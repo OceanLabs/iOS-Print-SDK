@@ -41,9 +41,9 @@ Sample Code
 3. Create `OLPrintJob`'s for every type of product you want to print in this order. A print order can have multiple print jobs attached.
 
     ```obj-c
-   id<OLPrintJob> squarePrints = [OLPrintJob printJobWithTemplateId:@kOLDefaultTemplateForSquarePrints OLAssets:assetsForPrinting];
-    id<OLPrintJob> magnets = [OLPrintJob printJobWithTemplateId:@kOLDefaultTemplateForMagnets OLAssets:assetsForPrinting];
-    id<OLPrintJob> polaroidStylePrints = [OLPrintJob printJobWithTemplateId:@kOLDefaultTemplateForPolaroidStylePrints OLAssets:assetsForPrinting];
+   id<OLPrintJob> squarePrints = [OLPrintJob printJobWithTemplateId:kOLDefaultTemplateForSquarePrints OLAssets:assetsForPrinting];
+    id<OLPrintJob> magnets = [OLPrintJob printJobWithTemplateId:kOLDefaultTemplateForMagnets OLAssets:assetsForPrinting];
+    id<OLPrintJob> polaroidStylePrints = [OLPrintJob printJobWithTemplateId:kOLDefaultTemplateForPolaroidStylePrints OLAssets:assetsForPrinting];
     ```
     
      *Note: The above shows only a small sample of the products available for printing with the SDK*
