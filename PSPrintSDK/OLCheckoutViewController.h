@@ -1,0 +1,16 @@
+//
+//  CheckoutViewController.h
+//  Print Studio
+//
+//  Created by Deon Botha on 05/01/2014.
+//  Copyright (c) 2014 Ocean Labs. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+#import "OLPrintEnvironment.h"
+@class OLPrintOrder;
+
+@interface OLCheckoutViewController : UITableViewController
+- (id)initWithPrintOrder:(OLPrintOrder *)printOrder;
+- (id)initWithAPIKey:(NSString *)apiKey environment:(OLPSPrintSDKEnvironment)env printOrder:(OLPrintOrder *)printOrder;
+@end
