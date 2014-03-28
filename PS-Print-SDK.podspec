@@ -34,7 +34,7 @@ Pod::Spec.new do |s|
   s.homepage         = "https://github.com/OceanLabs/PS-SDK-iOS"
   s.license          = 'MIT'
   s.author           = { "Deon Botha" => "deon@oceanlabs.co" }
-  s.source           = { :git => "https://github.com/OceanLabs/PS-SDK-iOS.git", :tag => s.version.to_s }
+  s.source           = { :git => "https://github.com/OceanLabs/iOS-Print-SDK.git", :tag => s.version.to_s }
   s.social_media_url = 'https://twitter.com/dbotha'
 
   s.platform     = :ios, '7.0'
