@@ -18,6 +18,9 @@ NSString *const kOLDefaultTemplateForMagnets = @"magnets";
 NSString *const kOLDefaultTemplateForPolaroidStylePrints = @"polaroids";
 NSString *const kOLDefaultTemplateForPolaroidStyleMiniPrints = @"polaroids_mini";
 NSString *const kOLDefaultTemplateForPostcard = @"ps_postcard";
+NSString *const kOLDefaultTemplateForFrames2x2 = @"frames_2";
+NSString *const kOLDefaultTemplateForFrames3x3 = @"frames_3";
+NSString *const kOLDefaultTemplateForFrames4x4 = @"frames_4";
 
 static NSString *const kKeyIdentifier = @"co.oceanlabs.pssdk.kKeyIdentifier";
 static NSString *const kKeyName = @"co.oceanlabs.pssdk.kKeyName";

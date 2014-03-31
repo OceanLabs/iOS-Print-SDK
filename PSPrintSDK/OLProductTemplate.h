@@ -19,6 +19,9 @@ NSString *const kOLDefaultTemplateForMagnets;
 NSString *const kOLDefaultTemplateForPolaroidStylePrints;
 NSString *const kOLDefaultTemplateForPolaroidStyleMiniPrints;
 NSString *const kOLDefaultTemplateForPostcard;
+NSString *const kOLDefaultTemplateForFrames2x2;
+NSString *const kOLDefaultTemplateForFrames3x3;
+NSString *const kOLDefaultTemplateForFrames4x4;
 
 @class OLProductTemplateSyncRequest;
 
