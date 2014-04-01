@@ -316,7 +316,9 @@ static const NSUInteger kSectionPayment = 2;
 
 - (void)submitOrderForPrintingWithProofOfPayment:(NSString *)proofOfPayment {
     self.printOrder.proofOfPayment = proofOfPayment;
+    [[NSNotificationCenter defaultCenter] postNotificationName:kOLNotificationUserCompletedPayment object:self userInfo:@{kOLKeyUserInfoPrintOrder: self.printOrder}];
     [self.printOrder saveToHistory];
+    
     [SVProgressHUD showWithStatus:NSLocalizedString(@"Processing", @"") maskType:SVProgressHUDMaskTypeBlack];
     [self.printOrder submitForPrintingWithProgressHandler:^(NSUInteger totalAssetsUploaded, NSUInteger totalAssetsToUpload,
                                                             long long totalAssetBytesWritten, long long totalAssetBytesExpectedToWrite,
@@ -326,6 +328,7 @@ static const NSUInteger kSectionPayment = 2;
         float progress = totalAssetsUploaded * step + (totalAssetBytesWritten / (float) totalAssetBytesExpectedToWrite) * step;
         [SVProgressHUD showProgress:progress status:[NSString stringWithFormat:@"Uploading Images \n%lu / %lu", (unsigned long) totalAssetsUploaded + 1, (unsigned long) totalAssetsToUpload] maskType:SVProgressHUDMaskTypeBlack];
     } completionHandler:^(NSString *orderIdReceipt, NSError *error) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:kOLNotificationPrintOrderSubmission object:self userInfo:@{kOLKeyUserInfoPrintOrder: self.printOrder}];
         [self.printOrder saveToHistory]; // save again as the print order has it's receipt set if it was successful, otherwise last error is set
         [SVProgressHUD dismiss];
         OLReceiptViewController *receiptVC = [[OLReceiptViewController alloc] initWithPrintOrder:self.printOrder];

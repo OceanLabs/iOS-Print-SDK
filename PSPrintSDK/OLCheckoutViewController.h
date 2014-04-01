@@ -10,6 +10,11 @@
 #import "OLPrintEnvironment.h"
 @class OLPrintOrder;
 
+NSString *const kOLNotificationUserSuppliedShippingDetails;
+NSString *const kOLNotificationUserCompletedPayment;
+NSString *const kOLNotificationPrintOrderSubmission;
+NSString *const kOLKeyUserInfoPrintOrder;
+
 @interface OLCheckoutViewController : UITableViewController
 - (id)initWithPrintOrder:(OLPrintOrder *)printOrder;
 - (id)initWithAPIKey:(NSString *)apiKey environment:(OLPSPrintSDKEnvironment)env printOrder:(OLPrintOrder *)printOrder;

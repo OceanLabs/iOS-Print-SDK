@@ -115,6 +115,7 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
         if (!components) {
             lastSyncDate = nil;
             templates = [[NSMutableArray alloc] init];
+            // TODO: load templates from Plist.
         } else {
             lastSyncDate = components[0];
             templates = components[1];

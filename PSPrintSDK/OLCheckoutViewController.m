@@ -14,6 +14,13 @@
 #import "OLProductTemplate.h"
 #import "OLPSPrintSDK.h"
 
+NSString *const kOLNotificationUserSuppliedShippingDetails = @"co.oceanlabs.pssdk.kOLNotificationUserSuppliedShippingDetails";
+NSString *const kOLNotificationUserCompletedPayment = @"co.oceanlabs.pssdk.kOLNotificationUserCompletedPayment";
+NSString *const kOLNotificationPrintOrderSubmission = @"co.oceanlabs.pssdk.kOLNotificationPrintOrderSubmission";
+
+NSString *const kOLKeyUserInfoPrintOrder = @"co.oceanlabs.pssdk.kOLKeyUserInfoPrintOrder";
+
+
 static const NSUInteger kMinPhoneNumberLength = 5;
 
 static const NSUInteger kSectionDeliveryDetails = 0;
@@ -123,6 +130,8 @@ static const NSUInteger kInputFieldTag = 99;
     [defaults setObject:email forKey:kKeyEmailAddress];
     [defaults setObject:phone forKey:kKeyPhone];
     [defaults synchronize];
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:kOLNotificationUserSuppliedShippingDetails object:self userInfo:@{kOLKeyUserInfoPrintOrder: self.printOrder}];
     [self.navigationController pushViewController:vc animated:YES];
 }
 
