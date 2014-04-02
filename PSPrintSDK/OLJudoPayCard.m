@@ -140,6 +140,7 @@ static NSString *token, *secret;
     manager.requestSerializer = [[AFJSONRequestSerializer alloc] init];
     [manager.requestSerializer setAuthorizationHeaderFieldWithUsername:token password:secret];
     [manager.requestSerializer setValue:@"3.0.0" forHTTPHeaderField:@"Api-Version"];
+    manager.responseSerializer.acceptableStatusCodes = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(200, 300)];
     
     NSDictionary *payload = nil;
     

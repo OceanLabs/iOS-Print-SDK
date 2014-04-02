@@ -37,13 +37,6 @@ static BOOL useJudoPayForGBP = NO;
 
 + (void)setUseJudoPayForGBP:(BOOL)use {
     useJudoPayForGBP = use;
-    if (use) {
-        if (environment == kOLPSPrintSDKEnvironmentSandbox) {
-            [OLJudoPayCard setClientId:kJudoClientId token:kJudoSandboxToken secret:kJudoSandboxSecret withEnvironment:kOLJudoPayEnvironmentSandbox];
-        } else {
-            [OLJudoPayCard setClientId:kJudoClientId token:kJudoLiveToken secret:kJudoLiveSecret withEnvironment:kOLJudoPayEnvironmentLive];
-        }
-    }
 }
 
 + (void)setAPIKey:(NSString *)_apiKey withEnvironment:(OLPSPrintSDKEnvironment)_environment {
@@ -51,8 +44,10 @@ static BOOL useJudoPayForGBP = NO;
     environment = _environment;
     if (environment == kOLPSPrintSDKEnvironmentLive) {
         [OLPayPalCard setClientId:kOLPayPalClientIdLive withEnvironment:kOLPayPalEnvironmentLive];
+        [OLJudoPayCard setClientId:kJudoClientId token:kJudoLiveToken secret:kJudoLiveSecret withEnvironment:kOLJudoPayEnvironmentLive];
     } else {
         [OLPayPalCard setClientId:kOLPayPalClientIdSandbox withEnvironment:kOLPayPalEnvironmentSandbox];
+        [OLJudoPayCard setClientId:kJudoClientId token:kJudoSandboxToken secret:kJudoSandboxSecret withEnvironment:kOLJudoPayEnvironmentSandbox];
     }
     
     [OLProductTemplate sync];
