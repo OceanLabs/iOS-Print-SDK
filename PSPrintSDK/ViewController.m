@@ -30,7 +30,7 @@
  * Insert your API keys here. These are found under your profile 
  * by logging in to the developer portal at http://developer.psilov.eu
  **********************************************************************/
-static NSString *const kAPIKeySandbox = @"ba171b0d91b1418fbd04f7b12af1e37e42d2cb1e"; // replace with your Sandbox API key found under the Profile section in the developer portal
+static NSString *const kAPIKeySandbox = @"REPLACE_ME"; // replace with your Sandbox API key found under the Profile section in the developer portal
 static NSString *const kAPIKeyLive = @"REPLACE_ME"; // replace with your Live API key found under the Profile section in the developer portal
 
 @interface ViewController () <UIImagePickerControllerDelegate, UINavigationControllerDelegate, ProductSelectionViewControllerDelegate>
