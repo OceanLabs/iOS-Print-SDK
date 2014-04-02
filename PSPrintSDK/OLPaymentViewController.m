@@ -83,21 +83,22 @@ static const NSUInteger kSectionPayment = 2;
     
     if ([self isShippingScreenOnTheStack]) {
         self.tableView.tableHeaderView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"checkout_progress_indicator2"]];
-        self.payWithCreditCardButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 44)];
-        self.payWithCreditCardButton.backgroundColor = [UIColor colorWithRed:55 / 255.0f green:188 / 255.0f blue:155 / 255.0f alpha:1.0];
-        [self.payWithCreditCardButton addTarget:self action:@selector(onButtonPayWithCreditCardClicked) forControlEvents:UIControlEventTouchUpInside];
-        [self.payWithCreditCardButton setTitle:NSLocalizedString(@"Pay with Card", @"") forState:UIControlStateNormal];
-        
-        self.payWithPayPalButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 52, self.view.frame.size.width, 44)];
-        [self.payWithPayPalButton setTitle:NSLocalizedString(@"Pay with PayPal", @"") forState:UIControlStateNormal];
-        [self.payWithPayPalButton addTarget:self action:@selector(onButtonPayWithPayPalClicked) forControlEvents:UIControlEventTouchUpInside];
-        self.payWithPayPalButton.backgroundColor = [UIColor colorWithRed:74 / 255.0f green:137 / 255.0f blue:220 / 255.0f alpha:1.0];
-        
-        UIView *footer = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, CGRectGetMaxY(self.payWithPayPalButton.frame))];
-        [footer addSubview:self.payWithCreditCardButton];
-        [footer addSubview:self.payWithPayPalButton];
-        self.tableView.tableFooterView = footer;
     }
+    
+    self.payWithCreditCardButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 44)];
+    self.payWithCreditCardButton.backgroundColor = [UIColor colorWithRed:55 / 255.0f green:188 / 255.0f blue:155 / 255.0f alpha:1.0];
+    [self.payWithCreditCardButton addTarget:self action:@selector(onButtonPayWithCreditCardClicked) forControlEvents:UIControlEventTouchUpInside];
+    [self.payWithCreditCardButton setTitle:NSLocalizedString(@"Pay with Card", @"") forState:UIControlStateNormal];
+    
+    self.payWithPayPalButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 52, self.view.frame.size.width, 44)];
+    [self.payWithPayPalButton setTitle:NSLocalizedString(@"Pay with PayPal", @"") forState:UIControlStateNormal];
+    [self.payWithPayPalButton addTarget:self action:@selector(onButtonPayWithPayPalClicked) forControlEvents:UIControlEventTouchUpInside];
+    self.payWithPayPalButton.backgroundColor = [UIColor colorWithRed:74 / 255.0f green:137 / 255.0f blue:220 / 255.0f alpha:1.0];
+    
+    UIView *footer = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, CGRectGetMaxY(self.payWithPayPalButton.frame))];
+    [footer addSubview:self.payWithCreditCardButton];
+    [footer addSubview:self.payWithPayPalButton];
+    self.tableView.tableFooterView = footer;
     
     [self updateViewsBasedOnPromoCodeChange]; // initialise based on promo state
     
