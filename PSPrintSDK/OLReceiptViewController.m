@@ -6,8 +6,6 @@
 //  Copyright (c) 2014 Ocean Labs. All rights reserved.
 //
 
-#define USE_JUDOPAY_FOR_GBP 1
-
 #import "OLReceiptViewController.h"
 #import "OLPaymentViewController.h"
 #import "Util.h"

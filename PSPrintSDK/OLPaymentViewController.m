@@ -29,6 +29,10 @@ static const NSUInteger kSectionOrderSummary = 0;
 static const NSUInteger kSectionPromoCodes = 1;
 static const NSUInteger kSectionPayment = 2;
 
+@interface OLPSPrintSDK (Private)
++ (BOOL)useJudoPayForGBP;
+@end
+
 @interface OLPaymentViewController () <CardIOPaymentViewControllerDelegate, PayPalPaymentDelegate, UIActionSheetDelegate, UITextFieldDelegate>
 @property (strong, nonatomic) OLPrintOrder *printOrder;
 @property (strong, nonatomic) OLPayPalCard *card;
@@ -269,11 +273,9 @@ static const NSUInteger kSectionPayment = 2;
 
         id card = [OLPayPalCard lastUsedCard];
         
-#ifdef USE_JUDOPAY_FOR_GBP
-        if ([self.printOrder.currencyCode isEqualToString:@"GBP"]) {
+        if ([OLPSPrintSDK useJudoPayForGBP] && [self.printOrder.currencyCode isEqualToString:@"GBP"]) {
             card = [OLJudoPayCard lastUsedCard];
         }
-#endif
         
         if (card == nil) {
             [self payWithNewCard];
@@ -292,9 +294,9 @@ static const NSUInteger kSectionPayment = 2;
 }
 
 - (void)payWithExistingPayPalCard:(OLPayPalCard *)card {
-#ifdef USE_JUDOPAY_FOR_GBP
-    NSAssert(![self.printOrder.currencyCode isEqualToString:@"GBP"], @"JudoPay should be used for GBP orders (and only for OceanLabs internal use)");
-#endif
+    if ([OLPSPrintSDK useJudoPayForGBP]) {
+        NSAssert(![self.printOrder.currencyCode isEqualToString:@"GBP"], @"JudoPay should be used for GBP orders (and only for OceanLabs internal use)");
+    }
     [SVProgressHUD showWithStatus:NSLocalizedString(@"Processing", @"") maskType:SVProgressHUDMaskTypeBlack];
     [card chargeCard:self.printOrder.cost currencyCode:self.printOrder.currencyCode description:@"" completionHandler:^(NSString *proofOfPayment, NSError *error) {
         if (error) {
@@ -444,15 +446,9 @@ static const NSUInteger kSectionPayment = 2;
 
 - (void)userDidProvideCreditCardInfo:(CardIOCreditCardInfo *)cardInfo inPaymentViewController:(CardIOPaymentViewController *)paymentViewController {
     [self dismissViewControllerAnimated:YES completion:^() {
-        BOOL completedWithJudoPay = NO;
-#ifdef USE_JUDOPAY_FOR_GBP
-        if ([self.printOrder.currencyCode isEqualToString:@"GBP"]) {
+        if ([OLPSPrintSDK useJudoPayForGBP] && [self.printOrder.currencyCode isEqualToString:@"GBP"]) {
             [self userDidProvideCreditCardInfoToPayByJudoPay:cardInfo];
-            completedWithJudoPay = YES;
-        }
-#endif
-        
-        if (!completedWithJudoPay) {
+        } else {
             [self userDidProvideCreditCardInfoToPayByPayPal:cardInfo];
         }
 
@@ -594,16 +590,9 @@ static const NSUInteger kSectionPayment = 2;
         [self payWithNewCard];
     } else if (buttonIndex == 1) {
         // pay with existing card
-
-        BOOL completedWithJudoCard = NO;
-#ifdef USE_JUDOPAY_FOR_GBP
-        if ([self.printOrder.currencyCode isEqualToString:@"GBP"]) {
+        if ([OLPSPrintSDK useJudoPayForGBP] && [self.printOrder.currencyCode isEqualToString:@"GBP"]) {
             [self payWithExistingJudoPayCard:[OLJudoPayCard lastUsedCard]];
-            completedWithJudoCard = YES;
-        }
-#endif
-        
-        if (!completedWithJudoCard) {
+        } else {
             [self payWithExistingPayPalCard:[OLPayPalCard lastUsedCard]];
         }
     }
