@@ -8,6 +8,7 @@
 
 #import "OLConstants.h"
 
+NSString *const kOLPSSDKVersion = @"1.0.0";
 NSString *const kOLPSSDKErrorDomain = @"co.oceanlabs.kOLPSSDKErrorDomain";
 const NSInteger kOLPSSDKErrorCodeFullDetailsFetchFailed = 99;
 const NSInteger kOLPSSDKErrorCodeServerFault = 100;

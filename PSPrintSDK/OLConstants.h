@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 
 NSString *const kOLPSSDKErrorDomain;
+NSString *const kOLPSSDKVersion;
 const NSInteger kOLPSSDKErrorCodeFullDetailsFetchFailed;
 const NSInteger kOLPSSDKErrorCodeServerFault;
 const NSInteger kOLPSSDKErrorCodeUnauthorized;

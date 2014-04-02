@@ -7,6 +7,7 @@
 //
 
 #import "OLBaseRequest.h"
+#import "OLConstants.h"
 
 @interface OLBaseRequest () <NSURLConnectionDelegate>
 
@@ -80,7 +81,7 @@ static NSString *httpMethodString(OLHTTPMethod method) {
         [request setValue:[NSString stringWithFormat:@"%lu", (unsigned long)[request.HTTPBody length]] forHTTPHeaderField:@"Content-Length"];
     }
     
-    [request setValue:@"Ps Print SDK iOS v1.0" forHTTPHeaderField:@"User-Agent"];
+    [request setValue:[NSString stringWithFormat: @"Ps Print SDK iOS v%@", kOLPSSDKVersion] forHTTPHeaderField:@"User-Agent"];
     for (NSString *key in self.requestHeaders.allKeys) {
         NSString *value = self.requestHeaders[key];
         [request setValue:value forHTTPHeaderField:key];
