@@ -11,6 +11,15 @@
 #import "OLProductTemplate.h"
 #import <PayPalMobile.h>
 
+#ifdef USE_JUDOPAY_FOR_GBP // This macro is only really for internal use. No harm in using it but it has no external benefit, default is PayPal REST APIs for credit card payments.
+#import "OLJudoPayCard.h"
+static NSString *const kJudoClientId      = @"100170-877";
+static NSString *const kJudoSandboxToken     = @"oLMiwCPBeLs0iVX4";
+static NSString *const kJudoSandboxSecret  = @"3bf983df93ceb422bc81fd0289c3eb95ea1d39d990ba27306679ed069826805c";
+static NSString *const kJudoLiveToken     = @"JjOZ49Z9XCYy2FAc";
+static NSString *const kJudoLiveSecret  = @"b8d5950ec68e27e7dfdb314dbd7160e7421c3bddd4d883d9aef5e94788def934";
+#endif
+
 static NSString *apiKey;
 static OLPSPrintSDKEnvironment environment;
 
@@ -33,6 +42,14 @@ static NSString *const kOLPayPalRecipientEmailSandbox = @"hello-facilitator@psil
     }
     
     [OLProductTemplate sync];
+    
+#ifdef USE_JUDOPAY_FOR_GBP
+    if (environment == kOLPSPrintSDKEnvironmentSandbox) {
+        [OLJudoPayCard setClientId:kJudoClientId token:kJudoSandboxToken secret:kJudoSandboxSecret withEnvironment:kOLJudoPayEnvironmentSandbox];
+    } else {
+        [OLJudoPayCard setClientId:kJudoClientId token:kJudoLiveToken secret:kJudoLiveSecret withEnvironment:kOLJudoPayEnvironmentLive];
+    }
+#endif
 }
 
 + (NSString *)paypalEnvironment {

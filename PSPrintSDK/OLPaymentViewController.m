@@ -21,6 +21,7 @@
 #import "OLPSPrintSDK.h"
 #import "OLProductTemplate.h"
 #import "OLCountry.h"
+#import "OLJudoPayCard.h"
 
 static NSString *const kCardIOAppToken = @"f1d07b66ad21407daf153c0ac66c09d7";
 static const NSUInteger kSectionCount = 3;
@@ -265,15 +266,24 @@ static const NSUInteger kSectionPayment = 2;
         // The user must have a promo code which reduces this order cost to nothing, lucky user :)
         [self submitOrderForPrintingWithProofOfPayment:nil];
     } else {
-        OLPayPalCard *card = [OLPayPalCard lastUsedCard];
+
+        id card = [OLPayPalCard lastUsedCard];
+        
+#ifdef USE_JUDOPAY_FOR_GBP
+        if ([self.printOrder.currencyCode isEqualToString:@"GBP"]) {
+            card = [OLJudoPayCard lastUsedCard];
+        }
+#endif
+        
         if (card == nil) {
             [self payWithNewCard];
         } else {
-            UIActionSheet *paysheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Pay with new card", [NSString stringWithFormat:@"Pay with card ending %@", [card.numberMasked substringFromIndex:card.numberMasked.length - 4]], nil];
+            UIActionSheet *paysheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Pay with new card", [NSString stringWithFormat:@"Pay with card ending %@", [[card numberMasked] substringFromIndex:[[card numberMasked] length] - 4]], nil];
             [paysheet showInView:self.view];
         }
     }
 }
+
 
 - (void)payWithNewCard {
     CardIOPaymentViewController *scanViewController = [[CardIOPaymentViewController alloc] initWithPaymentDelegate:self];
@@ -281,9 +291,27 @@ static const NSUInteger kSectionPayment = 2;
     [self presentViewController:scanViewController animated:YES completion:nil];
 }
 
-- (void)payWithExistingCard:(OLPayPalCard *)card {
+- (void)payWithExistingPayPalCard:(OLPayPalCard *)card {
+#ifdef USE_JUDOPAY_FOR_GBP
+    NSAssert(![self.printOrder.currencyCode isEqualToString:@"GBP"], @"JudoPay should be used for GBP orders (and only for OceanLabs internal use)");
+#endif
     [SVProgressHUD showWithStatus:NSLocalizedString(@"Processing", @"") maskType:SVProgressHUDMaskTypeBlack];
     [card chargeCard:self.printOrder.cost currencyCode:self.printOrder.currencyCode description:@"" completionHandler:^(NSString *proofOfPayment, NSError *error) {
+        if (error) {
+            [SVProgressHUD dismiss];
+            [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Oops!", @"") message:error.localizedDescription delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+            return;
+        }
+        
+        [self submitOrderForPrintingWithProofOfPayment:proofOfPayment];
+        [card saveAsLastUsedCard];
+    }];
+}
+
+- (void)payWithExistingJudoPayCard:(OLJudoPayCard *)card {
+    NSAssert([self.printOrder.currencyCode isEqualToString:@"GBP"], @"JudoPay should only be used for GBP orders (and only for OceanLabs internal use)");
+    [SVProgressHUD showWithStatus:NSLocalizedString(@"Processing", @"") maskType:SVProgressHUDMaskTypeBlack];
+    [card chargeCard:self.printOrder.cost currency:kOLJudoPayCurrencyGBP description:@"" completionHandler:^(NSString *proofOfPayment, NSError *error) {
         if (error) {
             [SVProgressHUD dismiss];
             [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Oops!", @"") message:error.localizedDescription delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
@@ -346,42 +374,88 @@ static const NSUInteger kSectionPayment = 2;
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
+- (void)userDidProvideCreditCardInfoToPayByPayPal:(CardIOCreditCardInfo *)cardInfo {
+    OLPayPalCardType type;
+    switch (cardInfo.cardType) {
+        case CardIOCreditCardTypeMastercard:
+            type = kOLPayPalCardTypeMastercard;
+            break;
+        case CardIOCreditCardTypeVisa:
+            type = kOLPayPalCardTypeVisa;
+            break;
+        case CardIOCreditCardTypeAmex:
+            type = kOLPayPalCardTypeAmex;
+            break;
+        case CardIOCreditCardTypeDiscover:
+            type = kOLPayPalCardTypeDiscover;
+            break;
+        default: {
+            UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Oops!", @"") message:NSLocalizedString(@"Sorry we couldn't recognize your card. Please try again manually entering your card details if necessary.", @"") delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"") otherButtonTitles:nil];
+            [av show];
+            return;
+        }
+    }
+    
+    [SVProgressHUD showWithStatus:NSLocalizedString(@"Processing", @"") maskType:SVProgressHUDMaskTypeBlack];
+    OLPayPalCard *card = [[OLPayPalCard alloc] init];
+    card.type = type;
+    card.number = cardInfo.cardNumber;
+    card.expireMonth = cardInfo.expiryMonth;
+    card.expireYear = cardInfo.expiryYear;
+    card.cvv2 = cardInfo.cvv;
+    
+    [card storeCardWithCompletionHandler:^(NSError *error) {
+        // ignore error as I'd rather the user gets a nice checkout experience than we store the card in PayPal vault.
+        [self payWithExistingPayPalCard:card];
+    }];
+
+}
+
+- (void)userDidProvideCreditCardInfoToPayByJudoPay:(CardIOCreditCardInfo *)cardInfo {
+    OLJudoPayCardType type;
+    switch (cardInfo.cardType) {
+        case CardIOCreditCardTypeMastercard:
+            type = kOLJudoPayCardTypeMastercard;
+            break;
+        case CardIOCreditCardTypeVisa:
+            type = kOLJudoPayCardTypeVisa;
+            break;
+        case CardIOCreditCardTypeAmex:
+            type = kOLJudoPayCardTypeAmex;
+            break;
+        case CardIOCreditCardTypeDiscover:
+            type = kOLJudoPayCardTypeDiscover;
+            break;
+        default: {
+            UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Oops!", @"") message:NSLocalizedString(@"Sorry we couldn't recognize your card. Please try again manually entering your card details if necessary.", @"") delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"") otherButtonTitles:nil];
+            [av show];
+            return;
+        }
+    }
+    
+    OLJudoPayCard *card = [[OLJudoPayCard alloc] init];
+    card.type = type;
+    card.number = cardInfo.cardNumber;
+    card.expireMonth = cardInfo.expiryMonth;
+    card.expireYear = cardInfo.expiryYear;
+    card.cvv2 = cardInfo.cvv;
+    [self payWithExistingJudoPayCard:card];
+}
 
 - (void)userDidProvideCreditCardInfo:(CardIOCreditCardInfo *)cardInfo inPaymentViewController:(CardIOPaymentViewController *)paymentViewController {
     [self dismissViewControllerAnimated:YES completion:^() {
-        OLPayPalCardType type;
-        switch (cardInfo.cardType) {
-            case CardIOCreditCardTypeMastercard:
-                type = kOLPayPalCardTypeMastercard;
-                break;
-            case CardIOCreditCardTypeVisa:
-                type = kOLPayPalCardTypeVisa;
-                break;
-            case CardIOCreditCardTypeAmex:
-                type = kOLPayPalCardTypeAmex;
-                break;
-            case CardIOCreditCardTypeDiscover:
-                type = kOLPayPalCardTypeDiscover;
-                break;
-            default: {
-                UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Oops!", @"") message:NSLocalizedString(@"Sorry we couldn't recognize your card. Please try again manually entering your card details if necessary.", @"") delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"") otherButtonTitles:nil];
-                [av show];
-                return;
-            }
+        BOOL completedWithJudoPay = NO;
+#ifdef USE_JUDOPAY_FOR_GBP
+        if ([self.printOrder.currencyCode isEqualToString:@"GBP"]) {
+            [self userDidProvideCreditCardInfoToPayByJudoPay:cardInfo];
+            completedWithJudoPay = YES;
         }
+#endif
         
-        [SVProgressHUD showWithStatus:NSLocalizedString(@"Processing", @"") maskType:SVProgressHUDMaskTypeBlack];
-        OLPayPalCard *card = [[OLPayPalCard alloc] init];
-        card.type = type;
-        card.number = cardInfo.cardNumber;
-        card.expireMonth = cardInfo.expiryMonth;
-        card.expireYear = cardInfo.expiryYear;
-        card.cvv2 = cardInfo.cvv;
-        
-        [card storeCardWithCompletionHandler:^(NSError *error) {
-            // ignore error as I'd rather the user gets a nice checkout experience than we store the card in PayPal vault.
-            [self payWithExistingCard:card];
-        }];
+        if (!completedWithJudoPay) {
+            [self userDidProvideCreditCardInfoToPayByPayPal:cardInfo];
+        }
+
     }];
 }
 
@@ -520,7 +594,18 @@ static const NSUInteger kSectionPayment = 2;
         [self payWithNewCard];
     } else if (buttonIndex == 1) {
         // pay with existing card
-        [self payWithExistingCard:[OLPayPalCard lastUsedCard]];
+
+        BOOL completedWithJudoCard = NO;
+#ifdef USE_JUDOPAY_FOR_GBP
+        if ([self.printOrder.currencyCode isEqualToString:@"GBP"]) {
+            [self payWithExistingJudoPayCard:[OLJudoPayCard lastUsedCard]];
+            completedWithJudoCard = YES;
+        }
+#endif
+        
+        if (!completedWithJudoCard) {
+            [self payWithExistingPayPalCard:[OLPayPalCard lastUsedCard]];
+        }
     }
 }
 
