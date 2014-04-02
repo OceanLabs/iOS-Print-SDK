@@ -181,7 +181,7 @@ static const NSUInteger kSectionErrorRetry = 2;
             id<OLPrintJob> job = self.printOrder.jobs[indexPath.row];
             cell.textLabel.text = [NSString stringWithFormat:@"%lu x %@", (unsigned long)job.quantity, job.productName];
             OLProductTemplate *template = [OLProductTemplate templateWithId:job.templateId];
-            if ([job.templateId isEqualToString:@"ps_postcard"] || [job.templateId isEqualToString:@"60_postcard"]) {
+            if ([job.templateId isEqualToString:@"ps_postcard"] || [job.templateId isEqualToString:@"60_postcards"]) {
                 cell.textLabel.text = [NSString stringWithFormat:@"%lu x %@", (unsigned long)self.printOrder.jobs.count, job.productName];
             } else if ([job.templateId isEqualToString:@"frames_2"] || [job.templateId isEqualToString:@"frames_3"] || [job.templateId isEqualToString:@"frames_4"]) {
                 cell.textLabel.text = [NSString stringWithFormat:@"%lu x %@", (unsigned long) (job.quantity + template.quantity - 1 ) / template.quantity, job.productName];
