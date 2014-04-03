@@ -20,7 +20,7 @@ static NSMutableArray *printOrders;
 + (NSString *)historyFilePath {
     NSArray * urls = [[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask];
     NSString *documentDirPath = [(NSURL *)[urls objectAtIndex:0] path];
-    return [documentDirPath stringByAppendingPathComponent:@"co.oceanlabs.pssdk.PrintOrderHistory"];
+    return [documentDirPath stringByAppendingPathComponent:@"co.oceanlabs.pssdk.OLPrintOrderHistory"];
 }
 
 - (BOOL)isSavedInHistory {
