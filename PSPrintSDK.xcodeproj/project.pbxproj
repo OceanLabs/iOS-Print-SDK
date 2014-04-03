@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		3A5ECAA2AA9D4F38934544CA /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 931ABE3568CB40F8892488E2 /* libPods.a */; };
 		CD382E4A18EB7C6300127F95 /* OLJudoPayCard.m in Sources */ = {isa = PBXBuildFile; fileRef = CD382E4818EB7C6300127F95 /* OLJudoPayCard.m */; };
+		CD382E4C18ECE1A000127F95 /* OLProductTemplates.plist in Resources */ = {isa = PBXBuildFile; fileRef = CD382E4B18ECE1A000127F95 /* OLProductTemplates.plist */; };
 		CD550A68187B30D200782D75 /* OLAddressLookupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CD550A67187B30D200782D75 /* OLAddressLookupViewController.m */; };
 		CD550B191881E1E600782D75 /* OLPrintOrder+History.m in Sources */ = {isa = PBXBuildFile; fileRef = CD550B181881E1E600782D75 /* OLPrintOrder+History.m */; };
 		CD550BDC1886BF8B00782D75 /* OLPayPalCard.m in Sources */ = {isa = PBXBuildFile; fileRef = CD550BDB1886BF8B00782D75 /* OLPayPalCard.m */; };
@@ -74,6 +75,7 @@
 		AFF040FCE03A46DCBBC65B4C /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
 		CD382E4818EB7C6300127F95 /* OLJudoPayCard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLJudoPayCard.m; sourceTree = "<group>"; };
 		CD382E4918EB7C6300127F95 /* OLJudoPayCard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLJudoPayCard.h; sourceTree = "<group>"; };
+		CD382E4B18ECE1A000127F95 /* OLProductTemplates.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = OLProductTemplates.plist; sourceTree = "<group>"; };
 		CD550A66187B30D200782D75 /* OLAddressLookupViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLAddressLookupViewController.h; sourceTree = "<group>"; };
 		CD550A67187B30D200782D75 /* OLAddressLookupViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLAddressLookupViewController.m; sourceTree = "<group>"; };
 		CD550B171881E1E600782D75 /* OLPrintOrder+History.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "OLPrintOrder+History.h"; sourceTree = "<group>"; };
@@ -302,6 +304,7 @@
 				CD97569418E083E3007CA090 /* PrintOrderHistoryViewController.m */,
 				CD97569618E098E5007CA090 /* ProductSelectionViewController.h */,
 				CD97569718E098E5007CA090 /* ProductSelectionViewController.m */,
+				CD382E4B18ECE1A000127F95 /* OLProductTemplates.plist */,
 				CD73BF83186215790009DE03 /* Images.xcassets */,
 				CD73BF72186215790009DE03 /* Supporting Files */,
 			);
@@ -500,6 +503,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CD382E4C18ECE1A000127F95 /* OLProductTemplates.plist in Resources */,
 				CD73BF84186215790009DE03 /* Images.xcassets in Resources */,
 				CD93BB481879EA4F00316492 /* PSPrintSDK.xcassets in Resources */,
 				CD73BF76186215790009DE03 /* InfoPlist.strings in Resources */,

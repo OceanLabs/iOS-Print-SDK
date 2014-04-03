@@ -45,6 +45,18 @@
     return nil;
 }
 
++ (BOOL)isValidCurrencyCode:(NSString *)code {
+    code = [code uppercaseString];
+    NSArray *countries = [OLCountry countries];
+    for (OLCountry *country in countries) {
+        if ([country.currencyCode isEqualToString:code]) {
+            return YES;
+        }
+    }
+    
+    return NO;
+}
+
 + (NSArray *)countries {
     static NSMutableArray *countries = nil;
     

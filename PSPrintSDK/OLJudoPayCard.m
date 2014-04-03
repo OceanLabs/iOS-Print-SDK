@@ -101,7 +101,7 @@ static NSString *token, *secret;
 
 
 - (void)setExpireMonth:(NSUInteger)expireMonth {
-    NSAssert(expireMonth >= 1 && expireMonth <= 12, @"The expire month specified (%d) must be between 1-12 inclusive", expireMonth);
+    NSAssert(expireMonth >= 1 && expireMonth <= 12, @"The expire month specified (%lu) must be between 1-12 inclusive", (unsigned long)expireMonth);
     _expireMonth = expireMonth;
 }
 
@@ -120,7 +120,7 @@ static NSString *token, *secret;
 }
 
 - (Card *)createJudoPayCard {
-    NSString *expiryDate = [NSString stringWithFormat:@"%02d/%02d", self.expireMonth, self.expireYear];
+    NSString *expiryDate = [NSString stringWithFormat:@"%02lu/%02lu", (unsigned long) self.expireMonth, (unsigned long) self.expireYear];
     Card *card = [[Card alloc] initWithCardNumber:self.number andExpiry:expiryDate andCV2:self.cvv2];
     card.cardToken = self.cardToken;
     
@@ -165,9 +165,9 @@ static NSString *token, *secret;
     [manager POST:[NSString stringWithFormat:@"https://%@/transactions/payments", environment == kOLJudoPayEnvironmentLive ? @"partnerapi.judopay.com" : @"partnerapi.judopay-sandbox.com"]
        parameters:payload
           success:^(AFHTTPRequestOperation *operation, id responseObject) {
-              [self onSuccessWithStatusCode:[operation.response statusCode] JSON:responseObject completionHandler:handler];
+              [self onSuccessWithStatusCode:(int) [operation.response statusCode] JSON:responseObject completionHandler:handler];
           } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-              [self onFailureWithStatusCode:[operation.response statusCode] error:error completionHandler:handler];
+              [self onFailureWithStatusCode:(int) [operation.response statusCode] error:error completionHandler:handler];
           }];
 }
 

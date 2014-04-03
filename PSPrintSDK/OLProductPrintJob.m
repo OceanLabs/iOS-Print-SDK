@@ -92,14 +92,14 @@ static NSString *const kKeyImages = @"co.oceanlabs.pssdk.kKeyImages";
 
 - (NSDecimalNumber *)costInCurrency:(NSString *)currencyCode {
     OLProductTemplate *template = [OLProductTemplate templateWithId:self.templateId];
-    NSUInteger expectedQuantity = template.quantity;
-    NSDecimalNumber *cost = [template costInCurrencyCode:currencyCode];
+    NSUInteger expectedQuantity = template.quantityPerSheet;
+    NSDecimalNumber *cost = [template costPerSheetInCurrencyCode:currencyCode];
     NSUInteger numOrders = (NSUInteger) floorf((self.quantity + expectedQuantity - 1)  / expectedQuantity);
     return (NSDecimalNumber *) [cost decimalNumberByMultiplyingBy:(NSDecimalNumber *) [NSDecimalNumber numberWithUnsignedInteger:numOrders]];
 }
 
 - (NSArray *)currenciesSupported {
-    return [OLProductTemplate templateWithId:self.templateId].supportedCurrencyCodes;
+    return [OLProductTemplate templateWithId:self.templateId].currenciesSupported;
 }
 
 - (NSDictionary *)jsonRepresentation {

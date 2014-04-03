@@ -66,11 +66,11 @@ static id stringOrEmptyString(NSString *str) {
 }
 
 - (NSDecimalNumber *)costInCurrency:(NSString *)currencyCode {
-    return [[OLProductTemplate templateWithId:self.templateId] costInCurrencyCode:currencyCode];
+    return [[OLProductTemplate templateWithId:self.templateId] costPerSheetInCurrencyCode:currencyCode];
 }
 
 - (NSArray *)currenciesSupported {
-    return [OLProductTemplate templateWithId:self.templateId].supportedCurrencyCodes;
+    return [OLProductTemplate templateWithId:self.templateId].currenciesSupported;
 }
 
 - (NSArray/*<OLImage>*/ *)assetsForUploading {

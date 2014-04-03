@@ -70,7 +70,7 @@
                                 }
                                 
                                 if (costPerSheetByCurrencyCode.count > 0) {
-                                    OLProductTemplate *t = [[OLProductTemplate alloc] initWithIdentifier:identifier name:name quantity:[imagesPerSheet unsignedIntegerValue] costsByCurrencyCode:costPerSheetByCurrencyCode enabled:enabled];
+                                    OLProductTemplate *t = [[OLProductTemplate alloc] initWithIdentifier:identifier name:name sheetQuantity:[imagesPerSheet unsignedIntegerValue] sheetCostsByCurrencyCode:costPerSheetByCurrencyCode enabled:enabled];
                                     [acc addObject:t];
                                 }
                             }

@@ -28,12 +28,12 @@ NSString *const kOLDefaultTemplateForFrames4x4;
 @interface OLProductTemplate : NSObject <NSCoding>
 @property (nonatomic, copy, readonly) NSString *identifier;
 @property (nonatomic, copy, readonly) NSString *name;
-@property (nonatomic, assign, readonly) NSUInteger quantity;
+@property (nonatomic, assign, readonly) NSUInteger quantityPerSheet;
 @property (nonatomic, assign, readonly) BOOL enabled;
-@property (nonatomic, readonly) NSArray *supportedCurrencyCodes;
+@property (nonatomic, readonly) NSArray *currenciesSupported;
 
-- (id)initWithIdentifier:(NSString *)identifier name:(NSString *)name quantity:(NSUInteger)quantity costsByCurrencyCode:(NSDictionary/*<String, NSDecimalNumber>*/*)costs enabled:(BOOL)enabled;
-- (NSDecimalNumber *)costInCurrencyCode:(NSString *)currencyCode;
+- (id)initWithIdentifier:(NSString *)identifier name:(NSString *)name sheetQuantity:(NSUInteger)quantity sheetCostsByCurrencyCode:(NSDictionary/*<String, NSDecimalNumber>*/*)costs enabled:(BOOL)enabled;
+- (NSDecimalNumber *)costPerSheetInCurrencyCode:(NSString *)currencyCode;
 
 + (void)sync;
 + (BOOL)isSyncInProgress;
