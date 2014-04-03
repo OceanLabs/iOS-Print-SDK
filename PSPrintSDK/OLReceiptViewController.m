@@ -191,7 +191,7 @@ static const NSUInteger kSectionErrorRetry = 2;
             
             cell.textLabel.font = [UIFont systemFontOfSize:cell.textLabel.font.pointSize];
             cell.detailTextLabel.font = [UIFont systemFontOfSize:cell.detailTextLabel.font.pointSize];
-            cost = [job costInCurrency:currencyCode];
+            cost = self.printOrder.jobs.count == 1 ? self.printOrder.cost : [job costInCurrency:currencyCode]; // if there is only 1 job then use the print order total cost as a promo discount may have been applied
         }
         
         NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];

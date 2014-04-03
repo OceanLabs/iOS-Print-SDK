@@ -214,16 +214,6 @@ static const NSUInteger kSectionPayment = 2;
 }
 
 - (void)updateViewsBasedOnPromoCodeChange {
-    if (self.printOrder.promoCode) {
-        self.promoTextField.text = self.printOrder.promoCode;
-        self.promoTextField.enabled = NO;
-        [self.promoApplyButton setTitle:NSLocalizedString(@"Clear", @"") forState:UIControlStateNormal];
-    } else {
-        self.promoTextField.text = @"";
-        self.promoTextField.enabled = YES;
-        [self.promoApplyButton setTitle:NSLocalizedString(@"Apply", @"") forState:UIControlStateNormal];
-    }
-    
     NSComparisonResult result = [self.printOrder.cost compare:[NSDecimalNumber zero]];
     if (result == NSOrderedAscending || result == NSOrderedSame) {
         self.payWithPayPalButton.hidden = YES;
@@ -543,7 +533,7 @@ static const NSUInteger kSectionPayment = 2;
             
             cell.textLabel.font = [UIFont systemFontOfSize:cell.textLabel.font.pointSize];
             cell.detailTextLabel.font = [UIFont systemFontOfSize:cell.detailTextLabel.font.pointSize];
-            cost = [job costInCurrency:currencyCode];
+            cost = self.printOrder.jobs.count == 1 ? self.printOrder.cost : [job costInCurrency:currencyCode]; // if there is only 1 job then use the print order total cost as a promo discount may have been applied
         }
         
         NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
@@ -556,7 +546,8 @@ static const NSUInteger kSectionPayment = 2;
         static NSString *const CellIdentifier = @"PromoCodeCell";
         cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
         if (cell == nil) {
-            cell = [[UITableViewCell alloc] initWithFrame:CGRectMake(0, 0, tableView.frame.size.width, 43)];
+            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+            cell.frame = CGRectMake(0, 0, tableView.frame.size.width, 43);
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
             UITextField *promoCodeTextField = [[UITextField alloc] initWithFrame:CGRectMake(20, 0, 232, 43)];
             promoCodeTextField.placeholder = NSLocalizedString(@"Code", @"");
@@ -577,6 +568,18 @@ static const NSUInteger kSectionPayment = 2;
             
             self.promoTextField = promoCodeTextField;
             self.promoApplyButton = applyButton;
+        }
+        
+        if (self.printOrder.promoCode) {
+            self.promoTextField.text = self.printOrder.promoCode;
+            self.promoTextField.enabled = NO;
+            [self.promoApplyButton setTitle:NSLocalizedString(@"Clear", @"") forState:UIControlStateNormal];
+            [self.promoApplyButton sizeToFit];
+        } else {
+            self.promoTextField.text = @"";
+            self.promoTextField.enabled = YES;
+            [self.promoApplyButton setTitle:NSLocalizedString(@"Apply", @"") forState:UIControlStateNormal];
+            [self.promoApplyButton sizeToFit];
         }
     }
     
