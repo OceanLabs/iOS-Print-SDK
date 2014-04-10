@@ -55,4 +55,6 @@ typedef void (^OLApplyPromoCodeCompletionHandler)(NSDecimalNumber *discount, NSE
 @property (nonatomic, copy) NSString *currencyCode;
 @property (nonatomic, readonly) NSDecimalNumber *cost;
 
+- (NSDecimalNumber *)costInCurrency:(NSString *)currencyCode;
+
 @end
