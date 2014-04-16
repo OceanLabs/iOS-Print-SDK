@@ -66,11 +66,7 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
 }
 
 - (NSArray *)currenciesSupported {
-    NSMutableArray *codes = [[NSMutableArray alloc] init];
-    for (NSString *code in self.costsByCurrencyCode) {
-        [codes addObject:code];
-    }
-    return codes;
+    return self.costsByCurrencyCode.allKeys;
 }
 
 + (void)sync {
@@ -141,7 +137,12 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
                     }
                 }
                 
-                [templates addObject:[[OLProductTemplate alloc] initWithIdentifier:templateId name:templateName sheetQuantity:[sheetQuantity unsignedIntegerValue] sheetCostsByCurrencyCode:costs enabled:[enabled boolValue]]];
+                NSAssert(costs.count > 0, @"OLProductTemplates.plist %@ (%@) does not contain any cost information", templateId, templateName);
+                if (costs.count > 0) {
+                    [templates addObject:[[OLProductTemplate alloc] initWithIdentifier:templateId name:templateName sheetQuantity:[sheetQuantity unsignedIntegerValue] sheetCostsByCurrencyCode:costs enabled:[enabled boolValue]]];
+                }
+            } else {
+                NSAssert(NO, @"Bad template format in OLProductTemplates.plist");
             }
         }
     }

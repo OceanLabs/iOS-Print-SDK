@@ -22,7 +22,7 @@ PODS:
     - SDWebImage/Core
   - SDWebImage/Core (3.6)
   - SVProgressHUD (1.0)
-  - UICKeyChainStore (1.0.4)
+  - UICKeyChainStore (1.0.5)
 
 DEPENDENCIES:
   - AFNetworking (~> 2.0.3)
@@ -33,9 +33,9 @@ DEPENDENCIES:
 
 SPEC CHECKSUMS:
   AFNetworking: e499052cbf3d743e9bb727bb37adb9dc2547ba15
-  PayPal-iOS-SDK: 5f9fe4e87074b2a8e00b4a213a25b6c25f358545
+  PayPal-iOS-SDK: d8a1fe117489029b0def778e84ece691434d0352
   SDWebImage: 7eb273e54ca8a2e506ad9bd5e80c35b2a4d7c95e
   SVProgressHUD: 5e10939a296debf5fe5a5895eda9539b8b2114f1
-  UICKeyChainStore: b42c6252b8bfd7fbf6326668467572b6b231e11a
+  UICKeyChainStore: bf99e73603419dc706496dc23a3aae8a1c65cb83
 
 COCOAPODS: 0.29.0

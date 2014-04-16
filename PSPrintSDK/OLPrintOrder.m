@@ -111,10 +111,7 @@ static id stringOrEmptyString(NSString *str) {
         return code;
     }
     
-    if (self.currenciesSupported.count == 0) {
-        NSAssert(NO, @"currenciesSupported.count == 0. There are %lu jobs that are part of this order", (unsigned long) self.jobs.count);
-    }
-    
+    NSAssert(self.currenciesSupported.count > 0, @"currenciesSupported.count == 0. There are %lu jobs that are part of this order", (unsigned long) self.jobs.count);
     code = self.currenciesSupported[0]; // return the first currency supported if the user hasn't specified one explicitly
     NSAssert(code != nil, @"Please ensure all OLPrintJobs making up a print order have at least one supported currency in common");
     return code;
