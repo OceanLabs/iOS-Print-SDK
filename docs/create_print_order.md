@@ -20,7 +20,7 @@ Sample Code
 1. Initialize the SDK and provide your API Keys (these can be found in the [Credentials](https://www.kite.ly/accounts/credentials/) section of the development dashboard). A typical place for initialization is in your app delegate's `didFinishLaunchingWithOptions:` method.
 
     ```obj-c
-    #import <Kite-Print-SDK/OLKitePrintSDK.h>
+    #import <OLKitePrintSDK.h>
     
     [OLKitePrintSDK setAPIKey:@"REPLACE_WITH_YOUR_API_KEY" withEnvironment:kOLKitePrintSDKEnvironmentSandbox];
     ```
