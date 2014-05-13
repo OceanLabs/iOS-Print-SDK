@@ -1,5 +1,7 @@
 # iOS Print SDK
 
+![Kite](docs/kite.png)
+
 The Kite Print SDK makes it easy to add print on demand functionality to your app.
 
 Harness our worldwide print and distribution network. We'll take care of all the tricky printing and postage stuff for you!
