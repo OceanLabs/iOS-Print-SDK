@@ -1,6 +1,6 @@
 //
 //  OLProductTemplate.m
-//  PS SDK
+//  Kite SDK
 //
 //  Created by Deon Botha on 18/03/2014.
 //  Copyright (c) 2014 Deon Botha. All rights reserved.
@@ -170,7 +170,7 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
     for (NSString *currency in self.costsByCurrencyCode) {
         [supportedCurrencies appendFormat:@" %@", currency];
     }
-    return [NSString stringWithFormat:@"%@%@ (%@)%@ quantity: %d",self.enabled ? @"enabled " : @"disabled ", self.identifier, self.name, supportedCurrencies, self.quantityPerSheet];
+    return [NSString stringWithFormat:@"%@%@ (%@)%@ quantity: %lu",self.enabled ? @"enabled " : @"disabled ", self.identifier, self.name, supportedCurrencies, (unsigned long) self.quantityPerSheet];
 }
 
 #pragma mark - NSCoding protocol methods

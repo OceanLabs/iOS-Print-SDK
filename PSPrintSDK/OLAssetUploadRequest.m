@@ -1,6 +1,6 @@
 //
 //  OLAssetUploadRequest.m
-//  PS SDK
+//  Kite SDK
 //
 //  Created by Deon Botha on 26/12/2013.
 //  Copyright (c) 2013 Deon Botha. All rights reserved.
@@ -9,7 +9,7 @@
 #import "OLAssetUploadRequest.h"
 #import "OLBaseRequest.h"
 #import "OLConstants.h"
-#import "OLPSPrintSDK.h"
+#import "OLKitePrintSDK.h"
 #import "OLAsset.h"
 #import "OLAsset+Private.h"
 #import <AFNetworking/AFNetworking.h>
@@ -49,11 +49,11 @@ typedef void (^UploadAssetsCompletionHandler)(NSError *error);
 
 + (NSError *)errorFromResponse:(id)json httpStatusCode:(NSInteger)httpStatusCode {
     NSString *errorMessage = @"Your asset upload request failed. Please try again.";
-    NSInteger errorCode = kOLPSSDKErrorCodeServerFault;
+    NSInteger errorCode = kOLKiteSDKErrorCodeServerFault;
     switch (httpStatusCode) {
         case 401:
             errorMessage = NSLocalizedString(@"401 Unauthorized Request Error whilst trying to upload an asset. Please check you included an Authorization header and that the supplied auth credentials are correct.", @"");
-            errorCode = kOLPSSDKErrorCodeUnauthorized;
+            errorCode = kOLKiteSDKErrorCodeUnauthorized;
             break;
         case 500:
             errorMessage = NSLocalizedString(@"500 Internal Server Error whilst trying to upload an asset. Please try again.", @"");
@@ -68,12 +68,12 @@ typedef void (^UploadAssetsCompletionHandler)(NSError *error);
         }
     }
     
-    return [NSError errorWithDomain:kOLPSSDKErrorDomain code:errorCode userInfo:@{NSLocalizedDescriptionKey:errorMessage}];
+    return [NSError errorWithDomain:kOLKiteSDKErrorDomain code:errorCode userInfo:@{NSLocalizedDescriptionKey:errorMessage}];
 }
 
 - (void)registerImageURLAssets:(NSArray/*<OLAsset>*/ *)imageURLAssets completionHandler:(RegisterImageURLAssetsCompletionHandler)handler {
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/v1.1/asset/", [OLPSPrintSDK apiEndpoint]]];
-    NSDictionary *headers = @{@"Authorization": [NSString stringWithFormat:@"ApiKey %@:", [OLPSPrintSDK apiKey]]};
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/v1.1/asset/", [OLKitePrintSDK apiEndpoint]]];
+    NSDictionary *headers = @{@"Authorization": [NSString stringWithFormat:@"ApiKey %@:", [OLKitePrintSDK apiKey]]};
     
     NSUInteger expectedRegisteredAssetCount = 0;
     NSMutableDictionary *jsonBody = [[NSMutableDictionary alloc] init];
@@ -119,7 +119,7 @@ typedef void (^UploadAssetsCompletionHandler)(NSError *error);
         }
         
         if (!error && registeredAssetCount != expectedRegisteredAssetCount) {
-            error = [NSError errorWithDomain:kOLPSSDKErrorDomain code:kOLPSSDKErrorCodeRegisteredAssetCountDiscrepency userInfo:@{NSLocalizedDescriptionKey:[NSString stringWithFormat:NSLocalizedString(@"Only registered %d/%d image URLs with the asset endpoint", @""), registeredAssetCount, expectedRegisteredAssetCount]}];
+            error = [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeRegisteredAssetCountDiscrepency userInfo:@{NSLocalizedDescriptionKey:[NSString stringWithFormat:NSLocalizedString(@"Only registered %d/%d image URLs with the asset endpoint", @""), registeredAssetCount, expectedRegisteredAssetCount]}];
         }
         
         handler(error);
@@ -136,8 +136,8 @@ typedef void (^UploadAssetsCompletionHandler)(NSError *error);
     }
     
     __weak OLAssetUploadRequest *zelf = self;
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/v1.1/asset/sign/?mime_types=%@&client_asset=true", [OLPSPrintSDK apiEndpoint], mimeTypes]];
-    NSDictionary *headers = @{@"Authorization": [NSString stringWithFormat:@"ApiKey %@:", [OLPSPrintSDK apiKey]]};
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/v1.1/asset/sign/?mime_types=%@&client_asset=true", [OLKitePrintSDK apiEndpoint], mimeTypes]];
+    NSDictionary *headers = @{@"Authorization": [NSString stringWithFormat:@"ApiKey %@:", [OLKitePrintSDK apiKey]]};
     self.signReq = [[OLBaseRequest alloc] initWithURL:url httpMethod:kOLHTTPMethodGET headers:headers body:nil];
     [self.signReq startWithCompletionHandler:^(NSInteger httpStatusCode, id json, NSError *error) {
         if (zelf.cancelled) return;

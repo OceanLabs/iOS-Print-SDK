@@ -1,6 +1,6 @@
 //
 //  ViewController.m
-//  PS SDK
+//  Kite SDK
 //
 //  Created by Deon Botha on 18/12/2013.
 //  Copyright (c) 2013 Deon Botha. All rights reserved.
@@ -15,7 +15,7 @@
 #import "OLAddressPickerController.h"
 #import "OLCountryPickerController.h"
 #import "OLPayPalCard.h"
-#import "OLPSPrintSDK.h"
+#import "OLKitePrintSDK.h"
 #import "OLAsset.h"
 #import "OLURLDataSource.h"
 #import "OLProductPrintJob.h"
@@ -28,9 +28,9 @@
 
 /**********************************************************************
  * Insert your API keys here. These are found under your profile 
- * by logging in to the developer portal at http://developer.psilov.eu
+ * by logging in to the developer portal at http://kite.ly
  **********************************************************************/
-static NSString *const kAPIKeySandbox = @"REPLACE_ME"; // replace with your Sandbox API key found under the Profile section in the developer portal
+static NSString *const kAPIKeySandbox = @"ba171b0d91b1418fbd04f7b12af1e37e42d2cb1e"; // replace with your Sandbox API key found under the Profile section in the developer portal
 static NSString *const kAPIKeyLive = @"REPLACE_ME"; // replace with your Live API key found under the Profile section in the developer portal
 
 @interface ViewController () <UIImagePickerControllerDelegate, UINavigationControllerDelegate, ProductSelectionViewControllerDelegate>
@@ -43,7 +43,7 @@ static NSString *const kAPIKeyLive = @"REPLACE_ME"; // replace with your Live AP
 @implementation ViewController
 
 - (void)viewDidLoad {
-    [OLPSPrintSDK setAPIKey:kAPIKeySandbox withEnvironment:kOLPSPrintSDKEnvironmentSandbox];
+    [OLKitePrintSDK setAPIKey:kAPIKeySandbox withEnvironment:kOLKitePrintSDKEnvironmentSandbox];
     
     [super viewDidLoad];
     self.selectedProduct = kProductSquares;
@@ -72,7 +72,7 @@ static NSString *const kAPIKeyLive = @"REPLACE_ME"; // replace with your Live AP
 }
 
 - (NSString *)apiKey {
-    if ([self environment] == kOLPSPrintSDKEnvironmentSandbox) {
+    if ([self environment] == kOLKitePrintSDKEnvironmentSandbox) {
         return kAPIKeySandbox;
     } else {
         return kAPIKeyLive;
@@ -81,7 +81,7 @@ static NSString *const kAPIKeyLive = @"REPLACE_ME"; // replace with your Live AP
 
 - (BOOL)isAPIKeySet {
     if ([[self apiKey] isEqualToString:@"REPLACE_ME"]) {
-        [[[UIAlertView alloc] initWithTitle:@"API Key Required" message:@"Set your API keys at the top of ViewController.m before you can print. This can be found under your profile at http://developer.psilov.eu" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+        [[[UIAlertView alloc] initWithTitle:@"API Key Required" message:@"Set your API keys at the top of ViewController.m before you can print. This can be found under your profile at http://kite.ly" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
         return NO;
     }
     
@@ -90,9 +90,9 @@ static NSString *const kAPIKeyLive = @"REPLACE_ME"; // replace with your Live AP
 
 - (OLPSPrintSDKEnvironment)environment {
     if (self.environmentPicker.selectedSegmentIndex == 0) {
-        return kOLPSPrintSDKEnvironmentSandbox;
+        return kOLKitePrintSDKEnvironmentSandbox;
     } else {
-        return kOLPSPrintSDKEnvironmentLive;
+        return kOLKitePrintSDKEnvironmentLive;
     }
 }
 

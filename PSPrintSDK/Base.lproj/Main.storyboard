@@ -5,7 +5,7 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3742"/>
     </dependencies>
     <scenes>
-        <!--View Controller - Ps Print SDK-->
+        <!--View Controller - Kite Print SDK-->
         <scene sceneID="ufC-wZ-h7g">
             <objects>
                 <viewController id="vXZ-lx-hvc" customClass="ViewController" sceneMemberID="viewController">
@@ -80,8 +80,8 @@
                                     <action selector="onButtonSelectProductClicked:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="LkL-NF-PPg"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="https://developer.psilov.eu" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QWq-dR-UOh">
-                                <rect key="frame" x="59" y="527" width="202" height="21"/>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="https://www.kite.ly" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QWq-dR-UOh">
+                                <rect key="frame" x="89" y="527" width="143" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
@@ -94,7 +94,7 @@
                             <constraint firstItem="41f-SW-s49" firstAttribute="top" secondItem="QWq-dR-UOh" secondAttribute="bottom" constant="20" id="zaz-Od-gp1"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="Ps Print SDK" id="ead-1D-CC7">
+                    <navigationItem key="navigationItem" title="Kite Print SDK" id="ead-1D-CC7">
                         <barButtonItem key="backBarButtonItem" title="Back" id="hMy-LQ-B16"/>
                     </navigationItem>
                     <connections>

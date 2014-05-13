@@ -1,6 +1,6 @@
 //
 //  OLAssetUploadRequest.h
-//  PS SDK
+//  Kite SDK
 //
 //  Created by Deon Botha on 26/12/2013.
 //  Copyright (c) 2013 Deon Botha. All rights reserved.

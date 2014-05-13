@@ -1,6 +1,6 @@
 //
 //  OLPrintOrder.h
-//  PS SDK
+//  Kite SDK
 //
 //  Created by Deon Botha on 30/12/2013.
 //  Copyright (c) 2013 Deon Botha. All rights reserved.

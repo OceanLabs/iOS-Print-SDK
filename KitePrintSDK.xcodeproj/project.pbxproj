@@ -33,7 +33,7 @@
 		CD73BFAA1863180A0009DE03 /* OLAddressSearchRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = CD73BFA91863180A0009DE03 /* OLAddressSearchRequest.m */; };
 		CD73BFAD18631A570009DE03 /* OLBaseRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = CD73BFAC18631A570009DE03 /* OLBaseRequest.m */; };
 		CD73BFB118634ED50009DE03 /* OLConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = CD73BFB018634ED50009DE03 /* OLConstants.m */; };
-		CD73BFB418635F170009DE03 /* OLPSPrintSDK.m in Sources */ = {isa = PBXBuildFile; fileRef = CD73BFB318635F170009DE03 /* OLPSPrintSDK.m */; };
+		CD73BFB418635F170009DE03 /* OLKitePrintSDK.m in Sources */ = {isa = PBXBuildFile; fileRef = CD73BFB318635F170009DE03 /* OLKitePrintSDK.m */; };
 		CD93BB2D18783B8E00316492 /* OLAddressPickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = CD93BB2C18783B8E00316492 /* OLAddressPickerController.m */; };
 		CD93BB30187842AB00316492 /* OLAddressSelectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CD93BB2F187842AB00316492 /* OLAddressSelectionViewController.m */; };
 		CD93BB3418785D3B00316492 /* OLAddress+AddressBook.m in Sources */ = {isa = PBXBuildFile; fileRef = CD93BB3318785D3B00316492 /* OLAddress+AddressBook.m */; };
@@ -41,7 +41,7 @@
 		CD93BB38187869A100316492 /* AddressBookUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD93BB36187869A100316492 /* AddressBookUI.framework */; };
 		CD93BB3E187882A300316492 /* OLAddressEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CD93BB3D187882A300316492 /* OLAddressEditViewController.m */; };
 		CD93BB451878DFA300316492 /* OLCountryPickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = CD93BB441878DFA300316492 /* OLCountryPickerController.m */; };
-		CD93BB481879EA4F00316492 /* PSPrintSDK.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CD93BB471879EA4F00316492 /* PSPrintSDK.xcassets */; };
+		CD93BB481879EA4F00316492 /* KitePrintSDK.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CD93BB471879EA4F00316492 /* KitePrintSDK.xcassets */; };
 		CD95AA78186F31BB0097C328 /* OLPrintOrderRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = CD95AA77186F31BB0097C328 /* OLPrintOrderRequest.m */; };
 		CD97568E18D8D148007CA090 /* OLProductTemplate.m in Sources */ = {isa = PBXBuildFile; fileRef = CD97568D18D8D147007CA090 /* OLProductTemplate.m */; };
 		CD97569118D8FDF4007CA090 /* OLProductTemplateSyncRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = CD97569018D8FDF4007CA090 /* OLProductTemplateSyncRequest.m */; };
@@ -83,23 +83,23 @@
 		CD550BDA1886BF8B00782D75 /* OLPayPalCard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLPayPalCard.h; sourceTree = "<group>"; };
 		CD550BDB1886BF8B00782D75 /* OLPayPalCard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLPayPalCard.m; sourceTree = "<group>"; };
 		CD550D94188AA20100782D75 /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
-		CD73BF68186215790009DE03 /* PSPrintSDK.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PSPrintSDK.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		CD73BF68186215790009DE03 /* KitePrintSDK.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KitePrintSDK.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CD73BF6B186215790009DE03 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		CD73BF6D186215790009DE03 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		CD73BF6F186215790009DE03 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
-		CD73BF73186215790009DE03 /* PSPrintSDK-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "PSPrintSDK-Info.plist"; sourceTree = "<group>"; };
+		CD73BF73186215790009DE03 /* KitePrintSDK-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "KitePrintSDK-Info.plist"; sourceTree = "<group>"; };
 		CD73BF75186215790009DE03 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		CD73BF77186215790009DE03 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		CD73BF79186215790009DE03 /* PSPrintSDK-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PSPrintSDK-Prefix.pch"; sourceTree = "<group>"; };
+		CD73BF79186215790009DE03 /* KitePrintSDK-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "KitePrintSDK-Prefix.pch"; sourceTree = "<group>"; };
 		CD73BF7A186215790009DE03 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		CD73BF7B186215790009DE03 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		CD73BF7E186215790009DE03 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		CD73BF80186215790009DE03 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		CD73BF81186215790009DE03 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		CD73BF83186215790009DE03 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
-		CD73BF89186215790009DE03 /* PSPrintSDKTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PSPrintSDKTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		CD73BF89186215790009DE03 /* KitePrintSDKTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = KitePrintSDKTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		CD73BF8A186215790009DE03 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
-		CD73BF92186215790009DE03 /* PSPrintSDKTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "PSPrintSDKTests-Info.plist"; sourceTree = "<group>"; };
+		CD73BF92186215790009DE03 /* KitePrintSDKTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "KitePrintSDKTests-Info.plist"; sourceTree = "<group>"; };
 		CD73BF94186215790009DE03 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		CD73BF96186215790009DE03 /* PS_SDKTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PS_SDKTests.m; sourceTree = "<group>"; };
 		CD73BFA21862FC510009DE03 /* OLAddress.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLAddress.h; sourceTree = "<group>"; };
@@ -112,8 +112,8 @@
 		CD73BFAC18631A570009DE03 /* OLBaseRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLBaseRequest.m; sourceTree = "<group>"; };
 		CD73BFAF18634ED50009DE03 /* OLConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLConstants.h; sourceTree = "<group>"; };
 		CD73BFB018634ED50009DE03 /* OLConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLConstants.m; sourceTree = "<group>"; };
-		CD73BFB218635F170009DE03 /* OLPSPrintSDK.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLPSPrintSDK.h; sourceTree = "<group>"; };
-		CD73BFB318635F170009DE03 /* OLPSPrintSDK.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLPSPrintSDK.m; sourceTree = "<group>"; };
+		CD73BFB218635F170009DE03 /* OLKitePrintSDK.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLKitePrintSDK.h; sourceTree = "<group>"; };
+		CD73BFB318635F170009DE03 /* OLKitePrintSDK.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLKitePrintSDK.m; sourceTree = "<group>"; };
 		CD93BB2B18783B8E00316492 /* OLAddressPickerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLAddressPickerController.h; sourceTree = "<group>"; };
 		CD93BB2C18783B8E00316492 /* OLAddressPickerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLAddressPickerController.m; sourceTree = "<group>"; };
 		CD93BB2E187842AB00316492 /* OLAddressSelectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLAddressSelectionViewController.h; sourceTree = "<group>"; };
@@ -126,7 +126,7 @@
 		CD93BB3D187882A300316492 /* OLAddressEditViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLAddressEditViewController.m; sourceTree = "<group>"; };
 		CD93BB431878DFA300316492 /* OLCountryPickerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLCountryPickerController.h; sourceTree = "<group>"; };
 		CD93BB441878DFA300316492 /* OLCountryPickerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLCountryPickerController.m; sourceTree = "<group>"; };
-		CD93BB471879EA4F00316492 /* PSPrintSDK.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = PSPrintSDK.xcassets; sourceTree = "<group>"; };
+		CD93BB471879EA4F00316492 /* KitePrintSDK.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = KitePrintSDK.xcassets; sourceTree = "<group>"; };
 		CD95AA76186F31BB0097C328 /* OLPrintOrderRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLPrintOrderRequest.h; sourceTree = "<group>"; };
 		CD95AA77186F31BB0097C328 /* OLPrintOrderRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLPrintOrderRequest.m; sourceTree = "<group>"; };
 		CD97568C18D8D147007CA090 /* OLProductTemplate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLProductTemplate.h; sourceTree = "<group>"; };
@@ -213,8 +213,8 @@
 			isa = PBXGroup;
 			children = (
 				CD73BFA01862FA210009DE03 /* Sample App */,
-				CD73BF71186215790009DE03 /* PS Print SDK */,
-				CD73BF90186215790009DE03 /* PS Print SDK Tests */,
+				CD73BF71186215790009DE03 /* Kite Print SDK */,
+				CD73BF90186215790009DE03 /* Kite Print SDK Tests */,
 				CD73BF6A186215790009DE03 /* Frameworks */,
 				CD73BF69186215790009DE03 /* Products */,
 				AFF040FCE03A46DCBBC65B4C /* Pods.xcconfig */,
@@ -224,8 +224,8 @@
 		CD73BF69186215790009DE03 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				CD73BF68186215790009DE03 /* PSPrintSDK.app */,
-				CD73BF89186215790009DE03 /* PSPrintSDKTests.xctest */,
+				CD73BF68186215790009DE03 /* KitePrintSDK.app */,
+				CD73BF89186215790009DE03 /* KitePrintSDKTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -245,7 +245,7 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		CD73BF71186215790009DE03 /* PS Print SDK */ = {
+		CD73BF71186215790009DE03 /* Kite Print SDK */ = {
 			isa = PBXGroup;
 			children = (
 				CDA8BF4F18D70CF500D835BB /* Checkout */,
@@ -256,37 +256,37 @@
 				CD7696A11868DE7A006D4A26 /* Print */,
 				CD73BFAF18634ED50009DE03 /* OLConstants.h */,
 				CD73BFB018634ED50009DE03 /* OLConstants.m */,
-				CD93BB471879EA4F00316492 /* PSPrintSDK.xcassets */,
+				CD93BB471879EA4F00316492 /* KitePrintSDK.xcassets */,
 			);
-			name = "PS Print SDK";
+			name = "Kite Print SDK";
 			path = PSPrintSDK;
 			sourceTree = "<group>";
 		};
 		CD73BF72186215790009DE03 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				CD73BF73186215790009DE03 /* PSPrintSDK-Info.plist */,
+				CD73BF73186215790009DE03 /* KitePrintSDK-Info.plist */,
 				CD73BF74186215790009DE03 /* InfoPlist.strings */,
 				CD73BF77186215790009DE03 /* main.m */,
-				CD73BF79186215790009DE03 /* PSPrintSDK-Prefix.pch */,
+				CD73BF79186215790009DE03 /* KitePrintSDK-Prefix.pch */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		CD73BF90186215790009DE03 /* PS Print SDK Tests */ = {
+		CD73BF90186215790009DE03 /* Kite Print SDK Tests */ = {
 			isa = PBXGroup;
 			children = (
 				CD73BF96186215790009DE03 /* PS_SDKTests.m */,
 				CD73BF91186215790009DE03 /* Supporting Files */,
 			);
-			name = "PS Print SDK Tests";
+			name = "Kite Print SDK Tests";
 			path = PSPrintSDKTests;
 			sourceTree = "<group>";
 		};
 		CD73BF91186215790009DE03 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				CD73BF92186215790009DE03 /* PSPrintSDKTests-Info.plist */,
+				CD73BF92186215790009DE03 /* KitePrintSDKTests-Info.plist */,
 				CD73BF93186215790009DE03 /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
@@ -349,8 +349,8 @@
 			isa = PBXGroup;
 			children = (
 				CDE5DDCD18E5BE40000FF3B5 /* OLPrintEnvironment.h */,
-				CD73BFB218635F170009DE03 /* OLPSPrintSDK.h */,
-				CD73BFB318635F170009DE03 /* OLPSPrintSDK.m */,
+				CD73BFB218635F170009DE03 /* OLKitePrintSDK.h */,
+				CD73BFB318635F170009DE03 /* OLKitePrintSDK.m */,
 				CD9D6AE2187188BE001CD1F9 /* OLPrintJob.h */,
 				CD9CF4A4187592A900F067B6 /* OLPrintJob.m */,
 				CD9D6AE3187189BF001CD1F9 /* OLPostcardPrintJob.h */,
@@ -425,9 +425,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		CD73BF67186215790009DE03 /* PSPrintSDK */ = {
+		CD73BF67186215790009DE03 /* KitePrintSDK */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = CD73BF9A186215790009DE03 /* Build configuration list for PBXNativeTarget "PSPrintSDK" */;
+			buildConfigurationList = CD73BF9A186215790009DE03 /* Build configuration list for PBXNativeTarget "KitePrintSDK" */;
 			buildPhases = (
 				132B0744ED4D498893281034 /* Check Pods Manifest.lock */,
 				CD73BF64186215790009DE03 /* Sources */,
@@ -439,14 +439,14 @@
 			);
 			dependencies = (
 			);
-			name = PSPrintSDK;
+			name = KitePrintSDK;
 			productName = PSPrintSDK;
-			productReference = CD73BF68186215790009DE03 /* PSPrintSDK.app */;
+			productReference = CD73BF68186215790009DE03 /* KitePrintSDK.app */;
 			productType = "com.apple.product-type.application";
 		};
-		CD73BF88186215790009DE03 /* PSPrintSDKTests */ = {
+		CD73BF88186215790009DE03 /* KitePrintSDKTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = CD73BF9D186215790009DE03 /* Build configuration list for PBXNativeTarget "PSPrintSDKTests" */;
+			buildConfigurationList = CD73BF9D186215790009DE03 /* Build configuration list for PBXNativeTarget "KitePrintSDKTests" */;
 			buildPhases = (
 				CD73BF85186215790009DE03 /* Sources */,
 				CD73BF86186215790009DE03 /* Frameworks */,
@@ -457,9 +457,9 @@
 			dependencies = (
 				CD73BF8F186215790009DE03 /* PBXTargetDependency */,
 			);
-			name = PSPrintSDKTests;
+			name = KitePrintSDKTests;
 			productName = PSPrintSDKTests;
-			productReference = CD73BF89186215790009DE03 /* PSPrintSDKTests.xctest */;
+			productReference = CD73BF89186215790009DE03 /* KitePrintSDKTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -479,7 +479,7 @@
 					};
 				};
 			};
-			buildConfigurationList = CD73BF63186215790009DE03 /* Build configuration list for PBXProject "PSPrintSDK" */;
+			buildConfigurationList = CD73BF63186215790009DE03 /* Build configuration list for PBXProject "KitePrintSDK" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -492,8 +492,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				CD73BF67186215790009DE03 /* PSPrintSDK */,
-				CD73BF88186215790009DE03 /* PSPrintSDKTests */,
+				CD73BF67186215790009DE03 /* KitePrintSDK */,
+				CD73BF88186215790009DE03 /* KitePrintSDKTests */,
 			);
 		};
 /* End PBXProject section */
@@ -505,7 +505,7 @@
 			files = (
 				CD382E4C18ECE1A000127F95 /* OLProductTemplates.plist in Resources */,
 				CD73BF84186215790009DE03 /* Images.xcassets in Resources */,
-				CD93BB481879EA4F00316492 /* PSPrintSDK.xcassets in Resources */,
+				CD93BB481879EA4F00316492 /* KitePrintSDK.xcassets in Resources */,
 				CD73BF76186215790009DE03 /* InfoPlist.strings in Resources */,
 				CD73BF7F186215790009DE03 /* Main.storyboard in Resources */,
 			);
@@ -573,7 +573,7 @@
 				CD73BF7C186215790009DE03 /* AppDelegate.m in Sources */,
 				CD97568E18D8D148007CA090 /* OLProductTemplate.m in Sources */,
 				CDA8BF5618D70D0F00D835BB /* OLPaymentViewController.m in Sources */,
-				CD73BFB418635F170009DE03 /* OLPSPrintSDK.m in Sources */,
+				CD73BFB418635F170009DE03 /* OLKitePrintSDK.m in Sources */,
 				CD73BFA41862FC510009DE03 /* OLAddress.m in Sources */,
 				CD93BB3418785D3B00316492 /* OLAddress+AddressBook.m in Sources */,
 				CD9D6AE91871B5C7001CD1F9 /* OLPrintOrder.m in Sources */,
@@ -609,7 +609,7 @@
 /* Begin PBXTargetDependency section */
 		CD73BF8F186215790009DE03 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = CD73BF67186215790009DE03 /* PSPrintSDK */;
+			target = CD73BF67186215790009DE03 /* KitePrintSDK */;
 			targetProxy = CD73BF8E186215790009DE03 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -723,10 +723,10 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "PSPrintSDK/PSPrintSDK-Prefix.pch";
-				INFOPLIST_FILE = "PSPrintSDK/PSPrintSDK-Info.plist";
+				GCC_PREFIX_HEADER = "PSPrintSDK/KitePrintSDK-Prefix.pch";
+				INFOPLIST_FILE = "PSPrintSDK/KitePrintSDK-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
-				PRODUCT_NAME = PSPrintSDK;
+				PRODUCT_NAME = KitePrintSDK;
 				PROVISIONING_PROFILE = "4D656082-BC7D-415C-B69F-35E12EDBB6A7";
 				WRAPPER_EXTENSION = app;
 			};
@@ -741,10 +741,10 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "PSPrintSDK/PSPrintSDK-Prefix.pch";
-				INFOPLIST_FILE = "PSPrintSDK/PSPrintSDK-Info.plist";
+				GCC_PREFIX_HEADER = "PSPrintSDK/KitePrintSDK-Prefix.pch";
+				INFOPLIST_FILE = "PSPrintSDK/KitePrintSDK-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
-				PRODUCT_NAME = PSPrintSDK;
+				PRODUCT_NAME = KitePrintSDK;
 				PROVISIONING_PROFILE = "4D656082-BC7D-415C-B69F-35E12EDBB6A7";
 				WRAPPER_EXTENSION = app;
 			};
@@ -766,8 +766,8 @@
 					"DEBUG=1",
 					"$(inherited)",
 				);
-				INFOPLIST_FILE = "PSPrintSDKTests/PSPrintSDKTests-Info.plist";
-				PRODUCT_NAME = PSPrintSDKTests;
+				INFOPLIST_FILE = "PSPrintSDKTests/KitePrintSDKTests-Info.plist";
+				PRODUCT_NAME = KitePrintSDKTests;
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;
 			};
@@ -785,8 +785,8 @@
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "PSPrintSDK/PSPrintSDK-Prefix.pch";
-				INFOPLIST_FILE = "PSPrintSDKTests/PSPrintSDKTests-Info.plist";
-				PRODUCT_NAME = PSPrintSDKTests;
+				INFOPLIST_FILE = "PSPrintSDKTests/KitePrintSDKTests-Info.plist";
+				PRODUCT_NAME = KitePrintSDKTests;
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;
 			};
@@ -795,7 +795,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		CD73BF63186215790009DE03 /* Build configuration list for PBXProject "PSPrintSDK" */ = {
+		CD73BF63186215790009DE03 /* Build configuration list for PBXProject "KitePrintSDK" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				CD73BF98186215790009DE03 /* Debug */,
@@ -804,7 +804,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		CD73BF9A186215790009DE03 /* Build configuration list for PBXNativeTarget "PSPrintSDK" */ = {
+		CD73BF9A186215790009DE03 /* Build configuration list for PBXNativeTarget "KitePrintSDK" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				CD73BF9B186215790009DE03 /* Debug */,
@@ -813,7 +813,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		CD73BF9D186215790009DE03 /* Build configuration list for PBXNativeTarget "PSPrintSDKTests" */ = {
+		CD73BF9D186215790009DE03 /* Build configuration list for PBXNativeTarget "KitePrintSDKTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				CD73BF9E186215790009DE03 /* Debug */,

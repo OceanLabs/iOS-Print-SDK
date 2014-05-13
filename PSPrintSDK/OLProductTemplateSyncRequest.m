@@ -1,6 +1,6 @@
 //
 //  OLTemplateSyncRequest.m
-//  PS SDK
+//  Kite SDK
 //
 //  Created by Deon Botha on 18/03/2014.
 //  Copyright (c) 2014 Deon Botha. All rights reserved.
@@ -8,7 +8,7 @@
 
 #import "OLProductTemplateSyncRequest.h"
 #import "OLBaseRequest.h"
-#import "OLPSPrintSDK.h"
+#import "OLKitePrintSDK.h"
 #import "OLProductTemplate.h"
 #import "OLConstants.h"
 
@@ -20,12 +20,12 @@
 
 - (void)sync:(OLTemplateSyncRequestCompletionHandler)handler {
     NSAssert(self.req == nil, @"Oops only one template sync request should be in progress at any given time");
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/v1.1/template/", [OLPSPrintSDK apiEndpoint]]];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/v1.1/template/", [OLKitePrintSDK apiEndpoint]]];
     [self fetchTemplatesWithURL:url templateAccumulator:[[NSMutableArray alloc] init] handler:handler];
 }
 
 - (void)fetchTemplatesWithURL:(NSURL *)url templateAccumulator:(NSMutableArray *)acc handler:(OLTemplateSyncRequestCompletionHandler)handler {
-    NSDictionary *headers = @{@"Authorization": [NSString stringWithFormat:@"ApiKey %@:", [OLPSPrintSDK apiKey]]};
+    NSDictionary *headers = @{@"Authorization": [NSString stringWithFormat:@"ApiKey %@:", [OLKitePrintSDK apiKey]]};
     self.req = [[OLBaseRequest alloc] initWithURL:url httpMethod:kOLHTTPMethodGET headers:headers body:nil];
     [self.req startWithCompletionHandler:^(NSInteger httpStatusCode, id json, NSError *error) {
         if (error) {
@@ -38,7 +38,7 @@
                 if ([meta isKindOfClass:[NSDictionary class]]) {
                     id next = meta[@"next"];
                     if ([next isKindOfClass:[NSString class]]) {
-                        nextPage = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", [OLPSPrintSDK apiEndpoint], next]];
+                        nextPage = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", [OLKitePrintSDK apiEndpoint], next]];
                     }
                 }
                 
@@ -89,13 +89,13 @@
                 if ([errorObj isKindOfClass:[NSDictionary class]]) {
                     id errorMessage = errorObj[@"message"];
                     if ([errorMessage isKindOfClass:[NSString class]]) {
-                        NSError *error = [NSError errorWithDomain:kOLPSSDKErrorDomain code:kOLPSSDKErrorCodeServerFault userInfo:@{NSLocalizedDescriptionKey:errorMessage}];
+                        NSError *error = [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeServerFault userInfo:@{NSLocalizedDescriptionKey:errorMessage}];
                         handler(nil, error);
                         return;
                     }
                 }
                 
-                handler(nil, [NSError errorWithDomain:kOLPSSDKErrorDomain code:kOLPSSDKErrorCodeServerFault userInfo:@{NSLocalizedDescriptionKey: NSLocalizedString(@"Failed to synchronize product templates. Please try again.", @"")}]);
+                handler(nil, [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeServerFault userInfo:@{NSLocalizedDescriptionKey: NSLocalizedString(@"Failed to synchronize product templates. Please try again.", @"")}]);
             }
         }
     }];

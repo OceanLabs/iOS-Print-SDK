@@ -7,8 +7,8 @@
 //
 
 typedef enum {
-    kOLPSPrintSDKEnvironmentLive,
-    kOLPSPrintSDKEnvironmentSandbox,
-    // _kOLPSPrintSDKEnvironmentStaging # private environment for only us :P
+    kOLKitePrintSDKEnvironmentLive,
+    kOLKitePrintSDKEnvironmentSandbox,
+    // _kOLKitePrintSDKEnvironmentStaging # private environment for only us :P
 } OLPSPrintSDKEnvironment;
 

@@ -1,6 +1,6 @@
 //
 //  OLPrintPostcardRequest.m
-//  PS SDK
+//  Kite SDK
 //
 //  Created by Deon Botha on 28/12/2013.
 //  Copyright (c) 2013 Deon Botha. All rights reserved.
@@ -9,7 +9,7 @@
 #import "OLPrintOrderRequest.h"
 #import "OLBaseRequest.h"
 #import "OLConstants.h"
-#import "OLPSPrintSDK.h"
+#import "OLKitePrintSDK.h"
 #import "OLPrintOrder.h"
 
 @interface OLPrintOrder (FriendInterface)
@@ -35,8 +35,8 @@
 
 - (void)submitForPrinting {
     NSAssert(self.req == nil, @"only one print order request can be in progress at a time");
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/v1.1/print", [OLPSPrintSDK apiEndpoint]]];
-    NSDictionary *headers = @{@"Authorization": [NSString stringWithFormat:@"ApiKey %@:", [OLPSPrintSDK apiKey]]};
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/v1.1/print", [OLKitePrintSDK apiEndpoint]]];
+    NSDictionary *headers = @{@"Authorization": [NSString stringWithFormat:@"ApiKey %@:", [OLKitePrintSDK apiKey]]};
     
     NSData *data = [NSJSONSerialization dataWithJSONObject:self.printOrderJSON options:0 error:nil];
     NSString *jsonString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
@@ -66,7 +66,7 @@
                 }
             }
             
-            error = [NSError errorWithDomain:kOLPSSDKErrorDomain code:kOLPSSDKErrorCodeServerFault userInfo:@{NSLocalizedDescriptionKey: errorMessage}];
+            error = [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeServerFault userInfo:@{NSLocalizedDescriptionKey: errorMessage}];
         }
         
         if (error) {

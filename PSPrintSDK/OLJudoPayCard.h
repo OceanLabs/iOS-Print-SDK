@@ -1,6 +1,6 @@
 //
 //  OLJudoPayCard.h
-//  PS SDK
+//  Kite SDK
 //
 //  Created by Deon Botha on 25/01/2014.
 //  Copyright (c) 2014 Deon Botha. All rights reserved.

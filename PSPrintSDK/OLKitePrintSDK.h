@@ -1,6 +1,6 @@
 //
 //  PrintStudio.h
-//  PS SDK
+//  Kite SDK
 //
 //  Created by Deon Botha on 19/12/2013.
 //  Copyright (c) 2013 Deon Botha. All rights reserved.
@@ -29,7 +29,7 @@ typedef void (^OLPrintProgressCompletionHandler)(float progress);
 typedef void (^OLPrintCompletionHandler)(NSString *receiptId, NSError *error);
 typedef void (^OLProductCostRefreshCompletionHandler)(NSError *error);
 
-@interface OLPSPrintSDK : NSObject
+@interface OLKitePrintSDK : NSObject
 
 + (void)setAPIKey:(NSString *)apiKey withEnvironment:(OLPSPrintSDKEnvironment)environment;
 

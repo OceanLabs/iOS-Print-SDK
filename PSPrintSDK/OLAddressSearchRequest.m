@@ -1,6 +1,6 @@
 //
 //  OLAddressSearchRequest.m
-//  PS SDK
+//  Kite SDK
 //
 //  Created by Deon Botha on 19/12/2013.
 //  Copyright (c) 2013 Deon Botha. All rights reserved.
@@ -11,7 +11,7 @@
 #import "OLConstants.h"
 #import "OLAddress.h"
 #import "OLCountry.h"
-#import "OLPSPrintSDK.h"
+#import "OLKitePrintSDK.h"
 
 static NSString *urlEscapeString(NSString *string) {
     NSString * escaped = (NSString *)CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(
@@ -43,8 +43,8 @@ static NSString *urlEscapeString(NSString *string) {
 
 - (void)searchForAddressWithCountry:(OLCountry *)country query:(NSString *)q {
     NSString *queryParms = [NSString stringWithFormat:@"search_term=%@&country_code=%@", urlEscapeString(q), urlEscapeString(country.codeAlpha3)];
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/v1.1/address/search?%@", [OLPSPrintSDK apiEndpoint], queryParms]];
-    [self startSearch:[[OLBaseRequest alloc] initWithURL:url httpMethod:kOLHTTPMethodGET headers:@{@"Authorization": [NSString stringWithFormat:@"ApiKey %@:", [OLPSPrintSDK apiKey]]} body:nil] country:country];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/v1.1/address/search?%@", [OLKitePrintSDK apiEndpoint], queryParms]];
+    [self startSearch:[[OLBaseRequest alloc] initWithURL:url httpMethod:kOLHTTPMethodGET headers:@{@"Authorization": [NSString stringWithFormat:@"ApiKey %@:", [OLKitePrintSDK apiKey]]} body:nil] country:country];
 }
 
 - (void)searchForAddress:(OLAddress *)address {
@@ -63,10 +63,10 @@ static NSString *urlEscapeString(NSString *string) {
         queryParms = [NSString stringWithFormat:@"address_id=%@&country_code=%@", urlEscapeString(addressId), urlEscapeString(address.country.codeAlpha3)];
     }
     
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/v1.1/address/search?%@", [OLPSPrintSDK apiEndpoint], queryParms]];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/v1.1/address/search?%@", [OLKitePrintSDK apiEndpoint], queryParms]];
     [self startSearch:[[OLBaseRequest alloc] initWithURL:url
                                               httpMethod:kOLHTTPMethodGET
-                                                 headers:@{@"Authorization": [NSString stringWithFormat:@"ApiKey %@:", [OLPSPrintSDK apiKey]]}
+                                                 headers:@{@"Authorization": [NSString stringWithFormat:@"ApiKey %@:", [OLKitePrintSDK apiKey]]}
                                                     body:nil]
               country:address.country];
 }
@@ -87,7 +87,7 @@ static NSString *urlEscapeString(NSString *string) {
         
         if (errorResponse) {
             NSString *errorMessage = errorResponse[@"message"];
-            [self.delegate addressSearchRequest:self didFailWithError:[NSError errorWithDomain:kOLPSSDKErrorDomain code:kOLPSSDKErrorCodeServerFault userInfo:@{NSLocalizedDescriptionKey: errorMessage}]];
+            [self.delegate addressSearchRequest:self didFailWithError:[NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeServerFault userInfo:@{NSLocalizedDescriptionKey: errorMessage}]];
         } else if (choices) {
             NSMutableArray *addresses = [[NSMutableArray alloc] init];
             for (id addrComponents in choices) {

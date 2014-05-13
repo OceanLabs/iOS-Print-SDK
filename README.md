@@ -1,10 +1,10 @@
 # iOS Print SDK
 
-The Ps Print SDK makes it easy to add print on demand functionality to your app.
+The Kite Print SDK makes it easy to add print on demand functionality to your app.
 
 Harness our worldwide print and distribution network. We'll take care of all the tricky printing and postage stuff for you!
 
-To get started, you will need to have a free Ps Print Studio developer account. Go to [developer.psilov.eu](https://developer.psilov.eu) to sign up for free.
+To get started, you will need to have a free Kite developer account. Go to [kite.ly](https://www.kite.ly) to sign up for free.
 
 ## Products
 
@@ -19,7 +19,7 @@ Use print to unlock hidden revenue streams and add value for your users. *In und
 
 ## Features
 - Print a wide variety of [products](#products) on demand
-- Dynamic control over the pricing of products in you app pricing using our web [Developer Dashboard](https://developer.psilov.eu)
+- Dynamic control over the pricing of products in you app pricing using our web [Developer Dashboard](https://www.kite.ly)
 - Revenue & order volume analytics available in the web dashboard
 - Review, refund or reprint any order within the web dashboard
 - Localized currency support
@@ -35,10 +35,10 @@ Use print to unlock hidden revenue streams and add value for your users. *In und
 ## Installation
 ### CocoaPods
 
-[CocoaPods](http://cocoapods.org) is a dependency manager for Objective-C, which automates and simplifies the process of using 3rd-party libraries like The Ps Print SDK in your projects. If you're using it just add the following to your Podfile:
+[CocoaPods](http://cocoapods.org) is a dependency manager for Objective-C, which automates and simplifies the process of using 3rd-party libraries like the Kite Print SDK in your projects. If you're using it just add the following to your Podfile:
 
 ```ruby
-pod "PS-Print-SDK", "~> 1.0"
+pod "Kite-Print-SDK", "~> 1.0"
 ```
 
 ## Use Cases
@@ -53,7 +53,7 @@ This is the quickest approach to integration and perfect if you don't want to sp
 
 1. [Create a print order](docs/create_print_order.md) representing the product(s) you wish to have printed and posted
 2. [Create and present a `OLCheckoutViewController`](docs/managed_checkout.md) passing it the `OLPrintOrder` object created in Step 1
-3. [Register your payment details](https://developer.psilov.eu/accounts/billing/) with us so that we can pay you when your users place orders
+3. [Register your payment details](https://www.kite.ly/accounts/billing/) with us so that we can pay you when your users place orders
 
 
 ### Custom Checkout
@@ -62,12 +62,12 @@ You can build your own UI if you don't want to use or customize the provided che
 1. [Create a print order](docs/create_print_order.md) representing the product(s) you wish to have printed and posted
 2. [Set the shipping address](docs/shipping.md) to which the order will be delivered
 3. [Take payment from the user](docs/payment.md) for the order and submit it to our servers for printing and posting
-4. [Register your payment details](https://developer.psilov.eu/accounts/billing/) with us so that we can pay you when your users place orders
+4. [Register your payment details](https://www.kite.ly/accounts/billing/) with us so that we can pay you when your users place orders
 
 ## Credentials & Environments
 Your mobile app integration requires different API Keys values for each environment: Live and Test (Sandbox).
 
-You can find these Ps Print API credentials under the [Credentials](https://developer.psilov.eu/accounts/credentials/) section of the development dashboard.
+You can find these Kite API credentials under the [Credentials](https://www.kite.ly/accounts/credentials/) section of the development dashboard.
 
 ### Sandbox
 
@@ -79,14 +79,14 @@ When you're ready to test the end to end printing and postage process; and befor
 
 Your Live API Key is used to submit print orders to our servers that will be printed and posted to the recipient specified. Live orders cost real money. This cost typically passed on to your end user (although this doesn't have to be the case if you want to cover it yourself). 
 
-Logging in to our [Developer Dashboard](https://developer.psilov.eu) allow's you to dynamically change the end user price i.e. the revenue you want to make on every order. Payment in several currencies is supported so that you can easily localize prices for your users. The dashboard also provides an overview of print order volume and the money you're making.
+Logging in to our [Developer Dashboard](https://www.kite.ly) allow's you to dynamically change the end user price i.e. the revenue you want to make on every order. Payment in several currencies is supported so that you can easily localize prices for your users. The dashboard also provides an overview of print order volume and the money you're making.
 
 ## Documentation
 
 * These docs in the SDK, which include an overview of usage, step-by-step integration instructions, and sample code
 * The sample app included in this SDK
 * Header files are thoroughly documented; refer to them as needed for extra details about any given property or parameter
-* The [Ps Print API & SDK Developer Docs](https://developer.psilov.eu/docs/1.1/), which cover error codes and optional server-side integration instructions
+* The [Kite Print API & SDK Developer Docs](https://www.kite.ly/docs/1.1/), which cover error codes and optional server-side integration instructions
 
 ## License
 

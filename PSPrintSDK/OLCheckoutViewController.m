@@ -12,7 +12,7 @@
 #import "OLAddressPickerController.h"
 #import "OLAddress.h"
 #import "OLProductTemplate.h"
-#import "OLPSPrintSDK.h"
+#import "OLKitePrintSDK.h"
 
 NSString *const kOLNotificationUserSuppliedShippingDetails = @"co.oceanlabs.pssdk.kOLNotificationUserSuppliedShippingDetails";
 NSString *const kOLNotificationUserCompletedPayment = @"co.oceanlabs.pssdk.kOLNotificationUserCompletedPayment";
@@ -47,7 +47,7 @@ static const NSUInteger kInputFieldTag = 99;
 
 - (id)initWithAPIKey:(NSString *)apiKey environment:(OLPSPrintSDKEnvironment)env printOrder:(OLPrintOrder *)printOrder {
     if (self = [super initWithStyle:UITableViewStyleGrouped]) {
-        [OLPSPrintSDK setAPIKey:apiKey withEnvironment:env];
+        [OLKitePrintSDK setAPIKey:apiKey withEnvironment:env];
         self.printOrder = printOrder;
         [self.printOrder preemptAssetUpload];
         [OLProductTemplate sync];

@@ -1,6 +1,6 @@
 //
 //  PrintStudio.m
-//  PS SDK
+//  Kite SDK
 //
 //  Created by Deon Botha on 02/01/2014.
 //  Copyright (c) 2013 Deon Botha. All rights reserved.

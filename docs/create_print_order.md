@@ -17,15 +17,15 @@ Overview
 Sample Code
 -----------
 
-1. Initialize the SDK and provide your API Keys (these can be found in the [Credentials](https://developer.psilov.eu/accounts/credentials/) section of the development dashboard). A typical place for initialization is in your app delegate's `didFinishLaunchingWithOptions:` method.
+1. Initialize the SDK and provide your API Keys (these can be found in the [Credentials](https://www.kite.ly/accounts/credentials/) section of the development dashboard). A typical place for initialization is in your app delegate's `didFinishLaunchingWithOptions:` method.
 
     ```obj-c
-    #import "OLPSPrintSDK.h"
+    #import "OLKitePrintSDK.h"
     
-    [OLPSPrintSDK setAPIKey:@"REPLACE_WITH_YOUR_API_KEY" withEnvironment:kOLPSPrintSDKEnvironmentSandbox];
+    [OLKitePrintSDK setAPIKey:@"REPLACE_WITH_YOUR_API_KEY" withEnvironment:kOLKitePrintSDKEnvironmentSandbox];
     ```
 
-    *Note: Sandbox orders will not be printed and posted. The Sandbox environment is purely for testing during development. If you want to submit a real order that will be printed and posted just use your live API key and the `kOLPSPrintSDKEnvironmentLive` environment*
+    *Note: Sandbox orders will not be printed and posted. The Sandbox environment is purely for testing during development. If you want to submit a real order that will be printed and posted just use your live API key and the `kOLKitePrintSDKEnvironmentLive` environment*
 
 2. Create `OLAsset` representations for every image you want to print. `OLAsset` has many constructors (including ones not listed below) to support any use case you may have.
 

@@ -38,5 +38,5 @@ Sample Code
 Next Steps
 ----------
 
-- That's all there is to it from an integration perspective! Submitted print orders will appear in the [developer dashboard](https://developer.psilov.eu/). You'll also need to register your payment details with us in the dashboard so that we can pay you when your users place orders.
+- That's all there is to it from an integration perspective! Submitted print orders will appear in the [developer dashboard](https://www.kite.ly/). You'll also need to register your payment details with us in the dashboard so that we can pay you when your users place orders.
 - Alternatively you can [build your own custom checkout UI](../README.md#) for complete control of the checkout and payment process.

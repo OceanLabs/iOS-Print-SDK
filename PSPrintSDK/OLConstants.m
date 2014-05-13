@@ -1,6 +1,6 @@
 //
 //  OLConsttants.m
-//  PS SDK
+//  Kite SDK
 //
 //  Created by Deon Botha on 19/12/2013.
 //  Copyright (c) 2013 Deon Botha. All rights reserved.
@@ -8,9 +8,9 @@
 
 #import "OLConstants.h"
 
-NSString *const kOLPSSDKVersion = @"1.0.0";
-NSString *const kOLPSSDKErrorDomain = @"co.oceanlabs.kOLPSSDKErrorDomain";
-const NSInteger kOLPSSDKErrorCodeFullDetailsFetchFailed = 99;
-const NSInteger kOLPSSDKErrorCodeServerFault = 100;
-const NSInteger kOLPSSDKErrorCodeUnauthorized = 401;
-const NSInteger kOLPSSDKErrorCodeRegisteredAssetCountDiscrepency = 101;
+NSString *const kOLKiteSDKVersion = @"1.0.0";
+NSString *const kOLKiteSDKErrorDomain = @"co.oceanlabs.kOLKiteSDKErrorDomain";
+const NSInteger kOLKiteSDKErrorCodeFullDetailsFetchFailed = 99;
+const NSInteger kOLKiteSDKErrorCodeServerFault = 100;
+const NSInteger kOLKiteSDKErrorCodeUnauthorized = 401;
+const NSInteger kOLKiteSDKErrorCodeRegisteredAssetCountDiscrepency = 101;

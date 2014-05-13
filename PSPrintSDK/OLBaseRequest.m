@@ -1,6 +1,6 @@
 //
 //  OLBaseRequest.m
-//  PS SDK
+//  Kite SDK
 //
 //  Created by Deon Botha on 19/12/2013.
 //  Copyright (c) 2013 Deon Botha. All rights reserved.
@@ -81,7 +81,7 @@ static NSString *httpMethodString(OLHTTPMethod method) {
         [request setValue:[NSString stringWithFormat:@"%lu", (unsigned long)[request.HTTPBody length]] forHTTPHeaderField:@"Content-Length"];
     }
     
-    [request setValue:[NSString stringWithFormat: @"Ps Print SDK iOS v%@", kOLPSSDKVersion] forHTTPHeaderField:@"User-Agent"];
+    [request setValue:[NSString stringWithFormat: @"Ps Print SDK iOS v%@", kOLKiteSDKVersion] forHTTPHeaderField:@"User-Agent"];
     for (NSString *key in self.requestHeaders.allKeys) {
         NSString *value = self.requestHeaders[key];
         [request setValue:value forHTTPHeaderField:key];

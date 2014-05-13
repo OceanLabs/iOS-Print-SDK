@@ -1,13 +1,13 @@
 //
 //  AppDelegate.m
-//  PS SDK
+//  Kite SDK
 //
 //  Created by Deon Botha on 18/12/2013.
 //  Copyright (c) 2013 Deon Botha. All rights reserved.
 //
 
 #import "AppDelegate.h"
-#import "OLPSPrintSDK.h"
+#import "OLKitePrintSDK.h"
 
 @implementation AppDelegate
 

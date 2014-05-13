@@ -18,7 +18,7 @@
 #import "OLCheckoutViewController.h"
 #import "Util.h"
 #import "OLPayPalCard.h"
-#import "OLPSPrintSDK.h"
+#import "OLKitePrintSDK.h"
 #import "OLProductTemplate.h"
 #import "OLCountry.h"
 #import "OLJudoPayCard.h"
@@ -29,7 +29,7 @@ static const NSUInteger kSectionOrderSummary = 0;
 static const NSUInteger kSectionPromoCodes = 1;
 static const NSUInteger kSectionPayment = 2;
 
-@interface OLPSPrintSDK (Private)
+@interface OLKitePrintSDK (Private)
 + (BOOL)useJudoPayForGBP;
 @end
 
@@ -171,8 +171,8 @@ static const NSUInteger kSectionPayment = 2;
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    [PayPalPaymentViewController setEnvironment:[OLPSPrintSDK paypalEnvironment]];
-    [PayPalPaymentViewController prepareForPaymentUsingClientId:[OLPSPrintSDK paypalClientId]];
+    [PayPalPaymentViewController setEnvironment:[OLKitePrintSDK paypalEnvironment]];
+    [PayPalPaymentViewController prepareForPaymentUsingClientId:[OLKitePrintSDK paypalClientId]];
     
     if ([self isTemplateSyncRequired]) {
         [OLProductTemplate sync];
@@ -264,7 +264,7 @@ static const NSUInteger kSectionPayment = 2;
 
         id card = [OLPayPalCard lastUsedCard];
         
-        if ([OLPSPrintSDK useJudoPayForGBP] && [self.printOrder.currencyCode isEqualToString:@"GBP"]) {
+        if ([OLKitePrintSDK useJudoPayForGBP] && [self.printOrder.currencyCode isEqualToString:@"GBP"]) {
             card = [OLJudoPayCard lastUsedCard];
         }
         
@@ -285,7 +285,7 @@ static const NSUInteger kSectionPayment = 2;
 }
 
 - (void)payWithExistingPayPalCard:(OLPayPalCard *)card {
-    if ([OLPSPrintSDK useJudoPayForGBP]) {
+    if ([OLKitePrintSDK useJudoPayForGBP]) {
         NSAssert(![self.printOrder.currencyCode isEqualToString:@"GBP"], @"JudoPay should be used for GBP orders (and only for OceanLabs internal use)");
     }
     [SVProgressHUD showWithStatus:NSLocalizedString(@"Processing", @"") maskType:SVProgressHUDMaskTypeBlack];
@@ -326,8 +326,8 @@ static const NSUInteger kSectionPayment = 2;
 
     NSString *aPayerId = @"someuser@somedomain.com"; // TODO: Needed for vault lookup
     PayPalPaymentViewController *paymentViewController;
-    paymentViewController = [[PayPalPaymentViewController alloc] initWithClientId:[OLPSPrintSDK paypalClientId]
-                                                                    receiverEmail:[OLPSPrintSDK paypalReceiverEmail]
+    paymentViewController = [[PayPalPaymentViewController alloc] initWithClientId:[OLKitePrintSDK paypalClientId]
+                                                                    receiverEmail:[OLKitePrintSDK paypalReceiverEmail]
                                                                           payerId:aPayerId
                                                                           payment:payment
                                                                          delegate:self];
@@ -437,7 +437,7 @@ static const NSUInteger kSectionPayment = 2;
 
 - (void)userDidProvideCreditCardInfo:(CardIOCreditCardInfo *)cardInfo inPaymentViewController:(CardIOPaymentViewController *)paymentViewController {
     [self dismissViewControllerAnimated:YES completion:^() {
-        if ([OLPSPrintSDK useJudoPayForGBP] && [self.printOrder.currencyCode isEqualToString:@"GBP"]) {
+        if ([OLKitePrintSDK useJudoPayForGBP] && [self.printOrder.currencyCode isEqualToString:@"GBP"]) {
             [self userDidProvideCreditCardInfoToPayByJudoPay:cardInfo];
         } else {
             [self userDidProvideCreditCardInfoToPayByPayPal:cardInfo];
@@ -480,7 +480,7 @@ static const NSUInteger kSectionPayment = 2;
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
     if (section == kSectionPayment) {
-        if ([OLPSPrintSDK environment] == kOLPSPrintSDKEnvironmentSandbox) {
+        if ([OLKitePrintSDK environment] == kOLKitePrintSDKEnvironmentSandbox) {
             return NSLocalizedString(@"Payment (Sandbox)", @"");
         } else {
             return NSLocalizedString(@"Payment", @"");
@@ -594,7 +594,7 @@ static const NSUInteger kSectionPayment = 2;
         [self payWithNewCard];
     } else if (buttonIndex == 1) {
         // pay with existing card
-        if ([OLPSPrintSDK useJudoPayForGBP] && [self.printOrder.currencyCode isEqualToString:@"GBP"]) {
+        if ([OLKitePrintSDK useJudoPayForGBP] && [self.printOrder.currencyCode isEqualToString:@"GBP"]) {
             [self payWithExistingJudoPayCard:[OLJudoPayCard lastUsedCard]];
         } else {
             [self payWithExistingPayPalCard:[OLPayPalCard lastUsedCard]];

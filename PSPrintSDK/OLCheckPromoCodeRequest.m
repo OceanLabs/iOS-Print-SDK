@@ -1,6 +1,6 @@
 //
 //  OLCheckPromoCodeRequest.m
-//  PS SDK
+//  Kite SDK
 //
 //  Created by Deon Botha on 12/02/2014.
 //  Copyright (c) 2014 Deon Botha. All rights reserved.
@@ -9,7 +9,7 @@
 #import "OLCheckPromoCodeRequest.h"
 #import "OLBaseRequest.h"
 #import "OLConstants.h"
-#import "OLPSPrintSDK.h"
+#import "OLKitePrintSDK.h"
 #import "OLPrintJob.h"
 #import "OLPrintOrder.h"
 
@@ -51,8 +51,8 @@ static NSString *urlencode(NSString *str) {
         [templateCostBreakdown appendFormat:@"%@:%@", job.templateId, [job costInCurrency:currencyCode]];
     }
     
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/v1.1/promo_code/check?code=%@&templates=%@&currency=%@", [OLPSPrintSDK apiEndpoint], urlencode(promoCode), templateCostBreakdown, order.currencyCode]];
-    NSDictionary *headers = @{@"Authorization": [NSString stringWithFormat:@"ApiKey %@:", [OLPSPrintSDK apiKey]]};
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/v1.1/promo_code/check?code=%@&templates=%@&currency=%@", [OLKitePrintSDK apiEndpoint], urlencode(promoCode), templateCostBreakdown, order.currencyCode]];
+    NSDictionary *headers = @{@"Authorization": [NSString stringWithFormat:@"ApiKey %@:", [OLKitePrintSDK apiKey]]};
     
     self.req = [[OLBaseRequest alloc] initWithURL:url httpMethod:kOLHTTPMethodGET headers:headers body:nil];
     [self.req startWithCompletionHandler:^(NSInteger httpStatusCode, id json, NSError *error) {
@@ -68,13 +68,13 @@ static NSString *urlencode(NSString *str) {
                 if ([errorObj isKindOfClass:[NSDictionary class]]) {
                     id errorMessage = errorObj[@"message"];
                     if ([errorMessage isKindOfClass:[NSString class]]) {
-                        NSError *error = [NSError errorWithDomain:kOLPSSDKErrorDomain code:kOLPSSDKErrorCodeServerFault userInfo:@{NSLocalizedDescriptionKey:errorMessage}];
+                        NSError *error = [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeServerFault userInfo:@{NSLocalizedDescriptionKey:errorMessage}];
                         handler(nil, error);
                         return;
                     }
                 }
                 
-                handler(nil, [NSError errorWithDomain:kOLPSSDKErrorDomain code:kOLPSSDKErrorCodeServerFault userInfo:@{NSLocalizedDescriptionKey: NSLocalizedString(@"Failed to validate your promo code. Please try again.", @"")}]);
+                handler(nil, [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeServerFault userInfo:@{NSLocalizedDescriptionKey: NSLocalizedString(@"Failed to validate your promo code. Please try again.", @"")}]);
             }
         }
     }];

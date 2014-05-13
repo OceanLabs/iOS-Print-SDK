@@ -1,12 +1,12 @@
 //
 //  PrintStudio.m
-//  PS SDK
+//  Kite SDK
 //
 //  Created by Deon Botha on 19/12/2013.
 //  Copyright (c) 2013 Deon Botha. All rights reserved.
 //
 
-#import "OLPSPrintSDK.h"
+#import "OLKitePrintSDK.h"
 #import "OLPayPalCard.h"
 #import "OLProductTemplate.h"
 #import <PayPalMobile.h>
@@ -21,15 +21,15 @@ static NSString *const kJudoLiveSecret  = @"b8d5950ec68e27e7dfdb314dbd7160e7421c
 static NSString *apiKey;
 static OLPSPrintSDKEnvironment environment;
 
-static NSString *const kOLAPIEndpointLive = @"https://api.psilov.eu";
-static NSString *const kOLAPIEndpointSandbox = @"https://api.psilov.eu";
+static NSString *const kOLAPIEndpointLive = @"https://api.kite.ly";
+static NSString *const kOLAPIEndpointSandbox = @"https://api.kite.ly";
 static NSString *const kOLPayPalClientIdLive = @"AT2JfBAmXD-CHGJnUb05ik4J-GrCi4XxjY9_grfCFjreYaLrNswj8uzhuWyj";
 static NSString *const kOLPayPalClientIdSandbox = @"Aa5nsBDntBpozWQykoxQXoHFOqs551hTNt0B8LQXTudoh8bD0nT1F735c_Fh";
 static NSString *const kOLPayPalRecipientEmailLive = @"deon@oceanlabs.co";
 static NSString *const kOLPayPalRecipientEmailSandbox = @"hello-facilitator@psilov.eu";
 static BOOL useJudoPayForGBP = NO;
 
-@implementation OLPSPrintSDK
+@implementation OLKitePrintSDK
 
 + (BOOL)useJudoPayForGBP {
     return useJudoPayForGBP;
@@ -42,7 +42,7 @@ static BOOL useJudoPayForGBP = NO;
 + (void)setAPIKey:(NSString *)_apiKey withEnvironment:(OLPSPrintSDKEnvironment)_environment {
     apiKey = _apiKey;
     environment = _environment;
-    if (environment == kOLPSPrintSDKEnvironmentLive) {
+    if (environment == kOLKitePrintSDKEnvironmentLive) {
         [OLPayPalCard setClientId:kOLPayPalClientIdLive withEnvironment:kOLPayPalEnvironmentLive];
         [OLJudoPayCard setClientId:kJudoClientId token:kJudoLiveToken secret:kJudoLiveSecret withEnvironment:kOLJudoPayEnvironmentLive];
     } else {
@@ -55,15 +55,15 @@ static BOOL useJudoPayForGBP = NO;
 
 + (NSString *)paypalEnvironment {
     switch (environment) {
-        case kOLPSPrintSDKEnvironmentLive: return PayPalEnvironmentProduction;
-        case kOLPSPrintSDKEnvironmentSandbox: return PayPalEnvironmentSandbox;
+        case kOLKitePrintSDKEnvironmentLive: return PayPalEnvironmentProduction;
+        case kOLKitePrintSDKEnvironmentSandbox: return PayPalEnvironmentSandbox;
     }
 }
 
 + (NSString *)paypalClientId {
     switch (environment) {
-        case kOLPSPrintSDKEnvironmentLive: return kOLPayPalClientIdLive;
-        case kOLPSPrintSDKEnvironmentSandbox: return kOLPayPalClientIdSandbox;
+        case kOLKitePrintSDKEnvironmentLive: return kOLPayPalClientIdLive;
+        case kOLKitePrintSDKEnvironmentSandbox: return kOLPayPalClientIdSandbox;
     }
 }
 
@@ -77,15 +77,15 @@ static BOOL useJudoPayForGBP = NO;
 
 + (NSString *)apiEndpoint {
     switch (environment) {
-        case kOLPSPrintSDKEnvironmentLive: return kOLAPIEndpointLive;
-        case kOLPSPrintSDKEnvironmentSandbox: return kOLAPIEndpointSandbox;
+        case kOLKitePrintSDKEnvironmentLive: return kOLAPIEndpointLive;
+        case kOLKitePrintSDKEnvironmentSandbox: return kOLAPIEndpointSandbox;
     }
 }
 
 + (NSString *)paypalReceiverEmail {
     switch (environment) {
-        case kOLPSPrintSDKEnvironmentLive: return kOLPayPalRecipientEmailLive;
-        case kOLPSPrintSDKEnvironmentSandbox: return kOLPayPalRecipientEmailSandbox;
+        case kOLKitePrintSDKEnvironmentLive: return kOLPayPalRecipientEmailLive;
+        case kOLKitePrintSDKEnvironmentSandbox: return kOLPayPalRecipientEmailSandbox;
     }
 }
 
