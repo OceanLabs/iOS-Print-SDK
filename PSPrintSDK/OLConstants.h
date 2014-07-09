@@ -14,3 +14,5 @@ const NSInteger kOLKiteSDKErrorCodeFullDetailsFetchFailed;
 const NSInteger kOLKiteSDKErrorCodeServerFault;
 const NSInteger kOLKiteSDKErrorCodeUnauthorized;
 const NSInteger kOLKiteSDKErrorCodeRegisteredAssetCountDiscrepency;
+
+NSString *const kOLKiteSDKErrorMessageUnauthorized;

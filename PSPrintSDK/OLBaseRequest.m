@@ -23,9 +23,6 @@
 @property (nonatomic, strong) NSDictionary *requestHeaders;
 @end
 
-
-static const NSTimeInterval kRequestTimeoutIntervalSeconds = 25;
-
 static NSString *httpMethodString(OLHTTPMethod method) {
     switch (method) {
         case kOLHTTPMethodGET:
@@ -63,7 +60,7 @@ static NSString *httpMethodString(OLHTTPMethod method) {
     self.responseData = [[NSMutableData alloc] init];
     self.handler = handler;
     
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:self.url cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:kRequestTimeoutIntervalSeconds];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:self.url];
     request.HTTPMethod = httpMethodString(self.httpMethod);
     if (self.requestBody) {
         request.HTTPBody = [self.requestBody dataUsingEncoding:NSUTF8StringEncoding];

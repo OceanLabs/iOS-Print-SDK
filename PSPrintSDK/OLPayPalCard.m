@@ -224,12 +224,10 @@ static NSString *typeToString(OLPayPalCardType type) {
                 }
                 
                 if (![paymentState isEqualToString:@"approved"]) {
-                    NSError *error = [NSError errorWithDomain:kOLErrorDomainPayPal code:statusCode userInfo:@{NSLocalizedDescriptionKey: NSLocalizedString(@"Your payment was not approved. Please try again.", @"")}];
+                    NSError *error = [NSError errorWithDomain:kOLErrorDomainPayPal code:statusCode userInfo:@{NSLocalizedDescriptionKey: [NSString stringWithFormat:NSLocalizedString(@"Your payment was not approved (transaction state: %@). Please try again.", @""), paymentState]}];
                     handler(nil, error);
                     return;
                 }
-                
-                
                 
                 handler(paymentId, nil);
                 
