@@ -49,7 +49,7 @@ static const NSUInteger kInputFieldTag = 99;
     if (self = [super initWithStyle:UITableViewStyleGrouped]) {
         [OLKitePrintSDK setAPIKey:apiKey withEnvironment:env];
         self.printOrder = printOrder;
-        [self.printOrder preemptAssetUpload];
+        //[self.printOrder preemptAssetUpload];
         [OLProductTemplate sync];
     }
 
@@ -59,7 +59,7 @@ static const NSUInteger kInputFieldTag = 99;
 - (id)initWithPrintOrder:(OLPrintOrder *)printOrder {
     if (self = [super initWithStyle:UITableViewStyleGrouped]) {
         self.printOrder = printOrder;
-        [self.printOrder preemptAssetUpload];
+        //[self.printOrder preemptAssetUpload];
         [OLProductTemplate sync];
     }
     
@@ -139,7 +139,7 @@ static const NSUInteger kInputFieldTag = 99;
     if ([self.navigationController.viewControllers indexOfObject:self] == NSNotFound) {
         // back button pressed. we're going back to photo selection view so lets cancel any
         // preempted asset upload
-        [self.printOrder cancelSubmissionOrPreemptedAssetUpload];
+        //[self.printOrder cancelSubmissionOrPreemptedAssetUpload];
     }
 }
 
