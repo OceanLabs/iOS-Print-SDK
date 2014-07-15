@@ -32,11 +32,11 @@ Sample Code
 	
 	    The Sandbox print environment (`kOLPSPrintSDKEnvironmentSandbox`) validates order proof of payments against the Sandbox PayPal environment. The Live print environment (`kOLPSPrintSDKEnvironmentLive`) validates order proof of payments against the Live PayPal Environment.
 	    
-	    `[OLPSPrintSDK paypalClientId]` & `[OLPSPrintSDK paypalReceiverEmail]` will always return the correct PayPal values for the environment you supplied to `OLPSPrintSDK setAPIKey:withEnvironment:`.
+	    `[OLKitePrintSDK paypalClientId]` & `[OLKitePrintSDK paypalReceiverEmail]` will always return the correct PayPal values for the environment you supplied to `OLPSPrintSDK setAPIKey:withEnvironment:`.
 	
 	        ```obj-c
-	        NSString *paypalClientId = [OLPSPrintSDK paypalClientId];
-	        NSString *paypalReceiverEmail = [OLPSPrintSDK paypalReceiverEmail];
+	        NSString *paypalClientId = [OLKitePrintSDK paypalClientId];
+	        NSString *paypalReceiverEmail = [OLKitePrintSDK paypalReceiverEmail];
 	        ```
 
     - Capture the users card details with your own UI and use `OLPayPalCard` to process the payment
