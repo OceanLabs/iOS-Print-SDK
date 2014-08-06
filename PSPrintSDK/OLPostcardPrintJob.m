@@ -147,6 +147,43 @@ static id stringOrEmptyString(NSString *str) {
     return json;
 }
 
+-(id) copyWithZone:(NSZone *)zone{
+    // Absolute hack but simple code, archive then unarchive copy :) Slower than doing it properly but still fast enough!
+    return [NSKeyedUnarchiver unarchiveObjectWithData:[NSKeyedArchiver archivedDataWithRootObject:self]];
+}
+
+- (NSUInteger) hash{
+    NSUInteger result = 1;
+    if (self.templateId) result *= [self.templateId hash];
+    if (self.frontImageAsset) result *= [self.frontImageAsset hash];
+    if (self.textOnPhotoImageAsset) result *= [self.textOnPhotoImageAsset hash];
+    if (self.message && [self.message hash] > 0) result *= [self.message hash];
+    if (self.address) result *= [self.address hash];
+    if (self.location) result *= [self.location hash];
+    NSLog(@"%lu", result);
+    return result;
+}
+
+- (BOOL)isEqual:(id)object {
+    if (self == object) {
+        return YES;
+    }
+    
+    if (![object isKindOfClass:[OLPostcardPrintJob class]]) {
+        return NO;
+    }
+    OLPostcardPrintJob* printJob = (OLPostcardPrintJob*)object;
+    BOOL result = YES;
+    if (self.templateId) result &= [self.templateId isEqual:printJob.templateId];
+    if (self.frontImageAsset) result &= [self.frontImageAsset isEqual:printJob.frontImageAsset];
+    if (self.textOnPhotoImageAsset) result &= [self.textOnPhotoImageAsset isEqual:printJob.textOnPhotoImageAsset];
+    if (self.message) result &= [self.message isEqual:printJob.message];
+    if (self.address) result &= [self.address isEqual:printJob.address];
+    if (self.location) result &= [self.location isEqual:printJob.location];
+    NSLog(@"%@", result? @"YES" : @"NO");
+    return result;
+}
+
 #pragma mark - NSCoding protocol
 
 - (void)encodeWithCoder:(NSCoder *)aCoder {
