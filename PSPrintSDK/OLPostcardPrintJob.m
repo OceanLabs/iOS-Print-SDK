@@ -160,7 +160,6 @@ static id stringOrEmptyString(NSString *str) {
     if (self.message && [self.message hash] > 0) result *= [self.message hash];
     if (self.address) result *= [self.address hash];
     if (self.location) result *= [self.location hash];
-    NSLog(@"%lu", result);
     return result;
 }
 
@@ -180,7 +179,6 @@ static id stringOrEmptyString(NSString *str) {
     if (self.message) result &= [self.message isEqual:printJob.message];
     if (self.address) result &= [self.address isEqual:printJob.address];
     if (self.location) result &= [self.location isEqual:printJob.location];
-    NSLog(@"%@", result? @"YES" : @"NO");
     return result;
 }
 
