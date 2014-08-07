@@ -25,6 +25,7 @@
 #import "OLProductTemplate.h"
 #import "ProductSelectionViewController.h"
 #import "OLAddress.h"
+#import "OLCheckoutDelegate.h"
 
 /**********************************************************************
  * Insert your API keys here. These are found under your profile 
@@ -33,14 +34,22 @@
 static NSString *const kAPIKeySandbox = @"REPLACE_ME"; // replace with your Sandbox API key found under the Profile section in the developer portal
 static NSString *const kAPIKeyLive = @"REPLACE_ME"; // replace with your Live API key found under the Profile section in the developer portal
 
-@interface ViewController () <UIImagePickerControllerDelegate, UINavigationControllerDelegate, ProductSelectionViewControllerDelegate>
+@interface ViewController () <UIImagePickerControllerDelegate, UINavigationControllerDelegate, ProductSelectionViewControllerDelegate, OLCheckoutDelegate>
 @property (nonatomic, weak) IBOutlet UISegmentedControl *environmentPicker;
 @property (nonatomic, weak) IBOutlet UITextField *apiKeyTextField;
 @property (nonatomic, weak) IBOutlet UIButton *productButton;
 @property (nonatomic, assign) Product selectedProduct;
+@property (nonatomic, strong) OLPrintOrder* printOrder;
 @end
 
 @implementation ViewController
+
+-(OLPrintOrder*) printOrder{
+    if (!_printOrder){
+        _printOrder = [[OLPrintOrder alloc] init];
+    }
+    return _printOrder;
+}
 
 - (void)viewDidLoad {
     [OLKitePrintSDK setAPIKey:kAPIKeySandbox withEnvironment:kOLKitePrintSDKEnvironmentSandbox];
@@ -116,14 +125,14 @@ static NSString *const kAPIKeyLive = @"REPLACE_ME"; // replace with your Live AP
 - (void)printWithAssets:(NSArray *)assets {
     if (![self isAPIKeySet]) return;
     
-    OLPrintOrder *printOrder = [[OLPrintOrder alloc] init];
     if (self.selectedProduct == kProductPostcard) {
-        [printOrder addPrintJob:[OLPrintJob postcardWithTemplateId:templateWithProduct(self.selectedProduct) frontImageOLAsset:[assets objectAtIndex:0] textOnPhotoImageOLAsset:nil message:@"Hello World" address:[OLAddress psTeamAddress] location:@[@"Ps HQ", @"London"]]];
+        [self.printOrder addPrintJob:[OLPrintJob postcardWithTemplateId:templateWithProduct(self.selectedProduct) frontImageOLAsset:[assets objectAtIndex:0] textOnPhotoImageOLAsset:nil message:@"Hello World" address:[OLAddress psTeamAddress] location:@[@"Ps HQ", @"London"]]];
     } else {
-        [printOrder addPrintJob:[OLPrintJob printJobWithTemplateId:templateWithProduct(self.selectedProduct) OLAssets:assets]];
+        [self.printOrder addPrintJob:[OLPrintJob printJobWithTemplateId:templateWithProduct(self.selectedProduct) OLAssets:assets]];
     }
     
-    OLCheckoutViewController *vc = [[OLCheckoutViewController alloc] initWithPrintOrder:printOrder];
+    OLCheckoutViewController *vc = [[OLCheckoutViewController alloc] initWithPrintOrder:self.printOrder];
+    vc.delegate = self;
     [self.navigationController pushViewController:vc animated:YES];
 }
 
@@ -147,6 +156,12 @@ static NSString *const kAPIKeyLive = @"REPLACE_ME"; // replace with your Live AP
     self.selectedProduct = product;
     [self.productButton setTitle:displayNameWithProduct(self.selectedProduct) forState:UIControlStateNormal];
     [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+#pragma mark - OLCheckoutDelegate
+
+- (BOOL) shouldShowContinueShoppingButton{
+    return YES;
 }
 
 #pragma mark - notification events
