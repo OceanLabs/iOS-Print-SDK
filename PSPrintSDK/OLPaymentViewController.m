@@ -589,7 +589,7 @@ static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
         continueShoppingButton.titleLabel.adjustsFontSizeToFitWidth = YES;
         continueShoppingButton.titleLabel.minimumScaleFactor = 0.5;
         [continueShoppingButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        [continueShoppingButton setBackgroundColor:[UIColor colorWithRed:60.0/256.0 green:115.0/256.0 blue:211.0/256.0 alpha:1]];
+        [continueShoppingButton setBackgroundColor:[UIColor colorWithRed:74 / 255.0f green:137 / 255.0f blue:220 / 255.0f alpha:1.0]];
         [continueShoppingButton addTarget:self action:@selector(onButtonContinueShoppingClicked:) forControlEvents:UIControlEventTouchUpInside];
         [cell addSubview:continueShoppingButton];
     } else if ([sectionString isEqualToString:kSectionPromoCodes]) {
