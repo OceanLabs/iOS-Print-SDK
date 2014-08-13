@@ -69,7 +69,6 @@ typedef void (^LoadAssetCompletionHandler)(ALAsset *asset, NSError *error);
             NSAssert(NO, @"Only JPEG & PNG images are supported");
         }
         
-        self.alAsset = asset;
         self.alAssetURL = [asset valueForProperty:ALAssetPropertyAssetURL];
         
     }
@@ -193,7 +192,7 @@ typedef void (^LoadAssetCompletionHandler)(ALAsset *asset, NSError *error);
         case kOLAssetTypeALAsset: {
             [self loadALAssetWithCompletionHandler:^(ALAsset *asset, NSError *error) {
                 if (asset && !error) {
-                    handler(self.alAsset.defaultRepresentation.size, nil);
+                    handler(asset.defaultRepresentation.size, nil);
                 } else {
                     handler(0, error);
                 }
@@ -241,7 +240,7 @@ typedef void (^LoadAssetCompletionHandler)(ALAsset *asset, NSError *error);
         case kOLAssetTypeALAsset: {
             [self loadALAssetWithCompletionHandler:^(ALAsset *asset, NSError *error) {
                 if (asset && !error) {
-                    ALAssetRepresentation *rep = self.alAsset.defaultRepresentation;
+                    ALAssetRepresentation *rep = asset.defaultRepresentation;
                     uint8_t *buffer = (uint8_t *) malloc((unsigned long) rep.size);
                     NSError *error = nil;
                     NSUInteger buffered = [rep getBytes:buffer fromOffset:0.0 length:(NSInteger) rep.size error:&error];
