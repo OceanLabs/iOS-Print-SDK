@@ -13,7 +13,7 @@
 @class OLAsset;
 
 
-@interface OLPostcardPrintJob : NSObject <OLPrintJob>
+@interface OLPostcardPrintJob : NSObject <OLPrintJob, NSCopying>
 
 - (id)initWithTemplateId:(NSString *)templateId frontImageOLAsset:(OLAsset *)frontImageAsset textOnPhotoImageOLAsset:(OLAsset *)textOnPhotoAsset message:(NSString *)message address:(OLAddress *)address location:(NSArray/*<NSString>*/ *)location;
 

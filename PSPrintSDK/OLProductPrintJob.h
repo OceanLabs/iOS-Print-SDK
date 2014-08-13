@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "OLPrintJob.h"
 
-@interface OLProductPrintJob : NSObject <OLPrintJob>
+@interface OLProductPrintJob : NSObject <OLPrintJob, NSCopying>
 
 - (id)initWithTemplateId:(NSString *)templateId imageFilePaths:(NSArray/*<NSString>*/ *)imageFilePaths;
 - (id)initWithTemplateId:(NSString *)templateId images:(NSArray/*<UIImage>*/ *)images;

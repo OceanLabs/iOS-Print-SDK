@@ -116,6 +116,33 @@ static NSString *const kKeyImages = @"co.oceanlabs.pssdk.kKeyImages";
     return json;
 }
 
+- (id)copyWithZone:(NSZone *)zone {
+    OLProductPrintJob *objectCopy = [[OLProductPrintJob allocWithZone:zone] init];
+    // Copy over all instance variables from self to objectCopy.
+    // Use deep copies for all strong pointers, shallow copies for weak.
+    objectCopy.assets = self.assets;
+    objectCopy.templateId = self.templateId;
+    return objectCopy;
+}
+
+- (NSUInteger) hash{
+    return [self.assets hash] * [self.templateId hash];
+}
+
+- (BOOL)isEqual:(id)object {
+    if (self == object) {
+        return YES;
+    }
+    
+    if (![object isKindOfClass:[OLProductPrintJob class]]) {
+        return NO;
+    }
+    OLProductPrintJob* printJob = (OLProductPrintJob*)object;
+    
+    return [self.templateId isEqual:printJob.templateId] && [self.assets isEqual:printJob.assets];
+}
+
+
 #pragma mark - NSCoding protocol
 
 - (void)encodeWithCoder:(NSCoder *)aCoder {

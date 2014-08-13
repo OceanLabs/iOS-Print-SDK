@@ -13,7 +13,7 @@
 #import "OLAddressEditViewController.h"
 #import <SVProgressHUD.h>
 
-static const NSUInteger kMaxInFlightRequests = 5;
+//static const NSUInteger kMaxInFlightRequests = 5;
 
 @interface OLAddressLookupViewController () <UITextFieldDelegate, OLCountryPickerControllerDelegate,
     UINavigationControllerDelegate, OLAddressSearchRequestDelegate, UISearchDisplayDelegate, UIGestureRecognizerDelegate, UISearchBarDelegate>

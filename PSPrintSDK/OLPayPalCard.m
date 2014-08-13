@@ -261,7 +261,7 @@ static NSString *typeToString(OLPayPalCardType type) {
 - (id)initWithCoder:(NSCoder *)aDecoder {
     if (self = [super init]) {
         self.numberMasked = [aDecoder decodeObjectForKey:kKeyNumberMasked]; // Only store masked version (last 4 digits) of card number for PCI compliance
-        self.type = [aDecoder decodeIntegerForKey:kKeyCardType];
+        self.type = [aDecoder decodeIntForKey:kKeyCardType];
         self.expireMonth = [aDecoder decodeIntegerForKey:kKeyExpireMonth];
         self.expireYear = [aDecoder decodeIntegerForKey:kKeyExpireYear];
         self.firstName = [aDecoder decodeObjectForKey:kKeyFirstName];

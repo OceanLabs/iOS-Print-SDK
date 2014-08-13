@@ -125,6 +125,7 @@ static const NSUInteger kInputFieldTag = 99;
     
     self.printOrder.shippingAddress = self.shippingAddress;
     OLPaymentViewController *vc = [[OLPaymentViewController alloc] initWithPrintOrder:self.printOrder];
+    vc.delegate = self.delegate;
     
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     [defaults setObject:email forKey:kKeyEmailAddress];
