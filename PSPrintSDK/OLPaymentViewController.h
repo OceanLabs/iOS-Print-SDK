@@ -7,9 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "OLCheckoutDelegate.h"
 
 @class OLPrintOrder;
 
 @interface OLPaymentViewController : UIViewController
+
+@property (weak, nonatomic) id<OLCheckoutDelegate> delegate;
+
 - (id)initWithPrintOrder:(OLPrintOrder *)printOrder;
 @end

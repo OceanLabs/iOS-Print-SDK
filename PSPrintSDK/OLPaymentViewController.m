@@ -24,10 +24,10 @@
 #import "OLJudoPayCard.h"
 
 static NSString *const kCardIOAppToken = @"f1d07b66ad21407daf153c0ac66c09d7";
-static const NSUInteger kSectionCount = 3;
-static const NSUInteger kSectionOrderSummary = 0;
-static const NSUInteger kSectionPromoCodes = 1;
-static const NSUInteger kSectionPayment = 2;
+static NSString *const kSectionOrderSummary = @"kSectionOrderSummary";
+static NSString *const kSectionPromoCodes = @"kSectionPromoCodes";
+static NSString *const kSectionPayment = @"kSectionPayment";
+static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
 
 @interface OLKitePrintSDK (Private)
 + (BOOL)useJudoPayForGBP;
@@ -45,6 +45,7 @@ static const NSUInteger kSectionPayment = 2;
 @property (strong, nonatomic) UITableView *tableView;
 @property (assign, nonatomic) BOOL completedTemplateSyncSuccessfully;
 @property (strong, nonatomic) NSString *paymentCurrencyCode;
+@property (strong, nonatomic) NSMutableArray* sections;
 @end
 
 @interface OLPaymentViewController () <UITableViewDataSource, UITableViewDelegate>
@@ -74,6 +75,14 @@ static const NSUInteger kSectionPayment = 2;
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.title = NSLocalizedString(@"Payment", @"");
+    
+    self.sections = [@[kSectionOrderSummary, kSectionPromoCodes, kSectionPayment] mutableCopy];
+    
+    if ([self.delegate respondsToSelector:@selector(shouldShowContinueShoppingButton)]) {
+        if ([self.delegate shouldShowContinueShoppingButton]){
+            [self.sections insertObject:kSectionContinueShopping atIndex:1];
+        }
+    }
     
     self.tableView = [[UITableView alloc] initWithFrame:self.view.frame style:UITableViewStyleGrouped];
     self.tableView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
@@ -232,6 +241,21 @@ static const NSUInteger kSectionPayment = 2;
 
 - (NSUInteger)supportedInterfaceOrientations {
     return UIInterfaceOrientationMaskPortrait;
+}
+
+- (void)onButtonContinueShoppingClicked:(id)sender {
+    if (self.delegate && [self.delegate respondsToSelector:@selector(userDidTapContinueShoppingButton)]){
+        [self.delegate userDidTapContinueShoppingButton];
+    }
+    else{ // Try as best we can to go to the beginning of the app
+        NSMutableArray *navigationStack = self.navigationController.viewControllers.mutableCopy;
+        if (navigationStack.count > 2 && [navigationStack[navigationStack.count - 2] isKindOfClass:[OLCheckoutViewController class]]) {
+            // clear the stack as we don't want the user to be able to return to payment as that stage of the journey is now complete.
+            [navigationStack removeObjectsInRange:NSMakeRange(1, navigationStack.count - 2)];
+            self.navigationController.viewControllers = navigationStack;
+            [self.navigationController popViewControllerAnimated:YES];
+        }
+    }
 }
 
 - (IBAction)onButtonApplyPromoCodeClicked:(id)sender {
@@ -460,35 +484,46 @@ static const NSUInteger kSectionPayment = 2;
 #pragma mark - UITableViewDataSource methods
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return self.completedTemplateSyncSuccessfully ? kSectionCount : 0;
+    return self.completedTemplateSyncSuccessfully ? [self.sections count] : 0;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    switch (section) {
-        case kSectionOrderSummary: {
-            if (self.printOrder.jobs.count <= 1) {
-                return self.printOrder.jobs.count;
-            } else {
-                return self.printOrder.jobs.count + 1; // additional cell to show total
-            }
-        };
-        case kSectionPromoCodes: return 1;
-        case kSectionPayment: return 0;
-        default: return 0;
+    NSString* sectionString = [self.sections objectAtIndex:section];
+    if ([sectionString isEqualToString:kSectionOrderSummary]) {
+        if (self.printOrder.jobs.count <= 1) {
+            return self.printOrder.jobs.count;
+        } else {
+            return self.printOrder.jobs.count + 1; // additional cell to show total
+        }
+    }
+    else if ([sectionString isEqualToString:kSectionContinueShopping]){
+        return 1;
+    }
+    else if ([sectionString isEqualToString:kSectionPromoCodes]){
+        return 1;
+    }
+    else if ([sectionString isEqualToString:kSectionPayment]){
+        return 0;
+    }
+    else{
+        return 0;
     }
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    if (section == kSectionPayment) {
+    NSString* sectionString = [self.sections objectAtIndex:section];
+    if ([sectionString isEqualToString:kSectionPayment]) {
         if ([OLKitePrintSDK environment] == kOLKitePrintSDKEnvironmentSandbox) {
             return NSLocalizedString(@"Payment (Sandbox)", @"");
         } else {
             return NSLocalizedString(@"Payment", @"");
         }
-    } else if (section == kSectionOrderSummary) {
+    } else if ([sectionString isEqualToString:kSectionOrderSummary]) {
         return NSLocalizedString(@"Order Summary", @"");
-    } else if (section == kSectionPromoCodes) {
+    } else if ([sectionString isEqualToString:kSectionPromoCodes]) {
         return NSLocalizedString(@"Promotional Codes", @"");
+    } else if ([sectionString isEqualToString:kSectionContinueShopping]) {
+        return @""; //Don't need a section title here.
     }
     
     return @"";
@@ -496,7 +531,8 @@ static const NSUInteger kSectionPayment = 2;
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = nil;
-    if (indexPath.section == kSectionOrderSummary) {
+    NSString* sectionString = [self.sections objectAtIndex:indexPath.section];
+    if ([sectionString isEqualToString:kSectionOrderSummary]) {
         static NSString *const CellIdentifier = @"JobCostSummaryCell";
         cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
         if (cell == nil) {
@@ -524,7 +560,7 @@ static const NSUInteger kSectionPayment = 2;
             cell.textLabel.text = [NSString stringWithFormat:@"%lu x %@", (unsigned long)job.quantity, job.productName];
             OLProductTemplate *template = [OLProductTemplate templateWithId:job.templateId];
             if ([job.templateId isEqualToString:@"ps_postcard"] || [job.templateId isEqualToString:@"60_postcards"]) {
-                cell.textLabel.text = [NSString stringWithFormat:@"%lu x %@", (unsigned long)self.printOrder.jobs.count, job.productName];
+                cell.textLabel.text = [NSString stringWithFormat:@"%@", job.productName];
             } else if ([job.templateId isEqualToString:@"frames_2"] || [job.templateId isEqualToString:@"frames_3"] || [job.templateId isEqualToString:@"frames_4"]) {
                 cell.textLabel.text = [NSString stringWithFormat:@"%lu x %@", (unsigned long) (job.quantity + template.quantityPerSheet - 1 ) / template.quantityPerSheet, job.productName];
             } else {
@@ -542,7 +578,21 @@ static const NSUInteger kSectionPayment = 2;
         cell.detailTextLabel.text = [formatter stringFromNumber:cost];
         
         return cell;
-    } else if (indexPath.section == kSectionPromoCodes) {
+    } else if ([sectionString isEqualToString:kSectionContinueShopping]) {
+        static NSString *const CellIdentifier = @"ContinueShoppingCell";
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+        cell.frame = CGRectMake(0, 0, tableView.frame.size.width, 43);
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        UIButton *continueShoppingButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        [continueShoppingButton setTitle:NSLocalizedString(@"Continue Shopping", @"") forState:UIControlStateNormal];
+        continueShoppingButton.frame = cell.frame;
+        continueShoppingButton.titleLabel.adjustsFontSizeToFitWidth = YES;
+        continueShoppingButton.titleLabel.minimumScaleFactor = 0.5;
+        [continueShoppingButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [continueShoppingButton setBackgroundColor:[UIColor colorWithRed:74 / 255.0f green:137 / 255.0f blue:220 / 255.0f alpha:1.0]];
+        [continueShoppingButton addTarget:self action:@selector(onButtonContinueShoppingClicked:) forControlEvents:UIControlEventTouchUpInside];
+        [cell addSubview:continueShoppingButton];
+    } else if ([sectionString isEqualToString:kSectionPromoCodes]) {
         static NSString *const CellIdentifier = @"PromoCodeCell";
         cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
         if (cell == nil) {

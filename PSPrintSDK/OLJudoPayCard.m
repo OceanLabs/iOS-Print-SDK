@@ -40,7 +40,7 @@ static NSString *const kKeychainJudoPayLastUsedCardDetails = @"co.oceanlabs.judo
 
 static const NSUInteger kStatusCodeSuccess = 200;
 static const NSUInteger kStatusBadRequest  = 400;
-static const NSUInteger kStatusCodeConflict= 409;
+//static const NSUInteger kStatusCodeConflict= 409;
 
 static NSString *JudoPayClientId;
 static OLJudoPayCard *lastUsedCard;
@@ -296,7 +296,7 @@ static NSString *token, *secret;
 - (id)initWithCoder:(NSCoder *)aDecoder {
     if (self = [super init]) {
         self.numberMasked = [aDecoder decodeObjectForKey:kKeyNumberMasked]; // Only store masked version (last 4 digits) of card number for PCI compliance
-        self.type = [aDecoder decodeIntegerForKey:kKeyCardType];
+        self.type = [aDecoder decodeIntForKey:kKeyCardType];
         self.expireMonth = [aDecoder decodeIntegerForKey:kKeyExpireMonth];
         self.expireYear = [aDecoder decodeIntegerForKey:kKeyExpireYear];
         self.firstName = [aDecoder decodeObjectForKey:kKeyFirstName];
