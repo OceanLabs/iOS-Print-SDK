@@ -21,7 +21,7 @@ Use print to unlock hidden revenue streams and add value for your users. *In und
 
 ## Features
 - Print a wide variety of [products](#products) on demand
-- Dynamic control over the pricing of products in your app pricing using our web [Developer Dashboard](https://www.kite.ly)
+- Dynamic & realtime control over the pricing of products in your app pricing using our web [Developer Dashboard](https://www.kite.ly)
 - Revenue & order volume analytics available in the web dashboard
 - Review, refund or reprint any order within the web dashboard
 - Localized currency support
