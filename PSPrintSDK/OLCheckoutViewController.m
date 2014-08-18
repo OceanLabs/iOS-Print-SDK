@@ -239,6 +239,7 @@ static const NSUInteger kInputFieldTag = 99;
             if (cell == nil) {
                 cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:kAddDeliveryAddressCell];
                 cell.textLabel.text = NSLocalizedString(@"Choose Delivery Address", @"");
+                cell.textLabel.adjustsFontSizeToFitWidth = YES;
                 cell.textLabel.textColor = kColourLightBlue;
             }
         }
@@ -246,7 +247,7 @@ static const NSUInteger kInputFieldTag = 99;
         static NSString *const TextFieldCell = @"EmailFieldCell";
         cell = [tableView dequeueReusableCellWithIdentifier:TextFieldCell];
         if (cell == nil) {
-            cell = [self createTextFieldCellWithReuseIdentifier:TextFieldCell title:@"Email" keyboardType:UIKeyboardTypeEmailAddress];
+            cell = [self createTextFieldCellWithReuseIdentifier:TextFieldCell title:NSLocalizedString(@"Email", @"")  keyboardType:UIKeyboardTypeEmailAddress];
             self.textFieldEmail = (UITextField *) [cell viewWithTag:kInputFieldTag];
             [self populateDefaultEmailAndPhone];
         }
@@ -255,7 +256,7 @@ static const NSUInteger kInputFieldTag = 99;
         static NSString *const TextFieldCell = @"PhoneFieldCell";
         cell = [tableView dequeueReusableCellWithIdentifier:TextFieldCell];
         if (cell == nil) {
-            cell = [self createTextFieldCellWithReuseIdentifier:TextFieldCell title:@"Phone" keyboardType:UIKeyboardTypePhonePad];
+            cell = [self createTextFieldCellWithReuseIdentifier:TextFieldCell title:NSLocalizedString(@"Phone", @"") keyboardType:UIKeyboardTypePhonePad];
             self.textFieldPhone = (UITextField *) [cell viewWithTag:kInputFieldTag];
             [self populateDefaultEmailAndPhone];
         }

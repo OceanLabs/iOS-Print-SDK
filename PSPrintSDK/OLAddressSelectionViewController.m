@@ -37,7 +37,7 @@ static const NSInteger kRowAddAddressManually = 2;
 - (id)initWithStyle:(UITableViewStyle)style {
     self = [super initWithStyle:style];
     if (self) {
-        self.title = @"Choose Address";
+        self.title = NSLocalizedString(@"Choose Address", @"");
         self.selectedAddresses = [[NSMutableSet alloc] init];
     }
     return self;
@@ -53,10 +53,10 @@ static const NSInteger kRowAddAddressManually = 2;
     _allowMultipleSelection = allowMultipleSelection;
     self.tableView.allowsMultipleSelection = _allowMultipleSelection;
     if (_allowMultipleSelection) {
-        UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithTitle:@"Done" style:UIBarButtonItemStyleDone target:self action:@selector(onButtonDoneClicked)];
+        UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Done", @"") style:UIBarButtonItemStyleDone target:self action:@selector(onButtonDoneClicked)];
         self.navigationItem.rightBarButtonItem = doneButton;
     } else {
-        UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithTitle:@"Done" style:UIBarButtonItemStylePlain target:self action:@selector(onButtonCancelClicked)];
+        UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Done", @"") style:UIBarButtonItemStylePlain target:self action:@selector(onButtonCancelClicked)];
         self.navigationItem.rightBarButtonItem = doneButton;
     }
 }
@@ -121,9 +121,9 @@ static const NSInteger kRowAddAddressManually = 2;
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
     if ([OLAddress addressBook].count == 0) { ++section; }
     if (section == 0) {
-        return [OLAddress addressBook].count > 0 ? @"Address Book" : nil;
+        return [OLAddress addressBook].count > 0 ? NSLocalizedString(@"Address Book", "") : nil;
     } else {
-        return @"Add New Address";
+        return NSLocalizedString(@"Add New Address", @"");
     }
 }
 
@@ -164,6 +164,7 @@ static const NSInteger kRowAddAddressManually = 2;
             cell.textLabel.text = NSLocalizedString(@"Enter Address Manually", @"");
         }
         
+        cell.textLabel.adjustsFontSizeToFitWidth = YES;
         cell.textLabel.textColor = [UIColor colorWithRed:0 / 255.0 green:122 / 255.0 blue:255 / 255.0 alpha:1.0];
     }
 
