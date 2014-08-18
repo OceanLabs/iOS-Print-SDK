@@ -61,7 +61,7 @@
     self.countryPickerView = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"CountryPickerView"];
     
     UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(15, 0, 110, 44)];
-    label.text = @"Country";
+    label.text = NSLocalizedString(@"Country", @"");
     
     self.labelCountry = [[UILabel alloc] initWithFrame:CGRectMake(110, 0, 320 - 110, 44)];
     self.labelCountry.adjustsFontSizeToFitWidth = YES;
