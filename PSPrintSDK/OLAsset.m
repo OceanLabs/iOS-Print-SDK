@@ -32,6 +32,10 @@ typedef void (^LoadAssetCompletionHandler)(ALAsset *asset, NSError *error);
 
 @implementation OLAsset
 
+- (BOOL)isCropBoxSet {
+    return self.cropBox.origin.x != 0 || self.cropBox.origin.y != 0 || self.cropBox.size.width != 1 || self.cropBox.size.height != 1;
+}
+
 - (id)initWithImageData:(NSData *)data mimeType:(NSString *)mimeType {
     if (self = [super init]) {
         NSAssert(data != nil, @"image data must be non nil");
@@ -197,7 +201,7 @@ typedef void (^LoadAssetCompletionHandler)(ALAsset *asset, NSError *error);
                     handler(0, error);
                 }
             }];
-
+            
             break;
         }
         case kOLAssetTypeDataSource: {
@@ -222,7 +226,7 @@ typedef void (^LoadAssetCompletionHandler)(ALAsset *asset, NSError *error);
                 NSNumber *fileSizeNumber = [fileAttributes objectForKey:NSFileSize];
                 handler([fileSizeNumber longLongValue], attributesError);
             });
-
+            
             break;
         }
         case kOLAssetTypeRemoteImageURL: {
@@ -232,7 +236,7 @@ typedef void (^LoadAssetCompletionHandler)(ALAsset *asset, NSError *error);
             break;
         }
     }
-
+    
 }
 
 - (void)dataWithCompletionHandler:(GetDataHandler)handler {
@@ -263,7 +267,7 @@ typedef void (^LoadAssetCompletionHandler)(ALAsset *asset, NSError *error);
                     handler(data, error);
                 });
             }];
-
+            
             break;
         }
         case kOLAssetTypeImageData: {

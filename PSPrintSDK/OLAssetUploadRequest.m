@@ -241,7 +241,15 @@ typedef void (^UploadAssetsCompletionHandler)(NSError *error);
             NSAssert(!error, @"errors should be covered above");
             notifiedDelegateOfSomeOutcome = YES;
             [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
-            [zelf.delegate assetUploadRequest:zelf didSucceedWithAssets:assets];
+            
+            for(OLAsset *a in assets) {
+                if([a isCropBoxSet]) {
+                    
+                }
+            }
+            
+            
+            //[zelf.delegate assetUploadRequest:zelf didSucceedWithAssets:assets];
         }
     };
     
