@@ -52,11 +52,11 @@ typedef void (^UploadAssetsCompletionHandler)(NSError *error);
     NSInteger errorCode = kOLKiteSDKErrorCodeServerFault;
     switch (httpStatusCode) {
         case 401:
-            errorMessage = NSLocalizedString(@"401 Unauthorized Request Error whilst trying to upload an asset. Please check you included an Authorization header and that the supplied auth credentials are correct.", @"");
+            errorMessage = NSLocalizedStringFromTableInBundle(@"401 Unauthorized Request Error whilst trying to upload an asset. Please check you included an Authorization header and that the supplied auth credentials are correct.", @"KitePrintSDK", [OLConstants bundle], @"");
             errorCode = kOLKiteSDKErrorCodeUnauthorized;
             break;
         case 500:
-            errorMessage = NSLocalizedString(@"500 Internal Server Error whilst trying to upload an asset. Please try again.", @"");
+            errorMessage = NSLocalizedStringFromTableInBundle(@"500 Internal Server Error whilst trying to upload an asset. Please try again.", @"KitePrintSDK", [OLConstants bundle], @"");
             break;
         default:
             break;
@@ -119,7 +119,7 @@ typedef void (^UploadAssetsCompletionHandler)(NSError *error);
         }
         
         if (!error && registeredAssetCount != expectedRegisteredAssetCount) {
-            error = [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeRegisteredAssetCountDiscrepency userInfo:@{NSLocalizedDescriptionKey:[NSString stringWithFormat:NSLocalizedString(@"Only registered %d/%d image URLs with the asset endpoint", @""), registeredAssetCount, expectedRegisteredAssetCount]}];
+            error = [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeRegisteredAssetCountDiscrepency userInfo:@{NSLocalizedDescriptionKey:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Only registered %d/%d image URLs with the asset endpoint", @"KitePrintSDK", [OLConstants bundle], @""), registeredAssetCount, expectedRegisteredAssetCount]}];
         }
         
         handler(error);

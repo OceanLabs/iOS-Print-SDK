@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2E85BC9919A24CB200EC7CC2 /* KitePrintSDK.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2E85BC9719A24CB200EC7CC2 /* KitePrintSDK.strings */; };
 		3A5ECAA2AA9D4F38934544CA /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 931ABE3568CB40F8892488E2 /* libPods.a */; };
 		CD382E4A18EB7C6300127F95 /* OLJudoPayCard.m in Sources */ = {isa = PBXBuildFile; fileRef = CD382E4818EB7C6300127F95 /* OLJudoPayCard.m */; };
 		CD51972D196D41BD00734791 /* OLProductTemplates.plist in Resources */ = {isa = PBXBuildFile; fileRef = CD51972C196D41BD00734791 /* OLProductTemplates.plist */; };
@@ -72,6 +73,28 @@
 
 /* Begin PBXFileReference section */
 		2E5E0C141993840600C34D5C /* OLCheckoutDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OLCheckoutDelegate.h; sourceTree = "<group>"; };
+		2E85BC8719A24BAB00EC7CC2 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Main.strings; sourceTree = "<group>"; };
+		2E85BC8819A24BAB00EC7CC2 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		2E85BC8919A24BAB00EC7CC2 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		2E85BC8A19A24BB400EC7CC2 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Main.strings; sourceTree = "<group>"; };
+		2E85BC8B19A24BB400EC7CC2 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		2E85BC8C19A24BB400EC7CC2 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		2E85BC8D19A24BB900EC7CC2 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/Main.strings; sourceTree = "<group>"; };
+		2E85BC8E19A24BB900EC7CC2 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		2E85BC8F19A24BB900EC7CC2 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		2E85BC9019A24BDB00EC7CC2 /* pt */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pt; path = pt.lproj/Main.strings; sourceTree = "<group>"; };
+		2E85BC9119A24BDB00EC7CC2 /* pt */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pt; path = pt.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		2E85BC9219A24BDB00EC7CC2 /* pt */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pt; path = pt.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		2E85BC9319A24BE500EC7CC2 /* el */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = el; path = el.lproj/Main.strings; sourceTree = "<group>"; };
+		2E85BC9419A24BE500EC7CC2 /* el */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = el; path = el.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		2E85BC9519A24BE500EC7CC2 /* el */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = el; path = el.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		2E85BC9819A24CB200EC7CC2 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = PSPrintSDK/en.lproj/KitePrintSDK.strings; sourceTree = "<group>"; };
+		2E85BC9A19A24CB900EC7CC2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/KitePrintSDK.strings; sourceTree = "<group>"; };
+		2E85BC9B19A24CBB00EC7CC2 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/KitePrintSDK.strings; sourceTree = "<group>"; };
+		2E85BC9C19A24CBC00EC7CC2 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/KitePrintSDK.strings; sourceTree = "<group>"; };
+		2E85BC9D19A24CBD00EC7CC2 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/KitePrintSDK.strings; sourceTree = "<group>"; };
+		2E85BC9E19A24CBE00EC7CC2 /* pt */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pt; path = pt.lproj/KitePrintSDK.strings; sourceTree = "<group>"; };
+		2E85BC9F19A24CBE00EC7CC2 /* el */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = el; path = el.lproj/KitePrintSDK.strings; sourceTree = "<group>"; };
 		931ABE3568CB40F8892488E2 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		AFF040FCE03A46DCBBC65B4C /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
 		CD382E4818EB7C6300127F95 /* OLJudoPayCard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLJudoPayCard.m; sourceTree = "<group>"; };
@@ -198,6 +221,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2E85BC9619A24C9E00EC7CC2 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				2E85BC9719A24CB200EC7CC2 /* KitePrintSDK.strings */,
+			);
+			name = "Supporting Files";
+			path = ..;
+			sourceTree = "<group>";
+		};
 		CD550BD61886BF6000782D75 /* Payment */ = {
 			isa = PBXGroup;
 			children = (
@@ -255,6 +287,7 @@
 				CDAFE005186D9C5E003572FE /* Asset */,
 				CD76969D1868DE51006D4A26 /* API */,
 				CD7696A11868DE7A006D4A26 /* Print */,
+				2E85BC9619A24C9E00EC7CC2 /* Supporting Files */,
 				CD73BFAF18634ED50009DE03 /* OLConstants.h */,
 				CD73BFB018634ED50009DE03 /* OLConstants.m */,
 				CD93BB471879EA4F00316492 /* KitePrintSDK.xcassets */,
@@ -287,8 +320,8 @@
 		CD73BF91186215790009DE03 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				CD73BF92186215790009DE03 /* KitePrintSDKTests-Info.plist */,
 				CD73BF93186215790009DE03 /* InfoPlist.strings */,
+				CD73BF92186215790009DE03 /* KitePrintSDKTests-Info.plist */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -488,6 +521,11 @@
 			knownRegions = (
 				en,
 				Base,
+				fr,
+				de,
+				it,
+				pt,
+				el,
 			);
 			mainGroup = CD73BF5F186215790009DE03;
 			productRefGroup = CD73BF69186215790009DE03 /* Products */;
@@ -506,6 +544,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CD51972D196D41BD00734791 /* OLProductTemplates.plist in Resources */,
+				2E85BC9919A24CB200EC7CC2 /* KitePrintSDK.strings in Resources */,
 				CD73BF84186215790009DE03 /* Images.xcassets in Resources */,
 				CD93BB481879EA4F00316492 /* KitePrintSDK.xcassets in Resources */,
 				CD73BF76186215790009DE03 /* InfoPlist.strings in Resources */,
@@ -617,10 +656,29 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
+		2E85BC9719A24CB200EC7CC2 /* KitePrintSDK.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				2E85BC9819A24CB200EC7CC2 /* en */,
+				2E85BC9A19A24CB900EC7CC2 /* Base */,
+				2E85BC9B19A24CBB00EC7CC2 /* fr */,
+				2E85BC9C19A24CBC00EC7CC2 /* de */,
+				2E85BC9D19A24CBD00EC7CC2 /* it */,
+				2E85BC9E19A24CBE00EC7CC2 /* pt */,
+				2E85BC9F19A24CBE00EC7CC2 /* el */,
+			);
+			name = KitePrintSDK.strings;
+			sourceTree = "<group>";
+		};
 		CD73BF74186215790009DE03 /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
 				CD73BF75186215790009DE03 /* en */,
+				2E85BC8819A24BAB00EC7CC2 /* fr */,
+				2E85BC8B19A24BB400EC7CC2 /* de */,
+				2E85BC8E19A24BB900EC7CC2 /* it */,
+				2E85BC9119A24BDB00EC7CC2 /* pt */,
+				2E85BC9419A24BE500EC7CC2 /* el */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
@@ -629,6 +687,11 @@
 			isa = PBXVariantGroup;
 			children = (
 				CD73BF7E186215790009DE03 /* Base */,
+				2E85BC8719A24BAB00EC7CC2 /* fr */,
+				2E85BC8A19A24BB400EC7CC2 /* de */,
+				2E85BC8D19A24BB900EC7CC2 /* it */,
+				2E85BC9019A24BDB00EC7CC2 /* pt */,
+				2E85BC9319A24BE500EC7CC2 /* el */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
@@ -637,9 +700,15 @@
 			isa = PBXVariantGroup;
 			children = (
 				CD73BF94186215790009DE03 /* en */,
+				2E85BC8919A24BAB00EC7CC2 /* fr */,
+				2E85BC8C19A24BB400EC7CC2 /* de */,
+				2E85BC8F19A24BB900EC7CC2 /* it */,
+				2E85BC9219A24BDB00EC7CC2 /* pt */,
+				2E85BC9519A24BE500EC7CC2 /* el */,
 			);
 			name = InfoPlist.strings;
-			sourceTree = "<group>";
+			path = PSPrintSDKTests;
+			sourceTree = SOURCE_ROOT;
 		};
 /* End PBXVariantGroup section */
 

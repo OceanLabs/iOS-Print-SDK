@@ -13,6 +13,7 @@
 #import "OLPrintOrder+History.h"
 #import "OLPrintJob.h"
 #import "OLProductTemplate.h"
+#import "OLConstants.h"
 #import <SVProgressHUD.h>
 
 static const NSUInteger kSectionOrderSummary = 0;
@@ -73,13 +74,13 @@ static const NSUInteger kSectionErrorRetry = 2;
                                                             long long totalBytesWritten, long long totalBytesExpectedToWrite) {
         const float step = (1.0f / totalAssetsToUpload);
         float progress = totalAssetsUploaded * step + (totalAssetBytesWritten / (float) totalAssetBytesExpectedToWrite) * step;
-        [SVProgressHUD showProgress:progress status:[NSString stringWithFormat:@"Uploading Images \n%lu / %lu", (unsigned long) totalAssetsUploaded + 1, (unsigned long) totalAssetsToUpload] maskType:SVProgressHUDMaskTypeBlack];
+        [SVProgressHUD showProgress:progress status:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Uploading Images \n%lu / %lu", @"KitePrintSDK", [OLConstants bundle], @""), (unsigned long) totalAssetsUploaded + 1, (unsigned long) totalAssetsToUpload] maskType:SVProgressHUDMaskTypeBlack];
     } completionHandler:^(NSString *orderIdReceipt, NSError *error) {
         [self.printOrder saveToHistory]; // save again as the print order has it's receipt set if it was successful, otherwise last error is set
         [SVProgressHUD dismiss];
 
         if (error) {
-            [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Oops!", @"") message:error.localizedDescription delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"") otherButtonTitles:nil] show];
+            [[[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLConstants bundle], @"") message:error.localizedDescription delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLConstants bundle], @"") otherButtonTitles:nil] show];
         } else {
             [UIView transitionWithView:self.view duration:0.3f options:UIViewAnimationOptionTransitionCrossDissolve animations:^{
                 ((UIImageView *) self.tableView.tableHeaderView).image = [UIImage imageNamed:@"receipt_success"];
@@ -115,9 +116,9 @@ static const NSUInteger kSectionErrorRetry = 2;
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
     if (section == kSectionOrderSummary) {
-        return NSLocalizedString(@"Order Summary", @"");
+        return NSLocalizedStringFromTableInBundle(@"Order Summary", @"KitePrintSDK", [OLConstants bundle], @"");
     } else if (section == kSectionOrderId) {
-        return NSLocalizedString(@"Order Id", @"");
+        return NSLocalizedStringFromTableInBundle(@"Order Id", @"KitePrintSDK", [OLConstants bundle], @"");
     }
     
     return nil;
@@ -172,7 +173,7 @@ static const NSUInteger kSectionErrorRetry = 2;
         NSDecimalNumber *cost = nil;
         NSString *currencyCode = self.printOrder.currencyCode;
         if (total) {
-            cell.textLabel.text = NSLocalizedString(@"Total", @"");
+            cell.textLabel.text = NSLocalizedStringFromTableInBundle(@"Total", @"KitePrintSDK", [OLConstants bundle], @"");
             cell.textLabel.font = [UIFont boldSystemFontOfSize:cell.textLabel.font.pointSize];
             cell.detailTextLabel.font = [UIFont boldSystemFontOfSize:cell.detailTextLabel.font.pointSize];
             cost = [self.printOrder cost];
@@ -186,7 +187,7 @@ static const NSUInteger kSectionErrorRetry = 2;
             } else if ([job.templateId isEqualToString:@"frames_2"] || [job.templateId isEqualToString:@"frames_3"] || [job.templateId isEqualToString:@"frames_4"]) {
                 cell.textLabel.text = [NSString stringWithFormat:@"%lu x %@", (unsigned long) (job.quantity + template.quantityPerSheet - 1 ) / template.quantityPerSheet, job.productName];
             } else {
-                cell.textLabel.text = [NSString stringWithFormat:@"Pack of %lu %@", (unsigned long)job.quantity, job.productName];
+                cell.textLabel.text = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Pack of %lu %@", @"KitePrintSDK", [OLConstants bundle], @""), (unsigned long)job.quantity, job.productName];
             }
             
             cell.textLabel.font = [UIFont systemFontOfSize:cell.textLabel.font.pointSize];
@@ -207,7 +208,7 @@ static const NSUInteger kSectionErrorRetry = 2;
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
         }
         
-        cell.textLabel.text = NSLocalizedString(@"Retry", @"");
+        cell.textLabel.text = NSLocalizedStringFromTableInBundle(@"Retry", @"KitePrintSDK", [OLConstants bundle], @"");
     }
 
     return cell;

@@ -68,8 +68,8 @@ static const NSUInteger kInputFieldTag = 99;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Next", @"") style:UIBarButtonItemStylePlain target:self action:@selector(onButtonNextClicked)];
-    self.title = NSLocalizedString(@"Shipping", @"");
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Next", @"KitePrintSDK", [OLConstants bundle], @"") style:UIBarButtonItemStylePlain target:self action:@selector(onButtonNextClicked)];
+    self.title = NSLocalizedStringFromTableInBundle(@"Shipping", @"KitePrintSDK", [OLConstants bundle], @"");
     self.tableView.tableHeaderView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"checkout_progress_indicator"]];
 
     UITapGestureRecognizer *tgr = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onBackgroundClicked)];
@@ -157,21 +157,21 @@ static const NSUInteger kInputFieldTag = 99;
      */
     if (self.shippingAddress == nil) {
         [self scrollSectionToVisible:kSectionDeliveryDetails];
-        UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Missing Delivery Address", @"") message:NSLocalizedString(@"Please choose an address to have your order shipped to", @"") delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"") otherButtonTitles:nil];
+        UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Missing Delivery Address", @"KitePrintSDK", [OLConstants bundle], @"") message:NSLocalizedStringFromTableInBundle(@"Please choose an address to have your order shipped to", @"KitePrintSDK", [OLConstants bundle], @"") delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLConstants bundle], @"") otherButtonTitles:nil];
         [av show];
         return NO;
     }
 
     if (![OLCheckoutViewController validateEmail:self.textFieldEmail.text]) {
         [self scrollSectionToVisible:kSectionEmailAddress];
-        UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Invalid Email Address", @"") message:NSLocalizedString(@"Please enter a valid email address", @"") delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"") otherButtonTitles:nil];
+        UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Invalid Email Address", @"KitePrintSDK", [OLConstants bundle], @"") message:NSLocalizedStringFromTableInBundle(@"Please enter a valid email address", @"KitePrintSDK", [OLConstants bundle], @"") delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLConstants bundle], @"") otherButtonTitles:nil];
         [av show];
         return NO;
     }
     
     if (self.textFieldPhone.text.length < kMinPhoneNumberLength) {
         [self scrollSectionToVisible:kSectionPhoneNumber];
-        UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Invalid Phone Number", @"") message:NSLocalizedString(@"Please enter a valid phone number", @"") delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"") otherButtonTitles:nil];
+        UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Invalid Phone Number", @"KitePrintSDK", [OLConstants bundle], @"") message:NSLocalizedStringFromTableInBundle(@"Please enter a valid phone number", @"KitePrintSDK", [OLConstants bundle], @"") delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLConstants bundle], @"") otherButtonTitles:nil];
         [av show];
         return NO;
     }
@@ -192,7 +192,7 @@ static const NSUInteger kInputFieldTag = 99;
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
     if (section == kSectionDeliveryDetails) {
-        return NSLocalizedString(@"Delivery Details", @"");
+        return NSLocalizedStringFromTableInBundle(@"Delivery Details", @"KitePrintSDK", [OLConstants bundle], @"");
     } else {
         return nil;
     }
@@ -200,9 +200,9 @@ static const NSUInteger kInputFieldTag = 99;
 
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section {
     if (section == kSectionEmailAddress) {
-        return NSLocalizedString(@"We'll send you a confirmation and order updates", @"");
+        return NSLocalizedStringFromTableInBundle(@"We'll send you a confirmation and order updates", @"KitePrintSDK", [OLConstants bundle], @"");
     } else if (section == kSectionPhoneNumber) {
-        return NSLocalizedString(@"Required by Royal Mail in case there are any issues during delivery", @"");
+        return NSLocalizedStringFromTableInBundle(@"Required by Royal Mail in case there are any issues during delivery", @"KitePrintSDK", [OLConstants bundle], @"");
     }
     
     return nil;
@@ -238,7 +238,8 @@ static const NSUInteger kInputFieldTag = 99;
             cell = [tableView dequeueReusableCellWithIdentifier:kAddDeliveryAddressCell];
             if (cell == nil) {
                 cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:kAddDeliveryAddressCell];
-                cell.textLabel.text = NSLocalizedString(@"Choose Delivery Address", @"");
+                cell.textLabel.text = NSLocalizedStringFromTableInBundle(@"Choose Delivery Address", @"KitePrintSDK", [OLConstants bundle], @"");
+                cell.textLabel.adjustsFontSizeToFitWidth = YES;
                 cell.textLabel.textColor = kColourLightBlue;
             }
         }
@@ -246,7 +247,7 @@ static const NSUInteger kInputFieldTag = 99;
         static NSString *const TextFieldCell = @"EmailFieldCell";
         cell = [tableView dequeueReusableCellWithIdentifier:TextFieldCell];
         if (cell == nil) {
-            cell = [self createTextFieldCellWithReuseIdentifier:TextFieldCell title:@"Email" keyboardType:UIKeyboardTypeEmailAddress];
+            cell = [self createTextFieldCellWithReuseIdentifier:TextFieldCell title:NSLocalizedStringFromTableInBundle(@"Email", @"KitePrintSDK", [OLConstants bundle], @"")  keyboardType:UIKeyboardTypeEmailAddress];
             self.textFieldEmail = (UITextField *) [cell viewWithTag:kInputFieldTag];
             [self populateDefaultEmailAndPhone];
         }
@@ -255,7 +256,7 @@ static const NSUInteger kInputFieldTag = 99;
         static NSString *const TextFieldCell = @"PhoneFieldCell";
         cell = [tableView dequeueReusableCellWithIdentifier:TextFieldCell];
         if (cell == nil) {
-            cell = [self createTextFieldCellWithReuseIdentifier:TextFieldCell title:@"Phone" keyboardType:UIKeyboardTypePhonePad];
+            cell = [self createTextFieldCellWithReuseIdentifier:TextFieldCell title:NSLocalizedStringFromTableInBundle(@"Phone", @"KitePrintSDK", [OLConstants bundle], @"") keyboardType:UIKeyboardTypePhonePad];
             self.textFieldPhone = (UITextField *) [cell viewWithTag:kInputFieldTag];
             [self populateDefaultEmailAndPhone];
         }
@@ -268,6 +269,7 @@ static const NSUInteger kInputFieldTag = 99;
     UITableViewCell *cell = [[UITableViewCell alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 43)];
     UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 11, 61, 21)];
     titleLabel.text = title;
+    titleLabel.adjustsFontSizeToFitWidth = YES;
     UITextField *inputField = [[UITextField alloc] initWithFrame:CGRectMake(86, 0, cell.frame.size.width - 86, 43)];
     inputField.delegate = self;
     inputField.tag = kInputFieldTag;

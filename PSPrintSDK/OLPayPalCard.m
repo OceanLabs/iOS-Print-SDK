@@ -7,6 +7,7 @@
 //
 
 #import "OLPayPalCard.h"
+#import "OLConstants.h"
 #import <AFNetworking.h>
 
 static NSString *const kKeyNumberMasked = @"co.oceanlabs.paypal.kKeyNumberMasked";
@@ -20,7 +21,7 @@ static NSString *const kKeyVaultExpireDate = @"co.oceanlabs.paypal.kKeyVaultExpi
 
 static NSString *const kOLErrorDomainPayPal = @"co.oceanlabs.paypal.kOLErrorDomainPayPal";
 
-#define kErrorMessageGenericPayPalVaultFailure NSLocalizedString(@"Failed to store card details with PayPal. Please try again.", @"")
+#define kErrorMessageGenericPayPalVaultFailure NSLocalizedStringFromTableInBundle(@"Failed to store card details with PayPal. Please try again.", @"KitePrintSDK", [OLConstants bundle], @"")
 
 static NSString *clientId;
 
@@ -224,7 +225,7 @@ static NSString *typeToString(OLPayPalCardType type) {
                 }
                 
                 if (![paymentState isEqualToString:@"approved"]) {
-                    NSError *error = [NSError errorWithDomain:kOLErrorDomainPayPal code:statusCode userInfo:@{NSLocalizedDescriptionKey: [NSString stringWithFormat:NSLocalizedString(@"Your payment was not approved (transaction state: %@). Please try again.", @""), paymentState]}];
+                    NSError *error = [NSError errorWithDomain:kOLErrorDomainPayPal code:statusCode userInfo:@{NSLocalizedDescriptionKey: [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Your payment was not approved (transaction state: %@). Please try again.", @"KitePrintSDK", [OLConstants bundle], @""), paymentState]}];
                     handler(nil, error);
                     return;
                 }

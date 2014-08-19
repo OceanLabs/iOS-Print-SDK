@@ -11,6 +11,7 @@
 #import "OLCountry.h"
 #import "OLCountryPickerController.h"
 #import "OLAddressEditViewController.h"
+#import "OLConstants.h"
 #import <SVProgressHUD.h>
 
 //static const NSUInteger kMaxInFlightRequests = 5;
@@ -38,7 +39,7 @@
 
 - (id)init {
     if (self = [super initWithStyle:UITableViewStylePlain]) {
-        self.title = NSLocalizedString(@"Address Search", @"");
+        self.title = NSLocalizedStringFromTableInBundle(@"Address Search", @"KitePrintSDK", [OLConstants bundle], @"");
     }
     
     return self;
@@ -61,7 +62,7 @@
     self.countryPickerView = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"CountryPickerView"];
     
     UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(15, 0, 110, 44)];
-    label.text = @"Country";
+    label.text = NSLocalizedStringFromTableInBundle(@"Country", @"KitePrintSDK", [OLConstants bundle], @"");
     
     self.labelCountry = [[UILabel alloc] initWithFrame:CGRectMake(110, 0, 320 - 110, 44)];
     self.labelCountry.adjustsFontSizeToFitWidth = YES;
@@ -88,7 +89,7 @@
 - (void)setCountry:(OLCountry *)country {
     _country = country;
     self.labelCountry.text = country.name;
-    self.searchBar.placeholder = NSLocalizedString(([NSString stringWithFormat:@"Search %@", country.name]), @"");
+    self.searchBar.placeholder = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Search %@", @"KitePrintSDK", [OLConstants bundle], @""), country.name];
 }
 
 - (void)onButtonChangeCountryClicked {

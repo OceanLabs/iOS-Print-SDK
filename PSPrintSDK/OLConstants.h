@@ -16,3 +16,9 @@ const NSInteger kOLKiteSDKErrorCodeUnauthorized;
 const NSInteger kOLKiteSDKErrorCodeRegisteredAssetCountDiscrepency;
 
 NSString *const kOLKiteSDKErrorMessageUnauthorized;
+
+@interface OLConstants : NSObject
+
++ (NSBundle *)bundle;
+
+@end
