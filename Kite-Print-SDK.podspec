@@ -1,5 +1,5 @@
 Pod::Spec.new do |s|
-  s.name             = "PS-Print-SDK"
+  s.name             = "Kite-Print-SDK"
   s.version          = "1.0.0"
   s.summary          = "Easily add print on demand functionality to your app. Print magnets, photo prints, postcards, polaroids, A4, etc."
   s.description      = <<-DESC
@@ -41,12 +41,13 @@ Pod::Spec.new do |s|
   s.requires_arc = true
 
   s.source_files = ['PSPrintSDK/OL*.{h,m}', 'PSPrintSDK/CardIO*.h']
-  s.resources = ['PSPrintSDK/PSPrintSDK.xcassets']
+  s.resources = ['PSPrintSDK/KitePrintSDK.xcassets']
 
   s.dependency 'SDWebImage'
   s.dependency 'SVProgressHUD'
   s.dependency 'AFNetworking', '~> 2.0.3'
   s.dependency 'PayPal-iOS-SDK', '~> 1.4.4'
+  s.dependency 'UICKeyChainStore', '~> 1.0.4'
 
   s.public_header_files = 'PSPrintSDK/**/*.h'
 end
