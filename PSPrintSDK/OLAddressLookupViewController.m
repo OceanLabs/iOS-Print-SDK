@@ -89,7 +89,7 @@
 - (void)setCountry:(OLCountry *)country {
     _country = country;
     self.labelCountry.text = country.name;
-    self.searchBar.placeholder = NSLocalizedStringFromTableInBundle(([NSString stringWithFormat:@"Search %@", country.name]), @"KitePrintSDK", [OLConstants bundle], @"");
+    self.searchBar.placeholder = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Search %@", @"KitePrintSDK", [OLConstants bundle], @""), country.name];
 }
 
 - (void)onButtonChangeCountryClicked {
