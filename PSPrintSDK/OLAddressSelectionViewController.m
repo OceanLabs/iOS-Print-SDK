@@ -12,6 +12,7 @@
 #import "OLCountry.h"
 #import "OLAddressEditViewController.h"
 #import "OLAddressLookupViewController.h"
+#import "OLConstants.h"
 
 #import <AddressBook/ABPerson.h>
 #import <AddressBookUI/AddressBookUI.h>
@@ -37,7 +38,7 @@ static const NSInteger kRowAddAddressManually = 2;
 - (id)initWithStyle:(UITableViewStyle)style {
     self = [super initWithStyle:style];
     if (self) {
-        self.title = NSLocalizedString(@"Choose Address", @"");
+        self.title = NSLocalizedStringFromTableInBundle(@"Choose Address", @"KitePrintSDK", [OLConstants bundle], @"");
         self.selectedAddresses = [[NSMutableSet alloc] init];
     }
     return self;
@@ -53,10 +54,10 @@ static const NSInteger kRowAddAddressManually = 2;
     _allowMultipleSelection = allowMultipleSelection;
     self.tableView.allowsMultipleSelection = _allowMultipleSelection;
     if (_allowMultipleSelection) {
-        UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Done", @"") style:UIBarButtonItemStyleDone target:self action:@selector(onButtonDoneClicked)];
+        UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Done", @"KitePrintSDK", [OLConstants bundle], @"") style:UIBarButtonItemStyleDone target:self action:@selector(onButtonDoneClicked)];
         self.navigationItem.rightBarButtonItem = doneButton;
     } else {
-        UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Done", @"") style:UIBarButtonItemStylePlain target:self action:@selector(onButtonCancelClicked)];
+        UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Done", @"KitePrintSDK", [OLConstants bundle], @"") style:UIBarButtonItemStylePlain target:self action:@selector(onButtonCancelClicked)];
         self.navigationItem.rightBarButtonItem = doneButton;
     }
 }
@@ -121,9 +122,9 @@ static const NSInteger kRowAddAddressManually = 2;
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
     if ([OLAddress addressBook].count == 0) { ++section; }
     if (section == 0) {
-        return [OLAddress addressBook].count > 0 ? NSLocalizedString(@"Address Book", "") : nil;
+        return [OLAddress addressBook].count > 0 ? NSLocalizedStringFromTableInBundle(@"Address Book", @"KitePrintSDK", [OLConstants bundle], "") : nil;
     } else {
-        return NSLocalizedString(@"Add New Address", @"");
+        return NSLocalizedStringFromTableInBundle(@"Add New Address", @"KitePrintSDK", [OLConstants bundle], @"");
     }
 }
 
@@ -157,11 +158,11 @@ static const NSInteger kRowAddAddressManually = 2;
         }
         
         if (indexPath.row == kRowAddAddressFromContacts) {
-            cell.textLabel.text = NSLocalizedString(@"Add Address from Contacts", @"");
+            cell.textLabel.text = NSLocalizedStringFromTableInBundle(@"Add Address from Contacts", @"KitePrintSDK", [OLConstants bundle], @"");
         } else if (indexPath.row == kRowAddAddressSearch) {
-            cell.textLabel.text = NSLocalizedString(@"Search for Address", @"");
+            cell.textLabel.text = NSLocalizedStringFromTableInBundle(@"Search for Address", @"KitePrintSDK", [OLConstants bundle], @"");
         } else {
-            cell.textLabel.text = NSLocalizedString(@"Enter Address Manually", @"");
+            cell.textLabel.text = NSLocalizedStringFromTableInBundle(@"Enter Address Manually", @"KitePrintSDK", [OLConstants bundle], @"");
         }
         
         cell.textLabel.adjustsFontSizeToFitWidth = YES;

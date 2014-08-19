@@ -44,7 +44,7 @@
     
     [self.req startWithCompletionHandler:^(NSInteger httpStatusCode, id json, NSError *error) {
         if ((httpStatusCode < 200 || httpStatusCode > 299) && httpStatusCode != 0) { // 0 status code comes through when we didn't even get a response from the server... i.e. no network connectivity
-            NSString *errorMessage = NSLocalizedString(([NSString stringWithFormat:@"Print order submission failed with a %lu HTTP response status code. Please try again.", (unsigned long) httpStatusCode]), @"");
+            NSString *errorMessage = ([NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Print order submission failed with a %lu HTTP response status code. Please try again.", @"KitePrintSDK", [OLConstants bundle], @""), (unsigned long) httpStatusCode]);
             id responseError = [json objectForKey:@"error"];
             if ([responseError isKindOfClass:[NSDictionary class]]) {
                 id responseErrorMessage = responseError[@"message"];

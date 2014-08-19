@@ -9,6 +9,7 @@
 #import "OLJudoPayCard.h"
 #import <UICKeyChainStore.h>
 #import <AFNetworking.h>
+#import "OLConstants.h"
 
 static NSString *const kKeyNumberMasked = @"co.oceanlabs.judopay.kKeyNumberMasked";
 static NSString *const kKeyCardType = @"co.oceanlabs.judopay.kKeyCardtype";
@@ -30,13 +31,13 @@ static NSString *const kOLErrorDomainJudoPay = @"co.oceanlabs.judopay.kOLErrorDo
 static NSString *const kServiceName = @"co.oceanlabs.judopay.kServiceName";
 static NSString *const kKeychainJudoPayLastUsedCardDetails = @"co.oceanlabs.judopay.kKeychainJudoPayCardDetails";
 
-#define kErrorTitleGenericPaymentFailed      NSLocalizedString(@"Payment Failed", @"Generic payment failed error dialog title")
-#define kErrorTitleInvalidCVV                NSLocalizedString(@"Invalid CVV", @"Invalid CVV payment failed error dialog title")
-#define kErrorTitlePaymentDeclined           NSLocalizedString(@"Payment Declined", @"Payment declined error dialog title")
+#define kErrorTitleGenericPaymentFailed      NSLocalizedStringFromTableInBundle(@"Payment Failed", @"KitePrintSDK", [OLConstants bundle], @"Generic payment failed error dialog title")
+#define kErrorTitleInvalidCVV                NSLocalizedStringFromTableInBundle(@"Invalid CVV", @"KitePrintSDK", [OLConstants bundle], @"Invalid CVV payment failed error dialog title")
+#define kErrorTitlePaymentDeclined           NSLocalizedStringFromTableInBundle(@"Payment Declined", @"KitePrintSDK", [OLConstants bundle], @"Payment declined error dialog title")
 
-#define kErrorMessageGenericPaymentFailed    NSLocalizedString(@"Unfortunately we failed to take a payment from your card. Please try again.", @"Generic payment failed error dialog message")
-#define kErrorMessageInvalidCVV              NSLocalizedString(@"You have entered an invalid CVV number. Please check it and try again.", @"Invalid CVV payment failed error dialog message")
-#define kErrorMessagePaymentDeclined         NSLocalizedString(@"Your payment has been declined. Please check your card details and try again.", @"Payment declined error dialog message")
+#define kErrorMessageGenericPaymentFailed    NSLocalizedStringFromTableInBundle(@"Unfortunately we failed to take a payment from your card. Please try again.", @"KitePrintSDK", [OLConstants bundle], @"Generic payment failed error dialog message")
+#define kErrorMessageInvalidCVV              NSLocalizedStringFromTableInBundle(@"You have entered an invalid CVV number. Please check it and try again.", @"KitePrintSDK", [OLConstants bundle], @"Invalid CVV payment failed error dialog message")
+#define kErrorMessagePaymentDeclined         NSLocalizedStringFromTableInBundle(@"Your payment has been declined. Please check your card details and try again.", @"KitePrintSDK", [OLConstants bundle], @"Payment declined error dialog message")
 
 static const NSUInteger kStatusCodeSuccess = 200;
 static const NSUInteger kStatusBadRequest  = 400;

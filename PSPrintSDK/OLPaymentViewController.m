@@ -22,6 +22,7 @@
 #import "OLProductTemplate.h"
 #import "OLCountry.h"
 #import "OLJudoPayCard.h"
+#import "OLConstants.h"
 
 static NSString *const kCardIOAppToken = @"f1d07b66ad21407daf153c0ac66c09d7";
 static NSString *const kSectionOrderSummary = @"kSectionOrderSummary";
@@ -74,7 +75,7 @@ static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.title = NSLocalizedString(@"Payment", @"");
+    self.title = NSLocalizedStringFromTableInBundle(@"Payment", @"KitePrintSDK", [OLConstants bundle], @"");
     
     self.sections = [@[kSectionOrderSummary, kSectionPromoCodes, kSectionPayment] mutableCopy];
     
@@ -97,10 +98,10 @@ static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
     self.payWithCreditCardButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 44)];
     self.payWithCreditCardButton.backgroundColor = [UIColor colorWithRed:55 / 255.0f green:188 / 255.0f blue:155 / 255.0f alpha:1.0];
     [self.payWithCreditCardButton addTarget:self action:@selector(onButtonPayWithCreditCardClicked) forControlEvents:UIControlEventTouchUpInside];
-    [self.payWithCreditCardButton setTitle:NSLocalizedString(@"Pay with Card", @"") forState:UIControlStateNormal];
+    [self.payWithCreditCardButton setTitle:NSLocalizedStringFromTableInBundle(@"Pay with Card", @"KitePrintSDK", [OLConstants bundle], @"") forState:UIControlStateNormal];
     
     self.payWithPayPalButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 52, self.view.frame.size.width, 44)];
-    [self.payWithPayPalButton setTitle:NSLocalizedString(@"Pay with PayPal", @"") forState:UIControlStateNormal];
+    [self.payWithPayPalButton setTitle:NSLocalizedStringFromTableInBundle(@"Pay with PayPal", @"KitePrintSDK", [OLConstants bundle], @"") forState:UIControlStateNormal];
     [self.payWithPayPalButton addTarget:self action:@selector(onButtonPayWithPayPalClicked) forControlEvents:UIControlEventTouchUpInside];
     self.payWithPayPalButton.backgroundColor = [UIColor colorWithRed:74 / 255.0f green:137 / 255.0f blue:220 / 255.0f alpha:1.0];
     
@@ -217,7 +218,7 @@ static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
             self.loadingTemplatesView.hidden = YES;
         }];
     } else {
-        UIAlertView *av = [[UIAlertView alloc] initWithTitle:@"Oops!" message:syncCompletionError.localizedDescription delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", @"") otherButtonTitles:NSLocalizedString(@"Retry", @""), nil];
+        UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLConstants bundle], @"") message:syncCompletionError.localizedDescription delegate:self cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLConstants bundle], @"") otherButtonTitles:NSLocalizedStringFromTableInBundle(@"Retry", @"KitePrintSDK", [OLConstants bundle], @""), nil];
         [av show];
     }
 }
@@ -226,10 +227,10 @@ static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
     NSComparisonResult result = [self.printOrder.cost compare:[NSDecimalNumber zero]];
     if (result == NSOrderedAscending || result == NSOrderedSame) {
         self.payWithPayPalButton.hidden = YES;
-        [self.payWithCreditCardButton setTitle:NSLocalizedString(@"Checkout for Free!", @"") forState:UIControlStateNormal];
+        [self.payWithCreditCardButton setTitle:NSLocalizedStringFromTableInBundle(@"Checkout for Free!", @"KitePrintSDK", [OLConstants bundle], @"") forState:UIControlStateNormal];
     } else {
         self.payWithPayPalButton.hidden = NO;
-        [self.payWithCreditCardButton setTitle:NSLocalizedString(@"Pay with Credit Card", @"") forState:UIControlStateNormal];
+        [self.payWithCreditCardButton setTitle:NSLocalizedStringFromTableInBundle(@"Pay with Credit Card", @"KitePrintSDK", [OLConstants bundle], @"") forState:UIControlStateNormal];
     }
     
     [self.tableView reloadData];
@@ -265,12 +266,12 @@ static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
         [self updateViewsBasedOnPromoCodeChange];
     } else {
         // Apply promo code
-        [SVProgressHUD showWithStatus:@"Checking Code"];
+        [SVProgressHUD showWithStatus:NSLocalizedStringFromTableInBundle(@"Checking Code", @"KitePrintSDK", [OLConstants bundle], @"")];
         [self.printOrder applyPromoCode:self.promoTextField.text withCompletionHandler:^(NSDecimalNumber *discount, NSError *error) {
             [self.tableView reloadData];
             if (error) {
                 [SVProgressHUD dismiss];
-                [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Oops", @"") message:error.localizedDescription delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"") otherButtonTitles:nil] show];
+                [[[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Oops", @"KitePrintSDK", [OLConstants bundle], @"") message:error.localizedDescription delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLConstants bundle], @"") otherButtonTitles:nil] show];
             } else {
                 [SVProgressHUD showSuccessWithStatus:nil];
                 [self updateViewsBasedOnPromoCodeChange];
@@ -295,7 +296,7 @@ static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
         if (card == nil) {
             [self payWithNewCard];
         } else {
-            UIActionSheet *paysheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Pay with new card", [NSString stringWithFormat:@"Pay with card ending %@", [[card numberMasked] substringFromIndex:[[card numberMasked] length] - 4]], nil];
+            UIActionSheet *paysheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLConstants bundle], @"") destructiveButtonTitle:nil otherButtonTitles:NSLocalizedStringFromTableInBundle(@"Pay with new card", @"KitePrintSDK", [OLConstants bundle], @""), [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Pay with card ending %@", @"KitePrintSDK", [OLConstants bundle], @""), [[card numberMasked] substringFromIndex:[[card numberMasked] length] - 4]], nil];
             [paysheet showInView:self.view];
         }
     }
@@ -312,11 +313,11 @@ static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
     if ([OLKitePrintSDK useJudoPayForGBP]) {
         NSAssert(![self.printOrder.currencyCode isEqualToString:@"GBP"], @"JudoPay should be used for GBP orders (and only for OceanLabs internal use)");
     }
-    [SVProgressHUD showWithStatus:NSLocalizedString(@"Processing", @"") maskType:SVProgressHUDMaskTypeBlack];
+    [SVProgressHUD showWithStatus:NSLocalizedStringFromTableInBundle(@"Processing", @"KitePrintSDK", [OLConstants bundle], @"") maskType:SVProgressHUDMaskTypeBlack];
     [card chargeCard:self.printOrder.cost currencyCode:self.printOrder.currencyCode description:@"" completionHandler:^(NSString *proofOfPayment, NSError *error) {
         if (error) {
             [SVProgressHUD dismiss];
-            [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Oops!", @"") message:error.localizedDescription delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+            [[[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLConstants bundle], @"") message:error.localizedDescription delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLConstants bundle], @"") otherButtonTitles:nil] show];
             return;
         }
         
@@ -327,11 +328,11 @@ static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
 
 - (void)payWithExistingJudoPayCard:(OLJudoPayCard *)card {
     NSAssert([self.printOrder.currencyCode isEqualToString:@"GBP"], @"JudoPay should only be used for GBP orders (and only for OceanLabs internal use)");
-    [SVProgressHUD showWithStatus:NSLocalizedString(@"Processing", @"") maskType:SVProgressHUDMaskTypeBlack];
+    [SVProgressHUD showWithStatus:NSLocalizedStringFromTableInBundle(@"Processing", @"KitePrintSDK", [OLConstants bundle], @"") maskType:SVProgressHUDMaskTypeBlack];
     [card chargeCard:self.printOrder.cost currency:kOLJudoPayCurrencyGBP description:@"" completionHandler:^(NSString *proofOfPayment, NSError *error) {
         if (error) {
             [SVProgressHUD dismiss];
-            [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Oops!", @"") message:error.localizedDescription delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+            [[[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLConstants bundle], @"") message:error.localizedDescription delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLConstants bundle], @"") otherButtonTitles:nil] show];
             return;
         }
         
@@ -364,14 +365,14 @@ static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
     [[NSNotificationCenter defaultCenter] postNotificationName:kOLNotificationUserCompletedPayment object:self userInfo:@{kOLKeyUserInfoPrintOrder: self.printOrder}];
     [self.printOrder saveToHistory];
     
-    [SVProgressHUD showWithStatus:NSLocalizedString(@"Processing", @"") maskType:SVProgressHUDMaskTypeBlack];
+    [SVProgressHUD showWithStatus:NSLocalizedStringFromTableInBundle(@"Processing", @"KitePrintSDK", [OLConstants bundle], @"") maskType:SVProgressHUDMaskTypeBlack];
     [self.printOrder submitForPrintingWithProgressHandler:^(NSUInteger totalAssetsUploaded, NSUInteger totalAssetsToUpload,
                                                             long long totalAssetBytesWritten, long long totalAssetBytesExpectedToWrite,
                                                             long long totalBytesWritten, long long totalBytesExpectedToWrite) {
 
         const float step = (1.0f / totalAssetsToUpload);
         float progress = totalAssetsUploaded * step + (totalAssetBytesWritten / (float) totalAssetBytesExpectedToWrite) * step;
-        [SVProgressHUD showProgress:progress status:[NSString stringWithFormat:@"Uploading Images \n%lu / %lu", (unsigned long) totalAssetsUploaded + 1, (unsigned long) totalAssetsToUpload] maskType:SVProgressHUDMaskTypeBlack];
+        [SVProgressHUD showProgress:progress status:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Uploading Images \n%lu / %lu", @"KitePrintSDK", [OLConstants bundle], @""), (unsigned long) totalAssetsUploaded + 1, (unsigned long) totalAssetsToUpload] maskType:SVProgressHUDMaskTypeBlack];
     } completionHandler:^(NSString *orderIdReceipt, NSError *error) {
         [[NSNotificationCenter defaultCenter] postNotificationName:kOLNotificationPrintOrderSubmission object:self userInfo:@{kOLKeyUserInfoPrintOrder: self.printOrder}];
         [self.printOrder saveToHistory]; // save again as the print order has it's receipt set if it was successful, otherwise last error is set
@@ -380,7 +381,7 @@ static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
         [self.navigationController pushViewController:receiptVC animated:YES];
         
         if (error) {
-            [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Oops!", @"") message:error.localizedDescription delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"") otherButtonTitles:nil] show];
+            [[[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLConstants bundle], @"") message:error.localizedDescription delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLConstants bundle], @"") otherButtonTitles:nil] show];
         }
     }];
 }
@@ -407,13 +408,13 @@ static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
             type = kOLPayPalCardTypeDiscover;
             break;
         default: {
-            UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Oops!", @"") message:NSLocalizedString(@"Sorry we couldn't recognize your card. Please try again manually entering your card details if necessary.", @"") delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"") otherButtonTitles:nil];
+            UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLConstants bundle], @"") message:NSLocalizedStringFromTableInBundle(@"Sorry we couldn't recognize your card. Please try again manually entering your card details if necessary.", @"KitePrintSDK", [OLConstants bundle], @"") delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLConstants bundle], @"") otherButtonTitles:nil];
             [av show];
             return;
         }
     }
     
-    [SVProgressHUD showWithStatus:NSLocalizedString(@"Processing", @"") maskType:SVProgressHUDMaskTypeBlack];
+    [SVProgressHUD showWithStatus:NSLocalizedStringFromTableInBundle(@"Processing", @"KitePrintSDK", [OLConstants bundle], @"") maskType:SVProgressHUDMaskTypeBlack];
     OLPayPalCard *card = [[OLPayPalCard alloc] init];
     card.type = type;
     card.number = cardInfo.cardNumber;
@@ -444,7 +445,7 @@ static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
             type = kOLJudoPayCardTypeDiscover;
             break;
         default: {
-            UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Oops!", @"") message:NSLocalizedString(@"Sorry we couldn't recognize your card. Please try again manually entering your card details if necessary.", @"") delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"") otherButtonTitles:nil];
+            UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLConstants bundle], @"") message:NSLocalizedStringFromTableInBundle(@"Sorry we couldn't recognize your card. Please try again manually entering your card details if necessary.", @"KitePrintSDK", [OLConstants bundle], @"") delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLConstants bundle], @"") otherButtonTitles:nil];
             [av show];
             return;
         }
@@ -514,14 +515,14 @@ static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
     NSString* sectionString = [self.sections objectAtIndex:section];
     if ([sectionString isEqualToString:kSectionPayment]) {
         if ([OLKitePrintSDK environment] == kOLKitePrintSDKEnvironmentSandbox) {
-            return NSLocalizedString(@"Payment (Sandbox)", @"");
+            return NSLocalizedStringFromTableInBundle(@"Payment (Sandbox)", @"KitePrintSDK", [OLConstants bundle], @"");
         } else {
-            return NSLocalizedString(@"Payment", @"");
+            return NSLocalizedStringFromTableInBundle(@"Payment", @"KitePrintSDK", [OLConstants bundle], @"");
         }
     } else if ([sectionString isEqualToString:kSectionOrderSummary]) {
-        return NSLocalizedString(@"Order Summary", @"");
+        return NSLocalizedStringFromTableInBundle(@"Order Summary", @"KitePrintSDK", [OLConstants bundle], @"");
     } else if ([sectionString isEqualToString:kSectionPromoCodes]) {
-        return NSLocalizedString(@"Promotional Codes", @"");
+        return NSLocalizedStringFromTableInBundle(@"Promotional Codes", @"KitePrintSDK", [OLConstants bundle], @"");
     } else if ([sectionString isEqualToString:kSectionContinueShopping]) {
         return @""; //Don't need a section title here.
     }
@@ -550,7 +551,7 @@ static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
         NSDecimalNumber *cost = nil;
         NSString *currencyCode = self.printOrder.currencyCode;
         if (total) {
-            cell.textLabel.text = NSLocalizedString(@"Total", @"");
+            cell.textLabel.text = NSLocalizedStringFromTableInBundle(@"Total", @"KitePrintSDK", [OLConstants bundle], @"");
             cell.textLabel.font = [UIFont boldSystemFontOfSize:cell.textLabel.font.pointSize];
             cell.detailTextLabel.font = [UIFont boldSystemFontOfSize:cell.detailTextLabel.font.pointSize];
             cost = [self.printOrder cost];
@@ -584,7 +585,7 @@ static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
         cell.frame = CGRectMake(0, 0, tableView.frame.size.width, 43);
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         UIButton *continueShoppingButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        [continueShoppingButton setTitle:NSLocalizedString(@"Continue Shopping", @"") forState:UIControlStateNormal];
+        [continueShoppingButton setTitle:NSLocalizedStringFromTableInBundle(@"Continue Shopping", @"KitePrintSDK", [OLConstants bundle], @"") forState:UIControlStateNormal];
         continueShoppingButton.frame = cell.frame;
         continueShoppingButton.titleLabel.adjustsFontSizeToFitWidth = YES;
         continueShoppingButton.titleLabel.minimumScaleFactor = 0.5;
@@ -600,11 +601,11 @@ static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
             cell.frame = CGRectMake(0, 0, tableView.frame.size.width, 43);
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
             UITextField *promoCodeTextField = [[UITextField alloc] initWithFrame:CGRectMake(20, 0, 232, 43)];
-            promoCodeTextField.placeholder = NSLocalizedString(@"Code", @"");
+            promoCodeTextField.placeholder = NSLocalizedStringFromTableInBundle(@"Code", @"KitePrintSDK", [OLConstants bundle], @"");
             promoCodeTextField.delegate = self;
             
             UIButton *applyButton = [UIButton buttonWithType:UIButtonTypeCustom];
-            [applyButton setTitle:NSLocalizedString(@"Apply", @"") forState:UIControlStateNormal];
+            [applyButton setTitle:NSLocalizedStringFromTableInBundle(@"Apply", @"KitePrintSDK", [OLConstants bundle], @"") forState:UIControlStateNormal];
             applyButton.frame = CGRectMake(260, 7, 40, 30);
             applyButton.titleLabel.adjustsFontSizeToFitWidth = YES;
             applyButton.titleLabel.minimumScaleFactor = 0.5;
@@ -623,12 +624,12 @@ static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
         if (self.printOrder.promoCode) {
             self.promoTextField.text = self.printOrder.promoCode;
             self.promoTextField.enabled = NO;
-            [self.promoApplyButton setTitle:NSLocalizedString(@"Clear", @"") forState:UIControlStateNormal];
+            [self.promoApplyButton setTitle:NSLocalizedStringFromTableInBundle(@"Clear", @"KitePrintSDK", [OLConstants bundle], @"") forState:UIControlStateNormal];
             [self.promoApplyButton sizeToFit];
         } else {
             self.promoTextField.text = @"";
             self.promoTextField.enabled = YES;
-            [self.promoApplyButton setTitle:NSLocalizedString(@"Apply", @"") forState:UIControlStateNormal];
+            [self.promoApplyButton setTitle:NSLocalizedStringFromTableInBundle(@"Apply", @"KitePrintSDK", [OLConstants bundle], @"") forState:UIControlStateNormal];
             [self.promoApplyButton sizeToFit];
         }
     }

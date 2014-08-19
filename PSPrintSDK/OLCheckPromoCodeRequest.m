@@ -74,7 +74,7 @@ static NSString *urlencode(NSString *str) {
                     }
                 }
                 
-                handler(nil, [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeServerFault userInfo:@{NSLocalizedDescriptionKey: NSLocalizedString(@"Failed to validate your promo code. Please try again.", @"")}]);
+                handler(nil, [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeServerFault userInfo:@{NSLocalizedDescriptionKey: NSLocalizedStringFromTableInBundle(@"Failed to validate your promo code. Please try again.", @"KitePrintSDK", [OLConstants bundle], @"")}]);
             }
         }
     }];
