@@ -249,7 +249,7 @@ typedef void (^UploadAssetsCompletionHandler)(NSError *error);
             }
             
             
-            //[zelf.delegate assetUploadRequest:zelf didSucceedWithAssets:assets];
+            [zelf.delegate assetUploadRequest:zelf didSucceedWithAssets:assets];
         }
     };
     
