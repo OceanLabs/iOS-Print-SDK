@@ -211,7 +211,7 @@ typedef void (^UploadAssetsCompletionHandler)(NSError *error);
 - (void)uploadOLAssets:(NSArray/*<OLAsset>*/ *)assets {
     NSMutableArray *imageURLAssets = [[NSMutableArray alloc] init];
     NSMutableArray *assetsToUpload = [[NSMutableArray alloc] init];
-    
+    NSMutableArray *cropBoxInfo = [[NSMutableArray alloc] init];
     for (OLAsset *asset in assets) {
         if (asset.assetType == kOLAssetTypeRemoteImageURL) {
             [imageURLAssets addObject:asset];
@@ -243,13 +243,36 @@ typedef void (^UploadAssetsCompletionHandler)(NSError *error);
             [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
             
             for(OLAsset *a in assets) {
+                
+                
                 if([a isCropBoxSet]) {
+                    NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
+                    dict[@"resource_uri"] = [NSString stringWithFormat:@"/v1.1/asset/%lld/", a.assetId];
+                    dict[@"crop_x"] = [NSNumber numberWithFloat:a.cropBox.origin.x]; //a.cropBox.origin
+                    dict[@"crop_y"] = [NSNumber numberWithFloat:a.cropBox.origin.y];
+                    dict[@"crop_width"] = [NSNumber numberWithFloat:a.cropBox.size.width];
+                    dict[@"crop_height"] = [NSNumber numberWithFloat:a.cropBox.size.height];
+                    [cropBoxInfo addObject:dict];
                     
                 }
             }
             
-            
-            [zelf.delegate assetUploadRequest:zelf didSucceedWithAssets:assets];
+            if([cropBoxInfo count] > 0) {
+                NSMutableDictionary *objects = [[NSMutableDictionary alloc] init];
+                objects[@"objects"] = cropBoxInfo;
+                AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+                manager.requestSerializer = [[AFJSONRequestSerializer alloc] init];
+                [manager.requestSerializer setValue:[NSString stringWithFormat:@"ApiKey %@:", [OLKitePrintSDK apiKey]] forHTTPHeaderField:@"Authorization"];
+                [manager.requestSerializer setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+                NSString *endpoint = [NSString stringWithFormat:@"%@/v1.1/asset/", [OLKitePrintSDK apiEndpoint]];
+                self.s3UploadOp = [manager PATCH:endpoint parameters:objects success:^(AFHTTPRequestOperation *operation, id responseObject) {
+                    [zelf.delegate assetUploadRequest:zelf didSucceedWithAssets:assets];
+                } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                    [zelf.delegate assetUploadRequest:zelf didFailWithError:error];
+                }];
+            } else {
+                [zelf.delegate assetUploadRequest:zelf didSucceedWithAssets:assets];
+            }
         }
     };
     
