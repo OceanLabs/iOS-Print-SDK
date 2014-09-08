@@ -50,8 +50,8 @@ static const NSUInteger kTagLabel = 100;
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.editingExistingSavedAddress = self.address.isSavedInAddressBook;
-    self.title = self.editingExistingSavedAddress ? @"Edit Address" : @"Add Address";
-    UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithTitle:self.editingExistingSavedAddress ? @"Save" : @"Add" style:UIBarButtonItemStyleDone target:self action:@selector(onSaveButtonClicked)];
+    self.title = self.editingExistingSavedAddress ? NSLocalizedStringFromTableInBundle(@"Edit Address", @"KitePrintSDK", [NSBundle mainBundle], @"") : NSLocalizedStringFromTableInBundle(@"Add Address", @"KitePrintSDK", [NSBundle mainBundle], @"");
+    UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithTitle:self.editingExistingSavedAddress ? NSLocalizedStringFromTableInBundle(@"Save", @"KitePrintSDK", [NSBundle mainBundle], @"") : NSLocalizedStringFromTableInBundle(@"Add", @"KitePrintSDK", [NSBundle mainBundle], @"") style:UIBarButtonItemStyleDone target:self action:@selector(onSaveButtonClicked)];
     self.navigationItem.rightBarButtonItem = doneButton;
 }
 
@@ -119,38 +119,38 @@ static const NSUInteger kTagLabel = 100;
     tf.autocapitalizationType = UITextAutocapitalizationTypeWords;
     switch (indexPath.row) {
         case 0:
-            label.text = @"Name";
+            label.text = NSLocalizedStringFromTableInBundle(@"Name", @"KitePrintSDK", [NSBundle mainBundle], @"");
             tf.text = self.address.recipientName;
             self.textFieldName = tf;
             break;
         case 1:
-            label.text = @"Line 1";
+            label.text = NSLocalizedStringFromTableInBundle(@"Line 1", @"KitePrintSDK", [NSBundle mainBundle], @"");
             tf.text = self.address.line1;
             self.textFieldLine1 = tf;
             break;
         case 2:
-            label.text = @"Line 2";
+            label.text = NSLocalizedStringFromTableInBundle(@"Line 2", @"KitePrintSDK", [NSBundle mainBundle], @"");
             tf.text = self.address.line2;
             self.textFieldLine2 = tf;
             break;
         case 3:
-            label.text = @"City";
+            label.text = NSLocalizedStringFromTableInBundle(@"City", @"KitePrintSDK", [NSBundle mainBundle], @"");
             tf.text = self.address.city;
             self.textFieldCity = tf;
             break;
         case 4:
-            label.text = @"County";
+            label.text = NSLocalizedStringFromTableInBundle(@"County", @"KitePrintSDK", [NSBundle mainBundle], @"");
             tf.text = self.address.stateOrCounty;
             self.textFieldCounty = tf;
             break;
         case 5:
-            label.text = @"Postcode";
+            label.text = NSLocalizedStringFromTableInBundle(@"Postcode", @"KitePrintSDK", [NSBundle mainBundle], @"");
             tf.text = self.address.zipOrPostcode;
             tf.autocapitalizationType = UITextAutocapitalizationTypeAllCharacters;
             self.textFieldPostCode = tf;
             break;
         case 6:
-            label.text = @"Country";
+            label.text = NSLocalizedStringFromTableInBundle(@"Country", @"KitePrintSDK", [NSBundle mainBundle], @"");
             tf.text = self.address.country.name;
             tf.enabled = NO;
             [tf setNeedsLayout];

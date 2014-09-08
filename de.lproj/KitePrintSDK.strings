@@ -193,3 +193,21 @@
 /* No comment provided by engineer. */
 "Your payment was not approved (transaction state: %@). Please try again." = "Ihre Zahlung konnte nicht bestätigt werden (Transaktionsstatus: %@). Bitte versuchen Sie es erneut.";
 
+/* No comment provided by engineer. */
+"Name" = "Name";
+
+/* No comment provided by engineer. */
+"Line 1" = "Line 1";
+
+/* No comment provided by engineer. */
+"Line 2" = "Line 2";
+
+/* No comment provided by engineer. */
+"City" = "City";
+
+/* No comment provided by engineer. */
+"County" = "County";
+
+/* No comment provided by engineer. */
+"Postcode" = "Postcode";
+
