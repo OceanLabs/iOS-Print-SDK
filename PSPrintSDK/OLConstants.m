@@ -21,10 +21,6 @@ NSString *const kOLKiteSDKErrorMessageUnauthorized = @"Unauthorized Kite Print S
 
 + (NSBundle *)bundle {
     NSBundle* bundle;
-    NSURL *url = [[NSBundle mainBundle] URLForResource:@"UserVoice" withExtension:@"bundle"];
-    if (url) {
-        bundle = [NSBundle bundleWithURL:url];
-    }
     
     if (!bundle) {
         bundle = [NSBundle mainBundle];
