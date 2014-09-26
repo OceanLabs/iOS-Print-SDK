@@ -111,12 +111,16 @@ static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
     self.payWithCreditCardButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 44)];
     self.payWithCreditCardButton.backgroundColor = [UIColor colorWithRed:162 / 255.0f green:227 / 255.0f blue:229 / 255.0f alpha:1.0];
     self.payWithCreditCardButton.titleLabel.font =[UIFont fontWithName:@"GillSans" size:17];
+    self.payWithCreditCardButton.tintColor = [UIColor blackColor];
+    [self.payWithCreditCardButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [self.payWithCreditCardButton addTarget:self action:@selector(onButtonPayWithCreditCardClicked) forControlEvents:UIControlEventTouchUpInside];
     [self.payWithCreditCardButton setTitle:[NSLocalizedString(@"Pay with Card", @"") uppercaseString] forState:UIControlStateNormal];
     
     self.payWithPayPalButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 52, self.view.frame.size.width, 44)];
     [self.payWithPayPalButton setTitle:[NSLocalizedString(@"Pay with PayPal", @"") uppercaseString] forState:UIControlStateNormal];
     self.payWithPayPalButton.titleLabel.font =[UIFont fontWithName:@"GillSans" size:17];
+    self.payWithPayPalButton.tintColor = [UIColor blackColor];
+    [self.payWithPayPalButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [self.payWithPayPalButton addTarget:self action:@selector(onButtonPayWithPayPalClicked) forControlEvents:UIControlEventTouchUpInside];
     self.payWithPayPalButton.backgroundColor = [UIColor colorWithRed:130 / 255.0f green:190 / 255.0f blue:218 / 255.0f alpha:1.0];
     
