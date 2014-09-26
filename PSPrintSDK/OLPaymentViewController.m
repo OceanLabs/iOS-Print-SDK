@@ -74,8 +74,22 @@ static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.title = NSLocalizedString(@"Payment", @"");
-    
+    // self.title = NSLocalizedString(@"Payment", @"");
+    UIView *titleView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 100, 28)];
+    UIImageView *whiteBox = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"titleBox"]];
+    whiteBox.frame =CGRectMake(0, 0, 100, 28);
+    whiteBox.layer.borderColor = [UIColor blackColor].CGColor;
+    whiteBox.layer.borderWidth = 1.5f;
+    whiteBox.contentMode=UIViewContentModeScaleToFill;
+    UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100, 28)];
+    titleLabel.textAlignment = NSTextAlignmentCenter;
+    [titleLabel setFont:[UIFont fontWithName:@"GillSans-Bold" size:12]];
+    titleLabel.text = [NSLocalizedString(@"Payment", @"") uppercaseString];
+    [titleView addSubview:whiteBox];
+    [titleView addSubview:titleLabel];
+    self.navigationItem.titleView = titleView;
+    //UIImage *test = iv.image;
+    // self.tableView.tableHeaderView = iv;
     self.sections = [@[kSectionOrderSummary, kSectionPromoCodes, kSectionPayment] mutableCopy];
     
     if ([self.delegate respondsToSelector:@selector(shouldShowContinueShoppingButton)]) {
@@ -95,14 +109,16 @@ static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
     }
     
     self.payWithCreditCardButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 44)];
-    self.payWithCreditCardButton.backgroundColor = [UIColor colorWithRed:55 / 255.0f green:188 / 255.0f blue:155 / 255.0f alpha:1.0];
+    self.payWithCreditCardButton.backgroundColor = [UIColor colorWithRed:162 / 255.0f green:227 / 255.0f blue:229 / 255.0f alpha:1.0];
+    self.payWithCreditCardButton.titleLabel.font =[UIFont fontWithName:@"GillSans" size:17];
     [self.payWithCreditCardButton addTarget:self action:@selector(onButtonPayWithCreditCardClicked) forControlEvents:UIControlEventTouchUpInside];
-    [self.payWithCreditCardButton setTitle:NSLocalizedString(@"Pay with Card", @"") forState:UIControlStateNormal];
+    [self.payWithCreditCardButton setTitle:[NSLocalizedString(@"Pay with Card", @"") uppercaseString] forState:UIControlStateNormal];
     
     self.payWithPayPalButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 52, self.view.frame.size.width, 44)];
-    [self.payWithPayPalButton setTitle:NSLocalizedString(@"Pay with PayPal", @"") forState:UIControlStateNormal];
+    [self.payWithPayPalButton setTitle:[NSLocalizedString(@"Pay with PayPal", @"") uppercaseString] forState:UIControlStateNormal];
+    self.payWithPayPalButton.titleLabel.font =[UIFont fontWithName:@"GillSans" size:17];
     [self.payWithPayPalButton addTarget:self action:@selector(onButtonPayWithPayPalClicked) forControlEvents:UIControlEventTouchUpInside];
-    self.payWithPayPalButton.backgroundColor = [UIColor colorWithRed:74 / 255.0f green:137 / 255.0f blue:220 / 255.0f alpha:1.0];
+    self.payWithPayPalButton.backgroundColor = [UIColor colorWithRed:130 / 255.0f green:190 / 255.0f blue:218 / 255.0f alpha:1.0];
     
     UIView *footer = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, CGRectGetMaxY(self.payWithPayPalButton.frame))];
     [footer addSubview:self.payWithCreditCardButton];
@@ -129,7 +145,7 @@ static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardDidShow:) name:UIKeyboardDidShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
-
+    
     UITapGestureRecognizer *tgr = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onBackgroundClicked)];
     tgr.cancelsTouchesInView = NO; // allow table cell selection to happen as normal
     [self.tableView addGestureRecognizer:tgr];
@@ -229,7 +245,7 @@ static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
         [self.payWithCreditCardButton setTitle:NSLocalizedString(@"Checkout for Free!", @"") forState:UIControlStateNormal];
     } else {
         self.payWithPayPalButton.hidden = NO;
-        [self.payWithCreditCardButton setTitle:NSLocalizedString(@"Pay with Credit Card", @"") forState:UIControlStateNormal];
+        [self.payWithCreditCardButton setTitle:[NSLocalizedString(@"Pay with Credit Card", @"") uppercaseString] forState:UIControlStateNormal];
     }
     
     [self.tableView reloadData];
@@ -285,7 +301,7 @@ static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
         // The user must have a promo code which reduces this order cost to nothing, lucky user :)
         [self submitOrderForPrintingWithProofOfPayment:nil];
     } else {
-
+        
         id card = [OLPayPalCard lastUsedCard];
         
         if ([OLKitePrintSDK useJudoPayForGBP] && [self.printOrder.currencyCode isEqualToString:@"GBP"]) {
@@ -347,7 +363,7 @@ static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
     payment.currencyCode = self.printOrder.currencyCode;
     payment.shortDescription = @"Product";
     NSAssert(payment.processable, @"oops");
-
+    
     NSString *aPayerId = @"someuser@somedomain.com"; // TODO: Needed for vault lookup
     PayPalPaymentViewController *paymentViewController;
     paymentViewController = [[PayPalPaymentViewController alloc] initWithClientId:[OLKitePrintSDK paypalClientId]
@@ -368,7 +384,7 @@ static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
     [self.printOrder submitForPrintingWithProgressHandler:^(NSUInteger totalAssetsUploaded, NSUInteger totalAssetsToUpload,
                                                             long long totalAssetBytesWritten, long long totalAssetBytesExpectedToWrite,
                                                             long long totalBytesWritten, long long totalBytesExpectedToWrite) {
-
+        
         const float step = (1.0f / totalAssetsToUpload);
         float progress = totalAssetsUploaded * step + (totalAssetBytesWritten / (float) totalAssetBytesExpectedToWrite) * step;
         [SVProgressHUD showProgress:progress status:[NSString stringWithFormat:@"Uploading Images \n%lu / %lu", (unsigned long) totalAssetsUploaded + 1, (unsigned long) totalAssetsToUpload] maskType:SVProgressHUDMaskTypeBlack];
@@ -425,7 +441,7 @@ static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
         // ignore error as I'd rather the user gets a nice checkout experience than we store the card in PayPal vault.
         [self payWithExistingPayPalCard:card];
     }];
-
+    
 }
 
 - (void)userDidProvideCreditCardInfoToPayByJudoPay:(CardIOCreditCardInfo *)cardInfo {
@@ -466,7 +482,7 @@ static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
         } else {
             [self userDidProvideCreditCardInfoToPayByPayPal:cardInfo];
         }
-
+        
     }];
 }
 
@@ -611,7 +627,7 @@ static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
             [applyButton setTitleColor:[UIColor colorWithRed:0 green:122 / 255.0 blue:255 / 255.0 alpha:1.0f] forState:UIControlStateNormal];
             [applyButton setTitleColor:[UIColor colorWithRed:146 / 255.0 green:146 / 255.0 blue:146 / 255.0 alpha:1.0f] forState:UIControlStateDisabled];
             applyButton.enabled = NO;
-
+            
             [applyButton addTarget:self action:@selector(onButtonApplyPromoCodeClicked:) forControlEvents:UIControlEventTouchUpInside];
             [cell addSubview:promoCodeTextField];
             [cell addSubview:applyButton];

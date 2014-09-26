@@ -52,7 +52,7 @@ static const NSUInteger kInputFieldTag = 99;
         //[self.printOrder preemptAssetUpload];
         [OLProductTemplate sync];
     }
-
+    
     return self;
 }
 
@@ -69,9 +69,24 @@ static const NSUInteger kInputFieldTag = 99;
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Next", @"") style:UIBarButtonItemStylePlain target:self action:@selector(onButtonNextClicked)];
-    self.title = NSLocalizedString(@"Shipping", @"");
-    self.tableView.tableHeaderView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"checkout_progress_indicator"]];
-
+    //self.title = NSLocalizedString(@"Shipping", @"");
+    UIView *titleView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 100, 28)];
+    UIImageView *whiteBox = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"titleBox"]];
+    whiteBox.frame =CGRectMake(0, 0, 100, 28);
+    whiteBox.layer.borderColor = [UIColor blackColor].CGColor;
+    whiteBox.layer.borderWidth = 1.5f;
+    whiteBox.contentMode=UIViewContentModeScaleToFill;
+    UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100, 28)];
+    titleLabel.textAlignment = NSTextAlignmentCenter;
+    [titleLabel setFont:[UIFont fontWithName:@"GillSans-Bold" size:12]];
+    titleLabel.text = [NSLocalizedString(@"Shipping", @"") uppercaseString];
+    [titleView addSubview:whiteBox];
+    [titleView addSubview:titleLabel];
+    self.navigationItem.titleView = titleView;
+    UIImageView *iv = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"checkout_progress_indicator"]];
+    //UIImage *test = iv.image;
+    self.tableView.tableHeaderView = iv;
+    
     UITapGestureRecognizer *tgr = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onBackgroundClicked)];
     tgr.cancelsTouchesInView = NO; // allow table cell selection to happen as normal
     [self.tableView addGestureRecognizer:tgr];
@@ -161,7 +176,7 @@ static const NSUInteger kInputFieldTag = 99;
         [av show];
         return NO;
     }
-
+    
     if (![OLCheckoutViewController validateEmail:self.textFieldEmail.text]) {
         [self scrollSectionToVisible:kSectionEmailAddress];
         UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Invalid Email Address", @"") message:NSLocalizedString(@"Please enter a valid email address", @"") delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"") otherButtonTitles:nil];
@@ -260,7 +275,7 @@ static const NSUInteger kInputFieldTag = 99;
             [self populateDefaultEmailAndPhone];
         }
     }
-
+    
     return cell;
 }
 
