@@ -44,8 +44,21 @@ static const NSUInteger kSectionErrorRetry = 2;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.title = @"Receipt";
-    
+    //self.title = @"Receipt";
+    UIView *titleView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 100, 28)];
+    UIImageView *whiteBox = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"titleBox"]];
+    whiteBox.frame =CGRectMake(0, 0, 100, 28);
+    whiteBox.layer.borderColor = [UIColor blackColor].CGColor;
+    whiteBox.layer.borderWidth = 1.5f;
+    whiteBox.contentMode=UIViewContentModeScaleToFill;
+    UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100, 28)];
+    titleLabel.textAlignment = NSTextAlignmentCenter;
+    [titleLabel setFont:[UIFont fontWithName:@"GillSans-Bold" size:12]];
+    titleLabel.text = [NSLocalizedString(@"Receipt", @"") uppercaseString];
+    [titleView addSubview:whiteBox];
+    [titleView addSubview:titleLabel];
+    self.navigationItem.titleView = titleView;
+
     self.tableView.tableHeaderView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 320, 86)];
     
     if (self.printOrder.printed) {
