@@ -181,8 +181,8 @@ static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    [PayPalPaymentViewController setEnvironment:[OLKitePrintSDK paypalEnvironment]];
-    [PayPalPaymentViewController prepareForPaymentUsingClientId:[OLKitePrintSDK paypalClientId]];
+    [PayPalMobile initializeWithClientIdsForEnvironments:@{[OLKitePrintSDK paypalEnvironment] : [OLKitePrintSDK paypalClientId]}];
+    [PayPalMobile preconnectWithEnvironment:[OLKitePrintSDK paypalEnvironment]];
     
     if ([self isTemplateSyncRequired]) {
         [OLProductTemplate sync];
@@ -349,14 +349,10 @@ static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
     payment.shortDescription = @"Product";
     NSAssert(payment.processable, @"oops");
 
-    NSString *aPayerId = @"someuser@somedomain.com"; // TODO: Needed for vault lookup
     PayPalPaymentViewController *paymentViewController;
-    paymentViewController = [[PayPalPaymentViewController alloc] initWithClientId:[OLKitePrintSDK paypalClientId]
-                                                                    receiverEmail:[OLKitePrintSDK paypalReceiverEmail]
-                                                                          payerId:aPayerId
-                                                                          payment:payment
-                                                                         delegate:self];
-    paymentViewController.hideCreditCardButton = YES;
+    PayPalConfiguration *payPalConfiguration = [[PayPalConfiguration alloc] init];
+    payPalConfiguration.acceptCreditCards = NO;
+    paymentViewController = [[PayPalPaymentViewController alloc] initWithPayment:payment configuration:payPalConfiguration delegate:self];
     [self presentViewController:paymentViewController animated:YES completion:nil];
 }
 
@@ -473,13 +469,13 @@ static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
 
 #pragma mark - PayPalPaymentDelegate methods
 
-- (void)payPalPaymentDidCancel {
+- (void)payPalPaymentDidCancel:(PayPalPaymentViewController *)paymentViewController {
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
-- (void)payPalPaymentDidComplete:(PayPalPayment *)completedPayment {
+- (void)payPalPaymentViewController:(PayPalPaymentViewController *)paymentViewController didCompletePayment:(PayPalPayment *)completedPayment {
     [self dismissViewControllerAnimated:YES completion:nil];
-    [self submitOrderForPrintingWithProofOfPayment:completedPayment.confirmation[@"proof_of_payment"][@"adaptive_payment"][@"pay_key"]];
+    [self submitOrderForPrintingWithProofOfPayment:completedPayment.confirmation[@"response"][@"id"]];
 }
 
 #pragma mark - UITableViewDataSource methods
