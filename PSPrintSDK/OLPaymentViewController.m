@@ -619,7 +619,7 @@ static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
         
         if (self.printOrder.promoCode) {
             self.promoTextField.text = self.printOrder.promoCode;
-            self.promoTextField.enabled = NO;
+            self.promoApplyButton.enabled = YES;
             [self.promoApplyButton setTitle:NSLocalizedStringFromTableInBundle(@"Clear", @"KitePrintSDK", [OLConstants bundle], @"") forState:UIControlStateNormal];
             [self.promoApplyButton sizeToFit];
         } else {
