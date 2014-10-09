@@ -578,7 +578,7 @@ static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
     } else if ([sectionString isEqualToString:kSectionContinueShopping]) {
         static NSString *const CellIdentifier = @"ContinueShoppingCell";
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
-        cell.frame = CGRectMake(0, 0, tableView.frame.size.width, 43);
+        cell.frame = CGRectMake(0, 0, tableView.frame.size.width, 44);
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         UIButton *continueShoppingButton = [UIButton buttonWithType:UIButtonTypeCustom];
         [continueShoppingButton setTitle:NSLocalizedStringFromTableInBundle(@"Continue Shopping", @"KitePrintSDK", [OLConstants bundle], @"") forState:UIControlStateNormal];

@@ -50,6 +50,9 @@ static id stringOrEmptyString(NSString *str) {
 
 @property (nonatomic, strong) OLCheckPromoCodeRequest *checkPromoCodeReq;
 
+@property (strong, nonatomic) NSString *promoCode;
+@property (strong, nonatomic) NSDecimalNumber *promoDiscount;
+
 @end
 
 @implementation OLPrintOrder
@@ -303,8 +306,8 @@ static id stringOrEmptyString(NSString *str) {
     self.checkPromoCodeReq = [[OLCheckPromoCodeRequest alloc] init];
     [self.checkPromoCodeReq checkPromoCode:promoCode withOrder:self andCompletionHandler:^(NSDecimalNumber *discount, NSError *error) {
         if (promoCode && !error) {
-            _promoCode = promoCode;
-            _promoDiscount = discount;
+                self.promoCode = promoCode;
+                self.promoDiscount = discount;
         }
         self.checkPromoCodeReq = nil;
         handler(discount, error);
@@ -312,8 +315,8 @@ static id stringOrEmptyString(NSString *str) {
 }
 
 - (void)clearPromoCode {
-    _promoCode = nil;
-    _promoDiscount = nil;
+    self.promoCode = nil;
+    self.promoDiscount = nil;
 }
 
 #pragma mark - OLAssetUploadRequestDelegate methods
