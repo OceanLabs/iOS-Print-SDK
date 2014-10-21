@@ -41,6 +41,7 @@ static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
 @property (strong, nonatomic) UIButton *promoApplyButton;
 @property (strong, nonatomic) UIButton *payWithCreditCardButton;
 @property (strong, nonatomic) UIButton *payWithPayPalButton;
+@property (strong, nonatomic) UIButton *payWithApplePayButton;
 
 @property (strong, nonatomic) UIView *loadingTemplatesView;
 @property (strong, nonatomic) UITableView *tableView;
@@ -105,9 +106,15 @@ static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
     [self.payWithPayPalButton addTarget:self action:@selector(onButtonPayWithPayPalClicked) forControlEvents:UIControlEventTouchUpInside];
     self.payWithPayPalButton.backgroundColor = [UIColor colorWithRed:74 / 255.0f green:137 / 255.0f blue:220 / 255.0f alpha:1.0];
     
-    UIView *footer = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, CGRectGetMaxY(self.payWithPayPalButton.frame))];
+    self.payWithApplePayButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 104, self.view.frame.size.width, 44)];
+    self.payWithApplePayButton.backgroundColor = [UIColor blackColor];
+    [self.payWithPayPalButton addTarget:self action:@selector(onButtonPayWithApplePayClicked) forControlEvents:UIControlEventTouchUpInside];
+    [self.payWithApplePayButton setTitle:NSLocalizedStringFromTableInBundle(@"Pay with Pay", @"KitePrintSDK", [OLConstants bundle], @"") forState:UIControlStateNormal];
+    
+    UIView *footer = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, CGRectGetMaxY(self.payWithApplePayButton.frame))];
     [footer addSubview:self.payWithCreditCardButton];
     [footer addSubview:self.payWithPayPalButton];
+    [footer addSubview:self.payWithApplePayButton];
     self.tableView.tableFooterView = footer;
     
     [self updateViewsBasedOnPromoCodeChange]; // initialise based on promo state
@@ -354,6 +361,10 @@ static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
     payPalConfiguration.acceptCreditCards = NO;
     paymentViewController = [[PayPalPaymentViewController alloc] initWithPayment:payment configuration:payPalConfiguration delegate:self];
     [self presentViewController:paymentViewController animated:YES completion:nil];
+}
+
+- (IBAction)onButtonPayWithApplePayClicked{
+    
 }
 
 - (void)submitOrderForPrintingWithProofOfPayment:(NSString *)proofOfPayment {
