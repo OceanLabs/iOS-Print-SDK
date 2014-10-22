@@ -44,5 +44,8 @@ static NSString *const kOLMimeTypePNG  = @"image/png";
  */
 @property (nonatomic, readonly) long long assetId;
 @property (nonatomic, readonly) NSURL *previewURL;
+@property(nonatomic, assign)CGRect cropBox;
+
+@property (nonatomic, readonly, getter = isCropBoxSet) BOOL cropboxSet;
 
 @end

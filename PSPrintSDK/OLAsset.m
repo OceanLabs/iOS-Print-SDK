@@ -32,6 +32,10 @@ typedef void (^LoadAssetCompletionHandler)(ALAsset *asset, NSError *error);
 
 @implementation OLAsset
 
+- (BOOL)isCropBoxSet {
+    return self.cropBox.origin.x != 0 || self.cropBox.origin.y != 0 || self.cropBox.size.width != 1 || self.cropBox.size.height != 1;
+}
+
 - (id)initWithImageData:(NSData *)data mimeType:(NSString *)mimeType {
     if (self = [super init]) {
         NSAssert(data != nil, @"image data must be non nil");
