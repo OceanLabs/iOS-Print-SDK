@@ -33,7 +33,18 @@ typedef void (^LoadAssetCompletionHandler)(ALAsset *asset, NSError *error);
 @implementation OLAsset
 
 - (BOOL)isCropBoxSet {
-    return self.cropBox.origin.x != 0 || self.cropBox.origin.y != 0 || self.cropBox.size.width != 1 || self.cropBox.size.height != 1;
+    return self.cropBox.origin.x != 0 || self.cropBox.origin.y != 0 || self.cropBox.size.width != 0 || self.cropBox.size.height != 0;
+}
+
+- (void) cropImage{
+    UIImage *image = [UIImage imageWithData:self.imageData];
+    CGImageRef imageRef = CGImageCreateWithImageInRect([image CGImage], self.cropBox);
+    UIImage *imgs = [UIImage imageWithCGImage:imageRef];
+    CGImageRelease(imageRef);
+    if (imgs){
+        self.imageData = UIImageJPEGRepresentation(imgs, 0.9);
+    }
+    self.cropBox = CGRectZero;
 }
 
 - (id)initWithImageData:(NSData *)data mimeType:(NSString *)mimeType {
@@ -201,7 +212,7 @@ typedef void (^LoadAssetCompletionHandler)(ALAsset *asset, NSError *error);
                     handler(0, error);
                 }
             }];
-
+            
             break;
         }
         case kOLAssetTypeDataSource: {
@@ -215,6 +226,9 @@ typedef void (^LoadAssetCompletionHandler)(ALAsset *asset, NSError *error);
         }
         case kOLAssetTypeImageData: {
             dispatch_async(dispatch_get_main_queue(), ^{
+                if ([self isCropBoxSet]){
+                    [self cropImage];
+                }
                 handler(self.imageData.length, nil);
             });
             break;
@@ -226,7 +240,7 @@ typedef void (^LoadAssetCompletionHandler)(ALAsset *asset, NSError *error);
                 NSNumber *fileSizeNumber = [fileAttributes objectForKey:NSFileSize];
                 handler([fileSizeNumber longLongValue], attributesError);
             });
-
+            
             break;
         }
         case kOLAssetTypeRemoteImageURL: {
@@ -236,7 +250,7 @@ typedef void (^LoadAssetCompletionHandler)(ALAsset *asset, NSError *error);
             break;
         }
     }
-
+    
 }
 
 - (void)dataWithCompletionHandler:(GetDataHandler)handler {
@@ -267,11 +281,14 @@ typedef void (^LoadAssetCompletionHandler)(ALAsset *asset, NSError *error);
                     handler(data, error);
                 });
             }];
-
+            
             break;
         }
         case kOLAssetTypeImageData: {
             dispatch_async(dispatch_get_main_queue(), ^{
+                if ([self isCropBoxSet]){
+                    [self cropImage];
+                }
                 handler(self.imageData, nil);
             });
             break;
