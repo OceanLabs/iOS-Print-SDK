@@ -34,6 +34,9 @@
 static NSString *const kAPIKeySandbox = @"REPLACE_ME"; // replace with your Sandbox API key found under the Profile section in the developer portal
 static NSString *const kAPIKeyLive = @"REPLACE_ME"; // replace with your Live API key found under the Profile section in the developer portal
 
+static NSString *const kStripePublishableKey = @"pk_test_6pRNASCoBOKtIshFeQd4XMUh"; //This is a test key. Replace with the live key here.
+static NSString *const kApplePayMerchantIDKey = @"merchant.co.oceanlabs.kite.ly"; //For internal use only.
+
 @interface ViewController () <UIImagePickerControllerDelegate, UINavigationControllerDelegate, ProductSelectionViewControllerDelegate, OLCheckoutDelegate>
 @property (nonatomic, weak) IBOutlet UISegmentedControl *environmentPicker;
 @property (nonatomic, weak) IBOutlet UITextField *apiKeyTextField;
@@ -53,6 +56,9 @@ static NSString *const kAPIKeyLive = @"REPLACE_ME"; // replace with your Live AP
 
 - (void)viewDidLoad {
     [OLKitePrintSDK setAPIKey:kAPIKeySandbox withEnvironment:kOLKitePrintSDKEnvironmentSandbox];
+    
+    [OLKitePrintSDK setApplePayMerchantID:kApplePayMerchantIDKey];
+    [OLKitePrintSDK setStripeKey:kStripePublishableKey];
     
     [super viewDidLoad];
     self.selectedProduct = kProductSquares;

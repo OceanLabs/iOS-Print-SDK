@@ -23,6 +23,9 @@
 #import "OLCountry.h"
 #import "OLJudoPayCard.h"
 #import "OLConstants.h"
+#import <Stripe+ApplePay.h>
+
+@import PassKit;
 
 static NSString *const kCardIOAppToken = @"f1d07b66ad21407daf153c0ac66c09d7";
 static NSString *const kSectionOrderSummary = @"kSectionOrderSummary";
@@ -41,15 +44,17 @@ static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
 @property (strong, nonatomic) UIButton *promoApplyButton;
 @property (strong, nonatomic) UIButton *payWithCreditCardButton;
 @property (strong, nonatomic) UIButton *payWithPayPalButton;
+@property (strong, nonatomic) UIButton *payWithApplePayButton;
 
 @property (strong, nonatomic) UIView *loadingTemplatesView;
 @property (strong, nonatomic) UITableView *tableView;
 @property (assign, nonatomic) BOOL completedTemplateSyncSuccessfully;
 @property (strong, nonatomic) NSString *paymentCurrencyCode;
 @property (strong, nonatomic) NSMutableArray* sections;
+@property (assign, nonatomic) BOOL applePayIsAvailable;
 @end
 
-@interface OLPaymentViewController () <UITableViewDataSource, UITableViewDelegate>
+@interface OLPaymentViewController () <UITableViewDataSource, UITableViewDelegate, PKPaymentAuthorizationViewControllerDelegate>
 
 @end
 
@@ -73,8 +78,21 @@ static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
     return NO;
 }
 
+-(BOOL)isApplePayAvailable{
+    PKPaymentRequest *request = [Stripe
+                                 paymentRequestWithMerchantIdentifier:[OLKitePrintSDK appleMerchantID]
+                                 amount:self.printOrder.cost
+                                 currency:self.printOrder.currencyCode
+                                 description:@"Prints"];
+    
+    return [Stripe canSubmitPaymentRequest:request];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    self.applePayIsAvailable = [self isApplePayAvailable];
+    
     self.title = NSLocalizedStringFromTableInBundle(@"Payment", @"KitePrintSDK", [OLConstants bundle], @"");
     
     self.sections = [@[kSectionOrderSummary, kSectionPromoCodes, kSectionPayment] mutableCopy];
@@ -95,19 +113,27 @@ static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
         self.tableView.tableHeaderView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"checkout_progress_indicator2"]];
     }
     
-    self.payWithCreditCardButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 44)];
+    self.payWithCreditCardButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 52, self.view.frame.size.width, 44)];
     self.payWithCreditCardButton.backgroundColor = [UIColor colorWithRed:55 / 255.0f green:188 / 255.0f blue:155 / 255.0f alpha:1.0];
     [self.payWithCreditCardButton addTarget:self action:@selector(onButtonPayWithCreditCardClicked) forControlEvents:UIControlEventTouchUpInside];
     [self.payWithCreditCardButton setTitle:NSLocalizedStringFromTableInBundle(@"Pay with Card", @"KitePrintSDK", [OLConstants bundle], @"") forState:UIControlStateNormal];
     
-    self.payWithPayPalButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 52, self.view.frame.size.width, 44)];
+    self.payWithPayPalButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 104, self.view.frame.size.width, 44)];
     [self.payWithPayPalButton setTitle:NSLocalizedStringFromTableInBundle(@"Pay with PayPal", @"KitePrintSDK", [OLConstants bundle], @"") forState:UIControlStateNormal];
     [self.payWithPayPalButton addTarget:self action:@selector(onButtonPayWithPayPalClicked) forControlEvents:UIControlEventTouchUpInside];
     self.payWithPayPalButton.backgroundColor = [UIColor colorWithRed:74 / 255.0f green:137 / 255.0f blue:220 / 255.0f alpha:1.0];
     
+    self.payWithApplePayButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 44)];
+    self.payWithApplePayButton.backgroundColor = [UIColor blackColor];
+    [self.payWithApplePayButton addTarget:self action:@selector(onButtonPayWithApplePayClicked) forControlEvents:UIControlEventTouchUpInside];
+    [self.payWithApplePayButton setTitle:NSLocalizedStringFromTableInBundle(@"Pay with Pay", @"KitePrintSDK", [OLConstants bundle], @"") forState:UIControlStateNormal];
+    
     UIView *footer = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, CGRectGetMaxY(self.payWithPayPalButton.frame))];
     [footer addSubview:self.payWithCreditCardButton];
     [footer addSubview:self.payWithPayPalButton];
+    if (self.applePayIsAvailable){
+        [footer addSubview:self.payWithApplePayButton];
+    }
     self.tableView.tableFooterView = footer;
     
     [self updateViewsBasedOnPromoCodeChange]; // initialise based on promo state
@@ -183,6 +209,7 @@ static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
     [super viewWillAppear:animated];
     [PayPalMobile initializeWithClientIdsForEnvironments:@{[OLKitePrintSDK paypalEnvironment] : [OLKitePrintSDK paypalClientId]}];
     [PayPalMobile preconnectWithEnvironment:[OLKitePrintSDK paypalEnvironment]];
+    [Stripe setDefaultPublishableKey:[OLKitePrintSDK stripePublishableKey]];
     
     if ([self isTemplateSyncRequired]) {
         [OLProductTemplate sync];
@@ -356,6 +383,25 @@ static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
     [self presentViewController:paymentViewController animated:YES completion:nil];
 }
 
+- (IBAction)onButtonPayWithApplePayClicked{
+    PKPaymentRequest *paymentRequest = [Stripe
+                                 paymentRequestWithMerchantIdentifier:[OLKitePrintSDK appleMerchantID]
+                                 amount:self.printOrder.cost
+                                 currency:self.printOrder.currencyCode
+                                 description:@"Prints"];
+    UIViewController *paymentController;
+//#if DEBUG
+//    paymentController = [[STPTestPaymentAuthorizationViewController alloc]
+//                         initWithPaymentRequest:paymentRequest];
+//    paymentController.delegate = self;
+//#else
+    paymentController = [[PKPaymentAuthorizationViewController alloc]
+                         initWithPaymentRequest:paymentRequest];
+    ((PKPaymentAuthorizationViewController *)paymentController).delegate = self;
+//#end
+    [self presentViewController:paymentController animated:YES completion:nil];
+}
+
 - (void)submitOrderForPrintingWithProofOfPayment:(NSString *)proofOfPayment {
     self.printOrder.proofOfPayment = proofOfPayment;
     [[NSNotificationCenter defaultCenter] postNotificationName:kOLNotificationUserCompletedPayment object:self userInfo:@{kOLKeyUserInfoPrintOrder: self.printOrder}];
@@ -476,6 +522,65 @@ static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
 - (void)payPalPaymentViewController:(PayPalPaymentViewController *)paymentViewController didCompletePayment:(PayPalPayment *)completedPayment {
     [self dismissViewControllerAnimated:YES completion:nil];
     [self submitOrderForPrintingWithProofOfPayment:completedPayment.confirmation[@"response"][@"id"]];
+}
+
+#pragma mark - Apple Pay Delegate Methods
+- (void)paymentAuthorizationViewController:(PKPaymentAuthorizationViewController *)controller
+                       didAuthorizePayment:(PKPayment *)payment
+                                completion:(void (^)(PKPaymentAuthorizationStatus))completion {
+    /*
+     We'll implement this method below in 'Creating a single-use token'.
+     Note that we've also been given a block that takes a
+     PKPaymentAuthorizationStatus. We'll call this function with either
+     PKPaymentAuthorizationStatusSuccess or PKPaymentAuthorizationStatusFailure
+     after all of our asynchronous code is finished executing. This is how the
+     PKPaymentAuthorizationViewController knows when and how to update its UI.
+     */
+    [self handlePaymentAuthorizationWithPayment:payment completion:completion];
+}
+
+- (void)paymentAuthorizationViewControllerDidFinish:(PKPaymentAuthorizationViewController *)controller {
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+#pragma mark Stripe
+
+- (void)handlePaymentAuthorizationWithPayment:(PKPayment *)payment
+                                   completion:(void (^)(PKPaymentAuthorizationStatus))completion {
+    [Stripe createTokenWithPayment:payment
+                        completion:^(STPToken *token, NSError *error) {
+                            if (error) {
+                                completion(PKPaymentAuthorizationStatusFailure);
+                                return;
+                            }
+                            /*
+                             We'll implement this below in "Sending the token to your server".
+                             Notice that we're passing the completion block through.
+                             See the above comment in didAuthorizePayment to learn why.
+                             */
+                            [self createBackendChargeWithToken:token completion:completion];
+                        }];
+}
+
+- (void)createBackendChargeWithToken:(STPToken *)token
+                          completion:(void (^)(PKPaymentAuthorizationStatus))completion {
+//    NSURL *url = [NSURL URLWithString:@"https://example.com/token"];
+//    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
+//    request.HTTPMethod = @"POST";
+//    NSString *body     = [NSString stringWithFormat:@"stripeToken=%@", token.tokenId];
+//    request.HTTPBody   = [body dataUsingEncoding:NSUTF8StringEncoding];
+//    
+//    [NSURLConnection sendAsynchronousRequest:request
+//                                       queue:[NSOperationQueue mainQueue]
+//                           completionHandler:^(NSURLResponse *response,
+//                                               NSData *data,
+//                                               NSError *error) {
+//                               if (error) {
+//                                   completion(PKPaymentAuthorizationStatusFailure);
+//                               } else {
+//                                   completion(PKPaymentAuthorizationStatusSuccess);
+//                               }
+//                           }];
 }
 
 #pragma mark - UITableViewDataSource methods
