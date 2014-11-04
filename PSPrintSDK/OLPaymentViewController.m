@@ -112,13 +112,14 @@ static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
     if ([self isShippingScreenOnTheStack]) {
         self.tableView.tableHeaderView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"checkout_progress_indicator2"]];
     }
+    CGFloat heightDiff = self.applePayIsAvailable ? 0 : 52;
     
-    self.payWithCreditCardButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 52, self.view.frame.size.width, 44)];
+    self.payWithCreditCardButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 52 - heightDiff, self.view.frame.size.width, 44)];
     self.payWithCreditCardButton.backgroundColor = [UIColor colorWithRed:55 / 255.0f green:188 / 255.0f blue:155 / 255.0f alpha:1.0];
     [self.payWithCreditCardButton addTarget:self action:@selector(onButtonPayWithCreditCardClicked) forControlEvents:UIControlEventTouchUpInside];
     [self.payWithCreditCardButton setTitle:NSLocalizedStringFromTableInBundle(@"Pay with Card", @"KitePrintSDK", [OLConstants bundle], @"") forState:UIControlStateNormal];
     
-    self.payWithPayPalButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 104, self.view.frame.size.width, 44)];
+    self.payWithPayPalButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 104 - heightDiff, self.view.frame.size.width, 44)];
     [self.payWithPayPalButton setTitle:NSLocalizedStringFromTableInBundle(@"Pay with PayPal", @"KitePrintSDK", [OLConstants bundle], @"") forState:UIControlStateNormal];
     [self.payWithPayPalButton addTarget:self action:@selector(onButtonPayWithPayPalClicked) forControlEvents:UIControlEventTouchUpInside];
     self.payWithPayPalButton.backgroundColor = [UIColor colorWithRed:74 / 255.0f green:137 / 255.0f blue:220 / 255.0f alpha:1.0];
@@ -156,7 +157,7 @@ static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardDidShow:) name:UIKeyboardDidShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
-
+    
     UITapGestureRecognizer *tgr = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onBackgroundClicked)];
     tgr.cancelsTouchesInView = NO; // allow table cell selection to happen as normal
     [self.tableView addGestureRecognizer:tgr];
@@ -313,7 +314,7 @@ static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
         // The user must have a promo code which reduces this order cost to nothing, lucky user :)
         [self submitOrderForPrintingWithProofOfPayment:nil];
     } else {
-
+        
         id card = [OLPayPalCard lastUsedCard];
         
         if ([OLKitePrintSDK useJudoPayForGBP] && [self.printOrder.currencyCode isEqualToString:@"GBP"]) {
@@ -375,7 +376,7 @@ static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
     payment.currencyCode = self.printOrder.currencyCode;
     payment.shortDescription = @"Product";
     NSAssert(payment.processable, @"oops");
-
+    
     PayPalPaymentViewController *paymentViewController;
     PayPalConfiguration *payPalConfiguration = [[PayPalConfiguration alloc] init];
     payPalConfiguration.acceptCreditCards = NO;
@@ -385,20 +386,20 @@ static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
 
 - (IBAction)onButtonPayWithApplePayClicked{
     PKPaymentRequest *paymentRequest = [Stripe
-                                 paymentRequestWithMerchantIdentifier:[OLKitePrintSDK appleMerchantID]
-                                 amount:self.printOrder.cost
-                                 currency:self.printOrder.currencyCode
-                                 description:@"Prints"];
+                                        paymentRequestWithMerchantIdentifier:[OLKitePrintSDK appleMerchantID]
+                                        amount:self.printOrder.cost
+                                        currency:self.printOrder.currencyCode
+                                        description:@"Prints"];
     UIViewController *paymentController;
-//#if DEBUG
-//    paymentController = [[STPTestPaymentAuthorizationViewController alloc]
-//                         initWithPaymentRequest:paymentRequest];
-//    paymentController.delegate = self;
-//#else
+    //#if DEBUG
+    //    paymentController = [[STPTestPaymentAuthorizationViewController alloc]
+    //                         initWithPaymentRequest:paymentRequest];
+    //    paymentController.delegate = self;
+    //#else
     paymentController = [[PKPaymentAuthorizationViewController alloc]
                          initWithPaymentRequest:paymentRequest];
     ((PKPaymentAuthorizationViewController *)paymentController).delegate = self;
-//#end
+    //#end
     [self presentViewController:paymentController animated:YES completion:nil];
 }
 
@@ -411,7 +412,7 @@ static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
     [self.printOrder submitForPrintingWithProgressHandler:^(NSUInteger totalAssetsUploaded, NSUInteger totalAssetsToUpload,
                                                             long long totalAssetBytesWritten, long long totalAssetBytesExpectedToWrite,
                                                             long long totalBytesWritten, long long totalBytesExpectedToWrite) {
-
+        
         const float step = (1.0f / totalAssetsToUpload);
         float progress = totalAssetsUploaded * step + (totalAssetBytesWritten / (float) totalAssetBytesExpectedToWrite) * step;
         [SVProgressHUD showProgress:progress status:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Uploading Images \n%lu / %lu", @"KitePrintSDK", [OLConstants bundle], @""), (unsigned long) totalAssetsUploaded + 1, (unsigned long) totalAssetsToUpload] maskType:SVProgressHUDMaskTypeBlack];
@@ -468,7 +469,7 @@ static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
         // ignore error as I'd rather the user gets a nice checkout experience than we store the card in PayPal vault.
         [self payWithExistingPayPalCard:card];
     }];
-
+    
 }
 
 - (void)userDidProvideCreditCardInfoToPayByJudoPay:(CardIOCreditCardInfo *)cardInfo {
@@ -509,7 +510,7 @@ static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
         } else {
             [self userDidProvideCreditCardInfoToPayByPayPal:cardInfo];
         }
-
+        
     }];
 }
 
@@ -564,23 +565,23 @@ static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
 
 - (void)createBackendChargeWithToken:(STPToken *)token
                           completion:(void (^)(PKPaymentAuthorizationStatus))completion {
-//    NSURL *url = [NSURL URLWithString:@"https://example.com/token"];
-//    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
-//    request.HTTPMethod = @"POST";
-//    NSString *body     = [NSString stringWithFormat:@"stripeToken=%@", token.tokenId];
-//    request.HTTPBody   = [body dataUsingEncoding:NSUTF8StringEncoding];
-//    
-//    [NSURLConnection sendAsynchronousRequest:request
-//                                       queue:[NSOperationQueue mainQueue]
-//                           completionHandler:^(NSURLResponse *response,
-//                                               NSData *data,
-//                                               NSError *error) {
-//                               if (error) {
-//                                   completion(PKPaymentAuthorizationStatusFailure);
-//                               } else {
-//                                   completion(PKPaymentAuthorizationStatusSuccess);
-//                               }
-//                           }];
+    //    NSURL *url = [NSURL URLWithString:@"https://example.com/token"];
+    //    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
+    //    request.HTTPMethod = @"POST";
+    //    NSString *body     = [NSString stringWithFormat:@"stripeToken=%@", token.tokenId];
+    //    request.HTTPBody   = [body dataUsingEncoding:NSUTF8StringEncoding];
+    //
+    //    [NSURLConnection sendAsynchronousRequest:request
+    //                                       queue:[NSOperationQueue mainQueue]
+    //                           completionHandler:^(NSURLResponse *response,
+    //                                               NSData *data,
+    //                                               NSError *error) {
+    //                               if (error) {
+    //                                   completion(PKPaymentAuthorizationStatusFailure);
+    //                               } else {
+    //                                   completion(PKPaymentAuthorizationStatusSuccess);
+    //                               }
+    //                           }];
 }
 
 #pragma mark - UITableViewDataSource methods
@@ -713,7 +714,7 @@ static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
             [applyButton setTitleColor:[UIColor colorWithRed:0 green:122 / 255.0 blue:255 / 255.0 alpha:1.0f] forState:UIControlStateNormal];
             [applyButton setTitleColor:[UIColor colorWithRed:146 / 255.0 green:146 / 255.0 blue:146 / 255.0 alpha:1.0f] forState:UIControlStateDisabled];
             applyButton.enabled = NO;
-
+            
             [applyButton addTarget:self action:@selector(onButtonApplyPromoCodeClicked:) forControlEvents:UIControlEventTouchUpInside];
             [cell addSubview:promoCodeTextField];
             [cell addSubview:applyButton];
