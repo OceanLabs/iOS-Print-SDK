@@ -19,6 +19,8 @@ static NSString *const kJudoLiveToken     = @"JjOZ49Z9XCYy2FAc";
 static NSString *const kJudoLiveSecret  = @"b8d5950ec68e27e7dfdb314dbd7160e7421c3bddd4d883d9aef5e94788def934";
 
 static NSString *apiKey;
+static NSString *StripePublishableKey;
+static NSString *kApplePayMerchantID;
 static OLPSPrintSDKEnvironment environment;
 
 static NSString *const kOLAPIEndpointLive = @"https://api.kite.ly";
@@ -27,6 +29,7 @@ static NSString *const kOLPayPalClientIdLive = @"AT2JfBAmXD-CHGJnUb05ik4J-GrCi4X
 static NSString *const kOLPayPalClientIdSandbox = @"Aa5nsBDntBpozWQykoxQXoHFOqs551hTNt0B8LQXTudoh8bD0nT1F735c_Fh";
 static NSString *const kOLPayPalRecipientEmailLive = @"deon@oceanlabs.co";
 static NSString *const kOLPayPalRecipientEmailSandbox = @"hello-facilitator@psilov.eu";
+
 static BOOL useJudoPayForGBP = NO;
 
 @implementation OLKitePrintSDK
@@ -51,6 +54,14 @@ static BOOL useJudoPayForGBP = NO;
     }
     
     [OLProductTemplate sync];
+}
+
++ (void) setApplePayMerchantID:(NSString *)mID{
+    kApplePayMerchantID = mID;
+}
+
++ (void) setStripeKey:(NSString *)stripeKey{
+    StripePublishableKey = stripeKey;
 }
 
 + (NSString *)paypalEnvironment {
@@ -87,6 +98,14 @@ static BOOL useJudoPayForGBP = NO;
         case kOLKitePrintSDKEnvironmentLive: return kOLPayPalRecipientEmailLive;
         case kOLKitePrintSDKEnvironmentSandbox: return kOLPayPalRecipientEmailSandbox;
     }
+}
+
++ (NSString *)stripePublishableKey {
+    return StripePublishableKey;
+}
+
++ (NSString *)appleMerchantID {
+    return kApplePayMerchantID;
 }
 
 @end

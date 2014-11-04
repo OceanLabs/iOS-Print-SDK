@@ -32,6 +32,8 @@ typedef void (^OLProductCostRefreshCompletionHandler)(NSError *error);
 @interface OLKitePrintSDK : NSObject
 
 + (void)setAPIKey:(NSString *)apiKey withEnvironment:(OLPSPrintSDKEnvironment)environment;
++ (void) setApplePayMerchantID:(NSString *)mID;
++ (void) setStripeKey:(NSString *)stripeKey;
 
 + (NSString *)apiKey;
 + (OLPSPrintSDKEnvironment)environment;
@@ -40,5 +42,8 @@ typedef void (^OLProductCostRefreshCompletionHandler)(NSError *error);
 + (NSString *)paypalEnvironment;
 + (NSString *)paypalClientId;
 + (NSString *)paypalReceiverEmail;
+
++ (NSString *)stripePublishableKey;
++ (NSString *)appleMerchantID;
 
 @end
