@@ -313,7 +313,7 @@ static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
     NSComparisonResult result = [self.printOrder.cost compare:[NSDecimalNumber zero]];
     if (result == NSOrderedAscending || result == NSOrderedSame) {
         // The user must have a promo code which reduces this order cost to nothing, lucky user :)
-        [self submitOrderForPrintingWithProofOfPayment:nil];
+        [self submitOrderForPrintingWithProofOfPayment:nil completion:^void(PKPaymentAuthorizationStatus status){}];
     } else {
         
         id card = [OLPayPalCard lastUsedCard];
@@ -350,7 +350,7 @@ static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
             return;
         }
         
-        [self submitOrderForPrintingWithProofOfPayment:proofOfPayment];
+        [self submitOrderForPrintingWithProofOfPayment:proofOfPayment completion:^void(PKPaymentAuthorizationStatus status){}];
         [card saveAsLastUsedCard];
     }];
 }
@@ -365,7 +365,7 @@ static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
             return;
         }
         
-        [self submitOrderForPrintingWithProofOfPayment:proofOfPayment];
+        [self submitOrderForPrintingWithProofOfPayment:proofOfPayment completion:^void(PKPaymentAuthorizationStatus status){}];
         [card saveAsLastUsedCard];
     }];
 }
@@ -404,29 +404,36 @@ static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
     [self presentViewController:paymentController animated:YES completion:nil];
 }
 
-- (void)submitOrderForPrintingWithProofOfPayment:(NSString *)proofOfPayment {
+- (void)submitOrderForPrintingWithProofOfPayment:(NSString *)proofOfPayment completion:(void (^)(PKPaymentAuthorizationStatus)) handler{
     self.printOrder.proofOfPayment = proofOfPayment;
     [[NSNotificationCenter defaultCenter] postNotificationName:kOLNotificationUserCompletedPayment object:self userInfo:@{kOLKeyUserInfoPrintOrder: self.printOrder}];
     [self.printOrder saveToHistory];
+    
+    __block BOOL handlerUsed = NO;
     
     [SVProgressHUD showWithStatus:NSLocalizedStringFromTableInBundle(@"Processing", @"KitePrintSDK", [OLConstants bundle], @"") maskType:SVProgressHUDMaskTypeBlack];
     [self.printOrder submitForPrintingWithProgressHandler:^(NSUInteger totalAssetsUploaded, NSUInteger totalAssetsToUpload,
                                                             long long totalAssetBytesWritten, long long totalAssetBytesExpectedToWrite,
                                                             long long totalBytesWritten, long long totalBytesExpectedToWrite) {
+        if (!handlerUsed) {
+            handler(PKPaymentAuthorizationStatusSuccess);
+            handlerUsed = YES;
+        }
         
         const float step = (1.0f / totalAssetsToUpload);
         float progress = totalAssetsUploaded * step + (totalAssetBytesWritten / (float) totalAssetBytesExpectedToWrite) * step;
         [SVProgressHUD showProgress:progress status:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Uploading Images \n%lu / %lu", @"KitePrintSDK", [OLConstants bundle], @""), (unsigned long) totalAssetsUploaded + 1, (unsigned long) totalAssetsToUpload] maskType:SVProgressHUDMaskTypeBlack];
     } completionHandler:^(NSString *orderIdReceipt, NSError *error) {
+        if (error) {
+            handler(PKPaymentAuthorizationStatusFailure);
+            [[[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLConstants bundle], @"") message:error.localizedDescription delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLConstants bundle], @"") otherButtonTitles:nil] show];
+        }
+        
         [[NSNotificationCenter defaultCenter] postNotificationName:kOLNotificationPrintOrderSubmission object:self userInfo:@{kOLKeyUserInfoPrintOrder: self.printOrder}];
         [self.printOrder saveToHistory]; // save again as the print order has it's receipt set if it was successful, otherwise last error is set
         [SVProgressHUD dismiss];
         OLReceiptViewController *receiptVC = [[OLReceiptViewController alloc] initWithPrintOrder:self.printOrder];
         [self.navigationController pushViewController:receiptVC animated:YES];
-        
-        if (error) {
-            [[[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLConstants bundle], @"") message:error.localizedDescription delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLConstants bundle], @"") otherButtonTitles:nil] show];
-        }
     }];
 }
 
@@ -523,7 +530,7 @@ static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
 
 - (void)payPalPaymentViewController:(PayPalPaymentViewController *)paymentViewController didCompletePayment:(PayPalPayment *)completedPayment {
     [self dismissViewControllerAnimated:YES completion:nil];
-    [self submitOrderForPrintingWithProofOfPayment:completedPayment.confirmation[@"response"][@"id"]];
+    [self submitOrderForPrintingWithProofOfPayment:completedPayment.confirmation[@"response"][@"id"] completion:^void(PKPaymentAuthorizationStatus status){}];
 }
 
 #pragma mark - Apple Pay Delegate Methods
@@ -566,7 +573,7 @@ static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
 
 - (void)createBackendChargeWithToken:(STPToken *)token
                           completion:(void (^)(PKPaymentAuthorizationStatus))completion {
-    [self submitOrderForPrintingWithProofOfPayment:token.tokenId];
+    [self submitOrderForPrintingWithProofOfPayment:token.tokenId completion:^void(PKPaymentAuthorizationStatus status){}];
 }
 
 #pragma mark - UITableViewDataSource methods
