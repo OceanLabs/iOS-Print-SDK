@@ -267,11 +267,11 @@ static const NSUInteger kInputFieldTag = 99;
 }
 
 - (UITableViewCell *)createTextFieldCellWithReuseIdentifier:(NSString *)identifier title:(NSString *)title keyboardType:(UIKeyboardType)type {
-    UITableViewCell *cell = [[UITableViewCell alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 43)];
+    UITableViewCell *cell = [[UITableViewCell alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 43)];
     UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 11, 61, 21)];
     titleLabel.text = title;
     titleLabel.adjustsFontSizeToFitWidth = YES;
-    UITextField *inputField = [[UITextField alloc] initWithFrame:CGRectMake(86, 0, cell.frame.size.width - 86, 43)];
+    UITextField *inputField = [[UITextField alloc] initWithFrame:CGRectMake(86, 0, [UIScreen mainScreen].bounds.size.width - 86, 43)];
     inputField.delegate = self;
     inputField.tag = kInputFieldTag;
     [inputField setKeyboardType:type];
