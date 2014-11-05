@@ -111,6 +111,7 @@ static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
     
     if ([self isShippingScreenOnTheStack]) {
         self.tableView.tableHeaderView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"checkout_progress_indicator2"]];
+        self.tableView.tableHeaderView.frame = CGRectMake(0, 0, self.view.frame.size.width, self.tableView.tableHeaderView.frame.size.height * [UIScreen mainScreen].bounds.size.width / 320.0);
     }
     CGFloat heightDiff = self.applePayIsAvailable ? 0 : 52;
     
@@ -702,13 +703,13 @@ static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
             cell.frame = CGRectMake(0, 0, tableView.frame.size.width, 43);
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
-            UITextField *promoCodeTextField = [[UITextField alloc] initWithFrame:CGRectMake(20, 0, 232, 43)];
+            UITextField *promoCodeTextField = [[UITextField alloc] initWithFrame:CGRectMake(20, 0, self.view.frame.size.width - 20 - 60, 43)];
             promoCodeTextField.placeholder = NSLocalizedStringFromTableInBundle(@"Code", @"KitePrintSDK", [OLConstants bundle], @"");
             promoCodeTextField.delegate = self;
             
             UIButton *applyButton = [UIButton buttonWithType:UIButtonTypeCustom];
             [applyButton setTitle:NSLocalizedStringFromTableInBundle(@"Apply", @"KitePrintSDK", [OLConstants bundle], @"") forState:UIControlStateNormal];
-            applyButton.frame = CGRectMake(260, 7, 40, 30);
+            applyButton.frame = CGRectMake(self.view.frame.size.width - 60, 7, 40, 30);
             applyButton.titleLabel.adjustsFontSizeToFitWidth = YES;
             applyButton.titleLabel.minimumScaleFactor = 0.5;
             [applyButton setTitleColor:[UIColor colorWithRed:0 green:122 / 255.0 blue:255 / 255.0 alpha:1.0f] forState:UIControlStateNormal];
