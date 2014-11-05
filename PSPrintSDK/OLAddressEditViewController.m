@@ -93,6 +93,7 @@ static const NSUInteger kTagLabel = 100;
     if (!cell) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:kCellIdentifier];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        cell.frame = CGRectMake(0, 0, self.view.frame.size.width, 43);
         
         UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(15, 0, 110, cell.frame.size.height)];
         label.font = cell.textLabel.font;

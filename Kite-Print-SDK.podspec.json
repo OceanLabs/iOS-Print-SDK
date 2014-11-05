@@ -42,7 +42,7 @@
       "~> 1.0.4"
     ],
     "Stripe": [
-
+      "2.2.0"
     ],
     "Stripe/ApplePay": [
     
