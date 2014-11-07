@@ -47,7 +47,7 @@ static const NSUInteger kSectionErrorRetry = 2;
     [super viewDidLoad];
     self.title = @"Receipt";
     
-    self.tableView.tableHeaderView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 320, 86)];
+    self.tableView.tableHeaderView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 320, 86 * [UIScreen mainScreen].bounds.size.width / 320.0)];
     
     if (self.printOrder.printed) {
         ((UIImageView *) self.tableView.tableHeaderView).image = [UIImage imageNamed:@"receipt_success"];
