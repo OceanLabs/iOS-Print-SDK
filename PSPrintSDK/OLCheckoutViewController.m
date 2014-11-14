@@ -231,10 +231,10 @@ static const NSUInteger kInputFieldTag = 99;
             cell = [tableView dequeueReusableCellWithIdentifier:kDeliveryAddressCell];
             if (cell == nil) {
                 cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:kDeliveryAddressCell];
+            }
                 cell.textLabel.textColor = [UIColor blackColor];
                 cell.textLabel.text = self.shippingAddress.recipientName;
                 cell.detailTextLabel.text = self.shippingAddress.descriptionWithoutRecipient;
-            }
         } else {
             cell = [tableView dequeueReusableCellWithIdentifier:kAddDeliveryAddressCell];
             if (cell == nil) {
@@ -312,9 +312,10 @@ static const NSUInteger kInputFieldTag = 99;
 #pragma mark - OLAddressPickerController delegate
 
 - (void)addressPicker:(OLAddressPickerController *)picker didFinishPickingAddresses:(NSArray/*<OLAddress>*/ *)addresses {
-    [self dismissViewControllerAnimated:YES completion:nil];
     self.shippingAddress = addresses[0];
-    [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:kSectionDeliveryDetails]] withRowAnimation:UITableViewRowAnimationFade];
+    [self dismissViewControllerAnimated:YES completion:nil];
+    [self.tableView reloadData];
+//    [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:kSectionDeliveryDetails]] withRowAnimation:UITableViewRowAnimationFade];
 }
 
 - (void)addressPickerDidCancelPicking:(OLAddressPickerController *)picker {

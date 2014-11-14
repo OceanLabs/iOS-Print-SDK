@@ -20,9 +20,9 @@
 static const NSInteger kSectionAddressList = 0;
 static const NSInteger kSectionAddAddress = 1;
 
-static const NSInteger kRowAddAddressFromContacts = 0;
-static const NSInteger kRowAddAddressSearch = 1;
-static const NSInteger kRowAddAddressManually = 2;
+//static const NSInteger kRowAddAddressFromContacts = 0;
+static const NSInteger kRowAddAddressSearch = 0;
+static const NSInteger kRowAddAddressManually = 1;
 
 @interface OLAddressSelectionViewController () <ABPeoplePickerNavigationControllerDelegate>
 @property (strong, nonatomic) NSMutableSet *selectedAddresses;
@@ -69,6 +69,9 @@ static const NSInteger kRowAddAddressManually = 2;
         if (self.allowMultipleSelection) {
             [self.selectedAddresses addObject:self.addressToAddToListOnViewDidAppear];
         }
+        else{
+            self.selectedAddresses = @[self.addressToAddToListOnViewDidAppear];
+        }
         if (insertSection) {
             [self.tableView insertSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
         } else {
@@ -90,7 +93,12 @@ static const NSInteger kRowAddAddressManually = 2;
 }
 
 - (void)onButtonCancelClicked {
-    [self.delegate addressSelectionControllerDidCancelPicking:self];
+    if (self.selected.count > 0){
+        [self.delegate addressSelectionController:self didFinishPickingAddresses:@[[self.selected firstObject]]];
+    }
+    else{
+        [self.delegate addressSelectionControllerDidCancelPicking:self];
+    }
 }
 
 - (void)onButtonDoneClicked {
@@ -115,7 +123,7 @@ static const NSInteger kRowAddAddressManually = 2;
     if (section == 0) {
         return [OLAddress addressBook].count;
     } else {
-        return 3;
+        return 2;
     }
 }
 
@@ -142,11 +150,11 @@ static const NSInteger kRowAddAddressManually = 2;
         
         OLAddress *address = [OLAddress addressBook][indexPath.row];
         
-        if (self.tableView.allowsMultipleSelection) {
+//        if (self.tableView.allowsMultipleSelection) {
             cell.imageView.image = [UIImage imageNamed:[self.selectedAddresses containsObject:address] ? @"checkmark_on" : nil];
-        } else {
-            cell.imageView.image = nil;
-        }
+//        } else {
+//            cell.imageView.image = nil;
+//        }
         cell.textLabel.text = address.recipientName;
         cell.detailTextLabel.text = address.descriptionWithoutRecipient;
     } else {
@@ -157,9 +165,10 @@ static const NSInteger kRowAddAddressManually = 2;
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:kManageCellIdentifier];
         }
         
-        if (indexPath.row == kRowAddAddressFromContacts) {
-            cell.textLabel.text = NSLocalizedStringFromTableInBundle(@"Add Address from Contacts", @"KitePrintSDK", [OLConstants bundle], @"");
-        } else if (indexPath.row == kRowAddAddressSearch) {
+//        if (indexPath.row == kRowAddAddressFromContacts) {
+//            cell.textLabel.text = NSLocalizedStringFromTableInBundle(@"Add Address from Contacts", @"KitePrintSDK", [OLConstants bundle], @"");
+//        } else
+        if (indexPath.row == kRowAddAddressSearch) {
             cell.textLabel.text = NSLocalizedStringFromTableInBundle(@"Search for Address", @"KitePrintSDK", [OLConstants bundle], @"");
         } else {
             cell.textLabel.text = NSLocalizedStringFromTableInBundle(@"Enter Address Manually", @"KitePrintSDK", [OLConstants bundle], @"");
@@ -214,9 +223,10 @@ static const NSInteger kRowAddAddressManually = 2;
             cell.imageView.image = [UIImage imageNamed:selected ? @"checkmark_on" : nil];
         }
     } else if (indexPath.section == kSectionAddAddress) {
-        if (indexPath.row == kRowAddAddressFromContacts) {
-            [self onButtonAddFromContactsClicked];
-        } else if (indexPath.row == kRowAddAddressManually) {
+//        if (indexPath.row == kRowAddAddressFromContacts) {
+//            [self onButtonAddFromContactsClicked];
+//    }
+        if (indexPath.row == kRowAddAddressManually) {
             [self.navigationController pushViewController:[[OLAddressEditViewController alloc] init] animated:YES];
         } else if (indexPath.row == kRowAddAddressSearch) {
             [self.navigationController pushViewController:[[OLAddressLookupViewController alloc] init] animated:YES];
