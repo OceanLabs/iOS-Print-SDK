@@ -98,6 +98,12 @@
 		2E85BC9F19A24CBE00EC7CC2 /* el */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = el; path = el.lproj/KitePrintSDK.strings; sourceTree = "<group>"; };
 		2ED38B0919F68E4100E8EE50 /* KitePrintSDK.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = KitePrintSDK.entitlements; sourceTree = "<group>"; };
 		352445B905BCE0BBF471808D /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
+		3D1779521A1E076600BE3E58 /* CardIO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CardIO.h; sourceTree = "<group>"; };
+		3D1779531A1E076600BE3E58 /* CardIOCreditCardInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CardIOCreditCardInfo.h; sourceTree = "<group>"; };
+		3D1779541A1E076600BE3E58 /* CardIOPaymentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CardIOPaymentViewController.h; sourceTree = "<group>"; };
+		3D1779551A1E076600BE3E58 /* CardIOPaymentViewControllerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CardIOPaymentViewControllerDelegate.h; sourceTree = "<group>"; };
+		3D1779561A1E076600BE3E58 /* CardIOView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CardIOView.h; sourceTree = "<group>"; };
+		3D1779571A1E076600BE3E58 /* CardIOViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CardIOViewDelegate.h; sourceTree = "<group>"; };
 		931ABE3568CB40F8892488E2 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		CD382E4818EB7C6300127F95 /* OLJudoPayCard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLJudoPayCard.m; sourceTree = "<group>"; };
 		CD382E4918EB7C6300127F95 /* OLJudoPayCard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLJudoPayCard.h; sourceTree = "<group>"; };
@@ -179,12 +185,6 @@
 		CDA8BF5318D70D0F00D835BB /* OLReceiptViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLReceiptViewController.h; sourceTree = "<group>"; };
 		CDA8BF5418D70D0F00D835BB /* OLReceiptViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLReceiptViewController.m; sourceTree = "<group>"; };
 		CDA8BF5518D70D0F00D835BB /* OLCheckoutViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLCheckoutViewController.h; sourceTree = "<group>"; };
-		CDA8BFE218D74E5800D835BB /* CardIO.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CardIO.h; sourceTree = "<group>"; };
-		CDA8BFE318D74E5800D835BB /* CardIOCreditCardInfo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CardIOCreditCardInfo.h; sourceTree = "<group>"; };
-		CDA8BFE418D74E5800D835BB /* CardIOPaymentViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CardIOPaymentViewController.h; sourceTree = "<group>"; };
-		CDA8BFE518D74E5800D835BB /* CardIOPaymentViewControllerDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CardIOPaymentViewControllerDelegate.h; sourceTree = "<group>"; };
-		CDA8BFE618D74E5800D835BB /* CardIOView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CardIOView.h; sourceTree = "<group>"; };
-		CDA8BFE718D74E5800D835BB /* CardIOViewDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CardIOViewDelegate.h; sourceTree = "<group>"; };
 		CDAFDFFF186CC90B003572FE /* OLAssetUploadRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLAssetUploadRequest.h; sourceTree = "<group>"; };
 		CDAFE000186CC90B003572FE /* OLAssetUploadRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLAssetUploadRequest.m; sourceTree = "<group>"; };
 		CDAFE006186D9C6C003572FE /* OLAsset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLAsset.h; sourceTree = "<group>"; };
@@ -232,6 +232,19 @@
 			path = ..;
 			sourceTree = "<group>";
 		};
+		3D1779511A1E074C00BE3E58 /* CardIO */ = {
+			isa = PBXGroup;
+			children = (
+				3D1779521A1E076600BE3E58 /* CardIO.h */,
+				3D1779531A1E076600BE3E58 /* CardIOCreditCardInfo.h */,
+				3D1779541A1E076600BE3E58 /* CardIOPaymentViewController.h */,
+				3D1779551A1E076600BE3E58 /* CardIOPaymentViewControllerDelegate.h */,
+				3D1779561A1E076600BE3E58 /* CardIOView.h */,
+				3D1779571A1E076600BE3E58 /* CardIOViewDelegate.h */,
+			);
+			name = CardIO;
+			sourceTree = "<group>";
+		};
 		9CB01DF75C9A736C7333F6D8 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -244,7 +257,7 @@
 		CD550BD61886BF6000782D75 /* Payment */ = {
 			isa = PBXGroup;
 			children = (
-				CDA8BFDB18D74DCA00D835BB /* CardIO */,
+				3D1779511A1E074C00BE3E58 /* CardIO */,
 				CD550BDA1886BF8B00782D75 /* OLPayPalCard.h */,
 				CD550BDB1886BF8B00782D75 /* OLPayPalCard.m */,
 				CD382E4918EB7C6300127F95 /* OLJudoPayCard.h */,
@@ -444,19 +457,6 @@
 			name = Checkout;
 			sourceTree = "<group>";
 		};
-		CDA8BFDB18D74DCA00D835BB /* CardIO */ = {
-			isa = PBXGroup;
-			children = (
-				CDA8BFE218D74E5800D835BB /* CardIO.h */,
-				CDA8BFE318D74E5800D835BB /* CardIOCreditCardInfo.h */,
-				CDA8BFE418D74E5800D835BB /* CardIOPaymentViewController.h */,
-				CDA8BFE518D74E5800D835BB /* CardIOPaymentViewControllerDelegate.h */,
-				CDA8BFE618D74E5800D835BB /* CardIOView.h */,
-				CDA8BFE718D74E5800D835BB /* CardIOViewDelegate.h */,
-			);
-			name = CardIO;
-			sourceTree = "<group>";
-		};
 		CDAFE005186D9C5E003572FE /* Asset */ = {
 			isa = PBXGroup;
 			children = (
@@ -515,7 +515,7 @@
 		CD73BF60186215790009DE03 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0500;
+				LastUpgradeCheck = 0610;
 				ORGANIZATIONNAME = "Deon Botha";
 				TargetAttributes = {
 					CD73BF67186215790009DE03 = {
@@ -734,7 +734,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -773,7 +772,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -853,22 +851,21 @@
 		CD73BF9E186215790009DE03 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/PSPrintSDK.app/PSPrintSDK";
+				BUNDLE_LOADER = "$(TEST_HOST)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "PSPrintSDK/PSPrintSDK-Prefix.pch";
+				GCC_PREFIX_HEADER = "PSPrintSDK/KitePrintSDK-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
 				);
 				INFOPLIST_FILE = "PSPrintSDKTests/KitePrintSDKTests-Info.plist";
 				PRODUCT_NAME = KitePrintSDKTests;
-				TEST_HOST = "$(BUNDLE_LOADER)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/KitePrintSDK.app/KitePrintSDK";
 				WRAPPER_EXTENSION = xctest;
 			};
 			name = Debug;
@@ -876,18 +873,17 @@
 		CD73BF9F186215790009DE03 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/PSPrintSDK.app/PSPrintSDK";
+				BUNDLE_LOADER = "$(TEST_HOST)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "PSPrintSDK/PSPrintSDK-Prefix.pch";
+				GCC_PREFIX_HEADER = "PSPrintSDK/KitePrintSDK-Prefix.pch";
 				INFOPLIST_FILE = "PSPrintSDKTests/KitePrintSDKTests-Info.plist";
 				PRODUCT_NAME = KitePrintSDKTests;
-				TEST_HOST = "$(BUNDLE_LOADER)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/KitePrintSDK.app/KitePrintSDK";
 				WRAPPER_EXTENSION = xctest;
 			};
 			name = Release;

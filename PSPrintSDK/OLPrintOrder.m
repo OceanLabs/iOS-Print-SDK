@@ -245,7 +245,7 @@ static id stringOrEmptyString(NSString *str) {
                 return;
             }
             
-            self.totalBytesExpectedToWrite += dataLength;
+            self.totalBytesExpectedToWrite += (NSUInteger) dataLength;
             if (--outstandingLengthCallbacks == 0) {
                 // kick off the asset upload as we now know the total upload size
                 self.assetUploadReq = [[OLAssetUploadRequest alloc] init];
@@ -322,7 +322,7 @@ static id stringOrEmptyString(NSString *str) {
 #pragma mark - OLAssetUploadRequestDelegate methods
 
 - (void)assetUploadRequest:(OLAssetUploadRequest *)req didProgressWithTotalAssetsUploaded:(NSUInteger)totalAssetsUploaded totalAssetsToUpload:(NSUInteger)totalAssetsToUpload bytesWritten:(long long)bytesWritten totalAssetBytesWritten:(long long)totalAssetBytesWritten totalAssetBytesExpectedToWrite:(long long)totalAssetBytesExpectedToWrite {
-    self.totalBytesWritten += bytesWritten;
+    self.totalBytesWritten += (NSUInteger) bytesWritten;
     if (self.userSubmittedForPrinting) {
         self.progressHandler(totalAssetsUploaded, totalAssetsToUpload, totalAssetBytesWritten, totalAssetBytesExpectedToWrite, self.totalBytesWritten, self.totalBytesExpectedToWrite);
     }

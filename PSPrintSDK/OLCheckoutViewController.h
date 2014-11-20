@@ -21,5 +21,5 @@ NSString *const kOLKeyUserInfoPrintOrder;
 @property (weak, nonatomic) id<OLCheckoutDelegate> delegate;
 
 - (id)initWithPrintOrder:(OLPrintOrder *)printOrder;
-- (id)initWithAPIKey:(NSString *)apiKey environment:(OLPSPrintSDKEnvironment)env printOrder:(OLPrintOrder *)printOrder;
+- (id)initWithAPIKey:(NSString *)apiKey environment:(OLKitePrintSDKEnvironment)env printOrder:(OLPrintOrder *)printOrder;
 @end

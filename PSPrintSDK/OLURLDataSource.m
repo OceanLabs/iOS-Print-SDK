@@ -43,40 +43,40 @@ static NSString *const kKeyURL = @"co.oceanlabs.pssdk.kKeyURL";
 }
 
 - (void)dataLengthWithCompletionHandler:(GetDataLengthHandler)handler {
-    self.inProgressDownload = [[SDWebImageManager sharedManager] downloadWithURL:self.url
-                                                                         options:0
-                                                                        progress:nil
-                                                                       completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished) {
-                                                                           dispatch_async(dispatch_get_main_queue(), ^{
-                                                                               if (finished) {
-                                                                                   self.inProgressDownload = nil;
-                                                                                   if (image) {
-                                                                                       NSData *data = UIImageJPEGRepresentation(image, 0.6);
-                                                                                       handler(data.length, error);
-                                                                                   } else {
-                                                                                       handler(0, error);
-                                                                                   }
-                                                                               }
-                                                                           });
-                                                                       }];
+    self.inProgressDownload = [[SDWebImageManager sharedManager] downloadImageWithURL:self.url
+                                                                              options:0
+                                                                             progress:nil
+                                                                            completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
+                                                                                dispatch_async(dispatch_get_main_queue(), ^{
+                                                                                    if (finished) {
+                                                                                        self.inProgressDownload = nil;
+                                                                                        if (image) {
+                                                                                            NSData *data = UIImageJPEGRepresentation(image, 0.6);
+                                                                                            handler(data.length, error);
+                                                                                        } else {
+                                                                                            handler(0, error);
+                                                                                        }
+                                                                                    }
+                                                                                });
+                                                                            }];
 }
 
 - (void)dataWithCompletionHandler:(GetDataHandler)handler {
-    self.inProgressDownload = [[SDWebImageManager sharedManager] downloadWithURL:self.url
-                                                                         options:0
-                                                                        progress:nil
-                                                                       completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished) {
-                                                                           dispatch_async(dispatch_get_main_queue(), ^{
-                                                                               if (finished) {
-                                                                                   self.inProgressDownload = nil;
-                                                                                   if (image) {
-                                                                                       handler(UIImageJPEGRepresentation(image, 0.6), error);
-                                                                                   } else {
-                                                                                       handler(nil, error);
-                                                                                   }
-                                                                               }
-                                                                           });
-                                                                       }];
+    self.inProgressDownload = [[SDWebImageManager sharedManager] downloadImageWithURL:self.url
+                                                                              options:0
+                                                                             progress:nil
+                                                                            completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
+                                                                                dispatch_async(dispatch_get_main_queue(), ^{
+                                                                                    if (finished) {
+                                                                                        self.inProgressDownload = nil;
+                                                                                        if (image) {
+                                                                                            handler(UIImageJPEGRepresentation(image, 0.6), error);
+                                                                                        } else {
+                                                                                            handler(nil, error);
+                                                                                        }
+                                                                                    }
+                                                                                });
+                                                                            }];
 }
 
 - (void)cancelAnyLoadingOfData {

@@ -45,7 +45,7 @@ static const NSUInteger kInputFieldTag = 99;
 
 @implementation OLCheckoutViewController
 
-- (id)initWithAPIKey:(NSString *)apiKey environment:(OLPSPrintSDKEnvironment)env printOrder:(OLPrintOrder *)printOrder {
+- (id)initWithAPIKey:(NSString *)apiKey environment:(OLKitePrintSDKEnvironment)env printOrder:(OLPrintOrder *)printOrder {
     if (self = [super initWithStyle:UITableViewStyleGrouped]) {
         [OLKitePrintSDK setAPIKey:apiKey withEnvironment:env];
         self.printOrder = printOrder;

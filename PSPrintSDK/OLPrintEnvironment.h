@@ -10,5 +10,5 @@ typedef enum {
     kOLKitePrintSDKEnvironmentLive,
     kOLKitePrintSDKEnvironmentSandbox,
     // _kOLKitePrintSDKEnvironmentStaging # private environment for only us :P
-} OLPSPrintSDKEnvironment;
+} OLKitePrintSDKEnvironment;
 

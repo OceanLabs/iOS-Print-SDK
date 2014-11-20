@@ -31,8 +31,8 @@
  * Insert your API keys here. These are found under your profile 
  * by logging in to the developer portal at http://kite.ly
  **********************************************************************/
-static NSString *const kAPIKeySandbox = @"REPLACE_ME"; // replace with your Sandbox API key found under the Profile section in the developer portal
-static NSString *const kAPIKeyLive = @"REPLACE_ME"; // replace with your Live API key found under the Profile section in the developer portal
+static NSString *const kAPIKeySandbox = @"7d567a45122b2285a85998c15aa09d9db77a4d99"; // replace with your Sandbox API key found under the Profile section in the developer portal
+static NSString *const kAPIKeyLive = @"9c58433545213db2948a9fbdf4bd9d5a2bf0f69b"; // replace with your Live API key found under the Profile section in the developer portal
 
 static NSString *const kStripePublishableKey = @"pk_test_6pRNASCoBOKtIshFeQd4XMUh"; //This is a test key. Replace with the live key here.
 static NSString *const kApplePayMerchantIDKey = @"merchant.co.oceanlabs.kite.ly"; //For internal use only.
@@ -57,8 +57,10 @@ static NSString *const kApplePayMerchantIDKey = @"merchant.co.oceanlabs.kite.ly"
 - (void)viewDidLoad {
     [OLKitePrintSDK setAPIKey:kAPIKeySandbox withEnvironment:kOLKitePrintSDKEnvironmentSandbox];
     
+#ifdef OL_KITE_OFFER_APPLE_PAY
     [OLKitePrintSDK setApplePayMerchantID:kApplePayMerchantIDKey];
     [OLKitePrintSDK setStripeKey:kStripePublishableKey];
+#endif
     
     [super viewDidLoad];
     self.selectedProduct = kProductSquares;
@@ -103,7 +105,7 @@ static NSString *const kApplePayMerchantIDKey = @"merchant.co.oceanlabs.kite.ly"
     return YES;
 }
 
-- (OLPSPrintSDKEnvironment)environment {
+- (OLKitePrintSDKEnvironment)environment {
     if (self.environmentPicker.selectedSegmentIndex == 0) {
         return kOLKitePrintSDKEnvironmentSandbox;
     } else {

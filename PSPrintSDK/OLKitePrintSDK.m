@@ -9,7 +9,9 @@
 #import "OLKitePrintSDK.h"
 #import "OLPayPalCard.h"
 #import "OLProductTemplate.h"
+#ifdef OL_KITE_OFFER_PAYPAL
 #import <PayPalMobile.h>
+#endif
 #import "OLJudoPayCard.h"
 
 static NSString *const kJudoClientId      = @"100170-877";
@@ -21,7 +23,7 @@ static NSString *const kJudoLiveSecret  = @"b8d5950ec68e27e7dfdb314dbd7160e7421c
 static NSString *apiKey;
 static NSString *StripePublishableKey;
 static NSString *kApplePayMerchantID;
-static OLPSPrintSDKEnvironment environment;
+static OLKitePrintSDKEnvironment environment;
 
 static NSString *const kOLAPIEndpointLive = @"https://api.kite.ly";
 static NSString *const kOLAPIEndpointSandbox = @"https://api.kite.ly";
@@ -42,7 +44,7 @@ static BOOL useJudoPayForGBP = NO;
     useJudoPayForGBP = use;
 }
 
-+ (void)setAPIKey:(NSString *)_apiKey withEnvironment:(OLPSPrintSDKEnvironment)_environment {
++ (void)setAPIKey:(NSString *)_apiKey withEnvironment:(OLKitePrintSDKEnvironment)_environment {
     apiKey = _apiKey;
     environment = _environment;
     if (environment == kOLKitePrintSDKEnvironmentLive) {
@@ -56,14 +58,22 @@ static BOOL useJudoPayForGBP = NO;
     [OLProductTemplate sync];
 }
 
-+ (void) setApplePayMerchantID:(NSString *)mID{
-    kApplePayMerchantID = mID;
++ (NSString *)apiKey {
+    return apiKey;
 }
 
-+ (void) setStripeKey:(NSString *)stripeKey{
-    StripePublishableKey = stripeKey;
++ (OLKitePrintSDKEnvironment)environment {
+    return environment;
 }
 
++ (NSString *)apiEndpoint {
+    switch (environment) {
+        case kOLKitePrintSDKEnvironmentLive: return kOLAPIEndpointLive;
+        case kOLKitePrintSDKEnvironmentSandbox: return kOLAPIEndpointSandbox;
+    }
+}
+
+#ifdef OL_KITE_OFFER_PAYPAL
 + (NSString *)paypalEnvironment {
     switch (environment) {
         case kOLKitePrintSDKEnvironmentLive: return PayPalEnvironmentProduction;
@@ -78,26 +88,21 @@ static BOOL useJudoPayForGBP = NO;
     }
 }
 
-+ (NSString *)apiKey {
-    return apiKey;
-}
-
-+ (OLPSPrintSDKEnvironment)environment {
-    return environment;
-}
-
-+ (NSString *)apiEndpoint {
-    switch (environment) {
-        case kOLKitePrintSDKEnvironmentLive: return kOLAPIEndpointLive;
-        case kOLKitePrintSDKEnvironmentSandbox: return kOLAPIEndpointSandbox;
-    }
-}
-
 + (NSString *)paypalReceiverEmail {
     switch (environment) {
         case kOLKitePrintSDKEnvironmentLive: return kOLPayPalRecipientEmailLive;
         case kOLKitePrintSDKEnvironmentSandbox: return kOLPayPalRecipientEmailSandbox;
     }
+}
+#endif
+
+#ifdef OL_KITE_OFFER_APPLE_PAY
++ (void) setApplePayMerchantID:(NSString *)mID{
+    kApplePayMerchantID = mID;
+}
+
++ (void) setStripeKey:(NSString *)stripeKey{
+    StripePublishableKey = stripeKey;
 }
 
 + (NSString *)stripePublishableKey {
@@ -107,5 +112,6 @@ static BOOL useJudoPayForGBP = NO;
 + (NSString *)appleMerchantID {
     return kApplePayMerchantID;
 }
+#endif
 
 @end

@@ -70,7 +70,8 @@ static const NSInteger kRowAddAddressManually = 1;
             [self.selectedAddresses addObject:self.addressToAddToListOnViewDidAppear];
         }
         else{
-            self.selectedAddresses = @[self.addressToAddToListOnViewDidAppear];
+            [self.selectedAddresses removeAllObjects];
+            [self.selectedAddresses addObject:self.addressToAddToListOnViewDidAppear];
         }
         if (insertSection) {
             [self.tableView insertSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];

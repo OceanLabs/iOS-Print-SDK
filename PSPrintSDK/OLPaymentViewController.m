@@ -9,7 +9,6 @@
 #import "OLPaymentViewController.h"
 #import "OLReceiptViewController.h"
 #import "CardIO.h"
-#import <PayPalMobile.h>
 #import "OLPrintOrder.h"
 #import "OLPrintJob.h"
 #import <SVProgressHUD.h>
@@ -23,7 +22,14 @@
 #import "OLCountry.h"
 #import "OLJudoPayCard.h"
 #import "OLConstants.h"
+
+#ifdef OL_KITE_OFFER_PAYPAL
+#import <PayPalMobile.h>
+#endif
+
+#ifdef OL_KITE_OFFER_APPLE_PAY
 #import <Stripe+ApplePay.h>
+#endif
 
 @import PassKit;
 
@@ -37,24 +43,40 @@ static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
 + (BOOL)useJudoPayForGBP;
 @end
 
-@interface OLPaymentViewController () <CardIOPaymentViewControllerDelegate, PayPalPaymentDelegate, UIActionSheetDelegate, UITextFieldDelegate>
+@interface OLPaymentViewController () <
+#ifdef OL_KITE_OFFER_PAYPAL
+CardIOPaymentViewControllerDelegate, PayPalPaymentDelegate,
+#endif
+UIActionSheetDelegate, UITextFieldDelegate>
+
 @property (strong, nonatomic) OLPrintOrder *printOrder;
 @property (strong, nonatomic) OLPayPalCard *card;
 @property (strong, nonatomic) UITextField *promoTextField;
 @property (strong, nonatomic) UIButton *promoApplyButton;
 @property (strong, nonatomic) UIButton *payWithCreditCardButton;
-@property (strong, nonatomic) UIButton *payWithPayPalButton;
+
+#ifdef OL_KITE_OFFER_APPLE_PAY
 @property (strong, nonatomic) UIButton *payWithApplePayButton;
+@property (assign, nonatomic) BOOL applePayIsAvailable;
+#endif
 
 @property (strong, nonatomic) UIView *loadingTemplatesView;
 @property (strong, nonatomic) UITableView *tableView;
 @property (assign, nonatomic) BOOL completedTemplateSyncSuccessfully;
 @property (strong, nonatomic) NSString *paymentCurrencyCode;
 @property (strong, nonatomic) NSMutableArray* sections;
-@property (assign, nonatomic) BOOL applePayIsAvailable;
+
+#ifdef OL_KITE_OFFER_PAYPAL
+@property (strong, nonatomic) UIButton *payWithPayPalButton;
+#endif
+
 @end
 
-@interface OLPaymentViewController () <UITableViewDataSource, UITableViewDelegate, PKPaymentAuthorizationViewControllerDelegate>
+@interface OLPaymentViewController () <UITableViewDataSource, UITableViewDelegate
+#ifdef OL_KITE_OFFER_APPLE_PAY
+, PKPaymentAuthorizationViewControllerDelegate
+#endif
+>
 
 @end
 
@@ -78,6 +100,7 @@ static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
     return NO;
 }
 
+#ifdef OL_KITE_OFFER_APPLE_PAY
 -(BOOL)isApplePayAvailable{
     PKPaymentRequest *request = [Stripe
                                  paymentRequestWithMerchantIdentifier:[OLKitePrintSDK appleMerchantID]
@@ -87,11 +110,14 @@ static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
     
     return [Stripe canSubmitPaymentRequest:request];
 }
+#endif
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+#ifdef OL_KITE_OFFER_APPLE_PAY
     self.applePayIsAvailable = [self isApplePayAvailable];
+#endif
     
     self.title = NSLocalizedStringFromTableInBundle(@"Payment", @"KitePrintSDK", [OLConstants bundle], @"");
     
@@ -113,29 +139,47 @@ static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
         self.tableView.tableHeaderView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"checkout_progress_indicator2"]];
         self.tableView.tableHeaderView.frame = CGRectMake(0, 0, self.view.frame.size.width, self.tableView.tableHeaderView.frame.size.height * [UIScreen mainScreen].bounds.size.width / 320.0);
     }
+    
+#ifdef OL_KITE_OFFER_APPLE_PAY
     CGFloat heightDiff = self.applePayIsAvailable ? 0 : 52;
+#else 
+    CGFloat heightDiff = 52;
+#endif
     
     self.payWithCreditCardButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 52 - heightDiff, self.view.frame.size.width, 44)];
     self.payWithCreditCardButton.backgroundColor = [UIColor colorWithRed:55 / 255.0f green:188 / 255.0f blue:155 / 255.0f alpha:1.0];
     [self.payWithCreditCardButton addTarget:self action:@selector(onButtonPayWithCreditCardClicked) forControlEvents:UIControlEventTouchUpInside];
     [self.payWithCreditCardButton setTitle:NSLocalizedStringFromTableInBundle(@"Pay with Card", @"KitePrintSDK", [OLConstants bundle], @"") forState:UIControlStateNormal];
+    CGFloat maxY = CGRectGetMaxY(self.payWithCreditCardButton.frame);
     
+#ifdef OL_KITE_OFFER_PAYPAL
     self.payWithPayPalButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 104 - heightDiff, self.view.frame.size.width, 44)];
     [self.payWithPayPalButton setTitle:NSLocalizedStringFromTableInBundle(@"Pay with PayPal", @"KitePrintSDK", [OLConstants bundle], @"") forState:UIControlStateNormal];
     [self.payWithPayPalButton addTarget:self action:@selector(onButtonPayWithPayPalClicked) forControlEvents:UIControlEventTouchUpInside];
     self.payWithPayPalButton.backgroundColor = [UIColor colorWithRed:74 / 255.0f green:137 / 255.0f blue:220 / 255.0f alpha:1.0];
+    maxY = CGRectGetMaxY(self.payWithPayPalButton.frame);
+#endif
     
+#ifdef OL_KITE_OFFER_APPLE_PAY
     self.payWithApplePayButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 44)];
     self.payWithApplePayButton.backgroundColor = [UIColor blackColor];
     [self.payWithApplePayButton addTarget:self action:@selector(onButtonPayWithApplePayClicked) forControlEvents:UIControlEventTouchUpInside];
     [self.payWithApplePayButton setTitle:NSLocalizedStringFromTableInBundle(@"Pay with Pay", @"KitePrintSDK", [OLConstants bundle], @"") forState:UIControlStateNormal];
+#endif
     
-    UIView *footer = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, CGRectGetMaxY(self.payWithPayPalButton.frame))];
+    UIView *footer = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, maxY)];
     [footer addSubview:self.payWithCreditCardButton];
+
+#ifdef OL_KITE_OFFER_PAYPAL
     [footer addSubview:self.payWithPayPalButton];
+#endif
+    
+#ifdef OL_KITE_OFFER_APPLE_PAY
     if (self.applePayIsAvailable){
         [footer addSubview:self.payWithApplePayButton];
     }
+#endif
+    
     self.tableView.tableFooterView = footer;
     
     [self updateViewsBasedOnPromoCodeChange]; // initialise based on promo state
@@ -209,9 +253,14 @@ static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+#ifdef OL_KITE_OFFER_PAYPAL
     [PayPalMobile initializeWithClientIdsForEnvironments:@{[OLKitePrintSDK paypalEnvironment] : [OLKitePrintSDK paypalClientId]}];
     [PayPalMobile preconnectWithEnvironment:[OLKitePrintSDK paypalEnvironment]];
+#endif
+
+#ifdef OL_KITE_OFFER_APPLE_PAY
     [Stripe setDefaultPublishableKey:[OLKitePrintSDK stripePublishableKey]];
+#endif
     
     if ([self isTemplateSyncRequired]) {
         [OLProductTemplate sync];
@@ -255,10 +304,20 @@ static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
 - (void)updateViewsBasedOnPromoCodeChange {
     NSComparisonResult result = [self.printOrder.cost compare:[NSDecimalNumber zero]];
     if (result == NSOrderedAscending || result == NSOrderedSame) {
+#ifdef OL_KITE_OFFER_PAYPAL
         self.payWithPayPalButton.hidden = YES;
+#endif
+#ifdef OL_KITE_OFFER_APPLE_PAY
+        self.payWithApplePayButton = YES;
+#endif
         [self.payWithCreditCardButton setTitle:NSLocalizedStringFromTableInBundle(@"Checkout for Free!", @"KitePrintSDK", [OLConstants bundle], @"") forState:UIControlStateNormal];
     } else {
+#ifdef OL_KITE_OFFER_PAYPAL
         self.payWithPayPalButton.hidden = NO;
+#endif
+#ifdef OL_KITE_OFFER_APPLE_PAY
+        self.payWithApplePayButton = NO;
+#endif
         [self.payWithCreditCardButton setTitle:NSLocalizedStringFromTableInBundle(@"Pay with Credit Card", @"KitePrintSDK", [OLConstants bundle], @"") forState:UIControlStateNormal];
     }
     
@@ -333,9 +392,11 @@ static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
 
 
 - (void)payWithNewCard {
+#ifdef OL_KITE_OFFER_PAYPAL
     CardIOPaymentViewController *scanViewController = [[CardIOPaymentViewController alloc] initWithPaymentDelegate:self];
     scanViewController.appToken = kCardIOAppToken; // get your app token from the card.io website
     [self presentViewController:scanViewController animated:YES completion:nil];
+#endif
 }
 
 - (void)payWithExistingPayPalCard:(OLPayPalCard *)card {
@@ -370,6 +431,7 @@ static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
     }];
 }
 
+#ifdef OL_KITE_OFFER_PAYPAL
 - (IBAction)onButtonPayWithPayPalClicked {
     // Create a PayPalPayment
     PayPalPayment *payment = [[PayPalPayment alloc] init];
@@ -384,7 +446,9 @@ static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
     paymentViewController = [[PayPalPaymentViewController alloc] initWithPayment:payment configuration:payPalConfiguration delegate:self];
     [self presentViewController:paymentViewController animated:YES completion:nil];
 }
+#endif
 
+#ifdef OL_KITE_OFFER_APPLE_PAY
 - (IBAction)onButtonPayWithApplePayClicked{
     PKPaymentRequest *paymentRequest = [Stripe
                                         paymentRequestWithMerchantIdentifier:[OLKitePrintSDK appleMerchantID]
@@ -403,6 +467,7 @@ static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
     //#end
     [self presentViewController:paymentController animated:YES completion:nil];
 }
+#endif
 
 - (void)submitOrderForPrintingWithProofOfPayment:(NSString *)proofOfPayment completion:(void (^)(PKPaymentAuthorizationStatus)) handler{
     self.printOrder.proofOfPayment = proofOfPayment;
@@ -439,6 +504,7 @@ static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
 
 #pragma mark - CardIOPaymentViewControllerDelegate methods
 
+#ifdef OL_KITE_OFFER_PAYPAL
 - (void)userDidCancelPaymentViewController:(CardIOPaymentViewController *)paymentViewController {
     [self dismissViewControllerAnimated:YES completion:nil];
 }
@@ -521,9 +587,11 @@ static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
         
     }];
 }
+#endif
 
 #pragma mark - PayPalPaymentDelegate methods
 
+#ifdef OL_KITE_OFFER_PAYPAL
 - (void)payPalPaymentDidCancel:(PayPalPaymentViewController *)paymentViewController {
     [self dismissViewControllerAnimated:YES completion:nil];
 }
@@ -532,8 +600,11 @@ static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
     [self dismissViewControllerAnimated:YES completion:nil];
     [self submitOrderForPrintingWithProofOfPayment:completedPayment.confirmation[@"response"][@"id"] completion:^void(PKPaymentAuthorizationStatus status){}];
 }
+#endif
 
 #pragma mark - Apple Pay Delegate Methods
+
+#ifdef OL_KITE_OFFER_APPLE_PAY
 - (void)paymentAuthorizationViewController:(PKPaymentAuthorizationViewController *)controller
                        didAuthorizePayment:(PKPayment *)payment
                                 completion:(void (^)(PKPaymentAuthorizationStatus))completion {
@@ -575,6 +646,7 @@ static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
                           completion:(void (^)(PKPaymentAuthorizationStatus))completion {
     [self submitOrderForPrintingWithProofOfPayment:token.tokenId completion:^void(PKPaymentAuthorizationStatus status){}];
 }
+#endif
 
 #pragma mark - UITableViewDataSource methods
 
