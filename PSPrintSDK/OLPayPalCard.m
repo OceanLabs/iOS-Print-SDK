@@ -22,6 +22,9 @@ static NSString *const kKeyVaultExpireDate = @"co.oceanlabs.paypal.kKeyVaultExpi
 static NSString *const kOLErrorDomainPayPal = @"co.oceanlabs.paypal.kOLErrorDomainPayPal";
 
 #define kErrorMessageGenericPayPalVaultFailure NSLocalizedStringFromTableInBundle(@"Failed to store card details with PayPal. Please try again.", @"KitePrintSDK", [OLConstants bundle], @"")
+#define kErrorMessageBadCardNumber NSLocalizedStringFromTableInBundle(@"Please enter a valid card number", @"KitePrintSDK", [OLConstants bundle], @"")
+#define kErrorMessageBadExpiryDate NSLocalizedStringFromTableInBundle(@"Please enter a card expiry date in the future", @"KitePrintSDK", [OLConstants bundle], @"")
+
 
 static NSString *clientId;
 
@@ -216,6 +219,7 @@ static NSString *typeToString(OLPayPalCardType type) {
         [manager POST:[NSString stringWithFormat:@"https://%@/v1/payments/payment", environment == kOLPayPalEnvironmentLive ? @"api.paypal.com" : @"api.sandbox.paypal.com"]
            parameters:paymentJSON success:^(AFHTTPRequestOperation *operation, id responseObject) {
             NSInteger statusCode = operation.response.statusCode;
+               NSLog(@"response: %@", responseObject);
             if (statusCode >= 200 && statusCode <= 299) {
                 id paymentId = responseObject[@"id"];
                 id paymentState = responseObject[@"state"];
@@ -236,6 +240,25 @@ static NSString *typeToString(OLPayPalCardType type) {
                 id errorMessage = [responseObject objectForKey:@"message"];
                 if (![errorMessage isKindOfClass:[NSString class]]) {
                     errorMessage = kErrorMessageGenericPayPalVaultFailure;
+                }
+                
+                if ([responseObject[@"details"] isKindOfClass:[NSArray class]]) {
+                    NSArray *details = responseObject[@"details"];
+                    if (details.count > 0) {
+                        if ([details[0] isKindOfClass:[NSDictionary class]]) {
+                            NSDictionary *detail = details[0];
+                            NSString *field = detail[@"field"];
+                            NSString *issue = detail[@"issue"];
+                            if ([field isKindOfClass:[NSString class]] && [issue isKindOfClass:[NSString class]]) {
+                                if ([field isEqualToString:@"payer.funding_instruments[0].credit_card.number"]) {
+                                    errorMessage = kErrorMessageBadCardNumber;
+                                } else if ([field isEqualToString:@"payer.funding_instruments[0].credit_card"]
+                                           && [issue isEqualToString:@"Invalid expiration (cannot be in the past)"]) {
+                                    errorMessage = kErrorMessageBadExpiryDate;
+                                }
+                            }
+                        }
+                    }
                 }
                 
                 handler(nil, [NSError errorWithDomain:kOLErrorDomainPayPal code:statusCode userInfo:@{NSLocalizedDescriptionKey: errorMessage}]);

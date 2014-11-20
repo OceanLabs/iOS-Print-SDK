@@ -22,6 +22,7 @@
 #import "OLCountry.h"
 #import "OLJudoPayCard.h"
 #import "OLConstants.h"
+#import "OLCreditCardCaptureViewController.h"
 
 #ifdef OL_KITE_OFFER_PAYPAL
 #import <PayPalMobile.h>
@@ -47,7 +48,7 @@ static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
 #ifdef OL_KITE_OFFER_PAYPAL
 CardIOPaymentViewControllerDelegate, PayPalPaymentDelegate,
 #endif
-UIActionSheetDelegate, UITextFieldDelegate>
+UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate>
 
 @property (strong, nonatomic) OLPrintOrder *printOrder;
 @property (strong, nonatomic) OLPayPalCard *card;
@@ -396,6 +397,10 @@ UIActionSheetDelegate, UITextFieldDelegate>
     CardIOPaymentViewController *scanViewController = [[CardIOPaymentViewController alloc] initWithPaymentDelegate:self];
     scanViewController.appToken = kCardIOAppToken; // get your app token from the card.io website
     [self presentViewController:scanViewController animated:YES completion:nil];
+#else
+    OLCreditCardCaptureViewController *ccCaptureController = [[OLCreditCardCaptureViewController alloc] initWithPrintOrder:self.printOrder];
+    ccCaptureController.delegate = self;
+    [self presentViewController:ccCaptureController animated:YES completion:nil];
 #endif
 }
 
@@ -843,5 +848,14 @@ UIActionSheetDelegate, UITextFieldDelegate>
         [OLProductTemplate sync];
     }
 }
+
+#pragma mark - OLCreditCardCaptureDelegate methods
+
+- (void)creditCardCaptureController:(OLCreditCardCaptureViewController *)vc didFinishWithProofOfPayment:(NSString *)proofOfPayment {
+    [self dismissViewControllerAnimated:YES completion:^{
+        [self submitOrderForPrintingWithProofOfPayment:proofOfPayment completion:^void(PKPaymentAuthorizationStatus status){}];
+    }];
+}
+
 
 @end

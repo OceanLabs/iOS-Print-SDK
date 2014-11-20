@@ -97,11 +97,11 @@ static BOOL useJudoPayForGBP = NO;
 #endif
 
 #ifdef OL_KITE_OFFER_APPLE_PAY
-+ (void) setApplePayMerchantID:(NSString *)mID{
++ (void)setApplePayMerchantID:(NSString *)mID{
     kApplePayMerchantID = mID;
 }
 
-+ (void) setStripeKey:(NSString *)stripeKey{
++ (void)setStripeKey:(NSString *)stripeKey{
     StripePublishableKey = stripeKey;
 }
 

@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		2E85BC9919A24CB200EC7CC2 /* KitePrintSDK.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2E85BC9719A24CB200EC7CC2 /* KitePrintSDK.strings */; };
 		3A5ECAA2AA9D4F38934544CA /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 931ABE3568CB40F8892488E2 /* libPods.a */; };
+		3D17795A1A1E1D6800BE3E58 /* OLCreditCardCaptureViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D1779591A1E1D6800BE3E58 /* OLCreditCardCaptureViewController.m */; };
 		CD382E4A18EB7C6300127F95 /* OLJudoPayCard.m in Sources */ = {isa = PBXBuildFile; fileRef = CD382E4818EB7C6300127F95 /* OLJudoPayCard.m */; };
 		CD51972D196D41BD00734791 /* OLProductTemplates.plist in Resources */ = {isa = PBXBuildFile; fileRef = CD51972C196D41BD00734791 /* OLProductTemplates.plist */; };
 		CD550A68187B30D200782D75 /* OLAddressLookupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CD550A67187B30D200782D75 /* OLAddressLookupViewController.m */; };
@@ -104,6 +105,8 @@
 		3D1779551A1E076600BE3E58 /* CardIOPaymentViewControllerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CardIOPaymentViewControllerDelegate.h; sourceTree = "<group>"; };
 		3D1779561A1E076600BE3E58 /* CardIOView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CardIOView.h; sourceTree = "<group>"; };
 		3D1779571A1E076600BE3E58 /* CardIOViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CardIOViewDelegate.h; sourceTree = "<group>"; };
+		3D1779581A1E1D6800BE3E58 /* OLCreditCardCaptureViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLCreditCardCaptureViewController.h; sourceTree = "<group>"; };
+		3D1779591A1E1D6800BE3E58 /* OLCreditCardCaptureViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLCreditCardCaptureViewController.m; sourceTree = "<group>"; };
 		931ABE3568CB40F8892488E2 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		CD382E4818EB7C6300127F95 /* OLJudoPayCard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLJudoPayCard.m; sourceTree = "<group>"; };
 		CD382E4918EB7C6300127F95 /* OLJudoPayCard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLJudoPayCard.h; sourceTree = "<group>"; };
@@ -453,6 +456,8 @@
 				CDA8BF5018D70D0F00D835BB /* OLPaymentViewController.m */,
 				CDA8BF5318D70D0F00D835BB /* OLReceiptViewController.h */,
 				CDA8BF5418D70D0F00D835BB /* OLReceiptViewController.m */,
+				3D1779581A1E1D6800BE3E58 /* OLCreditCardCaptureViewController.h */,
+				3D1779591A1E1D6800BE3E58 /* OLCreditCardCaptureViewController.m */,
 			);
 			name = Checkout;
 			sourceTree = "<group>";
@@ -646,6 +651,7 @@
 				CD93BB2D18783B8E00316492 /* OLAddressPickerController.m in Sources */,
 				CD73BF78186215790009DE03 /* main.m in Sources */,
 				CD9D6AE5187189BF001CD1F9 /* OLPostcardPrintJob.m in Sources */,
+				3D17795A1A1E1D6800BE3E58 /* OLCreditCardCaptureViewController.m in Sources */,
 				CD550A68187B30D200782D75 /* OLAddressLookupViewController.m in Sources */,
 				CD93BB30187842AB00316492 /* OLAddressSelectionViewController.m in Sources */,
 				CD93BB451878DFA300316492 /* OLCountryPickerController.m in Sources */,
@@ -746,6 +752,7 @@
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -784,6 +791,7 @@
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
 				ENABLE_NS_ASSERTIONS = NO;
