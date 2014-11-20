@@ -16,8 +16,16 @@ Pod::Spec.new do |spec|
   spec.platform		= :ios, '7.0'
   spec.social_media_url	= 'https://twitter.com/dbotha'
 
+  spec.subspec 'Lite' do |lite|
+  #subspec for users who don't want the third part PayPal & Stripe bloat
+  spec.source_files     = ['PSPrintSDK/OL*.{h,m}', 'PSPrintSDK/CardIO*.h']
+  spec.resources        = ['PSPrintSDK/KitePrintSDK.xcassets', '*.lproj']
+  end
+
   spec.subspec 'PayPal' do |paypal|
     paypal.xcconfig	=  { 'OTHER_CFLAGS' => '$(inherited) -DOL_KITE_OFFER_PAYPAL' }
+    spec.source_files     = ['PSPrintSDK/OL*.{h,m}', 'PSPrintSDK/CardIO*.h']
+    spec.resources        = ['PSPrintSDK/KitePrintSDK.xcassets', '*.lproj']
     paypal.dependency	'PayPal-iOS-SDK', '~> 2.3.2'
   end
 
