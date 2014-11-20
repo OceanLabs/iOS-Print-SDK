@@ -1,0 +1,7 @@
+pod 'SDWebImage'
+pod 'AFNetworking'
+pod 'SVProgressHUD'
+pod 'PayPal-iOS-SDK', '~> 2.3.2'
+pod 'UICKeyChainStore', '~> 1.0.4'
+pod 'Stripe', '2.2.0'
+pod 'Stripe/ApplePay'
