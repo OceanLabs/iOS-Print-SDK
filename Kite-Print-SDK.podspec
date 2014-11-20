@@ -21,9 +21,9 @@ Pod::Spec.new do |spec|
     paypal.dependency	'PayPal-iOS-SDK', '~> 2.3.2'
   end
 
-  spec.subspec 'ApplePay' do |apple|
-    apple.xcconfig	  =  { 'OTHER_CFLAGS' => '$(inherited) -DOL_KITE_OFFER_APPLE_PAY' }
-    apple.dependency	  'Stripe', '2.2.0'
-    apple.dependency	  'Stripe/ApplePay'
-  end
+  #spec.subspec 'ApplePay' do |apple|
+  #  apple.xcconfig	  =  { 'OTHER_CFLAGS' => '$(inherited) -DOL_KITE_OFFER_APPLE_PAY' }
+  #  apple.dependency	  'Stripe', '2.2.0'
+  #  apple.dependency	  'Stripe/ApplePay'
+  #end
 end
