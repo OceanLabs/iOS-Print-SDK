@@ -349,7 +349,8 @@ static id stringOrEmptyString(NSString *str) {
     // sanity check all assets are uploaded
     for (id<OLPrintJob> job in self.jobs) {
         for (OLAsset *jobAsset in job.assetsForUploading) {
-            NSAssert(jobAsset.isUploaded, @"oops all assets should have been uploaded");
+            BOOL isUploaded = jobAsset.isUploaded;
+            NSAssert(isUploaded, @"oops all assets should have been uploaded");
         }
     }
     

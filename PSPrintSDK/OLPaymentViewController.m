@@ -48,7 +48,7 @@ static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
 #ifdef OL_KITE_OFFER_PAYPAL
 CardIOPaymentViewControllerDelegate, PayPalPaymentDelegate,
 #endif
-UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate>
+UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavigationControllerDelegate>
 
 @property (strong, nonatomic) OLPrintOrder *printOrder;
 @property (strong, nonatomic) OLPayPalCard *card;
@@ -309,7 +309,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate>
         self.payWithPayPalButton.hidden = YES;
 #endif
 #ifdef OL_KITE_OFFER_APPLE_PAY
-        self.payWithApplePayButton = YES;
+        self.payWithApplePayButton.hidden = YES;
 #endif
         [self.payWithCreditCardButton setTitle:NSLocalizedStringFromTableInBundle(@"Checkout for Free!", @"KitePrintSDK", [OLConstants bundle], @"") forState:UIControlStateNormal];
     } else {
@@ -317,7 +317,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate>
         self.payWithPayPalButton.hidden = NO;
 #endif
 #ifdef OL_KITE_OFFER_APPLE_PAY
-        self.payWithApplePayButton = NO;
+        self.payWithApplePayButton.hidden = NO;
 #endif
         [self.payWithCreditCardButton setTitle:NSLocalizedStringFromTableInBundle(@"Pay with Credit Card", @"KitePrintSDK", [OLConstants bundle], @"") forState:UIControlStateNormal];
     }
