@@ -48,7 +48,7 @@ static NSString *const kApplePayMerchantIDKey = @"merchant.co.oceanlabs.kite.ly"
 
 @implementation ViewController
 
--(OLPrintOrder*) printOrder{
+- (OLPrintOrder*)printOrder {
     if (!_printOrder){
         _printOrder = [[OLPrintOrder alloc] init];
     }
@@ -169,7 +169,7 @@ static NSString *const kApplePayMerchantIDKey = @"merchant.co.oceanlabs.kite.ly"
 
 #pragma mark - OLCheckoutDelegate
 
-- (BOOL) shouldShowContinueShoppingButton{
+- (BOOL) shouldShowContinueShoppingButton {
     return YES;
 }
 
@@ -187,6 +187,7 @@ static NSString *const kApplePayMerchantIDKey = @"merchant.co.oceanlabs.kite.ly"
 
 - (void)onPrintOrderSubmission:(NSNotification*)n {
     NSLog(@"onPrintOrderSubmission for print order with order receipt: %@", [n.userInfo[kOLKeyUserInfoPrintOrder] receipt]);
+    _printOrder = [[OLPrintOrder alloc] init];
 }
 
 @end

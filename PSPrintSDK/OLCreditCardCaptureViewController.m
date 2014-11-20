@@ -174,6 +174,14 @@ static CardType getCardType(NSString *cardNumber) {
         return;
     }
     
+    NSUInteger expireMonth = [self cardExpireMonth];
+    NSUInteger expireYear = [self cardExpireYear];
+    if (expireMonth > 12) {
+        NSString *localizedDescription = NSLocalizedStringFromTableInBundle(@"Enter a valid expiry date", @"KitePrintSDK", [OLConstants bundle], @"");
+        [[[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLConstants bundle], @"") message:localizedDescription delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLConstants bundle], @"") otherButtonTitles:nil] show];
+        return;
+    }
+    
     CardType cardType = getCardType(self.textFieldCardNumber.text);
     OLPayPalCardType paypalCard;
     switch (cardType) {
@@ -200,8 +208,8 @@ static CardType getCardType(NSString *cardNumber) {
     OLPayPalCard *card = [[OLPayPalCard alloc] init];
     card.type = paypalCard;
     card.number = [self cardNumber];
-    card.expireMonth = [self cardExpireMonth];
-    card.expireYear = [self cardExpireYear];
+    card.expireMonth = expireMonth;
+    card.expireYear = expireYear;
     card.cvv2 = [self cardCVV];
     
     [card storeCardWithCompletionHandler:^(NSError *error) {
