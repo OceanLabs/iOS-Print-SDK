@@ -46,12 +46,14 @@ static const NSUInteger kInputFieldTag = 99;
 @implementation OLCheckoutViewController
 
 - (id)init {
-    NSAssert(NO, @"init is not a valid initializer for OLCheckoutViewController. Use initWithAPIKey:environment:printOrder:, or initWithPrintOrder: instead");
-    return nil;
+    //NSAssert(NO, @"init is not a valid initializer for OLCheckoutViewController. Use initWithAPIKey:environment:printOrder:, or initWithPrintOrder: instead");
+    if (self = [super initWithStyle:UITableViewStyleGrouped]) {
+    }
+    return self;
 }
 
 - (id)initWithAPIKey:(NSString *)apiKey environment:(OLKitePrintSDKEnvironment)env printOrder:(OLPrintOrder *)printOrder {
-    NSAssert(printOrder != nil, @"OLCheckoutViewController requires a non-nil print order");
+    //NSAssert(printOrder != nil, @"OLCheckoutViewController requires a non-nil print order");
     if (self = [super initWithStyle:UITableViewStyleGrouped]) {
         [OLKitePrintSDK setAPIKey:apiKey withEnvironment:env];
         self.printOrder = printOrder;
@@ -63,7 +65,7 @@ static const NSUInteger kInputFieldTag = 99;
 }
 
 - (id)initWithPrintOrder:(OLPrintOrder *)printOrder {
-    NSAssert(printOrder != nil, @"OLCheckoutViewController requires a non-nil print order");
+    //NSAssert(printOrder != nil, @"OLCheckoutViewController requires a non-nil print order");
     if (self = [super initWithStyle:UITableViewStyleGrouped]) {
         self.printOrder = printOrder;
         //[self.printOrder preemptAssetUpload];
@@ -71,6 +73,19 @@ static const NSUInteger kInputFieldTag = 99;
     }
     
     return self;
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    if (self.printOrder == nil) {
+        [[[UIAlertView alloc] initWithTitle:@"Oops" message:@"OLCheckoutViewController printOrder is nil. Did you use the correct initializer (initWithAPIKey:environment:printOrder:, or initWithPrintOrder:). Nothing will work as you expect until you resolve the issue in code." delegate:nil cancelButtonTitle:nil otherButtonTitles:nil] show];
+        return;
+    }
+    
+    if ([OLKitePrintSDK apiKey] == nil) {
+        [[[UIAlertView alloc] initWithTitle:@"Oops" message:@"OLCheckoutViewController printOrder is nil. Did you use the correct initializer (initWithAPIKey:environment:printOrder:) or alternatively  OLKitePrintSDK.setAPIKey:withEnvironment:. Nothing will work as you expect until you resolve the issue in code." delegate:nil cancelButtonTitle:nil otherButtonTitles:nil] show];
+        return;
+    }
 }
 
 - (void)viewDidLoad {

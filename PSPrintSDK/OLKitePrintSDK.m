@@ -20,9 +20,9 @@ static NSString *const kJudoSandboxSecret  = @"3bf983df93ceb422bc81fd0289c3eb95e
 static NSString *const kJudoLiveToken     = @"JjOZ49Z9XCYy2FAc";
 static NSString *const kJudoLiveSecret  = @"b8d5950ec68e27e7dfdb314dbd7160e7421c3bddd4d883d9aef5e94788def934";
 
-static NSString *apiKey;
-static NSString *StripePublishableKey;
-static NSString *kApplePayMerchantID;
+static NSString *apiKey = nil;
+static NSString *StripePublishableKey = nil;
+static NSString *kApplePayMerchantID = nil;
 static OLKitePrintSDKEnvironment environment;
 
 static NSString *const kOLAPIEndpointLive = @"https://api.kite.ly";
