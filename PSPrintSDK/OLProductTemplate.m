@@ -22,12 +22,16 @@ NSString *const kOLDefaultTemplateForPostcard = @"ps_postcard";
 NSString *const kOLDefaultTemplateForFrames2x2 = @"frames_2";
 NSString *const kOLDefaultTemplateForFrames3x3 = @"frames_3";
 NSString *const kOLDefaultTemplateForFrames4x4 = @"frames_4";
+NSString *const kOLDefaultTemplateForLargeFormatA1 = @"a1_poster";
+NSString *const kOLDefaultTemplateForLargeFormatA2 = @"a2_poster";
+NSString *const kOLDefaultTemplateForLargeFormatA3 = @"a3_poster";
 
 static NSString *const kKeyIdentifier = @"co.oceanlabs.pssdk.kKeyIdentifier";
 static NSString *const kKeyName = @"co.oceanlabs.pssdk.kKeyName";
 static NSString *const kKeyQuantity = @"co.oceanlabs.pssdk.kKeyQuantity";
 static NSString *const kKeyEnabled = @"co.oceanlabs.pssdk.kKeyEnabled";
 static NSString *const kKeyCostsByCurrency = @"co.oceanlabs.pssdk.kKeyCostsByCurrency";
+
 
 static NSMutableArray *templates;
 static NSDate *lastSyncDate;

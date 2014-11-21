@@ -23,6 +23,11 @@ NSString *const kOLDefaultTemplateForFrames2x2;
 NSString *const kOLDefaultTemplateForFrames3x3;
 NSString *const kOLDefaultTemplateForFrames4x4;
 
+NSString *const kOLDefaultTemplateForLargeFormatA1;
+NSString *const kOLDefaultTemplateForLargeFormatA2;
+NSString *const kOLDefaultTemplateForLargeFormatA3;
+
+
 @class OLProductTemplateSyncRequest;
 
 @interface OLProductTemplate : NSObject <NSCoding>

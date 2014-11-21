@@ -17,6 +17,9 @@ NSString *displayNameWithProduct(Product product) {
         case kProductPolaroidStyle: return @"Polaroid Style Prints";
         case kProductPolaroidStyleMini: return @"Mini Polaroid Style Prints";
         case kProductPostcard: return @"Postcard";
+        case kProductLargeFormatA1: return @"Large Format A1";
+        case kProductLargeFormatA2: return @"Large Format A2";
+        case kProductLargeFormatA3: return @"Large Format A3";
     }
 }
 
@@ -28,6 +31,9 @@ NSString *templateWithProduct(Product product) {
         case kProductPolaroidStyle: return kOLDefaultTemplateForPolaroidStylePrints;
         case kProductPolaroidStyleMini: return kOLDefaultTemplateForPolaroidStyleMiniPrints;
         case kProductPostcard: return kOLDefaultTemplateForPostcard;
+        case kProductLargeFormatA1: return kOLDefaultTemplateForLargeFormatA1;
+        case kProductLargeFormatA2: return kOLDefaultTemplateForLargeFormatA2;
+        case kProductLargeFormatA3: return kOLDefaultTemplateForLargeFormatA3;
     }
 }
 
@@ -44,6 +50,12 @@ static Product productWithDisplayName(NSString *displayName) {
         return kProductPolaroidStyleMini;
     } else if ([displayName isEqualToString:@"Postcard"]) {
         return kProductPostcard;
+    } else if ([displayName isEqualToString:@"Large Format A1"]) {
+        return kProductLargeFormatA1;
+    } else if ([displayName isEqualToString:@"Large Format A2"]) {
+        return kProductLargeFormatA2;
+    } else if ([displayName isEqualToString:@"Large Format A3"]) {
+        return kProductLargeFormatA3;
     } else {
         NSCAssert(NO, @"oops");
         return 0;

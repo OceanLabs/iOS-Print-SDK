@@ -154,5 +154,50 @@
 			<string>100</string>
 		</dict>
 	</dict>
+	<dict>
+		<key>OLTemplateId</key>
+		<string>a1_poster</string>
+		<key>OLTemplateName</key>
+		<string>Large Format A1</string>
+		<key>OLSheetQuanity</key>
+		<integer>1</integer>
+		<key>OLSheetCosts</key>
+		<dict>
+			<key>GBP</key>
+			<string>15</string>
+			<key>USD</key>
+			<string>24</string>
+		</dict>
+	</dict>
+	<dict>
+		<key>OLTemplateId</key>
+		<string>a2_poster</string>
+		<key>OLTemplateName</key>
+		<string>Large Format A2</string>
+		<key>OLSheetQuanity</key>
+		<integer>1</integer>
+		<key>OLSheetCosts</key>
+		<dict>
+			<key>GBP</key>
+			<string>12</string>
+			<key>USD</key>
+			<string>19</string>
+		</dict>
+	</dict>
+	<dict>
+		<key>OLTemplateId</key>
+		<string>a3_poster</string>
+		<key>OLTemplateName</key>
+		<string>Large Format A3</string>
+		<key>OLSheetQuanity</key>
+		<integer>1</integer>
+		<key>OLSheetCosts</key>
+		<dict>
+			<key>GBP</key>
+			<string>9</string>
+			<key>USD</key>
+			<string>14.50</string>
+		</dict>
+	</dict>
 </array>
 </plist>

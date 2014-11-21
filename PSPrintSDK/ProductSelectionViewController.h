@@ -14,7 +14,10 @@ typedef enum {
     kProductPolaroidStyle,
     kProductPolaroidStyleMini,
     kProductMagnets,
-    kProductPostcard
+    kProductPostcard,
+    kProductLargeFormatA1,
+    kProductLargeFormatA2,
+    kProductLargeFormatA3
 } Product;
 
 NSString *displayNameWithProduct(Product product);
