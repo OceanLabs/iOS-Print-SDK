@@ -43,6 +43,12 @@ Use print to unlock hidden revenue streams and add value for your users. *In und
 pod "Kite-Print-SDK", "~> 1.0"
 ```
 
+If you'd like to offer your users the opportunity to pay via PayPal in the checkout process also add the following to your Podfile:
+
+```ruby
+pod "Kite-Print-SDK/PayPal", "~> 1.0"
+```
+
 ## Use Cases
 
 The Print SDK supports two primary use cases: **Managed Checkout** and **Custom Checkout**.
