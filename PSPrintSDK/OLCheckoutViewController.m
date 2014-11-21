@@ -45,7 +45,13 @@ static const NSUInteger kInputFieldTag = 99;
 
 @implementation OLCheckoutViewController
 
+- (id)init {
+    NSAssert(NO, @"init is not a valid initializer for OLCheckoutViewController. Use initWithAPIKey:environment:printOrder:, or initWithPrintOrder: instead");
+    return nil;
+}
+
 - (id)initWithAPIKey:(NSString *)apiKey environment:(OLKitePrintSDKEnvironment)env printOrder:(OLPrintOrder *)printOrder {
+    NSAssert(printOrder != nil, @"OLCheckoutViewController requires a non-nil print order");
     if (self = [super initWithStyle:UITableViewStyleGrouped]) {
         [OLKitePrintSDK setAPIKey:apiKey withEnvironment:env];
         self.printOrder = printOrder;
@@ -57,6 +63,7 @@ static const NSUInteger kInputFieldTag = 99;
 }
 
 - (id)initWithPrintOrder:(OLPrintOrder *)printOrder {
+    NSAssert(printOrder != nil, @"OLCheckoutViewController requires a non-nil print order");
     if (self = [super initWithStyle:UITableViewStyleGrouped]) {
         self.printOrder = printOrder;
         //[self.printOrder preemptAssetUpload];
