@@ -44,6 +44,10 @@ static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
 + (BOOL)useJudoPayForGBP;
 @end
 
+@interface OLReceiptViewController (Private)
+@property (nonatomic, assign) BOOL presentedModally;
+@end
+
 @interface OLPaymentViewController () <
 #ifdef OL_KITE_OFFER_PAYPAL
 CardIOPaymentViewControllerDelegate, PayPalPaymentDelegate,
@@ -78,7 +82,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 , PKPaymentAuthorizationViewControllerDelegate
 #endif
 >
-
+@property (nonatomic, assign) BOOL presentedModally;
 @end
 
 @implementation OLPaymentViewController
@@ -503,6 +507,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         [self.printOrder saveToHistory]; // save again as the print order has it's receipt set if it was successful, otherwise last error is set
         [SVProgressHUD dismiss];
         OLReceiptViewController *receiptVC = [[OLReceiptViewController alloc] initWithPrintOrder:self.printOrder];
+        receiptVC.presentedModally = self.presentedModally;
         [self.navigationController pushViewController:receiptVC animated:YES];
     }];
 }

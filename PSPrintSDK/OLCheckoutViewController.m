@@ -34,6 +34,10 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
 
 static const NSUInteger kInputFieldTag = 99;
 
+@interface OLPaymentViewController (Private)
+@property (nonatomic, assign) BOOL presentedModally;
+@end
+
 
 #define kColourLightBlue [UIColor colorWithRed:0 / 255.0 green:122 / 255.0 blue:255 / 255.0 alpha:1.0]
 
@@ -41,6 +45,7 @@ static const NSUInteger kInputFieldTag = 99;
 @property (strong, nonatomic) OLAddress *shippingAddress;
 @property (strong, nonatomic) UITextField *textFieldEmail, *textFieldPhone;
 @property (strong, nonatomic) OLPrintOrder *printOrder;
+@property (assign, nonatomic) BOOL presentedModally;
 @end
 
 @implementation OLCheckoutViewController
@@ -75,8 +80,18 @@ static const NSUInteger kInputFieldTag = 99;
     return self;
 }
 
+- (void)presentViewControllerFrom:(UIViewController *)presentingViewController animated:(BOOL)animated completion:(void (^)(void))completion {
+    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:self];
+    [presentingViewController presentViewController:navController animated:animated completion:completion];
+}
+
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
+    if (![self.parentViewController isMemberOfClass:[UINavigationController class]]) {
+        [[[UIAlertView alloc] initWithTitle:@"Oops" message:@"OLCheckoutViewController should be part of a UINavigationController stack. Either push the OLCheckoutViewController onto a stack (or make it the rootViewController) or present it modally with OLCheckoutViewController.presentViewControllerFrom:animated:completion:" delegate:nil cancelButtonTitle:nil otherButtonTitles:nil] show];
+        return;
+    }
+    
     if (self.printOrder == nil) {
         [[[UIAlertView alloc] initWithTitle:@"Oops" message:@"OLCheckoutViewController printOrder is nil. Did you use the correct initializer (initWithAPIKey:environment:printOrder:, or initWithPrintOrder:). Nothing will work as you expect until you resolve the issue in code." delegate:nil cancelButtonTitle:nil otherButtonTitles:nil] show];
         return;
@@ -91,6 +106,12 @@ static const NSUInteger kInputFieldTag = 99;
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Next", @"KitePrintSDK", [OLConstants bundle], @"") style:UIBarButtonItemStylePlain target:self action:@selector(onButtonNextClicked)];
+    
+    self.presentedModally = self.parentViewController.isBeingPresented && self.navigationController.viewControllers.lastObject == self;
+    if (self.presentedModally) {
+        self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLConstants bundle], @"") style:UIBarButtonItemStylePlain target:self action:@selector(onButtonCancelClicked)];
+    }
+    
     self.title = NSLocalizedStringFromTableInBundle(@"Shipping", @"KitePrintSDK", [OLConstants bundle], @"");
     self.tableView.tableHeaderView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"checkout_progress_indicator"]];
     self.tableView.tableHeaderView.frame = CGRectMake(0, 0, self.view.frame.size.width, self.tableView.tableHeaderView.frame.size.height * [UIScreen mainScreen].bounds.size.width / 320.0);
@@ -98,6 +119,14 @@ static const NSUInteger kInputFieldTag = 99;
     UITapGestureRecognizer *tgr = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onBackgroundClicked)];
     tgr.cancelsTouchesInView = NO; // allow table cell selection to happen as normal
     [self.tableView addGestureRecognizer:tgr];
+}
+
+- (void)onButtonCancelClicked {
+    if ([self.delegate respondsToSelector:@selector(checkoutViewControllerDidCancel:)]) {
+        [self.delegate checkoutViewControllerDidCancel:self];
+    } else {
+        [self.parentViewController dismissViewControllerAnimated:YES completion:nil];
+    }
 }
 
 - (void)onBackgroundClicked {
@@ -148,6 +177,7 @@ static const NSUInteger kInputFieldTag = 99;
     
     self.printOrder.shippingAddress = self.shippingAddress;
     OLPaymentViewController *vc = [[OLPaymentViewController alloc] initWithPrintOrder:self.printOrder];
+    vc.presentedModally = self.presentedModally;
     vc.delegate = self.delegate;
     
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];

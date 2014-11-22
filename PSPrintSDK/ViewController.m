@@ -6,7 +6,6 @@
 //  Copyright (c) 2013 Deon Botha. All rights reserved.
 //
 
-
 #import "ViewController.h"
 #import "OLAddress.h"
 #import "OLCountry.h"
@@ -146,6 +145,7 @@ static NSString *const kApplePayMerchantIDKey = @"merchant.co.oceanlabs.kite.ly"
     
     OLCheckoutViewController *vc = [[OLCheckoutViewController alloc] initWithPrintOrder:self.printOrder];
     vc.delegate = self;
+    //[vc presentViewControllerFrom:self animated:YES completion:nil];
     [self.navigationController pushViewController:vc animated:YES];
 }
 
@@ -156,7 +156,6 @@ static NSString *const kApplePayMerchantIDKey = @"merchant.co.oceanlabs.kite.ly"
         UIImage *chosenImage = info[UIImagePickerControllerOriginalImage];
         [self printWithAssets:@[[OLAsset assetWithImageAsJPEG:chosenImage]]];
     }];
-
 }
 
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker {

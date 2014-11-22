@@ -22,6 +22,7 @@ static const NSUInteger kSectionErrorRetry = 2;
 
 @interface OLReceiptViewController ()
 @property (nonatomic, strong) OLPrintOrder *printOrder;
+@property (nonatomic, assign) BOOL presentedModally;
 @end
 
 @implementation OLReceiptViewController
@@ -56,14 +57,30 @@ static const NSUInteger kSectionErrorRetry = 2;
     }
 }
 
+- (void)onButtonDoneClicked {
+    [self.parentViewController dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    if (self.presentedModally) {
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Done", @"KitePrintSDK", [OLConstants bundle], @"") style:UIBarButtonItemStylePlain target:self action:@selector(onButtonDoneClicked)];
+        self.navigationController.viewControllers = @[self];
+        self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
+        self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
+    }
+}
+
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
-    NSMutableArray *navigationStack = self.navigationController.viewControllers.mutableCopy;
-    if ([navigationStack[navigationStack.count - 2] isKindOfClass:[OLPaymentViewController class]]) {
-        // clear the stack as we don't want the user to be able to return to payment as that stage of the journey is now complete.
-        [navigationStack removeObjectsInRange:NSMakeRange(1, navigationStack.count - 2)];
-        self.navigationController.viewControllers = navigationStack;
+    if (!self.presentedModally) {
+        NSMutableArray *navigationStack = self.navigationController.viewControllers.mutableCopy;
+        if ([navigationStack[navigationStack.count - 2] isKindOfClass:[OLPaymentViewController class]]) {
+            // clear the stack as we don't want the user to be able to return to payment as that stage of the journey is now complete.
+            [navigationStack removeObjectsInRange:NSMakeRange(1, navigationStack.count - 2)];
+            self.navigationController.viewControllers = navigationStack;
+        }
     }
 }
 

@@ -8,10 +8,14 @@
 
 #import <Foundation/Foundation.h>
 
+@class OLCheckoutViewController;
+
 @protocol OLCheckoutDelegate <NSObject>
 
 @optional
--(BOOL) shouldShowContinueShoppingButton;
--(void) userDidTapContinueShoppingButton;
+- (BOOL)shouldShowContinueShoppingButton;
+- (void)userDidTapContinueShoppingButton;
+
+- (void)checkoutViewControllerDidCancel:(OLCheckoutViewController *)controller;
 
 @end
