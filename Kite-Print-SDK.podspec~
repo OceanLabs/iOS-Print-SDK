@@ -19,7 +19,7 @@ Pod::Spec.new do |spec|
 
 
   spec.subspec 'Lite' do |lite|
-  #subspec for users who don't want the third part PayPal & Stripe bloat
+  #subspec for users who don't want the third party PayPal & Stripe bloat
   end
 
   spec.subspec 'PayPal' do |paypal|
