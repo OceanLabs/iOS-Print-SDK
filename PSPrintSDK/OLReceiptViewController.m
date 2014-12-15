@@ -203,6 +203,8 @@ static const NSUInteger kSectionErrorRetry = 2;
                 cell.textLabel.text = [NSString stringWithFormat:@"%lu x %@", (unsigned long)self.printOrder.jobs.count, job.productName];
             } else if ([job.templateId isEqualToString:@"frames_2"] || [job.templateId isEqualToString:@"frames_3"] || [job.templateId isEqualToString:@"frames_4"]) {
                 cell.textLabel.text = [NSString stringWithFormat:@"%lu x %@", (unsigned long) (job.quantity + template.quantityPerSheet - 1 ) / template.quantityPerSheet, job.productName];
+            } else if ([job.templateId containsString:@"poster"]){
+                cell.textLabel.text = [NSString stringWithFormat:@"%lu x %@", (unsigned long) (job.quantity + template.quantityPerSheet - 1 ) / template.quantityPerSheet, job.productName];
             } else {
                 cell.textLabel.text = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Pack of %lu %@", @"KitePrintSDK", [OLConstants bundle], @""), (unsigned long)job.quantity, job.productName];
             }
