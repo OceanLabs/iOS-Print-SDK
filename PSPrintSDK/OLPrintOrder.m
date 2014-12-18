@@ -259,7 +259,7 @@ static id stringOrEmptyString(NSString *str) {
 - (void)setProofOfPayment:(NSString *)proofOfPayment {
     _proofOfPayment = proofOfPayment;
     if (proofOfPayment) {
-        NSAssert([proofOfPayment hasPrefix:@"AP-"] || [proofOfPayment hasPrefix:@"PAY-"]
+        NSAssert([proofOfPayment hasPrefix:@"AP-"] || [proofOfPayment hasPrefix:@"PAY-"] || [proofOfPayment hasPrefix:@"tok_"]
                  || [proofOfPayment hasPrefix:@"J-"], @"Proof of payment must be a PayPal REST payment confirmation id or a PayPal Adaptive Payment pay key or JudoPay receiptId i.e. PAY-..., AP-... or J-");
     }
 }
