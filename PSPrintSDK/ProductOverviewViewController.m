@@ -64,10 +64,17 @@
 }
 
 - (IBAction)onButtonStartClicked:(UIBarButtonItem *)sender {
-    OrderReviewViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OrderReviewViewController"];
-    vc.printOrder = self.printOrder;
-    vc.product = self.product;
-    [self.navigationController pushViewController:vc animated:YES];
+    if (self.product.type == kOLTemplateTypeFrame2x2 || self.product.type == kOLTemplateTypeFrame3x3 || self.product.type == kOLTemplateTypeFrame4x4){
+        FrameSelectionViewController *frameVc = [self.storyboard instantiateViewControllerWithIdentifier:@"FrameSelectionViewController"];
+        frameVc.printOrder = self.printOrder;
+        [self.navigationController pushViewController:frameVc animated:YES];
+    }
+    else{
+        OrderReviewViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OrderReviewViewController"];
+        vc.printOrder = self.printOrder;
+        vc.product = self.product;
+        [self.navigationController pushViewController:vc animated:YES];
+    }
 }
 
 

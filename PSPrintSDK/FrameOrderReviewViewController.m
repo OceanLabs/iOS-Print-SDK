@@ -32,6 +32,8 @@ NSInteger margin = 2;
 
 - (void)viewDidLoad
 {
+    [super viewDidLoad];
+    
     // ensure order is maxed out by adding duplicates as necessary
     self.framePhotos = [[NSMutableArray alloc] init];
     [self.framePhotos addObjectsFromArray:self.userSelectedPhotos];

@@ -186,9 +186,21 @@
                     </tableView>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="KDi-0l-pjZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <tapGestureRecognizer id="Z55-oY-NCw"/>
-                <tapGestureRecognizer id="B57-4P-Aqx"/>
-                <tapGestureRecognizer id="cXE-AY-kGB"/>
+                <tapGestureRecognizer id="Z55-oY-NCw">
+                    <connections>
+                        <segue destination="xas-Kj-aIZ" kind="push" identifier="Selected2x2FrameStyleSegue" id="rbM-tD-kg6"/>
+                    </connections>
+                </tapGestureRecognizer>
+                <tapGestureRecognizer id="B57-4P-Aqx">
+                    <connections>
+                        <segue destination="xas-Kj-aIZ" kind="push" identifier="Selected3x3FrameStyleSegue" id="zv7-Iu-AXk"/>
+                    </connections>
+                </tapGestureRecognizer>
+                <tapGestureRecognizer id="cXE-AY-kGB">
+                    <connections>
+                        <segue destination="xas-Kj-aIZ" kind="push" identifier="Selected4x4FrameStyleSegue" id="f3M-i8-Sjn"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="2196" y="797"/>
         </scene>
@@ -226,7 +238,11 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="U9H-TS-rJj" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <tapGestureRecognizer id="7mv-Cu-Sh6"/>
+                <tapGestureRecognizer id="7mv-Cu-Sh6">
+                    <connections>
+                        <action selector="userDidTapOnImage:" destination="odB-u1-Ox0" id="7JW-gF-y7W"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="1806" y="797.5"/>
         </scene>
@@ -1048,6 +1064,7 @@
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
         <segue reference="dtR-Dg-f6O"/>
+        <segue reference="f3M-i8-Sjn"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" red="0.0" green="0.52941179275512695" blue="1" alpha="1" colorSpace="deviceRGB"/>
 </document>

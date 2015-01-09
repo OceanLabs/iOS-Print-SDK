@@ -104,8 +104,17 @@ typedef enum {
     }
 }
 
-#warning todo
 - (NSUInteger) quantityToFulfillOrder{
+    if (self.type == kOLTemplateTypeFrame4x4){
+        return 16;
+    }
+    else if (self.type == kOLTemplateTypeFrame3x3){
+        return 9;
+    }
+    else if (self.type == kOLTemplateTypeFrame2x2){
+        return 4;
+    }
+    
     OLProductTemplate *template = [OLProductTemplate templateWithId:self.templateId];
     return template.quantityPerSheet == 0 ? 1 : template.quantityPerSheet;
 }

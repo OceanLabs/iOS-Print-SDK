@@ -8,6 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
+@class OLPrintOrder;
+
 @interface FrameSelectionViewController : UITableViewController
+
+@property (strong, nonatomic) OLPrintOrder *printOrder;
 
 @end

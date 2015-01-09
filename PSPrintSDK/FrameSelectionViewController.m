@@ -8,6 +8,8 @@
 
 #import "FrameSelectionViewController.h"
 #import "UITableViewController+ScreenWidthFactor.h"
+#import "FrameOrderReviewViewController.h"
+#import "OLProduct.h"
 
 @interface FrameSelectionViewController ()
 
@@ -22,14 +24,29 @@
 
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-//    PhotoSelectionViewController *photoSelectionVC = segue.destinationViewController;
-//    if ([segue.identifier isEqualToString:@"Selected2x2FrameStyleSegue"]) {
-//        photoSelectionVC.product = [Product productForFrame2x2];
-//    } else if ([segue.identifier isEqualToString:@"Selected3x3FrameStyleSegue"]) {
-//        photoSelectionVC.product = [Product productForFrame3x3];
-//    } else if ([segue.identifier isEqualToString:@"Selected4x4FrameStyleSegue"]) {
-//        photoSelectionVC.product = [Product productForFrame4x4];
-//    }
+    NSArray *products = [OLProduct products];
+    
+    FrameOrderReviewViewController *vc = segue.destinationViewController;
+    vc.printOrder = self.printOrder;
+    if ([segue.identifier isEqualToString:@"Selected2x2FrameStyleSegue"]) {
+        for (OLProduct *product in products){
+            if (product.type == kOLTemplateTypeFrame2x2){
+                vc.product = product;
+            }
+        }
+    } else if ([segue.identifier isEqualToString:@"Selected3x3FrameStyleSegue"]) {
+        for (OLProduct *product in products){
+            if (product.type == kOLTemplateTypeFrame3x3){
+                vc.product = product;
+            }
+        }
+    } else if ([segue.identifier isEqualToString:@"Selected4x4FrameStyleSegue"]) {
+        for (OLProduct *product in products){
+            if (product.type == kOLTemplateTypeFrame4x4){
+                vc.product = product;
+            }
+        }
+    }
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {

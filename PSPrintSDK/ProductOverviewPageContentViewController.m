@@ -23,26 +23,8 @@
     [self.product setProductPhotography:self.pageIndex toImageView:self.imageView];
 }
 
-- (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender {
-    if ([identifier isEqualToString:@"ToPhotoSelectionSegue"]) {
-        
-        if (self.product.type == kOLTemplateTypeFrame2x2
-            || self.product.type == kOLTemplateTypeFrame3x3
-            || self.product.type == kOLTemplateTypeFrame4x4) {
-            FrameSelectionViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"FrameSelectionViewController"];
-            [self.navigationController pushViewController:vc animated:YES];
-            return NO;
-        }
-    }
-    
-    return YES;
+- (IBAction)userDidTapOnImage:(UITapGestureRecognizer *)sender {
 }
 
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-//    if ([segue.identifier isEqualToString:@"ToPhotoSelectionSegue"]) {
-//        PhotoSelectionViewController *photoSelectionVC = segue.destinationViewController;
-//        photoSelectionVC.product = self.product;
-//    }
-}
 
 @end
