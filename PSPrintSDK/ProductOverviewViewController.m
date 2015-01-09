@@ -43,11 +43,8 @@
     pageControl.backgroundColor = [UIColor clearColor];
     pageControl.frame = CGRectMake(0, -200, 100, 100);
     
-//    self.costLabel.font = [UIFont fontWithName:@"MissionGothic-Bold" size:22];
     self.costLabel.text = self.product.unitCost;
     
-//    self.sizeLabel.font = [UIFont fontWithName:@"MissionGothic-Regular" size:10];
-//    self.freePostageLabel.font = [UIFont fontWithName:@"MissionGothic-Bold" size:12];
     self.sizeLabel.text = [NSString stringWithFormat:@"%@\n%@", self.product.packInfo, self.product.dimensions];
 }
 

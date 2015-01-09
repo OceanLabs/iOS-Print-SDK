@@ -23,7 +23,7 @@
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vUR-Y7-KCs">
+                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vUR-Y7-KCs">
                                 <rect key="frame" x="0.0" y="291" width="320" height="44"/>
                                 <color key="backgroundColor" red="1" green="0.32941176470588235" blue="0.4392156862745098" alpha="1" colorSpace="calibratedRGB"/>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -34,23 +34,26 @@
                                     <segue destination="Z8M-jk-i8L" kind="push" id="lxp-V3-q4z"/>
                                 </connections>
                             </button>
-                            <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="yCC-yE-an1">
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="yCC-yE-an1">
                                 <rect key="frame" x="92" y="83" width="137" height="29"/>
                                 <segments>
                                     <segment title="Sandbox"/>
                                     <segment title="Live"/>
                                 </segments>
                             </segmentedControl>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zH5-iT-gzI">
+                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zH5-iT-gzI">
                                 <rect key="frame" x="0.0" y="187" width="320" height="44"/>
                                 <color key="backgroundColor" red="0.29019607843137252" green="0.53725490196078429" blue="0.86274509803921573" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="44" id="Q8H-Ud-kuW"/>
+                                </constraints>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <state key="normal" title="Print Local iPhone Photos"/>
                                 <connections>
                                     <action selector="onButtonPrintLocalPhotos:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="MiJ-Cw-5NW"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kvO-to-w6m">
+                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kvO-to-w6m">
                                 <rect key="frame" x="0.0" y="239" width="320" height="44"/>
                                 <color key="backgroundColor" red="0.21568627450980393" green="0.73725490196078436" blue="0.60784313725490191" alpha="1" colorSpace="calibratedRGB"/>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -59,18 +62,6 @@
                                 </state>
                                 <connections>
                                     <action selector="onButtonPrintRemotePhotos:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="2U2-WK-XEW"/>
-                                </connections>
-                            </button>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Product to Print:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9w7-C3-PAL">
-                                <rect key="frame" x="25" y="139" width="126" height="21"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eTF-HQ-Lym">
-                                <rect key="frame" x="163" y="135" width="137" height="30"/>
-                                <state key="normal" title="Square Prints"/>
-                                <connections>
-                                    <action selector="onButtonSelectProductClicked:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="LkL-NF-PPg"/>
                                 </connections>
                             </button>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="https://www.kite.ly" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QWq-dR-UOh">
@@ -82,7 +73,19 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="vUR-Y7-KCs" firstAttribute="top" secondItem="kvO-to-w6m" secondAttribute="bottom" constant="8" id="7jE-59-EN1"/>
+                            <constraint firstItem="kvO-to-w6m" firstAttribute="trailing" secondItem="zH5-iT-gzI" secondAttribute="trailing" id="8UM-b6-N0o"/>
+                            <constraint firstItem="kvO-to-w6m" firstAttribute="height" secondItem="vUR-Y7-KCs" secondAttribute="height" id="Lux-oR-IqI"/>
+                            <constraint firstItem="kvO-to-w6m" firstAttribute="top" secondItem="zH5-iT-gzI" secondAttribute="bottom" constant="8" id="QNh-ei-swB"/>
+                            <constraint firstAttribute="centerX" secondItem="yCC-yE-an1" secondAttribute="centerX" constant="-0.5" id="Sam-cA-4Np"/>
                             <constraint firstAttribute="centerX" secondItem="QWq-dR-UOh" secondAttribute="centerX" id="adk-DX-gZ9"/>
+                            <constraint firstItem="kvO-to-w6m" firstAttribute="trailing" secondItem="vUR-Y7-KCs" secondAttribute="trailing" id="e4o-Y6-mZG"/>
+                            <constraint firstItem="zH5-iT-gzI" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" id="lZT-wW-yWe"/>
+                            <constraint firstItem="kvO-to-w6m" firstAttribute="height" secondItem="zH5-iT-gzI" secondAttribute="height" id="p87-GQ-3DM"/>
+                            <constraint firstItem="kvO-to-w6m" firstAttribute="leading" secondItem="vUR-Y7-KCs" secondAttribute="leading" id="pPV-OU-x9w"/>
+                            <constraint firstItem="yCC-yE-an1" firstAttribute="top" secondItem="qcE-Ga-fsi" secondAttribute="bottom" constant="19" id="w4l-94-RAO"/>
+                            <constraint firstAttribute="trailing" secondItem="zH5-iT-gzI" secondAttribute="trailing" id="xCf-6l-ayO"/>
+                            <constraint firstItem="kvO-to-w6m" firstAttribute="leading" secondItem="zH5-iT-gzI" secondAttribute="leading" id="zBS-8c-yVa"/>
                             <constraint firstItem="41f-SW-s49" firstAttribute="top" secondItem="QWq-dR-UOh" secondAttribute="bottom" constant="20" id="zaz-Od-gp1"/>
                         </constraints>
                     </view>
@@ -92,7 +95,6 @@
                     <connections>
                         <outlet property="environmentPicker" destination="yCC-yE-an1" id="NOB-rj-pK6"/>
                         <outlet property="label" destination="XHd-7x-uBO" id="aG8-1I-J8e"/>
-                        <outlet property="productButton" destination="eTF-HQ-Lym" id="GzQ-3Z-ZjI"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>

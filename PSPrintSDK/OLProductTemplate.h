@@ -25,8 +25,7 @@ typedef enum {
     kOLTemplateTypeLargeFormatA1,
     kOLTemplateTypeLargeFormatA2,
     kOLTemplateTypeLargeFormatA3,
-    kOLTemplateTypePostcard
-    
+    kOLTemplateTypePostcard    
 } OLTemplateType;
 
 NSString *const kOLDefaultTemplateForSquarePrints;
@@ -35,6 +34,8 @@ NSString *const kOLDefaultTemplateForMagnets;
 NSString *const kOLDefaultTemplateForPolaroidStylePrints;
 NSString *const kOLDefaultTemplateForPolaroidStyleMiniPrints;
 NSString *const kOLDefaultTemplateForPostcard;
+NSString *const kOLDefaultTemplateForPsPostcard;
+NSString *const kOLDefaultTemplateFor60Postcard;
 NSString *const kOLDefaultTemplateForFrames2x2;
 NSString *const kOLDefaultTemplateForFrames3x3;
 NSString *const kOLDefaultTemplateForFrames4x4;

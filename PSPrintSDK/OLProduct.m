@@ -106,7 +106,8 @@ typedef enum {
 
 #warning todo
 - (NSUInteger) quantityToFulfillOrder{
-    return 1;
+    OLProductTemplate *template = [OLProductTemplate templateWithId:self.templateId];
+    return template.quantityPerSheet == 0 ? 1 : template.quantityPerSheet;
 }
 
 #pragma mark Product Info
@@ -190,7 +191,7 @@ typedef enum {
         case kOLTemplateTypeLargeFormatA1: return CGSizeMake(0, 0);
         case kOLTemplateTypeLargeFormatA2: return CGSizeMake(0, 0);
         case kOLTemplateTypeLargeFormatA3: return CGSizeMake(0, 0);
-            return CGSizeMake(0, 0);
+            default: CGSizeMake(0, 0);
     }
 }
 
@@ -257,7 +258,7 @@ typedef enum {
     else if ([[self templateId] isEqualToString:kOLDefaultTemplateForLargeFormatA3]){
         return kOLTemplateTypeLargeFormatA3;
     }
-    else if ([[self templateId] isEqualToString:kOLDefaultTemplateForPostcard]){
+    else if ([[self templateId] isEqualToString:kOLDefaultTemplateForPostcard] || [[self templateId] isEqualToString:kOLDefaultTemplateForPsPostcard] || [[self templateId] isEqualToString:kOLDefaultTemplateFor60Postcard]){
         return kOLTemplateTypePostcard;
     }
     NSAssert(NO, @"Unrecognized template: %@", [self templateId]);
