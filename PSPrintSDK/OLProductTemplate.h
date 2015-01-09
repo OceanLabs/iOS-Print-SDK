@@ -13,6 +13,22 @@ typedef void (^TemplateSyncHandler)(NSError *error);
 NSString *const kNotificationTemplateSyncComplete;
 NSString *const kNotificationKeyTemplateSyncError;
 
+typedef enum {
+    kOLTemplateTypeMagnets,
+    kOLTemplateTypeSquares,
+    kOLTemplateTypeMiniSquares,
+    kOLTemplateTypePolaroids,
+    kOLTemplateTypeMiniPolaroids,
+    kOLTemplateTypeFrame2x2,
+    kOLTemplateTypeFrame3x3,
+    kOLTemplateTypeFrame4x4,
+    kOLTemplateTypeLargeFormatA1,
+    kOLTemplateTypeLargeFormatA2,
+    kOLTemplateTypeLargeFormatA3,
+    kOLTemplateTypePostcard
+    
+} OLTemplateType;
+
 NSString *const kOLDefaultTemplateForSquarePrints;
 NSString *const kOLDefaultTemplateForSquareMiniPrints;
 NSString *const kOLDefaultTemplateForMagnets;
@@ -39,6 +55,8 @@ NSString *const kOLDefaultTemplateForLargeFormatA3;
 
 - (id)initWithIdentifier:(NSString *)identifier name:(NSString *)name sheetQuantity:(NSUInteger)quantity sheetCostsByCurrencyCode:(NSDictionary/*<String, NSDecimalNumber>*/*)costs enabled:(BOOL)enabled;
 - (NSDecimalNumber *)costPerSheetInCurrencyCode:(NSString *)currencyCode;
+- (NSURL *)coverImageURL;
+-(NSArray *)productsPhotoURLs;
 
 + (void)sync;
 + (BOOL)isSyncInProgress;

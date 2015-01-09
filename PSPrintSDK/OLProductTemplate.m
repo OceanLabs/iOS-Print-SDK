@@ -18,7 +18,7 @@ NSString *const kOLDefaultTemplateForSquareMiniPrints = @"squares_mini";
 NSString *const kOLDefaultTemplateForMagnets = @"magnets";
 NSString *const kOLDefaultTemplateForPolaroidStylePrints = @"polaroids";
 NSString *const kOLDefaultTemplateForPolaroidStyleMiniPrints = @"polaroids_mini";
-NSString *const kOLDefaultTemplateForPostcard = @"ps_postcard";
+NSString *const kOLDefaultTemplateForPostcard = @"default_postcard";
 NSString *const kOLDefaultTemplateForFrames2x2 = @"frames_2";
 NSString *const kOLDefaultTemplateForFrames3x3 = @"frames_3";
 NSString *const kOLDefaultTemplateForFrames4x4 = @"frames_4";
@@ -31,7 +31,6 @@ static NSString *const kKeyName = @"co.oceanlabs.pssdk.kKeyName";
 static NSString *const kKeyQuantity = @"co.oceanlabs.pssdk.kKeyQuantity";
 static NSString *const kKeyEnabled = @"co.oceanlabs.pssdk.kKeyEnabled";
 static NSString *const kKeyCostsByCurrency = @"co.oceanlabs.pssdk.kKeyCostsByCurrency";
-
 
 static NSMutableArray *templates;
 static NSDate *lastSyncDate;
@@ -176,6 +175,18 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
     }
     return [NSString stringWithFormat:@"%@%@ (%@)%@ quantity: %lu",self.enabled ? @"enabled " : @"disabled ", self.identifier, self.name, supportedCurrencies, (unsigned long) self.quantityPerSheet];
 }
+
+
+#warning todo
+-(NSURL *)coverImageURL{
+    return [NSURL URLWithString:@"https://dl.dropboxusercontent.com/u/3007013/petite-polaroids.png"];
+}
+
+#warning todo
+-(NSArray *)productsPhotoURLs{
+    return @[[NSURL URLWithString:@"https://dl.dropboxusercontent.com/u/3007013/polaroids3%402x.jpg"], [NSURL URLWithString:@"https://dl.dropboxusercontent.com/u/3007013/polaroids3%402x.jpg"]];
+}
+
 
 #pragma mark - NSCoding protocol methods
 
