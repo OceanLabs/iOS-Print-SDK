@@ -26,6 +26,29 @@
 
 @implementation OLProductHomeViewController
 
+-(NSArray *) products{
+    if (!_products){
+        _products = [OLKitePrintSDK enabledProducts] ? [OLKitePrintSDK enabledProducts] : [OLProduct products];
+        NSMutableArray *mutableProducts = [_products mutableCopy];
+        BOOL haveAtLeastOneFrame = NO;
+        for (OLProduct *product in _products){
+            if (product.templateType == kOLTemplateTypePostcard){
+                [mutableProducts removeObject:product];
+            }
+            if (product.templateType == kOLTemplateTypeFrame2x2 || product.templateType == kOLTemplateTypeFrame3x3 || product.templateType == kOLTemplateTypeFrame4x4){
+                if (haveAtLeastOneFrame){
+                    [mutableProducts removeObject:product];
+                }
+                else{
+                    haveAtLeastOneFrame = YES;
+                }
+            }
+        }
+        _products = mutableProducts;
+    }
+    return _products;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.title = NSLocalizedString(@"Products", @"");
