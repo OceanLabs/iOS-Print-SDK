@@ -157,9 +157,10 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
                             @"app_version": [NSString stringWithFormat:@"Version: %@ (%@)", appVersion, buildNumber]
                             };
     OLProductPrintJob* printJob = [[OLProductPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:photoAssets];
-    if (![self.printOrder.jobs containsObject:printJob]){
-        [self.printOrder addPrintJob:printJob];
+    for (id<OLPrintJob> job in self.printOrder.jobs){
+        [self.printOrder removePrintJob:job];
     }
+    [self.printOrder addPrintJob:printJob];
 
     
     OLCheckoutViewController *vc = [[OLCheckoutViewController alloc] initWithPrintOrder:self.printOrder];
@@ -172,7 +173,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 }
 
 - (BOOL) shouldShowContinueShoppingButton{
-    return YES;
+    return NO;
 }
 
 

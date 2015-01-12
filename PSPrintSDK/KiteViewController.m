@@ -22,7 +22,7 @@
 @implementation KiteViewController
 
 - (id)initWithPrintOrder:(OLPrintOrder *)printOrder {
-    //NSAssert(printOrder != nil, @"OLCheckoutViewController requires a non-nil print order");
+    NSAssert(printOrder != nil, @"KiteViewController requires a non-nil print order");
     if (self = [super init]) {
         self.printOrder = printOrder;
         //[self.printOrder preemptAssetUpload];
@@ -34,6 +34,7 @@
 
 -(void)viewDidLoad{
     UIStoryboard *sb = [UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:nil];
+    NSAssert(self.printOrder != nil, @"KiteViewController requires a non-nil print order");
     
     if (!self.navigationController){
         self.nextVc = [sb instantiateViewControllerWithIdentifier:@"ProductsNavigationController"];

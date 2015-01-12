@@ -48,11 +48,8 @@ static NSString *const kApplePayMerchantIDKey = @"merchant.co.oceanlabs.kite.ly"
 
 @implementation ViewController
 
-- (OLPrintOrder*)printOrder {
-    if (!_printOrder){
-        _printOrder = [[OLPrintOrder alloc] init];
-    }
-    return _printOrder;
+-(void)viewDidAppear:(BOOL)animated{
+    self.printOrder = [[OLPrintOrder alloc] init];
 }
 
 - (void)viewDidLoad {
@@ -134,19 +131,11 @@ static NSString *const kApplePayMerchantIDKey = @"merchant.co.oceanlabs.kite.ly"
 - (void)printWithAssets:(NSArray *)assets {
     if (![self isAPIKeySet]) return;
     
-    if (self.selectedProduct == kProductPostcard) {
-        [self.printOrder addPrintJob:[OLPrintJob postcardWithTemplateId:templateWithProduct(self.selectedProduct) frontImageOLAsset:[assets objectAtIndex:0] textOnPhotoImageOLAsset:nil message:@"Hello World" address:[OLAddress psTeamAddress] location:@[@"Kite HQ", @"London"]]];
-    } else {
-        if (self.selectedProduct == kProductLargeFormatA1 || self.selectedProduct == kProductLargeFormatA2 || self.selectedProduct == kProductLargeFormatA3) {
-            assets = @[[assets objectAtIndex:0]]; // large format only needs a single image
-        }
-        
-        [self.printOrder addPrintJob:[OLPrintJob printJobWithTemplateId:templateWithProduct(self.selectedProduct) OLAssets:assets]];
-    }
+    [self.printOrder addPrintJob:[OLPrintJob printJobWithTemplateId:nil OLAssets:assets]];
     
     KiteViewController *vc = [[KiteViewController alloc] initWithPrintOrder:self.printOrder];
-//    vc.delegate = self;
-//    [self presentViewController:vc animated:YES completion:NULL];
+    //    vc.delegate = self;
+    //    [self presentViewController:vc animated:YES completion:NULL];
     [self.navigationController pushViewController:vc animated:YES];
 }
 
