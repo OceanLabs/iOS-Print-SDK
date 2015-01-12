@@ -13,6 +13,7 @@
 #import "OLProductTemplate.h"
 #import "OLProduct.h"
 #import "OLKiteViewController.h"
+#import "OLKitePrintSDK.h"
 
 @interface OLProductHomeViewController ()
 @property (nonatomic, strong) NSArray *products;
@@ -28,8 +29,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.title = NSLocalizedString(@"Products", @"");
-    
-    self.products = [OLProduct products];
 }
 
 
@@ -88,7 +87,6 @@
     [product setCoverImageToImageView:cellImage];
     
     UILabel *productTypeLabel = (UILabel *)[cell.contentView viewWithTag:300];
-//    productTypeLabel.font = [UIFont fontWithName:@"MissionGothic-Bold" size:17];
     productTypeLabel.text = [product.productTemplate.name uppercaseString];
     productTypeLabel.backgroundColor = [product labelColor];
     

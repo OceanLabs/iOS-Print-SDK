@@ -20,11 +20,12 @@
 -(instancetype)initWithTemplate:(OLProductTemplate *)template;
 - (NSUInteger) quantityToFulfillOrder;
 - (NSString *)templateId;
-- (OLTemplateType)type;
+- (OLTemplateType)templateType;
 - (NSString *)unitCost;
 - (NSString *) packInfo;
 - (NSString *) dimensions;
 -(void)setCoverImageToImageView:(UIImageView *)imageView;
 -(void)setProductPhotography:(NSUInteger)i toImageView:(UIImageView *)imageView;
++(OLProduct *) productWithTemplateId:(NSString *)templateId;
 
 @end

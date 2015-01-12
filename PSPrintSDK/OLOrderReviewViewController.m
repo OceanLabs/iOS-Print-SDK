@@ -296,7 +296,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
         if (!reviewPhotoCellHeight) {
             UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"reviewPhotoCell"];
             
-            if (self.product.type == kOLTemplateTypePolaroids || self.product.type == kOLTemplateTypeMiniPolaroids){
+            if (self.product.templateType == kOLTemplateTypePolaroids || self.product.templateType == kOLTemplateTypeMiniPolaroids){
                 NSUInteger extraBottomBezel = 50 / [self screenWidthFactor];
                 reviewPhotoCellHeight = @(cell.bounds.size.height + extraBottomBezel);
             }

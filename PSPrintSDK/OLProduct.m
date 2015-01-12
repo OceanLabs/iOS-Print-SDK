@@ -41,6 +41,10 @@ typedef enum {
     return self;
 }
 
++(OLProduct *) productWithTemplateId:(NSString *)templateId{
+    return [[OLProduct alloc] initWithTemplate:[OLProductTemplate templateWithId:templateId]];
+}
+
 -(void)setCoverImageToImageView:(UIImageView *)imageView{
     UIImage *image;
     if ([self.coverImage isKindOfClass:[NSString class]]){
@@ -86,7 +90,7 @@ typedef enum {
         return _labelColor;
     }
     else{
-        switch (self.type) {
+        switch (self.templateType) {
             case kOLTemplateTypeMagnets: return [UIColor colorWithRed:243.0/255.0 green:174.0/255.0 blue:52.0/255 alpha:1.0];
             case kOLTemplateTypeMiniSquares: return [UIColor colorWithRed:50.0/255.0 green:159.0/255.0 blue:209.0/255 alpha:1.0];
             case kOLTemplateTypeSquares: return [UIColor colorWithRed:48.0/255.0 green:177.0/255.0 blue:137.0/255 alpha:1.0];
@@ -105,13 +109,13 @@ typedef enum {
 }
 
 - (NSUInteger) quantityToFulfillOrder{
-    if (self.type == kOLTemplateTypeFrame4x4){
+    if (self.templateType == kOLTemplateTypeFrame4x4){
         return 16;
     }
-    else if (self.type == kOLTemplateTypeFrame3x3){
+    else if (self.templateType == kOLTemplateTypeFrame3x3){
         return 9;
     }
-    else if (self.type == kOLTemplateTypeFrame2x2){
+    else if (self.templateType == kOLTemplateTypeFrame2x2){
         return 4;
     }
     
@@ -167,7 +171,7 @@ typedef enum {
 }
 
 - (CGSize) dimensionsInInches{
-    switch (self.type) {
+    switch (self.templateType) {
         case kOLTemplateTypeMagnets: return CGSizeMake(2.4, 2.4);
         case kOLTemplateTypeMiniSquares: return CGSizeMake(2.5, 2.5);
         case kOLTemplateTypeSquares: return CGSizeMake(3.7, 3.7);
@@ -186,7 +190,7 @@ typedef enum {
 }
 
 - (CGSize) dimensionsInCentimetres{
-    switch (self.type) {
+    switch (self.templateType) {
         case kOLTemplateTypeMagnets: return CGSizeMake(6.9, 6.9);
         case kOLTemplateTypeMiniSquares: return CGSizeMake(6.8, 6.8);
         case kOLTemplateTypeSquares: return CGSizeMake(9.8, 9.8);
@@ -233,7 +237,7 @@ typedef enum {
     return isMetric ? [self dimensionsInUnits:kSizeUnitsCentimetres] : [self dimensionsInUnits:kSizeUnitsInches];
 }
 
--(OLTemplateType)type{
+-(OLTemplateType)templateType{
     if ([[self templateId] isEqualToString:kOLDefaultTemplateForFrames2x2]){
         return kOLTemplateTypeFrame2x2;
     }

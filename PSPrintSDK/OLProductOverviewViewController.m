@@ -65,7 +65,7 @@
 }
 
 - (IBAction)onButtonStartClicked:(UIBarButtonItem *)sender {
-    if (self.product.type == kOLTemplateTypeFrame2x2 || self.product.type == kOLTemplateTypeFrame3x3 || self.product.type == kOLTemplateTypeFrame4x4){
+    if (self.product.templateType == kOLTemplateTypeFrame2x2 || self.product.templateType == kOLTemplateTypeFrame3x3 || self.product.templateType == kOLTemplateTypeFrame4x4){
         OLFrameSelectionViewController *frameVc = [self.storyboard instantiateViewControllerWithIdentifier:@"FrameSelectionViewController"];
         frameVc.printOrder = self.printOrder;
         [self.navigationController pushViewController:frameVc animated:YES];

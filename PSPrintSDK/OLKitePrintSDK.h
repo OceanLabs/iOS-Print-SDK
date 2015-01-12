@@ -36,6 +36,9 @@ typedef void (^OLProductCostRefreshCompletionHandler)(NSError *error);
 + (NSString *)apiKey;
 + (OLKitePrintSDKEnvironment)environment;
 + (NSString *)apiEndpoint;
++ (NSArray *)enabledProducts;
++ (void)setEnabledProducts:(NSArray *)products;
+
 
 #ifdef OL_KITE_OFFER_PAYPAL
 + (NSString *)paypalEnvironment;

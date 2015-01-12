@@ -30,19 +30,19 @@
     vc.printOrder = self.printOrder;
     if ([segue.identifier isEqualToString:@"Selected2x2FrameStyleSegue"]) {
         for (OLProduct *product in products){
-            if (product.type == kOLTemplateTypeFrame2x2){
+            if (product.templateType == kOLTemplateTypeFrame2x2){
                 vc.product = product;
             }
         }
     } else if ([segue.identifier isEqualToString:@"Selected3x3FrameStyleSegue"]) {
         for (OLProduct *product in products){
-            if (product.type == kOLTemplateTypeFrame3x3){
+            if (product.templateType == kOLTemplateTypeFrame3x3){
                 vc.product = product;
             }
         }
     } else if ([segue.identifier isEqualToString:@"Selected4x4FrameStyleSegue"]) {
         for (OLProduct *product in products){
-            if (product.type == kOLTemplateTypeFrame4x4){
+            if (product.templateType == kOLTemplateTypeFrame4x4){
                 vc.product = product;
             }
         }
