@@ -56,6 +56,15 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     return self;
 }
 
+- (void)viewDidAppear:(BOOL)animated{
+    // Assumes only one job
+    if ([self.extraCopiesOfAssets count] < [[self.printOrder.jobs.firstObject assetsForUploading] count]){
+        NSArray *assets = [[self.printOrder.jobs.firstObject assetsForUploading] subarrayWithRange:NSMakeRange(0, [self.extraCopiesOfAssets count])];
+        [self.printOrder removePrintJob:[self.printOrder.jobs firstObject]];
+        [self.printOrder addPrintJob: [[OLProductPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:assets]];
+    }
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
