@@ -1,6 +1,6 @@
 //
 //  ProductHomeViewController.h
-//  Print Studio
+//  Kite Print SDK
 //
 //  Created by Elliott Minns on 12/12/2013.
 //  Copyright (c) 2013 Ocean Labs. All rights reserved.

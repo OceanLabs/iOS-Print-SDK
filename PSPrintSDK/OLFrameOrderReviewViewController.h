@@ -1,6 +1,6 @@
 //
 //  FrameOrderReviewViewController.h
-//  HuggleUp
+//  Kite Print SDK
 //
 //  Created by Kostas Karayannis on 23/07/2014.
 //  Copyright (c) 2014 Ocean Labs. All rights reserved.

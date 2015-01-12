@@ -1,6 +1,6 @@
 //
 //  OLCreditCardCaptureViewController.m
-//  KitePrintSDK
+//  Kite Print SDK
 //
 //  Created by Deon Botha on 20/11/2014.
 //  Copyright (c) 2014 Deon Botha. All rights reserved.

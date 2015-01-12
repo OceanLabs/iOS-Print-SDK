@@ -1,6 +1,6 @@
 //
 //  CheckoutViewController.m
-//  Print Studio
+//  Kite Print SDK
 //
 //  Created by Deon Botha on 05/01/2014.
 //  Copyright (c) 2014 Ocean Labs. All rights reserved.
