@@ -26,13 +26,13 @@
 #import "ProductSelectionViewController.h"
 #import "OLAddress.h"
 #import "OLCheckoutDelegate.h"
-#import "KiteViewController.h"
+#import "OLKiteViewController.h"
 
 /**********************************************************************
  * Insert your API keys here. These are found under your profile 
  * by logging in to the developer portal at http://kite.ly
  **********************************************************************/
-static NSString *const kAPIKeySandbox = @" "; // replace with your Sandbox API key found under the Profile section in the developer portal
+static NSString *const kAPIKeySandbox = @"a45bf7f39523d31aa1ca4ecf64d422b4d810d9c4"; // replace with your Sandbox API key found under the Profile section in the developer portal
 static NSString *const kAPIKeyLive = @"REPLACE_ME"; // replace with your Live API key found under the Profile section in the developer portal
 
 static NSString *const kStripePublishableKey = @"pk_test_6pRNASCoBOKtIshFeQd4XMUh"; //This is a test key. Replace with the live key here.
@@ -133,7 +133,7 @@ static NSString *const kApplePayMerchantIDKey = @"merchant.co.oceanlabs.kite.ly"
     
     [self.printOrder addPrintJob:[OLPrintJob printJobWithTemplateId:nil OLAssets:assets]];
     
-    KiteViewController *vc = [[KiteViewController alloc] initWithPrintOrder:self.printOrder];
+    OLKiteViewController *vc = [[OLKiteViewController alloc] initWithPrintOrder:self.printOrder];
     //    vc.delegate = self;
     //    [self presentViewController:vc animated:YES completion:NULL];
     [self.navigationController pushViewController:vc animated:YES];

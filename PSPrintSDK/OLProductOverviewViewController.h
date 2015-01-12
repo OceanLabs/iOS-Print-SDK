@@ -11,7 +11,7 @@
 
 @class OLProduct;
 
-@interface ProductOverviewViewController : UIViewController
+@interface OLProductOverviewViewController : UIViewController
 @property (strong, nonatomic) OLProduct *product;
 @property (strong, nonatomic) OLPrintOrder *printOrder;
 @end

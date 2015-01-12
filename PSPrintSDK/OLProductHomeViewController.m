@@ -6,15 +6,15 @@
 //  Copyright (c) 2013 Ocean Labs. All rights reserved.
 //
 
-#import "ProductHomeViewController.h"
-#import "ProductOverviewViewController.h"
+#import "OLProductHomeViewController.h"
+#import "OLProductOverviewViewController.h"
 #import "UITableViewController+ScreenWidthFactor.h"
 
 #import "OLProductTemplate.h"
 #import "OLProduct.h"
-#import "KiteViewController.h"
+#import "OLKiteViewController.h"
 
-@interface ProductHomeViewController ()
+@interface OLProductHomeViewController ()
 @property (nonatomic, strong) NSArray *products;
 @property (nonatomic, strong) UIImageView *topSurpriseImageView;
 @property (nonatomic, strong) UIView *huggleBotSpeechBubble;
@@ -23,7 +23,7 @@
 @property (nonatomic, assign) BOOL startHuggleBotOnViewWillAppear;
 @end
 
-@implementation ProductHomeViewController
+@implementation OLProductHomeViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -41,8 +41,8 @@
 -(void)viewDidAppear:(BOOL)animated{
     if (self.navigationController){
         NSMutableArray *navigationStack = self.navigationController.viewControllers.mutableCopy;
-        if (navigationStack.count > 1 && [navigationStack[navigationStack.count - 2] isKindOfClass:[KiteViewController class]]) {
-            KiteViewController *kiteVc = navigationStack[navigationStack.count - 2];
+        if (navigationStack.count > 1 && [navigationStack[navigationStack.count - 2] isKindOfClass:[OLKiteViewController class]]) {
+            OLKiteViewController *kiteVc = navigationStack[navigationStack.count - 2];
             if (!kiteVc.presentingViewController){
                 [navigationStack removeObject:kiteVc];
                 self.navigationController.viewControllers = navigationStack;
@@ -53,7 +53,7 @@
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([segue.identifier isEqualToString:@"ToProductOverviewSegue"]) {
-        ProductOverviewViewController *vc = segue.destinationViewController;
+        OLProductOverviewViewController *vc = segue.destinationViewController;
         vc.printOrder = self.printOrder;
         NSIndexPath *path = [self.tableView indexPathForCell:sender];
         vc.product = self.products[path.row];

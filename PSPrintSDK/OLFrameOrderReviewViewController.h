@@ -6,9 +6,9 @@
 //  Copyright (c) 2014 Ocean Labs. All rights reserved.
 //
 
-#import "OrderReviewViewController.h"
+#import "OLOrderReviewViewController.h"
 #import <LXReorderableCollectionViewFlowLayout.h>
 
-@interface FrameOrderReviewViewController : OrderReviewViewController <LXReorderableCollectionViewDataSource, UICollectionViewDelegateFlowLayout>
+@interface OLFrameOrderReviewViewController : OLOrderReviewViewController <LXReorderableCollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 
 @end

@@ -6,18 +6,18 @@
 //  Copyright (c) 2014 Ocean Labs. All rights reserved.
 //
 
-#import "FrameOrderReviewViewController.h"
-#import "PrintPhoto.h"
+#import "OLFrameOrderReviewViewController.h"
+#import "OLPrintPhoto.h"
 #import "OLProduct.h"
 
-@interface FrameOrderReviewViewController ()
+@interface OLFrameOrderReviewViewController ()
 
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *confirmBarButton;
 @property (strong, nonatomic) NSMutableArray* framePhotos;
 
 @end
 
-@implementation FrameOrderReviewViewController
+@implementation OLFrameOrderReviewViewController
 
 NSInteger margin = 2;
 
@@ -59,7 +59,7 @@ NSInteger margin = 2;
     
     NSIndexPath* indexPath = [collectionView indexPathForItemAtPoint:[gestureRecognizer locationInView:collectionView]];
     
-    PrintPhoto *printPhoto = self.framePhotos[(tableIndexPath.row - 1) * self.product.quantityToFulfillOrder + indexPath.row];
+    OLPrintPhoto *printPhoto = self.framePhotos[(tableIndexPath.row - 1) * self.product.quantityToFulfillOrder + indexPath.row];
     OLImageEditorViewController *imageEditor = [[OLImageEditorViewController alloc] init];
     imageEditor.image = printPhoto;
     imageEditor.delegate = self;
@@ -215,7 +215,7 @@ NSInteger margin = 2;
     UIImageView* cellImage = (UIImageView*)[cell.contentView viewWithTag:110];
     
     if (cellImage && !cellImage.image && tableIndexindexPath){
-        [((PrintPhoto*)[self.framePhotos objectAtIndex:indexPath.row + (tableIndexindexPath.row-1) * self.product.quantityToFulfillOrder]) setThumbImageIdealSizeForImageView:cellImage];
+        [((OLPrintPhoto*)[self.framePhotos objectAtIndex:indexPath.row + (tableIndexindexPath.row-1) * self.product.quantityToFulfillOrder]) setThumbImageIdealSizeForImageView:cellImage];
     }
     
     

@@ -6,23 +6,23 @@
 //  Copyright (c) 2014 Ocean Labs. All rights reserved.
 //
 
-#import "ProductOverviewPageContentViewController.h"
-#import "FrameSelectionViewController.h"
+#import "OLProductOverviewPageContentViewController.h"
+#import "OLFrameSelectionViewController.h"
 #import "OLProductTemplate.h"
 #import "OLProduct.h"
-#import "ProductOverviewViewController.h"
+#import "OLProductOverviewViewController.h"
 
-@interface ProductOverviewViewController (Private)
+@interface OLProductOverviewViewController (Private)
 
 - (IBAction)onButtonStartClicked:(UIBarButtonItem *)sender;
 
 @end
 
-@interface ProductOverviewPageContentViewController ()
+@interface OLProductOverviewPageContentViewController ()
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;
 @end
 
-@implementation ProductOverviewPageContentViewController
+@implementation OLProductOverviewPageContentViewController
 
 
 - (void)viewDidLoad {

@@ -18,7 +18,7 @@ typedef enum {
     kPrintPhotoAssetTypeOLAsset
 } PrintPhotoAssetType;
 
-@interface PrintPhoto : NSObject <OLImageEditorImage, OLAssetDataSource>
+@interface OLPrintPhoto : NSObject <OLImageEditorImage, OLAssetDataSource>
 
 - (void)setThumbImageForImageView:(UIImageView *)imageView;
 - (void) setThumbImageIdealSizeForImageView:(UIImageView *)imageView;

@@ -12,7 +12,7 @@
 
 @class OLProduct;
 
-@interface OrderReviewViewController : UITableViewController <UITableViewDelegate, UITableViewDataSource, OLImageEditorViewControllerDelegate, UINavigationControllerDelegate>
+@interface OLOrderReviewViewController : UITableViewController <UITableViewDelegate, UITableViewDataSource, OLImageEditorViewControllerDelegate, UINavigationControllerDelegate>
 
 @property (nonatomic, strong) OLProduct *product;
 @property (strong, nonatomic) NSMutableArray* extraCopiesOfAssets;

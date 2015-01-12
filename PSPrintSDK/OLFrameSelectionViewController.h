@@ -10,7 +10,7 @@
 
 @class OLPrintOrder;
 
-@interface FrameSelectionViewController : UITableViewController
+@interface OLFrameSelectionViewController : UITableViewController
 
 @property (strong, nonatomic) OLPrintOrder *printOrder;
 

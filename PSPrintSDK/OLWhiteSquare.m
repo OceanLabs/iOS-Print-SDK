@@ -6,9 +6,9 @@
 //  Copyright (c) 2014 Ocean Labs. All rights reserved.
 //
 
-#import "WhiteSquare.h"
+#import "OLWhiteSquare.h"
 
-@implementation WhiteSquare
+@implementation OLWhiteSquare
 
 
 // Only override drawRect: if you perform custom drawing.

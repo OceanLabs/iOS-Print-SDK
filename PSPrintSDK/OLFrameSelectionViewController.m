@@ -6,16 +6,16 @@
 //  Copyright (c) 2014 Ocean Labs. All rights reserved.
 //
 
-#import "FrameSelectionViewController.h"
+#import "OLFrameSelectionViewController.h"
 #import "UITableViewController+ScreenWidthFactor.h"
-#import "FrameOrderReviewViewController.h"
+#import "OLFrameOrderReviewViewController.h"
 #import "OLProduct.h"
 
-@interface FrameSelectionViewController ()
+@interface OLFrameSelectionViewController ()
 
 @end
 
-@implementation FrameSelectionViewController
+@implementation OLFrameSelectionViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -26,7 +26,7 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     NSArray *products = [OLProduct products];
     
-    FrameOrderReviewViewController *vc = segue.destinationViewController;
+    OLFrameOrderReviewViewController *vc = segue.destinationViewController;
     vc.printOrder = self.printOrder;
     if ([segue.identifier isEqualToString:@"Selected2x2FrameStyleSegue"]) {
         for (OLProduct *product in products){

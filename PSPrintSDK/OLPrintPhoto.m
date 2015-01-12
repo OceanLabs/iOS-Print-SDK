@@ -6,7 +6,7 @@
 //  Copyright (c) 2013 Ocean Labs. All rights reserved.
 //
 
-#import "PrintPhoto.h"
+#import "OLPrintPhoto.h"
 #import <AssetsLibrary/AssetsLibrary.h>
 #import <OLInstagramImage.h>
 #import <OLFacebookImage.h>
@@ -37,13 +37,13 @@ static NSString *const kKeyServerImageSize = @"co.oceanlabs.psprintstudio.kKeySe
 
 @end
 
-@interface PrintPhoto ()
+@interface OLPrintPhoto ()
 @property (nonatomic, strong) ALAssetsLibrary *assetsLibrary;
 @property (nonatomic, assign) CGAffineTransform cropTransform;
 @property (nonatomic, strong) UIImage *cachedCroppedThumbnailImage;
 @end
 
-@implementation PrintPhoto
+@implementation OLPrintPhoto
 
 - (id)init {
     if (self = [super init]) {
@@ -153,7 +153,7 @@ static NSString *const kKeyServerImageSize = @"co.oceanlabs.psprintstudio.kKeySe
 - (BOOL)isEqual:(id)object {
     BOOL retVal = [object class] == [self class];
     if (retVal) {
-        PrintPhoto *other = object;
+        OLPrintPhoto *other = object;
         retVal &= (other.type == self.type);
         retVal &= ([other.asset isEqual:self.asset]);
     }

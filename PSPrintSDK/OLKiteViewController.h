@@ -10,7 +10,7 @@
 
 @class OLPrintOrder;
 
-@interface KiteViewController : UIViewController
+@interface OLKiteViewController : UIViewController
 
 - (id)initWithPrintOrder:(OLPrintOrder *)printOrder;
 

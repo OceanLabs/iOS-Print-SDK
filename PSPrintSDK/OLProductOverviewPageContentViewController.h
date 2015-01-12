@@ -10,14 +10,14 @@
 
 @class OLProduct;
 
-@protocol ProductOverviewPageContentViewControllerDelegate <NSObject>
+@protocol OLProductOverviewPageContentViewControllerDelegate <NSObject>
 
 -(void)userDidTapOnImage;
 
 @end
 
-@interface ProductOverviewPageContentViewController : UIViewController
+@interface OLProductOverviewPageContentViewController : UIViewController
 @property (assign, nonatomic) NSUInteger pageIndex;
 @property (strong, nonatomic) OLProduct *product;
-@property (weak, nonatomic) id<ProductOverviewPageContentViewControllerDelegate> delegate;
+@property (weak, nonatomic) id<OLProductOverviewPageContentViewControllerDelegate> delegate;
 @end

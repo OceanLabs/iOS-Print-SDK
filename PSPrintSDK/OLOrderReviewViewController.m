@@ -6,8 +6,8 @@
 //  Copyright (c) 2014 Ocean Labs. All rights reserved.
 //
 
-#import "OrderReviewViewController.h"
-#import "PrintPhoto.h"
+#import "OLOrderReviewViewController.h"
+#import "OLPrintPhoto.h"
 #import "AppDelegate.h"
 #import "OLAsset.h"
 #import "OLCheckoutViewController.h"
@@ -23,21 +23,21 @@
 
 static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 
-@interface OrderReviewViewController () <OLCheckoutDelegate>
+@interface OLOrderReviewViewController () <OLCheckoutDelegate>
 
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *confirmBarButton;
 @property (strong, nonatomic) NSArray *userSelectedPhotos;
 
 @end
 
-@implementation OrderReviewViewController
+@implementation OLOrderReviewViewController
 
 -(NSArray *) userSelectedPhotos{
     if (!_userSelectedPhotos){
         NSMutableArray *mutableUserSelectedPhotos = [[NSMutableArray alloc] init];
         for (OLProductPrintJob *job in self.printOrder.jobs){
             for (id asset in job.assetsForUploading){
-                PrintPhoto *printPhoto = [[PrintPhoto alloc] init];
+                OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
                 printPhoto.asset = asset;
                 [mutableUserSelectedPhotos addObject:printPhoto];
             }
@@ -117,7 +117,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     }
     
     NSUInteger instagramPhotoCount = 0, facebookPhotoCount = 0, iphonePhotoCount = 0;
-    for (PrintPhoto *photo in userSelectedPhotosAndExtras) {
+    for (OLPrintPhoto *photo in userSelectedPhotosAndExtras) {
         if (photo.type == kPrintPhotoAssetTypeALAsset) ++iphonePhotoCount;
         if (photo.type == kPrintPhotoAssetTypeOLFacebookPhoto) ++facebookPhotoCount;
         if (photo.type == kPrintPhotoAssetTypeOLInstagramPhoto) ++instagramPhotoCount;
@@ -126,7 +126,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     // Avoid uploading assets if possible. We can avoid uploading where the image already exists at a remote
     // URL and the user did not manipulate it in any way.
     NSMutableArray *photoAssets = [[NSMutableArray alloc] init];
-    for (PrintPhoto *photo in userSelectedPhotosAndExtras) {
+    for (OLPrintPhoto *photo in userSelectedPhotosAndExtras) {
         if ((photo.type == kPrintPhotoAssetTypeOLFacebookPhoto
              || photo.type == kPrintPhotoAssetTypeOLInstagramPhoto)
             && CGAffineTransformIsIdentity(photo.transform)) {
@@ -224,7 +224,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     }
     NSIndexPath* indexPath = [self.tableView indexPathForCell:(UITableViewCell*)cell];
     
-    PrintPhoto *printPhoto = self.userSelectedPhotos[indexPath.row - 1];
+    OLPrintPhoto *printPhoto = self.userSelectedPhotos[indexPath.row - 1];
     OLImageEditorViewController *imageEditor = [[OLImageEditorViewController alloc] init];
     imageEditor.image = printPhoto;
     imageEditor.delegate = self;
@@ -267,7 +267,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     UIImageView *cellImage = (UIImageView *)[cell.contentView viewWithTag:10];
     
     if (cellImage){
-        [((PrintPhoto*)[self.userSelectedPhotos objectAtIndex:indexPath.row-1]) setThumbImageIdealSizeForImageView:cellImage];
+        [((OLPrintPhoto*)[self.userSelectedPhotos objectAtIndex:indexPath.row-1]) setThumbImageIdealSizeForImageView:cellImage];
     }
     
     UILabel *countLabel = (UILabel *)[cell.contentView viewWithTag:30];
@@ -336,7 +336,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 }
 
 - (void)imageEditor:(OLImageEditorViewController *)editor userDidSuccessfullyCropImage:(id<OLImageEditorImage>)image {
-    PrintPhoto *printPhoto = (PrintPhoto *) image;
+    OLPrintPhoto *printPhoto = (OLPrintPhoto *) image;
     [printPhoto unloadImage]; // clear cache as we have new cropped image...
     [self.tableView reloadData];
     [self dismissViewControllerAnimated:YES completion:nil];

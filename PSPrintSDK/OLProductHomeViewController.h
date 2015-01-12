@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "OLPrintOrder.h"
 
-@interface ProductHomeViewController : UITableViewController
+@interface OLProductHomeViewController : UITableViewController
 
 @property (strong, nonatomic) OLPrintOrder *printOrder;
 

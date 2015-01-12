@@ -6,12 +6,12 @@
 //  Copyright (c) 2014 Deon Botha. All rights reserved.
 //
 
-#import "KiteViewController.h"
+#import "OLKiteViewController.h"
 #import "OLPrintOrder.h"
 #import "OLProductTemplate.h"
-#import "ProductHomeViewController.h"
+#import "OLProductHomeViewController.h"
 
-@interface KiteViewController ()
+@interface OLKiteViewController ()
 
 @property (assign, nonatomic) BOOL alreadyTransistioned;
 @property (strong, nonatomic) UIViewController *nextVc;
@@ -19,7 +19,7 @@
 
 @end
 
-@implementation KiteViewController
+@implementation OLKiteViewController
 
 - (id)initWithPrintOrder:(OLPrintOrder *)printOrder {
     NSAssert(printOrder != nil, @"KiteViewController requires a non-nil print order");
@@ -39,12 +39,12 @@
     if (!self.navigationController){
         self.nextVc = [sb instantiateViewControllerWithIdentifier:@"ProductsNavigationController"];
         ((UINavigationController *)self.nextVc).topViewController.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(dismiss)];
-        [(ProductHomeViewController *)self.nextVc setPrintOrder:self.printOrder];
+        [(OLProductHomeViewController *)self.nextVc setPrintOrder:self.printOrder];
         [self.view addSubview:self.nextVc.view];
     }
     else{
         self.nextVc = [sb instantiateViewControllerWithIdentifier:@"ProductHomeViewController"];
-        [(ProductHomeViewController *)self.nextVc setPrintOrder:self.printOrder];
+        [(OLProductHomeViewController *)self.nextVc setPrintOrder:self.printOrder];
         [self.view addSubview:self.nextVc.view];
         UIView *dummy = [self.view snapshotViewAfterScreenUpdates:YES];
         dummy.transform = CGAffineTransformMakeTranslation(0, self.navigationController.navigationBar.frame.size.height + [UIApplication sharedApplication].statusBarFrame.size.height);

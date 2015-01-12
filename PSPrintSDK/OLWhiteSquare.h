@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface WhiteSquare : UIView
+@interface OLWhiteSquare : UIView
 
 @end
