@@ -230,6 +230,8 @@ static NSString *const kKeyServerImageSize = @"co.oceanlabs.psprintstudio.kKeySe
                                                          handler(length, error);
                                                      }
                                                  }];
+    } else if (self.type == kPrintPhotoAssetTypeOLAsset){
+        [(OLAsset *)self.asset dataLengthWithCompletionHandler:handler];
     }
 }
 
@@ -261,6 +263,8 @@ static NSString *const kKeyServerImageSize = @"co.oceanlabs.psprintstudio.kKeySe
                                                              }
                                                          }
                                                  }];
+    } else if (self.type == kPrintPhotoAssetTypeOLAsset){
+        [(OLAsset *)self.asset dataWithCompletionHandler:handler];
     }
 }
 

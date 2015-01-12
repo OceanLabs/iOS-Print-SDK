@@ -131,6 +131,8 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
              || photo.type == kPrintPhotoAssetTypeOLInstagramPhoto)
             && CGAffineTransformIsIdentity(photo.transform)) {
             [photoAssets addObject:[OLAsset assetWithURL:[photo.asset fullURL]]];
+        } else if(photo.type == kPrintPhotoAssetTypeOLAsset){
+            [photoAssets addObject:photo.asset];
         } else {
             [photoAssets addObject:[OLAsset assetWithDataSource:photo]];
         }
