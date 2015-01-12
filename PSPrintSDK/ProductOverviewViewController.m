@@ -12,7 +12,7 @@
 #import "FrameSelectionViewController.h"
 #import "OrderReviewViewController.h"
 
-@interface ProductOverviewViewController () <UIPageViewControllerDataSource>
+@interface ProductOverviewViewController () <UIPageViewControllerDataSource, ProductOverviewPageContentViewControllerDelegate>
 @property (strong, nonatomic) UIPageViewController *pageController;
 @property (strong, nonatomic) IBOutlet UIPageControl *pageControl;
 @property (weak, nonatomic) IBOutlet UILabel *costLabel;
@@ -60,6 +60,7 @@
     ProductOverviewPageContentViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"ProductOverviewPageContentViewController"];
     vc.pageIndex = index;
     vc.product = self.product;
+    vc.delegate = self;
     return vc;
 }
 
@@ -77,12 +78,15 @@
     }
 }
 
-
+-(void)userDidTapOnImage{
+    [self onButtonStartClicked:nil];
+}
 
 #pragma mark - UIPageViewControllerDataSource
 
 - (UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerBeforeViewController:(UIViewController *)viewController {
     ProductOverviewPageContentViewController *vc = (ProductOverviewPageContentViewController *) viewController;
+    vc.delegate = self;
     self.pageControl.currentPage = vc.pageIndex;
     NSUInteger index = vc.pageIndex - 1;
     if (vc.pageIndex == 0) {
@@ -93,6 +97,7 @@
 
 - (UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerAfterViewController:(UIViewController *)viewController {
     ProductOverviewPageContentViewController *vc = (ProductOverviewPageContentViewController *) viewController;
+    vc.delegate = self;
     self.pageControl.currentPage = vc.pageIndex;
     NSUInteger index = (vc.pageIndex + 1) % self.product.productPhotos.count;
     return [self viewControllerAtIndex:index];

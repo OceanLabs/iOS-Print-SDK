@@ -10,6 +10,13 @@
 #import "FrameSelectionViewController.h"
 #import "OLProductTemplate.h"
 #import "OLProduct.h"
+#import "ProductOverviewViewController.h"
+
+@interface ProductOverviewViewController (Private)
+
+- (IBAction)onButtonStartClicked:(UIBarButtonItem *)sender;
+
+@end
 
 @interface ProductOverviewPageContentViewController ()
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;
@@ -24,6 +31,9 @@
 }
 
 - (IBAction)userDidTapOnImage:(UITapGestureRecognizer *)sender {
+    if ([self.delegate respondsToSelector:@selector(userDidTapOnImage)]){
+        [self.delegate userDidTapOnImage];
+    }
 }
 
 
