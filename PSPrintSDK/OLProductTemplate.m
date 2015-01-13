@@ -199,8 +199,8 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
 -(NSArray *)productsPhotoURLs{
     switch ([OLProductTemplate templateTypeWithIdentifier:self.identifier]) {
         case kOLTemplateTypeMagnets: return @[[NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/magnets1%402x.jpg"], [NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/magnets2%402x.jpg"]];
-        case kOLTemplateTypeMiniSquares: return @[[NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/mini%20squares%402x.jpg"], [NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/mini%20squares2%402x.jpg"]];
-        case kOLTemplateTypeSquares: return @[[NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/squares1%402x.jpg"], [NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/squares1%402x.jpg"]];
+        case kOLTemplateTypeMiniSquares: return @[[NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/mini%20squares%402x.png"], [NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/mini%20squares2%402x.jpg"]];
+        case kOLTemplateTypeSquares: return @[[NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/squares1%402x.png"], [NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/squares2%402x.jpg"]];
         case kOLTemplateTypeMiniPolaroids: return @[[NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/mini%20polaroids1%402x.jpg"], [NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/mini%20polaroids2%402x.jpg"]];
         case kOLTemplateTypePolaroids: return @[[NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/polaroids2%402x.jpg"], [NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/polaroids3%402x.jpg"]];
         case kOLTemplateTypeFrame2x2: return @[[NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/frames1%402x.jpg"]];
