@@ -193,6 +193,21 @@ static NSString *const kKeyServerImageSize = @"co.oceanlabs.psprintstudio.kKeySe
     } else if (self.type == kPrintPhotoAssetTypeOLFacebookPhoto || self.type == kPrintPhotoAssetTypeOLInstagramPhoto) {
         [self downloadFullImageWithProgress:progressHandler completion:completionHandler];
     }
+    else if (self.type == kPrintPhotoAssetTypeOLAsset){
+        OLAsset *asset = (OLAsset *)self.asset;
+        
+        if (asset.assetType == kOLAssetTypeRemoteImageURL){
+            [[SDWebImageManager sharedManager] downloadImageWithURL:[(OLAsset *)self.asset imageURL]  options:0 progress:nil completed:
+             ^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL){
+                 completionHandler(image);
+             }];
+        }
+        else{
+            [asset dataWithCompletionHandler:^(NSData *data, NSError *error){
+                completionHandler([UIImage imageWithData:data]);
+            }];
+        }
+    }
 }
 
 - (void)unloadImage {
