@@ -58,6 +58,7 @@ NSString *const kOLDefaultTemplateForLargeFormatA3;
 - (NSDecimalNumber *)costPerSheetInCurrencyCode:(NSString *)currencyCode;
 - (NSURL *)coverImageURL;
 -(NSArray *)productsPhotoURLs;
++(OLTemplateType)templateTypeWithIdentifier:(NSString *)identifier;
 
 + (void)sync;
 + (BOOL)isSyncInProgress;

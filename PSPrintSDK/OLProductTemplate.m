@@ -181,12 +181,41 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
 
 #warning todo
 -(NSURL *)coverImageURL{
-    return [NSURL URLWithString:@"https://dl.dropboxusercontent.com/u/3007013/petite-polaroids.png"];
+    switch ([OLProductTemplate templateTypeWithIdentifier:self.identifier]) {
+        case kOLTemplateTypeMagnets: return [NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/magnets.png"];
+        case kOLTemplateTypeMiniSquares: return [NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/mini%20squares.png"];
+        case kOLTemplateTypeSquares: return [NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/squares.png"];
+        case kOLTemplateTypeMiniPolaroids: return [NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/petite-polaroids.png"];
+        case kOLTemplateTypePolaroids: return [NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/polaroids.png"];
+        case kOLTemplateTypeFrame2x2: return [NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/frames.png"];
+        case kOLTemplateTypeFrame3x3: return [NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/frames.png"];
+        case kOLTemplateTypeFrame4x4: return [NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/frames.png"];
+        case kOLTemplateTypePostcard: return [NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/postcards.png"];
+        case kOLTemplateTypeLargeFormatA1: return [NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/petite-polaroids.png"];
+        case kOLTemplateTypeLargeFormatA2: return [NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/petite-polaroids.png"];
+        case kOLTemplateTypeLargeFormatA3: return [NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/petite-polaroids.png"];
+        default: return nil;
+    }
 }
 
 #warning todo
 -(NSArray *)productsPhotoURLs{
-    return @[[NSURL URLWithString:@"https://dl.dropboxusercontent.com/u/3007013/polaroids3%402x.jpg"], [NSURL URLWithString:@"https://dl.dropboxusercontent.com/u/3007013/polaroids3%402x.jpg"]];
+    switch ([OLProductTemplate templateTypeWithIdentifier:self.identifier]) {
+        case kOLTemplateTypeMagnets: return @[[NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/magnets1%402x.jpg"], [NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/magnets2%402x.jpg"]];
+        case kOLTemplateTypeMiniSquares: return @[[NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/mini%20squares%402x.jpg"], [NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/mini%20squares2%402x.jpg"]];
+        case kOLTemplateTypeSquares: return @[[NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/squares1%402x.jpg"], [NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/squares1%402x.jpg"]];
+        case kOLTemplateTypeMiniPolaroids: return @[[NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/mini%20polaroids1%402x.jpg"], [NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/mini%20polaroids2%402x.jpg"]];
+        case kOLTemplateTypePolaroids: return @[[NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/polaroids2%402x.jpg"], [NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/polaroids3%402x.jpg"]];
+        case kOLTemplateTypeFrame2x2: return @[[NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/frames1%402x.jpg"]];
+        case kOLTemplateTypeFrame3x3: return @[[NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/frames1%402x.jpg"]];
+        case kOLTemplateTypeFrame4x4: return @[[NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/frames1%402x.jpg"]];
+        case kOLTemplateTypePostcard: return @[[NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/postcards1%402x.jpg"], [NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/postcards2%402x.jpg"]];
+        case kOLTemplateTypeLargeFormatA1: return @[[NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/polaroids3%402x.jpg"], [NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/polaroids3%402x.jpg"]];
+        case kOLTemplateTypeLargeFormatA2: return @[[NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/polaroids3%402x.jpg"], [NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/polaroids3%402x.jpg"]];
+        case kOLTemplateTypeLargeFormatA3: return @[[NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/polaroids3%402x.jpg"], [NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/polaroids3%402x.jpg"]];
+        default: return nil;
+    }
+    return @[[NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/polaroids3%402x.jpg"], [NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/polaroids3%402x.jpg"]];
 }
 
 
@@ -210,6 +239,47 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
     }
     
     return self;
+}
+
++(OLTemplateType)templateTypeWithIdentifier:(NSString *)identifier{
+    if ([identifier isEqualToString:kOLDefaultTemplateForFrames2x2]){
+        return kOLTemplateTypeFrame2x2;
+    }
+    else if ([identifier isEqualToString:kOLDefaultTemplateForFrames3x3]){
+        return kOLTemplateTypeFrame3x3;
+    }
+    else if ([identifier isEqualToString:kOLDefaultTemplateForFrames4x4]){
+        return kOLTemplateTypeFrame4x4;
+    }
+    else if ([identifier isEqualToString:kOLDefaultTemplateForMagnets]){
+        return kOLTemplateTypeMagnets;
+    }
+    else if ([identifier isEqualToString:kOLDefaultTemplateForSquarePrints]){
+        return kOLTemplateTypeSquares;
+    }
+    else if ([identifier isEqualToString:kOLDefaultTemplateForSquareMiniPrints]){
+        return kOLTemplateTypeMiniSquares;
+    }
+    else if ([identifier isEqualToString:kOLDefaultTemplateForPolaroidStylePrints]){
+        return kOLTemplateTypePolaroids;
+    }
+    else if ([identifier isEqualToString:kOLDefaultTemplateForPolaroidStyleMiniPrints]){
+        return kOLTemplateTypeMiniPolaroids;
+    }
+    else if ([identifier isEqualToString:kOLDefaultTemplateForLargeFormatA1]){
+        return kOLTemplateTypeLargeFormatA1;
+    }
+    else if ([identifier isEqualToString:kOLDefaultTemplateForLargeFormatA2]){
+        return kOLTemplateTypeLargeFormatA2;
+    }
+    else if ([identifier isEqualToString:kOLDefaultTemplateForLargeFormatA3]){
+        return kOLTemplateTypeLargeFormatA3;
+    }
+    else if ([identifier isEqualToString:kOLDefaultTemplateForPostcard] || [identifier isEqualToString:kOLDefaultTemplateForPsPostcard] || [identifier isEqualToString:kOLDefaultTemplateFor60Postcard]){
+        return kOLTemplateTypePostcard;
+    }
+    NSAssert(NO, @"Unrecognized template: %@", identifier);
+    return -1;
 }
 
 @end

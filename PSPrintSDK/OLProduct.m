@@ -237,46 +237,7 @@ typedef enum {
     return isMetric ? [self dimensionsInUnits:kSizeUnitsCentimetres] : [self dimensionsInUnits:kSizeUnitsInches];
 }
 
--(OLTemplateType)templateType{
-    if ([[self templateId] isEqualToString:kOLDefaultTemplateForFrames2x2]){
-        return kOLTemplateTypeFrame2x2;
-    }
-    else if ([[self templateId] isEqualToString:kOLDefaultTemplateForFrames3x3]){
-        return kOLTemplateTypeFrame3x3;
-    }
-    else if ([[self templateId] isEqualToString:kOLDefaultTemplateForFrames4x4]){
-        return kOLTemplateTypeFrame4x4;
-    }
-    else if ([[self templateId] isEqualToString:kOLDefaultTemplateForMagnets]){
-        return kOLTemplateTypeMagnets;
-    }
-    else if ([[self templateId] isEqualToString:kOLDefaultTemplateForSquarePrints]){
-        return kOLTemplateTypeSquares;
-    }
-    else if ([[self templateId] isEqualToString:kOLDefaultTemplateForSquareMiniPrints]){
-        return kOLTemplateTypeMiniSquares;
-    }
-    else if ([[self templateId] isEqualToString:kOLDefaultTemplateForPolaroidStylePrints]){
-        return kOLTemplateTypePolaroids;
-    }
-    else if ([[self templateId] isEqualToString:kOLDefaultTemplateForPolaroidStyleMiniPrints]){
-        return kOLTemplateTypeMiniPolaroids;
-    }
-    else if ([[self templateId] isEqualToString:kOLDefaultTemplateForLargeFormatA1]){
-        return kOLTemplateTypeLargeFormatA1;
-    }
-    else if ([[self templateId] isEqualToString:kOLDefaultTemplateForLargeFormatA2]){
-        return kOLTemplateTypeLargeFormatA2;
-    }
-    else if ([[self templateId] isEqualToString:kOLDefaultTemplateForLargeFormatA3]){
-        return kOLTemplateTypeLargeFormatA3;
-    }
-    else if ([[self templateId] isEqualToString:kOLDefaultTemplateForPostcard] || [[self templateId] isEqualToString:kOLDefaultTemplateForPsPostcard] || [[self templateId] isEqualToString:kOLDefaultTemplateFor60Postcard]){
-        return kOLTemplateTypePostcard;
-    }
-    NSAssert(NO, @"Unrecognized template: %@", [self templateId]);
-    return -1;
-}
+
 
 -(NSArray *)productPhotos{
     if (_productPhotos){
@@ -285,6 +246,10 @@ typedef enum {
     else{
         return self.productTemplate.productsPhotoURLs;
     }
+}
+
+-(OLTemplateType)templateType{
+    return [OLProductTemplate templateTypeWithIdentifier:self.templateId];
 }
 
 
