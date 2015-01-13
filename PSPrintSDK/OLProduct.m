@@ -181,10 +181,9 @@ typedef enum {
         case kOLTemplateTypeFrame3x3: return CGSizeMake(19.6, 19.6);
         case kOLTemplateTypeFrame4x4: return CGSizeMake(19.6, 19.6);
         case kOLTemplateTypePostcard: return CGSizeMake(5.8, 4.1);
-#warning todo
-        case kOLTemplateTypeLargeFormatA1: return CGSizeMake(0, 0);
-        case kOLTemplateTypeLargeFormatA2: return CGSizeMake(0, 0);
-        case kOLTemplateTypeLargeFormatA3: return CGSizeMake(0, 0);
+        case kOLTemplateTypeLargeFormatA1: return CGSizeMake(23.4, 33.1);
+        case kOLTemplateTypeLargeFormatA2: return CGSizeMake(16.5, 23.4);
+        case kOLTemplateTypeLargeFormatA3: return CGSizeMake(11.7, 16.5);
             default: return CGSizeMake(0, 0);
     }
 }
@@ -200,10 +199,9 @@ typedef enum {
         case kOLTemplateTypeFrame3x3: return CGSizeMake(50, 50);
         case kOLTemplateTypeFrame4x4: return CGSizeMake(50, 50);
         case kOLTemplateTypePostcard: return CGSizeMake(14.9, 10.5);
-#warning todo
-        case kOLTemplateTypeLargeFormatA1: return CGSizeMake(0, 0);
-        case kOLTemplateTypeLargeFormatA2: return CGSizeMake(0, 0);
-        case kOLTemplateTypeLargeFormatA3: return CGSizeMake(0, 0);
+        case kOLTemplateTypeLargeFormatA1: return CGSizeMake(594, 841);
+        case kOLTemplateTypeLargeFormatA2: return CGSizeMake(420, 594);
+        case kOLTemplateTypeLargeFormatA3: return CGSizeMake(297, 420);
             default: CGSizeMake(0, 0);
     }
 }

@@ -178,8 +178,6 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
     return [NSString stringWithFormat:@"%@%@ (%@)%@ quantity: %lu",self.enabled ? @"enabled " : @"disabled ", self.identifier, self.name, supportedCurrencies, (unsigned long) self.quantityPerSheet];
 }
 
-
-#warning todo
 -(NSURL *)coverImageURL{
     switch ([OLProductTemplate templateTypeWithIdentifier:self.identifier]) {
         case kOLTemplateTypeMagnets: return [NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/magnets.png"];
@@ -198,7 +196,6 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
     }
 }
 
-#warning todo
 -(NSArray *)productsPhotoURLs{
     switch ([OLProductTemplate templateTypeWithIdentifier:self.identifier]) {
         case kOLTemplateTypeMagnets: return @[[NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/magnets1%402x.jpg"], [NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/magnets2%402x.jpg"]];
