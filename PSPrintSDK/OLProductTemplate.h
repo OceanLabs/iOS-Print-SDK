@@ -26,6 +26,8 @@ typedef enum {
     kOLTemplateTypeLargeFormatA1,
     kOLTemplateTypeLargeFormatA2,
     kOLTemplateTypeLargeFormatA3,
+    kOLTemplateTypeStickersSquare,
+    kOLTemplateTypeStickersCircle,
     kOLTemplateTypePostcard    
 } OLTemplateType;
 
@@ -41,11 +43,11 @@ NSString *const kOLDefaultTemplateForFrames2x2;
 NSString *const kOLDefaultTemplateForFrames3x3;
 NSString *const kOLDefaultTemplateForFrames4x4;
 NSString *const kOLDefaultTemplateForFrames;
-
 NSString *const kOLDefaultTemplateForLargeFormatA1;
 NSString *const kOLDefaultTemplateForLargeFormatA2;
 NSString *const kOLDefaultTemplateForLargeFormatA3;
-
+NSString *const kOLDefaultTemplateForStickersSquare;
+NSString *const kOLDefaultTemplateForStickersCircle;
 
 @class OLProductTemplateSyncRequest;
 

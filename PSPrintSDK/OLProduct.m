@@ -97,12 +97,11 @@ typedef enum {
             case kOLTemplateTypeLargeFormatA1: return [UIColor colorWithRed:203.0/255.0 green:86.0/255.0 blue:157.0/255 alpha:1.0];
             case kOLTemplateTypeLargeFormatA2: return [UIColor colorWithRed:203.0/255.0 green:86.0/255.0 blue:157.0/255 alpha:1.0];
             case kOLTemplateTypeLargeFormatA3: return [UIColor colorWithRed:203.0/255.0 green:86.0/255.0 blue:157.0/255 alpha:1.0];
+            case kOLTemplateTypeStickersSquare: return [UIColor colorWithRed:55.0/255.0 green:188.0/255.0 blue:155.0/255 alpha:1.0];
+            case kOLTemplateTypeStickersCircle: return [UIColor colorWithRed:79.0/255.0 green:193.0/255.0 blue:233.0/255 alpha:1.0];
             case kOLTemplateTypePostcard: return [UIColor colorWithRed:203.0/255.0 green:86.0/255.0 blue:157.0/255 alpha:1.0];
             case kOLTemplateTypeMiniPolaroids:return [UIColor colorWithRed:59.0/255.0 green:115.0/255.0 blue:211.0/255 alpha:1.0];
             case kOLTemplateTypePolaroids: return [UIColor colorWithRed:66.0/255.0 green:179.0/255.0 blue:227.0/255 alpha:1.0];
-//            case kOLTemplateTypeFrame2x2: return [UIColor colorWithRed:254.0/255.0 green:197.0/255.0 blue:68.0/255 alpha:1.0];
-//            case kOLTemplateTypeFrame3x3: return [UIColor colorWithRed:254.0/255.0 green:197.0/255.0 blue:68.0/255 alpha:1.0];
-//            case kOLTemplateTypeFrame4x4: return [UIColor colorWithRed:254.0/255.0 green:197.0/255.0 blue:68.0/255 alpha:1.0];
             case kOLTemplateTypeFrame: return [UIColor colorWithRed:254.0/255.0 green:197.0/255.0 blue:68.0/255 alpha:1.0];
             default: return nil;
         }
@@ -186,6 +185,8 @@ typedef enum {
         case kOLTemplateTypeLargeFormatA1: return CGSizeMake(23.4, 33.1);
         case kOLTemplateTypeLargeFormatA2: return CGSizeMake(16.5, 23.4);
         case kOLTemplateTypeLargeFormatA3: return CGSizeMake(11.7, 16.5);
+        case kOLTemplateTypeStickersCircle: return CGSizeMake(2.6, 2.6);
+        case kOLTemplateTypeStickersSquare: return CGSizeMake(2.4, 2.4);
             default: return CGSizeMake(0, 0);
     }
 }
@@ -205,6 +206,8 @@ typedef enum {
         case kOLTemplateTypeLargeFormatA1: return CGSizeMake(594, 841);
         case kOLTemplateTypeLargeFormatA2: return CGSizeMake(420, 594);
         case kOLTemplateTypeLargeFormatA3: return CGSizeMake(297, 420);
+        case kOLTemplateTypeStickersCircle: return CGSizeMake(6.59, 6.59);
+        case kOLTemplateTypeStickersSquare: return CGSizeMake(6.19, 6.19);
             default: CGSizeMake(0, 0);
     }
 }
