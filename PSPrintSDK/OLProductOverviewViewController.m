@@ -26,7 +26,12 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.title = self.product.productTemplate.name;
+    if (self.product.templateType == kOLTemplateTypeLargeFormatA1 || self.product.templateType == kOLTemplateTypeLargeFormatA2 || self.product.templateType == kOLTemplateTypeLargeFormatA3){
+        self.title = NSLocalizedString(@"Posters", @"");
+    }
+    else{
+        self.title = self.product.productTemplate.name;
+    }
     
     self.pageController = [[UIPageViewController alloc] initWithTransitionStyle:UIPageViewControllerTransitionStyleScroll navigationOrientation:UIPageViewControllerNavigationOrientationHorizontal options:nil];
     self.pageController.dataSource = self;

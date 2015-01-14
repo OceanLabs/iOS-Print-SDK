@@ -30,6 +30,7 @@
     if (!_products){
         _products = [OLKitePrintSDK enabledProducts] ? [OLKitePrintSDK enabledProducts] : [OLProduct products];
         NSMutableArray *mutableProducts = [_products mutableCopy];
+        BOOL haveAtLeastOnePoster = NO;
         for (OLProduct *product in _products){
             if (!product.labelColor){
                 [mutableProducts removeObject:product];
@@ -39,6 +40,14 @@
             }
             if (product.templateType == kOLTemplateTypeFrame2x2 || product.templateType == kOLTemplateTypeFrame3x3 || product.templateType == kOLTemplateTypeFrame4x4){
                 [mutableProducts removeObject:product];
+            }
+            if (product.templateType == kOLTemplateTypeLargeFormatA1 || product.templateType == kOLTemplateTypeLargeFormatA2 || product.templateType == kOLTemplateTypeLargeFormatA3){
+                if (haveAtLeastOnePoster){
+                    [mutableProducts removeObject:product];
+                }
+                else{
+                    haveAtLeastOnePoster = YES;
+                }
             }
         }
         _products = mutableProducts;
@@ -106,7 +115,12 @@
     [product setCoverImageToImageView:cellImage];
     
     UILabel *productTypeLabel = (UILabel *)[cell.contentView viewWithTag:300];
-    productTypeLabel.text = [product.productTemplate.name uppercaseString];
+    if (product.templateType == kOLTemplateTypeLargeFormatA1 || product.templateType == kOLTemplateTypeLargeFormatA2 || product.templateType == kOLTemplateTypeLargeFormatA3){
+        productTypeLabel.text = [NSLocalizedString(@"Posters", @"") uppercaseString];
+    }
+    else{
+        productTypeLabel.text = [product.productTemplate.name uppercaseString];
+    }
     productTypeLabel.backgroundColor = [product labelColor];
     
     return cell;
