@@ -11,6 +11,7 @@
 #import "OLProduct.h"
 #import "OLFrameSelectionViewController.h"
 #import "OLOrderReviewViewController.h"
+#import "OLPosterSizeSelectionViewController.h"
 
 @interface OLProductOverviewViewController () <UIPageViewControllerDataSource, OLProductOverviewPageContentViewControllerDelegate>
 @property (strong, nonatomic) UIPageViewController *pageController;
@@ -69,6 +70,11 @@
         OLFrameSelectionViewController *frameVc = [self.storyboard instantiateViewControllerWithIdentifier:@"FrameSelectionViewController"];
         frameVc.printOrder = self.printOrder;
         [self.navigationController pushViewController:frameVc animated:YES];
+    }
+    else if (self.product.templateType == kOLTemplateTypeLargeFormatA1 || self.product.templateType == kOLTemplateTypeLargeFormatA2 || self.product.templateType == kOLTemplateTypeLargeFormatA3){
+        OLPosterSizeSelectionViewController *posterVc = [self.storyboard instantiateViewControllerWithIdentifier:@"sizeSelect"];
+        posterVc.printOrder = self.printOrder;
+        [self.navigationController pushViewController:posterVc animated:YES];
     }
     else{
         OLOrderReviewViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OrderReviewViewController"];

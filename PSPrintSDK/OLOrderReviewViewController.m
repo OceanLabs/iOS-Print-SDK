@@ -238,6 +238,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     OLImageEditorViewController *imageEditor = [[OLImageEditorViewController alloc] init];
     imageEditor.image = printPhoto;
     imageEditor.delegate = self;
+    imageEditor.hidesDeleteIcon = YES;
     [self presentViewController:imageEditor animated:YES completion:nil];
 }
 

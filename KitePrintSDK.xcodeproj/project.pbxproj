@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2E1F69DE1A66999700696286 /* OLPosterSizeSelectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1F69DD1A66999700696286 /* OLPosterSizeSelectionViewController.m */; };
+		2E1F69E41A6699AE00696286 /* OLPosterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1F69E31A6699AE00696286 /* OLPosterViewController.m */; };
 		2E3F96AF1A4967FF005C0EA3 /* OLProduct.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E3F96AE1A4967FF005C0EA3 /* OLProduct.m */; };
 		2E3F96B21A49ACF4005C0EA3 /* OLPrintPhoto.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E3F96B11A49ACF4005C0EA3 /* OLPrintPhoto.m */; };
 		2E85BC9919A24CB200EC7CC2 /* KitePrintSDK.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2E85BC9719A24CB200EC7CC2 /* KitePrintSDK.strings */; };
@@ -86,6 +88,10 @@
 
 /* Begin PBXFileReference section */
 		019C40BD2A43BA8D3D0AC726 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
+		2E1F69DC1A66999700696286 /* OLPosterSizeSelectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLPosterSizeSelectionViewController.h; sourceTree = "<group>"; };
+		2E1F69DD1A66999700696286 /* OLPosterSizeSelectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLPosterSizeSelectionViewController.m; sourceTree = "<group>"; };
+		2E1F69E21A6699AE00696286 /* OLPosterViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLPosterViewController.h; sourceTree = "<group>"; };
+		2E1F69E31A6699AE00696286 /* OLPosterViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLPosterViewController.m; sourceTree = "<group>"; };
 		2E3F96AD1A4967FF005C0EA3 /* OLProduct.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLProduct.h; sourceTree = "<group>"; };
 		2E3F96AE1A4967FF005C0EA3 /* OLProduct.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLProduct.m; sourceTree = "<group>"; };
 		2E3F96B01A49ACF4005C0EA3 /* OLPrintPhoto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLPrintPhoto.h; sourceTree = "<group>"; };
@@ -520,10 +526,14 @@
 				2EA8BEB11A484FCB008A9248 /* OLProductOverviewPageContentViewController.m */,
 				2EA8BEB21A484FCB008A9248 /* OLFrameSelectionViewController.h */,
 				2EA8BEB31A484FCB008A9248 /* OLFrameSelectionViewController.m */,
+				2E1F69DC1A66999700696286 /* OLPosterSizeSelectionViewController.h */,
+				2E1F69DD1A66999700696286 /* OLPosterSizeSelectionViewController.m */,
 				2EA8BEB41A484FCB008A9248 /* OLOrderReviewViewController.h */,
 				2EA8BEB51A484FCB008A9248 /* OLOrderReviewViewController.m */,
 				2EA8BEB61A484FCB008A9248 /* OLFrameOrderReviewViewController.h */,
 				2EA8BEB71A484FCB008A9248 /* OLFrameOrderReviewViewController.m */,
+				2E1F69E21A6699AE00696286 /* OLPosterViewController.h */,
+				2E1F69E31A6699AE00696286 /* OLPosterViewController.m */,
 				CDA8BF5518D70D0F00D835BB /* OLCheckoutViewController.h */,
 				CDA8BF5118D70D0F00D835BB /* OLCheckoutViewController.m */,
 				2E5E0C141993840600C34D5C /* OLCheckoutDelegate.h */,
@@ -704,6 +714,7 @@
 				2EA8BEBC1A484FCB008A9248 /* OLOrderReviewViewController.m in Sources */,
 				2E3F96AF1A4967FF005C0EA3 /* OLProduct.m in Sources */,
 				2EE3C86D1A4ADDDB006446E2 /* OLWhiteSquare.m in Sources */,
+				2E1F69E41A6699AE00696286 /* OLPosterViewController.m in Sources */,
 				CD93BB3E187882A300316492 /* OLAddressEditViewController.m in Sources */,
 				2EA8BEC01A485093008A9248 /* UITableViewController+ScreenWidthFactor.m in Sources */,
 				CD97569818E098E5007CA090 /* ProductSelectionViewController.m in Sources */,
@@ -727,6 +738,7 @@
 				CD97569118D8FDF4007CA090 /* OLProductTemplateSyncRequest.m in Sources */,
 				CD95AA78186F31BB0097C328 /* OLPrintOrderRequest.m in Sources */,
 				CD9A3A9718AB9C4500DC7131 /* OLCheckPromoCodeRequest.m in Sources */,
+				2E1F69DE1A66999700696286 /* OLPosterSizeSelectionViewController.m in Sources */,
 				2EA8BEBB1A484FCB008A9248 /* OLFrameSelectionViewController.m in Sources */,
 				CD73BFA7186306550009DE03 /* OLCountry.m in Sources */,
 				CD73BFB118634ED50009DE03 /* OLConstants.m in Sources */,
