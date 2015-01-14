@@ -14,6 +14,7 @@
 #import "OLProductPrintJob.h"
 #import "OLCheckoutViewController.h"
 #import "OLConstants.h"
+#import "OLProductTemplate.h"
 
 @interface OLPosterViewController () <OLImageEditorViewControllerDelegate, UINavigationControllerDelegate>
 
@@ -77,6 +78,25 @@
     [self reloadImageViews];
 }
 
+-(CGSize)serverImageSize{
+    CGFloat pointsToPixels = 1.38;
+    switch (self.product.templateType) {
+        case kOLTemplateTypeLargeFormatA1:
+            return CGSizeMake(1564.724409288 * pointsToPixels, 2264.881889531 * pointsToPixels);
+            break;
+        case kOLTemplateTypeLargeFormatA2:
+            return CGSizeMake(1088.503936896 * pointsToPixels, 1581.732283302 * pointsToPixels);
+            break;
+        case kOLTemplateTypeLargeFormatA3:
+            return CGSizeMake(785.196850313 * pointsToPixels, 1133.8582676 * pointsToPixels);
+            break;
+            
+        default:
+            return CGSizeMake(0, 0);
+            break;
+    }
+}
+
 -(void)reloadImageViews {
     dispatch_queue_t queue = dispatch_queue_create("co.oceanlabs.posterup.reloadImageViews", NULL);
     dispatch_async(queue, ^{
@@ -110,7 +130,7 @@
     // I don't know why this works, but it does. You need to times the image size by 2 in order to keep it accurate
     // with the preview, the crop box and the ultimate image file.
     // Elliott Minns - Wizard of the unknown. If you need to contact me, don't.
-    CGSize photoSize = CGSizeMake(photo.serverImageSize.width / 2, photo.serverImageSize.height / 2);
+    CGSize photoSize = CGSizeMake([self serverImageSize].width / 2, [self serverImageSize].height / 2);
     
     [imageEditor setCropboxGuideImageToSize:photoSize];
     [self presentViewController:imageEditor animated:YES completion:nil];
