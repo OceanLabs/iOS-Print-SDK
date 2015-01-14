@@ -22,6 +22,7 @@ typedef enum {
     kOLTemplateTypeFrame2x2,
     kOLTemplateTypeFrame3x3,
     kOLTemplateTypeFrame4x4,
+    kOLTemplateTypeFrame,
     kOLTemplateTypeLargeFormatA1,
     kOLTemplateTypeLargeFormatA2,
     kOLTemplateTypeLargeFormatA3,
@@ -39,6 +40,7 @@ NSString *const kOLDefaultTemplateFor60Postcard;
 NSString *const kOLDefaultTemplateForFrames2x2;
 NSString *const kOLDefaultTemplateForFrames3x3;
 NSString *const kOLDefaultTemplateForFrames4x4;
+NSString *const kOLDefaultTemplateForFrames;
 
 NSString *const kOLDefaultTemplateForLargeFormatA1;
 NSString *const kOLDefaultTemplateForLargeFormatA2;

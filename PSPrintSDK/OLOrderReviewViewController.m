@@ -26,7 +26,6 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 @interface OLOrderReviewViewController () <OLCheckoutDelegate>
 
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *confirmBarButton;
-@property (strong, nonatomic) NSArray *userSelectedPhotos;
 
 @end
 

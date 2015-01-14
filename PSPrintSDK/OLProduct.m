@@ -100,10 +100,11 @@ typedef enum {
             case kOLTemplateTypePostcard: return [UIColor colorWithRed:203.0/255.0 green:86.0/255.0 blue:157.0/255 alpha:1.0];
             case kOLTemplateTypeMiniPolaroids:return [UIColor colorWithRed:59.0/255.0 green:115.0/255.0 blue:211.0/255 alpha:1.0];
             case kOLTemplateTypePolaroids: return [UIColor colorWithRed:66.0/255.0 green:179.0/255.0 blue:227.0/255 alpha:1.0];
-            case kOLTemplateTypeFrame2x2: return [UIColor colorWithRed:254.0/255.0 green:197.0/255.0 blue:68.0/255 alpha:1.0];
-            case kOLTemplateTypeFrame3x3: return [UIColor colorWithRed:254.0/255.0 green:197.0/255.0 blue:68.0/255 alpha:1.0];
-            case kOLTemplateTypeFrame4x4: return [UIColor colorWithRed:254.0/255.0 green:197.0/255.0 blue:68.0/255 alpha:1.0];
-                return [UIColor clearColor];
+//            case kOLTemplateTypeFrame2x2: return [UIColor colorWithRed:254.0/255.0 green:197.0/255.0 blue:68.0/255 alpha:1.0];
+//            case kOLTemplateTypeFrame3x3: return [UIColor colorWithRed:254.0/255.0 green:197.0/255.0 blue:68.0/255 alpha:1.0];
+//            case kOLTemplateTypeFrame4x4: return [UIColor colorWithRed:254.0/255.0 green:197.0/255.0 blue:68.0/255 alpha:1.0];
+            case kOLTemplateTypeFrame: return [UIColor colorWithRed:254.0/255.0 green:197.0/255.0 blue:68.0/255 alpha:1.0];
+            default: return nil;
         }
     }
 }
@@ -180,6 +181,7 @@ typedef enum {
         case kOLTemplateTypeFrame2x2: return CGSizeMake(19.6, 19.6);
         case kOLTemplateTypeFrame3x3: return CGSizeMake(19.6, 19.6);
         case kOLTemplateTypeFrame4x4: return CGSizeMake(19.6, 19.6);
+        case kOLTemplateTypeFrame: return CGSizeMake(19.6, 19.6);
         case kOLTemplateTypePostcard: return CGSizeMake(5.8, 4.1);
         case kOLTemplateTypeLargeFormatA1: return CGSizeMake(23.4, 33.1);
         case kOLTemplateTypeLargeFormatA2: return CGSizeMake(16.5, 23.4);
@@ -198,6 +200,7 @@ typedef enum {
         case kOLTemplateTypeFrame2x2: return CGSizeMake(50, 50);
         case kOLTemplateTypeFrame3x3: return CGSizeMake(50, 50);
         case kOLTemplateTypeFrame4x4: return CGSizeMake(50, 50);
+        case kOLTemplateTypeFrame: return CGSizeMake(50, 50);
         case kOLTemplateTypePostcard: return CGSizeMake(14.9, 10.5);
         case kOLTemplateTypeLargeFormatA1: return CGSizeMake(594, 841);
         case kOLTemplateTypeLargeFormatA2: return CGSizeMake(420, 594);

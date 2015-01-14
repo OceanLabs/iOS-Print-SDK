@@ -143,7 +143,7 @@ NSInteger margin = 2;
 }
 
 - (IBAction)onButtonNextClicked:(UIBarButtonItem *)sender {
-//    self.userSelectedPhotos = self.framePhotos;
+    self.userSelectedPhotos = self.framePhotos;
     if (![self shouldGoToCheckout]){
         return;
     }

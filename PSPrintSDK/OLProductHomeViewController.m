@@ -30,18 +30,15 @@
     if (!_products){
         _products = [OLKitePrintSDK enabledProducts] ? [OLKitePrintSDK enabledProducts] : [OLProduct products];
         NSMutableArray *mutableProducts = [_products mutableCopy];
-        BOOL haveAtLeastOneFrame = NO;
         for (OLProduct *product in _products){
+            if (!product.labelColor){
+                [mutableProducts removeObject:product];
+            }
             if (product.templateType == kOLTemplateTypePostcard){
                 [mutableProducts removeObject:product];
             }
             if (product.templateType == kOLTemplateTypeFrame2x2 || product.templateType == kOLTemplateTypeFrame3x3 || product.templateType == kOLTemplateTypeFrame4x4){
-                if (haveAtLeastOneFrame){
-                    [mutableProducts removeObject:product];
-                }
-                else{
-                    haveAtLeastOneFrame = YES;
-                }
+                [mutableProducts removeObject:product];
             }
         }
         _products = mutableProducts;
@@ -104,7 +101,6 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
     
     UIImageView *cellImage = (UIImageView *)[cell.contentView viewWithTag:40];
-    
     
     OLProduct *product = self.products[indexPath.row];
     [product setCoverImageToImageView:cellImage];

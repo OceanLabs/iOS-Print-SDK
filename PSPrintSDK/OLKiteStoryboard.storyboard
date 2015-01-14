@@ -216,6 +216,9 @@
                         <rect key="frame" x="0.0" y="64" width="320" height="504"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="photo_frame_1" translatesAutoresizingMaskIntoConstraints="NO" id="Bvp-VC-bEo">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="504"/>
+                            </imageView>
                             <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="qoS-sV-PNa">
                                 <rect key="frame" x="150" y="242" width="20" height="20"/>
                             </activityIndicatorView>
@@ -231,8 +234,12 @@
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="zYR-ul-g4X" secondAttribute="trailing" id="7bA-KK-i0Y"/>
                             <constraint firstItem="zYR-ul-g4X" firstAttribute="leading" secondItem="G5Z-CK-1DK" secondAttribute="leading" id="8NE-fd-kWp"/>
+                            <constraint firstItem="zYR-ul-g4X" firstAttribute="bottom" secondItem="Bvp-VC-bEo" secondAttribute="bottom" id="EA5-mn-F6f"/>
+                            <constraint firstItem="zYR-ul-g4X" firstAttribute="top" secondItem="Bvp-VC-bEo" secondAttribute="top" id="EWP-If-b7f"/>
                             <constraint firstItem="qoS-sV-PNa" firstAttribute="centerX" secondItem="zYR-ul-g4X" secondAttribute="centerX" id="FDY-eL-G6j"/>
                             <constraint firstItem="MMN-LL-4KO" firstAttribute="top" secondItem="zYR-ul-g4X" secondAttribute="bottom" id="Prc-El-9zR"/>
+                            <constraint firstItem="zYR-ul-g4X" firstAttribute="leading" secondItem="Bvp-VC-bEo" secondAttribute="leading" id="VYC-ug-CuY"/>
+                            <constraint firstItem="zYR-ul-g4X" firstAttribute="trailing" secondItem="Bvp-VC-bEo" secondAttribute="trailing" id="YqU-Bg-qtx"/>
                             <constraint firstItem="qoS-sV-PNa" firstAttribute="centerY" secondItem="zYR-ul-g4X" secondAttribute="centerY" id="k8n-f8-yuT"/>
                             <constraint firstItem="zYR-ul-g4X" firstAttribute="top" secondItem="a4S-c9-tbf" secondAttribute="bottom" id="mvg-rG-BAj"/>
                         </constraints>
@@ -687,6 +694,9 @@
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="232"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="photo_frame_1" translatesAutoresizingMaskIntoConstraints="NO" id="YrM-ke-715">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="230"/>
+                                        </imageView>
                                         <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="Jfb-0a-lXg">
                                             <rect key="frame" x="150" y="105" width="20" height="20"/>
                                         </activityIndicatorView>
@@ -705,13 +715,17 @@
                                         </label>
                                     </subviews>
                                     <constraints>
+                                        <constraint firstItem="ViN-re-T61" firstAttribute="trailing" secondItem="YrM-ke-715" secondAttribute="trailing" id="1pl-wz-9Z0"/>
                                         <constraint firstItem="ViN-re-T61" firstAttribute="top" secondItem="erj-5s-gaD" secondAttribute="top" id="IWg-62-eRr"/>
+                                        <constraint firstItem="ViN-re-T61" firstAttribute="top" secondItem="YrM-ke-715" secondAttribute="top" id="Ove-6t-7zc"/>
                                         <constraint firstItem="vKq-bO-BHp" firstAttribute="trailing" secondItem="ViN-re-T61" secondAttribute="trailing" id="X85-dE-Iv4"/>
                                         <constraint firstAttribute="bottom" secondItem="ViN-re-T61" secondAttribute="bottom" constant="2" id="YET-w7-9RF"/>
                                         <constraint firstAttribute="trailing" secondItem="ViN-re-T61" secondAttribute="trailing" id="YJq-oa-6t1"/>
+                                        <constraint firstItem="ViN-re-T61" firstAttribute="bottom" secondItem="YrM-ke-715" secondAttribute="bottom" id="b4o-Yd-4Q7"/>
                                         <constraint firstAttribute="centerY" secondItem="Jfb-0a-lXg" secondAttribute="centerY" constant="1" id="cYu-HB-Utd"/>
                                         <constraint firstAttribute="centerX" secondItem="Jfb-0a-lXg" secondAttribute="centerX" id="gvb-Of-wzi"/>
                                         <constraint firstItem="ViN-re-T61" firstAttribute="leading" secondItem="erj-5s-gaD" secondAttribute="leading" id="hX2-5j-P7b"/>
+                                        <constraint firstItem="ViN-re-T61" firstAttribute="leading" secondItem="YrM-ke-715" secondAttribute="leading" id="iLw-3I-NC1"/>
                                         <constraint firstAttribute="bottom" secondItem="vKq-bO-BHp" secondAttribute="bottom" constant="16" id="tyq-i9-aaH"/>
                                     </constraints>
                                 </tableViewCellContentView>
@@ -1066,6 +1080,7 @@
         <image name="frame_4x4_off" width="320" height="233"/>
         <image name="frame_border.png" width="290" height="313"/>
         <image name="menu_button" width="21" height="15"/>
+        <image name="photo_frame_1" width="316" height="224"/>
     </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
