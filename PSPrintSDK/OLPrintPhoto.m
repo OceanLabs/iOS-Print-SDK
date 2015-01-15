@@ -241,7 +241,7 @@ static NSString *const kKeyServerImageSize = @"co.oceanlabs.psprintstudio.kKeySe
                                                   progress:nil
                                                  completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished) {
                                                      if (finished) {
-                                                         NSUInteger length = UIImageJPEGRepresentation([OLImageEditorImage croppedImageWithImage:image transform:self.transform size:self.serverImageSize], 0.7).length;
+                                                         NSUInteger length = UIImageJPEGRepresentation([OLImageEditorImage croppedImageWithImage:image transform:self.transform size:self.serverImageSize], 0.9).length;
                                                          handler(length, error);
                                                      }
                                                  }];
@@ -262,7 +262,7 @@ static NSString *const kKeyServerImageSize = @"co.oceanlabs.psprintstudio.kKeySe
             }
 
             UIImage *image = [UIImage imageWithCGImage:[rep fullResolutionImage] scale:rep.scale orientation:orientation];
-            handler(UIImageJPEGRepresentation([OLImageEditorImage croppedImageWithImage:image transform:self.transform size:self.serverImageSize], 0.7), nil);
+            handler(UIImageJPEGRepresentation([OLImageEditorImage croppedImageWithImage:image transform:self.transform size:self.serverImageSize], 0.9), nil);
         });
     } else if (self.type == kPrintPhotoAssetTypeOLFacebookPhoto || self.type == kPrintPhotoAssetTypeOLInstagramPhoto) {
         [[SDWebImageManager sharedManager] downloadWithURL:[self.asset fullURL]
@@ -273,7 +273,7 @@ static NSString *const kKeyServerImageSize = @"co.oceanlabs.psprintstudio.kKeySe
                                                              if (error) {
                                                                  handler(nil, error);
                                                              } else {
-                                                                 NSData *data = UIImageJPEGRepresentation([OLImageEditorImage croppedImageWithImage:image transform:self.transform size:self.serverImageSize], 0.7);
+                                                                 NSData *data = UIImageJPEGRepresentation([OLImageEditorImage croppedImageWithImage:image transform:self.transform size:self.serverImageSize], 0.9);
                                                                  handler(data, error);
                                                              }
                                                          }
