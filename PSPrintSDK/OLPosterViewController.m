@@ -69,7 +69,7 @@
                                    style:UIBarButtonItemStylePlain
                                    target:self
                                    action:@selector(onButtonNextClicked)];
-    [self setTitle:[self.product.productTemplate name]];
+    [self setTitle:NSLocalizedString(@"Tap to Crop", @"")];
 }
 
 -(void)viewWillAppear:(BOOL)animated{

@@ -12,6 +12,7 @@
 #import "OLFrameSelectionViewController.h"
 #import "OLOrderReviewViewController.h"
 #import "OLPosterSizeSelectionViewController.h"
+#import "OLWhiteSquare.h"
 
 @interface OLProductOverviewViewController () <UIPageViewControllerDataSource, OLProductOverviewPageContentViewControllerDelegate>
 @property (strong, nonatomic) UIPageViewController *pageController;
@@ -19,6 +20,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *costLabel;
 @property (weak, nonatomic) IBOutlet UILabel *sizeLabel;
 @property (weak, nonatomic) IBOutlet UILabel *freePostageLabel;
+@property (weak, nonatomic) IBOutlet OLWhiteSquare *whiteBox;
 @end
 
 @implementation OLProductOverviewViewController
@@ -52,6 +54,13 @@
     self.costLabel.text = self.product.unitCost;
     
     self.sizeLabel.text = [NSString stringWithFormat:@"%@\n%@", self.product.packInfo, self.product.dimensions];
+    
+    if (self.product.templateType == kOLTemplateTypeLargeFormatA1 || self.product.templateType == kOLTemplateTypeLargeFormatA2 || self.product.templateType == kOLTemplateTypeLargeFormatA3){
+        self.costLabel.hidden = YES;
+        self.sizeLabel.hidden = YES;
+        self.freePostageLabel.hidden = YES;
+        self.whiteBox.hidden = YES;
+    }
 }
 
 - (BOOL)shouldAutorotate {
