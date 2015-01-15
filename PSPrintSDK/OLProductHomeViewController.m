@@ -14,6 +14,7 @@
 #import "OLProduct.h"
 #import "OLKiteViewController.h"
 #import "OLKitePrintSDK.h"
+#import "OLPosterSizeSelectionViewController.h"
 
 @interface OLProductHomeViewController ()
 @property (nonatomic, strong) NSArray *products;
@@ -79,19 +80,26 @@
     }
 }
 
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    if ([segue.identifier isEqualToString:@"ToProductOverviewSegue"]) {
-        OLProductOverviewViewController *vc = segue.destinationViewController;
-        vc.printOrder = self.printOrder;
-        NSIndexPath *path = [self.tableView indexPathForCell:sender];
-        vc.product = self.products[path.row];
-    }
-}
-
 #pragma mark - UITableViewDelegate Methods
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     return 233 * [self screenWidthFactor];
+}
+
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    OLProduct *product = self.products[indexPath.row];
+    if (product.templateType == kOLTemplateTypeLargeFormatA1 || product.templateType == kOLTemplateTypeLargeFormatA2 || product.templateType == kOLTemplateTypeLargeFormatA3){
+        OLPosterSizeSelectionViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"sizeSelect"];
+        vc.printOrder = self.printOrder;
+        [self.navigationController pushViewController:vc animated:YES];
+    }
+    else{
+        OLProductOverviewViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLProductOverviewViewController"];
+        vc.printOrder = self.printOrder;
+        vc.product = product;
+        [self.navigationController pushViewController:vc animated:YES];
+    }
+    
 }
 
 #pragma mark - UITableViewDataSource Methods
