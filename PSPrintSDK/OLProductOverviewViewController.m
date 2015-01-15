@@ -53,7 +53,12 @@
     
     self.costLabel.text = self.product.unitCost;
     
-    self.sizeLabel.text = [NSString stringWithFormat:@"%@\n%@", self.product.packInfo, self.product.dimensions];
+    if (self.product.templateType == kOLTemplateTypeFrame || self.product.templateType == kOLTemplateTypeFrame2x2 || self.product.templateType == kOLTemplateTypeFrame3x3 || self.product.templateType == kOLTemplateTypeFrame4x4){
+        self.sizeLabel.text = [NSString stringWithFormat:@"%@", self.product.dimensions];
+    }
+    else{
+        self.sizeLabel.text = [NSString stringWithFormat:@"%@\n%@", self.product.packInfo, self.product.dimensions];
+    }
     
     if (self.product.templateType == kOLTemplateTypeLargeFormatA1 || self.product.templateType == kOLTemplateTypeLargeFormatA2 || self.product.templateType == kOLTemplateTypeLargeFormatA3){
         self.costLabel.hidden = YES;
