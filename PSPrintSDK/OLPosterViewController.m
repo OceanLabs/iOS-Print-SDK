@@ -152,13 +152,17 @@
         if ((photo.type == kPrintPhotoAssetTypeOLFacebookPhoto || photo.type == kPrintPhotoAssetTypeOLInstagramPhoto)
             && CGAffineTransformIsIdentity(photo.transform)) {
             [photoAssets addObject:[OLAsset assetWithURL:[photo.asset fullURL]]];
-        } else {
+        }
+        else if(photo.type == kPrintPhotoAssetTypeOLAsset){
+            [photoAssets addObject:photo.asset];
+        }
+        else {
             [photoAssets addObject:[OLAsset assetWithDataSource:photo]];
         }
     }
     
     
-    OLProductPrintJob *job = [[OLProductPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:photoAssets];
+    OLProductPrintJob *job = [[OLProductPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:@[[photoAssets firstObject]]]; //Only adding the first photo since we only support buying one image at a time.
     OLPrintOrder *printOrder = [[OLPrintOrder alloc] init];
     NSDictionary *infoDict = [[NSBundle mainBundle] infoDictionary];
     NSString *appVersion = [infoDict objectForKey:@"CFBundleShortVersionString"];
