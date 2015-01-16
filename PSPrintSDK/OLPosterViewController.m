@@ -98,8 +98,7 @@
 }
 
 -(void)reloadImageViews {
-    dispatch_queue_t queue = dispatch_queue_create("co.oceanlabs.posterup.reloadImageViews", NULL);
-    dispatch_async(queue, ^{
+    dispatch_async(dispatch_get_main_queue(), ^{
         for (NSUInteger i = 0; i < MIN([self.imageViews count], [self.posterPhotos count]); i++) {
             
             [((OLPrintPhoto*)[self.posterPhotos objectAtIndex:i]) setThumbImageIdealSizeForImageView:self.imageViews[i]];
