@@ -75,14 +75,24 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     [self updateTitleBasedOnSelectedPhotoQuanitity];
     
     self.confirmBarButton.title = NSLocalizedString(@"Confirm", "");
-    
-    // Do any additional setup after loading the view.
 }
 
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+-(void)viewDidLayoutSubviews{
+    if (self.product.templateType == kOLTemplateTypeStickersCircle){
+        for (NSUInteger i = 1; i < [self.tableView numberOfRowsInSection:0]; i++){
+            UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]];
+            if (!cell){
+                continue;
+            }
+            UIImageView *imageView = (UIImageView *)[cell.contentView viewWithTag:10];
+            UIView *circleMaskView = [cell.contentView viewWithTag:89];
+            CAShapeLayer *aCircle=[CAShapeLayer layer];
+            aCircle.path=[UIBezierPath bezierPathWithRoundedRect:circleMaskView.bounds cornerRadius:circleMaskView.frame.size.height/2].CGPath;
+            
+            aCircle.fillColor=[UIColor blackColor].CGColor;
+            imageView.layer.mask=aCircle;
+        }
+    }
 }
 
 -(NSUInteger) totalNumberOfExtras{
@@ -290,6 +300,15 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     if (enhanceButton){
         enhanceButton.titleLabel.font = [UIFont fontWithName:@"MissionGothic-Bold" size:12];
     }
+    
+    if (self.product.templateType == kOLTemplateTypeStickersCircle){
+        UIView *circleMaskView = [cell.contentView viewWithTag:89];
+        circleMaskView.hidden = NO;
+        
+        UIImageView *backImageView = (UIImageView *)[cell.contentView viewWithTag:88];
+        [((OLPrintPhoto*)[self.userSelectedPhotos objectAtIndex:indexPath.row-1]) setThumbImageIdealSizeForImageView:backImageView];
+    }
+
     
     return cell;
 }
