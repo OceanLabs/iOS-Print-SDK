@@ -23,6 +23,7 @@ static UIColor *deselectedColor;
 @property (weak, nonatomic) IBOutlet UILabel *posterDimensionLabel;
 @property (weak, nonatomic) IBOutlet UIImageView *productImageView;
 @property (strong, nonatomic) OLProduct *product;
+@property (strong, nonatomic) NSMutableArray *availableButtons;
 
 @end
 
@@ -40,8 +41,8 @@ static UIColor *deselectedColor;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    self.availableButtons = [@[self.classicBtn, self.grandBtn, self.deluxeBtn] mutableCopy];
     deselectedColor = [UIColor colorWithRed:0.753 green:0.867 blue:0.922 alpha:1]; /*#c0ddeb*/
-    [self pressedClassic:nil];
     
     UIBarButtonItem *nextButton = [[UIBarButtonItem alloc]
                                    initWithTitle:@"Next"
@@ -50,6 +51,44 @@ static UIColor *deselectedColor;
                                    action:@selector(pressedContinue)];
     self.navigationItem.rightBarButtonItem = nextButton;
     [self setTitle:NSLocalizedString(@"Poster Size", @"")];
+    
+    OLProduct *productA1;
+    OLProduct *productA2;
+    OLProduct *productA3;
+    for (OLProduct *product in [OLProduct products]){
+        if (product.templateType == kOLTemplateTypeLargeFormatA1){
+            productA1 = product;
+        }
+        if (product.templateType == kOLTemplateTypeLargeFormatA2){
+            productA2 = product;
+        }
+        if (product.templateType == kOLTemplateTypeLargeFormatA3){
+            productA3 = product;
+        }
+    }
+    if (!productA1){
+        [self.deluxeBtn removeFromSuperview];
+        [self.availableButtons removeObject:self.deluxeBtn];
+    }
+    if (!productA2){
+        [self.grandBtn removeFromSuperview];
+        [self.availableButtons removeObject:self.grandBtn];
+    }
+    if (!productA3){
+        [self.classicBtn removeFromSuperview];
+        [self.availableButtons removeObject:self.classicBtn];
+    }
+    
+    UIButton *firstButton = [self.availableButtons firstObject];
+    if (firstButton == self.classicBtn){
+        [self pressedClassic:nil];
+    }
+    else if (firstButton == self.grandBtn){
+        [self pressedGrand:nil];
+    }
+    else if (firstButton == self.deluxeBtn){
+        [self pressedDeluxe:nil];
+    }
 }
 
 - (void)didReceiveMemoryWarning
