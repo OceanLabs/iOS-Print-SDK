@@ -49,6 +49,8 @@ NSInteger margin = 2;
     for (int i = 0; i < [self.framePhotos count]; i++){
         [self.extraCopiesOfAssets addObject:@0];
     }
+    
+    self.title = NSLocalizedString(@"Review", @"");
 }
 
 - (void)onTapGestureThumbnailTapped:(UITapGestureRecognizer*)gestureRecognizer {
@@ -116,7 +118,7 @@ NSInteger margin = 2;
     UILabel* countLabel = (UILabel *)[cellContentView viewWithTag:30];
     [countLabel setText: [NSString stringWithFormat:@"%lu", [countLabel.text integerValue] + 1]];
     
-    [self updateTitleBasedOnSelectedPhotoQuanitity];
+//    [self updateTitleBasedOnSelectedPhotoQuanitity];
 }
 
 - (IBAction)onButtonDownArrowClicked:(UIButton *)sender {
@@ -139,7 +141,7 @@ NSInteger margin = 2;
     UILabel* countLabel = (UILabel *)[cellContentView viewWithTag:30];
     [countLabel setText: [NSString stringWithFormat:@"%lu", [countLabel.text integerValue] - 1]];
     
-    [self updateTitleBasedOnSelectedPhotoQuanitity];
+//    [self updateTitleBasedOnSelectedPhotoQuanitity];
 }
 
 - (IBAction)onButtonNextClicked:(UIBarButtonItem *)sender {
