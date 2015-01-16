@@ -558,7 +558,7 @@
                                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tap to edit or tap and hold to rearrange the photos" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="285" translatesAutoresizingMaskIntoConstraints="NO" id="A9P-MS-asL">
                                             <rect key="frame" x="20" y="35" width="285" height="41"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                            <color key="textColor" red="0.66666666669999997" green="0.69803921570000005" blue="0.74117647060000003" alpha="1" colorSpace="calibratedRGB"/>
+                                            <color key="textColor" red="0.66666666666666663" green="0.69803921568627447" blue="0.74117647058823533" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                     </subviews>
@@ -648,6 +648,12 @@
                                                 <action selector="onButtonUpArrowClicked:" destination="xas-Kj-aIZ" eventType="touchUpInside" id="VBb-0i-vN1"/>
                                             </connections>
                                         </button>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Quantity:" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="4Ss-J1-Pr2">
+                                            <rect key="frame" x="8" y="354" width="67" height="21"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <color key="textColor" red="0.66666666666666663" green="0.69803921568627447" blue="0.74117647058823533" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
                                     </subviews>
                                     <color key="backgroundColor" red="0.92549019610000005" green="0.93725490199999995" blue="0.94901960780000005" alpha="1" colorSpace="calibratedRGB"/>
                                     <constraints>
@@ -666,7 +672,10 @@
                                         <constraint firstItem="ID3-1s-fIj" firstAttribute="top" secondItem="DiU-CS-JYT" secondAttribute="top" id="bCB-kO-4TH"/>
                                         <constraint firstAttribute="centerX" secondItem="DiU-CS-JYT" secondAttribute="centerX" id="kQr-1N-SXS"/>
                                         <constraint firstItem="HbX-2Q-Zfq" firstAttribute="width" secondItem="zdZ-sB-4j2" secondAttribute="width" constant="-65" id="kjR-dl-28e"/>
+                                        <constraint firstItem="ePf-Yj-GDO" firstAttribute="centerY" secondItem="4Ss-J1-Pr2" secondAttribute="centerY" constant="0.5" id="sSC-6L-9V6"/>
                                         <constraint firstAttribute="bottom" secondItem="DiU-CS-JYT" secondAttribute="bottom" constant="15" id="vrZ-N2-pqm"/>
+                                        <constraint firstItem="4Ss-J1-Pr2" firstAttribute="leading" secondItem="V0W-Qt-Al7" secondAttribute="leading" constant="8" id="woL-Zc-tBM"/>
+                                        <constraint firstItem="ePf-Yj-GDO" firstAttribute="leading" secondItem="4Ss-J1-Pr2" secondAttribute="trailing" constant="8" id="wt1-m1-8Lc"/>
                                     </constraints>
                                 </tableViewCellContentView>
                                 <color key="backgroundColor" red="0.92549019610000005" green="0.93725490199999995" blue="0.94901960780000005" alpha="1" colorSpace="calibratedRGB"/>
