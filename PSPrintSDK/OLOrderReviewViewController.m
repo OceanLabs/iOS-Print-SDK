@@ -37,6 +37,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
         for (OLProductPrintJob *job in self.printOrder.jobs){
             for (id asset in job.assetsForUploading){
                 OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
+                printPhoto.serverImageSize = [self.product serverImageSize];
                 printPhoto.asset = asset;
                 [mutableUserSelectedPhotos addObject:printPhoto];
             }
@@ -139,7 +140,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
              || photo.type == kPrintPhotoAssetTypeOLInstagramPhoto)
             && CGAffineTransformIsIdentity(photo.transform)) {
             [photoAssets addObject:[OLAsset assetWithURL:[photo.asset fullURL]]];
-        } else if(photo.type == kPrintPhotoAssetTypeOLAsset){
+        } else if(photo.type == kPrintPhotoAssetTypeOLAsset && CGAffineTransformIsIdentity(photo.transform)){
             [photoAssets addObject:photo.asset];
         } else {
             [photoAssets addObject:[OLAsset assetWithDataSource:photo]];

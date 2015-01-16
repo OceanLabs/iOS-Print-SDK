@@ -34,6 +34,7 @@
         for (OLProductPrintJob *job in self.printOrder.jobs){
             for (id asset in job.assetsForUploading){
                 OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
+                printPhoto.serverImageSize = [self.product serverImageSize];
                 printPhoto.asset = asset;
                 [mutableUserSelectedPhotos addObject:printPhoto];
             }
@@ -78,25 +79,6 @@
     [self reloadImageViews];
 }
 
--(CGSize)serverImageSize{
-    CGFloat pointsToPixels = 1.38;
-    switch (self.product.templateType) {
-        case kOLTemplateTypeLargeFormatA1:
-            return CGSizeMake(1564.724409288 * pointsToPixels, 2264.881889531 * pointsToPixels);
-            break;
-        case kOLTemplateTypeLargeFormatA2:
-            return CGSizeMake(1088.503936896 * pointsToPixels, 1581.732283302 * pointsToPixels);
-            break;
-        case kOLTemplateTypeLargeFormatA3:
-            return CGSizeMake(785.196850313 * pointsToPixels, 1133.8582676 * pointsToPixels);
-            break;
-            
-        default:
-            return CGSizeMake(0, 0);
-            break;
-    }
-}
-
 -(void)reloadImageViews {
     dispatch_async(dispatch_get_main_queue(), ^{
         for (NSUInteger i = 0; i < MIN([self.imageViews count], [self.posterPhotos count]); i++) {
@@ -129,7 +111,7 @@
     // I don't know why this works, but it does. You need to times the image size by 2 in order to keep it accurate
     // with the preview, the crop box and the ultimate image file.
     // Elliott Minns - Wizard of the unknown. If you need to contact me, don't.
-    CGSize photoSize = CGSizeMake([self serverImageSize].width / 2, [self serverImageSize].height / 2);
+    CGSize photoSize = CGSizeMake([self.product serverImageSize].width / 2, [self.product serverImageSize].height / 2);
     
     [imageEditor setCropboxGuideImageToSize:photoSize];
     [self presentViewController:imageEditor animated:YES completion:nil];
@@ -152,7 +134,7 @@
             && CGAffineTransformIsIdentity(photo.transform)) {
             [photoAssets addObject:[OLAsset assetWithURL:[photo.asset fullURL]]];
         }
-        else if(photo.type == kPrintPhotoAssetTypeOLAsset){
+        else if(photo.type == kPrintPhotoAssetTypeOLAsset && CGAffineTransformIsIdentity(photo.transform)){
             [photoAssets addObject:photo.asset];
         }
         else {

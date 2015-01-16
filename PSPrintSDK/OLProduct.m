@@ -33,6 +33,47 @@ typedef enum {
     return products;
 }
 
+-(CGSize)serverImageSize{
+    CGFloat pointsToPixels = 1.38;
+    if (self.templateType == kOLTemplateTypeLargeFormatA1){
+            return CGSizeMake(1564.724409288 * pointsToPixels, 2264.881889531 * pointsToPixels);
+    }
+    else if (self.templateType == kOLTemplateTypeLargeFormatA2){
+        return CGSizeMake(1088.503936896 * pointsToPixels, 1581.732283302 * pointsToPixels);
+    }
+    else if (self.templateType == kOLTemplateTypeLargeFormatA3){
+        return CGSizeMake(785.196850313 * pointsToPixels, 1133.8582676 * pointsToPixels);
+    }
+    else if (self.templateType == kOLTemplateTypePolaroids){
+            return CGSizeMake(945, 945);
+    }
+    else if (self.templateType == kOLTemplateTypeSquares){
+        return CGSizeMake(1111, 1111);
+    }
+    else if (self.templateType == kOLTemplateTypeMagnets){
+        return CGSizeMake(733, 733);
+    }
+    else if (self.templateType == kOLTemplateTypeMiniSquares){
+        return CGSizeMake(750, 750);
+    }
+    else if (self.templateType == kOLTemplateTypeStickersSquare){
+        return CGSizeMake(702, 702);
+    }
+    else if (self.templateType == kOLTemplateTypeStickersCircle){
+        return CGSizeMake(748, 748);
+    }
+    else if (self.templateType == kOLTemplateTypeMiniPolaroids){
+        return CGSizeMake(656, 656);
+    }
+    else if (self.templateType == kOLTemplateTypeFrame || self.templateType == kOLTemplateTypeFrame2x2 || self.templateType == kOLTemplateTypeFrame3x3 || self.templateType == kOLTemplateTypeFrame4x4){
+        return CGSizeMake(1651, 1651);
+    }
+    else{
+        return CGSizeMake(0, 0);
+    }
+
+}
+
 -(instancetype)initWithTemplate:(OLProductTemplate *)template{
     self = [super init];
     if (self) {

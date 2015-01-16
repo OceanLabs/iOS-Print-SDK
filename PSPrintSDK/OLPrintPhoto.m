@@ -279,7 +279,37 @@ static NSString *const kKeyServerImageSize = @"co.oceanlabs.psprintstudio.kKeySe
                                                          }
                                                  }];
     } else if (self.type == kPrintPhotoAssetTypeOLAsset){
-        [(OLAsset *)self.asset dataWithCompletionHandler:handler];
+        OLAsset *asset = self.asset;
+        if (CGAffineTransformIsIdentity(self.transform)){
+            [asset dataWithCompletionHandler:handler];
+        }
+        else{
+            if (asset.assetType == kOLAssetTypeRemoteImageURL){
+                [[SDWebImageManager sharedManager] downloadWithURL:[asset imageURL]
+                                                           options:0
+                                                          progress:nil
+                                                         completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished) {
+                                                             if (finished) {
+                                                                 if (error) {
+                                                                     handler(nil, error);
+                                                                 } else {
+                                                                     NSData *data = UIImageJPEGRepresentation([OLImageEditorImage croppedImageWithImage:image transform:self.transform size:self.serverImageSize], 0.9);
+                                                                     handler(data, error);
+                                                                 }
+                                                             }
+                                                         }];
+            }
+            else{
+                [asset dataWithCompletionHandler:^(NSData *data, NSError *error){
+                    if (error){
+                        handler(nil,error);
+                    }
+                    else{
+                        handler(UIImageJPEGRepresentation([OLImageEditorImage croppedImageWithImage:[UIImage imageWithData:data] transform:self.transform size:self.serverImageSize], 0.9), error);
+                    }
+                }];
+            }
+        }
     }
 }
 
