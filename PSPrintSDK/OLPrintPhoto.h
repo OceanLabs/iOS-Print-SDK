@@ -13,8 +13,6 @@
 
 typedef enum {
     kPrintPhotoAssetTypeALAsset,
-    kPrintPhotoAssetTypeOLInstagramPhoto,
-    kPrintPhotoAssetTypeOLFacebookPhoto,
     kPrintPhotoAssetTypeOLAsset
 } PrintPhotoAssetType;
 

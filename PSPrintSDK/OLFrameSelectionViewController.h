@@ -12,6 +12,6 @@
 
 @interface OLFrameSelectionViewController : UITableViewController
 
-@property (strong, nonatomic) OLPrintOrder *printOrder;
+@property (strong, nonatomic) NSArray *assets;
 
 @end

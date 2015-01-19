@@ -27,7 +27,7 @@
     NSArray *products = [OLProduct products];
     
     OLFrameOrderReviewViewController *vc = segue.destinationViewController;
-    vc.printOrder = self.printOrder;
+    vc.assets = self.assets;
     if ([segue.identifier isEqualToString:@"Selected2x2FrameStyleSegue"]) {
         for (OLProduct *product in products){
             if (product.templateType == kOLTemplateTypeFrame2x2){

@@ -13,5 +13,5 @@
 
 @interface OLProductOverviewViewController : UIViewController
 @property (strong, nonatomic) OLProduct *product;
-@property (strong, nonatomic) OLPrintOrder *printOrder;
+@property (strong, nonatomic) NSArray *assets;
 @end

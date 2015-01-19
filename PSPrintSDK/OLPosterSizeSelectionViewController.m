@@ -159,7 +159,7 @@ static UIColor *deselectedColor;
 - (IBAction)pressedContinue {
     OLPosterViewController *dest = [self.storyboard instantiateViewControllerWithIdentifier:@"p1x1ViewController"];
     dest.product = self.product;
-    dest.printOrder = self.printOrder;
+    dest.assets = self.assets;
     [self.navigationController pushViewController:dest animated:YES];
 }
 

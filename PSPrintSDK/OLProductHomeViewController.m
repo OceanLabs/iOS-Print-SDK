@@ -90,12 +90,12 @@
     OLProduct *product = self.products[indexPath.row];
     if (product.templateType == kOLTemplateTypeLargeFormatA1 || product.templateType == kOLTemplateTypeLargeFormatA2 || product.templateType == kOLTemplateTypeLargeFormatA3){
         OLPosterSizeSelectionViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"sizeSelect"];
-        vc.printOrder = self.printOrder;
+        vc.assets = self.assets;
         [self.navigationController pushViewController:vc animated:YES];
     }
     else{
         OLProductOverviewViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLProductOverviewViewController"];
-        vc.printOrder = self.printOrder;
+        vc.assets = self.assets;
         vc.product = product;
         [self.navigationController pushViewController:vc animated:YES];
     }

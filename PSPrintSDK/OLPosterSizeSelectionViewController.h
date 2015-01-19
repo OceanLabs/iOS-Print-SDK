@@ -10,6 +10,6 @@
 #import "OLPrintOrder.h"
 
 @interface OLPosterSizeSelectionViewController : UIViewController
-@property (strong, nonatomic) OLPrintOrder *printOrder;
+@property (strong, nonatomic) NSArray *assets;
 
 @end

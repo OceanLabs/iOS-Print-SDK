@@ -12,6 +12,6 @@
 
 @interface OLKiteViewController : UIViewController
 
-- (id)initWithPrintOrder:(OLPrintOrder *)printOrder;
+- (id)initWithAssets:(NSArray *)assets;
 
 @end

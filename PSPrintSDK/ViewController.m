@@ -131,9 +131,7 @@ static NSString *const kApplePayMerchantIDKey = @"merchant.co.oceanlabs.kite.ly"
 - (void)printWithAssets:(NSArray *)assets {
     if (![self isAPIKeySet]) return;
     
-    [self.printOrder addPrintJob:[OLPrintJob printJobWithTemplateId:nil OLAssets:assets]];
-    
-    OLKiteViewController *vc = [[OLKiteViewController alloc] initWithPrintOrder:self.printOrder];
+    OLKiteViewController *vc = [[OLKiteViewController alloc] initWithAssets:assets];
     //    vc.delegate = self;
     //    [self presentViewController:vc animated:YES completion:NULL];
     [self.navigationController pushViewController:vc animated:YES];

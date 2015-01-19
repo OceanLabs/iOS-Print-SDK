@@ -16,7 +16,7 @@
 
 @property (nonatomic, strong) OLProduct *product;
 @property (strong, nonatomic) NSMutableArray* extraCopiesOfAssets;
-@property (strong, nonatomic) OLPrintOrder *printOrder;
+@property (strong, nonatomic) NSArray *assets;
 @property (strong, nonatomic) NSArray *userSelectedPhotos;
 
 - (void)updateTitleBasedOnSelectedPhotoQuanitity;

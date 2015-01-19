@@ -29,13 +29,11 @@
 -(NSArray *) userSelectedPhotos{
     if (!_userSelectedPhotos){
         NSMutableArray *mutableUserSelectedPhotos = [[NSMutableArray alloc] init];
-        for (OLProductPrintJob *job in self.printOrder.jobs){
-            for (id asset in job.assetsForUploading){
-                OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
-                printPhoto.serverImageSize = [self.product serverImageSize];
-                printPhoto.asset = asset;
-                [mutableUserSelectedPhotos addObject:printPhoto];
-            }
+        for (id asset in self.assets){
+            OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
+            printPhoto.serverImageSize = [self.product serverImageSize];
+            printPhoto.asset = asset;
+            [mutableUserSelectedPhotos addObject:printPhoto];
         }
         _userSelectedPhotos = mutableUserSelectedPhotos;
     }
@@ -120,8 +118,6 @@
     NSUInteger instagramPhotoCount = 0, facebookPhotoCount = 0, iphonePhotoCount = 0;
     for (OLPrintPhoto *photo in self.posterPhotos) {
         if (photo.type == kPrintPhotoAssetTypeALAsset) ++iphonePhotoCount;
-        if (photo.type == kPrintPhotoAssetTypeOLFacebookPhoto) ++facebookPhotoCount;
-        if (photo.type == kPrintPhotoAssetTypeOLInstagramPhoto) ++instagramPhotoCount;
     }
     
     // Avoid uploading assets if possible. We can avoid uploading where the image already exists at a remote
@@ -142,9 +138,7 @@
     NSDictionary *infoDict = [[NSBundle mainBundle] infoDictionary];
     NSString *appVersion = [infoDict objectForKey:@"CFBundleShortVersionString"];
     NSNumber *buildNumber = [infoDict objectForKey:@"CFBundleVersion"];
-    printOrder.userData = @{@"photo_count_facebook": [NSNumber numberWithUnsignedInteger:facebookPhotoCount],
-                            @"photo_count_instagram": [NSNumber numberWithUnsignedInteger:instagramPhotoCount],
-                            @"photo_count_iphone": [NSNumber numberWithUnsignedInteger:iphonePhotoCount],
+    printOrder.userData = @{@"photo_count_iphone": [NSNumber numberWithUnsignedInteger:iphonePhotoCount],
                             @"sdk_version": kOLKiteSDKVersion,
                             @"platform": @"iOS",
                             @"uid": [[[UIDevice currentDevice] identifierForVendor] UUIDString],

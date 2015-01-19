@@ -32,13 +32,11 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 -(NSArray *) userSelectedPhotos{
     if (!_userSelectedPhotos){
         NSMutableArray *mutableUserSelectedPhotos = [[NSMutableArray alloc] init];
-        for (OLProductPrintJob *job in self.printOrder.jobs){
-            for (id asset in job.assetsForUploading){
-                OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
-                printPhoto.serverImageSize = [self.product serverImageSize];
-                printPhoto.asset = asset;
-                [mutableUserSelectedPhotos addObject:printPhoto];
-            }
+        for (id asset in self.assets){
+            OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
+            printPhoto.serverImageSize = [self.product serverImageSize];
+            printPhoto.asset = asset;
+            [mutableUserSelectedPhotos addObject:printPhoto];
         }
         _userSelectedPhotos = mutableUserSelectedPhotos;
     }
@@ -52,15 +50,6 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
         // Custom initialization
     }
     return self;
-}
-
-- (void)viewDidAppear:(BOOL)animated{
-    // Assumes only one job
-    if ([self.extraCopiesOfAssets count] < [[self.printOrder.jobs.firstObject assetsForUploading] count]){
-        NSArray *assets = [[self.printOrder.jobs.firstObject assetsForUploading] subarrayWithRange:NSMakeRange(0, [self.extraCopiesOfAssets count])];
-        [self.printOrder removePrintJob:[self.printOrder.jobs firstObject]];
-        [self.printOrder addPrintJob: [[OLProductPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:assets]];
-    }
 }
 
 - (void)viewDidLoad
@@ -133,11 +122,9 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
         }
     }
     
-    NSUInteger instagramPhotoCount = 0, facebookPhotoCount = 0, iphonePhotoCount = 0;
+    NSUInteger iphonePhotoCount = 0;
     for (OLPrintPhoto *photo in userSelectedPhotosAndExtras) {
         if (photo.type == kPrintPhotoAssetTypeALAsset) ++iphonePhotoCount;
-        if (photo.type == kPrintPhotoAssetTypeOLFacebookPhoto) ++facebookPhotoCount;
-        if (photo.type == kPrintPhotoAssetTypeOLInstagramPhoto) ++instagramPhotoCount;
     }
     
     // Avoid uploading assets if possible. We can avoid uploading where the image already exists at a remote
@@ -163,22 +150,22 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     NSDictionary *infoDict = [[NSBundle mainBundle] infoDictionary];
     NSString *appVersion = [infoDict objectForKey:@"CFBundleShortVersionString"];
     NSNumber *buildNumber = [infoDict objectForKey:@"CFBundleVersion"];
-    self.printOrder.userData = @{@"photo_count_facebook": [NSNumber numberWithUnsignedInteger:facebookPhotoCount],
-                            @"photo_count_instagram": [NSNumber numberWithUnsignedInteger:instagramPhotoCount],
-                            @"photo_count_iphone": [NSNumber numberWithUnsignedInteger:iphonePhotoCount],
+    
+    OLPrintOrder *printOrder = [[OLPrintOrder alloc] init];
+    printOrder.userData = @{@"photo_count_iphone": [NSNumber numberWithUnsignedInteger:iphonePhotoCount],
                             @"sdk_version": kOLKiteSDKVersion,
                             @"platform": @"iOS",
                             @"uid": [[[UIDevice currentDevice] identifierForVendor] UUIDString],
                             @"app_version": [NSString stringWithFormat:@"Version: %@ (%@)", appVersion, buildNumber]
                             };
     OLProductPrintJob* printJob = [[OLProductPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:photoAssets];
-    for (id<OLPrintJob> job in self.printOrder.jobs){
-        [self.printOrder removePrintJob:job];
+    for (id<OLPrintJob> job in printOrder.jobs){
+        [printOrder removePrintJob:job];
     }
-    [self.printOrder addPrintJob:printJob];
+    [printOrder addPrintJob:printJob];
 
     
-    OLCheckoutViewController *vc = [[OLCheckoutViewController alloc] initWithPrintOrder:self.printOrder];
+    OLCheckoutViewController *vc = [[OLCheckoutViewController alloc] initWithPrintOrder:printOrder];
     
     [self.navigationController pushViewController:vc animated:YES];
 }

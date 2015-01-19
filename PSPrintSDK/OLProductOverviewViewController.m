@@ -87,17 +87,17 @@
 - (IBAction)onButtonStartClicked:(UIBarButtonItem *)sender {
     if (self.product.templateType == kOLTemplateTypeFrame2x2 || self.product.templateType == kOLTemplateTypeFrame3x3 || self.product.templateType == kOLTemplateTypeFrame4x4 || self.product.templateType == kOLTemplateTypeFrame){
         OLFrameSelectionViewController *frameVc = [self.storyboard instantiateViewControllerWithIdentifier:@"FrameSelectionViewController"];
-        frameVc.printOrder = self.printOrder;
+        frameVc.assets = self.assets;
         [self.navigationController pushViewController:frameVc animated:YES];
     }
     else if (self.product.templateType == kOLTemplateTypeLargeFormatA1 || self.product.templateType == kOLTemplateTypeLargeFormatA2 || self.product.templateType == kOLTemplateTypeLargeFormatA3){
         OLPosterSizeSelectionViewController *posterVc = [self.storyboard instantiateViewControllerWithIdentifier:@"sizeSelect"];
-        posterVc.printOrder = self.printOrder;
+        posterVc.assets = self.assets;
         [self.navigationController pushViewController:posterVc animated:YES];
     }
     else{
         OLOrderReviewViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OrderReviewViewController"];
-        vc.printOrder = self.printOrder;
+        vc.assets = self.assets;
         vc.product = self.product;
         [self.navigationController pushViewController:vc animated:YES];
     }

@@ -12,7 +12,7 @@
 
 @interface OLPosterViewController : UIViewController
 
-@property (strong, nonatomic) OLPrintOrder *printOrder;
+@property (strong, nonatomic) NSArray *assets;
 @property (strong, nonatomic) OLProduct *product;
 @property (strong, nonatomic) NSMutableArray *userSelectedPhotos;
 

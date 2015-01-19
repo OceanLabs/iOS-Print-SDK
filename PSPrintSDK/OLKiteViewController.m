@@ -15,16 +15,16 @@
 
 @property (assign, nonatomic) BOOL alreadyTransistioned;
 @property (strong, nonatomic) UIViewController *nextVc;
-@property (strong, nonatomic) OLPrintOrder *printOrder;
+@property (strong, nonatomic) NSArray *assets;
 
 @end
 
 @implementation OLKiteViewController
 
-- (id)initWithPrintOrder:(OLPrintOrder *)printOrder {
-    NSAssert(printOrder != nil, @"KiteViewController requires a non-nil print order");
+- (id)initWithAssets:(NSArray *)assets {
+    NSAssert(assets != nil && [assets count] > 0, @"KiteViewController requires assets to print");
     if (self = [super init]) {
-        self.printOrder = printOrder;
+        self.assets = assets;
         //[self.printOrder preemptAssetUpload];
         [OLProductTemplate sync];
     }
@@ -34,17 +34,16 @@
 
 -(void)viewDidLoad{
     UIStoryboard *sb = [UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:nil];
-    NSAssert(self.printOrder != nil, @"KiteViewController requires a non-nil print order");
     
     if (!self.navigationController){
         self.nextVc = [sb instantiateViewControllerWithIdentifier:@"ProductsNavigationController"];
         ((UINavigationController *)self.nextVc).topViewController.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(dismiss)];
-        [(OLProductHomeViewController *)self.nextVc setPrintOrder:self.printOrder];
+        [(OLProductHomeViewController *)self.nextVc setAssets:self.assets];
         [self.view addSubview:self.nextVc.view];
     }
     else{
         self.nextVc = [sb instantiateViewControllerWithIdentifier:@"ProductHomeViewController"];
-        [(OLProductHomeViewController *)self.nextVc setPrintOrder:self.printOrder];
+        [(OLProductHomeViewController *)self.nextVc setAssets:self.assets];
         [self.view addSubview:self.nextVc.view];
         UIView *dummy = [self.view snapshotViewAfterScreenUpdates:YES];
         dummy.transform = CGAffineTransformMakeTranslation(0, self.navigationController.navigationBar.frame.size.height + [UIApplication sharedApplication].statusBarFrame.size.height);
