@@ -36,8 +36,6 @@ PODS:
   - Stripe/Core (2.2.0)
   - SVProgressHUD (1.1.2)
   - UICKeyChainStore (1.0.5)
-  - UIImageView+FadeIn (1.0.5):
-    - SDWebImage
 
 DEPENDENCIES:
   - AFNetworking (~> 2.5.0)
@@ -49,7 +47,6 @@ DEPENDENCIES:
   - Stripe/ApplePay
   - SVProgressHUD
   - UICKeyChainStore (~> 1.0.4)
-  - UIImageView+FadeIn
 
 SPEC CHECKSUMS:
   AFNetworking: 0f54cb5d16ce38c1b76948faffb8d5fb705021c7
@@ -61,6 +58,5 @@ SPEC CHECKSUMS:
   Stripe: 935d0ff491100ca1ba0f4040c64e449c5ed69f6d
   SVProgressHUD: da7a49e789af645d9279ffbca62318945a832438
   UICKeyChainStore: 4f9719600cc70025064e26f28f1210bcfc3b0c35
-  UIImageView+FadeIn: 678537843457cd2597f55bd970364afa3646086c
 
 COCOAPODS: 0.35.0

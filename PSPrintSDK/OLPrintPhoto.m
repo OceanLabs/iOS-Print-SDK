@@ -10,7 +10,7 @@
 #import <AssetsLibrary/AssetsLibrary.h>
 #import <SDWebImageManager.h>
 #import "OLAsset+Private.h"
-#import <UIImageView+FadeIn.h>
+#import "UIImageView+FadeIn.h"
 
 static NSString *const kKeyType = @"co.oceanlabs.psprintstudio.kKeyType";
 static NSString *const kKeyAsset = @"co.oceanlabs.psprintstudio.kKeyAsset";
