@@ -10,6 +10,7 @@
 #import "OLPrintOrder.h"
 #import "OLProductTemplate.h"
 #import "OLProductHomeViewController.h"
+#import "OLKitePrintSDK.h"
 
 @interface OLKiteViewController ()
 
@@ -34,16 +35,22 @@
 
 -(void)viewDidLoad{
     UIStoryboard *sb = [UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:nil];
+    NSString *nextVcNavIdentifier = @"ProductsNavigationController";
+    NSString *nextVcIdentifier = @"ProductHomeViewController";
+    if (([OLKitePrintSDK enabledProducts] && [[OLKitePrintSDK enabledProducts] count] < 2) || self.templateType != kOLTemplateTypeNoTemplate){
+        nextVcNavIdentifier = @"OLProductOverviewNavigationViewController";
+        nextVcIdentifier = @"OLProductOverviewViewController";
+    }
     
     if (!self.navigationController){
-        self.nextVc = [sb instantiateViewControllerWithIdentifier:@"ProductsNavigationController"];
+        self.nextVc = [sb instantiateViewControllerWithIdentifier:nextVcIdentifier];
         ((UINavigationController *)self.nextVc).topViewController.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(dismiss)];
-        [(OLProductHomeViewController *)self.nextVc setAssets:self.assets];
+        [(id)self.nextVc setAssets:self.assets];
         [self.view addSubview:self.nextVc.view];
     }
     else{
-        self.nextVc = [sb instantiateViewControllerWithIdentifier:@"ProductHomeViewController"];
-        [(OLProductHomeViewController *)self.nextVc setAssets:self.assets];
+        self.nextVc = [sb instantiateViewControllerWithIdentifier:nextVcIdentifier];
+        [(id)self.nextVc setAssets:self.assets];
         [self.view addSubview:self.nextVc.view];
         UIView *dummy = [self.view snapshotViewAfterScreenUpdates:YES];
         dummy.transform = CGAffineTransformMakeTranslation(0, self.navigationController.navigationBar.frame.size.height + [UIApplication sharedApplication].statusBarFrame.size.height);

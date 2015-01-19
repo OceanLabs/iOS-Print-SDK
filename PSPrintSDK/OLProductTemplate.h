@@ -14,6 +14,7 @@ NSString *const kNotificationTemplateSyncComplete;
 NSString *const kNotificationKeyTemplateSyncError;
 
 typedef enum {
+    kOLTemplateTypeNoTemplate,
     kOLTemplateTypeMagnets,
     kOLTemplateTypeSquares,
     kOLTemplateTypeMiniSquares,

@@ -90,7 +90,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="9qk-Sg-14B" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1806" y="115"/>
+            <point key="canvasLocation" x="2214" y="115"/>
         </scene>
         <!--Choose Frame Style-->
         <scene sceneID="UJ6-GP-I4m">
@@ -929,6 +929,24 @@
                 </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="2624" y="-522"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="FZH-42-102">
+            <objects>
+                <navigationController storyboardIdentifier="OLProductOverviewNavigationViewController" automaticallyAdjustsScrollViewInsets="NO" id="9cK-xy-0yf" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="w0F-84-cGw">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="TJ8-xQ-5ds" kind="relationship" relationship="rootViewController" id="UrY-XJ-Xsy"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="8sP-Ne-kl5" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1806" y="115"/>
         </scene>
     </scenes>
     <resources>
