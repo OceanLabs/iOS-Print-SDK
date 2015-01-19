@@ -7,10 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "OLProductTemplate.h"
 
 @class OLPrintOrder;
 
 @interface OLKiteViewController : UIViewController
+
+@property (assign, nonatomic) OLTemplateType templateType;
 
 - (id)initWithAssets:(NSArray *)assets;
 

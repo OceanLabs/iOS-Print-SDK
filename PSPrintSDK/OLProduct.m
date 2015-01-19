@@ -249,7 +249,7 @@ typedef enum {
         case kOLTemplateTypeLargeFormatA3: return CGSizeMake(297, 420);
         case kOLTemplateTypeStickersCircle: return CGSizeMake(6.59, 6.59);
         case kOLTemplateTypeStickersSquare: return CGSizeMake(6.19, 6.19);
-            default: CGSizeMake(0, 0);
+            default: return CGSizeMake(0, 0);
     }
 }
 

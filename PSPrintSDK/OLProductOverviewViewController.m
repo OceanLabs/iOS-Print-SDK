@@ -13,6 +13,7 @@
 #import "OLOrderReviewViewController.h"
 #import "OLPosterSizeSelectionViewController.h"
 #import "OLWhiteSquare.h"
+#import "OLKiteViewController.h"
 
 @interface OLProductOverviewViewController () <UIPageViewControllerDataSource, OLProductOverviewPageContentViewControllerDelegate>
 @property (strong, nonatomic) UIPageViewController *pageController;
@@ -65,6 +66,19 @@
         self.sizeLabel.hidden = YES;
         self.freePostageLabel.hidden = YES;
         self.whiteBox.hidden = YES;
+    }
+}
+
+-(void)viewDidAppear:(BOOL)animated{
+    if (self.navigationController){
+        NSMutableArray *navigationStack = self.navigationController.viewControllers.mutableCopy;
+        if (navigationStack.count > 1 && [navigationStack[navigationStack.count - 2] isKindOfClass:[OLKiteViewController class]]) {
+            OLKiteViewController *kiteVc = navigationStack[navigationStack.count - 2];
+            if (!kiteVc.presentingViewController){
+                [navigationStack removeObject:kiteVc];
+                self.navigationController.viewControllers = navigationStack;
+            }
+        }
     }
 }
 

@@ -58,7 +58,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.title = NSLocalizedString(@"Products", @"");
+    self.title = NSLocalizedString(@"Print Shop", @"");
 }
 
 
