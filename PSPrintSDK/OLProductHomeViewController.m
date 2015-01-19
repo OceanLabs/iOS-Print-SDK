@@ -131,6 +131,9 @@
     }
     productTypeLabel.backgroundColor = [product labelColor];
     
+    UIActivityIndicatorView *activityIndicator = (id)[cell.contentView viewWithTag:41];
+    [activityIndicator startAnimating];
+    
     return cell;
 }
 
