@@ -42,7 +42,7 @@ static UIColor *deselectedColor;
 {
     [super viewDidLoad];
     self.availableButtons = [@[self.classicBtn, self.grandBtn, self.deluxeBtn] mutableCopy];
-    deselectedColor = [UIColor colorWithRed:0.753 green:0.867 blue:0.922 alpha:1]; /*#c0ddeb*/
+    deselectedColor = [UIColor colorWithRed:0.365 green:0.612 blue:0.925 alpha:1]; /*#5d9cec*/
     
     UIBarButtonItem *nextButton = [[UIBarButtonItem alloc]
                                    initWithTitle:@"Next"
@@ -105,8 +105,11 @@ static UIColor *deselectedColor;
         }
     }
     self.classicBtn.backgroundColor = [UIColor whiteColor];
+    [self.classicBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     self.grandBtn.backgroundColor = deselectedColor;
+    [self.grandBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     self.deluxeBtn.backgroundColor = deselectedColor;
+    [self.deluxeBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     self.sizeLabel.text = @"A3:";
     [self.product setProductPhotography:0 toImageView:self.productImageView];
     self.posterDimensionLabel.text = [NSString stringWithFormat:@"%@", self.product.dimensions];
@@ -121,8 +124,11 @@ static UIColor *deselectedColor;
         }
     }
     self.grandBtn.backgroundColor = [UIColor whiteColor];
+    [self.grandBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     self.deluxeBtn.backgroundColor = deselectedColor;
+    [self.deluxeBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     self.classicBtn.backgroundColor = deselectedColor;
+    [self.classicBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     self.sizeLabel.text = @"A2:";
     [self.product setProductPhotography:0 toImageView:self.productImageView];
     self.posterDimensionLabel.text = [NSString stringWithFormat:@"%@", self.product.dimensions];
@@ -137,8 +143,12 @@ static UIColor *deselectedColor;
         }
     }
     self.classicBtn.backgroundColor = deselectedColor;
+    [self.classicBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     self.grandBtn.backgroundColor = deselectedColor;
+    [self.grandBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     self.deluxeBtn.backgroundColor = [UIColor whiteColor];
+    [self.deluxeBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    
     self.sizeLabel.text = @"A1:";
     [self.product setProductPhotography:0 toImageView:self.productImageView];
     self.posterDimensionLabel.text = [NSString stringWithFormat:@"%@", self.product.dimensions];
