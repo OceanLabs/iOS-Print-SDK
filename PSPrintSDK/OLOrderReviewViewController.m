@@ -62,6 +62,11 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     [self updateTitleBasedOnSelectedPhotoQuanitity];
     
     self.confirmBarButton.title = NSLocalizedString(@"Confirm", "");
+    
+    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Back", @"")
+                                                                             style:UIBarButtonItemStyleBordered
+                                                                            target:nil
+                                                                            action:nil];
 }
 
 -(void)viewDidLayoutSubviews{
