@@ -135,7 +135,6 @@
 		2EA8BEB71A484FCB008A9248 /* OLFrameOrderReviewViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLFrameOrderReviewViewController.m; sourceTree = "<group>"; };
 		2EA8BEBE1A485093008A9248 /* UITableViewController+ScreenWidthFactor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITableViewController+ScreenWidthFactor.h"; sourceTree = "<group>"; };
 		2EA8BEBF1A485093008A9248 /* UITableViewController+ScreenWidthFactor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITableViewController+ScreenWidthFactor.m"; sourceTree = "<group>"; };
-		2ED38B0919F68E4100E8EE50 /* KitePrintSDK.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = KitePrintSDK.entitlements; sourceTree = "<group>"; };
 		2EE3C86B1A4ADDDA006446E2 /* OLWhiteSquare.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLWhiteSquare.h; sourceTree = "<group>"; };
 		2EE3C86C1A4ADDDA006446E2 /* OLWhiteSquare.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLWhiteSquare.m; sourceTree = "<group>"; };
 		2EE3C86E1A4AFB0C006446E2 /* OLKiteViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLKiteViewController.h; sourceTree = "<group>"; };
@@ -337,7 +336,6 @@
 		CD73BF5F186215790009DE03 = {
 			isa = PBXGroup;
 			children = (
-				2ED38B0919F68E4100E8EE50 /* KitePrintSDK.entitlements */,
 				CD73BFA01862FA210009DE03 /* Sample App */,
 				CD73BF71186215790009DE03 /* Kite Print SDK */,
 				CD73BF90186215790009DE03 /* Kite Print SDK Tests */,
