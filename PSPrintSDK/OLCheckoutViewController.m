@@ -263,7 +263,7 @@ static const NSUInteger kInputFieldTag = 99;
     if (section == kSectionEmailAddress) {
         return NSLocalizedStringFromTableInBundle(@"We'll send you a confirmation and order updates", @"KitePrintSDK", [OLConstants bundle], @"");
     } else if (section == kSectionPhoneNumber) {
-        return NSLocalizedStringFromTableInBundle(@"Required by Royal Mail in case there are any issues during delivery", @"KitePrintSDK", [OLConstants bundle], @"");
+        return NSLocalizedStringFromTableInBundle(@"Required by the postal service in case there are any issues during delivery", @"KitePrintSDK", [OLConstants bundle], @"");
     }
     
     return nil;

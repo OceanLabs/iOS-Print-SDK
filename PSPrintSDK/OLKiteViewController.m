@@ -84,6 +84,7 @@
             dummy.transform = CGAffineTransformMakeTranslation(0, standardiOSBarsHeight);
         }
         [self.view addSubview:dummy];
+        self.title = self.nextVc.title;
         
         [self.navigationController pushViewController:self.nextVc animated:NO];
     }

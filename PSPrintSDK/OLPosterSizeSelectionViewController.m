@@ -51,7 +51,7 @@ static UIColor *deselectedColor;
                                    target:self
                                    action:@selector(pressedContinue)];
     self.navigationItem.rightBarButtonItem = nextButton;
-    [self setTitle:NSLocalizedString(@"Poster Size", @"")];
+    [self setTitle:NSLocalizedString(@"Choose Size", @"")];
     
     OLProduct *productA1;
     OLProduct *productA2;
