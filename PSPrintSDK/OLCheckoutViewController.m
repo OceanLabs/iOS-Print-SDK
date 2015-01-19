@@ -119,6 +119,14 @@ static const NSUInteger kInputFieldTag = 99;
     UITapGestureRecognizer *tgr = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onBackgroundClicked)];
     tgr.cancelsTouchesInView = NO; // allow table cell selection to happen as normal
     [self.tableView addGestureRecognizer:tgr];
+    
+    UILabel *kiteLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 100, 40, 40)];
+    kiteLabel.text = NSLocalizedString(@"Powered by Kite.ly", @"");
+    [kiteLabel sizeToFit];
+    kiteLabel.frame = CGRectMake(10, [UIScreen mainScreen].bounds.size.height - self.navigationController.navigationBar.frame.size.height - kiteLabel.frame.size.height - [[UIApplication sharedApplication] statusBarFrame].size.height,kiteLabel.frame.size.width, kiteLabel.frame.size.height);
+    kiteLabel.font = [UIFont systemFontOfSize:13];
+    kiteLabel.textColor = [UIColor darkGrayColor];
+    [self.view addSubview:kiteLabel];
 }
 
 - (void)onButtonCancelClicked {

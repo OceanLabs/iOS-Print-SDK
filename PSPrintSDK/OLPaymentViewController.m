@@ -156,14 +156,22 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     [self.payWithCreditCardButton addTarget:self action:@selector(onButtonPayWithCreditCardClicked) forControlEvents:UIControlEventTouchUpInside];
     [self.payWithCreditCardButton setTitle:NSLocalizedStringFromTableInBundle(@"Pay with Card", @"KitePrintSDK", [OLConstants bundle], @"") forState:UIControlStateNormal];
     CGFloat maxY = CGRectGetMaxY(self.payWithCreditCardButton.frame);
+
     
 #ifdef OL_KITE_OFFER_PAYPAL
     self.payWithPayPalButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 104 - heightDiff, self.view.frame.size.width, 44)];
     [self.payWithPayPalButton setTitle:NSLocalizedStringFromTableInBundle(@"Pay with PayPal", @"KitePrintSDK", [OLConstants bundle], @"") forState:UIControlStateNormal];
     [self.payWithPayPalButton addTarget:self action:@selector(onButtonPayWithPayPalClicked) forControlEvents:UIControlEventTouchUpInside];
     self.payWithPayPalButton.backgroundColor = [UIColor colorWithRed:74 / 255.0f green:137 / 255.0f blue:220 / 255.0f alpha:1.0];
-    maxY = CGRectGetMaxY(self.payWithPayPalButton.frame);
 #endif
+    
+    UILabel *kiteLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 0, 40, 40)];
+    kiteLabel.text = NSLocalizedString(@"Powered by Kite.ly", @"");
+    [kiteLabel sizeToFit];
+    kiteLabel.frame = CGRectMake(10, 148 - heightDiff, kiteLabel.frame.size.width, kiteLabel.frame.size.height);
+    kiteLabel.font = [UIFont systemFontOfSize:13];
+    kiteLabel.textColor = [UIColor darkGrayColor];
+    maxY = CGRectGetMaxY(kiteLabel.frame);
     
 #ifdef OL_KITE_OFFER_APPLE_PAY
     self.payWithApplePayButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 44)];
@@ -174,6 +182,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     
     UIView *footer = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, maxY)];
     [footer addSubview:self.payWithCreditCardButton];
+    [footer addSubview:kiteLabel];
 
 #ifdef OL_KITE_OFFER_PAYPAL
     [footer addSubview:self.payWithPayPalButton];
@@ -811,7 +820,6 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             [self.promoApplyButton sizeToFit];
         }
     }
-    
     return cell;
 }
 
