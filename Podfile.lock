@@ -20,29 +20,12 @@ PODS:
   - AFNetworking/UIKit (2.5.0):
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
-  - Bolts (1.1.3)
   - DACircularProgress (2.2.0)
-  - Facebook-iOS-SDK (3.22.0):
-    - Bolts (~> 1.0)
-  - FacebookImagePicker (HEAD based on 1.0.1):
-    - Facebook-iOS-SDK
-    - UIDevice+Hardware
-    - UIImageView+FadeIn
-  - InstagramImagePicker (HEAD based on 1.0.5):
-    - NSURL+Query
-    - NXOAuth2Client
-    - UIColor-HexString
-    - UIDevice+Hardware
-    - UIImageView+FadeIn
   - LXReorderableCollectionViewFlowLayout (0.1.1)
-  - NSURL+Query (1.0.0)
-  - NXOAuth2Client (1.2.8)
-  - OLImageEditor (HEAD based on 1.0.0):
+  - OLImageEditor (2.0.0):
     - DACircularProgress
-    - PEPhotoCropEditor
     - SDWebImage
   - PayPal-iOS-SDK (2.4.2)
-  - PEPhotoCropEditor (1.3.1)
   - SDWebImage (3.7.1):
     - SDWebImage/Core (= 3.7.1)
   - SDWebImage/Core (3.7.1)
@@ -53,43 +36,40 @@ PODS:
   - Stripe/Core (2.2.0)
   - SVProgressHUD (1.1.2)
   - UICKeyChainStore (1.0.5)
-  - UIColor-HexString (1.1.0)
-  - UIDevice+Hardware (1.0.0)
   - UIImageView+FadeIn (1.0.5):
     - SDWebImage
 
 DEPENDENCIES:
   - AFNetworking (~> 2.5.0)
-  - FacebookImagePicker (HEAD)
-  - InstagramImagePicker (HEAD)
   - LXReorderableCollectionViewFlowLayout
-  - OLImageEditor (HEAD)
+  - OLImageEditor (from `https://github.com/OceanLabs/OLImageEditor`)
   - PayPal-iOS-SDK (~> 2.4.2)
   - SDWebImage
   - Stripe (= 2.2.0)
   - Stripe/ApplePay
   - SVProgressHUD
   - UICKeyChainStore (~> 1.0.4)
+  - UIImageView+FadeIn
+
+EXTERNAL SOURCES:
+  OLImageEditor:
+    :git: https://github.com/OceanLabs/OLImageEditor
+
+CHECKOUT OPTIONS:
+  OLImageEditor:
+    :commit: 4d931ef93c3da19a30cc14517068df2ae53765d3
+    :git: https://github.com/OceanLabs/OLImageEditor
 
 SPEC CHECKSUMS:
   AFNetworking: 0f54cb5d16ce38c1b76948faffb8d5fb705021c7
-  Bolts: 3db0a875235e0c9042b013af13af0f00f79b102c
   DACircularProgress: 3b41941891a56dc6aa17971f5322a9a38a6f446e
-  Facebook-iOS-SDK: 0eda8ff7120aada0a9c5f98552f7625da6c3440a
-  FacebookImagePicker: ea1be3c446cee02dce3d58e125caa7437fbd4870
-  InstagramImagePicker: 1ef86fe264e4d00dbf05952a9fbb6d73ede2e809
   LXReorderableCollectionViewFlowLayout: b4e25543263e27d4c147109ae5ead01cc9119f23
-  NSURL+Query: 88af9d701685a603f7466cf5ca0cf20358cc7613
-  NXOAuth2Client: fa81be68c9ce628202028ae037c9c92cfbb37865
-  OLImageEditor: 27eb1a8a036a9b639da7885bf635cf10a7ad19e1
+  OLImageEditor: e27a5e93b9d888589fa96257889ae7a594bd4996
   PayPal-iOS-SDK: d23a5c671f293e07d1a52884943268c43b7ef99d
-  PEPhotoCropEditor: ec3d241673c914d5c561166d00cd07f6b91194e8
   SDWebImage: 116e88633b5b416ea0ca4b334a4ac59cf72dd38d
   Stripe: 935d0ff491100ca1ba0f4040c64e449c5ed69f6d
   SVProgressHUD: da7a49e789af645d9279ffbca62318945a832438
   UICKeyChainStore: 4f9719600cc70025064e26f28f1210bcfc3b0c35
-  UIColor-HexString: a9eabf02c1a2f9036ed6ac9cb2a3ea086f3b39e4
-  UIDevice+Hardware: db9535abce6661648c306ec2345777cbd0f45939
   UIImageView+FadeIn: 678537843457cd2597f55bd970364afa3646086c
 
 COCOAPODS: 0.35.0
