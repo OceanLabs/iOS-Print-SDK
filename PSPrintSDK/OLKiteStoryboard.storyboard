@@ -27,7 +27,7 @@
                                 <constraints>
                                     <constraint firstAttribute="height" constant="45" id="5cU-59-DcO"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
@@ -108,6 +108,29 @@
                         <sections>
                             <tableViewSection id="IyO-bD-JER">
                                 <cells>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="0tJ-V3-zfn">
+                                        <rect key="frame" x="0.0" y="472" width="320" height="235"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="0tJ-V3-zfn" id="2JI-BB-VTj">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="235"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <imageView contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="frame_1x1_off" translatesAutoresizingMaskIntoConstraints="NO" id="zXH-yE-Inb">
+                                                    <rect key="frame" x="0.0" y="0.0" width="320" height="233"/>
+                                                    <gestureRecognizers/>
+                                                    <connections>
+                                                        <outletCollection property="gestureRecognizers" destination="7vV-LQ-iYI" appends="YES" id="VcF-wC-rbJ"/>
+                                                    </connections>
+                                                </imageView>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstAttribute="trailing" secondItem="zXH-yE-Inb" secondAttribute="trailing" id="PnP-nW-thN"/>
+                                                <constraint firstItem="zXH-yE-Inb" firstAttribute="top" secondItem="2JI-BB-VTj" secondAttribute="top" id="qPo-3g-bzh"/>
+                                                <constraint firstItem="zXH-yE-Inb" firstAttribute="leading" secondItem="2JI-BB-VTj" secondAttribute="leading" id="v3b-0O-AlU"/>
+                                                <constraint firstAttribute="bottom" secondItem="zXH-yE-Inb" secondAttribute="bottom" constant="2" id="z3u-B6-zxb"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="WRO-FU-A57">
                                         <rect key="frame" x="0.0" y="2" width="320" height="235"/>
                                         <autoresizingMask key="autoresizingMask"/>
@@ -200,6 +223,11 @@
                 <tapGestureRecognizer id="cXE-AY-kGB">
                     <connections>
                         <segue destination="xas-Kj-aIZ" kind="push" identifier="Selected4x4FrameStyleSegue" id="f3M-i8-Sjn"/>
+                    </connections>
+                </tapGestureRecognizer>
+                <tapGestureRecognizer id="7vV-LQ-iYI">
+                    <connections>
+                        <segue destination="xas-Kj-aIZ" kind="push" identifier="Selected1x1FrameStyleSegue" id="BSU-O3-UVa"/>
                     </connections>
                 </tapGestureRecognizer>
             </objects>
@@ -963,6 +991,7 @@
     <resources>
         <image name="button_arrow_down" width="45" height="45"/>
         <image name="button_arrow_up" width="45" height="45"/>
+        <image name="frame_1x1_off" width="320" height="233"/>
         <image name="frame_2x2_off" width="320" height="233"/>
         <image name="frame_3x3_off" width="320" height="233"/>
         <image name="frame_4x4_off" width="320" height="233"/>
@@ -976,7 +1005,7 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="f3M-i8-Sjn"/>
+        <segue reference="BSU-O3-UVa"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" red="0.0" green="0.52941179275512695" blue="1" alpha="1" colorSpace="deviceRGB"/>
 </document>

@@ -47,6 +47,13 @@
             }
         }
     }
+    else if ([segue.identifier isEqualToString:@"Selected1x1FrameStyleSegue"]){
+        for (OLProduct *product in products){
+            if (product.templateType == kOLTemplateTypeFrame){
+                vc.product = product;
+            }
+        }
+    }
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
