@@ -13,6 +13,7 @@
 #import "OLKitePrintSDK.h"
 #import "OLProduct.h"
 #import "OLProductOverviewViewController.h"
+#import "OLPosterSizeSelectionViewController.h"
 
 @interface OLKiteViewController ()
 
@@ -64,13 +65,14 @@
     if (!self.navigationController){
         self.nextVc = [sb instantiateViewControllerWithIdentifier:nextVcNavIdentifier];
         ((UINavigationController *)self.nextVc).topViewController.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(dismiss)];
-        [(id)self.nextVc setAssets:self.assets];
+        [(id)((UINavigationController *)self.nextVc).topViewController setAssets:self.assets];
         if (product){
-            [(id)self.nextVc setProduct:product];
+            [(id)((UINavigationController *)self.nextVc).topViewController setProduct:product];
         }
         [self.view addSubview:self.nextVc.view];
     }
     else{
+        CGFloat standardiOSBarsHeight = self.navigationController.navigationBar.frame.size.height + [UIApplication sharedApplication].statusBarFrame.size.height;
         self.nextVc = [sb instantiateViewControllerWithIdentifier:nextVcIdentifier];
         [(id)self.nextVc setAssets:self.assets];
         if (product){
@@ -79,7 +81,7 @@
         [self.view addSubview:self.nextVc.view];
         UIView *dummy = [self.view snapshotViewAfterScreenUpdates:YES];
         if ([self.nextVc isKindOfClass:[UITableViewController class]]){
-            dummy.transform = CGAffineTransformMakeTranslation(0, self.navigationController.navigationBar.frame.size.height + [UIApplication sharedApplication].statusBarFrame.size.height);
+            dummy.transform = CGAffineTransformMakeTranslation(0, standardiOSBarsHeight);
         }
         [self.view addSubview:dummy];
         
@@ -91,6 +93,27 @@
     [self dismissViewControllerAnimated:YES completion:^{
     }];
     
+}
+
++ (BOOL)singleProductEnabled{
+    NSArray *products = [OLKitePrintSDK enabledProducts];
+    if (!products || [products count] == 0){
+        return NO;
+    }
+    if ([products count] == 1){
+        return YES;
+    }
+    BOOL includesFrames = NO;
+    BOOL includesLargeFormat = NO;
+    for (OLProduct *product in products){
+        if (product.templateType == kOLTemplateTypeFrame || product.templateType == kOLTemplateTypeFrame2x2 || product.templateType == kOLTemplateTypeFrame3x3 || product.templateType == kOLTemplateTypeFrame4x4){
+            includesFrames = YES;
+        }
+        else if (product.templateType == kOLTemplateTypeLargeFormatA1 || product.templateType == kOLTemplateTypeLargeFormatA2 || product.templateType == kOLTemplateTypeLargeFormatA3){
+            includesLargeFormat = YES;
+        }
+    }
+    return includesLargeFormat != includesFrames; //XOR
 }
 
 @end

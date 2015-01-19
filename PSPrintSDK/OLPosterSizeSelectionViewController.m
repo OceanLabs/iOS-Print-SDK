@@ -9,6 +9,7 @@
 #import "OLPosterSizeSelectionViewController.h"
 #import "OLProduct.h"
 #import "OLPosterViewController.h"
+#import "OLKiteViewController.h"
 
 static UIColor *deselectedColor;
 
@@ -88,6 +89,19 @@ static UIColor *deselectedColor;
     }
     else if (firstButton == self.deluxeBtn){
         [self pressedDeluxe:nil];
+    }
+}
+
+-(void)viewDidAppear:(BOOL)animated{
+    if (self.navigationController){
+        NSMutableArray *navigationStack = self.navigationController.viewControllers.mutableCopy;
+        if (navigationStack.count > 1 && [navigationStack[navigationStack.count - 2] isKindOfClass:[OLKiteViewController class]]) {
+            OLKiteViewController *kiteVc = navigationStack[navigationStack.count - 2];
+            if (!kiteVc.presentingViewController){
+                [navigationStack removeObject:kiteVc];
+                self.navigationController.viewControllers = navigationStack;
+            }
+        }
     }
 }
 
