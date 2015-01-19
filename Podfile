@@ -6,6 +6,5 @@ pod 'UICKeyChainStore', '~> 1.0.4'
 pod 'Stripe', '2.2.0'
 pod 'Stripe/ApplePay'
 pod 'OLImageEditor', :head
-pod 'InstagramImagePicker', :head
-pod 'FacebookImagePicker', :head
+pod 'UIImageView+FadeIn'
 pod 'LXReorderableCollectionViewFlowLayout'

@@ -12,8 +12,6 @@
 #import "OLAsset.h"
 #import "OLCheckoutViewController.h"
 #import "OLProductPrintJob.h"
-#import "OLInstagramImage.h"
-#import "OLFacebookImage.h"
 #import "OLConstants.h"
 #import "OLImageEditorViewController.h"
 #import "OLCheckoutDelegate.h"
@@ -146,11 +144,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     // URL and the user did not manipulate it in any way.
     NSMutableArray *photoAssets = [[NSMutableArray alloc] init];
     for (OLPrintPhoto *photo in userSelectedPhotosAndExtras) {
-        if ((photo.type == kPrintPhotoAssetTypeOLFacebookPhoto
-             || photo.type == kPrintPhotoAssetTypeOLInstagramPhoto)
-            && CGAffineTransformIsIdentity(photo.transform)) {
-            [photoAssets addObject:[OLAsset assetWithURL:[photo.asset fullURL]]];
-        } else if(photo.type == kPrintPhotoAssetTypeOLAsset && CGAffineTransformIsIdentity(photo.transform)){
+        if(photo.type == kPrintPhotoAssetTypeOLAsset && CGAffineTransformIsIdentity(photo.transform)){
             [photoAssets addObject:photo.asset];
         } else {
             [photoAssets addObject:[OLAsset assetWithDataSource:photo]];

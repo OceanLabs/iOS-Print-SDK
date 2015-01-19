@@ -8,11 +8,9 @@
 
 #import "OLPrintPhoto.h"
 #import <AssetsLibrary/AssetsLibrary.h>
-#import <OLInstagramImage.h>
-#import <OLFacebookImage.h>
-#import <UIImageView+FadeIn.h>
 #import <SDWebImageManager.h>
 #import "OLAsset+Private.h"
+#import <UIImageView+FadeIn.h>
 
 static NSString *const kKeyType = @"co.oceanlabs.psprintstudio.kKeyType";
 static NSString *const kKeyAsset = @"co.oceanlabs.psprintstudio.kKeyAsset";
@@ -73,13 +71,8 @@ static NSString *const kKeyServerImageSize = @"co.oceanlabs.psprintstudio.kKeySe
     _asset = asset;
     if ([asset isKindOfClass:[ALAsset class]]) {
         _type = kPrintPhotoAssetTypeALAsset;
-    } else if ([asset isKindOfClass:[OLInstagramImage class]]) {
-        _type = kPrintPhotoAssetTypeOLInstagramPhoto;
-        //[self downloadFullImageWithProgress:nil completion:nil];
-    } else if ([asset isKindOfClass:[OLFacebookImage class]]) {
-        _type = kPrintPhotoAssetTypeOLFacebookPhoto;
-        //[self downloadFullImageWithProgress:nil completion:nil];
-    } else if ([asset isKindOfClass:[OLAsset class]]){
+    }
+    else if ([asset isKindOfClass:[OLAsset class]]){
         _type = kPrintPhotoAssetTypeOLAsset;
     }
 }
@@ -99,12 +92,7 @@ static NSString *const kKeyServerImageSize = @"co.oceanlabs.psprintstudio.kKeySe
             }];
         }
     } else {
-        if (self.type == kPrintPhotoAssetTypeOLInstagramPhoto) {
-            [imageView setAndFadeInImageWithURL:[self.asset fullURL]];
-        } else if (self.type == kPrintPhotoAssetTypeOLFacebookPhoto) {
-            OLFacebookImage *fbImage = self.asset;
-            [imageView setAndFadeInImageWithURL:[fbImage bestURLForSize:CGSizeMake(imageView.frame.size.width * [UIScreen mainScreen].scale, imageView.frame.size.height * [UIScreen mainScreen].scale)]];
-        } else if (self.type == kPrintPhotoAssetTypeOLAsset){
+        if (self.type == kPrintPhotoAssetTypeOLAsset){
             OLAsset *asset = (OLAsset *)self.asset;
             
             if (asset.assetType == kOLAssetTypeRemoteImageURL){
@@ -141,11 +129,6 @@ static NSString *const kKeyServerImageSize = @"co.oceanlabs.psprintstudio.kKeySe
         if (self.type == kPrintPhotoAssetTypeALAsset) {
             ALAsset *asset = (ALAsset *)self.asset;
             imageView.image = [UIImage imageWithCGImage:asset.thumbnail];
-        } else if (self.type == kPrintPhotoAssetTypeOLInstagramPhoto) {
-            [imageView setAndFadeInImageWithURL:[self.asset thumbURL]];
-        } else if (self.type == kPrintPhotoAssetTypeOLFacebookPhoto) {
-            OLFacebookImage *fbImage = self.asset;
-            [imageView setAndFadeInImageWithURL:[fbImage bestURLForSize:CGSizeMake(220, 220)]];
         }
     }
 }
@@ -161,26 +144,6 @@ static NSString *const kKeyServerImageSize = @"co.oceanlabs.psprintstudio.kKeySe
     return retVal;
 }
 
-- (void)downloadFullImageWithProgress:(OLImageEditorImageGetImageProgressHandler)progressHandler completion:(OLImageEditorImageGetImageCompletionHandler)completionHandler {
-    if (progressHandler) progressHandler(0.05f); // small bit of fake inital progress to get progress bars displaying
-    [[SDWebImageManager sharedManager] downloadWithURL:[self.asset fullURL]
-                                               options:0
-                                              progress:^(NSInteger receivedSize, NSInteger expectedSize) {
-                                                  dispatch_async(dispatch_get_main_queue(), ^{
-                                                      if (progressHandler) {
-                                                          progressHandler(MAX(0.05f, receivedSize / (float) expectedSize));
-                                                      }
-                                                  });
-                                              }
-                                             completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished) {
-                                                 dispatch_async(dispatch_get_main_queue(), ^{
-                                                     if (finished) {
-                                                         if (completionHandler) completionHandler(image);
-                                                     }
-                                                 });
-                                             }];
-}
-
 #pragma mark - OLImageEditorImage protocol methods
 
 - (void)getImageWithProgress:(OLImageEditorImageGetImageProgressHandler)progressHandler completion:(OLImageEditorImageGetImageCompletionHandler)completionHandler {
@@ -190,8 +153,6 @@ static NSString *const kKeyServerImageSize = @"co.oceanlabs.psprintstudio.kKeySe
             UIImage* image = [UIImage imageWithCGImage:[[self.asset defaultRepresentation] fullScreenImage]];
             completionHandler(image);
         });
-    } else if (self.type == kPrintPhotoAssetTypeOLFacebookPhoto || self.type == kPrintPhotoAssetTypeOLInstagramPhoto) {
-        [self downloadFullImageWithProgress:progressHandler completion:completionHandler];
     }
     else if (self.type == kPrintPhotoAssetTypeOLAsset){
         OLAsset *asset = (OLAsset *)self.asset;
@@ -235,17 +196,7 @@ static NSString *const kKeyServerImageSize = @"co.oceanlabs.psprintstudio.kKeySe
         dispatch_async(dispatch_get_main_queue(), ^{
             handler([self.asset defaultRepresentation].size, nil);
         });
-    } else if (self.type == kPrintPhotoAssetTypeOLFacebookPhoto || self.type == kPrintPhotoAssetTypeOLInstagramPhoto) {
-        [[SDWebImageManager sharedManager] downloadWithURL:[self.asset fullURL]
-                                                   options:0
-                                                  progress:nil
-                                                 completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished) {
-                                                     if (finished) {
-                                                         NSUInteger length = UIImageJPEGRepresentation([OLImageEditorImage croppedImageWithImage:image transform:self.transform size:self.serverImageSize], 0.9).length;
-                                                         handler(length, error);
-                                                     }
-                                                 }];
-    } else if (self.type == kPrintPhotoAssetTypeOLAsset){
+    }  else if (self.type == kPrintPhotoAssetTypeOLAsset){
         [(OLAsset *)self.asset dataLengthWithCompletionHandler:handler];
     }
 }
@@ -264,20 +215,6 @@ static NSString *const kKeyServerImageSize = @"co.oceanlabs.psprintstudio.kKeySe
             UIImage *image = [UIImage imageWithCGImage:[rep fullResolutionImage] scale:rep.scale orientation:orientation];
             handler(UIImageJPEGRepresentation([OLImageEditorImage croppedImageWithImage:image transform:self.transform size:self.serverImageSize], 0.9), nil);
         });
-    } else if (self.type == kPrintPhotoAssetTypeOLFacebookPhoto || self.type == kPrintPhotoAssetTypeOLInstagramPhoto) {
-        [[SDWebImageManager sharedManager] downloadWithURL:[self.asset fullURL]
-                                                   options:0
-                                                  progress:nil
-                                                 completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished) {
-                                                         if (finished) {
-                                                             if (error) {
-                                                                 handler(nil, error);
-                                                             } else {
-                                                                 NSData *data = UIImageJPEGRepresentation([OLImageEditorImage croppedImageWithImage:image transform:self.transform size:self.serverImageSize], 0.9);
-                                                                 handler(data, error);
-                                                             }
-                                                         }
-                                                 }];
     } else if (self.type == kPrintPhotoAssetTypeOLAsset){
         OLAsset *asset = self.asset;
         if (CGAffineTransformIsIdentity(self.transform)){
