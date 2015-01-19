@@ -713,7 +713,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="xKd-Ph-d2e">
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" misplaced="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="xKd-Ph-d2e">
                                 <rect key="frame" x="150" y="230" width="20" height="20"/>
                             </activityIndicatorView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Hcx-YD-SLR">
@@ -797,7 +797,7 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <imageView clipsSubviews="YES" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="gRQ-xZ-368">
+                            <imageView clipsSubviews="YES" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gRQ-xZ-368">
                                 <rect key="frame" x="0.0" y="20" width="320" height="439"/>
                                 <gestureRecognizers/>
                                 <connections>
@@ -844,6 +844,7 @@
                             <constraint firstItem="n5R-FL-khI" firstAttribute="baseline" secondItem="c7e-Wo-NVf" secondAttribute="baseline" id="za0-Mt-qqc"/>
                         </constraints>
                     </view>
+                    <navigationItem key="navigationItem" id="gX3-Bf-5EU"/>
                     <connections>
                         <outlet property="classicBtn" destination="ISM-jH-rDT" id="7V1-Ql-xb0"/>
                         <outlet property="deluxeBtn" destination="ALg-Xy-p28" id="xAh-pn-FuD"/>
@@ -862,7 +863,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="2219" y="-522"/>
+            <point key="canvasLocation" x="2219" y="-558"/>
         </scene>
         <!--Poster View Controller-->
         <scene sceneID="zgh-jb-0R4">
@@ -928,7 +929,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="2624" y="-522"/>
+            <point key="canvasLocation" x="2624" y="-558"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="FZH-42-102">
@@ -947,6 +948,24 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="8sP-Ne-kl5" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1806" y="115"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="YpU-FP-0A6">
+            <objects>
+                <navigationController storyboardIdentifier="sizeSelectNavigationController" automaticallyAdjustsScrollViewInsets="NO" id="yZr-Az-jKf" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="ZeJ-wa-exk">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="CMl-an-8wL" kind="relationship" relationship="rootViewController" id="Y3H-kN-6df"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Boq-Ij-Vi6" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1815" y="-558"/>
         </scene>
     </scenes>
     <resources>

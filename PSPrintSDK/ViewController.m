@@ -27,6 +27,7 @@
 #import "OLAddress.h"
 #import "OLCheckoutDelegate.h"
 #import "OLKiteViewController.h"
+#import "OLProductTemplate.h"
 
 /**********************************************************************
  * Insert your API keys here. These are found under your profile 
@@ -132,6 +133,7 @@ static NSString *const kApplePayMerchantIDKey = @"merchant.co.oceanlabs.kite.ly"
     if (![self isAPIKeySet]) return;
     
     OLKiteViewController *vc = [[OLKiteViewController alloc] initWithAssets:assets];
+    vc.templateType = kOLTemplateTypeLargeFormatA;
     //    vc.delegate = self;
     //    [self presentViewController:vc animated:YES completion:NULL];
     [self.navigationController pushViewController:vc animated:YES];
