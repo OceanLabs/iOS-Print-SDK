@@ -115,7 +115,7 @@
 }
 
 -(void) doCheckout{
-    NSUInteger instagramPhotoCount = 0, facebookPhotoCount = 0, iphonePhotoCount = 0;
+    NSUInteger iphonePhotoCount = 0;
     for (OLPrintPhoto *photo in self.posterPhotos) {
         if (photo.type == kPrintPhotoAssetTypeALAsset) ++iphonePhotoCount;
     }
