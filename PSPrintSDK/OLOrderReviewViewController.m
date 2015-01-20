@@ -18,6 +18,7 @@
 #import "UITableViewController+ScreenWidthFactor.h"
 #import "OLProductTemplate.h"
 #import "OLProduct.h"
+#import "OLCircleMaskTableViewCell.h"
 
 static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 
@@ -67,24 +68,6 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
                                                                              style:UIBarButtonItemStyleBordered
                                                                             target:nil
                                                                             action:nil];
-}
-
--(void)viewDidLayoutSubviews{
-    if (self.product.templateType == kOLTemplateTypeStickersCircle){
-        for (NSUInteger i = 1; i < [self.tableView numberOfRowsInSection:0]; i++){
-            UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]];
-            if (!cell){
-                continue;
-            }
-            UIImageView *imageView = (UIImageView *)[cell.contentView viewWithTag:10];
-            UIView *circleMaskView = [cell.contentView viewWithTag:89];
-            CAShapeLayer *aCircle=[CAShapeLayer layer];
-            aCircle.path=[UIBezierPath bezierPathWithRoundedRect:circleMaskView.bounds cornerRadius:circleMaskView.frame.size.height/2].CGPath;
-            
-            aCircle.fillColor=[UIColor blackColor].CGColor;
-            imageView.layer.mask=aCircle;
-        }
-    }
 }
 
 -(NSUInteger) totalNumberOfExtras{
@@ -266,10 +249,9 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
         return cell;
     }
     
-    
-    UITableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:@"reviewPhotoCell"];
+    OLCircleMaskTableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:@"reviewPhotoCell"];
     if (!cell) {
-        cell = [[UITableViewCell alloc] init];
+        cell = [[OLCircleMaskTableViewCell alloc] init];
     }
     
     UIImageView *cellImage = (UIImageView *)[cell.contentView viewWithTag:10];
@@ -293,6 +275,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
         
         UIImageView *backImageView = (UIImageView *)[cell.contentView viewWithTag:88];
         [((OLPrintPhoto*)[self.userSelectedPhotos objectAtIndex:indexPath.row-1]) setThumbImageIdealSizeForImageView:backImageView];
+        cell.enableMask = YES;
     }
 
     

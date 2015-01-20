@@ -413,7 +413,7 @@
                                 </tableViewCellContentView>
                                 <color key="backgroundColor" red="0.92549019610000005" green="0.93725490199999995" blue="0.94901960780000005" alpha="1" colorSpace="calibratedRGB"/>
                             </tableViewCell>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="reviewPhotoCell" rowHeight="349" id="Nfs-D8-uSC">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="reviewPhotoCell" rowHeight="349" id="Nfs-D8-uSC" customClass="OLCircleMaskTableViewCell">
                                 <rect key="frame" x="0.0" y="62" width="320" height="349"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Nfs-D8-uSC" id="yvX-sN-w8r">
@@ -430,9 +430,9 @@
                                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" tag="88" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="HRc-wZ-Tzl">
                                             <rect key="frame" x="35" y="15" width="250" height="250"/>
                                         </imageView>
-                                        <view hidden="YES" tag="89" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pyH-09-uz7">
+                                        <view hidden="YES" tag="89" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pyH-09-uz7" userLabel="Mask View">
                                             <rect key="frame" x="35" y="15" width="250" height="250"/>
-                                            <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.5" colorSpace="calibratedRGB"/>
+                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         </view>
                                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" tag="10" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="TYP-hs-JYh">
                                             <rect key="frame" x="35" y="15" width="250" height="250"/>
