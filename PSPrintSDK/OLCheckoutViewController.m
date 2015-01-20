@@ -122,11 +122,12 @@ static const NSUInteger kInputFieldTag = 99;
     
     UILabel *kiteLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 100, 40, 40)];
     kiteLabel.text = NSLocalizedString(@"Powered by Kite.ly", @"");
-    [kiteLabel sizeToFit];
-    kiteLabel.frame = CGRectMake(10, [UIScreen mainScreen].bounds.size.height - self.navigationController.navigationBar.frame.size.height - kiteLabel.frame.size.height - [[UIApplication sharedApplication] statusBarFrame].size.height,kiteLabel.frame.size.width, kiteLabel.frame.size.height);
     kiteLabel.font = [UIFont systemFontOfSize:13];
-    kiteLabel.textColor = [UIColor darkGrayColor];
+    kiteLabel.textColor = [UIColor lightGrayColor];
     [self.view addSubview:kiteLabel];
+    [kiteLabel sizeToFit];
+    kiteLabel.frame = CGRectMake(([UIScreen mainScreen].bounds.size.width - kiteLabel.frame.size.width) / 2, [UIScreen mainScreen].bounds.size.height - self.navigationController.navigationBar.frame.size.height - kiteLabel.frame.size.height - [[UIApplication sharedApplication] statusBarFrame].size.height - 20, kiteLabel.frame.size.width, kiteLabel.frame.size.height);
+    
 }
 
 - (void)onButtonCancelClicked {
