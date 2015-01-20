@@ -59,6 +59,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 @property (strong, nonatomic) UITextField *promoTextField;
 @property (strong, nonatomic) UIButton *promoApplyButton;
 @property (strong, nonatomic) UIButton *payWithCreditCardButton;
+@property (strong, nonatomic) UILabel *poweredByKiteLabel;
 
 #ifdef OL_KITE_OFFER_APPLE_PAY
 @property (strong, nonatomic) UIButton *payWithApplePayButton;
@@ -165,14 +166,6 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     self.payWithPayPalButton.backgroundColor = [UIColor colorWithRed:74 / 255.0f green:137 / 255.0f blue:220 / 255.0f alpha:1.0];
 #endif
     
-    UILabel *kiteLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 0, 40, 40)];
-    kiteLabel.text = NSLocalizedString(@"Powered by Kite.ly", @"");
-    [kiteLabel sizeToFit];
-    kiteLabel.frame = CGRectMake(10, 148 - heightDiff, kiteLabel.frame.size.width, kiteLabel.frame.size.height);
-    kiteLabel.font = [UIFont systemFontOfSize:13];
-    kiteLabel.textColor = [UIColor darkGrayColor];
-    maxY = CGRectGetMaxY(kiteLabel.frame);
-    
 #ifdef OL_KITE_OFFER_APPLE_PAY
     self.payWithApplePayButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 44)];
     self.payWithApplePayButton.backgroundColor = [UIColor blackColor];
@@ -180,9 +173,17 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     [self.payWithApplePayButton setTitle:NSLocalizedStringFromTableInBundle(@"Pay with Pay", @"KitePrintSDK", [OLConstants bundle], @"") forState:UIControlStateNormal];
 #endif
     
+    self.poweredByKiteLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 100, 40, 40)];
+    self.poweredByKiteLabel.text = NSLocalizedString(@"Powered by Kite.ly", @"");
+    self.poweredByKiteLabel.font = [UIFont systemFontOfSize:13];
+    self.poweredByKiteLabel.textColor = [UIColor lightGrayColor];
+    [self.poweredByKiteLabel sizeToFit];
+    self.poweredByKiteLabel.frame = CGRectMake((self.view.frame.size.width - self.poweredByKiteLabel.frame.size.width) / 2, 168 - heightDiff, self.poweredByKiteLabel.frame.size.width, self.poweredByKiteLabel.frame.size.height);
+    maxY = CGRectGetMaxY(self.poweredByKiteLabel.frame);
+    
     UIView *footer = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, maxY)];
     [footer addSubview:self.payWithCreditCardButton];
-    [footer addSubview:kiteLabel];
+    [footer addSubview:self.poweredByKiteLabel];
 
 #ifdef OL_KITE_OFFER_PAYPAL
     [footer addSubview:self.payWithPayPalButton];
@@ -284,9 +285,23 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         self.completedTemplateSyncSuccessfully = YES;
         self.loadingTemplatesView.hidden = YES;
         [self.tableView reloadData];
+        [self positionPoweredByKiteLabel];
     } else {
         self.loadingTemplatesView.hidden = NO;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onTemplateSyncCompleted:) name:kNotificationTemplateSyncComplete object:nil];
+    }
+}
+
+- (void)positionPoweredByKiteLabel {
+    // position Powered by Kite label dynamically based on content size
+    CGRect tvFrame = self.tableView.frame;
+    CGFloat height = tvFrame.size.height - (self.tableView.contentSize.height - self.tableView.tableHeaderView.frame.size.height);
+
+    if (height > self.tableView.tableFooterView.frame.size.height) {
+        CGRect frame = self.tableView.tableFooterView.frame;
+        self.tableView.tableFooterView.frame = CGRectMake(frame.origin.x, frame.origin.y, frame.size.width, height);
+        frame = self.poweredByKiteLabel.frame;
+        self.poweredByKiteLabel.frame = CGRectMake(frame.origin.x, height - frame.size.height, frame.size.width, frame.size.height);
     }
 }
 
@@ -304,6 +319,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     if (!syncCompletionError) {
         self.completedTemplateSyncSuccessfully = YES;
         [self.tableView reloadData];
+        [self positionPoweredByKiteLabel];
         [UIView animateWithDuration:0.3 animations:^{
             self.loadingTemplatesView.alpha = 0;
         } completion:^(BOOL finished) {
