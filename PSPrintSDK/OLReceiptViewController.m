@@ -201,7 +201,7 @@ static const NSUInteger kSectionErrorRetry = 2;
             OLProductTemplate *template = [OLProductTemplate templateWithId:job.templateId];
             if ([job.templateId isEqualToString:@"ps_postcard"] || [job.templateId isEqualToString:@"60_postcards"]) {
                 cell.textLabel.text = [NSString stringWithFormat:@"%lu x %@", (unsigned long)self.printOrder.jobs.count, job.productName];
-            } else if ([job.templateId isEqualToString:@"frames_2"] || [job.templateId isEqualToString:@"frames_3"] || [job.templateId isEqualToString:@"frames_4"]) {
+            } else if ([job.templateId isEqualToString:@"frames_2x2"] || [job.templateId isEqualToString:@"frames_3x3"] || [job.templateId isEqualToString:@"frames_4x4"] || [job.templateId hasPrefix:@"frames"]) {
                 cell.textLabel.text = [NSString stringWithFormat:@"%lu x %@", (unsigned long) (job.quantity + template.quantityPerSheet - 1 ) / template.quantityPerSheet, job.productName];
             } else if ([job.templateId containsString:@"poster"]){
                 cell.textLabel.text = [NSString stringWithFormat:@"%lu x %@", (unsigned long) (job.quantity + template.quantityPerSheet - 1 ) / template.quantityPerSheet, job.productName];
