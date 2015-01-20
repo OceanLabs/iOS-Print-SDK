@@ -9,7 +9,7 @@
 #import "OLProduct.h"
 #import "OLCountry.h"
 #import "OLProductTemplate.h"
-#import <UIImageView+WebCache.h>
+#import "UIImageView+FadeIn.h"
 
 typedef enum {
     kSizeUnitsInches,
@@ -99,10 +99,10 @@ typedef enum {
         imageView.image = image;
     }
     else if ([self.coverImage isKindOfClass:[NSURL class]]){
-        [imageView sd_setImageWithPreviousCachedImageWithURL:self.coverImage andPlaceholderImage:nil options:SDWebImageRetryFailed progress:NULL completed:NULL];
+        [imageView setAndFadeInImageWithURL:self.coverImage];
     }
     else{
-        [imageView sd_setImageWithPreviousCachedImageWithURL:self.productTemplate.coverImageURL andPlaceholderImage:nil options:SDWebImageRetryFailed progress:NULL completed:NULL];
+        [imageView setAndFadeInImageWithURL:self.productTemplate.coverImageURL];
     }
 }
 
@@ -119,10 +119,10 @@ typedef enum {
         [imageView setImage:image];
     }
     else if ([self.productPhotos[i] isKindOfClass:[NSURL class]]){
-        [imageView sd_setImageWithPreviousCachedImageWithURL:self.productPhotos[i] andPlaceholderImage:nil options:SDWebImageRetryFailed progress:NULL completed:NULL];
+        [imageView setAndFadeInImageWithURL:self.productPhotos[i]];
     }
     else{
-        [imageView sd_setImageWithPreviousCachedImageWithURL:self.productTemplate.productsPhotoURLs[i % [self.productTemplate.productsPhotoURLs count]] andPlaceholderImage:nil options:SDWebImageRetryFailed progress:NULL completed:NULL];
+        [imageView setAndFadeInImageWithURL:self.productTemplate.productsPhotoURLs[i % [self.productTemplate.productsPhotoURLs count]]];
     }
 }
 
