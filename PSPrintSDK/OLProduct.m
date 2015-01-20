@@ -159,6 +159,9 @@ typedef enum {
     else if (self.templateType == kOLTemplateTypeFrame2x2){
         return 4;
     }
+    else if (self.templateType == kOLTemplateTypeFrame){
+        return 1;
+    }
     
     OLProductTemplate *template = [OLProductTemplate templateWithId:self.templateId];
     return template.quantityPerSheet == 0 ? 1 : template.quantityPerSheet;
