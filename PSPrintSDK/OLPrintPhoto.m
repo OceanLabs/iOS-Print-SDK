@@ -222,10 +222,10 @@ static NSString *const kKeyServerImageSize = @"co.oceanlabs.psprintstudio.kKeySe
         }
         else{
             if (asset.assetType == kOLAssetTypeRemoteImageURL){
-                [[SDWebImageManager sharedManager] downloadWithURL:[asset imageURL]
+                [[SDWebImageManager sharedManager] downloadImageWithURL:[asset imageURL]
                                                            options:0
                                                           progress:nil
-                                                         completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished) {
+                                                         completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *url) {
                                                              if (finished) {
                                                                  if (error) {
                                                                      handler(nil, error);

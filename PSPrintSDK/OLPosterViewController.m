@@ -106,15 +106,12 @@
     cropVc.delegate = self;
     cropVc.aspectRatio = [(UIView *)self.imageViews[0] frame].size.height / [(UIView *)self.imageViews[0] frame].size.width;
     if (((OLAsset *)((OLPrintPhoto *)[self.userSelectedPhotos objectAtIndex:0]).asset).assetType == kOLAssetTypeRemoteImageURL){
-        [[SDWebImageManager sharedManager] downloadWithURL:[((OLAsset *)((OLPrintPhoto *)[self.userSelectedPhotos objectAtIndex:0]).asset) imageURL]
-                                                   options:0
-                                                  progress:nil
-                                                 completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished) {
-                                                     if (finished) {
-                                                         [cropVc setFullImage:image];
-                                                         [self presentViewController:nav animated:YES completion:NULL];
-                                                     }
-                                                 }];
+        [[SDWebImageManager sharedManager] downloadImageWithURL:[((OLAsset *)((OLPrintPhoto *)[self.userSelectedPhotos objectAtIndex:0]).asset) imageURL] options:0 progress:nil completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *url) {
+            if (finished) {
+                [cropVc setFullImage:image];
+                [self presentViewController:nav animated:YES completion:NULL];
+            }
+        }];
     }
     else{
         [[self.userSelectedPhotos objectAtIndex:0] dataWithCompletionHandler:^(NSData *data, NSError *error){
