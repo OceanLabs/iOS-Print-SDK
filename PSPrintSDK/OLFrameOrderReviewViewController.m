@@ -9,11 +9,14 @@
 #import "OLFrameOrderReviewViewController.h"
 #import "OLPrintPhoto.h"
 #import "OLProduct.h"
+#import "OLAsset+Private.h"
+#import <SDWebImageManager.h>
 
-@interface OLFrameOrderReviewViewController ()
+@interface OLFrameOrderReviewViewController () <OLScrollCropViewControllerDelegate>
 
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *confirmBarButton;
 @property (strong, nonatomic) NSMutableArray* framePhotos;
+@property (weak, nonatomic) OLPrintPhoto *editingPrintPhoto;
 
 @end
 
@@ -61,11 +64,27 @@ NSInteger margin = 2;
     
     NSIndexPath* indexPath = [collectionView indexPathForItemAtPoint:[gestureRecognizer locationInView:collectionView]];
     
-    OLPrintPhoto *printPhoto = self.framePhotos[(tableIndexPath.row - 1) * self.product.quantityToFulfillOrder + indexPath.row];
-    OLImageEditorViewController *imageEditor = [[OLImageEditorViewController alloc] init];
-    imageEditor.image = printPhoto;
-    imageEditor.delegate = self;
-    [self presentViewController:imageEditor animated:YES completion:nil];
+    self.editingPrintPhoto = self.framePhotos[(tableIndexPath.row - 1) * self.product.quantityToFulfillOrder + indexPath.row];
+    self.editingPrintPhoto.asset = self.assets[(tableIndexPath.row - 1) * self.product.quantityToFulfillOrder + indexPath.row];
+    
+    UINavigationController *nav = [self.storyboard instantiateViewControllerWithIdentifier:@"CropViewNavigationController"];
+    OLScrollCropViewController *cropVc = (id)nav.topViewController;
+    cropVc.delegate = self;
+    cropVc.aspectRatio = 1;
+    if (((OLAsset *)(self.editingPrintPhoto.asset)).assetType == kOLAssetTypeRemoteImageURL){
+        [[SDWebImageManager sharedManager] downloadImageWithURL:[((OLAsset *)(self.editingPrintPhoto.asset)) imageURL] options:0 progress:nil completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *url) {
+            if (finished) {
+                [cropVc setFullImage:image];
+                [self presentViewController:nav animated:YES completion:NULL];
+            }
+        }];
+    }
+    else{
+        [[self.userSelectedPhotos objectAtIndex:0] dataWithCompletionHandler:^(NSData *data, NSError *error){
+            [cropVc setFullImage:[UIImage imageWithData:data]];
+            [self presentViewController:nav animated:YES completion:NULL];
+        }];
+    }
 }
 
 -(void)changeOrderOfPhotosInArray:(NSMutableArray*)array{
@@ -92,13 +111,6 @@ NSInteger margin = 2;
     [self changeOrderOfPhotosInArray:self.extraCopiesOfAssets];
     
     [super doCheckout];
-}
-
-- (void)imageEditor:(OLImageEditorViewController *)imageEditorVC userDidDeleteImage:(id<OLImageEditorImage>)image{
-    [self dismissViewControllerAnimated:YES completion:^(void){
-    [self.navigationController popViewControllerAnimated:YES];
-//        [self.userSelectedPhotos removeObject:image];
-    }];
 }
 
 #pragma mark Button Actions
@@ -254,6 +266,12 @@ NSInteger margin = 2;
     object = [self.extraCopiesOfAssets objectAtIndex:trueFromIndex];
     [self.extraCopiesOfAssets removeObjectAtIndex:trueFromIndex];
     [self.extraCopiesOfAssets insertObject:object atIndex:trueToIndex];
+}
+
+-(void)userDidCropImage:(UIImage *)croppedImage{
+    self.editingPrintPhoto.asset = [OLAsset assetWithImageAsJPEG:croppedImage];
+    
+    [self.tableView reloadData];
 }
 
 @end

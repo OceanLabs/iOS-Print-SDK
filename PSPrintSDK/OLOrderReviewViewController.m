@@ -13,18 +13,20 @@
 #import "OLCheckoutViewController.h"
 #import "OLProductPrintJob.h"
 #import "OLConstants.h"
-#import "OLImageEditorViewController.h"
 #import "OLCheckoutDelegate.h"
 #import "UITableViewController+ScreenWidthFactor.h"
 #import "OLProductTemplate.h"
 #import "OLProduct.h"
 #import "OLCircleMaskTableViewCell.h"
+#import "OLAsset+Private.h"
+#import <SDWebImageManager.h>
 
 static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 
 @interface OLOrderReviewViewController () <OLCheckoutDelegate>
 
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *confirmBarButton;
+@property (weak, nonatomic) OLPrintPhoto *editingPrintPhoto;
 
 @end
 
@@ -119,7 +121,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     // URL and the user did not manipulate it in any way.
     NSMutableArray *photoAssets = [[NSMutableArray alloc] init];
     for (OLPrintPhoto *photo in userSelectedPhotosAndExtras) {
-        if(photo.type == kPrintPhotoAssetTypeOLAsset && CGAffineTransformIsIdentity(photo.transform)){
+        if(photo.type == kPrintPhotoAssetTypeOLAsset){
             [photoAssets addObject:photo.asset];
         } else {
             [photoAssets addObject:[OLAsset assetWithDataSource:photo]];
@@ -214,12 +216,27 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     }
     NSIndexPath* indexPath = [self.tableView indexPathForCell:(UITableViewCell*)cell];
     
-    OLPrintPhoto *printPhoto = self.userSelectedPhotos[indexPath.row - 1];
-    OLImageEditorViewController *imageEditor = [[OLImageEditorViewController alloc] init];
-    imageEditor.image = printPhoto;
-    imageEditor.delegate = self;
-    imageEditor.hidesDeleteIcon = YES;
-    [self presentViewController:imageEditor animated:YES completion:nil];
+    self.editingPrintPhoto = self.userSelectedPhotos[indexPath.row - 1];
+    self.editingPrintPhoto.asset = self.assets[indexPath.row - 1];
+    
+    UINavigationController *nav = [self.storyboard instantiateViewControllerWithIdentifier:@"CropViewNavigationController"];
+    OLScrollCropViewController *cropVc = (id)nav.topViewController;
+    cropVc.delegate = self;
+    cropVc.aspectRatio = 1;
+    if (((OLAsset *)(self.editingPrintPhoto.asset)).assetType == kOLAssetTypeRemoteImageURL){
+        [[SDWebImageManager sharedManager] downloadImageWithURL:[((OLAsset *)(self.editingPrintPhoto.asset)) imageURL] options:0 progress:nil completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *url) {
+            if (finished) {
+                [cropVc setFullImage:image];
+                [self presentViewController:nav animated:YES completion:NULL];
+            }
+        }];
+    }
+    else{
+        [[self.userSelectedPhotos objectAtIndex:0] dataWithCompletionHandler:^(NSData *data, NSError *error){
+            [cropVc setFullImage:[UIImage imageWithData:data]];
+            [self presentViewController:nav animated:YES completion:NULL];
+        }];
+    }
 }
 
 - (IBAction)onButtonNextClicked:(UIBarButtonItem *)sender {
@@ -320,27 +337,10 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 
 #pragma mark - OLImageEditorViewControllerDelegate methods
 
-- (void)imageEditorUserDidCancel:(OLImageEditorViewController *)imageEditorVC {
-    [self dismissViewControllerAnimated:YES completion:nil];
-}
-
-- (void)imageEditor:(OLImageEditorViewController *)imageEditorVC userDidDeleteImage:(id<OLImageEditorImage>)image {
-    [self dismissViewControllerAnimated:YES completion:nil];
+-(void)userDidCropImage:(UIImage *)croppedImage{
+    self.editingPrintPhoto.asset = [OLAsset assetWithImageAsJPEG:croppedImage];
     
-    // Remove button pressed.
-//    [self.userSelectedPhotos removeObject:image];
     [self.tableView reloadData];
-    
-    
-    [self onUserSelectedPhotoCountChange];
-}
-
-- (void)imageEditor:(OLImageEditorViewController *)editor userDidSuccessfullyCropImage:(id<OLImageEditorImage>)image {
-    OLPrintPhoto *printPhoto = (OLPrintPhoto *) image;
-    [printPhoto unloadImage]; // clear cache as we have new cropped image...
-    [self.tableView reloadData];
-    [self dismissViewControllerAnimated:YES completion:nil];
-    
 }
 
 @end

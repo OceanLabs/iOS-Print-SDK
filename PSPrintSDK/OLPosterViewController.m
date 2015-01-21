@@ -8,7 +8,6 @@
 
 #import "OLPosterViewController.h"
 #import "OLPrintPhoto.h"
-#import <OLImageEditorViewController.h>
 #import "OLProductPrintJob.h"
 #import "OLCheckoutViewController.h"
 #import "OLConstants.h"
@@ -17,7 +16,7 @@
 #import <SDWebImageManager.h>
 #import "OLAsset+Private.h"
 
-@interface OLPosterViewController () <OLImageEditorViewControllerDelegate, UINavigationControllerDelegate, OLScrollCropViewControllerDelegate>
+@interface OLPosterViewController () <UINavigationControllerDelegate, OLScrollCropViewControllerDelegate>
 
 @property (strong, nonatomic) NSMutableArray *imageViews;
 @property (strong, nonatomic) NSMutableArray *posterPhotos;
@@ -131,7 +130,7 @@
     // URL and the user did not manipulate it in any way.
     NSMutableArray *photoAssets = [[NSMutableArray alloc] init];
     for (OLPrintPhoto *photo in self.posterPhotos) {
-        if(photo.type == kPrintPhotoAssetTypeOLAsset && CGAffineTransformIsIdentity(photo.transform)){
+        if(photo.type == kPrintPhotoAssetTypeOLAsset){
             [photoAssets addObject:photo.asset];
         }
         else {
@@ -169,19 +168,5 @@
     [self reloadImageViews];
     
 }
-
-//- (void)imageEditorUserDidCancel:(OLImageEditorViewController *)imageEditorVC {
-//    [self dismissViewControllerAnimated:YES completion:nil];
-//}
-
-- (void)imageEditor:(OLImageEditorViewController *)editor userDidSuccessfullyCropImage:(id<OLImageEditorImage>)image {
-    OLPrintPhoto *printPhoto = (OLPrintPhoto *) image;
-    
-    // Clear cache as we have new cropped image and reload all of the images.
-    [printPhoto unloadImage];
-    [self reloadImageViews];
-    [self dismissViewControllerAnimated:YES completion:nil];
-}
-
 
 @end
