@@ -13,8 +13,11 @@
 #import "OLCheckoutViewController.h"
 #import "OLConstants.h"
 #import "OLProductTemplate.h"
+#import "OLScrollCropViewController.h"
+#import <SDWebImageManager.h>
+#import "OLAsset+Private.h"
 
-@interface OLPosterViewController () <OLImageEditorViewControllerDelegate, UINavigationControllerDelegate>
+@interface OLPosterViewController () <OLImageEditorViewControllerDelegate, UINavigationControllerDelegate, OLScrollCropViewControllerDelegate>
 
 @property (strong, nonatomic) NSMutableArray *imageViews;
 @property (strong, nonatomic) NSMutableArray *posterPhotos;
@@ -98,20 +101,27 @@
 }
 
 -(void)doCrop{
-    OLImageEditorViewController *imageEditor = [[OLImageEditorViewController alloc] init];
-    OLPrintPhoto *photo = self.posterPhotos[[self.selectedImage integerValue] - 1];
-    imageEditor.image = photo;
-    imageEditor.delegate = self;
-    imageEditor.hidesDeleteIcon = YES;
-    
-    // I don't know why this works, but it does. You need to times the image size by 2 in order to keep it accurate
-    // with the preview, the crop box and the ultimate image file.
-    // Elliott Minns - Wizard of the unknown. If you need to contact me, don't.
-    CGSize photoSize = CGSizeMake([self.product serverImageSize].width / 2, [self.product serverImageSize].height / 2);
-    
-    [imageEditor setCropboxGuideImageToSize:photoSize];
-    [self presentViewController:imageEditor animated:YES completion:nil];
-
+    UINavigationController *nav = [self.storyboard instantiateViewControllerWithIdentifier:@"CropViewNavigationController"];
+    OLScrollCropViewController *cropVc = (id)nav.topViewController;
+    cropVc.delegate = self;
+    cropVc.aspectRatio = [(UIView *)self.imageViews[0] frame].size.height / [(UIView *)self.imageViews[0] frame].size.width;
+    if (((OLAsset *)((OLPrintPhoto *)[self.userSelectedPhotos objectAtIndex:0]).asset).assetType == kOLAssetTypeRemoteImageURL){
+        [[SDWebImageManager sharedManager] downloadWithURL:[((OLAsset *)((OLPrintPhoto *)[self.userSelectedPhotos objectAtIndex:0]).asset) imageURL]
+                                                   options:0
+                                                  progress:nil
+                                                 completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished) {
+                                                     if (finished) {
+                                                         [cropVc setFullImage:image];
+                                                         [self presentViewController:nav animated:YES completion:NULL];
+                                                     }
+                                                 }];
+    }
+    else{
+        [[self.userSelectedPhotos objectAtIndex:0] dataWithCompletionHandler:^(NSData *data, NSError *error){
+            [cropVc setFullImage:[UIImage imageWithData:data]];
+            [self presentViewController:nav animated:YES completion:NULL];
+        }];
+    }
 }
 
 -(void) doCheckout{
@@ -153,9 +163,19 @@
 
 #pragma mark - OLImageEditorViewControllerDelegate methods
 
-- (void)imageEditorUserDidCancel:(OLImageEditorViewController *)imageEditorVC {
-    [self dismissViewControllerAnimated:YES completion:nil];
+-(void)userDidCropImage:(UIImage *)croppedImage{
+    OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
+    printPhoto.serverImageSize = [self.product serverImageSize];
+    printPhoto.asset = [OLAsset assetWithImageAsJPEG:croppedImage];
+    self.posterPhotos[0] = printPhoto;
+    
+    [self reloadImageViews];
+    
 }
+
+//- (void)imageEditorUserDidCancel:(OLImageEditorViewController *)imageEditorVC {
+//    [self dismissViewControllerAnimated:YES completion:nil];
+//}
 
 - (void)imageEditor:(OLImageEditorViewController *)editor userDidSuccessfullyCropImage:(id<OLImageEditorImage>)image {
     OLPrintPhoto *printPhoto = (OLPrintPhoto *) image;

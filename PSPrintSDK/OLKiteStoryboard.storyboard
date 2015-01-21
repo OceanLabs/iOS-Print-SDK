@@ -721,6 +721,56 @@
             </objects>
             <point key="canvasLocation" x="2624" y="797"/>
         </scene>
+        <!--Scroll Crop View Controller-->
+        <scene sceneID="FtM-aT-ojK">
+            <objects>
+                <viewController storyboardIdentifier="OLScrollCropViewController" id="lkU-BR-804" customClass="OLScrollCropViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="hcp-Sa-ZAv"/>
+                        <viewControllerLayoutGuide type="bottom" id="uNG-6s-nO8"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="onG-Z7-5X1">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nok-mW-saD" customClass="RMImageCropper">
+                                <rect key="frame" x="16" y="72" width="288" height="488"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="nok-mW-saD" secondAttribute="height" multiplier="36:61" id="ImC-Qv-Ju3"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="centerY" secondItem="nok-mW-saD" secondAttribute="centerY" constant="-32" id="19d-5d-NoX"/>
+                            <constraint firstItem="nok-mW-saD" firstAttribute="leading" secondItem="onG-Z7-5X1" secondAttribute="leading" priority="750" constant="8" id="3Zq-Wc-0ch"/>
+                            <constraint firstItem="nok-mW-saD" firstAttribute="top" secondItem="hcp-Sa-ZAv" secondAttribute="bottom" priority="750" constant="8" id="H4k-lK-38g"/>
+                            <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="nok-mW-saD" secondAttribute="trailing" constant="8" id="Nk1-0V-3vy"/>
+                            <constraint firstItem="uNG-6s-nO8" firstAttribute="top" secondItem="nok-mW-saD" secondAttribute="bottom" priority="750" constant="8" id="NuE-55-TZV"/>
+                            <constraint firstItem="nok-mW-saD" firstAttribute="top" relation="greaterThanOrEqual" secondItem="hcp-Sa-ZAv" secondAttribute="bottom" constant="8" id="Q1H-Oj-kvx"/>
+                            <constraint firstItem="nok-mW-saD" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="onG-Z7-5X1" secondAttribute="leading" constant="8" id="cKh-Hz-uSr"/>
+                            <constraint firstAttribute="trailing" secondItem="nok-mW-saD" secondAttribute="trailing" priority="750" constant="8" id="cbV-yc-5n7"/>
+                            <constraint firstAttribute="centerX" secondItem="nok-mW-saD" secondAttribute="centerX" id="hIf-lk-h6P"/>
+                            <constraint firstItem="uNG-6s-nO8" firstAttribute="top" relation="greaterThanOrEqual" secondItem="nok-mW-saD" secondAttribute="bottom" constant="8" id="yAk-ch-LPF"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="NhS-TZ-HPH">
+                        <barButtonItem key="rightBarButtonItem" style="done" systemItem="done" id="aaW-gc-Vdq">
+                            <connections>
+                                <action selector="onBarButtonDoneTapped:" destination="lkU-BR-804" id="NXp-XE-gc5"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="aspectRatioConstraint" destination="ImC-Qv-Ju3" id="p9Y-jB-by8"/>
+                        <outlet property="cropView" destination="nok-mW-saD" id="qFn-PP-Pwf"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="qG7-3J-9cO" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3565" y="797"/>
+        </scene>
         <!--Poster Size Selection View Controller-->
         <scene sceneID="YYl-13-A7C">
             <objects>
@@ -986,6 +1036,24 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Boq-Ij-Vi6" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1815" y="-558"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="86d-z2-lD3">
+            <objects>
+                <navigationController storyboardIdentifier="CropViewNavigationController" automaticallyAdjustsScrollViewInsets="NO" id="Bet-2z-dgQ" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="pca-I4-4Tb">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="lkU-BR-804" kind="relationship" relationship="rootViewController" id="IJM-Zl-NLK"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="SiN-kc-Q1U" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3033" y="797"/>
         </scene>
     </scenes>
     <resources>
