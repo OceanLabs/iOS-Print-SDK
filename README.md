@@ -17,7 +17,7 @@ Use print to unlock hidden revenue streams and add value for your users. *In und
 - Square Prints
 - Postcards
 - A4 (invoices, letters, etc)
-- New products being added monthly 
+- New products being added monthly
 
 ## Features
 - Print a wide variety of [products](#products) on demand
@@ -51,11 +51,15 @@ pod "Kite-Print-SDK/PayPal", "~> 1.0"
 
 ## Use Cases
 
-The Print SDK supports two primary use cases: **Managed Checkout** and **Custom Checkout**.
+The Print SDK supports three primary use cases: **Full**, **Managed Checkout**, and **Custom Checkout**.
+
+### Full
+
+Full mode presents a complete print shop user interface, including a list of available products, beautiful product photography, a chance for the user to review their pics, crop them and lay them out on the product.
 
 ### Managed Checkout
 
-The Print SDK includes a robust checkout and payment experience that's proven to convert well with users. It can take care of the entire checkout process for you, no need to spend time building any user interfaces. 
+The Print SDK includes a robust checkout and payment experience that's proven to convert well with users. It can take care of the entire checkout process for you, no need to spend time building any user interfaces.
 
 This is the quickest approach to integration and perfect if you don't want to spend a great deal of time building a custom checkout experience.  To use it:
 
@@ -63,9 +67,8 @@ This is the quickest approach to integration and perfect if you don't want to sp
 2. [Create and present a `OLCheckoutViewController`](docs/managed_checkout.md) passing it the `OLPrintOrder` object created in Step 1
 3. [Register your payment details](https://www.kite.ly/accounts/billing/) with us so that we can pay you when your users place orders
 
-
 ### Custom Checkout
-You can build your own UI if you don't want to use or customize the provided checkout and payment experience. You can still use the Print SDK to handle the print order creation and submission: 
+You can build your own UI if you don't want to use or customize the provided checkout and payment experience. You can still use the Print SDK to handle the print order creation and submission:
 
 1. [Create a print order](docs/create_print_order.md) representing the product(s) you wish to have printed and posted
 2. [Set the shipping address](docs/shipping.md) to which the order will be delivered
@@ -85,7 +88,7 @@ When you're ready to test the end to end printing and postage process; and befor
 
 ### Live
 
-Your Live API Key is used to submit print orders to our servers that will be printed and posted to the recipient specified. Live orders cost real money. This cost typically passed on to your end user (although this doesn't have to be the case if you want to cover it yourself). 
+Your Live API Key is used to submit print orders to our servers that will be printed and posted to the recipient specified. Live orders cost real money. This cost typically passed on to your end user (although this doesn't have to be the case if you want to cover it yourself).
 
 Logging in to our [Developer Dashboard](https://www.kite.ly) allow's you to dynamically change the end user price i.e. the revenue you want to make on every order. Payment in several currencies is supported so that you can easily localize prices for your users. The dashboard also provides an overview of print order volume and the money you're making.
 
@@ -99,4 +102,3 @@ Logging in to our [Developer Dashboard](https://www.kite.ly) allow's you to dyna
 ## License
 
 Ps iOS Print Studio SDK is available under the MIT license. See the LICENSE file for more info.
-
