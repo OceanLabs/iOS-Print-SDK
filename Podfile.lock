@@ -45,12 +45,21 @@ DEPENDENCIES:
   - LXReorderableCollectionViewFlowLayout
   - OLImageEditor
   - PayPal-iOS-SDK (~> 2.4.2)
-  - RMImageCropper
+  - RMImageCropper (from `https://github.com/OceanLabs/RMImageCropper.git`)
   - SDWebImage
   - Stripe (= 2.2.0)
   - Stripe/ApplePay
   - SVProgressHUD
   - UICKeyChainStore (~> 1.0.4)
+
+EXTERNAL SOURCES:
+  RMImageCropper:
+    :git: https://github.com/OceanLabs/RMImageCropper.git
+
+CHECKOUT OPTIONS:
+  RMImageCropper:
+    :commit: 7b2b66d69f13f1195dcffae1d1730a3e8f33d591
+    :git: https://github.com/OceanLabs/RMImageCropper.git
 
 SPEC CHECKSUMS:
   AFNetworking: 0f54cb5d16ce38c1b76948faffb8d5fb705021c7
@@ -59,7 +68,7 @@ SPEC CHECKSUMS:
   LXReorderableCollectionViewFlowLayout: b4e25543263e27d4c147109ae5ead01cc9119f23
   OLImageEditor: 578c116e62dcb44e40c1ce48b9f48b3088768ee1
   PayPal-iOS-SDK: d23a5c671f293e07d1a52884943268c43b7ef99d
-  RMImageCropper: 27a4c329adec173ab3dfa278b4d2387b4eec9520
+  RMImageCropper: 3d65800cf55ba85786ac6aa6670ef9424c57d797
   SDWebImage: 116e88633b5b416ea0ca4b334a4ac59cf72dd38d
   Stripe: 935d0ff491100ca1ba0f4040c64e449c5ed69f6d
   SVProgressHUD: da7a49e789af645d9279ffbca62318945a832438
