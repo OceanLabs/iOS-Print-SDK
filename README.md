@@ -58,6 +58,8 @@ The Print SDK supports three primary use cases: **Full**, **Managed Checkout**, 
 
 ### Full
 
+![Kite](docs/print-shop1.jpg) ![Kite](docs/print-shop2.jpg)
+
 Full mode presents a complete print shop user interface, including a list of available products, beautiful product photography, a chance for the user to review their pics, crop them and lay them out on the product. To use it:
 
 1. [Create `OLAsset` objects](docs/create_asset_object.md) for the photo(s) you want to print

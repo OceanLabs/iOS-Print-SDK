@@ -22,7 +22,7 @@ Sample Code
 
      ```obj-c
     // SomeViewController.m
-    #import "OLKitePrintSDK.h"
+    #import "OLPrintSDK.h"
 
     @implementation SomeViewController
 
