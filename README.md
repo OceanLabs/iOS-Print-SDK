@@ -16,7 +16,10 @@ Use print to unlock hidden revenue streams and add value for your users. *In und
 - Polaroid Style Prints
 - Square Prints
 - Postcards
+- Frames
 - A4 (invoices, letters, etc)
+- Large Format (A3, A2, A1)
+- Square and Round Stickers
 - New products being added monthly
 
 ## Features
@@ -55,7 +58,12 @@ The Print SDK supports three primary use cases: **Full**, **Managed Checkout**, 
 
 ### Full
 
-Full mode presents a complete print shop user interface, including a list of available products, beautiful product photography, a chance for the user to review their pics, crop them and lay them out on the product.
+Full mode presents a complete print shop user interface, including a list of available products, beautiful product photography, a chance for the user to review their pics, crop them and lay them out on the product. To use it:
+
+1. [Create `OLAsset` objects](docs/create_asset_object.md) for the photo(s) you want to print
+2. Create an `NSArray` of the `OLAsset` object(s) created in step 1.
+3. [Create and present or push an `OLKiteViewController`](docs/OLKiteViewController.md) passing it the `NSArray` of `OLAsset` objects.
+4. _(Optional)_ [Customize `OLKitePrintSDK`](docs/OLKitePrintSDK.md) to limit which products are available to the user and provide custom photography for the available products.
 
 ### Managed Checkout
 
