@@ -188,6 +188,43 @@ typedef void (^OLImageEditorImageGetImageProgressHandler)(float progress);
     NSAssert(NO, @"Oops");
 }
 
++ (void)transform:(CGAffineTransform *)transform andSize:(CGSize *)size forOrientation:(UIImageOrientation)orientation {
+    *transform = CGAffineTransformIdentity;
+    BOOL transpose = NO;
+    
+    switch(orientation)
+    {
+        case UIImageOrientationUp:// EXIF 1
+        case UIImageOrientationUpMirrored:{ // EXIF 2
+        } break;
+        case UIImageOrientationDown: // EXIF 3
+        case UIImageOrientationDownMirrored: { // EXIF 4
+            *transform = CGAffineTransformMakeRotation(M_PI);
+        } break;
+        case UIImageOrientationLeftMirrored: // EXIF 5
+        case UIImageOrientationLeft: {// EXIF 6
+            *transform = CGAffineTransformMakeRotation(M_PI_2);
+            transpose = YES;
+        } break;
+        case UIImageOrientationRightMirrored: // EXIF 7
+        case UIImageOrientationRight: { // EXIF 8
+            *transform = CGAffineTransformMakeRotation(-M_PI_2);
+            transpose = YES;
+        } break;
+        default:
+            break;
+    }
+    
+    if(orientation == UIImageOrientationUpMirrored || orientation == UIImageOrientationDownMirrored ||
+       orientation == UIImageOrientationLeftMirrored || orientation == UIImageOrientationRightMirrored) {
+        *transform = CGAffineTransformScale(*transform, -1, 1);
+    }
+    
+    if(transpose) {
+        *size = CGSizeMake(size->height, size->width);
+    }
+}
+
 + (void)croppedImageWithEditorImage:(OLPrintPhoto *)editorImage size:(CGSize)destSize progress:(OLImageEditorImageGetImageProgressHandler)progressHandler completion:(OLImageEditorImageGetImageCompletionHandler)completionHandler {
     [editorImage getImageWithProgress:progressHandler completion:^(UIImage *image) {
         CGAffineTransform tr = editorImage.transform;
@@ -207,7 +244,7 @@ typedef void (^OLImageEditorImageGetImageProgressHandler)(float progress);
 + (UIImage *)croppedImageWithImage:(UIImage *)image transform:(CGAffineTransform)transform size:(CGSize)destSize initialCropboxSize:(CGSize)initialCropboxSize{
     CGSize sourceImageSize = CGSizeMake(image.size.width * image.scale, image.size.height * image.scale);
     CGAffineTransform orientationTransform = CGAffineTransformIdentity;
-//    [self transform:&orientationTransform andSize:&sourceImageSize forOrientation:image.imageOrientation];
+    [self transform:&orientationTransform andSize:&sourceImageSize forOrientation:image.imageOrientation];
     
     // Create a graphics context the size of the bounding rectangle
     UIImage *cropboxGuideImage = [UIImage imageNamed:@"cropbox_guide"];
