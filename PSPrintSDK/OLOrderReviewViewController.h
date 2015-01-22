@@ -7,12 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <OLImageEditorViewController.h>
 #import "OLPrintOrder.h"
+#import "OLScrollCropViewController.h"
 
 @class OLProduct;
 
-@interface OLOrderReviewViewController : UITableViewController <UITableViewDelegate, UITableViewDataSource, OLImageEditorViewControllerDelegate, UINavigationControllerDelegate>
+@interface OLOrderReviewViewController : UITableViewController <UITableViewDelegate, UITableViewDataSource, UINavigationControllerDelegate, OLScrollCropViewControllerDelegate>
 
 @property (nonatomic, strong) OLProduct *product;
 @property (strong, nonatomic) NSMutableArray* extraCopiesOfAssets;

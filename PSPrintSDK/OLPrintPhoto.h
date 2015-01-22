@@ -8,7 +8,6 @@
 
 #import <Foundation/Foundation.h>
 
-#import <OLImageEditorImage.h>
 #import "OLAsset.h"
 
 typedef enum {
@@ -16,7 +15,7 @@ typedef enum {
     kPrintPhotoAssetTypeOLAsset
 } PrintPhotoAssetType;
 
-@interface OLPrintPhoto : NSObject <OLImageEditorImage, OLAssetDataSource>
+@interface OLPrintPhoto : NSObject <OLAssetDataSource>
 
 - (void)setThumbImageForImageView:(UIImageView *)imageView;
 - (void) setThumbImageIdealSizeForImageView:(UIImageView *)imageView;

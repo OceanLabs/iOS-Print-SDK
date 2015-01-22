@@ -1,7 +1,7 @@
 Submitting a Print Order with Managed Checkout
 ==============
 
-The Print SDK includes a robust checkout and payment experience that's proven to convert well with users. It can take care of the entire checkout process for you, no need to spend time building any user interfaces. 
+The Print SDK includes a robust checkout and payment experience that's proven to convert well with users. It can take care of the entire checkout process for you, no need to spend time building any user interfaces.
 
 This is the quickest approach to integration and perfect if you don't want to spend any time building a custom checkout experience.
 
@@ -22,7 +22,7 @@ Sample Code
 
      ```obj-c
     // SomeViewController.m
-    #import "OLPSPrintSDK.h"
+    #import "OLPrintSDK.h"
 
     @implementation SomeViewController
 
@@ -30,7 +30,7 @@ Sample Code
         OLCheckoutViewController *vc = [[OLCheckoutViewController alloc] initWithPrintOrder:printOrder];
         [self.navigationController pushViewController:vc animated:YES];
     }
-    
+
     @end
     ```
 *Note: If you prefer you can also present the `OLCheckoutViewController` as a modal view controller rather than pushing it onto the navigation stack.*
