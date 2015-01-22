@@ -71,7 +71,7 @@ Full mode presents a complete print shop user interface, including a list of ava
 
 ### Managed Checkout
 
-![Kite](docs/checkout.jpg)
+<img src="docs/checkout.jpg" style="width: 320px;"/>
 
 The Print SDK includes a robust checkout and payment experience that's proven to convert well with users. It can take care of the entire checkout process for you, no need to spend time building any user interfaces.
 
