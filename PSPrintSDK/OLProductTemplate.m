@@ -212,7 +212,7 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
         case kOLTemplateTypeFrame2x2: return @[[NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/frames1%402x.jpg"]];
         case kOLTemplateTypeFrame3x3: return @[[NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/frames1%402x.jpg"]];
         case kOLTemplateTypeFrame4x4: return @[[NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/frames1%402x.jpg"]];
-        case kOLTemplateTypeFrame: return @[[NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/frames1%402x.jpg"]];
+        case kOLTemplateTypeFrame: return @[[NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/frames1%402x.jpg"], [NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/frames2%402x.jpg"]];
         case kOLTemplateTypePostcard: return @[[NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/postcards1%402x.jpg"], [NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/postcards2%402x.jpg"]];
         case kOLTemplateTypeLargeFormatA1: return @[[NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/A1.jpg"]];
         case kOLTemplateTypeLargeFormatA2: return @[[NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/A2.jpg"]];
