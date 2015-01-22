@@ -67,7 +67,11 @@ Full mode presents a complete print shop user interface, including a list of ava
 3. [Create and present or push an `OLKiteViewController`](docs/OLKiteViewController.md) passing it the `NSArray` of `OLAsset` objects.
 4. _(Optional)_ [Customize `OLKitePrintSDK`](docs/OLKitePrintSDK.md) to limit which products are available to the user and provide custom photography for the available products.
 
+*Note: Full mode includes the Managed Checkout flow described in the next section.*
+
 ### Managed Checkout
+
+![Kite](docs/checkout.jpg)
 
 The Print SDK includes a robust checkout and payment experience that's proven to convert well with users. It can take care of the entire checkout process for you, no need to spend time building any user interfaces.
 
