@@ -290,8 +290,6 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
         UIView *circleMaskView = [cell.contentView viewWithTag:89];
         circleMaskView.hidden = NO;
         
-        UIImageView *backImageView = (UIImageView *)[cell.contentView viewWithTag:88];
-        [((OLPrintPhoto*)[self.userSelectedPhotos objectAtIndex:indexPath.row-1]) setThumbImageIdealSizeForImageView:backImageView];
         cell.enableMask = YES;
     }
 

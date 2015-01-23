@@ -427,9 +427,6 @@
                                         <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="47f-lx-1I2">
                                             <rect key="frame" x="150" y="130" width="20" height="20"/>
                                         </activityIndicatorView>
-                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" tag="88" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="HRc-wZ-Tzl">
-                                            <rect key="frame" x="35" y="15" width="250" height="250"/>
-                                        </imageView>
                                         <view hidden="YES" tag="89" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pyH-09-uz7" userLabel="Mask View">
                                             <rect key="frame" x="35" y="15" width="250" height="250"/>
                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -514,17 +511,13 @@
                                         <constraint firstAttribute="bottom" secondItem="GDh-TS-oBz" secondAttribute="bottom" constant="69" id="Fbc-H0-rWb"/>
                                         <constraint firstItem="4J1-qF-jS9" firstAttribute="leading" secondItem="3xY-ZO-f5D" secondAttribute="trailing" constant="6" id="GgT-sE-2EX"/>
                                         <constraint firstItem="3xY-ZO-f5D" firstAttribute="leading" secondItem="uZ5-JB-PDG" secondAttribute="trailing" id="H0V-B3-fJa"/>
-                                        <constraint firstItem="TYP-hs-JYh" firstAttribute="leading" secondItem="HRc-wZ-Tzl" secondAttribute="leading" id="M6s-au-TRl"/>
                                         <constraint firstItem="uJT-7B-Llp" firstAttribute="top" secondItem="GDh-TS-oBz" secondAttribute="bottom" constant="5" id="MGR-77-G9W"/>
                                         <constraint firstItem="4J1-qF-jS9" firstAttribute="top" secondItem="GDh-TS-oBz" secondAttribute="bottom" constant="5" id="Ni3-aT-vgN"/>
                                         <constraint firstItem="3xY-ZO-f5D" firstAttribute="top" secondItem="GDh-TS-oBz" secondAttribute="bottom" constant="5" id="OWq-ed-L8d"/>
-                                        <constraint firstItem="TYP-hs-JYh" firstAttribute="trailing" secondItem="HRc-wZ-Tzl" secondAttribute="trailing" id="PCD-lP-7ow"/>
                                         <constraint firstItem="GDh-TS-oBz" firstAttribute="leading" secondItem="yvX-sN-w8r" secondAttribute="leading" constant="20" id="PIf-bv-8lk"/>
                                         <constraint firstAttribute="trailing" secondItem="GDh-TS-oBz" secondAttribute="trailing" constant="20" id="PbJ-Vy-5PS"/>
                                         <constraint firstItem="TYP-hs-JYh" firstAttribute="leading" secondItem="pyH-09-uz7" secondAttribute="leading" id="UhF-QM-Vxg"/>
                                         <constraint firstItem="TYP-hs-JYh" firstAttribute="bottom" secondItem="pyH-09-uz7" secondAttribute="bottom" id="VaV-lS-mQH"/>
-                                        <constraint firstItem="TYP-hs-JYh" firstAttribute="top" secondItem="HRc-wZ-Tzl" secondAttribute="top" id="YCS-nq-eId"/>
-                                        <constraint firstItem="TYP-hs-JYh" firstAttribute="bottom" secondItem="HRc-wZ-Tzl" secondAttribute="bottom" id="ZAw-Na-OUz"/>
                                         <constraint firstItem="TYP-hs-JYh" firstAttribute="top" secondItem="Wpc-Nz-XOK" secondAttribute="top" id="e34-EX-laU"/>
                                         <constraint firstItem="TYP-hs-JYh" firstAttribute="bottom" secondItem="Wpc-Nz-XOK" secondAttribute="bottom" id="fVr-27-uWY"/>
                                         <constraint firstAttribute="trailing" secondItem="TYP-hs-JYh" secondAttribute="trailing" constant="35" id="gxd-l8-pqz"/>
