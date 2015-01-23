@@ -22,5 +22,6 @@
 @property (weak, nonatomic) IBOutlet RMImageCropper *cropView;
 @property (assign, nonatomic) CGFloat aspectRatio;
 @property (weak, nonatomic) id<OLScrollCropViewControllerDelegate> delegate;
+@property (assign, nonatomic) BOOL enableCircleMask;
 
 @end

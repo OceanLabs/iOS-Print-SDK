@@ -18,8 +18,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-//    [self.cropView setFillRectWithColor:NO];
-//    [self.cropView setResizeScrollViewToImage:NO];
     [self.cropView setClipsToBounds:YES];
 }
 
@@ -34,12 +32,13 @@
 }
 
 -(void)viewDidLayoutSubviews{
-//    [self.cropView centerImage];
-}
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+    if (self.enableCircleMask){
+        CAShapeLayer *aCircle=[CAShapeLayer layer];
+        aCircle.path=[UIBezierPath bezierPathWithRoundedRect:self.cropView.bounds cornerRadius:self.cropView.frame.size.height/2].CGPath;
+        
+        aCircle.fillColor=[UIColor blackColor].CGColor;
+        self.cropView.layer.mask=aCircle;
+    }
 }
 
 - (IBAction)onBarButtonDoneTapped:(UIBarButtonItem *)sender {

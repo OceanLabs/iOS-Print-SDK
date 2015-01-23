@@ -221,6 +221,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     
     UINavigationController *nav = [self.storyboard instantiateViewControllerWithIdentifier:@"CropViewNavigationController"];
     OLScrollCropViewController *cropVc = (id)nav.topViewController;
+    cropVc.enableCircleMask = self.product.templateType == kOLTemplateTypeStickersCircle;
     cropVc.delegate = self;
     cropVc.aspectRatio = 1;
     if (((OLAsset *)(self.editingPrintPhoto.asset)).assetType == kOLAssetTypeRemoteImageURL){
