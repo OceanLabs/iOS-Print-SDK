@@ -44,7 +44,7 @@ NSInteger margin = 2;
     NSUInteger numOrders = (NSUInteger) floor(userSelectedAssetCount + self.product.quantityToFulfillOrder - 1) / self.product.quantityToFulfillOrder;
     NSUInteger duplicatesToFillOrder = numOrders * self.product.quantityToFulfillOrder - userSelectedAssetCount;
     for (NSUInteger i = 0; i < duplicatesToFillOrder; ++i) {
-        [self.framePhotos addObject:self.framePhotos[i % userSelectedAssetCount]];
+        [self.framePhotos addObject:self.userSelectedPhotos[i % userSelectedAssetCount]];
     }
     NSLog(@"Adding %lu duplicates to frame", (unsigned long)duplicatesToFillOrder);
     [super viewDidLoad];
@@ -65,7 +65,7 @@ NSInteger margin = 2;
     NSIndexPath* indexPath = [collectionView indexPathForItemAtPoint:[gestureRecognizer locationInView:collectionView]];
     
     self.editingPrintPhoto = self.framePhotos[(tableIndexPath.row - 1) * self.product.quantityToFulfillOrder + indexPath.row];
-    self.editingPrintPhoto.asset = self.assets[(tableIndexPath.row - 1) * self.product.quantityToFulfillOrder + indexPath.row];
+    self.editingPrintPhoto.asset = self.assets[((tableIndexPath.row - 1) * self.product.quantityToFulfillOrder + indexPath.row) % [self.assets count]];
     
     UINavigationController *nav = [self.storyboard instantiateViewControllerWithIdentifier:@"CropViewNavigationController"];
     OLScrollCropViewController *cropVc = (id)nav.topViewController;
