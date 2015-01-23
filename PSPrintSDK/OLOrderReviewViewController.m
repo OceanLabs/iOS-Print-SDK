@@ -83,7 +83,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 - (void)updateTitleBasedOnSelectedPhotoQuanitity {
     NSUInteger numOrders = 1 + (MAX(0, self.userSelectedPhotos.count - 1 + [self totalNumberOfExtras]) / self.product.quantityToFulfillOrder);
     NSUInteger quanityToFulfilOrder = numOrders * self.product.quantityToFulfillOrder;
-    self.title = [NSString stringWithFormat:@"%lu / %lu", self.userSelectedPhotos.count + [self totalNumberOfExtras], quanityToFulfilOrder];
+    self.title = [NSString stringWithFormat:@"%lu / %lu", (unsigned long) (self.userSelectedPhotos.count + [self totalNumberOfExtras]), (unsigned long)quanityToFulfilOrder];
 }
 
 -(BOOL) shouldGoToCheckout{
@@ -135,7 +135,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     for (NSUInteger i = 0; i < duplicatesToFillOrder; ++i) {
         [photoAssets addObject:photoAssets[i % userSelectedAssetCount]];
     }
-    NSLog(@"Adding %lu duplicates", duplicatesToFillOrder);
+    NSLog(@"Adding %lu duplicates", (unsigned long)duplicatesToFillOrder);
         
     NSDictionary *infoDict = [[NSBundle mainBundle] infoDictionary];
     NSString *appVersion = [infoDict objectForKey:@"CFBundleShortVersionString"];
@@ -182,7 +182,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     NSUInteger extraCopies = [self.extraCopiesOfAssets[indexPath.row - 1] integerValue] + 1;
     self.extraCopiesOfAssets[indexPath.row-1] = [NSNumber numberWithInteger:extraCopies];
     UILabel* countLabel = (UILabel *)[cellContentView viewWithTag:30];
-    [countLabel setText: [NSString stringWithFormat:@"%lu", extraCopies + 1]];
+    [countLabel setText: [NSString stringWithFormat:@"%lu", (unsigned long)extraCopies + 1]];
     
     [self updateTitleBasedOnSelectedPhotoQuanitity];
 }
@@ -203,7 +203,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     
     self.extraCopiesOfAssets[indexPath.row-1] = [NSNumber numberWithInteger:extraCopies];
     UILabel* countLabel = (UILabel *)[cellContentView viewWithTag:30];
-    [countLabel setText: [NSString stringWithFormat:@"%lu", extraCopies + 1]];
+    [countLabel setText: [NSString stringWithFormat:@"%lu", (unsigned long)extraCopies + 1]];
     
     [self updateTitleBasedOnSelectedPhotoQuanitity];
 }
@@ -278,7 +278,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     }
     
     UILabel *countLabel = (UILabel *)[cell.contentView viewWithTag:30];
-    [countLabel setText: [NSString stringWithFormat:@"%lu", 1+[((NSNumber*)[self.extraCopiesOfAssets objectAtIndex:indexPath.row-1]) integerValue]]];
+    [countLabel setText: [NSString stringWithFormat:@"%lu", (unsigned long)(1+[((NSNumber*)[self.extraCopiesOfAssets objectAtIndex:indexPath.row-1]) integerValue])]];
     countLabel.font = [UIFont fontWithName:@"MissionGothic-Black" size:18];
     
     UIButton* enhanceButton = (UIButton *)[cell.contentView viewWithTag:50];

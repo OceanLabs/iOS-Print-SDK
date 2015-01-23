@@ -7,27 +7,8 @@
 //
 
 #import "ViewController.h"
-#import "OLAddress.h"
-#import "OLCountry.h"
-#import "OLAssetUploadRequest.h"
-#import "OLPrintJob.h"
-#import "OLPrintOrder.h"
-#import "OLAddressPickerController.h"
-#import "OLCountryPickerController.h"
-#import "OLPayPalCard.h"
-#import "OLKitePrintSDK.h"
-#import "OLAsset.h"
-#import "OLURLDataSource.h"
-#import "OLProductPrintJob.h"
-#import "OLPostcardPrintJob.h"
-#import "OLCheckoutViewController.h"
-#import "OLProductTemplateSyncRequest.h"
-#import "OLProductTemplate.h"
 #import "ProductSelectionViewController.h"
-#import "OLAddress.h"
-#import "OLCheckoutDelegate.h"
-#import "OLKiteViewController.h"
-#import "OLProductTemplate.h"
+#import "OLKitePrintSDK.h"
 
 /**********************************************************************
  * Insert your API keys here. These are found under your profile 
@@ -70,6 +51,16 @@ static NSString *const kApplePayMerchantIDKey = @"merchant.co.oceanlabs.kite.ly"
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onUserSuppliedShippingDetails:) name:kOLNotificationUserSuppliedShippingDetails object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onUserCompletedPayment:) name:kOLNotificationUserCompletedPayment object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onPrintOrderSubmission:) name:kOLNotificationPrintOrderSubmission object:nil];
+    
+    
+    // Uncomment the following lines to only show a subset of the available products and customize the photography
+    /*
+     OLProduct *squares = [OLProduct productWithTemplateId:@"squares"];
+     OLProduct *magnets = [OLProduct productWithTemplateId:@"magnets"];
+     squares.coverImage = [NSURL URLWithString:@"http://psps.s3.amazonaws.com/sdk_static/1.jpg"];
+     squares.productPhotos = @[[NSURL URLWithString:@"http://psps.s3.amazonaws.com/sdk_static/2.jpg"]];
+     [OLKitePrintSDK setEnabledProducts:@[squares, magnets]];
+     */
 }
 
 - (BOOL)shouldAutorotate {

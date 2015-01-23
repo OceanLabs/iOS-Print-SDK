@@ -46,7 +46,7 @@ NSInteger margin = 2;
     for (NSUInteger i = 0; i < duplicatesToFillOrder; ++i) {
         [self.framePhotos addObject:self.framePhotos[i % userSelectedAssetCount]];
     }
-    NSLog(@"Adding %lu duplicates to frame", duplicatesToFillOrder);
+    NSLog(@"Adding %lu duplicates to frame", (unsigned long)duplicatesToFillOrder);
     [super viewDidLoad];
     self.extraCopiesOfAssets = [[NSMutableArray alloc] initWithCapacity:[self.framePhotos count]];
     for (int i = 0; i < [self.framePhotos count]; i++){
@@ -128,7 +128,7 @@ NSInteger margin = 2;
         self.extraCopiesOfAssets[(indexPath.row - 1) * self.product.quantityToFulfillOrder + i] = [NSNumber numberWithInteger:extraCopies];
     }
     UILabel* countLabel = (UILabel *)[cellContentView viewWithTag:30];
-    [countLabel setText: [NSString stringWithFormat:@"%lu", [countLabel.text integerValue] + 1]];
+    [countLabel setText: [NSString stringWithFormat:@"%lu", (unsigned long)[countLabel.text integerValue] + 1]];
     
 //    [self updateTitleBasedOnSelectedPhotoQuanitity];
 }
@@ -151,7 +151,7 @@ NSInteger margin = 2;
         self.extraCopiesOfAssets[(indexPath.row - 1) * self.product.quantityToFulfillOrder + i] = [NSNumber numberWithInteger:extraCopies];
     }
     UILabel* countLabel = (UILabel *)[cellContentView viewWithTag:30];
-    [countLabel setText: [NSString stringWithFormat:@"%lu", [countLabel.text integerValue] - 1]];
+    [countLabel setText: [NSString stringWithFormat:@"%lu", (unsigned long)[countLabel.text integerValue] - 1]];
     
 //    [self updateTitleBasedOnSelectedPhotoQuanitity];
 }
@@ -190,7 +190,7 @@ NSInteger margin = 2;
     }
     
     UILabel *countLabel = (UILabel *)[cell.contentView viewWithTag:30];
-    [countLabel setText: [NSString stringWithFormat:@"%lu", 1+[((NSNumber*)[self.extraCopiesOfAssets objectAtIndex:indexPath.row-1]) integerValue]]];
+    [countLabel setText: [NSString stringWithFormat:@"%lu", (unsigned long) (1+[((NSNumber*)[self.extraCopiesOfAssets objectAtIndex:indexPath.row-1]) integerValue])]];
     countLabel.font = [UIFont fontWithName:@"MissionGothic-Black" size:18];
     
     UICollectionView* collectionView = (UICollectionView*)[cell.contentView viewWithTag:100];

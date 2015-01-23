@@ -117,10 +117,10 @@
     static NSString *identifier = @"ProductCell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
     
-    UIImageView *cellImage = (UIImageView *)[cell.contentView viewWithTag:40];
+    UIImageView *cellImageView = (UIImageView *)[cell.contentView viewWithTag:40];
     
     OLProduct *product = self.products[indexPath.row];
-    [product setCoverImageToImageView:cellImage];
+    [product setCoverImageToImageView:cellImageView];
     
     UILabel *productTypeLabel = (UILabel *)[cell.contentView viewWithTag:300];
     if (product.templateType == kOLTemplateTypeLargeFormatA1 || product.templateType == kOLTemplateTypeLargeFormatA2 || product.templateType == kOLTemplateTypeLargeFormatA3){

@@ -22,6 +22,11 @@
 #import "OLPrintOrder+History.h"
 #import "OLProductTemplate.h"
 #import "OLConstants.h"
+#import "OLCheckoutDelegate.h"
+#import "OLKiteViewController.h"
+#import "OLProductTemplate.h"
+#import "OLProduct.h"
+
 
 @class OLPrintRequest;
 
