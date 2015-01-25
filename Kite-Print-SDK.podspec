@@ -7,7 +7,7 @@ Pod::Spec.new do |spec|
   spec.summary          = 'Easily add print on demand functionality to your app. Print magnets, photo prints, postcards, polaroids, A4, posters, stickers, etc.'
   spec.source           = {:git => 'https://github.com/OceanLabs/iOS-Print-SDK.git', :tag => '2.0.0'}
   spec.source_files     = ['PSPrintSDK/OL*.{h,m}', 'PSPrintSDK/CardIO*.h', 'PSPrintSDK/RMImageCropper/*.{h,m}', 'PSPrintSDK/Categories/*.{h,m}']
-  spec.resources        = ['PSPrintSDK/KitePrintSDK.xcassets', '*.lproj']
+  spec.resources        = ['PSPrintSDK/KitePrintSDK.xcassets', '*.lproj', 'PSPrintSDK/OLKiteStoryboard.storyboard']
   spec.dependency	'SDWebImage'
   spec.dependency	'SVProgressHUD'
   spec.dependency	'AFNetworking', '2.5.0'
