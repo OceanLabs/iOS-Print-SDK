@@ -104,4 +104,4 @@ Logging in to our [Developer Dashboard](https://www.kite.ly) allow's you to dyna
 
 ## License
 
-Ps iOS Print Studio SDK is available under the MIT license. See the LICENSE file for more info.
+Kite iOS Print Studio SDK is available under the MIT license. See the LICENSE file for more info.
