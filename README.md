@@ -56,31 +56,23 @@ pod "Kite-Print-SDK/PayPal", "~> 1.0"
 
 The Print SDK supports three primary use cases: **Full**, **Managed Checkout**, and **Custom Checkout**.
 
-### Full
+### Kite Print Shop User Experience
+
+The Kite Print SDK includes a robust product selection, photo editing and payment experience that's proven to convert well with users. It can take care of the entire process for you, no need to spend time building any user interfaces.
+
+This is the quickest approach to integration and perfect if you don't want to spend a great deal of time building a custom experience. You can be up & running within minutes!
 
 ![Kite](docs/print-shop1.jpg)
 
-Full mode presents a complete print shop user interface, including a list of available products, beautiful product photography, a chance for the user to review their pics, crop them and lay them out on the product. To use it:
+To use our Print Shop experience:
 
-1. [Create `OLAsset` objects](docs/create_asset_object.md) for the photo(s) you want to print
+1. [Create `OLAsset` objects](docs/create_asset_object.md) for the photo(s) you want to create products from
 2. Create an `NSArray` of the `OLAsset` object(s) created in step 1.
 3. [Create and present or push an `OLKiteViewController`](docs/OLKiteViewController.md) passing it the `NSArray` of `OLAsset` objects.
 4. _(Optional)_ [Customize `OLKitePrintSDK`](docs/OLKitePrintSDK.md) to limit which products are available to the user and provide custom photography for the available products.
 
-*Note: Full mode includes the Managed Checkout flow described in the next section.*
-
-### Managed Checkout
-
-The Print SDK includes a robust checkout and payment experience that's proven to convert well with users. It can take care of the entire checkout process for you, no need to spend time building any user interfaces.
-
-This is the quickest approach to integration and perfect if you don't want to spend a great deal of time building a custom checkout experience.  To use it:
-
-1. [Create a print order](docs/create_print_order.md) representing the product(s) you wish to have printed and posted
-2. [Create and present a `OLCheckoutViewController`](docs/managed_checkout.md) passing it the `OLPrintOrder` object created in Step 1
-3. [Register your payment details](https://www.kite.ly/accounts/billing/) with us so that we can pay you when your users place orders
-
-### Custom Checkout
-You can build your own UI if you don't want to use or customize the provided checkout and payment experience. You can still use the Print SDK to handle the print order creation and submission:
+### Custom User Experience
+You can build your own UI if you don't want to use or customize the provided Print Shop experience. You can still use the Print SDK to handle the print order creation and submission:
 
 1. [Create a print order](docs/create_print_order.md) representing the product(s) you wish to have printed and posted
 2. [Set the shipping address](docs/shipping.md) to which the order will be delivered

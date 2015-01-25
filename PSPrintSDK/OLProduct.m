@@ -88,18 +88,18 @@ typedef enum {
 
 -(void)setCoverImageToImageView:(UIImageView *)imageView{
     UIImage *image;
-    if ([self.coverImage isKindOfClass:[NSString class]]){
-        image = [UIImage imageNamed:self.coverImage];
+    if ([self.coverPhoto isKindOfClass:[NSString class]]){
+        image = [UIImage imageNamed:self.coverPhoto];
     }
-    else if ([self.coverImage isKindOfClass:[UIImage class]]){
-        image = self.coverImage;
+    else if ([self.coverPhoto isKindOfClass:[UIImage class]]){
+        image = self.coverPhoto;
     }
     
     if (image){
         imageView.image = image;
     }
-    else if ([self.coverImage isKindOfClass:[NSURL class]]){
-        [imageView setAndFadeInImageWithURL:self.coverImage];
+    else if ([self.coverPhoto isKindOfClass:[NSURL class]]){
+        [imageView setAndFadeInImageWithURL:self.coverPhoto];
     }
     else{
         [imageView setAndFadeInImageWithURL:self.productTemplate.coverImageURL];

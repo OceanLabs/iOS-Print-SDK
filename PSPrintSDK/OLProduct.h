@@ -13,7 +13,7 @@
 
 @property (strong, nonatomic) UIColor *labelColor;
 @property (strong, nonatomic) OLProductTemplate *productTemplate;
-@property (strong, nonatomic) id coverImage;
+@property (strong, nonatomic) id coverPhoto;
 @property (strong, nonatomic) NSArray *productPhotos;
 
 +(NSArray *)products;

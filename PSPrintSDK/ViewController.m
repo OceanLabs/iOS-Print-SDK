@@ -14,11 +14,11 @@
  * Insert your API keys here. These are found under your profile 
  * by logging in to the developer portal at http://kite.ly
  **********************************************************************/
-static NSString *const kAPIKeySandbox = @"a45bf7f39523d31aa1ca4ecf64d422b4d810d9c4"; // replace with your Sandbox API key found under the Profile section in the developer portal
+static NSString *const kAPIKeySandbox = @"ba171b0d91b1418fbd04f7b12af1e37e42d2cb1e"; // replace with your Sandbox API key found under the Profile section in the developer portal
 static NSString *const kAPIKeyLive = @"REPLACE_ME"; // replace with your Live API key found under the Profile section in the developer portal
 
-static NSString *const kStripePublishableKey = @"pk_test_6pRNASCoBOKtIshFeQd4XMUh"; //This is a test key. Replace with the live key here.
-static NSString *const kApplePayMerchantIDKey = @"merchant.co.oceanlabs.kite.ly"; //For internal use only.
+static NSString *const kStripePublishableKey = @"pk_test_6pRNASCoBOKtIshFeQd4XMUh"; // This is a test key. Replace with the live key here.
+static NSString *const kApplePayMerchantIDKey = @"merchant.co.oceanlabs.kite.ly"; // For internal use only.
 
 @interface ViewController () <UIImagePickerControllerDelegate, UINavigationControllerDelegate, ProductSelectionViewControllerDelegate, OLCheckoutDelegate>
 @property (nonatomic, weak) IBOutlet UISegmentedControl *environmentPicker;
@@ -57,7 +57,7 @@ static NSString *const kApplePayMerchantIDKey = @"merchant.co.oceanlabs.kite.ly"
     /*
      OLProduct *squares = [OLProduct productWithTemplateId:@"squares"];
      OLProduct *magnets = [OLProduct productWithTemplateId:@"magnets"];
-     squares.coverImage = [NSURL URLWithString:@"http://psps.s3.amazonaws.com/sdk_static/1.jpg"];
+     squares.coverPhoto = [NSURL URLWithString:@"http://psps.s3.amazonaws.com/sdk_static/1.jpg"];
      squares.productPhotos = @[[NSURL URLWithString:@"http://psps.s3.amazonaws.com/sdk_static/2.jpg"]];
      [OLKitePrintSDK setEnabledProducts:@[squares, magnets]];
      */
@@ -126,8 +126,8 @@ static NSString *const kApplePayMerchantIDKey = @"merchant.co.oceanlabs.kite.ly"
     OLKiteViewController *vc = [[OLKiteViewController alloc] initWithAssets:assets];
     vc.templateType = kOLTemplateTypeNoTemplate;
     //    vc.delegate = self;
-//        [self presentViewController:vc animated:YES completion:NULL];
-    [self.navigationController pushViewController:vc animated:YES];
+        [self presentViewController:vc animated:YES completion:NULL];
+    //[self.navigationController pushViewController:vc animated:YES];
 }
 
 #pragma mark - UIImagePickerControllerDelegate methods
