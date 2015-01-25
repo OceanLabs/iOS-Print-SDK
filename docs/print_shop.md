@@ -1,4 +1,4 @@
-Using the Kite Print Shop User Experience
+Print Shop User Experience
 ==============
 
 ![Kite](print-shop1.jpg)
