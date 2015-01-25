@@ -183,21 +183,21 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
 
 -(NSURL *)coverImageURL{
     switch ([OLProductTemplate templateTypeWithIdentifier:self.identifier]) {
-        case kOLTemplateTypeMagnets: return [NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/magnets.png"];
-        case kOLTemplateTypeMiniSquares: return [NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/mini%20squares.png"];
-        case kOLTemplateTypeSquares: return [NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/squares.png"];
-        case kOLTemplateTypeMiniPolaroids: return [NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/petite-polaroids.png"];
-        case kOLTemplateTypePolaroids: return [NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/polaroids.png"];
-        case kOLTemplateTypeFrame: return [NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/frames.png"];
-        case kOLTemplateTypeFrame2x2: return [NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/frames.png"];
-        case kOLTemplateTypeFrame3x3: return [NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/frames.png"];
-        case kOLTemplateTypeFrame4x4: return [NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/frames.png"];
-        case kOLTemplateTypePostcard: return [NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/postcards.png"];
-        case kOLTemplateTypeLargeFormatA1: return [NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/posters.png"];
-        case kOLTemplateTypeLargeFormatA2: return [NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/posters.png"];
-        case kOLTemplateTypeLargeFormatA3: return [NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/posters.png"];
-        case kOLTemplateTypeStickersCircle: return [NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/landscape-circle-stickers-notext.png"];
-        case kOLTemplateTypeStickersSquare: return [NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/landscape-square-stickers-notext.png"];
+        case kOLTemplateTypeMagnets: return [NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/magnets.jpg"];
+        case kOLTemplateTypeMiniSquares: return [NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/mini%20squares.jpg"];
+        case kOLTemplateTypeSquares: return [NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/squares.jpg"];
+        case kOLTemplateTypeMiniPolaroids: return [NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/petite-polaroids.jpg"];
+        case kOLTemplateTypePolaroids: return [NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/polaroids.jpg"];
+        case kOLTemplateTypeFrame: return [NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/frames.jpg"];
+        case kOLTemplateTypeFrame2x2: return [NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/frames.jpg"];
+        case kOLTemplateTypeFrame3x3: return [NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/frames.jpg"];
+        case kOLTemplateTypeFrame4x4: return [NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/frames.jpg"];
+        case kOLTemplateTypePostcard: return [NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/postcards.jpg"];
+        case kOLTemplateTypeLargeFormatA1: return [NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/posters.jpg"];
+        case kOLTemplateTypeLargeFormatA2: return [NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/posters.jpg"];
+        case kOLTemplateTypeLargeFormatA3: return [NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/posters.jpg"];
+        case kOLTemplateTypeStickersCircle: return [NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/landscape-circle-stickers-notext.jpg"];
+        case kOLTemplateTypeStickersSquare: return [NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/landscape-square-stickers-notext.jpg"];
         default: return nil;
     }
 }
