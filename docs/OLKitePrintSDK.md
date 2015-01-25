@@ -31,7 +31,7 @@ If you don't provide an array of products, then by default all active products a
 
 `OLProduct` objects can be further be customized with your own image that appears in the product list and in the product description by setting the following public properties.
 ```obj-c
-@property (strong, nonatomic) id coverImage;
+@property (strong, nonatomic) id coverPhoto;
 @property (strong, nonatomic) NSArray *productPhotos;
 ```
 These images can be in the form of:
