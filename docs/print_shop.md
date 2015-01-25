@@ -7,7 +7,7 @@ The Kite Print SDK includes a robust product selection, photo editing and paymen
 
 This is the quickest approach to integration and perfect if you don't want to spend a great deal of time building a custom experience. You can be up & running within minutes!
 
-If you don't want to use or customize the provided experience you can [build your own custom UI](../README.md#Custom-User-Experience).
+If you don't want to use or customize the provided experience you can [build your own custom UI](../README.md#custom-user-experience).
 
 _If you haven't already, see the [README](../README.md) for an initial overview and instructions for adding the SDK to your project._
 
@@ -65,4 +65,4 @@ Next Steps
 ----------
 
 - That's all there is to it from an integration perspective! Submitted print orders will appear in the [developer dashboard](https://www.kite.ly/). You'll also need to register your payment details with us in the dashboard so that we can pay you when your users place orders.
-- Alternatively you can [build your own custom checkout UI](../README.md#Custom-User-Experience) for complete control of the checkout and payment process.
+- Alternatively you can [build your own custom checkout UI](../README.md#custom-user-experience) for complete control of the checkout and payment process.
