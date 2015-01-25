@@ -46,7 +46,7 @@ Sample Code
 
      ```obj-c
     // SomeViewController.m
-    #import "OLPrintSDK.h"
+    #import <OLKitePrintSDK.h>
 
     @implementation SomeViewController
 
