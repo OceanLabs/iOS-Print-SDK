@@ -18,7 +18,7 @@ Use print to unlock hidden revenue streams and add value for your users. *In und
 - Postcards
 - Frames
 - A4 (invoices, letters, etc)
-- Large Format (A3, A2, A1)
+- Large Format Posters (A3, A2, A1)
 - Square and Round Stickers
 - New products being added monthly
 
