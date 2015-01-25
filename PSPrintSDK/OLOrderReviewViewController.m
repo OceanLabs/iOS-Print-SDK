@@ -8,7 +8,6 @@
 
 #import "OLOrderReviewViewController.h"
 #import "OLPrintPhoto.h"
-#import "AppDelegate.h"
 #import "OLAsset.h"
 #import "OLCheckoutViewController.h"
 #import "OLProductPrintJob.h"
