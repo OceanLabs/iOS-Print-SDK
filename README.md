@@ -43,33 +43,32 @@ Use print to unlock hidden revenue streams and add value for your users. *In und
 [CocoaPods](http://cocoapods.org) is a dependency manager for Objective-C, which automates and simplifies the process of using 3rd-party libraries like the Kite Print SDK in your projects. If you're using it just add the following to your Podfile:
 
 ```ruby
-pod "Kite-Print-SDK", "~> 1.0"
+pod "Kite-Print-SDK", "~> 2.0"
 ```
 
 If you'd like to offer your users the opportunity to pay via PayPal in the checkout process also add the following to your Podfile:
 
 ```ruby
-pod "Kite-Print-SDK/PayPal", "~> 1.0"
+pod "Kite-Print-SDK/PayPal", "~> 2.0"
 ```
 
 ## Use Cases
 
-The Print SDK supports three primary use cases: **Full**, **Managed Checkout**, and **Custom Checkout**.
+The Print SDK supports two primary use cases: **Kite Print Shop Experience**, and **Custom User Experience**.
 
 ### Kite Print Shop User Experience
 
-The Kite Print SDK includes a robust product selection, photo editing and payment experience that's proven to convert well with users. It can take care of the entire process for you, no need to spend time building any user interfaces.
+![Kite](docs/print-shop1.jpg)
+
+The Kite Print SDK includes a robust product selection, photo editing and payment experience that's proven to convert well with users. It can take care of everything for you, no need to spend time building any user interfaces.
 
 This is the quickest approach to integration and perfect if you don't want to spend a great deal of time building a custom experience. You can be up & running within minutes!
 
-![Kite](docs/print-shop1.jpg)
-
 To use our Print Shop experience:
 
-1. [Create `OLAsset` objects](docs/create_asset_object.md) for the photo(s) you want to create products from
-2. Create an `NSArray` of the `OLAsset` object(s) created in step 1.
-3. [Create and present or push an `OLKiteViewController`](docs/OLKiteViewController.md) passing it the `NSArray` of `OLAsset` objects.
-4. _(Optional)_ [Customize `OLKitePrintSDK`](docs/OLKitePrintSDK.md) to limit which products are available to the user and provide custom photography for the available products.
+1. [Create and present (or push) an `OLKiteViewController`](docs/print_shop.md) passing it an array of photos, we'll do the rest.
+2. [Register your payment details](https://www.kite.ly/accounts/billing/) with us so that we can pay you when your users place orders
+
 
 ### Custom User Experience
 You can build your own UI if you don't want to use or customize the provided Print Shop experience. You can still use the Print SDK to handle the print order creation and submission:
