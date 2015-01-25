@@ -14,8 +14,8 @@
  * Insert your API keys here. These are found under your profile 
  * by logging in to the developer portal at http://kite.ly
  **********************************************************************/
-static NSString *const kAPIKeySandbox = @"ba171b0d91b1418fbd04f7b12af1e37e42d2cb1e"; // replace with your Sandbox API key found under the Profile section in the developer portal
-static NSString *const kAPIKeyLive = @"REPLACE_ME"; // replace with your Live API key found under the Profile section in the developer portal
+static NSString *const kAPIKeySandbox = @"REPLACE_WITH_YOUR_API_KEY"; // replace with your Sandbox API key found under the Profile section in the developer portal
+static NSString *const kAPIKeyLive = @"REPLACE_WITH_YOUR_API_KEY"; // replace with your Live API key found under the Profile section in the developer portal
 
 static NSString *const kStripePublishableKey = @"pk_test_6pRNASCoBOKtIshFeQd4XMUh"; // This is a test key. Replace with the live key here.
 static NSString *const kApplePayMerchantIDKey = @"merchant.co.oceanlabs.kite.ly"; // For internal use only.
@@ -87,7 +87,7 @@ static NSString *const kApplePayMerchantIDKey = @"merchant.co.oceanlabs.kite.ly"
 }
 
 - (BOOL)isAPIKeySet {
-    if ([[self apiKey] isEqualToString:@"REPLACE_ME"]) {
+    if ([[self apiKey] isEqualToString:@"REPLACE_WITH_YOUR_API_KEY"]) {
         [[[UIAlertView alloc] initWithTitle:@"API Key Required" message:@"Set your API keys at the top of ViewController.m before you can print. This can be found under your profile at http://kite.ly" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
         return NO;
     }
@@ -110,16 +110,6 @@ static NSString *const kApplePayMerchantIDKey = @"merchant.co.oceanlabs.kite.ly"
     [self presentViewController:[[UINavigationController alloc] initWithRootViewController:vc] animated:YES completion:nil];
 }
 
-- (IBAction)onButtonPrintRemotePhotos:(id)sender {
-    if (![self isAPIKeySet]) return;
-//    [[[UIAlertView alloc] initWithTitle:@"Remote URLS" message:@"Change hardcoded remote image URLs in ViewController.m onButtonPrintRemotePhotos:" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
-    NSArray *assets = @[[OLAsset assetWithURL:[NSURL URLWithString:@"http://psps.s3.amazonaws.com/sdk_static/1.jpg"]],
-                        [OLAsset assetWithURL:[NSURL URLWithString:@"http://psps.s3.amazonaws.com/sdk_static/2.jpg"]],
-                        [OLAsset assetWithURL:[NSURL URLWithString:@"http://psps.s3.amazonaws.com/sdk_static/3.jpg"]],
-                        [OLAsset assetWithURL:[NSURL URLWithString:@"http://psps.s3.amazonaws.com/sdk_static/4.jpg"]]];
-    [self printWithAssets:assets];
-}
-
 - (void)printWithAssets:(NSArray *)assets {
     if (![self isAPIKeySet]) return;
     
@@ -128,6 +118,20 @@ static NSString *const kApplePayMerchantIDKey = @"merchant.co.oceanlabs.kite.ly"
     //    vc.delegate = self;
         [self presentViewController:vc animated:YES completion:NULL];
     //[self.navigationController pushViewController:vc animated:YES];
+}
+
+- (IBAction)onButtonPrintRemotePhotos:(id)sender {
+    if (![self isAPIKeySet]) return;
+    [[[UIAlertView alloc] initWithTitle:@"Remote URLS" message:@"Feel free to Change hardcoded remote image URLs in ViewController.m onButtonPrintRemotePhotos:" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+}
+
+#pragma mark - UIAlertViewDelegate methods
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    NSArray *assets = @[[OLAsset assetWithURL:[NSURL URLWithString:@"http://psps.s3.amazonaws.com/sdk_static/1.jpg"]],
+                        [OLAsset assetWithURL:[NSURL URLWithString:@"http://psps.s3.amazonaws.com/sdk_static/2.jpg"]],
+                        [OLAsset assetWithURL:[NSURL URLWithString:@"http://psps.s3.amazonaws.com/sdk_static/3.jpg"]],
+                        [OLAsset assetWithURL:[NSURL URLWithString:@"http://psps.s3.amazonaws.com/sdk_static/4.jpg"]]];
+    [self printWithAssets:assets];
 }
 
 #pragma mark - UIImagePickerControllerDelegate methods

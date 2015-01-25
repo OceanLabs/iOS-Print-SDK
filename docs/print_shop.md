@@ -16,7 +16,7 @@ Overview
 1. Initialise the SDK
 2. Create `OLAsset` objects for the photo(s) you want to turn into awesome personalised products
 3. Create and present a `OLKiteViewController` passing it the `OLAsset`(s) you created in Step 2
-4. _(Optional)_ [Customize `OLKitePrintSDK`](OLKitePrintSDK.md) to limit which products are available to the user and provide custom photography for the available products.
+4. _(Optional)_ Customize `OLKitePrintSDK` to limit which products are available to the user and provide custom photography for the available products.
 
 Sample Code
 -----------
@@ -60,6 +60,8 @@ Sample Code
     @end
     ```
 *Note: You can also present the `OLCheckoutViewController` as a modal view controller or  push it onto the navigation stack.*
+
+4. _(Optional)_ You can customize `OLKitePrintSDK` to limit which products are available to the user and provide custom photography for the available products. See [Customizing the `OLKitePrintSDK`](OLKitePrintSDK.md)
 
 Next Steps
 ----------
