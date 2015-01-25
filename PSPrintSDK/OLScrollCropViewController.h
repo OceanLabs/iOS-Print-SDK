@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <RMImageCropper.h>
+#import "RMImageCropper.h"
 
 @protocol OLScrollCropViewControllerDelegate <NSObject>
 

@@ -26,6 +26,8 @@
 		2EE3C8701A4AFB0C006446E2 /* OLKiteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EE3C86F1A4AFB0C006446E2 /* OLKiteViewController.m */; };
 		3A5ECAA2AA9D4F38934544CA /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 931ABE3568CB40F8892488E2 /* libPods.a */; };
 		3D17795A1A1E1D6800BE3E58 /* OLCreditCardCaptureViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D1779591A1E1D6800BE3E58 /* OLCreditCardCaptureViewController.m */; };
+		3D8122ED1A759F42004E7297 /* RMImageCropper.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D8122EA1A759F42004E7297 /* RMImageCropper.m */; };
+		3D8122EE1A759F42004E7297 /* UIView+RMUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D8122EC1A759F42004E7297 /* UIView+RMUtils.m */; };
 		3D818D171A6D6C7500795961 /* UIImageView+FadeIn.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D818D161A6D6C7500795961 /* UIImageView+FadeIn.m */; };
 		CD382E4A18EB7C6300127F95 /* OLJudoPayCard.m in Sources */ = {isa = PBXBuildFile; fileRef = CD382E4818EB7C6300127F95 /* OLJudoPayCard.m */; };
 		CD51972D196D41BD00734791 /* OLProductTemplates.plist in Resources */ = {isa = PBXBuildFile; fileRef = CD51972C196D41BD00734791 /* OLProductTemplates.plist */; };
@@ -154,6 +156,10 @@
 		3D1779571A1E076600BE3E58 /* CardIOViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CardIOViewDelegate.h; sourceTree = "<group>"; };
 		3D1779581A1E1D6800BE3E58 /* OLCreditCardCaptureViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLCreditCardCaptureViewController.h; sourceTree = "<group>"; };
 		3D1779591A1E1D6800BE3E58 /* OLCreditCardCaptureViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLCreditCardCaptureViewController.m; sourceTree = "<group>"; };
+		3D8122E91A759F42004E7297 /* RMImageCropper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RMImageCropper.h; path = RMImageCropper/RMImageCropper.h; sourceTree = "<group>"; };
+		3D8122EA1A759F42004E7297 /* RMImageCropper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RMImageCropper.m; path = RMImageCropper/RMImageCropper.m; sourceTree = "<group>"; };
+		3D8122EB1A759F42004E7297 /* UIView+RMUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIView+RMUtils.h"; path = "RMImageCropper/UIView+RMUtils.h"; sourceTree = "<group>"; };
+		3D8122EC1A759F42004E7297 /* UIView+RMUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIView+RMUtils.m"; path = "RMImageCropper/UIView+RMUtils.m"; sourceTree = "<group>"; };
 		3D818D151A6D6C7500795961 /* UIImageView+FadeIn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImageView+FadeIn.h"; sourceTree = "<group>"; };
 		3D818D161A6D6C7500795961 /* UIImageView+FadeIn.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+FadeIn.m"; sourceTree = "<group>"; };
 		931ABE3568CB40F8892488E2 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -320,6 +326,17 @@
 			name = CardIO;
 			sourceTree = "<group>";
 		};
+		3D8122E21A759E41004E7297 /* RMImageCropper */ = {
+			isa = PBXGroup;
+			children = (
+				3D8122E91A759F42004E7297 /* RMImageCropper.h */,
+				3D8122EA1A759F42004E7297 /* RMImageCropper.m */,
+				3D8122EB1A759F42004E7297 /* UIView+RMUtils.h */,
+				3D8122EC1A759F42004E7297 /* UIView+RMUtils.m */,
+			);
+			name = RMImageCropper;
+			sourceTree = "<group>";
+		};
 		9CB01DF75C9A736C7333F6D8 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -381,7 +398,7 @@
 			isa = PBXGroup;
 			children = (
 				2E0DB88E1A6402D9001032E3 /* View */,
-				CDA8BF4F18D70CF500D835BB /* Checkout */,
+				CDA8BF4F18D70CF500D835BB /* PrintShop */,
 				CD76969C18685B5C006D4A26 /* Address */,
 				CD550BD61886BF6000782D75 /* Payment */,
 				CDAFE005186D9C5E003572FE /* Asset */,
@@ -524,9 +541,10 @@
 			name = Picker;
 			sourceTree = "<group>";
 		};
-		CDA8BF4F18D70CF500D835BB /* Checkout */ = {
+		CDA8BF4F18D70CF500D835BB /* PrintShop */ = {
 			isa = PBXGroup;
 			children = (
+				3D8122E21A759E41004E7297 /* RMImageCropper */,
 				2EE3C86E1A4AFB0C006446E2 /* OLKiteViewController.h */,
 				2EE3C86F1A4AFB0C006446E2 /* OLKiteViewController.m */,
 				2EA8BEAC1A484FCB008A9248 /* OLProductHomeViewController.h */,
@@ -557,7 +575,7 @@
 				2E0A72641A6FB07000BC5AE7 /* OLScrollCropViewController.h */,
 				2E0A72651A6FB07000BC5AE7 /* OLScrollCropViewController.m */,
 			);
-			name = Checkout;
+			name = PrintShop;
 			sourceTree = "<group>";
 		};
 		CDAFE005186D9C5E003572FE /* Asset */ = {
@@ -739,6 +757,7 @@
 				CD73BFAA1863180A0009DE03 /* OLAddressSearchRequest.m in Sources */,
 				CD550BDC1886BF8B00782D75 /* OLPayPalCard.m in Sources */,
 				CD9CF4A318758BDF00F067B6 /* OLProductPrintJob.m in Sources */,
+				3D8122EE1A759F42004E7297 /* UIView+RMUtils.m in Sources */,
 				CD550B191881E1E600782D75 /* OLPrintOrder+History.m in Sources */,
 				CDAFE008186D9C6C003572FE /* OLAsset.m in Sources */,
 				CD73BF7C186215790009DE03 /* AppDelegate.m in Sources */,
@@ -769,6 +788,7 @@
 				CD550A68187B30D200782D75 /* OLAddressLookupViewController.m in Sources */,
 				2EA8BEB81A484FCB008A9248 /* OLProductHomeViewController.m in Sources */,
 				CD93BB30187842AB00316492 /* OLAddressSelectionViewController.m in Sources */,
+				3D8122ED1A759F42004E7297 /* RMImageCropper.m in Sources */,
 				CD93BB451878DFA300316492 /* OLCountryPickerController.m in Sources */,
 				CD73BFAD18631A570009DE03 /* OLBaseRequest.m in Sources */,
 				CD9CF4A5187592A900F067B6 /* OLPrintJob.m in Sources */,
