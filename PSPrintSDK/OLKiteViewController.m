@@ -134,6 +134,9 @@
 
 - (void)templateSyncDidFinish:(NSNotification *)n{
     if (n.userInfo[kNotificationKeyTemplateSyncError]){
+        if ([[OLProductTemplate templates] count] > 0){
+            return;
+        }
         NSLog(@"%@", n.userInfo[kNotificationKeyTemplateSyncError]);
         NSString *message = @"There was a problem getting Print Shop products. Try again later.";
         if ([UIAlertController class]){
