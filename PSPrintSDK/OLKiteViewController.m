@@ -16,7 +16,7 @@
 #import "OLPosterSizeSelectionViewController.h"
 #import "OLKitePrintSDK.h"
 
-@interface OLKiteViewController ()
+@interface OLKiteViewController () <UIAlertViewDelegate>
 
 @property (assign, nonatomic) BOOL alreadyTransistioned;
 @property (strong, nonatomic) UIViewController *nextVc;
@@ -135,18 +135,35 @@
 - (void)templateSyncDidFinish:(NSNotification *)n{
     if (n.userInfo[kNotificationKeyTemplateSyncError]){
         NSLog(@"%@", n.userInfo[kNotificationKeyTemplateSyncError]);
-        NSString *message = @"There was a problem getting print shop products. Try again later.";
+        NSString *message = @"There was a problem getting Print Shop products. Try again later.";
         if ([UIAlertController class]){
             UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"" message:message preferredStyle:UIAlertControllerStyleAlert];
-            [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:NULL]];
+            [alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"") style:UIAlertActionStyleCancel handler:^(UIAlertAction *action){
+                [self dismiss];
+            }]];
+            [alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Retry", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
+                [OLProductTemplate sync];
+            }]];
             [self presentViewController:alert animated:YES completion:^(void){}];
         }
         else{
-            UIAlertView *av = [[UIAlertView alloc] initWithTitle:@"" message:message delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            UIAlertView *av = [[UIAlertView alloc] initWithTitle:@"" message:message delegate:self cancelButtonTitle:NSLocalizedString(@"Retry", @"")  otherButtonTitles:NSLocalizedString(@"Cancel", @""), nil];
+            av.delegate = self;
             [av show];
         }
     }
-    [self transitionToNextScreen:NO];
+    else{
+        [self transitionToNextScreen:NO];
+    }
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+    if (buttonIndex == 0){
+        [OLProductTemplate sync];
+    }
+    else{
+        [self dismiss];
+    }
 }
 
 - (void)dealloc{
