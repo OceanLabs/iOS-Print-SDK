@@ -1,6 +1,8 @@
 Creating a Print Order
 ==============
 
+If you don't want to use the checkout experience included with the Print SDK (i.e. the [Kite Print Shop Experience](print_shop.md)) then you need to explicitly create a print order. 
+
 This tutorial covers creating a print order to be submitted for printing and posting.
 
 _If you haven't already, see the [README](../README.md) for an initial overview and instructions for adding the SDK to your project._
