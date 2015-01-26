@@ -295,13 +295,31 @@
                             <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="Pmz-Ej-3cl">
                                 <rect key="frame" x="150" y="274" width="20" height="20"/>
                             </activityIndicatorView>
+                            <navigationBar hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Gf0-5K-EaB">
+                                <rect key="frame" x="0.0" y="20" width="320" height="44"/>
+                                <items>
+                                    <navigationItem id="BQx-e8-ao7">
+                                        <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="xpp-G4-uxF">
+                                            <connections>
+                                                <action selector="dismiss" destination="cpC-15-nyB" id="vSC-ll-4y6"/>
+                                            </connections>
+                                        </barButtonItem>
+                                    </navigationItem>
+                                </items>
+                            </navigationBar>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="Gf0-5K-EaB" firstAttribute="leading" secondItem="0Xh-Kh-s3v" secondAttribute="leading" id="3KY-Wh-ziB"/>
                             <constraint firstAttribute="centerY" secondItem="Pmz-Ej-3cl" secondAttribute="centerY" id="G30-im-oE3"/>
                             <constraint firstAttribute="centerX" secondItem="Pmz-Ej-3cl" secondAttribute="centerX" id="OYH-Rg-0dI"/>
+                            <constraint firstAttribute="trailing" secondItem="Gf0-5K-EaB" secondAttribute="trailing" id="thT-Cx-p6N"/>
+                            <constraint firstItem="Gf0-5K-EaB" firstAttribute="top" secondItem="5Cv-ce-a01" secondAttribute="bottom" id="xlR-xs-zeV"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="navigationBar" destination="Gf0-5K-EaB" id="VuD-wt-zWy"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hQe-al-rzP" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

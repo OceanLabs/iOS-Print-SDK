@@ -21,6 +21,7 @@
 @property (assign, nonatomic) BOOL alreadyTransistioned;
 @property (strong, nonatomic) UIViewController *nextVc;
 @property (strong, nonatomic) NSArray *assets;
+@property (weak, nonatomic) IBOutlet UINavigationBar *navigationBar;
 
 @end
 
@@ -42,9 +43,12 @@
     if ([[OLProductTemplate templates] count] > 0){
         [self transitionToNextScreen:NO];
     }
+    if (!self.navigationController){
+        self.navigationBar.hidden = NO;
+    }
 }
 
--(void) dismiss{
+-(IBAction) dismiss{
     [self dismissViewControllerAnimated:YES completion:^{
     }];
     
