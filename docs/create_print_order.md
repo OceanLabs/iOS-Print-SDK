@@ -61,4 +61,3 @@ Sample Code
 Next Steps
 ----------
 - If you're building your own [Custom Checkout](../README.md#custom-checkout) UI then it's time to [set the shipping address](shipping.md) to which the order will be delivered
-- Alternatively you can use the [Kite Print Shop user experience](../README.md#kite-print-shop-user-experience) where you use our product selection, photo editing and payment UI
