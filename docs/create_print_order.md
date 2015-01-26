@@ -1,6 +1,8 @@
 Creating a Print Order
 ==============
 
+If you don't want to use the checkout experience included with the Print SDK (i.e. the [Kite Print Shop Experience](print_shop.md)) then you need to explicitly create a print order. 
+
 This tutorial covers creating a print order to be submitted for printing and posting.
 
 _If you haven't already, see the [README](../README.md) for an initial overview and instructions for adding the SDK to your project._
@@ -58,7 +60,4 @@ Sample Code
     
 Next Steps
 ----------
-
-- If you're using the [Managed Checkout](../README.md#managed-checkout) flow where you use our checkout and payment UI then
-[create and present a `OLCheckoutViewController`](managed_checkout.md) passing it the `OLPrintOrder` object you created in Step 4
-- Alternatively if you're building your own [Custom Checkout](../README.md#custom-checkout) UI then it's time to [set the shipping address](shipping.md) to which the order will be delivered
+- If you're building your own [Custom Checkout](../README.md#custom-checkout) UI then it's time to [set the shipping address](shipping.md) to which the order will be delivered
