@@ -22,6 +22,7 @@
 @property (strong, nonatomic) UIViewController *nextVc;
 @property (strong, nonatomic) NSArray *assets;
 @property (weak, nonatomic) IBOutlet UINavigationBar *navigationBar;
+@property (assign, nonatomic) BOOL alreadyTransitioned;
 
 @end
 
@@ -76,6 +77,7 @@
 }
 
 - (void)transitionToNextScreen:(BOOL)animated{
+    self.alreadyTransistioned = YES;
     UIStoryboard *sb = [UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:nil];
     NSString *nextVcNavIdentifier = @"ProductsNavigationController";
     NSString *nextVcIdentifier = @"ProductHomeViewController";
@@ -156,7 +158,9 @@
         }
     }
     else{
-        [self transitionToNextScreen:NO];
+        if (!self.alreadyTransistioned){
+            [self transitionToNextScreen:NO];
+        }
     }
 }
 
