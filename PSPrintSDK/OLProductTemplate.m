@@ -184,7 +184,7 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
 -(NSURL *)coverImageURL{
     switch ([OLProductTemplate templateTypeWithIdentifier:self.identifier]) {
         case kOLTemplateTypeMagnets: return [NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/magnets.jpg"];
-        case kOLTemplateTypeMiniSquares: return [NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/mini%20squares.jpg"];
+        case kOLTemplateTypeMiniSquares: return [NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/mini-squares.jpg"];
         case kOLTemplateTypeSquares: return [NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/squares.jpg"];
         case kOLTemplateTypeMiniPolaroids: return [NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/petite-polaroids.jpg"];
         case kOLTemplateTypePolaroids: return [NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/polaroids.jpg"];
