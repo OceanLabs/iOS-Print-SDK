@@ -1,7 +1,7 @@
 Setting a Shipping Address
 ==============
 
-If you don't want to use the checkout experience included with the Print SDK (i.e. [Managed Checkout](../README.md#managed-checkout)) then you need to explicitly set the shipping address for a print order. Typically you will create your own UI to capture shipping details from your users. 
+If you don't want to use the checkout experience included with the Print SDK (i.e. the [Kite Print Shop Experience](print_shop.md)) then you need to explicitly set the shipping address for a print order. Typically you will create your own UI to capture shipping details from your users. 
 
 The Print SDK also includes worldwide address search/lookup functionality that you can use to improve the user experience of your app.
 
@@ -22,7 +22,7 @@ Sample Code
 -----------
 1. You have two options when creating an `OLAddress`
     - Create the address manually
-    
+
         ```obj-c
         OLAddress *a    = [[OLAddress alloc] init];
         a.recipientName = @"Deon Botha";
@@ -35,23 +35,23 @@ Sample Code
         ```
 
     - Search for the address
-    
+
         ```obj-c
         - (void)doAddressSearch {
             OLCountry *usa = [OLCountry countryForCode:@"USA"];
             [OLAddress searchForAddressWithCountry:usa query:@"1 Infinite Loop" delegate:self];
         }
-        
+
         #pragma mark - OLAddressSearchRequestDelegate methods
 
         - (void)addressSearchRequest:(OLAddressSearchRequest *)req didSuceedWithMultipleOptions:(NSArray *)options {
             // present choice of OLAddress' to the user
         }
-        
+
         - (void)addressSearchRequest:(OLAddressSearchRequest *)req didSuceedWithUniqueAddress:(OLAddress *)addr {
             // Search resulted in one unique address
         }
-        
+
         - (void)addressSearchRequest:(OLAddressSearchRequest *)req didFailWithError:(NSError *)error {
             // Oops something went wrong
         }
