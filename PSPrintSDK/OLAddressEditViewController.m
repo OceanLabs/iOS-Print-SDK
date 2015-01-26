@@ -56,7 +56,51 @@ static const NSUInteger kTagLabel = 100;
 }
 
 - (void)onSaveButtonClicked {
-    [self saveAddressAndReturn];
+    if ([self isValidAddress]){
+        [self saveAddressAndReturn];
+    }
+}
+
+-(BOOL)isValidAddress{
+    BOOL flag = YES;
+    NSString *errorMessage;
+    if ([self.textFieldName.text isEqualToString:@""]){
+        flag = NO;
+        errorMessage = NSLocalizedString(@"Please enter your full name.", @"");
+    }
+    else if ([self.textFieldLine1.text isEqualToString:@""]){
+        flag = NO;
+        errorMessage = NSLocalizedString(@"Please fill in Line 1 of the address.", @"");
+    }
+    else if ([self.textFieldPostCode.text isEqualToString:@""]){
+        flag = NO;
+        errorMessage = NSLocalizedString(@"Please fill in your postal code", @"");
+    }
+
+    if (!flag){
+        if ([UIAlertController class]) // iOS 8 or greater
+        {
+            UIAlertController *alert= [UIAlertController
+                                       alertControllerWithTitle:NSLocalizedString(@"", @"")
+                                       message:errorMessage
+                                       preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertAction* ok = [UIAlertAction actionWithTitle:NSLocalizedString(@"OK", @"") style:UIAlertActionStyleDefault
+                                                       handler:^(UIAlertAction * action){}];
+            
+            [alert addAction:ok];
+            [self presentViewController:alert animated:YES completion:nil];
+        }
+        else{
+            UIAlertView* dialog = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"", @"")
+                                                             message:errorMessage
+                                                            delegate:self
+                                                   cancelButtonTitle:NSLocalizedString(@"OK", @"") otherButtonTitles:nil, nil];
+            [dialog show];
+        }
+    }
+    
+    
+    return flag;
 }
 
 - (void)saveAddressAndReturn {

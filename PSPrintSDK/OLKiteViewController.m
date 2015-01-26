@@ -140,7 +140,7 @@
             return;
         }
         NSLog(@"%@", n.userInfo[kNotificationKeyTemplateSyncError]);
-        NSString *message = @"There was a problem getting Print Shop products. Try again later.";
+        NSString *message = NSLocalizedString(@"There was problem getting Print Shop products. Check your Internet connectivity or try again later.", @"");
         if ([UIAlertController class]){
             UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"" message:message preferredStyle:UIAlertControllerStyleAlert];
             [alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"") style:UIAlertActionStyleCancel handler:^(UIAlertAction *action){
