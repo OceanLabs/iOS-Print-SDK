@@ -55,8 +55,6 @@ static BOOL useJudoPayForGBP = NO;
         [OLPayPalCard setClientId:kOLPayPalClientIdSandbox withEnvironment:kOLPayPalEnvironmentSandbox];
         [OLJudoPayCard setClientId:kJudoClientId token:kJudoSandboxToken secret:kJudoSandboxSecret withEnvironment:kOLJudoPayEnvironmentSandbox];
     }
-    
-    [OLProductTemplate sync];
 }
 
 + (NSString *)apiKey {

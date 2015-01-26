@@ -27,7 +27,6 @@
 #import "OLProductTemplate.h"
 #import "OLProduct.h"
 
-
 @class OLPrintRequest;
 
 typedef void (^OLPrintProgressCompletionHandler)(float progress);

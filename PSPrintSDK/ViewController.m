@@ -14,7 +14,7 @@
  * Insert your API keys here. These are found under your profile 
  * by logging in to the developer portal at http://kite.ly
  **********************************************************************/
-static NSString *const kAPIKeySandbox = @"REPLACE_WITH_YOUR_API_KEY"; // replace with your Sandbox API key found under the Profile section in the developer portal
+static NSString *const kAPIKeySandbox = @"a45bf7f39523d31aa1ca4ecf64d422b4d810d9c4"; // replace with your Sandbox API key found under the Profile section in the developer portal
 static NSString *const kAPIKeyLive = @"REPLACE_WITH_YOUR_API_KEY"; // replace with your Live API key found under the Profile section in the developer portal
 
 static NSString *const kStripePublishableKey = @"pk_test_6pRNASCoBOKtIshFeQd4XMUh"; // This is a test key. Replace with the live key here.
@@ -52,7 +52,8 @@ static NSString *const kApplePayMerchantIDKey = @"merchant.co.oceanlabs.kite.ly"
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onUserCompletedPayment:) name:kOLNotificationUserCompletedPayment object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onPrintOrderSubmission:) name:kOLNotificationPrintOrderSubmission object:nil];
     
-    // Uncomment the following lines to only show a subset of the available products and customize the photography
+    // Uncomment the following lines to only show a subset of the available products and customize the photography. This will only work if you've called [OLProductTemplate sync] and gave it enought time to sync.
+    
     /*
      OLProduct *squares = [OLProduct productWithTemplateId:@"squares"];
      OLProduct *magnets = [OLProduct productWithTemplateId:@"magnets"];
@@ -115,8 +116,8 @@ static NSString *const kApplePayMerchantIDKey = @"merchant.co.oceanlabs.kite.ly"
     OLKiteViewController *vc = [[OLKiteViewController alloc] initWithAssets:assets];
     vc.templateType = kOLTemplateTypeNoTemplate;
     //    vc.delegate = self;
-        [self presentViewController:vc animated:YES completion:NULL];
-    //[self.navigationController pushViewController:vc animated:YES];
+    [self presentViewController:vc animated:YES completion:NULL];
+//    [self.navigationController pushViewController:vc animated:YES];
 }
 
 - (IBAction)onButtonPrintRemotePhotos:(id)sender {

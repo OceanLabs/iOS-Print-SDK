@@ -10,9 +10,6 @@
 #import "OLProductTemplateSyncRequest.h"
 #import "OLCountry.h"
 
-NSString *const kNotificationTemplateSyncComplete = @"co.oceanlabs.pssdk.notification.kNotificationSyncComplete";
-NSString *const kNotificationKeyTemplateSyncError = @"co.oceanlabs.pssdk.notification.kNotificationKeyTemplateSyncError";
-
 NSString *const kOLDefaultTemplateForSquarePrints = @"squares";
 NSString *const kOLDefaultTemplateForSquareMiniPrints = @"squares_mini";
 NSString *const kOLDefaultTemplateForMagnets = @"magnets";
@@ -104,7 +101,7 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
         }
     }
     
-    NSAssert(NO, @"Template with id '%@' not found. Please ensure you've provided a OLProductTemplates.plist file detailing your print templates or run OLProductTemplate.sync first if your templates are defined in the developer dashboard", identifier);
+    NSAssert(NO, @"Template with id '%@' not found. Please ensure you've run OLProductTemplate.sync first if your templates are defined in the developer dashboard", identifier);
     return nil;
 }
 

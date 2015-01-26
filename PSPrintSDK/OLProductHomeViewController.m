@@ -64,7 +64,6 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    [OLProductTemplate sync];
 }
 
 -(void)viewDidAppear:(BOOL)animated{
