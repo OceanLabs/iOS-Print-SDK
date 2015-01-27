@@ -338,6 +338,17 @@
 			name = RMImageCropper;
 			sourceTree = "<group>";
 		};
+		3DE2B0C01A77D2290092D97F /* Util */ = {
+			isa = PBXGroup;
+			children = (
+				CD73BFAF18634ED50009DE03 /* OLConstants.h */,
+				CD73BFB018634ED50009DE03 /* OLConstants.m */,
+				2E0E250D1A77997E00808ED8 /* OLAnalytics.h */,
+				2E0E250E1A77997E00808ED8 /* OLAnalytics.m */,
+			);
+			name = Util;
+			sourceTree = "<group>";
+		};
 		9CB01DF75C9A736C7333F6D8 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -407,10 +418,7 @@
 				CD7696A11868DE7A006D4A26 /* Print */,
 				2E85BC9619A24C9E00EC7CC2 /* Supporting Files */,
 				2EA8BEC11A48509E008A9248 /* Categories */,
-				CD73BFAF18634ED50009DE03 /* OLConstants.h */,
-				CD73BFB018634ED50009DE03 /* OLConstants.m */,
-				2E0E250D1A77997E00808ED8 /* OLAnalytics.h */,
-				2E0E250E1A77997E00808ED8 /* OLAnalytics.m */,
+				3DE2B0C01A77D2290092D97F /* Util */,
 				2EA8BEAA1A484CA7008A9248 /* OLKiteStoryboard.storyboard */,
 				CD93BB471879EA4F00316492 /* KitePrintSDK.xcassets */,
 			);
