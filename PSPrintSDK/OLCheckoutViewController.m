@@ -13,6 +13,7 @@
 #import "OLAddress.h"
 #import "OLProductTemplate.h"
 #import "OLKitePrintSDK.h"
+#import "OLAnalytics.h"
 
 NSString *const kOLNotificationUserSuppliedShippingDetails = @"co.oceanlabs.pssdk.kOLNotificationUserSuppliedShippingDetails";
 NSString *const kOLNotificationUserCompletedPayment = @"co.oceanlabs.pssdk.kOLNotificationUserCompletedPayment";
@@ -105,6 +106,11 @@ static const NSUInteger kInputFieldTag = 99;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackShippingScreenViewedForOrder:self.printOrder];
+#endif
+    
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Next", @"KitePrintSDK", [OLConstants bundle], @"") style:UIBarButtonItemStylePlain target:self action:@selector(onButtonNextClicked)];
     
     self.presentedModally = self.parentViewController.isBeingPresented && self.navigationController.viewControllers.lastObject == self;

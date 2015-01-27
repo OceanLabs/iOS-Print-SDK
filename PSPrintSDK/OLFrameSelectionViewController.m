@@ -10,6 +10,7 @@
 #import "UITableViewController+ScreenWidthFactor.h"
 #import "OLFrameOrderReviewViewController.h"
 #import "OLProduct.h"
+#import "OLAnalytics.h"
 
 @interface OLFrameSelectionViewController ()
 
@@ -19,6 +20,11 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackProductTemplateSelectionScreenViewed:@"Frames"];
+#endif
+    
     self.title = NSLocalizedString(@"Choose Frame Style", @"");
 }
 

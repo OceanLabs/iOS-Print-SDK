@@ -14,6 +14,7 @@
 #import "OLPosterSizeSelectionViewController.h"
 #import "OLWhiteSquare.h"
 #import "OLKiteViewController.h"
+#import "OLAnalytics.h"
 
 @interface OLProductOverviewViewController () <UIPageViewControllerDataSource, OLProductOverviewPageContentViewControllerDelegate>
 @property (strong, nonatomic) UIPageViewController *pageController;
@@ -28,6 +29,10 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackProductDescriptionScreenViewed:self.product.productTemplate.name];
+#endif
     
     if (self.product.templateType == kOLTemplateTypeLargeFormatA1 || self.product.templateType == kOLTemplateTypeLargeFormatA2 || self.product.templateType == kOLTemplateTypeLargeFormatA3){
         self.title = NSLocalizedString(@"Posters", @"");

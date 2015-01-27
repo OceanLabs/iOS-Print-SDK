@@ -10,6 +10,7 @@
 #import "OLProduct.h"
 #import "OLPosterViewController.h"
 #import "OLKiteViewController.h"
+#import "OLAnalytics.h"
 
 static UIColor *deselectedColor;
 
@@ -42,6 +43,11 @@ static UIColor *deselectedColor;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackProductDescriptionScreenViewed:@"Posters"];
+#endif
+    
     self.availableButtons = [@[self.classicBtn, self.grandBtn, self.deluxeBtn] mutableCopy];
     deselectedColor = [UIColor colorWithRed:0.365 green:0.612 blue:0.925 alpha:1]; /*#5d9cec*/
     

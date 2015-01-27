@@ -23,6 +23,7 @@
 #import "OLJudoPayCard.h"
 #import "OLConstants.h"
 #import "OLCreditCardCaptureViewController.h"
+#import "OLAnalytics.h"
 
 #ifdef OL_KITE_OFFER_PAYPAL
 #import <PayPalMobile.h>
@@ -120,6 +121,11 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackPaymentScreenViewedForOrder:self.printOrder];
+#endif
+    
     
 #ifdef OL_KITE_OFFER_APPLE_PAY
     self.applePayIsAvailable = [self isApplePayAvailable];
@@ -505,6 +511,11 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 
 - (void)submitOrderForPrintingWithProofOfPayment:(NSString *)proofOfPayment completion:(void (^)(PKPaymentAuthorizationStatus)) handler{
     self.printOrder.proofOfPayment = proofOfPayment;
+    
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackPaymentCompletedForOrder:self.printOrder];
+#endif
+    
     [[NSNotificationCenter defaultCenter] postNotificationName:kOLNotificationUserCompletedPayment object:self userInfo:@{kOLKeyUserInfoPrintOrder: self.printOrder}];
     [self.printOrder saveToHistory];
     
@@ -529,6 +540,11 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         }
         
         [[NSNotificationCenter defaultCenter] postNotificationName:kOLNotificationPrintOrderSubmission object:self userInfo:@{kOLKeyUserInfoPrintOrder: self.printOrder}];
+        
+#ifndef OL_NO_ANALYTICS
+        [OLAnalytics trackOrderSubmission:self.printOrder];
+#endif
+        
         [self.printOrder saveToHistory]; // save again as the print order has it's receipt set if it was successful, otherwise last error is set
         [SVProgressHUD dismiss];
         OLReceiptViewController *receiptVC = [[OLReceiptViewController alloc] initWithPrintOrder:self.printOrder];

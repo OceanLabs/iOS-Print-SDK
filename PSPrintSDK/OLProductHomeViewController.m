@@ -15,6 +15,7 @@
 #import "OLKiteViewController.h"
 #import "OLKitePrintSDK.h"
 #import "OLPosterSizeSelectionViewController.h"
+#import "OLAnalytics.h"
 
 @interface OLProductHomeViewController ()
 @property (nonatomic, strong) NSArray *products;
@@ -58,6 +59,11 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackProductSelectionScreenViewed];
+#endif
+
     self.title = NSLocalizedString(@"Print Shop", @"");
 }
 

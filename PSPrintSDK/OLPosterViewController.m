@@ -15,6 +15,7 @@
 #import "OLScrollCropViewController.h"
 #import <SDWebImageManager.h>
 #import "OLAsset+Private.h"
+#import "OLAnalytics.h"
 
 @interface OLPosterViewController () <UINavigationControllerDelegate, OLScrollCropViewControllerDelegate>
 
@@ -51,6 +52,11 @@
 
 -(void)viewDidLoad{
     [super viewDidLoad];
+    
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackReviewScreenViewed:self.product.productTemplate.name];
+#endif
+    
     [self.posterPhotos addObjectsFromArray:self.userSelectedPhotos];
     
     self.imageViews = [[NSMutableArray alloc] initWithCapacity:self.product.quantityToFulfillOrder];

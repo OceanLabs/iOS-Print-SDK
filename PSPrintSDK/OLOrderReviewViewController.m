@@ -19,6 +19,7 @@
 #import "OLCircleMaskTableViewCell.h"
 #import "OLAsset+Private.h"
 #import <SDWebImageManager.h>
+#import "OLAnalytics.h"
 
 static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 
@@ -57,6 +58,11 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackReviewScreenViewed:self.product.productTemplate.name];
+#endif
+    
     self.extraCopiesOfAssets = [[NSMutableArray alloc] initWithCapacity:[self.userSelectedPhotos count]];
     for (int i = 0; i < [self.userSelectedPhotos count]; i++){
         [self.extraCopiesOfAssets addObject:@0];

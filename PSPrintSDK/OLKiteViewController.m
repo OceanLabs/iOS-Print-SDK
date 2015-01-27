@@ -15,6 +15,7 @@
 #import "OLProductOverviewViewController.h"
 #import "OLPosterSizeSelectionViewController.h"
 #import "OLKitePrintSDK.h"
+#import "OLAnalytics.h"
 
 @interface OLKiteViewController () <UIAlertViewDelegate>
 
@@ -40,6 +41,11 @@
 
 -(void)viewDidLoad{
     [super viewDidLoad];
+    
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackKiteViewControllerLoaded];
+#endif
+    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(templateSyncDidFinish:) name:kNotificationTemplateSyncComplete object:nil];
     if ([[OLProductTemplate templates] count] > 0){
         [self transitionToNextScreen:NO];
