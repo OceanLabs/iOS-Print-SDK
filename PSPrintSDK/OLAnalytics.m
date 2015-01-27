@@ -18,7 +18,7 @@
 
 static NSString *const kKeyUserDistinctId = @"ly.kite.sdk.kKeyUserDistinctId";
 static NSString *const kOLMixpanelToken = @"cdf64507670dd359c43aa8895fb87676";
-static NSString *const kOLMixpanelURL = @"http://api.mixpanel.com/track/";
+static NSString *const kOLMixpanelURL = @"https://api.mixpanel.com/track/";
 
 @implementation OLAnalytics
 
@@ -173,24 +173,6 @@ static NSString *nonNilStr(NSString *str) {
         if (printOrder.userData[@"phone"]) {
             p[@"Shipping Phone"] = printOrder.userData[@"phone"];
         }
-        
-        NSUInteger totalPhotoCount = 0;
-        if (printOrder.userData[@"photo_count_facebook"]) {
-            p[@"Facebook Photo Count"] = [printOrder.userData[@"photo_count_facebook"] stringValue];
-            totalPhotoCount += [printOrder.userData[@"photo_count_facebook"] unsignedIntegerValue];
-        }
-        
-        if (printOrder.userData[@"photo_count_instagram"]) {
-            p[@"Instagram Photo Count"] = [printOrder.userData[@"photo_count_instagram"] stringValue];
-            totalPhotoCount += [printOrder.userData[@"photo_count_instagram"] unsignedIntegerValue];
-        }
-        
-        if (printOrder.userData[@"photo_count_iphone"]) {
-            p[@"iPhone Photo Count"] = [printOrder.userData[@"photo_count_iphone"] stringValue];
-            totalPhotoCount += [printOrder.userData[@"photo_count_iphone"] unsignedIntegerValue];
-        }
-        
-        p[@"Total Photo Count"] = [NSString stringWithFormat:@"%lu", totalPhotoCount];
     }
     
     if (printOrder.shippingAddress) {
