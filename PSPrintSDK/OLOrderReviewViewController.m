@@ -292,10 +292,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
         enhanceButton.titleLabel.font = [UIFont fontWithName:@"MissionGothic-Bold" size:12];
     }
     
-    if (self.product.templateType == kOLTemplateTypeStickersCircle){
-        UIView *circleMaskView = [cell.contentView viewWithTag:89];
-        circleMaskView.hidden = NO;
-        
+    if (self.product.templateType == kOLTemplateTypeStickersCircle){       
         cell.enableMask = YES;
     }
 
