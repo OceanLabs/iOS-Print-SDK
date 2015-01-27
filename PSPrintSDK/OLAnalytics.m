@@ -63,11 +63,13 @@ static NSString *nonNilStr(NSString *str) {
     }
     NSDictionary *info = [[NSBundle mainBundle] infoDictionary];
     NSString *bundleName = [NSString stringWithFormat:@"%@", [info objectForKey:@"CFBundleDisplayName"]];
+    NSString *appVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"];
     NSMutableDictionary *propertiesDict = [@{
                                              @"token" : kOLMixpanelToken,
                                              @"distinct_id" : [OLAnalytics userDistinctId],
-                                             @"host_app_id" : [[NSBundle mainBundle] bundleIdentifier],
-                                             @"host_app_name" : bundleName,
+                                             @"App Bundle Id" : [[NSBundle mainBundle] bundleIdentifier],
+                                             @"App Name" : bundleName,
+                                             @"App Version" : appVersion,
                                              @"platform" : @"iOS",
                                              @"model" : [OLAnalytics platform],
                                              @"Screen Height" : @([UIScreen mainScreen].bounds.size.height),
