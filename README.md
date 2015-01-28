@@ -85,7 +85,7 @@ You can find these Kite API credentials under the [Credentials](https://www.kite
 
 ### Sandbox
 
-Your Sandbox API Key can be used to submit test print orders to our servers. These orders will not be printed and posted but will allow you to integrate the Print SDK into your app without incurring cost. During development and testing you'll primarily want to be using the sandbox environment to avoid moving real money around.
+Your Sandbox API Key can be used to submit test print orders to our servers. These orders will not be printed and posted but will allow you to integrate the Print SDK into your app without incurring cost. During development and testing you'll primarily want to be using the sandbox environment to avoid moving real money around. To test the sandbox payment you can use your own PayPal sandbox account or contact us at hello@kite.ly
 
 When you're ready to test the end to end printing and postage process; and before you submit your app to the App Store, you'll need to swap in your live API key.
 
