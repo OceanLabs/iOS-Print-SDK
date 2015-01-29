@@ -13,7 +13,6 @@
 #import "OLProductPrintJob.h"
 #import "OLConstants.h"
 #import "OLCheckoutDelegate.h"
-#import "UITableViewController+ScreenWidthFactor.h"
 #import "OLProductTemplate.h"
 #import "OLProduct.h"
 #import "OLCircleMaskCollectionViewCell.h"
@@ -177,13 +176,13 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 - (IBAction)onButtonUpArrowClicked:(UIButton *)sender {
     UIView* cellContentView = sender.superview;
     UIView* cell = cellContentView.superview;
-    while (![cell isKindOfClass:[UITableViewCell class]]){
+    while (![cell isKindOfClass:[UICollectionViewCell class]]){
         cell = cell.superview;
     }
     NSIndexPath* indexPath = [self.collectionView indexPathForCell:(UICollectionViewCell *)cell];
     
-    NSUInteger extraCopies = [self.extraCopiesOfAssets[indexPath.row - 1] integerValue] + 1;
-    self.extraCopiesOfAssets[indexPath.row-1] = [NSNumber numberWithInteger:extraCopies];
+    NSUInteger extraCopies = [self.extraCopiesOfAssets[indexPath.row] integerValue] + 1;
+    self.extraCopiesOfAssets[indexPath.row] = [NSNumber numberWithInteger:extraCopies];
     UILabel* countLabel = (UILabel *)[cellContentView viewWithTag:30];
     [countLabel setText: [NSString stringWithFormat:@"%lu", (unsigned long)extraCopies + 1]];
     
@@ -193,18 +192,18 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 - (IBAction)onButtonDownArrowClicked:(UIButton *)sender {
     UIView* cellContentView = sender.superview;
     UIView* cell = cellContentView.superview;
-    while (![cell isKindOfClass:[UITableViewCell class]]){
+    while (![cell isKindOfClass:[UICollectionViewCell class]]){
         cell = cell.superview;
     }
     NSIndexPath* indexPath = [self.collectionView indexPathForCell:(UICollectionViewCell *)cell];
     
-    NSUInteger extraCopies = [self.extraCopiesOfAssets[indexPath.row - 1] integerValue];
+    NSUInteger extraCopies = [self.extraCopiesOfAssets[indexPath.row] integerValue];
     if (extraCopies == 0){
         return;
     }
     extraCopies--;
     
-    self.extraCopiesOfAssets[indexPath.row-1] = [NSNumber numberWithInteger:extraCopies];
+    self.extraCopiesOfAssets[indexPath.row] = [NSNumber numberWithInteger:extraCopies];
     UILabel* countLabel = (UILabel *)[cellContentView viewWithTag:30];
     [countLabel setText: [NSString stringWithFormat:@"%lu", (unsigned long)extraCopies + 1]];
     
@@ -214,13 +213,13 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 - (IBAction)onButtonEnhanceClicked:(UIButton *)sender {
     UIView* cellContentView = sender.superview;
     UIView* cell = cellContentView.superview;
-    while (![cell isKindOfClass:[UITableViewCell class]]){
+    while (![cell isKindOfClass:[UICollectionViewCell class]]){
         cell = cell.superview;
     }
     NSIndexPath* indexPath = [self.collectionView indexPathForCell:(UICollectionViewCell *)cell];
     
-    self.editingPrintPhoto = self.userSelectedPhotos[indexPath.row - 1];
-    self.editingPrintPhoto.asset = self.assets[indexPath.row - 1];
+    self.editingPrintPhoto = self.userSelectedPhotos[indexPath.row];
+    self.editingPrintPhoto.asset = self.assets[indexPath.row];
     
     UINavigationController *nav = [self.storyboard instantiateViewControllerWithIdentifier:@"CropViewNavigationController"];
     OLScrollCropViewController *cropVc = (id)nav.topViewController;
@@ -272,6 +271,15 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     if (cellImage){
         [((OLPrintPhoto*)[self.userSelectedPhotos objectAtIndex:indexPath.row]) setThumbImageIdealSizeForImageView:cellImage];
     }
+    
+    UIButton *enhanceButton = (UIButton *)[cell.contentView viewWithTag:11];
+    [enhanceButton addTarget:self action:@selector(onButtonEnhanceClicked:) forControlEvents:UIControlEventTouchUpInside];
+    
+    UIButton *upButton = (UIButton *)[cell.contentView viewWithTag:12];
+    [upButton addTarget:self action:@selector(onButtonUpArrowClicked:) forControlEvents:UIControlEventTouchUpInside];
+    
+    UIButton *downButton = (UIButton *)[cell.contentView viewWithTag:13];
+    [downButton addTarget:self action:@selector(onButtonDownArrowClicked:) forControlEvents:UIControlEventTouchUpInside];
     
     UILabel *countLabel = (UILabel *)[cell.contentView viewWithTag:30];
     [countLabel setText: [NSString stringWithFormat:@"%lu", (unsigned long)(1+[((NSNumber*)[self.extraCopiesOfAssets objectAtIndex:indexPath.row]) integerValue])]];
