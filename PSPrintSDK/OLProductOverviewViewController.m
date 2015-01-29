@@ -15,6 +15,8 @@
 #import "OLWhiteSquare.h"
 #import "OLKiteViewController.h"
 #import "OLAnalytics.h"
+#import "OLProductHomeViewController.h"
+#import "OLFrameOrderReviewViewController.h"
 
 @interface OLProductOverviewViewController () <UIPageViewControllerDataSource, OLProductOverviewPageContentViewControllerDelegate>
 @property (strong, nonatomic) UIPageViewController *pageController;
@@ -112,7 +114,17 @@
     if (self.product.templateType == kOLTemplateTypeFrame2x2 || self.product.templateType == kOLTemplateTypeFrame3x3 || self.product.templateType == kOLTemplateTypeFrame4x4 || self.product.templateType == kOLTemplateTypeFrame){
         OLFrameSelectionViewController *frameVc = [self.storyboard instantiateViewControllerWithIdentifier:@"FrameSelectionViewController"];
         frameVc.assets = self.assets;
-        [self.navigationController pushViewController:frameVc animated:YES];
+        [(UINavigationController *)[self.splitViewController.viewControllers firstObject] pushViewController:frameVc animated:YES];
+        
+        NSArray *products = [OLProduct products];
+        OLFrameOrderReviewViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"FrameOrderReviewViewController"];
+        vc.assets = self.assets;
+        for (OLProduct *product in products){
+            if (product.templateType == kOLTemplateTypeFrame){
+                vc.product = product;
+            }
+        }
+        [self.splitViewController showDetailViewController:vc sender:self];
     }
     else if (self.product.templateType == kOLTemplateTypeLargeFormatA1 || self.product.templateType == kOLTemplateTypeLargeFormatA2 || self.product.templateType == kOLTemplateTypeLargeFormatA3){
         OLPosterSizeSelectionViewController *posterVc = [self.storyboard instantiateViewControllerWithIdentifier:@"sizeSelect"];

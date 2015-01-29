@@ -322,7 +322,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
                 reviewPhotoCellHeight = @(cell.bounds.size.height);
             }
         }
-        return [reviewPhotoCellHeight floatValue] * [self screenWidthFactor];
+        return 233 * self.view.bounds.size.width / 320;
     }
 }
 

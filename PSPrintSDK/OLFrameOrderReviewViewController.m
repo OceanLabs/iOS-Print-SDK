@@ -176,11 +176,6 @@ NSInteger margin = 2;
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     if (indexPath.row == 0){
         UITableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:@"reviewTitle"];
-        UILabel* titleLabel = (UILabel *)[cell.contentView viewWithTag:60];
-        titleLabel.font = [UIFont fontWithName:@"MissionGothic-Regular" size:19];
-        
-        UILabel* instructionsLabel = (UILabel*)[cell.contentView viewWithTag:70];
-        instructionsLabel.font = [UIFont fontWithName:@"MissionGothic-Light" size:15];
         return cell;
     }
     
@@ -191,7 +186,6 @@ NSInteger margin = 2;
     
     UILabel *countLabel = (UILabel *)[cell.contentView viewWithTag:30];
     [countLabel setText: [NSString stringWithFormat:@"%lu", (unsigned long) (1+[((NSNumber*)[self.extraCopiesOfAssets objectAtIndex:indexPath.row-1]) integerValue])]];
-    countLabel.font = [UIFont fontWithName:@"MissionGothic-Black" size:18];
     
     UICollectionView* collectionView = (UICollectionView*)[cell.contentView viewWithTag:100];
     collectionView.dataSource = self;
@@ -203,6 +197,20 @@ NSInteger margin = 2;
     return cell;
 }
 
+- (CGFloat) tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+    if (indexPath.row > 0){
+        return 400 * self.view.bounds.size.width / 320;
+    }
+    else{
+        NSNumber *labelHeight;
+        if (!labelHeight) {
+            UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"reviewTitle"];
+            labelHeight = @(cell.bounds.size.height);
+        }
+        return [labelHeight floatValue];
+    }
+}
+
 #pragma mark UICollectionView data source
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
@@ -212,12 +220,11 @@ NSInteger margin = 2;
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
     UICollectionViewCell* cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"imageInFrame" forIndexPath:indexPath];
     
-    //Workaround for Xcode 6-compiled code running on iOS 7
+    //Workaround for iOS 7
     if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8){
         cell.contentView.frame = cell.bounds;
         cell.contentView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin |UIViewAutoresizingFlexibleTopMargin |UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleBottomMargin;
     }
-
 
     UIView* tableViewCell = collectionView.superview;
     while (![tableViewCell isKindOfClass:[UITableViewCell class]]){

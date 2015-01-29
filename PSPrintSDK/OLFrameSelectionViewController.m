@@ -62,8 +62,43 @@
     }
 }
 
+- (IBAction)onTapGestureRecognized:(UITapGestureRecognizer *)sender{
+    NSInteger tag = sender.view.tag;
+    NSArray *products = [OLProduct products];
+    UINavigationController *nvc = [self.storyboard instantiateViewControllerWithIdentifier:@"FrameOrderReviewNavigationViewController"];
+    OLFrameOrderReviewViewController *vc = (OLFrameOrderReviewViewController *)nvc.topViewController;
+    vc.assets = self.assets;
+    if (tag == 22) {
+        for (OLProduct *product in products){
+            if (product.templateType == kOLTemplateTypeFrame2x2){
+                vc.product = product;
+            }
+        }
+    } else if (tag == 33) {
+        for (OLProduct *product in products){
+            if (product.templateType == kOLTemplateTypeFrame3x3){
+                vc.product = product;
+            }
+        }
+    } else if (tag == 44) {
+        for (OLProduct *product in products){
+            if (product.templateType == kOLTemplateTypeFrame4x4){
+                vc.product = product;
+            }
+        }
+    }
+    else if (tag == 11){
+        for (OLProduct *product in products){
+            if (product.templateType == kOLTemplateTypeFrame){
+                vc.product = product;
+            }
+        }
+    }
+    [self.splitViewController showDetailViewController:vc sender:self];
+}
+
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return 233 * [self screenWidthFactor];
+    return 233 * self.view.bounds.size.width / self.view.bounds.size.width;
 }
 
 

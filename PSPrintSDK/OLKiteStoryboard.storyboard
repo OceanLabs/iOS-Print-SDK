@@ -115,7 +115,7 @@
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="235"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="frame_1x1_off" translatesAutoresizingMaskIntoConstraints="NO" id="zXH-yE-Inb">
+                                                <imageView tag="11" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="frame_1x1_off" translatesAutoresizingMaskIntoConstraints="NO" id="zXH-yE-Inb">
                                                     <rect key="frame" x="0.0" y="0.0" width="600" height="233"/>
                                                     <gestureRecognizers/>
                                                     <connections>
@@ -138,7 +138,7 @@
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="235"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="frame_2x2_off" translatesAutoresizingMaskIntoConstraints="NO" id="DFN-u0-jnU">
+                                                <imageView tag="22" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="frame_2x2_off" translatesAutoresizingMaskIntoConstraints="NO" id="DFN-u0-jnU">
                                                     <rect key="frame" x="0.0" y="0.0" width="600" height="233"/>
                                                     <gestureRecognizers/>
                                                     <connections>
@@ -161,7 +161,7 @@
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="235"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="frame_3x3_off" translatesAutoresizingMaskIntoConstraints="NO" id="cCC-Kd-gjy">
+                                                <imageView tag="33" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="frame_3x3_off" translatesAutoresizingMaskIntoConstraints="NO" id="cCC-Kd-gjy">
                                                     <rect key="frame" x="0.0" y="0.0" width="600" height="233"/>
                                                     <gestureRecognizers/>
                                                     <connections>
@@ -184,7 +184,7 @@
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="235"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="frame_4x4_off" translatesAutoresizingMaskIntoConstraints="NO" id="Zq3-VF-7PF">
+                                                <imageView tag="44" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="frame_4x4_off" translatesAutoresizingMaskIntoConstraints="NO" id="Zq3-VF-7PF">
                                                     <rect key="frame" x="0.0" y="0.0" width="600" height="233"/>
                                                     <gestureRecognizers/>
                                                     <connections>
@@ -212,22 +212,22 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="KDi-0l-pjZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <tapGestureRecognizer id="Z55-oY-NCw">
                     <connections>
-                        <segue destination="xas-Kj-aIZ" kind="show" identifier="Selected2x2FrameStyleSegue" id="rbM-tD-kg6"/>
+                        <action selector="onTapGestureRecognized:" destination="FjW-de-agL" id="sUv-GK-JUI"/>
                     </connections>
                 </tapGestureRecognizer>
                 <tapGestureRecognizer id="B57-4P-Aqx">
                     <connections>
-                        <segue destination="xas-Kj-aIZ" kind="show" identifier="Selected3x3FrameStyleSegue" id="zv7-Iu-AXk"/>
+                        <action selector="onTapGestureRecognized:" destination="FjW-de-agL" id="HTP-uX-IiB"/>
                     </connections>
                 </tapGestureRecognizer>
                 <tapGestureRecognizer id="cXE-AY-kGB">
                     <connections>
-                        <segue destination="xas-Kj-aIZ" kind="show" identifier="Selected4x4FrameStyleSegue" id="f3M-i8-Sjn"/>
+                        <action selector="onTapGestureRecognized:" destination="FjW-de-agL" id="HdW-4M-yiT"/>
                     </connections>
                 </tapGestureRecognizer>
                 <tapGestureRecognizer id="7vV-LQ-iYI">
                     <connections>
-                        <segue destination="xas-Kj-aIZ" kind="show" identifier="Selected1x1FrameStyleSegue" id="BSU-O3-UVa"/>
+                        <action selector="onTapGestureRecognized:" destination="FjW-de-agL" id="unz-EE-7qi"/>
                     </connections>
                 </tapGestureRecognizer>
             </objects>
@@ -744,7 +744,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hLb-mG-OpM" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4920" y="841.90140845070414"/>
+            <point key="canvasLocation" x="5732" y="841"/>
         </scene>
         <!--Scroll Crop View Controller-->
         <scene sceneID="FtM-aT-ojK">
@@ -794,7 +794,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qG7-3J-9cO" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="6684.375" y="841.90140845070414"/>
+            <point key="canvasLocation" x="7496" y="841"/>
         </scene>
         <!--Poster Size Selection View Controller-->
         <scene sceneID="YYl-13-A7C">
@@ -1207,7 +1207,25 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SiN-kc-Q1U" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="5686.875" y="841.90140845070414"/>
+            <point key="canvasLocation" x="6498" y="841"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="Clk-rZ-VRw">
+            <objects>
+                <navigationController storyboardIdentifier="FrameOrderReviewNavigationViewController" automaticallyAdjustsScrollViewInsets="NO" id="wEN-Z0-FTv" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="DBV-yr-MzZ">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="xas-Kj-aIZ" kind="relationship" relationship="rootViewController" id="bc4-Aj-07A"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="lJs-lr-Dc4" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="4920" y="841"/>
         </scene>
     </scenes>
     <resources>
@@ -1221,8 +1239,5 @@
         <image name="photo_frame_1" width="316" height="224"/>
         <image name="poster_shadow" width="295" height="414"/>
     </resources>
-    <inferredMetricsTieBreakers>
-        <segue reference="zv7-Iu-AXk"/>
-    </inferredMetricsTieBreakers>
     <color key="tintColor" red="0.0" green="0.52941179275512695" blue="1" alpha="1" colorSpace="deviceRGB"/>
 </document>
