@@ -85,12 +85,12 @@
 - (void)transitionToNextScreen:(BOOL)animated{
     self.alreadyTransistioned = YES;
     UIStoryboard *sb = [UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:nil];
-    NSString *nextVcNavIdentifier = @"ProductsNavigationController";
-    NSString *nextVcIdentifier = @"ProductHomeViewController";
+    NSString *nextVcNavIdentifier = @"SplitViewController";
+    NSString *nextVcIdentifier = @"SplitViewController";
     OLProduct *product;
     if (([OLKitePrintSDK enabledProducts] && [[OLKitePrintSDK enabledProducts] count] < 2) || self.templateType != kOLTemplateTypeNoTemplate){
         nextVcNavIdentifier = @"OLProductOverviewNavigationViewController";
-        nextVcIdentifier = @"OLProductOverviewViewController";
+        nextVcIdentifier = @"OLProductOverviewNavigationViewController";
         
         if ([OLKitePrintSDK enabledProducts] && [[OLKitePrintSDK enabledProducts] count] == 1){
             product = [[OLKitePrintSDK enabledProducts] firstObject];
@@ -111,11 +111,29 @@
     
     if (!self.navigationController){
         self.nextVc = [sb instantiateViewControllerWithIdentifier:nextVcNavIdentifier];
-        ((UINavigationController *)self.nextVc).topViewController.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(dismiss)];
-        [(id)((UINavigationController *)self.nextVc).topViewController setAssets:self.assets];
-        if (product){
-            [(id)((UINavigationController *)self.nextVc).topViewController setProduct:product];
+        OLProduct *product = [[OLProductHomeViewController products] firstObject];
+        UIViewController *detailVc;
+        if (product.templateType == kOLTemplateTypeLargeFormatA1 || product.templateType == kOLTemplateTypeLargeFormatA2 || product.templateType == kOLTemplateTypeLargeFormatA3){
+            OLPosterSizeSelectionViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"sizeSelect"];
+            vc.assets = self.assets;
+            detailVc = vc;
         }
+        else{
+            UINavigationController *nvc = (UINavigationController *)[self.storyboard instantiateViewControllerWithIdentifier:@"OLProductOverviewNavigationViewController"];
+            OLProductOverviewViewController *vc = (OLProductOverviewViewController *)[nvc topViewController];
+            vc.assets = self.assets;
+            vc.product = product;
+            detailVc = nvc;
+        }
+        [((UISplitViewController *)self.nextVc) showDetailViewController:detailVc sender:nil];
+        [((UISplitViewController *)self.nextVc) setPreferredDisplayMode:UISplitViewControllerDisplayModeAllVisible];
+        ((UISplitViewController *)self.nextVc).presentsWithGesture = NO;
+        
+//        ((UINavigationController *)self.nextVc).topViewController.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(dismiss)];
+//        [(id)((UINavigationController *)self.nextVc).topViewController setAssets:self.assets];
+//        if (product){
+//            [(id)((UINavigationController *)self.nextVc).topViewController setProduct:product];
+//        }
         self.nextVc.view.alpha = 0;
         [self.view addSubview:self.nextVc.view];
         [UIView animateWithDuration:0.15 animations:^(void){

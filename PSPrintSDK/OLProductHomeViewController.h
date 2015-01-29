@@ -12,5 +12,6 @@
 @interface OLProductHomeViewController : UITableViewController
 
 @property (strong, nonatomic) NSArray *assets;
++(NSArray *) products;
 
 @end

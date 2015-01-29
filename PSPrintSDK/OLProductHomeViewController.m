@@ -18,7 +18,6 @@
 #import "OLAnalytics.h"
 
 @interface OLProductHomeViewController ()
-@property (nonatomic, strong) NSArray *products;
 @property (nonatomic, strong) UIImageView *topSurpriseImageView;
 @property (nonatomic, strong) UIView *huggleBotSpeechBubble;
 @property (nonatomic, weak) IBOutlet UILabel *huggleBotFriendNameLabel;
@@ -28,12 +27,14 @@
 
 @implementation OLProductHomeViewController
 
--(NSArray *) products{
-    if (!_products){
-        _products = [OLKitePrintSDK enabledProducts] ? [OLKitePrintSDK enabledProducts] : [OLProduct products];
-        NSMutableArray *mutableProducts = [_products mutableCopy];
+static NSArray *products;
+
++(NSArray *) products{
+    if (!products){
+        products = [OLKitePrintSDK enabledProducts] ? [OLKitePrintSDK enabledProducts] : [OLProduct products];
+        NSMutableArray *mutableProducts = [products mutableCopy];
         BOOL haveAtLeastOnePoster = NO;
-        for (OLProduct *product in _products){
+        for (OLProduct *product in products){
             if (!product.labelColor){
                 [mutableProducts removeObject:product];
             }
@@ -52,9 +53,9 @@
                 }
             }
         }
-        _products = mutableProducts;
+        products = mutableProducts;
     }
-    return _products;
+    return products;
 }
 
 - (void)viewDidLoad {
@@ -88,21 +89,25 @@
 #pragma mark - UITableViewDelegate Methods
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return 233 * [self screenWidthFactor];
+    return 233 * self.view.bounds.size.width / 320.0;
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    OLProduct *product = self.products[indexPath.row];
+    OLProduct *product = [OLProductHomeViewController products][indexPath.row];
     if (product.templateType == kOLTemplateTypeLargeFormatA1 || product.templateType == kOLTemplateTypeLargeFormatA2 || product.templateType == kOLTemplateTypeLargeFormatA3){
-        OLPosterSizeSelectionViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"sizeSelect"];
+        UINavigationController *nvc = (UINavigationController *)[self.storyboard instantiateViewControllerWithIdentifier:@"sizeSelectNavigationController"];
+        OLPosterSizeSelectionViewController *vc = (OLPosterSizeSelectionViewController *)[nvc topViewController];
         vc.assets = self.assets;
-        [self.navigationController pushViewController:vc animated:YES];
+        [self showDetailViewController:nvc sender:nil];
+//        [self.navigationController pushViewController:vc animated:YES];
     }
     else{
-        OLProductOverviewViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLProductOverviewViewController"];
+        UINavigationController *nvc = (UINavigationController *)[self.storyboard instantiateViewControllerWithIdentifier:@"OLProductOverviewNavigationViewController"];
+        OLProductOverviewViewController *vc = (OLProductOverviewViewController *)[nvc topViewController];
         vc.assets = self.assets;
         vc.product = product;
-        [self.navigationController pushViewController:vc animated:YES];
+        [self showDetailViewController:nvc sender:nil];
+//        [self.navigationController pushViewController:vc animated:YES];
     }
     
 }
@@ -114,7 +119,7 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return self.products.count;
+    return [OLProductHomeViewController products].count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -124,7 +129,7 @@
     
     UIImageView *cellImageView = (UIImageView *)[cell.contentView viewWithTag:40];
     
-    OLProduct *product = self.products[indexPath.row];
+    OLProduct *product = [OLProductHomeViewController products][indexPath.row];
     [product setCoverImageToImageView:cellImageView];
     
     UILabel *productTypeLabel = (UILabel *)[cell.contentView viewWithTag:300];
