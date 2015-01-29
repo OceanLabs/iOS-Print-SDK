@@ -124,7 +124,9 @@
             vc.assets = self.assets;
             vc.product = product;
             detailVc = nvc;
+
         }
+        [(OLProductHomeViewController *)[(UINavigationController *)[((UISplitViewController *)self.nextVc).viewControllers firstObject] topViewController]setAssets:self.assets];
         [((UISplitViewController *)self.nextVc) showDetailViewController:detailVc sender:nil];
         [((UISplitViewController *)self.nextVc) setPreferredDisplayMode:UISplitViewControllerDisplayModeAllVisible];
         ((UISplitViewController *)self.nextVc).presentsWithGesture = NO;
