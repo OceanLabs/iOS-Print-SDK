@@ -98,7 +98,12 @@ static UIColor *deselectedColor;
     }
 }
 
+-(void)viewWillAppear:(BOOL)animated{
+    [self.splitViewController setPreferredDisplayMode:UISplitViewControllerDisplayModePrimaryOverlay];
+}
+
 -(void)viewDidAppear:(BOOL)animated{
+    [self.splitViewController setPreferredDisplayMode:UISplitViewControllerDisplayModeAllVisible];
     if (self.navigationController){
         NSMutableArray *navigationStack = self.navigationController.viewControllers.mutableCopy;
         if (navigationStack.count > 1 && [navigationStack[navigationStack.count - 2] isKindOfClass:[OLKiteViewController class]]) {
@@ -180,6 +185,7 @@ static UIColor *deselectedColor;
     OLPosterViewController *dest = [self.storyboard instantiateViewControllerWithIdentifier:@"p1x1ViewController"];
     dest.product = self.product;
     dest.assets = self.assets;
+    [self.splitViewController setPreferredDisplayMode:UISplitViewControllerDisplayModePrimaryHidden];
     [self.navigationController pushViewController:dest animated:YES];
 }
 
