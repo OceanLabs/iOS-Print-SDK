@@ -15,6 +15,8 @@
 		2E3F96B21A49ACF4005C0EA3 /* OLPrintPhoto.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E3F96B11A49ACF4005C0EA3 /* OLPrintPhoto.m */; };
 		2E85BC9919A24CB200EC7CC2 /* KitePrintSDK.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2E85BC9719A24CB200EC7CC2 /* KitePrintSDK.strings */; };
 		2E8CB5301A6E5E260047DCEA /* OLCircleMaskTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E8CB52F1A6E5E260047DCEA /* OLCircleMaskTableViewCell.m */; };
+		2E973EEB1A7A54E200488212 /* OLOrderReviewCollectionViewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E973EEA1A7A54E200488212 /* OLOrderReviewCollectionViewViewController.m */; };
+		2E973EEE1A7A5D0E00488212 /* OLCircleMaskCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E973EED1A7A5D0E00488212 /* OLCircleMaskCollectionViewCell.m */; };
 		2EA8BEAB1A484CA7008A9248 /* OLKiteStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2EA8BEAA1A484CA7008A9248 /* OLKiteStoryboard.storyboard */; };
 		2EA8BEB81A484FCB008A9248 /* OLProductHomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA8BEAD1A484FCB008A9248 /* OLProductHomeViewController.m */; };
 		2EA8BEB91A484FCB008A9248 /* OLProductOverviewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA8BEAF1A484FCB008A9248 /* OLProductOverviewViewController.m */; };
@@ -130,6 +132,10 @@
 		2E85BC9F19A24CBE00EC7CC2 /* el */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = el; path = el.lproj/KitePrintSDK.strings; sourceTree = "<group>"; };
 		2E8CB52E1A6E5E260047DCEA /* OLCircleMaskTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLCircleMaskTableViewCell.h; sourceTree = "<group>"; };
 		2E8CB52F1A6E5E260047DCEA /* OLCircleMaskTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLCircleMaskTableViewCell.m; sourceTree = "<group>"; };
+		2E973EE91A7A54E200488212 /* OLOrderReviewCollectionViewViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLOrderReviewCollectionViewViewController.h; sourceTree = "<group>"; };
+		2E973EEA1A7A54E200488212 /* OLOrderReviewCollectionViewViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLOrderReviewCollectionViewViewController.m; sourceTree = "<group>"; };
+		2E973EEC1A7A5D0E00488212 /* OLCircleMaskCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLCircleMaskCollectionViewCell.h; sourceTree = "<group>"; };
+		2E973EED1A7A5D0E00488212 /* OLCircleMaskCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLCircleMaskCollectionViewCell.m; sourceTree = "<group>"; };
 		2EA8BEAA1A484CA7008A9248 /* OLKiteStoryboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = OLKiteStoryboard.storyboard; sourceTree = "<group>"; };
 		2EA8BEAC1A484FCB008A9248 /* OLProductHomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLProductHomeViewController.h; sourceTree = "<group>"; };
 		2EA8BEAD1A484FCB008A9248 /* OLProductHomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLProductHomeViewController.m; sourceTree = "<group>"; };
@@ -289,6 +295,8 @@
 				2EE3C86C1A4ADDDA006446E2 /* OLWhiteSquare.m */,
 				2E8CB52E1A6E5E260047DCEA /* OLCircleMaskTableViewCell.h */,
 				2E8CB52F1A6E5E260047DCEA /* OLCircleMaskTableViewCell.m */,
+				2E973EEC1A7A5D0E00488212 /* OLCircleMaskCollectionViewCell.h */,
+				2E973EED1A7A5D0E00488212 /* OLCircleMaskCollectionViewCell.m */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -569,6 +577,8 @@
 				2E1F69DD1A66999700696286 /* OLPosterSizeSelectionViewController.m */,
 				2EA8BEB41A484FCB008A9248 /* OLOrderReviewViewController.h */,
 				2EA8BEB51A484FCB008A9248 /* OLOrderReviewViewController.m */,
+				2E973EE91A7A54E200488212 /* OLOrderReviewCollectionViewViewController.h */,
+				2E973EEA1A7A54E200488212 /* OLOrderReviewCollectionViewViewController.m */,
 				2EA8BEB61A484FCB008A9248 /* OLFrameOrderReviewViewController.h */,
 				2EA8BEB71A484FCB008A9248 /* OLFrameOrderReviewViewController.m */,
 				2E1F69E21A6699AE00696286 /* OLPosterViewController.h */,
@@ -794,8 +804,10 @@
 				CD73BF78186215790009DE03 /* main.m in Sources */,
 				CD9D6AE5187189BF001CD1F9 /* OLPostcardPrintJob.m in Sources */,
 				2E0E250F1A77997E00808ED8 /* OLAnalytics.m in Sources */,
+				2E973EEE1A7A5D0E00488212 /* OLCircleMaskCollectionViewCell.m in Sources */,
 				3D17795A1A1E1D6800BE3E58 /* OLCreditCardCaptureViewController.m in Sources */,
 				CD550A68187B30D200782D75 /* OLAddressLookupViewController.m in Sources */,
+				2E973EEB1A7A54E200488212 /* OLOrderReviewCollectionViewViewController.m in Sources */,
 				2EA8BEB81A484FCB008A9248 /* OLProductHomeViewController.m in Sources */,
 				CD93BB30187842AB00316492 /* OLAddressSelectionViewController.m in Sources */,
 				3D8122ED1A759F42004E7297 /* RMImageCropper.m in Sources */,

@@ -121,7 +121,7 @@
         [self.navigationController pushViewController:posterVc animated:YES];
     }
     else{
-        OLOrderReviewViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OrderReviewViewController"];
+        OLOrderReviewViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLOrderReviewCollectionViewViewController"];
         vc.assets = self.assets;
         vc.product = self.product;
         [self.splitViewController setPreferredDisplayMode:UISplitViewControllerDisplayModePrimaryHidden];
