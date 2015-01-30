@@ -63,13 +63,13 @@ static UIColor *deselectedColor;
     OLProduct *productA2;
     OLProduct *productA3;
     for (OLProduct *product in [OLProduct products]){
-        if (product.templateType == kOLTemplateTypeLargeFormatA1){
+        if ([product.productTemplate.productCode isEqualToString:@"LFA1"]){
             productA1 = product;
         }
-        if (product.templateType == kOLTemplateTypeLargeFormatA2){
+        if ([product.productTemplate.productCode isEqualToString:@"LFA2"]){
             productA2 = product;
         }
-        if (product.templateType == kOLTemplateTypeLargeFormatA3){
+        if ([product.productTemplate.productCode isEqualToString:@"LFA3"]){
             productA3 = product;
         }
     }
@@ -120,7 +120,7 @@ static UIColor *deselectedColor;
 #pragma mark - actions
 - (IBAction)pressedClassic:(UIButton *)sender {
     for (OLProduct *product in [OLProduct products]){
-        if (product.templateType == kOLTemplateTypeLargeFormatA3){
+        if ([product.productTemplate.productCode isEqualToString:@"LFA3"]){
             self.product = product;
         }
     }
@@ -139,7 +139,7 @@ static UIColor *deselectedColor;
 
 - (IBAction)pressedGrand:(UIButton *)sender {
     for (OLProduct *product in [OLProduct products]){
-        if (product.templateType == kOLTemplateTypeLargeFormatA2){
+        if ([product.productTemplate.productCode isEqualToString:@"LFA2"]){
             self.product = product;
         }
     }
@@ -158,7 +158,7 @@ static UIColor *deselectedColor;
 
 - (IBAction)pressedDeluxe:(UIButton *)sender {
     for (OLProduct *product in [OLProduct products]){
-        if (product.templateType == kOLTemplateTypeLargeFormatA1){
+        if ([product.productTemplate.productCode isEqualToString:@"LFA1"]){
             self.product = product;
         }
     }

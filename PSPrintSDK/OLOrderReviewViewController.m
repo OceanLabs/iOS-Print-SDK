@@ -226,7 +226,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     
     UINavigationController *nav = [self.storyboard instantiateViewControllerWithIdentifier:@"CropViewNavigationController"];
     OLScrollCropViewController *cropVc = (id)nav.topViewController;
-    cropVc.enableCircleMask = self.product.templateType == kOLTemplateTypeStickersCircle;
+    cropVc.enableCircleMask = self.product.productTemplate.templateClass == kOLTemplateClassCircle;
     cropVc.delegate = self;
     cropVc.aspectRatio = 1;
     if (((OLAsset *)(self.editingPrintPhoto.asset)).assetType == kOLAssetTypeRemoteImageURL){
@@ -292,7 +292,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
         enhanceButton.titleLabel.font = [UIFont fontWithName:@"MissionGothic-Bold" size:12];
     }
     
-    if (self.product.templateType == kOLTemplateTypeStickersCircle){       
+    if (self.product.productTemplate.templateClass == kOLTemplateClassCircle){
         cell.enableMask = YES;
     }
 
@@ -314,7 +314,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
         if (!reviewPhotoCellHeight) {
             UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"reviewPhotoCell"];
             
-            if (self.product.templateType == kOLTemplateTypePolaroids || self.product.templateType == kOLTemplateTypeMiniPolaroids){
+            if (self.product.productTemplate.templateClass == kOLTemplateClassPolaroid){
                 NSUInteger extraBottomBezel = 50 / [self screenWidthFactor];
                 reviewPhotoCellHeight = @(cell.bounds.size.height + extraBottomBezel);
             }

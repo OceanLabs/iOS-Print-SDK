@@ -10,29 +10,18 @@
 #import "OLProductTemplateSyncRequest.h"
 #import "OLCountry.h"
 
-NSString *const kOLDefaultTemplateForSquarePrints = @"squares";
-NSString *const kOLDefaultTemplateForSquareMiniPrints = @"squares_mini";
-NSString *const kOLDefaultTemplateForMagnets = @"magnets";
-NSString *const kOLDefaultTemplateForPolaroidStylePrints = @"polaroids";
-NSString *const kOLDefaultTemplateForPolaroidStyleMiniPrints = @"polaroids_mini";
-NSString *const kOLDefaultTemplateForPostcard = @"default_postcard";
-NSString *const kOLDefaultTemplateForPsPostcard = @"ps_postcard";
-NSString *const kOLDefaultTemplateFor60Postcard = @"60_postcards";
-NSString *const kOLDefaultTemplateForFrames2x2 = @"frames_2x2";
-NSString *const kOLDefaultTemplateForFrames3x3 = @"frames_3x3";
-NSString *const kOLDefaultTemplateForFrames4x4 = @"frames_4x4";
-NSString *const kOLDefaultTemplateForFrames = @"frames";
-NSString *const kOLDefaultTemplateForLargeFormatA1 = @"a1_poster";
-NSString *const kOLDefaultTemplateForLargeFormatA2 = @"a2_poster";
-NSString *const kOLDefaultTemplateForLargeFormatA3 = @"a3_poster";
-NSString *const kOLDefaultTemplateForStickersSquare = @"stickers_square";
-NSString *const kOLDefaultTemplateForStickersCircle = @"stickers_circle";
-
 static NSString *const kKeyIdentifier = @"co.oceanlabs.pssdk.kKeyIdentifier";
 static NSString *const kKeyName = @"co.oceanlabs.pssdk.kKeyName";
 static NSString *const kKeyQuantity = @"co.oceanlabs.pssdk.kKeyQuantity";
 static NSString *const kKeyEnabled = @"co.oceanlabs.pssdk.kKeyEnabled";
 static NSString *const kKeyCostsByCurrency = @"co.oceanlabs.pssdk.kKeyCostsByCurrency";
+static NSString *const kKeyCoverPhotoURL = @"co.oceanlabs.pssdk.kKeyCoverPhotoURL";
+static NSString *const kKeyProductPhotographyURLs = @"co.oceanlabs.pssdk.kKeyProductPhotographyURLs";
+static NSString *const kKeyTemplateClass = @"co.oceanlabs.pssdk.kKeyTemplateClass";
+static NSString *const kKeyLabelColor = @"co.oceanlabs.pssdk.kKeyLabelColor";
+static NSString *const kKeySizeCm = @"co.oceanlabs.pssdk.kKeySizeCm";
+static NSString *const kKeySizeInches = @"co.oceanlabs.pssdk.kKeySizeInches";
+static NSString *const kKeyProductCode = @"co.oceanlabs.pssdk.kKeyProductCode";
 
 static NSMutableArray *templates;
 static NSDate *lastSyncDate;
@@ -115,52 +104,12 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
     return lastSyncDate;
 }
 
-+ (NSMutableArray *)templatesFromBundledPlist {
-    NSString *path = [[NSBundle mainBundle] pathForResource:@"OLProductTemplates" ofType:@"plist"];
-    NSMutableArray *plist = [[NSMutableArray alloc] initWithContentsOfFile:path];
-    
-    NSMutableArray *templates = [[NSMutableArray alloc] init];
-    for (id template in plist) {
-        if ([template isKindOfClass:[NSDictionary class]]) {
-            id templateId = template[@"OLTemplateId"];
-            id templateName = template[@"OLTemplateName"];
-            id sheetQuantity = template[@"OLSheetQuanity"];
-            id enabled = template[@"OLEnabled"] ? template[@"OLEnabled"] : [NSNumber numberWithInt:1];
-            id sheetCosts = template[@"OLSheetCosts"];
-            if ([templateId isKindOfClass:[NSString class]] && [templateName isKindOfClass:[NSString class]]
-                && [sheetQuantity isKindOfClass:[NSNumber class]] && [enabled isKindOfClass:[NSNumber class]]
-                && [sheetCosts isKindOfClass:[NSDictionary class]]) {
-                
-                NSMutableDictionary/*<String, NSDecimalNumber>*/ *costs = [[NSMutableDictionary alloc] init];
-                for (id key in sheetCosts) {
-                    id val = sheetCosts[key];
-                    if ([key isKindOfClass:[NSString class]] && [val isKindOfClass:[NSString class]]) {
-                        if ([OLCountry isValidCurrencyCode:key]) {
-                            NSDecimalNumber *cost = [NSDecimalNumber decimalNumberWithString:val];
-                            costs[key] = cost;
-                        }
-                    }
-                }
-                
-                NSAssert(costs.count > 0, @"OLProductTemplates.plist %@ (%@) does not contain any cost information", templateId, templateName);
-                if (costs.count > 0) {
-                    [templates addObject:[[OLProductTemplate alloc] initWithIdentifier:templateId name:templateName sheetQuantity:[sheetQuantity unsignedIntegerValue] sheetCostsByCurrencyCode:costs enabled:[enabled boolValue]]];
-                }
-            } else {
-                NSAssert(NO, @"Bad template format in OLProductTemplates.plist");
-            }
-        }
-    }
-    return templates;
-}
 
 + (NSArray *)templates {
     if (!templates) {
         NSArray *components = [NSKeyedUnarchiver unarchiveObjectWithFile:[OLProductTemplate templatesFilePath]];
         if (!components) {
-            lastSyncDate = nil;
-            templates = [self templatesFromBundledPlist];
-            
+            lastSyncDate = nil;            
         } else {
             lastSyncDate = components[0];
             templates = components[1];
@@ -168,6 +117,29 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
     }
     
     return templates;
+}
+
++ (void) resetTemplates{
+    templates = nil;
+}
+
++(OLTemplateClass)templateClassWithIdentifier:(NSString *)identifier{
+    if ([identifier isEqualToString:@"Square"]){
+        return kOLTemplateClassSquare;
+    }
+    else if ([identifier isEqualToString:@"Polaroid"]){
+        return kOLTemplateClassPolaroid;
+    }
+    else if ([identifier isEqualToString:@"Frame"]){
+        return kOLTemplateClassFrame;
+    }
+    else if ([identifier isEqualToString:@"Poster"]){
+        return kOLTemplateClassPoster;
+    }
+    else if ([identifier isEqualToString:@"Circle"]){
+        return kOLTemplateClassCircle;
+    }
+    return kOLTemplateClassNA;
 }
 
 - (NSString *)description {
@@ -178,58 +150,20 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
     return [NSString stringWithFormat:@"%@%@ (%@)%@ quantity: %lu",self.enabled ? @"enabled " : @"disabled ", self.identifier, self.name, supportedCurrencies, (unsigned long) self.quantityPerSheet];
 }
 
--(NSURL *)coverImageURL{
-    switch ([OLProductTemplate templateTypeWithIdentifier:self.identifier]) {
-        case kOLTemplateTypeMagnets: return [NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/magnets.jpg"];
-        case kOLTemplateTypeMiniSquares: return [NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/mini-squares.jpg"];
-        case kOLTemplateTypeSquares: return [NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/squares.jpg"];
-        case kOLTemplateTypeMiniPolaroids: return [NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/petite-polaroids.jpg"];
-        case kOLTemplateTypePolaroids: return [NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/polaroids.jpg"];
-        case kOLTemplateTypeFrame: return [NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/frames.jpg"];
-        case kOLTemplateTypeFrame2x2: return [NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/frames.jpg"];
-        case kOLTemplateTypeFrame3x3: return [NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/frames.jpg"];
-        case kOLTemplateTypeFrame4x4: return [NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/frames.jpg"];
-        case kOLTemplateTypePostcard: return [NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/postcards.jpg"];
-        case kOLTemplateTypeLargeFormatA1: return [NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/posters.jpg"];
-        case kOLTemplateTypeLargeFormatA2: return [NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/posters.jpg"];
-        case kOLTemplateTypeLargeFormatA3: return [NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/posters.jpg"];
-        case kOLTemplateTypeStickersCircle: return [NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/landscape-circle-stickers-notext.jpg"];
-        case kOLTemplateTypeStickersSquare: return [NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/landscape-square-stickers-notext.jpg"];
-        default: return nil;
-    }
-}
-
--(NSArray *)productsPhotoURLs{
-    switch ([OLProductTemplate templateTypeWithIdentifier:self.identifier]) {
-        case kOLTemplateTypeMagnets: return @[[NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/magnets1%402x.jpg"], [NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/magnets2%402x.jpg"]];
-        case kOLTemplateTypeMiniSquares: return @[[NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/mini%20squares%402x.jpg"], [NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/mini%20squares2%402x.jpg"]];
-        case kOLTemplateTypeSquares: return @[[NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/squares1%402x.jpg"], [NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/squares2%402x.jpg"]];
-        case kOLTemplateTypeMiniPolaroids: return @[[NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/mini%20polaroids1%402x.jpg"], [NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/mini%20polaroids2%402x.jpg"]];
-        case kOLTemplateTypePolaroids: return @[[NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/polaroids2%402x.jpg"], [NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/polaroids3%402x.jpg"]];
-        case kOLTemplateTypeFrame2x2: return @[[NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/frames1%402x.jpg"]];
-        case kOLTemplateTypeFrame3x3: return @[[NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/frames1%402x.jpg"]];
-        case kOLTemplateTypeFrame4x4: return @[[NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/frames1%402x.jpg"]];
-        case kOLTemplateTypeFrame: return @[[NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/frames1%402x.jpg"], [NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/frames2%402x.jpg"]];
-        case kOLTemplateTypePostcard: return @[[NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/postcards1%402x.jpg"], [NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/postcards2%402x.jpg"]];
-        case kOLTemplateTypeLargeFormatA1: return @[[NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/A1.jpg"]];
-        case kOLTemplateTypeLargeFormatA2: return @[[NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/A2.jpg"]];
-        case kOLTemplateTypeLargeFormatA3: return @[[NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/A3.jpg"]];
-        case kOLTemplateTypeStickersSquare: return @[[NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/product_square-stickers-1%402x.jpg"], [NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/product_square-stickers-2%402x.jpg"]];
-        case kOLTemplateTypeStickersCircle: return @[[NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/product_rounded-stickers-1%402x.jpg"], [NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/product_rounded-stickers-2%402x.jpg"]];
-        default: return nil;
-    }
-    return @[[NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/polaroids3%402x.jpg"], [NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/polaroids3%402x.jpg"]];
-}
-
-
 #pragma mark - NSCoding protocol methods
-
 - (void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:self.identifier forKey:kKeyIdentifier];
     [aCoder encodeObject:self.name forKey:kKeyName];
     [aCoder encodeInteger:self.quantityPerSheet forKey:kKeyQuantity];
     [aCoder encodeBool:self.enabled forKey:kKeyEnabled];
     [aCoder encodeObject:self.costsByCurrencyCode forKey:kKeyCostsByCurrency];
+    [aCoder encodeObject:self.coverPhotoURL forKey:kKeyCoverPhotoURL];
+    [aCoder encodeObject:self.productPhotographyURLs forKey:kKeyProductPhotographyURLs];
+    [aCoder encodeObject:self.labelColor forKey:kKeyLabelColor];
+    [aCoder encodeObject:[NSNumber numberWithInt:self.templateClass] forKey:kKeyTemplateClass];
+    [aCoder encodeCGSize:self.sizeCm forKey:kKeySizeCm];
+    [aCoder encodeCGSize:self.sizeInches forKey:kKeySizeInches];
+    [aCoder encodeObject:self.productCode forKey:kKeyProductCode];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
@@ -239,59 +173,16 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
         _quantityPerSheet = [aDecoder decodeIntegerForKey:kKeyQuantity];
         _enabled = [aDecoder decodeBoolForKey:kKeyEnabled];
         _costsByCurrencyCode = [aDecoder decodeObjectForKey:kKeyCostsByCurrency];
+        _coverPhotoURL = [aDecoder decodeObjectForKey:kKeyCoverPhotoURL];
+        _productPhotographyURLs = [aDecoder decodeObjectForKey:kKeyProductPhotographyURLs];
+        _templateClass = [[aDecoder decodeObjectForKey:kKeyTemplateClass] intValue];
+        _labelColor = [aDecoder decodeObjectForKey:kKeyLabelColor];
+        _sizeCm = [aDecoder decodeCGSizeForKey:kKeySizeCm];
+        _sizeInches = [aDecoder decodeCGSizeForKey:kKeySizeInches];
+        _productCode = [aDecoder decodeObjectForKey:kKeyProductCode];
     }
     
     return self;
-}
-
-+(OLTemplateType)templateTypeWithIdentifier:(NSString *)identifier{
-    if ([identifier isEqualToString:kOLDefaultTemplateForFrames2x2]){
-        return kOLTemplateTypeFrame2x2;
-    }
-    else if ([identifier isEqualToString:kOLDefaultTemplateForFrames3x3]){
-        return kOLTemplateTypeFrame3x3;
-    }
-    else if ([identifier isEqualToString:kOLDefaultTemplateForFrames4x4]){
-        return kOLTemplateTypeFrame4x4;
-    }
-    else if ([identifier isEqualToString:kOLDefaultTemplateForFrames]){
-        return kOLTemplateTypeFrame;
-    }
-    else if ([identifier isEqualToString:kOLDefaultTemplateForMagnets]){
-        return kOLTemplateTypeMagnets;
-    }
-    else if ([identifier isEqualToString:kOLDefaultTemplateForSquarePrints]){
-        return kOLTemplateTypeSquares;
-    }
-    else if ([identifier isEqualToString:kOLDefaultTemplateForSquareMiniPrints]){
-        return kOLTemplateTypeMiniSquares;
-    }
-    else if ([identifier isEqualToString:kOLDefaultTemplateForPolaroidStylePrints]){
-        return kOLTemplateTypePolaroids;
-    }
-    else if ([identifier isEqualToString:kOLDefaultTemplateForPolaroidStyleMiniPrints]){
-        return kOLTemplateTypeMiniPolaroids;
-    }
-    else if ([identifier isEqualToString:kOLDefaultTemplateForLargeFormatA1]){
-        return kOLTemplateTypeLargeFormatA1;
-    }
-    else if ([identifier isEqualToString:kOLDefaultTemplateForLargeFormatA2]){
-        return kOLTemplateTypeLargeFormatA2;
-    }
-    else if ([identifier isEqualToString:kOLDefaultTemplateForLargeFormatA3]){
-        return kOLTemplateTypeLargeFormatA3;
-    }
-    else if ([identifier isEqualToString:kOLDefaultTemplateForStickersCircle]){
-        return kOLTemplateTypeStickersCircle;
-    }
-    else if ([identifier isEqualToString:kOLDefaultTemplateForStickersSquare]){
-        return kOLTemplateTypeStickersSquare;
-    }
-    else if ([identifier isEqualToString:kOLDefaultTemplateForPostcard] || [identifier isEqualToString:kOLDefaultTemplateForPsPostcard] || [identifier isEqualToString:kOLDefaultTemplateFor60Postcard]){
-        return kOLTemplateTypePostcard;
-    }
-//    NSAssert(NO, @"Unrecognized template: %@", identifier);
-    return -1;
 }
 
 @end

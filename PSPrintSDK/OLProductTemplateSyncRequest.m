@@ -56,13 +56,72 @@
                             id identifier = template[@"template_id"];
                             id costs = template[@"cost"];
                             id imagesPerSheet = template[@"images_per_page"];
+                            id product = template[@"product"];
                             NSNumber *enabledNumber = template[@"enabled"];
                             BOOL enabled = enabledNumber == nil ? YES : [enabledNumber boolValue];
                             
                             if ([name isKindOfClass:[NSString class]]
                                 && [identifier isKindOfClass:[NSString class]]
                                 && [costs isKindOfClass:[NSArray class]]
-                                && (imagesPerSheet == nil || [imagesPerSheet isKindOfClass:[NSNumber class]])) {
+                                && (imagesPerSheet == nil || [imagesPerSheet isKindOfClass:[NSNumber class]])
+                                && (product == nil || [product isKindOfClass:[NSDictionary class]])) {
+                                
+                                NSString *coverPhoto;
+                                NSArray *productShots;
+                                NSString *productClass;
+                                UIColor *labelColor;
+                                CGSize sizeCm = CGSizeMake(0, 0);
+                                CGSize sizeInches = CGSizeMake(0, 0);
+                                NSString *code;
+                                if (product){
+                                    coverPhoto = [product[@"ios_sdk_cover_photo"] isKindOfClass:[NSString class]] ? product[@"ios_sdk_cover_photo"] : nil;
+                                    
+                                    NSString *productShot1 = [product[@"ios_sdk_product_shot_1"] isKindOfClass:[NSString class]] ? product[@"ios_sdk_product_shot_1"] : nil;
+                                    NSString *productShot2 = [product[@"ios_sdk_product_shot_2"] isKindOfClass:[NSString class]] ? product[@"ios_sdk_product_shot_2"] : nil;
+                                    if (productShot1 && productShot2){
+                                        productShots = @[[NSURL URLWithString:productShot1], [NSURL URLWithString:productShot2]];
+                                    }
+                                    else if (productShot1){
+                                        productShots = @[[NSURL URLWithString:productShot1]];
+                                    }
+                                    else if (productShot2){
+                                        productShots = @[[NSURL URLWithString:productShot2]];
+                                    }
+                                    
+                                    productClass = [product[@"ios_sdk_product_class"] isKindOfClass:[NSString class]] ? product[@"ios_sdk_product_class"] : nil;
+                                    
+                                    NSArray *colorArray = [product[@"ios_sdk_label_color"] isKindOfClass:[NSArray class]] ? product[@"ios_sdk_label_color"] : nil;
+                                    if (colorArray){
+                                        NSNumber *red = [colorArray[0] isKindOfClass:[NSNumber class]] ? colorArray[0] : nil;
+                                        NSNumber *green = [colorArray[1] isKindOfClass:[NSNumber class]] ? colorArray[1] : nil;
+                                        NSNumber *blue = [colorArray[2] isKindOfClass:[NSNumber class]] ? colorArray[2] : nil;
+                                        if (red && blue && green){
+                                            labelColor = [UIColor colorWithRed:[red doubleValue]/255.0 green:[green doubleValue]/255.0 blue:[blue doubleValue]/255.0 alpha:1.0];
+                                        }
+                                    }
+                                    
+                                    NSDictionary *sizeDict = [product[@"size"] isKindOfClass:[NSDictionary class]] ? product[@"size"] : nil;
+                                    if (sizeDict){
+                                        NSDictionary *cmDict = [sizeDict[@"cm"] isKindOfClass:[NSDictionary class]] ? sizeDict[@"cm"] : nil;
+                                        NSDictionary *inchDict = [sizeDict[@"inch"] isKindOfClass:[NSDictionary class]] ? sizeDict[@"inch"] : nil;
+                                        if (cmDict){
+                                            NSNumber *cmHeight = [cmDict[@"height"] isKindOfClass:[NSNumber class]] ? cmDict[@"height"] : nil;
+                                            NSNumber *cmWidth = [cmDict[@"width"] isKindOfClass:[NSNumber class]] ? cmDict[@"width"] : nil;
+                                            if (cmHeight && cmWidth){
+                                                sizeCm = CGSizeMake([cmWidth doubleValue], [cmHeight doubleValue]);
+                                            }
+                                        }
+                                        if (inchDict){
+                                            NSNumber *inchHeight = [inchDict[@"height"] isKindOfClass:[NSNumber class]] ? inchDict[@"height"] : nil;
+                                            NSNumber *inchWidth = [inchDict[@"width"] isKindOfClass:[NSNumber class]] ? inchDict[@"width"] : nil;
+                                            if (inchHeight && inchWidth){
+                                                sizeInches = CGSizeMake([inchHeight doubleValue], [inchWidth doubleValue]);
+                                            }
+                                        }
+                                        
+                                        code = [product[@"product_code"] isKindOfClass:[NSString class]] ? product[@"product_code"] : nil;
+                                    }
+                                }
                             
                                 NSMutableDictionary *costPerSheetByCurrencyCode = [[NSMutableDictionary alloc] init];
                                 for (id cost in costs) {
@@ -77,6 +136,13 @@
                                 
                                 if (costPerSheetByCurrencyCode.count > 0) {
                                     OLProductTemplate *t = [[OLProductTemplate alloc] initWithIdentifier:identifier name:name sheetQuantity:[imagesPerSheet unsignedIntegerValue] sheetCostsByCurrencyCode:costPerSheetByCurrencyCode enabled:enabled];
+                                    t.coverPhotoURL = [NSURL URLWithString:coverPhoto];
+                                    t.productPhotographyURLs = productShots;
+                                    t.templateClass = [OLProductTemplate templateClassWithIdentifier:productClass];
+                                    t.labelColor = labelColor;
+                                    t.sizeCm = sizeCm;
+                                    t.sizeInches = sizeInches;
+                                    t.productCode = code;
                                     [acc addObject:t];
                                 }
                             }

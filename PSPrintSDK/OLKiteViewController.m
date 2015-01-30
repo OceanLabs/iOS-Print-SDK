@@ -72,10 +72,10 @@
     BOOL includesFrames = NO;
     BOOL includesLargeFormat = NO;
     for (OLProduct *product in products){
-        if (product.templateType == kOLTemplateTypeFrame || product.templateType == kOLTemplateTypeFrame2x2 || product.templateType == kOLTemplateTypeFrame3x3 || product.templateType == kOLTemplateTypeFrame4x4){
+        if (product.productTemplate.templateClass == kOLTemplateClassFrame){
             includesFrames = YES;
         }
-        else if (product.templateType == kOLTemplateTypeLargeFormatA1 || product.templateType == kOLTemplateTypeLargeFormatA2 || product.templateType == kOLTemplateTypeLargeFormatA3){
+        else if (product.productTemplate.templateClass == kOLTemplateClassPoster){
             includesLargeFormat = YES;
         }
     }
@@ -88,7 +88,7 @@
     NSString *nextVcNavIdentifier = @"ProductsNavigationController";
     NSString *nextVcIdentifier = @"ProductHomeViewController";
     OLProduct *product;
-    if (([OLKitePrintSDK enabledProducts] && [[OLKitePrintSDK enabledProducts] count] < 2) || self.templateType != kOLTemplateTypeNoTemplate){
+    if (([OLKitePrintSDK enabledProducts] && [[OLKitePrintSDK enabledProducts] count] < 2) || self.templateClass != kOLTemplateClassNA){
         nextVcNavIdentifier = @"OLProductOverviewNavigationViewController";
         nextVcIdentifier = @"OLProductOverviewViewController";
         
@@ -97,13 +97,13 @@
         }
         else{
             for (OLProduct *productIter in [OLProduct products]){
-                if (productIter.templateType == self.templateType){
+                if ([productIter.productTemplate.identifier isEqualToString:product.productTemplate.identifier]){
                     product = productIter;
                 }
             }
         }
         
-        if (product.templateType == kOLTemplateTypeLargeFormatA1 || product.templateType == kOLTemplateTypeLargeFormatA2 || product.templateType == kOLTemplateTypeLargeFormatA3){
+        if (product.productTemplate.templateClass == kOLTemplateClassPoster){
             nextVcIdentifier = @"sizeSelect";
             nextVcNavIdentifier = @"sizeSelectNavigationController";
         }
@@ -141,6 +141,7 @@
 }
 
 - (void)templateSyncDidFinish:(NSNotification *)n{
+    [OLProductTemplate resetTemplates];
     if (n.userInfo[kNotificationKeyTemplateSyncError]){
         if ([[OLProductTemplate templates] count] > 0){
             return;
