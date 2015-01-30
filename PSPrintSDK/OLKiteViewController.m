@@ -88,7 +88,7 @@
     NSString *nextVcNavIdentifier = @"ProductsNavigationController";
     NSString *nextVcIdentifier = @"ProductHomeViewController";
     OLProduct *product;
-    if (([OLKitePrintSDK enabledProducts] && [[OLKitePrintSDK enabledProducts] count] < 2) || self.templateClass != kOLTemplateClassNA){
+    if (([OLKitePrintSDK enabledProducts] && [[OLKitePrintSDK enabledProducts] count] < 2)){
         nextVcNavIdentifier = @"OLProductOverviewNavigationViewController";
         nextVcIdentifier = @"OLProductOverviewViewController";
         

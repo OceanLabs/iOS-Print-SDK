@@ -13,8 +13,6 @@
 
 @interface OLKiteViewController : UIViewController
 
-@property (assign, nonatomic) OLTemplateClass templateClass;
-
 - (id)initWithAssets:(NSArray *)assets;
 
 @end
