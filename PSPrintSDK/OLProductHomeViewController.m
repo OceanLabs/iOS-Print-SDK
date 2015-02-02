@@ -137,6 +137,9 @@
     if (product.productTemplate.templateClass == kOLTemplateClassPoster){
         productTypeLabel.text = [NSLocalizedString(@"Posters", @"") uppercaseString];
     }
+    else if (product.productTemplate.templateClass == kOLTemplateClassFrame){
+        productTypeLabel.text = [NSLocalizedString(@"Frames", @"") uppercaseString];
+    }
     else{
         productTypeLabel.text = [product.productTemplate.name uppercaseString];
     }
