@@ -92,15 +92,9 @@
         nextVcNavIdentifier = @"OLProductOverviewNavigationViewController";
         nextVcIdentifier = @"OLProductOverviewViewController";
         
-        if ([OLKitePrintSDK enabledProducts] && [[OLKitePrintSDK enabledProducts] count] == 1){
+        if ([OLKiteViewController singleProductEnabled]){
             product = [[OLKitePrintSDK enabledProducts] firstObject];
-        }
-        else{
-            for (OLProduct *productIter in [OLProduct products]){
-                if ([productIter.productTemplate.identifier isEqualToString:product.productTemplate.identifier]){
-                    product = productIter;
-                }
-            }
+            NSAssert(product && product.productTemplate.templateClass != kOLTemplateClassNA, @"Product chosen does not support the Print Shop User Experience. Please implement a custom checkout.");
         }
         
         if (product.productTemplate.templateClass == kOLTemplateClassPoster){
