@@ -301,8 +301,12 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 - (void)positionPoweredByKiteLabel {
     // position Powered by Kite label dynamically based on content size
     CGRect tvFrame = self.tableView.frame;
-    CGFloat height = tvFrame.size.height - (self.tableView.contentSize.height - self.tableView.tableHeaderView.frame.size.height);
-
+    CGFloat extraHeight = 0;
+    if ([self.delegate respondsToSelector:@selector(shouldShowContinueShoppingButton)]){
+        extraHeight = 64;
+    }
+    CGFloat height = tvFrame.size.height - (self.tableView.contentSize.height - self.tableView.tableHeaderView.frame.size.height - extraHeight);
+    
     if (height > self.tableView.tableFooterView.frame.size.height) {
         CGRect frame = self.tableView.tableFooterView.frame;
         self.tableView.tableFooterView.frame = CGRectMake(frame.origin.x, frame.origin.y, frame.size.width, height);
