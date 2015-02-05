@@ -76,16 +76,8 @@
                                 if (product){
                                     coverPhoto = [product[@"ios_sdk_cover_photo"] isKindOfClass:[NSString class]] ? product[@"ios_sdk_cover_photo"] : nil;
                                     
-                                    NSString *productShot1 = [product[@"ios_sdk_product_shot_1"] isKindOfClass:[NSString class]] ? product[@"ios_sdk_product_shot_1"] : nil;
-                                    NSString *productShot2 = [product[@"ios_sdk_product_shot_2"] isKindOfClass:[NSString class]] ? product[@"ios_sdk_product_shot_2"] : nil;
-                                    if (productShot1 && productShot2){
-                                        productShots = @[[NSURL URLWithString:productShot1], [NSURL URLWithString:productShot2]];
-                                    }
-                                    else if (productShot1){
-                                        productShots = @[[NSURL URLWithString:productShot1]];
-                                    }
-                                    else if (productShot2){
-                                        productShots = @[[NSURL URLWithString:productShot2]];
+                                    if ([product[@"ios_sdk_product_shots"] isKindOfClass:[NSArray class]]){
+                                        productShots = product[@"ios_sdk_product_shots"];
                                     }
                                     
                                     productClass = [product[@"ios_sdk_product_class"] isKindOfClass:[NSString class]] ? product[@"ios_sdk_product_class"] : nil;
