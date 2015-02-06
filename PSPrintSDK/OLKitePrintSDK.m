@@ -30,8 +30,8 @@ static NSString *const kOLAPIEndpointLive = @"https://api.kite.ly";
 static NSString *const kOLAPIEndpointSandbox = @"https://api.kite.ly";
 static NSString *const kOLPayPalClientIdLive = @"ASYVBBCHF_KwVUstugKy4qvpQaPlUeE_5beKRJHpIP2d3SA_jZrsaUDTmLQY";
 static NSString *const kOLPayPalClientIdSandbox = @"AcEcBRDxqcCKiikjm05FyD4Sfi4pkNP98AYN67sr3_yZdBe23xEk0qhdhZLM";
-static NSString *const kOLPayPalRecipientEmailLive = @"deon@oceanlabs.co";
-static NSString *const kOLPayPalRecipientEmailSandbox = @"hello-facilitator@psilov.eu";
+static NSString *const kOLPayPalRecipientEmailLive = @"hello@kite.ly";
+static NSString *const kOLPayPalRecipientEmailSandbox = @"sandbox-merchant@kite.ly";
 
 static BOOL useJudoPayForGBP = NO;
 
