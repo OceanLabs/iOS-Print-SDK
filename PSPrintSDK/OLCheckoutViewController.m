@@ -317,6 +317,7 @@ static const NSUInteger kInputFieldTag = 99;
         if (cell == nil) {
             cell = [self createTextFieldCellWithReuseIdentifier:TextFieldCell title:NSLocalizedStringFromTableInBundle(@"Email", @"KitePrintSDK", [OLConstants bundle], @"")  keyboardType:UIKeyboardTypeEmailAddress];
             self.textFieldEmail = (UITextField *) [cell viewWithTag:kInputFieldTag];
+            self.textFieldEmail.autocapitalizationType = UITextAutocapitalizationTypeNone;
             [self populateDefaultEmailAndPhone];
         }
         

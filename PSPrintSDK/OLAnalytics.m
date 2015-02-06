@@ -64,6 +64,7 @@ static NSString *nonNilStr(NSString *str) {
     NSDictionary *info = [[NSBundle mainBundle] infoDictionary];
     NSString *bundleName = [NSString stringWithFormat:@"%@", [info objectForKey:@"CFBundleDisplayName"]];
     NSString *appVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"];
+    NSString *apiKey = [OLKitePrintSDK apiKey] == nil ? @"Unknown" : [OLKitePrintSDK apiKey];
     NSMutableDictionary *propertiesDict = [@{
                                              @"token" : kOLMixpanelToken,
                                              @"distinct_id" : [OLAnalytics userDistinctId],
@@ -74,7 +75,8 @@ static NSString *nonNilStr(NSString *str) {
                                              @"model" : [OLAnalytics platform],
                                              @"Screen Height" : @([UIScreen mainScreen].bounds.size.height),
                                              @"Screen Width" : @([UIScreen mainScreen].bounds.size.width),
-                                             @"Environment" : environment
+                                             @"Environment" : environment,
+                                             @"API Key": apiKey
                                              } mutableCopy];
     NSDictionary *dict = @{@"event" : eventName,
                            @"properties" : propertiesDict};
