@@ -176,11 +176,7 @@ NSInteger margin = 2;
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     if (indexPath.row == 0){
         UITableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:@"reviewTitle"];
-        UILabel* titleLabel = (UILabel *)[cell.contentView viewWithTag:60];
-        titleLabel.font = [UIFont fontWithName:@"MissionGothic-Regular" size:19];
         
-        UILabel* instructionsLabel = (UILabel*)[cell.contentView viewWithTag:70];
-        instructionsLabel.font = [UIFont fontWithName:@"MissionGothic-Light" size:15];
         return cell;
     }
     
@@ -191,7 +187,6 @@ NSInteger margin = 2;
     
     UILabel *countLabel = (UILabel *)[cell.contentView viewWithTag:30];
     [countLabel setText: [NSString stringWithFormat:@"%lu", (unsigned long) (1+[((NSNumber*)[self.extraCopiesOfAssets objectAtIndex:indexPath.row-1]) integerValue])]];
-    countLabel.font = [UIFont fontWithName:@"MissionGothic-Black" size:18];
     
     UICollectionView* collectionView = (UICollectionView*)[cell.contentView viewWithTag:100];
     collectionView.dataSource = self;
