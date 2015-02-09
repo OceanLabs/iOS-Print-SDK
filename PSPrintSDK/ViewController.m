@@ -99,7 +99,6 @@ static NSString *const kApplePayMerchantIDKey = @"merchant.co.oceanlabs.kite.ly"
     if (![self isAPIKeySet]) return;
     
     OLKiteViewController *vc = [[OLKiteViewController alloc] initWithAssets:assets];
-    vc.templateClass = kOLTemplateClassNA;
     //    vc.delegate = self;
     [self presentViewController:vc animated:YES completion:NULL];
 //    [self.navigationController pushViewController:vc animated:YES];
