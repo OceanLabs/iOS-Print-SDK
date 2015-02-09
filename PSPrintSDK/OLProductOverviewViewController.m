@@ -37,6 +37,9 @@
     if (self.product.productTemplate.templateClass == kOLTemplateClassPoster){
         self.title = NSLocalizedString(@"Posters", @"");
     }
+    else if (self.product.productTemplate.templateClass == kOLTemplateClassFrame){
+        self.title = NSLocalizedString(@"Frames", @"");
+    }
     else{
         self.title = self.product.productTemplate.name;
     }
