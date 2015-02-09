@@ -33,17 +33,23 @@
         _products = [OLKitePrintSDK enabledProducts] ? [OLKitePrintSDK enabledProducts] : [OLProduct products];
         NSMutableArray *mutableProducts = [_products mutableCopy];
         BOOL haveAtLeastOnePoster = NO;
+        BOOL haveAtLeastOneFrame = NO;
         for (OLProduct *product in _products){
             if (!product.labelColor){
                 [mutableProducts removeObject:product];
             }
-            if (product.templateType == kOLTemplateTypePostcard){
+            if (product.productTemplate.templateClass == kOLTemplateClassNA){
                 [mutableProducts removeObject:product];
             }
-            if (product.templateType == kOLTemplateTypeFrame2x2 || product.templateType == kOLTemplateTypeFrame3x3 || product.templateType == kOLTemplateTypeFrame4x4){
-                [mutableProducts removeObject:product];
+            if (product.productTemplate.templateClass == kOLTemplateClassFrame){
+                if (haveAtLeastOneFrame){
+                    [mutableProducts removeObject:product];
+                }
+                else{
+                    haveAtLeastOneFrame = YES;
+                }
             }
-            if (product.templateType == kOLTemplateTypeLargeFormatA1 || product.templateType == kOLTemplateTypeLargeFormatA2 || product.templateType == kOLTemplateTypeLargeFormatA3){
+            if (product.productTemplate.templateClass == kOLTemplateClassPoster){
                 if (haveAtLeastOnePoster){
                     [mutableProducts removeObject:product];
                 }
@@ -93,7 +99,7 @@
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     OLProduct *product = self.products[indexPath.row];
-    if (product.templateType == kOLTemplateTypeLargeFormatA1 || product.templateType == kOLTemplateTypeLargeFormatA2 || product.templateType == kOLTemplateTypeLargeFormatA3){
+    if (product.productTemplate.templateClass == kOLTemplateClassPoster){
         OLPosterSizeSelectionViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"sizeSelect"];
         vc.assets = self.assets;
         [self.navigationController pushViewController:vc animated:YES];
@@ -114,7 +120,7 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return self.products.count;
+    return [self.products count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -128,8 +134,11 @@
     [product setCoverImageToImageView:cellImageView];
     
     UILabel *productTypeLabel = (UILabel *)[cell.contentView viewWithTag:300];
-    if (product.templateType == kOLTemplateTypeLargeFormatA1 || product.templateType == kOLTemplateTypeLargeFormatA2 || product.templateType == kOLTemplateTypeLargeFormatA3){
+    if (product.productTemplate.templateClass == kOLTemplateClassPoster){
         productTypeLabel.text = [NSLocalizedString(@"Posters", @"") uppercaseString];
+    }
+    else if (product.productTemplate.templateClass == kOLTemplateClassFrame){
+        productTypeLabel.text = [NSLocalizedString(@"Frames", @"") uppercaseString];
     }
     else{
         productTypeLabel.text = [product.productTemplate.name uppercaseString];
