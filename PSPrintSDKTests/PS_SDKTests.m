@@ -7,6 +7,13 @@
 //
 
 #import <XCTest/XCTest.h>
+#import "ViewController.h"
+
+@interface ViewController (Private)
+
+- (NSString *)apiKey;
+
+@end
 
 @interface PS_SDKTests : XCTestCase
 
@@ -28,7 +35,10 @@
 
 - (void)testExample
 {
-    XCTFail(@"No implementation for \"%s\"", __PRETTY_FUNCTION__);
+    ViewController *vc = [[ViewController alloc] init];
+    if (![[vc apiKey] isEqualToString:@"REPLACE_WITH_YOUR_API_KEY"]){
+        XCTFail(@"API Key is set.");
+    }
 }
 
 @end
