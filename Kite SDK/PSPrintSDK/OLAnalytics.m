@@ -193,7 +193,7 @@ static NSString *nonNilStr(NSString *str) {
     
     NSDecimalNumber *cost = [printOrder costInCurrency:@"GBP"];
     p[@"Cost"] = [cost stringValue];
-    p[@"Job Count"] = [NSString stringWithFormat:@"%lu", printOrder.jobs.count];
+    p[@"Job Count"] = [NSString stringWithFormat:@"%lu",  (unsigned long) printOrder.jobs.count];
     
     return p;
 }
