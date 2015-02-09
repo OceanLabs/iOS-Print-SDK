@@ -102,6 +102,9 @@ Logging in to our [Developer Dashboard](https://www.kite.ly) allow's you to dyna
 * Header files are thoroughly documented; refer to them as needed for extra details about any given property or parameter
 * The [Kite Print API & SDK Developer Docs](https://www.kite.ly/docs/1.1/), which cover error codes and optional server-side integration instructions
 
+## Print API
+We also have a [REST print API](https://www.kite.ly/docs/1.1/) for those who prefer to invent wheels :)
+
 ## License
 
-Kite iOS Print Studio SDK is available under the MIT license. See the [LICENSE](Kite SDK/LICENSE) file for more info.
+Kite iOS Print SDK is available under the MIT license. See the [LICENSE](Kite SDK/LICENSE) file for more info.
