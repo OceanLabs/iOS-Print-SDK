@@ -1,17 +1,17 @@
 Pod::Spec.new do |spec|
   spec.name		= 'Kite-Print-SDK'
-  spec.version         	= '2.0.2'
-  spec.license          =  'MIT'
+  spec.version         	= '2.0.3'
+  spec.license 		= { :type => 'MIT', :file => 'Kite SDK/LICENSE' }
   spec.homepage         = 'https://github.com/OceanLabs/iOS-Print-SDK'
   spec.authors          = {'Deon Botha' => 'deon@oceanlabs.co'}
-  spec.summary          = 'Easily add print on demand functionality to your app. Print magnets, photo prints, postcards, polaroids, A4, posters, stickers, etc.'
-  spec.source           = {:git => 'https://github.com/OceanLabs/iOS-Print-SDK.git', :tag => '2.0.2'}
-  spec.source_files     = ['PSPrintSDK/OL*.{h,m}', 'PSPrintSDK/CardIO*.h', 'PSPrintSDK/RMImageCropper/*.{h,m}', 'PSPrintSDK/Categories/*.{h,m}']
-  spec.resources        = ['PSPrintSDK/KitePrintSDK.xcassets', '*.lproj', 'PSPrintSDK/OLKiteStoryboard.storyboard']
+  spec.summary          = "Add physical print functionality in minutes! Print magnets, photo prints, postcards, polaroids, posters, stickers, canvas', phone cases, etc"
+  spec.source           = {:git => 'https://github.com/OceanLabs/iOS-Print-SDK.git', :tag => '2.0.3'}
+  spec.source_files     = ['Kite SDK/PSPrintSDK/OL*.{h,m}', 'Kite SDK/PSPrintSDK/CardIO*.h', 'Kite SDK/PSPrintSDK/RMImageCropper/*.{h,m}', 'Kite SDK/PSPrintSDK/Categories/*.{h,m}']
+  spec.resources        = ['Kite SDK/PSPrintSDK/KitePrintSDK.xcassets', 'Kite SDK/*.lproj', 'Kite SDK/PSPrintSDK/OLKiteStoryboard.storyboard']
   spec.dependency	'SDWebImage'
   spec.dependency	'SVProgressHUD'
   spec.dependency	'AFNetworking', '2.5.0'
-  spec.dependency	'UICKeyChainStore', '~> 1.0.4' 
+  spec.dependency	'UICKeyChainStore', '~> 1.0.4'
   spec.dependency	'LXReorderableCollectionViewFlowLayout'
   spec.requires_arc	= true
   spec.platform		= :ios, '7.0'

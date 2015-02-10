@@ -3,7 +3,7 @@ Customizing The Kite.ly Print SDK
 
 This tutorial covers customizing the Kite.ly Print SDK
 
-_If you haven't already, see the [README](../README.md) for an initial overview and instructions for adding the SDK to your project._
+_If you haven't already, see the [README](../../README.md) for an initial overview and instructions for adding the SDK to your project._
 
 
 Overview
@@ -66,7 +66,7 @@ Sample Code
 
 Next Steps
 ----------
-- If you are using the [Full mode of the SDK](../README.md#full) then create and present or push an [`OLKiteViewController`](OLKiteViewController.md) passing it an array of OLAssets
-- If you are using the [Managed Checkout](../README.md#managed-checkout) flow where you use our checkout and payment UI then
+- If you are using the [Full mode of the SDK](../../README.md#full) then create and present or push an [`OLKiteViewController`](OLKiteViewController.md) passing it an array of OLAssets
+- If you are using the [Managed Checkout](../../README.md#managed-checkout) flow where you use our checkout and payment UI then
 [create and present a `OLCheckoutViewController`](managed_checkout.md) passing it a [`OLPrintOrder`](create_print_order.md)
-- Alternatively if you're building your own [Custom Checkout](../README.md#custom-checkout) UI then it's time to [set the shipping address](shipping.md) to which the order will be delivered
+- Alternatively if you're building your own [Custom Checkout](../../README.md#custom-checkout) UI then it's time to [set the shipping address](shipping.md) to which the order will be delivered
