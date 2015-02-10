@@ -8,8 +8,10 @@
 
 #import <UIKit/UIKit.h>
 #import "OLPrintOrder.h"
+#import "OLKiteViewController.h"
 
 @interface OLPosterSizeSelectionViewController : UIViewController
 @property (strong, nonatomic) NSMutableArray *assets;
+@property (weak, nonatomic) id<OLKiteDelegate> delegate;
 
 @end

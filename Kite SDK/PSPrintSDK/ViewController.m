@@ -19,7 +19,7 @@ static NSString *const kAPIKeyLive = @"REPLACE_WITH_YOUR_API_KEY"; // replace wi
 static NSString *const kStripePublishableKey = @"pk_test_6pRNASCoBOKtIshFeQd4XMUh"; // This is a test key. Replace with the live key here.
 static NSString *const kApplePayMerchantIDKey = @"merchant.co.oceanlabs.kite.ly"; // For internal use only.
 
-@interface ViewController () <UIImagePickerControllerDelegate, UINavigationControllerDelegate, OLCheckoutDelegate>
+@interface ViewController () <UIImagePickerControllerDelegate, UINavigationControllerDelegate, OLKiteDelegate>
 @property (nonatomic, weak) IBOutlet UISegmentedControl *environmentPicker;
 @property (nonatomic, strong) OLPrintOrder* printOrder;
 @end
@@ -99,7 +99,7 @@ static NSString *const kApplePayMerchantIDKey = @"merchant.co.oceanlabs.kite.ly"
     if (![self isAPIKeySet]) return;
     
     OLKiteViewController *vc = [[OLKiteViewController alloc] initWithAssets:assets];
-    //    vc.delegate = self;
+    vc.delegate = self;
     [self presentViewController:vc animated:YES completion:NULL];
 //    [self.navigationController pushViewController:vc animated:YES];
 }
@@ -131,9 +131,9 @@ static NSString *const kApplePayMerchantIDKey = @"merchant.co.oceanlabs.kite.ly"
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
-#pragma mark - OLCheckoutDelegate
+#pragma mark - OLKiteDelete
 
-- (BOOL) shouldShowContinueShoppingButton {
+- (BOOL) shouldShowAddMorePhotosInReview {
     return YES;
 }
 

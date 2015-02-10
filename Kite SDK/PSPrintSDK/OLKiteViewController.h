@@ -11,7 +11,16 @@
 
 @class OLPrintOrder;
 
+@protocol OLKiteDelegate <NSObject>
+
+@optional
+- (BOOL)shouldShowAddMorePhotosInReview;
+
+@end
+
 @interface OLKiteViewController : UIViewController
+
+@property (weak, nonatomic) id<OLKiteDelegate> delegate;
 
 - (id)initWithAssets:(NSArray *)assets;
 

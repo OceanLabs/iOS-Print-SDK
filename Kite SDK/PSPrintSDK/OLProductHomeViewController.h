@@ -8,9 +8,11 @@
 
 #import <UIKit/UIKit.h>
 #import "OLPrintOrder.h"
+#import "OLKiteViewController.h"
 
 @interface OLProductHomeViewController : UITableViewController
 
 @property (strong, nonatomic) NSMutableArray *assets;
+@property (weak, nonatomic) id<OLKiteDelegate> delegate;
 
 @end

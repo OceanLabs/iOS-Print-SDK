@@ -35,7 +35,7 @@ typedef enum {
     return self.productTemplate.labelColor;
 }
 
-#warning TODO
+//#warning TODO: Not doing anything at the moment
 - (CGSize)serverImageSize{
     return CGSizeMake(0, 0);
 }

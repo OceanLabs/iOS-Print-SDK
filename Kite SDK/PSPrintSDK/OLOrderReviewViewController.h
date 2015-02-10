@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "OLPrintOrder.h"
 #import "OLScrollCropViewController.h"
+#import "OLKiteViewController.h"
 
 @class OLProduct;
 
@@ -18,6 +19,7 @@
 @property (strong, nonatomic) NSMutableArray *extraCopiesOfAssets;
 @property (strong, nonatomic) NSMutableArray *assets;
 @property (strong, nonatomic) NSMutableArray *userSelectedPhotos;
+@property (weak, nonatomic) id<OLKiteDelegate> delegate;
 
 - (void)updateTitleBasedOnSelectedPhotoQuanitity;
 - (BOOL) shouldGoToCheckout;

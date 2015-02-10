@@ -81,17 +81,18 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
                                                                             target:nil
                                                                             action:nil];
     
-    self.addMorePhotosView = [[UIView alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height - 46 - [[UIApplication sharedApplication] statusBarFrame].size.height - self.navigationController.navigationBar.frame.size.height, self.view.bounds.size.width, 46)];
-    self.addMorePhotosView.backgroundColor = self.tableView.backgroundColor;
-    self.addMorePhotosView.tag = 777;
-    [self.tableView addSubview:self.addMorePhotosView];
-    
-    self.addMorePhotosButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 46)];
-    [self.addMorePhotosButton addTarget:self action:@selector(onButtonAddMorePhotosClicked) forControlEvents:UIControlEventTouchUpInside];
-    [self.addMorePhotosButton setTitle:NSLocalizedString(@"Add More Photos", @"") forState:UIControlStateNormal];
-    [self.addMorePhotosButton setBackgroundColor:[UIColor colorWithRed: 0.243 green: 0.78 blue: 0.616 alpha: 1]];
-    [self.addMorePhotosView addSubview:self.addMorePhotosButton];
-    
+    if ([self shouldShowAddMorePhotos]){
+        self.addMorePhotosView = [[UIView alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height - 46 - [[UIApplication sharedApplication] statusBarFrame].size.height - self.navigationController.navigationBar.frame.size.height, self.view.bounds.size.width, 46)];
+        self.addMorePhotosView.backgroundColor = self.tableView.backgroundColor;
+        self.addMorePhotosView.tag = 777;
+        [self.tableView addSubview:self.addMorePhotosView];
+        
+        self.addMorePhotosButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 46)];
+        [self.addMorePhotosButton addTarget:self action:@selector(onButtonAddMorePhotosClicked) forControlEvents:UIControlEventTouchUpInside];
+        [self.addMorePhotosButton setTitle:NSLocalizedString(@"Add More Photos", @"") forState:UIControlStateNormal];
+        [self.addMorePhotosButton setBackgroundColor:[UIColor colorWithRed: 0.243 green: 0.78 blue: 0.616 alpha: 1]];
+        [self.addMorePhotosView addSubview:self.addMorePhotosButton];
+    }
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
@@ -338,6 +339,15 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     [self onButtonEnhanceClicked:sender];
 }
 
+- (BOOL)shouldShowAddMorePhotos{
+    if (![self.delegate respondsToSelector:@selector(shouldShowAddMorePhotosInReview)]){
+        return YES;
+    }
+    else{
+        return [self.delegate shouldShowAddMorePhotosInReview];
+    }
+}
+
 
 #pragma mark UITableView data source and delegate methods
 
@@ -349,7 +359,7 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
-    return 2;
+    return [self shouldShowAddMorePhotos] ? 2 : 1;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
