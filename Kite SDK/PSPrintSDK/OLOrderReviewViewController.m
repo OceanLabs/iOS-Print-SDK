@@ -23,13 +23,15 @@
 #import <CTAssetsPickerController.h>
 
 static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
+static const NSUInteger kTagAlertViewDeletePhoto = 98;
 
-@interface OLOrderReviewViewController () <OLCheckoutDelegate, CTAssetsPickerControllerDelegate>
+@interface OLOrderReviewViewController () <OLCheckoutDelegate, CTAssetsPickerControllerDelegate, UIAlertViewDelegate>
 
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *confirmBarButton;
 @property (weak, nonatomic) OLPrintPhoto *editingPrintPhoto;
 @property (strong, nonatomic) UIView *addMorePhotosView;
 @property (strong, nonatomic) UIButton *addMorePhotosButton;
+@property (assign, nonatomic) NSUInteger indexOfPhotoToDelete;
 
 @end
 
@@ -196,12 +198,14 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     return NO;
 }
 
-- (NSArray *)createAssetArray {
-    NSMutableArray *array = [[NSMutableArray alloc] initWithCapacity:self.userSelectedPhotos.count];
-    for (OLPrintPhoto *object in self.userSelectedPhotos) {
-        [array addObject:object.asset];
-    }
-    return array;
+- (void) deletePhotoAtIndex:(NSUInteger)index{
+    [self.assets removeObjectAtIndex:index];
+    [self.userSelectedPhotos removeObjectAtIndex:index];
+    [self.extraCopiesOfAssets removeObjectAtIndex:index];
+    
+    [self updateTitleBasedOnSelectedPhotoQuanitity];
+    
+    [self.tableView deleteRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:index+1 inSection:0]] withRowAnimation:UITableViewRowAnimationAutomatic];
 }
 
 - (void)populateArrayWithNewArray:(NSArray *)array dataType:(Class)class {
@@ -211,24 +215,9 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
         [assetArray addObject:[OLAsset assetWithALAsset:asset]];
     }
     
-//    // First remove any that are not returned.
-//    NSMutableArray *removeArray = [NSMutableArray arrayWithArray:self.assets];
-//    for (id asset in self.assets) {
-//        if (![asset isKindOfClass:class] || [assetArray containsObject:asset]) {
-//#warning Remove from extracopies of assets
-//            [removeArray removeObject:asset];
-//        }
-//    }
-//    
-//    [self.assets removeObjectsInArray:removeArray];
-    
-    // Second, add the remaining objects to the end of the array without replacing any.
+
     NSMutableArray *addArray = [NSMutableArray arrayWithArray:assetArray];
-//    for (id object in self.assets) {
-//        if ([addArray containsObject:object]) {
-//            [addArray removeObject:object];
-//        }
-//    }
+
     for (ALAsset *asset in addArray){
         [self.extraCopiesOfAssets addObject:@0];
         
@@ -251,14 +240,6 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     CTAssetsPickerController *picker = [[CTAssetsPickerController alloc] init];
     picker.delegate = self;
     picker.assetsFilter = [ALAssetsFilter allPhotos];
-//    NSArray *allAssets = [[self createAssetArray] mutableCopy];
-//    NSMutableArray *alAssets = [[NSMutableArray alloc] init];
-//    for (id asset in allAssets){
-//        if ([asset isKindOfClass:[ALAsset class]]){
-//            [alAssets addObject:asset];
-//        }
-//    }
-//    picker.selectedAssets = alAssets;
     [self presentViewController:picker animated:YES completion:nil];
 }
 
@@ -288,6 +269,20 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     
     NSUInteger extraCopies = [self.extraCopiesOfAssets[indexPath.row - 1] integerValue];
     if (extraCopies == 0){
+        if ([UIAlertController class]){
+            UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Delete?", @"") message:NSLocalizedString(@"Do you want to delete this photo?", @"") preferredStyle:UIAlertControllerStyleAlert];
+            [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Yes, delete it", @"") style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action){
+                [self deletePhotoAtIndex:indexPath.row-1];
+            }]];
+            [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"No, keep it", @"") style:UIAlertActionStyleCancel handler:^(UIAlertAction *action){}]];
+            [self presentViewController:ac animated:YES completion:NULL];
+        }
+        else{
+            UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Delete?", @"") message:NSLocalizedString(@"Do you want to delete this photo?", @"") delegate:self cancelButtonTitle:NSLocalizedString(@"Yes, delete it", @"") otherButtonTitles:NSLocalizedString(@"No, keep it", @""), nil];
+            self.indexOfPhotoToDelete = indexPath.row-1;
+            av.tag = kTagAlertViewDeletePhoto;
+            [av show];
+        };
         return;
     }
     extraCopies--;
@@ -424,6 +419,11 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     if (alertView.tag == kTagAlertViewSelectMorePhotos) {
         if (buttonIndex == 1) {
             [self doCheckout];
+        }
+    }
+    else if (alertView.tag == kTagAlertViewDeletePhoto) {
+        if (buttonIndex == 0){
+            [self deletePhotoAtIndex:self.indexOfPhotoToDelete];
         }
     }
 }
