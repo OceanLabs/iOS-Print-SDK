@@ -119,7 +119,7 @@
     }
     else{
         OLOrderReviewViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OrderReviewViewController"];
-        vc.assets = self.assets;
+        vc.assets = [self.assets mutableCopy];
         vc.product = self.product;
         [self.navigationController pushViewController:vc animated:YES];
     }

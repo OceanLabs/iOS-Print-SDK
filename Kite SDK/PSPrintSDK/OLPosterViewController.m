@@ -29,7 +29,7 @@
 
 @implementation OLPosterViewController
 
--(NSArray *) userSelectedPhotos{
+-(NSMutableArray *) userSelectedPhotos{
     if (!_userSelectedPhotos){
         NSMutableArray *mutableUserSelectedPhotos = [[NSMutableArray alloc] init];
         for (id asset in self.assets){
