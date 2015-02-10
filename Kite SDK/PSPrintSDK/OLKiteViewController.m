@@ -134,7 +134,7 @@
     if (!self.navigationController){
         self.nextVc = [sb instantiateViewControllerWithIdentifier:nextVcNavIdentifier];
         ((UINavigationController *)self.nextVc).topViewController.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(dismiss)];
-        [(id)((UINavigationController *)self.nextVc).topViewController setAssets:self.assets];
+        [(id)((UINavigationController *)self.nextVc).topViewController setAssets:[self.assets mutableCopy]];
         if (product){
             [(id)((UINavigationController *)self.nextVc).topViewController setProduct:product];
         }
@@ -143,7 +143,7 @@
     else{
         CGFloat standardiOSBarsHeight = self.navigationController.navigationBar.frame.size.height + [UIApplication sharedApplication].statusBarFrame.size.height;
         self.nextVc = [sb instantiateViewControllerWithIdentifier:nextVcIdentifier];
-        [(id)self.nextVc setAssets:self.assets];
+        [(id)self.nextVc setAssets:[self.assets mutableCopy]];
         if (product){
             [(id)self.nextVc setProduct:product];
         }
