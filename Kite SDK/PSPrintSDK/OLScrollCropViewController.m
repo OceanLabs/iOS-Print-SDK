@@ -19,16 +19,6 @@
     [super viewDidLoad];
     
     [self.cropView setClipsToBounds:YES];
-    
-    UIButton *doneButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 40, 20)];
-    [doneButton addTarget:self action:@selector(onBarButtonDoneTapped:) forControlEvents:UIControlEventTouchUpInside];
-    [doneButton setTitle:NSLocalizedString(@"Done", @"") forState:UIControlStateNormal];
-    [doneButton setTitleColor:self.view.tintColor forState:UIControlStateNormal];
-    [doneButton.titleLabel setFont:[UIFont boldSystemFontOfSize:18]];
-    [doneButton sizeToFit];
-    
-    UIBarButtonItem *item =[[UIBarButtonItem alloc] initWithCustomView:doneButton];
-    self.navigationItem.rightBarButtonItem = item;
 }
 
 -(void)viewWillAppear:(BOOL)animated{

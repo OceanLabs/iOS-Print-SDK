@@ -775,7 +775,13 @@
                             <constraint firstItem="uNG-6s-nO8" firstAttribute="top" relation="greaterThanOrEqual" secondItem="nok-mW-saD" secondAttribute="bottom" constant="8" id="yAk-ch-LPF"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="NhS-TZ-HPH"/>
+                    <navigationItem key="navigationItem" id="NhS-TZ-HPH">
+                        <barButtonItem key="rightBarButtonItem" systemItem="done" id="QM2-5z-9jC">
+                            <connections>
+                                <action selector="onBarButtonDoneTapped:" destination="lkU-BR-804" id="lm7-Az-QlR"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="aspectRatioConstraint" destination="ImC-Qv-Ju3" id="p9Y-jB-by8"/>
                         <outlet property="cropView" destination="nok-mW-saD" id="qFn-PP-Pwf"/>

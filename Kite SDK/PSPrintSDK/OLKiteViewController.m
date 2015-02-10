@@ -24,6 +24,7 @@
 @property (strong, nonatomic) NSArray *assets;
 @property (weak, nonatomic) IBOutlet UINavigationBar *navigationBar;
 @property (assign, nonatomic) BOOL alreadyTransitioned;
+@property (assign, nonatomic) BOOL presentLater;
 
 @end
 
@@ -55,9 +56,36 @@
     }
 }
 
+-(void) viewWillAppear:(BOOL)animated{
+    if (self.presentLater){
+        self.presentLater = NO;
+        UIView *view = [[UIView alloc] initWithFrame:self.view.bounds];
+        view.backgroundColor = [UIColor whiteColor];
+        [self.nextVc.view addSubview:view];
+        [self presentViewController:self.nextVc animated:NO completion:^(void){
+            [UIView animateWithDuration:0.15 animations:^(void){
+                view.alpha = 0;
+            } completion:^(BOOL b){
+                [view removeFromSuperview];
+            }];
+            
+        }];
+    }
+}
+
 -(IBAction) dismiss{
-    [self dismissViewControllerAnimated:YES completion:^{
-    }];
+    if (self.presentedViewController){
+        UIView *dummy = [self.presentedViewController.view snapshotViewAfterScreenUpdates:YES];
+        [self.view addSubview:dummy];
+        [self.presentedViewController dismissViewControllerAnimated:NO completion:^{
+            [self dismissViewControllerAnimated:YES completion:^{
+            }];
+        }];
+    }
+    else{
+        [self dismissViewControllerAnimated:YES completion:^{
+        }];
+    }
     
 }
 
@@ -110,11 +138,7 @@
         if (product){
             [(id)((UINavigationController *)self.nextVc).topViewController setProduct:product];
         }
-        self.nextVc.view.alpha = 0;
-        [self.view addSubview:self.nextVc.view];
-        [UIView animateWithDuration:0.15 animations:^(void){
-            self.nextVc.view.alpha = 1;
-        }];
+        self.presentLater = YES;
     }
     else{
         CGFloat standardiOSBarsHeight = self.navigationController.navigationBar.frame.size.height + [UIApplication sharedApplication].statusBarFrame.size.height;
