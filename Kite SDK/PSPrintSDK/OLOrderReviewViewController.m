@@ -235,6 +235,15 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     [self onUserSelectedPhotoCountChange];
 }
 
+- (BOOL)shouldShowAddMorePhotos{
+    if (![self.delegate respondsToSelector:@selector(shouldShowAddMorePhotosInReview)]){
+        return YES;
+    }
+    else{
+        return [self.delegate shouldShowAddMorePhotosInReview];
+    }
+}
+
 #pragma mark Button Actions
 
 - (void)onButtonAddMorePhotosClicked{
@@ -338,16 +347,6 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
 - (IBAction)onButtonImageClicked:(UIButton *)sender {
     [self onButtonEnhanceClicked:sender];
 }
-
-- (BOOL)shouldShowAddMorePhotos{
-    if (![self.delegate respondsToSelector:@selector(shouldShowAddMorePhotosInReview)]){
-        return YES;
-    }
-    else{
-        return [self.delegate shouldShowAddMorePhotosInReview];
-    }
-}
-
 
 #pragma mark UITableView data source and delegate methods
 

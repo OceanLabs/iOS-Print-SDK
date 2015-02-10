@@ -11,6 +11,7 @@
 #import "OLProduct.h"
 #import "OLAsset+Private.h"
 #import <SDWebImageManager.h>
+#import "UITableViewController+ScreenWidthFactor.h"
 
 @interface OLFrameOrderReviewViewController () <OLScrollCropViewControllerDelegate>
 
@@ -113,6 +114,10 @@ NSInteger margin = 2;
     [super doCheckout];
 }
 
+- (BOOL)shouldShowAddMorePhotos{
+    return NO;
+}
+
 #pragma mark Button Actions
 
 - (IBAction)onButtonUpArrowClicked:(UIButton *)sender {
@@ -169,33 +174,67 @@ NSInteger margin = 2;
 #pragma mark UITableView data source and delegate methods
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    int incompleteFrame = ([self.framePhotos count] % self.product.quantityToFulfillOrder) != 0 ? 1 : 0;
-    return [self.framePhotos count]/self.product.quantityToFulfillOrder + incompleteFrame + 1;
+    if (section == 0){
+        int incompleteFrame = ([self.framePhotos count] % self.product.quantityToFulfillOrder) != 0 ? 1 : 0;
+        return [self.framePhotos count]/self.product.quantityToFulfillOrder + incompleteFrame + 1;
+    }
+    else{
+        return 1;
+    }
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
-    if (indexPath.row == 0){
-        UITableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:@"reviewTitle"];
+    if (indexPath.section == 0){
+        if (indexPath.row == 0){
+            UITableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:@"reviewTitle"];
+            
+            return cell;
+        }
+        
+        UITableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:@"reviewPhotoCell"];
+        if (!cell) {
+            cell = [[UITableViewCell alloc] init];
+        }
+        
+        UILabel *countLabel = (UILabel *)[cell.contentView viewWithTag:30];
+        [countLabel setText: [NSString stringWithFormat:@"%lu", (unsigned long) (1+[((NSNumber*)[self.extraCopiesOfAssets objectAtIndex:indexPath.row-1]) integerValue])]];
+        
+        UICollectionView* collectionView = (UICollectionView*)[cell.contentView viewWithTag:100];
+        collectionView.dataSource = self;
+        collectionView.delegate = self;
+        
+        UITapGestureRecognizer* doubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTapGestureThumbnailTapped:)];
+        [collectionView addGestureRecognizer:doubleTap];
         
         return cell;
     }
-    
-    UITableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:@"reviewPhotoCell"];
-    if (!cell) {
-        cell = [[UITableViewCell alloc] init];
+    else{
+        return [tableView dequeueReusableCellWithIdentifier:@"dummyCell"];
     }
-    
-    UILabel *countLabel = (UILabel *)[cell.contentView viewWithTag:30];
-    [countLabel setText: [NSString stringWithFormat:@"%lu", (unsigned long) (1+[((NSNumber*)[self.extraCopiesOfAssets objectAtIndex:indexPath.row-1]) integerValue])]];
-    
-    UICollectionView* collectionView = (UICollectionView*)[cell.contentView viewWithTag:100];
-    collectionView.dataSource = self;
-    collectionView.delegate = self;
-    
-    UITapGestureRecognizer* doubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTapGestureThumbnailTapped:)];
-    [collectionView addGestureRecognizer:doubleTap];
-    
-    return cell;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+    if (indexPath.section == 0){
+        if (indexPath.row == 0){
+            NSNumber *labelHeight;
+            if (!labelHeight) {
+                UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"reviewTitle"];
+                labelHeight = @(cell.bounds.size.height);
+            }
+            return [labelHeight floatValue];
+        }
+        else{
+            NSNumber *reviewPhotoCellHeight;
+            if (!reviewPhotoCellHeight) {
+                UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"reviewPhotoCell"];
+                reviewPhotoCellHeight = @(cell.bounds.size.height);
+            }
+            return [reviewPhotoCellHeight floatValue] * [self screenWidthFactor];
+        }
+    }
+    else{
+        return 46;
+    }
 }
 
 #pragma mark UICollectionView data source
