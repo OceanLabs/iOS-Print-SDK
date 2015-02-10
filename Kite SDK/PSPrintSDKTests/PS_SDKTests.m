@@ -7,6 +7,12 @@
 //
 
 #import <XCTest/XCTest.h>
+#import "ViewController.h"
+
+@interface ViewController (Private)
+- (NSString *)liveKey;
+- (NSString *)sandboxKey;
+@end
 
 @interface PS_SDKTests : XCTestCase
 
@@ -26,9 +32,11 @@
     [super tearDown];
 }
 
-- (void)testExample
-{
-    XCTFail(@"No implementation for \"%s\"", __PRETTY_FUNCTION__);
+- (void)testSampleAppAPIKeyIsNotSet {
+    ViewController *vc = [[ViewController alloc] init];
+    if (![[vc liveKey] isEqualToString:@"REPLACE_WITH_YOUR_API_KEY"] || ![[vc sandboxKey] isEqualToString:@"REPLACE_WITH_YOUR_API_KEY"]){
+        XCTFail(@"API Key is set in ViewController.m, this is undesirable for third party developers when commiting & pushing codes.");
+    }
 }
 
 @end

@@ -78,6 +78,14 @@ static NSString *const kApplePayMerchantIDKey = @"merchant.co.oceanlabs.kite.ly"
     }
 }
 
+- (NSString *)liveKey {
+    return kAPIKeyLive;
+}
+
+- (NSString *)sandboxKey {
+    return kAPIKeySandbox;
+}
+
 - (BOOL)isAPIKeySet {
     if ([[self apiKey] isEqualToString:@"REPLACE_WITH_YOUR_API_KEY"]) {
         [[[UIAlertView alloc] initWithTitle:@"API Key Required" message:@"Set your API keys at the top of ViewController.m before you can print. This can be found under your profile at http://kite.ly" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
