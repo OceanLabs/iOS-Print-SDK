@@ -13,6 +13,7 @@ Pod::Spec.new do |spec|
   spec.dependency	'AFNetworking', '2.5.0'
   spec.dependency	'UICKeyChainStore', '~> 1.0.4'
   spec.dependency	'LXReorderableCollectionViewFlowLayout'
+  spec.dependency	'CTAssetsPickerController'
   spec.requires_arc	= true
   spec.platform		= :ios, '7.0'
   spec.social_media_url	= 'https://twitter.com/dbotha'
