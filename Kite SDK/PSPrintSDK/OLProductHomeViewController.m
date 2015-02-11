@@ -102,12 +102,14 @@
     if (product.productTemplate.templateClass == kOLTemplateClassPoster){
         OLPosterSizeSelectionViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"sizeSelect"];
         vc.assets = self.assets;
+        vc.delegate = self.delegate;
         [self.navigationController pushViewController:vc animated:YES];
     }
     else{
         OLProductOverviewViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLProductOverviewViewController"];
         vc.assets = self.assets;
         vc.product = product;
+        vc.delegate = self.delegate;
         [self.navigationController pushViewController:vc animated:YES];
     }
     

@@ -20,19 +20,24 @@
 #import "OLAsset+Private.h"
 #import <SDWebImageManager.h>
 #import "OLAnalytics.h"
+#import <CTAssetsPickerController.h>
 
 static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
+static const NSUInteger kTagAlertViewDeletePhoto = 98;
 
-@interface OLOrderReviewViewController () <OLCheckoutDelegate>
+@interface OLOrderReviewViewController () <OLCheckoutDelegate, CTAssetsPickerControllerDelegate, UIAlertViewDelegate>
 
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *confirmBarButton;
 @property (weak, nonatomic) OLPrintPhoto *editingPrintPhoto;
+@property (strong, nonatomic) UIView *addMorePhotosView;
+@property (strong, nonatomic) UIButton *addMorePhotosButton;
+@property (assign, nonatomic) NSUInteger indexOfPhotoToDelete;
 
 @end
 
 @implementation OLOrderReviewViewController
 
--(NSArray *) userSelectedPhotos{
+-(NSMutableArray *) userSelectedPhotos{
     if (!_userSelectedPhotos){
         NSMutableArray *mutableUserSelectedPhotos = [[NSMutableArray alloc] init];
         for (id asset in self.assets){
@@ -75,6 +80,27 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
                                                                              style:UIBarButtonItemStyleBordered
                                                                             target:nil
                                                                             action:nil];
+    
+    if ([self shouldShowAddMorePhotos]){
+        self.addMorePhotosView = [[UIView alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height - 46 - [[UIApplication sharedApplication] statusBarFrame].size.height - self.navigationController.navigationBar.frame.size.height, self.view.bounds.size.width, 46)];
+        self.addMorePhotosView.backgroundColor = self.tableView.backgroundColor;
+        self.addMorePhotosView.tag = 777;
+        [self.tableView addSubview:self.addMorePhotosView];
+        
+        self.addMorePhotosButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 46)];
+        [self.addMorePhotosButton addTarget:self action:@selector(onButtonAddMorePhotosClicked) forControlEvents:UIControlEventTouchUpInside];
+        [self.addMorePhotosButton setTitle:NSLocalizedString(@"Add More Photos", @"") forState:UIControlStateNormal];
+        [self.addMorePhotosButton setBackgroundColor:[UIColor colorWithRed: 0.243 green: 0.78 blue: 0.616 alpha: 1]];
+        [self.addMorePhotosView addSubview:self.addMorePhotosButton];
+    }
+}
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    CGRect frame = self.addMorePhotosView.frame;
+    frame.origin.y = scrollView.contentOffset.y + self.tableView.frame.size.height - self.addMorePhotosView.frame.size.height;
+    self.addMorePhotosView.frame = frame;
+    
+    [self.tableView bringSubviewToFront:self.addMorePhotosView];
 }
 
 -(NSUInteger) totalNumberOfExtras{
@@ -173,8 +199,59 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     return NO;
 }
 
+- (void) deletePhotoAtIndex:(NSUInteger)index{
+    [self.assets removeObjectAtIndex:index];
+    [self.userSelectedPhotos removeObjectAtIndex:index];
+    [self.extraCopiesOfAssets removeObjectAtIndex:index];
+    
+    [self updateTitleBasedOnSelectedPhotoQuanitity];
+    
+    [self.tableView deleteRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:index+1 inSection:0]] withRowAnimation:UITableViewRowAnimationAutomatic];
+}
+
+- (void)populateArrayWithNewArray:(NSArray *)array dataType:(Class)class {
+    NSMutableArray *assetArray = [[NSMutableArray alloc] initWithCapacity:array.count];
+    
+    for (ALAsset *asset in array){
+        [assetArray addObject:[OLAsset assetWithALAsset:asset]];
+    }
+    
+    
+    NSMutableArray *addArray = [NSMutableArray arrayWithArray:assetArray];
+    
+    for (ALAsset *asset in addArray){
+        [self.extraCopiesOfAssets addObject:@0];
+        
+        OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
+        printPhoto.serverImageSize = [self.product serverImageSize];
+        printPhoto.asset = asset;
+        [self.userSelectedPhotos addObject:printPhoto];
+    }
+    [self.assets addObjectsFromArray:addArray];
+    
+    // Reload the table view.
+    [self.tableView reloadData];
+    
+    [self onUserSelectedPhotoCountChange];
+}
+
+- (BOOL)shouldShowAddMorePhotos{
+    if (![self.delegate respondsToSelector:@selector(shouldShowAddMorePhotosInReview)]){
+        return YES;
+    }
+    else{
+        return [self.delegate shouldShowAddMorePhotosInReview];
+    }
+}
 
 #pragma mark Button Actions
+
+- (void)onButtonAddMorePhotosClicked{
+    CTAssetsPickerController *picker = [[CTAssetsPickerController alloc] init];
+    picker.delegate = self;
+    picker.assetsFilter = [ALAssetsFilter allPhotos];
+    [self presentViewController:picker animated:YES completion:nil];
+}
 
 - (IBAction)onButtonUpArrowClicked:(UIButton *)sender {
     UIView* cellContentView = sender.superview;
@@ -202,6 +279,20 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     
     NSUInteger extraCopies = [self.extraCopiesOfAssets[indexPath.row - 1] integerValue];
     if (extraCopies == 0){
+        if ([UIAlertController class]){
+            UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Delete?", @"") message:NSLocalizedString(@"Do you want to delete this photo?", @"") preferredStyle:UIAlertControllerStyleAlert];
+            [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Yes, delete it", @"") style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action){
+                [self deletePhotoAtIndex:indexPath.row-1];
+            }]];
+            [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"No, keep it", @"") style:UIAlertActionStyleCancel handler:^(UIAlertAction *action){}]];
+            [self presentViewController:ac animated:YES completion:NULL];
+        }
+        else{
+            UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Delete?", @"") message:NSLocalizedString(@"Do you want to delete this photo?", @"") delegate:self cancelButtonTitle:NSLocalizedString(@"Yes, delete it", @"") otherButtonTitles:NSLocalizedString(@"No, keep it", @""), nil];
+            self.indexOfPhotoToDelete = indexPath.row-1;
+            av.tag = kTagAlertViewDeletePhoto;
+            [av show];
+        };
         return;
     }
     extraCopies--;
@@ -238,7 +329,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
         }];
     }
     else{
-        [[self.userSelectedPhotos objectAtIndex:0] dataWithCompletionHandler:^(NSData *data, NSError *error){
+        [self.editingPrintPhoto dataWithCompletionHandler:^(NSData *data, NSError *error){
             [cropVc setFullImage:[UIImage imageWithData:data]];
             [self presentViewController:nav animated:YES completion:NULL];
         }];
@@ -257,72 +348,78 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     [self onButtonEnhanceClicked:sender];
 }
 
-
 #pragma mark UITableView data source and delegate methods
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    return [self.userSelectedPhotos count] + 1;
+    if (section == 0){
+        return [self.userSelectedPhotos count] + 1;
+    }
+    else return 1;
+}
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
+    return [self shouldShowAddMorePhotos] ? 2 : 1;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
-    if (indexPath.row == 0){
-        UITableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:@"reviewTitle"];
-        UILabel* titleLabel = (UILabel *)[cell.contentView viewWithTag:60];
-        titleLabel.font = [UIFont fontWithName:@"MissionGothic-Regular" size:19];
+    if (indexPath.section == 0){
+        if (indexPath.row == 0){
+            UITableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:@"reviewTitle"];
+            return cell;
+        }
+        
+        OLCircleMaskTableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:@"reviewPhotoCell"];
+        if (!cell) {
+            cell = [[OLCircleMaskTableViewCell alloc] init];
+        }
+        
+        UIImageView *cellImage = (UIImageView *)[cell.contentView viewWithTag:10];
+        cellImage.image = nil;
+        
+        if (cellImage){
+            [((OLPrintPhoto*)[self.userSelectedPhotos objectAtIndex:indexPath.row-1]) setThumbImageIdealSizeForImageView:cellImage];
+        }
+        
+        UILabel *countLabel = (UILabel *)[cell.contentView viewWithTag:30];
+        [countLabel setText: [NSString stringWithFormat:@"%lu", (unsigned long)(1+[((NSNumber*)[self.extraCopiesOfAssets objectAtIndex:indexPath.row-1]) integerValue])]];
+        
+        if (self.product.productTemplate.templateClass == kOLTemplateClassCircle){
+            cell.enableMask = YES;
+        }
         return cell;
     }
-    
-    OLCircleMaskTableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:@"reviewPhotoCell"];
-    if (!cell) {
-        cell = [[OLCircleMaskTableViewCell alloc] init];
+    else{
+        return [tableView dequeueReusableCellWithIdentifier:@"dummyCell"];
     }
-    
-    UIImageView *cellImage = (UIImageView *)[cell.contentView viewWithTag:10];
-    
-    if (cellImage){
-        [((OLPrintPhoto*)[self.userSelectedPhotos objectAtIndex:indexPath.row-1]) setThumbImageIdealSizeForImageView:cellImage];
-    }
-    
-    UILabel *countLabel = (UILabel *)[cell.contentView viewWithTag:30];
-    [countLabel setText: [NSString stringWithFormat:@"%lu", (unsigned long)(1+[((NSNumber*)[self.extraCopiesOfAssets objectAtIndex:indexPath.row-1]) integerValue])]];
-    countLabel.font = [UIFont fontWithName:@"MissionGothic-Black" size:18];
-    
-    UIButton* enhanceButton = (UIButton *)[cell.contentView viewWithTag:50];
-    if (enhanceButton){
-        enhanceButton.titleLabel.font = [UIFont fontWithName:@"MissionGothic-Bold" size:12];
-    }
-    
-    if (self.product.productTemplate.templateClass == kOLTemplateClassCircle){
-        cell.enableMask = YES;
-    }
-
-    
-    return cell;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    if (indexPath.row == 0){
-        NSNumber *labelHeight;
-        if (!labelHeight) {
-            UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"reviewTitle"];
-            labelHeight = @(cell.bounds.size.height);
+    if (indexPath.section == 0){
+        if (indexPath.row == 0){
+            NSNumber *labelHeight;
+            if (!labelHeight) {
+                UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"reviewTitle"];
+                labelHeight = @(cell.bounds.size.height);
+            }
+            return [labelHeight floatValue];
         }
-        return [labelHeight floatValue];
+        else{
+            NSNumber *reviewPhotoCellHeight;
+            if (!reviewPhotoCellHeight) {
+                
+                if (self.product.productTemplate.templateClass == kOLTemplateClassPolaroid){
+                    NSUInteger extraBottomBezel = 50 / [self screenWidthFactor];
+                    reviewPhotoCellHeight = @(280 * [self screenWidthFactor] + extraBottomBezel + 40 * [self screenWidthFactor] - 40);
+                }
+                else{
+                    reviewPhotoCellHeight = @(280 * [self screenWidthFactor] + 40 * [self screenWidthFactor] - 40);
+                }
+            }
+            return [reviewPhotoCellHeight floatValue] + 69;
+        }
     }
-    else{
-        NSNumber *reviewPhotoCellHeight;
-        if (!reviewPhotoCellHeight) {
-            UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"reviewPhotoCell"];
-            
-            if (self.product.productTemplate.templateClass == kOLTemplateClassPolaroid){
-                NSUInteger extraBottomBezel = 50 / [self screenWidthFactor];
-                reviewPhotoCellHeight = @(cell.bounds.size.height + extraBottomBezel);
-            }
-            else{
-                reviewPhotoCellHeight = @(cell.bounds.size.height);
-            }
-        }
-        return [reviewPhotoCellHeight floatValue] * [self screenWidthFactor];
+    else {
+        return 46;
     }
 }
 
@@ -334,6 +431,11 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
             [self doCheckout];
         }
     }
+    else if (alertView.tag == kTagAlertViewDeletePhoto) {
+        if (buttonIndex == 0){
+            [self deletePhotoAtIndex:self.indexOfPhotoToDelete];
+        }
+    }
 }
 
 #pragma mark - OLImageEditorViewControllerDelegate methods
@@ -342,6 +444,28 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     self.editingPrintPhoto.asset = [OLAsset assetWithImageAsJPEG:croppedImage];
     
     [self.tableView reloadData];
+}
+
+#pragma mark - CTAssetsPickerControllerDelegate Methods
+
+- (void)assetsPickerController:(CTAssetsPickerController *)picker didFinishPickingAssets:(NSArray *)assets {
+    [self populateArrayWithNewArray:assets dataType:[ALAsset class]];
+    [picker dismissViewControllerAnimated:YES completion:^(void){}];
+}
+
+- (BOOL)assetsPickerController:(CTAssetsPickerController *)picker shouldShowAssetsGroup:(ALAssetsGroup *)group{
+    if (group.numberOfAssets == 0){
+        return NO;
+    }
+    return YES;
+}
+
+- (BOOL)assetsPickerController:(CTAssetsPickerController *)picker shouldShowAsset:(ALAsset *)asset{
+    NSString *fileName = [[[asset defaultRepresentation] filename] lowercaseString];
+    if (!([fileName hasSuffix:@".jpg"] || [fileName hasSuffix:@".jpeg"] || [fileName hasSuffix:@"png"])) {
+        return NO;
+    }
+    return YES;
 }
 
 @end

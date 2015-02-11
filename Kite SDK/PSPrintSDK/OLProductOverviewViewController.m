@@ -110,17 +110,20 @@
     if (self.product.productTemplate.templateClass == kOLTemplateClassFrame){
         OLFrameSelectionViewController *frameVc = [self.storyboard instantiateViewControllerWithIdentifier:@"FrameSelectionViewController"];
         frameVc.assets = self.assets;
+        frameVc.delegate = self.delegate;
         [self.navigationController pushViewController:frameVc animated:YES];
     }
     else if (self.product.productTemplate.templateClass == kOLTemplateClassPoster){
         OLPosterSizeSelectionViewController *posterVc = [self.storyboard instantiateViewControllerWithIdentifier:@"sizeSelect"];
         posterVc.assets = self.assets;
+        posterVc.delegate = self.delegate;
         [self.navigationController pushViewController:posterVc animated:YES];
     }
     else{
         OLOrderReviewViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OrderReviewViewController"];
         vc.assets = self.assets;
         vc.product = self.product;
+        vc.delegate = self.delegate;
         [self.navigationController pushViewController:vc animated:YES];
     }
 }

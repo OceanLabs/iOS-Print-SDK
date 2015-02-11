@@ -53,19 +53,6 @@ static const NSInteger kRowAddAddressManually = 1;
 - (void)setAllowMultipleSelection:(BOOL)allowMultipleSelection {
     _allowMultipleSelection = allowMultipleSelection;
     self.tableView.allowsMultipleSelection = _allowMultipleSelection;
-    UIButton *doneButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 40, 20)];
-    [doneButton addTarget:self action:@selector(onButtonDoneClicked) forControlEvents:UIControlEventTouchUpInside];
-    [doneButton setTitle:NSLocalizedString(@"Done", @"") forState:UIControlStateNormal];
-    [doneButton setTitleColor:self.view.tintColor forState:UIControlStateNormal];
-    [doneButton.titleLabel setFont:[UIFont boldSystemFontOfSize:18]];
-    [doneButton sizeToFit];
-    if (_allowMultipleSelection) {
-        [doneButton addTarget:self action:@selector(onButtonCancelClicked) forControlEvents:UIControlEventTouchUpInside];
-    } else {
-        [doneButton addTarget:self action:@selector(onButtonDoneClicked) forControlEvents:UIControlEventTouchUpInside];
-    }
-    UIBarButtonItem *item =[[UIBarButtonItem alloc] initWithCustomView:doneButton];
-    self.navigationItem.rightBarButtonItem = item;
 }
 
 - (void)viewDidAppear:(BOOL)animated {
