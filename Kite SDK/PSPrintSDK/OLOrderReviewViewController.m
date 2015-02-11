@@ -213,18 +213,21 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     NSMutableArray *assetArray = [[NSMutableArray alloc] initWithCapacity:array.count];
     
     for (ALAsset *asset in array){
-        OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
-        printPhoto.asset = asset;
-        printPhoto.serverImageSize = [self.product serverImageSize];
-        [assetArray addObject:printPhoto];
-        
+        [assetArray addObject:[OLAsset assetWithALAsset:asset]];
     }
-
-    for (ALAsset *asset in assetArray){
+    
+    
+    NSMutableArray *addArray = [NSMutableArray arrayWithArray:assetArray];
+    
+    for (ALAsset *asset in addArray){
         [self.extraCopiesOfAssets addObject:@0];
-        [self.userSelectedPhotos addObject:asset];
+        
+        OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
+        printPhoto.serverImageSize = [self.product serverImageSize];
+        printPhoto.asset = asset;
+        [self.userSelectedPhotos addObject:printPhoto];
     }
-    [self.assets addObjectsFromArray:assetArray];
+    [self.assets addObjectsFromArray:addArray];
     
     // Reload the table view.
     [self.tableView reloadData];

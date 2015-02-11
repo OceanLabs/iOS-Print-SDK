@@ -101,6 +101,24 @@ typedef void (^OLImageEditorImageGetImageProgressHandler)(float progress);
             if (asset.assetType == kOLAssetTypeRemoteImageURL){
                 [imageView setAndFadeInImageWithURL:[self.asset imageURL]];
             }
+            else if (asset.assetType == kOLAssetTypeALAsset){
+                if (self.cachedCroppedThumbnailImage) {
+                    imageView.image = self.cachedCroppedThumbnailImage;
+                }
+                else {
+                    [asset loadALAssetWithCompletionHandler:^(ALAsset *asset, NSError *error){
+                        OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
+                        printPhoto.asset = asset;
+                        [OLPrintPhoto croppedImageWithEditorImage:printPhoto size:CGSizeMake(imageView.frame.size.width * [UIScreen mainScreen].scale, imageView.frame.size.height * [UIScreen mainScreen].scale) progress:nil completion:^(UIImage *image) {
+                            self.cachedCroppedThumbnailImage = image;
+                            dispatch_async(dispatch_get_main_queue(), ^(void){
+                                imageView.image = image;
+                            });
+                            
+                        }];
+                    }];
+                }
+            }
             else{
                 [asset dataWithCompletionHandler:^(NSData *data, NSError *error){
                     OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
