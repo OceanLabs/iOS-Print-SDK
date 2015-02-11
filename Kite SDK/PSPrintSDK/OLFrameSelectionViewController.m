@@ -33,29 +33,29 @@
     NSArray *products = [OLProduct products];
     
     OLFrameOrderReviewViewController *vc = segue.destinationViewController;
-    vc.assets = self.assets;
+    vc.assets = [self.assets mutableCopy];
     if ([segue.identifier isEqualToString:@"Selected2x2FrameStyleSegue"]) {
         for (OLProduct *product in products){
-            if (product.templateType == kOLTemplateTypeFrame2x2){
+            if (product.productTemplate.templateClass == kOLTemplateClassFrame && product.productTemplate.quantityPerSheet == 4){
                 vc.product = product;
             }
         }
     } else if ([segue.identifier isEqualToString:@"Selected3x3FrameStyleSegue"]) {
         for (OLProduct *product in products){
-            if (product.templateType == kOLTemplateTypeFrame3x3){
+            if (product.productTemplate.templateClass == kOLTemplateClassFrame && product.productTemplate.quantityPerSheet == 9){
                 vc.product = product;
             }
         }
     } else if ([segue.identifier isEqualToString:@"Selected4x4FrameStyleSegue"]) {
         for (OLProduct *product in products){
-            if (product.templateType == kOLTemplateTypeFrame4x4){
+            if (product.productTemplate.templateClass == kOLTemplateClassFrame && product.productTemplate.quantityPerSheet == 16){
                 vc.product = product;
             }
         }
     }
     else if ([segue.identifier isEqualToString:@"Selected1x1FrameStyleSegue"]){
         for (OLProduct *product in products){
-            if (product.templateType == kOLTemplateTypeFrame){
+            if (product.productTemplate.templateClass == kOLTemplateClassFrame && product.productTemplate.quantityPerSheet == 1){
                 vc.product = product;
             }
         }

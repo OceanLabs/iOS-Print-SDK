@@ -24,6 +24,7 @@
 @property (strong, nonatomic) NSArray *assets;
 @property (weak, nonatomic) IBOutlet UINavigationBar *navigationBar;
 @property (assign, nonatomic) BOOL alreadyTransitioned;
+@property (assign, nonatomic) BOOL presentLater;
 
 @end
 
@@ -55,9 +56,36 @@
     }
 }
 
+-(void) viewWillAppear:(BOOL)animated{
+    if (self.presentLater){
+        self.presentLater = NO;
+        UIView *view = [[UIView alloc] initWithFrame:self.view.bounds];
+        view.backgroundColor = [UIColor whiteColor];
+        [self.nextVc.view addSubview:view];
+        [self presentViewController:self.nextVc animated:NO completion:^(void){
+            [UIView animateWithDuration:0.15 animations:^(void){
+                view.alpha = 0;
+            } completion:^(BOOL b){
+                [view removeFromSuperview];
+            }];
+            
+        }];
+    }
+}
+
 -(IBAction) dismiss{
-    [self dismissViewControllerAnimated:YES completion:^{
-    }];
+    if (self.presentedViewController){
+        UIView *dummy = [self.presentedViewController.view snapshotViewAfterScreenUpdates:YES];
+        [self.view addSubview:dummy];
+        [self.presentedViewController dismissViewControllerAnimated:NO completion:^{
+            [self dismissViewControllerAnimated:YES completion:^{
+            }];
+        }];
+    }
+    else{
+        [self dismissViewControllerAnimated:YES completion:^{
+        }];
+    }
     
 }
 
@@ -72,10 +100,10 @@
     BOOL includesFrames = NO;
     BOOL includesLargeFormat = NO;
     for (OLProduct *product in products){
-        if (product.templateType == kOLTemplateTypeFrame || product.templateType == kOLTemplateTypeFrame2x2 || product.templateType == kOLTemplateTypeFrame3x3 || product.templateType == kOLTemplateTypeFrame4x4){
+        if (product.productTemplate.templateClass == kOLTemplateClassFrame){
             includesFrames = YES;
         }
-        else if (product.templateType == kOLTemplateTypeLargeFormatA1 || product.templateType == kOLTemplateTypeLargeFormatA2 || product.templateType == kOLTemplateTypeLargeFormatA3){
+        else if (product.productTemplate.templateClass == kOLTemplateClassPoster){
             includesLargeFormat = YES;
         }
     }
@@ -88,22 +116,16 @@
     NSString *nextVcNavIdentifier = @"SplitViewController";
     NSString *nextVcIdentifier = @"SplitViewController";
     OLProduct *product;
-    if (([OLKitePrintSDK enabledProducts] && [[OLKitePrintSDK enabledProducts] count] < 2) || self.templateType != kOLTemplateTypeNoTemplate){
+    if (([OLKitePrintSDK enabledProducts] && [[OLKitePrintSDK enabledProducts] count] < 2)){
         nextVcNavIdentifier = @"OLProductOverviewNavigationViewController";
         nextVcIdentifier = @"OLProductOverviewNavigationViewController";
         
-        if ([OLKitePrintSDK enabledProducts] && [[OLKitePrintSDK enabledProducts] count] == 1){
+        if ([OLKiteViewController singleProductEnabled]){
             product = [[OLKitePrintSDK enabledProducts] firstObject];
-        }
-        else{
-            for (OLProduct *productIter in [OLProduct products]){
-                if (productIter.templateType == self.templateType){
-                    product = productIter;
-                }
-            }
+            NSAssert(product && product.productTemplate.templateClass != kOLTemplateClassNA, @"Product chosen does not support the Print Shop User Experience. Please implement a custom checkout.");
         }
         
-        if (product.templateType == kOLTemplateTypeLargeFormatA1 || product.templateType == kOLTemplateTypeLargeFormatA2 || product.templateType == kOLTemplateTypeLargeFormatA3){
+        if (product.productTemplate.templateClass == kOLTemplateClassPoster){
             nextVcIdentifier = @"sizeSelect";
             nextVcNavIdentifier = @"sizeSelectNavigationController";
         }
@@ -111,41 +133,19 @@
     
     if (!self.navigationController){
         self.nextVc = [sb instantiateViewControllerWithIdentifier:nextVcNavIdentifier];
-        OLProduct *product = [[OLProductHomeViewController products] firstObject];
-        UIViewController *detailVc;
-        if (product.templateType == kOLTemplateTypeLargeFormatA1 || product.templateType == kOLTemplateTypeLargeFormatA2 || product.templateType == kOLTemplateTypeLargeFormatA3){
-            OLPosterSizeSelectionViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"sizeSelect"];
-            vc.assets = self.assets;
-            detailVc = vc;
+        [(OLProductHomeViewController *)((UINavigationController *)self.nextVc).topViewController setDelegate:self.delegate];
+        ((UINavigationController *)self.nextVc).topViewController.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(dismiss)];
+        [(id)((UINavigationController *)self.nextVc).topViewController setAssets:[self.assets mutableCopy]];
+        if (product){
+            [(id)((UINavigationController *)self.nextVc).topViewController setProduct:product];
         }
-        else{
-            UINavigationController *nvc = (UINavigationController *)[self.storyboard instantiateViewControllerWithIdentifier:@"OLProductOverviewNavigationViewController"];
-            OLProductOverviewViewController *vc = (OLProductOverviewViewController *)[nvc topViewController];
-            vc.assets = self.assets;
-            vc.product = product;
-            detailVc = nvc;
-
-        }
-        [(OLProductHomeViewController *)[(UINavigationController *)[((UISplitViewController *)self.nextVc).viewControllers firstObject] topViewController]setAssets:self.assets];
-        [((UISplitViewController *)self.nextVc) showDetailViewController:detailVc sender:nil];
-        [((UISplitViewController *)self.nextVc) setPreferredDisplayMode:UISplitViewControllerDisplayModeAllVisible];
-        ((UISplitViewController *)self.nextVc).presentsWithGesture = NO;
-        
-//        ((UINavigationController *)self.nextVc).topViewController.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(dismiss)];
-//        [(id)((UINavigationController *)self.nextVc).topViewController setAssets:self.assets];
-//        if (product){
-//            [(id)((UINavigationController *)self.nextVc).topViewController setProduct:product];
-//        }
-        self.nextVc.view.alpha = 0;
-        [self.view addSubview:self.nextVc.view];
-        [UIView animateWithDuration:0.15 animations:^(void){
-            self.nextVc.view.alpha = 1;
-        }];
+        self.presentLater = YES;
     }
     else{
         CGFloat standardiOSBarsHeight = self.navigationController.navigationBar.frame.size.height + [UIApplication sharedApplication].statusBarFrame.size.height;
         self.nextVc = [sb instantiateViewControllerWithIdentifier:nextVcIdentifier];
-        [(id)self.nextVc setAssets:self.assets];
+        [(OLProductHomeViewController *)((UINavigationController *)self.nextVc).topViewController setDelegate:self.delegate];
+        [(id)self.nextVc setAssets:[self.assets mutableCopy]];
         if (product){
             [(id)self.nextVc setProduct:product];
         }
@@ -161,6 +161,7 @@
 }
 
 - (void)templateSyncDidFinish:(NSNotification *)n{
+    [OLProductTemplate resetTemplates];
     if (n.userInfo[kNotificationKeyTemplateSyncError]){
         if ([[OLProductTemplate templates] count] > 0){
             return;

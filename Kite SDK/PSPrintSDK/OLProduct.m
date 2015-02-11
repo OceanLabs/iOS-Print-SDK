@@ -20,58 +20,28 @@ typedef enum {
 
 +(NSArray *)products{
     static NSMutableArray *products = nil;
-    if (!products) {
-        NSArray *templates = [OLProductTemplate templates];
-        products = [[NSMutableArray alloc] initWithCapacity:[templates count]];
-        for (OLProductTemplate *template in templates){
-            if (template.enabled){
-                [products addObject:[[OLProduct alloc] initWithTemplate:template]];
-            }
+    NSArray *templates = [OLProductTemplate templates];
+    products = [[NSMutableArray alloc] initWithCapacity:[templates count]];
+    for (OLProductTemplate *template in templates){
+        if (template.enabled){
+            [products addObject:[[OLProduct alloc] initWithTemplate:template]];
         }
     }
     
     return products;
 }
 
--(CGSize)serverImageSize{
-    CGFloat pointsToPixels = 1.38;
-    if (self.templateType == kOLTemplateTypeLargeFormatA1){
-            return CGSizeMake(1564.724409288 * pointsToPixels, 2264.881889531 * pointsToPixels);
-    }
-    else if (self.templateType == kOLTemplateTypeLargeFormatA2){
-        return CGSizeMake(1088.503936896 * pointsToPixels, 1581.732283302 * pointsToPixels);
-    }
-    else if (self.templateType == kOLTemplateTypeLargeFormatA3){
-        return CGSizeMake(785.196850313 * pointsToPixels, 1133.8582676 * pointsToPixels);
-    }
-    else if (self.templateType == kOLTemplateTypePolaroids){
-            return CGSizeMake(945, 945);
-    }
-    else if (self.templateType == kOLTemplateTypeSquares){
-        return CGSizeMake(1111, 1111);
-    }
-    else if (self.templateType == kOLTemplateTypeMagnets){
-        return CGSizeMake(733, 733);
-    }
-    else if (self.templateType == kOLTemplateTypeMiniSquares){
-        return CGSizeMake(750, 750);
-    }
-    else if (self.templateType == kOLTemplateTypeStickersSquare){
-        return CGSizeMake(702, 702);
-    }
-    else if (self.templateType == kOLTemplateTypeStickersCircle){
-        return CGSizeMake(748, 748);
-    }
-    else if (self.templateType == kOLTemplateTypeMiniPolaroids){
-        return CGSizeMake(656, 656);
-    }
-    else if (self.templateType == kOLTemplateTypeFrame || self.templateType == kOLTemplateTypeFrame2x2 || self.templateType == kOLTemplateTypeFrame3x3 || self.templateType == kOLTemplateTypeFrame4x4){
-        return CGSizeMake(1651, 1651);
-    }
-    else{
-        return CGSizeMake(0, 0);
-    }
+- (UIColor *)labelColor{
+    return self.productTemplate.labelColor;
+}
 
+//#warning TODO: Not doing anything at the moment
+- (CGSize)serverImageSize{
+    return CGSizeMake(0, 0);
+}
+
+-(NSUInteger)quantityToFulfillOrder{
+    return self.productTemplate.quantityPerSheet;
 }
 
 -(instancetype)initWithTemplate:(OLProductTemplate *)template{
@@ -102,7 +72,7 @@ typedef enum {
         [imageView setAndFadeInImageWithURL:self.coverPhoto];
     }
     else{
-        [imageView setAndFadeInImageWithURL:self.productTemplate.coverImageURL];
+        [imageView setAndFadeInImageWithURL:self.productTemplate.coverPhotoURL];
     }
 }
 
@@ -122,49 +92,8 @@ typedef enum {
         [imageView setAndFadeInImageWithURL:self.productPhotos[i]];
     }
     else{
-        [imageView setAndFadeInImageWithURL:self.productTemplate.productsPhotoURLs[i % [self.productTemplate.productsPhotoURLs count]]];
+        [imageView setAndFadeInImageWithURL:self.productTemplate.productPhotographyURLs[i % [self.productTemplate.productPhotographyURLs count]]];
     }
-}
-
--(UIColor *)labelColor{
-    if (_labelColor){
-        return _labelColor;
-    }
-    else{
-        switch (self.templateType) {
-            case kOLTemplateTypeMagnets: return [UIColor colorWithRed:243.0/255.0 green:174.0/255.0 blue:52.0/255 alpha:1.0];
-            case kOLTemplateTypeMiniSquares: return [UIColor colorWithRed:50.0/255.0 green:159.0/255.0 blue:209.0/255 alpha:1.0];
-            case kOLTemplateTypeSquares: return [UIColor colorWithRed:48.0/255.0 green:177.0/255.0 blue:137.0/255 alpha:1.0];
-            case kOLTemplateTypeLargeFormatA1: return [UIColor colorWithRed:203.0/255.0 green:86.0/255.0 blue:157.0/255 alpha:1.0];
-            case kOLTemplateTypeLargeFormatA2: return [UIColor colorWithRed:203.0/255.0 green:86.0/255.0 blue:157.0/255 alpha:1.0];
-            case kOLTemplateTypeLargeFormatA3: return [UIColor colorWithRed:203.0/255.0 green:86.0/255.0 blue:157.0/255 alpha:1.0];
-            case kOLTemplateTypeStickersSquare: return [UIColor colorWithRed:55.0/255.0 green:188.0/255.0 blue:155.0/255 alpha:1.0];
-            case kOLTemplateTypeStickersCircle: return [UIColor colorWithRed:79.0/255.0 green:193.0/255.0 blue:233.0/255 alpha:1.0];
-            case kOLTemplateTypePostcard: return [UIColor colorWithRed:203.0/255.0 green:86.0/255.0 blue:157.0/255 alpha:1.0];
-            case kOLTemplateTypeMiniPolaroids:return [UIColor colorWithRed:59.0/255.0 green:115.0/255.0 blue:211.0/255 alpha:1.0];
-            case kOLTemplateTypePolaroids: return [UIColor colorWithRed:66.0/255.0 green:179.0/255.0 blue:227.0/255 alpha:1.0];
-            case kOLTemplateTypeFrame: return [UIColor colorWithRed:254.0/255.0 green:197.0/255.0 blue:68.0/255 alpha:1.0];
-            default: return nil;
-        }
-    }
-}
-
-- (NSUInteger) quantityToFulfillOrder{
-    if (self.templateType == kOLTemplateTypeFrame4x4){
-        return 16;
-    }
-    else if (self.templateType == kOLTemplateTypeFrame3x3){
-        return 9;
-    }
-    else if (self.templateType == kOLTemplateTypeFrame2x2){
-        return 4;
-    }
-    else if (self.templateType == kOLTemplateTypeFrame){
-        return 1;
-    }
-    
-    OLProductTemplate *template = [OLProductTemplate templateWithId:self.templateId];
-    return template.quantityPerSheet == 0 ? 1 : template.quantityPerSheet;
 }
 
 #pragma mark Product Info
@@ -215,45 +144,11 @@ typedef enum {
 }
 
 - (CGSize) dimensionsInInches{
-    switch (self.templateType) {
-        case kOLTemplateTypeMagnets: return CGSizeMake(2.4, 2.4);
-        case kOLTemplateTypeMiniSquares: return CGSizeMake(2.5, 2.5);
-        case kOLTemplateTypeSquares: return CGSizeMake(3.7, 3.7);
-        case kOLTemplateTypeMiniPolaroids:return CGSizeMake(2.5, 2.1);
-        case kOLTemplateTypePolaroids: return CGSizeMake(3.7, 3.1);
-        case kOLTemplateTypeFrame2x2: return CGSizeMake(19.6, 19.6);
-        case kOLTemplateTypeFrame3x3: return CGSizeMake(19.6, 19.6);
-        case kOLTemplateTypeFrame4x4: return CGSizeMake(19.6, 19.6);
-        case kOLTemplateTypeFrame: return CGSizeMake(19.6, 19.6);
-        case kOLTemplateTypePostcard: return CGSizeMake(5.8, 4.1);
-        case kOLTemplateTypeLargeFormatA1: return CGSizeMake(23.4, 33.1);
-        case kOLTemplateTypeLargeFormatA2: return CGSizeMake(16.5, 23.4);
-        case kOLTemplateTypeLargeFormatA3: return CGSizeMake(11.7, 16.5);
-        case kOLTemplateTypeStickersCircle: return CGSizeMake(2.6, 2.6);
-        case kOLTemplateTypeStickersSquare: return CGSizeMake(2.4, 2.4);
-            default: return CGSizeMake(0, 0);
-    }
+    return self.productTemplate.sizeInches;
 }
 
 - (CGSize) dimensionsInCentimetres{
-    switch (self.templateType) {
-        case kOLTemplateTypeMagnets: return CGSizeMake(6.9, 6.9);
-        case kOLTemplateTypeMiniSquares: return CGSizeMake(6.8, 6.8);
-        case kOLTemplateTypeSquares: return CGSizeMake(9.8, 9.8);
-        case kOLTemplateTypeMiniPolaroids:return CGSizeMake(6.2, 7.1);
-        case kOLTemplateTypePolaroids: return CGSizeMake(8.7, 10);
-        case kOLTemplateTypeFrame2x2: return CGSizeMake(50, 50);
-        case kOLTemplateTypeFrame3x3: return CGSizeMake(50, 50);
-        case kOLTemplateTypeFrame4x4: return CGSizeMake(50, 50);
-        case kOLTemplateTypeFrame: return CGSizeMake(50, 50);
-        case kOLTemplateTypePostcard: return CGSizeMake(14.9, 10.5);
-        case kOLTemplateTypeLargeFormatA1: return CGSizeMake(594, 841);
-        case kOLTemplateTypeLargeFormatA2: return CGSizeMake(420, 594);
-        case kOLTemplateTypeLargeFormatA3: return CGSizeMake(297, 420);
-        case kOLTemplateTypeStickersCircle: return CGSizeMake(6.59, 6.59);
-        case kOLTemplateTypeStickersSquare: return CGSizeMake(6.19, 6.19);
-            default: return CGSizeMake(0, 0);
-    }
+    return self.productTemplate.sizeCm;
 }
 
 - (NSString *) dimensionsInUnits:(SizeUnits)sizeUnits{
@@ -292,12 +187,12 @@ typedef enum {
         return _productPhotos;
     }
     else{
-        return self.productTemplate.productsPhotoURLs;
+        return self.productTemplate.productPhotographyURLs;
     }
 }
 
--(OLTemplateType)templateType{
-    return [OLProductTemplate templateTypeWithIdentifier:self.templateId];
+- (NSString *)description{
+    return [self.productTemplate description];
 }
 
 

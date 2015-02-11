@@ -36,8 +36,11 @@
     [OLAnalytics trackProductDescriptionScreenViewed:self.product.productTemplate.name];
 #endif
     
-    if (self.product.templateType == kOLTemplateTypeLargeFormatA1 || self.product.templateType == kOLTemplateTypeLargeFormatA2 || self.product.templateType == kOLTemplateTypeLargeFormatA3){
+    if (self.product.productTemplate.templateClass == kOLTemplateClassPoster){
         self.title = NSLocalizedString(@"Posters", @"");
+    }
+    else if (self.product.productTemplate.templateClass == kOLTemplateClassFrame){
+        self.title = NSLocalizedString(@"Frames", @"");
     }
     else{
         self.title = self.product.productTemplate.name;
@@ -61,14 +64,14 @@
     
     self.costLabel.text = self.product.unitCost;
     
-    if (self.product.templateType == kOLTemplateTypeFrame || self.product.templateType == kOLTemplateTypeFrame2x2 || self.product.templateType == kOLTemplateTypeFrame3x3 || self.product.templateType == kOLTemplateTypeFrame4x4){
+    if (self.product.productTemplate.templateClass == kOLTemplateClassFrame){
         self.sizeLabel.text = [NSString stringWithFormat:@"%@", self.product.dimensions];
     }
     else{
         self.sizeLabel.text = [NSString stringWithFormat:@"%@\n%@", self.product.packInfo, self.product.dimensions];
     }
     
-    if (self.product.templateType == kOLTemplateTypeLargeFormatA1 || self.product.templateType == kOLTemplateTypeLargeFormatA2 || self.product.templateType == kOLTemplateTypeLargeFormatA3){
+    if (self.product.productTemplate.templateClass == kOLTemplateClassPoster){
         self.costLabel.hidden = YES;
         self.sizeLabel.hidden = YES;
         self.freePostageLabel.hidden = YES;
@@ -111,9 +114,10 @@
 }
 
 - (IBAction)onButtonStartClicked:(UIBarButtonItem *)sender {
-    if (self.product.templateType == kOLTemplateTypeFrame2x2 || self.product.templateType == kOLTemplateTypeFrame3x3 || self.product.templateType == kOLTemplateTypeFrame4x4 || self.product.templateType == kOLTemplateTypeFrame){
+    if (self.product.productTemplate.templateClass == kOLTemplateClassFrame){
         OLFrameSelectionViewController *frameVc = [self.storyboard instantiateViewControllerWithIdentifier:@"FrameSelectionViewController"];
         frameVc.assets = self.assets;
+        frameVc.delegate = self.delegate;
         [(UINavigationController *)[self.splitViewController.viewControllers firstObject] pushViewController:frameVc animated:YES];
         
         NSArray *products = [OLProduct products];
@@ -126,9 +130,10 @@
         }
         [self.splitViewController showDetailViewController:vc sender:self];
     }
-    else if (self.product.templateType == kOLTemplateTypeLargeFormatA1 || self.product.templateType == kOLTemplateTypeLargeFormatA2 || self.product.templateType == kOLTemplateTypeLargeFormatA3){
+    else if (self.product.productTemplate.templateClass == kOLTemplateClassPoster){
         OLPosterSizeSelectionViewController *posterVc = [self.storyboard instantiateViewControllerWithIdentifier:@"sizeSelect"];
         posterVc.assets = self.assets;
+        posterVc.delegate = self.delegate;
         [self.splitViewController setPreferredDisplayMode:UISplitViewControllerDisplayModePrimaryHidden];
         [self.navigationController pushViewController:posterVc animated:YES];
     }
@@ -136,6 +141,7 @@
         OLOrderReviewViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLOrderReviewCollectionViewViewController"];
         vc.assets = self.assets;
         vc.product = self.product;
+        vc.delegate = self.delegate;
         [self.splitViewController setPreferredDisplayMode:UISplitViewControllerDisplayModePrimaryHidden];
         [self.navigationController pushViewController:vc animated:YES];
     }

@@ -7,7 +7,6 @@
 //
 
 #import "ViewController.h"
-#import "ProductSelectionViewController.h"
 #import "OLKitePrintSDK.h"
 
 /**********************************************************************
@@ -20,11 +19,8 @@ static NSString *const kAPIKeyLive = @"REPLACE_WITH_YOUR_API_KEY"; // replace wi
 static NSString *const kStripePublishableKey = @"pk_test_6pRNASCoBOKtIshFeQd4XMUh"; // This is a test key. Replace with the live key here.
 static NSString *const kApplePayMerchantIDKey = @"merchant.co.oceanlabs.kite.ly"; // For internal use only.
 
-@interface ViewController () <UIImagePickerControllerDelegate, UINavigationControllerDelegate, ProductSelectionViewControllerDelegate, OLCheckoutDelegate>
+@interface ViewController () <UIImagePickerControllerDelegate, UINavigationControllerDelegate, OLKiteDelegate>
 @property (nonatomic, weak) IBOutlet UISegmentedControl *environmentPicker;
-@property (nonatomic, weak) IBOutlet UITextField *apiKeyTextField;
-@property (nonatomic, weak) IBOutlet UIButton *productButton;
-@property (nonatomic, assign) Product selectedProduct;
 @property (nonatomic, strong) OLPrintOrder* printOrder;
 @end
 
@@ -44,10 +40,6 @@ static NSString *const kApplePayMerchantIDKey = @"merchant.co.oceanlabs.kite.ly"
 #endif
     
     [super viewDidLoad];
-    self.selectedProduct = kProductSquares;
-    [self.productButton setTitle:displayNameWithProduct(self.selectedProduct) forState:UIControlStateNormal];
-    self.productButton.titleLabel.adjustsFontSizeToFitWidth = YES;
-    self.productButton.titleLabel.minimumScaleFactor = 0.5;
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onUserSuppliedShippingDetails:) name:kOLNotificationUserSuppliedShippingDetails object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onUserCompletedPayment:) name:kOLNotificationUserCompletedPayment object:nil];
@@ -87,6 +79,14 @@ static NSString *const kApplePayMerchantIDKey = @"merchant.co.oceanlabs.kite.ly"
     }
 }
 
+- (NSString *)liveKey {
+    return kAPIKeyLive;
+}
+
+- (NSString *)sandboxKey {
+    return kAPIKeySandbox;
+}
+
 - (BOOL)isAPIKeySet {
     if ([[self apiKey] isEqualToString:@"REPLACE_WITH_YOUR_API_KEY"]) {
         [[[UIAlertView alloc] initWithTitle:@"API Key Required" message:@"Set your API keys at the top of ViewController.m before you can print. This can be found under your profile at http://kite.ly" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
@@ -104,19 +104,11 @@ static NSString *const kApplePayMerchantIDKey = @"merchant.co.oceanlabs.kite.ly"
     }
 }
 
-- (IBAction)onButtonSelectProductClicked:(id)sender {
-    ProductSelectionViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"ProductSelectionViewController"];
-    vc.selectedProduct = self.selectedProduct;
-    vc.delegate = self;
-    [self presentViewController:[[UINavigationController alloc] initWithRootViewController:vc] animated:YES completion:nil];
-}
-
 - (void)printWithAssets:(NSArray *)assets {
     if (![self isAPIKeySet]) return;
     
     OLKiteViewController *vc = [[OLKiteViewController alloc] initWithAssets:assets];
-    vc.templateType = kOLTemplateTypeNoTemplate;
-    //    vc.delegate = self;
+    vc.delegate = self;
     [self presentViewController:vc animated:YES completion:NULL];
 //    [self.navigationController pushViewController:vc animated:YES];
 }
@@ -148,17 +140,9 @@ static NSString *const kApplePayMerchantIDKey = @"merchant.co.oceanlabs.kite.ly"
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
-#pragma mark - ProductSelectionViewControllerDelegate
+#pragma mark - OLKiteDelete
 
-- (void)productSelectionViewControllerUserDidSelectProduct:(Product)product {
-    self.selectedProduct = product;
-    [self.productButton setTitle:displayNameWithProduct(self.selectedProduct) forState:UIControlStateNormal];
-    [self dismissViewControllerAnimated:YES completion:nil];
-}
-
-#pragma mark - OLCheckoutDelegate
-
-- (BOOL) shouldShowContinueShoppingButton {
+- (BOOL) shouldShowAddMorePhotosInReview {
     return YES;
 }
 

@@ -1,11 +1,11 @@
 Creating a Print Order
 ==============
 
-If you don't want to use the checkout experience included with the Print SDK (i.e. the [Kite Print Shop Experience](print_shop.md)) then you need to explicitly create a print order. 
+If you don't want to use the checkout experience included with the Print SDK (i.e. the [Kite Print Shop Experience](print_shop.md)) then you need to explicitly create a print order.
 
 This tutorial covers creating a print order to be submitted for printing and posting.
 
-_If you haven't already, see the [README](../README.md) for an initial overview and instructions for adding the SDK to your project._
+_If you haven't already, see the [README](../../README.md) for an initial overview and instructions for adding the SDK to your project._
 
 
 Overview
@@ -23,7 +23,7 @@ Sample Code
 
     ```obj-c
     #import <OLKitePrintSDK.h>
-    
+
     [OLKitePrintSDK setAPIKey:@"REPLACE_WITH_YOUR_API_KEY" withEnvironment:kOLKitePrintSDKEnvironmentSandbox];
     ```
 
@@ -47,7 +47,7 @@ Sample Code
     id<OLPrintJob> magnets = [OLPrintJob printJobWithTemplateId:kOLDefaultTemplateForMagnets OLAssets:assetsForPrinting];
     id<OLPrintJob> polaroidStylePrints = [OLPrintJob printJobWithTemplateId:kOLDefaultTemplateForPolaroidStylePrints OLAssets:assetsForPrinting];
     ```
-    
+
      *Note: The above shows only a small sample of the products available for printing with the SDK*
 4. Create an `OLPrintOrder` and attach the print job(s) you created in the previous step
 
@@ -55,9 +55,9 @@ Sample Code
     OLPrintOrder *printOrder = [[OLPrintOrder alloc] init];
     [printOrder addPrintJob:squarePrints];
     [printOrder addPrintJob:magnets];
-    [printOrder addPrintJob:polaroidStylePrints];    
+    [printOrder addPrintJob:polaroidStylePrints];
     ```
-    
+
 Next Steps
 ----------
-- If you're building your own [Custom Checkout](../README.md#custom-checkout) UI then it's time to [set the shipping address](shipping.md) to which the order will be delivered
+- If you're building your own [Custom Checkout](../../README.md#custom-checkout) UI then it's time to [set the shipping address](shipping.md) to which the order will be delivered

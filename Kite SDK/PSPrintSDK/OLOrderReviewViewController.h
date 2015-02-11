@@ -9,19 +9,20 @@
 #import <UIKit/UIKit.h>
 #import "OLPrintOrder.h"
 #import "OLScrollCropViewController.h"
+#import "OLKiteViewController.h"
 
 @class OLProduct;
 
 @interface OLOrderReviewViewController : UITableViewController <UITableViewDelegate, UITableViewDataSource, UINavigationControllerDelegate, OLScrollCropViewControllerDelegate>
 
 @property (nonatomic, strong) OLProduct *product;
-@property (strong, nonatomic) NSMutableArray* extraCopiesOfAssets;
-@property (strong, nonatomic) NSArray *assets;
-@property (strong, nonatomic) NSArray *userSelectedPhotos;
+@property (strong, nonatomic) NSMutableArray *extraCopiesOfAssets;
+@property (strong, nonatomic) NSMutableArray *assets;
+@property (strong, nonatomic) NSMutableArray *userSelectedPhotos;
+@property (weak, nonatomic) id<OLKiteDelegate> delegate;
 
 - (void)updateTitleBasedOnSelectedPhotoQuanitity;
 - (BOOL) shouldGoToCheckout;
 - (void) doCheckout;
--(NSArray *) userSelectedPhotos;
 
 @end

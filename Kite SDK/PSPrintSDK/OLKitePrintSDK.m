@@ -73,6 +73,9 @@ static BOOL useJudoPayForGBP = NO;
 }
 
 + (NSArray *)enabledProducts{
+    if (enabledProducts && [enabledProducts count] == 0){
+        return nil;
+    }
     return enabledProducts;
 }
 

@@ -9,11 +9,13 @@
 #import <UIKit/UIKit.h>
 #import "OLPrintOrder.h"
 #import "OLProduct.h"
+#import "OLKiteViewController.h"
 
 @interface OLPosterViewController : UIViewController
 
-@property (strong, nonatomic) NSArray *assets;
+@property (strong, nonatomic) NSMutableArray *assets;
 @property (strong, nonatomic) OLProduct *product;
 @property (strong, nonatomic) NSMutableArray *userSelectedPhotos;
+@property (weak, nonatomic) id<OLKiteDelegate> delegate;
 
 @end

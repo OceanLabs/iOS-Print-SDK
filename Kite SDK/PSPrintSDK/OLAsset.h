@@ -8,8 +8,11 @@
 
 #import <Foundation/Foundation.h>
 
+@class ALAsset;
+
 typedef void (^GetDataLengthHandler)(long long dataLength, NSError *error);
 typedef void (^GetDataHandler)(NSData *data, NSError *error);
+typedef void (^LoadAssetCompletionHandler)(ALAsset *asset, NSError *error);
 
 static NSString *const kOLMimeTypeJPEG = @"image/jpeg";
 static NSString *const kOLMimeTypePNG  = @"image/png";
@@ -21,8 +24,6 @@ static NSString *const kOLMimeTypePNG  = @"image/png";
 @optional
 - (void)cancelAnyLoadingOfData;
 @end
-
-@class ALAsset;
 
 @interface OLAsset : NSObject <NSCoding>
 
@@ -47,5 +48,7 @@ static NSString *const kOLMimeTypePNG  = @"image/png";
 @property(nonatomic, assign)CGRect cropBox;
 
 @property (nonatomic, readonly, getter = isCropBoxSet) BOOL cropboxSet;
+
+- (void)loadALAssetWithCompletionHandler:(LoadAssetCompletionHandler)handler;
 
 @end

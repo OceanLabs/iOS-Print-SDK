@@ -7,11 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "OLKiteViewController.h"
 
 @class OLPrintOrder;
 
 @interface OLFrameSelectionViewController : UITableViewController
 
 @property (strong, nonatomic) NSArray *assets;
+@property (weak, nonatomic) id<OLKiteDelegate> delegate;
 
 @end

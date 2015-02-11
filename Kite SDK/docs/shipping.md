@@ -1,11 +1,11 @@
 Setting a Shipping Address
 ==============
 
-If you don't want to use the checkout experience included with the Print SDK (i.e. the [Kite Print Shop Experience](print_shop.md)) then you need to explicitly set the shipping address for a print order. Typically you will create your own UI to capture shipping details from your users. 
+If you don't want to use the checkout experience included with the Print SDK (i.e. the [Kite Print Shop Experience](print_shop.md)) then you need to explicitly set the shipping address for a print order. Typically you will create your own UI to capture shipping details from your users.
 
 The Print SDK also includes worldwide address search/lookup functionality that you can use to improve the user experience of your app.
 
-_If you haven't already, see the [README](../README.md) for an initial overview and instructions for adding the SDK to your project._
+_If you haven't already, see the [README](../../README.md) for an initial overview and instructions for adding the SDK to your project._
 
 Prerequisites
 --------

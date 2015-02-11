@@ -53,13 +53,6 @@ static const NSInteger kRowAddAddressManually = 1;
 - (void)setAllowMultipleSelection:(BOOL)allowMultipleSelection {
     _allowMultipleSelection = allowMultipleSelection;
     self.tableView.allowsMultipleSelection = _allowMultipleSelection;
-    if (_allowMultipleSelection) {
-        UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Done", @"KitePrintSDK", [OLConstants bundle], @"") style:UIBarButtonItemStyleDone target:self action:@selector(onButtonDoneClicked)];
-        self.navigationItem.rightBarButtonItem = doneButton;
-    } else {
-        UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Done", @"KitePrintSDK", [OLConstants bundle], @"") style:UIBarButtonItemStylePlain target:self action:@selector(onButtonCancelClicked)];
-        self.navigationItem.rightBarButtonItem = doneButton;
-    }
 }
 
 - (void)viewDidAppear:(BOOL)animated {

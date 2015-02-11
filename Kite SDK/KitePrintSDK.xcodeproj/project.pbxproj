@@ -69,7 +69,6 @@
 		CD97568E18D8D148007CA090 /* OLProductTemplate.m in Sources */ = {isa = PBXBuildFile; fileRef = CD97568D18D8D147007CA090 /* OLProductTemplate.m */; };
 		CD97569118D8FDF4007CA090 /* OLProductTemplateSyncRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = CD97569018D8FDF4007CA090 /* OLProductTemplateSyncRequest.m */; };
 		CD97569518E083E3007CA090 /* PrintOrderHistoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CD97569418E083E3007CA090 /* PrintOrderHistoryViewController.m */; };
-		CD97569818E098E5007CA090 /* ProductSelectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CD97569718E098E5007CA090 /* ProductSelectionViewController.m */; };
 		CD9A3A9718AB9C4500DC7131 /* OLCheckPromoCodeRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = CD9A3A9618AB9C4500DC7131 /* OLCheckPromoCodeRequest.m */; };
 		CD9CF4A318758BDF00F067B6 /* OLProductPrintJob.m in Sources */ = {isa = PBXBuildFile; fileRef = CD9CF4A218758BDF00F067B6 /* OLProductPrintJob.m */; };
 		CD9CF4A5187592A900F067B6 /* OLPrintJob.m in Sources */ = {isa = PBXBuildFile; fileRef = CD9CF4A4187592A900F067B6 /* OLPrintJob.m */; };
@@ -232,8 +231,6 @@
 		CD97569018D8FDF4007CA090 /* OLProductTemplateSyncRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLProductTemplateSyncRequest.m; sourceTree = "<group>"; };
 		CD97569318E083E3007CA090 /* PrintOrderHistoryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrintOrderHistoryViewController.h; sourceTree = "<group>"; };
 		CD97569418E083E3007CA090 /* PrintOrderHistoryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PrintOrderHistoryViewController.m; sourceTree = "<group>"; };
-		CD97569618E098E5007CA090 /* ProductSelectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProductSelectionViewController.h; sourceTree = "<group>"; };
-		CD97569718E098E5007CA090 /* ProductSelectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProductSelectionViewController.m; sourceTree = "<group>"; };
 		CD9A3A9518AB9C4500DC7131 /* OLCheckPromoCodeRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLCheckPromoCodeRequest.h; sourceTree = "<group>"; };
 		CD9A3A9618AB9C4500DC7131 /* OLCheckPromoCodeRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLCheckPromoCodeRequest.m; sourceTree = "<group>"; };
 		CD9CF4A118758BDF00F067B6 /* OLProductPrintJob.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLProductPrintJob.h; sourceTree = "<group>"; };
@@ -474,8 +471,6 @@
 				CD73BF81186215790009DE03 /* ViewController.m */,
 				CD97569318E083E3007CA090 /* PrintOrderHistoryViewController.h */,
 				CD97569418E083E3007CA090 /* PrintOrderHistoryViewController.m */,
-				CD97569618E098E5007CA090 /* ProductSelectionViewController.h */,
-				CD97569718E098E5007CA090 /* ProductSelectionViewController.m */,
 				CD73BF83186215790009DE03 /* Images.xcassets */,
 				CD73BF72186215790009DE03 /* Supporting Files */,
 			);
@@ -767,7 +762,6 @@
 				2EE3C86D1A4ADDDB006446E2 /* OLWhiteSquare.m in Sources */,
 				2E1F69E41A6699AE00696286 /* OLPosterViewController.m in Sources */,
 				CD93BB3E187882A300316492 /* OLAddressEditViewController.m in Sources */,
-				CD97569818E098E5007CA090 /* ProductSelectionViewController.m in Sources */,
 				CD73BF82186215790009DE03 /* ViewController.m in Sources */,
 				2EA8BEBD1A484FCB008A9248 /* OLFrameOrderReviewViewController.m in Sources */,
 				2EE3C8701A4AFB0C006446E2 /* OLKiteViewController.m in Sources */,

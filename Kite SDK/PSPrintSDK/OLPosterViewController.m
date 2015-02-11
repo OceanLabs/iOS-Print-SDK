@@ -29,12 +29,11 @@
 
 @implementation OLPosterViewController
 
--(NSArray *) userSelectedPhotos{
+-(NSMutableArray *) userSelectedPhotos{
     if (!_userSelectedPhotos){
         NSMutableArray *mutableUserSelectedPhotos = [[NSMutableArray alloc] init];
         for (id asset in self.assets){
             OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
-            printPhoto.serverImageSize = [self.product serverImageSize];
             printPhoto.asset = asset;
             [mutableUserSelectedPhotos addObject:printPhoto];
         }
@@ -62,10 +61,12 @@
     self.imageViews = [[NSMutableArray alloc] initWithCapacity:self.product.quantityToFulfillOrder];
     for (NSUInteger i = 0; i < self.product.quantityToFulfillOrder; i++){
         UIView *view = [self.view viewWithTag:i + 1];
-        [self.imageViews addObject:view];
+        if (view){
+            [self.imageViews addObject:view];
+        }
         
         if (self.posterPhotos.count < self.product.quantityToFulfillOrder){
-            [self.posterPhotos addObject:self.posterPhotos[i % self.posterPhotos.count]];
+            [self.posterPhotos addObject:self.userSelectedPhotos[i % self.userSelectedPhotos.count]];
         }
     }
         
@@ -167,7 +168,6 @@
 
 -(void)userDidCropImage:(UIImage *)croppedImage{
     OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
-    printPhoto.serverImageSize = [self.product serverImageSize];
     printPhoto.asset = [OLAsset assetWithImageAsJPEG:croppedImage];
     self.posterPhotos[0] = printPhoto;
     
