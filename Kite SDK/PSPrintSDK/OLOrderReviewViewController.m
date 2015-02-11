@@ -213,21 +213,18 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     NSMutableArray *assetArray = [[NSMutableArray alloc] initWithCapacity:array.count];
     
     for (ALAsset *asset in array){
-        [assetArray addObject:[OLAsset assetWithALAsset:asset]];
-    }
-    
-
-    NSMutableArray *addArray = [NSMutableArray arrayWithArray:assetArray];
-
-    for (ALAsset *asset in addArray){
-        [self.extraCopiesOfAssets addObject:@0];
-        
         OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
-        printPhoto.serverImageSize = [self.product serverImageSize];
         printPhoto.asset = asset;
-        [self.userSelectedPhotos addObject:printPhoto];
+        printPhoto.serverImageSize = [self.product serverImageSize];
+        [assetArray addObject:printPhoto];
+        
     }
-    [self.assets addObjectsFromArray:addArray];
+
+    for (ALAsset *asset in assetArray){
+        [self.extraCopiesOfAssets addObject:@0];
+        [self.userSelectedPhotos addObject:asset];
+    }
+    [self.assets addObjectsFromArray:assetArray];
     
     // Reload the table view.
     [self.tableView reloadData];
@@ -374,6 +371,7 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
         }
         
         UIImageView *cellImage = (UIImageView *)[cell.contentView viewWithTag:10];
+        cellImage.image = nil;
         
         if (cellImage){
             [((OLPrintPhoto*)[self.userSelectedPhotos objectAtIndex:indexPath.row-1]) setThumbImageIdealSizeForImageView:cellImage];
