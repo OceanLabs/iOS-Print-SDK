@@ -10,7 +10,7 @@ To get started, you will need to have a free Kite developer account. Go to [kite
 
 ## Products
 
-Use print to unlock hidden revenue streams and add value for your users. *In under ten minutes* you could be using our SDK to print:
+Use our SDK to unlock hidden revenue streams and add value for your users. *In under ten minutes* you could be generating money from:
 
 - Magnets
 - Polaroid Style Prints
