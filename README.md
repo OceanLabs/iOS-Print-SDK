@@ -10,7 +10,7 @@ To get started, you will need to have a free Kite developer account. Go to [kite
 
 ## Products
 
-Use our SDK to unlock hidden revenue streams and add value for your users. *In under ten minutes* you could be generating money from:
+Use our SDK to unlock hidden revenue streams and add value for your users. *In under ten minutes* you could be selling:
 
 - Magnets
 - Polaroid Style Prints
