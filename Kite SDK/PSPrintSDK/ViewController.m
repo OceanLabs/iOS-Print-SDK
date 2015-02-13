@@ -9,6 +9,8 @@
 #import "ViewController.h"
 #import "OLKitePrintSDK.h"
 
+#import <AssetsLibrary/AssetsLibrary.h>
+
 /**********************************************************************
  * Insert your API keys here. These are found under your profile 
  * by logging in to the developer portal at http://kite.ly
@@ -141,7 +143,14 @@ static NSString *const kApplePayMerchantIDKey = @"merchant.co.oceanlabs.kite.ly"
 
 #pragma mark - OLKiteDelete
 
-- (BOOL) shouldShowAddMorePhotosInReview {
+- (BOOL)kiteController:(OLKiteViewController *)controller isDefaultAssetsGroup:(ALAssetsGroup *)group {
+//    if ([[group valueForProperty:ALAssetsGroupPropertyName] isEqualToString:@"Instagram"]) {
+//        return YES;
+//    }
+    return NO;
+}
+
+- (BOOL)kiteControllerShouldShowAddMorePhotosInReview:(OLKiteViewController *)controller {
     return YES;
 }
 

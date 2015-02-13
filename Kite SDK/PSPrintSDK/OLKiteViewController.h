@@ -10,12 +10,14 @@
 #import "OLProductTemplate.h"
 
 @class OLPrintOrder;
+@class OLKiteViewController;
+@class ALAssetsGroup;
 
 @protocol OLKiteDelegate <NSObject>
 
 @optional
-- (BOOL)shouldShowAddMorePhotosInReview;
-
+- (BOOL)kiteController:(OLKiteViewController *)controller isDefaultAssetsGroup:(ALAssetsGroup *)group;
+- (BOOL)kiteControllerShouldShowAddMorePhotosInReview:(OLKiteViewController *)controller;
 @end
 
 @interface OLKiteViewController : UIViewController
