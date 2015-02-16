@@ -124,7 +124,7 @@
         OLFrameOrderReviewViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"FrameOrderReviewViewController"];
         vc.assets = self.assets;
         for (OLProduct *product in products){
-            if (product.templateType == kOLTemplateTypeFrame){
+            if (product.productTemplate.templateClass == kOLTemplateClassFrame){
                 vc.product = product;
             }
         }
