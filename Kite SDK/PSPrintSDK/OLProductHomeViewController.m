@@ -35,7 +35,7 @@ static NSArray *products;
         NSMutableArray *mutableProducts = [products mutableCopy];
         BOOL haveAtLeastOnePoster = NO;
         BOOL haveAtLeastOneFrame = NO;
-        for (OLProduct *product in _products){
+        for (OLProduct *product in products){
             if (!product.labelColor){
                 [mutableProducts removeObject:product];
             }
@@ -99,7 +99,7 @@ static NSArray *products;
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    OLProduct *product = self.products[indexPath.row];
+    OLProduct *product = [OLProduct products][indexPath.row];
     if (product.productTemplate.templateClass == kOLTemplateClassPoster){
         OLPosterSizeSelectionViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"sizeSelect"];
         vc.assets = self.assets;
@@ -124,7 +124,7 @@ static NSArray *products;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return [self.products count];
+    return [[OLProduct products] count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {

@@ -223,7 +223,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     
     UINavigationController *nav = [self.storyboard instantiateViewControllerWithIdentifier:@"CropViewNavigationController"];
     OLScrollCropViewController *cropVc = (id)nav.topViewController;
-    cropVc.enableCircleMask = self.product.templateType == kOLTemplateTypeStickersCircle;
+    cropVc.enableCircleMask = self.product.productTemplate.templateClass == kOLTemplateClassCircle;
     cropVc.delegate = self;
     cropVc.aspectRatio = 1;
     if (((OLAsset *)(self.editingPrintPhoto.asset)).assetType == kOLAssetTypeRemoteImageURL){
@@ -284,7 +284,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     UILabel *countLabel = (UILabel *)[cell.contentView viewWithTag:30];
     [countLabel setText: [NSString stringWithFormat:@"%lu", (unsigned long)(1+[((NSNumber*)[self.extraCopiesOfAssets objectAtIndex:indexPath.row]) integerValue])]];
     
-    if (self.product.templateType == kOLTemplateTypeStickersCircle){
+    if (self.product.productTemplate.templateClass == kOLTemplateClassCircle){
         cell.enableMask = YES;
     }
     

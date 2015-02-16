@@ -70,26 +70,26 @@
     vc.assets = self.assets;
     if (tag == 22) {
         for (OLProduct *product in products){
-            if (product.templateType == kOLTemplateTypeFrame2x2){
+            if (product.productTemplate.templateClass == kOLTemplateClassFrame && product.productTemplate.quantityPerSheet == 4){
                 vc.product = product;
             }
         }
     } else if (tag == 33) {
         for (OLProduct *product in products){
-            if (product.templateType == kOLTemplateTypeFrame3x3){
+            if (product.productTemplate.templateClass == kOLTemplateClassFrame && product.productTemplate.quantityPerSheet == 9){
                 vc.product = product;
             }
         }
     } else if (tag == 44) {
         for (OLProduct *product in products){
-            if (product.templateType == kOLTemplateTypeFrame4x4){
+            if (product.productTemplate.templateClass == kOLTemplateClassFrame && product.productTemplate.quantityPerSheet == 16){
                 vc.product = product;
             }
         }
     }
     else if (tag == 11){
         for (OLProduct *product in products){
-            if (product.templateType == kOLTemplateTypeFrame){
+            if (product.productTemplate.templateClass == kOLTemplateClassFrame && product.productTemplate.quantityPerSheet == 1){
                 vc.product = product;
             }
         }
