@@ -101,10 +101,12 @@ static NSArray *products;
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     OLProduct *product = [OLProduct products][indexPath.row];
     if (product.productTemplate.templateClass == kOLTemplateClassPoster){
-        OLPosterSizeSelectionViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"sizeSelect"];
-        vc.assets = self.assets;
-        vc.delegate = self.delegate;
-        [self.navigationController pushViewController:vc animated:YES];
+        UINavigationController *vc = (UINavigationController *)[self.storyboard instantiateViewControllerWithIdentifier:@"sizeSelectNavigationController"];
+        ((OLPosterSizeSelectionViewController *)vc.topViewController).assets = self.assets;
+        ((OLPosterSizeSelectionViewController *)vc.topViewController).delegate = self.delegate;
+        [self showDetailViewController:vc sender:nil];
+
+//        [self.navigationController pushViewController:vc animated:YES];
     }
     else{
         UINavigationController *nvc = (UINavigationController *)[self.storyboard instantiateViewControllerWithIdentifier:@"OLProductOverviewNavigationViewController"];
@@ -112,7 +114,8 @@ static NSArray *products;
         vc.assets = self.assets;
         vc.product = product;
         vc.delegate = self.delegate;
-        [self.navigationController pushViewController:vc animated:YES];
+        [self showDetailViewController:nvc sender:nil];
+//        [self.navigationController pushViewController:vc animated:YES];
     }
     
 }
@@ -124,7 +127,7 @@ static NSArray *products;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return [[OLProduct products] count];
+    return [[OLProductHomeViewController products] count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {

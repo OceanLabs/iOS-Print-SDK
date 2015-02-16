@@ -102,7 +102,7 @@
 }
 
 - (UIViewController *)viewControllerAtIndex:(NSUInteger)index {
-    if (index == NSNotFound || index >= self.self.product.productPhotos.count) {
+    if (index == NSNotFound || index >= self.product.productPhotos.count) {
         return nil;
     }
     

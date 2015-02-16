@@ -116,29 +116,56 @@
     NSString *nextVcNavIdentifier = @"SplitViewController";
     NSString *nextVcIdentifier = @"SplitViewController";
     OLProduct *product;
-    if (([OLKitePrintSDK enabledProducts] && [[OLKitePrintSDK enabledProducts] count] < 2)){
-        nextVcNavIdentifier = @"OLProductOverviewNavigationViewController";
-        nextVcIdentifier = @"OLProductOverviewNavigationViewController";
-        
-        if ([OLKiteViewController singleProductEnabled]){
-            product = [[OLKitePrintSDK enabledProducts] firstObject];
-            NSAssert(product && product.productTemplate.templateClass != kOLTemplateClassNA, @"Product chosen does not support the Print Shop User Experience. Please implement a custom checkout.");
-        }
-        
-        if (product.productTemplate.templateClass == kOLTemplateClassPoster){
-            nextVcIdentifier = @"sizeSelect";
-            nextVcNavIdentifier = @"sizeSelectNavigationController";
-        }
-    }
+//    if (([OLKitePrintSDK enabledProducts] && [[OLKitePrintSDK enabledProducts] count] < 2)){
+//        nextVcNavIdentifier = @"OLProductOverviewNavigationViewController";
+//        nextVcIdentifier = @"OLProductOverviewNavigationViewController";
+//        
+//        if ([OLKiteViewController singleProductEnabled]){
+//            product = [[OLKitePrintSDK enabledProducts] firstObject];
+//            NSAssert(product && product.productTemplate.templateClass != kOLTemplateClassNA, @"Product chosen does not support the Print Shop User Experience. Please implement a custom checkout.");
+//        }
+//        
+//        if (product.productTemplate.templateClass == kOLTemplateClassPoster){
+//            nextVcIdentifier = @"sizeSelect";
+//            nextVcNavIdentifier = @"sizeSelectNavigationController";
+//        }
+//    }
     
     if (!self.navigationController){
-        self.nextVc = [sb instantiateViewControllerWithIdentifier:nextVcNavIdentifier];
-        [(OLProductHomeViewController *)((UINavigationController *)self.nextVc).topViewController setDelegate:self.delegate];
-        ((UINavigationController *)self.nextVc).topViewController.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(dismiss)];
-        [(id)((UINavigationController *)self.nextVc).topViewController setAssets:[self.assets mutableCopy]];
-        if (product){
-            [(id)((UINavigationController *)self.nextVc).topViewController setProduct:product];
+        OLProduct *product = [[OLProductHomeViewController products] firstObject];
+        UIViewController *detailVc;
+        if (product.productTemplate.templateClass == kOLTemplateClassPoster){
+            OLPosterSizeSelectionViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"sizeSelect"];
+            vc.assets = [self.assets mutableCopy];
+            detailVc = vc;
         }
+        else{
+            UINavigationController *nvc = (UINavigationController *)[self.storyboard instantiateViewControllerWithIdentifier:@"OLProductOverviewNavigationViewController"];
+            OLProductOverviewViewController *vc = (OLProductOverviewViewController *)[nvc topViewController];
+            vc.assets = [self.assets mutableCopy];
+            vc.product = product;
+            detailVc = nvc;
+        }
+
+        self.nextVc = [sb instantiateViewControllerWithIdentifier:nextVcNavIdentifier];
+        OLProductHomeViewController *home = (OLProductHomeViewController *)[(UINavigationController *)[((UISplitViewController *)self.nextVc).viewControllers firstObject] topViewController];
+        home.delegate = self.delegate;
+        
+        home.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(dismiss)];
+        [home setAssets:[self.assets mutableCopy]];
+//        if (product){
+//            [(id)((UINavigationController *)self.nextVc).topViewController setProduct:product];
+//        }
+        [((UISplitViewController *)self.nextVc) showDetailViewController:detailVc sender:nil];
+        [((UISplitViewController *)self.nextVc) setPreferredDisplayMode:UISplitViewControllerDisplayModeAllVisible];
+        ((UISplitViewController *)self.nextVc).presentsWithGesture = NO;
+        
+//        self.nextVc.view.alpha = 0;
+//        [self.view addSubview:self.nextVc.view];
+//        [UIView animateWithDuration:0.15 animations:^(void){
+//            self.nextVc.view.alpha = 1;
+//        }];
+
         self.presentLater = YES;
     }
     else{

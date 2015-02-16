@@ -15,4 +15,6 @@
 @property (strong, nonatomic) NSMutableArray *assets;
 @property (weak, nonatomic) id<OLKiteDelegate> delegate;
 
++(NSArray *) products;
+
 @end
