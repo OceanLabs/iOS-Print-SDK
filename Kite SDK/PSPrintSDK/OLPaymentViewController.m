@@ -109,11 +109,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 
 #ifdef OL_KITE_OFFER_APPLE_PAY
 -(BOOL)isApplePayAvailable{
-    PKPaymentRequest *request = [Stripe
-                                 paymentRequestWithMerchantIdentifier:[OLKitePrintSDK appleMerchantID]
-                                 amount:self.printOrder.cost
-                                 currency:self.printOrder.currencyCode
-                                 description:@"Prints"];
+    PKPaymentRequest *request = [Stripe paymentRequestWithMerchantIdentifier:[OLKitePrintSDK appleMerchantID]];
     
     return [Stripe canSubmitPaymentRequest:request];
 }
@@ -494,11 +490,10 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 
 #ifdef OL_KITE_OFFER_APPLE_PAY
 - (IBAction)onButtonPayWithApplePayClicked{
-    PKPaymentRequest *paymentRequest = [Stripe
-                                        paymentRequestWithMerchantIdentifier:[OLKitePrintSDK appleMerchantID]
-                                        amount:self.printOrder.cost
-                                        currency:self.printOrder.currencyCode
-                                        description:@"Prints"];
+    PKPaymentRequest *paymentRequest = [Stripe paymentRequestWithMerchantIdentifier:[OLKitePrintSDK appleMerchantID]];
+    paymentRequest.currencyCode = self.printOrder.currencyCode;
+    PKPaymentSummaryItem *summaryItem = [PKPaymentSummaryItem summaryItemWithLabel:NSLocalizedString(@"Prints", @"") amount:self.printOrder.cost];
+    paymentRequest.paymentSummaryItems = @[summaryItem];
     UIViewController *paymentController;
     //#if DEBUG
     //    paymentController = [[STPTestPaymentAuthorizationViewController alloc]
@@ -663,14 +658,6 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 - (void)paymentAuthorizationViewController:(PKPaymentAuthorizationViewController *)controller
                        didAuthorizePayment:(PKPayment *)payment
                                 completion:(void (^)(PKPaymentAuthorizationStatus))completion {
-    /*
-     We'll implement this method below in 'Creating a single-use token'.
-     Note that we've also been given a block that takes a
-     PKPaymentAuthorizationStatus. We'll call this function with either
-     PKPaymentAuthorizationStatusSuccess or PKPaymentAuthorizationStatusFailure
-     after all of our asynchronous code is finished executing. This is how the
-     PKPaymentAuthorizationViewController knows when and how to update its UI.
-     */
     [self handlePaymentAuthorizationWithPayment:payment completion:completion];
 }
 
@@ -682,19 +669,14 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 
 - (void)handlePaymentAuthorizationWithPayment:(PKPayment *)payment
                                    completion:(void (^)(PKPaymentAuthorizationStatus))completion {
-    [Stripe createTokenWithPayment:payment
-                        completion:^(STPToken *token, NSError *error) {
-                            if (error) {
-                                completion(PKPaymentAuthorizationStatusFailure);
-                                return;
-                            }
-                            /*
-                             We'll implement this below in "Sending the token to your server".
-                             Notice that we're passing the completion block through.
-                             See the above comment in didAuthorizePayment to learn why.
-                             */
-                            [self createBackendChargeWithToken:token completion:completion];
-                        }];
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:[OLKitePrintSDK stripePublishableKey]];
+    [client createTokenWithPayment:payment completion:^(STPToken *token, NSError *error) {
+        if (error) {
+            completion(PKPaymentAuthorizationStatusFailure);
+            return;
+        }
+        [self createBackendChargeWithToken:token completion:completion];
+    }];
 }
 
 - (void)createBackendChargeWithToken:(STPToken *)token
