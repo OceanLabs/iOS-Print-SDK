@@ -72,7 +72,7 @@ typedef void (^UploadAssetsCompletionHandler)(NSError *error);
 }
 
 - (void)registerImageURLAssets:(NSArray/*<OLAsset>*/ *)imageURLAssets completionHandler:(RegisterImageURLAssetsCompletionHandler)handler {
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/v1.1/asset/", [OLKitePrintSDK apiEndpoint]]];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/v1.2/asset/", [OLKitePrintSDK apiEndpoint]]];
     NSDictionary *headers = @{@"Authorization": [NSString stringWithFormat:@"ApiKey %@:", [OLKitePrintSDK apiKey]]};
     
     NSUInteger expectedRegisteredAssetCount = 0;
@@ -136,7 +136,7 @@ typedef void (^UploadAssetsCompletionHandler)(NSError *error);
     }
     
     __weak OLAssetUploadRequest *zelf = self;
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/v1.1/asset/sign/?mime_types=%@&client_asset=true", [OLKitePrintSDK apiEndpoint], mimeTypes]];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/v1.2/asset/sign/?mime_types=%@&client_asset=true", [OLKitePrintSDK apiEndpoint], mimeTypes]];
     NSDictionary *headers = @{@"Authorization": [NSString stringWithFormat:@"ApiKey %@:", [OLKitePrintSDK apiKey]]};
     self.signReq = [[OLBaseRequest alloc] initWithURL:url httpMethod:kOLHTTPMethodGET headers:headers body:nil];
     [self.signReq startWithCompletionHandler:^(NSInteger httpStatusCode, id json, NSError *error) {
