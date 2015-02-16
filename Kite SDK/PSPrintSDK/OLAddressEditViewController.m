@@ -184,12 +184,20 @@ static const NSUInteger kTagLabel = 100;
             self.textFieldCity = tf;
             break;
         case 4:
-            label.text = NSLocalizedStringFromTableInBundle(@"County", @"KitePrintSDK", [NSBundle mainBundle], @"");
+            if (self.address.country == [OLCountry countryForCode:@"USA"]) {
+                label.text = @"State";
+            } else {
+                label.text = NSLocalizedStringFromTableInBundle(@"County", @"KitePrintSDK", [NSBundle mainBundle], @"");
+            }
             tf.text = self.address.stateOrCounty;
             self.textFieldCounty = tf;
             break;
         case 5:
-            label.text = NSLocalizedStringFromTableInBundle(@"Postcode", @"KitePrintSDK", [NSBundle mainBundle], @"");
+            if (self.address.country == [OLCountry countryForCode:@"USA"]) {
+                label.text = @"ZIP Code";
+            } else {
+                label.text = NSLocalizedStringFromTableInBundle(@"Postcode", @"KitePrintSDK", [NSBundle mainBundle], @"");
+            }
             tf.text = self.address.zipOrPostcode;
             tf.autocapitalizationType = UITextAutocapitalizationTypeAllCharacters;
             self.textFieldPostCode = tf;
@@ -225,6 +233,7 @@ static const NSUInteger kTagLabel = 100;
     [self dismissViewControllerAnimated:YES completion:nil];
     self.address.country = countries.lastObject;
     self.textFieldCountry.text = self.address.country.name;
+    [self.tableView reloadData];
 }
 
 - (void)countryPickerDidCancelPicking:(OLCountryPickerController *)picker {
@@ -245,7 +254,6 @@ static const NSUInteger kTagLabel = 100;
     } else if (textField == self.textFieldCounty) {
         [self.textFieldPostCode becomeFirstResponder];
     } else if (textField == self.textFieldPostCode) {
-        //[self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
         [textField resignFirstResponder];
     } else if (textField == self.textFieldCountry) {
         [self saveAddressAndReturn];
