@@ -235,12 +235,22 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     [self onUserSelectedPhotoCountChange];
 }
 
+- (OLKiteViewController *)kiteViewController {
+    for (UIViewController *vc in self.navigationController.viewControllers) {
+        if ([vc isMemberOfClass:[OLKiteViewController class]]) {
+            return (OLKiteViewController *) vc;
+        }
+    }
+    
+    return nil;
+}
+
 - (BOOL)shouldShowAddMorePhotos{
-    if (![self.delegate respondsToSelector:@selector(shouldShowAddMorePhotosInReview)]){
+    if (![self.delegate respondsToSelector:@selector(kiteControllerShouldShowAddMorePhotosInReview:)]){
         return YES;
     }
     else{
-        return [self.delegate shouldShowAddMorePhotosInReview];
+        return [self.delegate kiteControllerShouldShowAddMorePhotosInReview:[self kiteViewController]];
     }
 }
 
@@ -447,6 +457,14 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
 }
 
 #pragma mark - CTAssetsPickerControllerDelegate Methods
+
+- (BOOL)assetsPickerController:(CTAssetsPickerController *)picker isDefaultAssetsGroup:(ALAssetsGroup *)group {
+    if ([self.delegate respondsToSelector:@selector(kiteController:isDefaultAssetsGroup:)]) {
+        return [self.delegate kiteController:[self kiteViewController] isDefaultAssetsGroup:group];
+    }
+    
+    return NO;
+}
 
 - (void)assetsPickerController:(CTAssetsPickerController *)picker didFinishPickingAssets:(NSArray *)assets {
     [self populateArrayWithNewArray:assets dataType:[ALAsset class]];
