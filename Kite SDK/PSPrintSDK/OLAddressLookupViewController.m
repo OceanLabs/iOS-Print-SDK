@@ -89,7 +89,11 @@
 - (void)setCountry:(OLCountry *)country {
     _country = country;
     self.labelCountry.text = country.name;
-    self.searchBar.placeholder = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Search %@", @"KitePrintSDK", [OLConstants bundle], @""), country.name];
+    if ([country.codeAlpha3 isEqualToString:@"USA"]) {
+        self.searchBar.placeholder = NSLocalizedStringFromTableInBundle(@"Search by ZIP code, street or address", @"KitePrintSDK", [OLConstants bundle], @"");
+    } else {
+        self.searchBar.placeholder = NSLocalizedStringFromTableInBundle(@"Search by postcode, street or address", @"KitePrintSDK", [OLConstants bundle], @"");
+    }
 }
 
 - (void)onButtonChangeCountryClicked {
