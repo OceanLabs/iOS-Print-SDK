@@ -43,7 +43,7 @@ static NSString *urlEscapeString(NSString *string) {
 
 - (void)searchForAddressWithCountry:(OLCountry *)country query:(NSString *)q {
     NSString *queryParms = [NSString stringWithFormat:@"search_term=%@&country_code=%@", urlEscapeString(q), urlEscapeString(country.codeAlpha3)];
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/v1.1/address/search?%@", [OLKitePrintSDK apiEndpoint], queryParms]];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/v1.2/address/search?%@", [OLKitePrintSDK apiEndpoint], queryParms]];
     [self startSearch:[[OLBaseRequest alloc] initWithURL:url httpMethod:kOLHTTPMethodGET headers:@{@"Authorization": [NSString stringWithFormat:@"ApiKey %@:", [OLKitePrintSDK apiKey]]} body:nil] country:country];
 }
 
@@ -63,7 +63,7 @@ static NSString *urlEscapeString(NSString *string) {
         queryParms = [NSString stringWithFormat:@"address_id=%@&country_code=%@", urlEscapeString(addressId), urlEscapeString(address.country.codeAlpha3)];
     }
     
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/v1.1/address/search?%@", [OLKitePrintSDK apiEndpoint], queryParms]];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/v1.2/address/search?%@", [OLKitePrintSDK apiEndpoint], queryParms]];
     [self startSearch:[[OLBaseRequest alloc] initWithURL:url
                                               httpMethod:kOLHTTPMethodGET
                                                  headers:@{@"Authorization": [NSString stringWithFormat:@"ApiKey %@:", [OLKitePrintSDK apiKey]]}

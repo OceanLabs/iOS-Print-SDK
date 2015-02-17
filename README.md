@@ -10,7 +10,7 @@ To get started, you will need to have a free Kite developer account. Go to [kite
 
 ## Products
 
-Use print to unlock hidden revenue streams and add value for your users. *In under ten minutes* you could be using our SDK to print:
+Use our SDK to unlock hidden revenue streams and add value for your users. *In under ten minutes* you could be selling:
 
 - Magnets
 - Polaroid Style Prints
@@ -20,6 +20,8 @@ Use print to unlock hidden revenue streams and add value for your users. *In und
 - A4 (invoices, letters, etc)
 - Large Format Posters (A3, A2, A1)
 - Square and Round Stickers
+- T-Shirts & other Apparel
+- Phone Cases
 - New products being added monthly
 
 ## Features

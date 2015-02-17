@@ -9,6 +9,8 @@
 #import "ViewController.h"
 #import "OLKitePrintSDK.h"
 
+#import <AssetsLibrary/AssetsLibrary.h>
+
 /**********************************************************************
  * Insert your API keys here. These are found under your profile 
  * by logging in to the developer portal at http://kite.ly
@@ -32,13 +34,6 @@ static NSString *const kApplePayMerchantIDKey = @"merchant.co.oceanlabs.kite.ly"
 }
 
 - (void)viewDidLoad {
-    [OLKitePrintSDK setAPIKey:kAPIKeySandbox withEnvironment:kOLKitePrintSDKEnvironmentSandbox];
-    
-#ifdef OL_KITE_OFFER_APPLE_PAY
-    [OLKitePrintSDK setApplePayMerchantID:kApplePayMerchantIDKey];
-    [OLKitePrintSDK setStripeKey:kStripePublishableKey];
-#endif
-    
     [super viewDidLoad];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onUserSuppliedShippingDetails:) name:kOLNotificationUserSuppliedShippingDetails object:nil];
@@ -106,11 +101,18 @@ static NSString *const kApplePayMerchantIDKey = @"merchant.co.oceanlabs.kite.ly"
 
 - (void)printWithAssets:(NSArray *)assets {
     if (![self isAPIKeySet]) return;
+
+    [OLKitePrintSDK setAPIKey:[self apiKey] withEnvironment:[self environment]];
+    
+#ifdef OL_KITE_OFFER_APPLE_PAY
+    [OLKitePrintSDK setApplePayMerchantID:kApplePayMerchantIDKey];
+    [OLKitePrintSDK setStripeKey:kStripePublishableKey];
+#endif
     
     OLKiteViewController *vc = [[OLKiteViewController alloc] initWithAssets:assets];
     vc.delegate = self;
     [self presentViewController:vc animated:YES completion:NULL];
-//    [self.navigationController pushViewController:vc animated:YES];
+
 }
 
 - (IBAction)onButtonPrintRemotePhotos:(id)sender {
@@ -142,7 +144,14 @@ static NSString *const kApplePayMerchantIDKey = @"merchant.co.oceanlabs.kite.ly"
 
 #pragma mark - OLKiteDelete
 
-- (BOOL) shouldShowAddMorePhotosInReview {
+- (BOOL)kiteController:(OLKiteViewController *)controller isDefaultAssetsGroup:(ALAssetsGroup *)group {
+//    if ([[group valueForProperty:ALAssetsGroupPropertyName] isEqualToString:@"Instagram"]) {
+//        return YES;
+//    }
+    return NO;
+}
+
+- (BOOL)kiteControllerShouldShowAddMorePhotosInReview:(OLKiteViewController *)controller {
     return YES;
 }
 
