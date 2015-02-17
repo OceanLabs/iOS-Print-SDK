@@ -19,10 +19,11 @@
 #import "OLAsset+Private.h"
 #import <SDWebImageManager.h>
 #import "OLAnalytics.h"
+#import <CTAssetsPickerController.h>
 
 static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 
-@interface OLOrderReviewCollectionViewViewController ()
+@interface OLOrderReviewCollectionViewViewController () <CTAssetsPickerControllerDelegate>
 
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *confirmBarButton;
 @property (weak, nonatomic) OLPrintPhoto *editingPrintPhoto;
@@ -32,7 +33,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 
 @implementation OLOrderReviewCollectionViewViewController
 
--(NSArray *) userSelectedPhotos{
+-(NSMutableArray *) userSelectedPhotos{
     if (!_userSelectedPhotos){
         NSMutableArray *mutableUserSelectedPhotos = [[NSMutableArray alloc] init];
         for (id asset in self.assets){
@@ -170,8 +171,50 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     return NO;
 }
 
+- (void)populateArrayWithNewArray:(NSArray *)array dataType:(Class)class {
+    NSMutableArray *assetArray = [[NSMutableArray alloc] initWithCapacity:array.count];
+    
+    for (ALAsset *asset in array){
+        [assetArray addObject:[OLAsset assetWithALAsset:asset]];
+    }
+    
+    
+    NSMutableArray *addArray = [NSMutableArray arrayWithArray:assetArray];
+    
+    for (ALAsset *asset in addArray){
+        [self.extraCopiesOfAssets addObject:@0];
+        
+        OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
+        printPhoto.serverImageSize = [self.product serverImageSize];
+        printPhoto.asset = asset;
+        [self.userSelectedPhotos addObject:printPhoto];
+    }
+    [self.assets addObjectsFromArray:addArray];
+    
+    // Reload the table view.
+    [self.collectionView reloadData];
+    
+    [self onUserSelectedPhotoCountChange];
+}
+
+- (OLKiteViewController *)kiteViewController {
+    for (UIViewController *vc in self.navigationController.viewControllers) {
+        if ([vc isMemberOfClass:[OLKiteViewController class]]) {
+            return (OLKiteViewController *) vc;
+        }
+    }
+    
+    return nil;
+}
 
 #pragma mark Button Actions
+
+- (IBAction)onButtonAddMorePhotosClicked{
+    CTAssetsPickerController *picker = [[CTAssetsPickerController alloc] init];
+    picker.delegate = self;
+    picker.assetsFilter = [ALAssetsFilter allPhotos];
+    [self presentViewController:picker animated:YES completion:nil];
+}
 
 - (IBAction)onButtonUpArrowClicked:(UIButton *)sender {
     UIView* cellContentView = sender.superview;
@@ -343,5 +386,34 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     [self.collectionView reloadData];
 }
 
+#pragma mark - CTAssetsPickerControllerDelegate Methods
+
+- (BOOL)assetsPickerController:(CTAssetsPickerController *)picker isDefaultAssetsGroup:(ALAssetsGroup *)group {
+    if ([self.delegate respondsToSelector:@selector(kiteController:isDefaultAssetsGroup:)]) {
+        return [self.delegate kiteController:[self kiteViewController] isDefaultAssetsGroup:group];
+    }
+    
+    return NO;
+}
+
+- (void)assetsPickerController:(CTAssetsPickerController *)picker didFinishPickingAssets:(NSArray *)assets {
+    [self populateArrayWithNewArray:assets dataType:[ALAsset class]];
+    [picker dismissViewControllerAnimated:YES completion:^(void){}];
+}
+
+- (BOOL)assetsPickerController:(CTAssetsPickerController *)picker shouldShowAssetsGroup:(ALAssetsGroup *)group{
+    if (group.numberOfAssets == 0){
+        return NO;
+    }
+    return YES;
+}
+
+- (BOOL)assetsPickerController:(CTAssetsPickerController *)picker shouldShowAsset:(ALAsset *)asset{
+    NSString *fileName = [[[asset defaultRepresentation] filename] lowercaseString];
+    if (!([fileName hasSuffix:@".jpg"] || [fileName hasSuffix:@".jpeg"] || [fileName hasSuffix:@"png"])) {
+        return NO;
+    }
+    return YES;
+}
 
 @end

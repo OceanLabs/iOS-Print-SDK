@@ -17,13 +17,12 @@
 
 @property (nonatomic, strong) OLProduct *product;
 @property (strong, nonatomic) NSMutableArray* extraCopiesOfAssets;
-@property (strong, nonatomic) NSArray *assets;
-@property (strong, nonatomic) NSArray *userSelectedPhotos;
+@property (strong, nonatomic) NSMutableArray *assets;
+@property (strong, nonatomic) NSMutableArray *userSelectedPhotos;
 @property (weak, nonatomic) id<OLKiteDelegate> delegate;
 
 - (void)updateTitleBasedOnSelectedPhotoQuanitity;
 - (BOOL) shouldGoToCheckout;
 - (void) doCheckout;
--(NSArray *) userSelectedPhotos;
 
 @end
