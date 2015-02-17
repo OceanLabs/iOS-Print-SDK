@@ -32,6 +32,7 @@
 
 #ifdef OL_KITE_OFFER_APPLE_PAY
 #import <Stripe+ApplePay.h>
+#import <STPTestPaymentAuthorizationViewController.h>
 #endif
 
 @import PassKit;
@@ -496,18 +497,19 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 - (IBAction)onButtonPayWithApplePayClicked{
     PKPaymentRequest *paymentRequest = [Stripe paymentRequestWithMerchantIdentifier:[OLKitePrintSDK appleMerchantID]];
     paymentRequest.currencyCode = self.printOrder.currencyCode;
-    PKPaymentSummaryItem *summaryItem = [PKPaymentSummaryItem summaryItemWithLabel:NSLocalizedString(@"Prints", @"") amount:self.printOrder.cost];
+    PKPaymentSummaryItem *summaryItem = [PKPaymentSummaryItem summaryItemWithLabel:NSLocalizedString(@"kite.ly", @"") amount:self.printOrder.cost];
     paymentRequest.paymentSummaryItems = @[summaryItem];
     UIViewController *paymentController;
-    //#if DEBUG
-    //    paymentController = [[STPTestPaymentAuthorizationViewController alloc]
-    //                         initWithPaymentRequest:paymentRequest];
-    //    paymentController.delegate = self;
-    //#else
-    paymentController = [[PKPaymentAuthorizationViewController alloc]
-                         initWithPaymentRequest:paymentRequest];
-    ((PKPaymentAuthorizationViewController *)paymentController).delegate = self;
-    //#end
+    if ([OLKitePrintSDK environment] == kOLKitePrintSDKEnvironmentSandbox) {
+        paymentController = [[STPTestPaymentAuthorizationViewController alloc]
+                             initWithPaymentRequest:paymentRequest];
+        ((STPTestPaymentAuthorizationViewController *)paymentController).delegate = self;
+    }
+    else{
+        paymentController = [[PKPaymentAuthorizationViewController alloc]
+                             initWithPaymentRequest:paymentRequest];
+        ((PKPaymentAuthorizationViewController *)paymentController).delegate = self;
+    }
     [self presentViewController:paymentController animated:YES completion:nil];
 }
 #endif
@@ -525,9 +527,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     __block BOOL handlerUsed = NO;
     
     [SVProgressHUD showWithStatus:NSLocalizedStringFromTableInBundle(@"Processing", @"KitePrintSDK", [OLConstants bundle], @"") maskType:SVProgressHUDMaskTypeBlack];
-    [self.printOrder submitForPrintingWithProgressHandler:^(NSUInteger totalAssetsUploaded, NSUInteger totalAssetsToUpload,
-                                                            long long totalAssetBytesWritten, long long totalAssetBytesExpectedToWrite,
-                                                            long long totalBytesWritten, long long totalBytesExpectedToWrite) {
+    [self.printOrder submitForPrintingWithProgressHandler:^(NSUInteger totalAssetsUploaded, NSUInteger totalAssetsToUpload, long long totalAssetBytesWritten, long long totalAssetBytesExpectedToWrite, long long totalBytesWritten, long long totalBytesExpectedToWrite) {
         if (!handlerUsed) {
             handler(PKPaymentAuthorizationStatusSuccess);
             handlerUsed = YES;
@@ -540,6 +540,11 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         if (error) {
             handler(PKPaymentAuthorizationStatusFailure);
             [[[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLConstants bundle], @"") message:error.localizedDescription delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLConstants bundle], @"") otherButtonTitles:nil] show];
+        }
+        
+        if (!handlerUsed) {
+            handler(PKPaymentAuthorizationStatusSuccess);
+            handlerUsed = YES;
         }
         
         [[NSNotificationCenter defaultCenter] postNotificationName:kOLNotificationPrintOrderSubmission object:self userInfo:@{kOLKeyUserInfoPrintOrder: self.printOrder}];
@@ -674,18 +679,35 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 - (void)handlePaymentAuthorizationWithPayment:(PKPayment *)payment
                                    completion:(void (^)(PKPaymentAuthorizationStatus))completion {
     STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:[OLKitePrintSDK stripePublishableKey]];
-    [client createTokenWithPayment:payment completion:^(STPToken *token, NSError *error) {
-        if (error) {
-            completion(PKPaymentAuthorizationStatusFailure);
-            return;
-        }
-        [self createBackendChargeWithToken:token completion:completion];
-    }];
+
+    if ([OLKitePrintSDK environment] == kOLKitePrintSDKEnvironmentSandbox){
+        STPCard *card = [STPCard new];
+        card.number = @"4242424242424242";
+        card.expMonth = 12;
+        card.expYear = 2020;
+        card.cvc = @"123";
+        [client createTokenWithCard:card completion:^(STPToken *token, NSError *error) {
+            if (error) {
+                completion(PKPaymentAuthorizationStatusFailure);
+                return;
+            }
+            [self createBackendChargeWithToken:token completion:completion];
+        }];
+    }
+    else{
+        [client createTokenWithPayment:payment completion:^(STPToken *token, NSError *error) {
+            if (error) {
+                completion(PKPaymentAuthorizationStatusFailure);
+                return;
+            }
+            [self createBackendChargeWithToken:token completion:completion];
+        }];
+    }
 }
 
 - (void)createBackendChargeWithToken:(STPToken *)token
                           completion:(void (^)(PKPaymentAuthorizationStatus))completion {
-    [self submitOrderForPrintingWithProofOfPayment:token.tokenId completion:^void(PKPaymentAuthorizationStatus status){}];
+    [self submitOrderForPrintingWithProofOfPayment:token.tokenId completion:completion];
 }
 #endif
 

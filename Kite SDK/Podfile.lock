@@ -20,6 +20,7 @@ PODS:
   - AFNetworking/UIKit (2.5.1):
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
+  - ApplePayStubs (0.1.4)
   - CTAssetsPickerController (2.9.1)
   - LXReorderableCollectionViewFlowLayout (0.1.1)
   - PayPal-iOS-SDK (2.4.2)
@@ -36,6 +37,7 @@ PODS:
 
 DEPENDENCIES:
   - AFNetworking (~> 2.5.0)
+  - ApplePayStubs
   - CTAssetsPickerController
   - LXReorderableCollectionViewFlowLayout
   - PayPal-iOS-SDK (~> 2.4.2)
@@ -47,6 +49,7 @@ DEPENDENCIES:
 
 SPEC CHECKSUMS:
   AFNetworking: 8bee59492a6ff15d69130efa4d0dc67e0094a52a
+  ApplePayStubs: 09178734db2fc35cf71eb53d0ba5c9ca94f92e27
   CTAssetsPickerController: 9a061b0aede144a66b959d635739f7e88b9b3eb5
   LXReorderableCollectionViewFlowLayout: b4e25543263e27d4c147109ae5ead01cc9119f23
   PayPal-iOS-SDK: d23a5c671f293e07d1a52884943268c43b7ef99d
