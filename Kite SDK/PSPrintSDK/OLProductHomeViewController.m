@@ -99,7 +99,7 @@ static NSArray *products;
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    OLProduct *product = [OLProduct products][indexPath.row];
+    OLProduct *product = [OLProductHomeViewController products][indexPath.row];
     if (product.productTemplate.templateClass == kOLTemplateClassPoster){
         UINavigationController *vc = (UINavigationController *)[self.storyboard instantiateViewControllerWithIdentifier:@"sizeSelectNavigationController"];
         ((OLPosterSizeSelectionViewController *)vc.topViewController).assets = self.assets;
