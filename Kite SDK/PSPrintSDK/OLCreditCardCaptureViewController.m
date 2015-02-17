@@ -10,7 +10,11 @@
 #import <SVProgressHUD.h>
 #import "OLConstants.h"
 #import "OLPayPalCard.h"
+#import "OLJudoPayCard.h"
 #import "OLPrintOrder.h"
+#import "CardIO.h"
+#import "OLKitePrintSDK.h"
+#import <AVFoundation/AVFoundation.h>
 
 static const NSUInteger kOLSectionCardNumber = 0;
 static const NSUInteger kOLSectionExpiryDate = 1;
@@ -30,6 +34,8 @@ static NSString *const kRegexMasterCard = @"^5[1-5][0-9]{2}$";
 static NSString *const kRegexAmex = @"^3[47][0-9]{2}$";
 static NSString *const kRegexDinersClub = @"^3(?:0[0-5]|[68][0-9])[0-9]$";
 static NSString *const kRegexDiscover = @"^6(?:011|5[0-9]{2})$";
+
+static NSString *const kCardIOAppToken = @"f1d07b66ad21407daf153c0ac66c09d7";
 
 static CardType getCardType(NSString *cardNumber) {
     if(cardNumber.length < 4) {
@@ -70,7 +76,15 @@ static CardType getCardType(NSString *cardNumber) {
     return kCardTypeUnknown;
 }
 
-@interface OLCreditCardCaptureRootController : UITableViewController <UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate>
+@interface OLKitePrintSDK (Private)
++ (BOOL)useJudoPayForGBP;
+@end
+
+@interface OLCreditCardCaptureRootController : UITableViewController <UITableViewDelegate,
+#ifdef OL_KITE_OFFER_PAYPAL
+CardIOPaymentViewControllerDelegate,
+#endif
+UITableViewDataSource, UITextFieldDelegate>
 @property (nonatomic, strong) UITextField *textFieldCardNumber, *textFieldExpiryDate, *textFieldCVV;
 @property (nonatomic, strong) OLPrintOrder *printOrder;
 @property (nonatomic, weak) id <UINavigationControllerDelegate, OLCreditCardCaptureDelegate> delegate;
@@ -131,6 +145,65 @@ static CardType getCardType(NSString *cardNumber) {
     [footerView addSubview:buttonPay];
     
     self.tableView.tableFooterView = footerView;
+    
+#ifdef OL_KITE_OFFER_PAYPAL
+    if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]){
+        AVAuthorizationStatus authStatus = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];
+        if ((authStatus == AVAuthorizationStatusAuthorized || authStatus == AVAuthorizationStatusNotDetermined)){
+            
+            UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 60)];
+            self.tableView.tableHeaderView = headerView;
+            
+            UIButton *scanButton = [[UIButton alloc] init];
+            [headerView addSubview:scanButton];
+            
+            [scanButton setTitle:NSLocalizedString(@"Scan Your Card", @"") forState:UIControlStateNormal];
+            [scanButton setTitleColor:[UIColor colorWithRed:74 / 255.0f green:137 / 255.0f blue:220 / 255.0f alpha:1.0] forState:UIControlStateNormal];
+            [scanButton.titleLabel setFont:[UIFont systemFontOfSize:14]];
+            
+            [scanButton addTarget:self action:@selector(showCardScanner) forControlEvents:UIControlEventTouchUpInside];
+            
+            scanButton.translatesAutoresizingMaskIntoConstraints = NO;
+            NSDictionary *views = NSDictionaryOfVariableBindings(scanButton);
+            NSMutableArray *con = [[NSMutableArray alloc] init];
+            
+            NSArray *visuals = @[@"H:|-0-[scanButton]-0-|",
+                                 @"V:|-0-[scanButton]-0-|"];
+            
+            
+            for (NSString *visual in visuals) {
+                [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+            }
+            
+            [scanButton.superview addConstraints:con];
+            
+            UIImageView *cameraIcon = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"button_camera"]];
+            [headerView addSubview:cameraIcon];
+            
+            cameraIcon.translatesAutoresizingMaskIntoConstraints = NO;
+            views = NSDictionaryOfVariableBindings(cameraIcon);
+            con = [[NSMutableArray alloc] init];
+            
+            visuals = @[@"V:[cameraIcon(==18)]", @"H:|-10-[cameraIcon(==21)]"];
+            
+            
+            for (NSString *visual in visuals) {
+                [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+            }
+            
+            [con addObject:[NSLayoutConstraint constraintWithItem:cameraIcon
+                                                        attribute:NSLayoutAttributeCenterY
+                                                        relatedBy:NSLayoutRelationEqual
+                                                           toItem:cameraIcon.superview
+                                                        attribute:NSLayoutAttributeCenterY
+                                                       multiplier:1.f constant:0.f]];
+            
+            [cameraIcon.superview addConstraints:con];
+        }
+    }
+    
+#endif
+    
 }
 
 - (NSString *)cardNumber {
@@ -204,7 +277,6 @@ static CardType getCardType(NSString *cardNumber) {
         }
     }
     
-    [SVProgressHUD showWithStatus:NSLocalizedStringFromTableInBundle(@"Processing", @"KitePrintSDK", [OLConstants bundle], @"") maskType:SVProgressHUDMaskTypeBlack];
     OLPayPalCard *card = [[OLPayPalCard alloc] init];
     card.type = paypalCard;
     card.number = [self cardNumber];
@@ -212,6 +284,11 @@ static CardType getCardType(NSString *cardNumber) {
     card.expireYear = expireYear;
     card.cvv2 = [self cardCVV];
     
+    [self storeAndChargeCard:card];
+}
+
+- (void)storeAndChargeCard:(OLPayPalCard *)card{
+    [SVProgressHUD showWithStatus:NSLocalizedStringFromTableInBundle(@"Processing", @"KitePrintSDK", [OLConstants bundle], @"") maskType:SVProgressHUDMaskTypeBlack];
     [card storeCardWithCompletionHandler:^(NSError *error) {
         // ignore error as I'd rather the user gets a nice checkout experience than we store the card in PayPal vault.
         [card chargeCard:self.printOrder.cost currencyCode:self.printOrder.currencyCode description:@"" completionHandler:^(NSString *proofOfPayment, NSError *error) {
@@ -226,11 +303,19 @@ static CardType getCardType(NSString *cardNumber) {
             [card saveAsLastUsedCard];
         }];
     }];
-
 }
 
 - (void)onButtonCancelClicked {
     [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void) showCardScanner{
+#ifdef OL_KITE_OFFER_PAYPAL
+    CardIOPaymentViewController *scanViewController = [[CardIOPaymentViewController alloc] initWithPaymentDelegate:self];
+    scanViewController.appToken = kCardIOAppToken; // get your app token from the card.io website
+    scanViewController.disableManualEntryButtons = YES;
+    [self presentViewController:scanViewController animated:YES completion:nil];
+#endif
 }
 
 #pragma mark - UITableViewDataSource methods
@@ -318,5 +403,90 @@ static CardType getCardType(NSString *cardNumber) {
     
     return YES;
 }
+
+#pragma mark - CardIOPaymentViewControllerDelegate methods
+
+#ifdef OL_KITE_OFFER_PAYPAL
+- (void)userDidCancelPaymentViewController:(CardIOPaymentViewController *)paymentViewController {
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)userDidProvideCreditCardInfoToPayByPayPal:(CardIOCreditCardInfo *)cardInfo {
+    OLPayPalCardType type;
+    switch (cardInfo.cardType) {
+        case CardIOCreditCardTypeMastercard:
+            type = kOLPayPalCardTypeMastercard;
+            break;
+        case CardIOCreditCardTypeVisa:
+            type = kOLPayPalCardTypeVisa;
+            break;
+        case CardIOCreditCardTypeAmex:
+            type = kOLPayPalCardTypeAmex;
+            break;
+        case CardIOCreditCardTypeDiscover:
+            type = kOLPayPalCardTypeDiscover;
+            break;
+        default: {
+            UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLConstants bundle], @"") message:NSLocalizedStringFromTableInBundle(@"Sorry we couldn't recognize your card. Please try again manually entering your card details if necessary.", @"KitePrintSDK", [OLConstants bundle], @"") delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLConstants bundle], @"") otherButtonTitles:nil];
+            [av show];
+            return;
+        }
+    }
+    
+    [SVProgressHUD showWithStatus:NSLocalizedStringFromTableInBundle(@"Processing", @"KitePrintSDK", [OLConstants bundle], @"") maskType:SVProgressHUDMaskTypeBlack];
+    OLPayPalCard *card = [[OLPayPalCard alloc] init];
+    card.type = type;
+    card.number = cardInfo.cardNumber;
+    card.expireMonth = cardInfo.expiryMonth;
+    card.expireYear = cardInfo.expiryYear;
+    card.cvv2 = cardInfo.cvv;
+    
+    [self storeAndChargeCard:card];
+}
+
+- (void)userDidProvideCreditCardInfoToPayByJudoPay:(CardIOCreditCardInfo *)cardInfo {
+    OLJudoPayCardType type;
+    switch (cardInfo.cardType) {
+        case CardIOCreditCardTypeMastercard:
+            type = kOLJudoPayCardTypeMastercard;
+            break;
+        case CardIOCreditCardTypeVisa:
+            type = kOLJudoPayCardTypeVisa;
+            break;
+        case CardIOCreditCardTypeAmex:
+            type = kOLJudoPayCardTypeAmex;
+            break;
+        case CardIOCreditCardTypeDiscover:
+            type = kOLJudoPayCardTypeDiscover;
+            break;
+        default: {
+            UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLConstants bundle], @"") message:NSLocalizedStringFromTableInBundle(@"Sorry we couldn't recognize your card. Please try again manually entering your card details if necessary.", @"KitePrintSDK", [OLConstants bundle], @"") delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLConstants bundle], @"") otherButtonTitles:nil];
+            [av show];
+            return;
+        }
+    }
+    
+    OLJudoPayCard *card = [[OLJudoPayCard alloc] init];
+    card.type = type;
+    card.number = cardInfo.cardNumber;
+    card.expireMonth = cardInfo.expiryMonth;
+    card.expireYear = cardInfo.expiryYear;
+    card.cvv2 = cardInfo.cvv;
+    
+    [self storeAndChargeCard:(OLPayPalCard *)card];
+}
+
+
+- (void)userDidProvideCreditCardInfo:(CardIOCreditCardInfo *)cardInfo inPaymentViewController:(CardIOPaymentViewController *)paymentViewController {
+    [self dismissViewControllerAnimated:YES completion:^() {
+        if ([OLKitePrintSDK useJudoPayForGBP] && [self.printOrder.currencyCode isEqualToString:@"GBP"]) {
+            [self userDidProvideCreditCardInfoToPayByJudoPay:cardInfo];
+        } else {
+            [self userDidProvideCreditCardInfoToPayByPayPal:cardInfo];
+        }
+     
+    }];
+}
+#endif
 
 @end
