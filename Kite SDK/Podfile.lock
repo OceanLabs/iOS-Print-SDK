@@ -40,7 +40,7 @@ DEPENDENCIES:
   - LXReorderableCollectionViewFlowLayout
   - PayPal-iOS-SDK (~> 2.4.2)
   - SDWebImage
-  - Stripe
+  - Stripe (= 3.1.0)
   - Stripe/ApplePay
   - SVProgressHUD
   - UICKeyChainStore (~> 1.0.4)
