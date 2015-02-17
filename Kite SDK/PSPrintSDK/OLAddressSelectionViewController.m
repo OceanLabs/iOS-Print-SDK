@@ -48,6 +48,7 @@ static const NSInteger kRowAddAddressManually = 1;
     [super viewDidLoad];
     self.tableView.allowsMultipleSelection = self.allowMultipleSelection;
     self.allowMultipleSelection = _allowMultipleSelection;
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Done", @"KitePrinSDK", [OLConstants bundle], @"") style:UIBarButtonItemStyleDone target:self action:@selector(onButtonDoneClicked)];
 }
 
 - (void)setAllowMultipleSelection:(BOOL)allowMultipleSelection {

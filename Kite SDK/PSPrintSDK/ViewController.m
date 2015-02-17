@@ -33,13 +33,6 @@ static NSString *const kApplePayMerchantIDKey = @"merchant.co.oceanlabs.kite.ly"
 }
 
 - (void)viewDidLoad {
-    [OLKitePrintSDK setAPIKey:kAPIKeySandbox withEnvironment:kOLKitePrintSDKEnvironmentSandbox];
-    
-#ifdef OL_KITE_OFFER_APPLE_PAY
-    [OLKitePrintSDK setApplePayMerchantID:kApplePayMerchantIDKey];
-    [OLKitePrintSDK setStripeKey:kStripePublishableKey];
-#endif
-    
     [super viewDidLoad];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onUserSuppliedShippingDetails:) name:kOLNotificationUserSuppliedShippingDetails object:nil];
@@ -107,11 +100,18 @@ static NSString *const kApplePayMerchantIDKey = @"merchant.co.oceanlabs.kite.ly"
 
 - (void)printWithAssets:(NSArray *)assets {
     if (![self isAPIKeySet]) return;
+
+    [OLKitePrintSDK setAPIKey:[self apiKey] withEnvironment:[self environment]];
+    
+#ifdef OL_KITE_OFFER_APPLE_PAY
+    [OLKitePrintSDK setApplePayMerchantID:kApplePayMerchantIDKey];
+    [OLKitePrintSDK setStripeKey:kStripePublishableKey];
+#endif
     
     OLKiteViewController *vc = [[OLKiteViewController alloc] initWithAssets:assets];
     vc.delegate = self;
     [self presentViewController:vc animated:YES completion:NULL];
-//    [self.navigationController pushViewController:vc animated:YES];
+
 }
 
 - (IBAction)onButtonPrintRemotePhotos:(id)sender {

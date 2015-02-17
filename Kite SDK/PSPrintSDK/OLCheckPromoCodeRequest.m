@@ -51,7 +51,7 @@ static NSString *urlencode(NSString *str) {
         [templateCostBreakdown appendFormat:@"%@:%@", job.templateId, [job costInCurrency:currencyCode]];
     }
     
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/v1.1/promo_code/check?code=%@&templates=%@&currency=%@", [OLKitePrintSDK apiEndpoint], urlencode(promoCode), templateCostBreakdown, order.currencyCode]];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/v1.2/promo_code/check?code=%@&templates=%@&currency=%@", [OLKitePrintSDK apiEndpoint], urlencode(promoCode), templateCostBreakdown, order.currencyCode]];
     NSDictionary *headers = @{@"Authorization": [NSString stringWithFormat:@"ApiKey %@:", [OLKitePrintSDK apiKey]]};
     
     self.req = [[OLBaseRequest alloc] initWithURL:url httpMethod:kOLHTTPMethodGET headers:headers body:nil];
