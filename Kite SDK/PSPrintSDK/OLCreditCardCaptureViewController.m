@@ -314,6 +314,9 @@ UITableViewDataSource, UITextFieldDelegate>
     CardIOPaymentViewController *scanViewController = [[CardIOPaymentViewController alloc] initWithPaymentDelegate:self];
     scanViewController.appToken = kCardIOAppToken; // get your app token from the card.io website
     scanViewController.disableManualEntryButtons = YES;
+    scanViewController.collectCVV = NO;
+    scanViewController.collectExpiry = NO;
+    scanViewController.suppressScanConfirmation = YES;
     [self presentViewController:scanViewController animated:YES completion:nil];
 #endif
 }
@@ -411,81 +414,9 @@ UITableViewDataSource, UITextFieldDelegate>
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
-- (void)userDidProvideCreditCardInfoToPayByPayPal:(CardIOCreditCardInfo *)cardInfo {
-    OLPayPalCardType type;
-    switch (cardInfo.cardType) {
-        case CardIOCreditCardTypeMastercard:
-            type = kOLPayPalCardTypeMastercard;
-            break;
-        case CardIOCreditCardTypeVisa:
-            type = kOLPayPalCardTypeVisa;
-            break;
-        case CardIOCreditCardTypeAmex:
-            type = kOLPayPalCardTypeAmex;
-            break;
-        case CardIOCreditCardTypeDiscover:
-            type = kOLPayPalCardTypeDiscover;
-            break;
-        default: {
-            UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLConstants bundle], @"") message:NSLocalizedStringFromTableInBundle(@"Sorry we couldn't recognize your card. Please try again manually entering your card details if necessary.", @"KitePrintSDK", [OLConstants bundle], @"") delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLConstants bundle], @"") otherButtonTitles:nil];
-            [av show];
-            return;
-        }
-    }
-    
-    [SVProgressHUD showWithStatus:NSLocalizedStringFromTableInBundle(@"Processing", @"KitePrintSDK", [OLConstants bundle], @"") maskType:SVProgressHUDMaskTypeBlack];
-    OLPayPalCard *card = [[OLPayPalCard alloc] init];
-    card.type = type;
-    card.number = cardInfo.cardNumber;
-    card.expireMonth = cardInfo.expiryMonth;
-    card.expireYear = cardInfo.expiryYear;
-    card.cvv2 = cardInfo.cvv;
-    
-    [self storeAndChargeCard:card];
-}
-
-- (void)userDidProvideCreditCardInfoToPayByJudoPay:(CardIOCreditCardInfo *)cardInfo {
-    OLJudoPayCardType type;
-    switch (cardInfo.cardType) {
-        case CardIOCreditCardTypeMastercard:
-            type = kOLJudoPayCardTypeMastercard;
-            break;
-        case CardIOCreditCardTypeVisa:
-            type = kOLJudoPayCardTypeVisa;
-            break;
-        case CardIOCreditCardTypeAmex:
-            type = kOLJudoPayCardTypeAmex;
-            break;
-        case CardIOCreditCardTypeDiscover:
-            type = kOLJudoPayCardTypeDiscover;
-            break;
-        default: {
-            UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLConstants bundle], @"") message:NSLocalizedStringFromTableInBundle(@"Sorry we couldn't recognize your card. Please try again manually entering your card details if necessary.", @"KitePrintSDK", [OLConstants bundle], @"") delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLConstants bundle], @"") otherButtonTitles:nil];
-            [av show];
-            return;
-        }
-    }
-    
-    OLJudoPayCard *card = [[OLJudoPayCard alloc] init];
-    card.type = type;
-    card.number = cardInfo.cardNumber;
-    card.expireMonth = cardInfo.expiryMonth;
-    card.expireYear = cardInfo.expiryYear;
-    card.cvv2 = cardInfo.cvv;
-    
-    [self storeAndChargeCard:(OLPayPalCard *)card];
-}
-
-
 - (void)userDidProvideCreditCardInfo:(CardIOCreditCardInfo *)cardInfo inPaymentViewController:(CardIOPaymentViewController *)paymentViewController {
-    [self dismissViewControllerAnimated:YES completion:^() {
-        if ([OLKitePrintSDK useJudoPayForGBP] && [self.printOrder.currencyCode isEqualToString:@"GBP"]) {
-            [self userDidProvideCreditCardInfoToPayByJudoPay:cardInfo];
-        } else {
-            [self userDidProvideCreditCardInfoToPayByPayPal:cardInfo];
-        }
-     
-    }];
+    self.textFieldCardNumber.text = cardInfo.cardNumber;
+    [self dismissViewControllerAnimated:YES completion:^(){}];
 }
 #endif
 
