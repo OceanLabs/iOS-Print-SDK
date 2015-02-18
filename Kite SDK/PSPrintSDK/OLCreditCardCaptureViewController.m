@@ -145,65 +145,6 @@ UITableViewDataSource, UITextFieldDelegate>
     [footerView addSubview:buttonPay];
     
     self.tableView.tableFooterView = footerView;
-    
-#ifdef OL_KITE_OFFER_PAYPAL
-    if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]){
-        AVAuthorizationStatus authStatus = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];
-        if ((authStatus == AVAuthorizationStatusAuthorized || authStatus == AVAuthorizationStatusNotDetermined)){
-            
-            UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 60)];
-            self.tableView.tableHeaderView = headerView;
-            
-            UIButton *scanButton = [[UIButton alloc] init];
-            [headerView addSubview:scanButton];
-            
-            [scanButton setTitle:NSLocalizedString(@"Scan Your Card", @"") forState:UIControlStateNormal];
-            [scanButton setTitleColor:[UIColor colorWithRed:74 / 255.0f green:137 / 255.0f blue:220 / 255.0f alpha:1.0] forState:UIControlStateNormal];
-            [scanButton.titleLabel setFont:[UIFont systemFontOfSize:14]];
-            
-            [scanButton addTarget:self action:@selector(showCardScanner) forControlEvents:UIControlEventTouchUpInside];
-            
-            scanButton.translatesAutoresizingMaskIntoConstraints = NO;
-            NSDictionary *views = NSDictionaryOfVariableBindings(scanButton);
-            NSMutableArray *con = [[NSMutableArray alloc] init];
-            
-            NSArray *visuals = @[@"H:|-0-[scanButton]-0-|",
-                                 @"V:|-0-[scanButton]-0-|"];
-            
-            
-            for (NSString *visual in visuals) {
-                [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
-            }
-            
-            [scanButton.superview addConstraints:con];
-            
-            UIImageView *cameraIcon = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"button_camera"]];
-            [headerView addSubview:cameraIcon];
-            
-            cameraIcon.translatesAutoresizingMaskIntoConstraints = NO;
-            views = NSDictionaryOfVariableBindings(cameraIcon);
-            con = [[NSMutableArray alloc] init];
-            
-            visuals = @[@"V:[cameraIcon(==18)]", @"H:|-10-[cameraIcon(==21)]"];
-            
-            
-            for (NSString *visual in visuals) {
-                [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
-            }
-            
-            [con addObject:[NSLayoutConstraint constraintWithItem:cameraIcon
-                                                        attribute:NSLayoutAttributeCenterY
-                                                        relatedBy:NSLayoutRelationEqual
-                                                           toItem:cameraIcon.superview
-                                                        attribute:NSLayoutAttributeCenterY
-                                                       multiplier:1.f constant:0.f]];
-            
-            [cameraIcon.superview addConstraints:con];
-        }
-    }
-    
-#endif
-    
 }
 
 - (NSString *)cardNumber {
@@ -311,13 +252,25 @@ UITableViewDataSource, UITextFieldDelegate>
 
 - (void) showCardScanner{
 #ifdef OL_KITE_OFFER_PAYPAL
+    
     CardIOPaymentViewController *scanViewController = [[CardIOPaymentViewController alloc] initWithPaymentDelegate:self];
     scanViewController.appToken = kCardIOAppToken; // get your app token from the card.io website
     scanViewController.disableManualEntryButtons = YES;
     scanViewController.collectCVV = NO;
     scanViewController.collectExpiry = NO;
     scanViewController.suppressScanConfirmation = YES;
-    [self presentViewController:scanViewController animated:YES completion:nil];
+    
+    AVAuthorizationStatus authStatus = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];
+    if (authStatus == AVAuthorizationStatusNotDetermined || authStatus == AVAuthorizationStatusDenied){
+        [AVCaptureDevice requestAccessForMediaType:AVMediaTypeVideo completionHandler:^(BOOL granted){
+            if (granted){
+                [self presentViewController:scanViewController animated:YES completion:nil];
+            }
+        }];
+    }
+    else{
+        [self presentViewController:scanViewController animated:YES completion:nil];
+    }
 #endif
 }
 
@@ -349,7 +302,7 @@ UITableViewDataSource, UITextFieldDelegate>
     if (cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
-        UITextField *textField = [[UITextField alloc] initWithFrame:CGRectMake(20, 0, self.view.frame.size.width - 20, 43)];
+        UITextField *textField = [[UITextField alloc] initWithFrame:CGRectMake(20, 0, self.view.frame.size.width - 63, 43)];
         textField.delegate = self;
         textField.tag = 99;
         textField.keyboardType = UIKeyboardTypeNumberPad;
@@ -360,6 +313,20 @@ UITableViewDataSource, UITextFieldDelegate>
     if (indexPath.section == kOLSectionCardNumber) {
         textField.placeholder = NSLocalizedString(@"Card Number", @"");
         self.textFieldCardNumber = textField;
+        
+#ifdef OL_KITE_OFFER_PAYPAL
+        if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]){
+            AVAuthorizationStatus authStatus = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];
+            if ((authStatus == AVAuthorizationStatusAuthorized || authStatus == AVAuthorizationStatusNotDetermined)){
+                UIButton *cameraIcon = [[UIButton alloc] initWithFrame:CGRectMake(self.tableView.frame.size.width - 43, 0, 43, 43)];
+                [cameraIcon setImage:[UIImage imageNamed:@"button_camera"] forState:UIControlStateNormal];
+                [cameraIcon addTarget:self action:@selector(showCardScanner) forControlEvents:UIControlEventTouchUpInside];
+                [cell.contentView addSubview:cameraIcon];
+            }
+        }
+        
+#endif
+        
     } else if (indexPath.section == kOLSectionExpiryDate) {
         textField.placeholder = NSLocalizedString(@"MM/YY", @"");
         self.textFieldExpiryDate = textField;
