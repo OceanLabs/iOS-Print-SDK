@@ -8,6 +8,7 @@
 
 #import <XCTest/XCTest.h>
 #import "ViewController.h"
+#import "NSString+Formatting.h"
 
 @interface ViewController (Private)
 - (NSString *)liveKey;
@@ -36,6 +37,57 @@
     ViewController *vc = [[ViewController alloc] init];
     if (![[vc liveKey] isEqualToString:@"REPLACE_WITH_YOUR_API_KEY"] || ![[vc sandboxKey] isEqualToString:@"REPLACE_WITH_YOUR_API_KEY"]){
         XCTFail(@"API Key is set in ViewController.m, this is undesirable for third party developers when commiting & pushing codes.");
+    }
+}
+
+- (void)testCreditCardFormatter {
+    NSString *input = @"";
+    NSString *expected = @"";
+    NSString *actual = [NSString stringByFormattingCreditCardNumber:input];
+    if (![actual isEqualToString:expected]){
+        XCTFail(@"Credit card number formatter does not work properly. Expected: %@ but got: %@", expected, actual);
+    }
+    
+    input = @"123";
+    expected = @"123";
+    actual = [NSString stringByFormattingCreditCardNumber:input];
+    if (![actual isEqualToString:expected]){
+        XCTFail(@"Credit card number formatter does not work properly. Expected: %@ but got: %@", expected, actual);
+    }
+    
+    input = @"1234";
+    expected = @"1234";
+    actual = [NSString stringByFormattingCreditCardNumber:input];
+    if (![actual isEqualToString:expected]){
+        XCTFail(@"Credit card number formatter does not work properly. Expected: %@ but got: %@", expected, actual);
+    }
+    
+    input = @"12345";
+    expected = @"1234 5";
+    actual = [NSString stringByFormattingCreditCardNumber:input];
+    if (![actual isEqualToString:expected]){
+        XCTFail(@"Credit card number formatter does not work properly. Expected: %@ but got: %@", expected, actual);
+    }
+    
+    input = @"123456789abcdefg";
+    expected = @"1234 5678 9abc defg";
+    actual = [NSString stringByFormattingCreditCardNumber:input];
+    if (![actual isEqualToString:expected]){
+        XCTFail(@"Credit card number formatter does not work properly. Expected: %@ but got: %@", expected, actual);
+    }
+    
+    input = @"123456789abcdefgh";
+    expected = @"1234 5678 9abc defg";
+    actual = [NSString stringByFormattingCreditCardNumber:input];
+    if (![actual isEqualToString:expected]){
+        XCTFail(@"Credit card number formatter does not work properly. Expected: %@ but got: %@", expected, actual);
+    }
+    
+    input = @"123456789abcdefghijk";
+    expected = @"1234 5678 9abc defg";
+    actual = [NSString stringByFormattingCreditCardNumber:input];
+    if (![actual isEqualToString:expected]){
+        XCTFail(@"Credit card number formatter does not work properly. Expected: %@ but got: %@", expected, actual);
     }
 }
 

@@ -15,6 +15,7 @@
 #import "CardIO.h"
 #import "OLKitePrintSDK.h"
 #import <AVFoundation/AVFoundation.h>
+#import "NSString+Formatting.h"
 
 static const NSUInteger kOLSectionCardNumber = 0;
 static const NSUInteger kOLSectionExpiryDate = 1;
@@ -148,16 +149,16 @@ UITableViewDataSource, UITextFieldDelegate>
 }
 
 - (NSString *)cardNumber {
-    return self.textFieldCardNumber.text;
+    return [NSString stringByTrimmingSpecialCharacters:self.textFieldCardNumber.text];
 }
 
 - (NSUInteger)cardExpireMonth {
-    NSString *expiryDate = [OLCreditCardCaptureRootController trimSpecialCharacters:self.textFieldExpiryDate.text];
+    NSString *expiryDate = [NSString stringByTrimmingSpecialCharacters:self.textFieldExpiryDate.text];
     return [[expiryDate substringToIndex:2] integerValue];
 }
 
 - (NSUInteger)cardExpireYear {
-    NSString *expiryDate = [OLCreditCardCaptureRootController trimSpecialCharacters:self.textFieldExpiryDate.text];
+    NSString *expiryDate = [NSString stringByTrimmingSpecialCharacters:self.textFieldExpiryDate.text];
     return [[expiryDate substringFromIndex:2] integerValue];
 }
 
@@ -340,34 +341,17 @@ UITableViewDataSource, UITextFieldDelegate>
 
 #pragma mark - UITextFieldDelegate methods
 
-+ (NSString *)trimSpecialCharacters:(NSString *)input {
-    NSCharacterSet *special = [NSCharacterSet characterSetWithCharactersInString:@"/+-() "];
-    return [[input componentsSeparatedByCharactersInSet:special] componentsJoinedByString:@""];
-}
-
-+ (NSString *)formatCreditCardExpiry:(NSString *)input {
-    input = [OLCreditCardCaptureRootController trimSpecialCharacters:input];
-    switch (input.length) {
-        case 0:
-            return @"";
-        case 1:
-            if ([input isEqualToString:@"0"] || [input isEqualToString:@"1"]) {
-                return input;
-            }
-            
-            input = [@"0" stringByAppendingString:input];
-        default:
-            return [[NSString stringWithFormat:@"%@/%@", [input substringToIndex:2], [input substringFromIndex:2]] substringToIndex:MIN(input.length + 1, 5)];
-    }
-}
-
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
     if (textField == self.textFieldExpiryDate) {
-        self.textFieldExpiryDate.text = [OLCreditCardCaptureRootController formatCreditCardExpiry:[self.textFieldExpiryDate.text stringByReplacingCharactersInRange:range withString:string]];
+        self.textFieldExpiryDate.text = [NSString stringByFormattingCreditCardExpiry:[self.textFieldExpiryDate.text stringByReplacingCharactersInRange:range withString:string]];
         if (string.length == 0 && self.textFieldExpiryDate.text.length == 3) {
             self.textFieldExpiryDate.text = [self.textFieldExpiryDate.text substringToIndex:2];
         }
         
+        return NO;
+    }
+    else if (textField == self.textFieldCardNumber) {
+        self.textFieldCardNumber.text = [NSString stringByFormattingCreditCardNumber:[self.textFieldCardNumber.text stringByReplacingCharactersInRange:range withString:string]];
         return NO;
     }
     
@@ -382,7 +366,7 @@ UITableViewDataSource, UITextFieldDelegate>
 }
 
 - (void)userDidProvideCreditCardInfo:(CardIOCreditCardInfo *)cardInfo inPaymentViewController:(CardIOPaymentViewController *)paymentViewController {
-    self.textFieldCardNumber.text = cardInfo.cardNumber;
+    self.textFieldCardNumber.text = [NSString stringByFormattingCreditCardNumber:cardInfo.cardNumber];
     [self dismissViewControllerAnimated:YES completion:^(){}];
 }
 #endif
