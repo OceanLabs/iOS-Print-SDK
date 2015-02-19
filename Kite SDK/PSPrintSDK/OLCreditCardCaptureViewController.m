@@ -386,8 +386,14 @@ UITableViewDataSource, UITextFieldDelegate>
         }
         else if (string.length > 0){
             offset = 1;
-            if (textField.text.length < idx+1 && [[textField.text substringWithRange:NSMakeRange(idx, 1)] isEqualToString:@" "]){
-                offset = 2;
+            if (textField.text.length > idx){
+                NSString *s = [textField.text substringWithRange:NSMakeRange(idx, 1)];
+                if ([s isEqualToString:@" "]){
+                    offset = 2;
+                }
+            }
+            else{
+                offset = 0;
             }
         }
         [textField setSelectedRange:NSMakeRange(idx + offset, 0)];
