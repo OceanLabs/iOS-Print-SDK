@@ -355,11 +355,16 @@ UITableViewDataSource, UITextFieldDelegate>
         UITextRange *selRange = textField.selectedTextRange;
         UITextPosition *selStartPos = selRange.start;
         NSInteger idx = [textField offsetFromPosition:textField.beginningOfDocument toPosition:selStartPos];
+        NSInteger offset = -1;
+        
+        if ([[self.textFieldCardNumber.text substringWithRange:range] isEqualToString:@" "]){
+            range = NSMakeRange(range.location-1, range.length);
+            offset--;
+        }
         
         self.textFieldCardNumber.text = [NSString stringByFormattingCreditCardNumber:[self.textFieldCardNumber.text stringByReplacingCharactersInRange:range withString:string]];
         
         if (string.length == 0){
-            NSInteger offset = -1;
             if (idx + offset > textField.text.length){
                 offset--;
             }
