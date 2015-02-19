@@ -16,6 +16,7 @@
 #import "OLKitePrintSDK.h"
 #import <AVFoundation/AVFoundation.h>
 #import "NSString+Formatting.h"
+#import "UITextField+Selection.h"
 
 static const NSUInteger kOLSectionCardNumber = 0;
 static const NSUInteger kOLSectionExpiryDate = 1;
@@ -351,7 +352,20 @@ UITableViewDataSource, UITextFieldDelegate>
         return NO;
     }
     else if (textField == self.textFieldCardNumber) {
+        UITextRange *selRange = textField.selectedTextRange;
+        UITextPosition *selStartPos = selRange.start;
+        NSInteger idx = [textField offsetFromPosition:textField.beginningOfDocument toPosition:selStartPos];
+        
         self.textFieldCardNumber.text = [NSString stringByFormattingCreditCardNumber:[self.textFieldCardNumber.text stringByReplacingCharactersInRange:range withString:string]];
+        
+        if (string.length == 0){
+            NSInteger offset = -1;
+            if (idx + offset > textField.text.length){
+                offset--;
+            }
+            [textField setSelectedRange:NSMakeRange(idx + offset, 0)];
+        }
+        
         return NO;
     }
     
