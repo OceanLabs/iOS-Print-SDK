@@ -55,20 +55,24 @@
     }
 }
 
+-(void) presentNextVc{
+    UIView *view = [[UIView alloc] initWithFrame:self.view.bounds];
+    view.backgroundColor = [UIColor whiteColor];
+    [self.nextVc.view addSubview:view];
+    [self presentViewController:self.nextVc animated:NO completion:^(void){
+        [UIView animateWithDuration:0.15 animations:^(void){
+            view.alpha = 0;
+        } completion:^(BOOL b){
+            [view removeFromSuperview];
+        }];
+        
+    }];
+}
+
 -(void) viewWillAppear:(BOOL)animated{
     if (self.presentLater){
         self.presentLater = NO;
-        UIView *view = [[UIView alloc] initWithFrame:self.view.bounds];
-        view.backgroundColor = [UIColor whiteColor];
-        [self.nextVc.view addSubview:view];
-        [self presentViewController:self.nextVc animated:NO completion:^(void){
-            [UIView animateWithDuration:0.15 animations:^(void){
-                view.alpha = 0;
-            } completion:^(BOOL b){
-                [view removeFromSuperview];
-            }];
-            
-        }];
+        [self presentNextVc];
     }
 }
 
@@ -138,7 +142,13 @@
         if (product){
             [(id)((UINavigationController *)self.nextVc).topViewController setProduct:product];
         }
-        self.presentLater = YES;
+        if (!self.presentLater){
+            self.presentLater = YES;
+        }
+        else{
+            self.presentLater = NO;
+            [self presentNextVc];
+        }
     }
     else{
         CGFloat standardiOSBarsHeight = self.navigationController.navigationBar.frame.size.height + [UIApplication sharedApplication].statusBarFrame.size.height;
@@ -185,6 +195,7 @@
     }
     else{
         if (!self.alreadyTransitioned){
+            self.presentLater = YES;
             [self transitionToNextScreen:NO];
         }
     }
