@@ -120,6 +120,11 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Back", @"")
+                                                                             style:UIBarButtonItemStyleBordered
+                                                                            target:nil
+                                                                            action:nil];
+    
 #ifndef OL_NO_ANALYTICS
     [OLAnalytics trackPaymentScreenViewedForOrder:self.printOrder];
 #endif
