@@ -19,7 +19,6 @@
 
 @interface OLKiteViewController () <UIAlertViewDelegate>
 
-@property (assign, nonatomic) BOOL alreadyTransistioned;
 @property (strong, nonatomic) UIViewController *nextVc;
 @property (strong, nonatomic) NSArray *assets;
 @property (weak, nonatomic) IBOutlet UINavigationBar *navigationBar;
@@ -111,7 +110,7 @@
 }
 
 - (void)transitionToNextScreen:(BOOL)animated{
-    self.alreadyTransistioned = YES;
+    self.alreadyTransitioned = YES;
     UIStoryboard *sb = [UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:nil];
     NSString *nextVcNavIdentifier = @"ProductsNavigationController";
     NSString *nextVcIdentifier = @"ProductHomeViewController";
@@ -185,7 +184,7 @@
         }
     }
     else{
-        if (!self.alreadyTransistioned){
+        if (!self.alreadyTransitioned){
             [self transitionToNextScreen:NO];
         }
     }
