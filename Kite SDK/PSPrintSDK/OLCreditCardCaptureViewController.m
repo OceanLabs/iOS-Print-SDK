@@ -266,12 +266,26 @@ UITableViewDataSource, UITextFieldDelegate>
     scanViewController.suppressScanConfirmation = YES;
     
     AVAuthorizationStatus authStatus = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];
-    if (authStatus == AVAuthorizationStatusNotDetermined || authStatus == AVAuthorizationStatusDenied){
+    if (authStatus == AVAuthorizationStatusNotDetermined){
         [AVCaptureDevice requestAccessForMediaType:AVMediaTypeVideo completionHandler:^(BOOL granted){
             if (granted){
                 [self presentViewController:scanViewController animated:YES completion:nil];
             }
         }];
+    }
+    else if (authStatus == AVAuthorizationStatusDenied){
+        if ([UIAlertController class]){
+            UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Camera Permission Denied", @"") message:NSLocalizedString(@"You have previously denied acces to the camera. If you wish to use the camera to scan your card, please allow access to the camera in the Settings app.", @"") preferredStyle:UIAlertControllerStyleAlert];
+            [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Settings", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
+                [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
+            }]];
+            [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"") style:UIAlertActionStyleCancel handler:NULL]];
+            [self presentViewController:ac animated:YES completion:NULL];
+        }
+        else{
+            UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Camera Permission Denied", @"") message:NSLocalizedString(@"You have previously denied acces to the camera. If you wish to use the camera to scan your card, please allow access to the camera in the Settings app.", @"") delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"") otherButtonTitles:nil];
+            [av show];
+        }
     }
     else{
         [self presentViewController:scanViewController animated:YES completion:nil];
@@ -322,7 +336,7 @@ UITableViewDataSource, UITextFieldDelegate>
 #ifdef OL_KITE_OFFER_PAYPAL
         if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]){
             AVAuthorizationStatus authStatus = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];
-            if ((authStatus == AVAuthorizationStatusAuthorized || authStatus == AVAuthorizationStatusNotDetermined)){
+            if ((authStatus == AVAuthorizationStatusAuthorized || authStatus == AVAuthorizationStatusNotDetermined || authStatus == AVAuthorizationStatusDenied)){
                 UIButton *cameraIcon = [[UIButton alloc] initWithFrame:CGRectMake(self.tableView.frame.size.width - 43, 0, 43, 43)];
                 [cameraIcon setImage:[UIImage imageNamed:@"button_camera"] forState:UIControlStateNormal];
                 [cameraIcon addTarget:self action:@selector(showCardScanner) forControlEvents:UIControlEventTouchUpInside];
@@ -360,19 +374,23 @@ UITableViewDataSource, UITextFieldDelegate>
         NSInteger idx = [textField offsetFromPosition:textField.beginningOfDocument toPosition:selStartPos];
         NSInteger offset = -1;
         
-        if ([[self.textFieldCardNumber.text substringWithRange:range] isEqualToString:@" "]){
+        if ([[self.textFieldCardNumber.text substringWithRange:range] isEqualToString:@" "] && string.length == 0){
             range = NSMakeRange(range.location-1, range.length);
-            offset--;
+            offset = -2;
         }
         
         self.textFieldCardNumber.text = [NSString stringByFormattingCreditCardNumber:[self.textFieldCardNumber.text stringByReplacingCharactersInRange:range withString:string]];
         
-        if (string.length == 0){
-            if (idx + offset > textField.text.length){
-                offset--;
-            }
-            [textField setSelectedRange:NSMakeRange(idx + offset, 0)];
+        if (string.length == 0 && idx + offset > textField.text.length){
+            offset = -2;
         }
+        else if (string.length > 0){
+            offset = 1;
+            if (textField.text.length < idx+1 && [[textField.text substringWithRange:NSMakeRange(idx, 1)] isEqualToString:@" "]){
+                offset = 2;
+            }
+        }
+        [textField setSelectedRange:NSMakeRange(idx + offset, 0)];
         
         return NO;
     }
