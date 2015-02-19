@@ -11,7 +11,6 @@
 		2E0E250F1A77997E00808ED8 /* OLAnalytics.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0E250E1A77997E00808ED8 /* OLAnalytics.m */; };
 		2E1F69DE1A66999700696286 /* OLPosterSizeSelectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1F69DD1A66999700696286 /* OLPosterSizeSelectionViewController.m */; };
 		2E1F69E41A6699AE00696286 /* OLPosterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1F69E31A6699AE00696286 /* OLPosterViewController.m */; };
-		2E342CEB1A94E62F004AD2B3 /* NSString+Formatting.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E342CEA1A94E62F004AD2B3 /* NSString+Formatting.m */; };
 		2E3D1B671A95FB380098A09B /* UITextField+Selection.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E3D1B661A95FB380098A09B /* UITextField+Selection.m */; };
 		2E3F96AF1A4967FF005C0EA3 /* OLProduct.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E3F96AE1A4967FF005C0EA3 /* OLProduct.m */; };
 		2E3F96B21A49ACF4005C0EA3 /* OLPrintPhoto.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E3F96B11A49ACF4005C0EA3 /* OLPrintPhoto.m */; };
@@ -32,6 +31,7 @@
 		3D8122EE1A759F42004E7297 /* UIView+RMUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D8122EC1A759F42004E7297 /* UIView+RMUtils.m */; };
 		3D8122F31A75A46D004E7297 /* UIImageView+FadeIn.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D8122F01A75A46D004E7297 /* UIImageView+FadeIn.m */; };
 		3D8122F41A75A46D004E7297 /* UITableViewController+ScreenWidthFactor.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D8122F21A75A46D004E7297 /* UITableViewController+ScreenWidthFactor.m */; };
+		3DEF0D181A964881000F1E66 /* NSString+Formatting.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DEF0D171A964881000F1E66 /* NSString+Formatting.m */; };
 		CD382E4A18EB7C6300127F95 /* OLJudoPayCard.m in Sources */ = {isa = PBXBuildFile; fileRef = CD382E4818EB7C6300127F95 /* OLJudoPayCard.m */; };
 		CD550A68187B30D200782D75 /* OLAddressLookupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CD550A67187B30D200782D75 /* OLAddressLookupViewController.m */; };
 		CD550B191881E1E600782D75 /* OLPrintOrder+History.m in Sources */ = {isa = PBXBuildFile; fileRef = CD550B181881E1E600782D75 /* OLPrintOrder+History.m */; };
@@ -102,8 +102,6 @@
 		2E1F69DD1A66999700696286 /* OLPosterSizeSelectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLPosterSizeSelectionViewController.m; sourceTree = "<group>"; };
 		2E1F69E21A6699AE00696286 /* OLPosterViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLPosterViewController.h; sourceTree = "<group>"; };
 		2E1F69E31A6699AE00696286 /* OLPosterViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLPosterViewController.m; sourceTree = "<group>"; };
-		2E342CE91A94E62F004AD2B3 /* NSString+Formatting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSString+Formatting.h"; path = "PSPrintSDK/NSString+Formatting.h"; sourceTree = "<group>"; };
-		2E342CEA1A94E62F004AD2B3 /* NSString+Formatting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSString+Formatting.m"; path = "PSPrintSDK/NSString+Formatting.m"; sourceTree = "<group>"; };
 		2E3D1B651A95FB380098A09B /* UITextField+Selection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UITextField+Selection.h"; path = "PSPrintSDK/UITextField+Selection.h"; sourceTree = "<group>"; };
 		2E3D1B661A95FB380098A09B /* UITextField+Selection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UITextField+Selection.m"; path = "PSPrintSDK/UITextField+Selection.m"; sourceTree = "<group>"; };
 		2E3F96AD1A4967FF005C0EA3 /* OLProduct.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLProduct.h; sourceTree = "<group>"; };
@@ -169,6 +167,8 @@
 		3D8122F01A75A46D004E7297 /* UIImageView+FadeIn.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIImageView+FadeIn.m"; path = "PSPrintSDK/Categories/UIImageView+FadeIn.m"; sourceTree = "<group>"; };
 		3D8122F11A75A46D004E7297 /* UITableViewController+ScreenWidthFactor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UITableViewController+ScreenWidthFactor.h"; path = "PSPrintSDK/Categories/UITableViewController+ScreenWidthFactor.h"; sourceTree = "<group>"; };
 		3D8122F21A75A46D004E7297 /* UITableViewController+ScreenWidthFactor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UITableViewController+ScreenWidthFactor.m"; path = "PSPrintSDK/Categories/UITableViewController+ScreenWidthFactor.m"; sourceTree = "<group>"; };
+		3DEF0D161A964881000F1E66 /* NSString+Formatting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSString+Formatting.h"; path = "PSPrintSDK/Categories/NSString+Formatting.h"; sourceTree = "<group>"; };
+		3DEF0D171A964881000F1E66 /* NSString+Formatting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSString+Formatting.m"; path = "PSPrintSDK/Categories/NSString+Formatting.m"; sourceTree = "<group>"; };
 		931ABE3568CB40F8892488E2 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		CD382E4818EB7C6300127F95 /* OLJudoPayCard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLJudoPayCard.m; sourceTree = "<group>"; };
 		CD382E4918EB7C6300127F95 /* OLJudoPayCard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLJudoPayCard.h; sourceTree = "<group>"; };
@@ -308,12 +308,12 @@
 		2EA8BEC11A48509E008A9248 /* Categories */ = {
 			isa = PBXGroup;
 			children = (
+				3DEF0D161A964881000F1E66 /* NSString+Formatting.h */,
+				3DEF0D171A964881000F1E66 /* NSString+Formatting.m */,
 				3D8122EF1A75A46D004E7297 /* UIImageView+FadeIn.h */,
 				3D8122F01A75A46D004E7297 /* UIImageView+FadeIn.m */,
 				3D8122F11A75A46D004E7297 /* UITableViewController+ScreenWidthFactor.h */,
 				3D8122F21A75A46D004E7297 /* UITableViewController+ScreenWidthFactor.m */,
-				2E342CE91A94E62F004AD2B3 /* NSString+Formatting.h */,
-				2E342CEA1A94E62F004AD2B3 /* NSString+Formatting.m */,
 				2E3D1B651A95FB380098A09B /* UITextField+Selection.h */,
 				2E3D1B661A95FB380098A09B /* UITextField+Selection.m */,
 			);
@@ -777,6 +777,7 @@
 				CDA8BF5618D70D0F00D835BB /* OLPaymentViewController.m in Sources */,
 				2E3F96B21A49ACF4005C0EA3 /* OLPrintPhoto.m in Sources */,
 				CD73BFB418635F170009DE03 /* OLKitePrintSDK.m in Sources */,
+				3DEF0D181A964881000F1E66 /* NSString+Formatting.m in Sources */,
 				CD73BFA41862FC510009DE03 /* OLAddress.m in Sources */,
 				2EA8BEB91A484FCB008A9248 /* OLProductOverviewViewController.m in Sources */,
 				CD93BB3418785D3B00316492 /* OLAddress+AddressBook.m in Sources */,
@@ -806,7 +807,6 @@
 				3D8122ED1A759F42004E7297 /* RMImageCropper.m in Sources */,
 				CD93BB451878DFA300316492 /* OLCountryPickerController.m in Sources */,
 				CD73BFAD18631A570009DE03 /* OLBaseRequest.m in Sources */,
-				2E342CEB1A94E62F004AD2B3 /* NSString+Formatting.m in Sources */,
 				CD9CF4A5187592A900F067B6 /* OLPrintJob.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
