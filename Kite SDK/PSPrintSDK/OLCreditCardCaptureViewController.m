@@ -146,7 +146,7 @@ UITableViewDataSource, UITextFieldDelegate>
     UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 44 + 40)];
     [footerView addSubview:buttonPay];
     
-    self.tableView.tableFooterView = footerView;
+    self.tableView.tableFooterView = footerView;    
 }
 
 - (NSString *)cardNumber {
@@ -249,6 +249,9 @@ UITableViewDataSource, UITextFieldDelegate>
 }
 
 - (void)onButtonCancelClicked {
+    [self.textFieldCardNumber resignFirstResponder];
+    [self.textFieldCVV resignFirstResponder];
+    [self.textFieldExpiryDate resignFirstResponder];
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
@@ -381,10 +384,12 @@ UITableViewDataSource, UITextFieldDelegate>
 
 #ifdef OL_KITE_OFFER_PAYPAL
 - (void)userDidCancelPaymentViewController:(CardIOPaymentViewController *)paymentViewController {
+    [self.textFieldCardNumber becomeFirstResponder];
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)userDidProvideCreditCardInfo:(CardIOCreditCardInfo *)cardInfo inPaymentViewController:(CardIOPaymentViewController *)paymentViewController {
+    [self.textFieldExpiryDate becomeFirstResponder];
     self.textFieldCardNumber.text = [NSString stringByFormattingCreditCardNumber:cardInfo.cardNumber];
     [self dismissViewControllerAnimated:YES completion:^(){}];
 }
