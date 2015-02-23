@@ -109,4 +109,4 @@ We also have a [REST print API](https://www.kite.ly/docs/1.1/) for those who pre
 
 ## License
 
-Kite iOS Print SDK is available under a modified MIT license. See the [LICENSE](LICENSE) file for more info.
+Kite iOS Print SDK is available under a modified MIT license. See the [LICENSE](Kite SDK/LICENSE) file for more info.
