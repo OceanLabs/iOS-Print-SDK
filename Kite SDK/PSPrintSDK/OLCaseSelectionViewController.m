@@ -49,7 +49,23 @@
     OLProduct *product = (OLProduct *)self.caseProducts[indexPath.row];
     
     UIImageView *imageView = (UIImageView *)[cell.contentView viewWithTag:10];
-    [product setCoverImageToImageView:imageView];
+    NSString *imageName;
+    if ([product.productTemplate.productCode hasSuffix:@"PHONE_4"]){
+        imageName = @"cover-iphone4";
+    }
+    else if ([product.productTemplate.productCode hasSuffix:@"PHONE_5"]){
+        imageName = @"cover-iphone5";
+    }
+    else if ([product.productTemplate.productCode hasSuffix:@"PHONE_5C"]){
+        imageName = @"cover-iphone5c";
+    }
+    else if ([product.productTemplate.productCode hasSuffix:@"PHONE_6"]){
+        imageName = @"cover-iphone6";
+    }
+    else if ([product.productTemplate.productCode hasSuffix:@"PHONE_6P"]){
+        imageName = @"cover-iphone6plus";
+    }
+    imageView.image = [UIImage imageNamed:imageName];
     
     UITextView *textView = (UITextView *)[cell.contentView viewWithTag:20];
     textView.text = [product.productTemplate.name stringByReplacingOccurrencesOfString:@" Case" withString:@""];
