@@ -12,16 +12,51 @@
 #import "OLAsset+Private.h"
 #import <SDWebImageManager.h>
 #import "RMImageCropper.h"
+#import "OLProductPrintJob.h"
 
 @interface OLSingleImageProductReviewViewController ()
 
 @property (weak, nonatomic) IBOutlet RMImageCropper *imageCropView;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *maskAspectRatio;
 @property (weak, nonatomic) IBOutlet UIView *containerView;
+@property (weak, nonatomic) IBOutlet UILabel *quantityLabel;
+@property (assign, nonatomic) NSUInteger quantity;
 
 @end
 
 @implementation OLSingleImageProductReviewViewController
+
+-(void)viewDidLoad{
+    [super viewDidLoad];
+    
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackReviewScreenViewed:self.product.productTemplate.name];
+#endif
+    
+    OLPrintPhoto *printPhoto = (OLPrintPhoto *)[self.userSelectedPhotos firstObject];
+    if ([(OLAsset *)printPhoto.asset assetType] == kOLAssetTypeRemoteImageURL){
+        [[SDWebImageManager sharedManager] downloadImageWithURL:[((OLAsset *)printPhoto.asset) imageURL] options:0 progress:nil completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *url) {
+            if (finished) {
+                self.imageCropView.image = image;
+            }
+        }];
+    }
+    else{
+        [printPhoto dataWithCompletionHandler:^(NSData *data, NSError *error){
+            self.imageCropView.image = [UIImage imageWithData:data];
+        }];
+    }
+    
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]
+                                              initWithTitle:@"Next"
+                                              style:UIBarButtonItemStylePlain
+                                              target:self
+                                              action:@selector(onButtonNextClicked)];
+    [self setTitle:NSLocalizedString(@"Reposition the Photo", @"")];
+    
+    self.quantity = 1;
+    [self updateQuantityLabel];
+}
 
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
@@ -77,33 +112,20 @@
     return _userSelectedPhotos;
 }
 
--(void)viewDidLoad{
-    [super viewDidLoad];
-    
-#ifndef OL_NO_ANALYTICS
-    [OLAnalytics trackReviewScreenViewed:self.product.productTemplate.name];
-#endif
-    
-    OLPrintPhoto *printPhoto = (OLPrintPhoto *)[self.userSelectedPhotos firstObject];
-    if ([(OLAsset *)printPhoto.asset assetType] == kOLAssetTypeRemoteImageURL){
-        [[SDWebImageManager sharedManager] downloadImageWithURL:[((OLAsset *)printPhoto.asset) imageURL] options:0 progress:nil completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *url) {
-            if (finished) {
-                self.imageCropView.image = image;
-            }
-        }];
+- (void) updateQuantityLabel{
+    self.quantityLabel.text = [NSString stringWithFormat:@"%lu", (unsigned long)self.quantity];
+}
+
+- (IBAction)onButtonDownArrowClicked:(UIButton *)sender {
+    if (self.quantity > 1){
+        self.quantity--;
+        [self updateQuantityLabel];
     }
-    else{
-        [printPhoto dataWithCompletionHandler:^(NSData *data, NSError *error){
-            self.imageCropView.image = [UIImage imageWithData:data];
-        }];
-    }
-    
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]
-                                              initWithTitle:@"Next"
-                                              style:UIBarButtonItemStylePlain
-                                              target:self
-                                              action:@selector(onButtonNextClicked)];
-    [self setTitle:NSLocalizedString(@"Reposition the Photo", @"")];
+}
+
+- (IBAction)onButtonUpArrowClicked:(UIButton *)sender {
+    self.quantity++;
+    [self updateQuantityLabel];
 }
 
 -(void)onButtonNextClicked{
@@ -111,7 +133,30 @@
 }
 
 -(void) doCheckout{
+    NSUInteger iphonePhotoCount = 1;
     
+    OLAsset *asset = [OLAsset assetWithImageAsJPEG:self.imageCropView.editedImage];
+    
+    NSMutableArray *assetArray = [[NSMutableArray alloc] initWithCapacity:self.quantity];
+    for (NSInteger i = 0; i < self.quantity; i++){
+        [assetArray addObject:asset];
+    }
+    
+    OLProductPrintJob *job = [[OLProductPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:assetArray];
+    OLPrintOrder *printOrder = [[OLPrintOrder alloc] init];
+    NSDictionary *infoDict = [[NSBundle mainBundle] infoDictionary];
+    NSString *appVersion = [infoDict objectForKey:@"CFBundleShortVersionString"];
+    NSNumber *buildNumber = [infoDict objectForKey:@"CFBundleVersion"];
+    printOrder.userData = @{@"photo_count_iphone": [NSNumber numberWithUnsignedInteger:iphonePhotoCount],
+                            @"sdk_version": kOLKiteSDKVersion,
+                            @"platform": @"iOS",
+                            @"uid": [[[UIDevice currentDevice] identifierForVendor] UUIDString],
+                            @"app_version": [NSString stringWithFormat:@"Version: %@ (%@)", appVersion, buildNumber]
+                            };
+    [printOrder addPrintJob:job];
+    
+    OLCheckoutViewController *vc = [[OLCheckoutViewController alloc] initWithPrintOrder:printOrder];
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
 @end

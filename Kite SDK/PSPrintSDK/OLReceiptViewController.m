@@ -201,11 +201,15 @@ static const NSUInteger kSectionErrorRetry = 2;
             OLProductTemplate *template = [OLProductTemplate templateWithId:job.templateId];
             if ([job.templateId isEqualToString:@"ps_postcard"] || [job.templateId isEqualToString:@"60_postcards"]) {
                 cell.textLabel.text = [NSString stringWithFormat:@"%lu x %@", (unsigned long)self.printOrder.jobs.count, job.productName];
-            } else if ([job.templateId isEqualToString:@"frames_2x2"] || [job.templateId isEqualToString:@"frames_3x3"] || [job.templateId isEqualToString:@"frames_4x4"] || [job.templateId hasPrefix:@"frames"]) {
+            } else if (template.templateClass == kOLTemplateClassFrame) {
                 cell.textLabel.text = [NSString stringWithFormat:@"%lu x %@", (unsigned long) (job.quantity + template.quantityPerSheet - 1 ) / template.quantityPerSheet, job.productName];
-            } else if ([job.templateId rangeOfString:@"poster"].location != NSNotFound){
+            } else if (template.templateClass == kOLTemplateClassPoster){
                 cell.textLabel.text = [NSString stringWithFormat:@"%lu x %@", (unsigned long) (job.quantity + template.quantityPerSheet - 1 ) / template.quantityPerSheet, job.productName];
-            } else {
+            }
+            else if (template.templateClass == kOLTemplateClassCase){
+                cell.textLabel.text = [NSString stringWithFormat:@"%lu x %@", (unsigned long) (job.quantity + template.quantityPerSheet - 1 ) / template.quantityPerSheet, job.productName];
+            }
+            else {
                 cell.textLabel.text = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Pack of %lu %@", @"KitePrintSDK", [OLConstants bundle], @""), (unsigned long)job.quantity, job.productName];
             }
             
