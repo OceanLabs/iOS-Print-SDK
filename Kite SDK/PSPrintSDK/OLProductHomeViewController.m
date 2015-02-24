@@ -34,6 +34,7 @@
         NSMutableArray *mutableProducts = [_products mutableCopy];
         BOOL haveAtLeastOnePoster = NO;
         BOOL haveAtLeastOneFrame = NO;
+        BOOL haveAtLeastOneCase = NO;
         for (OLProduct *product in _products){
             if (!product.labelColor){
                 [mutableProducts removeObject:product];
@@ -55,6 +56,14 @@
                 }
                 else{
                     haveAtLeastOnePoster = YES;
+                }
+            }
+            if (product.productTemplate.templateClass == kOLTemplateClassCase){
+                if (haveAtLeastOneCase){
+                    [mutableProducts removeObject:product];
+                }
+                else{
+                    haveAtLeastOneCase = YES;
                 }
             }
         }
@@ -141,6 +150,9 @@
     }
     else if (product.productTemplate.templateClass == kOLTemplateClassFrame){
         productTypeLabel.text = [NSLocalizedString(@"Frames", @"") uppercaseString];
+    }
+    else if (product.productTemplate.templateClass == kOLTemplateClassCase){
+        productTypeLabel.text = [NSLocalizedString(@"Phone Cases", @"") uppercaseString];
     }
     else{
         productTypeLabel.text = [product.productTemplate.name uppercaseString];

@@ -13,7 +13,7 @@
 
 @interface OLFrameSelectionViewController : UITableViewController
 
-@property (strong, nonatomic) NSArray *assets;
+@property (strong, nonatomic) NSMutableArray *assets;
 @property (weak, nonatomic) id<OLKiteDelegate> delegate;
 
 @end

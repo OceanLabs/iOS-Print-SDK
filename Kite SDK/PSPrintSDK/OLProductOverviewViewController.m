@@ -15,6 +15,7 @@
 #import "OLWhiteSquare.h"
 #import "OLKiteViewController.h"
 #import "OLAnalytics.h"
+#import "OLCaseSelectionViewController.h"
 
 @interface OLProductOverviewViewController () <UIPageViewControllerDataSource, OLProductOverviewPageContentViewControllerDelegate>
 @property (strong, nonatomic) UIPageViewController *pageController;
@@ -39,6 +40,9 @@
     }
     else if (self.product.productTemplate.templateClass == kOLTemplateClassFrame){
         self.title = NSLocalizedString(@"Frames", @"");
+    }
+    else if (self.product.productTemplate.templateClass == kOLTemplateClassCase){
+        self.title = NSLocalizedString(@"Phone Cases", @"");
     }
     else{
         self.title = self.product.productTemplate.name;
@@ -74,6 +78,10 @@
         self.sizeLabel.hidden = YES;
         self.freePostageLabel.hidden = YES;
         self.whiteBox.hidden = YES;
+    }
+    
+    if (self.product.productTemplate.templateClass == kOLTemplateClassCase){
+        [self.sizeLabel removeFromSuperview];
     }
 }
 
@@ -113,11 +121,11 @@
         frameVc.delegate = self.delegate;
         [self.navigationController pushViewController:frameVc animated:YES];
     }
-    else if (self.product.productTemplate.templateClass == kOLTemplateClassPoster){
-        OLPosterSizeSelectionViewController *posterVc = [self.storyboard instantiateViewControllerWithIdentifier:@"sizeSelect"];
-        posterVc.assets = self.assets;
-        posterVc.delegate = self.delegate;
-        [self.navigationController pushViewController:posterVc animated:YES];
+    else if (self.product.productTemplate.templateClass == kOLTemplateClassCase){
+        OLCaseSelectionViewController *caseVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLCaseSelectionViewController"];
+        caseVc.assets = self.assets;
+        caseVc.delegate = self.delegate;
+        [self.navigationController pushViewController:caseVc animated:YES];
     }
     else{
         OLOrderReviewViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OrderReviewViewController"];
