@@ -23,6 +23,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *costLabel;
 @property (weak, nonatomic) IBOutlet UILabel *sizeLabel;
 @property (weak, nonatomic) IBOutlet UILabel *freePostageLabel;
+@property (weak, nonatomic) IBOutlet UILabel *fromLabel;
 @property (weak, nonatomic) IBOutlet OLWhiteSquare *whiteBox;
 @end
 
@@ -43,6 +44,7 @@
     }
     else if (self.product.productTemplate.templateClass == kOLTemplateClassCase){
         self.title = NSLocalizedString(@"Phone Cases", @"");
+        self.fromLabel.hidden = NO;
     }
     else{
         self.title = self.product.productTemplate.name;

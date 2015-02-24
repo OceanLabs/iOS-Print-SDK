@@ -49,6 +49,16 @@
                                 <rect key="frame" x="213" y="523" width="106.5" height="45"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             </view>
+                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="From:" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Trg-5j-Mms">
+                                <rect key="frame" x="0.0" y="523" width="42" height="21"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="21" id="7EH-HX-vjG"/>
+                                    <constraint firstAttribute="width" constant="42" id="hfd-zV-dNl"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
@@ -59,10 +69,12 @@
                             <constraint firstItem="jHu-F3-y31" firstAttribute="leading" secondItem="jsU-Jg-zMC" secondAttribute="leading" id="JvN-2m-SW9"/>
                             <constraint firstItem="BbI-Sm-L92" firstAttribute="width" secondItem="jHu-F3-y31" secondAttribute="width" id="MJx-Ri-nuV"/>
                             <constraint firstItem="5KW-iO-2Nb" firstAttribute="leading" secondItem="IOD-8G-yBt" secondAttribute="leading" id="Of2-cO-fX8"/>
+                            <constraint firstItem="Trg-5j-Mms" firstAttribute="leading" secondItem="5KW-iO-2Nb" secondAttribute="leading" id="Rl9-57-W2d"/>
                             <constraint firstItem="jHu-F3-y31" firstAttribute="top" secondItem="BbI-Sm-L92" secondAttribute="top" id="a4l-gD-y2q"/>
                             <constraint firstItem="5KW-iO-2Nb" firstAttribute="width" secondItem="jsU-Jg-zMC" secondAttribute="width" id="anx-uB-5EP"/>
                             <constraint firstItem="BbI-Sm-L92" firstAttribute="width" secondItem="5KW-iO-2Nb" secondAttribute="width" id="bdT-i5-5AI"/>
                             <constraint firstItem="jHu-F3-y31" firstAttribute="leading" secondItem="BbI-Sm-L92" secondAttribute="trailing" id="d3O-Oy-2Zl"/>
+                            <constraint firstItem="Trg-5j-Mms" firstAttribute="top" secondItem="5KW-iO-2Nb" secondAttribute="top" id="g0S-ak-htn"/>
                             <constraint firstItem="jHu-F3-y31" firstAttribute="height" secondItem="jsU-Jg-zMC" secondAttribute="height" id="giL-WM-pG5"/>
                             <constraint firstAttribute="trailing" secondItem="LPR-fp-Gxd" secondAttribute="trailing" constant="20" id="gxV-jb-0o6"/>
                             <constraint firstItem="G9u-bX-KKH" firstAttribute="top" secondItem="LPR-fp-Gxd" secondAttribute="bottom" constant="50" id="gyV-LK-uYI"/>
@@ -86,6 +98,7 @@
                     <connections>
                         <outlet property="costLabel" destination="5KW-iO-2Nb" id="CYY-AG-6ak"/>
                         <outlet property="freePostageLabel" destination="jHu-F3-y31" id="wjq-bu-FYn"/>
+                        <outlet property="fromLabel" destination="Trg-5j-Mms" id="1rk-z7-Rya"/>
                         <outlet property="pageControl" destination="LPR-fp-Gxd" id="c2Y-Hz-Ela"/>
                         <outlet property="sizeLabel" destination="BbI-Sm-L92" id="D9d-9G-7Wa"/>
                         <outlet property="whiteBox" destination="jsU-Jg-zMC" id="OtK-gx-8uY"/>
