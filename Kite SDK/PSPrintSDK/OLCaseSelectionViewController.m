@@ -55,6 +55,10 @@
     textView.text = [product.productTemplate.name stringByReplacingOccurrencesOfString:@" Case" withString:@""];
     textView.backgroundColor = product.productTemplate.labelColor;
     
+    UITextView *priceTextView = (UITextView *)[cell.contentView viewWithTag:30];
+    priceTextView.text = product.unitCost;
+    priceTextView.backgroundColor = product.productTemplate.labelColor;
+    
     return cell;
 }
 
