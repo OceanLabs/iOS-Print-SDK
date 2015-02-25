@@ -27,5 +27,7 @@
 -(void)setCoverImageToImageView:(UIImageView *)imageView;
 -(void)setProductPhotography:(NSUInteger)i toImageView:(UIImageView *)imageView;
 +(OLProduct *) productWithTemplateId:(NSString *)templateId;
+- (NSDecimalNumber*) decimalNumberUnitCost;
++ (NSString*) unitCostWithCost:(NSDecimalNumber*)cost;
 
 @end

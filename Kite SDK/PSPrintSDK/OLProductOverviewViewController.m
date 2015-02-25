@@ -29,6 +29,17 @@
 
 @implementation OLProductOverviewViewController
 
++ (NSString *) minimumPriceForProductClass:(OLTemplateClass)class{
+    double min = DBL_MAX;
+    NSArray *allProducts = [OLKitePrintSDK enabledProducts] ? [OLKitePrintSDK enabledProducts] : [OLProduct products];
+    for (OLProduct *product in allProducts){
+        if (product.productTemplate.templateClass == class && [product.decimalNumberUnitCost doubleValue] < min){
+            min = [product.decimalNumberUnitCost doubleValue];
+        }
+    }
+    return [OLProduct unitCostWithCost:[NSDecimalNumber decimalNumberWithString:[NSString stringWithFormat:@"%f", min]]];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     
@@ -66,7 +77,12 @@
     pageControl.backgroundColor = [UIColor clearColor];
     pageControl.frame = CGRectMake(0, -200, 100, 100);
     
-    self.costLabel.text = self.product.unitCost;
+    if (self.product.productTemplate.templateClass == kOLTemplateClassCase){
+        self.costLabel.text = [OLProductOverviewViewController minimumPriceForProductClass:kOLTemplateClassCase];
+    }
+    else{
+        self.costLabel.text = self.product.unitCost;
+    }
     
     if (self.product.productTemplate.templateClass == kOLTemplateClassFrame){
         self.sizeLabel.text = [NSString stringWithFormat:@"%@", self.product.dimensions];
