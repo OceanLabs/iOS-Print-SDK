@@ -61,7 +61,7 @@
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     
-    if (self.product.productTemplate.templateClass == kOLTemplateClassCase){
+    if (self.product.productTemplate.templateClass == kOLTemplateClassCase || self.product.productTemplate.templateClass == kOLTemplateClassDecal){
         NSString *imageName;
         if ([self.product.productTemplate.productCode hasSuffix:@"PHONE_4"]){
             imageName = @"iphone4";

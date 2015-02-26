@@ -24,7 +24,7 @@
     self.caseProducts = [[NSMutableArray alloc] init];
     NSArray *allProducts = [OLKitePrintSDK enabledProducts] ? [OLKitePrintSDK enabledProducts] : [OLProduct products];
     for (OLProduct *product in allProducts){
-        if (product.productTemplate.templateClass == kOLTemplateClassCase){
+        if (product.productTemplate.templateClass == self.templateClass){
             [self.caseProducts insertObject:product atIndex:0];
         }
     }

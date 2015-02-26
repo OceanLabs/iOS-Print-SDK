@@ -142,6 +142,9 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
     else if ([identifier isEqualToString:@"PHONE_CASE"]){
         return kOLTemplateClassCase;
     }
+    else if ([identifier isEqualToString:@"CLEAR_CASE_DECAL"]){
+        return kOLTemplateClassDecal;
+    }
     return kOLTemplateClassNA;
 }
 

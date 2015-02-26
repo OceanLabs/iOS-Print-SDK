@@ -57,6 +57,10 @@
         self.title = NSLocalizedString(@"Phone Cases", @"");
         self.fromLabel.hidden = NO;
     }
+    else if (self.product.productTemplate.templateClass == kOLTemplateClassDecal){
+        self.title = NSLocalizedString(@"Clear Cases & Stickers", @"");
+        self.fromLabel.hidden = NO;
+    }
     else{
         self.title = self.product.productTemplate.name;
     }
@@ -77,8 +81,9 @@
     pageControl.backgroundColor = [UIColor clearColor];
     pageControl.frame = CGRectMake(0, -200, 100, 100);
     
-    if (self.product.productTemplate.templateClass == kOLTemplateClassCase){
-        self.costLabel.text = [OLProductOverviewViewController minimumPriceForProductClass:kOLTemplateClassCase];
+    OLTemplateClass templateClass = self.product.productTemplate.templateClass;
+    if (templateClass == kOLTemplateClassCase || templateClass == kOLTemplateClassDecal){
+        self.costLabel.text = [OLProductOverviewViewController minimumPriceForProductClass:templateClass];
     }
     else{
         self.costLabel.text = self.product.unitCost;
@@ -98,7 +103,7 @@
         self.whiteBox.hidden = YES;
     }
     
-    if (self.product.productTemplate.templateClass == kOLTemplateClassCase){
+    if (templateClass == kOLTemplateClassCase || templateClass == kOLTemplateClassDecal){
         [self.sizeLabel removeFromSuperview];
     }
 }
@@ -139,10 +144,11 @@
         frameVc.delegate = self.delegate;
         [self.navigationController pushViewController:frameVc animated:YES];
     }
-    else if (self.product.productTemplate.templateClass == kOLTemplateClassCase){
+    else if (self.product.productTemplate.templateClass == kOLTemplateClassCase || self.product.productTemplate.templateClass == kOLTemplateClassDecal){
         OLCaseSelectionViewController *caseVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLCaseSelectionViewController"];
         caseVc.assets = self.assets;
         caseVc.delegate = self.delegate;
+        caseVc.templateClass = self.product.productTemplate.templateClass;
         [self.navigationController pushViewController:caseVc animated:YES];
     }
     else{

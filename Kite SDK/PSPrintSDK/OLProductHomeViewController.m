@@ -35,6 +35,7 @@
         BOOL haveAtLeastOnePoster = NO;
         BOOL haveAtLeastOneFrame = NO;
         BOOL haveAtLeastOneCase = NO;
+        BOOL haveAtLeastOneDecal = NO;
         for (OLProduct *product in _products){
             if (!product.labelColor){
                 [mutableProducts removeObject:product];
@@ -64,6 +65,14 @@
                 }
                 else{
                     haveAtLeastOneCase = YES;
+                }
+            }
+            if (product.productTemplate.templateClass == kOLTemplateClassDecal){
+                if (haveAtLeastOneDecal){
+                    [mutableProducts removeObject:product];
+                }
+                else{
+                    haveAtLeastOneDecal = YES;
                 }
             }
         }
@@ -153,6 +162,9 @@
     }
     else if (product.productTemplate.templateClass == kOLTemplateClassCase){
         productTypeLabel.text = [NSLocalizedString(@"Phone Cases", @"") uppercaseString];
+    }
+    else if (product.productTemplate.templateClass == kOLTemplateClassDecal){
+        productTypeLabel.text = [NSLocalizedString(@"Clear Cases & Stickers", @"") uppercaseString];
     }
     else{
         productTypeLabel.text = [product.productTemplate.name uppercaseString];

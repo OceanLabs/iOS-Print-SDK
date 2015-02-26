@@ -13,5 +13,6 @@
 
 @property (strong, nonatomic) NSMutableArray *assets;
 @property (weak, nonatomic) id<OLKiteDelegate> delegate;
+@property (assign, nonatomic) OLTemplateClass templateClass;
 
 @end

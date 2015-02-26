@@ -206,7 +206,7 @@ static const NSUInteger kSectionErrorRetry = 2;
             } else if (template.templateClass == kOLTemplateClassPoster){
                 cell.textLabel.text = [NSString stringWithFormat:@"%lu x %@", (unsigned long) (job.quantity + template.quantityPerSheet - 1 ) / template.quantityPerSheet, job.productName];
             }
-            else if (template.templateClass == kOLTemplateClassCase){
+            else if (template.templateClass == kOLTemplateClassCase || template.templateClass == kOLTemplateClassDecal){
                 cell.textLabel.text = [NSString stringWithFormat:@"%lu x %@", (unsigned long) (job.quantity + template.quantityPerSheet - 1 ) / template.quantityPerSheet, job.productName];
             }
             else {

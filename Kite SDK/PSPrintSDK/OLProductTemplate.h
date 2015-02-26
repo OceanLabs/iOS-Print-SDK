@@ -20,7 +20,8 @@ typedef enum {
     kOLTemplateClassFrame,
     kOLTemplateClassPoster,
     kOLTemplateClassPolaroid,
-    kOLTemplateClassCase
+    kOLTemplateClassCase,
+    kOLTemplateClassDecal
 }OLTemplateClass;
 
 @class OLProductTemplateSyncRequest;
