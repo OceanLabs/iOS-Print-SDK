@@ -69,7 +69,7 @@
     imageView.image = [UIImage imageNamed:imageName];
     
     UITextView *textView = (UITextView *)[cell.contentView viewWithTag:20];
-    textView.text = [product.productTemplate.name stringByReplacingOccurrencesOfString:@" Case" withString:@""];
+    textView.text = [[product.productTemplate.name stringByReplacingOccurrencesOfString:@" Case" withString:@""] stringByReplacingOccurrencesOfString:@" Clear Decals" withString:@""];
     textView.backgroundColor = product.productTemplate.labelColor;
     
     return cell;
