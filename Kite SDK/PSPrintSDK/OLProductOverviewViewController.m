@@ -16,6 +16,7 @@
 #import "OLKiteViewController.h"
 #import "OLAnalytics.h"
 #import "OLCaseSelectionViewController.h"
+#import "OLSingleImageProductReviewViewController.h"
 
 @interface OLProductOverviewViewController () <UIPageViewControllerDataSource, OLProductOverviewPageContentViewControllerDelegate>
 @property (strong, nonatomic) UIPageViewController *pageController;
@@ -23,7 +24,6 @@
 @property (weak, nonatomic) IBOutlet UILabel *costLabel;
 @property (weak, nonatomic) IBOutlet UILabel *sizeLabel;
 @property (weak, nonatomic) IBOutlet UILabel *freePostageLabel;
-@property (weak, nonatomic) IBOutlet UILabel *fromLabel;
 @property (weak, nonatomic) IBOutlet OLWhiteSquare *whiteBox;
 @end
 
@@ -55,11 +55,9 @@
     }
     else if (self.product.productTemplate.templateClass == kOLTemplateClassCase){
         self.title = NSLocalizedString(@"Phone Cases", @"");
-        self.fromLabel.hidden = NO;
     }
     else if (self.product.productTemplate.templateClass == kOLTemplateClassDecal){
         self.title = NSLocalizedString(@"Clear Cases & Stickers", @"");
-        self.fromLabel.hidden = NO;
     }
     else{
         self.title = self.product.productTemplate.name;
@@ -82,12 +80,12 @@
     pageControl.frame = CGRectMake(0, -200, 100, 100);
     
     OLTemplateClass templateClass = self.product.productTemplate.templateClass;
-    if (templateClass == kOLTemplateClassCase || templateClass == kOLTemplateClassDecal){
-        self.costLabel.text = [OLProductOverviewViewController minimumPriceForProductClass:templateClass];
-    }
-    else{
+//    if (templateClass == kOLTemplateClassCase || templateClass == kOLTemplateClassDecal){
+//        self.costLabel.text = [OLProductOverviewViewController minimumPriceForProductClass:templateClass];
+//    }
+//    else{
         self.costLabel.text = self.product.unitCost;
-    }
+//    }
     
     if (self.product.productTemplate.templateClass == kOLTemplateClassFrame){
         self.sizeLabel.text = [NSString stringWithFormat:@"%@", self.product.dimensions];
@@ -145,11 +143,11 @@
         [self.navigationController pushViewController:frameVc animated:YES];
     }
     else if (self.product.productTemplate.templateClass == kOLTemplateClassCase || self.product.productTemplate.templateClass == kOLTemplateClassDecal){
-        OLCaseSelectionViewController *caseVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLCaseSelectionViewController"];
-        caseVc.assets = self.assets;
-        caseVc.delegate = self.delegate;
-        caseVc.templateClass = self.product.productTemplate.templateClass;
-        [self.navigationController pushViewController:caseVc animated:YES];
+        OLSingleImageProductReviewViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLSingleImageProductReviewViewController"];
+        vc.assets = self.assets;
+        vc.delegate = self.delegate;
+        vc.product = self.product;
+        [self.navigationController pushViewController:vc animated:YES];
     }
     else{
         OLOrderReviewViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OrderReviewViewController"];

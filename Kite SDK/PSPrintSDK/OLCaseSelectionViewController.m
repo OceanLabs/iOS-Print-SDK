@@ -11,6 +11,7 @@
 #import "OLProduct.h"
 #import "OLSingleImageProductReviewViewController.h"
 #import "UITableViewController+ScreenWidthFactor.h"
+#import "OLProductOverviewViewController.h"
 
 @interface OLCaseSelectionViewController ()
 
@@ -35,7 +36,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{    
     OLProduct *product = self.caseProducts[indexPath.row];
     
-    OLSingleImageProductReviewViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLSingleImageProductReviewViewController"];
+    OLProductOverviewViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLProductOverviewViewController"];
     vc.delegate = self.delegate;
     vc.assets = self.assets;
     vc.product = product;
@@ -70,10 +71,6 @@
     UITextView *textView = (UITextView *)[cell.contentView viewWithTag:20];
     textView.text = [product.productTemplate.name stringByReplacingOccurrencesOfString:@" Case" withString:@""];
     textView.backgroundColor = product.productTemplate.labelColor;
-    
-    UITextView *priceTextView = (UITextView *)[cell.contentView viewWithTag:30];
-    priceTextView.text = product.unitCost;
-    priceTextView.backgroundColor = product.productTemplate.labelColor;
     
     return cell;
 }

@@ -9,7 +9,7 @@
 #import "OLProductHomeViewController.h"
 #import "OLProductOverviewViewController.h"
 #import "UITableViewController+ScreenWidthFactor.h"
-
+#import "OLCaseSelectionViewController.h"
 #import "OLProductTemplate.h"
 #import "OLProduct.h"
 #import "OLKiteViewController.h"
@@ -123,6 +123,13 @@
         vc.delegate = self.delegate;
         [self.navigationController pushViewController:vc animated:YES];
     }
+    else if (product.productTemplate.templateClass == kOLTemplateClassCase || product.productTemplate.templateClass == kOLTemplateClassDecal){
+        OLCaseSelectionViewController *caseVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLCaseSelectionViewController"];
+        caseVc.delegate = self.delegate;
+        caseVc.assets = self.assets;
+        caseVc.templateClass = product.productTemplate.templateClass;
+        [self.navigationController pushViewController:caseVc animated:YES];
+    }
     else{
         OLProductOverviewViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLProductOverviewViewController"];
         vc.assets = self.assets;
@@ -130,7 +137,6 @@
         vc.delegate = self.delegate;
         [self.navigationController pushViewController:vc animated:YES];
     }
-    
 }
 
 #pragma mark - UITableViewDataSource Methods
