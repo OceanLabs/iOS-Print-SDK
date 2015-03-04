@@ -296,6 +296,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         [self.tableView reloadData];
         [self positionPoweredByKiteLabel];
     } else {
+        [self positionPoweredByKiteLabel];
         self.loadingTemplatesView.hidden = NO;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onTemplateSyncCompleted:) name:kNotificationTemplateSyncComplete object:nil];
     }
@@ -304,7 +305,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 - (void)positionPoweredByKiteLabel {
     // position Powered by Kite label dynamically based on content size
     CGRect tvFrame = self.tableView.frame;
-    CGFloat extraHeight = 0;
+    CGFloat extraHeight = MAX(self.tableView.contentInset.top, self.view.frame.origin.y);
     if ([self.delegate respondsToSelector:@selector(shouldShowContinueShoppingButton)] && [self.delegate shouldShowContinueShoppingButton]){
         extraHeight = 64;
     }
