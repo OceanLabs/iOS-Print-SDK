@@ -153,7 +153,7 @@
     else{
         CGFloat standardiOSBarsHeight = self.navigationController.navigationBar.frame.size.height + [UIApplication sharedApplication].statusBarFrame.size.height;
         self.nextVc = [sb instantiateViewControllerWithIdentifier:nextVcIdentifier];
-        [(OLProductHomeViewController *)((UINavigationController *)self.nextVc).topViewController setDelegate:self.delegate];
+        [(OLProductHomeViewController *)((UINavigationController *)self.nextVc) setDelegate:self.delegate];
         [(id)self.nextVc setAssets:[self.assets mutableCopy]];
         if (product){
             [(id)self.nextVc setProduct:product];
