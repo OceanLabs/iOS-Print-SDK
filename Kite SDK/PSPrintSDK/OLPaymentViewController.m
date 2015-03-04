@@ -138,7 +138,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     
     self.sections = [@[kSectionOrderSummary, kSectionPromoCodes, kSectionPayment] mutableCopy];
     
-    if ([self.delegate respondsToSelector:@selector(shouldShowContinueShoppingButton)]) {
+    if ([self.delegate respondsToSelector:@selector(shouldShowContinueShoppingButton)] && [self.delegate shouldShowContinueShoppingButton]) {
         if ([self.delegate shouldShowContinueShoppingButton]){
             [self.sections insertObject:kSectionContinueShopping atIndex:1];
         }

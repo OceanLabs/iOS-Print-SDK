@@ -268,7 +268,7 @@ static const NSUInteger kInputFieldTag = 99;
 
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section {
     if (section == kSectionEmailAddress) {
-        return NSLocalizedStringFromTableInBundle(@"We'll send you a confirmation and order updates", @"KitePrintSDK", [OLConstants bundle], @"");
+        return NSLocalizedStringFromTableInBundle(@"We'll send you confirmation and order updates", @"KitePrintSDK", [OLConstants bundle], @"");
     } else if (section == kSectionPhoneNumber) {
         return NSLocalizedStringFromTableInBundle(@"Required by the postal service in case there are any issues during delivery", @"KitePrintSDK", [OLConstants bundle], @"");
     }
