@@ -138,7 +138,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     
     self.sections = [@[kSectionOrderSummary, kSectionPromoCodes, kSectionPayment] mutableCopy];
     
-    if ([self.delegate respondsToSelector:@selector(shouldShowContinueShoppingButton)] && [self.delegate shouldShowContinueShoppingButton]) {
+    if ([self.delegate respondsToSelector:@selector(shouldShowContinueShoppingButton)]) {
         if ([self.delegate shouldShowContinueShoppingButton]){
             [self.sections insertObject:kSectionContinueShopping atIndex:1];
         }
@@ -305,7 +305,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     // position Powered by Kite label dynamically based on content size
     CGRect tvFrame = self.tableView.frame;
     CGFloat extraHeight = 0;
-    if ([self.delegate respondsToSelector:@selector(shouldShowContinueShoppingButton)]){
+    if ([self.delegate respondsToSelector:@selector(shouldShowContinueShoppingButton)] && [self.delegate shouldShowContinueShoppingButton]){
         extraHeight = 64;
     }
     CGFloat height = tvFrame.size.height - (self.tableView.contentSize.height - self.tableView.tableHeaderView.frame.size.height - extraHeight);
