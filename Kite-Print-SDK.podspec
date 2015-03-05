@@ -11,7 +11,7 @@ Pod::Spec.new do |spec|
   spec.dependency	'SDWebImage'
   spec.dependency	'SVProgressHUD'
   spec.dependency	'AFNetworking', '2.5.0'
-  spec.dependency	'UICKeyChainStore', '~> 1.0.4'
+  spec.dependency	'UICKeyChainStore', '~> 2.0.4'
   spec.dependency	'LXReorderableCollectionViewFlowLayout'
   spec.dependency	'CTAssetsPickerController'
   spec.requires_arc	= true
