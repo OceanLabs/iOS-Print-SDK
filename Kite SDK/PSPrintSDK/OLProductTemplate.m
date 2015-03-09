@@ -104,12 +104,52 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
     return lastSyncDate;
 }
 
++ (NSMutableArray *)templatesFromBundledPlist {
+    NSString *path = [[NSBundle mainBundle] pathForResource:@"OLProductTemplates" ofType:@"plist"];
+    NSMutableArray *plist = [[NSMutableArray alloc] initWithContentsOfFile:path];
+    
+    NSMutableArray *templates = [[NSMutableArray alloc] init];
+    for (id template in plist) {
+        if ([template isKindOfClass:[NSDictionary class]]) {
+            id templateId = template[@"OLTemplateId"];
+            id templateName = template[@"OLTemplateName"];
+            id sheetQuantity = template[@"OLSheetQuanity"];
+            id enabled = template[@"OLEnabled"] ? template[@"OLEnabled"] : [NSNumber numberWithInt:1];
+            id sheetCosts = template[@"OLSheetCosts"];
+            if ([templateId isKindOfClass:[NSString class]] && [templateName isKindOfClass:[NSString class]]
+                && [sheetQuantity isKindOfClass:[NSNumber class]] && [enabled isKindOfClass:[NSNumber class]]
+                && [sheetCosts isKindOfClass:[NSDictionary class]]) {
+                
+                NSMutableDictionary/*<String, NSDecimalNumber>*/ *costs = [[NSMutableDictionary alloc] init];
+                for (id key in sheetCosts) {
+                    id val = sheetCosts[key];
+                    if ([key isKindOfClass:[NSString class]] && [val isKindOfClass:[NSString class]]) {
+                        if ([OLCountry isValidCurrencyCode:key]) {
+                            NSDecimalNumber *cost = [NSDecimalNumber decimalNumberWithString:val];
+                            costs[key] = cost;
+                        }
+                    }
+                }
+                
+                NSAssert(costs.count > 0, @"OLProductTemplates.plist %@ (%@) does not contain any cost information", templateId, templateName);
+                if (costs.count > 0) {
+                    [templates addObject:[[OLProductTemplate alloc] initWithIdentifier:templateId name:templateName sheetQuantity:[sheetQuantity unsignedIntegerValue] sheetCostsByCurrencyCode:costs enabled:[enabled boolValue]]];
+                }
+            } else {
+                NSAssert(NO, @"Bad template format in OLProductTemplates.plist");
+            }
+        }
+    }
+    return templates;
+}
+
 
 + (NSArray *)templates {
     if (!templates) {
         NSArray *components = [NSKeyedUnarchiver unarchiveObjectWithFile:[OLProductTemplate templatesFilePath]];
         if (!components) {
-            lastSyncDate = nil;            
+            lastSyncDate = nil;
+            templates = [self templatesFromBundledPlist];
         } else {
             lastSyncDate = components[0];
             templates = components[1];
