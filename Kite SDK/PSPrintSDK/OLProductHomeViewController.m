@@ -17,6 +17,13 @@
 #import "OLPosterSizeSelectionViewController.h"
 #import "OLAnalytics.h"
 
+@interface OLProduct (Private)
+
+-(void)setCoverImageToImageView:(UIImageView *)imageView;
+-(void)setProductPhotography:(NSUInteger)i toImageView:(UIImageView *)imageView;
+
+@end
+
 @interface OLProductHomeViewController ()
 @property (nonatomic, strong) NSArray *products;
 @property (nonatomic, strong) UIImageView *topSurpriseImageView;

@@ -12,6 +12,13 @@
 #import "OLKiteViewController.h"
 #import "OLAnalytics.h"
 
+@interface OLProduct (Private)
+
+-(void)setCoverImageToImageView:(UIImageView *)imageView;
+-(void)setProductPhotography:(NSUInteger)i toImageView:(UIImageView *)imageView;
+
+@end
+
 static UIColor *deselectedColor;
 
 
