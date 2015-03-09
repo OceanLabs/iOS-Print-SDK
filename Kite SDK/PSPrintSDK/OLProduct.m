@@ -108,11 +108,11 @@ typedef enum {
 }
 
 - (NSString *)unitCost {
-    return [OLProduct unitCostWithCost:[self decimalNumberUnitCost]];
+    return [OLProduct unitCostWithCost:[self unitCostDecimalNumber]];
     
 }
 
-- (NSDecimalNumber*) decimalNumberUnitCost{
+- (NSDecimalNumber*) unitCostDecimalNumber{
     OLProductTemplate *template = [OLProductTemplate templateWithId:self.templateId];
     
     NSString *code = [OLCountry countryForCurrentLocale].currencyCode;

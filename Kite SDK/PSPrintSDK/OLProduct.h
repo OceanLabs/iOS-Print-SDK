@@ -25,7 +25,5 @@
 - (NSString *) dimensions;
 -(CGSize)serverImageSize;
 +(OLProduct *) productWithTemplateId:(NSString *)templateId;
-- (NSDecimalNumber*) decimalNumberUnitCost;
-+ (NSString*) unitCostWithCost:(NSDecimalNumber*)cost;
 
 @end

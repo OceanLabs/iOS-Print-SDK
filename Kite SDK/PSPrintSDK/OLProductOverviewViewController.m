@@ -18,6 +18,13 @@
 #import "OLCaseSelectionViewController.h"
 #import "OLSingleImageProductReviewViewController.h"
 
+@interface OLProduct (Private)
+
+- (NSDecimalNumber*) unitCostDecimalNumber;
++ (NSString*) unitCostWithCost:(NSDecimalNumber*)cost;
+
+@end
+
 @interface OLProductOverviewViewController () <UIPageViewControllerDataSource, OLProductOverviewPageContentViewControllerDelegate>
 @property (strong, nonatomic) UIPageViewController *pageController;
 @property (strong, nonatomic) IBOutlet UIPageControl *pageControl;
@@ -33,8 +40,8 @@
     double min = DBL_MAX;
     NSArray *allProducts = [OLKitePrintSDK enabledProducts] ? [OLKitePrintSDK enabledProducts] : [OLProduct products];
     for (OLProduct *product in allProducts){
-        if (product.productTemplate.templateClass == class && [product.decimalNumberUnitCost doubleValue] < min){
-            min = [product.decimalNumberUnitCost doubleValue];
+        if (product.productTemplate.templateClass == class && [product.unitCostDecimalNumber doubleValue] < min){
+            min = [product.unitCostDecimalNumber doubleValue];
         }
     }
     return [OLProduct unitCostWithCost:[NSDecimalNumber decimalNumberWithString:[NSString stringWithFormat:@"%f", min]]];
