@@ -49,10 +49,14 @@ static BOOL useJudoPayForGBP = NO;
     apiKey = _apiKey;
     environment = _environment;
     if (environment == kOLKitePrintSDKEnvironmentLive) {
-        [OLPayPalCard setClientId:kOLPayPalClientIdLive withEnvironment:kOLPayPalEnvironmentLive];
+#ifdef OL_KITE_OFFER_PAYPAL
+        [OLPayPalCard setClientId:[self paypalClientId] withEnvironment:kOLPayPalEnvironmentLive];
+#endif
         [OLJudoPayCard setClientId:kJudoClientId token:kJudoLiveToken secret:kJudoLiveSecret withEnvironment:kOLJudoPayEnvironmentLive];
     } else {
-        [OLPayPalCard setClientId:kOLPayPalClientIdSandbox withEnvironment:kOLPayPalEnvironmentSandbox];
+#ifdef OL_KITE_OFFER_PAYPAL
+        [OLPayPalCard setClientId:[self paypalClientId] withEnvironment:kOLPayPalEnvironmentSandbox];
+#endif
         [OLJudoPayCard setClientId:kJudoClientId token:kJudoSandboxToken secret:kJudoSandboxSecret withEnvironment:kOLJudoPayEnvironmentSandbox];
     }
 }
