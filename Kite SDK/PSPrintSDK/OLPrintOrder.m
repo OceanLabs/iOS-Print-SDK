@@ -283,6 +283,10 @@ static id stringOrEmptyString(NSString *str) {
         [json setObject:self.proofOfPayment forKey:@"proof_of_payment"];
     }
     
+    if (self.currencyCode && self.cost) {
+        [json setObject:@{@"currency" : self.currencyCode, @"amount" : self.cost} forKey:@"customer_payment"];
+    }
+    
     if (self.promoCode) {
         [json setObject:[self promoCode] forKey:@"promo_code"];
     }
