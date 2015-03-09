@@ -15,6 +15,15 @@
 #import "OLWhiteSquare.h"
 #import "OLKiteViewController.h"
 #import "OLAnalytics.h"
+#import "OLCaseSelectionViewController.h"
+#import "OLSingleImageProductReviewViewController.h"
+
+@interface OLProduct (Private)
+
+- (NSDecimalNumber*) unitCostDecimalNumber;
++ (NSString*) unitCostWithCost:(NSDecimalNumber*)cost;
+
+@end
 
 @interface OLProductOverviewViewController () <UIPageViewControllerDataSource, OLProductOverviewPageContentViewControllerDelegate>
 @property (strong, nonatomic) UIPageViewController *pageController;
@@ -26,6 +35,17 @@
 @end
 
 @implementation OLProductOverviewViewController
+
++ (NSString *) minimumPriceForProductClass:(OLTemplateClass)class{
+    double min = DBL_MAX;
+    NSArray *allProducts = [OLKitePrintSDK enabledProducts] ? [OLKitePrintSDK enabledProducts] : [OLProduct products];
+    for (OLProduct *product in allProducts){
+        if (product.productTemplate.templateClass == class && [product.unitCostDecimalNumber doubleValue] < min){
+            min = [product.unitCostDecimalNumber doubleValue];
+        }
+    }
+    return [OLProduct unitCostWithCost:[NSDecimalNumber decimalNumberWithString:[NSString stringWithFormat:@"%f", min]]];
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -39,6 +59,12 @@
     }
     else if (self.product.productTemplate.templateClass == kOLTemplateClassFrame){
         self.title = NSLocalizedString(@"Frames", @"");
+    }
+    else if (self.product.productTemplate.templateClass == kOLTemplateClassCase){
+        self.title = NSLocalizedString(@"Phone Cases", @"");
+    }
+    else if (self.product.productTemplate.templateClass == kOLTemplateClassDecal){
+        self.title = NSLocalizedString(@"Clear Cases & Stickers", @"");
     }
     else{
         self.title = self.product.productTemplate.name;
@@ -60,7 +86,13 @@
     pageControl.backgroundColor = [UIColor clearColor];
     pageControl.frame = CGRectMake(0, -200, 100, 100);
     
-    self.costLabel.text = self.product.unitCost;
+    OLTemplateClass templateClass = self.product.productTemplate.templateClass;
+//    if (templateClass == kOLTemplateClassCase || templateClass == kOLTemplateClassDecal){
+//        self.costLabel.text = [OLProductOverviewViewController minimumPriceForProductClass:templateClass];
+//    }
+//    else{
+        self.costLabel.text = self.product.unitCost;
+//    }
     
     if (self.product.productTemplate.templateClass == kOLTemplateClassFrame){
         self.sizeLabel.text = [NSString stringWithFormat:@"%@", self.product.dimensions];
@@ -74,6 +106,10 @@
         self.sizeLabel.hidden = YES;
         self.freePostageLabel.hidden = YES;
         self.whiteBox.hidden = YES;
+    }
+    
+    if (templateClass == kOLTemplateClassCase || templateClass == kOLTemplateClassDecal){
+        [self.sizeLabel removeFromSuperview];
     }
 }
 
@@ -113,11 +149,12 @@
         frameVc.delegate = self.delegate;
         [self.navigationController pushViewController:frameVc animated:YES];
     }
-    else if (self.product.productTemplate.templateClass == kOLTemplateClassPoster){
-        OLPosterSizeSelectionViewController *posterVc = [self.storyboard instantiateViewControllerWithIdentifier:@"sizeSelect"];
-        posterVc.assets = self.assets;
-        posterVc.delegate = self.delegate;
-        [self.navigationController pushViewController:posterVc animated:YES];
+    else if (self.product.productTemplate.templateClass == kOLTemplateClassCase || self.product.productTemplate.templateClass == kOLTemplateClassDecal){
+        OLSingleImageProductReviewViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLSingleImageProductReviewViewController"];
+        vc.assets = self.assets;
+        vc.delegate = self.delegate;
+        vc.product = self.product;
+        [self.navigationController pushViewController:vc animated:YES];
     }
     else{
         OLOrderReviewViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OrderReviewViewController"];

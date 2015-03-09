@@ -9,13 +9,20 @@
 #import "OLProductHomeViewController.h"
 #import "OLProductOverviewViewController.h"
 #import "UITableViewController+ScreenWidthFactor.h"
-
+#import "OLCaseSelectionViewController.h"
 #import "OLProductTemplate.h"
 #import "OLProduct.h"
 #import "OLKiteViewController.h"
 #import "OLKitePrintSDK.h"
 #import "OLPosterSizeSelectionViewController.h"
 #import "OLAnalytics.h"
+
+@interface OLProduct (Private)
+
+-(void)setCoverImageToImageView:(UIImageView *)imageView;
+-(void)setProductPhotography:(NSUInteger)i toImageView:(UIImageView *)imageView;
+
+@end
 
 @interface OLProductHomeViewController ()
 @property (nonatomic, strong) NSArray *products;
@@ -34,6 +41,8 @@
         NSMutableArray *mutableProducts = [_products mutableCopy];
         BOOL haveAtLeastOnePoster = NO;
         BOOL haveAtLeastOneFrame = NO;
+        BOOL haveAtLeastOneCase = NO;
+        BOOL haveAtLeastOneDecal = NO;
         for (OLProduct *product in _products){
             if (!product.labelColor){
                 [mutableProducts removeObject:product];
@@ -55,6 +64,22 @@
                 }
                 else{
                     haveAtLeastOnePoster = YES;
+                }
+            }
+            if (product.productTemplate.templateClass == kOLTemplateClassCase){
+                if (haveAtLeastOneCase){
+                    [mutableProducts removeObject:product];
+                }
+                else{
+                    haveAtLeastOneCase = YES;
+                }
+            }
+            if (product.productTemplate.templateClass == kOLTemplateClassDecal){
+                if (haveAtLeastOneDecal){
+                    [mutableProducts removeObject:product];
+                }
+                else{
+                    haveAtLeastOneDecal = YES;
                 }
             }
         }
@@ -105,6 +130,13 @@
         vc.delegate = self.delegate;
         [self.navigationController pushViewController:vc animated:YES];
     }
+    else if (product.productTemplate.templateClass == kOLTemplateClassCase || product.productTemplate.templateClass == kOLTemplateClassDecal){
+        OLCaseSelectionViewController *caseVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLCaseSelectionViewController"];
+        caseVc.delegate = self.delegate;
+        caseVc.assets = self.assets;
+        caseVc.templateClass = product.productTemplate.templateClass;
+        [self.navigationController pushViewController:caseVc animated:YES];
+    }
     else{
         OLProductOverviewViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLProductOverviewViewController"];
         vc.assets = self.assets;
@@ -112,7 +144,6 @@
         vc.delegate = self.delegate;
         [self.navigationController pushViewController:vc animated:YES];
     }
-    
 }
 
 #pragma mark - UITableViewDataSource Methods
@@ -141,6 +172,12 @@
     }
     else if (product.productTemplate.templateClass == kOLTemplateClassFrame){
         productTypeLabel.text = [NSLocalizedString(@"Frames", @"") uppercaseString];
+    }
+    else if (product.productTemplate.templateClass == kOLTemplateClassCase){
+        productTypeLabel.text = [NSLocalizedString(@"Phone Cases", @"") uppercaseString];
+    }
+    else if (product.productTemplate.templateClass == kOLTemplateClassDecal){
+        productTypeLabel.text = [NSLocalizedString(@"Clear Cases & Stickers", @"") uppercaseString];
     }
     else{
         productTypeLabel.text = [product.productTemplate.name uppercaseString];

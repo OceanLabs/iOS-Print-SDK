@@ -24,8 +24,6 @@
 - (NSString *) packInfo;
 - (NSString *) dimensions;
 -(CGSize)serverImageSize;
--(void)setCoverImageToImageView:(UIImageView *)imageView;
--(void)setProductPhotography:(NSUInteger)i toImageView:(UIImageView *)imageView;
 +(OLProduct *) productWithTemplateId:(NSString *)templateId;
 
 @end
