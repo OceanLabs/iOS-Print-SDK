@@ -154,7 +154,7 @@ static NSString *const kApplePayMerchantIDKey = @"merchant.co.oceanlabs.kite.ly"
     return YES;
 }
 
-- (BOOL)shouldShowPhoneEntryInCheckoutScreen{
+- (BOOL)shouldShowPhoneEntryOnCheckoutScreen{
     return YES;
 }
 

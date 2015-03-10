@@ -18,7 +18,7 @@
 @optional
 - (BOOL)kiteController:(OLKiteViewController *)controller isDefaultAssetsGroup:(ALAssetsGroup *)group;
 - (BOOL)kiteControllerShouldShowAddMorePhotosInReview:(OLKiteViewController *)controller;
-- (BOOL)shouldShowPhoneEntryInCheckoutScreen;
+- (BOOL)shouldShowPhoneEntryOnCheckoutScreen;
 @end
 
 @interface OLKiteViewController : UIViewController
