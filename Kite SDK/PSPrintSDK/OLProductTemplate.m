@@ -234,7 +234,7 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
         _productCode = [aDecoder decodeObjectForKey:kKeyProductCode];
         _imageBleed = [aDecoder decodeUIEdgeInsetsForKey:kKeyImageBleed];
         _maskImageURL = [aDecoder decodeObjectForKey:kKeyMaskImageURL];
-        _sizePx = [aDecoder decodeObjectForKey:kKeySizePx];
+        _sizePx = [aDecoder decodeCGSizeForKey:kKeySizePx];
     }
     
     return self;
