@@ -67,29 +67,30 @@
     [super viewWillAppear:animated];
     
     if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0){
-        UIVisualEffect *blurEffect;
-        blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
-        
-        self.visualEffectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
-        UIView *view = self.visualEffectView;
-        [view.layer setMasksToBounds:YES];
-        [view.layer setCornerRadius:45.0f];
-        [self.containerView insertSubview:view belowSubview:self.maskActivityIndicator];
-        
-        view.translatesAutoresizingMaskIntoConstraints = NO;
-        NSDictionary *views = NSDictionaryOfVariableBindings(view);
-        NSMutableArray *con = [[NSMutableArray alloc] init];
-        
-        NSArray *visuals = @[@"H:|-0-[view]-0-|",
-                             @"V:|-0-[view]-0-|"];
-        
-        
-        for (NSString *visual in visuals) {
-            [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+        if (!self.visualEffectView){
+            UIVisualEffect *blurEffect;
+            blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
+            
+            self.visualEffectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
+            UIView *view = self.visualEffectView;
+            [view.layer setMasksToBounds:YES];
+            [view.layer setCornerRadius:45.0f];
+            [self.containerView insertSubview:view belowSubview:self.maskActivityIndicator];
+            
+            view.translatesAutoresizingMaskIntoConstraints = NO;
+            NSDictionary *views = NSDictionaryOfVariableBindings(view);
+            NSMutableArray *con = [[NSMutableArray alloc] init];
+            
+            NSArray *visuals = @[@"H:|-0-[view]-0-|",
+                                 @"V:|-0-[view]-0-|"];
+            
+            
+            for (NSString *visual in visuals) {
+                [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+            }
+            
+            [view.superview addConstraints:con];
         }
-        
-        [view.superview addConstraints:con];
-        
     }
     else{
         
@@ -116,9 +117,7 @@
         [self.view layoutIfNeeded];
         
         [self maskWithImage:image targetView:self.imageCropView];
-        self.visualEffectView.alpha = 0;
-        [self.visualEffectView removeFromSuperview];
-        self.visualEffectView = nil;
+        self.visualEffectView.hidden = YES;
         [self.maskActivityIndicator removeFromSuperview];
         self.maskActivityIndicator = nil;
     }];
@@ -126,7 +125,19 @@
 
 -(void) maskWithImage:(UIImage*) maskImage targetView:(UIView*) targetView{
     CALayer *_maskingLayer = [CALayer layer];
-    _maskingLayer.frame = targetView.bounds;
+    CGRect f = targetView.bounds;
+    UIEdgeInsets imageBleed = self.product.productTemplate.imageBleed;
+    CGSize size = self.product.productTemplate.sizePx;
+    
+    UIEdgeInsets adjustedBleed = UIEdgeInsetsMake(f.size.height * imageBleed.top / size.height,
+                                                  f.size.width * imageBleed.left / size.width,
+                                                  f.size.height * imageBleed.bottom / size.height,
+                                                  f.size.width * imageBleed.right / size.width);
+    
+    _maskingLayer.frame = CGRectMake(f.origin.x + adjustedBleed.left,
+                                     f.origin.y + adjustedBleed.top,
+                                     f.size.width - (adjustedBleed.left + adjustedBleed.right),
+                                     f.size.height - (adjustedBleed.top + adjustedBleed.bottom));
     [_maskingLayer setContents:(id)[maskImage CGImage]];
     [targetView.layer setMask:_maskingLayer];
 }
