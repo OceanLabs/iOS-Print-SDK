@@ -24,6 +24,7 @@
 
 @property (strong, nonatomic) UIImage *maskImage;
 @property (strong, nonatomic) UIVisualEffectView *visualEffectView;
+@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *maskActivityIndicator;
 
 
 @end
@@ -71,7 +72,9 @@
         
         self.visualEffectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
         UIView *view = self.visualEffectView;
-        [self.containerView addSubview:view];
+        [view.layer setMasksToBounds:YES];
+        [view.layer setCornerRadius:45.0f];
+        [self.containerView insertSubview:view belowSubview:self.maskActivityIndicator];
         
         view.translatesAutoresizingMaskIntoConstraints = NO;
         NSDictionary *views = NSDictionaryOfVariableBindings(view);
@@ -116,7 +119,8 @@
         self.visualEffectView.alpha = 0;
         [self.visualEffectView removeFromSuperview];
         self.visualEffectView = nil;
-        
+        [self.maskActivityIndicator removeFromSuperview];
+        self.maskActivityIndicator = nil;
     }];
 }
 

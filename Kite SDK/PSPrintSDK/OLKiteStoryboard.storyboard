@@ -1162,19 +1162,25 @@
                                 <rect key="frame" x="20" y="79" width="280" height="403"/>
                                 <subviews>
                                     <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="6Lh-tc-HKt">
-                                        <rect key="frame" x="130" y="191.5" width="20" height="20"/>
+                                        <rect key="frame" x="130" y="191" width="20" height="20"/>
                                     </activityIndicatorView>
                                     <view tag="1" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="33O-65-cUP" customClass="RMImageCropper">
                                         <rect key="frame" x="0.0" y="0.0" width="280" height="403"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     </view>
+                                    <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="3eC-J9-SCj">
+                                        <rect key="frame" x="130" y="192" width="20" height="20"/>
+                                        <color key="color" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                    </activityIndicatorView>
                                 </subviews>
                                 <constraints>
+                                    <constraint firstAttribute="centerY" secondItem="3eC-J9-SCj" secondAttribute="centerY" constant="-0.5" id="8At-gA-gyg"/>
                                     <constraint firstItem="33O-65-cUP" firstAttribute="top" secondItem="nF0-F4-GDd" secondAttribute="top" id="Kmr-Pi-DIN"/>
                                     <constraint firstItem="6Lh-tc-HKt" firstAttribute="centerX" secondItem="33O-65-cUP" secondAttribute="centerX" id="QGI-y9-RDg"/>
                                     <constraint firstAttribute="bottom" secondItem="33O-65-cUP" secondAttribute="bottom" id="RKT-ZU-vV9"/>
                                     <constraint firstAttribute="width" secondItem="nF0-F4-GDd" secondAttribute="height" multiplier="140:201" id="aPH-cB-xjf"/>
                                     <constraint firstAttribute="trailing" secondItem="33O-65-cUP" secondAttribute="trailing" id="cva-WG-Dzs"/>
+                                    <constraint firstAttribute="centerX" secondItem="3eC-J9-SCj" secondAttribute="centerX" id="ot1-Sw-Nfg"/>
                                     <constraint firstItem="6Lh-tc-HKt" firstAttribute="centerY" secondItem="33O-65-cUP" secondAttribute="centerY" id="pPs-Ku-fV9"/>
                                     <constraint firstItem="33O-65-cUP" firstAttribute="leading" secondItem="nF0-F4-GDd" secondAttribute="leading" id="q40-hk-iMm"/>
                                 </constraints>
@@ -1249,6 +1255,7 @@
                     <connections>
                         <outlet property="containerView" destination="nF0-F4-GDd" id="Di5-5U-EhN"/>
                         <outlet property="imageCropView" destination="33O-65-cUP" id="jv4-S5-bTo"/>
+                        <outlet property="maskActivityIndicator" destination="3eC-J9-SCj" id="qxu-Q4-fT7"/>
                         <outlet property="maskAspectRatio" destination="aPH-cB-xjf" id="rJE-uw-a7z"/>
                         <outlet property="quantityLabel" destination="7OQ-Pp-OtB" id="j10-rq-mjO"/>
                     </connections>
