@@ -22,6 +22,10 @@
 @property (weak, nonatomic) IBOutlet UILabel *quantityLabel;
 @property (assign, nonatomic) NSUInteger quantity;
 
+@property (strong, nonatomic) UIImage *maskImage;
+@property (strong, nonatomic) UIVisualEffectView *visualEffectView;
+
+
 @end
 
 @implementation OLSingleImageProductReviewViewController
@@ -61,35 +65,59 @@
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     
-    if (self.product.productTemplate.templateClass == kOLTemplateClassCase || self.product.productTemplate.templateClass == kOLTemplateClassDecal){
-        NSString *imageName;
-        if ([self.product.productTemplate.productCode hasSuffix:@"PHONE_4"]){
-            imageName = @"iphone4";
-        }
-        else if ([self.product.productTemplate.productCode hasSuffix:@"PHONE_5"]){
-            imageName = @"iphone5";
-        }
-        else if ([self.product.productTemplate.productCode hasSuffix:@"PHONE_5C"]){
-            imageName = @"iphone5c";
-        }
-        else if ([self.product.productTemplate.productCode hasSuffix:@"PHONE_6"]){
-            imageName = @"iphone6";
-        }
-        else if ([self.product.productTemplate.productCode hasSuffix:@"PHONE_6P"]){
-            imageName = @"iphone6plus";
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0){
+        UIVisualEffect *blurEffect;
+        blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
+        
+        self.visualEffectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
+        UIView *view = self.visualEffectView;
+        [self.containerView addSubview:view];
+        
+        view.translatesAutoresizingMaskIntoConstraints = NO;
+        NSDictionary *views = NSDictionaryOfVariableBindings(view);
+        NSMutableArray *con = [[NSMutableArray alloc] init];
+        
+        NSArray *visuals = @[@"H:|-0-[view]-0-|",
+                             @"V:|-0-[view]-0-|"];
+        
+        
+        for (NSString *visual in visuals) {
+            [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
         }
         
-        UIImage* mask = [UIImage imageNamed:imageName];
+        [view.superview addConstraints:con];
+        
+    }
+    else{
+        
+    }
+    
+    UIImage *tempMask = [UIImage imageNamed:@"dummy mask"];
+    [self.containerView removeConstraint:self.maskAspectRatio];
+    NSLayoutConstraint *con = [NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self.containerView attribute:NSLayoutAttributeWidth multiplier:tempMask.size.height / tempMask.size.width constant:0];
+    [self.containerView addConstraints:@[con]];
+    self.maskAspectRatio = con;
+    
+    [self.view setNeedsLayout];
+    [self.view layoutIfNeeded];
+    
+    [self maskWithImage:tempMask targetView:self.imageCropView];
+    
+    [[SDWebImageManager sharedManager] downloadImageWithURL:self.product.productTemplate.maskImageURL options:SDWebImageHighPriority progress:NULL completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL){
         
         [self.containerView removeConstraint:self.maskAspectRatio];
-        NSLayoutConstraint *con = [NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self.containerView attribute:NSLayoutAttributeWidth multiplier:mask.size.height / mask.size.width constant:0];
+        NSLayoutConstraint *con = [NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self.containerView attribute:NSLayoutAttributeWidth multiplier:image.size.height / image.size.width constant:0];
         [self.containerView addConstraints:@[con]];
         
         [self.view setNeedsLayout];
         [self.view layoutIfNeeded];
         
-        [self maskWithImage:mask targetView:self.imageCropView];
-    }
+        [self maskWithImage:image targetView:self.imageCropView];
+        self.visualEffectView.alpha = 0;
+        [self.visualEffectView removeFromSuperview];
+        self.visualEffectView = nil;
+        
+    }];
 }
 
 -(void) maskWithImage:(UIImage*) maskImage targetView:(UIView*) targetView{
