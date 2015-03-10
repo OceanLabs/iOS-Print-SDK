@@ -255,7 +255,7 @@ static const NSUInteger kInputFieldTag = 99;
 #pragma mark - UITableViewDataSource methods
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return kSectionCount;
+    return [self.kiteDelegate respondsToSelector:@selector(shouldShowPhoneEntryInCheckoutScreen)] && ![self.kiteDelegate shouldShowPhoneEntryInCheckoutScreen] ? kSectionCount - 1 : kSectionCount;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {

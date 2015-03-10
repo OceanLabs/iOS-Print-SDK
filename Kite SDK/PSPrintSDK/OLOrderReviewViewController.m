@@ -187,6 +187,7 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
 
     
     OLCheckoutViewController *vc = [[OLCheckoutViewController alloc] initWithPrintOrder:printOrder];
+    vc.kiteDelegate = self.delegate;
     
     [self.navigationController pushViewController:vc animated:YES];
 }
