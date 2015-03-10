@@ -22,6 +22,9 @@ static NSString *const kKeyLabelColor = @"co.oceanlabs.pssdk.kKeyLabelColor";
 static NSString *const kKeySizeCm = @"co.oceanlabs.pssdk.kKeySizeCm";
 static NSString *const kKeySizeInches = @"co.oceanlabs.pssdk.kKeySizeInches";
 static NSString *const kKeyProductCode = @"co.oceanlabs.pssdk.kKeyProductCode";
+static NSString *const kKeyImageBleed = @"co.oceanlabs.pssdk.kKeyImageBleed";
+static NSString *const kKeyMaskImageURL = @"co.oceanlabs.pssdk.kKeymaskImageURL";
+static NSString *const kKeySizePx = @"co.oceanlabs.pssdk.kKeySizePx";
 
 static NSMutableArray *templates;
 static NSDate *lastSyncDate;
@@ -210,6 +213,9 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
     [aCoder encodeCGSize:self.sizeCm forKey:kKeySizeCm];
     [aCoder encodeCGSize:self.sizeInches forKey:kKeySizeInches];
     [aCoder encodeObject:self.productCode forKey:kKeyProductCode];
+    [aCoder encodeUIEdgeInsets:self.imageBleed forKey:kKeyImageBleed];
+    [aCoder encodeObject:self.maskImageURL forKey:kKeyMaskImageURL];
+    [aCoder encodeCGSize:self.sizePx forKey:kKeySizePx];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
@@ -226,6 +232,9 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
         _sizeCm = [aDecoder decodeCGSizeForKey:kKeySizeCm];
         _sizeInches = [aDecoder decodeCGSizeForKey:kKeySizeInches];
         _productCode = [aDecoder decodeObjectForKey:kKeyProductCode];
+        _imageBleed = [aDecoder decodeUIEdgeInsetsForKey:kKeyImageBleed];
+        _maskImageURL = [aDecoder decodeObjectForKey:kKeyMaskImageURL];
+        _sizePx = [aDecoder decodeObjectForKey:kKeySizePx];
     }
     
     return self;

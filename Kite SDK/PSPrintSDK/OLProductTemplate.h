@@ -39,6 +39,9 @@ typedef enum {
 @property (assign, nonatomic) CGSize sizeCm;
 @property (assign, nonatomic) CGSize sizeInches;
 @property (strong, nonatomic) NSString *productCode;
+@property (assign, nonatomic) UIEdgeInsets imageBleed;
+@property (strong, nonatomic) NSURL *maskImageURL;
+@property (assign, nonatomic) CGSize sizePx;
 
 - (id)initWithIdentifier:(NSString *)identifier name:(NSString *)name sheetQuantity:(NSUInteger)quantity sheetCostsByCurrencyCode:(NSDictionary/*<String, NSDecimalNumber>*/*)costs enabled:(BOOL)enabled;
 - (NSDecimalNumber *)costPerSheetInCurrencyCode:(NSString *)currencyCode;
