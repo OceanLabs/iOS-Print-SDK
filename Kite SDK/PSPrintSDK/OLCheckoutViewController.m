@@ -237,7 +237,7 @@ static const NSUInteger kInputFieldTag = 99;
         return NO;
     }
     
-    if (self.textFieldPhone.text.length < kMinPhoneNumberLength) {
+    if (self.textFieldPhone.text.length < kMinPhoneNumberLength && (([self.kiteDelegate respondsToSelector:@selector(shouldShowPhoneEntryOnCheckoutScreen)] && [self.kiteDelegate shouldShowPhoneEntryOnCheckoutScreen]) || ![self.kiteDelegate respondsToSelector:@selector(shouldShowPhoneEntryOnCheckoutScreen)])) {
         [self scrollSectionToVisible:kSectionPhoneNumber];
         UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Invalid Phone Number", @"KitePrintSDK", [OLConstants bundle], @"") message:NSLocalizedStringFromTableInBundle(@"Please enter a valid phone number", @"KitePrintSDK", [OLConstants bundle], @"") delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLConstants bundle], @"") otherButtonTitles:nil];
         [av show];
@@ -255,7 +255,7 @@ static const NSUInteger kInputFieldTag = 99;
 #pragma mark - UITableViewDataSource methods
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return kSectionCount;
+    return [self.kiteDelegate respondsToSelector:@selector(shouldShowPhoneEntryOnCheckoutScreen)] && ![self.kiteDelegate shouldShowPhoneEntryOnCheckoutScreen] ? kSectionCount - 1 : kSectionCount;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {

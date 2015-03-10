@@ -154,6 +154,10 @@ static NSString *const kApplePayMerchantIDKey = @"merchant.co.oceanlabs.kite.ly"
     return YES;
 }
 
+- (BOOL)shouldShowPhoneEntryOnCheckoutScreen{
+    return YES;
+}
+
 #pragma mark - notification events
 
 // useful if you want to fire off Anlaytic events for conversion funnel analysis, etc.
