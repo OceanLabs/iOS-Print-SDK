@@ -13,6 +13,13 @@
 #import "UITableViewController+ScreenWidthFactor.h"
 #import "OLProductOverviewViewController.h"
 
+@interface OLProduct (Private)
+
+-(void)setCoverImageToImageView:(UIImageView *)imageView;
+-(void)setProductPhotography:(NSUInteger)i toImageView:(UIImageView *)imageView;
+
+@end
+
 @interface OLCaseSelectionViewController ()
 
 @property (strong, nonatomic) NSMutableArray *caseProducts;
@@ -50,23 +57,7 @@
     OLProduct *product = (OLProduct *)self.caseProducts[indexPath.row];
     
     UIImageView *imageView = (UIImageView *)[cell.contentView viewWithTag:10];
-    NSString *imageName;
-    if ([product.productTemplate.productCode hasSuffix:@"PHONE_4"]){
-        imageName = @"cover-iphone4";
-    }
-    else if ([product.productTemplate.productCode hasSuffix:@"PHONE_5"]){
-        imageName = @"cover-iphone5";
-    }
-    else if ([product.productTemplate.productCode hasSuffix:@"PHONE_5C"]){
-        imageName = @"cover-iphone5c";
-    }
-    else if ([product.productTemplate.productCode hasSuffix:@"PHONE_6"]){
-        imageName = @"cover-iphone6";
-    }
-    else if ([product.productTemplate.productCode hasSuffix:@"PHONE_6P"]){
-        imageName = @"cover-iphone6plus";
-    }
-    imageView.image = [UIImage imageNamed:imageName];
+    [product setCoverImageToImageView:imageView];
     
     UITextView *textView = (UITextView *)[cell.contentView viewWithTag:20];
     textView.text = [[product.productTemplate.name stringByReplacingOccurrencesOfString:@" Case" withString:@""] stringByReplacingOccurrencesOfString:@" Clear Decals" withString:@""];
