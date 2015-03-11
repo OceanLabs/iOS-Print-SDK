@@ -173,19 +173,19 @@
     
     UILabel *productTypeLabel = (UILabel *)[cell.contentView viewWithTag:300];
     if (product.productTemplate.templateClass == kOLTemplateClassPoster){
-        productTypeLabel.text = [NSLocalizedString(@"Posters", @"") uppercaseString];
+        productTypeLabel.text = NSLocalizedString(@"Posters", @"");
     }
     else if (product.productTemplate.templateClass == kOLTemplateClassFrame){
-        productTypeLabel.text = [NSLocalizedString(@"Frames", @"") uppercaseString];
+        productTypeLabel.text = NSLocalizedString(@"Frames", @"");
     }
     else if (product.productTemplate.templateClass == kOLTemplateClassCase){
-        productTypeLabel.text = [NSLocalizedString(@"Phone Cases", @"") uppercaseString];
+        productTypeLabel.text = NSLocalizedString(@"Phone Cases", @"");
     }
     else if (product.productTemplate.templateClass == kOLTemplateClassDecal){
-        productTypeLabel.text = [NSLocalizedString(@"Clear Cases & Stickers", @"") uppercaseString];
+        productTypeLabel.text = NSLocalizedString(@"Cases & Stickers", @"");
     }
     else{
-        productTypeLabel.text = [product.productTemplate.name uppercaseString];
+        productTypeLabel.text = product.productTemplate.name;
     }
     productTypeLabel.backgroundColor = [product labelColor];
     

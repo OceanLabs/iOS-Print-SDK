@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6751" systemVersion="14C109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="cpC-15-nyB">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6751" systemVersion="14C1510" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="cpC-15-nyB">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6736"/>
@@ -367,14 +367,14 @@
                                         <activityIndicatorView opaque="NO" tag="41" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="Jfb-0a-lXg">
                                             <rect key="frame" x="150" y="105" width="20" height="20"/>
                                         </activityIndicatorView>
-                                        <imageView userInteractionEnabled="NO" tag="40" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="ViN-re-T61">
+                                        <imageView userInteractionEnabled="NO" tag="40" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="ViN-re-T61">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="230"/>
                                         </imageView>
                                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" tag="300" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="NAME" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="9" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="vKq-bO-BHp">
-                                            <rect key="frame" x="95" y="181" width="225" height="35"/>
+                                            <rect key="frame" x="150" y="181" width="170" height="35"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="35" id="6uQ-Nz-nsN"/>
-                                                <constraint firstAttribute="width" constant="225" id="veE-MK-a95"/>
+                                                <constraint firstAttribute="width" constant="170" id="veE-MK-a95"/>
                                             </constraints>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -820,8 +820,8 @@
                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="photo_frame_1" translatesAutoresizingMaskIntoConstraints="NO" id="b5Q-XR-fhJ">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="229.5"/>
                                         </imageView>
-                                        <imageView userInteractionEnabled="NO" tag="10" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="7V2-8f-tij">
-                                            <rect key="frame" x="0.0" y="0.0" width="320" height="231"/>
+                                        <imageView userInteractionEnabled="NO" tag="10" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="7V2-8f-tij">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="228"/>
                                         </imageView>
                                         <label opaque="NO" userInteractionEnabled="NO" tag="20" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Product" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9zd-Ed-Xyl">
                                             <rect key="frame" x="180" y="179" width="140" height="35"/>
@@ -842,7 +842,7 @@
                                         <constraint firstAttribute="bottom" secondItem="9zd-Ed-Xyl" secondAttribute="bottom" constant="16" id="E0W-15-wiS"/>
                                         <constraint firstItem="b5Q-XR-fhJ" firstAttribute="top" secondItem="Lxh-tG-y6D" secondAttribute="top" id="HGf-oB-2xa"/>
                                         <constraint firstAttribute="bottom" secondItem="b5Q-XR-fhJ" secondAttribute="bottom" id="UkJ-Qa-sy7"/>
-                                        <constraint firstAttribute="bottom" secondItem="7V2-8f-tij" secondAttribute="bottom" constant="-1" id="aaj-rt-oh5"/>
+                                        <constraint firstAttribute="bottom" secondItem="7V2-8f-tij" secondAttribute="bottom" constant="2" id="aaj-rt-oh5"/>
                                         <constraint firstAttribute="trailing" secondItem="9zd-Ed-Xyl" secondAttribute="trailing" id="vEA-cC-ao2"/>
                                         <constraint firstAttribute="trailing" secondItem="7V2-8f-tij" secondAttribute="trailing" id="yMI-S4-UAF"/>
                                     </constraints>

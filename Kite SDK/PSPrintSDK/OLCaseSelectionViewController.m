@@ -33,11 +33,16 @@
     NSArray *allProducts = [OLKitePrintSDK enabledProducts] ? [OLKitePrintSDK enabledProducts] : [OLProduct products];
     for (OLProduct *product in allProducts){
         if (product.productTemplate.templateClass == self.templateClass){
-            [self.caseProducts insertObject:product atIndex:0];
+            [self.caseProducts addObject:product];
         }
     }
     
-    self.title = NSLocalizedString(@"Pick Device", @"");
+    self.title = NSLocalizedString(@"Choose Device", @"");
+    
+    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Back", @"")
+                                                                             style:UIBarButtonItemStyleBordered
+                                                                            target:nil
+                                                                            action:nil];
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{    
