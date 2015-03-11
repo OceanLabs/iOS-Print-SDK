@@ -20,6 +20,7 @@
 @interface OLProduct (Private)
 
 -(void)setCoverImageToImageView:(UIImageView *)imageView;
+-(void)setClassImageToImageView:(UIImageView *)imageView;
 -(void)setProductPhotography:(NSUInteger)i toImageView:(UIImageView *)imageView;
 
 @end
@@ -169,7 +170,7 @@
     UIImageView *cellImageView = (UIImageView *)[cell.contentView viewWithTag:40];
     
     OLProduct *product = self.products[indexPath.row];
-    [product setCoverImageToImageView:cellImageView];
+    [product setClassImageToImageView:cellImageView];
     
     UILabel *productTypeLabel = (UILabel *)[cell.contentView viewWithTag:300];
     if (product.productTemplate.templateClass == kOLTemplateClassPoster){

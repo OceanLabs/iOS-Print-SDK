@@ -72,6 +72,26 @@ typedef enum {
         [imageView setAndFadeInImageWithURL:self.coverPhoto];
     }
     else{
+        [imageView setAndFadeInImageWithURL:self.productTemplate.coverPhotoURL];
+    }
+}
+
+-(void)setClassImageToImageView:(UIImageView *)imageView{
+    UIImage *image;
+    if ([self.coverPhoto isKindOfClass:[NSString class]]){
+        image = [UIImage imageNamed:self.coverPhoto];
+    }
+    else if ([self.coverPhoto isKindOfClass:[UIImage class]]){
+        image = self.coverPhoto;
+    }
+    
+    if (image){
+        imageView.image = image;
+    }
+    else if ([self.coverPhoto isKindOfClass:[NSURL class]]){
+        [imageView setAndFadeInImageWithURL:self.coverPhoto];
+    }
+    else{
         OLProductTemplate *template = self.productTemplate;
         if (template.templateClass == kOLTemplateClassCase || template.templateClass == kOLTemplateClassDecal){
             [imageView setAndFadeInImageWithURL:self.productTemplate.classPhotoURL];
