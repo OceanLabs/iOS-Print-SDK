@@ -76,6 +76,7 @@
                                 NSString *maskImageURL;
                                 NSString *code;
                                 CGSize sizePx = CGSizeZero;
+                                NSString *classPhoto;
                                 if (product){
                                     coverPhoto = [product[@"ios_sdk_cover_photo"] isKindOfClass:[NSString class]] ? product[@"ios_sdk_cover_photo"] : nil;
                                     
@@ -84,6 +85,8 @@
                                     if ([product[@"ios_sdk_product_shots"] isKindOfClass:[NSArray class]]){
                                         productShots = product[@"ios_sdk_product_shots"];
                                     }
+                                    
+                                    classPhoto = [product[@"ios_sdk_class_photo"] isKindOfClass:[NSString class]] ? product[@"ios_sdk_class_photo"] : nil;
                                     
                                     productClass = [product[@"ios_sdk_product_class"] isKindOfClass:[NSString class]] ? product[@"ios_sdk_product_class"] : nil;
                                     
@@ -156,6 +159,7 @@
                                     t.imageBleed = imageBleed;
                                     t.maskImageURL = [NSURL URLWithString:maskImageURL];
                                     t.sizePx = sizePx;
+                                    t.classPhotoURL = [NSURL URLWithString:classPhoto];
                                     [acc addObject:t];
                                 }
                             }

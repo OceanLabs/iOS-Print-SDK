@@ -72,7 +72,14 @@ typedef enum {
         [imageView setAndFadeInImageWithURL:self.coverPhoto];
     }
     else{
-        [imageView setAndFadeInImageWithURL:self.productTemplate.coverPhotoURL];
+        OLProductTemplate *template = self.productTemplate;
+        if (template.templateClass == kOLTemplateClassCase || template.templateClass == kOLTemplateClassDecal){
+            [imageView setAndFadeInImageWithURL:self.productTemplate.classPhotoURL];
+        }
+        else{
+            [imageView setAndFadeInImageWithURL:self.productTemplate.coverPhotoURL];
+        }
+        
     }
 }
 

@@ -25,6 +25,7 @@ static NSString *const kKeyProductCode = @"co.oceanlabs.pssdk.kKeyProductCode";
 static NSString *const kKeyImageBleed = @"co.oceanlabs.pssdk.kKeyImageBleed";
 static NSString *const kKeyMaskImageURL = @"co.oceanlabs.pssdk.kKeymaskImageURL";
 static NSString *const kKeySizePx = @"co.oceanlabs.pssdk.kKeySizePx";
+static NSString *const kKeyClassPhotoURL = @"co.oceanlabs.pssdk.kKeyClassPhotoURL";
 
 static NSMutableArray *templates;
 static NSDate *lastSyncDate;
@@ -216,6 +217,7 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
     [aCoder encodeUIEdgeInsets:self.imageBleed forKey:kKeyImageBleed];
     [aCoder encodeObject:self.maskImageURL forKey:kKeyMaskImageURL];
     [aCoder encodeCGSize:self.sizePx forKey:kKeySizePx];
+    [aCoder encodeObject:self.classPhotoURL forKey:kKeyClassPhotoURL];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
@@ -235,6 +237,7 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
         _imageBleed = [aDecoder decodeUIEdgeInsetsForKey:kKeyImageBleed];
         _maskImageURL = [aDecoder decodeObjectForKey:kKeyMaskImageURL];
         _sizePx = [aDecoder decodeCGSizeForKey:kKeySizePx];
+        _classPhotoURL = [aDecoder decodeObjectForKey:kKeyClassPhotoURL];
     }
     
     return self;
