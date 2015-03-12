@@ -76,7 +76,8 @@ static NSString *nonNilStr(NSString *str) {
                                              @"Screen Height" : @([UIScreen mainScreen].bounds.size.height),
                                              @"Screen Width" : @([UIScreen mainScreen].bounds.size.width),
                                              @"Environment" : environment,
-                                             @"API Key": apiKey
+                                             @"API Key": apiKey,
+                                             @"Kite SDK Version": kOLKiteSDKVersion
                                              } mutableCopy];
     NSDictionary *dict = @{@"event" : eventName,
                            @"properties" : propertiesDict};

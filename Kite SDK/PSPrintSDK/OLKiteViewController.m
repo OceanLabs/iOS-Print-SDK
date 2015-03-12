@@ -136,7 +136,11 @@
     
     if (!self.navigationController){
         self.nextVc = [sb instantiateViewControllerWithIdentifier:nextVcNavIdentifier];
-        [(OLProductHomeViewController *)((UINavigationController *)self.nextVc).topViewController setDelegate:self.delegate];
+        OLProductHomeViewController *homeVC = (OLProductHomeViewController *)((UINavigationController *)self.nextVc).topViewController;
+        [homeVC setDelegate:self.delegate];
+        homeVC.userEmail = self.userEmail;
+        homeVC.userPhone = self.userPhone;
+        
         ((UINavigationController *)self.nextVc).topViewController.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(dismiss)];
         [(id)((UINavigationController *)self.nextVc).topViewController setAssets:[self.assets mutableCopy]];
         if (product){

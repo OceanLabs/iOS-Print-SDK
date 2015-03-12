@@ -13,6 +13,7 @@
 #import <PayPalMobile.h>
 #endif
 #import "OLJudoPayCard.h"
+#import "OLProductHomeViewController.h"
 
 static NSString *const kJudoClientId      = @"100170-877";
 static NSString *const kJudoSandboxToken     = @"oLMiwCPBeLs0iVX4";
@@ -34,6 +35,12 @@ static NSString *const kOLPayPalRecipientEmailLive = @"hello@kite.ly";
 static NSString *const kOLPayPalRecipientEmailSandbox = @"sandbox-merchant@kite.ly";
 
 static BOOL useJudoPayForGBP = NO;
+
+@interface OLKitePrintSDK (InternalUtils)
++ (NSString *)userEmail:(UIViewController *)topVC;
++ (NSString *)userPhone:(UIViewController *)topVC;
++ (id<OLKiteDelegate>)kiteDelegate:(UIViewController *)topVC;
+@end
 
 @implementation OLKitePrintSDK
 
@@ -104,6 +111,7 @@ static BOOL useJudoPayForGBP = NO;
         case kOLKitePrintSDKEnvironmentSandbox: return kOLPayPalRecipientEmailSandbox;
     }
 }
+
 #endif
 
 #ifdef OL_KITE_OFFER_APPLE_PAY
@@ -123,5 +131,63 @@ static BOOL useJudoPayForGBP = NO;
     return kApplePayMerchantID;
 }
 #endif
+
+#pragma mark - Internal Kite Utils (May be better to move these to their own source file longer term
+
++ (NSString *)userEmail:(UIViewController *)topVC {
+    OLKiteViewController *kiteVC = [self kiteViewControllerInNavStack:topVC.navigationController.viewControllers];
+    OLProductHomeViewController *homeVC = [self homeViewControllerInNavStack:topVC.navigationController.viewControllers];
+    if (kiteVC) {
+        return kiteVC.userEmail;
+    } else if (homeVC) {
+        return homeVC.userEmail;
+    }
+    
+    return nil;
+}
+
++ (NSString *)userPhone:(UIViewController *)topVC {
+    OLKiteViewController *kiteVC = [self kiteViewControllerInNavStack:topVC.navigationController.viewControllers];
+    OLProductHomeViewController *homeVC = [self homeViewControllerInNavStack:topVC.navigationController.viewControllers];
+    if (kiteVC) {
+        return kiteVC.userPhone;
+    } else if (homeVC) {
+        return homeVC.userPhone;
+    }
+    
+    return nil;
+}
+
++ (id<OLKiteDelegate>)kiteDelegate:(UIViewController *)topVC {
+    OLKiteViewController *kiteVC = [self kiteViewControllerInNavStack:topVC.navigationController.viewControllers];
+    OLProductHomeViewController *homeVC = [self homeViewControllerInNavStack:topVC.navigationController.viewControllers];
+    if (kiteVC) {
+        return kiteVC.delegate;
+    } else if (homeVC) {
+        return homeVC.delegate;
+    }
+    
+    return nil;
+}
+
++ (OLKiteViewController *)kiteViewControllerInNavStack:(NSArray *)viewControllers {
+    for (UIViewController *vc in viewControllers) {
+        if ([vc isMemberOfClass:[OLKiteViewController class]]) {
+            return (OLKiteViewController *) vc;
+        }
+    }
+    
+    return nil;
+}
+
++ (OLProductHomeViewController *)homeViewControllerInNavStack:(NSArray *)viewControllers {
+    for (UIViewController *vc in viewControllers) {
+        if ([vc isMemberOfClass:[OLProductHomeViewController class]]) {
+            return (OLProductHomeViewController *) vc;
+        }
+    }
+    
+    return nil;
+}
 
 @end
