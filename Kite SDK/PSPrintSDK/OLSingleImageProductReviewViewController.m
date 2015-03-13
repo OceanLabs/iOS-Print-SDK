@@ -194,7 +194,7 @@
     OLAsset *asset = [OLAsset assetWithImageAsJPEG:croppedImage];
     
     [asset dataLengthWithCompletionHandler:^(long long dataLength, NSError *error){
-        if (dataLength < 25000){
+        if (dataLength < 40000){
             if ([UIAlertController class]){
                 UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Image Is Too Small", @"") message:NSLocalizedString(@"Please zoom out or pick a higher quality image", @"") preferredStyle:UIAlertControllerStyleAlert];
                 [alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", @"") style:UIAlertActionStyleDefault handler:NULL]];
