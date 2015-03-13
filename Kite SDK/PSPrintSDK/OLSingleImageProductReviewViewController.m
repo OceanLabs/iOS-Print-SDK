@@ -116,6 +116,8 @@
     
     [self maskWithImage:tempMask targetView:self.imageCropView];
     
+    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
+    
     [[SDWebImageManager sharedManager] downloadImageWithURL:self.product.productTemplate.maskImageURL options:SDWebImageHighPriority progress:NULL completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL){
         
         [self.containerView removeConstraint:self.maskAspectRatio];
@@ -129,6 +131,8 @@
         self.visualEffectView.hidden = YES;
         [self.maskActivityIndicator removeFromSuperview];
         self.maskActivityIndicator = nil;
+        
+        [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
     }];
 }
 
