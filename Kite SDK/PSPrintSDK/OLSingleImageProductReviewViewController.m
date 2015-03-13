@@ -15,6 +15,7 @@
 #import "OLProductPrintJob.h"
 #import "OLProductHomeViewController.h"
 #import "OLKitePrintSDK.h"
+#import <CTAssetsPickerController.h>
 
 @interface OLKitePrintSDK (InternalUtils)
 + (NSString *)userEmail:(UIViewController *)topVC;
@@ -23,7 +24,7 @@
 @end
 
 
-@interface OLSingleImageProductReviewViewController ()
+@interface OLSingleImageProductReviewViewController () <UICollectionViewDataSource, UICollectionViewDelegate, CTAssetsPickerControllerDelegate>
 
 @property (weak, nonatomic) IBOutlet RMImageCropper *imageCropView;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *maskAspectRatio;
@@ -34,6 +35,7 @@
 @property (strong, nonatomic) UIImage *maskImage;
 @property (strong, nonatomic) UIVisualEffectView *visualEffectView;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *maskActivityIndicator;
+@property (weak, nonatomic) IBOutlet UICollectionView *imagesCollectionView;
 
 
 @end
@@ -49,7 +51,7 @@
     
     OLPrintPhoto *printPhoto = (OLPrintPhoto *)[self.userSelectedPhotos firstObject];
     if ([(OLAsset *)printPhoto.asset assetType] == kOLAssetTypeRemoteImageURL){
-        [[SDWebImageManager sharedManager] downloadImageWithURL:[((OLAsset *)printPhoto.asset) imageURL] options:0 progress:nil completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *url) {
+        [[SDWebImageManager sharedManager] downloadImageWithURL:[((OLAsset *)printPhoto.asset) imageURL] options:SDWebImageHighPriority progress:nil completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *url) {
             if (finished) {
                 self.imageCropView.image = image;
             }
@@ -70,6 +72,9 @@
     
     self.quantity = 1;
     [self updateQuantityLabel];
+    
+    self.imagesCollectionView.dataSource = self;
+    self.imagesCollectionView.delegate = self;
 }
 
 -(void)viewWillAppear:(BOOL)animated{
@@ -232,8 +237,166 @@
             
             [self.navigationController pushViewController:vc animated:YES];
         }
-        
     }];
+}
+
+#pragma mark CollectionView delegate and data source
+
+- (NSInteger) sectionForMoreCell{
+    return 0;
+}
+
+- (NSInteger) sectionForImageCells{
+    return [self shouldShowAddMorePhotos] ? 1 : 0;
+}
+
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
+    if (section == [self sectionForImageCells]){
+        return self.userSelectedPhotos.count;
+    }
+    else if (section == [self sectionForMoreCell]){
+        return 1;
+    }
+    else{
+        return 0;
+    }
+}
+
+- (OLKiteViewController *)kiteViewController {
+    for (UIViewController *vc in self.navigationController.viewControllers) {
+        if ([vc isMemberOfClass:[OLKiteViewController class]]) {
+            return (OLKiteViewController *) vc;
+        }
+    }
+    
+    return nil;
+}
+
+- (BOOL)shouldShowAddMorePhotos{
+    if (![self.delegate respondsToSelector:@selector(kiteControllerShouldShowAddMorePhotosInReview:)]){
+        return YES;
+    }
+    else{
+        return [self.delegate kiteControllerShouldShowAddMorePhotosInReview:[self kiteViewController]];
+    }
+}
+
+- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
+    if ([self shouldShowAddMorePhotos]){
+        return 2;
+    }
+    else{
+        return 1;
+    }
+}
+
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
+    if (indexPath.section == [self sectionForImageCells]){
+        UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"imageCell" forIndexPath:indexPath];
+        
+        UIImageView *imageView = (UIImageView *)[cell.contentView viewWithTag:1];
+        
+        OLPrintPhoto *printPhoto = (OLPrintPhoto *)[self.userSelectedPhotos objectAtIndex:indexPath.row];
+        if ([(OLAsset *)printPhoto.asset assetType] == kOLAssetTypeRemoteImageURL){
+            [[SDWebImageManager sharedManager] downloadImageWithURL:[((OLAsset *)printPhoto.asset) imageURL] options:0 progress:nil completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *url) {
+                if (finished) {
+                    imageView.image = image;
+                }
+            }];
+        }
+        else{
+            [printPhoto dataWithCompletionHandler:^(NSData *data, NSError *error){
+                imageView.image = [UIImage imageWithData:data];
+            }];
+        }
+        
+        return cell;
+    }
+    
+    else {
+        UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"moreCell" forIndexPath:indexPath];
+        return cell;
+    }
+    
+    
+}
+
+- (void) collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
+    if (indexPath.section == [self sectionForImageCells]){
+        OLPrintPhoto *printPhoto = (OLPrintPhoto *)[self.userSelectedPhotos objectAtIndex:indexPath.row];
+        if ([(OLAsset *)printPhoto.asset assetType] == kOLAssetTypeRemoteImageURL){
+            [[SDWebImageManager sharedManager] downloadImageWithURL:[((OLAsset *)printPhoto.asset) imageURL] options:0 progress:nil completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *url) {
+                if (finished) {
+                    self.imageCropView.image = image;
+                }
+            }];
+        }
+        else{
+            [printPhoto dataWithCompletionHandler:^(NSData *data, NSError *error){
+                self.imageCropView.image = [UIImage imageWithData:data];
+            }];
+        }
+    }
+    else{
+        CTAssetsPickerController *picker = [[CTAssetsPickerController alloc] init];
+        picker.delegate = self;
+        picker.assetsFilter = [ALAssetsFilter allPhotos];
+        [self presentViewController:picker animated:YES completion:nil];
+    }
+}
+
+#pragma mark - CTAssetsPickerControllerDelegate Methods
+
+- (void)populateArrayWithNewArray:(NSArray *)array dataType:(Class)class {
+    NSMutableArray *assetArray = [[NSMutableArray alloc] initWithCapacity:array.count];
+    
+    for (ALAsset *asset in array){
+        [assetArray addObject:[OLAsset assetWithALAsset:asset]];
+    }
+    
+    NSMutableArray *addArray = [NSMutableArray arrayWithArray:assetArray];
+    
+    for (ALAsset *asset in addArray){
+        OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
+        printPhoto.serverImageSize = [self.product serverImageSize];
+        printPhoto.asset = asset;
+        [self.userSelectedPhotos addObject:printPhoto];
+    }
+    
+    [self.imagesCollectionView reloadData];
+}
+
+- (BOOL)assetsPickerController:(CTAssetsPickerController *)picker isDefaultAssetsGroup:(ALAssetsGroup *)group {
+    if ([self.delegate respondsToSelector:@selector(kiteController:isDefaultAssetsGroup:)]) {
+        return [self.delegate kiteController:[self kiteViewController] isDefaultAssetsGroup:group];
+    }
+    
+    return NO;
+}
+
+- (void)assetsPickerController:(CTAssetsPickerController *)picker didSelectAsset:(ALAsset *)asset{
+    [self assetsPickerController:picker didFinishPickingAssets:@[asset]];
+}
+
+- (void)assetsPickerController:(CTAssetsPickerController *)picker didFinishPickingAssets:(NSArray *)assets {
+    [self populateArrayWithNewArray:assets dataType:[ALAsset class]];
+    [self collectionView:self.imagesCollectionView didSelectItemAtIndexPath:[NSIndexPath indexPathForItem:self.userSelectedPhotos.count-1 inSection:[self sectionForImageCells]]];
+    [picker dismissViewControllerAnimated:YES completion:^(void){}];
+}
+
+- (BOOL)assetsPickerController:(CTAssetsPickerController *)picker shouldShowAssetsGroup:(ALAssetsGroup *)group{
+    if (group.numberOfAssets == 0){
+        return NO;
+    }
+    return YES;
+}
+
+- (BOOL)assetsPickerController:(CTAssetsPickerController *)picker shouldShowAsset:(ALAsset *)asset{
+    NSString *fileName = [[[asset defaultRepresentation] filename] lowercaseString];
+    if (!([fileName hasSuffix:@".jpg"] || [fileName hasSuffix:@".jpeg"] || [fileName hasSuffix:@"png"])) {
+        return NO;
+    }
+    return YES;
 }
 
 @end
