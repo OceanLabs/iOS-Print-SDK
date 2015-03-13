@@ -69,7 +69,7 @@
     }];
 }
 
--(void) viewWillAppear:(BOOL)animated{
+-(void) viewDidAppear:(BOOL)animated{
     if (self.presentLater){
         self.presentLater = NO;
         [self presentNextVc];
