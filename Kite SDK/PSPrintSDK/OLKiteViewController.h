@@ -24,6 +24,9 @@
 
 @property (weak, nonatomic) id<OLKiteDelegate> delegate;
 
+@property (copy, nonatomic) NSString *userEmail; // speed up checkout by prepopulating the users email in the Shipping details if you know it
+@property (copy, nonatomic) NSString *userPhone; // speed up checkout by prepopulating the users phone number in the Shipping details if you know it
+
 - (id)initWithAssets:(NSArray *)assets;
 
 @end

@@ -13,6 +13,15 @@
 #import <SDWebImageManager.h>
 #import "RMImageCropper.h"
 #import "OLProductPrintJob.h"
+#import "OLProductHomeViewController.h"
+#import "OLKitePrintSDK.h"
+
+@interface OLKitePrintSDK (InternalUtils)
++ (NSString *)userEmail:(UIViewController *)topVC;
++ (NSString *)userPhone:(UIViewController *)topVC;
++ (id<OLKiteDelegate>)kiteDelegate:(UIViewController *)topVC;
+@end
+
 
 @interface OLSingleImageProductReviewViewController ()
 
@@ -199,6 +208,10 @@
     [printOrder addPrintJob:job];
     
     OLCheckoutViewController *vc = [[OLCheckoutViewController alloc] initWithPrintOrder:printOrder];
+    vc.userEmail = [OLKitePrintSDK userEmail:self];
+    vc.userPhone = [OLKitePrintSDK userPhone:self];
+    vc.kiteDelegate = [OLKitePrintSDK kiteDelegate:self];
+    
     [self.navigationController pushViewController:vc animated:YES];
 }
 
