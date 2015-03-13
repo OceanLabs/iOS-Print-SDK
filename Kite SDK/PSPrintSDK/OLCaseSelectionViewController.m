@@ -72,7 +72,7 @@
     UITextView *textView = (UITextView *)[cell.contentView viewWithTag:20];
     NSString *productName = [product.productTemplate.name stringByReplacingOccurrencesOfString:@" Clear Case Decals Only" withString:@""];
     productName = [productName stringByReplacingOccurrencesOfString:@" Clear Case and Decals" withString:@""];
-    productName = [productName stringByReplacingOccurrencesOfString:@" Clear Decals" withString:@""];
+    productName = [productName stringByReplacingOccurrencesOfString:@" Clear Case" withString:@""];
     productName = [productName stringByReplacingOccurrencesOfString:@" Case" withString:@""];
     textView.text = productName;
     textView.backgroundColor = product.productTemplate.labelColor;

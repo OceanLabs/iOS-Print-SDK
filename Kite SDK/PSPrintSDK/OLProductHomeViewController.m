@@ -183,7 +183,7 @@
         productTypeLabel.text = NSLocalizedString(@"Phone Cases", @"");
     }
     else if (product.productTemplate.templateClass == kOLTemplateClassDecal){
-        productTypeLabel.text = NSLocalizedString(@"Cases & Stickers", @"");
+        productTypeLabel.text = NSLocalizedString(@"Clear Cases", @"");
     }
     else{
         productTypeLabel.text = product.productTemplate.name;
