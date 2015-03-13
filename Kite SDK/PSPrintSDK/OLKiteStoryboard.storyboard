@@ -1243,7 +1243,7 @@
                                             <rect key="frame" x="0.0" y="0.0" width="46" height="46"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView userInteractionEnabled="NO" tag="1" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="jpc-j1-Ne6">
+                                                <imageView userInteractionEnabled="NO" tag="1" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="jpc-j1-Ne6">
                                                     <rect key="frame" x="0.0" y="0.0" width="46" height="46"/>
                                                 </imageView>
                                             </subviews>
