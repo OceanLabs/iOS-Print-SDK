@@ -185,34 +185,51 @@
 }
 
 -(void) doCheckout{
-    NSUInteger iphonePhotoCount = 1;
+    UIImage *croppedImage = self.imageCropView.editedImage;
     
-    OLAsset *asset = [OLAsset assetWithImageAsJPEG:self.imageCropView.editedImage];
+    OLAsset *asset = [OLAsset assetWithImageAsJPEG:croppedImage];
     
-    NSMutableArray *assetArray = [[NSMutableArray alloc] initWithCapacity:self.quantity];
-    for (NSInteger i = 0; i < self.quantity; i++){
-        [assetArray addObject:asset];
-    }
-    
-    OLProductPrintJob *job = [[OLProductPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:assetArray];
-    OLPrintOrder *printOrder = [[OLPrintOrder alloc] init];
-    NSDictionary *infoDict = [[NSBundle mainBundle] infoDictionary];
-    NSString *appVersion = [infoDict objectForKey:@"CFBundleShortVersionString"];
-    NSNumber *buildNumber = [infoDict objectForKey:@"CFBundleVersion"];
-    printOrder.userData = @{@"photo_count_iphone": [NSNumber numberWithUnsignedInteger:iphonePhotoCount],
-                            @"sdk_version": kOLKiteSDKVersion,
-                            @"platform": @"iOS",
-                            @"uid": [[[UIDevice currentDevice] identifierForVendor] UUIDString],
-                            @"app_version": [NSString stringWithFormat:@"Version: %@ (%@)", appVersion, buildNumber]
-                            };
-    [printOrder addPrintJob:job];
-    
-    OLCheckoutViewController *vc = [[OLCheckoutViewController alloc] initWithPrintOrder:printOrder];
-    vc.userEmail = [OLKitePrintSDK userEmail:self];
-    vc.userPhone = [OLKitePrintSDK userPhone:self];
-    vc.kiteDelegate = [OLKitePrintSDK kiteDelegate:self];
-    
-    [self.navigationController pushViewController:vc animated:YES];
+    [asset dataLengthWithCompletionHandler:^(long long dataLength, NSError *error){
+        if (dataLength < 25000){
+            if ([UIAlertController class]){
+                UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Image Is Too Small", @"") message:NSLocalizedString(@"Please zoom out or pick a higher quality image", @"") preferredStyle:UIAlertControllerStyleAlert];
+                [alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", @"") style:UIAlertActionStyleDefault handler:NULL]];
+                [self presentViewController:alert animated:YES completion:NULL];
+            }
+            else{
+                [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Image Too Small", @"") message:NSLocalizedString(@"Please zoom out or pick higher quality image", @"") delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"") otherButtonTitles:nil] show];
+            }
+        }
+        else{
+            
+            NSMutableArray *assetArray = [[NSMutableArray alloc] initWithCapacity:self.quantity];
+            for (NSInteger i = 0; i < self.quantity; i++){
+                [assetArray addObject:asset];
+            }
+            
+            NSUInteger iphonePhotoCount = 1;
+            OLProductPrintJob *job = [[OLProductPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:assetArray];
+            OLPrintOrder *printOrder = [[OLPrintOrder alloc] init];
+            NSDictionary *infoDict = [[NSBundle mainBundle] infoDictionary];
+            NSString *appVersion = [infoDict objectForKey:@"CFBundleShortVersionString"];
+            NSNumber *buildNumber = [infoDict objectForKey:@"CFBundleVersion"];
+            printOrder.userData = @{@"photo_count_iphone": [NSNumber numberWithUnsignedInteger:iphonePhotoCount],
+                                    @"sdk_version": kOLKiteSDKVersion,
+                                    @"platform": @"iOS",
+                                    @"uid": [[[UIDevice currentDevice] identifierForVendor] UUIDString],
+                                    @"app_version": [NSString stringWithFormat:@"Version: %@ (%@)", appVersion, buildNumber]
+                                    };
+            [printOrder addPrintJob:job];
+            
+            OLCheckoutViewController *vc = [[OLCheckoutViewController alloc] initWithPrintOrder:printOrder];
+            vc.userEmail = [OLKitePrintSDK userEmail:self];
+            vc.userPhone = [OLKitePrintSDK userPhone:self];
+            vc.kiteDelegate = [OLKitePrintSDK kiteDelegate:self];
+            
+            [self.navigationController pushViewController:vc animated:YES];
+        }
+        
+    }];
 }
 
 @end
