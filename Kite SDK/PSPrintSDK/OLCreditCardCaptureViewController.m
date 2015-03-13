@@ -146,7 +146,12 @@ UITableViewDataSource, UITextFieldDelegate>
     UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 44 + 40)];
     [footerView addSubview:buttonPay];
     
-    self.tableView.tableFooterView = footerView;    
+    self.tableView.tableFooterView = footerView;
+    
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Pay", @"")
+                                                                             style:UIBarButtonItemStyleDone
+                                                                            target:self
+                                                                            action:@selector(onButtonPayClicked)];
 }
 
 - (NSString *)cardNumber {
