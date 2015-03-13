@@ -106,6 +106,12 @@ static NSString *nonNilStr(NSString *str) {
     [OLAnalytics sendToMixPanelWithDictionary:dict];
 }
 
++ (void)trackDeviceSelectionScreenViewedWithTemplateClass:(NSString *)templateClassString{
+    NSDictionary *dict = [OLAnalytics defaultDictionaryForEventName:@"Device Selection Screen Viewed"];
+    [dict[@"properties"] setObject:templateClassString forKey:@"Product Class"];
+    [OLAnalytics sendToMixPanelWithDictionary:dict];
+}
+
 + (void)trackReviewScreenViewed:(NSString *)productName{
     NSDictionary *dict = [OLAnalytics defaultDictionaryForEventName:@"Review Screen Viewed"];
     [dict[@"properties"] setObject:productName forKey:@"Product Name"];

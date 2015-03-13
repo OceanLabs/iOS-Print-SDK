@@ -192,6 +192,39 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
     return kOLTemplateClassNA;
 }
 
++ (NSString *)templateClassStringWithTemplateClass:(OLTemplateClass)templateClass{
+    switch (templateClass) {
+        case kOLTemplateClassCase:
+            return @"Case";
+            break;
+        case kOLTemplateClassCircle:
+            return @"Circle";
+            break;
+        case kOLTemplateClassDecal:
+            return @"Decal";
+            break;
+        case kOLTemplateClassFrame:
+            return @"Frame";
+            break;
+        case kOLTemplateClassNA:
+            return @"NA Clas";
+            break;
+        case kOLTemplateClassPolaroid:
+            return @"Polaroid";
+            break;
+        case kOLTemplateClassPoster:
+            return @"Poster";
+            break;
+        case kOLTemplateClassSquare:
+            return @"Square";
+            break;
+            
+        default:
+            return @"";
+            break;
+    }
+}
+
 - (NSString *)description {
     NSMutableString *supportedCurrencies = [[NSMutableString alloc] init];
     for (NSString *currency in self.costsByCurrencyCode) {

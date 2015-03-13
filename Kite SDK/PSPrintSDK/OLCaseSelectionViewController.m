@@ -12,6 +12,7 @@
 #import "OLSingleImageProductReviewViewController.h"
 #import "UITableViewController+ScreenWidthFactor.h"
 #import "OLProductOverviewViewController.h"
+#import "OLAnalytics.h"
 
 @interface OLProduct (Private)
 
@@ -43,6 +44,10 @@
                                                                              style:UIBarButtonItemStyleBordered
                                                                             target:nil
                                                                             action:nil];
+    
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackDeviceSelectionScreenViewedWithTemplateClass:[OLProductTemplate templateClassStringWithTemplateClass:self.templateClass]];
+#endif
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{    

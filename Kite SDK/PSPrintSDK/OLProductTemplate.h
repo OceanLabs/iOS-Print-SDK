@@ -46,7 +46,8 @@ typedef enum {
 
 - (id)initWithIdentifier:(NSString *)identifier name:(NSString *)name sheetQuantity:(NSUInteger)quantity sheetCostsByCurrencyCode:(NSDictionary/*<String, NSDecimalNumber>*/*)costs enabled:(BOOL)enabled;
 - (NSDecimalNumber *)costPerSheetInCurrencyCode:(NSString *)currencyCode;
-+(OLTemplateClass)templateClassWithIdentifier:(NSString *)identifier;
++ (OLTemplateClass)templateClassWithIdentifier:(NSString *)identifier;
++ (NSString *)templateClassStringWithTemplateClass:(OLTemplateClass)templateClass;
 
 + (void)sync;
 + (BOOL)isSyncInProgress;
