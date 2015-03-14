@@ -62,7 +62,12 @@ static NSString *nonNilStr(NSString *str) {
         environment = @"Sandbox";
     }
     NSDictionary *info = [[NSBundle mainBundle] infoDictionary];
-    NSString *bundleName = [NSString stringWithFormat:@"%@", [info objectForKey:@"CFBundleDisplayName"]];
+    NSString *bundleName = nil;
+    if ([info objectForKey:@"CFBundleDisplayName"] == nil) {
+         bundleName = [[[NSBundle mainBundle] infoDictionary] objectForKey:(NSString *) kCFBundleNameKey];
+    } else {
+        bundleName = [NSString stringWithFormat:@"%@", [info objectForKey:@"CFBundleDisplayName"]];
+    }
     NSString *appVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"];
     NSString *apiKey = [OLKitePrintSDK apiKey] == nil ? @"Unknown" : [OLKitePrintSDK apiKey];
     NSMutableDictionary *propertiesDict = [@{
