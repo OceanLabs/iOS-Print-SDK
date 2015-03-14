@@ -75,6 +75,10 @@
     
     self.imagesCollectionView.dataSource = self;
     self.imagesCollectionView.delegate = self;
+    
+    if (![self shouldShowAddMorePhotos] && self.userSelectedPhotos.count == 1){
+        self.imagesCollectionView.hidden = YES;
+    }
 }
 
 -(void)viewWillAppear:(BOOL)animated{
