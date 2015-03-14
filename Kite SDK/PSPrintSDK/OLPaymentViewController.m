@@ -111,7 +111,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
                                  paymentRequestWithMerchantIdentifier:[OLKitePrintSDK appleMerchantID]
                                  amount:self.printOrder.cost
                                  currency:self.printOrder.currencyCode
-                                 description:@"Prints"];
+                                 description:self.printOrder.paymentDescription];
     
     return [Stripe canSubmitPaymentRequest:request];
 }
@@ -446,11 +446,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         NSAssert(![self.printOrder.currencyCode isEqualToString:@"GBP"], @"JudoPay should be used for GBP orders (and only for OceanLabs internal use)");
     }
     [SVProgressHUD showWithStatus:NSLocalizedStringFromTableInBundle(@"Processing", @"KitePrintSDK", [OLConstants bundle], @"") maskType:SVProgressHUDMaskTypeBlack];
-    NSString *description = [(id<OLPrintJob>)[self.printOrder.jobs firstObject] productName];
-    if (self.printOrder.jobs.count > 1){
-        description = [description stringByAppendingString:@"& More"];
-    }
-    [card chargeCard:self.printOrder.cost currencyCode:self.printOrder.currencyCode description:description completionHandler:^(NSString *proofOfPayment, NSError *error) {
+    [card chargeCard:self.printOrder.cost currencyCode:self.printOrder.currencyCode description:self.printOrder.paymentDescription completionHandler:^(NSString *proofOfPayment, NSError *error) {
         if (error) {
             [SVProgressHUD dismiss];
             [[[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLConstants bundle], @"") message:error.localizedDescription delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLConstants bundle], @"") otherButtonTitles:nil] show];
@@ -465,7 +461,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 - (void)payWithExistingJudoPayCard:(OLJudoPayCard *)card {
     NSAssert([self.printOrder.currencyCode isEqualToString:@"GBP"], @"JudoPay should only be used for GBP orders (and only for OceanLabs internal use)");
     [SVProgressHUD showWithStatus:NSLocalizedStringFromTableInBundle(@"Processing", @"KitePrintSDK", [OLConstants bundle], @"") maskType:SVProgressHUDMaskTypeBlack];
-    [card chargeCard:self.printOrder.cost currency:kOLJudoPayCurrencyGBP description:@"" completionHandler:^(NSString *proofOfPayment, NSError *error) {
+    [card chargeCard:self.printOrder.cost currency:kOLJudoPayCurrencyGBP description:self.printOrder.paymentDescription completionHandler:^(NSString *proofOfPayment, NSError *error) {
         if (error) {
             [SVProgressHUD dismiss];
             [[[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLConstants bundle], @"") message:error.localizedDescription delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLConstants bundle], @"") otherButtonTitles:nil] show];
@@ -503,7 +499,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
                                         paymentRequestWithMerchantIdentifier:[OLKitePrintSDK appleMerchantID]
                                         amount:self.printOrder.cost
                                         currency:self.printOrder.currencyCode
-                                        description:@"Prints"];
+                                        description:self.printOrder.paymentDescription];
     UIViewController *paymentController;
     //#if DEBUG
     //    paymentController = [[STPTestPaymentAuthorizationViewController alloc]

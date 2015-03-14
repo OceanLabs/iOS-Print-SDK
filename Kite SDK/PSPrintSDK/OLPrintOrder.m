@@ -80,6 +80,19 @@ static id stringOrEmptyString(NSString *str) {
     return self;
 }
 
+- (NSString *)paymentDescription {
+    NSString *description = [(id<OLPrintJob>)[self.jobs firstObject] productName];
+    if (self.jobs.count > 1){
+        description = [description stringByAppendingString:@"& More"];
+    }
+    
+    if (description == nil) {
+        description = @"";
+    }
+    
+    return description;
+}
+
 - (BOOL)printed {
     return self.receipt != nil;
 }
