@@ -199,6 +199,11 @@ static NSString *typeToString(OLPayPalCardType type) {
                                   };
         }
         
+        NSString *total = [NSString stringWithFormat:@"%.2f", [amount doubleValue]];
+        if ([[currencyCode lowercaseString] isEqualToString:@"jpy"]) {
+            total = [NSString stringWithFormat:@"%.0f", [amount doubleValue]]; // no decimal places allowed for YEN
+        }
+        
         NSDictionary *paymentJSON = @{@"intent": @"sale",
                                  @"payer": @{
                                          @"payment_method": @"credit_card",
@@ -207,7 +212,7 @@ static NSString *typeToString(OLPayPalCardType type) {
                                  @"transactions": @[
                                          @{
                                              @"amount": @{
-                                                     @"total": [NSString stringWithFormat:@"%.2f", [amount doubleValue]],
+                                                     @"total": total,
                                                      @"currency": currencyCode
                                                      },
                                              @"description": description
