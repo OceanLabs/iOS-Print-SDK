@@ -479,10 +479,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     PayPalPayment *payment = [[PayPalPayment alloc] init];
     payment.amount = self.printOrder.cost;
     payment.currencyCode = self.printOrder.currencyCode;
-    payment.shortDescription = [(id<OLPrintJob>)[self.printOrder.jobs firstObject] productName];
-    if (self.printOrder.jobs.count > 1){
-        payment.shortDescription = [payment.shortDescription stringByAppendingString:@"& More"];
-    }
+    payment.shortDescription = self.printOrder.paymentDescription;
     NSAssert(payment.processable, @"oops");
     
     PayPalPaymentViewController *paymentViewController;
