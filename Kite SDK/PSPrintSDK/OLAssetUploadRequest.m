@@ -176,7 +176,7 @@ typedef void (^UploadAssetsCompletionHandler)(NSError *error);
     [request setHTTPBody:data];
     [request setValue:@"private" forHTTPHeaderField:@"x-amz-acl"];
     [request setValue:mimeType forHTTPHeaderField:@"Content-Type"];
-    [request setTimeoutInterval:25];
+    [request setTimeoutInterval:120];
     
     __weak OLAssetUploadRequest *zelf = self;
     self.s3UploadOp = [[AFHTTPRequestOperation alloc] initWithRequest:request];

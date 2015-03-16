@@ -60,12 +60,12 @@
     else if (self.product.productTemplate.templateClass == kOLTemplateClassFrame){
         self.title = NSLocalizedString(@"Frames", @"");
     }
-    else if (self.product.productTemplate.templateClass == kOLTemplateClassCase){
-        self.title = NSLocalizedString(@"Phone Cases", @"");
-    }
-    else if (self.product.productTemplate.templateClass == kOLTemplateClassDecal){
-        self.title = NSLocalizedString(@"Clear Cases & Stickers", @"");
-    }
+//    else if (self.product.productTemplate.templateClass == kOLTemplateClassCase){
+//        self.title = NSLocalizedString(@"Phone Cases", @"");
+//    }
+//    else if (self.product.productTemplate.templateClass == kOLTemplateClassDecal){
+//        self.title = NSLocalizedString(@"Clear Cases & Stickers", @"");
+//    }
     else{
         self.title = self.product.productTemplate.name;
     }

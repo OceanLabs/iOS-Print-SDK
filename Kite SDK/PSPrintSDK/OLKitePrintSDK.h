@@ -43,7 +43,6 @@ typedef void (^OLProductCostRefreshCompletionHandler)(NSError *error);
 + (NSArray *)enabledProducts;
 + (void)setEnabledProducts:(NSArray *)products;
 
-
 #ifdef OL_KITE_OFFER_PAYPAL
 + (NSString *)paypalEnvironment;
 + (NSString *)paypalClientId;

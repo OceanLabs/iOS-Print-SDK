@@ -109,6 +109,8 @@ static NSString *const kApplePayMerchantIDKey = @"merchant.co.oceanlabs.kite.ly"
 #endif
     
     OLKiteViewController *vc = [[OLKiteViewController alloc] initWithAssets:assets];
+    vc.userEmail = @"";
+    vc.userPhone = @"";
     vc.delegate = self;
     [self presentViewController:vc animated:YES completion:NULL];
 

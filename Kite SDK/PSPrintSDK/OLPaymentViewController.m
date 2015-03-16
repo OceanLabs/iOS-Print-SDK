@@ -111,7 +111,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
                                  paymentRequestWithMerchantIdentifier:[OLKitePrintSDK appleMerchantID]
                                  amount:self.printOrder.cost
                                  currency:self.printOrder.currencyCode
-                                 description:@"Prints"];
+                                 description:self.printOrder.paymentDescription];
     
     return [Stripe canSubmitPaymentRequest:request];
 }
@@ -446,7 +446,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         NSAssert(![self.printOrder.currencyCode isEqualToString:@"GBP"], @"JudoPay should be used for GBP orders (and only for OceanLabs internal use)");
     }
     [SVProgressHUD showWithStatus:NSLocalizedStringFromTableInBundle(@"Processing", @"KitePrintSDK", [OLConstants bundle], @"") maskType:SVProgressHUDMaskTypeBlack];
-    [card chargeCard:self.printOrder.cost currencyCode:self.printOrder.currencyCode description:@"" completionHandler:^(NSString *proofOfPayment, NSError *error) {
+    [card chargeCard:self.printOrder.cost currencyCode:self.printOrder.currencyCode description:self.printOrder.paymentDescription completionHandler:^(NSString *proofOfPayment, NSError *error) {
         if (error) {
             [SVProgressHUD dismiss];
             [[[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLConstants bundle], @"") message:error.localizedDescription delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLConstants bundle], @"") otherButtonTitles:nil] show];
@@ -461,7 +461,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 - (void)payWithExistingJudoPayCard:(OLJudoPayCard *)card {
     NSAssert([self.printOrder.currencyCode isEqualToString:@"GBP"], @"JudoPay should only be used for GBP orders (and only for OceanLabs internal use)");
     [SVProgressHUD showWithStatus:NSLocalizedStringFromTableInBundle(@"Processing", @"KitePrintSDK", [OLConstants bundle], @"") maskType:SVProgressHUDMaskTypeBlack];
-    [card chargeCard:self.printOrder.cost currency:kOLJudoPayCurrencyGBP description:@"" completionHandler:^(NSString *proofOfPayment, NSError *error) {
+    [card chargeCard:self.printOrder.cost currency:kOLJudoPayCurrencyGBP description:self.printOrder.paymentDescription completionHandler:^(NSString *proofOfPayment, NSError *error) {
         if (error) {
             [SVProgressHUD dismiss];
             [[[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLConstants bundle], @"") message:error.localizedDescription delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLConstants bundle], @"") otherButtonTitles:nil] show];
@@ -479,7 +479,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     PayPalPayment *payment = [[PayPalPayment alloc] init];
     payment.amount = self.printOrder.cost;
     payment.currencyCode = self.printOrder.currencyCode;
-    payment.shortDescription = @"Product";
+    payment.shortDescription = self.printOrder.paymentDescription;
     NSAssert(payment.processable, @"oops");
     
     PayPalPaymentViewController *paymentViewController;
@@ -496,7 +496,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
                                         paymentRequestWithMerchantIdentifier:[OLKitePrintSDK appleMerchantID]
                                         amount:self.printOrder.cost
                                         currency:self.printOrder.currencyCode
-                                        description:@"Prints"];
+                                        description:self.printOrder.paymentDescription];
     UIViewController *paymentController;
     //#if DEBUG
     //    paymentController = [[STPTestPaymentAuthorizationViewController alloc]
@@ -512,6 +512,9 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 #endif
 
 - (void)submitOrderForPrintingWithProofOfPayment:(NSString *)proofOfPayment completion:(void (^)(PKPaymentAuthorizationStatus)) handler{
+    
+    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
+    
     self.printOrder.proofOfPayment = proofOfPayment;
     
 #ifndef OL_NO_ANALYTICS
@@ -527,6 +530,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     [self.printOrder submitForPrintingWithProgressHandler:^(NSUInteger totalAssetsUploaded, NSUInteger totalAssetsToUpload,
                                                             long long totalAssetBytesWritten, long long totalAssetBytesExpectedToWrite,
                                                             long long totalBytesWritten, long long totalBytesExpectedToWrite) {
+        [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
         if (!handlerUsed) {
             handler(PKPaymentAuthorizationStatusSuccess);
             handlerUsed = YES;
@@ -549,6 +553,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         
         [self.printOrder saveToHistory]; // save again as the print order has it's receipt set if it was successful, otherwise last error is set
         [SVProgressHUD dismiss];
+        [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
         OLReceiptViewController *receiptVC = [[OLReceiptViewController alloc] initWithPrintOrder:self.printOrder];
         receiptVC.presentedModally = self.presentedModally;
         [self.navigationController pushViewController:receiptVC animated:YES];

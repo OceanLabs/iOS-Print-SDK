@@ -76,6 +76,33 @@ typedef enum {
     }
 }
 
+-(void)setClassImageToImageView:(UIImageView *)imageView{
+    UIImage *image;
+    if ([self.coverPhoto isKindOfClass:[NSString class]]){
+        image = [UIImage imageNamed:self.coverPhoto];
+    }
+    else if ([self.coverPhoto isKindOfClass:[UIImage class]]){
+        image = self.coverPhoto;
+    }
+    
+    if (image){
+        imageView.image = image;
+    }
+    else if ([self.coverPhoto isKindOfClass:[NSURL class]]){
+        [imageView setAndFadeInImageWithURL:self.coverPhoto];
+    }
+    else{
+        OLProductTemplate *template = self.productTemplate;
+        if (template.templateClass == kOLTemplateClassCase || template.templateClass == kOLTemplateClassDecal){
+            [imageView setAndFadeInImageWithURL:self.productTemplate.classPhotoURL];
+        }
+        else{
+            [imageView setAndFadeInImageWithURL:self.productTemplate.coverPhotoURL];
+        }
+        
+    }
+}
+
 -(void)setProductPhotography:(NSUInteger)i toImageView:(UIImageView *)imageView{
     UIImage *image;
     if ([self.productPhotos[i] isKindOfClass:[NSString class]]){

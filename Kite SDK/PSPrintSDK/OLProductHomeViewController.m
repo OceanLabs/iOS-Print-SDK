@@ -20,6 +20,7 @@
 @interface OLProduct (Private)
 
 -(void)setCoverImageToImageView:(UIImageView *)imageView;
+-(void)setClassImageToImageView:(UIImageView *)imageView;
 -(void)setProductPhotography:(NSUInteger)i toImageView:(UIImageView *)imageView;
 
 @end
@@ -119,7 +120,12 @@
 #pragma mark - UITableViewDelegate Methods
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return 233 * [self screenWidthFactor];
+    if ([self tableView:tableView numberOfRowsInSection:indexPath.section] == 2){
+        return (self.view.bounds.size.height - 64) / 2;
+    }
+    else{
+        return 233 * [self screenWidthFactor];
+    }
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -164,23 +170,23 @@
     UIImageView *cellImageView = (UIImageView *)[cell.contentView viewWithTag:40];
     
     OLProduct *product = self.products[indexPath.row];
-    [product setCoverImageToImageView:cellImageView];
+    [product setClassImageToImageView:cellImageView];
     
     UILabel *productTypeLabel = (UILabel *)[cell.contentView viewWithTag:300];
     if (product.productTemplate.templateClass == kOLTemplateClassPoster){
-        productTypeLabel.text = [NSLocalizedString(@"Posters", @"") uppercaseString];
+        productTypeLabel.text = NSLocalizedString(@"Posters", @"");
     }
     else if (product.productTemplate.templateClass == kOLTemplateClassFrame){
-        productTypeLabel.text = [NSLocalizedString(@"Frames", @"") uppercaseString];
+        productTypeLabel.text = NSLocalizedString(@"Frames", @"");
     }
     else if (product.productTemplate.templateClass == kOLTemplateClassCase){
-        productTypeLabel.text = [NSLocalizedString(@"Phone Cases", @"") uppercaseString];
+        productTypeLabel.text = NSLocalizedString(@"Phone Cases", @"");
     }
     else if (product.productTemplate.templateClass == kOLTemplateClassDecal){
-        productTypeLabel.text = [NSLocalizedString(@"Clear Cases & Stickers", @"") uppercaseString];
+        productTypeLabel.text = NSLocalizedString(@"Clear Cases", @"");
     }
     else{
-        productTypeLabel.text = [product.productTemplate.name uppercaseString];
+        productTypeLabel.text = product.productTemplate.name;
     }
     productTypeLabel.backgroundColor = [product labelColor];
     

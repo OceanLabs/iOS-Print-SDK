@@ -22,6 +22,10 @@ static NSString *const kKeyLabelColor = @"co.oceanlabs.pssdk.kKeyLabelColor";
 static NSString *const kKeySizeCm = @"co.oceanlabs.pssdk.kKeySizeCm";
 static NSString *const kKeySizeInches = @"co.oceanlabs.pssdk.kKeySizeInches";
 static NSString *const kKeyProductCode = @"co.oceanlabs.pssdk.kKeyProductCode";
+static NSString *const kKeyImageBleed = @"co.oceanlabs.pssdk.kKeyImageBleed";
+static NSString *const kKeyMaskImageURL = @"co.oceanlabs.pssdk.kKeymaskImageURL";
+static NSString *const kKeySizePx = @"co.oceanlabs.pssdk.kKeySizePx";
+static NSString *const kKeyClassPhotoURL = @"co.oceanlabs.pssdk.kKeyClassPhotoURL";
 
 static NSMutableArray *templates;
 static NSDate *lastSyncDate;
@@ -188,6 +192,39 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
     return kOLTemplateClassNA;
 }
 
++ (NSString *)templateClassStringWithTemplateClass:(OLTemplateClass)templateClass{
+    switch (templateClass) {
+        case kOLTemplateClassCase:
+            return @"Case";
+            break;
+        case kOLTemplateClassCircle:
+            return @"Circle";
+            break;
+        case kOLTemplateClassDecal:
+            return @"Decal";
+            break;
+        case kOLTemplateClassFrame:
+            return @"Frame";
+            break;
+        case kOLTemplateClassNA:
+            return @"NA Clas";
+            break;
+        case kOLTemplateClassPolaroid:
+            return @"Polaroid";
+            break;
+        case kOLTemplateClassPoster:
+            return @"Poster";
+            break;
+        case kOLTemplateClassSquare:
+            return @"Square";
+            break;
+            
+        default:
+            return @"";
+            break;
+    }
+}
+
 - (NSString *)description {
     NSMutableString *supportedCurrencies = [[NSMutableString alloc] init];
     for (NSString *currency in self.costsByCurrencyCode) {
@@ -210,6 +247,10 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
     [aCoder encodeCGSize:self.sizeCm forKey:kKeySizeCm];
     [aCoder encodeCGSize:self.sizeInches forKey:kKeySizeInches];
     [aCoder encodeObject:self.productCode forKey:kKeyProductCode];
+    [aCoder encodeUIEdgeInsets:self.imageBleed forKey:kKeyImageBleed];
+    [aCoder encodeObject:self.maskImageURL forKey:kKeyMaskImageURL];
+    [aCoder encodeCGSize:self.sizePx forKey:kKeySizePx];
+    [aCoder encodeObject:self.classPhotoURL forKey:kKeyClassPhotoURL];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
@@ -226,6 +267,10 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
         _sizeCm = [aDecoder decodeCGSizeForKey:kKeySizeCm];
         _sizeInches = [aDecoder decodeCGSizeForKey:kKeySizeInches];
         _productCode = [aDecoder decodeObjectForKey:kKeyProductCode];
+        _imageBleed = [aDecoder decodeUIEdgeInsetsForKey:kKeyImageBleed];
+        _maskImageURL = [aDecoder decodeObjectForKey:kKeyMaskImageURL];
+        _sizePx = [aDecoder decodeCGSizeForKey:kKeySizePx];
+        _classPhotoURL = [aDecoder decodeObjectForKey:kKeyClassPhotoURL];
     }
     
     return self;

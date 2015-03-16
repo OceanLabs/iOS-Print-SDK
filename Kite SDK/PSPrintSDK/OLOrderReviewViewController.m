@@ -20,10 +20,17 @@
 #import "OLAsset+Private.h"
 #import <SDWebImageManager.h>
 #import "OLAnalytics.h"
+#import "OLKitePrintSDK.h"
 #import <CTAssetsPickerController.h>
 
 static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 static const NSUInteger kTagAlertViewDeletePhoto = 98;
+
+@interface OLKitePrintSDK (InternalUtils)
++ (NSString *)userEmail:(UIViewController *)topVC;
++ (NSString *)userPhone:(UIViewController *)topVC;
++ (id<OLKiteDelegate>)kiteDelegate:(UIViewController *)topVC;
+@end
 
 @interface OLOrderReviewViewController () <OLCheckoutDelegate, CTAssetsPickerControllerDelegate, UIAlertViewDelegate>
 
@@ -187,9 +194,22 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
 
     
     OLCheckoutViewController *vc = [[OLCheckoutViewController alloc] initWithPrintOrder:printOrder];
-    vc.kiteDelegate = self.delegate;
+    vc.userEmail = [OLKitePrintSDK userEmail:self];
+    vc.userPhone = [OLKitePrintSDK userPhone:self];
+    vc.kiteDelegate = [OLKitePrintSDK kiteDelegate:self];
+    
     
     [self.navigationController pushViewController:vc animated:YES];
+}
+
+- (OLKiteViewController *)kiteViewController {
+    for (UIViewController *vc in self.navigationController.viewControllers) {
+        if ([vc isMemberOfClass:[OLKiteViewController class]]) {
+            return (OLKiteViewController *) vc;
+        }
+    }
+    
+    return nil;
 }
 
 - (void)onUserSelectedPhotoCountChange {
@@ -234,16 +254,6 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     [self.tableView reloadData];
     
     [self onUserSelectedPhotoCountChange];
-}
-
-- (OLKiteViewController *)kiteViewController {
-    for (UIViewController *vc in self.navigationController.viewControllers) {
-        if ([vc isMemberOfClass:[OLKiteViewController class]]) {
-            return (OLKiteViewController *) vc;
-        }
-    }
-    
-    return nil;
 }
 
 - (BOOL)shouldShowAddMorePhotos{

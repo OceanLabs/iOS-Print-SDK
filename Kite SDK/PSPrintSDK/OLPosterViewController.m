@@ -16,6 +16,14 @@
 #import <SDWebImageManager.h>
 #import "OLAsset+Private.h"
 #import "OLAnalytics.h"
+#import "OLProductHomeViewController.h"
+#import "OLKitePrintSDK.h"
+
+@interface OLKitePrintSDK (InternalUtils)
++ (NSString *)userEmail:(UIViewController *)topVC;
++ (NSString *)userPhone:(UIViewController *)topVC;
++ (id<OLKiteDelegate>)kiteDelegate:(UIViewController *)topVC;
+@end
 
 @interface OLPosterViewController () <UINavigationControllerDelegate, OLScrollCropViewControllerDelegate>
 
@@ -160,8 +168,11 @@
     [printOrder addPrintJob:job];
     
     OLCheckoutViewController *vc = [[OLCheckoutViewController alloc] initWithPrintOrder:printOrder];
-    [self.navigationController pushViewController:vc animated:YES];
+    vc.userEmail = [OLKitePrintSDK userEmail:self];
+    vc.userPhone = [OLKitePrintSDK userPhone:self];
+    vc.kiteDelegate = [OLKitePrintSDK kiteDelegate:self];
     
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
 #pragma mark - OLImageEditorViewControllerDelegate methods

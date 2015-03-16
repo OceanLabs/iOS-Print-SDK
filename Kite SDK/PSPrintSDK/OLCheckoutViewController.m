@@ -153,12 +153,20 @@ static const NSUInteger kInputFieldTag = 99;
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSString *email = [defaults stringForKey:kKeyEmailAddress];
     NSString *phone = [defaults stringForKey:kKeyPhone];
-    if (email && self.textFieldEmail.text.length == 0) {
-        self.textFieldEmail.text = email;
+    if (self.textFieldEmail.text.length == 0) {
+        if (email.length > 0) {
+            self.textFieldEmail.text = email;
+        } else if (self.userEmail.length > 0) {
+            self.textFieldEmail.text = self.userEmail;
+        }
     }
     
-    if (phone && self.textFieldPhone.text.length == 0) {
-        self.textFieldPhone.text = phone;
+    if (self.textFieldPhone.text.length == 0) {
+        if (phone.length > 0) {
+            self.textFieldPhone.text = phone;
+        } else if (self.userPhone.length > 0) {
+            self.textFieldPhone.text = self.userPhone;
+        }
     }
 }
 

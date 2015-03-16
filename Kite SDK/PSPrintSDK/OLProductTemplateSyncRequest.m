@@ -70,15 +70,23 @@
                                 NSArray *productShots;
                                 NSString *productClass;
                                 UIColor *labelColor;
-                                CGSize sizeCm = CGSizeMake(0, 0);
-                                CGSize sizeInches = CGSizeMake(0, 0);
+                                CGSize sizeCm = CGSizeZero;
+                                CGSize sizeInches = CGSizeZero;
+                                UIEdgeInsets imageBleed = UIEdgeInsetsZero;
+                                NSString *maskImageURL;
                                 NSString *code;
+                                CGSize sizePx = CGSizeZero;
+                                NSString *classPhoto;
                                 if (product){
                                     coverPhoto = [product[@"ios_sdk_cover_photo"] isKindOfClass:[NSString class]] ? product[@"ios_sdk_cover_photo"] : nil;
+                                    
+                                    maskImageURL = [product[@"mask_url"] isKindOfClass:[NSString class]] ? product[@"mask_url"] : nil;
                                     
                                     if ([product[@"ios_sdk_product_shots"] isKindOfClass:[NSArray class]]){
                                         productShots = product[@"ios_sdk_product_shots"];
                                     }
+                                    
+                                    classPhoto = [product[@"ios_sdk_class_photo"] isKindOfClass:[NSString class]] ? product[@"ios_sdk_class_photo"] : nil;
                                     
                                     productClass = [product[@"ios_sdk_product_class"] isKindOfClass:[NSString class]] ? product[@"ios_sdk_product_class"] : nil;
                                     
@@ -92,10 +100,16 @@
                                         }
                                     }
                                     
+                                    NSArray *bleedArray = [product[@"mask_bleed"] isKindOfClass:[NSArray class]] ? product[@"mask_bleed"] : nil;
+                                    if (bleedArray){
+                                        imageBleed = UIEdgeInsetsMake([bleedArray[0] floatValue], [bleedArray[3] floatValue], [bleedArray[2] floatValue], [bleedArray[1] floatValue]);
+                                    }
+                                    
                                     NSDictionary *sizeDict = [product[@"size"] isKindOfClass:[NSDictionary class]] ? product[@"size"] : nil;
                                     if (sizeDict){
                                         NSDictionary *cmDict = [sizeDict[@"cm"] isKindOfClass:[NSDictionary class]] ? sizeDict[@"cm"] : nil;
                                         NSDictionary *inchDict = [sizeDict[@"inch"] isKindOfClass:[NSDictionary class]] ? sizeDict[@"inch"] : nil;
+                                        NSDictionary *pxDict = [sizeDict[@"px"] isKindOfClass:[NSDictionary class]] ? sizeDict[@"px"] : nil;
                                         if (cmDict){
                                             NSNumber *cmHeight = [cmDict[@"height"] isKindOfClass:[NSNumber class]] ? cmDict[@"height"] : nil;
                                             NSNumber *cmWidth = [cmDict[@"width"] isKindOfClass:[NSNumber class]] ? cmDict[@"width"] : nil;
@@ -107,7 +121,14 @@
                                             NSNumber *inchHeight = [inchDict[@"height"] isKindOfClass:[NSNumber class]] ? inchDict[@"height"] : nil;
                                             NSNumber *inchWidth = [inchDict[@"width"] isKindOfClass:[NSNumber class]] ? inchDict[@"width"] : nil;
                                             if (inchHeight && inchWidth){
-                                                sizeInches = CGSizeMake([inchHeight doubleValue], [inchWidth doubleValue]);
+                                                sizeInches = CGSizeMake([inchWidth doubleValue], [inchHeight doubleValue]);
+                                            }
+                                        }
+                                        if (pxDict){
+                                            NSNumber *pxHeight = [pxDict[@"height"] isKindOfClass:[NSNumber class]] ? pxDict[@"height"] : nil;
+                                            NSNumber *pxWidth = [pxDict[@"width"] isKindOfClass:[NSNumber class]] ? pxDict[@"width"] : nil;
+                                            if (pxHeight && pxWidth){
+                                                sizePx = CGSizeMake([pxWidth doubleValue], [pxHeight doubleValue]);
                                             }
                                         }
                                         
@@ -135,6 +156,10 @@
                                     t.sizeCm = sizeCm;
                                     t.sizeInches = sizeInches;
                                     t.productCode = code;
+                                    t.imageBleed = imageBleed;
+                                    t.maskImageURL = [NSURL URLWithString:maskImageURL];
+                                    t.sizePx = sizePx;
+                                    t.classPhotoURL = [NSURL URLWithString:classPhoto];
                                     [acc addObject:t];
                                 }
                             }

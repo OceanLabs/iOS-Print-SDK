@@ -12,6 +12,14 @@
 #import "OLSingleImageProductReviewViewController.h"
 #import "UITableViewController+ScreenWidthFactor.h"
 #import "OLProductOverviewViewController.h"
+#import "OLAnalytics.h"
+
+@interface OLProduct (Private)
+
+-(void)setCoverImageToImageView:(UIImageView *)imageView;
+-(void)setProductPhotography:(NSUInteger)i toImageView:(UIImageView *)imageView;
+
+@end
 
 @interface OLCaseSelectionViewController ()
 
@@ -26,11 +34,20 @@
     NSArray *allProducts = [OLKitePrintSDK enabledProducts] ? [OLKitePrintSDK enabledProducts] : [OLProduct products];
     for (OLProduct *product in allProducts){
         if (product.productTemplate.templateClass == self.templateClass){
-            [self.caseProducts insertObject:product atIndex:0];
+            [self.caseProducts addObject:product];
         }
     }
     
-    self.title = NSLocalizedString(@"Pick Device", @"");
+    self.title = NSLocalizedString(@"Choose Device", @"");
+    
+    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Back", @"")
+                                                                             style:UIBarButtonItemStyleBordered
+                                                                            target:nil
+                                                                            action:nil];
+    
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackDeviceSelectionScreenViewedWithTemplateClass:[OLProductTemplate templateClassStringWithTemplateClass:self.templateClass]];
+#endif
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{    
@@ -50,26 +67,14 @@
     OLProduct *product = (OLProduct *)self.caseProducts[indexPath.row];
     
     UIImageView *imageView = (UIImageView *)[cell.contentView viewWithTag:10];
-    NSString *imageName;
-    if ([product.productTemplate.productCode hasSuffix:@"PHONE_4"]){
-        imageName = @"cover-iphone4";
-    }
-    else if ([product.productTemplate.productCode hasSuffix:@"PHONE_5"]){
-        imageName = @"cover-iphone5";
-    }
-    else if ([product.productTemplate.productCode hasSuffix:@"PHONE_5C"]){
-        imageName = @"cover-iphone5c";
-    }
-    else if ([product.productTemplate.productCode hasSuffix:@"PHONE_6"]){
-        imageName = @"cover-iphone6";
-    }
-    else if ([product.productTemplate.productCode hasSuffix:@"PHONE_6P"]){
-        imageName = @"cover-iphone6plus";
-    }
-    imageView.image = [UIImage imageNamed:imageName];
+    [product setCoverImageToImageView:imageView];
     
     UITextView *textView = (UITextView *)[cell.contentView viewWithTag:20];
-    textView.text = [[product.productTemplate.name stringByReplacingOccurrencesOfString:@" Case" withString:@""] stringByReplacingOccurrencesOfString:@" Clear Decals" withString:@""];
+    NSString *productName = [product.productTemplate.name stringByReplacingOccurrencesOfString:@" Clear Case Decals Only" withString:@""];
+    productName = [productName stringByReplacingOccurrencesOfString:@" Clear Case and Decals" withString:@""];
+    productName = [productName stringByReplacingOccurrencesOfString:@" Clear Case" withString:@""];
+    productName = [productName stringByReplacingOccurrencesOfString:@" Case" withString:@""];
+    textView.text = productName;
     textView.backgroundColor = product.productTemplate.labelColor;
     
     return cell;
@@ -80,7 +85,12 @@
 }
 
 - (CGFloat) tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    return 233 * [self screenWidthFactor];
+    if ([self tableView:tableView numberOfRowsInSection:indexPath.section] == 2){
+        return (self.view.bounds.size.height - 64) / 2;
+    }
+    else{
+        return 233 * [self screenWidthFactor];
+    }
 }
 
 @end

@@ -22,6 +22,9 @@ NSString *const kOLKeyUserInfoPrintOrder;
 @property (weak, nonatomic) id<OLCheckoutDelegate> delegate;
 @property (weak, nonatomic) id<OLKiteDelegate> kiteDelegate;
 
+@property (copy, nonatomic) NSString *userEmail;
+@property (copy, nonatomic) NSString *userPhone;
+
 - (id)initWithPrintOrder:(OLPrintOrder *)printOrder;
 - (id)initWithAPIKey:(NSString *)apiKey environment:(OLKitePrintSDKEnvironment)env printOrder:(OLPrintOrder *)printOrder;
 - (void)presentViewControllerFrom:(UIViewController *)presentingViewController animated:(BOOL)animated completion:(void (^)(void))completion;
