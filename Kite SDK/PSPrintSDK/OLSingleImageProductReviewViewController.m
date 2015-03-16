@@ -198,6 +198,10 @@
 }
 
 -(void) doCheckout{
+    if (!self.imageCropView.image || !self.visualEffectView.hidden){
+        return;
+    }
+    
     UIImage *croppedImage = self.imageCropView.editedImage;
     
     OLAsset *asset = [OLAsset assetWithImageAsJPEG:croppedImage];
