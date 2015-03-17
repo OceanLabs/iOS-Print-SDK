@@ -17,6 +17,7 @@
 #import "OLAnalytics.h"
 #import "OLCaseSelectionViewController.h"
 #import "OLSingleImageProductReviewViewController.h"
+#import "OLPhotoSelectionViewController.h"
 
 @interface OLProduct (Private)
 
@@ -60,12 +61,6 @@
     else if (self.product.productTemplate.templateClass == kOLTemplateClassFrame){
         self.title = NSLocalizedString(@"Frames", @"");
     }
-//    else if (self.product.productTemplate.templateClass == kOLTemplateClassCase){
-//        self.title = NSLocalizedString(@"Phone Cases", @"");
-//    }
-//    else if (self.product.productTemplate.templateClass == kOLTemplateClassDecal){
-//        self.title = NSLocalizedString(@"Clear Cases & Stickers", @"");
-//    }
     else{
         self.title = self.product.productTemplate.name;
     }
@@ -157,7 +152,7 @@
         [self.navigationController pushViewController:vc animated:YES];
     }
     else{
-        OLOrderReviewViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OrderReviewViewController"];
+        OLPhotoSelectionViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"PhotoSelectionViewController"];
         vc.assets = self.assets;
         vc.product = self.product;
         vc.delegate = self.delegate;
