@@ -313,11 +313,11 @@ static void *ActionSheetCellKey;
 }
 
 - (IBAction)facebookSelected:(id)sender {
-//    OLFacebookImagePickerController *picker = nil;
-//    picker = [[OLFacebookImagePickerController alloc] init];
-//    picker.delegate = self;
-//    picker.selected = [self createAssetArray];
-//    [self presentViewController:picker animated:YES completion:nil];
+    OLFacebookImagePickerController *picker = nil;
+    picker = [[OLFacebookImagePickerController alloc] init];
+    picker.delegate = self;
+    picker.selected = [self createAssetArray];
+    [self presentViewController:picker animated:YES completion:nil];
 }
 
 - (IBAction)onButtonClearClicked:(UIButton *)sender {
