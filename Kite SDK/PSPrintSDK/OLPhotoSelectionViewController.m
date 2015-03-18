@@ -74,15 +74,32 @@ static void *ActionSheetCellKey;
 
 @property (nonatomic, weak) IBOutlet UIButton *buttonNext;
 @property (nonatomic, weak) IBOutlet UIView *noSelectedPhotosView;
+@property (weak, nonatomic) IBOutlet UIView *clearButtonContainerView;
+@property (weak, nonatomic) IBOutlet UIButton *clearButton;
+@property (strong, nonatomic) UIVisualEffectView *visualEffectView;
 @end
 
 @implementation OLPhotoSelectionViewController
 
+-(NSMutableArray *) userSelectedPhotos{
+    if (!_userSelectedPhotos){
+        NSMutableArray *mutableUserSelectedPhotos = [[NSMutableArray alloc] init];
+        for (id asset in self.assets){
+            OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
+            printPhoto.serverImageSize = [self.product serverImageSize];
+            printPhoto.asset = asset;
+            [mutableUserSelectedPhotos addObject:printPhoto];
+        }
+        _userSelectedPhotos = mutableUserSelectedPhotos;
+    }
+    return _userSelectedPhotos;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.userSelectedPhotos = [[NSMutableArray alloc] init];
+//    self.userSelectedPhotos = [[NSMutableArray alloc] init];
     self.userDisabledPhotos = [[NSMutableArray alloc] init];
-    [self onUserSelectedPhotoCountChange];
+//    [self onUserSelectedPhotoCountChange];
     
     self.galleryButton.image = [UIImage imageNamed:@"import_gallery"];
     self.galleryButton.title = NSLocalizedString(@"Camera Roll", @"");
@@ -105,6 +122,41 @@ static void *ActionSheetCellKey;
     [self.buttonFacebookImport setBackgroundImage:[self imageWithColor:[UIColor colorWithHexString:@"#497aba"]] forState:UIControlStateHighlighted];
     [self.buttonGalleryImport setBackgroundImage:[self imageWithColor:[UIColor colorWithHexString:@"#369c82"]] forState:UIControlStateHighlighted];
     [self.buttonInstagramImport setBackgroundImage:[self imageWithColor:[UIColor colorWithHexString:@"#c29334"]] forState:UIControlStateHighlighted];
+    
+    if (self.userSelectedPhotos.count > 0) {
+            self.noSelectedPhotosView.alpha = 0;
+    }
+    else if (self.userSelectedPhotos.count == 0) {
+            self.noSelectedPhotosView.alpha = 1;
+    }
+    [self onUserSelectedPhotoCountChange];
+    
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0){
+        UIVisualEffect *blurEffect;
+        blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleExtraLight];
+        
+        self.visualEffectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
+        UIView *view = self.visualEffectView;
+        [self.clearButtonContainerView insertSubview:view belowSubview:self.clearButton];
+        
+        view.translatesAutoresizingMaskIntoConstraints = NO;
+        NSDictionary *views = NSDictionaryOfVariableBindings(view);
+        NSMutableArray *con = [[NSMutableArray alloc] init];
+        
+        NSArray *visuals = @[@"H:|-0-[view]-0-|",
+                             @"V:|-0-[view]-0-|"];
+        
+        
+        for (NSString *visual in visuals) {
+            [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+        }
+        
+        [view.superview addConstraints:con];
+        
+    }
+    else{
+        self.clearButtonContainerView.backgroundColor = [UIColor whiteColor];
+    }
 }
 
 -(void) viewWillAppear:(BOOL)animated{
@@ -143,6 +195,7 @@ static void *ActionSheetCellKey;
 - (void)updateNoSelectedPhotosView {
     NSTimeInterval delay = 0.35;
     NSTimeInterval duration = 0.3;
+    self.collectionView.alpha = self.userSelectedPhotos.count == 0 ? 0 : 1;
     if (self.userSelectedPhotos.count > 0 && self.noSelectedPhotosView.alpha >= 0.9f) {
         self.noSelectedPhotosView.alpha = 1;
         [UIView animateWithDuration:duration delay:delay options:UIViewAnimationOptionCurveEaseIn animations:^{
@@ -163,6 +216,23 @@ static void *ActionSheetCellKey;
         NSUInteger numOrders = 1 + (MAX(0, self.userSelectedPhotos.count - 1) / self.product.quantityToFulfillOrder);
         NSUInteger quanityToFulfilOrder = numOrders * self.product.quantityToFulfillOrder;
         [self setTitle:[NSString stringWithFormat:@"%lu / %lu", (unsigned long)self.userSelectedPhotos.count - self.userDisabledPhotos.count, (unsigned long)quanityToFulfilOrder]];
+    }
+    
+    if ([self.userDisabledPhotos count] > 0){
+        if ([self.userDisabledPhotos count] == 1){
+            [self.clearButton setTitle:[NSString stringWithFormat:NSLocalizedString(@"Clear %lu Photo", @""), (unsigned long)[self.userDisabledPhotos count]] forState:UIControlStateNormal];
+        }
+        else{
+            [self.clearButton setTitle:[NSString stringWithFormat:NSLocalizedString(@"Clear %lu Photos", @""), (unsigned long)[self.userDisabledPhotos count]] forState:UIControlStateNormal];
+        }
+        [UIView animateKeyframesWithDuration:0.15 delay:0 options:UIViewKeyframeAnimationOptionBeginFromCurrentState | UIViewAnimationOptionCurveLinear animations:^{
+            self.clearButtonContainerView.transform = CGAffineTransformMakeTranslation(0, -40);
+        }completion:NULL];
+    }
+    else{
+        [UIView animateKeyframesWithDuration:0.15 delay:0 options:UIViewKeyframeAnimationOptionBeginFromCurrentState | UIViewAnimationOptionCurveLinear animations:^{
+            self.clearButtonContainerView.transform = CGAffineTransformIdentity;
+        }completion:NULL];
     }
 }
 
@@ -197,8 +267,6 @@ static void *ActionSheetCellKey;
     
     // Reload the collection view.
     [self.collectionView reloadData];
-    
-    self.collectionView.alpha = self.userSelectedPhotos.count == 0 ? 0 : 1;
     
     [self onUserSelectedPhotoCountChange];
 }
@@ -245,11 +313,20 @@ static void *ActionSheetCellKey;
 }
 
 - (IBAction)facebookSelected:(id)sender {
-    OLFacebookImagePickerController *picker = nil;
-    picker = [[OLFacebookImagePickerController alloc] init];
-    picker.delegate = self;
-    picker.selected = [self createAssetArray];
-    [self presentViewController:picker animated:YES completion:nil];
+//    OLFacebookImagePickerController *picker = nil;
+//    picker = [[OLFacebookImagePickerController alloc] init];
+//    picker.delegate = self;
+//    picker.selected = [self createAssetArray];
+//    [self presentViewController:picker animated:YES completion:nil];
+}
+
+- (IBAction)onButtonClearClicked:(UIButton *)sender {
+    for (id photo in self.userDisabledPhotos){
+        [self.userSelectedPhotos removeObject:photo];
+    }
+    [self.userDisabledPhotos removeAllObjects];
+    [self updateTitleBasedOnSelectedPhotoQuanitity];
+    [self.collectionView reloadData];
 }
 
 #pragma mark - CTAssetsPickerControllerDelegate Methods
