@@ -383,6 +383,9 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
             cell = [[OLCircleMaskTableViewCell alloc] init];
         }
         
+        UIActivityIndicatorView *activityIndicator = (UIActivityIndicatorView *)[cell.contentView viewWithTag:278];
+        [activityIndicator startAnimating];
+        
         UIImageView *cellImage = (UIImageView *)[cell.contentView viewWithTag:10];
         cellImage.image = nil;
         
