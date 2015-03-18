@@ -304,12 +304,12 @@ static void *ActionSheetCellKey;
 }
 
 - (IBAction)instagramSelected:(id)sender {
-//    OLInstagramImagePickerController *picker = nil;
-//    picker = [[OLInstagramImagePickerController alloc] initWithClientId:kInstagramClientId secret:kInstagramClientSecret redirectURI:@"psapp://instagram-callback"];
-//    
-//    picker.delegate = self;
-//    picker.selected = [self createAssetArray];
-//    [self presentViewController:picker animated:YES completion:nil];
+    OLInstagramImagePickerController *picker = nil;
+    picker = [[OLInstagramImagePickerController alloc] initWithClientId:@"8e298e2947f04a07a21ae306cc32cbb8" secret:@"981de984cb954e2196563493f85b13bf" redirectURI:@"sticky9://instagram-callback"];
+    
+    picker.delegate = self;
+    picker.selected = [self createAssetArray];
+    [self presentViewController:picker animated:YES completion:nil];
 }
 
 - (IBAction)facebookSelected:(id)sender {

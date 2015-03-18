@@ -10,15 +10,21 @@
 
 #import "OLAsset.h"
 
+typedef void (^OLImageEditorImageGetImageCompletionHandler)(UIImage *image);
+typedef void (^OLImageEditorImageGetImageProgressHandler)(float progress);
+
 typedef enum {
     kPrintPhotoAssetTypeALAsset,
-    kPrintPhotoAssetTypeOLAsset
+    kPrintPhotoAssetTypeOLAsset,
+    kPrintPhotoAssetTypeInstagramPhoto,
+    kPrintPhotoAssetTypeFacebookPhoto
 } PrintPhotoAssetType;
 
 @interface OLPrintPhoto : NSObject <OLAssetDataSource>
 
 - (void)setThumbImageForImageView:(UIImageView *)imageView;
 - (void) setThumbImageIdealSizeForImageView:(UIImageView *)imageView;
+- (void)getImageWithProgress:(OLImageEditorImageGetImageProgressHandler)progressHandler completion:(OLImageEditorImageGetImageCompletionHandler)completionHandler;
 
 @property (nonatomic, assign, readonly) PrintPhotoAssetType type;
 @property (nonatomic, strong) id asset;

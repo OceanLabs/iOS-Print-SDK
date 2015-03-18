@@ -18,7 +18,6 @@
 #import "OLProduct.h"
 #import "OLCircleMaskTableViewCell.h"
 #import "OLAsset+Private.h"
-#import <SDWebImageManager.h>
 #import "OLAnalytics.h"
 #import "OLKitePrintSDK.h"
 #import <CTAssetsPickerController.h>
@@ -341,20 +340,10 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     cropVc.enableCircleMask = self.product.productTemplate.templateClass == kOLTemplateClassCircle;
     cropVc.delegate = self;
     cropVc.aspectRatio = 1;
-    if (((OLAsset *)(self.editingPrintPhoto.asset)).assetType == kOLAssetTypeRemoteImageURL){
-        [[SDWebImageManager sharedManager] downloadImageWithURL:[((OLAsset *)(self.editingPrintPhoto.asset)) imageURL] options:0 progress:nil completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *url) {
-            if (finished) {
-                [cropVc setFullImage:image];
-                [self presentViewController:nav animated:YES completion:NULL];
-            }
-        }];
-    }
-    else{
-        [self.editingPrintPhoto dataWithCompletionHandler:^(NSData *data, NSError *error){
-            [cropVc setFullImage:[UIImage imageWithData:data]];
-            [self presentViewController:nav animated:YES completion:NULL];
-        }];
-    }
+    [self.editingPrintPhoto getImageWithProgress:NULL completion:^(UIImage *image){
+        [cropVc setFullImage:image];
+        [self presentViewController:nav animated:YES completion:NULL];
+    }];
 }
 
 - (IBAction)onButtonNextClicked:(UIBarButtonItem *)sender {

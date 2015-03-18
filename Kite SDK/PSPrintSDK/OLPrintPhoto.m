@@ -9,16 +9,16 @@
 #import "OLPrintPhoto.h"
 #import <AssetsLibrary/AssetsLibrary.h>
 #import <SDWebImageManager.h>
+#import <OLInstagramImage.h>
 #import "OLAsset+Private.h"
 #import "UIImageView+FadeIn.h"
+#import <OLInstagramImage.h>
+#import <OLFacebookImage.h>
 
 static NSString *const kKeyType = @"co.oceanlabs.psprintstudio.kKeyType";
 static NSString *const kKeyAsset = @"co.oceanlabs.psprintstudio.kKeyAsset";
 static NSString *const kKeyCropTransform = @"co.oceanlabs.psprintstudio.kKeyCropTransform";
 static NSString *const kKeyServerImageSize = @"co.oceanlabs.psprintstudio.kKeyServerImageSize";
-
-typedef void (^OLImageEditorImageGetImageCompletionHandler)(UIImage *image);
-typedef void (^OLImageEditorImageGetImageProgressHandler)(float progress);
 
 @implementation ALAsset (isEqual)
 
@@ -78,6 +78,9 @@ typedef void (^OLImageEditorImageGetImageProgressHandler)(float progress);
     else if ([asset isKindOfClass:[OLAsset class]]){
         _type = kPrintPhotoAssetTypeOLAsset;
     }
+    else if ([asset isKindOfClass:[OLInstagramImage class]]){
+        _type = kPrintPhotoAssetTypeInstagramPhoto;
+    }
 }
 
 - (void) setThumbImageIdealSizeForImageView:(UIImageView *)imageView {
@@ -95,7 +98,14 @@ typedef void (^OLImageEditorImageGetImageProgressHandler)(float progress);
             }];
         }
     } else {
-        if (self.type == kPrintPhotoAssetTypeOLAsset){
+        if (self.type == kPrintPhotoAssetTypeInstagramPhoto) {
+            [imageView setAndFadeInImageWithURL:[self.asset fullURL]];
+        }
+        else if (self.type == kPrintPhotoAssetTypeFacebookPhoto){
+            OLFacebookImage *fbImage = self.asset;
+            [imageView setAndFadeInImageWithURL:[fbImage bestURLForSize:CGSizeMake(imageView.frame.size.width * [UIScreen mainScreen].scale, imageView.frame.size.height * [UIScreen mainScreen].scale)]];
+        }
+        else if (self.type == kPrintPhotoAssetTypeOLAsset){
             OLAsset *asset = (OLAsset *)self.asset;
             
             if (asset.assetType == kOLAssetTypeRemoteImageURL){
@@ -152,6 +162,13 @@ typedef void (^OLImageEditorImageGetImageProgressHandler)(float progress);
             ALAsset *asset = (ALAsset *)self.asset;
             imageView.image = [UIImage imageWithCGImage:asset.thumbnail];
         }
+        else if (self.type == kPrintPhotoAssetTypeInstagramPhoto) {
+            [imageView setAndFadeInImageWithURL:[self.asset thumbURL]];
+        }
+        else if (self.type == kPrintPhotoAssetTypeFacebookPhoto){
+            OLFacebookImage *fbImage = self.asset;
+            [imageView setAndFadeInImageWithURL:[fbImage bestURLForSize:CGSizeMake(220, 220)]];
+        }
         else if (self.type == kPrintPhotoAssetTypeOLAsset){
             OLAsset *asset = (OLAsset *)self.asset;
             
@@ -204,6 +221,23 @@ typedef void (^OLImageEditorImageGetImageProgressHandler)(float progress);
     return retVal;
 }
 
+- (void)downloadFullImageWithProgress:(OLImageEditorImageGetImageProgressHandler)progressHandler completion:(OLImageEditorImageGetImageCompletionHandler)completionHandler {
+    if (progressHandler) progressHandler(0.05f); // small bit of fake inital progress to get progress bars displaying
+    [[SDWebImageManager sharedManager] downloadImageWithURL:[self.asset fullURL] options:0 progress:^(NSInteger receivedSize, NSInteger expectedSize) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (progressHandler) {
+                progressHandler(MAX(0.05f, receivedSize / (float) expectedSize));
+            }
+        });
+    } completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (finished) {
+                if (completionHandler) completionHandler(image);
+            }
+        });
+    }];
+}
+
 #pragma mark - OLImageEditorImage protocol methods
 
 - (void)getImageWithProgress:(OLImageEditorImageGetImageProgressHandler)progressHandler completion:(OLImageEditorImageGetImageCompletionHandler)completionHandler {
@@ -213,6 +247,9 @@ typedef void (^OLImageEditorImageGetImageProgressHandler)(float progress);
             UIImage* image = [UIImage imageWithCGImage:[[self.asset defaultRepresentation] fullScreenImage]];
             completionHandler(image);
         });
+    }
+    else if (self.type == kPrintPhotoAssetTypeFacebookPhoto || self.type == kPrintPhotoAssetTypeInstagramPhoto) {
+        [self downloadFullImageWithProgress:progressHandler completion:completionHandler];
     }
     else if (self.type == kPrintPhotoAssetTypeOLAsset){
         OLAsset *asset = (OLAsset *)self.asset;
@@ -370,7 +407,16 @@ typedef void (^OLImageEditorImageGetImageProgressHandler)(float progress);
         dispatch_async(dispatch_get_main_queue(), ^{
             handler([self.asset defaultRepresentation].size, nil);
         });
-    }  else if (self.type == kPrintPhotoAssetTypeOLAsset){
+    }
+    else if (self.type == kPrintPhotoAssetTypeInstagramPhoto || self.type == kPrintPhotoAssetTypeFacebookPhoto){
+        [[SDWebImageManager sharedManager] downloadImageWithURL:[self.asset fullURL] options:0 progress:NULL completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
+            if (finished) {
+                NSUInteger length = UIImageJPEGRepresentation([OLPrintPhoto croppedImageWithImage:image transform:self.transform size:self.serverImageSize], 0.7).length;
+                handler(length, error);
+            }
+        }];
+    }
+    else if (self.type == kPrintPhotoAssetTypeOLAsset){
         [(OLAsset *)self.asset dataLengthWithCompletionHandler:handler];
     }
 }
@@ -389,7 +435,20 @@ typedef void (^OLImageEditorImageGetImageProgressHandler)(float progress);
             UIImage *image = [UIImage imageWithCGImage:[rep fullResolutionImage] scale:rep.scale orientation:orientation];
             handler(UIImageJPEGRepresentation(image, 0.9), nil);
         });
-    } else if (self.type == kPrintPhotoAssetTypeOLAsset){
+    }
+    else if (self.type == kPrintPhotoAssetTypeFacebookPhoto || self.type == kPrintPhotoAssetTypeInstagramPhoto){
+        [[SDWebImageManager sharedManager] downloadImageWithURL:[self.asset fullURL] options:0 progress:NULL completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
+            if (finished) {
+                if (error) {
+                    handler(nil, error);
+                } else {
+                    NSData *data = UIImageJPEGRepresentation([OLPrintPhoto croppedImageWithImage:image transform:self.transform size:self.serverImageSize], 0.7);
+                    handler(data, error);
+                }
+            }
+        }];
+    }
+    else if (self.type == kPrintPhotoAssetTypeOLAsset){
         OLAsset *asset = self.asset;
         if (CGAffineTransformIsIdentity(self.transform)){
             [asset dataWithCompletionHandler:handler];
@@ -397,17 +456,17 @@ typedef void (^OLImageEditorImageGetImageProgressHandler)(float progress);
         else{
             if (asset.assetType == kOLAssetTypeRemoteImageURL){
                 [[SDWebImageManager sharedManager] downloadImageWithURL:[asset imageURL]
-                                                           options:0
-                                                          progress:nil
-                                                         completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *url) {
-                                                             if (finished) {
-                                                                 if (error) {
-                                                                     handler(nil, error);
-                                                                 } else {
-                                                                     handler(UIImageJPEGRepresentation(image, 0.9), error);
-                                                                 }
-                                                             }
-                                                         }];
+                                                                options:0
+                                                               progress:nil
+                                                              completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *url) {
+                                                                  if (finished) {
+                                                                      if (error) {
+                                                                          handler(nil, error);
+                                                                      } else {
+                                                                          handler(UIImageJPEGRepresentation(image, 0.9), error);
+                                                                      }
+                                                                  }
+                                                              }];
             }
             else{
                 [asset dataWithCompletionHandler:^(NSData *data, NSError *error){
