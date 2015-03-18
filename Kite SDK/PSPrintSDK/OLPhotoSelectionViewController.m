@@ -123,6 +123,11 @@ static void *ActionSheetCellKey;
     [self.buttonGalleryImport setBackgroundImage:[self imageWithColor:[UIColor colorWithHexString:@"#369c82"]] forState:UIControlStateHighlighted];
     [self.buttonInstagramImport setBackgroundImage:[self imageWithColor:[UIColor colorWithHexString:@"#c29334"]] forState:UIControlStateHighlighted];
     
+    LXReorderableCollectionViewFlowLayout *layout = (LXReorderableCollectionViewFlowLayout *)[self.collectionView collectionViewLayout];
+    layout.headerReferenceSize = CGSizeMake(0, 50);
+    
+    [self.collectionView registerClass:[UICollectionReusableView class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"headerView"];
+    
     if (self.userSelectedPhotos.count > 0) {
             self.noSelectedPhotosView.alpha = 0;
     }
@@ -282,7 +287,7 @@ static void *ActionSheetCellKey;
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     for (OLPrintPhoto *photo in self.userSelectedPhotos) {
-//        [photo unloadImage];
+        [photo unloadImage];
     }
 }
 
@@ -396,7 +401,28 @@ static void *ActionSheetCellKey;
 - (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath{
     UICollectionReusableView *cell = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"headerView" forIndexPath:indexPath];
     
-    UILabel *label = (UILabel *)[cell viewWithTag:190];
+    
+    UILabel *label = (UILabel *)[cell viewWithTag:77];
+    if (!label){
+        label = [[UILabel alloc] init];
+        label.tag = 77;
+        [cell addSubview:label];
+        
+        label.translatesAutoresizingMaskIntoConstraints = NO;
+        NSDictionary *views = NSDictionaryOfVariableBindings(label);
+        NSMutableArray *con = [[NSMutableArray alloc] init];
+        
+        NSArray *visuals = @[@"H:|-20-[label]-0-|",
+                             @"V:|-0-[label]-0-|"];
+        
+        
+        for (NSString *visual in visuals) {
+            [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+        }
+        
+        [label.superview addConstraints:con];
+    }
+    
     NSString *title;
     OLTemplateClass templateClass = [OLProductTemplate templateWithId:self.product.templateId].templateClass;
     if (templateClass == kOLTemplateClassFrame){
@@ -538,9 +564,26 @@ static void *ActionSheetCellKey;
 
 - (void)collectionView:(UICollectionView *)collectionView itemAtIndexPath:(NSIndexPath *)fromIndexPath willMoveToIndexPath:(NSIndexPath *)toIndexPath {
     
-    id object = [self.userSelectedPhotos objectAtIndex:fromIndexPath.item];
-    [self.userSelectedPhotos removeObjectAtIndex:fromIndexPath.item];
-    [self.userSelectedPhotos insertObject:object atIndex:toIndexPath.item];
+    id object = [self.userSelectedPhotos objectAtIndex:fromIndexPath.item + fromIndexPath.section * self.product.quantityToFulfillOrder];
+    [self.userSelectedPhotos removeObjectAtIndex:fromIndexPath.item + fromIndexPath.section * self.product.quantityToFulfillOrder];
+    [self.userSelectedPhotos insertObject:object atIndex:toIndexPath.item + toIndexPath.section * self.product.quantityToFulfillOrder];
+}
+
+- (BOOL)collectionView:(UICollectionView *)collectionView itemAtIndexPath:(NSIndexPath *)fromIndexPath canMoveToIndexPath:(NSIndexPath *)toIndexPath{
+    if (toIndexPath.item >= MIN(self.userSelectedPhotos.count, (self.userSelectedPhotos.count - fromIndexPath.section * self.product.quantityToFulfillOrder))){
+        return NO;
+    }
+    if (fromIndexPath.section != toIndexPath.section){
+        return NO;
+    }
+    return YES;
+}
+
+- (BOOL)collectionView:(UICollectionView *)collectionView canMoveItemAtIndexPath:(NSIndexPath *)indexPath{
+    if (indexPath.item >= MIN(self.userSelectedPhotos.count, self.product.quantityToFulfillOrder)){
+        return NO;
+    }
+    return YES;
 }
 
 - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section{
@@ -554,11 +597,7 @@ static void *ActionSheetCellKey;
 - (CGSize)collectionView:(UICollectionView *)collectionView
                   layout:(UICollectionViewLayout *)collectionViewLayout
   sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
-//    if (indexPath.item % 3 == 1) {
         return CGSizeMake(self.view.bounds.size.width/3, self.view.bounds.size.width/3);
-//    } else {
-//        return CGSizeMake(106, 106);
-//    }
 }
 
 #pragma mark - Autorotate and Orientation Methods

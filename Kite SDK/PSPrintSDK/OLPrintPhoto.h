@@ -25,6 +25,7 @@ typedef enum {
 - (void)setThumbImageForImageView:(UIImageView *)imageView;
 - (void) setThumbImageIdealSizeForImageView:(UIImageView *)imageView;
 - (void)getImageWithProgress:(OLImageEditorImageGetImageProgressHandler)progressHandler completion:(OLImageEditorImageGetImageCompletionHandler)completionHandler;
+- (void)unloadImage;
 
 @property (nonatomic, assign, readonly) PrintPhotoAssetType type;
 @property (nonatomic, strong) id asset;
