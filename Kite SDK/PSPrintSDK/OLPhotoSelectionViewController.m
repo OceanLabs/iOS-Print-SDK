@@ -28,6 +28,7 @@
 #import "OLConstants.h"
 #import <LXReorderableCollectionViewFlowLayout.h>
 #import "NSArray+QueryingExtras.h"
+#import "OLKitePrintSDK.h"
 
 NSInteger OLPhotoSelectionMargin = 0;
 
@@ -38,6 +39,12 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 @end
 
 static void *ActionSheetCellKey;
+
+@interface OLKitePrintSDK (Private)
+
++ (OLKiteViewController *)kiteViewControllerInNavStack:(NSArray *)viewControllers;
+
+@end
 
 @implementation UIActionSheet(Cell)
 
@@ -65,6 +72,10 @@ static void *ActionSheetCellKey;
 @property (nonatomic, weak) IBOutlet OLPhotoSelectionButton *galleryButton;
 @property (nonatomic, weak) IBOutlet OLPhotoSelectionButton *instagramButton;
 @property (nonatomic, weak) IBOutlet OLPhotoSelectionButton *facebookButton;
+@property (weak, nonatomic) IBOutlet UIView *cameraRollContainer;
+@property (weak, nonatomic) IBOutlet UIView *instagramContainer;
+@property (weak, nonatomic) IBOutlet UIView *facebookContainer;
+
 @property (nonatomic, weak) IBOutlet UICollectionView *collectionView;
 @property (nonatomic, strong) CTAssetsPickerController *picker;
 @property (strong, nonatomic) NSMutableArray *userDisabledPhotos;
@@ -99,15 +110,15 @@ static void *ActionSheetCellKey;
     self.facebookButton.title = NSLocalizedString(@"Facebook", @"");
     self.facebookButton.mainColor = [UIColor colorWithHexString:@"#5d9cec"];
     
-    UIFont *font = [UIFont fontWithName:@"MissionGothic-Bold" size:15];
-    self.buttonFacebookImport.titleLabel.font = font;
-    self.buttonGalleryImport.titleLabel.font = font;
-    self.buttonInstagramImport.titleLabel.font = font;
-    self.chooseImportSourceLabel.font = [UIFont fontWithName:@"MissionGothic-Regular" size:19];
-    
     [self.buttonFacebookImport setBackgroundImage:[self imageWithColor:[UIColor colorWithHexString:@"#497aba"]] forState:UIControlStateHighlighted];
     [self.buttonGalleryImport setBackgroundImage:[self imageWithColor:[UIColor colorWithHexString:@"#369c82"]] forState:UIControlStateHighlighted];
     [self.buttonInstagramImport setBackgroundImage:[self imageWithColor:[UIColor colorWithHexString:@"#c29334"]] forState:UIControlStateHighlighted];
+    
+    if (![self instagramEnabled]){
+        [self.instagramButton removeFromSuperview];
+        [self.buttonInstagramImport removeFromSuperview];
+        [self.instagramContainer removeFromSuperview];
+    }
     
     LXReorderableCollectionViewFlowLayout *layout = (LXReorderableCollectionViewFlowLayout *)[self.collectionView collectionViewLayout];
     layout.headerReferenceSize = CGSizeMake(0, 50);
@@ -150,11 +161,15 @@ static void *ActionSheetCellKey;
     }
 }
 
--(void) viewWillAppear:(BOOL)animated{
+- (BOOL)instagramEnabled{
+    return [OLKitePrintSDK instagramSecret] && ![[OLKitePrintSDK instagramSecret] isEqualToString:@""] && [OLKitePrintSDK instagramClientID] && ![[OLKitePrintSDK instagramClientID] isEqualToString:@""] && [OLKitePrintSDK instagramReturnURI] && ![[OLKitePrintSDK instagramReturnURI] isEqualToString:@""];
+}
+
+- (void)viewWillAppear:(BOOL)animated{
     [self.collectionView reloadData];
 }
 
--(void) viewDidAppear:(BOOL)animated{
+- (void)viewDidAppear:(BOOL)animated{
     [self updateNoSelectedPhotosView];
     [self updateTitleBasedOnSelectedPhotoQuanitity];
 }
@@ -192,7 +207,8 @@ static void *ActionSheetCellKey;
         [UIView animateWithDuration:duration delay:delay options:UIViewAnimationOptionCurveEaseIn animations:^{
             self.noSelectedPhotosView.alpha = 0;
         } completion:^(BOOL finished) {}];
-    } else if (self.userSelectedPhotos.count == 0 && self.noSelectedPhotosView.alpha <= 0.1f) {
+    }
+    else if (self.userSelectedPhotos.count == 0 && self.noSelectedPhotosView.alpha <= 0.1f) {
         self.noSelectedPhotosView.alpha = 0;
         [UIView animateWithDuration:duration delay:delay options:UIViewAnimationOptionCurveEaseIn animations:^{
             self.noSelectedPhotosView.alpha = 1;
@@ -313,7 +329,7 @@ static void *ActionSheetCellKey;
 
 - (IBAction)instagramSelected:(id)sender {
     OLInstagramImagePickerController *picker = nil;
-    picker = [[OLInstagramImagePickerController alloc] initWithClientId:@"8e298e2947f04a07a21ae306cc32cbb8" secret:@"981de984cb954e2196563493f85b13bf" redirectURI:@"sticky9://instagram-callback"];
+    picker = [[OLInstagramImagePickerController alloc] initWithClientId:[OLKitePrintSDK instagramClientID] secret:[OLKitePrintSDK instagramSecret] redirectURI:[OLKitePrintSDK instagramReturnURI]];
     
     picker.delegate = self;
     picker.selected = [self createAssetArray];
@@ -361,6 +377,7 @@ static void *ActionSheetCellKey;
     }completion:^(BOOL finished){
         [self.indexPathsToRemoveDict removeAllObjects];
         [self.collectionView reloadData];
+        [self updateNoSelectedPhotosView];
     }];
     
 }

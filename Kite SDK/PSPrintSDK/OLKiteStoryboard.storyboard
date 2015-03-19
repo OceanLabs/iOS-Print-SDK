@@ -1388,22 +1388,31 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Bco-ct-3Yg" customClass="OLPhotoSelectionButton">
-                                <rect key="frame" x="0.0" y="20" width="106.5" height="67"/>
+                                <rect key="frame" x="0.0" y="20" width="107" height="67"/>
                                 <color key="backgroundColor" red="0.28235294119999998" green="0.81176470590000005" blue="0.67843137249999996" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="67" id="Ly3-ZJ-e8S"/>
+                                </constraints>
                                 <connections>
                                     <action selector="cameraRollSelected:" destination="5M4-me-Xph" eventType="touchUpInside" id="TY6-79-iky"/>
                                 </connections>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TIp-Hm-PTo" customClass="OLPhotoSelectionButton">
-                                <rect key="frame" x="106" y="20" width="107" height="67"/>
+                                <rect key="frame" x="106.5" y="20" width="106.5" height="67"/>
                                 <color key="backgroundColor" red="0.96470588239999999" green="0.73333333329999995" blue="0.25882352939999997" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="67" id="jld-4T-CzE"/>
+                                </constraints>
                                 <connections>
                                     <action selector="instagramSelected:" destination="5M4-me-Xph" eventType="touchUpInside" id="100-Li-HTQ"/>
                                 </connections>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9nk-DX-0TW" customClass="OLPhotoSelectionButton">
-                                <rect key="frame" x="213" y="20" width="106.5" height="67"/>
+                                <rect key="frame" x="213" y="20" width="107" height="67"/>
                                 <color key="backgroundColor" red="0.36470588240000001" green="0.61176470589999998" blue="0.92549019610000005" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="67" id="eVd-9B-cnm"/>
+                                </constraints>
                                 <connections>
                                     <action selector="facebookSelected:" destination="5M4-me-Xph" eventType="touchUpInside" id="xBg-dB-75D"/>
                                 </connections>
@@ -1564,6 +1573,7 @@
                                     <constraint firstItem="ygM-3Q-VpC" firstAttribute="centerY" secondItem="R1h-WW-in1" secondAttribute="centerY" id="NMv-f2-bzF"/>
                                     <constraint firstItem="R1h-WW-in1" firstAttribute="leading" secondItem="934-Aw-K7I" secondAttribute="leading" id="QcC-WP-Ab1"/>
                                     <constraint firstItem="Qmw-15-obN" firstAttribute="leading" secondItem="934-Aw-K7I" secondAttribute="leading" constant="20" id="Spi-0u-Yvf"/>
+                                    <constraint firstItem="3Qz-eK-tvU" firstAttribute="top" secondItem="R1h-WW-in1" secondAttribute="bottom" priority="750" constant="15" id="Wb9-8p-Ym6"/>
                                     <constraint firstItem="ygM-3Q-VpC" firstAttribute="centerX" secondItem="R1h-WW-in1" secondAttribute="centerX" id="Wg6-Ch-NjH"/>
                                     <constraint firstItem="nlZ-9G-2DN" firstAttribute="centerX" secondItem="bJC-QM-oWH" secondAttribute="centerX" id="bP9-xj-ZLx"/>
                                     <constraint firstItem="LFC-nl-Cex" firstAttribute="centerY" secondItem="3Qz-eK-tvU" secondAttribute="centerY" id="bau-Vc-FiA"/>
@@ -1582,6 +1592,7 @@
                             <constraint firstItem="Bco-ct-3Yg" firstAttribute="height" secondItem="9nk-DX-0TW" secondAttribute="height" id="1eq-Iq-MkA"/>
                             <constraint firstItem="SHl-5H-G7O" firstAttribute="top" secondItem="ihm-7V-1WO" secondAttribute="bottom" constant="-40" id="2oX-7s-3D1"/>
                             <constraint firstItem="Bco-ct-3Yg" firstAttribute="height" secondItem="TIp-Hm-PTo" secondAttribute="height" id="6xo-KW-gGX"/>
+                            <constraint firstItem="9nk-DX-0TW" firstAttribute="leading" secondItem="Bco-ct-3Yg" secondAttribute="trailing" priority="750" id="7TB-bO-5yf"/>
                             <constraint firstItem="Bco-ct-3Yg" firstAttribute="top" secondItem="Prc-x4-bQB" secondAttribute="bottom" id="9e4-gB-SEF"/>
                             <constraint firstItem="Bco-ct-3Yg" firstAttribute="leading" secondItem="H6l-Sv-Ai2" secondAttribute="leading" id="C3a-eD-lxd"/>
                             <constraint firstItem="Qmw-15-obN" firstAttribute="top" secondItem="Prc-x4-bQB" secondAttribute="bottom" constant="20" id="F6f-ve-u56"/>
@@ -1595,8 +1606,6 @@
                             <constraint firstAttribute="trailing" secondItem="9nk-DX-0TW" secondAttribute="trailing" id="YAa-Zm-2xs"/>
                             <constraint firstItem="TIp-Hm-PTo" firstAttribute="leading" secondItem="Bco-ct-3Yg" secondAttribute="trailing" id="bwg-7T-isz"/>
                             <constraint firstAttribute="trailing" secondItem="7XX-0J-tJc" secondAttribute="trailing" id="eJZ-KS-LOB"/>
-                            <constraint firstItem="Bco-ct-3Yg" firstAttribute="width" secondItem="TIp-Hm-PTo" secondAttribute="height" multiplier="106:67" id="fO9-N6-pda"/>
-                            <constraint firstItem="Bco-ct-3Yg" firstAttribute="width" secondItem="9nk-DX-0TW" secondAttribute="height" multiplier="106:67" id="hBv-EQ-gwu"/>
                             <constraint firstItem="9nk-DX-0TW" firstAttribute="leading" secondItem="TIp-Hm-PTo" secondAttribute="trailing" id="k4m-yc-3zH"/>
                             <constraint firstItem="9nk-DX-0TW" firstAttribute="top" secondItem="Prc-x4-bQB" secondAttribute="bottom" id="kzv-d4-7qc"/>
                             <constraint firstItem="R1h-WW-in1" firstAttribute="top" secondItem="Prc-x4-bQB" secondAttribute="bottom" constant="90" id="l0B-mQ-mo9"/>
@@ -1620,13 +1629,16 @@
                         <outlet property="buttonGalleryImport" destination="R1h-WW-in1" id="OEX-bL-9cY"/>
                         <outlet property="buttonInstagramImport" destination="nlZ-9G-2DN" id="n3b-Da-89z"/>
                         <outlet property="buttonNext" destination="b0B-Ki-nCb" id="6YU-d8-7LH"/>
+                        <outlet property="cameraRollContainer" destination="ygM-3Q-VpC" id="lww-HG-txe"/>
                         <outlet property="chooseImportSourceLabel" destination="Qmw-15-obN" id="KvT-Nk-W95"/>
                         <outlet property="clearButton" destination="ABl-be-HjV" id="OmM-5J-0YH"/>
                         <outlet property="clearButtonContainerView" destination="ihm-7V-1WO" id="V4F-Oo-lHd"/>
                         <outlet property="collectionView" destination="7XX-0J-tJc" id="trV-ag-XzR"/>
                         <outlet property="facebookButton" destination="9nk-DX-0TW" id="QKz-Lx-xnM"/>
+                        <outlet property="facebookContainer" destination="LFC-nl-Cex" id="WtE-cJ-1pA"/>
                         <outlet property="galleryButton" destination="Bco-ct-3Yg" id="po2-xJ-yF1"/>
                         <outlet property="instagramButton" destination="TIp-Hm-PTo" id="9Bl-mF-1sQ"/>
+                        <outlet property="instagramContainer" destination="bJC-QM-oWH" id="81V-KN-jpA"/>
                         <outlet property="noSelectedPhotosView" destination="934-Aw-K7I" id="qzE-ch-3PM"/>
                         <outlet property="view" destination="H6l-Sv-Ai2" id="3gW-lU-9Gh"/>
                     </connections>

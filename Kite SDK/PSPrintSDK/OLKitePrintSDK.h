@@ -36,6 +36,10 @@ typedef void (^OLProductCostRefreshCompletionHandler)(NSError *error);
 @interface OLKitePrintSDK : NSObject
 
 + (void)setAPIKey:(NSString *)apiKey withEnvironment:(OLKitePrintSDKEnvironment)environment;
++ (void)setInstagramEnabledWithReturnURI:(NSString *)URI clientID:(NSString *)clientID secret:(NSString *)secret;
++ (NSString *) instagramReturnURI;
++ (NSString *) instagramSecret;
++ (NSString *) instagramClientID;
 
 + (NSString *)apiKey;
 + (OLKitePrintSDKEnvironment)environment;
