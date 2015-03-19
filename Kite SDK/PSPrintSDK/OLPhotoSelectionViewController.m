@@ -243,32 +243,53 @@ static void *ActionSheetCellKey;
 
 - (void)populateArrayWithNewArray:(NSArray *)array dataType:(Class)class {
     NSMutableArray *photoArray = [[NSMutableArray alloc] initWithCapacity:array.count];
+    NSMutableArray *assetArray = [[NSMutableArray alloc] initWithCapacity:array.count];
     
     for (id object in array) {
         OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
         printPhoto.serverImageSize = self.product.serverImageSize;
         printPhoto.asset = object;
         [photoArray addObject:printPhoto];
+        
+        if ([object isKindOfClass: [ALAsset class]]){
+            [assetArray addObject:[OLAsset assetWithALAsset:object]];
+        }
+        else if ([object isKindOfClass: [OLInstagramImage class]] || [object isKindOfClass: [OLFacebookImage class]]){
+            [assetArray addObject:[OLAsset assetWithURL:[object fullURL]]];
+        }
+        else if ([object isKindOfClass:[OLAsset class]]){
+            [assetArray addObject:object];
+        }
     }
     
     // First remove any that are not returned.
     NSMutableArray *removeArray = [NSMutableArray arrayWithArray:self.userSelectedPhotos];
+    NSMutableArray *removeAssetArray = [NSMutableArray arrayWithArray:self.assets];
     for (OLPrintPhoto *object in self.userSelectedPhotos) {
         if (![object.asset isKindOfClass:class] || [photoArray containsObject:object]) {
+            [removeAssetArray removeObjectAtIndex:[removeArray indexOfObjectIdenticalTo:object]];
             [removeArray removeObject:object];
         }
     }
     
     [self.userSelectedPhotos removeObjectsInArray:removeArray];
+    [self.assets removeObjectsInArray:removeAssetArray];
     
     // Second, add the remaining objects to the end of the array without replacing any.
     NSMutableArray *addArray = [NSMutableArray arrayWithArray:photoArray];
+    NSMutableArray *addAssetArray = [NSMutableArray arrayWithArray:assetArray];
     for (id object in self.userSelectedPhotos) {
         if ([addArray containsObject:object]) {
             [addArray removeObject:object];
         }
     }
+    for (id object in self.assets){
+        if ([addAssetArray containsObject:object]){
+            [addAssetArray removeObject:object];
+        }
+    }
     [self.userSelectedPhotos addObjectsFromArray:addArray];
+    [self.assets addObjectsFromArray:addAssetArray];
     
     // Reload the collection view.
     [self.collectionView reloadData];
@@ -562,11 +583,15 @@ static void *ActionSheetCellKey;
     [collectionView deselectItemAtIndexPath:indexPath animated:NO];
 }
 
-- (void)collectionView:(UICollectionView *)collectionView itemAtIndexPath:(NSIndexPath *)fromIndexPath willMoveToIndexPath:(NSIndexPath *)toIndexPath {
+- (void)collectionView:(UICollectionView *)collectionView itemAtIndexPath:(NSIndexPath *)fromIndexPath didMoveToIndexPath:(NSIndexPath *)toIndexPath {
     
     id object = [self.userSelectedPhotos objectAtIndex:fromIndexPath.item + fromIndexPath.section * self.product.quantityToFulfillOrder];
     [self.userSelectedPhotos removeObjectAtIndex:fromIndexPath.item + fromIndexPath.section * self.product.quantityToFulfillOrder];
     [self.userSelectedPhotos insertObject:object atIndex:toIndexPath.item + toIndexPath.section * self.product.quantityToFulfillOrder];
+    
+    object = [self.assets objectAtIndex:fromIndexPath.item + fromIndexPath.section * self.product.quantityToFulfillOrder];
+    [self.assets removeObjectAtIndex:fromIndexPath.item + fromIndexPath.section * self.product.quantityToFulfillOrder];
+    [self.assets insertObject:object atIndex:toIndexPath.item + toIndexPath.section * self.product.quantityToFulfillOrder];
 }
 
 - (BOOL)collectionView:(UICollectionView *)collectionView itemAtIndexPath:(NSIndexPath *)fromIndexPath canMoveToIndexPath:(NSIndexPath *)toIndexPath{
@@ -649,6 +674,7 @@ static void *ActionSheetCellKey;
     [finalPhotos addObjectsFromArray:self.userSelectedPhotos];
     [finalPhotos removeObjectsInArray:self.userDisabledPhotos];
     orvc.userSelectedPhotos = finalPhotos;
+    orvc.assets = self.assets;
     [self.navigationController pushViewController:orvc animated:YES];
 }
 
