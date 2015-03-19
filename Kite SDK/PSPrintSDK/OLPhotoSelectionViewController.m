@@ -348,6 +348,7 @@ static void *ActionSheetCellKey;
 
 - (IBAction)onButtonClearClicked:(UIButton *)sender {
     for (id photo in self.userDisabledPhotos){
+        [self.assets removeObject:[photo asset]];
         [self.userSelectedPhotos removeObject:photo];
     }
     [self.userDisabledPhotos removeAllObjects];
