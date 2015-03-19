@@ -43,20 +43,6 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
 
 @implementation OLOrderReviewViewController
 
--(NSMutableArray *) userSelectedPhotos{
-    if (!_userSelectedPhotos){
-        NSMutableArray *mutableUserSelectedPhotos = [[NSMutableArray alloc] init];
-        for (id asset in self.assets){
-            OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
-            printPhoto.serverImageSize = [self.product serverImageSize];
-            printPhoto.asset = asset;
-            [mutableUserSelectedPhotos addObject:printPhoto];
-        }
-        _userSelectedPhotos = mutableUserSelectedPhotos;
-    }
-    return _userSelectedPhotos;
-}
-
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -243,7 +229,6 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
         [self.extraCopiesOfAssets addObject:@0];
         
         OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
-        printPhoto.serverImageSize = [self.product serverImageSize];
         printPhoto.asset = asset;
         [self.userSelectedPhotos addObject:printPhoto];
     }

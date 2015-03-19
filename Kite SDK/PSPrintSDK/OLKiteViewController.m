@@ -16,6 +16,7 @@
 #import "OLPosterSizeSelectionViewController.h"
 #import "OLKitePrintSDK.h"
 #import "OLAnalytics.h"
+#import "OLPrintPhoto.h"
 
 @interface OLKiteViewController () <UIAlertViewDelegate>
 
@@ -30,19 +31,18 @@
 
 @implementation OLKiteViewController
 
-//-(NSMutableArray *) userSelectedPhotos{
-//    if (!_userSelectedPhotos){
-//        NSMutableArray *mutableUserSelectedPhotos = [[NSMutableArray alloc] init];
-//        for (id asset in self.assets){
-//            OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
-//            printPhoto.serverImageSize = [self.product serverImageSize];
-//            printPhoto.asset = asset;
-//            [mutableUserSelectedPhotos addObject:printPhoto];
-//        }
-//        _userSelectedPhotos = mutableUserSelectedPhotos;
-//    }
-//    return _userSelectedPhotos;
-//}
+-(NSMutableArray *) userSelectedPhotos{
+    if (!_userSelectedPhotos){
+        NSMutableArray *mutableUserSelectedPhotos = [[NSMutableArray alloc] init];
+        for (id asset in self.assets){
+            OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
+            printPhoto.asset = asset;
+            [mutableUserSelectedPhotos addObject:printPhoto];
+        }
+        _userSelectedPhotos = mutableUserSelectedPhotos;
+    }
+    return _userSelectedPhotos;
+}
 
 - (id)initWithAssets:(NSArray *)assets {
     NSAssert(assets != nil && [assets count] > 0, @"KiteViewController requires assets to print");

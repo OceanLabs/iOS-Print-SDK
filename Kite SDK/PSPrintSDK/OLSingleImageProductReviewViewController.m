@@ -366,7 +366,6 @@
     
     for (ALAsset *asset in addArray){
         OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
-        printPhoto.serverImageSize = [self.product serverImageSize];
         printPhoto.asset = asset;
         [self.userSelectedPhotos addObject:printPhoto];
     }

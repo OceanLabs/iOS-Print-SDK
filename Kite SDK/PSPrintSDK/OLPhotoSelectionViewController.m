@@ -83,20 +83,6 @@ static void *ActionSheetCellKey;
 
 @implementation OLPhotoSelectionViewController
 
--(NSMutableArray *) userSelectedPhotos{
-    if (!_userSelectedPhotos){
-        NSMutableArray *mutableUserSelectedPhotos = [[NSMutableArray alloc] init];
-        for (id asset in self.assets){
-            OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
-            printPhoto.serverImageSize = [self.product serverImageSize];
-            printPhoto.asset = asset;
-            [mutableUserSelectedPhotos addObject:printPhoto];
-        }
-        _userSelectedPhotos = mutableUserSelectedPhotos;
-    }
-    return _userSelectedPhotos;
-}
-
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.userDisabledPhotos = [[NSMutableArray alloc] init];
@@ -247,7 +233,6 @@ static void *ActionSheetCellKey;
     
     for (id object in array) {
         OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
-        printPhoto.serverImageSize = self.product.serverImageSize;
         printPhoto.asset = object;
         [photoArray addObject:printPhoto];
         

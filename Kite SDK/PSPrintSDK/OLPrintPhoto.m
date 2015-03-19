@@ -18,7 +18,6 @@
 static NSString *const kKeyType = @"co.oceanlabs.psprintstudio.kKeyType";
 static NSString *const kKeyAsset = @"co.oceanlabs.psprintstudio.kKeyAsset";
 static NSString *const kKeyCropTransform = @"co.oceanlabs.psprintstudio.kKeyCropTransform";
-static NSString *const kKeyServerImageSize = @"co.oceanlabs.psprintstudio.kKeyServerImageSize";
 
 @implementation ALAsset (isEqual)
 
@@ -411,7 +410,7 @@ static NSString *const kKeyServerImageSize = @"co.oceanlabs.psprintstudio.kKeySe
     else if (self.type == kPrintPhotoAssetTypeInstagramPhoto || self.type == kPrintPhotoAssetTypeFacebookPhoto){
         [[SDWebImageManager sharedManager] downloadImageWithURL:[self.asset fullURL] options:0 progress:NULL completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
             if (finished) {
-                NSUInteger length = UIImageJPEGRepresentation([OLPrintPhoto croppedImageWithImage:image transform:self.transform size:self.serverImageSize], 0.7).length;
+                NSUInteger length = UIImageJPEGRepresentation(image, 0.7).length;
                 handler(length, error);
             }
         }];
@@ -442,7 +441,7 @@ static NSString *const kKeyServerImageSize = @"co.oceanlabs.psprintstudio.kKeySe
                 if (error) {
                     handler(nil, error);
                 } else {
-                    NSData *data = UIImageJPEGRepresentation([OLPrintPhoto croppedImageWithImage:image transform:self.transform size:self.serverImageSize], 0.7);
+                    NSData *data = UIImageJPEGRepresentation(image, 0.7);
                     handler(data, error);
                 }
             }
@@ -506,7 +505,6 @@ static NSString *const kKeyServerImageSize = @"co.oceanlabs.psprintstudio.kKeySe
             self.asset = [aDecoder decodeObjectForKey:kKeyAsset];
         }
         self.cropTransform = [aDecoder decodeCGAffineTransformForKey:kKeyCropTransform];
-        self.serverImageSize = [aDecoder decodeCGSizeForKey:kKeyServerImageSize];
     }
     
     return self;
@@ -515,7 +513,6 @@ static NSString *const kKeyServerImageSize = @"co.oceanlabs.psprintstudio.kKeySe
 - (void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeInteger:self.type forKey:kKeyType];
     [aCoder encodeCGAffineTransform:self.cropTransform forKey:kKeyCropTransform];
-    [aCoder encodeCGSize:self.serverImageSize forKey:kKeyServerImageSize];
     if (self.type == kPrintPhotoAssetTypeALAsset) {
         [aCoder encodeObject:[self.asset valueForProperty:ALAssetPropertyAssetURL] forKey:kKeyAsset];
     } else {

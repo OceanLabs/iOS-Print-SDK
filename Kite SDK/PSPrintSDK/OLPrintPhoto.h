@@ -29,7 +29,6 @@ typedef enum {
 
 @property (nonatomic, assign, readonly) PrintPhotoAssetType type;
 @property (nonatomic, strong) id asset;
-@property (nonatomic, assign) CGSize serverImageSize;
 @property (assign, nonatomic) CGSize transformFactor;
 
 @end
