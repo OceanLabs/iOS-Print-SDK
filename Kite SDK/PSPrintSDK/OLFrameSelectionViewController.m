@@ -34,6 +34,7 @@
     
     OLFrameOrderReviewViewController *vc = segue.destinationViewController;
     vc.assets = [self.assets mutableCopy];
+    vc.userSelectedPhotos = self.userSelectedPhotos;
     if ([segue.identifier isEqualToString:@"Selected2x2FrameStyleSegue"]) {
         for (OLProduct *product in products){
             if (product.productTemplate.templateClass == kOLTemplateClassFrame && product.productTemplate.quantityPerSheet == 4){

@@ -133,6 +133,7 @@
     if (product.productTemplate.templateClass == kOLTemplateClassPoster){
         OLPosterSizeSelectionViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"sizeSelect"];
         vc.assets = self.assets;
+        vc.userSelectedPhotos = self.userSelectedPhotos;
         vc.delegate = self.delegate;
         [self.navigationController pushViewController:vc animated:YES];
     }
@@ -140,12 +141,14 @@
         OLCaseSelectionViewController *caseVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLCaseSelectionViewController"];
         caseVc.delegate = self.delegate;
         caseVc.assets = self.assets;
+        caseVc.userSelectedPhotos = self.userSelectedPhotos;
         caseVc.templateClass = product.productTemplate.templateClass;
         [self.navigationController pushViewController:caseVc animated:YES];
     }
     else{
         OLProductOverviewViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLProductOverviewViewController"];
         vc.assets = self.assets;
+        vc.userSelectedPhotos = self.userSelectedPhotos;
         vc.product = product;
         vc.delegate = self.delegate;
         [self.navigationController pushViewController:vc animated:YES];

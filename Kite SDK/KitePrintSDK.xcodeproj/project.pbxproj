@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		2E0A72661A6FB07000BC5AE7 /* OLScrollCropViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0A72651A6FB07000BC5AE7 /* OLScrollCropViewController.m */; };
 		2E0E250F1A77997E00808ED8 /* OLAnalytics.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0E250E1A77997E00808ED8 /* OLAnalytics.m */; };
+		2E1549CB1ABAE50600795670 /* NSArray+QueryingExtras.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1549CA1ABAE50600795670 /* NSArray+QueryingExtras.m */; };
 		2E1F69DE1A66999700696286 /* OLPosterSizeSelectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1F69DD1A66999700696286 /* OLPosterSizeSelectionViewController.m */; };
 		2E1F69E41A6699AE00696286 /* OLPosterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1F69E31A6699AE00696286 /* OLPosterViewController.m */; };
 		2E39CAA31AB894A8008B1EFF /* OLPhotoSelectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E39CAA21AB894A8008B1EFF /* OLPhotoSelectionViewController.m */; };
@@ -103,6 +104,8 @@
 		2E0A72651A6FB07000BC5AE7 /* OLScrollCropViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLScrollCropViewController.m; sourceTree = "<group>"; };
 		2E0E250D1A77997E00808ED8 /* OLAnalytics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLAnalytics.h; sourceTree = "<group>"; };
 		2E0E250E1A77997E00808ED8 /* OLAnalytics.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLAnalytics.m; sourceTree = "<group>"; };
+		2E1549C91ABAE50600795670 /* NSArray+QueryingExtras.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSArray+QueryingExtras.h"; path = "PSPrintSDK/NSArray+QueryingExtras.h"; sourceTree = "<group>"; };
+		2E1549CA1ABAE50600795670 /* NSArray+QueryingExtras.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSArray+QueryingExtras.m"; path = "PSPrintSDK/NSArray+QueryingExtras.m"; sourceTree = "<group>"; };
 		2E1F69DC1A66999700696286 /* OLPosterSizeSelectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLPosterSizeSelectionViewController.h; sourceTree = "<group>"; };
 		2E1F69DD1A66999700696286 /* OLPosterSizeSelectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLPosterSizeSelectionViewController.m; sourceTree = "<group>"; };
 		2E1F69E21A6699AE00696286 /* OLPosterViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLPosterViewController.h; sourceTree = "<group>"; };
@@ -333,6 +336,8 @@
 				3D8122F01A75A46D004E7297 /* UIImageView+FadeIn.m */,
 				3D8122F11A75A46D004E7297 /* UITableViewController+ScreenWidthFactor.h */,
 				3D8122F21A75A46D004E7297 /* UITableViewController+ScreenWidthFactor.m */,
+				2E1549C91ABAE50600795670 /* NSArray+QueryingExtras.h */,
+				2E1549CA1ABAE50600795670 /* NSArray+QueryingExtras.m */,
 			);
 			name = Categories;
 			path = ..;
@@ -798,6 +803,7 @@
 				3D8122EE1A759F42004E7297 /* UIView+RMUtils.m in Sources */,
 				CD550B191881E1E600782D75 /* OLPrintOrder+History.m in Sources */,
 				CDAFE008186D9C6C003572FE /* OLAsset.m in Sources */,
+				2E1549CB1ABAE50600795670 /* NSArray+QueryingExtras.m in Sources */,
 				CD73BF7C186215790009DE03 /* AppDelegate.m in Sources */,
 				CD97568E18D8D148007CA090 /* OLProductTemplate.m in Sources */,
 				CDA8BF5618D70D0F00D835BB /* OLPaymentViewController.m in Sources */,

@@ -27,6 +27,7 @@
 #import "OLCheckoutViewController.h"
 #import "OLConstants.h"
 #import <LXReorderableCollectionViewFlowLayout.h>
+#import "NSArray+QueryingExtras.h"
 
 NSInteger OLPhotoSelectionMargin = 0;
 
@@ -66,7 +67,6 @@ static void *ActionSheetCellKey;
 @property (nonatomic, weak) IBOutlet OLPhotoSelectionButton *facebookButton;
 @property (nonatomic, weak) IBOutlet UICollectionView *collectionView;
 @property (nonatomic, strong) CTAssetsPickerController *picker;
-@property (nonatomic, strong) NSMutableArray *userSelectedPhotos;
 @property (strong, nonatomic) NSMutableArray *userDisabledPhotos;
 
 @property (nonatomic, weak) IBOutlet UILabel *chooseImportSourceLabel;
@@ -77,6 +77,8 @@ static void *ActionSheetCellKey;
 @property (weak, nonatomic) IBOutlet UIView *clearButtonContainerView;
 @property (weak, nonatomic) IBOutlet UIButton *clearButton;
 @property (strong, nonatomic) UIVisualEffectView *visualEffectView;
+
+@property (strong, nonatomic) NSMutableDictionary *indexPathsToRemoveDict;
 @end
 
 @implementation OLPhotoSelectionViewController
@@ -97,9 +99,7 @@ static void *ActionSheetCellKey;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-//    self.userSelectedPhotos = [[NSMutableArray alloc] init];
     self.userDisabledPhotos = [[NSMutableArray alloc] init];
-//    [self onUserSelectedPhotoCountChange];
     
     self.galleryButton.image = [UIImage imageNamed:@"import_gallery"];
     self.galleryButton.title = NSLocalizedString(@"Camera Roll", @"");
@@ -189,7 +189,7 @@ static void *ActionSheetCellKey;
 
 - (void)onUserSelectedPhotoCountChange {
     for (OLPrintPhoto *printPhoto in self.userDisabledPhotos){
-        if (![self.userSelectedPhotos containsObject:printPhoto]){
+        if (![self.userSelectedPhotos containsObjectIdenticalTo:printPhoto]){
             [self.userDisabledPhotos removeObject:printPhoto];
         }
     }
@@ -266,9 +266,9 @@ static void *ActionSheetCellKey;
     NSMutableArray *removeArray = [NSMutableArray arrayWithArray:self.userSelectedPhotos];
     NSMutableArray *removeAssetArray = [NSMutableArray arrayWithArray:self.assets];
     for (OLPrintPhoto *object in self.userSelectedPhotos) {
-        if (![object.asset isKindOfClass:class] || [photoArray containsObject:object]) {
+        if (![object.asset isKindOfClass:class] || [photoArray containsObjectIdenticalTo:object]) {
             [removeAssetArray removeObjectAtIndex:[removeArray indexOfObjectIdenticalTo:object]];
-            [removeArray removeObject:object];
+            [removeArray removeObjectIdenticalTo:object];
         }
     }
     
@@ -279,15 +279,12 @@ static void *ActionSheetCellKey;
     NSMutableArray *addArray = [NSMutableArray arrayWithArray:photoArray];
     NSMutableArray *addAssetArray = [NSMutableArray arrayWithArray:assetArray];
     for (id object in self.userSelectedPhotos) {
-        if ([addArray containsObject:object]) {
-            [addArray removeObject:object];
+        if ([addAssetArray containsObjectIdenticalTo:[object asset]]){
+            [addArray removeObjectAtIndex:[addAssetArray indexOfObjectIdenticalTo:[object asset]]];
+            [addAssetArray removeObjectIdenticalTo:[object asset]];
         }
     }
-    for (id object in self.assets){
-        if ([addAssetArray containsObject:object]){
-            [addAssetArray removeObject:object];
-        }
-    }
+
     [self.userSelectedPhotos addObjectsFromArray:addArray];
     [self.assets addObjectsFromArray:addAssetArray];
     
@@ -347,13 +344,40 @@ static void *ActionSheetCellKey;
 }
 
 - (IBAction)onButtonClearClicked:(UIButton *)sender {
+    NSInteger initialSections = [self numberOfSectionsInCollectionView:self.collectionView];
+    
+    self.indexPathsToRemoveDict = [[NSMutableDictionary alloc] init];
     for (id photo in self.userDisabledPhotos){
-        [self.assets removeObject:[photo asset]];
-        [self.userSelectedPhotos removeObject:photo];
+        NSUInteger index = [self.userSelectedPhotos indexOfObjectIdenticalTo:photo];
+        NSUInteger section = index / self.product.quantityToFulfillOrder;
+        NSUInteger item = index % self.product.quantityToFulfillOrder;
+        
+        if (!self.indexPathsToRemoveDict[[NSNumber numberWithInteger:section]]){
+            self.indexPathsToRemoveDict[[NSNumber numberWithInteger:section]] = [[NSMutableArray alloc] init];
+        }
+        [self.indexPathsToRemoveDict[[NSNumber numberWithInteger:section]] addObject:[NSIndexPath indexPathForItem:item inSection:section]];
     }
+    for (id photo in self.userDisabledPhotos){
+        [self.assets removeObjectIdenticalTo:[photo asset]];
+        [self.userSelectedPhotos removeObjectIdenticalTo:photo];
+    }
+    
     [self.userDisabledPhotos removeAllObjects];
     [self updateTitleBasedOnSelectedPhotoQuanitity];
-    [self.collectionView reloadData];
+    
+    [self.collectionView performBatchUpdates:^{
+        if ([self numberOfSectionsInCollectionView:self.collectionView] < initialSections){
+            [self.collectionView deleteSections:[NSIndexSet indexSetWithIndex:initialSections-1]];
+        }
+        for (NSNumber *sectionNumber in self.indexPathsToRemoveDict.allKeys){
+            NSNumber *n = [NSNumber numberWithLong:[sectionNumber longValue]];
+            [self.collectionView deleteItemsAtIndexPaths:self.indexPathsToRemoveDict[n]];
+        }
+    }completion:^(BOOL finished){
+        [self.indexPathsToRemoveDict removeAllObjects];
+        [self.collectionView reloadData];
+    }];
+    
 }
 
 #pragma mark - CTAssetsPickerControllerDelegate Methods
@@ -413,11 +437,27 @@ static void *ActionSheetCellKey;
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
     NSInteger number = collectionView.frame.size.height / 105 ;
-    return MIN(MAX(self.userSelectedPhotos.count, number * 3), self.product.quantityToFulfillOrder);
+    NSInteger removedImagesInOtherSections = 0;
+    for (NSNumber *sectionNumber in self.indexPathsToRemoveDict.allKeys){
+        NSNumber *n = [NSNumber numberWithLong:[sectionNumber longValue]];
+        if ([n integerValue] != section){
+            removedImagesInOtherSections += [self.indexPathsToRemoveDict[n] count];
+        }
+    }
+    NSInteger removedImagesInThisSection = [self.indexPathsToRemoveDict[[NSNumber numberWithInteger:section]] count];
+    NSInteger finalNumberOfPhotosRemoved = removedImagesInThisSection + removedImagesInOtherSections;
+
+    return MIN(MAX(self.userSelectedPhotos.count + finalNumberOfPhotosRemoved, number * 3), self.product.quantityToFulfillOrder) - removedImagesInThisSection;
 }
 
 - (NSInteger) numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
-    return ((NSInteger)(self.userSelectedPhotos.count / self.product.quantityToFulfillOrder))+1;
+    NSInteger removedImagesCount = 0;
+    for (NSNumber *section in self.indexPathsToRemoveDict.allKeys){
+        NSNumber *n = [NSNumber numberWithLong:[section longValue]];
+        removedImagesCount += [self.indexPathsToRemoveDict[n] count];
+    }
+    NSInteger finalNumberOfPhotos = self.userSelectedPhotos.count;
+    return ceil(finalNumberOfPhotos / (double)self.product.quantityToFulfillOrder);
 }
 
 - (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath{
@@ -487,6 +527,7 @@ static void *ActionSheetCellKey;
         
         [cell.contentView addConstraints:con];
     }
+    imageView.image = nil;
     
     UIImageView *checkmark = (UIImageView *) [cell.contentView viewWithTag:41];
     if (!checkmark){
@@ -547,7 +588,7 @@ static void *ActionSheetCellKey;
     if (imageIndex < self.userSelectedPhotos.count) {
         OLPrintPhoto *photo = self.userSelectedPhotos[indexPath.row + indexPath.section * self.product.quantityToFulfillOrder];
         [photo setThumbImageForImageView:imageView];
-        checkmark.hidden = [self.userDisabledPhotos containsObject:photo];
+        checkmark.hidden = [self.userDisabledPhotos containsObjectIdenticalTo:photo];
         disabled.hidden = !checkmark.hidden;
     } else {
         [imageView setImage:nil];
@@ -564,8 +605,8 @@ static void *ActionSheetCellKey;
     id photo;
     if (indexPath.row < [self.userSelectedPhotos count]){
         photo = self.userSelectedPhotos[indexPath.row + indexPath.section * self.product.quantityToFulfillOrder];
-        if ([self.userDisabledPhotos containsObject:photo]){
-            [self.userDisabledPhotos removeObject:photo];
+        if ([self.userDisabledPhotos containsObjectIdenticalTo:photo]){
+            [self.userDisabledPhotos removeObjectIdenticalTo:photo];
         }
         else{
             [self.userDisabledPhotos addObject:photo];
@@ -574,7 +615,7 @@ static void *ActionSheetCellKey;
     
     UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
     UIView *checkmark = [cell viewWithTag:41];
-    checkmark.hidden = [self.userDisabledPhotos containsObject:photo] || indexPath.row >= [self.userSelectedPhotos count];
+    checkmark.hidden = [self.userDisabledPhotos containsObjectIdenticalTo:photo] || indexPath.row >= [self.userSelectedPhotos count];
     
     UIView *disabled = [cell viewWithTag:42];
     disabled.hidden = !checkmark.hidden || indexPath.row >= [self.userSelectedPhotos count];
