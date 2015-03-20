@@ -241,12 +241,13 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
 }
 
 - (BOOL)shouldShowAddMorePhotos{
-    if (![self.delegate respondsToSelector:@selector(kiteControllerShouldShowAddMorePhotosInReview:)]){
-        return YES;
-    }
-    else{
-        return [self.delegate kiteControllerShouldShowAddMorePhotosInReview:[self kiteViewController]];
-    }
+    return NO;
+//    if (![self.delegate respondsToSelector:@selector(kiteControllerShouldShowAddMorePhotosInReview:)]){
+//        return YES;
+//    }
+//    else{
+//        return [self.delegate kiteControllerShouldShowAddMorePhotosInReview:[self kiteViewController]];
+//    }
 }
 
 #pragma mark Button Actions

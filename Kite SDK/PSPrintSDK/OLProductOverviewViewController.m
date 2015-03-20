@@ -26,6 +26,12 @@
 
 @end
 
+@interface OLKitePrintSDK (Kite)
+
++ (OLKiteViewController *)kiteViewControllerInNavStack:(NSArray *)viewControllers;
+
+@end
+
 @interface OLProductOverviewViewController () <UIPageViewControllerDataSource, OLProductOverviewPageContentViewControllerDelegate>
 @property (strong, nonatomic) UIPageViewController *pageController;
 @property (strong, nonatomic) IBOutlet UIPageControl *pageControl;
@@ -154,12 +160,24 @@
         [self.navigationController pushViewController:vc animated:YES];
     }
     else{
-        OLPhotoSelectionViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"PhotoSelectionViewController"];
-        vc.assets = self.assets;
-        vc.userSelectedPhotos = self.userSelectedPhotos;
-        vc.product = self.product;
-        vc.delegate = self.delegate;
-        [self.navigationController pushViewController:vc animated:YES];
+        if (![self.delegate respondsToSelector:@selector(kiteControllerShouldShowAddMorePhotosInReview:)] || [self.delegate kiteControllerShouldShowAddMorePhotosInReview:[OLKitePrintSDK kiteViewControllerInNavStack:self.navigationController.viewControllers]]){
+            OLPhotoSelectionViewController *vc;
+            vc = [self.storyboard instantiateViewControllerWithIdentifier:@"PhotoSelectionViewController"];
+            vc.assets = self.assets;
+            vc.userSelectedPhotos = self.userSelectedPhotos;
+            vc.product = self.product;
+            vc.delegate = self.delegate;
+            [self.navigationController pushViewController:vc animated:YES];
+        }
+        else{
+            OLOrderReviewViewController *vc;
+            vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OrderReviewViewController"];
+            vc.assets = self.assets;
+            vc.userSelectedPhotos = self.userSelectedPhotos;
+            vc.product = self.product;
+            vc.delegate = self.delegate;
+            [self.navigationController pushViewController:vc animated:YES];
+        }
     }
 }
 
