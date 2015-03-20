@@ -519,7 +519,7 @@ static void *ActionSheetCellKey;
     NSString *title;
     OLTemplateClass templateClass = [OLProductTemplate templateWithId:self.product.templateId].templateClass;
     if (templateClass == kOLTemplateClassFrame){
-        title = [[NSString alloc]initWithFormat:@"#%lu %@", indexPath.section + 1, self.product.productTemplate.name];
+        title = [[NSString alloc]initWithFormat:@"#%lu Frame", indexPath.section + 1];
     }
     else{
         title = [[NSString alloc]initWithFormat:@"#%lu Pack of %lu %@", indexPath.section + 1, (unsigned long)self.product.quantityToFulfillOrder, self.product.productTemplate.name];
