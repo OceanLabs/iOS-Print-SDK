@@ -15,8 +15,12 @@
 #import <objc/runtime.h>
 #import <OLInstagramImagePickerController.h>
 #import <OLInstagramImage.h>
+
+#ifdef OL_KITE_OFFER_FACEBOOK
 #import <OLFacebookImagePickerController.h>
 #import <OLFacebookImage.h>
+#endif
+
 #import <UIImageView+FadeIn.h>
 #import "OLPrintJob.h"
 #import "OLAddress.h"
@@ -65,7 +69,9 @@ static void *ActionSheetCellKey;
                                             UICollectionViewDelegateFlowLayout,
                                             UIActionSheetDelegate,
                                             OLInstagramImagePickerControllerDelegate,
+#ifdef OL_KITE_OFFER_FACEBOOK
                                             OLFacebookImagePickerControllerDelegate,
+#endif
                                             LXReorderableCollectionViewDataSource,
                                             UICollectionViewDelegateFlowLayout>
 
@@ -172,7 +178,11 @@ static void *ActionSheetCellKey;
 }
 
 - (BOOL)facebookEnabled{
+#ifdef OL_KITE_OFFER_FACEBOOK
     return YES;
+#else
+    return NO;
+#endif
 }
 
 - (void)viewWillAppear:(BOOL)animated{
@@ -265,9 +275,14 @@ static void *ActionSheetCellKey;
         if ([object isKindOfClass: [ALAsset class]]){
             [assetArray addObject:[OLAsset assetWithALAsset:object]];
         }
-        else if ([object isKindOfClass: [OLInstagramImage class]] || [object isKindOfClass: [OLFacebookImage class]]){
+        else if ([object isKindOfClass: [OLInstagramImage class]]){
             [assetArray addObject:[OLAsset assetWithURL:[object fullURL]]];
         }
+#ifdef OL_KITE_OFFER_FACEBOOK
+        else if ([object isKindOfClass: [OLFacebookImage class]]){
+            [assetArray addObject:[OLAsset assetWithURL:[object fullURL]]];
+        }
+#endif
         else if ([object isKindOfClass:[OLAsset class]]){
             [assetArray addObject:object];
         }
@@ -347,11 +362,13 @@ static void *ActionSheetCellKey;
 }
 
 - (IBAction)facebookSelected:(id)sender {
+#ifdef OL_KITE_OFFER_FACEBOOK
     OLFacebookImagePickerController *picker = nil;
     picker = [[OLFacebookImagePickerController alloc] init];
     picker.delegate = self;
     picker.selected = [self createAssetArray];
     [self presentViewController:picker animated:YES completion:nil];
+#endif
 }
 
 - (IBAction)onButtonClearClicked:(UIButton *)sender {
@@ -430,6 +447,7 @@ static void *ActionSheetCellKey;
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
+#ifdef OL_KITE_OFFER_FACEBOOK
 #pragma mark - OLFacebookImagePickerControllerDelegate Methods
 
 - (void)facebookImagePicker:(OLFacebookImagePickerController *)imagePicker didFailWithError:(NSError *)error {
@@ -444,6 +462,7 @@ static void *ActionSheetCellKey;
 - (void)facebookImagePickerDidCancelPickingImages:(OLFacebookImagePickerController *)imagePicker {
     [self dismissViewControllerAnimated:YES completion:nil];
 }
+#endif
 
 #pragma mark - UICollectionViewDataSource Methods
 

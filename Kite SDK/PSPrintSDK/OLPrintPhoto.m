@@ -13,7 +13,10 @@
 #import "OLAsset+Private.h"
 #import "UIImageView+FadeIn.h"
 #import <OLInstagramImage.h>
+
+#ifdef OL_KITE_OFFER_FACEBOOK
 #import <OLFacebookImage.h>
+#endif
 
 static NSString *const kKeyType = @"co.oceanlabs.psprintstudio.kKeyType";
 static NSString *const kKeyAsset = @"co.oceanlabs.psprintstudio.kKeyAsset";
@@ -100,10 +103,12 @@ static NSString *const kKeyCropTransform = @"co.oceanlabs.psprintstudio.kKeyCrop
         if (self.type == kPrintPhotoAssetTypeInstagramPhoto) {
             [imageView setAndFadeInImageWithURL:[self.asset fullURL]];
         }
+#ifdef OL_KITE_OFFER_FACEBOOK
         else if (self.type == kPrintPhotoAssetTypeFacebookPhoto){
             OLFacebookImage *fbImage = self.asset;
             [imageView setAndFadeInImageWithURL:[fbImage bestURLForSize:CGSizeMake(imageView.frame.size.width * [UIScreen mainScreen].scale, imageView.frame.size.height * [UIScreen mainScreen].scale)]];
         }
+#endif
         else if (self.type == kPrintPhotoAssetTypeOLAsset){
             OLAsset *asset = (OLAsset *)self.asset;
             
@@ -164,10 +169,12 @@ static NSString *const kKeyCropTransform = @"co.oceanlabs.psprintstudio.kKeyCrop
         else if (self.type == kPrintPhotoAssetTypeInstagramPhoto) {
             [imageView setAndFadeInImageWithURL:[self.asset thumbURL]];
         }
+#ifdef OL_KITE_OFFER_FACEBOOK
         else if (self.type == kPrintPhotoAssetTypeFacebookPhoto){
             OLFacebookImage *fbImage = self.asset;
             [imageView setAndFadeInImageWithURL:[fbImage bestURLForSize:CGSizeMake(220, 220)]];
         }
+#endif
         else if (self.type == kPrintPhotoAssetTypeOLAsset){
             OLAsset *asset = (OLAsset *)self.asset;
             

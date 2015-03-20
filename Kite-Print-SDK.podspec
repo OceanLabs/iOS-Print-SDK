@@ -14,6 +14,8 @@ Pod::Spec.new do |spec|
   spec.dependency	'UICKeyChainStore', '~> 2.0.4'
   spec.dependency	'LXReorderableCollectionViewFlowLayout'
   spec.dependency	'CTAssetsPickerController'
+  spec.dependency 'FacebookImagePicker'
+  spec.dependency 'InstagramImagePicker'
   spec.requires_arc	= true
   spec.platform		= :ios, '7.0'
   spec.social_media_url	= 'https://twitter.com/dbotha'
@@ -27,6 +29,11 @@ Pod::Spec.new do |spec|
   spec.subspec 'PayPal' do |paypal|
     paypal.xcconfig	=  { 'OTHER_CFLAGS' => '$(inherited) -DOL_KITE_OFFER_PAYPAL' }
     paypal.dependency	'PayPal-iOS-SDK', '~> 2.4.2'
+  end
+
+  spec.subspec 'Facebook' do |facebook|
+    facebook.xcconfig =  { 'OTHER_CFLAGS' => '$(inherited) -DOL_KITE_OFFER_FACEBOOK' }
+    facebook.dependency 'FacebookImagePicker', :head
   end
 
   spec.subspec 'ApplePay' do |apple|
