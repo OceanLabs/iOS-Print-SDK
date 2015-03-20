@@ -170,14 +170,6 @@ static const NSUInteger kInputFieldTag = 99;
     }
 }
 
-- (BOOL)shouldAutorotate {
-    return NO;
-}
-
-- (NSUInteger)supportedInterfaceOrientations {
-    return UIInterfaceOrientationMaskPortrait;
-}
-
 - (void)onButtonNextClicked {
     if (![self hasUserProvidedValidDetailsToProgressToPayment]) {
         return;

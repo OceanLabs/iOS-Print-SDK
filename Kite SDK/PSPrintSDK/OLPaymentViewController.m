@@ -368,14 +368,6 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     [self.tableView reloadData];
 }
 
-- (BOOL)shouldAutorotate {
-    return NO;
-}
-
-- (NSUInteger)supportedInterfaceOrientations {
-    return UIInterfaceOrientationMaskPortrait;
-}
-
 - (void)onButtonContinueShoppingClicked:(id)sender {
     if (self.delegate && [self.delegate respondsToSelector:@selector(userDidTapContinueShoppingButton)]){
         [self.delegate userDidTapContinueShoppingButton];

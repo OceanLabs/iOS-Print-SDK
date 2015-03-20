@@ -930,13 +930,13 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="249" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" misplaced="YES" text="FREE SHIPPING" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="c7e-Wo-NVf">
-                                <rect key="frame" x="108" y="547" width="147" height="11"/>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="249" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" text="FREE SHIPPING" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="c7e-Wo-NVf">
+                                <rect key="frame" x="107.5" y="547" width="147" height="11"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="9"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Price" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="t7m-Te-qkc">
-                                <rect key="frame" x="265" y="540" width="39" height="20"/>
+                                <rect key="frame" x="265" y="540" width="38.5" height="19.5"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
                                 <nil key="highlightedColor"/>
                             </label>
@@ -951,7 +951,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="dimension" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="n5R-FL-khI">
-                                <rect key="frame" x="40" y="544" width="58" height="15"/>
+                                <rect key="frame" x="40" y="544" width="57.5" height="14.5"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                 <nil key="highlightedColor"/>
                             </label>

@@ -35,15 +35,6 @@ static const NSUInteger kSectionErrorRetry = 2;
     return self;
 }
 
-
-- (BOOL)shouldAutorotate {
-    return NO;
-}
-
-- (NSUInteger)supportedInterfaceOrientations {
-    return UIInterfaceOrientationMaskPortrait;
-}
-
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.title = @"Receipt";

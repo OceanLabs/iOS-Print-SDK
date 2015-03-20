@@ -126,10 +126,6 @@
     }
 }
 
-- (BOOL)shouldAutorotate {
-    return NO;
-}
-
 - (UIViewController *)viewControllerAtIndex:(NSUInteger)index {
     if (index == NSNotFound || index >= self.self.product.productPhotos.count) {
         return nil;
