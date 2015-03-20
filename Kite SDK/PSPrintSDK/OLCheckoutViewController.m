@@ -88,7 +88,7 @@ static const NSUInteger kInputFieldTag = 99;
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    if (![self.parentViewController isMemberOfClass:[UINavigationController class]]) {
+    if (![self.parentViewController isKindOfClass:[UINavigationController class]]) {
         [[[UIAlertView alloc] initWithTitle:@"Oops" message:@"OLCheckoutViewController should be part of a UINavigationController stack. Either push the OLCheckoutViewController onto a stack (or make it the rootViewController) or present it modally with OLCheckoutViewController.presentViewControllerFrom:animated:completion:" delegate:nil cancelButtonTitle:nil otherButtonTitles:nil] show];
         return;
     }
