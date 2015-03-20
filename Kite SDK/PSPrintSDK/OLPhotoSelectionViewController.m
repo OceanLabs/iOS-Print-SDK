@@ -120,6 +120,12 @@ static void *ActionSheetCellKey;
         [self.instagramContainer removeFromSuperview];
     }
     
+    if (![self facebookEnabled]){
+        [self.facebookButton removeFromSuperview];
+        [self.buttonFacebookImport removeFromSuperview];
+        [self.facebookContainer removeFromSuperview];
+    }
+    
     LXReorderableCollectionViewFlowLayout *layout = (LXReorderableCollectionViewFlowLayout *)[self.collectionView collectionViewLayout];
     layout.headerReferenceSize = CGSizeMake(0, 50);
     
@@ -163,6 +169,10 @@ static void *ActionSheetCellKey;
 
 - (BOOL)instagramEnabled{
     return [OLKitePrintSDK instagramSecret] && ![[OLKitePrintSDK instagramSecret] isEqualToString:@""] && [OLKitePrintSDK instagramClientID] && ![[OLKitePrintSDK instagramClientID] isEqualToString:@""] && [OLKitePrintSDK instagramReturnURI] && ![[OLKitePrintSDK instagramReturnURI] isEqualToString:@""];
+}
+
+- (BOOL)facebookEnabled{
+    return YES;
 }
 
 - (void)viewWillAppear:(BOOL)animated{

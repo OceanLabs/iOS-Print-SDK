@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6751" systemVersion="14C1510" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="cpC-15-nyB">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6751" systemVersion="14C1514" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="cpC-15-nyB">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6736"/>
@@ -1595,6 +1595,7 @@
                             <constraint firstItem="9nk-DX-0TW" firstAttribute="leading" secondItem="Bco-ct-3Yg" secondAttribute="trailing" priority="750" id="7TB-bO-5yf"/>
                             <constraint firstItem="Bco-ct-3Yg" firstAttribute="top" secondItem="Prc-x4-bQB" secondAttribute="bottom" id="9e4-gB-SEF"/>
                             <constraint firstItem="Bco-ct-3Yg" firstAttribute="leading" secondItem="H6l-Sv-Ai2" secondAttribute="leading" id="C3a-eD-lxd"/>
+                            <constraint firstItem="7XX-0J-tJc" firstAttribute="top" secondItem="Bco-ct-3Yg" secondAttribute="bottom" id="CZT-E2-gla"/>
                             <constraint firstItem="Qmw-15-obN" firstAttribute="top" secondItem="Prc-x4-bQB" secondAttribute="bottom" constant="20" id="F6f-ve-u56"/>
                             <constraint firstItem="SHl-5H-G7O" firstAttribute="top" secondItem="934-Aw-K7I" secondAttribute="bottom" id="FtF-wn-6UH"/>
                             <constraint firstItem="934-Aw-K7I" firstAttribute="leading" secondItem="H6l-Sv-Ai2" secondAttribute="leading" id="HIm-aR-y7v"/>
@@ -1603,8 +1604,10 @@
                             <constraint firstItem="TIp-Hm-PTo" firstAttribute="top" secondItem="Prc-x4-bQB" secondAttribute="bottom" id="PbE-A6-fuF"/>
                             <constraint firstItem="Bco-ct-3Yg" firstAttribute="width" secondItem="TIp-Hm-PTo" secondAttribute="width" id="QHS-Ta-w7V"/>
                             <constraint firstAttribute="trailing" secondItem="934-Aw-K7I" secondAttribute="trailing" id="VEj-lt-L4U"/>
+                            <constraint firstAttribute="trailing" secondItem="Bco-ct-3Yg" secondAttribute="trailing" priority="749" id="VJq-JB-HSz"/>
                             <constraint firstAttribute="trailing" secondItem="9nk-DX-0TW" secondAttribute="trailing" id="YAa-Zm-2xs"/>
                             <constraint firstItem="TIp-Hm-PTo" firstAttribute="leading" secondItem="Bco-ct-3Yg" secondAttribute="trailing" id="bwg-7T-isz"/>
+                            <constraint firstAttribute="trailing" secondItem="TIp-Hm-PTo" secondAttribute="trailing" priority="750" id="eCp-ch-ZTw"/>
                             <constraint firstAttribute="trailing" secondItem="7XX-0J-tJc" secondAttribute="trailing" id="eJZ-KS-LOB"/>
                             <constraint firstItem="9nk-DX-0TW" firstAttribute="leading" secondItem="TIp-Hm-PTo" secondAttribute="trailing" id="k4m-yc-3zH"/>
                             <constraint firstItem="9nk-DX-0TW" firstAttribute="top" secondItem="Prc-x4-bQB" secondAttribute="bottom" id="kzv-d4-7qc"/>
@@ -1612,7 +1615,6 @@
                             <constraint firstItem="SHl-5H-G7O" firstAttribute="top" secondItem="7XX-0J-tJc" secondAttribute="bottom" id="lMV-dK-VcX"/>
                             <constraint firstItem="934-Aw-K7I" firstAttribute="top" secondItem="Prc-x4-bQB" secondAttribute="bottom" id="uBG-kJ-jpw"/>
                             <constraint firstItem="ihm-7V-1WO" firstAttribute="leading" secondItem="H6l-Sv-Ai2" secondAttribute="leading" id="yrt-fq-wPM"/>
-                            <constraint firstItem="7XX-0J-tJc" firstAttribute="top" secondItem="9nk-DX-0TW" secondAttribute="bottom" id="zSz-uq-XBW"/>
                         </constraints>
                     </view>
                     <extendedEdge key="edgesForExtendedLayout" bottom="YES"/>
