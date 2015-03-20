@@ -398,5 +398,15 @@ static const NSUInteger kInputFieldTag = 99;
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
+#pragma mark - Autorotate and Orientation Methods
+
+- (BOOL)shouldAutorotate {
+    return NO;
+}
+
+- (NSUInteger)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskPortrait;
+}
+
 
 @end
