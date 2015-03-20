@@ -395,7 +395,9 @@ static void *ActionSheetCellKey;
     
     [self.collectionView performBatchUpdates:^{
         if ([self numberOfSectionsInCollectionView:self.collectionView] < initialSections){
-            [self.collectionView deleteSections:[NSIndexSet indexSetWithIndex:initialSections-1]];
+            NSUInteger sectionsDeleted = initialSections - [self numberOfSectionsInCollectionView:self.collectionView];
+            NSRange range = NSMakeRange(initialSections - sectionsDeleted, sectionsDeleted);
+            [self.collectionView deleteSections:[NSIndexSet indexSetWithIndexesInRange:range]];
         }
         for (NSNumber *sectionNumber in self.indexPathsToRemoveDict.allKeys){
             NSNumber *n = [NSNumber numberWithLong:[sectionNumber longValue]];
