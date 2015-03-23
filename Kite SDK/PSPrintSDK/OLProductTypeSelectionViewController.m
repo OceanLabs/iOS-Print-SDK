@@ -47,7 +47,12 @@
 }
 
 - (void)viewDidLoad{
-    self.title = NSLocalizedString(@"Choose Device", @"");
+    if ([[self.products firstObject] productTemplate].templateUI == kOLTemplateUICase){
+        self.title = NSLocalizedString(@"Choose Device", @"");
+    }
+    else{
+        self.title = NSLocalizedString(@"Choose Size", @"");
+    }
     
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Back", @"")
                                                                              style:UIBarButtonItemStyleBordered

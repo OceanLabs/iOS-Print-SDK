@@ -265,6 +265,10 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     }
 }
 
+- (CGFloat) productAspectRatio{
+    return self.product.productTemplate.sizePx.height / self.product.productTemplate.sizePx.width;
+}
+
 #pragma mark Button Actions
 
 - (void)onButtonAddMorePhotosClicked{
@@ -340,7 +344,7 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     OLScrollCropViewController *cropVc = (id)nav.topViewController;
     cropVc.enableCircleMask = self.product.productTemplate.templateUI == kOLTemplateUICircle;
     cropVc.delegate = self;
-    cropVc.aspectRatio = 1;
+    cropVc.aspectRatio = [self productAspectRatio];
     if (((OLAsset *)(self.editingPrintPhoto.asset)).assetType == kOLAssetTypeRemoteImageURL){
         [[SDWebImageManager sharedManager] downloadImageWithURL:[((OLAsset *)(self.editingPrintPhoto.asset)) imageURL] options:0 progress:nil completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *url) {
             if (finished) {
@@ -433,7 +437,7 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
                     reviewPhotoCellHeight = @(280 * [self screenWidthFactor] + extraBottomBezel + 40 * [self screenWidthFactor] - 40);
                 }
                 else{
-                    reviewPhotoCellHeight = @(280 * [self screenWidthFactor] + 40 * [self screenWidthFactor] - 40);
+                    reviewPhotoCellHeight = @(280 * [self productAspectRatio] * [self screenWidthFactor] + 40 * [self screenWidthFactor] - 40);
                 }
             }
             return [reviewPhotoCellHeight floatValue] + 69;
