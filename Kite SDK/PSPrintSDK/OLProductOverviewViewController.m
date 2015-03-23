@@ -17,11 +17,18 @@
 #import "OLAnalytics.h"
 #import "OLCaseSelectionViewController.h"
 #import "OLSingleImageProductReviewViewController.h"
+#import "OLPhotoSelectionViewController.h"
 
 @interface OLProduct (Private)
 
 - (NSDecimalNumber*) unitCostDecimalNumber;
 + (NSString*) unitCostWithCost:(NSDecimalNumber*)cost;
+
+@end
+
+@interface OLKitePrintSDK (Kite)
+
++ (OLKiteViewController *)kiteViewControllerInNavStack:(NSArray *)viewControllers;
 
 @end
 
@@ -60,12 +67,6 @@
     else if (self.product.productTemplate.templateClass == kOLTemplateClassFrame){
         self.title = NSLocalizedString(@"Frames", @"");
     }
-//    else if (self.product.productTemplate.templateClass == kOLTemplateClassCase){
-//        self.title = NSLocalizedString(@"Phone Cases", @"");
-//    }
-//    else if (self.product.productTemplate.templateClass == kOLTemplateClassDecal){
-//        self.title = NSLocalizedString(@"Clear Cases & Stickers", @"");
-//    }
     else{
         self.title = self.product.productTemplate.name;
     }
@@ -142,22 +143,37 @@
     if (self.product.productTemplate.templateClass == kOLTemplateClassFrame){
         OLFrameSelectionViewController *frameVc = [self.storyboard instantiateViewControllerWithIdentifier:@"FrameSelectionViewController"];
         frameVc.assets = self.assets;
+        frameVc.userSelectedPhotos = self.userSelectedPhotos;
         frameVc.delegate = self.delegate;
         [self.navigationController pushViewController:frameVc animated:YES];
     }
     else if (self.product.productTemplate.templateClass == kOLTemplateClassCase || self.product.productTemplate.templateClass == kOLTemplateClassDecal){
         OLSingleImageProductReviewViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLSingleImageProductReviewViewController"];
         vc.assets = self.assets;
+        vc.userSelectedPhotos = self.userSelectedPhotos;
         vc.delegate = self.delegate;
         vc.product = self.product;
         [self.navigationController pushViewController:vc animated:YES];
     }
     else{
-        OLOrderReviewViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OrderReviewViewController"];
-        vc.assets = self.assets;
-        vc.product = self.product;
-        vc.delegate = self.delegate;
-        [self.navigationController pushViewController:vc animated:YES];
+        if (![self.delegate respondsToSelector:@selector(kiteControllerShouldAllowUserToAddMorePhotos:)] || [self.delegate kiteControllerShouldAllowUserToAddMorePhotos:[OLKitePrintSDK kiteViewControllerInNavStack:self.navigationController.viewControllers]]){
+            OLPhotoSelectionViewController *vc;
+            vc = [self.storyboard instantiateViewControllerWithIdentifier:@"PhotoSelectionViewController"];
+            vc.assets = self.assets;
+            vc.userSelectedPhotos = self.userSelectedPhotos;
+            vc.product = self.product;
+            vc.delegate = self.delegate;
+            [self.navigationController pushViewController:vc animated:YES];
+        }
+        else{
+            OLOrderReviewViewController *vc;
+            vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OrderReviewViewController"];
+            vc.assets = self.assets;
+            vc.userSelectedPhotos = self.userSelectedPhotos;
+            vc.product = self.product;
+            vc.delegate = self.delegate;
+            [self.navigationController pushViewController:vc animated:YES];
+        }
     }
 }
 

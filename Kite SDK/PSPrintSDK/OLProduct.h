@@ -23,7 +23,6 @@
 - (NSString *)unitCost;
 - (NSString *) packInfo;
 - (NSString *) dimensions;
--(CGSize)serverImageSize;
 +(OLProduct *) productWithTemplateId:(NSString *)templateId;
 
 @end

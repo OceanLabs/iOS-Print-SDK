@@ -9,6 +9,9 @@
 #import "AppDelegate.h"
 #import "OLKitePrintSDK.h"
 
+#ifdef OL_KITE_OFFER_FACEBOOK
+#import <FacebookSDK/FacebookSDK.h>
+#endif
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
@@ -41,5 +44,12 @@
 {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 }
+
+#ifdef OL_KITE_OFFER_FACEBOOK
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
+    BOOL wasHandled = [FBAppCall handleOpenURL:url sourceApplication:sourceApplication];
+    return wasHandled;
+}
+#endif
 
 @end

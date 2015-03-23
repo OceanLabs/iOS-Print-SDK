@@ -14,14 +14,15 @@ Pod::Spec.new do |spec|
   spec.dependency	'UICKeyChainStore', '~> 2.0.4'
   spec.dependency	'LXReorderableCollectionViewFlowLayout'
   spec.dependency	'CTAssetsPickerController'
+  spec.dependency 'FacebookImagePicker'
+  spec.dependency 'InstagramImagePicker'
   spec.requires_arc	= true
   spec.platform		= :ios, '7.0'
   spec.social_media_url	= 'https://twitter.com/dbotha'
   spec.default_subspec = 'Lite'
 
-
   spec.subspec 'Lite' do |lite|
-  #subspec for developers who don't want the third party PayPal & Stripe bloat
+  #subspec for developers who don't want the third party PayPal, Stripe, Instagram, Facebook bloat
   end
 
   spec.subspec 'PayPal' do |paypal|
@@ -34,4 +35,15 @@ Pod::Spec.new do |spec|
     apple.dependency	  'Stripe', '2.2.0'
     apple.dependency	  'Stripe/ApplePay'
   end
+
+  spec.subspec 'Facebook' do |facebook|
+    facebook.xcconfig =  { 'OTHER_CFLAGS' => '$(inherited) -DOL_KITE_OFFER_FACEBOOK' }
+    facebook.dependency 'FacebookImagePicker'
+  end
+
+  spec.subspec 'Instagram' do |instagram|
+    instagram.xcconfig =  { 'OTHER_CFLAGS' => '$(inherited) -DOL_KITE_OFFER_INSTAGRAM' }
+    instagram.dependency 'InstagramImagePicker'
+  end
+
 end

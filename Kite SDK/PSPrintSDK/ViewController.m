@@ -39,6 +39,10 @@ static NSString *const kApplePayMerchantIDKey = @"merchant.co.oceanlabs.kite.ly"
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onUserCompletedPayment:) name:kOLNotificationUserCompletedPayment object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onPrintOrderSubmission:) name:kOLNotificationPrintOrderSubmission object:nil];
     
+#ifdef OL_KITE_OFFER_INSTAGRAM
+    [OLKitePrintSDK setInstagramEnabledWithClientID:@"a6a09c92a14d488baa471e5209906d3d" secret:@"bfb814274cd041a5b7e06f32608e0e87" redirectURI:@"kite://instagram-callback"];
+#endif
+    
     // Uncomment the following lines to only show a subset of the available products and customize the photography. This will only work if you've called [OLProductTemplate sync] and gave it enought time to sync.
     
     /*
@@ -152,7 +156,7 @@ static NSString *const kApplePayMerchantIDKey = @"merchant.co.oceanlabs.kite.ly"
     return NO;
 }
 
-- (BOOL)kiteControllerShouldShowAddMorePhotosInReview:(OLKiteViewController *)controller {
+- (BOOL)kiteControllerShouldAllowUserToAddMorePhotos:(OLKiteViewController *)controller {
     return YES;
 }
 

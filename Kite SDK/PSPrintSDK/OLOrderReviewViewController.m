@@ -18,7 +18,6 @@
 #import "OLProduct.h"
 #import "OLCircleMaskTableViewCell.h"
 #import "OLAsset+Private.h"
-#import <SDWebImageManager.h>
 #import "OLAnalytics.h"
 #import "OLKitePrintSDK.h"
 #import <CTAssetsPickerController.h>
@@ -43,20 +42,6 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
 @end
 
 @implementation OLOrderReviewViewController
-
--(NSMutableArray *) userSelectedPhotos{
-    if (!_userSelectedPhotos){
-        NSMutableArray *mutableUserSelectedPhotos = [[NSMutableArray alloc] init];
-        for (id asset in self.assets){
-            OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
-            printPhoto.serverImageSize = [self.product serverImageSize];
-            printPhoto.asset = asset;
-            [mutableUserSelectedPhotos addObject:printPhoto];
-        }
-        _userSelectedPhotos = mutableUserSelectedPhotos;
-    }
-    return _userSelectedPhotos;
-}
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -244,7 +229,6 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
         [self.extraCopiesOfAssets addObject:@0];
         
         OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
-        printPhoto.serverImageSize = [self.product serverImageSize];
         printPhoto.asset = asset;
         [self.userSelectedPhotos addObject:printPhoto];
     }
@@ -257,12 +241,13 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
 }
 
 - (BOOL)shouldShowAddMorePhotos{
-    if (![self.delegate respondsToSelector:@selector(kiteControllerShouldShowAddMorePhotosInReview:)]){
-        return YES;
-    }
-    else{
-        return [self.delegate kiteControllerShouldShowAddMorePhotosInReview:[self kiteViewController]];
-    }
+    return NO;
+//    if (![self.delegate respondsToSelector:@selector(kiteControllerShouldAllowUserToAddMorePhotos:)]){
+//        return YES;
+//    }
+//    else{
+//        return [self.delegate kiteControllerShouldAllowUserToAddMorePhotos:[self kiteViewController]];
+//    }
 }
 
 #pragma mark Button Actions
@@ -341,20 +326,10 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     cropVc.enableCircleMask = self.product.productTemplate.templateClass == kOLTemplateClassCircle;
     cropVc.delegate = self;
     cropVc.aspectRatio = 1;
-    if (((OLAsset *)(self.editingPrintPhoto.asset)).assetType == kOLAssetTypeRemoteImageURL){
-        [[SDWebImageManager sharedManager] downloadImageWithURL:[((OLAsset *)(self.editingPrintPhoto.asset)) imageURL] options:0 progress:nil completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *url) {
-            if (finished) {
-                [cropVc setFullImage:image];
-                [self presentViewController:nav animated:YES completion:NULL];
-            }
-        }];
-    }
-    else{
-        [self.editingPrintPhoto dataWithCompletionHandler:^(NSData *data, NSError *error){
-            [cropVc setFullImage:[UIImage imageWithData:data]];
-            [self presentViewController:nav animated:YES completion:NULL];
-        }];
-    }
+    [self.editingPrintPhoto getImageWithProgress:NULL completion:^(UIImage *image){
+        [cropVc setFullImage:image];
+        [self presentViewController:nav animated:YES completion:NULL];
+    }];
 }
 
 - (IBAction)onButtonNextClicked:(UIBarButtonItem *)sender {
@@ -393,6 +368,9 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
         if (!cell) {
             cell = [[OLCircleMaskTableViewCell alloc] init];
         }
+        
+        UIActivityIndicatorView *activityIndicator = (UIActivityIndicatorView *)[cell.contentView viewWithTag:278];
+        [activityIndicator startAnimating];
         
         UIImageView *cellImage = (UIImageView *)[cell.contentView viewWithTag:10];
         cellImage.image = nil;
