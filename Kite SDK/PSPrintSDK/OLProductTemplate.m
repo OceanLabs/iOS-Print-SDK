@@ -61,6 +61,15 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
     return [documentDirPath stringByAppendingPathComponent:@"co.oceanlabs.pssdk.Templates"];
 }
 
+- (NSString *)templateType{
+    if (_templateType && ![_templateType isEqualToString:@""]){
+        return _templateType;
+    }
+    else{
+        return self.name;
+    }
+}
+
 - (NSDecimalNumber *)costPerSheetInCurrencyCode:(NSString *)currencyCode {
     return self.costsByCurrencyCode[currencyCode];
 }
