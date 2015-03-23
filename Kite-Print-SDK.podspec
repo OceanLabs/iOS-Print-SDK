@@ -8,14 +8,12 @@ Pod::Spec.new do |spec|
   spec.source           = {:git => 'https://github.com/OceanLabs/iOS-Print-SDK.git', :tag => '2.0.13'}
   spec.source_files     = ['Kite SDK/PSPrintSDK/OL*.{h,m}', 'Kite SDK/PSPrintSDK/CardIO*.h', 'Kite SDK/PSPrintSDK/RMImageCropper/*.{h,m}', 'Kite SDK/PSPrintSDK/Categories/*.{h,m}']
   spec.resources        = ['Kite SDK/PSPrintSDK/KitePrintSDK.xcassets', 'Kite SDK/*.lproj', 'Kite SDK/PSPrintSDK/OLKiteStoryboard.storyboard']
-  spec.dependency	'SDWebImage'
+  spec.dependency	'SDWebImage', '~> 3.7.2'
   spec.dependency	'SVProgressHUD'
   spec.dependency	'AFNetworking', '2.5.0'
   spec.dependency	'UICKeyChainStore', '~> 2.0.4'
   spec.dependency	'LXReorderableCollectionViewFlowLayout'
   spec.dependency	'CTAssetsPickerController'
-  spec.dependency 'FacebookImagePicker'
-  spec.dependency 'InstagramImagePicker'
   spec.requires_arc	= true
   spec.platform		= :ios, '7.0'
   spec.social_media_url	= 'https://twitter.com/dbotha'
