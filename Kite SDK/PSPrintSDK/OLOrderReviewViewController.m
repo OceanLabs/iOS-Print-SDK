@@ -411,6 +411,18 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
         if (self.product.productTemplate.templateUI == kOLTemplateUICircle){
             cell.enableMask = YES;
         }
+        
+        UIView *borderView = [cell.contentView viewWithTag:399];
+        
+        NSLayoutConstraint *topCon = [NSLayoutConstraint constraintWithItem:cellImage attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:borderView attribute:NSLayoutAttributeTop multiplier:1 constant:15];
+        NSLayoutConstraint *leftCon = [NSLayoutConstraint constraintWithItem:cellImage attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:borderView attribute:NSLayoutAttributeLeft multiplier:1 constant:15];
+        NSLayoutConstraint *rightCon = [NSLayoutConstraint constraintWithItem:cellImage attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:borderView attribute:NSLayoutAttributeRight multiplier:1 constant:-15];
+        NSLayoutConstraint *bottomCon = [NSLayoutConstraint constraintWithItem:cellImage attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationLessThanOrEqual toItem:borderView attribute:NSLayoutAttributeBottom multiplier:1 constant:-15];
+        
+        [borderView.superview addConstraints:@[topCon, leftCon, rightCon, bottomCon]];
+
+        
+        
         return cell;
     }
     else{

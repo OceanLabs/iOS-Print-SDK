@@ -450,7 +450,7 @@
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="349"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GDh-TS-oBz">
+                                        <view tag="399" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GDh-TS-oBz">
                                             <rect key="frame" x="20" y="0.0" width="280" height="280"/>
                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                         </view>
@@ -540,17 +540,17 @@
                                         <constraint firstItem="3xY-ZO-f5D" firstAttribute="top" secondItem="GDh-TS-oBz" secondAttribute="bottom" constant="5" id="OWq-ed-L8d"/>
                                         <constraint firstItem="GDh-TS-oBz" firstAttribute="leading" secondItem="yvX-sN-w8r" secondAttribute="leading" constant="20" id="PIf-bv-8lk"/>
                                         <constraint firstAttribute="trailing" secondItem="GDh-TS-oBz" secondAttribute="trailing" constant="20" id="PbJ-Vy-5PS"/>
-                                        <constraint firstItem="TYP-hs-JYh" firstAttribute="bottom" relation="lessThanOrEqual" secondItem="GDh-TS-oBz" secondAttribute="bottom" constant="-15" id="QnV-dU-QDd"/>
+                                        <constraint firstItem="TYP-hs-JYh" firstAttribute="bottom" relation="lessThanOrEqual" secondItem="GDh-TS-oBz" secondAttribute="bottom" constant="-15" placeholder="YES" id="QnV-dU-QDd"/>
                                         <constraint firstItem="TYP-hs-JYh" firstAttribute="top" secondItem="Wpc-Nz-XOK" secondAttribute="top" id="e34-EX-laU"/>
                                         <constraint firstItem="TYP-hs-JYh" firstAttribute="bottom" secondItem="Wpc-Nz-XOK" secondAttribute="bottom" id="fVr-27-uWY"/>
-                                        <constraint firstAttribute="trailing" secondItem="TYP-hs-JYh" secondAttribute="trailing" constant="35" id="gxd-l8-pqz"/>
                                         <constraint firstItem="uZ5-JB-PDG" firstAttribute="top" secondItem="GDh-TS-oBz" secondAttribute="bottom" constant="5" id="i2B-yf-LIU"/>
+                                        <constraint firstItem="TYP-hs-JYh" firstAttribute="trailing" secondItem="GDh-TS-oBz" secondAttribute="trailing" constant="-15" placeholder="YES" id="iob-es-DZW"/>
+                                        <constraint firstItem="TYP-hs-JYh" firstAttribute="leading" secondItem="GDh-TS-oBz" secondAttribute="leading" constant="15" placeholder="YES" id="jLQ-JN-rwe"/>
                                         <constraint firstItem="uZ5-JB-PDG" firstAttribute="leading" secondItem="uJT-7B-Llp" secondAttribute="trailing" id="jeI-t5-Atg"/>
                                         <constraint firstItem="TYP-hs-JYh" firstAttribute="leading" secondItem="Wpc-Nz-XOK" secondAttribute="leading" id="nh0-Nj-iyr"/>
-                                        <constraint firstItem="TYP-hs-JYh" firstAttribute="leading" secondItem="yvX-sN-w8r" secondAttribute="leading" constant="35" id="pUN-Vt-fFN"/>
                                         <constraint firstItem="GDh-TS-oBz" firstAttribute="top" secondItem="yvX-sN-w8r" secondAttribute="top" id="sSr-AQ-pNn"/>
                                         <constraint firstItem="TYP-hs-JYh" firstAttribute="trailing" secondItem="Wpc-Nz-XOK" secondAttribute="trailing" id="u4C-BW-VHC"/>
-                                        <constraint firstItem="TYP-hs-JYh" firstAttribute="top" secondItem="yvX-sN-w8r" secondAttribute="top" constant="15" id="ylw-tj-jpv"/>
+                                        <constraint firstItem="TYP-hs-JYh" firstAttribute="top" secondItem="yvX-sN-w8r" secondAttribute="top" constant="15" placeholder="YES" id="ylw-tj-jpv"/>
                                     </constraints>
                                 </tableViewCellContentView>
                                 <color key="backgroundColor" red="0.92549019607843142" green="0.93725490196078431" blue="0.94901960784313721" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
