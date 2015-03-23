@@ -24,7 +24,8 @@ typedef enum {
     products = [[NSMutableArray alloc] initWithCapacity:[templates count]];
     for (OLProductTemplate *template in templates){
         if (template.enabled){
-            [products addObject:[[OLProduct alloc] initWithTemplate:template]];
+            OLProduct *product = [[OLProduct alloc] initWithTemplate:template];
+            [products addObject: product];
         }
     }
     
@@ -93,7 +94,7 @@ typedef enum {
     }
     else{
         OLProductTemplate *template = self.productTemplate;
-        if (template.templateClass == kOLTemplateClassCase || template.templateClass == kOLTemplateClassDecal){
+        if (template.templateUI == kOLTemplateUICase){
             [imageView setAndFadeInImageWithURL:self.productTemplate.classPhotoURL];
         }
         else{

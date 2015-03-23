@@ -20,7 +20,7 @@
 
 - (void)sync:(OLTemplateSyncRequestCompletionHandler)handler {
     NSAssert(self.req == nil, @"Oops only one template sync request should be in progress at any given time");
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/v1.2/template/", [OLKitePrintSDK apiEndpoint]]];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@/template/", [OLKitePrintSDK apiEndpoint], [OLKitePrintSDK apiVersion]]];
     [self fetchTemplatesWithURL:url templateAccumulator:[[NSMutableArray alloc] init] handler:handler];
 }
 
@@ -69,6 +69,8 @@
                                 NSString *coverPhoto;
                                 NSArray *productShots;
                                 NSString *productClass;
+                                NSString *productType;
+                                NSString *uiClass;
                                 UIColor *labelColor;
                                 CGSize sizeCm = CGSizeZero;
                                 CGSize sizeInches = CGSizeZero;
@@ -89,6 +91,10 @@
                                     classPhoto = [product[@"ios_sdk_class_photo"] isKindOfClass:[NSString class]] ? product[@"ios_sdk_class_photo"] : nil;
                                     
                                     productClass = [product[@"ios_sdk_product_class"] isKindOfClass:[NSString class]] ? product[@"ios_sdk_product_class"] : nil;
+                                    
+                                    productType = [product[@"ios_sdk_product_type"] isKindOfClass:[NSString class]] ? product[@"ios_sdk_product_type"] : nil;
+                                    
+                                    uiClass = [product[@"ios_sdk_ui_class"] isKindOfClass:[NSString class]] ? product[@"ios_sdk_ui_class"] : nil;
                                     
                                     NSArray *colorArray = [product[@"ios_sdk_label_color"] isKindOfClass:[NSArray class]] ? product[@"ios_sdk_label_color"] : nil;
                                     if (colorArray){
@@ -151,7 +157,9 @@
                                     OLProductTemplate *t = [[OLProductTemplate alloc] initWithIdentifier:identifier name:name sheetQuantity:[imagesPerSheet unsignedIntegerValue] sheetCostsByCurrencyCode:costPerSheetByCurrencyCode enabled:enabled];
                                     t.coverPhotoURL = [NSURL URLWithString:coverPhoto];
                                     t.productPhotographyURLs = productShots;
-                                    t.templateClass = [OLProductTemplate templateClassWithIdentifier:productClass];
+                                    t.templateUI = [OLProductTemplate templateUIWithIdentifier:uiClass];
+                                    t.templateType = productType;
+                                    t.templateClass = productClass;
                                     t.labelColor = labelColor;
                                     t.sizeCm = sizeCm;
                                     t.sizeInches = sizeInches;

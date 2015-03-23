@@ -201,12 +201,12 @@ static const NSUInteger kSectionErrorRetry = 2;
             OLProductTemplate *template = [OLProductTemplate templateWithId:job.templateId];
             if ([job.templateId isEqualToString:@"ps_postcard"] || [job.templateId isEqualToString:@"60_postcards"]) {
                 cell.textLabel.text = [NSString stringWithFormat:@"%lu x %@", (unsigned long)self.printOrder.jobs.count, job.productName];
-            } else if (template.templateClass == kOLTemplateClassFrame) {
+            } else if (template.templateUI == kOLTemplateUIFrame) {
                 cell.textLabel.text = [NSString stringWithFormat:@"%lu x %@", (unsigned long) (job.quantity + template.quantityPerSheet - 1 ) / template.quantityPerSheet, job.productName];
-            } else if (template.templateClass == kOLTemplateClassPoster){
+            } else if (template.templateUI == kOLTemplateUIPoster){
                 cell.textLabel.text = [NSString stringWithFormat:@"%lu x %@", (unsigned long) (job.quantity + template.quantityPerSheet - 1 ) / template.quantityPerSheet, job.productName];
             }
-            else if (template.templateClass == kOLTemplateClassCase || template.templateClass == kOLTemplateClassDecal){
+            else if (template.templateUI == kOLTemplateUICase){
                 cell.textLabel.text = [NSString stringWithFormat:@"%lu x %@", (unsigned long) (job.quantity + template.quantityPerSheet - 1 ) / template.quantityPerSheet, job.productName];
             }
             else {

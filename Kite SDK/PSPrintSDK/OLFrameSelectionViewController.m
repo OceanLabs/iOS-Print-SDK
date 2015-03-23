@@ -36,26 +36,26 @@
     vc.assets = [self.assets mutableCopy];
     if ([segue.identifier isEqualToString:@"Selected2x2FrameStyleSegue"]) {
         for (OLProduct *product in products){
-            if (product.productTemplate.templateClass == kOLTemplateClassFrame && product.productTemplate.quantityPerSheet == 4){
+            if (product.productTemplate.templateUI == kOLTemplateUIFrame && product.productTemplate.quantityPerSheet == 4){
                 vc.product = product;
             }
         }
     } else if ([segue.identifier isEqualToString:@"Selected3x3FrameStyleSegue"]) {
         for (OLProduct *product in products){
-            if (product.productTemplate.templateClass == kOLTemplateClassFrame && product.productTemplate.quantityPerSheet == 9){
+            if (product.productTemplate.templateUI == kOLTemplateUIFrame && product.productTemplate.quantityPerSheet == 9){
                 vc.product = product;
             }
         }
     } else if ([segue.identifier isEqualToString:@"Selected4x4FrameStyleSegue"]) {
         for (OLProduct *product in products){
-            if (product.productTemplate.templateClass == kOLTemplateClassFrame && product.productTemplate.quantityPerSheet == 16){
+            if (product.productTemplate.templateUI == kOLTemplateUIFrame && product.productTemplate.quantityPerSheet == 16){
                 vc.product = product;
             }
         }
     }
     else if ([segue.identifier isEqualToString:@"Selected1x1FrameStyleSegue"]){
         for (OLProduct *product in products){
-            if (product.productTemplate.templateClass == kOLTemplateClassFrame && product.productTemplate.quantityPerSheet == 1){
+            if (product.productTemplate.templateUI == kOLTemplateUIFrame && product.productTemplate.quantityPerSheet == 1){
                 vc.product = product;
             }
         }

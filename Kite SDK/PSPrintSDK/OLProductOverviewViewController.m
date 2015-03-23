@@ -15,7 +15,7 @@
 #import "OLWhiteSquare.h"
 #import "OLKiteViewController.h"
 #import "OLAnalytics.h"
-#import "OLCaseSelectionViewController.h"
+#import "OLProductTypeSelectionViewController.h"
 #import "OLSingleImageProductReviewViewController.h"
 
 @interface OLProduct (Private)
@@ -36,11 +36,11 @@
 
 @implementation OLProductOverviewViewController
 
-+ (NSString *) minimumPriceForProductClass:(OLTemplateClass)class{
++ (NSString *) minimumPriceForProductClass:(OLTemplateUI)class{
     double min = DBL_MAX;
     NSArray *allProducts = [OLKitePrintSDK enabledProducts] ? [OLKitePrintSDK enabledProducts] : [OLProduct products];
     for (OLProduct *product in allProducts){
-        if (product.productTemplate.templateClass == class && [product.unitCostDecimalNumber doubleValue] < min){
+        if (product.productTemplate.templateUI == class && [product.unitCostDecimalNumber doubleValue] < min){
             min = [product.unitCostDecimalNumber doubleValue];
         }
     }
@@ -54,10 +54,10 @@
     [OLAnalytics trackProductDescriptionScreenViewed:self.product.productTemplate.name];
 #endif
     
-    if (self.product.productTemplate.templateClass == kOLTemplateClassPoster){
+    if (self.product.productTemplate.templateUI == kOLTemplateUIPoster){
         self.title = NSLocalizedString(@"Posters", @"");
     }
-    else if (self.product.productTemplate.templateClass == kOLTemplateClassFrame){
+    else if (self.product.productTemplate.templateUI == kOLTemplateUIFrame){
         self.title = NSLocalizedString(@"Frames", @"");
     }
 //    else if (self.product.productTemplate.templateClass == kOLTemplateClassCase){
@@ -86,7 +86,7 @@
     pageControl.backgroundColor = [UIColor clearColor];
     pageControl.frame = CGRectMake(0, -200, 100, 100);
     
-    OLTemplateClass templateClass = self.product.productTemplate.templateClass;
+    OLTemplateUI templateClass = self.product.productTemplate.templateUI;
 //    if (templateClass == kOLTemplateClassCase || templateClass == kOLTemplateClassDecal){
 //        self.costLabel.text = [OLProductOverviewViewController minimumPriceForProductClass:templateClass];
 //    }
@@ -94,21 +94,21 @@
         self.costLabel.text = self.product.unitCost;
 //    }
     
-    if (self.product.productTemplate.templateClass == kOLTemplateClassFrame){
+    if (self.product.productTemplate.templateUI == kOLTemplateUIFrame){
         self.sizeLabel.text = [NSString stringWithFormat:@"%@", self.product.dimensions];
     }
     else{
         self.sizeLabel.text = [NSString stringWithFormat:@"%@\n%@", self.product.packInfo, self.product.dimensions];
     }
     
-    if (self.product.productTemplate.templateClass == kOLTemplateClassPoster){
+    if (self.product.productTemplate.templateUI == kOLTemplateUIPoster){
         self.costLabel.hidden = YES;
         self.sizeLabel.hidden = YES;
         self.freePostageLabel.hidden = YES;
         self.whiteBox.hidden = YES;
     }
     
-    if (templateClass == kOLTemplateClassCase || templateClass == kOLTemplateClassDecal){
+    if (templateClass == kOLTemplateUICase){
         [self.sizeLabel removeFromSuperview];
     }
 }
@@ -143,13 +143,13 @@
 }
 
 - (IBAction)onButtonStartClicked:(UIBarButtonItem *)sender {
-    if (self.product.productTemplate.templateClass == kOLTemplateClassFrame){
+    if (self.product.productTemplate.templateUI == kOLTemplateUIFrame){
         OLFrameSelectionViewController *frameVc = [self.storyboard instantiateViewControllerWithIdentifier:@"FrameSelectionViewController"];
         frameVc.assets = self.assets;
         frameVc.delegate = self.delegate;
         [self.navigationController pushViewController:frameVc animated:YES];
     }
-    else if (self.product.productTemplate.templateClass == kOLTemplateClassCase || self.product.productTemplate.templateClass == kOLTemplateClassDecal){
+    else if (self.product.productTemplate.templateUI == kOLTemplateUICase){
         OLSingleImageProductReviewViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLSingleImageProductReviewViewController"];
         vc.assets = self.assets;
         vc.delegate = self.delegate;

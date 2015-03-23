@@ -33,6 +33,7 @@ static NSString *const kOLPayPalClientIdLive = @"ASYVBBCHF_KwVUstugKy4qvpQaPlUeE
 static NSString *const kOLPayPalClientIdSandbox = @"AcEcBRDxqcCKiikjm05FyD4Sfi4pkNP98AYN67sr3_yZdBe23xEk0qhdhZLM";
 static NSString *const kOLPayPalRecipientEmailLive = @"hello@kite.ly";
 static NSString *const kOLPayPalRecipientEmailSandbox = @"sandbox-merchant@kite.ly";
+static NSString *const kOLAPIEndpointVersion = @"v1.3";
 
 static BOOL useJudoPayForGBP = NO;
 
@@ -81,6 +82,10 @@ static BOOL useJudoPayForGBP = NO;
         case kOLKitePrintSDKEnvironmentLive: return kOLAPIEndpointLive;
         case kOLKitePrintSDKEnvironmentSandbox: return kOLAPIEndpointSandbox;
     }
+}
+
++ (NSString *)apiVersion{
+    return kOLAPIEndpointVersion;
 }
 
 + (NSArray *)enabledProducts{

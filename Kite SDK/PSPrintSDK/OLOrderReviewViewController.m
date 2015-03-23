@@ -338,7 +338,7 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     
     UINavigationController *nav = [self.storyboard instantiateViewControllerWithIdentifier:@"CropViewNavigationController"];
     OLScrollCropViewController *cropVc = (id)nav.topViewController;
-    cropVc.enableCircleMask = self.product.productTemplate.templateClass == kOLTemplateClassCircle;
+    cropVc.enableCircleMask = self.product.productTemplate.templateUI == kOLTemplateUICircle;
     cropVc.delegate = self;
     cropVc.aspectRatio = 1;
     if (((OLAsset *)(self.editingPrintPhoto.asset)).assetType == kOLAssetTypeRemoteImageURL){
@@ -404,7 +404,7 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
         UILabel *countLabel = (UILabel *)[cell.contentView viewWithTag:30];
         [countLabel setText: [NSString stringWithFormat:@"%lu", (unsigned long)(1+[((NSNumber*)[self.extraCopiesOfAssets objectAtIndex:indexPath.row-1]) integerValue])]];
         
-        if (self.product.productTemplate.templateClass == kOLTemplateClassCircle){
+        if (self.product.productTemplate.templateUI == kOLTemplateUICircle){
             cell.enableMask = YES;
         }
         return cell;
@@ -428,7 +428,7 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
             NSNumber *reviewPhotoCellHeight;
             if (!reviewPhotoCellHeight) {
                 
-                if (self.product.productTemplate.templateClass == kOLTemplateClassPolaroid){
+                if (self.product.productTemplate.templateUI == kOLTemplateUIPolaroid){
                     NSUInteger extraBottomBezel = 50 / [self screenWidthFactor];
                     reviewPhotoCellHeight = @(280 * [self screenWidthFactor] + extraBottomBezel + 40 * [self screenWidthFactor] - 40);
                 }

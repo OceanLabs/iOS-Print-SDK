@@ -40,6 +40,7 @@ typedef void (^OLProductCostRefreshCompletionHandler)(NSError *error);
 + (NSString *)apiKey;
 + (OLKitePrintSDKEnvironment)environment;
 + (NSString *)apiEndpoint;
++ (NSString *)apiVersion;
 + (NSArray *)enabledProducts;
 + (void)setEnabledProducts:(NSArray *)products;
 

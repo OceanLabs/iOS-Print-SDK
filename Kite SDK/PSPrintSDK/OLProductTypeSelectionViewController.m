@@ -6,7 +6,7 @@
 //  Copyright (c) 2015 Deon Botha. All rights reserved.
 //
 
-#import "OLCaseSelectionViewController.h"
+#import "OLProductTypeSelectionViewController.h"
 #import "OLKitePrintSDK.h"
 #import "OLProduct.h"
 #import "OLSingleImageProductReviewViewController.h"
@@ -21,23 +21,32 @@
 
 @end
 
-@interface OLCaseSelectionViewController ()
+@interface OLProductTypeSelectionViewController ()
 
-@property (strong, nonatomic) NSMutableArray *caseProducts;
+@property (strong, nonatomic) NSMutableArray *products;
 
 @end
 
-@implementation OLCaseSelectionViewController
+@implementation OLProductTypeSelectionViewController
 
-- (void)viewDidLoad{
-    self.caseProducts = [[NSMutableArray alloc] init];
-    NSArray *allProducts = [OLKitePrintSDK enabledProducts] ? [OLKitePrintSDK enabledProducts] : [OLProduct products];
-    for (OLProduct *product in allProducts){
-        if (product.productTemplate.templateClass == self.templateClass){
-            [self.caseProducts addObject:product];
+-(NSMutableArray *) products{
+    if (!_products){
+        _products = [[NSMutableArray alloc] init];
+        NSArray *allProducts = [OLKitePrintSDK enabledProducts] ? [OLKitePrintSDK enabledProducts] : [OLProduct products];
+        _products = [[NSMutableArray alloc] init];
+        for (OLProduct *product in allProducts){
+            if (!product.labelColor || product.productTemplate.templateUI == kOLTemplateUINA){
+                continue;
+            }
+            if ([product.productTemplate.templateClass isEqualToString:self.templateClass]){
+                [_products addObject:product];
+            }
         }
     }
-    
+    return _products;
+}
+
+- (void)viewDidLoad{
     self.title = NSLocalizedString(@"Choose Device", @"");
     
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Back", @"")
@@ -46,12 +55,12 @@
                                                                             action:nil];
     
 #ifndef OL_NO_ANALYTICS
-    [OLAnalytics trackDeviceSelectionScreenViewedWithTemplateClass:[OLProductTemplate templateClassStringWithTemplateClass:self.templateClass]];
+    [OLAnalytics trackProductTypeSelectionScreenViewedWithTemplateClass:self.templateClass];
 #endif
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{    
-    OLProduct *product = self.caseProducts[indexPath.row];
+    OLProduct *product = self.products[indexPath.row];
     
     OLProductOverviewViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLProductOverviewViewController"];
     vc.delegate = self.delegate;
@@ -64,24 +73,20 @@
 - (UITableViewCell *) tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"caseCell"];
     
-    OLProduct *product = (OLProduct *)self.caseProducts[indexPath.row];
+    OLProduct *product = (OLProduct *)self.products[indexPath.row];
     
     UIImageView *imageView = (UIImageView *)[cell.contentView viewWithTag:10];
     [product setCoverImageToImageView:imageView];
     
     UITextView *textView = (UITextView *)[cell.contentView viewWithTag:20];
-    NSString *productName = [product.productTemplate.name stringByReplacingOccurrencesOfString:@" Clear Case Decals Only" withString:@""];
-    productName = [productName stringByReplacingOccurrencesOfString:@" Clear Case and Decals" withString:@""];
-    productName = [productName stringByReplacingOccurrencesOfString:@" Clear Case" withString:@""];
-    productName = [productName stringByReplacingOccurrencesOfString:@" Case" withString:@""];
-    textView.text = productName;
+    textView.text = product.productTemplate.templateType;
     textView.backgroundColor = product.productTemplate.labelColor;
     
     return cell;
 }
 
 - (NSInteger) tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    return self.caseProducts.count;
+    return self.products.count;
 }
 
 - (CGFloat) tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
