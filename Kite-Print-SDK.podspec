@@ -14,6 +14,7 @@ Pod::Spec.new do |spec|
   spec.dependency	'UICKeyChainStore', '~> 2.0.4'
   spec.dependency	'LXReorderableCollectionViewFlowLayout'
   spec.dependency	'CTAssetsPickerController'
+  spec.dependency	'UIColor-HexString'
   spec.requires_arc	= true
   spec.platform		= :ios, '7.0'
   spec.social_media_url	= 'https://twitter.com/dbotha'
