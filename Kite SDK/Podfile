@@ -7,6 +7,5 @@ pod 'Stripe', '2.2.0'
 pod 'Stripe/ApplePay'
 pod 'LXReorderableCollectionViewFlowLayout'
 pod 'CTAssetsPickerController'
-pod 'InstagramImagePicker', :head
-pod 'FacebookImagePicker', :head
-pod 'OLImageEditor', :head
+pod 'InstagramImagePicker'
+pod 'FacebookImagePicker'
