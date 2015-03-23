@@ -127,10 +127,6 @@
     }
 }
 
-- (BOOL)shouldAutorotate {
-    return NO;
-}
-
 - (UIViewController *)viewControllerAtIndex:(NSUInteger)index {
     if (index == NSNotFound || index >= self.self.product.productPhotos.count) {
         return nil;
@@ -212,6 +208,16 @@
 
 - (NSInteger)presentationIndexForPageViewController:(UIPageViewController *)pageViewController {
     return 0;
+}
+
+#pragma mark - Autorotate and Orientation Methods
+
+- (BOOL)shouldAutorotate {
+    return NO;
+}
+
+- (NSUInteger)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskPortrait;
 }
 
 

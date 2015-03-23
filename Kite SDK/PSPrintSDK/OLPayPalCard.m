@@ -224,6 +224,7 @@ static NSString *typeToString(OLPayPalCardType type) {
         [manager POST:[NSString stringWithFormat:@"https://%@/v1/payments/payment", environment == kOLPayPalEnvironmentLive ? @"api.paypal.com" : @"api.sandbox.paypal.com"]
            parameters:paymentJSON success:^(AFHTTPRequestOperation *operation, id responseObject) {
             NSInteger statusCode = operation.response.statusCode;
+
             if (statusCode >= 200 && statusCode <= 299) {
                 id paymentId = responseObject[@"id"];
                 id paymentState = responseObject[@"state"];
