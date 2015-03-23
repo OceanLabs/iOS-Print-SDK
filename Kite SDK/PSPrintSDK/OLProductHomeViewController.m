@@ -154,7 +154,7 @@
 #pragma mark - Autorotate and Orientation Methods
 
 - (BOOL)shouldAutorotate {
-    return YES;
+    return NO;
 }
 
 - (NSUInteger)supportedInterfaceOrientations {

@@ -107,6 +107,14 @@ static const NSInteger kRowAddAddressManually = 1;
     [self presentViewController:picker animated:YES completion:nil];
 }
 
+- (BOOL)shouldAutorotate {
+    return NO;
+}
+
+- (NSUInteger)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskPortrait;
+}
+
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {

@@ -35,15 +35,6 @@ static const NSUInteger kSectionErrorRetry = 2;
     return self;
 }
 
-
-- (BOOL)shouldAutorotate {
-    return NO;
-}
-
-- (NSUInteger)supportedInterfaceOrientations {
-    return UIInterfaceOrientationMaskPortrait;
-}
-
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.title = @"Receipt";
@@ -245,6 +236,16 @@ static const NSUInteger kSectionErrorRetry = 2;
     }
     
     [self retrySubmittingOrderForPrinting];
+}
+
+#pragma mark - Autorotate and Orientation Methods
+
+- (BOOL)shouldAutorotate {
+    return NO;
+}
+
+- (NSUInteger)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskPortrait;
 }
 
 @end

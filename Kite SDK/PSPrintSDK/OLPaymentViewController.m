@@ -368,14 +368,6 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     [self.tableView reloadData];
 }
 
-- (BOOL)shouldAutorotate {
-    return NO;
-}
-
-- (NSUInteger)supportedInterfaceOrientations {
-    return UIInterfaceOrientationMaskPortrait;
-}
-
 - (void)onButtonContinueShoppingClicked:(id)sender {
     if (self.delegate && [self.delegate respondsToSelector:@selector(userDidTapContinueShoppingButton)]){
         [self.delegate userDidTapContinueShoppingButton];
@@ -840,6 +832,16 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     [self dismissViewControllerAnimated:YES completion:^{
         [self submitOrderForPrintingWithProofOfPayment:proofOfPayment completion:^void(PKPaymentAuthorizationStatus status){}];
     }];
+}
+
+#pragma mark - Autorotate and Orientation Methods
+
+- (BOOL)shouldAutorotate {
+    return NO;
+}
+
+- (NSUInteger)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskPortrait;
 }
 
 
