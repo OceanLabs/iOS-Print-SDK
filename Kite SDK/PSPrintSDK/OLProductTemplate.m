@@ -25,6 +25,7 @@ static NSString *const kKeySizeCm = @"co.oceanlabs.pssdk.kKeySizeCm";
 static NSString *const kKeySizeInches = @"co.oceanlabs.pssdk.kKeySizeInches";
 static NSString *const kKeyProductCode = @"co.oceanlabs.pssdk.kKeyProductCode";
 static NSString *const kKeyImageBleed = @"co.oceanlabs.pssdk.kKeyImageBleed";
+static NSString *const kKeyImageBorder = @"co.oceanlabs.pssdk.kKeyImageBorder";
 static NSString *const kKeyMaskImageURL = @"co.oceanlabs.pssdk.kKeymaskImageURL";
 static NSString *const kKeySizePx = @"co.oceanlabs.pssdk.kKeySizePx";
 static NSString *const kKeyClassPhotoURL = @"co.oceanlabs.pssdk.kKeyClassPhotoURL";
@@ -182,9 +183,6 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
     if ([identifier isEqualToString:@"RECTANGLE"]){
         return kOLTemplateUIRectagle;
     }
-    else if ([identifier isEqualToString:@"POLAROID"]){
-        return kOLTemplateUIPolaroid;
-    }
     else if ([identifier isEqualToString:@"FRAME"]){
         return kOLTemplateUIFrame;
     }
@@ -213,9 +211,6 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
             break;
         case kOLTemplateUINA:
             return @"NA Class";
-            break;
-        case kOLTemplateUIPolaroid:
-            return @"Polaroid";
             break;
         case kOLTemplateUIPoster:
             return @"Poster";
@@ -255,6 +250,7 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
     [aCoder encodeCGSize:self.sizeInches forKey:kKeySizeInches];
     [aCoder encodeObject:self.productCode forKey:kKeyProductCode];
     [aCoder encodeUIEdgeInsets:self.imageBleed forKey:kKeyImageBleed];
+    [aCoder encodeUIEdgeInsets:self.imageBorder forKey:kKeyImageBorder];
     [aCoder encodeObject:self.maskImageURL forKey:kKeyMaskImageURL];
     [aCoder encodeCGSize:self.sizePx forKey:kKeySizePx];
     [aCoder encodeObject:self.classPhotoURL forKey:kKeyClassPhotoURL];
@@ -277,6 +273,7 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
         _sizeInches = [aDecoder decodeCGSizeForKey:kKeySizeInches];
         _productCode = [aDecoder decodeObjectForKey:kKeyProductCode];
         _imageBleed = [aDecoder decodeUIEdgeInsetsForKey:kKeyImageBleed];
+        _imageBorder = [aDecoder decodeUIEdgeInsetsForKey:kKeyImageBorder];
         _maskImageURL = [aDecoder decodeObjectForKey:kKeyMaskImageURL];
         _sizePx = [aDecoder decodeCGSizeForKey:kKeySizePx];
         _classPhotoURL = [aDecoder decodeObjectForKey:kKeyClassPhotoURL];

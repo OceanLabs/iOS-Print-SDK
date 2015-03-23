@@ -75,6 +75,7 @@
                                 CGSize sizeCm = CGSizeZero;
                                 CGSize sizeInches = CGSizeZero;
                                 UIEdgeInsets imageBleed = UIEdgeInsetsZero;
+                                UIEdgeInsets imageBorder = UIEdgeInsetsZero;
                                 NSString *maskImageURL;
                                 NSString *code;
                                 CGSize sizePx = CGSizeZero;
@@ -109,6 +110,11 @@
                                     NSArray *bleedArray = [product[@"mask_bleed"] isKindOfClass:[NSArray class]] ? product[@"mask_bleed"] : nil;
                                     if (bleedArray){
                                         imageBleed = UIEdgeInsetsMake([bleedArray[0] floatValue], [bleedArray[3] floatValue], [bleedArray[2] floatValue], [bleedArray[1] floatValue]);
+                                    }
+                                    
+                                    NSArray *borderArray = [product[@"ios_image_border"] isKindOfClass:[NSArray class]] ? product[@"ios_image_border"] : nil;
+                                    if (borderArray){
+                                        imageBorder = UIEdgeInsetsMake([borderArray[0] floatValue], [borderArray[3] floatValue], [borderArray[2] floatValue], [borderArray[1] floatValue]);
                                     }
                                     
                                     NSDictionary *sizeDict = [product[@"size"] isKindOfClass:[NSDictionary class]] ? product[@"size"] : nil;
@@ -168,6 +174,7 @@
                                     t.maskImageURL = [NSURL URLWithString:maskImageURL];
                                     t.sizePx = sizePx;
                                     t.classPhotoURL = [NSURL URLWithString:classPhoto];
+                                    t.imageBorder = imageBorder;
                                     [acc addObject:t];
                                 }
                             }

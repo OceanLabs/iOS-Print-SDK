@@ -266,7 +266,7 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
 }
 
 - (CGFloat) productAspectRatio{
-    return self.product.productTemplate.sizePx.height / self.product.productTemplate.sizePx.width;
+    return self.product.productTemplate.sizeCm.height / self.product.productTemplate.sizeCm.width;
 }
 
 #pragma mark Button Actions
@@ -414,10 +414,12 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
         
         UIView *borderView = [cell.contentView viewWithTag:399];
         
-        NSLayoutConstraint *topCon = [NSLayoutConstraint constraintWithItem:cellImage attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:borderView attribute:NSLayoutAttributeTop multiplier:1 constant:15];
-        NSLayoutConstraint *leftCon = [NSLayoutConstraint constraintWithItem:cellImage attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:borderView attribute:NSLayoutAttributeLeft multiplier:1 constant:15];
-        NSLayoutConstraint *rightCon = [NSLayoutConstraint constraintWithItem:cellImage attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:borderView attribute:NSLayoutAttributeRight multiplier:1 constant:-15];
-        NSLayoutConstraint *bottomCon = [NSLayoutConstraint constraintWithItem:cellImage attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationLessThanOrEqual toItem:borderView attribute:NSLayoutAttributeBottom multiplier:1 constant:-15];
+        UIEdgeInsets b = self.product.productTemplate.imageBorder;
+        
+        NSLayoutConstraint *topCon = [NSLayoutConstraint constraintWithItem:cellImage attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:borderView attribute:NSLayoutAttributeTop multiplier:1 constant:b.top];
+        NSLayoutConstraint *leftCon = [NSLayoutConstraint constraintWithItem:cellImage attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:borderView attribute:NSLayoutAttributeLeft multiplier:1 constant:b.left];
+        NSLayoutConstraint *rightCon = [NSLayoutConstraint constraintWithItem:cellImage attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:borderView attribute:NSLayoutAttributeRight multiplier:1 constant:-b.right];
+        NSLayoutConstraint *bottomCon = [NSLayoutConstraint constraintWithItem:cellImage attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationLessThanOrEqual toItem:borderView attribute:NSLayoutAttributeBottom multiplier:1 constant:-b.bottom];
         
         [borderView.superview addConstraints:@[topCon, leftCon, rightCon, bottomCon]];
 
@@ -444,13 +446,13 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
             NSNumber *reviewPhotoCellHeight;
             if (!reviewPhotoCellHeight) {
                 
-                if (self.product.productTemplate.templateUI == kOLTemplateUIPolaroid){
-                    NSUInteger extraBottomBezel = 50 / [self screenWidthFactor];
-                    reviewPhotoCellHeight = @(280 * [self screenWidthFactor] + extraBottomBezel + 40 * [self screenWidthFactor] - 40);
-                }
-                else{
+//                if (self.product.productTemplate.templateUI == kOLTemplateUIPolaroid){
+//                    NSUInteger extraBottomBezel = 50 / [self screenWidthFactor];
+//                    reviewPhotoCellHeight = @(280 * [self screenWidthFactor] + extraBottomBezel + 40 * [self screenWidthFactor] - 40);
+//                }
+//                else{
                     reviewPhotoCellHeight = @(280 * [self productAspectRatio] * [self screenWidthFactor] + 40 * [self screenWidthFactor] - 40);
-                }
+//                }
             }
             return [reviewPhotoCellHeight floatValue] + 69;
         }

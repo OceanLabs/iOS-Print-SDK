@@ -19,7 +19,6 @@ typedef enum {
     kOLTemplateUICircle,
     kOLTemplateUIFrame,
     kOLTemplateUIPoster,
-    kOLTemplateUIPolaroid,
     kOLTemplateUICase
 }OLTemplateUI;
 
@@ -41,6 +40,7 @@ typedef enum {
 @property (assign, nonatomic) CGSize sizeInches;
 @property (strong, nonatomic) NSString *productCode;
 @property (assign, nonatomic) UIEdgeInsets imageBleed;
+@property (assign, nonatomic) UIEdgeInsets imageBorder;
 @property (strong, nonatomic) NSURL *maskImageURL;
 @property (assign, nonatomic) CGSize sizePx;
 @property (strong, nonatomic) NSURL *classPhotoURL;
