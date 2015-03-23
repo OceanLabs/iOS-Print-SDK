@@ -63,7 +63,7 @@
         }
     }
     
-    if (![self.delegate respondsToSelector:@selector(kiteControllerShouldShowAddMorePhotosInReview:)] || [self.delegate kiteControllerShouldShowAddMorePhotosInReview:[OLKitePrintSDK kiteViewControllerInNavStack:self.navigationController.viewControllers]]){
+    if (![self.delegate respondsToSelector:@selector(kiteControllerShouldAllowUserToAddMorePhotos:)] || [self.delegate kiteControllerShouldAllowUserToAddMorePhotos:[OLKitePrintSDK kiteViewControllerInNavStack:self.navigationController.viewControllers]]){
         OLPhotoSelectionViewController *vc;
         vc = [self.storyboard instantiateViewControllerWithIdentifier:@"PhotoSelectionViewController"];
         vc.assets = self.assets;

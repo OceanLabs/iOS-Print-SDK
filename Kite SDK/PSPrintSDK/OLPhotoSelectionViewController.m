@@ -13,8 +13,11 @@
 
 #import <CTAssetsPickerController.h>
 #import <objc/runtime.h>
+
+#ifdef OL_KITE_OFFER_INSTAGRAM
 #import <OLInstagramImagePickerController.h>
 #import <OLInstagramImage.h>
+#endif
 
 #ifdef OL_KITE_OFFER_FACEBOOK
 #import <OLFacebookImagePickerController.h>
@@ -47,6 +50,11 @@ static void *ActionSheetCellKey;
 @interface OLKitePrintSDK (Private)
 
 + (OLKiteViewController *)kiteViewControllerInNavStack:(NSArray *)viewControllers;
+#ifdef OL_KITE_OFFER_INSTAGRAM
++ (NSString *) instagramRedirectURI;
++ (NSString *) instagramSecret;
++ (NSString *) instagramClientID;
+#endif
 
 @end
 
@@ -68,7 +76,9 @@ static void *ActionSheetCellKey;
                                             UICollectionViewDelegate,
                                             UICollectionViewDelegateFlowLayout,
                                             UIActionSheetDelegate,
+#ifdef OL_KITE_OFFER_INSTAGRAM
                                             OLInstagramImagePickerControllerDelegate,
+#endif
 #ifdef OL_KITE_OFFER_FACEBOOK
                                             OLFacebookImagePickerControllerDelegate,
 #endif
@@ -174,7 +184,11 @@ static void *ActionSheetCellKey;
 }
 
 - (BOOL)instagramEnabled{
-    return [OLKitePrintSDK instagramSecret] && ![[OLKitePrintSDK instagramSecret] isEqualToString:@""] && [OLKitePrintSDK instagramClientID] && ![[OLKitePrintSDK instagramClientID] isEqualToString:@""] && [OLKitePrintSDK instagramReturnURI] && ![[OLKitePrintSDK instagramReturnURI] isEqualToString:@""];
+#ifdef OL_KITE_OFFER_INSTAGRAM
+    return [OLKitePrintSDK instagramSecret] && ![[OLKitePrintSDK instagramSecret] isEqualToString:@""] && [OLKitePrintSDK instagramClientID] && ![[OLKitePrintSDK instagramClientID] isEqualToString:@""] && [OLKitePrintSDK instagramRedirectURI] && ![[OLKitePrintSDK instagramRedirectURI] isEqualToString:@""];
+#else 
+    return NO;
+#endif
 }
 
 - (BOOL)facebookEnabled{
@@ -275,9 +289,11 @@ static void *ActionSheetCellKey;
         if ([object isKindOfClass: [ALAsset class]]){
             [assetArray addObject:[OLAsset assetWithALAsset:object]];
         }
+#ifdef OL_KITE_OFFER_INSTAGRAM
         else if ([object isKindOfClass: [OLInstagramImage class]]){
             [assetArray addObject:[OLAsset assetWithURL:[object fullURL]]];
         }
+#endif
 #ifdef OL_KITE_OFFER_FACEBOOK
         else if ([object isKindOfClass: [OLFacebookImage class]]){
             [assetArray addObject:[OLAsset assetWithURL:[object fullURL]]];
@@ -353,12 +369,14 @@ static void *ActionSheetCellKey;
 }
 
 - (IBAction)instagramSelected:(id)sender {
+#ifdef OL_KITE_OFFER_INSTAGRAM
     OLInstagramImagePickerController *picker = nil;
-    picker = [[OLInstagramImagePickerController alloc] initWithClientId:[OLKitePrintSDK instagramClientID] secret:[OLKitePrintSDK instagramSecret] redirectURI:[OLKitePrintSDK instagramReturnURI]];
+    picker = [[OLInstagramImagePickerController alloc] initWithClientId:[OLKitePrintSDK instagramClientID] secret:[OLKitePrintSDK instagramSecret] redirectURI:[OLKitePrintSDK instagramRedirectURI]];
     
     picker.delegate = self;
     picker.selected = [self createAssetArray];
     [self presentViewController:picker animated:YES completion:nil];
+#endif
 }
 
 - (IBAction)facebookSelected:(id)sender {
@@ -413,6 +431,24 @@ static void *ActionSheetCellKey;
 
 #pragma mark - CTAssetsPickerControllerDelegate Methods
 
+- (OLKiteViewController *)kiteViewController {
+    for (UIViewController *vc in self.navigationController.viewControllers) {
+        if ([vc isMemberOfClass:[OLKiteViewController class]]) {
+            return (OLKiteViewController *) vc;
+        }
+    }
+    
+    return nil;
+}
+
+- (BOOL)assetsPickerController:(CTAssetsPickerController *)picker isDefaultAssetsGroup:(ALAssetsGroup *)group {
+    if ([self.delegate respondsToSelector:@selector(kiteController:isDefaultAssetsGroup:)]) {
+        return [self.delegate kiteController:[self kiteViewController] isDefaultAssetsGroup:group];
+    }
+    
+    return NO;
+}
+
 - (void)assetsPickerController:(CTAssetsPickerController *)picker didFinishPickingAssets:(NSArray *)assets {
     [self populateArrayWithNewArray:assets dataType:[ALAsset class]];
     [picker dismissViewControllerAnimated:YES completion:^(void){}];
@@ -434,6 +470,7 @@ static void *ActionSheetCellKey;
     return YES;
 }
 
+#ifdef OL_KITE_OFFER_INSTAGRAM
 #pragma mark - OLInstagramImagePickerControllerDelegate Methods
 
 - (void)instagramImagePicker:(OLInstagramImagePickerController *)imagePicker didFailWithError:(NSError *)error {
@@ -448,6 +485,7 @@ static void *ActionSheetCellKey;
 - (void)instagramImagePickerDidCancelPickingImages:(OLInstagramImagePickerController *)imagePicker {
     [self dismissViewControllerAnimated:YES completion:nil];
 }
+#endif
 
 #ifdef OL_KITE_OFFER_FACEBOOK
 #pragma mark - OLFacebookImagePickerControllerDelegate Methods
@@ -697,7 +735,14 @@ static void *ActionSheetCellKey;
 - (CGSize)collectionView:(UICollectionView *)collectionView
                   layout:(UICollectionViewLayout *)collectionViewLayout
   sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
-        return CGSizeMake(self.view.bounds.size.width/3, self.view.bounds.size.width/3);
+    CGFloat width = floorf(self.view.bounds.size.width/3);
+    CGFloat height = width;
+    
+    if (indexPath.item % 3 == 2) {
+        width = self.view.bounds.size.width - 2 * width;
+    }
+
+    return CGSizeMake(width, height);
 }
 
 #pragma mark - Autorotate and Orientation Methods

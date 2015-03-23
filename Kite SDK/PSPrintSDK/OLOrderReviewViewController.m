@@ -242,11 +242,11 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
 
 - (BOOL)shouldShowAddMorePhotos{
     return NO;
-//    if (![self.delegate respondsToSelector:@selector(kiteControllerShouldShowAddMorePhotosInReview:)]){
+//    if (![self.delegate respondsToSelector:@selector(kiteControllerShouldAllowUserToAddMorePhotos:)]){
 //        return YES;
 //    }
 //    else{
-//        return [self.delegate kiteControllerShouldShowAddMorePhotosInReview:[self kiteViewController]];
+//        return [self.delegate kiteControllerShouldAllowUserToAddMorePhotos:[self kiteViewController]];
 //    }
 }
 

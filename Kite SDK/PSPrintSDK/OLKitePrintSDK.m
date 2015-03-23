@@ -36,9 +36,11 @@ static NSString *const kOLPayPalRecipientEmailSandbox = @"sandbox-merchant@kite.
 
 static BOOL useJudoPayForGBP = NO;
 
+#ifdef OL_KITE_OFFER_INSTAGRAM
 static NSString *instagramClientID = nil;
 static NSString *instagramSecret = nil;
-static NSString *instagramReturnURI = nil;
+static NSString *instagramRedirectURI = nil;
+#endif
 
 @interface OLKitePrintSDK (InternalUtils)
 + (NSString *)userEmail:(UIViewController *)topVC;
@@ -198,22 +200,24 @@ static NSString *instagramReturnURI = nil;
     return nil;
 }
 
-+ (void)setInstagramEnabledWithReturnURI:(NSString *)URI clientID:(NSString *)clientID secret:(NSString *)secret{
-    instagramReturnURI = URI;
+#ifdef OL_KITE_OFFER_INSTAGRAM
++ (void)setInstagramEnabledWithClientID:(NSString *)clientID secret:(NSString *)secret redirectURI:(NSString *)redirectURI {
+    instagramRedirectURI = redirectURI;
     instagramSecret = secret;
     instagramClientID = clientID;
 }
 
-+ (NSString *) instagramReturnURI{
-    return instagramReturnURI;
++ (NSString *)instagramRedirectURI {
+    return instagramRedirectURI;
 }
 
-+ (NSString *) instagramSecret{
++ (NSString *)instagramSecret{
     return instagramSecret;
 }
 
-+ (NSString *) instagramClientID{
++ (NSString *)instagramClientID{
     return instagramClientID;
 }
+#endif
 
 @end

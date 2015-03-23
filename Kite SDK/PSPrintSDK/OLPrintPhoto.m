@@ -9,10 +9,11 @@
 #import "OLPrintPhoto.h"
 #import <AssetsLibrary/AssetsLibrary.h>
 #import <SDWebImageManager.h>
+#ifdef OL_KITE_OFFER_INSTAGRAM
 #import <OLInstagramImage.h>
+#endif
 #import "OLAsset+Private.h"
 #import "UIImageView+FadeIn.h"
-#import <OLInstagramImage.h>
 
 #ifdef OL_KITE_OFFER_FACEBOOK
 #import <OLFacebookImage.h>
@@ -80,8 +81,18 @@ static NSString *const kKeyCropTransform = @"co.oceanlabs.psprintstudio.kKeyCrop
     else if ([asset isKindOfClass:[OLAsset class]]){
         _type = kPrintPhotoAssetTypeOLAsset;
     }
+#ifdef OL_KITE_OFFER_INSTAGRAM
     else if ([asset isKindOfClass:[OLInstagramImage class]]){
         _type = kPrintPhotoAssetTypeInstagramPhoto;
+    }
+#endif
+#ifdef OL_KITE_OFFER_FACEBOOK
+    else if ([asset isKindOfClass:[OLFacebookImage class]]){
+        _type = kPrintPhotoAssetTypeFacebookPhoto;
+    }
+#endif
+    else {
+        NSAssert(NO, @"Unknown asset type of class: %@", [asset class]);
     }
 }
 
@@ -100,16 +111,7 @@ static NSString *const kKeyCropTransform = @"co.oceanlabs.psprintstudio.kKeyCrop
             }];
         }
     } else {
-        if (self.type == kPrintPhotoAssetTypeInstagramPhoto) {
-            [imageView setAndFadeInImageWithURL:[self.asset fullURL]];
-        }
-#ifdef OL_KITE_OFFER_FACEBOOK
-        else if (self.type == kPrintPhotoAssetTypeFacebookPhoto){
-            OLFacebookImage *fbImage = self.asset;
-            [imageView setAndFadeInImageWithURL:[fbImage bestURLForSize:CGSizeMake(imageView.frame.size.width * [UIScreen mainScreen].scale, imageView.frame.size.height * [UIScreen mainScreen].scale)]];
-        }
-#endif
-        else if (self.type == kPrintPhotoAssetTypeOLAsset){
+        if (self.type == kPrintPhotoAssetTypeOLAsset){
             OLAsset *asset = (OLAsset *)self.asset;
             
             if (asset.assetType == kOLAssetTypeRemoteImageURL){
@@ -147,6 +149,17 @@ static NSString *const kKeyCropTransform = @"co.oceanlabs.psprintstudio.kKeyCrop
                 }];
             }
         }
+#ifdef OL_KITE_OFFER_INSTAGRAM
+        else if (self.type == kPrintPhotoAssetTypeInstagramPhoto) {
+            [imageView setAndFadeInImageWithURL:[self.asset fullURL]];
+        }
+#endif
+#ifdef OL_KITE_OFFER_FACEBOOK
+        else if (self.type == kPrintPhotoAssetTypeFacebookPhoto){
+            OLFacebookImage *fbImage = self.asset;
+            [imageView setAndFadeInImageWithURL:[fbImage bestURLForSize:CGSizeMake(imageView.frame.size.width * [UIScreen mainScreen].scale, imageView.frame.size.height * [UIScreen mainScreen].scale)]];
+        }
+#endif
     }
 }
 
@@ -166,9 +179,11 @@ static NSString *const kKeyCropTransform = @"co.oceanlabs.psprintstudio.kKeyCrop
             ALAsset *asset = (ALAsset *)self.asset;
             imageView.image = [UIImage imageWithCGImage:asset.thumbnail];
         }
+#ifdef OL_KITE_OFFER_INSTAGRAM
         else if (self.type == kPrintPhotoAssetTypeInstagramPhoto) {
             [imageView setAndFadeInImageWithURL:[self.asset thumbURL]];
         }
+#endif
 #ifdef OL_KITE_OFFER_FACEBOOK
         else if (self.type == kPrintPhotoAssetTypeFacebookPhoto){
             OLFacebookImage *fbImage = self.asset;
@@ -227,6 +242,7 @@ static NSString *const kKeyCropTransform = @"co.oceanlabs.psprintstudio.kKeyCrop
     return retVal;
 }
 
+#if defined(OL_KITE_OFFER_INSTAGRAM) || defined(OL_KITE_OFFER_FACEBOOK)
 - (void)downloadFullImageWithProgress:(OLImageEditorImageGetImageProgressHandler)progressHandler completion:(OLImageEditorImageGetImageCompletionHandler)completionHandler {
     if (progressHandler) progressHandler(0.05f); // small bit of fake inital progress to get progress bars displaying
     [[SDWebImageManager sharedManager] downloadImageWithURL:[self.asset fullURL] options:0 progress:^(NSInteger receivedSize, NSInteger expectedSize) {
@@ -243,6 +259,7 @@ static NSString *const kKeyCropTransform = @"co.oceanlabs.psprintstudio.kKeyCrop
         });
     }];
 }
+#endif
 
 #pragma mark - OLImageEditorImage protocol methods
 
@@ -254,9 +271,11 @@ static NSString *const kKeyCropTransform = @"co.oceanlabs.psprintstudio.kKeyCrop
             completionHandler(image);
         });
     }
+#if defined(OL_KITE_OFFER_INSTAGRAM) || defined(OL_KITE_OFFER_FACEBOOK)
     else if (self.type == kPrintPhotoAssetTypeFacebookPhoto || self.type == kPrintPhotoAssetTypeInstagramPhoto) {
         [self downloadFullImageWithProgress:progressHandler completion:completionHandler];
     }
+#endif
     else if (self.type == kPrintPhotoAssetTypeOLAsset){
         OLAsset *asset = (OLAsset *)self.asset;
         
@@ -414,6 +433,7 @@ static NSString *const kKeyCropTransform = @"co.oceanlabs.psprintstudio.kKeyCrop
             handler([self.asset defaultRepresentation].size, nil);
         });
     }
+#if defined(OL_KITE_OFFER_INSTAGRAM) || defined(OL_KITE_OFFER_FACEBOOK)
     else if (self.type == kPrintPhotoAssetTypeInstagramPhoto || self.type == kPrintPhotoAssetTypeFacebookPhoto){
         [[SDWebImageManager sharedManager] downloadImageWithURL:[self.asset fullURL] options:0 progress:NULL completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
             if (finished) {
@@ -422,6 +442,7 @@ static NSString *const kKeyCropTransform = @"co.oceanlabs.psprintstudio.kKeyCrop
             }
         }];
     }
+#endif
     else if (self.type == kPrintPhotoAssetTypeOLAsset){
         [(OLAsset *)self.asset dataLengthWithCompletionHandler:handler];
     }
@@ -442,6 +463,7 @@ static NSString *const kKeyCropTransform = @"co.oceanlabs.psprintstudio.kKeyCrop
             handler(UIImageJPEGRepresentation(image, 0.9), nil);
         });
     }
+#if defined(OL_KITE_OFFER_INSTAGRAM) || defined(OL_KITE_OFFER_FACEBOOK)
     else if (self.type == kPrintPhotoAssetTypeFacebookPhoto || self.type == kPrintPhotoAssetTypeInstagramPhoto){
         [[SDWebImageManager sharedManager] downloadImageWithURL:[self.asset fullURL] options:0 progress:NULL completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
             if (finished) {
@@ -454,6 +476,7 @@ static NSString *const kKeyCropTransform = @"co.oceanlabs.psprintstudio.kKeyCrop
             }
         }];
     }
+#endif
     else if (self.type == kPrintPhotoAssetTypeOLAsset){
         OLAsset *asset = self.asset;
         if (CGAffineTransformIsIdentity(self.transform)){
@@ -506,7 +529,6 @@ static NSString *const kKeyCropTransform = @"co.oceanlabs.psprintstudio.kKeyCrop
                           }
                          failureBlock:^(NSError *err) {
                              NSAssert([NSThread isMainThread], @"oops wrong assumption about main thread callback");
-                             NSLog(@"boo, there will likely be a crash at some point in the future...");
                          }];
         } else {
             self.asset = [aDecoder decodeObjectForKey:kKeyAsset];
