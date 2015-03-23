@@ -932,12 +932,12 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="249" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" misplaced="YES" text="FREE SHIPPING" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="c7e-Wo-NVf">
-                                <rect key="frame" x="108" y="547" width="147" height="11"/>
+                                <rect key="frame" x="108" y="548" width="147" height="11"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="9"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Price" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="t7m-Te-qkc">
-                                <rect key="frame" x="265" y="540" width="39" height="20"/>
+                                <rect key="frame" x="266" y="541" width="39" height="20"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
                                 <nil key="highlightedColor"/>
                             </label>
@@ -952,7 +952,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="dimension" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="n5R-FL-khI">
-                                <rect key="frame" x="40" y="544" width="58" height="15"/>
+                                <rect key="frame" x="40" y="545" width="58" height="15"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                 <nil key="highlightedColor"/>
                             </label>
@@ -992,6 +992,7 @@
                             <constraint firstItem="Hcx-YD-SLR" firstAttribute="leading" secondItem="ISM-jH-rDT" secondAttribute="trailing" constant="1" id="bOn-fe-TEW"/>
                             <constraint firstItem="c7e-Wo-NVf" firstAttribute="leading" secondItem="n5R-FL-khI" secondAttribute="trailing" constant="10" id="cBx-wS-fsz"/>
                             <constraint firstItem="kok-Gu-zjj" firstAttribute="top" secondItem="gRQ-xZ-368" secondAttribute="bottom" id="dXX-gG-t8n"/>
+                            <constraint firstItem="put-lQ-Dgd" firstAttribute="top" secondItem="gRQ-xZ-368" secondAttribute="bottom" priority="750" constant="38" id="fPa-tR-DCW"/>
                             <constraint firstItem="t7m-Te-qkc" firstAttribute="leading" secondItem="c7e-Wo-NVf" secondAttribute="trailing" constant="10.5" id="jZ2-H6-LPo"/>
                             <constraint firstItem="c7e-Wo-NVf" firstAttribute="baseline" secondItem="t7m-Te-qkc" secondAttribute="baseline" constant="0.5" id="jyo-B1-Mq4"/>
                             <constraint firstItem="put-lQ-Dgd" firstAttribute="top" secondItem="Hcx-YD-SLR" secondAttribute="bottom" constant="38" id="nPL-cO-DTn"/>
@@ -1005,6 +1006,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="gX3-Bf-5EU"/>
                     <connections>
+                        <outlet property="chooseSizeLabel" destination="kok-Gu-zjj" id="GlW-94-cPi"/>
                         <outlet property="classicBtn" destination="ISM-jH-rDT" id="7V1-Ql-xb0"/>
                         <outlet property="deluxeBtn" destination="ALg-Xy-p28" id="xAh-pn-FuD"/>
                         <outlet property="grandBtn" destination="Hcx-YD-SLR" id="uGs-cL-3e2"/>

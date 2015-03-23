@@ -33,6 +33,7 @@ static UIColor *deselectedColor;
 @property (weak, nonatomic) IBOutlet UIImageView *productImageView;
 @property (strong, nonatomic) OLProduct *product;
 @property (strong, nonatomic) NSMutableArray *availableButtons;
+@property (weak, nonatomic) IBOutlet UILabel *chooseSizeLabel;
 
 @end
 
@@ -70,13 +71,13 @@ static UIColor *deselectedColor;
     OLProduct *productA2;
     OLProduct *productA3;
     for (OLProduct *product in [OLProduct products]){
-        if ([product.productTemplate.productCode isEqualToString:@"LFA1"] && product.productTemplate.quantityPerSheet == 1){
+        if ([product.productTemplate.productCode hasSuffix:@"A1"] && product.productTemplate.quantityPerSheet == 1){
             productA1 = product;
         }
-        if ([product.productTemplate.productCode isEqualToString:@"LFA2"] && product.productTemplate.quantityPerSheet == 1){
+        if ([product.productTemplate.productCode hasSuffix:@"A2"] && product.productTemplate.quantityPerSheet == 1){
             productA2 = product;
         }
-        if ([product.productTemplate.productCode isEqualToString:@"LFA3"] && product.productTemplate.quantityPerSheet == 1){
+        if ([product.productTemplate.productCode hasSuffix:@"A3"] && product.productTemplate.quantityPerSheet == 1){
             productA3 = product;
         }
     }
@@ -103,6 +104,12 @@ static UIColor *deselectedColor;
     else if (firstButton == self.deluxeBtn){
         [self pressedDeluxe:nil];
     }
+    
+    if (self.availableButtons.count == 1){
+        [[self.availableButtons firstObject] removeFromSuperview];
+        [self.availableButtons removeAllObjects];
+        [self.chooseSizeLabel removeFromSuperview];
+    }
 }
 
 -(void)viewDidAppear:(BOOL)animated{
@@ -127,7 +134,7 @@ static UIColor *deselectedColor;
 #pragma mark - actions
 - (IBAction)pressedClassic:(UIButton *)sender {
     for (OLProduct *product in [OLProduct products]){
-        if ([product.productTemplate.productCode isEqualToString:@"LFA3"] && product.productTemplate.quantityPerSheet == 1){
+        if ([product.productTemplate.productCode hasSuffix:@"A3"] && product.productTemplate.quantityPerSheet == 1){
             self.product = product;
         }
     }
@@ -146,7 +153,7 @@ static UIColor *deselectedColor;
 
 - (IBAction)pressedGrand:(UIButton *)sender {
     for (OLProduct *product in [OLProduct products]){
-        if ([product.productTemplate.productCode isEqualToString:@"LFA2"] && product.productTemplate.quantityPerSheet == 1){
+        if ([product.productTemplate.productCode hasSuffix:@"A2"] && product.productTemplate.quantityPerSheet == 1){
             self.product = product;
         }
     }
@@ -165,7 +172,7 @@ static UIColor *deselectedColor;
 
 - (IBAction)pressedDeluxe:(UIButton *)sender {
     for (OLProduct *product in [OLProduct products]){
-        if ([product.productTemplate.productCode isEqualToString:@"LFA1"] && product.productTemplate.quantityPerSheet == 1){
+        if ([product.productTemplate.productCode hasSuffix:@"A1"] && product.productTemplate.quantityPerSheet == 1){
             self.product = product;
         }
     }
