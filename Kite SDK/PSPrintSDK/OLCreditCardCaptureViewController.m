@@ -121,6 +121,16 @@ UITableViewDataSource, UITextFieldDelegate>
     return self.rootVC.delegate;
 }
 
+#pragma mark - Autorotate and Orientation Methods
+
+- (BOOL)shouldAutorotate {
+    return NO;
+}
+
+- (NSUInteger)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskPortrait;
+}
+
 @end
 
 @implementation OLCreditCardCaptureRootController
@@ -423,5 +433,15 @@ UITableViewDataSource, UITextFieldDelegate>
     [self dismissViewControllerAnimated:YES completion:^(){}];
 }
 #endif
+
+#pragma mark - Autorotate and Orientation Methods
+
+- (BOOL)shouldAutorotate {
+    return NO;
+}
+
+- (NSUInteger)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskPortrait;
+}
 
 @end
