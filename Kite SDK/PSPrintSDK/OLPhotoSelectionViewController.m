@@ -24,7 +24,7 @@
 #import <OLFacebookImage.h>
 #endif
 
-#import <UIImageView+FadeIn.h>
+#import "UIImageView+FadeIn.h"
 #import "OLPrintJob.h"
 #import "OLAddress.h"
 #import "OLAsset.h"
