@@ -43,7 +43,6 @@ static NSString *const kKeyCropTransform = @"co.oceanlabs.psprintstudio.kKeyCrop
 
 @interface OLPrintPhoto ()
 @property (nonatomic, strong) ALAssetsLibrary *assetsLibrary;
-@property (nonatomic, assign) CGAffineTransform cropTransform;
 @property (nonatomic, strong) UIImage *cachedCroppedThumbnailImage;
 @end
 
@@ -51,26 +50,9 @@ static NSString *const kKeyCropTransform = @"co.oceanlabs.psprintstudio.kKeyCrop
 
 - (id)init {
     if (self = [super init]) {
-        self.cropTransform = CGAffineTransformIdentity;
     }
     
     return self;
-}
-
-- (void)setTransform:(CGAffineTransform)transform {
-    self.cropTransform = transform;
-}
-
-- (CGAffineTransform)transform {
-    return self.cropTransform;
-}
-
-- (BOOL)transformed {
-    return !CGAffineTransformIsIdentity(self.cropTransform);
-}
-
-- (void)setTransformed:(BOOL)transformed {
-    
 }
 
 - (void)setAsset:(id)asset {
@@ -366,34 +348,29 @@ static NSString *const kKeyCropTransform = @"co.oceanlabs.psprintstudio.kKeyCrop
 #endif
     else if (self.type == kPrintPhotoAssetTypeOLAsset){
         OLAsset *asset = self.asset;
-        if (CGAffineTransformIsIdentity(self.transform)){
-            [asset dataWithCompletionHandler:handler];
+        if (asset.assetType == kOLAssetTypeRemoteImageURL){
+            [[SDWebImageManager sharedManager] downloadImageWithURL:[asset imageURL]
+                                                            options:0
+                                                           progress:nil
+                                                          completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *url) {
+                                                              if (finished) {
+                                                                  if (error) {
+                                                                      handler(nil, error);
+                                                                  } else {
+                                                                      handler(UIImageJPEGRepresentation(image, 0.7), error);
+                                                                  }
+                                                              }
+                                                          }];
         }
         else{
-            if (asset.assetType == kOLAssetTypeRemoteImageURL){
-                [[SDWebImageManager sharedManager] downloadImageWithURL:[asset imageURL]
-                                                                options:0
-                                                               progress:nil
-                                                              completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *url) {
-                                                                  if (finished) {
-                                                                      if (error) {
-                                                                          handler(nil, error);
-                                                                      } else {
-                                                                          handler(UIImageJPEGRepresentation(image, 0.7), error);
-                                                                      }
-                                                                  }
-                                                              }];
-            }
-            else{
-                [asset dataWithCompletionHandler:^(NSData *data, NSError *error){
-                    if (error){
-                        handler(nil,error);
-                    }
-                    else{
-                        handler(data, error);
-                    }
-                }];
-            }
+            [asset dataWithCompletionHandler:^(NSData *data, NSError *error){
+                if (error){
+                    handler(nil,error);
+                }
+                else{
+                    handler(data, error);
+                }
+            }];
         }
     }
 }
@@ -420,7 +397,6 @@ static NSString *const kKeyCropTransform = @"co.oceanlabs.psprintstudio.kKeyCrop
         } else {
             self.asset = [aDecoder decodeObjectForKey:kKeyAsset];
         }
-        self.cropTransform = [aDecoder decodeCGAffineTransformForKey:kKeyCropTransform];
     }
     
     return self;
@@ -428,7 +404,6 @@ static NSString *const kKeyCropTransform = @"co.oceanlabs.psprintstudio.kKeyCrop
 
 - (void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeInteger:self.type forKey:kKeyType];
-    [aCoder encodeCGAffineTransform:self.cropTransform forKey:kKeyCropTransform];
     if (self.type == kPrintPhotoAssetTypeALAsset) {
         [aCoder encodeObject:[self.asset valueForProperty:ALAssetPropertyAssetURL] forKey:kKeyAsset];
     } else {
