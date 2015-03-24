@@ -108,6 +108,7 @@
         OLProductTypeSelectionViewController *typeVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLTypeSelectionViewController"];
         typeVc.delegate = self.delegate;
         typeVc.assets = self.assets;
+        typeVc.userSelectedPhotos = self.userSelectedPhotos;
         typeVc.templateClass = product.productTemplate.templateClass;
         [self.navigationController pushViewController:typeVc animated:YES];
     }
