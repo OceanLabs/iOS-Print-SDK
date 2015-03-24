@@ -337,16 +337,18 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     }
     NSIndexPath* indexPath = [self.tableView indexPathForCell:(UITableViewCell*)cell];
     
+    OLPrintPhoto *tempPrintPhoto = [[OLPrintPhoto alloc] init];
+    tempPrintPhoto.asset = self.assets[indexPath.row - 1];
     self.editingPrintPhoto = self.userSelectedPhotos[indexPath.row - 1];
-    self.editingPrintPhoto.asset = self.assets[indexPath.row - 1];
     
     UINavigationController *nav = [self.storyboard instantiateViewControllerWithIdentifier:@"CropViewNavigationController"];
     OLScrollCropViewController *cropVc = (id)nav.topViewController;
     cropVc.enableCircleMask = self.product.productTemplate.templateUI == kOLTemplateUICircle;
     cropVc.delegate = self;
     cropVc.aspectRatio = [self productAspectRatio];
-    if (((OLAsset *)(self.editingPrintPhoto.asset)).assetType == kOLAssetTypeRemoteImageURL){
-        [[SDWebImageManager sharedManager] downloadImageWithURL:[((OLAsset *)(self.editingPrintPhoto.asset)) imageURL] options:0 progress:nil completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *url) {
+    
+    if (((OLAsset *)(tempPrintPhoto.asset)).assetType == kOLAssetTypeRemoteImageURL){
+        [[SDWebImageManager sharedManager] downloadImageWithURL:[((OLAsset *)(tempPrintPhoto.asset)) imageURL] options:0 progress:nil completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *url) {
             if (finished) {
                 [cropVc setFullImage:image];
                 [self presentViewController:nav animated:YES completion:NULL];
