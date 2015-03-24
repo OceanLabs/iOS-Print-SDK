@@ -194,6 +194,7 @@ static UIColor *deselectedColor;
     OLPosterViewController *dest = [self.storyboard instantiateViewControllerWithIdentifier:@"p1x1ViewController"];
     dest.product = self.product;
     dest.assets = self.assets;
+    dest.userSelectedPhotos = self.userSelectedPhotos;
     [self.navigationController pushViewController:dest animated:YES];
 }
 

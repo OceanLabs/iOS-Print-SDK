@@ -11,8 +11,12 @@
 #import "OLFrameOrderReviewViewController.h"
 #import "OLProduct.h"
 #import "OLAnalytics.h"
+#import "OLPhotoSelectionViewController.h"
+#import "OLKitePrintSDK.h"
 
-@interface OLFrameSelectionViewController ()
+@interface OLKitePrintSDK (Kite)
+
++ (OLKiteViewController *)kiteViewControllerInNavStack:(NSArray *)viewControllers;
 
 @end
 
@@ -28,39 +32,58 @@
     self.title = NSLocalizedString(@"Choose Frame Style", @"");
 }
 
-
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+- (IBAction)onTapGestureRecognized:(UITapGestureRecognizer *)sender {
     NSArray *products = [OLProduct products];
+    OLProduct *chosenProduct;
     
-    OLFrameOrderReviewViewController *vc = segue.destinationViewController;
-    vc.assets = [self.assets mutableCopy];
-    if ([segue.identifier isEqualToString:@"Selected2x2FrameStyleSegue"]) {
+    if (sender.view.tag == 22) {
         for (OLProduct *product in products){
             if (product.productTemplate.templateUI == kOLTemplateUIFrame && product.productTemplate.quantityPerSheet == 4){
-                vc.product = product;
+                chosenProduct = product;
             }
         }
-    } else if ([segue.identifier isEqualToString:@"Selected3x3FrameStyleSegue"]) {
+    } else if (sender.view.tag == 33) {
         for (OLProduct *product in products){
             if (product.productTemplate.templateUI == kOLTemplateUIFrame && product.productTemplate.quantityPerSheet == 9){
-                vc.product = product;
+                chosenProduct = product;
             }
         }
-    } else if ([segue.identifier isEqualToString:@"Selected4x4FrameStyleSegue"]) {
+    } else if (sender.view.tag == 44) {
         for (OLProduct *product in products){
             if (product.productTemplate.templateUI == kOLTemplateUIFrame && product.productTemplate.quantityPerSheet == 16){
-                vc.product = product;
+                chosenProduct = product;
             }
         }
     }
-    else if ([segue.identifier isEqualToString:@"Selected1x1FrameStyleSegue"]){
+    else if (sender.view.tag == 11){
         for (OLProduct *product in products){
             if (product.productTemplate.templateUI == kOLTemplateUIFrame && product.productTemplate.quantityPerSheet == 1){
-                vc.product = product;
+                chosenProduct = product;
             }
         }
     }
+    
+    if (![self.delegate respondsToSelector:@selector(kiteControllerShouldAllowUserToAddMorePhotos:)] || [self.delegate kiteControllerShouldAllowUserToAddMorePhotos:[OLKitePrintSDK kiteViewControllerInNavStack:self.navigationController.viewControllers]]){
+        OLPhotoSelectionViewController *vc;
+        vc = [self.storyboard instantiateViewControllerWithIdentifier:@"PhotoSelectionViewController"];
+        vc.assets = self.assets;
+        vc.userSelectedPhotos = self.userSelectedPhotos;
+        vc.product = chosenProduct;
+        vc.delegate = self.delegate;
+        [self.navigationController pushViewController:vc animated:YES];
+    }
+    else{
+        OLFrameOrderReviewViewController *vc;
+        vc = [self.storyboard instantiateViewControllerWithIdentifier:@"FrameOrderReviewViewController"];
+        vc.assets = self.assets;
+        vc.userSelectedPhotos = self.userSelectedPhotos;
+        vc.product = chosenProduct;
+        vc.delegate = self.delegate;
+        [self.navigationController pushViewController:vc animated:YES];
+    }
+    
 }
+
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     if ([self tableView:tableView numberOfRowsInSection:indexPath.section] == 2){

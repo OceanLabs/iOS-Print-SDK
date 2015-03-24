@@ -16,11 +16,13 @@
 #import "OLPosterSizeSelectionViewController.h"
 #import "OLKitePrintSDK.h"
 #import "OLAnalytics.h"
+#import "OLPrintPhoto.h"
 
 @interface OLKiteViewController () <UIAlertViewDelegate>
 
 @property (strong, nonatomic) UIViewController *nextVc;
 @property (strong, nonatomic) NSArray *assets;
+@property (strong, nonatomic) NSMutableArray *userSelectedPhotos;
 @property (weak, nonatomic) IBOutlet UINavigationBar *navigationBar;
 @property (assign, nonatomic) BOOL alreadyTransitioned;
 @property (assign, nonatomic) BOOL presentLater;
@@ -28,6 +30,19 @@
 @end
 
 @implementation OLKiteViewController
+
+-(NSMutableArray *) userSelectedPhotos{
+    if (!_userSelectedPhotos){
+        NSMutableArray *mutableUserSelectedPhotos = [[NSMutableArray alloc] init];
+        for (id asset in self.assets){
+            OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
+            printPhoto.asset = asset;
+            [mutableUserSelectedPhotos addObject:printPhoto];
+        }
+        _userSelectedPhotos = mutableUserSelectedPhotos;
+    }
+    return _userSelectedPhotos;
+}
 
 - (id)initWithAssets:(NSArray *)assets {
     NSAssert(assets != nil && [assets count] > 0, @"KiteViewController requires assets to print");
@@ -143,6 +158,7 @@
         
         ((UINavigationController *)self.nextVc).topViewController.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(dismiss)];
         [(id)((UINavigationController *)self.nextVc).topViewController setAssets:[self.assets mutableCopy]];
+        [(id)((UINavigationController *)self.nextVc).topViewController setUserSelectedPhotos:self.userSelectedPhotos];
         if (product){
             [(id)((UINavigationController *)self.nextVc).topViewController setProduct:product];
         }
@@ -159,6 +175,7 @@
         self.nextVc = [sb instantiateViewControllerWithIdentifier:nextVcIdentifier];
         [(OLProductHomeViewController *)((UINavigationController *)self.nextVc) setDelegate:self.delegate];
         [(id)self.nextVc setAssets:[self.assets mutableCopy]];
+        [(id)self.nextVc setUserSelectedPhotos:self.userSelectedPhotos];
         if (product){
             [(id)self.nextVc setProduct:product];
         }

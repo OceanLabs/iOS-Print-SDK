@@ -281,11 +281,11 @@
 }
 
 - (BOOL)shouldShowAddMorePhotos{
-    if (![self.delegate respondsToSelector:@selector(kiteControllerShouldShowAddMorePhotosInReview:)]){
+    if (![self.delegate respondsToSelector:@selector(kiteControllerShouldAllowUserToAddMorePhotos:)]){
         return YES;
     }
     else{
-        return [self.delegate kiteControllerShouldShowAddMorePhotosInReview:[self kiteViewController]];
+        return [self.delegate kiteControllerShouldAllowUserToAddMorePhotos:[self kiteViewController]];
     }
 }
 
@@ -366,7 +366,6 @@
     
     for (ALAsset *asset in addArray){
         OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
-        printPhoto.serverImageSize = [self.product serverImageSize];
         printPhoto.asset = asset;
         [self.userSelectedPhotos addObject:printPhoto];
     }

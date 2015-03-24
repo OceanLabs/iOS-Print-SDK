@@ -70,6 +70,7 @@
     OLProductOverviewViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLProductOverviewViewController"];
     vc.delegate = self.delegate;
     vc.assets = self.assets;
+    vc.userSelectedPhotos = self.userSelectedPhotos;
     vc.product = product;
     
     [self.navigationController pushViewController:vc animated:YES];

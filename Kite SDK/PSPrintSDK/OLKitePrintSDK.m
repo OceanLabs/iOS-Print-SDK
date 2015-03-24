@@ -37,6 +37,12 @@ static NSString *const kOLAPIEndpointVersion = @"v1.3";
 
 static BOOL useJudoPayForGBP = NO;
 
+#ifdef OL_KITE_OFFER_INSTAGRAM
+static NSString *instagramClientID = nil;
+static NSString *instagramSecret = nil;
+static NSString *instagramRedirectURI = nil;
+#endif
+
 @interface OLKitePrintSDK (InternalUtils)
 + (NSString *)userEmail:(UIViewController *)topVC;
 + (NSString *)userPhone:(UIViewController *)topVC;
@@ -198,5 +204,25 @@ static BOOL useJudoPayForGBP = NO;
     
     return nil;
 }
+
+#ifdef OL_KITE_OFFER_INSTAGRAM
++ (void)setInstagramEnabledWithClientID:(NSString *)clientID secret:(NSString *)secret redirectURI:(NSString *)redirectURI {
+    instagramRedirectURI = redirectURI;
+    instagramSecret = secret;
+    instagramClientID = clientID;
+}
+
++ (NSString *)instagramRedirectURI {
+    return instagramRedirectURI;
+}
+
++ (NSString *)instagramSecret{
+    return instagramSecret;
+}
+
++ (NSString *)instagramClientID{
+    return instagramClientID;
+}
+#endif
 
 @end

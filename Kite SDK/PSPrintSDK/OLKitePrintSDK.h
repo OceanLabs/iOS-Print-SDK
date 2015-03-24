@@ -36,13 +36,17 @@ typedef void (^OLProductCostRefreshCompletionHandler)(NSError *error);
 @interface OLKitePrintSDK : NSObject
 
 + (void)setAPIKey:(NSString *)apiKey withEnvironment:(OLKitePrintSDKEnvironment)environment;
-
 + (NSString *)apiKey;
 + (OLKitePrintSDKEnvironment)environment;
 + (NSString *)apiEndpoint;
 + (NSString *)apiVersion;
 + (NSArray *)enabledProducts;
 + (void)setEnabledProducts:(NSArray *)products;
+
+// optionally enable Instagram photo picking functionality (you'll need to take 5 minutes to register your app https://instagram.com/developer/):
+#ifdef OL_KITE_OFFER_INSTAGRAM
++ (void)setInstagramEnabledWithClientID:(NSString *)clientID secret:(NSString *)secret redirectURI:(NSString *)redirectURI;
+#endif
 
 #ifdef OL_KITE_OFFER_PAYPAL
 + (NSString *)paypalEnvironment;
