@@ -93,7 +93,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="9qk-Sg-14B" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2214" y="115"/>
+            <point key="canvasLocation" x="1806" y="115"/>
         </scene>
         <!--Choose Frame Style-->
         <scene sceneID="UJ6-GP-I4m">
@@ -328,10 +328,10 @@
             </objects>
             <point key="canvasLocation" x="474" y="115"/>
         </scene>
-        <!--Navigation Controller-->
+        <!--Custom Navigation Controller-->
         <scene sceneID="Xb6-HD-CEQ">
             <objects>
-                <navigationController storyboardIdentifier="ProductsNavigationController" definesPresentationContext="YES" useStoryboardIdentifierAsRestorationIdentifier="YES" id="2So-Cm-Lml" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="ProductsNavigationController" definesPresentationContext="YES" useStoryboardIdentifierAsRestorationIdentifier="YES" id="2So-Cm-Lml" customClass="OLCustomNavigationController" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="Hgc-vO-95m">
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -581,7 +581,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="wuh-x7-vUe" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2624" y="115"/>
+            <point key="canvasLocation" x="2216" y="115"/>
         </scene>
         <!--Frame Order Review View Controller-->
         <scene sceneID="XV9-cJ-5z9">
@@ -799,7 +799,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qG7-3J-9cO" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3565" y="797"/>
+            <point key="canvasLocation" x="3149" y="-1228"/>
         </scene>
         <!--Case Selection View Controller-->
         <scene sceneID="H5s-DL-bfC">
@@ -857,7 +857,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xqg-1v-StR" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2218" y="-1228"/>
+            <point key="canvasLocation" x="1810" y="-1228"/>
         </scene>
         <!--Poster Size Selection View Controller-->
         <scene sceneID="YYl-13-A7C">
@@ -930,8 +930,8 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="249" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" misplaced="YES" text="FREE SHIPPING" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="c7e-Wo-NVf">
-                                <rect key="frame" x="108" y="547" width="147" height="11"/>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="249" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" text="FREE SHIPPING" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="c7e-Wo-NVf">
+                                <rect key="frame" x="107.5" y="547" width="147" height="11"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="9"/>
                                 <nil key="highlightedColor"/>
                             </label>
@@ -951,7 +951,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="dimension" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="n5R-FL-khI">
-                                <rect key="frame" x="40" y="544" width="58" height="15"/>
+                                <rect key="frame" x="40" y="544" width="57.5" height="14.5"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                 <nil key="highlightedColor"/>
                             </label>
@@ -1021,7 +1021,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="2219" y="-558"/>
+            <point key="canvasLocation" x="1811" y="-558"/>
         </scene>
         <!--Poster View Controller-->
         <scene sceneID="zgh-jb-0R4">
@@ -1087,48 +1087,12 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="2624" y="-558"/>
+            <point key="canvasLocation" x="2216" y="-558"/>
         </scene>
-        <!--Navigation Controller-->
-        <scene sceneID="FZH-42-102">
-            <objects>
-                <navigationController storyboardIdentifier="OLProductOverviewNavigationViewController" automaticallyAdjustsScrollViewInsets="NO" id="9cK-xy-0yf" sceneMemberID="viewController">
-                    <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="w0F-84-cGw">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <nil name="viewControllers"/>
-                    <connections>
-                        <segue destination="TJ8-xQ-5ds" kind="relationship" relationship="rootViewController" id="UrY-XJ-Xsy"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="8sP-Ne-kl5" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1806" y="115"/>
-        </scene>
-        <!--Navigation Controller-->
-        <scene sceneID="YpU-FP-0A6">
-            <objects>
-                <navigationController storyboardIdentifier="sizeSelectNavigationController" automaticallyAdjustsScrollViewInsets="NO" id="yZr-Az-jKf" sceneMemberID="viewController">
-                    <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="ZeJ-wa-exk">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <nil name="viewControllers"/>
-                    <connections>
-                        <segue destination="CMl-an-8wL" kind="relationship" relationship="rootViewController" id="Y3H-kN-6df"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="Boq-Ij-Vi6" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1815" y="-558"/>
-        </scene>
-        <!--Navigation Controller-->
+        <!--Custom Navigation Controller-->
         <scene sceneID="86d-z2-lD3">
             <objects>
-                <navigationController storyboardIdentifier="CropViewNavigationController" automaticallyAdjustsScrollViewInsets="NO" id="Bet-2z-dgQ" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="CropViewNavigationController" automaticallyAdjustsScrollViewInsets="NO" id="Bet-2z-dgQ" customClass="OLCustomNavigationController" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="black" id="pca-I4-4Tb">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -1141,7 +1105,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SiN-kc-Q1U" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3033" y="797"/>
+            <point key="canvasLocation" x="2617" y="-1228"/>
         </scene>
         <!--Single Image Product Review View Controller-->
         <scene sceneID="RKn-QM-T9w">
@@ -1328,7 +1292,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="2616" y="-1228"/>
+            <point key="canvasLocation" x="2208" y="-1228"/>
         </scene>
         <!--Choose Photos-->
         <scene sceneID="P36-F6-0uT">
