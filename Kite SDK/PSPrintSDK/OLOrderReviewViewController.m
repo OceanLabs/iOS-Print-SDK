@@ -330,8 +330,8 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     OLScrollCropViewController *cropVc = (id)nav.topViewController;
     cropVc.enableCircleMask = self.product.productTemplate.templateUI == kOLTemplateUICircle;
     cropVc.delegate = self;
-    cropVc.aspectRatio = [self productAspectRatio];;
-    [self.editingPrintPhoto getImageWithProgress:NULL completion:^(UIImage *image){
+    cropVc.aspectRatio = [self productAspectRatio];
+    [tempPrintPhoto getImageWithProgress:NULL completion:^(UIImage *image){
         [cropVc setFullImage:image];
         [self presentViewController:nav animated:YES completion:NULL];
     }];
@@ -459,6 +459,7 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
 #pragma mark - OLImageEditorViewControllerDelegate methods
 
 -(void)userDidCropImage:(UIImage *)croppedImage{
+    [self.editingPrintPhoto unloadImage];
     self.editingPrintPhoto.asset = [OLAsset assetWithImageAsJPEG:croppedImage];
     
     [self.tableView reloadData];

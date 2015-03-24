@@ -99,10 +99,8 @@ static NSString *const kKeyCropTransform = @"co.oceanlabs.psprintstudio.kKeyCrop
 - (void) setThumbImageIdealSizeForImageView:(UIImageView *)imageView {
     CGFloat dim = MAX(imageView.frame.size.width * [UIScreen mainScreen].scale, imageView.frame.size.height * [UIScreen mainScreen].scale);
     if (self.cachedCroppedThumbnailImage) {
-        if (!(MAX(self.cachedCroppedThumbnailImage.size.width, self.cachedCroppedThumbnailImage.size.width) < dim)){
-            imageView.image = self.cachedCroppedThumbnailImage;
-            return;
-        }
+        imageView.image = self.cachedCroppedThumbnailImage;
+        return;
     }
     if (self.type == kPrintPhotoAssetTypeALAsset) {
         [OLPrintPhoto croppedImageWithEditorImage:self size:CGSizeMake(dim, dim) progress:nil completion:^(UIImage *image) {
@@ -349,80 +347,32 @@ static NSString *const kKeyCropTransform = @"co.oceanlabs.psprintstudio.kKeyCrop
 }
 
 + (void)croppedImageWithEditorImage:(OLPrintPhoto *)editorImage size:(CGSize)destSize progress:(OLImageEditorImageGetImageProgressHandler)progressHandler completion:(OLImageEditorImageGetImageCompletionHandler)completionHandler {
+    
     [editorImage getImageWithProgress:progressHandler completion:^(UIImage *image) {
-        CGAffineTransform tr = editorImage.transform;
-        CGSize initialCropboxSize;
-        if ([editorImage respondsToSelector:@selector(transformFactor)]){
-            initialCropboxSize = editorImage.transformFactor;
-        }
-        UIImage *croppedImage = [self croppedImageWithImage:image transform:tr size:destSize initialCropboxSize:initialCropboxSize];
+        CGFloat factor = fmax(destSize.height, destSize.width) / fmin(image.size.width,image.size.height);
+        factor *= [UIScreen mainScreen].scale;
+        
+        UIImage *croppedImage = [self croppedImageWithImage:image size:CGSizeMake(image.size.width * factor, image.size.height * factor)];
         completionHandler(croppedImage);
     }];
 }
 
-+ (UIImage *)croppedImageWithImage:(UIImage *)image transform:(CGAffineTransform)transform size:(CGSize)destSize{
-    return [self croppedImageWithImage:image transform:transform size:destSize initialCropboxSize:CGSizeMake(0, 0)];
-}
-
-+ (UIImage *)croppedImageWithImage:(UIImage *)image transform:(CGAffineTransform)transform size:(CGSize)destSize initialCropboxSize:(CGSize)initialCropboxSize{
-    CGSize sourceImageSize = CGSizeMake(image.size.width * image.scale, image.size.height * image.scale);
-    CGAffineTransform orientationTransform = CGAffineTransformIdentity;
-    [self transform:&orientationTransform andSize:&sourceImageSize forOrientation:image.imageOrientation];
-    
-    // Create a graphics context the size of the bounding rectangle
-    UIImage *cropboxGuideImage = [UIImage imageNamed:@"cropbox_guide"];
-    if (initialCropboxSize.width != 0 && initialCropboxSize.height != 0){
-        UIGraphicsBeginImageContext(initialCropboxSize);
-        [cropboxGuideImage drawInRect:CGRectMake(0, 0, initialCropboxSize.width, initialCropboxSize.height)];
-        cropboxGuideImage = UIGraphicsGetImageFromCurrentImageContext();
-        UIGraphicsEndImageContext();
-    }
++ (UIImage *)croppedImageWithImage:(UIImage *)image size:(CGSize)destSize {
+    // Create a bitmap graphics context
+    // This will also set it as the current context
     UIGraphicsBeginImageContext(destSize);
-    [cropboxGuideImage drawInRect:CGRectMake(-destSize.width / 2, -destSize.height / 2, destSize.width, destSize.height)];
-    cropboxGuideImage = UIGraphicsGetImageFromCurrentImageContext();
+    
+    // Draw the scaled image in the current context
+    [image drawInRect:CGRectMake(0, 0, destSize.width, destSize.height)];
+    
+    // Create a new image from current context
+    UIImage* scaledImage = UIGraphicsGetImageFromCurrentImageContext();
+    
+    // Pop the current context from the stack
     UIGraphicsEndImageContext();
     
-    
-    CGSize cropboxGuideSize = CGSizeMake(cropboxGuideImage.scale * (cropboxGuideImage.size.width), cropboxGuideImage.scale * (cropboxGuideImage.size.height));
-    //    NSAssert(cropboxGuideSize.width == cropboxGuideSize.height, @"oops only support 1:1 aspect ratio at the moment given we show be showing a square crop box");
-    //    NSAssert(destSize.width == destSize.height, @"oops only support 1:1 aspect ratio at the moment given we show be showing a square crop box");
-    
-    // do the transforms and draw the image
-    UIGraphicsBeginImageContextWithOptions(destSize, /*opaque: */ YES, /*scale: */ 1);
-    CGContextRef context = UIGraphicsGetCurrentContext();
-    
-    CGAffineTransform t = CGAffineTransformMakeScale(destSize.width / cropboxGuideSize.width, destSize.height / cropboxGuideSize.height);
-    t = CGAffineTransformTranslate(t, cropboxGuideSize.width / 2, cropboxGuideSize.height / 2);
-    CGContextConcatCTM(context, t);
-    
-    // The transform matrix applied to the image is in points and so we need to convert it to pixels. Multiply by the screen scale to do
-    // this.
-    CGFloat screenScale = [[UIScreen mainScreen] scale];
-    CGContextConcatCTM(context, CGAffineTransformMakeScale(screenScale, screenScale));
-    CGContextConcatCTM(context, transform);
-    CGContextConcatCTM(context, CGAffineTransformMakeScale(1 / screenScale, - 1 / screenScale));
-    
-    CGContextConcatCTM(context, orientationTransform);
-    
-    // scale image to aspect fill initial crop box
-    CGFloat imgWidth = sourceImageSize.width;
-    CGFloat imgHeight = sourceImageSize.height;
-    CGFloat imageToCropboxScale = 1;
-    CGFloat xScale = 1;
-    CGFloat yScale = 1;
-    
-    xScale = cropboxGuideSize.width / imgWidth;
-    yScale = cropboxGuideSize.height / imgHeight;
-    imageToCropboxScale = fmax(xScale, yScale);
-    
-    imgWidth *= imageToCropboxScale;
-    imgHeight *= imageToCropboxScale;
-    CGContextDrawImage(context, CGRectMake(-imgWidth / 2, -imgHeight / 2, imgWidth, imgHeight), image.CGImage);
-    
-    UIImage *imageCopy = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    
-    return imageCopy;
+    // Return our new scaled image
+    return scaledImage;
 }
 
 
@@ -465,7 +415,7 @@ static NSString *const kKeyCropTransform = @"co.oceanlabs.psprintstudio.kKeyCrop
             }
 
             UIImage *image = [UIImage imageWithCGImage:[rep fullResolutionImage] scale:rep.scale orientation:orientation];
-            handler(UIImageJPEGRepresentation(image, 0.9), nil);
+            handler(UIImageJPEGRepresentation(image, 0.7), nil);
         });
     }
 #if defined(OL_KITE_OFFER_INSTAGRAM) || defined(OL_KITE_OFFER_FACEBOOK)
@@ -497,7 +447,7 @@ static NSString *const kKeyCropTransform = @"co.oceanlabs.psprintstudio.kKeyCrop
                                                                       if (error) {
                                                                           handler(nil, error);
                                                                       } else {
-                                                                          handler(UIImageJPEGRepresentation(image, 0.9), error);
+                                                                          handler(UIImageJPEGRepresentation(image, 0.7), error);
                                                                       }
                                                                   }
                                                               }];
