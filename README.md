@@ -46,13 +46,20 @@ Use our SDK to unlock hidden revenue streams and add value for your users. *In u
 
 ```ruby
 pod "Kite-Print-SDK", "~> 2.0"
-```
-
-If you'd like to offer your users the opportunity to pay via PayPal in the checkout process also add the following to your Podfile:
-
-```ruby
 pod "Kite-Print-SDK/PayPal", "~> 2.0"
+
+#Uncomment this next line if you want Instagram photo picking support
+#pod "Kite-Print-SDK/Instagram", "~> 2.0"
+
+#Uncomment this	next line if you want Facebook photo picking support
+#pod "Kite-Print-SDK/Facebook", "~> 2.0"
 ```
+
+The SDK includes lots of optional functionality enabled via CocoaPod Subspecs so that you can pick and choose your setup.
+
+If you'd like to offer your users the opportunity to add photos via Instagram or Facebook then uncomment the appropriate lines above. The follow the instructions to [Enable Facebook & Instagram Photo Selection](Kite SDK/docs/social_photo_sources.md).
+
+PayPal functionality is also optional although recommended as you'll typically see a higher conversion rate with it.
 
 ## Use Cases
 
