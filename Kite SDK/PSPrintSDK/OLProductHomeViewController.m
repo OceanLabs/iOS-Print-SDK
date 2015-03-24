@@ -103,7 +103,7 @@
         vc.delegate = self.delegate;
         [self.navigationController pushViewController:vc animated:YES];
     }
-    else if ([self.templatesPerClass[product.productTemplate.templateClass] count] > 1 && !product.productTemplate.templateUI == kOLTemplateUIFrame){
+    else if ([self.templatesPerClass[product.productTemplate.templateClass] count] > 1 && !(product.productTemplate.templateUI == kOLTemplateUIFrame)){
         OLProductTypeSelectionViewController *typeVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLTypeSelectionViewController"];
         typeVc.delegate = self.delegate;
         typeVc.assets = self.assets;
