@@ -9,7 +9,7 @@ _If you haven't already, see the [README](../../README.md) for an initial overvi
 
 Overview
 --------
-1. Update you CocoaPods Podfile with the desired dependencies
+1. Update your CocoaPods Podfile with the desired dependencies
 2. Configure Instagram
 3. Configure Facebook
 
