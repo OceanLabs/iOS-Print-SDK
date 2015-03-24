@@ -22,7 +22,7 @@ typedef enum {
 
 @interface OLPrintPhoto : NSObject <OLAssetDataSource>
 
-- (void) setThumbImageIdealSizeForImageView:(UIImageView *)imageView;
+- (void) setImageIdealSizeForImageView:(UIImageView *)imageView highQuality:(BOOL)highQuality;
 - (void)getImageWithProgress:(OLImageEditorImageGetImageProgressHandler)progressHandler completion:(OLImageEditorImageGetImageCompletionHandler)completionHandler;
 - (void)unloadImage;
 

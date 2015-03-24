@@ -656,7 +656,7 @@ static void *ActionSheetCellKey;
     NSUInteger imageIndex = indexPath.row + indexPath.section * self.product.quantityToFulfillOrder;
     if (imageIndex < self.userSelectedPhotos.count) {
         OLPrintPhoto *photo = self.userSelectedPhotos[indexPath.row + indexPath.section * self.product.quantityToFulfillOrder];
-        [photo setThumbImageIdealSizeForImageView:imageView];
+        [photo setImageIdealSizeForImageView:imageView highQuality:NO];
         checkmark.hidden = [self.userDisabledPhotos containsObjectIdenticalTo:photo];
         disabled.hidden = !checkmark.hidden;
     } else {

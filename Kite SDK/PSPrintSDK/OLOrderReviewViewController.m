@@ -381,7 +381,7 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
         cellImage.image = nil;
         
         if (cellImage){
-            [((OLPrintPhoto*)[self.userSelectedPhotos objectAtIndex:indexPath.row-1]) setThumbImageIdealSizeForImageView:cellImage];
+            [((OLPrintPhoto*)[self.userSelectedPhotos objectAtIndex:indexPath.row-1]) setImageIdealSizeForImageView:cellImage highQuality:YES];
         }
         
         UILabel *countLabel = (UILabel *)[cell.contentView viewWithTag:30];
