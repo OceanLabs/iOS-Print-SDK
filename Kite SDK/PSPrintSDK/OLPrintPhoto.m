@@ -97,13 +97,14 @@ static NSString *const kKeyCropTransform = @"co.oceanlabs.psprintstudio.kKeyCrop
 }
 
 - (void) setThumbImageIdealSizeForImageView:(UIImageView *)imageView {
-    CGFloat dim = MAX(imageView.frame.size.width * [UIScreen mainScreen].scale, imageView.frame.size.height * [UIScreen mainScreen].scale);
     if (self.cachedCroppedThumbnailImage) {
-        imageView.image = self.cachedCroppedThumbnailImage;
-        return;
+        if (!(fmax(imageView.frame.size.width, imageView.frame.size.height) * [UIScreen mainScreen].scale > fmax(self.cachedCroppedThumbnailImage.size.width, self.cachedCroppedThumbnailImage.size.height))){
+            imageView.image = self.cachedCroppedThumbnailImage;
+            return;
+        }
     }
     if (self.type == kPrintPhotoAssetTypeALAsset) {
-        [OLPrintPhoto croppedImageWithEditorImage:self size:CGSizeMake(dim, dim) progress:nil completion:^(UIImage *image) {
+        [OLPrintPhoto resizedImageWithEditorImage:self size:imageView.frame.size progress:nil completion:^(UIImage *image) {
             //                NSAssert([NSThread isMainThread], @"oops assumption about being on the main thread is wrong");
             self.cachedCroppedThumbnailImage = image;
             dispatch_async(dispatch_get_main_queue(), ^(void){
@@ -128,7 +129,7 @@ static NSString *const kKeyCropTransform = @"co.oceanlabs.psprintstudio.kKeyCrop
                     [asset loadALAssetWithCompletionHandler:^(ALAsset *asset, NSError *error){
                         OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
                         printPhoto.asset = asset;
-                        [OLPrintPhoto croppedImageWithEditorImage:printPhoto size:CGSizeMake(dim, dim) progress:nil completion:^(UIImage *image) {
+                        [OLPrintPhoto resizedImageWithEditorImage:printPhoto size:imageView.frame.size progress:nil completion:^(UIImage *image) {
                             self.cachedCroppedThumbnailImage = image;
                             dispatch_async(dispatch_get_main_queue(), ^(void){
                                 imageView.image = image;
@@ -142,7 +143,7 @@ static NSString *const kKeyCropTransform = @"co.oceanlabs.psprintstudio.kKeyCrop
                 [asset dataWithCompletionHandler:^(NSData *data, NSError *error){
                     OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
                     printPhoto.asset = [OLAsset assetWithImageAsJPEG:[UIImage imageWithData:data]];
-                    [OLPrintPhoto croppedImageWithEditorImage:printPhoto size:CGSizeMake(dim, dim) progress:nil completion:^(UIImage *image) {
+                    [OLPrintPhoto resizedImageWithEditorImage:printPhoto size:imageView.frame.size progress:nil completion:^(UIImage *image) {
                         self.cachedCroppedThumbnailImage = image;
                         dispatch_async(dispatch_get_main_queue(), ^(void){
                             imageView.image = image;
@@ -160,77 +161,9 @@ static NSString *const kKeyCropTransform = @"co.oceanlabs.psprintstudio.kKeyCrop
 #ifdef OL_KITE_OFFER_FACEBOOK
         else if (self.type == kPrintPhotoAssetTypeFacebookPhoto){
             OLFacebookImage *fbImage = self.asset;
-            [imageView setAndFadeInImageWithURL:[fbImage bestURLForSize:CGSizeMake(dim, dim)]];
+            [imageView setAndFadeInImageWithURL:[fbImage bestURLForSize:imageView.frame.size]];
         }
 #endif
-    }
-}
-
-- (void)setThumbImageForImageView:(UIImageView *)imageView {
-    if (!CGAffineTransformIsIdentity(self.transform)) {
-        if (self.cachedCroppedThumbnailImage) {
-            imageView.image = self.cachedCroppedThumbnailImage;
-        } else {
-            [OLPrintPhoto croppedImageWithEditorImage:self size:CGSizeMake(250, 250) progress:nil completion:^(UIImage *image) {
-                NSAssert([NSThread isMainThread], @"oops assumption about being on the main thread is wrong");
-                self.cachedCroppedThumbnailImage = image;
-                imageView.image = image;
-            }];
-        }
-    } else {
-        if (self.type == kPrintPhotoAssetTypeALAsset) {
-            ALAsset *asset = (ALAsset *)self.asset;
-            imageView.image = [UIImage imageWithCGImage:asset.thumbnail];
-        }
-#ifdef OL_KITE_OFFER_INSTAGRAM
-        else if (self.type == kPrintPhotoAssetTypeInstagramPhoto) {
-            [imageView setAndFadeInImageWithURL:[self.asset thumbURL]];
-        }
-#endif
-#ifdef OL_KITE_OFFER_FACEBOOK
-        else if (self.type == kPrintPhotoAssetTypeFacebookPhoto){
-            OLFacebookImage *fbImage = self.asset;
-            [imageView setAndFadeInImageWithURL:[fbImage bestURLForSize:CGSizeMake(250, 250)]];
-        }
-#endif
-        else if (self.type == kPrintPhotoAssetTypeOLAsset){
-            OLAsset *asset = (OLAsset *)self.asset;
-            
-            if (asset.assetType == kOLAssetTypeRemoteImageURL){
-                [imageView setAndFadeInImageWithURL:[self.asset imageURL]];
-            }
-            else if (asset.assetType == kOLAssetTypeALAsset){
-                if (self.cachedCroppedThumbnailImage) {
-                    imageView.image = self.cachedCroppedThumbnailImage;
-                }
-                else {
-                    [asset loadALAssetWithCompletionHandler:^(ALAsset *asset, NSError *error){
-                        OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
-                        printPhoto.asset = asset;
-                        [OLPrintPhoto croppedImageWithEditorImage:printPhoto size:CGSizeMake(250, 250) progress:nil completion:^(UIImage *image) {
-                            self.cachedCroppedThumbnailImage = image;
-                            dispatch_async(dispatch_get_main_queue(), ^(void){
-                                imageView.image = image;
-                            });
-                            
-                        }];
-                    }];
-                }
-            }
-            else{
-                [asset dataWithCompletionHandler:^(NSData *data, NSError *error){
-                    OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
-                    printPhoto.asset = [OLAsset assetWithImageAsJPEG:[UIImage imageWithData:data]];
-                    [OLPrintPhoto croppedImageWithEditorImage:printPhoto size:CGSizeMake(250, 250) progress:nil completion:^(UIImage *image) {
-                        self.cachedCroppedThumbnailImage = image;
-                        dispatch_async(dispatch_get_main_queue(), ^(void){
-                            imageView.image = image;
-                        });
-                    }];
-                    
-                }];
-            }
-        }
     }
 }
 
@@ -263,8 +196,6 @@ static NSString *const kKeyCropTransform = @"co.oceanlabs.psprintstudio.kKeyCrop
     }];
 }
 #endif
-
-#pragma mark - OLImageEditorImage protocol methods
 
 - (void)getImageWithProgress:(OLImageEditorImageGetImageProgressHandler)progressHandler completion:(OLImageEditorImageGetImageCompletionHandler)completionHandler {
     if (self.type == kPrintPhotoAssetTypeALAsset) {
@@ -346,32 +277,23 @@ static NSString *const kKeyCropTransform = @"co.oceanlabs.psprintstudio.kKeyCrop
     }
 }
 
-+ (void)croppedImageWithEditorImage:(OLPrintPhoto *)editorImage size:(CGSize)destSize progress:(OLImageEditorImageGetImageProgressHandler)progressHandler completion:(OLImageEditorImageGetImageCompletionHandler)completionHandler {
++ (void)resizedImageWithEditorImage:(OLPrintPhoto *)editorImage size:(CGSize)destSize progress:(OLImageEditorImageGetImageProgressHandler)progressHandler completion:(OLImageEditorImageGetImageCompletionHandler)completionHandler {
     
     [editorImage getImageWithProgress:progressHandler completion:^(UIImage *image) {
         CGFloat factor = fmax(destSize.height, destSize.width) / fmin(image.size.width,image.size.height);
         factor *= [UIScreen mainScreen].scale;
         
-        UIImage *croppedImage = [self croppedImageWithImage:image size:CGSizeMake(image.size.width * factor, image.size.height * factor)];
+        UIImage *croppedImage = [self resizedImageWithImage:image size:CGSizeMake(image.size.width * factor, image.size.height * factor)];
         completionHandler(croppedImage);
     }];
 }
 
-+ (UIImage *)croppedImageWithImage:(UIImage *)image size:(CGSize)destSize {
-    // Create a bitmap graphics context
-    // This will also set it as the current context
++ (UIImage *)resizedImageWithImage:(UIImage *)image size:(CGSize)destSize {
     UIGraphicsBeginImageContext(destSize);
-    
-    // Draw the scaled image in the current context
     [image drawInRect:CGRectMake(0, 0, destSize.width, destSize.height)];
-    
-    // Create a new image from current context
     UIImage* scaledImage = UIGraphicsGetImageFromCurrentImageContext();
-    
-    // Pop the current context from the stack
     UIGraphicsEndImageContext();
     
-    // Return our new scaled image
     return scaledImage;
 }
 
