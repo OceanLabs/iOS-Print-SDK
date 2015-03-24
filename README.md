@@ -57,7 +57,7 @@ pod "Kite-Print-SDK/PayPal", "~> 2.0"
 
 The SDK includes lots of optional functionality enabled via CocoaPod Subspecs so that you can pick and choose your setup.
 
-If you'd like to offer your users the opportunity to add photos via Instagram or Facebook then uncomment the appropriate lines above. The follow the instructions to [Enable Facebook & Instagram Photo Selection](Kite SDK/docs/social_photo_sources.md).
+If you'd like to offer your users the opportunity to add photos via Instagram or Facebook then uncomment the appropriate lines above, then follow the instructions to [Enable Facebook & Instagram Photo Selection](Kite SDK/docs/social_photo_sources.md).
 
 PayPal functionality is also optional although recommended as you'll typically see a higher conversion rate with it.
 
