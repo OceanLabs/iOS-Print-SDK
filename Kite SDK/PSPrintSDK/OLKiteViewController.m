@@ -118,10 +118,10 @@
     BOOL includesFrames = NO;
     BOOL includesLargeFormat = NO;
     for (OLProduct *product in products){
-        if (product.productTemplate.templateClass == kOLTemplateClassFrame){
+        if (product.productTemplate.templateUI == kOLTemplateUIFrame){
             includesFrames = YES;
         }
-        else if (product.productTemplate.templateClass == kOLTemplateClassPoster){
+        else if (product.productTemplate.templateUI == kOLTemplateUIPoster){
             includesLargeFormat = YES;
         }
     }
@@ -140,10 +140,10 @@
         
         if ([OLKiteViewController singleProductEnabled]){
             product = [[OLKitePrintSDK enabledProducts] firstObject];
-            NSAssert(product && product.productTemplate.templateClass != kOLTemplateClassNA, @"Product chosen does not support the Print Shop User Experience. Please implement a custom checkout.");
+            NSAssert(product && product.productTemplate.templateUI != kOLTemplateUINA, @"Product chosen does not support the Print Shop User Experience. Please implement a custom checkout.");
         }
         
-        if (product.productTemplate.templateClass == kOLTemplateClassPoster){
+        if (product.productTemplate.templateUI == kOLTemplateUIPoster){
             nextVcIdentifier = @"sizeSelect";
             nextVcNavIdentifier = @"sizeSelectNavigationController";
         }

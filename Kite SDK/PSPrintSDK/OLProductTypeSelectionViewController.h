@@ -9,11 +9,11 @@
 #import <UIKit/UIKit.h>
 #import "OLKitePrintSDK.h"
 
-@interface OLCaseSelectionViewController : UITableViewController
+@interface OLProductTypeSelectionViewController : UITableViewController
 
 @property (strong, nonatomic) NSMutableArray *assets;
 @property (strong, nonatomic) NSMutableArray *userSelectedPhotos;
 @property (weak, nonatomic) id<OLKiteDelegate> delegate;
-@property (assign, nonatomic) OLTemplateClass templateClass;
+@property (assign, nonatomic) NSString *templateClass;
 
 @end

@@ -35,7 +35,7 @@
 
 - (void)submitForPrinting {
     NSAssert(self.req == nil, @"only one print order request can be in progress at a time");
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/v1.2/print", [OLKitePrintSDK apiEndpoint]]];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@/print", [OLKitePrintSDK apiEndpoint], [OLKitePrintSDK apiVersion]]];
     NSDictionary *headers = @{@"Authorization": [NSString stringWithFormat:@"ApiKey %@:", [OLKitePrintSDK apiKey]]};
     
     NSData *data = [NSJSONSerialization dataWithJSONObject:self.printOrderJSON options:0 error:nil];
