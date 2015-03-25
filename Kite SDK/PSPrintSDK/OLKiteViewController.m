@@ -152,7 +152,6 @@
 }
 
 - (void)templateSyncDidFinish:(NSNotification *)n{
-    [OLProductTemplate resetTemplates];
     if (n.userInfo[kNotificationKeyTemplateSyncError]){
         if ([[OLProductTemplate templates] count] > 0){
             return;
@@ -176,6 +175,7 @@
         }
     }
     else{
+        [OLProductTemplate resetTemplates];
         if (!self.alreadyTransitioned){
             self.presentLater = YES;
             [self transitionToNextScreen:NO];
