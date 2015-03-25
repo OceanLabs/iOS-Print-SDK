@@ -107,47 +107,12 @@
     
 }
 
-+ (BOOL)singleProductEnabled{
-    NSArray *products = [OLKitePrintSDK enabledProducts];
-    if (!products || [products count] == 0){
-        return NO;
-    }
-    if ([products count] == 1){
-        return YES;
-    }
-    BOOL includesFrames = NO;
-    BOOL includesLargeFormat = NO;
-    for (OLProduct *product in products){
-        if (product.productTemplate.templateUI == kOLTemplateUIFrame){
-            includesFrames = YES;
-        }
-        else if (product.productTemplate.templateUI == kOLTemplateUIPoster){
-            includesLargeFormat = YES;
-        }
-    }
-    return includesLargeFormat != includesFrames; //XOR, true if we have one or the other but not both
-}
 
 - (void)transitionToNextScreen:(BOOL)animated{
     self.alreadyTransitioned = YES;
     UIStoryboard *sb = [UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:nil];
     NSString *nextVcNavIdentifier = @"ProductsNavigationController";
     NSString *nextVcIdentifier = @"ProductHomeViewController";
-    OLProduct *product;
-    if (([OLKitePrintSDK enabledProducts] && [[OLKitePrintSDK enabledProducts] count] < 2)){
-        nextVcNavIdentifier = @"OLProductOverviewNavigationViewController";
-        nextVcIdentifier = @"OLProductOverviewViewController";
-        
-        if ([OLKiteViewController singleProductEnabled]){
-            product = [[OLKitePrintSDK enabledProducts] firstObject];
-            NSAssert(product && product.productTemplate.templateUI != kOLTemplateUINA, @"Product chosen does not support the Print Shop User Experience. Please implement a custom checkout.");
-        }
-        
-        if (product.productTemplate.templateUI == kOLTemplateUIPoster){
-            nextVcIdentifier = @"sizeSelect";
-            nextVcNavIdentifier = @"sizeSelectNavigationController";
-        }
-    }
     
     if (!self.navigationController){
         self.nextVc = [sb instantiateViewControllerWithIdentifier:nextVcNavIdentifier];
@@ -159,9 +124,7 @@
         ((UINavigationController *)self.nextVc).topViewController.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(dismiss)];
         [(id)((UINavigationController *)self.nextVc).topViewController setAssets:[self.assets mutableCopy]];
         [(id)((UINavigationController *)self.nextVc).topViewController setUserSelectedPhotos:self.userSelectedPhotos];
-        if (product){
-            [(id)((UINavigationController *)self.nextVc).topViewController setProduct:product];
-        }
+
         if (!self.presentLater){
             self.presentLater = YES;
         }
@@ -176,9 +139,7 @@
         [(OLProductHomeViewController *)((UINavigationController *)self.nextVc) setDelegate:self.delegate];
         [(id)self.nextVc setAssets:[self.assets mutableCopy]];
         [(id)self.nextVc setUserSelectedPhotos:self.userSelectedPhotos];
-        if (product){
-            [(id)self.nextVc setProduct:product];
-        }
+
         [self.view addSubview:self.nextVc.view];
         UIView *dummy = [self.view snapshotViewAfterScreenUpdates:YES];
         if ([self.nextVc isKindOfClass:[UITableViewController class]]){

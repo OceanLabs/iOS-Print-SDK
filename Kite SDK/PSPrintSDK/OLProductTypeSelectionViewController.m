@@ -32,7 +32,7 @@
 -(NSMutableArray *) products{
     if (!_products){
         _products = [[NSMutableArray alloc] init];
-        NSArray *allProducts = [OLKitePrintSDK enabledProducts] ? [OLKitePrintSDK enabledProducts] : [OLProduct products];
+        NSArray *allProducts = [OLProduct products];
         _products = [[NSMutableArray alloc] init];
         for (OLProduct *product in allProducts){
             if (!product.labelColor || product.productTemplate.templateUI == kOLTemplateUINA){

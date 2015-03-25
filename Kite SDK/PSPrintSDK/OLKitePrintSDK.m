@@ -24,7 +24,6 @@ static NSString *const kJudoLiveSecret  = @"b8d5950ec68e27e7dfdb314dbd7160e7421c
 static NSString *apiKey = nil;
 static NSString *StripePublishableKey = nil;
 static NSString *kApplePayMerchantID = nil;
-static NSArray *enabledProducts = nil;
 static OLKitePrintSDKEnvironment environment;
 
 static NSString *const kOLAPIEndpointLive = @"https://api.kite.ly";
@@ -92,17 +91,6 @@ static NSString *instagramRedirectURI = nil;
 
 + (NSString *)apiVersion{
     return kOLAPIEndpointVersion;
-}
-
-+ (NSArray *)enabledProducts{
-    if (enabledProducts && [enabledProducts count] == 0){
-        return nil;
-    }
-    return enabledProducts;
-}
-
-+ (void)setEnabledProducts:(NSArray *)products{
-    enabledProducts = products;
 }
 
 #ifdef OL_KITE_OFFER_PAYPAL

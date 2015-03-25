@@ -17,4 +17,7 @@
 @property (strong, nonatomic) NSMutableArray *assets;
 @property (strong, nonatomic) NSMutableArray *userSelectedPhotos;
 @property (weak, nonatomic) id<OLKiteDelegate> delegate;
+
+@property (copy, nonatomic) NSString *userEmail;
+@property (copy, nonatomic) NSString *userPhone;
 @end

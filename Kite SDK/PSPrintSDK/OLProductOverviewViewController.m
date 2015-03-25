@@ -45,7 +45,7 @@
 
 + (NSString *) minimumPriceForProductClass:(OLTemplateUI)class{
     double min = DBL_MAX;
-    NSArray *allProducts = [OLKitePrintSDK enabledProducts] ? [OLKitePrintSDK enabledProducts] : [OLProduct products];
+    NSArray *allProducts = [OLProduct products];
     for (OLProduct *product in allProducts){
         if (product.productTemplate.templateUI == class && [product.unitCostDecimalNumber doubleValue] < min){
             min = [product.unitCostDecimalNumber doubleValue];
