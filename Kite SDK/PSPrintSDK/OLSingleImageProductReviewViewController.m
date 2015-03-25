@@ -340,7 +340,7 @@ CTAssetsPickerControllerDelegate>
         UIImageView *imageView = (UIImageView *)[cell.contentView viewWithTag:1];
         
         OLPrintPhoto *printPhoto = (OLPrintPhoto *)[self.userSelectedPhotos objectAtIndex:indexPath.row];
-        [printPhoto setImageIdealSizeForImageView:imageView highQuality:YES];
+        [printPhoto setImageIdealSizeForImageView:imageView highQuality:NO];
         
         return cell;
     }
@@ -358,7 +358,9 @@ CTAssetsPickerControllerDelegate>
         self.imageCropView.image = nil;
         OLPrintPhoto *printPhoto = (OLPrintPhoto *)[self.userSelectedPhotos objectAtIndex:indexPath.row];
         [printPhoto getImageWithProgress:NULL completion:^(UIImage *image){
-            self.imageCropView.image = image;
+            dispatch_async(dispatch_get_main_queue(), ^{
+                self.imageCropView.image = image;
+            });
         }];
     }
     else if ([self instagramEnabled] || [self facebookEnabled]){
@@ -504,10 +506,6 @@ CTAssetsPickerControllerDelegate>
     }
     
     return NO;
-}
-
-- (void)assetsPickerController:(CTAssetsPickerController *)picker didSelectAsset:(ALAsset *)asset{
-    [self assetsPickerController:picker didFinishPickingAssets:@[asset]];
 }
 
 - (void)assetsPickerController:(CTAssetsPickerController *)picker didFinishPickingAssets:(NSArray *)assets {
