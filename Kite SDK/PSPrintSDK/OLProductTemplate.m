@@ -163,6 +163,12 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
     return templates;
 }
 
++ (void) deleteCachedTemplates{
+    NSFileManager *manager = [NSFileManager defaultManager];
+    NSError *error;
+    [manager removeItemAtPath:[OLProductTemplate templatesFilePath] error:&error];
+}
+
 + (void) resetTemplates{
     templates = nil;
 }

@@ -55,5 +55,6 @@ typedef enum {
 + (NSArray *)templates;
 + (NSDate *)lastSyncDate;
 + (void) resetTemplates;
++ (void) deleteCachedTemplates;
 
 @end
