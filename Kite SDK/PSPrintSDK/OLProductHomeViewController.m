@@ -39,7 +39,7 @@
 - (NSMutableDictionary *)templatesPerClass{
     if (!_templatesPerClass){
         _templatesPerClass = [[NSMutableDictionary alloc] init];
-        NSArray *allProducts = [OLKitePrintSDK enabledProducts] ? [OLKitePrintSDK enabledProducts] : [OLProduct products];
+        NSArray *allProducts = [OLProduct products];
         for (OLProduct *product in allProducts){
             if (!product.labelColor || product.productTemplate.templateUI == kOLTemplateUINA){
                 continue;
