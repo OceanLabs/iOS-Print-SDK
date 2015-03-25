@@ -76,9 +76,6 @@ static NSString *const kApplePayMerchantIDKey = @"merchant.co.oceanlabs.kite.ly"
         return kAPIKeyLive;
     }
 }
-- (IBAction)onButtonDeleteCachedTemplatesClicked:(UIButton *)sender {
-    [OLProductTemplate deleteCachedTemplates];
-}
 
 - (NSString *)liveKey {
     return kAPIKeyLive;
