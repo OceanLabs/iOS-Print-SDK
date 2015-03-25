@@ -22,7 +22,7 @@ PODS:
     - AFNetworking/NSURLSession
   - Bolts (1.1.4)
   - CTAssetsPickerController (2.9.3)
-  - Facebook-iOS-SDK (3.23.1):
+  - Facebook-iOS-SDK (3.23.2):
     - Bolts (~> 1.0)
   - FacebookImagePicker (1.0.1):
     - Facebook-iOS-SDK (~> 3.23.1)
@@ -63,7 +63,7 @@ SPEC CHECKSUMS:
   AFNetworking: 8bee59492a6ff15d69130efa4d0dc67e0094a52a
   Bolts: dd9fb8433d67f5acc3b6b4d1379bbc5513d716c1
   CTAssetsPickerController: 56a4a228dcb48a9375ab8d4922e82ac74af74aa1
-  Facebook-iOS-SDK: 89dae50e975ebab95a01b0962d27277fc9cf08fd
+  Facebook-iOS-SDK: cd87f0b2f0c1d9574b44e8fa2baacc275524bac3
   FacebookImagePicker: d7ff24cf1585c70558bfd4481ca96081f187f011
   InstagramImagePicker: 3f4bdbf53fa66eaa63adb70b50734cf04de2526d
   LXReorderableCollectionViewFlowLayout: b4e25543263e27d4c147109ae5ead01cc9119f23

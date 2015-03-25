@@ -340,7 +340,7 @@ CTAssetsPickerControllerDelegate>
         UIImageView *imageView = (UIImageView *)[cell.contentView viewWithTag:1];
         
         OLPrintPhoto *printPhoto = (OLPrintPhoto *)[self.userSelectedPhotos objectAtIndex:indexPath.row];
-        [printPhoto setThumbImageForImageView:imageView];
+        [printPhoto setImageIdealSizeForImageView:imageView highQuality:YES];
         
         return cell;
     }
