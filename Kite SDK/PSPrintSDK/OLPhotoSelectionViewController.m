@@ -555,8 +555,8 @@ static void *ActionSheetCellKey;
     }
     
     NSString *title;
-    OLTemplateClass templateClass = [OLProductTemplate templateWithId:self.product.templateId].templateClass;
-    if (templateClass == kOLTemplateClassFrame){
+    OLTemplateUI templateUI = [OLProductTemplate templateWithId:self.product.templateId].templateUI;
+    if (templateUI == kOLTemplateUIFrame){
         title = [[NSString alloc]initWithFormat:@"#%lu Frame", indexPath.section + 1];
     }
     else{
@@ -656,7 +656,7 @@ static void *ActionSheetCellKey;
     NSUInteger imageIndex = indexPath.row + indexPath.section * self.product.quantityToFulfillOrder;
     if (imageIndex < self.userSelectedPhotos.count) {
         OLPrintPhoto *photo = self.userSelectedPhotos[indexPath.row + indexPath.section * self.product.quantityToFulfillOrder];
-        [photo setThumbImageForImageView:imageView];
+        [photo setImageIdealSizeForImageView:imageView highQuality:NO];
         checkmark.hidden = [self.userDisabledPhotos containsObjectIdenticalTo:photo];
         disabled.hidden = !checkmark.hidden;
     } else {
@@ -781,7 +781,7 @@ static void *ActionSheetCellKey;
 -(void)doSegueToOrderPreview{
 //    [OLAnalytics trackPhotosSelectedForOrder];
     OLOrderReviewViewController* orvc;
-    if (self.product.productTemplate.templateClass == kOLTemplateClassFrame){
+    if (self.product.productTemplate.templateUI == kOLTemplateUIFrame){
         orvc = [self.storyboard instantiateViewControllerWithIdentifier:@"FrameOrderReviewViewController"];
     }
     else{
