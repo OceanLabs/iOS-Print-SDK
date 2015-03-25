@@ -38,26 +38,26 @@
     
     if (sender.view.tag == 22) {
         for (OLProduct *product in products){
-            if (product.productTemplate.templateClass == kOLTemplateClassFrame && product.productTemplate.quantityPerSheet == 4){
+            if (product.productTemplate.templateUI == kOLTemplateUIFrame && product.productTemplate.quantityPerSheet == 4){
                 chosenProduct = product;
             }
         }
     } else if (sender.view.tag == 33) {
         for (OLProduct *product in products){
-            if (product.productTemplate.templateClass == kOLTemplateClassFrame && product.productTemplate.quantityPerSheet == 9){
+            if (product.productTemplate.templateUI == kOLTemplateUIFrame && product.productTemplate.quantityPerSheet == 9){
                 chosenProduct = product;
             }
         }
     } else if (sender.view.tag == 44) {
         for (OLProduct *product in products){
-            if (product.productTemplate.templateClass == kOLTemplateClassFrame && product.productTemplate.quantityPerSheet == 16){
+            if (product.productTemplate.templateUI == kOLTemplateUIFrame && product.productTemplate.quantityPerSheet == 16){
                 chosenProduct = product;
             }
         }
     }
     else if (sender.view.tag == 11){
         for (OLProduct *product in products){
-            if (product.productTemplate.templateClass == kOLTemplateClassFrame && product.productTemplate.quantityPerSheet == 1){
+            if (product.productTemplate.templateUI == kOLTemplateUIFrame && product.productTemplate.quantityPerSheet == 1){
                 chosenProduct = product;
             }
         }

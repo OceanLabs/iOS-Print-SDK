@@ -22,13 +22,11 @@ typedef enum {
 
 @interface OLPrintPhoto : NSObject <OLAssetDataSource>
 
-- (void)setThumbImageForImageView:(UIImageView *)imageView;
-- (void) setThumbImageIdealSizeForImageView:(UIImageView *)imageView;
+- (void) setImageIdealSizeForImageView:(UIImageView *)imageView highQuality:(BOOL)highQuality;
 - (void)getImageWithProgress:(OLImageEditorImageGetImageProgressHandler)progressHandler completion:(OLImageEditorImageGetImageCompletionHandler)completionHandler;
 - (void)unloadImage;
 
 @property (nonatomic, assign, readonly) PrintPhotoAssetType type;
 @property (nonatomic, strong) id asset;
-@property (assign, nonatomic) CGSize transformFactor;
 
 @end

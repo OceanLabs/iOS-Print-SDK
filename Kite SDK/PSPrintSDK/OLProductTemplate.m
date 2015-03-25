@@ -18,11 +18,14 @@ static NSString *const kKeyCostsByCurrency = @"co.oceanlabs.pssdk.kKeyCostsByCur
 static NSString *const kKeyCoverPhotoURL = @"co.oceanlabs.pssdk.kKeyCoverPhotoURL";
 static NSString *const kKeyProductPhotographyURLs = @"co.oceanlabs.pssdk.kKeyProductPhotographyURLs";
 static NSString *const kKeyTemplateClass = @"co.oceanlabs.pssdk.kKeyTemplateClass";
+static NSString *const kKeyTemplateType = @"co.oceanlabs.pssdk.kKeyTemplateType";
+static NSString *const kKeyTemplateUI = @"co.oceanlabs.pssdk.kKeyTemplateUI";
 static NSString *const kKeyLabelColor = @"co.oceanlabs.pssdk.kKeyLabelColor";
 static NSString *const kKeySizeCm = @"co.oceanlabs.pssdk.kKeySizeCm";
 static NSString *const kKeySizeInches = @"co.oceanlabs.pssdk.kKeySizeInches";
 static NSString *const kKeyProductCode = @"co.oceanlabs.pssdk.kKeyProductCode";
 static NSString *const kKeyImageBleed = @"co.oceanlabs.pssdk.kKeyImageBleed";
+static NSString *const kKeyImageBorder = @"co.oceanlabs.pssdk.kKeyImageBorder";
 static NSString *const kKeyMaskImageURL = @"co.oceanlabs.pssdk.kKeymaskImageURL";
 static NSString *const kKeySizePx = @"co.oceanlabs.pssdk.kKeySizePx";
 static NSString *const kKeyClassPhotoURL = @"co.oceanlabs.pssdk.kKeyClassPhotoURL";
@@ -57,6 +60,15 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
     NSArray * urls = [[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask];
     NSString *documentDirPath = [(NSURL *)[urls objectAtIndex:0] path];
     return [documentDirPath stringByAppendingPathComponent:@"co.oceanlabs.pssdk.Templates"];
+}
+
+- (NSString *)templateType{
+    if (_templateType && ![_templateType isEqualToString:@""]){
+        return _templateType;
+    }
+    else{
+        return self.name;
+    }
 }
 
 - (NSDecimalNumber *)costPerSheetInCurrencyCode:(NSString *)currencyCode {
@@ -167,56 +179,44 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
     templates = nil;
 }
 
-+(OLTemplateClass)templateClassWithIdentifier:(NSString *)identifier{
-    if ([identifier isEqualToString:@"Square"]){
-        return kOLTemplateClassSquare;
++(OLTemplateUI)templateUIWithIdentifier:(NSString *)identifier{
+    if ([identifier isEqualToString:@"RECTANGLE"]){
+        return kOLTemplateUIRectagle;
     }
-    else if ([identifier isEqualToString:@"Polaroid"]){
-        return kOLTemplateClassPolaroid;
+    else if ([identifier isEqualToString:@"FRAME"]){
+        return kOLTemplateUIFrame;
     }
-    else if ([identifier isEqualToString:@"Frame"]){
-        return kOLTemplateClassFrame;
+    else if ([identifier isEqualToString:@"POSTER"]){
+        return kOLTemplateUIPoster;
     }
-    else if ([identifier isEqualToString:@"Poster"]){
-        return kOLTemplateClassPoster;
-    }
-    else if ([identifier isEqualToString:@"Circle"]){
-        return kOLTemplateClassCircle;
+    else if ([identifier isEqualToString:@"CIRCLE"]){
+        return kOLTemplateUICircle;
     }
     else if ([identifier isEqualToString:@"PHONE_CASE"]){
-        return kOLTemplateClassCase;
+        return kOLTemplateUICase;
     }
-    else if ([identifier isEqualToString:@"CLEAR_CASE_DECAL"]){
-        return kOLTemplateClassDecal;
-    }
-    return kOLTemplateClassNA;
+    return kOLTemplateUINA;
 }
 
-+ (NSString *)templateClassStringWithTemplateClass:(OLTemplateClass)templateClass{
++ (NSString *)templateUIStringWithTemplateClass:(OLTemplateUI)templateClass{
     switch (templateClass) {
-        case kOLTemplateClassCase:
+        case kOLTemplateUICase:
             return @"Case";
             break;
-        case kOLTemplateClassCircle:
+        case kOLTemplateUICircle:
             return @"Circle";
             break;
-        case kOLTemplateClassDecal:
-            return @"Decal";
-            break;
-        case kOLTemplateClassFrame:
+        case kOLTemplateUIFrame:
             return @"Frame";
             break;
-        case kOLTemplateClassNA:
-            return @"NA Clas";
+        case kOLTemplateUINA:
+            return @"NA Class";
             break;
-        case kOLTemplateClassPolaroid:
-            return @"Polaroid";
-            break;
-        case kOLTemplateClassPoster:
+        case kOLTemplateUIPoster:
             return @"Poster";
             break;
-        case kOLTemplateClassSquare:
-            return @"Square";
+        case kOLTemplateUIRectagle:
+            return @"Rectangle";
             break;
             
         default:
@@ -243,11 +243,14 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
     [aCoder encodeObject:self.coverPhotoURL forKey:kKeyCoverPhotoURL];
     [aCoder encodeObject:self.productPhotographyURLs forKey:kKeyProductPhotographyURLs];
     [aCoder encodeObject:self.labelColor forKey:kKeyLabelColor];
-    [aCoder encodeObject:[NSNumber numberWithInt:self.templateClass] forKey:kKeyTemplateClass];
+    [aCoder encodeObject:[NSNumber numberWithInt:self.templateUI] forKey:kKeyTemplateUI];
+    [aCoder encodeObject:self.templateClass forKey:kKeyTemplateClass];
+    [aCoder encodeObject:self.templateType forKey:kKeyTemplateType];
     [aCoder encodeCGSize:self.sizeCm forKey:kKeySizeCm];
     [aCoder encodeCGSize:self.sizeInches forKey:kKeySizeInches];
     [aCoder encodeObject:self.productCode forKey:kKeyProductCode];
     [aCoder encodeUIEdgeInsets:self.imageBleed forKey:kKeyImageBleed];
+    [aCoder encodeUIEdgeInsets:self.imageBorder forKey:kKeyImageBorder];
     [aCoder encodeObject:self.maskImageURL forKey:kKeyMaskImageURL];
     [aCoder encodeCGSize:self.sizePx forKey:kKeySizePx];
     [aCoder encodeObject:self.classPhotoURL forKey:kKeyClassPhotoURL];
@@ -262,12 +265,15 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
         _costsByCurrencyCode = [aDecoder decodeObjectForKey:kKeyCostsByCurrency];
         _coverPhotoURL = [aDecoder decodeObjectForKey:kKeyCoverPhotoURL];
         _productPhotographyURLs = [aDecoder decodeObjectForKey:kKeyProductPhotographyURLs];
-        _templateClass = [[aDecoder decodeObjectForKey:kKeyTemplateClass] intValue];
+        _templateUI = [[aDecoder decodeObjectForKey:kKeyTemplateUI] intValue];
+        _templateClass = [aDecoder decodeObjectForKey:kKeyTemplateClass];
+        _templateType = [aDecoder decodeObjectForKey:kKeyTemplateType];
         _labelColor = [aDecoder decodeObjectForKey:kKeyLabelColor];
         _sizeCm = [aDecoder decodeCGSizeForKey:kKeySizeCm];
         _sizeInches = [aDecoder decodeCGSizeForKey:kKeySizeInches];
         _productCode = [aDecoder decodeObjectForKey:kKeyProductCode];
         _imageBleed = [aDecoder decodeUIEdgeInsetsForKey:kKeyImageBleed];
+        _imageBorder = [aDecoder decodeUIEdgeInsetsForKey:kKeyImageBorder];
         _maskImageURL = [aDecoder decodeObjectForKey:kKeyMaskImageURL];
         _sizePx = [aDecoder decodeCGSizeForKey:kKeySizePx];
         _classPhotoURL = [aDecoder decodeObjectForKey:kKeyClassPhotoURL];

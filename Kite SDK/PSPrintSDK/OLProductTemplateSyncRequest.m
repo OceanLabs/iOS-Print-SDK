@@ -20,7 +20,7 @@
 
 - (void)sync:(OLTemplateSyncRequestCompletionHandler)handler {
     NSAssert(self.req == nil, @"Oops only one template sync request should be in progress at any given time");
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/v1.2/template/", [OLKitePrintSDK apiEndpoint]]];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@/template/", [OLKitePrintSDK apiEndpoint], [OLKitePrintSDK apiVersion]]];
     [self fetchTemplatesWithURL:url templateAccumulator:[[NSMutableArray alloc] init] handler:handler];
 }
 
@@ -69,10 +69,13 @@
                                 NSString *coverPhoto;
                                 NSArray *productShots;
                                 NSString *productClass;
+                                NSString *productType;
+                                NSString *uiClass;
                                 UIColor *labelColor;
                                 CGSize sizeCm = CGSizeZero;
                                 CGSize sizeInches = CGSizeZero;
                                 UIEdgeInsets imageBleed = UIEdgeInsetsZero;
+                                UIEdgeInsets imageBorder = UIEdgeInsetsZero;
                                 NSString *maskImageURL;
                                 NSString *code;
                                 CGSize sizePx = CGSizeZero;
@@ -90,6 +93,10 @@
                                     
                                     productClass = [product[@"ios_sdk_product_class"] isKindOfClass:[NSString class]] ? product[@"ios_sdk_product_class"] : nil;
                                     
+                                    productType = [product[@"ios_sdk_product_type"] isKindOfClass:[NSString class]] ? product[@"ios_sdk_product_type"] : nil;
+                                    
+                                    uiClass = [product[@"ios_sdk_ui_class"] isKindOfClass:[NSString class]] ? product[@"ios_sdk_ui_class"] : nil;
+                                    
                                     NSArray *colorArray = [product[@"ios_sdk_label_color"] isKindOfClass:[NSArray class]] ? product[@"ios_sdk_label_color"] : nil;
                                     if (colorArray){
                                         NSNumber *red = [colorArray[0] isKindOfClass:[NSNumber class]] ? colorArray[0] : nil;
@@ -103,6 +110,11 @@
                                     NSArray *bleedArray = [product[@"mask_bleed"] isKindOfClass:[NSArray class]] ? product[@"mask_bleed"] : nil;
                                     if (bleedArray){
                                         imageBleed = UIEdgeInsetsMake([bleedArray[0] floatValue], [bleedArray[3] floatValue], [bleedArray[2] floatValue], [bleedArray[1] floatValue]);
+                                    }
+                                    
+                                    NSArray *borderArray = [product[@"ios_image_border"] isKindOfClass:[NSArray class]] ? product[@"ios_image_border"] : nil;
+                                    if (borderArray){
+                                        imageBorder = UIEdgeInsetsMake([borderArray[0] floatValue], [borderArray[3] floatValue], [borderArray[2] floatValue], [borderArray[1] floatValue]);
                                     }
                                     
                                     NSDictionary *sizeDict = [product[@"size"] isKindOfClass:[NSDictionary class]] ? product[@"size"] : nil;
@@ -151,7 +163,9 @@
                                     OLProductTemplate *t = [[OLProductTemplate alloc] initWithIdentifier:identifier name:name sheetQuantity:[imagesPerSheet unsignedIntegerValue] sheetCostsByCurrencyCode:costPerSheetByCurrencyCode enabled:enabled];
                                     t.coverPhotoURL = [NSURL URLWithString:coverPhoto];
                                     t.productPhotographyURLs = productShots;
-                                    t.templateClass = [OLProductTemplate templateClassWithIdentifier:productClass];
+                                    t.templateUI = [OLProductTemplate templateUIWithIdentifier:uiClass];
+                                    t.templateType = productType;
+                                    t.templateClass = productClass;
                                     t.labelColor = labelColor;
                                     t.sizeCm = sizeCm;
                                     t.sizeInches = sizeInches;
@@ -160,6 +174,7 @@
                                     t.maskImageURL = [NSURL URLWithString:maskImageURL];
                                     t.sizePx = sizePx;
                                     t.classPhotoURL = [NSURL URLWithString:classPhoto];
+                                    t.imageBorder = imageBorder;
                                     [acc addObject:t];
                                 }
                             }

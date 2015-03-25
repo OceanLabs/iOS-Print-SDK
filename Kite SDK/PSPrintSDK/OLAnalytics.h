@@ -16,7 +16,7 @@
 + (void)trackProductSelectionScreenViewed;
 + (void)trackProductDescriptionScreenViewed:(NSString *)productName;
 + (void)trackProductTemplateSelectionScreenViewed:(NSString *)productName;
-+ (void)trackDeviceSelectionScreenViewedWithTemplateClass:(NSString *)templateClassString;
++ (void)trackProductTypeSelectionScreenViewedWithTemplateClass:(NSString *)templateClassString;
 + (void)trackReviewScreenViewed:(NSString *)productName;
 + (void)trackShippingScreenViewedForOrder:(OLPrintOrder *)printOrder;
 + (void)trackPaymentScreenViewedForOrder:(OLPrintOrder *)printOrder;
