@@ -284,22 +284,7 @@ static void *ActionSheetCellKey;
         printPhoto.asset = object;
         [photoArray addObject:printPhoto];
         
-        if ([object isKindOfClass: [ALAsset class]]){
-            [assetArray addObject:[OLAsset assetWithALAsset:object]];
-        }
-#ifdef OL_KITE_OFFER_INSTAGRAM
-        else if ([object isKindOfClass: [OLInstagramImage class]]){
-            [assetArray addObject:[OLAsset assetWithURL:[object fullURL]]];
-        }
-#endif
-#ifdef OL_KITE_OFFER_FACEBOOK
-        else if ([object isKindOfClass: [OLFacebookImage class]]){
-            [assetArray addObject:[OLAsset assetWithURL:[object fullURL]]];
-        }
-#endif
-        else if ([object isKindOfClass:[OLAsset class]]){
-            [assetArray addObject:object];
-        }
+        [assetArray addObject:[OLAsset assetWithPrintPhoto:printPhoto]];
     }
     
     // First remove any that are not returned.
@@ -319,9 +304,11 @@ static void *ActionSheetCellKey;
     NSMutableArray *addArray = [NSMutableArray arrayWithArray:photoArray];
     NSMutableArray *addAssetArray = [NSMutableArray arrayWithArray:assetArray];
     for (id object in self.userSelectedPhotos) {
-        if ([addAssetArray containsObjectIdenticalTo:[object asset]]){
-            [addArray removeObjectAtIndex:[addAssetArray indexOfObjectIdenticalTo:[object asset]]];
-            [addAssetArray removeObjectIdenticalTo:[object asset]];
+        OLAsset *asset = [OLAsset assetWithPrintPhoto:object];
+        
+        if ([addAssetArray containsObject:asset]){
+            [addArray removeObjectAtIndex:[addAssetArray indexOfObject:asset]];
+            [addAssetArray removeObject:asset];
         }
     }
 
