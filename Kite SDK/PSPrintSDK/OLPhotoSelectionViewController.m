@@ -258,6 +258,8 @@ static void *ActionSheetCellKey;
     }
     
     if ([self.userDisabledPhotos count] > 0){
+        self.navigationItem.rightBarButtonItem.title = NSLocalizedString(@"Cancel", @"");
+        
         if ([self.userDisabledPhotos count] == 1){
             [self.clearButton setTitle:[NSString stringWithFormat:NSLocalizedString(@"Clear %lu Photo", @""), (unsigned long)[self.userDisabledPhotos count]] forState:UIControlStateNormal];
         }
@@ -269,6 +271,7 @@ static void *ActionSheetCellKey;
         }completion:NULL];
     }
     else{
+        self.navigationItem.rightBarButtonItem.title = NSLocalizedString(@"Next", @"");
         [UIView animateKeyframesWithDuration:0.15 delay:0 options:UIViewKeyframeAnimationOptionBeginFromCurrentState | UIViewAnimationOptionCurveLinear animations:^{
             self.clearButtonContainerView.transform = CGAffineTransformIdentity;
         }completion:NULL];
@@ -743,6 +746,13 @@ static void *ActionSheetCellKey;
 #pragma mark - Storyboard Methods
 
 - (BOOL)shouldGoToOrderPreview {
+    if (self.userDisabledPhotos.count > 0){
+        [self.userDisabledPhotos removeAllObjects];
+        [self updateTitleBasedOnSelectedPhotoQuanitity];
+        [self.collectionView reloadData];
+        return NO;
+    }
+    
     if (self.userSelectedPhotos.count - self.userDisabledPhotos.count == 0) {
         if ([UIAlertController class]){
             UIAlertController *av = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Oops!", @"") message:NSLocalizedString(@"Please select some images to print first.", @"") preferredStyle:UIAlertControllerStyleAlert];
@@ -775,10 +785,7 @@ static void *ActionSheetCellKey;
         orvc = [self.storyboard instantiateViewControllerWithIdentifier:@"OrderReviewViewController"];
     }
     orvc.product = self.product;
-    NSMutableArray *finalPhotos = [[NSMutableArray alloc] init];
-    [finalPhotos addObjectsFromArray:self.userSelectedPhotos];
-    [finalPhotos removeObjectsInArray:self.userDisabledPhotos];
-    orvc.userSelectedPhotos = finalPhotos;
+    orvc.userSelectedPhotos = self.userSelectedPhotos;
     orvc.assets = self.assets;
     [self.navigationController pushViewController:orvc animated:YES];
 }
