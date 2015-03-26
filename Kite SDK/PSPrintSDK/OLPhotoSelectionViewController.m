@@ -389,7 +389,7 @@ static void *ActionSheetCellKey;
         [self.indexPathsToRemoveDict[[NSNumber numberWithInteger:section]] addObject:[NSIndexPath indexPathForItem:item inSection:section]];
     }
     for (id photo in self.userDisabledPhotos){
-        [self.assets removeObjectIdenticalTo:[photo asset]];
+        [self.assets removeObject:[OLAsset assetWithPrintPhoto:photo]];
         [self.userSelectedPhotos removeObjectIdenticalTo:photo];
     }
     
