@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 
 @class ALAsset;
+@class OLPrintPhoto;
 
 typedef void (^GetDataLengthHandler)(long long dataLength, NSError *error);
 typedef void (^GetDataHandler)(NSData *data, NSError *error);
@@ -35,6 +36,7 @@ static NSString *const kOLMimeTypePNG  = @"image/png";
 + (OLAsset *)assetWithALAsset:(ALAsset *)asset;
 + (OLAsset *)assetWithDataSource:(id<OLAssetDataSource>)dataSource;
 + (OLAsset *)assetWithURL:(NSURL *)url;
++ (OLAsset *)assetWithPrintPhoto:(OLPrintPhoto *)printPhoto;
 
 @property (nonatomic, readonly) NSString *mimeType;
 

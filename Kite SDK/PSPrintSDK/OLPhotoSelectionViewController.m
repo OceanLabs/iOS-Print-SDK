@@ -258,6 +258,8 @@ static void *ActionSheetCellKey;
     }
     
     if ([self.userDisabledPhotos count] > 0){
+        self.navigationItem.rightBarButtonItem.title = NSLocalizedString(@"Cancel", @"");
+        
         if ([self.userDisabledPhotos count] == 1){
             [self.clearButton setTitle:[NSString stringWithFormat:NSLocalizedString(@"Clear %lu Photo", @""), (unsigned long)[self.userDisabledPhotos count]] forState:UIControlStateNormal];
         }
@@ -269,6 +271,7 @@ static void *ActionSheetCellKey;
         }completion:NULL];
     }
     else{
+        self.navigationItem.rightBarButtonItem.title = NSLocalizedString(@"Next", @"");
         [UIView animateKeyframesWithDuration:0.15 delay:0 options:UIViewKeyframeAnimationOptionBeginFromCurrentState | UIViewAnimationOptionCurveLinear animations:^{
             self.clearButtonContainerView.transform = CGAffineTransformIdentity;
         }completion:NULL];
@@ -284,22 +287,7 @@ static void *ActionSheetCellKey;
         printPhoto.asset = object;
         [photoArray addObject:printPhoto];
         
-        if ([object isKindOfClass: [ALAsset class]]){
-            [assetArray addObject:[OLAsset assetWithALAsset:object]];
-        }
-#ifdef OL_KITE_OFFER_INSTAGRAM
-        else if ([object isKindOfClass: [OLInstagramImage class]]){
-            [assetArray addObject:[OLAsset assetWithURL:[object fullURL]]];
-        }
-#endif
-#ifdef OL_KITE_OFFER_FACEBOOK
-        else if ([object isKindOfClass: [OLFacebookImage class]]){
-            [assetArray addObject:[OLAsset assetWithURL:[object fullURL]]];
-        }
-#endif
-        else if ([object isKindOfClass:[OLAsset class]]){
-            [assetArray addObject:object];
-        }
+        [assetArray addObject:[OLAsset assetWithPrintPhoto:printPhoto]];
     }
     
     // First remove any that are not returned.
@@ -319,9 +307,11 @@ static void *ActionSheetCellKey;
     NSMutableArray *addArray = [NSMutableArray arrayWithArray:photoArray];
     NSMutableArray *addAssetArray = [NSMutableArray arrayWithArray:assetArray];
     for (id object in self.userSelectedPhotos) {
-        if ([addAssetArray containsObjectIdenticalTo:[object asset]]){
-            [addArray removeObjectAtIndex:[addAssetArray indexOfObjectIdenticalTo:[object asset]]];
-            [addAssetArray removeObjectIdenticalTo:[object asset]];
+        OLAsset *asset = [OLAsset assetWithPrintPhoto:object];
+        
+        if ([addAssetArray containsObject:asset]){
+            [addArray removeObjectAtIndex:[addAssetArray indexOfObject:asset]];
+            [addAssetArray removeObject:asset];
         }
     }
 
@@ -402,7 +392,7 @@ static void *ActionSheetCellKey;
         [self.indexPathsToRemoveDict[[NSNumber numberWithInteger:section]] addObject:[NSIndexPath indexPathForItem:item inSection:section]];
     }
     for (id photo in self.userDisabledPhotos){
-        [self.assets removeObjectIdenticalTo:[photo asset]];
+        [self.assets removeObjectAtIndex:[self.userSelectedPhotos indexOfObject:photo]];
         [self.userSelectedPhotos removeObjectIdenticalTo:photo];
     }
     
@@ -756,6 +746,13 @@ static void *ActionSheetCellKey;
 #pragma mark - Storyboard Methods
 
 - (BOOL)shouldGoToOrderPreview {
+    if (self.userDisabledPhotos.count > 0){
+        [self.userDisabledPhotos removeAllObjects];
+        [self updateTitleBasedOnSelectedPhotoQuanitity];
+        [self.collectionView reloadData];
+        return NO;
+    }
+    
     if (self.userSelectedPhotos.count - self.userDisabledPhotos.count == 0) {
         if ([UIAlertController class]){
             UIAlertController *av = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Oops!", @"") message:NSLocalizedString(@"Please select some images to print first.", @"") preferredStyle:UIAlertControllerStyleAlert];
@@ -788,10 +785,7 @@ static void *ActionSheetCellKey;
         orvc = [self.storyboard instantiateViewControllerWithIdentifier:@"OrderReviewViewController"];
     }
     orvc.product = self.product;
-    NSMutableArray *finalPhotos = [[NSMutableArray alloc] init];
-    [finalPhotos addObjectsFromArray:self.userSelectedPhotos];
-    [finalPhotos removeObjectsInArray:self.userDisabledPhotos];
-    orvc.userSelectedPhotos = finalPhotos;
+    orvc.userSelectedPhotos = self.userSelectedPhotos;
     orvc.assets = self.assets;
     [self.navigationController pushViewController:orvc animated:YES];
 }

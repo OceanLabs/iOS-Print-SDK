@@ -10,6 +10,15 @@
 #import <AssetsLibrary/AssetsLibrary.h>
 #import "OLURLDataSource.h"
 #import "OLAsset+Private.h"
+#import "OLPrintPhoto.h"
+
+#ifdef OL_KITE_OFFER_INSTAGRAM
+#import <OLInstagramImage.h>
+#endif
+
+#ifdef OL_KITE_OFFER_FACEBOOK
+#import <OLFacebookImage.h>
+#endif
 
 static NSString *const kKeyMimeType = @"co.oceanlabs.pssdk.kKeyMimeType";
 static NSString *const kKeyImageData = @"co.oceanlabs.pssdk.kKeyImageData";
@@ -138,7 +147,7 @@ static NSString *const kKeyImageURL = @"co.oceanlabs.pssdk.kKeyImageURL";
 }
 
 - (NSString *)description {
-    return [NSString stringWithFormat:@"[AssetID: %lld URL: %@]", self.assetId, self.previewURL];
+    return [NSString stringWithFormat:@"[AssetID: %lld URL: %@]", self.assetId, self.imageURL];
 }
 
 + (OLAsset *)assetWithImageAsJPEG:(UIImage *)image {
@@ -180,6 +189,31 @@ static NSString *const kKeyImageURL = @"co.oceanlabs.pssdk.kKeyImageURL";
     } else {
         // Worst case scenario where we will need to download the entire image first and just assume it's a JPEG.
         return [OLAsset assetWithDataSource:[[OLURLDataSource alloc] initWithURLString:urlStr]];
+    }
+    
+    return nil;
+}
+
++ (OLAsset *)assetWithPrintPhoto:(OLPrintPhoto *)printPhoto{
+    if ([[printPhoto asset] isKindOfClass: [ALAsset class]]){
+        return [OLAsset assetWithALAsset:[printPhoto asset]];
+    }
+#ifdef OL_KITE_OFFER_INSTAGRAM
+    else if ([[printPhoto asset] isKindOfClass: [OLInstagramImage class]]){
+        return [OLAsset assetWithURL:[[printPhoto asset] fullURL]];
+    }
+#endif
+#ifdef OL_KITE_OFFER_FACEBOOK
+    else if ([[printPhoto asset] isKindOfClass: [OLFacebookImage class]]){
+        return [OLAsset assetWithURL:[[printPhoto asset] fullURL]];
+    }
+#endif
+    else if ([[printPhoto asset] isKindOfClass:[OLAsset class]]){
+        return [NSKeyedUnarchiver unarchiveObjectWithData:[NSKeyedArchiver archivedDataWithRootObject:[printPhoto asset]]];
+    }
+    
+    else if ([[printPhoto asset] isKindOfClass:[ALAsset class]]){
+        return [OLAsset assetWithALAsset:[printPhoto asset]];
     }
     
     return nil;
