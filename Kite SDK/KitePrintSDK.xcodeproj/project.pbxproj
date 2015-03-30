@@ -28,6 +28,7 @@
 		2EA8BEBB1A484FCB008A9248 /* OLFrameSelectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA8BEB31A484FCB008A9248 /* OLFrameSelectionViewController.m */; };
 		2EA8BEBC1A484FCB008A9248 /* OLOrderReviewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA8BEB51A484FCB008A9248 /* OLOrderReviewViewController.m */; };
 		2EA8BEBD1A484FCB008A9248 /* OLFrameOrderReviewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA8BEB71A484FCB008A9248 /* OLFrameOrderReviewViewController.m */; };
+		2ED5DEBF1AC948C1003301A8 /* LXReorderableCollectionViewFlowLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 2ED5DEBE1AC948C1003301A8 /* LXReorderableCollectionViewFlowLayout.m */; };
 		2EE3C86D1A4ADDDB006446E2 /* OLWhiteSquare.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EE3C86C1A4ADDDA006446E2 /* OLWhiteSquare.m */; };
 		2EE3C8701A4AFB0C006446E2 /* OLKiteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EE3C86F1A4AFB0C006446E2 /* OLKiteViewController.m */; };
 		3A5ECAA2AA9D4F38934544CA /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 931ABE3568CB40F8892488E2 /* libPods.a */; };
@@ -162,6 +163,8 @@
 		2EA8BEB51A484FCB008A9248 /* OLOrderReviewViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLOrderReviewViewController.m; sourceTree = "<group>"; };
 		2EA8BEB61A484FCB008A9248 /* OLFrameOrderReviewViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLFrameOrderReviewViewController.h; sourceTree = "<group>"; };
 		2EA8BEB71A484FCB008A9248 /* OLFrameOrderReviewViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLFrameOrderReviewViewController.m; sourceTree = "<group>"; };
+		2ED5DEBD1AC948C1003301A8 /* LXReorderableCollectionViewFlowLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LXReorderableCollectionViewFlowLayout.h; sourceTree = "<group>"; };
+		2ED5DEBE1AC948C1003301A8 /* LXReorderableCollectionViewFlowLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LXReorderableCollectionViewFlowLayout.m; sourceTree = "<group>"; };
 		2EE3C86B1A4ADDDA006446E2 /* OLWhiteSquare.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLWhiteSquare.h; sourceTree = "<group>"; };
 		2EE3C86C1A4ADDDA006446E2 /* OLWhiteSquare.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLWhiteSquare.m; sourceTree = "<group>"; };
 		2EE3C86E1A4AFB0C006446E2 /* OLKiteViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLKiteViewController.h; sourceTree = "<group>"; };
@@ -344,6 +347,15 @@
 			);
 			name = Categories;
 			path = ..;
+			sourceTree = "<group>";
+		};
+		2ED5DEB01AC94337003301A8 /* LXReorderableCollectionViewFlowLayout */ = {
+			isa = PBXGroup;
+			children = (
+				2ED5DEBD1AC948C1003301A8 /* LXReorderableCollectionViewFlowLayout.h */,
+				2ED5DEBE1AC948C1003301A8 /* LXReorderableCollectionViewFlowLayout.m */,
+			);
+			name = LXReorderableCollectionViewFlowLayout;
 			sourceTree = "<group>";
 		};
 		3D1779511A1E074C00BE3E58 /* CardIO */ = {
@@ -584,6 +596,7 @@
 		CDA8BF4F18D70CF500D835BB /* PrintShop */ = {
 			isa = PBXGroup;
 			children = (
+				2ED5DEB01AC94337003301A8 /* LXReorderableCollectionViewFlowLayout */,
 				3D8122E21A759E41004E7297 /* RMImageCropper */,
 				2EE3C86E1A4AFB0C006446E2 /* OLKiteViewController.h */,
 				2EE3C86F1A4AFB0C006446E2 /* OLKiteViewController.m */,
@@ -827,6 +840,7 @@
 				3D8122F41A75A46D004E7297 /* UITableViewController+ScreenWidthFactor.m in Sources */,
 				2E8CB5301A6E5E260047DCEA /* OLCircleMaskTableViewCell.m in Sources */,
 				CD9A3A9718AB9C4500DC7131 /* OLCheckPromoCodeRequest.m in Sources */,
+				2ED5DEBF1AC948C1003301A8 /* LXReorderableCollectionViewFlowLayout.m in Sources */,
 				2E1F69DE1A66999700696286 /* OLPosterSizeSelectionViewController.m in Sources */,
 				2EA8BEBB1A484FCB008A9248 /* OLFrameSelectionViewController.m in Sources */,
 				CD73BFA7186306550009DE03 /* OLCountry.m in Sources */,

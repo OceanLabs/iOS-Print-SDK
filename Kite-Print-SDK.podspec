@@ -12,7 +12,7 @@ Pod::Spec.new do |spec|
   spec.dependency	'SVProgressHUD'
   spec.dependency	'AFNetworking', '2.5.0'
   spec.dependency	'UICKeyChainStore', '~> 2.0.4'
-  spec.dependency	'LXReorderableCollectionViewFlowLayout'
+  spec.dependency	'CSStickyHeaderFlowLayout'
   spec.dependency	'CTAssetsPickerController'
   spec.dependency	'UIColor-HexString'
   spec.requires_arc	= true
