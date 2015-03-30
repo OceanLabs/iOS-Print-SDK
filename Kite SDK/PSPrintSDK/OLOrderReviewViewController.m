@@ -314,8 +314,14 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     [self updateTitleBasedOnSelectedPhotoQuanitity];
 }
 
-- (IBAction)onButtonEnhanceClicked:(UIButton *)sender {
-    UIView* cellContentView = sender.superview;
+- (IBAction)onButtonEnhanceClicked:(id)sender {
+    UIView* cellContentView;
+    if ([sender isKindOfClass: [UIButton class]]){
+        cellContentView = [(UIButton *)sender superview];
+    }
+    else if ([sender isKindOfClass:[UITapGestureRecognizer class]]){
+        cellContentView = [(UITapGestureRecognizer *)sender view];
+    }
     UIView* cell = cellContentView.superview;
     while (![cell isKindOfClass:[UITableViewCell class]]){
         cell = cell.superview;
@@ -374,15 +380,25 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
             cell = [[OLCircleMaskTableViewCell alloc] init];
         }
         
+        UIView *borderView = [cell.contentView viewWithTag:399];
+        
         UIActivityIndicatorView *activityIndicator = (UIActivityIndicatorView *)[cell.contentView viewWithTag:278];
         [activityIndicator startAnimating];
         
         UIImageView *cellImage = (UIImageView *)[cell.contentView viewWithTag:10];
-        cellImage.image = nil;
+        [cellImage removeFromSuperview];
         
-        if (cellImage){
-            [((OLPrintPhoto*)[self.userSelectedPhotos objectAtIndex:indexPath.row-1]) setImageIdealSizeForImageView:cellImage highQuality:YES];
-        }
+        cellImage = [[UIImageView alloc] initWithFrame:borderView.frame];
+        cellImage.tag = 10;
+        cellImage.translatesAutoresizingMaskIntoConstraints = NO;
+        cellImage.contentMode = UIViewContentModeScaleAspectFill;
+        cellImage.clipsToBounds = YES;
+        [cell.contentView insertSubview:cellImage aboveSubview:activityIndicator];
+        
+        cellImage.userInteractionEnabled = YES;
+        [cellImage addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onButtonEnhanceClicked:)]];
+        
+        [((OLPrintPhoto*)[self.userSelectedPhotos objectAtIndex:indexPath.row-1]) setImageIdealSizeForImageView:cellImage highQuality:YES];
         
         UILabel *countLabel = (UILabel *)[cell.contentView viewWithTag:30];
         [countLabel setText: [NSString stringWithFormat:@"%lu", (unsigned long)(1+[((NSNumber*)[self.extraCopiesOfAssets objectAtIndex:indexPath.row-1]) integerValue])]];
@@ -391,8 +407,6 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
             cell.enableMask = YES;
         }
         
-        UIView *borderView = [cell.contentView viewWithTag:399];
-        
         UIEdgeInsets b = self.product.productTemplate.imageBorder;
         
         NSLayoutConstraint *topCon = [NSLayoutConstraint constraintWithItem:cellImage attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:borderView attribute:NSLayoutAttributeTop multiplier:1 constant:b.top];
@@ -400,7 +414,13 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
         NSLayoutConstraint *rightCon = [NSLayoutConstraint constraintWithItem:cellImage attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:borderView attribute:NSLayoutAttributeRight multiplier:1 constant:-b.right];
         NSLayoutConstraint *bottomCon = [NSLayoutConstraint constraintWithItem:cellImage attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationLessThanOrEqual toItem:borderView attribute:NSLayoutAttributeBottom multiplier:1 constant:-b.bottom];
         
-        [borderView.superview addConstraints:@[topCon, leftCon, rightCon, bottomCon]];
+        NSLayoutConstraint *aspectRatioCon = [NSLayoutConstraint constraintWithItem:cellImage attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:cellImage attribute:NSLayoutAttributeHeight multiplier:1 constant:0];
+        aspectRatioCon.priority = 750;
+        NSLayoutConstraint *activityCenterXCon = [NSLayoutConstraint constraintWithItem:cellImage attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:activityIndicator attribute:NSLayoutAttributeCenterX multiplier:1 constant:0];
+        NSLayoutConstraint *activityCenterYCon = [NSLayoutConstraint constraintWithItem:cellImage attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:activityIndicator attribute:NSLayoutAttributeCenterY multiplier:1 constant:0];
+        
+        [borderView.superview addConstraints:@[topCon, leftCon, rightCon, bottomCon, activityCenterYCon, activityCenterXCon]];
+        [cellImage addConstraints:@[aspectRatioCon]];
 
         
         
