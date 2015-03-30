@@ -89,7 +89,7 @@ typedef enum {
     }
     else{
         OLProductTemplate *template = self.productTemplate;
-        if (template.classPhotoURL && [template.classPhotoURL absoluteString]){
+        if (template.classPhotoURL && ![[template.classPhotoURL absoluteString] isEqualToString:@""]){
             [imageView setAndFadeInImageWithURL:self.productTemplate.classPhotoURL];
         }
         else{
