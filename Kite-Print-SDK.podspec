@@ -1,19 +1,19 @@
 Pod::Spec.new do |spec|
   spec.name		= 'Kite-Print-SDK'
-  spec.version         	= '2.0.15'
+  spec.version         	= '2.0.16'
   spec.license 		= { :type => 'MIT', :file => 'Kite SDK/LICENSE' }
   spec.homepage         = 'https://github.com/OceanLabs/iOS-Print-SDK'
   spec.authors          = {'Deon Botha' => 'deon@oceanlabs.co'}
   spec.summary          = "Add physical print functionality in minutes! Print magnets, photo prints, postcards, polaroids, posters, stickers, canvas', phone cases, etc"
-  spec.source           = {:git => 'https://github.com/OceanLabs/iOS-Print-SDK.git', :tag => '2.0.15'}
+  spec.source           = {:git => 'https://github.com/OceanLabs/iOS-Print-SDK.git', :tag => s.version.to_s }
   spec.source_files     = ['Kite SDK/PSPrintSDK/OL*.{h,m}', 'Kite SDK/PSPrintSDK/CardIO*.h', 'Kite SDK/PSPrintSDK/RMImageCropper/*.{h,m}', 'Kite SDK/PSPrintSDK/Categories/*.{h,m}']
   spec.resources        = ['Kite SDK/PSPrintSDK/KitePrintSDK.xcassets', 'Kite SDK/*.lproj', 'Kite SDK/PSPrintSDK/OLKiteStoryboard.storyboard', 'Kite SDK/PSPrintSDK/OLPhotoSelectionButton.xib']
   spec.dependency	'SDWebImage', '~> 3.7.2'
   spec.dependency	'SVProgressHUD'
-  spec.dependency	'AFNetworking', '2.5.0'
+  spec.dependency	'AFNetworking', '~> 2.5.0'
   spec.dependency	'UICKeyChainStore', '~> 2.0.4'
-  spec.dependency	'CSStickyHeaderFlowLayout'
-  spec.dependency	'CTAssetsPickerController'
+  spec.dependency	'CSStickyHeaderFlowLayout', '~> 0.2.4'
+  spec.dependency	'CTAssetsPickerController', '~> 2.9.3'
   spec.dependency	'UIColor-HexString'
   spec.requires_arc	= true
   spec.platform		= :ios, '7.0'
