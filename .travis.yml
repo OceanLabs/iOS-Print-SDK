@@ -1,0 +1,3 @@
+language: objective-c
+podfile: Kite\ SDK/Podfile
+xcode_workspace: Kite\ SDK/KitePrintSDK.xcworkspace
