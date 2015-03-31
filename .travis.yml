@@ -1,4 +1,4 @@
 language: objective-c
-podfile: Kite\ SDK/Podfile
-xcode_workspace: Kite\ SDK/KitePrintSDK.xcworkspace
+podfile: Kite SDK/Podfile
+xcode_workspace: Kite SDK/KitePrintSDK.xcworkspace
 xcode_scheme: KitePrintSDK
