@@ -1,5 +1,5 @@
 language: objective-c
 podfile: Kite SDK/Podfile
 script:
-  - xctool -workspace Kite SDK/KitePrintSDK.xcworkspace -scheme KitePrintSDK -sdk iphonesimulator ONLY_ACTIVE_ARCH=NO
-  - xctool test -workspace Kite SDK/KitePrintSDK.xcworkspace -scheme KitePrintSDK -sdk iphonesimulator ONLY_ACTIVE_ARCH=NO
+  - xctool -workspace Kite\ SDK/KitePrintSDK.xcworkspace -scheme KitePrintSDK -sdk iphonesimulator ONLY_ACTIVE_ARCH=NO
+  - xctool test -workspace Kite\ SDK/KitePrintSDK.xcworkspace -scheme KitePrintSDK -sdk iphonesimulator ONLY_ACTIVE_ARCH=NO
