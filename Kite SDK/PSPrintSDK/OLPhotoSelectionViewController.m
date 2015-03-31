@@ -31,7 +31,7 @@
 #import <UIColor+HexString.h>
 #import "OLCheckoutViewController.h"
 #import "OLConstants.h"
-#import <LXReorderableCollectionViewFlowLayout.h>
+#import "LXReorderableCollectionViewFlowLayout.h"
 #import "NSArray+QueryingExtras.h"
 #import "OLKitePrintSDK.h"
 
@@ -521,6 +521,7 @@ static void *ActionSheetCellKey;
 
 - (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath{
     UICollectionReusableView *cell = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"headerView" forIndexPath:indexPath];
+    cell.backgroundColor = [UIColor colorWithHexString:@"#ECEFF2"];
     
     
     UILabel *label = (UILabel *)[cell viewWithTag:77];
