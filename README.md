@@ -1,6 +1,7 @@
 # iOS Print SDK
 
 ![Kite](Kite SDK/docs/kite.png)
+[![Build Status](https://travis-ci.org/OceanLabs/iOS-Print-SDK.svg?branch=master)](https://travis-ci.org/OceanLabs/iOS-Print-SDK)
 
 The Kite Print SDK makes it easy to add print on demand functionality to your app.
 
