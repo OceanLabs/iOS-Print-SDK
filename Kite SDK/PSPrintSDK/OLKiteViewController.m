@@ -24,8 +24,12 @@
 @property (strong, nonatomic) NSArray *assets;
 @property (strong, nonatomic) NSMutableArray *userSelectedPhotos;
 @property (weak, nonatomic) IBOutlet UINavigationBar *navigationBar;
+
+// Because template sync happens in the constructor it may complete before the OLKiteViewController has appeared. In such a case where sync does
+// complete first we make a note to immediately transition to the appropriate view when the OLKiteViewController does appear:
+@property (assign, nonatomic) BOOL transitionOnViewDidAppear;
+@property (assign, nonatomic) BOOL seenViewDidAppear;
 @property (assign, nonatomic) BOOL alreadyTransitioned;
-@property (assign, nonatomic) BOOL presentLater;
 
 @end
 
@@ -55,51 +59,49 @@
     NSAssert(assets != nil && [assets count] > 0, @"KiteViewController requires assets to print");
     if ((self = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:nil] instantiateViewControllerWithIdentifier:@"KiteViewController"])) {
         self.assets = assets;
-        [OLProductTemplate sync];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(templateSyncDidFinish:) name:kNotificationTemplateSyncComplete object:nil];
     }
     
     return self;
 }
 
--(void)viewDidLoad{
+-(void)viewDidLoad {
     [super viewDidLoad];
-    if (![OLKitePrintSDK cacheTemplates]){
-        [OLProductTemplate deleteCachedTemplates];
-    }
-    [OLProductTemplate resetTemplates];
     
 #ifndef OL_NO_ANALYTICS
     [OLAnalytics trackKiteViewControllerLoaded];
 #endif
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(templateSyncDidFinish:) name:kNotificationTemplateSyncComplete object:nil];
-    if ([[OLProductTemplate templates] count] > 0){
-        [self transitionToNextScreen:NO];
-    }
     if (!self.navigationController){
         self.navigationBar.hidden = NO;
     }
 }
 
--(void) presentNextVc{
-    UIView *view = [[UIView alloc] initWithFrame:self.view.bounds];
-    view.backgroundColor = [UIColor whiteColor];
-    [self.nextVc.view addSubview:view];
-    [self presentViewController:self.nextVc animated:NO completion:^(void){
-        [UIView animateWithDuration:0.15 animations:^(void){
-            view.alpha = 0;
-        } completion:^(BOOL b){
-            [view removeFromSuperview];
-        }];
+- (void)viewWillAppear:(BOOL)animated {
+    if (self.isBeingPresented) {
+        if (![OLKitePrintSDK cacheTemplates]) {
+            [OLProductTemplate deleteCachedTemplates];
+        }
         
-    }];
+        self.alreadyTransitioned = NO;
+        self.transitionOnViewDidAppear = NO;
+        self.seenViewDidAppear = NO;
+        [OLProductTemplate sync];
+    }
 }
 
 -(void) viewDidAppear:(BOOL)animated{
-    if (self.presentLater){
-        self.presentLater = NO;
-        [self presentNextVc];
+    self.seenViewDidAppear = YES;
+    
+    if ([[OLProductTemplate templates] count] > 0){
+        self.transitionOnViewDidAppear = YES;
     }
+    
+    if (self.isBeingPresented && self.transitionOnViewDidAppear) {
+        [self transitionToNextScreen];
+    }
+    
+    self.transitionOnViewDidAppear = NO;
 }
 
 -(IBAction) dismiss{
@@ -108,58 +110,46 @@
         [self.view addSubview:dummy];
         [self.presentedViewController dismissViewControllerAnimated:NO completion:^{
             [self dismissViewControllerAnimated:YES completion:^{
+                [dummy removeFromSuperview];
             }];
         }];
-    }
-    else{
+    } else {
         [self dismissViewControllerAnimated:YES completion:^{
         }];
     }
-    
 }
 
-
-- (void)transitionToNextScreen:(BOOL)animated{
+- (void)transitionToNextScreen{
+    if (self.alreadyTransitioned) {
+        return;
+    }
     self.alreadyTransitioned = YES;
+    
     UIStoryboard *sb = [UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:nil];
     NSString *nextVcNavIdentifier = @"ProductsNavigationController";
-    NSString *nextVcIdentifier = @"ProductHomeViewController";
     
-    if (!self.navigationController){
-        self.nextVc = [sb instantiateViewControllerWithIdentifier:nextVcNavIdentifier];
-        OLProductHomeViewController *homeVC = (OLProductHomeViewController *)((UINavigationController *)self.nextVc).topViewController;
-        [homeVC setDelegate:self.delegate];
-        homeVC.userEmail = self.userEmail;
-        homeVC.userPhone = self.userPhone;
-        
-        ((UINavigationController *)self.nextVc).topViewController.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(dismiss)];
-        [(id)((UINavigationController *)self.nextVc).topViewController setAssets:[self.assets mutableCopy]];
-        [(id)((UINavigationController *)self.nextVc).topViewController setUserSelectedPhotos:self.userSelectedPhotos];
+    self.nextVc = [sb instantiateViewControllerWithIdentifier:nextVcNavIdentifier];
+    OLProductHomeViewController *homeVC = (OLProductHomeViewController *)((UINavigationController *)self.nextVc).topViewController;
+    [homeVC setDelegate:self.delegate];
+    homeVC.userEmail = self.userEmail;
+    homeVC.userPhone = self.userPhone;
+    
+    ((UINavigationController *)self.nextVc).topViewController.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(dismiss)];
+    [(id)((UINavigationController *)self.nextVc).topViewController setAssets:[self.assets mutableCopy]];
+    [(id)((UINavigationController *)self.nextVc).topViewController setUserSelectedPhotos:self.userSelectedPhotos];
 
-        if (!self.presentLater){
-            self.presentLater = YES;
-        }
-        else{
-            self.presentLater = NO;
-            [self presentNextVc];
-        }
-    }
-    else{
-        CGFloat standardiOSBarsHeight = self.navigationController.navigationBar.frame.size.height + [UIApplication sharedApplication].statusBarFrame.size.height;
-        self.nextVc = [sb instantiateViewControllerWithIdentifier:nextVcIdentifier];
-        [(OLProductHomeViewController *)((UINavigationController *)self.nextVc) setDelegate:self.delegate];
-        [(id)self.nextVc setAssets:[self.assets mutableCopy]];
-        [(id)self.nextVc setUserSelectedPhotos:self.userSelectedPhotos];
-
-        [self.view addSubview:self.nextVc.view];
-        UIView *dummy = [self.view snapshotViewAfterScreenUpdates:YES];
-        if ([self.nextVc isKindOfClass:[UITableViewController class]]){
-            dummy.transform = CGAffineTransformMakeTranslation(0, standardiOSBarsHeight);
-        }
-        [self.view addSubview:dummy];
-        self.title = self.nextVc.title;
-        [self.navigationController pushViewController:self.nextVc animated:animated];
-    }
+    CGRect bounds = self.view.bounds;
+    bounds.origin.y = CGRectGetMaxY(self.navigationBar.frame);
+    UIView *view = [[UIView alloc] initWithFrame:bounds];
+    view.backgroundColor = [UIColor whiteColor];
+    [self.nextVc.view addSubview:view];
+    [self presentViewController:self.nextVc animated:NO completion:^(void){
+        [UIView animateWithDuration:0.3 animations:^(void){
+            view.alpha = 0;
+        } completion:^(BOOL b){
+            [view removeFromSuperview];
+        }];
+    }];
 }
 
 - (void)templateSyncDidFinish:(NSNotification *)n{
@@ -167,7 +157,7 @@
         if ([[OLProductTemplate templates] count] > 0){
             return;
         }
-        NSLog(@"%@", n.userInfo[kNotificationKeyTemplateSyncError]);
+        
         NSString *message = NSLocalizedString(@"There was problem getting Print Shop products. Check your Internet connectivity or try again later.", @"");
         if ([UIAlertController class]){
             UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"" message:message preferredStyle:UIAlertControllerStyleAlert];
@@ -186,9 +176,10 @@
         }
     }
     else{
-        if (!self.alreadyTransitioned){
-            self.presentLater = YES;
-            [self transitionToNextScreen:NO];
+        if (self.seenViewDidAppear){
+            [self transitionToNextScreen];
+        } else {
+            self.transitionOnViewDidAppear = YES;
         }
     }
 }

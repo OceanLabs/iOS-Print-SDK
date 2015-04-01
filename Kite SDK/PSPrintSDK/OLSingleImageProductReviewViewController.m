@@ -13,7 +13,6 @@
 #import <SDWebImageManager.h>
 #import "RMImageCropper.h"
 #import "OLProductPrintJob.h"
-#import "OLProductHomeViewController.h"
 #import "OLKitePrintSDK.h"
 #import <CTAssetsPickerController.h>
 #import "NSArray+QueryingExtras.h"

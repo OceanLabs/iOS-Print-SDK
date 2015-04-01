@@ -16,7 +16,6 @@
 #import <SDWebImageManager.h>
 #import "OLAsset+Private.h"
 #import "OLAnalytics.h"
-#import "OLProductHomeViewController.h"
 #import "OLKitePrintSDK.h"
 
 @interface OLKitePrintSDK (InternalUtils)
