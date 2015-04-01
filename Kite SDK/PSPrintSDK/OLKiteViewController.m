@@ -81,6 +81,7 @@
     if (self.isBeingPresented) {
         if (![OLKitePrintSDK cacheTemplates]) {
             [OLProductTemplate deleteCachedTemplates];
+            [OLProductTemplate resetTemplates];
         }
         
         self.alreadyTransitioned = NO;
