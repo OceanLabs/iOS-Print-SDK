@@ -9,7 +9,7 @@
 #import "OLScrollCropViewController.h"
 #import "RMImageCropper.h"
 
-@interface OLScrollCropViewController ()
+@interface OLScrollCropViewController () <RMImageCropperDelegate>
 
 @end
 
@@ -32,6 +32,8 @@
         self.navigationItem.rightBarButtonItem = item;
     }
     
+    self.navigationItem.rightBarButtonItem.enabled = NO;
+    
     UIButton *cancelButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 40, 20)];
     [cancelButton addTarget:self action:@selector(onBarButtonCancelTapped:) forControlEvents:UIControlEventTouchUpInside];
     [cancelButton setTitle: NSLocalizedString(@"Cancel", @"") forState:UIControlStateNormal];
@@ -41,6 +43,7 @@
     
     UIBarButtonItem *cancelItem =[[UIBarButtonItem alloc] initWithCustomView:cancelButton];
     self.navigationItem.leftBarButtonItem = cancelItem;
+    self.cropView.delegate = self;
 }
 
 -(void)viewWillAppear:(BOOL)animated{
@@ -84,6 +87,12 @@
 
 - (NSUInteger)supportedInterfaceOrientations {
     return UIInterfaceOrientationMaskPortrait;
+}
+
+#pragma mark - RMImageCropperDelegate methods
+
+- (void)imageCropperDidTransformImage:(RMImageCropper *)imageCropper {
+    self.navigationItem.rightBarButtonItem.enabled = YES;
 }
 
 @end

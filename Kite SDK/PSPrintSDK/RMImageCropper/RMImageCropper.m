@@ -677,6 +677,12 @@ CGFloat const RESET_DURATION = 0.10f;
 
 #pragma mark - Gesture Handlers
 
+- (void)notifyDelegateOfTransform {
+    if ([self.delegate respondsToSelector:@selector(imageCropperDidTransformImage:)]) {
+        [self.delegate imageCropperDidTransformImage:self];
+    }
+}
+
 - (void)pinchRecognized:(UIPinchGestureRecognizer *)recognizer
 {
     if (self.enabled)
@@ -691,6 +697,8 @@ CGFloat const RESET_DURATION = 0.10f;
         {
             [self correctSizeAndTranslationErrors];
         }
+        
+        [self notifyDelegateOfTransform];
     }
 }
 
@@ -709,13 +717,17 @@ CGFloat const RESET_DURATION = 0.10f;
             CGPoint velocity = [recognizer velocityInView:self.imageView];
             [self startDecelerationWithVelocity:velocity];
         }
+        
+        [self notifyDelegateOfTransform];
     }
 }
 
 - (void)tapRecognized:(UITapGestureRecognizer *)recognizer
 {
-    if (self.tapped != nil)
+    if (self.tapped != nil) {
         self.tapped();
+        [self notifyDelegateOfTransform];
+    }
 }
 
 - (void)doubleTapRecognized:(UITapGestureRecognizer *)recognizer
@@ -732,6 +744,7 @@ CGFloat const RESET_DURATION = 0.10f;
     }
     
     [self resetToScale:scale WithDuration:RESET_DURATION andCompletion:nil];
+    [self notifyDelegateOfTransform];
 }
 
 #pragma mark - Inertia
