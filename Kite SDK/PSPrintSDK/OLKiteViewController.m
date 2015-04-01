@@ -56,6 +56,7 @@
 
 -(void)viewDidLoad{
     [super viewDidLoad];
+    [OLProductTemplate resetTemplates];
     
 #ifndef OL_NO_ANALYTICS
     [OLAnalytics trackKiteViewControllerLoaded];
@@ -175,7 +176,6 @@
         }
     }
     else{
-        [OLProductTemplate resetTemplates];
         if (!self.alreadyTransitioned){
             self.presentLater = YES;
             [self transitionToNextScreen:NO];

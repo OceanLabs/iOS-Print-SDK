@@ -40,6 +40,8 @@ typedef void (^OLProductCostRefreshCompletionHandler)(NSError *error);
 + (OLKitePrintSDKEnvironment)environment;
 + (NSString *)apiEndpoint;
 + (NSString *)apiVersion;
++ (void)setCacheTemplates:(BOOL)cache;
++ (BOOL)cacheTemplates;
 
 // optionally enable Instagram photo picking functionality (you'll need to take 5 minutes to register your app https://instagram.com/developer/):
 #ifdef OL_KITE_OFFER_INSTAGRAM

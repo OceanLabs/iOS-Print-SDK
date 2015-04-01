@@ -36,6 +36,8 @@ static NSString *const kOLAPIEndpointVersion = @"v1.3";
 
 static BOOL useJudoPayForGBP = NO;
 
+static BOOL cacheTemplates = NO;
+
 #ifdef OL_KITE_OFFER_INSTAGRAM
 static NSString *instagramClientID = nil;
 static NSString *instagramSecret = nil;
@@ -56,6 +58,17 @@ static NSString *instagramRedirectURI = nil;
 
 + (void)setUseJudoPayForGBP:(BOOL)use {
     useJudoPayForGBP = use;
+}
+
++ (void)setCacheTemplates:(BOOL)cache{
+    if (!cache){
+        [OLProductTemplate deleteCachedTemplates];
+    }
+    cacheTemplates = cache;
+}
+
++ (BOOL)cacheTemplates{
+    return cacheTemplates;
 }
 
 + (void)setAPIKey:(NSString *)_apiKey withEnvironment:(OLKitePrintSDKEnvironment)_environment {
