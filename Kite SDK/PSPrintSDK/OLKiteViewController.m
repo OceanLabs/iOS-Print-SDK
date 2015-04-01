@@ -29,6 +29,13 @@
 
 @end
 
+@interface OLKitePrintSDK (Private)
+
++ (void)setCacheTemplates:(BOOL)cache;
++ (BOOL)cacheTemplates;
+
+@end
+
 @implementation OLKiteViewController
 
 -(NSMutableArray *) userSelectedPhotos{
@@ -56,6 +63,9 @@
 
 -(void)viewDidLoad{
     [super viewDidLoad];
+    if (![OLKitePrintSDK cacheTemplates]){
+        [OLProductTemplate deleteCachedTemplates];
+    }
     [OLProductTemplate resetTemplates];
     
 #ifndef OL_NO_ANALYTICS

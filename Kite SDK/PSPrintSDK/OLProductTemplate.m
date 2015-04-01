@@ -35,6 +35,13 @@ static NSMutableArray *templates;
 static NSDate *lastSyncDate;
 static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
 
+@interface OLKitePrintSDK (Private)
+
++ (void)setCacheTemplates:(BOOL)cache;
++ (BOOL)cacheTemplates;
+
+@end
+
 @interface OLProductTemplate ()
 @property (nonatomic, strong) NSDictionary/*<NSString, NSDecimalNumber>*/ *costsByCurrencyCode;
 @end
