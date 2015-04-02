@@ -159,7 +159,7 @@ typedef enum {
 }
 
 - (NSString *) packInfo{
-    if ([[self templateId] hasSuffix:@"_poster"] || [[self templateId] hasPrefix:@"frames_"]){
+    if (self.productTemplate.templateUI == kOLTemplateUIFrame || self.productTemplate.templateUI == kOLTemplateUIFrame || self.quantityToFulfillOrder == 1){
         return @"";
     }
     NSString* packOfString = NSLocalizedString(@"PACK OF", @"Example pack of 22");
