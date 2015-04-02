@@ -9,6 +9,7 @@
 #import "OLProductTemplate.h"
 #import "OLProductTemplateSyncRequest.h"
 #import "OLCountry.h"
+#import "OLKitePrintSDK.h"
 
 static NSString *const kKeyIdentifier = @"co.oceanlabs.pssdk.kKeyIdentifier";
 static NSString *const kKeyName = @"co.oceanlabs.pssdk.kKeyName";
@@ -33,6 +34,13 @@ static NSString *const kKeyClassPhotoURL = @"co.oceanlabs.pssdk.kKeyClassPhotoUR
 static NSMutableArray *templates;
 static NSDate *lastSyncDate;
 static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
+
+@interface OLKitePrintSDK (Private)
+
++ (void)setCacheTemplates:(BOOL)cache;
++ (BOOL)cacheTemplates;
+
+@end
 
 @interface OLProductTemplate ()
 @property (nonatomic, strong) NSDictionary/*<NSString, NSDecimalNumber>*/ *costsByCurrencyCode;
@@ -113,7 +121,9 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
 + (void)saveTemplatesAsLatest:(NSArray *)templates_ {
     templates = [NSMutableArray arrayWithArray:templates_];
     lastSyncDate = [NSDate date];
-    [NSKeyedArchiver archiveRootObject:@[lastSyncDate, templates] toFile:[OLProductTemplate templatesFilePath]];
+    if ([OLKitePrintSDK cacheTemplates]){
+        [NSKeyedArchiver archiveRootObject:@[lastSyncDate, templates] toFile:[OLProductTemplate templatesFilePath]];
+    }
 }
 
 + (NSDate *)lastSyncDate {
