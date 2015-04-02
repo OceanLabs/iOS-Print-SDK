@@ -26,7 +26,6 @@
 @end
 
 @interface OLProductHomeViewController ()
-//@property (nonatomic, strong) NSMutableDictionary *templatesPerClass;
 @property (nonatomic, strong) NSMutableArray *templatesWithProducts;
 @property (nonatomic, strong) UIImageView *topSurpriseImageView;
 @property (nonatomic, strong) UIView *huggleBotSpeechBubble;
