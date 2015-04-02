@@ -79,6 +79,9 @@
 - (UITableViewCell *) tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"caseCell"];
     
+    UIActivityIndicatorView *activity = (UIActivityIndicatorView *)[cell.contentView viewWithTag:41];
+    [activity startAnimating];
+    
     OLProduct *product = (OLProduct *)self.products[indexPath.row];
     
     UIImageView *imageView = (UIImageView *)[cell.contentView viewWithTag:10];
