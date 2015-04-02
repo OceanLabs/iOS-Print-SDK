@@ -361,9 +361,12 @@ static const NSUInteger kInputFieldTag = 99;
 #pragma mark - UITextFieldDelegate methods
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
-    if (textField == self.textFieldEmail) {
+    if (textField == self.textFieldEmail && ([self.kiteDelegate respondsToSelector:@selector(shouldShowPhoneEntryOnCheckoutScreen)] && [self.kiteDelegate shouldShowPhoneEntryOnCheckoutScreen])) {
         [self scrollSectionToVisible:kSectionPhoneNumber];
         [self.textFieldPhone becomeFirstResponder];
+    }
+    else{
+        [textField resignFirstResponder];
     }
     
     return YES;
