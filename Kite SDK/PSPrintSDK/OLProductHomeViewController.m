@@ -26,7 +26,8 @@
 @end
 
 @interface OLProductHomeViewController ()
-@property (nonatomic, strong) NSMutableDictionary *templatesPerClass;
+//@property (nonatomic, strong) NSMutableDictionary *templatesPerClass;
+@property (nonatomic, strong) NSMutableArray *templatesWithProducts;
 @property (nonatomic, strong) UIImageView *topSurpriseImageView;
 @property (nonatomic, strong) UIView *huggleBotSpeechBubble;
 @property (nonatomic, weak) IBOutlet UILabel *huggleBotFriendNameLabel;
@@ -34,26 +35,55 @@
 @property (nonatomic, assign) BOOL startHuggleBotOnViewWillAppear;
 @end
 
+@interface TemplateProductHolder : NSObject
+- (id)initWithTemplateClassName:(NSString *)templateClass;
+@property (nonatomic, copy, readonly) NSString *templateClass;
+@property (nonatomic, strong) NSMutableArray *products;
+@end
+
+@implementation TemplateProductHolder
+- (id)initWithTemplateClassName:(NSString *)templateClass {
+    if (self = [super init]) {
+        self.products = [[NSMutableArray alloc] init];
+        _templateClass = templateClass;
+    }
+    
+    return self;
+}
+
+@end
+
+static TemplateProductHolder *findTemplateProductHolder(NSArray *templatesWithProducts, NSString *templateClass) {
+    for (TemplateProductHolder *holder in templatesWithProducts) {
+        if ([holder.templateClass isEqualToString:templateClass]) {
+            return holder;
+        }
+    }
+    
+    return nil;
+}
+
 @implementation OLProductHomeViewController
 
-- (NSMutableDictionary *)templatesPerClass{
-    if (!_templatesPerClass){
-        _templatesPerClass = [[NSMutableDictionary alloc] init];
+- (NSMutableArray *)templatesWithProducts{
+    if (!_templatesWithProducts){
+        _templatesWithProducts = [[NSMutableArray alloc] init];
         NSArray *allProducts = [OLProduct products];
         for (OLProduct *product in allProducts){
             if (!product.labelColor || product.productTemplate.templateUI == kOLTemplateUINA){
                 continue;
             }
-            if (![[_templatesPerClass allKeys] containsObject:product.productTemplate.templateClass]){
-                [_templatesPerClass setObject:[[NSMutableArray alloc] init] forKey:product.productTemplate.templateClass];
-                [_templatesPerClass[product.productTemplate.templateClass] addObject:product];
+            
+            TemplateProductHolder *holder = findTemplateProductHolder(_templatesWithProducts, product.productTemplate.templateClass);
+            if (holder == nil) {
+                holder = [[TemplateProductHolder alloc] initWithTemplateClassName:product.productTemplate.templateClass];
+                [_templatesWithProducts addObject:holder];
             }
-            else{
-                [_templatesPerClass[product.productTemplate.templateClass] addObject:product];
-            }
+            
+            [holder.products addObject:product];
         }
     }
-    return _templatesPerClass;
+    return _templatesWithProducts;
 }
 
 - (void)viewDidLoad {
@@ -96,15 +126,16 @@
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    OLProduct *product = [[self.templatesPerClass allValues][indexPath.row] firstObject];
-    if (product.productTemplate.templateUI == kOLTemplateUIPoster && [self.templatesPerClass[product.productTemplate.templateClass] count] > 1){
+    TemplateProductHolder *holder = self.templatesWithProducts[indexPath.row];
+    OLProduct *product = [holder.products firstObject];
+    if (product.productTemplate.templateUI == kOLTemplateUIPoster && holder.products.count > 1){
         OLPosterSizeSelectionViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"sizeSelect"];
         vc.assets = self.assets;
         vc.userSelectedPhotos = self.userSelectedPhotos;
         vc.delegate = self.delegate;
         [self.navigationController pushViewController:vc animated:YES];
     }
-    else if ([self.templatesPerClass[product.productTemplate.templateClass] count] > 1 && !(product.productTemplate.templateUI == kOLTemplateUIFrame)){
+    else if (holder.products.count > 1 && !(product.productTemplate.templateUI == kOLTemplateUIFrame)){
         OLProductTypeSelectionViewController *typeVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLTypeSelectionViewController"];
         typeVc.delegate = self.delegate;
         typeVc.assets = self.assets;
@@ -129,7 +160,7 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return [self.templatesPerClass count];
+    return [self.templatesWithProducts count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -139,7 +170,8 @@
     
     UIImageView *cellImageView = (UIImageView *)[cell.contentView viewWithTag:40];
 
-    OLProduct *product = [self.templatesPerClass[[self.templatesPerClass allKeys][indexPath.row]] firstObject];
+    TemplateProductHolder *holder = self.templatesWithProducts[indexPath.row];
+    OLProduct *product = [holder.products firstObject];
     [product setClassImageToImageView:cellImageView];
 
     UILabel *productTypeLabel = (UILabel *)[cell.contentView viewWithTag:300];
