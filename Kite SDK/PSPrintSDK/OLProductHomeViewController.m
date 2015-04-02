@@ -97,7 +97,7 @@
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     OLProduct *product = [[self.templatesPerClass allValues][indexPath.row] firstObject];
-    if (product.productTemplate.templateUI == kOLTemplateUIPoster){
+    if (product.productTemplate.templateUI == kOLTemplateUIPoster && [self.templatesPerClass[product.productTemplate.templateClass] count] > 1){
         OLPosterSizeSelectionViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"sizeSelect"];
         vc.assets = self.assets;
         vc.userSelectedPhotos = self.userSelectedPhotos;

@@ -18,6 +18,7 @@
 #import "OLProductTypeSelectionViewController.h"
 #import "OLSingleImageProductReviewViewController.h"
 #import "OLPhotoSelectionViewController.h"
+#import "OLPosterViewController.h"
 
 @interface OLProduct (Private)
 
@@ -88,25 +89,13 @@
     pageControl.frame = CGRectMake(0, -200, 100, 100);
     
     OLTemplateUI templateClass = self.product.productTemplate.templateUI;
-//    if (templateClass == kOLTemplateClassCase || templateClass == kOLTemplateClassDecal){
-//        self.costLabel.text = [OLProductOverviewViewController minimumPriceForProductClass:templateClass];
-//    }
-//    else{
-        self.costLabel.text = self.product.unitCost;
-//    }
+    self.costLabel.text = self.product.unitCost;
     
-    if (self.product.productTemplate.templateUI == kOLTemplateUIFrame){
+    if (self.product.productTemplate.templateUI == kOLTemplateUIFrame || self.product.productTemplate.templateUI == kOLTemplateUIPoster){
         self.sizeLabel.text = [NSString stringWithFormat:@"%@", self.product.dimensions];
     }
     else{
         self.sizeLabel.text = [NSString stringWithFormat:@"%@\n%@", self.product.packInfo, self.product.dimensions];
-    }
-    
-    if (self.product.productTemplate.templateUI == kOLTemplateUIPoster){
-        self.costLabel.hidden = YES;
-        self.sizeLabel.hidden = YES;
-        self.freePostageLabel.hidden = YES;
-        self.whiteBox.hidden = YES;
     }
     
     if (templateClass == kOLTemplateUICase){
@@ -154,6 +143,13 @@
         vc.delegate = self.delegate;
         vc.product = self.product;
         [self.navigationController pushViewController:vc animated:YES];
+    }
+    else if (self.product.productTemplate.templateUI == kOLTemplateUIPoster){
+        OLPosterViewController *dest = [self.storyboard instantiateViewControllerWithIdentifier:@"p1x1ViewController"];
+        dest.product = self.product;
+        dest.assets = self.assets;
+        dest.userSelectedPhotos = self.userSelectedPhotos;
+        [self.navigationController pushViewController:dest animated:YES];
     }
     else{
         if (![self.delegate respondsToSelector:@selector(kiteControllerShouldAllowUserToAddMorePhotos:)] || [self.delegate kiteControllerShouldAllowUserToAddMorePhotos:[OLKitePrintSDK kiteViewControllerInNavStack:self.navigationController.viewControllers]]){
