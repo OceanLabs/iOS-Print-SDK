@@ -40,7 +40,7 @@
 #endif
 @end
 
-@interface OLSingleImageProductReviewViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UINavigationControllerDelegate, UIActionSheetDelegate,
+@interface OLSingleImageProductReviewViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UINavigationControllerDelegate, UIActionSheetDelegate, UIAlertViewDelegate,
 #ifdef OL_KITE_OFFER_INSTAGRAM
 OLInstagramImagePickerControllerDelegate,
 #endif
@@ -54,6 +54,7 @@ CTAssetsPickerControllerDelegate>
 @property (weak, nonatomic) IBOutlet UIView *containerView;
 @property (weak, nonatomic) IBOutlet UILabel *quantityLabel;
 @property (assign, nonatomic) NSUInteger quantity;
+@property (assign, nonatomic) BOOL downloadedMask;
 
 @property (strong, nonatomic) UIImage *maskImage;
 @property (strong, nonatomic) UIVisualEffectView *visualEffectView;
@@ -67,6 +68,7 @@ CTAssetsPickerControllerDelegate>
 
 -(void)viewDidLoad{
     [super viewDidLoad];
+    self.downloadedMask = NO;
     
 #ifndef OL_NO_ANALYTICS
     [OLAnalytics trackReviewScreenViewed:self.product.productTemplate.name];
@@ -144,22 +146,29 @@ CTAssetsPickerControllerDelegate>
     [self maskWithImage:tempMask targetView:self.imageCropView];
     
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
-    
+    [self downloadMask];
+}
+
+- (void)downloadMask {
     [[SDWebImageManager sharedManager] downloadImageWithURL:self.product.productTemplate.maskImageURL options:SDWebImageHighPriority progress:NULL completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL){
-        
-        [self.containerView removeConstraint:self.maskAspectRatio];
-        NSLayoutConstraint *con = [NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self.containerView attribute:NSLayoutAttributeWidth multiplier:self.product.productTemplate.sizePx.height / self.product.productTemplate.sizePx.width constant:0];
-        [self.containerView addConstraints:@[con]];
-        
-        [self.view setNeedsLayout];
-        [self.view layoutIfNeeded];
-        
-        [self maskWithImage:image targetView:self.imageCropView];
-        self.visualEffectView.hidden = YES;
-        [self.maskActivityIndicator removeFromSuperview];
-        self.maskActivityIndicator = nil;
-        
         [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+        if (error) {
+            UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Oops", @"")  message:NSLocalizedString(@"Failed to download phone case mask. Please check your internet connectivity and try again", @"")  delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", @"") otherButtonTitles:@"Retry", nil];
+            [av show];
+        } else {
+            [self.containerView removeConstraint:self.maskAspectRatio];
+            NSLayoutConstraint *con = [NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self.containerView attribute:NSLayoutAttributeWidth multiplier:self.product.productTemplate.sizePx.height / self.product.productTemplate.sizePx.width constant:0];
+            [self.containerView addConstraints:@[con]];
+            
+            [self.view setNeedsLayout];
+            [self.view layoutIfNeeded];
+            
+            [self maskWithImage:image targetView:self.imageCropView];
+            self.visualEffectView.hidden = YES;
+            self.downloadedMask = YES;
+            [self.maskActivityIndicator removeFromSuperview];
+            self.maskActivityIndicator = nil;
+        }
     }];
 }
 
@@ -216,7 +225,7 @@ CTAssetsPickerControllerDelegate>
 }
 
 -(void) doCheckout{
-    if (!self.imageCropView.image || !self.visualEffectView.hidden){
+    if (!self.imageCropView.image || !self.downloadedMask) {
         return;
     }
     
@@ -592,6 +601,16 @@ CTAssetsPickerControllerDelegate>
 
 - (NSUInteger)supportedInterfaceOrientations {
     return UIInterfaceOrientationMaskPortrait;
+}
+
+#pragma mark - UIAlertViewDelegate methods
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if (buttonIndex == 0) {
+        [self.navigationController popViewControllerAnimated:YES];
+    } else {
+        [self downloadMask];
+    }
 }
 
 @end
