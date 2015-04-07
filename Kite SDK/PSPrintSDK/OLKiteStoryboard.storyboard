@@ -1103,10 +1103,10 @@
             </objects>
             <point key="canvasLocation" x="2617" y="-1228"/>
         </scene>
-        <!--Single Image Product Review View Controller-->
+        <!--Case View Controller-->
         <scene sceneID="RKn-QM-T9w">
             <objects>
-                <viewController storyboardIdentifier="OLSingleImageProductReviewViewController" id="B6a-B5-3aL" customClass="OLSingleImageProductReviewViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="OLSingleImageProductReviewViewController" id="B6a-B5-3aL" customClass="OLCaseViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="xRf-1g-got"/>
                         <viewControllerLayoutGuide type="bottom" id="Mvu-z2-gQf"/>
