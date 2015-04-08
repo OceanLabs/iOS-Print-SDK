@@ -223,11 +223,14 @@ static void *ActionSheetCellKey;
 }
 
 - (void)onUserSelectedPhotoCountChange {
+    NSMutableArray *toRemove = [[NSMutableArray alloc] init];
     for (OLPrintPhoto *printPhoto in self.userDisabledPhotos){
         if (![self.userSelectedPhotos containsObjectIdenticalTo:printPhoto]){
-            [self.userDisabledPhotos removeObject:printPhoto];
+            [toRemove addObject:printPhoto];
         }
     }
+    [self.userDisabledPhotos removeObjectsInArray:toRemove];
+    
     [self updateNoSelectedPhotosView];
     [self updateTitleBasedOnSelectedPhotoQuanitity];
 }
