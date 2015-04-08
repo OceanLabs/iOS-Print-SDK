@@ -191,7 +191,7 @@ static UIColor *deselectedColor;
 }
 
 - (IBAction)pressedContinue {
-    OLPosterViewController *dest = [self.storyboard instantiateViewControllerWithIdentifier:@"p1x1ViewController"];
+    OLPosterViewController *dest = [self.storyboard instantiateViewControllerWithIdentifier:@"OLSingleImageProductReviewViewController"];
     dest.product = self.product;
     dest.assets = self.assets;
     dest.userSelectedPhotos = self.userSelectedPhotos;

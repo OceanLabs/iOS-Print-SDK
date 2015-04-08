@@ -133,7 +133,7 @@
         [self.navigationController pushViewController:frameVc animated:YES];
     }
     else if (self.product.productTemplate.templateUI == kOLTemplateUICase){
-        OLSingleImageProductReviewViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLSingleImageProductReviewViewController"];
+        OLSingleImageProductReviewViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLCaseViewController"];
         vc.assets = self.assets;
         vc.userSelectedPhotos = self.userSelectedPhotos;
         vc.delegate = self.delegate;
@@ -149,7 +149,7 @@
         [self.navigationController pushViewController:vc animated:YES];
     }
     else if (self.product.productTemplate.templateUI == kOLTemplateUIPoster){
-        OLPosterViewController *dest = [self.storyboard instantiateViewControllerWithIdentifier:@"p1x1ViewController"];
+        OLPosterViewController *dest = [self.storyboard instantiateViewControllerWithIdentifier:@"OLSingleImageProductReviewViewController"];
         dest.product = self.product;
         dest.assets = self.assets;
         dest.userSelectedPhotos = self.userSelectedPhotos;
