@@ -198,7 +198,9 @@ static void *ActionSheetCellKey;
 }
 
 - (void)viewWillAppear:(BOOL)animated{
-    [self.collectionView reloadData];
+    if (self.userSelectedPhotos.count > 0){
+        [self.collectionView reloadData];
+    }
 }
 
 - (void)viewDidAppear:(BOOL)animated{
