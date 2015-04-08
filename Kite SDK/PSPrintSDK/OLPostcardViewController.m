@@ -27,7 +27,7 @@
 
 - (void)viewDidLoad{
     [super viewDidLoad];
-    self.postcardBackView = [[UIView alloc] init];
+    self.postcardBackView = [[NSBundle mainBundle] loadNibNamed:@"PostcardBackView" owner:nil options:nil].firstObject;
     self.postcardBackView.backgroundColor = [UIColor blackColor];
     [self.containerView addSubview:self.postcardBackView];
     self.postcardBackView.hidden = YES;

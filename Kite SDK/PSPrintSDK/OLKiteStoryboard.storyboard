@@ -1770,7 +1770,7 @@
                             <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="U64-5e-xk3" secondAttribute="trailing" id="kkD-Yw-8bN"/>
                         </constraints>
                     </view>
-                    <extendedEdge key="edgesForExtendedLayout"/>
+                    <extendedEdge key="edgesForExtendedLayout" top="YES"/>
                     <navigationItem key="navigationItem" id="ZOM-Xv-CG7"/>
                     <connections>
                         <outlet property="containerView" destination="U64-5e-xk3" id="9BC-xC-26W"/>
