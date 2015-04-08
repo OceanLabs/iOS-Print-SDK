@@ -1951,7 +1951,7 @@
                             <constraint firstAttribute="centerX" secondItem="F6s-yG-aS1" secondAttribute="centerX" id="sPn-1Z-8Ts"/>
                         </constraints>
                     </view>
-                    <extendedEdge key="edgesForExtendedLayout"/>
+                    <extendedEdge key="edgesForExtendedLayout" top="YES"/>
                     <navigationItem key="navigationItem" id="sGX-Vh-ezf"/>
                     <connections>
                         <outlet property="containerView" destination="F6s-yG-aS1" id="Gan-vf-O94"/>
