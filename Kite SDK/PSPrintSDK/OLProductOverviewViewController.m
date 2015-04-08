@@ -19,6 +19,7 @@
 #import "OLSingleImageProductReviewViewController.h"
 #import "OLPhotoSelectionViewController.h"
 #import "OLPosterViewController.h"
+#import "OLPostcardViewController.h"
 
 @interface OLProduct (Private)
 
@@ -91,12 +92,7 @@
     OLTemplateUI templateClass = self.product.productTemplate.templateUI;
     self.costLabel.text = self.product.unitCost;
     
-    if (self.product.productTemplate.templateUI == kOLTemplateUIFrame || self.product.productTemplate.templateUI == kOLTemplateUIPoster){
-        self.sizeLabel.text = [NSString stringWithFormat:@"%@", self.product.dimensions];
-    }
-    else{
-        self.sizeLabel.text = [NSString stringWithFormat:@"%@\n%@", self.product.packInfo, self.product.dimensions];
-    }
+    self.sizeLabel.text = [NSString stringWithFormat:@"%@%@", self.product.packInfo, self.product.dimensions];
     
     if (templateClass == kOLTemplateUICase){
         [self.sizeLabel removeFromSuperview];
@@ -138,6 +134,14 @@
     }
     else if (self.product.productTemplate.templateUI == kOLTemplateUICase){
         OLSingleImageProductReviewViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLSingleImageProductReviewViewController"];
+        vc.assets = self.assets;
+        vc.userSelectedPhotos = self.userSelectedPhotos;
+        vc.delegate = self.delegate;
+        vc.product = self.product;
+        [self.navigationController pushViewController:vc animated:YES];
+    }
+    else if (self.product.productTemplate.templateUI == kOLTemplateUIPostcard){
+        OLPostcardViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLPostcardViewController"];
         vc.assets = self.assets;
         vc.userSelectedPhotos = self.userSelectedPhotos;
         vc.delegate = self.delegate;

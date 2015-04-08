@@ -159,11 +159,11 @@ typedef enum {
 }
 
 - (NSString *) packInfo{
-    if (self.productTemplate.templateUI == kOLTemplateUIFrame || self.productTemplate.templateUI == kOLTemplateUIFrame || self.quantityToFulfillOrder == 1){
+    if (self.productTemplate.templateUI == kOLTemplateUIFrame || self.productTemplate.templateUI == kOLTemplateUIPoster || self.productTemplate.templateUI == kOLTemplateUIPostcard || self.quantityToFulfillOrder == 1 || self.quantityToFulfillOrder == 0){
         return @"";
     }
     NSString* packOfString = NSLocalizedString(@"PACK OF", @"Example pack of 22");
-    return [packOfString stringByAppendingFormat:@" %lu", (unsigned long)self.quantityToFulfillOrder];
+    return [packOfString stringByAppendingFormat:@" %lu\n", (unsigned long)self.quantityToFulfillOrder];
 }
 
 - (CGSize) dimensionsInInches{
