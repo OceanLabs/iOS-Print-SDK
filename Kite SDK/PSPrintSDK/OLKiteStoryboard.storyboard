@@ -235,7 +235,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="2196" y="797"/>
+            <point key="canvasLocation" x="2338" y="797"/>
         </scene>
         <!--Product Overview Page Content View Controller-->
         <scene sceneID="0If-qa-Bx3">
@@ -738,7 +738,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hLb-mG-OpM" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2624" y="797"/>
+            <point key="canvasLocation" x="2748" y="797"/>
         </scene>
         <!--Scroll Crop View Controller-->
         <scene sceneID="FtM-aT-ojK">
@@ -788,7 +788,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qG7-3J-9cO" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3149" y="-1228"/>
+            <point key="canvasLocation" x="3280" y="-1220"/>
         </scene>
         <!--Product Type Selection View Controller-->
         <scene sceneID="H5s-DL-bfC">
@@ -1101,7 +1101,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SiN-kc-Q1U" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2617" y="-1228"/>
+            <point key="canvasLocation" x="2748" y="-1220"/>
         </scene>
         <!--Case View Controller-->
         <scene sceneID="RKn-QM-T9w">
@@ -1288,7 +1288,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="2208" y="-1228"/>
+            <point key="canvasLocation" x="2343" y="-1220"/>
         </scene>
         <!--Choose Photos-->
         <scene sceneID="P36-F6-0uT">
@@ -1787,7 +1787,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="2196" y="-1866"/>
+            <point key="canvasLocation" x="2343" y="-1857"/>
         </scene>
     </scenes>
     <resources>
