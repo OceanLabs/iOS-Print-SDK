@@ -20,13 +20,6 @@
 #import "OLPhotoSelectionViewController.h"
 #import "OLPosterViewController.h"
 
-@interface OLProduct (Private)
-
-- (NSDecimalNumber*) unitCostDecimalNumber;
-+ (NSString*) unitCostWithCost:(NSDecimalNumber*)cost;
-
-@end
-
 @interface OLKitePrintSDK (Kite)
 
 + (OLKiteViewController *)kiteViewControllerInNavStack:(NSArray *)viewControllers;
