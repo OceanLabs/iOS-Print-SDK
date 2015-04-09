@@ -38,6 +38,7 @@
 		3D8122EE1A759F42004E7297 /* UIView+RMUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D8122EC1A759F42004E7297 /* UIView+RMUtils.m */; };
 		3D8122F31A75A46D004E7297 /* UIImageView+FadeIn.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D8122F01A75A46D004E7297 /* UIImageView+FadeIn.m */; };
 		3D8122F41A75A46D004E7297 /* UITableViewController+ScreenWidthFactor.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D8122F21A75A46D004E7297 /* UITableViewController+ScreenWidthFactor.m */; };
+		3D8ECA511AD692FA00CFB2C0 /* OLProductGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D8ECA501AD692FA00CFB2C0 /* OLProductGroup.m */; };
 		3DEF0D181A964881000F1E66 /* NSString+Formatting.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DEF0D171A964881000F1E66 /* NSString+Formatting.m */; };
 		3DEF0D1B1A964B4E000F1E66 /* UITextField+Selection.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DEF0D1A1A964B4E000F1E66 /* UITextField+Selection.m */; };
 		CD382E4A18EB7C6300127F95 /* OLJudoPayCard.m in Sources */ = {isa = PBXBuildFile; fileRef = CD382E4818EB7C6300127F95 /* OLJudoPayCard.m */; };
@@ -188,6 +189,8 @@
 		3D8122F01A75A46D004E7297 /* UIImageView+FadeIn.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIImageView+FadeIn.m"; path = "PSPrintSDK/Categories/UIImageView+FadeIn.m"; sourceTree = "<group>"; };
 		3D8122F11A75A46D004E7297 /* UITableViewController+ScreenWidthFactor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UITableViewController+ScreenWidthFactor.h"; path = "PSPrintSDK/Categories/UITableViewController+ScreenWidthFactor.h"; sourceTree = "<group>"; };
 		3D8122F21A75A46D004E7297 /* UITableViewController+ScreenWidthFactor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UITableViewController+ScreenWidthFactor.m"; path = "PSPrintSDK/Categories/UITableViewController+ScreenWidthFactor.m"; sourceTree = "<group>"; };
+		3D8ECA4F1AD692FA00CFB2C0 /* OLProductGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLProductGroup.h; sourceTree = "<group>"; };
+		3D8ECA501AD692FA00CFB2C0 /* OLProductGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLProductGroup.m; sourceTree = "<group>"; };
 		3DEF0D161A964881000F1E66 /* NSString+Formatting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSString+Formatting.h"; path = "PSPrintSDK/Categories/NSString+Formatting.h"; sourceTree = "<group>"; };
 		3DEF0D171A964881000F1E66 /* NSString+Formatting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSString+Formatting.m"; path = "PSPrintSDK/Categories/NSString+Formatting.m"; sourceTree = "<group>"; };
 		3DEF0D191A964B4E000F1E66 /* UITextField+Selection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UITextField+Selection.h"; path = "PSPrintSDK/Categories/UITextField+Selection.h"; sourceTree = "<group>"; };
@@ -568,6 +571,8 @@
 				CD550B181881E1E600782D75 /* OLPrintOrder+History.m */,
 				CD97568C18D8D147007CA090 /* OLProductTemplate.h */,
 				CD97568D18D8D147007CA090 /* OLProductTemplate.m */,
+				3D8ECA4F1AD692FA00CFB2C0 /* OLProductGroup.h */,
+				3D8ECA501AD692FA00CFB2C0 /* OLProductGroup.m */,
 				2E3F96AD1A4967FF005C0EA3 /* OLProduct.h */,
 				2E3F96AE1A4967FF005C0EA3 /* OLProduct.m */,
 				2E3F96B01A49ACF4005C0EA3 /* OLPrintPhoto.h */,
@@ -801,6 +806,7 @@
 			files = (
 				CDE0744B188D7730009ADFA2 /* OLURLDataSource.m in Sources */,
 				2E0A72661A6FB07000BC5AE7 /* OLScrollCropViewController.m in Sources */,
+				3D8ECA511AD692FA00CFB2C0 /* OLProductGroup.m in Sources */,
 				CDA8BF5718D70D0F00D835BB /* OLCheckoutViewController.m in Sources */,
 				3D0D7ACC1AC0C44C00746FC8 /* NSArray+QueryingExtras.m in Sources */,
 				CD97569518E083E3007CA090 /* PrintOrderHistoryViewController.m in Sources */,

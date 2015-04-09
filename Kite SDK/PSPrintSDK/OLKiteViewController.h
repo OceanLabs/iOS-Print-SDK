@@ -28,6 +28,9 @@
 @property (copy, nonatomic) NSString *userEmail; // speed up checkout by prepopulating the users email in the Shipping details if you know it
 @property (copy, nonatomic) NSString *userPhone; // speed up checkout by prepopulating the users phone number in the Shipping details if you know it
 
+// A set of product template_id strings which if present will restrict which products ultimate show up in the product selection journey
+@property (copy, nonatomic) NSArray/*<NSString>*/ *filterProducts;
+
 - (id)initWithAssets:(NSArray *)assets;
 
 @end

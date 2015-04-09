@@ -32,6 +32,21 @@ typedef enum {
     return products;
 }
 
++(NSArray *)productsWithFilters:(NSArray *)templateIds {
+    NSArray *products = [self products];
+    if (!templateIds || templateIds.count == 0) {
+        return products;
+    }
+    
+    NSMutableArray *filteredProducts = [[NSMutableArray alloc] init];
+    for (OLProduct *product in products) {
+        if ([templateIds containsObject:product.templateId]) {
+            [filteredProducts addObject:product];
+        }
+    }
+    return filteredProducts;
+}
+
 - (UIColor *)labelColor{
     return self.productTemplate.labelColor;
 }
