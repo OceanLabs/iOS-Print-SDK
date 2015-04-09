@@ -32,7 +32,7 @@ typedef enum {
     return products;
 }
 
-+(NSArray *)productsWithFilters:(NSSet *)templateIds {
++(NSArray *)productsWithFilters:(NSArray *)templateIds {
     NSArray *products = [self products];
     if (!templateIds || templateIds.count == 0) {
         return products;

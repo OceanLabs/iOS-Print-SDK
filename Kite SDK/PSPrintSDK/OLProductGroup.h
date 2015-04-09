@@ -11,7 +11,7 @@
 @interface OLProductGroup : NSObject
 
 + (NSArray *)groups;
-+ (NSArray *)groupsWithFilters:(NSSet *)templateIds;
++ (NSArray *)groupsWithFilters:(NSArray *)templateIds;
 
 @property (nonatomic, copy, readonly) NSString *templateClass;
 @property (nonatomic, copy, readonly) NSMutableArray *products;

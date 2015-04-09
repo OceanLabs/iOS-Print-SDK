@@ -36,7 +36,7 @@ static OLProductGroup *findGroupWithTemplateClass(NSArray *groups, NSString *tem
     return [self groupsWithFilters:nil];
 }
 
-+ (NSArray *)groupsWithFilters:(NSSet *)templateIds {
++ (NSArray *)groupsWithFilters:(NSArray *)templateIds {
     NSMutableArray *groups = [[NSMutableArray alloc] init];
     NSArray *allProducts = [OLProduct productsWithFilters:templateIds];
     
