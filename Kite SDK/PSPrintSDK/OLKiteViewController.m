@@ -19,6 +19,7 @@
 #import "OLAnalytics.h"
 #import "OLPrintPhoto.h"
 #import "OLProductGroup.h"
+#import "OLCustomNavigationController.h"
 
 static const NSInteger kTagNoProductsAlertView = 99;
 static const NSInteger kTagTemplateSyncFailAlertView = 100;
@@ -152,7 +153,7 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
             vc.userSelectedPhotos = self.userSelectedPhotos;
             vc.delegate = self.delegate;
             vc.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Cancel", @"") style:UIBarButtonItemStylePlain target:self action:@selector(onButtonCancelClicked)];
-            [self fadeToViewController:[[UINavigationController alloc] initWithRootViewController:vc]];
+            [self fadeToViewController:[[OLCustomNavigationController alloc] initWithRootViewController:vc]];
         } else if (group.products.count > 1 && product.productTemplate.templateUI != kOLTemplateUIFrame){
             OLProductTypeSelectionViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLTypeSelectionViewController"];
             vc.filterProducts = self.filterProducts;
@@ -161,7 +162,7 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
             vc.userSelectedPhotos = self.userSelectedPhotos;
             vc.templateClass = product.productTemplate.templateClass;
             vc.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Cancel", @"") style:UIBarButtonItemStylePlain target:self action:@selector(onButtonCancelClicked)];
-            [self fadeToViewController:[[UINavigationController alloc] initWithRootViewController:vc]];
+            [self fadeToViewController:[[OLCustomNavigationController alloc] initWithRootViewController:vc]];
         } else {
             OLProductOverviewViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLProductOverviewViewController"];
             vc.assets = [NSMutableArray arrayWithArray:self.assets];
@@ -169,7 +170,7 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
             vc.product = product;
             vc.delegate = self.delegate;
             vc.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Cancel", @"") style:UIBarButtonItemStylePlain target:self action:@selector(onButtonCancelClicked)];
-            [self fadeToViewController:[[UINavigationController alloc] initWithRootViewController:vc]];
+            [self fadeToViewController:[[OLCustomNavigationController alloc] initWithRootViewController:vc]];
         }
     } else {
         // Launch the product home view controller where the top level groups will be displayed
