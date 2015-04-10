@@ -32,6 +32,21 @@ typedef enum {
     return products;
 }
 
++(NSArray *)productsWithFilters:(NSArray *)templateIds {
+    NSArray *products = [self products];
+    if (!templateIds || templateIds.count == 0) {
+        return products;
+    }
+    
+    NSMutableArray *filteredProducts = [[NSMutableArray alloc] init];
+    for (OLProduct *product in products) {
+        if ([templateIds containsObject:product.templateId]) {
+            [filteredProducts addObject:product];
+        }
+    }
+    return filteredProducts;
+}
+
 - (UIColor *)labelColor{
     return self.productTemplate.labelColor;
 }
@@ -121,33 +136,39 @@ typedef enum {
 
 #pragma mark Product Info
 
-+ (NSString*) unitCostWithCost:(NSDecimalNumber*)cost{
+- (NSString *)currencyCode {
     NSString *code = [OLCountry countryForCurrentLocale].currencyCode;
-    
-    NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
-    [formatter setNumberStyle:NSNumberFormatterCurrencyStyle];
-    [formatter setCurrencyCode:code];
-    return [formatter stringFromNumber:cost];
-}
-
-- (NSString *)unitCost {
-    return [OLProduct unitCostWithCost:[self unitCostDecimalNumber]];
-    
-}
-
-- (NSDecimalNumber*) unitCostDecimalNumber{
     OLProductTemplate *template = [OLProductTemplate templateWithId:self.templateId];
-    
-    NSString *code = [OLCountry countryForCurrentLocale].currencyCode;
     if (![template.currenciesSupported containsObject:code]) {
+        // preferred currency fallback order if users local currency isn't supported: USD, GBP, EUR
+        if ([template.currenciesSupported containsObject:@"USD"]) {
+            code = @"USD";
+        }
+        
         if ([template.currenciesSupported containsObject:@"GBP"]) {
             code = @"GBP";
-        } else {
-            code = [template.currenciesSupported firstObject];
+        }
+        
+        if ([template.currenciesSupported containsObject:@"EUR"]) {
+            code = @"EUR";
         }
     }
     
-    NSDecimalNumber *sheetCost = [template costPerSheetInCurrencyCode:code];
+    return code;
+}
+
+- (NSString *)unitCost {
+    
+    NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
+    [formatter setNumberStyle:NSNumberFormatterCurrencyStyle];
+    [formatter setCurrencyCode:[self currencyCode]];
+    return [formatter stringFromNumber:[self unitCostDecimalNumber]];
+}
+
+- (NSDecimalNumber*) unitCostDecimalNumber {
+    OLProductTemplate *template = [OLProductTemplate templateWithId:self.templateId];
+    
+    NSDecimalNumber *sheetCost = [template costPerSheetInCurrencyCode:[self currencyCode]];
     NSUInteger sheetQuanity = template.quantityPerSheet == 0 ? 1 : template.quantityPerSheet;
     NSUInteger numSheets = (NSUInteger) ceil(self.quantityToFulfillOrder / sheetQuanity);
     NSDecimalNumber *unitCost = [sheetCost decimalNumberByMultiplyingBy:[NSDecimalNumber decimalNumberWithString:[NSString stringWithFormat:@"%lu", (unsigned long)numSheets]]];

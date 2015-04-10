@@ -70,7 +70,7 @@ static UIColor *deselectedColor;
     OLProduct *productA1;
     OLProduct *productA2;
     OLProduct *productA3;
-    for (OLProduct *product in [OLProduct products]){
+    for (OLProduct *product in [OLProduct productsWithFilters:self.filterProducts]){
         if ([product.productTemplate.productCode hasSuffix:@"A1"] && product.productTemplate.quantityPerSheet == 1){
             productA1 = product;
         }

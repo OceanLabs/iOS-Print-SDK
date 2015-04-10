@@ -203,8 +203,10 @@ static NSString *nonNilStr(NSString *str) {
         p[@"Shipping Country Code3"] = nonNilStr(printOrder.shippingAddress.country.codeAlpha3);
     }
     
-    NSDecimalNumber *cost = [printOrder costInCurrency:@"GBP"];
-    p[@"Cost"] = [cost stringValue];
+    if ([printOrder.currenciesSupported containsObject:@"GBP"]) {
+        NSDecimalNumber *cost = [printOrder costInCurrency:@"GBP"];
+        p[@"Cost"] = [cost stringValue];
+    }
     p[@"Job Count"] = [NSString stringWithFormat:@"%lu",  (unsigned long) printOrder.jobs.count];
     
     return p;

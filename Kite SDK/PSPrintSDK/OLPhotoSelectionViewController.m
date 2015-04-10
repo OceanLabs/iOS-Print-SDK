@@ -198,7 +198,9 @@ static void *ActionSheetCellKey;
 }
 
 - (void)viewWillAppear:(BOOL)animated{
-    [self.collectionView reloadData];
+    if (self.userSelectedPhotos.count > 0){
+        [self.collectionView reloadData];
+    }
 }
 
 - (void)viewDidAppear:(BOOL)animated{
@@ -221,11 +223,14 @@ static void *ActionSheetCellKey;
 }
 
 - (void)onUserSelectedPhotoCountChange {
+    NSMutableArray *toRemove = [[NSMutableArray alloc] init];
     for (OLPrintPhoto *printPhoto in self.userDisabledPhotos){
         if (![self.userSelectedPhotos containsObjectIdenticalTo:printPhoto]){
-            [self.userDisabledPhotos removeObject:printPhoto];
+            [toRemove addObject:printPhoto];
         }
     }
+    [self.userDisabledPhotos removeObjectsInArray:toRemove];
+    
     [self updateNoSelectedPhotosView];
     [self updateTitleBasedOnSelectedPhotoQuanitity];
 }
@@ -663,8 +668,9 @@ static void *ActionSheetCellKey;
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     id photo;
-    if (indexPath.row < [self.userSelectedPhotos count]){
-        photo = self.userSelectedPhotos[indexPath.row + indexPath.section * self.product.quantityToFulfillOrder];
+    NSInteger photoIndex = indexPath.row + indexPath.section * self.product.quantityToFulfillOrder;
+    if (photoIndex < [self.userSelectedPhotos count]){
+        photo = self.userSelectedPhotos[photoIndex];
         if ([self.userDisabledPhotos containsObjectIdenticalTo:photo]){
             [self.userDisabledPhotos removeObjectIdenticalTo:photo];
         }
@@ -675,10 +681,10 @@ static void *ActionSheetCellKey;
     
     UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
     UIView *checkmark = [cell viewWithTag:41];
-    checkmark.hidden = [self.userDisabledPhotos containsObjectIdenticalTo:photo] || indexPath.row >= [self.userSelectedPhotos count];
+    checkmark.hidden = [self.userDisabledPhotos containsObjectIdenticalTo:photo] || photoIndex >= [self.userSelectedPhotos count];
     
     UIView *disabled = [cell viewWithTag:42];
-    disabled.hidden = !checkmark.hidden || indexPath.row >= [self.userSelectedPhotos count];
+    disabled.hidden = !checkmark.hidden || photoIndex >= [self.userSelectedPhotos count];
     
     [self updateTitleBasedOnSelectedPhotoQuanitity];
     

@@ -21,13 +21,6 @@
 #import "OLPosterViewController.h"
 #import "OLPostcardViewController.h"
 
-@interface OLProduct (Private)
-
-- (NSDecimalNumber*) unitCostDecimalNumber;
-+ (NSString*) unitCostWithCost:(NSDecimalNumber*)cost;
-
-@end
-
 @interface OLKitePrintSDK (Kite)
 
 + (OLKiteViewController *)kiteViewControllerInNavStack:(NSArray *)viewControllers;
@@ -44,17 +37,6 @@
 @end
 
 @implementation OLProductOverviewViewController
-
-+ (NSString *) minimumPriceForProductClass:(OLTemplateUI)class{
-    double min = DBL_MAX;
-    NSArray *allProducts = [OLProduct products];
-    for (OLProduct *product in allProducts){
-        if (product.productTemplate.templateUI == class && [product.unitCostDecimalNumber doubleValue] < min){
-            min = [product.unitCostDecimalNumber doubleValue];
-        }
-    }
-    return [OLProduct unitCostWithCost:[NSDecimalNumber decimalNumberWithString:[NSString stringWithFormat:@"%f", min]]];
-}
 
 - (void)viewDidLoad {
     [super viewDidLoad];

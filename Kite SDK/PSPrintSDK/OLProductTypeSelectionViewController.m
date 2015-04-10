@@ -32,8 +32,7 @@
 -(NSMutableArray *) products{
     if (!_products){
         _products = [[NSMutableArray alloc] init];
-        NSArray *allProducts = [OLProduct products];
-        _products = [[NSMutableArray alloc] init];
+        NSArray *allProducts = [OLProduct productsWithFilters:self.filterProducts];
         for (OLProduct *product in allProducts){
             if (!product.labelColor || product.productTemplate.templateUI == kOLTemplateUINA){
                 continue;

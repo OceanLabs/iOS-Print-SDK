@@ -17,6 +17,7 @@
 @property (strong, nonatomic) NSArray *productPhotos;
 
 +(NSArray *)products;
++(NSArray *)productsWithFilters:(NSArray *)allowedTemplateIds;
 -(instancetype)initWithTemplate:(OLProductTemplate *)template;
 - (NSUInteger) quantityToFulfillOrder;
 - (NSString *)templateId;
