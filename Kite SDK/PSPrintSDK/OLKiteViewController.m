@@ -239,10 +239,6 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
 
 + (NSString *)storyboardIdentifierForGroupSelected:(OLProductGroup *)group{
     OLProduct *product = [group.products firstObject];
-    /*****
-     * Ugly reminder that if new OLTemplateUI values are added then we need to update below AND in OLProductHomeViewController tableView:didSelectRowAtIndexPath: -- Yuck.
-     * Heck if you're changing the below think carefully as you may need to change OLProductHomeViewController too!
-     *****/
     if (product.productTemplate.templateUI == kOLTemplateUIPoster && group.products.count > 1) {
         return @"sizeSelect";
     }
