@@ -706,6 +706,7 @@
 				ORGANIZATIONNAME = "Deon Botha";
 				TargetAttributes = {
 					CD73BF67186215790009DE03 = {
+						DevelopmentTeam = 52629Y9DP9;
 						SystemCapabilities = {
 							com.apple.OMC = {
 								enabled = 0;
