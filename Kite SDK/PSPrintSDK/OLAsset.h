@@ -15,8 +15,8 @@ typedef void (^GetDataLengthHandler)(long long dataLength, NSError *error);
 typedef void (^GetDataHandler)(NSData *data, NSError *error);
 typedef void (^LoadAssetCompletionHandler)(ALAsset *asset, NSError *error);
 
-static NSString *const kOLMimeTypeJPEG = @"image/jpeg";
-static NSString *const kOLMimeTypePNG  = @"image/png";
+extern NSString *const kOLMimeTypeJPEG;
+extern NSString *const kOLMimeTypePNG;
 
 @protocol OLAssetDataSource <NSObject, NSCoding>
 - (NSString *)mimeType;

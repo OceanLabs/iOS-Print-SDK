@@ -12,10 +12,10 @@
 #import "OLKiteViewController.h"
 @class OLPrintOrder;
 
-NSString *const kOLNotificationUserSuppliedShippingDetails;
-NSString *const kOLNotificationUserCompletedPayment;
-NSString *const kOLNotificationPrintOrderSubmission;
-NSString *const kOLKeyUserInfoPrintOrder;
+extern NSString *const kOLNotificationUserSuppliedShippingDetails;
+extern NSString *const kOLNotificationUserCompletedPayment;
+extern NSString *const kOLNotificationPrintOrderSubmission;
+extern NSString *const kOLKeyUserInfoPrintOrder;
 
 @interface OLCheckoutViewController : UITableViewController
 
