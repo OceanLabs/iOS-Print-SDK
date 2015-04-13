@@ -98,12 +98,13 @@
 }
 
 - (CGFloat) tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    if ([self tableView:tableView numberOfRowsInSection:indexPath.section] == 2){
-        return (self.view.bounds.size.height - 64) / 2;
-    }
-    else{
-        return 233 * [self screenWidthFactor];
-    }
+    return 233;
+//    if ([self tableView:tableView numberOfRowsInSection:indexPath.section] == 2){
+//        return (self.view.bounds.size.height - 64) / 2;
+//    }
+//    else{
+//        return 233 * [self screenWidthFactor];
+//    }
 }
 
 #pragma mark - Autorotate and Orientation Methods

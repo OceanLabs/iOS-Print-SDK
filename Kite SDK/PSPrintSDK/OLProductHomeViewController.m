@@ -8,7 +8,6 @@
 
 #import "OLProductHomeViewController.h"
 #import "OLProductOverviewViewController.h"
-#import "UITableViewController+ScreenWidthFactor.h"
 #import "OLProductTypeSelectionViewController.h"
 #import "OLProductTemplate.h"
 #import "OLProduct.h"
@@ -18,6 +17,7 @@
 #import "OLAnalytics.h"
 #import "OLProductGroup.h"
 #import "NSObject+Utils.h"
+#import "OLCustomNavigationController.h"
 
 @interface OLProduct (Private)
 
@@ -33,7 +33,7 @@
 
 @end
 
-@interface OLProductHomeViewController ()
+@interface OLProductHomeViewController () <UICollectionViewDelegateFlowLayout>
 @property (nonatomic, strong) NSArray *productGroups;
 @property (nonatomic, strong) UIImageView *topSurpriseImageView;
 @property (nonatomic, strong) UIView *huggleBotSpeechBubble;
@@ -60,6 +60,7 @@
 #endif
 
     self.title = NSLocalizedString(@"Print Shop", @"");
+    //self.splitViewController.preferredDisplayMode = UISplitViewControllerDisplayModePrimaryHidden;
 }
 
 
@@ -80,22 +81,38 @@
     }
 }
 
-#pragma mark - UITableViewDelegate Methods
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+    [self.collectionView.collectionViewLayout invalidateLayout];
+}
 
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if ([self tableView:tableView numberOfRowsInSection:indexPath.section] == 2){
-        return (self.view.bounds.size.height - 64) / 2;
+#pragma mark - UICollectionViewDelegate Methods
+
+- (CGSize) collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
+    CGSize screenSize = self.view.bounds.size;
+    if (self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular) {
+        if (screenSize.width > screenSize.height && self.traitCollection.verticalSizeClass == UIUserInterfaceSizeClassRegular){
+            return CGSizeMake(screenSize.width/3 - 0.5, 233);
+        }
+        else{
+            return CGSizeMake(screenSize.width/2 - 0.5, 233);
+        }
     }
     else{
-        return 233 * [self screenWidthFactor];
+        return CGSizeMake(screenSize.width, 233 * screenSize.width / 320.0);
     }
 }
 
--(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    /*****
-     * Ugly reminder that if new OLTemplateUI values are added then we need to update below AND in OLKiteViewController transitionToNextScreen: -- Yuck.
-     * Heck if you're changing the below think carefully as you may need to change OLKiteViewController too!
-     *****/
+//- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+//    if ([self tableView:tableView numberOfRowsInSection:indexPath.section] == 2){
+//        return (self.view.bounds.size.height - 64) / 2;
+//    }
+//    else{
+//        return 233 * [self screenWidthFactor];
+//    }
+//}
+
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
     OLProductGroup *group = self.productGroups[indexPath.row];
     OLProduct *product = [group.products firstObject];
     NSString *identifier = [OLKiteViewController storyboardIdentifierForGroupSelected:group];
@@ -108,23 +125,42 @@
     [vc safePerformSelector:@selector(setTemplateClass:) withObject:product.productTemplate.templateClass];
     [vc safePerformSelector:@selector(setProduct:) withObject:product];
     
+//    OLProductOverviewViewController *overview = [self.storyboard instantiateViewControllerWithIdentifier:@"OLProductOverviewViewController"];
+//    [overview safePerformSelector:@selector(setAssets:) withObject:self.assets];
+//    [overview safePerformSelector:@selector(setUserSelectedPhotos:) withObject:self.userSelectedPhotos];
+//    [overview safePerformSelector:@selector(setDelegate:) withObject:self.delegate];
+//    [overview safePerformSelector:@selector(setFilterProducts:) withObject:self.filterProducts];
+//    [overview safePerformSelector:@selector(setTemplateClass:) withObject:product.productTemplate.templateClass];
+//    [overview safePerformSelector:@selector(setProduct:) withObject:product];
+    
     [self.navigationController pushViewController:vc animated:YES];
+    
+//    self.splitViewController.preferredPrimaryColumnWidthFraction = UISplitViewControllerAutomaticDimension;
+//    self.splitViewController.minimumPrimaryColumnWidth = UISplitViewControllerAutomaticDimension;
+    
+//    [self.splitViewController showDetailViewController:overview sender:self];
+//    self.splitViewController.viewControllers = @[self.navigationController, [[OLCustomNavigationController alloc] initWithRootViewController:overview]];
+    
+//    self.splitViewController.viewControllers = @[self, overview];
+//    self.splitViewController.preferredDisplayMode = UISplitViewControllerDisplayModeAllVisible;
+    
+    
+    
 }
 
-#pragma mark - UITableViewDataSource Methods
+#pragma mark - UICollectionViewDataSource Methods
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
     return 1;
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
     return [self.productGroups count];
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
     static NSString *identifier = @"ProductCell";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
+    UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
     
     UIImageView *cellImageView = (UIImageView *)[cell.contentView viewWithTag:40];
 

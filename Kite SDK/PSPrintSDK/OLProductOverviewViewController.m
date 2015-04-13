@@ -87,11 +87,11 @@
 }
 
 -(void)viewWillAppear:(BOOL)animated{
-    [self.splitViewController setPreferredDisplayMode:UISplitViewControllerDisplayModePrimaryOverlay];
+//    [self.splitViewController setPreferredDisplayMode:UISplitViewControllerDisplayModePrimaryOverlay];
 }
 
 -(void)viewDidAppear:(BOOL)animated{
-    [self.splitViewController setPreferredDisplayMode:UISplitViewControllerDisplayModeAllVisible];
+//    [self.splitViewController setPreferredDisplayMode:UISplitViewControllerDisplayModeAllVisible];
     if (self.navigationController){
         NSMutableArray *navigationStack = self.navigationController.viewControllers.mutableCopy;
         if (navigationStack.count > 1 && [navigationStack[navigationStack.count - 2] isKindOfClass:[OLKiteViewController class]]) {
@@ -128,7 +128,7 @@
         OLFrameOrderReviewViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"FrameOrderReviewViewController"];
         vc.assets = self.assets;
         for (OLProduct *product in products){
-            if (product.productTemplate.templateClass == kOLTemplateUIFrame){
+            if (product.productTemplate.templateUI == kOLTemplateUIFrame){
                 vc.product = product;
             }
         }
@@ -140,7 +140,7 @@
         vc.userSelectedPhotos = self.userSelectedPhotos;
         vc.delegate = self.delegate;
         vc.product = self.product;
-        [self.splitViewController setPreferredDisplayMode:UISplitViewControllerDisplayModePrimaryHidden];
+//        [self.splitViewController setPreferredDisplayMode:UISplitViewControllerDisplayModePrimaryHidden];
         [self.navigationController pushViewController:vc animated:YES];
     }
     else if (self.product.productTemplate.templateUI == kOLTemplateUIPoster){
