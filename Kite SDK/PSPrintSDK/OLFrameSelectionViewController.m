@@ -11,8 +11,12 @@
 #import "OLFrameOrderReviewViewController.h"
 #import "OLProduct.h"
 #import "OLAnalytics.h"
+#import "OLPhotoSelectionViewController.h"
+#import "OLKitePrintSDK.h"
 
-@interface OLFrameSelectionViewController ()
+@interface OLKitePrintSDK (Kite)
+
++ (OLKiteViewController *)kiteViewControllerInNavStack:(NSArray *)viewControllers;
 
 @end
 
@@ -28,77 +32,75 @@
     self.title = NSLocalizedString(@"Choose Frame Style", @"");
 }
 
-
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+- (IBAction)onTapGestureRecognized:(UITapGestureRecognizer *)sender {
     NSArray *products = [OLProduct products];
+    OLProduct *chosenProduct;
     
-    OLFrameOrderReviewViewController *vc = segue.destinationViewController;
-    vc.assets = [self.assets mutableCopy];
-    if ([segue.identifier isEqualToString:@"Selected2x2FrameStyleSegue"]) {
+    if (sender.view.tag == 22) {
         for (OLProduct *product in products){
-            if (product.productTemplate.templateClass == kOLTemplateClassFrame && product.productTemplate.quantityPerSheet == 4){
-                vc.product = product;
+            if (product.productTemplate.templateUI == kOLTemplateUIFrame && product.productTemplate.quantityPerSheet == 4){
+                chosenProduct = product;
             }
         }
-    } else if ([segue.identifier isEqualToString:@"Selected3x3FrameStyleSegue"]) {
+    } else if (sender.view.tag == 33) {
         for (OLProduct *product in products){
-            if (product.productTemplate.templateClass == kOLTemplateClassFrame && product.productTemplate.quantityPerSheet == 9){
-                vc.product = product;
+            if (product.productTemplate.templateUI == kOLTemplateUIFrame && product.productTemplate.quantityPerSheet == 9){
+                chosenProduct = product;
             }
         }
-    } else if ([segue.identifier isEqualToString:@"Selected4x4FrameStyleSegue"]) {
+    } else if (sender.view.tag == 44) {
         for (OLProduct *product in products){
-            if (product.productTemplate.templateClass == kOLTemplateClassFrame && product.productTemplate.quantityPerSheet == 16){
-                vc.product = product;
-            }
-        }
-    }
-    else if ([segue.identifier isEqualToString:@"Selected1x1FrameStyleSegue"]){
-        for (OLProduct *product in products){
-            if (product.productTemplate.templateClass == kOLTemplateClassFrame && product.productTemplate.quantityPerSheet == 1){
-                vc.product = product;
+            if (product.productTemplate.templateUI == kOLTemplateUIFrame && product.productTemplate.quantityPerSheet == 16){
+                chosenProduct = product;
             }
         }
     }
-}
-
-- (IBAction)onTapGestureRecognized:(UITapGestureRecognizer *)sender{
-    NSInteger tag = sender.view.tag;
-    NSArray *products = [OLProduct products];
-    UINavigationController *nvc = [self.storyboard instantiateViewControllerWithIdentifier:@"FrameOrderReviewNavigationViewController"];
-    OLFrameOrderReviewViewController *vc = (OLFrameOrderReviewViewController *)nvc.topViewController;
-    vc.assets = self.assets;
-    if (tag == 22) {
+    else if (sender.view.tag == 11){
         for (OLProduct *product in products){
-            if (product.productTemplate.templateClass == kOLTemplateClassFrame && product.productTemplate.quantityPerSheet == 4){
-                vc.product = product;
-            }
-        }
-    } else if (tag == 33) {
-        for (OLProduct *product in products){
-            if (product.productTemplate.templateClass == kOLTemplateClassFrame && product.productTemplate.quantityPerSheet == 9){
-                vc.product = product;
-            }
-        }
-    } else if (tag == 44) {
-        for (OLProduct *product in products){
-            if (product.productTemplate.templateClass == kOLTemplateClassFrame && product.productTemplate.quantityPerSheet == 16){
-                vc.product = product;
+            if (product.productTemplate.templateUI == kOLTemplateUIFrame && product.productTemplate.quantityPerSheet == 1){
+                chosenProduct = product;
             }
         }
     }
-    else if (tag == 11){
-        for (OLProduct *product in products){
-            if (product.productTemplate.templateClass == kOLTemplateClassFrame && product.productTemplate.quantityPerSheet == 1){
-                vc.product = product;
-            }
-        }
+    
+    if (![self.delegate respondsToSelector:@selector(kiteControllerShouldAllowUserToAddMorePhotos:)] || [self.delegate kiteControllerShouldAllowUserToAddMorePhotos:[OLKitePrintSDK kiteViewControllerInNavStack:self.navigationController.viewControllers]]){
+        OLPhotoSelectionViewController *vc;
+        vc = [self.storyboard instantiateViewControllerWithIdentifier:@"PhotoSelectionViewController"];
+        vc.assets = self.assets;
+        vc.userSelectedPhotos = self.userSelectedPhotos;
+        vc.product = chosenProduct;
+        vc.delegate = self.delegate;
+        [self.navigationController pushViewController:vc animated:YES];
     }
-    [self.splitViewController showDetailViewController:vc sender:self];
+    else{
+        OLFrameOrderReviewViewController *vc;
+        vc = [self.storyboard instantiateViewControllerWithIdentifier:@"FrameOrderReviewViewController"];
+        vc.assets = self.assets;
+        vc.userSelectedPhotos = self.userSelectedPhotos;
+        vc.product = chosenProduct;
+        vc.delegate = self.delegate;
+        [self.navigationController pushViewController:vc animated:YES];
+    }
+    
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return 233 * self.view.bounds.size.width / self.view.bounds.size.width;
+    if ([self tableView:tableView numberOfRowsInSection:indexPath.section] == 2){
+        return (self.view.bounds.size.height - 64) / 2;
+    }
+    else{
+        return 233 * [self screenWidthFactor];
+    }
+}
+
+#pragma mark - Autorotate and Orientation Methods
+
+- (BOOL)shouldAutorotate {
+    return NO;
+}
+
+- (NSUInteger)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskPortrait;
 }
 
 

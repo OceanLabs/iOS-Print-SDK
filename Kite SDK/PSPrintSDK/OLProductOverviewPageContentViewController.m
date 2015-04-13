@@ -12,6 +12,13 @@
 #import "OLProduct.h"
 #import "OLProductOverviewViewController.h"
 
+@interface OLProduct (Private)
+
+-(void)setCoverImageToImageView:(UIImageView *)imageView;
+-(void)setProductPhotography:(NSUInteger)i toImageView:(UIImageView *)imageView;
+
+@end
+
 @interface OLProductOverviewViewController (Private)
 
 - (IBAction)onButtonStartClicked:(UIBarButtonItem *)sender;
@@ -34,6 +41,16 @@
     if ([self.delegate respondsToSelector:@selector(userDidTapOnImage)]){
         [self.delegate userDidTapOnImage];
     }
+}
+
+#pragma mark - Autorotate and Orientation Methods
+
+- (BOOL)shouldAutorotate {
+    return NO;
+}
+
+- (NSUInteger)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskPortrait;
 }
 
 

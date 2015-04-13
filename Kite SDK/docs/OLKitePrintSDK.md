@@ -18,12 +18,6 @@ You can set the environment to be either live or sandbox for testing:
 + (OLKitePrintSDKEnvironment)environment;
 ```
 
-You can also customize the available products. Pass an array of `OLProduct` objects:
-```obj-c
-+ (void)setEnabledProducts:(NSArray *)products;
-```
-If you don't provide an array of products, then by default all active products are available.
-
 `OLProduct` objects can be created by using the template name which you can find in the [Developer Dashboard](https://www.kite.ly) using:
 ```obj-c
 +(OLProduct *) productWithTemplateId:(NSString *)templateId

@@ -38,7 +38,6 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
         NSMutableArray *mutableUserSelectedPhotos = [[NSMutableArray alloc] init];
         for (id asset in self.assets){
             OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
-            printPhoto.serverImageSize = [self.product serverImageSize];
             printPhoto.asset = asset;
             [mutableUserSelectedPhotos addObject:printPhoto];
         }
@@ -185,7 +184,6 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
         [self.extraCopiesOfAssets addObject:@0];
         
         OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
-        printPhoto.serverImageSize = [self.product serverImageSize];
         printPhoto.asset = asset;
         [self.userSelectedPhotos addObject:printPhoto];
     }
@@ -266,7 +264,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     
     UINavigationController *nav = [self.storyboard instantiateViewControllerWithIdentifier:@"CropViewNavigationController"];
     OLScrollCropViewController *cropVc = (id)nav.topViewController;
-    cropVc.enableCircleMask = self.product.productTemplate.templateClass == kOLTemplateClassCircle;
+    cropVc.enableCircleMask = self.product.productTemplate.templateUI == kOLTemplateUICircle;
     cropVc.delegate = self;
     cropVc.aspectRatio = 1;
     if (((OLAsset *)(self.editingPrintPhoto.asset)).assetType == kOLAssetTypeRemoteImageURL){
@@ -312,7 +310,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     UIImageView *cellImage = (UIImageView *)[cell.contentView viewWithTag:10];
     
     if (cellImage){
-        [((OLPrintPhoto*)[self.userSelectedPhotos objectAtIndex:indexPath.row]) setThumbImageIdealSizeForImageView:cellImage];
+        [((OLPrintPhoto*)[self.userSelectedPhotos objectAtIndex:indexPath.row]) setImageIdealSizeForImageView:cellImage highQuality:YES];
     }
     
     UIButton *enhanceButton = (UIButton *)[cell.contentView viewWithTag:11];
@@ -327,7 +325,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     UILabel *countLabel = (UILabel *)[cell.contentView viewWithTag:30];
     [countLabel setText: [NSString stringWithFormat:@"%lu", (unsigned long)(1+[((NSNumber*)[self.extraCopiesOfAssets objectAtIndex:indexPath.row]) integerValue])]];
     
-    if (self.product.productTemplate.templateClass == kOLTemplateClassCircle){
+    if (self.product.productTemplate.templateUI == kOLTemplateUICircle){
         cell.enableMask = YES;
     }
     

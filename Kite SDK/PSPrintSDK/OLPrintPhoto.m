@@ -9,16 +9,19 @@
 #import "OLPrintPhoto.h"
 #import <AssetsLibrary/AssetsLibrary.h>
 #import <SDWebImageManager.h>
+#ifdef OL_KITE_OFFER_INSTAGRAM
+#import <OLInstagramImage.h>
+#endif
 #import "OLAsset+Private.h"
 #import "UIImageView+FadeIn.h"
+
+#ifdef OL_KITE_OFFER_FACEBOOK
+#import <OLFacebookImage.h>
+#endif
 
 static NSString *const kKeyType = @"co.oceanlabs.psprintstudio.kKeyType";
 static NSString *const kKeyAsset = @"co.oceanlabs.psprintstudio.kKeyAsset";
 static NSString *const kKeyCropTransform = @"co.oceanlabs.psprintstudio.kKeyCropTransform";
-static NSString *const kKeyServerImageSize = @"co.oceanlabs.psprintstudio.kKeyServerImageSize";
-
-typedef void (^OLImageEditorImageGetImageCompletionHandler)(UIImage *image);
-typedef void (^OLImageEditorImageGetImageProgressHandler)(float progress);
 
 @implementation ALAsset (isEqual)
 
@@ -40,7 +43,6 @@ typedef void (^OLImageEditorImageGetImageProgressHandler)(float progress);
 
 @interface OLPrintPhoto ()
 @property (nonatomic, strong) ALAssetsLibrary *assetsLibrary;
-@property (nonatomic, assign) CGAffineTransform cropTransform;
 @property (nonatomic, strong) UIImage *cachedCroppedThumbnailImage;
 @end
 
@@ -48,26 +50,9 @@ typedef void (^OLImageEditorImageGetImageProgressHandler)(float progress);
 
 - (id)init {
     if (self = [super init]) {
-        self.cropTransform = CGAffineTransformIdentity;
     }
     
     return self;
-}
-
-- (void)setTransform:(CGAffineTransform)transform {
-    self.cropTransform = transform;
-}
-
-- (CGAffineTransform)transform {
-    return self.cropTransform;
-}
-
-- (BOOL)transformed {
-    return !CGAffineTransformIsIdentity(self.cropTransform);
-}
-
-- (void)setTransformed:(BOOL)transformed {
-    
 }
 
 - (void)setAsset:(id)asset {
@@ -78,15 +63,33 @@ typedef void (^OLImageEditorImageGetImageProgressHandler)(float progress);
     else if ([asset isKindOfClass:[OLAsset class]]){
         _type = kPrintPhotoAssetTypeOLAsset;
     }
+#ifdef OL_KITE_OFFER_INSTAGRAM
+    else if ([asset isKindOfClass:[OLInstagramImage class]]){
+        _type = kPrintPhotoAssetTypeInstagramPhoto;
+    }
+#endif
+#ifdef OL_KITE_OFFER_FACEBOOK
+    else if ([asset isKindOfClass:[OLFacebookImage class]]){
+        _type = kPrintPhotoAssetTypeFacebookPhoto;
+    }
+#endif
+    else {
+        NSAssert(NO, @"Unknown asset type of class: %@", [asset class]);
+    }
 }
 
-- (void) setThumbImageIdealSizeForImageView:(UIImageView *)imageView {
-    if (!CGAffineTransformIsIdentity(self.transform) || self.type == kPrintPhotoAssetTypeALAsset) {
-        if (self.cachedCroppedThumbnailImage) {
+- (void) setImageIdealSizeForImageView:(UIImageView *)imageView highQuality:(BOOL)highQuality{
+    CGSize destSize = highQuality ? imageView.frame.size : CGSizeMake(220.0 / [UIScreen mainScreen].scale, 220.0 / [UIScreen mainScreen].scale);
+    
+    if (self.cachedCroppedThumbnailImage) {
+        if (!(fmax(imageView.frame.size.width, imageView.frame.size.height) * [UIScreen mainScreen].scale > fmax(self.cachedCroppedThumbnailImage.size.width, self.cachedCroppedThumbnailImage.size.height))){
             imageView.image = self.cachedCroppedThumbnailImage;
-        } else {
-            [OLPrintPhoto croppedImageWithEditorImage:self size:CGSizeMake(imageView.frame.size.width * [UIScreen mainScreen].scale, imageView.frame.size.height * [UIScreen mainScreen].scale) progress:nil completion:^(UIImage *image) {
-//                NSAssert([NSThread isMainThread], @"oops assumption about being on the main thread is wrong");
+            return;
+        }
+    }
+    if (self.type == kPrintPhotoAssetTypeALAsset) {
+        if (highQuality){
+            [OLPrintPhoto resizedImageWithEditorImage:self size:destSize progress:nil completion:^(UIImage *image) {
                 self.cachedCroppedThumbnailImage = image;
                 dispatch_async(dispatch_get_main_queue(), ^(void){
                     imageView.image = image;
@@ -94,7 +97,14 @@ typedef void (^OLImageEditorImageGetImageProgressHandler)(float progress);
                 
             }];
         }
-    } else {
+        else{
+            ALAsset *alAsset = (ALAsset *)self.asset;
+            self.cachedCroppedThumbnailImage = [UIImage imageWithCGImage:alAsset.thumbnail];
+            imageView.image = self.cachedCroppedThumbnailImage;
+        }
+        
+    }
+    else {
         if (self.type == kPrintPhotoAssetTypeOLAsset){
             OLAsset *asset = (OLAsset *)self.asset;
             
@@ -102,28 +112,30 @@ typedef void (^OLImageEditorImageGetImageProgressHandler)(float progress);
                 [imageView setAndFadeInImageWithURL:[self.asset imageURL]];
             }
             else if (asset.assetType == kOLAssetTypeALAsset){
-                if (self.cachedCroppedThumbnailImage) {
-                    imageView.image = self.cachedCroppedThumbnailImage;
-                }
-                else {
-                    [asset loadALAssetWithCompletionHandler:^(ALAsset *asset, NSError *error){
-                        OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
-                        printPhoto.asset = asset;
-                        [OLPrintPhoto croppedImageWithEditorImage:printPhoto size:CGSizeMake(imageView.frame.size.width * [UIScreen mainScreen].scale, imageView.frame.size.height * [UIScreen mainScreen].scale) progress:nil completion:^(UIImage *image) {
-                            self.cachedCroppedThumbnailImage = image;
-                            dispatch_async(dispatch_get_main_queue(), ^(void){
-                                imageView.image = image;
-                            });
-                            
-                        }];
+                if (highQuality){
+                [asset loadALAssetWithCompletionHandler:^(ALAsset *asset, NSError *error){
+                    OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
+                    printPhoto.asset = asset;
+                    [OLPrintPhoto resizedImageWithEditorImage:printPhoto size:destSize progress:nil completion:^(UIImage *image) {
+                        self.cachedCroppedThumbnailImage = image;
+                        dispatch_async(dispatch_get_main_queue(), ^(void){
+                            imageView.image = image;
+                        });
+                        
                     }];
+                }];
+                }
+                else{
+                    ALAsset *alAsset = (ALAsset *)self.asset;
+                    self.cachedCroppedThumbnailImage = [UIImage imageWithCGImage:alAsset.thumbnail];
+                    imageView.image = self.cachedCroppedThumbnailImage;
                 }
             }
             else{
                 [asset dataWithCompletionHandler:^(NSData *data, NSError *error){
                     OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
                     printPhoto.asset = [OLAsset assetWithImageAsJPEG:[UIImage imageWithData:data]];
-                    [OLPrintPhoto croppedImageWithEditorImage:printPhoto size:CGSizeMake(imageView.frame.size.width * [UIScreen mainScreen].scale, imageView.frame.size.height * [UIScreen mainScreen].scale) progress:nil completion:^(UIImage *image) {
+                    [OLPrintPhoto resizedImageWithEditorImage:printPhoto size:destSize progress:nil completion:^(UIImage *image) {
                         self.cachedCroppedThumbnailImage = image;
                         dispatch_async(dispatch_get_main_queue(), ^(void){
                             imageView.image = image;
@@ -133,25 +145,17 @@ typedef void (^OLImageEditorImageGetImageProgressHandler)(float progress);
                 }];
             }
         }
-    }
-}
-
-- (void)setThumbImageForImageView:(UIImageView *)imageView {
-    if (!CGAffineTransformIsIdentity(self.transform)) {
-        if (self.cachedCroppedThumbnailImage) {
-            imageView.image = self.cachedCroppedThumbnailImage;
-        } else {
-            [OLPrintPhoto croppedImageWithEditorImage:self size:CGSizeMake(215, 215) progress:nil completion:^(UIImage *image) {
-                NSAssert([NSThread isMainThread], @"oops assumption about being on the main thread is wrong");
-                self.cachedCroppedThumbnailImage = image;
-                imageView.image = image;
-            }];
+#ifdef OL_KITE_OFFER_INSTAGRAM
+        else if (self.type == kPrintPhotoAssetTypeInstagramPhoto) {
+            [imageView setAndFadeInImageWithURL:[self.asset fullURL]];
         }
-    } else {
-        if (self.type == kPrintPhotoAssetTypeALAsset) {
-            ALAsset *asset = (ALAsset *)self.asset;
-            imageView.image = [UIImage imageWithCGImage:asset.thumbnail];
+#endif
+#ifdef OL_KITE_OFFER_FACEBOOK
+        else if (self.type == kPrintPhotoAssetTypeFacebookPhoto){
+            OLFacebookImage *fbImage = self.asset;
+            [imageView setAndFadeInImageWithURL:[fbImage bestURLForSize:destSize]];
         }
+#endif
     }
 }
 
@@ -166,7 +170,24 @@ typedef void (^OLImageEditorImageGetImageProgressHandler)(float progress);
     return retVal;
 }
 
-#pragma mark - OLImageEditorImage protocol methods
+#if defined(OL_KITE_OFFER_INSTAGRAM) || defined(OL_KITE_OFFER_FACEBOOK)
+- (void)downloadFullImageWithProgress:(OLImageEditorImageGetImageProgressHandler)progressHandler completion:(OLImageEditorImageGetImageCompletionHandler)completionHandler {
+    if (progressHandler) progressHandler(0.05f); // small bit of fake inital progress to get progress bars displaying
+    [[SDWebImageManager sharedManager] downloadImageWithURL:[self.asset fullURL] options:0 progress:^(NSInteger receivedSize, NSInteger expectedSize) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (progressHandler) {
+                progressHandler(MAX(0.05f, receivedSize / (float) expectedSize));
+            }
+        });
+    } completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (finished) {
+                if (completionHandler) completionHandler(image);
+            }
+        });
+    }];
+}
+#endif
 
 - (void)getImageWithProgress:(OLImageEditorImageGetImageProgressHandler)progressHandler completion:(OLImageEditorImageGetImageCompletionHandler)completionHandler {
     if (self.type == kPrintPhotoAssetTypeALAsset) {
@@ -176,6 +197,11 @@ typedef void (^OLImageEditorImageGetImageProgressHandler)(float progress);
             completionHandler(image);
         });
     }
+#if defined(OL_KITE_OFFER_INSTAGRAM) || defined(OL_KITE_OFFER_FACEBOOK)
+    else if (self.type == kPrintPhotoAssetTypeFacebookPhoto || self.type == kPrintPhotoAssetTypeInstagramPhoto) {
+        [self downloadFullImageWithProgress:progressHandler completion:completionHandler];
+    }
+#endif
     else if (self.type == kPrintPhotoAssetTypeOLAsset){
         OLAsset *asset = (OLAsset *)self.asset;
         
@@ -243,81 +269,24 @@ typedef void (^OLImageEditorImageGetImageProgressHandler)(float progress);
     }
 }
 
-+ (void)croppedImageWithEditorImage:(OLPrintPhoto *)editorImage size:(CGSize)destSize progress:(OLImageEditorImageGetImageProgressHandler)progressHandler completion:(OLImageEditorImageGetImageCompletionHandler)completionHandler {
++ (void)resizedImageWithEditorImage:(OLPrintPhoto *)editorImage size:(CGSize)destSize progress:(OLImageEditorImageGetImageProgressHandler)progressHandler completion:(OLImageEditorImageGetImageCompletionHandler)completionHandler {
+    
     [editorImage getImageWithProgress:progressHandler completion:^(UIImage *image) {
-        CGAffineTransform tr = editorImage.transform;
-        CGSize initialCropboxSize;
-        if ([editorImage respondsToSelector:@selector(transformFactor)]){
-            initialCropboxSize = editorImage.transformFactor;
-        }
-        UIImage *croppedImage = [self croppedImageWithImage:image transform:tr size:destSize initialCropboxSize:initialCropboxSize];
+        CGFloat factor = fmax(destSize.height, destSize.width) / fmin(image.size.width,image.size.height);
+        factor *= [UIScreen mainScreen].scale;
+        
+        UIImage *croppedImage = [self resizedImageWithImage:image size:CGSizeMake(image.size.width * factor, image.size.height * factor)];
         completionHandler(croppedImage);
     }];
 }
 
-+ (UIImage *)croppedImageWithImage:(UIImage *)image transform:(CGAffineTransform)transform size:(CGSize)destSize{
-    return [self croppedImageWithImage:image transform:transform size:destSize initialCropboxSize:CGSizeMake(0, 0)];
-}
-
-+ (UIImage *)croppedImageWithImage:(UIImage *)image transform:(CGAffineTransform)transform size:(CGSize)destSize initialCropboxSize:(CGSize)initialCropboxSize{
-    CGSize sourceImageSize = CGSizeMake(image.size.width * image.scale, image.size.height * image.scale);
-    CGAffineTransform orientationTransform = CGAffineTransformIdentity;
-    [self transform:&orientationTransform andSize:&sourceImageSize forOrientation:image.imageOrientation];
-    
-    // Create a graphics context the size of the bounding rectangle
-    UIImage *cropboxGuideImage = [UIImage imageNamed:@"cropbox_guide"];
-    if (initialCropboxSize.width != 0 && initialCropboxSize.height != 0){
-        UIGraphicsBeginImageContext(initialCropboxSize);
-        [cropboxGuideImage drawInRect:CGRectMake(0, 0, initialCropboxSize.width, initialCropboxSize.height)];
-        cropboxGuideImage = UIGraphicsGetImageFromCurrentImageContext();
-        UIGraphicsEndImageContext();
-    }
++ (UIImage *)resizedImageWithImage:(UIImage *)image size:(CGSize)destSize {
     UIGraphicsBeginImageContext(destSize);
-    [cropboxGuideImage drawInRect:CGRectMake(-destSize.width / 2, -destSize.height / 2, destSize.width, destSize.height)];
-    cropboxGuideImage = UIGraphicsGetImageFromCurrentImageContext();
+    [image drawInRect:CGRectMake(0, 0, destSize.width, destSize.height)];
+    UIImage* scaledImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     
-    
-    CGSize cropboxGuideSize = CGSizeMake(cropboxGuideImage.scale * (cropboxGuideImage.size.width), cropboxGuideImage.scale * (cropboxGuideImage.size.height));
-    //    NSAssert(cropboxGuideSize.width == cropboxGuideSize.height, @"oops only support 1:1 aspect ratio at the moment given we show be showing a square crop box");
-    //    NSAssert(destSize.width == destSize.height, @"oops only support 1:1 aspect ratio at the moment given we show be showing a square crop box");
-    
-    // do the transforms and draw the image
-    UIGraphicsBeginImageContextWithOptions(destSize, /*opaque: */ YES, /*scale: */ 1);
-    CGContextRef context = UIGraphicsGetCurrentContext();
-    
-    CGAffineTransform t = CGAffineTransformMakeScale(destSize.width / cropboxGuideSize.width, destSize.height / cropboxGuideSize.height);
-    t = CGAffineTransformTranslate(t, cropboxGuideSize.width / 2, cropboxGuideSize.height / 2);
-    CGContextConcatCTM(context, t);
-    
-    // The transform matrix applied to the image is in points and so we need to convert it to pixels. Multiply by the screen scale to do
-    // this.
-    CGFloat screenScale = [[UIScreen mainScreen] scale];
-    CGContextConcatCTM(context, CGAffineTransformMakeScale(screenScale, screenScale));
-    CGContextConcatCTM(context, transform);
-    CGContextConcatCTM(context, CGAffineTransformMakeScale(1 / screenScale, - 1 / screenScale));
-    
-    CGContextConcatCTM(context, orientationTransform);
-    
-    // scale image to aspect fill initial crop box
-    CGFloat imgWidth = sourceImageSize.width;
-    CGFloat imgHeight = sourceImageSize.height;
-    CGFloat imageToCropboxScale = 1;
-    CGFloat xScale = 1;
-    CGFloat yScale = 1;
-    
-    xScale = cropboxGuideSize.width / imgWidth;
-    yScale = cropboxGuideSize.height / imgHeight;
-    imageToCropboxScale = fmax(xScale, yScale);
-    
-    imgWidth *= imageToCropboxScale;
-    imgHeight *= imageToCropboxScale;
-    CGContextDrawImage(context, CGRectMake(-imgWidth / 2, -imgHeight / 2, imgWidth, imgHeight), image.CGImage);
-    
-    UIImage *imageCopy = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    
-    return imageCopy;
+    return scaledImage;
 }
 
 
@@ -332,7 +301,18 @@ typedef void (^OLImageEditorImageGetImageProgressHandler)(float progress);
         dispatch_async(dispatch_get_main_queue(), ^{
             handler([self.asset defaultRepresentation].size, nil);
         });
-    }  else if (self.type == kPrintPhotoAssetTypeOLAsset){
+    }
+#if defined(OL_KITE_OFFER_INSTAGRAM) || defined(OL_KITE_OFFER_FACEBOOK)
+    else if (self.type == kPrintPhotoAssetTypeInstagramPhoto || self.type == kPrintPhotoAssetTypeFacebookPhoto){
+        [[SDWebImageManager sharedManager] downloadImageWithURL:[self.asset fullURL] options:0 progress:NULL completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
+            if (finished) {
+                NSUInteger length = UIImageJPEGRepresentation(image, 0.7).length;
+                handler(length, error);
+            }
+        }];
+    }
+#endif
+    else if (self.type == kPrintPhotoAssetTypeOLAsset){
         [(OLAsset *)self.asset dataLengthWithCompletionHandler:handler];
     }
 }
@@ -349,38 +329,48 @@ typedef void (^OLImageEditorImageGetImageProgressHandler)(float progress);
             }
 
             UIImage *image = [UIImage imageWithCGImage:[rep fullResolutionImage] scale:rep.scale orientation:orientation];
-            handler(UIImageJPEGRepresentation(image, 0.9), nil);
+            handler(UIImageJPEGRepresentation(image, 0.7), nil);
         });
-    } else if (self.type == kPrintPhotoAssetTypeOLAsset){
+    }
+#if defined(OL_KITE_OFFER_INSTAGRAM) || defined(OL_KITE_OFFER_FACEBOOK)
+    else if (self.type == kPrintPhotoAssetTypeFacebookPhoto || self.type == kPrintPhotoAssetTypeInstagramPhoto){
+        [[SDWebImageManager sharedManager] downloadImageWithURL:[self.asset fullURL] options:0 progress:NULL completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
+            if (finished) {
+                if (error) {
+                    handler(nil, error);
+                } else {
+                    NSData *data = UIImageJPEGRepresentation(image, 0.7);
+                    handler(data, error);
+                }
+            }
+        }];
+    }
+#endif
+    else if (self.type == kPrintPhotoAssetTypeOLAsset){
         OLAsset *asset = self.asset;
-        if (CGAffineTransformIsIdentity(self.transform)){
-            [asset dataWithCompletionHandler:handler];
+        if (asset.assetType == kOLAssetTypeRemoteImageURL){
+            [[SDWebImageManager sharedManager] downloadImageWithURL:[asset imageURL]
+                                                            options:0
+                                                           progress:nil
+                                                          completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *url) {
+                                                              if (finished) {
+                                                                  if (error) {
+                                                                      handler(nil, error);
+                                                                  } else {
+                                                                      handler(UIImageJPEGRepresentation(image, 0.7), error);
+                                                                  }
+                                                              }
+                                                          }];
         }
         else{
-            if (asset.assetType == kOLAssetTypeRemoteImageURL){
-                [[SDWebImageManager sharedManager] downloadImageWithURL:[asset imageURL]
-                                                           options:0
-                                                          progress:nil
-                                                         completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *url) {
-                                                             if (finished) {
-                                                                 if (error) {
-                                                                     handler(nil, error);
-                                                                 } else {
-                                                                     handler(UIImageJPEGRepresentation(image, 0.9), error);
-                                                                 }
-                                                             }
-                                                         }];
-            }
-            else{
-                [asset dataWithCompletionHandler:^(NSData *data, NSError *error){
-                    if (error){
-                        handler(nil,error);
-                    }
-                    else{
-                        handler(data, error);
-                    }
-                }];
-            }
+            [asset dataWithCompletionHandler:^(NSData *data, NSError *error){
+                if (error){
+                    handler(nil,error);
+                }
+                else{
+                    handler(data, error);
+                }
+            }];
         }
     }
 }
@@ -403,13 +393,10 @@ typedef void (^OLImageEditorImageGetImageProgressHandler)(float progress);
                           }
                          failureBlock:^(NSError *err) {
                              NSAssert([NSThread isMainThread], @"oops wrong assumption about main thread callback");
-                             NSLog(@"boo, there will likely be a crash at some point in the future...");
                          }];
         } else {
             self.asset = [aDecoder decodeObjectForKey:kKeyAsset];
         }
-        self.cropTransform = [aDecoder decodeCGAffineTransformForKey:kKeyCropTransform];
-        self.serverImageSize = [aDecoder decodeCGSizeForKey:kKeyServerImageSize];
     }
     
     return self;
@@ -417,8 +404,6 @@ typedef void (^OLImageEditorImageGetImageProgressHandler)(float progress);
 
 - (void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeInteger:self.type forKey:kKeyType];
-    [aCoder encodeCGAffineTransform:self.cropTransform forKey:kKeyCropTransform];
-    [aCoder encodeCGSize:self.serverImageSize forKey:kKeyServerImageSize];
     if (self.type == kPrintPhotoAssetTypeALAsset) {
         [aCoder encodeObject:[self.asset valueForProperty:ALAssetPropertyAssetURL] forKey:kKeyAsset];
     } else {

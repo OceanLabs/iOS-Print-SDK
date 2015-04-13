@@ -9,15 +9,25 @@
 #import "OLProductHomeViewController.h"
 #import "OLProductOverviewViewController.h"
 #import "UITableViewController+ScreenWidthFactor.h"
-
+#import "OLProductTypeSelectionViewController.h"
 #import "OLProductTemplate.h"
 #import "OLProduct.h"
 #import "OLKiteViewController.h"
 #import "OLKitePrintSDK.h"
 #import "OLPosterSizeSelectionViewController.h"
 #import "OLAnalytics.h"
+#import "OLProductGroup.h"
+
+@interface OLProduct (Private)
+
+-(void)setCoverImageToImageView:(UIImageView *)imageView;
+-(void)setClassImageToImageView:(UIImageView *)imageView;
+-(void)setProductPhotography:(NSUInteger)i toImageView:(UIImageView *)imageView;
+
+@end
 
 @interface OLProductHomeViewController ()
+@property (nonatomic, strong) NSArray *productGroups;
 @property (nonatomic, strong) UIImageView *topSurpriseImageView;
 @property (nonatomic, strong) UIView *huggleBotSpeechBubble;
 @property (nonatomic, weak) IBOutlet UILabel *huggleBotFriendNameLabel;
@@ -27,41 +37,12 @@
 
 @implementation OLProductHomeViewController
 
-static NSArray *products;
-
-+(NSArray *) products{
-    if (!products){
-        products = [OLKitePrintSDK enabledProducts] ? [OLKitePrintSDK enabledProducts] : [OLProduct products];
-        NSMutableArray *mutableProducts = [products mutableCopy];
-        BOOL haveAtLeastOnePoster = NO;
-        BOOL haveAtLeastOneFrame = NO;
-        for (OLProduct *product in products){
-            if (!product.labelColor){
-                [mutableProducts removeObject:product];
-            }
-            if (product.productTemplate.templateClass == kOLTemplateClassNA){
-                [mutableProducts removeObject:product];
-            }
-            if (product.productTemplate.templateClass == kOLTemplateClassFrame){
-                if (haveAtLeastOneFrame){
-                    [mutableProducts removeObject:product];
-                }
-                else{
-                    haveAtLeastOneFrame = YES;
-                }
-            }
-            if (product.productTemplate.templateClass == kOLTemplateClassPoster){
-                if (haveAtLeastOnePoster){
-                    [mutableProducts removeObject:product];
-                }
-                else{
-                    haveAtLeastOnePoster = YES;
-                }
-            }
-        }
-        products = mutableProducts;
+- (NSArray *)productGroups {
+    if (!_productGroups){
+        _productGroups = [OLProductGroup groupsWithFilters:self.filterProducts];
     }
-    return products;
+    
+    return _productGroups;
 }
 
 - (void)viewDidLoad {
@@ -95,29 +76,47 @@ static NSArray *products;
 #pragma mark - UITableViewDelegate Methods
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return 233 * self.view.bounds.size.width / 320.0;
+    if ([self tableView:tableView numberOfRowsInSection:indexPath.section] == 2){
+        return (self.view.bounds.size.height - 64) / 2;
+    }
+    else{
+        return 233 * [self screenWidthFactor];
+    }
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    OLProduct *product = [OLProductHomeViewController products][indexPath.row];
-    if (product.productTemplate.templateClass == kOLTemplateClassPoster){
-        UINavigationController *vc = (UINavigationController *)[self.storyboard instantiateViewControllerWithIdentifier:@"sizeSelectNavigationController"];
-        ((OLPosterSizeSelectionViewController *)vc.topViewController).assets = self.assets;
-        ((OLPosterSizeSelectionViewController *)vc.topViewController).delegate = self.delegate;
-        [self showDetailViewController:vc sender:nil];
-
-//        [self.navigationController pushViewController:vc animated:YES];
+    /*****
+     * Ugly reminder that if new OLTemplateUI values are added then we need to update below AND in OLKiteViewController transitionToNextScreen: -- Yuck.
+     * Heck if you're changing the below think carefully as you may need to change OLKiteViewController too!
+     *****/
+    OLProductGroup *group = self.productGroups[indexPath.row];
+    OLProduct *product = [group.products firstObject];
+    if (product.productTemplate.templateUI == kOLTemplateUIPoster && group.products.count > 1){
+        OLPosterSizeSelectionViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"sizeSelect"];
+        vc.assets = self.assets;
+        vc.userSelectedPhotos = self.userSelectedPhotos;
+        vc.delegate = self.delegate;
+        [self.navigationController pushViewController:vc animated:YES];
+    }
+    else if (group.products.count > 1 && product.productTemplate.templateUI != kOLTemplateUIFrame){
+        OLProductTypeSelectionViewController *typeVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLTypeSelectionViewController"];
+        typeVc.filterProducts = self.filterProducts;
+        typeVc.delegate = self.delegate;
+        typeVc.assets = self.assets;
+        typeVc.userSelectedPhotos = self.userSelectedPhotos;
+        typeVc.templateClass = product.productTemplate.templateClass;
+        [self.navigationController pushViewController:typeVc animated:YES];
     }
     else{
         UINavigationController *nvc = (UINavigationController *)[self.storyboard instantiateViewControllerWithIdentifier:@"OLProductOverviewNavigationViewController"];
         OLProductOverviewViewController *vc = (OLProductOverviewViewController *)[nvc topViewController];
         vc.assets = self.assets;
+        vc.userSelectedPhotos = self.userSelectedPhotos;
         vc.product = product;
         vc.delegate = self.delegate;
         [self showDetailViewController:nvc sender:nil];
 //        [self.navigationController pushViewController:vc animated:YES];
     }
-    
 }
 
 #pragma mark - UITableViewDataSource Methods
@@ -127,7 +126,7 @@ static NSArray *products;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return [[OLProductHomeViewController products] count];
+    return [self.productGroups count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -136,22 +135,17 @@ static NSArray *products;
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
     
     UIImageView *cellImageView = (UIImageView *)[cell.contentView viewWithTag:40];
-    
-    OLProduct *product = [OLProductHomeViewController products][indexPath.row];
-    [product setCoverImageToImageView:cellImageView];
-    
+
+    OLProductGroup *group = self.productGroups[indexPath.row];
+    OLProduct *product = [group.products firstObject];
+    [product setClassImageToImageView:cellImageView];
+
     UILabel *productTypeLabel = (UILabel *)[cell.contentView viewWithTag:300];
-    if (product.productTemplate.templateClass == kOLTemplateClassPoster){
-        productTypeLabel.text = [NSLocalizedString(@"Posters", @"") uppercaseString];
-    }
-    else if (product.productTemplate.templateClass == kOLTemplateClassFrame){
-        productTypeLabel.text = [NSLocalizedString(@"Frames", @"") uppercaseString];
-    }
-    else{
-        productTypeLabel.text = [product.productTemplate.name uppercaseString];
-    }
+
+    productTypeLabel.text = product.productTemplate.templateClass;
+
     productTypeLabel.backgroundColor = [product labelColor];
-    
+
     UIActivityIndicatorView *activityIndicator = (id)[cell.contentView viewWithTag:41];
     [activityIndicator startAnimating];
     
@@ -161,7 +155,7 @@ static NSArray *products;
 #pragma mark - Autorotate and Orientation Methods
 
 - (BOOL)shouldAutorotate {
-    return YES;
+    return NO;
 }
 
 - (NSUInteger)supportedInterfaceOrientations {

@@ -9,13 +9,14 @@
 #import <Foundation/Foundation.h>
 
 @class ALAsset;
+@class OLPrintPhoto;
 
 typedef void (^GetDataLengthHandler)(long long dataLength, NSError *error);
 typedef void (^GetDataHandler)(NSData *data, NSError *error);
 typedef void (^LoadAssetCompletionHandler)(ALAsset *asset, NSError *error);
 
-static NSString *const kOLMimeTypeJPEG = @"image/jpeg";
-static NSString *const kOLMimeTypePNG  = @"image/png";
+extern NSString *const kOLMimeTypeJPEG;
+extern NSString *const kOLMimeTypePNG;
 
 @protocol OLAssetDataSource <NSObject, NSCoding>
 - (NSString *)mimeType;
@@ -35,6 +36,7 @@ static NSString *const kOLMimeTypePNG  = @"image/png";
 + (OLAsset *)assetWithALAsset:(ALAsset *)asset;
 + (OLAsset *)assetWithDataSource:(id<OLAssetDataSource>)dataSource;
 + (OLAsset *)assetWithURL:(NSURL *)url;
++ (OLAsset *)assetWithPrintPhoto:(OLPrintPhoto *)printPhoto;
 
 @property (nonatomic, readonly) NSString *mimeType;
 

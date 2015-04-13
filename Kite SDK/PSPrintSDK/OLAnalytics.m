@@ -62,7 +62,12 @@ static NSString *nonNilStr(NSString *str) {
         environment = @"Sandbox";
     }
     NSDictionary *info = [[NSBundle mainBundle] infoDictionary];
-    NSString *bundleName = [NSString stringWithFormat:@"%@", [info objectForKey:@"CFBundleDisplayName"]];
+    NSString *bundleName = nil;
+    if ([info objectForKey:@"CFBundleDisplayName"] == nil) {
+         bundleName = [[[NSBundle mainBundle] infoDictionary] objectForKey:(NSString *) kCFBundleNameKey];
+    } else {
+        bundleName = [NSString stringWithFormat:@"%@", [info objectForKey:@"CFBundleDisplayName"]];
+    }
     NSString *appVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"];
     NSString *apiKey = [OLKitePrintSDK apiKey] == nil ? @"Unknown" : [OLKitePrintSDK apiKey];
     NSMutableDictionary *propertiesDict = [@{
@@ -76,7 +81,8 @@ static NSString *nonNilStr(NSString *str) {
                                              @"Screen Height" : @([UIScreen mainScreen].bounds.size.height),
                                              @"Screen Width" : @([UIScreen mainScreen].bounds.size.width),
                                              @"Environment" : environment,
-                                             @"API Key": apiKey
+                                             @"API Key": apiKey,
+                                             @"Kite SDK Version": kOLKiteSDKVersion
                                              } mutableCopy];
     NSDictionary *dict = @{@"event" : eventName,
                            @"properties" : propertiesDict};
@@ -102,6 +108,12 @@ static NSString *nonNilStr(NSString *str) {
 + (void)trackProductTemplateSelectionScreenViewed:(NSString *)productName{
     NSDictionary *dict = [OLAnalytics defaultDictionaryForEventName:@"Template Selection Screen Viewed"];
     [dict[@"properties"] setObject:productName forKey:@"Product Name"];
+    [OLAnalytics sendToMixPanelWithDictionary:dict];
+}
+
++ (void)trackProductTypeSelectionScreenViewedWithTemplateClass:(NSString *)templateClassString{
+    NSDictionary *dict = [OLAnalytics defaultDictionaryForEventName:@"Device Selection Screen Viewed"];
+    [dict[@"properties"] setObject:nonNilStr(templateClassString) forKey:@"Product Class"];
     [OLAnalytics sendToMixPanelWithDictionary:dict];
 }
 
@@ -191,8 +203,10 @@ static NSString *nonNilStr(NSString *str) {
         p[@"Shipping Country Code3"] = nonNilStr(printOrder.shippingAddress.country.codeAlpha3);
     }
     
-    NSDecimalNumber *cost = [printOrder costInCurrency:@"GBP"];
-    p[@"Cost"] = [cost stringValue];
+    if ([printOrder.currenciesSupported containsObject:@"GBP"]) {
+        NSDecimalNumber *cost = [printOrder costInCurrency:@"GBP"];
+        p[@"Cost"] = [cost stringValue];
+    }
     p[@"Job Count"] = [NSString stringWithFormat:@"%lu",  (unsigned long) printOrder.jobs.count];
     
     return p;

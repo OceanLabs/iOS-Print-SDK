@@ -18,12 +18,18 @@
 #import "OLProduct.h"
 #import "OLCircleMaskTableViewCell.h"
 #import "OLAsset+Private.h"
-#import <SDWebImageManager.h>
 #import "OLAnalytics.h"
+#import "OLKitePrintSDK.h"
 #import <CTAssetsPickerController.h>
 
 static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 static const NSUInteger kTagAlertViewDeletePhoto = 98;
+
+@interface OLKitePrintSDK (InternalUtils)
++ (NSString *)userEmail:(UIViewController *)topVC;
++ (NSString *)userPhone:(UIViewController *)topVC;
++ (id<OLKiteDelegate>)kiteDelegate:(UIViewController *)topVC;
+@end
 
 @interface OLOrderReviewViewController () <OLCheckoutDelegate, CTAssetsPickerControllerDelegate, UIAlertViewDelegate>
 
@@ -36,20 +42,6 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
 @end
 
 @implementation OLOrderReviewViewController
-
--(NSMutableArray *) userSelectedPhotos{
-    if (!_userSelectedPhotos){
-        NSMutableArray *mutableUserSelectedPhotos = [[NSMutableArray alloc] init];
-        for (id asset in self.assets){
-            OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
-            printPhoto.serverImageSize = [self.product serverImageSize];
-            printPhoto.asset = asset;
-            [mutableUserSelectedPhotos addObject:printPhoto];
-        }
-        _userSelectedPhotos = mutableUserSelectedPhotos;
-    }
-    return _userSelectedPhotos;
-}
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -187,8 +179,22 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
 
     
     OLCheckoutViewController *vc = [[OLCheckoutViewController alloc] initWithPrintOrder:printOrder];
+    vc.userEmail = [OLKitePrintSDK userEmail:self];
+    vc.userPhone = [OLKitePrintSDK userPhone:self];
+    vc.kiteDelegate = [OLKitePrintSDK kiteDelegate:self];
+    
     
     [self.navigationController pushViewController:vc animated:YES];
+}
+
+- (OLKiteViewController *)kiteViewController {
+    for (UIViewController *vc in self.navigationController.viewControllers) {
+        if ([vc isMemberOfClass:[OLKiteViewController class]]) {
+            return (OLKiteViewController *) vc;
+        }
+    }
+    
+    return nil;
 }
 
 - (void)onUserSelectedPhotoCountChange {
@@ -223,7 +229,6 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
         [self.extraCopiesOfAssets addObject:@0];
         
         OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
-        printPhoto.serverImageSize = [self.product serverImageSize];
         printPhoto.asset = asset;
         [self.userSelectedPhotos addObject:printPhoto];
     }
@@ -235,23 +240,18 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     [self onUserSelectedPhotoCountChange];
 }
 
-- (OLKiteViewController *)kiteViewController {
-    for (UIViewController *vc in self.navigationController.viewControllers) {
-        if ([vc isMemberOfClass:[OLKiteViewController class]]) {
-            return (OLKiteViewController *) vc;
-        }
-    }
-    
-    return nil;
+- (BOOL)shouldShowAddMorePhotos{
+    return NO;
+//    if (![self.delegate respondsToSelector:@selector(kiteControllerShouldAllowUserToAddMorePhotos:)]){
+//        return YES;
+//    }
+//    else{
+//        return [self.delegate kiteControllerShouldAllowUserToAddMorePhotos:[self kiteViewController]];
+//    }
 }
 
-- (BOOL)shouldShowAddMorePhotos{
-    if (![self.delegate respondsToSelector:@selector(kiteControllerShouldShowAddMorePhotosInReview:)]){
-        return YES;
-    }
-    else{
-        return [self.delegate kiteControllerShouldShowAddMorePhotosInReview:[self kiteViewController]];
-    }
+- (CGFloat) productAspectRatio{
+    return self.product.productTemplate.sizeCm.height / self.product.productTemplate.sizeCm.width;
 }
 
 #pragma mark Button Actions
@@ -314,36 +314,33 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     [self updateTitleBasedOnSelectedPhotoQuanitity];
 }
 
-- (IBAction)onButtonEnhanceClicked:(UIButton *)sender {
-    UIView* cellContentView = sender.superview;
+- (IBAction)onButtonEnhanceClicked:(id)sender {
+    UIView* cellContentView;
+    if ([sender isKindOfClass: [UIButton class]]){
+        cellContentView = [(UIButton *)sender superview];
+    }
+    else if ([sender isKindOfClass:[UITapGestureRecognizer class]]){
+        cellContentView = [(UITapGestureRecognizer *)sender view];
+    }
     UIView* cell = cellContentView.superview;
     while (![cell isKindOfClass:[UITableViewCell class]]){
         cell = cell.superview;
     }
     NSIndexPath* indexPath = [self.tableView indexPathForCell:(UITableViewCell*)cell];
     
+    OLPrintPhoto *tempPrintPhoto = [[OLPrintPhoto alloc] init];
+    tempPrintPhoto.asset = self.assets[indexPath.row - 1];
     self.editingPrintPhoto = self.userSelectedPhotos[indexPath.row - 1];
-    self.editingPrintPhoto.asset = self.assets[indexPath.row - 1];
     
     UINavigationController *nav = [self.storyboard instantiateViewControllerWithIdentifier:@"CropViewNavigationController"];
     OLScrollCropViewController *cropVc = (id)nav.topViewController;
-    cropVc.enableCircleMask = self.product.productTemplate.templateClass == kOLTemplateClassCircle;
+    cropVc.enableCircleMask = self.product.productTemplate.templateUI == kOLTemplateUICircle;
     cropVc.delegate = self;
-    cropVc.aspectRatio = 1;
-    if (((OLAsset *)(self.editingPrintPhoto.asset)).assetType == kOLAssetTypeRemoteImageURL){
-        [[SDWebImageManager sharedManager] downloadImageWithURL:[((OLAsset *)(self.editingPrintPhoto.asset)) imageURL] options:0 progress:nil completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *url) {
-            if (finished) {
-                [cropVc setFullImage:image];
-                [self presentViewController:nav animated:YES completion:NULL];
-            }
-        }];
-    }
-    else{
-        [self.editingPrintPhoto dataWithCompletionHandler:^(NSData *data, NSError *error){
-            [cropVc setFullImage:[UIImage imageWithData:data]];
-            [self presentViewController:nav animated:YES completion:NULL];
-        }];
-    }
+    cropVc.aspectRatio = [self productAspectRatio];
+    [tempPrintPhoto getImageWithProgress:NULL completion:^(UIImage *image){
+        [cropVc setFullImage:image];
+        [self presentViewController:nav animated:YES completion:NULL];
+    }];
 }
 
 - (IBAction)onButtonNextClicked:(UIBarButtonItem *)sender {
@@ -383,19 +380,50 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
             cell = [[OLCircleMaskTableViewCell alloc] init];
         }
         
-        UIImageView *cellImage = (UIImageView *)[cell.contentView viewWithTag:10];
-        cellImage.image = nil;
+        UIView *borderView = [cell.contentView viewWithTag:399];
         
-        if (cellImage){
-            [((OLPrintPhoto*)[self.userSelectedPhotos objectAtIndex:indexPath.row-1]) setThumbImageIdealSizeForImageView:cellImage];
-        }
+        UIActivityIndicatorView *activityIndicator = (UIActivityIndicatorView *)[cell.contentView viewWithTag:278];
+        [activityIndicator startAnimating];
+        
+        UIImageView *cellImage = (UIImageView *)[cell.contentView viewWithTag:10];
+        [cellImage removeFromSuperview];
+        
+        cellImage = [[UIImageView alloc] initWithFrame:borderView.frame];
+        cellImage.tag = 10;
+        cellImage.translatesAutoresizingMaskIntoConstraints = NO;
+        cellImage.contentMode = UIViewContentModeScaleAspectFill;
+        cellImage.clipsToBounds = YES;
+        [cell.contentView insertSubview:cellImage aboveSubview:activityIndicator];
+        
+        cellImage.userInteractionEnabled = YES;
+        [cellImage addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onButtonEnhanceClicked:)]];
+        
+        [((OLPrintPhoto*)[self.userSelectedPhotos objectAtIndex:indexPath.row-1]) setImageIdealSizeForImageView:cellImage highQuality:YES];
         
         UILabel *countLabel = (UILabel *)[cell.contentView viewWithTag:30];
         [countLabel setText: [NSString stringWithFormat:@"%lu", (unsigned long)(1+[((NSNumber*)[self.extraCopiesOfAssets objectAtIndex:indexPath.row-1]) integerValue])]];
         
-        if (self.product.productTemplate.templateClass == kOLTemplateClassCircle){
+        if (self.product.productTemplate.templateUI == kOLTemplateUICircle){
             cell.enableMask = YES;
         }
+        
+        UIEdgeInsets b = self.product.productTemplate.imageBorder;
+        
+        NSLayoutConstraint *topCon = [NSLayoutConstraint constraintWithItem:cellImage attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:borderView attribute:NSLayoutAttributeTop multiplier:1 constant:b.top];
+        NSLayoutConstraint *leftCon = [NSLayoutConstraint constraintWithItem:cellImage attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:borderView attribute:NSLayoutAttributeLeft multiplier:1 constant:b.left];
+        NSLayoutConstraint *rightCon = [NSLayoutConstraint constraintWithItem:cellImage attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:borderView attribute:NSLayoutAttributeRight multiplier:1 constant:-b.right];
+        NSLayoutConstraint *bottomCon = [NSLayoutConstraint constraintWithItem:cellImage attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationLessThanOrEqual toItem:borderView attribute:NSLayoutAttributeBottom multiplier:1 constant:-b.bottom];
+        
+        NSLayoutConstraint *aspectRatioCon = [NSLayoutConstraint constraintWithItem:cellImage attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:cellImage attribute:NSLayoutAttributeHeight multiplier:1 constant:0];
+        aspectRatioCon.priority = 750;
+        NSLayoutConstraint *activityCenterXCon = [NSLayoutConstraint constraintWithItem:cellImage attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:activityIndicator attribute:NSLayoutAttributeCenterX multiplier:1 constant:0];
+        NSLayoutConstraint *activityCenterYCon = [NSLayoutConstraint constraintWithItem:cellImage attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:activityIndicator attribute:NSLayoutAttributeCenterY multiplier:1 constant:0];
+        
+        [borderView.superview addConstraints:@[topCon, leftCon, rightCon, bottomCon, activityCenterYCon, activityCenterXCon]];
+        [cellImage addConstraints:@[aspectRatioCon]];
+
+        
+        
         return cell;
     }
     else{
@@ -417,13 +445,13 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
             NSNumber *reviewPhotoCellHeight;
             if (!reviewPhotoCellHeight) {
                 
-                if (self.product.productTemplate.templateClass == kOLTemplateClassPolaroid){
-                    NSUInteger extraBottomBezel = 50 / [self screenWidthFactor];
-                    reviewPhotoCellHeight = @(280 * [self screenWidthFactor] + extraBottomBezel + 40 * [self screenWidthFactor] - 40);
-                }
-                else{
-                    reviewPhotoCellHeight = @(280 * [self screenWidthFactor] + 40 * [self screenWidthFactor] - 40);
-                }
+//                if (self.product.productTemplate.templateUI == kOLTemplateUIPolaroid){
+//                    NSUInteger extraBottomBezel = 50 / [self screenWidthFactor];
+//                    reviewPhotoCellHeight = @(280 * [self screenWidthFactor] + extraBottomBezel + 40 * [self screenWidthFactor] - 40);
+//                }
+//                else{
+                    reviewPhotoCellHeight = @(280 * [self productAspectRatio] * [self screenWidthFactor] + 40 * [self screenWidthFactor] - 40);
+//                }
             }
             return [reviewPhotoCellHeight floatValue] + 69;
         }
@@ -451,6 +479,7 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
 #pragma mark - OLImageEditorViewControllerDelegate methods
 
 -(void)userDidCropImage:(UIImage *)croppedImage{
+    [self.editingPrintPhoto unloadImage];
     self.editingPrintPhoto.asset = [OLAsset assetWithImageAsJPEG:croppedImage];
     
     [self.tableView reloadData];
@@ -484,6 +513,16 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
         return NO;
     }
     return YES;
+}
+
+#pragma mark - Autorotate and Orientation Methods
+
+- (BOOL)shouldAutorotate {
+    return NO;
+}
+
+- (NSUInteger)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskPortrait;
 }
 
 @end

@@ -15,8 +15,17 @@
 #import "OLWhiteSquare.h"
 #import "OLKiteViewController.h"
 #import "OLAnalytics.h"
-#import "OLProductHomeViewController.h"
+#import "OLProductTypeSelectionViewController.h"
+#import "OLSingleImageProductReviewViewController.h"
+#import "OLPhotoSelectionViewController.h"
+#import "OLPosterViewController.h"
 #import "OLFrameOrderReviewViewController.h"
+
+@interface OLKitePrintSDK (Kite)
+
++ (OLKiteViewController *)kiteViewControllerInNavStack:(NSArray *)viewControllers;
+
+@end
 
 @interface OLProductOverviewViewController () <UIPageViewControllerDataSource, OLProductOverviewPageContentViewControllerDelegate>
 @property (strong, nonatomic) UIPageViewController *pageController;
@@ -36,10 +45,10 @@
     [OLAnalytics trackProductDescriptionScreenViewed:self.product.productTemplate.name];
 #endif
     
-    if (self.product.productTemplate.templateClass == kOLTemplateClassPoster){
+    if (self.product.productTemplate.templateUI == kOLTemplateUIPoster){
         self.title = NSLocalizedString(@"Posters", @"");
     }
-    else if (self.product.productTemplate.templateClass == kOLTemplateClassFrame){
+    else if (self.product.productTemplate.templateUI == kOLTemplateUIFrame){
         self.title = NSLocalizedString(@"Frames", @"");
     }
     else{
@@ -62,20 +71,18 @@
     pageControl.backgroundColor = [UIColor clearColor];
     pageControl.frame = CGRectMake(0, -200, 100, 100);
     
+    OLTemplateUI templateClass = self.product.productTemplate.templateUI;
     self.costLabel.text = self.product.unitCost;
     
-    if (self.product.productTemplate.templateClass == kOLTemplateClassFrame){
+    if (self.product.productTemplate.templateUI == kOLTemplateUIFrame || self.product.productTemplate.templateUI == kOLTemplateUIPoster){
         self.sizeLabel.text = [NSString stringWithFormat:@"%@", self.product.dimensions];
     }
     else{
         self.sizeLabel.text = [NSString stringWithFormat:@"%@\n%@", self.product.packInfo, self.product.dimensions];
     }
     
-    if (self.product.productTemplate.templateClass == kOLTemplateClassPoster){
-        self.costLabel.hidden = YES;
-        self.sizeLabel.hidden = YES;
-        self.freePostageLabel.hidden = YES;
-        self.whiteBox.hidden = YES;
+    if (templateClass == kOLTemplateUICase){
+        [self.sizeLabel removeFromSuperview];
     }
 }
 
@@ -97,10 +104,6 @@
     }
 }
 
-- (BOOL)shouldAutorotate {
-    return NO;
-}
-
 - (UIViewController *)viewControllerAtIndex:(NSUInteger)index {
     if (index == NSNotFound || index >= self.product.productPhotos.count) {
         return nil;
@@ -114,9 +117,10 @@
 }
 
 - (IBAction)onButtonStartClicked:(UIBarButtonItem *)sender {
-    if (self.product.productTemplate.templateClass == kOLTemplateClassFrame){
+    if (self.product.productTemplate.templateUI == kOLTemplateUIFrame){
         OLFrameSelectionViewController *frameVc = [self.storyboard instantiateViewControllerWithIdentifier:@"FrameSelectionViewController"];
         frameVc.assets = self.assets;
+        frameVc.userSelectedPhotos = self.userSelectedPhotos;
         frameVc.delegate = self.delegate;
         [(UINavigationController *)[self.splitViewController.viewControllers firstObject] pushViewController:frameVc animated:YES];
         
@@ -124,26 +128,47 @@
         OLFrameOrderReviewViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"FrameOrderReviewViewController"];
         vc.assets = self.assets;
         for (OLProduct *product in products){
-            if (product.productTemplate.templateClass == kOLTemplateClassFrame){
+            if (product.productTemplate.templateClass == kOLTemplateUIFrame){
                 vc.product = product;
             }
         }
         [self.splitViewController showDetailViewController:vc sender:self];
     }
-    else if (self.product.productTemplate.templateClass == kOLTemplateClassPoster){
-        OLPosterSizeSelectionViewController *posterVc = [self.storyboard instantiateViewControllerWithIdentifier:@"sizeSelect"];
-        posterVc.assets = self.assets;
-        posterVc.delegate = self.delegate;
-        [self.splitViewController setPreferredDisplayMode:UISplitViewControllerDisplayModePrimaryHidden];
-        [self.navigationController pushViewController:posterVc animated:YES];
-    }
-    else{
-        OLOrderReviewViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLOrderReviewCollectionViewViewController"];
+    else if (self.product.productTemplate.templateUI == kOLTemplateUICase){
+        OLSingleImageProductReviewViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLSingleImageProductReviewViewController"];
         vc.assets = self.assets;
-        vc.product = self.product;
+        vc.userSelectedPhotos = self.userSelectedPhotos;
         vc.delegate = self.delegate;
+        vc.product = self.product;
         [self.splitViewController setPreferredDisplayMode:UISplitViewControllerDisplayModePrimaryHidden];
         [self.navigationController pushViewController:vc animated:YES];
+    }
+    else if (self.product.productTemplate.templateUI == kOLTemplateUIPoster){
+        OLPosterViewController *dest = [self.storyboard instantiateViewControllerWithIdentifier:@"p1x1ViewController"];
+        dest.product = self.product;
+        dest.assets = self.assets;
+        dest.userSelectedPhotos = self.userSelectedPhotos;
+        [self.navigationController pushViewController:dest animated:YES];
+    }
+    else{
+        if (![self.delegate respondsToSelector:@selector(kiteControllerShouldAllowUserToAddMorePhotos:)] || [self.delegate kiteControllerShouldAllowUserToAddMorePhotos:[OLKitePrintSDK kiteViewControllerInNavStack:self.navigationController.viewControllers]]){
+            OLPhotoSelectionViewController *vc;
+            vc = [self.storyboard instantiateViewControllerWithIdentifier:@"PhotoSelectionViewController"];
+            vc.assets = self.assets;
+            vc.userSelectedPhotos = self.userSelectedPhotos;
+            vc.product = self.product;
+            vc.delegate = self.delegate;
+            [self.navigationController pushViewController:vc animated:YES];
+        }
+        else{
+            OLOrderReviewViewController *vc;
+            vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OrderReviewViewController"];
+            vc.assets = self.assets;
+            vc.userSelectedPhotos = self.userSelectedPhotos;
+            vc.product = self.product;
+            vc.delegate = self.delegate;
+            [self.navigationController pushViewController:vc animated:YES];
+        }
     }
 }
 
@@ -178,6 +203,16 @@
 
 - (NSInteger)presentationIndexForPageViewController:(UIPageViewController *)pageViewController {
     return 0;
+}
+
+#pragma mark - Autorotate and Orientation Methods
+
+- (BOOL)shouldAutorotate {
+    return NO;
+}
+
+- (NSUInteger)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskPortrait;
 }
 
 

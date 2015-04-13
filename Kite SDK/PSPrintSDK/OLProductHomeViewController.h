@@ -13,8 +13,13 @@
 @interface OLProductHomeViewController : UITableViewController
 
 @property (strong, nonatomic) NSMutableArray *assets;
+@property (strong, nonatomic) NSMutableArray *userSelectedPhotos;
 @property (weak, nonatomic) id<OLKiteDelegate> delegate;
 
-+(NSArray *) products;
+@property (copy, nonatomic) NSString *userEmail;
+@property (copy, nonatomic) NSString *userPhone;
+
+// A set of product template_id strings which if present will restrict which products ultimate show up in the product selection journey
+@property (copy, nonatomic) NSArray/*<NSString>*/ *filterProducts;
 
 @end

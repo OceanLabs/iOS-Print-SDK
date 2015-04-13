@@ -17,15 +17,13 @@
 @property (strong, nonatomic) NSArray *productPhotos;
 
 +(NSArray *)products;
++(NSArray *)productsWithFilters:(NSArray *)allowedTemplateIds;
 -(instancetype)initWithTemplate:(OLProductTemplate *)template;
 - (NSUInteger) quantityToFulfillOrder;
 - (NSString *)templateId;
 - (NSString *)unitCost;
 - (NSString *) packInfo;
 - (NSString *) dimensions;
--(CGSize)serverImageSize;
--(void)setCoverImageToImageView:(UIImageView *)imageView;
--(void)setProductPhotography:(NSUInteger)i toImageView:(UIImageView *)imageView;
 +(OLProduct *) productWithTemplateId:(NSString *)templateId;
 
 @end

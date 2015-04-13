@@ -88,7 +88,7 @@ static const NSUInteger kInputFieldTag = 99;
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    if (![self.parentViewController isMemberOfClass:[UINavigationController class]]) {
+    if (![self.parentViewController isKindOfClass:[UINavigationController class]]) {
         [[[UIAlertView alloc] initWithTitle:@"Oops" message:@"OLCheckoutViewController should be part of a UINavigationController stack. Either push the OLCheckoutViewController onto a stack (or make it the rootViewController) or present it modally with OLCheckoutViewController.presentViewControllerFrom:animated:completion:" delegate:nil cancelButtonTitle:nil otherButtonTitles:nil] show];
         return;
     }
@@ -120,7 +120,8 @@ static const NSUInteger kInputFieldTag = 99;
     
     self.title = NSLocalizedStringFromTableInBundle(@"Shipping", @"KitePrintSDK", [OLConstants bundle], @"");
     self.tableView.tableHeaderView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"checkout_progress_indicator"]];
-    self.tableView.tableHeaderView.frame = CGRectMake(0, 0, self.view.frame.size.width, self.tableView.tableHeaderView.frame.size.height * [UIScreen mainScreen].bounds.size.width / 320.0);
+    self.tableView.tableHeaderView.contentMode = UIViewContentModeCenter;
+    self.tableView.tableHeaderView.frame = CGRectMake(0, 0, self.view.frame.size.width, self.tableView.tableHeaderView.frame.size.height);
 
     UITapGestureRecognizer *tgr = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onBackgroundClicked)];
     tgr.cancelsTouchesInView = NO; // allow table cell selection to happen as normal
@@ -153,21 +154,21 @@ static const NSUInteger kInputFieldTag = 99;
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSString *email = [defaults stringForKey:kKeyEmailAddress];
     NSString *phone = [defaults stringForKey:kKeyPhone];
-    if (email && self.textFieldEmail.text.length == 0) {
-        self.textFieldEmail.text = email;
+    if (self.textFieldEmail.text.length == 0) {
+        if (email.length > 0) {
+            self.textFieldEmail.text = email;
+        } else if (self.userEmail.length > 0) {
+            self.textFieldEmail.text = self.userEmail;
+        }
     }
     
-    if (phone && self.textFieldPhone.text.length == 0) {
-        self.textFieldPhone.text = phone;
+    if (self.textFieldPhone.text.length == 0) {
+        if (phone.length > 0) {
+            self.textFieldPhone.text = phone;
+        } else if (self.userPhone.length > 0) {
+            self.textFieldPhone.text = self.userPhone;
+        }
     }
-}
-
-- (BOOL)shouldAutorotate {
-    return NO;
-}
-
-- (NSUInteger)supportedInterfaceOrientations {
-    return UIInterfaceOrientationMaskPortrait;
 }
 
 - (void)onButtonNextClicked {
@@ -237,7 +238,7 @@ static const NSUInteger kInputFieldTag = 99;
         return NO;
     }
     
-    if (self.textFieldPhone.text.length < kMinPhoneNumberLength) {
+    if (self.textFieldPhone.text.length < kMinPhoneNumberLength && (([self.kiteDelegate respondsToSelector:@selector(shouldShowPhoneEntryOnCheckoutScreen)] && [self.kiteDelegate shouldShowPhoneEntryOnCheckoutScreen]) || ![self.kiteDelegate respondsToSelector:@selector(shouldShowPhoneEntryOnCheckoutScreen)])) {
         [self scrollSectionToVisible:kSectionPhoneNumber];
         UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Invalid Phone Number", @"KitePrintSDK", [OLConstants bundle], @"") message:NSLocalizedStringFromTableInBundle(@"Please enter a valid phone number", @"KitePrintSDK", [OLConstants bundle], @"") delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLConstants bundle], @"") otherButtonTitles:nil];
         [av show];
@@ -255,7 +256,7 @@ static const NSUInteger kInputFieldTag = 99;
 #pragma mark - UITableViewDataSource methods
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return kSectionCount;
+    return [self.kiteDelegate respondsToSelector:@selector(shouldShowPhoneEntryOnCheckoutScreen)] && ![self.kiteDelegate shouldShowPhoneEntryOnCheckoutScreen] ? kSectionCount - 1 : kSectionCount;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
@@ -268,7 +269,7 @@ static const NSUInteger kInputFieldTag = 99;
 
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section {
     if (section == kSectionEmailAddress) {
-        return NSLocalizedStringFromTableInBundle(@"We'll send you a confirmation and order updates", @"KitePrintSDK", [OLConstants bundle], @"");
+        return NSLocalizedStringFromTableInBundle(@"We'll send you confirmation and order updates", @"KitePrintSDK", [OLConstants bundle], @"");
     } else if (section == kSectionPhoneNumber) {
         return NSLocalizedStringFromTableInBundle(@"Required by the postal service in case there are any issues during delivery", @"KitePrintSDK", [OLConstants bundle], @"");
     }
@@ -361,9 +362,12 @@ static const NSUInteger kInputFieldTag = 99;
 #pragma mark - UITextFieldDelegate methods
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
-    if (textField == self.textFieldEmail) {
+    if (textField == self.textFieldEmail && ([self.kiteDelegate respondsToSelector:@selector(shouldShowPhoneEntryOnCheckoutScreen)] && [self.kiteDelegate shouldShowPhoneEntryOnCheckoutScreen])) {
         [self scrollSectionToVisible:kSectionPhoneNumber];
         [self.textFieldPhone becomeFirstResponder];
+    }
+    else{
+        [textField resignFirstResponder];
     }
     
     return YES;
@@ -382,12 +386,22 @@ static const NSUInteger kInputFieldTag = 99;
 - (void)addressPicker:(OLAddressPickerController *)picker didFinishPickingAddresses:(NSArray/*<OLAddress>*/ *)addresses {
     self.shippingAddress = addresses[0];
     [self dismissViewControllerAnimated:YES completion:nil];
-    [self.tableView reloadData];
-//    [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:kSectionDeliveryDetails]] withRowAnimation:UITableViewRowAnimationFade];
+//    [self.tableView reloadData];
+    [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:kSectionDeliveryDetails]] withRowAnimation:UITableViewRowAnimationFade];
 }
 
 - (void)addressPickerDidCancelPicking:(OLAddressPickerController *)picker {
     [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+#pragma mark - Autorotate and Orientation Methods
+
+- (BOOL)shouldAutorotate {
+    return NO;
+}
+
+- (NSUInteger)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskPortrait;
 }
 
 

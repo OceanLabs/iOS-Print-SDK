@@ -80,6 +80,19 @@ static id stringOrEmptyString(NSString *str) {
     return self;
 }
 
+- (NSString *)paymentDescription {
+    NSString *description = [(id<OLPrintJob>)[self.jobs firstObject] productName];
+    if (self.jobs.count > 1){
+        description = [description stringByAppendingString:@"& More"];
+    }
+    
+    if (description == nil) {
+        description = @"";
+    }
+    
+    return description;
+}
+
 - (BOOL)printed {
     return self.receipt != nil;
 }
@@ -281,6 +294,10 @@ static id stringOrEmptyString(NSString *str) {
 
     if (self.proofOfPayment) {
         [json setObject:self.proofOfPayment forKey:@"proof_of_payment"];
+    }
+    
+    if (self.currencyCode && self.cost) {
+        [json setObject:@{@"currency" : self.currencyCode, @"amount" : self.cost} forKey:@"customer_payment"];
     }
     
     if (self.promoCode) {

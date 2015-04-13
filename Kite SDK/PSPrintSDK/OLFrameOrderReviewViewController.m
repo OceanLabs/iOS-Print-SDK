@@ -252,7 +252,7 @@ NSInteger margin = 2;
     UIImageView* cellImage = (UIImageView*)[cell.contentView viewWithTag:110];
     
     if (cellImage && !cellImage.image && tableIndexindexPath){
-        [((OLPrintPhoto*)[self.framePhotos objectAtIndex:indexPath.row + (tableIndexindexPath.row-1) * self.product.quantityToFulfillOrder]) setThumbImageIdealSizeForImageView:cellImage];
+        [((OLPrintPhoto*)[self.framePhotos objectAtIndex:indexPath.row + (tableIndexindexPath.row-1) * self.product.quantityToFulfillOrder]) setImageIdealSizeForImageView:cellImage highQuality:YES];
     }
     
     
@@ -295,6 +295,16 @@ NSInteger margin = 2;
     self.editingPrintPhoto.asset = [OLAsset assetWithImageAsJPEG:croppedImage];
     
     [self.tableView reloadData];
+}
+
+#pragma mark - Autorotate and Orientation Methods
+
+- (BOOL)shouldAutorotate {
+    return NO;
+}
+
+- (NSUInteger)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskPortrait;
 }
 
 @end

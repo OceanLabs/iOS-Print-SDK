@@ -53,13 +53,10 @@ Sample Code
     - (void)launchPrintShop:(NSArray *)assetsForPrinting {
         OLKiteViewController *vc = [[OLKiteViewController alloc] initWithAssets:assetsForPrinting];
         [self presentViewController:vc animated:YES completion:NULL];
-        // or push onto nav stack: [self.navigationController pushViewController:vc animated:YES];
-
     }
 
     @end
     ```
-*Note: You can also present the `OLCheckoutViewController` as a modal view controller or  push it onto the navigation stack.*
 
 4. _(Optional)_ You can customize `OLKitePrintSDK` to limit which products are available to the user and provide custom photography for the available products. See [Customizing the `OLKitePrintSDK`](OLKitePrintSDK.md)
 

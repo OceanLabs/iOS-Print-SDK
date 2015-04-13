@@ -12,15 +12,18 @@
 #import "OLKiteViewController.h"
 @class OLPrintOrder;
 
-NSString *const kOLNotificationUserSuppliedShippingDetails;
-NSString *const kOLNotificationUserCompletedPayment;
-NSString *const kOLNotificationPrintOrderSubmission;
-NSString *const kOLKeyUserInfoPrintOrder;
+extern NSString *const kOLNotificationUserSuppliedShippingDetails;
+extern NSString *const kOLNotificationUserCompletedPayment;
+extern NSString *const kOLNotificationPrintOrderSubmission;
+extern NSString *const kOLKeyUserInfoPrintOrder;
 
 @interface OLCheckoutViewController : UITableViewController
 
 @property (weak, nonatomic) id<OLCheckoutDelegate> delegate;
 @property (weak, nonatomic) id<OLKiteDelegate> kiteDelegate;
+
+@property (copy, nonatomic) NSString *userEmail;
+@property (copy, nonatomic) NSString *userPhone;
 
 - (id)initWithPrintOrder:(OLPrintOrder *)printOrder;
 - (id)initWithAPIKey:(NSString *)apiKey environment:(OLKitePrintSDKEnvironment)env printOrder:(OLPrintOrder *)printOrder;

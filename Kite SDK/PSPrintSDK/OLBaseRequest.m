@@ -78,13 +78,27 @@ static NSString *httpMethodString(OLHTTPMethod method) {
         [request setValue:[NSString stringWithFormat:@"%lu", (unsigned long)[request.HTTPBody length]] forHTTPHeaderField:@"Content-Length"];
     }
     
-    [request setValue:[NSString stringWithFormat: @"Ps Print SDK iOS v%@", kOLKiteSDKVersion] forHTTPHeaderField:@"User-Agent"];
+    [request setValue:[NSString stringWithFormat: @"Kite SDK iOS v%@", kOLKiteSDKVersion] forHTTPHeaderField:@"User-Agent"];
+    [request setValue:[[NSBundle mainBundle] bundleIdentifier] forHTTPHeaderField:@"X-App-Bundle-Id"];
+    [request setValue:[self appName] forHTTPHeaderField:@"X-App-Name"];
     for (NSString *key in self.requestHeaders.allKeys) {
         NSString *value = self.requestHeaders[key];
         [request setValue:value forHTTPHeaderField:key];
     }
     
     self.conn = [NSURLConnection connectionWithRequest:request delegate:self];
+}
+
+- (NSString *)appName {
+    NSDictionary *info = [[NSBundle mainBundle] infoDictionary];
+    NSString *bundleName = nil;
+    if ([info objectForKey:@"CFBundleDisplayName"] == nil) {
+        bundleName = [[[NSBundle mainBundle] infoDictionary] objectForKey:(NSString *) kCFBundleNameKey];
+    } else {
+        bundleName = [NSString stringWithFormat:@"%@", [info objectForKey:@"CFBundleDisplayName"]];
+    }
+    
+    return bundleName;
 }
 
 - (void)cancel {
