@@ -391,6 +391,8 @@ CTAssetsPickerControllerDelegate>
             [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"") style:UIAlertActionStyleCancel handler:^(UIAlertAction *action){
                 [ac dismissViewControllerAnimated:YES completion:NULL];
             }]];
+            ac.popoverPresentationController.sourceView = collectionView;
+            ac.popoverPresentationController.sourceRect = [collectionView cellForItemAtIndexPath:indexPath].frame;
             [self presentViewController:ac animated:YES completion:NULL];
         }
         else{
