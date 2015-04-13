@@ -23,6 +23,7 @@
 		2E973EEB1A7A54E200488212 /* OLOrderReviewCollectionViewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E973EEA1A7A54E200488212 /* OLOrderReviewCollectionViewViewController.m */; };
 		2E973EEE1A7A5D0E00488212 /* OLCircleMaskCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E973EED1A7A5D0E00488212 /* OLCircleMaskCollectionViewCell.m */; };
 		2E9965AA1ABC7035007F010F /* OLCustomNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E9965A91ABC7035007F010F /* OLCustomNavigationController.m */; };
+		2EA3FEF41AD7E85700572CD0 /* NSObject+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA3FEF31AD7E85700572CD0 /* NSObject+Utils.m */; };
 		2EA8BEAB1A484CA7008A9248 /* OLKiteStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2EA8BEAA1A484CA7008A9248 /* OLKiteStoryboard.storyboard */; };
 		2EA8BEB81A484FCB008A9248 /* OLProductHomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA8BEAD1A484FCB008A9248 /* OLProductHomeViewController.m */; };
 		2EA8BEB91A484FCB008A9248 /* OLProductOverviewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA8BEAF1A484FCB008A9248 /* OLProductOverviewViewController.m */; };
@@ -157,6 +158,8 @@
 		2E973EED1A7A5D0E00488212 /* OLCircleMaskCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLCircleMaskCollectionViewCell.m; sourceTree = "<group>"; };
 		2E9965A81ABC7035007F010F /* OLCustomNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLCustomNavigationController.h; sourceTree = "<group>"; };
 		2E9965A91ABC7035007F010F /* OLCustomNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLCustomNavigationController.m; sourceTree = "<group>"; };
+		2EA3FEF21AD7E85700572CD0 /* NSObject+Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSObject+Utils.h"; path = "PSPrintSDK/NSObject+Utils.h"; sourceTree = "<group>"; };
+		2EA3FEF31AD7E85700572CD0 /* NSObject+Utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSObject+Utils.m"; path = "PSPrintSDK/NSObject+Utils.m"; sourceTree = "<group>"; };
 		2EA8BEAA1A484CA7008A9248 /* OLKiteStoryboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = OLKiteStoryboard.storyboard; sourceTree = "<group>"; };
 		2EA8BEAC1A484FCB008A9248 /* OLProductHomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLProductHomeViewController.h; sourceTree = "<group>"; };
 		2EA8BEAD1A484FCB008A9248 /* OLProductHomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLProductHomeViewController.m; sourceTree = "<group>"; };
@@ -355,6 +358,8 @@
 				3D8122F01A75A46D004E7297 /* UIImageView+FadeIn.m */,
 				3D8122F11A75A46D004E7297 /* UITableViewController+ScreenWidthFactor.h */,
 				3D8122F21A75A46D004E7297 /* UITableViewController+ScreenWidthFactor.m */,
+				2EA3FEF21AD7E85700572CD0 /* NSObject+Utils.h */,
+				2EA3FEF31AD7E85700572CD0 /* NSObject+Utils.m */,
 			);
 			name = Categories;
 			path = ..;
@@ -845,6 +850,7 @@
 				3DEF0D181A964881000F1E66 /* NSString+Formatting.m in Sources */,
 				CD73BFA41862FC510009DE03 /* OLAddress.m in Sources */,
 				2E9965AA1ABC7035007F010F /* OLCustomNavigationController.m in Sources */,
+				2EA3FEF41AD7E85700572CD0 /* NSObject+Utils.m in Sources */,
 				2EA8BEB91A484FCB008A9248 /* OLProductOverviewViewController.m in Sources */,
 				CD93BB3418785D3B00316492 /* OLAddress+AddressBook.m in Sources */,
 				CD9D6AE91871B5C7001CD1F9 /* OLPrintOrder.m in Sources */,
