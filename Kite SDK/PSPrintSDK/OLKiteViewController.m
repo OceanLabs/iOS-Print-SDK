@@ -104,7 +104,7 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
     }
     
     if (self.isBeingPresented && self.transitionOnViewDidAppear) {
-        [self transitionToNextScreen];
+        [self performSelector:@selector(transitionToNextScreen) withObject:nil afterDelay:0.2];
     }
     
     self.transitionOnViewDidAppear = NO;
