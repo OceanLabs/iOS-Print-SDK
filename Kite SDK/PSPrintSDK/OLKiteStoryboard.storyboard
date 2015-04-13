@@ -284,18 +284,6 @@
             </objects>
             <point key="canvasLocation" x="549" y="1672"/>
         </scene>
-        <!--SplitViewController-->
-        <scene sceneID="4vQ-aZ-lGR">
-            <objects>
-                <splitViewController storyboardIdentifier="SplitViewController" title="SplitViewController" id="m4P-oD-0W3" sceneMemberID="viewController">
-                    <connections>
-                        <segue destination="2So-Cm-Lml" kind="relationship" relationship="masterViewController" id="pmW-B8-G4n"/>
-                    </connections>
-                </splitViewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="1gH-bb-P7F" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-461" y="989"/>
-        </scene>
         <!--Kite View Controller-->
         <scene sceneID="Ayk-NT-sQ7">
             <objects>

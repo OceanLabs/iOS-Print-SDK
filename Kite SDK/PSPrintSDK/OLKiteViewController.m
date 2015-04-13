@@ -137,6 +137,7 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
     
     UIStoryboard *sb = [UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:nil];
     NSString *nextVcNavIdentifier;
+    NSString *detailVcIdentifier = @"OLProductOverviewNavigationViewController";
     OLProduct *product;
     if (groups.count == 0) {
         if ([UIAlertController class]){
@@ -172,17 +173,32 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
     [vc safePerformSelector:@selector(setUserSelectedPhotos:) withObject:self.userSelectedPhotos];
     [vc safePerformSelector:@selector(setTemplateClass:) withObject:product.productTemplate.templateClass];
     [[vc navigationItem] setLeftBarButtonItem:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(dismiss)]];
-    [self fadeToViewController:nav];
     
+     UINavigationController *nvc = [sb instantiateViewControllerWithIdentifier:detailVcIdentifier];
+    [nvc safePerformSelector:@selector(setProduct:) withObject:product];
+    [nvc safePerformSelector:@selector(setDelegate:) withObject:self.delegate];
+    [nvc safePerformSelector:@selector(setUserEmail:) withObject:self.userEmail];
+    [nvc safePerformSelector:@selector(setUserPhone:) withObject:self.userPhone];
+    [nvc safePerformSelector:@selector(setFilterProducts:) withObject:self.filterProducts];
+    [nvc safePerformSelector:@selector(setAssets:) withObject:[self.assets mutableCopy]];
+    [nvc safePerformSelector:@selector(setUserSelectedPhotos:) withObject:self.userSelectedPhotos];
+    [nvc safePerformSelector:@selector(setTemplateClass:) withObject:product.productTemplate.templateClass];
+    
+    [self fadeToViewController:nav detailViewController:nvc];
 }
 
-- (void)fadeToViewController:(UIViewController *)vc {
+- (void)fadeToViewController:(UIViewController *)vc detailViewController:(UIViewController *)detailVc{
+    UISplitViewController *splitVc = [[UISplitViewController alloc] init];
+    splitVc.preferredDisplayMode = UISplitViewControllerDisplayModeAllVisible;
+    splitVc.viewControllers = @[vc];
+    
+    
     CGRect bounds = self.view.bounds;
     bounds.origin.y = CGRectGetMaxY(self.navigationBar.frame);
     UIView *view = [[UIView alloc] initWithFrame:bounds];
     view.backgroundColor = [UIColor whiteColor];
     [vc.view addSubview:view];
-    [self presentViewController:vc animated:NO completion:^(void){
+    [self presentViewController:splitVc animated:NO completion:^(void){
         [UIView animateWithDuration:0.3 animations:^(void){
             view.alpha = 0;
         } completion:^(BOOL b){
@@ -252,13 +268,13 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
 
 #pragma mark - Autorotate and Orientation Methods
 
-- (BOOL)shouldAutorotate {
-    return NO;
-}
-
-- (NSUInteger)supportedInterfaceOrientations {
-    return UIInterfaceOrientationMaskPortrait;
-}
+//- (BOOL)shouldAutorotate {
+//    return NO;
+//}
+//
+//- (NSUInteger)supportedInterfaceOrientations {
+//    return UIInterfaceOrientationMaskPortrait;
+//}
 
 - (void)dealloc{
     [[NSNotificationCenter defaultCenter] removeObserver:self];
