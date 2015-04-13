@@ -31,6 +31,7 @@
 @property (strong, nonatomic) NSNumber *selectedImage;
 @property (assign, nonatomic) BOOL hasShownHelp;
 @property (weak, nonatomic) UIImageView *imageTapped;
+@property (weak, nonatomic) OLPrintPhoto *editingPrintPhoto;
 
 @end
 
@@ -114,24 +115,19 @@
 }
 
 -(void)doCrop{
+    OLPrintPhoto *tempPrintPhoto = [[OLPrintPhoto alloc] init];
+    tempPrintPhoto.asset = self.assets[0];
+    self.editingPrintPhoto = self.userSelectedPhotos[0];
+    
     UINavigationController *nav = [self.storyboard instantiateViewControllerWithIdentifier:@"CropViewNavigationController"];
     OLScrollCropViewController *cropVc = (id)nav.topViewController;
     cropVc.delegate = self;
     cropVc.aspectRatio = [(UIView *)self.imageViews[0] frame].size.height / [(UIView *)self.imageViews[0] frame].size.width;
-    if (((OLAsset *)((OLPrintPhoto *)[self.userSelectedPhotos objectAtIndex:0]).asset).assetType == kOLAssetTypeRemoteImageURL){
-        [[SDWebImageManager sharedManager] downloadImageWithURL:[((OLAsset *)((OLPrintPhoto *)[self.userSelectedPhotos objectAtIndex:0]).asset) imageURL] options:0 progress:nil completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *url) {
-            if (finished) {
-                [cropVc setFullImage:image];
-                [self presentViewController:nav animated:YES completion:NULL];
-            }
-        }];
-    }
-    else{
-        [[self.userSelectedPhotos objectAtIndex:0] dataWithCompletionHandler:^(NSData *data, NSError *error){
-            [cropVc setFullImage:[UIImage imageWithData:data]];
-            [self presentViewController:nav animated:YES completion:NULL];
-        }];
-    }
+    
+    [tempPrintPhoto getImageWithProgress:NULL completion:^(UIImage *image){
+        [cropVc setFullImage:image];
+        [self presentViewController:nav animated:YES completion:NULL];
+    }];
 }
 
 -(void) doCheckout{
@@ -177,9 +173,10 @@
 #pragma mark - OLImageEditorViewControllerDelegate methods
 
 -(void)userDidCropImage:(UIImage *)croppedImage{
-    OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
-    printPhoto.asset = [OLAsset assetWithImageAsJPEG:croppedImage];
-    self.posterPhotos[0] = printPhoto;
+    [self.editingPrintPhoto unloadImage];
+    self.editingPrintPhoto.asset = [OLAsset assetWithImageAsJPEG:croppedImage];
+    
+    self.posterPhotos[0] = self.editingPrintPhoto;
     
     [self reloadImageViews];
     

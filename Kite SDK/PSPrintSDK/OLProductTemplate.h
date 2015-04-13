@@ -10,8 +10,8 @@
 
 typedef void (^TemplateSyncHandler)(NSError *error);
 
-NSString *const kNotificationTemplateSyncComplete;
-NSString *const kNotificationKeyTemplateSyncError;
+extern NSString *const kNotificationTemplateSyncComplete;
+extern NSString *const kNotificationKeyTemplateSyncError;
 
 typedef enum {
     kOLTemplateUINA,

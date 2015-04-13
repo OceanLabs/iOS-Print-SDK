@@ -420,6 +420,7 @@
                                             <nil key="highlightedColor"/>
                                         </label>
                                     </subviews>
+                                    <color key="backgroundColor" red="0.92549019607843142" green="0.93725490196078431" blue="0.94901960784313721" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     <constraints>
                                         <constraint firstItem="65S-WP-jrl" firstAttribute="top" secondItem="MJf-Wl-VDr" secondAttribute="top" constant="6" id="3Ym-r0-qBd"/>
                                         <constraint firstAttribute="trailing" secondItem="65S-WP-jrl" secondAttribute="trailing" constant="8" id="JTh-nv-dUf"/>
