@@ -81,12 +81,13 @@
                             <constraint firstAttribute="centerX" secondItem="QWq-dR-UOh" secondAttribute="centerX" id="adk-DX-gZ9"/>
                             <constraint firstItem="kvO-to-w6m" firstAttribute="trailing" secondItem="vUR-Y7-KCs" secondAttribute="trailing" id="e4o-Y6-mZG"/>
                             <constraint firstItem="zH5-iT-gzI" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" id="lZT-wW-yWe"/>
+                            <constraint firstItem="QWq-dR-UOh" firstAttribute="top" relation="greaterThanOrEqual" secondItem="vUR-Y7-KCs" secondAttribute="bottom" id="nb6-8p-FQl"/>
                             <constraint firstItem="kvO-to-w6m" firstAttribute="height" secondItem="zH5-iT-gzI" secondAttribute="height" id="p87-GQ-3DM"/>
                             <constraint firstItem="kvO-to-w6m" firstAttribute="leading" secondItem="vUR-Y7-KCs" secondAttribute="leading" id="pPV-OU-x9w"/>
                             <constraint firstItem="yCC-yE-an1" firstAttribute="top" secondItem="qcE-Ga-fsi" secondAttribute="bottom" constant="19" id="w4l-94-RAO"/>
                             <constraint firstAttribute="trailing" secondItem="zH5-iT-gzI" secondAttribute="trailing" id="xCf-6l-ayO"/>
                             <constraint firstItem="kvO-to-w6m" firstAttribute="leading" secondItem="zH5-iT-gzI" secondAttribute="leading" id="zBS-8c-yVa"/>
-                            <constraint firstItem="41f-SW-s49" firstAttribute="top" secondItem="QWq-dR-UOh" secondAttribute="bottom" constant="20" id="zaz-Od-gp1"/>
+                            <constraint firstItem="41f-SW-s49" firstAttribute="top" secondItem="QWq-dR-UOh" secondAttribute="bottom" priority="750" constant="20" id="zaz-Od-gp1"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Kite Print SDK" id="ead-1D-CC7">
