@@ -199,25 +199,31 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
 }
 
 - (CGFloat) productAspectRatio{
-    return self.product.productTemplate.sizeCm.height / self.product.productTemplate.sizeCm.width;
+    UIEdgeInsets b = self.product.productTemplate.imageBorder;
+    if (b.top < b.bottom){
+        return 1;
+    }
+    else{
+        return self.product.productTemplate.sizeCm.height / self.product.productTemplate.sizeCm.width;
+    }
 }
 
 #pragma mark Button Actions
 
 - (IBAction)onButtonUpArrowClicked:(UIButton *)sender {
-//    UIView* cellContentView = sender.superview;
-//    UIView* cell = cellContentView.superview;
-//    while (![cell isKindOfClass:[UITableViewCell class]]){
-//        cell = cell.superview;
-//    }
-//    NSIndexPath* indexPath = [self.tableView indexPathForCell:(UITableViewCell*)cell];
-//    
-//    NSUInteger extraCopies = [self.extraCopiesOfAssets[indexPath.row] integerValue] + 1;
-//    self.extraCopiesOfAssets[indexPath.row] = [NSNumber numberWithInteger:extraCopies];
-//    UILabel* countLabel = (UILabel *)[cellContentView viewWithTag:30];
-//    [countLabel setText: [NSString stringWithFormat:@"%lu", (unsigned long)extraCopies + 1]];
-//    
-//    [self updateTitleBasedOnSelectedPhotoQuanitity];
+    UIView* cellContentView = sender.superview;
+    UIView* cell = cellContentView.superview;
+    while (![cell isKindOfClass:[UICollectionViewCell class]]){
+        cell = cell.superview;
+    }
+    NSIndexPath* indexPath = [self.collectionView indexPathForCell:(UICollectionViewCell *)cell];
+    
+    NSUInteger extraCopies = [self.extraCopiesOfAssets[indexPath.row] integerValue] + 1;
+    self.extraCopiesOfAssets[indexPath.row] = [NSNumber numberWithInteger:extraCopies];
+    UILabel* countLabel = (UILabel *)[cellContentView viewWithTag:30];
+    [countLabel setText: [NSString stringWithFormat:@"%lu", (unsigned long)extraCopies + 1]];
+    
+    [self updateTitleBasedOnSelectedPhotoQuanitity];
 }
 
 - (IBAction)onButtonDownArrowClicked:(UIButton *)sender {
@@ -256,32 +262,32 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
 }
 
 - (IBAction)onButtonEnhanceClicked:(id)sender {
-//    UIView* cellContentView;
-//    if ([sender isKindOfClass: [UIButton class]]){
-//        cellContentView = [(UIButton *)sender superview];
-//    }
-//    else if ([sender isKindOfClass:[UITapGestureRecognizer class]]){
-//        cellContentView = [(UITapGestureRecognizer *)sender view];
-//    }
-//    UIView* cell = cellContentView.superview;
-//    while (![cell isKindOfClass:[UITableViewCell class]]){
-//        cell = cell.superview;
-//    }
-//    NSIndexPath* indexPath = [self.tableView indexPathForCell:(UITableViewCell*)cell];
-//    
-//    OLPrintPhoto *tempPrintPhoto = [[OLPrintPhoto alloc] init];
-//    tempPrintPhoto.asset = self.assets[indexPath.row];
-//    self.editingPrintPhoto = self.userSelectedPhotos[indexPath.row];
-//    
-//    UINavigationController *nav = [self.storyboard instantiateViewControllerWithIdentifier:@"CropViewNavigationController"];
-//    OLScrollCropViewController *cropVc = (id)nav.topViewController;
-//    cropVc.enableCircleMask = self.product.productTemplate.templateUI == kOLTemplateUICircle;
-//    cropVc.delegate = self;
-//    cropVc.aspectRatio = [self productAspectRatio];
-//    [tempPrintPhoto getImageWithProgress:NULL completion:^(UIImage *image){
-//        [cropVc setFullImage:image];
-//        [self presentViewController:nav animated:YES completion:NULL];
-//    }];
+    UIView *cellContentView;
+    if ([sender isKindOfClass: [UIButton class]]){
+        cellContentView = [(UIButton *)sender superview];
+    }
+    else if ([sender isKindOfClass:[UITapGestureRecognizer class]]){
+        cellContentView = [(UITapGestureRecognizer *)sender view];
+    }
+    UIView *cell = cellContentView.superview;
+    while (![cell isKindOfClass:[UICollectionViewCell class]]){
+        cell = cell.superview;
+    }
+    NSIndexPath *indexPath = [self.collectionView indexPathForCell:(UICollectionViewCell *)cell];
+    
+    OLPrintPhoto *tempPrintPhoto = [[OLPrintPhoto alloc] init];
+    tempPrintPhoto.asset = self.assets[indexPath.row];
+    self.editingPrintPhoto = self.userSelectedPhotos[indexPath.row];
+    
+    UINavigationController *nav = [self.storyboard instantiateViewControllerWithIdentifier:@"CropViewNavigationController"];
+    OLScrollCropViewController *cropVc = (id)nav.topViewController;
+    cropVc.enableCircleMask = self.product.productTemplate.templateUI == kOLTemplateUICircle;
+    cropVc.delegate = self;
+    cropVc.aspectRatio = [self productAspectRatio];
+    [tempPrintPhoto getImageWithProgress:NULL completion:^(UIImage *image){
+        [cropVc setFullImage:image];
+        [self presentViewController:nav animated:YES completion:NULL];
+    }];
 }
 
 - (IBAction)onButtonNextClicked:(UIBarButtonItem *)sender {
@@ -296,7 +302,7 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     [self onButtonEnhanceClicked:sender];
 }
 
-#pragma mark UITableView data source and delegate methods
+#pragma mark UICollectionView data source and delegate methods
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
     return [self.userSelectedPhotos count];
@@ -358,9 +364,12 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    CGFloat width = 320;
+    UIEdgeInsets b = self.product.productTemplate.imageBorder;
     
-    CGFloat height = 280 * [self productAspectRatio] * 1 + 40 * 1 - 40 + 69;
+    CGFloat width = 320;
+    CGFloat heightForButtons = 69;
+    CGFloat imageHeight = (width - b.right - b.left) * [self productAspectRatio] * 1;
+    CGFloat height = imageHeight + (b.top + b.bottom) * 1 + heightForButtons;
     
     return CGSizeMake(width, height);
 
