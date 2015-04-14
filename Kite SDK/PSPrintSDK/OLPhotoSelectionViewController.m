@@ -337,6 +337,11 @@ static void *ActionSheetCellKey;
     return array;
 }
 
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+    [self.collectionView.collectionViewLayout invalidateLayout];
+}
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     for (OLPrintPhoto *photo in self.userSelectedPhotos) {
@@ -738,16 +743,6 @@ static void *ActionSheetCellKey;
     }
 
     return CGSizeMake(width, height);
-}
-
-#pragma mark - Autorotate and Orientation Methods
-
-- (BOOL)shouldAutorotate {
-    return NO;
-}
-
-- (NSUInteger)supportedInterfaceOrientations {
-    return UIInterfaceOrientationMaskPortrait;
 }
 
 #pragma mark - Storyboard Methods

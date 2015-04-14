@@ -13,10 +13,9 @@
 #import "OLProductPrintJob.h"
 #import "OLConstants.h"
 #import "OLCheckoutDelegate.h"
-#import "UITableViewController+ScreenWidthFactor.h"
 #import "OLProductTemplate.h"
 #import "OLProduct.h"
-#import "OLCircleMaskTableViewCell.h"
+#import "OLCircleMaskCollectionViewCell.h"
 #import "OLAsset+Private.h"
 #import "OLAnalytics.h"
 #import "OLKitePrintSDK.h"
@@ -31,7 +30,7 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
 + (id<OLKiteDelegate>)kiteDelegate:(UIViewController *)topVC;
 @end
 
-@interface OLOrderReviewViewController () <OLCheckoutDelegate, CTAssetsPickerControllerDelegate, UIAlertViewDelegate>
+@interface OLOrderReviewViewController () <OLCheckoutDelegate, UIAlertViewDelegate, UICollectionViewDelegateFlowLayout>
 
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *confirmBarButton;
 @property (weak, nonatomic) OLPrintPhoto *editingPrintPhoto;
@@ -72,27 +71,11 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
                                                                              style:UIBarButtonItemStyleBordered
                                                                             target:nil
                                                                             action:nil];
-    
-    if ([self shouldShowAddMorePhotos]){
-        self.addMorePhotosView = [[UIView alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height - 46 - [[UIApplication sharedApplication] statusBarFrame].size.height - self.navigationController.navigationBar.frame.size.height, self.view.bounds.size.width, 46)];
-        self.addMorePhotosView.backgroundColor = self.tableView.backgroundColor;
-        self.addMorePhotosView.tag = 777;
-        [self.tableView addSubview:self.addMorePhotosView];
-        
-        self.addMorePhotosButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 46)];
-        [self.addMorePhotosButton addTarget:self action:@selector(onButtonAddMorePhotosClicked) forControlEvents:UIControlEventTouchUpInside];
-        [self.addMorePhotosButton setTitle:NSLocalizedString(@"Add More Photos", @"") forState:UIControlStateNormal];
-        [self.addMorePhotosButton setBackgroundColor:[UIColor colorWithRed: 0.243 green: 0.78 blue: 0.616 alpha: 1]];
-        [self.addMorePhotosView addSubview:self.addMorePhotosButton];
-    }
 }
 
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    CGRect frame = self.addMorePhotosView.frame;
-    frame.origin.y = scrollView.contentOffset.y + self.tableView.frame.size.height - self.addMorePhotosView.frame.size.height;
-    self.addMorePhotosView.frame = frame;
-    
-    [self.tableView bringSubviewToFront:self.addMorePhotosView];
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+    [self.collectionView.collectionViewLayout invalidateLayout];
 }
 
 -(NSUInteger) totalNumberOfExtras{
@@ -212,42 +195,7 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     
     [self updateTitleBasedOnSelectedPhotoQuanitity];
     
-    [self.tableView deleteRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:index+1 inSection:0]] withRowAnimation:UITableViewRowAnimationAutomatic];
-}
-
-- (void)populateArrayWithNewArray:(NSArray *)array dataType:(Class)class {
-    NSMutableArray *assetArray = [[NSMutableArray alloc] initWithCapacity:array.count];
-    
-    for (ALAsset *asset in array){
-        [assetArray addObject:[OLAsset assetWithALAsset:asset]];
-    }
-    
-    
-    NSMutableArray *addArray = [NSMutableArray arrayWithArray:assetArray];
-    
-    for (ALAsset *asset in addArray){
-        [self.extraCopiesOfAssets addObject:@0];
-        
-        OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
-        printPhoto.asset = asset;
-        [self.userSelectedPhotos addObject:printPhoto];
-    }
-    [self.assets addObjectsFromArray:addArray];
-    
-    // Reload the table view.
-    [self.tableView reloadData];
-    
-    [self onUserSelectedPhotoCountChange];
-}
-
-- (BOOL)shouldShowAddMorePhotos{
-    return NO;
-//    if (![self.delegate respondsToSelector:@selector(kiteControllerShouldAllowUserToAddMorePhotos:)]){
-//        return YES;
-//    }
-//    else{
-//        return [self.delegate kiteControllerShouldAllowUserToAddMorePhotos:[self kiteViewController]];
-//    }
+//    [self.tableView deleteRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:index inSection:0]] withRowAnimation:UITableViewRowAnimationAutomatic];
 }
 
 - (CGFloat) productAspectRatio{
@@ -256,91 +204,84 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
 
 #pragma mark Button Actions
 
-- (void)onButtonAddMorePhotosClicked{
-    CTAssetsPickerController *picker = [[CTAssetsPickerController alloc] init];
-    picker.delegate = self;
-    picker.assetsFilter = [ALAssetsFilter allPhotos];
-    [self presentViewController:picker animated:YES completion:nil];
-}
-
 - (IBAction)onButtonUpArrowClicked:(UIButton *)sender {
-    UIView* cellContentView = sender.superview;
-    UIView* cell = cellContentView.superview;
-    while (![cell isKindOfClass:[UITableViewCell class]]){
-        cell = cell.superview;
-    }
-    NSIndexPath* indexPath = [self.tableView indexPathForCell:(UITableViewCell*)cell];
-    
-    NSUInteger extraCopies = [self.extraCopiesOfAssets[indexPath.row - 1] integerValue] + 1;
-    self.extraCopiesOfAssets[indexPath.row-1] = [NSNumber numberWithInteger:extraCopies];
-    UILabel* countLabel = (UILabel *)[cellContentView viewWithTag:30];
-    [countLabel setText: [NSString stringWithFormat:@"%lu", (unsigned long)extraCopies + 1]];
-    
-    [self updateTitleBasedOnSelectedPhotoQuanitity];
+//    UIView* cellContentView = sender.superview;
+//    UIView* cell = cellContentView.superview;
+//    while (![cell isKindOfClass:[UITableViewCell class]]){
+//        cell = cell.superview;
+//    }
+//    NSIndexPath* indexPath = [self.tableView indexPathForCell:(UITableViewCell*)cell];
+//    
+//    NSUInteger extraCopies = [self.extraCopiesOfAssets[indexPath.row] integerValue] + 1;
+//    self.extraCopiesOfAssets[indexPath.row] = [NSNumber numberWithInteger:extraCopies];
+//    UILabel* countLabel = (UILabel *)[cellContentView viewWithTag:30];
+//    [countLabel setText: [NSString stringWithFormat:@"%lu", (unsigned long)extraCopies + 1]];
+//    
+//    [self updateTitleBasedOnSelectedPhotoQuanitity];
 }
 
 - (IBAction)onButtonDownArrowClicked:(UIButton *)sender {
-    UIView* cellContentView = sender.superview;
-    UIView* cell = cellContentView.superview;
-    while (![cell isKindOfClass:[UITableViewCell class]]){
-        cell = cell.superview;
-    }
-    NSIndexPath* indexPath = [self.tableView indexPathForCell:(UITableViewCell*)cell];
-    
-    NSUInteger extraCopies = [self.extraCopiesOfAssets[indexPath.row - 1] integerValue];
-    if (extraCopies == 0){
-        if ([UIAlertController class]){
-            UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Delete?", @"") message:NSLocalizedString(@"Do you want to delete this photo?", @"") preferredStyle:UIAlertControllerStyleAlert];
-            [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Yes, delete it", @"") style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action){
-                [self deletePhotoAtIndex:indexPath.row-1];
-            }]];
-            [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"No, keep it", @"") style:UIAlertActionStyleCancel handler:^(UIAlertAction *action){}]];
-            [self presentViewController:ac animated:YES completion:NULL];
-        }
-        else{
-            UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Delete?", @"") message:NSLocalizedString(@"Do you want to delete this photo?", @"") delegate:self cancelButtonTitle:NSLocalizedString(@"Yes, delete it", @"") otherButtonTitles:NSLocalizedString(@"No, keep it", @""), nil];
-            self.indexOfPhotoToDelete = indexPath.row-1;
-            av.tag = kTagAlertViewDeletePhoto;
-            [av show];
-        };
-        return;
-    }
-    extraCopies--;
-    
-    self.extraCopiesOfAssets[indexPath.row-1] = [NSNumber numberWithInteger:extraCopies];
-    UILabel* countLabel = (UILabel *)[cellContentView viewWithTag:30];
-    [countLabel setText: [NSString stringWithFormat:@"%lu", (unsigned long)extraCopies + 1]];
-    
-    [self updateTitleBasedOnSelectedPhotoQuanitity];
+//    UIView* cellContentView = sender.superview;
+//    UIView* cell = cellContentView.superview;
+//    while (![cell isKindOfClass:[UITableViewCell class]]){
+//        cell = cell.superview;
+//    }
+//    NSIndexPath* indexPath = [self.tableView indexPathForCell:(UITableViewCell*)cell];
+//    
+//    NSUInteger extraCopies = [self.extraCopiesOfAssets[indexPath.row] integerValue];
+//    if (extraCopies == 0){
+//        if ([UIAlertController class]){
+//            UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Delete?", @"") message:NSLocalizedString(@"Do you want to delete this photo?", @"") preferredStyle:UIAlertControllerStyleAlert];
+//            [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Yes, delete it", @"") style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action){
+//                [self deletePhotoAtIndex:indexPath.row];
+//            }]];
+//            [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"No, keep it", @"") style:UIAlertActionStyleCancel handler:^(UIAlertAction *action){}]];
+//            [self presentViewController:ac animated:YES completion:NULL];
+//        }
+//        else{
+//            UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Delete?", @"") message:NSLocalizedString(@"Do you want to delete this photo?", @"") delegate:self cancelButtonTitle:NSLocalizedString(@"Yes, delete it", @"") otherButtonTitles:NSLocalizedString(@"No, keep it", @""), nil];
+//            self.indexOfPhotoToDelete = indexPath.row;
+//            av.tag = kTagAlertViewDeletePhoto;
+//            [av show];
+//        };
+//        return;
+//    }
+//    extraCopies--;
+//    
+//    self.extraCopiesOfAssets[indexPath.row] = [NSNumber numberWithInteger:extraCopies];
+//    UILabel* countLabel = (UILabel *)[cellContentView viewWithTag:30];
+//    [countLabel setText: [NSString stringWithFormat:@"%lu", (unsigned long)extraCopies + 1]];
+//    
+//    [self updateTitleBasedOnSelectedPhotoQuanitity];
 }
 
 - (IBAction)onButtonEnhanceClicked:(id)sender {
-    UIView* cellContentView;
-    if ([sender isKindOfClass: [UIButton class]]){
-        cellContentView = [(UIButton *)sender superview];
-    }
-    else if ([sender isKindOfClass:[UITapGestureRecognizer class]]){
-        cellContentView = [(UITapGestureRecognizer *)sender view];
-    }
-    UIView* cell = cellContentView.superview;
-    while (![cell isKindOfClass:[UITableViewCell class]]){
-        cell = cell.superview;
-    }
-    NSIndexPath* indexPath = [self.tableView indexPathForCell:(UITableViewCell*)cell];
-    
-    OLPrintPhoto *tempPrintPhoto = [[OLPrintPhoto alloc] init];
-    tempPrintPhoto.asset = self.assets[indexPath.row - 1];
-    self.editingPrintPhoto = self.userSelectedPhotos[indexPath.row - 1];
-    
-    UINavigationController *nav = [self.storyboard instantiateViewControllerWithIdentifier:@"CropViewNavigationController"];
-    OLScrollCropViewController *cropVc = (id)nav.topViewController;
-    cropVc.enableCircleMask = self.product.productTemplate.templateUI == kOLTemplateUICircle;
-    cropVc.delegate = self;
-    cropVc.aspectRatio = [self productAspectRatio];
-    [tempPrintPhoto getImageWithProgress:NULL completion:^(UIImage *image){
-        [cropVc setFullImage:image];
-        [self presentViewController:nav animated:YES completion:NULL];
-    }];
+//    UIView* cellContentView;
+//    if ([sender isKindOfClass: [UIButton class]]){
+//        cellContentView = [(UIButton *)sender superview];
+//    }
+//    else if ([sender isKindOfClass:[UITapGestureRecognizer class]]){
+//        cellContentView = [(UITapGestureRecognizer *)sender view];
+//    }
+//    UIView* cell = cellContentView.superview;
+//    while (![cell isKindOfClass:[UITableViewCell class]]){
+//        cell = cell.superview;
+//    }
+//    NSIndexPath* indexPath = [self.tableView indexPathForCell:(UITableViewCell*)cell];
+//    
+//    OLPrintPhoto *tempPrintPhoto = [[OLPrintPhoto alloc] init];
+//    tempPrintPhoto.asset = self.assets[indexPath.row];
+//    self.editingPrintPhoto = self.userSelectedPhotos[indexPath.row];
+//    
+//    UINavigationController *nav = [self.storyboard instantiateViewControllerWithIdentifier:@"CropViewNavigationController"];
+//    OLScrollCropViewController *cropVc = (id)nav.topViewController;
+//    cropVc.enableCircleMask = self.product.productTemplate.templateUI == kOLTemplateUICircle;
+//    cropVc.delegate = self;
+//    cropVc.aspectRatio = [self productAspectRatio];
+//    [tempPrintPhoto getImageWithProgress:NULL completion:^(UIImage *image){
+//        [cropVc setFullImage:image];
+//        [self presentViewController:nav animated:YES completion:NULL];
+//    }];
 }
 
 - (IBAction)onButtonNextClicked:(UIBarButtonItem *)sender {
@@ -357,108 +298,97 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
 
 #pragma mark UITableView data source and delegate methods
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    if (section == 0){
-        return [self.userSelectedPhotos count] + 1;
-    }
-    else return 1;
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
+    return [self.userSelectedPhotos count];
 }
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
-    return [self shouldShowAddMorePhotos] ? 2 : 1;
+- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
+    return 1;
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
-    if (indexPath.section == 0){
-        if (indexPath.row == 0){
-            UITableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:@"reviewTitle"];
-            return cell;
-        }
-        
-        OLCircleMaskTableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:@"reviewPhotoCell"];
-        if (!cell) {
-            cell = [[OLCircleMaskTableViewCell alloc] init];
-        }
-        
-        UIView *borderView = [cell.contentView viewWithTag:399];
-        
-        UIActivityIndicatorView *activityIndicator = (UIActivityIndicatorView *)[cell.contentView viewWithTag:278];
-        [activityIndicator startAnimating];
-        
-        UIImageView *cellImage = (UIImageView *)[cell.contentView viewWithTag:10];
-        [cellImage removeFromSuperview];
-        
-        cellImage = [[UIImageView alloc] initWithFrame:borderView.frame];
-        cellImage.tag = 10;
-        cellImage.translatesAutoresizingMaskIntoConstraints = NO;
-        cellImage.contentMode = UIViewContentModeScaleAspectFill;
-        cellImage.clipsToBounds = YES;
-        [cell.contentView insertSubview:cellImage aboveSubview:activityIndicator];
-        
-        cellImage.userInteractionEnabled = YES;
-        [cellImage addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onButtonEnhanceClicked:)]];
-        
-        [((OLPrintPhoto*)[self.userSelectedPhotos objectAtIndex:indexPath.row-1]) setImageIdealSizeForImageView:cellImage highQuality:YES];
-        
-        UILabel *countLabel = (UILabel *)[cell.contentView viewWithTag:30];
-        [countLabel setText: [NSString stringWithFormat:@"%lu", (unsigned long)(1+[((NSNumber*)[self.extraCopiesOfAssets objectAtIndex:indexPath.row-1]) integerValue])]];
-        
-        if (self.product.productTemplate.templateUI == kOLTemplateUICircle){
-            cell.enableMask = YES;
-        }
-        
-        UIEdgeInsets b = self.product.productTemplate.imageBorder;
-        
-        NSLayoutConstraint *topCon = [NSLayoutConstraint constraintWithItem:cellImage attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:borderView attribute:NSLayoutAttributeTop multiplier:1 constant:b.top];
-        NSLayoutConstraint *leftCon = [NSLayoutConstraint constraintWithItem:cellImage attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:borderView attribute:NSLayoutAttributeLeft multiplier:1 constant:b.left];
-        NSLayoutConstraint *rightCon = [NSLayoutConstraint constraintWithItem:cellImage attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:borderView attribute:NSLayoutAttributeRight multiplier:1 constant:-b.right];
-        NSLayoutConstraint *bottomCon = [NSLayoutConstraint constraintWithItem:cellImage attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationLessThanOrEqual toItem:borderView attribute:NSLayoutAttributeBottom multiplier:1 constant:-b.bottom];
-        
-        NSLayoutConstraint *aspectRatioCon = [NSLayoutConstraint constraintWithItem:cellImage attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:cellImage attribute:NSLayoutAttributeHeight multiplier:1 constant:0];
-        aspectRatioCon.priority = 750;
-        NSLayoutConstraint *activityCenterXCon = [NSLayoutConstraint constraintWithItem:cellImage attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:activityIndicator attribute:NSLayoutAttributeCenterX multiplier:1 constant:0];
-        NSLayoutConstraint *activityCenterYCon = [NSLayoutConstraint constraintWithItem:cellImage attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:activityIndicator attribute:NSLayoutAttributeCenterY multiplier:1 constant:0];
-        
-        [borderView.superview addConstraints:@[topCon, leftCon, rightCon, bottomCon, activityCenterYCon, activityCenterXCon]];
-        [cellImage addConstraints:@[aspectRatioCon]];
-
-        
-        
-        return cell;
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
+    OLCircleMaskCollectionViewCell* cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"reviewPhotoCell" forIndexPath:indexPath];
+    
+    UIView *borderView = [cell.contentView viewWithTag:399];
+    
+    UIActivityIndicatorView *activityIndicator = (UIActivityIndicatorView *)[cell.contentView viewWithTag:278];
+    [activityIndicator startAnimating];
+    
+    UIImageView *cellImage = (UIImageView *)[cell.contentView viewWithTag:10];
+    [cellImage removeFromSuperview];
+    
+    cellImage = [[UIImageView alloc] initWithFrame:borderView.frame];
+    cellImage.tag = 10;
+    cellImage.translatesAutoresizingMaskIntoConstraints = NO;
+    cellImage.contentMode = UIViewContentModeScaleAspectFill;
+    cellImage.clipsToBounds = YES;
+    [cell.contentView insertSubview:cellImage aboveSubview:activityIndicator];
+    
+    cellImage.userInteractionEnabled = YES;
+    [cellImage addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onButtonEnhanceClicked:)]];
+    
+    [((OLPrintPhoto*)[self.userSelectedPhotos objectAtIndex:indexPath.row]) setImageIdealSizeForImageView:cellImage highQuality:YES];
+    
+    UILabel *countLabel = (UILabel *)[cell.contentView viewWithTag:30];
+    [countLabel setText: [NSString stringWithFormat:@"%lu", (unsigned long)(1+[((NSNumber*)[self.extraCopiesOfAssets objectAtIndex:indexPath.row]) integerValue])]];
+    
+    if (self.product.productTemplate.templateUI == kOLTemplateUICircle){
+        cell.enableMask = YES;
     }
-    else{
-        return [tableView dequeueReusableCellWithIdentifier:@"dummyCell"];
-    }
+    
+    UIEdgeInsets b = self.product.productTemplate.imageBorder;
+    
+    NSLayoutConstraint *topCon = [NSLayoutConstraint constraintWithItem:cellImage attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:borderView attribute:NSLayoutAttributeTop multiplier:1 constant:b.top];
+    NSLayoutConstraint *leftCon = [NSLayoutConstraint constraintWithItem:cellImage attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:borderView attribute:NSLayoutAttributeLeft multiplier:1 constant:b.left];
+    NSLayoutConstraint *rightCon = [NSLayoutConstraint constraintWithItem:cellImage attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:borderView attribute:NSLayoutAttributeRight multiplier:1 constant:-b.right];
+    NSLayoutConstraint *bottomCon = [NSLayoutConstraint constraintWithItem:cellImage attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationLessThanOrEqual toItem:borderView attribute:NSLayoutAttributeBottom multiplier:1 constant:-b.bottom];
+    
+    NSLayoutConstraint *aspectRatioCon = [NSLayoutConstraint constraintWithItem:cellImage attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:cellImage attribute:NSLayoutAttributeHeight multiplier:1 constant:0];
+    aspectRatioCon.priority = 750;
+    NSLayoutConstraint *activityCenterXCon = [NSLayoutConstraint constraintWithItem:cellImage attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:activityIndicator attribute:NSLayoutAttributeCenterX multiplier:1 constant:0];
+    NSLayoutConstraint *activityCenterYCon = [NSLayoutConstraint constraintWithItem:cellImage attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:activityIndicator attribute:NSLayoutAttributeCenterY multiplier:1 constant:0];
+    
+    [borderView.superview addConstraints:@[topCon, leftCon, rightCon, bottomCon, activityCenterYCon, activityCenterXCon]];
+    [cellImage addConstraints:@[aspectRatioCon]];
+    
+    
+    
+    return cell;
 }
 
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    if (indexPath.section == 0){
-        if (indexPath.row == 0){
-            NSNumber *labelHeight;
-            if (!labelHeight) {
-                UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"reviewTitle"];
-                labelHeight = @(cell.bounds.size.height);
-            }
-            return [labelHeight floatValue];
-        }
-        else{
-            NSNumber *reviewPhotoCellHeight;
-            if (!reviewPhotoCellHeight) {
-                
-//                if (self.product.productTemplate.templateUI == kOLTemplateUIPolaroid){
-//                    NSUInteger extraBottomBezel = 50 / [self screenWidthFactor];
-//                    reviewPhotoCellHeight = @(280 * [self screenWidthFactor] + extraBottomBezel + 40 * [self screenWidthFactor] - 40);
-//                }
-//                else{
-                    reviewPhotoCellHeight = @(280 * [self productAspectRatio] * [self screenWidthFactor] + 40 * [self screenWidthFactor] - 40);
-//                }
-            }
-            return [reviewPhotoCellHeight floatValue] + 69;
-        }
-    }
-    else {
-        return 46;
-    }
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    CGFloat width = 320;
+    
+    CGFloat height = 280 * [self productAspectRatio] * 1 + 40 * 1 - 40 + 69;
+    
+    return CGSizeMake(width, height);
+
+}
+
+-(CGFloat)marginBetweenCellsForCollectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout{
+    CGFloat width = self.view.bounds.size.width;
+    CGFloat cellWidth = [self collectionView:collectionView layout:collectionViewLayout sizeForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]].width;
+    int cellsPerRow = width / cellWidth;
+    CGFloat spaceLeft = width - (cellsPerRow * cellWidth);
+    CGFloat margin = spaceLeft / (cellsPerRow + 1);
+    return margin;
+}
+
+// 3
+- (UIEdgeInsets)collectionView:
+(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout insetForSectionAtIndex:(NSInteger)section {
+    CGFloat margin = [self marginBetweenCellsForCollectionView:collectionView layout:collectionViewLayout];
+    return UIEdgeInsetsMake(0, margin, 0, margin);
+}
+- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section
+{
+    return 0;//[self marginBetweenCellsForCollectionView:collectionView layout:collectionViewLayout];
+}
+
+- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section
+{
+    return 20.0;
 }
 
 #pragma mark - UIAlertViewDelegate methods
@@ -482,47 +412,7 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     [self.editingPrintPhoto unloadImage];
     self.editingPrintPhoto.asset = [OLAsset assetWithImageAsJPEG:croppedImage];
     
-    [self.tableView reloadData];
-}
-
-#pragma mark - CTAssetsPickerControllerDelegate Methods
-
-- (BOOL)assetsPickerController:(CTAssetsPickerController *)picker isDefaultAssetsGroup:(ALAssetsGroup *)group {
-    if ([self.delegate respondsToSelector:@selector(kiteController:isDefaultAssetsGroup:)]) {
-        return [self.delegate kiteController:[self kiteViewController] isDefaultAssetsGroup:group];
-    }
-    
-    return NO;
-}
-
-- (void)assetsPickerController:(CTAssetsPickerController *)picker didFinishPickingAssets:(NSArray *)assets {
-    [self populateArrayWithNewArray:assets dataType:[ALAsset class]];
-    [picker dismissViewControllerAnimated:YES completion:^(void){}];
-}
-
-- (BOOL)assetsPickerController:(CTAssetsPickerController *)picker shouldShowAssetsGroup:(ALAssetsGroup *)group{
-    if (group.numberOfAssets == 0){
-        return NO;
-    }
-    return YES;
-}
-
-- (BOOL)assetsPickerController:(CTAssetsPickerController *)picker shouldShowAsset:(ALAsset *)asset{
-    NSString *fileName = [[[asset defaultRepresentation] filename] lowercaseString];
-    if (!([fileName hasSuffix:@".jpg"] || [fileName hasSuffix:@".jpeg"] || [fileName hasSuffix:@"png"])) {
-        return NO;
-    }
-    return YES;
-}
-
-#pragma mark - Autorotate and Orientation Methods
-
-- (BOOL)shouldAutorotate {
-    return NO;
-}
-
-- (NSUInteger)supportedInterfaceOrientations {
-    return UIInterfaceOrientationMaskPortrait;
+    [self.collectionView reloadData];
 }
 
 @end

@@ -57,36 +57,36 @@ NSInteger margin = 2;
     self.title = NSLocalizedString(@"Review", @"");
 }
 
-- (void)onTapGestureThumbnailTapped:(UITapGestureRecognizer*)gestureRecognizer {
-    NSIndexPath *tableIndexPath = [self.tableView indexPathForRowAtPoint:[gestureRecognizer locationInView:self.tableView]];
-    UITableViewCell* tableCell = [self.tableView cellForRowAtIndexPath:tableIndexPath];
-    
-    UICollectionView* collectionView = (UICollectionView*)[tableCell.contentView viewWithTag:100];
-    
-    NSIndexPath* indexPath = [collectionView indexPathForItemAtPoint:[gestureRecognizer locationInView:collectionView]];
-    
-    self.editingPrintPhoto = self.framePhotos[(tableIndexPath.row - 1) * self.product.quantityToFulfillOrder + indexPath.row];
-    self.editingPrintPhoto.asset = self.assets[((tableIndexPath.row - 1) * self.product.quantityToFulfillOrder + indexPath.row) % [self.assets count]];
-    
-    UINavigationController *nav = [self.storyboard instantiateViewControllerWithIdentifier:@"CropViewNavigationController"];
-    OLScrollCropViewController *cropVc = (id)nav.topViewController;
-    cropVc.delegate = self;
-    cropVc.aspectRatio = 1;
-    if (((OLAsset *)(self.editingPrintPhoto.asset)).assetType == kOLAssetTypeRemoteImageURL){
-        [[SDWebImageManager sharedManager] downloadImageWithURL:[((OLAsset *)(self.editingPrintPhoto.asset)) imageURL] options:0 progress:nil completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *url) {
-            if (finished) {
-                [cropVc setFullImage:image];
-                [self presentViewController:nav animated:YES completion:NULL];
-            }
-        }];
-    }
-    else{
-        [[self.userSelectedPhotos objectAtIndex:0] dataWithCompletionHandler:^(NSData *data, NSError *error){
-            [cropVc setFullImage:[UIImage imageWithData:data]];
-            [self presentViewController:nav animated:YES completion:NULL];
-        }];
-    }
-}
+//- (void)onTapGestureThumbnailTapped:(UITapGestureRecognizer*)gestureRecognizer {
+//    NSIndexPath *tableIndexPath = [self.tableView indexPathForRowAtPoint:[gestureRecognizer locationInView:self.tableView]];
+//    UITableViewCell* tableCell = [self.tableView cellForRowAtIndexPath:tableIndexPath];
+//    
+//    UICollectionView* collectionView = (UICollectionView*)[tableCell.contentView viewWithTag:100];
+//    
+//    NSIndexPath* indexPath = [collectionView indexPathForItemAtPoint:[gestureRecognizer locationInView:collectionView]];
+//    
+//    self.editingPrintPhoto = self.framePhotos[(tableIndexPath.row - 1) * self.product.quantityToFulfillOrder + indexPath.row];
+//    self.editingPrintPhoto.asset = self.assets[((tableIndexPath.row - 1) * self.product.quantityToFulfillOrder + indexPath.row) % [self.assets count]];
+//    
+//    UINavigationController *nav = [self.storyboard instantiateViewControllerWithIdentifier:@"CropViewNavigationController"];
+//    OLScrollCropViewController *cropVc = (id)nav.topViewController;
+//    cropVc.delegate = self;
+//    cropVc.aspectRatio = 1;
+//    if (((OLAsset *)(self.editingPrintPhoto.asset)).assetType == kOLAssetTypeRemoteImageURL){
+//        [[SDWebImageManager sharedManager] downloadImageWithURL:[((OLAsset *)(self.editingPrintPhoto.asset)) imageURL] options:0 progress:nil completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *url) {
+//            if (finished) {
+//                [cropVc setFullImage:image];
+//                [self presentViewController:nav animated:YES completion:NULL];
+//            }
+//        }];
+//    }
+//    else{
+//        [[self.userSelectedPhotos objectAtIndex:0] dataWithCompletionHandler:^(NSData *data, NSError *error){
+//            [cropVc setFullImage:[UIImage imageWithData:data]];
+//            [self presentViewController:nav animated:YES completion:NULL];
+//        }];
+//    }
+//}
 
 -(void)changeOrderOfPhotosInArray:(NSMutableArray*)array{
     NSUInteger photosPerRow = sqrt(self.product.quantityToFulfillOrder);
@@ -120,46 +120,46 @@ NSInteger margin = 2;
 
 #pragma mark Button Actions
 
-- (IBAction)onButtonUpArrowClicked:(UIButton *)sender {
-    UIView* cellContentView = sender.superview;
-    UIView* cell = cellContentView.superview;
-    while (![cell isKindOfClass:[UITableViewCell class]]){
-        cell = cell.superview;
-    }
-    NSIndexPath* indexPath = [self.tableView indexPathForCell:(UITableViewCell*)cell];
-    
-    for (int i = 0; i < self.product.quantityToFulfillOrder; i++){
-        NSUInteger extraCopies = [self.extraCopiesOfAssets[(indexPath.row - 1) * self.product.quantityToFulfillOrder + i] integerValue] + 1;
-        self.extraCopiesOfAssets[(indexPath.row - 1) * self.product.quantityToFulfillOrder + i] = [NSNumber numberWithInteger:extraCopies];
-    }
-    UILabel* countLabel = (UILabel *)[cellContentView viewWithTag:30];
-    [countLabel setText: [NSString stringWithFormat:@"%lu", (unsigned long)[countLabel.text integerValue] + 1]];
-    
-//    [self updateTitleBasedOnSelectedPhotoQuanitity];
-}
+//- (IBAction)onButtonUpArrowClicked:(UIButton *)sender {
+//    UIView* cellContentView = sender.superview;
+//    UIView* cell = cellContentView.superview;
+//    while (![cell isKindOfClass:[UITableViewCell class]]){
+//        cell = cell.superview;
+//    }
+//    NSIndexPath* indexPath = [self.tableView indexPathForCell:(UITableViewCell*)cell];
+//    
+//    for (int i = 0; i < self.product.quantityToFulfillOrder; i++){
+//        NSUInteger extraCopies = [self.extraCopiesOfAssets[(indexPath.row - 1) * self.product.quantityToFulfillOrder + i] integerValue] + 1;
+//        self.extraCopiesOfAssets[(indexPath.row - 1) * self.product.quantityToFulfillOrder + i] = [NSNumber numberWithInteger:extraCopies];
+//    }
+//    UILabel* countLabel = (UILabel *)[cellContentView viewWithTag:30];
+//    [countLabel setText: [NSString stringWithFormat:@"%lu", (unsigned long)[countLabel.text integerValue] + 1]];
+//    
+////    [self updateTitleBasedOnSelectedPhotoQuanitity];
+//}
 
-- (IBAction)onButtonDownArrowClicked:(UIButton *)sender {
-    UIView* cellContentView = sender.superview;
-    UIView* cell = cellContentView.superview;
-    while (![cell isKindOfClass:[UITableViewCell class]]){
-        cell = cell.superview;
-    }
-    NSIndexPath* indexPath = [self.tableView indexPathForCell:(UITableViewCell*)cell];
-    
-    for (int i = 0; i < self.product.quantityToFulfillOrder; i++){
-        NSUInteger extraCopies = [self.extraCopiesOfAssets[(indexPath.row - 1) * self.product.quantityToFulfillOrder + i] integerValue];
-        if (extraCopies == 0){
-            return;
-        }
-        extraCopies--;
-        
-        self.extraCopiesOfAssets[(indexPath.row - 1) * self.product.quantityToFulfillOrder + i] = [NSNumber numberWithInteger:extraCopies];
-    }
-    UILabel* countLabel = (UILabel *)[cellContentView viewWithTag:30];
-    [countLabel setText: [NSString stringWithFormat:@"%lu", (unsigned long)[countLabel.text integerValue] - 1]];
-    
-//    [self updateTitleBasedOnSelectedPhotoQuanitity];
-}
+//- (IBAction)onButtonDownArrowClicked:(UIButton *)sender {
+//    UIView* cellContentView = sender.superview;
+//    UIView* cell = cellContentView.superview;
+//    while (![cell isKindOfClass:[UITableViewCell class]]){
+//        cell = cell.superview;
+//    }
+//    NSIndexPath* indexPath = [self.tableView indexPathForCell:(UITableViewCell*)cell];
+//    
+//    for (int i = 0; i < self.product.quantityToFulfillOrder; i++){
+//        NSUInteger extraCopies = [self.extraCopiesOfAssets[(indexPath.row - 1) * self.product.quantityToFulfillOrder + i] integerValue];
+//        if (extraCopies == 0){
+//            return;
+//        }
+//        extraCopies--;
+//        
+//        self.extraCopiesOfAssets[(indexPath.row - 1) * self.product.quantityToFulfillOrder + i] = [NSNumber numberWithInteger:extraCopies];
+//    }
+//    UILabel* countLabel = (UILabel *)[cellContentView viewWithTag:30];
+//    [countLabel setText: [NSString stringWithFormat:@"%lu", (unsigned long)[countLabel.text integerValue] - 1]];
+//    
+////    [self updateTitleBasedOnSelectedPhotoQuanitity];
+//}
 
 - (IBAction)onButtonNextClicked:(UIBarButtonItem *)sender {
     self.userSelectedPhotos = self.framePhotos;
@@ -213,19 +213,19 @@ NSInteger margin = 2;
     }
 }
 
-- (CGFloat) tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    if (indexPath.row > 0){
-        return 400 * self.view.bounds.size.width / 320;
-    }
-    else{
-        NSNumber *labelHeight;
-        if (!labelHeight) {
-            UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"reviewTitle"];
-            labelHeight = @(cell.bounds.size.height);
-        }
-        return [labelHeight floatValue];
-    }
-}
+//- (CGFloat) tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+//    if (indexPath.row > 0){
+//        return 400 * self.view.bounds.size.width / 320;
+//    }
+//    else{
+//        NSNumber *labelHeight;
+//        if (!labelHeight) {
+//            UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"reviewTitle"];
+//            labelHeight = @(cell.bounds.size.height);
+//        }
+//        return [labelHeight floatValue];
+//    }
+//}
 
 #pragma mark UICollectionView data source
 
@@ -233,31 +233,31 @@ NSInteger margin = 2;
     return self.product.quantityToFulfillOrder;
 }
 
-- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
-    UICollectionViewCell* cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"imageInFrame" forIndexPath:indexPath];
-    
-    //Workaround for iOS 7
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8){
-        cell.contentView.frame = cell.bounds;
-        cell.contentView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin |UIViewAutoresizingFlexibleTopMargin |UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleBottomMargin;
-    }
-
-    UIView* tableViewCell = collectionView.superview;
-    while (![tableViewCell isKindOfClass:[UITableViewCell class]]){
-        tableViewCell = tableViewCell.superview;
-    }
-
-    NSIndexPath* tableIndexindexPath = [self.tableView indexPathForRowAtPoint:tableViewCell.frame.origin];//[self.tableView indexPathForCell:(UITableViewCell*)tableViewCell];
-    
-    UIImageView* cellImage = (UIImageView*)[cell.contentView viewWithTag:110];
-    
-    if (cellImage && !cellImage.image && tableIndexindexPath){
-        [((OLPrintPhoto*)[self.framePhotos objectAtIndex:indexPath.row + (tableIndexindexPath.row-1) * self.product.quantityToFulfillOrder]) setImageIdealSizeForImageView:cellImage highQuality:YES];
-    }
-    
-    
-    return cell;
-}
+//- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
+//    UICollectionViewCell* cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"imageInFrame" forIndexPath:indexPath];
+//    
+//    //Workaround for iOS 7
+//    if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8){
+//        cell.contentView.frame = cell.bounds;
+//        cell.contentView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin |UIViewAutoresizingFlexibleTopMargin |UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleBottomMargin;
+//    }
+//
+//    UIView* tableViewCell = collectionView.superview;
+//    while (![tableViewCell isKindOfClass:[UITableViewCell class]]){
+//        tableViewCell = tableViewCell.superview;
+//    }
+//
+//    NSIndexPath* tableIndexindexPath = [self.tableView indexPathForRowAtPoint:tableViewCell.frame.origin];//[self.tableView indexPathForCell:(UITableViewCell*)tableViewCell];
+//    
+//    UIImageView* cellImage = (UIImageView*)[cell.contentView viewWithTag:110];
+//    
+//    if (cellImage && !cellImage.image && tableIndexindexPath){
+//        [((OLPrintPhoto*)[self.framePhotos objectAtIndex:indexPath.row + (tableIndexindexPath.row-1) * self.product.quantityToFulfillOrder]) setImageIdealSizeForImageView:cellImage highQuality:YES];
+//    }
+//    
+//    
+//    return cell;
+//}
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
     int photosPerRow = sqrt(self.product.quantityToFulfillOrder);
@@ -273,29 +273,29 @@ NSInteger margin = 2;
     return margin;
 }
 
-- (void)collectionView:(UICollectionView *)collectionView itemAtIndexPath:(NSIndexPath *)fromIndexPath willMoveToIndexPath:(NSIndexPath *)toIndexPath {
-    UIView* tableViewCell = collectionView.superview;
-    while (![tableViewCell isKindOfClass:[UITableViewCell class]]){
-        tableViewCell = tableViewCell.superview;
-    }
-    NSIndexPath* tableIndexPath = [self.tableView indexPathForCell:(UITableViewCell*)tableViewCell];
-    
-    NSInteger trueFromIndex = fromIndexPath.item + (tableIndexPath.row-1) * self.product.quantityToFulfillOrder;
-    NSInteger trueToIndex = toIndexPath.item + (tableIndexPath.row-1) * self.product.quantityToFulfillOrder;
-    
-    id object = [self.framePhotos objectAtIndex:trueFromIndex];
-    [self.framePhotos removeObjectAtIndex:trueFromIndex];
-    [self.framePhotos insertObject:object atIndex:trueToIndex];
-    object = [self.extraCopiesOfAssets objectAtIndex:trueFromIndex];
-    [self.extraCopiesOfAssets removeObjectAtIndex:trueFromIndex];
-    [self.extraCopiesOfAssets insertObject:object atIndex:trueToIndex];
-}
+//- (void)collectionView:(UICollectionView *)collectionView itemAtIndexPath:(NSIndexPath *)fromIndexPath willMoveToIndexPath:(NSIndexPath *)toIndexPath {
+//    UIView* tableViewCell = collectionView.superview;
+//    while (![tableViewCell isKindOfClass:[UITableViewCell class]]){
+//        tableViewCell = tableViewCell.superview;
+//    }
+//    NSIndexPath* tableIndexPath = [self.tableView indexPathForCell:(UITableViewCell*)tableViewCell];
+//    
+//    NSInteger trueFromIndex = fromIndexPath.item + (tableIndexPath.row-1) * self.product.quantityToFulfillOrder;
+//    NSInteger trueToIndex = toIndexPath.item + (tableIndexPath.row-1) * self.product.quantityToFulfillOrder;
+//    
+//    id object = [self.framePhotos objectAtIndex:trueFromIndex];
+//    [self.framePhotos removeObjectAtIndex:trueFromIndex];
+//    [self.framePhotos insertObject:object atIndex:trueToIndex];
+//    object = [self.extraCopiesOfAssets objectAtIndex:trueFromIndex];
+//    [self.extraCopiesOfAssets removeObjectAtIndex:trueFromIndex];
+//    [self.extraCopiesOfAssets insertObject:object atIndex:trueToIndex];
+//}
 
--(void)userDidCropImage:(UIImage *)croppedImage{
-    self.editingPrintPhoto.asset = [OLAsset assetWithImageAsJPEG:croppedImage];
-    
-    [self.tableView reloadData];
-}
+//-(void)userDidCropImage:(UIImage *)croppedImage{
+//    self.editingPrintPhoto.asset = [OLAsset assetWithImageAsJPEG:croppedImage];
+//    
+//    [self.tableView reloadData];
+//}
 
 #pragma mark - Autorotate and Orientation Methods
 
