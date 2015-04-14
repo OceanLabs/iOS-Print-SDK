@@ -388,12 +388,18 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
 {
     UIEdgeInsets b = self.product.productTemplate.imageBorder;
     
-    CGFloat width = 320;
-    CGFloat heightForButtons = 56;
-    CGFloat imageHeight = (width - b.right - b.left) * [self productAspectRatio] * 1;
-    CGFloat height = imageHeight + (b.top + b.bottom) * 1 + heightForButtons;
+    CGFloat screenWidthFactor = 1;
+    if (self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassCompact){
+        screenWidthFactor = self.view.frame.size.width / 320;
+    }
     
-    return CGSizeMake(width, height);
+    CGFloat margin = 20;
+    CGFloat heightForButtons = 56;
+    CGFloat imageWidth = 280;
+    CGFloat imageHeight = (imageWidth - b.right - b.left) * [self productAspectRatio] * screenWidthFactor;
+    CGFloat height = imageHeight + (b.top + b.bottom) + heightForButtons + margin;
+    
+    return CGSizeMake(imageWidth * screenWidthFactor + margin * 2, height);
 
 }
 
