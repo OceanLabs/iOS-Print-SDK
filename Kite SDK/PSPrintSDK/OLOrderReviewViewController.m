@@ -315,16 +315,28 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
     OLCircleMaskCollectionViewCell* cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"reviewPhotoCell" forIndexPath:indexPath];
+    UIView *view = cell.contentView;
+    view.translatesAutoresizingMaskIntoConstraints = NO;
+    NSDictionary *views = NSDictionaryOfVariableBindings(view);
+    NSMutableArray *con = [[NSMutableArray alloc] init];
+    
+    NSArray *visuals = @[@"H:|-0-[view]-0-|",
+                         @"V:|-0-[view]-0-|"];
+    
+    
+    for (NSString *visual in visuals) {
+        [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+    }
+    
+    [view.superview addConstraints:con];
+
     
     UIView *borderView = [cell.contentView viewWithTag:399];
     
     UIActivityIndicatorView *activityIndicator = (UIActivityIndicatorView *)[cell.contentView viewWithTag:278];
     [activityIndicator startAnimating];
     
-    UIImageView *cellImage = (UIImageView *)[cell.contentView viewWithTag:10];
-    [cellImage removeFromSuperview];
-    
-    cellImage = [[UIImageView alloc] initWithFrame:borderView.frame];
+    UIImageView *cellImage = [[UIImageView alloc] initWithFrame:borderView.frame];
     cellImage.tag = 10;
     cellImage.translatesAutoresizingMaskIntoConstraints = NO;
     cellImage.contentMode = UIViewContentModeScaleAspectFill;
@@ -377,7 +389,7 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     UIEdgeInsets b = self.product.productTemplate.imageBorder;
     
     CGFloat width = 320;
-    CGFloat heightForButtons = 69;
+    CGFloat heightForButtons = 56;
     CGFloat imageHeight = (width - b.right - b.left) * [self productAspectRatio] * 1;
     CGFloat height = imageHeight + (b.top + b.bottom) * 1 + heightForButtons;
     

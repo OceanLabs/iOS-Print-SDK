@@ -12,7 +12,6 @@
 #import "OLOrderReviewViewController.h"
 
 #import <CTAssetsPickerController.h>
-#import <objc/runtime.h>
 
 #ifdef OL_KITE_OFFER_INSTAGRAM
 #import <OLInstagramImagePickerController.h>
@@ -39,12 +38,6 @@ NSInteger OLPhotoSelectionMargin = 0;
 
 static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 
-@interface UIActionSheet (Cell)
-@property (nonatomic, strong) UICollectionViewCell *cell;
-@end
-
-static void *ActionSheetCellKey;
-
 @interface OLKitePrintSDK (Private)
 
 + (OLKiteViewController *)kiteViewControllerInNavStack:(NSArray *)viewControllers;
@@ -56,24 +49,11 @@ static void *ActionSheetCellKey;
 
 @end
 
-@implementation UIActionSheet(Cell)
-
-- (void)setCell:(UICollectionViewCell *)cell {
-    objc_setAssociatedObject(self, ActionSheetCellKey, cell, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-- (UICollectionViewCell *)cell {
-    return objc_getAssociatedObject(self, ActionSheetCellKey);
-}
-
-@end
-
 @interface OLPhotoSelectionViewController () <UINavigationControllerDelegate,
                                             CTAssetsPickerControllerDelegate,
                                             UICollectionViewDataSource,
                                             UICollectionViewDelegate,
                                             UICollectionViewDelegateFlowLayout,
-                                            UIActionSheetDelegate,
 #ifdef OL_KITE_OFFER_INSTAGRAM
                                             OLInstagramImagePickerControllerDelegate,
 #endif
@@ -339,7 +319,9 @@ static void *ActionSheetCellKey;
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
     [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
-    [self.collectionView.collectionViewLayout invalidateLayout];
+    [coordinator animateAlongsideTransition:NULL completion:^(id<UIViewControllerTransitionCoordinator> context){
+        [self.collectionView.collectionViewLayout invalidateLayout];
+    }];
 }
 
 - (void)didReceiveMemoryWarning {
