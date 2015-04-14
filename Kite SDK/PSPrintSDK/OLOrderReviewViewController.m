@@ -195,7 +195,7 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     
     [self updateTitleBasedOnSelectedPhotoQuanitity];
     
-//    [self.tableView deleteRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:index inSection:0]] withRowAnimation:UITableViewRowAnimationAutomatic];
+    [self.collectionView deleteItemsAtIndexPaths:@[[NSIndexPath indexPathForRow:index inSection:0]]];
 }
 
 - (CGFloat) productAspectRatio{
@@ -227,38 +227,38 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
 }
 
 - (IBAction)onButtonDownArrowClicked:(UIButton *)sender {
-//    UIView* cellContentView = sender.superview;
-//    UIView* cell = cellContentView.superview;
-//    while (![cell isKindOfClass:[UITableViewCell class]]){
-//        cell = cell.superview;
-//    }
-//    NSIndexPath* indexPath = [self.tableView indexPathForCell:(UITableViewCell*)cell];
-//    
-//    NSUInteger extraCopies = [self.extraCopiesOfAssets[indexPath.row] integerValue];
-//    if (extraCopies == 0){
-//        if ([UIAlertController class]){
-//            UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Delete?", @"") message:NSLocalizedString(@"Do you want to delete this photo?", @"") preferredStyle:UIAlertControllerStyleAlert];
-//            [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Yes, delete it", @"") style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action){
-//                [self deletePhotoAtIndex:indexPath.row];
-//            }]];
-//            [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"No, keep it", @"") style:UIAlertActionStyleCancel handler:^(UIAlertAction *action){}]];
-//            [self presentViewController:ac animated:YES completion:NULL];
-//        }
-//        else{
-//            UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Delete?", @"") message:NSLocalizedString(@"Do you want to delete this photo?", @"") delegate:self cancelButtonTitle:NSLocalizedString(@"Yes, delete it", @"") otherButtonTitles:NSLocalizedString(@"No, keep it", @""), nil];
-//            self.indexOfPhotoToDelete = indexPath.row;
-//            av.tag = kTagAlertViewDeletePhoto;
-//            [av show];
-//        };
-//        return;
-//    }
-//    extraCopies--;
-//    
-//    self.extraCopiesOfAssets[indexPath.row] = [NSNumber numberWithInteger:extraCopies];
-//    UILabel* countLabel = (UILabel *)[cellContentView viewWithTag:30];
-//    [countLabel setText: [NSString stringWithFormat:@"%lu", (unsigned long)extraCopies + 1]];
-//    
-//    [self updateTitleBasedOnSelectedPhotoQuanitity];
+    UIView* cellContentView = sender.superview;
+    UIView* cell = cellContentView.superview;
+    while (![cell isKindOfClass:[UICollectionViewCell class]]){
+        cell = cell.superview;
+    }
+    NSIndexPath* indexPath = [self.collectionView indexPathForCell:(UICollectionViewCell *)cell];
+    
+    NSUInteger extraCopies = [self.extraCopiesOfAssets[indexPath.row] integerValue];
+    if (extraCopies == 0){
+        if ([UIAlertController class]){
+            UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Delete?", @"") message:NSLocalizedString(@"Do you want to delete this photo?", @"") preferredStyle:UIAlertControllerStyleAlert];
+            [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Yes, delete it", @"") style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action){
+                [self deletePhotoAtIndex:indexPath.row];
+            }]];
+            [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"No, keep it", @"") style:UIAlertActionStyleCancel handler:^(UIAlertAction *action){}]];
+            [self presentViewController:ac animated:YES completion:NULL];
+        }
+        else{
+            UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Delete?", @"") message:NSLocalizedString(@"Do you want to delete this photo?", @"") delegate:self cancelButtonTitle:NSLocalizedString(@"Yes, delete it", @"") otherButtonTitles:NSLocalizedString(@"No, keep it", @""), nil];
+            self.indexOfPhotoToDelete = indexPath.row;
+            av.tag = kTagAlertViewDeletePhoto;
+            [av show];
+        };
+        return;
+    }
+    extraCopies--;
+    
+    self.extraCopiesOfAssets[indexPath.row] = [NSNumber numberWithInteger:extraCopies];
+    UILabel* countLabel = (UILabel *)[cellContentView viewWithTag:30];
+    [countLabel setText: [NSString stringWithFormat:@"%lu", (unsigned long)extraCopies + 1]];
+    
+    [self updateTitleBasedOnSelectedPhotoQuanitity];
 }
 
 - (IBAction)onButtonEnhanceClicked:(id)sender {
@@ -333,10 +333,19 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     cellImage.userInteractionEnabled = YES;
     [cellImage addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onButtonEnhanceClicked:)]];
     
-    [((OLPrintPhoto*)[self.userSelectedPhotos objectAtIndex:indexPath.row]) setImageIdealSizeForImageView:cellImage highQuality:YES];
+    UIButton *enhanceButton = (UIButton *)[cell.contentView viewWithTag:11];
+    [enhanceButton addTarget:self action:@selector(onButtonEnhanceClicked:) forControlEvents:UIControlEventTouchUpInside];
+    
+    UIButton *upButton = (UIButton *)[cell.contentView viewWithTag:12];
+    [upButton addTarget:self action:@selector(onButtonUpArrowClicked:) forControlEvents:UIControlEventTouchUpInside];
+    
+    UIButton *downButton = (UIButton *)[cell.contentView viewWithTag:13];
+    [downButton addTarget:self action:@selector(onButtonDownArrowClicked:) forControlEvents:UIControlEventTouchUpInside];
     
     UILabel *countLabel = (UILabel *)[cell.contentView viewWithTag:30];
     [countLabel setText: [NSString stringWithFormat:@"%lu", (unsigned long)(1+[((NSNumber*)[self.extraCopiesOfAssets objectAtIndex:indexPath.row]) integerValue])]];
+    
+    [((OLPrintPhoto*)[self.userSelectedPhotos objectAtIndex:indexPath.row]) setImageIdealSizeForImageView:cellImage highQuality:YES];
     
     if (self.product.productTemplate.templateUI == kOLTemplateUICircle){
         cell.enableMask = YES;
