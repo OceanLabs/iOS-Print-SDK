@@ -177,14 +177,6 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
 }
 
 - (void)fadeToViewController:(UIViewController *)vc{
-//    UISplitViewController *splitVc = [[UISplitViewController alloc] init];
-//    splitVc.viewControllers = @[[[UIViewController alloc] init], vc];
-//    splitVc.preferredPrimaryColumnWidthFraction = 0;
-//    splitVc.minimumPrimaryColumnWidth = 0;
-    
-//    splitVc.preferredDisplayMode = UISplitViewControllerDisplayModeAllVisible;
-    
-    
     CGRect bounds = self.view.bounds;
     bounds.origin.y = CGRectGetMaxY(self.navigationBar.frame);
     UIView *view = [[UIView alloc] initWithFrame:bounds];

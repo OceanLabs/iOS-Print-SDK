@@ -4,7 +4,6 @@
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7520"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
-        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
         <!--Product-->
@@ -723,70 +722,6 @@
             </objects>
             <point key="canvasLocation" x="3148" y="1644"/>
         </scene>
-        <!--Product Type Selection View Controller-->
-        <scene sceneID="H5s-DL-bfC">
-            <objects>
-                <tableViewController id="1P5-A7-dqr" customClass="OLProductTypeSelectionViewController" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="none" showsSelectionImmediatelyOnTouchBegin="NO" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="2k0-iU-Xjg">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <color key="separatorColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <inset key="separatorInset" minX="15" minY="0.0" maxX="0.0" maxY="0.0"/>
-                        <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="caseCell" rowHeight="230" id="BaM-BC-shg">
-                                <autoresizingMask key="autoresizingMask"/>
-                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="BaM-BC-shg" id="Lxh-tG-y6D">
-                                    <autoresizingMask key="autoresizingMask"/>
-                                    <subviews>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="photo_frame_1" translatesAutoresizingMaskIntoConstraints="NO" id="b5Q-XR-fhJ">
-                                            <rect key="frame" x="0.0" y="0.0" width="600" height="230"/>
-                                        </imageView>
-                                        <activityIndicatorView opaque="NO" tag="41" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="Xtv-GP-ITO">
-                                            <rect key="frame" x="290" y="105" width="20" height="20"/>
-                                        </activityIndicatorView>
-                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" tag="10" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="7V2-8f-tij">
-                                            <rect key="frame" x="0.0" y="0.0" width="600" height="228"/>
-                                        </imageView>
-                                        <label opaque="NO" userInteractionEnabled="NO" tag="20" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Product" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9zd-Ed-Xyl">
-                                            <rect key="frame" x="430" y="179" width="170" height="35"/>
-                                            <constraints>
-                                                <constraint firstAttribute="height" constant="35" id="LsY-xG-hIe"/>
-                                                <constraint firstAttribute="width" constant="170" id="zgT-Z1-f2p"/>
-                                            </constraints>
-                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
-                                    </subviews>
-                                    <constraints>
-                                        <constraint firstAttribute="trailing" secondItem="b5Q-XR-fhJ" secondAttribute="trailing" id="56R-go-Vce"/>
-                                        <constraint firstItem="b5Q-XR-fhJ" firstAttribute="leading" secondItem="Lxh-tG-y6D" secondAttribute="leading" id="6gG-yY-cNB"/>
-                                        <constraint firstItem="7V2-8f-tij" firstAttribute="top" secondItem="Lxh-tG-y6D" secondAttribute="top" id="9on-TW-yIg"/>
-                                        <constraint firstItem="7V2-8f-tij" firstAttribute="leading" secondItem="Lxh-tG-y6D" secondAttribute="leading" id="Aiu-KF-Vjd"/>
-                                        <constraint firstAttribute="bottom" secondItem="9zd-Ed-Xyl" secondAttribute="bottom" constant="16" id="E0W-15-wiS"/>
-                                        <constraint firstItem="b5Q-XR-fhJ" firstAttribute="top" secondItem="Lxh-tG-y6D" secondAttribute="top" id="HGf-oB-2xa"/>
-                                        <constraint firstAttribute="bottom" secondItem="b5Q-XR-fhJ" secondAttribute="bottom" id="UkJ-Qa-sy7"/>
-                                        <constraint firstAttribute="bottom" secondItem="7V2-8f-tij" secondAttribute="bottom" constant="2" id="aaj-rt-oh5"/>
-                                        <constraint firstAttribute="centerXWithinMargins" secondItem="Xtv-GP-ITO" secondAttribute="centerXWithinMargins" id="rNL-Cy-nT3"/>
-                                        <constraint firstAttribute="centerYWithinMargins" secondItem="Xtv-GP-ITO" secondAttribute="centerYWithinMargins" id="u4v-5E-UZ4"/>
-                                        <constraint firstAttribute="trailing" secondItem="9zd-Ed-Xyl" secondAttribute="trailing" id="vEA-cC-ao2"/>
-                                        <constraint firstAttribute="trailing" secondItem="7V2-8f-tij" secondAttribute="trailing" id="yMI-S4-UAF"/>
-                                    </constraints>
-                                </tableViewCellContentView>
-                            </tableViewCell>
-                        </prototypes>
-                        <connections>
-                            <outlet property="dataSource" destination="1P5-A7-dqr" id="ueS-dD-DIN"/>
-                            <outlet property="delegate" destination="1P5-A7-dqr" id="sqN-ms-Cnl"/>
-                        </connections>
-                    </tableView>
-                    <navigationItem key="navigationItem" id="u4o-1G-dF7"/>
-                </tableViewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="xqg-1v-StR" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1395" y="-1394"/>
-        </scene>
         <!--Poster Size Selection View Controller-->
         <scene sceneID="YYl-13-A7C">
             <objects>
@@ -1293,7 +1228,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="2085" y="-1386"/>
+            <point key="canvasLocation" x="2221" y="-1350"/>
         </scene>
         <!--Choose Photos-->
         <scene sceneID="P36-F6-0uT">
@@ -1888,7 +1823,7 @@
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Vsq-oC-uOo" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1395" y="-2106"/>
+            <point key="canvasLocation" x="1340" y="-1350"/>
         </scene>
         <!--Postcard View Controller-->
         <scene sceneID="dKq-W6-rsf">
@@ -2034,7 +1969,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="2101" y="-2106"/>
+            <point key="canvasLocation" x="2221" y="-2098"/>
         </scene>
         <!--Single Image Product Review View Controller-->
         <scene sceneID="Wbo-3y-qdz">

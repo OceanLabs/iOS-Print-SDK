@@ -23,6 +23,7 @@
 @property (assign, nonatomic) BOOL downloadedMask;
 @property (strong, nonatomic) UIVisualEffectView *visualEffectView;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *maskActivityIndicator;
+@property (strong, nonatomic) UIImage *maskImage;
 
 @end
 
@@ -82,6 +83,14 @@
     [self downloadMask];
 }
 
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+    
+    [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context){
+        [self maskWithImage:self.maskImage targetView:self.imageCropView];
+    }completion:^(id <UIViewControllerTransitionCoordinatorContext> context){}];
+}
+
 - (void)downloadMask {
     [[SDWebImageManager sharedManager] downloadImageWithURL:self.product.productTemplate.maskImageURL options:SDWebImageHighPriority progress:NULL completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL){
         [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
@@ -96,7 +105,8 @@
             [self.view setNeedsLayout];
             [self.view layoutIfNeeded];
             
-            [self maskWithImage:image targetView:self.imageCropView];
+            self.maskImage = image;
+            [self maskWithImage:self.maskImage targetView:self.imageCropView];
             self.visualEffectView.hidden = YES;
             self.downloadedMask = YES;
             [self.maskActivityIndicator removeFromSuperview];
