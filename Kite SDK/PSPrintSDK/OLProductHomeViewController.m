@@ -91,17 +91,25 @@
 - (CGSize) collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
     CGSize size = self.view.bounds.size;
     NSInteger numberOfCells = [self collectionView:collectionView numberOfItemsInSection:indexPath.section];
-    CGFloat halfScreenHeight = (self.view.frame.size.height - [[UIApplication sharedApplication] statusBarFrame].size.height - self.navigationController.navigationBar.frame.size.height)/2;
+    CGFloat halfScreenHeight = (size.height - [[UIApplication sharedApplication] statusBarFrame].size.height - self.navigationController.navigationBar.frame.size.height)/2;
     
-    if (numberOfCells == 4){
+    if (self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassCompact && size.height > size.width) {
+        if (numberOfCells == 2){
+            return CGSizeMake(size.width, halfScreenHeight);
+        }
+        else{
+            return CGSizeMake(size.width, 233 * (size.width / 320.0));
+        }
+    }
+    else if (numberOfCells == 4){
         return CGSizeMake(size.width/2 - 0.5, MAX(halfScreenHeight, 233));
     }
     else if (numberOfCells == 2){
         if (size.width < size.height){
-            return CGSizeMake(self.view.frame.size.width, halfScreenHeight);
+            return CGSizeMake(size.width, halfScreenHeight);
         }
         else{
-            return CGSizeMake(self.view.frame.size.width/2 - 0.5, halfScreenHeight * 2);
+            return CGSizeMake(size.width/2 - 0.5, halfScreenHeight * 2);
         }
     }
     else{
