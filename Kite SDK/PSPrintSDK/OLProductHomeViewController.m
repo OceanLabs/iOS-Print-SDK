@@ -17,12 +17,19 @@
 #import "OLPosterSizeSelectionViewController.h"
 #import "OLAnalytics.h"
 #import "OLProductGroup.h"
+#import "NSObject+Utils.h"
 
 @interface OLProduct (Private)
 
 -(void)setCoverImageToImageView:(UIImageView *)imageView;
 -(void)setClassImageToImageView:(UIImageView *)imageView;
 -(void)setProductPhotography:(NSUInteger)i toImageView:(UIImageView *)imageView;
+
+@end
+
+@interface OLKiteViewController (Private)
+
++ (NSString *)storyboardIdentifierForGroupSelected:(OLProductGroup *)group;
 
 @end
 
@@ -91,30 +98,17 @@
      *****/
     OLProductGroup *group = self.productGroups[indexPath.row];
     OLProduct *product = [group.products firstObject];
-    if (product.productTemplate.templateUI == kOLTemplateUIPoster && group.products.count > 1){
-        OLPosterSizeSelectionViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"sizeSelect"];
-        vc.assets = self.assets;
-        vc.userSelectedPhotos = self.userSelectedPhotos;
-        vc.delegate = self.delegate;
-        [self.navigationController pushViewController:vc animated:YES];
-    }
-    else if (group.products.count > 1 && product.productTemplate.templateUI != kOLTemplateUIFrame){
-        OLProductTypeSelectionViewController *typeVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLTypeSelectionViewController"];
-        typeVc.filterProducts = self.filterProducts;
-        typeVc.delegate = self.delegate;
-        typeVc.assets = self.assets;
-        typeVc.userSelectedPhotos = self.userSelectedPhotos;
-        typeVc.templateClass = product.productTemplate.templateClass;
-        [self.navigationController pushViewController:typeVc animated:YES];
-    }
-    else{
-        OLProductOverviewViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLProductOverviewViewController"];
-        vc.assets = self.assets;
-        vc.userSelectedPhotos = self.userSelectedPhotos;
-        vc.product = product;
-        vc.delegate = self.delegate;
-        [self.navigationController pushViewController:vc animated:YES];
-    }
+    NSString *identifier = [OLKiteViewController storyboardIdentifierForGroupSelected:group];
+    
+    id vc = [self.storyboard instantiateViewControllerWithIdentifier:identifier];
+    [vc safePerformSelector:@selector(setAssets:) withObject:self.assets];
+    [vc safePerformSelector:@selector(setUserSelectedPhotos:) withObject:self.userSelectedPhotos];
+    [vc safePerformSelector:@selector(setDelegate:) withObject:self.delegate];
+    [vc safePerformSelector:@selector(setFilterProducts:) withObject:self.filterProducts];
+    [vc safePerformSelector:@selector(setTemplateClass:) withObject:product.productTemplate.templateClass];
+    [vc safePerformSelector:@selector(setProduct:) withObject:product];
+    
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
 #pragma mark - UITableViewDataSource Methods

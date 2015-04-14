@@ -94,7 +94,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="9qk-Sg-14B" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2338" y="115"/>
+            <point key="canvasLocation" x="1811" y="121"/>
         </scene>
         <!--Choose Frame Style-->
         <scene sceneID="UJ6-GP-I4m">
@@ -235,7 +235,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="2196" y="797"/>
+            <point key="canvasLocation" x="1808" y="780"/>
         </scene>
         <!--Product Overview Page Content View Controller-->
         <scene sceneID="0If-qa-Bx3">
@@ -282,7 +282,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="1806" y="797.5"/>
+            <point key="canvasLocation" x="1353" y="780"/>
         </scene>
         <!--Kite View Controller-->
         <scene sceneID="Ayk-NT-sQ7">
@@ -328,21 +328,6 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hQe-al-rzP" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="474" y="115"/>
-        </scene>
-        <!--Custom Navigation Controller-->
-        <scene sceneID="Xb6-HD-CEQ">
-            <objects>
-                <navigationController storyboardIdentifier="ProductsNavigationController" definesPresentationContext="YES" useStoryboardIdentifierAsRestorationIdentifier="YES" id="2So-Cm-Lml" customClass="OLCustomNavigationController" sceneMemberID="viewController">
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="Hgc-vO-95m">
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <connections>
-                        <segue destination="7qp-ww-Uws" kind="relationship" relationship="rootViewController" id="aF3-p9-5Co"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="dKy-nE-KFa" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="911" y="115"/>
         </scene>
         <!--Products-->
         <scene sceneID="CTf-aG-UPo">
@@ -571,7 +556,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="wuh-x7-vUe" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2748" y="115"/>
+            <point key="canvasLocation" x="2221" y="121"/>
         </scene>
         <!--Frame Order Review View Controller-->
         <scene sceneID="XV9-cJ-5z9">
@@ -739,7 +724,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hLb-mG-OpM" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2624" y="797"/>
+            <point key="canvasLocation" x="2213" y="780"/>
         </scene>
         <!--Scroll Crop View Controller-->
         <scene sceneID="FtM-aT-ojK">
@@ -789,7 +774,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qG7-3J-9cO" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3149" y="-1228"/>
+            <point key="canvasLocation" x="1808" y="1482"/>
         </scene>
         <!--Product Type Selection View Controller-->
         <scene sceneID="H5s-DL-bfC">
@@ -849,10 +834,11 @@
                             <outlet property="delegate" destination="1P5-A7-dqr" id="sqN-ms-Cnl"/>
                         </connections>
                     </tableView>
+                    <navigationItem key="navigationItem" id="u4o-1G-dF7"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xqg-1v-StR" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1810" y="-1228"/>
+            <point key="canvasLocation" x="1815" y="-1222"/>
         </scene>
         <!--Poster Size Selection View Controller-->
         <scene sceneID="YYl-13-A7C">
@@ -1018,7 +1004,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="2343" y="-558"/>
+            <point key="canvasLocation" x="1816" y="-552"/>
         </scene>
         <!--Poster View Controller-->
         <scene sceneID="zgh-jb-0R4">
@@ -1084,7 +1070,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="2748" y="-558"/>
+            <point key="canvasLocation" x="2221" y="-552"/>
         </scene>
         <!--Custom Navigation Controller-->
         <scene sceneID="86d-z2-lD3">
@@ -1102,7 +1088,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SiN-kc-Q1U" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2617" y="-1228"/>
+            <point key="canvasLocation" x="1353" y="1464"/>
         </scene>
         <!--Single Image Product Review View Controller-->
         <scene sceneID="RKn-QM-T9w">
@@ -1289,7 +1275,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="2208" y="-1228"/>
+            <point key="canvasLocation" x="2213" y="-1222"/>
         </scene>
         <!--Choose Photos-->
         <scene sceneID="P36-F6-0uT">
@@ -1607,43 +1593,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Z0C-eh-Wpp" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1413" y="-1228"/>
-        </scene>
-        <!--Custom Navigation Controller-->
-        <scene sceneID="bei-J9-ysM">
-            <objects>
-                <navigationController storyboardIdentifier="OLProductOverviewNavigationViewController" definesPresentationContext="YES" id="NWa-FA-Gox" customClass="OLCustomNavigationController" sceneMemberID="viewController">
-                    <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="Y23-h3-81E">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <nil name="viewControllers"/>
-                    <connections>
-                        <segue destination="TJ8-xQ-5ds" kind="relationship" relationship="rootViewController" id="yBJ-TP-8jo"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="pcz-Pp-cBS" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1806" y="115"/>
-        </scene>
-        <!--Custom Navigation Controller-->
-        <scene sceneID="H4p-Au-Z7f">
-            <objects>
-                <navigationController storyboardIdentifier="sizeSelectNavigationController" definesPresentationContext="YES" id="DQN-kH-F3q" customClass="OLCustomNavigationController" sceneMemberID="viewController">
-                    <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="Ybr-lz-FJB">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <nil name="viewControllers"/>
-                    <connections>
-                        <segue destination="CMl-an-8wL" kind="relationship" relationship="rootViewController" id="RmX-J0-R4q"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="Mck-VB-k6Y" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1811" y="-558"/>
+            <point key="canvasLocation" x="1353" y="-1222"/>
         </scene>
     </scenes>
     <resources>
