@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "OLKitePrintSDK.h"
 
-@interface OLProductTypeSelectionViewController : UITableViewController
+@interface OLProductTypeSelectionViewController : UICollectionViewController
 
 @property (strong, nonatomic) NSMutableArray *assets;
 @property (strong, nonatomic) NSMutableArray *userSelectedPhotos;

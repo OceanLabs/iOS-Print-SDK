@@ -21,7 +21,7 @@
 
 @end
 
-@interface OLProductTypeSelectionViewController ()
+@interface OLProductTypeSelectionViewController () <UICollectionViewDelegateFlowLayout>
 
 @property (strong, nonatomic) NSMutableArray *products;
 
@@ -63,7 +63,12 @@
 #endif
 }
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{    
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+    [self.collectionView.collectionViewLayout invalidateLayout];
+}
+
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
     OLProduct *product = self.products[indexPath.row];
     
     OLProductOverviewViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLProductOverviewViewController"];
@@ -75,8 +80,8 @@
     [self.navigationController pushViewController:vc animated:YES];
 }
 
-- (UITableViewCell *) tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"caseCell"];
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
+    UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"caseCell" forIndexPath:indexPath];
     
     UIActivityIndicatorView *activity = (UIActivityIndicatorView *)[cell.contentView viewWithTag:41];
     [activity startAnimating];
@@ -93,28 +98,39 @@
     return cell;
 }
 
-- (NSInteger) tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
+- (NSInteger) collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
     return self.products.count;
 }
 
-- (CGFloat) tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    return 233;
-//    if ([self tableView:tableView numberOfRowsInSection:indexPath.section] == 2){
-//        return (self.view.bounds.size.height - 64) / 2;
-//    }
-//    else{
-//        return 233 * [self screenWidthFactor];
-//    }
+- (CGSize) collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
+    CGSize size = self.view.bounds.size;
+    NSInteger numberOfCells = [self collectionView:collectionView numberOfItemsInSection:indexPath.section];
+    CGFloat halfScreenHeight = (self.view.frame.size.height - [[UIApplication sharedApplication] statusBarFrame].size.height - self.navigationController.navigationBar.frame.size.height)/2;
+    
+    if (numberOfCells == 4){
+        return CGSizeMake(size.width/2 - 0.5, MAX(halfScreenHeight, 233));
+    }
+    else if (numberOfCells == 2){
+        if (size.width < size.height){
+            return CGSizeMake(self.view.frame.size.width, halfScreenHeight);
+        }
+        else{
+            return CGSizeMake(self.view.frame.size.width/2 - 0.5, halfScreenHeight * 2);
+        }
+    }
+    else{
+        return CGSizeMake(size.width/2 - 0.5, 233);
+    }
 }
 
 #pragma mark - Autorotate and Orientation Methods
 
-- (BOOL)shouldAutorotate {
-    return NO;
-}
-
-- (NSUInteger)supportedInterfaceOrientations {
-    return UIInterfaceOrientationMaskPortrait;
-}
+//- (BOOL)shouldAutorotate {
+//    return NO;
+//}
+//
+//- (NSUInteger)supportedInterfaceOrientations {
+//    return UIInterfaceOrientationMaskPortrait;
+//}
 
 @end

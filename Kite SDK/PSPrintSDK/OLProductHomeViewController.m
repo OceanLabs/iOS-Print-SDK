@@ -89,28 +89,25 @@
 #pragma mark - UICollectionViewDelegate Methods
 
 - (CGSize) collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
-    CGSize screenSize = self.view.bounds.size;
-    if (self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular) {
-        if (screenSize.width > screenSize.height && self.traitCollection.verticalSizeClass == UIUserInterfaceSizeClassRegular){
-            return CGSizeMake(screenSize.width/3 - 0.5, 233);
+    CGSize size = self.view.bounds.size;
+    NSInteger numberOfCells = [self collectionView:collectionView numberOfItemsInSection:indexPath.section];
+    CGFloat halfScreenHeight = (self.view.frame.size.height - [[UIApplication sharedApplication] statusBarFrame].size.height - self.navigationController.navigationBar.frame.size.height)/2;
+    
+    if (numberOfCells == 4){
+        return CGSizeMake(size.width/2 - 0.5, MAX(halfScreenHeight, 233));
+    }
+    else if (numberOfCells == 2){
+        if (size.width < size.height){
+            return CGSizeMake(self.view.frame.size.width, halfScreenHeight);
         }
         else{
-            return CGSizeMake(screenSize.width/2 - 0.5, 233);
+            return CGSizeMake(self.view.frame.size.width/2 - 0.5, halfScreenHeight * 2);
         }
     }
     else{
-        return CGSizeMake(screenSize.width, 233 * screenSize.width / 320.0);
+        return CGSizeMake(size.width/2 - 0.5, 233);
     }
 }
-
-//- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-//    if ([self tableView:tableView numberOfRowsInSection:indexPath.section] == 2){
-//        return (self.view.bounds.size.height - 64) / 2;
-//    }
-//    else{
-//        return 233 * [self screenWidthFactor];
-//    }
-//}
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
     OLProductGroup *group = self.productGroups[indexPath.row];
