@@ -340,6 +340,7 @@ CTAssetsPickerControllerDelegate>
     CTAssetsPickerController *picker = [[CTAssetsPickerController alloc] init];
     picker.delegate = self;
     picker.assetsFilter = [ALAssetsFilter allPhotos];
+    picker.modalPresentationStyle = UIModalPresentationPageSheet;
     [self presentViewController:picker animated:YES completion:nil];
 }
 
@@ -348,6 +349,7 @@ CTAssetsPickerControllerDelegate>
     OLFacebookImagePickerController *picker = nil;
     picker = [[OLFacebookImagePickerController alloc] init];
     picker.delegate = self;
+    picker.modalPresentationStyle = UIModalPresentationPageSheet;
     [self presentViewController:picker animated:YES completion:nil];
 #endif
 }
@@ -356,8 +358,8 @@ CTAssetsPickerControllerDelegate>
 #ifdef OL_KITE_OFFER_INSTAGRAM
     OLInstagramImagePickerController *picker = nil;
     picker = [[OLInstagramImagePickerController alloc] initWithClientId:[OLKitePrintSDK instagramClientID] secret:[OLKitePrintSDK instagramSecret] redirectURI:[OLKitePrintSDK instagramRedirectURI]];
-    
     picker.delegate = self;
+    picker.modalPresentationStyle = UIModalPresentationPageSheet;
     [self presentViewController:picker animated:YES completion:nil];
 #endif
 }

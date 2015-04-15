@@ -341,6 +341,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     CTAssetsPickerController *picker = [[CTAssetsPickerController alloc] init];
     picker.delegate = self;
     picker.assetsFilter = [ALAssetsFilter allPhotos];
+    picker.modalPresentationStyle = UIModalPresentationPageSheet;
     NSArray *allAssets = [[self createAssetArray] mutableCopy];
     NSMutableArray *alAssets = [[NSMutableArray alloc] init];
     for (id asset in allAssets){
@@ -359,6 +360,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     
     picker.delegate = self;
     picker.selected = [self createAssetArray];
+    picker.modalPresentationStyle = UIModalPresentationPageSheet;
     [self presentViewController:picker animated:YES completion:nil];
 #endif
 }
@@ -369,6 +371,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     picker = [[OLFacebookImagePickerController alloc] init];
     picker.delegate = self;
     picker.selected = [self createAssetArray];
+    picker.modalPresentationStyle = UIModalPresentationPageSheet;
     [self presentViewController:picker animated:YES completion:nil];
 #endif
 }

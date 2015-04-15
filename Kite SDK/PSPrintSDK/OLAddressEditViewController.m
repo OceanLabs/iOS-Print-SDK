@@ -223,6 +223,7 @@ static const NSUInteger kTagLabel = 100;
         controller.delegate = self;
         OLCountry *selectedCountry = self.address.country;
         controller.selected = @[selectedCountry ? selectedCountry : [OLCountry countryForCode:@"GBR"]];
+        controller.modalPresentationStyle = UIModalPresentationPageSheet;
         [self presentViewController:controller animated:YES completion:nil];
     }
 }

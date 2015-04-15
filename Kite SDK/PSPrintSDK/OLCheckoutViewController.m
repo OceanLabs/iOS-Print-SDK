@@ -386,6 +386,7 @@ static const NSUInteger kInputFieldTag = 99;
     if (indexPath.section == kSectionDeliveryDetails) {
         OLAddressPickerController *c = [[OLAddressPickerController alloc] init];
         c.delegate = self;
+        c.modalPresentationStyle = UIModalPresentationPageSheet;
         [self presentViewController:c animated:YES completion:nil];
     }
 }

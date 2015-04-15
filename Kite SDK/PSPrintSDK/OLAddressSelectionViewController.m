@@ -104,6 +104,7 @@ static const NSInteger kRowAddAddressManually = 1;
     ABPeoplePickerNavigationController *picker = [[ABPeoplePickerNavigationController alloc] init];
     picker.peoplePickerDelegate = self;
     picker.displayedProperties = @[[NSNumber numberWithInteger:kABPersonAddressProperty]];
+    picker.modalPresentationStyle = UIModalPresentationPageSheet;
     [self presentViewController:picker animated:YES completion:nil];
 }
 
