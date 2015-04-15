@@ -83,6 +83,8 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 @property (weak, nonatomic) IBOutlet UIButton *clearButton;
 @property (strong, nonatomic) UIVisualEffectView *visualEffectView;
 
+@property (assign, nonatomic) CGSize rotationSize;
+
 @property (strong, nonatomic) NSMutableDictionary *indexPathsToRemoveDict;
 @end
 
@@ -107,6 +109,8 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     [self.buttonFacebookImport setBackgroundImage:[self imageWithColor:[UIColor colorWithHexString:@"#497aba"]] forState:UIControlStateHighlighted];
     [self.buttonGalleryImport setBackgroundImage:[self imageWithColor:[UIColor colorWithHexString:@"#369c82"]] forState:UIControlStateHighlighted];
     [self.buttonInstagramImport setBackgroundImage:[self imageWithColor:[UIColor colorWithHexString:@"#c29334"]] forState:UIControlStateHighlighted];
+    
+    self.rotationSize = CGSizeZero;
     
     if (![self instagramEnabled]){
         [self.instagramButton removeFromSuperview];
@@ -186,6 +190,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 - (void)viewDidAppear:(BOOL)animated{
     [self updateNoSelectedPhotosView];
     [self updateTitleBasedOnSelectedPhotoQuanitity];
+    [self.collectionView.collectionViewLayout invalidateLayout];
 }
 
 - (UIImage *)imageWithColor:(UIColor *)color {
@@ -319,9 +324,8 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
     [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
-    [coordinator animateAlongsideTransition:NULL completion:^(id<UIViewControllerTransitionCoordinator> context){
-        [self.collectionView.collectionViewLayout invalidateLayout];
-    }];
+    self.rotationSize = size;
+    [self.collectionView.collectionViewLayout invalidateLayout];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -487,7 +491,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 #pragma mark - UICollectionViewDataSource Methods
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    NSInteger number = collectionView.frame.size.height / 105 ;
+    NSInteger number = self.product.quantityToFulfillOrder;//collectionView.frame.size.height / 105 ;
     NSInteger removedImagesInOtherSections = 0;
     for (NSNumber *sectionNumber in self.indexPathsToRemoveDict.allKeys){
         NSNumber *n = [NSNumber numberWithLong:[sectionNumber longValue]];
@@ -717,11 +721,17 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 - (CGSize)collectionView:(UICollectionView *)collectionView
                   layout:(UICollectionViewLayout *)collectionViewLayout
   sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
-    CGFloat width = floorf(self.view.bounds.size.width/3);
+    CGSize size = self.view.bounds.size;
+    
+    if (self.rotationSize.width != 0){
+        size = self.rotationSize;
+    }
+    
+    CGFloat width = floorf(size.width/3);
     CGFloat height = width;
     
     if (indexPath.item % 3 == 2) {
-        width = self.view.bounds.size.width - 2 * width;
+        width = size.width - 2 * width;
     }
 
     return CGSizeMake(width, height);
