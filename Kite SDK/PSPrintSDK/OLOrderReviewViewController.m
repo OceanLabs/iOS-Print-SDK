@@ -167,7 +167,6 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     vc.userPhone = [OLKitePrintSDK userPhone:self];
     vc.kiteDelegate = [OLKitePrintSDK kiteDelegate:self];
     
-    
     [self.navigationController pushViewController:vc animated:YES];
 }
 
@@ -183,10 +182,6 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
 
 - (void)onUserSelectedPhotoCountChange {
     [self updateTitleBasedOnSelectedPhotoQuanitity];
-}
-
-- (BOOL) shouldShowContinueShoppingButton{
-    return NO;
 }
 
 - (void) deletePhotoAtIndex:(NSUInteger)index{

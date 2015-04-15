@@ -205,6 +205,35 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     }
 #endif
     
+    UIView *view = self.payWithCreditCardButton;
+    view.translatesAutoresizingMaskIntoConstraints = NO;
+    NSDictionary *views = NSDictionaryOfVariableBindings(view);
+    NSMutableArray *con = [[NSMutableArray alloc] init];
+    
+    NSString *v = [NSString stringWithFormat:@"V:|-%f-[view(44)]", 52 - heightDiff];
+    NSArray *visuals = @[@"H:|-0-[view]-0-|", v];
+    
+    
+    for (NSString *visual in visuals) {
+        [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+    }
+    
+    [view.superview addConstraints:con];
+    
+    view = self.payWithPayPalButton;
+    view.translatesAutoresizingMaskIntoConstraints = NO;
+    views = NSDictionaryOfVariableBindings(view);
+    con = [[NSMutableArray alloc] init];
+    
+    v = [NSString stringWithFormat:@"V:|-%f-[view(44)]", 104 - heightDiff];
+    visuals = @[@"H:|-0-[view]-0-|", v];
+    
+    for (NSString *visual in visuals) {
+        [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+    }
+    
+    [view.superview addConstraints:con];
+    
     self.tableView.tableFooterView = footer;
     
     [self updateViewsBasedOnPromoCodeChange]; // initialise based on promo state
@@ -745,6 +774,23 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         [continueShoppingButton setBackgroundColor:[UIColor colorWithRed:74 / 255.0f green:137 / 255.0f blue:220 / 255.0f alpha:1.0]];
         [continueShoppingButton addTarget:self action:@selector(onButtonContinueShoppingClicked:) forControlEvents:UIControlEventTouchUpInside];
         [cell addSubview:continueShoppingButton];
+        
+        UIView *view = continueShoppingButton;
+        view.translatesAutoresizingMaskIntoConstraints = NO;
+        NSDictionary *views = NSDictionaryOfVariableBindings(view);
+        NSMutableArray *con = [[NSMutableArray alloc] init];
+        
+        NSArray *visuals = @[@"H:|-0-[view]-0-|",
+                             @"V:|-0-[view]-0-|"];
+        
+        
+        for (NSString *visual in visuals) {
+            [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+        }
+        
+        [view.superview addConstraints:con];
+
+        
     } else if ([sectionString isEqualToString:kSectionPromoCodes]) {
         static NSString *const CellIdentifier = @"PromoCodeCell";
         cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
@@ -768,6 +814,38 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             [applyButton addTarget:self action:@selector(onButtonApplyPromoCodeClicked:) forControlEvents:UIControlEventTouchUpInside];
             [cell addSubview:promoCodeTextField];
             [cell addSubview:applyButton];
+            
+            UIView *view = promoCodeTextField;
+            view.translatesAutoresizingMaskIntoConstraints = NO;
+            NSDictionary *views = NSDictionaryOfVariableBindings(view);
+            NSMutableArray *con = [[NSMutableArray alloc] init];
+            
+            NSArray *visuals = @[@"H:|-20-[view]-60-|",
+                                 @"V:|-0-[view]-0-|"];
+            
+            
+            for (NSString *visual in visuals) {
+                [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+            }
+            
+            [view.superview addConstraints:con];
+            
+            view = applyButton;
+            view.translatesAutoresizingMaskIntoConstraints = NO;
+            views = NSDictionaryOfVariableBindings(view);
+            con = [[NSMutableArray alloc] init];
+            
+            visuals = @[@"H:[view(60)]-0-|",
+                                 @"V:|-0-[view]-0-|"];
+            
+            
+            for (NSString *visual in visuals) {
+                [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+            }
+            
+            [view.superview addConstraints:con];
+
+
             
             self.promoTextField = promoCodeTextField;
             self.promoApplyButton = applyButton;
@@ -833,16 +911,6 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     [self dismissViewControllerAnimated:YES completion:^{
         [self submitOrderForPrintingWithProofOfPayment:proofOfPayment completion:^void(PKPaymentAuthorizationStatus status){}];
     }];
-}
-
-#pragma mark - Autorotate and Orientation Methods
-
-- (BOOL)shouldAutorotate {
-    return NO;
-}
-
-- (NSUInteger)supportedInterfaceOrientations {
-    return UIInterfaceOrientationMaskPortrait;
 }
 
 

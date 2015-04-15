@@ -346,6 +346,23 @@ static const NSUInteger kInputFieldTag = 99;
     [inputField setKeyboardType:type];
     [cell addSubview:titleLabel];
     [cell addSubview:inputField];
+    
+    UIView *view = inputField;
+    view.translatesAutoresizingMaskIntoConstraints = NO;
+    NSDictionary *views = NSDictionaryOfVariableBindings(view);
+    NSMutableArray *con = [[NSMutableArray alloc] init];
+    
+    NSArray *visuals = @[@"H:|-86-[view]-0-|",
+                         @"V:|-0-[view]-0-|"];
+    
+    
+    for (NSString *visual in visuals) {
+        [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+    }
+    
+    [view.superview addConstraints:con];
+
+    
     return cell;
 }
 
@@ -392,16 +409,6 @@ static const NSUInteger kInputFieldTag = 99;
 
 - (void)addressPickerDidCancelPicking:(OLAddressPickerController *)picker {
     [self dismissViewControllerAnimated:YES completion:nil];
-}
-
-#pragma mark - Autorotate and Orientation Methods
-
-- (BOOL)shouldAutorotate {
-    return NO;
-}
-
-- (NSUInteger)supportedInterfaceOrientations {
-    return UIInterfaceOrientationMaskPortrait;
 }
 
 
