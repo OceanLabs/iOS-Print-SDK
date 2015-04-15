@@ -389,7 +389,7 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     UIEdgeInsets b = self.product.productTemplate.imageBorder;
     
     CGFloat screenWidthFactor = 1;
-    if (self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassCompact){
+    if (self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassCompact && self.view.frame.size.width < self.view.frame.size.height){
         screenWidthFactor = self.view.frame.size.width / 320;
     }
     
