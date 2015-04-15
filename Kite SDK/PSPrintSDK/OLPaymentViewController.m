@@ -23,6 +23,7 @@
 #import "OLConstants.h"
 #import "OLCreditCardCaptureViewController.h"
 #import "OLAnalytics.h"
+#import "UIView+RoundRect.h"
 
 #ifdef OL_KITE_OFFER_PAYPAL
 #import <PayPalMobile.h>
@@ -166,6 +167,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     self.payWithCreditCardButton.backgroundColor = [UIColor colorWithRed:55 / 255.0f green:188 / 255.0f blue:155 / 255.0f alpha:1.0];
     [self.payWithCreditCardButton addTarget:self action:@selector(onButtonPayWithCreditCardClicked) forControlEvents:UIControlEventTouchUpInside];
     [self.payWithCreditCardButton setTitle:NSLocalizedStringFromTableInBundle(@"Pay with Card", @"KitePrintSDK", [OLConstants bundle], @"") forState:UIControlStateNormal];
+    [self.payWithCreditCardButton makeRoundRect];
     CGFloat maxY = CGRectGetMaxY(self.payWithCreditCardButton.frame);
 
     
@@ -174,6 +176,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     [self.payWithPayPalButton setTitle:NSLocalizedStringFromTableInBundle(@"Pay with PayPal", @"KitePrintSDK", [OLConstants bundle], @"") forState:UIControlStateNormal];
     [self.payWithPayPalButton addTarget:self action:@selector(onButtonPayWithPayPalClicked) forControlEvents:UIControlEventTouchUpInside];
     self.payWithPayPalButton.backgroundColor = [UIColor colorWithRed:74 / 255.0f green:137 / 255.0f blue:220 / 255.0f alpha:1.0];
+    [self.payWithPayPalButton makeRoundRect];
 #endif
     
 #ifdef OL_KITE_OFFER_APPLE_PAY
@@ -211,7 +214,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     NSMutableArray *con = [[NSMutableArray alloc] init];
     
     NSString *v = [NSString stringWithFormat:@"V:|-%f-[view(44)]", 52 - heightDiff];
-    NSArray *visuals = @[@"H:|-0-[view]-0-|", v];
+    NSArray *visuals = @[@"H:|-20-[view]-20-|", v];
     
     
     for (NSString *visual in visuals) {
@@ -220,19 +223,21 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     
     [view.superview addConstraints:con];
     
+#ifdef OL_KITE_OFFER_PAYPAL
     view = self.payWithPayPalButton;
     view.translatesAutoresizingMaskIntoConstraints = NO;
     views = NSDictionaryOfVariableBindings(view);
     con = [[NSMutableArray alloc] init];
     
     v = [NSString stringWithFormat:@"V:|-%f-[view(44)]", 104 - heightDiff];
-    visuals = @[@"H:|-0-[view]-0-|", v];
+    visuals = @[@"H:|-20-[view]-20-|", v];
     
     for (NSString *visual in visuals) {
         [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
     }
     
     [view.superview addConstraints:con];
+#endif
     
     self.tableView.tableFooterView = footer;
     
