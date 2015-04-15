@@ -313,6 +313,11 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     return 1;
 }
 
+- (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath{
+    UICollectionReusableView * cell = [collectionView dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:@"reviewHeaderCell" forIndexPath:indexPath];
+    return cell;
+}
+
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
     OLCircleMaskCollectionViewCell* cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"reviewPhotoCell" forIndexPath:indexPath];
     UIView *view = cell.contentView;
@@ -395,7 +400,7 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     
     CGFloat margin = 20;
     CGFloat heightForButtons = 56;
-    CGFloat imageWidth = 280;
+    CGFloat imageWidth = 320 - margin * 2;
     CGFloat imageHeight = (imageWidth - b.right - b.left) * [self productAspectRatio] * screenWidthFactor;
     CGFloat height = imageHeight + (b.top + b.bottom) + heightForButtons + margin;
     
