@@ -47,6 +47,7 @@ static const NSUInteger kInputFieldTag = 99;
 @property (strong, nonatomic) UITextField *textFieldEmail, *textFieldPhone;
 @property (strong, nonatomic) OLPrintOrder *printOrder;
 @property (assign, nonatomic) BOOL presentedModally;
+@property (strong, nonatomic) UILabel *kiteLabel;
 @end
 
 @implementation OLCheckoutViewController
@@ -104,6 +105,13 @@ static const NSUInteger kInputFieldTag = 99;
     }
 }
 
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+    [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinator> context){
+        [self positionKiteLabel];
+    } completion:NULL];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     
@@ -127,14 +135,20 @@ static const NSUInteger kInputFieldTag = 99;
     tgr.cancelsTouchesInView = NO; // allow table cell selection to happen as normal
     [self.tableView addGestureRecognizer:tgr];
     
-    UILabel *kiteLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 100, 40, 40)];
-    kiteLabel.text = NSLocalizedString(@"Powered by Kite.ly", @"");
-    kiteLabel.font = [UIFont systemFontOfSize:13];
-    kiteLabel.textColor = [UIColor lightGrayColor];
-    [self.view addSubview:kiteLabel];
-    [kiteLabel sizeToFit];
-    kiteLabel.frame = CGRectMake(([UIScreen mainScreen].bounds.size.width - kiteLabel.frame.size.width) / 2, [UIScreen mainScreen].bounds.size.height - self.navigationController.navigationBar.frame.size.height - kiteLabel.frame.size.height - [[UIApplication sharedApplication] statusBarFrame].size.height - 20, kiteLabel.frame.size.width, kiteLabel.frame.size.height);
+    [self positionKiteLabel];
+}
+
+- (void)positionKiteLabel{
+    if (!self.kiteLabel){
+        self.kiteLabel = [[UILabel alloc] init];
+        self.kiteLabel.text = NSLocalizedString(@"Powered by Kite.ly", @"");
+        self.kiteLabel.font = [UIFont systemFontOfSize:13];
+        self.kiteLabel.textColor = [UIColor lightGrayColor];
+        [self.view addSubview:self.kiteLabel];
+        [self.kiteLabel sizeToFit];
+    }
     
+    self.kiteLabel.frame = CGRectMake(([UIScreen mainScreen].bounds.size.width - self.kiteLabel.frame.size.width) / 2, [UIScreen mainScreen].bounds.size.height - self.navigationController.navigationBar.frame.size.height - self.kiteLabel.frame.size.height - [[UIApplication sharedApplication] statusBarFrame].size.height - 20, self.kiteLabel.frame.size.width, self.kiteLabel.frame.size.height);
 }
 
 - (void)onButtonCancelClicked {
@@ -340,7 +354,7 @@ static const NSUInteger kInputFieldTag = 99;
     UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 11, 61, 21)];
     titleLabel.text = title;
     titleLabel.adjustsFontSizeToFitWidth = YES;
-    UITextField *inputField = [[UITextField alloc] initWithFrame:CGRectMake(86, 0, [UIScreen mainScreen].bounds.size.width - 86, 43)];
+    UITextField *inputField = [[UITextField alloc] init];
     inputField.delegate = self;
     inputField.tag = kInputFieldTag;
     [inputField setKeyboardType:type];
