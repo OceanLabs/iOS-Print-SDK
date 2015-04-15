@@ -191,7 +191,7 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     
     [self updateTitleBasedOnSelectedPhotoQuanitity];
     
-    [self.collectionView deleteItemsAtIndexPaths:@[[NSIndexPath indexPathForRow:index inSection:0]]];
+    [self.collectionView deleteItemsAtIndexPaths:@[[NSIndexPath indexPathForItem:index inSection:0]]];
 }
 
 - (CGFloat) productAspectRatio{
@@ -214,8 +214,8 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     }
     NSIndexPath* indexPath = [self.collectionView indexPathForCell:(UICollectionViewCell *)cell];
     
-    NSUInteger extraCopies = [self.extraCopiesOfAssets[indexPath.row] integerValue] + 1;
-    self.extraCopiesOfAssets[indexPath.row] = [NSNumber numberWithInteger:extraCopies];
+    NSUInteger extraCopies = [self.extraCopiesOfAssets[indexPath.item] integerValue] + 1;
+    self.extraCopiesOfAssets[indexPath.item] = [NSNumber numberWithInteger:extraCopies];
     UILabel* countLabel = (UILabel *)[cellContentView viewWithTag:30];
     [countLabel setText: [NSString stringWithFormat:@"%lu", (unsigned long)extraCopies + 1]];
     
@@ -230,19 +230,19 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     }
     NSIndexPath* indexPath = [self.collectionView indexPathForCell:(UICollectionViewCell *)cell];
     
-    NSUInteger extraCopies = [self.extraCopiesOfAssets[indexPath.row] integerValue];
+    NSUInteger extraCopies = [self.extraCopiesOfAssets[indexPath.item] integerValue];
     if (extraCopies == 0){
         if ([UIAlertController class]){
             UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Delete?", @"") message:NSLocalizedString(@"Do you want to delete this photo?", @"") preferredStyle:UIAlertControllerStyleAlert];
             [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Yes, delete it", @"") style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action){
-                [self deletePhotoAtIndex:indexPath.row];
+                [self deletePhotoAtIndex:indexPath.item];
             }]];
             [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"No, keep it", @"") style:UIAlertActionStyleCancel handler:^(UIAlertAction *action){}]];
             [self presentViewController:ac animated:YES completion:NULL];
         }
         else{
             UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Delete?", @"") message:NSLocalizedString(@"Do you want to delete this photo?", @"") delegate:self cancelButtonTitle:NSLocalizedString(@"Yes, delete it", @"") otherButtonTitles:NSLocalizedString(@"No, keep it", @""), nil];
-            self.indexOfPhotoToDelete = indexPath.row;
+            self.indexOfPhotoToDelete = indexPath.item;
             av.tag = kTagAlertViewDeletePhoto;
             [av show];
         };
@@ -250,7 +250,7 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     }
     extraCopies--;
     
-    self.extraCopiesOfAssets[indexPath.row] = [NSNumber numberWithInteger:extraCopies];
+    self.extraCopiesOfAssets[indexPath.item] = [NSNumber numberWithInteger:extraCopies];
     UILabel* countLabel = (UILabel *)[cellContentView viewWithTag:30];
     [countLabel setText: [NSString stringWithFormat:@"%lu", (unsigned long)extraCopies + 1]];
     
@@ -272,8 +272,8 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     NSIndexPath *indexPath = [self.collectionView indexPathForCell:(UICollectionViewCell *)cell];
     
     OLPrintPhoto *tempPrintPhoto = [[OLPrintPhoto alloc] init];
-    tempPrintPhoto.asset = self.assets[indexPath.row];
-    self.editingPrintPhoto = self.userSelectedPhotos[indexPath.row];
+    tempPrintPhoto.asset = self.assets[indexPath.item];
+    self.editingPrintPhoto = self.userSelectedPhotos[indexPath.item];
     
     UINavigationController *nav = [self.storyboard instantiateViewControllerWithIdentifier:@"CropViewNavigationController"];
     OLScrollCropViewController *cropVc = (id)nav.topViewController;
@@ -329,12 +329,14 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     }
     
     [view.superview addConstraints:con];
-
     
     UIView *borderView = [cell.contentView viewWithTag:399];
     
     UIActivityIndicatorView *activityIndicator = (UIActivityIndicatorView *)[cell.contentView viewWithTag:278];
     [activityIndicator startAnimating];
+    
+    UIView *oldView = [cell.contentView viewWithTag:10];
+    [oldView removeFromSuperview];
     
     UIImageView *cellImage = [[UIImageView alloc] initWithFrame:borderView.frame];
     cellImage.tag = 10;
@@ -356,9 +358,9 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     [downButton addTarget:self action:@selector(onButtonDownArrowClicked:) forControlEvents:UIControlEventTouchUpInside];
     
     UILabel *countLabel = (UILabel *)[cell.contentView viewWithTag:30];
-    [countLabel setText: [NSString stringWithFormat:@"%lu", (unsigned long)(1+[((NSNumber*)[self.extraCopiesOfAssets objectAtIndex:indexPath.row]) integerValue])]];
+    [countLabel setText: [NSString stringWithFormat:@"%lu", (unsigned long)(1+[((NSNumber*)[self.extraCopiesOfAssets objectAtIndex:indexPath.item]) integerValue])]];
     
-    [((OLPrintPhoto*)[self.userSelectedPhotos objectAtIndex:indexPath.row]) setImageIdealSizeForImageView:cellImage highQuality:YES];
+    [((OLPrintPhoto*)[self.userSelectedPhotos objectAtIndex:indexPath.item]) setImageIdealSizeForImageView:cellImage highQuality:YES];
     
     if (self.product.productTemplate.templateUI == kOLTemplateUICircle){
         cell.enableMask = YES;
