@@ -376,7 +376,7 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     NSLayoutConstraint *rightCon = [NSLayoutConstraint constraintWithItem:cellImage attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:borderView attribute:NSLayoutAttributeRight multiplier:1 constant:-b.right];
     NSLayoutConstraint *bottomCon = [NSLayoutConstraint constraintWithItem:cellImage attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationLessThanOrEqual toItem:borderView attribute:NSLayoutAttributeBottom multiplier:1 constant:-b.bottom];
     
-    NSLayoutConstraint *aspectRatioCon = [NSLayoutConstraint constraintWithItem:cellImage attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:cellImage attribute:NSLayoutAttributeHeight multiplier:1 constant:0];
+    NSLayoutConstraint *aspectRatioCon = [NSLayoutConstraint constraintWithItem:cellImage attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:cellImage attribute:NSLayoutAttributeWidth multiplier:[self productAspectRatio] constant:0];
     aspectRatioCon.priority = 750;
     NSLayoutConstraint *activityCenterXCon = [NSLayoutConstraint constraintWithItem:cellImage attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:activityIndicator attribute:NSLayoutAttributeCenterX multiplier:1 constant:0];
     NSLayoutConstraint *activityCenterYCon = [NSLayoutConstraint constraintWithItem:cellImage attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:activityIndicator attribute:NSLayoutAttributeCenterY multiplier:1 constant:0];
@@ -393,18 +393,21 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
 {
     UIEdgeInsets b = self.product.productTemplate.imageBorder;
     
+    //Everything is designed and calculated based on a 320 view width. Scale up as necessary for larger phones.
     CGFloat screenWidthFactor = 1;
+    //Only change the scale for portrait phones.
     if (self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassCompact && self.view.frame.size.width < self.view.frame.size.height){
         screenWidthFactor = self.view.frame.size.width / 320;
     }
     
     CGFloat margin = 20;
-    CGFloat heightForButtons = 56;
-    CGFloat imageWidth = 320 - margin * 2;
-    CGFloat imageHeight = (imageWidth - b.right - b.left) * [self productAspectRatio] * screenWidthFactor;
-    CGFloat height = imageHeight + (b.top + b.bottom) + heightForButtons + margin;
+    CGFloat heightForButtons = 51;
+    CGFloat imageWidth = 320 - margin * 2  - b.right - b.left;
+    CGFloat imageHeight = imageWidth * [self productAspectRatio];
+    CGFloat height = (imageHeight + b.top + b.bottom) * screenWidthFactor + margin + heightForButtons;
+    CGFloat width = (imageWidth + b.right + b.left) * screenWidthFactor + margin * 2;
     
-    return CGSizeMake(imageWidth * screenWidthFactor + margin * 2, height);
+    return CGSizeMake(width, height);
 
 }
 
