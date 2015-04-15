@@ -121,16 +121,6 @@ UITableViewDataSource, UITextFieldDelegate>
     return self.rootVC.delegate;
 }
 
-#pragma mark - Autorotate and Orientation Methods
-
-- (BOOL)shouldAutorotate {
-    return NO;
-}
-
-- (NSUInteger)supportedInterfaceOrientations {
-    return UIInterfaceOrientationMaskPortrait;
-}
-
 @end
 
 @implementation OLCreditCardCaptureRootController
@@ -148,13 +138,28 @@ UITableViewDataSource, UITextFieldDelegate>
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    UIButton *buttonPay = [[UIButton alloc] initWithFrame:CGRectMake(0, 20, self.view.frame.size.width, 44)];
+    UIButton *buttonPay = [[UIButton alloc] init];
     buttonPay.backgroundColor = [UIColor colorWithRed:74 / 255.0f green:137 / 255.0f blue:220 / 255.0f alpha:1.0];
     [buttonPay addTarget:self action:@selector(onButtonPayClicked) forControlEvents:UIControlEventTouchUpInside];
     [buttonPay setTitle:NSLocalizedString(@"Pay", @"") forState:UIControlStateNormal];
     
     UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 44 + 40)];
     [footerView addSubview:buttonPay];
+    
+    UIView *view = buttonPay;
+    view.translatesAutoresizingMaskIntoConstraints = NO;
+    NSDictionary *views = NSDictionaryOfVariableBindings(view);
+    NSMutableArray *con = [[NSMutableArray alloc] init];
+    
+    NSArray *visuals = @[@"H:|-0-[view]-0-|",
+                         @"V:|-20-[view(44)]"];
+    
+    
+    for (NSString *visual in visuals) {
+        [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+    }
+    
+    [view.superview addConstraints:con];
     
     self.tableView.tableFooterView = footerView;
     
@@ -341,6 +346,22 @@ UITableViewDataSource, UITextFieldDelegate>
         textField.tag = 99;
         textField.keyboardType = UIKeyboardTypeNumberPad;
         [cell addSubview:textField];
+        
+        UIView *view = textField;
+        view.translatesAutoresizingMaskIntoConstraints = NO;
+        NSDictionary *views = NSDictionaryOfVariableBindings(view);
+        NSMutableArray *con = [[NSMutableArray alloc] init];
+        
+        NSArray *visuals = @[@"H:|-20-[view]-43-|",
+                             @"V:|-0-[view]-0-|"];
+        
+        
+        for (NSString *visual in visuals) {
+            [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+        }
+        
+        [view.superview addConstraints:con];
+
     }
     
     UITextField *textField = (UITextField *) [cell viewWithTag:99];
@@ -352,10 +373,26 @@ UITableViewDataSource, UITextFieldDelegate>
         if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]){
             AVAuthorizationStatus authStatus = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];
             if ((authStatus == AVAuthorizationStatusAuthorized || authStatus == AVAuthorizationStatusNotDetermined || authStatus == AVAuthorizationStatusDenied)){
-                UIButton *cameraIcon = [[UIButton alloc] initWithFrame:CGRectMake(self.tableView.frame.size.width - 43, 0, 43, 43)];
+                UIButton *cameraIcon = [[UIButton alloc] init];
                 [cameraIcon setImage:[UIImage imageNamed:@"button_camera"] forState:UIControlStateNormal];
                 [cameraIcon addTarget:self action:@selector(showCardScanner) forControlEvents:UIControlEventTouchUpInside];
                 [cell.contentView addSubview:cameraIcon];
+                
+                UIView *view = cameraIcon;
+                view.translatesAutoresizingMaskIntoConstraints = NO;
+                NSDictionary *views = NSDictionaryOfVariableBindings(view);
+                NSMutableArray *con = [[NSMutableArray alloc] init];
+                
+                NSArray *visuals = @[@"H:[view(43)]-0-|",
+                                     @"V:|-0-[view]-0-|"];
+                
+                
+                for (NSString *visual in visuals) {
+                    [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+                }
+                
+                [view.superview addConstraints:con];
+
             }
         }
         
