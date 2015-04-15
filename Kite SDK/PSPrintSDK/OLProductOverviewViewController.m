@@ -82,12 +82,7 @@
     }
 }
 
--(void)viewWillAppear:(BOOL)animated{
-//    [self.splitViewController setPreferredDisplayMode:UISplitViewControllerDisplayModePrimaryOverlay];
-}
-
 -(void)viewDidAppear:(BOOL)animated{
-//    [self.splitViewController setPreferredDisplayMode:UISplitViewControllerDisplayModeAllVisible];
     if (self.navigationController){
         NSMutableArray *navigationStack = self.navigationController.viewControllers.mutableCopy;
         if (navigationStack.count > 1 && [navigationStack[navigationStack.count - 2] isKindOfClass:[OLKiteViewController class]]) {
@@ -118,17 +113,7 @@
         frameVc.assets = self.assets;
         frameVc.userSelectedPhotos = self.userSelectedPhotos;
         frameVc.delegate = self.delegate;
-        [(UINavigationController *)[self.splitViewController.viewControllers firstObject] pushViewController:frameVc animated:YES];
-        
-        NSArray *products = [OLProduct products];
-        OLFrameOrderReviewViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"FrameOrderReviewViewController"];
-        vc.assets = self.assets;
-        for (OLProduct *product in products){
-            if (product.productTemplate.templateUI == kOLTemplateUIFrame){
-                vc.product = product;
-            }
-        }
-        [self.splitViewController showDetailViewController:vc sender:self];
+        [self.navigationController pushViewController:frameVc animated:YES];
     }
     else if (self.product.productTemplate.templateUI == kOLTemplateUICase){
         OLSingleImageProductReviewViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLCaseViewController"];
@@ -136,7 +121,6 @@
         vc.userSelectedPhotos = self.userSelectedPhotos;
         vc.delegate = self.delegate;
         vc.product = self.product;
-//        [self.splitViewController setPreferredDisplayMode:UISplitViewControllerDisplayModePrimaryHidden];
         [self.navigationController pushViewController:vc animated:YES];
     }
     else if (self.product.productTemplate.templateUI == kOLTemplateUIPostcard){

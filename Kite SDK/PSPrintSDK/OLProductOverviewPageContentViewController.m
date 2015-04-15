@@ -43,15 +43,5 @@
     }
 }
 
-#pragma mark - Autorotate and Orientation Methods
-
-- (BOOL)shouldAutorotate {
-    return NO;
-}
-
-- (NSUInteger)supportedInterfaceOrientations {
-    return UIInterfaceOrientationMaskPortrait;
-}
-
 
 @end

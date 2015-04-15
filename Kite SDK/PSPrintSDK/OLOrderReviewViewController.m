@@ -32,7 +32,6 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
 
 @interface OLOrderReviewViewController () <OLCheckoutDelegate, UIAlertViewDelegate, UICollectionViewDelegateFlowLayout>
 
-@property (weak, nonatomic) IBOutlet UIBarButtonItem *confirmBarButton;
 @property (weak, nonatomic) OLPrintPhoto *editingPrintPhoto;
 @property (strong, nonatomic) UIView *addMorePhotosView;
 @property (strong, nonatomic) UIButton *addMorePhotosButton;
@@ -65,13 +64,11 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     }
     [self updateTitleBasedOnSelectedPhotoQuanitity];
     
-    self.confirmBarButton.title = NSLocalizedString(@"Confirm", "");
-    
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Back", @"")
                                                                              style:UIBarButtonItemStyleBordered
                                                                             target:nil
                                                                             action:nil];
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Next", @"") style:UIBarButtonItemStylePlain target:self action:@selector(onButtonNextClicked:)];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Confirm", @"") style:UIBarButtonItemStylePlain target:self action:@selector(onButtonNextClicked:)];
 }
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {

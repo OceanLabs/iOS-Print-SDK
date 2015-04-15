@@ -15,7 +15,6 @@
 
 @interface OLFrameOrderReviewViewController () <OLScrollCropViewControllerDelegate>
 
-@property (weak, nonatomic) IBOutlet UIBarButtonItem *confirmBarButton;
 @property (strong, nonatomic) NSMutableArray* framePhotos;
 @property (weak, nonatomic) OLPrintPhoto *editingPrintPhoto;
 
@@ -23,7 +22,7 @@
 
 @implementation OLFrameOrderReviewViewController
 
-NSInteger margin = 2;
+CGFloat margin = 2;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -55,6 +54,8 @@ NSInteger margin = 2;
     }
     
     self.title = NSLocalizedString(@"Review", @"");
+    
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Confirm", @"") style:UIBarButtonItemStylePlain target:self action:@selector(onButtonNextClicked:)];
 }
 
 //- (void)onTapGestureThumbnailTapped:(UITapGestureRecognizer*)gestureRecognizer {
@@ -65,8 +66,8 @@ NSInteger margin = 2;
 //    
 //    NSIndexPath* indexPath = [collectionView indexPathForItemAtPoint:[gestureRecognizer locationInView:collectionView]];
 //    
-//    self.editingPrintPhoto = self.framePhotos[(tableIndexPath.row - 1) * self.product.quantityToFulfillOrder + indexPath.row];
-//    self.editingPrintPhoto.asset = self.assets[((tableIndexPath.row - 1) * self.product.quantityToFulfillOrder + indexPath.row) % [self.assets count]];
+//    self.editingPrintPhoto = self.framePhotos[(tableIndexPath.item) * self.product.quantityToFulfillOrder + indexPath.row];
+//    self.editingPrintPhoto.asset = self.assets[((tableIndexPath.item) * self.product.quantityToFulfillOrder + indexPath.row) % [self.assets count]];
 //    
 //    UINavigationController *nav = [self.storyboard instantiateViewControllerWithIdentifier:@"CropViewNavigationController"];
 //    OLScrollCropViewController *cropVc = (id)nav.topViewController;
@@ -129,8 +130,8 @@ NSInteger margin = 2;
 //    NSIndexPath* indexPath = [self.tableView indexPathForCell:(UITableViewCell*)cell];
 //    
 //    for (int i = 0; i < self.product.quantityToFulfillOrder; i++){
-//        NSUInteger extraCopies = [self.extraCopiesOfAssets[(indexPath.row - 1) * self.product.quantityToFulfillOrder + i] integerValue] + 1;
-//        self.extraCopiesOfAssets[(indexPath.row - 1) * self.product.quantityToFulfillOrder + i] = [NSNumber numberWithInteger:extraCopies];
+//        NSUInteger extraCopies = [self.extraCopiesOfAssets[(indexPath.item) * self.product.quantityToFulfillOrder + i] integerValue] + 1;
+//        self.extraCopiesOfAssets[(indexPath.item) * self.product.quantityToFulfillOrder + i] = [NSNumber numberWithInteger:extraCopies];
 //    }
 //    UILabel* countLabel = (UILabel *)[cellContentView viewWithTag:30];
 //    [countLabel setText: [NSString stringWithFormat:@"%lu", (unsigned long)[countLabel.text integerValue] + 1]];
@@ -147,13 +148,13 @@ NSInteger margin = 2;
 //    NSIndexPath* indexPath = [self.tableView indexPathForCell:(UITableViewCell*)cell];
 //    
 //    for (int i = 0; i < self.product.quantityToFulfillOrder; i++){
-//        NSUInteger extraCopies = [self.extraCopiesOfAssets[(indexPath.row - 1) * self.product.quantityToFulfillOrder + i] integerValue];
+//        NSUInteger extraCopies = [self.extraCopiesOfAssets[(indexPath.item) * self.product.quantityToFulfillOrder + i] integerValue];
 //        if (extraCopies == 0){
 //            return;
 //        }
 //        extraCopies--;
 //        
-//        self.extraCopiesOfAssets[(indexPath.row - 1) * self.product.quantityToFulfillOrder + i] = [NSNumber numberWithInteger:extraCopies];
+//        self.extraCopiesOfAssets[(indexPath.item) * self.product.quantityToFulfillOrder + i] = [NSNumber numberWithInteger:extraCopies];
 //    }
 //    UILabel* countLabel = (UILabel *)[cellContentView viewWithTag:30];
 //    [countLabel setText: [NSString stringWithFormat:@"%lu", (unsigned long)[countLabel.text integerValue] - 1]];
@@ -171,105 +172,95 @@ NSInteger margin = 2;
 }
 
 
-#pragma mark UITableView data source and delegate methods
+#pragma mark UICollectionView data source and delegate methods
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    if (section == 0){
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
+    if (collectionView.tag == 10){
         int incompleteFrame = ([self.framePhotos count] % self.product.quantityToFulfillOrder) != 0 ? 1 : 0;
-        return [self.framePhotos count]/self.product.quantityToFulfillOrder + incompleteFrame + 1;
+        return [self.framePhotos count]/self.product.quantityToFulfillOrder + incompleteFrame;
     }
     else{
-        return 1;
+        return self.product.quantityToFulfillOrder;
     }
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
-    if (indexPath.section == 0){
-        if (indexPath.row == 0){
-            UITableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:@"reviewTitle"];
-            
-            return cell;
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
+    if (collectionView.tag == 10){
+        UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"reviewCell" forIndexPath:indexPath];
+        
+        UIView *view = cell.contentView;
+        view.translatesAutoresizingMaskIntoConstraints = NO;
+        NSDictionary *views = NSDictionaryOfVariableBindings(view);
+        NSMutableArray *con = [[NSMutableArray alloc] init];
+        
+        NSArray *visuals = @[@"H:|-0-[view]-0-|",
+                             @"V:|-0-[view]-0-|"];
+        
+        
+        for (NSString *visual in visuals) {
+            [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
         }
         
-        UITableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:@"reviewPhotoCell"];
-        if (!cell) {
-            cell = [[UITableViewCell alloc] init];
-        }
+        [view.superview addConstraints:con];
         
         UILabel *countLabel = (UILabel *)[cell.contentView viewWithTag:30];
-        [countLabel setText: [NSString stringWithFormat:@"%lu", (unsigned long) (1+[((NSNumber*)[self.extraCopiesOfAssets objectAtIndex:indexPath.row-1]) integerValue])]];
+        [countLabel setText: [NSString stringWithFormat:@"%lu", (unsigned long) (1+[((NSNumber*)[self.extraCopiesOfAssets objectAtIndex:indexPath.item]) integerValue])]];
         
-        UICollectionView* collectionView = (UICollectionView*)[cell.contentView viewWithTag:100];
+        UICollectionView* collectionView = (UICollectionView*)[cell.contentView viewWithTag:20];
         collectionView.dataSource = self;
         collectionView.delegate = self;
         
-        UITapGestureRecognizer* doubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTapGestureThumbnailTapped:)];
-        [collectionView addGestureRecognizer:doubleTap];
+//        UITapGestureRecognizer* doubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTapGestureThumbnailTapped:)];
+//        [collectionView addGestureRecognizer:doubleTap];
         
         return cell;
     }
     else{
-        return [tableView dequeueReusableCellWithIdentifier:@"dummyCell"];
+        UICollectionViewCell* cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"imageCell" forIndexPath:indexPath];
+        
+            //Workaround for iOS 7
+            if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8){
+                cell.contentView.frame = cell.bounds;
+                cell.contentView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin |UIViewAutoresizingFlexibleTopMargin |UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleBottomMargin;
+            }
+        
+            UIView* view = collectionView.superview;
+            while (![view isKindOfClass:[UICollectionViewCell class]]){
+                view = view.superview;
+            }
+        
+            NSIndexPath* tableIndexindexPath = [self.collectionView indexPathForCell:(UICollectionViewCell *)view];
+        
+            UIImageView* cellImage = (UIImageView*)[cell.contentView viewWithTag:110];
+        
+            if (cellImage && !cellImage.image && tableIndexindexPath){
+                [((OLPrintPhoto*)[self.framePhotos objectAtIndex:indexPath.row + (tableIndexindexPath.item) * self.product.quantityToFulfillOrder]) setImageIdealSizeForImageView:cellImage highQuality:YES];
+            }
+            
+            
+            return cell;
     }
 }
 
-//- (CGFloat) tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-//    if (indexPath.row > 0){
-//        return 400 * self.view.bounds.size.width / 320;
-//    }
-//    else{
-//        NSNumber *labelHeight;
-//        if (!labelHeight) {
-//            UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"reviewTitle"];
-//            labelHeight = @(cell.bounds.size.height);
-//        }
-//        return [labelHeight floatValue];
-//    }
-//}
+- (CGSize) collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
+    if (collectionView.tag == 10){
+        return CGSizeMake(320, 351);
+    }
+    else{
+        CGFloat photosPerRow = sqrt(self.product.quantityToFulfillOrder);
 
-#pragma mark UICollectionView data source
-
-- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
-    return self.product.quantityToFulfillOrder;
-}
-
-//- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
-//    UICollectionViewCell* cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"imageInFrame" forIndexPath:indexPath];
-//    
-//    //Workaround for iOS 7
-//    if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8){
-//        cell.contentView.frame = cell.bounds;
-//        cell.contentView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin |UIViewAutoresizingFlexibleTopMargin |UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleBottomMargin;
-//    }
-//
-//    UIView* tableViewCell = collectionView.superview;
-//    while (![tableViewCell isKindOfClass:[UITableViewCell class]]){
-//        tableViewCell = tableViewCell.superview;
-//    }
-//
-//    NSIndexPath* tableIndexindexPath = [self.tableView indexPathForRowAtPoint:tableViewCell.frame.origin];//[self.tableView indexPathForCell:(UITableViewCell*)tableViewCell];
-//    
-//    UIImageView* cellImage = (UIImageView*)[cell.contentView viewWithTag:110];
-//    
-//    if (cellImage && !cellImage.image && tableIndexindexPath){
-//        [((OLPrintPhoto*)[self.framePhotos objectAtIndex:indexPath.row + (tableIndexindexPath.row-1) * self.product.quantityToFulfillOrder]) setImageIdealSizeForImageView:cellImage highQuality:YES];
-//    }
-//    
-//    
-//    return cell;
-//}
-
-- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
-    int photosPerRow = sqrt(self.product.quantityToFulfillOrder);
-    
-    return CGSizeMake(collectionView.frame.size.width / photosPerRow - margin/2 * (photosPerRow-1), collectionView.frame.size.height / photosPerRow - margin/2 * (photosPerRow-1));
+        return CGSizeMake(
+                          (collectionView.frame.size.width / photosPerRow - margin/2 * (photosPerRow-1))-11/(photosPerRow-1),
+                          (collectionView.frame.size.height / photosPerRow - margin/2 * (photosPerRow-1))
+                          );
+    }
 }
 
 - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section{
-    return margin;
+    return 0;
 }
 
-- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section{
+- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section{
     return margin;
 }
 
@@ -280,8 +271,8 @@ NSInteger margin = 2;
 //    }
 //    NSIndexPath* tableIndexPath = [self.tableView indexPathForCell:(UITableViewCell*)tableViewCell];
 //    
-//    NSInteger trueFromIndex = fromIndexPath.item + (tableIndexPath.row-1) * self.product.quantityToFulfillOrder;
-//    NSInteger trueToIndex = toIndexPath.item + (tableIndexPath.row-1) * self.product.quantityToFulfillOrder;
+//    NSInteger trueFromIndex = fromIndexPath.item + (tableIndexPath.item) * self.product.quantityToFulfillOrder;
+//    NSInteger trueToIndex = toIndexPath.item + (tableIndexPath.rowitem) * self.product.quantityToFulfillOrder;
 //    
 //    id object = [self.framePhotos objectAtIndex:trueFromIndex];
 //    [self.framePhotos removeObjectAtIndex:trueFromIndex];
@@ -296,15 +287,5 @@ NSInteger margin = 2;
 //    
 //    [self.tableView reloadData];
 //}
-
-#pragma mark - Autorotate and Orientation Methods
-
-- (BOOL)shouldAutorotate {
-    return NO;
-}
-
-- (NSUInteger)supportedInterfaceOrientations {
-    return UIInterfaceOrientationMaskPortrait;
-}
 
 @end

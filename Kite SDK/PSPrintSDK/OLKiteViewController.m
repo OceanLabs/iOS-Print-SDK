@@ -250,16 +250,6 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
     }
 }
 
-#pragma mark - Autorotate and Orientation Methods
-
-//- (BOOL)shouldAutorotate {
-//    return NO;
-//}
-//
-//- (NSUInteger)supportedInterfaceOrientations {
-//    return UIInterfaceOrientationMaskPortrait;
-//}
-
 - (void)dealloc{
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
