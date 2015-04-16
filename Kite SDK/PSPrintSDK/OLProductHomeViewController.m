@@ -130,27 +130,7 @@
     [vc safePerformSelector:@selector(setTemplateClass:) withObject:product.productTemplate.templateClass];
     [vc safePerformSelector:@selector(setProduct:) withObject:product];
     
-//    OLProductOverviewViewController *overview = [self.storyboard instantiateViewControllerWithIdentifier:@"OLProductOverviewViewController"];
-//    [overview safePerformSelector:@selector(setAssets:) withObject:self.assets];
-//    [overview safePerformSelector:@selector(setUserSelectedPhotos:) withObject:self.userSelectedPhotos];
-//    [overview safePerformSelector:@selector(setDelegate:) withObject:self.delegate];
-//    [overview safePerformSelector:@selector(setFilterProducts:) withObject:self.filterProducts];
-//    [overview safePerformSelector:@selector(setTemplateClass:) withObject:product.productTemplate.templateClass];
-//    [overview safePerformSelector:@selector(setProduct:) withObject:product];
-    
     [self.navigationController pushViewController:vc animated:YES];
-    
-//    self.splitViewController.preferredPrimaryColumnWidthFraction = UISplitViewControllerAutomaticDimension;
-//    self.splitViewController.minimumPrimaryColumnWidth = UISplitViewControllerAutomaticDimension;
-    
-//    [self.splitViewController showDetailViewController:overview sender:self];
-//    self.splitViewController.viewControllers = @[self.navigationController, [[OLCustomNavigationController alloc] initWithRootViewController:overview]];
-    
-//    self.splitViewController.viewControllers = @[self, overview];
-//    self.splitViewController.preferredDisplayMode = UISplitViewControllerDisplayModeAllVisible;
-    
-    
-    
 }
 
 #pragma mark - UICollectionViewDataSource Methods

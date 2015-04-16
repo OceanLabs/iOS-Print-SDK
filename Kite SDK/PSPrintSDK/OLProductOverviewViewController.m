@@ -109,10 +109,11 @@
 
 - (IBAction)onButtonStartClicked:(UIBarButtonItem *)sender {
     if (self.product.productTemplate.templateUI == kOLTemplateUIFrame){
-        OLFrameSelectionViewController *frameVc = [self.storyboard instantiateViewControllerWithIdentifier:@"FrameSelectionViewController"];
+        OLFrameOrderReviewViewController *frameVc = [self.storyboard instantiateViewControllerWithIdentifier:@"FrameOrderReviewViewController"];
         frameVc.assets = self.assets;
         frameVc.userSelectedPhotos = self.userSelectedPhotos;
         frameVc.delegate = self.delegate;
+        frameVc.product = self.product;
         [self.navigationController pushViewController:frameVc animated:YES];
     }
     else if (self.product.productTemplate.templateUI == kOLTemplateUICase){

@@ -242,7 +242,7 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
     if (product.productTemplate.templateUI == kOLTemplateUIPoster && group.products.count > 1) {
         return @"sizeSelect";
     }
-    else if (product.productTemplate.templateUI != kOLTemplateUIFrame && group.products.count > 1){
+    else if (group.products.count > 1){
         return @"OLTypeSelectionViewController";
     }
     else {
