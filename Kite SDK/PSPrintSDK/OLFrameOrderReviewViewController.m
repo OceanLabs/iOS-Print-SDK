@@ -58,36 +58,36 @@ CGFloat margin = 2;
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Confirm", @"") style:UIBarButtonItemStylePlain target:self action:@selector(onButtonNextClicked:)];
 }
 
-//- (void)onTapGestureThumbnailTapped:(UITapGestureRecognizer*)gestureRecognizer {
-//    NSIndexPath *tableIndexPath = [self.tableView indexPathForRowAtPoint:[gestureRecognizer locationInView:self.tableView]];
-//    UITableViewCell* tableCell = [self.tableView cellForRowAtIndexPath:tableIndexPath];
-//    
-//    UICollectionView* collectionView = (UICollectionView*)[tableCell.contentView viewWithTag:100];
-//    
-//    NSIndexPath* indexPath = [collectionView indexPathForItemAtPoint:[gestureRecognizer locationInView:collectionView]];
-//    
-//    self.editingPrintPhoto = self.framePhotos[(tableIndexPath.item) * self.product.quantityToFulfillOrder + indexPath.row];
-//    self.editingPrintPhoto.asset = self.assets[((tableIndexPath.item) * self.product.quantityToFulfillOrder + indexPath.row) % [self.assets count]];
-//    
-//    UINavigationController *nav = [self.storyboard instantiateViewControllerWithIdentifier:@"CropViewNavigationController"];
-//    OLScrollCropViewController *cropVc = (id)nav.topViewController;
-//    cropVc.delegate = self;
-//    cropVc.aspectRatio = 1;
-//    if (((OLAsset *)(self.editingPrintPhoto.asset)).assetType == kOLAssetTypeRemoteImageURL){
-//        [[SDWebImageManager sharedManager] downloadImageWithURL:[((OLAsset *)(self.editingPrintPhoto.asset)) imageURL] options:0 progress:nil completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *url) {
-//            if (finished) {
-//                [cropVc setFullImage:image];
-//                [self presentViewController:nav animated:YES completion:NULL];
-//            }
-//        }];
-//    }
-//    else{
-//        [[self.userSelectedPhotos objectAtIndex:0] dataWithCompletionHandler:^(NSData *data, NSError *error){
-//            [cropVc setFullImage:[UIImage imageWithData:data]];
-//            [self presentViewController:nav animated:YES completion:NULL];
-//        }];
-//    }
-//}
+- (void)onTapGestureThumbnailTapped:(UITapGestureRecognizer*)gestureRecognizer {
+    NSIndexPath *tableIndexPath = [self.collectionView indexPathForItemAtPoint:[gestureRecognizer locationInView:self.collectionView]];
+    UICollectionViewCell *tableCell = [self.collectionView cellForItemAtIndexPath:tableIndexPath];
+    
+    UICollectionView* collectionView = (UICollectionView*)[tableCell.contentView viewWithTag:100];
+    
+    NSIndexPath* indexPath = [collectionView indexPathForItemAtPoint:[gestureRecognizer locationInView:collectionView]];
+    
+    self.editingPrintPhoto = self.framePhotos[(tableIndexPath.item) * self.product.quantityToFulfillOrder + indexPath.row];
+    self.editingPrintPhoto.asset = self.assets[((tableIndexPath.item) * self.product.quantityToFulfillOrder + indexPath.row) % [self.assets count]];
+    
+    UINavigationController *nav = [self.storyboard instantiateViewControllerWithIdentifier:@"CropViewNavigationController"];
+    OLScrollCropViewController *cropVc = (id)nav.topViewController;
+    cropVc.delegate = self;
+    cropVc.aspectRatio = 1;
+    if (((OLAsset *)(self.editingPrintPhoto.asset)).assetType == kOLAssetTypeRemoteImageURL){
+        [[SDWebImageManager sharedManager] downloadImageWithURL:[((OLAsset *)(self.editingPrintPhoto.asset)) imageURL] options:0 progress:nil completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *url) {
+            if (finished) {
+                [cropVc setFullImage:image];
+                [self presentViewController:nav animated:YES completion:NULL];
+            }
+        }];
+    }
+    else{
+        [[self.userSelectedPhotos objectAtIndex:0] dataWithCompletionHandler:^(NSData *data, NSError *error){
+            [cropVc setFullImage:[UIImage imageWithData:data]];
+            [self presentViewController:nav animated:YES completion:NULL];
+        }];
+    }
+}
 
 -(void)changeOrderOfPhotosInArray:(NSMutableArray*)array{
     NSUInteger photosPerRow = sqrt(self.product.quantityToFulfillOrder);
@@ -206,39 +206,40 @@ CGFloat margin = 2;
         UILabel *countLabel = (UILabel *)[cell.contentView viewWithTag:30];
         [countLabel setText: [NSString stringWithFormat:@"%lu", (unsigned long) (1+[((NSNumber*)[self.extraCopiesOfAssets objectAtIndex:indexPath.item]) integerValue])]];
         
-        UICollectionView* collectionView = (UICollectionView*)[cell.contentView viewWithTag:20];
-        collectionView.dataSource = self;
-        collectionView.delegate = self;
+        UICollectionView* innerCollectionView = (UICollectionView*)[cell.contentView viewWithTag:20];
         
-//        UITapGestureRecognizer* doubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTapGestureThumbnailTapped:)];
-//        [collectionView addGestureRecognizer:doubleTap];
+        innerCollectionView.dataSource = self;
+        innerCollectionView.delegate = self;
+        
+        UITapGestureRecognizer* doubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTapGestureThumbnailTapped:)];
+        [collectionView addGestureRecognizer:doubleTap];
         
         return cell;
     }
     else{
         UICollectionViewCell* cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"imageCell" forIndexPath:indexPath];
         
-            //Workaround for iOS 7
-            if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8){
-                cell.contentView.frame = cell.bounds;
-                cell.contentView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin |UIViewAutoresizingFlexibleTopMargin |UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleBottomMargin;
-            }
+        //Workaround for iOS 7
+        if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8){
+            cell.contentView.frame = cell.bounds;
+            cell.contentView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin |UIViewAutoresizingFlexibleTopMargin |UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleBottomMargin;
+        }
         
-            UIView* view = collectionView.superview;
-            while (![view isKindOfClass:[UICollectionViewCell class]]){
-                view = view.superview;
-            }
+        UIView* view = collectionView.superview;
+        while (![view isKindOfClass:[UICollectionViewCell class]]){
+            view = view.superview;
+        }
         
-            NSIndexPath* tableIndexindexPath = [self.collectionView indexPathForCell:(UICollectionViewCell *)view];
+        NSIndexPath* tableIndexindexPath = [self.collectionView indexPathForCell:(UICollectionViewCell *)view];
         
-            UIImageView* cellImage = (UIImageView*)[cell.contentView viewWithTag:110];
+        UIImageView* cellImage = (UIImageView*)[cell.contentView viewWithTag:110];
         
-            if (cellImage && !cellImage.image && tableIndexindexPath){
-                [((OLPrintPhoto*)[self.framePhotos objectAtIndex:indexPath.row + (tableIndexindexPath.item) * self.product.quantityToFulfillOrder]) setImageIdealSizeForImageView:cellImage highQuality:YES];
-            }
-            
-            
-            return cell;
+        cellImage.image = nil;
+        
+        [((OLPrintPhoto*)[self.framePhotos objectAtIndex:indexPath.row + (tableIndexindexPath.item) * self.product.quantityToFulfillOrder]) setImageIdealSizeForImageView:cellImage highQuality:YES];
+        
+        
+        return cell;
     }
 }
 
@@ -250,7 +251,7 @@ CGFloat margin = 2;
         CGFloat photosPerRow = sqrt(self.product.quantityToFulfillOrder);
 
         return CGSizeMake(
-                          (collectionView.frame.size.width / photosPerRow - margin/2 * (photosPerRow-1))-11/(photosPerRow-1),
+                          (collectionView.frame.size.width / photosPerRow - margin/2 * (photosPerRow-1))-11/MAX(1,(photosPerRow-1)),
                           (collectionView.frame.size.height / photosPerRow - margin/2 * (photosPerRow-1))
                           );
     }
@@ -264,28 +265,33 @@ CGFloat margin = 2;
     return margin;
 }
 
-//- (void)collectionView:(UICollectionView *)collectionView itemAtIndexPath:(NSIndexPath *)fromIndexPath willMoveToIndexPath:(NSIndexPath *)toIndexPath {
-//    UIView* tableViewCell = collectionView.superview;
-//    while (![tableViewCell isKindOfClass:[UITableViewCell class]]){
-//        tableViewCell = tableViewCell.superview;
-//    }
-//    NSIndexPath* tableIndexPath = [self.tableView indexPathForCell:(UITableViewCell*)tableViewCell];
-//    
-//    NSInteger trueFromIndex = fromIndexPath.item + (tableIndexPath.item) * self.product.quantityToFulfillOrder;
-//    NSInteger trueToIndex = toIndexPath.item + (tableIndexPath.rowitem) * self.product.quantityToFulfillOrder;
-//    
-//    id object = [self.framePhotos objectAtIndex:trueFromIndex];
-//    [self.framePhotos removeObjectAtIndex:trueFromIndex];
-//    [self.framePhotos insertObject:object atIndex:trueToIndex];
-//    object = [self.extraCopiesOfAssets objectAtIndex:trueFromIndex];
-//    [self.extraCopiesOfAssets removeObjectAtIndex:trueFromIndex];
-//    [self.extraCopiesOfAssets insertObject:object atIndex:trueToIndex];
-//}
+- (void)collectionView:(UICollectionView *)collectionView itemAtIndexPath:(NSIndexPath *)fromIndexPath willMoveToIndexPath:(NSIndexPath *)toIndexPath {
+    UIView* tableViewCell = collectionView.superview;
+    while (![tableViewCell isKindOfClass:[UICollectionViewCell class]]){
+        tableViewCell = tableViewCell.superview;
+    }
+    NSIndexPath* tableIndexPath = [self.collectionView indexPathForCell:(UICollectionViewCell *)tableViewCell];
+    
+    NSInteger trueFromIndex = fromIndexPath.item + (tableIndexPath.item) * self.product.quantityToFulfillOrder;
+    NSInteger trueToIndex = toIndexPath.item + (tableIndexPath.item) * self.product.quantityToFulfillOrder;
+    
+    id object = [self.framePhotos objectAtIndex:trueFromIndex];
+    [self.framePhotos removeObjectAtIndex:trueFromIndex];
+    [self.framePhotos insertObject:object atIndex:trueToIndex];
+    object = [self.extraCopiesOfAssets objectAtIndex:trueFromIndex];
+    [self.extraCopiesOfAssets removeObjectAtIndex:trueFromIndex];
+    [self.extraCopiesOfAssets insertObject:object atIndex:trueToIndex];
+}
 
-//-(void)userDidCropImage:(UIImage *)croppedImage{
-//    self.editingPrintPhoto.asset = [OLAsset assetWithImageAsJPEG:croppedImage];
-//    
-//    [self.tableView reloadData];
-//}
+- (void) collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath{
+    UICollectionView *innerCollectionView = (id)[cell.contentView viewWithTag:20];
+    [innerCollectionView reloadData];
+}
+
+-(void)userDidCropImage:(UIImage *)croppedImage{
+    self.editingPrintPhoto.asset = [OLAsset assetWithImageAsJPEG:croppedImage];
+    
+    [self.collectionView reloadData];
+}
 
 @end
