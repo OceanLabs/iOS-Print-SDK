@@ -18,6 +18,7 @@
 #import "OLProductGroup.h"
 #import "NSObject+Utils.h"
 #import "OLCustomNavigationController.h"
+#import "UIViewController+TraitCollectionCompatibility.h"
 
 @interface OLProduct (Private)
 
@@ -60,7 +61,6 @@
 #endif
 
     self.title = NSLocalizedString(@"Print Shop", @"");
-    //self.splitViewController.preferredDisplayMode = UISplitViewControllerDisplayModePrimaryHidden;
 }
 
 
@@ -93,7 +93,7 @@
     NSInteger numberOfCells = [self collectionView:collectionView numberOfItemsInSection:indexPath.section];
     CGFloat halfScreenHeight = (size.height - [[UIApplication sharedApplication] statusBarFrame].size.height - self.navigationController.navigationBar.frame.size.height)/2;
     
-    if (self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassCompact && size.height > size.width) {
+    if ([self isHorizontalSizeClassCompact] && size.height > size.width) {
         if (numberOfCells == 2){
             return CGSizeMake(size.width, halfScreenHeight);
         }
@@ -166,13 +166,25 @@
 }
 
 #pragma mark - Autorotate and Orientation Methods
+// Currently here to disable landscape orientations and rotation on iOS 7. When support is dropped, these can be deleted.
 
-//- (BOOL)shouldAutorotate {
-//    return NO;
-//}
-//
-//- (NSUInteger)supportedInterfaceOrientations {
-//    return UIInterfaceOrientationMaskPortrait;
-//}
+- (BOOL)shouldAutorotate {
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
+        return YES;
+    }
+    else{
+        return NO;
+    }
+}
+
+- (NSUInteger)supportedInterfaceOrientations {
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
+        return UIInterfaceOrientationMaskAll;
+    }
+    else{
+        return UIInterfaceOrientationMaskPortrait;
+    }
+}
+
 
 @end

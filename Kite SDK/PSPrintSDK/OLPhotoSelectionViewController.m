@@ -547,10 +547,10 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     NSString *title;
     OLTemplateUI templateUI = [OLProductTemplate templateWithId:self.product.templateId].templateUI;
     if (templateUI == kOLTemplateUIFrame){
-        title = [[NSString alloc]initWithFormat:@"#%lu Frame", indexPath.section + 1];
+        title = [[NSString alloc]initWithFormat:@"#%d Frame", indexPath.section + 1];
     }
     else{
-        title = [[NSString alloc]initWithFormat:@"#%lu Pack of %lu %@", indexPath.section + 1, (unsigned long)self.product.quantityToFulfillOrder, self.product.productTemplate.name];
+        title = [[NSString alloc]initWithFormat:@"#%d Pack of %lu %@", indexPath.section + 1, (unsigned long)self.product.quantityToFulfillOrder, self.product.productTemplate.name];
     }
     label.text = title;
     
@@ -794,6 +794,27 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
         if (buttonIndex == 1) {
             [self doSegueToOrderPreview];
         }
+    }
+}
+
+#pragma mark - Autorotate and Orientation Methods
+// Currently here to disable landscape orientations and rotation on iOS 7. When support is dropped, these can be deleted.
+
+- (BOOL)shouldAutorotate {
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
+        return YES;
+    }
+    else{
+        return NO;
+    }
+}
+
+- (NSUInteger)supportedInterfaceOrientations {
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
+        return UIInterfaceOrientationMaskAll;
+    }
+    else{
+        return UIInterfaceOrientationMaskPortrait;
     }
 }
 

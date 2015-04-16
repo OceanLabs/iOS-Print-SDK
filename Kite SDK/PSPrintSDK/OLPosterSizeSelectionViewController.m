@@ -112,12 +112,7 @@ static UIColor *deselectedColor;
     }
 }
 
--(void)viewWillAppear:(BOOL)animated{
-    [self.splitViewController setPreferredDisplayMode:UISplitViewControllerDisplayModePrimaryOverlay];
-}
-
 -(void)viewDidAppear:(BOOL)animated{
-    [self.splitViewController setPreferredDisplayMode:UISplitViewControllerDisplayModeAllVisible];
     if (self.navigationController){
         NSMutableArray *navigationStack = self.navigationController.viewControllers.mutableCopy;
         if (navigationStack.count > 1 && [navigationStack[navigationStack.count - 2] isKindOfClass:[OLKiteViewController class]]) {
@@ -200,8 +195,28 @@ static UIColor *deselectedColor;
     dest.product = self.product;
     dest.assets = self.assets;
     dest.userSelectedPhotos = self.userSelectedPhotos;
-    [self.splitViewController setPreferredDisplayMode:UISplitViewControllerDisplayModePrimaryHidden];
     [self.navigationController pushViewController:dest animated:YES];
+}
+
+#pragma mark - Autorotate and Orientation Methods
+// Currently here to disable landscape orientations and rotation on iOS 7. When support is dropped, these can be deleted.
+
+- (BOOL)shouldAutorotate {
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
+        return YES;
+    }
+    else{
+        return NO;
+    }
+}
+
+- (NSUInteger)supportedInterfaceOrientations {
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
+        return UIInterfaceOrientationMaskAll;
+    }
+    else{
+        return UIInterfaceOrientationMaskPortrait;
+    }
 }
 
 @end

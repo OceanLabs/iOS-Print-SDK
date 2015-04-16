@@ -30,9 +30,9 @@
 		2EA8BEB81A484FCB008A9248 /* OLProductHomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA8BEAD1A484FCB008A9248 /* OLProductHomeViewController.m */; };
 		2EA8BEB91A484FCB008A9248 /* OLProductOverviewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA8BEAF1A484FCB008A9248 /* OLProductOverviewViewController.m */; };
 		2EA8BEBA1A484FCB008A9248 /* OLProductOverviewPageContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA8BEB11A484FCB008A9248 /* OLProductOverviewPageContentViewController.m */; };
-		2EA8BEBB1A484FCB008A9248 /* OLFrameSelectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA8BEB31A484FCB008A9248 /* OLFrameSelectionViewController.m */; };
 		2EA8BEBC1A484FCB008A9248 /* OLOrderReviewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA8BEB51A484FCB008A9248 /* OLOrderReviewViewController.m */; };
 		2EA8BEBD1A484FCB008A9248 /* OLFrameOrderReviewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA8BEB71A484FCB008A9248 /* OLFrameOrderReviewViewController.m */; };
+		2ECF2E5C1ADFD12E00BF6267 /* UIViewController+TraitCollectionCompatibility.m in Sources */ = {isa = PBXBuildFile; fileRef = 2ECF2E5B1ADFD12E00BF6267 /* UIViewController+TraitCollectionCompatibility.m */; };
 		2ED5DEBF1AC948C1003301A8 /* LXReorderableCollectionViewFlowLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 2ED5DEBE1AC948C1003301A8 /* LXReorderableCollectionViewFlowLayout.m */; };
 		2EE3C86D1A4ADDDB006446E2 /* OLWhiteSquare.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EE3C86C1A4ADDDA006446E2 /* OLWhiteSquare.m */; };
 		2EE3C8701A4AFB0C006446E2 /* OLKiteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EE3C86F1A4AFB0C006446E2 /* OLKiteViewController.m */; };
@@ -172,12 +172,12 @@
 		2EA8BEAF1A484FCB008A9248 /* OLProductOverviewViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLProductOverviewViewController.m; sourceTree = "<group>"; };
 		2EA8BEB01A484FCB008A9248 /* OLProductOverviewPageContentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLProductOverviewPageContentViewController.h; sourceTree = "<group>"; };
 		2EA8BEB11A484FCB008A9248 /* OLProductOverviewPageContentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLProductOverviewPageContentViewController.m; sourceTree = "<group>"; };
-		2EA8BEB21A484FCB008A9248 /* OLFrameSelectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLFrameSelectionViewController.h; sourceTree = "<group>"; };
-		2EA8BEB31A484FCB008A9248 /* OLFrameSelectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLFrameSelectionViewController.m; sourceTree = "<group>"; };
 		2EA8BEB41A484FCB008A9248 /* OLOrderReviewViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLOrderReviewViewController.h; sourceTree = "<group>"; };
 		2EA8BEB51A484FCB008A9248 /* OLOrderReviewViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLOrderReviewViewController.m; sourceTree = "<group>"; };
 		2EA8BEB61A484FCB008A9248 /* OLFrameOrderReviewViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLFrameOrderReviewViewController.h; sourceTree = "<group>"; };
 		2EA8BEB71A484FCB008A9248 /* OLFrameOrderReviewViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLFrameOrderReviewViewController.m; sourceTree = "<group>"; };
+		2ECF2E5A1ADFD12E00BF6267 /* UIViewController+TraitCollectionCompatibility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+TraitCollectionCompatibility.h"; sourceTree = "<group>"; };
+		2ECF2E5B1ADFD12E00BF6267 /* UIViewController+TraitCollectionCompatibility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+TraitCollectionCompatibility.m"; sourceTree = "<group>"; };
 		2ED5DEBD1AC948C1003301A8 /* LXReorderableCollectionViewFlowLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LXReorderableCollectionViewFlowLayout.h; sourceTree = "<group>"; };
 		2ED5DEBE1AC948C1003301A8 /* LXReorderableCollectionViewFlowLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LXReorderableCollectionViewFlowLayout.m; sourceTree = "<group>"; };
 		2EE3C86B1A4ADDDA006446E2 /* OLWhiteSquare.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLWhiteSquare.h; sourceTree = "<group>"; };
@@ -328,6 +328,7 @@
 		2E0DB88E1A6402D9001032E3 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				2E38C0CC1AD5206F008BC28A /* PostcardBackView.xib */,
 				2E39CAA61AB89541008B1EFF /* OLPhotoSelectionButton.h */,
 				2E39CAA71AB89541008B1EFF /* OLPhotoSelectionButton.m */,
 				2E39CAA41AB89515008B1EFF /* OLPhotoSelectionButton.xib */,
@@ -365,6 +366,8 @@
 				3D8122F21A75A46D004E7297 /* UITableViewController+ScreenWidthFactor.m */,
 				2EA3FEF21AD7E85700572CD0 /* NSObject+Utils.h */,
 				2EA3FEF31AD7E85700572CD0 /* NSObject+Utils.m */,
+				2ECF2E5A1ADFD12E00BF6267 /* UIViewController+TraitCollectionCompatibility.h */,
+				2ECF2E5B1ADFD12E00BF6267 /* UIViewController+TraitCollectionCompatibility.m */,
 			);
 			name = Categories;
 			path = ..;
@@ -485,7 +488,6 @@
 				2EA8BEC11A48509E008A9248 /* Categories */,
 				3DE2B0C01A77D2290092D97F /* Util */,
 				2EA8BEAA1A484CA7008A9248 /* OLKiteStoryboard.storyboard */,
-				2E38C0CC1AD5206F008BC28A /* PostcardBackView.xib */,
 				CD93BB471879EA4F00316492 /* KitePrintSDK.xcassets */,
 			);
 			name = "Kite Print SDK";
@@ -628,8 +630,6 @@
 				2EA8BEAD1A484FCB008A9248 /* OLProductHomeViewController.m */,
 				2E5258FC1A9C884700DBC69B /* OLProductTypeSelectionViewController.h */,
 				2E5258FD1A9C884700DBC69B /* OLProductTypeSelectionViewController.m */,
-				2EA8BEB21A484FCB008A9248 /* OLFrameSelectionViewController.h */,
-				2EA8BEB31A484FCB008A9248 /* OLFrameSelectionViewController.m */,
 				2E1F69DC1A66999700696286 /* OLPosterSizeSelectionViewController.h */,
 				2E1F69DD1A66999700696286 /* OLPosterSizeSelectionViewController.m */,
 				2EA8BEAE1A484FCB008A9248 /* OLProductOverviewViewController.h */,
@@ -828,6 +828,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2ECF2E5C1ADFD12E00BF6267 /* UIViewController+TraitCollectionCompatibility.m in Sources */,
 				CDE0744B188D7730009ADFA2 /* OLURLDataSource.m in Sources */,
 				2E0A72661A6FB07000BC5AE7 /* OLScrollCropViewController.m in Sources */,
 				3D8ECA511AD692FA00CFB2C0 /* OLProductGroup.m in Sources */,
@@ -874,7 +875,6 @@
 				CD9A3A9718AB9C4500DC7131 /* OLCheckPromoCodeRequest.m in Sources */,
 				2ED5DEBF1AC948C1003301A8 /* LXReorderableCollectionViewFlowLayout.m in Sources */,
 				2E1F69DE1A66999700696286 /* OLPosterSizeSelectionViewController.m in Sources */,
-				2EA8BEBB1A484FCB008A9248 /* OLFrameSelectionViewController.m in Sources */,
 				CD73BFA7186306550009DE03 /* OLCountry.m in Sources */,
 				CD73BFB118634ED50009DE03 /* OLConstants.m in Sources */,
 				2EA8BEBA1A484FCB008A9248 /* OLProductOverviewPageContentViewController.m in Sources */,

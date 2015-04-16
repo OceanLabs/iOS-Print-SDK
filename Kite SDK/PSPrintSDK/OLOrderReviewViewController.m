@@ -20,6 +20,7 @@
 #import "OLAnalytics.h"
 #import "OLKitePrintSDK.h"
 #import <CTAssetsPickerController.h>
+#import "UIViewController+TraitCollectionCompatibility.h"
 
 static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 static const NSUInteger kTagAlertViewDeletePhoto = 98;
@@ -390,7 +391,7 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     //Everything is designed and calculated based on a 320 view width. Scale up as necessary for larger phones.
     CGFloat screenWidthFactor = 1;
     //Only change the scale for portrait phones.
-    if (self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassCompact && self.view.frame.size.width < self.view.frame.size.height){
+    if ([self isHorizontalSizeClassCompact] && self.view.frame.size.width < self.view.frame.size.height){
         screenWidthFactor = self.view.frame.size.width / 320;
     }
     
@@ -452,6 +453,27 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     self.editingPrintPhoto.asset = [OLAsset assetWithImageAsJPEG:croppedImage];
     
     [self.collectionView reloadData];
+}
+
+#pragma mark - Autorotate and Orientation Methods
+// Currently here to disable landscape orientations and rotation on iOS 7. When support is dropped, these can be deleted.
+
+- (BOOL)shouldAutorotate {
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
+        return YES;
+    }
+    else{
+        return NO;
+    }
+}
+
+- (NSUInteger)supportedInterfaceOrientations {
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
+        return UIInterfaceOrientationMaskAll;
+    }
+    else{
+        return UIInterfaceOrientationMaskPortrait;
+    }
 }
 
 @end
