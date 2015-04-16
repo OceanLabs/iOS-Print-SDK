@@ -414,7 +414,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
         }
     }completion:^(BOOL finished){
         [self.indexPathsToRemoveDict removeAllObjects];
-        [self.collectionView reloadData];
+        [self.collectionView performSelector:@selector(reloadData) withObject:0 afterDelay:0.05];
         [self updateNoSelectedPhotosView];
     }];
     
