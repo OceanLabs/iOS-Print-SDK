@@ -138,7 +138,7 @@ UITableViewDataSource, UITextFieldDelegate>
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    UIButton *buttonPay = [[UIButton alloc] init];
+    UIButton *buttonPay = [[UIButton alloc] initWithFrame:CGRectMake(0, 20, self.view.frame.size.width, 44)];
     buttonPay.backgroundColor = [UIColor colorWithRed:74 / 255.0f green:137 / 255.0f blue:220 / 255.0f alpha:1.0];
     [buttonPay addTarget:self action:@selector(onButtonPayClicked) forControlEvents:UIControlEventTouchUpInside];
     [buttonPay setTitle:NSLocalizedString(@"Pay", @"") forState:UIControlStateNormal];
@@ -347,20 +347,22 @@ UITableViewDataSource, UITextFieldDelegate>
         textField.keyboardType = UIKeyboardTypeNumberPad;
         [cell addSubview:textField];
         
-        UIView *view = textField;
-        view.translatesAutoresizingMaskIntoConstraints = NO;
-        NSDictionary *views = NSDictionaryOfVariableBindings(view);
-        NSMutableArray *con = [[NSMutableArray alloc] init];
-        
-        NSArray *visuals = @[@"H:|-20-[view]-43-|",
-                             @"V:|-0-[view]-0-|"];
-        
-        
-        for (NSString *visual in visuals) {
-            [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+        if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8){
+            UIView *view = textField;
+            view.translatesAutoresizingMaskIntoConstraints = NO;
+            NSDictionary *views = NSDictionaryOfVariableBindings(view);
+            NSMutableArray *con = [[NSMutableArray alloc] init];
+            
+            NSArray *visuals = @[@"H:|-20-[view]-43-|",
+                                 @"V:|-0-[view]-0-|"];
+            
+            
+            for (NSString *visual in visuals) {
+                [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+            }
+            
+            [view.superview addConstraints:con];
         }
-        
-        [view.superview addConstraints:con];
 
     }
     
@@ -373,25 +375,27 @@ UITableViewDataSource, UITextFieldDelegate>
         if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]){
             AVAuthorizationStatus authStatus = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];
             if ((authStatus == AVAuthorizationStatusAuthorized || authStatus == AVAuthorizationStatusNotDetermined || authStatus == AVAuthorizationStatusDenied)){
-                UIButton *cameraIcon = [[UIButton alloc] init];
+                UIButton *cameraIcon = [[UIButton alloc] initWithFrame:CGRectMake(self.tableView.frame.size.width - 43, 0, 43, 43)];
                 [cameraIcon setImage:[UIImage imageNamed:@"button_camera"] forState:UIControlStateNormal];
                 [cameraIcon addTarget:self action:@selector(showCardScanner) forControlEvents:UIControlEventTouchUpInside];
                 [cell.contentView addSubview:cameraIcon];
                 
-                UIView *view = cameraIcon;
-                view.translatesAutoresizingMaskIntoConstraints = NO;
-                NSDictionary *views = NSDictionaryOfVariableBindings(view);
-                NSMutableArray *con = [[NSMutableArray alloc] init];
-                
-                NSArray *visuals = @[@"H:[view(43)]-0-|",
-                                     @"V:|-0-[view]-0-|"];
-                
-                
-                for (NSString *visual in visuals) {
-                    [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+                if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
+                    UIView *view = cameraIcon;
+                    view.translatesAutoresizingMaskIntoConstraints = NO;
+                    NSDictionary *views = NSDictionaryOfVariableBindings(view);
+                    NSMutableArray *con = [[NSMutableArray alloc] init];
+                    
+                    NSArray *visuals = @[@"H:[view(43)]-0-|",
+                                         @"V:|-0-[view]-0-|"];
+                    
+                    
+                    for (NSString *visual in visuals) {
+                        [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+                    }
+                    
+                    [view.superview addConstraints:con];
                 }
-                
-                [view.superview addConstraints:con];
 
             }
         }
