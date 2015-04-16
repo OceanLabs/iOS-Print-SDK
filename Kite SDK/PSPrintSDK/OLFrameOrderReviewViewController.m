@@ -62,7 +62,7 @@ CGFloat margin = 2;
     NSIndexPath *tableIndexPath = [self.collectionView indexPathForItemAtPoint:[gestureRecognizer locationInView:self.collectionView]];
     UICollectionViewCell *tableCell = [self.collectionView cellForItemAtIndexPath:tableIndexPath];
     
-    UICollectionView* collectionView = (UICollectionView*)[tableCell.contentView viewWithTag:100];
+    UICollectionView* collectionView = (UICollectionView*)[tableCell.contentView viewWithTag:20];
     
     NSIndexPath* indexPath = [collectionView indexPathForItemAtPoint:[gestureRecognizer locationInView:collectionView]];
     
@@ -73,20 +73,11 @@ CGFloat margin = 2;
     OLScrollCropViewController *cropVc = (id)nav.topViewController;
     cropVc.delegate = self;
     cropVc.aspectRatio = 1;
-    if (((OLAsset *)(self.editingPrintPhoto.asset)).assetType == kOLAssetTypeRemoteImageURL){
-        [[SDWebImageManager sharedManager] downloadImageWithURL:[((OLAsset *)(self.editingPrintPhoto.asset)) imageURL] options:0 progress:nil completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *url) {
-            if (finished) {
-                [cropVc setFullImage:image];
-                [self presentViewController:nav animated:YES completion:NULL];
-            }
-        }];
-    }
-    else{
-        [[self.userSelectedPhotos objectAtIndex:0] dataWithCompletionHandler:^(NSData *data, NSError *error){
-            [cropVc setFullImage:[UIImage imageWithData:data]];
-            [self presentViewController:nav animated:YES completion:NULL];
-        }];
-    }
+    
+    [self.editingPrintPhoto getImageWithProgress:NULL completion:^(UIImage *image){
+        [cropVc setFullImage:image];
+        [self presentViewController:nav animated:YES completion:NULL];
+    }];
 }
 
 -(void)changeOrderOfPhotosInArray:(NSMutableArray*)array{
@@ -281,14 +272,19 @@ CGFloat margin = 2;
     object = [self.extraCopiesOfAssets objectAtIndex:trueFromIndex];
     [self.extraCopiesOfAssets removeObjectAtIndex:trueFromIndex];
     [self.extraCopiesOfAssets insertObject:object atIndex:trueToIndex];
+    object = [self.assets objectAtIndex:trueFromIndex];
+    [self.assets removeObjectAtIndex:trueFromIndex];
+    [self.assets insertObject:object atIndex:trueToIndex];
 }
 
 - (void) collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath{
     UICollectionView *innerCollectionView = (id)[cell.contentView viewWithTag:20];
+    [innerCollectionView.collectionViewLayout invalidateLayout];
     [innerCollectionView reloadData];
 }
 
 -(void)userDidCropImage:(UIImage *)croppedImage{
+    [self.editingPrintPhoto unloadImage];
     self.editingPrintPhoto.asset = [OLAsset assetWithImageAsJPEG:croppedImage];
     
     [self.collectionView reloadData];
