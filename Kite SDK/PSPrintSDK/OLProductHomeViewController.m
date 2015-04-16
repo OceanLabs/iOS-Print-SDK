@@ -106,21 +106,21 @@
         }
     }
     else if (numberOfCells == 6){
-        return CGSizeMake(size.width/2 - 0.5, MAX(halfScreenHeight * (2.0 / 3.0), 233));
+        return CGSizeMake(size.width/2 - 1, MAX(halfScreenHeight * (2.0 / 3.0), 233));
     }
     else if (numberOfCells == 4){
-        return CGSizeMake(size.width/2 - 0.5, MAX(halfScreenHeight, 233));
+        return CGSizeMake(size.width/2 - 1, MAX(halfScreenHeight, 233));
     }
     else if (numberOfCells == 2){
         if (size.width < size.height){
             return CGSizeMake(size.width, halfScreenHeight);
         }
         else{
-            return CGSizeMake(size.width/2 - 0.5, halfScreenHeight * 2);
+            return CGSizeMake(size.width/2 - 1, halfScreenHeight * 2);
         }
     }
     else{
-        return CGSizeMake(size.width/2 - 0.5, 233);
+        return CGSizeMake(size.width/2 - 1, 233);
     }
 }
 
