@@ -521,7 +521,7 @@
                         <color key="backgroundColor" red="0.92549019607843142" green="0.93725490196078431" blue="0.94901960784313721" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="JgW-xa-g8h">
                             <size key="itemSize" width="50" height="50"/>
-                            <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                            <size key="headerReferenceSize" width="50" height="50"/>
                             <size key="footerReferenceSize" width="0.0" height="0.0"/>
                             <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                         </collectionViewFlowLayout>
@@ -579,6 +579,24 @@
                                 <size key="customSize" width="320" height="351"/>
                             </collectionViewCell>
                         </cells>
+                        <collectionReusableView key="sectionHeaderView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="reviewHeaderCell" id="RhI-hg-H0r">
+                            <rect key="frame" x="0.0" y="0.0" width="600" height="50"/>
+                            <autoresizingMask key="autoresizingMask"/>
+                            <subviews>
+                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tap to edit or tap and hold to rearrange the photos" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="285" translatesAutoresizingMaskIntoConstraints="NO" id="cFp-1Q-iSs">
+                                    <rect key="frame" x="0.0" y="0.0" width="600" height="50"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                    <color key="textColor" red="0.66666666669999997" green="0.69803921570000005" blue="0.74117647060000003" alpha="1" colorSpace="calibratedRGB"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                            </subviews>
+                            <constraints>
+                                <constraint firstItem="cFp-1Q-iSs" firstAttribute="leading" secondItem="RhI-hg-H0r" secondAttribute="leading" id="DXB-2Z-SMB"/>
+                                <constraint firstItem="cFp-1Q-iSs" firstAttribute="top" secondItem="RhI-hg-H0r" secondAttribute="top" id="e0P-8t-2uN"/>
+                                <constraint firstAttribute="bottom" secondItem="cFp-1Q-iSs" secondAttribute="bottom" id="t5f-mT-yg6"/>
+                                <constraint firstAttribute="trailing" secondItem="cFp-1Q-iSs" secondAttribute="trailing" id="xnJ-FA-MPA"/>
+                            </constraints>
+                        </collectionReusableView>
                         <connections>
                             <outlet property="dataSource" destination="Vt9-y8-Spq" id="any-JP-czP"/>
                             <outlet property="delegate" destination="Vt9-y8-Spq" id="HqA-kW-Ii4"/>
