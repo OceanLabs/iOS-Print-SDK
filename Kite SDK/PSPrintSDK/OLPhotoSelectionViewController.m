@@ -165,6 +165,10 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     }
 }
 
+- (BOOL)prefersStatusBarHidden {
+    return NO;
+}
+
 - (BOOL)instagramEnabled{
 #ifdef OL_KITE_OFFER_INSTAGRAM
     return [OLKitePrintSDK instagramSecret] && ![[OLKitePrintSDK instagramSecret] isEqualToString:@""] && [OLKitePrintSDK instagramClientID] && ![[OLKitePrintSDK instagramClientID] isEqualToString:@""] && [OLKitePrintSDK instagramRedirectURI] && ![[OLKitePrintSDK instagramRedirectURI] isEqualToString:@""];
