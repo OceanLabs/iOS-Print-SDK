@@ -93,7 +93,7 @@
     if (indexPath.item >= self.products.count){
         UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"extraCell" forIndexPath:indexPath];
         UIImageView *cellImageView = (UIImageView *)[cell.contentView viewWithTag:40];
-        [cellImageView setAndFadeInImageWithURL:[NSURL URLWithString:@"https://dl.dropboxusercontent.com/u/3007013/comingsoon_stamp.png"]];
+        [cellImageView setAndFadeInImageWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/product_photography/placeholder.png"]];
         return cell;
     }
     

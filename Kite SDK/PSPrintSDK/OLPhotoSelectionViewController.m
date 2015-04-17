@@ -33,6 +33,7 @@
 #import "LXReorderableCollectionViewFlowLayout.h"
 #import "NSArray+QueryingExtras.h"
 #import "OLKitePrintSDK.h"
+#import "NSObject+Utils.h"
 
 NSInteger OLPhotoSelectionMargin = 0;
 
@@ -551,10 +552,10 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     NSString *title;
     OLTemplateUI templateUI = [OLProductTemplate templateWithId:self.product.templateId].templateUI;
     if (templateUI == kOLTemplateUIFrame){
-        title = [[NSString alloc]initWithFormat:@"#%d Frame", indexPath.section + 1];
+        title = [[NSString alloc]initWithFormat:@"#%ld Frame", indexPath.section + 1];
     }
     else{
-        title = [[NSString alloc]initWithFormat:@"#%d Pack of %lu %@", indexPath.section + 1, (unsigned long)self.product.quantityToFulfillOrder, self.product.productTemplate.name];
+        title = [[NSString alloc]initWithFormat:@"#%ld Pack of %lu %@", indexPath.section + 1, (unsigned long)self.product.quantityToFulfillOrder, self.product.productTemplate.name];
     }
     label.text = title;
     
@@ -778,16 +779,19 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 
 -(void)doSegueToOrderPreview{
 //    [OLAnalytics trackPhotosSelectedForOrder];
-    OLOrderReviewViewController* orvc;
+    UIViewController* orvc;
     if (self.product.productTemplate.templateUI == kOLTemplateUIFrame){
         orvc = [self.storyboard instantiateViewControllerWithIdentifier:@"FrameOrderReviewViewController"];
+    }
+    else if (self.product.productTemplate.templateUI == kOLTemplateUIPhotobook){
+        orvc = [self.storyboard instantiateViewControllerWithIdentifier:@"PhotobookViewController"];
     }
     else{
         orvc = [self.storyboard instantiateViewControllerWithIdentifier:@"OrderReviewViewController"];
     }
-    orvc.product = self.product;
-    orvc.userSelectedPhotos = self.userSelectedPhotos;
-    orvc.assets = self.assets;
+    [orvc safePerformSelector:@selector(setProduct:) withObject:self.product];
+    [orvc safePerformSelector:@selector(setUserSelectedPhotos:) withObject:self.userSelectedPhotos];
+    [orvc safePerformSelector:@selector(setAssets:) withObject:self.assets];
     [self.navigationController pushViewController:orvc animated:YES];
 }
 

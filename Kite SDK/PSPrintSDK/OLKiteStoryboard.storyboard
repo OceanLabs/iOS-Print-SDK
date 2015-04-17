@@ -514,6 +514,43 @@
             </objects>
             <point key="canvasLocation" x="1386" y="-1280"/>
         </scene>
+        <!--Photobook Page View Controller-->
+        <scene sceneID="6A5-sL-g1u">
+            <objects>
+                <viewController storyboardIdentifier="OLPhotobookPageViewController" id="11Z-vd-9Wv" customClass="OLPhotobookPageViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="3pJ-t4-8d2"/>
+                        <viewControllerLayoutGuide type="bottom" id="wDa-Oe-ITL"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="tgc-Pj-vj3">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="white" translatesAutoresizingMaskIntoConstraints="NO" id="vlb-0j-ww9">
+                                <rect key="frame" x="290" y="300" width="20" height="20"/>
+                            </activityIndicatorView>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="MuP-1U-Qqd">
+                                <rect key="frame" x="10" y="25" width="580" height="570"/>
+                            </imageView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="MuP-1U-Qqd" firstAttribute="top" secondItem="3pJ-t4-8d2" secondAttribute="bottom" constant="5" id="6rU-Tk-PxI"/>
+                            <constraint firstItem="wDa-Oe-ITL" firstAttribute="top" secondItem="MuP-1U-Qqd" secondAttribute="bottom" constant="5" id="EBv-QC-bWX"/>
+                            <constraint firstItem="vlb-0j-ww9" firstAttribute="centerY" secondItem="MuP-1U-Qqd" secondAttribute="centerY" id="Iil-Bu-kg5"/>
+                            <constraint firstItem="vlb-0j-ww9" firstAttribute="centerX" secondItem="MuP-1U-Qqd" secondAttribute="centerX" id="T1f-CU-bFe"/>
+                            <constraint firstAttribute="trailing" secondItem="MuP-1U-Qqd" secondAttribute="trailing" constant="10" id="at6-xh-ShV"/>
+                            <constraint firstItem="MuP-1U-Qqd" firstAttribute="leading" secondItem="tgc-Pj-vj3" secondAttribute="leading" constant="10" id="veM-Nr-bXW"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="imageView" destination="MuP-1U-Qqd" id="Cte-uc-Ytc"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="j3a-cE-iKY" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3137" y="-2098"/>
+        </scene>
         <!--Poster View Controller-->
         <scene sceneID="zgh-jb-0R4">
             <objects>
@@ -578,7 +615,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="3435" y="-2056"/>
+            <point key="canvasLocation" x="4011" y="-2098"/>
         </scene>
         <!--Product Home View Controller-->
         <scene sceneID="utb-1P-DTs">
@@ -1601,6 +1638,58 @@
                 <tapGestureRecognizer id="427-Zf-DjM">
                     <connections>
                         <action selector="onGestureRecognizerTapped:" destination="E9j-vk-U16" id="QAG-Ju-E7O"/>
+                    </connections>
+                </tapGestureRecognizer>
+            </objects>
+            <point key="canvasLocation" x="2221" y="-2858"/>
+        </scene>
+        <!--Photobook View Controller-->
+        <scene sceneID="VAM-9o-3tT">
+            <objects>
+                <viewController storyboardIdentifier="PhotobookViewController" id="og1-vt-n4Z" customClass="OLPhotobookViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="LtF-ql-Rxv"/>
+                        <viewControllerLayoutGuide type="bottom" id="eAv-QL-iu7"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="xrD-7k-Kti">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rlk-bS-4UT" userLabel="Container View">
+                                <rect key="frame" x="0.0" y="171" width="600" height="258"/>
+                                <subviews>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="poster_shadow" translatesAutoresizingMaskIntoConstraints="NO" id="UgD-45-FUC">
+                                        <rect key="frame" x="0.0" y="0.0" width="600" height="258"/>
+                                    </imageView>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstItem="UgD-45-FUC" firstAttribute="leading" secondItem="rlk-bS-4UT" secondAttribute="leading" id="2CI-4L-mxD"/>
+                                    <constraint firstAttribute="bottom" secondItem="UgD-45-FUC" secondAttribute="bottom" id="Zau-ZW-enX"/>
+                                    <constraint firstAttribute="trailing" secondItem="UgD-45-FUC" secondAttribute="trailing" id="fYK-8z-zVV"/>
+                                    <constraint firstItem="UgD-45-FUC" firstAttribute="top" secondItem="rlk-bS-4UT" secondAttribute="top" id="tV8-7T-om5"/>
+                                    <constraint firstAttribute="width" secondItem="rlk-bS-4UT" secondAttribute="height" multiplier="21:9" id="vHx-Xy-jdf"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" red="0.92549019610000005" green="0.93725490199999995" blue="0.94901960780000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <gestureRecognizers/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="rlk-bS-4UT" secondAttribute="trailing" id="8fi-cg-d9L"/>
+                            <constraint firstAttribute="centerX" secondItem="rlk-bS-4UT" secondAttribute="centerX" id="jUI-Bv-c8p"/>
+                            <constraint firstItem="rlk-bS-4UT" firstAttribute="leading" secondItem="xrD-7k-Kti" secondAttribute="leading" priority="750" id="u6Z-cg-ERF"/>
+                            <constraint firstAttribute="centerY" secondItem="rlk-bS-4UT" secondAttribute="centerY" id="xQu-oT-r6s"/>
+                        </constraints>
+                    </view>
+                    <extendedEdge key="edgesForExtendedLayout" top="YES"/>
+                    <navigationItem key="navigationItem" id="2Od-Wr-K8P"/>
+                    <connections>
+                        <outlet property="containerView" destination="rlk-bS-4UT" id="Ewh-mD-XG1"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="tsM-51-f4Y" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="bcg-yL-fA0">
+                    <connections>
+                        <action selector="onGestureRecognizerTapped:" destination="og1-vt-n4Z" id="BgV-lD-8BA"/>
                     </connections>
                 </tapGestureRecognizer>
             </objects>

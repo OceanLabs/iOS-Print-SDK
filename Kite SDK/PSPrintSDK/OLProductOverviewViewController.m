@@ -20,6 +20,7 @@
 #import "OLPosterViewController.h"
 #import "OLFrameOrderReviewViewController.h"
 #import "OLPostcardViewController.h"
+#import "NSObject+Utils.h"
 
 @interface OLKitePrintSDK (Kite)
 
@@ -107,57 +108,37 @@
 }
 
 - (IBAction)onButtonStartClicked:(UIBarButtonItem *)sender {
+    UIViewController *vc;
     if (self.product.productTemplate.templateUI == kOLTemplateUIFrame){
-        OLFrameOrderReviewViewController *frameVc = [self.storyboard instantiateViewControllerWithIdentifier:@"FrameOrderReviewViewController"];
-        frameVc.assets = self.assets;
-        frameVc.userSelectedPhotos = self.userSelectedPhotos;
-        frameVc.delegate = self.delegate;
-        frameVc.product = self.product;
-        [self.navigationController pushViewController:frameVc animated:YES];
+        vc = [self.storyboard instantiateViewControllerWithIdentifier:@"FrameOrderReviewViewController"];
     }
     else if (self.product.productTemplate.templateUI == kOLTemplateUICase){
-        OLSingleImageProductReviewViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLCaseViewController"];
-        vc.assets = self.assets;
-        vc.userSelectedPhotos = self.userSelectedPhotos;
-        vc.delegate = self.delegate;
-        vc.product = self.product;
-        [self.navigationController pushViewController:vc animated:YES];
+        vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLCaseViewController"];
     }
     else if (self.product.productTemplate.templateUI == kOLTemplateUIPostcard){
-        OLPostcardViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLPostcardViewController"];
-        vc.assets = self.assets;
-        vc.userSelectedPhotos = self.userSelectedPhotos;
-        vc.delegate = self.delegate;
-        vc.product = self.product;
-        [self.navigationController pushViewController:vc animated:YES];
+        vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLPostcardViewController"];
+    }
+    else if (self.product.productTemplate.templateUI == kOLTemplateUIPhotobook){
+        vc = [self.storyboard instantiateViewControllerWithIdentifier:@"PhotobookViewController"];
     }
     else if (self.product.productTemplate.templateUI == kOLTemplateUIPoster){
-        OLPosterViewController *dest = [self.storyboard instantiateViewControllerWithIdentifier:@"OLSingleImageProductReviewViewController"];
-        dest.product = self.product;
-        dest.assets = self.assets;
-        dest.userSelectedPhotos = self.userSelectedPhotos;
-        [self.navigationController pushViewController:dest animated:YES];
+        vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLSingleImageProductReviewViewController"];
     }
     else{
         if (![self.delegate respondsToSelector:@selector(kiteControllerShouldAllowUserToAddMorePhotos:)] || [self.delegate kiteControllerShouldAllowUserToAddMorePhotos:[OLKitePrintSDK kiteViewControllerInNavStack:self.navigationController.viewControllers]]){
-            OLPhotoSelectionViewController *vc;
             vc = [self.storyboard instantiateViewControllerWithIdentifier:@"PhotoSelectionViewController"];
-            vc.assets = self.assets;
-            vc.userSelectedPhotos = self.userSelectedPhotos;
-            vc.product = self.product;
-            vc.delegate = self.delegate;
-            [self.navigationController pushViewController:vc animated:YES];
         }
         else{
-            OLOrderReviewViewController *vc;
             vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OrderReviewViewController"];
-            vc.assets = self.assets;
-            vc.userSelectedPhotos = self.userSelectedPhotos;
-            vc.product = self.product;
-            vc.delegate = self.delegate;
             [self.navigationController pushViewController:vc animated:YES];
         }
     }
+    [vc safePerformSelector:@selector(setAssets:) withObject:self.assets];
+    [vc safePerformSelector:@selector(setUserSelectedPhotos:) withObject:self.userSelectedPhotos];
+    [vc safePerformSelector:@selector(setDelegate:) withObject:self.delegate];
+    [vc safePerformSelector:@selector(setProduct:) withObject:self.product];
+    
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
 -(void)userDidTapOnImage{
@@ -190,7 +171,7 @@
 }
 
 - (NSInteger)presentationIndexForPageViewController:(UIPageViewController *)pageViewController {
-    return 0;
+    return 1;
 }
 
 #pragma mark - Autorotate and Orientation Methods

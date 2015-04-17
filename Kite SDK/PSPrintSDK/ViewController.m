@@ -33,7 +33,6 @@ static NSString *const kApplePayMerchantIDKey = @"merchant.co.oceanlabs.kite.ly"
 
 -(void)viewDidAppear:(BOOL)animated{
     self.printOrder = [[OLPrintOrder alloc] init];
-    [OLProductTemplate sync];
 }
 
 - (void)viewDidLoad {
