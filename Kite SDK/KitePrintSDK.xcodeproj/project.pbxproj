@@ -1067,7 +1067,6 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
 					"COCOAPODS=1",
-					"STRIPE_ENABLE_APPLEPAY=1",
 				);
 				INFOPLIST_FILE = "PSPrintSDK/KitePrintSDK-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
@@ -1091,7 +1090,6 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
 					"COCOAPODS=1",
-					"STRIPE_ENABLE_APPLEPAY=1",
 				);
 				INFOPLIST_FILE = "PSPrintSDK/KitePrintSDK-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;

@@ -8,6 +8,7 @@
 
 #import "ViewController.h"
 #import "OLKitePrintSDK.h"
+#import <CTAssetsPickerController.h>
 
 #import <AssetsLibrary/AssetsLibrary.h>
 
@@ -21,7 +22,9 @@ static NSString *const kAPIKeyLive = @"REPLACE_WITH_YOUR_API_KEY"; // replace wi
 static NSString *const kStripePublishableKey = @"pk_test_6pRNASCoBOKtIshFeQd4XMUh"; // This is a test key. Replace with the live key here.
 static NSString *const kApplePayMerchantIDKey = @"merchant.co.oceanlabs.kite.ly"; // For internal use only.
 
-@interface ViewController () <UIImagePickerControllerDelegate, UINavigationControllerDelegate, OLKiteDelegate>
+@interface ViewController () <CTAssetsPickerControllerDelegate, UINavigationControllerDelegate, OLKiteDelegate>
+@property (weak, nonatomic) IBOutlet UIButton *localPhotosButton;
+@property (weak, nonatomic) IBOutlet UIButton *remotePhotosButton;
 @property (nonatomic, weak) IBOutlet UISegmentedControl *environmentPicker;
 @property (nonatomic, strong) OLPrintOrder* printOrder;
 @end
@@ -35,6 +38,17 @@ static NSString *const kApplePayMerchantIDKey = @"merchant.co.oceanlabs.kite.ly"
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+#ifndef DEBUG
+    
+    self.title = @"Kite.ly";
+    self.environmentPicker.selectedSegmentIndex = 1;
+    self.environmentPicker.hidden = YES;
+    [self.remotePhotosButton removeFromSuperview];
+    [self.localPhotosButton setTitle:NSLocalizedString(@"Start", @"") forState:UIControlStateNormal];
+    [self.localPhotosButton.titleLabel setFont:[UIFont boldSystemFontOfSize:17]];
+    
+#endif
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onUserSuppliedShippingDetails:) name:kOLNotificationUserSuppliedShippingDetails object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onUserCompletedPayment:) name:kOLNotificationUserCompletedPayment object:nil];
@@ -55,9 +69,12 @@ static NSString *const kApplePayMerchantIDKey = @"merchant.co.oceanlabs.kite.ly"
 
 - (IBAction)onButtonPrintLocalPhotos:(id)sender {
     if (![self isAPIKeySet]) return;
-    UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
-    imagePicker.delegate = self;
-    [self presentViewController:imagePicker animated:YES completion:nil];
+    CTAssetsPickerController *picker = [[CTAssetsPickerController alloc] init];
+    picker.delegate = self;
+    picker.assetsFilter = [ALAssetsFilter allPhotos];
+    picker.modalPresentationStyle = UIModalPresentationPageSheet;
+    
+    [self presentViewController:picker animated:YES completion:nil];
 }
 
 - (NSString *)apiKey {
@@ -138,6 +155,34 @@ static NSString *const kApplePayMerchantIDKey = @"merchant.co.oceanlabs.kite.ly"
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
+#pragma mark - CTAssetsPickerControllerDelegate Methods
+
+- (void)assetsPickerController:(CTAssetsPickerController *)picker didFinishPickingAssets:(NSArray *)assets {
+    [picker dismissViewControllerAnimated:YES completion:^(void){
+        NSMutableArray *assetObjects = [[NSMutableArray alloc] initWithCapacity:assets.count];
+        for (ALAsset *asset in assets){
+            [assetObjects addObject:[OLAsset assetWithALAsset:asset]];
+        }
+        [self printWithAssets:assetObjects];
+    }];
+    
+}
+
+- (BOOL)assetsPickerController:(CTAssetsPickerController *)picker shouldShowAssetsGroup:(ALAssetsGroup *)group{
+    if (group.numberOfAssets == 0){
+        return NO;
+    }
+    return YES;
+}
+
+- (BOOL)assetsPickerController:(CTAssetsPickerController *)picker shouldShowAsset:(ALAsset *)asset{
+    NSString *fileName = [[[asset defaultRepresentation] filename] lowercaseString];
+    if (!([fileName hasSuffix:@".jpg"] || [fileName hasSuffix:@".jpeg"] || [fileName hasSuffix:@"png"])) {
+        return NO;
+    }
+    return YES;
+}
+
 #pragma mark - OLKiteDelete
 
 - (BOOL)kiteController:(OLKiteViewController *)controller isDefaultAssetsGroup:(ALAssetsGroup *)group {
@@ -155,6 +200,9 @@ static NSString *const kApplePayMerchantIDKey = @"merchant.co.oceanlabs.kite.ly"
     return YES;
 }
 
+- (IBAction)onButtonKiteClicked:(UIButton *)sender {
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://www.kite.ly"]];
+}
 #pragma mark - notification events
 
 // useful if you want to fire off Anlaytic events for conversion funnel analysis, etc.

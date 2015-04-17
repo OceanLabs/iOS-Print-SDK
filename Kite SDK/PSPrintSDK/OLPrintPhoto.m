@@ -113,22 +113,23 @@ static NSString *const kKeyCropTransform = @"co.oceanlabs.psprintstudio.kKeyCrop
             }
             else if (asset.assetType == kOLAssetTypeALAsset){
                 if (highQuality){
-                [asset loadALAssetWithCompletionHandler:^(ALAsset *asset, NSError *error){
-                    OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
-                    printPhoto.asset = asset;
-                    [OLPrintPhoto resizedImageWithEditorImage:printPhoto size:destSize progress:nil completion:^(UIImage *image) {
-                        self.cachedCroppedThumbnailImage = image;
-                        dispatch_async(dispatch_get_main_queue(), ^(void){
-                            imageView.image = image;
-                        });
-                        
+                    [asset loadALAssetWithCompletionHandler:^(ALAsset *asset, NSError *error){
+                        OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
+                        printPhoto.asset = asset;
+                        [OLPrintPhoto resizedImageWithEditorImage:printPhoto size:destSize progress:nil completion:^(UIImage *image) {
+                            self.cachedCroppedThumbnailImage = image;
+                            dispatch_async(dispatch_get_main_queue(), ^(void){
+                                imageView.image = image;
+                            });
+                            
+                        }];
                     }];
-                }];
                 }
                 else{
-                    ALAsset *alAsset = (ALAsset *)self.asset;
-                    self.cachedCroppedThumbnailImage = [UIImage imageWithCGImage:alAsset.thumbnail];
-                    imageView.image = self.cachedCroppedThumbnailImage;
+                    [asset loadALAssetWithCompletionHandler:^(ALAsset *asset, NSError *error){
+                        self.cachedCroppedThumbnailImage = [UIImage imageWithCGImage:asset.thumbnail];
+                        imageView.image = self.cachedCroppedThumbnailImage;
+                    }];
                 }
             }
             else{
