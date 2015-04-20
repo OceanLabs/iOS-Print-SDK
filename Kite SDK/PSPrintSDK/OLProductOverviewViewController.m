@@ -118,9 +118,6 @@
     else if (self.product.productTemplate.templateUI == kOLTemplateUIPostcard){
         vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLPostcardViewController"];
     }
-    else if (self.product.productTemplate.templateUI == kOLTemplateUIPhotobook){
-        vc = [self.storyboard instantiateViewControllerWithIdentifier:@"PhotobookViewController"];
-    }
     else if (self.product.productTemplate.templateUI == kOLTemplateUIPoster){
         vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLSingleImageProductReviewViewController"];
     }
