@@ -118,7 +118,8 @@
     NSInteger extras = 0;
     NSInteger numberOfProducts = [self.products count];
     
-    if (!(numberOfProducts % 2 == 0) && !([self isHorizontalSizeClassCompact])){
+    CGSize size = self.view.frame.size;
+    if (!(numberOfProducts % 2 == 0) && (!([self isHorizontalSizeClassCompact]) || size.height < size.width)){
         extras = 1;
     }
     

@@ -39,14 +39,29 @@ static NSString *const kApplePayMerchantIDKey = @"merchant.co.oceanlabs.kite.ly"
     [super viewDidLoad];
     
 #ifndef DEBUG
+    self.navigationController.navigationBar.hidden = YES;
+    self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
+    [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationNone];
+    UIImageView *view = [[UIImageView alloc] init];
+    view.image = [UIImage imageNamed:@"homepage"];
+    view.userInteractionEnabled = YES;
+    [view addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onButtonPrintLocalPhotos:)]];
     
-    self.title = @"Kite.ly";
-    self.environmentPicker.selectedSegmentIndex = 1;
-    self.environmentPicker.hidden = YES;
-    [self.remotePhotosButton removeFromSuperview];
-    [self.localPhotosButton setTitle:NSLocalizedString(@"Start", @"") forState:UIControlStateNormal];
-    [self.localPhotosButton.titleLabel setFont:[UIFont boldSystemFontOfSize:17]];
+    [self.view addSubview:view];
     
+    view.translatesAutoresizingMaskIntoConstraints = NO;
+    NSDictionary *views = NSDictionaryOfVariableBindings(view);
+    NSMutableArray *con = [[NSMutableArray alloc] init];
+    
+    NSArray *visuals = @[@"H:|-0-[view]-0-|",
+                         @"V:|-0-[view]-0-|"];
+    
+    
+    for (NSString *visual in visuals) {
+        [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+    }
+    
+    [view.superview addConstraints:con];
 #endif
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onUserSuppliedShippingDetails:) name:kOLNotificationUserSuppliedShippingDetails object:nil];
