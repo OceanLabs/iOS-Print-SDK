@@ -66,14 +66,14 @@ static NSString *const kApplePayMerchantIDKey = @"merchant.co.oceanlabs.kite.ly"
     
     UIImageView *kiteLogo = [[UIImageView alloc] init];
     [self.view addSubview:kiteLogo];
-    kiteLogo.image = [UIImageView imageNamed:@"kite-logo"];
+    kiteLogo.image = [UIImage imageNamed:@"kite-logo"];
     view = kiteLogo;
     
     view.translatesAutoresizingMaskIntoConstraints = NO;
-    NSDictionary *views = NSDictionaryOfVariableBindings(view);
-    NSMutableArray *con = [[NSMutableArray alloc] init];
+    views = NSDictionaryOfVariableBindings(view);
+    con = [[NSMutableArray alloc] init];
     
-    NSArray *visuals = @[@"H:[view(89)]",
+    visuals = @[@"H:[view(89)]",
                          @"V:[view(83)]-0-|"];
     
     
@@ -82,7 +82,8 @@ static NSString *const kApplePayMerchantIDKey = @"merchant.co.oceanlabs.kite.ly"
     }
     
     [view.superview addConstraints:con];
-
+    
+    [view.superview addConstraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:view.superview attribute:NSLayoutAttributeCenterX multiplier:1 constant:0]];
     
 #endif
     
