@@ -552,10 +552,10 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     NSString *title;
     OLTemplateUI templateUI = [OLProductTemplate templateWithId:self.product.templateId].templateUI;
     if (templateUI == kOLTemplateUIFrame){
-        title = [[NSString alloc]initWithFormat:@"#%ld Frame", indexPath.section + 1];
+        title = [[NSString alloc]initWithFormat:@"#%ld Frame", (long)indexPath.section + 1];
     }
     else{
-        title = [[NSString alloc]initWithFormat:@"#%ld Pack of %lu %@", indexPath.section + 1, (unsigned long)self.product.quantityToFulfillOrder, self.product.productTemplate.name];
+        title = [[NSString alloc]initWithFormat:@"#%ld Pack of %lu %@", (long)indexPath.section + 1, (unsigned long)self.product.quantityToFulfillOrder, self.product.productTemplate.name];
     }
     label.text = title;
     
