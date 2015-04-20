@@ -23,7 +23,9 @@
     
     OLPrintPhoto *printPhoto = [self.userSelectedPhotos objectAtIndex:self.pageIndex];
     [printPhoto getImageWithProgress:NULL completion:^(UIImage *image){
-        self.imageView.image = image;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.imageView.image = image;
+        });
     }];
 }
 

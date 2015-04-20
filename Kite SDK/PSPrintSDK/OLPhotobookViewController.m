@@ -15,6 +15,7 @@
 
 @property (strong, nonatomic) UIPageViewController *pageController;
 @property (weak, nonatomic) IBOutlet UIView *containerView;
+@property (strong, nonatomic) NSMutableArray *photobookPhotos;
 
 @end
 
@@ -22,6 +23,12 @@
 
 - (void)viewDidLoad{
     [super viewDidLoad];
+    
+    self.photobookPhotos = [[NSMutableArray alloc] initWithCapacity:self.product.quantityToFulfillOrder];
+    [self.photobookPhotos addObjectsFromArray:self.userSelectedPhotos];
+    for (NSInteger i = self.userSelectedPhotos.count; i < self.product.quantityToFulfillOrder; i++){
+        [self.photobookPhotos addObject:[self.userSelectedPhotos objectAtIndex:i % self.userSelectedPhotos.count]];
+    }
     
     self.pageController = [[UIPageViewController alloc] initWithTransitionStyle:UIPageViewControllerTransitionStylePageCurl navigationOrientation:UIPageViewControllerNavigationOrientationHorizontal options:@{UIPageViewControllerOptionSpineLocationKey : [NSNumber numberWithInt:UIPageViewControllerSpineLocationMid]}];
     self.pageController.dataSource = self;
@@ -49,13 +56,13 @@
 }
 
 - (UIViewController *)viewControllerAtIndex:(NSUInteger)index {
-    if (index == NSNotFound || index >= self.userSelectedPhotos.count) {
+    if (index == NSNotFound || index >= self.photobookPhotos.count) {
         return nil;
     }
     
     OLPhotobookPageViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLPhotobookPageViewController"];
     vc.pageIndex = index;
-    vc.userSelectedPhotos = self.userSelectedPhotos;
+    vc.userSelectedPhotos = self.photobookPhotos;
     vc.assets = self.assets;
     return vc;
 }
@@ -74,14 +81,14 @@
 - (UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerAfterViewController:(UIViewController *)viewController {
     OLPhotobookPageViewController *vc = (OLPhotobookPageViewController *) viewController;
     NSUInteger index = (vc.pageIndex + 1);
-    if (index >= self.userSelectedPhotos.count){
+    if (index >= self.photobookPhotos.count){
         return nil;
     }
     return [self viewControllerAtIndex:index];
 }
 
 - (NSInteger)presentationCountForPageViewController:(UIPageViewController *)pageViewController {
-    return self.userSelectedPhotos.count;
+    return self.photobookPhotos.count;
 }
 
 - (NSInteger)presentationIndexForPageViewController:(UIPageViewController *)pageViewController {
