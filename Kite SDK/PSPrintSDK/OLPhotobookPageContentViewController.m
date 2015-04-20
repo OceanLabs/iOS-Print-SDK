@@ -6,17 +6,18 @@
 //  Copyright (c) 2015 Deon Botha. All rights reserved.
 //
 
-#import "OLPhotobookPageViewController.h"
+#import "OLPhotobookPageContentViewController.h"
 #import "OLPrintPhoto.h"
+#import "OLScrollCropViewController.h"
 
-@interface OLPhotobookPageViewController ()
+@interface OLPhotobookPageContentViewController ()
 
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;
 
 
 @end
 
-@implementation OLPhotobookPageViewController
+@implementation OLPhotobookPageContentViewController
 
 - (void)viewDidLoad{
     [super viewDidLoad];

@@ -9,9 +9,9 @@
 #import "OLPhotobookViewController.h"
 #import "OLProduct.h"
 #import "OLProductTemplate.h"
-#import "OLPhotobookPageViewController.h"
+#import "OLPhotobookPageContentViewController.h"
 
-@interface OLPhotobookViewController () <UIPageViewControllerDataSource, UIPageViewControllerDelegate>
+@interface OLPhotobookViewController () <UIPageViewControllerDataSource, UIPageViewControllerDelegate, UIGestureRecognizerDelegate>
 
 @property (strong, nonatomic) UIPageViewController *pageController;
 @property (weak, nonatomic) IBOutlet UIView *containerView;
@@ -59,8 +59,8 @@
 
 - (void)pageViewController:(UIPageViewController *)pageViewController didFinishAnimating:(BOOL)finished previousViewControllers:(NSArray *)previousViewControllers transitionCompleted:(BOOL)completed{
     if (completed){
-        OLPhotobookPageViewController *vc1 = [pageViewController.viewControllers firstObject];
-        OLPhotobookPageViewController *vc2 = [pageViewController.viewControllers lastObject];
+        OLPhotobookPageContentViewController *vc1 = [pageViewController.viewControllers firstObject];
+        OLPhotobookPageContentViewController *vc2 = [pageViewController.viewControllers lastObject];
         self.title = [NSString stringWithFormat: NSLocalizedString(@"Pages %d & %d of %d", @""), vc1.pageIndex+1, vc2.pageIndex+1, self.product.quantityToFulfillOrder];
     }
 }
@@ -70,7 +70,7 @@
         return nil;
     }
     
-    OLPhotobookPageViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLPhotobookPageViewController"];
+    OLPhotobookPageContentViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLPhotobookPageViewController"];
     vc.pageIndex = index;
     vc.userSelectedPhotos = self.photobookPhotos;
     vc.assets = self.assets;
@@ -80,7 +80,7 @@
 #pragma mark - UIPageViewControllerDataSource
 
 - (UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerBeforeViewController:(UIViewController *)viewController {
-    OLPhotobookPageViewController *vc = (OLPhotobookPageViewController *) viewController;
+    OLPhotobookPageContentViewController *vc = (OLPhotobookPageContentViewController *) viewController;
     NSUInteger index = vc.pageIndex - 1;
     if (vc.pageIndex == 0) {
         return nil;
@@ -89,7 +89,7 @@
 }
 
 - (UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerAfterViewController:(UIViewController *)viewController {
-    OLPhotobookPageViewController *vc = (OLPhotobookPageViewController *) viewController;
+    OLPhotobookPageContentViewController *vc = (OLPhotobookPageContentViewController *) viewController;
     NSUInteger index = (vc.pageIndex + 1);
     if (index >= self.photobookPhotos.count){
         return nil;

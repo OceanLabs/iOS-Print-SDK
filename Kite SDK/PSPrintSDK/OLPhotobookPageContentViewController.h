@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface OLPhotobookPageViewController : UIViewController
+@interface OLPhotobookPageContentViewController : UIViewController
 
 @property (strong, nonatomic) NSMutableArray *assets;
 @property (strong, nonatomic) NSMutableArray *userSelectedPhotos;
