@@ -17,6 +17,7 @@
 #import <AVFoundation/AVFoundation.h>
 #import "NSString+Formatting.h"
 #import "UITextField+Selection.h"
+#import "UIView+RoundRect.h"
 
 static const NSUInteger kOLSectionCardNumber = 0;
 static const NSUInteger kOLSectionExpiryDate = 1;
@@ -142,6 +143,7 @@ UITableViewDataSource, UITextFieldDelegate>
     buttonPay.backgroundColor = [UIColor colorWithRed:74 / 255.0f green:137 / 255.0f blue:220 / 255.0f alpha:1.0];
     [buttonPay addTarget:self action:@selector(onButtonPayClicked) forControlEvents:UIControlEventTouchUpInside];
     [buttonPay setTitle:NSLocalizedString(@"Pay", @"") forState:UIControlStateNormal];
+    [buttonPay makeRoundRect];
     
     UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 44 + 40)];
     [footerView addSubview:buttonPay];
@@ -151,7 +153,7 @@ UITableViewDataSource, UITextFieldDelegate>
     NSDictionary *views = NSDictionaryOfVariableBindings(view);
     NSMutableArray *con = [[NSMutableArray alloc] init];
     
-    NSArray *visuals = @[@"H:|-0-[view]-0-|",
+    NSArray *visuals = @[@"H:|-20-[view]-20-|",
                          @"V:|-20-[view(44)]"];
     
     
