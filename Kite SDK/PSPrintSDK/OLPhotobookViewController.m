@@ -26,6 +26,10 @@
 
 @implementation OLPhotobookViewController
 
+- (void)viewDidLayoutSubviews{
+    NSLog(@"did it");
+}
+
 - (void)viewDidLoad{
     [super viewDidLoad];
     
@@ -116,11 +120,11 @@
 }
 
 - (BOOL)isContainerViewAtRightEdge{
-    return self.containerView.center.x + self.containerView.frame.size.width / 2  < self.view.frame.size.width;
+    return self.containerView.center.x + self.containerView.frame.size.width / 2  <= self.view.frame.size.width;
 }
 
 - (BOOL)isContainerViewAtLeftEdge{
-    return self.containerView.center.x - self.containerView.frame.size.width / 2 > 0;
+    return self.containerView.center.x - self.containerView.frame.size.width / 2 >= 0;
 }
 
 - (void)onPanGestureRecognized:(UIPanGestureRecognizer *)recognizer{
@@ -145,24 +149,6 @@
             } completion:NULL];
         }
     }
-    
-//    if (recognizer.state == UIGestureRecognizerStateEnded) {
-//        
-//        CGPoint velocity = [recognizer velocityInView:self.pageController.view];
-//        CGFloat magnitude = sqrtf((velocity.x * velocity.x) + (velocity.y * velocity.y));
-//        CGFloat slideMult = magnitude / 200;
-//        
-//        float slideFactor = 0.1 * slideMult; // Increase for more of a slide
-//        CGPoint finalPoint = CGPointMake(recognizer.view.center.x + (velocity.x * slideFactor),
-//                                         recognizer.view.center.y);
-//        finalPoint.x = MIN(MAX(finalPoint.x, 0), self.pageController.view.bounds.size.width);
-//        finalPoint.y = MIN(MAX(finalPoint.y, 0), self.pageController.view.bounds.size.height);
-//        
-//        [UIView animateWithDuration:slideFactor*2 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
-//            recognizer.view.center = finalPoint;
-//        } completion:nil];
-//        
-//    }
 }
 
 - (BOOL) gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
@@ -170,6 +156,14 @@
         return NO;
     }
     else if ([gestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]] && [otherGestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]]){
+        CGPoint translation = [(UIPanGestureRecognizer *)gestureRecognizer translationInView:self.containerView];
+        BOOL draggingLeft = translation.x < 0;
+        BOOL draggingRight = translation.x > 0;
+        if (([self isContainerViewAtRightEdge] && draggingLeft) || ([self isContainerViewAtLeftEdge] && draggingRight)){
+            gestureRecognizer.enabled = NO;
+            gestureRecognizer.enabled = YES;
+            return YES;
+        }
         return NO;
     }
     return YES;
