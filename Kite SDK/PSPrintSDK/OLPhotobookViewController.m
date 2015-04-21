@@ -26,10 +26,6 @@
 
 @implementation OLPhotobookViewController
 
-- (void)viewDidLayoutSubviews{
-    NSLog(@"did it");
-}
-
 - (void)viewDidLoad{
     [super viewDidLoad];
     
@@ -82,6 +78,12 @@
     [self.pageController.view addGestureRecognizer:panGesture];
     
     self.title = [NSString stringWithFormat: NSLocalizedString(@"Pages 1 & 2 of %d", @""), self.product.quantityToFulfillOrder];
+    
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Back", @"") style:UIBarButtonItemStylePlain target:self action:@selector(onBackButtonTapped)];
+}
+
+- (void)onBackButtonTapped{
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator{
@@ -104,7 +106,7 @@
     }
     
     index = [[self.pageController.viewControllers objectAtIndex:self.editingPageIndex] pageIndex];
-    tempPrintPhoto.asset = self.assets[index];
+    tempPrintPhoto.asset = self.assets[index % [self.assets count]];
     self.editingPrintPhoto = self.photobookPhotos[index];
     
     UINavigationController *nav = [self.storyboard instantiateViewControllerWithIdentifier:@"CropViewNavigationController"];
@@ -120,11 +122,11 @@
 }
 
 - (BOOL)isContainerViewAtRightEdge{
-    return self.containerView.center.x + self.containerView.frame.size.width / 2  <= self.view.frame.size.width;
+    return self.containerView.transform.tx <= -self.containerView.frame.size.width + self.view.frame.size.width;
 }
 
 - (BOOL)isContainerViewAtLeftEdge{
-    return self.containerView.center.x - self.containerView.frame.size.width / 2 >= 0;
+    return self.containerView.transform.tx >= 0;
 }
 
 - (void)onPanGestureRecognized:(UIPanGestureRecognizer *)recognizer{
@@ -134,18 +136,17 @@
     if (!(([self isContainerViewAtLeftEdge] && draggingRight) || ([self isContainerViewAtRightEdge] && draggingLeft))){
         CGFloat translationX = translation.x;
     
-        self.containerView.center = CGPointMake(self.containerView.center.x + translationX,
-                                                self.containerView.center.y);
+        self.containerView.transform = CGAffineTransformTranslate(self.containerView.transform, translationX, 0);
         [recognizer setTranslation:CGPointMake(0, 0) inView:self.containerView];
         
         if ([self isContainerViewAtRightEdge]){
             [UIView animateWithDuration:0.1 delay:0 options:UIViewAnimationOptionBeginFromCurrentState  animations:^{
-                self.containerView.center = CGPointMake(self.view.frame.size.width - self.containerView.frame.size.width / 2, self.containerView.center.y);
+                self.containerView.transform = CGAffineTransformMakeTranslation(-self.containerView.frame.size.width + self.view.frame.size.width, 0);
             } completion:NULL];
         }
         else if ([self isContainerViewAtLeftEdge]){
             [UIView animateWithDuration:0.1 delay:0 options:UIViewAnimationOptionBeginFromCurrentState  animations:^{
-                self.containerView.center = CGPointMake(self.containerView.frame.size.width / 2, self.containerView.center.y);
+                self.containerView.transform = CGAffineTransformMakeTranslation(0, 0);
             } completion:NULL];
         }
     }

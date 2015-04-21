@@ -1651,7 +1651,7 @@
                         <viewControllerLayoutGuide type="top" id="LtF-ql-Rxv"/>
                         <viewControllerLayoutGuide type="bottom" id="eAv-QL-iu7"/>
                     </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="xrD-7k-Kti">
+                    <view key="view" clipsSubviews="YES" contentMode="scaleToFill" id="xrD-7k-Kti">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
