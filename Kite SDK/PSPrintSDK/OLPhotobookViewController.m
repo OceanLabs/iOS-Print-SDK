@@ -79,6 +79,18 @@
     self.title = [NSString stringWithFormat: NSLocalizedString(@"Pages 1 & 2 of %d", @""), self.product.quantityToFulfillOrder];
     
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Back", @"") style:UIBarButtonItemStylePlain target:self action:@selector(onBackButtonTapped)];
+    
+    if (self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassCompact){
+        self.containerView.transform = CGAffineTransformMakeTranslation(-self.containerView.frame.size.width/4, 0);
+        self.containerView.transform = CGAffineTransformScale(self.containerView.transform, 0.5, 0.5);
+    }
+}
+
+- (void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
+    [UIView animateWithDuration:0.5 delay:0.5 options:0 animations:^{
+        self.containerView.transform = CGAffineTransformIdentity;
+    } completion:NULL];
 }
 
 - (void)onBackButtonTapped{
@@ -179,6 +191,10 @@
         OLPhotobookPageContentViewController *vc1 = [pageViewController.viewControllers firstObject];
         OLPhotobookPageContentViewController *vc2 = [pageViewController.viewControllers lastObject];
         self.title = [NSString stringWithFormat: NSLocalizedString(@"Pages %d & %d of %d", @""), vc1.pageIndex+1, vc2.pageIndex+1, self.product.quantityToFulfillOrder];
+        
+        [UIView animateWithDuration:0.2 animations:^{
+            self.containerView.transform = CGAffineTransformIdentity;
+        }];
     }
 }
 
