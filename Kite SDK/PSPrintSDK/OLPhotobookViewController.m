@@ -115,11 +115,36 @@
 
 }
 
+- (BOOL)isContainerViewAtRightEdge{
+    return self.containerView.center.x + self.containerView.frame.size.width / 2  < self.view.frame.size.width;
+}
+
+- (BOOL)isContainerViewAtLeftEdge{
+    return self.containerView.center.x - self.containerView.frame.size.width / 2 > 0;
+}
+
 - (void)onPanGestureRecognized:(UIPanGestureRecognizer *)recognizer{
-    CGPoint translation = [recognizer translationInView:self.pageController.view];
-    recognizer.view.center = CGPointMake(recognizer.view.center.x + translation.x,
-                                         recognizer.view.center.y);
-    [recognizer setTranslation:CGPointMake(0, 0) inView:self.pageController.view];
+    CGPoint translation = [recognizer translationInView:self.containerView];
+    BOOL draggingLeft = translation.x < 0;
+    BOOL draggingRight = translation.x > 0;
+    if (!(([self isContainerViewAtLeftEdge] && draggingRight) || ([self isContainerViewAtRightEdge] && draggingLeft))){
+        CGFloat translationX = translation.x;
+    
+        self.containerView.center = CGPointMake(self.containerView.center.x + translationX,
+                                                self.containerView.center.y);
+        [recognizer setTranslation:CGPointMake(0, 0) inView:self.containerView];
+        
+        if ([self isContainerViewAtRightEdge]){
+            [UIView animateWithDuration:0.1 delay:0 options:UIViewAnimationOptionBeginFromCurrentState  animations:^{
+                self.containerView.center = CGPointMake(self.view.frame.size.width - self.containerView.frame.size.width / 2, self.containerView.center.y);
+            } completion:NULL];
+        }
+        else if ([self isContainerViewAtLeftEdge]){
+            [UIView animateWithDuration:0.1 delay:0 options:UIViewAnimationOptionBeginFromCurrentState  animations:^{
+                self.containerView.center = CGPointMake(self.containerView.frame.size.width / 2, self.containerView.center.y);
+            } completion:NULL];
+        }
+    }
     
 //    if (recognizer.state == UIGestureRecognizerStateEnded) {
 //        
