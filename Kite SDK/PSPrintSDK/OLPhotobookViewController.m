@@ -59,14 +59,13 @@
     
     CGFloat minimumDimension = MIN(self.view.frame.size.width, self.view.frame.size.height);
     
-    NSLayoutConstraint *heightCon = [NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self.containerView attribute:NSLayoutAttributeHeight multiplier:1 constant:minimumDimension - 34];
+    NSLayoutConstraint *heightCon = [NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:minimumDimension-32];
     heightCon.priority = UILayoutPriorityDefaultHigh;
     [self.containerView addConstraint:heightCon];
     
-    
-    self.centerXCon = [NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeCenterX multiplier:1 constant:0];
+    self.centerXCon = [NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.containerView.superview attribute:NSLayoutAttributeCenterX multiplier:1 constant:0];
     if (self.view.frame.size.width > self.view.frame.size.height){
-        [self.view addConstraint:self.centerXCon];
+        [self.containerView.superview addConstraint:self.centerXCon];
     }
     
     UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTapGestureRecognized:)];
@@ -87,6 +86,7 @@
 }
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator{
+    self.containerView.transform = CGAffineTransformIdentity;
     if (size.width > size.height){
         [self.view addConstraint:self.centerXCon];
     }

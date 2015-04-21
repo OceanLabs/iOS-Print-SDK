@@ -1678,7 +1678,7 @@
                             <constraint firstAttribute="trailing" secondItem="rlk-bS-4UT" secondAttribute="trailing" placeholder="YES" id="8fi-cg-d9L"/>
                             <constraint firstItem="rlk-bS-4UT" firstAttribute="top" relation="greaterThanOrEqual" secondItem="LtF-ql-Rxv" secondAttribute="bottom" id="St7-0b-fIl"/>
                             <constraint firstItem="eAv-QL-iu7" firstAttribute="top" relation="greaterThanOrEqual" secondItem="rlk-bS-4UT" secondAttribute="bottom" id="cCM-bg-A0t"/>
-                            <constraint firstItem="rlk-bS-4UT" firstAttribute="leading" secondItem="xrD-7k-Kti" secondAttribute="leading" id="u6Z-cg-ERF"/>
+                            <constraint firstItem="rlk-bS-4UT" firstAttribute="leading" secondItem="xrD-7k-Kti" secondAttribute="leading" priority="750" id="u6Z-cg-ERF"/>
                             <constraint firstAttribute="centerY" secondItem="rlk-bS-4UT" secondAttribute="centerY" constant="-16" id="xQu-oT-r6s"/>
                         </constraints>
                         <variation key="default">
