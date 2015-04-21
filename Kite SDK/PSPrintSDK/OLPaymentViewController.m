@@ -488,7 +488,6 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 - (void)payWithNewCard {
     OLCreditCardCaptureViewController *ccCaptureController = [[OLCreditCardCaptureViewController alloc] initWithPrintOrder:self.printOrder];
     ccCaptureController.delegate = self;
-    ccCaptureController.modalPresentationStyle = UIModalPresentationPageSheet;
     [self presentViewController:ccCaptureController animated:YES completion:nil];
 }
 
