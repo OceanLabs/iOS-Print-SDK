@@ -194,7 +194,7 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
 
 - (CGFloat) productAspectRatio{
     UIEdgeInsets b = self.product.productTemplate.imageBorder;
-    if (b.top < b.bottom){
+    if (b.top < b.bottom){ //This is for polaroids, since we don't know its pixel dims
         return 1;
     }
     else{

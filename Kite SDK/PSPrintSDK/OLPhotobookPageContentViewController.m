@@ -21,7 +21,10 @@
 
 - (void)viewDidLoad{
     [super viewDidLoad];
-    
+    [self loadImage];
+}
+
+- (void)loadImage{
     OLPrintPhoto *printPhoto = [self.userSelectedPhotos objectAtIndex:self.pageIndex];
     [printPhoto getImageWithProgress:NULL completion:^(UIImage *image){
         dispatch_async(dispatch_get_main_queue(), ^{

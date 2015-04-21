@@ -14,4 +14,6 @@
 @property (strong, nonatomic) NSMutableArray *userSelectedPhotos;
 @property (assign, nonatomic) NSInteger pageIndex;
 
+- (void)loadImage;
+
 @end
