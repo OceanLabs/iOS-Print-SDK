@@ -20,6 +20,7 @@
 @property (strong, nonatomic) NSMutableArray *photobookPhotos;
 @property (strong, nonatomic) OLPrintPhoto *editingPrintPhoto;
 @property (assign, nonatomic) NSInteger editingPageIndex;
+@property (strong, nonatomic) NSLayoutConstraint *centerXCon;
 
 @end
 
@@ -48,13 +49,25 @@
     NSDictionary *views = NSDictionaryOfVariableBindings(view);
     NSMutableArray *con = [[NSMutableArray alloc] init];
     
-    NSArray *visuals = @[@"H:|-0-[view]-(0)-|", @"V:|-0-[view]-0-|"];
+    NSArray *visuals = @[@"H:|-20-[view]-20-|", @"V:|-20-[view]-20-|"];
     
     for (NSString *visual in visuals) {
         [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
     }
     
     [view.superview addConstraints:con];
+    
+    CGFloat minimumDimension = MIN(self.view.frame.size.width, self.view.frame.size.height);
+    
+    NSLayoutConstraint *heightCon = [NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self.containerView attribute:NSLayoutAttributeHeight multiplier:1 constant:minimumDimension - 34];
+    heightCon.priority = UILayoutPriorityDefaultHigh;
+    [self.containerView addConstraint:heightCon];
+    
+    
+    self.centerXCon = [NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeCenterX multiplier:1 constant:0];
+    if (self.view.frame.size.width > self.view.frame.size.height){
+        [self.view addConstraint:self.centerXCon];
+    }
     
     UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTapGestureRecognized:)];
     tapGesture.delegate = self;
@@ -65,6 +78,15 @@
     [self.pageController.view addGestureRecognizer:panGesture];
     
     self.title = [NSString stringWithFormat: NSLocalizedString(@"Pages 1 & 2 of %d", @""), self.product.quantityToFulfillOrder];
+}
+
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator{
+    if (size.width > size.height){
+        [self.view addConstraint:self.centerXCon];
+    }
+    else{
+        [self.view removeConstraint:self.centerXCon];
+    }
 }
 
 - (void)onTapGestureRecognized:(UITapGestureRecognizer *)sender{

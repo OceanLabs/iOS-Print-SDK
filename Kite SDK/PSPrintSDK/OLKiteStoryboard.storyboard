@@ -530,13 +530,13 @@
                                 <rect key="frame" x="290" y="300" width="20" height="20"/>
                             </activityIndicatorView>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="MuP-1U-Qqd">
-                                <rect key="frame" x="10" y="25" width="580" height="570"/>
+                                <rect key="frame" x="10" y="20" width="580" height="580"/>
                             </imageView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="MuP-1U-Qqd" firstAttribute="top" secondItem="3pJ-t4-8d2" secondAttribute="bottom" constant="5" id="6rU-Tk-PxI"/>
-                            <constraint firstItem="wDa-Oe-ITL" firstAttribute="top" secondItem="MuP-1U-Qqd" secondAttribute="bottom" constant="5" id="EBv-QC-bWX"/>
+                            <constraint firstItem="MuP-1U-Qqd" firstAttribute="top" secondItem="3pJ-t4-8d2" secondAttribute="bottom" id="6rU-Tk-PxI"/>
+                            <constraint firstItem="wDa-Oe-ITL" firstAttribute="top" secondItem="MuP-1U-Qqd" secondAttribute="bottom" id="EBv-QC-bWX"/>
                             <constraint firstItem="vlb-0j-ww9" firstAttribute="centerY" secondItem="MuP-1U-Qqd" secondAttribute="centerY" id="Iil-Bu-kg5"/>
                             <constraint firstItem="vlb-0j-ww9" firstAttribute="centerX" secondItem="MuP-1U-Qqd" secondAttribute="centerX" id="T1f-CU-bFe"/>
                             <constraint firstAttribute="trailing" secondItem="MuP-1U-Qqd" secondAttribute="trailing" constant="10" id="at6-xh-ShV"/>
@@ -1656,14 +1656,15 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rlk-bS-4UT" userLabel="Container View">
-                                <rect key="frame" x="0.0" y="131" width="600" height="338"/>
+                                <rect key="frame" x="0.0" y="151" width="587" height="330"/>
                                 <subviews>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="poster_shadow" translatesAutoresizingMaskIntoConstraints="NO" id="UgD-45-FUC">
-                                        <rect key="frame" x="0.0" y="0.0" width="600" height="338"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="587" height="330"/>
                                     </imageView>
                                 </subviews>
                                 <constraints>
                                     <constraint firstItem="UgD-45-FUC" firstAttribute="leading" secondItem="rlk-bS-4UT" secondAttribute="leading" id="2CI-4L-mxD"/>
+                                    <constraint firstAttribute="height" constant="330" placeholder="YES" id="VJZ-gD-2G0"/>
                                     <constraint firstAttribute="bottom" secondItem="UgD-45-FUC" secondAttribute="bottom" id="Zau-ZW-enX"/>
                                     <constraint firstAttribute="trailing" secondItem="UgD-45-FUC" secondAttribute="trailing" id="fYK-8z-zVV"/>
                                     <constraint firstItem="UgD-45-FUC" firstAttribute="top" secondItem="rlk-bS-4UT" secondAttribute="top" id="tV8-7T-om5"/>
@@ -1674,11 +1675,17 @@
                         <color key="backgroundColor" red="0.92549019610000005" green="0.93725490199999995" blue="0.94901960780000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <gestureRecognizers/>
                         <constraints>
-                            <constraint firstAttribute="trailing" secondItem="rlk-bS-4UT" secondAttribute="trailing" id="8fi-cg-d9L"/>
-                            <constraint firstAttribute="centerX" secondItem="rlk-bS-4UT" secondAttribute="centerX" id="jUI-Bv-c8p"/>
-                            <constraint firstItem="rlk-bS-4UT" firstAttribute="leading" secondItem="xrD-7k-Kti" secondAttribute="leading" priority="750" id="u6Z-cg-ERF"/>
-                            <constraint firstAttribute="centerY" secondItem="rlk-bS-4UT" secondAttribute="centerY" id="xQu-oT-r6s"/>
+                            <constraint firstAttribute="trailing" secondItem="rlk-bS-4UT" secondAttribute="trailing" placeholder="YES" id="8fi-cg-d9L"/>
+                            <constraint firstItem="rlk-bS-4UT" firstAttribute="top" relation="greaterThanOrEqual" secondItem="LtF-ql-Rxv" secondAttribute="bottom" id="St7-0b-fIl"/>
+                            <constraint firstItem="eAv-QL-iu7" firstAttribute="top" relation="greaterThanOrEqual" secondItem="rlk-bS-4UT" secondAttribute="bottom" id="cCM-bg-A0t"/>
+                            <constraint firstItem="rlk-bS-4UT" firstAttribute="leading" secondItem="xrD-7k-Kti" secondAttribute="leading" id="u6Z-cg-ERF"/>
+                            <constraint firstAttribute="centerY" secondItem="rlk-bS-4UT" secondAttribute="centerY" constant="-16" id="xQu-oT-r6s"/>
                         </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="8fi-cg-d9L"/>
+                            </mask>
+                        </variation>
                     </view>
                     <extendedEdge key="edgesForExtendedLayout" top="YES"/>
                     <navigationItem key="navigationItem" id="2Od-Wr-K8P"/>
