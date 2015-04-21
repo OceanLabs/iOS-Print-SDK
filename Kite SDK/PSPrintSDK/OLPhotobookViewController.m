@@ -88,7 +88,7 @@
 
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
-    [UIView animateWithDuration:0.5 delay:0.5 options:0 animations:^{
+    [UIView animateWithDuration:0.5 delay:0.2 options:0 animations:^{
         self.containerView.transform = CGAffineTransformIdentity;
     } completion:NULL];
 }
@@ -142,6 +142,9 @@
 }
 
 - (void)onPanGestureRecognized:(UIPanGestureRecognizer *)recognizer{
+    if ([self isContainerViewAtLeftEdge] && [self isContainerViewAtRightEdge]){
+        return;
+    }
     CGPoint translation = [recognizer translationInView:self.containerView];
     BOOL draggingLeft = translation.x < 0;
     BOOL draggingRight = translation.x > 0;
