@@ -57,9 +57,9 @@
     
     [view.superview addConstraints:con];
     
-    CGFloat minimumDimension = MIN(self.view.frame.size.width, self.view.frame.size.height);
+    CGFloat maximumDimension = MAX(self.view.frame.size.width, self.view.frame.size.height);
     
-    NSLayoutConstraint *heightCon = [NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:minimumDimension-32];
+    NSLayoutConstraint *heightCon = [NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:maximumDimension];
     heightCon.priority = UILayoutPriorityDefaultHigh;
     [self.containerView addConstraint:heightCon];
     
@@ -80,7 +80,7 @@
     
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Back", @"") style:UIBarButtonItemStylePlain target:self action:@selector(onBackButtonTapped)];
     
-    if (self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassCompact){
+    if (self.view.frame.size.width < self.view.frame.size.height){
         self.containerView.transform = CGAffineTransformMakeTranslation(-self.containerView.frame.size.width/4, 0);
         self.containerView.transform = CGAffineTransformScale(self.containerView.transform, 0.5, 0.5);
     }

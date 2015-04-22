@@ -109,7 +109,6 @@ static NSString *const kApplePayMerchantIDKey = @"merchant.co.oceanlabs.kite.ly"
     CTAssetsPickerController *picker = [[CTAssetsPickerController alloc] init];
     picker.delegate = self;
     picker.assetsFilter = [ALAssetsFilter allPhotos];
-    picker.modalPresentationStyle = UIModalPresentationPageSheet;
     
     [self presentViewController:picker animated:YES completion:nil];
 }
