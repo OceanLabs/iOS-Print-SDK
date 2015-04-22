@@ -141,6 +141,16 @@
     return self.containerView.transform.tx >= 0;
 }
 
+- (BOOL)isBookAtStart{
+    OLPhotobookPageContentViewController *vc1 = [self.pageController.viewControllers firstObject];
+    return vc1.pageIndex == 0;
+}
+
+- (BOOL)isBookAtEnd{
+    OLPhotobookPageContentViewController *vc2 = [self.pageController.viewControllers lastObject];
+    return vc2.pageIndex == self.photobookPhotos.count - 1;
+}
+
 - (void)onPanGestureRecognized:(UIPanGestureRecognizer *)recognizer{
     if ([self isContainerViewAtLeftEdge] && [self isContainerViewAtRightEdge]){
         return;
