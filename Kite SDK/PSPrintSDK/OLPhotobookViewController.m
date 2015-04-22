@@ -24,6 +24,8 @@
 
 @property (strong, nonatomic) UIDynamicAnimator* dynamicAnimator;
 @property (strong, nonatomic) UIDynamicItemBehavior* discardBehavior;
+@property (weak, nonatomic) IBOutlet UILabel *leftPageLabel;
+@property (weak, nonatomic) IBOutlet UILabel *rightPageLabel;
 
 @end
 
@@ -92,7 +94,7 @@
     [self.pageController.view addGestureRecognizer:tapGesture];
     [self.pageController.view addGestureRecognizer:panGesture];
     
-    self.title = [NSString stringWithFormat: NSLocalizedString(@"Pages 1 & 2 of %d", @""), self.product.quantityToFulfillOrder];
+    self.title = [NSString stringWithFormat: NSLocalizedString(@"%d / %d", @""), self.userSelectedPhotos.count, self.product.quantityToFulfillOrder];
     
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Back", @"") style:UIBarButtonItemStylePlain target:self action:@selector(onBackButtonTapped)];
     
@@ -253,7 +255,8 @@
     if (completed){
         OLPhotobookPageContentViewController *vc1 = [pageViewController.viewControllers firstObject];
         OLPhotobookPageContentViewController *vc2 = [pageViewController.viewControllers lastObject];
-        self.title = [NSString stringWithFormat: NSLocalizedString(@"Pages %d & %d of %d", @""), vc1.pageIndex+1, vc2.pageIndex+1, self.product.quantityToFulfillOrder];
+        self.leftPageLabel.text = [NSString stringWithFormat:@"%ld", (long)vc1.pageIndex+1];
+        self.rightPageLabel.text = [NSString stringWithFormat:@"%ld", (long)vc2.pageIndex+1];
         
         [UIView animateWithDuration:0.2 animations:^{
             self.containerView.transform = CGAffineTransformIdentity;
