@@ -259,7 +259,12 @@
         self.rightPageLabel.text = [NSString stringWithFormat:@"%ld", (long)vc2.pageIndex+1];
         
         [UIView animateWithDuration:0.2 animations:^{
-            self.containerView.transform = CGAffineTransformIdentity;
+            if ([(OLPhotobookPageContentViewController *)[previousViewControllers firstObject] pageIndex] < vc1.pageIndex){
+                self.containerView.transform = CGAffineTransformIdentity;
+            }
+            else{
+                self.containerView.transform = CGAffineTransformMakeTranslation(-self.containerView.frame.size.width + self.view.frame.size.width, 0);
+            }
         }];
     }
 }
