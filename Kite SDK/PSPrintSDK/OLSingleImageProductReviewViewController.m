@@ -259,7 +259,7 @@ CTAssetsPickerControllerDelegate>
         UIImageView *imageView = (UIImageView *)[cell.contentView viewWithTag:1];
         
         OLPrintPhoto *printPhoto = (OLPrintPhoto *)[self.userSelectedPhotos objectAtIndex:indexPath.row];
-        [printPhoto setImageSize:imageView.frame.size ForImageView:imageView];
+        [printPhoto setImageSize:imageView.frame.size forImageView:imageView];
         
         return cell;
     }

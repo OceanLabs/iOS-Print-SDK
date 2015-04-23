@@ -11,7 +11,6 @@
 #import "OLProduct.h"
 #import "OLAsset+Private.h"
 #import <SDWebImageManager.h>
-#import "UITableViewController+ScreenWidthFactor.h"
 
 @interface OLFrameOrderReviewViewController () <OLScrollCropViewControllerDelegate>
 
@@ -63,15 +62,15 @@ CGFloat margin = 2;
 }
 
 - (void)onTapGestureThumbnailTapped:(UITapGestureRecognizer*)gestureRecognizer {
-    NSIndexPath *tableIndexPath = [self.collectionView indexPathForItemAtPoint:[gestureRecognizer locationInView:self.collectionView]];
-    UICollectionViewCell *tableCell = [self.collectionView cellForItemAtIndexPath:tableIndexPath];
+    NSIndexPath *outerCollectionViewIndexPath = [self.collectionView indexPathForItemAtPoint:[gestureRecognizer locationInView:self.collectionView]];
+    UICollectionViewCell *outerCollectionViewCell = [self.collectionView cellForItemAtIndexPath:outerCollectionViewIndexPath];
     
-    UICollectionView* collectionView = (UICollectionView*)[tableCell.contentView viewWithTag:20];
+    UICollectionView* collectionView = (UICollectionView*)[outerCollectionViewCell.contentView viewWithTag:20];
     
     NSIndexPath* indexPath = [collectionView indexPathForItemAtPoint:[gestureRecognizer locationInView:collectionView]];
     
-    self.editingPrintPhoto = self.framePhotos[(tableIndexPath.item) * self.product.quantityToFulfillOrder + indexPath.row];
-    self.editingPrintPhoto.asset = self.assets[((tableIndexPath.item) * self.product.quantityToFulfillOrder + indexPath.row) % [self.assets count]];
+    self.editingPrintPhoto = self.framePhotos[(outerCollectionViewIndexPath.item) * self.product.quantityToFulfillOrder + indexPath.row];
+    self.editingPrintPhoto.asset = self.frameAssets[((outerCollectionViewIndexPath.item) * self.product.quantityToFulfillOrder + indexPath.row)];
     
     UINavigationController *nav = [self.storyboard instantiateViewControllerWithIdentifier:@"CropViewNavigationController"];
     OLScrollCropViewController *cropVc = (id)nav.topViewController;
@@ -206,9 +205,6 @@ CGFloat margin = 2;
         innerCollectionView.dataSource = self;
         innerCollectionView.delegate = self;
         
-        UITapGestureRecognizer* doubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTapGestureThumbnailTapped:)];
-        [collectionView addGestureRecognizer:doubleTap];
-        
         return cell;
     }
     else{
@@ -225,16 +221,17 @@ CGFloat margin = 2;
             view = view.superview;
         }
         
-        NSIndexPath* tableIndexindexPath = [self.collectionView indexPathForCell:(UICollectionViewCell *)view];
+        NSIndexPath* outerCollectionViewIndexPath = [self.collectionView indexPathForCell:(UICollectionViewCell *)view];
         
         UIImageView* cellImage = (UIImageView*)[cell.contentView viewWithTag:110];
-        
-        CGSize cellSize = [self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath];
-        
+        cellImage.userInteractionEnabled = YES;
         cellImage.image = nil;
         
-        OLPrintPhoto *printPhoto =(OLPrintPhoto*)[self.framePhotos objectAtIndex:indexPath.row + (tableIndexindexPath.item) * self.product.quantityToFulfillOrder];
-        [printPhoto setImageSize:[self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath] ForImageView:cellImage];
+        OLPrintPhoto *printPhoto =(OLPrintPhoto*)[self.framePhotos objectAtIndex:indexPath.row + (outerCollectionViewIndexPath.item) * self.product.quantityToFulfillOrder];
+        [printPhoto setImageSize:[self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath] forImageView:cellImage];
+        
+        UITapGestureRecognizer* doubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTapGestureThumbnailTapped:)];
+        [cellImage addGestureRecognizer:doubleTap];
         
         return cell;
     }
@@ -248,29 +245,33 @@ CGFloat margin = 2;
         CGFloat photosPerRow = sqrt(self.product.quantityToFulfillOrder);
 
         return CGSizeMake(
-                          (collectionView.frame.size.width / photosPerRow - margin/2 * (photosPerRow-1))-11/MAX(1,(photosPerRow-1)),
-                          (collectionView.frame.size.height / photosPerRow - margin/2 * (photosPerRow-1))
+                          (collectionView.frame.size.width - margin * (photosPerRow-1.0)) / photosPerRow,
+                          (collectionView.frame.size.width - margin * (photosPerRow-1.0)) / photosPerRow
                           );
     }
 }
 
 - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section{
-    return 0;
+    return margin;
 }
 
 - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section{
     return margin;
 }
 
+- (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout insetForSectionAtIndex:(NSInteger)section{
+    return UIEdgeInsetsZero;
+}
+
 - (void)collectionView:(UICollectionView *)collectionView itemAtIndexPath:(NSIndexPath *)fromIndexPath willMoveToIndexPath:(NSIndexPath *)toIndexPath {
-    UIView* tableViewCell = collectionView.superview;
-    while (![tableViewCell isKindOfClass:[UICollectionViewCell class]]){
-        tableViewCell = tableViewCell.superview;
+    UIView* outerCollectionViewCell = collectionView.superview;
+    while (![outerCollectionViewCell isKindOfClass:[UICollectionViewCell class]]){
+        outerCollectionViewCell = outerCollectionViewCell.superview;
     }
-    NSIndexPath* tableIndexPath = [self.collectionView indexPathForCell:(UICollectionViewCell *)tableViewCell];
+    NSIndexPath* outerCollectionViewIndexPath = [self.collectionView indexPathForCell:(UICollectionViewCell *)outerCollectionViewCell];
     
-    NSInteger trueFromIndex = fromIndexPath.item + (tableIndexPath.item) * self.product.quantityToFulfillOrder;
-    NSInteger trueToIndex = toIndexPath.item + (tableIndexPath.item) * self.product.quantityToFulfillOrder;
+    NSInteger trueFromIndex = fromIndexPath.item + (outerCollectionViewIndexPath.item) * self.product.quantityToFulfillOrder;
+    NSInteger trueToIndex = toIndexPath.item + (outerCollectionViewIndexPath.item) * self.product.quantityToFulfillOrder;
     
     id object = [self.framePhotos objectAtIndex:trueFromIndex];
     [self.framePhotos removeObjectAtIndex:trueFromIndex];

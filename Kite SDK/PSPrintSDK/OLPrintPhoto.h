@@ -22,7 +22,7 @@ typedef enum {
 
 @interface OLPrintPhoto : NSObject <OLAssetDataSource>
 
-- (void) setImageSize:(CGSize)destSize ForImageView:(UIImageView *)imageView;
+- (void) setImageSize:(CGSize)destSize forImageView:(UIImageView *)imageView;
 - (void)getImageWithProgress:(OLImageEditorImageGetImageProgressHandler)progressHandler completion:(OLImageEditorImageGetImageCompletionHandler)completionHandler;
 - (void)unloadImage;
 

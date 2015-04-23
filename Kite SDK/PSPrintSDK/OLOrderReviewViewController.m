@@ -359,7 +359,7 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     [countLabel setText: [NSString stringWithFormat:@"%lu", (unsigned long)(1+[((NSNumber*)[self.extraCopiesOfAssets objectAtIndex:indexPath.item]) integerValue])]];
     
     OLPrintPhoto *printPhoto = (OLPrintPhoto*)[self.userSelectedPhotos objectAtIndex:indexPath.item];
-    [printPhoto setImageSize:cellImage.frame.size ForImageView:cellImage];
+    [printPhoto setImageSize:cellImage.frame.size forImageView:cellImage];
     
     if (self.product.productTemplate.templateUI == kOLTemplateUICircle){
         cell.enableMask = YES;

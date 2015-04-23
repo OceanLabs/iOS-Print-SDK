@@ -78,7 +78,7 @@ static NSString *const kKeyCropTransform = @"co.oceanlabs.psprintstudio.kKeyCrop
     }
 }
 
-- (void) setImageSize:(CGSize)destSize ForImageView:(UIImageView *)imageView{
+- (void) setImageSize:(CGSize)destSize forImageView:(UIImageView *)imageView{
     if (self.cachedCroppedThumbnailImage) {
         if (!(fmax(imageView.frame.size.width, imageView.frame.size.height) * [UIScreen mainScreen].scale > fmax(self.cachedCroppedThumbnailImage.size.width, self.cachedCroppedThumbnailImage.size.height))){
             imageView.image = self.cachedCroppedThumbnailImage;
