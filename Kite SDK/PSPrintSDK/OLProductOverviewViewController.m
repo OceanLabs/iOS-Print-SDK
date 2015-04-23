@@ -109,10 +109,7 @@
 
 - (IBAction)onButtonStartClicked:(UIBarButtonItem *)sender {
     UIViewController *vc;
-    if (self.product.productTemplate.templateUI == kOLTemplateUIFrame){
-        vc = [self.storyboard instantiateViewControllerWithIdentifier:@"FrameOrderReviewViewController"];
-    }
-    else if (self.product.productTemplate.templateUI == kOLTemplateUICase){
+    if (self.product.productTemplate.templateUI == kOLTemplateUICase){
         vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLCaseViewController"];
     }
     else if (self.product.productTemplate.templateUI == kOLTemplateUIPostcard){
