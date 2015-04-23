@@ -78,9 +78,7 @@ static NSString *const kKeyCropTransform = @"co.oceanlabs.psprintstudio.kKeyCrop
     }
 }
 
-- (void) setImageIdealSizeForImageView:(UIImageView *)imageView highQuality:(BOOL)highQuality{
-    CGSize destSize = highQuality ? imageView.frame.size : CGSizeMake(220.0 / [UIScreen mainScreen].scale, 220.0 / [UIScreen mainScreen].scale);
-    
+- (void) setImageSize:(CGSize)destSize ForImageView:(UIImageView *)imageView{
     if (self.cachedCroppedThumbnailImage) {
         if (!(fmax(imageView.frame.size.width, imageView.frame.size.height) * [UIScreen mainScreen].scale > fmax(self.cachedCroppedThumbnailImage.size.width, self.cachedCroppedThumbnailImage.size.height))){
             imageView.image = self.cachedCroppedThumbnailImage;
@@ -88,21 +86,13 @@ static NSString *const kKeyCropTransform = @"co.oceanlabs.psprintstudio.kKeyCrop
         }
     }
     if (self.type == kPrintPhotoAssetTypeALAsset) {
-        if (highQuality){
-            [OLPrintPhoto resizedImageWithEditorImage:self size:destSize progress:nil completion:^(UIImage *image) {
-                self.cachedCroppedThumbnailImage = image;
-                dispatch_async(dispatch_get_main_queue(), ^(void){
-                    imageView.image = image;
-                });
-                
-            }];
-        }
-        else{
-            ALAsset *alAsset = (ALAsset *)self.asset;
-            self.cachedCroppedThumbnailImage = [UIImage imageWithCGImage:alAsset.thumbnail];
-            imageView.image = self.cachedCroppedThumbnailImage;
-        }
-        
+        [OLPrintPhoto resizedImageWithEditorImage:self size:destSize progress:nil completion:^(UIImage *image) {
+            self.cachedCroppedThumbnailImage = image;
+            dispatch_async(dispatch_get_main_queue(), ^(void){
+                imageView.image = image;
+            });
+            
+        }];
     }
     else {
         if (self.type == kPrintPhotoAssetTypeOLAsset){
@@ -112,25 +102,17 @@ static NSString *const kKeyCropTransform = @"co.oceanlabs.psprintstudio.kKeyCrop
                 [imageView setAndFadeInImageWithURL:[self.asset imageURL]];
             }
             else if (asset.assetType == kOLAssetTypeALAsset){
-                if (highQuality){
-                    [asset loadALAssetWithCompletionHandler:^(ALAsset *asset, NSError *error){
-                        OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
-                        printPhoto.asset = asset;
-                        [OLPrintPhoto resizedImageWithEditorImage:printPhoto size:destSize progress:nil completion:^(UIImage *image) {
-                            self.cachedCroppedThumbnailImage = image;
-                            dispatch_async(dispatch_get_main_queue(), ^(void){
-                                imageView.image = image;
-                            });
-                            
-                        }];
+                [asset loadALAssetWithCompletionHandler:^(ALAsset *asset, NSError *error){
+                    OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
+                    printPhoto.asset = asset;
+                    [OLPrintPhoto resizedImageWithEditorImage:printPhoto size:destSize progress:nil completion:^(UIImage *image) {
+                        self.cachedCroppedThumbnailImage = image;
+                        dispatch_async(dispatch_get_main_queue(), ^(void){
+                            imageView.image = image;
+                        });
+                        
                     }];
-                }
-                else{
-                    [asset loadALAssetWithCompletionHandler:^(ALAsset *asset, NSError *error){
-                        self.cachedCroppedThumbnailImage = [UIImage imageWithCGImage:asset.thumbnail];
-                        imageView.image = self.cachedCroppedThumbnailImage;
-                    }];
-                }
+                }];
             }
             else{
                 [asset dataWithCompletionHandler:^(NSData *data, NSError *error){

@@ -96,7 +96,8 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         for (NSUInteger i = 0; i < MIN([self.imageViews count], [self.posterPhotos count]); i++) {
             
-            [((OLPrintPhoto*)[self.posterPhotos objectAtIndex:i]) setImageIdealSizeForImageView:self.imageViews[i] highQuality:YES];
+            OLPrintPhoto *printPhoto = (OLPrintPhoto*)[self.posterPhotos objectAtIndex:i];
+            [printPhoto setImageSize:[(UIView *)self.imageViews[i] frame].size ForImageView:self.imageViews[i]];
         }
     });
 }

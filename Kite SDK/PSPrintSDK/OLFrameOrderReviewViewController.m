@@ -230,12 +230,11 @@ CGFloat margin = 2;
         UIImageView* cellImage = (UIImageView*)[cell.contentView viewWithTag:110];
         
         CGSize cellSize = [self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath];
-        cellImage.frame = CGRectMake(cellImage.frame.origin.x, cellImage.frame.origin.y, cellSize.width, cellSize.height);
         
         cellImage.image = nil;
         
-        [((OLPrintPhoto*)[self.framePhotos objectAtIndex:indexPath.row + (tableIndexindexPath.item) * self.product.quantityToFulfillOrder]) setImageIdealSizeForImageView:cellImage highQuality:YES];
-        
+        OLPrintPhoto *printPhoto =(OLPrintPhoto*)[self.framePhotos objectAtIndex:indexPath.row + (tableIndexindexPath.item) * self.product.quantityToFulfillOrder];
+        [printPhoto setImageSize:[self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath] ForImageView:cellImage];
         
         return cell;
     }
