@@ -140,7 +140,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="545" y="994"/>
+            <point key="canvasLocation" x="1377" y="166"/>
         </scene>
         <!--Kite View Controller-->
         <scene sceneID="Ayk-NT-sQ7">
@@ -298,7 +298,7 @@
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="EcN-mE-tcF" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3101" y="174"/>
+            <point key="canvasLocation" x="2237" y="886"/>
         </scene>
         <!--Scroll Crop View Controller-->
         <scene sceneID="FtM-aT-ojK">
@@ -348,7 +348,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qG7-3J-9cO" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2221" y="994"/>
+            <point key="canvasLocation" x="2221" y="1618"/>
         </scene>
         <!--Poster Size Selection View Controller-->
         <scene sceneID="YYl-13-A7C">
@@ -528,30 +528,38 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="9bm-Iv-FDI">
+                                <rect key="frame" x="0.0" y="20" width="600" height="580"/>
+                            </imageView>
                             <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="white" translatesAutoresizingMaskIntoConstraints="NO" id="vlb-0j-ww9">
                                 <rect key="frame" x="290" y="300" width="20" height="20"/>
                             </activityIndicatorView>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="MuP-1U-Qqd">
-                                <rect key="frame" x="10" y="20" width="580" height="580"/>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="MuP-1U-Qqd" userLabel="Photo">
+                                <rect key="frame" x="50" y="70" width="500" height="480"/>
                             </imageView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="MuP-1U-Qqd" firstAttribute="top" secondItem="3pJ-t4-8d2" secondAttribute="bottom" id="6rU-Tk-PxI"/>
-                            <constraint firstItem="wDa-Oe-ITL" firstAttribute="top" secondItem="MuP-1U-Qqd" secondAttribute="bottom" id="EBv-QC-bWX"/>
+                            <constraint firstItem="MuP-1U-Qqd" firstAttribute="top" secondItem="3pJ-t4-8d2" secondAttribute="bottom" constant="50" id="6rU-Tk-PxI"/>
+                            <constraint firstAttribute="trailing" secondItem="9bm-Iv-FDI" secondAttribute="trailing" id="7GW-xD-ihN"/>
+                            <constraint firstItem="wDa-Oe-ITL" firstAttribute="top" secondItem="MuP-1U-Qqd" secondAttribute="bottom" constant="50" id="EBv-QC-bWX"/>
                             <constraint firstItem="vlb-0j-ww9" firstAttribute="centerY" secondItem="MuP-1U-Qqd" secondAttribute="centerY" id="Iil-Bu-kg5"/>
                             <constraint firstItem="vlb-0j-ww9" firstAttribute="centerX" secondItem="MuP-1U-Qqd" secondAttribute="centerX" id="T1f-CU-bFe"/>
-                            <constraint firstAttribute="trailing" secondItem="MuP-1U-Qqd" secondAttribute="trailing" constant="10" id="at6-xh-ShV"/>
-                            <constraint firstItem="MuP-1U-Qqd" firstAttribute="leading" secondItem="tgc-Pj-vj3" secondAttribute="leading" constant="10" id="veM-Nr-bXW"/>
+                            <constraint firstItem="wDa-Oe-ITL" firstAttribute="top" secondItem="9bm-Iv-FDI" secondAttribute="bottom" id="UcH-kE-6cW"/>
+                            <constraint firstItem="9bm-Iv-FDI" firstAttribute="top" secondItem="3pJ-t4-8d2" secondAttribute="bottom" id="XEE-Ua-2Mi"/>
+                            <constraint firstAttribute="trailing" secondItem="MuP-1U-Qqd" secondAttribute="trailing" constant="50" id="at6-xh-ShV"/>
+                            <constraint firstItem="MuP-1U-Qqd" firstAttribute="leading" secondItem="tgc-Pj-vj3" secondAttribute="leading" constant="50" id="veM-Nr-bXW"/>
+                            <constraint firstItem="9bm-Iv-FDI" firstAttribute="leading" secondItem="tgc-Pj-vj3" secondAttribute="leading" id="z4C-V2-eyZ"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="imageView" destination="MuP-1U-Qqd" id="Cte-uc-Ytc"/>
+                        <outlet property="pageBackground" destination="9bm-Iv-FDI" id="pT5-Vu-joD"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="j3a-cE-iKY" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3137" y="-2098"/>
+            <point key="canvasLocation" x="1386" y="-2114"/>
         </scene>
         <!--Poster View Controller-->
         <scene sceneID="zgh-jb-0R4">
@@ -617,7 +625,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="4011" y="-2098"/>
+            <point key="canvasLocation" x="4219" y="-2570"/>
         </scene>
         <!--Product Home View Controller-->
         <scene sceneID="utb-1P-DTs">
@@ -738,7 +746,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SiN-kc-Q1U" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1426" y="994"/>
+            <point key="canvasLocation" x="1377" y="1618"/>
         </scene>
         <!--Case View Controller-->
         <scene sceneID="RKn-QM-T9w">
@@ -1241,7 +1249,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Z0C-eh-Wpp" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1386" y="182"/>
+            <point key="canvasLocation" x="1386" y="910"/>
         </scene>
         <!--Custom Navigation Controller-->
         <scene sceneID="bei-J9-ysM">
@@ -1660,7 +1668,7 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rlk-bS-4UT" userLabel="Container View">
                                 <rect key="frame" x="0.0" y="151" width="587" height="330"/>
                                 <subviews>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="book" translatesAutoresizingMaskIntoConstraints="NO" id="UgD-45-FUC">
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="UgD-45-FUC">
                                         <rect key="frame" x="0.0" y="0.0" width="587" height="330"/>
                                     </imageView>
                                 </subviews>
@@ -1906,7 +1914,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="book" width="414" height="295"/>
         <image name="button_arrow_down" width="45" height="45"/>
         <image name="button_arrow_up" width="45" height="45"/>
         <image name="frame_border" width="290" height="313"/>

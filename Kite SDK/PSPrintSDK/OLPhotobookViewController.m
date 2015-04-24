@@ -14,7 +14,11 @@
 #import "OLScrollCropViewController.h"
 #import "OLProductPrintJob.h"
 
+#import <MPFlipTransition.h>
+
 static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
+static const NSUInteger kTagLeft = 10;
+static const NSUInteger kTagRight = 20;
 
 @interface OLKitePrintSDK (InternalUtils)
 + (NSString *)userEmail:(UIViewController *)topVC;
@@ -32,9 +36,11 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 @property (strong, nonatomic) NSLayoutConstraint *centerXCon;
 
 @property (strong, nonatomic) UIDynamicAnimator* dynamicAnimator;
-@property (strong, nonatomic) UIDynamicItemBehavior* discardBehavior;
+@property (strong, nonatomic) UIDynamicItemBehavior* inertiaBehavior;
 @property (weak, nonatomic) IBOutlet UILabel *leftPageLabel;
 @property (weak, nonatomic) IBOutlet UILabel *rightPageLabel;
+
+@property (strong, nonatomic) UIView *bookCover;
 
 @end
 
@@ -45,12 +51,43 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     return _dynamicAnimator;
 }
 
--(UIDynamicItemBehavior*) discardBehavior{
-    if (!_discardBehavior){
-        _discardBehavior = [[UIDynamicItemBehavior alloc] init];
-        [self.dynamicAnimator addBehavior:_discardBehavior];
+-(UIDynamicItemBehavior*) inertiaBehavior{
+    if (!_inertiaBehavior){
+        _inertiaBehavior = [[UIDynamicItemBehavior alloc] init];
+        [self.dynamicAnimator addBehavior:_inertiaBehavior];
     }
-    return _discardBehavior;
+    return _inertiaBehavior;
+}
+
+-(UIView *) bookCover{
+    if (!_bookCover){
+        _bookCover = [[UIView alloc] initWithFrame:self.containerView.frame];
+        _bookCover.backgroundColor = [UIColor clearColor];
+        _bookCover.hidden = YES;
+        
+        UIImageView *halfBookCoverImage;
+        
+        UISwipeGestureRecognizer *swipe = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(openBook:)];
+        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(openBook:)];
+        
+        if ([self isBookAtStart]){
+            halfBookCoverImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"book-cover-right"]];
+            halfBookCoverImage.frame = CGRectMake(_bookCover.frame.size.width / 2.0, 0, _bookCover.frame.size.width / 2.0, _bookCover.frame.size.height);
+            halfBookCoverImage.tag = kTagRight;
+            swipe.direction = UISwipeGestureRecognizerDirectionLeft;
+        }
+        else{
+            halfBookCoverImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"book-cover-left"]];
+            halfBookCoverImage.frame = CGRectMake(0, 0, _bookCover.frame.size.width / 2.0, _bookCover.frame.size.height);
+            halfBookCoverImage.tag = kTagLeft;
+            swipe.direction = UISwipeGestureRecognizerDirectionRight;
+        }
+        [_bookCover addSubview:halfBookCoverImage];
+        halfBookCoverImage.userInteractionEnabled = YES;
+        [halfBookCoverImage addGestureRecognizer:tap];
+        [halfBookCoverImage addGestureRecognizer:swipe];
+    }
+    return _bookCover;
 }
 
 - (void)viewDidLoad{
@@ -201,9 +238,8 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     BOOL draggingLeft = translation.x < 0;
     BOOL draggingRight = translation.x > 0;
     if (!(([self isContainerViewAtLeftEdge:NO] && draggingRight) || ([self isContainerViewAtRightEdge:NO] && draggingLeft))){
-        CGFloat translationX = translation.x;
-    
-        self.containerView.transform = CGAffineTransformTranslate(self.containerView.transform, translationX, 0);
+        
+        self.containerView.transform = CGAffineTransformTranslate(self.containerView.transform, translation.x, 0);
         [recognizer setTranslation:CGPointMake(0, 0) inView:self.containerView];
         
         if ([self isContainerViewAtRightEdge:NO]){
@@ -221,20 +257,20 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     if (recognizer.state == UIGestureRecognizerStateEnded){
         self.containerView.frame = CGRectMake(self.containerView.frame.origin.x + self.containerView.transform.tx, self.containerView.frame.origin.y, self.containerView.frame.size.width, self.containerView.frame.size.height);
         self.containerView.transform = CGAffineTransformIdentity;
-        [self.discardBehavior addItem:self.containerView];
-        [self.discardBehavior addLinearVelocity:CGPointMake([recognizer velocityInView:self.containerView].x, 0) forItem:self.containerView];
+        [self.inertiaBehavior addItem:self.containerView];
+        [self.inertiaBehavior addLinearVelocity:CGPointMake([recognizer velocityInView:self.containerView].x, 0) forItem:self.containerView];
         __weak OLPhotobookViewController *welf = self;
-        [self.discardBehavior setAction:^{
+        [self.inertiaBehavior setAction:^{
             if ([welf isContainerViewAtRightEdge:YES] ){
-                [welf.discardBehavior removeItem:welf.containerView];
+                [welf.inertiaBehavior removeItem:welf.containerView];
                 
                 welf.containerView.transform = CGAffineTransformMakeTranslation(-welf.containerView.frame.size.width + welf.view.frame.size.width, 0);
                 
                 [welf.view setNeedsLayout];
                 [welf.view layoutIfNeeded];
             }
-            else if ([welf isContainerViewAtLeftEdge:YES] && [self.discardBehavior linearVelocityForItem:welf.containerView].x > 0){
-                [welf.discardBehavior removeItem:welf.containerView];
+            else if ([welf isContainerViewAtLeftEdge:YES] && [self.inertiaBehavior linearVelocityForItem:welf.containerView].x > 0){
+                [welf.inertiaBehavior removeItem:welf.containerView];
                 
                 welf.containerView.transform = CGAffineTransformIdentity;
                 
@@ -254,9 +290,21 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
         BOOL draggingLeft = translation.x < 0;
         BOOL draggingRight = translation.x > 0;
         if (([self isContainerViewAtRightEdge:NO] && draggingLeft) || ([self isContainerViewAtLeftEdge:NO] && draggingRight)){
+            if (draggingLeft && [self isBookAtEnd]) {
+                [MPFlipTransition transitionFromView:self.containerView toView:self.bookCover duration:0.4 style:MPFlipStyleDefault transitionAction:MPTransitionActionShowHide completion:^(BOOL finished){
+                    self.bookCover.frame = self.containerView.frame;
+                    [self.view addSubview:self.bookCover];
+                }];
+            }
+            else if (draggingRight && [self isBookAtStart]) {
+                [MPFlipTransition transitionFromView:self.containerView toView:self.bookCover duration:0.4 style:MPFlipStyleDirectionBackward transitionAction:MPTransitionActionShowHide completion:^(BOOL finished){
+                    [self.view addSubview:self.bookCover];
+                    self.bookCover.frame = self.containerView.frame;
+                }];
+            }
             gestureRecognizer.enabled = NO;
             gestureRecognizer.enabled = YES;
-            return YES;
+            return NO;
         }
         return NO;
     }
@@ -278,7 +326,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
             if ([(OLPhotobookPageContentViewController *)[previousViewControllers firstObject] pageIndex] < vc1.pageIndex){
                 self.containerView.transform = CGAffineTransformIdentity;
             }
-            else{
+            else if (![self isContainerViewAtLeftEdge:NO]){
                 self.containerView.transform = CGAffineTransformMakeTranslation(-self.containerView.frame.size.width + self.view.frame.size.width, 0);
             }
         }];
@@ -295,6 +343,14 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     vc.userSelectedPhotos = self.photobookPhotos;
     vc.assets = self.assets;
     return vc;
+}
+
+- (void)openBook:(UIGestureRecognizer *)sender{
+    MPFlipStyle style = sender.view.tag == kTagRight ? MPFlipStyleDefault : MPFlipStyleDirectionBackward;
+    [MPFlipTransition transitionFromView:self.bookCover toView:self.containerView duration:0.4 style:style transitionAction:MPTransitionActionShowHide completion:^(BOOL finished){
+        [self.bookCover removeFromSuperview];
+        self.bookCover = nil;
+    }];
 }
 
 -(void)userDidCropImage:(UIImage *)croppedImage{

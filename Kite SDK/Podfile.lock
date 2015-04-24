@@ -32,6 +32,7 @@ PODS:
     - NXOAuth2Client (~> 1.2.8)
     - SDWebImage (~> 3.7.2)
     - UIColor-HexString
+  - MPFlipViewController (0.0.2)
   - NXOAuth2Client (1.2.8)
   - PayPal-iOS-SDK (2.4.2)
   - SDWebImage (3.7.2):
@@ -52,6 +53,7 @@ DEPENDENCIES:
   - CTAssetsPickerController
   - FacebookImagePicker
   - InstagramImagePicker
+  - MPFlipViewController
   - PayPal-iOS-SDK (~> 2.4.2)
   - SDWebImage
   - Stripe (= 2.2.0)
@@ -68,6 +70,7 @@ SPEC CHECKSUMS:
   Facebook-iOS-SDK: cd87f0b2f0c1d9574b44e8fa2baacc275524bac3
   FacebookImagePicker: d7ff24cf1585c70558bfd4481ca96081f187f011
   InstagramImagePicker: 3f4bdbf53fa66eaa63adb70b50734cf04de2526d
+  MPFlipViewController: 86caa6203ca9d35af23cc6b4e1bcf53e53333770
   NXOAuth2Client: 98c4d4c594edd2b289cfc34a8928653e1dab7adf
   PayPal-iOS-SDK: ddbc32428357fdfdfe430dd956125745a7096f24
   SDWebImage: 71b7cdc1d1721d6a82ed62889030225f2c249e29

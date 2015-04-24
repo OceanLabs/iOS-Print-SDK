@@ -13,6 +13,7 @@
 @interface OLPhotobookPageContentViewController ()
 
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;
+@property (weak, nonatomic) IBOutlet UIImageView *pageBackground;
 
 
 @end
@@ -22,6 +23,26 @@
 - (void)viewDidLoad{
     [super viewDidLoad];
     [self loadImage];
+}
+
+- (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    [self setPage:(self.pageIndex % 2 == 0)];
+}
+
+//- (void)setPageIndex:(NSInteger)pageIndex{
+//    _pageIndex = pageIndex;
+//    
+//    [self setPage:(pageIndex % 2 == 0)];
+//}
+
+- (void)setPage:(BOOL)left{
+    if (left){
+        self.pageBackground.image = [UIImage imageNamed:@"page-left"];
+    }
+    else{
+        self.pageBackground.image = [UIImage imageNamed:@"page-right"];
+    }
 }
 
 - (void)loadImage{
