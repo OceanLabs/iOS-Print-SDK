@@ -183,12 +183,24 @@ static const NSUInteger kTagRight = 20;
 }
 
 - (void)onPanGestureRecognized:(UIPanGestureRecognizer *)recognizer{
-    if ([self isContainerViewAtLeftEdge:NO] && [self isContainerViewAtRightEdge:NO]){
-        return;
-    }
     CGPoint translation = [recognizer translationInView:self.containerView];
     BOOL draggingLeft = translation.x < 0;
     BOOL draggingRight = translation.x > 0;
+    
+    if (([self isContainerViewAtRightEdge:NO] && draggingLeft) || ([self isContainerViewAtLeftEdge:NO] && draggingRight)){
+        if (draggingLeft && [self isBookAtEnd] && recognizer.state == UIGestureRecognizerStateBegan) {
+            [self closeBookBack];
+        }
+        else if (draggingRight && [self isBookAtStart] && recognizer.state == UIGestureRecognizerStateBegan) {
+            [self closeBookFront];
+        }
+        return;
+    }
+    
+    if ([self isContainerViewAtLeftEdge:NO] && [self isContainerViewAtRightEdge:NO]){
+        return;
+    }
+    
     if (!(([self isContainerViewAtLeftEdge:NO] && draggingRight) || ([self isContainerViewAtRightEdge:NO] && draggingLeft))){
         
         self.containerView.transform = CGAffineTransformTranslate(self.containerView.transform, translation.x, 0);
@@ -237,20 +249,13 @@ static const NSUInteger kTagRight = 20;
     if ([gestureRecognizer isKindOfClass:[UITapGestureRecognizer class]] || [otherGestureRecognizer isKindOfClass:[UITapGestureRecognizer class]]){
         return NO;
     }
+    
     else if ([gestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]] && [otherGestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]]){
         CGPoint translation = [(UIPanGestureRecognizer *)gestureRecognizer translationInView:self.containerView];
         BOOL draggingLeft = translation.x < 0;
         BOOL draggingRight = translation.x > 0;
         if (([self isContainerViewAtRightEdge:NO] && draggingLeft) || ([self isContainerViewAtLeftEdge:NO] && draggingRight)){
-            if (draggingLeft && [self isBookAtEnd]) {
-                [self closeBookBack];
-            }
-            else if (draggingRight && [self isBookAtStart]) {
-                [self closeBookFront];
-            }
-            gestureRecognizer.enabled = NO;
-            gestureRecognizer.enabled = YES;
-            return NO;
+            return YES;
         }
         return NO;
     }
