@@ -413,6 +413,7 @@ static const NSUInteger kTagRight = 20;
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(openBook:)];
     
     UIImageView *halfBookCoverImage;
+    
     if ([self isBookAtStart]){
         [self.bookCover viewWithTag:kTagLeft].hidden = YES;
         if (![self.bookCover viewWithTag:kTagRight]){
@@ -420,23 +421,27 @@ static const NSUInteger kTagRight = 20;
             halfBookCoverImage.frame = CGRectMake(self.bookCover.frame.size.width / 2.0, 0, self.bookCover.frame.size.width / 2.0, self.bookCover.frame.size.height);
             halfBookCoverImage.tag = kTagRight;
             swipe.direction = UISwipeGestureRecognizerDirectionLeft;
+            [self.bookCover addSubview:halfBookCoverImage];
+            halfBookCoverImage.userInteractionEnabled = YES;
+            [halfBookCoverImage addGestureRecognizer:tap];
+            [halfBookCoverImage addGestureRecognizer:swipe];
         }
         [self.bookCover viewWithTag:kTagRight].hidden = NO;
     }
     else{
         [self.bookCover viewWithTag:kTagRight].hidden = YES;
         if (![self.bookCover viewWithTag:kTagLeft]){
-        halfBookCoverImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"book-cover-left"]];
-        halfBookCoverImage.frame = CGRectMake(0, 0, self.bookCover.frame.size.width / 2.0, self.bookCover.frame.size.height);
-        halfBookCoverImage.tag = kTagLeft;
-        swipe.direction = UISwipeGestureRecognizerDirectionRight;
+            halfBookCoverImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"book-cover-left"]];
+            halfBookCoverImage.frame = CGRectMake(0, 0, self.bookCover.frame.size.width / 2.0, self.bookCover.frame.size.height);
+            halfBookCoverImage.tag = kTagLeft;
+            swipe.direction = UISwipeGestureRecognizerDirectionRight;
+            [self.bookCover addSubview:halfBookCoverImage];
+            halfBookCoverImage.userInteractionEnabled = YES;
+            [halfBookCoverImage addGestureRecognizer:tap];
+            [halfBookCoverImage addGestureRecognizer:swipe];
         }
         [self.bookCover viewWithTag:kTagLeft].hidden = NO;
     }
-    [self.bookCover addSubview:halfBookCoverImage];
-    halfBookCoverImage.userInteractionEnabled = YES;
-    [halfBookCoverImage addGestureRecognizer:tap];
-    [halfBookCoverImage addGestureRecognizer:swipe];
 }
 
 - (BOOL)isBookAtStart{
