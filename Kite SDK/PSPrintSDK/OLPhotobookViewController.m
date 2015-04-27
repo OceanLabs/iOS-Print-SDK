@@ -40,7 +40,7 @@ static const NSUInteger kTagRight = 20;
 @property (weak, nonatomic) IBOutlet UILabel *leftPageLabel;
 @property (weak, nonatomic) IBOutlet UILabel *rightPageLabel;
 
-@property (strong, nonatomic) UIView *bookCover;
+@property (strong, nonatomic) IBOutlet UIView *bookCover;
 
 @end
 
@@ -57,37 +57,6 @@ static const NSUInteger kTagRight = 20;
         [self.dynamicAnimator addBehavior:_inertiaBehavior];
     }
     return _inertiaBehavior;
-}
-
--(UIView *) bookCover{
-    if (!_bookCover){
-        _bookCover = [[UIView alloc] initWithFrame:self.containerView.frame];
-        _bookCover.backgroundColor = [UIColor colorWithRed: 0.906 green: 0.922 blue: 0.937 alpha: 1]; //#E7EBEF
-        _bookCover.hidden = YES;
-        
-        UIImageView *halfBookCoverImage;
-        
-        UISwipeGestureRecognizer *swipe = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(openBook:)];
-        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(openBook:)];
-        
-        if ([self isBookAtStart]){
-            halfBookCoverImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"book-cover-right"]];
-            halfBookCoverImage.frame = CGRectMake(_bookCover.frame.size.width / 2.0, 0, _bookCover.frame.size.width / 2.0, _bookCover.frame.size.height);
-            halfBookCoverImage.tag = kTagRight;
-            swipe.direction = UISwipeGestureRecognizerDirectionLeft;
-        }
-        else{
-            halfBookCoverImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"book-cover-left"]];
-            halfBookCoverImage.frame = CGRectMake(0, 0, _bookCover.frame.size.width / 2.0, _bookCover.frame.size.height);
-            halfBookCoverImage.tag = kTagLeft;
-            swipe.direction = UISwipeGestureRecognizerDirectionRight;
-        }
-        [_bookCover addSubview:halfBookCoverImage];
-        halfBookCoverImage.userInteractionEnabled = YES;
-        [halfBookCoverImage addGestureRecognizer:tap];
-        [halfBookCoverImage addGestureRecognizer:swipe];
-    }
-    return _bookCover;
 }
 
 - (void)viewDidLoad{
@@ -134,6 +103,7 @@ static const NSUInteger kTagRight = 20;
     
     UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTapGestureRecognized:)];
     tapGesture.delegate = self;
+    
     UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(onPanGestureRecognized:)];
     panGesture.delegate = self;
     
@@ -246,7 +216,7 @@ static const NSUInteger kTagRight = 20;
 }
 
 - (BOOL) gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
-    if ([gestureRecognizer isKindOfClass:[UITapGestureRecognizer class]] && [otherGestureRecognizer isKindOfClass:[UITapGestureRecognizer class]]){
+    if ([gestureRecognizer isKindOfClass:[UITapGestureRecognizer class]] || [otherGestureRecognizer isKindOfClass:[UITapGestureRecognizer class]]){
         return NO;
     }
     else if ([gestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]] && [otherGestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]]){
@@ -425,6 +395,41 @@ static const NSUInteger kTagRight = 20;
 
 #pragma mark Book related methods
 
+-(void) setUpBookCoverView{
+    self.bookCover.hidden = NO;
+    for (UIGestureRecognizer *gesture in self.bookCover.gestureRecognizers){
+        [self.bookCover removeGestureRecognizer:gesture];
+    }
+    UISwipeGestureRecognizer *swipe = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(openBook:)];
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(openBook:)];
+    
+    UIImageView *halfBookCoverImage;
+    if ([self isBookAtStart]){
+        [self.bookCover viewWithTag:kTagLeft].hidden = YES;
+        if (![self.bookCover viewWithTag:kTagRight]){
+            halfBookCoverImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"book-cover-right"]];
+            halfBookCoverImage.frame = CGRectMake(self.bookCover.frame.size.width / 2.0, 0, self.bookCover.frame.size.width / 2.0, self.bookCover.frame.size.height);
+            halfBookCoverImage.tag = kTagRight;
+            swipe.direction = UISwipeGestureRecognizerDirectionLeft;
+        }
+        [self.bookCover viewWithTag:kTagRight].hidden = NO;
+    }
+    else{
+        [self.bookCover viewWithTag:kTagRight].hidden = YES;
+        if (![self.bookCover viewWithTag:kTagLeft]){
+        halfBookCoverImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"book-cover-left"]];
+        halfBookCoverImage.frame = CGRectMake(0, 0, self.bookCover.frame.size.width / 2.0, self.bookCover.frame.size.height);
+        halfBookCoverImage.tag = kTagLeft;
+        swipe.direction = UISwipeGestureRecognizerDirectionRight;
+        }
+        [self.bookCover viewWithTag:kTagLeft].hidden = NO;
+    }
+    [self.bookCover addSubview:halfBookCoverImage];
+    halfBookCoverImage.userInteractionEnabled = YES;
+    [halfBookCoverImage addGestureRecognizer:tap];
+    [halfBookCoverImage addGestureRecognizer:swipe];
+}
+
 - (BOOL)isBookAtStart{
     OLPhotobookPageContentViewController *vc1 = [self.pageController.viewControllers firstObject];
     return vc1.pageIndex == 0;
@@ -436,23 +441,21 @@ static const NSUInteger kTagRight = 20;
 }
 
 - (void)openBook:(UIGestureRecognizer *)sender{
+    [self setUpBookCoverView];
     MPFlipStyle style = sender.view.tag == kTagRight ? MPFlipStyleDefault : MPFlipStyleDirectionBackward;
     [MPFlipTransition transitionFromView:self.bookCover toView:self.containerView duration:0.4 style:style transitionAction:MPTransitionActionShowHide completion:^(BOOL finished){
-        [self.bookCover removeFromSuperview];
-        self.bookCover = nil;
+        self.bookCover.hidden = YES;
     }];
 }
 
 - (void)closeBookFront{
+    [self setUpBookCoverView];
     [MPFlipTransition transitionFromView:self.containerView toView:self.bookCover duration:0.4 style:MPFlipStyleDirectionBackward transitionAction:MPTransitionActionShowHide completion:^(BOOL finished){
-        [self.view addSubview:self.bookCover];
-        self.bookCover.frame = self.containerView.frame;
     }];
 }
 - (void)closeBookBack{
+    [self setUpBookCoverView];
     [MPFlipTransition transitionFromView:self.containerView toView:self.bookCover duration:0.4 style:MPFlipStyleDefault transitionAction:MPTransitionActionShowHide completion:^(BOOL finished){
-        self.bookCover.frame = self.containerView.frame;
-        [self.view addSubview:self.bookCover];
     }];
 }
 

@@ -1665,6 +1665,10 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
+                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HqC-Iz-l8f" userLabel="bookCover">
+                                <rect key="frame" x="0.0" y="151" width="587" height="330"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rlk-bS-4UT" userLabel="Container View">
                                 <rect key="frame" x="0.0" y="151" width="587" height="330"/>
                                 <subviews>
@@ -1700,6 +1704,8 @@
                             <constraint firstItem="Tdl-Mn-UXO" firstAttribute="top" secondItem="UgD-45-FUC" secondAttribute="bottom" priority="250" constant="8" id="3eC-Qu-GBr"/>
                             <constraint firstAttribute="trailing" secondItem="Tdl-Mn-UXO" secondAttribute="trailing" priority="250" constant="16" id="6Zu-hy-dcT"/>
                             <constraint firstItem="rlk-bS-4UT" firstAttribute="leading" secondItem="8NO-a3-rcI" secondAttribute="trailing" priority="250" constant="8" id="HqO-4L-WL8"/>
+                            <constraint firstItem="rlk-bS-4UT" firstAttribute="bottom" secondItem="HqC-Iz-l8f" secondAttribute="bottom" id="N2P-GG-dH8"/>
+                            <constraint firstItem="rlk-bS-4UT" firstAttribute="trailing" secondItem="HqC-Iz-l8f" secondAttribute="trailing" id="NCf-Ko-Aek"/>
                             <constraint firstItem="rlk-bS-4UT" firstAttribute="top" relation="greaterThanOrEqual" secondItem="LtF-ql-Rxv" secondAttribute="bottom" id="St7-0b-fIl"/>
                             <constraint firstItem="eAv-QL-iu7" firstAttribute="top" relation="greaterThanOrEqual" secondItem="8NO-a3-rcI" secondAttribute="bottom" constant="8" id="aIn-cE-tWI"/>
                             <constraint firstItem="eAv-QL-iu7" firstAttribute="top" relation="greaterThanOrEqual" secondItem="rlk-bS-4UT" secondAttribute="bottom" id="cCM-bg-A0t"/>
@@ -1708,7 +1714,9 @@
                             <constraint firstItem="8NO-a3-rcI" firstAttribute="top" secondItem="rlk-bS-4UT" secondAttribute="bottom" priority="250" constant="8" id="mi4-le-lKi"/>
                             <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="Tdl-Mn-UXO" secondAttribute="trailing" constant="8" id="oEZ-U7-b1b"/>
                             <constraint firstItem="Tdl-Mn-UXO" firstAttribute="leading" secondItem="rlk-bS-4UT" secondAttribute="trailing" priority="250" constant="8" id="qbJ-3X-I2J"/>
+                            <constraint firstItem="rlk-bS-4UT" firstAttribute="leading" secondItem="HqC-Iz-l8f" secondAttribute="leading" id="tmB-a5-HON"/>
                             <constraint firstItem="rlk-bS-4UT" firstAttribute="leading" secondItem="xrD-7k-Kti" secondAttribute="leading" priority="750" id="u6Z-cg-ERF"/>
+                            <constraint firstItem="rlk-bS-4UT" firstAttribute="top" secondItem="HqC-Iz-l8f" secondAttribute="top" id="vq9-7i-r4T"/>
                             <constraint firstAttribute="centerY" secondItem="rlk-bS-4UT" secondAttribute="centerY" constant="-16" id="xQu-oT-r6s"/>
                         </constraints>
                         <variation key="default">
@@ -1720,6 +1728,7 @@
                     <extendedEdge key="edgesForExtendedLayout" top="YES"/>
                     <navigationItem key="navigationItem" id="2Od-Wr-K8P"/>
                     <connections>
+                        <outlet property="bookCover" destination="HqC-Iz-l8f" id="edo-y8-uSK"/>
                         <outlet property="containerView" destination="rlk-bS-4UT" id="Ewh-mD-XG1"/>
                         <outlet property="leftPageLabel" destination="8NO-a3-rcI" id="NWX-mg-vOi"/>
                         <outlet property="rightPageLabel" destination="Tdl-Mn-UXO" id="Xu6-C5-3zK"/>
