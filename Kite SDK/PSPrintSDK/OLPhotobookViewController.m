@@ -144,11 +144,6 @@ static const NSUInteger kTagRight = 20;
     
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Back", @"") style:UIBarButtonItemStylePlain target:self action:@selector(onBackButtonTapped)];
     
-    if (self.view.frame.size.width < self.view.frame.size.height){
-        self.containerView.transform = CGAffineTransformMakeTranslation(-self.containerView.frame.size.width/4, 0);
-        self.containerView.transform = CGAffineTransformScale(self.containerView.transform, 0.5, 0.5);
-    }
-    
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Confirm", @"") style:UIBarButtonItemStylePlain target:self action:@selector(onButtonNextClicked:)];
     
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Back", @"")
@@ -159,9 +154,6 @@ static const NSUInteger kTagRight = 20;
 
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
-    [UIView animateWithDuration:0.5 delay:0.2 options:0 animations:^{
-        self.containerView.transform = CGAffineTransformIdentity;
-    } completion:NULL];
 }
 
 - (void)onBackButtonTapped{
@@ -200,34 +192,6 @@ static const NSUInteger kTagRight = 20;
         [cropVc setFullImage:image];
         [self presentViewController:nav animated:YES completion:NULL];
     }];
-}
-
-- (BOOL)isContainerViewAtRightEdge:(BOOL)useFrame{
-    if (!useFrame){
-        return (self.containerView.transform.tx <= -self.containerView.frame.size.width + self.view.frame.size.width);
-    }
-    else{
-        return self.containerView.frame.origin.x + self.containerView.frame.size.width  <= self.view.frame.size.width;
-    }
-}
-
-- (BOOL)isContainerViewAtLeftEdge:(BOOL)useFrame{
-    if (!useFrame){
-        return self.containerView.transform.tx >= 0;
-    }
-    else{
-        return self.containerView.center.x - self.containerView.frame.size.width / 2 >= 0;
-    }
-}
-
-- (BOOL)isBookAtStart{
-    OLPhotobookPageContentViewController *vc1 = [self.pageController.viewControllers firstObject];
-    return vc1.pageIndex == 0;
-}
-
-- (BOOL)isBookAtEnd{
-    OLPhotobookPageContentViewController *vc2 = [self.pageController.viewControllers lastObject];
-    return vc2.pageIndex == self.photobookPhotos.count - 1;
 }
 
 - (void)onPanGestureRecognized:(UIPanGestureRecognizer *)recognizer{
@@ -291,16 +255,10 @@ static const NSUInteger kTagRight = 20;
         BOOL draggingRight = translation.x > 0;
         if (([self isContainerViewAtRightEdge:NO] && draggingLeft) || ([self isContainerViewAtLeftEdge:NO] && draggingRight)){
             if (draggingLeft && [self isBookAtEnd]) {
-                [MPFlipTransition transitionFromView:self.containerView toView:self.bookCover duration:0.4 style:MPFlipStyleDefault transitionAction:MPTransitionActionShowHide completion:^(BOOL finished){
-                    self.bookCover.frame = self.containerView.frame;
-                    [self.view addSubview:self.bookCover];
-                }];
+                [self closeBookBack];
             }
             else if (draggingRight && [self isBookAtStart]) {
-                [MPFlipTransition transitionFromView:self.containerView toView:self.bookCover duration:0.4 style:MPFlipStyleDirectionBackward transitionAction:MPTransitionActionShowHide completion:^(BOOL finished){
-                    [self.view addSubview:self.bookCover];
-                    self.bookCover.frame = self.containerView.frame;
-                }];
+                [self closeBookFront];
             }
             gestureRecognizer.enabled = NO;
             gestureRecognizer.enabled = YES;
@@ -343,14 +301,6 @@ static const NSUInteger kTagRight = 20;
     vc.userSelectedPhotos = self.photobookPhotos;
     vc.assets = self.assets;
     return vc;
-}
-
-- (void)openBook:(UIGestureRecognizer *)sender{
-    MPFlipStyle style = sender.view.tag == kTagRight ? MPFlipStyleDefault : MPFlipStyleDirectionBackward;
-    [MPFlipTransition transitionFromView:self.bookCover toView:self.containerView duration:0.4 style:style transitionAction:MPTransitionActionShowHide completion:^(BOOL finished){
-        [self.bookCover removeFromSuperview];
-        self.bookCover = nil;
-    }];
 }
 
 -(void)userDidCropImage:(UIImage *)croppedImage{
@@ -470,6 +420,61 @@ static const NSUInteger kTagRight = 20;
         if (buttonIndex == 1) {
             [self doCheckout];
         }
+    }
+}
+
+#pragma mark Book related methods
+
+- (BOOL)isBookAtStart{
+    OLPhotobookPageContentViewController *vc1 = [self.pageController.viewControllers firstObject];
+    return vc1.pageIndex == 0;
+}
+
+- (BOOL)isBookAtEnd{
+    OLPhotobookPageContentViewController *vc2 = [self.pageController.viewControllers lastObject];
+    return vc2.pageIndex == self.photobookPhotos.count - 1;
+}
+
+- (void)openBook:(UIGestureRecognizer *)sender{
+    MPFlipStyle style = sender.view.tag == kTagRight ? MPFlipStyleDefault : MPFlipStyleDirectionBackward;
+    [MPFlipTransition transitionFromView:self.bookCover toView:self.containerView duration:0.4 style:style transitionAction:MPTransitionActionShowHide completion:^(BOOL finished){
+        [self.bookCover removeFromSuperview];
+        self.bookCover = nil;
+    }];
+}
+
+- (void)closeBookFront{
+    [MPFlipTransition transitionFromView:self.containerView toView:self.bookCover duration:0.4 style:MPFlipStyleDirectionBackward transitionAction:MPTransitionActionShowHide completion:^(BOOL finished){
+        [self.view addSubview:self.bookCover];
+        self.bookCover.frame = self.containerView.frame;
+    }];
+}
+- (void)closeBookBack{
+    [MPFlipTransition transitionFromView:self.containerView toView:self.bookCover duration:0.4 style:MPFlipStyleDefault transitionAction:MPTransitionActionShowHide completion:^(BOOL finished){
+        self.bookCover.frame = self.containerView.frame;
+        [self.view addSubview:self.bookCover];
+    }];
+}
+
+- (CGFloat)xTrasformForBookAtRightEdge{
+    return self.view.frame.size.width - self.containerView.frame.size.width;
+}
+
+- (BOOL)isContainerViewAtRightEdge:(BOOL)useFrame{
+    if (!useFrame){
+        return self.containerView.transform.tx <= [self xTrasformForBookAtRightEdge];
+    }
+    else{
+        return self.containerView.frame.origin.x <= [self xTrasformForBookAtRightEdge];
+    }
+}
+
+- (BOOL)isContainerViewAtLeftEdge:(BOOL)useFrame{
+    if (!useFrame){
+        return self.containerView.transform.tx >= 0;
+    }
+    else{
+        return self.containerView.center.x - self.containerView.frame.size.width / 2 >= 0;
     }
 }
 
