@@ -131,6 +131,7 @@ static const NSUInteger kTagRight = 20;
 }
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator{
+    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
     self.containerView.transform = CGAffineTransformIdentity;
     if (size.width > size.height){
         [self.view addConstraint:self.centerXCon];
@@ -310,8 +311,8 @@ static const NSUInteger kTagRight = 20;
             if ([(OLPhotobookPageContentViewController *)[previousViewControllers firstObject] pageIndex] < vc1.pageIndex){
                 self.containerView.transform = CGAffineTransformIdentity;
             }
-            else if (![self isContainerViewAtLeftEdge:NO]){
-                self.containerView.transform = CGAffineTransformMakeTranslation(-self.containerView.frame.size.width + self.view.frame.size.width, 0);
+            else if (![self isContainerViewAtRightEdge:NO]){
+                self.containerView.transform = CGAffineTransformMakeTranslation([self xTrasformForBookAtRightEdge], 0);
             }
         }];
     }
@@ -418,7 +419,6 @@ static const NSUInteger kTagRight = 20;
         [self.bookCover viewWithTag:kTagLeft].hidden = YES;
         if (![self.bookCover viewWithTag:kTagRight]){
             halfBookCoverImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"book-cover-right"]];
-            halfBookCoverImage.frame = CGRectMake(self.bookCover.frame.size.width / 2.0, 0, self.bookCover.frame.size.width / 2.0, self.bookCover.frame.size.height);
             halfBookCoverImage.tag = kTagRight;
             swipe.direction = UISwipeGestureRecognizerDirectionLeft;
             [self.bookCover addSubview:halfBookCoverImage];
@@ -426,13 +426,13 @@ static const NSUInteger kTagRight = 20;
             [halfBookCoverImage addGestureRecognizer:tap];
             [halfBookCoverImage addGestureRecognizer:swipe];
         }
+        halfBookCoverImage.frame = CGRectMake(self.bookCover.frame.size.width / 2.0, 0, self.bookCover.frame.size.width / 2.0, self.bookCover.frame.size.height);
         [self.bookCover viewWithTag:kTagRight].hidden = NO;
     }
     else{
         [self.bookCover viewWithTag:kTagRight].hidden = YES;
         if (![self.bookCover viewWithTag:kTagLeft]){
             halfBookCoverImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"book-cover-left"]];
-            halfBookCoverImage.frame = CGRectMake(0, 0, self.bookCover.frame.size.width / 2.0, self.bookCover.frame.size.height);
             halfBookCoverImage.tag = kTagLeft;
             swipe.direction = UISwipeGestureRecognizerDirectionRight;
             [self.bookCover addSubview:halfBookCoverImage];
@@ -440,6 +440,7 @@ static const NSUInteger kTagRight = 20;
             [halfBookCoverImage addGestureRecognizer:tap];
             [halfBookCoverImage addGestureRecognizer:swipe];
         }
+        halfBookCoverImage.frame = CGRectMake(0, 0, self.bookCover.frame.size.width / 2.0, self.bookCover.frame.size.height);
         [self.bookCover viewWithTag:kTagLeft].hidden = NO;
     }
 }
