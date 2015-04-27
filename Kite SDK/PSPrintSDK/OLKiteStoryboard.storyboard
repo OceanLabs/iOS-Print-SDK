@@ -1694,7 +1694,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                         </subviews>
-                        <color key="backgroundColor" red="0.92549019610000005" green="0.93725490199999995" blue="0.94901960780000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="backgroundColor" red="0.92453902959823608" green="0.936881422996521" blue="0.94951432943344116" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <gestureRecognizers/>
                         <constraints>
                             <constraint firstItem="Tdl-Mn-UXO" firstAttribute="top" secondItem="UgD-45-FUC" secondAttribute="bottom" priority="250" constant="8" id="3eC-Qu-GBr"/>

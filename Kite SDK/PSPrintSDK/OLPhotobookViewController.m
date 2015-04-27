@@ -62,7 +62,7 @@ static const NSUInteger kTagRight = 20;
 -(UIView *) bookCover{
     if (!_bookCover){
         _bookCover = [[UIView alloc] initWithFrame:self.containerView.frame];
-        _bookCover.backgroundColor = [UIColor clearColor];
+        _bookCover.backgroundColor = [UIColor colorWithRed: 0.906 green: 0.922 blue: 0.937 alpha: 1]; //#E7EBEF
         _bookCover.hidden = YES;
         
         UIImageView *halfBookCoverImage;
