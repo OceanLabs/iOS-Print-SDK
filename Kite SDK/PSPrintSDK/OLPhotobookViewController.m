@@ -140,6 +140,24 @@ static const NSUInteger kTagRight = 20;
     }
 }
 
+- (CGFloat) productAspectRatio{
+    return 1;//self.product.productTemplate.sizePx.height / self.product.productTemplate.sizePx.width;
+}
+
+- (UIViewController *)viewControllerAtIndex:(NSUInteger)index {
+    if (index == NSNotFound || index >= self.photobookPhotos.count) {
+        return nil;
+    }
+    
+    OLPhotobookPageContentViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLPhotobookPageViewController"];
+    vc.pageIndex = index;
+    vc.userSelectedPhotos = self.photobookPhotos;
+    vc.assets = self.assets;
+    return vc;
+}
+
+#pragma mark - Gesture recognizers
+
 - (void)onTapGestureRecognized:(UITapGestureRecognizer *)sender{
     OLPrintPhoto *tempPrintPhoto = [[OLPrintPhoto alloc] init];
     NSInteger index = 0;
@@ -239,39 +257,7 @@ static const NSUInteger kTagRight = 20;
     return YES;
 }
 
-- (CGFloat) productAspectRatio{
-    return 1;//self.product.productTemplate.sizePx.height / self.product.productTemplate.sizePx.width;
-}
-
-- (void)pageViewController:(UIPageViewController *)pageViewController didFinishAnimating:(BOOL)finished previousViewControllers:(NSArray *)previousViewControllers transitionCompleted:(BOOL)completed{
-    if (completed){
-        OLPhotobookPageContentViewController *vc1 = [pageViewController.viewControllers firstObject];
-        OLPhotobookPageContentViewController *vc2 = [pageViewController.viewControllers lastObject];
-        self.leftPageLabel.text = [NSString stringWithFormat:@"%ld", (long)vc1.pageIndex+1];
-        self.rightPageLabel.text = [NSString stringWithFormat:@"%ld", (long)vc2.pageIndex+1];
-        
-        [UIView animateWithDuration:0.2 animations:^{
-            if ([(OLPhotobookPageContentViewController *)[previousViewControllers firstObject] pageIndex] < vc1.pageIndex){
-                self.containerView.transform = CGAffineTransformIdentity;
-            }
-            else if (![self isContainerViewAtLeftEdge:NO]){
-                self.containerView.transform = CGAffineTransformMakeTranslation(-self.containerView.frame.size.width + self.view.frame.size.width, 0);
-            }
-        }];
-    }
-}
-
-- (UIViewController *)viewControllerAtIndex:(NSUInteger)index {
-    if (index == NSNotFound || index >= self.photobookPhotos.count) {
-        return nil;
-    }
-    
-    OLPhotobookPageContentViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLPhotobookPageViewController"];
-    vc.pageIndex = index;
-    vc.userSelectedPhotos = self.photobookPhotos;
-    vc.assets = self.assets;
-    return vc;
-}
+#pragma mark - OLScrollCropView delegate
 
 -(void)userDidCropImage:(UIImage *)croppedImage{
     [self.editingPrintPhoto unloadImage];
@@ -280,7 +266,7 @@ static const NSUInteger kTagRight = 20;
     [(OLPhotobookPageContentViewController *)[self.pageController.viewControllers objectAtIndex:self.editingPageIndex] loadImage];
 }
 
-#pragma mark - UIPageViewControllerDataSource
+#pragma mark - UIPageViewControllerDataSource and delegate
 
 - (UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerBeforeViewController:(UIViewController *)viewController {
     OLPhotobookPageContentViewController *vc = (OLPhotobookPageContentViewController *) viewController;
@@ -308,7 +294,25 @@ static const NSUInteger kTagRight = 20;
     return 2;
 }
 
-#pragma mark Checkout
+- (void)pageViewController:(UIPageViewController *)pageViewController didFinishAnimating:(BOOL)finished previousViewControllers:(NSArray *)previousViewControllers transitionCompleted:(BOOL)completed{
+    if (completed){
+        OLPhotobookPageContentViewController *vc1 = [pageViewController.viewControllers firstObject];
+        OLPhotobookPageContentViewController *vc2 = [pageViewController.viewControllers lastObject];
+        self.leftPageLabel.text = [NSString stringWithFormat:@"%ld", (long)vc1.pageIndex+1];
+        self.rightPageLabel.text = [NSString stringWithFormat:@"%ld", (long)vc2.pageIndex+1];
+        
+        [UIView animateWithDuration:0.2 animations:^{
+            if ([(OLPhotobookPageContentViewController *)[previousViewControllers firstObject] pageIndex] < vc1.pageIndex){
+                self.containerView.transform = CGAffineTransformIdentity;
+            }
+            else if (![self isContainerViewAtLeftEdge:NO]){
+                self.containerView.transform = CGAffineTransformMakeTranslation(-self.containerView.frame.size.width + self.view.frame.size.width, 0);
+            }
+        }];
+    }
+}
+
+#pragma mark - Checkout
 
 - (IBAction)onButtonNextClicked:(UIBarButtonItem *)sender {
     if (![self shouldGoToCheckout]){
@@ -393,7 +397,7 @@ static const NSUInteger kTagRight = 20;
     }
 }
 
-#pragma mark Book related methods
+#pragma mark - Book related methods
 
 -(void) setUpBookCoverView{
     self.bookCover.hidden = NO;
