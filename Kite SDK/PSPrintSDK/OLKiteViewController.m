@@ -197,7 +197,12 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
             return;
         }
         
+        NSError *error = n.userInfo[kNotificationKeyTemplateSyncError];
         NSString *message = NSLocalizedString(@"There was problem getting Print Shop products. Check your Internet connectivity or try again later.", @"");
+        if (error.code == kOLKiteSDKErrorCodeMaintenanceMode) {
+            message = kOLKiteSDKErrorMessageMaintenanceMode;
+        }
+        
         if ([UIAlertController class]){
             UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"" message:message preferredStyle:UIAlertControllerStyleAlert];
             [alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"") style:UIAlertActionStyleCancel handler:^(UIAlertAction *action){
