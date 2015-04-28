@@ -82,7 +82,7 @@ static const NSUInteger kTagRight = 20;
     NSDictionary *views = NSDictionaryOfVariableBindings(view);
     NSMutableArray *con = [[NSMutableArray alloc] init];
     
-    NSArray *visuals = @[@"H:|-20-[view]-20-|", @"V:|-20-[view]-20-|"];
+    NSArray *visuals = @[@"H:|-27-[view]-27-|", @"V:|-10-[view]-10-|"];
     
     for (NSString *visual in visuals) {
         [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
