@@ -41,6 +41,7 @@ static const NSUInteger kTagRight = 20;
 @property (weak, nonatomic) IBOutlet UILabel *rightPageLabel;
 
 @property (strong, nonatomic) IBOutlet UIView *bookCover;
+@property (assign, nonatomic) BOOL bookClosed;
 
 @end
 
@@ -142,6 +143,16 @@ static const NSUInteger kTagRight = 20;
     
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinator> context){
         [self setUpBookCoverView];
+        if (size.width > size.height){
+            self.containerView.transform = CGAffineTransformIdentity;
+            self.bookCover.transform = CGAffineTransformIdentity;
+        }
+        else{
+            if (self.bookClosed && [self isBookAtStart]){
+                self.containerView.transform = CGAffineTransformMakeTranslation([self xTrasformForBookAtRightEdge], 0);
+                self.bookCover.transform = CGAffineTransformMakeTranslation([self xTrasformForBookAtRightEdge], 0);
+            }
+        }
     }completion:NULL];
 }
 
@@ -469,6 +480,7 @@ static const NSUInteger kTagRight = 20;
         MPFlipStyle style = sender.view.tag == kTagRight ? MPFlipStyleDefault : MPFlipStyleDirectionBackward;
         [MPFlipTransition transitionFromView:self.bookCover toView:self.containerView duration:0.4 style:style transitionAction:MPTransitionActionShowHide completion:^(BOOL finished){
             self.bookCover.hidden = YES;
+            self.bookClosed = NO;
         }];
     }];
     
@@ -484,6 +496,7 @@ static const NSUInteger kTagRight = 20;
                 self.bookCover.transform = CGAffineTransformMakeTranslation([self xTrasformForBookAtRightEdge], 0);
             }];
         }
+        self.bookClosed = YES;
     }];
 }
 - (void)closeBookBack{
@@ -498,6 +511,7 @@ static const NSUInteger kTagRight = 20;
     } completion:^(BOOL finished){
         [MPFlipTransition transitionFromView:self.containerView toView:self.bookCover duration:0.4 style:MPFlipStyleDefault transitionAction:MPTransitionActionShowHide completion:^(BOOL finished){
         }];
+        self.bookClosed = YES;
     }];
 }
 
