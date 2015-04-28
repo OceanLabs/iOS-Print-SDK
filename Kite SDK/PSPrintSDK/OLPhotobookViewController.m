@@ -139,6 +139,10 @@ static const NSUInteger kTagRight = 20;
     else{
         [self.view removeConstraint:self.centerXCon];
     }
+    
+    [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinator> context){
+        [self setUpBookCoverView];
+    }completion:NULL];
 }
 
 - (CGFloat) productAspectRatio{
@@ -409,17 +413,16 @@ static const NSUInteger kTagRight = 20;
 
 -(void) setUpBookCoverView{
     self.bookCover.hidden = NO;
-    for (UIGestureRecognizer *gesture in self.bookCover.gestureRecognizers){
-        [self.bookCover removeGestureRecognizer:gesture];
-    }
+
     UISwipeGestureRecognizer *swipe = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(openBook:)];
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(openBook:)];
     
     UIImageView *halfBookCoverImage;
     
     if ([self isBookAtStart]){
+        halfBookCoverImage = (UIImageView *)[self.bookCover viewWithTag:kTagRight];
         [self.bookCover viewWithTag:kTagLeft].hidden = YES;
-        if (![self.bookCover viewWithTag:kTagRight]){
+        if (!halfBookCoverImage){
             halfBookCoverImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"book-cover-right"]];
             halfBookCoverImage.tag = kTagRight;
             swipe.direction = UISwipeGestureRecognizerDirectionLeft;
@@ -433,7 +436,8 @@ static const NSUInteger kTagRight = 20;
     }
     else{
         [self.bookCover viewWithTag:kTagRight].hidden = YES;
-        if (![self.bookCover viewWithTag:kTagLeft]){
+        halfBookCoverImage = (UIImageView *)[self.bookCover viewWithTag:kTagLeft];
+        if (!halfBookCoverImage){
             halfBookCoverImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"book-cover-left"]];
             halfBookCoverImage.tag = kTagLeft;
             swipe.direction = UISwipeGestureRecognizerDirectionRight;
