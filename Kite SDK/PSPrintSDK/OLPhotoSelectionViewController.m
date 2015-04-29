@@ -34,6 +34,7 @@
 #import "NSArray+QueryingExtras.h"
 #import "OLKitePrintSDK.h"
 #import "NSObject+Utils.h"
+#import "UIViewController+TraitCollectionCompatibility.h"
 
 NSInteger OLPhotoSelectionMargin = 0;
 
@@ -331,6 +332,9 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
     self.rotationSize = size;
     [self.collectionView.collectionViewLayout invalidateLayout];
+    [coordinator animateAlongsideTransition:NULL completion:^(id<UIViewControllerTransitionCoordinator> context){
+        [self.collectionView reloadData];
+    }];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -493,10 +497,46 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 }
 #endif
 
+- (NSInteger) findFactorOf:(NSInteger)qty maximum:(NSInteger)max minimum:(NSInteger)min{
+    min = MAX(1, min);
+    max = MAX(1, max);
+    NSInteger factor = max;
+    while (factor > min) {
+        if (qty % factor == 0){
+            return factor;
+        }
+        else{
+            factor--;
+        }
+    }
+    return min;
+}
+
+- (NSUInteger)numberOfCellsPerRow{
+    CGSize size = self.rotationSize.width != 0 ? self.rotationSize : self.view.frame.size;
+    
+    if (![self isHorizontalSizeClassCompact]){
+        if (size.height > size.width){
+            return [self findFactorOf:self.product.quantityToFulfillOrder maximum:4 minimum:2];
+        }
+        else{
+            return [self findFactorOf:self.product.quantityToFulfillOrder maximum:8 minimum:2];
+        }
+    }
+    else{
+        if (size.height > size.width){
+            return [self findFactorOf:self.product.quantityToFulfillOrder maximum:3 minimum:2];
+        }
+        else{
+            return [self findFactorOf:self.product.quantityToFulfillOrder maximum:7 minimum:2];
+        }
+    }
+}
+
 #pragma mark - UICollectionViewDataSource Methods
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    NSInteger number = self.product.quantityToFulfillOrder;//collectionView.frame.size.height / 105 ;
+    NSInteger number = self.product.quantityToFulfillOrder;
     NSInteger removedImagesInOtherSections = 0;
     for (NSNumber *sectionNumber in self.indexPathsToRemoveDict.allKeys){
         NSNumber *n = [NSNumber numberWithLong:[sectionNumber longValue]];
@@ -507,7 +547,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     NSInteger removedImagesInThisSection = [self.indexPathsToRemoveDict[[NSNumber numberWithInteger:section]] count];
     NSInteger finalNumberOfPhotosRemoved = removedImagesInThisSection + removedImagesInOtherSections;
 
-    return MIN(MAX(self.userSelectedPhotos.count + finalNumberOfPhotosRemoved, number * 3), self.product.quantityToFulfillOrder) - removedImagesInThisSection;
+    return MIN(MAX(self.userSelectedPhotos.count + finalNumberOfPhotosRemoved, number * [self numberOfCellsPerRow]), self.product.quantityToFulfillOrder) - removedImagesInThisSection;
 }
 
 - (NSInteger) numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
@@ -646,7 +686,8 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
         disabled.backgroundColor = [UIColor colorWithRed:0.5 green:0.5 blue:0.5 alpha:0.5];
     }
     
-    imageView.backgroundColor = indexPath.item % 2 == 0 ? [UIColor colorWithHexString:@"#e6e9ed"] : [UIColor colorWithHexString:@"#dce0e5"];
+    NSInteger skipAtNewLine = [self numberOfCellsPerRow] % 2 == 0  && indexPath.item / [self numberOfCellsPerRow] % 2 == 0 ? 1 : 0;
+    imageView.backgroundColor = (indexPath.item + skipAtNewLine) % 2 == 0 ? [UIColor colorWithHexString:@"#e6e9ed"] : [UIColor colorWithHexString:@"#dce0e5"];
     
     NSUInteger imageIndex = indexPath.row + indexPath.section * self.product.quantityToFulfillOrder;
     if (imageIndex < self.userSelectedPhotos.count) {
@@ -735,12 +776,12 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
         size = self.rotationSize;
     }
     
-    CGFloat width = floorf(size.width/3);
+    CGFloat width = floorf(size.width/((float)[self numberOfCellsPerRow]));
     CGFloat height = width;
     
-    if (indexPath.item % 3 == 2) {
-        width = size.width - 2 * width;
-    }
+//    if (indexPath.item % [self numberOfCellsPerRow] == 2) {
+//        width = size.width - 2 * width;
+//    }
 
     return CGSizeMake(width, height);
 }
