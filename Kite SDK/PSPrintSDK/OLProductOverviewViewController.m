@@ -107,6 +107,10 @@
     return vc;
 }
 
+- (IBAction)onTapGestureRecognized:(UITapGestureRecognizer *)sender {
+    [self onButtonStartClicked:nil];
+}
+
 - (IBAction)onButtonStartClicked:(UIBarButtonItem *)sender {
     UIViewController *vc;
     if (self.product.productTemplate.templateUI == kOLTemplateUICase){
