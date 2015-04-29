@@ -1699,11 +1699,11 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="P6D-Eb-oaD" userLabel="pagesLabelContainer">
-                                <rect key="frame" x="228" y="487" width="130" height="42"/>
+                                <rect key="frame" x="228" y="538" width="130" height="42"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Pages 1-2 of 24" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="6zv-ER-YtC">
                                         <rect key="frame" x="0.0" y="0.0" width="130" height="42"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                         <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
@@ -1723,8 +1723,7 @@
                         <gestureRecognizers/>
                         <constraints>
                             <constraint firstItem="Tdl-Mn-UXO" firstAttribute="top" secondItem="UgD-45-FUC" secondAttribute="bottom" priority="250" constant="8" id="3eC-Qu-GBr"/>
-                            <constraint firstItem="eAv-QL-iu7" firstAttribute="top" relation="greaterThanOrEqual" secondItem="P6D-Eb-oaD" secondAttribute="bottom" constant="10" id="5AF-cM-WlX"/>
-                            <constraint firstAttribute="trailing" secondItem="Tdl-Mn-UXO" secondAttribute="trailing" priority="250" constant="16" id="6Zu-hy-dcT"/>
+                            <constraint firstItem="eAv-QL-iu7" firstAttribute="top" secondItem="P6D-Eb-oaD" secondAttribute="bottom" constant="20" id="5AF-cM-WlX"/>
                             <constraint firstItem="rlk-bS-4UT" firstAttribute="leading" secondItem="8NO-a3-rcI" secondAttribute="trailing" priority="250" constant="8" id="HqO-4L-WL8"/>
                             <constraint firstAttribute="centerX" secondItem="P6D-Eb-oaD" secondAttribute="centerX" constant="7" id="Kix-gc-0g0"/>
                             <constraint firstItem="rlk-bS-4UT" firstAttribute="bottom" secondItem="HqC-Iz-l8f" secondAttribute="bottom" id="N2P-GG-dH8"/>
@@ -1734,22 +1733,14 @@
                             <constraint firstItem="eAv-QL-iu7" firstAttribute="top" relation="greaterThanOrEqual" secondItem="rlk-bS-4UT" secondAttribute="bottom" constant="10" id="cCM-bg-A0t"/>
                             <constraint firstItem="8NO-a3-rcI" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="xrD-7k-Kti" secondAttribute="leading" constant="8" id="egw-MI-AGq"/>
                             <constraint firstItem="eAv-QL-iu7" firstAttribute="top" relation="greaterThanOrEqual" secondItem="Tdl-Mn-UXO" secondAttribute="bottom" constant="8" id="fwq-Uh-9W1"/>
-                            <constraint firstItem="P6D-Eb-oaD" firstAttribute="top" secondItem="rlk-bS-4UT" secondAttribute="bottom" priority="750" id="idg-Xf-11K"/>
                             <constraint firstItem="8NO-a3-rcI" firstAttribute="top" secondItem="rlk-bS-4UT" secondAttribute="bottom" priority="250" constant="8" id="mi4-le-lKi"/>
                             <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="Tdl-Mn-UXO" secondAttribute="trailing" constant="8" id="oEZ-U7-b1b"/>
                             <constraint firstItem="Tdl-Mn-UXO" firstAttribute="leading" secondItem="rlk-bS-4UT" secondAttribute="trailing" priority="250" constant="8" id="qbJ-3X-I2J"/>
                             <constraint firstItem="rlk-bS-4UT" firstAttribute="leading" secondItem="HqC-Iz-l8f" secondAttribute="leading" id="tmB-a5-HON"/>
                             <constraint firstItem="rlk-bS-4UT" firstAttribute="leading" secondItem="xrD-7k-Kti" secondAttribute="leading" priority="750" id="u6Z-cg-ERF"/>
                             <constraint firstItem="rlk-bS-4UT" firstAttribute="top" secondItem="HqC-Iz-l8f" secondAttribute="top" id="vq9-7i-r4T"/>
-                            <constraint firstItem="P6D-Eb-oaD" firstAttribute="top" secondItem="rlk-bS-4UT" secondAttribute="bottom" priority="749" constant="-57" id="vuv-KQ-fbe"/>
                             <constraint firstAttribute="centerY" secondItem="rlk-bS-4UT" secondAttribute="centerY" constant="-22" id="xQu-oT-r6s"/>
                         </constraints>
-                        <variation key="default">
-                            <mask key="constraints">
-                                <exclude reference="vuv-KQ-fbe"/>
-                                <exclude reference="6Zu-hy-dcT"/>
-                            </mask>
-                        </variation>
                     </view>
                     <extendedEdge key="edgesForExtendedLayout" top="YES"/>
                     <navigationItem key="navigationItem" id="2Od-Wr-K8P"/>
