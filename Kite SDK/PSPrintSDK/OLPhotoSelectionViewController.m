@@ -786,6 +786,14 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     return CGSizeMake(width, height);
 }
 
+- (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout insetForSectionAtIndex:(NSInteger)section{
+    CGSize size = self.rotationSize.width != 0 ? self.rotationSize : self.view.frame.size;
+    
+    CGSize cellSize = [self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
+    CGFloat diff = size.width - (cellSize.width * [self numberOfCellsPerRow]);
+    return UIEdgeInsetsMake(0, diff/2.0, 0, diff/2.0);
+}
+
 #pragma mark - Storyboard Methods
 
 - (BOOL)shouldGoToOrderPreview {
