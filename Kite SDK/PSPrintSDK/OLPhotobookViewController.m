@@ -13,6 +13,7 @@
 #import "OLPrintPhoto.h"
 #import "OLScrollCropViewController.h"
 #import "OLProductPrintJob.h"
+#import "UIView+RoundRect.h"
 
 #import <MPFlipTransition.h>
 
@@ -42,6 +43,9 @@ static const NSUInteger kTagRight = 20;
 
 @property (strong, nonatomic) IBOutlet UIView *bookCover;
 @property (assign, nonatomic) BOOL bookClosed;
+@property (weak, nonatomic) IBOutlet UIView *pagesLabelContainer;
+@property (weak, nonatomic) IBOutlet UILabel *pagesLabel;
+@property (strong, nonatomic) UIVisualEffectView *visualEffectView;
 
 @end
 
@@ -121,6 +125,37 @@ static const NSUInteger kTagRight = 20;
                                                                              style:UIBarButtonItemStyleBordered
                                                                             target:nil
                                                                             action:nil];
+    
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0){
+        UIVisualEffect *blurEffect;
+        blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleDark];
+        
+        self.visualEffectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
+        UIView *view = self.visualEffectView;
+        [self.pagesLabelContainer insertSubview:view belowSubview:self.pagesLabel];
+        
+        view.translatesAutoresizingMaskIntoConstraints = NO;
+        NSDictionary *views = NSDictionaryOfVariableBindings(view);
+        NSMutableArray *con = [[NSMutableArray alloc] init];
+        
+        NSArray *visuals = @[@"H:|-0-[view]-0-|",
+                             @"V:|-0-[view]-0-|"];
+        
+        
+        for (NSString *visual in visuals) {
+            [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+        }
+        
+        [view.superview addConstraints:con];
+        
+    }
+    else{
+        self.pagesLabelContainer.backgroundColor = [UIColor darkGrayColor];
+    }
+    
+    [self.pagesLabelContainer makeRoundRect];
+    
+    self.pagesLabel.text = [NSString stringWithFormat:@"Pages %d-%d of %ld", 1, 2, (long)self.product.quantityToFulfillOrder];
 }
 
 - (void)viewDidAppear:(BOOL)animated{
@@ -408,8 +443,9 @@ static const NSUInteger kTagRight = 20;
     if (completed){
         OLPhotobookPageContentViewController *vc1 = [pageViewController.viewControllers firstObject];
         OLPhotobookPageContentViewController *vc2 = [pageViewController.viewControllers lastObject];
-        self.leftPageLabel.text = [NSString stringWithFormat:@"%ld", (long)vc1.pageIndex+1];
-        self.rightPageLabel.text = [NSString stringWithFormat:@"%ld", (long)vc2.pageIndex+1];
+        self.pagesLabel.text = [NSString stringWithFormat:@"Pages %ld-%ld of %ld", (long)vc1.pageIndex+1, (long)vc2.pageIndex+1, (long)self.product.quantityToFulfillOrder];
+//        self.leftPageLabel.text = [NSString stringWithFormat:@"%ld", (long)vc1.pageIndex+1];
+//        self.rightPageLabel.text = [NSString stringWithFormat:@"%ld", (long)vc2.pageIndex+1];
         
         [UIView animateWithDuration:0.2 animations:^{
             if ([(OLPhotobookPageContentViewController *)[previousViewControllers firstObject] pageIndex] < vc1.pageIndex){
@@ -481,6 +517,7 @@ static const NSUInteger kTagRight = 20;
         [MPFlipTransition transitionFromView:self.bookCover toView:self.containerView duration:0.4 style:style transitionAction:MPTransitionActionShowHide completion:^(BOOL finished){
             self.bookCover.hidden = YES;
             self.bookClosed = NO;
+            self.pagesLabelContainer.hidden = NO;
         }];
     }];
     
@@ -497,6 +534,7 @@ static const NSUInteger kTagRight = 20;
             }];
         }
         self.bookClosed = YES;
+        self.pagesLabelContainer.hidden = YES;
     }];
 }
 - (void)closeBookBack{
@@ -512,6 +550,7 @@ static const NSUInteger kTagRight = 20;
         [MPFlipTransition transitionFromView:self.containerView toView:self.bookCover duration:0.4 style:MPFlipStyleDefault transitionAction:MPTransitionActionShowHide completion:^(BOOL finished){
         }];
         self.bookClosed = YES;
+        self.pagesLabelContainer.hidden = YES;
     }];
 }
 

@@ -551,6 +551,9 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     if (templateUI == kOLTemplateUIFrame){
         title = [[NSString alloc]initWithFormat:@"#%ld Frame", (long)indexPath.section + 1];
     }
+    else if (templateUI == kOLTemplateUIPhotobook){
+        title = [[NSString alloc]initWithFormat:@"#%ld Photobook", (long)indexPath.section + 1];
+    }
     else{
         title = [[NSString alloc]initWithFormat:@"#%ld Pack of %lu %@", (long)indexPath.section + 1, (unsigned long)self.product.quantityToFulfillOrder, self.product.productTemplate.name];
     }
