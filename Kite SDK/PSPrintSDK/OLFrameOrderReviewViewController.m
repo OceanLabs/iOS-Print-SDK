@@ -260,7 +260,12 @@ CGFloat margin = 2;
 }
 
 - (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout insetForSectionAtIndex:(NSInteger)section{
-    return UIEdgeInsetsZero;
+    if (collectionView.tag == 20){
+        return UIEdgeInsetsZero;
+    }
+    else{
+        return UIEdgeInsetsMake(0, 10, 0, 10);
+    }
 }
 
 - (void)collectionView:(UICollectionView *)collectionView itemAtIndexPath:(NSIndexPath *)fromIndexPath willMoveToIndexPath:(NSIndexPath *)toIndexPath {
