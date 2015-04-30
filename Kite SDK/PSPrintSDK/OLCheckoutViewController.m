@@ -136,6 +136,7 @@ static const NSUInteger kInputFieldTag = 99;
     tgr.cancelsTouchesInView = NO; // allow table cell selection to happen as normal
     [self.tableView addGestureRecognizer:tgr];
     
+    self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 10, 20)];
 }
 
 - (void)positionKiteLabel{
