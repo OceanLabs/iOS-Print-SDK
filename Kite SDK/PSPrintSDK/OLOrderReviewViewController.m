@@ -74,7 +74,20 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
     [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+    
+    NSArray *visibleCells = [self.collectionView indexPathsForVisibleItems];
+    NSIndexPath *maxIndexPath = [visibleCells firstObject];
+    for (NSIndexPath *indexPath in visibleCells){
+        if (maxIndexPath.item < indexPath.item){
+            maxIndexPath = indexPath;
+        }
+    }
+    
     [self.collectionView.collectionViewLayout invalidateLayout];
+    [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinator> context){
+        [self.collectionView scrollToItemAtIndexPath:maxIndexPath atScrollPosition:UICollectionViewScrollPositionBottom animated:YES];
+    }completion:^(id<UIViewControllerTransitionCoordinator> context){
+    }];
 }
 
 -(NSUInteger) totalNumberOfExtras{
