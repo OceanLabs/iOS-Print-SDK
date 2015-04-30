@@ -48,6 +48,7 @@ static const NSUInteger kInputFieldTag = 99;
 @property (strong, nonatomic) OLPrintOrder *printOrder;
 @property (assign, nonatomic) BOOL presentedModally;
 @property (strong, nonatomic) UILabel *kiteLabel;
+@property (strong, nonatomic) NSLayoutConstraint *kiteLabelYCon;
 @end
 
 @implementation OLCheckoutViewController
@@ -135,20 +136,17 @@ static const NSUInteger kInputFieldTag = 99;
     tgr.cancelsTouchesInView = NO; // allow table cell selection to happen as normal
     [self.tableView addGestureRecognizer:tgr];
     
-    [self positionKiteLabel];
 }
 
 - (void)positionKiteLabel{
-    if (!self.kiteLabel){
-        self.kiteLabel = [[UILabel alloc] init];
-        self.kiteLabel.text = NSLocalizedString(@"Powered by Kite.ly", @"");
-        self.kiteLabel.font = [UIFont systemFontOfSize:13];
-        self.kiteLabel.textColor = [UIColor lightGrayColor];
-        [self.view addSubview:self.kiteLabel];
-        [self.kiteLabel sizeToFit];
-    }
+    [self.kiteLabel.superview removeConstraint:self.kiteLabelYCon];
     
-    self.kiteLabel.frame = CGRectMake(([UIScreen mainScreen].bounds.size.width - self.kiteLabel.frame.size.width) / 2, [UIScreen mainScreen].bounds.size.height - self.navigationController.navigationBar.frame.size.height - self.kiteLabel.frame.size.height - [[UIApplication sharedApplication] statusBarFrame].size.height - 20, self.kiteLabel.frame.size.width, self.kiteLabel.frame.size.height);
+    CGRect rectOfCellInTableView = [self.tableView rectForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:kSectionPhoneNumber]];
+    CGSize size = self.view.frame.size;
+    CGFloat blankSpace = MAX(size.height - rectOfCellInTableView.origin.y - 64 - self.kiteLabel.frame.size.height - 10, 83);
+    
+    self.kiteLabelYCon = [NSLayoutConstraint constraintWithItem:self.kiteLabel attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.kiteLabel.superview attribute:NSLayoutAttributeTop multiplier:1 constant:blankSpace];
+    [self.kiteLabel.superview addConstraint:self.kiteLabelYCon];
 }
 
 - (void)onButtonCancelClicked {
@@ -343,6 +341,18 @@ static const NSUInteger kInputFieldTag = 99;
             cell = [self createTextFieldCellWithReuseIdentifier:TextFieldCell title:NSLocalizedStringFromTableInBundle(@"Phone", @"KitePrintSDK", [OLConstants bundle], @"") keyboardType:UIKeyboardTypePhonePad];
             self.textFieldPhone = (UITextField *) [cell viewWithTag:kInputFieldTag];
             [self populateDefaultEmailAndPhone];
+            
+            self.kiteLabel = [[UILabel alloc] init];
+            self.kiteLabel.text = NSLocalizedString(@"Powered by Kite.ly", @"");
+            self.kiteLabel.font = [UIFont systemFontOfSize:13];
+            self.kiteLabel.textColor = [UIColor lightGrayColor];
+            self.kiteLabel.textAlignment = NSTextAlignmentCenter;
+            [cell.contentView addSubview:self.kiteLabel];
+            self.kiteLabel.translatesAutoresizingMaskIntoConstraints = NO;
+            
+            [cell.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.kiteLabel attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:cell.contentView attribute:NSLayoutAttributeCenterX multiplier:1 constant:0]];
+            
+            [self positionKiteLabel];
         }
     }
 
