@@ -377,7 +377,7 @@ static const NSUInteger kInputFieldTag = 99;
         NSDictionary *views = NSDictionaryOfVariableBindings(view);
         NSMutableArray *con = [[NSMutableArray alloc] init];
         
-        NSArray *visuals = @[@"H:|-86-[view]-0-|"];
+        NSArray *visuals = @[@"H:|-86-[view]-0-|", @"V:[view(43)]"];
         
         
         for (NSString *visual in visuals) {
