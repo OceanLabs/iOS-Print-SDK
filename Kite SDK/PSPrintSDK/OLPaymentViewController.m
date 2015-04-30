@@ -828,8 +828,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
                 NSDictionary *views = NSDictionaryOfVariableBindings(view);
                 NSMutableArray *con = [[NSMutableArray alloc] init];
                 
-                NSArray *visuals = @[@"H:|-20-[view]-60-|",
-                                     @"V:|-0-[view]-0-|"];
+                NSArray *visuals = @[@"H:|-20-[view]-60-|", @"V:[view(43)]"];
                 
                 
                 for (NSString *visual in visuals) {
@@ -838,18 +837,23 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
                 
                 [view.superview addConstraints:con];
                 
+                NSLayoutConstraint *centerY = [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:view.superview attribute:NSLayoutAttributeCenterY multiplier:1 constant:0];
+                [con addObject:centerY];
+                
                 view = applyButton;
                 view.translatesAutoresizingMaskIntoConstraints = NO;
                 views = NSDictionaryOfVariableBindings(view);
                 con = [[NSMutableArray alloc] init];
                 
-                visuals = @[@"H:[view(60)]-0-|",
-                            @"V:|-0-[view]-0-|"];
+                visuals = @[@"H:[view(60)]-0-|"];
                 
                 
                 for (NSString *visual in visuals) {
                     [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
                 }
+                
+                NSLayoutConstraint *buttonCenterY = [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:view.superview attribute:NSLayoutAttributeCenterY multiplier:1 constant:0];
+                [con addObject:buttonCenterY];
                 
                 [view.superview addConstraints:con];
             }

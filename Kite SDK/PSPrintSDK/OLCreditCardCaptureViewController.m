@@ -355,13 +355,15 @@ UITableViewDataSource, UITextFieldDelegate>
             NSDictionary *views = NSDictionaryOfVariableBindings(view);
             NSMutableArray *con = [[NSMutableArray alloc] init];
             
-            NSArray *visuals = @[@"H:|-20-[view]-43-|",
-                                 @"V:|-0-[view]-0-|"];
+            NSArray *visuals = @[@"H:|-20-[view]-43-|", @"V:[view(43)]"];
             
             
             for (NSString *visual in visuals) {
                 [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
             }
+            
+            NSLayoutConstraint *centerY = [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:view.superview attribute:NSLayoutAttributeCenterY multiplier:1 constant:0];
+            [con addObject:centerY];
             
             [view.superview addConstraints:con];
         }
@@ -389,12 +391,15 @@ UITableViewDataSource, UITextFieldDelegate>
                     NSMutableArray *con = [[NSMutableArray alloc] init];
                     
                     NSArray *visuals = @[@"H:[view(43)]-0-|",
-                                         @"V:|-0-[view]-0-|"];
+                                         @"V:[view(43)]"];
                     
                     
                     for (NSString *visual in visuals) {
                         [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
                     }
+                    
+                    NSLayoutConstraint *centerY = [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:view.superview attribute:NSLayoutAttributeCenterY multiplier:1 constant:0];
+                    [con addObject:centerY];
                     
                     [view.superview addConstraints:con];
                 }
