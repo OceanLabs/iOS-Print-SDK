@@ -537,7 +537,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="9bm-Iv-FDI">
+                            <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="9bm-Iv-FDI">
                                 <rect key="frame" x="1" y="20" width="599" height="580"/>
                             </imageView>
                             <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="white" translatesAutoresizingMaskIntoConstraints="NO" id="vlb-0j-ww9">
@@ -546,17 +546,35 @@
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="MuP-1U-Qqd" userLabel="Photo">
                                 <rect key="frame" x="0.0" y="20" width="600" height="580"/>
                             </imageView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="page-shadow-right" translatesAutoresizingMaskIntoConstraints="NO" id="mzK-jn-yTP">
+                                <rect key="frame" x="1" y="20" width="199" height="580"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="199" id="Pbx-ii-kdB"/>
+                                </constraints>
+                            </imageView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="page-shadow-left" translatesAutoresizingMaskIntoConstraints="NO" id="IFE-q9-rjQ">
+                                <rect key="frame" x="401" y="20" width="199" height="580"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="199" id="ZaZ-u7-289"/>
+                                </constraints>
+                            </imageView>
                         </subviews>
-                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="MuP-1U-Qqd" firstAttribute="top" secondItem="3pJ-t4-8d2" secondAttribute="bottom" id="6rU-Tk-PxI"/>
                             <constraint firstAttribute="trailing" secondItem="9bm-Iv-FDI" secondAttribute="trailing" id="7GW-xD-ihN"/>
+                            <constraint firstItem="mzK-jn-yTP" firstAttribute="leading" secondItem="tgc-Pj-vj3" secondAttribute="leading" constant="1" id="9YQ-1g-s3b"/>
                             <constraint firstItem="wDa-Oe-ITL" firstAttribute="top" secondItem="MuP-1U-Qqd" secondAttribute="bottom" id="EBv-QC-bWX"/>
                             <constraint firstItem="vlb-0j-ww9" firstAttribute="centerY" secondItem="MuP-1U-Qqd" secondAttribute="centerY" id="Iil-Bu-kg5"/>
+                            <constraint firstItem="wDa-Oe-ITL" firstAttribute="top" secondItem="mzK-jn-yTP" secondAttribute="bottom" id="PHn-l9-d0C"/>
+                            <constraint firstAttribute="trailing" secondItem="IFE-q9-rjQ" secondAttribute="trailing" id="SEZ-z8-Jko"/>
                             <constraint firstItem="vlb-0j-ww9" firstAttribute="centerX" secondItem="MuP-1U-Qqd" secondAttribute="centerX" id="T1f-CU-bFe"/>
                             <constraint firstItem="wDa-Oe-ITL" firstAttribute="top" secondItem="9bm-Iv-FDI" secondAttribute="bottom" id="UcH-kE-6cW"/>
                             <constraint firstItem="9bm-Iv-FDI" firstAttribute="top" secondItem="3pJ-t4-8d2" secondAttribute="bottom" id="XEE-Ua-2Mi"/>
                             <constraint firstAttribute="trailing" secondItem="MuP-1U-Qqd" secondAttribute="trailing" id="at6-xh-ShV"/>
+                            <constraint firstItem="IFE-q9-rjQ" firstAttribute="top" secondItem="3pJ-t4-8d2" secondAttribute="bottom" id="et6-2g-Vur"/>
+                            <constraint firstItem="wDa-Oe-ITL" firstAttribute="top" secondItem="IFE-q9-rjQ" secondAttribute="bottom" id="if5-uF-2kT"/>
+                            <constraint firstItem="mzK-jn-yTP" firstAttribute="top" secondItem="3pJ-t4-8d2" secondAttribute="bottom" id="mFQ-fO-ReA"/>
                             <constraint firstItem="MuP-1U-Qqd" firstAttribute="leading" secondItem="tgc-Pj-vj3" secondAttribute="leading" id="veM-Nr-bXW"/>
                             <constraint firstItem="9bm-Iv-FDI" firstAttribute="leading" secondItem="tgc-Pj-vj3" secondAttribute="leading" constant="1" id="z4C-V2-eyZ"/>
                         </constraints>
@@ -564,6 +582,8 @@
                     <connections>
                         <outlet property="imageView" destination="MuP-1U-Qqd" id="Cte-uc-Ytc"/>
                         <outlet property="pageBackground" destination="9bm-Iv-FDI" id="pT5-Vu-joD"/>
+                        <outlet property="pageShadowLeft" destination="IFE-q9-rjQ" id="tcZ-GP-iQY"/>
+                        <outlet property="pageShadowRight" destination="mzK-jn-yTP" id="NXT-rj-GQg"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="j3a-cE-iKY" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1958,6 +1978,8 @@
         <image name="import_facebook" width="26" height="22"/>
         <image name="import_gallery" width="26" height="22"/>
         <image name="import_instagram" width="26" height="22"/>
+        <image name="page-shadow-left" width="99" height="389"/>
+        <image name="page-shadow-right" width="99" height="389"/>
         <image name="photo_frame_1" width="316" height="224"/>
         <image name="poster_shadow" width="295" height="414"/>
     </resources>
