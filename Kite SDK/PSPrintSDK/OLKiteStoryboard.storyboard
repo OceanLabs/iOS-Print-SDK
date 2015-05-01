@@ -547,7 +547,7 @@
                                 <rect key="frame" x="0.0" y="20" width="600" height="580"/>
                             </imageView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="page-shadow-right" translatesAutoresizingMaskIntoConstraints="NO" id="mzK-jn-yTP">
-                                <rect key="frame" x="1" y="20" width="199" height="580"/>
+                                <rect key="frame" x="0.0" y="20" width="199" height="580"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="199" id="Pbx-ii-kdB"/>
                                 </constraints>
@@ -563,7 +563,7 @@
                         <constraints>
                             <constraint firstItem="MuP-1U-Qqd" firstAttribute="top" secondItem="3pJ-t4-8d2" secondAttribute="bottom" id="6rU-Tk-PxI"/>
                             <constraint firstAttribute="trailing" secondItem="9bm-Iv-FDI" secondAttribute="trailing" id="7GW-xD-ihN"/>
-                            <constraint firstItem="mzK-jn-yTP" firstAttribute="leading" secondItem="tgc-Pj-vj3" secondAttribute="leading" constant="1" id="9YQ-1g-s3b"/>
+                            <constraint firstItem="mzK-jn-yTP" firstAttribute="leading" secondItem="tgc-Pj-vj3" secondAttribute="leading" id="9YQ-1g-s3b"/>
                             <constraint firstItem="wDa-Oe-ITL" firstAttribute="top" secondItem="MuP-1U-Qqd" secondAttribute="bottom" id="EBv-QC-bWX"/>
                             <constraint firstItem="vlb-0j-ww9" firstAttribute="centerY" secondItem="MuP-1U-Qqd" secondAttribute="centerY" id="Iil-Bu-kg5"/>
                             <constraint firstItem="wDa-Oe-ITL" firstAttribute="top" secondItem="mzK-jn-yTP" secondAttribute="bottom" id="PHn-l9-d0C"/>
@@ -1757,9 +1757,9 @@
                             <constraint firstAttribute="centerX" secondItem="P6D-Eb-oaD" secondAttribute="centerX" constant="7" id="Kix-gc-0g0"/>
                             <constraint firstItem="rlk-bS-4UT" firstAttribute="bottom" secondItem="HqC-Iz-l8f" secondAttribute="bottom" id="N2P-GG-dH8"/>
                             <constraint firstItem="rlk-bS-4UT" firstAttribute="trailing" secondItem="HqC-Iz-l8f" secondAttribute="trailing" id="NCf-Ko-Aek"/>
-                            <constraint firstItem="rlk-bS-4UT" firstAttribute="top" relation="greaterThanOrEqual" secondItem="LtF-ql-Rxv" secondAttribute="bottom" constant="10" id="St7-0b-fIl"/>
+                            <constraint firstItem="rlk-bS-4UT" firstAttribute="top" relation="greaterThanOrEqual" secondItem="LtF-ql-Rxv" secondAttribute="bottom" constant="20" id="St7-0b-fIl"/>
                             <constraint firstItem="eAv-QL-iu7" firstAttribute="top" relation="greaterThanOrEqual" secondItem="8NO-a3-rcI" secondAttribute="bottom" constant="8" id="aIn-cE-tWI"/>
-                            <constraint firstItem="eAv-QL-iu7" firstAttribute="top" relation="greaterThanOrEqual" secondItem="rlk-bS-4UT" secondAttribute="bottom" constant="10" id="cCM-bg-A0t"/>
+                            <constraint firstItem="eAv-QL-iu7" firstAttribute="top" relation="greaterThanOrEqual" secondItem="rlk-bS-4UT" secondAttribute="bottom" constant="20" id="cCM-bg-A0t"/>
                             <constraint firstItem="8NO-a3-rcI" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="xrD-7k-Kti" secondAttribute="leading" constant="8" id="egw-MI-AGq"/>
                             <constraint firstItem="eAv-QL-iu7" firstAttribute="top" relation="greaterThanOrEqual" secondItem="Tdl-Mn-UXO" secondAttribute="bottom" constant="8" id="fwq-Uh-9W1"/>
                             <constraint firstItem="8NO-a3-rcI" firstAttribute="top" secondItem="rlk-bS-4UT" secondAttribute="bottom" priority="250" constant="8" id="mi4-le-lKi"/>
