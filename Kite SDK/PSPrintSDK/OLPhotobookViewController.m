@@ -36,6 +36,7 @@ static const NSUInteger kTagRight = 20;
 @property (assign, nonatomic) NSInteger editingPageIndex;
 @property (strong, nonatomic) NSLayoutConstraint *centerXCon;
 @property (strong, nonatomic) NSLayoutConstraint *widthCon;
+@property (strong, nonatomic) NSLayoutConstraint *widthCon2;
 
 @property (strong, nonatomic) UIDynamicAnimator* dynamicAnimator;
 @property (strong, nonatomic) UIDynamicItemBehavior* inertiaBehavior;
@@ -96,7 +97,7 @@ static const NSUInteger kTagRight = 20;
     
     [view.superview addConstraints:con];
     
-    CGFloat bookAspectRatio = 8.0/4.0;
+    CGFloat bookAspectRatio = 1.469543147;
     
     NSLayoutConstraint *bookAspectRatioCon = [NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:self.containerView attribute:NSLayoutAttributeHeight multiplier:bookAspectRatio constant:0];
     [self.containerView addConstraint:bookAspectRatioCon];
@@ -117,7 +118,9 @@ static const NSUInteger kTagRight = 20;
         [self.view addConstraint:self.widthCon];
     }
     
-    
+    self.widthCon2 = [NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:self.view.frame.size.width * 1.9];
+    self.widthCon2.priority = UILayoutPriorityDefaultHigh;
+    [self.view addConstraint:self.widthCon2];
     
     UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTapGestureRecognized:)];
     tapGesture.delegate = self;

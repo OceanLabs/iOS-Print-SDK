@@ -1748,7 +1748,7 @@
                                 </constraints>
                             </view>
                         </subviews>
-                        <color key="backgroundColor" red="0.74509803921568629" green="0.80000000000000004" blue="0.81568627450980391" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="backgroundColor" red="0.74509803921568629" green="0.80392156862745101" blue="0.81960784313725488" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <gestureRecognizers/>
                         <constraints>
                             <constraint firstItem="Tdl-Mn-UXO" firstAttribute="top" secondItem="UgD-45-FUC" secondAttribute="bottom" priority="250" constant="8" id="3eC-Qu-GBr"/>
