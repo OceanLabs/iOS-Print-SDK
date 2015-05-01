@@ -136,7 +136,17 @@ static const NSUInteger kInputFieldTag = 99;
     tgr.cancelsTouchesInView = NO; // allow table cell selection to happen as normal
     [self.tableView addGestureRecognizer:tgr];
     
-    self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 10, 20)];
+    self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 10, 0)];
+    
+    self.kiteLabel = [[UILabel alloc] init];
+    self.kiteLabel.text = NSLocalizedString(@"Powered by Kite.ly", @"");
+    self.kiteLabel.font = [UIFont systemFontOfSize:13];
+    self.kiteLabel.textColor = [UIColor lightGrayColor];
+    self.kiteLabel.textAlignment = NSTextAlignmentCenter;
+    [self.tableView.tableFooterView addSubview:self.kiteLabel];
+    self.kiteLabel.translatesAutoresizingMaskIntoConstraints = NO;
+    
+    [self.tableView.tableFooterView addConstraint:[NSLayoutConstraint constraintWithItem:self.kiteLabel attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.tableView.tableFooterView attribute:NSLayoutAttributeCenterX multiplier:1 constant:0]];
 }
 
 - (void)positionKiteLabel {
@@ -144,7 +154,7 @@ static const NSUInteger kInputFieldTag = 99;
     
     CGSize size = self.view.frame.size;
     CGFloat navBarHeight = [[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height;
-    CGFloat blankSpace = MAX(size.height - self.tableView.contentSize.height - navBarHeight + 40, 30);
+    CGFloat blankSpace = MAX(size.height - self.tableView.contentSize.height - navBarHeight - 5, 30);
     
     self.kiteLabelYCon = [NSLayoutConstraint constraintWithItem:self.kiteLabel attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.kiteLabel.superview attribute:NSLayoutAttributeBottom multiplier:1 constant:blankSpace];
     [self.kiteLabel.superview addConstraint:self.kiteLabelYCon];
@@ -348,18 +358,6 @@ static const NSUInteger kInputFieldTag = 99;
             cell = [self createTextFieldCellWithReuseIdentifier:TextFieldCell title:NSLocalizedStringFromTableInBundle(@"Phone", @"KitePrintSDK", [OLConstants bundle], @"") keyboardType:UIKeyboardTypePhonePad];
             self.textFieldPhone = (UITextField *) [cell viewWithTag:kInputFieldTag];
             [self populateDefaultEmailAndPhone];
-            
-            self.kiteLabel = [[UILabel alloc] init];
-            self.kiteLabel.text = NSLocalizedString(@"Powered by Kite.ly", @"");
-            self.kiteLabel.font = [UIFont systemFontOfSize:13];
-            self.kiteLabel.textColor = [UIColor lightGrayColor];
-            self.kiteLabel.textAlignment = NSTextAlignmentCenter;
-            [cell.contentView addSubview:self.kiteLabel];
-            self.kiteLabel.translatesAutoresizingMaskIntoConstraints = NO;
-            
-            [cell.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.kiteLabel attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:cell.contentView attribute:NSLayoutAttributeCenterX multiplier:1 constant:0]];
-            
-            [self positionKiteLabel];
         }
     }
 

@@ -196,9 +196,6 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     self.kiteLabel.text = NSLocalizedString(@"Powered by Kite.ly", @"");
     self.kiteLabel.font = [UIFont systemFontOfSize:13];
     self.kiteLabel.textColor = [UIColor lightGrayColor];
-    [self.kiteLabel sizeToFit];
-//    self.poweredByKiteLabel.frame = CGRectMake((self.view.frame.size.width - self.poweredByKiteLabel.frame.size.width) / 2, 168 - heightDiff, self.poweredByKiteLabel.frame.size.width, self.poweredByKiteLabel.frame.size.height);
-//    maxY = CGRectGetMaxY(self.poweredByKiteLabel.frame);
     
     maxY += 30;
     UIView *footer = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, maxY)];
