@@ -62,6 +62,10 @@
 #endif
 
     self.title = NSLocalizedString(@"Print Shop", @"");
+    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Back", @"")
+                                                                             style:UIBarButtonItemStyleBordered
+                                                                            target:nil
+                                                                            action:nil];
 }
 
 
