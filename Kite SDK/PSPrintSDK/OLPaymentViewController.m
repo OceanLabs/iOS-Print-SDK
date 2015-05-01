@@ -59,7 +59,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 @property (strong, nonatomic) UITextField *promoTextField;
 @property (strong, nonatomic) UIButton *promoApplyButton;
 @property (strong, nonatomic) UIButton *payWithCreditCardButton;
-@property (strong, nonatomic) UILabel *poweredByKiteLabel;
+@property (strong, nonatomic) UILabel *kiteLabel;
 
 #ifdef OL_KITE_OFFER_APPLE_PAY
 @property (strong, nonatomic) UIButton *payWithApplePayButton;
@@ -71,6 +71,9 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 @property (assign, nonatomic) BOOL completedTemplateSyncSuccessfully;
 @property (strong, nonatomic) NSString *paymentCurrencyCode;
 @property (strong, nonatomic) NSMutableArray* sections;
+
+@property (strong, nonatomic) NSLayoutConstraint *kiteLabelYCon;
+@property (strong, nonatomic) UIView *lowestView;
 
 #ifdef OL_KITE_OFFER_PAYPAL
 @property (strong, nonatomic) UIButton *payWithPayPalButton;
@@ -169,6 +172,8 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     [self.payWithCreditCardButton setTitle:NSLocalizedStringFromTableInBundle(@"Pay with Card", @"KitePrintSDK", [OLConstants bundle], @"") forState:UIControlStateNormal];
     [self.payWithCreditCardButton makeRoundRect];
     CGFloat maxY = CGRectGetMaxY(self.payWithCreditCardButton.frame);
+    
+    self.lowestView = self.payWithCreditCardButton;
 
     
 #ifdef OL_KITE_OFFER_PAYPAL
@@ -177,6 +182,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     [self.payWithPayPalButton addTarget:self action:@selector(onButtonPayWithPayPalClicked) forControlEvents:UIControlEventTouchUpInside];
     self.payWithPayPalButton.backgroundColor = [UIColor colorWithRed:74 / 255.0f green:137 / 255.0f blue:220 / 255.0f alpha:1.0];
     [self.payWithPayPalButton makeRoundRect];
+    maxY = CGRectGetMaxY(self.payWithPayPalButton.frame);
 #endif
     
 #ifdef OL_KITE_OFFER_APPLE_PAY
@@ -186,20 +192,26 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     [self.payWithApplePayButton setTitle:NSLocalizedStringFromTableInBundle(@"Pay with Pay", @"KitePrintSDK", [OLConstants bundle], @"") forState:UIControlStateNormal];
 #endif
     
-    self.poweredByKiteLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 100, 40, 40)];
-    self.poweredByKiteLabel.text = NSLocalizedString(@"Powered by Kite.ly", @"");
-    self.poweredByKiteLabel.font = [UIFont systemFontOfSize:13];
-    self.poweredByKiteLabel.textColor = [UIColor lightGrayColor];
-    [self.poweredByKiteLabel sizeToFit];
-    self.poweredByKiteLabel.frame = CGRectMake((self.view.frame.size.width - self.poweredByKiteLabel.frame.size.width) / 2, 168 - heightDiff, self.poweredByKiteLabel.frame.size.width, self.poweredByKiteLabel.frame.size.height);
-    maxY = CGRectGetMaxY(self.poweredByKiteLabel.frame);
+    self.kiteLabel = [[UILabel alloc] init];
+    self.kiteLabel.text = NSLocalizedString(@"Powered by Kite.ly", @"");
+    self.kiteLabel.font = [UIFont systemFontOfSize:13];
+    self.kiteLabel.textColor = [UIColor lightGrayColor];
+    [self.kiteLabel sizeToFit];
+//    self.poweredByKiteLabel.frame = CGRectMake((self.view.frame.size.width - self.poweredByKiteLabel.frame.size.width) / 2, 168 - heightDiff, self.poweredByKiteLabel.frame.size.width, self.poweredByKiteLabel.frame.size.height);
+//    maxY = CGRectGetMaxY(self.poweredByKiteLabel.frame);
     
+    maxY += 30;
     UIView *footer = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, maxY)];
     [footer addSubview:self.payWithCreditCardButton];
-    [footer addSubview:self.poweredByKiteLabel];
+    [footer addSubview:self.kiteLabel];
+    
+    self.kiteLabel.translatesAutoresizingMaskIntoConstraints = NO;
+    
+    [footer addConstraint:[NSLayoutConstraint constraintWithItem:self.kiteLabel attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:footer attribute:NSLayoutAttributeCenterX multiplier:1 constant:0]];
 
 #ifdef OL_KITE_OFFER_PAYPAL
     [footer addSubview:self.payWithPayPalButton];
+    self.lowestView = self.payWithPayPalButton;
 #endif
     
 #ifdef OL_KITE_OFFER_APPLE_PAY
@@ -307,7 +319,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
     [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinator> context){
-        [self positionPoweredByKiteLabel];
+        [self positionKiteLabel];
     } completion:NULL];
 }
 
@@ -373,29 +385,22 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         self.completedTemplateSyncSuccessfully = YES;
         self.loadingTemplatesView.hidden = YES;
         [self.tableView reloadData];
-        [self positionPoweredByKiteLabel];
     } else {
-        [self positionPoweredByKiteLabel];
         self.loadingTemplatesView.hidden = NO;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onTemplateSyncCompleted:) name:kNotificationTemplateSyncComplete object:nil];
     }
+    [self positionKiteLabel];
 }
 
-- (void)positionPoweredByKiteLabel {
-    // position Powered by Kite label dynamically based on content size
-    CGRect tvFrame = self.tableView.frame;
-    CGFloat extraHeight = MAX(self.tableView.contentInset.top, self.view.frame.origin.y);
-    if ([self.delegate respondsToSelector:@selector(shouldShowContinueShoppingButton)] && [self.delegate shouldShowContinueShoppingButton]){
-        extraHeight = 64;
-    }
-    CGFloat height = tvFrame.size.height - (self.tableView.contentSize.height - self.tableView.tableHeaderView.frame.size.height - extraHeight);
+- (void)positionKiteLabel {
+    [self.kiteLabel.superview removeConstraint:self.kiteLabelYCon];
     
-    if (height > self.tableView.tableFooterView.frame.size.height) {
-        CGRect frame = self.tableView.tableFooterView.frame;
-        self.tableView.tableFooterView.frame = CGRectMake(frame.origin.x, frame.origin.y, frame.size.width, height);
-        frame = self.poweredByKiteLabel.frame;
-        self.poweredByKiteLabel.frame = CGRectMake(frame.origin.x, height - frame.size.height, frame.size.width, frame.size.height);
-    }
+    CGSize size = self.view.frame.size;
+    CGFloat navBarHeight = [[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height;
+    CGFloat blankSpace = MAX(size.height - self.tableView.contentSize.height - navBarHeight + 5, 10);
+    
+    self.kiteLabelYCon = [NSLayoutConstraint constraintWithItem:self.kiteLabel attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.lowestView attribute:NSLayoutAttributeBottom multiplier:1 constant:blankSpace];
+    [self.kiteLabel.superview addConstraint:self.kiteLabelYCon];
 }
 
 - (void)dealloc {
@@ -412,7 +417,6 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     if (!syncCompletionError) {
         self.completedTemplateSyncSuccessfully = YES;
         [self.tableView reloadData];
-        [self positionPoweredByKiteLabel];
         [UIView animateWithDuration:0.3 animations:^{
             self.loadingTemplatesView.alpha = 0;
         } completion:^(BOOL finished) {

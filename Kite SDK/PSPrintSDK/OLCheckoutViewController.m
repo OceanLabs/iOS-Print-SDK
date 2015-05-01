@@ -139,14 +139,14 @@ static const NSUInteger kInputFieldTag = 99;
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 10, 20)];
 }
 
-- (void)positionKiteLabel{
+- (void)positionKiteLabel {
     [self.kiteLabel.superview removeConstraint:self.kiteLabelYCon];
     
-    CGRect rectOfCellInTableView = [self.tableView rectForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:kSectionPhoneNumber]];
     CGSize size = self.view.frame.size;
-    CGFloat blankSpace = MAX(size.height - rectOfCellInTableView.origin.y - 64 - self.kiteLabel.frame.size.height - 10, 83);
+    CGFloat navBarHeight = [[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height;
+    CGFloat blankSpace = MAX(size.height - self.tableView.contentSize.height - navBarHeight + 40, 30);
     
-    self.kiteLabelYCon = [NSLayoutConstraint constraintWithItem:self.kiteLabel attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.kiteLabel.superview attribute:NSLayoutAttributeTop multiplier:1 constant:blankSpace];
+    self.kiteLabelYCon = [NSLayoutConstraint constraintWithItem:self.kiteLabel attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.kiteLabel.superview attribute:NSLayoutAttributeBottom multiplier:1 constant:blankSpace];
     [self.kiteLabel.superview addConstraint:self.kiteLabelYCon];
 }
 
@@ -216,6 +216,12 @@ static const NSUInteger kInputFieldTag = 99;
     
     [[NSNotificationCenter defaultCenter] postNotificationName:kOLNotificationUserSuppliedShippingDetails object:self userInfo:@{kOLKeyUserInfoPrintOrder: self.printOrder}];
     [self.navigationController pushViewController:vc animated:YES];
+}
+
+- (void) viewWillAppear:(BOOL)animated{
+    if (self.kiteLabel){
+        [self positionKiteLabel];
+    }
 }
 
 - (void) viewWillDisappear:(BOOL)animated {
