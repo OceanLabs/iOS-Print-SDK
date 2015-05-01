@@ -35,6 +35,7 @@ static const NSUInteger kTagRight = 20;
 @property (strong, nonatomic) OLPrintPhoto *editingPrintPhoto;
 @property (assign, nonatomic) NSInteger editingPageIndex;
 @property (strong, nonatomic) NSLayoutConstraint *centerXCon;
+@property (strong, nonatomic) NSLayoutConstraint *widthCon;
 
 @property (strong, nonatomic) UIDynamicAnimator* dynamicAnimator;
 @property (strong, nonatomic) UIDynamicItemBehavior* inertiaBehavior;
@@ -95,9 +96,22 @@ static const NSUInteger kTagRight = 20;
     
     [view.superview addConstraints:con];
     
-    CGFloat maximumDimension = MAX(self.view.frame.size.width, self.view.frame.size.height);
+    CGFloat bookAspectRatio = 8.0/4.0;
     
-    NSLayoutConstraint *heightCon = [NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:maximumDimension];
+    NSLayoutConstraint *bookAspectRatioCon = [NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:self.containerView attribute:NSLayoutAttributeHeight multiplier:bookAspectRatio constant:0];
+    [self.containerView addConstraint:bookAspectRatioCon];
+    
+    CGFloat navBarHeight = [[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height;
+    
+    CGFloat height;
+    if (self.view.frame.size.height > self.view.frame.size.width){
+        height = (self.view.frame.size.width * 2) / bookAspectRatio;
+    }
+    else{
+        height = self.view.frame.size.height - navBarHeight - 20;
+    }
+    
+    NSLayoutConstraint *heightCon = [NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:height];
     heightCon.priority = UILayoutPriorityDefaultHigh;
     [self.containerView addConstraint:heightCon];
     
@@ -105,6 +119,9 @@ static const NSUInteger kTagRight = 20;
     if (self.view.frame.size.width > self.view.frame.size.height){
         [self.containerView.superview addConstraint:self.centerXCon];
     }
+    
+    self.widthCon = [NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeWidth multiplier:1.9 constant:0];
+    [self.view addConstraint:self.widthCon];
     
     UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTapGestureRecognized:)];
     tapGesture.delegate = self;
@@ -171,9 +188,13 @@ static const NSUInteger kTagRight = 20;
     self.containerView.transform = CGAffineTransformIdentity;
     if (size.width > size.height){
         [self.view addConstraint:self.centerXCon];
+        [self.view removeConstraint:self.widthCon];
     }
     else{
         [self.view removeConstraint:self.centerXCon];
+        
+        self.widthCon = [NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeWidth multiplier:1.9 constant:0];
+        [self.view addConstraint:self.widthCon];
     }
     
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinator> context){
