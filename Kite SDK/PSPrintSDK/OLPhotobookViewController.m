@@ -93,7 +93,7 @@ static const NSUInteger kTagRight = 20;
     [self.containerView addConstraint:[NSLayoutConstraint constraintWithItem:self.pageController.view attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:self.containerView attribute:NSLayoutAttributeWidth multiplier:1 - (2 * .031951641) constant:0]];
     [self.containerView addConstraint:[NSLayoutConstraint constraintWithItem:self.pageController.view attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.containerView attribute:NSLayoutAttributeCenterX multiplier:1 constant:0]];
     
-    CGFloat bookAspectRatio = 1.469543147; //TODO: Make this part of the product
+    CGFloat bookAspectRatio = [self productAspectRatio];
     
     NSLayoutConstraint *bookAspectRatioCon = [NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:self.containerView attribute:NSLayoutAttributeHeight multiplier:bookAspectRatio constant:0];
     [self.containerView addConstraint:bookAspectRatioCon];
@@ -101,12 +101,13 @@ static const NSUInteger kTagRight = 20;
     self.centerXCon = [NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.containerView.superview attribute:NSLayoutAttributeCenterX multiplier:1 constant:0];
     if (self.view.frame.size.width > self.view.frame.size.height){
         [self.containerView.superview addConstraint:self.centerXCon];
+        self.widthCon = [NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationLessThanOrEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:self.view.frame.size.width - 20];
     }
     else{
         self.widthCon = [NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationLessThanOrEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:self.view.frame.size.width * 1.9];
-        [self.view addConstraint:self.widthCon];
     }
     
+    [self.view addConstraint:self.widthCon];
     self.widthCon2 = [NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:self.view.frame.size.width * 1.9];
     self.widthCon2.priority = UILayoutPriorityDefaultHigh;
     [self.view addConstraint:self.widthCon2];
@@ -178,16 +179,16 @@ static const NSUInteger kTagRight = 20;
     [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
     self.containerView.transform = CGAffineTransformIdentity;
     [self.containerView.superview removeConstraint:self.centerYCon];
+    [self.view removeConstraint:self.widthCon];
     if (size.width > size.height){
         [self.view addConstraint:self.centerXCon];
-        [self.view removeConstraint:self.widthCon];
+        self.widthCon = [NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationLessThanOrEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:size.width - 20];
     }
     else{
         [self.view removeConstraint:self.centerXCon];
-        
         self.widthCon = [NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationLessThanOrEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:size.width * 1.9];
-        [self.view addConstraint:self.widthCon];
     }
+    [self.view addConstraint:self.widthCon];
     
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinator> context){
         [self setUpBookCoverView];
@@ -208,7 +209,7 @@ static const NSUInteger kTagRight = 20;
 }
 
 - (CGFloat) productAspectRatio{
-    return 1;//self.product.productTemplate.sizePx.height / self.product.productTemplate.sizePx.width;
+    return self.product.productTemplate.sizeCm.width*2 / self.product.productTemplate.sizeCm.height;
 }
 
 - (UIViewController *)viewControllerAtIndex:(NSUInteger)index {
@@ -460,8 +461,8 @@ static const NSUInteger kTagRight = 20;
         OLPhotobookPageContentViewController *vc1 = [pageViewController.viewControllers firstObject];
         OLPhotobookPageContentViewController *vc2 = [pageViewController.viewControllers lastObject];
         self.pagesLabel.text = [NSString stringWithFormat:@"Pages %ld-%ld of %ld", (long)vc1.pageIndex+1, (long)vc2.pageIndex+1, (long)self.product.quantityToFulfillOrder];
-//        self.leftPageLabel.text = [NSString stringWithFormat:@"%ld", (long)vc1.pageIndex+1];
-//        self.rightPageLabel.text = [NSString stringWithFormat:@"%ld", (long)vc2.pageIndex+1];
+        //        self.leftPageLabel.text = [NSString stringWithFormat:@"%ld", (long)vc1.pageIndex+1];
+        //        self.rightPageLabel.text = [NSString stringWithFormat:@"%ld", (long)vc2.pageIndex+1];
         
         [UIView animateWithDuration:0.2 animations:^{
             if ([(OLPhotobookPageContentViewController *)[previousViewControllers firstObject] pageIndex] < vc1.pageIndex){
@@ -476,7 +477,7 @@ static const NSUInteger kTagRight = 20;
 
 -(void) setUpBookCoverView{
     self.bookCover.hidden = NO;
-
+    
     UISwipeGestureRecognizer *swipe = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(openBook:)];
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(openBook:)];
     
@@ -560,14 +561,14 @@ static const NSUInteger kTagRight = 20;
                           delay:0
                         options:UIViewAnimationOptionBeginFromCurrentState
                      animations:^{
-        self.containerView.transform = CGAffineTransformIdentity;
-        self.bookCover.transform = CGAffineTransformIdentity;
-    } completion:^(BOOL finished){
-        [MPFlipTransition transitionFromView:self.containerView toView:self.bookCover duration:0.4 style:MPFlipStyleDefault transitionAction:MPTransitionActionShowHide completion:^(BOOL finished){
-        }];
-        self.bookClosed = YES;
-        self.pagesLabelContainer.hidden = YES;
-    }];
+                         self.containerView.transform = CGAffineTransformIdentity;
+                         self.bookCover.transform = CGAffineTransformIdentity;
+                     } completion:^(BOOL finished){
+                         [MPFlipTransition transitionFromView:self.containerView toView:self.bookCover duration:0.4 style:MPFlipStyleDefault transitionAction:MPTransitionActionShowHide completion:^(BOOL finished){
+                         }];
+                         self.bookClosed = YES;
+                         self.pagesLabelContainer.hidden = YES;
+                     }];
 }
 
 - (CGFloat)xTrasformForBookAtRightEdge{
