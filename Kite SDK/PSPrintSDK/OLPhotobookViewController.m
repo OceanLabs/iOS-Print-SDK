@@ -365,7 +365,8 @@ static const NSUInteger kTagRight = 20;
     UINavigationController *nav = [self.storyboard instantiateViewControllerWithIdentifier:@"CropViewNavigationController"];
     OLScrollCropViewController *cropVc = (id)nav.topViewController;
     cropVc.delegate = self;
-    cropVc.aspectRatio = [self productAspectRatio];
+    UIImageView *imageView = [(OLPhotobookPageContentViewController *)[[self.pageController viewControllers] firstObject] imageView];
+    cropVc.aspectRatio = imageView.frame.size.height / imageView.frame.size.width;
     [tempPrintPhoto getImageWithProgress:NULL completion:^(UIImage *image){
         [cropVc setFullImage:image];
         [self presentViewController:nav animated:YES completion:NULL];
@@ -590,6 +591,27 @@ static const NSUInteger kTagRight = 20;
     }
     else{
         return self.containerView.center.x - self.containerView.frame.size.width / 2 >= 0;
+    }
+}
+
+#pragma mark - Autorotate and Orientation Methods
+// Currently here to disable landscape orientations and rotation on iOS 7. When support is dropped, these can be deleted.
+
+- (BOOL)shouldAutorotate {
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
+        return YES;
+    }
+    else{
+        return NO;
+    }
+}
+
+- (NSUInteger)supportedInterfaceOrientations {
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
+        return UIInterfaceOrientationMaskAll;
+    }
+    else{
+        return UIInterfaceOrientationMaskLandscape;
     }
 }
 
