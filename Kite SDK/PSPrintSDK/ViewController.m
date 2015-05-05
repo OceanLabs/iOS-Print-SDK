@@ -38,55 +38,6 @@ static NSString *const kApplePayMerchantIDKey = @"merchant.co.oceanlabs.kite.ly"
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-#ifndef DEBUG
-    self.navigationController.navigationBar.hidden = YES;
-    self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
-    [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationNone];
-    UIImageView *view = [[UIImageView alloc] init];
-    view.image = [UIImage imageNamed:@"homepage"];
-    view.contentMode = UIViewContentModeScaleAspectFill;
-    view.userInteractionEnabled = YES;
-    [view addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onButtonPrintLocalPhotos:)]];
-    
-    [self.view addSubview:view];
-    
-    view.translatesAutoresizingMaskIntoConstraints = NO;
-    NSDictionary *views = NSDictionaryOfVariableBindings(view);
-    NSMutableArray *con = [[NSMutableArray alloc] init];
-    
-    NSArray *visuals = @[@"H:|-0-[view]-0-|",
-                         @"V:|-0-[view]-0-|"];
-    
-    
-    for (NSString *visual in visuals) {
-        [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
-    }
-    
-    [view.superview addConstraints:con];
-    
-    UIImageView *kiteLogo = [[UIImageView alloc] init];
-    [self.view addSubview:kiteLogo];
-    kiteLogo.image = [UIImage imageNamed:@"kite-logo"];
-    view = kiteLogo;
-    
-    view.translatesAutoresizingMaskIntoConstraints = NO;
-    views = NSDictionaryOfVariableBindings(view);
-    con = [[NSMutableArray alloc] init];
-    
-    visuals = @[@"H:[view(89)]",
-                         @"V:[view(83)]-0-|"];
-    
-    
-    for (NSString *visual in visuals) {
-        [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
-    }
-    
-    [view.superview addConstraints:con];
-    
-    [view.superview addConstraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:view.superview attribute:NSLayoutAttributeCenterX multiplier:1 constant:0]];
-    
-#endif
-    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onUserSuppliedShippingDetails:) name:kOLNotificationUserSuppliedShippingDetails object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onUserCompletedPayment:) name:kOLNotificationUserCompletedPayment object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onPrintOrderSubmission:) name:kOLNotificationPrintOrderSubmission object:nil];
@@ -139,9 +90,6 @@ static NSString *const kApplePayMerchantIDKey = @"merchant.co.oceanlabs.kite.ly"
 }
 
 - (OLKitePrintSDKEnvironment)environment {
-#ifndef DEBUG
-    return kOLKitePrintSDKEnvironmentLive;
-#endif
     if (self.environmentPicker.selectedSegmentIndex == 0) {
         return kOLKitePrintSDKEnvironmentSandbox;
     } else {
