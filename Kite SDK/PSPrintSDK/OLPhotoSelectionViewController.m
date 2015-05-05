@@ -498,6 +498,9 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 #endif
 
 - (NSInteger) findFactorOf:(NSInteger)qty maximum:(NSInteger)max minimum:(NSInteger)min{
+    if (qty == 1){
+        return 3;
+    }
     min = MAX(1, min);
     max = MAX(1, max);
     NSInteger factor = max;
