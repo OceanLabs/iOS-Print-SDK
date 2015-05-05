@@ -1695,11 +1695,11 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HqC-Iz-l8f" userLabel="bookCover">
-                                <rect key="frame" x="0.0" y="157" width="660" height="330"/>
+                                <rect key="frame" x="0.0" y="151" width="660" height="330"/>
                                 <color key="backgroundColor" red="0.74509803919999995" green="0.80000000000000004" blue="0.81568627449999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rlk-bS-4UT" userLabel="Container View">
-                                <rect key="frame" x="0.0" y="157" width="660" height="330"/>
+                                <rect key="frame" x="0.0" y="151" width="660" height="330"/>
                                 <subviews>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="book" translatesAutoresizingMaskIntoConstraints="NO" id="UgD-45-FUC">
                                         <rect key="frame" x="0.0" y="0.0" width="660" height="330"/>
@@ -1716,13 +1716,13 @@
                                 </constraints>
                             </view>
                             <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8NO-a3-rcI">
-                                <rect key="frame" x="8" y="495" width="10" height="21"/>
+                                <rect key="frame" x="8" y="489" width="10" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="2" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Tdl-Mn-UXO">
-                                <rect key="frame" x="582" y="495" width="10" height="21"/>
+                                <rect key="frame" x="582" y="489" width="10" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
@@ -1768,7 +1768,7 @@
                             <constraint firstItem="rlk-bS-4UT" firstAttribute="leading" secondItem="HqC-Iz-l8f" secondAttribute="leading" id="tmB-a5-HON"/>
                             <constraint firstItem="rlk-bS-4UT" firstAttribute="leading" secondItem="xrD-7k-Kti" secondAttribute="leading" priority="750" id="u6Z-cg-ERF"/>
                             <constraint firstItem="rlk-bS-4UT" firstAttribute="top" secondItem="HqC-Iz-l8f" secondAttribute="top" id="vq9-7i-r4T"/>
-                            <constraint firstAttribute="centerY" secondItem="rlk-bS-4UT" secondAttribute="centerY" constant="-22" id="xQu-oT-r6s"/>
+                            <constraint firstAttribute="centerY" secondItem="rlk-bS-4UT" secondAttribute="centerY" constant="-16" placeholder="YES" id="xQu-oT-r6s"/>
                         </constraints>
                     </view>
                     <extendedEdge key="edgesForExtendedLayout" top="YES"/>
@@ -1971,7 +1971,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="book" width="775" height="527"/>
+        <image name="book" width="579" height="394"/>
         <image name="button_arrow_down" width="45" height="45"/>
         <image name="button_arrow_up" width="45" height="45"/>
         <image name="frame_border" width="290" height="313"/>

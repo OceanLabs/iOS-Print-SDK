@@ -37,6 +37,7 @@ static const NSUInteger kTagRight = 20;
 @property (strong, nonatomic) NSLayoutConstraint *centerXCon;
 @property (strong, nonatomic) NSLayoutConstraint *widthCon;
 @property (strong, nonatomic) NSLayoutConstraint *widthCon2;
+@property (strong, nonatomic) NSLayoutConstraint *centerYCon;
 
 @property (strong, nonatomic) UIDynamicAnimator* dynamicAnimator;
 @property (strong, nonatomic) UIDynamicItemBehavior* inertiaBehavior;
@@ -160,6 +161,9 @@ static const NSUInteger kTagRight = 20;
     [self.pagesLabelContainer makeRoundRect];
     
     self.pagesLabel.text = [NSString stringWithFormat:@"Pages %d-%d of %ld", 1, 2, (long)self.product.quantityToFulfillOrder];
+    
+    self.centerYCon = [NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.containerView.superview attribute:NSLayoutAttributeCenterY multiplier:1 constant:([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height)/2.0];
+    [self.containerView.superview addConstraint:self.centerYCon];
 }
 
 - (void)viewDidAppear:(BOOL)animated{
@@ -173,6 +177,7 @@ static const NSUInteger kTagRight = 20;
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator{
     [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
     self.containerView.transform = CGAffineTransformIdentity;
+    [self.containerView.superview removeConstraint:self.centerYCon];
     if (size.width > size.height){
         [self.view addConstraint:self.centerXCon];
         [self.view removeConstraint:self.widthCon];
@@ -196,6 +201,9 @@ static const NSUInteger kTagRight = 20;
                 self.bookCover.transform = CGAffineTransformMakeTranslation([self xTrasformForBookAtRightEdge], 0);
             }
         }
+        
+        self.centerYCon = [NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.containerView.superview attribute:NSLayoutAttributeCenterY multiplier:1 constant:([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height)/2.0];
+        [self.containerView.superview addConstraint:self.centerYCon];
     }completion:NULL];
 }
 
