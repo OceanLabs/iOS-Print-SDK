@@ -122,6 +122,9 @@
     else if (self.product.productTemplate.templateUI == kOLTemplateUIPoster){
         vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLSingleImageProductReviewViewController"];
     }
+    else if (self.product.productTemplate.templateUI == kOLTemplateUIPhotobook){
+        vc = [self.storyboard instantiateViewControllerWithIdentifier:@"PhotobookViewController"];
+    }
     else{
         if (![self.delegate respondsToSelector:@selector(kiteControllerShouldAllowUserToAddMorePhotos:)] || [self.delegate kiteControllerShouldAllowUserToAddMorePhotos:[OLKitePrintSDK kiteViewControllerInNavStack:self.navigationController.viewControllers]]){
             vc = [self.storyboard instantiateViewControllerWithIdentifier:@"PhotoSelectionViewController"];
