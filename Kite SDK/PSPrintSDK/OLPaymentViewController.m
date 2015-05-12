@@ -23,6 +23,7 @@
 #import "OLConstants.h"
 #import "OLCreditCardCaptureViewController.h"
 #import "OLAnalytics.h"
+#import "OLPaymentLineItem.h"
 
 #ifdef OL_KITE_OFFER_PAYPAL
 #import <PayPalMobile.h>
@@ -637,10 +638,10 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     NSString* sectionString = [self.sections objectAtIndex:section];
     if ([sectionString isEqualToString:kSectionOrderSummary]) {
-        if (self.printOrder.jobs.count <= 1) {
-            return self.printOrder.jobs.count;
+        if (self.printOrder.jobs.count + self.printOrder.lineItems.count <= 1) {
+            return self.printOrder.jobs.count + self.printOrder.lineItems.count;
         } else {
-            return self.printOrder.jobs.count + 1; // additional cell to show total
+            return self.printOrder.jobs.count + self.printOrder.lineItems.count + 1; // additional cell to show total
         }
     }
     else if ([sectionString isEqualToString:kSectionContinueShopping]){
@@ -693,7 +694,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
         }
         
-        BOOL total = self.printOrder.jobs.count > 1 && indexPath.row == self.printOrder.jobs.count;
+        BOOL total = self.printOrder.jobs.count + self.printOrder.lineItems.count > 1 && indexPath.row == self.printOrder.jobs.count + self.printOrder.lineItems.count;
         NSDecimalNumber *cost = nil;
         NSString *currencyCode = self.printOrder.currencyCode;
         if (total) {
@@ -701,7 +702,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             cell.textLabel.font = [UIFont boldSystemFontOfSize:cell.textLabel.font.pointSize];
             cell.detailTextLabel.font = [UIFont boldSystemFontOfSize:cell.detailTextLabel.font.pointSize];
             cost = [self.printOrder cost];
-        } else {
+        } else if (indexPath.row < self.printOrder.jobs.count){
             // TODO: Server to return parent product type.
             id<OLPrintJob> job = self.printOrder.jobs[indexPath.row];
             cell.textLabel.text = [NSString stringWithFormat:@"%lu x %@", (unsigned long)job.quantity, job.productName];
@@ -722,7 +723,15 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             
             cell.textLabel.font = [UIFont systemFontOfSize:cell.textLabel.font.pointSize];
             cell.detailTextLabel.font = [UIFont systemFontOfSize:cell.detailTextLabel.font.pointSize];
-            cost = self.printOrder.jobs.count == 1 ? self.printOrder.cost : [job costInCurrency:currencyCode]; // if there is only 1 job then use the print order total cost as a promo discount may have been applied
+            cost = (self.printOrder.jobs.count == 1 && self.printOrder.lineItems.count == 0) ? self.printOrder.cost : [job costInCurrency:currencyCode]; // if there is only 1 job then use the print order total cost as a promo discount may have been applied
+        }
+        else{
+            OLPaymentLineItem *item = self.printOrder.lineItems[indexPath.row - self.printOrder.jobs.count];
+            cell.textLabel.text = item.name;
+            
+            cell.textLabel.font = [UIFont systemFontOfSize:cell.textLabel.font.pointSize];
+            cell.detailTextLabel.font = [UIFont systemFontOfSize:cell.detailTextLabel.font.pointSize];
+            cost = [item price];
         }
         
         NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];

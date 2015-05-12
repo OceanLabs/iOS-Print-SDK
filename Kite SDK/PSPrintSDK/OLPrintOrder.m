@@ -15,10 +15,12 @@
 #import "OLCountry.h"
 #import "OLAsset+Private.h"
 #import "OLCheckPromoCodeRequest.h"
+#import "OLPaymentLineItem.h"
 
 static NSString *const kKeyProofOfPayment = @"co.oceanlabs.pssdk.kKeyProofOfPayment";
 static NSString *const kKeyVoucherCode = @"co.oceanlabs.pssdk.kKeyVoucherCode";
 static NSString *const kKeyJobs = @"co.oceanlabs.pssdk.kKeyJobs";
+static NSString *const kKeyLineItems = @"co.oceanlabs.pssdk.kKeyLineItems";
 static NSString *const kKeyReceipt = @"co.oceanlabs.pssdk.kKeyReceipt";
 static NSString *const kKeyStorageIdentifier = @"co.oceanlabs.pssdk.kKeyStorageIdentifier";
 static NSString *const kKeyUserData = @"co.oceanlabs.pssdk.kKeyUserData";
@@ -74,6 +76,7 @@ static id stringOrEmptyString(NSString *str) {
 - (id)init {
     if (self = [super init]) {
         _jobs = [[NSMutableArray alloc] init];
+        _lineItems = [[NSMutableArray alloc] init];
         _storageIdentifier = NSNotFound;
     }
     
@@ -157,6 +160,10 @@ static id stringOrEmptyString(NSString *str) {
         cost = [cost decimalNumberByAdding:[job costInCurrency:currencyCode]];
     }
     
+    for (OLPaymentLineItem *item in self.lineItems){
+        cost = [cost decimalNumberByAdding:[item price]];
+    }
+    
     if (self.promoDiscount) {
         cost = [cost decimalNumberBySubtracting:self.promoDiscount];
         
@@ -175,6 +182,14 @@ static id stringOrEmptyString(NSString *str) {
 
 - (void)removePrintJob:(id<OLPrintJob>)job {
     [(NSMutableArray *) self.jobs removeObject:job];
+}
+
+- (void)addLineItem:(OLPaymentLineItem *)item{
+     [(NSMutableArray *) self.lineItems addObject:item];
+}
+
+- (void)removeLineItem:(OLPaymentLineItem *)item{
+    [(NSMutableArray *) self.lineItems removeObject:item];
 }
 
 - (void)cancelSubmissionOrPreemptedAssetUpload {
@@ -425,6 +440,7 @@ static id stringOrEmptyString(NSString *str) {
     [aCoder encodeObject:self.proofOfPayment forKey:kKeyProofOfPayment];
     [aCoder encodeObject:self.promoCode forKey:kKeyVoucherCode];
     [aCoder encodeObject:self.jobs forKey:kKeyJobs];
+    [aCoder encodeObject:self.lineItems forKey:kKeyLineItems];
     [aCoder encodeObject:self.receipt forKey:kKeyReceipt];
     [aCoder encodeInteger:self.storageIdentifier forKey:kKeyStorageIdentifier];
     [aCoder encodeObject:self.userData forKey:kKeyUserData];
@@ -436,21 +452,26 @@ static id stringOrEmptyString(NSString *str) {
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
-    if (self = [self init]) {
-        _proofOfPayment = [aDecoder decodeObjectForKey:kKeyProofOfPayment];
-        _promoCode = [aDecoder decodeObjectForKey:kKeyVoucherCode];
-        _jobs = [aDecoder decodeObjectForKey:kKeyJobs];
-        _receipt = [aDecoder decodeObjectForKey:kKeyReceipt];
-        _storageIdentifier = [aDecoder decodeIntegerForKey:kKeyStorageIdentifier];
-        _userData = [aDecoder decodeObjectForKey:kKeyUserData];
-        _shippingAddress = [aDecoder decodeObjectForKey:kKeyShippingAddress];
-        _lastPrintSubmissionError = [aDecoder decodeObjectForKey:kKeyLastPrintError];
-        _lastPrintSubmissionDate = [aDecoder decodeObjectForKey:kKeyLastPrintSubmissionDate];
-        _promoDiscount = [aDecoder decodeObjectForKey:kKeyPromoDiscount];
-        _currencyCode = [aDecoder decodeObjectForKey:kKeyCurrencyCode];
+    @try {
+        if (self = [self init]) {
+            _proofOfPayment = [aDecoder decodeObjectForKey:kKeyProofOfPayment];
+            _promoCode = [aDecoder decodeObjectForKey:kKeyVoucherCode];
+            _jobs = [aDecoder decodeObjectForKey:kKeyJobs];
+            _receipt = [aDecoder decodeObjectForKey:kKeyReceipt];
+            _storageIdentifier = [aDecoder decodeIntegerForKey:kKeyStorageIdentifier];
+            _userData = [aDecoder decodeObjectForKey:kKeyUserData];
+            _shippingAddress = [aDecoder decodeObjectForKey:kKeyShippingAddress];
+            _lastPrintSubmissionError = [aDecoder decodeObjectForKey:kKeyLastPrintError];
+            _lastPrintSubmissionDate = [aDecoder decodeObjectForKey:kKeyLastPrintSubmissionDate];
+            _promoDiscount = [aDecoder decodeObjectForKey:kKeyPromoDiscount];
+            _currencyCode = [aDecoder decodeObjectForKey:kKeyCurrencyCode];
+        }
+        return self;
+        
     }
-    
-    return self;
+    @catch (NSException *exception) {
+        return nil;
+    }
 }
 
 @end

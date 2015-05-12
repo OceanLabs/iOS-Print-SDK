@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 
 @class OLAddress;
+@class OLPaymentLineItem;
 
 @protocol OLPrintJob;
 
@@ -23,6 +24,8 @@ typedef void (^OLApplyPromoCodeCompletionHandler)(NSDecimalNumber *discount, NSE
 
 - (void)addPrintJob:(id<OLPrintJob>)job;
 - (void)removePrintJob:(id<OLPrintJob>)job;
+- (void)addLineItem:(OLPaymentLineItem *)item;
+- (void)removeLineItem:(OLPaymentLineItem *)item;
 - (void)submitForPrintingWithCompletionHandler:(OLPrintOrderCompletionHandler)completionHandler;
 - (void)submitForPrintingWithProgressHandler:(OLPrintOrderProgressHandler)progressHandler completionHandler:(OLPrintOrderCompletionHandler)completionHandler;
 - (void)cancelSubmissionOrPreemptedAssetUpload; // cancels both preempted asset upload and submission for printing
@@ -42,6 +45,7 @@ typedef void (^OLApplyPromoCodeCompletionHandler)(NSDecimalNumber *discount, NSE
 @property (nonatomic, readonly) NSDecimalNumber *promoDiscount;
 
 @property (nonatomic, readonly) NSArray *jobs;
+@property (nonatomic, readonly) NSArray *lineItems;
 @property (nonatomic, readonly) NSUInteger totalAssetsToUpload;
 
 @property (nonatomic, readonly) BOOL printed; // YES if submission for printing was successful and receipt will be non nil.
