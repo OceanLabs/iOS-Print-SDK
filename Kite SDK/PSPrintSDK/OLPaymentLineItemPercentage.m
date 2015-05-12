@@ -8,6 +8,8 @@
 
 #import "OLPaymentLineItemPercentage.h"
 
+static NSString *const kKeyLineItemJob = @"co.oceanlabs.kKeyLineItemJob";
+
 @implementation OLPaymentLineItemPercentage
 
 - (NSDecimalNumber *)price{
@@ -17,6 +19,20 @@
     else{
         return [super price];
     }
+}
+
+#pragma mark - NSCoding protocol methods
+
+- (void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:self.printJob forKey:kKeyLineItemJob];
+}
+
+- (id)initWithCoder:(NSCoder *)aDecoder {
+    if (self = [super init]) {
+        self.printJob = [aDecoder decodeObjectForKey:kKeyLineItemJob];
+    }
+    
+    return self;
 }
 
 @end

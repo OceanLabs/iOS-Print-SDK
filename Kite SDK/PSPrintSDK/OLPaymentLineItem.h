@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface OLPaymentLineItem : NSObject
+@interface OLPaymentLineItem : NSObject <NSCoding>
 
 @property (strong, nonatomic) NSDecimalNumber *value;
 @property (strong, nonatomic) NSString *name;

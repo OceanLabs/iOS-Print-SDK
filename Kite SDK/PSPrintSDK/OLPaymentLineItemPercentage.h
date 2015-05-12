@@ -9,8 +9,8 @@
 #import "OLPaymentLineItem.h"
 #import "OLPrintJob.h"
 
-@interface OLPaymentLineItemPercentage : OLPaymentLineItem
+@interface OLPaymentLineItemPercentage : OLPaymentLineItem <NSCoding>
 
-@property (weak, nonatomic) id<OLPrintJob> printJob;
+@property (strong, nonatomic) id<OLPrintJob> printJob;
 
 @end
