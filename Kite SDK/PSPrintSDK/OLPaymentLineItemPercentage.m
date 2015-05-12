@@ -24,11 +24,12 @@ static NSString *const kKeyLineItemJob = @"co.oceanlabs.kKeyLineItemJob";
 #pragma mark - NSCoding protocol methods
 
 - (void)encodeWithCoder:(NSCoder *)aCoder {
+    [super encodeWithCoder:aCoder];
     [aCoder encodeObject:self.printJob forKey:kKeyLineItemJob];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
-    if (self = [super init]) {
+    if (self = [super initWithCoder:aDecoder]) {
         self.printJob = [aDecoder decodeObjectForKey:kKeyLineItemJob];
     }
     
