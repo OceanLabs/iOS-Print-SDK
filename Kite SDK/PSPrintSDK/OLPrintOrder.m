@@ -457,6 +457,7 @@ static id stringOrEmptyString(NSString *str) {
             _proofOfPayment = [aDecoder decodeObjectForKey:kKeyProofOfPayment];
             _promoCode = [aDecoder decodeObjectForKey:kKeyVoucherCode];
             _jobs = [aDecoder decodeObjectForKey:kKeyJobs];
+            _lineItems = [aDecoder decodeObjectForKey:kKeyLineItems];
             _receipt = [aDecoder decodeObjectForKey:kKeyReceipt];
             _storageIdentifier = [aDecoder decodeIntegerForKey:kKeyStorageIdentifier];
             _userData = [aDecoder decodeObjectForKey:kKeyUserData];
