@@ -66,6 +66,48 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
     // Do any additional setup after loading the view.
 }
 
+-(BOOL)isValidAddress{
+    BOOL flag = YES;
+    NSString *errorMessage;
+    if ([self.textFieldName.text isEqualToString:@""]){
+        flag = NO;
+        errorMessage = NSLocalizedString(@"Please enter your full name.", @"");
+    }
+    else if ([self.textFieldLine1.text isEqualToString:@""]){
+        flag = NO;
+        errorMessage = NSLocalizedString(@"Please fill in Line 1 of the address.", @"");
+    }
+    else if ([self.textFieldPostCode.text isEqualToString:@""]){
+        flag = NO;
+        errorMessage = NSLocalizedString(@"Please fill in your postal code", @"");
+    }
+    
+    if (!flag){
+        if ([UIAlertController class]) // iOS 8 or greater
+        {
+            UIAlertController *alert= [UIAlertController
+                                       alertControllerWithTitle:NSLocalizedString(@"", @"")
+                                       message:errorMessage
+                                       preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertAction* ok = [UIAlertAction actionWithTitle:NSLocalizedString(@"OK", @"") style:UIAlertActionStyleDefault
+                                                       handler:^(UIAlertAction * action){}];
+            
+            [alert addAction:ok];
+            [self presentViewController:alert animated:YES completion:nil];
+        }
+        else{
+            UIAlertView* dialog = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"", @"")
+                                                             message:errorMessage
+                                                            delegate:self
+                                                   cancelButtonTitle:NSLocalizedString(@"OK", @"") otherButtonTitles:nil, nil];
+            [dialog show];
+        }
+    }
+    
+    
+    return flag;
+}
+
 - (void)populateDefaultDeliveryAddress {
     if (!self.shippingAddress){
         self.shippingAddress = [[OLAddress alloc] init];
@@ -102,8 +144,15 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
     [super onBackgroundClicked];
 }
 
+- (BOOL)hasUserProvidedValidDetailsToProgressToPayment{
+    if (![self isValidAddress]){
+        return NO;
+    }
+    return [super hasUserProvidedValidDetailsToProgressToPayment];
+}
+
 - (void)onButtonNextClicked{
-    if (![super hasUserProvidedValidDetailsToProgressToPayment]) {
+    if (![self hasUserProvidedValidDetailsToProgressToPayment]) {
         return;
     }
     
