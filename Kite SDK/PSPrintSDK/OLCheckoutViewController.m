@@ -329,6 +329,7 @@ static const NSUInteger kTagInputFieldLabel = 100;
             cell = [tableView dequeueReusableCellWithIdentifier:kDeliveryAddressCell];
             if (cell == nil) {
                 cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:kDeliveryAddressCell];
+                cell.selectionStyle = UITableViewCellSelectionStyleNone;
             }
                 cell.textLabel.textColor = [UIColor blackColor];
                 cell.textLabel.text = self.shippingAddress.recipientName;

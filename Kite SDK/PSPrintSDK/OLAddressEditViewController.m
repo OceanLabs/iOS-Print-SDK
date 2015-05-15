@@ -118,7 +118,9 @@ static const NSUInteger kTagLabel = 100;
     } else {
         vc.addressToAddToListOnViewDidAppear = self.address;
     }
-    [self.navigationController popToRootViewControllerAnimated:YES];
+    [self.address saveToAddressBook];
+    [vc.delegate addressSelectionController:vc didFinishPickingAddresses:@[self.address]];
+//    [self.navigationController popToRootViewControllerAnimated:YES];
 }
 
 #pragma mark - UITableViewDataSource methods
