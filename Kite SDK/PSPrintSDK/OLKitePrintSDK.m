@@ -16,6 +16,7 @@
 #import "OLProductHomeViewController.h"
 #import "OLIntegratedCheckoutViewController.h"
 #import <SkyLab.h>
+#import <NSUserDefaults+GroundControl.h>
 
 static NSString *const kJudoClientId      = @"100170-877";
 static NSString *const kJudoSandboxToken     = @"oLMiwCPBeLs0iVX4";
@@ -37,8 +38,9 @@ static NSString *const kOLPayPalRecipientEmailSandbox = @"sandbox-merchant@kite.
 static NSString *const kOLAPIEndpointVersion = @"v1.3";
 
 static BOOL useJudoPayForGBP = NO;
-
 static BOOL cacheTemplates = NO;
+
+static NSString *const kOLKiteABTestShippingScreen = @"ly.kite.abtest.shippingscreen";
 
 #ifdef OL_KITE_OFFER_INSTAGRAM
 static NSString *instagramClientID = nil;
@@ -228,11 +230,22 @@ static NSString *instagramRedirectURI = nil;
 }
 #endif
 
++ (void)fetchRemotePlist{
+    NSDictionary *oldDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestShippingScreen];
+    
+    NSURL *URL = [NSURL URLWithString:@"https://sdk-static.s3.amazonaws.com/kite-ios-remote.plist"];
+    [[NSUserDefaults standardUserDefaults] registerDefaultsWithURL:URL success:^(NSDictionary *defaults){
+        if (![oldDict[@"Experiment Version"] isEqualToString:defaults[@"Experiment Version"]]){
+            [SkyLab resetTestNamed:kOLKiteABTestShippingScreen];
+        }
+    }failure:NULL];
+}
+
 + (void)checkoutViewControllerForPrintOrder:(OLPrintOrder *)printOrder handler:(void(^)(OLCheckoutViewController *vc))handler{
-    [SkyLab resetTestNamed:@"Shipping Screen"];
-    [SkyLab splitTestWithName:@"Shipping Screen" conditions:@{
-                                                              @"Classic" : @0.5,
-                                                              @"Integrated" : @0.5
+    NSDictionary *experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestShippingScreen];
+    [SkyLab splitTestWithName:kOLKiteABTestShippingScreen conditions:@{
+                                                              @"Classic" : experimentDict[@"Classic"],
+                                                              @"Integrated" : experimentDict[@"Integrated"]
                                                               }block:^(id choice){
                                                                   OLCheckoutViewController *vc;
                                                                   if ([choice isEqualToString:@"Classic"]){
