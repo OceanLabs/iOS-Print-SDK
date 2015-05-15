@@ -13,6 +13,7 @@
 #import "OLPrintOrder.h"
 #import "OLProductTemplate.h"
 #import "OLCountryPickerController.h"
+#import "OLConstants.h"
 
 static const NSUInteger kSectionDeliveryDetails = 0;
 
@@ -205,28 +206,11 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
     UITableViewCell *cell = nil;
     if (indexPath.section == kSectionDeliveryDetails) {
         static NSString *const kAddDeliveryAddressCell = @"AddDeliveryAddressCell";
-        static NSString *const kCellIdentifier = @"CellIdentifier";
+//        static NSString *const kCellIdentifier = @"CellIdentifier";
         
         cell = [tableView dequeueReusableCellWithIdentifier:kAddDeliveryAddressCell];
         if (!cell) {
-            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:kCellIdentifier];
-            cell.selectionStyle = UITableViewCellSelectionStyleNone;
-            
-            UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(15, 0, 110, cell.frame.size.height)];
-            label.font = cell.textLabel.font;
-            label.tag = kTagLabel;
-            
-            UITextField *tf = [[UITextField alloc] initWithFrame:CGRectMake(110, 0, cell.frame.size.width - 110, cell.frame.size.height)];
-            tf.adjustsFontSizeToFitWidth = YES;
-            tf.textColor = [UIColor blackColor];
-            tf.autocorrectionType = UITextAutocorrectionTypeNo;
-            tf.textAlignment = NSTextAlignmentLeft;
-            tf.tag = kTagTextField;
-            tf.clearButtonMode = UITextFieldViewModeWhileEditing;
-            tf.delegate = self;
-            
-            [cell.contentView addSubview:tf];
-            [cell.contentView addSubview:label];
+            cell = [self createTextFieldCellWithReuseIdentifier:kAddDeliveryAddressCell title:@"" keyboardType:UIKeyboardTypeAlphabet];
         }
         
         UITextField *tf = (UITextField *) [cell viewWithTag:kTagTextField];
@@ -258,12 +242,20 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
                 self.textFieldCity = tf;
                 break;
             case 4:
-                label.text = NSLocalizedStringFromTableInBundle(@"County", @"KitePrintSDK", [NSBundle mainBundle], @"");
+                if (self.shippingAddress.country == [OLCountry countryForCode:@"USA"]) {
+                    label.text = @"State";
+                } else {
+                    label.text = NSLocalizedStringFromTableInBundle(@"County", @"KitePrintSDK", [NSBundle mainBundle], @"");
+                }
                 tf.text = self.shippingAddress.stateOrCounty;
                 self.textFieldCounty = tf;
                 break;
             case 5:
-                label.text = NSLocalizedStringFromTableInBundle(@"Postcode", @"KitePrintSDK", [NSBundle mainBundle], @"");
+                if (self.shippingAddress.country == [OLCountry countryForCode:@"USA"]) {
+                    label.text = @"ZIP Code";
+                } else {
+                    label.text = NSLocalizedStringFromTableInBundle(@"Postcode", @"KitePrintSDK", [NSBundle mainBundle], @"");
+                }
                 tf.text = self.shippingAddress.zipOrPostcode;
                 tf.autocapitalizationType = UITextAutocapitalizationTypeAllCharacters;
                 self.textFieldPostCode = tf;
@@ -305,7 +297,7 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
             
             OLCountryPickerController *controller = [[OLCountryPickerController alloc] init];
             controller.delegate = self;
-#warning Test this!
+
             if (!self.shippingAddress.country){
                 self.shippingAddress.country = [OLCountry countryForCode:@"GBR"];
                 controller.selected = @[self.shippingAddress.country];
@@ -313,6 +305,14 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
             [self presentViewController:controller animated:YES completion:nil];
         }
         
+    }
+}
+
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+    if (section == kSectionDeliveryDetails) {
+        return NSLocalizedStringFromTableInBundle(@"Delivery Address", @"KitePrintSDK", [OLConstants bundle], @"");
+    } else {
+        return nil;
     }
 }
 

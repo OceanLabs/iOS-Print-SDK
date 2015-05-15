@@ -34,6 +34,7 @@ static NSString *const kKeyEmailAddress = @"co.oceanlabs.pssdk.kKeyEmailAddress"
 static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
 
 static const NSUInteger kInputFieldTag = 99;
+static const NSUInteger kTagInputFieldLabel = 100;
 
 @interface OLPaymentViewController (Private)
 @property (nonatomic, assign) BOOL presentedModally;
@@ -366,10 +367,12 @@ static const NSUInteger kInputFieldTag = 99;
 
 - (UITableViewCell *)createTextFieldCellWithReuseIdentifier:(NSString *)identifier title:(NSString *)title keyboardType:(UIKeyboardType)type {
     UITableViewCell *cell = [[UITableViewCell alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 43)];
-    UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 11, 61, 21)];
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, 11, 110, 21)];
     titleLabel.text = title;
     titleLabel.adjustsFontSizeToFitWidth = YES;
-    UITextField *inputField = [[UITextField alloc] initWithFrame:CGRectMake(86, 0, [UIScreen mainScreen].bounds.size.width - 86, 43)];
+    titleLabel.tag = kTagInputFieldLabel;
+    UITextField *inputField = [[UITextField alloc] initWithFrame:CGRectMake(125, 0, [UIScreen mainScreen].bounds.size.width - 86, 43)];
     inputField.delegate = self;
     inputField.tag = kInputFieldTag;
     [inputField setKeyboardType:type];
@@ -382,7 +385,7 @@ static const NSUInteger kInputFieldTag = 99;
         NSDictionary *views = NSDictionaryOfVariableBindings(view);
         NSMutableArray *con = [[NSMutableArray alloc] init];
         
-        NSArray *visuals = @[@"H:|-86-[view]-0-|", @"V:[view(43)]"];
+        NSArray *visuals = @[@"H:|-125-[view]-0-|", @"V:[view(43)]"];
         
         
         for (NSString *visual in visuals) {
