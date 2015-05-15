@@ -14,6 +14,8 @@
 #endif
 #import "OLJudoPayCard.h"
 #import "OLProductHomeViewController.h"
+#import "OLIntegratedCheckoutViewController.h"
+#import <SkyLab.h>
 
 static NSString *const kJudoClientId      = @"100170-877";
 static NSString *const kJudoSandboxToken     = @"oLMiwCPBeLs0iVX4";
@@ -225,5 +227,22 @@ static NSString *instagramRedirectURI = nil;
     return instagramClientID;
 }
 #endif
+
++ (void)checkoutViewControllerForPrintOrder:(OLPrintOrder *)printOrder handler:(void(^)(OLCheckoutViewController *vc))handler{
+    [SkyLab resetTestNamed:@"Shipping Screen"];
+    [SkyLab splitTestWithName:@"Shipping Screen" conditions:@{
+                                                              @"Classic" : @0.5,
+                                                              @"Integrated" : @0.5
+                                                              }block:^(id choice){
+                                                                  OLCheckoutViewController *vc;
+                                                                  if ([choice isEqualToString:@"Classic"]){
+                                                                      vc = [[OLCheckoutViewController alloc] initWithPrintOrder:printOrder];
+                                                                  }
+                                                                  else{
+                                                                      vc = [[OLIntegratedCheckoutViewController alloc] initWithPrintOrder:printOrder];
+                                                                  }
+                                                                  handler(vc);
+                                                              }];
+}
 
 @end

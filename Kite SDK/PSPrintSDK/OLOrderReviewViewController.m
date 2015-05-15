@@ -21,6 +21,7 @@
 #import "OLKitePrintSDK.h"
 #import <CTAssetsPickerController.h>
 #import "UIViewController+TraitCollectionCompatibility.h"
+#import "OLIntegratedCheckoutViewController.h"
 
 static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 static const NSUInteger kTagAlertViewDeletePhoto = 98;
@@ -29,6 +30,7 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
 + (NSString *)userEmail:(UIViewController *)topVC;
 + (NSString *)userPhone:(UIViewController *)topVC;
 + (id<OLKiteDelegate>)kiteDelegate:(UIViewController *)topVC;
++ (void)checkoutViewControllerForPrintOrder:(OLPrintOrder *)printOrder handler:(void(^)(OLCheckoutViewController *vc))handler;
 @end
 
 @interface OLOrderReviewViewController () <OLCheckoutDelegate, UIAlertViewDelegate, UICollectionViewDelegateFlowLayout>
@@ -173,12 +175,13 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     [printOrder addPrintJob:printJob];
 
     
-    OLCheckoutViewController *vc = [[OLCheckoutViewController alloc] initWithPrintOrder:printOrder];
-    vc.userEmail = [OLKitePrintSDK userEmail:self];
-    vc.userPhone = [OLKitePrintSDK userPhone:self];
-    vc.kiteDelegate = [OLKitePrintSDK kiteDelegate:self];
-    
-    [self.navigationController pushViewController:vc animated:YES];
+    [OLKitePrintSDK checkoutViewControllerForPrintOrder:printOrder handler:^(OLCheckoutViewController *vc){
+        vc.userEmail = [OLKitePrintSDK userEmail:self];
+        vc.userPhone = [OLKitePrintSDK userPhone:self];
+        vc.kiteDelegate = [OLKitePrintSDK kiteDelegate:self];
+        
+        [self.navigationController pushViewController:vc animated:YES];
+    }];
 }
 
 - (OLKiteViewController *)kiteViewController {

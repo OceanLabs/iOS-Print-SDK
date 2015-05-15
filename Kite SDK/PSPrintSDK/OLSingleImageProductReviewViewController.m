@@ -31,6 +31,7 @@
 + (NSString *)userEmail:(UIViewController *)topVC;
 + (NSString *)userPhone:(UIViewController *)topVC;
 + (id<OLKiteDelegate>)kiteDelegate:(UIViewController *)topVC;
++ (void)checkoutViewControllerForPrintOrder:(OLPrintOrder *)printOrder handler:(void(^)(OLCheckoutViewController *vc))handler;
 
 #ifdef OL_KITE_OFFER_INSTAGRAM
 + (NSString *) instagramRedirectURI;
@@ -176,12 +177,13 @@ CTAssetsPickerControllerDelegate>
                                     };
             [printOrder addPrintJob:job];
             
-            OLCheckoutViewController *vc = [[OLCheckoutViewController alloc] initWithPrintOrder:printOrder];
-            vc.userEmail = [OLKitePrintSDK userEmail:self];
-            vc.userPhone = [OLKitePrintSDK userPhone:self];
-            vc.kiteDelegate = [OLKitePrintSDK kiteDelegate:self];
-            
-            [self.navigationController pushViewController:vc animated:YES];
+            [OLKitePrintSDK checkoutViewControllerForPrintOrder:printOrder handler:^(OLCheckoutViewController *vc){
+                vc.userEmail = [OLKitePrintSDK userEmail:self];
+                vc.userPhone = [OLKitePrintSDK userPhone:self];
+                vc.kiteDelegate = [OLKitePrintSDK kiteDelegate:self];
+                
+                [self.navigationController pushViewController:vc animated:YES];
+            }];
         }
     }];
 }
