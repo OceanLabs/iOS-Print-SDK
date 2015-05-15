@@ -43,6 +43,12 @@ static const NSUInteger kTagInputFieldLabel = 100;
 
 #define kColourLightBlue [UIColor colorWithRed:0 / 255.0 green:122 / 255.0 blue:255 / 255.0 alpha:1.0]
 
+@interface OLKitePrintSDK (Private)
+
++ (void)addressViewController:(void(^)(UIViewController *vc))handler;
+
+@end
+
 @interface OLCheckoutViewController () <OLAddressPickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate>
 @property (strong, nonatomic) OLAddress *shippingAddress;
 @property (strong, nonatomic) UITextField *textFieldEmail, *textFieldPhone;
@@ -341,6 +347,7 @@ static const NSUInteger kTagInputFieldLabel = 100;
                 cell.textLabel.text = NSLocalizedStringFromTableInBundle(@"Choose Delivery Address", @"KitePrintSDK", [OLConstants bundle], @"");
                 cell.textLabel.adjustsFontSizeToFitWidth = YES;
                 cell.textLabel.textColor = kColourLightBlue;
+                cell.selectionStyle = UITableViewCellSelectionStyleNone;
             }
         }
     } else if (indexPath.section == kSectionEmailAddress) {
@@ -407,9 +414,15 @@ static const NSUInteger kTagInputFieldLabel = 100;
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section == kSectionDeliveryDetails) {
-        OLAddressPickerController *c = [[OLAddressPickerController alloc] init];
-        c.delegate = self;
-        [self presentViewController:c animated:YES completion:nil];
+        [OLKitePrintSDK addressViewController:^(UIViewController *vc){
+            if ([vc isKindOfClass:[UINavigationController class]]){
+                [(OLAddressPickerController *)[[(UINavigationController *)vc viewControllers] firstObject] setDelegate:self];
+            }
+            else{
+                [(OLAddressPickerController *)vc setDelegate:self];
+            }
+            [self presentViewController:vc animated:YES completion:nil];
+        }];
     }
 }
 

@@ -17,6 +17,7 @@
 #import "OLIntegratedCheckoutViewController.h"
 #import <SkyLab.h>
 #import <NSUserDefaults+GroundControl.h>
+#import "OLAddressEditViewController.h"
 
 static NSString *const kJudoClientId      = @"100170-877";
 static NSString *const kJudoSandboxToken     = @"oLMiwCPBeLs0iVX4";
@@ -41,6 +42,7 @@ static BOOL useJudoPayForGBP = NO;
 static BOOL cacheTemplates = NO;
 
 static NSString *const kOLKiteABTestShippingScreen = @"ly.kite.abtest.shippingscreen";
+static NSString *const kOLKiteABTestAddressScreen = @"ly.kite.abtest.addressscreen";
 
 #ifdef OL_KITE_OFFER_INSTAGRAM
 static NSString *instagramClientID = nil;
@@ -239,6 +241,24 @@ static NSString *instagramRedirectURI = nil;
             [SkyLab resetTestNamed:kOLKiteABTestShippingScreen];
         }
     }failure:NULL];
+}
+
++ (void)addressViewController:(void(^)(UIViewController *vc))handler{
+    NSDictionary *experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestAddressScreen];
+    [SkyLab splitTestWithName:kOLKiteABTestAddressScreen conditions:@{
+                                                                       @"Manual" : experimentDict[@"Manual"],
+                                                                       @"OfferSearch" : experimentDict[@"Manual"]
+                                                                       }block:^(id choice){
+                                                                           UIViewController *vc;
+                                                                           if ([choice isEqualToString:@"Manual"]){
+                                                                               vc = [[UINavigationController alloc] initWithRootViewController:[[OLAddressEditViewController alloc] init]];
+                                                                               
+                                                                           }
+                                                                           else{
+                                                                               vc = [[OLAddressPickerController alloc] init];
+                                                                           }
+                                                                           handler(vc);
+                                                                       }];
 }
 
 + (void)checkoutViewControllerForPrintOrder:(OLPrintOrder *)printOrder handler:(void(^)(OLCheckoutViewController *vc))handler{
