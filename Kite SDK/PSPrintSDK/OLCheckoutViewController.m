@@ -123,9 +123,7 @@ static const NSUInteger kTagInputFieldLabel = 100;
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-#ifndef OL_NO_ANALYTICS
-    [OLAnalytics trackShippingScreenViewedForOrder:self.printOrder];
-#endif
+    [self trackViewed];
     
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Next", @"KitePrintSDK", [OLConstants bundle], @"") style:UIBarButtonItemStylePlain target:self action:@selector(onButtonNextClicked)];
     
@@ -154,6 +152,12 @@ static const NSUInteger kTagInputFieldLabel = 100;
     self.kiteLabel.translatesAutoresizingMaskIntoConstraints = NO;
     
     [self.tableView.tableFooterView addConstraint:[NSLayoutConstraint constraintWithItem:self.kiteLabel attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.tableView.tableFooterView attribute:NSLayoutAttributeCenterX multiplier:1 constant:0]];
+}
+
+- (void)trackViewed{
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackShippingScreenViewedForOrder:self.printOrder variant:@"Classic"];
+#endif
 }
 
 - (void)positionKiteLabel {

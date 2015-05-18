@@ -14,6 +14,7 @@
 #import "OLProductTemplate.h"
 #import "OLCountryPickerController.h"
 #import "OLConstants.h"
+#import "OLAnalytics.h"
 
 static const NSUInteger kSectionDeliveryDetails = 0;
 
@@ -65,6 +66,12 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
     [super viewDidLoad];
     [self populateDefaultDeliveryAddress];
     // Do any additional setup after loading the view.
+}
+
+- (void)trackViewed{
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackShippingScreenViewedForOrder:self.printOrder variant:@"Integrated"];
+#endif
 }
 
 -(BOOL)isValidAddress{

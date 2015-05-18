@@ -123,10 +123,11 @@ static NSString *nonNilStr(NSString *str) {
     [OLAnalytics sendToMixPanelWithDictionary:dict];
 }
 
-+ (void)trackShippingScreenViewedForOrder:(OLPrintOrder *)printOrder{
++ (void)trackShippingScreenViewedForOrder:(OLPrintOrder *)printOrder variant:(NSString *)variant{
     NSDictionary *dict = [OLAnalytics defaultDictionaryForEventName:@"Shipping Screen Viewed"];
     NSMutableDictionary *p = [self propertiesForPrintOrder:printOrder];
     [dict[@"properties"] addEntriesFromDictionary:p];
+    [dict[@"properties"] addEntriesFromDictionary:@{@"Shipping Screen Variant" : variant}];
     [OLAnalytics sendToMixPanelWithDictionary:dict];
 }
 
