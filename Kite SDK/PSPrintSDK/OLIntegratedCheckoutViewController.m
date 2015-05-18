@@ -33,14 +33,16 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
 
 @interface OLCheckoutViewController (PrivateMethods)
 
+@property (strong, nonatomic) UITextField *textFieldEmail, *textFieldPhone;
 - (void)onBackgroundClicked;
 - (BOOL)hasUserProvidedValidDetailsToProgressToPayment;
 
 @end
 
-@interface OLIntegratedCheckoutViewController () <UITextFieldDelegate, OLCountryPickerControllerDelegate, UINavigationControllerDelegate>
+@interface OLIntegratedCheckoutViewController () <UITextFieldDelegate, OLCountryPickerControllerDelegate, UINavigationControllerDelegate, UITableViewDelegate>
 
 @property (nonatomic, strong) UITextField *textFieldName, *textFieldLine1, *textFieldLine2, *textFieldCity, *textFieldCounty, *textFieldPostCode, *textFieldCountry;
+@property (weak, nonatomic) UITextField *activeTextView;
 
 @end
 
@@ -65,7 +67,7 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
 {
     [super viewDidLoad];
     [self populateDefaultDeliveryAddress];
-    // Do any additional setup after loading the view.
+    [self registerForKeyboardNotifications];
 }
 
 - (void)trackViewed{
@@ -167,16 +169,11 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
     [self.textFieldEmail resignFirstResponder];
     [self.textFieldPhone resignFirstResponder];
     
+    [self saveAddress];
+    
     NSString *email = self.textFieldEmail.text ? self.textFieldEmail.text : @"";
     NSString *phone = self.textFieldPhone.text ? self.textFieldPhone.text : @"";
     
-    NSString *name = self.textFieldName.text ? self.textFieldName.text : @"";
-    NSString *line1 = self.textFieldLine1.text ? self.textFieldLine1.text : @"";
-    NSString *line2 = self.textFieldLine2.text ? self.textFieldLine2.text : @"";
-    NSString *city = self.textFieldCity.text ? self.textFieldCity.text : @"";
-    NSString *county = self.textFieldCounty.text ? self.textFieldCounty.text : @"";
-    NSString *postCode = self.textFieldPostCode.text ? self.textFieldPostCode.text : @"";
-    NSString *country = self.shippingAddress.country ? self.shippingAddress.country.codeAlpha3 : @"";
     
     NSMutableDictionary *d = [[NSMutableDictionary alloc] init];
     if (self.printOrder.userData) {
@@ -195,6 +192,29 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
     [defaults setObject:email forKey:kKeyEmailAddress];
     [defaults setObject:phone forKey:kKeyPhone];
     
+    
+    
+    
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:kOLNotificationUserSuppliedShippingDetails object:self userInfo:@{kOLKeyUserInfoPrintOrder: self.printOrder}];
+    [self.navigationController pushViewController:vc animated:YES];
+}
+
+- (void)saveAddress{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    
+    NSString *email = self.textFieldEmail.text ? self.textFieldEmail.text : @"";
+    NSString *phone = self.textFieldPhone.text ? self.textFieldPhone.text : @"";
+    NSString *name = self.textFieldName.text ? self.textFieldName.text : @"";
+    NSString *line1 = self.textFieldLine1.text ? self.textFieldLine1.text : @"";
+    NSString *line2 = self.textFieldLine2.text ? self.textFieldLine2.text : @"";
+    NSString *city = self.textFieldCity.text ? self.textFieldCity.text : @"";
+    NSString *county = self.textFieldCounty.text ? self.textFieldCounty.text : @"";
+    NSString *postCode = self.textFieldPostCode.text ? self.textFieldPostCode.text : @"";
+    NSString *country = self.shippingAddress.country ? self.shippingAddress.country.codeAlpha3 : @"";
+    
+    [defaults setObject:email forKey:kKeyEmailAddress];
+    [defaults setObject:phone forKey:kKeyPhone];
     [defaults setObject:name forKey:kKeyRecipientName];
     [defaults setObject:line1 forKey:kKeyLine1];
     [defaults setObject:line2 forKey:kKeyLine2];
@@ -204,9 +224,6 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
     [defaults setObject:country forKey:kKeyCountry];
     
     [defaults synchronize];
-    
-    [[NSNotificationCenter defaultCenter] postNotificationName:kOLNotificationUserSuppliedShippingDetails object:self userInfo:@{kOLKeyUserInfoPrintOrder: self.printOrder}];
-    [self.navigationController pushViewController:vc animated:YES];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -226,6 +243,7 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
         tf.returnKeyType = UIReturnKeyNext;
         cell.accessoryType = UITableViewCellAccessoryNone;
         tf.autocapitalizationType = UITextAutocapitalizationTypeWords;
+        tf.autocorrectionType = UITextAutocorrectionTypeNo;
         tf.delegate = self;
         switch (indexPath.row) {
             case 0:
@@ -355,7 +373,18 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
             default:
                 break;
         }
+        [self saveAddress];
     }
+}
+
+- (void)registerForKeyboardNotifications
+{
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWasShown:)
+                                                 name:UIKeyboardDidShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWillBeHidden:)
+                                                 name:UIKeyboardWillHideNotification object:nil];
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
@@ -365,6 +394,7 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
 
 - (void)textFieldDidEndEditing:(UITextField *)textField{
     [self saveAddressFromTextField:textField];
+    self.activeTextView = nil;
 }
 
 -(void) countryPicker:(OLCountryPickerController *)picker didSucceedWithCountries:(NSArray *)countries{
@@ -378,6 +408,90 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
 
 -(void) countryPickerDidCancelPicking:(OLCountryPickerController *)picker{
     [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+    if (textField == self.textFieldName) {
+        [self.textFieldLine1 becomeFirstResponder];
+    } else if (textField == self.textFieldLine1) {
+        [self.textFieldLine2 becomeFirstResponder];
+    } else if (textField == self.textFieldLine2) {
+        [self.textFieldCity becomeFirstResponder];
+    } else if (textField == self.textFieldCity) {
+        [self.textFieldCounty becomeFirstResponder];
+    } else if (textField == self.textFieldCounty) {
+        [self.textFieldPostCode becomeFirstResponder];
+    } else if (textField == self.textFieldPostCode) {
+        [textField resignFirstResponder];
+    } else if (textField == self.textFieldCountry) {
+        
+    }
+    else if (textField == self.textFieldEmail && ([self.kiteDelegate respondsToSelector:@selector(shouldShowPhoneEntryOnCheckoutScreen)] && [self.kiteDelegate shouldShowPhoneEntryOnCheckoutScreen])) {
+//        [self scrollToTextField:self.textFieldPhone];
+        [self.textFieldPhone becomeFirstResponder];
+    }
+    else{
+        [textField resignFirstResponder];
+    }
+    [self saveAddressFromTextField:textField];
+    return YES;
+}
+
+//- (void)textFieldDidBeginEditing:(UITextField *)textField {
+//    [self scrollToTextField:textField];
+//}
+//
+//- (void)scrollToTextField:(UITextField *)textField{
+//    UIView* view = textField.superview;
+//    while (![view isKindOfClass:[UITableViewCell class]]){
+//        view = view.superview;
+//    }
+//    NSIndexPath* indexPath = [self.tableView indexPathForCell:(UITableViewCell*)view];
+//    
+//    CGRect rect = [self.tableView rectForRowAtIndexPath:indexPath];
+//    [self.tableView scrollRectToVisible:rect animated:YES];
+//}
+
+- (void)textFieldDidBeginEditing:(UITextField *)textField
+{
+    // save the text view that is being edited
+    self.activeTextView = textField;
+}
+
+// Called when the UIKeyboardDidShowNotification is sent.
+- (void)keyboardWasShown:(NSNotification*)aNotification
+{
+    
+        NSDictionary* info = [aNotification userInfo];
+        CGSize kbSize = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
+        UIEdgeInsets contentInsets = UIEdgeInsetsMake(0.0, 0.0, kbSize.height, 0.0);
+    [UIView animateWithDuration:0.1 animations:^{
+        self.tableView.contentInset = contentInsets;
+        self.tableView.scrollIndicatorInsets = contentInsets;
+    }];
+    
+    // If active text field is hidden by keyboard, scroll it so it's visible
+    // Your application might not need or want this behavior.
+    CGRect aRect = self.view.frame;
+    aRect.size.height -= kbSize.height;
+    if (!CGRectContainsPoint(aRect, self.activeTextView.frame.origin) ) {
+        CGPoint scrollPoint = CGPointMake(0.0, self.activeTextView.frame.origin.y-kbSize.height);
+        [self.tableView setContentOffset:scrollPoint animated:YES];
+    }
+    
+}
+
+// Called when the UIKeyboardWillHideNotification is received
+- (void)keyboardWillBeHidden:(NSNotification *)aNotification
+{
+    // scroll back..
+    UIEdgeInsets contentInsets = UIEdgeInsetsMake([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height, 0, 0, 0);
+    self.tableView.contentInset = contentInsets;
+    self.tableView.scrollIndicatorInsets = contentInsets;
+}
+
+- (void)dealloc{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 //-(CGFloat) tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
