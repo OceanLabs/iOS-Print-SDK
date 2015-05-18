@@ -245,13 +245,21 @@ static NSString *instagramRedirectURI = nil;
 
 + (void)addressViewController:(void(^)(UIViewController *vc))handler{
     NSDictionary *experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestAddressScreen];
+    if (!experimentDict){
+        experimentDict = @{@"Manual" : @0, @"OfferSearch" : @1};
+    }
     [SkyLab splitTestWithName:kOLKiteABTestAddressScreen conditions:@{
                                                                        @"Manual" : experimentDict[@"Manual"],
                                                                        @"OfferSearch" : experimentDict[@"Manual"]
                                                                        }block:^(id choice){
                                                                            UIViewController *vc;
                                                                            if ([choice isEqualToString:@"Manual"]){
-                                                                               vc = [[UINavigationController alloc] initWithRootViewController:[[OLAddressEditViewController alloc] init]];
+                                                                               if ([OLAddress addressBook].count > 0) {
+                                                                                   vc = [[OLAddressPickerController alloc] init];
+                                                                               }
+                                                                               else{
+                                                                                   vc = [[UINavigationController alloc] initWithRootViewController:[[OLAddressEditViewController alloc] init]];
+                                                                               }
                                                                                
                                                                            }
                                                                            else{
@@ -263,6 +271,9 @@ static NSString *instagramRedirectURI = nil;
 
 + (void)checkoutViewControllerForPrintOrder:(OLPrintOrder *)printOrder handler:(void(^)(OLCheckoutViewController *vc))handler{
     NSDictionary *experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestShippingScreen];
+    if (!experimentDict){
+        experimentDict = @{@"Classic" : @0.5, @"Integrated" : @0.5};
+    }
     [SkyLab splitTestWithName:kOLKiteABTestShippingScreen conditions:@{
                                                               @"Classic" : experimentDict[@"Classic"],
                                                               @"Integrated" : experimentDict[@"Integrated"]

@@ -129,6 +129,7 @@ static const NSUInteger kTagLabel = 100;
         [vc.delegate addressSelectionController:vc didFinishPickingAddresses:@[self.address]];
     }
     else if ([vc.delegate respondsToSelector:@selector(addressPicker:didFinishPickingAddresses:)]){
+        [self.address saveToAddressBook];
         [(id)(vc.delegate) addressPicker:nil didFinishPickingAddresses:@[self.address]];
     }
 //    [self.navigationController popToRootViewControllerAnimated:YES];
