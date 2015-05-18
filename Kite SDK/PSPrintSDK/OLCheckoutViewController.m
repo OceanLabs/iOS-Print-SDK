@@ -56,6 +56,7 @@ static const NSUInteger kTagInputFieldLabel = 100;
 @property (assign, nonatomic) BOOL presentedModally;
 @property (strong, nonatomic) UILabel *kiteLabel;
 @property (strong, nonatomic) NSLayoutConstraint *kiteLabelYCon;
+@property (weak, nonatomic) UITextField *activeTextView;
 @end
 
 @implementation OLCheckoutViewController
@@ -123,6 +124,8 @@ static const NSUInteger kTagInputFieldLabel = 100;
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    [self registerForKeyboardNotifications];
+    
     [self trackViewed];
     
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Next", @"KitePrintSDK", [OLConstants bundle], @"") style:UIBarButtonItemStylePlain target:self action:@selector(onButtonNextClicked)];
@@ -152,6 +155,16 @@ static const NSUInteger kTagInputFieldLabel = 100;
     self.kiteLabel.translatesAutoresizingMaskIntoConstraints = NO;
     
     [self.tableView.tableFooterView addConstraint:[NSLayoutConstraint constraintWithItem:self.kiteLabel attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.tableView.tableFooterView attribute:NSLayoutAttributeCenterX multiplier:1 constant:0]];
+}
+
+- (void)registerForKeyboardNotifications
+{
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWasShown:)
+                                                 name:UIKeyboardDidShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWillBeHidden:)
+                                                 name:UIKeyboardWillHideNotification object:nil];
 }
 
 - (void)trackViewed{
@@ -434,7 +447,6 @@ static const NSUInteger kTagInputFieldLabel = 100;
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
     if (textField == self.textFieldEmail && ([self.kiteDelegate respondsToSelector:@selector(shouldShowPhoneEntryOnCheckoutScreen)] && [self.kiteDelegate shouldShowPhoneEntryOnCheckoutScreen])) {
-        [self scrollSectionToVisible:kSectionPhoneNumber];
         [self.textFieldPhone becomeFirstResponder];
     }
     else{
@@ -445,11 +457,7 @@ static const NSUInteger kTagInputFieldLabel = 100;
 }
 
 - (void)textFieldDidBeginEditing:(UITextField *)textField {
-    if (textField == self.textFieldEmail) {
-        [self scrollSectionToVisible:kSectionEmailAddress];
-    } else if (textField == self.textFieldPhone) {
-        [self scrollSectionToVisible:kSectionPhoneNumber];
-    }
+    self.activeTextView = textField;
 }
 
 #pragma mark - OLAddressPickerController delegate
@@ -484,6 +492,42 @@ static const NSUInteger kTagInputFieldLabel = 100;
     else{
         return UIInterfaceOrientationMaskPortrait;
     }
+}
+
+// Called when the UIKeyboardDidShowNotification is sent.
+- (void)keyboardWasShown:(NSNotification*)aNotification
+{
+    
+    NSDictionary* info = [aNotification userInfo];
+    CGSize kbSize = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
+    UIEdgeInsets contentInsets = UIEdgeInsetsMake(0.0, 0.0, kbSize.height, 0.0);
+    [UIView animateWithDuration:0.1 animations:^{
+        self.tableView.contentInset = contentInsets;
+        self.tableView.scrollIndicatorInsets = contentInsets;
+    }];
+    
+    // If active text field is hidden by keyboard, scroll it so it's visible
+    // Your application might not need or want this behavior.
+    CGRect aRect = self.view.frame;
+    aRect.size.height -= kbSize.height;
+    if (!CGRectContainsPoint(aRect, self.activeTextView.frame.origin) ) {
+        CGPoint scrollPoint = CGPointMake(0.0, self.activeTextView.frame.origin.y-kbSize.height);
+        [self.tableView setContentOffset:scrollPoint animated:YES];
+    }
+    
+}
+
+// Called when the UIKeyboardWillHideNotification is received
+- (void)keyboardWillBeHidden:(NSNotification *)aNotification
+{
+    // scroll back..
+    UIEdgeInsets contentInsets = UIEdgeInsetsMake([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height, 0, 0, 0);
+    self.tableView.contentInset = contentInsets;
+    self.tableView.scrollIndicatorInsets = contentInsets;
+}
+
+- (void)dealloc{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 

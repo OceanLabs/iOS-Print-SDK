@@ -67,7 +67,6 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
 {
     [super viewDidLoad];
     [self populateDefaultDeliveryAddress];
-    [self registerForKeyboardNotifications];
 }
 
 - (void)trackViewed{
@@ -377,16 +376,6 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
     }
 }
 
-- (void)registerForKeyboardNotifications
-{
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(keyboardWasShown:)
-                                                 name:UIKeyboardDidShowNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(keyboardWillBeHidden:)
-                                                 name:UIKeyboardWillHideNotification object:nil];
-}
-
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
     [self saveAddressFromTextField:textField];
     return YES;
@@ -435,63 +424,6 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
     }
     [self saveAddressFromTextField:textField];
     return YES;
-}
-
-//- (void)textFieldDidBeginEditing:(UITextField *)textField {
-//    [self scrollToTextField:textField];
-//}
-//
-//- (void)scrollToTextField:(UITextField *)textField{
-//    UIView* view = textField.superview;
-//    while (![view isKindOfClass:[UITableViewCell class]]){
-//        view = view.superview;
-//    }
-//    NSIndexPath* indexPath = [self.tableView indexPathForCell:(UITableViewCell*)view];
-//    
-//    CGRect rect = [self.tableView rectForRowAtIndexPath:indexPath];
-//    [self.tableView scrollRectToVisible:rect animated:YES];
-//}
-
-- (void)textFieldDidBeginEditing:(UITextField *)textField
-{
-    // save the text view that is being edited
-    self.activeTextView = textField;
-}
-
-// Called when the UIKeyboardDidShowNotification is sent.
-- (void)keyboardWasShown:(NSNotification*)aNotification
-{
-    
-        NSDictionary* info = [aNotification userInfo];
-        CGSize kbSize = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
-        UIEdgeInsets contentInsets = UIEdgeInsetsMake(0.0, 0.0, kbSize.height, 0.0);
-    [UIView animateWithDuration:0.1 animations:^{
-        self.tableView.contentInset = contentInsets;
-        self.tableView.scrollIndicatorInsets = contentInsets;
-    }];
-    
-    // If active text field is hidden by keyboard, scroll it so it's visible
-    // Your application might not need or want this behavior.
-    CGRect aRect = self.view.frame;
-    aRect.size.height -= kbSize.height;
-    if (!CGRectContainsPoint(aRect, self.activeTextView.frame.origin) ) {
-        CGPoint scrollPoint = CGPointMake(0.0, self.activeTextView.frame.origin.y-kbSize.height);
-        [self.tableView setContentOffset:scrollPoint animated:YES];
-    }
-    
-}
-
-// Called when the UIKeyboardWillHideNotification is received
-- (void)keyboardWillBeHidden:(NSNotification *)aNotification
-{
-    // scroll back..
-    UIEdgeInsets contentInsets = UIEdgeInsetsMake([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height, 0, 0, 0);
-    self.tableView.contentInset = contentInsets;
-    self.tableView.scrollIndicatorInsets = contentInsets;
-}
-
-- (void)dealloc{
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 //-(CGFloat) tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
