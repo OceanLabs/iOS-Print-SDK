@@ -233,12 +233,16 @@ static NSString *instagramRedirectURI = nil;
 #endif
 
 + (void)fetchRemotePlist{
-    NSDictionary *oldDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestShippingScreen];
+    NSDictionary *oldDictShipping = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestShippingScreen];
+    NSDictionary *oldDictAddress = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestAddressScreen];
     
     NSURL *URL = [NSURL URLWithString:@"https://sdk-static.s3.amazonaws.com/kite-ios-remote.plist"];
     [[NSUserDefaults standardUserDefaults] registerDefaultsWithURL:URL success:^(NSDictionary *defaults){
-        if (![oldDict[@"Experiment Version"] isEqualToString:defaults[@"Experiment Version"]]){
+        if (![oldDictShipping[@"Experiment Version"] isEqualToString:defaults[kOLKiteABTestShippingScreen][@"Experiment Version"]]){
             [SkyLab resetTestNamed:kOLKiteABTestShippingScreen];
+        }
+        if (![oldDictAddress[@"Experiment Version"] isEqualToString:defaults[kOLKiteABTestAddressScreen][@"Experiment Version"]]){
+            [SkyLab resetTestNamed:kOLKiteABTestAddressScreen];
         }
     }failure:NULL];
 }
