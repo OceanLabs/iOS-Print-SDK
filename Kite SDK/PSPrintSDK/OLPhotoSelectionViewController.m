@@ -786,7 +786,8 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
         size = self.rotationSize;
     }
     
-    CGFloat width = floorf(size.width/((float)[self numberOfCellsPerRow]));
+    float numberOfCellsPerRow = [self numberOfCellsPerRow];
+    CGFloat width = ceilf(size.width/numberOfCellsPerRow);
     CGFloat height = width;
     
 //    if (indexPath.item % [self numberOfCellsPerRow] == 2) {
