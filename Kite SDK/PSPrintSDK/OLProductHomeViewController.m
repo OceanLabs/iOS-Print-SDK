@@ -8,7 +8,6 @@
 
 #import "OLProductHomeViewController.h"
 #import "OLProductOverviewViewController.h"
-#import "UITableViewController+ScreenWidthFactor.h"
 #import "OLProductTypeSelectionViewController.h"
 #import "OLProductTemplate.h"
 #import "OLProduct.h"
@@ -17,6 +16,10 @@
 #import "OLPosterSizeSelectionViewController.h"
 #import "OLAnalytics.h"
 #import "OLProductGroup.h"
+#import "NSObject+Utils.h"
+#import "OLCustomNavigationController.h"
+#import "UIViewController+TraitCollectionCompatibility.h"
+#import "UIImageView+FadeIn.h"
 
 @interface OLProduct (Private)
 
@@ -26,13 +29,20 @@
 
 @end
 
-@interface OLProductHomeViewController ()
+@interface OLKiteViewController (Private)
+
++ (NSString *)storyboardIdentifierForGroupSelected:(OLProductGroup *)group;
+
+@end
+
+@interface OLProductHomeViewController () <UICollectionViewDelegateFlowLayout>
 @property (nonatomic, strong) NSArray *productGroups;
 @property (nonatomic, strong) UIImageView *topSurpriseImageView;
 @property (nonatomic, strong) UIView *huggleBotSpeechBubble;
 @property (nonatomic, weak) IBOutlet UILabel *huggleBotFriendNameLabel;
 @property (weak, nonatomic) IBOutlet UILabel *letsStartLabel;
 @property (nonatomic, assign) BOOL startHuggleBotOnViewWillAppear;
+@property (assign, nonatomic) BOOL fromRotation;
 @end
 
 @implementation OLProductHomeViewController
@@ -53,6 +63,10 @@
 #endif
 
     self.title = NSLocalizedString(@"Print Shop", @"");
+    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Back", @"")
+                                                                             style:UIBarButtonItemStyleBordered
+                                                                            target:nil
+                                                                            action:nil];
 }
 
 
@@ -73,68 +87,118 @@
     }
 }
 
-#pragma mark - UITableViewDelegate Methods
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
 
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if ([self tableView:tableView numberOfRowsInSection:indexPath.section] == 2){
-        return (self.view.bounds.size.height - 64) / 2;
+    self.fromRotation = YES;
+    NSArray *visibleCells = [self.collectionView indexPathsForVisibleItems];
+    NSIndexPath *maxIndexPath = [visibleCells firstObject];
+    for (NSIndexPath *indexPath in visibleCells){
+        if (maxIndexPath.item < indexPath.item){
+            maxIndexPath = indexPath;
+        }
+    }
+    
+    [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinator> context){
+        [self.collectionView.collectionViewLayout invalidateLayout];
+    }completion:^(id<UIViewControllerTransitionCoordinator> context){
+        [self.collectionView reloadData];
+    }];
+}
+
+#pragma mark - UICollectionViewDelegate Methods
+
+- (CGSize) collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
+    CGSize size = self.view.bounds.size;
+    NSInteger numberOfCells = [self collectionView:collectionView numberOfItemsInSection:indexPath.section];
+    CGFloat halfScreenHeight = (size.height - [[UIApplication sharedApplication] statusBarFrame].size.height - self.navigationController.navigationBar.frame.size.height)/2;
+    
+    if ([self isHorizontalSizeClassCompact] && size.height > size.width) {
+        if (numberOfCells == 2){
+            return CGSizeMake(size.width, halfScreenHeight);
+        }
+        else{
+            return CGSizeMake(size.width, 233 * (size.width / 320.0));
+        }
+    }
+    else if (numberOfCells == 6){
+        return CGSizeMake(size.width/2 - 1, MAX(halfScreenHeight * (2.0 / 3.0), 233));
+    }
+    else if (numberOfCells == 4){
+        return CGSizeMake(size.width/2 - 1, MAX(halfScreenHeight, 233));
+    }
+    else if (numberOfCells == 2){
+        if (size.width < size.height){
+            return CGSizeMake(size.width, halfScreenHeight);
+        }
+        else{
+            return CGSizeMake(size.width/2 - 1, halfScreenHeight * 2);
+        }
     }
     else{
-        return 233 * [self screenWidthFactor];
+        return CGSizeMake(size.width/2 - 1, 233);
     }
 }
 
--(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    /*****
-     * Ugly reminder that if new OLTemplateUI values are added then we need to update below AND in OLKiteViewController transitionToNextScreen: -- Yuck.
-     * Heck if you're changing the below think carefully as you may need to change OLKiteViewController too!
-     *****/
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
+    if (indexPath.item >= self.productGroups.count){
+        return;
+    }
+    
     OLProductGroup *group = self.productGroups[indexPath.row];
     OLProduct *product = [group.products firstObject];
-    if (product.productTemplate.templateUI == kOLTemplateUIPoster && group.products.count > 1){
-        OLPosterSizeSelectionViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"sizeSelect"];
-        vc.assets = self.assets;
-        vc.userSelectedPhotos = self.userSelectedPhotos;
-        vc.delegate = self.delegate;
-        [self.navigationController pushViewController:vc animated:YES];
-    }
-    else if (group.products.count > 1 && product.productTemplate.templateUI != kOLTemplateUIFrame){
-        OLProductTypeSelectionViewController *typeVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLTypeSelectionViewController"];
-        typeVc.filterProducts = self.filterProducts;
-        typeVc.delegate = self.delegate;
-        typeVc.assets = self.assets;
-        typeVc.userSelectedPhotos = self.userSelectedPhotos;
-        typeVc.templateClass = product.productTemplate.templateClass;
-        [self.navigationController pushViewController:typeVc animated:YES];
-    }
-    else{
-        OLProductOverviewViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLProductOverviewViewController"];
-        vc.assets = self.assets;
-        vc.userSelectedPhotos = self.userSelectedPhotos;
-        vc.product = product;
-        vc.delegate = self.delegate;
-        [self.navigationController pushViewController:vc animated:YES];
-    }
+    NSString *identifier = [OLKiteViewController storyboardIdentifierForGroupSelected:group];
+    
+    id vc = [self.storyboard instantiateViewControllerWithIdentifier:identifier];
+    [vc safePerformSelector:@selector(setAssets:) withObject:self.assets];
+    [vc safePerformSelector:@selector(setUserSelectedPhotos:) withObject:self.userSelectedPhotos];
+    [vc safePerformSelector:@selector(setDelegate:) withObject:self.delegate];
+    [vc safePerformSelector:@selector(setFilterProducts:) withObject:self.filterProducts];
+    [vc safePerformSelector:@selector(setTemplateClass:) withObject:product.productTemplate.templateClass];
+    [vc safePerformSelector:@selector(setProduct:) withObject:product];
+    
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
-#pragma mark - UITableViewDataSource Methods
+#pragma mark - UICollectionViewDataSource Methods
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
     return 1;
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return [self.productGroups count];
+- (NSInteger) collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
+    NSInteger extras = 0;
+    NSInteger numberOfProducts = [self.productGroups count];
+    
+    CGSize size = self.view.frame.size;
+    if (!(numberOfProducts % 2 == 0) && (!([self isHorizontalSizeClassCompact]) || size.height < size.width)){
+        extras = 1;
+    }
+    
+    return numberOfProducts + extras;
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
+    if (indexPath.item >= self.productGroups.count){
+        UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"extraCell" forIndexPath:indexPath];
+        UIImageView *cellImageView = (UIImageView *)[cell.contentView viewWithTag:40];
+        [cellImageView setAndFadeInImageWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/product_photography/placeholder.png"]];
+        if (self.fromRotation){
+            self.fromRotation = NO;
+            cell.alpha = 0;
+            [UIView animateWithDuration:0.3 animations:^{
+                cell.alpha = 1;
+            }];
+        }
+        return cell;
+    }
     
     static NSString *identifier = @"ProductCell";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
+    UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
     
     UIImageView *cellImageView = (UIImageView *)[cell.contentView viewWithTag:40];
 
-    OLProductGroup *group = self.productGroups[indexPath.row];
+    OLProductGroup *group = self.productGroups[indexPath.item];
     OLProduct *product = [group.products firstObject];
     [product setClassImageToImageView:cellImageView];
 
@@ -151,13 +215,25 @@
 }
 
 #pragma mark - Autorotate and Orientation Methods
+// Currently here to disable landscape orientations and rotation on iOS 7. When support is dropped, these can be deleted.
 
 - (BOOL)shouldAutorotate {
-    return NO;
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
+        return YES;
+    }
+    else{
+        return NO;
+    }
 }
 
 - (NSUInteger)supportedInterfaceOrientations {
-    return UIInterfaceOrientationMaskPortrait;
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
+        return UIInterfaceOrientationMaskAll;
+    }
+    else{
+        return UIInterfaceOrientationMaskPortrait;
+    }
 }
+
 
 @end

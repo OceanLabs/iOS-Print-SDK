@@ -23,6 +23,7 @@
 #import "OLConstants.h"
 #import "OLCreditCardCaptureViewController.h"
 #import "OLAnalytics.h"
+#import "UIView+RoundRect.h"
 
 #ifdef OL_KITE_OFFER_PAYPAL
 #import <PayPalMobile.h>
@@ -58,7 +59,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 @property (strong, nonatomic) UITextField *promoTextField;
 @property (strong, nonatomic) UIButton *promoApplyButton;
 @property (strong, nonatomic) UIButton *payWithCreditCardButton;
-@property (strong, nonatomic) UILabel *poweredByKiteLabel;
+@property (strong, nonatomic) UILabel *kiteLabel;
 
 #ifdef OL_KITE_OFFER_APPLE_PAY
 @property (strong, nonatomic) UIButton *payWithApplePayButton;
@@ -70,6 +71,9 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 @property (assign, nonatomic) BOOL completedTemplateSyncSuccessfully;
 @property (strong, nonatomic) NSString *paymentCurrencyCode;
 @property (strong, nonatomic) NSMutableArray* sections;
+
+@property (strong, nonatomic) NSLayoutConstraint *kiteLabelYCon;
+@property (strong, nonatomic) UIView *lowestView;
 
 #ifdef OL_KITE_OFFER_PAYPAL
 @property (strong, nonatomic) UIButton *payWithPayPalButton;
@@ -166,7 +170,10 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     self.payWithCreditCardButton.backgroundColor = [UIColor colorWithRed:55 / 255.0f green:188 / 255.0f blue:155 / 255.0f alpha:1.0];
     [self.payWithCreditCardButton addTarget:self action:@selector(onButtonPayWithCreditCardClicked) forControlEvents:UIControlEventTouchUpInside];
     [self.payWithCreditCardButton setTitle:NSLocalizedStringFromTableInBundle(@"Pay with Card", @"KitePrintSDK", [OLConstants bundle], @"") forState:UIControlStateNormal];
+    [self.payWithCreditCardButton makeRoundRect];
     CGFloat maxY = CGRectGetMaxY(self.payWithCreditCardButton.frame);
+    
+    self.lowestView = self.payWithCreditCardButton;
 
     
 #ifdef OL_KITE_OFFER_PAYPAL
@@ -174,6 +181,8 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     [self.payWithPayPalButton setTitle:NSLocalizedStringFromTableInBundle(@"Pay with PayPal", @"KitePrintSDK", [OLConstants bundle], @"") forState:UIControlStateNormal];
     [self.payWithPayPalButton addTarget:self action:@selector(onButtonPayWithPayPalClicked) forControlEvents:UIControlEventTouchUpInside];
     self.payWithPayPalButton.backgroundColor = [UIColor colorWithRed:74 / 255.0f green:137 / 255.0f blue:220 / 255.0f alpha:1.0];
+    [self.payWithPayPalButton makeRoundRect];
+    maxY = CGRectGetMaxY(self.payWithPayPalButton.frame);
 #endif
     
 #ifdef OL_KITE_OFFER_APPLE_PAY
@@ -183,26 +192,60 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     [self.payWithApplePayButton setTitle:NSLocalizedStringFromTableInBundle(@"Pay with Pay", @"KitePrintSDK", [OLConstants bundle], @"") forState:UIControlStateNormal];
 #endif
     
-    self.poweredByKiteLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 100, 40, 40)];
-    self.poweredByKiteLabel.text = NSLocalizedString(@"Powered by Kite.ly", @"");
-    self.poweredByKiteLabel.font = [UIFont systemFontOfSize:13];
-    self.poweredByKiteLabel.textColor = [UIColor lightGrayColor];
-    [self.poweredByKiteLabel sizeToFit];
-    self.poweredByKiteLabel.frame = CGRectMake((self.view.frame.size.width - self.poweredByKiteLabel.frame.size.width) / 2, 168 - heightDiff, self.poweredByKiteLabel.frame.size.width, self.poweredByKiteLabel.frame.size.height);
-    maxY = CGRectGetMaxY(self.poweredByKiteLabel.frame);
+    self.kiteLabel = [[UILabel alloc] init];
+    self.kiteLabel.text = NSLocalizedString(@"Powered by Kite.ly", @"");
+    self.kiteLabel.font = [UIFont systemFontOfSize:13];
+    self.kiteLabel.textColor = [UIColor lightGrayColor];
     
+    maxY += 30;
     UIView *footer = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, maxY)];
     [footer addSubview:self.payWithCreditCardButton];
-    [footer addSubview:self.poweredByKiteLabel];
+    [footer addSubview:self.kiteLabel];
+    
+    self.kiteLabel.translatesAutoresizingMaskIntoConstraints = NO;
+    
+    [footer addConstraint:[NSLayoutConstraint constraintWithItem:self.kiteLabel attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:footer attribute:NSLayoutAttributeCenterX multiplier:1 constant:0]];
 
 #ifdef OL_KITE_OFFER_PAYPAL
     [footer addSubview:self.payWithPayPalButton];
+    self.lowestView = self.payWithPayPalButton;
 #endif
     
 #ifdef OL_KITE_OFFER_APPLE_PAY
     if (self.applePayIsAvailable){
         [footer addSubview:self.payWithApplePayButton];
     }
+#endif
+    
+    UIView *view = self.payWithCreditCardButton;
+    view.translatesAutoresizingMaskIntoConstraints = NO;
+    NSDictionary *views = NSDictionaryOfVariableBindings(view);
+    NSMutableArray *con = [[NSMutableArray alloc] init];
+    
+    NSString *v = [NSString stringWithFormat:@"V:|-%f-[view(44)]", 52 - heightDiff];
+    NSArray *visuals = @[@"H:|-20-[view]-20-|", v];
+    
+    
+    for (NSString *visual in visuals) {
+        [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+    }
+    
+    [view.superview addConstraints:con];
+    
+#ifdef OL_KITE_OFFER_PAYPAL
+    view = self.payWithPayPalButton;
+    view.translatesAutoresizingMaskIntoConstraints = NO;
+    views = NSDictionaryOfVariableBindings(view);
+    con = [[NSMutableArray alloc] init];
+    
+    v = [NSString stringWithFormat:@"V:|-%f-[view(44)]", 104 - heightDiff];
+    visuals = @[@"H:|-20-[view]-20-|", v];
+    
+    for (NSString *visual in visuals) {
+        [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+    }
+    
+    [view.superview addConstraints:con];
 #endif
     
     self.tableView.tableFooterView = footer;
@@ -219,11 +262,48 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     loadingLabel.text = @"Loading";
     loadingLabel.textColor = [UIColor colorWithRed:128 / 255.0 green:128 / 255.0 blue:128 / 255.0 alpha:1];
     [loadingLabel sizeToFit];
+    loadingLabel.textAlignment = NSTextAlignmentCenter;
     loadingLabel.frame = CGRectMake((f.size.width - loadingLabel.frame.size.width) / 2, CGRectGetMaxY(ai.frame) + 10, loadingLabel.frame.size.width, loadingLabel.frame.size.height);
     
     [self.loadingTemplatesView addSubview:ai];
     [self.loadingTemplatesView addSubview:loadingLabel];
     [self.view addSubview:self.loadingTemplatesView];
+    
+    ai.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.loadingTemplatesView addConstraints:@[[NSLayoutConstraint constraintWithItem:ai attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:ai.superview attribute:NSLayoutAttributeCenterY multiplier:1 constant:0],[NSLayoutConstraint constraintWithItem:ai attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:ai.superview attribute:NSLayoutAttributeCenterX multiplier:1 constant:0]]];
+    
+    view = self.loadingTemplatesView;
+    
+    view.translatesAutoresizingMaskIntoConstraints = NO;
+    views = NSDictionaryOfVariableBindings(view);
+    con = [[NSMutableArray alloc] init];
+    
+    visuals = @[@"H:|-0-[view]-0-|",
+                         @"V:|-0-[view]-0-|"];
+    
+    
+    for (NSString *visual in visuals) {
+        [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+    }
+    
+    [view.superview addConstraints:con];
+    
+    view = loadingLabel;
+    
+    view.translatesAutoresizingMaskIntoConstraints = NO;
+    views = NSDictionaryOfVariableBindings(view, ai);
+    con = [[NSMutableArray alloc] init];
+    
+    visuals = @[@"H:|-0-[view]-0-|",
+                @"V:[ai]-0-[view]"];
+    
+    
+    for (NSString *visual in visuals) {
+        [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+    }
+    
+    [view.superview addConstraints:con];
+
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardDidShow:) name:UIKeyboardDidShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
@@ -231,6 +311,13 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     UITapGestureRecognizer *tgr = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onBackgroundClicked)];
     tgr.cancelsTouchesInView = NO; // allow table cell selection to happen as normal
     [self.tableView addGestureRecognizer:tgr];
+}
+
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+    [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinator> context){
+        [self positionKiteLabel];
+    } completion:NULL];
 }
 
 - (void)onBackgroundClicked {
@@ -295,29 +382,22 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         self.completedTemplateSyncSuccessfully = YES;
         self.loadingTemplatesView.hidden = YES;
         [self.tableView reloadData];
-        [self positionPoweredByKiteLabel];
     } else {
-        [self positionPoweredByKiteLabel];
         self.loadingTemplatesView.hidden = NO;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onTemplateSyncCompleted:) name:kNotificationTemplateSyncComplete object:nil];
     }
+    [self positionKiteLabel];
 }
 
-- (void)positionPoweredByKiteLabel {
-    // position Powered by Kite label dynamically based on content size
-    CGRect tvFrame = self.tableView.frame;
-    CGFloat extraHeight = MAX(self.tableView.contentInset.top, self.view.frame.origin.y);
-    if ([self.delegate respondsToSelector:@selector(shouldShowContinueShoppingButton)] && [self.delegate shouldShowContinueShoppingButton]){
-        extraHeight = 64;
-    }
-    CGFloat height = tvFrame.size.height - (self.tableView.contentSize.height - self.tableView.tableHeaderView.frame.size.height - extraHeight);
+- (void)positionKiteLabel {
+    [self.kiteLabel.superview removeConstraint:self.kiteLabelYCon];
     
-    if (height > self.tableView.tableFooterView.frame.size.height) {
-        CGRect frame = self.tableView.tableFooterView.frame;
-        self.tableView.tableFooterView.frame = CGRectMake(frame.origin.x, frame.origin.y, frame.size.width, height);
-        frame = self.poweredByKiteLabel.frame;
-        self.poweredByKiteLabel.frame = CGRectMake(frame.origin.x, height - frame.size.height, frame.size.width, frame.size.height);
-    }
+    CGSize size = self.view.frame.size;
+    CGFloat navBarHeight = [[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height;
+    CGFloat blankSpace = MAX(size.height - self.tableView.contentSize.height - navBarHeight + 5, 10);
+    
+    self.kiteLabelYCon = [NSLayoutConstraint constraintWithItem:self.kiteLabel attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.lowestView attribute:NSLayoutAttributeBottom multiplier:1 constant:blankSpace];
+    [self.kiteLabel.superview addConstraint:self.kiteLabelYCon];
 }
 
 - (void)dealloc {
@@ -334,7 +414,6 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     if (!syncCompletionError) {
         self.completedTemplateSyncSuccessfully = YES;
         [self.tableView reloadData];
-        [self positionPoweredByKiteLabel];
         [UIView animateWithDuration:0.3 animations:^{
             self.loadingTemplatesView.alpha = 0;
         } completion:^(BOOL finished) {
@@ -708,12 +787,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             OLProductTemplate *template = [OLProductTemplate templateWithId:job.templateId];
             if ([job.templateId isEqualToString:@"ps_postcard"] || [job.templateId isEqualToString:@"60_postcards"]) {
                 cell.textLabel.text = [NSString stringWithFormat:@"%@", job.productName];
-            } else if (template.templateUI == kOLTemplateUIFrame) {
-                cell.textLabel.text = [NSString stringWithFormat:@"%lu x %@", (unsigned long) (job.quantity + template.quantityPerSheet - 1 ) / template.quantityPerSheet, job.productName];
-            } else if (template.templateUI == kOLTemplateUIPoster){
-                cell.textLabel.text = [NSString stringWithFormat:@"%lu x %@", (unsigned long) (job.quantity + template.quantityPerSheet - 1 ) / template.quantityPerSheet, job.productName];
-            }
-            else if (template.templateUI == kOLTemplateUICase){
+            } else if (template.templateUI == kOLTemplateUIFrame || template.templateUI == kOLTemplateUIPoster || template.templateUI == kOLTemplateUICase || template.templateUI == kOLTemplateUIPhotobook) {
                 cell.textLabel.text = [NSString stringWithFormat:@"%lu x %@", (unsigned long) (job.quantity + template.quantityPerSheet - 1 ) / template.quantityPerSheet, job.productName];
             }
             else {
@@ -745,6 +819,23 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         [continueShoppingButton setBackgroundColor:[UIColor colorWithRed:74 / 255.0f green:137 / 255.0f blue:220 / 255.0f alpha:1.0]];
         [continueShoppingButton addTarget:self action:@selector(onButtonContinueShoppingClicked:) forControlEvents:UIControlEventTouchUpInside];
         [cell addSubview:continueShoppingButton];
+        
+        UIView *view = continueShoppingButton;
+        view.translatesAutoresizingMaskIntoConstraints = NO;
+        NSDictionary *views = NSDictionaryOfVariableBindings(view);
+        NSMutableArray *con = [[NSMutableArray alloc] init];
+        
+        NSArray *visuals = @[@"H:|-0-[view]-0-|",
+                             @"V:|-0-[view]-0-|"];
+        
+        
+        for (NSString *visual in visuals) {
+            [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+        }
+        
+        [view.superview addConstraints:con];
+
+        
     } else if ([sectionString isEqualToString:kSectionPromoCodes]) {
         static NSString *const CellIdentifier = @"PromoCodeCell";
         cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
@@ -768,6 +859,44 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             [applyButton addTarget:self action:@selector(onButtonApplyPromoCodeClicked:) forControlEvents:UIControlEventTouchUpInside];
             [cell addSubview:promoCodeTextField];
             [cell addSubview:applyButton];
+            
+            if ([[[UIDevice currentDevice] systemVersion] floatValue] >=8){
+                UIView *view = promoCodeTextField;
+                view.translatesAutoresizingMaskIntoConstraints = NO;
+                NSDictionary *views = NSDictionaryOfVariableBindings(view);
+                NSMutableArray *con = [[NSMutableArray alloc] init];
+                
+                NSArray *visuals = @[@"H:|-20-[view]-60-|", @"V:[view(43)]"];
+                
+                
+                for (NSString *visual in visuals) {
+                    [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+                }
+                
+                [view.superview addConstraints:con];
+                
+                NSLayoutConstraint *centerY = [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:view.superview attribute:NSLayoutAttributeCenterY multiplier:1 constant:0];
+                [con addObject:centerY];
+                
+                view = applyButton;
+                view.translatesAutoresizingMaskIntoConstraints = NO;
+                views = NSDictionaryOfVariableBindings(view);
+                con = [[NSMutableArray alloc] init];
+                
+                visuals = @[@"H:[view(60)]-0-|"];
+                
+                
+                for (NSString *visual in visuals) {
+                    [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+                }
+                
+                NSLayoutConstraint *buttonCenterY = [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:view.superview attribute:NSLayoutAttributeCenterY multiplier:1 constant:0];
+                [con addObject:buttonCenterY];
+                
+                [view.superview addConstraints:con];
+            }
+
+
             
             self.promoTextField = promoCodeTextField;
             self.promoApplyButton = applyButton;
@@ -836,13 +965,24 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 }
 
 #pragma mark - Autorotate and Orientation Methods
+// Currently here to disable landscape orientations and rotation on iOS 7. When support is dropped, these can be deleted.
 
 - (BOOL)shouldAutorotate {
-    return NO;
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
+        return YES;
+    }
+    else{
+        return NO;
+    }
 }
 
 - (NSUInteger)supportedInterfaceOrientations {
-    return UIInterfaceOrientationMaskPortrait;
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
+        return UIInterfaceOrientationMaskAll;
+    }
+    else{
+        return UIInterfaceOrientationMaskPortrait;
+    }
 }
 
 

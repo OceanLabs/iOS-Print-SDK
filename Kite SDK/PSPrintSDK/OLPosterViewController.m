@@ -96,7 +96,8 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         for (NSUInteger i = 0; i < MIN([self.imageViews count], [self.posterPhotos count]); i++) {
             
-            [((OLPrintPhoto*)[self.posterPhotos objectAtIndex:i]) setImageIdealSizeForImageView:self.imageViews[i] highQuality:YES];
+            OLPrintPhoto *printPhoto = (OLPrintPhoto*)[self.posterPhotos objectAtIndex:i];
+            [printPhoto setImageSize:[(UIView *)self.imageViews[i] frame].size forImageView:self.imageViews[i]];
         }
     });
 }
@@ -183,13 +184,24 @@
 }
 
 #pragma mark - Autorotate and Orientation Methods
+// Currently here to disable landscape orientations and rotation on iOS 7. When support is dropped, these can be deleted.
 
 - (BOOL)shouldAutorotate {
-    return NO;
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
+        return YES;
+    }
+    else{
+        return NO;
+    }
 }
 
 - (NSUInteger)supportedInterfaceOrientations {
-    return UIInterfaceOrientationMaskPortrait;
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
+        return UIInterfaceOrientationMaskAll;
+    }
+    else{
+        return UIInterfaceOrientationMaskPortrait;
+    }
 }
 
 @end

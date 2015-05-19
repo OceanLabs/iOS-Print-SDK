@@ -20,6 +20,7 @@
 #import "OLPrintPhoto.h"
 #import "OLProductGroup.h"
 #import "OLCustomNavigationController.h"
+#import "NSObject+Utils.h"
 
 static const NSInteger kTagNoProductsAlertView = 99;
 static const NSInteger kTagTemplateSyncFailAlertView = 100;
@@ -133,66 +134,51 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
     
     // The screen we transition to will depend on what products are available based on the developers filter preferences.
     NSArray *groups = [OLProductGroup groupsWithFilters:self.filterProducts];
+    
+    UIStoryboard *sb = [UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:nil];
+    NSString *nextVcNavIdentifier;
+    OLProduct *product;
     if (groups.count == 0) {
-        UIAlertView *av = [[UIAlertView alloc] initWithTitle:@"Store Maintenance" message:NSLocalizedString(@"Our store is currently undergoing maintence so no products are available for purchase at this time. Please try again a little later.", @"") delegate:self cancelButtonTitle:NSLocalizedString(@"OK", @"")  otherButtonTitles:nil];
-        av.tag = kTagNoProductsAlertView;
-        av.delegate = self;
-        [av show];
-        return;
-    } else if (groups.count == 1) {
-        /*****
-         * Ugly reminder that if new OLTemplateUI values are added then we need to update below AND in OLProductHomeViewController tableView:didSelectRowAtIndexPath: -- Yuck.
-         * Heck if you're changing the below think carefully as you may need to change OLProductHomeViewController too!
-         *****/
-        OLProductGroup *group = groups[0];
-        OLProduct *product = [group.products firstObject];
-        if (product.productTemplate.templateUI == kOLTemplateUIPoster && group.products.count > 1) {
-            OLPosterSizeSelectionViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"sizeSelect"];
-            vc.filterProducts = self.filterProducts;
-            vc.assets = [NSMutableArray arrayWithArray:self.assets];
-            vc.userSelectedPhotos = self.userSelectedPhotos;
-            vc.delegate = self.delegate;
-            vc.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Cancel", @"") style:UIBarButtonItemStylePlain target:self action:@selector(onButtonCancelClicked)];
-            [self fadeToViewController:[[OLCustomNavigationController alloc] initWithRootViewController:vc]];
-        } else if (group.products.count > 1 && product.productTemplate.templateUI != kOLTemplateUIFrame){
-            OLProductTypeSelectionViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLTypeSelectionViewController"];
-            vc.filterProducts = self.filterProducts;
-            vc.delegate = self.delegate;
-            vc.assets = [NSMutableArray arrayWithArray:self.assets];
-            vc.userSelectedPhotos = self.userSelectedPhotos;
-            vc.templateClass = product.productTemplate.templateClass;
-            vc.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Cancel", @"") style:UIBarButtonItemStylePlain target:self action:@selector(onButtonCancelClicked)];
-            [self fadeToViewController:[[OLCustomNavigationController alloc] initWithRootViewController:vc]];
-        } else {
-            OLProductOverviewViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLProductOverviewViewController"];
-            vc.assets = [NSMutableArray arrayWithArray:self.assets];
-            vc.userSelectedPhotos = self.userSelectedPhotos;
-            vc.product = product;
-            vc.delegate = self.delegate;
-            vc.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Cancel", @"") style:UIBarButtonItemStylePlain target:self action:@selector(onButtonCancelClicked)];
-            [self fadeToViewController:[[OLCustomNavigationController alloc] initWithRootViewController:vc]];
+        if ([UIAlertController class]){
+            UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Store Maintenance", @"") message:NSLocalizedString(@"Our store is currently undergoing maintence so no products are available for purchase at this time. Please try again a little later.", @"") preferredStyle:UIAlertControllerStyleAlert];
+            [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+                [self dismiss];
+            }]];
+            [self presentViewController:ac animated:YES completion:NULL];
         }
-    } else {
-        // Launch the product home view controller where the top level groups will be displayed
-        UIStoryboard *sb = [UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:nil];
-        NSString *nextVcNavIdentifier = @"ProductsNavigationController";
-        
-        UIViewController *vc = [sb instantiateViewControllerWithIdentifier:nextVcNavIdentifier];
-        OLProductHomeViewController *homeVC = (OLProductHomeViewController *)((UINavigationController *)vc).topViewController;
-        [homeVC setDelegate:self.delegate];
-        homeVC.userEmail = self.userEmail;
-        homeVC.userPhone = self.userPhone;
-        homeVC.filterProducts = self.filterProducts;
-        
-        ((UINavigationController *)vc).topViewController.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(dismiss)];
-        [(id)((UINavigationController *)vc).topViewController setAssets:[self.assets mutableCopy]];
-        [(id)((UINavigationController *)vc).topViewController setUserSelectedPhotos:self.userSelectedPhotos];
-        
-        [self fadeToViewController:vc];
+        else{
+            UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Store Maintenance", @"") message:NSLocalizedString(@"Our store is currently undergoing maintence so no products are available for purchase at this time. Please try again a little later.", @"") delegate:self cancelButtonTitle:NSLocalizedString(@"OK", @"")  otherButtonTitles:nil];
+            av.tag = kTagNoProductsAlertView;
+            av.delegate = self;
+            [av show];
+        }
+        return;
     }
+    else if (groups.count == 1) {
+        OLProductGroup *group = groups[0];
+        product = [group.products firstObject];
+        nextVcNavIdentifier = [OLKiteViewController storyboardIdentifierForGroupSelected:group];
+    }
+    else {
+        // Launch the product home view controller where the top level groups will be displayed
+        nextVcNavIdentifier = @"ProductHomeViewController";
+    }
+    UIViewController *vc = [sb instantiateViewControllerWithIdentifier:nextVcNavIdentifier];
+    UINavigationController *nav = [[OLCustomNavigationController alloc] initWithRootViewController:vc];
+    [vc safePerformSelector:@selector(setProduct:) withObject:product];
+    [vc safePerformSelector:@selector(setDelegate:) withObject:self.delegate];
+    [vc safePerformSelector:@selector(setUserEmail:) withObject:self.userEmail];
+    [vc safePerformSelector:@selector(setUserPhone:) withObject:self.userPhone];
+    [vc safePerformSelector:@selector(setFilterProducts:) withObject:self.filterProducts];
+    [vc safePerformSelector:@selector(setAssets:) withObject:[self.assets mutableCopy]];
+    [vc safePerformSelector:@selector(setUserSelectedPhotos:) withObject:self.userSelectedPhotos];
+    [vc safePerformSelector:@selector(setTemplateClass:) withObject:product.productTemplate.templateClass];
+    [[vc navigationItem] setLeftBarButtonItem:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(dismiss)]];
+    
+    [self fadeToViewController:nav];
 }
 
-- (void)fadeToViewController:(UIViewController *)vc {
+- (void)fadeToViewController:(UIViewController *)vc{
     CGRect bounds = self.view.bounds;
     bounds.origin.y = CGRectGetMaxY(self.navigationBar.frame);
     UIView *view = [[UIView alloc] initWithFrame:bounds];
@@ -253,21 +239,42 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
     }
 }
 
-- (void)onButtonCancelClicked {
-    [self dismiss];
-}
-
-#pragma mark - Autorotate and Orientation Methods
-
-- (BOOL)shouldAutorotate {
-    return NO;
-}
-
-- (NSUInteger)supportedInterfaceOrientations {
-    return UIInterfaceOrientationMaskPortrait;
++ (NSString *)storyboardIdentifierForGroupSelected:(OLProductGroup *)group{
+    OLProduct *product = [group.products firstObject];
+    if (product.productTemplate.templateUI == kOLTemplateUIPoster && group.products.count > 1) {
+        return @"sizeSelect";
+    }
+    else if (group.products.count > 1){
+        return @"OLTypeSelectionViewController";
+    }
+    else {
+        return @"OLProductOverviewViewController";
+    }
 }
 
 - (void)dealloc{
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
+
+#pragma mark - Autorotate and Orientation Methods
+// Currently here to disable landscape orientations and rotation on iOS 7. When support is dropped, these can be deleted.
+
+- (BOOL)shouldAutorotate {
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
+        return YES;
+    }
+    else{
+        return NO;
+    }
+}
+
+- (NSUInteger)supportedInterfaceOrientations {
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
+        return UIInterfaceOrientationMaskAll;
+    }
+    else{
+        return UIInterfaceOrientationMaskPortrait;
+    }
+}
+
 @end

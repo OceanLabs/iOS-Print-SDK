@@ -107,14 +107,6 @@ static const NSInteger kRowAddAddressManually = 1;
     [self presentViewController:picker animated:YES completion:nil];
 }
 
-- (BOOL)shouldAutorotate {
-    return NO;
-}
-
-- (NSUInteger)supportedInterfaceOrientations {
-    return UIInterfaceOrientationMaskPortrait;
-}
-
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -154,7 +146,7 @@ static const NSInteger kRowAddAddressManually = 1;
         OLAddress *address = [OLAddress addressBook][indexPath.row];
         
 //        if (self.tableView.allowsMultipleSelection) {
-            cell.imageView.image = [UIImage imageNamed:[self.selectedAddresses containsObject:address] ? @"checkmark_on" : nil];
+            cell.imageView.image = [self.selectedAddresses containsObject:address] ? [UIImage imageNamed:@"checkmark_on"] : nil;
 //        } else {
 //            cell.imageView.image = nil;
 //        }
@@ -223,7 +215,7 @@ static const NSInteger kRowAddAddressManually = 1;
             }
             
             UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-            cell.imageView.image = [UIImage imageNamed:selected ? @"checkmark_on" : nil];
+            cell.imageView.image = selected ? [UIImage imageNamed:@"checkmark_on"] : nil;
         }
     } else if (indexPath.section == kSectionAddAddress) {
 //        if (indexPath.row == kRowAddAddressFromContacts) {
@@ -286,6 +278,27 @@ static const NSInteger kRowAddAddressManually = 1;
     }];
     
     return NO;
+}
+
+#pragma mark - Autorotate and Orientation Methods
+// Currently here to disable landscape orientations and rotation on iOS 7. When support is dropped, these can be deleted.
+
+- (BOOL)shouldAutorotate {
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
+        return YES;
+    }
+    else{
+        return NO;
+    }
+}
+
+- (NSUInteger)supportedInterfaceOrientations {
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
+        return UIInterfaceOrientationMaskAll;
+    }
+    else{
+        return UIInterfaceOrientationMaskPortrait;
+    }
 }
 
 

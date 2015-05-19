@@ -47,6 +47,8 @@ static const NSUInteger kInputFieldTag = 99;
 @property (strong, nonatomic) UITextField *textFieldEmail, *textFieldPhone;
 @property (strong, nonatomic) OLPrintOrder *printOrder;
 @property (assign, nonatomic) BOOL presentedModally;
+@property (strong, nonatomic) UILabel *kiteLabel;
+@property (strong, nonatomic) NSLayoutConstraint *kiteLabelYCon;
 @end
 
 @implementation OLCheckoutViewController
@@ -104,6 +106,13 @@ static const NSUInteger kInputFieldTag = 99;
     }
 }
 
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+    [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinator> context){
+        [self positionKiteLabel];
+    } completion:NULL];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     
@@ -127,14 +136,28 @@ static const NSUInteger kInputFieldTag = 99;
     tgr.cancelsTouchesInView = NO; // allow table cell selection to happen as normal
     [self.tableView addGestureRecognizer:tgr];
     
-    UILabel *kiteLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 100, 40, 40)];
-    kiteLabel.text = NSLocalizedString(@"Powered by Kite.ly", @"");
-    kiteLabel.font = [UIFont systemFontOfSize:13];
-    kiteLabel.textColor = [UIColor lightGrayColor];
-    [self.view addSubview:kiteLabel];
-    [kiteLabel sizeToFit];
-    kiteLabel.frame = CGRectMake(([UIScreen mainScreen].bounds.size.width - kiteLabel.frame.size.width) / 2, [UIScreen mainScreen].bounds.size.height - self.navigationController.navigationBar.frame.size.height - kiteLabel.frame.size.height - [[UIApplication sharedApplication] statusBarFrame].size.height - 20, kiteLabel.frame.size.width, kiteLabel.frame.size.height);
+    self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 10, 0)];
     
+    self.kiteLabel = [[UILabel alloc] init];
+    self.kiteLabel.text = NSLocalizedString(@"Powered by Kite.ly", @"");
+    self.kiteLabel.font = [UIFont systemFontOfSize:13];
+    self.kiteLabel.textColor = [UIColor lightGrayColor];
+    self.kiteLabel.textAlignment = NSTextAlignmentCenter;
+    [self.tableView.tableFooterView addSubview:self.kiteLabel];
+    self.kiteLabel.translatesAutoresizingMaskIntoConstraints = NO;
+    
+    [self.tableView.tableFooterView addConstraint:[NSLayoutConstraint constraintWithItem:self.kiteLabel attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.tableView.tableFooterView attribute:NSLayoutAttributeCenterX multiplier:1 constant:0]];
+}
+
+- (void)positionKiteLabel {
+    [self.kiteLabel.superview removeConstraint:self.kiteLabelYCon];
+    
+    CGSize size = self.view.frame.size;
+    CGFloat navBarHeight = [[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height;
+    CGFloat blankSpace = MAX(size.height - self.tableView.contentSize.height - navBarHeight - 5, 30);
+    
+    self.kiteLabelYCon = [NSLayoutConstraint constraintWithItem:self.kiteLabel attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.kiteLabel.superview attribute:NSLayoutAttributeBottom multiplier:1 constant:blankSpace];
+    [self.kiteLabel.superview addConstraint:self.kiteLabelYCon];
 }
 
 - (void)onButtonCancelClicked {
@@ -203,6 +226,12 @@ static const NSUInteger kInputFieldTag = 99;
     
     [[NSNotificationCenter defaultCenter] postNotificationName:kOLNotificationUserSuppliedShippingDetails object:self userInfo:@{kOLKeyUserInfoPrintOrder: self.printOrder}];
     [self.navigationController pushViewController:vc animated:YES];
+}
+
+- (void) viewWillAppear:(BOOL)animated{
+    if (self.kiteLabel){
+        [self positionKiteLabel];
+    }
 }
 
 - (void) viewWillDisappear:(BOOL)animated {
@@ -346,6 +375,27 @@ static const NSUInteger kInputFieldTag = 99;
     [inputField setKeyboardType:type];
     [cell addSubview:titleLabel];
     [cell addSubview:inputField];
+    
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8){
+        UIView *view = inputField;
+        view.translatesAutoresizingMaskIntoConstraints = NO;
+        NSDictionary *views = NSDictionaryOfVariableBindings(view);
+        NSMutableArray *con = [[NSMutableArray alloc] init];
+        
+        NSArray *visuals = @[@"H:|-86-[view]-0-|", @"V:[view(43)]"];
+        
+        
+        for (NSString *visual in visuals) {
+            [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+        }
+        
+        NSLayoutConstraint *centerY = [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:view.superview attribute:NSLayoutAttributeCenterY multiplier:1 constant:0];
+        [con addObject:centerY];
+        
+        [view.superview addConstraints:con];
+    }
+
+    
     return cell;
 }
 
@@ -395,13 +445,24 @@ static const NSUInteger kInputFieldTag = 99;
 }
 
 #pragma mark - Autorotate and Orientation Methods
+// Currently here to disable landscape orientations and rotation on iOS 7. When support is dropped, these can be deleted.
 
 - (BOOL)shouldAutorotate {
-    return NO;
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
+        return YES;
+    }
+    else{
+        return NO;
+    }
 }
 
 - (NSUInteger)supportedInterfaceOrientations {
-    return UIInterfaceOrientationMaskPortrait;
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
+        return UIInterfaceOrientationMaskAll;
+    }
+    else{
+        return UIInterfaceOrientationMaskPortrait;
+    }
 }
 
 
