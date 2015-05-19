@@ -627,6 +627,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     imageView.translatesAutoresizingMaskIntoConstraints = NO;
     
     [cell.contentView addSubview:imageView];
+    [cell.contentView sendSubviewToBack:imageView];
     
     // Auto autolayout constraints to the cell.
     NSDictionary *views = NSDictionaryOfVariableBindings(imageView);
