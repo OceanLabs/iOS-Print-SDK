@@ -56,7 +56,7 @@ CTAssetsPickerControllerDelegate>
 @property (weak, nonatomic) IBOutlet UIView *containerView;
 @property (weak, nonatomic) IBOutlet RMImageCropper *imageCropView;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *maskAspectRatio;
-@property (assign, nonatomic) BOOL imagesPicked;
+@property (strong, nonatomic) OLPrintPhoto *imagePicked;
 
 -(void) doCheckout;
 
@@ -337,10 +337,26 @@ CTAssetsPickerControllerDelegate>
     }
 }
 
+- (NSArray *)createAssetArray {
+    NSMutableArray *array = [[NSMutableArray alloc] initWithCapacity:self.userSelectedPhotos.count];
+    for (OLPrintPhoto *object in self.userSelectedPhotos) {
+        [array addObject:object.asset];
+    }
+    return array;
+}
+
 - (void)showCameraRollImagePicker{
     CTAssetsPickerController *picker = [[CTAssetsPickerController alloc] init];
     picker.delegate = self;
     picker.assetsFilter = [ALAssetsFilter allPhotos];
+    NSArray *allAssets = [[self createAssetArray] mutableCopy];
+    NSMutableArray *alAssets = [[NSMutableArray alloc] init];
+    for (id asset in allAssets){
+        if ([asset isKindOfClass:[ALAsset class]]){
+            [alAssets addObject:asset];
+        }
+    }
+    picker.selectedAssets = alAssets;
     [self presentViewController:picker animated:YES completion:nil];
 }
 
@@ -349,6 +365,7 @@ CTAssetsPickerControllerDelegate>
     OLFacebookImagePickerController *picker = nil;
     picker = [[OLFacebookImagePickerController alloc] init];
     picker.delegate = self;
+    picker.selected = [self createAssetArray];
     [self presentViewController:picker animated:YES completion:nil];
 #endif
 }
@@ -358,6 +375,7 @@ CTAssetsPickerControllerDelegate>
     OLInstagramImagePickerController *picker = nil;
     picker = [[OLInstagramImagePickerController alloc] initWithClientId:[OLKitePrintSDK instagramClientID] secret:[OLKitePrintSDK instagramSecret] redirectURI:[OLKitePrintSDK instagramRedirectURI]];
     picker.delegate = self;
+    picker.selected = [self createAssetArray];
     [self presentViewController:picker animated:YES completion:nil];
 #endif
 }
@@ -373,22 +391,7 @@ CTAssetsPickerControllerDelegate>
         printPhoto.asset = object;
         [photoArray addObject:printPhoto];
         
-        if ([object isKindOfClass: [ALAsset class]]){
-            [assetArray addObject:[OLAsset assetWithALAsset:object]];
-        }
-#ifdef OL_KITE_OFFER_INSTAGRAM
-        else if ([object isKindOfClass: [OLInstagramImage class]]){
-            [assetArray addObject:[OLAsset assetWithURL:[object fullURL]]];
-        }
-#endif
-#ifdef OL_KITE_OFFER_FACEBOOK
-        else if ([object isKindOfClass: [OLFacebookImage class]]){
-            [assetArray addObject:[OLAsset assetWithURL:[object fullURL]]];
-        }
-#endif
-        else if ([object isKindOfClass:[OLAsset class]]){
-            [assetArray addObject:object];
-        }
+        [assetArray addObject:[OLAsset assetWithPrintPhoto:printPhoto]];
     }
     
     // First remove any that are not returned.
@@ -408,18 +411,24 @@ CTAssetsPickerControllerDelegate>
     NSMutableArray *addArray = [NSMutableArray arrayWithArray:photoArray];
     NSMutableArray *addAssetArray = [NSMutableArray arrayWithArray:assetArray];
     for (id object in self.userSelectedPhotos) {
-        if ([addAssetArray containsObjectIdenticalTo:[object asset]]){
-            [addArray removeObjectAtIndex:[addAssetArray indexOfObjectIdenticalTo:[object asset]]];
-            [addAssetArray removeObjectIdenticalTo:[object asset]];
+        OLAsset *asset = [OLAsset assetWithPrintPhoto:object];
+        
+        if ([addAssetArray containsObject:asset]){
+            [addArray removeObjectAtIndex:[addAssetArray indexOfObject:asset]];
+            [addAssetArray removeObject:asset];
         }
     }
     
-    self.imagesPicked = addArray.count > 0;
+    for (OLPrintPhoto *photo in addArray){
+        if (![removeArray containsObject:photo]){
+            self.imagePicked = photo;
+            break;
+        }
+    }
     
     [self.userSelectedPhotos addObjectsFromArray:addArray];
     [self.assets addObjectsFromArray:addAssetArray];
     
-    // Reload the collection view.
     [self.imagesCollectionView reloadData];
 }
 
@@ -433,8 +442,13 @@ CTAssetsPickerControllerDelegate>
 
 - (void)assetsPickerController:(CTAssetsPickerController *)picker didFinishPickingAssets:(NSArray *)assets {
     [self populateArrayWithNewArray:assets dataType:[ALAsset class]];
-    if (self.imagesPicked){
-        [self collectionView:self.imagesCollectionView didSelectItemAtIndexPath:[NSIndexPath indexPathForItem:self.userSelectedPhotos.count-1 inSection:[self sectionForImageCells]]];
+    if (self.imagePicked){
+        [self.imagePicked getImageWithProgress:NULL completion:^(UIImage *image){
+            dispatch_async(dispatch_get_main_queue(), ^{
+                self.imageCropView.image = image;
+            });
+        }];
+        self.imagePicked = nil;
     }
     [picker dismissViewControllerAnimated:YES completion:^(void){}];
 }
@@ -463,8 +477,13 @@ CTAssetsPickerControllerDelegate>
 
 - (void)instagramImagePicker:(OLInstagramImagePickerController *)imagePicker didFinishPickingImages:(NSArray *)images {
     [self populateArrayWithNewArray:images dataType:[OLInstagramImage class]];
-    if (self.imagesPicked){
-        [self collectionView:self.imagesCollectionView didSelectItemAtIndexPath:[NSIndexPath indexPathForItem:self.userSelectedPhotos.count-1 inSection:[self sectionForImageCells]]];
+    if (self.imagePicked){
+        [self.imagePicked getImageWithProgress:NULL completion:^(UIImage *image){
+            dispatch_async(dispatch_get_main_queue(), ^{
+                self.imageCropView.image = image;
+            });
+        }];
+        self.imagePicked = nil;
     }
     [self dismissViewControllerAnimated:YES completion:^(void){}];
 }
@@ -483,8 +502,13 @@ CTAssetsPickerControllerDelegate>
 
 - (void)facebookImagePicker:(OLFacebookImagePickerController *)imagePicker didFinishPickingImages:(NSArray *)images {
     [self populateArrayWithNewArray:images dataType:[OLFacebookImage class]];
-    if (self.imagesPicked){
-        [self collectionView:self.imagesCollectionView didSelectItemAtIndexPath:[NSIndexPath indexPathForItem:self.userSelectedPhotos.count-1 inSection:[self sectionForImageCells]]];
+    if (self.imagePicked){
+        [self.imagePicked getImageWithProgress:NULL completion:^(UIImage *image){
+            dispatch_async(dispatch_get_main_queue(), ^{
+                self.imageCropView.image = image;
+            });
+        }];
+        self.imagePicked = nil;
     }
     [self dismissViewControllerAnimated:YES completion:^(void){}];
 }
