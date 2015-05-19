@@ -11,6 +11,7 @@
 #import "OLProduct.h"
 #import "OLAsset+Private.h"
 #import <SDWebImageManager.h>
+#import "UIViewController+TraitCollectionCompatibility.h"
 
 @interface OLFrameOrderReviewViewController () <OLScrollCropViewControllerDelegate>
 
@@ -205,6 +206,26 @@ CGFloat margin = 2;
         innerCollectionView.dataSource = self;
         innerCollectionView.delegate = self;
         
+        view = innerCollectionView;
+        
+        CGSize size = [self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath];
+        float scaleFactorH = size.width / 320.0;
+        
+        view.translatesAutoresizingMaskIntoConstraints = NO;
+        views = NSDictionaryOfVariableBindings(view);
+        con = [[NSMutableArray alloc] init];
+        
+        visuals = @[[NSString stringWithFormat:@"H:|-%f-[view]-%f-|", 25 * scaleFactorH, 25 * scaleFactorH],
+                             [NSString stringWithFormat:@"V:|-%f-[view]", 53 * scaleFactorH]];
+        
+        
+        for (NSString *visual in visuals) {
+            [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+        }
+        
+        [view.superview addConstraints:con];
+
+        
         return cell;
     }
     else{
@@ -239,7 +260,13 @@ CGFloat margin = 2;
 
 - (CGSize) collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
     if (collectionView.tag == 10){
-        return CGSizeMake(320, 351);
+        if ([self isHorizontalSizeClassCompact] && self.view.frame.size.height > self.view.frame.size.width){
+            float scaleFactorH = (self.view.frame.size.width-20) / 320.0;
+            return CGSizeMake(320 * scaleFactorH, 351 * scaleFactorH);
+        }
+        else{
+            return CGSizeMake(320, 351);
+        }
     }
     else{
         CGFloat photosPerRow = sqrt(self.product.quantityToFulfillOrder);
