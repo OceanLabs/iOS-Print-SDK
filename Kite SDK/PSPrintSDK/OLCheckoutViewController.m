@@ -48,6 +48,7 @@ static const NSUInteger kInputFieldTag = 99;
 @property (strong, nonatomic) OLPrintOrder *printOrder;
 @property (assign, nonatomic) BOOL presentedModally;
 @property (strong, nonatomic) UILabel *kiteLabel;
+@property (strong, nonatomic) NSLayoutConstraint *kiteLabelYCon;
 @end
 
 @implementation OLCheckoutViewController
@@ -135,20 +136,28 @@ static const NSUInteger kInputFieldTag = 99;
     tgr.cancelsTouchesInView = NO; // allow table cell selection to happen as normal
     [self.tableView addGestureRecognizer:tgr];
     
-    [self positionKiteLabel];
+    self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 10, 0)];
+    
+    self.kiteLabel = [[UILabel alloc] init];
+    self.kiteLabel.text = NSLocalizedString(@"Powered by Kite.ly", @"");
+    self.kiteLabel.font = [UIFont systemFontOfSize:13];
+    self.kiteLabel.textColor = [UIColor lightGrayColor];
+    self.kiteLabel.textAlignment = NSTextAlignmentCenter;
+    [self.tableView.tableFooterView addSubview:self.kiteLabel];
+    self.kiteLabel.translatesAutoresizingMaskIntoConstraints = NO;
+    
+    [self.tableView.tableFooterView addConstraint:[NSLayoutConstraint constraintWithItem:self.kiteLabel attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.tableView.tableFooterView attribute:NSLayoutAttributeCenterX multiplier:1 constant:0]];
 }
 
-- (void)positionKiteLabel{
-    if (!self.kiteLabel){
-        self.kiteLabel = [[UILabel alloc] init];
-        self.kiteLabel.text = NSLocalizedString(@"Powered by Kite.ly", @"");
-        self.kiteLabel.font = [UIFont systemFontOfSize:13];
-        self.kiteLabel.textColor = [UIColor lightGrayColor];
-        [self.view addSubview:self.kiteLabel];
-        [self.kiteLabel sizeToFit];
-    }
+- (void)positionKiteLabel {
+    [self.kiteLabel.superview removeConstraint:self.kiteLabelYCon];
     
-    self.kiteLabel.frame = CGRectMake(([UIScreen mainScreen].bounds.size.width - self.kiteLabel.frame.size.width) / 2, [UIScreen mainScreen].bounds.size.height - self.navigationController.navigationBar.frame.size.height - self.kiteLabel.frame.size.height - [[UIApplication sharedApplication] statusBarFrame].size.height - 20, self.kiteLabel.frame.size.width, self.kiteLabel.frame.size.height);
+    CGSize size = self.view.frame.size;
+    CGFloat navBarHeight = [[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height;
+    CGFloat blankSpace = MAX(size.height - self.tableView.contentSize.height - navBarHeight - 5, 30);
+    
+    self.kiteLabelYCon = [NSLayoutConstraint constraintWithItem:self.kiteLabel attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.kiteLabel.superview attribute:NSLayoutAttributeBottom multiplier:1 constant:blankSpace];
+    [self.kiteLabel.superview addConstraint:self.kiteLabelYCon];
 }
 
 - (void)onButtonCancelClicked {
@@ -217,6 +226,12 @@ static const NSUInteger kInputFieldTag = 99;
     
     [[NSNotificationCenter defaultCenter] postNotificationName:kOLNotificationUserSuppliedShippingDetails object:self userInfo:@{kOLKeyUserInfoPrintOrder: self.printOrder}];
     [self.navigationController pushViewController:vc animated:YES];
+}
+
+- (void) viewWillAppear:(BOOL)animated{
+    if (self.kiteLabel){
+        [self positionKiteLabel];
+    }
 }
 
 - (void) viewWillDisappear:(BOOL)animated {
@@ -367,13 +382,15 @@ static const NSUInteger kInputFieldTag = 99;
         NSDictionary *views = NSDictionaryOfVariableBindings(view);
         NSMutableArray *con = [[NSMutableArray alloc] init];
         
-        NSArray *visuals = @[@"H:|-86-[view]-0-|",
-                             @"V:|-0-[view]-0-|"];
+        NSArray *visuals = @[@"H:|-86-[view]-0-|", @"V:[view(43)]"];
         
         
         for (NSString *visual in visuals) {
             [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
         }
+        
+        NSLayoutConstraint *centerY = [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:view.superview attribute:NSLayoutAttributeCenterY multiplier:1 constant:0];
+        [con addObject:centerY];
         
         [view.superview addConstraints:con];
     }

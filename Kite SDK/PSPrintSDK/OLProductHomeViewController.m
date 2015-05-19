@@ -42,6 +42,7 @@
 @property (nonatomic, weak) IBOutlet UILabel *huggleBotFriendNameLabel;
 @property (weak, nonatomic) IBOutlet UILabel *letsStartLabel;
 @property (nonatomic, assign) BOOL startHuggleBotOnViewWillAppear;
+@property (assign, nonatomic) BOOL fromRotation;
 @end
 
 @implementation OLProductHomeViewController
@@ -62,6 +63,10 @@
 #endif
 
     self.title = NSLocalizedString(@"Print Shop", @"");
+    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Back", @"")
+                                                                             style:UIBarButtonItemStyleBordered
+                                                                            target:nil
+                                                                            action:nil];
 }
 
 
@@ -84,8 +89,19 @@
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
     [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
-    [self.collectionView.collectionViewLayout invalidateLayout];
-    [coordinator animateAlongsideTransition:NULL completion:^(id<UIViewControllerTransitionCoordinator> context){
+
+    self.fromRotation = YES;
+    NSArray *visibleCells = [self.collectionView indexPathsForVisibleItems];
+    NSIndexPath *maxIndexPath = [visibleCells firstObject];
+    for (NSIndexPath *indexPath in visibleCells){
+        if (maxIndexPath.item < indexPath.item){
+            maxIndexPath = indexPath;
+        }
+    }
+    
+    [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinator> context){
+        [self.collectionView.collectionViewLayout invalidateLayout];
+    }completion:^(id<UIViewControllerTransitionCoordinator> context){
         [self.collectionView reloadData];
     }];
 }
@@ -167,6 +183,13 @@
         UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"extraCell" forIndexPath:indexPath];
         UIImageView *cellImageView = (UIImageView *)[cell.contentView viewWithTag:40];
         [cellImageView setAndFadeInImageWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/product_photography/placeholder.png"]];
+        if (self.fromRotation){
+            self.fromRotation = NO;
+            cell.alpha = 0;
+            [UIView animateWithDuration:0.3 animations:^{
+                cell.alpha = 1;
+            }];
+        }
         return cell;
     }
     

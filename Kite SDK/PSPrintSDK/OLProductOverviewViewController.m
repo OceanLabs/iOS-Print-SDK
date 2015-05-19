@@ -107,6 +107,10 @@
     return vc;
 }
 
+- (IBAction)onTapGestureRecognized:(UITapGestureRecognizer *)sender {
+    [self onButtonStartClicked:nil];
+}
+
 - (IBAction)onButtonStartClicked:(UIBarButtonItem *)sender {
     UIViewController *vc;
     if (self.product.productTemplate.templateUI == kOLTemplateUICase){
@@ -121,6 +125,9 @@
     else{
         if (![self.delegate respondsToSelector:@selector(kiteControllerShouldAllowUserToAddMorePhotos:)] || [self.delegate kiteControllerShouldAllowUserToAddMorePhotos:[OLKitePrintSDK kiteViewControllerInNavStack:self.navigationController.viewControllers]]){
             vc = [self.storyboard instantiateViewControllerWithIdentifier:@"PhotoSelectionViewController"];
+        }
+        else if (!(![self.delegate respondsToSelector:@selector(kiteControllerShouldAllowUserToAddMorePhotos:)] || [self.delegate kiteControllerShouldAllowUserToAddMorePhotos:[OLKitePrintSDK kiteViewControllerInNavStack:self.navigationController.viewControllers]]) && self.product.productTemplate.templateUI == kOLTemplateUIPhotobook){
+            vc = [self.storyboard instantiateViewControllerWithIdentifier:@"PhotobookViewController"];
         }
         else{
             vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OrderReviewViewController"];

@@ -11,6 +11,7 @@
 #import "OLProduct.h"
 #import "OLAsset+Private.h"
 #import <SDWebImageManager.h>
+#import "UIViewController+TraitCollectionCompatibility.h"
 
 @interface OLFrameOrderReviewViewController () <OLScrollCropViewControllerDelegate>
 
@@ -205,6 +206,26 @@ CGFloat margin = 2;
         innerCollectionView.dataSource = self;
         innerCollectionView.delegate = self;
         
+        view = innerCollectionView;
+        
+        CGSize size = [self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath];
+        float scaleFactorH = size.width / 320.0;
+        
+        view.translatesAutoresizingMaskIntoConstraints = NO;
+        views = NSDictionaryOfVariableBindings(view);
+        con = [[NSMutableArray alloc] init];
+        
+        visuals = @[[NSString stringWithFormat:@"H:|-%f-[view]-%f-|", 25 * scaleFactorH, 25 * scaleFactorH],
+                             [NSString stringWithFormat:@"V:|-%f-[view]", 53 * scaleFactorH]];
+        
+        
+        for (NSString *visual in visuals) {
+            [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+        }
+        
+        [view.superview addConstraints:con];
+
+        
         return cell;
     }
     else{
@@ -239,6 +260,11 @@ CGFloat margin = 2;
 
 - (CGSize) collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
     if (collectionView.tag == 10){
+        CGSize size = self.view.frame.size;
+        if (MIN(size.height, size.width) == 320){
+            float scaleFactorH = (MIN(self.view.frame.size.width, self.view.frame.size.height)-20) / 320.0;
+            return CGSizeMake(320 * scaleFactorH, 351 * scaleFactorH);
+        }
         return CGSizeMake(320, 351);
     }
     else{
@@ -260,7 +286,12 @@ CGFloat margin = 2;
 }
 
 - (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout insetForSectionAtIndex:(NSInteger)section{
-    return UIEdgeInsetsZero;
+    if (collectionView.tag == 20){
+        return UIEdgeInsetsZero;
+    }
+    else{
+        return UIEdgeInsetsMake(0, 10, 0, 10);
+    }
 }
 
 - (void)collectionView:(UICollectionView *)collectionView itemAtIndexPath:(NSIndexPath *)fromIndexPath willMoveToIndexPath:(NSIndexPath *)toIndexPath {

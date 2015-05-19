@@ -34,6 +34,7 @@
 #import "NSArray+QueryingExtras.h"
 #import "OLKitePrintSDK.h"
 #import "NSObject+Utils.h"
+#import "UIViewController+TraitCollectionCompatibility.h"
 
 NSInteger OLPhotoSelectionMargin = 0;
 
@@ -137,6 +138,10 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
             self.noSelectedPhotosView.alpha = 1;
     }
     [self onUserSelectedPhotoCountChange];
+    
+    for (OLPrintPhoto *printPhoto in self.userSelectedPhotos){
+        [printPhoto unloadImage];
+    }
     
     if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0){
         UIVisualEffect *blurEffect;
@@ -330,7 +335,11 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
     [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
     self.rotationSize = size;
-    [self.collectionView.collectionViewLayout invalidateLayout];
+    [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinator> context){
+        [self.collectionView.collectionViewLayout invalidateLayout];
+    }completion:^(id<UIViewControllerTransitionCoordinator> context){
+        [self.collectionView reloadData];
+    }];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -493,10 +502,49 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 }
 #endif
 
+- (NSInteger) findFactorOf:(NSInteger)qty maximum:(NSInteger)max minimum:(NSInteger)min{
+    if (qty == 1){
+        return 3;
+    }
+    min = MAX(1, min);
+    max = MAX(1, max);
+    NSInteger factor = max;
+    while (factor > min) {
+        if (qty % factor == 0){
+            return factor;
+        }
+        else{
+            factor--;
+        }
+    }
+    return min;
+}
+
+- (NSUInteger)numberOfCellsPerRow{
+    CGSize size = self.rotationSize.width != 0 ? self.rotationSize : self.view.frame.size;
+    
+    if (![self isHorizontalSizeClassCompact]){
+        if (size.height > size.width){
+            return [self findFactorOf:self.product.quantityToFulfillOrder maximum:4 minimum:2];
+        }
+        else{
+            return [self findFactorOf:self.product.quantityToFulfillOrder maximum:8 minimum:2];
+        }
+    }
+    else{
+        if (size.height > size.width){
+            return [self findFactorOf:self.product.quantityToFulfillOrder maximum:3 minimum:2];
+        }
+        else{
+            return [self findFactorOf:self.product.quantityToFulfillOrder maximum:7 minimum:2];
+        }
+    }
+}
+
 #pragma mark - UICollectionViewDataSource Methods
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    NSInteger number = self.product.quantityToFulfillOrder;//collectionView.frame.size.height / 105 ;
+    NSInteger number = self.product.quantityToFulfillOrder;
     NSInteger removedImagesInOtherSections = 0;
     for (NSNumber *sectionNumber in self.indexPathsToRemoveDict.allKeys){
         NSNumber *n = [NSNumber numberWithLong:[sectionNumber longValue]];
@@ -507,7 +555,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     NSInteger removedImagesInThisSection = [self.indexPathsToRemoveDict[[NSNumber numberWithInteger:section]] count];
     NSInteger finalNumberOfPhotosRemoved = removedImagesInThisSection + removedImagesInOtherSections;
 
-    return MIN(MAX(self.userSelectedPhotos.count + finalNumberOfPhotosRemoved, number * 3), self.product.quantityToFulfillOrder) - removedImagesInThisSection;
+    return MIN(MAX(self.userSelectedPhotos.count + finalNumberOfPhotosRemoved, number * [self numberOfCellsPerRow]), self.product.quantityToFulfillOrder) - removedImagesInThisSection;
 }
 
 - (NSInteger) numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
@@ -551,6 +599,9 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     if (templateUI == kOLTemplateUIFrame){
         title = [[NSString alloc]initWithFormat:@"#%ld Frame", (long)indexPath.section + 1];
     }
+    else if (templateUI == kOLTemplateUIPhotobook){
+        title = [[NSString alloc]initWithFormat:@"#%ld Photobook", (long)indexPath.section + 1];
+    }
     else{
         title = [[NSString alloc]initWithFormat:@"#%ld Pack of %lu %@", (long)indexPath.section + 1, (unsigned long)self.product.quantityToFulfillOrder, self.product.productTemplate.name];
     }
@@ -565,29 +616,32 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
     
     UIImageView *imageView = (UIImageView *) [cell.contentView viewWithTag:40];
-    if (imageView == nil) {
-        cell.contentView.backgroundColor = [UIColor whiteColor];
-        imageView = [[UIImageView alloc] init];
-        imageView.tag = 40;
-        imageView.clipsToBounds = YES;
-        imageView.contentMode = UIViewContentModeScaleAspectFill;
-        imageView.translatesAutoresizingMaskIntoConstraints = NO;
-        
-        [cell.contentView addSubview:imageView];
-        
-        // Auto autolayout constraints to the cell.
-        NSDictionary *views = NSDictionaryOfVariableBindings(imageView);
-        NSMutableArray *con = [[NSMutableArray alloc] init];
-        
-        NSArray *visuals = @[@"H:|-0-[imageView]-0-|",
-                             @"V:|-0-[imageView]-0-|"];
-        
-        for (NSString *visual in visuals) {
-            [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
-        }
-        
-        [cell.contentView addConstraints:con];
+    if (imageView != nil) {
+        [imageView removeFromSuperview];
     }
+    cell.contentView.backgroundColor = [UIColor whiteColor];
+    imageView = [[UIImageView alloc] init];
+    imageView.tag = 40;
+    imageView.clipsToBounds = YES;
+    imageView.contentMode = UIViewContentModeScaleAspectFill;
+    imageView.translatesAutoresizingMaskIntoConstraints = NO;
+    
+    [cell.contentView addSubview:imageView];
+    [cell.contentView sendSubviewToBack:imageView];
+    
+    // Auto autolayout constraints to the cell.
+    NSDictionary *views = NSDictionaryOfVariableBindings(imageView);
+    NSMutableArray *con = [[NSMutableArray alloc] init];
+    
+    NSArray *visuals = @[@"H:|-0-[imageView]-0-|",
+                         @"V:|-0-[imageView]-0-|"];
+    
+    for (NSString *visual in visuals) {
+        [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+    }
+    
+    [cell.contentView addConstraints:con];
+    
     imageView.image = nil;
     
     UIImageView *checkmark = (UIImageView *) [cell.contentView viewWithTag:41];
@@ -643,7 +697,8 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
         disabled.backgroundColor = [UIColor colorWithRed:0.5 green:0.5 blue:0.5 alpha:0.5];
     }
     
-    imageView.backgroundColor = indexPath.item % 2 == 0 ? [UIColor colorWithHexString:@"#e6e9ed"] : [UIColor colorWithHexString:@"#dce0e5"];
+    NSInteger skipAtNewLine = [self numberOfCellsPerRow] % 2 == 0  && indexPath.item / [self numberOfCellsPerRow] % 2 == 0 ? 1 : 0;
+    imageView.backgroundColor = (indexPath.item + skipAtNewLine) % 2 == 0 ? [UIColor colorWithHexString:@"#e6e9ed"] : [UIColor colorWithHexString:@"#dce0e5"];
     
     NSUInteger imageIndex = indexPath.row + indexPath.section * self.product.quantityToFulfillOrder;
     if (imageIndex < self.userSelectedPhotos.count) {
@@ -732,14 +787,23 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
         size = self.rotationSize;
     }
     
-    CGFloat width = floorf(size.width/3);
+    float numberOfCellsPerRow = [self numberOfCellsPerRow];
+    CGFloat width = ceilf(size.width/numberOfCellsPerRow);
     CGFloat height = width;
     
-    if (indexPath.item % 3 == 2) {
-        width = size.width - 2 * width;
-    }
+//    if (indexPath.item % [self numberOfCellsPerRow] == 2) {
+//        width = size.width - 2 * width;
+//    }
 
     return CGSizeMake(width, height);
+}
+
+- (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout insetForSectionAtIndex:(NSInteger)section{
+    CGSize size = self.rotationSize.width != 0 ? self.rotationSize : self.view.frame.size;
+    
+    CGSize cellSize = [self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
+    CGFloat diff = size.width - (cellSize.width * [self numberOfCellsPerRow]);
+    return UIEdgeInsetsMake(0, diff/2.0, 0, diff/2.0);
 }
 
 #pragma mark - Storyboard Methods
