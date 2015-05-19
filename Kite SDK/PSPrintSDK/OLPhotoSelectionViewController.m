@@ -139,6 +139,10 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     }
     [self onUserSelectedPhotoCountChange];
     
+    for (OLPrintPhoto *printPhoto in self.userSelectedPhotos){
+        [printPhoto unloadImage];
+    }
+    
     if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0){
         UIVisualEffect *blurEffect;
         blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleExtraLight];
@@ -612,29 +616,31 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
     
     UIImageView *imageView = (UIImageView *) [cell.contentView viewWithTag:40];
-    if (imageView == nil) {
-        cell.contentView.backgroundColor = [UIColor whiteColor];
-        imageView = [[UIImageView alloc] init];
-        imageView.tag = 40;
-        imageView.clipsToBounds = YES;
-        imageView.contentMode = UIViewContentModeScaleAspectFill;
-        imageView.translatesAutoresizingMaskIntoConstraints = NO;
-        
-        [cell.contentView addSubview:imageView];
-        
-        // Auto autolayout constraints to the cell.
-        NSDictionary *views = NSDictionaryOfVariableBindings(imageView);
-        NSMutableArray *con = [[NSMutableArray alloc] init];
-        
-        NSArray *visuals = @[@"H:|-0-[imageView]-0-|",
-                             @"V:|-0-[imageView]-0-|"];
-        
-        for (NSString *visual in visuals) {
-            [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
-        }
-        
-        [cell.contentView addConstraints:con];
+    if (imageView != nil) {
+        [imageView removeFromSuperview];
     }
+    cell.contentView.backgroundColor = [UIColor whiteColor];
+    imageView = [[UIImageView alloc] init];
+    imageView.tag = 40;
+    imageView.clipsToBounds = YES;
+    imageView.contentMode = UIViewContentModeScaleAspectFill;
+    imageView.translatesAutoresizingMaskIntoConstraints = NO;
+    
+    [cell.contentView addSubview:imageView];
+    
+    // Auto autolayout constraints to the cell.
+    NSDictionary *views = NSDictionaryOfVariableBindings(imageView);
+    NSMutableArray *con = [[NSMutableArray alloc] init];
+    
+    NSArray *visuals = @[@"H:|-0-[imageView]-0-|",
+                         @"V:|-0-[imageView]-0-|"];
+    
+    for (NSString *visual in visuals) {
+        [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+    }
+    
+    [cell.contentView addConstraints:con];
+    
     imageView.image = nil;
     
     UIImageView *checkmark = (UIImageView *) [cell.contentView viewWithTag:41];
