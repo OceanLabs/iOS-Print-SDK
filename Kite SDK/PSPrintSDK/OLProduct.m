@@ -143,13 +143,9 @@ typedef enum {
         // preferred currency fallback order if users local currency isn't supported: USD, GBP, EUR
         if ([template.currenciesSupported containsObject:@"USD"]) {
             code = @"USD";
-        }
-        
-        if ([template.currenciesSupported containsObject:@"GBP"]) {
+        } else if ([template.currenciesSupported containsObject:@"GBP"]) {
             code = @"GBP";
-        }
-        
-        if ([template.currenciesSupported containsObject:@"EUR"]) {
+        } else if ([template.currenciesSupported containsObject:@"EUR"]) {
             code = @"EUR";
         }
     }
