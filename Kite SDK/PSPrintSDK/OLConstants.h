@@ -14,8 +14,10 @@ extern const NSInteger kOLKiteSDKErrorCodeFullDetailsFetchFailed;
 extern const NSInteger kOLKiteSDKErrorCodeServerFault;
 extern const NSInteger kOLKiteSDKErrorCodeUnauthorized;
 extern const NSInteger kOLKiteSDKErrorCodeRegisteredAssetCountDiscrepency;
+extern const NSInteger kOLKiteSDKErrorCodeMaintenanceMode;
 
 extern NSString *const kOLKiteSDKErrorMessageUnauthorized;
+extern NSString *const kOLKiteSDKErrorMessageMaintenanceMode;
 
 @interface OLConstants : NSObject
 
