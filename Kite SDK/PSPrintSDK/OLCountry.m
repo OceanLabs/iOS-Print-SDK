@@ -282,7 +282,7 @@
     [countries addObject:[[OLCountry alloc] initWithName:@"Sweden" code2:@"SE" code3:@"SWE" currencyCode:@"SEK"]];
     [countries addObject:[[OLCountry alloc] initWithName:@"Switzerland" code2:@"CH" code3:@"CHE" currencyCode:@"CHF"]];
     [countries addObject:[[OLCountry alloc] initWithName:@"Syrian Arab Republic" code2:@"SY" code3:@"SYR" currencyCode:@"SYP"]];
-    [countries addObject:[[OLCountry alloc] initWithName:@"Taiwan, Province of China" code2:@"TW" code3:@"TWN" currencyCode:@"TWD"]];
+    [countries addObject:[[OLCountry alloc] initWithName:@"Taiwan" code2:@"TW" code3:@"TWN" currencyCode:@"TWD"]];
     [countries addObject:[[OLCountry alloc] initWithName:@"Tajikistan" code2:@"TJ" code3:@"TJK" currencyCode:@"TJS"]];
     [countries addObject:[[OLCountry alloc] initWithName:@"Tanzania, United Republic of" code2:@"TZ" code3:@"TZA" currencyCode:@"TZS"]];
     [countries addObject:[[OLCountry alloc] initWithName:@"Thailand" code2:@"TH" code3:@"THA" currencyCode:@"THB"]];
