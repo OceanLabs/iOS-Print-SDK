@@ -260,13 +260,12 @@ CGFloat margin = 2;
 
 - (CGSize) collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
     if (collectionView.tag == 10){
-        if ([self isHorizontalSizeClassCompact] && self.view.frame.size.height > self.view.frame.size.width){
-            float scaleFactorH = (self.view.frame.size.width-20) / 320.0;
+        CGSize size = self.view.frame.size;
+        if (MIN(size.height, size.width) == 320){
+            float scaleFactorH = (MIN(self.view.frame.size.width, self.view.frame.size.height)-20) / 320.0;
             return CGSizeMake(320 * scaleFactorH, 351 * scaleFactorH);
         }
-        else{
-            return CGSizeMake(320, 351);
-        }
+        return CGSizeMake(320, 351);
     }
     else{
         CGFloat photosPerRow = sqrt(self.product.quantityToFulfillOrder);
