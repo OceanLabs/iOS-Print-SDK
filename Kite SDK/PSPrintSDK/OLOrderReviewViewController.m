@@ -85,9 +85,8 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
         }
     }
     
-    [self.collectionView.collectionViewLayout invalidateLayout];
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinator> context){
-        [self.collectionView scrollToItemAtIndexPath:maxIndexPath atScrollPosition:UICollectionViewScrollPositionBottom animated:YES];
+        [self.collectionView.collectionViewLayout invalidateLayout];
     }completion:^(id<UIViewControllerTransitionCoordinator> context){
     }];
 }

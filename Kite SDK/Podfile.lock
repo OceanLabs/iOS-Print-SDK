@@ -1,36 +1,41 @@
 PODS:
-  - AFNetworking (2.5.2):
-    - AFNetworking/NSURLConnection (= 2.5.2)
-    - AFNetworking/NSURLSession (= 2.5.2)
-    - AFNetworking/Reachability (= 2.5.2)
-    - AFNetworking/Security (= 2.5.2)
-    - AFNetworking/Serialization (= 2.5.2)
-    - AFNetworking/UIKit (= 2.5.2)
-  - AFNetworking/NSURLConnection (2.5.2):
+  - AFNetworking (2.5.4):
+    - AFNetworking/NSURLConnection (= 2.5.4)
+    - AFNetworking/NSURLSession (= 2.5.4)
+    - AFNetworking/Reachability (= 2.5.4)
+    - AFNetworking/Security (= 2.5.4)
+    - AFNetworking/Serialization (= 2.5.4)
+    - AFNetworking/UIKit (= 2.5.4)
+  - AFNetworking/NSURLConnection (2.5.4):
     - AFNetworking/Reachability
     - AFNetworking/Security
     - AFNetworking/Serialization
-  - AFNetworking/NSURLSession (2.5.2):
+  - AFNetworking/NSURLSession (2.5.4):
     - AFNetworking/Reachability
     - AFNetworking/Security
     - AFNetworking/Serialization
-  - AFNetworking/Reachability (2.5.2)
-  - AFNetworking/Security (2.5.2)
-  - AFNetworking/Serialization (2.5.2)
-  - AFNetworking/UIKit (2.5.2):
+  - AFNetworking/Reachability (2.5.4)
+  - AFNetworking/Security (2.5.4)
+  - AFNetworking/Serialization (2.5.4)
+  - AFNetworking/UIKit (2.5.4):
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
-  - Bolts (1.1.4)
-  - CSStickyHeaderFlowLayout (0.2.4)
+  - Bolts (1.1.5):
+    - Bolts/AppLinks (= 1.1.5)
+    - Bolts/Tasks (= 1.1.5)
+  - Bolts/AppLinks (1.1.5):
+    - Bolts/Tasks
+  - Bolts/Tasks (1.1.5)
+  - CSStickyHeaderFlowLayout (0.2.5)
   - CTAssetsPickerController (2.9.3)
   - Facebook-iOS-SDK (3.23.2):
     - Bolts (~> 1.0)
-  - FacebookImagePicker (1.0.1):
-    - Facebook-iOS-SDK (~> 3.23.1)
+  - FacebookImagePicker (1.0.3):
+    - Facebook-iOS-SDK (~> 3.23.2)
     - SDWebImage (~> 3.7.2)
   - GroundControl (2.1.0):
     - AFNetworking (~> 2.2)
-  - InstagramImagePicker (1.0.5):
+  - InstagramImagePicker (1.0.8):
     - NXOAuth2Client (~> 1.2.8)
     - SDWebImage (~> 3.7.2)
     - UIColor-HexString
@@ -68,14 +73,14 @@ DEPENDENCIES:
   - UIColor-HexString
 
 SPEC CHECKSUMS:
-  AFNetworking: fefbce9660acb17f48ae0011292d4da0f457bf36
-  Bolts: f8e2f94edbf9fec7bb8de5ecaaa3aa6b7de6f64e
-  CSStickyHeaderFlowLayout: a04d4bc7d6f6668073d19d22d42c27a682dd71da
+  AFNetworking: 05edc0ac4c4c8cf57bcf4b84be5b0744b6d8e71e
+  Bolts: aac24961496d504aa56fc267cde95162a71bac39
+  CSStickyHeaderFlowLayout: 75e439a59c23f609091d9a784c7b5db7de583f1f
   CTAssetsPickerController: 56a4a228dcb48a9375ab8d4922e82ac74af74aa1
   Facebook-iOS-SDK: cd87f0b2f0c1d9574b44e8fa2baacc275524bac3
-  FacebookImagePicker: d7ff24cf1585c70558bfd4481ca96081f187f011
+  FacebookImagePicker: 65ed253b544712e3a4af14eef43600621b639e2d
   GroundControl: fbc762e0097feece7fb6d8cdc8f2747a504a6833
-  InstagramImagePicker: 3f4bdbf53fa66eaa63adb70b50734cf04de2526d
+  InstagramImagePicker: 9ff8eb307b33b2f61d1287ea0bd425646b031101
   MPFlipViewController: 86caa6203ca9d35af23cc6b4e1bcf53e53333770
   NXOAuth2Client: 98c4d4c594edd2b289cfc34a8928653e1dab7adf
   PayPal-iOS-SDK: ddbc32428357fdfdfe430dd956125745a7096f24

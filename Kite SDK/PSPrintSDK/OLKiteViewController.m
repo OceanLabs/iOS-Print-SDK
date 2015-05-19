@@ -144,7 +144,9 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
     if (groups.count == 0) {
         if ([UIAlertController class]){
             UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Store Maintenance", @"") message:NSLocalizedString(@"Our store is currently undergoing maintence so no products are available for purchase at this time. Please try again a little later.", @"") preferredStyle:UIAlertControllerStyleAlert];
-            [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", @"") style:UIAlertActionStyleDefault handler:NULL]];
+            [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+                [self dismiss];
+            }]];
             [self presentViewController:ac animated:YES completion:NULL];
         }
         else{
