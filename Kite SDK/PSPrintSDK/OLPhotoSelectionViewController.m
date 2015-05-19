@@ -331,8 +331,9 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
     [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
     self.rotationSize = size;
-    [self.collectionView.collectionViewLayout invalidateLayout];
-    [coordinator animateAlongsideTransition:NULL completion:^(id<UIViewControllerTransitionCoordinator> context){
+    [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinator> context){
+        [self.collectionView.collectionViewLayout invalidateLayout];
+    }completion:^(id<UIViewControllerTransitionCoordinator> context){
         [self.collectionView reloadData];
     }];
 }
