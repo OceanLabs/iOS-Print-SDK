@@ -56,6 +56,7 @@ CTAssetsPickerControllerDelegate>
 @property (weak, nonatomic) IBOutlet UIView *containerView;
 @property (weak, nonatomic) IBOutlet RMImageCropper *imageCropView;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *maskAspectRatio;
+@property (assign, nonatomic) BOOL imagesPicked;
 
 -(void) doCheckout;
 
@@ -413,6 +414,8 @@ CTAssetsPickerControllerDelegate>
         }
     }
     
+    self.imagesPicked = addArray.count > 0;
+    
     [self.userSelectedPhotos addObjectsFromArray:addArray];
     [self.assets addObjectsFromArray:addAssetArray];
     
@@ -430,7 +433,9 @@ CTAssetsPickerControllerDelegate>
 
 - (void)assetsPickerController:(CTAssetsPickerController *)picker didFinishPickingAssets:(NSArray *)assets {
     [self populateArrayWithNewArray:assets dataType:[ALAsset class]];
-    [self collectionView:self.imagesCollectionView didSelectItemAtIndexPath:[NSIndexPath indexPathForItem:self.userSelectedPhotos.count-1 inSection:[self sectionForImageCells]]];
+    if (self.imagesPicked){
+        [self collectionView:self.imagesCollectionView didSelectItemAtIndexPath:[NSIndexPath indexPathForItem:self.userSelectedPhotos.count-1 inSection:[self sectionForImageCells]]];
+    }
     [picker dismissViewControllerAnimated:YES completion:^(void){}];
 }
 
@@ -458,7 +463,9 @@ CTAssetsPickerControllerDelegate>
 
 - (void)instagramImagePicker:(OLInstagramImagePickerController *)imagePicker didFinishPickingImages:(NSArray *)images {
     [self populateArrayWithNewArray:images dataType:[OLInstagramImage class]];
-    [self collectionView:self.imagesCollectionView didSelectItemAtIndexPath:[NSIndexPath indexPathForItem:self.userSelectedPhotos.count-1 inSection:[self sectionForImageCells]]];
+    if (self.imagesPicked){
+        [self collectionView:self.imagesCollectionView didSelectItemAtIndexPath:[NSIndexPath indexPathForItem:self.userSelectedPhotos.count-1 inSection:[self sectionForImageCells]]];
+    }
     [self dismissViewControllerAnimated:YES completion:^(void){}];
 }
 
@@ -476,7 +483,9 @@ CTAssetsPickerControllerDelegate>
 
 - (void)facebookImagePicker:(OLFacebookImagePickerController *)imagePicker didFinishPickingImages:(NSArray *)images {
     [self populateArrayWithNewArray:images dataType:[OLFacebookImage class]];
-    [self collectionView:self.imagesCollectionView didSelectItemAtIndexPath:[NSIndexPath indexPathForItem:self.userSelectedPhotos.count-1 inSection:[self sectionForImageCells]]];
+    if (self.imagesPicked){
+        [self collectionView:self.imagesCollectionView didSelectItemAtIndexPath:[NSIndexPath indexPathForItem:self.userSelectedPhotos.count-1 inSection:[self sectionForImageCells]]];
+    }
     [self dismissViewControllerAnimated:YES completion:^(void){}];
 }
 
