@@ -411,7 +411,7 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
     } else if (textField == self.textFieldCounty) {
         [self.textFieldPostCode becomeFirstResponder];
     } else if (textField == self.textFieldPostCode) {
-        [textField resignFirstResponder];
+        [self.textFieldEmail becomeFirstResponder];
     } else if (textField == self.textFieldCountry) {
         
     }
@@ -437,6 +437,7 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
     inputField.delegate = self;
     inputField.tag = kInputFieldTag;
     [inputField setKeyboardType:type];
+    [inputField setReturnKeyType:UIReturnKeyNext];
     [cell addSubview:titleLabel];
     [cell addSubview:inputField];
     

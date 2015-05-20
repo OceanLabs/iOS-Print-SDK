@@ -371,6 +371,10 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
             cell = [self createTextFieldCellWithReuseIdentifier:TextFieldCell title:NSLocalizedStringFromTableInBundle(@"Email", @"KitePrintSDK", [OLConstants bundle], @"")  keyboardType:UIKeyboardTypeEmailAddress];
             self.textFieldEmail = (UITextField *) [cell viewWithTag:kInputFieldTag];
             self.textFieldEmail.autocapitalizationType = UITextAutocapitalizationTypeNone;
+            self.textFieldEmail.autocorrectionType = UITextAutocorrectionTypeNo;
+            if (!([self.kiteDelegate respondsToSelector:@selector(shouldShowPhoneEntryOnCheckoutScreen)] && [self.kiteDelegate shouldShowPhoneEntryOnCheckoutScreen])){
+                self.textFieldEmail.returnKeyType = UIReturnKeyDone;
+            }
             [self populateDefaultEmailAndPhone];
         }
         
@@ -399,6 +403,7 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
     inputField.delegate = self;
     inputField.tag = kInputFieldTag;
     [inputField setKeyboardType:type];
+    [inputField setReturnKeyType:UIReturnKeyNext];
     [cell addSubview:titleLabel];
     [cell addSubview:inputField];
     
