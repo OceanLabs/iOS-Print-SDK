@@ -426,6 +426,43 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
     return YES;
 }
 
+- (UITableViewCell *)createTextFieldCellWithReuseIdentifier:(NSString *)identifier title:(NSString *)title keyboardType:(UIKeyboardType)type {
+    UITableViewCell *cell = [[UITableViewCell alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 43)];
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, 11, 110, 21)];
+    titleLabel.text = title;
+    titleLabel.adjustsFontSizeToFitWidth = YES;
+    titleLabel.tag = kTagInputFieldLabel;
+    UITextField *inputField = [[UITextField alloc] initWithFrame:CGRectMake(125, 0, [UIScreen mainScreen].bounds.size.width - 86, 43)];
+    inputField.delegate = self;
+    inputField.tag = kInputFieldTag;
+    [inputField setKeyboardType:type];
+    [cell addSubview:titleLabel];
+    [cell addSubview:inputField];
+    
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8){
+        UIView *view = inputField;
+        view.translatesAutoresizingMaskIntoConstraints = NO;
+        NSDictionary *views = NSDictionaryOfVariableBindings(view);
+        NSMutableArray *con = [[NSMutableArray alloc] init];
+        
+        NSArray *visuals = @[@"H:|-125-[view]-0-|", @"V:[view(43)]"];
+        
+        
+        for (NSString *visual in visuals) {
+            [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+        }
+        
+        NSLayoutConstraint *centerY = [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:view.superview attribute:NSLayoutAttributeCenterY multiplier:1 constant:0];
+        [con addObject:centerY];
+        
+        [view.superview addConstraints:con];
+    }
+    
+    
+    return cell;
+}
+
 //-(CGFloat) tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
 //    if (indexPath.section == kSectionDeliveryDetails) {
 //    return 400;

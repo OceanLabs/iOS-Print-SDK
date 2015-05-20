@@ -17,6 +17,9 @@ extern NSString *const kOLNotificationUserCompletedPayment;
 extern NSString *const kOLNotificationPrintOrderSubmission;
 extern NSString *const kOLKeyUserInfoPrintOrder;
 
+static const NSUInteger kInputFieldTag = 99;
+static const NSUInteger kTagInputFieldLabel = 100;
+
 @interface OLCheckoutViewController : UITableViewController
 
 @property (weak, nonatomic) id<OLCheckoutDelegate> delegate;
