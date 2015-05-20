@@ -13,6 +13,8 @@
 #import "UITableViewController+ScreenWidthFactor.h"
 #import "OLProductOverviewViewController.h"
 #import "OLAnalytics.h"
+#import "UIViewController+TraitCollectionCompatibility.h"
+#import "UIImageView+FadeIn.h"
 
 @interface OLProduct (Private)
 
@@ -21,9 +23,10 @@
 
 @end
 
-@interface OLProductTypeSelectionViewController ()
+@interface OLProductTypeSelectionViewController () <UICollectionViewDelegateFlowLayout>
 
 @property (strong, nonatomic) NSMutableArray *products;
+@property (assign, nonatomic) BOOL fromRotation;
 
 @end
 
@@ -63,7 +66,30 @@
 #endif
 }
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{    
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+    self.fromRotation = YES;
+    
+    NSArray *visibleCells = [self.collectionView indexPathsForVisibleItems];
+    NSIndexPath *maxIndexPath = [visibleCells firstObject];
+    for (NSIndexPath *indexPath in visibleCells){
+        if (maxIndexPath.item < indexPath.item){
+            maxIndexPath = indexPath;
+        }
+    }
+    
+    [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinator> context){
+        [self.collectionView.collectionViewLayout invalidateLayout];
+    } completion:^(id<UIViewControllerTransitionCoordinator> context){
+        [self.collectionView reloadData];
+    }];
+}
+
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
+    if (indexPath.item >= self.products.count){
+        return;
+    }
+    
     OLProduct *product = self.products[indexPath.row];
     
     OLProductOverviewViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLProductOverviewViewController"];
@@ -75,13 +101,27 @@
     [self.navigationController pushViewController:vc animated:YES];
 }
 
-- (UITableViewCell *) tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"caseCell"];
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
+    if (indexPath.item >= self.products.count){
+        UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"extraCell" forIndexPath:indexPath];
+        UIImageView *cellImageView = (UIImageView *)[cell.contentView viewWithTag:40];
+        [cellImageView setAndFadeInImageWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/product_photography/placeholder.png"]];
+        if (self.fromRotation){
+            self.fromRotation = NO;
+            cell.alpha = 0;
+            [UIView animateWithDuration:0.3 animations:^{
+                cell.alpha = 1;
+            }];
+        }
+        return cell;
+    }
+    
+    UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"caseCell" forIndexPath:indexPath];
     
     UIActivityIndicatorView *activity = (UIActivityIndicatorView *)[cell.contentView viewWithTag:41];
     [activity startAnimating];
     
-    OLProduct *product = (OLProduct *)self.products[indexPath.row];
+    OLProduct *product = (OLProduct *)self.products[indexPath.item];
     
     UIImageView *imageView = (UIImageView *)[cell.contentView viewWithTag:10];
     [product setCoverImageToImageView:imageView];
@@ -93,27 +133,69 @@
     return cell;
 }
 
-- (NSInteger) tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    return self.products.count;
+- (NSInteger) collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
+    NSInteger extras = 0;
+    NSInteger numberOfProducts = [self.products count];
+    
+    CGSize size = self.view.frame.size;
+    if (!(numberOfProducts % 2 == 0) && (!([self isHorizontalSizeClassCompact]) || size.height < size.width)){
+        extras = 1;
+    }
+    
+    return numberOfProducts + extras;
 }
 
-- (CGFloat) tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    if ([self tableView:tableView numberOfRowsInSection:indexPath.section] == 2){
-        return (self.view.bounds.size.height - 64) / 2;
+- (CGSize) collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
+    CGSize size = self.view.bounds.size;
+    NSInteger numberOfCells = [self collectionView:collectionView numberOfItemsInSection:indexPath.section];
+    CGFloat halfScreenHeight = (size.height - [[UIApplication sharedApplication] statusBarFrame].size.height - self.navigationController.navigationBar.frame.size.height)/2;
+    
+    if ([self isHorizontalSizeClassCompact] && size.height > size.width) {
+        if (numberOfCells == 2){
+            return CGSizeMake(size.width, halfScreenHeight);
+        }
+        else{
+            return CGSizeMake(size.width, 233 * (size.width / 320.0));
+        }
+    }
+    else if (numberOfCells == 6){
+        return CGSizeMake(size.width/2 - 1, MAX(halfScreenHeight * (2.0 / 3.0), 233));
+    }
+    else if (numberOfCells == 4){
+        return CGSizeMake(size.width/2 - 1, MAX(halfScreenHeight, 233));
+    }
+    else if (numberOfCells == 2){
+        if (size.width < size.height){
+            return CGSizeMake(size.width, halfScreenHeight);
+        }
+        else{
+            return CGSizeMake(size.width/2 - 1, halfScreenHeight * 2);
+        }
     }
     else{
-        return 233 * [self screenWidthFactor];
+        return CGSizeMake(size.width/2 - 1, 233);
     }
 }
 
 #pragma mark - Autorotate and Orientation Methods
+// Currently here to disable landscape orientations and rotation on iOS 7. When support is dropped, these can be deleted.
 
 - (BOOL)shouldAutorotate {
-    return NO;
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
+        return YES;
+    }
+    else{
+        return NO;
+    }
 }
 
 - (NSUInteger)supportedInterfaceOrientations {
-    return UIInterfaceOrientationMaskPortrait;
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
+        return UIInterfaceOrientationMaskAll;
+    }
+    else{
+        return UIInterfaceOrientationMaskPortrait;
+    }
 }
 
 @end

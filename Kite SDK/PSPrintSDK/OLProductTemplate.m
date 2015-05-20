@@ -211,6 +211,12 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
     else if ([identifier isEqualToString:@"PHONE_CASE"]){
         return kOLTemplateUICase;
     }
+//    else if ([identifier isEqualToString:@"POSTCARD"]){
+//        return kOLTemplateUIPostcard;
+//    }
+//    else if ([identifier isEqualToString:@"PHOTOBOOK"]){
+//                return kOLTemplateUIPhotobook;
+//    }
     return kOLTemplateUINA;
 }
 

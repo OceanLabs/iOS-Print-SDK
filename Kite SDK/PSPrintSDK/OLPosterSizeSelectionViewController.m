@@ -191,7 +191,7 @@ static UIColor *deselectedColor;
 }
 
 - (IBAction)pressedContinue {
-    OLPosterViewController *dest = [self.storyboard instantiateViewControllerWithIdentifier:@"p1x1ViewController"];
+    OLPosterViewController *dest = [self.storyboard instantiateViewControllerWithIdentifier:@"OLSingleImageProductReviewViewController"];
     dest.product = self.product;
     dest.assets = self.assets;
     dest.userSelectedPhotos = self.userSelectedPhotos;
@@ -199,13 +199,24 @@ static UIColor *deselectedColor;
 }
 
 #pragma mark - Autorotate and Orientation Methods
+// Currently here to disable landscape orientations and rotation on iOS 7. When support is dropped, these can be deleted.
 
 - (BOOL)shouldAutorotate {
-    return NO;
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
+        return YES;
+    }
+    else{
+        return NO;
+    }
 }
 
 - (NSUInteger)supportedInterfaceOrientations {
-    return UIInterfaceOrientationMaskPortrait;
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
+        return UIInterfaceOrientationMaskAll;
+    }
+    else{
+        return UIInterfaceOrientationMaskPortrait;
+    }
 }
 
 @end

@@ -11,7 +11,6 @@
 #import "OLAnalytics.h"
 #import "OLAsset+Private.h"
 #import <SDWebImageManager.h>
-#import "RMImageCropper.h"
 #import "OLProductPrintJob.h"
 #import "OLKitePrintSDK.h"
 #import <CTAssetsPickerController.h>
@@ -49,18 +48,17 @@ OLFacebookImagePickerControllerDelegate,
 #endif
 CTAssetsPickerControllerDelegate>
 
-@property (weak, nonatomic) IBOutlet RMImageCropper *imageCropView;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *maskAspectRatio;
-@property (weak, nonatomic) IBOutlet UIView *containerView;
 @property (weak, nonatomic) IBOutlet UILabel *quantityLabel;
 @property (assign, nonatomic) NSUInteger quantity;
-@property (assign, nonatomic) BOOL downloadedMask;
 
-@property (strong, nonatomic) UIImage *maskImage;
-@property (strong, nonatomic) UIVisualEffectView *visualEffectView;
-@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *maskActivityIndicator;
 @property (weak, nonatomic) IBOutlet UICollectionView *imagesCollectionView;
 
+@property (weak, nonatomic) IBOutlet UIView *containerView;
+@property (weak, nonatomic) IBOutlet RMImageCropper *imageCropView;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *maskAspectRatio;
+@property (strong, nonatomic) OLPrintPhoto *imagePicked;
+
+-(void) doCheckout;
 
 @end
 
@@ -68,7 +66,6 @@ CTAssetsPickerControllerDelegate>
 
 -(void)viewDidLoad{
     [super viewDidLoad];
-    self.downloadedMask = NO;
     
 #ifndef OL_NO_ANALYTICS
     [OLAnalytics trackReviewScreenViewed:self.product.productTemplate.name];
@@ -103,93 +100,8 @@ CTAssetsPickerControllerDelegate>
 
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
-    
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0){
-        if (!self.visualEffectView){
-            UIVisualEffect *blurEffect;
-            blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
-            
-            self.visualEffectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
-            UIView *view = self.visualEffectView;
-            [view.layer setMasksToBounds:YES];
-            [view.layer setCornerRadius:45.0f];
-            [self.containerView insertSubview:view belowSubview:self.maskActivityIndicator];
-            
-            view.translatesAutoresizingMaskIntoConstraints = NO;
-            NSDictionary *views = NSDictionaryOfVariableBindings(view);
-            NSMutableArray *con = [[NSMutableArray alloc] init];
-            
-            NSArray *visuals = @[@"H:|-0-[view]-0-|",
-                                 @"V:|-0-[view]-0-|"];
-            
-            
-            for (NSString *visual in visuals) {
-                [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
-            }
-            
-            [view.superview addConstraints:con];
-        }
-    }
-    else{
-        
-    }
-    
-    UIImage *tempMask = [UIImage imageNamed:@"dummy mask"];
-    [self.containerView removeConstraint:self.maskAspectRatio];
-    NSLayoutConstraint *con = [NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self.containerView attribute:NSLayoutAttributeWidth multiplier:tempMask.size.height / tempMask.size.width constant:0];
-    [self.containerView addConstraints:@[con]];
-    self.maskAspectRatio = con;
-    
-    [self.view setNeedsLayout];
-    [self.view layoutIfNeeded];
-    
-    [self maskWithImage:tempMask targetView:self.imageCropView];
-    
-    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
-    [self downloadMask];
 }
 
-- (void)downloadMask {
-    [[SDWebImageManager sharedManager] downloadImageWithURL:self.product.productTemplate.maskImageURL options:SDWebImageHighPriority progress:NULL completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL){
-        [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
-        if (error) {
-            UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Oops", @"")  message:NSLocalizedString(@"Failed to download phone case mask. Please check your internet connectivity and try again", @"")  delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", @"") otherButtonTitles:@"Retry", nil];
-            [av show];
-        } else {
-            [self.containerView removeConstraint:self.maskAspectRatio];
-            NSLayoutConstraint *con = [NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self.containerView attribute:NSLayoutAttributeWidth multiplier:self.product.productTemplate.sizePx.height / self.product.productTemplate.sizePx.width constant:0];
-            [self.containerView addConstraints:@[con]];
-            
-            [self.view setNeedsLayout];
-            [self.view layoutIfNeeded];
-            
-            [self maskWithImage:image targetView:self.imageCropView];
-            self.visualEffectView.hidden = YES;
-            self.downloadedMask = YES;
-            [self.maskActivityIndicator removeFromSuperview];
-            self.maskActivityIndicator = nil;
-        }
-    }];
-}
-
--(void) maskWithImage:(UIImage*) maskImage targetView:(UIView*) targetView{
-    CALayer *_maskingLayer = [CALayer layer];
-    CGRect f = targetView.bounds;
-    UIEdgeInsets imageBleed = self.product.productTemplate.imageBleed;
-    CGSize size = self.product.productTemplate.sizePx;
-    
-    UIEdgeInsets adjustedBleed = UIEdgeInsetsMake(f.size.height * imageBleed.top / size.height,
-                                                  f.size.width * imageBleed.left / size.width,
-                                                  f.size.height * imageBleed.bottom / size.height,
-                                                  f.size.width * imageBleed.right / size.width);
-    
-    _maskingLayer.frame = CGRectMake(f.origin.x + adjustedBleed.left,
-                                     f.origin.y + adjustedBleed.top,
-                                     f.size.width - (adjustedBleed.left + adjustedBleed.right),
-                                     f.size.height - (adjustedBleed.top + adjustedBleed.bottom));
-    [_maskingLayer setContents:(id)[maskImage CGImage]];
-    [targetView.layer setMask:_maskingLayer];
-}
 
 -(NSMutableArray *) userSelectedPhotos{
     if (!_userSelectedPhotos){
@@ -225,7 +137,7 @@ CTAssetsPickerControllerDelegate>
 }
 
 -(void) doCheckout{
-    if (!self.imageCropView.image || !self.downloadedMask) {
+    if (!self.imageCropView.image) {
         return;
     }
     
@@ -348,7 +260,7 @@ CTAssetsPickerControllerDelegate>
         UIImageView *imageView = (UIImageView *)[cell.contentView viewWithTag:1];
         
         OLPrintPhoto *printPhoto = (OLPrintPhoto *)[self.userSelectedPhotos objectAtIndex:indexPath.row];
-        [printPhoto setImageIdealSizeForImageView:imageView highQuality:NO];
+        [printPhoto setImageSize:imageView.frame.size forImageView:imageView];
         
         return cell;
     }
@@ -425,10 +337,26 @@ CTAssetsPickerControllerDelegate>
     }
 }
 
+- (NSArray *)createAssetArray {
+    NSMutableArray *array = [[NSMutableArray alloc] initWithCapacity:self.userSelectedPhotos.count];
+    for (OLPrintPhoto *object in self.userSelectedPhotos) {
+        [array addObject:object.asset];
+    }
+    return array;
+}
+
 - (void)showCameraRollImagePicker{
     CTAssetsPickerController *picker = [[CTAssetsPickerController alloc] init];
     picker.delegate = self;
     picker.assetsFilter = [ALAssetsFilter allPhotos];
+    NSArray *allAssets = [[self createAssetArray] mutableCopy];
+    NSMutableArray *alAssets = [[NSMutableArray alloc] init];
+    for (id asset in allAssets){
+        if ([asset isKindOfClass:[ALAsset class]]){
+            [alAssets addObject:asset];
+        }
+    }
+    picker.selectedAssets = alAssets;
     [self presentViewController:picker animated:YES completion:nil];
 }
 
@@ -437,6 +365,7 @@ CTAssetsPickerControllerDelegate>
     OLFacebookImagePickerController *picker = nil;
     picker = [[OLFacebookImagePickerController alloc] init];
     picker.delegate = self;
+    picker.selected = [self createAssetArray];
     [self presentViewController:picker animated:YES completion:nil];
 #endif
 }
@@ -445,8 +374,8 @@ CTAssetsPickerControllerDelegate>
 #ifdef OL_KITE_OFFER_INSTAGRAM
     OLInstagramImagePickerController *picker = nil;
     picker = [[OLInstagramImagePickerController alloc] initWithClientId:[OLKitePrintSDK instagramClientID] secret:[OLKitePrintSDK instagramSecret] redirectURI:[OLKitePrintSDK instagramRedirectURI]];
-    
     picker.delegate = self;
+    picker.selected = [self createAssetArray];
     [self presentViewController:picker animated:YES completion:nil];
 #endif
 }
@@ -462,22 +391,7 @@ CTAssetsPickerControllerDelegate>
         printPhoto.asset = object;
         [photoArray addObject:printPhoto];
         
-        if ([object isKindOfClass: [ALAsset class]]){
-            [assetArray addObject:[OLAsset assetWithALAsset:object]];
-        }
-#ifdef OL_KITE_OFFER_INSTAGRAM
-        else if ([object isKindOfClass: [OLInstagramImage class]]){
-            [assetArray addObject:[OLAsset assetWithURL:[object fullURL]]];
-        }
-#endif
-#ifdef OL_KITE_OFFER_FACEBOOK
-        else if ([object isKindOfClass: [OLFacebookImage class]]){
-            [assetArray addObject:[OLAsset assetWithURL:[object fullURL]]];
-        }
-#endif
-        else if ([object isKindOfClass:[OLAsset class]]){
-            [assetArray addObject:object];
-        }
+        [assetArray addObject:[OLAsset assetWithPrintPhoto:printPhoto]];
     }
     
     // First remove any that are not returned.
@@ -497,16 +411,24 @@ CTAssetsPickerControllerDelegate>
     NSMutableArray *addArray = [NSMutableArray arrayWithArray:photoArray];
     NSMutableArray *addAssetArray = [NSMutableArray arrayWithArray:assetArray];
     for (id object in self.userSelectedPhotos) {
-        if ([addAssetArray containsObjectIdenticalTo:[object asset]]){
-            [addArray removeObjectAtIndex:[addAssetArray indexOfObjectIdenticalTo:[object asset]]];
-            [addAssetArray removeObjectIdenticalTo:[object asset]];
+        OLAsset *asset = [OLAsset assetWithPrintPhoto:object];
+        
+        if ([addAssetArray containsObject:asset]){
+            [addArray removeObjectAtIndex:[addAssetArray indexOfObject:asset]];
+            [addAssetArray removeObject:asset];
+        }
+    }
+    
+    for (OLPrintPhoto *photo in addArray){
+        if (![removeArray containsObject:photo]){
+            self.imagePicked = photo;
+            break;
         }
     }
     
     [self.userSelectedPhotos addObjectsFromArray:addArray];
     [self.assets addObjectsFromArray:addAssetArray];
     
-    // Reload the collection view.
     [self.imagesCollectionView reloadData];
 }
 
@@ -520,7 +442,14 @@ CTAssetsPickerControllerDelegate>
 
 - (void)assetsPickerController:(CTAssetsPickerController *)picker didFinishPickingAssets:(NSArray *)assets {
     [self populateArrayWithNewArray:assets dataType:[ALAsset class]];
-    [self collectionView:self.imagesCollectionView didSelectItemAtIndexPath:[NSIndexPath indexPathForItem:self.userSelectedPhotos.count-1 inSection:[self sectionForImageCells]]];
+    if (self.imagePicked){
+        [self.imagePicked getImageWithProgress:NULL completion:^(UIImage *image){
+            dispatch_async(dispatch_get_main_queue(), ^{
+                self.imageCropView.image = image;
+            });
+        }];
+        self.imagePicked = nil;
+    }
     [picker dismissViewControllerAnimated:YES completion:^(void){}];
 }
 
@@ -548,7 +477,14 @@ CTAssetsPickerControllerDelegate>
 
 - (void)instagramImagePicker:(OLInstagramImagePickerController *)imagePicker didFinishPickingImages:(NSArray *)images {
     [self populateArrayWithNewArray:images dataType:[OLInstagramImage class]];
-    [self collectionView:self.imagesCollectionView didSelectItemAtIndexPath:[NSIndexPath indexPathForItem:self.userSelectedPhotos.count-1 inSection:[self sectionForImageCells]]];
+    if (self.imagePicked){
+        [self.imagePicked getImageWithProgress:NULL completion:^(UIImage *image){
+            dispatch_async(dispatch_get_main_queue(), ^{
+                self.imageCropView.image = image;
+            });
+        }];
+        self.imagePicked = nil;
+    }
     [self dismissViewControllerAnimated:YES completion:^(void){}];
 }
 
@@ -566,7 +502,14 @@ CTAssetsPickerControllerDelegate>
 
 - (void)facebookImagePicker:(OLFacebookImagePickerController *)imagePicker didFinishPickingImages:(NSArray *)images {
     [self populateArrayWithNewArray:images dataType:[OLFacebookImage class]];
-    [self collectionView:self.imagesCollectionView didSelectItemAtIndexPath:[NSIndexPath indexPathForItem:self.userSelectedPhotos.count-1 inSection:[self sectionForImageCells]]];
+    if (self.imagePicked){
+        [self.imagePicked getImageWithProgress:NULL completion:^(UIImage *image){
+            dispatch_async(dispatch_get_main_queue(), ^{
+                self.imageCropView.image = image;
+            });
+        }];
+        self.imagePicked = nil;
+    }
     [self dismissViewControllerAnimated:YES completion:^(void){}];
 }
 
@@ -592,26 +535,26 @@ CTAssetsPickerControllerDelegate>
     else if (buttonIndex == 2){
         [self showFacebookImagePicker];
     }
-    
 }
 
 #pragma mark - Autorotate and Orientation Methods
+// Currently here to disable landscape orientations and rotation on iOS 7. When support is dropped, these can be deleted.
 
 - (BOOL)shouldAutorotate {
-    return NO;
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
+        return YES;
+    }
+    else{
+        return NO;
+    }
 }
 
 - (NSUInteger)supportedInterfaceOrientations {
-    return UIInterfaceOrientationMaskPortrait;
-}
-
-#pragma mark - UIAlertViewDelegate methods
-
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-    if (buttonIndex == 0) {
-        [self.navigationController popViewControllerAnimated:YES];
-    } else {
-        [self downloadMask];
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
+        return UIInterfaceOrientationMaskAll;
+    }
+    else{
+        return UIInterfaceOrientationMaskPortrait;
     }
 }
 

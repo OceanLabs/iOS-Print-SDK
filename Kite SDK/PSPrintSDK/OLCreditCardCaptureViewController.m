@@ -17,6 +17,7 @@
 #import <AVFoundation/AVFoundation.h>
 #import "NSString+Formatting.h"
 #import "UITextField+Selection.h"
+#import "UIView+RoundRect.h"
 
 static const NSUInteger kOLSectionCardNumber = 0;
 static const NSUInteger kOLSectionExpiryDate = 1;
@@ -121,16 +122,6 @@ UITableViewDataSource, UITextFieldDelegate>
     return self.rootVC.delegate;
 }
 
-#pragma mark - Autorotate and Orientation Methods
-
-- (BOOL)shouldAutorotate {
-    return NO;
-}
-
-- (NSUInteger)supportedInterfaceOrientations {
-    return UIInterfaceOrientationMaskPortrait;
-}
-
 @end
 
 @implementation OLCreditCardCaptureRootController
@@ -152,9 +143,25 @@ UITableViewDataSource, UITextFieldDelegate>
     buttonPay.backgroundColor = [UIColor colorWithRed:74 / 255.0f green:137 / 255.0f blue:220 / 255.0f alpha:1.0];
     [buttonPay addTarget:self action:@selector(onButtonPayClicked) forControlEvents:UIControlEventTouchUpInside];
     [buttonPay setTitle:NSLocalizedString(@"Pay", @"") forState:UIControlStateNormal];
+    [buttonPay makeRoundRect];
     
     UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 44 + 40)];
     [footerView addSubview:buttonPay];
+    
+    UIView *view = buttonPay;
+    view.translatesAutoresizingMaskIntoConstraints = NO;
+    NSDictionary *views = NSDictionaryOfVariableBindings(view);
+    NSMutableArray *con = [[NSMutableArray alloc] init];
+    
+    NSArray *visuals = @[@"H:|-20-[view]-20-|",
+                         @"V:|-20-[view(44)]"];
+    
+    
+    for (NSString *visual in visuals) {
+        [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+    }
+    
+    [view.superview addConstraints:con];
     
     self.tableView.tableFooterView = footerView;
     
@@ -341,6 +348,26 @@ UITableViewDataSource, UITextFieldDelegate>
         textField.tag = 99;
         textField.keyboardType = UIKeyboardTypeNumberPad;
         [cell addSubview:textField];
+        
+        if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8){
+            UIView *view = textField;
+            view.translatesAutoresizingMaskIntoConstraints = NO;
+            NSDictionary *views = NSDictionaryOfVariableBindings(view);
+            NSMutableArray *con = [[NSMutableArray alloc] init];
+            
+            NSArray *visuals = @[@"H:|-20-[view]-43-|", @"V:[view(43)]"];
+            
+            
+            for (NSString *visual in visuals) {
+                [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+            }
+            
+            NSLayoutConstraint *centerY = [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:view.superview attribute:NSLayoutAttributeCenterY multiplier:1 constant:0];
+            [con addObject:centerY];
+            
+            [view.superview addConstraints:con];
+        }
+
     }
     
     UITextField *textField = (UITextField *) [cell viewWithTag:99];
@@ -356,6 +383,27 @@ UITableViewDataSource, UITextFieldDelegate>
                 [cameraIcon setImage:[UIImage imageNamed:@"button_camera"] forState:UIControlStateNormal];
                 [cameraIcon addTarget:self action:@selector(showCardScanner) forControlEvents:UIControlEventTouchUpInside];
                 [cell.contentView addSubview:cameraIcon];
+                
+                if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
+                    UIView *view = cameraIcon;
+                    view.translatesAutoresizingMaskIntoConstraints = NO;
+                    NSDictionary *views = NSDictionaryOfVariableBindings(view);
+                    NSMutableArray *con = [[NSMutableArray alloc] init];
+                    
+                    NSArray *visuals = @[@"H:[view(43)]-0-|",
+                                         @"V:[view(43)]"];
+                    
+                    
+                    for (NSString *visual in visuals) {
+                        [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+                    }
+                    
+                    NSLayoutConstraint *centerY = [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:view.superview attribute:NSLayoutAttributeCenterY multiplier:1 constant:0];
+                    [con addObject:centerY];
+                    
+                    [view.superview addConstraints:con];
+                }
+
             }
         }
         
@@ -435,13 +483,24 @@ UITableViewDataSource, UITextFieldDelegate>
 #endif
 
 #pragma mark - Autorotate and Orientation Methods
+// Currently here to disable landscape orientations and rotation on iOS 7. When support is dropped, these can be deleted.
 
 - (BOOL)shouldAutorotate {
-    return NO;
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
+        return YES;
+    }
+    else{
+        return NO;
+    }
 }
 
 - (NSUInteger)supportedInterfaceOrientations {
-    return UIInterfaceOrientationMaskPortrait;
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
+        return UIInterfaceOrientationMaskAll;
+    }
+    else{
+        return UIInterfaceOrientationMaskPortrait;
+    }
 }
 
 @end

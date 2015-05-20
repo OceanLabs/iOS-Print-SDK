@@ -39,7 +39,10 @@ static const NSUInteger kSectionErrorRetry = 2;
     [super viewDidLoad];
     self.title = @"Receipt";
     
-    self.tableView.tableHeaderView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 320, 86 * [UIScreen mainScreen].bounds.size.width / 320.0)];
+    CGFloat width = 320;
+    self.tableView.tableHeaderView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, width, 86)];
+    self.tableView.tableHeaderView.backgroundColor = [UIColor whiteColor];
+    self.tableView.tableHeaderView.contentMode = UIViewContentModeCenter;
     
     if (self.printOrder.printed) {
         ((UIImageView *) self.tableView.tableHeaderView).image = [UIImage imageNamed:@"receipt_success"];
@@ -239,13 +242,24 @@ static const NSUInteger kSectionErrorRetry = 2;
 }
 
 #pragma mark - Autorotate and Orientation Methods
+// Currently here to disable landscape orientations and rotation on iOS 7. When support is dropped, these can be deleted.
 
 - (BOOL)shouldAutorotate {
-    return NO;
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
+        return YES;
+    }
+    else{
+        return NO;
+    }
 }
 
 - (NSUInteger)supportedInterfaceOrientations {
-    return UIInterfaceOrientationMaskPortrait;
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
+        return UIInterfaceOrientationMaskAll;
+    }
+    else{
+        return UIInterfaceOrientationMaskPortrait;
+    }
 }
 
 @end

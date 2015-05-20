@@ -12,7 +12,6 @@
 #import "OLOrderReviewViewController.h"
 
 #import <CTAssetsPickerController.h>
-#import <objc/runtime.h>
 
 #ifdef OL_KITE_OFFER_INSTAGRAM
 #import <OLInstagramImagePickerController.h>
@@ -34,16 +33,12 @@
 #import "LXReorderableCollectionViewFlowLayout.h"
 #import "NSArray+QueryingExtras.h"
 #import "OLKitePrintSDK.h"
+#import "NSObject+Utils.h"
+#import "UIViewController+TraitCollectionCompatibility.h"
 
 NSInteger OLPhotoSelectionMargin = 0;
 
 static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
-
-@interface UIActionSheet (Cell)
-@property (nonatomic, strong) UICollectionViewCell *cell;
-@end
-
-static void *ActionSheetCellKey;
 
 @interface OLKitePrintSDK (Private)
 
@@ -56,24 +51,11 @@ static void *ActionSheetCellKey;
 
 @end
 
-@implementation UIActionSheet(Cell)
-
-- (void)setCell:(UICollectionViewCell *)cell {
-    objc_setAssociatedObject(self, ActionSheetCellKey, cell, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-- (UICollectionViewCell *)cell {
-    return objc_getAssociatedObject(self, ActionSheetCellKey);
-}
-
-@end
-
 @interface OLPhotoSelectionViewController () <UINavigationControllerDelegate,
                                             CTAssetsPickerControllerDelegate,
                                             UICollectionViewDataSource,
                                             UICollectionViewDelegate,
                                             UICollectionViewDelegateFlowLayout,
-                                            UIActionSheetDelegate,
 #ifdef OL_KITE_OFFER_INSTAGRAM
                                             OLInstagramImagePickerControllerDelegate,
 #endif
@@ -103,6 +85,8 @@ static void *ActionSheetCellKey;
 @property (weak, nonatomic) IBOutlet UIButton *clearButton;
 @property (strong, nonatomic) UIVisualEffectView *visualEffectView;
 
+@property (assign, nonatomic) CGSize rotationSize;
+
 @property (strong, nonatomic) NSMutableDictionary *indexPathsToRemoveDict;
 @end
 
@@ -128,6 +112,8 @@ static void *ActionSheetCellKey;
     [self.buttonGalleryImport setBackgroundImage:[self imageWithColor:[UIColor colorWithHexString:@"#369c82"]] forState:UIControlStateHighlighted];
     [self.buttonInstagramImport setBackgroundImage:[self imageWithColor:[UIColor colorWithHexString:@"#c29334"]] forState:UIControlStateHighlighted];
     
+    self.rotationSize = CGSizeZero;
+    
     if (![self instagramEnabled]){
         [self.instagramButton removeFromSuperview];
         [self.buttonInstagramImport removeFromSuperview];
@@ -152,6 +138,10 @@ static void *ActionSheetCellKey;
             self.noSelectedPhotosView.alpha = 1;
     }
     [self onUserSelectedPhotoCountChange];
+    
+    for (OLPrintPhoto *printPhoto in self.userSelectedPhotos){
+        [printPhoto unloadImage];
+    }
     
     if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0){
         UIVisualEffect *blurEffect;
@@ -181,6 +171,10 @@ static void *ActionSheetCellKey;
     }
 }
 
+- (BOOL)prefersStatusBarHidden {
+    return NO;
+}
+
 - (BOOL)instagramEnabled{
 #ifdef OL_KITE_OFFER_INSTAGRAM
     return [OLKitePrintSDK instagramSecret] && ![[OLKitePrintSDK instagramSecret] isEqualToString:@""] && [OLKitePrintSDK instagramClientID] && ![[OLKitePrintSDK instagramClientID] isEqualToString:@""] && [OLKitePrintSDK instagramRedirectURI] && ![[OLKitePrintSDK instagramRedirectURI] isEqualToString:@""];
@@ -206,6 +200,7 @@ static void *ActionSheetCellKey;
 - (void)viewDidAppear:(BOOL)animated{
     [self updateNoSelectedPhotosView];
     [self updateTitleBasedOnSelectedPhotoQuanitity];
+    [self.collectionView.collectionViewLayout invalidateLayout];
 }
 
 - (UIImage *)imageWithColor:(UIColor *)color {
@@ -337,6 +332,16 @@ static void *ActionSheetCellKey;
     return array;
 }
 
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+    self.rotationSize = size;
+    [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinator> context){
+        [self.collectionView.collectionViewLayout invalidateLayout];
+    }completion:^(id<UIViewControllerTransitionCoordinator> context){
+        [self.collectionView reloadData];
+    }];
+}
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     for (OLPrintPhoto *photo in self.userSelectedPhotos) {
@@ -416,7 +421,7 @@ static void *ActionSheetCellKey;
         }
     }completion:^(BOOL finished){
         [self.indexPathsToRemoveDict removeAllObjects];
-        [self.collectionView reloadData];
+        [self.collectionView performSelector:@selector(reloadData) withObject:0 afterDelay:0.05];
         [self updateNoSelectedPhotosView];
     }];
     
@@ -497,10 +502,49 @@ static void *ActionSheetCellKey;
 }
 #endif
 
+- (NSInteger) findFactorOf:(NSInteger)qty maximum:(NSInteger)max minimum:(NSInteger)min{
+    if (qty == 1){
+        return 3;
+    }
+    min = MAX(1, min);
+    max = MAX(1, max);
+    NSInteger factor = max;
+    while (factor > min) {
+        if (qty % factor == 0){
+            return factor;
+        }
+        else{
+            factor--;
+        }
+    }
+    return min;
+}
+
+- (NSUInteger)numberOfCellsPerRow{
+    CGSize size = self.rotationSize.width != 0 ? self.rotationSize : self.view.frame.size;
+    
+    if (![self isHorizontalSizeClassCompact]){
+        if (size.height > size.width){
+            return [self findFactorOf:self.product.quantityToFulfillOrder maximum:4 minimum:2];
+        }
+        else{
+            return [self findFactorOf:self.product.quantityToFulfillOrder maximum:8 minimum:2];
+        }
+    }
+    else{
+        if (size.height > size.width){
+            return [self findFactorOf:self.product.quantityToFulfillOrder maximum:3 minimum:2];
+        }
+        else{
+            return [self findFactorOf:self.product.quantityToFulfillOrder maximum:7 minimum:2];
+        }
+    }
+}
+
 #pragma mark - UICollectionViewDataSource Methods
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    NSInteger number = collectionView.frame.size.height / 105 ;
+    NSInteger number = self.product.quantityToFulfillOrder;
     NSInteger removedImagesInOtherSections = 0;
     for (NSNumber *sectionNumber in self.indexPathsToRemoveDict.allKeys){
         NSNumber *n = [NSNumber numberWithLong:[sectionNumber longValue]];
@@ -511,7 +555,7 @@ static void *ActionSheetCellKey;
     NSInteger removedImagesInThisSection = [self.indexPathsToRemoveDict[[NSNumber numberWithInteger:section]] count];
     NSInteger finalNumberOfPhotosRemoved = removedImagesInThisSection + removedImagesInOtherSections;
 
-    return MIN(MAX(self.userSelectedPhotos.count + finalNumberOfPhotosRemoved, number * 3), self.product.quantityToFulfillOrder) - removedImagesInThisSection;
+    return MIN(MAX(self.userSelectedPhotos.count + finalNumberOfPhotosRemoved, number * [self numberOfCellsPerRow]), self.product.quantityToFulfillOrder) - removedImagesInThisSection;
 }
 
 - (NSInteger) numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
@@ -553,10 +597,13 @@ static void *ActionSheetCellKey;
     NSString *title;
     OLTemplateUI templateUI = [OLProductTemplate templateWithId:self.product.templateId].templateUI;
     if (templateUI == kOLTemplateUIFrame){
-        title = [[NSString alloc]initWithFormat:@"#%lu Frame", indexPath.section + 1];
+        title = [[NSString alloc]initWithFormat:@"#%ld Frame", (long)indexPath.section + 1];
+    }
+    else if (templateUI == kOLTemplateUIPhotobook){
+        title = [[NSString alloc]initWithFormat:@"#%ld Photobook", (long)indexPath.section + 1];
     }
     else{
-        title = [[NSString alloc]initWithFormat:@"#%lu Pack of %lu %@", indexPath.section + 1, (unsigned long)self.product.quantityToFulfillOrder, self.product.productTemplate.name];
+        title = [[NSString alloc]initWithFormat:@"#%ld Pack of %lu %@", (long)indexPath.section + 1, (unsigned long)self.product.quantityToFulfillOrder, self.product.productTemplate.name];
     }
     label.text = title;
     
@@ -569,29 +616,32 @@ static void *ActionSheetCellKey;
     UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
     
     UIImageView *imageView = (UIImageView *) [cell.contentView viewWithTag:40];
-    if (imageView == nil) {
-        cell.contentView.backgroundColor = [UIColor whiteColor];
-        imageView = [[UIImageView alloc] init];
-        imageView.tag = 40;
-        imageView.clipsToBounds = YES;
-        imageView.contentMode = UIViewContentModeScaleAspectFill;
-        imageView.translatesAutoresizingMaskIntoConstraints = NO;
-        
-        [cell.contentView addSubview:imageView];
-        
-        // Auto autolayout constraints to the cell.
-        NSDictionary *views = NSDictionaryOfVariableBindings(imageView);
-        NSMutableArray *con = [[NSMutableArray alloc] init];
-        
-        NSArray *visuals = @[@"H:|-0-[imageView]-0-|",
-                             @"V:|-0-[imageView]-0-|"];
-        
-        for (NSString *visual in visuals) {
-            [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
-        }
-        
-        [cell.contentView addConstraints:con];
+    if (imageView != nil) {
+        [imageView removeFromSuperview];
     }
+    cell.contentView.backgroundColor = [UIColor whiteColor];
+    imageView = [[UIImageView alloc] init];
+    imageView.tag = 40;
+    imageView.clipsToBounds = YES;
+    imageView.contentMode = UIViewContentModeScaleAspectFill;
+    imageView.translatesAutoresizingMaskIntoConstraints = NO;
+    
+    [cell.contentView addSubview:imageView];
+    [cell.contentView sendSubviewToBack:imageView];
+    
+    // Auto autolayout constraints to the cell.
+    NSDictionary *views = NSDictionaryOfVariableBindings(imageView);
+    NSMutableArray *con = [[NSMutableArray alloc] init];
+    
+    NSArray *visuals = @[@"H:|-0-[imageView]-0-|",
+                         @"V:|-0-[imageView]-0-|"];
+    
+    for (NSString *visual in visuals) {
+        [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+    }
+    
+    [cell.contentView addConstraints:con];
+    
     imageView.image = nil;
     
     UIImageView *checkmark = (UIImageView *) [cell.contentView viewWithTag:41];
@@ -647,12 +697,13 @@ static void *ActionSheetCellKey;
         disabled.backgroundColor = [UIColor colorWithRed:0.5 green:0.5 blue:0.5 alpha:0.5];
     }
     
-    imageView.backgroundColor = indexPath.item % 2 == 0 ? [UIColor colorWithHexString:@"#e6e9ed"] : [UIColor colorWithHexString:@"#dce0e5"];
+    NSInteger skipAtNewLine = [self numberOfCellsPerRow] % 2 == 0  && indexPath.item / [self numberOfCellsPerRow] % 2 == 0 ? 1 : 0;
+    imageView.backgroundColor = (indexPath.item + skipAtNewLine) % 2 == 0 ? [UIColor colorWithHexString:@"#e6e9ed"] : [UIColor colorWithHexString:@"#dce0e5"];
     
     NSUInteger imageIndex = indexPath.row + indexPath.section * self.product.quantityToFulfillOrder;
     if (imageIndex < self.userSelectedPhotos.count) {
         OLPrintPhoto *photo = self.userSelectedPhotos[indexPath.row + indexPath.section * self.product.quantityToFulfillOrder];
-        [photo setImageIdealSizeForImageView:imageView highQuality:NO];
+        [photo setImageSize:[self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath] forImageView:imageView];
         checkmark.hidden = [self.userDisabledPhotos containsObjectIdenticalTo:photo];
         disabled.hidden = !checkmark.hidden;
     } else {
@@ -730,24 +781,29 @@ static void *ActionSheetCellKey;
 - (CGSize)collectionView:(UICollectionView *)collectionView
                   layout:(UICollectionViewLayout *)collectionViewLayout
   sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
-    CGFloat width = floorf(self.view.bounds.size.width/3);
+    CGSize size = self.view.bounds.size;
+    
+    if (self.rotationSize.width != 0){
+        size = self.rotationSize;
+    }
+    
+    float numberOfCellsPerRow = [self numberOfCellsPerRow];
+    CGFloat width = ceilf(size.width/numberOfCellsPerRow);
     CGFloat height = width;
     
-    if (indexPath.item % 3 == 2) {
-        width = self.view.bounds.size.width - 2 * width;
-    }
+//    if (indexPath.item % [self numberOfCellsPerRow] == 2) {
+//        width = size.width - 2 * width;
+//    }
 
     return CGSizeMake(width, height);
 }
 
-#pragma mark - Autorotate and Orientation Methods
-
-- (BOOL)shouldAutorotate {
-    return NO;
-}
-
-- (NSUInteger)supportedInterfaceOrientations {
-    return UIInterfaceOrientationMaskPortrait;
+- (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout insetForSectionAtIndex:(NSInteger)section{
+    CGSize size = self.rotationSize.width != 0 ? self.rotationSize : self.view.frame.size;
+    
+    CGSize cellSize = [self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
+    CGFloat diff = size.width - (cellSize.width * [self numberOfCellsPerRow]);
+    return UIEdgeInsetsMake(0, diff/2.0, 0, diff/2.0);
 }
 
 #pragma mark - Storyboard Methods
@@ -784,16 +840,19 @@ static void *ActionSheetCellKey;
 
 -(void)doSegueToOrderPreview{
 //    [OLAnalytics trackPhotosSelectedForOrder];
-    OLOrderReviewViewController* orvc;
+    UIViewController* orvc;
     if (self.product.productTemplate.templateUI == kOLTemplateUIFrame){
         orvc = [self.storyboard instantiateViewControllerWithIdentifier:@"FrameOrderReviewViewController"];
+    }
+    else if (self.product.productTemplate.templateUI == kOLTemplateUIPhotobook){
+        orvc = [self.storyboard instantiateViewControllerWithIdentifier:@"PhotobookViewController"];
     }
     else{
         orvc = [self.storyboard instantiateViewControllerWithIdentifier:@"OrderReviewViewController"];
     }
-    orvc.product = self.product;
-    orvc.userSelectedPhotos = self.userSelectedPhotos;
-    orvc.assets = self.assets;
+    [orvc safePerformSelector:@selector(setProduct:) withObject:self.product];
+    [orvc safePerformSelector:@selector(setUserSelectedPhotos:) withObject:self.userSelectedPhotos];
+    [orvc safePerformSelector:@selector(setAssets:) withObject:self.assets];
     [self.navigationController pushViewController:orvc animated:YES];
 }
 
@@ -804,6 +863,27 @@ static void *ActionSheetCellKey;
         if (buttonIndex == 1) {
             [self doSegueToOrderPreview];
         }
+    }
+}
+
+#pragma mark - Autorotate and Orientation Methods
+// Currently here to disable landscape orientations and rotation on iOS 7. When support is dropped, these can be deleted.
+
+- (BOOL)shouldAutorotate {
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
+        return YES;
+    }
+    else{
+        return NO;
+    }
+}
+
+- (NSUInteger)supportedInterfaceOrientations {
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
+        return UIInterfaceOrientationMaskAll;
+    }
+    else{
+        return UIInterfaceOrientationMaskPortrait;
     }
 }
 

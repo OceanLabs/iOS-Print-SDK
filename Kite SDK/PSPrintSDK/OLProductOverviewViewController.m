@@ -9,7 +9,6 @@
 #import "OLProductOverviewViewController.h"
 #import "OLProductOverviewPageContentViewController.h"
 #import "OLProduct.h"
-#import "OLFrameSelectionViewController.h"
 #import "OLOrderReviewViewController.h"
 #import "OLPosterSizeSelectionViewController.h"
 #import "OLWhiteSquare.h"
@@ -19,6 +18,9 @@
 #import "OLSingleImageProductReviewViewController.h"
 #import "OLPhotoSelectionViewController.h"
 #import "OLPosterViewController.h"
+#import "OLFrameOrderReviewViewController.h"
+#import "OLPostcardViewController.h"
+#import "NSObject+Utils.h"
 
 @interface OLKitePrintSDK (Kite)
 
@@ -73,12 +75,7 @@
     OLTemplateUI templateClass = self.product.productTemplate.templateUI;
     self.costLabel.text = self.product.unitCost;
     
-    if (self.product.productTemplate.templateUI == kOLTemplateUIFrame || self.product.productTemplate.templateUI == kOLTemplateUIPoster){
-        self.sizeLabel.text = [NSString stringWithFormat:@"%@", self.product.dimensions];
-    }
-    else{
-        self.sizeLabel.text = [NSString stringWithFormat:@"%@\n%@", self.product.packInfo, self.product.dimensions];
-    }
+    self.sizeLabel.text = [NSString stringWithFormat:@"%@%@", self.product.packInfo, self.product.dimensions];
     
     if (templateClass == kOLTemplateUICase){
         [self.sizeLabel removeFromSuperview];
@@ -99,7 +96,7 @@
 }
 
 - (UIViewController *)viewControllerAtIndex:(NSUInteger)index {
-    if (index == NSNotFound || index >= self.self.product.productPhotos.count) {
+    if (index == NSNotFound || index >= self.product.productPhotos.count) {
         return nil;
     }
     
@@ -110,49 +107,39 @@
     return vc;
 }
 
+- (IBAction)onTapGestureRecognized:(UITapGestureRecognizer *)sender {
+    [self onButtonStartClicked:nil];
+}
+
 - (IBAction)onButtonStartClicked:(UIBarButtonItem *)sender {
-    if (self.product.productTemplate.templateUI == kOLTemplateUIFrame){
-        OLFrameSelectionViewController *frameVc = [self.storyboard instantiateViewControllerWithIdentifier:@"FrameSelectionViewController"];
-        frameVc.assets = self.assets;
-        frameVc.userSelectedPhotos = self.userSelectedPhotos;
-        frameVc.delegate = self.delegate;
-        [self.navigationController pushViewController:frameVc animated:YES];
+    UIViewController *vc;
+    if (self.product.productTemplate.templateUI == kOLTemplateUICase){
+        vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLCaseViewController"];
     }
-    else if (self.product.productTemplate.templateUI == kOLTemplateUICase){
-        OLSingleImageProductReviewViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLSingleImageProductReviewViewController"];
-        vc.assets = self.assets;
-        vc.userSelectedPhotos = self.userSelectedPhotos;
-        vc.delegate = self.delegate;
-        vc.product = self.product;
-        [self.navigationController pushViewController:vc animated:YES];
+    else if (self.product.productTemplate.templateUI == kOLTemplateUIPostcard){
+        vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLPostcardViewController"];
     }
     else if (self.product.productTemplate.templateUI == kOLTemplateUIPoster){
-        OLPosterViewController *dest = [self.storyboard instantiateViewControllerWithIdentifier:@"p1x1ViewController"];
-        dest.product = self.product;
-        dest.assets = self.assets;
-        dest.userSelectedPhotos = self.userSelectedPhotos;
-        [self.navigationController pushViewController:dest animated:YES];
+        vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLSingleImageProductReviewViewController"];
     }
     else{
         if (![self.delegate respondsToSelector:@selector(kiteControllerShouldAllowUserToAddMorePhotos:)] || [self.delegate kiteControllerShouldAllowUserToAddMorePhotos:[OLKitePrintSDK kiteViewControllerInNavStack:self.navigationController.viewControllers]]){
-            OLPhotoSelectionViewController *vc;
             vc = [self.storyboard instantiateViewControllerWithIdentifier:@"PhotoSelectionViewController"];
-            vc.assets = self.assets;
-            vc.userSelectedPhotos = self.userSelectedPhotos;
-            vc.product = self.product;
-            vc.delegate = self.delegate;
-            [self.navigationController pushViewController:vc animated:YES];
+        }
+        else if (!(![self.delegate respondsToSelector:@selector(kiteControllerShouldAllowUserToAddMorePhotos:)] || [self.delegate kiteControllerShouldAllowUserToAddMorePhotos:[OLKitePrintSDK kiteViewControllerInNavStack:self.navigationController.viewControllers]]) && self.product.productTemplate.templateUI == kOLTemplateUIPhotobook){
+            vc = [self.storyboard instantiateViewControllerWithIdentifier:@"PhotobookViewController"];
         }
         else{
-            OLOrderReviewViewController *vc;
             vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OrderReviewViewController"];
-            vc.assets = self.assets;
-            vc.userSelectedPhotos = self.userSelectedPhotos;
-            vc.product = self.product;
-            vc.delegate = self.delegate;
             [self.navigationController pushViewController:vc animated:YES];
         }
     }
+    [vc safePerformSelector:@selector(setAssets:) withObject:self.assets];
+    [vc safePerformSelector:@selector(setUserSelectedPhotos:) withObject:self.userSelectedPhotos];
+    [vc safePerformSelector:@selector(setDelegate:) withObject:self.delegate];
+    [vc safePerformSelector:@selector(setProduct:) withObject:self.product];
+    
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
 -(void)userDidTapOnImage{
@@ -185,17 +172,28 @@
 }
 
 - (NSInteger)presentationIndexForPageViewController:(UIPageViewController *)pageViewController {
-    return 0;
+    return 1;
 }
 
 #pragma mark - Autorotate and Orientation Methods
+// Currently here to disable landscape orientations and rotation on iOS 7. When support is dropped, these can be deleted.
 
 - (BOOL)shouldAutorotate {
-    return NO;
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
+        return YES;
+    }
+    else{
+        return NO;
+    }
 }
 
 - (NSUInteger)supportedInterfaceOrientations {
-    return UIInterfaceOrientationMaskPortrait;
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
+        return UIInterfaceOrientationMaskAll;
+    }
+    else{
+        return UIInterfaceOrientationMaskPortrait;
+    }
 }
 
 
