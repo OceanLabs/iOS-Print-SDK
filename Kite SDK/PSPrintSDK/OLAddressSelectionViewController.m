@@ -106,15 +106,6 @@ static const NSInteger kRowAddAddressManually = 0;
     }
 }
 
-//- (void)onButtonDoneClicked {
-//    if ([self.delegate respondsToSelector:@selector(addressSelectionController:didFinishPickingAddresses:)]){
-//        [self.delegate addressSelectionController:self didFinishPickingAddresses:self.selected];
-//    }
-//    else if ([self.delegate respondsToSelector:@selector(addressPicker:didFinishPickingAddresses:)]){
-//        [(id)(self.delegate) addressPicker:nil didFinishPickingAddresses:self.selected];
-//    }
-//}
-
 - (void)onButtonAddFromContactsClicked {
     ABPeoplePickerNavigationController *picker = [[ABPeoplePickerNavigationController alloc] init];
     picker.peoplePickerDelegate = self;
