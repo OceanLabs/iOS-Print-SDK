@@ -14,13 +14,14 @@
 #import "OLProductTemplate.h"
 #import "OLKitePrintSDK.h"
 #import "OLAnalytics.h"
+#import "OLAddressEditViewController.h"
+#import <SkyLab.h>
 
 NSString *const kOLNotificationUserSuppliedShippingDetails = @"co.oceanlabs.pssdk.kOLNotificationUserSuppliedShippingDetails";
 NSString *const kOLNotificationUserCompletedPayment = @"co.oceanlabs.pssdk.kOLNotificationUserCompletedPayment";
 NSString *const kOLNotificationPrintOrderSubmission = @"co.oceanlabs.pssdk.kOLNotificationPrintOrderSubmission";
 
 NSString *const kOLKeyUserInfoPrintOrder = @"co.oceanlabs.pssdk.kOLKeyUserInfoPrintOrder";
-
 
 static const NSUInteger kMinPhoneNumberLength = 5;
 
@@ -32,6 +33,7 @@ static const NSUInteger kSectionCount = 3;
 
 static NSString *const kKeyEmailAddress = @"co.oceanlabs.pssdk.kKeyEmailAddress";
 static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
+static NSString *const kOLKiteABTestOfferAddressSearch = @"ly.kite.abtest.offer_address_search";
 
 @interface OLPaymentViewController (Private)
 @property (nonatomic, assign) BOOL presentedModally;
@@ -39,12 +41,6 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
 
 
 #define kColourLightBlue [UIColor colorWithRed:0 / 255.0 green:122 / 255.0 blue:255 / 255.0 alpha:1.0]
-
-@interface OLKitePrintSDK (Private)
-
-+ (void)addressViewController:(void(^)(UIViewController *vc))handler;
-
-@end
 
 @interface OLCheckoutViewController () <OLAddressPickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate>
 @property (strong, nonatomic) OLAddress *shippingAddress;
@@ -54,6 +50,7 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
 @property (strong, nonatomic) UILabel *kiteLabel;
 @property (strong, nonatomic) NSLayoutConstraint *kiteLabelYCon;
 @property (weak, nonatomic) UITextField *activeTextView;
+@property (assign, nonatomic) BOOL offerAddressSearch;
 @end
 
 @implementation OLCheckoutViewController
@@ -61,6 +58,7 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
 - (id)init {
     //NSAssert(NO, @"init is not a valid initializer for OLCheckoutViewController. Use initWithAPIKey:environment:printOrder:, or initWithPrintOrder: instead");
     if (self = [super initWithStyle:UITableViewStyleGrouped]) {
+        [self setupABTestVariants];
     }
     return self;
 }
@@ -72,6 +70,7 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
         self.printOrder = printOrder;
         //[self.printOrder preemptAssetUpload];
         [OLProductTemplate sync];
+        [self setupABTestVariants];
     }
 
     return self;
@@ -83,9 +82,25 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
         self.printOrder = printOrder;
         //[self.printOrder preemptAssetUpload];
         [OLProductTemplate sync];
+        [self setupABTestVariants];
     }
     
     return self;
+}
+
+- (void)setupABTestVariants {
+    NSDictionary *experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestOfferAddressSearch];
+    if (!experimentDict) {
+        experimentDict = @{@"Offer Search" : @0.5, @"Manual" : @0.5};
+    }
+    [SkyLab splitTestWithName:kOLKiteABTestOfferAddressSearch
+                   conditions:@{
+                                @"Offer Search" : experimentDict[@"Offer Search"],
+                                @"Manual" : experimentDict[@"Manual"]
+                                } block:^(id choice) {
+                                    self.offerAddressSearch = [choice isEqualToString:@"Offer Search"];
+                                }];
+
 }
 
 - (void)presentViewControllerFrom:(UIViewController *)presentingViewController animated:(BOOL)animated completion:(void (^)(void))completion {
@@ -166,7 +181,11 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
 
 - (void)trackViewed{
 #ifndef OL_NO_ANALYTICS
-    [OLAnalytics trackShippingScreenViewedForOrder:self.printOrder variant:@"Classic"];
+    if (self.offerAddressSearch) {
+        [OLAnalytics trackShippingScreenViewedForOrder:self.printOrder variant:@"Classic + Address Search"];
+    } else {
+        [OLAnalytics trackShippingScreenViewedForOrder:self.printOrder variant:@"Classic"];
+    }
 #endif
 }
 
@@ -434,15 +453,16 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section == kSectionDeliveryDetails) {
-        [OLKitePrintSDK addressViewController:^(UIViewController *vc){
-            if ([vc isKindOfClass:[UINavigationController class]]){
-                [(OLAddressPickerController *)[[(UINavigationController *)vc viewControllers] firstObject] setDelegate:self];
-            }
-            else{
-                [(OLAddressPickerController *)vc setDelegate:self];
-            }
-            [self presentViewController:vc animated:YES completion:nil];
-        }];
+        if (self.offerAddressSearch || [OLAddress addressBook].count > 0) {
+            OLAddressPickerController *addressPicker = [[OLAddressPickerController alloc] init];
+            addressPicker.delegate = self;
+            addressPicker.allowsAddressSearch = self.offerAddressSearch;
+            [self presentViewController:addressPicker animated:YES completion:nil];
+        } else {
+            OLAddressEditViewController *editVc = [[OLAddressEditViewController alloc] init];
+            editVc.delegate = self;
+            [self presentViewController:[[UINavigationController alloc] initWithRootViewController:editVc] animated:YES completion:nil];
+        }
     }
 }
 

@@ -42,7 +42,7 @@ static BOOL useJudoPayForGBP = NO;
 static BOOL cacheTemplates = NO;
 
 static NSString *const kOLKiteABTestShippingScreen = @"ly.kite.abtest.shippingscreen";
-static NSString *const kOLKiteABTestAddressScreen = @"ly.kite.abtest.addressscreen";
+static NSString *const kOLOfferAddressSearch = @"ly.kite.flag.offer_address_search";
 
 #ifdef OL_KITE_OFFER_INSTAGRAM
 static NSString *instagramClientID = nil;
@@ -233,44 +233,24 @@ static NSString *instagramRedirectURI = nil;
 #endif
 
 + (void)fetchRemotePlist{
-    NSDictionary *oldDictShipping = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestShippingScreen];
-    NSDictionary *oldDictAddress = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestAddressScreen];
+    NSDictionary *oldDefaults = [[NSUserDefaults standardUserDefaults] dictionaryRepresentation];
     
     NSURL *URL = [NSURL URLWithString:@"https://sdk-static.s3.amazonaws.com/kite-ios-remote.plist"];
     [[NSUserDefaults standardUserDefaults] registerDefaultsWithURL:URL success:^(NSDictionary *defaults){
-        if (![oldDictShipping[@"Experiment Version"] isEqualToString:defaults[kOLKiteABTestShippingScreen][@"Experiment Version"]]){
-            [SkyLab resetTestNamed:kOLKiteABTestShippingScreen];
-        }
-        if (![oldDictAddress[@"Experiment Version"] isEqualToString:defaults[kOLKiteABTestAddressScreen][@"Experiment Version"]]){
-            [SkyLab resetTestNamed:kOLKiteABTestAddressScreen];
+        // reset SKLab A/B tests if the experiment version for any test has been bumped. This allows us to default to sticky SkyLab behaviour
+        // and when we want to reset things just bump the experiment version.
+        for (NSString *key in defaults) {
+            id possibleDict = defaults[key];
+            id oldPossibleDict = oldDefaults[key];
+            if ([possibleDict isKindOfClass:[NSDictionary class]] && [oldPossibleDict isKindOfClass:[NSDictionary class]]) {
+                id experimentVersion = [possibleDict objectForKey:@"Experiment Version"];
+                id oldExperimentVersion = [oldPossibleDict objectForKey:@"Experiment Version"];
+                if ([experimentVersion isKindOfClass:[NSString class]] && [oldExperimentVersion isKindOfClass:[NSString class]] && ![experimentVersion isEqualToString:oldExperimentVersion]) {
+                    [SkyLab resetTestNamed:key];
+                }
+            }
         }
     }failure:NULL];
-}
-
-+ (void)addressViewController:(void(^)(UIViewController *vc))handler{
-    NSDictionary *experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestAddressScreen];
-    if (!experimentDict){
-        experimentDict = @{@"Manual" : @0, @"OfferSearch" : @1};
-    }
-    [SkyLab splitTestWithName:kOLKiteABTestAddressScreen conditions:@{
-                                                                       @"Manual" : experimentDict[@"Manual"],
-                                                                       @"OfferSearch" : experimentDict[@"Manual"]
-                                                                       }block:^(id choice){
-                                                                           UIViewController *vc;
-                                                                           if ([choice isEqualToString:@"Manual"]){
-                                                                               if ([OLAddress addressBook].count > 0) {
-                                                                                   vc = [[OLAddressPickerController alloc] init];
-                                                                               }
-                                                                               else{
-                                                                                   vc = [[UINavigationController alloc] initWithRootViewController:[[OLAddressEditViewController alloc] init]];
-                                                                               }
-                                                                               
-                                                                           }
-                                                                           else{
-                                                                               vc = [[OLAddressPickerController alloc] init];
-                                                                           }
-                                                                           handler(vc);
-                                                                       }];
 }
 
 + (void)checkoutViewControllerForPrintOrder:(OLPrintOrder *)printOrder handler:(void(^)(OLCheckoutViewController *vc))handler{

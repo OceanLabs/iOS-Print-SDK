@@ -124,11 +124,7 @@ static const NSInteger kRowAddAddressManually = 0;
     if (section == 0) {
         return [OLAddress addressBook].count;
     } else {
-        NSDictionary *experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:@"ly.kite.abtest.addressscreen"];
-        if (!experimentDict){
-            experimentDict = @{@"Manual" : @0, @"OfferSearch" : @1};
-        }
-        return [experimentDict[@"OfferSearch"] integerValue] > 0 ? 2 : 1;
+        return self.allowAddressSearch ? 2 : 1;
     }
 }
 
