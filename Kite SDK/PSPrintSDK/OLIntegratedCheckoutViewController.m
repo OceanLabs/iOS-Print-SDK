@@ -36,6 +36,8 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
 @property (strong, nonatomic) UITextField *textFieldEmail, *textFieldPhone;
 - (void)onBackgroundClicked;
 - (BOOL)hasUserProvidedValidDetailsToProgressToPayment;
+- (BOOL)showPhoneEntryField;
+- (void)setupABTestVariants;
 
 @end
 
@@ -58,6 +60,7 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
         self.printOrder = printOrder;
         //[self.printOrder preemptAssetUpload];
         [OLProductTemplate sync];
+        [super setupABTestVariants];
     }
     
     return self;
@@ -71,7 +74,7 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
 
 - (void)trackViewed{
 #ifndef OL_NO_ANALYTICS
-    [OLAnalytics trackShippingScreenViewedForOrder:self.printOrder variant:@"Integrated"];
+    [OLAnalytics trackShippingScreenViewedForOrder:self.printOrder variant:@"Integrated" showPhoneEntryField:[self showPhoneEntryField]];
 #endif
 }
 
@@ -229,7 +232,6 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
     UITableViewCell *cell = nil;
     if (indexPath.section == kSectionDeliveryDetails) {
         static NSString *const kAddDeliveryAddressCell = @"AddDeliveryAddressCell";
-//        static NSString *const kCellIdentifier = @"CellIdentifier";
         
         cell = [tableView dequeueReusableCellWithIdentifier:kAddDeliveryAddressCell];
         if (!cell) {
@@ -295,7 +297,7 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
                 self.textFieldCountry = tf;
                 break;
         }
-        //        }
+
     } else{
         cell = [super tableView:tableView cellForRowAtIndexPath:indexPath];
         
@@ -414,9 +416,7 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
         [self.textFieldEmail becomeFirstResponder];
     } else if (textField == self.textFieldCountry) {
         
-    }
-    else if (textField == self.textFieldEmail && ([self.kiteDelegate respondsToSelector:@selector(shouldShowPhoneEntryOnCheckoutScreen)] && [self.kiteDelegate shouldShowPhoneEntryOnCheckoutScreen])) {
-//        [self scrollToTextField:self.textFieldPhone];
+    } else if (textField == self.textFieldEmail && [super showPhoneEntryField]) {
         [self.textFieldPhone becomeFirstResponder];
     }
     else{

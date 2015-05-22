@@ -34,6 +34,7 @@ static const NSUInteger kSectionCount = 3;
 static NSString *const kKeyEmailAddress = @"co.oceanlabs.pssdk.kKeyEmailAddress";
 static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
 static NSString *const kOLKiteABTestOfferAddressSearch = @"ly.kite.abtest.offer_address_search";
+static NSString *const kOLKiteABTestRequirePhoneNumber = @"ly.kite.abtest.require_phone";
 
 @interface OLPaymentViewController (Private)
 @property (nonatomic, assign) BOOL presentedModally;
@@ -51,6 +52,7 @@ static NSString *const kOLKiteABTestOfferAddressSearch = @"ly.kite.abtest.offer_
 @property (strong, nonatomic) NSLayoutConstraint *kiteLabelYCon;
 @property (weak, nonatomic) UITextField *activeTextView;
 @property (assign, nonatomic) BOOL offerAddressSearch;
+@property (assign, nonatomic) BOOL requirePhoneNumber;
 @end
 
 @implementation OLCheckoutViewController
@@ -91,14 +93,26 @@ static NSString *const kOLKiteABTestOfferAddressSearch = @"ly.kite.abtest.offer_
 - (void)setupABTestVariants {
     NSDictionary *experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestOfferAddressSearch];
     if (!experimentDict) {
-        experimentDict = @{@"Offer Search" : @0.5, @"Manual" : @0.5};
+        experimentDict = @{@"Yes" : @0.5, @"No" : @0.5};
     }
     [SkyLab splitTestWithName:kOLKiteABTestOfferAddressSearch
                    conditions:@{
-                                @"Offer Search" : experimentDict[@"Offer Search"],
-                                @"Manual" : experimentDict[@"Manual"]
+                                @"Yes" : experimentDict[@"Yes"],
+                                @"No" : experimentDict[@"No"]
                                 } block:^(id choice) {
-                                    self.offerAddressSearch = [choice isEqualToString:@"Offer Search"];
+                                    self.offerAddressSearch = [choice isEqualToString:@"Yes"];
+                                }];
+    
+    experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestRequirePhoneNumber];
+    if (!experimentDict) {
+        experimentDict = @{@"Yes" : @0.5, @"No" : @0.5};
+    }
+    [SkyLab splitTestWithName:kOLKiteABTestRequirePhoneNumber
+                   conditions:@{
+                                @"Yes" : experimentDict[@"Yes"],
+                                @"No" : experimentDict[@"No"]
+                                } block:^(id choice) {
+                                    self.requirePhoneNumber = [choice isEqualToString:@"Yes"];
                                 }];
 
 }
@@ -182,9 +196,9 @@ static NSString *const kOLKiteABTestOfferAddressSearch = @"ly.kite.abtest.offer_
 - (void)trackViewed{
 #ifndef OL_NO_ANALYTICS
     if (self.offerAddressSearch) {
-        [OLAnalytics trackShippingScreenViewedForOrder:self.printOrder variant:@"Classic + Address Search"];
+        [OLAnalytics trackShippingScreenViewedForOrder:self.printOrder variant:@"Classic + Address Search" showPhoneEntryField:[self showPhoneEntryField]];
     } else {
-        [OLAnalytics trackShippingScreenViewedForOrder:self.printOrder variant:@"Classic"];
+        [OLAnalytics trackShippingScreenViewedForOrder:self.printOrder variant:@"Classic" showPhoneEntryField:[self showPhoneEntryField]];
     }
 #endif
 }
@@ -307,7 +321,7 @@ static NSString *const kOLKiteABTestOfferAddressSearch = @"ly.kite.abtest.offer_
         return NO;
     }
     
-    if (self.textFieldPhone.text.length < kMinPhoneNumberLength && (([self.kiteDelegate respondsToSelector:@selector(shouldShowPhoneEntryOnCheckoutScreen)] && [self.kiteDelegate shouldShowPhoneEntryOnCheckoutScreen]) || ![self.kiteDelegate respondsToSelector:@selector(shouldShowPhoneEntryOnCheckoutScreen)])) {
+    if (self.textFieldPhone.text.length < kMinPhoneNumberLength && [self showPhoneEntryField]) {
         [self scrollSectionToVisible:kSectionPhoneNumber];
         UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Invalid Phone Number", @"KitePrintSDK", [OLConstants bundle], @"") message:NSLocalizedStringFromTableInBundle(@"Please enter a valid phone number", @"KitePrintSDK", [OLConstants bundle], @"") delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLConstants bundle], @"") otherButtonTitles:nil];
         [av show];
@@ -322,10 +336,20 @@ static NSString *const kOLKiteABTestOfferAddressSearch = @"ly.kite.abtest.offer_
     [self.tableView scrollRectToVisible:sectionRect animated:YES];
 }
 
+- (BOOL)showPhoneEntryField {
+    if ([self.kiteDelegate respondsToSelector:@selector(shouldShowPhoneEntryOnCheckoutScreen)]) {
+        return [self.kiteDelegate shouldShowPhoneEntryOnCheckoutScreen]; // delegate overrides whatever the A/B test might say.
+    }
+    
+    return self.requirePhoneNumber;
+}
+
+
 #pragma mark - UITableViewDataSource methods
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return [self.kiteDelegate respondsToSelector:@selector(shouldShowPhoneEntryOnCheckoutScreen)] && ![self.kiteDelegate shouldShowPhoneEntryOnCheckoutScreen] ? kSectionCount - 1 : kSectionCount;
+    
+    return [self showPhoneEntryField] ? kSectionCount : kSectionCount - 1;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
@@ -391,9 +415,6 @@ static NSString *const kOLKiteABTestOfferAddressSearch = @"ly.kite.abtest.offer_
             self.textFieldEmail = (UITextField *) [cell viewWithTag:kInputFieldTag];
             self.textFieldEmail.autocapitalizationType = UITextAutocapitalizationTypeNone;
             self.textFieldEmail.autocorrectionType = UITextAutocorrectionTypeNo;
-            if (!([self.kiteDelegate respondsToSelector:@selector(shouldShowPhoneEntryOnCheckoutScreen)] && [self.kiteDelegate shouldShowPhoneEntryOnCheckoutScreen])){
-                self.textFieldEmail.returnKeyType = UIReturnKeyDone;
-            }
             [self populateDefaultEmailAndPhone];
         }
         
@@ -469,7 +490,7 @@ static NSString *const kOLKiteABTestOfferAddressSearch = @"ly.kite.abtest.offer_
 #pragma mark - UITextFieldDelegate methods
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
-    if (textField == self.textFieldEmail && ([self.kiteDelegate respondsToSelector:@selector(shouldShowPhoneEntryOnCheckoutScreen)] && [self.kiteDelegate shouldShowPhoneEntryOnCheckoutScreen])) {
+    if (textField == self.textFieldEmail && [self showPhoneEntryField]) {
         [self.textFieldPhone becomeFirstResponder];
     }
     else{
