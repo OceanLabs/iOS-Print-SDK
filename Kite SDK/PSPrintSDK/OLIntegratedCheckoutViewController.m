@@ -395,6 +395,7 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
     [self dismissViewControllerAnimated:YES completion:nil];
     self.shippingAddress.country = countries.lastObject;
     self.textFieldCountry.text = self.shippingAddress.country.name;
+    [self.tableView reloadData]; // refesh labels if country has changed i.e. Postal Code -> ZIP Code if UK -> USA.
 }
 
 -(void) countryPickerDidCancelPicking:(OLCountryPickerController *)picker{
