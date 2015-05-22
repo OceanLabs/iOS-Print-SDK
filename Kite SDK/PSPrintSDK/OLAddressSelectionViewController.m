@@ -21,8 +21,8 @@ static const NSInteger kSectionAddressList = 0;
 static const NSInteger kSectionAddAddress = 1;
 
 //static const NSInteger kRowAddAddressFromContacts = 0;
-static const NSInteger kRowAddAddressSearch = 0;
-static const NSInteger kRowAddAddressManually = 1;
+static const NSInteger kRowAddAddressSearch = 1;
+static const NSInteger kRowAddAddressManually = 0;
 
 @interface OLAddressSelectionViewController () <ABPeoplePickerNavigationControllerDelegate>
 @property (strong, nonatomic) NSMutableSet *selectedAddresses;
@@ -48,7 +48,7 @@ static const NSInteger kRowAddAddressManually = 1;
     [super viewDidLoad];
     self.tableView.allowsMultipleSelection = self.allowMultipleSelection;
     self.allowMultipleSelection = _allowMultipleSelection;
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Done", @"KitePrinSDK", [OLConstants bundle], @"") style:UIBarButtonItemStyleDone target:self action:@selector(onButtonDoneClicked)];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Done", @"KitePrinSDK", [OLConstants bundle], @"") style:UIBarButtonItemStyleDone target:self action:@selector(onButtonCancelClicked)];
 }
 
 - (void)setAllowMultipleSelection:(BOOL)allowMultipleSelection {
@@ -89,15 +89,21 @@ static const NSInteger kRowAddAddressManually = 1;
 
 - (void)onButtonCancelClicked {
     if (self.selected.count > 0){
-        [self.delegate addressSelectionController:self didFinishPickingAddresses:@[[self.selected firstObject]]];
+        if ([self.delegate respondsToSelector:@selector(addressSelectionController:didFinishPickingAddresses:)]){
+            [self.delegate addressSelectionController:self didFinishPickingAddresses:self.selected];
+        }
+        else if ([self.delegate respondsToSelector:@selector(addressPicker:didFinishPickingAddresses:)]){
+            [(id)(self.delegate) addressPicker:nil didFinishPickingAddresses:self.selected];
+        }
     }
     else{
-        [self.delegate addressSelectionControllerDidCancelPicking:self];
+        if ([self.delegate respondsToSelector:@selector(addressSelectionControllerDidCancelPicking:)]){
+            [self.delegate addressSelectionControllerDidCancelPicking:self];
+        }
+        else if ([self.delegate respondsToSelector:@selector(addressPickerDidCancelPicking:)]){
+            [(id)(self.delegate) addressPickerDidCancelPicking:nil];
+        }
     }
-}
-
-- (void)onButtonDoneClicked {
-    [self.delegate addressSelectionController:self didFinishPickingAddresses:self.selected];
 }
 
 - (void)onButtonAddFromContactsClicked {
@@ -118,7 +124,7 @@ static const NSInteger kRowAddAddressManually = 1;
     if (section == 0) {
         return [OLAddress addressBook].count;
     } else {
-        return 2;
+        return self.allowAddressSearch ? 2 : 1;
     }
 }
 
@@ -203,7 +209,8 @@ static const NSInteger kRowAddAddressManually = 1;
     if (indexPath.section == kSectionAddressList) {
         if (!self.allowMultipleSelection) {
             OLAddress *address = [OLAddress addressBook][indexPath.row];
-            [self.delegate addressSelectionController:self didFinishPickingAddresses:@[address]];
+            self.selected = @[address];
+            [self onButtonCancelClicked];
         } else {
             OLAddress *address = [OLAddress addressBook][indexPath.row];
             BOOL selected = YES;
