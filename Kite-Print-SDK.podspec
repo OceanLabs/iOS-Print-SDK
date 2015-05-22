@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name		= 'Kite-Print-SDK'
-  spec.version         	= '2.0.23'
+  spec.version         	= '2.0.25'
   spec.license 		= { :type => 'MIT', :file => 'Kite SDK/LICENSE' }
   spec.homepage         = 'https://github.com/OceanLabs/iOS-Print-SDK'
   spec.authors          = {'Deon Botha' => 'deon@oceanlabs.co'}
@@ -14,6 +14,9 @@ Pod::Spec.new do |spec|
   spec.dependency	'UICKeyChainStore', '~> 2.0.4'
   spec.dependency	'CSStickyHeaderFlowLayout', '~> 0.2.4'
   spec.dependency	'CTAssetsPickerController', '~> 2.9.3'
+  spec.dependency	'GroundControl', '~> 2.1.0'
+  spec.dependency	'SkyLab', '~> 1.0.0'
+  spec.dependency	'MPFlipViewController', '~> 0.0.2'
   spec.dependency	'UIColor-HexString'
   spec.requires_arc	= true
   spec.platform		= :ios, '7.0'
