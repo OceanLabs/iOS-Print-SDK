@@ -25,6 +25,7 @@
 #import "OLAnalytics.h"
 #import "OLPaymentLineItem.h"
 #import "UIView+RoundRect.h"
+#import "OLBaseRequest.h"
 
 #ifdef OL_KITE_OFFER_PAYPAL
 #import <PayPalMobile.h>
@@ -74,9 +75,8 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 @property (assign, nonatomic) BOOL applePayIsAvailable;
 #endif
 
-@property (strong, nonatomic) UIView *loadingTemplatesView;
+@property (strong, nonatomic) UIView *loadingView;
 @property (strong, nonatomic) UITableView *tableView;
-@property (assign, nonatomic) BOOL completedTemplateSyncSuccessfully;
 @property (strong, nonatomic) NSString *paymentCurrencyCode;
 @property (strong, nonatomic) NSMutableArray* sections;
 
@@ -102,19 +102,19 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 - (id)initWithPrintOrder:(OLPrintOrder *)printOrder {
     if (self = [super init]) {
         self.printOrder = printOrder;
-        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(hideLoadingView) name:kNotificationCostFetchComplete object:nil];
     }
     
     return self;
 }
 
-- (BOOL)isShippingScreenOnTheStack {
+- (OLCheckoutViewController *)shippingScreenOnTheStack {
     NSArray *vcStack = self.navigationController.viewControllers;
     if ([vcStack[vcStack.count - 2] isKindOfClass:[OLCheckoutViewController class]]) {
-        return YES;
+        return vcStack[vcStack.count - 2];
     }
     
-    return NO;
+    return nil;
 }
 
 #ifdef OL_KITE_OFFER_APPLE_PAY
@@ -162,7 +162,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     self.tableView.dataSource = self;
     [self.view addSubview:self.tableView];
     
-    if ([self isShippingScreenOnTheStack]) {
+    if ([self shippingScreenOnTheStack]) {
         self.tableView.tableHeaderView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"checkout_progress_indicator2"]];
         self.tableView.tableHeaderView.contentMode = UIViewContentModeCenter;
         self.tableView.tableHeaderView.frame = CGRectMake(0, 0, self.view.frame.size.width, self.tableView.tableHeaderView.frame.size.height);
@@ -260,10 +260,10 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     
     [self updateViewsBasedOnPromoCodeChange]; // initialise based on promo state
     
-    self.loadingTemplatesView = [[UIView alloc] initWithFrame:self.view.frame];
-    self.loadingTemplatesView.backgroundColor = [UIColor colorWithRed:239 / 255.0 green:239 / 255.0 blue:244 / 255.0 alpha:1];
+    self.loadingView = [[UIView alloc] initWithFrame:self.view.frame];
+    self.loadingView.backgroundColor = [UIColor colorWithRed:239 / 255.0 green:239 / 255.0 blue:244 / 255.0 alpha:1];
     UIActivityIndicatorView *ai = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-    CGRect f = self.loadingTemplatesView.frame;
+    CGRect f = self.loadingView.frame;
     ai.center = CGPointMake(f.size.width / 2, f.size.height / 2);
     [ai startAnimating];
     UILabel *loadingLabel = [[UILabel alloc] init];
@@ -273,14 +273,14 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     loadingLabel.textAlignment = NSTextAlignmentCenter;
     loadingLabel.frame = CGRectMake((f.size.width - loadingLabel.frame.size.width) / 2, CGRectGetMaxY(ai.frame) + 10, loadingLabel.frame.size.width, loadingLabel.frame.size.height);
     
-    [self.loadingTemplatesView addSubview:ai];
-    [self.loadingTemplatesView addSubview:loadingLabel];
-    [self.view addSubview:self.loadingTemplatesView];
+    [self.loadingView addSubview:ai];
+    [self.loadingView addSubview:loadingLabel];
+    [self.view addSubview:self.loadingView];
     
     ai.translatesAutoresizingMaskIntoConstraints = NO;
-    [self.loadingTemplatesView addConstraints:@[[NSLayoutConstraint constraintWithItem:ai attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:ai.superview attribute:NSLayoutAttributeCenterY multiplier:1 constant:0],[NSLayoutConstraint constraintWithItem:ai attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:ai.superview attribute:NSLayoutAttributeCenterX multiplier:1 constant:0]]];
+    [self.loadingView addConstraints:@[[NSLayoutConstraint constraintWithItem:ai attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:ai.superview attribute:NSLayoutAttributeCenterY multiplier:1 constant:0],[NSLayoutConstraint constraintWithItem:ai attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:ai.superview attribute:NSLayoutAttributeCenterX multiplier:1 constant:0]]];
     
-    view = self.loadingTemplatesView;
+    view = self.loadingView;
     
     view.translatesAutoresizingMaskIntoConstraints = NO;
     views = NSDictionaryOfVariableBindings(view);
@@ -353,24 +353,6 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     self.tableView.clipsToBounds = YES;
 }
 
-- (BOOL)isTemplateSyncRequired {
-    if (self.completedTemplateSyncSuccessfully) {
-        return NO;
-    }
-    
-    NSDate *lastSyncDate = [OLProductTemplate lastSyncDate];
-    if (lastSyncDate == nil) {
-        return YES; // if we've never synced successfully before then definitely sync now
-    }
-    
-    NSTimeInterval elapsedSecondsSinceLastSync = -[lastSyncDate timeIntervalSinceNow];
-    if (elapsedSecondsSinceLastSync > (60 * 60)) { // if > 1hr has passed since last successful sync then sync now
-        return YES;
-    }
-    
-    return NO;
-}
-
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
 #ifdef OL_KITE_OFFER_PAYPAL
@@ -382,19 +364,16 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     [Stripe setDefaultPublishableKey:[OLKitePrintSDK stripePublishableKey]];
 #endif
     
-    if ([self isTemplateSyncRequired]) {
-        [OLProductTemplate sync];
-    }
-    
-    if (![OLProductTemplate isSyncInProgress]) {
-        self.completedTemplateSyncSuccessfully = YES;
-        self.loadingTemplatesView.hidden = YES;
-        [self.tableView reloadData];
-    } else {
-        self.loadingTemplatesView.hidden = NO;
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onTemplateSyncCompleted:) name:kNotificationTemplateSyncComplete object:nil];
-    }
     [self positionKiteLabel];
+}
+
+- (void)hideLoadingView{
+    [self.tableView reloadData];
+    [UIView animateWithDuration:0.15 animations:^{
+        self.loadingView.alpha = 0;
+    } completion:^(BOOL finished) {
+        self.loadingView.hidden = YES;
+    }];
 }
 
 - (void)positionKiteLabel {
@@ -417,24 +396,18 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-- (void)onTemplateSyncCompleted:(NSNotification *)notification {
-    NSError *syncCompletionError = notification.userInfo[kNotificationKeyTemplateSyncError];
-    if (!syncCompletionError) {
-        self.completedTemplateSyncSuccessfully = YES;
-        [self.tableView reloadData];
-        [UIView animateWithDuration:0.3 animations:^{
-            self.loadingTemplatesView.alpha = 0;
-        } completion:^(BOOL finished) {
-            self.loadingTemplatesView.hidden = YES;
-        }];
-    } else {
-        UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLConstants bundle], @"") message:syncCompletionError.localizedDescription delegate:self cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLConstants bundle], @"") otherButtonTitles:NSLocalizedStringFromTableInBundle(@"Retry", @"KitePrintSDK", [OLConstants bundle], @""), nil];
-        [av show];
-    }
-}
-
 - (void)updateViewsBasedOnPromoCodeChange {
     [self.printOrder costWithCompletionHandler:^(NSDecimalNumber *totalCost, NSDecimalNumber *shippingCost, NSArray *lineItems, NSDictionary *jobCosts, NSError * error){
+        if (!error){
+            [self hideLoadingView];
+        }
+        else if (error.code == kOLKiteSDKErrorCodeRequestInProgress){
+            //            [self makeRequestForCost];
+        }
+        else{
+            UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLConstants bundle], @"") message:error.localizedDescription delegate:self cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLConstants bundle], @"") otherButtonTitles:NSLocalizedStringFromTableInBundle(@"Retry", @"KitePrintSDK", [OLConstants bundle], @""), nil];
+            [av show];
+        }
         
         NSComparisonResult result = [totalCost compare:[NSDecimalNumber zero]];
         if (result == NSOrderedAscending || result == NSOrderedSame) {
@@ -600,7 +573,9 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 
 #ifdef OL_KITE_OFFER_APPLE_PAY
 - (IBAction)onButtonPayWithApplePayClicked{
-    [self.printOrder costWithCompletionHandler:^(NSDecimalNumber *totalCost, NSDecimalNumber *shippingCost, NSArray *lineItems, NSDictionary *jobCosts, NSError * error){
+    [self.costRequest cancel];
+    self.costRequest = [self.printOrder costWithCompletionHandler:^(NSDecimalNumber *totalCost, NSDecimalNumber *shippingCost, NSArray *lineItems, NSDictionary *jobCosts, NSError * error){
+        self.costRequest = nil;
         self.amountPaid = totalCost;
         PKPaymentRequest *paymentRequest = [Stripe
                                             paymentRequestWithMerchantIdentifier:[OLKitePrintSDK appleMerchantID]
@@ -719,7 +694,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 #pragma mark - UITableViewDataSource methods
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return self.completedTemplateSyncSuccessfully ? [self.sections count] : 0;
+    return [self.sections count];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -956,7 +931,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         [self.navigationController popViewControllerAnimated:YES];
     } else if (buttonIndex == 1) {
         // Clicked retry, attempt syncing again
-        [OLProductTemplate sync];
+        [self updateViewsBasedOnPromoCodeChange];
     }
 }
 
@@ -988,6 +963,5 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         return UIInterfaceOrientationMaskPortrait;
     }
 }
-
 
 @end

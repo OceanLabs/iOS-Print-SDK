@@ -300,7 +300,6 @@ static id stringOrEmptyString(NSString *str) {
 - (OLBaseRequest *)costInCurrency:(NSString *)currencyCode completionHandler:(OLPrintOrderCostCompletionHandler)handler{
     NSDictionary *cache = self.cachedCostResponse;
     if (cache){
-        NSLog(@"Cost is cached");
         [self parseCostResponseJson:cache forCurrency:currencyCode withCompletionHandler:handler];
         return nil;
     }
@@ -311,7 +310,7 @@ static id stringOrEmptyString(NSString *str) {
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@/price/?%@", [OLKitePrintSDK apiEndpoint], [OLKitePrintSDK apiVersion], [self orderStringParameter]]];
     
     if (self.req){
-        handler(nil, nil, nil, nil, [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeFullDetailsFetchFailed userInfo:@{NSLocalizedDescriptionKey: kOLKiteSDKErrorMessageUnauthorized}]);
+        handler(nil, nil, nil, nil, [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeRequestInProgress userInfo:@{NSLocalizedDescriptionKey: kOLKiteSDKErrorMessageRequestInProgress}]);
         return nil;
     }
     
@@ -333,8 +332,7 @@ static id stringOrEmptyString(NSString *str) {
             NSLog(@"Response: %@", json);
             
             if ([self hash] != hash){
-                self.req = nil;
-                [self costInCurrency:currencyCode completionHandler:handler];
+                self.req = [self costInCurrency:currencyCode completionHandler:handler];
                 return;
             }
             [self cacheCostResponse:json forHash: hash];

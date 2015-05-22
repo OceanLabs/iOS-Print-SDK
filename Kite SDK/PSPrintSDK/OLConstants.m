@@ -12,6 +12,8 @@ NSString *const kOLKiteSDKVersion = @"2.0.23";
 NSString *const kOLKiteSDKErrorDomain = @"co.oceanlabs.kOLKiteSDKErrorDomain";
 NSString *const kNotificationTemplateSyncComplete = @"co.oceanlabs.pssdk.notification.kNotificationSyncComplete";
 NSString *const kNotificationKeyTemplateSyncError = @"co.oceanlabs.pssdk.notification.kNotificationKeyTemplateSyncError";
+NSString *const kNotificationCostFetchComplete = @"co.oceanlabs.pssdk.notification.kNotificationCostFetchComplete";
+const NSInteger kOLKiteSDKErrorCodeRequestInProgress = 98;
 const NSInteger kOLKiteSDKErrorCodeFullDetailsFetchFailed = 99;
 const NSInteger kOLKiteSDKErrorCodeServerFault = 100;
 const NSInteger kOLKiteSDKErrorCodeUnauthorized = 401;
@@ -20,9 +22,9 @@ const NSInteger kOLKiteSDKErrorCodeMaintenanceMode = 503;
 
 NSString *const kOLKiteSDKErrorMessageUnauthorized = @"Unauthorized Kite Print SDK Request. Did you set your API Key and Environment correctly using [OLKitePrintSDK setAPIKey:withEnvironment:]";
 
-NSString *const kOLKiteSDKErrorMessageRequestInProgress = @"A request to get costs is already in progress.";
-
 NSString *const kOLKiteSDKErrorMessageMaintenanceMode = @"Our store is currently undergoing maintence so no products are available for purchase at this time. Please try again a little later.";
+
+NSString *const kOLKiteSDKErrorMessageRequestInProgress = @"A request to get costs is already in progress.";
 
 @implementation OLConstants
 

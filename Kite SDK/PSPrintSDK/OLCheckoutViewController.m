@@ -149,7 +149,7 @@ static const NSUInteger kInputFieldTag = 99;
     [self.tableView.tableFooterView addConstraint:[NSLayoutConstraint constraintWithItem:self.kiteLabel attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.tableView.tableFooterView attribute:NSLayoutAttributeCenterX multiplier:1 constant:0]];
     
     [self.printOrder costWithCompletionHandler:^(NSDecimalNumber *totalCost, NSDecimalNumber *shippingCost, NSArray *lineItems, NSDictionary *jobCosts, NSError * error){
-        
+        [[NSNotificationCenter defaultCenter] postNotificationName:kNotificationCostFetchComplete object:nil];
     }];
 }
 
