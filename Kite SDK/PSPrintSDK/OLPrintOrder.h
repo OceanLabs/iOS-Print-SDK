@@ -10,6 +10,7 @@
 
 @class OLAddress;
 @class OLPaymentLineItem;
+@class OLBaseRequest;
 
 @protocol OLPrintJob;
 
@@ -18,14 +19,16 @@ typedef void (^OLPrintOrderCompletionHandler)(NSString *orderIdReceipt, NSError 
 
 typedef void (^OLApplyPromoCodeCompletionHandler)(NSDecimalNumber *discount, NSError *error);
 
+typedef void (^OLPrintOrderCostCompletionHandler)(NSDecimalNumber *totalCost, NSDecimalNumber *shippingCost, NSArray *lineItems, NSDictionary *jobCosts, NSError * error);
+
 @interface OLPrintOrder : NSObject <NSCoding>
 
 + (OLPrintOrder *)submitJob:(id<OLPrintJob>)job withProofOfPayment:(NSString *)proofOfPayment forPrintingWithProgressHandler:(OLPrintOrderProgressHandler)progressHandler completionHandler:(OLPrintOrderCompletionHandler)completionHandler;
 
 - (void)addPrintJob:(id<OLPrintJob>)job;
 - (void)removePrintJob:(id<OLPrintJob>)job;
-- (void)addLineItem:(OLPaymentLineItem *)item;
-- (void)removeLineItem:(OLPaymentLineItem *)item;
+- (void)addLineItem:(OLPaymentLineItem *)item __deprecated_msg("use name instead.");
+- (void)removeLineItem:(OLPaymentLineItem *)item __deprecated_msg("use name instead.");
 - (void)submitForPrintingWithCompletionHandler:(OLPrintOrderCompletionHandler)completionHandler;
 - (void)submitForPrintingWithProgressHandler:(OLPrintOrderProgressHandler)progressHandler completionHandler:(OLPrintOrderCompletionHandler)completionHandler;
 - (void)cancelSubmissionOrPreemptedAssetUpload; // cancels both preempted asset upload and submission for printing
@@ -36,13 +39,13 @@ typedef void (^OLApplyPromoCodeCompletionHandler)(NSDecimalNumber *discount, NSE
  */
 - (void)preemptAssetUpload;
 
-- (void)applyPromoCode:(NSString *)promoCode withCompletionHandler:(OLApplyPromoCodeCompletionHandler)handler;
-- (void)clearPromoCode;
+- (void)applyPromoCode:(NSString *)promoCode withCompletionHandler:(OLApplyPromoCodeCompletionHandler)handler __deprecated_msg("use name instead.");;
+- (void)clearPromoCode __deprecated_msg("use name instead.");
 
 @property (nonatomic, strong) OLAddress *shippingAddress;
 @property (nonatomic, strong) NSString *proofOfPayment;
 @property (nonatomic, readonly) NSString *promoCode;
-@property (nonatomic, readonly) NSDecimalNumber *promoDiscount;
+@property (nonatomic, readonly) NSDecimalNumber *promoDiscount __deprecated_msg("use name instead.");
 
 @property (nonatomic, readonly) NSArray *jobs;
 @property (nonatomic, readonly) NSArray *lineItems;
@@ -57,10 +60,11 @@ typedef void (^OLApplyPromoCodeCompletionHandler)(NSDecimalNumber *discount, NSE
 
 @property (nonatomic, readonly) NSArray *currenciesSupported;
 @property (nonatomic, copy) NSString *currencyCode;
-@property (nonatomic, readonly) NSDecimalNumber *cost;
+@property (nonatomic, readonly) NSDecimalNumber *cost __deprecated_msg("use name instead.");
 
 @property (nonatomic, readonly) NSString *paymentDescription;
 
-- (NSDecimalNumber *)costInCurrency:(NSString *)currencyCode;
-
+- (NSDecimalNumber *)costInCurrency:(NSString *)currencyCode __deprecated_msg("use name instead.");
+- (OLBaseRequest *)costWithCompletionHandler:(OLPrintOrderCostCompletionHandler)handler;
+- (OLBaseRequest *)costInCurrency:(NSString *)currencyCode completionHandler:(OLPrintOrderCostCompletionHandler)handler;
 @end
