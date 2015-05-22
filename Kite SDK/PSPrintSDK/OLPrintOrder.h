@@ -27,8 +27,6 @@ typedef void (^OLPrintOrderCostCompletionHandler)(NSDecimalNumber *totalCost, NS
 
 - (void)addPrintJob:(id<OLPrintJob>)job;
 - (void)removePrintJob:(id<OLPrintJob>)job;
-- (void)addLineItem:(OLPaymentLineItem *)item __deprecated_msg("use name instead.");
-- (void)removeLineItem:(OLPaymentLineItem *)item __deprecated_msg("use name instead.");
 - (void)submitForPrintingWithCompletionHandler:(OLPrintOrderCompletionHandler)completionHandler;
 - (void)submitForPrintingWithProgressHandler:(OLPrintOrderProgressHandler)progressHandler completionHandler:(OLPrintOrderCompletionHandler)completionHandler;
 - (void)cancelSubmissionOrPreemptedAssetUpload; // cancels both preempted asset upload and submission for printing
@@ -39,16 +37,11 @@ typedef void (^OLPrintOrderCostCompletionHandler)(NSDecimalNumber *totalCost, NS
  */
 - (void)preemptAssetUpload;
 
-- (void)applyPromoCode:(NSString *)promoCode withCompletionHandler:(OLApplyPromoCodeCompletionHandler)handler __deprecated_msg("use name instead.");;
-- (void)clearPromoCode __deprecated_msg("use name instead.");
-
 @property (nonatomic, strong) OLAddress *shippingAddress;
 @property (nonatomic, strong) NSString *proofOfPayment;
-@property (nonatomic, readonly) NSString *promoCode;
-@property (nonatomic, readonly) NSDecimalNumber *promoDiscount __deprecated_msg("use name instead.");
+@property (nonatomic, strong) NSString *promoCode;
 
 @property (nonatomic, readonly) NSArray *jobs;
-@property (nonatomic, readonly) NSArray *lineItems;
 @property (nonatomic, readonly) NSUInteger totalAssetsToUpload;
 
 @property (nonatomic, readonly) BOOL printed; // YES if submission for printing was successful and receipt will be non nil.
@@ -60,11 +53,12 @@ typedef void (^OLPrintOrderCostCompletionHandler)(NSDecimalNumber *totalCost, NS
 
 @property (nonatomic, readonly) NSArray *currenciesSupported;
 @property (nonatomic, copy) NSString *currencyCode;
-@property (nonatomic, readonly) NSDecimalNumber *cost __deprecated_msg("use name instead.");
 
 @property (nonatomic, readonly) NSString *paymentDescription;
 
-- (NSDecimalNumber *)costInCurrency:(NSString *)currencyCode __deprecated_msg("use name instead.");
 - (OLBaseRequest *)costWithCompletionHandler:(OLPrintOrderCostCompletionHandler)handler;
 - (OLBaseRequest *)costInCurrency:(NSString *)currencyCode completionHandler:(OLPrintOrderCostCompletionHandler)handler;
+- (NSArray *)cachedLineItems;
+- (NSArray *)cachedLineItemsForCurrency:(NSString *)currencyCode;
+- (void) costIsFinal;
 @end

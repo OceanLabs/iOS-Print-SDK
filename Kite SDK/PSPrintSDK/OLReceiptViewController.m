@@ -15,6 +15,7 @@
 #import "OLProductTemplate.h"
 #import "OLConstants.h"
 #import <SVProgressHUD.h>
+#import "OLPaymentLineItem.h"
 
 static const NSUInteger kSectionOrderSummary = 0;
 static const NSUInteger kSectionOrderId = 1;
@@ -111,10 +112,11 @@ static const NSUInteger kSectionErrorRetry = 2;
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     if (section == kSectionOrderSummary) {
-        if (self.printOrder.jobs.count <= 1) {
-            return self.printOrder.jobs.count;
+        NSUInteger count = [self.printOrder cachedLineItems].count;
+        if (count <= 1) {
+            return count;
         } else {
-            return self.printOrder.jobs.count + 1; // additional cell to show total
+            return count + 1; // additional cell to show total
         }
     } else if (section == kSectionOrderId) {
         return 1;
@@ -180,42 +182,32 @@ static const NSUInteger kSectionErrorRetry = 2;
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
         }
         
-        BOOL total = self.printOrder.jobs.count > 1 && indexPath.row == self.printOrder.jobs.count;
-        NSDecimalNumber *cost = nil;
-        NSString *currencyCode = self.printOrder.currencyCode;
-        if (total) {
-            cell.textLabel.text = NSLocalizedStringFromTableInBundle(@"Total", @"KitePrintSDK", [OLConstants bundle], @"");
-            cell.textLabel.font = [UIFont boldSystemFontOfSize:cell.textLabel.font.pointSize];
-            cell.detailTextLabel.font = [UIFont boldSystemFontOfSize:cell.detailTextLabel.font.pointSize];
-            cost = [self.printOrder cost];
-        } else {
-            // TODO: Server to return parent product type.
-            id<OLPrintJob> job = self.printOrder.jobs[indexPath.row];
-            cell.textLabel.text = [NSString stringWithFormat:@"%lu x %@", (unsigned long)job.quantity, job.productName];
-            OLProductTemplate *template = [OLProductTemplate templateWithId:job.templateId];
-            if ([job.templateId isEqualToString:@"ps_postcard"] || [job.templateId isEqualToString:@"60_postcards"]) {
-                cell.textLabel.text = [NSString stringWithFormat:@"%lu x %@", (unsigned long)self.printOrder.jobs.count, job.productName];
-            } else if (template.templateUI == kOLTemplateUIFrame) {
-                cell.textLabel.text = [NSString stringWithFormat:@"%lu x %@", (unsigned long) (job.quantity + template.quantityPerSheet - 1 ) / template.quantityPerSheet, job.productName];
-            } else if (template.templateUI == kOLTemplateUIPoster){
-                cell.textLabel.text = [NSString stringWithFormat:@"%lu x %@", (unsigned long) (job.quantity + template.quantityPerSheet - 1 ) / template.quantityPerSheet, job.productName];
-            }
-            else if (template.templateUI == kOLTemplateUICase){
-                cell.textLabel.text = [NSString stringWithFormat:@"%lu x %@", (unsigned long) (job.quantity + template.quantityPerSheet - 1 ) / template.quantityPerSheet, job.productName];
-            }
-            else {
-                cell.textLabel.text = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Pack of %lu %@", @"KitePrintSDK", [OLConstants bundle], @""), (unsigned long)job.quantity, job.productName];
-            }
-            
-            cell.textLabel.font = [UIFont systemFontOfSize:cell.textLabel.font.pointSize];
-            cell.detailTextLabel.font = [UIFont systemFontOfSize:cell.detailTextLabel.font.pointSize];
-            cost = self.printOrder.jobs.count == 1 ? self.printOrder.cost : [job costInCurrency:currencyCode]; // if there is only 1 job then use the print order total cost as a promo discount may have been applied
-        }
         
-        NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
-        [formatter setNumberStyle:NSNumberFormatterCurrencyStyle];
-        [formatter setCurrencyCode:currencyCode];
-        cell.detailTextLabel.text = [formatter stringFromNumber:cost];
+        [self.printOrder costWithCompletionHandler:^(NSDecimalNumber *totalCost, NSDecimalNumber *shippingCost, NSArray *lineItems, NSDictionary *jobCosts, NSError * error){
+            BOOL total = lineItems.count > 1 && indexPath.row == lineItems.count && [shippingCost doubleValue] == 0;
+            NSDecimalNumber *cost;
+            NSString *currencyCode = self.printOrder.currencyCode;
+            if (total) {
+                cell.textLabel.text = NSLocalizedStringFromTableInBundle(@"Total", @"KitePrintSDK", [OLConstants bundle], @"");
+                cell.textLabel.font = [UIFont boldSystemFontOfSize:cell.textLabel.font.pointSize];
+                cell.detailTextLabel.font = [UIFont boldSystemFontOfSize:cell.detailTextLabel.font.pointSize];
+                
+                cost = totalCost;
+                
+                NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
+                [formatter setNumberStyle:NSNumberFormatterCurrencyStyle];
+                [formatter setCurrencyCode:currencyCode];
+                cell.detailTextLabel.text = [formatter stringFromNumber:totalCost];
+            }
+            else{
+                OLPaymentLineItem *item = lineItems[indexPath.row];
+                cell.textLabel.text = item.name;
+                
+                cell.textLabel.font = [UIFont systemFontOfSize:cell.textLabel.font.pointSize];
+                cell.detailTextLabel.font = [UIFont systemFontOfSize:cell.detailTextLabel.font.pointSize];
+                cell.detailTextLabel.text = [item costString];
+            }
+        }];
     } else if (indexPath.section == kSectionErrorRetry) {
         static NSString *const kCellRetry = @"kCellRetry";
         cell = [tableView dequeueReusableCellWithIdentifier:kCellRetry];

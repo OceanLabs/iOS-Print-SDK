@@ -427,26 +427,29 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 }
 
 - (void)updateViewsBasedOnPromoCodeChange {
-    NSComparisonResult result = [self.printOrder.cost compare:[NSDecimalNumber zero]];
-    if (result == NSOrderedAscending || result == NSOrderedSame) {
+    [self.printOrder costWithCompletionHandler:^(NSDecimalNumber *totalCost, NSDecimalNumber *shippingCost, NSArray *lineItems, NSDictionary *jobCosts, NSError * error){
+        
+        NSComparisonResult result = [totalCost compare:[NSDecimalNumber zero]];
+        if (result == NSOrderedAscending || result == NSOrderedSame) {
 #ifdef OL_KITE_OFFER_PAYPAL
-        self.payWithPayPalButton.hidden = YES;
+            self.payWithPayPalButton.hidden = YES;
 #endif
 #ifdef OL_KITE_OFFER_APPLE_PAY
-        self.payWithApplePayButton.hidden = YES;
+            self.payWithApplePayButton.hidden = YES;
 #endif
-        [self.payWithCreditCardButton setTitle:NSLocalizedStringFromTableInBundle(@"Checkout for Free!", @"KitePrintSDK", [OLConstants bundle], @"") forState:UIControlStateNormal];
-    } else {
+            [self.payWithCreditCardButton setTitle:NSLocalizedStringFromTableInBundle(@"Checkout for Free!", @"KitePrintSDK", [OLConstants bundle], @"") forState:UIControlStateNormal];
+        } else {
 #ifdef OL_KITE_OFFER_PAYPAL
-        self.payWithPayPalButton.hidden = NO;
+            self.payWithPayPalButton.hidden = NO;
 #endif
 #ifdef OL_KITE_OFFER_APPLE_PAY
-        self.payWithApplePayButton.hidden = NO;
+            self.payWithApplePayButton.hidden = NO;
 #endif
-        [self.payWithCreditCardButton setTitle:NSLocalizedStringFromTableInBundle(@"Pay with Credit Card", @"KitePrintSDK", [OLConstants bundle], @"") forState:UIControlStateNormal];
-    }
-    
-    [self.tableView reloadData];
+            [self.payWithCreditCardButton setTitle:NSLocalizedStringFromTableInBundle(@"Pay with Credit Card", @"KitePrintSDK", [OLConstants bundle], @"") forState:UIControlStateNormal];
+        }
+        
+        [self.tableView reloadData];
+    }];
 }
 
 - (void)onButtonContinueShoppingClicked:(id)sender {
@@ -467,7 +470,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 - (IBAction)onButtonApplyPromoCodeClicked:(id)sender {
     if (self.printOrder.promoCode) {
         // Clear promo code
-        [self.printOrder clearPromoCode];
+        self.printOrder.promoCode = nil;
         [self updateViewsBasedOnPromoCodeChange];
     } else {
 
@@ -479,7 +482,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             if (rejectMessage) {
                 [[[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Oops", @"KitePrintSDK", [OLConstants bundle], @"") message:rejectMessage delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLConstants bundle], @"") otherButtonTitles:nil] show];
                 
-                [self.printOrder clearPromoCode];
+                self.printOrder.promoCode = nil;
                 [self updateViewsBasedOnPromoCodeChange];
                 return;
             }
@@ -488,7 +491,8 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         
         // Apply promo code
         [SVProgressHUD showWithStatus:NSLocalizedStringFromTableInBundle(@"Checking Code", @"KitePrintSDK", [OLConstants bundle], @"")];
-        [self.printOrder applyPromoCode:self.promoTextField.text withCompletionHandler:^(NSDecimalNumber *discount, NSError *error) {
+        self.printOrder.promoCode = self.promoTextField.text;
+        [self.printOrder costWithCompletionHandler:^(NSDecimalNumber *totalCost, NSDecimalNumber *shippingCost, NSArray *lineItems, NSDictionary *jobCosts, NSError * error){
             [self.tableView reloadData];
             if (error) {
                 [SVProgressHUD dismiss];
@@ -502,25 +506,27 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 }
 
 - (IBAction)onButtonPayWithCreditCardClicked {
-    NSComparisonResult result = [self.printOrder.cost compare:[NSDecimalNumber zero]];
-    if (result == NSOrderedAscending || result == NSOrderedSame) {
-        // The user must have a promo code which reduces this order cost to nothing, lucky user :)
-        [self submitOrderForPrintingWithProofOfPayment:nil completion:^void(PKPaymentAuthorizationStatus status){}];
-    } else {
-        
-        id card = [OLPayPalCard lastUsedCard];
-        
-        if ([OLKitePrintSDK useJudoPayForGBP] && [self.printOrder.currencyCode isEqualToString:@"GBP"]) {
-            card = [OLJudoPayCard lastUsedCard];
-        }
-        
-        if (card == nil) {
-            [self payWithNewCard];
+    [self.printOrder costWithCompletionHandler:^(NSDecimalNumber *totalCost, NSDecimalNumber *shippingCost, NSArray *lineItems, NSDictionary *jobCosts, NSError * error){
+        NSComparisonResult result = [totalCost compare:[NSDecimalNumber zero]];
+        if (result == NSOrderedAscending || result == NSOrderedSame) {
+            // The user must have a promo code which reduces this order cost to nothing, lucky user :)
+            [self submitOrderForPrintingWithProofOfPayment:nil completion:^void(PKPaymentAuthorizationStatus status){}];
         } else {
-            UIActionSheet *paysheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLConstants bundle], @"") destructiveButtonTitle:nil otherButtonTitles:NSLocalizedStringFromTableInBundle(@"Pay with new card", @"KitePrintSDK", [OLConstants bundle], @""), [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Pay with card ending %@", @"KitePrintSDK", [OLConstants bundle], @""), [[card numberMasked] substringFromIndex:[[card numberMasked] length] - 4]], nil];
-            [paysheet showInView:self.view];
+            
+            id card = [OLPayPalCard lastUsedCard];
+            
+            if ([OLKitePrintSDK useJudoPayForGBP] && [self.printOrder.currencyCode isEqualToString:@"GBP"]) {
+                card = [OLJudoPayCard lastUsedCard];
+            }
+            
+            if (card == nil) {
+                [self payWithNewCard];
+            } else {
+                UIActionSheet *paysheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLConstants bundle], @"") destructiveButtonTitle:nil otherButtonTitles:NSLocalizedStringFromTableInBundle(@"Pay with new card", @"KitePrintSDK", [OLConstants bundle], @""), [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Pay with card ending %@", @"KitePrintSDK", [OLConstants bundle], @""), [[card numberMasked] substringFromIndex:[[card numberMasked] length] - 4]], nil];
+                [paysheet showInView:self.view];
+            }
         }
-    }
+    }];
 }
 
 
@@ -535,68 +541,77 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         NSAssert(![self.printOrder.currencyCode isEqualToString:@"GBP"], @"JudoPay should be used for GBP orders (and only for OceanLabs internal use)");
     }
     [SVProgressHUD showWithStatus:NSLocalizedStringFromTableInBundle(@"Processing", @"KitePrintSDK", [OLConstants bundle], @"") maskType:SVProgressHUDMaskTypeBlack];
-    [card chargeCard:self.printOrder.cost currencyCode:self.printOrder.currencyCode description:self.printOrder.paymentDescription completionHandler:^(NSString *proofOfPayment, NSError *error) {
-        if (error) {
-            [SVProgressHUD dismiss];
-            [[[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLConstants bundle], @"") message:error.localizedDescription delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLConstants bundle], @"") otherButtonTitles:nil] show];
-            return;
-        }
-        
-        [self submitOrderForPrintingWithProofOfPayment:proofOfPayment completion:^void(PKPaymentAuthorizationStatus status){}];
-        [card saveAsLastUsedCard];
+    [self.printOrder costWithCompletionHandler:^(NSDecimalNumber *totalCost, NSDecimalNumber *shippingCost, NSArray *lineItems, NSDictionary *jobCosts, NSError * error){
+        [card chargeCard:totalCost currencyCode:self.printOrder.currencyCode description:self.printOrder.paymentDescription completionHandler:^(NSString *proofOfPayment, NSError *error) {
+            if (error) {
+                [SVProgressHUD dismiss];
+                [[[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLConstants bundle], @"") message:error.localizedDescription delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLConstants bundle], @"") otherButtonTitles:nil] show];
+                return;
+            }
+            
+            [self submitOrderForPrintingWithProofOfPayment:proofOfPayment completion:^void(PKPaymentAuthorizationStatus status){}];
+            [card saveAsLastUsedCard];
+        }];
     }];
 }
 
 - (void)payWithExistingJudoPayCard:(OLJudoPayCard *)card {
     NSAssert([self.printOrder.currencyCode isEqualToString:@"GBP"], @"JudoPay should only be used for GBP orders (and only for OceanLabs internal use)");
     [SVProgressHUD showWithStatus:NSLocalizedStringFromTableInBundle(@"Processing", @"KitePrintSDK", [OLConstants bundle], @"") maskType:SVProgressHUDMaskTypeBlack];
-    [card chargeCard:self.printOrder.cost currency:kOLJudoPayCurrencyGBP description:self.printOrder.paymentDescription completionHandler:^(NSString *proofOfPayment, NSError *error) {
-        if (error) {
-            [SVProgressHUD dismiss];
-            [[[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLConstants bundle], @"") message:error.localizedDescription delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLConstants bundle], @"") otherButtonTitles:nil] show];
-            return;
-        }
-        
-        [self submitOrderForPrintingWithProofOfPayment:proofOfPayment completion:^void(PKPaymentAuthorizationStatus status){}];
-        [card saveAsLastUsedCard];
+    [self.printOrder costWithCompletionHandler:^(NSDecimalNumber *totalCost, NSDecimalNumber *shippingCost, NSArray *lineItems, NSDictionary *jobCosts, NSError * error){
+        [card chargeCard:totalCost currency:kOLJudoPayCurrencyGBP description:self.printOrder.paymentDescription completionHandler:^(NSString *proofOfPayment, NSError *error) {
+            if (error) {
+                [SVProgressHUD dismiss];
+                [[[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLConstants bundle], @"") message:error.localizedDescription delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLConstants bundle], @"") otherButtonTitles:nil] show];
+                return;
+            }
+            
+            [self submitOrderForPrintingWithProofOfPayment:proofOfPayment completion:^void(PKPaymentAuthorizationStatus status){}];
+            [card saveAsLastUsedCard];
+        }];
     }];
 }
 
 #ifdef OL_KITE_OFFER_PAYPAL
 - (IBAction)onButtonPayWithPayPalClicked {
-    // Create a PayPalPayment
-    PayPalPayment *payment = [[PayPalPayment alloc] init];
-    payment.amount = self.printOrder.cost;
-    payment.currencyCode = self.printOrder.currencyCode;
-    payment.shortDescription = self.printOrder.paymentDescription;
-    NSAssert(payment.processable, @"oops");
-    
-    PayPalPaymentViewController *paymentViewController;
-    PayPalConfiguration *payPalConfiguration = [[PayPalConfiguration alloc] init];
-    payPalConfiguration.acceptCreditCards = NO;
-    paymentViewController = [[PayPalPaymentViewController alloc] initWithPayment:payment configuration:payPalConfiguration delegate:self];
-    [self presentViewController:paymentViewController animated:YES completion:nil];
+    [self.printOrder costWithCompletionHandler:^(NSDecimalNumber *totalCost, NSDecimalNumber *shippingCost, NSArray *lineItems, NSDictionary *jobCosts, NSError * error){
+        // Create a PayPalPayment
+        PayPalPayment *payment = [[PayPalPayment alloc] init];
+        payment.amount = totalCost;
+        payment.currencyCode = self.printOrder.currencyCode;
+        payment.shortDescription = self.printOrder.paymentDescription;
+        NSAssert(payment.processable, @"oops");
+        
+        PayPalPaymentViewController *paymentViewController;
+        PayPalConfiguration *payPalConfiguration = [[PayPalConfiguration alloc] init];
+        payPalConfiguration.acceptCreditCards = NO;
+        paymentViewController = [[PayPalPaymentViewController alloc] initWithPayment:payment configuration:payPalConfiguration delegate:self];
+        [self presentViewController:paymentViewController animated:YES completion:nil];
+    }];
 }
 #endif
 
 #ifdef OL_KITE_OFFER_APPLE_PAY
 - (IBAction)onButtonPayWithApplePayClicked{
-    PKPaymentRequest *paymentRequest = [Stripe
-                                        paymentRequestWithMerchantIdentifier:[OLKitePrintSDK appleMerchantID]
-                                        amount:self.printOrder.cost
-                                        currency:self.printOrder.currencyCode
-                                        description:self.printOrder.paymentDescription];
-    UIViewController *paymentController;
-    //#if DEBUG
-    //    paymentController = [[STPTestPaymentAuthorizationViewController alloc]
-    //                         initWithPaymentRequest:paymentRequest];
-    //    paymentController.delegate = self;
-    //#else
-    paymentController = [[PKPaymentAuthorizationViewController alloc]
-                         initWithPaymentRequest:paymentRequest];
-    ((PKPaymentAuthorizationViewController *)paymentController).delegate = self;
-    //#end
-    [self presentViewController:paymentController animated:YES completion:nil];
+    [self.printOrder costWithCompletionHandler:^(NSDecimalNumber *totalCost, NSDecimalNumber *shippingCost, NSArray *lineItems, NSDictionary *jobCosts, NSError * error){
+        self.amountPaid = totalCost;
+        PKPaymentRequest *paymentRequest = [Stripe
+                                            paymentRequestWithMerchantIdentifier:[OLKitePrintSDK appleMerchantID]
+                                            amount:totalCost
+                                            currency:self.printOrder.currencyCode
+                                            description:self.printOrder.paymentDescription];
+        UIViewController *paymentController;
+        //#if DEBUG
+        //    paymentController = [[STPTestPaymentAuthorizationViewController alloc]
+        //                         initWithPaymentRequest:paymentRequest];
+        //    paymentController.delegate = self;
+        //#else
+        paymentController = [[PKPaymentAuthorizationViewController alloc]
+                             initWithPaymentRequest:paymentRequest];
+        ((PKPaymentAuthorizationViewController *)paymentController).delegate = self;
+        //#end
+        [self presentViewController:paymentController animated:YES completion:nil];
+    }];
 }
 #endif
 
@@ -605,6 +620,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
     
     self.printOrder.proofOfPayment = proofOfPayment;
+    [self.printOrder costIsFinal];
     
 #ifndef OL_NO_ANALYTICS
     [OLAnalytics trackPaymentCompletedForOrder:self.printOrder];
@@ -668,22 +684,12 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 - (void)paymentAuthorizationViewController:(PKPaymentAuthorizationViewController *)controller
                        didAuthorizePayment:(PKPayment *)payment
                                 completion:(void (^)(PKPaymentAuthorizationStatus))completion {
-    /*
-     We'll implement this method below in 'Creating a single-use token'.
-     Note that we've also been given a block that takes a
-     PKPaymentAuthorizationStatus. We'll call this function with either
-     PKPaymentAuthorizationStatusSuccess or PKPaymentAuthorizationStatusFailure
-     after all of our asynchronous code is finished executing. This is how the
-     PKPaymentAuthorizationViewController knows when and how to update its UI.
-     */
     [self handlePaymentAuthorizationWithPayment:payment completion:completion];
 }
 
 - (void)paymentAuthorizationViewControllerDidFinish:(PKPaymentAuthorizationViewController *)controller {
     [self dismissViewControllerAnimated:YES completion:nil];
 }
-
-#pragma mark Stripe
 
 - (void)handlePaymentAuthorizationWithPayment:(PKPayment *)payment
                                    completion:(void (^)(PKPaymentAuthorizationStatus))completion {
@@ -693,11 +699,6 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
                                 completion(PKPaymentAuthorizationStatusFailure);
                                 return;
                             }
-                            /*
-                             We'll implement this below in "Sending the token to your server".
-                             Notice that we're passing the completion block through.
-                             See the above comment in didAuthorizePayment to learn why.
-                             */
                             [self createBackendChargeWithToken:token completion:completion];
                         }];
 }
@@ -717,10 +718,11 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     NSString* sectionString = [self.sections objectAtIndex:section];
     if ([sectionString isEqualToString:kSectionOrderSummary]) {
-        if (self.printOrder.jobs.count + self.printOrder.lineItems.count <= 1) {
-            return self.printOrder.jobs.count + self.printOrder.lineItems.count;
+        NSUInteger count = [self.printOrder cachedLineItems].count;
+        if (count <= 1) {
+            return count;
         } else {
-            return self.printOrder.jobs.count + self.printOrder.lineItems.count + 1; // additional cell to show total
+            return count + 1; // additional cell to show total
         }
     }
     else if ([sectionString isEqualToString:kSectionContinueShopping]){
@@ -773,45 +775,31 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
         }
         
-        BOOL total = self.printOrder.jobs.count + self.printOrder.lineItems.count > 1 && indexPath.row == self.printOrder.jobs.count + self.printOrder.lineItems.count;
-        NSDecimalNumber *cost = nil;
-        NSString *currencyCode = self.printOrder.currencyCode;
-        if (total) {
-            cell.textLabel.text = NSLocalizedStringFromTableInBundle(@"Total", @"KitePrintSDK", [OLConstants bundle], @"");
-            cell.textLabel.font = [UIFont boldSystemFontOfSize:cell.textLabel.font.pointSize];
-            cell.detailTextLabel.font = [UIFont boldSystemFontOfSize:cell.detailTextLabel.font.pointSize];
-            cost = [self.printOrder cost];
-        } else if (indexPath.row < self.printOrder.jobs.count){
-            // TODO: Server to return parent product type.
-            id<OLPrintJob> job = self.printOrder.jobs[indexPath.row];
-            cell.textLabel.text = [NSString stringWithFormat:@"%lu x %@", (unsigned long)job.quantity, job.productName];
-            OLProductTemplate *template = [OLProductTemplate templateWithId:job.templateId];
-            if ([job.templateId isEqualToString:@"ps_postcard"] || [job.templateId isEqualToString:@"60_postcards"]) {
-                cell.textLabel.text = [NSString stringWithFormat:@"%@", job.productName];
-            } else if (template.templateUI == kOLTemplateUIFrame || template.templateUI == kOLTemplateUIPoster || template.templateUI == kOLTemplateUICase || template.templateUI == kOLTemplateUIPhotobook) {
-                cell.textLabel.text = [NSString stringWithFormat:@"%lu x %@", (unsigned long) (job.quantity + template.quantityPerSheet - 1 ) / template.quantityPerSheet, job.productName];
+        [self.printOrder costWithCompletionHandler:^(NSDecimalNumber *totalCost, NSDecimalNumber *shippingCost, NSArray *lineItems, NSDictionary *jobCosts, NSError * error){
+            BOOL total = lineItems.count > 1 && indexPath.row == lineItems.count && [shippingCost doubleValue] == 0;
+            NSDecimalNumber *cost;
+            NSString *currencyCode = self.printOrder.currencyCode;
+            if (total) {
+                cell.textLabel.text = NSLocalizedStringFromTableInBundle(@"Total", @"KitePrintSDK", [OLConstants bundle], @"");
+                cell.textLabel.font = [UIFont boldSystemFontOfSize:cell.textLabel.font.pointSize];
+                cell.detailTextLabel.font = [UIFont boldSystemFontOfSize:cell.detailTextLabel.font.pointSize];
+                
+                cost = totalCost;
+                
+                NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
+                [formatter setNumberStyle:NSNumberFormatterCurrencyStyle];
+                [formatter setCurrencyCode:currencyCode];
+                cell.detailTextLabel.text = [formatter stringFromNumber:totalCost];
+            } 
+            else{
+                OLPaymentLineItem *item = lineItems[indexPath.row];
+                cell.textLabel.text = item.name;
+                
+                cell.textLabel.font = [UIFont systemFontOfSize:cell.textLabel.font.pointSize];
+                cell.detailTextLabel.font = [UIFont systemFontOfSize:cell.detailTextLabel.font.pointSize];
+                cell.detailTextLabel.text = [item costString];
             }
-            else {
-                cell.textLabel.text = [NSString stringWithFormat:@"Pack of %lu %@", (unsigned long)job.quantity, job.productName];
-            }
-            
-            cell.textLabel.font = [UIFont systemFontOfSize:cell.textLabel.font.pointSize];
-            cell.detailTextLabel.font = [UIFont systemFontOfSize:cell.detailTextLabel.font.pointSize];
-            cost = (self.printOrder.jobs.count == 1 && self.printOrder.lineItems.count == 0) ? self.printOrder.cost : [job costInCurrency:currencyCode]; // if there is only 1 job then use the print order total cost as a promo discount may have been applied
-        }
-        else{
-            OLPaymentLineItem *item = self.printOrder.lineItems[indexPath.row - self.printOrder.jobs.count];
-            cell.textLabel.text = item.name;
-            
-            cell.textLabel.font = [UIFont systemFontOfSize:cell.textLabel.font.pointSize];
-            cell.detailTextLabel.font = [UIFont systemFontOfSize:cell.detailTextLabel.font.pointSize];
-            cost = [item price];
-        }
-        
-        NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
-        [formatter setNumberStyle:NSNumberFormatterCurrencyStyle];
-        [formatter setCurrencyCode:currencyCode];
-        cell.detailTextLabel.text = [formatter stringFromNumber:cost];
+        }];
         
         return cell;
     } else if ([sectionString isEqualToString:kSectionContinueShopping]) {

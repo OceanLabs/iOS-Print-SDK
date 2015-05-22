@@ -14,23 +14,28 @@ static NSString *const kKeyLineItemCurrencyCode = @"co.oceanlabs.kKeyLineItemCur
 
 @implementation OLPaymentLineItem
 
-- (NSDecimalNumber *)price{
-    return self.value;
+- (instancetype) initWithName:(NSString *)name cost:(NSDecimalNumber *)cost{
+    if (self = [super init]){
+        _name = name;
+        _cost = cost;
+    }
+    
+    return self;
 }
 
-- (NSString *)priceString{
-    if ([[self price] isEqualToNumber:@0]){
+- (NSString *)costString{
+    if ([[self cost] isEqualToNumber:@0]){
         return NSLocalizedString(@"FREE", @"");
     }
     else{
         if (!self.currencyCode || [self.currencyCode isEqualToString:@""]){
-            return [[self price] description];
+            return [[self cost] description];
         }
         
         NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
         [formatter setNumberStyle:NSNumberFormatterCurrencyStyle];
         [formatter setCurrencyCode:self.currencyCode];
-        return [formatter stringFromNumber:[self price]];
+        return [formatter stringFromNumber:[self cost]];
     }
 }
 
@@ -38,14 +43,14 @@ static NSString *const kKeyLineItemCurrencyCode = @"co.oceanlabs.kKeyLineItemCur
 
 - (void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:self.name forKey:kKeyLineItemName];
-    [aCoder encodeObject:self.value forKey:kKeyLineItemValue];
+    [aCoder encodeObject:self.cost forKey:kKeyLineItemValue];
     [aCoder encodeObject:self.currencyCode forKey:kKeyLineItemCurrencyCode];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
     if (self = [super init]) {
         self.name = [aDecoder decodeObjectForKey:kKeyLineItemName];
-        self.value = [aDecoder decodeObjectForKey:kKeyLineItemValue];
+        self.cost = [aDecoder decodeObjectForKey:kKeyLineItemValue];
         self.currencyCode = [aDecoder decodeObjectForKey:kKeyLineItemCurrencyCode];
     }
     

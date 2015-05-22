@@ -77,6 +77,7 @@ static NSString *nonNilStr(NSString *str) {
                                              @"App Name" : bundleName,
                                              @"App Version" : appVersion,
                                              @"platform" : @"iOS",
+                                             @"platform version" : [[UIDevice currentDevice] systemVersion],
                                              @"model" : [OLAnalytics platform],
                                              @"Screen Height" : @([UIScreen mainScreen].bounds.size.height),
                                              @"Screen Width" : @([UIScreen mainScreen].bounds.size.width),
@@ -178,7 +179,6 @@ static NSString *nonNilStr(NSString *str) {
     
     if (printOrder.promoCode) {
         p[@"Voucher Code"] = printOrder.promoCode;
-        p[@"Voucher Discount"] = printOrder.promoDiscount.stringValue;
     }
     
     if (printOrder.userData) {
@@ -203,10 +203,10 @@ static NSString *nonNilStr(NSString *str) {
         p[@"Shipping Country Code3"] = nonNilStr(printOrder.shippingAddress.country.codeAlpha3);
     }
     
-    if ([printOrder.currenciesSupported containsObject:@"GBP"]) {
-        NSDecimalNumber *cost = [printOrder costInCurrency:@"GBP"];
-        p[@"Cost"] = [cost stringValue];
-    }
+//    if ([printOrder.currenciesSupported containsObject:@"GBP"]) {
+//        NSDecimalNumber *cost = [printOrder costInCurrency:@"GBP"];
+//        p[@"Cost"] = [cost stringValue];
+//    }
     p[@"Job Count"] = [NSString stringWithFormat:@"%lu",  (unsigned long) printOrder.jobs.count];
     
     return p;
