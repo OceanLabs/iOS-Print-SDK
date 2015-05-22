@@ -138,6 +138,13 @@ static NSString *const kOLKiteABTestRequirePhoneNumber = @"ly.kite.abtest.requir
         [[[UIAlertView alloc] initWithTitle:@"Oops" message:@"It appears you have not specified your Kite API Key. Did you use the correct initializer for OLCheckoutViewController (initWithAPIKey:environment:printOrder:) or alternatively  directly set it using OLKitePrintSDK.setAPIKey:withEnvironment:. Nothing will work as you expect until you resolve the issue in code." delegate:nil cancelButtonTitle:nil otherButtonTitles:nil] show];
         return;
     }
+    
+    // force loading of all tableview cells. This is important as we want to hook up the strong references to email & phone number text fields
+    for (NSUInteger section = 0; section < [self numberOfSectionsInTableView:self.tableView]; ++section) {
+        for (NSUInteger row = 0; row < [self tableView:self.tableView numberOfRowsInSection:section]; ++row) {
+            [self tableView:self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:row inSection:section]];
+        }
+    }
 }
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
