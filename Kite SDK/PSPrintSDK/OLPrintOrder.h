@@ -58,7 +58,5 @@ typedef void (^OLPrintOrderCostCompletionHandler)(NSDecimalNumber *totalCost, NS
 
 - (OLBaseRequest *)costWithCompletionHandler:(OLPrintOrderCostCompletionHandler)handler;
 - (OLBaseRequest *)costInCurrency:(NSString *)currencyCode completionHandler:(OLPrintOrderCostCompletionHandler)handler;
-- (NSArray *)cachedLineItems;
-- (NSArray *)cachedLineItemsForCurrency:(NSString *)currencyCode;
 - (void) costIsFinal;
 @end

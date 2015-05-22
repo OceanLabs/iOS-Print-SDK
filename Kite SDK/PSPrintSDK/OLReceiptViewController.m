@@ -26,6 +26,13 @@ static const NSUInteger kSectionErrorRetry = 2;
 @property (nonatomic, assign) BOOL presentedModally;
 @end
 
+@interface OLPrintOrder (Private)
+
+- (NSArray *)cachedLineItems;
+- (NSArray *)cachedLineItemsForCurrency:(NSString *)currencyCode;
+
+@end
+
 @implementation OLReceiptViewController
 
 - (id)initWithPrintOrder:(OLPrintOrder *)printOrder {

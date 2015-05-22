@@ -49,6 +49,13 @@ static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
 @property (nonatomic, assign) BOOL presentedModally;
 @end
 
+@interface OLPrintOrder (Private)
+
+- (NSArray *)cachedLineItems;
+- (NSArray *)cachedLineItemsForCurrency:(NSString *)currencyCode;
+
+@end
+
 @interface OLPaymentViewController () <
 #ifdef OL_KITE_OFFER_PAYPAL
 PayPalPaymentDelegate,

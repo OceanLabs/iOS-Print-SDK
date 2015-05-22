@@ -83,6 +83,10 @@ static id stringOrEmptyString(NSString *str) {
     return self;
 }
 
+- (void)setPromoCode:(NSString *)promoCode{
+    _promoCode = promoCode;
+}
+
 - (NSDictionary *)cachedCostResponse{
     if (self.finalCost){
         return self.finalCost;
@@ -221,19 +225,19 @@ static id stringOrEmptyString(NSString *str) {
         idx++;
     }
     
-    NSDecimalNumber *shippingNumber = [NSDecimalNumber decimalNumberWithDecimal: [json[@"total_shipping_cost"][currencyCode] decimalValue]];
-    OLPaymentLineItem *shippingItem = [[OLPaymentLineItem alloc] init];
-    shippingItem.name = NSLocalizedString(@"Shipping", @"");
-    shippingItem.cost = shippingNumber;
-    [lineItems addObject:shippingItem];
-    
-    NSDecimalNumber *discount = json[@"discount"][currencyCode];
+    NSDecimalNumber *discount = [NSDecimalNumber decimalNumberWithDecimal: [json[@"discount"][currencyCode] decimalValue]];
     if ([discount doubleValue] != 0){
         OLPaymentLineItem *discountItem = [[OLPaymentLineItem alloc] init];
         discountItem.cost = [discount decimalNumberByMultiplyingBy:[NSDecimalNumber decimalNumberWithString:@"-1"]];
         discountItem.name = NSLocalizedString(@"Discount", @"");
         [lineItems addObject:discountItem];
     }
+    
+    NSDecimalNumber *shippingNumber = [NSDecimalNumber decimalNumberWithDecimal: [json[@"total_shipping_cost"][currencyCode] decimalValue]];
+    OLPaymentLineItem *shippingItem = [[OLPaymentLineItem alloc] init];
+    shippingItem.name = NSLocalizedString(@"Shipping", @"");
+    shippingItem.cost = shippingNumber;
+    [lineItems addObject:shippingItem];
     
     return lineItems;
 }
@@ -269,21 +273,22 @@ static id stringOrEmptyString(NSString *str) {
         idx++;
     }
     NSDecimalNumber *totalNumber = [NSDecimalNumber decimalNumberWithDecimal: [json[@"total"][currencyCode]  decimalValue]];
+    
+    NSDecimalNumber *discount = json[@"discount"][currencyCode];
+    if ([discount doubleValue] != 0){
+        OLPaymentLineItem *discountItem = [[OLPaymentLineItem alloc] init];
+        discountItem.cost = [[NSDecimalNumber decimalNumberWithDecimal:[discount decimalValue]] decimalNumberByMultiplyingBy:[NSDecimalNumber decimalNumberWithString:@"-1"]];
+        discountItem.name = NSLocalizedString(@"Discount", @"");
+        discountItem.currencyCode = currencyCode;
+        [lineItems addObject:discountItem];
+    }
+    
     NSDecimalNumber *shippingNumber = [NSDecimalNumber decimalNumberWithDecimal: [json[@"total_shipping_cost"][currencyCode] decimalValue]];
     OLPaymentLineItem *shippingItem = [[OLPaymentLineItem alloc] init];
     shippingItem.name = NSLocalizedString(@"Shipping", @"");
     shippingItem.cost = shippingNumber;
     shippingItem.currencyCode = currencyCode;
     [lineItems addObject:shippingItem];
-    
-    NSDecimalNumber *discount = json[@"discount"][currencyCode];
-    if ([discount doubleValue] != 0){
-        OLPaymentLineItem *discountItem = [[OLPaymentLineItem alloc] init];
-        discountItem.cost = [discount decimalNumberByMultiplyingBy:[NSDecimalNumber decimalNumberWithString:@"-1"]];
-        discountItem.name = NSLocalizedString(@"Discount", @"");
-        discountItem.currencyCode = currencyCode;
-        [lineItems addObject:discountItem];
-    }
     
     handler(totalNumber, shippingNumber, lineItems, jobCosts, nil);
 }
@@ -528,6 +533,8 @@ static id stringOrEmptyString(NSString *str) {
     }
     OLCountry *country = self.shippingAddress.country ? self.shippingAddress.country : [OLCountry countryForCurrentLocale];
     hash *= [country.codeAlpha3 hash];
+    
+    hash *= [self.promoCode hash];
     
     return hash;
 }
