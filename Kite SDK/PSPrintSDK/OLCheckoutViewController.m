@@ -138,13 +138,6 @@ static NSString *const kOLKiteABTestRequirePhoneNumber = @"ly.kite.abtest.requir
         [[[UIAlertView alloc] initWithTitle:@"Oops" message:@"It appears you have not specified your Kite API Key. Did you use the correct initializer for OLCheckoutViewController (initWithAPIKey:environment:printOrder:) or alternatively  directly set it using OLKitePrintSDK.setAPIKey:withEnvironment:. Nothing will work as you expect until you resolve the issue in code." delegate:nil cancelButtonTitle:nil otherButtonTitles:nil] show];
         return;
     }
-    
-    // force loading of all tableview cells. This is important as we want to hook up the strong references to email & phone number text fields
-    for (NSUInteger section = 0; section < [self numberOfSectionsInTableView:self.tableView]; ++section) {
-        for (NSUInteger row = 0; row < [self tableView:self.tableView numberOfRowsInSection:section]; ++row) {
-            [self tableView:self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:row inSection:section]];
-        }
-    }
 }
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
@@ -234,27 +227,6 @@ static NSString *const kOLKiteABTestRequirePhoneNumber = @"ly.kite.abtest.requir
     [self.textFieldPhone resignFirstResponder];
 }
 
-- (void)populateDefaultEmailAndPhone {
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSString *email = [defaults stringForKey:kKeyEmailAddress];
-    NSString *phone = [defaults stringForKey:kKeyPhone];
-    if (self.textFieldEmail.text.length == 0) {
-        if (email.length > 0) {
-            self.textFieldEmail.text = email;
-        } else if (self.userEmail.length > 0) {
-            self.textFieldEmail.text = self.userEmail;
-        }
-    }
-    
-    if (self.textFieldPhone.text.length == 0) {
-        if (phone.length > 0) {
-            self.textFieldPhone.text = phone;
-        } else if (self.userPhone.length > 0) {
-            self.textFieldPhone.text = self.userPhone;
-        }
-    }
-}
-
 - (void)onButtonNextClicked {
     if (![self hasUserProvidedValidDetailsToProgressToPayment]) {
         return;
@@ -263,8 +235,8 @@ static NSString *const kOLKiteABTestRequirePhoneNumber = @"ly.kite.abtest.requir
     [self.textFieldEmail resignFirstResponder];
     [self.textFieldPhone resignFirstResponder];
     
-    NSString *email = self.textFieldEmail.text ? self.textFieldEmail.text : @"";
-    NSString *phone = self.textFieldPhone.text ? self.textFieldPhone.text : @"";
+    NSString *email = [self userEmail];
+    NSString *phone = [self userPhone];
     
     NSMutableDictionary *d = [[NSMutableDictionary alloc] init];
     if (self.printOrder.userData) {
@@ -321,14 +293,14 @@ static NSString *const kOLKiteABTestRequirePhoneNumber = @"ly.kite.abtest.requir
         return NO;
     }
 
-    if (![OLCheckoutViewController validateEmail:self.textFieldEmail.text]) {
+    if (![OLCheckoutViewController validateEmail:[self userEmail]]) {
         [self scrollSectionToVisible:kSectionEmailAddress];
         UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Invalid Email Address", @"KitePrintSDK", [OLConstants bundle], @"") message:NSLocalizedStringFromTableInBundle(@"Please enter a valid email address", @"KitePrintSDK", [OLConstants bundle], @"") delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLConstants bundle], @"") otherButtonTitles:nil];
         [av show];
         return NO;
     }
     
-    if (self.textFieldPhone.text.length < kMinPhoneNumberLength && [self showPhoneEntryField]) {
+    if ([self userPhone].length < kMinPhoneNumberLength && [self showPhoneEntryField]) {
         [self scrollSectionToVisible:kSectionPhoneNumber];
         UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Invalid Phone Number", @"KitePrintSDK", [OLConstants bundle], @"") message:NSLocalizedStringFromTableInBundle(@"Please enter a valid phone number", @"KitePrintSDK", [OLConstants bundle], @"") delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLConstants bundle], @"") otherButtonTitles:nil];
         [av show];
@@ -336,6 +308,48 @@ static NSString *const kOLKiteABTestRequirePhoneNumber = @"ly.kite.abtest.requir
     }
     
     return YES;
+}
+
+- (void)populateDefaultEmailAndPhone {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSString *email = [defaults stringForKey:kKeyEmailAddress];
+    NSString *phone = [defaults stringForKey:kKeyPhone];
+    if (self.textFieldEmail.text.length == 0) {
+        if (email.length > 0) {
+            self.textFieldEmail.text = email;
+        } else if (self.userEmail.length > 0) {
+            self.textFieldEmail.text = self.userEmail;
+        }
+    }
+    
+    if (self.textFieldPhone.text.length == 0) {
+        if (phone.length > 0) {
+            self.textFieldPhone.text = phone;
+        } else if (self.userPhone.length > 0) {
+            self.textFieldPhone.text = self.userPhone;
+        }
+    }
+}
+
+
+- (NSString *)userEmail {
+    if (self.textFieldEmail == nil) {
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        NSString *email = [defaults stringForKey:kKeyEmailAddress];
+        return email ? email : @"";
+    }
+    
+    return self.textFieldEmail.text;
+}
+
+- (NSString *)userPhone {
+    if (self.textFieldPhone == nil) {
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        NSString *phone = [defaults stringForKey:kKeyPhone];
+        return phone ? phone : @"";
+    }
+    
+    return self.textFieldPhone.text;
 }
 
 - (void)scrollSectionToVisible:(NSUInteger)section {

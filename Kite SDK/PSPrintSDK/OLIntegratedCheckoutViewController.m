@@ -38,6 +38,8 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
 - (BOOL)hasUserProvidedValidDetailsToProgressToPayment;
 - (BOOL)showPhoneEntryField;
 - (void)setupABTestVariants;
+- (NSString *)userEmail;
+- (NSString *)userPhone;
 
 @end
 
@@ -173,8 +175,8 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
     
     [self saveAddress];
     
-    NSString *email = self.textFieldEmail.text ? self.textFieldEmail.text : @"";
-    NSString *phone = self.textFieldPhone.text ? self.textFieldPhone.text : @"";
+    NSString *email = [super userEmail];
+    NSString *phone = [super userPhone];
     
     
     NSMutableDictionary *d = [[NSMutableDictionary alloc] init];
@@ -205,8 +207,8 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
 - (void)saveAddress{
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     
-    NSString *email = self.textFieldEmail.text ? self.textFieldEmail.text : @"";
-    NSString *phone = self.textFieldPhone.text ? self.textFieldPhone.text : @"";
+    NSString *email = [super userEmail];
+    NSString *phone = [super userPhone];
     NSString *name = self.textFieldName.text ? self.textFieldName.text : @"";
     NSString *line1 = self.textFieldLine1.text ? self.textFieldLine1.text : @"";
     NSString *line2 = self.textFieldLine2.text ? self.textFieldLine2.text : @"";
