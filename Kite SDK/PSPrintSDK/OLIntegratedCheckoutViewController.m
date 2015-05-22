@@ -122,6 +122,34 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
     return flag;
 }
 
+- (NSString *)addrName {
+    return self.textFieldName ? self.textFieldName.text : self.shippingAddress.recipientName;
+}
+
+- (NSString *)addrLine1 {
+    return self.textFieldLine1 ? self.textFieldLine1.text : self.shippingAddress.line1;
+}
+
+- (NSString *)addrLine2 {
+    return self.textFieldLine2 ? self.textFieldLine2.text : self.shippingAddress.line2;
+}
+
+- (NSString *)addrCity {
+    return self.textFieldCity ? self.textFieldCity.text : self.shippingAddress.city;
+}
+
+- (NSString *)addrCounty {
+    return self.textFieldCounty ? self.textFieldCounty.text : self.shippingAddress.stateOrCounty;
+}
+
+- (NSString *)addrPostCode {
+    return self.textFieldPostCode ? self.textFieldPostCode.text : self.shippingAddress.zipOrPostcode;
+}
+
+- (OLCountry *)addrCountry {
+    return self.shippingAddress.country;
+}
+
 - (void)populateDefaultDeliveryAddress {
     if (!self.shippingAddress){
         self.shippingAddress = [[OLAddress alloc] init];
@@ -196,10 +224,6 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
     [defaults setObject:email forKey:kKeyEmailAddress];
     [defaults setObject:phone forKey:kKeyPhone];
     
-    
-    
-    
-    
     [[NSNotificationCenter defaultCenter] postNotificationName:kOLNotificationUserSuppliedShippingDetails object:self userInfo:@{kOLKeyUserInfoPrintOrder: self.printOrder}];
     [self.navigationController pushViewController:vc animated:YES];
 }
@@ -209,13 +233,13 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
     
     NSString *email = [super userEmail];
     NSString *phone = [super userPhone];
-    NSString *name = self.textFieldName.text ? self.textFieldName.text : @"";
-    NSString *line1 = self.textFieldLine1.text ? self.textFieldLine1.text : @"";
-    NSString *line2 = self.textFieldLine2.text ? self.textFieldLine2.text : @"";
-    NSString *city = self.textFieldCity.text ? self.textFieldCity.text : @"";
-    NSString *county = self.textFieldCounty.text ? self.textFieldCounty.text : @"";
-    NSString *postCode = self.textFieldPostCode.text ? self.textFieldPostCode.text : @"";
-    NSString *country = self.shippingAddress.country ? self.shippingAddress.country.codeAlpha3 : @"";
+    NSString *name = [self addrName];
+    NSString *line1 = [self addrLine1];
+    NSString *line2 = [self addrLine2];
+    NSString *city = [self addrCity];
+    NSString *county = [self addrCounty];
+    NSString *postCode = [self addrPostCode];
+    NSString *country = [self addrCountry].codeAlpha3;
     
     [defaults setObject:email forKey:kKeyEmailAddress];
     [defaults setObject:phone forKey:kKeyPhone];
