@@ -183,9 +183,9 @@ static NSString *const kApplePayMerchantIDKey = @"merchant.co.oceanlabs.kite.ly"
     return YES;
 }
 
-- (BOOL)shouldShowPhoneEntryOnCheckoutScreen{
-    return YES;
-}
+//- (BOOL)shouldShowPhoneEntryOnCheckoutScreen{
+//    return YES;
+//}
 
 - (IBAction)onButtonKiteClicked:(UIButton *)sender {
     [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://www.kite.ly"]];

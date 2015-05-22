@@ -14,13 +14,14 @@
 #import "OLProductTemplate.h"
 #import "OLKitePrintSDK.h"
 #import "OLAnalytics.h"
+#import "OLAddressEditViewController.h"
+#import <SkyLab.h>
 
 NSString *const kOLNotificationUserSuppliedShippingDetails = @"co.oceanlabs.pssdk.kOLNotificationUserSuppliedShippingDetails";
 NSString *const kOLNotificationUserCompletedPayment = @"co.oceanlabs.pssdk.kOLNotificationUserCompletedPayment";
 NSString *const kOLNotificationPrintOrderSubmission = @"co.oceanlabs.pssdk.kOLNotificationPrintOrderSubmission";
 
 NSString *const kOLKeyUserInfoPrintOrder = @"co.oceanlabs.pssdk.kOLKeyUserInfoPrintOrder";
-
 
 static const NSUInteger kMinPhoneNumberLength = 5;
 
@@ -32,8 +33,8 @@ static const NSUInteger kSectionCount = 3;
 
 static NSString *const kKeyEmailAddress = @"co.oceanlabs.pssdk.kKeyEmailAddress";
 static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
-
-static const NSUInteger kInputFieldTag = 99;
+static NSString *const kOLKiteABTestOfferAddressSearch = @"ly.kite.abtest.offer_address_search";
+static NSString *const kOLKiteABTestRequirePhoneNumber = @"ly.kite.abtest.require_phone";
 
 @interface OLPaymentViewController (Private)
 @property (nonatomic, assign) BOOL presentedModally;
@@ -49,6 +50,9 @@ static const NSUInteger kInputFieldTag = 99;
 @property (assign, nonatomic) BOOL presentedModally;
 @property (strong, nonatomic) UILabel *kiteLabel;
 @property (strong, nonatomic) NSLayoutConstraint *kiteLabelYCon;
+@property (weak, nonatomic) UITextField *activeTextView;
+@property (assign, nonatomic) BOOL offerAddressSearch;
+@property (assign, nonatomic) BOOL requirePhoneNumber;
 @end
 
 @implementation OLCheckoutViewController
@@ -56,6 +60,7 @@ static const NSUInteger kInputFieldTag = 99;
 - (id)init {
     //NSAssert(NO, @"init is not a valid initializer for OLCheckoutViewController. Use initWithAPIKey:environment:printOrder:, or initWithPrintOrder: instead");
     if (self = [super initWithStyle:UITableViewStyleGrouped]) {
+        [self setupABTestVariants];
     }
     return self;
 }
@@ -67,6 +72,7 @@ static const NSUInteger kInputFieldTag = 99;
         self.printOrder = printOrder;
         //[self.printOrder preemptAssetUpload];
         [OLProductTemplate sync];
+        [self setupABTestVariants];
     }
 
     return self;
@@ -78,9 +84,37 @@ static const NSUInteger kInputFieldTag = 99;
         self.printOrder = printOrder;
         //[self.printOrder preemptAssetUpload];
         [OLProductTemplate sync];
+        [self setupABTestVariants];
     }
     
     return self;
+}
+
+- (void)setupABTestVariants {
+    NSDictionary *experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestOfferAddressSearch];
+    if (!experimentDict) {
+        experimentDict = @{@"Yes" : @0.5, @"No" : @0.5};
+    }
+    [SkyLab splitTestWithName:kOLKiteABTestOfferAddressSearch
+                   conditions:@{
+                                @"Yes" : experimentDict[@"Yes"],
+                                @"No" : experimentDict[@"No"]
+                                } block:^(id choice) {
+                                    self.offerAddressSearch = [choice isEqualToString:@"Yes"];
+                                }];
+    
+    experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestRequirePhoneNumber];
+    if (!experimentDict) {
+        experimentDict = @{@"Yes" : @0.5, @"No" : @0.5};
+    }
+    [SkyLab splitTestWithName:kOLKiteABTestRequirePhoneNumber
+                   conditions:@{
+                                @"Yes" : experimentDict[@"Yes"],
+                                @"No" : experimentDict[@"No"]
+                                } block:^(id choice) {
+                                    self.requirePhoneNumber = [choice isEqualToString:@"Yes"];
+                                }];
+
 }
 
 - (void)presentViewControllerFrom:(UIViewController *)presentingViewController animated:(BOOL)animated completion:(void (^)(void))completion {
@@ -116,9 +150,9 @@ static const NSUInteger kInputFieldTag = 99;
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-#ifndef OL_NO_ANALYTICS
-    [OLAnalytics trackShippingScreenViewedForOrder:self.printOrder];
-#endif
+    [self registerForKeyboardNotifications];
+    
+    [self trackViewed];
     
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Next", @"KitePrintSDK", [OLConstants bundle], @"") style:UIBarButtonItemStylePlain target:self action:@selector(onButtonNextClicked)];
     
@@ -147,6 +181,26 @@ static const NSUInteger kInputFieldTag = 99;
     self.kiteLabel.translatesAutoresizingMaskIntoConstraints = NO;
     
     [self.tableView.tableFooterView addConstraint:[NSLayoutConstraint constraintWithItem:self.kiteLabel attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.tableView.tableFooterView attribute:NSLayoutAttributeCenterX multiplier:1 constant:0]];
+}
+
+- (void)registerForKeyboardNotifications
+{
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWasShown:)
+                                                 name:UIKeyboardDidShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWillBeHidden:)
+                                                 name:UIKeyboardWillHideNotification object:nil];
+}
+
+- (void)trackViewed{
+#ifndef OL_NO_ANALYTICS
+    if (self.offerAddressSearch) {
+        [OLAnalytics trackShippingScreenViewedForOrder:self.printOrder variant:@"Classic + Address Search" showPhoneEntryField:[self showPhoneEntryField]];
+    } else {
+        [OLAnalytics trackShippingScreenViewedForOrder:self.printOrder variant:@"Classic" showPhoneEntryField:[self showPhoneEntryField]];
+    }
+#endif
 }
 
 - (void)positionKiteLabel {
@@ -267,7 +321,7 @@ static const NSUInteger kInputFieldTag = 99;
         return NO;
     }
     
-    if (self.textFieldPhone.text.length < kMinPhoneNumberLength && (([self.kiteDelegate respondsToSelector:@selector(shouldShowPhoneEntryOnCheckoutScreen)] && [self.kiteDelegate shouldShowPhoneEntryOnCheckoutScreen]) || ![self.kiteDelegate respondsToSelector:@selector(shouldShowPhoneEntryOnCheckoutScreen)])) {
+    if (self.textFieldPhone.text.length < kMinPhoneNumberLength && [self showPhoneEntryField]) {
         [self scrollSectionToVisible:kSectionPhoneNumber];
         UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Invalid Phone Number", @"KitePrintSDK", [OLConstants bundle], @"") message:NSLocalizedStringFromTableInBundle(@"Please enter a valid phone number", @"KitePrintSDK", [OLConstants bundle], @"") delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLConstants bundle], @"") otherButtonTitles:nil];
         [av show];
@@ -282,10 +336,20 @@ static const NSUInteger kInputFieldTag = 99;
     [self.tableView scrollRectToVisible:sectionRect animated:YES];
 }
 
+- (BOOL)showPhoneEntryField {
+    if ([self.kiteDelegate respondsToSelector:@selector(shouldShowPhoneEntryOnCheckoutScreen)]) {
+        return [self.kiteDelegate shouldShowPhoneEntryOnCheckoutScreen]; // delegate overrides whatever the A/B test might say.
+    }
+    
+    return self.requirePhoneNumber;
+}
+
+
 #pragma mark - UITableViewDataSource methods
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return [self.kiteDelegate respondsToSelector:@selector(shouldShowPhoneEntryOnCheckoutScreen)] && ![self.kiteDelegate shouldShowPhoneEntryOnCheckoutScreen] ? kSectionCount - 1 : kSectionCount;
+    
+    return [self showPhoneEntryField] ? kSectionCount : kSectionCount - 1;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
@@ -328,6 +392,7 @@ static const NSUInteger kInputFieldTag = 99;
             cell = [tableView dequeueReusableCellWithIdentifier:kDeliveryAddressCell];
             if (cell == nil) {
                 cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:kDeliveryAddressCell];
+                cell.selectionStyle = UITableViewCellSelectionStyleNone;
             }
                 cell.textLabel.textColor = [UIColor blackColor];
                 cell.textLabel.text = self.shippingAddress.recipientName;
@@ -339,6 +404,7 @@ static const NSUInteger kInputFieldTag = 99;
                 cell.textLabel.text = NSLocalizedStringFromTableInBundle(@"Choose Delivery Address", @"KitePrintSDK", [OLConstants bundle], @"");
                 cell.textLabel.adjustsFontSizeToFitWidth = YES;
                 cell.textLabel.textColor = kColourLightBlue;
+                cell.selectionStyle = UITableViewCellSelectionStyleNone;
             }
         }
     } else if (indexPath.section == kSectionEmailAddress) {
@@ -348,6 +414,7 @@ static const NSUInteger kInputFieldTag = 99;
             cell = [self createTextFieldCellWithReuseIdentifier:TextFieldCell title:NSLocalizedStringFromTableInBundle(@"Email", @"KitePrintSDK", [OLConstants bundle], @"")  keyboardType:UIKeyboardTypeEmailAddress];
             self.textFieldEmail = (UITextField *) [cell viewWithTag:kInputFieldTag];
             self.textFieldEmail.autocapitalizationType = UITextAutocapitalizationTypeNone;
+            self.textFieldEmail.autocorrectionType = UITextAutocorrectionTypeNo;
             [self populateDefaultEmailAndPhone];
         }
         
@@ -366,13 +433,17 @@ static const NSUInteger kInputFieldTag = 99;
 
 - (UITableViewCell *)createTextFieldCellWithReuseIdentifier:(NSString *)identifier title:(NSString *)title keyboardType:(UIKeyboardType)type {
     UITableViewCell *cell = [[UITableViewCell alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 43)];
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
     UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 11, 61, 21)];
+
     titleLabel.text = title;
     titleLabel.adjustsFontSizeToFitWidth = YES;
+    titleLabel.tag = kTagInputFieldLabel;
     UITextField *inputField = [[UITextField alloc] initWithFrame:CGRectMake(86, 0, [UIScreen mainScreen].bounds.size.width - 86, 43)];
     inputField.delegate = self;
     inputField.tag = kInputFieldTag;
     [inputField setKeyboardType:type];
+    [inputField setReturnKeyType:UIReturnKeyNext];
     [cell addSubview:titleLabel];
     [cell addSubview:inputField];
     
@@ -403,17 +474,23 @@ static const NSUInteger kInputFieldTag = 99;
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section == kSectionDeliveryDetails) {
-        OLAddressPickerController *c = [[OLAddressPickerController alloc] init];
-        c.delegate = self;
-        [self presentViewController:c animated:YES completion:nil];
+        if (self.offerAddressSearch || [OLAddress addressBook].count > 0) {
+            OLAddressPickerController *addressPicker = [[OLAddressPickerController alloc] init];
+            addressPicker.delegate = self;
+            addressPicker.allowsAddressSearch = self.offerAddressSearch;
+            [self presentViewController:addressPicker animated:YES completion:nil];
+        } else {
+            OLAddressEditViewController *editVc = [[OLAddressEditViewController alloc] init];
+            editVc.delegate = self;
+            [self presentViewController:[[UINavigationController alloc] initWithRootViewController:editVc] animated:YES completion:nil];
+        }
     }
 }
 
 #pragma mark - UITextFieldDelegate methods
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
-    if (textField == self.textFieldEmail && ([self.kiteDelegate respondsToSelector:@selector(shouldShowPhoneEntryOnCheckoutScreen)] && [self.kiteDelegate shouldShowPhoneEntryOnCheckoutScreen])) {
-        [self scrollSectionToVisible:kSectionPhoneNumber];
+    if (textField == self.textFieldEmail && [self showPhoneEntryField]) {
         [self.textFieldPhone becomeFirstResponder];
     }
     else{
@@ -424,11 +501,7 @@ static const NSUInteger kInputFieldTag = 99;
 }
 
 - (void)textFieldDidBeginEditing:(UITextField *)textField {
-    if (textField == self.textFieldEmail) {
-        [self scrollSectionToVisible:kSectionEmailAddress];
-    } else if (textField == self.textFieldPhone) {
-        [self scrollSectionToVisible:kSectionPhoneNumber];
-    }
+    self.activeTextView = textField;
 }
 
 #pragma mark - OLAddressPickerController delegate
@@ -463,6 +536,42 @@ static const NSUInteger kInputFieldTag = 99;
     else{
         return UIInterfaceOrientationMaskPortrait;
     }
+}
+
+// Called when the UIKeyboardDidShowNotification is sent.
+- (void)keyboardWasShown:(NSNotification*)aNotification
+{
+    
+    NSDictionary* info = [aNotification userInfo];
+    CGSize kbSize = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
+    UIEdgeInsets contentInsets = UIEdgeInsetsMake([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height, 0.0, kbSize.height, 0.0);
+    [UIView animateWithDuration:0.1 animations:^{
+        self.tableView.contentInset = contentInsets;
+        self.tableView.scrollIndicatorInsets = contentInsets;
+    }];
+    
+    // If active text field is hidden by keyboard, scroll it so it's visible
+    // Your application might not need or want this behavior.
+    CGRect aRect = self.view.frame;
+    aRect.size.height -= kbSize.height;
+    if (!CGRectContainsPoint(aRect, self.activeTextView.frame.origin) ) {
+        CGPoint scrollPoint = CGPointMake(0.0, self.activeTextView.frame.origin.y-kbSize.height);
+        [self.tableView setContentOffset:scrollPoint animated:YES];
+    }
+    
+}
+
+// Called when the UIKeyboardWillHideNotification is received
+- (void)keyboardWillBeHidden:(NSNotification *)aNotification
+{
+    // scroll back..
+    UIEdgeInsets contentInsets = UIEdgeInsetsMake([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height, 0, 0, 0);
+    self.tableView.contentInset = contentInsets;
+    self.tableView.scrollIndicatorInsets = contentInsets;
+}
+
+- (void)dealloc{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 

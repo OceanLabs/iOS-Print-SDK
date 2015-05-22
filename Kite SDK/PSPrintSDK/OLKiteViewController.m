@@ -43,6 +43,7 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
 
 + (void)setCacheTemplates:(BOOL)cache;
 + (BOOL)cacheTemplates;
++ (void)fetchRemotePlist;
 
 @end
 
@@ -81,6 +82,8 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
     if (!self.navigationController){
         self.navigationBar.hidden = NO;
     }
+    
+    [OLKitePrintSDK fetchRemotePlist];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
