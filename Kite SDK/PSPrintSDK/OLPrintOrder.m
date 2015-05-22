@@ -249,6 +249,7 @@ static id stringOrEmptyString(NSString *str) {
     for (NSDictionary *lineItemDict in json[@"line_items"]){
         OLPaymentLineItem * item = [[OLPaymentLineItem alloc] init];
         item.cost = [NSDecimalNumber decimalNumberWithDecimal: [lineItemDict[@"product_cost"][currencyCode] decimalValue]];
+        item.currencyCode = currencyCode;
         
         OLProductPrintJob *job = self.jobs[idx];
         item.name = [NSString stringWithFormat:@"%lu x %@", (unsigned long)job.quantity, job.productName];
@@ -272,6 +273,7 @@ static id stringOrEmptyString(NSString *str) {
     OLPaymentLineItem *shippingItem = [[OLPaymentLineItem alloc] init];
     shippingItem.name = NSLocalizedString(@"Shipping", @"");
     shippingItem.cost = shippingNumber;
+    shippingItem.currencyCode = currencyCode;
     [lineItems addObject:shippingItem];
     
     NSDecimalNumber *discount = json[@"discount"][currencyCode];
@@ -279,6 +281,7 @@ static id stringOrEmptyString(NSString *str) {
         OLPaymentLineItem *discountItem = [[OLPaymentLineItem alloc] init];
         discountItem.cost = [discount decimalNumberByMultiplyingBy:[NSDecimalNumber decimalNumberWithString:@"-1"]];
         discountItem.name = NSLocalizedString(@"Discount", @"");
+        discountItem.currencyCode = currencyCode;
         [lineItems addObject:discountItem];
     }
     
