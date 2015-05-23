@@ -14,6 +14,10 @@
 #endif
 #import "OLJudoPayCard.h"
 #import "OLProductHomeViewController.h"
+#import "OLIntegratedCheckoutViewController.h"
+#import <SkyLab.h>
+#import <NSUserDefaults+GroundControl.h>
+#import "OLAddressEditViewController.h"
 
 static NSString *const kJudoClientId      = @"100170-877";
 static NSString *const kJudoSandboxToken     = @"oLMiwCPBeLs0iVX4";
@@ -35,8 +39,10 @@ static NSString *const kOLPayPalRecipientEmailSandbox = @"sandbox-merchant@kite.
 static NSString *const kOLAPIEndpointVersion = @"v1.3";
 
 static BOOL useJudoPayForGBP = NO;
-
 static BOOL cacheTemplates = NO;
+
+static NSString *const kOLKiteABTestShippingScreen = @"ly.kite.abtest.shippingscreen";
+static NSString *const kOLOfferAddressSearch = @"ly.kite.flag.offer_address_search";
 
 #ifdef OL_KITE_OFFER_INSTAGRAM
 static NSString *instagramClientID = nil;
@@ -225,5 +231,46 @@ static NSString *instagramRedirectURI = nil;
     return instagramClientID;
 }
 #endif
+
++ (void)fetchRemotePlist{
+    NSDictionary *oldDefaults = [[NSUserDefaults standardUserDefaults] dictionaryRepresentation];
+    
+    NSURL *URL = [NSURL URLWithString:@"https://sdk-static.s3.amazonaws.com/kite-ios-remote.plist"];
+    [[NSUserDefaults standardUserDefaults] registerDefaultsWithURL:URL success:^(NSDictionary *defaults){
+        // reset SKLab A/B tests if the experiment version for any test has been bumped. This allows us to default to sticky SkyLab behaviour
+        // and when we want to reset things just bump the experiment version.
+        for (NSString *key in defaults) {
+            id possibleDict = defaults[key];
+            id oldPossibleDict = oldDefaults[key];
+            if ([possibleDict isKindOfClass:[NSDictionary class]] && [oldPossibleDict isKindOfClass:[NSDictionary class]]) {
+                id experimentVersion = [possibleDict objectForKey:@"Experiment Version"];
+                id oldExperimentVersion = [oldPossibleDict objectForKey:@"Experiment Version"];
+                if ([experimentVersion isKindOfClass:[NSString class]] && [oldExperimentVersion isKindOfClass:[NSString class]] && ![experimentVersion isEqualToString:oldExperimentVersion]) {
+                    [SkyLab resetTestNamed:key];
+                }
+            }
+        }
+    }failure:NULL];
+}
+
++ (void)checkoutViewControllerForPrintOrder:(OLPrintOrder *)printOrder handler:(void(^)(OLCheckoutViewController *vc))handler{
+    NSDictionary *experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestShippingScreen];
+    if (!experimentDict){
+        experimentDict = @{@"Classic" : @0.66, @"Integrated" : @0.34}; // There are 3 variants Classic+Address Search, Classic no Address Search & Integrated hence Classic gets 2/3 of the chance here as it will further get split 50:50 between the 2 classic variants internally resulting in 1/3 probability each.
+    }
+    [SkyLab splitTestWithName:kOLKiteABTestShippingScreen conditions:@{
+                                                              @"Classic" : experimentDict[@"Classic"],
+                                                              @"Integrated" : experimentDict[@"Integrated"]
+                                                              }block:^(id choice){
+                                                                  OLCheckoutViewController *vc;
+                                                                  if ([choice isEqualToString:@"Classic"]){
+                                                                      vc = [[OLCheckoutViewController alloc] initWithPrintOrder:printOrder];
+                                                                  }
+                                                                  else{
+                                                                      vc = [[OLIntegratedCheckoutViewController alloc] initWithPrintOrder:printOrder];
+                                                                  }
+                                                                  handler(vc);
+                                                              }];
+}
 
 @end

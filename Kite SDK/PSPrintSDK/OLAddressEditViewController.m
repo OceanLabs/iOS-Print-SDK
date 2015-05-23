@@ -12,6 +12,7 @@
 #import "OLCountry.h"
 #import "OLCountryPickerController.h"
 #import "OLAddressSelectionViewController.h"
+#import "OLAddressPickerController.h"
 
 static const NSUInteger kTagTextField = 99;
 static const NSUInteger kTagLabel = 100;
@@ -53,6 +54,11 @@ static const NSUInteger kTagLabel = 100;
     self.title = self.editingExistingSavedAddress ? NSLocalizedStringFromTableInBundle(@"Edit Address", @"KitePrintSDK", [NSBundle mainBundle], @"") : NSLocalizedStringFromTableInBundle(@"Add Address", @"KitePrintSDK", [NSBundle mainBundle], @"");
     UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithTitle:self.editingExistingSavedAddress ? NSLocalizedStringFromTableInBundle(@"Save", @"KitePrintSDK", [NSBundle mainBundle], @"") : NSLocalizedStringFromTableInBundle(@"Add", @"KitePrintSDK", [NSBundle mainBundle], @"") style:UIBarButtonItemStyleDone target:self action:@selector(onSaveButtonClicked)];
     self.navigationItem.rightBarButtonItem = doneButton;
+    
+    if ([self.navigationController.viewControllers firstObject] == self){
+        UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [NSBundle mainBundle], @"") style:UIBarButtonItemStylePlain target:self action:@selector(onCancelButtonClicked)];
+        self.navigationItem.leftBarButtonItem = cancelButton;
+    }
 }
 
 - (void)onSaveButtonClicked {
@@ -112,13 +118,31 @@ static const NSUInteger kTagLabel = 100;
     self.address.zipOrPostcode = self.textFieldPostCode.text;
     
     OLAddressSelectionViewController *vc = self.navigationController.viewControllers[0];
-    if (self.address.isSavedInAddressBook) {
-        [self.address saveToAddressBook]; // save
-        [vc.tableView reloadData];
-    } else {
-        vc.addressToAddToListOnViewDidAppear = self.address;
+    if ([vc.delegate respondsToSelector:@selector(addressSelectionController:didFinishPickingAddresses:)]){
+        if (self.address.isSavedInAddressBook) {
+            [self.address saveToAddressBook]; // save
+            [vc.tableView reloadData];
+        } else {
+            vc.addressToAddToListOnViewDidAppear = self.address;
+        }
+        [self.address saveToAddressBook];
+        [vc.delegate addressSelectionController:vc didFinishPickingAddresses:@[self.address]];
     }
-    [self.navigationController popToRootViewControllerAnimated:YES];
+    else if ([vc.delegate respondsToSelector:@selector(addressPicker:didFinishPickingAddresses:)]){
+        [self.address saveToAddressBook];
+        [(id)(vc.delegate) addressPicker:nil didFinishPickingAddresses:@[self.address]];
+    }
+//    [self.navigationController popToRootViewControllerAnimated:YES];
+}
+
+- (void)onCancelButtonClicked{
+    OLAddressSelectionViewController *vc = self.navigationController.viewControllers[0];
+    if ([vc.delegate respondsToSelector:@selector(addressSelectionControllerDidCancelPicking:)]){
+        [vc.delegate addressSelectionControllerDidCancelPicking:vc];
+    }
+    else if ([vc.delegate respondsToSelector:@selector(addressPickerDidCancelPicking:)]){
+        [(id)(vc.delegate) addressPickerDidCancelPicking:nil];
+    }
 }
 
 #pragma mark - UITableViewDataSource methods

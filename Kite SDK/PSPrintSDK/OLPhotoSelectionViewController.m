@@ -525,18 +525,18 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     
     if (![self isHorizontalSizeClassCompact]){
         if (size.height > size.width){
-            return [self findFactorOf:self.product.quantityToFulfillOrder maximum:4 minimum:2];
+            return [self findFactorOf:self.product.quantityToFulfillOrder maximum:6 minimum:6];
         }
         else{
-            return [self findFactorOf:self.product.quantityToFulfillOrder maximum:8 minimum:2];
+            return [self findFactorOf:self.product.quantityToFulfillOrder maximum:6 minimum:6];
         }
     }
     else{
         if (size.height > size.width){
-            return [self findFactorOf:self.product.quantityToFulfillOrder maximum:3 minimum:2];
+            return [self findFactorOf:self.product.quantityToFulfillOrder maximum:3 minimum:3];
         }
         else{
-            return [self findFactorOf:self.product.quantityToFulfillOrder maximum:7 minimum:2];
+            return [self findFactorOf:self.product.quantityToFulfillOrder maximum:6 minimum:6];
         }
     }
 }

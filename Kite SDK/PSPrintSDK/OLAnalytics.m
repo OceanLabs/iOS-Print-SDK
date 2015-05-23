@@ -124,10 +124,12 @@ static NSString *nonNilStr(NSString *str) {
     [OLAnalytics sendToMixPanelWithDictionary:dict];
 }
 
-+ (void)trackShippingScreenViewedForOrder:(OLPrintOrder *)printOrder{
++ (void)trackShippingScreenViewedForOrder:(OLPrintOrder *)printOrder variant:(NSString *)variant showPhoneEntryField:(BOOL)showPhoneEntryField {
     NSDictionary *dict = [OLAnalytics defaultDictionaryForEventName:@"Shipping Screen Viewed"];
     NSMutableDictionary *p = [self propertiesForPrintOrder:printOrder];
     [dict[@"properties"] addEntriesFromDictionary:p];
+    [dict[@"properties"] addEntriesFromDictionary:@{@"Shipping Screen Variant" : variant,
+                                                    @"Showing Phone Entry Field" : showPhoneEntryField ? @"Yes" : @"No"}];
     [OLAnalytics sendToMixPanelWithDictionary:dict];
 }
 
@@ -138,9 +140,10 @@ static NSString *nonNilStr(NSString *str) {
     [OLAnalytics sendToMixPanelWithDictionary:dict];
 }
 
-+ (void)trackPaymentCompletedForOrder:(OLPrintOrder *)printOrder{
++ (void)trackPaymentCompletedForOrder:(OLPrintOrder *)printOrder paymentMethod:(NSString *)method{
     NSDictionary *dict = [OLAnalytics defaultDictionaryForEventName:@"Payment Completed"];
     NSMutableDictionary *p = [self propertiesForPrintOrder:printOrder];
+    p[@"Payment Method"] = method;
     [dict[@"properties"] addEntriesFromDictionary:p];
     [OLAnalytics sendToMixPanelWithDictionary:dict];
 }
@@ -159,11 +162,6 @@ static NSString *nonNilStr(NSString *str) {
     
     if (printOrder.proofOfPayment) {
         p[@"Proof of Payment"] = printOrder.proofOfPayment;
-        NSString *paymentMethod = @"JudoPay";
-        if ([printOrder.proofOfPayment hasPrefix:@"AP-"] || [printOrder.proofOfPayment hasPrefix:@"PAY-"]) {
-            paymentMethod = @"PayPal";
-        }
-        p[@"Payment Method"] = paymentMethod;
     }
     
     if (printOrder.lastPrintSubmissionError) {

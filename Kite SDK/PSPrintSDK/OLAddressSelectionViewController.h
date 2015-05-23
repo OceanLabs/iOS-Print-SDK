@@ -18,5 +18,6 @@
 @interface OLAddressSelectionViewController : UITableViewController
 @property (weak, nonatomic) id<OLAddressSelectionViewControllerDelegate> delegate;
 @property (assign, nonatomic) BOOL allowMultipleSelection;
+@property (assign, nonatomic) BOOL allowAddressSearch;
 @property (strong, nonatomic) NSArray/*<OLAddress>*/ *selected;
 @end
