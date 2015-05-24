@@ -15,6 +15,8 @@
 
 @implementation OLAddressPickerController
 
+@dynamic delegate;
+
 - (id)init {
     OLAddressSelectionViewController *vc = [[OLAddressSelectionViewController alloc] init];
     if (self = [super initWithRootViewController:vc]) {
