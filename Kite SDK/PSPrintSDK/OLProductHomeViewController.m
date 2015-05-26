@@ -21,6 +21,8 @@
 #import "UIViewController+TraitCollectionCompatibility.h"
 #import "UIImageView+FadeIn.h"
 
+#define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
+
 @interface OLProduct (Private)
 
 -(void)setCoverImageToImageView:(UIImageView *)imageView;
@@ -178,9 +180,18 @@
     return numberOfProducts + extras;
 }
 
+- (void)fixCellFrameOnIOS7:(UICollectionViewCell *)cell {
+    // Ugly hack to fix cell frame on iOS 7 iPad. For whatever reason the frame size is not as per collectionView:layout:sizeForItemAtIndexPath:, others also experiencing this issue http://stackoverflow.com/questions/25804588/auto-layout-in-uicollectionviewcell-not-working
+    if (SYSTEM_VERSION_LESS_THAN(@"8")) {
+        [[cell contentView] setFrame:[cell bounds]];
+        [[cell contentView] setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight];
+    }
+}
+
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
     if (indexPath.item >= self.productGroups.count){
         UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"extraCell" forIndexPath:indexPath];
+        [self fixCellFrameOnIOS7:cell];
         UIImageView *cellImageView = (UIImageView *)[cell.contentView viewWithTag:40];
         [cellImageView setAndFadeInImageWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/product_photography/placeholder.png"]];
         if (self.fromRotation){
@@ -195,6 +206,7 @@
     
     static NSString *identifier = @"ProductCell";
     UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
+    [self fixCellFrameOnIOS7:cell];
     
     UIImageView *cellImageView = (UIImageView *)[cell.contentView viewWithTag:40];
 

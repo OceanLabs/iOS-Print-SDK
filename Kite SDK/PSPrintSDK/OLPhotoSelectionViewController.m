@@ -38,6 +38,8 @@
 
 NSInteger OLPhotoSelectionMargin = 0;
 
+#define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
+
 static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 
 @interface OLKitePrintSDK (Private)
@@ -610,10 +612,20 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     return cell;
 }
 
+- (void)fixCellFrameOnIOS7:(UICollectionViewCell *)cell {
+    // Ugly hack to fix cell frame on iOS 7 iPad. For whatever reason the frame size is not as per collectionView:layout:sizeForItemAtIndexPath:, others also experiencing this issue http://stackoverflow.com/questions/25804588/auto-layout-in-uicollectionviewcell-not-working
+    if (SYSTEM_VERSION_LESS_THAN(@"8")) {
+        [[cell contentView] setFrame:[cell bounds]];
+        [[cell contentView] setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight];
+    }
+}
+
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView
                   cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     static NSString *identifier = @"PhotoCell";
     UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
+    
+    [self fixCellFrameOnIOS7:cell];
     
     UIImageView *imageView = (UIImageView *) [cell.contentView viewWithTag:40];
     if (imageView != nil) {

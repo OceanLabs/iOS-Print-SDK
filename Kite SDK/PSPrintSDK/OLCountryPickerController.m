@@ -21,6 +21,7 @@
 
 @implementation OLCountryListController
 
+
 - (id)initWithStyle:(UITableViewStyle)style {
     if (self = [super initWithStyle:style]) {
         self.selected = [[NSMutableArray alloc] init];
@@ -189,6 +190,8 @@
 @end
 
 @implementation OLCountryPickerController
+
+@dynamic delegate;
 
 - (id)init {
     OLCountryListController *vc = [[OLCountryListController alloc] initWithStyle:UITableViewStylePlain];
