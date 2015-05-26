@@ -40,10 +40,6 @@
 @interface OLProductHomeViewController () <UICollectionViewDelegateFlowLayout>
 @property (nonatomic, strong) NSArray *productGroups;
 @property (nonatomic, strong) UIImageView *topSurpriseImageView;
-@property (nonatomic, strong) UIView *huggleBotSpeechBubble;
-@property (nonatomic, weak) IBOutlet UILabel *huggleBotFriendNameLabel;
-@property (weak, nonatomic) IBOutlet UILabel *letsStartLabel;
-@property (nonatomic, assign) BOOL startHuggleBotOnViewWillAppear;
 @property (assign, nonatomic) BOOL fromRotation;
 @end
 
