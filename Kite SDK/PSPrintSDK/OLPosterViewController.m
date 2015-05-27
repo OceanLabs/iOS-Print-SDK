@@ -173,13 +173,19 @@
 
 #pragma mark - OLImageEditorViewControllerDelegate methods
 
--(void)userDidCropImage:(UIImage *)croppedImage{
+- (void)scrollCropViewControllerDidCancel:(OLScrollCropViewController *)cropper{
+    [cropper dismissViewControllerAnimated:YES completion:NULL];
+}
+
+-(void)scrollCropViewController:(OLScrollCropViewController *)cropper didFinishCroppingImage:(UIImage *)croppedImage{
     [self.editingPrintPhoto unloadImage];
     self.editingPrintPhoto.asset = [OLAsset assetWithImageAsJPEG:croppedImage];
     
     self.posterPhotos[0] = self.editingPrintPhoto;
     
     [self reloadImageViews];
+    
+    [cropper dismissViewControllerAnimated:YES completion:NULL];
     
 }
 

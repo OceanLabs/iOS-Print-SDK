@@ -66,14 +66,15 @@
 }
 
 - (IBAction)onBarButtonDoneTapped:(UIBarButtonItem *)sender {
-    if ([self.delegate respondsToSelector:@selector(userDidCropImage:)]){
-        [self.delegate userDidCropImage:[self.cropView editedImage]];
+    if ([self.delegate respondsToSelector:@selector(scrollCropViewController:didFinishCroppingImage:)]){
+        [self.delegate scrollCropViewController:self didFinishCroppingImage:[self.cropView editedImage]];
     }
-    [self dismissViewControllerAnimated:YES completion:NULL];
 }
 
 - (IBAction)onBarButtonCancelTapped:(UIBarButtonItem *)sender {
-    [self dismissViewControllerAnimated:YES completion:NULL];
+    if ([self.delegate respondsToSelector:@selector(scrollCropViewControllerDidCancel:)]){
+        [self.delegate scrollCropViewControllerDidCancel:self];
+    }
 }
 
 #pragma mark - Autorotate and Orientation Methods
