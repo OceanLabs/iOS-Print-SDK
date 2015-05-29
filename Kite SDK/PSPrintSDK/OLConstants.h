@@ -17,8 +17,6 @@ extern const NSInteger kOLKiteSDKErrorCodeUnauthorized;
 extern const NSInteger kOLKiteSDKErrorCodeRegisteredAssetCountDiscrepency;
 extern const NSInteger kOLKiteSDKErrorCodeMaintenanceMode;
 
-extern NSString *const kNotificationCostFetchComplete;
-
 extern NSString *const kOLKiteSDKErrorMessageUnauthorized;
 extern NSString *const kOLKiteSDKErrorMessageMaintenanceMode;
 extern NSString *const kOLKiteSDKErrorMessageRequestInProgress;

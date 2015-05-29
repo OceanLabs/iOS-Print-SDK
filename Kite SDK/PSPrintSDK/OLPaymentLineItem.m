@@ -8,50 +8,58 @@
 
 #import "OLPaymentLineItem.h"
 
-static NSString *const kKeyLineItemName = @"co.oceanlabs.kKeyLineItemName";
-static NSString *const kKeyLineItemValue = @"co.oceanlabs.kKeyLineItemValue";
-static NSString *const kKeyLineItemCurrencyCode = @"co.oceanlabs.kKeyLineItemCurrencyCode";
+static NSString *const kKeyLineItemDescription = @"ly.kite.iossdk.kKeyLineItemDescription";
+static NSString *const kKeyLineItemCosts = @"ly.kite.iossdk.kKeyLineItemCosts";
+static NSString *const kKeyLineItemShippingCosts = @"ly.kite.iossdk.kKeyLineItemShippingCosts";
+
+@interface OLPaymentLineItem ()
+@property (nonatomic, strong) NSDictionary *costs;
+@property (nonatomic, strong) NSString *itemDescription;
+@end
 
 @implementation OLPaymentLineItem
 
-- (instancetype) initWithName:(NSString *)name cost:(NSDecimalNumber *)cost{
+- (instancetype)initWithDescription:(NSString *)description
+                              costs:(NSDictionary/*<NSString, NSDecimalNumber>*/ *)costs {
     if (self = [super init]){
-        _name = name;
-        _cost = cost;
+        _itemDescription = description;
+        _costs = costs;
     }
     
     return self;
 }
 
-- (NSString *)costString{
-    if ([[self cost] isEqualToNumber:@0]){
+- (NSString *)description {
+    return self.itemDescription;
+}
+
+- (NSDecimalNumber *)costInCurrency:(NSString *)currencyCode {
+    return self.costs[currencyCode];
+}
+
+- (NSString *)costStringInCurrency:(NSString *)currencyCode {
+    NSDecimalNumber *cost = [self costInCurrency:currencyCode];
+    if ([cost isEqualToNumber:@0]){
         return NSLocalizedString(@"FREE", @"");
-    }
-    else{
-        if (!self.currencyCode || [self.currencyCode isEqualToString:@""]){
-            return [[self cost] description];
-        }
-        
+    } else {
         NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
         [formatter setNumberStyle:NSNumberFormatterCurrencyStyle];
-        [formatter setCurrencyCode:self.currencyCode];
-        return [formatter stringFromNumber:[self cost]];
+        [formatter setCurrencyCode:currencyCode];
+        return [formatter stringFromNumber:cost];
     }
 }
 
 #pragma mark - NSCoding protocol methods
 
 - (void)encodeWithCoder:(NSCoder *)aCoder {
-    [aCoder encodeObject:self.name forKey:kKeyLineItemName];
-    [aCoder encodeObject:self.cost forKey:kKeyLineItemValue];
-    [aCoder encodeObject:self.currencyCode forKey:kKeyLineItemCurrencyCode];
+    [aCoder encodeObject:self.itemDescription forKey:kKeyLineItemDescription];
+    [aCoder encodeObject:self.costs forKey:kKeyLineItemCosts];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
     if (self = [super init]) {
-        self.name = [aDecoder decodeObjectForKey:kKeyLineItemName];
-        self.cost = [aDecoder decodeObjectForKey:kKeyLineItemValue];
-        self.currencyCode = [aDecoder decodeObjectForKey:kKeyLineItemCurrencyCode];
+        _itemDescription = [aDecoder decodeObjectForKey:kKeyLineItemDescription];
+        _costs = [aDecoder decodeObjectForKey:kKeyLineItemCosts];
     }
     
     return self;

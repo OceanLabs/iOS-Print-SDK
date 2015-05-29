@@ -10,16 +10,15 @@
 
 @class OLAddress;
 @class OLPaymentLineItem;
-@class OLBaseRequest;
+@class OLPrintOrderCostRequest;
+@class OLPrintOrderCost;
 
 @protocol OLPrintJob;
 
 typedef void (^OLPrintOrderProgressHandler)(NSUInteger totalAssetsUploaded, NSUInteger totalAssetsToUpload, long long totalAssetBytesWritten, long long totalAssetBytesExpectedToWrite, long long totalBytesWritten, long long totalBytesExpectedToWrite);
 typedef void (^OLPrintOrderCompletionHandler)(NSString *orderIdReceipt, NSError *error);
 
-typedef void (^OLApplyPromoCodeCompletionHandler)(NSDecimalNumber *discount, NSError *error);
-
-typedef void (^OLPrintOrderCostCompletionHandler)(NSDecimalNumber *totalCost, NSDecimalNumber *shippingCost, NSArray *lineItems, NSDictionary *jobCosts, NSError * error);
+typedef void (^OLPrintOrderCostCompletionHandler)(OLPrintOrderCost *cost, NSError * error);
 
 @interface OLPrintOrder : NSObject <NSCoding>
 
@@ -56,7 +55,6 @@ typedef void (^OLPrintOrderCostCompletionHandler)(NSDecimalNumber *totalCost, NS
 
 @property (nonatomic, readonly) NSString *paymentDescription;
 
-- (OLBaseRequest *)costWithCompletionHandler:(OLPrintOrderCostCompletionHandler)handler;
-- (OLBaseRequest *)costInCurrency:(NSString *)currencyCode completionHandler:(OLPrintOrderCostCompletionHandler)handler;
-- (void) costIsFinal;
+- (void)costWithCompletionHandler:(OLPrintOrderCostCompletionHandler)handler;
+
 @end

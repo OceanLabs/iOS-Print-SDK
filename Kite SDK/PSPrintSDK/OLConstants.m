@@ -12,7 +12,6 @@ NSString *const kOLKiteSDKVersion = @"2.0.25";
 NSString *const kOLKiteSDKErrorDomain = @"co.oceanlabs.kOLKiteSDKErrorDomain";
 NSString *const kNotificationTemplateSyncComplete = @"co.oceanlabs.pssdk.notification.kNotificationSyncComplete";
 NSString *const kNotificationKeyTemplateSyncError = @"co.oceanlabs.pssdk.notification.kNotificationKeyTemplateSyncError";
-NSString *const kNotificationCostFetchComplete = @"co.oceanlabs.pssdk.notification.kNotificationCostFetchComplete";
 const NSInteger kOLKiteSDKErrorCodeRequestInProgress = 98;
 const NSInteger kOLKiteSDKErrorCodeFullDetailsFetchFailed = 99;
 const NSInteger kOLKiteSDKErrorCodeServerFault = 100;

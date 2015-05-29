@@ -40,6 +40,7 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
 - (void)setupABTestVariants;
 - (NSString *)userEmail;
 - (NSString *)userPhone;
+- (void)recalculateOrderCostIfNewSelectedCountryDiffers:(OLCountry *)selectedCountry;
 
 @end
 
@@ -415,6 +416,8 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
 }
 
 -(void) countryPicker:(OLCountryPickerController *)picker didSucceedWithCountries:(NSArray *)countries{
+    [super recalculateOrderCostIfNewSelectedCountryDiffers:countries.lastObject];
+    
     if (!self.shippingAddress){
         self.shippingAddress = [[OLAddress alloc] init];
     }
@@ -422,6 +425,8 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
     self.shippingAddress.country = countries.lastObject;
     self.textFieldCountry.text = self.shippingAddress.country.name;
     [self.tableView reloadData]; // refesh labels if country has changed i.e. Postal Code -> ZIP Code if UK -> USA.
+    
+    
 }
 
 -(void) countryPickerDidCancelPicking:(OLCountryPickerController *)picker{

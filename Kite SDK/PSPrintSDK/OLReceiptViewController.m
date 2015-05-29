@@ -16,6 +16,7 @@
 #import "OLConstants.h"
 #import <SVProgressHUD.h>
 #import "OLPaymentLineItem.h"
+#import "OLPrintOrderCost.h"
 
 static const NSUInteger kSectionOrderSummary = 0;
 static const NSUInteger kSectionOrderId = 1;
@@ -24,13 +25,6 @@ static const NSUInteger kSectionErrorRetry = 2;
 @interface OLReceiptViewController ()
 @property (nonatomic, strong) OLPrintOrder *printOrder;
 @property (nonatomic, assign) BOOL presentedModally;
-@end
-
-@interface OLPrintOrder (Private)
-
-- (NSArray *)cachedLineItems;
-- (NSArray *)cachedLineItemsForCurrency:(NSString *)currencyCode;
-
 @end
 
 @implementation OLReceiptViewController
@@ -119,7 +113,12 @@ static const NSUInteger kSectionErrorRetry = 2;
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     if (section == kSectionOrderSummary) {
-        NSUInteger count = [self.printOrder cachedLineItems].count;
+        __block NSUInteger count = 0;
+        [self.printOrder costWithCompletionHandler:^(OLPrintOrderCost *cost, NSError *error) {
+            // this will actually do the right thing. Either this will callback immediately because printOrder
+            // has cached costs and the count will be updated before below conditionals are hit or it will make an async request and count will remain 0 for below.
+            count = cost.lineItems.count;
+        }];
         if (count <= 1) {
             return count;
         } else {
@@ -189,9 +188,11 @@ static const NSUInteger kSectionErrorRetry = 2;
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
         }
         
-        
-        [self.printOrder costWithCompletionHandler:^(NSDecimalNumber *totalCost, NSDecimalNumber *shippingCost, NSArray *lineItems, NSDictionary *jobCosts, NSError * error){
-            BOOL total = lineItems.count > 1 && indexPath.row == lineItems.count && [shippingCost doubleValue] == 0;
+        [self.printOrder costWithCompletionHandler:^(OLPrintOrderCost *orderCost, NSError *error) {
+            NSArray *lineItems = orderCost.lineItems;
+            NSDecimalNumber *totalCost = [orderCost totalCostInCurrency:self.printOrder.currencyCode];
+            
+            BOOL total = indexPath.row >= lineItems.count;
             NSDecimalNumber *cost;
             NSString *currencyCode = self.printOrder.currencyCode;
             if (total) {
@@ -208,11 +209,10 @@ static const NSUInteger kSectionErrorRetry = 2;
             }
             else{
                 OLPaymentLineItem *item = lineItems[indexPath.row];
-                cell.textLabel.text = item.name;
-                
+                cell.textLabel.text = item.description;
                 cell.textLabel.font = [UIFont systemFontOfSize:cell.textLabel.font.pointSize];
                 cell.detailTextLabel.font = [UIFont systemFontOfSize:cell.detailTextLabel.font.pointSize];
-                cell.detailTextLabel.text = [item costString];
+                cell.detailTextLabel.text = [item costStringInCurrency:self.printOrder.currencyCode];
             }
         }];
     } else if (indexPath.section == kSectionErrorRetry) {

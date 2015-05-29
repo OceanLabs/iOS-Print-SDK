@@ -10,11 +10,12 @@
 
 @interface OLPaymentLineItem : NSObject <NSCoding>
 
-@property (strong, nonatomic) NSDecimalNumber *cost;
-@property (strong, nonatomic) NSString *name;
-@property (strong, nonatomic) NSString *currencyCode;
+@property (readonly, copy) NSString *description;
 
-- (instancetype) initWithName:(NSString *)name cost:(NSDecimalNumber *)cost;
-- (NSString *)costString;
+- (instancetype) initWithDescription:(NSString *)description
+                               costs:(NSDictionary/*<NSString, NSDecimalNumber>*/ *)costs;
+
+- (NSDecimalNumber *)costInCurrency:(NSString *)currencyCode;
+- (NSString *)costStringInCurrency:(NSString *)currencyCode;
 
 @end
