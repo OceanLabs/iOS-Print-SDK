@@ -71,7 +71,6 @@ static NSString *const kOLKiteABTestRequirePhoneNumber = @"ly.kite.abtest.requir
         [OLKitePrintSDK setAPIKey:apiKey withEnvironment:env];
         self.printOrder = printOrder;
         //[self.printOrder preemptAssetUpload];
-        [OLProductTemplate sync];
         [self setupABTestVariants];
     }
 
@@ -83,7 +82,6 @@ static NSString *const kOLKiteABTestRequirePhoneNumber = @"ly.kite.abtest.requir
     if (self = [super initWithStyle:UITableViewStyleGrouped]) {
         self.printOrder = printOrder;
         //[self.printOrder preemptAssetUpload];
-        [OLProductTemplate sync];
         [self setupABTestVariants];
     }
     
