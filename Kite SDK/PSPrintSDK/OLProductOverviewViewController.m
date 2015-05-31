@@ -72,14 +72,16 @@
     pageControl.backgroundColor = [UIColor clearColor];
     pageControl.frame = CGRectMake(0, -200, 100, 100);
     
-    OLTemplateUI templateClass = self.product.productTemplate.templateUI;
     self.costLabel.text = self.product.unitCost;
     
     self.sizeLabel.text = [NSString stringWithFormat:@"%@%@", self.product.packInfo, self.product.dimensions];
     
+    OLTemplateUI templateClass = self.product.productTemplate.templateUI;
     if (templateClass == kOLTemplateUICase){
         [self.sizeLabel removeFromSuperview];
     }
+    
+    [self.freePostageLabel removeFromSuperview]; // TODO: when /template supports sensible shipping values from we can remove this
 }
 
 -(void)viewDidAppear:(BOOL)animated{
