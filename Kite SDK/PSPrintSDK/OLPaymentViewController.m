@@ -865,6 +865,8 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             promoCodeTextField.placeholder = NSLocalizedStringFromTableInBundle(@"Code", @"KitePrintSDK", [OLConstants bundle], @"");
             promoCodeTextField.delegate = self;
             promoCodeTextField.autocapitalizationType = UITextAutocapitalizationTypeNone;
+            promoCodeTextField.autocorrectionType = UITextAutocorrectionTypeNo;
+            promoCodeTextField.spellCheckingType = UITextSpellCheckingTypeNo;
             
             UIButton *applyButton = [UIButton buttonWithType:UIButtonTypeCustom];
             [applyButton setTitle:NSLocalizedStringFromTableInBundle(@"Apply", @"KitePrintSDK", [OLConstants bundle], @"") forState:UIControlStateNormal];
