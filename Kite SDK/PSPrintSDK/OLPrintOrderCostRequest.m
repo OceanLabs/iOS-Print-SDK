@@ -150,6 +150,19 @@ static NSUInteger cacheOrderHash; // cached response is only valid for orders wi
     return costs;
 }
 
+- (NSDictionary *)makeAllDiscountValuesNegative:(NSDictionary *)discount {
+    NSMutableDictionary *discounts = [[NSMutableDictionary alloc] init];
+    for (NSString *currencyCode in discount) {
+        NSDecimalNumber *val = discount[currencyCode];
+        if ([val doubleValue] > 0) {
+            val = [val decimalNumberByMultiplyingBy:(NSDecimalNumber *)[NSDecimalNumber numberWithInteger:-1]];
+        }
+        
+        discounts[currencyCode] = val;
+    }
+    return discounts;
+}
+
 - (void)order:(OLPrintOrder *)order parseCostResponseJson:(NSDictionary *)json withCompletionHandler:(OLPrintOrderCostRequestCompletionHandler)handler {
     NSMutableArray *lineItems = [[NSMutableArray alloc] init];
     NSMutableDictionary *jobCosts = [[NSMutableDictionary alloc] init];
@@ -166,6 +179,11 @@ static NSUInteger cacheOrderHash; // cached response is only valid for orders wi
         idx++;
     }
 
+    NSDictionary *totalCosts = [self createCostsDictionaryFromJSON:json[@"total"]];
+    NSDictionary *totalShippingCosts = [self createCostsDictionaryFromJSON:json[@"total_shipping_cost"]];
+    
+    OLPaymentLineItem *shippingItem = [[OLPaymentLineItem alloc] initWithDescription:NSLocalizedString(@"Shipping", @"") costs:totalShippingCosts];
+    [lineItems addObject:shippingItem];
     
     NSDictionary *discount = [self createCostsDictionaryFromJSON:json[@"promo_code"][@"discount"]];
     id promoDiscountInvalidReason = json[@"promo_code"][@"invalid_message"];
@@ -177,17 +195,11 @@ static NSUInteger cacheOrderHash; // cached response is only valid for orders wi
     for (NSString *currencyCode in discount) {
         NSDecimalNumber *currencyDiscount = discount[currencyCode];
         if ([currencyDiscount doubleValue] != 0) {
-            OLPaymentLineItem *discountItem = [[OLPaymentLineItem alloc] initWithDescription:NSLocalizedString(@"Discount", @"") costs:discount];
+            OLPaymentLineItem *discountItem = [[OLPaymentLineItem alloc] initWithDescription:NSLocalizedString(@"Promotional Discount", @"") costs:[self makeAllDiscountValuesNegative: discount]];
             [lineItems addObject:discountItem];
             break;
         }
     }
-
-    NSDictionary *totalCosts = [self createCostsDictionaryFromJSON:json[@"total"]];
-    NSDictionary *totalShippingCosts = [self createCostsDictionaryFromJSON:json[@"total_shipping_cost"]];
-    
-    OLPaymentLineItem *shippingItem = [[OLPaymentLineItem alloc] initWithDescription:NSLocalizedString(@"Shipping", @"") costs:totalShippingCosts];
-    [lineItems addObject:shippingItem];
     
     OLPrintOrderCost *orderCost = [[OLPrintOrderCost alloc] initWithTotalCosts:totalCosts shippingCosts:totalShippingCosts jobCosts:jobCosts lineItems:lineItems promoDiscount:discount promoCodeInvalidReason:promoDiscountInvalidReason];
     handler(orderCost, nil);

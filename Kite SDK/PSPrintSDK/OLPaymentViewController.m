@@ -513,7 +513,8 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         }
 #pragma clang diagnostic pop
         
-        [self applyPromoCode:self.promoTextField.text];
+        NSString *promoCode = [self.promoTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+        [self applyPromoCode:promoCode];
     }
 }
 
@@ -863,6 +864,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             UITextField *promoCodeTextField = [[UITextField alloc] initWithFrame:CGRectMake(20, 0, self.view.frame.size.width - 20 - 60, 43)];
             promoCodeTextField.placeholder = NSLocalizedStringFromTableInBundle(@"Code", @"KitePrintSDK", [OLConstants bundle], @"");
             promoCodeTextField.delegate = self;
+            promoCodeTextField.autocapitalizationType = UITextAutocapitalizationTypeNone;
             
             UIButton *applyButton = [UIButton buttonWithType:UIButtonTypeCustom];
             [applyButton setTitle:NSLocalizedStringFromTableInBundle(@"Apply", @"KitePrintSDK", [OLConstants bundle], @"") forState:UIControlStateNormal];
@@ -921,6 +923,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         
         if (self.printOrder.promoCode) {
             self.promoTextField.text = self.printOrder.promoCode;
+            self.promoTextField.textColor = [UIColor lightGrayColor];
             self.promoTextField.enabled = NO;
             self.promoApplyButton.enabled = YES;
             [self.promoApplyButton setTitle:NSLocalizedStringFromTableInBundle(@"Clear", @"KitePrintSDK", [OLConstants bundle], @"") forState:UIControlStateNormal];
@@ -928,6 +931,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             self.clearPromoCode = YES;
         } else {
             self.promoTextField.text = @"";
+            self.promoTextField.textColor = [UIColor darkTextColor];
             self.promoTextField.enabled = YES;
             self.promoApplyButton.enabled = NO;
             [self.promoApplyButton setTitle:NSLocalizedStringFromTableInBundle(@"Apply", @"KitePrintSDK", [OLConstants bundle], @"") forState:UIControlStateNormal];

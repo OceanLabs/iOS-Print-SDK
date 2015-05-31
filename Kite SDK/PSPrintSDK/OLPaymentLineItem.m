@@ -40,7 +40,7 @@ static NSString *const kKeyLineItemShippingCosts = @"ly.kite.iossdk.kKeyLineItem
 - (NSString *)costStringInCurrency:(NSString *)currencyCode {
     NSDecimalNumber *cost = [self costInCurrency:currencyCode];
     if ([cost isEqualToNumber:@0]){
-        return NSLocalizedString(@"FREE", @"");
+        return NSLocalizedString(@"Free", @"");
     } else {
         NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
         [formatter setNumberStyle:NSNumberFormatterCurrencyStyle];
