@@ -160,6 +160,9 @@ static const NSUInteger kTagRight = 20;
         
         [self.containerView.superview addConstraint:[NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationLessThanOrEqual toItem:self.containerView.superview attribute:NSLayoutAttributeRight multiplier:1 constant:0]];
         [self.containerView.superview addConstraint:[NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationGreaterThanOrEqual toItem:self.containerView.superview attribute:NSLayoutAttributeLeft multiplier:1 constant:0]];
+        if ([self productAspectRatio] > 1){ //Landscape book REALLY doesn't like the following, only do it for portrait.
+            [self.containerView.superview addConstraint:[NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.containerView.superview attribute:NSLayoutAttributeCenterX multiplier:1 constant:0]];
+        }
         
         UINavigationBar *navigationBar = [[UINavigationBar alloc] init];
         [self.view addSubview:navigationBar];
@@ -194,7 +197,11 @@ static const NSUInteger kTagRight = 20;
     
     self.pagesLabel.text = [NSString stringWithFormat:@"Pages %d-%d of %ld", 1, 2, (long)self.product.quantityToFulfillOrder];
     
-    self.centerYCon = [NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.containerView.superview attribute:NSLayoutAttributeCenterY multiplier:1 constant:([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height)/2.0];
+    CGFloat yOffset = ([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height)/2.0;
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8){
+        yOffset = 22;
+    }
+    self.centerYCon = [NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.containerView.superview attribute:NSLayoutAttributeCenterY multiplier:1 constant:yOffset];
     [self.containerView.superview addConstraint:self.centerYCon];
 }
 
@@ -597,7 +604,9 @@ static const NSUInteger kTagRight = 20;
         [MPFlipTransition transitionFromView:self.bookCover toView:self.containerView duration:0.4 style:style transitionAction:MPTransitionActionShowHide completion:^(BOOL finished){
             self.bookCover.hidden = YES;
             self.bookClosed = NO;
-            self.pagesLabelContainer.hidden = NO;
+            [UIView animateWithDuration:0.2 animations:^{
+                self.pagesLabelContainer.alpha = 1;
+            }];
         }];
     }];
     
@@ -606,6 +615,10 @@ static const NSUInteger kTagRight = 20;
 
 - (void)closeBookFront{
     [self setUpBookCoverView];
+    [UIView animateWithDuration:0.2 animations:^{
+        self.pagesLabelContainer.alpha = 0;
+    }];
+    
     [MPFlipTransition transitionFromView:self.containerView toView:self.bookCover duration:0.4 style:MPFlipStyleDirectionBackward transitionAction:MPTransitionActionShowHide completion:^(BOOL finished){
         if (![self isContainerViewAtRightEdge:NO]){
             [UIView animateWithDuration:0.2 animations:^{
@@ -614,11 +627,13 @@ static const NSUInteger kTagRight = 20;
             }];
         }
         self.bookClosed = YES;
-        self.pagesLabelContainer.hidden = YES;
     }];
 }
 - (void)closeBookBack{
     [self setUpBookCoverView];
+    [UIView animateWithDuration:0.2 animations:^{
+        self.pagesLabelContainer.alpha = 0;
+    }];
     
     [UIView animateWithDuration:0.2
                           delay:0
@@ -630,7 +645,6 @@ static const NSUInteger kTagRight = 20;
                          [MPFlipTransition transitionFromView:self.containerView toView:self.bookCover duration:0.4 style:MPFlipStyleDefault transitionAction:MPTransitionActionShowHide completion:^(BOOL finished){
                          }];
                          self.bookClosed = YES;
-                         self.pagesLabelContainer.hidden = YES;
                      }];
 }
 
