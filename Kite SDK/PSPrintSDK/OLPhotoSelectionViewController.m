@@ -254,9 +254,14 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     if (self.userSelectedPhotos.count == 0) {
         [self setTitle:NSLocalizedString(@"Choose Photos", @"")];
     } else {
-        NSUInteger numOrders = 1 + (MAX(0, self.userSelectedPhotos.count - 1) / self.product.quantityToFulfillOrder);
-        NSUInteger quanityToFulfilOrder = numOrders * self.product.quantityToFulfillOrder;
-        [self setTitle:[NSString stringWithFormat:@"%lu / %lu", (unsigned long)self.userSelectedPhotos.count - self.userDisabledPhotos.count, (unsigned long)quanityToFulfilOrder]];
+        if (self.product.quantityToFulfillOrder > 1){
+            NSUInteger numOrders = 1 + (MAX(0, self.userSelectedPhotos.count - 1) / self.product.quantityToFulfillOrder);
+            NSUInteger quanityToFulfilOrder = numOrders * self.product.quantityToFulfillOrder;
+            [self setTitle:[NSString stringWithFormat:@"%lu / %lu", (unsigned long)self.userSelectedPhotos.count - self.userDisabledPhotos.count, (unsigned long)quanityToFulfilOrder]];
+        }
+        else{
+            [self setTitle:[NSString stringWithFormat:@"%lu", (unsigned long)self.userSelectedPhotos.count - self.userDisabledPhotos.count]];
+        }
     }
     
     if ([self.userDisabledPhotos count] > 0){
@@ -395,8 +400,8 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     self.indexPathsToRemoveDict = [[NSMutableDictionary alloc] init];
     for (id photo in self.userDisabledPhotos){
         NSUInteger index = [self.userSelectedPhotos indexOfObjectIdenticalTo:photo];
-        NSUInteger section = index / self.product.quantityToFulfillOrder;
-        NSUInteger item = index % self.product.quantityToFulfillOrder;
+        NSUInteger section = [self shouldGroupPhotosInOneSection] ? 0 : index / self.product.quantityToFulfillOrder;
+        NSUInteger item = [self shouldGroupPhotosInOneSection] ? index : index % self.product.quantityToFulfillOrder;
         
         if (!self.indexPathsToRemoveDict[[NSNumber numberWithInteger:section]]){
             self.indexPathsToRemoveDict[[NSNumber numberWithInteger:section]] = [[NSMutableArray alloc] init];
@@ -545,7 +550,15 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 
 #pragma mark - UICollectionViewDataSource Methods
 
+- (BOOL)shouldGroupPhotosInOneSection{
+    return self.product.quantityToFulfillOrder == 1 && self.product.productTemplate.templateUI != kOLTemplateUIFrame;
+}
+
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
+    if ([self shouldGroupPhotosInOneSection]){
+        return self.userSelectedPhotos.count;
+    }
+    
     NSInteger number = self.product.quantityToFulfillOrder;
     NSInteger removedImagesInOtherSections = 0;
     for (NSNumber *sectionNumber in self.indexPathsToRemoveDict.allKeys){
@@ -561,6 +574,10 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 }
 
 - (NSInteger) numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
+    if ([self shouldGroupPhotosInOneSection]){
+        return 1;
+    }
+    
     NSInteger removedImagesCount = 0;
     for (NSNumber *section in self.indexPathsToRemoveDict.allKeys){
         NSNumber *n = [NSNumber numberWithLong:[section longValue]];
@@ -573,7 +590,6 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 - (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath{
     UICollectionReusableView *cell = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"headerView" forIndexPath:indexPath];
     cell.backgroundColor = [UIColor colorWithHexString:@"#ECEFF2"];
-    
     
     UILabel *label = (UILabel *)[cell viewWithTag:77];
     if (!label){
@@ -776,6 +792,10 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 }
 
 - (BOOL)collectionView:(UICollectionView *)collectionView canMoveItemAtIndexPath:(NSIndexPath *)indexPath{
+    if ([self shouldGroupPhotosInOneSection]){
+        return NO;
+    }
+    
     if (indexPath.item >= MIN(self.userSelectedPhotos.count, self.product.quantityToFulfillOrder)){
         return NO;
     }
@@ -816,6 +836,15 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     CGSize cellSize = [self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
     CGFloat diff = size.width - (cellSize.width * [self numberOfCellsPerRow]);
     return UIEdgeInsetsMake(0, diff/2.0, 0, diff/2.0);
+}
+
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section{
+    if ([self shouldGroupPhotosInOneSection]){
+        return CGSizeZero;
+    }
+    else{
+        return CGSizeMake(self.view.frame.size.width, 50);
+    }
 }
 
 #pragma mark - Storyboard Methods
