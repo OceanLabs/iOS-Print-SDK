@@ -50,6 +50,7 @@ static const NSUInteger kTagRight = 20;
 @property (weak, nonatomic) IBOutlet UIView *pagesLabelContainer;
 @property (weak, nonatomic) IBOutlet UILabel *pagesLabel;
 @property (strong, nonatomic) UIVisualEffectView *visualEffectView;
+@property (assign, nonatomic) BOOL animating;
 
 @end
 
@@ -318,6 +319,10 @@ static const NSUInteger kTagRight = 20;
     return 2;
 }
 
+- (void)pageViewController:(UIPageViewController *)pageViewController willTransitionToViewControllers:(NSArray *)pendingViewControllers{
+    self.animating = YES;
+}
+
 #pragma mark - Checkout
 
 - (IBAction)onButtonNextClicked:(UIBarButtonItem *)sender {
@@ -445,12 +450,14 @@ static const NSUInteger kTagRight = 20;
     BOOL draggingRight = translation.x > 0;
     
     if (([self isContainerViewAtRightEdge:NO] && draggingLeft) || ([self isContainerViewAtLeftEdge:NO] && draggingRight)){
-        if (draggingLeft && [self isBookAtEnd] && recognizer.state == UIGestureRecognizerStateBegan) {
+        if (draggingLeft && [self isBookAtEnd]) {
             recognizer.enabled = NO;
             recognizer.enabled = YES;
             [self closeBookBack];
         }
-        else if (draggingRight && [self isBookAtStart] && recognizer.state == UIGestureRecognizerStateBegan) {
+        else if (draggingRight && [self isBookAtStart]) {
+            recognizer.enabled = NO;
+            recognizer.enabled = YES;
             [self closeBookFront];
         }
         return;
@@ -527,6 +534,7 @@ static const NSUInteger kTagRight = 20;
 #pragma mark - Book related methods
 
 - (void)pageViewController:(UIPageViewController *)pageViewController didFinishAnimating:(BOOL)finished previousViewControllers:(NSArray *)previousViewControllers transitionCompleted:(BOOL)completed{
+    self.animating = NO;
     if (completed){
         OLPhotobookPageContentViewController *vc1 = [pageViewController.viewControllers firstObject];
         OLPhotobookPageContentViewController *vc2 = [pageViewController.viewControllers lastObject];
@@ -596,12 +604,17 @@ static const NSUInteger kTagRight = 20;
 }
 
 - (void)openBook:(UIGestureRecognizer *)sender{
+    if (self.animating){
+        return;
+    }
+    self.animating = YES;
     [UIView animateWithDuration:0.4 animations:^{
         self.bookCover.transform = CGAffineTransformIdentity;
         self.containerView.transform = CGAffineTransformIdentity;
     }completion:^(BOOL completed){
         MPFlipStyle style = sender.view.tag == kTagRight ? MPFlipStyleDefault : MPFlipStyleDirectionBackward;
         [MPFlipTransition transitionFromView:self.bookCover toView:self.containerView duration:0.4 style:style transitionAction:MPTransitionActionShowHide completion:^(BOOL finished){
+            self.animating = NO;
             self.bookCover.hidden = YES;
             self.bookClosed = NO;
             [UIView animateWithDuration:0.2 animations:^{
@@ -614,12 +627,17 @@ static const NSUInteger kTagRight = 20;
 }
 
 - (void)closeBookFront{
+    if (self.animating){
+        return;
+    }
+    self.animating = YES;
     [self setUpBookCoverView];
     [UIView animateWithDuration:0.2 animations:^{
         self.pagesLabelContainer.alpha = 0;
     }];
     
     [MPFlipTransition transitionFromView:self.containerView toView:self.bookCover duration:0.4 style:MPFlipStyleDirectionBackward transitionAction:MPTransitionActionShowHide completion:^(BOOL finished){
+        self.animating = NO;
         if (![self isContainerViewAtRightEdge:NO]){
             [UIView animateWithDuration:0.2 animations:^{
                 self.containerView.transform = CGAffineTransformMakeTranslation([self xTrasformForBookAtRightEdge], 0);
@@ -630,6 +648,10 @@ static const NSUInteger kTagRight = 20;
     }];
 }
 - (void)closeBookBack{
+    if (self.animating){
+        return;
+    }
+    self.animating = YES;
     [self setUpBookCoverView];
     [UIView animateWithDuration:0.2 animations:^{
         self.pagesLabelContainer.alpha = 0;
@@ -643,6 +665,7 @@ static const NSUInteger kTagRight = 20;
                          self.bookCover.transform = CGAffineTransformIdentity;
                      } completion:^(BOOL finished){
                          [MPFlipTransition transitionFromView:self.containerView toView:self.bookCover duration:0.4 style:MPFlipStyleDefault transitionAction:MPTransitionActionShowHide completion:^(BOOL finished){
+                             self.animating = NO;
                          }];
                          self.bookClosed = YES;
                      }];
