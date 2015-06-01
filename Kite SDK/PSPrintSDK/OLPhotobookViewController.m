@@ -227,11 +227,17 @@ static const NSUInteger kTagRight = 20;
 
 #pragma mark - OLScrollCropView delegate
 
--(void)userDidCropImage:(UIImage *)croppedImage{
+- (void)scrollCropViewControllerDidCancel:(OLScrollCropViewController *)cropper{
+    [cropper dismissViewControllerAnimated:YES completion:NULL];
+}
+
+-(void)scrollCropViewController:(OLScrollCropViewController *)cropper didFinishCroppingImage:(UIImage *)croppedImage{
     [self.editingPrintPhoto unloadImage];
     self.editingPrintPhoto.asset = [OLAsset assetWithImageAsJPEG:croppedImage];
     
     [(OLPhotobookPageContentViewController *)[self.pageController.viewControllers objectAtIndex:self.editingPageIndex] loadImage];
+    
+    [cropper dismissViewControllerAnimated:YES completion:NULL];
 }
 
 #pragma mark - UIPageViewControllerDataSource and delegate

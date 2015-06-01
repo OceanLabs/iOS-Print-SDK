@@ -321,11 +321,17 @@ CGFloat margin = 2;
     [innerCollectionView reloadData];
 }
 
--(void)userDidCropImage:(UIImage *)croppedImage{
+- (void)scrollCropViewControllerDidCancel:(OLScrollCropViewController *)cropper{
+    [cropper dismissViewControllerAnimated:YES completion:NULL];
+}
+
+-(void)scrollCropViewController:(OLScrollCropViewController *)cropper didFinishCroppingImage:(UIImage *)croppedImage{
     [self.editingPrintPhoto unloadImage];
     self.editingPrintPhoto.asset = [OLAsset assetWithImageAsJPEG:croppedImage];
     
     [self.collectionView reloadData];
+    
+    [cropper dismissViewControllerAnimated:YES completion:NULL];
 }
 
 #pragma mark - Autorotate and Orientation Methods
