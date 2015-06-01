@@ -202,6 +202,10 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     [self.userSelectedPhotos removeObjectAtIndex:index];
     [self.extraCopiesOfAssets removeObjectAtIndex:index];
     
+    if (self.userSelectedPhotos.count == 0){
+        [self.navigationController popViewControllerAnimated:YES];
+    }
+    
     [self updateTitleBasedOnSelectedPhotoQuanitity];
     
     [self.collectionView deleteItemsAtIndexPaths:@[[NSIndexPath indexPathForItem:index inSection:0]]];
