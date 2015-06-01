@@ -10,6 +10,7 @@
 
 extern NSString *const kOLKiteSDKErrorDomain;
 extern NSString *const kOLKiteSDKVersion;
+extern const NSInteger kOLKiteSDKErrorCodeRequestInProgress;
 extern const NSInteger kOLKiteSDKErrorCodeFullDetailsFetchFailed;
 extern const NSInteger kOLKiteSDKErrorCodeServerFault;
 extern const NSInteger kOLKiteSDKErrorCodeUnauthorized;
@@ -18,6 +19,7 @@ extern const NSInteger kOLKiteSDKErrorCodeMaintenanceMode;
 
 extern NSString *const kOLKiteSDKErrorMessageUnauthorized;
 extern NSString *const kOLKiteSDKErrorMessageMaintenanceMode;
+extern NSString *const kOLKiteSDKErrorMessageRequestInProgress;
 
 @interface OLConstants : NSObject
 

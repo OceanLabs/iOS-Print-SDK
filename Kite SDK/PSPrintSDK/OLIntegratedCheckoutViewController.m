@@ -40,6 +40,7 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
 - (void)setupABTestVariants;
 - (NSString *)userEmail;
 - (NSString *)userPhone;
+- (void)recalculateOrderCostIfNewSelectedCountryDiffers:(OLCountry *)selectedCountry;
 
 @end
 
@@ -61,7 +62,6 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
     if (self = [super initWithStyle:UITableViewStyleGrouped]) {
         self.printOrder = printOrder;
         //[self.printOrder preemptAssetUpload];
-        [OLProductTemplate sync];
         [super setupABTestVariants];
     }
     
@@ -70,8 +70,8 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
 
 - (void)viewDidLoad
 {
+    [self populateDefaultDeliveryAddress]; // call before super as this sets printOrder.shippingAddress if necessary & super gets & caches cost for shipping address
     [super viewDidLoad];
-    [self populateDefaultDeliveryAddress];
 }
 
 - (void)trackViewed{
@@ -173,6 +173,10 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
     
     if (self.shippingAddress.country == nil) {
         self.shippingAddress.country = [OLCountry countryForCurrentLocale];
+    }
+    
+    if (self.printOrder.shippingAddress == nil) {
+        self.printOrder.shippingAddress = self.shippingAddress;
     }
 }
 
@@ -415,6 +419,8 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
 }
 
 -(void) countryPicker:(OLCountryPickerController *)picker didSucceedWithCountries:(NSArray *)countries{
+    [super recalculateOrderCostIfNewSelectedCountryDiffers:countries.lastObject];
+    
     if (!self.shippingAddress){
         self.shippingAddress = [[OLAddress alloc] init];
     }
@@ -422,6 +428,8 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
     self.shippingAddress.country = countries.lastObject;
     self.textFieldCountry.text = self.shippingAddress.country.name;
     [self.tableView reloadData]; // refesh labels if country has changed i.e. Postal Code -> ZIP Code if UK -> USA.
+    
+    
 }
 
 -(void) countryPickerDidCancelPicking:(OLCountryPickerController *)picker{

@@ -14,18 +14,21 @@
 #import "OLAddress.h"
 #import "OLCountry.h"
 #import "OLAsset+Private.h"
-#import "OLCheckPromoCodeRequest.h"
+#import "OLPaymentLineItem.h"
+#import "OLKitePrintSDK.h"
+#import "OLPrintOrderCostRequest.h"
+#import "OLPrintOrderCost.h"
 
 static NSString *const kKeyProofOfPayment = @"co.oceanlabs.pssdk.kKeyProofOfPayment";
 static NSString *const kKeyVoucherCode = @"co.oceanlabs.pssdk.kKeyVoucherCode";
 static NSString *const kKeyJobs = @"co.oceanlabs.pssdk.kKeyJobs";
+static NSString *const kKeyFinalCost = @"co.oceanlabs.pssdk.kKeyFinalCost";
 static NSString *const kKeyReceipt = @"co.oceanlabs.pssdk.kKeyReceipt";
 static NSString *const kKeyStorageIdentifier = @"co.oceanlabs.pssdk.kKeyStorageIdentifier";
 static NSString *const kKeyUserData = @"co.oceanlabs.pssdk.kKeyUserData";
 static NSString *const kKeyShippingAddress = @"co.oceanlabs.pssdk.kKeyShippingAddress";
 static NSString *const kKeyLastPrintError = @"co.oceanlabs.pssdk.kKeyLastPrintError";
 static NSString *const kKeyLastPrintSubmissionDate = @"co.oceanlabs.pssdk.kKeyLastPrintSubmissionDate";
-static NSString *const kKeyPromoDiscount = @"co.oceanlabs.pssdk.kKeyPromoDiscount";
 static NSString *const kKeyCurrencyCode = @"co.oceanlabs.pssdk.kKeyCurrencyCode";
 
 static NSMutableArray *inProgressPrintOrders; // Tracks all currently in progress print orders. This is useful as it means they won't be dealloc'd if a user doesn't come a strong reference to them but still expects the completion handler callback
@@ -33,6 +36,10 @@ static NSMutableArray *inProgressPrintOrders; // Tracks all currently in progres
 static id stringOrEmptyString(NSString *str) {
     return str ? str : @"";
 }
+
+@interface OLPrintOrderCostRequest (Private)
++ (NSDictionary *)cachedResponseForOrder:(OLPrintOrder *)order;
+@end
 
 @interface OLPrintOrder () <OLAssetUploadRequestDelegate, OLPrintOrderRequestDelegate>
 @property (nonatomic, copy) OLPrintOrderProgressHandler progressHandler;
@@ -48,10 +55,10 @@ static id stringOrEmptyString(NSString *str) {
 @property (nonatomic, assign) BOOL userSubmittedForPrinting;
 @property (nonatomic, assign) NSUInteger totalBytesWritten, totalBytesExpectedToWrite;
 
-@property (nonatomic, strong) OLCheckPromoCodeRequest *checkPromoCodeReq;
-
-@property (strong, nonatomic) NSString *promoCode;
-@property (strong, nonatomic) NSDecimalNumber *promoDiscount;
+@property (strong, nonatomic) OLPrintOrderCost *cachedCost;
+@property (strong, nonatomic) OLPrintOrderCost *finalCost;
+@property (nonatomic, strong) OLPrintOrderCostRequest *costReq;
+@property (strong, nonatomic) NSMutableArray *costCompletionHandlers;
 
 @end
 
@@ -78,6 +85,10 @@ static id stringOrEmptyString(NSString *str) {
     }
     
     return self;
+}
+
+- (void)setPromoCode:(NSString *)promoCode{
+    _promoCode = promoCode;
 }
 
 - (NSString *)paymentDescription {
@@ -145,36 +156,53 @@ static id stringOrEmptyString(NSString *str) {
     return code;
 }
 
-- (NSDecimalNumber *)cost {
-    return [self costInCurrency:self.currencyCode];
-}
-
-- (NSDecimalNumber *)costInCurrency:(NSString *)currencyCode {
-    NSAssert([self.currenciesSupported containsObject:currencyCode], @"The print order cost in '%@' is not supported. Please check OLPrintOrder.currenciesSupported or ensure all OLPrintJob templates have prices in the requested currency.", currencyCode);
-    
-    NSDecimalNumber *cost = [NSDecimalNumber zero];
-    for (id<OLPrintJob> job in self.jobs) {
-        cost = [cost decimalNumberByAdding:[job costInCurrency:currencyCode]];
-    }
-    
-    if (self.promoDiscount) {
-        cost = [cost decimalNumberBySubtracting:self.promoDiscount];
-        
-        // if cost is negative, make it zero.
-        if ([cost compare:[NSNumber numberWithInt:0]] == NSOrderedAscending) {
-            cost = [NSDecimalNumber zero];
-        }
-    }
-    
-    return cost;
-}
-
 - (void)addPrintJob:(id<OLPrintJob>)job {
     [(NSMutableArray *) self.jobs addObject:job];
 }
 
 - (void)removePrintJob:(id<OLPrintJob>)job {
     [(NSMutableArray *) self.jobs removeObject:job];
+}
+
+- (BOOL)hasCachedCost {
+    if (self.finalCost) {
+        return YES;
+    }
+    
+    return [OLPrintOrderCostRequest cachedResponseForOrder:self] != nil;
+}
+
+- (void)costWithCompletionHandler:(OLPrintOrderCostCompletionHandler)handler {
+    if (self.finalCost) {
+        if (handler) {
+            handler(self.finalCost, nil);
+        }
+        return;
+    }
+    
+    if (handler && !self.costCompletionHandlers) {
+        self.costCompletionHandlers = [[NSMutableArray alloc] init];
+    }
+    
+    if (handler) {
+        [self.costCompletionHandlers addObject:handler];
+    }
+    
+    if (self.costReq != nil) {
+        return; // request already in progress. 
+    }
+    
+    self.costReq = [[OLPrintOrderCostRequest alloc] init];
+    [self.costReq orderCost:self completionHandler:^(OLPrintOrderCost *cost, NSError *error) {
+        self.costReq = nil;
+        self.cachedCost = cost;
+        
+        NSArray *handlers = [self.costCompletionHandlers copy];
+        [self.costCompletionHandlers removeAllObjects];
+        for (OLPrintOrderCostCompletionHandler handler in handlers) {
+            handler(cost, error);
+        }
+    }];
 }
 
 - (void)cancelSubmissionOrPreemptedAssetUpload {
@@ -296,8 +324,8 @@ static id stringOrEmptyString(NSString *str) {
         [json setObject:self.proofOfPayment forKey:@"proof_of_payment"];
     }
     
-    if (self.currencyCode && self.cost) {
-        [json setObject:@{@"currency" : self.currencyCode, @"amount" : self.cost} forKey:@"customer_payment"];
+    if (self.currencyCode && self.cachedCost) {
+        [json setObject:@{@"currency": self.currencyCode, @"amount" : [self.cachedCost totalCostInCurrency:self.currencyCode]} forKey:@"customer_payment"];
     }
     
     if (self.promoCode) {
@@ -329,23 +357,17 @@ static id stringOrEmptyString(NSString *str) {
     return json;
 }
 
-- (void)applyPromoCode:(NSString *)promoCode withCompletionHandler:(OLApplyPromoCodeCompletionHandler)handler {
-    NSAssert([self.currenciesSupported containsObject:self.currencyCode], @"Please ensure all OLPrintJob's making up this order support the current currencyCode '%@' before trying to apply a promo code", self.currencyCode);
+- (NSUInteger) hash {
+    NSUInteger hash = 17;
+    for (id<OLPrintJob> job in self.jobs){
+        hash = 31 * hash + [job hash];
+    }
     
-    self.checkPromoCodeReq = [[OLCheckPromoCodeRequest alloc] init];
-    [self.checkPromoCodeReq checkPromoCode:promoCode withOrder:self andCompletionHandler:^(NSDecimalNumber *discount, NSError *error) {
-        if (promoCode && !error) {
-                self.promoCode = promoCode;
-                self.promoDiscount = discount;
-        }
-        self.checkPromoCodeReq = nil;
-        handler(discount, error);
-    }];
-}
-
-- (void)clearPromoCode {
-    self.promoCode = nil;
-    self.promoDiscount = nil;
+    // shipping address country can change delivery costs
+    OLCountry *country = self.shippingAddress.country ? self.shippingAddress.country : [OLCountry countryForCurrentLocale];
+    hash = 31 * hash + [country.codeAlpha3 hash];
+    hash = 31 * hash + [self.promoCode hash];
+    return hash;
 }
 
 #pragma mark - OLAssetUploadRequestDelegate methods
@@ -408,6 +430,7 @@ static id stringOrEmptyString(NSString *str) {
     self.printOrderReq = nil;
     [inProgressPrintOrders removeObject:self];
     _receipt = receipt;
+    self.finalCost = self.cachedCost;
     self.completionHandler(receipt, nil);
 }
 
@@ -431,26 +454,31 @@ static id stringOrEmptyString(NSString *str) {
     [aCoder encodeObject:self.shippingAddress forKey:kKeyShippingAddress];
     [aCoder encodeObject:self.lastPrintSubmissionError forKey:kKeyLastPrintError];
     [aCoder encodeObject:self.lastPrintSubmissionDate forKey:kKeyLastPrintSubmissionDate];
-    [aCoder encodeObject:self.promoDiscount forKey:kKeyPromoDiscount];
     [aCoder encodeObject:_currencyCode forKey:kKeyCurrencyCode];
+    [aCoder encodeObject:self.finalCost forKey:kKeyFinalCost];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
-    if (self = [self init]) {
-        _proofOfPayment = [aDecoder decodeObjectForKey:kKeyProofOfPayment];
-        _promoCode = [aDecoder decodeObjectForKey:kKeyVoucherCode];
-        _jobs = [aDecoder decodeObjectForKey:kKeyJobs];
-        _receipt = [aDecoder decodeObjectForKey:kKeyReceipt];
-        _storageIdentifier = [aDecoder decodeIntegerForKey:kKeyStorageIdentifier];
-        _userData = [aDecoder decodeObjectForKey:kKeyUserData];
-        _shippingAddress = [aDecoder decodeObjectForKey:kKeyShippingAddress];
-        _lastPrintSubmissionError = [aDecoder decodeObjectForKey:kKeyLastPrintError];
-        _lastPrintSubmissionDate = [aDecoder decodeObjectForKey:kKeyLastPrintSubmissionDate];
-        _promoDiscount = [aDecoder decodeObjectForKey:kKeyPromoDiscount];
-        _currencyCode = [aDecoder decodeObjectForKey:kKeyCurrencyCode];
+    @try {
+        if (self = [self init]) {
+            _proofOfPayment = [aDecoder decodeObjectForKey:kKeyProofOfPayment];
+            _promoCode = [aDecoder decodeObjectForKey:kKeyVoucherCode];
+            _jobs = [aDecoder decodeObjectForKey:kKeyJobs];
+            _receipt = [aDecoder decodeObjectForKey:kKeyReceipt];
+            _storageIdentifier = [aDecoder decodeIntegerForKey:kKeyStorageIdentifier];
+            _userData = [aDecoder decodeObjectForKey:kKeyUserData];
+            _shippingAddress = [aDecoder decodeObjectForKey:kKeyShippingAddress];
+            _lastPrintSubmissionError = [aDecoder decodeObjectForKey:kKeyLastPrintError];
+            _lastPrintSubmissionDate = [aDecoder decodeObjectForKey:kKeyLastPrintSubmissionDate];
+            _currencyCode = [aDecoder decodeObjectForKey:kKeyCurrencyCode];
+            _finalCost = [aDecoder decodeObjectForKey:kKeyFinalCost];
+        }
+        return self;
+        
     }
-    
-    return self;
+    @catch (NSException *exception) {
+        return nil;
+    }
 }
 
 @end

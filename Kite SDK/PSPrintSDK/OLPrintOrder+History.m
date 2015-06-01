@@ -48,12 +48,12 @@ static NSMutableArray *printOrders;
 - (void)deleteFromHistory {
     for (OLPrintOrder *order in [OLPrintOrder printOrderHistory]) {
         if (order.storageIdentifier == self.storageIdentifier) {
+            self.storageIdentifier = NSNotFound;
             [printOrders removeObject:order];
             break;
         }
     }
     
-    self.storageIdentifier = NSNotFound;
     [NSKeyedArchiver archiveRootObject:printOrders toFile:[OLPrintOrder historyFilePath]];
 }
 

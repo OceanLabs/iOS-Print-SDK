@@ -71,7 +71,6 @@ static NSString *const kOLKiteABTestRequirePhoneNumber = @"ly.kite.abtest.requir
         [OLKitePrintSDK setAPIKey:apiKey withEnvironment:env];
         self.printOrder = printOrder;
         //[self.printOrder preemptAssetUpload];
-        [OLProductTemplate sync];
         [self setupABTestVariants];
     }
 
@@ -83,7 +82,6 @@ static NSString *const kOLKiteABTestRequirePhoneNumber = @"ly.kite.abtest.requir
     if (self = [super initWithStyle:UITableViewStyleGrouped]) {
         self.printOrder = printOrder;
         //[self.printOrder preemptAssetUpload];
-        [OLProductTemplate sync];
         [self setupABTestVariants];
     }
     
@@ -181,6 +179,8 @@ static NSString *const kOLKiteABTestRequirePhoneNumber = @"ly.kite.abtest.requir
     self.kiteLabel.translatesAutoresizingMaskIntoConstraints = NO;
     
     [self.tableView.tableFooterView addConstraint:[NSLayoutConstraint constraintWithItem:self.kiteLabel attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.tableView.tableFooterView attribute:NSLayoutAttributeCenterX multiplier:1 constant:0]];
+    
+    [self.printOrder costWithCompletionHandler:nil]; // ignore outcome, internally printOrder caches the result and this will speed up things when we hit the PaymentScreen *if* the user doesn't change destination shipping country as the voids shipping price
 }
 
 - (void)registerForKeyboardNotifications
@@ -525,10 +525,25 @@ static NSString *const kOLKiteABTestRequirePhoneNumber = @"ly.kite.abtest.requir
     self.activeTextView = textField;
 }
 
+- (void)recalculateOrderCostIfNewSelectedCountryDiffers:(OLCountry *)selectedCountry {
+    if (self.printOrder.shippingAddress == nil) {
+        // just populate with a blank address for now with default local country -- this will get replaced on filling out address and proceeding to the next screen
+        self.printOrder.shippingAddress = [[OLAddress alloc] init];
+        self.printOrder.shippingAddress.country = self.shippingAddress ? self.shippingAddress.country : [OLCountry countryForCurrentLocale];
+    }
+    
+    if (![self.printOrder.shippingAddress.country isEqual:selectedCountry]) {
+        // changing destination address voids internal printOrder cached costs, recalc early to speed things up before we hit the Payment screen
+        self.printOrder.shippingAddress.country = selectedCountry;
+        [self.printOrder costWithCompletionHandler:nil]; // ignore outcome, internally printOrder caches the result and this will speed up things when we hit the PaymentScreen
+    }
+}
+
 #pragma mark - OLAddressPickerController delegate
 
 - (void)addressPicker:(OLAddressPickerController *)picker didFinishPickingAddresses:(NSArray/*<OLAddress>*/ *)addresses {
-    self.shippingAddress = addresses[0];
+    [self recalculateOrderCostIfNewSelectedCountryDiffers:[addresses[0] country]];
+    self.shippingAddress = [addresses[0] copy];
     [self dismissViewControllerAnimated:YES completion:nil];
 //    [self.tableView reloadData];
     [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:kSectionDeliveryDetails]] withRowAnimation:UITableViewRowAnimationFade];
