@@ -364,18 +364,24 @@ static NSString *const kKeyCropTransform = @"co.oceanlabs.psprintstudio.kKeyCrop
     if (self = [super init]) {
         _type = [aDecoder decodeIntForKey:kKeyType];
         if (self.type == kPrintPhotoAssetTypeALAsset) {
-            // This next bit of code is very broken as there is no guarantee we will actually be able to get the asset e.g. the user could
-            // have long since denied us access to their library, etc. :( TODO: handle correctly
             NSURL *assetURL = [aDecoder decodeObjectForKey:kKeyAsset];
             ALAssetsLibrary *assetLibrary = [[ALAssetsLibrary alloc] init];
             [assetLibrary assetForURL:assetURL
                           resultBlock:^(ALAsset *asset) {
                               NSAssert([NSThread isMainThread], @"oops wrong assumption about main thread callback");
-                              self.assetsLibrary = assetLibrary;
-                              self.asset = asset;
+                              if (asset == nil) {
+                                  // corrupt asset, user has probably deleted the photo from their device
+                                  _type = kPrintPhotoAssetTypeOLAsset;
+                                  self.asset = [OLAsset assetWithImageAsPNG:[UIImage imageNamed:@"corrupt"]];
+                              } else {
+                                  self.assetsLibrary = assetLibrary;
+                                  self.asset = asset;
+                              }
                           }
                          failureBlock:^(NSError *err) {
                              NSAssert([NSThread isMainThread], @"oops wrong assumption about main thread callback");
+                             _type = kPrintPhotoAssetTypeOLAsset;
+                             self.asset = [OLAsset assetWithImageAsPNG:[UIImage imageNamed:@"corrupt"]];
                          }];
         } else {
             self.asset = [aDecoder decodeObjectForKey:kKeyAsset];
