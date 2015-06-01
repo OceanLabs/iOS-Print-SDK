@@ -154,10 +154,40 @@ static const NSUInteger kTagRight = 20;
         }
         
         [view.superview addConstraints:con];
-        
     }
     else{
         self.pagesLabelContainer.backgroundColor = [UIColor darkGrayColor];
+        
+        [self.containerView.superview addConstraint:[NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationLessThanOrEqual toItem:self.containerView.superview attribute:NSLayoutAttributeRight multiplier:1 constant:0]];
+        [self.containerView.superview addConstraint:[NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationGreaterThanOrEqual toItem:self.containerView.superview attribute:NSLayoutAttributeLeft multiplier:1 constant:0]];
+        
+        UINavigationBar *navigationBar = [[UINavigationBar alloc] init];
+        [self.view addSubview:navigationBar];
+        UIView *view = navigationBar;
+        
+        view.translatesAutoresizingMaskIntoConstraints = NO;
+        NSDictionary *views = NSDictionaryOfVariableBindings(view);
+        NSMutableArray *con = [[NSMutableArray alloc] init];
+        
+        NSArray *visuals = @[@"H:|-0-[view]-0-|", @"V:|-0-[view(44)]"];
+        
+        for (NSString *visual in visuals) {
+            [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+        }
+        
+        [view.superview addConstraints:con];
+        
+        UIButton *backButton = [[UIButton alloc] initWithFrame:CGRectMake(5, 0, 50, 44)];
+        [backButton setTitle:NSLocalizedString(@"Back", @"") forState:UIControlStateNormal];
+        [backButton setTitleColor:self.view.tintColor forState:UIControlStateNormal];
+        [backButton addTarget:self action:@selector(ios7Back) forControlEvents:UIControlEventTouchUpInside];
+        [navigationBar addSubview:backButton];
+        
+        UIButton *nextButton = [[UIButton alloc] initWithFrame:CGRectMake(MAX(self.view.frame.size.width, self.view.frame.size.height) - 55, 0, 50, 44)];
+        [nextButton setTitle:NSLocalizedString(@"Next", @"") forState:UIControlStateNormal];
+        [nextButton setTitleColor:self.view.tintColor forState:UIControlStateNormal];
+        [nextButton addTarget:self action:@selector(onButtonNextClicked:) forControlEvents:UIControlEventTouchUpInside];
+        [navigationBar addSubview:nextButton];
     }
     
     [self.pagesLabelContainer makeRoundRect];
@@ -166,6 +196,19 @@ static const NSUInteger kTagRight = 20;
     
     self.centerYCon = [NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.containerView.superview attribute:NSLayoutAttributeCenterY multiplier:1 constant:([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height)/2.0];
     [self.containerView.superview addConstraint:self.centerYCon];
+}
+
+- (void)ios7Back{
+    [self dismissViewControllerAnimated:YES completion:NULL];
+}
+
+- (BOOL)prefersStatusBarHidden{
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8){
+        return YES;
+    }
+    else{
+        return [super prefersStatusBarHidden];
+    }
 }
 
 - (void)viewDidAppear:(BOOL)animated{
@@ -342,7 +385,15 @@ static const NSUInteger kTagRight = 20;
         vc.userPhone = [OLKitePrintSDK userPhone:self];
         vc.kiteDelegate = [OLKitePrintSDK kiteDelegate:self];
         
-        [self.navigationController pushViewController:vc animated:YES];
+        if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8){
+            UIViewController *presenting = self.presentingViewController;
+            [self dismissViewControllerAnimated:YES completion:^{
+                [(UINavigationController *)[presenting.childViewControllers firstObject] pushViewController:vc animated:YES];
+            }];
+        }
+        else{
+            [self.navigationController pushViewController:vc animated:YES];
+        }
     }];
 }
 
@@ -402,6 +453,10 @@ static const NSUInteger kTagRight = 20;
         return;
     }
     
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8){
+        return;
+    }
+    
     if (!(([self isContainerViewAtLeftEdge:NO] && draggingRight) || ([self isContainerViewAtRightEdge:NO] && draggingLeft))){
         
         self.containerView.transform = CGAffineTransformTranslate(self.containerView.transform, translation.x, 0);
@@ -450,7 +505,6 @@ static const NSUInteger kTagRight = 20;
     if ([gestureRecognizer isKindOfClass:[UITapGestureRecognizer class]] || [otherGestureRecognizer isKindOfClass:[UITapGestureRecognizer class]]){
         return NO;
     }
-    
     else if ([gestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]] && [otherGestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]]){
         CGPoint translation = [(UIPanGestureRecognizer *)gestureRecognizer translationInView:self.containerView];
         BOOL draggingLeft = translation.x < 0;
@@ -585,6 +639,10 @@ static const NSUInteger kTagRight = 20;
 }
 
 - (BOOL)isContainerViewAtRightEdge:(BOOL)useFrame{
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8){
+        return YES;
+    }
+    
     if (!useFrame){
         return self.containerView.transform.tx <= [self xTrasformForBookAtRightEdge];
     }
@@ -594,6 +652,10 @@ static const NSUInteger kTagRight = 20;
 }
 
 - (BOOL)isContainerViewAtLeftEdge:(BOOL)useFrame{
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8){
+        return YES;
+    }
+    
     if (!useFrame){
         return self.containerView.transform.tx >= 0;
     }

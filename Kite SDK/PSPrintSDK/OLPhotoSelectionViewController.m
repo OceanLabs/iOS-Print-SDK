@@ -852,20 +852,29 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 
 -(void)doSegueToOrderPreview{
 //    [OLAnalytics trackPhotosSelectedForOrder];
-    UIViewController* orvc;
+    UIViewController* vc;
     if (self.product.productTemplate.templateUI == kOLTemplateUIFrame){
-        orvc = [self.storyboard instantiateViewControllerWithIdentifier:@"FrameOrderReviewViewController"];
+        vc = [self.storyboard instantiateViewControllerWithIdentifier:@"FrameOrderReviewViewController"];
     }
     else if (self.product.productTemplate.templateUI == kOLTemplateUIPhotobook){
-        orvc = [self.storyboard instantiateViewControllerWithIdentifier:@"PhotobookViewController"];
+        vc = [self.storyboard instantiateViewControllerWithIdentifier:@"PhotobookViewController"];
+        
+        if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8){
+            [vc safePerformSelector:@selector(setProduct:) withObject:self.product];
+            [vc safePerformSelector:@selector(setUserSelectedPhotos:) withObject:self.userSelectedPhotos];
+            [vc safePerformSelector:@selector(setAssets:) withObject:self.assets];
+            
+            [self.navigationController presentViewController:vc animated:YES completion:NULL];
+            return;
+        }
     }
     else{
-        orvc = [self.storyboard instantiateViewControllerWithIdentifier:@"OrderReviewViewController"];
+        vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OrderReviewViewController"];
     }
-    [orvc safePerformSelector:@selector(setProduct:) withObject:self.product];
-    [orvc safePerformSelector:@selector(setUserSelectedPhotos:) withObject:self.userSelectedPhotos];
-    [orvc safePerformSelector:@selector(setAssets:) withObject:self.assets];
-    [self.navigationController pushViewController:orvc animated:YES];
+    [vc safePerformSelector:@selector(setProduct:) withObject:self.product];
+    [vc safePerformSelector:@selector(setUserSelectedPhotos:) withObject:self.userSelectedPhotos];
+    [vc safePerformSelector:@selector(setAssets:) withObject:self.assets];
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
 #pragma mark - UIAlertViewDelegate methods
