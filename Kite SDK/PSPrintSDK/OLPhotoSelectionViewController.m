@@ -254,9 +254,14 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     if (self.userSelectedPhotos.count == 0) {
         [self setTitle:NSLocalizedString(@"Choose Photos", @"")];
     } else {
-        NSUInteger numOrders = 1 + (MAX(0, self.userSelectedPhotos.count - 1) / self.product.quantityToFulfillOrder);
-        NSUInteger quanityToFulfilOrder = numOrders * self.product.quantityToFulfillOrder;
-        [self setTitle:[NSString stringWithFormat:@"%lu / %lu", (unsigned long)self.userSelectedPhotos.count - self.userDisabledPhotos.count, (unsigned long)quanityToFulfilOrder]];
+        if (self.product.quantityToFulfillOrder > 1){
+            NSUInteger numOrders = 1 + (MAX(0, self.userSelectedPhotos.count - 1) / self.product.quantityToFulfillOrder);
+            NSUInteger quanityToFulfilOrder = numOrders * self.product.quantityToFulfillOrder;
+            [self setTitle:[NSString stringWithFormat:@"%lu / %lu", (unsigned long)self.userSelectedPhotos.count - self.userDisabledPhotos.count, (unsigned long)quanityToFulfilOrder]];
+        }
+        else{
+            [self setTitle:[NSString stringWithFormat:@"%lu", (unsigned long)self.userSelectedPhotos.count - self.userDisabledPhotos.count]];
+        }
     }
     
     if ([self.userDisabledPhotos count] > 0){
