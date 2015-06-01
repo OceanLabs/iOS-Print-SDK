@@ -46,14 +46,14 @@ Use our SDK to unlock hidden revenue streams and add value for your users. *In u
 [CocoaPods](http://cocoapods.org) is a dependency manager for Objective-C, which automates and simplifies the process of using 3rd-party libraries like the Kite Print SDK in your projects. If you're using it just add the following to your Podfile:
 
 ```ruby
-pod "Kite-Print-SDK", "~> 2.0"
-pod "Kite-Print-SDK/PayPal", "~> 2.0"
+pod "Kite-Print-SDK"
+pod "Kite-Print-SDK/PayPal"
 
 #Uncomment this next line if you want Instagram photo picking support
-#pod "Kite-Print-SDK/Instagram", "~> 2.0"
+#pod "Kite-Print-SDK/Instagram"
 
 #Uncomment this	next line if you want Facebook photo picking support
-#pod "Kite-Print-SDK/Facebook", "~> 2.0"
+#pod "Kite-Print-SDK/Facebook"
 ```
 
 The SDK includes lots of optional functionality enabled via CocoaPod Subspecs so that you can pick and choose your setup.
