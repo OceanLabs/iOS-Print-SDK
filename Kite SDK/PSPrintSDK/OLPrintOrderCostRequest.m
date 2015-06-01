@@ -47,20 +47,10 @@ static NSUInteger cacheOrderHash; // cached response is only valid for orders wi
 
 @implementation OLPrintOrderCostRequest
 
-- (NSUInteger)uniqueAssetCount:(NSArray *)assets {
-    NSMutableArray *uniqueAssets = [[NSMutableArray alloc] init];
-    for (id asset in assets) {
-        if (![uniqueAssets containsObject:asset]) {
-            [uniqueAssets addObject:asset];
-        }
-    }
-    return uniqueAssets.count;
-}
-
 - (NSString *)stringFromOrder:(OLPrintOrder *)order {
     NSString *basketString = @"";
     for (id<OLPrintJob> job in order.jobs){
-        basketString = [basketString stringByAppendingString:[NSString stringWithFormat:@"%@:%d,", [job templateId], (int)[self uniqueAssetCount:[job assetsForUploading]]]];
+        basketString = [basketString stringByAppendingString:[NSString stringWithFormat:@"%@:%d,", [job templateId], (int)[job quantity]]];
     }
     basketString = [basketString stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@","]];
 
