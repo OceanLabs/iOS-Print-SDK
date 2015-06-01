@@ -112,19 +112,6 @@ static UIColor *deselectedColor;
     }
 }
 
--(void)viewDidAppear:(BOOL)animated{
-    if (self.navigationController){
-        NSMutableArray *navigationStack = self.navigationController.viewControllers.mutableCopy;
-        if (navigationStack.count > 1 && [navigationStack[navigationStack.count - 2] isKindOfClass:[OLKiteViewController class]]) {
-            OLKiteViewController *kiteVc = navigationStack[navigationStack.count - 2];
-            if (!kiteVc.presentingViewController){
-                [navigationStack removeObject:kiteVc];
-                self.navigationController.viewControllers = navigationStack;
-            }
-        }
-    }
-}
-
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];

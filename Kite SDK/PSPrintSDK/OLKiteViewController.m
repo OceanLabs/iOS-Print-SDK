@@ -108,25 +108,14 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
     }
     
     if (self.isBeingPresented && self.transitionOnViewDidAppear) {
-        [self performSelector:@selector(transitionToNextScreen) withObject:nil afterDelay:0.2];
+        [self transitionToNextScreen];
     }
     
     self.transitionOnViewDidAppear = NO;
 }
 
 -(IBAction) dismiss{
-    if (self.presentedViewController){
-        UIView *dummy = [self.presentedViewController.view snapshotViewAfterScreenUpdates:YES];
-        [self.view addSubview:dummy];
-        [self.presentedViewController dismissViewControllerAnimated:NO completion:^{
-            [self dismissViewControllerAnimated:YES completion:^{
-                [dummy removeFromSuperview];
-            }];
-        }];
-    } else {
-        [self dismissViewControllerAnimated:YES completion:^{
-        }];
-    }
+        [self dismissViewControllerAnimated:YES completion:^{}];
 }
 
 - (void)transitionToNextScreen{
@@ -182,18 +171,12 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
 }
 
 - (void)fadeToViewController:(UIViewController *)vc{
-    CGRect bounds = self.view.bounds;
-    bounds.origin.y = CGRectGetMaxY(self.navigationBar.frame);
-    UIView *view = [[UIView alloc] initWithFrame:bounds];
-    view.backgroundColor = [UIColor whiteColor];
-    [vc.view addSubview:view];
-    [self presentViewController:vc animated:NO completion:^(void){
-        [UIView animateWithDuration:0.3 animations:^(void){
-            view.alpha = 0;
-        } completion:^(BOOL b){
-            [view removeFromSuperview];
-        }];
-    }];
+    vc.view.alpha = 0;
+    [self addChildViewController:vc];
+    [self.view addSubview:vc.view];
+    [UIView animateWithDuration:0.3 animations:^(void){
+        vc.view.alpha = 1;
+    } completion:^(BOOL b){}];
 }
 
 - (void)templateSyncDidFinish:(NSNotification *)n{

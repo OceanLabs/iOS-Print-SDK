@@ -84,19 +84,6 @@
     [self.freePostageLabel removeFromSuperview]; // TODO: when /template supports sensible shipping values from we can remove this
 }
 
--(void)viewDidAppear:(BOOL)animated{
-    if (self.navigationController){
-        NSMutableArray *navigationStack = self.navigationController.viewControllers.mutableCopy;
-        if (navigationStack.count > 1 && [navigationStack[navigationStack.count - 2] isKindOfClass:[OLKiteViewController class]]) {
-            OLKiteViewController *kiteVc = navigationStack[navigationStack.count - 2];
-            if (!kiteVc.presentingViewController){
-                [navigationStack removeObject:kiteVc];
-                self.navigationController.viewControllers = navigationStack;
-            }
-        }
-    }
-}
-
 - (UIViewController *)viewControllerAtIndex:(NSUInteger)index {
     if (index == NSNotFound || index >= self.product.productPhotos.count) {
         return nil;
