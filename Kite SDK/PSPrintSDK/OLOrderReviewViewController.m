@@ -100,9 +100,14 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
 }
 
 - (void)updateTitleBasedOnSelectedPhotoQuanitity {
-    NSUInteger numOrders = 1 + (MAX(0, self.userSelectedPhotos.count - 1 + [self totalNumberOfExtras]) / self.product.quantityToFulfillOrder);
-    NSUInteger quanityToFulfilOrder = numOrders * self.product.quantityToFulfillOrder;
-    self.title = [NSString stringWithFormat:@"%lu / %lu", (unsigned long) (self.userSelectedPhotos.count + [self totalNumberOfExtras]), (unsigned long)quanityToFulfilOrder];
+    if (self.product.quantityToFulfillOrder > 1){
+        NSUInteger numOrders = 1 + (MAX(0, self.userSelectedPhotos.count - 1 + [self totalNumberOfExtras]) / self.product.quantityToFulfillOrder);
+        NSUInteger quanityToFulfilOrder = numOrders * self.product.quantityToFulfillOrder;
+        self.title = [NSString stringWithFormat:@"%lu / %lu", (unsigned long) (self.userSelectedPhotos.count + [self totalNumberOfExtras]), (unsigned long)quanityToFulfilOrder];
+    }
+    else{
+        self.title = [NSString stringWithFormat:@"%lu", (unsigned long) (self.userSelectedPhotos.count + [self totalNumberOfExtras])];
+    }
 }
 
 -(BOOL) shouldGoToCheckout{
