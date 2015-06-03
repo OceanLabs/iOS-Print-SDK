@@ -91,7 +91,7 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
         NSString *cost = self.shippingCosts[country.name][currencyCode];
         return cost ? [NSDecimalNumber decimalNumberWithString:cost] : nil;
     }
-    else if ([country isEUCountry]){
+    else if (country.isInEurope){
         NSString *cost = self.shippingCosts[@"europe"][currencyCode];
         return cost ? [NSDecimalNumber decimalNumberWithString:cost] : nil;
     }
