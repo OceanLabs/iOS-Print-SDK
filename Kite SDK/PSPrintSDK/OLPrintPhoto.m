@@ -282,7 +282,16 @@ static NSString *const kKeyCropTransform = @"co.oceanlabs.psprintstudio.kKeyCrop
 - (void)dataLengthWithCompletionHandler:(GetDataLengthHandler)handler {
     if (self.type == kPrintPhotoAssetTypeALAsset) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            handler([self.asset defaultRepresentation].size, nil);
+            ALAssetRepresentation *assetRepresentation = [self.asset defaultRepresentation];
+            if (assetRepresentation) {
+                handler(assetRepresentation.size, nil);
+            } else {
+                // unfortunately the image is no longer available, it's likely the user deleted it from their device hence
+                // the asset uri is now pointing to nothing. In this case we fall back to a default "corrupt" image so that
+                // things still work as expected just nothing nice will get printed.
+                NSData *data = [NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"kite_corrupt" ofType:@"jpg"]];
+                handler(data.length, nil);
+            }
         });
     }
 #if defined(OL_KITE_OFFER_INSTAGRAM) || defined(OL_KITE_OFFER_FACEBOOK)
@@ -304,15 +313,19 @@ static NSString *const kKeyCropTransform = @"co.oceanlabs.psprintstudio.kKeyCrop
     if (self.type == kPrintPhotoAssetTypeALAsset) {
         dispatch_async(dispatch_get_main_queue(), ^{
             ALAssetRepresentation *rep = [self.asset defaultRepresentation];
-            
-            UIImageOrientation orientation = UIImageOrientationUp;
-            NSNumber* orientationValue = [self.asset valueForProperty:@"ALAssetPropertyOrientation"];
-            if (orientationValue != nil) {
-                orientation = [orientationValue intValue];
-            }
+            if (rep) {
+                UIImageOrientation orientation = UIImageOrientationUp;
+                NSNumber* orientationValue = [self.asset valueForProperty:@"ALAssetPropertyOrientation"];
+                if (orientationValue != nil) {
+                    orientation = [orientationValue intValue];
+                }
 
-            UIImage *image = [UIImage imageWithCGImage:[rep fullResolutionImage] scale:rep.scale orientation:orientation];
-            handler(UIImageJPEGRepresentation(image, 0.7), nil);
+                UIImage *image = [UIImage imageWithCGImage:[rep fullResolutionImage] scale:rep.scale orientation:orientation];
+                handler(UIImageJPEGRepresentation(image, 0.7), nil);
+            } else {
+                NSData *data = [NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"kite_corrupt" ofType:@"jpg"]];
+                handler(data, nil);
+            }
         });
     }
 #if defined(OL_KITE_OFFER_INSTAGRAM) || defined(OL_KITE_OFFER_FACEBOOK)
@@ -372,7 +385,8 @@ static NSString *const kKeyCropTransform = @"co.oceanlabs.psprintstudio.kKeyCrop
                               if (asset == nil) {
                                   // corrupt asset, user has probably deleted the photo from their device
                                   _type = kPrintPhotoAssetTypeOLAsset;
-                                  self.asset = [OLAsset assetWithImageAsPNG:[UIImage imageNamed:@"corrupt"]];
+                                  NSData *data = [NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"kite_corrupt" ofType:@"jpg"]];
+                                  self.asset = [OLAsset assetWithDataAsJPEG:data];
                               } else {
                                   self.assetsLibrary = assetLibrary;
                                   self.asset = asset;
@@ -381,7 +395,8 @@ static NSString *const kKeyCropTransform = @"co.oceanlabs.psprintstudio.kKeyCrop
                          failureBlock:^(NSError *err) {
                              NSAssert([NSThread isMainThread], @"oops wrong assumption about main thread callback");
                              _type = kPrintPhotoAssetTypeOLAsset;
-                             self.asset = [OLAsset assetWithImageAsPNG:[UIImage imageNamed:@"corrupt"]];
+                             NSData *data = [NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"kite_corrupt" ofType:@"jpg"]];
+                             self.asset = [OLAsset assetWithDataAsJPEG:data];
                          }];
         } else {
             self.asset = [aDecoder decodeObjectForKey:kKeyAsset];

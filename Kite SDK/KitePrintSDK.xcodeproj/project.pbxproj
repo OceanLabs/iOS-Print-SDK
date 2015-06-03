@@ -42,6 +42,7 @@
 		3A5ECAA2AA9D4F38934544CA /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 931ABE3568CB40F8892488E2 /* libPods.a */; };
 		3D0D7ACC1AC0C44C00746FC8 /* NSArray+QueryingExtras.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D0D7ACB1AC0C44C00746FC8 /* NSArray+QueryingExtras.m */; };
 		3D17795A1A1E1D6800BE3E58 /* OLCreditCardCaptureViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D1779591A1E1D6800BE3E58 /* OLCreditCardCaptureViewController.m */; };
+		3D6CDAAD1B1F41AE00786478 /* kite_corrupt.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 3D6CDAAC1B1F41AE00786478 /* kite_corrupt.jpg */; };
 		3D8122ED1A759F42004E7297 /* RMImageCropper.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D8122EA1A759F42004E7297 /* RMImageCropper.m */; };
 		3D8122EE1A759F42004E7297 /* UIView+RMUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D8122EC1A759F42004E7297 /* UIView+RMUtils.m */; };
 		3D8122F31A75A46D004E7297 /* UIImageView+FadeIn.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D8122F01A75A46D004E7297 /* UIImageView+FadeIn.m */; };
@@ -206,6 +207,7 @@
 		3D1779571A1E076600BE3E58 /* CardIOViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CardIOViewDelegate.h; sourceTree = "<group>"; };
 		3D1779581A1E1D6800BE3E58 /* OLCreditCardCaptureViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLCreditCardCaptureViewController.h; sourceTree = "<group>"; };
 		3D1779591A1E1D6800BE3E58 /* OLCreditCardCaptureViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLCreditCardCaptureViewController.m; sourceTree = "<group>"; };
+		3D6CDAAC1B1F41AE00786478 /* kite_corrupt.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = kite_corrupt.jpg; path = PSPrintSDK/kite_corrupt.jpg; sourceTree = "<group>"; };
 		3D8122E91A759F42004E7297 /* RMImageCropper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RMImageCropper.h; path = RMImageCropper/RMImageCropper.h; sourceTree = "<group>"; };
 		3D8122EA1A759F42004E7297 /* RMImageCropper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RMImageCropper.m; path = RMImageCropper/RMImageCropper.m; sourceTree = "<group>"; };
 		3D8122EB1A759F42004E7297 /* UIView+RMUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIView+RMUtils.h"; path = "RMImageCropper/UIView+RMUtils.h"; sourceTree = "<group>"; };
@@ -358,6 +360,7 @@
 		2E85BC9619A24C9E00EC7CC2 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				3D6CDAAC1B1F41AE00786478 /* kite_corrupt.jpg */,
 				2E85BC9719A24CB200EC7CC2 /* KitePrintSDK.strings */,
 			);
 			name = "Supporting Files";
@@ -801,6 +804,7 @@
 				CD73BF84186215790009DE03 /* Images.xcassets in Resources */,
 				CD93BB481879EA4F00316492 /* KitePrintSDK.xcassets in Resources */,
 				CD73BF76186215790009DE03 /* InfoPlist.strings in Resources */,
+				3D6CDAAD1B1F41AE00786478 /* kite_corrupt.jpg in Resources */,
 				CD73BF7F186215790009DE03 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
