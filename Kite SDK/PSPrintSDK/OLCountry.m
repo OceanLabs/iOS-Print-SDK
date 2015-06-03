@@ -328,4 +328,8 @@
     return countries;
 }
 
+- (BOOL)isEUCountry{
+    return NO;
+}
+
 @end

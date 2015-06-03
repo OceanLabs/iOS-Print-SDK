@@ -25,6 +25,7 @@ typedef enum {
 }OLTemplateUI;
 
 @class OLProductTemplateSyncRequest;
+@class OLCountry;
 
 @interface OLProductTemplate : NSObject <NSCoding>
 @property (nonatomic, copy, readonly) NSString *identifier;
@@ -46,9 +47,11 @@ typedef enum {
 @property (strong, nonatomic) NSURL *maskImageURL;
 @property (assign, nonatomic) CGSize sizePx;
 @property (strong, nonatomic) NSURL *classPhotoURL;
+@property (strong, nonatomic) NSDictionary *shippingCosts;
 
 - (id)initWithIdentifier:(NSString *)identifier name:(NSString *)name sheetQuantity:(NSUInteger)quantity sheetCostsByCurrencyCode:(NSDictionary/*<String, NSDecimalNumber>*/*)costs enabled:(BOOL)enabled;
 - (NSDecimalNumber *)costPerSheetInCurrencyCode:(NSString *)currencyCode;
+- (NSDecimalNumber *)shippingCostForCountry:(OLCountry *)country;
 + (OLTemplateUI)templateUIWithIdentifier:(NSString *)identifier;
 + (NSString *)templateUIStringWithTemplateClass:(OLTemplateUI)templateClass;
 

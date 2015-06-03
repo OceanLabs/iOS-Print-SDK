@@ -60,6 +60,8 @@
                             NSNumber *enabledNumber = template[@"enabled"];
                             BOOL enabled = enabledNumber == nil ? YES : [enabledNumber boolValue];
                             
+                            NSDictionary *shippingCosts = [template[@"shipping_costs"] isKindOfClass:[NSDictionary class]] ? template[@"shipping_costs"] : nil;
+                            
                             if ([name isKindOfClass:[NSString class]]
                                 && [identifier isKindOfClass:[NSString class]]
                                 && [costs isKindOfClass:[NSArray class]]
@@ -175,6 +177,7 @@
                                     t.sizePx = sizePx;
                                     t.classPhotoURL = [NSURL URLWithString:classPhoto];
                                     t.imageBorder = imageBorder;
+                                    t.shippingCosts = shippingCosts;
                                     [acc addObject:t];
                                 }
                             }

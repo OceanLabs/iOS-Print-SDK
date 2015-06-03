@@ -18,4 +18,6 @@
 + (OLCountry *)countryForCode:(NSString *)code;
 + (OLCountry *)countryForCurrentLocale;
 
+- (BOOL)isEUCountry;
+
 @end
