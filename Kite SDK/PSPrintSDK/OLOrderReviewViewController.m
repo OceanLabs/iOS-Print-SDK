@@ -203,7 +203,6 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
 }
 
 - (void) deletePhotoAtIndex:(NSUInteger)index{
-    [self.assets removeObjectAtIndex:index];
     [self.userSelectedPhotos removeObjectAtIndex:index];
     [self.extraCopiesOfAssets removeObjectAtIndex:index];
     
@@ -294,7 +293,7 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     NSIndexPath *indexPath = [self.collectionView indexPathForCell:(UICollectionViewCell *)cell];
     
     OLPrintPhoto *tempPrintPhoto = [[OLPrintPhoto alloc] init];
-    tempPrintPhoto.asset = self.assets[indexPath.item];
+    tempPrintPhoto.asset = [(OLPrintPhoto *)self.userSelectedPhotos[indexPath.item] originalAsset];
     self.editingPrintPhoto = self.userSelectedPhotos[indexPath.item];
     
     UINavigationController *nav = [self.storyboard instantiateViewControllerWithIdentifier:@"CropViewNavigationController"];

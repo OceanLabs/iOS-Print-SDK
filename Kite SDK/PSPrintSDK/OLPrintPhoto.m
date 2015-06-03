@@ -23,6 +23,10 @@ static NSString *const kKeyType = @"co.oceanlabs.psprintstudio.kKeyType";
 static NSString *const kKeyAsset = @"co.oceanlabs.psprintstudio.kKeyAsset";
 static NSString *const kKeyCropTransform = @"co.oceanlabs.psprintstudio.kKeyCropTransform";
 
+static NSString *const kKeyExtraCopies = @"co.oceanlabs.psprintstudio.kKeyExtraCopies";
+static NSString *const kKeyOriginalType = @"co.oceanlabs.psprintstudio.kKeyOriginalType";
+static NSString *const kKeyOriginalAsset = @"co.oceanlabs.psprintstudio.kKeyOriginalAsset";
+
 @implementation ALAsset (isEqual)
 
 - (NSURL*)defaultURL {
@@ -44,6 +48,8 @@ static NSString *const kKeyCropTransform = @"co.oceanlabs.psprintstudio.kKeyCrop
 @interface OLPrintPhoto ()
 @property (nonatomic, strong) ALAssetsLibrary *assetsLibrary;
 @property (nonatomic, strong) UIImage *cachedCroppedThumbnailImage;
+@property (strong, nonatomic) id originalAsset;
+@property (assign, nonatomic) PrintPhotoAssetType originalType;
 @end
 
 @implementation OLPrintPhoto
@@ -56,6 +62,9 @@ static NSString *const kKeyCropTransform = @"co.oceanlabs.psprintstudio.kKeyCrop
 }
 
 - (void)setAsset:(id)asset {
+    if (!_asset){
+        _originalAsset = asset;
+    }
     _asset = asset;
     if ([asset isKindOfClass:[ALAsset class]]) {
         _type = kPrintPhotoAssetTypeALAsset;
@@ -75,6 +84,10 @@ static NSString *const kKeyCropTransform = @"co.oceanlabs.psprintstudio.kKeyCrop
 #endif
     else {
         NSAssert(NO, @"Unknown asset type of class: %@", [asset class]);
+    }
+    
+    if (_type == kPrintPhotoAssetTypeFacebookPhoto || _type == kPrintPhotoAssetTypeInstagramPhoto){
+        _originalType = _type;
     }
 }
 
@@ -363,6 +376,9 @@ static NSString *const kKeyCropTransform = @"co.oceanlabs.psprintstudio.kKeyCrop
 - (id)initWithCoder:(NSCoder *)aDecoder {
     if (self = [super init]) {
         _type = [aDecoder decodeIntForKey:kKeyType];
+        _originalType = [aDecoder decodeIntForKey:kKeyOriginalType];
+        _originalAsset = [aDecoder decodeObjectForKey:kKeyOriginalAsset];
+        _extraCopies = [aDecoder decodeIntForKey:kKeyExtraCopies];
         if (self.type == kPrintPhotoAssetTypeALAsset) {
             // This next bit of code is very broken as there is no guarantee we will actually be able to get the asset e.g. the user could
             // have long since denied us access to their library, etc. :( TODO: handle correctly
@@ -387,6 +403,9 @@ static NSString *const kKeyCropTransform = @"co.oceanlabs.psprintstudio.kKeyCrop
 
 - (void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeInteger:self.type forKey:kKeyType];
+    [aCoder encodeInteger:self.originalType forKey:kKeyOriginalType];
+    [aCoder encodeObject:self.originalAsset forKey:kKeyOriginalAsset];
+    [aCoder encodeInteger:self.extraCopies forKey:kKeyExtraCopies];
     if (self.type == kPrintPhotoAssetTypeALAsset) {
         [aCoder encodeObject:[self.asset valueForProperty:ALAssetPropertyAssetURL] forKey:kKeyAsset];
     } else {

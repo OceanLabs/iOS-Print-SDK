@@ -16,7 +16,6 @@
 @interface OLFrameOrderReviewViewController () <OLScrollCropViewControllerDelegate>
 
 @property (strong, nonatomic) NSMutableArray* framePhotos;
-@property (strong, nonatomic) NSMutableArray* frameAssets;
 @property (weak, nonatomic) OLPrintPhoto *editingPrintPhoto;
 
 @end
@@ -41,14 +40,11 @@ CGFloat margin = 2;
     // ensure order is maxed out by adding duplicates as necessary
     self.framePhotos = [[NSMutableArray alloc] init];
     [self.framePhotos addObjectsFromArray:self.userSelectedPhotos];
-    self.frameAssets = [[NSMutableArray alloc] init];
-    [self.frameAssets addObjectsFromArray:self.assets];
     NSUInteger userSelectedAssetCount = [self.framePhotos count];
     NSUInteger numOrders = (NSUInteger) floor(userSelectedAssetCount + self.product.quantityToFulfillOrder - 1) / self.product.quantityToFulfillOrder;
     NSUInteger duplicatesToFillOrder = numOrders * self.product.quantityToFulfillOrder - userSelectedAssetCount;
     for (NSUInteger i = 0; i < duplicatesToFillOrder; ++i) {
         [self.framePhotos addObject:self.userSelectedPhotos[i % userSelectedAssetCount]];
-        [self.frameAssets addObject:self.assets[i % userSelectedAssetCount]];
     }
     NSLog(@"Adding %lu duplicates to frame", (unsigned long)duplicatesToFillOrder);
     [super viewDidLoad];
@@ -71,7 +67,7 @@ CGFloat margin = 2;
     NSIndexPath* indexPath = [collectionView indexPathForItemAtPoint:[gestureRecognizer locationInView:collectionView]];
     
     self.editingPrintPhoto = self.framePhotos[(outerCollectionViewIndexPath.item) * self.product.quantityToFulfillOrder + indexPath.row];
-    self.editingPrintPhoto.asset = self.frameAssets[((outerCollectionViewIndexPath.item) * self.product.quantityToFulfillOrder + indexPath.row)];
+    self.editingPrintPhoto.asset = [(OLPrintPhoto *)self.framePhotos[((outerCollectionViewIndexPath.item) * self.product.quantityToFulfillOrder + indexPath.row)] originalAsset];
     
     UINavigationController *nav = [self.storyboard instantiateViewControllerWithIdentifier:@"CropViewNavigationController"];
     OLScrollCropViewController *cropVc = (id)nav.topViewController;
@@ -310,9 +306,6 @@ CGFloat margin = 2;
     object = [self.extraCopiesOfAssets objectAtIndex:trueFromIndex];
     [self.extraCopiesOfAssets removeObjectAtIndex:trueFromIndex];
     [self.extraCopiesOfAssets insertObject:object atIndex:trueToIndex];
-    object = [self.frameAssets objectAtIndex:trueFromIndex];
-    [self.frameAssets removeObjectAtIndex:trueFromIndex];
-    [self.frameAssets insertObject:object atIndex:trueToIndex];
 }
 
 - (void) collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath{
