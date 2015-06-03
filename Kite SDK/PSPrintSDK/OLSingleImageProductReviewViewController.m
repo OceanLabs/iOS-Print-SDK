@@ -72,7 +72,8 @@ CTAssetsPickerControllerDelegate>
     [OLAnalytics trackReviewScreenViewed:self.product.productTemplate.name];
 #endif
     
-    OLPrintPhoto *printPhoto = (OLPrintPhoto *)[self.userSelectedPhotos firstObject];
+    OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
+    printPhoto.asset = [(OLPrintPhoto *)[self.userSelectedPhotos firstObject] originalAsset];
     [printPhoto getImageWithProgress:NULL completion:^(UIImage *image){
         self.imageCropView.image = image;
     }];
@@ -278,7 +279,8 @@ CTAssetsPickerControllerDelegate>
 - (void) collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
     if (indexPath.section == [self sectionForImageCells]){
         self.imageCropView.image = nil;
-        OLPrintPhoto *printPhoto = (OLPrintPhoto *)[self.userSelectedPhotos objectAtIndex:indexPath.row];
+        OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
+        printPhoto.asset = [(OLPrintPhoto *)[self.userSelectedPhotos objectAtIndex:indexPath.row] originalAsset];
         [printPhoto getImageWithProgress:NULL completion:^(UIImage *image){
             dispatch_async(dispatch_get_main_queue(), ^{
                 self.imageCropView.image = image;
