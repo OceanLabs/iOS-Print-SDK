@@ -48,10 +48,6 @@ CGFloat margin = 2;
     }
     NSLog(@"Adding %lu duplicates to frame", (unsigned long)duplicatesToFillOrder);
     [super viewDidLoad];
-    self.extraCopiesOfAssets = [[NSMutableArray alloc] initWithCapacity:[self.framePhotos count]];
-    for (int i = 0; i < [self.framePhotos count]; i++){
-        [self.extraCopiesOfAssets addObject:@0];
-    }
     
     self.title = NSLocalizedString(@"Review", @"");
     
@@ -101,7 +97,6 @@ CGFloat margin = 2;
 
 -(void) doCheckout{
     [self changeOrderOfPhotosInArray:self.framePhotos];
-    [self changeOrderOfPhotosInArray:self.extraCopiesOfAssets];
     
     [super doCheckout];
 }
@@ -195,7 +190,7 @@ CGFloat margin = 2;
         [view.superview addConstraints:con];
         
         UILabel *countLabel = (UILabel *)[cell.contentView viewWithTag:30];
-        [countLabel setText: [NSString stringWithFormat:@"%lu", (unsigned long) (1+[((NSNumber*)[self.extraCopiesOfAssets objectAtIndex:indexPath.item]) integerValue])]];
+        [countLabel setText: [NSString stringWithFormat:@"%lu", [self.userSelectedPhotos[indexPath.item] extraCopies]]];
         
         UICollectionView* innerCollectionView = (UICollectionView*)[cell.contentView viewWithTag:20];
         
@@ -303,9 +298,6 @@ CGFloat margin = 2;
     id object = [self.framePhotos objectAtIndex:trueFromIndex];
     [self.framePhotos removeObjectAtIndex:trueFromIndex];
     [self.framePhotos insertObject:object atIndex:trueToIndex];
-    object = [self.extraCopiesOfAssets objectAtIndex:trueFromIndex];
-    [self.extraCopiesOfAssets removeObjectAtIndex:trueFromIndex];
-    [self.extraCopiesOfAssets insertObject:object atIndex:trueToIndex];
 }
 
 - (void) collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath{
