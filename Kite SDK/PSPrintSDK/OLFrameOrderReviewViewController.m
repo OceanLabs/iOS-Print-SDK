@@ -13,6 +13,16 @@
 #import <SDWebImageManager.h>
 #import "UIViewController+TraitCollectionCompatibility.h"
 
+@interface OLOrderReviewViewController (Private)
+
+- (void)updateTitleBasedOnSelectedPhotoQuanitity;
+- (BOOL) shouldGoToCheckout;
+- (void) doCheckout;
+- (void)preparePhotosForCheckout;
+-(NSUInteger) totalNumberOfExtras;
+
+@end
+
 @interface OLFrameOrderReviewViewController () <OLScrollCropViewControllerDelegate>
 
 @property (strong, nonatomic) NSMutableArray* framePhotos;
@@ -95,61 +105,22 @@ CGFloat margin = 2;
     }
 }
 
--(void) doCheckout{
+- (void)preparePhotosForCheckout{
     [self changeOrderOfPhotosInArray:self.framePhotos];
-    
-    [super doCheckout];
+    self.checkoutPhotos = self.framePhotos;
 }
 
 - (BOOL)shouldShowAddMorePhotos{
     return NO;
 }
 
+-(NSUInteger) totalNumberOfExtras{
+    return 0;
+}
+
 #pragma mark Button Actions
 
-//- (IBAction)onButtonUpArrowClicked:(UIButton *)sender {
-//    UIView* cellContentView = sender.superview;
-//    UIView* cell = cellContentView.superview;
-//    while (![cell isKindOfClass:[UITableViewCell class]]){
-//        cell = cell.superview;
-//    }
-//    NSIndexPath* indexPath = [self.tableView indexPathForCell:(UITableViewCell*)cell];
-//    
-//    for (int i = 0; i < self.product.quantityToFulfillOrder; i++){
-//        NSUInteger extraCopies = [self.extraCopiesOfAssets[(indexPath.item) * self.product.quantityToFulfillOrder + i] integerValue] + 1;
-//        self.extraCopiesOfAssets[(indexPath.item) * self.product.quantityToFulfillOrder + i] = [NSNumber numberWithInteger:extraCopies];
-//    }
-//    UILabel* countLabel = (UILabel *)[cellContentView viewWithTag:30];
-//    [countLabel setText: [NSString stringWithFormat:@"%lu", (unsigned long)[countLabel.text integerValue] + 1]];
-//    
-////    [self updateTitleBasedOnSelectedPhotoQuanitity];
-//}
-
-//- (IBAction)onButtonDownArrowClicked:(UIButton *)sender {
-//    UIView* cellContentView = sender.superview;
-//    UIView* cell = cellContentView.superview;
-//    while (![cell isKindOfClass:[UITableViewCell class]]){
-//        cell = cell.superview;
-//    }
-//    NSIndexPath* indexPath = [self.tableView indexPathForCell:(UITableViewCell*)cell];
-//    
-//    for (int i = 0; i < self.product.quantityToFulfillOrder; i++){
-//        NSUInteger extraCopies = [self.extraCopiesOfAssets[(indexPath.item) * self.product.quantityToFulfillOrder + i] integerValue];
-//        if (extraCopies == 0){
-//            return;
-//        }
-//        extraCopies--;
-//        
-//        self.extraCopiesOfAssets[(indexPath.item) * self.product.quantityToFulfillOrder + i] = [NSNumber numberWithInteger:extraCopies];
-//    }
-//    UILabel* countLabel = (UILabel *)[cellContentView viewWithTag:30];
-//    [countLabel setText: [NSString stringWithFormat:@"%lu", (unsigned long)[countLabel.text integerValue] - 1]];
-//    
-////    [self updateTitleBasedOnSelectedPhotoQuanitity];
-//}
-
 - (IBAction)onButtonNextClicked:(UIBarButtonItem *)sender {
-    self.userSelectedPhotos = self.framePhotos;
     if (![self shouldGoToCheckout]){
         return;
     }
@@ -188,9 +159,6 @@ CGFloat margin = 2;
         }
         
         [view.superview addConstraints:con];
-        
-        UILabel *countLabel = (UILabel *)[cell.contentView viewWithTag:30];
-        [countLabel setText: [NSString stringWithFormat:@"%lu", [self.userSelectedPhotos[indexPath.item] extraCopies]]];
         
         UICollectionView* innerCollectionView = (UICollectionView*)[cell.contentView viewWithTag:20];
         

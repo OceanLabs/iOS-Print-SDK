@@ -122,25 +122,17 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
 }
 
 - (void)doCheckout {
-    int originalCount = (int)[self.userSelectedPhotos count];
-    NSMutableArray* userSelectedPhotosAndExtras = [[NSMutableArray alloc] initWithCapacity:originalCount + [self totalNumberOfExtras]];
-    [userSelectedPhotosAndExtras addObjectsFromArray:self.userSelectedPhotos];
-    for (int i = 0; i < originalCount; i++) {
-        NSInteger numberOfCopies = [self.userSelectedPhotos[i] extraCopies];
-        for (NSInteger j = 0; j < numberOfCopies; j++){
-            [userSelectedPhotosAndExtras addObject:self.userSelectedPhotos[i]];
-        }
-    }
+    [self preparePhotosForCheckout];
     
     NSUInteger iphonePhotoCount = 0;
-    for (OLPrintPhoto *photo in userSelectedPhotosAndExtras) {
+    for (OLPrintPhoto *photo in self.checkoutPhotos) {
         if (photo.type == kPrintPhotoAssetTypeALAsset) ++iphonePhotoCount;
     }
     
     // Avoid uploading assets if possible. We can avoid uploading where the image already exists at a remote
     // URL and the user did not manipulate it in any way.
     NSMutableArray *photoAssets = [[NSMutableArray alloc] init];
-    for (OLPrintPhoto *photo in userSelectedPhotosAndExtras) {
+    for (OLPrintPhoto *photo in self.checkoutPhotos) {
         if(photo.type == kPrintPhotoAssetTypeOLAsset){
             [photoAssets addObject:photo.asset];
         } else {
@@ -312,6 +304,17 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
 
 - (IBAction)onButtonImageClicked:(UIButton *)sender {
     [self onButtonEnhanceClicked:sender];
+}
+
+- (void)preparePhotosForCheckout{
+    self.checkoutPhotos = [[NSMutableArray alloc] init];
+    [self.checkoutPhotos addObjectsFromArray:self.userSelectedPhotos];
+    for (int i = 0; i < self.userSelectedPhotos.count; i++) {
+        NSInteger numberOfCopies = [self.userSelectedPhotos[i] extraCopies];
+        for (NSInteger j = 0; j < numberOfCopies; j++){
+            [self.checkoutPhotos addObject:self.userSelectedPhotos[i]];
+        }
+    }
 }
 
 #pragma mark UICollectionView data source and delegate methods
