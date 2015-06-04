@@ -30,6 +30,7 @@ static NSString *const kKeyImageBorder = @"co.oceanlabs.pssdk.kKeyImageBorder";
 static NSString *const kKeyMaskImageURL = @"co.oceanlabs.pssdk.kKeymaskImageURL";
 static NSString *const kKeySizePx = @"co.oceanlabs.pssdk.kKeySizePx";
 static NSString *const kKeyClassPhotoURL = @"co.oceanlabs.pssdk.kKeyClassPhotoURL";
+static NSString *const kKeyShippingCosts = @"co.oceanlabs.pssdk.kKeyShippingCosts";
 
 static NSMutableArray *templates;
 static NSDate *lastSyncDate;
@@ -81,6 +82,46 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
 
 - (NSDecimalNumber *)costPerSheetInCurrencyCode:(NSString *)currencyCode {
     return self.costsByCurrencyCode[currencyCode];
+}
+
+- (NSDecimalNumber *)shippingCostForCountry:(OLCountry *)country{
+    NSString *currencyCode = [self currencyForCurrentLocale];
+    
+    if ([[self.shippingCosts allKeys] containsObject:country.codeAlpha3]){
+        NSString *cost = self.shippingCosts[country.codeAlpha3][currencyCode];
+        return cost ? [NSDecimalNumber decimalNumberWithString:cost] : nil;
+    }
+    else if (country.isInEurope){
+        NSString *cost = self.shippingCosts[@"europe"][currencyCode];
+        return cost ? [NSDecimalNumber decimalNumberWithString:cost] : nil;
+    }
+    else{
+        NSString *cost = self.shippingCosts[@"rest_of_world"][currencyCode];
+        return cost? [NSDecimalNumber decimalNumberWithString:cost] : nil;
+    }
+}
+
+- (NSString *)currencyForCurrentLocale {
+    NSString *code = [OLCountry countryForCurrentLocale].currencyCode;
+    if ([self.currenciesSupported containsObject:code]) {
+        return code;
+    }
+    
+    if ([self.currenciesSupported containsObject:@"USD"]) {
+        return @"USD";
+    }
+    
+    if ([self.currenciesSupported containsObject:@"GBP"]) {
+        return @"GBP";
+    }
+    
+    if ([self.currenciesSupported containsObject:@"EUR"]) {
+        return @"EUR";
+    }
+    
+    NSAssert(self.currenciesSupported.count > 0, @"This template has no costs associated with it.");
+    code = self.currenciesSupported[0]; // return the first currency supported if the user hasn't specified one explicitly
+    return code;
 }
 
 - (NSArray *)currenciesSupported {
@@ -276,6 +317,7 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
     [aCoder encodeObject:self.maskImageURL forKey:kKeyMaskImageURL];
     [aCoder encodeCGSize:self.sizePx forKey:kKeySizePx];
     [aCoder encodeObject:self.classPhotoURL forKey:kKeyClassPhotoURL];
+    [aCoder encodeObject:self.shippingCosts forKey:kKeyShippingCosts];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
@@ -299,6 +341,7 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
         _maskImageURL = [aDecoder decodeObjectForKey:kKeyMaskImageURL];
         _sizePx = [aDecoder decodeCGSizeForKey:kKeySizePx];
         _classPhotoURL = [aDecoder decodeObjectForKey:kKeyClassPhotoURL];
+        _shippingCosts = [aDecoder decodeObjectForKey:kKeyShippingCosts];
     }
     
     return self;
