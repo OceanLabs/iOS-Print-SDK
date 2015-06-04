@@ -23,7 +23,7 @@
     } else {
         [[UIApplication sharedApplication] registerForRemoteNotificationTypes:types];
     }
-    
+        
     return YES;
 }
 							
@@ -63,6 +63,10 @@
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     [OLKitePrintSDK addPushDeviceToken:deviceToken];
+}
+
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
+    [OLKitePrintSDK trackReceivedPushNotification:userInfo];
 }
 
 @end

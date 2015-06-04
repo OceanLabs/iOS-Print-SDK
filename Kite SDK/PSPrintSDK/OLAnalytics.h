@@ -23,5 +23,6 @@
 + (void)trackPaymentCompletedForOrder:(OLPrintOrder *)printOrder paymentMethod:(NSString *)method;
 + (void)trackOrderSubmission:(OLPrintOrder *)printOrder;
 + (void)addPushDeviceToken:(NSData *)deviceToken;
++ (void)trackReceivedPushNotification:(NSDictionary *)userInfo;
 
 @end

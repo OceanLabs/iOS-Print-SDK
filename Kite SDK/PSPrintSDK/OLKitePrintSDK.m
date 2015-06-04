@@ -117,6 +117,10 @@ static NSString *instagramRedirectURI = nil;
     [OLAnalytics addPushDeviceToken:deviceToken];
 }
 
++ (void)trackReceivedPushNotification:(NSDictionary *)userInfo{
+    [OLAnalytics trackReceivedPushNotification:userInfo];
+}
+
 #ifdef OL_KITE_OFFER_PAYPAL
 + (NSString *)paypalEnvironment {
     switch (environment) {

@@ -100,6 +100,12 @@ static NSString *nonNilStr(NSString *str) {
     }];
 }
 
++ (void)trackReceivedPushNotification:(NSDictionary *)userInfo{
+    NSDictionary *dict = [OLAnalytics defaultDictionaryForEventName:@"Push Received"];
+    [dict[@"properties"] setObject:userInfo forKey:@"push_userInfo"];
+    [OLAnalytics sendToMixPanelWithDictionary:dict];
+}
+
 + (void)sendToMixPanelWithDictionary:(NSDictionary *)dict{
     NSError *error;
     NSData * jsonData = [NSJSONSerialization dataWithJSONObject:dict options:NSJSONWritingPrettyPrinted error:&error];

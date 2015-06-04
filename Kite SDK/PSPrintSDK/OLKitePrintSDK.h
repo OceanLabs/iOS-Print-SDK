@@ -41,6 +41,7 @@ typedef void (^OLProductCostRefreshCompletionHandler)(NSError *error);
 + (NSString *)apiEndpoint;
 + (NSString *)apiVersion;
 + (void)addPushDeviceToken:(NSData *)deviceToken;
++ (void)trackReceivedPushNotification:(NSDictionary *)userInfo;
 
 // optionally enable Instagram photo picking functionality (you'll need to take 5 minutes to register your app https://instagram.com/developer/):
 #ifdef OL_KITE_OFFER_INSTAGRAM
