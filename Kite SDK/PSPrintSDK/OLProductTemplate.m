@@ -101,7 +101,7 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
     }
 }
 
-- (NSString *)currencyForCurrentLocale{
+- (NSString *)currencyForCurrentLocale {
     NSString *code = [OLCountry countryForCurrentLocale].currencyCode;
     if ([self.currenciesSupported containsObject:code]) {
         return code;

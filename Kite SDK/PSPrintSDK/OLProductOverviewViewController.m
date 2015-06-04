@@ -84,7 +84,7 @@
     
     NSDecimalNumber *shippingCost = [self.product.productTemplate shippingCostForCountry:[OLCountry countryForCurrentLocale]];
     if (shippingCost && [shippingCost doubleValue] != 0){
-        self.freePostageLabel.text = [NSString stringWithFormat:NSLocalizedString(@"Shipping: %@", @""), [shippingCost formatCostForCurrencyCode:[OLCountry countryForCurrentLocale].currencyCode]];
+        self.freePostageLabel.text = [NSString stringWithFormat:NSLocalizedString(@"Shipping: %@", @""), [shippingCost formatCostForCurrencyCode:[self.product.productTemplate currencyForCurrentLocale]]];
     }
     else if (!shippingCost){ // ¯\_(ツ)_/¯ don't assume 0, remove shipping information altogether
         [self.freePostageLabel removeFromSuperview];
