@@ -87,8 +87,8 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
 - (NSDecimalNumber *)shippingCostForCountry:(OLCountry *)country{
     NSString *currencyCode = [self currencyForCurrentLocale];
     
-    if ([[self.shippingCosts allKeys] containsObject:country.name]){
-        NSString *cost = self.shippingCosts[country.name][currencyCode];
+    if ([[self.shippingCosts allKeys] containsObject:country.codeAlpha3]){
+        NSString *cost = self.shippingCosts[country.codeAlpha3][currencyCode];
         return cost ? [NSDecimalNumber decimalNumberWithString:cost] : nil;
     }
     else if (country.isInEurope){
