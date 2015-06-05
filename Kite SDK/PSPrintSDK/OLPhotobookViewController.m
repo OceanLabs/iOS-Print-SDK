@@ -204,6 +204,10 @@ static const NSUInteger kTagRight = 20;
     }
     self.centerYCon = [NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.containerView.superview attribute:NSLayoutAttributeCenterY multiplier:1 constant:yOffset];
     [self.containerView.superview addConstraint:self.centerYCon];
+    
+    self.containerView.layer.shadowOffset = CGSizeMake(-10, 20);
+    self.containerView.layer.shadowRadius = 5;
+    self.containerView.layer.shadowOpacity = 0.25;
 }
 
 - (void)ios7Back{
