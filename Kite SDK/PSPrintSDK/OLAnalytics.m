@@ -132,9 +132,8 @@ static NSString *nonNilStr(NSString *str) {
              };
 }
 
-+ (void)updatePersonName:(NSString *)name email:(NSString *)email orderCount:(NSUInteger)orderCount {
++ (void)updatePersonName:(NSString *)name email:(NSString *)email phone:(NSString *)phone {
     NSString *uuid = [self userDistinctId];
-    
     
     NSMutableDictionary *setDict = [[OLAnalytics hostProperties] mutableCopy];
     
@@ -144,7 +143,11 @@ static NSString *nonNilStr(NSString *str) {
     if (email && ![email isEqualToString:@""]){
         setDict[@"email"] = email;
     }
+    if (phone && ![phone isEqualToString:@""]){
+        setDict[@"phone"] = phone;
+    }
     
+    NSUInteger orderCount = [OLPrintOrder printOrderHistory].count;
     setDict[@"Order Count"] = [[NSNumber alloc] initWithUnsignedInteger:orderCount];
     
     NSDictionary *properties = @{

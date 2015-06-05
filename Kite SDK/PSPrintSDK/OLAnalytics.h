@@ -24,5 +24,6 @@
 + (void)trackOrderSubmission:(OLPrintOrder *)printOrder;
 + (void)addPushDeviceToken:(NSData *)deviceToken;
 + (void)trackReceivedPushNotification:(NSDictionary *)userInfo;
++ (void)updatePersonName:(NSString *)name email:(NSString *)email phone:(NSString *)phone;
 
 @end
