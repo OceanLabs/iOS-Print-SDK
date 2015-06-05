@@ -197,11 +197,11 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     if (self.userSelectedPhotos.count > 0){
         [self.collectionView reloadData];
     }
+    [self updateTitleBasedOnSelectedPhotoQuanitity];
 }
 
 - (void)viewDidAppear:(BOOL)animated{
     [self updateNoSelectedPhotosView];
-    [self updateTitleBasedOnSelectedPhotoQuanitity];
     [self.collectionView.collectionViewLayout invalidateLayout];
 }
 
