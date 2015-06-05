@@ -96,6 +96,10 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    self.navigationItem.titleView = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100, 44)];
+    [(UILabel *)self.navigationItem.titleView setTextAlignment:NSTextAlignmentCenter];
+    [(UILabel *)self.navigationItem.titleView setFont:[UIFont preferredFontForTextStyle:UIFontTextStyleHeadline]];
     self.userDisabledPhotos = [[NSMutableArray alloc] init];
     
     self.galleryButton.image = [UIImage imageNamed:@"import_gallery"];
@@ -264,15 +268,15 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 
 - (void)updateTitleBasedOnSelectedPhotoQuanitity {
     if (self.userSelectedPhotos.count == 0) {
-        [self setTitle:NSLocalizedString(@"Choose Photos", @"")];
+        [(UILabel *)self.navigationItem.titleView setText:NSLocalizedString(@"Choose Photos", @"")];
     } else {
         if (self.product.quantityToFulfillOrder > 1){
             NSUInteger numOrders = 1 + (MAX(0, self.userSelectedPhotos.count - 1 + [self totalNumberOfExtras]) / self.product.quantityToFulfillOrder);
             NSUInteger quanityToFulfilOrder = numOrders * self.product.quantityToFulfillOrder;
-            [self setTitle:[NSString stringWithFormat:@"%lu / %lu", (unsigned long)self.userSelectedPhotos.count - self.userDisabledPhotos.count + [self totalNumberOfExtras], (unsigned long)quanityToFulfilOrder]];
+            [(UILabel *)self.navigationItem.titleView setText:[NSString stringWithFormat:@"%lu / %lu", (unsigned long)self.userSelectedPhotos.count - self.userDisabledPhotos.count + [self totalNumberOfExtras], (unsigned long)quanityToFulfilOrder]];
         }
         else{
-            [self setTitle:[NSString stringWithFormat:@"%lu", (unsigned long)self.userSelectedPhotos.count - self.userDisabledPhotos.count]];
+            [(UILabel *)self.navigationItem.titleView setText:[NSString stringWithFormat:@"%lu", (unsigned long)self.userSelectedPhotos.count - self.userDisabledPhotos.count]];
         }
     }
     
