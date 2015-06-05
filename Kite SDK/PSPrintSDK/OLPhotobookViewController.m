@@ -623,6 +623,7 @@ static const NSUInteger kTagRight = 20;
             self.bookClosed = NO;
             [UIView animateWithDuration:0.2 animations:^{
                 self.pagesLabelContainer.alpha = 1;
+                self.containerView.layer.shadowOpacity = 0.25;
             }];
         }];
     }];
@@ -638,6 +639,7 @@ static const NSUInteger kTagRight = 20;
     [self setUpBookCoverView];
     [UIView animateWithDuration:0.2 animations:^{
         self.pagesLabelContainer.alpha = 0;
+        self.containerView.layer.shadowOpacity = 0;
     }];
     
     [MPFlipTransition transitionFromView:self.containerView toView:self.bookCover duration:0.4 style:MPFlipStyleDirectionBackward transitionAction:MPTransitionActionShowHide completion:^(BOOL finished){
@@ -659,6 +661,7 @@ static const NSUInteger kTagRight = 20;
     [self setUpBookCoverView];
     [UIView animateWithDuration:0.2 animations:^{
         self.pagesLabelContainer.alpha = 0;
+        self.containerView.layer.shadowOpacity = 0;
     }];
     
     [UIView animateWithDuration:0.2
