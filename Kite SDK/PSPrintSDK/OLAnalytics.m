@@ -106,6 +106,70 @@ static NSString *nonNilStr(NSString *str) {
     [OLAnalytics sendToMixPanelWithDictionary:dict];
 }
 
++ (NSDictionary *)hostProperties{
+    NSString *bundleName = nil;
+    NSDictionary *info = [[NSBundle mainBundle] infoDictionary];
+    if ([info objectForKey:@"CFBundleDisplayName"] == nil) {
+        bundleName = [[[NSBundle mainBundle] infoDictionary] objectForKey:(NSString *) kCFBundleNameKey];
+    } else {
+        bundleName = [NSString stringWithFormat:@"%@", [info objectForKey:@"CFBundleDisplayName"]];
+    }
+    NSString *appVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"];
+    NSString *apiKey = [OLKitePrintSDK apiKey] == nil ? @"Unknown" : [OLKitePrintSDK apiKey];
+    
+    return @{
+             @"App Bundle Id" : [[NSBundle mainBundle] bundleIdentifier],
+             @"App Name" : bundleName,
+             @"App Version" : appVersion,
+             @"platform" : @"iOS",
+             @"platform version" : [[UIDevice currentDevice] systemVersion],
+             @"model" : [OLAnalytics platform],
+             @"Screen Height" : @([UIScreen mainScreen].bounds.size.height),
+             @"Screen Width" : @([UIScreen mainScreen].bounds.size.width),
+             @"API Key": apiKey,
+             @"Kite SDK Version": kOLKiteSDKVersion,
+             @"environment": [self environment]
+             };
+}
+
++ (void)updatePersonName:(NSString *)name email:(NSString *)email orderCount:(NSUInteger)orderCount {
+    NSString *uuid = [self userDistinctId];
+    
+    
+    NSMutableDictionary *setDict = [[OLAnalytics hostProperties] mutableCopy];
+    
+    if (name && ![name isEqualToString:@""]){
+        setDict[@"full_name"] = name;
+    }
+    if (email && ![email isEqualToString:@""]){
+        setDict[@"email"] = email;
+    }
+    
+    setDict[@"Order Count"] = [[NSNumber alloc] initWithUnsignedInteger:orderCount];
+    
+    NSDictionary *properties = @{
+                                 @"uuid": uuid,
+                                 @"set" : setDict
+                                 };
+    
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    manager.requestSerializer = [AFJSONRequestSerializer serializer];
+    [manager.requestSerializer setValue:[NSString stringWithFormat:@"apikey %@", [OLKitePrintSDK apiKey]] forHTTPHeaderField:@"Authorization"];
+    [manager.requestSerializer setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    [manager POST:[NSString stringWithFormat:@"%@/v1.4/person/", [OLKitePrintSDK apiEndpoint]] parameters:properties success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        if ([operation.response statusCode] >= 200 && [operation.response statusCode] <= 299){
+            NSLog(@"Successfully updated customer details");
+        }
+        else{
+            NSLog(@"There was an error posting the customer details: %ld", (long)[operation.response statusCode]);
+        }
+        
+    }failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"There was an error posting the customer details: %@", error);
+    }];
+    
+}
+
 + (void)sendToMixPanelWithDictionary:(NSDictionary *)dict{
     NSError *error;
     NSData * jsonData = [NSJSONSerialization dataWithJSONObject:dict options:NSJSONWritingPrettyPrinted error:&error];
