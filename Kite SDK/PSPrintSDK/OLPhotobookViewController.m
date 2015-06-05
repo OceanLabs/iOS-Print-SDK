@@ -136,7 +136,7 @@ static const NSUInteger kTagRight = 20;
     
     if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0){
         UIVisualEffect *blurEffect;
-        blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleDark];
+        blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
         
         self.visualEffectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
         UIView *view = self.visualEffectView;
@@ -196,7 +196,7 @@ static const NSUInteger kTagRight = 20;
     
     [self.pagesLabelContainer makeRoundRect];
     
-    self.pagesLabel.text = [NSString stringWithFormat:@"Pages %d-%d of %ld", 1, 2, (long)self.product.quantityToFulfillOrder];
+    self.pagesLabel.text = [NSString stringWithFormat:@"%d-%d of %ld", 1, 2, (long)self.product.quantityToFulfillOrder];
     
     CGFloat yOffset = ([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height)/2.0;
     if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8){
