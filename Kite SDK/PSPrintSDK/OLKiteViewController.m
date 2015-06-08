@@ -84,6 +84,10 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
     }
     
     [OLKitePrintSDK fetchRemotePlist];
+    
+    if ([OLKitePrintSDK environment] == kOLKitePrintSDKEnvironmentLive){
+        [[self.view viewWithTag:9999] removeFromSuperview];
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated {
