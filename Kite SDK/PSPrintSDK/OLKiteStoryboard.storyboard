@@ -1750,11 +1750,11 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HqC-Iz-l8f" userLabel="bookCover">
-                                <rect key="frame" x="0.0" y="151" width="660" height="330"/>
+                                <rect key="frame" x="30" y="151" width="660" height="330"/>
                                 <color key="backgroundColor" red="0.74509803919999995" green="0.80000000000000004" blue="0.81568627449999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rlk-bS-4UT" userLabel="Container View">
-                                <rect key="frame" x="0.0" y="151" width="660" height="330"/>
+                                <rect key="frame" x="30" y="151" width="660" height="330"/>
                                 <subviews>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="book" translatesAutoresizingMaskIntoConstraints="NO" id="UgD-45-FUC">
                                         <rect key="frame" x="0.0" y="0.0" width="660" height="330"/>
@@ -1771,7 +1771,7 @@
                                 </constraints>
                             </view>
                             <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8NO-a3-rcI">
-                                <rect key="frame" x="8" y="489" width="10" height="20.5"/>
+                                <rect key="frame" x="12" y="489" width="10" height="20.5"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
@@ -1822,7 +1822,7 @@
                             <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="Tdl-Mn-UXO" secondAttribute="trailing" constant="8" id="oEZ-U7-b1b"/>
                             <constraint firstItem="Tdl-Mn-UXO" firstAttribute="leading" secondItem="rlk-bS-4UT" secondAttribute="trailing" priority="250" constant="8" id="qbJ-3X-I2J"/>
                             <constraint firstItem="rlk-bS-4UT" firstAttribute="leading" secondItem="HqC-Iz-l8f" secondAttribute="leading" id="tmB-a5-HON"/>
-                            <constraint firstItem="rlk-bS-4UT" firstAttribute="leading" secondItem="xrD-7k-Kti" secondAttribute="leading" priority="750" id="u6Z-cg-ERF"/>
+                            <constraint firstItem="rlk-bS-4UT" firstAttribute="leading" secondItem="xrD-7k-Kti" secondAttribute="leading" priority="750" constant="30" id="u6Z-cg-ERF"/>
                             <constraint firstItem="rlk-bS-4UT" firstAttribute="top" secondItem="HqC-Iz-l8f" secondAttribute="top" id="vq9-7i-r4T"/>
                             <constraint firstAttribute="centerY" secondItem="rlk-bS-4UT" secondAttribute="centerY" constant="-16" placeholder="YES" id="xQu-oT-r6s"/>
                         </constraints>
