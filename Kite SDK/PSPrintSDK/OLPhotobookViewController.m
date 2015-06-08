@@ -21,7 +21,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 static const NSUInteger kTagLeft = 10;
 static const NSUInteger kTagRight = 20;
 static const CGFloat kBookAnimationTime = 0.4;
-static const CGFloat kBookEdgePadding = 30;
+static const CGFloat kBookEdgePadding = 38;
 
 @interface OLKitePrintSDK (InternalUtils)
 + (NSString *)userEmail:(UIViewController *)topVC;
@@ -105,14 +105,14 @@ static const CGFloat kBookEdgePadding = 30;
     self.centerXCon = [NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.containerView.superview attribute:NSLayoutAttributeCenterX multiplier:1 constant:0];
     if (self.view.frame.size.width > self.view.frame.size.height){
         [self.containerView.superview addConstraint:self.centerXCon];
-        self.widthCon = [NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationLessThanOrEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:self.view.frame.size.width - 20 - kBookEdgePadding];
+        self.widthCon = [NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationLessThanOrEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:self.view.frame.size.width - 20 - kBookEdgePadding * 2];
     }
     else{
-        self.widthCon = [NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationLessThanOrEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:(self.view.frame.size.width - kBookEdgePadding) * 1.9];
+        self.widthCon = [NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationLessThanOrEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:(self.view.frame.size.width - kBookEdgePadding * 2) * 1.9];
     }
     
     [self.view addConstraint:self.widthCon];
-    self.widthCon2 = [NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:(self.view.frame.size.width - kBookEdgePadding) * 1.9];
+    self.widthCon2 = [NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:(self.view.frame.size.width - kBookEdgePadding * 2) * 1.9];
     self.widthCon2.priority = UILayoutPriorityDefaultHigh;
     [self.view addConstraint:self.widthCon2];
     
@@ -249,11 +249,11 @@ static const CGFloat kBookEdgePadding = 30;
     [self.view removeConstraint:self.widthCon];
     if (size.width > size.height){
         [self.view addConstraint:self.centerXCon];
-        self.widthCon = [NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationLessThanOrEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:size.width - 20 - kBookEdgePadding];
+        self.widthCon = [NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationLessThanOrEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:size.width - 20 - kBookEdgePadding * 2];
     }
     else{
         [self.view removeConstraint:self.centerXCon];
-        self.widthCon = [NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationLessThanOrEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:size.width * 1.9];
+        self.widthCon = [NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationLessThanOrEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:(size.width - kBookEdgePadding * 2)* 1.9];
     }
     [self.view addConstraint:self.widthCon];
     
@@ -767,7 +767,7 @@ static const CGFloat kBookEdgePadding = 30;
 }
 
 - (CGFloat)xTrasformForBookAtRightEdge{
-    return self.view.frame.size.width - self.containerView.frame.size.width - kBookEdgePadding;
+    return self.view.frame.size.width - self.containerView.frame.size.width - kBookEdgePadding * 2;
 }
 
 - (BOOL)isContainerViewAtRightEdge:(BOOL)useFrame{
@@ -779,7 +779,7 @@ static const CGFloat kBookEdgePadding = 30;
         return self.containerView.transform.tx <= [self xTrasformForBookAtRightEdge];
     }
     else{
-        return self.containerView.frame.origin.x <= [self xTrasformForBookAtRightEdge];
+        return self.containerView.frame.origin.x - kBookEdgePadding <= [self xTrasformForBookAtRightEdge];
     }
 }
 
