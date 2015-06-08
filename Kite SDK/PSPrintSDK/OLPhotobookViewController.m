@@ -271,7 +271,9 @@ static const CGFloat bookAnimationTime = 0.4;
         
         self.centerYCon = [NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.containerView.superview attribute:NSLayoutAttributeCenterY multiplier:1 constant:([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height)/2.0];
         [self.containerView.superview addConstraint:self.centerYCon];
-    }completion:NULL];
+    }completion:^(id<UIViewControllerTransitionCoordinator> context){
+        self.containerView.layer.shadowOpacity = 0;
+    }];
 }
 
 - (CGFloat) productAspectRatio{
