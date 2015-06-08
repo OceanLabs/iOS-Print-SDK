@@ -20,6 +20,7 @@
 static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 static const NSUInteger kTagLeft = 10;
 static const NSUInteger kTagRight = 20;
+static const CGFloat bookAnimationTime = 0.4;
 
 @interface OLKitePrintSDK (InternalUtils)
 + (NSString *)userEmail:(UIViewController *)topVC;
@@ -205,9 +206,14 @@ static const NSUInteger kTagRight = 20;
     self.centerYCon = [NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.containerView.superview attribute:NSLayoutAttributeCenterY multiplier:1 constant:yOffset];
     [self.containerView.superview addConstraint:self.centerYCon];
     
-    self.containerView.layer.shadowOffset = CGSizeMake(-10, 20);
+    self.bookCover.layer.shadowOffset = CGSizeMake(-10, 10);
+    self.bookCover.layer.shadowRadius = 5;
+    self.bookCover.layer.shadowOpacity = 0.25;
+    
+    self.containerView.layer.shadowOffset = CGSizeMake(-10, 10);
     self.containerView.layer.shadowRadius = 5;
     self.containerView.layer.shadowOpacity = 0.25;
+    
 }
 
 - (void)ios7Back{
@@ -546,7 +552,7 @@ static const NSUInteger kTagRight = 20;
         //        self.leftPageLabel.text = [NSString stringWithFormat:@"%ld", (long)vc1.pageIndex+1];
         //        self.rightPageLabel.text = [NSString stringWithFormat:@"%ld", (long)vc2.pageIndex+1];
         
-        [UIView animateWithDuration:0.2 animations:^{
+        [UIView animateWithDuration:bookAnimationTime/2.0 animations:^{
             if ([(OLPhotobookPageContentViewController *)[previousViewControllers firstObject] pageIndex] < vc1.pageIndex){
                 self.containerView.transform = CGAffineTransformIdentity;
             }
@@ -612,18 +618,40 @@ static const NSUInteger kTagRight = 20;
         return;
     }
     self.animating = YES;
-    [UIView animateWithDuration:0.4 animations:^{
+    
+    //Fade out shadow of the half-book.
+    UIView *closedPage = [self.bookCover viewWithTag:sender.view.tag];
+    CABasicAnimation *showAnim = [CABasicAnimation animationWithKeyPath:@"shadowOpacity"];
+    showAnim.fromValue = [NSNumber numberWithFloat:0.25];
+    showAnim.toValue = [NSNumber numberWithFloat:0.0];
+    showAnim.duration = bookAnimationTime/2.0;
+    showAnim.beginTime = CACurrentMediaTime() + bookAnimationTime/2.0;
+    showAnim.removedOnCompletion = NO;
+    showAnim.fillMode = kCAFillModeForwards;
+    [closedPage.layer addAnimation:showAnim forKey:@"shadowOpacity"];
+    
+    //Fade in shadow of the book cover
+    CABasicAnimation *hideAnim = [CABasicAnimation animationWithKeyPath:@"shadowOpacity"];
+    hideAnim.fromValue = [NSNumber numberWithFloat:0.0];
+    hideAnim.toValue = [NSNumber numberWithFloat:0.25];
+    hideAnim.duration = bookAnimationTime/2.0;
+    hideAnim.beginTime = CACurrentMediaTime() + bookAnimationTime/2.0;
+    hideAnim.removedOnCompletion = NO;
+    hideAnim.fillMode = kCAFillModeForwards;
+    [self.bookCover.layer addAnimation:hideAnim forKey:@"shadowOpacity"];
+    
+    [UIView animateWithDuration:bookAnimationTime animations:^{
         self.bookCover.transform = CGAffineTransformIdentity;
         self.containerView.transform = CGAffineTransformIdentity;
     }completion:^(BOOL completed){
         MPFlipStyle style = sender.view.tag == kTagRight ? MPFlipStyleDefault : MPFlipStyleDirectionBackward;
-        [MPFlipTransition transitionFromView:self.bookCover toView:self.containerView duration:0.4 style:style transitionAction:MPTransitionActionShowHide completion:^(BOOL finished){
+        [MPFlipTransition transitionFromView:self.bookCover toView:self.containerView duration:bookAnimationTime style:style transitionAction:MPTransitionActionShowHide completion:^(BOOL finished){
             self.animating = NO;
+            self.containerView.layer.shadowOpacity = 0.25;
             self.bookCover.hidden = YES;
             self.bookClosed = NO;
-            [UIView animateWithDuration:0.2 animations:^{
+            [UIView animateWithDuration:bookAnimationTime/2.0 animations:^{
                 self.pagesLabelContainer.alpha = 1;
-                self.containerView.layer.shadowOpacity = 0.25;
             }];
         }];
     }];
@@ -637,15 +665,39 @@ static const NSUInteger kTagRight = 20;
     }
     self.animating = YES;
     [self setUpBookCoverView];
-    [UIView animateWithDuration:0.2 animations:^{
+    
+    // Turn off containerView shadow because we will be animating that. Will use bookCover view shadow for the duration of the animation.
+    self.containerView.layer.shadowOpacity = 0;
+    
+    //Fade in shadow of the half-book.
+    UIView *closedPage = [self.bookCover viewWithTag:kTagRight];
+    closedPage.layer.shadowOffset = CGSizeMake(-10, 10);
+    closedPage.layer.shadowRadius = 5;
+    closedPage.layer.shadowOpacity = 0.0;
+    CABasicAnimation *showAnim = [CABasicAnimation animationWithKeyPath:@"shadowOpacity"];
+    showAnim.fromValue = [NSNumber numberWithFloat:0.0];
+    showAnim.toValue = [NSNumber numberWithFloat:0.25];
+    showAnim.duration = bookAnimationTime/2.0;
+    [closedPage.layer addAnimation:showAnim forKey:@"shadowOpacity"];
+    closedPage.layer.shadowOpacity = 0.25;
+    
+    //Fade out shadow of the book cover
+    CABasicAnimation *hideAnim = [CABasicAnimation animationWithKeyPath:@"shadowOpacity"];
+    hideAnim.fromValue = [NSNumber numberWithFloat:0.25];
+    hideAnim.toValue = [NSNumber numberWithFloat:0.0];
+    hideAnim.duration = bookAnimationTime/2.0;
+    [self.bookCover.layer addAnimation:hideAnim forKey:@"shadowOpacity"];
+    self.bookCover.layer.shadowOpacity = 0.0;
+    
+    
+    [UIView animateWithDuration:bookAnimationTime/2.0 animations:^{
         self.pagesLabelContainer.alpha = 0;
-        self.containerView.layer.shadowOpacity = 0;
     }];
     
-    [MPFlipTransition transitionFromView:self.containerView toView:self.bookCover duration:0.4 style:MPFlipStyleDirectionBackward transitionAction:MPTransitionActionShowHide completion:^(BOOL finished){
+    [MPFlipTransition transitionFromView:self.containerView toView:self.bookCover duration:bookAnimationTime style:MPFlipStyleDirectionBackward transitionAction:MPTransitionActionShowHide completion:^(BOOL finished){
         self.animating = NO;
         if (![self isContainerViewAtRightEdge:NO]){
-            [UIView animateWithDuration:0.2 animations:^{
+            [UIView animateWithDuration:bookAnimationTime/2.0 animations:^{
                 self.containerView.transform = CGAffineTransformMakeTranslation([self xTrasformForBookAtRightEdge], 0);
                 self.bookCover.transform = CGAffineTransformMakeTranslation([self xTrasformForBookAtRightEdge], 0);
             }];
@@ -659,19 +711,42 @@ static const NSUInteger kTagRight = 20;
     }
     self.animating = YES;
     [self setUpBookCoverView];
-    [UIView animateWithDuration:0.2 animations:^{
+    
+    // Turn off containerView shadow because we will be animating that. Will use bookCover view shadow for the duration of the animation.
+    self.containerView.layer.shadowOpacity = 0;
+    
+    //Fade in shadow of the half-book.
+    UIView *closedPage = [self.bookCover viewWithTag:kTagLeft];
+    closedPage.layer.shadowOffset = CGSizeMake(-10, 10);
+    closedPage.layer.shadowRadius = 5;
+    closedPage.layer.shadowOpacity = 0.0;
+    CABasicAnimation *showAnim = [CABasicAnimation animationWithKeyPath:@"shadowOpacity"];
+    showAnim.fromValue = [NSNumber numberWithFloat:0.0];
+    showAnim.toValue = [NSNumber numberWithFloat:0.25];
+    showAnim.duration = bookAnimationTime/2.0;
+    [closedPage.layer addAnimation:showAnim forKey:@"shadowOpacity"];
+    closedPage.layer.shadowOpacity = 0.25;
+    
+    //Fade out shadow of the book cover
+    CABasicAnimation *hideAnim = [CABasicAnimation animationWithKeyPath:@"shadowOpacity"];
+    hideAnim.fromValue = [NSNumber numberWithFloat:0.25];
+    hideAnim.toValue = [NSNumber numberWithFloat:0.0];
+    hideAnim.duration = bookAnimationTime/2.0;
+    [self.bookCover.layer addAnimation:hideAnim forKey:@"shadowOpacity"];
+    self.bookCover.layer.shadowOpacity = 0.0;
+    
+    [UIView animateWithDuration:bookAnimationTime/2.0 animations:^{
         self.pagesLabelContainer.alpha = 0;
-        self.containerView.layer.shadowOpacity = 0;
     }];
     
-    [UIView animateWithDuration:0.2
+    [UIView animateWithDuration:bookAnimationTime/2.0
                           delay:0
                         options:UIViewAnimationOptionBeginFromCurrentState
                      animations:^{
                          self.containerView.transform = CGAffineTransformIdentity;
                          self.bookCover.transform = CGAffineTransformIdentity;
                      } completion:^(BOOL finished){
-                         [MPFlipTransition transitionFromView:self.containerView toView:self.bookCover duration:0.4 style:MPFlipStyleDefault transitionAction:MPTransitionActionShowHide completion:^(BOOL finished){
+                         [MPFlipTransition transitionFromView:self.containerView toView:self.bookCover duration:bookAnimationTime style:MPFlipStyleDefault transitionAction:MPTransitionActionShowHide completion:^(BOOL finished){
                              self.animating = NO;
                          }];
                          self.bookClosed = YES;
