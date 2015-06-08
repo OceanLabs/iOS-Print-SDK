@@ -209,10 +209,14 @@ static const CGFloat bookAnimationTime = 0.4;
     self.bookCover.layer.shadowOffset = CGSizeMake(-10, 10);
     self.bookCover.layer.shadowRadius = 5;
     self.bookCover.layer.shadowOpacity = 0.25;
+    self.bookCover.layer.shouldRasterize = YES;
+    self.bookCover.layer.rasterizationScale = [UIScreen mainScreen].scale;
     
     self.containerView.layer.shadowOffset = CGSizeMake(-10, 10);
     self.containerView.layer.shadowRadius = 5;
     self.containerView.layer.shadowOpacity = 0.25;
+    self.containerView.layer.shouldRasterize = YES;
+    self.containerView.layer.rasterizationScale = [UIScreen mainScreen].scale;
     
 }
 
@@ -582,6 +586,12 @@ static const CGFloat bookAnimationTime = 0.4;
             halfBookCoverImage.userInteractionEnabled = YES;
             [halfBookCoverImage addGestureRecognizer:tap];
             [halfBookCoverImage addGestureRecognizer:swipe];
+            
+            halfBookCoverImage.layer.shadowOffset = CGSizeMake(-10, 10);
+            halfBookCoverImage.layer.shadowRadius = 5;
+            halfBookCoverImage.layer.shadowOpacity = 0.0;
+            halfBookCoverImage.layer.shouldRasterize = YES;
+            halfBookCoverImage.layer.rasterizationScale = [UIScreen mainScreen].scale;
         }
         halfBookCoverImage.frame = CGRectMake(self.bookCover.frame.size.width / 2.0, 0, self.bookCover.frame.size.width / 2.0, self.bookCover.frame.size.height);
         [self.bookCover viewWithTag:kTagRight].hidden = NO;
@@ -597,6 +607,12 @@ static const CGFloat bookAnimationTime = 0.4;
             halfBookCoverImage.userInteractionEnabled = YES;
             [halfBookCoverImage addGestureRecognizer:tap];
             [halfBookCoverImage addGestureRecognizer:swipe];
+            
+            halfBookCoverImage.layer.shadowOffset = CGSizeMake(-10, 10);
+            halfBookCoverImage.layer.shadowRadius = 5;
+            halfBookCoverImage.layer.shadowOpacity = 0.0;
+            halfBookCoverImage.layer.shouldRasterize = YES;
+            halfBookCoverImage.layer.rasterizationScale = [UIScreen mainScreen].scale;
         }
         halfBookCoverImage.frame = CGRectMake(0, 0, self.bookCover.frame.size.width / 2.0, self.bookCover.frame.size.height);
         [self.bookCover viewWithTag:kTagLeft].hidden = NO;
@@ -619,31 +635,31 @@ static const CGFloat bookAnimationTime = 0.4;
     }
     self.animating = YES;
     
-    //Fade out shadow of the half-book.
-    UIView *closedPage = [self.bookCover viewWithTag:sender.view.tag];
-    CABasicAnimation *showAnim = [CABasicAnimation animationWithKeyPath:@"shadowOpacity"];
-    showAnim.fromValue = [NSNumber numberWithFloat:0.25];
-    showAnim.toValue = [NSNumber numberWithFloat:0.0];
-    showAnim.duration = bookAnimationTime/2.0;
-    showAnim.beginTime = CACurrentMediaTime() + bookAnimationTime/2.0;
-    showAnim.removedOnCompletion = NO;
-    showAnim.fillMode = kCAFillModeForwards;
-    [closedPage.layer addAnimation:showAnim forKey:@"shadowOpacity"];
-    
-    //Fade in shadow of the book cover
-    CABasicAnimation *hideAnim = [CABasicAnimation animationWithKeyPath:@"shadowOpacity"];
-    hideAnim.fromValue = [NSNumber numberWithFloat:0.0];
-    hideAnim.toValue = [NSNumber numberWithFloat:0.25];
-    hideAnim.duration = bookAnimationTime/2.0;
-    hideAnim.beginTime = CACurrentMediaTime() + bookAnimationTime/2.0;
-    hideAnim.removedOnCompletion = NO;
-    hideAnim.fillMode = kCAFillModeForwards;
-    [self.bookCover.layer addAnimation:hideAnim forKey:@"shadowOpacity"];
-    
     [UIView animateWithDuration:bookAnimationTime animations:^{
         self.bookCover.transform = CGAffineTransformIdentity;
         self.containerView.transform = CGAffineTransformIdentity;
     }completion:^(BOOL completed){
+        //Fade out shadow of the half-book.
+        UIView *closedPage = [self.bookCover viewWithTag:sender.view.tag];
+        CABasicAnimation *showAnim = [CABasicAnimation animationWithKeyPath:@"shadowOpacity"];
+        showAnim.fromValue = [NSNumber numberWithFloat:0.25];
+        showAnim.toValue = [NSNumber numberWithFloat:0.0];
+        showAnim.duration = bookAnimationTime/2.0;
+        showAnim.beginTime = CACurrentMediaTime() + bookAnimationTime/2.0;
+        showAnim.removedOnCompletion = NO;
+        showAnim.fillMode = kCAFillModeForwards;
+        [closedPage.layer addAnimation:showAnim forKey:@"shadowOpacity"];
+        
+        //Fade in shadow of the book cover
+        CABasicAnimation *hideAnim = [CABasicAnimation animationWithKeyPath:@"shadowOpacity"];
+        hideAnim.fromValue = [NSNumber numberWithFloat:0.0];
+        hideAnim.toValue = [NSNumber numberWithFloat:0.25];
+        hideAnim.duration = bookAnimationTime/2.0;
+        hideAnim.beginTime = CACurrentMediaTime() + bookAnimationTime/2.0;
+        hideAnim.removedOnCompletion = NO;
+        hideAnim.fillMode = kCAFillModeForwards;
+        [self.bookCover.layer addAnimation:hideAnim forKey:@"shadowOpacity"];
+        
         MPFlipStyle style = sender.view.tag == kTagRight ? MPFlipStyleDefault : MPFlipStyleDirectionBackward;
         [MPFlipTransition transitionFromView:self.bookCover toView:self.containerView duration:bookAnimationTime style:style transitionAction:MPTransitionActionShowHide completion:^(BOOL finished){
             self.animating = NO;
@@ -671,9 +687,6 @@ static const CGFloat bookAnimationTime = 0.4;
     
     //Fade in shadow of the half-book.
     UIView *closedPage = [self.bookCover viewWithTag:kTagRight];
-    closedPage.layer.shadowOffset = CGSizeMake(-10, 10);
-    closedPage.layer.shadowRadius = 5;
-    closedPage.layer.shadowOpacity = 0.0;
     CABasicAnimation *showAnim = [CABasicAnimation animationWithKeyPath:@"shadowOpacity"];
     showAnim.fromValue = [NSNumber numberWithFloat:0.0];
     showAnim.toValue = [NSNumber numberWithFloat:0.25];
@@ -717,9 +730,6 @@ static const CGFloat bookAnimationTime = 0.4;
     
     //Fade in shadow of the half-book.
     UIView *closedPage = [self.bookCover viewWithTag:kTagLeft];
-    closedPage.layer.shadowOffset = CGSizeMake(-10, 10);
-    closedPage.layer.shadowRadius = 5;
-    closedPage.layer.shadowOpacity = 0.0;
     CABasicAnimation *showAnim = [CABasicAnimation animationWithKeyPath:@"shadowOpacity"];
     showAnim.fromValue = [NSNumber numberWithFloat:0.0];
     showAnim.toValue = [NSNumber numberWithFloat:0.25];
