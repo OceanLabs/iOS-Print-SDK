@@ -8,59 +8,49 @@
 
 #import "OLProductHomeViewController.h"
 #import "OLProductOverviewViewController.h"
-#import "UITableViewController+ScreenWidthFactor.h"
-
+#import "OLProductTypeSelectionViewController.h"
 #import "OLProductTemplate.h"
 #import "OLProduct.h"
 #import "OLKiteViewController.h"
 #import "OLKitePrintSDK.h"
 #import "OLPosterSizeSelectionViewController.h"
 #import "OLAnalytics.h"
+#import "OLProductGroup.h"
+#import "NSObject+Utils.h"
+#import "OLCustomNavigationController.h"
+#import "UIViewController+TraitCollectionCompatibility.h"
+#import "UIImageView+FadeIn.h"
 
-@interface OLProductHomeViewController ()
-@property (nonatomic, strong) NSArray *products;
+#define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
+
+@interface OLProduct (Private)
+
+-(void)setCoverImageToImageView:(UIImageView *)imageView;
+-(void)setClassImageToImageView:(UIImageView *)imageView;
+-(void)setProductPhotography:(NSUInteger)i toImageView:(UIImageView *)imageView;
+
+@end
+
+@interface OLKiteViewController (Private)
+
++ (NSString *)storyboardIdentifierForGroupSelected:(OLProductGroup *)group;
+
+@end
+
+@interface OLProductHomeViewController () <UICollectionViewDelegateFlowLayout>
+@property (nonatomic, strong) NSArray *productGroups;
 @property (nonatomic, strong) UIImageView *topSurpriseImageView;
-@property (nonatomic, strong) UIView *huggleBotSpeechBubble;
-@property (nonatomic, weak) IBOutlet UILabel *huggleBotFriendNameLabel;
-@property (weak, nonatomic) IBOutlet UILabel *letsStartLabel;
-@property (nonatomic, assign) BOOL startHuggleBotOnViewWillAppear;
+@property (assign, nonatomic) BOOL fromRotation;
 @end
 
 @implementation OLProductHomeViewController
 
--(NSArray *) products{
-    if (!_products){
-        _products = [OLKitePrintSDK enabledProducts] ? [OLKitePrintSDK enabledProducts] : [OLProduct products];
-        NSMutableArray *mutableProducts = [_products mutableCopy];
-        BOOL haveAtLeastOnePoster = NO;
-        BOOL haveAtLeastOneFrame = NO;
-        for (OLProduct *product in _products){
-            if (!product.labelColor){
-                [mutableProducts removeObject:product];
-            }
-            if (product.productTemplate.templateClass == kOLTemplateClassNA){
-                [mutableProducts removeObject:product];
-            }
-            if (product.productTemplate.templateClass == kOLTemplateClassFrame){
-                if (haveAtLeastOneFrame){
-                    [mutableProducts removeObject:product];
-                }
-                else{
-                    haveAtLeastOneFrame = YES;
-                }
-            }
-            if (product.productTemplate.templateClass == kOLTemplateClassPoster){
-                if (haveAtLeastOnePoster){
-                    [mutableProducts removeObject:product];
-                }
-                else{
-                    haveAtLeastOnePoster = YES;
-                }
-            }
-        }
-        _products = mutableProducts;
+- (NSArray *)productGroups {
+    if (!_productGroups){
+        _productGroups = [OLProductGroup groupsWithFilters:self.filterProducts];
     }
-    return _products;
+    
+    return _productGroups;
 }
 
 - (void)viewDidLoad {
@@ -71,6 +61,10 @@
 #endif
 
     self.title = NSLocalizedString(@"Print Shop", @"");
+    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Back", @"")
+                                                                             style:UIBarButtonItemStyleBordered
+                                                                            target:nil
+                                                                            action:nil];
 }
 
 
@@ -78,75 +72,137 @@
     [super viewWillAppear:animated];
 }
 
--(void)viewDidAppear:(BOOL)animated{
-    if (self.navigationController){
-        NSMutableArray *navigationStack = self.navigationController.viewControllers.mutableCopy;
-        if (navigationStack.count > 1 && [navigationStack[navigationStack.count - 2] isKindOfClass:[OLKiteViewController class]]) {
-            OLKiteViewController *kiteVc = navigationStack[navigationStack.count - 2];
-            if (!kiteVc.presentingViewController){
-                [navigationStack removeObject:kiteVc];
-                self.navigationController.viewControllers = navigationStack;
-            }
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+
+    self.fromRotation = YES;
+    NSArray *visibleCells = [self.collectionView indexPathsForVisibleItems];
+    NSIndexPath *maxIndexPath = [visibleCells firstObject];
+    for (NSIndexPath *indexPath in visibleCells){
+        if (maxIndexPath.item < indexPath.item){
+            maxIndexPath = indexPath;
         }
     }
+    
+    [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinator> context){
+        [self.collectionView.collectionViewLayout invalidateLayout];
+    }completion:^(id<UIViewControllerTransitionCoordinator> context){
+        [self.collectionView reloadData];
+    }];
 }
 
-#pragma mark - UITableViewDelegate Methods
+#pragma mark - UICollectionViewDelegate Methods
 
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return 233 * [self screenWidthFactor];
-}
-
--(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    OLProduct *product = self.products[indexPath.row];
-    if (product.productTemplate.templateClass == kOLTemplateClassPoster){
-        OLPosterSizeSelectionViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"sizeSelect"];
-        vc.assets = self.assets;
-        vc.delegate = self.delegate;
-        [self.navigationController pushViewController:vc animated:YES];
+- (CGSize) collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
+    CGSize size = self.view.bounds.size;
+    NSInteger numberOfCells = [self collectionView:collectionView numberOfItemsInSection:indexPath.section];
+    CGFloat halfScreenHeight = (size.height - [[UIApplication sharedApplication] statusBarFrame].size.height - self.navigationController.navigationBar.frame.size.height)/2;
+    
+    if ([self isHorizontalSizeClassCompact] && size.height > size.width) {
+        if (numberOfCells == 2){
+            return CGSizeMake(size.width, halfScreenHeight);
+        }
+        else{
+            return CGSizeMake(size.width, 233 * (size.width / 320.0));
+        }
+    }
+    else if (numberOfCells == 6){
+        return CGSizeMake(size.width/2 - 1, MAX(halfScreenHeight * (2.0 / 3.0), 233));
+    }
+    else if (numberOfCells == 4){
+        return CGSizeMake(size.width/2 - 1, MAX(halfScreenHeight, 233));
+    }
+    else if (numberOfCells == 2){
+        if (size.width < size.height){
+            return CGSizeMake(size.width, halfScreenHeight);
+        }
+        else{
+            return CGSizeMake(size.width/2 - 1, halfScreenHeight * 2);
+        }
     }
     else{
-        OLProductOverviewViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLProductOverviewViewController"];
-        vc.assets = self.assets;
-        vc.product = product;
-        vc.delegate = self.delegate;
-        [self.navigationController pushViewController:vc animated:YES];
+        return CGSizeMake(size.width/2 - 1, 233);
     }
-    
 }
 
-#pragma mark - UITableViewDataSource Methods
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
+    if (indexPath.item >= self.productGroups.count){
+        return;
+    }
+    
+    OLProductGroup *group = self.productGroups[indexPath.row];
+    OLProduct *product = [group.products firstObject];
+    NSString *identifier = [OLKiteViewController storyboardIdentifierForGroupSelected:group];
+    
+    id vc = [self.storyboard instantiateViewControllerWithIdentifier:identifier];
+    [vc safePerformSelector:@selector(setAssets:) withObject:self.assets];
+    [vc safePerformSelector:@selector(setUserSelectedPhotos:) withObject:self.userSelectedPhotos];
+    [vc safePerformSelector:@selector(setDelegate:) withObject:self.delegate];
+    [vc safePerformSelector:@selector(setFilterProducts:) withObject:self.filterProducts];
+    [vc safePerformSelector:@selector(setTemplateClass:) withObject:product.productTemplate.templateClass];
+    [vc safePerformSelector:@selector(setProduct:) withObject:product];
+    
+    [self.navigationController pushViewController:vc animated:YES];
+}
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+#pragma mark - UICollectionViewDataSource Methods
+
+- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
     return 1;
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return [self.products count];
+- (NSInteger) collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
+    NSInteger extras = 0;
+    NSInteger numberOfProducts = [self.productGroups count];
+    
+    CGSize size = self.view.frame.size;
+    if (!(numberOfProducts % 2 == 0) && (!([self isHorizontalSizeClassCompact]) || size.height < size.width)){
+        extras = 1;
+    }
+    
+    return numberOfProducts + extras;
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+- (void)fixCellFrameOnIOS7:(UICollectionViewCell *)cell {
+    // Ugly hack to fix cell frame on iOS 7 iPad. For whatever reason the frame size is not as per collectionView:layout:sizeForItemAtIndexPath:, others also experiencing this issue http://stackoverflow.com/questions/25804588/auto-layout-in-uicollectionviewcell-not-working
+    if (SYSTEM_VERSION_LESS_THAN(@"8")) {
+        [[cell contentView] setFrame:[cell bounds]];
+        [[cell contentView] setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight];
+    }
+}
+
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
+    if (indexPath.item >= self.productGroups.count){
+        UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"extraCell" forIndexPath:indexPath];
+        [self fixCellFrameOnIOS7:cell];
+        UIImageView *cellImageView = (UIImageView *)[cell.contentView viewWithTag:40];
+        [cellImageView setAndFadeInImageWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/product_photography/placeholder.png"]];
+        if (self.fromRotation){
+            self.fromRotation = NO;
+            cell.alpha = 0;
+            [UIView animateWithDuration:0.3 animations:^{
+                cell.alpha = 1;
+            }];
+        }
+        return cell;
+    }
     
     static NSString *identifier = @"ProductCell";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
+    UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
+    [self fixCellFrameOnIOS7:cell];
     
     UIImageView *cellImageView = (UIImageView *)[cell.contentView viewWithTag:40];
-    
-    OLProduct *product = self.products[indexPath.row];
-    [product setCoverImageToImageView:cellImageView];
-    
+
+    OLProductGroup *group = self.productGroups[indexPath.item];
+    OLProduct *product = [group.products firstObject];
+    [product setClassImageToImageView:cellImageView];
+
     UILabel *productTypeLabel = (UILabel *)[cell.contentView viewWithTag:300];
-    if (product.productTemplate.templateClass == kOLTemplateClassPoster){
-        productTypeLabel.text = [NSLocalizedString(@"Posters", @"") uppercaseString];
-    }
-    else if (product.productTemplate.templateClass == kOLTemplateClassFrame){
-        productTypeLabel.text = [NSLocalizedString(@"Frames", @"") uppercaseString];
-    }
-    else{
-        productTypeLabel.text = [product.productTemplate.name uppercaseString];
-    }
+
+    productTypeLabel.text = product.productTemplate.templateClass;
+
     productTypeLabel.backgroundColor = [product labelColor];
-    
+
     UIActivityIndicatorView *activityIndicator = (id)[cell.contentView viewWithTag:41];
     [activityIndicator startAnimating];
     
@@ -154,13 +210,25 @@
 }
 
 #pragma mark - Autorotate and Orientation Methods
+// Currently here to disable landscape orientations and rotation on iOS 7. When support is dropped, these can be deleted.
 
 - (BOOL)shouldAutorotate {
-    return YES;
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
+        return YES;
+    }
+    else{
+        return NO;
+    }
 }
 
 - (NSUInteger)supportedInterfaceOrientations {
-    return UIInterfaceOrientationMaskPortrait;
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
+        return UIInterfaceOrientationMaskAll;
+    }
+    else{
+        return UIInterfaceOrientationMaskPortrait;
+    }
 }
+
 
 @end

@@ -1,61 +1,94 @@
 PODS:
-  - AFNetworking (2.5.1):
-    - AFNetworking/NSURLConnection (= 2.5.1)
-    - AFNetworking/NSURLSession (= 2.5.1)
-    - AFNetworking/Reachability (= 2.5.1)
-    - AFNetworking/Security (= 2.5.1)
-    - AFNetworking/Serialization (= 2.5.1)
-    - AFNetworking/UIKit (= 2.5.1)
-  - AFNetworking/NSURLConnection (2.5.1):
+  - AFNetworking (2.5.4):
+    - AFNetworking/NSURLConnection (= 2.5.4)
+    - AFNetworking/NSURLSession (= 2.5.4)
+    - AFNetworking/Reachability (= 2.5.4)
+    - AFNetworking/Security (= 2.5.4)
+    - AFNetworking/Serialization (= 2.5.4)
+    - AFNetworking/UIKit (= 2.5.4)
+  - AFNetworking/NSURLConnection (2.5.4):
     - AFNetworking/Reachability
     - AFNetworking/Security
     - AFNetworking/Serialization
-  - AFNetworking/NSURLSession (2.5.1):
+  - AFNetworking/NSURLSession (2.5.4):
     - AFNetworking/Reachability
     - AFNetworking/Security
     - AFNetworking/Serialization
-  - AFNetworking/Reachability (2.5.1)
-  - AFNetworking/Security (2.5.1)
-  - AFNetworking/Serialization (2.5.1)
-  - AFNetworking/UIKit (2.5.1):
+  - AFNetworking/Reachability (2.5.4)
+  - AFNetworking/Security (2.5.4)
+  - AFNetworking/Serialization (2.5.4)
+  - AFNetworking/UIKit (2.5.4):
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
-  - ApplePayStubs (0.1.4)
-  - CTAssetsPickerController (2.9.1)
-  - LXReorderableCollectionViewFlowLayout (0.1.1)
+  - Bolts (1.1.5):
+    - Bolts/AppLinks (= 1.1.5)
+    - Bolts/Tasks (= 1.1.5)
+  - Bolts/AppLinks (1.1.5):
+    - Bolts/Tasks
+  - Bolts/Tasks (1.1.5)
+  - CSStickyHeaderFlowLayout (0.2.5)
+  - CTAssetsPickerController (2.9.3)
+  - Facebook-iOS-SDK (3.23.2):
+    - Bolts (~> 1.0)
+  - FacebookImagePicker (1.0.3):
+    - Facebook-iOS-SDK (~> 3.23.2)
+    - SDWebImage (~> 3.7.2)
+  - GroundControl (2.1.0):
+    - AFNetworking (~> 2.2)
+  - InstagramImagePicker (1.0.8):
+    - NXOAuth2Client (~> 1.2.8)
+    - SDWebImage (~> 3.7.2)
+    - UIColor-HexString
+  - MPFlipViewController (0.0.2)
+  - NXOAuth2Client (1.2.8)
   - PayPal-iOS-SDK (2.4.2)
-  - SDWebImage (3.7.1):
-    - SDWebImage/Core (= 3.7.1)
-  - SDWebImage/Core (3.7.1)
-  - Stripe (3.1.0):
-    - Stripe/Core (= 3.1.0)
-  - Stripe/ApplePay (3.1.0):
+  - SDWebImage (3.7.2):
+    - SDWebImage/Core (= 3.7.2)
+  - SDWebImage/Core (3.7.2)
+  - SkyLab (1.0.0)
+  - Stripe (2.2.0):
+    - Stripe/Core (= 2.2.0)
+  - Stripe/ApplePay (2.2.0):
     - Stripe/Core
-  - Stripe/Core (3.1.0)
-  - SVProgressHUD (1.1.2)
-  - UICKeyChainStore (1.0.5)
+  - Stripe/Core (2.2.0)
+  - SVProgressHUD (1.1.3)
+  - UICKeyChainStore (2.0.4)
+  - UIColor-HexString (1.1.0)
 
 DEPENDENCIES:
   - AFNetworking (~> 2.5.0)
-  - ApplePayStubs
+  - CSStickyHeaderFlowLayout
   - CTAssetsPickerController
-  - LXReorderableCollectionViewFlowLayout
+  - FacebookImagePicker
+  - GroundControl
+  - InstagramImagePicker
+  - MPFlipViewController
   - PayPal-iOS-SDK (~> 2.4.2)
   - SDWebImage
-  - Stripe (= 3.1.0)
+  - SkyLab
+  - Stripe (= 2.2.0)
   - Stripe/ApplePay
   - SVProgressHUD
-  - UICKeyChainStore (~> 1.0.4)
+  - UICKeyChainStore (~> 2.0.4)
+  - UIColor-HexString
 
 SPEC CHECKSUMS:
-  AFNetworking: 8bee59492a6ff15d69130efa4d0dc67e0094a52a
-  ApplePayStubs: 09178734db2fc35cf71eb53d0ba5c9ca94f92e27
-  CTAssetsPickerController: 9a061b0aede144a66b959d635739f7e88b9b3eb5
-  LXReorderableCollectionViewFlowLayout: b4e25543263e27d4c147109ae5ead01cc9119f23
-  PayPal-iOS-SDK: d23a5c671f293e07d1a52884943268c43b7ef99d
-  SDWebImage: 116e88633b5b416ea0ca4b334a4ac59cf72dd38d
-  Stripe: aaa174b50fac40a16958cbc892457a241d0b4b08
-  SVProgressHUD: da7a49e789af645d9279ffbca62318945a832438
-  UICKeyChainStore: 4f9719600cc70025064e26f28f1210bcfc3b0c35
+  AFNetworking: 05edc0ac4c4c8cf57bcf4b84be5b0744b6d8e71e
+  Bolts: aac24961496d504aa56fc267cde95162a71bac39
+  CSStickyHeaderFlowLayout: 75e439a59c23f609091d9a784c7b5db7de583f1f
+  CTAssetsPickerController: 56a4a228dcb48a9375ab8d4922e82ac74af74aa1
+  Facebook-iOS-SDK: cd87f0b2f0c1d9574b44e8fa2baacc275524bac3
+  FacebookImagePicker: 65ed253b544712e3a4af14eef43600621b639e2d
+  GroundControl: fbc762e0097feece7fb6d8cdc8f2747a504a6833
+  InstagramImagePicker: 9ff8eb307b33b2f61d1287ea0bd425646b031101
+  MPFlipViewController: 86caa6203ca9d35af23cc6b4e1bcf53e53333770
+  NXOAuth2Client: 98c4d4c594edd2b289cfc34a8928653e1dab7adf
+  PayPal-iOS-SDK: ddbc32428357fdfdfe430dd956125745a7096f24
+  SDWebImage: 71b7cdc1d1721d6a82ed62889030225f2c249e29
+  SkyLab: 01d9559bbab2183e54e67dc7a8a12a22b0a4be99
+  Stripe: 8e93a44ea9caf2ed5e0cafa0364a0ce8fdd54dd6
+  SVProgressHUD: 748080e4f36e603f6c02aec292664239df5279c1
+  UICKeyChainStore: 69eb0c3a6f669bccf16ba88de3b9069b71501361
+  UIColor-HexString: f8a5612bd6772fed8db58ee594b42a0b2831750e
 
 COCOAPODS: 0.35.0

@@ -7,9 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "OLAddressPickerController.h"
 
 @class OLAddress;
 
 @interface OLAddressEditViewController : UITableViewController
+@property (weak, nonatomic) id<UINavigationControllerDelegate, OLAddressPickerControllerDelegate> delegate;
+
 - (id)initWithAddress:(OLAddress *)address;
 @end

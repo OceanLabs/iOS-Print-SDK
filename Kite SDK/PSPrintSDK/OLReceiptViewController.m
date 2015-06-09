@@ -15,6 +15,8 @@
 #import "OLProductTemplate.h"
 #import "OLConstants.h"
 #import <SVProgressHUD.h>
+#import "OLPaymentLineItem.h"
+#import "OLPrintOrderCost.h"
 
 static const NSUInteger kSectionOrderSummary = 0;
 static const NSUInteger kSectionOrderId = 1;
@@ -35,20 +37,14 @@ static const NSUInteger kSectionErrorRetry = 2;
     return self;
 }
 
-
-- (BOOL)shouldAutorotate {
-    return NO;
-}
-
-- (NSUInteger)supportedInterfaceOrientations {
-    return UIInterfaceOrientationMaskPortrait;
-}
-
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.title = @"Receipt";
     
-    self.tableView.tableHeaderView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 320, 86 * [UIScreen mainScreen].bounds.size.width / 320.0)];
+    CGFloat width = 320;
+    self.tableView.tableHeaderView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, width, 86)];
+    self.tableView.tableHeaderView.backgroundColor = [UIColor whiteColor];
+    self.tableView.tableHeaderView.contentMode = UIViewContentModeCenter;
     
     if (self.printOrder.printed) {
         ((UIImageView *) self.tableView.tableHeaderView).image = [UIImage imageNamed:@"receipt_success"];
@@ -117,10 +113,16 @@ static const NSUInteger kSectionErrorRetry = 2;
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     if (section == kSectionOrderSummary) {
-        if (self.printOrder.jobs.count <= 1) {
-            return self.printOrder.jobs.count;
+        __block NSUInteger count = 0;
+        [self.printOrder costWithCompletionHandler:^(OLPrintOrderCost *cost, NSError *error) {
+            // this will actually do the right thing. Either this will callback immediately because printOrder
+            // has cached costs and the count will be updated before below conditionals are hit or it will make an async request and count will remain 0 for below.
+            count = cost.lineItems.count;
+        }];
+        if (count <= 1) {
+            return count;
         } else {
-            return self.printOrder.jobs.count + 1; // additional cell to show total
+            return count + 1; // additional cell to show total
         }
     } else if (section == kSectionOrderId) {
         return 1;
@@ -186,38 +188,33 @@ static const NSUInteger kSectionErrorRetry = 2;
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
         }
         
-        BOOL total = self.printOrder.jobs.count > 1 && indexPath.row == self.printOrder.jobs.count;
-        NSDecimalNumber *cost = nil;
-        NSString *currencyCode = self.printOrder.currencyCode;
-        if (total) {
-            cell.textLabel.text = NSLocalizedStringFromTableInBundle(@"Total", @"KitePrintSDK", [OLConstants bundle], @"");
-            cell.textLabel.font = [UIFont boldSystemFontOfSize:cell.textLabel.font.pointSize];
-            cell.detailTextLabel.font = [UIFont boldSystemFontOfSize:cell.detailTextLabel.font.pointSize];
-            cost = [self.printOrder cost];
-        } else {
-            // TODO: Server to return parent product type.
-            id<OLPrintJob> job = self.printOrder.jobs[indexPath.row];
-            cell.textLabel.text = [NSString stringWithFormat:@"%lu x %@", (unsigned long)job.quantity, job.productName];
-            OLProductTemplate *template = [OLProductTemplate templateWithId:job.templateId];
-            if ([job.templateId isEqualToString:@"ps_postcard"] || [job.templateId isEqualToString:@"60_postcards"]) {
-                cell.textLabel.text = [NSString stringWithFormat:@"%lu x %@", (unsigned long)self.printOrder.jobs.count, job.productName];
-            } else if ([job.templateId isEqualToString:@"frames_2x2"] || [job.templateId isEqualToString:@"frames_3x3"] || [job.templateId isEqualToString:@"frames_4x4"] || [job.templateId hasPrefix:@"frames"]) {
-                cell.textLabel.text = [NSString stringWithFormat:@"%lu x %@", (unsigned long) (job.quantity + template.quantityPerSheet - 1 ) / template.quantityPerSheet, job.productName];
-            } else if ([job.templateId rangeOfString:@"poster"].location != NSNotFound){
-                cell.textLabel.text = [NSString stringWithFormat:@"%lu x %@", (unsigned long) (job.quantity + template.quantityPerSheet - 1 ) / template.quantityPerSheet, job.productName];
-            } else {
-                cell.textLabel.text = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Pack of %lu %@", @"KitePrintSDK", [OLConstants bundle], @""), (unsigned long)job.quantity, job.productName];
-            }
+        [self.printOrder costWithCompletionHandler:^(OLPrintOrderCost *orderCost, NSError *error) {
+            NSArray *lineItems = orderCost.lineItems;
+            NSDecimalNumber *totalCost = [orderCost totalCostInCurrency:self.printOrder.currencyCode];
             
-            cell.textLabel.font = [UIFont systemFontOfSize:cell.textLabel.font.pointSize];
-            cell.detailTextLabel.font = [UIFont systemFontOfSize:cell.detailTextLabel.font.pointSize];
-            cost = self.printOrder.jobs.count == 1 ? self.printOrder.cost : [job costInCurrency:currencyCode]; // if there is only 1 job then use the print order total cost as a promo discount may have been applied
-        }
-        
-        NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
-        [formatter setNumberStyle:NSNumberFormatterCurrencyStyle];
-        [formatter setCurrencyCode:currencyCode];
-        cell.detailTextLabel.text = [formatter stringFromNumber:cost];
+            BOOL total = indexPath.row >= lineItems.count;
+            NSDecimalNumber *cost;
+            NSString *currencyCode = self.printOrder.currencyCode;
+            if (total) {
+                cell.textLabel.text = NSLocalizedStringFromTableInBundle(@"Total", @"KitePrintSDK", [OLConstants bundle], @"");
+                cell.textLabel.font = [UIFont boldSystemFontOfSize:cell.textLabel.font.pointSize];
+                cell.detailTextLabel.font = [UIFont boldSystemFontOfSize:cell.detailTextLabel.font.pointSize];
+                
+                cost = totalCost;
+                
+                NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
+                [formatter setNumberStyle:NSNumberFormatterCurrencyStyle];
+                [formatter setCurrencyCode:currencyCode];
+                cell.detailTextLabel.text = [formatter stringFromNumber:totalCost];
+            }
+            else{
+                OLPaymentLineItem *item = lineItems[indexPath.row];
+                cell.textLabel.text = item.description;
+                cell.textLabel.font = [UIFont systemFontOfSize:cell.textLabel.font.pointSize];
+                cell.detailTextLabel.font = [UIFont systemFontOfSize:cell.detailTextLabel.font.pointSize];
+                cell.detailTextLabel.text = [item costStringInCurrency:self.printOrder.currencyCode];
+            }
+        }];
     } else if (indexPath.section == kSectionErrorRetry) {
         static NSString *const kCellRetry = @"kCellRetry";
         cell = [tableView dequeueReusableCellWithIdentifier:kCellRetry];
@@ -241,6 +238,27 @@ static const NSUInteger kSectionErrorRetry = 2;
     }
     
     [self retrySubmittingOrderForPrinting];
+}
+
+#pragma mark - Autorotate and Orientation Methods
+// Currently here to disable landscape orientations and rotation on iOS 7. When support is dropped, these can be deleted.
+
+- (BOOL)shouldAutorotate {
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
+        return YES;
+    }
+    else{
+        return NO;
+    }
+}
+
+- (NSUInteger)supportedInterfaceOrientations {
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
+        return UIInterfaceOrientationMaskAll;
+    }
+    else{
+        return UIInterfaceOrientationMaskPortrait;
+    }
 }
 
 @end

@@ -8,14 +8,18 @@
 
 #import <Foundation/Foundation.h>
 
-NSString *const kOLKiteSDKErrorDomain;
-NSString *const kOLKiteSDKVersion;
-const NSInteger kOLKiteSDKErrorCodeFullDetailsFetchFailed;
-const NSInteger kOLKiteSDKErrorCodeServerFault;
-const NSInteger kOLKiteSDKErrorCodeUnauthorized;
-const NSInteger kOLKiteSDKErrorCodeRegisteredAssetCountDiscrepency;
+extern NSString *const kOLKiteSDKErrorDomain;
+extern NSString *const kOLKiteSDKVersion;
+extern const NSInteger kOLKiteSDKErrorCodeRequestInProgress;
+extern const NSInteger kOLKiteSDKErrorCodeFullDetailsFetchFailed;
+extern const NSInteger kOLKiteSDKErrorCodeServerFault;
+extern const NSInteger kOLKiteSDKErrorCodeUnauthorized;
+extern const NSInteger kOLKiteSDKErrorCodeRegisteredAssetCountDiscrepency;
+extern const NSInteger kOLKiteSDKErrorCodeMaintenanceMode;
 
-NSString *const kOLKiteSDKErrorMessageUnauthorized;
+extern NSString *const kOLKiteSDKErrorMessageUnauthorized;
+extern NSString *const kOLKiteSDKErrorMessageMaintenanceMode;
+extern NSString *const kOLKiteSDKErrorMessageRequestInProgress;
 
 @interface OLConstants : NSObject
 

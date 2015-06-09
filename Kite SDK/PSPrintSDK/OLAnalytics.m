@@ -62,7 +62,12 @@ static NSString *nonNilStr(NSString *str) {
         environment = @"Sandbox";
     }
     NSDictionary *info = [[NSBundle mainBundle] infoDictionary];
-    NSString *bundleName = [NSString stringWithFormat:@"%@", [info objectForKey:@"CFBundleDisplayName"]];
+    NSString *bundleName = nil;
+    if ([info objectForKey:@"CFBundleDisplayName"] == nil) {
+         bundleName = [[[NSBundle mainBundle] infoDictionary] objectForKey:(NSString *) kCFBundleNameKey];
+    } else {
+        bundleName = [NSString stringWithFormat:@"%@", [info objectForKey:@"CFBundleDisplayName"]];
+    }
     NSString *appVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"];
     NSString *apiKey = [OLKitePrintSDK apiKey] == nil ? @"Unknown" : [OLKitePrintSDK apiKey];
     NSMutableDictionary *propertiesDict = [@{
@@ -72,11 +77,13 @@ static NSString *nonNilStr(NSString *str) {
                                              @"App Name" : bundleName,
                                              @"App Version" : appVersion,
                                              @"platform" : @"iOS",
+                                             @"platform version" : [[UIDevice currentDevice] systemVersion],
                                              @"model" : [OLAnalytics platform],
                                              @"Screen Height" : @([UIScreen mainScreen].bounds.size.height),
                                              @"Screen Width" : @([UIScreen mainScreen].bounds.size.width),
                                              @"Environment" : environment,
-                                             @"API Key": apiKey
+                                             @"API Key": apiKey,
+                                             @"Kite SDK Version": kOLKiteSDKVersion
                                              } mutableCopy];
     NSDictionary *dict = @{@"event" : eventName,
                            @"properties" : propertiesDict};
@@ -105,16 +112,24 @@ static NSString *nonNilStr(NSString *str) {
     [OLAnalytics sendToMixPanelWithDictionary:dict];
 }
 
++ (void)trackProductTypeSelectionScreenViewedWithTemplateClass:(NSString *)templateClassString{
+    NSDictionary *dict = [OLAnalytics defaultDictionaryForEventName:@"Device Selection Screen Viewed"];
+    [dict[@"properties"] setObject:nonNilStr(templateClassString) forKey:@"Product Class"];
+    [OLAnalytics sendToMixPanelWithDictionary:dict];
+}
+
 + (void)trackReviewScreenViewed:(NSString *)productName{
     NSDictionary *dict = [OLAnalytics defaultDictionaryForEventName:@"Review Screen Viewed"];
     [dict[@"properties"] setObject:productName forKey:@"Product Name"];
     [OLAnalytics sendToMixPanelWithDictionary:dict];
 }
 
-+ (void)trackShippingScreenViewedForOrder:(OLPrintOrder *)printOrder{
++ (void)trackShippingScreenViewedForOrder:(OLPrintOrder *)printOrder variant:(NSString *)variant showPhoneEntryField:(BOOL)showPhoneEntryField {
     NSDictionary *dict = [OLAnalytics defaultDictionaryForEventName:@"Shipping Screen Viewed"];
     NSMutableDictionary *p = [self propertiesForPrintOrder:printOrder];
     [dict[@"properties"] addEntriesFromDictionary:p];
+    [dict[@"properties"] addEntriesFromDictionary:@{@"Shipping Screen Variant" : variant,
+                                                    @"Showing Phone Entry Field" : showPhoneEntryField ? @"Yes" : @"No"}];
     [OLAnalytics sendToMixPanelWithDictionary:dict];
 }
 
@@ -125,9 +140,10 @@ static NSString *nonNilStr(NSString *str) {
     [OLAnalytics sendToMixPanelWithDictionary:dict];
 }
 
-+ (void)trackPaymentCompletedForOrder:(OLPrintOrder *)printOrder{
++ (void)trackPaymentCompletedForOrder:(OLPrintOrder *)printOrder paymentMethod:(NSString *)method{
     NSDictionary *dict = [OLAnalytics defaultDictionaryForEventName:@"Payment Completed"];
     NSMutableDictionary *p = [self propertiesForPrintOrder:printOrder];
+    p[@"Payment Method"] = method;
     [dict[@"properties"] addEntriesFromDictionary:p];
     [OLAnalytics sendToMixPanelWithDictionary:dict];
 }
@@ -146,11 +162,6 @@ static NSString *nonNilStr(NSString *str) {
     
     if (printOrder.proofOfPayment) {
         p[@"Proof of Payment"] = printOrder.proofOfPayment;
-        NSString *paymentMethod = @"JudoPay";
-        if ([printOrder.proofOfPayment hasPrefix:@"AP-"] || [printOrder.proofOfPayment hasPrefix:@"PAY-"]) {
-            paymentMethod = @"PayPal";
-        }
-        p[@"Payment Method"] = paymentMethod;
     }
     
     if (printOrder.lastPrintSubmissionError) {
@@ -166,7 +177,6 @@ static NSString *nonNilStr(NSString *str) {
     
     if (printOrder.promoCode) {
         p[@"Voucher Code"] = printOrder.promoCode;
-        p[@"Voucher Discount"] = printOrder.promoDiscount.stringValue;
     }
     
     if (printOrder.userData) {
@@ -191,8 +201,10 @@ static NSString *nonNilStr(NSString *str) {
         p[@"Shipping Country Code3"] = nonNilStr(printOrder.shippingAddress.country.codeAlpha3);
     }
     
-    NSDecimalNumber *cost = [printOrder costInCurrency:@"GBP"];
-    p[@"Cost"] = [cost stringValue];
+//    if ([printOrder.currenciesSupported containsObject:@"GBP"]) {
+//        NSDecimalNumber *cost = [printOrder costInCurrency:@"GBP"];
+//        p[@"Cost"] = [cost stringValue];
+//    }
     p[@"Job Count"] = [NSString stringWithFormat:@"%lu",  (unsigned long) printOrder.jobs.count];
     
     return p;

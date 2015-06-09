@@ -1,6 +1,7 @@
 # iOS Print SDK
 
 ![Kite](Kite SDK/docs/kite.png)
+[![Build Status](https://travis-ci.org/OceanLabs/iOS-Print-SDK.svg?branch=master)](https://travis-ci.org/OceanLabs/iOS-Print-SDK)
 
 The Kite Print SDK makes it easy to add print on demand functionality to your app.
 
@@ -45,14 +46,21 @@ Use our SDK to unlock hidden revenue streams and add value for your users. *In u
 [CocoaPods](http://cocoapods.org) is a dependency manager for Objective-C, which automates and simplifies the process of using 3rd-party libraries like the Kite Print SDK in your projects. If you're using it just add the following to your Podfile:
 
 ```ruby
-pod "Kite-Print-SDK", "~> 2.0"
+pod "Kite-Print-SDK"
+pod "Kite-Print-SDK/PayPal"
+
+#Uncomment this next line if you want Instagram photo picking support
+#pod "Kite-Print-SDK/Instagram"
+
+#Uncomment this	next line if you want Facebook photo picking support
+#pod "Kite-Print-SDK/Facebook"
 ```
 
-If you'd like to offer your users the opportunity to pay via PayPal in the checkout process also add the following to your Podfile:
+The SDK includes lots of optional functionality enabled via CocoaPod Subspecs so that you can pick and choose your setup.
 
-```ruby
-pod "Kite-Print-SDK/PayPal", "~> 2.0"
-```
+If you'd like to offer your users the opportunity to add photos via Instagram or Facebook then uncomment the appropriate lines above and follow the instructions to [Enable Facebook & Instagram Photo Selection](Kite SDK/docs/social_photo_sources.md).
+
+PayPal functionality is also optional although recommended as you'll typically see a higher conversion rate with it.
 
 ## Use Cases
 
@@ -109,4 +117,4 @@ We also have a [REST print API](https://www.kite.ly/docs/1.1/) for those who pre
 
 ## License
 
-Kite iOS Print SDK is available under the MIT license. See the [LICENSE](Kite SDK/LICENSE) file for more info.
+Kite iOS Print SDK is available under a modified MIT license. See the [LICENSE](Kite SDK/LICENSE) file for more info.

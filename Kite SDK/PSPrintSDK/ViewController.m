@@ -8,12 +8,13 @@
 
 #import "ViewController.h"
 #import "OLKitePrintSDK.h"
+#import <CTAssetsPickerController.h>
 
 #import <AssetsLibrary/AssetsLibrary.h>
 
 /**********************************************************************
  * Insert your API keys here. These are found under your profile 
- * by logging in to the developer portal at http://kite.ly
+ * by logging in to the developer portal at https://www.kite.ly
  **********************************************************************/
 static NSString *const kAPIKeySandbox = @"REPLACE_WITH_YOUR_API_KEY"; // replace with your Sandbox API key found under the Profile section in the developer portal
 static NSString *const kAPIKeyLive = @"REPLACE_WITH_YOUR_API_KEY"; // replace with your Live API key found under the Profile section in the developer portal
@@ -21,7 +22,9 @@ static NSString *const kAPIKeyLive = @"REPLACE_WITH_YOUR_API_KEY"; // replace wi
 static NSString *const kStripePublishableKey = @"pk_test_6pRNASCoBOKtIshFeQd4XMUh"; // This is a test key. Replace with the live key here.
 static NSString *const kApplePayMerchantIDKey = @"merchant.co.oceanlabs.kite.ly"; // For internal use only.
 
-@interface ViewController () <UIImagePickerControllerDelegate, UINavigationControllerDelegate, OLKiteDelegate>
+@interface ViewController () <CTAssetsPickerControllerDelegate, UINavigationControllerDelegate, OLKiteDelegate>
+@property (weak, nonatomic) IBOutlet UIButton *localPhotosButton;
+@property (weak, nonatomic) IBOutlet UIButton *remotePhotosButton;
 @property (nonatomic, weak) IBOutlet UISegmentedControl *environmentPicker;
 @property (nonatomic, strong) OLPrintOrder* printOrder;
 @end
@@ -39,15 +42,9 @@ static NSString *const kApplePayMerchantIDKey = @"merchant.co.oceanlabs.kite.ly"
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onUserCompletedPayment:) name:kOLNotificationUserCompletedPayment object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onPrintOrderSubmission:) name:kOLNotificationPrintOrderSubmission object:nil];
     
-    // Uncomment the following lines to only show a subset of the available products and customize the photography. This will only work if you've called [OLProductTemplate sync] and gave it enought time to sync.
-    
-    /*
-     OLProduct *squares = [OLProduct productWithTemplateId:@"squares"];
-     OLProduct *magnets = [OLProduct productWithTemplateId:@"magnets"];
-     squares.coverPhoto = [NSURL URLWithString:@"http://psps.s3.amazonaws.com/sdk_static/1.jpg"];
-     squares.productPhotos = @[[NSURL URLWithString:@"http://psps.s3.amazonaws.com/sdk_static/2.jpg"]];
-     [OLKitePrintSDK setEnabledProducts:@[squares, magnets]];
-     */
+#ifdef OL_KITE_OFFER_INSTAGRAM
+    [OLKitePrintSDK setInstagramEnabledWithClientID:@"a6a09c92a14d488baa471e5209906d3d" secret:@"bfb814274cd041a5b7e06f32608e0e87" redirectURI:@"kite://instagram-callback"];
+#endif
 }
 
 - (BOOL)shouldAutorotate {
@@ -60,9 +57,11 @@ static NSString *const kApplePayMerchantIDKey = @"merchant.co.oceanlabs.kite.ly"
 
 - (IBAction)onButtonPrintLocalPhotos:(id)sender {
     if (![self isAPIKeySet]) return;
-    UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
-    imagePicker.delegate = self;
-    [self presentViewController:imagePicker animated:YES completion:nil];
+    CTAssetsPickerController *picker = [[CTAssetsPickerController alloc] init];
+    picker.delegate = self;
+    picker.assetsFilter = [ALAssetsFilter allPhotos];
+    
+    [self presentViewController:picker animated:YES completion:nil];
 }
 
 - (NSString *)apiKey {
@@ -109,6 +108,8 @@ static NSString *const kApplePayMerchantIDKey = @"merchant.co.oceanlabs.kite.ly"
 #endif
     
     OLKiteViewController *vc = [[OLKiteViewController alloc] initWithAssets:assets];
+    vc.userEmail = @"";
+    vc.userPhone = @"";
     vc.delegate = self;
     [self presentViewController:vc animated:YES completion:NULL];
 
@@ -141,6 +142,34 @@ static NSString *const kApplePayMerchantIDKey = @"merchant.co.oceanlabs.kite.ly"
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
+#pragma mark - CTAssetsPickerControllerDelegate Methods
+
+- (void)assetsPickerController:(CTAssetsPickerController *)picker didFinishPickingAssets:(NSArray *)assets {
+    [picker dismissViewControllerAnimated:YES completion:^(void){
+        NSMutableArray *assetObjects = [[NSMutableArray alloc] initWithCapacity:assets.count];
+        for (ALAsset *asset in assets){
+            [assetObjects addObject:[OLAsset assetWithALAsset:asset]];
+        }
+        [self printWithAssets:assetObjects];
+    }];
+    
+}
+
+- (BOOL)assetsPickerController:(CTAssetsPickerController *)picker shouldShowAssetsGroup:(ALAssetsGroup *)group{
+    if (group.numberOfAssets == 0){
+        return NO;
+    }
+    return YES;
+}
+
+- (BOOL)assetsPickerController:(CTAssetsPickerController *)picker shouldShowAsset:(ALAsset *)asset{
+    NSString *fileName = [[[asset defaultRepresentation] filename] lowercaseString];
+    if (!([fileName hasSuffix:@".jpg"] || [fileName hasSuffix:@".jpeg"] || [fileName hasSuffix:@"png"])) {
+        return NO;
+    }
+    return YES;
+}
+
 #pragma mark - OLKiteDelete
 
 - (BOOL)kiteController:(OLKiteViewController *)controller isDefaultAssetsGroup:(ALAssetsGroup *)group {
@@ -150,10 +179,17 @@ static NSString *const kApplePayMerchantIDKey = @"merchant.co.oceanlabs.kite.ly"
     return NO;
 }
 
-- (BOOL)kiteControllerShouldShowAddMorePhotosInReview:(OLKiteViewController *)controller {
+- (BOOL)kiteControllerShouldAllowUserToAddMorePhotos:(OLKiteViewController *)controller {
     return YES;
 }
 
+//- (BOOL)shouldShowPhoneEntryOnCheckoutScreen{
+//    return YES;
+//}
+
+- (IBAction)onButtonKiteClicked:(UIButton *)sender {
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://www.kite.ly"]];
+}
 #pragma mark - notification events
 
 // useful if you want to fire off Anlaytic events for conversion funnel analysis, etc.

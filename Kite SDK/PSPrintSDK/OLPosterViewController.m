@@ -16,6 +16,13 @@
 #import <SDWebImageManager.h>
 #import "OLAsset+Private.h"
 #import "OLAnalytics.h"
+#import "OLKitePrintSDK.h"
+
+@interface OLKitePrintSDK (InternalUtils)
++ (NSString *)userEmail:(UIViewController *)topVC;
++ (NSString *)userPhone:(UIViewController *)topVC;
++ (id<OLKiteDelegate>)kiteDelegate:(UIViewController *)topVC;
+@end
 
 @interface OLPosterViewController () <UINavigationControllerDelegate, OLScrollCropViewControllerDelegate>
 
@@ -24,6 +31,7 @@
 @property (strong, nonatomic) NSNumber *selectedImage;
 @property (assign, nonatomic) BOOL hasShownHelp;
 @property (weak, nonatomic) UIImageView *imageTapped;
+@property (weak, nonatomic) OLPrintPhoto *editingPrintPhoto;
 
 @end
 
@@ -88,7 +96,8 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         for (NSUInteger i = 0; i < MIN([self.imageViews count], [self.posterPhotos count]); i++) {
             
-            [((OLPrintPhoto*)[self.posterPhotos objectAtIndex:i]) setThumbImageIdealSizeForImageView:self.imageViews[i]];
+            OLPrintPhoto *printPhoto = (OLPrintPhoto*)[self.posterPhotos objectAtIndex:i];
+            [printPhoto setImageSize:[(UIView *)self.imageViews[i] frame].size forImageView:self.imageViews[i]];
         }
     });
 }
@@ -107,24 +116,19 @@
 }
 
 -(void)doCrop{
+    OLPrintPhoto *tempPrintPhoto = [[OLPrintPhoto alloc] init];
+    tempPrintPhoto.asset = self.assets[0];
+    self.editingPrintPhoto = self.userSelectedPhotos[0];
+    
     UINavigationController *nav = [self.storyboard instantiateViewControllerWithIdentifier:@"CropViewNavigationController"];
     OLScrollCropViewController *cropVc = (id)nav.topViewController;
     cropVc.delegate = self;
     cropVc.aspectRatio = [(UIView *)self.imageViews[0] frame].size.height / [(UIView *)self.imageViews[0] frame].size.width;
-    if (((OLAsset *)((OLPrintPhoto *)[self.userSelectedPhotos objectAtIndex:0]).asset).assetType == kOLAssetTypeRemoteImageURL){
-        [[SDWebImageManager sharedManager] downloadImageWithURL:[((OLAsset *)((OLPrintPhoto *)[self.userSelectedPhotos objectAtIndex:0]).asset) imageURL] options:0 progress:nil completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *url) {
-            if (finished) {
-                [cropVc setFullImage:image];
-                [self presentViewController:nav animated:YES completion:NULL];
-            }
-        }];
-    }
-    else{
-        [[self.userSelectedPhotos objectAtIndex:0] dataWithCompletionHandler:^(NSData *data, NSError *error){
-            [cropVc setFullImage:[UIImage imageWithData:data]];
-            [self presentViewController:nav animated:YES completion:NULL];
-        }];
-    }
+    
+    [tempPrintPhoto getImageWithProgress:NULL completion:^(UIImage *image){
+        [cropVc setFullImage:image];
+        [self presentViewController:nav animated:YES completion:NULL];
+    }];
 }
 
 -(void) doCheckout{
@@ -160,19 +164,50 @@
     [printOrder addPrintJob:job];
     
     OLCheckoutViewController *vc = [[OLCheckoutViewController alloc] initWithPrintOrder:printOrder];
-    [self.navigationController pushViewController:vc animated:YES];
+    vc.userEmail = [OLKitePrintSDK userEmail:self];
+    vc.userPhone = [OLKitePrintSDK userPhone:self];
+    vc.kiteDelegate = [OLKitePrintSDK kiteDelegate:self];
     
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
 #pragma mark - OLImageEditorViewControllerDelegate methods
 
--(void)userDidCropImage:(UIImage *)croppedImage{
-    OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
-    printPhoto.asset = [OLAsset assetWithImageAsJPEG:croppedImage];
-    self.posterPhotos[0] = printPhoto;
+- (void)scrollCropViewControllerDidCancel:(OLScrollCropViewController *)cropper{
+    [cropper dismissViewControllerAnimated:YES completion:NULL];
+}
+
+-(void)scrollCropViewController:(OLScrollCropViewController *)cropper didFinishCroppingImage:(UIImage *)croppedImage{
+    [self.editingPrintPhoto unloadImage];
+    self.editingPrintPhoto.asset = [OLAsset assetWithImageAsJPEG:croppedImage];
+    
+    self.posterPhotos[0] = self.editingPrintPhoto;
     
     [self reloadImageViews];
     
+    [cropper dismissViewControllerAnimated:YES completion:NULL];
+    
+}
+
+#pragma mark - Autorotate and Orientation Methods
+// Currently here to disable landscape orientations and rotation on iOS 7. When support is dropped, these can be deleted.
+
+- (BOOL)shouldAutorotate {
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
+        return YES;
+    }
+    else{
+        return NO;
+    }
+}
+
+- (NSUInteger)supportedInterfaceOrientations {
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
+        return UIInterfaceOrientationMaskAll;
+    }
+    else{
+        return UIInterfaceOrientationMaskPortrait;
+    }
 }
 
 @end

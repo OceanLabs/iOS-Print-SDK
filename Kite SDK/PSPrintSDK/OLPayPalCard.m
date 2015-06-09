@@ -199,6 +199,11 @@ static NSString *typeToString(OLPayPalCardType type) {
                                   };
         }
         
+        NSString *total = [NSString stringWithFormat:@"%.2f", [amount doubleValue]];
+        if ([[currencyCode lowercaseString] isEqualToString:@"jpy"]) {
+            total = [NSString stringWithFormat:@"%.0f", [amount doubleValue]]; // no decimal places allowed for YEN
+        }
+        
         NSDictionary *paymentJSON = @{@"intent": @"sale",
                                  @"payer": @{
                                          @"payment_method": @"credit_card",
@@ -207,7 +212,7 @@ static NSString *typeToString(OLPayPalCardType type) {
                                  @"transactions": @[
                                          @{
                                              @"amount": @{
-                                                     @"total": [NSString stringWithFormat:@"%.2f", [amount doubleValue]],
+                                                     @"total": total,
                                                      @"currency": currencyCode
                                                      },
                                              @"description": description
@@ -219,7 +224,7 @@ static NSString *typeToString(OLPayPalCardType type) {
         [manager POST:[NSString stringWithFormat:@"https://%@/v1/payments/payment", environment == kOLPayPalEnvironmentLive ? @"api.paypal.com" : @"api.sandbox.paypal.com"]
            parameters:paymentJSON success:^(AFHTTPRequestOperation *operation, id responseObject) {
             NSInteger statusCode = operation.response.statusCode;
-               NSLog(@"response: %@", responseObject);
+
             if (statusCode >= 200 && statusCode <= 299) {
                 id paymentId = responseObject[@"id"];
                 id paymentState = responseObject[@"state"];

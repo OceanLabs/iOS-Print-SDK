@@ -15,11 +15,14 @@
 
 @implementation OLAddressPickerController
 
+@dynamic delegate;
+
 - (id)init {
     OLAddressSelectionViewController *vc = [[OLAddressSelectionViewController alloc] init];
     if (self = [super initWithRootViewController:vc]) {
         self.selectionVC = vc;
         vc.delegate = self;
+        self.allowsAddressSearch = YES;
     }
     
     return self;
@@ -33,16 +36,20 @@
     return self.selectionVC.allowMultipleSelection;
 }
 
+- (void)setAllowsAddressSearch:(BOOL)allowsAddressSearch {
+    self.selectionVC.allowAddressSearch = allowsAddressSearch;
+}
+
+- (BOOL)allowsAddressSearch {
+    return self.selectionVC.allowAddressSearch;
+}
+
 - (NSArray *)selected {
     return self.selectionVC.selected;
 }
 
 - (void)setSelected:(NSArray *)selected {
     self.selectionVC.selected = selected;
-}
-
-- (BOOL)shouldAutorotate {
-    return NO;
 }
 
 #pragma mark - OLAddressSelectionViewControllerDelegate methods
@@ -57,6 +64,27 @@
 
 -(void)addressSelectionControllerDidCancelPicking:(OLAddressSelectionViewController *)vc {
     [self.delegate addressPickerDidCancelPicking:self];
+}
+
+#pragma mark - Autorotate and Orientation Methods
+// Currently here to disable landscape orientations and rotation on iOS 7. When support is dropped, these can be deleted.
+
+- (BOOL)shouldAutorotate {
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
+        return YES;
+    }
+    else{
+        return NO;
+    }
+}
+
+- (NSUInteger)supportedInterfaceOrientations {
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
+        return UIInterfaceOrientationMaskAll;
+    }
+    else{
+        return UIInterfaceOrientationMaskPortrait;
+    }
 }
 
 @end

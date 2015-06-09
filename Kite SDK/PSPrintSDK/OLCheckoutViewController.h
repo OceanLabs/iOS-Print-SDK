@@ -12,17 +12,24 @@
 #import "OLKiteViewController.h"
 @class OLPrintOrder;
 
-NSString *const kOLNotificationUserSuppliedShippingDetails;
-NSString *const kOLNotificationUserCompletedPayment;
-NSString *const kOLNotificationPrintOrderSubmission;
-NSString *const kOLKeyUserInfoPrintOrder;
+extern NSString *const kOLNotificationUserSuppliedShippingDetails;
+extern NSString *const kOLNotificationUserCompletedPayment;
+extern NSString *const kOLNotificationPrintOrderSubmission;
+extern NSString *const kOLKeyUserInfoPrintOrder;
+
+static const NSUInteger kInputFieldTag = 99;
+static const NSUInteger kTagInputFieldLabel = 100;
 
 @interface OLCheckoutViewController : UITableViewController
 
 @property (weak, nonatomic) id<OLCheckoutDelegate> delegate;
 @property (weak, nonatomic) id<OLKiteDelegate> kiteDelegate;
 
+@property (copy, nonatomic) NSString *userEmail;
+@property (copy, nonatomic) NSString *userPhone;
+
 - (id)initWithPrintOrder:(OLPrintOrder *)printOrder;
 - (id)initWithAPIKey:(NSString *)apiKey environment:(OLKitePrintSDKEnvironment)env printOrder:(OLPrintOrder *)printOrder;
 - (void)presentViewControllerFrom:(UIViewController *)presentingViewController animated:(BOOL)animated completion:(void (^)(void))completion;
+- (UITableViewCell *)createTextFieldCellWithReuseIdentifier:(NSString *)identifier title:(NSString *)title keyboardType:(UIKeyboardType)type;
 @end

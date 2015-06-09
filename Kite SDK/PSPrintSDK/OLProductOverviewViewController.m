@@ -9,12 +9,25 @@
 #import "OLProductOverviewViewController.h"
 #import "OLProductOverviewPageContentViewController.h"
 #import "OLProduct.h"
-#import "OLFrameSelectionViewController.h"
 #import "OLOrderReviewViewController.h"
 #import "OLPosterSizeSelectionViewController.h"
 #import "OLWhiteSquare.h"
 #import "OLKiteViewController.h"
 #import "OLAnalytics.h"
+#import "OLProductTypeSelectionViewController.h"
+#import "OLSingleImageProductReviewViewController.h"
+#import "OLPhotoSelectionViewController.h"
+#import "OLPosterViewController.h"
+#import "OLFrameOrderReviewViewController.h"
+#import "OLPostcardViewController.h"
+#import "NSObject+Utils.h"
+#import "NSDecimalNumber+CostFormatter.h"
+
+@interface OLKitePrintSDK (Kite)
+
++ (OLKiteViewController *)kiteViewControllerInNavStack:(NSArray *)viewControllers;
+
+@end
 
 @interface OLProductOverviewViewController () <UIPageViewControllerDataSource, OLProductOverviewPageContentViewControllerDelegate>
 @property (strong, nonatomic) UIPageViewController *pageController;
@@ -34,10 +47,10 @@
     [OLAnalytics trackProductDescriptionScreenViewed:self.product.productTemplate.name];
 #endif
     
-    if (self.product.productTemplate.templateClass == kOLTemplateClassPoster){
+    if (self.product.productTemplate.templateUI == kOLTemplateUIPoster){
         self.title = NSLocalizedString(@"Posters", @"");
     }
-    else if (self.product.productTemplate.templateClass == kOLTemplateClassFrame){
+    else if (self.product.productTemplate.templateUI == kOLTemplateUIFrame){
         self.title = NSLocalizedString(@"Frames", @"");
     }
     else{
@@ -62,40 +75,26 @@
     
     self.costLabel.text = self.product.unitCost;
     
-    if (self.product.productTemplate.templateClass == kOLTemplateClassFrame){
-        self.sizeLabel.text = [NSString stringWithFormat:@"%@", self.product.dimensions];
-    }
-    else{
-        self.sizeLabel.text = [NSString stringWithFormat:@"%@\n%@", self.product.packInfo, self.product.dimensions];
+    self.sizeLabel.text = [NSString stringWithFormat:@"%@%@", self.product.packInfo, self.product.dimensions];
+    
+    OLTemplateUI templateClass = self.product.productTemplate.templateUI;
+    if (templateClass == kOLTemplateUICase){
+        [self.sizeLabel removeFromSuperview];
     }
     
-    if (self.product.productTemplate.templateClass == kOLTemplateClassPoster){
-        self.costLabel.hidden = YES;
-        self.sizeLabel.hidden = YES;
-        self.freePostageLabel.hidden = YES;
-        self.whiteBox.hidden = YES;
+    NSDecimalNumber *shippingCost = [self.product.productTemplate shippingCostForCountry:[OLCountry countryForCurrentLocale]];
+    if (shippingCost && [shippingCost doubleValue] != 0){
+        self.freePostageLabel.text = [NSString stringWithFormat:NSLocalizedString(@"Shipping: %@", @""), [shippingCost formatCostForCurrencyCode:[self.product.productTemplate currencyForCurrentLocale]]];
     }
-}
-
--(void)viewDidAppear:(BOOL)animated{
-    if (self.navigationController){
-        NSMutableArray *navigationStack = self.navigationController.viewControllers.mutableCopy;
-        if (navigationStack.count > 1 && [navigationStack[navigationStack.count - 2] isKindOfClass:[OLKiteViewController class]]) {
-            OLKiteViewController *kiteVc = navigationStack[navigationStack.count - 2];
-            if (!kiteVc.presentingViewController){
-                [navigationStack removeObject:kiteVc];
-                self.navigationController.viewControllers = navigationStack;
-            }
-        }
+    else if (!shippingCost){ // ¯\_(ツ)_/¯ don't assume 0, remove shipping information altogether
+        [self.freePostageLabel removeFromSuperview];
+        [self.whiteBox removeFromSuperview];
     }
-}
-
-- (BOOL)shouldAutorotate {
-    return NO;
+    //else do nothing, free shipping label will be shown
 }
 
 - (UIViewController *)viewControllerAtIndex:(NSUInteger)index {
-    if (index == NSNotFound || index >= self.self.product.productPhotos.count) {
+    if (index == NSNotFound || index >= self.product.productPhotos.count) {
         return nil;
     }
     
@@ -106,26 +105,39 @@
     return vc;
 }
 
+- (IBAction)onTapGestureRecognized:(UITapGestureRecognizer *)sender {
+    [self onButtonStartClicked:nil];
+}
+
 - (IBAction)onButtonStartClicked:(UIBarButtonItem *)sender {
-    if (self.product.productTemplate.templateClass == kOLTemplateClassFrame){
-        OLFrameSelectionViewController *frameVc = [self.storyboard instantiateViewControllerWithIdentifier:@"FrameSelectionViewController"];
-        frameVc.assets = self.assets;
-        frameVc.delegate = self.delegate;
-        [self.navigationController pushViewController:frameVc animated:YES];
+    UIViewController *vc;
+    if (self.product.productTemplate.templateUI == kOLTemplateUICase){
+        vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLCaseViewController"];
     }
-    else if (self.product.productTemplate.templateClass == kOLTemplateClassPoster){
-        OLPosterSizeSelectionViewController *posterVc = [self.storyboard instantiateViewControllerWithIdentifier:@"sizeSelect"];
-        posterVc.assets = self.assets;
-        posterVc.delegate = self.delegate;
-        [self.navigationController pushViewController:posterVc animated:YES];
+    else if (self.product.productTemplate.templateUI == kOLTemplateUIPostcard){
+        vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLPostcardViewController"];
+    }
+    else if (self.product.productTemplate.templateUI == kOLTemplateUIPoster){
+        vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLSingleImageProductReviewViewController"];
     }
     else{
-        OLOrderReviewViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OrderReviewViewController"];
-        vc.assets = self.assets;
-        vc.product = self.product;
-        vc.delegate = self.delegate;
-        [self.navigationController pushViewController:vc animated:YES];
+        if (![self.delegate respondsToSelector:@selector(kiteControllerShouldAllowUserToAddMorePhotos:)] || [self.delegate kiteControllerShouldAllowUserToAddMorePhotos:[OLKitePrintSDK kiteViewControllerInNavStack:self.navigationController.viewControllers]]){
+            vc = [self.storyboard instantiateViewControllerWithIdentifier:@"PhotoSelectionViewController"];
+        }
+        else if (!(![self.delegate respondsToSelector:@selector(kiteControllerShouldAllowUserToAddMorePhotos:)] || [self.delegate kiteControllerShouldAllowUserToAddMorePhotos:[OLKitePrintSDK kiteViewControllerInNavStack:self.navigationController.viewControllers]]) && self.product.productTemplate.templateUI == kOLTemplateUIPhotobook){
+            vc = [self.storyboard instantiateViewControllerWithIdentifier:@"PhotobookViewController"];
+        }
+        else{
+            vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OrderReviewViewController"];
+            [self.navigationController pushViewController:vc animated:YES];
+        }
     }
+    [vc safePerformSelector:@selector(setAssets:) withObject:self.assets];
+    [vc safePerformSelector:@selector(setUserSelectedPhotos:) withObject:self.userSelectedPhotos];
+    [vc safePerformSelector:@selector(setDelegate:) withObject:self.delegate];
+    [vc safePerformSelector:@selector(setProduct:) withObject:self.product];
+    
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
 -(void)userDidTapOnImage{
@@ -158,7 +170,28 @@
 }
 
 - (NSInteger)presentationIndexForPageViewController:(UIPageViewController *)pageViewController {
-    return 0;
+    return 1;
+}
+
+#pragma mark - Autorotate and Orientation Methods
+// Currently here to disable landscape orientations and rotation on iOS 7. When support is dropped, these can be deleted.
+
+- (BOOL)shouldAutorotate {
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
+        return YES;
+    }
+    else{
+        return NO;
+    }
+}
+
+- (NSUInteger)supportedInterfaceOrientations {
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
+        return UIInterfaceOrientationMaskAll;
+    }
+    else{
+        return UIInterfaceOrientationMaskPortrait;
+    }
 }
 
 

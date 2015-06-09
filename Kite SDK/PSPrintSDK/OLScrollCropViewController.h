@@ -9,9 +9,12 @@
 #import <UIKit/UIKit.h>
 #import "RMImageCropper.h"
 
+@class OLScrollCropViewController;
+
 @protocol OLScrollCropViewControllerDelegate <NSObject>
 
--(void)userDidCropImage:(UIImage *)croppedImage;
+- (void)scrollCropViewController:(OLScrollCropViewController *)cropper didFinishCroppingImage:(UIImage *)croppedImage;
+- (void)scrollCropViewControllerDidCancel:(OLScrollCropViewController *)cropper;
 
 @end
 

@@ -13,7 +13,7 @@
 
 @class OLProduct;
 
-@interface OLOrderReviewViewController : UITableViewController <UITableViewDelegate, UITableViewDataSource, UINavigationControllerDelegate, OLScrollCropViewControllerDelegate>
+@interface OLOrderReviewViewController : UICollectionViewController <UINavigationControllerDelegate, OLScrollCropViewControllerDelegate>
 
 @property (nonatomic, strong) OLProduct *product;
 @property (strong, nonatomic) NSMutableArray *extraCopiesOfAssets;

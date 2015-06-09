@@ -12,6 +12,13 @@
 #import "OLKiteViewController.h"
 #import "OLAnalytics.h"
 
+@interface OLProduct (Private)
+
+-(void)setCoverImageToImageView:(UIImageView *)imageView;
+-(void)setProductPhotography:(NSUInteger)i toImageView:(UIImageView *)imageView;
+
+@end
+
 static UIColor *deselectedColor;
 
 
@@ -26,6 +33,7 @@ static UIColor *deselectedColor;
 @property (weak, nonatomic) IBOutlet UIImageView *productImageView;
 @property (strong, nonatomic) OLProduct *product;
 @property (strong, nonatomic) NSMutableArray *availableButtons;
+@property (weak, nonatomic) IBOutlet UILabel *chooseSizeLabel;
 
 @end
 
@@ -62,14 +70,14 @@ static UIColor *deselectedColor;
     OLProduct *productA1;
     OLProduct *productA2;
     OLProduct *productA3;
-    for (OLProduct *product in [OLProduct products]){
-        if ([product.productTemplate.productCode isEqualToString:@"LFA1"] && product.productTemplate.quantityPerSheet == 1){
+    for (OLProduct *product in [OLProduct productsWithFilters:self.filterProducts]){
+        if ([product.productTemplate.productCode hasSuffix:@"A1"] && product.productTemplate.quantityPerSheet == 1){
             productA1 = product;
         }
-        if ([product.productTemplate.productCode isEqualToString:@"LFA2"] && product.productTemplate.quantityPerSheet == 1){
+        if ([product.productTemplate.productCode hasSuffix:@"A2"] && product.productTemplate.quantityPerSheet == 1){
             productA2 = product;
         }
-        if ([product.productTemplate.productCode isEqualToString:@"LFA3"] && product.productTemplate.quantityPerSheet == 1){
+        if ([product.productTemplate.productCode hasSuffix:@"A3"] && product.productTemplate.quantityPerSheet == 1){
             productA3 = product;
         }
     }
@@ -96,18 +104,11 @@ static UIColor *deselectedColor;
     else if (firstButton == self.deluxeBtn){
         [self pressedDeluxe:nil];
     }
-}
-
--(void)viewDidAppear:(BOOL)animated{
-    if (self.navigationController){
-        NSMutableArray *navigationStack = self.navigationController.viewControllers.mutableCopy;
-        if (navigationStack.count > 1 && [navigationStack[navigationStack.count - 2] isKindOfClass:[OLKiteViewController class]]) {
-            OLKiteViewController *kiteVc = navigationStack[navigationStack.count - 2];
-            if (!kiteVc.presentingViewController){
-                [navigationStack removeObject:kiteVc];
-                self.navigationController.viewControllers = navigationStack;
-            }
-        }
+    
+    if (self.availableButtons.count == 1){
+        [[self.availableButtons firstObject] removeFromSuperview];
+        [self.availableButtons removeAllObjects];
+        [self.chooseSizeLabel removeFromSuperview];
     }
 }
 
@@ -120,7 +121,7 @@ static UIColor *deselectedColor;
 #pragma mark - actions
 - (IBAction)pressedClassic:(UIButton *)sender {
     for (OLProduct *product in [OLProduct products]){
-        if ([product.productTemplate.productCode isEqualToString:@"LFA3"] && product.productTemplate.quantityPerSheet == 1){
+        if ([product.productTemplate.productCode hasSuffix:@"A3"] && product.productTemplate.quantityPerSheet == 1){
             self.product = product;
         }
     }
@@ -139,7 +140,7 @@ static UIColor *deselectedColor;
 
 - (IBAction)pressedGrand:(UIButton *)sender {
     for (OLProduct *product in [OLProduct products]){
-        if ([product.productTemplate.productCode isEqualToString:@"LFA2"] && product.productTemplate.quantityPerSheet == 1){
+        if ([product.productTemplate.productCode hasSuffix:@"A2"] && product.productTemplate.quantityPerSheet == 1){
             self.product = product;
         }
     }
@@ -158,7 +159,7 @@ static UIColor *deselectedColor;
 
 - (IBAction)pressedDeluxe:(UIButton *)sender {
     for (OLProduct *product in [OLProduct products]){
-        if ([product.productTemplate.productCode isEqualToString:@"LFA1"] && product.productTemplate.quantityPerSheet == 1){
+        if ([product.productTemplate.productCode hasSuffix:@"A1"] && product.productTemplate.quantityPerSheet == 1){
             self.product = product;
         }
     }
@@ -177,10 +178,32 @@ static UIColor *deselectedColor;
 }
 
 - (IBAction)pressedContinue {
-    OLPosterViewController *dest = [self.storyboard instantiateViewControllerWithIdentifier:@"p1x1ViewController"];
+    OLPosterViewController *dest = [self.storyboard instantiateViewControllerWithIdentifier:@"OLSingleImageProductReviewViewController"];
     dest.product = self.product;
     dest.assets = self.assets;
+    dest.userSelectedPhotos = self.userSelectedPhotos;
     [self.navigationController pushViewController:dest animated:YES];
+}
+
+#pragma mark - Autorotate and Orientation Methods
+// Currently here to disable landscape orientations and rotation on iOS 7. When support is dropped, these can be deleted.
+
+- (BOOL)shouldAutorotate {
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
+        return YES;
+    }
+    else{
+        return NO;
+    }
+}
+
+- (NSUInteger)supportedInterfaceOrientations {
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
+        return UIInterfaceOrientationMaskAll;
+    }
+    else{
+        return UIInterfaceOrientationMaskPortrait;
+    }
 }
 
 @end

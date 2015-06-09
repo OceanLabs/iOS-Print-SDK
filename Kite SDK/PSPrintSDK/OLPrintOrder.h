@@ -9,13 +9,16 @@
 #import <Foundation/Foundation.h>
 
 @class OLAddress;
+@class OLPaymentLineItem;
+@class OLPrintOrderCostRequest;
+@class OLPrintOrderCost;
 
 @protocol OLPrintJob;
 
 typedef void (^OLPrintOrderProgressHandler)(NSUInteger totalAssetsUploaded, NSUInteger totalAssetsToUpload, long long totalAssetBytesWritten, long long totalAssetBytesExpectedToWrite, long long totalBytesWritten, long long totalBytesExpectedToWrite);
 typedef void (^OLPrintOrderCompletionHandler)(NSString *orderIdReceipt, NSError *error);
 
-typedef void (^OLApplyPromoCodeCompletionHandler)(NSDecimalNumber *discount, NSError *error);
+typedef void (^OLPrintOrderCostCompletionHandler)(OLPrintOrderCost *cost, NSError * error);
 
 @interface OLPrintOrder : NSObject <NSCoding>
 
@@ -33,13 +36,9 @@ typedef void (^OLApplyPromoCodeCompletionHandler)(NSDecimalNumber *discount, NSE
  */
 - (void)preemptAssetUpload;
 
-- (void)applyPromoCode:(NSString *)promoCode withCompletionHandler:(OLApplyPromoCodeCompletionHandler)handler;
-- (void)clearPromoCode;
-
 @property (nonatomic, strong) OLAddress *shippingAddress;
 @property (nonatomic, strong) NSString *proofOfPayment;
-@property (nonatomic, readonly) NSString *promoCode;
-@property (nonatomic, readonly) NSDecimalNumber *promoDiscount;
+@property (nonatomic, strong) NSString *promoCode;
 
 @property (nonatomic, readonly) NSArray *jobs;
 @property (nonatomic, readonly) NSUInteger totalAssetsToUpload;
@@ -53,8 +52,9 @@ typedef void (^OLApplyPromoCodeCompletionHandler)(NSDecimalNumber *discount, NSE
 
 @property (nonatomic, readonly) NSArray *currenciesSupported;
 @property (nonatomic, copy) NSString *currencyCode;
-@property (nonatomic, readonly) NSDecimalNumber *cost;
 
-- (NSDecimalNumber *)costInCurrency:(NSString *)currencyCode;
+@property (nonatomic, readonly) NSString *paymentDescription;
+
+- (void)costWithCompletionHandler:(OLPrintOrderCostCompletionHandler)handler;
 
 @end

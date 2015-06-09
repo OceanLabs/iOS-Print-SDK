@@ -125,8 +125,13 @@ static NSString *const kKeyImages = @"co.oceanlabs.pssdk.kKeyImages";
     return objectCopy;
 }
 
-- (NSUInteger) hash{
-    return [self.assets hash] * [self.templateId hash];
+- (NSUInteger) hash {
+    NSUInteger val = [self.templateId hash];
+    for (id asset in self.assets) {
+        val = 37 * val + [asset hash];
+    }
+
+    return val;
 }
 
 - (BOOL)isEqual:(id)object {
