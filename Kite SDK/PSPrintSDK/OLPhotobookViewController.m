@@ -709,7 +709,7 @@ static const CGFloat kBookEdgePadding = 38;
     [self.bookCover.layer addAnimation:hideAnim forKey:@"shadowOpacity"];
     self.bookCover.layer.shadowOpacity = 0.0;
     
-    [UIView animateWithDuration:kBookAnimationTime/2.0 animations:^{
+    [UIView animateWithDuration:kBookAnimationTime/8.0 animations:^{
         self.pagesLabelContainer.alpha = 0;
     }];
     
@@ -755,7 +755,7 @@ static const CGFloat kBookEdgePadding = 38;
     [self.bookCover.layer addAnimation:hideAnim forKey:@"shadowOpacity"];
     self.bookCover.layer.shadowOpacity = 0.0;
     
-    [UIView animateWithDuration:kBookAnimationTime/2.0 animations:^{
+    [UIView animateWithDuration:kBookAnimationTime/8.0 animations:^{
         self.pagesLabelContainer.alpha = 0;
     }];
     
