@@ -439,7 +439,6 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     }
     
     [self.tableView reloadData];
-}
 
     }];
 }
@@ -608,20 +607,22 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 - (IBAction)onButtonPayWithApplePayClicked{
     PKPaymentRequest *paymentRequest = [Stripe paymentRequestWithMerchantIdentifier:[OLKitePrintSDK appleMerchantID]];
     paymentRequest.currencyCode = self.printOrder.currencyCode;
-    PKPaymentSummaryItem *summaryItem = [PKPaymentSummaryItem summaryItemWithLabel:NSLocalizedString(@"kite.ly", @"") amount:self.printOrder.cost];
-    paymentRequest.paymentSummaryItems = @[summaryItem];
-    UIViewController *paymentController;
-    if ([OLKitePrintSDK environment] == kOLKitePrintSDKEnvironmentSandbox) {
-        paymentController = [[STPTestPaymentAuthorizationViewController alloc]
-                             initWithPaymentRequest:paymentRequest];
-        ((STPTestPaymentAuthorizationViewController *)paymentController).delegate = self;
-    }
-    else{
-        paymentController = [[PKPaymentAuthorizationViewController alloc]
-                             initWithPaymentRequest:paymentRequest];
-        ((PKPaymentAuthorizationViewController *)paymentController).delegate = self;
-    }
-    [self presentViewController:paymentController animated:YES completion:nil];
+    [self.printOrder costWithCompletionHandler:^(OLPrintOrderCost *cost, NSError *error){
+        PKPaymentSummaryItem *summaryItem = [PKPaymentSummaryItem summaryItemWithLabel:NSLocalizedString(@"kite.ly", @"") amount:[cost totalCostInCurrency:self.printOrder.currencyCode]];
+        paymentRequest.paymentSummaryItems = @[summaryItem];
+        UIViewController *paymentController;
+        if ([OLKitePrintSDK environment] == kOLKitePrintSDKEnvironmentSandbox) {
+            paymentController = [[STPTestPaymentAuthorizationViewController alloc]
+                                 initWithPaymentRequest:paymentRequest];
+            ((STPTestPaymentAuthorizationViewController *)paymentController).delegate = self;
+        }
+        else{
+            paymentController = [[PKPaymentAuthorizationViewController alloc]
+                                 initWithPaymentRequest:paymentRequest];
+            ((PKPaymentAuthorizationViewController *)paymentController).delegate = self;
+        }
+        [self presentViewController:paymentController animated:YES completion:nil];
+    }];
 }
 #endif
 
