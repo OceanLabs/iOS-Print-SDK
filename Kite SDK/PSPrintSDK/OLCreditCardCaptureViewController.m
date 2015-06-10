@@ -130,7 +130,14 @@ UITableViewDataSource, UITextFieldDelegate>
 - (id)initWithPrintOrder:(OLPrintOrder *)printOrder {
     if (self = [super initWithStyle:UITableViewStyleGrouped]) {
         self.printOrder = printOrder;
-        self.title = NSLocalizedString(@"Pay with Credit Card", @"");
+        
+        if ([OLKitePrintSDK environment] == kOLKitePrintSDKEnvironmentSandbox) {
+            self.title = NSLocalizedString(@"Pay with Credit Card (TEST)", @"");
+        } else {
+            self.title = NSLocalizedString(@"Pay with Credit Card", @"");
+        }
+
+        
         self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Cancel", @"") style:UIBarButtonItemStylePlain target:self action:@selector(onButtonCancelClicked)];
     }
     

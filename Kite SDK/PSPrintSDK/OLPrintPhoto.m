@@ -23,6 +23,10 @@ static NSString *const kKeyType = @"co.oceanlabs.psprintstudio.kKeyType";
 static NSString *const kKeyAsset = @"co.oceanlabs.psprintstudio.kKeyAsset";
 static NSString *const kKeyCropTransform = @"co.oceanlabs.psprintstudio.kKeyCropTransform";
 
+static NSString *const kKeyExtraCopies = @"co.oceanlabs.psprintstudio.kKeyExtraCopies";
+static NSString *const kKeyOriginalType = @"co.oceanlabs.psprintstudio.kKeyOriginalType";
+static NSString *const kKeyOriginalAsset = @"co.oceanlabs.psprintstudio.kKeyOriginalAsset";
+
 @implementation ALAsset (isEqual)
 
 - (NSURL*)defaultURL {
@@ -44,6 +48,8 @@ static NSString *const kKeyCropTransform = @"co.oceanlabs.psprintstudio.kKeyCrop
 @interface OLPrintPhoto ()
 @property (nonatomic, strong) ALAssetsLibrary *assetsLibrary;
 @property (nonatomic, strong) UIImage *cachedCroppedThumbnailImage;
+@property (strong, nonatomic) id originalAsset;
+@property (assign, nonatomic) PrintPhotoAssetType originalType;
 @end
 
 @implementation OLPrintPhoto
@@ -56,6 +62,9 @@ static NSString *const kKeyCropTransform = @"co.oceanlabs.psprintstudio.kKeyCrop
 }
 
 - (void)setAsset:(id)asset {
+    if (!_asset){
+        _originalAsset = asset;
+    }
     _asset = asset;
     if ([asset isKindOfClass:[ALAsset class]]) {
         _type = kPrintPhotoAssetTypeALAsset;
@@ -75,6 +84,10 @@ static NSString *const kKeyCropTransform = @"co.oceanlabs.psprintstudio.kKeyCrop
 #endif
     else {
         NSAssert(NO, @"Unknown asset type of class: %@", [asset class]);
+    }
+    
+    if (_type == kPrintPhotoAssetTypeFacebookPhoto || _type == kPrintPhotoAssetTypeInstagramPhoto){
+        _originalType = _type;
     }
 }
 
@@ -282,7 +295,16 @@ static NSString *const kKeyCropTransform = @"co.oceanlabs.psprintstudio.kKeyCrop
 - (void)dataLengthWithCompletionHandler:(GetDataLengthHandler)handler {
     if (self.type == kPrintPhotoAssetTypeALAsset) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            handler([self.asset defaultRepresentation].size, nil);
+            ALAssetRepresentation *assetRepresentation = [self.asset defaultRepresentation];
+            if (assetRepresentation) {
+                handler(assetRepresentation.size, nil);
+            } else {
+                // unfortunately the image is no longer available, it's likely the user deleted it from their device hence
+                // the asset uri is now pointing to nothing. In this case we fall back to a default "corrupt" image so that
+                // things still work as expected just nothing nice will get printed.
+                NSData *data = [NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"kite_corrupt" ofType:@"jpg"]];
+                handler(data.length, nil);
+            }
         });
     }
 #if defined(OL_KITE_OFFER_INSTAGRAM) || defined(OL_KITE_OFFER_FACEBOOK)
@@ -304,15 +326,19 @@ static NSString *const kKeyCropTransform = @"co.oceanlabs.psprintstudio.kKeyCrop
     if (self.type == kPrintPhotoAssetTypeALAsset) {
         dispatch_async(dispatch_get_main_queue(), ^{
             ALAssetRepresentation *rep = [self.asset defaultRepresentation];
-            
-            UIImageOrientation orientation = UIImageOrientationUp;
-            NSNumber* orientationValue = [self.asset valueForProperty:@"ALAssetPropertyOrientation"];
-            if (orientationValue != nil) {
-                orientation = [orientationValue intValue];
-            }
+            if (rep) {
+                UIImageOrientation orientation = UIImageOrientationUp;
+                NSNumber* orientationValue = [self.asset valueForProperty:@"ALAssetPropertyOrientation"];
+                if (orientationValue != nil) {
+                    orientation = [orientationValue intValue];
+                }
 
-            UIImage *image = [UIImage imageWithCGImage:[rep fullResolutionImage] scale:rep.scale orientation:orientation];
-            handler(UIImageJPEGRepresentation(image, 0.7), nil);
+                UIImage *image = [UIImage imageWithCGImage:[rep fullResolutionImage] scale:rep.scale orientation:orientation];
+                handler(UIImageJPEGRepresentation(image, 0.7), nil);
+            } else {
+                NSData *data = [NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"kite_corrupt" ofType:@"jpg"]];
+                handler(data, nil);
+            }
         });
     }
 #if defined(OL_KITE_OFFER_INSTAGRAM) || defined(OL_KITE_OFFER_FACEBOOK)
@@ -363,19 +389,30 @@ static NSString *const kKeyCropTransform = @"co.oceanlabs.psprintstudio.kKeyCrop
 - (id)initWithCoder:(NSCoder *)aDecoder {
     if (self = [super init]) {
         _type = [aDecoder decodeIntForKey:kKeyType];
+        _originalType = [aDecoder decodeIntForKey:kKeyOriginalType];
+        _originalAsset = [aDecoder decodeObjectForKey:kKeyOriginalAsset];
+        _extraCopies = [aDecoder decodeIntForKey:kKeyExtraCopies];
         if (self.type == kPrintPhotoAssetTypeALAsset) {
-            // This next bit of code is very broken as there is no guarantee we will actually be able to get the asset e.g. the user could
-            // have long since denied us access to their library, etc. :( TODO: handle correctly
             NSURL *assetURL = [aDecoder decodeObjectForKey:kKeyAsset];
             ALAssetsLibrary *assetLibrary = [[ALAssetsLibrary alloc] init];
             [assetLibrary assetForURL:assetURL
                           resultBlock:^(ALAsset *asset) {
                               NSAssert([NSThread isMainThread], @"oops wrong assumption about main thread callback");
-                              self.assetsLibrary = assetLibrary;
-                              self.asset = asset;
+                              if (asset == nil) {
+                                  // corrupt asset, user has probably deleted the photo from their device
+                                  _type = kPrintPhotoAssetTypeOLAsset;
+                                  NSData *data = [NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"kite_corrupt" ofType:@"jpg"]];
+                                  self.asset = [OLAsset assetWithDataAsJPEG:data];
+                              } else {
+                                  self.assetsLibrary = assetLibrary;
+                                  self.asset = asset;
+                              }
                           }
                          failureBlock:^(NSError *err) {
                              NSAssert([NSThread isMainThread], @"oops wrong assumption about main thread callback");
+                             _type = kPrintPhotoAssetTypeOLAsset;
+                             NSData *data = [NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"kite_corrupt" ofType:@"jpg"]];
+                             self.asset = [OLAsset assetWithDataAsJPEG:data];
                          }];
         } else {
             self.asset = [aDecoder decodeObjectForKey:kKeyAsset];
@@ -387,6 +424,9 @@ static NSString *const kKeyCropTransform = @"co.oceanlabs.psprintstudio.kKeyCrop
 
 - (void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeInteger:self.type forKey:kKeyType];
+    [aCoder encodeInteger:self.originalType forKey:kKeyOriginalType];
+    [aCoder encodeObject:self.originalAsset forKey:kKeyOriginalAsset];
+    [aCoder encodeInteger:self.extraCopies forKey:kKeyExtraCopies];
     if (self.type == kPrintPhotoAssetTypeALAsset) {
         [aCoder encodeObject:[self.asset valueForProperty:ALAssetPropertyAssetURL] forKey:kKeyAsset];
     } else {

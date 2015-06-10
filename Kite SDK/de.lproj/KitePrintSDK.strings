@@ -125,7 +125,7 @@
 "Payment" = "Zahlungsmethode";
 
 /* No comment provided by engineer. */
-"Payment (Sandbox)" = "mit Sandbox bezahlen";
+"Payment (TEST)" = "mit TEST bezahlen";
 
 /* Payment declined error dialog title */
 "Payment Declined" = "Zahlung abgelehnt";

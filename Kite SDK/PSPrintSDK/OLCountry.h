@@ -13,6 +13,7 @@
 @property (nonatomic, readonly) NSString *codeAlpha2;
 @property (nonatomic, readonly) NSString *codeAlpha3;
 @property (nonatomic, readonly) NSString *currencyCode;
+@property (nonatomic, readonly, getter=isInEurope) BOOL inEurope;
 
 + (NSArray *)countries;
 + (OLCountry *)countryForCode:(NSString *)code;

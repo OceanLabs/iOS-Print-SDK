@@ -61,10 +61,6 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     [OLAnalytics trackReviewScreenViewed:self.product.productTemplate.name];
 #endif
     
-    self.extraCopiesOfAssets = [[NSMutableArray alloc] initWithCapacity:[self.userSelectedPhotos count]];
-    for (int i = 0; i < [self.userSelectedPhotos count]; i++){
-        [self.extraCopiesOfAssets addObject:@0];
-    }
     [self updateTitleBasedOnSelectedPhotoQuanitity];
     
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Back", @"")
@@ -93,16 +89,21 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
 
 -(NSUInteger) totalNumberOfExtras{
     NSUInteger res = 0;
-    for (NSNumber* num in self.extraCopiesOfAssets){
-        res += [num integerValue];
+    for (OLPrintPhoto *photo in self.userSelectedPhotos){
+        res += photo.extraCopies;
     }
     return res;
 }
 
 - (void)updateTitleBasedOnSelectedPhotoQuanitity {
-    NSUInteger numOrders = 1 + (MAX(0, self.userSelectedPhotos.count - 1 + [self totalNumberOfExtras]) / self.product.quantityToFulfillOrder);
-    NSUInteger quanityToFulfilOrder = numOrders * self.product.quantityToFulfillOrder;
-    self.title = [NSString stringWithFormat:@"%lu / %lu", (unsigned long) (self.userSelectedPhotos.count + [self totalNumberOfExtras]), (unsigned long)quanityToFulfilOrder];
+    if (self.product.quantityToFulfillOrder > 1){
+        NSUInteger numOrders = 1 + (MAX(0, self.userSelectedPhotos.count - 1 + [self totalNumberOfExtras]) / self.product.quantityToFulfillOrder);
+        NSUInteger quanityToFulfilOrder = numOrders * self.product.quantityToFulfillOrder;
+        self.title = [NSString stringWithFormat:@"%lu / %lu", (unsigned long) (self.userSelectedPhotos.count + [self totalNumberOfExtras]), (unsigned long)quanityToFulfilOrder];
+    }
+    else{
+        self.title = [NSString stringWithFormat:@"%lu", (unsigned long) (self.userSelectedPhotos.count + [self totalNumberOfExtras])];
+    }
 }
 
 -(BOOL) shouldGoToCheckout{
@@ -121,25 +122,17 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
 }
 
 - (void)doCheckout {
-    int originalCount = (int)[self.userSelectedPhotos count];
-    NSMutableArray* userSelectedPhotosAndExtras = [[NSMutableArray alloc] initWithCapacity:originalCount + [self totalNumberOfExtras]];
-    [userSelectedPhotosAndExtras addObjectsFromArray:self.userSelectedPhotos];
-    for (int i = 0; i < originalCount; i++) {
-        int numberOfCopies = [((NSNumber*)self.extraCopiesOfAssets[i]) intValue];
-        for (int j = 0; j < numberOfCopies; j++){
-            [userSelectedPhotosAndExtras addObject:self.userSelectedPhotos[i]];
-        }
-    }
+    [self preparePhotosForCheckout];
     
     NSUInteger iphonePhotoCount = 0;
-    for (OLPrintPhoto *photo in userSelectedPhotosAndExtras) {
+    for (OLPrintPhoto *photo in self.checkoutPhotos) {
         if (photo.type == kPrintPhotoAssetTypeALAsset) ++iphonePhotoCount;
     }
     
     // Avoid uploading assets if possible. We can avoid uploading where the image already exists at a remote
     // URL and the user did not manipulate it in any way.
     NSMutableArray *photoAssets = [[NSMutableArray alloc] init];
-    for (OLPrintPhoto *photo in userSelectedPhotosAndExtras) {
+    for (OLPrintPhoto *photo in self.checkoutPhotos) {
         if(photo.type == kPrintPhotoAssetTypeOLAsset){
             [photoAssets addObject:photo.asset];
         } else {
@@ -198,9 +191,7 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
 }
 
 - (void) deletePhotoAtIndex:(NSUInteger)index{
-    [self.assets removeObjectAtIndex:index];
     [self.userSelectedPhotos removeObjectAtIndex:index];
-    [self.extraCopiesOfAssets removeObjectAtIndex:index];
     
     if (self.userSelectedPhotos.count == 0){
         [self.navigationController popViewControllerAnimated:YES];
@@ -231,8 +222,8 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     }
     NSIndexPath* indexPath = [self.collectionView indexPathForCell:(UICollectionViewCell *)cell];
     
-    NSUInteger extraCopies = [self.extraCopiesOfAssets[indexPath.item] integerValue] + 1;
-    self.extraCopiesOfAssets[indexPath.item] = [NSNumber numberWithInteger:extraCopies];
+    NSInteger extraCopies = [self.userSelectedPhotos[indexPath.item] extraCopies] + 1;
+    [self.userSelectedPhotos[indexPath.item] setExtraCopies:extraCopies];
     UILabel* countLabel = (UILabel *)[cellContentView viewWithTag:30];
     [countLabel setText: [NSString stringWithFormat:@"%lu", (unsigned long)extraCopies + 1]];
     
@@ -247,7 +238,7 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     }
     NSIndexPath* indexPath = [self.collectionView indexPathForCell:(UICollectionViewCell *)cell];
     
-    NSUInteger extraCopies = [self.extraCopiesOfAssets[indexPath.item] integerValue];
+    NSInteger extraCopies = [self.userSelectedPhotos[indexPath.item] extraCopies];
     if (extraCopies == 0){
         if ([UIAlertController class]){
             UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Delete?", @"") message:NSLocalizedString(@"Do you want to delete this photo?", @"") preferredStyle:UIAlertControllerStyleAlert];
@@ -267,7 +258,7 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     }
     extraCopies--;
     
-    self.extraCopiesOfAssets[indexPath.item] = [NSNumber numberWithInteger:extraCopies];
+    [self.userSelectedPhotos[indexPath.item] setExtraCopies:extraCopies];
     UILabel* countLabel = (UILabel *)[cellContentView viewWithTag:30];
     [countLabel setText: [NSString stringWithFormat:@"%lu", (unsigned long)extraCopies + 1]];
     
@@ -289,7 +280,7 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     NSIndexPath *indexPath = [self.collectionView indexPathForCell:(UICollectionViewCell *)cell];
     
     OLPrintPhoto *tempPrintPhoto = [[OLPrintPhoto alloc] init];
-    tempPrintPhoto.asset = self.assets[indexPath.item];
+    tempPrintPhoto.asset = [self.userSelectedPhotos[indexPath.item] originalAsset];
     self.editingPrintPhoto = self.userSelectedPhotos[indexPath.item];
     
     UINavigationController *nav = [self.storyboard instantiateViewControllerWithIdentifier:@"CropViewNavigationController"];
@@ -313,6 +304,17 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
 
 - (IBAction)onButtonImageClicked:(UIButton *)sender {
     [self onButtonEnhanceClicked:sender];
+}
+
+- (void)preparePhotosForCheckout{
+    self.checkoutPhotos = [[NSMutableArray alloc] init];
+    [self.checkoutPhotos addObjectsFromArray:self.userSelectedPhotos];
+    for (int i = 0; i < self.userSelectedPhotos.count; i++) {
+        NSInteger numberOfCopies = [self.userSelectedPhotos[i] extraCopies];
+        for (NSInteger j = 0; j < numberOfCopies; j++){
+            [self.checkoutPhotos addObject:self.userSelectedPhotos[i]];
+        }
+    }
 }
 
 #pragma mark UICollectionView data source and delegate methods
@@ -375,7 +377,7 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     [downButton addTarget:self action:@selector(onButtonDownArrowClicked:) forControlEvents:UIControlEventTouchUpInside];
     
     UILabel *countLabel = (UILabel *)[cell.contentView viewWithTag:30];
-    [countLabel setText: [NSString stringWithFormat:@"%lu", (unsigned long)(1+[((NSNumber*)[self.extraCopiesOfAssets objectAtIndex:indexPath.item]) integerValue])]];
+    [countLabel setText: [NSString stringWithFormat:@"%lu", [self.userSelectedPhotos[indexPath.item] extraCopies]+1]];
     
     OLPrintPhoto *printPhoto = (OLPrintPhoto*)[self.userSelectedPhotos objectAtIndex:indexPath.item];
     [printPhoto setImageSize:cellImage.frame.size forImageView:cellImage];
