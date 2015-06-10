@@ -1756,6 +1756,13 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rlk-bS-4UT" userLabel="Container View">
                                 <rect key="frame" x="38" y="151" width="660" height="330"/>
                                 <subviews>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4k7-zt-s1N">
+                                        <rect key="frame" x="0.0" y="280" width="610" height="50"/>
+                                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.25" colorSpace="calibratedRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="50" id="Dzr-kv-tDt"/>
+                                        </constraints>
+                                    </view>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="book" translatesAutoresizingMaskIntoConstraints="NO" id="UgD-45-FUC">
                                         <rect key="frame" x="0.0" y="0.0" width="660" height="330"/>
                                     </imageView>
@@ -1763,9 +1770,12 @@
                                 <color key="backgroundColor" red="0.74509803919999995" green="0.80000000000000004" blue="0.81568627449999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstItem="UgD-45-FUC" firstAttribute="leading" secondItem="rlk-bS-4UT" secondAttribute="leading" id="2CI-4L-mxD"/>
+                                    <constraint firstItem="4k7-zt-s1N" firstAttribute="leading" secondItem="rlk-bS-4UT" secondAttribute="leading" id="5U5-JX-rE7"/>
                                     <constraint firstAttribute="height" constant="330" placeholder="YES" id="VJZ-gD-2G0"/>
                                     <constraint firstAttribute="bottom" secondItem="UgD-45-FUC" secondAttribute="bottom" id="Zau-ZW-enX"/>
+                                    <constraint firstAttribute="trailing" secondItem="4k7-zt-s1N" secondAttribute="trailing" constant="50" id="c0T-sI-PvL"/>
                                     <constraint firstAttribute="trailing" secondItem="UgD-45-FUC" secondAttribute="trailing" id="fYK-8z-zVV"/>
+                                    <constraint firstAttribute="bottom" secondItem="4k7-zt-s1N" secondAttribute="bottom" id="sqj-uc-N5d"/>
                                     <constraint firstItem="UgD-45-FUC" firstAttribute="top" secondItem="rlk-bS-4UT" secondAttribute="top" id="tV8-7T-om5"/>
                                     <constraint firstAttribute="width" secondItem="rlk-bS-4UT" secondAttribute="height" multiplier="8:4" placeholder="YES" id="vHx-Xy-jdf"/>
                                 </constraints>
@@ -1831,6 +1841,7 @@
                     <navigationItem key="navigationItem" id="2Od-Wr-K8P"/>
                     <connections>
                         <outlet property="bookCover" destination="HqC-Iz-l8f" id="edo-y8-uSK"/>
+                        <outlet property="bookImageView" destination="UgD-45-FUC" id="21E-GT-p9J"/>
                         <outlet property="containerView" destination="rlk-bS-4UT" id="Ewh-mD-XG1"/>
                         <outlet property="leftPageLabel" destination="8NO-a3-rcI" id="NWX-mg-vOi"/>
                         <outlet property="pagesLabel" destination="6zv-ER-YtC" id="COA-sz-sqZ"/>
@@ -2027,7 +2038,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="book" width="579" height="394"/>
+        <image name="book" width="575" height="393"/>
         <image name="button_arrow_down" width="45" height="45"/>
         <image name="button_arrow_up" width="45" height="45"/>
         <image name="frame_border" width="290" height="313"/>

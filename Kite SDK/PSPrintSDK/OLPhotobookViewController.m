@@ -36,6 +36,7 @@ static const CGFloat kBookEdgePadding = 38;
 @property (weak, nonatomic) IBOutlet UIView *containerView;
 @property (strong, nonatomic) NSMutableArray *photobookPhotos;
 @property (strong, nonatomic) OLPrintPhoto *editingPrintPhoto;
+@property (weak, nonatomic) IBOutlet UIImageView *bookImageView;
 @property (assign, nonatomic) NSInteger editingPageIndex;
 @property (strong, nonatomic) NSLayoutConstraint *centerXCon;
 @property (strong, nonatomic) NSLayoutConstraint *widthCon;
@@ -219,6 +220,7 @@ static const CGFloat kBookEdgePadding = 38;
     self.containerView.layer.shouldRasterize = YES;
     self.containerView.layer.rasterizationScale = [UIScreen mainScreen].scale;
     
+    [self.bookImageView makeRoundRectWithRadius:3];
 }
 
 - (void)ios7Back{
