@@ -1014,11 +1014,29 @@
                                         <rect key="frame" x="0.0" y="0.0" width="107" height="107"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="107" height="107"/>
                                             <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" tag="50" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hGt-ra-Plw">
+                                                    <rect key="frame" x="8" y="78" width="21" height="21"/>
+                                                    <color key="backgroundColor" red="0.29803921570000003" green="0.53333333329999999" blue="0.90588235289999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="21" id="Coo-Rd-w8A"/>
+                                                        <constraint firstAttribute="width" secondItem="hGt-ra-Plw" secondAttribute="height" multiplier="1:1" id="G2o-vP-jMd"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="10"/>
+                                                    <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstItem="hGt-ra-Plw" firstAttribute="leading" secondItem="FA7-7D-Mry" secondAttribute="leadingMargin" id="Ixd-px-Uem"/>
+                                            <constraint firstAttribute="bottomMargin" secondItem="hGt-ra-Plw" secondAttribute="bottom" id="fKa-GP-qNC"/>
+                                        </constraints>
+                                        <size key="customSize" width="107" height="107"/>
                                     </collectionViewCell>
                                 </cells>
                                 <connections>
@@ -1366,20 +1384,20 @@
                                             </state>
                                         </button>
                                         <label opaque="NO" userInteractionEnabled="NO" tag="30" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="2" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qCO-0F-q7E">
-                                            <rect key="frame" x="66" y="285" width="46" height="46"/>
+                                            <rect key="frame" x="65" y="285" width="46" height="46"/>
                                             <color key="backgroundColor" red="0.96470588239999999" green="0.73333333329999995" blue="0.25882352939999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <button opaque="NO" tag="12" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iox-F6-2wa">
-                                            <rect key="frame" x="112" y="285" width="46" height="46"/>
+                                            <rect key="frame" x="111" y="285" width="46" height="46"/>
                                             <state key="normal" title="Button" image="button_arrow_up">
                                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                             </state>
                                         </button>
                                         <button opaque="NO" tag="11" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dyy-fJ-b3t">
-                                            <rect key="frame" x="164" y="285" width="136" height="46"/>
+                                            <rect key="frame" x="163" y="285" width="137" height="46"/>
                                             <color key="backgroundColor" red="0.2901960784" green="0.53725490200000003" blue="0.86274509799999999" alpha="1" colorSpace="calibratedRGB"/>
                                             <state key="normal" title="CROP">
                                                 <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -1398,7 +1416,7 @@
                                     <constraint firstAttribute="bottom" secondItem="ywb-1O-Wlz" secondAttribute="bottom" constant="20" id="A4g-4a-0Ah"/>
                                     <constraint firstItem="ywb-1O-Wlz" firstAttribute="top" secondItem="6rZ-As-Bvm" secondAttribute="bottom" constant="5" id="ELX-hz-H1k"/>
                                     <constraint firstItem="6rZ-As-Bvm" firstAttribute="centerX" secondItem="dSM-Tk-2t9" secondAttribute="centerX" placeholder="YES" id="FYX-0w-5xf"/>
-                                    <constraint firstItem="qCO-0F-q7E" firstAttribute="leading" secondItem="ywb-1O-Wlz" secondAttribute="trailing" id="Pgk-fm-fFu"/>
+                                    <constraint firstItem="qCO-0F-q7E" firstAttribute="leading" secondItem="ywb-1O-Wlz" secondAttribute="trailing" constant="-1" id="Pgk-fm-fFu"/>
                                     <constraint firstItem="iox-F6-2wa" firstAttribute="bottom" secondItem="ywb-1O-Wlz" secondAttribute="bottom" id="X71-hh-E9U"/>
                                     <constraint firstItem="iox-F6-2wa" firstAttribute="leading" secondItem="qCO-0F-q7E" secondAttribute="trailing" id="Z0m-7F-yEc"/>
                                     <constraint firstItem="6rZ-As-Bvm" firstAttribute="leading" secondItem="miU-dY-0if" secondAttribute="leading" constant="20" id="cm2-JV-Lx8"/>

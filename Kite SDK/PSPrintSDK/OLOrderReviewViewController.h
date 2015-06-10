@@ -16,13 +16,8 @@
 @interface OLOrderReviewViewController : UICollectionViewController <UINavigationControllerDelegate, OLScrollCropViewControllerDelegate>
 
 @property (nonatomic, strong) OLProduct *product;
-@property (strong, nonatomic) NSMutableArray *extraCopiesOfAssets;
-@property (strong, nonatomic) NSMutableArray *assets;
 @property (strong, nonatomic) NSMutableArray *userSelectedPhotos;
 @property (weak, nonatomic) id<OLKiteDelegate> delegate;
-
-- (void)updateTitleBasedOnSelectedPhotoQuanitity;
-- (BOOL) shouldGoToCheckout;
-- (void) doCheckout;
+@property (strong, nonatomic) NSMutableArray *checkoutPhotos;
 
 @end

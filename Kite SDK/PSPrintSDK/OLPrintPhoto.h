@@ -28,5 +28,8 @@ typedef enum {
 
 @property (nonatomic, assign, readonly) PrintPhotoAssetType type;
 @property (nonatomic, strong) id asset;
+@property (assign, nonatomic) NSInteger extraCopies;
+@property (strong, nonatomic, readonly) id originalAsset;
+@property (assign, nonatomic, readonly) PrintPhotoAssetType originalType;
 
 @end
