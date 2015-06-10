@@ -464,6 +464,9 @@ static const CGFloat kBookEdgePadding = 38;
 }
 
 - (void)onPanGestureRecognized:(UIPanGestureRecognizer *)recognizer{
+    if (self.animating){
+        return;
+    }
     CGPoint translation = [recognizer translationInView:self.containerView];
     BOOL draggingLeft = translation.x < 0;
     BOOL draggingRight = translation.x > 0;
@@ -513,8 +516,10 @@ static const CGFloat kBookEdgePadding = 38;
         [self.inertiaBehavior addItem:self.containerView];
         [self.inertiaBehavior addLinearVelocity:CGPointMake([recognizer velocityInView:self.containerView].x, 0) forItem:self.containerView];
         __weak OLPhotobookViewController *welf = self;
+        self.animating = YES;
         [self.inertiaBehavior setAction:^{
             if ([welf isContainerViewAtRightEdge:YES] ){
+                welf.animating = NO;
                 [welf.inertiaBehavior removeItem:welf.containerView];
                 
                 welf.containerView.transform = CGAffineTransformMakeTranslation(-welf.containerView.frame.size.width + welf.view.frame.size.width - kBookEdgePadding * 2, 0);
@@ -523,6 +528,7 @@ static const CGFloat kBookEdgePadding = 38;
                 [welf.view layoutIfNeeded];
             }
             else if ([welf isContainerViewAtLeftEdge:YES] && [self.inertiaBehavior linearVelocityForItem:welf.containerView].x > 0){
+                welf.animating = NO;
                 [welf.inertiaBehavior removeItem:welf.containerView];
                 
                 welf.containerView.transform = CGAffineTransformIdentity;
@@ -548,6 +554,10 @@ static const CGFloat kBookEdgePadding = 38;
         return NO;
     }
     return YES;
+}
+
+- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer{
+    return !self.animating;
 }
 
 #pragma mark - Book related methods
