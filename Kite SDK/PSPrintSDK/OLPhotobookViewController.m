@@ -30,6 +30,15 @@ static const CGFloat kBookEdgePadding = 38;
 + (void)checkoutViewControllerForPrintOrder:(OLPrintOrder *)printOrder handler:(void(^)(OLCheckoutViewController *vc))handler;
 @end
 
+@interface MPFlipTransition (Private)
+
+- (void)animateFlip1:(BOOL)isFallingBack fromProgress:(CGFloat)fromProgress toProgress:(CGFloat)toProgress withCompletion:(void (^)(BOOL finished))completion;
+- (void)animateFlip2:(BOOL)isFallingBack fromProgress:(CGFloat)fromProgress withCompletion:(void (^)(BOOL finished))completion;
+- (void)transitionDidComplete:(BOOL)completed;
+- (void)cleanupLayers;
+
+@end
+
 @interface OLPhotobookViewController () <UIPageViewControllerDataSource, UIPageViewControllerDelegate, UIGestureRecognizerDelegate, OLScrollCropViewControllerDelegate>
 
 @property (strong, nonatomic) UIPageViewController *pageController;
@@ -229,6 +238,20 @@ static const CGFloat kBookEdgePadding = 38;
             self.pageControllerPanGesture = (UIPanGestureRecognizer *)gesture;
         }
     }
+    
+    [self setUpBookCoverView];
+    self.bookCover.hidden = NO;
+    self.containerView.layer.shadowOpacity = 0;
+    
+    UIView *closedPage = [self.bookCover viewWithTag:kTagLeft];
+    closedPage.layer.shadowOpacity = 0.25;
+    self.bookCover.layer.shadowOpacity = 0.0;
+    self.pagesLabelContainer.alpha = 0;
+    self.bookClosed = YES;
+    
+    self.containerView.transform = CGAffineTransformMakeTranslation([self xTrasformForBookAtRightEdge], 0);
+    self.bookCover.transform = CGAffineTransformMakeTranslation([self xTrasformForBookAtRightEdge], 0);
+    self.containerView.hidden = YES;
 }
 
 - (void)ios7Back{
@@ -246,6 +269,22 @@ static const CGFloat kBookEdgePadding = 38;
 
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
+    
+    MPFlipStyle style = MPFlipStyleDefault;
+    MPFlipTransition *flipTransition = [[MPFlipTransition alloc] initWithSourceView:self.bookCover destinationView:self.containerView duration:0.5 timingCurve:UIViewAnimationCurveEaseOut completionAction:MPTransitionActionNone];
+    flipTransition.style = style;
+    
+    [flipTransition buildLayers];
+    CGFloat maxProgress = 0.5;
+    [flipTransition setDuration:[flipTransition duration] * 1 / maxProgress]; // necessary to arrive at the dersired total duration
+    [flipTransition animateFlip1:NO fromProgress:0 toProgress:maxProgress withCompletion:^(BOOL finished) {
+        [flipTransition animateFlip2:YES fromProgress:maxProgress withCompletion:^(BOOL finished) {
+            [flipTransition cleanupLayers];
+            [flipTransition transitionDidComplete:NO];
+            
+        }];
+    }];
+
 }
 
 - (void)onBackButtonTapped{
@@ -639,7 +678,25 @@ static const CGFloat kBookEdgePadding = 38;
             halfBookCoverImage.layer.shouldRasterize = YES;
             halfBookCoverImage.layer.rasterizationScale = [UIScreen mainScreen].scale;
         }
-        halfBookCoverImage.frame = CGRectMake(self.bookCover.frame.size.width / 2.0, 0, self.bookCover.frame.size.width / 2.0, self.bookCover.frame.size.height);
+        
+        [halfBookCoverImage removeConstraints:halfBookCoverImage.constraints];
+        UIView *view = halfBookCoverImage;
+        view.translatesAutoresizingMaskIntoConstraints = NO;
+        NSDictionary *views = NSDictionaryOfVariableBindings(view);
+        NSMutableArray *con = [[NSMutableArray alloc] init];
+        
+        NSArray *visuals = @[@"H:[view]-0-|",
+                             @"V:|-0-[view]-0-|"];
+        
+        
+        for (NSString *visual in visuals) {
+            [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+        }
+        
+        [view.superview addConstraints:con];
+        
+        [view.superview addConstraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:view.superview attribute:NSLayoutAttributeWidth multiplier:0.5 constant:1]];
+
         [self.bookCover viewWithTag:kTagRight].hidden = NO;
     }
     else{
@@ -660,6 +717,7 @@ static const CGFloat kBookEdgePadding = 38;
             halfBookCoverImage.layer.shouldRasterize = YES;
             halfBookCoverImage.layer.rasterizationScale = [UIScreen mainScreen].scale;
         }
+        
         halfBookCoverImage.frame = CGRectMake(0, 0, self.bookCover.frame.size.width / 2.0, self.bookCover.frame.size.height);
         [self.bookCover viewWithTag:kTagLeft].hidden = NO;
     }
