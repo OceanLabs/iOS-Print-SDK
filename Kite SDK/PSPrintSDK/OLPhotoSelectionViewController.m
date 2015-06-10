@@ -529,6 +529,9 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 
 - (NSUInteger)numberOfCellsPerRow{
     CGSize size = self.rotationSize.width != 0 ? self.rotationSize : self.view.frame.size;
+    if (self.product.quantityToFulfillOrder == 3){
+        return 3;
+    }
     
     if (![self isHorizontalSizeClassCompact]){
         if (size.height > size.width){
