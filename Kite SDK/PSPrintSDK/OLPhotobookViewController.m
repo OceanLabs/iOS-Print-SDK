@@ -674,8 +674,10 @@ static const CGFloat kBookEdgePadding = 38;
             [self.bookCover.layer addAnimation:hideAnim forKey:@"shadowOpacity"];
             
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, kBookAnimationTime/4.0 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-                self.containerView.layer.shadowOpacity = 0.25;
-                self.bookCover.hidden = YES;
+                if (!self.animating){
+                    self.containerView.layer.shadowOpacity = 0.25;
+                    self.bookCover.hidden = YES;
+                }
             });
         }];
     }];
