@@ -33,6 +33,7 @@ static const CGFloat kBookEdgePadding = 38;
 @interface OLPhotobookViewController () <UIPageViewControllerDataSource, UIPageViewControllerDelegate, UIGestureRecognizerDelegate, OLScrollCropViewControllerDelegate>
 
 @property (strong, nonatomic) UIPageViewController *pageController;
+@property (weak, nonatomic) UIPanGestureRecognizer *pageControllerPanGesture;
 @property (weak, nonatomic) IBOutlet UIView *containerView;
 @property (strong, nonatomic) NSMutableArray *photobookPhotos;
 @property (strong, nonatomic) OLPrintPhoto *editingPrintPhoto;
@@ -221,6 +222,13 @@ static const CGFloat kBookEdgePadding = 38;
     self.containerView.layer.rasterizationScale = [UIScreen mainScreen].scale;
     
     [self.bookImageView makeRoundRectWithRadius:3];
+    
+    for (UIGestureRecognizer *gesture in self.pageController.gestureRecognizers){
+        gesture.delegate = self;
+        if ([gesture isKindOfClass:[UIPanGestureRecognizer class]]){
+            self.pageControllerPanGesture = gesture;
+        }
+    }
 }
 
 - (void)ios7Back{
@@ -557,6 +565,17 @@ static const CGFloat kBookEdgePadding = 38;
 }
 
 - (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer{
+    if (gestureRecognizer == self.pageControllerPanGesture){
+        CGPoint translation = [(UIPanGestureRecognizer *)gestureRecognizer translationInView:self.containerView];
+        BOOL draggingLeft = translation.x < 0;
+        BOOL draggingRight = translation.x > 0;
+        if (draggingLeft && [self isBookAtEnd]){
+            return NO;
+        }
+        if (draggingRight && [self isBookAtStart]){
+            return NO;
+        }
+    }
     return !self.animating;
 }
 
