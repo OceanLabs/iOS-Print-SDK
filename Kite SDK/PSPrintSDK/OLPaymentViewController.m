@@ -767,7 +767,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     NSString* sectionString = [self.sections objectAtIndex:section];
     if ([sectionString isEqualToString:kSectionPayment]) {
         if ([OLKitePrintSDK environment] == kOLKitePrintSDKEnvironmentSandbox) {
-            return NSLocalizedStringFromTableInBundle(@"Payment Options (Sandbox)", @"KitePrintSDK", [OLConstants bundle], @"");
+            return NSLocalizedStringFromTableInBundle(@"Payment Options (TEST)", @"KitePrintSDK", [OLConstants bundle], @"");
         } else {
             return NSLocalizedStringFromTableInBundle(@"Payment Options", @"KitePrintSDK", [OLConstants bundle], @"");
         }
