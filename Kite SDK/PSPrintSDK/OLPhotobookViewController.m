@@ -55,6 +55,7 @@ static const CGFloat kBookEdgePadding = 38;
 @property (weak, nonatomic) IBOutlet UILabel *pagesLabel;
 @property (strong, nonatomic) UIVisualEffectView *visualEffectView;
 @property (assign, nonatomic) BOOL animating;
+@property (assign, nonatomic) BOOL stranded;
 
 @end
 
@@ -68,7 +69,6 @@ static const CGFloat kBookEdgePadding = 38;
 -(UIDynamicItemBehavior*) inertiaBehavior{
     if (!_inertiaBehavior){
         _inertiaBehavior = [[UIDynamicItemBehavior alloc] init];
-        [self.dynamicAnimator addBehavior:_inertiaBehavior];
     }
     return _inertiaBehavior;
 }
@@ -226,7 +226,7 @@ static const CGFloat kBookEdgePadding = 38;
     for (UIGestureRecognizer *gesture in self.pageController.gestureRecognizers){
         gesture.delegate = self;
         if ([gesture isKindOfClass:[UIPanGestureRecognizer class]]){
-            self.pageControllerPanGesture = gesture;
+            self.pageControllerPanGesture = (UIPanGestureRecognizer *)gesture;
         }
     }
 }
@@ -254,6 +254,7 @@ static const CGFloat kBookEdgePadding = 38;
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator{
     [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+    self.stranded = NO;
     self.containerView.transform = CGAffineTransformIdentity;
     [self.containerView.superview removeConstraint:self.centerYCon];
     [self.view removeConstraint:self.widthCon];
@@ -521,28 +522,41 @@ static const CGFloat kBookEdgePadding = 38;
     if (recognizer.state == UIGestureRecognizerStateEnded){
         self.containerView.frame = CGRectMake(self.containerView.frame.origin.x + self.containerView.transform.tx, self.containerView.frame.origin.y, self.containerView.frame.size.width, self.containerView.frame.size.height);
         self.containerView.transform = CGAffineTransformIdentity;
+        [self.dynamicAnimator addBehavior:self.inertiaBehavior];
         [self.inertiaBehavior addItem:self.containerView];
         [self.inertiaBehavior addLinearVelocity:CGPointMake([recognizer velocityInView:self.containerView].x, 0) forItem:self.containerView];
+        self.inertiaBehavior.resistance = 3;
         __weak OLPhotobookViewController *welf = self;
         self.animating = YES;
+        self.stranded = NO;
         [self.inertiaBehavior setAction:^{
             if ([welf isContainerViewAtRightEdge:YES] ){
                 welf.animating = NO;
                 [welf.inertiaBehavior removeItem:welf.containerView];
+                [welf.dynamicAnimator removeBehavior:welf.inertiaBehavior];
                 
                 welf.containerView.transform = CGAffineTransformMakeTranslation(-welf.containerView.frame.size.width + welf.view.frame.size.width - kBookEdgePadding * 2, 0);
                 
                 [welf.view setNeedsLayout];
                 [welf.view layoutIfNeeded];
+                welf.stranded = NO;
             }
             else if ([welf isContainerViewAtLeftEdge:YES] && [self.inertiaBehavior linearVelocityForItem:welf.containerView].x > 0){
                 welf.animating = NO;
                 [welf.inertiaBehavior removeItem:welf.containerView];
+                [welf.dynamicAnimator removeBehavior:welf.inertiaBehavior];
                 
                 welf.containerView.transform = CGAffineTransformIdentity;
                 
                 [welf.view setNeedsLayout];
                 [welf.view layoutIfNeeded];
+                welf.stranded = NO;
+            }
+            
+            else if ([welf.inertiaBehavior linearVelocityForItem:welf.containerView].x < 15 && [welf.inertiaBehavior linearVelocityForItem:welf.containerView].x > -15 && !welf.stranded){
+                welf.animating = NO;
+                [welf.inertiaBehavior removeItem:welf.containerView];
+                welf.stranded = YES;
             }
         }];
     }
@@ -817,7 +831,7 @@ static const CGFloat kBookEdgePadding = 38;
     }
     
     if (!useFrame){
-        return self.containerView.transform.tx <= [self xTrasformForBookAtRightEdge];
+        return self.containerView.transform.tx <= [self xTrasformForBookAtRightEdge] && !self.stranded;
     }
     else{
         return self.containerView.frame.origin.x - kBookEdgePadding <= [self xTrasformForBookAtRightEdge];
@@ -830,7 +844,7 @@ static const CGFloat kBookEdgePadding = 38;
     }
     
     if (!useFrame){
-        return self.containerView.transform.tx >= 0;
+        return self.containerView.transform.tx >= 0 && !self.stranded;
     }
     else{
         return self.containerView.center.x - self.containerView.frame.size.width / 2  - kBookEdgePadding >= 0;
