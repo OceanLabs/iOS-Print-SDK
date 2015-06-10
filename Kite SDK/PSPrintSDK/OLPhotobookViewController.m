@@ -656,7 +656,6 @@ static const CGFloat kBookEdgePadding = 38;
         MPFlipTransition *flipTransition = [[MPFlipTransition alloc] initWithSourceView:self.bookCover destinationView:self.containerView duration:kBookAnimationTime timingCurve:UIViewAnimationCurveEaseInOut completionAction:MPTransitionActionNone];
         flipTransition.style = style;
         [flipTransition perform:^(BOOL finished){
-            self.animating = NO;
             self.bookClosed = NO;
             [UIView animateWithDuration:kBookAnimationTime/2.0 animations:^{
                 self.pagesLabelContainer.alpha = 1;
@@ -684,10 +683,9 @@ static const CGFloat kBookEdgePadding = 38;
             [self.bookCover.layer addAnimation:hideAnim forKey:@"shadowOpacity"];
             
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, kBookAnimationTime/4.0 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-                if (!self.animating){
-                    self.containerView.layer.shadowOpacity = 0.25;
-                    self.bookCover.hidden = YES;
-                }
+                self.animating = NO;
+                self.containerView.layer.shadowOpacity = 0.25;
+                self.bookCover.hidden = YES;
             });
         }];
     }];
