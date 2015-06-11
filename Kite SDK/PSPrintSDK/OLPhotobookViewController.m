@@ -232,7 +232,7 @@ static const CGFloat kBookEdgePadding = 38;
     self.containerView.layer.shouldRasterize = YES;
     self.containerView.layer.rasterizationScale = [UIScreen mainScreen].scale;
     
-    [self.bookImageView makeRoundRectWithRadius:3];
+    [self.bookImageView makeRoundRectWithRadius:6];
     
     for (UIGestureRecognizer *gesture in self.pageController.gestureRecognizers){
         gesture.delegate = self;
@@ -281,6 +281,11 @@ static const CGFloat kBookEdgePadding = 38;
             self.containerView.transform = CGAffineTransformMakeTranslation([self xTrasformForBookAtRightEdge], 0);
         }
     }
+//    UIView *v1 = [self.bookCover viewWithTag:kTagRight];
+//    [[[v1 subviews] firstObject] setFrame:[v1 bounds]];
+//    UIView *v2 = [self.bookCover viewWithTag:kTagLeft];
+//    [[[v2 subviews] firstObject] setFrame:[v2 bounds]];
+    
 }
 
 - (BOOL)isLandscape{
@@ -691,29 +696,35 @@ static const CGFloat kBookEdgePadding = 38;
     UISwipeGestureRecognizer *swipe = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(openBook:)];
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(openBook:)];
     
-    UIImageView *halfBookCoverImage;
+    UIView *halfBookCoverImageContainer;
     
     if ([self isBookAtStart]){
-        halfBookCoverImage = (UIImageView *)[self.bookCover viewWithTag:kTagRight];
+        halfBookCoverImageContainer = [self.bookCover viewWithTag:kTagRight];
         [self.bookCover viewWithTag:kTagLeft].hidden = YES;
-        if (!halfBookCoverImage){
-            halfBookCoverImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"book-cover-right"]];
-            halfBookCoverImage.tag = kTagRight;
+        if (!halfBookCoverImageContainer){
+            halfBookCoverImageContainer = [[UIView alloc] init];
+            halfBookCoverImageContainer.tag = kTagRight;
             swipe.direction = UISwipeGestureRecognizerDirectionLeft;
-            [self.bookCover addSubview:halfBookCoverImage];
-            halfBookCoverImage.userInteractionEnabled = YES;
-            [halfBookCoverImage addGestureRecognizer:tap];
-            [halfBookCoverImage addGestureRecognizer:swipe];
             
-            halfBookCoverImage.layer.shadowOffset = CGSizeMake(-10, 10);
-            halfBookCoverImage.layer.shadowRadius = 5;
-            halfBookCoverImage.layer.shadowOpacity = 0.0;
-            halfBookCoverImage.layer.shouldRasterize = YES;
-            halfBookCoverImage.layer.rasterizationScale = [UIScreen mainScreen].scale;
+            UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"book-cover-right"]];
+            imageView.contentMode = UIViewContentModeScaleAspectFill;
+            [imageView makeRoundRectWithRadius:6];
+            [halfBookCoverImageContainer addSubview:imageView];
+            
+            [self.bookCover addSubview:halfBookCoverImageContainer];
+            halfBookCoverImageContainer.userInteractionEnabled = YES;
+            [halfBookCoverImageContainer addGestureRecognizer:tap];
+            [halfBookCoverImageContainer addGestureRecognizer:swipe];
+            
+            halfBookCoverImageContainer.layer.shadowOffset = CGSizeMake(-10, 10);
+            halfBookCoverImageContainer.layer.shadowRadius = 5;
+            halfBookCoverImageContainer.layer.shadowOpacity = 0.0;
+            halfBookCoverImageContainer.layer.shouldRasterize = YES;
+            halfBookCoverImageContainer.layer.rasterizationScale = [UIScreen mainScreen].scale;
         }
         
-        [halfBookCoverImage removeConstraints:halfBookCoverImage.constraints];
-        UIView *view = halfBookCoverImage;
+        [halfBookCoverImageContainer removeConstraints:halfBookCoverImageContainer.constraints];
+        UIView *view = halfBookCoverImageContainer;
         view.translatesAutoresizingMaskIntoConstraints = NO;
         NSDictionary *views = NSDictionaryOfVariableBindings(view);
         NSMutableArray *con = [[NSMutableArray alloc] init];
@@ -727,31 +738,53 @@ static const CGFloat kBookEdgePadding = 38;
         }
         
         [view.superview addConstraints:con];
-        
         [view.superview addConstraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:view.superview attribute:NSLayoutAttributeWidth multiplier:0.5 constant:1]];
+        
+        view = [[halfBookCoverImageContainer subviews] firstObject];
+        [view removeConstraints:view.constraints];
+        view.translatesAutoresizingMaskIntoConstraints = NO;
+        views = NSDictionaryOfVariableBindings(view);
+        con = [[NSMutableArray alloc] init];
+        
+        visuals = @[@"H:|-0-[view]-0-|",
+                             @"V:|-0-[view]-0-|"];
+        
+        
+        for (NSString *visual in visuals) {
+            [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+        }
+        
+        [view.superview addConstraints:con];
 
         [self.bookCover viewWithTag:kTagRight].hidden = NO;
     }
     else{
         [self.bookCover viewWithTag:kTagRight].hidden = YES;
-        halfBookCoverImage = (UIImageView *)[self.bookCover viewWithTag:kTagLeft];
-        if (!halfBookCoverImage){
-            halfBookCoverImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"book-cover-left"]];
-            halfBookCoverImage.tag = kTagLeft;
+        halfBookCoverImageContainer = [self.bookCover viewWithTag:kTagLeft];
+        if (!halfBookCoverImageContainer){
+            halfBookCoverImageContainer = [[UIView alloc] init];
+            halfBookCoverImageContainer.tag = kTagLeft;
             swipe.direction = UISwipeGestureRecognizerDirectionRight;
-            [self.bookCover addSubview:halfBookCoverImage];
-            halfBookCoverImage.userInteractionEnabled = YES;
-            [halfBookCoverImage addGestureRecognizer:tap];
-            [halfBookCoverImage addGestureRecognizer:swipe];
+            [self.bookCover addSubview:halfBookCoverImageContainer];
+            halfBookCoverImageContainer.userInteractionEnabled = YES;
+            [halfBookCoverImageContainer addGestureRecognizer:tap];
+            [halfBookCoverImageContainer addGestureRecognizer:swipe];
             
-            halfBookCoverImage.layer.shadowOffset = CGSizeMake(-10, 10);
-            halfBookCoverImage.layer.shadowRadius = 5;
-            halfBookCoverImage.layer.shadowOpacity = 0.0;
-            halfBookCoverImage.layer.shouldRasterize = YES;
-            halfBookCoverImage.layer.rasterizationScale = [UIScreen mainScreen].scale;
+            UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"book-cover-left"]];
+            imageView.contentMode = UIViewContentModeScaleAspectFill;
+            [imageView makeRoundRectWithRadius:6];
+            [halfBookCoverImageContainer addSubview:imageView];
+            
+            halfBookCoverImageContainer.layer.shadowOffset = CGSizeMake(-10, 10);
+            halfBookCoverImageContainer.layer.shadowRadius = 5;
+            halfBookCoverImageContainer.layer.shadowOpacity = 0.0;
+            halfBookCoverImageContainer.layer.shouldRasterize = YES;
+            halfBookCoverImageContainer.layer.rasterizationScale = [UIScreen mainScreen].scale;
         }
         
-        halfBookCoverImage.frame = CGRectMake(0, 0, self.bookCover.frame.size.width / 2.0, self.bookCover.frame.size.height);
+        
+        halfBookCoverImageContainer.frame = CGRectMake(0, 0, self.bookCover.frame.size.width / 2.0, self.bookCover.frame.size.height);
+        [[[halfBookCoverImageContainer subviews] firstObject] setFrame:halfBookCoverImageContainer.frame];
         [self.bookCover viewWithTag:kTagLeft].hidden = NO;
     }
 }

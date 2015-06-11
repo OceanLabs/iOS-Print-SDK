@@ -1778,14 +1778,14 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wLR-Iq-33c" userLabel="containerView">
                                 <rect key="frame" x="38" y="166" width="600" height="300"/>
                                 <subviews>
-                                    <view hidden="YES" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="HqC-Iz-l8f" userLabel="bookCover">
-                                        <rect key="frame" x="-180" y="-15" width="660" height="330"/>
-                                        <color key="backgroundColor" red="0.74509803919999995" green="0.80000000000000004" blue="0.81568627449999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HqC-Iz-l8f" userLabel="bookCover">
+                                        <rect key="frame" x="0.0" y="0.0" width="600" height="300"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rlk-bS-4UT" userLabel="openBookView">
                                         <rect key="frame" x="0.0" y="0.0" width="600" height="300"/>
                                         <subviews>
-                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4k7-zt-s1N">
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4k7-zt-s1N" userLabel="fakeShadow">
                                                 <rect key="frame" x="0.0" y="250" width="550" height="50"/>
                                                 <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.25" colorSpace="calibratedRGB"/>
                                                 <constraints>
