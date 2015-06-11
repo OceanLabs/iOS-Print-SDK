@@ -43,6 +43,7 @@ static const CGFloat kBookEdgePadding = 38;
 
 @property (strong, nonatomic) UIPageViewController *pageController;
 @property (weak, nonatomic) UIPanGestureRecognizer *pageControllerPanGesture;
+@property (weak, nonatomic) IBOutlet UIView *openbookView;
 @property (weak, nonatomic) IBOutlet UIView *containerView;
 @property (strong, nonatomic) NSMutableArray *photobookPhotos;
 @property (strong, nonatomic) OLPrintPhoto *editingPrintPhoto;
@@ -65,6 +66,7 @@ static const CGFloat kBookEdgePadding = 38;
 @property (strong, nonatomic) UIVisualEffectView *visualEffectView;
 @property (assign, nonatomic) BOOL animating;
 @property (assign, nonatomic) BOOL stranded;
+@property (assign, nonatomic) BOOL hasDoneFirstTimeLayout;
 
 @end
 
@@ -98,15 +100,15 @@ static const CGFloat kBookEdgePadding = 38;
     [self.pageController setViewControllers:@[[self viewControllerAtIndex:0], [self viewControllerAtIndex:1]] direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
     
     [self addChildViewController:self.pageController];
-    [self.containerView addSubview:self.pageController.view];
+    [self.openbookView addSubview:self.pageController.view];
     
     self.pageController.view.translatesAutoresizingMaskIntoConstraints = NO;
     
-    [self.containerView addConstraint:[NSLayoutConstraint constraintWithItem:self.pageController.view attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self.containerView attribute:NSLayoutAttributeHeight multiplier:1 - (2 * .021573604) constant:0]];
-    [self.containerView addConstraint:[NSLayoutConstraint constraintWithItem:self.pageController.view attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.containerView attribute:NSLayoutAttributeCenterY multiplier:1 constant:0]];
+    [self.openbookView addConstraint:[NSLayoutConstraint constraintWithItem:self.pageController.view attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self.openbookView attribute:NSLayoutAttributeHeight multiplier:1 - (2 * .021573604) constant:0]];
+    [self.openbookView addConstraint:[NSLayoutConstraint constraintWithItem:self.pageController.view attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.openbookView attribute:NSLayoutAttributeCenterY multiplier:1 constant:0]];
     
-    [self.containerView addConstraint:[NSLayoutConstraint constraintWithItem:self.pageController.view attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:self.containerView attribute:NSLayoutAttributeWidth multiplier:1 - (2 * .031951641) constant:0]];
-    [self.containerView addConstraint:[NSLayoutConstraint constraintWithItem:self.pageController.view attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.containerView attribute:NSLayoutAttributeCenterX multiplier:1 constant:0]];
+    [self.openbookView addConstraint:[NSLayoutConstraint constraintWithItem:self.pageController.view attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:self.openbookView attribute:NSLayoutAttributeWidth multiplier:1 - (2 * .031951641) constant:0]];
+    [self.openbookView addConstraint:[NSLayoutConstraint constraintWithItem:self.pageController.view attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.openbookView attribute:NSLayoutAttributeCenterX multiplier:1 constant:0]];
     
     CGFloat bookAspectRatio = [self productAspectRatio];
     
@@ -243,15 +245,18 @@ static const CGFloat kBookEdgePadding = 38;
     self.bookCover.hidden = NO;
     self.containerView.layer.shadowOpacity = 0;
     
-    UIView *closedPage = [self.bookCover viewWithTag:kTagLeft];
+    UIView *closedPage = [self.bookCover viewWithTag:kTagRight];
+    closedPage.layer.shadowOffset = CGSizeMake(-10, 10);
+    closedPage.layer.shadowRadius = 5;
     closedPage.layer.shadowOpacity = 0.25;
+    closedPage.layer.shouldRasterize = YES;
+    closedPage.layer.rasterizationScale = [UIScreen mainScreen].scale;
+    
     self.bookCover.layer.shadowOpacity = 0.0;
     self.pagesLabelContainer.alpha = 0;
     self.bookClosed = YES;
     
-    self.containerView.transform = CGAffineTransformMakeTranslation([self xTrasformForBookAtRightEdge], 0);
-    self.bookCover.transform = CGAffineTransformMakeTranslation([self xTrasformForBookAtRightEdge], 0);
-    self.containerView.hidden = YES;
+    self.openbookView.hidden = YES;
 }
 
 - (void)ios7Back{
@@ -267,23 +272,53 @@ static const CGFloat kBookEdgePadding = 38;
     }
 }
 
+- (void)viewDidLayoutSubviews{
+    [super viewDidLayoutSubviews];
+    
+    if (!self.hasDoneFirstTimeLayout){
+        self.hasDoneFirstTimeLayout = YES;
+        if (![self isLandscape]){
+            self.containerView.transform = CGAffineTransformMakeTranslation([self xTrasformForBookAtRightEdge], 0);
+        }
+    }
+}
+
+- (BOOL)isLandscape{
+    return self.view.frame.size.width > self.view.frame.size.height;
+}
+
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
     
-    MPFlipStyle style = MPFlipStyleDefault;
-    MPFlipTransition *flipTransition = [[MPFlipTransition alloc] initWithSourceView:self.bookCover destinationView:self.containerView duration:0.5 timingCurve:UIViewAnimationCurveEaseOut completionAction:MPTransitionActionNone];
-    flipTransition.style = style;
-    
-    [flipTransition buildLayers];
-    CGFloat maxProgress = 0.5;
-    [flipTransition setDuration:[flipTransition duration] * 1 / maxProgress]; // necessary to arrive at the dersired total duration
-    [flipTransition animateFlip1:NO fromProgress:0 toProgress:maxProgress withCompletion:^(BOOL finished) {
-        [flipTransition animateFlip2:YES fromProgress:maxProgress withCompletion:^(BOOL finished) {
-            [flipTransition cleanupLayers];
-            [flipTransition transitionDidComplete:NO];
-            
+    if (self.bookClosed){
+        self.animating = YES;
+        MPFlipStyle style = MPFlipStyleDefault;
+        MPFlipTransition *flipTransition = [[MPFlipTransition alloc] initWithSourceView:self.bookCover destinationView:self.openbookView duration:0.5 timingCurve:UIViewAnimationCurveEaseOut completionAction:MPTransitionActionNone];
+        flipTransition.style = style;
+        
+        [flipTransition buildLayers];
+        CGFloat maxProgress = 0.5;
+        [flipTransition setRubberbandMaximumProgress:maxProgress/2.0];
+        [flipTransition setDuration:[flipTransition duration] * 1 / maxProgress]; // necessary to arrive at the dersired total duration
+        [flipTransition animateFlip1:NO fromProgress:0 toProgress:maxProgress withCompletion:^(BOOL finished) {
+            flipTransition.timingCurve = UIViewAnimationCurveEaseIn;
+            [flipTransition animateFlip2:YES fromProgress:maxProgress withCompletion:^(BOOL finished) {
+                [flipTransition cleanupLayers];
+                [flipTransition transitionDidComplete:NO];
+                [flipTransition buildLayers];
+                flipTransition.duration = flipTransition.duration;
+                flipTransition.timingCurve = UIViewAnimationCurveEaseOut;
+                [flipTransition animateFlip1:NO fromProgress:0 toProgress:maxProgress/2.0 withCompletion:^(BOOL finished) {
+                    flipTransition.timingCurve = UIViewAnimationCurveEaseIn;
+                    [flipTransition animateFlip2:YES fromProgress:maxProgress/2.0 withCompletion:^(BOOL finished) {
+                        [flipTransition cleanupLayers];
+                        [flipTransition transitionDidComplete:NO];
+                        self.animating = NO;
+                    }];
+                }];
+            }];
         }];
-    }];
+    }
 
 }
 
@@ -311,12 +346,10 @@ static const CGFloat kBookEdgePadding = 38;
         [self setUpBookCoverView];
         if (size.width > size.height){
             self.containerView.transform = CGAffineTransformIdentity;
-            self.bookCover.transform = CGAffineTransformIdentity;
         }
         else{
             if (self.bookClosed && [self isBookAtStart]){
                 self.containerView.transform = CGAffineTransformMakeTranslation([self xTrasformForBookAtRightEdge], 0);
-                self.bookCover.transform = CGAffineTransformMakeTranslation([self xTrasformForBookAtRightEdge], 0);
             }
         }
         
@@ -740,11 +773,10 @@ static const CGFloat kBookEdgePadding = 38;
     self.animating = YES;
     
     [UIView animateWithDuration:kBookAnimationTime animations:^{
-        self.bookCover.transform = CGAffineTransformIdentity;
         self.containerView.transform = CGAffineTransformIdentity;
     }completion:^(BOOL completed){
         MPFlipStyle style = sender.view.tag == kTagRight ? MPFlipStyleDefault : MPFlipStyleDirectionBackward;
-        MPFlipTransition *flipTransition = [[MPFlipTransition alloc] initWithSourceView:self.bookCover destinationView:self.containerView duration:kBookAnimationTime timingCurve:UIViewAnimationCurveEaseInOut completionAction:MPTransitionActionNone];
+        MPFlipTransition *flipTransition = [[MPFlipTransition alloc] initWithSourceView:self.bookCover destinationView:self.openbookView duration:kBookAnimationTime timingCurve:UIViewAnimationCurveEaseInOut completionAction:MPTransitionActionNone];
         flipTransition.style = style;
         [flipTransition perform:^(BOOL finished){
             self.bookClosed = NO;
@@ -752,7 +784,7 @@ static const CGFloat kBookEdgePadding = 38;
                 self.pagesLabelContainer.alpha = 1;
             }];
             
-            self.containerView.hidden = NO;
+            self.openbookView.hidden = NO;
             
             //Fade out shadow of the half-book.
             UIView *closedPage = [self.bookCover viewWithTag:sender.view.tag];
@@ -816,7 +848,7 @@ static const CGFloat kBookEdgePadding = 38;
         self.pagesLabelContainer.alpha = 0;
     }];
     
-    MPFlipTransition *flipTransition = [[MPFlipTransition alloc] initWithSourceView:self.containerView destinationView:self.bookCover duration:kBookAnimationTime timingCurve:UIViewAnimationCurveEaseInOut completionAction:MPTransitionActionShowHide];
+    MPFlipTransition *flipTransition = [[MPFlipTransition alloc] initWithSourceView:self.openbookView destinationView:self.bookCover duration:kBookAnimationTime timingCurve:UIViewAnimationCurveEaseInOut completionAction:MPTransitionActionShowHide];
     flipTransition.flippingPageShadowOpacity = 0;
     flipTransition.style = MPFlipStyleDirectionBackward;
     [flipTransition perform:^(BOOL finished){
@@ -824,7 +856,6 @@ static const CGFloat kBookEdgePadding = 38;
         if (![self isContainerViewAtRightEdge:NO]){
             [UIView animateWithDuration:kBookAnimationTime/2.0 animations:^{
                 self.containerView.transform = CGAffineTransformMakeTranslation([self xTrasformForBookAtRightEdge], 0);
-                self.bookCover.transform = CGAffineTransformMakeTranslation([self xTrasformForBookAtRightEdge], 0);
             }];
         }
         self.bookClosed = YES;
@@ -867,9 +898,8 @@ static const CGFloat kBookEdgePadding = 38;
                         options:UIViewAnimationOptionBeginFromCurrentState
                      animations:^{
                          self.containerView.transform = CGAffineTransformIdentity;
-                         self.bookCover.transform = CGAffineTransformIdentity;
                      } completion:^(BOOL finished){
-                         MPFlipTransition *flipTransition = [[MPFlipTransition alloc] initWithSourceView:self.containerView destinationView:self.bookCover duration:kBookAnimationTime timingCurve:UIViewAnimationCurveEaseInOut completionAction:MPTransitionActionShowHide];
+                         MPFlipTransition *flipTransition = [[MPFlipTransition alloc] initWithSourceView:self.openbookView destinationView:self.bookCover duration:kBookAnimationTime timingCurve:UIViewAnimationCurveEaseInOut completionAction:MPTransitionActionShowHide];
                          flipTransition.flippingPageShadowOpacity = 0;
                          flipTransition.style = MPFlipStyleDefault;
                          [flipTransition perform:^(BOOL finished){
