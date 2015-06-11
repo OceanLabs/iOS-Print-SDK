@@ -43,6 +43,7 @@ static const CGFloat kBookEdgePadding = 38;
 
 @property (strong, nonatomic) UIPageViewController *pageController;
 @property (weak, nonatomic) UIPanGestureRecognizer *pageControllerPanGesture;
+@property (weak, nonatomic) IBOutlet UIView *fakeShadowView;
 @property (weak, nonatomic) IBOutlet UIView *openbookView;
 @property (weak, nonatomic) IBOutlet UIView *containerView;
 @property (strong, nonatomic) NSMutableArray *photobookPhotos;
@@ -258,6 +259,8 @@ static const CGFloat kBookEdgePadding = 38;
     self.bookClosed = YES;
     
     self.openbookView.hidden = YES;
+    
+    [self.fakeShadowView makeRoundRectWithRadius:3];
 }
 
 - (void)ios7Back{
@@ -834,6 +837,14 @@ static const CGFloat kBookEdgePadding = 38;
             hideAnim.fillMode = kCAFillModeForwards;
             [self.containerView.layer addAnimation:hideAnim forKey:@"shadowOpacity"];
             
+            CABasicAnimation *cornerAnim = [CABasicAnimation animationWithKeyPath:@"cornerRadius"];
+            cornerAnim.fromValue = @3;
+            cornerAnim.toValue = @0;
+            cornerAnim.duration = kBookAnimationTime/4.0;
+            cornerAnim.removedOnCompletion = NO;
+            cornerAnim.fillMode = kCAFillModeForwards;
+            [self.fakeShadowView.layer addAnimation:cornerAnim forKey:@"cornerRadius"];
+            
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, kBookAnimationTime/4.0 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
                 self.animating = NO;
                 self.containerView.layer.shadowOpacity = 0.25;
@@ -879,6 +890,15 @@ static const CGFloat kBookEdgePadding = 38;
     flipTransition.style = MPFlipStyleDirectionBackward;
     [flipTransition perform:^(BOOL finished){
         self.animating = NO;
+        
+        CABasicAnimation *cornerAnim = [CABasicAnimation animationWithKeyPath:@"cornerRadius"];
+        cornerAnim.fromValue = @0;
+        cornerAnim.toValue = @3;
+        cornerAnim.duration = kBookAnimationTime/4.0;
+        cornerAnim.removedOnCompletion = NO;
+        cornerAnim.fillMode = kCAFillModeForwards;
+        [self.fakeShadowView.layer addAnimation:cornerAnim forKey:@"cornerRadius"];
+        
         if (![self isContainerViewAtRightEdge:NO]){
             [UIView animateWithDuration:kBookAnimationTime/2.0 animations:^{
                 self.containerView.transform = CGAffineTransformMakeTranslation([self xTrasformForBookAtRightEdge], 0);
@@ -930,6 +950,7 @@ static const CGFloat kBookEdgePadding = 38;
                          flipTransition.style = MPFlipStyleDefault;
                          [flipTransition perform:^(BOOL finished){
                              self.animating = NO;
+                             [self.fakeShadowView makeRoundRectWithRadius:3];
                          }];
                          self.bookClosed = YES;
                      }];
