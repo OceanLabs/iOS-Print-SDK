@@ -221,11 +221,11 @@ static const CGFloat kBookEdgePadding = 38;
     self.centerYCon = [NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.containerView.superview attribute:NSLayoutAttributeCenterY multiplier:1 constant:yOffset];
     [self.containerView.superview addConstraint:self.centerYCon];
     
-    self.bookCover.layer.shadowOffset = CGSizeMake(-10, 10);
-    self.bookCover.layer.shadowRadius = 5;
-    self.bookCover.layer.shadowOpacity = 0.25;
-    self.bookCover.layer.shouldRasterize = YES;
-    self.bookCover.layer.rasterizationScale = [UIScreen mainScreen].scale;
+    self.containerView.layer.shadowOffset = CGSizeMake(-10, 10);
+    self.containerView.layer.shadowRadius = 5;
+    self.containerView.layer.shadowOpacity = 0.25;
+    self.containerView.layer.shouldRasterize = YES;
+    self.containerView.layer.rasterizationScale = [UIScreen mainScreen].scale;
     
     self.containerView.layer.shadowOffset = CGSizeMake(-10, 10);
     self.containerView.layer.shadowRadius = 5;
@@ -253,7 +253,7 @@ static const CGFloat kBookEdgePadding = 38;
     closedPage.layer.shouldRasterize = YES;
     closedPage.layer.rasterizationScale = [UIScreen mainScreen].scale;
     
-    self.bookCover.layer.shadowOpacity = 0.0;
+    self.containerView.layer.shadowOpacity = 0.0;
     self.pagesLabelContainer.alpha = 0;
     self.bookClosed = YES;
     
@@ -832,7 +832,7 @@ static const CGFloat kBookEdgePadding = 38;
             hideAnim.duration = kBookAnimationTime/4.0;
             hideAnim.removedOnCompletion = NO;
             hideAnim.fillMode = kCAFillModeForwards;
-            [self.bookCover.layer addAnimation:hideAnim forKey:@"shadowOpacity"];
+            [self.containerView.layer addAnimation:hideAnim forKey:@"shadowOpacity"];
             
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, kBookAnimationTime/4.0 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
                 self.animating = NO;
@@ -853,9 +853,6 @@ static const CGFloat kBookEdgePadding = 38;
     [self setUpBookCoverView];
     self.bookCover.hidden = NO;
     
-    // Turn off containerView shadow because we will be animating that. Will use bookCover view shadow for the duration of the animation.
-    self.containerView.layer.shadowOpacity = 0;
-    
     //Fade in shadow of the half-book.
     UIView *closedPage = [self.bookCover viewWithTag:kTagRight];
     CABasicAnimation *showAnim = [CABasicAnimation animationWithKeyPath:@"shadowOpacity"];
@@ -870,8 +867,8 @@ static const CGFloat kBookEdgePadding = 38;
     hideAnim.fromValue = [NSNumber numberWithFloat:0.25];
     hideAnim.toValue = [NSNumber numberWithFloat:0.0];
     hideAnim.duration = kBookAnimationTime/4.0;
-    [self.bookCover.layer addAnimation:hideAnim forKey:@"shadowOpacity"];
-    self.bookCover.layer.shadowOpacity = 0.0;
+    [self.containerView.layer addAnimation:hideAnim forKey:@"shadowOpacity"];
+    self.containerView.layer.shadowOpacity = 0.0;
     
     [UIView animateWithDuration:kBookAnimationTime/8.0 animations:^{
         self.pagesLabelContainer.alpha = 0;
@@ -915,8 +912,8 @@ static const CGFloat kBookEdgePadding = 38;
     hideAnim.fromValue = [NSNumber numberWithFloat:0.25];
     hideAnim.toValue = [NSNumber numberWithFloat:0.0];
     hideAnim.duration = kBookAnimationTime/4.0;
-    [self.bookCover.layer addAnimation:hideAnim forKey:@"shadowOpacity"];
-    self.bookCover.layer.shadowOpacity = 0.0;
+    [self.containerView.layer addAnimation:hideAnim forKey:@"shadowOpacity"];
+    self.containerView.layer.shadowOpacity = 0.0;
     
     [UIView animateWithDuration:kBookAnimationTime/8.0 animations:^{
         self.pagesLabelContainer.alpha = 0;
