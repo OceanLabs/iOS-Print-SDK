@@ -232,7 +232,7 @@ static const CGFloat kBookEdgePadding = 38;
     self.containerView.layer.shouldRasterize = YES;
     self.containerView.layer.rasterizationScale = [UIScreen mainScreen].scale;
     
-    [self.bookImageView makeRoundRectWithRadius:6];
+    [self.bookImageView makeRoundRectWithRadius:3];
     
     for (UIGestureRecognizer *gesture in self.pageController.gestureRecognizers){
         gesture.delegate = self;
@@ -281,11 +281,6 @@ static const CGFloat kBookEdgePadding = 38;
             self.containerView.transform = CGAffineTransformMakeTranslation([self xTrasformForBookAtRightEdge], 0);
         }
     }
-//    UIView *v1 = [self.bookCover viewWithTag:kTagRight];
-//    [[[v1 subviews] firstObject] setFrame:[v1 bounds]];
-//    UIView *v2 = [self.bookCover viewWithTag:kTagLeft];
-//    [[[v2 subviews] firstObject] setFrame:[v2 bounds]];
-    
 }
 
 - (BOOL)isLandscape{
@@ -310,17 +305,7 @@ static const CGFloat kBookEdgePadding = 38;
             [flipTransition animateFlip2:YES fromProgress:maxProgress withCompletion:^(BOOL finished) {
                 [flipTransition cleanupLayers];
                 [flipTransition transitionDidComplete:NO];
-                [flipTransition buildLayers];
-                flipTransition.duration = flipTransition.duration;
-                flipTransition.timingCurve = UIViewAnimationCurveEaseOut;
-                [flipTransition animateFlip1:NO fromProgress:0 toProgress:maxProgress/2.0 withCompletion:^(BOOL finished) {
-                    flipTransition.timingCurve = UIViewAnimationCurveEaseIn;
-                    [flipTransition animateFlip2:YES fromProgress:maxProgress/2.0 withCompletion:^(BOOL finished) {
-                        [flipTransition cleanupLayers];
-                        [flipTransition transitionDidComplete:NO];
-                        self.animating = NO;
-                    }];
-                }];
+                self.animating = NO;
             }];
         }];
     }
@@ -708,7 +693,7 @@ static const CGFloat kBookEdgePadding = 38;
             
             UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"book-cover-right"]];
             imageView.contentMode = UIViewContentModeScaleAspectFill;
-            [imageView makeRoundRectWithRadius:6];
+            [imageView makeRoundRectWithRadius:3];
             [halfBookCoverImageContainer addSubview:imageView];
             
             [self.bookCover addSubview:halfBookCoverImageContainer];
@@ -772,7 +757,7 @@ static const CGFloat kBookEdgePadding = 38;
             
             UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"book-cover-left"]];
             imageView.contentMode = UIViewContentModeScaleAspectFill;
-            [imageView makeRoundRectWithRadius:6];
+            [imageView makeRoundRectWithRadius:3];
             [halfBookCoverImageContainer addSubview:imageView];
             
             halfBookCoverImageContainer.layer.shadowOffset = CGSizeMake(-10, 10);
