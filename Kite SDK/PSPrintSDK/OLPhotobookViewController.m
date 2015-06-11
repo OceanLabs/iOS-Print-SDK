@@ -67,6 +67,7 @@ static const CGFloat kBookEdgePadding = 38;
 @property (assign, nonatomic) BOOL animating;
 @property (assign, nonatomic) BOOL stranded;
 @property (assign, nonatomic) BOOL hasDoneFirstTimeLayout;
+@property (assign, nonatomic) BOOL userHasOpenedBook;
 
 @end
 
@@ -291,25 +292,36 @@ static const CGFloat kBookEdgePadding = 38;
     [super viewDidAppear:animated];
     
     if (self.bookClosed){
-        self.animating = YES;
-        MPFlipStyle style = MPFlipStyleDefault;
-        MPFlipTransition *flipTransition = [[MPFlipTransition alloc] initWithSourceView:self.bookCover destinationView:self.openbookView duration:0.5 timingCurve:UIViewAnimationCurveEaseOut completionAction:MPTransitionActionNone];
-        flipTransition.style = style;
-        
-        [flipTransition buildLayers];
-        CGFloat maxProgress = 0.5;
-        [flipTransition setRubberbandMaximumProgress:maxProgress/2.0];
-        [flipTransition setDuration:[flipTransition duration] * 1 / maxProgress]; // necessary to arrive at the dersired total duration
-        [flipTransition animateFlip1:NO fromProgress:0 toProgress:maxProgress withCompletion:^(BOOL finished) {
-            flipTransition.timingCurve = UIViewAnimationCurveEaseIn;
-            [flipTransition animateFlip2:YES fromProgress:maxProgress withCompletion:^(BOOL finished) {
-                [flipTransition cleanupLayers];
-                [flipTransition transitionDidComplete:NO];
-                self.animating = NO;
-            }];
-        }];
+        [self tease];
     }
+}
 
+- (void)tease{
+    if (self.animating || self.userHasOpenedBook){
+        return;
+    }
+    
+    self.animating = YES;
+    MPFlipStyle style = MPFlipStyleDefault;
+    MPFlipTransition *flipTransition = [[MPFlipTransition alloc] initWithSourceView:self.bookCover destinationView:self.openbookView duration:0.5 timingCurve:UIViewAnimationCurveEaseOut completionAction:MPTransitionActionNone];
+    flipTransition.style = style;
+    
+    [flipTransition buildLayers];
+    CGFloat maxProgress = 0.5;
+    [flipTransition setRubberbandMaximumProgress:maxProgress/2.0];
+    [flipTransition setDuration:[flipTransition duration] * 1 / maxProgress]; // necessary to arrive at the dersired total duration
+    [flipTransition animateFlip1:NO fromProgress:0 toProgress:maxProgress withCompletion:^(BOOL finished) {
+        flipTransition.timingCurve = UIViewAnimationCurveEaseIn;
+        [flipTransition animateFlip2:YES fromProgress:maxProgress withCompletion:^(BOOL finished) {
+            [flipTransition cleanupLayers];
+            [flipTransition transitionDidComplete:NO];
+            self.animating = NO;
+            
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+                [self tease];
+            });
+        }];
+    }];
 }
 
 - (void)onBackButtonTapped{
@@ -663,8 +675,6 @@ static const CGFloat kBookEdgePadding = 38;
         OLPhotobookPageContentViewController *vc1 = [pageViewController.viewControllers firstObject];
         OLPhotobookPageContentViewController *vc2 = [pageViewController.viewControllers lastObject];
         self.pagesLabel.text = [NSString stringWithFormat:@"%ld-%ld of %ld", (long)vc1.pageIndex+1, (long)vc2.pageIndex+1, (long)self.product.quantityToFulfillOrder];
-        //        self.leftPageLabel.text = [NSString stringWithFormat:@"%ld", (long)vc1.pageIndex+1];
-        //        self.rightPageLabel.text = [NSString stringWithFormat:@"%ld", (long)vc2.pageIndex+1];
         
         [UIView animateWithDuration:kBookAnimationTime/2.0 animations:^{
             if ([(OLPhotobookPageContentViewController *)[previousViewControllers firstObject] pageIndex] < vc1.pageIndex){
@@ -789,6 +799,7 @@ static const CGFloat kBookEdgePadding = 38;
         return;
     }
     self.animating = YES;
+    self.userHasOpenedBook = YES;
     
     [UIView animateWithDuration:kBookAnimationTime animations:^{
         self.containerView.transform = CGAffineTransformIdentity;
