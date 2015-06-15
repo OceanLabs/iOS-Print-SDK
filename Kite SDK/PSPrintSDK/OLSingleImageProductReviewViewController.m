@@ -246,9 +246,10 @@ CTAssetsPickerControllerDelegate>
         
         UIImageView *imageView = (UIImageView *)[cell.contentView viewWithTag:1];
         
-        OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
-        [printPhoto getImageWithProgress:NULL completion:^(UIImage *image){
-            imageView.image = image;
+        [self.userSelectedPhotos[indexPath.item] getImageWithProgress:NULL completion:^(UIImage *image){
+            dispatch_async(dispatch_get_main_queue(), ^{
+                imageView.image = image;
+            });
         }];
         
         return cell;
@@ -265,8 +266,7 @@ CTAssetsPickerControllerDelegate>
 - (void) collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
     if (indexPath.section == [self sectionForImageCells]){
         self.imageCropView.image = nil;
-        OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
-        [printPhoto getImageWithProgress:NULL completion:^(UIImage *image){
+        [self.userSelectedPhotos[indexPath.item] getImageWithProgress:NULL completion:^(UIImage *image){
             dispatch_async(dispatch_get_main_queue(), ^{
                 self.imageCropView.image = image;
             });

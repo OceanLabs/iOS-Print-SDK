@@ -221,7 +221,6 @@ static const NSUInteger kTagRight = 20;
     OLPhotobookPageContentViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLPhotobookPageViewController"];
     vc.pageIndex = index;
     vc.userSelectedPhotos = self.photobookPhotos;
-    vc.assets = self.assets;
     return vc;
 }
 
@@ -357,7 +356,6 @@ static const NSUInteger kTagRight = 20;
 #pragma mark - Gesture recognizers
 
 - (void)onTapGestureRecognized:(UITapGestureRecognizer *)sender{
-    OLPrintPhoto *tempPrintPhoto = [[OLPrintPhoto alloc] init];
     NSInteger index = 0;
     if ([sender locationInView:self.pageController.view].x < self.pageController.view.frame.size.width / 2.0){
         self.editingPageIndex = 0;
@@ -367,7 +365,6 @@ static const NSUInteger kTagRight = 20;
     }
     
     index = [[self.pageController.viewControllers objectAtIndex:self.editingPageIndex] pageIndex];
-    tempPrintPhoto.asset = self.assets[index % [self.assets count]];
     self.editingPrintPhoto = self.photobookPhotos[index];
     
     UINavigationController *nav = [self.storyboard instantiateViewControllerWithIdentifier:@"CropViewNavigationController"];
@@ -375,7 +372,7 @@ static const NSUInteger kTagRight = 20;
     cropVc.delegate = self;
     UIImageView *imageView = [(OLPhotobookPageContentViewController *)[[self.pageController viewControllers] firstObject] imageView];
     cropVc.aspectRatio = imageView.frame.size.height / imageView.frame.size.width;
-    [tempPrintPhoto getImageWithProgress:NULL completion:^(UIImage *image){
+    [self.editingPrintPhoto getImageWithProgress:NULL completion:^(UIImage *image){
         [cropVc setFullImage:image];
         [self presentViewController:nav animated:YES completion:NULL];
     }];

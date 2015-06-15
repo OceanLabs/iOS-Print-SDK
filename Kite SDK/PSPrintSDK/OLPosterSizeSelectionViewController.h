@@ -11,7 +11,6 @@
 #import "OLKiteViewController.h"
 
 @interface OLPosterSizeSelectionViewController : UIViewController
-@property (strong, nonatomic) NSMutableArray *assets;
 @property (strong, nonatomic) NSMutableArray *userSelectedPhotos;
 @property (weak, nonatomic) id<OLKiteDelegate> delegate;
 

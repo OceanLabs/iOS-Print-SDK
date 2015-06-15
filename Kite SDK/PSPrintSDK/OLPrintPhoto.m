@@ -86,7 +86,7 @@ static NSString *const kKeyExtraCopies = @"co.oceanlabs.psprintstudio.kKeyExtraC
 
 - (void) setCroppedImageSize:(CGSize)destSize forImageView:(UIImageView *)imageView{
     if (self.cachedCroppedThumbnailImage) {
-        if (!(fmax(imageView.frame.size.width, imageView.frame.size.height) * [UIScreen mainScreen].scale > fmax(self.cachedCroppedThumbnailImage.size.width, self.cachedCroppedThumbnailImage.size.height))){
+        if (!(fmax(imageView.frame.size.width, imageView.frame.size.height) * [UIScreen mainScreen].scale > fmin(self.cachedCroppedThumbnailImage.size.width, self.cachedCroppedThumbnailImage.size.height))){
             imageView.image = self.cachedCroppedThumbnailImage;
             return;
         }

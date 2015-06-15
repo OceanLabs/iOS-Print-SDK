@@ -166,7 +166,6 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
     [vc safePerformSelector:@selector(setUserEmail:) withObject:self.userEmail];
     [vc safePerformSelector:@selector(setUserPhone:) withObject:self.userPhone];
     [vc safePerformSelector:@selector(setFilterProducts:) withObject:self.filterProducts];
-    [vc safePerformSelector:@selector(setAssets:) withObject:[self.assets mutableCopy]];
     [vc safePerformSelector:@selector(setUserSelectedPhotos:) withObject:self.userSelectedPhotos];
     [vc safePerformSelector:@selector(setTemplateClass:) withObject:product.productTemplate.templateClass];
     [[vc navigationItem] setLeftBarButtonItem:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(dismiss)]];

@@ -14,7 +14,6 @@
 
 @interface OLProductOverviewViewController : UIViewController
 @property (strong, nonatomic) OLProduct *product;
-@property (strong, nonatomic) NSMutableArray *assets;
 @property (strong, nonatomic) NSMutableArray *userSelectedPhotos;
 @property (weak, nonatomic) id<OLKiteDelegate> delegate;
 

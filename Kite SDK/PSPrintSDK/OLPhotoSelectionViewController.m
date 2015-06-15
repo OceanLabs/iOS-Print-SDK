@@ -315,16 +315,13 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     
     // First remove any that are not returned.
     NSMutableArray *removeArray = [NSMutableArray arrayWithArray:self.userSelectedPhotos];
-    NSMutableArray *removeAssetArray = [NSMutableArray arrayWithArray:self.assets];
     for (OLPrintPhoto *object in self.userSelectedPhotos) {
         if (![object.asset isKindOfClass:class] || [photoArray containsObjectIdenticalTo:object]) {
-            [removeAssetArray removeObjectAtIndex:[removeArray indexOfObjectIdenticalTo:object]];
             [removeArray removeObjectIdenticalTo:object];
         }
     }
     
     [self.userSelectedPhotos removeObjectsInArray:removeArray];
-    [self.assets removeObjectsInArray:removeAssetArray];
     
     // Second, add the remaining objects to the end of the array without replacing any.
     NSMutableArray *addArray = [NSMutableArray arrayWithArray:photoArray];
@@ -339,7 +336,6 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     }
 
     [self.userSelectedPhotos addObjectsFromArray:addArray];
-    [self.assets addObjectsFromArray:addAssetArray];
     
     // Reload the collection view.
     [self.collectionView reloadData];
@@ -425,7 +421,6 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
         [self.indexPathsToRemoveDict[[NSNumber numberWithInteger:section]] addObject:[NSIndexPath indexPathForItem:item inSection:section]];
     }
     for (id photo in self.userDisabledPhotos){
-        [self.assets removeObjectAtIndex:[self.userSelectedPhotos indexOfObject:photo]];
         [self.userSelectedPhotos removeObjectIdenticalTo:photo];
     }
     
@@ -811,9 +806,6 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     [self.userSelectedPhotos removeObjectAtIndex:fromIndexPath.item + fromIndexPath.section * self.product.quantityToFulfillOrder];
     [self.userSelectedPhotos insertObject:object atIndex:toIndexPath.item + toIndexPath.section * self.product.quantityToFulfillOrder];
     
-    object = [self.assets objectAtIndex:fromIndexPath.item + fromIndexPath.section * self.product.quantityToFulfillOrder];
-    [self.assets removeObjectAtIndex:fromIndexPath.item + fromIndexPath.section * self.product.quantityToFulfillOrder];
-    [self.assets insertObject:object atIndex:toIndexPath.item + toIndexPath.section * self.product.quantityToFulfillOrder];
 }
 
 - (BOOL)collectionView:(UICollectionView *)collectionView itemAtIndexPath:(NSIndexPath *)fromIndexPath canMoveToIndexPath:(NSIndexPath *)toIndexPath{
@@ -928,7 +920,6 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     }
     [orvc safePerformSelector:@selector(setProduct:) withObject:self.product];
     [orvc safePerformSelector:@selector(setUserSelectedPhotos:) withObject:self.userSelectedPhotos];
-    [orvc safePerformSelector:@selector(setAssets:) withObject:self.assets];
     [self.navigationController pushViewController:orvc animated:YES];
 }
 
