@@ -18,6 +18,7 @@
 @property (weak, nonatomic) IBOutlet UIImageView *pageShadowLeft;
 @property (weak, nonatomic) IBOutlet UIImageView *pageShadowLeft2;
 
+@property (strong, nonatomic) NSMutableSet *selectedViews;
 
 @end
 
@@ -25,6 +26,7 @@
 
 - (void)viewDidLoad{
     [super viewDidLoad];
+    self.selectedViews = [[NSMutableSet alloc] init];
     [self loadImage];
 }
 
@@ -54,6 +56,28 @@
         self.pageShadowRight.hidden = NO;
         self.pageShadowLeft2.hidden = YES;
         self.pageShadowRight2.hidden = NO;
+    }
+}
+
+- (UIView *)selectedViewForPoint:(CGPoint)p{
+    //Just one view for now
+    UIView *selectedView = self.imageView;
+    
+    if ([self.selectedViews containsObject:selectedView]){
+        [self.selectedViews removeObject:selectedView];
+        [UIView animateWithDuration:0.15 animations:^(void){
+            selectedView.layer.borderColor = [UIColor clearColor].CGColor;
+            selectedView.layer.borderWidth = 0;
+        }];
+        return nil;
+    }
+    else{
+        [self.selectedViews addObject:selectedView];
+        [UIView animateWithDuration:0.15 animations:^(void){
+            selectedView.layer.borderColor = self.view.tintColor.CGColor;
+            selectedView.layer.borderWidth = 3.0;
+        }];
+        return selectedView;
     }
 }
 

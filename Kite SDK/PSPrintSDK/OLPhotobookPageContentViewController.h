@@ -16,5 +16,6 @@
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;
 
 - (void)loadImage;
+- (UIView *)selectedViewForPoint:(CGPoint)p;
 
 @end

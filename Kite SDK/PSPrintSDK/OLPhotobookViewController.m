@@ -95,6 +95,10 @@ static const CGFloat kBookEdgePadding = 38;
         [self.photobookPhotos addObject:[self.userSelectedPhotos objectAtIndex:i % self.userSelectedPhotos.count]];
     }
     
+    if (self.editMode){
+        self.photobookPhotos = [[self.photobookPhotos subarrayWithRange:NSMakeRange(0, 2)] mutableCopy];
+    }
+    
     self.pageController = [[UIPageViewController alloc] initWithTransitionStyle:UIPageViewControllerTransitionStylePageCurl navigationOrientation:UIPageViewControllerNavigationOrientationHorizontal options:@{UIPageViewControllerOptionSpineLocationKey : [NSNumber numberWithInt:UIPageViewControllerSpineLocationMid]}];
     self.pageController.dataSource = self;
     self.pageController.delegate = self;
@@ -118,7 +122,7 @@ static const CGFloat kBookEdgePadding = 38;
     [self.containerView addConstraint:bookAspectRatioCon];
     
     self.centerXCon = [NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.containerView.superview attribute:NSLayoutAttributeCenterX multiplier:1 constant:0];
-    if (self.view.frame.size.width > self.view.frame.size.height){
+    if ([self isLandscape]){
         [self.containerView.superview addConstraint:self.centerXCon];
         self.widthCon = [NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationLessThanOrEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:self.view.frame.size.width - 20 - kBookEdgePadding * 2];
     }
@@ -215,7 +219,7 @@ static const CGFloat kBookEdgePadding = 38;
     
     self.pagesLabel.text = [NSString stringWithFormat:@"%d-%d of %ld", 1, 2, (long)self.product.quantityToFulfillOrder];
     
-    CGFloat yOffset = ([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height)/2.0;
+    CGFloat yOffset = !self.editMode ? ([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height)/2.0 : -15;
     if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8){
         yOffset = 22;
     }
@@ -243,24 +247,26 @@ static const CGFloat kBookEdgePadding = 38;
         }
     }
     
-    [self setUpBookCoverView];
-    self.bookCover.hidden = NO;
-    self.containerView.layer.shadowOpacity = 0;
-    
-    UIView *closedPage = [self.bookCover viewWithTag:kTagRight];
-    closedPage.layer.shadowOffset = CGSizeMake(-10, 10);
-    closedPage.layer.shadowRadius = 5;
-    closedPage.layer.shadowOpacity = 0.25;
-    closedPage.layer.shouldRasterize = YES;
-    closedPage.layer.rasterizationScale = [UIScreen mainScreen].scale;
-    
-    self.containerView.layer.shadowOpacity = 0.0;
-    self.pagesLabelContainer.alpha = 0;
-    self.bookClosed = YES;
-    
-    self.openbookView.hidden = YES;
-    
-    [self.fakeShadowView makeRoundRectWithRadius:3];
+    if (!self.editMode){ //Start with book closed
+        [self setUpBookCoverView];
+        self.bookCover.hidden = NO;
+        self.containerView.layer.shadowOpacity = 0;
+        
+        UIView *closedPage = [self.bookCover viewWithTag:kTagRight];
+        closedPage.layer.shadowOffset = CGSizeMake(-10, 10);
+        closedPage.layer.shadowRadius = 5;
+        closedPage.layer.shadowOpacity = 0.25;
+        closedPage.layer.shouldRasterize = YES;
+        closedPage.layer.rasterizationScale = [UIScreen mainScreen].scale;
+        
+        self.containerView.layer.shadowOpacity = 0.0;
+        self.pagesLabelContainer.alpha = 0;
+        self.bookClosed = YES;
+        
+        self.openbookView.hidden = YES;
+        
+        [self.fakeShadowView makeRoundRectWithRadius:3];
+    }
 }
 
 - (void)ios7Back{
@@ -279,7 +285,7 @@ static const CGFloat kBookEdgePadding = 38;
 - (void)viewDidLayoutSubviews{
     [super viewDidLayoutSubviews];
     
-    if (!self.hasDoneFirstTimeLayout){
+    if (!self.hasDoneFirstTimeLayout && !self.editMode){
         self.hasDoneFirstTimeLayout = YES;
         if (![self isLandscape]){
             self.containerView.transform = CGAffineTransformMakeTranslation([self xTrasformForBookAtRightEdge], 0);
@@ -288,13 +294,13 @@ static const CGFloat kBookEdgePadding = 38;
 }
 
 - (BOOL)isLandscape{
-    return self.view.frame.size.width > self.view.frame.size.height;
+    return self.view.frame.size.width > self.view.frame.size.height || self.editMode;
 }
 
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
     
-    if (self.bookClosed){
+    if (self.bookClosed && !self.editMode){
         [self tease];
     }
 }
@@ -358,7 +364,9 @@ static const CGFloat kBookEdgePadding = 38;
             }
         }
         
-        self.centerYCon = [NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.containerView.superview attribute:NSLayoutAttributeCenterY multiplier:1 constant:([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height)/2.0];
+        CGFloat yOffset = !self.editMode ? ([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height)/2.0 : -15;
+        
+        self.centerYCon = [NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.containerView.superview attribute:NSLayoutAttributeCenterY multiplier:1 constant:yOffset];
         [self.containerView.superview addConstraint:self.centerYCon];
     }completion:^(id<UIViewControllerTransitionCoordinator> context){
         self.containerView.layer.shadowOpacity = 0;
@@ -532,6 +540,13 @@ static const CGFloat kBookEdgePadding = 38;
     }
     else{
         self.editingPageIndex = 1;
+    }
+    
+    if (self.editMode){
+        OLPhotobookPageContentViewController *page = [self.pageController.viewControllers objectAtIndex:self.editingPageIndex];
+        [page selectedViewForPoint:[sender locationInView:page.view]];
+        
+        return;
     }
     
     index = [[self.pageController.viewControllers objectAtIndex:self.editingPageIndex] pageIndex];
@@ -857,7 +872,7 @@ static const CGFloat kBookEdgePadding = 38;
 }
 
 - (void)closeBookFront{
-    if (self.animating){
+    if (self.animating || self.editMode){
         return;
     }
     self.animating = YES;
@@ -908,7 +923,7 @@ static const CGFloat kBookEdgePadding = 38;
     }];
 }
 - (void)closeBookBack{
-    if (self.animating){
+    if (self.animating || self.editMode){
         return;
     }
     self.animating = YES;
