@@ -424,8 +424,13 @@ static NSString *const kKeyOriginalAsset = @"co.oceanlabs.psprintstudio.kKeyOrig
 
 - (void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeInteger:self.type forKey:kKeyType];
+    if ([self.originalAsset isKindOfClass:[ALAsset class]]){
+        [aCoder encodeObject:[self.originalAsset valueForProperty:ALAssetPropertyAssetURL] forKey:kKeyOriginalAsset];
+    }
+    else{
+        [aCoder encodeObject:self.originalAsset forKey:kKeyOriginalAsset];
+    }
     [aCoder encodeInteger:self.originalType forKey:kKeyOriginalType];
-    [aCoder encodeObject:self.originalAsset forKey:kKeyOriginalAsset];
     [aCoder encodeInteger:self.extraCopies forKey:kKeyExtraCopies];
     if (self.type == kPrintPhotoAssetTypeALAsset) {
         [aCoder encodeObject:[self.asset valueForProperty:ALAssetPropertyAssetURL] forKey:kKeyAsset];
