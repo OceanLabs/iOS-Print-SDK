@@ -56,37 +56,26 @@
     }
 }
 
-- (void)deselectSelected{
-    if (self.selectedView){
-        [UIView animateWithDuration:0.15 animations:^(void){
-            self.selectedView.layer.borderColor = [UIColor clearColor].CGColor;
-            self.selectedView.layer.borderWidth = 0;
-        } completion:^(BOOL finished){
-            self.selectedView = nil;
-        }];
-        
-    }
+- (NSInteger)imageIndexForPoint:(CGPoint)p{
+    return self.pageIndex; //only one for now
 }
 
-- (void)userDidTapOnViewWithPoint:(CGPoint)p{
-    //Just one view for now
-    UIView *selectedView = self.imageView;
+- (void)unhighlightImageAtIndex:(NSInteger)index{
+    UIView *selectedView = self.imageView; //only one for now
     
-    if (self.selectedView){
-        [UIView animateWithDuration:0.15 animations:^(void){
-            selectedView.layer.borderColor = [UIColor clearColor].CGColor;
-            selectedView.layer.borderWidth = 0;
-        } completion:^(BOOL finished){
-            self.selectedView = nil;
-        }];
-    }
-    else{
-        [UIView animateWithDuration:0.15 animations:^(void){
-            selectedView.layer.borderColor = self.view.tintColor.CGColor;
-            selectedView.layer.borderWidth = 3.0;
-        }];
-        self.selectedView = selectedView;
-    }
+    [UIView animateWithDuration:0.15 animations:^(void){
+        selectedView.layer.borderColor = [UIColor clearColor].CGColor;
+        selectedView.layer.borderWidth = 0;
+    }];
+}
+
+- (void)highlightImageAtIndex:(NSInteger)index{
+    UIView *selectedView = self.imageView; //only one for now
+    
+    [UIView animateWithDuration:0.15 animations:^(void){
+        selectedView.layer.borderColor = self.view.tintColor.CGColor;
+        selectedView.layer.borderWidth = 3.0;
+    }];
 }
 
 - (void)loadImage{

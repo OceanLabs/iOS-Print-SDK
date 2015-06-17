@@ -13,8 +13,7 @@
 @interface OLEditPhotobookViewController () <UICollectionViewDelegateFlowLayout, OLPhotobookViewControllerDelegate>
 
 @property (strong, nonatomic) NSMutableArray *photobookPhotos;
-@property (strong, nonatomic) UIView *selectedView;
-@property (strong, nonatomic) OLPhotobookPageContentViewController *selectedPage;
+@property (assign, nonatomic) NSNumber *selectedIndexNumber;
 
 @end
 
@@ -56,6 +55,9 @@
         for (OLPhotobookViewController *photobook in self.childViewControllers){
             if (photobook.view == view){
                 photobook.editingPageNumber = [NSNumber numberWithInteger:indexPath.item * 2];
+                if (self.selectedIndexNumber){
+                    [[self findPageForImageIndex:[self.selectedIndexNumber integerValue]] highlightImageAtIndex:[self.selectedIndexNumber integerValue]];
+                }
             }
         }
     }
@@ -75,33 +77,41 @@
     [self.photobookPhotos exchangeObjectAtIndex:index1 withObjectAtIndex:index2];
 }
 
-- (void)photobook:(OLPhotobookViewController *)photobook userDidTapOnPage:(OLPhotobookPageContentViewController *)page{
-    UIView *selected = page.selectedView;
-    if (!selected){
-        self.selectedView = nil;
-        self.selectedPage = nil;
+- (OLPhotobookPageContentViewController *)findPageForImageIndex:(NSInteger)index{
+    for (OLPhotobookViewController *photobook in self.childViewControllers){
+        for (OLPhotobookPageContentViewController *page in photobook.pageController.viewControllers){
+            if (page.pageIndex == index){
+                return page;
+            }
+        }
     }
-    else if (!self.selectedPage){
-        self.selectedView = selected;
-        self.selectedPage = page;
-    }
-    else{
-        //swap
-        [page deselectSelected];
-        [self swapImageAtIndex:self.selectedPage.pageIndex withImageAtIndex:page.pageIndex];
-        photobook.userSelectedPhotos = self.photobookPhotos;
-        [(OLPhotobookViewController *)self.selectedPage.parentViewController.parentViewController setUserSelectedPhotos:self.photobookPhotos];
-        [self.selectedPage deselectSelected];
-        self.selectedPage = nil;
-        self.selectedView = nil;
-    }
+    return nil;
 }
 
-- (void)photobook:(OLPhotobookViewController *)photobook userDidTapOnBlankImageAtIndex:(NSInteger)index{
-    if (self.selectedPage){
-       //swap
+- (void)photobook:(OLPhotobookViewController *)photobook userDidTapOnImageWithIndex:(NSInteger)index{
+    OLPhotobookPageContentViewController *page = [self findPageForImageIndex:index];
+    if ([self.photobookPhotos objectAtIndex:index] != (id)[NSNull null]){ //user tapped on non-blank image
+        if (self.selectedIndexNumber && [self.selectedIndexNumber integerValue] == index){ //deselect
+            [[self findPageForImageIndex:[self.selectedIndexNumber integerValue]] unhighlightImageAtIndex:index];
+            self.selectedIndexNumber = nil;
+        }
+        else if (self.selectedIndexNumber){ //swap
+            [page unhighlightImageAtIndex:index];
+            [self swapImageAtIndex:[self.selectedIndexNumber integerValue] withImageAtIndex:page.pageIndex];
+            photobook.userSelectedPhotos = self.photobookPhotos;
+            OLPhotobookPageContentViewController *selectedPage = [self findPageForImageIndex:[self.selectedIndexNumber integerValue]];
+            [(OLPhotobookViewController *)selectedPage.parentViewController.parentViewController setUserSelectedPhotos:self.photobookPhotos];
+            [selectedPage unhighlightImageAtIndex:[self.selectedIndexNumber integerValue]];
+            self.selectedIndexNumber = nil;
+        }
+        else{ //select
+            self.selectedIndexNumber = [NSNumber numberWithInteger:index];
+            [page highlightImageAtIndex:index];
+        }
     }
-    
+    else{ //pick new photos
+        
+    }
 }
 
 @end

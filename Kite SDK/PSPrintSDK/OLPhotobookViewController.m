@@ -41,7 +41,6 @@ static const CGFloat kBookEdgePadding = 38;
 
 @interface OLPhotobookViewController () <UIPageViewControllerDataSource, UIPageViewControllerDelegate, UIGestureRecognizerDelegate, OLScrollCropViewControllerDelegate>
 
-@property (strong, nonatomic) UIPageViewController *pageController;
 @property (weak, nonatomic) UIPanGestureRecognizer *pageControllerPanGesture;
 @property (weak, nonatomic) IBOutlet UIView *fakeShadowView;
 @property (weak, nonatomic) IBOutlet UIView *openbookView;
@@ -565,13 +564,8 @@ static const CGFloat kBookEdgePadding = 38;
     
     if (self.editMode){
         OLPhotobookPageContentViewController *page = [self.pageController.viewControllers objectAtIndex:self.croppingImageIndex];
-        if (self.photobookPhotos[page.pageIndex] != [NSNull null]){
-            [page userDidTapOnViewWithPoint:[sender locationInView:page.view]];
-            [self.photobookDelegate photobook:self userDidTapOnPage:page];
-        }
-        else{
-            [self.photobookDelegate photobook:self userDidTapOnBlankImageAtIndex:page.pageIndex];
-        }
+        NSInteger index = [page imageIndexForPoint:[sender locationInView:page.view]];
+        [self.photobookDelegate photobook:self userDidTapOnImageWithIndex:index];
         
         return;
     }
