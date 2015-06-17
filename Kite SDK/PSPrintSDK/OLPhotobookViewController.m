@@ -49,7 +49,7 @@ static const CGFloat kBookEdgePadding = 38;
 @property (strong, nonatomic) NSMutableArray *photobookPhotos;
 @property (strong, nonatomic) OLPrintPhoto *editingPrintPhoto;
 @property (weak, nonatomic) IBOutlet UIImageView *bookImageView;
-@property (assign, nonatomic) NSInteger editingPageIndex;
+@property (assign, nonatomic) NSInteger croppingImageIndex;
 @property (strong, nonatomic) NSLayoutConstraint *centerXCon;
 @property (strong, nonatomic) NSLayoutConstraint *widthCon;
 @property (strong, nonatomic) NSLayoutConstraint *widthCon2;
@@ -86,24 +86,40 @@ static const CGFloat kBookEdgePadding = 38;
     return _inertiaBehavior;
 }
 
-- (void)viewDidLoad{
-    [super viewDidLoad];
+- (void)setUserSelectedPhotos:(NSMutableArray *)userSelectedPhotos{
+    _userSelectedPhotos = userSelectedPhotos;
     
     self.photobookPhotos = [[NSMutableArray alloc] initWithCapacity:self.product.quantityToFulfillOrder];
-    [self.photobookPhotos addObjectsFromArray:self.userSelectedPhotos];
-    for (NSInteger i = self.userSelectedPhotos.count; i < self.product.quantityToFulfillOrder; i++){
-        [self.photobookPhotos addObject:[self.userSelectedPhotos objectAtIndex:i % self.userSelectedPhotos.count]];
+    [self.photobookPhotos addObjectsFromArray:userSelectedPhotos];
+    for (NSInteger i = userSelectedPhotos.count; i < self.product.quantityToFulfillOrder; i++){
+        [self.photobookPhotos addObject:[userSelectedPhotos objectAtIndex:i % userSelectedPhotos.count]];
     }
     
-    if (self.editMode){
-        self.photobookPhotos = [[self.photobookPhotos subarrayWithRange:NSMakeRange(0, 2)] mutableCopy];
+    for (OLPhotobookPageContentViewController *page in [self.pageController viewControllers]){
+        page.userSelectedPhotos = self.photobookPhotos;
+        [page loadImage];
     }
+}
+
+- (void)setEditingPageNumber:(NSNumber *)editingPageNumber{
+    _editingPageNumber = editingPageNumber;
+    [self updatePagesLabel];
+    [self setPages];
+}
+
+- (void)setPages{
+    NSInteger pageIndex = self.editingPageNumber ? [self.editingPageNumber integerValue] : 0;
+    [self.pageController setViewControllers:@[[self viewControllerAtIndex:pageIndex], [self viewControllerAtIndex:pageIndex + 1]] direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
+}
+
+- (void)viewDidLoad{
+    [super viewDidLoad];
     
     self.pageController = [[UIPageViewController alloc] initWithTransitionStyle:UIPageViewControllerTransitionStylePageCurl navigationOrientation:UIPageViewControllerNavigationOrientationHorizontal options:@{UIPageViewControllerOptionSpineLocationKey : [NSNumber numberWithInt:UIPageViewControllerSpineLocationMid]}];
     self.pageController.dataSource = self;
     self.pageController.delegate = self;
     
-    [self.pageController setViewControllers:@[[self viewControllerAtIndex:0], [self viewControllerAtIndex:1]] direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
+    [self setPages];
     
     [self addChildViewController:self.pageController];
     [self.openbookView addSubview:self.pageController.view];
@@ -217,7 +233,7 @@ static const CGFloat kBookEdgePadding = 38;
     
     [self.pagesLabelContainer makeRoundRect];
     
-    self.pagesLabel.text = [NSString stringWithFormat:@"%d-%d of %ld", 1, 2, (long)self.product.quantityToFulfillOrder];
+    [self updatePagesLabel];
     
     CGFloat yOffset = !self.editMode ? ([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height)/2.0 : -15;
     if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8){
@@ -267,6 +283,11 @@ static const CGFloat kBookEdgePadding = 38;
         
         [self.fakeShadowView makeRoundRectWithRadius:3];
     }
+}
+
+- (void)updatePagesLabel{
+    int page = self.editingPageNumber ? [self.editingPageNumber intValue] : 0;
+    self.pagesLabel.text = [NSString stringWithFormat:@"%d-%d of %ld", page + 1, page + 2, (long)self.product.quantityToFulfillOrder];
 }
 
 - (void)ios7Back{
@@ -378,7 +399,7 @@ static const CGFloat kBookEdgePadding = 38;
 }
 
 - (UIViewController *)viewControllerAtIndex:(NSUInteger)index {
-    if (index == NSNotFound || index >= self.photobookPhotos.count) {
+    if (index == NSNotFound) {
         return nil;
     }
     
@@ -399,7 +420,7 @@ static const CGFloat kBookEdgePadding = 38;
     [self.editingPrintPhoto unloadImage];
     self.editingPrintPhoto.asset = [OLAsset assetWithImageAsJPEG:croppedImage];
     
-    [(OLPhotobookPageContentViewController *)[self.pageController.viewControllers objectAtIndex:self.editingPageIndex] loadImage];
+    [(OLPhotobookPageContentViewController *)[self.pageController.viewControllers objectAtIndex:self.croppingImageIndex] loadImage];
     
     [cropper dismissViewControllerAnimated:YES completion:NULL];
 }
@@ -536,20 +557,26 @@ static const CGFloat kBookEdgePadding = 38;
     OLPrintPhoto *tempPrintPhoto = [[OLPrintPhoto alloc] init];
     NSInteger index = 0;
     if ([sender locationInView:self.pageController.view].x < self.pageController.view.frame.size.width / 2.0){
-        self.editingPageIndex = 0;
+        self.croppingImageIndex = 0;
     }
     else{
-        self.editingPageIndex = 1;
+        self.croppingImageIndex = 1;
     }
     
     if (self.editMode){
-        OLPhotobookPageContentViewController *page = [self.pageController.viewControllers objectAtIndex:self.editingPageIndex];
-        [page selectedViewForPoint:[sender locationInView:page.view]];
+        OLPhotobookPageContentViewController *page = [self.pageController.viewControllers objectAtIndex:self.croppingImageIndex];
+        if (self.photobookPhotos[page.pageIndex] != [NSNull null]){
+            [page userDidTapOnViewWithPoint:[sender locationInView:page.view]];
+            [self.photobookDelegate photobook:self userDidTapOnPage:page];
+        }
+        else{
+            [self.photobookDelegate photobook:self userDidTapOnBlankImageAtIndex:page.pageIndex];
+        }
         
         return;
     }
     
-    index = [[self.pageController.viewControllers objectAtIndex:self.editingPageIndex] pageIndex];
+    index = [[self.pageController.viewControllers objectAtIndex:self.croppingImageIndex] pageIndex];
     tempPrintPhoto.asset = self.assets[index % [self.assets count]];
     self.editingPrintPhoto = self.photobookPhotos[index];
     

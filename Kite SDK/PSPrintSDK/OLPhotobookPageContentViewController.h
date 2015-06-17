@@ -14,8 +14,11 @@
 @property (strong, nonatomic) NSMutableArray *userSelectedPhotos;
 @property (assign, nonatomic) NSInteger pageIndex;
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;
+@property (assign, nonatomic) BOOL editMode;
+@property (weak, nonatomic) UIView *selectedView;
 
 - (void)loadImage;
-- (UIView *)selectedViewForPoint:(CGPoint)p;
+- (void)userDidTapOnViewWithPoint:(CGPoint)p;
+- (void)deselectSelected;
 
 @end

@@ -9,12 +9,24 @@
 #import <UIKit/UIKit.h>
 #import "OLKitePrintSDK.h"
 
+@class OLPhotobookPageContentViewController;
+@class OLPhotobookViewController;
+
+@protocol OLPhotobookViewControllerDelegate <NSObject>
+
+- (void)photobook:(OLPhotobookViewController *)photobook userDidTapOnBlankImageAtIndex:(NSInteger)index;
+- (void)photobook:(OLPhotobookViewController *)photobook userDidTapOnPage:(OLPhotobookPageContentViewController *)page;
+
+@end
+
 @interface OLPhotobookViewController : UIViewController
 
 @property (strong, nonatomic) OLProduct *product;
 @property (strong, nonatomic) NSMutableArray *assets;
 @property (strong, nonatomic) NSMutableArray *userSelectedPhotos;
+@property (strong, nonatomic) NSNumber *editingPageNumber;
 @property (weak, nonatomic) id<OLKiteDelegate> delegate;
+@property (weak, nonatomic) id<OLPhotobookViewControllerDelegate> photobookDelegate;
 
 @property (assign, nonatomic) BOOL editMode;
 

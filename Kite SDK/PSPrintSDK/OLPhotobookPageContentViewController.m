@@ -18,15 +18,12 @@
 @property (weak, nonatomic) IBOutlet UIImageView *pageShadowLeft;
 @property (weak, nonatomic) IBOutlet UIImageView *pageShadowLeft2;
 
-@property (strong, nonatomic) NSMutableSet *selectedViews;
-
 @end
 
 @implementation OLPhotobookPageContentViewController
 
 - (void)viewDidLoad{
     [super viewDidLoad];
-    self.selectedViews = [[NSMutableSet alloc] init];
     [self loadImage];
 }
 
@@ -59,35 +56,54 @@
     }
 }
 
-- (UIView *)selectedViewForPoint:(CGPoint)p{
+- (void)deselectSelected{
+    if (self.selectedView){
+        [UIView animateWithDuration:0.15 animations:^(void){
+            self.selectedView.layer.borderColor = [UIColor clearColor].CGColor;
+            self.selectedView.layer.borderWidth = 0;
+        } completion:^(BOOL finished){
+            self.selectedView = nil;
+        }];
+        
+    }
+}
+
+- (void)userDidTapOnViewWithPoint:(CGPoint)p{
     //Just one view for now
     UIView *selectedView = self.imageView;
     
-    if ([self.selectedViews containsObject:selectedView]){
-        [self.selectedViews removeObject:selectedView];
+    if (self.selectedView){
         [UIView animateWithDuration:0.15 animations:^(void){
             selectedView.layer.borderColor = [UIColor clearColor].CGColor;
             selectedView.layer.borderWidth = 0;
+        } completion:^(BOOL finished){
+            self.selectedView = nil;
         }];
-        return nil;
     }
     else{
-        [self.selectedViews addObject:selectedView];
         [UIView animateWithDuration:0.15 animations:^(void){
             selectedView.layer.borderColor = self.view.tintColor.CGColor;
             selectedView.layer.borderWidth = 3.0;
         }];
-        return selectedView;
+        self.selectedView = selectedView;
     }
 }
 
 - (void)loadImage{
-    OLPrintPhoto *printPhoto = [self.userSelectedPhotos objectAtIndex:self.pageIndex];
-    [printPhoto getImageWithProgress:NULL completion:^(UIImage *image){
-        dispatch_async(dispatch_get_main_queue(), ^{
-            self.imageView.image = image;
-        });
-    }];
+        OLPrintPhoto *printPhoto = [self.userSelectedPhotos objectAtIndex:self.pageIndex];
+    if (printPhoto != (id)[NSNull null]){
+        [printPhoto getImageWithProgress:NULL completion:^(UIImage *image){
+            dispatch_async(dispatch_get_main_queue(), ^{
+                self.imageView.image = image;
+            });
+        }];
+    }
+    else{
+        self.imageView.contentMode = UIViewContentModeCenter;
+        self.imageView.image = [UIImage imageNamed:@"plus"];
+        self.pageShadowLeft2.hidden = YES;
+        self.pageShadowRight2.hidden = YES;
+    }
 }
 
 @end
