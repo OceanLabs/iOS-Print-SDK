@@ -36,7 +36,7 @@
 #endif
 @end
 
-@interface OLEditPhotobookViewController () <UICollectionViewDelegateFlowLayout, OLPhotobookViewControllerDelegate, CTAssetsPickerControllerDelegate, UIActionSheetDelegate,
+@interface OLEditPhotobookViewController () <UICollectionViewDelegateFlowLayout, OLPhotobookViewControllerDelegate, CTAssetsPickerControllerDelegate, UIActionSheetDelegate, UIAlertViewDelegate,
 #ifdef OL_KITE_OFFER_INSTAGRAM
 OLInstagramImagePickerControllerDelegate,
 #endif
@@ -55,7 +55,84 @@ UINavigationControllerDelegate>
 - (void)viewDidLoad{
     [super viewDidLoad];
     
+    self.title = NSLocalizedString(@"Move Pages", @"");
+    
+    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Back", @"")
+                                                                             style:UIBarButtonItemStyleBordered
+                                                                            target:nil
+                                                                            action:nil];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]
+                                              initWithTitle:NSLocalizedString(@"Next", @"")
+                                              style:UIBarButtonItemStylePlain
+                                              target:self
+                                              action:@selector(onButtonNextClicked)];
+    
     [self updatePhotobookPhotos];
+}
+
+- (void)onButtonNextClicked{
+    if (self.userSelectedPhotos.count == 0){
+        
+        NSString *alertTitle = NSLocalizedString(@"No photos", @"");
+        NSString *alertMessage = NSLocalizedString(@"Please add at least one photo", @"");
+        NSString *actionTitle = NSLocalizedString(@"OK", @"");
+        if ([UIAlertController class]){
+            UIAlertController *ac = [UIAlertController alertControllerWithTitle:alertTitle message:alertMessage preferredStyle:UIAlertControllerStyleAlert];
+            [ac addAction:[UIAlertAction actionWithTitle:actionTitle style:UIAlertActionStyleDefault handler:NULL]];
+            [self presentViewController:ac animated:YES completion:NULL];
+        }
+        else{
+            UIAlertView *av = [[UIAlertView alloc] initWithTitle:alertTitle message:alertMessage delegate:self cancelButtonTitle:actionTitle otherButtonTitles:nil];
+            av.delegate = self;
+            [av show];
+        }
+        return;
+    }
+    
+    if (self.userSelectedPhotos.count < self.product.quantityToFulfillOrder){
+        NSString *alertTitle = NSLocalizedString(@"You can add more photos", @"");
+        NSString *alertMessage = NSLocalizedString(@"Are you sure you want to proceed? If you do, the blank pages will be filled in with duplicate photos", @"");
+        NSString *actionTitle = NSLocalizedString(@"Yes, proceed", @"");
+        if ([UIAlertController class]){
+            UIAlertController *ac = [UIAlertController alertControllerWithTitle:alertTitle message:alertMessage preferredStyle:UIAlertControllerStyleAlert];
+            [ac addAction:[UIAlertAction actionWithTitle:actionTitle style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
+                [self proceedToBookReview];
+            }]];
+            [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"No, not yet", @"") style:UIAlertActionStyleCancel handler:NULL]];
+            [self presentViewController:ac animated:YES completion:NULL];
+        }
+        else{
+            UIAlertView *av = [[UIAlertView alloc] initWithTitle:alertTitle message:alertMessage delegate:self cancelButtonTitle:NSLocalizedString(@"No, not yet", @"") otherButtonTitles:actionTitle, nil];
+            av.tag = 172;
+            [av show];
+        }
+    }
+    else{
+        [self proceedToBookReview];
+    }
+    
+}
+
+- (void)proceedToBookReview{
+    NSInteger i = 0;
+    NSMutableArray *bookPhotos = [[NSMutableArray alloc] init];
+    for (NSInteger object = 0; object < self.photobookPhotos.count; object++){
+        if (self.photobookPhotos[object] == [NSNull null]){
+            [bookPhotos addObject:self.userSelectedPhotos[i % self.userSelectedPhotos.count]];
+            i++;
+        }
+        else{
+            [bookPhotos addObject:self.photobookPhotos[object]];
+        }
+    }
+    
+    OLPhotobookViewController *photobook = [self.storyboard instantiateViewControllerWithIdentifier:@"PhotobookViewController"];
+    photobook.assets = self.assets;
+    photobook.userSelectedPhotos = self.photobookPhotos;
+    photobook.product = self.product;
+    photobook.delegate = self.delegate;
+    
+    [self.navigationController pushViewController:photobook animated:YES];
 }
 
 - (void)updatePhotobookPhotos{
@@ -398,7 +475,7 @@ UINavigationControllerDelegate>
 
 #pragma mark UIActionSheet Delegate (only used on iOS 7)
 
-- (void) actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex{
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex{
     if (buttonIndex == 0){
         [self showCameraRollImagePicker];
     }
@@ -412,6 +489,14 @@ UINavigationControllerDelegate>
     }
     else if (buttonIndex == 2){
         [self showFacebookImagePicker];
+    }
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+    if (alertView.tag == 172){
+        if (buttonIndex == 1){
+            [self proceedToBookReview];
+        }
     }
 }
 
