@@ -81,6 +81,8 @@
 - (void)loadImage{
         OLPrintPhoto *printPhoto = [self.userSelectedPhotos objectAtIndex:self.pageIndex];
     if (printPhoto != (id)[NSNull null]){
+        self.imageView.image = nil;
+        self.imageView.contentMode = UIViewContentModeScaleAspectFill;
         [printPhoto getImageWithProgress:NULL completion:^(UIImage *image){
             dispatch_async(dispatch_get_main_queue(), ^{
                 self.imageView.image = image;
