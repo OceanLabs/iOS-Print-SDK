@@ -46,7 +46,9 @@ OLFacebookImagePickerControllerDelegate,
 UINavigationControllerDelegate>
 
 @property (strong, nonatomic) NSMutableArray *photobookPhotos;
+@property (strong, nonatomic) NSArray *userSelectedPhotosCopy;
 @property (assign, nonatomic) NSNumber *selectedIndexNumber;
+@property (assign, nonatomic) NSInteger addNewPhotosAtIndex;
 
 @end
 
@@ -137,15 +139,34 @@ UINavigationControllerDelegate>
 
 - (void)updatePhotobookPhotos{
     if (!self.photobookPhotos){
+        self.userSelectedPhotosCopy = [[NSArray alloc] initWithArray:self.userSelectedPhotos copyItems:NO];
         self.photobookPhotos = [[NSMutableArray alloc] initWithCapacity:self.product.quantityToFulfillOrder];
+        [self.photobookPhotos addObjectsFromArray:self.userSelectedPhotos];
+        for (NSInteger i = self.userSelectedPhotos.count; i < self.product.quantityToFulfillOrder; i++){
+            [self.photobookPhotos addObject:[NSNull null]];
+        }
     }
     else{
-        [self.photobookPhotos removeAllObjects];
+        NSMutableArray *newPhotos = [NSMutableArray arrayWithArray:self.userSelectedPhotos];
+        [newPhotos removeObjectsInArray:self.userSelectedPhotosCopy];
+        for (NSInteger newPhoto = 0; newPhoto < newPhotos.count; newPhoto++){
+            BOOL foundSpot = NO;
+            for (NSInteger bookPhoto = self.addNewPhotosAtIndex; bookPhoto < self.photobookPhotos.count && !foundSpot; bookPhoto++){
+                if (self.photobookPhotos[bookPhoto] == [NSNull null]){
+                    self.photobookPhotos[bookPhoto] = newPhotos[newPhoto];
+                    foundSpot = YES;
+                }
+            }
+            for (NSInteger bookPhoto = 0; bookPhoto < self.addNewPhotosAtIndex && !foundSpot; bookPhoto++){
+                if (self.photobookPhotos[bookPhoto] == [NSNull null]){
+                    self.photobookPhotos[bookPhoto] = newPhotos[newPhoto];
+                    foundSpot = YES;
+                }
+            }
+        }
+        self.userSelectedPhotosCopy = [[NSArray alloc] initWithArray:self.userSelectedPhotos copyItems:NO];
     }
-    [self.photobookPhotos addObjectsFromArray:self.userSelectedPhotos];
-    for (NSInteger i = self.userSelectedPhotos.count; i < self.product.quantityToFulfillOrder; i++){
-        [self.photobookPhotos addObject:[NSNull null]];
-    }
+    
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
@@ -227,6 +248,7 @@ UINavigationControllerDelegate>
         self.selectedIndexNumber = nil;
     }
     else if ([self.photobookPhotos objectAtIndex:index] == (id)[NSNull null]){ //pick new images
+        self.addNewPhotosAtIndex = index;
         [self addMorePhotosFromPage:page];
     }
     else{ //select
