@@ -262,9 +262,7 @@ UINavigationControllerDelegate>
 
 }
 
-- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator{
-    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
-    
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator{    
     for (OLPhotobookViewController *photobook in self.childViewControllers){
         [photobook viewWillTransitionToSize:CGSizeMake(size.width, [self cellHeightForSize:size]) withTransitionCoordinator:coordinator];
     }
