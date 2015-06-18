@@ -73,10 +73,12 @@ CTAssetsPickerControllerDelegate>
 #endif
     
     OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
+    if (self.userSelectedPhotos.count > 0){
     printPhoto.asset = [(OLPrintPhoto *)[self.userSelectedPhotos firstObject] originalAsset];
     [printPhoto getImageWithProgress:NULL completion:^(UIImage *image){
         self.imageCropView.image = image;
     }];
+    }
     
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]
                                               initWithTitle:@"Next"
@@ -95,7 +97,7 @@ CTAssetsPickerControllerDelegate>
         self.imagesCollectionView.hidden = YES;
     }
     
-    if ([self shouldShowAddMorePhotos] && self.assets.count == 0){
+    if ([self shouldShowAddMorePhotos] && self.assets.count == 0 && [[[UIDevice currentDevice] systemVersion] floatValue] >= 8){
         [self collectionView:self.imagesCollectionView didSelectItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
     }
 }
