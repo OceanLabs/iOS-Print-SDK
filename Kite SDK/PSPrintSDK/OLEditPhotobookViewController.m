@@ -130,9 +130,14 @@ UINavigationControllerDelegate>
     
     OLPhotobookViewController *photobook = [self.storyboard instantiateViewControllerWithIdentifier:@"PhotobookViewController"];
     photobook.assets = self.assets;
-    photobook.userSelectedPhotos = self.photobookPhotos;
+    photobook.userSelectedPhotos = bookPhotos;
     photobook.product = self.product;
     photobook.delegate = self.delegate;
+    
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8){
+        [self.navigationController presentViewController:photobook animated:YES completion:NULL];
+        return;
+    }
     
     [self.navigationController pushViewController:photobook animated:YES];
 }

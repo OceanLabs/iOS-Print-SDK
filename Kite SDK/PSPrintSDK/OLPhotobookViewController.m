@@ -193,7 +193,8 @@ static const CGFloat kBookEdgePadding = 38;
         [view.superview addConstraints:con];
     }
     else{
-        self.pagesLabelContainer.backgroundColor = [UIColor darkGrayColor];
+        self.pagesLabelContainer.backgroundColor = [UIColor colorWithRed:1 green:1 blue:1 alpha:0.8];
+        self.pagesLabel.font = [UIFont systemFontOfSize:13];
         
         [self.containerView.superview addConstraint:[NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationLessThanOrEqual toItem:self.containerView.superview attribute:NSLayoutAttributeRight multiplier:1 constant:0]];
         [self.containerView.superview addConstraint:[NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationGreaterThanOrEqual toItem:self.containerView.superview attribute:NSLayoutAttributeLeft multiplier:1 constant:0]];
@@ -201,33 +202,35 @@ static const CGFloat kBookEdgePadding = 38;
             [self.containerView.superview addConstraint:[NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.containerView.superview attribute:NSLayoutAttributeCenterX multiplier:1 constant:0]];
         }
         
-        UINavigationBar *navigationBar = [[UINavigationBar alloc] init];
-        [self.view addSubview:navigationBar];
-        UIView *view = navigationBar;
-        
-        view.translatesAutoresizingMaskIntoConstraints = NO;
-        NSDictionary *views = NSDictionaryOfVariableBindings(view);
-        NSMutableArray *con = [[NSMutableArray alloc] init];
-        
-        NSArray *visuals = @[@"H:|-0-[view]-0-|", @"V:|-0-[view(44)]"];
-        
-        for (NSString *visual in visuals) {
-            [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+        if (!self.editMode){
+            UINavigationBar *navigationBar = [[UINavigationBar alloc] init];
+            [self.view addSubview:navigationBar];
+            UIView *view = navigationBar;
+            
+            view.translatesAutoresizingMaskIntoConstraints = NO;
+            NSDictionary *views = NSDictionaryOfVariableBindings(view);
+            NSMutableArray *con = [[NSMutableArray alloc] init];
+            
+            NSArray *visuals = @[@"H:|-0-[view]-0-|", @"V:|-0-[view(44)]"];
+            
+            for (NSString *visual in visuals) {
+                [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+            }
+            
+            [view.superview addConstraints:con];
+            
+            UIButton *backButton = [[UIButton alloc] initWithFrame:CGRectMake(5, 0, 50, 44)];
+            [backButton setTitle:NSLocalizedString(@"Back", @"") forState:UIControlStateNormal];
+            [backButton setTitleColor:self.view.tintColor forState:UIControlStateNormal];
+            [backButton addTarget:self action:@selector(ios7Back) forControlEvents:UIControlEventTouchUpInside];
+            [navigationBar addSubview:backButton];
+            
+            UIButton *nextButton = [[UIButton alloc] initWithFrame:CGRectMake(MAX(self.view.frame.size.width, self.view.frame.size.height) - 55, 0, 50, 44)];
+            [nextButton setTitle:NSLocalizedString(@"Next", @"") forState:UIControlStateNormal];
+            [nextButton setTitleColor:self.view.tintColor forState:UIControlStateNormal];
+            [nextButton addTarget:self action:@selector(onButtonNextClicked:) forControlEvents:UIControlEventTouchUpInside];
+            [navigationBar addSubview:nextButton];
         }
-        
-        [view.superview addConstraints:con];
-        
-        UIButton *backButton = [[UIButton alloc] initWithFrame:CGRectMake(5, 0, 50, 44)];
-        [backButton setTitle:NSLocalizedString(@"Back", @"") forState:UIControlStateNormal];
-        [backButton setTitleColor:self.view.tintColor forState:UIControlStateNormal];
-        [backButton addTarget:self action:@selector(ios7Back) forControlEvents:UIControlEventTouchUpInside];
-        [navigationBar addSubview:backButton];
-        
-        UIButton *nextButton = [[UIButton alloc] initWithFrame:CGRectMake(MAX(self.view.frame.size.width, self.view.frame.size.height) - 55, 0, 50, 44)];
-        [nextButton setTitle:NSLocalizedString(@"Next", @"") forState:UIControlStateNormal];
-        [nextButton setTitleColor:self.view.tintColor forState:UIControlStateNormal];
-        [nextButton addTarget:self action:@selector(onButtonNextClicked:) forControlEvents:UIControlEventTouchUpInside];
-        [navigationBar addSubview:nextButton];
     }
     
     [self.pagesLabelContainer makeRoundRect];
@@ -305,7 +308,7 @@ static const CGFloat kBookEdgePadding = 38;
 - (void)viewDidLayoutSubviews{
     [super viewDidLayoutSubviews];
     
-    if (!self.hasDoneFirstTimeLayout && !self.editMode){
+    if (!self.hasDoneFirstTimeLayout && !self.editMode && [[[UIDevice currentDevice] systemVersion] floatValue] >= 8){
         self.hasDoneFirstTimeLayout = YES;
         if (![self isLandscape]){
             self.containerView.transform = CGAffineTransformMakeTranslation([self xTrasformForBookAtRightEdge], 0);
