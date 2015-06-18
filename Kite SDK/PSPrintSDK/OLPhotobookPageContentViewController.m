@@ -43,7 +43,7 @@
         self.pageBackground.image = [UIImage imageNamed:@"page-left"];
         self.pageShadowLeft.hidden = NO;
         self.pageShadowRight.hidden = YES;
-        self.pageShadowLeft2.hidden = NO;
+        self.pageShadowLeft2.hidden = YES;
         self.pageShadowRight2.hidden = YES;
 
     }
@@ -52,7 +52,7 @@
         self.pageShadowLeft.hidden = YES;
         self.pageShadowRight.hidden = NO;
         self.pageShadowLeft2.hidden = YES;
-        self.pageShadowRight2.hidden = NO;
+        self.pageShadowRight2.hidden = YES;
     }
 }
 
@@ -86,8 +86,11 @@
         [printPhoto getImageWithProgress:NULL completion:^(UIImage *image){
             dispatch_async(dispatch_get_main_queue(), ^{
                 self.imageView.image = image;
+                self.pageShadowLeft2.hidden = NO;
+                self.pageShadowRight2.hidden = NO;
             });
         }];
+        
     }
     else{
         self.imageView.contentMode = UIViewContentModeCenter;
