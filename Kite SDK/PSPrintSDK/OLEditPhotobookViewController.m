@@ -211,7 +211,11 @@ UINavigationControllerDelegate>
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
-    return CGSizeMake(self.view.frame.size.width, 302);
+    return CGSizeMake(self.view.frame.size.width, [self cellHeightForSize:self.view.frame.size]);
+}
+
+- (CGFloat) cellHeightForSize:(CGSize)size{
+    return (size.width) / (self.product.productTemplate.sizeCm.width*2 / self.product.productTemplate.sizeCm.height) + 40;
 }
 
 - (void)swapImageAtIndex:(NSInteger)index1 withImageAtIndex:(NSInteger)index2{
@@ -256,6 +260,22 @@ UINavigationControllerDelegate>
         [page highlightImageAtIndex:index];
     }
 
+}
+
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator{
+    for (OLPhotobookViewController *photobook in self.childViewControllers){
+        [photobook viewWillTransitionToSize:CGSizeMake(size.width, [self cellHeightForSize:size]) withTransitionCoordinator:coordinator];
+    }
+    
+    [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinator> context){
+        [self.collectionView.collectionViewLayout invalidateLayout];
+        for (OLPhotobookViewController * photobook in self.childViewControllers){
+            photobook.view.frame = CGRectMake(0, 0, size.width, [self cellHeightForSize:size]);
+        }
+//        [self.collectionView reloadData];
+    }completion:^(id<UIViewControllerTransitionCoordinator> context){
+//        [self.collectionView reloadData];
+    }];
 }
 
 #pragma mark - Adding new images
