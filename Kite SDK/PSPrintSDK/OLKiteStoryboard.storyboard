@@ -5,6 +5,7 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
     </dependencies>
     <scenes>
         <!--Product-->
@@ -613,13 +614,18 @@
                                 <rect key="frame" x="0.0" y="20" width="600" height="580"/>
                             </imageView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="page-shadow-right" translatesAutoresizingMaskIntoConstraints="NO" id="mzK-jn-yTP">
-                                <rect key="frame" x="0.0" y="20" width="100" height="580"/>
+                                <rect key="frame" x="0.0" y="20" width="180" height="580"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="100" id="Pbx-ii-kdB"/>
                                 </constraints>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="Pbx-ii-kdB"/>
+                                    </mask>
+                                </variation>
                             </imageView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="page-shadow-right" translatesAutoresizingMaskIntoConstraints="NO" id="bHy-Vg-ZGQ">
-                                <rect key="frame" x="0.0" y="20" width="100" height="580"/>
+                                <rect key="frame" x="0.0" y="20" width="180" height="580"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="199" id="7Jk-F2-Rzp"/>
                                 </constraints>
@@ -630,13 +636,18 @@
                                 </variation>
                             </imageView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="page-shadow-left" translatesAutoresizingMaskIntoConstraints="NO" id="IFE-q9-rjQ">
-                                <rect key="frame" x="500" y="20" width="100" height="580"/>
+                                <rect key="frame" x="420" y="20" width="180" height="580"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="100" id="ZaZ-u7-289"/>
                                 </constraints>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="ZaZ-u7-289"/>
+                                    </mask>
+                                </variation>
                             </imageView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="page-shadow-left" translatesAutoresizingMaskIntoConstraints="NO" id="x7V-bo-RW7">
-                                <rect key="frame" x="500" y="20" width="100" height="580"/>
+                                <rect key="frame" x="420" y="20" width="180" height="580"/>
                                 <constraints>
                                     <constraint firstAttribute="width" id="Ngu-GC-43b"/>
                                 </constraints>
@@ -663,6 +674,7 @@
                             <constraint firstItem="bHy-Vg-ZGQ" firstAttribute="top" secondItem="mzK-jn-yTP" secondAttribute="top" id="QWD-iC-d4e"/>
                             <constraint firstAttribute="trailing" secondItem="IFE-q9-rjQ" secondAttribute="trailing" id="SEZ-z8-Jko"/>
                             <constraint firstItem="vlb-0j-ww9" firstAttribute="centerX" secondItem="MuP-1U-Qqd" secondAttribute="centerX" id="T1f-CU-bFe"/>
+                            <constraint firstItem="IFE-q9-rjQ" firstAttribute="width" secondItem="tgc-Pj-vj3" secondAttribute="width" multiplier="0.3" id="Tb5-Zq-0Mk"/>
                             <constraint firstItem="wDa-Oe-ITL" firstAttribute="top" secondItem="9bm-Iv-FDI" secondAttribute="bottom" id="UcH-kE-6cW"/>
                             <constraint firstItem="9bm-Iv-FDI" firstAttribute="top" secondItem="3pJ-t4-8d2" secondAttribute="bottom" id="XEE-Ua-2Mi"/>
                             <constraint firstAttribute="trailing" secondItem="MuP-1U-Qqd" secondAttribute="trailing" id="at6-xh-ShV"/>
@@ -671,6 +683,7 @@
                             <constraint firstItem="wDa-Oe-ITL" firstAttribute="top" secondItem="IFE-q9-rjQ" secondAttribute="bottom" id="if5-uF-2kT"/>
                             <constraint firstItem="mzK-jn-yTP" firstAttribute="top" secondItem="3pJ-t4-8d2" secondAttribute="bottom" id="mFQ-fO-ReA"/>
                             <constraint firstItem="bHy-Vg-ZGQ" firstAttribute="bottom" secondItem="mzK-jn-yTP" secondAttribute="bottom" id="qSu-yk-yw8"/>
+                            <constraint firstItem="mzK-jn-yTP" firstAttribute="width" secondItem="tgc-Pj-vj3" secondAttribute="width" multiplier="0.3" id="qpV-5Q-AOR"/>
                             <constraint firstItem="MuP-1U-Qqd" firstAttribute="leading" secondItem="tgc-Pj-vj3" secondAttribute="leading" id="veM-Nr-bXW"/>
                             <constraint firstItem="9bm-Iv-FDI" firstAttribute="leading" secondItem="tgc-Pj-vj3" secondAttribute="leading" constant="1" id="z4C-V2-eyZ"/>
                         </constraints>
