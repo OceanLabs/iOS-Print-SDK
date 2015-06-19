@@ -178,11 +178,15 @@ UINavigationControllerDelegate>
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
-    UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"bookPreviewCell" forIndexPath:indexPath];
+    UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:indexPath.section == 0 ? @"coverEditCell" : @"bookPreviewCell" forIndexPath:indexPath];
     
     UIView *view = [cell viewWithTag:10];
     if (!view){
         OLPhotobookViewController *photobook = [self.storyboard instantiateViewControllerWithIdentifier:@"PhotobookViewController"];
+        if (indexPath.section == 1){
+            photobook.startOpen = YES;
+        }
+        
         photobook.assets = self.assets;
         
         photobook.userSelectedPhotos = self.photobookPhotos;
@@ -215,7 +219,17 @@ UINavigationControllerDelegate>
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
-    return self.product.quantityToFulfillOrder / 2.0;
+    if (section == 0){
+        return 1;
+    }
+    else{
+        return self.product.quantityToFulfillOrder / 2.0;
+    }
+    
+}
+
+- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
+    return 2;
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{

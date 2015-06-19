@@ -46,7 +46,7 @@ static const CGFloat kBookEdgePadding = 38;
 @property (weak, nonatomic) IBOutlet UIView *openbookView;
 @property (weak, nonatomic) IBOutlet UIView *containerView;
 @property (strong, nonatomic) NSMutableArray *photobookPhotos;
-@property (strong, nonatomic) OLPrintPhoto *editingPrintPhoto;
+@property (strong, nonatomic) OLPrintPhoto *croppingPrintPhoto;
 @property (weak, nonatomic) IBOutlet UIImageView *bookImageView;
 @property (assign, nonatomic) NSInteger croppingImageIndex;
 @property (strong, nonatomic) NSLayoutConstraint *centerXCon;
@@ -254,12 +254,6 @@ static const CGFloat kBookEdgePadding = 38;
     self.containerView.layer.shouldRasterize = YES;
     self.containerView.layer.rasterizationScale = [UIScreen mainScreen].scale;
     
-    self.containerView.layer.shadowOffset = CGSizeMake(-10, 10);
-    self.containerView.layer.shadowRadius = 5;
-    self.containerView.layer.shadowOpacity = 0.25;
-    self.containerView.layer.shouldRasterize = YES;
-    self.containerView.layer.rasterizationScale = [UIScreen mainScreen].scale;
-    
     [self.bookImageView makeRoundRectWithRadius:3];
     
     for (UIGestureRecognizer *gesture in self.pageController.gestureRecognizers){
@@ -269,7 +263,7 @@ static const CGFloat kBookEdgePadding = 38;
         }
     }
     
-    if (!self.editMode){ //Start with book closed
+    if (!self.editMode || !self.startOpen){ //Start with book closed
         [self setUpBookCoverView];
         self.bookCover.hidden = NO;
         self.containerView.layer.shadowOpacity = 0;
@@ -312,10 +306,13 @@ static const CGFloat kBookEdgePadding = 38;
 - (void)viewDidLayoutSubviews{
     [super viewDidLayoutSubviews];
     
-    if (!self.hasDoneFirstTimeLayout && !self.editMode && [[[UIDevice currentDevice] systemVersion] floatValue] >= 8){
+    if (!self.hasDoneFirstTimeLayout && [[[UIDevice currentDevice] systemVersion] floatValue] >= 8){
         self.hasDoneFirstTimeLayout = YES;
         if (![self isLandscape]){
             self.containerView.transform = CGAffineTransformMakeTranslation([self xTrasformForBookAtRightEdge], 0);
+        }
+        else if (self.editMode && !self.startOpen){
+            self.containerView.transform = CGAffineTransformMakeTranslation(-self.view.frame.size.width/2.0 + self.containerView.frame.size.width/2.0, 0);
         }
     }
 }
@@ -425,8 +422,8 @@ static const CGFloat kBookEdgePadding = 38;
 }
 
 -(void)scrollCropViewController:(OLScrollCropViewController *)cropper didFinishCroppingImage:(UIImage *)croppedImage{
-    [self.editingPrintPhoto unloadImage];
-    self.editingPrintPhoto.asset = [OLAsset assetWithImageAsJPEG:croppedImage];
+    [self.croppingPrintPhoto unloadImage];
+    self.croppingPrintPhoto.asset = [OLAsset assetWithImageAsJPEG:croppedImage];
     
     [(OLPhotobookPageContentViewController *)[self.pageController.viewControllers objectAtIndex:self.croppingImageIndex] loadImage];
     
@@ -581,7 +578,7 @@ static const CGFloat kBookEdgePadding = 38;
     
     index = [[self.pageController.viewControllers objectAtIndex:self.croppingImageIndex] pageIndex];
     tempPrintPhoto.asset = self.assets[index % [self.assets count]];
-    self.editingPrintPhoto = self.photobookPhotos[index];
+    self.croppingPrintPhoto = self.photobookPhotos[index];
     
     UINavigationController *nav = [self.storyboard instantiateViewControllerWithIdentifier:@"CropViewNavigationController"];
     OLScrollCropViewController *cropVc = (id)nav.topViewController;
@@ -767,9 +764,11 @@ static const CGFloat kBookEdgePadding = 38;
             [halfBookCoverImageContainer addSubview:imageView];
             
             [self.bookCover addSubview:halfBookCoverImageContainer];
-            halfBookCoverImageContainer.userInteractionEnabled = YES;
-            [halfBookCoverImageContainer addGestureRecognizer:tap];
-            [halfBookCoverImageContainer addGestureRecognizer:swipe];
+            if (!self.editMode){
+                halfBookCoverImageContainer.userInteractionEnabled = YES;
+                [halfBookCoverImageContainer addGestureRecognizer:tap];
+                [halfBookCoverImageContainer addGestureRecognizer:swipe];
+            }
             
             halfBookCoverImageContainer.layer.shadowOffset = CGSizeMake(-10, 10);
             halfBookCoverImageContainer.layer.shadowRadius = 5;

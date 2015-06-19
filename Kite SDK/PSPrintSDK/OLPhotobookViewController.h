@@ -30,5 +30,6 @@
 @property (strong, nonatomic) UIPageViewController *pageController;
 
 @property (assign, nonatomic) BOOL editMode;
+@property (assign, nonatomic) BOOL startOpen;
 
 @end
