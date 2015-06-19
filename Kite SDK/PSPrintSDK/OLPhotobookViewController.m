@@ -96,7 +96,6 @@ static const CGFloat kBookEdgePadding = 38;
     
     for (OLPhotobookPageContentViewController *page in [self.pageController viewControllers]){
         page.userSelectedPhotos = self.photobookPhotos;
-        [page loadImage];
     }
 }
 

@@ -93,10 +93,18 @@
         
     }
     else{
-        self.imageView.contentMode = UIViewContentModeCenter;
-        self.imageView.image = [UIImage imageNamed:@"plus"];
         self.pageShadowLeft2.hidden = YES;
         self.pageShadowRight2.hidden = YES;
+        [UIView animateWithDuration:0.5 animations:^{
+            self.imageView.alpha = 0;
+        }completion:^(BOOL finished){
+            self.imageView.contentMode = UIViewContentModeCenter;
+            self.imageView.image = [UIImage imageNamed:@"plus"];
+            [UIView animateWithDuration:0.15 animations:^{
+                self.imageView.alpha = 1;
+            }];
+        }];
+        
     }
 }
 

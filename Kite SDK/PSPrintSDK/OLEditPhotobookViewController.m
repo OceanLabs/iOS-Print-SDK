@@ -213,6 +213,9 @@ UINavigationControllerDelegate>
             if (photobook.view == view){
                 photobook.editingPageNumber = [NSNumber numberWithInteger:indexPath.item * 2];
                 photobook.userSelectedPhotos = self.photobookPhotos;
+                for (OLPhotobookPageContentViewController *page in photobook.pageController.viewControllers){
+                    [page loadImage];
+                }
                 if (self.selectedIndexNumber){
                     [[self findPageForImageIndex:[self.selectedIndexNumber integerValue]] highlightImageAtIndex:[self.selectedIndexNumber integerValue]];
                 }
@@ -277,6 +280,8 @@ UINavigationControllerDelegate>
         
         OLPhotobookPageContentViewController *selectedPage = [self findPageForImageIndex:[self.selectedIndexNumber integerValue]];
         [(OLPhotobookViewController *)selectedPage.parentViewController.parentViewController setUserSelectedPhotos:self.photobookPhotos];
+        [page loadImage];
+        [selectedPage loadImage];
         
         [selectedPage unhighlightImageAtIndex:[self.selectedIndexNumber integerValue]];
         self.selectedIndexNumber = nil;
@@ -295,6 +300,7 @@ UINavigationControllerDelegate>
 - (void)deletePage{
     self.photobookPhotos[self.interactionImageIndex] = [NSNull null];
     self.interactionPhotobook.userSelectedPhotos = self.photobookPhotos;
+    [[self findPageForImageIndex:self.interactionImageIndex] loadImage];
 }
 
 - (void)addPage{
@@ -483,6 +489,9 @@ UINavigationControllerDelegate>
     for (OLPhotobookViewController *photobook in self.childViewControllers){
         if (!photobook.bookClosed){
             photobook.userSelectedPhotos = self.photobookPhotos;
+            for (OLPhotobookPageContentViewController *page in photobook.pageController.viewControllers){
+                [page loadImage];
+            }
         }
     }
     
