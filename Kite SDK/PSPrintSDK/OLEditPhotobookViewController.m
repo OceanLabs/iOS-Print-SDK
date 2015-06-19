@@ -13,6 +13,7 @@
 #import "OLPrintPhoto.h"
 #import "NSArray+QueryingExtras.h"
 #import "OLImageView.h"
+#import "OLScrollCropViewController.h"
 
 #ifdef OL_KITE_OFFER_INSTAGRAM
 #import <OLInstagramImagePickerController.h>
@@ -37,7 +38,7 @@
 #endif
 @end
 
-@interface OLEditPhotobookViewController () <UICollectionViewDelegateFlowLayout, OLPhotobookViewControllerDelegate, CTAssetsPickerControllerDelegate, UIActionSheetDelegate, UIAlertViewDelegate, OLImageViewDelegate,
+@interface OLEditPhotobookViewController () <UICollectionViewDelegateFlowLayout, OLPhotobookViewControllerDelegate, CTAssetsPickerControllerDelegate, UIActionSheetDelegate, UIAlertViewDelegate, OLImageViewDelegate, OLScrollCropViewControllerDelegate,
 #ifdef OL_KITE_OFFER_INSTAGRAM
 OLInstagramImagePickerControllerDelegate,
 #endif
@@ -180,6 +181,17 @@ UINavigationControllerDelegate>
 
 - (void)cropImage{
     
+    OLPrintPhoto *cropPhoto = self.photobookPhotos[self.interactionImageIndex];
+    
+    UINavigationController *nav = [self.storyboard instantiateViewControllerWithIdentifier:@"CropViewNavigationController"];
+    OLScrollCropViewController *cropVc = (id)nav.topViewController;
+    cropVc.delegate = self;
+    UIImageView *imageView = [self findPageForImageIndex:self.interactionImageIndex].imageView;
+    cropVc.aspectRatio = imageView.frame.size.height / imageView.frame.size.width;
+    [cropPhoto getImageWithProgress:NULL completion:^(UIImage *image){
+        [cropVc setFullImage:image];
+        [self presentViewController:nav animated:YES completion:NULL];
+    }];
 }
 
 #pragma mark - User Actions
@@ -323,11 +335,11 @@ UINavigationControllerDelegate>
     view.delegate = self;
     [view becomeFirstResponder];
     UIMenuItem *deleteItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Remove", @"") action:@selector(deletePage)];
-//    UIMenuItem *cropImageItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Crop", @"") action:@selector(cropImage)];
+    UIMenuItem *cropImageItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Crop", @"") action:@selector(cropImage)];
 //    UIMenuItem *addPageItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Add Page", @"") action:@selector(addPage)];
     
     UIMenuController *mc = [UIMenuController sharedMenuController];
-    [mc setMenuItems:@[deleteItem]];
+    [mc setMenuItems:@[deleteItem, cropImageItem]];
     [mc setTargetRect:view.frame inView:view];
     [mc setMenuVisible:YES animated:YES];
 }
@@ -403,6 +415,21 @@ UINavigationControllerDelegate>
 
 - (CGFloat) cellHeightForSize:(CGSize)size{
     return (size.width) / (self.product.productTemplate.sizeCm.width*2 / self.product.productTemplate.sizeCm.height) + 40;
+}
+
+#pragma mark - OLScrollCropView delegate
+
+- (void)scrollCropViewControllerDidCancel:(OLScrollCropViewController *)cropper{
+    [cropper dismissViewControllerAnimated:YES completion:NULL];
+}
+
+-(void)scrollCropViewController:(OLScrollCropViewController *)cropper didFinishCroppingImage:(UIImage *)croppedImage{
+    [self.photobookPhotos[self.interactionImageIndex] unloadImage];
+    [self.photobookPhotos[self.interactionImageIndex] setAsset:[OLAsset assetWithImageAsJPEG:croppedImage]];
+    
+    [[self findPageForImageIndex:self.interactionImageIndex] loadImageWithCompletionHandler:NULL];
+    
+    [cropper dismissViewControllerAnimated:YES completion:NULL];
 }
 
 #pragma mark - Adding new images
