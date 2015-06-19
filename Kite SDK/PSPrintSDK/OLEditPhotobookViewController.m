@@ -190,7 +190,12 @@ UINavigationControllerDelegate>
         photobook.assets = self.assets;
         
         photobook.userSelectedPhotos = self.photobookPhotos;
-        photobook.editingPageNumber = [NSNumber numberWithInteger:indexPath.item * 2];
+        if (indexPath.section == 0){
+            photobook.editingPageNumber = nil;
+        }
+        else{
+            photobook.editingPageNumber = [NSNumber numberWithInteger:indexPath.item * 2];
+        }
         
         photobook.product = self.product;
         photobook.delegate = self.delegate;
@@ -246,6 +251,9 @@ UINavigationControllerDelegate>
 
 - (OLPhotobookPageContentViewController *)findPageForImageIndex:(NSInteger)index{
     for (OLPhotobookViewController *photobook in self.childViewControllers){
+        if (photobook.bookClosed){
+            continue;
+        }
         for (OLPhotobookPageContentViewController *page in photobook.pageController.viewControllers){
             if (page.pageIndex == index){
                 return page;
@@ -473,7 +481,9 @@ UINavigationControllerDelegate>
     
     [self updatePhotobookPhotos];
     for (OLPhotobookViewController *photobook in self.childViewControllers){
-        photobook.userSelectedPhotos = self.photobookPhotos;
+        if (!photobook.bookClosed){
+            photobook.userSelectedPhotos = self.photobookPhotos;
+        }
     }
     
 }

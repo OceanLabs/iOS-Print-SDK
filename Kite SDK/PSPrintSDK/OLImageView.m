@@ -15,7 +15,9 @@
 }
 
 - (BOOL)canPerformAction:(SEL)action withSender:(id)sender{
-    if ([self respondsToSelector:action] && [self.delegate respondsToSelector:action]){
+    NSArray *whiteList = @[@"deletePage", @"addPage", @"cropImage"];
+    
+    if ([self respondsToSelector:action] && [self.delegate respondsToSelector:action] && [whiteList containsObject:NSStringFromSelector(action)]){
         return YES;
     }
     else{
