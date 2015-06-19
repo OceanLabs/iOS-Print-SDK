@@ -424,7 +424,7 @@ static const CGFloat kBookEdgePadding = 38;
     [self.croppingPrintPhoto unloadImage];
     self.croppingPrintPhoto.asset = [OLAsset assetWithImageAsJPEG:croppedImage];
     
-    [(OLPhotobookPageContentViewController *)[self.pageController.viewControllers objectAtIndex:self.croppingImageIndex] loadImage];
+    [(OLPhotobookPageContentViewController *)[self.pageController.viewControllers objectAtIndex:self.croppingImageIndex] loadImageWithCompletionHandler:NULL];
     
     [cropper dismissViewControllerAnimated:YES completion:NULL];
 }

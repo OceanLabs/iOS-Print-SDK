@@ -18,13 +18,15 @@
 @property (weak, nonatomic) IBOutlet UIImageView *pageShadowLeft;
 @property (weak, nonatomic) IBOutlet UIImageView *pageShadowLeft2;
 
+@property (assign, nonatomic) BOOL left;
+
 @end
 
 @implementation OLPhotobookPageContentViewController
 
 - (void)viewDidLoad{
     [super viewDidLoad];
-    [self loadImage];
+    [self loadImageWithCompletionHandler:NULL];
 }
 
 - (void)viewWillAppear:(BOOL)animated{
@@ -39,6 +41,7 @@
 //}
 
 - (void)setPage:(BOOL)left{
+    self.left = left;
     if (left){
         self.pageBackground.image = [UIImage imageNamed:@"page-left"];
         self.pageShadowLeft.hidden = NO;
@@ -78,7 +81,7 @@
     }];
 }
 
-- (void)loadImage{
+- (void)loadImageWithCompletionHandler:(void(^)(void))handler{
         OLPrintPhoto *printPhoto = [self.userSelectedPhotos objectAtIndex:self.pageIndex];
     if (printPhoto != (id)[NSNull null]){
         self.imageView.image = nil;
@@ -86,8 +89,15 @@
         [printPhoto getImageWithProgress:NULL completion:^(UIImage *image){
             dispatch_async(dispatch_get_main_queue(), ^{
                 self.imageView.image = image;
-                self.pageShadowLeft2.hidden = NO;
-                self.pageShadowRight2.hidden = NO;
+                if (self.left){
+                    self.pageShadowLeft2.hidden = NO;
+                }
+                else{
+                    self.pageShadowRight2.hidden = NO;
+                }
+                if (handler){
+                    handler();
+                }
             });
         }];
         
@@ -100,8 +110,12 @@
         }completion:^(BOOL finished){
             self.imageView.contentMode = UIViewContentModeCenter;
             self.imageView.image = [UIImage imageNamed:@"plus"];
+            self.imageView.backgroundColor = [UIColor whiteColor];
             [UIView animateWithDuration:0.15 animations:^{
                 self.imageView.alpha = 1;
+                if (handler){
+                    handler();
+                }
             }];
         }];
         

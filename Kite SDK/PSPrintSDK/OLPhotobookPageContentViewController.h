@@ -15,7 +15,7 @@
 @property (assign, nonatomic) NSInteger pageIndex;
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;
 
-- (void)loadImage;
+- (void)loadImageWithCompletionHandler:(void(^)(void))handler;
 - (NSInteger)imageIndexForPoint:(CGPoint)p;
 - (void)highlightImageAtIndex:(NSInteger)index;
 - (void)unhighlightImageAtIndex:(NSInteger)index;

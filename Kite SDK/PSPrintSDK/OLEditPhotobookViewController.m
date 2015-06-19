@@ -171,7 +171,7 @@ UINavigationControllerDelegate>
 - (void)deletePage{
     self.photobookPhotos[self.interactionImageIndex] = [NSNull null];
     self.interactionPhotobook.userSelectedPhotos = self.photobookPhotos;
-    [[self findPageForImageIndex:self.interactionImageIndex] loadImage];
+    [[self findPageForImageIndex:self.interactionImageIndex] loadImageWithCompletionHandler:NULL];
 }
 
 - (void)addPage{
@@ -234,18 +234,76 @@ UINavigationControllerDelegate>
         self.selectedIndexNumber = nil;
     }
     else if (self.selectedIndexNumber){ //swap
-        [page unhighlightImageAtIndex:index];
-        [self swapImageAtIndex:[self.selectedIndexNumber integerValue] withImageAtIndex:page.pageIndex];
-        
-        photobook.userSelectedPhotos = self.photobookPhotos;
-        
         OLPhotobookPageContentViewController *selectedPage = [self findPageForImageIndex:[self.selectedIndexNumber integerValue]];
-        [(OLPhotobookViewController *)selectedPage.parentViewController.parentViewController setUserSelectedPhotos:self.photobookPhotos];
-        [page loadImage];
-        [selectedPage loadImage];
+        OLPrintPhoto *printPhoto = [self.photobookPhotos objectAtIndex:page.pageIndex];
         
+        [page unhighlightImageAtIndex:index];
         [selectedPage unhighlightImageAtIndex:[self.selectedIndexNumber integerValue]];
-        self.selectedIndexNumber = nil;
+        
+        UIView *pageCopy = [page.imageView snapshotViewAfterScreenUpdates:YES];
+        page.imageView.image = nil;
+        pageCopy.frame = [self.view convertRect:page.imageView.frame fromView:page.view];
+        [self.view addSubview:pageCopy];
+        
+        if (selectedPage){ //Previously selected page is in view
+            UIView *selectedPageCopy = [selectedPage.imageView snapshotViewAfterScreenUpdates:YES];
+            selectedPage.imageView.image = nil;
+            selectedPageCopy.frame = [self.view convertRect:selectedPage.imageView.frame fromView:selectedPage.view];
+            [self.view addSubview:selectedPageCopy];
+            
+            CGRect tempFrame = pageCopy.frame;
+            [UIView animateWithDuration:0.5 animations:^{
+                if (printPhoto != (id)[NSNull null]){
+                    pageCopy.frame = selectedPageCopy.frame;
+                }
+                selectedPageCopy.frame = tempFrame;
+            } completion:^(BOOL finished){
+                [self swapImageAtIndex:[self.selectedIndexNumber integerValue] withImageAtIndex:page.pageIndex];
+                photobook.userSelectedPhotos = self.photobookPhotos;
+                
+                [(OLPhotobookViewController *)selectedPage.parentViewController.parentViewController setUserSelectedPhotos:self.photobookPhotos];
+                [page loadImageWithCompletionHandler:^{
+                    [selectedPage loadImageWithCompletionHandler:^{
+                        [pageCopy removeFromSuperview];
+                        [selectedPageCopy removeFromSuperview];
+                        self.selectedIndexNumber = nil;
+                    }];
+                }];
+            }];
+        }
+        else{ //Previously selected image is not in view. Only pretend to swap.
+            [self swapImageAtIndex:[self.selectedIndexNumber integerValue] withImageAtIndex:page.pageIndex];
+            photobook.userSelectedPhotos = self.photobookPhotos;
+            
+            CGFloat x = 0;
+            if (page.pageIndex % 2 == 0 && [self.selectedIndexNumber integerValue] % 2 == 1){
+                x += self.view.frame.size.width / 2.0;
+            }
+            if (page.pageIndex % 2 == 1 && [self.selectedIndexNumber integerValue] % 2 == 0){
+                x -= self.view.frame.size.width / 2.0;
+            }
+            
+            [page loadImageWithCompletionHandler:^{
+                UIView *selectedPageCopy = [page.imageView snapshotViewAfterScreenUpdates:YES];
+                page.imageView.hidden = YES;
+                selectedPageCopy.frame = [self.view convertRect:page.imageView.frame fromView:page.view];
+                selectedPageCopy.transform = CGAffineTransformMakeTranslation(x, [self.selectedIndexNumber integerValue] < page.pageIndex ? -1000 : 1000);
+                [self.view addSubview:selectedPageCopy];
+                [UIView animateWithDuration:0.5 animations:^{
+                    if (printPhoto != (id)[NSNull null]){
+                        pageCopy.transform = selectedPageCopy.transform;
+                    }
+                    selectedPageCopy.transform = CGAffineTransformIdentity;
+                }completion:^(BOOL finished){
+                    page.imageView.hidden = NO;
+                    [selectedPageCopy removeFromSuperview];
+                    [pageCopy removeFromSuperview];
+                    self.selectedIndexNumber = nil;
+                }];
+            }];
+        }
+        
+        
     }
     else if ([self.photobookPhotos objectAtIndex:index] == (id)[NSNull null]){ //pick new images
         self.addNewPhotosAtIndex = index;
@@ -313,7 +371,7 @@ UINavigationControllerDelegate>
                 photobook.editingPageNumber = [NSNumber numberWithInteger:indexPath.item * 2];
                 photobook.userSelectedPhotos = self.photobookPhotos;
                 for (OLPhotobookPageContentViewController *page in photobook.pageController.viewControllers){
-                    [page loadImage];
+                    [page loadImageWithCompletionHandler:NULL];
                 }
                 if (self.selectedIndexNumber){
                     [[self findPageForImageIndex:[self.selectedIndexNumber integerValue]] highlightImageAtIndex:[self.selectedIndexNumber integerValue]];
@@ -494,7 +552,7 @@ UINavigationControllerDelegate>
         if (!photobook.bookClosed){
             photobook.userSelectedPhotos = self.photobookPhotos;
             for (OLPhotobookPageContentViewController *page in photobook.pageController.viewControllers){
-                [page loadImage];
+                [page loadImageWithCompletionHandler:NULL];
             }
         }
     }
