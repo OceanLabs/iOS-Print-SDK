@@ -12,6 +12,7 @@
 #import <CTAssetsPickerController.h>
 #import "OLPrintPhoto.h"
 #import "NSArray+QueryingExtras.h"
+#import "OLImageView.h"
 
 #ifdef OL_KITE_OFFER_INSTAGRAM
 #import <OLInstagramImagePickerController.h>
@@ -36,7 +37,7 @@
 #endif
 @end
 
-@interface OLEditPhotobookViewController () <UICollectionViewDelegateFlowLayout, OLPhotobookViewControllerDelegate, CTAssetsPickerControllerDelegate, UIActionSheetDelegate, UIAlertViewDelegate,
+@interface OLEditPhotobookViewController () <UICollectionViewDelegateFlowLayout, OLPhotobookViewControllerDelegate, CTAssetsPickerControllerDelegate, UIActionSheetDelegate, UIAlertViewDelegate, OLImageViewDelegate,
 #ifdef OL_KITE_OFFER_INSTAGRAM
 OLInstagramImagePickerControllerDelegate,
 #endif
@@ -49,6 +50,8 @@ UINavigationControllerDelegate>
 @property (strong, nonatomic) NSArray *userSelectedPhotosCopy;
 @property (assign, nonatomic) NSNumber *selectedIndexNumber;
 @property (assign, nonatomic) NSInteger addNewPhotosAtIndex;
+@property (assign, nonatomic) NSInteger interactionImageIndex;
+@property (weak, nonatomic) OLPhotobookViewController *interactionPhotobook;
 
 @end
 
@@ -265,6 +268,35 @@ UINavigationControllerDelegate>
         [page highlightImageAtIndex:index];
     }
 
+}
+
+- (void)deletePage{
+    self.photobookPhotos[self.interactionImageIndex] = [NSNull null];
+    self.interactionPhotobook.userSelectedPhotos = self.photobookPhotos;
+}
+
+- (void)addPage{
+    
+}
+
+- (void)cropImage{
+    
+}
+
+- (void)photobook:(OLPhotobookViewController *)photobook userDidLongPressOnImageWithIndex:(NSInteger)index sender:(UILongPressGestureRecognizer *)sender{
+    self.interactionImageIndex = index;
+    self.interactionPhotobook = photobook;
+    OLImageView *view = (OLImageView *)[photobook.pageController.viewControllers[index % 2] imageView];
+    view.delegate = self;
+    [view becomeFirstResponder];
+    UIMenuItem *deleteItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Remove", @"") action:@selector(deletePage)];
+//    UIMenuItem *cropImageItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Crop", @"") action:@selector(cropImage)];
+//    UIMenuItem *addPageItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Add Page", @"") action:@selector(addPage)];
+    
+    UIMenuController *mc = [UIMenuController sharedMenuController];
+    [mc setMenuItems:@[deleteItem]];
+    [mc setTargetRect:view.frame inView:view];
+    [mc setMenuVisible:YES animated:YES];
 }
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator{    

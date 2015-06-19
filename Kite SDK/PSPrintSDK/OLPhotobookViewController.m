@@ -156,8 +156,12 @@ static const CGFloat kBookEdgePadding = 38;
     UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(onPanGestureRecognized:)];
     panGesture.delegate = self;
     
+    UILongPressGestureRecognizer *longPressGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(onLongPressGestureRecognized:)];
+    longPressGesture.delegate = self;
+    
     [self.pageController.view addGestureRecognizer:tapGesture];
     [self.pageController.view addGestureRecognizer:panGesture];
+    [self.pageController.view addGestureRecognizer:longPressGesture];
     
     self.title = [NSString stringWithFormat: NSLocalizedString(@"%d / %d", @""), self.userSelectedPhotos.count, self.product.quantityToFulfillOrder];
     
@@ -678,6 +682,18 @@ static const CGFloat kBookEdgePadding = 38;
             }
         }];
     }
+}
+
+- (void)onLongPressGestureRecognized:(UILongPressGestureRecognizer *)sender{
+    if ([sender locationInView:self.pageController.view].x < self.pageController.view.frame.size.width / 2.0){
+        self.croppingImageIndex = 0;
+    }
+    else{
+        self.croppingImageIndex = 1;
+    }
+    OLPhotobookPageContentViewController *page = [self.pageController.viewControllers objectAtIndex:self.croppingImageIndex];
+    NSInteger index = [page imageIndexForPoint:[sender locationInView:page.view]];
+    [self.photobookDelegate photobook:self userDidLongPressOnImageWithIndex:index sender:sender];
 }
 
 - (BOOL) gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
