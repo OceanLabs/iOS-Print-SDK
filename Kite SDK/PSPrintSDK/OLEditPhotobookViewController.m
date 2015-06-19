@@ -75,47 +75,18 @@ UINavigationControllerDelegate>
     [self updatePhotobookPhotos];
 }
 
-- (void)onButtonNextClicked{
-    if (self.userSelectedPhotos.count == 0){
-        
-        NSString *alertTitle = NSLocalizedString(@"No photos", @"");
-        NSString *alertMessage = NSLocalizedString(@"Please add at least one photo", @"");
-        NSString *actionTitle = NSLocalizedString(@"OK", @"");
-        if ([UIAlertController class]){
-            UIAlertController *ac = [UIAlertController alertControllerWithTitle:alertTitle message:alertMessage preferredStyle:UIAlertControllerStyleAlert];
-            [ac addAction:[UIAlertAction actionWithTitle:actionTitle style:UIAlertActionStyleDefault handler:NULL]];
-            [self presentViewController:ac animated:YES completion:NULL];
-        }
-        else{
-            UIAlertView *av = [[UIAlertView alloc] initWithTitle:alertTitle message:alertMessage delegate:self cancelButtonTitle:actionTitle otherButtonTitles:nil];
-            av.delegate = self;
-            [av show];
-        }
-        return;
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator{
+    for (OLPhotobookViewController *photobook in self.childViewControllers){
+        [photobook viewWillTransitionToSize:CGSizeMake(size.width, [self cellHeightForSize:size]) withTransitionCoordinator:coordinator];
     }
     
-    if (self.userSelectedPhotos.count < self.product.quantityToFulfillOrder){
-        NSString *alertTitle = NSLocalizedString(@"You can add more photos", @"");
-        NSString *alertMessage = NSLocalizedString(@"Are you sure you want to proceed? If you do, the blank pages will be filled in with duplicate photos", @"");
-        NSString *actionTitle = NSLocalizedString(@"Yes, proceed", @"");
-        if ([UIAlertController class]){
-            UIAlertController *ac = [UIAlertController alertControllerWithTitle:alertTitle message:alertMessage preferredStyle:UIAlertControllerStyleAlert];
-            [ac addAction:[UIAlertAction actionWithTitle:actionTitle style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
-                [self proceedToBookReview];
-            }]];
-            [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"No, not yet", @"") style:UIAlertActionStyleCancel handler:NULL]];
-            [self presentViewController:ac animated:YES completion:NULL];
+    [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinator> context){
+        [self.collectionView.collectionViewLayout invalidateLayout];
+        for (OLPhotobookViewController * photobook in self.childViewControllers){
+            photobook.view.frame = CGRectMake(0, 0, size.width, [self cellHeightForSize:size]);
         }
-        else{
-            UIAlertView *av = [[UIAlertView alloc] initWithTitle:alertTitle message:alertMessage delegate:self cancelButtonTitle:NSLocalizedString(@"No, not yet", @"") otherButtonTitles:actionTitle, nil];
-            av.tag = 172;
-            [av show];
-        }
-    }
-    else{
-        [self proceedToBookReview];
-    }
-    
+    }completion:^(id<UIViewControllerTransitionCoordinator> context){
+    }];
 }
 
 - (void)proceedToBookReview{
@@ -176,6 +147,134 @@ UINavigationControllerDelegate>
     }
     
 }
+
+- (void)swapImageAtIndex:(NSInteger)index1 withImageAtIndex:(NSInteger)index2{
+    [self.photobookPhotos exchangeObjectAtIndex:index1 withObjectAtIndex:index2];
+}
+
+- (OLPhotobookPageContentViewController *)findPageForImageIndex:(NSInteger)index{
+    for (OLPhotobookViewController *photobook in self.childViewControllers){
+        if (photobook.bookClosed){
+            continue;
+        }
+        for (OLPhotobookPageContentViewController *page in photobook.pageController.viewControllers){
+            if (page.pageIndex == index){
+                return page;
+            }
+        }
+    }
+    return nil;
+}
+
+#pragma mark - Menu Actions
+
+- (void)deletePage{
+    self.photobookPhotos[self.interactionImageIndex] = [NSNull null];
+    self.interactionPhotobook.userSelectedPhotos = self.photobookPhotos;
+    [[self findPageForImageIndex:self.interactionImageIndex] loadImage];
+}
+
+- (void)addPage{
+    
+}
+
+- (void)cropImage{
+    
+}
+
+#pragma mark - User Actions
+
+- (void)onButtonNextClicked{
+    if (self.userSelectedPhotos.count == 0){
+        
+        NSString *alertTitle = NSLocalizedString(@"No photos", @"");
+        NSString *alertMessage = NSLocalizedString(@"Please add at least one photo", @"");
+        NSString *actionTitle = NSLocalizedString(@"OK", @"");
+        if ([UIAlertController class]){
+            UIAlertController *ac = [UIAlertController alertControllerWithTitle:alertTitle message:alertMessage preferredStyle:UIAlertControllerStyleAlert];
+            [ac addAction:[UIAlertAction actionWithTitle:actionTitle style:UIAlertActionStyleDefault handler:NULL]];
+            [self presentViewController:ac animated:YES completion:NULL];
+        }
+        else{
+            UIAlertView *av = [[UIAlertView alloc] initWithTitle:alertTitle message:alertMessage delegate:self cancelButtonTitle:actionTitle otherButtonTitles:nil];
+            av.delegate = self;
+            [av show];
+        }
+        return;
+    }
+    
+    if (self.userSelectedPhotos.count < self.product.quantityToFulfillOrder){
+        NSString *alertTitle = NSLocalizedString(@"You can add more photos", @"");
+        NSString *alertMessage = NSLocalizedString(@"Are you sure you want to proceed? If you do, the blank pages will be filled in with duplicate photos", @"");
+        NSString *actionTitle = NSLocalizedString(@"Yes, proceed", @"");
+        if ([UIAlertController class]){
+            UIAlertController *ac = [UIAlertController alertControllerWithTitle:alertTitle message:alertMessage preferredStyle:UIAlertControllerStyleAlert];
+            [ac addAction:[UIAlertAction actionWithTitle:actionTitle style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
+                [self proceedToBookReview];
+            }]];
+            [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"No, not yet", @"") style:UIAlertActionStyleCancel handler:NULL]];
+            [self presentViewController:ac animated:YES completion:NULL];
+        }
+        else{
+            UIAlertView *av = [[UIAlertView alloc] initWithTitle:alertTitle message:alertMessage delegate:self cancelButtonTitle:NSLocalizedString(@"No, not yet", @"") otherButtonTitles:actionTitle, nil];
+            av.tag = 172;
+            [av show];
+        }
+    }
+    else{
+        [self proceedToBookReview];
+    }
+    
+}
+
+- (void)photobook:(OLPhotobookViewController *)photobook userDidTapOnImageWithIndex:(NSInteger)index{
+    OLPhotobookPageContentViewController *page = [self findPageForImageIndex:index];
+    if (self.selectedIndexNumber && [self.selectedIndexNumber integerValue] == index){ //deselect
+        [[self findPageForImageIndex:[self.selectedIndexNumber integerValue]] unhighlightImageAtIndex:index];
+        self.selectedIndexNumber = nil;
+    }
+    else if (self.selectedIndexNumber){ //swap
+        [page unhighlightImageAtIndex:index];
+        [self swapImageAtIndex:[self.selectedIndexNumber integerValue] withImageAtIndex:page.pageIndex];
+        
+        photobook.userSelectedPhotos = self.photobookPhotos;
+        
+        OLPhotobookPageContentViewController *selectedPage = [self findPageForImageIndex:[self.selectedIndexNumber integerValue]];
+        [(OLPhotobookViewController *)selectedPage.parentViewController.parentViewController setUserSelectedPhotos:self.photobookPhotos];
+        [page loadImage];
+        [selectedPage loadImage];
+        
+        [selectedPage unhighlightImageAtIndex:[self.selectedIndexNumber integerValue]];
+        self.selectedIndexNumber = nil;
+    }
+    else if ([self.photobookPhotos objectAtIndex:index] == (id)[NSNull null]){ //pick new images
+        self.addNewPhotosAtIndex = index;
+        [self addMorePhotosFromPage:page];
+    }
+    else{ //select
+        self.selectedIndexNumber = [NSNumber numberWithInteger:index];
+        [page highlightImageAtIndex:index];
+    }
+    
+}
+
+- (void)photobook:(OLPhotobookViewController *)photobook userDidLongPressOnImageWithIndex:(NSInteger)index sender:(UILongPressGestureRecognizer *)sender{
+    self.interactionImageIndex = index;
+    self.interactionPhotobook = photobook;
+    OLImageView *view = (OLImageView *)[photobook.pageController.viewControllers[index % 2] imageView];
+    view.delegate = self;
+    [view becomeFirstResponder];
+    UIMenuItem *deleteItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Remove", @"") action:@selector(deletePage)];
+//    UIMenuItem *cropImageItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Crop", @"") action:@selector(cropImage)];
+//    UIMenuItem *addPageItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Add Page", @"") action:@selector(addPage)];
+    
+    UIMenuController *mc = [UIMenuController sharedMenuController];
+    [mc setMenuItems:@[deleteItem]];
+    [mc setTargetRect:view.frame inView:view];
+    [mc setMenuVisible:YES animated:YES];
+}
+
+#pragma mark - CollectionView
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
     UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:indexPath.section == 0 ? @"coverEditCell" : @"bookPreviewCell" forIndexPath:indexPath];
@@ -246,101 +345,6 @@ UINavigationControllerDelegate>
 
 - (CGFloat) cellHeightForSize:(CGSize)size{
     return (size.width) / (self.product.productTemplate.sizeCm.width*2 / self.product.productTemplate.sizeCm.height) + 40;
-}
-
-- (void)swapImageAtIndex:(NSInteger)index1 withImageAtIndex:(NSInteger)index2{
-    [self.photobookPhotos exchangeObjectAtIndex:index1 withObjectAtIndex:index2];
-}
-
-- (OLPhotobookPageContentViewController *)findPageForImageIndex:(NSInteger)index{
-    for (OLPhotobookViewController *photobook in self.childViewControllers){
-        if (photobook.bookClosed){
-            continue;
-        }
-        for (OLPhotobookPageContentViewController *page in photobook.pageController.viewControllers){
-            if (page.pageIndex == index){
-                return page;
-            }
-        }
-    }
-    return nil;
-}
-
-- (void)photobook:(OLPhotobookViewController *)photobook userDidTapOnImageWithIndex:(NSInteger)index{
-    OLPhotobookPageContentViewController *page = [self findPageForImageIndex:index];
-    if (self.selectedIndexNumber && [self.selectedIndexNumber integerValue] == index){ //deselect
-        [[self findPageForImageIndex:[self.selectedIndexNumber integerValue]] unhighlightImageAtIndex:index];
-        self.selectedIndexNumber = nil;
-    }
-    else if (self.selectedIndexNumber){ //swap
-        [page unhighlightImageAtIndex:index];
-        [self swapImageAtIndex:[self.selectedIndexNumber integerValue] withImageAtIndex:page.pageIndex];
-        
-        photobook.userSelectedPhotos = self.photobookPhotos;
-        
-        OLPhotobookPageContentViewController *selectedPage = [self findPageForImageIndex:[self.selectedIndexNumber integerValue]];
-        [(OLPhotobookViewController *)selectedPage.parentViewController.parentViewController setUserSelectedPhotos:self.photobookPhotos];
-        [page loadImage];
-        [selectedPage loadImage];
-        
-        [selectedPage unhighlightImageAtIndex:[self.selectedIndexNumber integerValue]];
-        self.selectedIndexNumber = nil;
-    }
-    else if ([self.photobookPhotos objectAtIndex:index] == (id)[NSNull null]){ //pick new images
-        self.addNewPhotosAtIndex = index;
-        [self addMorePhotosFromPage:page];
-    }
-    else{ //select
-        self.selectedIndexNumber = [NSNumber numberWithInteger:index];
-        [page highlightImageAtIndex:index];
-    }
-
-}
-
-- (void)deletePage{
-    self.photobookPhotos[self.interactionImageIndex] = [NSNull null];
-    self.interactionPhotobook.userSelectedPhotos = self.photobookPhotos;
-    [[self findPageForImageIndex:self.interactionImageIndex] loadImage];
-}
-
-- (void)addPage{
-    
-}
-
-- (void)cropImage{
-    
-}
-
-- (void)photobook:(OLPhotobookViewController *)photobook userDidLongPressOnImageWithIndex:(NSInteger)index sender:(UILongPressGestureRecognizer *)sender{
-    self.interactionImageIndex = index;
-    self.interactionPhotobook = photobook;
-    OLImageView *view = (OLImageView *)[photobook.pageController.viewControllers[index % 2] imageView];
-    view.delegate = self;
-    [view becomeFirstResponder];
-    UIMenuItem *deleteItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Remove", @"") action:@selector(deletePage)];
-//    UIMenuItem *cropImageItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Crop", @"") action:@selector(cropImage)];
-//    UIMenuItem *addPageItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Add Page", @"") action:@selector(addPage)];
-    
-    UIMenuController *mc = [UIMenuController sharedMenuController];
-    [mc setMenuItems:@[deleteItem]];
-    [mc setTargetRect:view.frame inView:view];
-    [mc setMenuVisible:YES animated:YES];
-}
-
-- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator{    
-    for (OLPhotobookViewController *photobook in self.childViewControllers){
-        [photobook viewWillTransitionToSize:CGSizeMake(size.width, [self cellHeightForSize:size]) withTransitionCoordinator:coordinator];
-    }
-    
-    [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinator> context){
-        [self.collectionView.collectionViewLayout invalidateLayout];
-        for (OLPhotobookViewController * photobook in self.childViewControllers){
-            photobook.view.frame = CGRectMake(0, 0, size.width, [self cellHeightForSize:size]);
-        }
-//        [self.collectionView reloadData];
-    }completion:^(id<UIViewControllerTransitionCoordinator> context){
-//        [self.collectionView reloadData];
-    }];
 }
 
 #pragma mark - Adding new images
