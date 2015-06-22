@@ -171,6 +171,57 @@ UINavigationControllerDelegate>
     return nil;
 }
 
+- (void)addPageShadowsToView:(UIView *)view{
+    UIImage *leftImage = [UIImage imageNamed:@"page-shadow-left"];
+    UIImage *rightImage = [UIImage imageNamed:@"page-shadow-right"];
+    
+    UIImageView *left1 = [[UIImageView alloc] initWithImage:leftImage];
+    left1.contentMode = UIViewContentModeScaleToFill;
+    left1.tag = 11;
+    left1.translatesAutoresizingMaskIntoConstraints = NO;
+    [view addSubview:left1];
+    
+    UIImageView *left2 = [[UIImageView alloc] initWithImage:leftImage];
+    left2.contentMode = UIViewContentModeScaleToFill;
+    left2.tag = 12;
+    left2.translatesAutoresizingMaskIntoConstraints = NO;
+    [view addSubview:left2];
+    
+    UIImageView *right1 = [[UIImageView alloc] initWithImage:rightImage];
+    right1.contentMode = UIViewContentModeScaleToFill;
+    right1.tag = 21;
+    right1.translatesAutoresizingMaskIntoConstraints = NO;
+    [view addSubview:right1];
+    
+    UIImageView *right2 = [[UIImageView alloc] initWithImage:rightImage];
+    right2.contentMode = UIViewContentModeScaleToFill;
+    right2.tag = 22;
+    right2.translatesAutoresizingMaskIntoConstraints = NO;
+    [view addSubview:right2];
+    
+    CGFloat shadowWidth = view.frame.size.width * 0.3;
+    
+    left1.frame = CGRectMake(view.frame.size.width - shadowWidth, 0, shadowWidth, view.frame.size.height);
+    left2.frame = CGRectMake(view.frame.size.width - shadowWidth, 0, shadowWidth, view.frame.size.height);
+    right1.frame = CGRectMake(0, 0, shadowWidth, view.frame.size.height);
+    right2.frame = CGRectMake(0, 0, shadowWidth, view.frame.size.height);
+}
+
+- (void)setPageShadowAlpha:(UIView *)view forIndex:(NSInteger)index{
+    if (index % 2 == 0){//LEFT
+        [view viewWithTag:21].alpha = 0;
+        [view viewWithTag:22].alpha = 0;
+        [view viewWithTag:11].alpha = 1;
+        [view viewWithTag:12].alpha = 1;
+    }
+    else{
+        [view viewWithTag:11].alpha = 0;
+        [view viewWithTag:12].alpha = 0;
+        [view viewWithTag:21].alpha = 1;
+        [view viewWithTag:22].alpha = 1;
+    }
+}
+
 #pragma mark - Menu Actions
 
 - (void)deletePage{
@@ -257,19 +308,30 @@ UINavigationControllerDelegate>
         [selectedPage unhighlightImageAtIndex:[self.selectedIndexNumber integerValue]];
         
         UIView *pageCopy = [page.imageView snapshotViewAfterScreenUpdates:YES];
-        page.imageView.image = nil;
+        [page clearImage];
         pageCopy.frame = [self.view convertRect:page.imageView.frame fromView:page.view];
+        [self addPageShadowsToView:pageCopy];
+        [self setPageShadowAlpha:pageCopy forIndex:index];
         [self.view addSubview:pageCopy];
         
         if (selectedPage){ //Previously selected page is in view
             UIView *selectedPageCopy = [selectedPage.imageView snapshotViewAfterScreenUpdates:YES];
-            selectedPage.imageView.image = nil;
+            [selectedPage clearImage];
             selectedPageCopy.frame = [self.view convertRect:selectedPage.imageView.frame fromView:selectedPage.view];
+            [self addPageShadowsToView:selectedPageCopy];
+            [self setPageShadowAlpha:selectedPageCopy forIndex:[self.selectedIndexNumber integerValue]];
+            
             [self.view addSubview:selectedPageCopy];
             
             CGRect tempFrame = pageCopy.frame;
+            if (printPhoto == (id)[NSNull null]){
+                [pageCopy removeFromSuperview];
+            }
             [UIView animateWithDuration:0.5 animations:^{
+                [self setPageShadowAlpha:selectedPageCopy forIndex:index];
+                
                 if (printPhoto != (id)[NSNull null]){
+                    [self setPageShadowAlpha:pageCopy forIndex:[self.selectedIndexNumber integerValue]];
                     pageCopy.frame = selectedPageCopy.frame;
                 }
                 selectedPageCopy.frame = tempFrame;
@@ -306,7 +368,7 @@ UINavigationControllerDelegate>
                 selectedPageCopy.frame = [self.view convertRect:page.imageView.frame fromView:page.view];
                 selectedPageCopy.transform = CGAffineTransformMakeTranslation(x, [self.selectedIndexNumber integerValue] < page.pageIndex ? -1000 : 1000);
                 [self.view addSubview:selectedPageCopy];
-                [UIView animateWithDuration:0.5 animations:^{
+                [UIView animateWithDuration:2 animations:^{
                     if (printPhoto != (id)[NSNull null]){
                         pageCopy.transform = selectedPageCopy.transform;
                     }

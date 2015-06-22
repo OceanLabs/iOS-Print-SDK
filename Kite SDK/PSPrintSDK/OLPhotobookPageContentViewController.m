@@ -81,6 +81,12 @@
     }];
 }
 
+- (void)clearImage{
+    self.pageShadowLeft2.hidden = YES;
+    self.pageShadowRight2.hidden = YES;
+    self.imageView.image = nil;
+}
+
 - (void)loadImageWithCompletionHandler:(void(^)(void))handler{
         OLPrintPhoto *printPhoto = [self.userSelectedPhotos objectAtIndex:self.pageIndex];
     if (printPhoto != (id)[NSNull null]){

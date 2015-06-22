@@ -19,5 +19,6 @@
 - (NSInteger)imageIndexForPoint:(CGPoint)p;
 - (void)highlightImageAtIndex:(NSInteger)index;
 - (void)unhighlightImageAtIndex:(NSInteger)index;
+- (void)clearImage;
 
 @end
