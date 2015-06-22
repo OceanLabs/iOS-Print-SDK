@@ -308,12 +308,12 @@ UINavigationControllerDelegate>
         [selectedPage unhighlightImageAtIndex:[self.selectedIndexNumber integerValue]];
         
         UIView *pageCopy = [page.imageView snapshotViewAfterScreenUpdates:YES];
-        [page clearImage];
         pageCopy.frame = [self.view convertRect:page.imageView.frame fromView:page.view];
+        [page clearImage];
         [self addPageShadowsToView:pageCopy];
         [self setPageShadowAlpha:pageCopy forIndex:index];
         [self.view addSubview:pageCopy];
-        
+    
         if (selectedPage){ //Previously selected page is in view
             UIView *selectedPageCopy = [selectedPage.imageView snapshotViewAfterScreenUpdates:YES];
             [selectedPage clearImage];
@@ -351,6 +351,11 @@ UINavigationControllerDelegate>
             }];
         }
         else{ //Previously selected image is not in view. Only pretend to swap.
+            if (self.photobookPhotos[index] == (id)[NSNull null]){
+                [pageCopy viewWithTag:12].alpha = 0;
+                [pageCopy viewWithTag:22].alpha = 0;
+            }
+
             [self swapImageAtIndex:[self.selectedIndexNumber integerValue] withImageAtIndex:page.pageIndex];
             photobook.userSelectedPhotos = self.photobookPhotos;
             
@@ -367,8 +372,14 @@ UINavigationControllerDelegate>
                 page.imageView.hidden = YES;
                 selectedPageCopy.frame = [self.view convertRect:page.imageView.frame fromView:page.view];
                 selectedPageCopy.transform = CGAffineTransformMakeTranslation(x, [self.selectedIndexNumber integerValue] < page.pageIndex ? -1000 : 1000);
+                
+                [self addPageShadowsToView:selectedPageCopy];
+                [self setPageShadowAlpha:selectedPageCopy forIndex:[self.selectedIndexNumber integerValue]];
                 [self.view addSubview:selectedPageCopy];
-                [UIView animateWithDuration:2 animations:^{
+                
+                [UIView animateWithDuration:0.5 animations:^{
+                    [self setPageShadowAlpha:selectedPageCopy forIndex:index];
+                    
                     if (printPhoto != (id)[NSNull null]){
                         pageCopy.transform = selectedPageCopy.transform;
                     }
