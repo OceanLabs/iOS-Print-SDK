@@ -370,6 +370,8 @@ UINavigationControllerDelegate>
             [page loadImageWithCompletionHandler:^{
                 UIView *selectedPageCopy = [page.imageView snapshotViewAfterScreenUpdates:YES];
                 page.imageView.hidden = YES;
+                page.pageShadowLeft2.hidden = YES;
+                page.pageShadowRight2.hidden = YES;
                 selectedPageCopy.frame = [self.view convertRect:page.imageView.frame fromView:page.view];
                 selectedPageCopy.transform = CGAffineTransformMakeTranslation(x, [self.selectedIndexNumber integerValue] < page.pageIndex ? -1000 : 1000);
                 
@@ -389,6 +391,15 @@ UINavigationControllerDelegate>
                     [selectedPageCopy removeFromSuperview];
                     [pageCopy removeFromSuperview];
                     self.selectedIndexNumber = nil;
+                    
+                    if (self.photobookPhotos[index] != (id)[NSNull null]){
+                        if (index % 2 == 0){
+                            page.pageShadowLeft2.hidden = NO;
+                        }
+                        else{
+                            page.pageShadowRight2.hidden = NO;
+                        }
+                    }
                 }];
             }];
         }

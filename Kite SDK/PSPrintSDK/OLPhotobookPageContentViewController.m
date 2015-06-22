@@ -14,9 +14,8 @@
 
 @property (weak, nonatomic) IBOutlet UIImageView *pageBackground;
 @property (weak, nonatomic) IBOutlet UIImageView *pageShadowRight;
-@property (weak, nonatomic) IBOutlet UIImageView *pageShadowRight2;
 @property (weak, nonatomic) IBOutlet UIImageView *pageShadowLeft;
-@property (weak, nonatomic) IBOutlet UIImageView *pageShadowLeft2;
+
 
 @property (assign, nonatomic) BOOL left;
 
