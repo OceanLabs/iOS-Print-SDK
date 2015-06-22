@@ -25,6 +25,10 @@
 #import <OLFacebookImage.h>
 #endif
 
+static const NSInteger kSectionCover = 0;
+static const NSInteger kSectionHelp = 1;
+static const NSInteger kSectionPages = 2;
+
 @interface OLKitePrintSDK (InternalUtils)
 + (NSString *)userEmail:(UIViewController *)topVC;
 + (NSString *)userPhone:(UIViewController *)topVC;
@@ -271,6 +275,7 @@ UINavigationControllerDelegate>
                 selectedPageCopy.frame = tempFrame;
             } completion:^(BOOL finished){
                 [self swapImageAtIndex:[self.selectedIndexNumber integerValue] withImageAtIndex:page.pageIndex];
+                self.selectedIndexNumber = nil;
                 photobook.userSelectedPhotos = self.photobookPhotos;
                 
                 [(OLPhotobookViewController *)selectedPage.parentViewController.parentViewController setUserSelectedPhotos:self.photobookPhotos];
@@ -278,7 +283,7 @@ UINavigationControllerDelegate>
                     [selectedPage loadImageWithCompletionHandler:^{
                         [pageCopy removeFromSuperview];
                         [selectedPageCopy removeFromSuperview];
-                        self.selectedIndexNumber = nil;
+                        
                     }];
                 }];
             }];
@@ -347,19 +352,31 @@ UINavigationControllerDelegate>
 #pragma mark - CollectionView
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
-    UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:indexPath.section == 0 ? @"coverEditCell" : @"bookPreviewCell" forIndexPath:indexPath];
+    UICollectionViewCell *cell;
+    if (indexPath.section == kSectionCover){
+        cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"coverEditCell" forIndexPath:indexPath];
+    }
+    else if (indexPath.section == kSectionHelp){
+        cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"helpCell" forIndexPath:indexPath];
+        UILabel *label = (UILabel *)[cell viewWithTag:10];
+        label.text = NSLocalizedString(@"Tap on a photo to select it, then tap on another to swap them. Tap and hold for more options.", @"");
+        return cell;
+    }
+    else{
+        cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"bookPreviewCell" forIndexPath:indexPath];
+    }
     
     UIView *view = [cell viewWithTag:10];
     if (!view){
         OLPhotobookViewController *photobook = [self.storyboard instantiateViewControllerWithIdentifier:@"PhotobookViewController"];
-        if (indexPath.section == 1){
+        if (indexPath.section == kSectionPages){
             photobook.startOpen = YES;
         }
         
         photobook.assets = self.assets;
         
         photobook.userSelectedPhotos = self.photobookPhotos;
-        if (indexPath.section == 0){
+        if (indexPath.section == kSectionCover){
             photobook.editingPageNumber = nil;
         }
         else{
@@ -396,7 +413,7 @@ UINavigationControllerDelegate>
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
-    if (section == 0){
+    if (section == kSectionCover || section == kSectionHelp){
         return 1;
     }
     else{
@@ -406,11 +423,16 @@ UINavigationControllerDelegate>
 }
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
-    return 2;
+    return 3;
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
-    return CGSizeMake(self.view.frame.size.width, [self cellHeightForSize:self.view.frame.size]);
+    if (indexPath.section == kSectionHelp){
+        return CGSizeMake(self.view.frame.size.width, 30);
+    }
+    else{
+        return CGSizeMake(self.view.frame.size.width, [self cellHeightForSize:self.view.frame.size]);
+    }
 }
 
 - (CGFloat) cellHeightForSize:(CGSize)size{
