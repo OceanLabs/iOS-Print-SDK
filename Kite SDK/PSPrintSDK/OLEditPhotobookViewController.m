@@ -443,7 +443,7 @@ UINavigationControllerDelegate>
     else if (indexPath.section == kSectionHelp){
         cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"helpCell" forIndexPath:indexPath];
         UILabel *label = (UILabel *)[cell viewWithTag:10];
-        label.text = NSLocalizedString(@"Tap on a photo to select it, then tap on another to swap them. Tap and hold for more options.", @"");
+        label.text = NSLocalizedString(@"Tap to swap pages. Hold for more options.", @"");
         return cell;
     }
     else{
