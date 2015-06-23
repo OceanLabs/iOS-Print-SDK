@@ -520,7 +520,7 @@ UINavigationControllerDelegate>
 }
 
 - (CGFloat) cellHeightForSize:(CGSize)size{
-    return (size.width) / (self.product.productTemplate.sizeCm.width*2 / self.product.productTemplate.sizeCm.height) + 40;
+    return (size.width) / (self.product.productTemplate.sizeCm.width*2 / self.product.productTemplate.sizeCm.height);
 }
 
 #pragma mark - OLScrollCropView delegate

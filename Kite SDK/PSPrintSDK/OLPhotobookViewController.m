@@ -59,6 +59,10 @@ static const CGFloat kBookEdgePadding = 38;
 @property (weak, nonatomic) IBOutlet UILabel *leftPageLabel;
 @property (weak, nonatomic) IBOutlet UILabel *rightPageLabel;
 
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *topMarginCon;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *bottomMarginCon;
+
+
 @property (strong, nonatomic) IBOutlet UIView *bookCover;
 @property (assign, nonatomic) BOOL bookClosed;
 @property (weak, nonatomic) IBOutlet UIView *pagesLabelContainer;
@@ -282,6 +286,11 @@ static const CGFloat kBookEdgePadding = 38;
         
         [self.fakeShadowView makeRoundRectWithRadius:3];
     }
+    
+    if (self.editMode){
+        [self.view removeConstraint:self.topMarginCon];
+        [self.view removeConstraint:self.bottomMarginCon];
+    }
 }
 
 - (void)updatePagesLabel{
@@ -366,7 +375,7 @@ static const CGFloat kBookEdgePadding = 38;
     self.containerView.transform = CGAffineTransformIdentity;
     [self.containerView.superview removeConstraint:self.centerYCon];
     [self.view removeConstraint:self.widthCon];
-    if (size.width > size.height){
+    if (size.width > size.height || self.editMode){
         [self.view addConstraint:self.centerXCon];
         self.widthCon = [NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationLessThanOrEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:size.width - 20 - kBookEdgePadding * 2];
     }

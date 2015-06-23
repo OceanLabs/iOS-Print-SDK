@@ -1950,11 +1950,13 @@
                     <connections>
                         <outlet property="bookCover" destination="HqC-Iz-l8f" id="edo-y8-uSK"/>
                         <outlet property="bookImageView" destination="UgD-45-FUC" id="21E-GT-p9J"/>
+                        <outlet property="bottomMarginCon" destination="6OB-XY-vp2" id="UJa-Gn-Ee7"/>
                         <outlet property="containerView" destination="wLR-Iq-33c" id="ZB7-ei-MIu"/>
                         <outlet property="fakeShadowView" destination="4k7-zt-s1N" id="VDC-XM-Td3"/>
                         <outlet property="openbookView" destination="rlk-bS-4UT" id="Q1X-2u-4iN"/>
                         <outlet property="pagesLabel" destination="6zv-ER-YtC" id="COA-sz-sqZ"/>
                         <outlet property="pagesLabelContainer" destination="P6D-Eb-oaD" id="H0M-vG-XPI"/>
+                        <outlet property="topMarginCon" destination="bx6-vt-q2D" id="i3p-5O-8FF"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="tsM-51-f4Y" userLabel="First Responder" sceneMemberID="firstResponder"/>
