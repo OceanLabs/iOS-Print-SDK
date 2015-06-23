@@ -512,7 +512,7 @@ UINavigationControllerDelegate>
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
     if (indexPath.section == kSectionHelp){
-        return CGSizeMake(self.view.frame.size.width, 12);
+        return CGSizeMake(self.view.frame.size.width, 20);
     }
     else{
         return CGSizeMake(self.view.frame.size.width, [self cellHeightForSize:self.view.frame.size]);
@@ -520,7 +520,8 @@ UINavigationControllerDelegate>
 }
 
 - (CGFloat) cellHeightForSize:(CGSize)size{
-    return (size.width) / (self.product.productTemplate.sizeCm.width*2 / self.product.productTemplate.sizeCm.height);
+    CGFloat min = MIN(size.width, size.height);
+    return (min) / (self.product.productTemplate.sizeCm.width*2 / self.product.productTemplate.sizeCm.height);
 }
 
 #pragma mark - OLScrollCropView delegate

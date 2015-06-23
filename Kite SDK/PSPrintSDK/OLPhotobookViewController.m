@@ -128,11 +128,14 @@ static const CGFloat kBookEdgePadding = 38;
     
     self.pageController.view.translatesAutoresizingMaskIntoConstraints = NO;
     
-    [self.openbookView addConstraint:[NSLayoutConstraint constraintWithItem:self.pageController.view attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self.openbookView attribute:NSLayoutAttributeHeight multiplier:1 - (2 * .021573604) constant:0]];
-    [self.openbookView addConstraint:[NSLayoutConstraint constraintWithItem:self.pageController.view attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.openbookView attribute:NSLayoutAttributeCenterY multiplier:1 constant:0]];
+    [self.openbookView.superview addConstraint:[NSLayoutConstraint constraintWithItem:self.pageController.view attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self.openbookView attribute:NSLayoutAttributeHeight multiplier:1 - (2 * .021573604) constant:0]];
+    [self.openbookView.superview addConstraint:[NSLayoutConstraint constraintWithItem:self.pageController.view attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.openbookView attribute:NSLayoutAttributeCenterY multiplier:1 constant:0]];
     
-    [self.openbookView addConstraint:[NSLayoutConstraint constraintWithItem:self.pageController.view attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:self.openbookView attribute:NSLayoutAttributeWidth multiplier:1 - (2 * .031951641) constant:0]];
-    [self.openbookView addConstraint:[NSLayoutConstraint constraintWithItem:self.pageController.view attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.openbookView attribute:NSLayoutAttributeCenterX multiplier:1 constant:0]];
+    [self.openbookView.superview addConstraint:[NSLayoutConstraint constraintWithItem:self.pageController.view attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:self.openbookView attribute:NSLayoutAttributeWidth multiplier:1 - (2 * .031951641) constant:0]];
+    [self.openbookView.superview addConstraint:[NSLayoutConstraint constraintWithItem:self.pageController.view attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.openbookView attribute:NSLayoutAttributeCenterX multiplier:1 constant:0]];
+    
+    [self.openbookView.superview setNeedsLayout];
+    [self.openbookView.superview layoutIfNeeded];
     
     CGFloat bookAspectRatio = [self productAspectRatio];
     
@@ -150,7 +153,7 @@ static const CGFloat kBookEdgePadding = 38;
     
     [self.view addConstraint:self.widthCon];
     self.widthCon2 = [NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:(self.view.frame.size.width - kBookEdgePadding * 2) * 1.9];
-    self.widthCon2.priority = UILayoutPriorityDefaultHigh;
+    self.widthCon2.priority = UILayoutPriorityDefaultLow;
     [self.view addConstraint:self.widthCon2];
     
     UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTapGestureRecognized:)];
@@ -288,8 +291,8 @@ static const CGFloat kBookEdgePadding = 38;
     }
     
     if (self.editMode){
-        [self.view removeConstraint:self.topMarginCon];
-        [self.view removeConstraint:self.bottomMarginCon];
+        self.topMarginCon.constant = 5;
+        self.bottomMarginCon.constant = 0;
     }
 }
 
@@ -318,9 +321,6 @@ static const CGFloat kBookEdgePadding = 38;
         self.hasDoneFirstTimeLayout = YES;
         if (![self isLandscape]){
             self.containerView.transform = CGAffineTransformMakeTranslation([self xTrasformForBookAtRightEdge], 0);
-        }
-        else if (self.editMode && !self.startOpen){
-            self.containerView.transform = CGAffineTransformMakeTranslation(-self.view.frame.size.width/2.0 + self.containerView.frame.size.width/2.0, 0);
         }
     }
 }
@@ -420,6 +420,7 @@ static const CGFloat kBookEdgePadding = 38;
     vc.pageIndex = index;
     vc.userSelectedPhotos = self.photobookPhotos;
     vc.assets = self.assets;
+    vc.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     return vc;
 }
 
