@@ -12,7 +12,7 @@
 #import "OLPhotobookPageContentViewController.h"
 #import "OLPrintPhoto.h"
 #import "OLScrollCropViewController.h"
-#import "OLProductPrintJob.h"
+#import "OLPhotobookPrintJob.h"
 #import "UIView+RoundRect.h"
 
 #import <MPFlipTransition.h>
@@ -490,7 +490,7 @@ static const CGFloat kBookEdgePadding = 38;
                             @"uid": [[[UIDevice currentDevice] identifierForVendor] UUIDString],
                             @"app_version": [NSString stringWithFormat:@"Version: %@ (%@)", appVersion, buildNumber]
                             };
-    OLProductPrintJob* printJob = [[OLProductPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:photoAssets];
+    OLPhotobookPrintJob* printJob = [[OLPhotobookPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:photoAssets];
     for (id<OLPrintJob> job in printOrder.jobs){
         [printOrder removePrintJob:job];
     }
