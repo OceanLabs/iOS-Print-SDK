@@ -704,7 +704,7 @@ static const CGFloat kBookEdgePadding = 38;
             halfBookCoverImageContainer.tag = kTagRight;
             swipe.direction = UISwipeGestureRecognizerDirectionLeft;
             
-            UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"book-cover-right"]];
+            UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:[self productAspectRatio]/2.0 < 1 ? @"book-cover-right" : @"book-cover-right-landscape"]];
             imageView.contentMode = UIViewContentModeScaleAspectFill;
             [imageView makeRoundRectWithRadius:3];
             [halfBookCoverImageContainer addSubview:imageView];
@@ -768,7 +768,7 @@ static const CGFloat kBookEdgePadding = 38;
             [halfBookCoverImageContainer addGestureRecognizer:tap];
             [halfBookCoverImageContainer addGestureRecognizer:swipe];
             
-            UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"book-cover-left"]];
+            UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:[self productAspectRatio]/2.0 < 1 ? @"book-cover-left" : @"book-cover-left-landscape"]];
             imageView.contentMode = UIViewContentModeScaleAspectFill;
             [imageView makeRoundRectWithRadius:3];
             [halfBookCoverImageContainer addSubview:imageView];
