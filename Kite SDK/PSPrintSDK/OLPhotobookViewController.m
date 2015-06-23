@@ -211,7 +211,7 @@ static const CGFloat kBookEdgePadding = 38;
         [navigationBar addSubview:nextButton];
     }
     
-    [self.pagesLabelContainer makeRoundRect];
+    [self.pagesLabelContainer makeRoundRectWithRadius:3];
     
     self.pagesLabel.text = [NSString stringWithFormat:@"%d-%d of %ld", 1, 2, (long)self.product.quantityToFulfillOrder];
     
