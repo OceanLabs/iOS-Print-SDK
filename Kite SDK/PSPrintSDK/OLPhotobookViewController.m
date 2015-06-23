@@ -375,7 +375,7 @@ static const CGFloat kBookEdgePadding = 38;
     self.containerView.transform = CGAffineTransformIdentity;
     [self.containerView.superview removeConstraint:self.centerYCon];
     [self.view removeConstraint:self.widthCon];
-    if (size.width > size.height || self.editMode){
+    if (size.width > size.height){
         [self.view addConstraint:self.centerXCon];
         self.widthCon = [NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationLessThanOrEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:size.width - 20 - kBookEdgePadding * 2];
     }
