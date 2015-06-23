@@ -512,7 +512,7 @@ UINavigationControllerDelegate>
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
     if (indexPath.section == kSectionHelp){
-        return CGSizeMake(self.view.frame.size.width, 30);
+        return CGSizeMake(self.view.frame.size.width, 12);
     }
     else{
         return CGSizeMake(self.view.frame.size.width, [self cellHeightForSize:self.view.frame.size]);
