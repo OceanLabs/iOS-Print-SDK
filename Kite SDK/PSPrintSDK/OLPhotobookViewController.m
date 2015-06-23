@@ -236,7 +236,7 @@ static const CGFloat kBookEdgePadding = 38;
         }
     }
     
-    [self.pagesLabelContainer makeRoundRect];
+    [self.pagesLabelContainer makeRoundRectWithRadius:3];
     
     [self updatePagesLabel];
     
