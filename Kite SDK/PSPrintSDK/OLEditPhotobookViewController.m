@@ -606,6 +606,9 @@ UINavigationControllerDelegate>
 }
 
 - (NSArray *)createAssetArray {
+    if (self.addNewPhotosAtIndex == -1){
+        return @[];
+    }
     NSMutableArray *array = [[NSMutableArray alloc] initWithCapacity:self.userSelectedPhotos.count];
     for (OLPrintPhoto *object in self.userSelectedPhotos) {
         [array addObject:object.asset];
@@ -754,18 +757,9 @@ UINavigationControllerDelegate>
 }
 
 - (void)instagramImagePicker:(OLInstagramImagePickerController *)imagePicker didFinishPickingImages:(NSArray *)images {
-    [self populateArrayWithNewArray:images dataType:[OLInstagramImage class]];
-    [self dismissViewControllerAnimated:YES completion:^(void){}];
-}
-
-- (void)instagramImagePickerDidCancelPickingImages:(OLInstagramImagePickerController *)imagePicker {
-    [self dismissViewControllerAnimated:YES completion:nil];
-}
-
-- (void)instagramImagePicker:(OLInstagramImagePickerController *)imagePicker didSelectImage:(OLInstagramImage *)image{
     if (self.addNewPhotosAtIndex == -1){
         self.coverPhoto = [[OLPrintPhoto alloc] init];
-        self.coverPhoto.asset = image;
+        self.coverPhoto.asset = [images firstObject];
         
         for (OLPhotobookViewController *photobook in self.childViewControllers){
             if ([photobook bookClosed]){
@@ -775,6 +769,23 @@ UINavigationControllerDelegate>
         }
         
         [imagePicker dismissViewControllerAnimated:YES completion:NULL];
+        return;
+    }
+    
+    [self populateArrayWithNewArray:images dataType:[OLInstagramImage class]];
+    [self dismissViewControllerAnimated:YES completion:^(void){}];
+}
+
+- (void)instagramImagePickerDidCancelPickingImages:(OLInstagramImagePickerController *)imagePicker {
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (BOOL)instagramImagePicker:(OLInstagramImagePickerController *)imagePicker shouldSelectImage:(OLInstagramImage *)image{
+    if (self.addNewPhotosAtIndex == -1){
+        return imagePicker.selected.count == 0;
+    }
+    else{
+        return YES;
     }
 }
 #endif
@@ -795,19 +806,12 @@ UINavigationControllerDelegate>
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
-- (void)facebookImagePicker:(OLFacebookImagePickerController *)imagePicker didSelectImage:(OLFacebookImage *)image{
+- (BOOL)facebookImagePicker:(OLFacebookImagePickerController *)imagePicker shouldSelectImage:(OLFacebookImage *)image{
     if (self.addNewPhotosAtIndex == -1){
-        self.coverPhoto = [[OLPrintPhoto alloc] init];
-        self.coverPhoto.asset = image;
-        
-        for (OLPhotobookViewController *photobook in self.childViewControllers){
-            if ([photobook bookClosed]){
-                photobook.coverPhoto = self.coverPhoto;
-                break;
-            }
-        }
-        
-        [imagePicker dismissViewControllerAnimated:YES completion:NULL];
+        return imagePicker.selected.count == 0;
+    }
+    else{
+        return YES;
     }
 }
 #endif
