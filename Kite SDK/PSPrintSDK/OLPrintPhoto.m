@@ -105,7 +105,7 @@ static NSOperationQueue *imageOperationQueue;
 
 - (void) setImageSize:(CGSize)destSize toImageView:(UIImageView *)imageView cropped:(BOOL)cropped{
     if (self.cachedCroppedThumbnailImage) {
-        if (!(fmax(imageView.frame.size.width, imageView.frame.size.height) * [UIScreen mainScreen].scale > fmin(self.cachedCroppedThumbnailImage.size.width, self.cachedCroppedThumbnailImage.size.height))){
+        if (!(MIN(imageView.frame.size.width, imageView.frame.size.height) * [UIScreen mainScreen].scale > MAX(self.cachedCroppedThumbnailImage.size.width, self.cachedCroppedThumbnailImage.size.height))){
             imageView.image = self.cachedCroppedThumbnailImage;
             return;
         }
@@ -115,6 +115,7 @@ static NSOperationQueue *imageOperationQueue;
             [OLPrintPhoto resizedImageWithPrintPhoto:self size:destSize cropped:cropped progress:nil completion:^(UIImage *image) {
                 self.cachedCroppedThumbnailImage = image;
                 dispatch_async(dispatch_get_main_queue(), ^(void){
+                    self.cachedCroppedThumbnailImage = image;
                     imageView.image = image;
                 });
                 
@@ -151,20 +152,21 @@ static NSOperationQueue *imageOperationQueue;
                     }];
                 }
                 else{
-                    [asset dataWithCompletionHandler:^(NSData *data, NSError *error){
-                        OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
-                        printPhoto.asset = [OLAsset assetWithImageAsJPEG:[UIImage imageWithData:data]];
-                        printPhoto.cropImageSize = self.cropImageSize;
-                        printPhoto.cropImageFrame = self.cropImageFrame;
-                        printPhoto.cropImageRect = self.cropImageRect;
-                        [OLPrintPhoto resizedImageWithPrintPhoto:printPhoto size:destSize cropped:cropped progress:nil completion:^(UIImage *image) {
-                            self.cachedCroppedThumbnailImage = image;
-                            dispatch_async(dispatch_get_main_queue(), ^(void){
-                                imageView.image = image;
-                            });
+                    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                        [asset dataWithCompletionHandler:^(NSData *data, NSError *error){
+                            OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
+                            printPhoto.asset = [OLAsset assetWithImageAsJPEG:[UIImage imageWithData:data]];
+                            printPhoto.cropImageSize = self.cropImageSize;
+                            printPhoto.cropImageFrame = self.cropImageFrame;
+                            printPhoto.cropImageRect = self.cropImageRect;
+                            [OLPrintPhoto resizedImageWithPrintPhoto:printPhoto size:destSize cropped:cropped progress:nil completion:^(UIImage *image) {
+                                self.cachedCroppedThumbnailImage = image;
+                                dispatch_async(dispatch_get_main_queue(), ^(void){
+                                    imageView.image = image;
+                                });
+                            }];
                         }];
-                        
-                    }];
+                    });
                 }
             }
 #ifdef OL_KITE_OFFER_INSTAGRAM
@@ -267,7 +269,7 @@ static NSOperationQueue *imageOperationQueue;
 }
 
 - (BOOL)isCropped{
-    return !CGRectIsEmpty(self.cropImageFrame) || !CGRectIsEmpty(self.cropImageRect) || CGSizeEqualToSize(self.cropImageSize, CGSizeZero);
+    return !CGRectIsEmpty(self.cropImageFrame) || !CGRectIsEmpty(self.cropImageRect) || !CGSizeEqualToSize(self.cropImageSize, CGSizeZero);
 }
 
 + (void)transform:(CGAffineTransform *)transform andSize:(CGSize *)size forOrientation:(UIImageOrientation)orientation {
