@@ -103,7 +103,7 @@ static NSOperationQueue *imageOperationQueue;
     }
 }
 
-- (void) setThumbImageSize:(CGSize)destSize forImageView:(UIImageView *)imageView cropped:(BOOL)cropped{
+- (void) setImageSize:(CGSize)destSize toImageView:(UIImageView *)imageView cropped:(BOOL)cropped{
     if (self.cachedCroppedThumbnailImage) {
         if (!(fmax(imageView.frame.size.width, imageView.frame.size.height) * [UIScreen mainScreen].scale > fmin(self.cachedCroppedThumbnailImage.size.width, self.cachedCroppedThumbnailImage.size.height))){
             imageView.image = self.cachedCroppedThumbnailImage;
@@ -195,10 +195,6 @@ static NSOperationQueue *imageOperationQueue;
         }
 }
 
-- (void) setCroppedImageSize:(CGSize)destSize forImageView:(UIImageView *)imageView{
-    [self setThumbImageSize:destSize forImageView:imageView cropped:YES];
-}
-
 - (BOOL)isEqual:(id)object {
     BOOL retVal = [object class] == [self class];
     if (retVal) {
@@ -230,14 +226,19 @@ static NSOperationQueue *imageOperationQueue;
 #endif
 
 - (void)getImageWithProgress:(OLImageEditorImageGetImageProgressHandler)progressHandler completion:(OLImageEditorImageGetImageCompletionHandler)completionHandler {
+    [self getImageWithFullResolution:YES progress:progressHandler completion:completionHandler];
+}
+
+- (void)getImageWithFullResolution:(BOOL)fullResolution progress:(OLImageEditorImageGetImageProgressHandler)progressHandler completion:(OLImageEditorImageGetImageCompletionHandler)completionHandler {
     if (self.type == kPrintPhotoAssetTypeALAsset) {
-        
-//        dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0);
-//        dispatch_async(queue, ^(void){
-            UIImage* image = [UIImage imageWithCGImage:[[self.asset defaultRepresentation] fullResolutionImage] scale:1 orientation:[[self.asset valueForProperty:ALAssetPropertyOrientation] integerValue]];
-            completionHandler(image);
-        
-//        });
+        UIImage* image;
+        if (fullResolution){
+            image = [UIImage imageWithCGImage:[[self.asset defaultRepresentation] fullResolutionImage] scale:1 orientation:[[self.asset valueForProperty:ALAssetPropertyOrientation] integerValue]];
+        }
+        else{
+            image = [UIImage imageWithCGImage:[[self.asset defaultRepresentation] fullScreenImage]];
+        }
+        completionHandler(image);
     }
 #if defined(OL_KITE_OFFER_INSTAGRAM) || defined(OL_KITE_OFFER_FACEBOOK)
     else if (self.type == kPrintPhotoAssetTypeFacebookPhoto || self.type == kPrintPhotoAssetTypeInstagramPhoto) {
@@ -312,7 +313,7 @@ static NSOperationQueue *imageOperationQueue;
     
     [blockOperation addExecutionBlock:^{
         @autoreleasepool {
-            [printPhoto getImageWithProgress:progressHandler completion:^(UIImage *image) {
+            [printPhoto getImageWithFullResolution:CGSizeEqualToSize(destSize, CGSizeZero) progress:progressHandler completion:^(UIImage *image) {
                 if (destSize.height != 0 && destSize.width != 0){
                     image = [OLPrintPhoto imageWithImage:image scaledToWidth:destSize.width * [UIScreen mainScreen].scale];
                 }
