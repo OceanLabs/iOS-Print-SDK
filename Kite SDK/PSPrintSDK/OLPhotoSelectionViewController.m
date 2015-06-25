@@ -145,10 +145,6 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     }
     [self onUserSelectedPhotoCountChange];
     
-    for (OLPrintPhoto *printPhoto in self.userSelectedPhotos){
-        [printPhoto unloadImage];
-    }
-    
     if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0){
         UIVisualEffect *blurEffect;
         blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleExtraLight];
