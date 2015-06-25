@@ -56,8 +56,6 @@ static const CGFloat kBookEdgePadding = 38;
 
 @property (strong, nonatomic) UIDynamicAnimator* dynamicAnimator;
 @property (strong, nonatomic) UIDynamicItemBehavior* inertiaBehavior;
-@property (weak, nonatomic) IBOutlet UILabel *leftPageLabel;
-@property (weak, nonatomic) IBOutlet UILabel *rightPageLabel;
 
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *topMarginCon;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *bottomMarginCon;
@@ -73,9 +71,20 @@ static const CGFloat kBookEdgePadding = 38;
 @property (assign, nonatomic) BOOL hasDoneFirstTimeLayout;
 @property (assign, nonatomic) BOOL userHasOpenedBook;
 
+@property (weak, nonatomic) UIImageView *coverImageView;
+
 @end
 
 @implementation OLPhotobookViewController
+
+- (void)setCoverPhoto:(OLPrintPhoto *)coverPhoto{
+    _coverPhoto = coverPhoto;
+    [coverPhoto getImageWithProgress:NULL completion:^(UIImage *image){
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.coverImageView.image = image;
+        });
+    }];
+}
 
 -(UIDynamicAnimator*) dynamicAnimator{
     if (!_dynamicAnimator) _dynamicAnimator = [[UIDynamicAnimator alloc] initWithReferenceView:self.view];
@@ -420,7 +429,7 @@ static const CGFloat kBookEdgePadding = 38;
     vc.pageIndex = index;
     vc.userSelectedPhotos = self.photobookPhotos;
     vc.assets = self.assets;
-    vc.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    vc.view.autoresizingMask = UIViewAutoresizingNone;
     return vc;
 }
 
@@ -534,6 +543,7 @@ static const CGFloat kBookEdgePadding = 38;
                             @"app_version": [NSString stringWithFormat:@"Version: %@ (%@)", appVersion, buildNumber]
                             };
     OLPhotobookPrintJob* printJob = [[OLPhotobookPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:photoAssets];
+    printJob.frontCover = [OLAsset assetWithDataSource:self.coverPhoto];
     for (id<OLPrintJob> job in printOrder.jobs){
         [printOrder removePrintJob:job];
     }
@@ -566,6 +576,15 @@ static const CGFloat kBookEdgePadding = 38;
 }
 
 #pragma mark - Gesture recognizers
+
+- (void)onCoverTapRecognized:(UITapGestureRecognizer *)sender{
+    if (self.editMode){
+        [self.photobookDelegate photobook:self userDidTapOnImageWithIndex:-1];
+    }
+    else{
+        [self openBook:sender];
+    }
+}
 
 - (void)onTapGestureRecognized:(UITapGestureRecognizer *)sender{
     OLPrintPhoto *tempPrintPhoto = [[OLPrintPhoto alloc] init];
@@ -755,7 +774,7 @@ static const CGFloat kBookEdgePadding = 38;
 
 -(void) setUpBookCoverView{
     UISwipeGestureRecognizer *swipe = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(openBook:)];
-    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(openBook:)];
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onCoverTapRecognized:)];
     
     UIView *halfBookCoverImageContainer;
     
@@ -770,12 +789,14 @@ static const CGFloat kBookEdgePadding = 38;
             UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:[self productAspectRatio]/2.0 < 1 ? @"book-cover-right" : @"book-cover-right-landscape"]];
             imageView.contentMode = UIViewContentModeScaleAspectFill;
             [imageView makeRoundRectWithRadius:3];
+            imageView.tag = 17;
             [halfBookCoverImageContainer addSubview:imageView];
             
             [self.bookCover addSubview:halfBookCoverImageContainer];
+            
+            halfBookCoverImageContainer.userInteractionEnabled = YES;
+            [halfBookCoverImageContainer addGestureRecognizer:tap];
             if (!self.editMode){
-                halfBookCoverImageContainer.userInteractionEnabled = YES;
-                [halfBookCoverImageContainer addGestureRecognizer:tap];
                 [halfBookCoverImageContainer addGestureRecognizer:swipe];
             }
             
@@ -784,6 +805,14 @@ static const CGFloat kBookEdgePadding = 38;
             halfBookCoverImageContainer.layer.shadowOpacity = 0.0;
             halfBookCoverImageContainer.layer.shouldRasterize = YES;
             halfBookCoverImageContainer.layer.rasterizationScale = [UIScreen mainScreen].scale;
+            
+            UIImageView *coverImageView = [[UIImageView alloc] init];
+            self.coverImageView = coverImageView;
+            coverImageView.tag = 18;
+            coverImageView.contentMode = UIViewContentModeScaleAspectFill;
+            coverImageView.clipsToBounds = YES;
+            [halfBookCoverImageContainer addSubview:coverImageView];
+            coverImageView.translatesAutoresizingMaskIntoConstraints = NO;
         }
         
         [halfBookCoverImageContainer removeConstraints:halfBookCoverImageContainer.constraints];
@@ -803,14 +832,14 @@ static const CGFloat kBookEdgePadding = 38;
         [view.superview addConstraints:con];
         [view.superview addConstraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:view.superview attribute:NSLayoutAttributeWidth multiplier:0.5 constant:1]];
         
-        view = [[halfBookCoverImageContainer subviews] firstObject];
+        view = [halfBookCoverImageContainer viewWithTag:17];
         [view removeConstraints:view.constraints];
         view.translatesAutoresizingMaskIntoConstraints = NO;
         views = NSDictionaryOfVariableBindings(view);
         con = [[NSMutableArray alloc] init];
         
         visuals = @[@"H:|-0-[view]-0-|",
-                             @"V:|-0-[view]-0-|"];
+                    @"V:|-0-[view]-0-|"];
         
         
         for (NSString *visual in visuals) {
@@ -818,7 +847,13 @@ static const CGFloat kBookEdgePadding = 38;
         }
         
         [view.superview addConstraints:con];
-
+        
+        UIView *coverImageView = [halfBookCoverImageContainer viewWithTag:18];
+        [halfBookCoverImageContainer addConstraint:[NSLayoutConstraint constraintWithItem:coverImageView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:halfBookCoverImageContainer attribute:NSLayoutAttributeWidth multiplier:0.8 constant:0]];
+        [halfBookCoverImageContainer addConstraint:[NSLayoutConstraint constraintWithItem:coverImageView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:halfBookCoverImageContainer attribute:NSLayoutAttributeHeight multiplier:0.9 constant:0]];
+        [halfBookCoverImageContainer addConstraint:[NSLayoutConstraint constraintWithItem:halfBookCoverImageContainer attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:coverImageView attribute:NSLayoutAttributeCenterX multiplier:0.97 constant:0]];
+        [halfBookCoverImageContainer addConstraint:[NSLayoutConstraint constraintWithItem:coverImageView attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:halfBookCoverImageContainer attribute:NSLayoutAttributeCenterY multiplier:1 constant:0]];
+        
         [self.bookCover viewWithTag:kTagRight].hidden = NO;
     }
     else{

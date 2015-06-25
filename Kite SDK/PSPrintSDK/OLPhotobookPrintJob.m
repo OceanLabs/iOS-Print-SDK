@@ -49,7 +49,7 @@ static NSString *const kKeyPhotobookImages = @"co.oceanlabs.pssdk.kKeyPhotobookI
     NSMutableDictionary *json = [[NSMutableDictionary alloc] init];
     json[@"template_id"] = [OLProductTemplate templateWithId:self.templateId].identifier;
     json[@"assets"] = @{
-//                        @"front_cover" : @"",
+                        @"front_cover" : self.frontCover ? [NSString stringWithFormat:@"%lld", self.frontCover.assetId] : @"",
 //                        @"back_cover" : @"",
                         @"pages" : pages
                         };

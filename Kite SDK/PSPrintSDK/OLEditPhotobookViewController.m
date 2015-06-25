@@ -57,6 +57,7 @@ UINavigationControllerDelegate>
 @property (assign, nonatomic) NSInteger addNewPhotosAtIndex;
 @property (assign, nonatomic) NSInteger interactionImageIndex;
 @property (weak, nonatomic) OLPhotobookViewController *interactionPhotobook;
+@property (strong, nonatomic) OLPrintPhoto *coverPhoto;
 
 @end
 
@@ -109,6 +110,7 @@ UINavigationControllerDelegate>
     
     OLPhotobookViewController *photobook = [self.storyboard instantiateViewControllerWithIdentifier:@"PhotobookViewController"];
     photobook.assets = self.assets;
+    photobook.coverPhoto = self.coverPhoto;
     photobook.userSelectedPhotos = bookPhotos;
     photobook.product = self.product;
     photobook.delegate = self.delegate;
@@ -295,6 +297,13 @@ UINavigationControllerDelegate>
 }
 
 - (void)photobook:(OLPhotobookViewController *)photobook userDidTapOnImageWithIndex:(NSInteger)index{
+    if (index == -1){ //Replace Cover
+        self.addNewPhotosAtIndex = index;
+        [self addMorePhotosFromView:photobook.view];
+        return;
+    }
+    
+    
     OLPhotobookPageContentViewController *page = [self findPageForImageIndex:index];
     if (self.selectedIndexNumber && [self.selectedIndexNumber integerValue] == index){ //deselect
         [[self findPageForImageIndex:[self.selectedIndexNumber integerValue]] unhighlightImageAtIndex:index];
@@ -408,7 +417,7 @@ UINavigationControllerDelegate>
     }
     else if ([self.photobookPhotos objectAtIndex:index] == (id)[NSNull null]){ //pick new images
         self.addNewPhotosAtIndex = index;
-        [self addMorePhotosFromPage:page];
+        [self addMorePhotosFromView:page.view];
     }
     else{ //select
         self.selectedIndexNumber = [NSNumber numberWithInteger:index];
@@ -541,7 +550,7 @@ UINavigationControllerDelegate>
 
 #pragma mark - Adding new images
 
-- (void)addMorePhotosFromPage:(OLPhotobookPageContentViewController *)page{
+- (void)addMorePhotosFromView:(UIView *)view{
     if ([self instagramEnabled] || [self facebookEnabled]){
         if ([UIAlertController class]){
             UIAlertController *ac = [UIAlertController alertControllerWithTitle:nil message:NSLocalizedString(@"Add photos from:", @"") preferredStyle:UIAlertControllerStyleActionSheet];
@@ -562,8 +571,8 @@ UINavigationControllerDelegate>
             [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"") style:UIAlertActionStyleCancel handler:^(UIAlertAction *action){
                 [ac dismissViewControllerAnimated:YES completion:NULL];
             }]];
-            ac.popoverPresentationController.sourceView = page.view;
-            ac.popoverPresentationController.sourceRect = page.view.frame;
+            ac.popoverPresentationController.sourceView = view;
+            ac.popoverPresentationController.sourceRect = view.frame;
             [self presentViewController:ac animated:YES completion:NULL];
         }
         else{
@@ -639,8 +648,6 @@ UINavigationControllerDelegate>
 #endif
 }
 
-#pragma mark - CTAssetsPickerControllerDelegate Methods
-
 - (void)populateArrayWithNewArray:(NSArray *)array dataType:(Class)class {
     NSMutableArray *photoArray = [[NSMutableArray alloc] initWithCapacity:array.count];
     NSMutableArray *assetArray = [[NSMutableArray alloc] initWithCapacity:array.count];
@@ -693,6 +700,8 @@ UINavigationControllerDelegate>
     
 }
 
+#pragma mark - CTAssetsPickerControllerDelegate Methods
+
 - (BOOL)assetsPickerController:(CTAssetsPickerController *)picker isDefaultAssetsGroup:(ALAssetsGroup *)group {
     if ([self.delegate respondsToSelector:@selector(kiteController:isDefaultAssetsGroup:)]) {
         return [self.delegate kiteController:[self kiteViewController] isDefaultAssetsGroup:group];
@@ -704,6 +713,22 @@ UINavigationControllerDelegate>
 - (void)assetsPickerController:(CTAssetsPickerController *)picker didFinishPickingAssets:(NSArray *)assets {
     [self populateArrayWithNewArray:assets dataType:[ALAsset class]];
     [picker dismissViewControllerAnimated:YES completion:^(void){}];
+}
+
+- (void)assetsPickerController:(CTAssetsPickerController *)picker didSelectAsset:(ALAsset *)asset{
+    if (self.addNewPhotosAtIndex == -1){
+        self.coverPhoto = [[OLPrintPhoto alloc] init];
+        self.coverPhoto.asset = asset;
+        
+        for (OLPhotobookViewController *photobook in self.childViewControllers){
+            if ([photobook bookClosed]){
+                photobook.coverPhoto = self.coverPhoto;
+                break;
+            }
+        }
+        
+        [picker dismissViewControllerAnimated:YES completion:NULL];
+    }
 }
 
 - (BOOL)assetsPickerController:(CTAssetsPickerController *)picker shouldShowAssetsGroup:(ALAssetsGroup *)group{
@@ -736,6 +761,22 @@ UINavigationControllerDelegate>
 - (void)instagramImagePickerDidCancelPickingImages:(OLInstagramImagePickerController *)imagePicker {
     [self dismissViewControllerAnimated:YES completion:nil];
 }
+
+- (void)instagramImagePicker:(OLInstagramImagePickerController *)imagePicker didSelectImage:(OLInstagramImage *)image{
+    if (self.addNewPhotosAtIndex == -1){
+        self.coverPhoto = [[OLPrintPhoto alloc] init];
+        self.coverPhoto.asset = image;
+        
+        for (OLPhotobookViewController *photobook in self.childViewControllers){
+            if ([photobook bookClosed]){
+                photobook.coverPhoto = self.coverPhoto;
+                break;
+            }
+        }
+        
+        [imagePicker dismissViewControllerAnimated:YES completion:NULL];
+    }
+}
 #endif
 
 #ifdef OL_KITE_OFFER_FACEBOOK
@@ -752,6 +793,22 @@ UINavigationControllerDelegate>
 
 - (void)facebookImagePickerDidCancelPickingImages:(OLFacebookImagePickerController *)imagePicker {
     [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)facebookImagePicker:(OLFacebookImagePickerController *)imagePicker didSelectImage:(OLFacebookImage *)image{
+    if (self.addNewPhotosAtIndex == -1){
+        self.coverPhoto = [[OLPrintPhoto alloc] init];
+        self.coverPhoto.asset = image;
+        
+        for (OLPhotobookViewController *photobook in self.childViewControllers){
+            if ([photobook bookClosed]){
+                photobook.coverPhoto = self.coverPhoto;
+                break;
+            }
+        }
+        
+        [imagePicker dismissViewControllerAnimated:YES completion:NULL];
+    }
 }
 #endif
 
