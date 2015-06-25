@@ -24,6 +24,8 @@
 		2E5259011A9C91DF00DBC69B /* OLSingleImageProductReviewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E5259001A9C91DF00DBC69B /* OLSingleImageProductReviewViewController.m */; };
 		2E5F802C1B01E5F700095203 /* OLPaymentLineItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E5F802B1B01E5F700095203 /* OLPaymentLineItem.m */; };
 		2E5F80321B04A22500095203 /* OLIntegratedCheckoutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E5F80311B04A22500095203 /* OLIntegratedCheckoutViewController.m */; };
+		2E676C2B1B33FD70005E068B /* OLImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E676C2A1B33FD70005E068B /* OLImageView.m */; };
+		2E768F551B394372009BAC18 /* OLPhotobookPrintJob.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E768F541B394372009BAC18 /* OLPhotobookPrintJob.m */; };
 		2E85BC9919A24CB200EC7CC2 /* KitePrintSDK.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2E85BC9719A24CB200EC7CC2 /* KitePrintSDK.strings */; };
 		2E8C29ED1B18D1AC0045DC21 /* OLPrintOrderCostRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E8C29EC1B18D1AC0045DC21 /* OLPrintOrderCostRequest.m */; };
 		2E8C29F01B18D1E10045DC21 /* OLPrintOrderCost.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E8C29EF1B18D1E10045DC21 /* OLPrintOrderCost.m */; };
@@ -35,6 +37,7 @@
 		2EA8BEBA1A484FCB008A9248 /* OLProductOverviewPageContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA8BEB11A484FCB008A9248 /* OLProductOverviewPageContentViewController.m */; };
 		2EA8BEBC1A484FCB008A9248 /* OLOrderReviewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA8BEB51A484FCB008A9248 /* OLOrderReviewViewController.m */; };
 		2EA8BEBD1A484FCB008A9248 /* OLFrameOrderReviewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA8BEB71A484FCB008A9248 /* OLFrameOrderReviewViewController.m */; };
+		2EB4959C1B303FA8003FB762 /* OLEditPhotobookViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB4959B1B303FA8003FB762 /* OLEditPhotobookViewController.m */; };
 		2EB4BD681AE128740004CEE0 /* OLPhotobookViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB4BD671AE128740004CEE0 /* OLPhotobookViewController.m */; };
 		2EB4BD6B1AE13F520004CEE0 /* OLPhotobookPageContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB4BD6A1AE13F520004CEE0 /* OLPhotobookPageContentViewController.m */; };
 		2ED5DEBF1AC948C1003301A8 /* LXReorderableCollectionViewFlowLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 2ED5DEBE1AC948C1003301A8 /* LXReorderableCollectionViewFlowLayout.m */; };
@@ -148,6 +151,10 @@
 		2E5F802B1B01E5F700095203 /* OLPaymentLineItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLPaymentLineItem.m; sourceTree = "<group>"; };
 		2E5F80301B04A22500095203 /* OLIntegratedCheckoutViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLIntegratedCheckoutViewController.h; sourceTree = "<group>"; };
 		2E5F80311B04A22500095203 /* OLIntegratedCheckoutViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLIntegratedCheckoutViewController.m; sourceTree = "<group>"; };
+		2E676C291B33FD70005E068B /* OLImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLImageView.h; sourceTree = "<group>"; };
+		2E676C2A1B33FD70005E068B /* OLImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLImageView.m; sourceTree = "<group>"; };
+		2E768F531B394372009BAC18 /* OLPhotobookPrintJob.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLPhotobookPrintJob.h; sourceTree = "<group>"; };
+		2E768F541B394372009BAC18 /* OLPhotobookPrintJob.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLPhotobookPrintJob.m; sourceTree = "<group>"; };
 		2E85BC8719A24BAB00EC7CC2 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Main.strings; sourceTree = "<group>"; };
 		2E85BC8819A24BAB00EC7CC2 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		2E85BC8919A24BAB00EC7CC2 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -189,6 +196,8 @@
 		2EA8BEB51A484FCB008A9248 /* OLOrderReviewViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLOrderReviewViewController.m; sourceTree = "<group>"; };
 		2EA8BEB61A484FCB008A9248 /* OLFrameOrderReviewViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLFrameOrderReviewViewController.h; sourceTree = "<group>"; };
 		2EA8BEB71A484FCB008A9248 /* OLFrameOrderReviewViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLFrameOrderReviewViewController.m; sourceTree = "<group>"; };
+		2EB4959A1B303FA8003FB762 /* OLEditPhotobookViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLEditPhotobookViewController.h; sourceTree = "<group>"; };
+		2EB4959B1B303FA8003FB762 /* OLEditPhotobookViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLEditPhotobookViewController.m; sourceTree = "<group>"; };
 		2EB4BD661AE128740004CEE0 /* OLPhotobookViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLPhotobookViewController.h; sourceTree = "<group>"; };
 		2EB4BD671AE128740004CEE0 /* OLPhotobookViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLPhotobookViewController.m; sourceTree = "<group>"; };
 		2EB4BD691AE13F520004CEE0 /* OLPhotobookPageContentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLPhotobookPageContentViewController.h; sourceTree = "<group>"; };
@@ -356,6 +365,8 @@
 				2EE3C86C1A4ADDDA006446E2 /* OLWhiteSquare.m */,
 				2E973EEC1A7A5D0E00488212 /* OLCircleMaskCollectionViewCell.h */,
 				2E973EED1A7A5D0E00488212 /* OLCircleMaskCollectionViewCell.m */,
+				2E676C291B33FD70005E068B /* OLImageView.h */,
+				2E676C2A1B33FD70005E068B /* OLImageView.m */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -609,6 +620,8 @@
 				CD9CF4A4187592A900F067B6 /* OLPrintJob.m */,
 				CD9D6AE3187189BF001CD1F9 /* OLPostcardPrintJob.h */,
 				CD9D6AE4187189BF001CD1F9 /* OLPostcardPrintJob.m */,
+				2E768F531B394372009BAC18 /* OLPhotobookPrintJob.h */,
+				2E768F541B394372009BAC18 /* OLPhotobookPrintJob.m */,
 				CD9CF4A118758BDF00F067B6 /* OLProductPrintJob.h */,
 				CD9CF4A218758BDF00F067B6 /* OLProductPrintJob.m */,
 				CD9D6AE71871B5C7001CD1F9 /* OLPrintOrder.h */,
@@ -681,6 +694,8 @@
 				2EB4BD671AE128740004CEE0 /* OLPhotobookViewController.m */,
 				2EB4BD691AE13F520004CEE0 /* OLPhotobookPageContentViewController.h */,
 				2EB4BD6A1AE13F520004CEE0 /* OLPhotobookPageContentViewController.m */,
+				2EB4959A1B303FA8003FB762 /* OLEditPhotobookViewController.h */,
+				2EB4959B1B303FA8003FB762 /* OLEditPhotobookViewController.m */,
 				CDA8BF5518D70D0F00D835BB /* OLCheckoutViewController.h */,
 				CDA8BF5118D70D0F00D835BB /* OLCheckoutViewController.m */,
 				2E5F80301B04A22500095203 /* OLIntegratedCheckoutViewController.h */,
@@ -869,6 +884,7 @@
 				3D8ECA511AD692FA00CFB2C0 /* OLProductGroup.m in Sources */,
 				CDA8BF5718D70D0F00D835BB /* OLCheckoutViewController.m in Sources */,
 				2EB4BD681AE128740004CEE0 /* OLPhotobookViewController.m in Sources */,
+				2E676C2B1B33FD70005E068B /* OLImageView.m in Sources */,
 				3D0D7ACC1AC0C44C00746FC8 /* NSArray+QueryingExtras.m in Sources */,
 				CD97569518E083E3007CA090 /* PrintOrderHistoryViewController.m in Sources */,
 				2EA8BEBC1A484FCB008A9248 /* OLOrderReviewViewController.m in Sources */,
@@ -889,6 +905,7 @@
 				CD9CF4A318758BDF00F067B6 /* OLProductPrintJob.m in Sources */,
 				2E5259011A9C91DF00DBC69B /* OLSingleImageProductReviewViewController.m in Sources */,
 				2E8C29F01B18D1E10045DC21 /* OLPrintOrderCost.m in Sources */,
+				2EB4959C1B303FA8003FB762 /* OLEditPhotobookViewController.m in Sources */,
 				3D8122EE1A759F42004E7297 /* UIView+RMUtils.m in Sources */,
 				CD550B191881E1E600782D75 /* OLPrintOrder+History.m in Sources */,
 				CDAFE008186D9C6C003572FE /* OLAsset.m in Sources */,
@@ -932,6 +949,7 @@
 				3D8122ED1A759F42004E7297 /* RMImageCropper.m in Sources */,
 				CD93BB451878DFA300316492 /* OLCountryPickerController.m in Sources */,
 				CD73BFAD18631A570009DE03 /* OLBaseRequest.m in Sources */,
+				2E768F551B394372009BAC18 /* OLPhotobookPrintJob.m in Sources */,
 				2E5F802C1B01E5F700095203 /* OLPaymentLineItem.m in Sources */,
 				CD9CF4A5187592A900F067B6 /* OLPrintJob.m in Sources */,
 				3DF9D6FD1B0F618000A40C0C /* UIView+RoundRect.m in Sources */,
