@@ -109,7 +109,6 @@ UINavigationControllerDelegate>
     }
     
     OLPhotobookViewController *photobook = [self.storyboard instantiateViewControllerWithIdentifier:@"PhotobookViewController"];
-    photobook.assets = self.assets;
     photobook.coverPhoto = self.coverPhoto;
     photobook.userSelectedPhotos = bookPhotos;
     photobook.product = self.product;
@@ -465,9 +464,7 @@ UINavigationControllerDelegate>
         if (indexPath.section == kSectionPages){
             photobook.startOpen = YES;
         }
-        
-        photobook.assets = self.assets;
-        
+                
         photobook.userSelectedPhotos = self.photobookPhotos;
         if (indexPath.section == kSectionCover){
             photobook.editingPageNumber = nil;
@@ -665,16 +662,13 @@ UINavigationControllerDelegate>
     
     // First remove any that are not returned.
     NSMutableArray *removeArray = [NSMutableArray arrayWithArray:self.userSelectedPhotos];
-    NSMutableArray *removeAssetArray = [NSMutableArray arrayWithArray:self.assets];
     for (OLPrintPhoto *object in self.userSelectedPhotos) {
         if (![object.asset isKindOfClass:class] || [photoArray containsObjectIdenticalTo:object]) {
-            [removeAssetArray removeObjectAtIndex:[removeArray indexOfObjectIdenticalTo:object]];
             [removeArray removeObjectIdenticalTo:object];
         }
     }
     
     [self.userSelectedPhotos removeObjectsInArray:removeArray];
-    [self.assets removeObjectsInArray:removeAssetArray];
     
     // Second, add the remaining objects to the end of the array without replacing any.
     NSMutableArray *addArray = [NSMutableArray arrayWithArray:photoArray];
@@ -689,7 +683,6 @@ UINavigationControllerDelegate>
     }
     
     [self.userSelectedPhotos addObjectsFromArray:addArray];
-    [self.assets addObjectsFromArray:addAssetArray];
     
     [self updatePhotobookPhotos];
     for (OLPhotobookViewController *photobook in self.childViewControllers){

@@ -921,7 +921,6 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
         if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8){
             [vc safePerformSelector:@selector(setProduct:) withObject:self.product];
             [vc safePerformSelector:@selector(setUserSelectedPhotos:) withObject:self.userSelectedPhotos];
-            [vc safePerformSelector:@selector(setAssets:) withObject:self.assets];
             
             [self.navigationController presentViewController:vc animated:YES completion:NULL];
             return;

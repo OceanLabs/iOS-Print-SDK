@@ -130,7 +130,6 @@
         else if (!(![self.delegate respondsToSelector:@selector(kiteControllerShouldAllowUserToAddMorePhotos:)] || [self.delegate kiteControllerShouldAllowUserToAddMorePhotos:[OLKitePrintSDK kiteViewControllerInNavStack:self.navigationController.viewControllers]]) && self.product.productTemplate.templateUI == kOLTemplateUIPhotobook){
             vc = [self.storyboard instantiateViewControllerWithIdentifier:@"PhotobookViewController"];
             if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8){
-                [vc safePerformSelector:@selector(setAssets:) withObject:self.assets];
                 [vc safePerformSelector:@selector(setUserSelectedPhotos:) withObject:self.userSelectedPhotos];
                 [vc safePerformSelector:@selector(setDelegate:) withObject:self.delegate];
                 [vc safePerformSelector:@selector(setProduct:) withObject:self.product];

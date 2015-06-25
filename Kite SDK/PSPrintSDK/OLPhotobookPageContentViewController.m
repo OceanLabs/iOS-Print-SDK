@@ -91,20 +91,31 @@
     if (printPhoto != (id)[NSNull null]){
         self.imageView.image = nil;
         self.imageView.contentMode = UIViewContentModeScaleAspectFill;
-        [printPhoto getImageWithProgress:NULL completion:^(UIImage *image){
-            dispatch_async(dispatch_get_main_queue(), ^{
-                self.imageView.image = image;
-                if (self.left){
-                    self.pageShadowLeft2.hidden = NO;
-                }
-                else{
-                    self.pageShadowRight2.hidden = NO;
-                }
-                if (handler){
-                    handler();
-                }
-            });
-        }];
+        [printPhoto setImageSize:self.imageView.frame.size toImageView:self.imageView cropped:YES];
+        if (self.left){
+            self.pageShadowLeft2.hidden = NO;
+        }
+        else{
+            self.pageShadowRight2.hidden = NO;
+        }
+        if (handler){
+            handler();
+        }
+
+//        [printPhoto getImageWithProgress:NULL completion:^(UIImage *image){
+//            dispatch_async(dispatch_get_main_queue(), ^{
+//                self.imageView.image = image;
+//                if (self.left){
+//                    self.pageShadowLeft2.hidden = NO;
+//                }
+//                else{
+//                    self.pageShadowRight2.hidden = NO;
+//                }
+//                if (handler){
+//                    handler();
+//                }
+//            });
+//        }];
         
     }
     else{

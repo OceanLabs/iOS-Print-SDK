@@ -79,11 +79,9 @@ static const CGFloat kBookEdgePadding = 38;
 
 - (void)setCoverPhoto:(OLPrintPhoto *)coverPhoto{
     _coverPhoto = coverPhoto;
-    [coverPhoto getImageWithProgress:NULL completion:^(UIImage *image){
-        dispatch_async(dispatch_get_main_queue(), ^{
-            self.coverImageView.image = image;
-        });
-    }];
+    if (self.coverImageView){
+        [coverPhoto setImageSize:self.coverImageView.frame.size toImageView:self.coverImageView cropped:YES];
+    }
 }
 
 -(UIDynamicAnimator*) dynamicAnimator{
@@ -428,7 +426,6 @@ static const CGFloat kBookEdgePadding = 38;
     OLPhotobookPageContentViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLPhotobookPageViewController"];
     vc.pageIndex = index;
     vc.userSelectedPhotos = self.photobookPhotos;
-    vc.assets = self.assets;
     vc.view.autoresizingMask = UIViewAutoresizingNone;
     return vc;
 }
@@ -587,7 +584,6 @@ static const CGFloat kBookEdgePadding = 38;
 }
 
 - (void)onTapGestureRecognized:(UITapGestureRecognizer *)sender{
-    OLPrintPhoto *tempPrintPhoto = [[OLPrintPhoto alloc] init];
     NSInteger index = 0;
     if ([sender locationInView:self.pageController.view].x < self.pageController.view.frame.size.width / 2.0){
         self.croppingImageIndex = 0;
@@ -605,7 +601,6 @@ static const CGFloat kBookEdgePadding = 38;
     }
     
     index = [[self.pageController.viewControllers objectAtIndex:self.croppingImageIndex] pageIndex];
-    tempPrintPhoto.asset = self.assets[index % [self.assets count]];
     self.croppingPrintPhoto = self.photobookPhotos[index];
     
     UINavigationController *nav = [self.storyboard instantiateViewControllerWithIdentifier:@"CropViewNavigationController"];
@@ -613,7 +608,7 @@ static const CGFloat kBookEdgePadding = 38;
     cropVc.delegate = self;
     UIImageView *imageView = [(OLPhotobookPageContentViewController *)[[self.pageController viewControllers] firstObject] imageView];
     cropVc.aspectRatio = imageView.frame.size.height / imageView.frame.size.width;
-    [tempPrintPhoto getImageWithProgress:NULL completion:^(UIImage *image){
+    [self.croppingPrintPhoto getImageWithProgress:NULL completion:^(UIImage *image){
         [cropVc setFullImage:image];
         [self presentViewController:nav animated:YES completion:NULL];
     }];
