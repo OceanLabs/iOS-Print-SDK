@@ -172,7 +172,7 @@ static NSOperationQueue *imageOperationQueue;
 #ifdef OL_KITE_OFFER_INSTAGRAM
             else if (self.type == kPrintPhotoAssetTypeInstagramPhoto) {
                 if (![self isCropped]){
-                    [imageView setAndFadeInImageWithURL:[self.asset imageURL]];
+                    [imageView setAndFadeInImageWithURL:[self.asset fullURL]];
                 }
                 else{
                     [OLPrintPhoto resizedImageWithPrintPhoto:self size:destSize cropped:cropped progress:nil completion:^(UIImage *image) {
