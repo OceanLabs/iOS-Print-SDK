@@ -105,8 +105,8 @@ static NSOperationQueue *imageOperationQueue;
 
 - (void) setImageSize:(CGSize)destSize toImageView:(UIImageView *)imageView cropped:(BOOL)cropped{
     if (self.cachedCroppedThumbnailImage) {
-        if (!(MIN(imageView.frame.size.width, imageView.frame.size.height) * [UIScreen mainScreen].scale > MAX(self.cachedCroppedThumbnailImage.size.width, self.cachedCroppedThumbnailImage.size.height))){
-            imageView.image = self.cachedCroppedThumbnailImage;
+        imageView.image = self.cachedCroppedThumbnailImage;
+        if (!(MIN(imageView.frame.size.width, imageView.frame.size.height) * 2 > MAX(self.cachedCroppedThumbnailImage.size.width, self.cachedCroppedThumbnailImage.size.height))){ //Should be time screen scale but the 6 Plus chokes
             return;
         }
     }
@@ -317,7 +317,7 @@ static NSOperationQueue *imageOperationQueue;
         @autoreleasepool {
             [printPhoto getImageWithFullResolution:CGSizeEqualToSize(destSize, CGSizeZero) progress:progressHandler completion:^(UIImage *image) {
                 if (destSize.height != 0 && destSize.width != 0){
-                    image = [OLPrintPhoto imageWithImage:image scaledToWidth:destSize.width * [UIScreen mainScreen].scale];
+                    image = [OLPrintPhoto imageWithImage:image scaledToWidth:destSize.width * 2]; //Should be time screen scale but the 6 Plus chokes
                 }
                 
                 if (![printPhoto isCropped] || !cropped){
