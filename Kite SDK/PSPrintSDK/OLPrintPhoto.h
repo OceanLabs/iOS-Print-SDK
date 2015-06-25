@@ -23,6 +23,7 @@ typedef enum {
 @interface OLPrintPhoto : NSObject <OLAssetDataSource>
 
 - (void) setCroppedImageSize:(CGSize)destSize forImageView:(UIImageView *)imageView;
+- (void) setThumbImageSize:(CGSize)destSize forImageView:(UIImageView *)imageView cropped:(BOOL)cropped;
 - (void)getImageWithProgress:(OLImageEditorImageGetImageProgressHandler)progressHandler completion:(OLImageEditorImageGetImageCompletionHandler)completionHandler;
 - (void)unloadImage;
 

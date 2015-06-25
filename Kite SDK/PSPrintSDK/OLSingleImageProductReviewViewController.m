@@ -76,6 +76,10 @@ CTAssetsPickerControllerDelegate>
         self.imageCropView.image = image;
     }];
     
+    for (OLPrintPhoto *printPhoto in self.userSelectedPhotos){
+        [printPhoto unloadImage];
+    }
+    
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]
                                               initWithTitle:@"Next"
                                               style:UIBarButtonItemStylePlain
@@ -246,11 +250,7 @@ CTAssetsPickerControllerDelegate>
         
         UIImageView *imageView = (UIImageView *)[cell.contentView viewWithTag:1];
         
-        [self.userSelectedPhotos[indexPath.item] getImageWithProgress:NULL completion:^(UIImage *image){
-            dispatch_async(dispatch_get_main_queue(), ^{
-                imageView.image = image;
-            });
-        }];
+        [self.userSelectedPhotos[indexPath.item] setThumbImageSize:imageView.frame.size forImageView:imageView cropped:NO];
         
         return cell;
     }
