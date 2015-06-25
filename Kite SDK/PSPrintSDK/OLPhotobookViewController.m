@@ -808,6 +808,7 @@ static const CGFloat kBookEdgePadding = 38;
             coverImageView.clipsToBounds = YES;
             [halfBookCoverImageContainer addSubview:coverImageView];
             coverImageView.translatesAutoresizingMaskIntoConstraints = NO;
+            self.coverPhoto = self.coverPhoto; //this is on purpose
         }
         
         [halfBookCoverImageContainer removeConstraints:halfBookCoverImageContainer.constraints];
