@@ -707,14 +707,9 @@ UINavigationControllerDelegate>
 }
 
 - (void)assetsPickerController:(CTAssetsPickerController *)picker didFinishPickingAssets:(NSArray *)assets {
-    [self populateArrayWithNewArray:assets dataType:[ALAsset class]];
-    [picker dismissViewControllerAnimated:YES completion:^(void){}];
-}
-
-- (void)assetsPickerController:(CTAssetsPickerController *)picker didSelectAsset:(ALAsset *)asset{
     if (self.addNewPhotosAtIndex == -1){
         self.coverPhoto = [[OLPrintPhoto alloc] init];
-        self.coverPhoto.asset = asset;
+        self.coverPhoto.asset = [assets firstObject];
         
         for (OLPhotobookViewController *photobook in self.childViewControllers){
             if ([photobook bookClosed]){
@@ -724,6 +719,19 @@ UINavigationControllerDelegate>
         }
         
         [picker dismissViewControllerAnimated:YES completion:NULL];
+        return;
+    }
+    
+    [self populateArrayWithNewArray:assets dataType:[ALAsset class]];
+    [picker dismissViewControllerAnimated:YES completion:^(void){}];
+}
+
+- (BOOL)assetsPickerController:(CTAssetsPickerController *)picker shouldSelectAsset:(ALAsset *)asset{
+    if (self.addNewPhotosAtIndex == -1){
+        return picker.selectedAssets.count == 0;
+    }
+    else{
+        return YES;
     }
 }
 
