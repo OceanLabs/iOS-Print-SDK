@@ -72,11 +72,13 @@ CTAssetsPickerControllerDelegate>
     [OLAnalytics trackReviewScreenViewed:self.product.productTemplate.name];
 #endif
     
-    OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
-    printPhoto.asset = [(OLPrintPhoto *)[self.userSelectedPhotos firstObject] originalAsset];
-    [printPhoto getImageWithProgress:NULL completion:^(UIImage *image){
+    [[self.userSelectedPhotos firstObject] getImageWithProgress:NULL completion:^(UIImage *image){
         self.imageCropView.image = image;
     }];
+    
+    for (OLPrintPhoto *printPhoto in self.userSelectedPhotos){
+        [printPhoto unloadImage];
+    }
     
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]
                                               initWithTitle:@"Next"
@@ -95,27 +97,13 @@ CTAssetsPickerControllerDelegate>
         self.imagesCollectionView.hidden = YES;
     }
     
-    if ([self shouldShowAddMorePhotos] && self.assets.count == 0){
+    if ([self shouldShowAddMorePhotos] && self.userSelectedPhotos.count == 0){
         [self collectionView:self.imagesCollectionView didSelectItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
     }
 }
 
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
-}
-
-
--(NSMutableArray *) userSelectedPhotos{
-    if (!_userSelectedPhotos){
-        NSMutableArray *mutableUserSelectedPhotos = [[NSMutableArray alloc] init];
-        for (id asset in self.assets){
-            OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
-            printPhoto.asset = asset;
-            [mutableUserSelectedPhotos addObject:printPhoto];
-        }
-        _userSelectedPhotos = mutableUserSelectedPhotos;
-    }
-    return _userSelectedPhotos;
 }
 
 - (void) updateQuantityLabel{
@@ -262,9 +250,7 @@ CTAssetsPickerControllerDelegate>
         
         UIImageView *imageView = (UIImageView *)[cell.contentView viewWithTag:1];
         
-        OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
-        printPhoto.asset = [(OLPrintPhoto *)[self.userSelectedPhotos objectAtIndex:indexPath.row] originalAsset];
-        [printPhoto setImageSize:imageView.frame.size forImageView:imageView];
+        [self.userSelectedPhotos[indexPath.item] setImageSize:imageView.frame.size toImageView:imageView cropped:NO];
         
         return cell;
     }
@@ -280,9 +266,7 @@ CTAssetsPickerControllerDelegate>
 - (void) collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
     if (indexPath.section == [self sectionForImageCells]){
         self.imageCropView.image = nil;
-        OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
-        printPhoto.asset = [(OLPrintPhoto *)[self.userSelectedPhotos objectAtIndex:indexPath.row] originalAsset];
-        [printPhoto getImageWithProgress:NULL completion:^(UIImage *image){
+        [self.userSelectedPhotos[indexPath.item] getImageWithProgress:NULL completion:^(UIImage *image){
             dispatch_async(dispatch_get_main_queue(), ^{
                 self.imageCropView.image = image;
             });
@@ -401,16 +385,13 @@ CTAssetsPickerControllerDelegate>
     
     // First remove any that are not returned.
     NSMutableArray *removeArray = [NSMutableArray arrayWithArray:self.userSelectedPhotos];
-    NSMutableArray *removeAssetArray = [NSMutableArray arrayWithArray:self.assets];
     for (OLPrintPhoto *object in self.userSelectedPhotos) {
         if (![object.asset isKindOfClass:class] || [photoArray containsObjectIdenticalTo:object]) {
-            [removeAssetArray removeObjectAtIndex:[removeArray indexOfObjectIdenticalTo:object]];
             [removeArray removeObjectIdenticalTo:object];
         }
     }
     
     [self.userSelectedPhotos removeObjectsInArray:removeArray];
-    [self.assets removeObjectsInArray:removeAssetArray];
     
     // Second, add the remaining objects to the end of the array without replacing any.
     NSMutableArray *addArray = [NSMutableArray arrayWithArray:photoArray];
@@ -432,7 +413,6 @@ CTAssetsPickerControllerDelegate>
     }
     
     [self.userSelectedPhotos addObjectsFromArray:addArray];
-    [self.assets addObjectsFromArray:addAssetArray];
     
     [self.imagesCollectionView reloadData];
 }

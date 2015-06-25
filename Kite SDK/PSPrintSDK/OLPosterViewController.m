@@ -37,19 +37,6 @@
 
 @implementation OLPosterViewController
 
--(NSMutableArray *) userSelectedPhotos{
-    if (!_userSelectedPhotos){
-        NSMutableArray *mutableUserSelectedPhotos = [[NSMutableArray alloc] init];
-        for (id asset in self.assets){
-            OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
-            printPhoto.asset = asset;
-            [mutableUserSelectedPhotos addObject:printPhoto];
-        }
-        _userSelectedPhotos = mutableUserSelectedPhotos;
-    }
-    return _userSelectedPhotos;
-}
-
 -(NSMutableArray *) posterPhotos{
     if (!_posterPhotos){
         _posterPhotos = [[NSMutableArray alloc] init];
@@ -97,7 +84,7 @@
         for (NSUInteger i = 0; i < MIN([self.imageViews count], [self.posterPhotos count]); i++) {
             
             OLPrintPhoto *printPhoto = (OLPrintPhoto*)[self.posterPhotos objectAtIndex:i];
-            [printPhoto setImageSize:[(UIView *)self.imageViews[i] frame].size forImageView:self.imageViews[i]];
+            [printPhoto setImageSize:[(UIView *)self.imageViews[i] frame].size toImageView:self.imageViews[i] cropped:YES];
         }
     });
 }
@@ -116,8 +103,6 @@
 }
 
 -(void)doCrop{
-    OLPrintPhoto *tempPrintPhoto = [[OLPrintPhoto alloc] init];
-    tempPrintPhoto.asset = self.assets[0];
     self.editingPrintPhoto = self.userSelectedPhotos[0];
     
     UINavigationController *nav = [self.storyboard instantiateViewControllerWithIdentifier:@"CropViewNavigationController"];
@@ -125,7 +110,7 @@
     cropVc.delegate = self;
     cropVc.aspectRatio = [(UIView *)self.imageViews[0] frame].size.height / [(UIView *)self.imageViews[0] frame].size.width;
     
-    [tempPrintPhoto getImageWithProgress:NULL completion:^(UIImage *image){
+    [self.editingPrintPhoto getImageWithProgress:NULL completion:^(UIImage *image){
         [cropVc setFullImage:image];
         [self presentViewController:nav animated:YES completion:NULL];
     }];
