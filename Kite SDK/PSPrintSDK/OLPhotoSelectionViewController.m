@@ -177,8 +177,10 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     }
 }
 
-- (BOOL)prefersStatusBarHidden {
-    return NO;
+- (void)viewDidLayoutSubviews{
+    [super viewDidLayoutSubviews];
+    
+    self.collectionView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
 }
 
 - (BOOL)instagramEnabled{
@@ -359,9 +361,10 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
     self.rotationSize = size;
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinator> context){
+        [self.collectionView reloadData];
         [self.collectionView.collectionViewLayout invalidateLayout];
     }completion:^(id<UIViewControllerTransitionCoordinator> context){
-        [self.collectionView reloadData];
+        
     }];
 }
 

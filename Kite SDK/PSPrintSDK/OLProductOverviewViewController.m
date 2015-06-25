@@ -138,7 +138,6 @@
         }
         else{
             vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OrderReviewViewController"];
-            [self.navigationController pushViewController:vc animated:YES];
         }
     }
     [vc safePerformSelector:@selector(setAssets:) withObject:self.assets];

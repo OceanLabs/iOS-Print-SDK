@@ -108,7 +108,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 
 - (OLCheckoutViewController *)shippingScreenOnTheStack {
     NSArray *vcStack = self.navigationController.viewControllers;
-    if ([vcStack[vcStack.count - 2] isKindOfClass:[OLCheckoutViewController class]]) {
+    if (vcStack.count >= 2 && [vcStack[vcStack.count - 2] isKindOfClass:[OLCheckoutViewController class]]) {
         return vcStack[vcStack.count - 2];
     }
     
