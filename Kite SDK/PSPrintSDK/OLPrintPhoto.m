@@ -103,9 +103,9 @@ static NSOperationQueue *imageOperationQueue;
     }
 }
 
-- (void) setImageSize:(CGSize)destSize toImageView:(UIImageView *)imageView cropped:(BOOL)cropped{
+- (void)setImageSize:(CGSize)destSize cropped:(BOOL)cropped completionHandler:(void(^)(UIImage *image))handler{
     if (self.cachedCroppedThumbnailImage) {
-        imageView.image = self.cachedCroppedThumbnailImage;
+        handler(self.cachedCroppedThumbnailImage);
         if ((MAX(destSize.height, destSize.width) * 2 <= MIN(self.cachedCroppedThumbnailImage.size.width, self.cachedCroppedThumbnailImage.size.height))){ //Should be times screen scale but the 6 Plus chokes
             return;
         }
@@ -114,10 +114,8 @@ static NSOperationQueue *imageOperationQueue;
         if (self.type == kPrintPhotoAssetTypeALAsset) {
             [OLPrintPhoto resizedImageWithPrintPhoto:self size:destSize cropped:cropped progress:nil completion:^(UIImage *image) {
                 self.cachedCroppedThumbnailImage = image;
-                dispatch_async(dispatch_get_main_queue(), ^(void){
-                    self.cachedCroppedThumbnailImage = image;
-                    imageView.image = image;
-                });
+                self.cachedCroppedThumbnailImage = image;
+                handler(image);
                 
             }];
         }
@@ -127,11 +125,11 @@ static NSOperationQueue *imageOperationQueue;
                 
                 if (asset.assetType == kOLAssetTypeRemoteImageURL){
                     if (![self isCropped]){
-                        [imageView setAndFadeInImageWithURL:[self.asset imageURL]];
+                        [self getImageWithFullResolution:YES progress:NULL completion:handler];
                     }
                     else{
                         [OLPrintPhoto resizedImageWithPrintPhoto:self size:destSize cropped:cropped progress:nil completion:^(UIImage *image) {
-                            imageView.image = image;
+                            handler(image);
                         }];
                     }
                 }
@@ -144,10 +142,7 @@ static NSOperationQueue *imageOperationQueue;
                         printPhoto.cropImageRect = self.cropImageRect;
                         [OLPrintPhoto resizedImageWithPrintPhoto:printPhoto size:destSize cropped:cropped progress:nil completion:^(UIImage *image) {
                             self.cachedCroppedThumbnailImage = image;
-                            dispatch_async(dispatch_get_main_queue(), ^(void){
-                                imageView.image = image;
-                            });
-                            
+                            handler(image);
                         }];
                     }];
                 }
@@ -161,9 +156,7 @@ static NSOperationQueue *imageOperationQueue;
                             printPhoto.cropImageRect = self.cropImageRect;
                             [OLPrintPhoto resizedImageWithPrintPhoto:printPhoto size:destSize cropped:cropped progress:nil completion:^(UIImage *image) {
                                 self.cachedCroppedThumbnailImage = image;
-                                dispatch_async(dispatch_get_main_queue(), ^(void){
-                                    imageView.image = image;
-                                });
+                                handler(image);
                             }];
                         }];
                     });
@@ -172,24 +165,23 @@ static NSOperationQueue *imageOperationQueue;
 #ifdef OL_KITE_OFFER_INSTAGRAM
             else if (self.type == kPrintPhotoAssetTypeInstagramPhoto) {
                 if (![self isCropped]){
-                    [imageView setAndFadeInImageWithURL:[self.asset fullURL]];
+                    [self getImageWithFullResolution:YES progress:NULL completion:handler];
                 }
                 else{
                     [OLPrintPhoto resizedImageWithPrintPhoto:self size:destSize cropped:cropped progress:nil completion:^(UIImage *image) {
-                        imageView.image = image;
+                        handler(image);
                     }];
                 }
             }
 #endif
 #ifdef OL_KITE_OFFER_FACEBOOK
             else if (self.type == kPrintPhotoAssetTypeFacebookPhoto){
-                OLFacebookImage *fbImage = self.asset;
                 if (![self isCropped]){
-                    [imageView setAndFadeInImageWithURL:[fbImage bestURLForSize:destSize]];
+                    [self getImageWithFullResolution:YES progress:NULL completion:handler];
                 }
                 else{
                     [OLPrintPhoto resizedImageWithPrintPhoto:self size:destSize cropped:cropped progress:nil completion:^(UIImage *image) {
-                        imageView.image = image;
+                        handler(image);
                     }];
                 }
             }

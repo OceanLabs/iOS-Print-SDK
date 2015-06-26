@@ -760,7 +760,11 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     
     if (imageIndex < self.userSelectedPhotos.count) {
         OLPrintPhoto *photo = self.userSelectedPhotos[indexPath.row + indexPath.section * self.product.quantityToFulfillOrder];
-        [photo setImageSize:[self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath] toImageView:imageView cropped:YES];
+        [photo setImageSize:[self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath] cropped:YES completionHandler:^(UIImage *image){
+            dispatch_async(dispatch_get_main_queue(), ^{
+                imageView.image = image;
+            });
+        }];
         checkmark.hidden = [self.userDisabledPhotos containsObjectIdenticalTo:photo];
         disabled.hidden = !checkmark.hidden;
     } else {

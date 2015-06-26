@@ -207,7 +207,11 @@ CGFloat margin = 2;
         cellImage.image = nil;
         
         OLPrintPhoto *printPhoto =(OLPrintPhoto*)[self.framePhotos objectAtIndex:indexPath.row + (outerCollectionViewIndexPath.item) * self.product.quantityToFulfillOrder];
-        [printPhoto setImageSize:[self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath] toImageView:cellImage cropped:YES];
+        [printPhoto setImageSize:[self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath] cropped:YES completionHandler:^(UIImage *image){
+            dispatch_async(dispatch_get_main_queue(), ^{
+                cellImage.image = image;
+            });
+        }];
         
         UITapGestureRecognizer* doubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTapGestureThumbnailTapped:)];
         [cellImage addGestureRecognizer:doubleTap];
