@@ -70,6 +70,7 @@ static const CGFloat kBookEdgePadding = 38;
 @property (assign, nonatomic) BOOL animating;
 @property (assign, nonatomic) BOOL stranded;
 @property (assign, nonatomic) BOOL userHasOpenedBook;
+@property (assign, nonatomic) BOOL haveSeenViewDidAppear;
 
 @property (weak, nonatomic) UIImageView *coverImageView;
 
@@ -321,7 +322,7 @@ static const CGFloat kBookEdgePadding = 38;
 - (void)viewDidLayoutSubviews{
     [super viewDidLayoutSubviews];
     
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8){
+    if (!self.haveSeenViewDidAppear && [[[UIDevice currentDevice] systemVersion] floatValue] >= 8){
         if (![self isLandscape]){
             self.containerView.transform = CGAffineTransformMakeTranslation([self xTrasformForBookAtRightEdge], 0);
         }
@@ -334,6 +335,7 @@ static const CGFloat kBookEdgePadding = 38;
 
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
+    self.haveSeenViewDidAppear = YES;
     
     if (self.bookClosed && !self.editMode){
         [self tease];
@@ -833,7 +835,7 @@ static const CGFloat kBookEdgePadding = 38;
             halfBookCoverImageContainer.layer.shouldRasterize = YES;
             halfBookCoverImageContainer.layer.rasterizationScale = [UIScreen mainScreen].scale;
             
-            OLImageView *coverImageView = [[OLImageView alloc] init];
+            OLImageView *coverImageView = [[OLImageView alloc] initWithFrame:CGRectMake(0, 0, self.bookCover.frame.size.width / 2.0, self.bookCover.frame.size.height)];
             self.coverImageView = coverImageView;
             [self loadCoverPhoto];
             coverImageView.tag = 18;
