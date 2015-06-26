@@ -446,6 +446,9 @@ static const CGFloat kBookEdgePadding = 38;
 -(void)scrollCropViewController:(OLScrollCropViewController *)cropper didFinishCroppingImage:(UIImage *)croppedImage{
     [self.croppingPrintPhoto unloadImage];
     self.croppingPrintPhoto.asset = [OLAsset assetWithImageAsJPEG:croppedImage];
+    if (self.croppingPrintPhoto == self.coverPhoto){
+        self.coverPhoto = self.coverPhoto;
+    }
     
     [(OLPhotobookPageContentViewController *)[self.pageController.viewControllers objectAtIndex:self.croppingImageIndex] loadImageWithCompletionHandler:NULL];
     
@@ -585,9 +588,25 @@ static const CGFloat kBookEdgePadding = 38;
     if (self.editMode){
         [self.photobookDelegate photobook:self userDidTapOnImageWithIndex:-1];
     }
+    else if (self.coverPhoto){
+        self.croppingPrintPhoto = self.coverPhoto;
+        UINavigationController *nav = [self.storyboard instantiateViewControllerWithIdentifier:@"CropViewNavigationController"];
+        OLScrollCropViewController *cropVc = (id)nav.topViewController;
+        cropVc.delegate = self;
+        UIImageView *imageView = [(OLPhotobookPageContentViewController *)[[self.pageController viewControllers] firstObject] imageView];
+        cropVc.aspectRatio = imageView.frame.size.height / imageView.frame.size.width;
+        [self.croppingPrintPhoto getImageWithProgress:NULL completion:^(UIImage *image){
+            [cropVc setFullImage:image];
+            [self presentViewController:nav animated:YES completion:NULL];
+        }];
+    }
     else{
         [self openBook:sender];
     }
+}
+
+- (void)onCoverLongPressRecognized:(UILongPressGestureRecognizer *)sender{
+    
 }
 
 - (void)onTapGestureRecognized:(UITapGestureRecognizer *)sender{
