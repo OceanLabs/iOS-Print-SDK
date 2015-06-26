@@ -112,7 +112,15 @@ static const CGFloat kBookEdgePadding = 38;
 
 - (void)setPages{
     NSInteger pageIndex = self.editingPageNumber ? [self.editingPageNumber integerValue] : 0;
-    [self.pageController setViewControllers:@[[self viewControllerAtIndex:pageIndex], [self viewControllerAtIndex:pageIndex + 1]] direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
+    if (self.pageController.viewControllers.count < 2){
+        [self.pageController setViewControllers:@[[self viewControllerAtIndex:pageIndex], [self viewControllerAtIndex:pageIndex + 1]] direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
+    }
+    else{
+        [self.pageController.viewControllers[0] setPageIndex:pageIndex];
+        [self.pageController.viewControllers[0] loadImageWithCompletionHandler:NULL];
+        [self.pageController.viewControllers[1] setPageIndex:pageIndex + 1];
+        [self.pageController.viewControllers[1] loadImageWithCompletionHandler:NULL];
+    }
 }
 
 - (void)viewDidLoad{

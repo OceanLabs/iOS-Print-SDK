@@ -274,7 +274,7 @@ UINavigationControllerDelegate>
 #pragma mark - User Actions
 
 - (void)onButtonNextClicked{
-    if (self.userSelectedPhotos.count == 0){
+    if (self.photobookPhotos.count == 0){
         
         NSString *alertTitle = NSLocalizedString(@"No photos", @"");
         NSString *alertMessage = NSLocalizedString(@"Please add at least one photo", @"");
@@ -292,7 +292,7 @@ UINavigationControllerDelegate>
         return;
     }
     
-    if (self.userSelectedPhotos.count < self.product.quantityToFulfillOrder){
+    if (self.photobookPhotos.count < self.product.quantityToFulfillOrder){
         NSString *alertTitle = NSLocalizedString(@"You can add more photos", @"");
         NSString *alertMessage = NSLocalizedString(@"Are you sure you want to proceed? If you do, the blank pages will be filled in with duplicate photos", @"");
         NSString *actionTitle = NSLocalizedString(@"Yes, proceed", @"");
@@ -520,13 +520,10 @@ UINavigationControllerDelegate>
         for (OLPhotobookViewController *photobook in self.childViewControllers){
             if (photobook.view == view){
                 photobook.editingPageNumber = [NSNumber numberWithInteger:indexPath.item * 2];
-                photobook.userSelectedPhotos = self.photobookPhotos;
-                for (OLPhotobookPageContentViewController *page in photobook.pageController.viewControllers){
-                    [page loadImageWithCompletionHandler:NULL];
-                }
                 if (self.selectedIndexNumber){
                     [[self findPageForImageIndex:[self.selectedIndexNumber integerValue]] highlightImageAtIndex:[self.selectedIndexNumber integerValue]];
                 }
+                break;
             }
         }
     }
