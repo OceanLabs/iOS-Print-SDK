@@ -959,51 +959,50 @@ static const CGFloat kBookEdgePadding = 38;
     
     [UIView animateWithDuration:kBookAnimationTime animations:^{
         self.containerView.transform = CGAffineTransformIdentity;
-    }completion:^(BOOL completed){
-        MPFlipStyle style = sender.view.tag == kTagRight ? MPFlipStyleDefault : MPFlipStyleDirectionBackward;
-        MPFlipTransition *flipTransition = [[MPFlipTransition alloc] initWithSourceView:self.bookCover destinationView:self.openbookView duration:kBookAnimationTime timingCurve:UIViewAnimationCurveEaseInOut completionAction:MPTransitionActionNone];
-        flipTransition.style = style;
-        [flipTransition perform:^(BOOL finished){
-            self.bookClosed = NO;
-            [UIView animateWithDuration:kBookAnimationTime/2.0 animations:^{
-                self.pagesLabelContainer.alpha = 1;
-            }];
-            
-            self.openbookView.hidden = NO;
-            
-            //Fade out shadow of the half-book.
-            UIView *closedPage = [self.bookCover viewWithTag:sender.view.tag];
-            CABasicAnimation *showAnim = [CABasicAnimation animationWithKeyPath:@"shadowOpacity"];
-            showAnim.fromValue = [NSNumber numberWithFloat:0.25];
-            showAnim.toValue = [NSNumber numberWithFloat:0.0];
-            showAnim.duration = kBookAnimationTime/4.0;
-            showAnim.removedOnCompletion = NO;
-            showAnim.fillMode = kCAFillModeForwards;
-            [closedPage.layer addAnimation:showAnim forKey:@"shadowOpacity"];
-            
-            //Fade in shadow of the book cover
-            CABasicAnimation *hideAnim = [CABasicAnimation animationWithKeyPath:@"shadowOpacity"];
-            hideAnim.fromValue = [NSNumber numberWithFloat:0.0];
-            hideAnim.toValue = [NSNumber numberWithFloat:0.25];
-            hideAnim.duration = kBookAnimationTime/4.0;
-            hideAnim.removedOnCompletion = NO;
-            hideAnim.fillMode = kCAFillModeForwards;
-            [self.containerView.layer addAnimation:hideAnim forKey:@"shadowOpacity"];
-            
-            CABasicAnimation *cornerAnim = [CABasicAnimation animationWithKeyPath:@"cornerRadius"];
-            cornerAnim.fromValue = @3;
-            cornerAnim.toValue = @0;
-            cornerAnim.duration = kBookAnimationTime/4.0;
-            cornerAnim.removedOnCompletion = NO;
-            cornerAnim.fillMode = kCAFillModeForwards;
-            [self.fakeShadowView.layer addAnimation:cornerAnim forKey:@"cornerRadius"];
-            
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, kBookAnimationTime/4.0 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-                self.animating = NO;
-                self.containerView.layer.shadowOpacity = 0.25;
-                self.bookCover.hidden = YES;
-            });
+    }completion:^(BOOL completed){}];
+    MPFlipStyle style = sender.view.tag == kTagRight ? MPFlipStyleDefault : MPFlipStyleDirectionBackward;
+    MPFlipTransition *flipTransition = [[MPFlipTransition alloc] initWithSourceView:self.bookCover destinationView:self.openbookView duration:kBookAnimationTime timingCurve:UIViewAnimationCurveEaseInOut completionAction:MPTransitionActionNone];
+    flipTransition.style = style;
+    [flipTransition perform:^(BOOL finished){
+        self.bookClosed = NO;
+        [UIView animateWithDuration:kBookAnimationTime/2.0 animations:^{
+            self.pagesLabelContainer.alpha = 1;
         }];
+        
+        self.openbookView.hidden = NO;
+        
+        //Fade out shadow of the half-book.
+        UIView *closedPage = [self.bookCover viewWithTag:sender.view.tag];
+        CABasicAnimation *showAnim = [CABasicAnimation animationWithKeyPath:@"shadowOpacity"];
+        showAnim.fromValue = [NSNumber numberWithFloat:0.25];
+        showAnim.toValue = [NSNumber numberWithFloat:0.0];
+        showAnim.duration = kBookAnimationTime/4.0;
+        showAnim.removedOnCompletion = NO;
+        showAnim.fillMode = kCAFillModeForwards;
+        [closedPage.layer addAnimation:showAnim forKey:@"shadowOpacity"];
+        
+        //Fade in shadow of the book cover
+        CABasicAnimation *hideAnim = [CABasicAnimation animationWithKeyPath:@"shadowOpacity"];
+        hideAnim.fromValue = [NSNumber numberWithFloat:0.0];
+        hideAnim.toValue = [NSNumber numberWithFloat:0.25];
+        hideAnim.duration = kBookAnimationTime/4.0;
+        hideAnim.removedOnCompletion = NO;
+        hideAnim.fillMode = kCAFillModeForwards;
+        [self.containerView.layer addAnimation:hideAnim forKey:@"shadowOpacity"];
+        
+        CABasicAnimation *cornerAnim = [CABasicAnimation animationWithKeyPath:@"cornerRadius"];
+        cornerAnim.fromValue = @3;
+        cornerAnim.toValue = @0;
+        cornerAnim.duration = kBookAnimationTime/4.0;
+        cornerAnim.removedOnCompletion = NO;
+        cornerAnim.fillMode = kCAFillModeForwards;
+        [self.fakeShadowView.layer addAnimation:cornerAnim forKey:@"cornerRadius"];
+        
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, kBookAnimationTime/4.0 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+            self.animating = NO;
+            self.containerView.layer.shadowOpacity = 0.25;
+            self.bookCover.hidden = YES;
+        });
     }];
     
     
@@ -1038,6 +1037,12 @@ static const CGFloat kBookEdgePadding = 38;
         self.pagesLabelContainer.alpha = 0;
     }];
     
+    if (![self isContainerViewAtRightEdge:NO]){
+        [UIView animateWithDuration:kBookAnimationTime animations:^{
+            self.containerView.transform = CGAffineTransformMakeTranslation([self xTrasformForBookAtRightEdge], 0);
+        }];
+    }
+    
     MPFlipTransition *flipTransition = [[MPFlipTransition alloc] initWithSourceView:self.openbookView destinationView:self.bookCover duration:kBookAnimationTime timingCurve:UIViewAnimationCurveEaseInOut completionAction:MPTransitionActionShowHide];
     flipTransition.flippingPageShadowOpacity = 0;
     flipTransition.style = MPFlipStyleDirectionBackward;
@@ -1052,11 +1057,6 @@ static const CGFloat kBookEdgePadding = 38;
         cornerAnim.fillMode = kCAFillModeForwards;
         [self.fakeShadowView.layer addAnimation:cornerAnim forKey:@"cornerRadius"];
         
-        if (![self isContainerViewAtRightEdge:NO]){
-            [UIView animateWithDuration:kBookAnimationTime/2.0 animations:^{
-                self.containerView.transform = CGAffineTransformMakeTranslation([self xTrasformForBookAtRightEdge], 0);
-            }];
-        }
         self.bookClosed = YES;
     }];
 }
@@ -1097,16 +1097,15 @@ static const CGFloat kBookEdgePadding = 38;
                         options:UIViewAnimationOptionBeginFromCurrentState
                      animations:^{
                          self.containerView.transform = CGAffineTransformIdentity;
-                     } completion:^(BOOL finished){
-                         MPFlipTransition *flipTransition = [[MPFlipTransition alloc] initWithSourceView:self.openbookView destinationView:self.bookCover duration:kBookAnimationTime timingCurve:UIViewAnimationCurveEaseInOut completionAction:MPTransitionActionShowHide];
-                         flipTransition.flippingPageShadowOpacity = 0;
-                         flipTransition.style = MPFlipStyleDefault;
-                         [flipTransition perform:^(BOOL finished){
-                             self.animating = NO;
-                             [self.fakeShadowView makeRoundRectWithRadius:3];
-                         }];
-                         self.bookClosed = YES;
-                     }];
+                     } completion:^(BOOL finished){}];
+    MPFlipTransition *flipTransition = [[MPFlipTransition alloc] initWithSourceView:self.openbookView destinationView:self.bookCover duration:kBookAnimationTime timingCurve:UIViewAnimationCurveEaseInOut completionAction:MPTransitionActionShowHide];
+    flipTransition.flippingPageShadowOpacity = 0;
+    flipTransition.style = MPFlipStyleDefault;
+    [flipTransition perform:^(BOOL finished){
+        self.animating = NO;
+        [self.fakeShadowView makeRoundRectWithRadius:3];
+    }];
+    self.bookClosed = YES;
 }
 
 - (CGFloat)xTrasformForBookAtRightEdge{
