@@ -87,36 +87,26 @@
 }
 
 - (void)loadImageWithCompletionHandler:(void(^)(void))handler{
-        OLPrintPhoto *printPhoto = [self.userSelectedPhotos objectAtIndex:self.pageIndex];
+    __block BOOL calledHandler;
+    OLPrintPhoto *printPhoto = [self.userSelectedPhotos objectAtIndex:self.pageIndex];
     if (printPhoto != (id)[NSNull null]){
         self.imageView.image = nil;
         self.imageView.contentMode = UIViewContentModeScaleAspectFill;
-        [printPhoto setImageSize:self.imageView.frame.size toImageView:self.imageView cropped:YES];
-        if (self.left){
-            self.pageShadowLeft2.hidden = NO;
-        }
-        else{
-            self.pageShadowRight2.hidden = NO;
-        }
-        if (handler){
-            handler();
-        }
-
-//        [printPhoto getImageWithProgress:NULL completion:^(UIImage *image){
-//            dispatch_async(dispatch_get_main_queue(), ^{
-//                self.imageView.image = image;
-//                if (self.left){
-//                    self.pageShadowLeft2.hidden = NO;
-//                }
-//                else{
-//                    self.pageShadowRight2.hidden = NO;
-//                }
-//                if (handler){
-//                    handler();
-//                }
-//            });
-//        }];
-        
+        [printPhoto setImageSize:self.imageView.frame.size cropped:YES completionHandler:^(UIImage *image){
+            dispatch_async(dispatch_get_main_queue(), ^{
+                self.imageView.image = image;
+                if (self.left){
+                    self.pageShadowLeft2.hidden = NO;
+                }
+                else{
+                    self.pageShadowRight2.hidden = NO;
+                }
+                if (handler && !calledHandler){
+                    calledHandler = YES;
+                    handler();
+                }
+            });
+        }];
     }
     else{
         self.pageShadowLeft2.hidden = YES;

@@ -80,7 +80,11 @@ static const CGFloat kBookEdgePadding = 38;
 - (void)setCoverPhoto:(OLPrintPhoto *)coverPhoto{
     _coverPhoto = coverPhoto;
     if (self.coverImageView){
-        [coverPhoto setImageSize:self.coverImageView.frame.size toImageView:self.coverImageView cropped:YES];
+        [coverPhoto setImageSize:self.coverImageView.frame.size cropped:YES completionHandler:^(UIImage *image){
+            dispatch_async(dispatch_get_main_queue(), ^{
+                self.coverImageView.image = image;
+            });
+        }];
     }
 }
 
