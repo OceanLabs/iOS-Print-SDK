@@ -84,7 +84,11 @@
         for (NSUInteger i = 0; i < MIN([self.imageViews count], [self.posterPhotos count]); i++) {
             
             OLPrintPhoto *printPhoto = (OLPrintPhoto*)[self.posterPhotos objectAtIndex:i];
-            [printPhoto setImageSize:[(UIView *)self.imageViews[i] frame].size toImageView:self.imageViews[i] cropped:YES];
+            [printPhoto setImageSize:[(UIView *)self.imageViews[i] frame].size cropped:YES completionHandler:^(UIImage *image){
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self.imageViews[i] setImage:image];
+                });
+            }];
         }
     });
 }
