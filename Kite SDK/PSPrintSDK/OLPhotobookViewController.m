@@ -69,7 +69,6 @@ static const CGFloat kBookEdgePadding = 38;
 @property (strong, nonatomic) UIVisualEffectView *visualEffectView;
 @property (assign, nonatomic) BOOL animating;
 @property (assign, nonatomic) BOOL stranded;
-@property (assign, nonatomic) BOOL hasDoneFirstTimeLayout;
 @property (assign, nonatomic) BOOL userHasOpenedBook;
 
 @property (weak, nonatomic) UIImageView *coverImageView;
@@ -77,20 +76,6 @@ static const CGFloat kBookEdgePadding = 38;
 @end
 
 @implementation OLPhotobookViewController
-
-- (void)setCoverPhoto:(OLPrintPhoto *)coverPhoto{
-    _coverPhoto = coverPhoto;
-	if (!coverPhoto){
-        self.coverImageView.image = nil;
-    }
-    if (self.coverImageView){
-        [coverPhoto setImageSize:self.coverImageView.frame.size cropped:YES completionHandler:^(UIImage *image){
-            dispatch_async(dispatch_get_main_queue(), ^{
-                self.coverImageView.image = image;
-            });
-        }];
-    }
-}
 
 -(UIDynamicAnimator*) dynamicAnimator{
     if (!_dynamicAnimator) _dynamicAnimator = [[UIDynamicAnimator alloc] initWithReferenceView:self.view];
@@ -336,8 +321,7 @@ static const CGFloat kBookEdgePadding = 38;
 - (void)viewDidLayoutSubviews{
     [super viewDidLayoutSubviews];
     
-    if (!self.hasDoneFirstTimeLayout && [[[UIDevice currentDevice] systemVersion] floatValue] >= 8){
-        self.hasDoneFirstTimeLayout = YES;
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8){
         if (![self isLandscape]){
             self.containerView.transform = CGAffineTransformMakeTranslation([self xTrasformForBookAtRightEdge], 0);
         }
@@ -430,6 +414,20 @@ static const CGFloat kBookEdgePadding = 38;
     return self.product.productTemplate.sizeCm.width*2 / self.product.productTemplate.sizeCm.height;
 }
 
+- (void)loadCoverPhoto{
+    if (!self.coverPhoto){
+        self.coverImageView.image = nil;
+    }
+    __weak OLPhotobookViewController *welf = self;
+    if (self.coverImageView){
+        [self.coverPhoto setImageSize:self.coverImageView.frame.size cropped:YES completionHandler:^(UIImage *image){
+            dispatch_async(dispatch_get_main_queue(), ^{
+                welf.coverImageView.image = image;
+            });
+        }];
+    }
+}
+
 - (UIViewController *)viewControllerAtIndex:(NSUInteger)index {
     if (index == NSNotFound) {
         return nil;
@@ -452,7 +450,7 @@ static const CGFloat kBookEdgePadding = 38;
     [self.croppingPrintPhoto unloadImage];
     self.croppingPrintPhoto.asset = [OLAsset assetWithImageAsJPEG:croppedImage];
     if (self.croppingPrintPhoto == self.coverPhoto){
-        self.coverPhoto = self.coverPhoto;
+        [self loadCoverPhoto];
     }
     
     [(OLPhotobookPageContentViewController *)[self.pageController.viewControllers objectAtIndex:self.croppingImageIndex] loadImageWithCompletionHandler:NULL];
@@ -837,17 +835,16 @@ static const CGFloat kBookEdgePadding = 38;
             
             OLImageView *coverImageView = [[OLImageView alloc] init];
             self.coverImageView = coverImageView;
+            [self loadCoverPhoto];
             coverImageView.tag = 18;
             coverImageView.contentMode = UIViewContentModeScaleAspectFill;
             coverImageView.clipsToBounds = YES;
             [halfBookCoverImageContainer addSubview:coverImageView];
             coverImageView.translatesAutoresizingMaskIntoConstraints = NO;
-            self.coverPhoto = self.coverPhoto; //this is on purpose
-            coverImageView.userInteractionEnabled = YES;
-            [coverImageView addGestureRecognizer:tap];
-            [coverImageView addGestureRecognizer:longPress];
-            if (!self.editMode){
-                [coverImageView addGestureRecognizer:swipe];
+            if (self.editMode){
+                coverImageView.userInteractionEnabled = YES;
+                [coverImageView addGestureRecognizer:tap];
+                [coverImageView addGestureRecognizer:longPress];
             }
         }
         
@@ -891,7 +888,9 @@ static const CGFloat kBookEdgePadding = 38;
         [halfBookCoverImageContainer addConstraint:[NSLayoutConstraint constraintWithItem:coverImageView attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:halfBookCoverImageContainer attribute:NSLayoutAttributeCenterY multiplier:1 constant:0]];
         
         if (self.editMode){
+            [[halfBookCoverImageContainer viewWithTag:1234] removeFromSuperview];
             UILabel *helpLabel = [[UILabel alloc] init];
+            helpLabel.tag = 1234;
             helpLabel.font = [UIFont systemFontOfSize:11];
             helpLabel.text = NSLocalizedString(@"Tap to edit", @"");
             helpLabel.translatesAutoresizingMaskIntoConstraints = NO;

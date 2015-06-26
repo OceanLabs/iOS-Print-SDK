@@ -116,6 +116,7 @@ UINavigationControllerDelegate>
     
     OLPhotobookViewController *photobook = [self.storyboard instantiateViewControllerWithIdentifier:@"PhotobookViewController"];
     photobook.coverPhoto = self.coverPhoto;
+    [photobook loadCoverPhoto];
     photobook.userSelectedPhotos = bookPhotos;
     photobook.product = self.product;
     photobook.delegate = self.delegate;
@@ -235,6 +236,7 @@ UINavigationControllerDelegate>
     if (self.interactionImageIndex == -1){
         self.coverPhoto = nil;
         self.interactionPhotobook.coverPhoto = nil;
+        [self.interactionPhotobook loadCoverPhoto];
         return;
     }
     
@@ -574,6 +576,7 @@ UINavigationControllerDelegate>
         [self.coverPhoto unloadImage];
         [self.coverPhoto setAsset:[OLAsset assetWithImageAsJPEG:croppedImage]];
         self.interactionPhotobook.coverPhoto = self.coverPhoto;
+        [self.interactionPhotobook loadCoverPhoto];
         
     }
     else{
@@ -755,6 +758,7 @@ UINavigationControllerDelegate>
         for (OLPhotobookViewController *photobook in self.childViewControllers){
             if ([photobook bookClosed]){
                 photobook.coverPhoto = self.coverPhoto;
+                [photobook loadCoverPhoto];
                 break;
             }
         }
@@ -806,6 +810,7 @@ UINavigationControllerDelegate>
         for (OLPhotobookViewController *photobook in self.childViewControllers){
             if ([photobook bookClosed]){
                 photobook.coverPhoto = self.coverPhoto;
+                [photobook loadCoverPhoto];
                 break;
             }
         }

@@ -33,4 +33,6 @@
 @property (assign, nonatomic, readonly) BOOL bookClosed;
 @property (strong, nonatomic) OLPrintPhoto *coverPhoto;
 
+- (void)loadCoverPhoto;
+
 @end
