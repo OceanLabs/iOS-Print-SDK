@@ -646,29 +646,10 @@ UINavigationControllerDelegate>
     }
 }
 
-- (NSArray *)createAssetArray {
-    if (self.addNewPhotosAtIndex == -1){
-        return @[];
-    }
-    NSMutableArray *array = [[NSMutableArray alloc] initWithCapacity:self.userSelectedPhotos.count];
-    for (OLPrintPhoto *object in self.userSelectedPhotos) {
-        [array addObject:object.asset];
-    }
-    return array;
-}
-
 - (void)showCameraRollImagePicker{
     CTAssetsPickerController *picker = [[CTAssetsPickerController alloc] init];
     picker.delegate = self;
     picker.assetsFilter = [ALAssetsFilter allPhotos];
-    NSArray *allAssets = [[self createAssetArray] mutableCopy];
-    NSMutableArray *alAssets = [[NSMutableArray alloc] init];
-    for (id asset in allAssets){
-        if ([asset isKindOfClass:[ALAsset class]]){
-            [alAssets addObject:asset];
-        }
-    }
-    picker.selectedAssets = alAssets;
     [self presentViewController:picker animated:YES completion:nil];
 }
 
@@ -677,7 +658,6 @@ UINavigationControllerDelegate>
     OLFacebookImagePickerController *picker = nil;
     picker = [[OLFacebookImagePickerController alloc] init];
     picker.delegate = self;
-    picker.selected = [self createAssetArray];
     [self presentViewController:picker animated:YES completion:nil];
 #endif
 }
@@ -687,7 +667,6 @@ UINavigationControllerDelegate>
     OLInstagramImagePickerController *picker = nil;
     picker = [[OLInstagramImagePickerController alloc] initWithClientId:[OLKitePrintSDK instagramClientID] secret:[OLKitePrintSDK instagramSecret] redirectURI:[OLKitePrintSDK instagramRedirectURI]];
     picker.delegate = self;
-    picker.selected = [self createAssetArray];
     [self presentViewController:picker animated:YES completion:nil];
 #endif
 }

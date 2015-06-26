@@ -87,7 +87,6 @@
 }
 
 - (void)loadImageWithCompletionHandler:(void(^)(void))handler{
-    __block BOOL calledHandler;
     OLPrintPhoto *printPhoto = [self.userSelectedPhotos objectAtIndex:self.pageIndex];
     if (printPhoto != (id)[NSNull null]){
         self.imageView.image = nil;
@@ -101,8 +100,7 @@
                 else{
                     self.pageShadowRight2.hidden = NO;
                 }
-                if (handler && !calledHandler){
-                    calledHandler = YES;
+                if (handler){
                     handler();
                 }
             });
