@@ -14,6 +14,7 @@
 #import "OLScrollCropViewController.h"
 #import "OLPhotobookPrintJob.h"
 #import "UIView+RoundRect.h"
+#import "OLImageView.h"
 
 #import <MPFlipTransition.h>
 
@@ -79,6 +80,9 @@ static const CGFloat kBookEdgePadding = 38;
 
 - (void)setCoverPhoto:(OLPrintPhoto *)coverPhoto{
     _coverPhoto = coverPhoto;
+	if (!coverPhoto){
+        self.coverImageView.image = nil;
+    }
     if (self.coverImageView){
         [coverPhoto setImageSize:self.coverImageView.frame.size cropped:YES completionHandler:^(UIImage *image){
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -447,6 +451,9 @@ static const CGFloat kBookEdgePadding = 38;
 -(void)scrollCropViewController:(OLScrollCropViewController *)cropper didFinishCroppingImage:(UIImage *)croppedImage{
     [self.croppingPrintPhoto unloadImage];
     self.croppingPrintPhoto.asset = [OLAsset assetWithImageAsJPEG:croppedImage];
+    if (self.croppingPrintPhoto == self.coverPhoto){
+        self.coverPhoto = self.coverPhoto;
+    }
     
     [(OLPhotobookPageContentViewController *)[self.pageController.viewControllers objectAtIndex:self.croppingImageIndex] loadImageWithCompletionHandler:NULL];
     
@@ -586,8 +593,26 @@ static const CGFloat kBookEdgePadding = 38;
     if (self.editMode){
         [self.photobookDelegate photobook:self userDidTapOnImageWithIndex:-1];
     }
+    else if (self.coverPhoto){
+        self.croppingPrintPhoto = self.coverPhoto;
+        UINavigationController *nav = [self.storyboard instantiateViewControllerWithIdentifier:@"CropViewNavigationController"];
+        OLScrollCropViewController *cropVc = (id)nav.topViewController;
+        cropVc.delegate = self;
+        UIImageView *imageView = [(OLPhotobookPageContentViewController *)[[self.pageController viewControllers] firstObject] imageView];
+        cropVc.aspectRatio = imageView.frame.size.height / imageView.frame.size.width;
+        [self.croppingPrintPhoto getImageWithProgress:NULL completion:^(UIImage *image){
+            [cropVc setFullImage:image];
+            [self presentViewController:nav animated:YES completion:NULL];
+        }];
+    }
     else{
         [self openBook:sender];
+    }
+}
+
+- (void)onCoverLongPressRecognized:(UILongPressGestureRecognizer *)sender{
+    if (self.editMode && self.coverPhoto){
+        [self.photobookDelegate photobook:self userDidLongPressOnImageWithIndex:-1 sender:sender];
     }
 }
 
@@ -778,6 +803,7 @@ static const CGFloat kBookEdgePadding = 38;
 -(void) setUpBookCoverView{
     UISwipeGestureRecognizer *swipe = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(openBook:)];
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onCoverTapRecognized:)];
+    UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(onCoverLongPressRecognized:)];
     
     UIView *halfBookCoverImageContainer;
     
@@ -809,7 +835,7 @@ static const CGFloat kBookEdgePadding = 38;
             halfBookCoverImageContainer.layer.shouldRasterize = YES;
             halfBookCoverImageContainer.layer.rasterizationScale = [UIScreen mainScreen].scale;
             
-            UIImageView *coverImageView = [[UIImageView alloc] init];
+            OLImageView *coverImageView = [[OLImageView alloc] init];
             self.coverImageView = coverImageView;
             coverImageView.tag = 18;
             coverImageView.contentMode = UIViewContentModeScaleAspectFill;
@@ -817,6 +843,12 @@ static const CGFloat kBookEdgePadding = 38;
             [halfBookCoverImageContainer addSubview:coverImageView];
             coverImageView.translatesAutoresizingMaskIntoConstraints = NO;
             self.coverPhoto = self.coverPhoto; //this is on purpose
+            coverImageView.userInteractionEnabled = YES;
+            [coverImageView addGestureRecognizer:tap];
+            [coverImageView addGestureRecognizer:longPress];
+            if (!self.editMode){
+                [coverImageView addGestureRecognizer:swipe];
+            }
         }
         
         [halfBookCoverImageContainer removeConstraints:halfBookCoverImageContainer.constraints];
@@ -857,6 +889,16 @@ static const CGFloat kBookEdgePadding = 38;
         [halfBookCoverImageContainer addConstraint:[NSLayoutConstraint constraintWithItem:coverImageView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:halfBookCoverImageContainer attribute:NSLayoutAttributeHeight multiplier:0.9 constant:0]];
         [halfBookCoverImageContainer addConstraint:[NSLayoutConstraint constraintWithItem:halfBookCoverImageContainer attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:coverImageView attribute:NSLayoutAttributeCenterX multiplier:0.97 constant:0]];
         [halfBookCoverImageContainer addConstraint:[NSLayoutConstraint constraintWithItem:coverImageView attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:halfBookCoverImageContainer attribute:NSLayoutAttributeCenterY multiplier:1 constant:0]];
+        
+        if (self.editMode){
+            UILabel *helpLabel = [[UILabel alloc] init];
+            helpLabel.font = [UIFont systemFontOfSize:11];
+            helpLabel.text = NSLocalizedString(@"Tap to edit", @"");
+            helpLabel.translatesAutoresizingMaskIntoConstraints = NO;
+            [halfBookCoverImageContainer insertSubview:helpLabel belowSubview:coverImageView];
+            [halfBookCoverImageContainer addConstraint:[NSLayoutConstraint constraintWithItem:halfBookCoverImageContainer attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:helpLabel attribute:NSLayoutAttributeCenterX multiplier:1 constant:0]];
+            [halfBookCoverImageContainer addConstraint:[NSLayoutConstraint constraintWithItem:halfBookCoverImageContainer attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:helpLabel attribute:NSLayoutAttributeCenterY multiplier:1 constant:0]];
+        }
         
         [self.bookCover viewWithTag:kTagRight].hidden = NO;
     }
