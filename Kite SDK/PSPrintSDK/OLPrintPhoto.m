@@ -57,14 +57,6 @@ static NSOperationQueue *imageOperationQueue;
 
 @implementation OLPrintPhoto
 
-+(NSOperationQueue *) operationQueue{
-    if (!operationQueue){
-        operationQueue = [[NSOperationQueue alloc] init];
-        operationQueue.maxConcurrentOperationCount = 1;
-    }
-    return operationQueue;
-}
-
 +(NSOperationQueue *) imageOperationQueue{
     if (!imageOperationQueue){
         imageOperationQueue = [[NSOperationQueue alloc] init];
@@ -128,7 +120,10 @@ static NSOperationQueue *imageOperationQueue;
                 
                 if (asset.assetType == kOLAssetTypeRemoteImageURL){
                     if (![self isCropped]){
-                        [self getImageWithFullResolution:YES progress:NULL completion:handler];
+                        [self getImageWithFullResolution:YES progress:NULL completion:^(UIImage *image){
+                            self.cachedCroppedThumbnailImage = image;
+                            handler(image);
+                        }];
                     }
                     else{
                         [OLPrintPhoto resizedImageWithPrintPhoto:self size:destSize cropped:cropped progress:nil completion:^(UIImage *image) {
@@ -169,7 +164,10 @@ static NSOperationQueue *imageOperationQueue;
 #ifdef OL_KITE_OFFER_INSTAGRAM
             else if (self.type == kPrintPhotoAssetTypeInstagramPhoto) {
                 if (![self isCropped]){
-                    [self getImageWithFullResolution:YES progress:NULL completion:handler];
+                    [self getImageWithFullResolution:YES progress:NULL completion:^(UIImage *image){
+                        self.cachedCroppedThumbnailImage = image;
+                        handler(image);
+                    }];
                 }
                 else{
                     [OLPrintPhoto resizedImageWithPrintPhoto:self size:destSize cropped:cropped progress:nil completion:^(UIImage *image) {
@@ -182,7 +180,10 @@ static NSOperationQueue *imageOperationQueue;
 #ifdef OL_KITE_OFFER_FACEBOOK
             else if (self.type == kPrintPhotoAssetTypeFacebookPhoto){
                 if (![self isCropped]){
-                    [self getImageWithFullResolution:YES progress:NULL completion:handler];
+                    [self getImageWithFullResolution:YES progress:NULL completion:^(UIImage *image){
+                        self.cachedCroppedThumbnailImage = image;
+                        handler(image);
+                    }];
                 }
                 else{
                     [OLPrintPhoto resizedImageWithPrintPhoto:self size:destSize cropped:cropped progress:nil completion:^(UIImage *image) {
