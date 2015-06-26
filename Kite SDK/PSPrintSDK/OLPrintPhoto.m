@@ -103,17 +103,20 @@ static NSOperationQueue *imageOperationQueue;
     }
 }
 
++ (CGFloat)screenScale{
+    return 2; //Should be [UIScreen mainScreen].scale but the 6 Plus chokes on 3x images.
+}
+
 - (void)setImageSize:(CGSize)destSize cropped:(BOOL)cropped completionHandler:(void(^)(UIImage *image))handler{
     if (self.cachedCroppedThumbnailImage) {
         handler(self.cachedCroppedThumbnailImage);
-        if ((MAX(destSize.height, destSize.width) * 2 <= MIN(self.cachedCroppedThumbnailImage.size.width, self.cachedCroppedThumbnailImage.size.height))){ //Should be times screen scale but the 6 Plus chokes
+        if ((MAX(destSize.height, destSize.width) * [OLPrintPhoto screenScale] <= MIN(self.cachedCroppedThumbnailImage.size.width, self.cachedCroppedThumbnailImage.size.height))){
             return;
         }
     }
         
         if (self.type == kPrintPhotoAssetTypeALAsset) {
             [OLPrintPhoto resizedImageWithPrintPhoto:self size:destSize cropped:cropped progress:nil completion:^(UIImage *image) {
-                self.cachedCroppedThumbnailImage = image;
                 self.cachedCroppedThumbnailImage = image;
                 handler(image);
                 
@@ -129,6 +132,7 @@ static NSOperationQueue *imageOperationQueue;
                     }
                     else{
                         [OLPrintPhoto resizedImageWithPrintPhoto:self size:destSize cropped:cropped progress:nil completion:^(UIImage *image) {
+                            self.cachedCroppedThumbnailImage = image;
                             handler(image);
                         }];
                     }
@@ -169,6 +173,7 @@ static NSOperationQueue *imageOperationQueue;
                 }
                 else{
                     [OLPrintPhoto resizedImageWithPrintPhoto:self size:destSize cropped:cropped progress:nil completion:^(UIImage *image) {
+                        self.cachedCroppedThumbnailImage = image;
                         handler(image);
                     }];
                 }
@@ -181,6 +186,7 @@ static NSOperationQueue *imageOperationQueue;
                 }
                 else{
                     [OLPrintPhoto resizedImageWithPrintPhoto:self size:destSize cropped:cropped progress:nil completion:^(UIImage *image) {
+                        self.cachedCroppedThumbnailImage = image;
                         handler(image);
                     }];
                 }
@@ -309,7 +315,7 @@ static NSOperationQueue *imageOperationQueue;
         @autoreleasepool {
             [printPhoto getImageWithFullResolution:CGSizeEqualToSize(destSize, CGSizeZero) progress:progressHandler completion:^(UIImage *image) {
                 if (destSize.height != 0 && destSize.width != 0){
-                    image = [OLPrintPhoto imageWithImage:image scaledToWidth:destSize.width * 2]; //Should be times screen scale but the 6 Plus chokes
+                    image = [OLPrintPhoto imageWithImage:image scaledToSize:destSize];
                 }
                 
                 if (![printPhoto isCropped] || !cropped){
@@ -326,13 +332,13 @@ static NSOperationQueue *imageOperationQueue;
     [[OLPrintPhoto imageOperationQueue] addOperation:blockOperation];
 }
 
-+(UIImage*)imageWithImage:(UIImage*) sourceImage scaledToWidth:(CGFloat) i_width
++(UIImage*)imageWithImage:(UIImage*) sourceImage scaledToSize:(CGSize) i_size
 {
-    CGFloat oldWidth = sourceImage.size.width;
-    CGFloat scaleFactor = i_width / oldWidth;
+    
+    CGFloat scaleFactor = (MAX(i_size.width, i_size.height) * [OLPrintPhoto screenScale]) / MIN(sourceImage.size.height, sourceImage.size.width);
     
     CGFloat newHeight = sourceImage.size.height * scaleFactor;
-    CGFloat newWidth = oldWidth * scaleFactor;
+    CGFloat newWidth = sourceImage.size.width * scaleFactor;
     
     UIGraphicsBeginImageContext(CGSizeMake(newWidth, newHeight));
     [sourceImage drawInRect:CGRectMake(0, 0, newWidth, newHeight)];
