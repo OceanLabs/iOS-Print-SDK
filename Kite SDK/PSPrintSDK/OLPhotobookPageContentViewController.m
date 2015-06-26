@@ -14,7 +14,9 @@
 
 @property (weak, nonatomic) IBOutlet UIImageView *pageBackground;
 @property (weak, nonatomic) IBOutlet UIImageView *pageShadowRight;
+@property (weak, nonatomic) IBOutlet UIImageView *pageShadowRight2;
 @property (weak, nonatomic) IBOutlet UIImageView *pageShadowLeft;
+@property (weak, nonatomic) IBOutlet UIImageView *pageShadowLeft2;
 
 
 @end
@@ -42,11 +44,16 @@
         self.pageBackground.image = [UIImage imageNamed:@"page-left"];
         self.pageShadowLeft.hidden = NO;
         self.pageShadowRight.hidden = YES;
+        self.pageShadowLeft2.hidden = NO;
+        self.pageShadowRight2.hidden = YES;
+
     }
     else{
         self.pageBackground.image = [UIImage imageNamed:@"page-right"];
         self.pageShadowLeft.hidden = YES;
         self.pageShadowRight.hidden = NO;
+        self.pageShadowLeft2.hidden = YES;
+        self.pageShadowRight2.hidden = NO;
     }
 }
 

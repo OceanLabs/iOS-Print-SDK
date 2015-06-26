@@ -12,7 +12,7 @@
 #import "OLPhotobookPageContentViewController.h"
 #import "OLPrintPhoto.h"
 #import "OLScrollCropViewController.h"
-#import "OLProductPrintJob.h"
+#import "OLPhotobookPrintJob.h"
 #import "UIView+RoundRect.h"
 
 #import <MPFlipTransition.h>
@@ -20,6 +20,8 @@
 static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 static const NSUInteger kTagLeft = 10;
 static const NSUInteger kTagRight = 20;
+static const CGFloat kBookAnimationTime = 0.8;
+static const CGFloat kBookEdgePadding = 38;
 
 @interface OLKitePrintSDK (InternalUtils)
 + (NSString *)userEmail:(UIViewController *)topVC;
@@ -28,12 +30,25 @@ static const NSUInteger kTagRight = 20;
 + (void)checkoutViewControllerForPrintOrder:(OLPrintOrder *)printOrder handler:(void(^)(OLCheckoutViewController *vc))handler;
 @end
 
+@interface MPFlipTransition (Private)
+
+- (void)animateFlip1:(BOOL)isFallingBack fromProgress:(CGFloat)fromProgress toProgress:(CGFloat)toProgress withCompletion:(void (^)(BOOL finished))completion;
+- (void)animateFlip2:(BOOL)isFallingBack fromProgress:(CGFloat)fromProgress withCompletion:(void (^)(BOOL finished))completion;
+- (void)transitionDidComplete:(BOOL)completed;
+- (void)cleanupLayers;
+
+@end
+
 @interface OLPhotobookViewController () <UIPageViewControllerDataSource, UIPageViewControllerDelegate, UIGestureRecognizerDelegate, OLScrollCropViewControllerDelegate>
 
 @property (strong, nonatomic) UIPageViewController *pageController;
+@property (weak, nonatomic) UIPanGestureRecognizer *pageControllerPanGesture;
+@property (weak, nonatomic) IBOutlet UIView *fakeShadowView;
+@property (weak, nonatomic) IBOutlet UIView *openbookView;
 @property (weak, nonatomic) IBOutlet UIView *containerView;
 @property (strong, nonatomic) NSMutableArray *photobookPhotos;
 @property (strong, nonatomic) OLPrintPhoto *editingPrintPhoto;
+@property (weak, nonatomic) IBOutlet UIImageView *bookImageView;
 @property (assign, nonatomic) NSInteger editingPageIndex;
 @property (strong, nonatomic) NSLayoutConstraint *centerXCon;
 @property (strong, nonatomic) NSLayoutConstraint *widthCon;
@@ -50,6 +65,10 @@ static const NSUInteger kTagRight = 20;
 @property (weak, nonatomic) IBOutlet UIView *pagesLabelContainer;
 @property (weak, nonatomic) IBOutlet UILabel *pagesLabel;
 @property (strong, nonatomic) UIVisualEffectView *visualEffectView;
+@property (assign, nonatomic) BOOL animating;
+@property (assign, nonatomic) BOOL stranded;
+@property (assign, nonatomic) BOOL hasDoneFirstTimeLayout;
+@property (assign, nonatomic) BOOL userHasOpenedBook;
 
 @end
 
@@ -63,7 +82,6 @@ static const NSUInteger kTagRight = 20;
 -(UIDynamicItemBehavior*) inertiaBehavior{
     if (!_inertiaBehavior){
         _inertiaBehavior = [[UIDynamicItemBehavior alloc] init];
-        [self.dynamicAnimator addBehavior:_inertiaBehavior];
     }
     return _inertiaBehavior;
 }
@@ -84,15 +102,15 @@ static const NSUInteger kTagRight = 20;
     [self.pageController setViewControllers:@[[self viewControllerAtIndex:0], [self viewControllerAtIndex:1]] direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
     
     [self addChildViewController:self.pageController];
-    [self.containerView addSubview:self.pageController.view];
+    [self.openbookView addSubview:self.pageController.view];
     
     self.pageController.view.translatesAutoresizingMaskIntoConstraints = NO;
     
-    [self.containerView addConstraint:[NSLayoutConstraint constraintWithItem:self.pageController.view attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self.containerView attribute:NSLayoutAttributeHeight multiplier:1 - (2 * .021573604) constant:0]];
-    [self.containerView addConstraint:[NSLayoutConstraint constraintWithItem:self.pageController.view attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.containerView attribute:NSLayoutAttributeCenterY multiplier:1 constant:0]];
+    [self.openbookView addConstraint:[NSLayoutConstraint constraintWithItem:self.pageController.view attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self.openbookView attribute:NSLayoutAttributeHeight multiplier:1 - (2 * .021573604) constant:0]];
+    [self.openbookView addConstraint:[NSLayoutConstraint constraintWithItem:self.pageController.view attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.openbookView attribute:NSLayoutAttributeCenterY multiplier:1 constant:0]];
     
-    [self.containerView addConstraint:[NSLayoutConstraint constraintWithItem:self.pageController.view attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:self.containerView attribute:NSLayoutAttributeWidth multiplier:1 - (2 * .031951641) constant:0]];
-    [self.containerView addConstraint:[NSLayoutConstraint constraintWithItem:self.pageController.view attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.containerView attribute:NSLayoutAttributeCenterX multiplier:1 constant:0]];
+    [self.openbookView addConstraint:[NSLayoutConstraint constraintWithItem:self.pageController.view attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:self.openbookView attribute:NSLayoutAttributeWidth multiplier:1 - (2 * .031951641) constant:0]];
+    [self.openbookView addConstraint:[NSLayoutConstraint constraintWithItem:self.pageController.view attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.openbookView attribute:NSLayoutAttributeCenterX multiplier:1 constant:0]];
     
     CGFloat bookAspectRatio = [self productAspectRatio];
     
@@ -102,14 +120,14 @@ static const NSUInteger kTagRight = 20;
     self.centerXCon = [NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.containerView.superview attribute:NSLayoutAttributeCenterX multiplier:1 constant:0];
     if (self.view.frame.size.width > self.view.frame.size.height){
         [self.containerView.superview addConstraint:self.centerXCon];
-        self.widthCon = [NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationLessThanOrEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:self.view.frame.size.width - 20];
+        self.widthCon = [NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationLessThanOrEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:self.view.frame.size.width - 20 - kBookEdgePadding * 2];
     }
     else{
-        self.widthCon = [NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationLessThanOrEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:self.view.frame.size.width * 1.9];
+        self.widthCon = [NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationLessThanOrEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:(self.view.frame.size.width - kBookEdgePadding * 2) * 1.9];
     }
     
     [self.view addConstraint:self.widthCon];
-    self.widthCon2 = [NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:self.view.frame.size.width * 1.9];
+    self.widthCon2 = [NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:(self.view.frame.size.width - kBookEdgePadding * 2) * 1.9];
     self.widthCon2.priority = UILayoutPriorityDefaultHigh;
     [self.view addConstraint:self.widthCon2];
     
@@ -135,7 +153,7 @@ static const NSUInteger kTagRight = 20;
     
     if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0){
         UIVisualEffect *blurEffect;
-        blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleDark];
+        blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
         
         self.visualEffectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
         UIView *view = self.visualEffectView;
@@ -154,22 +172,159 @@ static const NSUInteger kTagRight = 20;
         }
         
         [view.superview addConstraints:con];
-        
     }
     else{
         self.pagesLabelContainer.backgroundColor = [UIColor darkGrayColor];
+        
+        [self.containerView.superview addConstraint:[NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationLessThanOrEqual toItem:self.containerView.superview attribute:NSLayoutAttributeRight multiplier:1 constant:0]];
+        [self.containerView.superview addConstraint:[NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationGreaterThanOrEqual toItem:self.containerView.superview attribute:NSLayoutAttributeLeft multiplier:1 constant:0]];
+        if ([self productAspectRatio] > 1){ //Landscape book REALLY doesn't like the following, only do it for portrait.
+            [self.containerView.superview addConstraint:[NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.containerView.superview attribute:NSLayoutAttributeCenterX multiplier:1 constant:0]];
+        }
+        
+        UINavigationBar *navigationBar = [[UINavigationBar alloc] init];
+        [self.view addSubview:navigationBar];
+        UIView *view = navigationBar;
+        
+        view.translatesAutoresizingMaskIntoConstraints = NO;
+        NSDictionary *views = NSDictionaryOfVariableBindings(view);
+        NSMutableArray *con = [[NSMutableArray alloc] init];
+        
+        NSArray *visuals = @[@"H:|-0-[view]-0-|", @"V:|-0-[view(44)]"];
+        
+        for (NSString *visual in visuals) {
+            [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+        }
+        
+        [view.superview addConstraints:con];
+        
+        UIButton *backButton = [[UIButton alloc] initWithFrame:CGRectMake(5, 0, 50, 44)];
+        [backButton setTitle:NSLocalizedString(@"Back", @"") forState:UIControlStateNormal];
+        [backButton setTitleColor:self.view.tintColor forState:UIControlStateNormal];
+        [backButton addTarget:self action:@selector(ios7Back) forControlEvents:UIControlEventTouchUpInside];
+        [navigationBar addSubview:backButton];
+        
+        UIButton *nextButton = [[UIButton alloc] initWithFrame:CGRectMake(MAX(self.view.frame.size.width, self.view.frame.size.height) - 55, 0, 50, 44)];
+        [nextButton setTitle:NSLocalizedString(@"Next", @"") forState:UIControlStateNormal];
+        [nextButton setTitleColor:self.view.tintColor forState:UIControlStateNormal];
+        [nextButton addTarget:self action:@selector(onButtonNextClicked:) forControlEvents:UIControlEventTouchUpInside];
+        [navigationBar addSubview:nextButton];
     }
     
-    [self.pagesLabelContainer makeRoundRect];
+    [self.pagesLabelContainer makeRoundRectWithRadius:3];
     
-    self.pagesLabel.text = [NSString stringWithFormat:@"Pages %d-%d of %ld", 1, 2, (long)self.product.quantityToFulfillOrder];
+    self.pagesLabel.text = [NSString stringWithFormat:@"%d-%d of %ld", 1, 2, (long)self.product.quantityToFulfillOrder];
     
-    self.centerYCon = [NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.containerView.superview attribute:NSLayoutAttributeCenterY multiplier:1 constant:([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height)/2.0];
+    CGFloat yOffset = ([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height)/2.0;
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8){
+        yOffset = 22;
+    }
+    self.centerYCon = [NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.containerView.superview attribute:NSLayoutAttributeCenterY multiplier:1 constant:yOffset];
     [self.containerView.superview addConstraint:self.centerYCon];
+    
+    self.containerView.layer.shadowOffset = CGSizeMake(-10, 10);
+    self.containerView.layer.shadowRadius = 5;
+    self.containerView.layer.shadowOpacity = 0.25;
+    self.containerView.layer.shouldRasterize = YES;
+    self.containerView.layer.rasterizationScale = [UIScreen mainScreen].scale;
+    
+    self.containerView.layer.shadowOffset = CGSizeMake(-10, 10);
+    self.containerView.layer.shadowRadius = 5;
+    self.containerView.layer.shadowOpacity = 0.25;
+    self.containerView.layer.shouldRasterize = YES;
+    self.containerView.layer.rasterizationScale = [UIScreen mainScreen].scale;
+    
+    [self.bookImageView makeRoundRectWithRadius:3];
+    
+    for (UIGestureRecognizer *gesture in self.pageController.gestureRecognizers){
+        gesture.delegate = self;
+        if ([gesture isKindOfClass:[UIPanGestureRecognizer class]]){
+            self.pageControllerPanGesture = (UIPanGestureRecognizer *)gesture;
+        }
+    }
+    
+    [self setUpBookCoverView];
+    self.bookCover.hidden = NO;
+    self.containerView.layer.shadowOpacity = 0;
+    
+    UIView *closedPage = [self.bookCover viewWithTag:kTagRight];
+    closedPage.layer.shadowOffset = CGSizeMake(-10, 10);
+    closedPage.layer.shadowRadius = 5;
+    closedPage.layer.shadowOpacity = 0.25;
+    closedPage.layer.shouldRasterize = YES;
+    closedPage.layer.rasterizationScale = [UIScreen mainScreen].scale;
+    
+    self.containerView.layer.shadowOpacity = 0.0;
+    self.pagesLabelContainer.alpha = 0;
+    self.bookClosed = YES;
+    
+    self.openbookView.hidden = YES;
+    
+    [self.fakeShadowView makeRoundRectWithRadius:3];
+}
+
+- (void)ios7Back{
+    [self dismissViewControllerAnimated:YES completion:NULL];
+}
+
+- (BOOL)prefersStatusBarHidden{
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8){
+        return YES;
+    }
+    else{
+        return [super prefersStatusBarHidden];
+    }
+}
+
+- (void)viewDidLayoutSubviews{
+    [super viewDidLayoutSubviews];
+    
+    if (!self.hasDoneFirstTimeLayout){
+        self.hasDoneFirstTimeLayout = YES;
+        if (![self isLandscape]){
+            self.containerView.transform = CGAffineTransformMakeTranslation([self xTrasformForBookAtRightEdge], 0);
+        }
+    }
+}
+
+- (BOOL)isLandscape{
+    return self.view.frame.size.width > self.view.frame.size.height;
 }
 
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
+    
+    if (self.bookClosed){
+        [self tease];
+    }
+}
+
+- (void)tease{
+    if (self.animating || self.userHasOpenedBook){
+        return;
+    }
+    
+    self.animating = YES;
+    MPFlipStyle style = MPFlipStyleDefault;
+    MPFlipTransition *flipTransition = [[MPFlipTransition alloc] initWithSourceView:self.bookCover destinationView:self.openbookView duration:0.5 timingCurve:UIViewAnimationCurveEaseOut completionAction:MPTransitionActionNone];
+    flipTransition.style = style;
+    
+    [flipTransition buildLayers];
+    CGFloat maxProgress = 0.5;
+    [flipTransition setRubberbandMaximumProgress:maxProgress/2.0];
+    [flipTransition setDuration:[flipTransition duration] * 1 / maxProgress]; // necessary to arrive at the dersired total duration
+    [flipTransition animateFlip1:NO fromProgress:0 toProgress:maxProgress withCompletion:^(BOOL finished) {
+        flipTransition.timingCurve = UIViewAnimationCurveEaseIn;
+        [flipTransition animateFlip2:YES fromProgress:maxProgress withCompletion:^(BOOL finished) {
+            [flipTransition cleanupLayers];
+            [flipTransition transitionDidComplete:NO];
+            self.animating = NO;
+            
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+                [self tease];
+            });
+        }];
+    }];
 }
 
 - (void)onBackButtonTapped{
@@ -178,16 +333,17 @@ static const NSUInteger kTagRight = 20;
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator{
     [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+    self.stranded = NO;
     self.containerView.transform = CGAffineTransformIdentity;
     [self.containerView.superview removeConstraint:self.centerYCon];
     [self.view removeConstraint:self.widthCon];
     if (size.width > size.height){
         [self.view addConstraint:self.centerXCon];
-        self.widthCon = [NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationLessThanOrEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:size.width - 20];
+        self.widthCon = [NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationLessThanOrEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:size.width - 20 - kBookEdgePadding * 2];
     }
     else{
         [self.view removeConstraint:self.centerXCon];
-        self.widthCon = [NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationLessThanOrEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:size.width * 1.9];
+        self.widthCon = [NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationLessThanOrEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:(size.width - kBookEdgePadding * 2)* 1.9];
     }
     [self.view addConstraint:self.widthCon];
     
@@ -195,18 +351,18 @@ static const NSUInteger kTagRight = 20;
         [self setUpBookCoverView];
         if (size.width > size.height){
             self.containerView.transform = CGAffineTransformIdentity;
-            self.bookCover.transform = CGAffineTransformIdentity;
         }
         else{
             if (self.bookClosed && [self isBookAtStart]){
                 self.containerView.transform = CGAffineTransformMakeTranslation([self xTrasformForBookAtRightEdge], 0);
-                self.bookCover.transform = CGAffineTransformMakeTranslation([self xTrasformForBookAtRightEdge], 0);
             }
         }
         
         self.centerYCon = [NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.containerView.superview attribute:NSLayoutAttributeCenterY multiplier:1 constant:([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height)/2.0];
         [self.containerView.superview addConstraint:self.centerYCon];
-    }completion:NULL];
+    }completion:^(id<UIViewControllerTransitionCoordinator> context){
+        self.containerView.layer.shadowOpacity = 0;
+    }];
 }
 
 - (CGFloat) productAspectRatio{
@@ -266,6 +422,10 @@ static const NSUInteger kTagRight = 20;
 
 - (NSInteger)presentationIndexForPageViewController:(UIPageViewController *)pageViewController {
     return 2;
+}
+
+- (void)pageViewController:(UIPageViewController *)pageViewController willTransitionToViewControllers:(NSArray *)pendingViewControllers{
+    self.animating = YES;
 }
 
 #pragma mark - Checkout
@@ -330,7 +490,7 @@ static const NSUInteger kTagRight = 20;
                             @"uid": [[[UIDevice currentDevice] identifierForVendor] UUIDString],
                             @"app_version": [NSString stringWithFormat:@"Version: %@ (%@)", appVersion, buildNumber]
                             };
-    OLProductPrintJob* printJob = [[OLProductPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:photoAssets];
+    OLPhotobookPrintJob* printJob = [[OLPhotobookPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:photoAssets];
     for (id<OLPrintJob> job in printOrder.jobs){
         [printOrder removePrintJob:job];
     }
@@ -342,7 +502,15 @@ static const NSUInteger kTagRight = 20;
         vc.userPhone = [OLKitePrintSDK userPhone:self];
         vc.kiteDelegate = [OLKitePrintSDK kiteDelegate:self];
         
-        [self.navigationController pushViewController:vc animated:YES];
+        if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8){
+            UIViewController *presenting = self.presentingViewController;
+            [self dismissViewControllerAnimated:YES completion:^{
+                [(UINavigationController *)[presenting.childViewControllers firstObject] pushViewController:vc animated:YES];
+            }];
+        }
+        else{
+            [self.navigationController pushViewController:vc animated:YES];
+        }
     }];
 }
 
@@ -382,17 +550,22 @@ static const NSUInteger kTagRight = 20;
 }
 
 - (void)onPanGestureRecognized:(UIPanGestureRecognizer *)recognizer{
+    if (self.animating){
+        return;
+    }
     CGPoint translation = [recognizer translationInView:self.containerView];
     BOOL draggingLeft = translation.x < 0;
     BOOL draggingRight = translation.x > 0;
     
     if (([self isContainerViewAtRightEdge:NO] && draggingLeft) || ([self isContainerViewAtLeftEdge:NO] && draggingRight)){
-        if (draggingLeft && [self isBookAtEnd] && recognizer.state == UIGestureRecognizerStateBegan) {
+        if (draggingLeft && [self isBookAtEnd]) {
             recognizer.enabled = NO;
             recognizer.enabled = YES;
             [self closeBookBack];
         }
-        else if (draggingRight && [self isBookAtStart] && recognizer.state == UIGestureRecognizerStateBegan) {
+        else if (draggingRight && [self isBookAtStart]) {
+            recognizer.enabled = NO;
+            recognizer.enabled = YES;
             [self closeBookFront];
         }
         return;
@@ -402,14 +575,20 @@ static const NSUInteger kTagRight = 20;
         return;
     }
     
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8){
+        return;
+    }
+    
     if (!(([self isContainerViewAtLeftEdge:NO] && draggingRight) || ([self isContainerViewAtRightEdge:NO] && draggingLeft))){
         
         self.containerView.transform = CGAffineTransformTranslate(self.containerView.transform, translation.x, 0);
         [recognizer setTranslation:CGPointMake(0, 0) inView:self.containerView];
         
         if ([self isContainerViewAtRightEdge:NO]){
+            recognizer.enabled = NO;
+            recognizer.enabled = YES;
             [UIView animateWithDuration:0.1 delay:0 options:UIViewAnimationOptionBeginFromCurrentState  animations:^{
-                self.containerView.transform = CGAffineTransformMakeTranslation(-self.containerView.frame.size.width + self.view.frame.size.width, 0);
+                self.containerView.transform = CGAffineTransformMakeTranslation(-self.containerView.frame.size.width + self.view.frame.size.width - kBookEdgePadding * 2, 0);
             } completion:NULL];
         }
         else if ([self isContainerViewAtLeftEdge:NO]){
@@ -422,25 +601,41 @@ static const NSUInteger kTagRight = 20;
     if (recognizer.state == UIGestureRecognizerStateEnded){
         self.containerView.frame = CGRectMake(self.containerView.frame.origin.x + self.containerView.transform.tx, self.containerView.frame.origin.y, self.containerView.frame.size.width, self.containerView.frame.size.height);
         self.containerView.transform = CGAffineTransformIdentity;
+        [self.dynamicAnimator addBehavior:self.inertiaBehavior];
         [self.inertiaBehavior addItem:self.containerView];
         [self.inertiaBehavior addLinearVelocity:CGPointMake([recognizer velocityInView:self.containerView].x, 0) forItem:self.containerView];
+        self.inertiaBehavior.resistance = 3;
         __weak OLPhotobookViewController *welf = self;
+        self.animating = YES;
+        self.stranded = NO;
         [self.inertiaBehavior setAction:^{
             if ([welf isContainerViewAtRightEdge:YES] ){
+                welf.animating = NO;
                 [welf.inertiaBehavior removeItem:welf.containerView];
+                [welf.dynamicAnimator removeBehavior:welf.inertiaBehavior];
                 
-                welf.containerView.transform = CGAffineTransformMakeTranslation(-welf.containerView.frame.size.width + welf.view.frame.size.width, 0);
+                welf.containerView.transform = CGAffineTransformMakeTranslation(-welf.containerView.frame.size.width + welf.view.frame.size.width - kBookEdgePadding * 2, 0);
                 
                 [welf.view setNeedsLayout];
                 [welf.view layoutIfNeeded];
+                welf.stranded = NO;
             }
             else if ([welf isContainerViewAtLeftEdge:YES] && [self.inertiaBehavior linearVelocityForItem:welf.containerView].x > 0){
+                welf.animating = NO;
                 [welf.inertiaBehavior removeItem:welf.containerView];
+                [welf.dynamicAnimator removeBehavior:welf.inertiaBehavior];
                 
                 welf.containerView.transform = CGAffineTransformIdentity;
                 
                 [welf.view setNeedsLayout];
                 [welf.view layoutIfNeeded];
+                welf.stranded = NO;
+            }
+            
+            else if ([welf.inertiaBehavior linearVelocityForItem:welf.containerView].x < 15 && [welf.inertiaBehavior linearVelocityForItem:welf.containerView].x > -15 && !welf.stranded){
+                welf.animating = NO;
+                [welf.inertiaBehavior removeItem:welf.containerView];
+                welf.stranded = YES;
             }
         }];
     }
@@ -450,7 +645,6 @@ static const NSUInteger kTagRight = 20;
     if ([gestureRecognizer isKindOfClass:[UITapGestureRecognizer class]] || [otherGestureRecognizer isKindOfClass:[UITapGestureRecognizer class]]){
         return NO;
     }
-    
     else if ([gestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]] && [otherGestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]]){
         CGPoint translation = [(UIPanGestureRecognizer *)gestureRecognizer translationInView:self.containerView];
         BOOL draggingLeft = translation.x < 0;
@@ -463,17 +657,31 @@ static const NSUInteger kTagRight = 20;
     return YES;
 }
 
+- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer{
+    if (gestureRecognizer == self.pageControllerPanGesture){
+        CGPoint translation = [(UIPanGestureRecognizer *)gestureRecognizer translationInView:self.containerView];
+        BOOL draggingLeft = translation.x < 0;
+        BOOL draggingRight = translation.x > 0;
+        if (draggingLeft && [self isBookAtEnd]){
+            return NO;
+        }
+        if (draggingRight && [self isBookAtStart]){
+            return NO;
+        }
+    }
+    return !self.animating;
+}
+
 #pragma mark - Book related methods
 
 - (void)pageViewController:(UIPageViewController *)pageViewController didFinishAnimating:(BOOL)finished previousViewControllers:(NSArray *)previousViewControllers transitionCompleted:(BOOL)completed{
+    self.animating = NO;
     if (completed){
         OLPhotobookPageContentViewController *vc1 = [pageViewController.viewControllers firstObject];
         OLPhotobookPageContentViewController *vc2 = [pageViewController.viewControllers lastObject];
-        self.pagesLabel.text = [NSString stringWithFormat:@"Pages %ld-%ld of %ld", (long)vc1.pageIndex+1, (long)vc2.pageIndex+1, (long)self.product.quantityToFulfillOrder];
-        //        self.leftPageLabel.text = [NSString stringWithFormat:@"%ld", (long)vc1.pageIndex+1];
-        //        self.rightPageLabel.text = [NSString stringWithFormat:@"%ld", (long)vc2.pageIndex+1];
+        self.pagesLabel.text = [NSString stringWithFormat:@"%ld-%ld of %ld", (long)vc1.pageIndex+1, (long)vc2.pageIndex+1, (long)self.product.quantityToFulfillOrder];
         
-        [UIView animateWithDuration:0.2 animations:^{
+        [UIView animateWithDuration:kBookAnimationTime/2.0 animations:^{
             if ([(OLPhotobookPageContentViewController *)[previousViewControllers firstObject] pageIndex] < vc1.pageIndex){
                 self.containerView.transform = CGAffineTransformIdentity;
             }
@@ -485,41 +693,98 @@ static const NSUInteger kTagRight = 20;
 }
 
 -(void) setUpBookCoverView{
-    self.bookCover.hidden = NO;
-    
     UISwipeGestureRecognizer *swipe = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(openBook:)];
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(openBook:)];
     
-    UIImageView *halfBookCoverImage;
+    UIView *halfBookCoverImageContainer;
     
     if ([self isBookAtStart]){
-        halfBookCoverImage = (UIImageView *)[self.bookCover viewWithTag:kTagRight];
+        halfBookCoverImageContainer = [self.bookCover viewWithTag:kTagRight];
         [self.bookCover viewWithTag:kTagLeft].hidden = YES;
-        if (!halfBookCoverImage){
-            halfBookCoverImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"book-cover-right"]];
-            halfBookCoverImage.tag = kTagRight;
+        if (!halfBookCoverImageContainer){
+            halfBookCoverImageContainer = [[UIView alloc] init];
+            halfBookCoverImageContainer.tag = kTagRight;
             swipe.direction = UISwipeGestureRecognizerDirectionLeft;
-            [self.bookCover addSubview:halfBookCoverImage];
-            halfBookCoverImage.userInteractionEnabled = YES;
-            [halfBookCoverImage addGestureRecognizer:tap];
-            [halfBookCoverImage addGestureRecognizer:swipe];
+            
+            UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:[self productAspectRatio]/2.0 < 1 ? @"book-cover-right" : @"book-cover-right-landscape"]];
+            imageView.contentMode = UIViewContentModeScaleAspectFill;
+            [imageView makeRoundRectWithRadius:3];
+            [halfBookCoverImageContainer addSubview:imageView];
+            
+            [self.bookCover addSubview:halfBookCoverImageContainer];
+            halfBookCoverImageContainer.userInteractionEnabled = YES;
+            [halfBookCoverImageContainer addGestureRecognizer:tap];
+            [halfBookCoverImageContainer addGestureRecognizer:swipe];
+            
+            halfBookCoverImageContainer.layer.shadowOffset = CGSizeMake(-10, 10);
+            halfBookCoverImageContainer.layer.shadowRadius = 5;
+            halfBookCoverImageContainer.layer.shadowOpacity = 0.0;
+            halfBookCoverImageContainer.layer.shouldRasterize = YES;
+            halfBookCoverImageContainer.layer.rasterizationScale = [UIScreen mainScreen].scale;
         }
-        halfBookCoverImage.frame = CGRectMake(self.bookCover.frame.size.width / 2.0, 0, self.bookCover.frame.size.width / 2.0, self.bookCover.frame.size.height);
+        
+        [halfBookCoverImageContainer removeConstraints:halfBookCoverImageContainer.constraints];
+        UIView *view = halfBookCoverImageContainer;
+        view.translatesAutoresizingMaskIntoConstraints = NO;
+        NSDictionary *views = NSDictionaryOfVariableBindings(view);
+        NSMutableArray *con = [[NSMutableArray alloc] init];
+        
+        NSArray *visuals = @[@"H:[view]-0-|",
+                             @"V:|-0-[view]-0-|"];
+        
+        
+        for (NSString *visual in visuals) {
+            [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+        }
+        
+        [view.superview addConstraints:con];
+        [view.superview addConstraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:view.superview attribute:NSLayoutAttributeWidth multiplier:0.5 constant:1]];
+        
+        view = [[halfBookCoverImageContainer subviews] firstObject];
+        [view removeConstraints:view.constraints];
+        view.translatesAutoresizingMaskIntoConstraints = NO;
+        views = NSDictionaryOfVariableBindings(view);
+        con = [[NSMutableArray alloc] init];
+        
+        visuals = @[@"H:|-0-[view]-0-|",
+                             @"V:|-0-[view]-0-|"];
+        
+        
+        for (NSString *visual in visuals) {
+            [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+        }
+        
+        [view.superview addConstraints:con];
+
         [self.bookCover viewWithTag:kTagRight].hidden = NO;
     }
     else{
         [self.bookCover viewWithTag:kTagRight].hidden = YES;
-        halfBookCoverImage = (UIImageView *)[self.bookCover viewWithTag:kTagLeft];
-        if (!halfBookCoverImage){
-            halfBookCoverImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"book-cover-left"]];
-            halfBookCoverImage.tag = kTagLeft;
+        halfBookCoverImageContainer = [self.bookCover viewWithTag:kTagLeft];
+        if (!halfBookCoverImageContainer){
+            halfBookCoverImageContainer = [[UIView alloc] init];
+            halfBookCoverImageContainer.tag = kTagLeft;
             swipe.direction = UISwipeGestureRecognizerDirectionRight;
-            [self.bookCover addSubview:halfBookCoverImage];
-            halfBookCoverImage.userInteractionEnabled = YES;
-            [halfBookCoverImage addGestureRecognizer:tap];
-            [halfBookCoverImage addGestureRecognizer:swipe];
+            [self.bookCover addSubview:halfBookCoverImageContainer];
+            halfBookCoverImageContainer.userInteractionEnabled = YES;
+            [halfBookCoverImageContainer addGestureRecognizer:tap];
+            [halfBookCoverImageContainer addGestureRecognizer:swipe];
+            
+            UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:[self productAspectRatio]/2.0 < 1 ? @"book-cover-left" : @"book-cover-left-landscape"]];
+            imageView.contentMode = UIViewContentModeScaleAspectFill;
+            [imageView makeRoundRectWithRadius:3];
+            [halfBookCoverImageContainer addSubview:imageView];
+            
+            halfBookCoverImageContainer.layer.shadowOffset = CGSizeMake(-10, 10);
+            halfBookCoverImageContainer.layer.shadowRadius = 5;
+            halfBookCoverImageContainer.layer.shadowOpacity = 0.0;
+            halfBookCoverImageContainer.layer.shouldRasterize = YES;
+            halfBookCoverImageContainer.layer.rasterizationScale = [UIScreen mainScreen].scale;
         }
-        halfBookCoverImage.frame = CGRectMake(0, 0, self.bookCover.frame.size.width / 2.0, self.bookCover.frame.size.height);
+        
+        
+        halfBookCoverImageContainer.frame = CGRectMake(0, 0, self.bookCover.frame.size.width / 2.0, self.bookCover.frame.size.height);
+        [[[halfBookCoverImageContainer subviews] firstObject] setFrame:halfBookCoverImageContainer.frame];
         [self.bookCover viewWithTag:kTagLeft].hidden = NO;
     }
 }
@@ -535,15 +800,58 @@ static const NSUInteger kTagRight = 20;
 }
 
 - (void)openBook:(UIGestureRecognizer *)sender{
-    [UIView animateWithDuration:0.4 animations:^{
-        self.bookCover.transform = CGAffineTransformIdentity;
+    if (self.animating){
+        return;
+    }
+    self.animating = YES;
+    self.userHasOpenedBook = YES;
+    
+    [UIView animateWithDuration:kBookAnimationTime animations:^{
         self.containerView.transform = CGAffineTransformIdentity;
     }completion:^(BOOL completed){
         MPFlipStyle style = sender.view.tag == kTagRight ? MPFlipStyleDefault : MPFlipStyleDirectionBackward;
-        [MPFlipTransition transitionFromView:self.bookCover toView:self.containerView duration:0.4 style:style transitionAction:MPTransitionActionShowHide completion:^(BOOL finished){
-            self.bookCover.hidden = YES;
+        MPFlipTransition *flipTransition = [[MPFlipTransition alloc] initWithSourceView:self.bookCover destinationView:self.openbookView duration:kBookAnimationTime timingCurve:UIViewAnimationCurveEaseInOut completionAction:MPTransitionActionNone];
+        flipTransition.style = style;
+        [flipTransition perform:^(BOOL finished){
             self.bookClosed = NO;
-            self.pagesLabelContainer.hidden = NO;
+            [UIView animateWithDuration:kBookAnimationTime/2.0 animations:^{
+                self.pagesLabelContainer.alpha = 1;
+            }];
+            
+            self.openbookView.hidden = NO;
+            
+            //Fade out shadow of the half-book.
+            UIView *closedPage = [self.bookCover viewWithTag:sender.view.tag];
+            CABasicAnimation *showAnim = [CABasicAnimation animationWithKeyPath:@"shadowOpacity"];
+            showAnim.fromValue = [NSNumber numberWithFloat:0.25];
+            showAnim.toValue = [NSNumber numberWithFloat:0.0];
+            showAnim.duration = kBookAnimationTime/4.0;
+            showAnim.removedOnCompletion = NO;
+            showAnim.fillMode = kCAFillModeForwards;
+            [closedPage.layer addAnimation:showAnim forKey:@"shadowOpacity"];
+            
+            //Fade in shadow of the book cover
+            CABasicAnimation *hideAnim = [CABasicAnimation animationWithKeyPath:@"shadowOpacity"];
+            hideAnim.fromValue = [NSNumber numberWithFloat:0.0];
+            hideAnim.toValue = [NSNumber numberWithFloat:0.25];
+            hideAnim.duration = kBookAnimationTime/4.0;
+            hideAnim.removedOnCompletion = NO;
+            hideAnim.fillMode = kCAFillModeForwards;
+            [self.containerView.layer addAnimation:hideAnim forKey:@"shadowOpacity"];
+            
+            CABasicAnimation *cornerAnim = [CABasicAnimation animationWithKeyPath:@"cornerRadius"];
+            cornerAnim.fromValue = @3;
+            cornerAnim.toValue = @0;
+            cornerAnim.duration = kBookAnimationTime/4.0;
+            cornerAnim.removedOnCompletion = NO;
+            cornerAnim.fillMode = kCAFillModeForwards;
+            [self.fakeShadowView.layer addAnimation:cornerAnim forKey:@"cornerRadius"];
+            
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, kBookAnimationTime/4.0 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+                self.animating = NO;
+                self.containerView.layer.shadowOpacity = 0.25;
+                self.bookCover.hidden = YES;
+            });
         }];
     }];
     
@@ -551,54 +859,132 @@ static const NSUInteger kTagRight = 20;
 }
 
 - (void)closeBookFront{
+    if (self.animating){
+        return;
+    }
+    self.animating = YES;
     [self setUpBookCoverView];
-    [MPFlipTransition transitionFromView:self.containerView toView:self.bookCover duration:0.4 style:MPFlipStyleDirectionBackward transitionAction:MPTransitionActionShowHide completion:^(BOOL finished){
+    self.bookCover.hidden = NO;
+    
+    //Fade in shadow of the half-book.
+    UIView *closedPage = [self.bookCover viewWithTag:kTagRight];
+    CABasicAnimation *showAnim = [CABasicAnimation animationWithKeyPath:@"shadowOpacity"];
+    showAnim.fromValue = [NSNumber numberWithFloat:0.0];
+    showAnim.toValue = [NSNumber numberWithFloat:0.25];
+    showAnim.duration = kBookAnimationTime/4.0;
+    [closedPage.layer addAnimation:showAnim forKey:@"shadowOpacity"];
+    closedPage.layer.shadowOpacity = 0.25;
+    
+    //Fade out shadow of the book cover
+    CABasicAnimation *hideAnim = [CABasicAnimation animationWithKeyPath:@"shadowOpacity"];
+    hideAnim.fromValue = [NSNumber numberWithFloat:0.25];
+    hideAnim.toValue = [NSNumber numberWithFloat:0.0];
+    hideAnim.duration = kBookAnimationTime/4.0;
+    [self.containerView.layer addAnimation:hideAnim forKey:@"shadowOpacity"];
+    self.containerView.layer.shadowOpacity = 0.0;
+    
+    [UIView animateWithDuration:kBookAnimationTime/8.0 animations:^{
+        self.pagesLabelContainer.alpha = 0;
+    }];
+    
+    MPFlipTransition *flipTransition = [[MPFlipTransition alloc] initWithSourceView:self.openbookView destinationView:self.bookCover duration:kBookAnimationTime timingCurve:UIViewAnimationCurveEaseInOut completionAction:MPTransitionActionShowHide];
+    flipTransition.flippingPageShadowOpacity = 0;
+    flipTransition.style = MPFlipStyleDirectionBackward;
+    [flipTransition perform:^(BOOL finished){
+        self.animating = NO;
+        
+        CABasicAnimation *cornerAnim = [CABasicAnimation animationWithKeyPath:@"cornerRadius"];
+        cornerAnim.fromValue = @0;
+        cornerAnim.toValue = @3;
+        cornerAnim.duration = kBookAnimationTime/4.0;
+        cornerAnim.removedOnCompletion = NO;
+        cornerAnim.fillMode = kCAFillModeForwards;
+        [self.fakeShadowView.layer addAnimation:cornerAnim forKey:@"cornerRadius"];
+        
         if (![self isContainerViewAtRightEdge:NO]){
-            [UIView animateWithDuration:0.2 animations:^{
+            [UIView animateWithDuration:kBookAnimationTime/2.0 animations:^{
                 self.containerView.transform = CGAffineTransformMakeTranslation([self xTrasformForBookAtRightEdge], 0);
-                self.bookCover.transform = CGAffineTransformMakeTranslation([self xTrasformForBookAtRightEdge], 0);
             }];
         }
         self.bookClosed = YES;
-        self.pagesLabelContainer.hidden = YES;
     }];
 }
 - (void)closeBookBack{
+    if (self.animating){
+        return;
+    }
+    self.animating = YES;
     [self setUpBookCoverView];
+    self.bookCover.hidden = NO;
     
-    [UIView animateWithDuration:0.2
+    // Turn off containerView shadow because we will be animating that. Will use bookCover view shadow for the duration of the animation.
+    self.containerView.layer.shadowOpacity = 0;
+    
+    //Fade in shadow of the half-book.
+    UIView *closedPage = [self.bookCover viewWithTag:kTagLeft];
+    CABasicAnimation *showAnim = [CABasicAnimation animationWithKeyPath:@"shadowOpacity"];
+    showAnim.fromValue = [NSNumber numberWithFloat:0.0];
+    showAnim.toValue = [NSNumber numberWithFloat:0.25];
+    showAnim.duration = kBookAnimationTime/4.0;
+    [closedPage.layer addAnimation:showAnim forKey:@"shadowOpacity"];
+    closedPage.layer.shadowOpacity = 0.25;
+    
+    //Fade out shadow of the book cover
+    CABasicAnimation *hideAnim = [CABasicAnimation animationWithKeyPath:@"shadowOpacity"];
+    hideAnim.fromValue = [NSNumber numberWithFloat:0.25];
+    hideAnim.toValue = [NSNumber numberWithFloat:0.0];
+    hideAnim.duration = kBookAnimationTime/4.0;
+    [self.containerView.layer addAnimation:hideAnim forKey:@"shadowOpacity"];
+    self.containerView.layer.shadowOpacity = 0.0;
+    
+    [UIView animateWithDuration:kBookAnimationTime/8.0 animations:^{
+        self.pagesLabelContainer.alpha = 0;
+    }];
+    
+    [UIView animateWithDuration:kBookAnimationTime/2.0
                           delay:0
                         options:UIViewAnimationOptionBeginFromCurrentState
                      animations:^{
                          self.containerView.transform = CGAffineTransformIdentity;
-                         self.bookCover.transform = CGAffineTransformIdentity;
                      } completion:^(BOOL finished){
-                         [MPFlipTransition transitionFromView:self.containerView toView:self.bookCover duration:0.4 style:MPFlipStyleDefault transitionAction:MPTransitionActionShowHide completion:^(BOOL finished){
+                         MPFlipTransition *flipTransition = [[MPFlipTransition alloc] initWithSourceView:self.openbookView destinationView:self.bookCover duration:kBookAnimationTime timingCurve:UIViewAnimationCurveEaseInOut completionAction:MPTransitionActionShowHide];
+                         flipTransition.flippingPageShadowOpacity = 0;
+                         flipTransition.style = MPFlipStyleDefault;
+                         [flipTransition perform:^(BOOL finished){
+                             self.animating = NO;
+                             [self.fakeShadowView makeRoundRectWithRadius:3];
                          }];
                          self.bookClosed = YES;
-                         self.pagesLabelContainer.hidden = YES;
                      }];
 }
 
 - (CGFloat)xTrasformForBookAtRightEdge{
-    return self.view.frame.size.width - self.containerView.frame.size.width;
+    return self.view.frame.size.width - self.containerView.frame.size.width - kBookEdgePadding * 2;
 }
 
 - (BOOL)isContainerViewAtRightEdge:(BOOL)useFrame{
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8){
+        return YES;
+    }
+    
     if (!useFrame){
-        return self.containerView.transform.tx <= [self xTrasformForBookAtRightEdge];
+        return self.containerView.transform.tx <= [self xTrasformForBookAtRightEdge] && !self.stranded;
     }
     else{
-        return self.containerView.frame.origin.x <= [self xTrasformForBookAtRightEdge];
+        return self.containerView.frame.origin.x - kBookEdgePadding <= [self xTrasformForBookAtRightEdge];
     }
 }
 
 - (BOOL)isContainerViewAtLeftEdge:(BOOL)useFrame{
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8){
+        return YES;
+    }
+    
     if (!useFrame){
-        return self.containerView.transform.tx >= 0;
+        return self.containerView.transform.tx >= 0 && !self.stranded;
     }
     else{
-        return self.containerView.center.x - self.containerView.frame.size.width / 2 >= 0;
+        return self.containerView.center.x - self.containerView.frame.size.width / 2  - kBookEdgePadding >= 0;
     }
 }
 
