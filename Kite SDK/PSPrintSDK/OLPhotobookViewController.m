@@ -890,6 +890,16 @@ static const CGFloat kBookEdgePadding = 38;
         [halfBookCoverImageContainer addConstraint:[NSLayoutConstraint constraintWithItem:halfBookCoverImageContainer attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:coverImageView attribute:NSLayoutAttributeCenterX multiplier:0.97 constant:0]];
         [halfBookCoverImageContainer addConstraint:[NSLayoutConstraint constraintWithItem:coverImageView attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:halfBookCoverImageContainer attribute:NSLayoutAttributeCenterY multiplier:1 constant:0]];
         
+        if (self.editMode){
+            UILabel *helpLabel = [[UILabel alloc] init];
+            helpLabel.font = [UIFont systemFontOfSize:11];
+            helpLabel.text = NSLocalizedString(@"Tap to edit", @"");
+            helpLabel.translatesAutoresizingMaskIntoConstraints = NO;
+            [halfBookCoverImageContainer insertSubview:helpLabel belowSubview:coverImageView];
+            [halfBookCoverImageContainer addConstraint:[NSLayoutConstraint constraintWithItem:halfBookCoverImageContainer attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:helpLabel attribute:NSLayoutAttributeCenterX multiplier:1 constant:0]];
+            [halfBookCoverImageContainer addConstraint:[NSLayoutConstraint constraintWithItem:halfBookCoverImageContainer attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:helpLabel attribute:NSLayoutAttributeCenterY multiplier:1 constant:0]];
+        }
+        
         [self.bookCover viewWithTag:kTagRight].hidden = NO;
     }
     else{
