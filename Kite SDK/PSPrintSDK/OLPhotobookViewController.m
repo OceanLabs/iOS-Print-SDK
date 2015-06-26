@@ -684,8 +684,10 @@ static const CGFloat kBookEdgePadding = 38;
         [recognizer setTranslation:CGPointMake(0, 0) inView:self.containerView];
         
         if ([self isContainerViewAtRightEdge:NO]){
+            recognizer.enabled = NO;
+            recognizer.enabled = YES;
             [UIView animateWithDuration:0.1 delay:0 options:UIViewAnimationOptionBeginFromCurrentState  animations:^{
-                self.containerView.transform = CGAffineTransformMakeTranslation(-self.containerView.frame.size.width + self.view.frame.size.width, 0);
+                self.containerView.transform = CGAffineTransformMakeTranslation(-self.containerView.frame.size.width + self.view.frame.size.width - kBookEdgePadding * 2, 0);
             } completion:NULL];
         }
         else if ([self isContainerViewAtLeftEdge:NO]){
