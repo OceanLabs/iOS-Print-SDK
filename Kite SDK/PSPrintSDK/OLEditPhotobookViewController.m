@@ -783,8 +783,10 @@ UINavigationControllerDelegate>
 
 - (void)instagramImagePicker:(OLInstagramImagePickerController *)imagePicker didFinishPickingImages:(NSArray *)images {
     if (self.addNewPhotosAtIndex == -1){
-        self.coverPhoto = [[OLPrintPhoto alloc] init];
-        self.coverPhoto.asset = [images firstObject];
+        if (images.count > 0){
+            self.coverPhoto = [[OLPrintPhoto alloc] init];
+            self.coverPhoto.asset = [images firstObject];
+        }
         
         for (OLPhotobookViewController *photobook in self.childViewControllers){
             if ([photobook bookClosed]){
@@ -824,6 +826,23 @@ UINavigationControllerDelegate>
 }
 
 - (void)facebookImagePicker:(OLFacebookImagePickerController *)imagePicker didFinishPickingImages:(NSArray *)images {
+    if (self.addNewPhotosAtIndex == -1){
+        if (images.count > 0){
+            self.coverPhoto = [[OLPrintPhoto alloc] init];
+            self.coverPhoto.asset = [images firstObject];
+        }
+        
+        for (OLPhotobookViewController *photobook in self.childViewControllers){
+            if ([photobook bookClosed]){
+                photobook.coverPhoto = self.coverPhoto;
+                [photobook loadCoverPhoto];
+                break;
+            }
+        }
+        
+        [imagePicker dismissViewControllerAnimated:YES completion:NULL];
+        return;
+    }
     [self populateArrayWithNewArray:images dataType:[OLFacebookImage class]];
     [self dismissViewControllerAnimated:YES completion:^(void){}];
 }
