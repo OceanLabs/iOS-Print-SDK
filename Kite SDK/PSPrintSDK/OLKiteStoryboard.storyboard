@@ -1913,11 +1913,11 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="P6D-Eb-oaD" userLabel="pagesLabelContainer">
-                                <rect key="frame" x="263" y="533" width="60" height="22"/>
+                                <rect key="frame" x="263" y="429" width="60" height="22"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1-2 of 24" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="6zv-ER-YtC">
                                         <rect key="frame" x="0.0" y="0.0" width="60" height="22"/>
-                                        <color key="backgroundColor" white="1" alpha="0.29999999999999999" colorSpace="calibratedWhite"/>
+                                        <color key="backgroundColor" white="1" alpha="0.5" colorSpace="calibratedWhite"/>
                                         <fontDescription key="fontDescription" type="system" weight="medium" pointSize="10"/>
                                         <color key="textColor" red="0.48627450979999998" green="0.48627450979999998" blue="0.48627450979999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <nil key="highlightedColor"/>
@@ -1937,12 +1937,12 @@
                         <color key="backgroundColor" red="0.74509803921568629" green="0.80392156862745101" blue="0.81960784313725488" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <gestureRecognizers/>
                         <constraints>
-                            <constraint firstItem="eAv-QL-iu7" firstAttribute="top" secondItem="P6D-Eb-oaD" secondAttribute="bottom" constant="45" id="5AF-cM-WlX"/>
                             <constraint firstItem="eAv-QL-iu7" firstAttribute="top" relation="greaterThanOrEqual" secondItem="wLR-Iq-33c" secondAttribute="bottom" constant="20" id="6OB-XY-vp2"/>
                             <constraint firstAttribute="centerX" secondItem="P6D-Eb-oaD" secondAttribute="centerX" constant="7" id="Kix-gc-0g0"/>
                             <constraint firstItem="wLR-Iq-33c" firstAttribute="leading" secondItem="xrD-7k-Kti" secondAttribute="leading" priority="750" constant="38" id="Xjf-bl-V0K"/>
                             <constraint firstItem="wLR-Iq-33c" firstAttribute="top" relation="greaterThanOrEqual" secondItem="LtF-ql-Rxv" secondAttribute="bottom" constant="20" id="bx6-vt-q2D"/>
                             <constraint firstAttribute="centerY" secondItem="wLR-Iq-33c" secondAttribute="centerY" constant="-16" placeholder="YES" id="r8S-W8-SmN"/>
+                            <constraint firstItem="P6D-Eb-oaD" firstAttribute="bottom" secondItem="wLR-Iq-33c" secondAttribute="bottom" constant="-15" id="xxK-hn-AB7"/>
                         </constraints>
                     </view>
                     <extendedEdge key="edgesForExtendedLayout" top="YES"/>

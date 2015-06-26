@@ -520,7 +520,10 @@ UINavigationControllerDelegate>
     if (indexPath.section == kSectionHelp){
         return CGSizeMake(self.view.frame.size.width, 20);
     }
-    else{
+    else if (indexPath.section == kSectionCover){
+        return CGSizeMake(self.view.frame.size.width, [self cellHeightForSize:self.view.frame.size] + 10);
+    }
+    else {
         return CGSizeMake(self.view.frame.size.width, [self cellHeightForSize:self.view.frame.size]);
     }
 }
