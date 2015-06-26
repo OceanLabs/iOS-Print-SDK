@@ -14,6 +14,7 @@
 #import "OLScrollCropViewController.h"
 #import "OLPhotobookPrintJob.h"
 #import "UIView+RoundRect.h"
+#import "OLImageView.h"
 
 #import <MPFlipTransition.h>
 
@@ -79,6 +80,9 @@ static const CGFloat kBookEdgePadding = 38;
 
 - (void)setCoverPhoto:(OLPrintPhoto *)coverPhoto{
     _coverPhoto = coverPhoto;
+    if (!coverPhoto){
+        self.coverImageView.image = nil;
+    }
     [coverPhoto getImageWithProgress:NULL completion:^(UIImage *image){
         dispatch_async(dispatch_get_main_queue(), ^{
             self.coverImageView.image = image;
@@ -606,7 +610,9 @@ static const CGFloat kBookEdgePadding = 38;
 }
 
 - (void)onCoverLongPressRecognized:(UILongPressGestureRecognizer *)sender{
-    
+    if (self.editMode && self.coverPhoto){
+        [self.photobookDelegate photobook:self userDidLongPressOnImageWithIndex:-1 sender:sender];
+    }
 }
 
 - (void)onTapGestureRecognized:(UITapGestureRecognizer *)sender{
@@ -798,6 +804,7 @@ static const CGFloat kBookEdgePadding = 38;
 -(void) setUpBookCoverView{
     UISwipeGestureRecognizer *swipe = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(openBook:)];
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onCoverTapRecognized:)];
+    UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(onCoverLongPressRecognized:)];
     
     UIView *halfBookCoverImageContainer;
     
@@ -829,13 +836,19 @@ static const CGFloat kBookEdgePadding = 38;
             halfBookCoverImageContainer.layer.shouldRasterize = YES;
             halfBookCoverImageContainer.layer.rasterizationScale = [UIScreen mainScreen].scale;
             
-            UIImageView *coverImageView = [[UIImageView alloc] init];
+            OLImageView *coverImageView = [[OLImageView alloc] init];
             self.coverImageView = coverImageView;
             coverImageView.tag = 18;
             coverImageView.contentMode = UIViewContentModeScaleAspectFill;
             coverImageView.clipsToBounds = YES;
             [halfBookCoverImageContainer addSubview:coverImageView];
             coverImageView.translatesAutoresizingMaskIntoConstraints = NO;
+            coverImageView.userInteractionEnabled = YES;
+            [coverImageView addGestureRecognizer:tap];
+            [coverImageView addGestureRecognizer:longPress];
+            if (!self.editMode){
+                [coverImageView addGestureRecognizer:swipe];
+            }
         }
         
         [halfBookCoverImageContainer removeConstraints:halfBookCoverImageContainer.constraints];

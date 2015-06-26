@@ -29,6 +29,12 @@ static const NSInteger kSectionCover = 0;
 static const NSInteger kSectionHelp = 1;
 static const NSInteger kSectionPages = 2;
 
+@interface OLPhotobookViewController ()
+
+@property (weak, nonatomic) UIImageView *coverImageView;
+
+@end
+
 @interface OLKitePrintSDK (InternalUtils)
 + (NSString *)userEmail:(UIViewController *)topVC;
 + (NSString *)userPhone:(UIViewController *)topVC;
@@ -227,6 +233,12 @@ UINavigationControllerDelegate>
 #pragma mark - Menu Actions
 
 - (void)deletePage{
+    if (self.interactionImageIndex == -1){
+        self.coverPhoto = nil;
+        self.interactionPhotobook.coverPhoto = nil;
+        return;
+    }
+    
     self.photobookPhotos[self.interactionImageIndex] = [NSNull null];
     self.interactionPhotobook.userSelectedPhotos = self.photobookPhotos;
     [[self findPageForImageIndex:self.interactionImageIndex] loadImageWithCompletionHandler:NULL];
@@ -237,13 +249,20 @@ UINavigationControllerDelegate>
 }
 
 - (void)cropImage{
-    
-    OLPrintPhoto *cropPhoto = self.photobookPhotos[self.interactionImageIndex];
+    OLPrintPhoto *cropPhoto;
+    UIImageView *imageView;
+    if (self.interactionImageIndex == -1){
+        cropPhoto = self.coverPhoto;
+        imageView = self.interactionPhotobook.coverImageView;
+    }
+    else{
+        cropPhoto = self.photobookPhotos[self.interactionImageIndex];
+        imageView = [self findPageForImageIndex:self.interactionImageIndex].imageView;
+    }
     
     UINavigationController *nav = [self.storyboard instantiateViewControllerWithIdentifier:@"CropViewNavigationController"];
     OLScrollCropViewController *cropVc = (id)nav.topViewController;
     cropVc.delegate = self;
-    UIImageView *imageView = [self findPageForImageIndex:self.interactionImageIndex].imageView;
     cropVc.aspectRatio = imageView.frame.size.height / imageView.frame.size.width;
     [cropPhoto getImageWithProgress:NULL completion:^(UIImage *image){
         [cropVc setFullImage:image];
@@ -427,9 +446,20 @@ UINavigationControllerDelegate>
 }
 
 - (void)photobook:(OLPhotobookViewController *)photobook userDidLongPressOnImageWithIndex:(NSInteger)index sender:(UILongPressGestureRecognizer *)sender{
+    OLImageView *view;
+    if (index == -1){
+        view = (OLImageView *)sender.view;
+    }
+    else{
+        if (self.photobookPhotos[index] == (id)[NSNull null]){
+            return;
+        }
+        view = (OLImageView *)[photobook.pageController.viewControllers[index % 2] imageView];
+    }
+    
     self.interactionImageIndex = index;
     self.interactionPhotobook = photobook;
-    OLImageView *view = (OLImageView *)[photobook.pageController.viewControllers[index % 2] imageView];
+    
     view.delegate = self;
     [view becomeFirstResponder];
     UIMenuItem *deleteItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Remove", @"") action:@selector(deletePage)];
@@ -543,10 +573,18 @@ UINavigationControllerDelegate>
 }
 
 -(void)scrollCropViewController:(OLScrollCropViewController *)cropper didFinishCroppingImage:(UIImage *)croppedImage{
-    [self.photobookPhotos[self.interactionImageIndex] unloadImage];
-    [self.photobookPhotos[self.interactionImageIndex] setAsset:[OLAsset assetWithImageAsJPEG:croppedImage]];
-    
-    [[self findPageForImageIndex:self.interactionImageIndex] loadImageWithCompletionHandler:NULL];
+    if (self.interactionImageIndex == -1){
+        [self.coverPhoto unloadImage];
+        [self.coverPhoto setAsset:[OLAsset assetWithImageAsJPEG:croppedImage]];
+        self.interactionPhotobook.coverPhoto = self.coverPhoto;
+        
+    }
+    else{
+        [self.photobookPhotos[self.interactionImageIndex] unloadImage];
+        [self.photobookPhotos[self.interactionImageIndex] setAsset:[OLAsset assetWithImageAsJPEG:croppedImage]];
+        
+        [[self findPageForImageIndex:self.interactionImageIndex] loadImageWithCompletionHandler:NULL];
+    }
     
     [cropper dismissViewControllerAnimated:YES completion:NULL];
 }
