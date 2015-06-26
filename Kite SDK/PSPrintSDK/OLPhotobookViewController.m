@@ -299,8 +299,12 @@ static const CGFloat kBookEdgePadding = 38;
         [self.fakeShadowView makeRoundRectWithRadius:3];
     }
     
-    if (self.editMode){
-        self.topMarginCon.constant = 5;
+    if (self.editMode && self.bookClosed){
+        self.topMarginCon.constant = 10;
+        self.bottomMarginCon.constant = 0;
+    }
+    else if (self.editMode){
+        self.topMarginCon.constant = 0;
         self.bottomMarginCon.constant = 0;
     }
 }
