@@ -13,6 +13,8 @@
 @interface OLPhotobookPageContentViewController ()
 
 @property (weak, nonatomic) IBOutlet UIImageView *pageBackground;
+@property (weak, nonatomic) IBOutlet UIImageView *pageShadowRight;
+@property (weak, nonatomic) IBOutlet UIImageView *pageShadowLeft;
 
 @property (assign, nonatomic) BOOL left;
 

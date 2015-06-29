@@ -338,11 +338,12 @@ UINavigationControllerDelegate>
         UIView *pageCopy = [page.imageView snapshotViewAfterScreenUpdates:YES];
         pageCopy.frame = [self.view convertRect:page.imageView.frame fromView:page.view];
         [page clearImage];
-        [self addPageShadowsToView:pageCopy];
-        [self setPageShadowAlpha:pageCopy forIndex:index];
-        [self.view addSubview:pageCopy];
+        
     
         if (selectedPage){ //Previously selected page is in view
+            [self addPageShadowsToView:pageCopy];
+            [self setPageShadowAlpha:pageCopy forIndex:index];
+            [self.view addSubview:pageCopy];
             OLPhotobookViewController *selectedPhotobook = (OLPhotobookViewController *)selectedPage.parentViewController.parentViewController;
             UIView *selectedPageCopy = [selectedPage.imageView snapshotViewAfterScreenUpdates:YES];
             [selectedPage clearImage];
@@ -387,8 +388,7 @@ UINavigationControllerDelegate>
             }];
         }
         else{ //Previously selected image is not in view. Only pretend to swap.
-            page.pageShadowLeft.hidden = YES;
-            page.pageShadowRight.hidden = YES;
+            [self.view addSubview:pageCopy];
             if (self.photobookPhotos[index] == (id)[NSNull null]){
                 [pageCopy viewWithTag:12].alpha = 0;
                 [pageCopy viewWithTag:22].alpha = 0;
@@ -412,11 +412,15 @@ UINavigationControllerDelegate>
                 photobook.pagesLabel.superview.alpha = 0;
             }];
             
+            page.imageView.transform = CGAffineTransformMakeTranslation(-1000000, 0);
+            page.pageShadowLeft2.alpha = 0;
+            page.pageShadowRight2.alpha = 0;
             [page loadImageWithCompletionHandler:^{
                 UIView *selectedPageCopy = [page.imageView snapshotViewAfterScreenUpdates:YES];
                 page.imageView.hidden = YES;
                 page.pageShadowLeft2.hidden = YES;
                 page.pageShadowRight2.hidden = YES;
+                page.imageView.transform = CGAffineTransformIdentity;
                 selectedPageCopy.frame = [self.view convertRect:page.imageView.frame fromView:page.view];
                 selectedPageCopy.transform = CGAffineTransformMakeTranslation(x, [self.selectedIndexNumber integerValue] < page.pageIndex ? -1000 : 1000);
                 
@@ -439,12 +443,12 @@ UINavigationControllerDelegate>
                     
                     if (self.photobookPhotos[index] != (id)[NSNull null]){
                         if (index % 2 == 0){
-                            page.pageShadowLeft.hidden = NO;
                             page.pageShadowLeft2.hidden = NO;
+                            page.pageShadowLeft2.alpha = 1;
                         }
                         else{
-                            page.pageShadowRight.hidden = NO;
                             page.pageShadowRight2.hidden = NO;
+                            page.pageShadowRight2.alpha = 1;
                         }
                     }
                     [UIView animateWithDuration:0.5 animations:^{
