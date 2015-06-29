@@ -254,6 +254,10 @@ UINavigationControllerDelegate>
         return;
     }
     
+    if ([self.selectedIndexNumber integerValue] == self.interactionImageIndex){
+        [[self findPageForImageIndex:[self.selectedIndexNumber integerValue]] unhighlightImageAtIndex:[self.selectedIndexNumber integerValue]];
+        self.selectedIndexNumber = nil;
+    }
     self.photobookPhotos[self.interactionImageIndex] = [NSNull null];
     self.interactionPhotobook.userSelectedPhotos = self.photobookPhotos;
     [[self findPageForImageIndex:self.interactionImageIndex] loadImageWithCompletionHandler:NULL];
