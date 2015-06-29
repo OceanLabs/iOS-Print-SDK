@@ -351,6 +351,7 @@ UINavigationControllerDelegate>
         [[self findPageForImageIndex:[self.selectedIndexNumber integerValue]] unhighlightImageAtIndex:index];
         self.selectedIndexNumber = nil;
         self.animating = NO;
+        [self photobook:photobook userDidLongPressOnImageWithIndex:index sender:nil];
     }
     else if (self.selectedIndexNumber){ //swap
         OLPhotobookPageContentViewController *selectedPage = [self findPageForImageIndex:[self.selectedIndexNumber integerValue]];
