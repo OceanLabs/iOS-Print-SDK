@@ -32,6 +32,7 @@
 @property (assign, nonatomic) BOOL startOpen;
 @property (assign, nonatomic, readonly) BOOL bookClosed;
 @property (strong, nonatomic) OLPrintPhoto *coverPhoto;
+@property (weak, nonatomic) IBOutlet UILabel *pagesLabel;
 
 - (void)loadCoverPhoto;
 

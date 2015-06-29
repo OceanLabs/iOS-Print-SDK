@@ -65,7 +65,6 @@ static const CGFloat kBookEdgePadding = 38;
 @property (strong, nonatomic) IBOutlet UIView *bookCover;
 @property (assign, nonatomic) BOOL bookClosed;
 @property (weak, nonatomic) IBOutlet UIView *pagesLabelContainer;
-@property (weak, nonatomic) IBOutlet UILabel *pagesLabel;
 @property (strong, nonatomic) UIVisualEffectView *visualEffectView;
 @property (assign, nonatomic) BOOL animating;
 @property (assign, nonatomic) BOOL stranded;
@@ -563,7 +562,7 @@ static const CGFloat kBookEdgePadding = 38;
                             @"app_version": [NSString stringWithFormat:@"Version: %@ (%@)", appVersion, buildNumber]
                             };
     OLPhotobookPrintJob* printJob = [[OLPhotobookPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:photoAssets];
-    printJob.frontCover = [OLAsset assetWithDataSource:self.coverPhoto];
+    printJob.frontCover = self.coverPhoto ? [OLAsset assetWithDataSource:self.coverPhoto] : nil;
     for (id<OLPrintJob> job in printOrder.jobs){
         [printOrder removePrintJob:job];
     }

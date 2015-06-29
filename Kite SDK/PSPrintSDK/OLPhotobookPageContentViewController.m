@@ -65,19 +65,19 @@
 - (void)unhighlightImageAtIndex:(NSInteger)index{
     UIView *selectedView = self.imageView; //only one for now
     
-    [UIView animateWithDuration:0.15 animations:^(void){
+//    [UIView animateWithDuration:0.15 animations:^(void){
         selectedView.layer.borderColor = [UIColor clearColor].CGColor;
         selectedView.layer.borderWidth = 0;
-    }];
+//    }];
 }
 
 - (void)highlightImageAtIndex:(NSInteger)index{
     UIView *selectedView = self.imageView; //only one for now
     
-    [UIView animateWithDuration:0.15 animations:^(void){
+//    [UIView animateWithDuration:0.15 animations:^(void){
         selectedView.layer.borderColor = self.view.tintColor.CGColor;
         selectedView.layer.borderWidth = 3.0;
-    }];
+//    }];
 }
 
 - (void)clearImage{
@@ -90,7 +90,6 @@
     OLPrintPhoto *printPhoto = [self.userSelectedPhotos objectAtIndex:self.pageIndex];
     if (printPhoto != (id)[NSNull null]){
         self.imageView.image = nil;
-        self.imageView.contentMode = UIViewContentModeScaleAspectFill;
         [printPhoto setImageSize:self.imageView.frame.size cropped:YES completionHandler:^(UIImage *image){
             dispatch_async(dispatch_get_main_queue(), ^{
                 self.imageView.image = image;

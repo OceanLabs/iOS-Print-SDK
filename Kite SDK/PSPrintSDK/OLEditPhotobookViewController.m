@@ -344,6 +344,7 @@ UINavigationControllerDelegate>
         [self.view addSubview:pageCopy];
     
         if (selectedPage){ //Previously selected page is in view
+            OLPhotobookViewController *selectedPhotobook = (OLPhotobookViewController *)selectedPage.parentViewController.parentViewController;
             UIView *selectedPageCopy = [selectedPage.imageView snapshotViewAfterScreenUpdates:YES];
             [selectedPage clearImage];
             selectedPageCopy.frame = [self.view convertRect:selectedPage.imageView.frame fromView:selectedPage.view];
@@ -356,6 +357,10 @@ UINavigationControllerDelegate>
             if (printPhoto == (id)[NSNull null]){
                 [pageCopy removeFromSuperview];
             }
+            [UIView animateWithDuration:0.05 animations:^{
+                photobook.pagesLabel.superview.alpha = 0;
+                selectedPhotobook.pagesLabel.superview.alpha = 0;
+            }];
             [UIView animateWithDuration:0.5 animations:^{
                 [self setPageShadowAlpha:selectedPageCopy forIndex:index];
                 
@@ -374,7 +379,10 @@ UINavigationControllerDelegate>
                     [selectedPage loadImageWithCompletionHandler:^{
                         [pageCopy removeFromSuperview];
                         [selectedPageCopy removeFromSuperview];
-                        
+                        [UIView animateWithDuration:0.5 animations:^{
+                            photobook.pagesLabel.superview.alpha = 1;
+                            selectedPhotobook.pagesLabel.superview.alpha = 1;
+                        }];
                     }];
                 }];
             }];
@@ -520,8 +528,13 @@ UINavigationControllerDelegate>
         for (OLPhotobookViewController *photobook in self.childViewControllers){
             if (photobook.view == view){
                 photobook.editingPageNumber = [NSNumber numberWithInteger:indexPath.item * 2];
-                if (self.selectedIndexNumber){
-                    [[self findPageForImageIndex:[self.selectedIndexNumber integerValue]] highlightImageAtIndex:[self.selectedIndexNumber integerValue]];
+                for (OLPhotobookPageContentViewController *page in photobook.pageController.viewControllers){
+                    if (self.selectedIndexNumber && page.pageIndex == [self.selectedIndexNumber integerValue]){
+                        [page highlightImageAtIndex:[self.selectedIndexNumber integerValue]];
+                    }
+                    else{
+                        [page unhighlightImageAtIndex:page.pageIndex];
+                    }
                 }
                 break;
             }
