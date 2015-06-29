@@ -15,6 +15,8 @@
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;
 @property (weak, nonatomic) IBOutlet UIImageView *pageShadowLeft2;
 @property (weak, nonatomic) IBOutlet UIImageView *pageShadowRight2;
+@property (weak, nonatomic) IBOutlet UIImageView *pageShadowRight;
+@property (weak, nonatomic) IBOutlet UIImageView *pageShadowLeft;
 
 - (void)loadImageWithCompletionHandler:(void(^)(void))handler;
 - (NSInteger)imageIndexForPoint:(CGPoint)p;

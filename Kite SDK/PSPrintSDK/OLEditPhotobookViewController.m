@@ -323,7 +323,6 @@ UINavigationControllerDelegate>
         return;
     }
     
-    
     OLPhotobookPageContentViewController *page = [self findPageForImageIndex:index];
     if (self.selectedIndexNumber && [self.selectedIndexNumber integerValue] == index){ //deselect
         [[self findPageForImageIndex:[self.selectedIndexNumber integerValue]] unhighlightImageAtIndex:index];
@@ -388,6 +387,8 @@ UINavigationControllerDelegate>
             }];
         }
         else{ //Previously selected image is not in view. Only pretend to swap.
+            page.pageShadowLeft.hidden = YES;
+            page.pageShadowRight.hidden = YES;
             if (self.photobookPhotos[index] == (id)[NSNull null]){
                 [pageCopy viewWithTag:12].alpha = 0;
                 [pageCopy viewWithTag:22].alpha = 0;
@@ -395,6 +396,9 @@ UINavigationControllerDelegate>
 
             [self swapImageAtIndex:[self.selectedIndexNumber integerValue] withImageAtIndex:page.pageIndex];
             photobook.userSelectedPhotos = self.photobookPhotos;
+            for (OLPhotobookViewController *otherPhotobook in self.childViewControllers){
+                otherPhotobook.userSelectedPhotos = self.photobookPhotos;
+            }
             
             CGFloat x = 0;
             if (page.pageIndex % 2 == 0 && [self.selectedIndexNumber integerValue] % 2 == 1){
@@ -403,6 +407,10 @@ UINavigationControllerDelegate>
             if (page.pageIndex % 2 == 1 && [self.selectedIndexNumber integerValue] % 2 == 0){
                 x -= self.view.frame.size.width / 2.0;
             }
+            
+            [UIView animateWithDuration:0.05 animations:^{
+                photobook.pagesLabel.superview.alpha = 0;
+            }];
             
             [page loadImageWithCompletionHandler:^{
                 UIView *selectedPageCopy = [page.imageView snapshotViewAfterScreenUpdates:YES];
@@ -431,12 +439,17 @@ UINavigationControllerDelegate>
                     
                     if (self.photobookPhotos[index] != (id)[NSNull null]){
                         if (index % 2 == 0){
+                            page.pageShadowLeft.hidden = NO;
                             page.pageShadowLeft2.hidden = NO;
                         }
                         else{
+                            page.pageShadowRight.hidden = NO;
                             page.pageShadowRight2.hidden = NO;
                         }
                     }
+                    [UIView animateWithDuration:0.5 animations:^{
+                        photobook.pagesLabel.superview.alpha = 1;
+                    }];
                 }];
             }];
         }

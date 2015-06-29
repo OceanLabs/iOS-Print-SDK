@@ -13,9 +13,6 @@
 @interface OLPhotobookPageContentViewController ()
 
 @property (weak, nonatomic) IBOutlet UIImageView *pageBackground;
-@property (weak, nonatomic) IBOutlet UIImageView *pageShadowRight;
-@property (weak, nonatomic) IBOutlet UIImageView *pageShadowLeft;
-
 
 @property (assign, nonatomic) BOOL left;
 
@@ -65,19 +62,15 @@
 - (void)unhighlightImageAtIndex:(NSInteger)index{
     UIView *selectedView = self.imageView; //only one for now
     
-//    [UIView animateWithDuration:0.15 animations:^(void){
-        selectedView.layer.borderColor = [UIColor clearColor].CGColor;
-        selectedView.layer.borderWidth = 0;
-//    }];
+    selectedView.layer.borderColor = [UIColor clearColor].CGColor;
+    selectedView.layer.borderWidth = 0;
 }
 
 - (void)highlightImageAtIndex:(NSInteger)index{
     UIView *selectedView = self.imageView; //only one for now
     
-//    [UIView animateWithDuration:0.15 animations:^(void){
-        selectedView.layer.borderColor = self.view.tintColor.CGColor;
-        selectedView.layer.borderWidth = 3.0;
-//    }];
+    selectedView.layer.borderColor = self.view.tintColor.CGColor;
+    selectedView.layer.borderWidth = 3.0;
 }
 
 - (void)clearImage{
