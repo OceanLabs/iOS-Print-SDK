@@ -762,7 +762,7 @@ static const CGFloat kBookEdgePadding = 38;
     if ([gestureRecognizer isKindOfClass:[UITapGestureRecognizer class]] || [otherGestureRecognizer isKindOfClass:[UITapGestureRecognizer class]]){
         return NO;
     }
-    else if ([gestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]] && [otherGestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]]){
+    else if (([gestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]] && [otherGestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]]) && ![otherGestureRecognizer.view isKindOfClass:[UICollectionView class]]){
         CGPoint translation = [(UIPanGestureRecognizer *)gestureRecognizer translationInView:self.containerView];
         BOOL draggingLeft = translation.x < 0;
         BOOL draggingRight = translation.x > 0;
