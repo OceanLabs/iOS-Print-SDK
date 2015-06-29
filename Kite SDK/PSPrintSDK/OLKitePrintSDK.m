@@ -18,6 +18,7 @@
 #import <SkyLab.h>
 #import <NSUserDefaults+GroundControl.h>
 #import "OLAddressEditViewController.h"
+#import "OLAnalytics.h"
 
 static NSString *const kJudoClientId      = @"100170-877";
 static NSString *const kJudoSandboxToken     = @"oLMiwCPBeLs0iVX4";
@@ -110,6 +111,14 @@ static NSString *instagramRedirectURI = nil;
 
 + (NSString *)apiVersion{
     return kOLAPIEndpointVersion;
+}
+
++ (void) addPushDeviceToken:(NSData *)deviceToken{
+    [OLAnalytics addPushDeviceToken:deviceToken];
+}
+
++ (void)trackReceivedPushNotification:(NSDictionary *)userInfo{
+    [OLAnalytics trackReceivedPushNotification:userInfo];
 }
 
 #ifdef OL_KITE_OFFER_PAYPAL

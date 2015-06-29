@@ -8,6 +8,7 @@
 
 #import "OLBaseRequest.h"
 #import "OLConstants.h"
+#import "OLAnalytics.h"
 
 @interface OLBaseRequest () <NSURLConnectionDelegate>
 
@@ -81,6 +82,7 @@ static NSString *httpMethodString(OLHTTPMethod method) {
     [request setValue:[NSString stringWithFormat: @"Kite SDK iOS v%@", kOLKiteSDKVersion] forHTTPHeaderField:@"User-Agent"];
     [request setValue:[[NSBundle mainBundle] bundleIdentifier] forHTTPHeaderField:@"X-App-Bundle-Id"];
     [request setValue:[self appName] forHTTPHeaderField:@"X-App-Name"];
+    [request setValue:[OLAnalytics userDistinctId] forHTTPHeaderField:@"X-Kite-UUID"];
     for (NSString *key in self.requestHeaders.allKeys) {
         NSString *value = self.requestHeaders[key];
         [request setValue:value forHTTPHeaderField:key];

@@ -47,6 +47,132 @@ static NSString *nonNilStr(NSString *str) {
     return platform;
 }
 
++ (NSString *)environment {
+    NSString *environment = @"Live";
+#ifdef PAYMENT_SANDBOX
+    environment = @"Development";
+#endif
+    return environment;
+}
+
++ (void)addPushDeviceToken:(NSData *)deviceToken {
+    const unsigned char *buffer = (const unsigned char *)[deviceToken bytes];
+    if (!buffer) {
+        return;
+    }
+    NSMutableString *hex = [NSMutableString stringWithCapacity:(deviceToken.length * 2)];
+    for (NSUInteger i = 0; i < deviceToken.length; i++) {
+        [hex appendString:[NSString stringWithFormat:@"%02lx", (unsigned long)buffer[i]]];
+    }
+    
+    NSString *pushToken = [NSString stringWithString:hex];
+    if (!pushToken) {
+        return;
+    }
+    
+    NSString *uuid = [self userDistinctId];
+    NSDictionary *properties = @{
+                                 @"uuid": uuid,
+                                 @"set" : @{
+                                         @"push_token" : @{
+                                                 @"platform" : @"iOS",
+                                                 @"token" : pushToken
+                                                 },
+                                         @"platform" : @"iOS",
+                                         @"environment": [self environment]
+                                         }
+                                 };
+    
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    manager.requestSerializer = [AFJSONRequestSerializer serializer];
+    [manager.requestSerializer setValue:[NSString stringWithFormat:@"apikey %@", [OLKitePrintSDK apiKey]] forHTTPHeaderField:@"Authorization"];
+    [manager.requestSerializer setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    [manager POST:[NSString stringWithFormat:@"%@/v1.4/person/", [OLKitePrintSDK apiEndpoint]] parameters:properties success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        if ([operation.response statusCode] >= 200 && [operation.response statusCode] <= 299){
+            NSLog(@"Successfully posted push notification token.");
+        }
+        else{
+            NSLog(@"There was an error posting the push notification token: %ld", (long)[operation.response statusCode]);
+        }
+        
+    }failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"There was an error posting the push notification token: %@", error);
+    }];
+}
+
++ (void)trackReceivedPushNotification:(NSDictionary *)userInfo{
+    NSDictionary *dict = [OLAnalytics defaultDictionaryForEventName:@"Push Received"];
+    [dict[@"properties"] setObject:userInfo forKey:@"push_userInfo"];
+    [OLAnalytics sendToMixPanelWithDictionary:dict];
+}
+
++ (NSDictionary *)hostProperties{
+    NSString *bundleName = nil;
+    NSDictionary *info = [[NSBundle mainBundle] infoDictionary];
+    if ([info objectForKey:@"CFBundleDisplayName"] == nil) {
+        bundleName = [[[NSBundle mainBundle] infoDictionary] objectForKey:(NSString *) kCFBundleNameKey];
+    } else {
+        bundleName = [NSString stringWithFormat:@"%@", [info objectForKey:@"CFBundleDisplayName"]];
+    }
+    NSString *appVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"];
+    NSString *apiKey = [OLKitePrintSDK apiKey] == nil ? @"Unknown" : [OLKitePrintSDK apiKey];
+    
+    return @{
+             @"App Bundle Id" : [[NSBundle mainBundle] bundleIdentifier],
+             @"App Name" : bundleName,
+             @"App Version" : appVersion,
+             @"platform" : @"iOS",
+             @"platform version" : [[UIDevice currentDevice] systemVersion],
+             @"model" : [OLAnalytics platform],
+             @"Screen Height" : @([UIScreen mainScreen].bounds.size.height),
+             @"Screen Width" : @([UIScreen mainScreen].bounds.size.width),
+             @"API Key": apiKey,
+             @"Kite SDK Version": kOLKiteSDKVersion,
+             @"environment": [self environment]
+             };
+}
+
++ (void)updatePersonName:(NSString *)name email:(NSString *)email phone:(NSString *)phone {
+    NSString *uuid = [self userDistinctId];
+    
+    NSMutableDictionary *setDict = [[OLAnalytics hostProperties] mutableCopy];
+    
+    if (name && ![name isEqualToString:@""]){
+        setDict[@"full_name"] = name;
+    }
+    if (email && ![email isEqualToString:@""]){
+        setDict[@"email"] = email;
+    }
+    if (phone && ![phone isEqualToString:@""]){
+        setDict[@"phone"] = phone;
+    }
+    
+    NSUInteger orderCount = [OLPrintOrder printOrderHistory].count;
+    setDict[@"Order Count"] = [[NSNumber alloc] initWithUnsignedInteger:orderCount];
+    
+    NSDictionary *properties = @{
+                                 @"uuid": uuid,
+                                 @"set" : setDict
+                                 };
+    
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    manager.requestSerializer = [AFJSONRequestSerializer serializer];
+    [manager.requestSerializer setValue:[NSString stringWithFormat:@"apikey %@", [OLKitePrintSDK apiKey]] forHTTPHeaderField:@"Authorization"];
+    [manager.requestSerializer setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    [manager POST:[NSString stringWithFormat:@"%@/v1.4/person/", [OLKitePrintSDK apiEndpoint]] parameters:properties success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        if ([operation.response statusCode] >= 200 && [operation.response statusCode] <= 299){
+            NSLog(@"Successfully updated customer details");
+        }
+        else{
+            NSLog(@"There was an error posting the customer details: %ld", (long)[operation.response statusCode]);
+        }
+        
+    }failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"There was an error posting the customer details: %@", error);
+    }];
+    
+}
+
 + (void)sendToMixPanelWithDictionary:(NSDictionary *)dict{
     NSError *error;
     NSData * jsonData = [NSJSONSerialization dataWithJSONObject:dict options:NSJSONWritingPrettyPrinted error:&error];
