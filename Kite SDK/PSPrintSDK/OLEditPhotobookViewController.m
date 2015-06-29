@@ -70,6 +70,11 @@ UINavigationControllerDelegate>
 
 @implementation OLEditPhotobookViewController
 
+- (void)setAnimating:(BOOL)animating{
+    _animating = animating;
+    self.collectionView.scrollEnabled = !animating;
+}
+
 - (void)viewDidLoad{
     [super viewDidLoad];
     
