@@ -29,7 +29,6 @@ static NSString *const kKeyCropImageSize = @"co.oceanlabs.psprintstudio.kKeyCrop
 
 static NSString *const kKeyExtraCopies = @"co.oceanlabs.psprintstudio.kKeyExtraCopies";
 
-static NSOperationQueue *operationQueue;
 static NSOperationQueue *imageOperationQueue;
 
 @implementation ALAsset (isEqual)

@@ -85,20 +85,27 @@
     OLPrintPhoto *printPhoto = [self.userSelectedPhotos objectAtIndex:self.pageIndex];
     if (printPhoto != (id)[NSNull null]){
         self.imageView.image = nil;
-        [printPhoto setImageSize:self.imageView.frame.size cropped:YES completionHandler:^(UIImage *image){
-            dispatch_async(dispatch_get_main_queue(), ^{
-                self.imageView.image = image;
-                if (self.left){
-                    self.pageShadowLeft2.hidden = NO;
-                }
-                else{
-                    self.pageShadowRight2.hidden = NO;
-                }
-                if (handler){
-                    handler();
-                }
-            });
-        }];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            NSInteger blockIndex = self.pageIndex;
+            
+            [printPhoto setImageSize:self.imageView.frame.size cropped:YES completionHandler:^(UIImage *image){
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if (blockIndex == self.pageIndex){
+                        self.imageView.image = image;
+                        
+                        if (self.left){
+                            self.pageShadowLeft2.hidden = NO;
+                        }
+                        else{
+                            self.pageShadowRight2.hidden = NO;
+                        }
+                    }
+                    if (handler){
+                        handler();
+                    }
+                });
+            }];
+        });
     }
     else{
         self.pageShadowLeft2.hidden = YES;
