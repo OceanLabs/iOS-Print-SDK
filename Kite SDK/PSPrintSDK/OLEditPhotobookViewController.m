@@ -64,6 +64,7 @@ UINavigationControllerDelegate>
 @property (assign, nonatomic) NSInteger interactionImageIndex;
 @property (weak, nonatomic) OLPhotobookViewController *interactionPhotobook;
 @property (strong, nonatomic) OLPrintPhoto *coverPhoto;
+@property (assign, nonatomic) BOOL animating;
 
 @end
 
@@ -317,9 +318,14 @@ UINavigationControllerDelegate>
 }
 
 - (void)photobook:(OLPhotobookViewController *)photobook userDidTapOnImageWithIndex:(NSInteger)index{
+    if (self.animating == YES){
+        return;
+    }
+    self.animating = YES;
     if (index == -1){ //Replace Cover
         self.addNewPhotosAtIndex = index;
         [self addMorePhotosFromView:photobook.view];
+        self.animating = NO;
         return;
     }
     
@@ -327,6 +333,7 @@ UINavigationControllerDelegate>
     if (self.selectedIndexNumber && [self.selectedIndexNumber integerValue] == index){ //deselect
         [[self findPageForImageIndex:[self.selectedIndexNumber integerValue]] unhighlightImageAtIndex:index];
         self.selectedIndexNumber = nil;
+        self.animating = NO;
     }
     else if (self.selectedIndexNumber){ //swap
         OLPhotobookPageContentViewController *selectedPage = [self findPageForImageIndex:[self.selectedIndexNumber integerValue]];
@@ -379,6 +386,7 @@ UINavigationControllerDelegate>
                     [selectedPage loadImageWithCompletionHandler:^{
                         [pageCopy removeFromSuperview];
                         [selectedPageCopy removeFromSuperview];
+                        self.animating = NO;
                         [UIView animateWithDuration:0.5 animations:^{
                             photobook.pagesLabel.superview.alpha = 1;
                             selectedPhotobook.pagesLabel.superview.alpha = 1;
@@ -436,6 +444,7 @@ UINavigationControllerDelegate>
                     }
                     selectedPageCopy.transform = CGAffineTransformIdentity;
                 }completion:^(BOOL finished){
+                    self.animating = NO;
                     page.imageView.hidden = NO;
                     [selectedPageCopy removeFromSuperview];
                     [pageCopy removeFromSuperview];
@@ -463,10 +472,12 @@ UINavigationControllerDelegate>
     else if ([self.photobookPhotos objectAtIndex:index] == (id)[NSNull null]){ //pick new images
         self.addNewPhotosAtIndex = index;
         [self addMorePhotosFromView:page.view];
+        self.animating = NO;
     }
     else{ //select
         self.selectedIndexNumber = [NSNumber numberWithInteger:index];
         [page highlightImageAtIndex:index];
+        self.animating = NO;
     }
     
 }
