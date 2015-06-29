@@ -131,7 +131,6 @@
             vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OrderReviewViewController"];
         }
     }
-    [vc safePerformSelector:@selector(setAssets:) withObject:self.assets];
     [vc safePerformSelector:@selector(setUserSelectedPhotos:) withObject:self.userSelectedPhotos];
     [vc safePerformSelector:@selector(setDelegate:) withObject:self.delegate];
     [vc safePerformSelector:@selector(setProduct:) withObject:self.product];
