@@ -93,6 +93,14 @@ UINavigationControllerDelegate>
     [self updatePhotobookPhotos];
 }
 
+- (void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
+    for (OLPhotobookViewController *photobook in self.childViewControllers){
+        [photobook.view setNeedsLayout];
+        [photobook.view layoutIfNeeded];
+    }
+}
+
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator{
     for (OLPhotobookViewController *photobook in self.childViewControllers){
         [photobook viewWillTransitionToSize:CGSizeMake(size.width, [self cellHeightForSize:size]) withTransitionCoordinator:coordinator];
