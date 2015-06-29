@@ -133,11 +133,7 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     // URL and the user did not manipulate it in any way.
     NSMutableArray *photoAssets = [[NSMutableArray alloc] init];
     for (OLPrintPhoto *photo in self.checkoutPhotos) {
-        if(photo.type == kPrintPhotoAssetTypeOLAsset){
-            [photoAssets addObject:photo.asset];
-        } else {
-            [photoAssets addObject:[OLAsset assetWithDataSource:photo]];
-        }
+        [photoAssets addObject:[OLAsset assetWithDataSource:photo]];
     }
     
     // ensure order is maxed out by adding duplicates as necessary
@@ -279,8 +275,6 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     }
     NSIndexPath *indexPath = [self.collectionView indexPathForCell:(UICollectionViewCell *)cell];
     
-    OLPrintPhoto *tempPrintPhoto = [[OLPrintPhoto alloc] init];
-    tempPrintPhoto.asset = [self.userSelectedPhotos[indexPath.item] originalAsset];
     self.editingPrintPhoto = self.userSelectedPhotos[indexPath.item];
     
     UINavigationController *nav = [self.storyboard instantiateViewControllerWithIdentifier:@"CropViewNavigationController"];
@@ -288,7 +282,7 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     cropVc.enableCircleMask = self.product.productTemplate.templateUI == kOLTemplateUICircle;
     cropVc.delegate = self;
     cropVc.aspectRatio = [self productAspectRatio];
-    [tempPrintPhoto getImageWithProgress:NULL completion:^(UIImage *image){
+    [self.editingPrintPhoto getImageWithProgress:NULL completion:^(UIImage *image){
         [cropVc setFullImage:image];
         [self presentViewController:nav animated:YES completion:NULL];
     }];
@@ -380,7 +374,11 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     [countLabel setText: [NSString stringWithFormat:@"%lu", [self.userSelectedPhotos[indexPath.item] extraCopies]+1]];
     
     OLPrintPhoto *printPhoto = (OLPrintPhoto*)[self.userSelectedPhotos objectAtIndex:indexPath.item];
-    [printPhoto setImageSize:cellImage.frame.size forImageView:cellImage];
+    [printPhoto setImageSize:cellImage.frame.size cropped:YES completionHandler:^(UIImage *image){
+        dispatch_async(dispatch_get_main_queue(), ^{
+            cellImage.image = image;
+        });
+    }];
     
     if (self.product.productTemplate.templateUI == kOLTemplateUICircle){
         cell.enableMask = YES;
@@ -476,10 +474,12 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
 
 -(void)scrollCropViewController:(OLScrollCropViewController *)cropper didFinishCroppingImage:(UIImage *)croppedImage{
     [self.editingPrintPhoto unloadImage];
-    self.editingPrintPhoto.asset = [OLAsset assetWithImageAsJPEG:croppedImage];
+    
+    self.editingPrintPhoto.cropImageFrame = [cropper.cropView getFrameRect];
+    self.editingPrintPhoto.cropImageRect = [cropper.cropView getImageRect];
+    self.editingPrintPhoto.cropImageSize = [cropper.cropView croppedImageSize];
     
     [self.collectionView reloadData];
-    
     [cropper dismissViewControllerAnimated:YES completion:NULL];
 }
 

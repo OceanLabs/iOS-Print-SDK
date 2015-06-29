@@ -10,7 +10,6 @@
 
 @interface OLPhotobookPageContentViewController : UIViewController
 
-@property (strong, nonatomic) NSMutableArray *assets;
 @property (strong, nonatomic) NSMutableArray *userSelectedPhotos;
 @property (assign, nonatomic) NSInteger pageIndex;
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;

@@ -249,6 +249,10 @@ CGFloat const RESET_DURATION = 0.10f;
     return [RMImageCropper editedImageFromImage:self.image andFrame:frameRect andImageRect:imageRect andImageViewWidth:self.imageView.rm_width andImageViewHeight:self.imageView.rm_height];
 }
 
+- (CGSize)croppedImageSize{
+    return CGSizeMake(self.imageView.rm_width, self.imageView.rm_height);
+}
+
 - (void)editedImageAsync:(void (^)(UIImage *image))complete
 {
     CGRect frameRect = [self getFrameRect];
