@@ -105,7 +105,10 @@ static NSOperationQueue *imageOperationQueue;
             return;
         }
     }
-        
+    
+    NSBlockOperation *blockOperation = [[NSBlockOperation alloc] init];
+    
+    [blockOperation addExecutionBlock:^{
         if (self.type == kPrintPhotoAssetTypeALAsset) {
             [OLPrintPhoto resizedImageWithPrintPhoto:self size:destSize cropped:cropped progress:nil completion:^(UIImage *image) {
                 self.cachedCroppedThumbnailImage = image;
@@ -145,19 +148,17 @@ static NSOperationQueue *imageOperationQueue;
                     }];
                 }
                 else{
-                    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-                        [asset dataWithCompletionHandler:^(NSData *data, NSError *error){
-                            OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
-                            printPhoto.asset = [OLAsset assetWithImageAsJPEG:[UIImage imageWithData:data]];
-                            printPhoto.cropImageSize = self.cropImageSize;
-                            printPhoto.cropImageFrame = self.cropImageFrame;
-                            printPhoto.cropImageRect = self.cropImageRect;
-                            [OLPrintPhoto resizedImageWithPrintPhoto:printPhoto size:destSize cropped:cropped progress:nil completion:^(UIImage *image) {
-                                self.cachedCroppedThumbnailImage = image;
-                                handler(image);
-                            }];
+                    [asset dataWithCompletionHandler:^(NSData *data, NSError *error){
+                        OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
+                        printPhoto.asset = [OLAsset assetWithImageAsJPEG:[UIImage imageWithData:data]];
+                        printPhoto.cropImageSize = self.cropImageSize;
+                        printPhoto.cropImageFrame = self.cropImageFrame;
+                        printPhoto.cropImageRect = self.cropImageRect;
+                        [OLPrintPhoto resizedImageWithPrintPhoto:printPhoto size:destSize cropped:cropped progress:nil completion:^(UIImage *image) {
+                            self.cachedCroppedThumbnailImage = image;
+                            handler(image);
                         }];
-                    });
+                    }];
                 }
             }
 #ifdef OL_KITE_OFFER_INSTAGRAM
@@ -193,6 +194,8 @@ static NSOperationQueue *imageOperationQueue;
             }
 #endif
         }
+    }];
+    [[OLPrintPhoto imageOperationQueue] addOperation:blockOperation];
 }
 
 - (BOOL)isEqual:(id)object {
@@ -309,27 +312,22 @@ static NSOperationQueue *imageOperationQueue;
 
 + (void)resizedImageWithPrintPhoto:(OLPrintPhoto *)printPhoto size:(CGSize)destSize cropped:(BOOL)cropped progress:(OLImageEditorImageGetImageProgressHandler)progressHandler completion:(OLImageEditorImageGetImageCompletionHandler)completionHandler {
     
-    NSBlockOperation *blockOperation = [[NSBlockOperation alloc] init];
     
-    [blockOperation addExecutionBlock:^{
-        @autoreleasepool {
-            [printPhoto getImageWithFullResolution:CGSizeEqualToSize(destSize, CGSizeZero) progress:progressHandler completion:^(UIImage *image) {
-                if (destSize.height != 0 && destSize.width != 0){
-                    image = [OLPrintPhoto imageWithImage:image scaledToSize:destSize];
-                }
-                
-                if (![printPhoto isCropped] || !cropped){
-                    completionHandler(image);
-                    return;
-                }
-                
-                image = [RMImageCropper editedImageFromImage:image andFrame:printPhoto.cropImageFrame andImageRect:printPhoto.cropImageRect andImageViewWidth:printPhoto.cropImageSize.width andImageViewHeight:printPhoto.cropImageSize.height];
-                
-                completionHandler(image);
-            }];
+    [printPhoto getImageWithFullResolution:CGSizeEqualToSize(destSize, CGSizeZero) progress:progressHandler completion:^(UIImage *image) {
+        if (destSize.height != 0 && destSize.width != 0){
+            image = [OLPrintPhoto imageWithImage:image scaledToSize:destSize];
         }
+        
+        if (![printPhoto isCropped] || !cropped){
+            completionHandler(image);
+            return;
+        }
+        
+        image = [RMImageCropper editedImageFromImage:image andFrame:printPhoto.cropImageFrame andImageRect:printPhoto.cropImageRect andImageViewWidth:printPhoto.cropImageSize.width andImageViewHeight:printPhoto.cropImageSize.height];
+        
+        completionHandler(image);
     }];
-    [[OLPrintPhoto imageOperationQueue] addOperation:blockOperation];
+    
 }
 
 +(UIImage*)imageWithImage:(UIImage*) sourceImage scaledToSize:(CGSize) i_size
@@ -408,22 +406,20 @@ static NSOperationQueue *imageOperationQueue;
 
 - (void)dataWithCompletionHandler:(GetDataHandler)handler {
     if (self.type == kPrintPhotoAssetTypeALAsset) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            ALAssetRepresentation *rep = [self.asset defaultRepresentation];
-            if (rep) {
-                UIImageOrientation orientation = UIImageOrientationUp;
-                NSNumber* orientationValue = [self.asset valueForProperty:@"ALAssetPropertyOrientation"];
-                if (orientationValue != nil) {
-                    orientation = [orientationValue intValue];
-                }
-
-                UIImage *image = [UIImage imageWithCGImage:[rep fullResolutionImage] scale:rep.scale orientation:orientation];
-                [self dataWithImage:image withCompletionHandler:handler];
-            } else {
-                NSData *data = [NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"kite_corrupt" ofType:@"jpg"]];
-                handler(data, nil);
+        ALAssetRepresentation *rep = [self.asset defaultRepresentation];
+        if (rep) {
+            UIImageOrientation orientation = UIImageOrientationUp;
+            NSNumber* orientationValue = [self.asset valueForProperty:@"ALAssetPropertyOrientation"];
+            if (orientationValue != nil) {
+                orientation = [orientationValue intValue];
             }
-        });
+            
+            UIImage *image = [UIImage imageWithCGImage:[rep fullResolutionImage] scale:rep.scale orientation:orientation];
+            [self dataWithImage:image withCompletionHandler:handler];
+        } else {
+            NSData *data = [NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"kite_corrupt" ofType:@"jpg"]];
+            handler(data, nil);
+        }
     }
 #if defined(OL_KITE_OFFER_INSTAGRAM) || defined(OL_KITE_OFFER_FACEBOOK)
     else if (self.type == kPrintPhotoAssetTypeFacebookPhoto || self.type == kPrintPhotoAssetTypeInstagramPhoto){
