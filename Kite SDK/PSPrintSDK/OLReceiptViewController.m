@@ -17,6 +17,7 @@
 #import <SVProgressHUD.h>
 #import "OLPaymentLineItem.h"
 #import "OLPrintOrderCost.h"
+#import "OLOrderReviewViewController.h"
 
 static const NSUInteger kSectionOrderSummary = 0;
 static const NSUInteger kSectionOrderId = 1;
@@ -25,6 +26,12 @@ static const NSUInteger kSectionErrorRetry = 2;
 @interface OLReceiptViewController ()
 @property (nonatomic, strong) OLPrintOrder *printOrder;
 @property (nonatomic, assign) BOOL presentedModally;
+@end
+
+@interface OLOrderReviewViewController (Private)
+
+- (UIView *)footerViewForReceiptViewController:(UIViewController *)receiptVc;
+
 @end
 
 @implementation OLReceiptViewController
@@ -50,6 +57,10 @@ static const NSUInteger kSectionErrorRetry = 2;
         ((UIImageView *) self.tableView.tableHeaderView).image = [UIImage imageNamed:@"receipt_success"];
     } else {
         ((UIImageView *) self.tableView.tableHeaderView).image = [UIImage imageNamed:@"receipt_failure"];
+    }
+    
+    if ([self.delegate respondsToSelector:@selector(footerViewForReceiptViewController:)]){
+        self.tableView.tableFooterView = [(OLOrderReviewViewController *)self.delegate footerViewForReceiptViewController:self];
     }
 }
 
