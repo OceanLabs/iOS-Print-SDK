@@ -163,6 +163,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     self.tableView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
+    self.tableView.allowsMultipleSelectionDuringEditing = NO;
     [self.view addSubview:self.tableView];
     
     if ([self shippingScreenOnTheStack]) {
@@ -947,6 +948,21 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         }
     }
     return cell;
+}
+
+- (BOOL) tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath{
+    if ([self.delegate respondsToSelector:@selector(shouldAllowJobEditing)] && ![self.delegate shouldAllowJobEditing]){
+        return NO;
+    }
+    NSString* sectionString = [self.sections objectAtIndex:indexPath.section];
+    return [sectionString isEqualToString:kSectionOrderSummary] && indexPath.row < self.printOrder.jobs.count && self.printOrder.jobs.count > 1;
+}
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        [self.printOrder removePrintJob:self.printOrder.jobs[indexPath.row]];
+        [self.tableView reloadData];
+    }
 }
 
 #pragma mark - UIActionSheetDelegate methods

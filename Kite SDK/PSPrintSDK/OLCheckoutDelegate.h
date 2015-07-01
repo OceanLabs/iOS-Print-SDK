@@ -15,6 +15,7 @@
 @optional
 - (BOOL)shouldShowContinueShoppingButton;
 - (void)userDidTapContinueShoppingButton;
+- (BOOL)shouldAllowJobEditing;
 
 - (void)checkoutViewControllerDidCancel:(OLCheckoutViewController *)controller;
 
