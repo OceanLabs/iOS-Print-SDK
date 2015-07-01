@@ -195,7 +195,7 @@ static NSString *const kApplePayMerchantIDKey = @"merchant.co.oceanlabs.kite.ly"
 // useful if you want to fire off Anlaytic events for conversion funnel analysis, etc.
 
 - (void)onUserSuppliedShippingDetails:(NSNotification*)n {
-    NSLog(@"onUserSuppliedShippingDetails for print order with shipping address: %@", [n.userInfo[kOLKeyUserInfoPrintOrder] shippingAddress] );
+//    NSLog(@"onUserSuppliedShippingDetails for print order with shipping address: %@", [n.userInfo[kOLKeyUserInfoPrintOrder] shippingAddresses] );
 }
 
 - (void)onUserCompletedPayment:(NSNotification*)n {
