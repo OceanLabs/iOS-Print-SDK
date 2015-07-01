@@ -126,13 +126,17 @@ static const NSUInteger kTagLabel = 100;
             vc.addressToAddToListOnViewDidAppear = self.address;
         }
         [self.address saveToAddressBook];
-        [vc.delegate addressSelectionController:vc didFinishPickingAddresses:@[self.address]];
+        if (vc.allowMultipleSelection){
+            [self.navigationController popToRootViewControllerAnimated:YES];
+        }
+        else{
+            [vc.delegate addressSelectionController:vc didFinishPickingAddresses:@[self.address]];
+        }
     }
     else if ([vc.delegate respondsToSelector:@selector(addressPicker:didFinishPickingAddresses:)]){
         [self.address saveToAddressBook];
         [(id)(vc.delegate) addressPicker:nil didFinishPickingAddresses:@[self.address]];
     }
-//    [self.navigationController popToRootViewControllerAnimated:YES];
 }
 
 - (void)onCancelButtonClicked{
