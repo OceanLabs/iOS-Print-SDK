@@ -342,21 +342,16 @@ static id stringOrEmptyString(NSString *str) {
         [jobs addObject:[printJob jsonRepresentation]];
     }
     
-    
-    if (self.shippingAddresses.count > 0) {
-        NSMutableArray *addresses = [[NSMutableArray alloc] init];
-        for (OLAddress *address in self.shippingAddresses){
-            NSDictionary *shippingAddress = @{@"recipient_name": stringOrEmptyString(address.recipientName),
-                                              @"address_line_1": stringOrEmptyString(address.line1),
-                                              @"address_line_2": stringOrEmptyString(address.line2),
-                                              @"city": stringOrEmptyString(address.city),
-                                              @"county_state": stringOrEmptyString(address.stateOrCounty),
-                                              @"postcode": stringOrEmptyString(address.zipOrPostcode),
-                                              @"country_code": stringOrEmptyString(address.country.codeAlpha3)
-                                              };
-            [addresses addObject:shippingAddress];
-        }
-        [json setObject:addresses forKey:@"shipping_addresses"];
+    if (self.shippingAddress) {
+        NSDictionary *shippingAddress = @{@"recipient_name": stringOrEmptyString(self.shippingAddress.recipientName),
+                                          @"address_line_1": stringOrEmptyString(self.shippingAddress.line1),
+                                          @"address_line_2": stringOrEmptyString(self.shippingAddress.line2),
+                                          @"city": stringOrEmptyString(self.shippingAddress.city),
+                                          @"county_state": stringOrEmptyString(self.shippingAddress.stateOrCounty),
+                                          @"postcode": stringOrEmptyString(self.shippingAddress.zipOrPostcode),
+                                          @"country_code": stringOrEmptyString(self.shippingAddress.country.codeAlpha3)
+                                          };
+        [json setObject:shippingAddress forKey:@"shipping_address"];
     }
     
     return json;
@@ -368,20 +363,51 @@ static id stringOrEmptyString(NSString *str) {
         hash = 31 * hash + [job hash];
     }
     
-    NSMutableArray *countries = [[NSMutableArray alloc] init];
-    for (OLAddress *address in self.shippingAddresses){
-        [countries addObject:address.country];
-    }
-    if (countries.count == 0){
-        [countries addObject:[OLCountry countryForCurrentLocale]];
-    }
-    
     // shipping address country can change delivery costs
-    for (OLCountry *country in countries){
-        hash = 31 * hash + [country.codeAlpha3 hash];
-    }
+    OLCountry *country = self.shippingAddress.country ? self.shippingAddress.country : [OLCountry countryForCurrentLocale];
+    hash = 31 * hash + [country.codeAlpha3 hash];
     hash = 31 * hash + [self.promoCode hash];
     return hash;
+}
+
+- (NSArray *)uniqueJobs{
+    NSMutableArray *uniqJobs = [[NSMutableArray alloc] init];
+    NSMutableSet *uniqJobIds = [[NSMutableSet alloc] init];
+    for (id<OLPrintJob> job in self.jobs){
+        if (![uniqJobIds containsObject:job.uuid]){
+            [uniqJobIds addObject:job.uuid];
+            [uniqJobs addObject:job];
+        }
+    }
+    return uniqJobs;
+}
+
+- (void)discardDuplicateJobs{
+    NSMutableSet *uniqJobIds = [[NSMutableSet alloc] init];
+    for (id<OLPrintJob> job in self.jobs){
+        if ([uniqJobIds containsObject:job.uuid]){
+            [self removePrintJob:job];
+        }
+        else{
+            [uniqJobIds addObject:job.uuid];
+        }
+    }
+}
+
+- (void)duplicateJobsForAddresses:(NSArray *)addresses{
+    NSArray *jobs = [[NSArray alloc] initWithArray:self.jobs copyItems:YES];
+    for (id<OLPrintJob> job in self.jobs){
+        [self removePrintJob:job];
+    }
+    
+    for (OLAddress *address in addresses){
+        for (id<OLPrintJob> job in jobs){
+            id<OLPrintJob> jobCopy = [job copyWithZone:NULL];
+            jobCopy.address = address;
+            [self addPrintJob:jobCopy];
+        }
+    }
+    
 }
 
 #pragma mark - OLAssetUploadRequestDelegate methods
@@ -465,7 +491,7 @@ static id stringOrEmptyString(NSString *str) {
     [aCoder encodeObject:self.receipt forKey:kKeyReceipt];
     [aCoder encodeInteger:self.storageIdentifier forKey:kKeyStorageIdentifier];
     [aCoder encodeObject:self.userData forKey:kKeyUserData];
-    [aCoder encodeObject:self.shippingAddresses forKey:kKeyShippingAddress];
+    [aCoder encodeObject:self.shippingAddress forKey:kKeyShippingAddress];
     [aCoder encodeObject:self.lastPrintSubmissionError forKey:kKeyLastPrintError];
     [aCoder encodeObject:self.lastPrintSubmissionDate forKey:kKeyLastPrintSubmissionDate];
     [aCoder encodeObject:_currencyCode forKey:kKeyCurrencyCode];
@@ -481,7 +507,7 @@ static id stringOrEmptyString(NSString *str) {
             _receipt = [aDecoder decodeObjectForKey:kKeyReceipt];
             _storageIdentifier = [aDecoder decodeIntegerForKey:kKeyStorageIdentifier];
             _userData = [aDecoder decodeObjectForKey:kKeyUserData];
-            _shippingAddresses = [aDecoder decodeObjectForKey:kKeyShippingAddress];
+            _shippingAddress = [aDecoder decodeObjectForKey:kKeyShippingAddress];
             _lastPrintSubmissionError = [aDecoder decodeObjectForKey:kKeyLastPrintError];
             _lastPrintSubmissionDate = [aDecoder decodeObjectForKey:kKeyLastPrintSubmissionDate];
             _currencyCode = [aDecoder decodeObjectForKey:kKeyCurrencyCode];

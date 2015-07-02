@@ -16,6 +16,7 @@
 #import "OLAnalytics.h"
 #import "OLAddressEditViewController.h"
 #import <SkyLab.h>
+#import "OLProductPrintJob.h"
 
 NSString *const kOLNotificationUserSuppliedShippingDetails = @"co.oceanlabs.pssdk.kOLNotificationUserSuppliedShippingDetails";
 NSString *const kOLNotificationUserCompletedPayment = @"co.oceanlabs.pssdk.kOLNotificationUserCompletedPayment";
@@ -270,7 +271,14 @@ static NSString *const kOLKiteABTestAllowMultipleRecipients = @"ly.kite.abtest.a
     d[@"phone"] = phone;
     self.printOrder.userData = d;
     
-    self.printOrder.shippingAddresses = self.shippingAddresses;
+    if (self.shippingAddresses.count == 1){
+        self.printOrder.shippingAddress = [self.shippingAddresses firstObject];
+        [self.printOrder discardDuplicateJobs];
+    }
+    else{
+        self.printOrder.shippingAddress = nil;
+        [self.printOrder duplicateJobsForAddresses:self.shippingAddresses];
+    }
     OLPaymentViewController *vc = [[OLPaymentViewController alloc] initWithPrintOrder:self.printOrder];
     vc.presentedModally = self.presentedModally;
     vc.delegate = self.delegate;

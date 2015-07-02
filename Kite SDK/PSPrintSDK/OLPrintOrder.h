@@ -36,7 +36,7 @@ typedef void (^OLPrintOrderCostCompletionHandler)(OLPrintOrderCost *cost, NSErro
  */
 - (void)preemptAssetUpload;
 
-@property (nonatomic, strong) NSArray *shippingAddresses;
+@property (nonatomic, strong) OLAddress *shippingAddress;
 @property (nonatomic, strong) NSString *proofOfPayment;
 @property (nonatomic, strong) NSString *promoCode;
 
@@ -55,6 +55,8 @@ typedef void (^OLPrintOrderCostCompletionHandler)(OLPrintOrderCost *cost, NSErro
 
 @property (nonatomic, readonly) NSString *paymentDescription;
 
+- (void)discardDuplicateJobs;
+- (void)duplicateJobsForAddresses:(NSArray *)addresses;
 - (void)costWithCompletionHandler:(OLPrintOrderCostCompletionHandler)handler;
 
 @end

@@ -15,12 +15,19 @@
 static NSString *const kKeyProductTemplateId = @"co.oceanlabs.pssdk.kKeyProductTemplateId";
 static NSString *const kKeyImages = @"co.oceanlabs.pssdk.kKeyImages";
 
+static id stringOrEmptyString(NSString *str) {
+    return str ? str : @"";
+}
+
 @interface OLProductPrintJob ()
 @property (nonatomic, strong) NSString *templateId;
 @property (nonatomic, strong) NSArray *assets;
 @end
 
 @implementation OLProductPrintJob
+
+@synthesize address;
+@synthesize uuid;
 
 - (id)initWithTemplateId:(NSString *)templateId imageFilePaths:(NSArray/*<NSString>*/ *)imageFilePaths {
     if (self = [super init]) {
@@ -112,6 +119,18 @@ static NSString *const kKeyImages = @"co.oceanlabs.pssdk.kKeyImages";
     json[@"template_id"] = [OLProductTemplate templateWithId:self.templateId].identifier;
     json[@"assets"] = assets;
     json[@"frame_contents"] = @{};
+    
+    if (self.address) {
+        NSDictionary *shippingAddress = @{@"recipient_name": stringOrEmptyString(self.address.recipientName),
+                                          @"address_line_1": stringOrEmptyString(self.address.line1),
+                                          @"address_line_2": stringOrEmptyString(self.address.line2),
+                                          @"city": stringOrEmptyString(self.address.city),
+                                          @"county_state": stringOrEmptyString(self.address.stateOrCounty),
+                                          @"postcode": stringOrEmptyString(self.address.zipOrPostcode),
+                                          @"country_code": stringOrEmptyString(self.address.country.codeAlpha3)
+                                          };
+        [json setObject:shippingAddress forKey:@"shipping_address"];
+    }
     
     return json;
 }

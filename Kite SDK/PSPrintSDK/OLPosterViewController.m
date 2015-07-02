@@ -140,6 +140,7 @@
     
     
     OLProductPrintJob *job = [[OLProductPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:@[[photoAssets firstObject]]]; //Only adding the first photo since we only support buying one image at a time.
+    job.uuid = [[NSUUID UUID] UUIDString];
     OLPrintOrder *printOrder = [[OLPrintOrder alloc] init];
     NSDictionary *infoDict = [[NSBundle mainBundle] infoDictionary];
     NSString *appVersion = [infoDict objectForKey:@"CFBundleShortVersionString"];

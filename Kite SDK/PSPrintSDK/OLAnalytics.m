@@ -189,22 +189,16 @@ static NSString *nonNilStr(NSString *str) {
         }
     }
     
-    if (printOrder.shippingAddresses.count > 0) {
-        NSMutableArray *addresses = [[NSMutableArray alloc] init];
-        for (OLAddress *address in printOrder.shippingAddresses){
-            NSMutableDictionary *d = [[NSMutableDictionary alloc] init];
-            d[@"Shipping Recipient"] = nonNilStr(address.recipientName);
-            d[@"Shipping Line 1"] = nonNilStr(address.line1);
-            d[@"Shipping Line 2"] = nonNilStr(address.line2);
-            d[@"Shipping City"] = nonNilStr(address.city);
-            d[@"Shipping County"] = nonNilStr(address.stateOrCounty);
-            d[@"Shipping Postcode"] = nonNilStr(address.zipOrPostcode);
-            d[@"Shipping Country"] = nonNilStr(address.country.name);
-            d[@"Shipping Country Code2"] = nonNilStr(address.country.codeAlpha2);
-            d[@"Shipping Country Code3"] = nonNilStr(address.country.codeAlpha3);
-            [addresses addObject:d];
-        }
-        p[@"Shipping Addresses"] = addresses;
+    if (printOrder.shippingAddress) {
+        p[@"Shipping Recipient"] = nonNilStr(printOrder.shippingAddress.recipientName);
+        p[@"Shipping Line 1"] = nonNilStr(printOrder.shippingAddress.line1);
+        p[@"Shipping Line 2"] = nonNilStr(printOrder.shippingAddress.line2);
+        p[@"Shipping City"] = nonNilStr(printOrder.shippingAddress.city);
+        p[@"Shipping County"] = nonNilStr(printOrder.shippingAddress.stateOrCounty);
+        p[@"Shipping Postcode"] = nonNilStr(printOrder.shippingAddress.zipOrPostcode);
+        p[@"Shipping Country"] = nonNilStr(printOrder.shippingAddress.country.name);
+        p[@"Shipping Country Code2"] = nonNilStr(printOrder.shippingAddress.country.codeAlpha2);
+        p[@"Shipping Country Code3"] = nonNilStr(printOrder.shippingAddress.country.codeAlpha3);
     }
     
 //    if ([printOrder.currenciesSupported containsObject:@"GBP"]) {

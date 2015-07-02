@@ -32,13 +32,14 @@ static id stringOrEmptyString(NSString *str) {
 @property (nonatomic, strong) OLAsset *frontImageAsset;
 @property (nonatomic, strong) OLAsset *textOnPhotoImageAsset;
 @property (nonatomic, copy) NSString *message;
-@property (nonatomic, strong) OLAddress *address;
 @property (nonatomic, strong) NSArray *location;
 
 @end
 
 @implementation OLPostcardPrintJob
 
+@synthesize address;
+@synthesize uuid;
 
 - (id)initWithTemplateId:(NSString *)templateId frontImageOLAsset:(OLAsset *)frontImageAsset textOnPhotoImageOLAsset:(OLAsset *)textOnPhotoAsset message:(NSString *)message address:(OLAddress *)address location:(NSArray/*<NSString>*/ *)location; {
     if (self = [super init]) {

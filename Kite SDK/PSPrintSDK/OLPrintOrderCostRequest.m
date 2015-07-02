@@ -53,17 +53,9 @@ static NSUInteger cacheOrderHash; // cached response is only valid for orders wi
         basketString = [basketString stringByAppendingString:[NSString stringWithFormat:@"%@:%d,", [job templateId], (int)[job quantity]]];
     }
     basketString = [basketString stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@","]];
-    
-    NSMutableArray *countries = [[NSMutableArray alloc] init];
-    for (OLAddress *address in order.shippingAddresses){
-        [countries addObject:address.country];
-    }
-    if (countries.count == 0){
-        [countries addObject:[[OLCountry countryForCurrentLocale] codeAlpha3]];
-    }
 
     NSDictionary *dict = @{@"basket" : basketString,
-                           @"shipping_country_codes" : countries,
+                           @"shipping_country_code" : order.shippingAddress.country ? [order.shippingAddress.country codeAlpha3] : [[OLCountry countryForCurrentLocale] codeAlpha3],
                            @"promo_code" : order.promoCode ? urlencode(order.promoCode) : @""
                            };
 
