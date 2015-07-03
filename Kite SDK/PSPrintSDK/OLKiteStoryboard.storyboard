@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="cpC-15-nyB">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14E46" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="cpC-15-nyB">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
@@ -1942,14 +1942,59 @@
                                     <constraint firstItem="6zv-ER-YtC" firstAttribute="leading" secondItem="P6D-Eb-oaD" secondAttribute="leading" id="tiB-3M-mvy"/>
                                 </constraints>
                             </view>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceHorizontal="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="5Q3-gb-UdF">
+                                <rect key="frame" x="0.0" y="580" width="600" height="20"/>
+                                <color key="backgroundColor" red="0.90588235294117647" green="0.92549019607843142" blue="0.92941176470588238" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="20" id="udb-pn-xfO"/>
+                                </constraints>
+                                <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="3" minimumInteritemSpacing="3" id="EET-l0-WsE">
+                                    <size key="itemSize" width="50" height="50"/>
+                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                </collectionViewFlowLayout>
+                                <cells>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="pagesCell" id="Qcx-b9-pzq">
+                                        <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                            <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" tag="10" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="NyA-A1-zYH">
+                                                    <rect key="frame" x="0.0" y="0.0" width="25.5" height="50"/>
+                                                </imageView>
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" tag="20" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="JTL-18-2lR">
+                                                    <rect key="frame" x="24" y="0.0" width="25.5" height="50"/>
+                                                </imageView>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        </view>
+                                        <constraints>
+                                            <constraint firstAttribute="bottom" secondItem="JTL-18-2lR" secondAttribute="bottom" id="2rm-SK-j9x"/>
+                                            <constraint firstItem="NyA-A1-zYH" firstAttribute="leading" secondItem="Qcx-b9-pzq" secondAttribute="leading" id="4Om-FQ-2Gc"/>
+                                            <constraint firstItem="NyA-A1-zYH" firstAttribute="top" secondItem="Qcx-b9-pzq" secondAttribute="top" id="5RY-BR-x72"/>
+                                            <constraint firstAttribute="bottom" secondItem="NyA-A1-zYH" secondAttribute="bottom" id="BQS-BY-xxg"/>
+                                            <constraint firstItem="JTL-18-2lR" firstAttribute="top" secondItem="Qcx-b9-pzq" secondAttribute="top" id="Kua-Gb-u4U"/>
+                                            <constraint firstItem="JTL-18-2lR" firstAttribute="leading" secondItem="NyA-A1-zYH" secondAttribute="trailing" constant="-1" id="RLL-Id-vBA"/>
+                                            <constraint firstItem="JTL-18-2lR" firstAttribute="width" secondItem="NyA-A1-zYH" secondAttribute="width" id="dsW-3B-0xg"/>
+                                            <constraint firstAttribute="trailing" secondItem="JTL-18-2lR" secondAttribute="trailing" id="vuS-q0-5I0"/>
+                                        </constraints>
+                                    </collectionViewCell>
+                                </cells>
+                            </collectionView>
                         </subviews>
                         <color key="backgroundColor" red="0.74509803921568629" green="0.80392156862745101" blue="0.81960784313725488" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <gestureRecognizers/>
                         <constraints>
                             <constraint firstItem="eAv-QL-iu7" firstAttribute="top" relation="greaterThanOrEqual" secondItem="wLR-Iq-33c" secondAttribute="bottom" constant="20" id="6OB-XY-vp2"/>
+                            <constraint firstAttribute="trailing" secondItem="5Q3-gb-UdF" secondAttribute="trailing" id="Gq6-Ch-fHX"/>
+                            <constraint firstItem="eAv-QL-iu7" firstAttribute="top" secondItem="5Q3-gb-UdF" secondAttribute="bottom" id="KIb-SW-xVl"/>
                             <constraint firstAttribute="centerX" secondItem="P6D-Eb-oaD" secondAttribute="centerX" constant="7" id="Kix-gc-0g0"/>
                             <constraint firstItem="wLR-Iq-33c" firstAttribute="leading" secondItem="xrD-7k-Kti" secondAttribute="leading" priority="750" constant="38" id="Xjf-bl-V0K"/>
                             <constraint firstItem="wLR-Iq-33c" firstAttribute="top" relation="greaterThanOrEqual" secondItem="LtF-ql-Rxv" secondAttribute="bottom" constant="20" id="bx6-vt-q2D"/>
+                            <constraint firstItem="5Q3-gb-UdF" firstAttribute="leading" secondItem="xrD-7k-Kti" secondAttribute="leading" id="gXs-No-oya"/>
                             <constraint firstAttribute="centerY" secondItem="wLR-Iq-33c" secondAttribute="centerY" constant="-16" placeholder="YES" id="r8S-W8-SmN"/>
                             <constraint firstItem="P6D-Eb-oaD" firstAttribute="bottom" secondItem="wLR-Iq-33c" secondAttribute="bottom" constant="-15" id="xxK-hn-AB7"/>
                         </constraints>
@@ -1965,6 +2010,8 @@
                         <outlet property="openbookView" destination="rlk-bS-4UT" id="Q1X-2u-4iN"/>
                         <outlet property="pagesLabel" destination="6zv-ER-YtC" id="COA-sz-sqZ"/>
                         <outlet property="pagesLabelContainer" destination="P6D-Eb-oaD" id="H0M-vG-XPI"/>
+                        <outlet property="scrubber" destination="5Q3-gb-UdF" id="aVR-S4-7IM"/>
+                        <outlet property="scrubberHeightCon" destination="udb-pn-xfO" id="Cnc-3x-dw1"/>
                         <outlet property="topMarginCon" destination="bx6-vt-q2D" id="i3p-5O-8FF"/>
                     </connections>
                 </viewController>

@@ -16,7 +16,7 @@
  * Insert your API keys here. These are found under your profile 
  * by logging in to the developer portal at https://www.kite.ly
  **********************************************************************/
-static NSString *const kAPIKeySandbox = @"REPLACE_WITH_YOUR_API_KEY"; // replace with your Sandbox API key found under the Profile section in the developer portal
+static NSString *const kAPIKeySandbox = @"2778e89d274cf8ecbbad3fbba180cc5e62d0997c"; // replace with your Sandbox API key found under the Profile section in the developer portal
 static NSString *const kAPIKeyLive = @"REPLACE_WITH_YOUR_API_KEY"; // replace with your Live API key found under the Profile section in the developer portal
 
 static NSString *const kStripePublishableKey = @"pk_test_6pRNASCoBOKtIshFeQd4XMUh"; // This is a test key. Replace with the live key here.
@@ -180,7 +180,7 @@ static NSString *const kApplePayMerchantIDKey = @"merchant.co.oceanlabs.kite.ly"
 }
 
 - (BOOL)kiteControllerShouldAllowUserToAddMorePhotos:(OLKiteViewController *)controller {
-    return YES;
+    return NO;
 }
 
 //- (BOOL)shouldShowPhoneEntryOnCheckoutScreen{

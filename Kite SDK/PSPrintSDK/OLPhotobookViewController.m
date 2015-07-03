@@ -40,11 +40,12 @@ static const CGFloat kBookEdgePadding = 38;
 
 @end
 
-@interface OLPhotobookViewController () <UIPageViewControllerDataSource, UIPageViewControllerDelegate, UIGestureRecognizerDelegate, OLScrollCropViewControllerDelegate>
+@interface OLPhotobookViewController () <UIPageViewControllerDataSource, UIPageViewControllerDelegate, UIGestureRecognizerDelegate, OLScrollCropViewControllerDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout>
 
 @property (weak, nonatomic) UIPanGestureRecognizer *pageControllerPanGesture;
 @property (weak, nonatomic) IBOutlet UIView *fakeShadowView;
 @property (weak, nonatomic) IBOutlet UIView *openbookView;
+@property (weak, nonatomic) IBOutlet UICollectionView *scrubber;
 @property (weak, nonatomic) IBOutlet UIView *containerView;
 @property (strong, nonatomic) NSMutableArray *photobookPhotos;
 @property (strong, nonatomic) OLPrintPhoto *croppingPrintPhoto;
@@ -54,6 +55,7 @@ static const CGFloat kBookEdgePadding = 38;
 @property (strong, nonatomic) NSLayoutConstraint *widthCon;
 @property (strong, nonatomic) NSLayoutConstraint *widthCon2;
 @property (strong, nonatomic) NSLayoutConstraint *centerYCon;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *scrubberHeightCon;
 
 @property (strong, nonatomic) UIDynamicAnimator* dynamicAnimator;
 @property (strong, nonatomic) UIDynamicItemBehavior* inertiaBehavior;
@@ -301,11 +303,16 @@ static const CGFloat kBookEdgePadding = 38;
     if (self.editMode && self.bookClosed){
         self.topMarginCon.constant = 10;
         self.bottomMarginCon.constant = 0;
+        self.scrubber.hidden = YES;
     }
     else if (self.editMode){
         self.topMarginCon.constant = 0;
         self.bottomMarginCon.constant = 0;
+        self.scrubber.hidden = YES;
     }
+
+	self.scrubber.dataSource = self;
+    self.scrubber.delegate = self;
 }
 
 - (void)updatePagesLabel{
@@ -347,6 +354,11 @@ static const CGFloat kBookEdgePadding = 38;
     if (self.bookClosed && !self.editMode){
         [self tease];
     }
+    
+//    self.scrubberHeightCon.constant = 60;
+//    [UIView animateWithDuration:0.5 animations:^{
+//        [self.view layoutIfNeeded];
+//    }];
 }
 
 - (void)tease{
@@ -1145,6 +1157,38 @@ static const CGFloat kBookEdgePadding = 38;
     else{
         return self.containerView.center.x - self.containerView.frame.size.width / 2  - kBookEdgePadding >= 0;
     }
+}
+
+#pragma mark - CollectionView delegate and dataSource methods
+
+- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
+    return self.editMode ? 0 : 1;
+}
+
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
+    return self.product.quantityToFulfillOrder / 2.0;
+}
+
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
+    UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"pagesCell" forIndexPath:indexPath];
+    
+    UIImageView *left = (UIImageView *)[cell viewWithTag:10];
+    UIImageView *right = (UIImageView *)[cell viewWithTag:20];
+    
+    OLPrintPhoto *printPhoto = [self.photobookPhotos objectAtIndex:indexPath.item * 2];
+    [printPhoto setImageSize:CGSizeMake(100, 100) cropped:YES completionHandler:^(UIImage *image){
+        left.image = image;
+    }];
+    printPhoto = [self.photobookPhotos objectAtIndex:indexPath.item * 2 + 1];
+     [printPhoto setImageSize:CGSizeMake(100, 100) cropped:YES completionHandler:^(UIImage *image){
+        right.image = image;
+     }];
+    
+    return cell;
+}
+
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
+    return CGSizeMake(20 * [self productAspectRatio], 20);
 }
 
 #pragma mark - Autorotate and Orientation Methods
