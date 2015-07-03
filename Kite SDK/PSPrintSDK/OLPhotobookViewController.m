@@ -1203,16 +1203,12 @@ static const CGFloat kBookEdgePadding = 38;
     NSInteger allPages = self.photobookPhotos.count;
     
     CGFloat relativeToCollection = (CGFloat)(indexPath.item) / (CGFloat)[self collectionView:collectionView numberOfItemsInSection:indexPath.section];
-    
-    NSLog(@"%f", relativeToCollection);
-    
+        
     NSInteger relativeToAll = relativeToCollection * allPages;
     
     if (relativeToAll % 2 == 1){
         relativeToAll--;
     }
-    
-    NSLog(@"%d", relativeToAll);
     
     OLPrintPhoto *printPhoto = [self.photobookPhotos objectAtIndex:relativeToAll];
     [printPhoto setImageSize:CGSizeMake(100, 100) cropped:YES completionHandler:^(UIImage *image){
