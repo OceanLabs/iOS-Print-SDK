@@ -484,8 +484,8 @@
                         <variation key="default">
                             <mask key="constraints">
                                 <exclude reference="ojV-vO-jP6"/>
-                                <exclude reference="RZd-YG-HVB"/>
                                 <exclude reference="Ev7-5O-KVN"/>
+                                <exclude reference="RZd-YG-HVB"/>
                             </mask>
                         </variation>
                     </view>
@@ -2035,6 +2035,30 @@
                                     <constraint firstItem="HqC-Iz-l8f" firstAttribute="leading" secondItem="wLR-Iq-33c" secondAttribute="leading" id="yDo-Kb-0gK"/>
                                 </constraints>
                             </view>
+                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="faa-Rz-cHy" userLabel="preview">
+                                <rect key="frame" x="263" y="515" width="60" height="50"/>
+                                <subviews>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" tag="10" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="1gC-hf-oY1">
+                                        <rect key="frame" x="0.0" y="0.0" width="30" height="50"/>
+                                    </imageView>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" tag="20" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="tPe-Jp-axX">
+                                        <rect key="frame" x="30" y="0.0" width="30" height="50"/>
+                                    </imageView>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstItem="1gC-hf-oY1" firstAttribute="leading" secondItem="faa-Rz-cHy" secondAttribute="leading" id="4QL-60-Uis"/>
+                                    <constraint firstAttribute="height" constant="50" id="7SP-E5-eQ8"/>
+                                    <constraint firstItem="tPe-Jp-axX" firstAttribute="leading" secondItem="1gC-hf-oY1" secondAttribute="trailing" id="DsN-zY-lyS"/>
+                                    <constraint firstItem="tPe-Jp-axX" firstAttribute="top" secondItem="faa-Rz-cHy" secondAttribute="top" id="MCB-9r-yzx"/>
+                                    <constraint firstAttribute="trailing" secondItem="tPe-Jp-axX" secondAttribute="trailing" id="OWq-9J-Aev"/>
+                                    <constraint firstAttribute="bottom" secondItem="1gC-hf-oY1" secondAttribute="bottom" id="PSH-7j-oUz"/>
+                                    <constraint firstAttribute="width" secondItem="faa-Rz-cHy" secondAttribute="height" multiplier="6:5" placeholder="YES" id="bfL-oi-qab"/>
+                                    <constraint firstItem="1gC-hf-oY1" firstAttribute="top" secondItem="faa-Rz-cHy" secondAttribute="top" id="hT2-hf-IrM"/>
+                                    <constraint firstAttribute="bottom" secondItem="tPe-Jp-axX" secondAttribute="bottom" id="ucP-ED-5vF"/>
+                                    <constraint firstItem="tPe-Jp-axX" firstAttribute="width" secondItem="1gC-hf-oY1" secondAttribute="width" id="w00-qP-sEZ"/>
+                                </constraints>
+                            </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="P6D-Eb-oaD" userLabel="pagesLabelContainer">
                                 <rect key="frame" x="263" y="429" width="60" height="22"/>
                                 <subviews>
@@ -2056,14 +2080,14 @@
                                     <constraint firstItem="6zv-ER-YtC" firstAttribute="leading" secondItem="P6D-Eb-oaD" secondAttribute="leading" id="tiB-3M-mvy"/>
                                 </constraints>
                             </view>
-                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceHorizontal="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="5Q3-gb-UdF">
-                                <rect key="frame" x="0.0" y="580" width="600" height="20"/>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceHorizontal="YES" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="5Q3-gb-UdF" customClass="OLPhotobookScrubberCollectionView">
+                                <rect key="frame" x="0.0" y="570" width="600" height="30"/>
                                 <color key="backgroundColor" red="0.90588235294117647" green="0.92549019607843142" blue="0.92941176470588238" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="20" id="udb-pn-xfO"/>
+                                    <constraint firstAttribute="height" constant="30" id="udb-pn-xfO"/>
                                 </constraints>
                                 <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="3" minimumInteritemSpacing="3" id="EET-l0-WsE">
-                                    <size key="itemSize" width="50" height="50"/>
+                                    <size key="itemSize" width="50" height="22"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                     <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
@@ -2073,14 +2097,14 @@
                                         <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="50" height="22"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" tag="10" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="NyA-A1-zYH">
-                                                    <rect key="frame" x="0.0" y="0.0" width="25.5" height="50"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="25.5" height="22"/>
                                                 </imageView>
                                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" tag="20" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="JTL-18-2lR">
-                                                    <rect key="frame" x="24" y="0.0" width="25.5" height="50"/>
+                                                    <rect key="frame" x="24" y="0.0" width="25.5" height="22"/>
                                                 </imageView>
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -2108,8 +2132,10 @@
                             <constraint firstAttribute="centerX" secondItem="P6D-Eb-oaD" secondAttribute="centerX" constant="7" id="Kix-gc-0g0"/>
                             <constraint firstItem="wLR-Iq-33c" firstAttribute="leading" secondItem="xrD-7k-Kti" secondAttribute="leading" priority="750" constant="38" id="Xjf-bl-V0K"/>
                             <constraint firstItem="wLR-Iq-33c" firstAttribute="top" relation="greaterThanOrEqual" secondItem="LtF-ql-Rxv" secondAttribute="bottom" constant="20" id="bx6-vt-q2D"/>
+                            <constraint firstItem="5Q3-gb-UdF" firstAttribute="top" secondItem="faa-Rz-cHy" secondAttribute="bottom" constant="5" id="eap-3w-Xhz"/>
                             <constraint firstItem="5Q3-gb-UdF" firstAttribute="leading" secondItem="xrD-7k-Kti" secondAttribute="leading" id="gXs-No-oya"/>
                             <constraint firstAttribute="centerY" secondItem="wLR-Iq-33c" secondAttribute="centerY" constant="-16" placeholder="YES" id="r8S-W8-SmN"/>
+                            <constraint firstAttribute="centerX" secondItem="faa-Rz-cHy" secondAttribute="centerX" constant="7" id="wtu-c9-qxK"/>
                             <constraint firstItem="P6D-Eb-oaD" firstAttribute="bottom" secondItem="wLR-Iq-33c" secondAttribute="bottom" constant="-15" id="xxK-hn-AB7"/>
                         </constraints>
                     </view>
@@ -2124,6 +2150,7 @@
                         <outlet property="openbookView" destination="rlk-bS-4UT" id="Q1X-2u-4iN"/>
                         <outlet property="pagesLabel" destination="6zv-ER-YtC" id="COA-sz-sqZ"/>
                         <outlet property="pagesLabelContainer" destination="P6D-Eb-oaD" id="H0M-vG-XPI"/>
+                        <outlet property="pagesPreviewContainer" destination="faa-Rz-cHy" id="Tz7-uG-vit"/>
                         <outlet property="scrubber" destination="5Q3-gb-UdF" id="aVR-S4-7IM"/>
                         <outlet property="scrubberHeightCon" destination="udb-pn-xfO" id="Cnc-3x-dw1"/>
                         <outlet property="topMarginCon" destination="bx6-vt-q2D" id="i3p-5O-8FF"/>

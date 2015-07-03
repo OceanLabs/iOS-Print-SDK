@@ -74,6 +74,7 @@ static const CGFloat kBookEdgePadding = 38;
 @property (assign, nonatomic) BOOL haveSeenViewDidAppear;
 
 @property (weak, nonatomic) UIImageView *coverImageView;
+@property (weak, nonatomic) IBOutlet UIView *pagesPreviewContainer;
 
 @end
 
@@ -303,16 +304,17 @@ static const CGFloat kBookEdgePadding = 38;
     if (self.editMode && self.bookClosed){
         self.topMarginCon.constant = 10;
         self.bottomMarginCon.constant = 0;
-        self.scrubber.hidden = YES;
+        [self.scrubber removeFromSuperview];
     }
     else if (self.editMode){
         self.topMarginCon.constant = 0;
         self.bottomMarginCon.constant = 0;
-        self.scrubber.hidden = YES;
+        [self.scrubber removeFromSuperview];
     }
 
 	self.scrubber.dataSource = self;
     self.scrubber.delegate = self;
+    [self.pagesPreviewContainer addConstraint:[NSLayoutConstraint constraintWithItem:self.pagesPreviewContainer attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:self.pagesPreviewContainer attribute:NSLayoutAttributeHeight multiplier:[self productAspectRatio] constant:0]];
 }
 
 - (void)updatePagesLabel{
@@ -354,11 +356,6 @@ static const CGFloat kBookEdgePadding = 38;
     if (self.bookClosed && !self.editMode){
         [self tease];
     }
-    
-//    self.scrubberHeightCon.constant = 60;
-//    [UIView animateWithDuration:0.5 animations:^{
-//        [self.view layoutIfNeeded];
-//    }];
 }
 
 - (void)tease{
@@ -801,6 +798,32 @@ static const CGFloat kBookEdgePadding = 38;
     return !self.animating;
 }
 
+- (void)userDidTouchScrubberAtPoint:(CGPoint)p{
+    CGFloat normalizedP = p.x / self.scrubber.frame.size.width;
+    
+    NSInteger page = (self.photobookPhotos.count / 2.0) * normalizedP;
+    if (page % 2 == 1){
+        page--;
+    }
+    
+    UIImageView *left = (UIImageView *)[self.pagesPreviewContainer viewWithTag:10];
+    UIImageView *right = (UIImageView *)[self.pagesPreviewContainer viewWithTag:20];
+    
+    [(OLPrintPhoto *)self.photobookPhotos[page] setImageSize:left.frame.size cropped:YES completionHandler:^(UIImage *image){
+        left.image = image;
+    }];
+    [(OLPrintPhoto *)self.photobookPhotos[page+1] setImageSize:right.frame.size cropped:YES completionHandler:^(UIImage *image){
+        right.image = image;
+    }];
+    
+    self.pagesPreviewContainer.hidden = NO;
+}
+
+- (void)userDidStopTouchingScrubber{
+    self.pagesPreviewContainer.hidden = YES;
+}
+
+
 #pragma mark - Book related methods
 
 - (void)pageViewController:(UIPageViewController *)pageViewController didFinishAnimating:(BOOL)finished previousViewControllers:(NSArray *)previousViewControllers transitionCompleted:(BOOL)completed{
@@ -1188,7 +1211,7 @@ static const CGFloat kBookEdgePadding = 38;
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
-    return CGSizeMake(20 * [self productAspectRatio], 20);
+    return CGSizeMake(collectionView.frame.size.height * [self productAspectRatio], collectionView.frame.size.height);
 }
 
 #pragma mark - Autorotate and Orientation Methods
