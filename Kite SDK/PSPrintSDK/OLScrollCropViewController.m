@@ -18,7 +18,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    [self.cropView setClipsToBounds:YES];
+    [self.cropView setClipsToBounds:NO];
     
     if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8){
         UIButton *doneButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 40, 20)];

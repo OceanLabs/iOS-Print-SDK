@@ -97,7 +97,7 @@ CTAssetsPickerControllerDelegate>
         self.imagesCollectionView.hidden = YES;
     }
     
-    if ([self shouldShowAddMorePhotos] && self.userSelectedPhotos.count == 0){
+    if ([self shouldShowAddMorePhotos] && self.userSelectedPhotos.count == 0 && [[[UIDevice currentDevice] systemVersion] floatValue] >= 8){
         [self collectionView:self.imagesCollectionView didSelectItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
     }
 }
