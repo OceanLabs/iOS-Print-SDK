@@ -801,11 +801,11 @@ static const CGFloat kBookEdgePadding = 38;
 - (void)userDidTouchScrubberAtPoint:(CGPoint)p{
     CGFloat normalizedP = p.x / self.scrubber.frame.size.width;
     
-    NSInteger page = (self.photobookPhotos.count / 2.0) * normalizedP;
+    NSInteger page = (self.photobookPhotos.count) * normalizedP;
     if (page % 2 == 1){
         page--;
     }
-    
+        
     UIImageView *left = (UIImageView *)[self.pagesPreviewContainer viewWithTag:10];
     UIImageView *right = (UIImageView *)[self.pagesPreviewContainer viewWithTag:20];
     
@@ -1189,7 +1189,9 @@ static const CGFloat kBookEdgePadding = 38;
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
-    return self.product.quantityToFulfillOrder / 2.0;
+    CGFloat numberOfItems = (self.scrubber.frame.size.width+3) / ([self collectionView:collectionView layout:self.scrubber.collectionViewLayout sizeForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]].width+3);
+    
+    return numberOfItems;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
@@ -1198,11 +1200,25 @@ static const CGFloat kBookEdgePadding = 38;
     UIImageView *left = (UIImageView *)[cell viewWithTag:10];
     UIImageView *right = (UIImageView *)[cell viewWithTag:20];
     
-    OLPrintPhoto *printPhoto = [self.photobookPhotos objectAtIndex:indexPath.item * 2];
+    NSInteger allPages = self.photobookPhotos.count;
+    
+    CGFloat relativeToCollection = (CGFloat)(indexPath.item) / (CGFloat)[self collectionView:collectionView numberOfItemsInSection:indexPath.section];
+    
+    NSLog(@"%f", relativeToCollection);
+    
+    NSInteger relativeToAll = relativeToCollection * allPages;
+    
+    if (relativeToAll % 2 == 1){
+        relativeToAll--;
+    }
+    
+    NSLog(@"%d", relativeToAll);
+    
+    OLPrintPhoto *printPhoto = [self.photobookPhotos objectAtIndex:relativeToAll];
     [printPhoto setImageSize:CGSizeMake(100, 100) cropped:YES completionHandler:^(UIImage *image){
         left.image = image;
     }];
-    printPhoto = [self.photobookPhotos objectAtIndex:indexPath.item * 2 + 1];
+    printPhoto = [self.photobookPhotos objectAtIndex:relativeToAll + 1];
      [printPhoto setImageSize:CGSizeMake(100, 100) cropped:YES completionHandler:^(UIImage *image){
         right.image = image;
      }];

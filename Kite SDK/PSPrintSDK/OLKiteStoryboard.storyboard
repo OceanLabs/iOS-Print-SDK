@@ -2035,30 +2035,6 @@
                                     <constraint firstItem="HqC-Iz-l8f" firstAttribute="leading" secondItem="wLR-Iq-33c" secondAttribute="leading" id="yDo-Kb-0gK"/>
                                 </constraints>
                             </view>
-                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="faa-Rz-cHy" userLabel="preview">
-                                <rect key="frame" x="263" y="515" width="60" height="50"/>
-                                <subviews>
-                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" tag="10" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="1gC-hf-oY1">
-                                        <rect key="frame" x="0.0" y="0.0" width="30" height="50"/>
-                                    </imageView>
-                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" tag="20" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="tPe-Jp-axX">
-                                        <rect key="frame" x="30" y="0.0" width="30" height="50"/>
-                                    </imageView>
-                                </subviews>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <constraints>
-                                    <constraint firstItem="1gC-hf-oY1" firstAttribute="leading" secondItem="faa-Rz-cHy" secondAttribute="leading" id="4QL-60-Uis"/>
-                                    <constraint firstAttribute="height" constant="50" id="7SP-E5-eQ8"/>
-                                    <constraint firstItem="tPe-Jp-axX" firstAttribute="leading" secondItem="1gC-hf-oY1" secondAttribute="trailing" id="DsN-zY-lyS"/>
-                                    <constraint firstItem="tPe-Jp-axX" firstAttribute="top" secondItem="faa-Rz-cHy" secondAttribute="top" id="MCB-9r-yzx"/>
-                                    <constraint firstAttribute="trailing" secondItem="tPe-Jp-axX" secondAttribute="trailing" id="OWq-9J-Aev"/>
-                                    <constraint firstAttribute="bottom" secondItem="1gC-hf-oY1" secondAttribute="bottom" id="PSH-7j-oUz"/>
-                                    <constraint firstAttribute="width" secondItem="faa-Rz-cHy" secondAttribute="height" multiplier="6:5" placeholder="YES" id="bfL-oi-qab"/>
-                                    <constraint firstItem="1gC-hf-oY1" firstAttribute="top" secondItem="faa-Rz-cHy" secondAttribute="top" id="hT2-hf-IrM"/>
-                                    <constraint firstAttribute="bottom" secondItem="tPe-Jp-axX" secondAttribute="bottom" id="ucP-ED-5vF"/>
-                                    <constraint firstItem="tPe-Jp-axX" firstAttribute="width" secondItem="1gC-hf-oY1" secondAttribute="width" id="w00-qP-sEZ"/>
-                                </constraints>
-                            </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="P6D-Eb-oaD" userLabel="pagesLabelContainer">
                                 <rect key="frame" x="263" y="429" width="60" height="22"/>
                                 <subviews>
@@ -2078,6 +2054,30 @@
                                     <constraint firstAttribute="bottom" secondItem="6zv-ER-YtC" secondAttribute="bottom" id="dkM-qt-1TL"/>
                                     <constraint firstItem="6zv-ER-YtC" firstAttribute="top" secondItem="P6D-Eb-oaD" secondAttribute="top" id="pFo-eB-i56"/>
                                     <constraint firstItem="6zv-ER-YtC" firstAttribute="leading" secondItem="P6D-Eb-oaD" secondAttribute="leading" id="tiB-3M-mvy"/>
+                                </constraints>
+                            </view>
+                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="faa-Rz-cHy" userLabel="preview">
+                                <rect key="frame" x="251" y="495" width="84" height="70"/>
+                                <subviews>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" tag="10" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="1gC-hf-oY1">
+                                        <rect key="frame" x="0.0" y="0.0" width="42" height="70"/>
+                                    </imageView>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" tag="20" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="tPe-Jp-axX">
+                                        <rect key="frame" x="42" y="0.0" width="42" height="70"/>
+                                    </imageView>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstItem="1gC-hf-oY1" firstAttribute="leading" secondItem="faa-Rz-cHy" secondAttribute="leading" id="4QL-60-Uis"/>
+                                    <constraint firstAttribute="height" constant="70" id="7SP-E5-eQ8"/>
+                                    <constraint firstItem="tPe-Jp-axX" firstAttribute="leading" secondItem="1gC-hf-oY1" secondAttribute="trailing" id="DsN-zY-lyS"/>
+                                    <constraint firstItem="tPe-Jp-axX" firstAttribute="top" secondItem="faa-Rz-cHy" secondAttribute="top" id="MCB-9r-yzx"/>
+                                    <constraint firstAttribute="trailing" secondItem="tPe-Jp-axX" secondAttribute="trailing" id="OWq-9J-Aev"/>
+                                    <constraint firstAttribute="bottom" secondItem="1gC-hf-oY1" secondAttribute="bottom" id="PSH-7j-oUz"/>
+                                    <constraint firstAttribute="width" secondItem="faa-Rz-cHy" secondAttribute="height" multiplier="6:5" placeholder="YES" id="bfL-oi-qab"/>
+                                    <constraint firstItem="1gC-hf-oY1" firstAttribute="top" secondItem="faa-Rz-cHy" secondAttribute="top" id="hT2-hf-IrM"/>
+                                    <constraint firstAttribute="bottom" secondItem="tPe-Jp-axX" secondAttribute="bottom" id="ucP-ED-5vF"/>
+                                    <constraint firstItem="tPe-Jp-axX" firstAttribute="width" secondItem="1gC-hf-oY1" secondAttribute="width" id="w00-qP-sEZ"/>
                                 </constraints>
                             </view>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceHorizontal="YES" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="5Q3-gb-UdF" customClass="OLPhotobookScrubberCollectionView">
