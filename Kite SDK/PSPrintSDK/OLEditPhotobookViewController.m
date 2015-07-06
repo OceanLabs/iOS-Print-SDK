@@ -578,7 +578,6 @@ UINavigationControllerDelegate>
                 return cell;
             }
         }
-        NSLog(@"%@", indexPath);
         OLPhotobookViewController *photobook = [self.storyboard instantiateViewControllerWithIdentifier:@"PhotobookViewController"];
         if (indexPath.section == kSectionPages){
             photobook.startOpen = YES;
