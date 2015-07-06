@@ -804,6 +804,14 @@ static const CGFloat kBookEdgePadding = 38;
 }
 
 - (void)userDidTouchScrubberAtPoint:(CGPoint)p{
+    if (self.animating){
+        return;
+    }
+    if (self.bookClosed){
+        [self openBook:NULL];
+        return;
+    }
+    
     CGFloat normalizedP = p.x / self.scrubber.frame.size.width;
     
     NSInteger page = (self.photobookPhotos.count) * normalizedP;
@@ -827,6 +835,9 @@ static const CGFloat kBookEdgePadding = 38;
 }
 
 - (void)userDidStopTouchingScrubberAtPoint:(CGPoint)p{
+    if (self.bookClosed || self.animating){
+        return;
+    }
     self.pagesPreviewContainer.hidden = YES;
     
     CGFloat normalizedP = p.x / self.scrubber.frame.size.width;
@@ -839,10 +850,6 @@ static const CGFloat kBookEdgePadding = 38;
     OLPhotobookPageContentViewController *vc1 = [self.pageController.viewControllers firstObject];
     if (vc1.pageIndex != page){
         [self.pageController setViewControllers:@[[self viewControllerAtIndex:page], [self viewControllerAtIndex:page+1]] direction:vc1.pageIndex < page ? UIPageViewControllerNavigationDirectionForward : UIPageViewControllerNavigationDirectionReverse animated:YES completion:NULL];
-    }
-    
-    if (self.bookClosed){
-        [self openBook:NULL];
     }
 }
 
@@ -1024,10 +1031,12 @@ static const CGFloat kBookEdgePadding = 38;
     self.animating = YES;
     self.userHasOpenedBook = YES;
     
+    NSInteger tag = [self isBookAtStart] ? kTagRight : kTagLeft;
+    
     [UIView animateWithDuration:kBookAnimationTime animations:^{
         self.containerView.transform = CGAffineTransformIdentity;
     }completion:^(BOOL completed){}];
-    MPFlipStyle style = sender.view.tag == kTagRight ? MPFlipStyleDefault : MPFlipStyleDirectionBackward;
+    MPFlipStyle style = [self isBookAtStart] ? MPFlipStyleDefault : MPFlipStyleDirectionBackward;
     MPFlipTransition *flipTransition = [[MPFlipTransition alloc] initWithSourceView:self.bookCover destinationView:self.openbookView duration:kBookAnimationTime timingCurve:UIViewAnimationCurveEaseInOut completionAction:MPTransitionActionNone];
     flipTransition.style = style;
     [flipTransition perform:^(BOOL finished){
@@ -1039,7 +1048,7 @@ static const CGFloat kBookEdgePadding = 38;
         self.openbookView.hidden = NO;
         
         //Fade out shadow of the half-book.
-        UIView *closedPage = [self.bookCover viewWithTag:sender.view.tag];
+        UIView *closedPage = [self.bookCover viewWithTag:tag];
         CABasicAnimation *showAnim = [CABasicAnimation animationWithKeyPath:@"shadowOpacity"];
         showAnim.fromValue = [NSNumber numberWithFloat:0.25];
         showAnim.toValue = [NSNumber numberWithFloat:0.0];
