@@ -820,8 +820,22 @@ static const CGFloat kBookEdgePadding = 38;
     self.pagesPreviewContainer.hidden = NO;
 }
 
-- (void)userDidStopTouchingScrubber{
+- (void)userDidStopTouchingScrubberAtPoint:(CGPoint)p{
     self.pagesPreviewContainer.hidden = YES;
+    
+    CGFloat normalizedP = p.x / self.scrubber.frame.size.width;
+    
+    NSInteger page = (self.photobookPhotos.count) * normalizedP;
+    if (page % 2 == 1){
+        page--;
+    }
+    
+    OLPhotobookPageContentViewController *vc1 = [self.pageController.viewControllers firstObject];
+    if (vc1.pageIndex != page){
+        [self.pageController setViewControllers:@[[self viewControllerAtIndex:page], [self viewControllerAtIndex:page+1]] direction:vc1.pageIndex < page ? UIPageViewControllerNavigationDirectionForward : UIPageViewControllerNavigationDirectionReverse animated:YES completion:NULL];
+    }
+    
+    self.pagesLabel.text = [NSString stringWithFormat:@"%ld-%ld of %ld", (long)page+1, (long)page+2, (long)self.product.quantityToFulfillOrder];
 }
 
 
@@ -1225,6 +1239,15 @@ static const CGFloat kBookEdgePadding = 38;
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
     return CGSizeMake(collectionView.frame.size.height * [self productAspectRatio], collectionView.frame.size.height);
+}
+
+- (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout insetForSectionAtIndex:(NSInteger)section{
+    CGSize size = self.view.frame.size;
+    
+    CGSize cellSize = [self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
+    NSInteger numberOfItems = [self collectionView:collectionView numberOfItemsInSection:0];
+    CGFloat diff = size.width - (cellSize.width * numberOfItems + (numberOfItems-1) * 3);
+    return UIEdgeInsetsMake(0, diff/2.0, 0, diff/2.0);
 }
 
 #pragma mark - Autorotate and Orientation Methods

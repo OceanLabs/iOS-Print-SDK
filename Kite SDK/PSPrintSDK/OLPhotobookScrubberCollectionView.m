@@ -11,7 +11,7 @@
 
 @interface OLPhotobookViewController ()
 
-- (void)userDidStopTouchingScrubber;
+- (void)userDidStopTouchingScrubberAtPoint:(CGPoint)p;
 - (void)userDidTouchScrubberAtPoint:(CGPoint)p;
 
 @end
@@ -27,8 +27,8 @@
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event{
     [super touchesEnded:touches withEvent:event];
-    if ([self.delegate respondsToSelector:@selector(userDidStopTouchingScrubber)]){
-        [(OLPhotobookViewController *)self.delegate userDidStopTouchingScrubber];
+    if ([self.delegate respondsToSelector:@selector(userDidStopTouchingScrubberAtPoint:)]){
+        [(OLPhotobookViewController *)self.delegate userDidStopTouchingScrubberAtPoint:[(UITouch *)[touches anyObject] locationInView:self]];
     }
 }
 
