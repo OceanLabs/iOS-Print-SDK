@@ -258,9 +258,12 @@ static const CGFloat kBookEdgePadding = 38;
     
     [self updatePagesLabel];
     
-    CGFloat yOffset = !self.editMode ? ([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height)/2.0 : -15;
+    CGFloat yOffset = ([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height)/2.0 - self.scrubber.frame.size.height/2.0;
     if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8){
         yOffset = 22;
+    }
+    if (self.editMode){
+        yOffset = -15;
     }
     self.centerYCon = [NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.containerView.superview attribute:NSLayoutAttributeCenterY multiplier:1 constant:yOffset];
     [self.containerView.superview addConstraint:self.centerYCon];
@@ -418,6 +421,7 @@ static const CGFloat kBookEdgePadding = 38;
         }
         
         CGFloat yOffset = !self.editMode ? ([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height)/2.0 : -15;
+        yOffset -=self.scrubber.frame.size.height/2.0;
         
         self.centerYCon = [NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.containerView.superview attribute:NSLayoutAttributeCenterY multiplier:1 constant:yOffset];
         [self.containerView.superview addConstraint:self.centerYCon];
@@ -806,6 +810,8 @@ static const CGFloat kBookEdgePadding = 38;
     if (page % 2 == 1){
         page--;
     }
+    
+    self.pagesLabel.text = [NSString stringWithFormat:@"%ld-%ld of %ld", (long)page+1, (long)page+2, (long)self.product.quantityToFulfillOrder];
         
     UIImageView *left = (UIImageView *)[self.pagesPreviewContainer viewWithTag:10];
     UIImageView *right = (UIImageView *)[self.pagesPreviewContainer viewWithTag:20];
@@ -835,7 +841,9 @@ static const CGFloat kBookEdgePadding = 38;
         [self.pageController setViewControllers:@[[self viewControllerAtIndex:page], [self viewControllerAtIndex:page+1]] direction:vc1.pageIndex < page ? UIPageViewControllerNavigationDirectionForward : UIPageViewControllerNavigationDirectionReverse animated:YES completion:NULL];
     }
     
-    self.pagesLabel.text = [NSString stringWithFormat:@"%ld-%ld of %ld", (long)page+1, (long)page+2, (long)self.product.quantityToFulfillOrder];
+    if (self.bookClosed){
+        [self openBook:NULL];
+    }
 }
 
 

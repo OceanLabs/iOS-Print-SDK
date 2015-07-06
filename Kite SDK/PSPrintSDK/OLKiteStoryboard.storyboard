@@ -2057,7 +2057,7 @@
                                 </constraints>
                             </view>
                             <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="faa-Rz-cHy" userLabel="preview">
-                                <rect key="frame" x="251" y="495" width="84" height="70"/>
+                                <rect key="frame" x="251" y="359" width="84" height="70"/>
                                 <subviews>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" tag="10" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="1gC-hf-oY1">
                                         <rect key="frame" x="0.0" y="0.0" width="42" height="70"/>
@@ -2127,17 +2127,26 @@
                         <gestureRecognizers/>
                         <constraints>
                             <constraint firstItem="eAv-QL-iu7" firstAttribute="top" relation="greaterThanOrEqual" secondItem="wLR-Iq-33c" secondAttribute="bottom" constant="20" id="6OB-XY-vp2"/>
+                            <constraint firstItem="faa-Rz-cHy" firstAttribute="bottom" secondItem="P6D-Eb-oaD" secondAttribute="bottom" id="Edg-ye-cOe"/>
                             <constraint firstAttribute="trailing" secondItem="5Q3-gb-UdF" secondAttribute="trailing" id="Gq6-Ch-fHX"/>
                             <constraint firstItem="eAv-QL-iu7" firstAttribute="top" secondItem="5Q3-gb-UdF" secondAttribute="bottom" id="KIb-SW-xVl"/>
                             <constraint firstAttribute="centerX" secondItem="P6D-Eb-oaD" secondAttribute="centerX" constant="7" id="Kix-gc-0g0"/>
+                            <constraint firstItem="P6D-Eb-oaD" firstAttribute="top" secondItem="faa-Rz-cHy" secondAttribute="bottom" id="XC6-Va-wnT"/>
                             <constraint firstItem="wLR-Iq-33c" firstAttribute="leading" secondItem="xrD-7k-Kti" secondAttribute="leading" priority="750" constant="38" id="Xjf-bl-V0K"/>
                             <constraint firstItem="wLR-Iq-33c" firstAttribute="top" relation="greaterThanOrEqual" secondItem="LtF-ql-Rxv" secondAttribute="bottom" constant="20" id="bx6-vt-q2D"/>
+                            <constraint firstItem="5Q3-gb-UdF" firstAttribute="top" relation="greaterThanOrEqual" secondItem="wLR-Iq-33c" secondAttribute="bottom" constant="10" id="eO4-td-2g2"/>
                             <constraint firstItem="5Q3-gb-UdF" firstAttribute="top" secondItem="faa-Rz-cHy" secondAttribute="bottom" constant="5" id="eap-3w-Xhz"/>
                             <constraint firstItem="5Q3-gb-UdF" firstAttribute="leading" secondItem="xrD-7k-Kti" secondAttribute="leading" id="gXs-No-oya"/>
                             <constraint firstAttribute="centerY" secondItem="wLR-Iq-33c" secondAttribute="centerY" constant="-16" placeholder="YES" id="r8S-W8-SmN"/>
                             <constraint firstAttribute="centerX" secondItem="faa-Rz-cHy" secondAttribute="centerX" constant="7" id="wtu-c9-qxK"/>
                             <constraint firstItem="P6D-Eb-oaD" firstAttribute="bottom" secondItem="wLR-Iq-33c" secondAttribute="bottom" constant="-15" id="xxK-hn-AB7"/>
                         </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="Edg-ye-cOe"/>
+                                <exclude reference="eap-3w-Xhz"/>
+                            </mask>
+                        </variation>
                     </view>
                     <extendedEdge key="edgesForExtendedLayout" top="YES"/>
                     <navigationItem key="navigationItem" id="2Od-Wr-K8P"/>
