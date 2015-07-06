@@ -334,6 +334,10 @@ static const CGFloat kBookEdgePadding = 38;
             self.containerView.transform = CGAffineTransformMakeTranslation([self xTrasformForBookAtRightEdge], 0);
         }
     }
+    if (self.editMode && self.bookClosed){
+        self.containerView.transform = CGAffineTransformMakeTranslation(-self.containerView.frame.size.width / 4.0, 0);
+    }
+
 }
 
 - (BOOL)isLandscape{
