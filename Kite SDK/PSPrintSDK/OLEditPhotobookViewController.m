@@ -569,6 +569,9 @@ UINavigationControllerDelegate>
         photobook.view.tag = 10;
         
         photobook.photobookDelegate = self;
+        
+        [photobook.view setNeedsLayout];
+        [photobook.view layoutIfNeeded];
     }
     else{
         for (OLPhotobookViewController *photobook in self.childViewControllers){
@@ -582,6 +585,8 @@ UINavigationControllerDelegate>
                         [page unhighlightImageAtIndex:page.pageIndex];
                     }
                 }
+                [photobook.view setNeedsLayout];
+                [photobook.view layoutIfNeeded];
                 break;
             }
         }

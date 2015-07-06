@@ -421,7 +421,9 @@ static const CGFloat kBookEdgePadding = 38;
         }
         
         CGFloat yOffset = !self.editMode ? ([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height)/2.0 : -15;
-        yOffset -=self.scrubber.frame.size.height/2.0;
+        if (!self.editMode){
+            yOffset -=self.scrubber.frame.size.height/2.0;
+        }
         
         self.centerYCon = [NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.containerView.superview attribute:NSLayoutAttributeCenterY multiplier:1 constant:yOffset];
         [self.containerView.superview addConstraint:self.centerYCon];
