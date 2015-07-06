@@ -44,6 +44,7 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
 + (void)setCacheTemplates:(BOOL)cache;
 + (BOOL)cacheTemplates;
 + (void)fetchRemotePlist;
++ (BOOL)loadLocalPlist;
 
 @end
 
@@ -83,7 +84,9 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
         self.navigationBar.hidden = NO;
     }
     
-    [OLKitePrintSDK fetchRemotePlist];
+    if (![OLKitePrintSDK loadLocalPlist]){
+        [OLKitePrintSDK fetchRemotePlist];
+    }
     
     if ([OLKitePrintSDK environment] == kOLKitePrintSDKEnvironmentLive){
         [[self.view viewWithTag:9999] removeFromSuperview];
