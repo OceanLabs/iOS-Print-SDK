@@ -232,26 +232,18 @@ static NSString *instagramRedirectURI = nil;
 }
 #endif
 
-+ (BOOL)loadLocalPlist{
-    NSString *path = [[NSBundle mainBundle] pathForResource:@"OLKitePrintSDKDefaults" ofType:@"plist"];
-    NSDictionary *plist = [[NSDictionary alloc] initWithContentsOfFile:path];
-    if (plist){
-        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-        for (NSString *key in [plist allKeys]){
-            [defaults setObject:plist[key] forKey:key];
-        }
-        [defaults synchronize];
-        return YES;
-    }
-    else{
-        return NO;
-    }
++ (void)fetchRemotePlistsWithCompletionHandler:(void(^)())handler{
+    [OLKitePrintSDK fetchRemotePlistWithURL:nil completionHandler:^(NSError *error){
+        [OLKitePrintSDK fetchRemotePlistWithURL:[NSString stringWithFormat:@"https://sdk-static.s3.amazonaws.com/kite-ios-remote-%@.plist", [OLKitePrintSDK apiKey]] completionHandler:^(NSError *error2){
+            handler();
+        }];
+    }];
 }
 
-+ (void)fetchRemotePlist{
++ (void)fetchRemotePlistWithURL:(NSString *)urlString completionHandler:(void (^)(NSError *error))handler{
     NSDictionary *oldDefaults = [[NSUserDefaults standardUserDefaults] dictionaryRepresentation];
     
-    NSURL *URL = [NSURL URLWithString:@"https://sdk-static.s3.amazonaws.com/kite-ios-remote.plist"];
+    NSURL *URL = [NSURL URLWithString:urlString ? urlString : @"https://sdk-static.s3.amazonaws.com/kite-ios-remote.plist"];
     [[NSUserDefaults standardUserDefaults] registerDefaultsWithURL:URL success:^(NSDictionary *defaults){
         // reset SKLab A/B tests if the experiment version for any test has been bumped. This allows us to default to sticky SkyLab behaviour
         // and when we want to reset things just bump the experiment version.
@@ -266,7 +258,10 @@ static NSString *instagramRedirectURI = nil;
                 }
             }
         }
-    }failure:NULL];
+        handler(nil);
+    }failure:^(NSError *error){
+        handler(error);
+    }];
 }
 
 + (void)checkoutViewControllerForPrintOrder:(OLPrintOrder *)printOrder handler:(void(^)(OLCheckoutViewController *vc))handler{
