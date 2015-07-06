@@ -99,6 +99,16 @@ UINavigationControllerDelegate>
         [photobook.view setNeedsLayout];
         [photobook.view layoutIfNeeded];
     }
+    
+    NSInteger maxItem = -1;
+    for (UICollectionViewCell *cell in [self.collectionView visibleCells]){
+        NSIndexPath *indexPath = [self.collectionView indexPathForCell:cell];
+        if (indexPath.item > maxItem){
+            maxItem = indexPath.item;
+        }
+    }
+    [self collectionView:self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:maxItem+1 inSection:kSectionPages]];
+    [self collectionView:self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:maxItem+2 inSection:kSectionPages]];
 }
 
 - (void)viewDidDisappear:(BOOL)animated{
@@ -553,6 +563,22 @@ UINavigationControllerDelegate>
     
     UIView *view = [cell viewWithTag:10];
     if (!view){
+        for (OLPhotobookViewController *photobook in self.childViewControllers){
+            if (!photobook.view.superview){
+                photobook.editingPageNumber = [NSNumber numberWithInteger:indexPath.item * 2];
+                for (OLPhotobookPageContentViewController *page in photobook.pageController.viewControllers){
+                    if (self.selectedIndexNumber && page.pageIndex == [self.selectedIndexNumber integerValue]){
+                        [page highlightImageAtIndex:[self.selectedIndexNumber integerValue]];
+                    }
+                    else{
+                        [page unhighlightImageAtIndex:page.pageIndex];
+                    }
+                }
+                [cell addSubview:photobook.view];
+                return cell;
+            }
+        }
+        NSLog(@"%@", indexPath);
         OLPhotobookViewController *photobook = [self.storyboard instantiateViewControllerWithIdentifier:@"PhotobookViewController"];
         if (indexPath.section == kSectionPages){
             photobook.startOpen = YES;
