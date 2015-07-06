@@ -627,7 +627,7 @@ static const CGFloat kBookEdgePadding = 38;
         }];
     }
     else{
-        [self openBook:sender];
+        [self openBook];
     }
 }
 
@@ -808,7 +808,7 @@ static const CGFloat kBookEdgePadding = 38;
         return;
     }
     if (self.bookClosed){
-        [self openBook:NULL];
+        [self openBook];
         return;
     }
     
@@ -875,7 +875,7 @@ static const CGFloat kBookEdgePadding = 38;
 }
 
 -(void) setUpBookCoverView{
-    UISwipeGestureRecognizer *swipe = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(openBook:)];
+    UISwipeGestureRecognizer *swipe = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(openBook)];
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onCoverTapRecognized:)];
     UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(onCoverLongPressRecognized:)];
     
@@ -1024,7 +1024,7 @@ static const CGFloat kBookEdgePadding = 38;
     return vc2.pageIndex == self.photobookPhotos.count - 1;
 }
 
-- (void)openBook:(UIGestureRecognizer *)sender{
+- (void)openBook{
     if (self.animating){
         return;
     }
