@@ -101,6 +101,12 @@ UINavigationControllerDelegate>
     }
 }
 
+- (void)viewDidDisappear:(BOOL)animated{
+    [super viewDidDisappear:animated];
+    
+    self.navigationItem.rightBarButtonItem.enabled = YES;
+}
+
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator{
     for (OLPhotobookViewController *photobook in self.childViewControllers){
         [photobook viewWillTransitionToSize:CGSizeMake(size.width, [self cellHeightForSize:size]) withTransitionCoordinator:coordinator];
@@ -116,6 +122,7 @@ UINavigationControllerDelegate>
 }
 
 - (void)proceedToBookReview{
+    self.navigationItem.rightBarButtonItem.enabled = NO;
     NSInteger i = 0;
     NSMutableArray *bookPhotos = [[NSMutableArray alloc] init];
     for (NSInteger object = 0; object < self.photobookPhotos.count; object++){
