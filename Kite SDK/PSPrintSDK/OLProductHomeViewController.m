@@ -23,6 +23,8 @@
 
 #define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
 
+static NSString *const kOLKiteThemeHeaderLogoImageURL = @"ly.kite.theme.headerLogoImageURL";
+
 @interface OLProduct (Private)
 
 -(void)setCoverImageToImageView:(UIImageView *)imageView;
@@ -60,11 +62,18 @@
     [OLAnalytics trackProductSelectionScreenViewed];
 #endif
 
-    self.title = NSLocalizedString(@"Print Shop", @"");
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Back", @"")
                                                                              style:UIBarButtonItemStyleBordered
                                                                             target:nil
                                                                             action:nil];
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    if ([defaults objectForKey:kOLKiteThemeHeaderLogoImageURL]){
+        self.navigationItem.titleView = [[UIImageView alloc] init];
+        [(UIImageView *)self.navigationItem.titleView setAndFadeInImageWithURL:[defaults objectForKey:kOLKiteThemeHeaderLogoImageURL]];
+    }
+    else{
+        self.title = NSLocalizedString(@"Print Shop", @"");
+    }
 }
 
 
