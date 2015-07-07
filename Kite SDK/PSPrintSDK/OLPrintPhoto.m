@@ -136,28 +136,36 @@ static NSOperationQueue *imageOperationQueue;
                 }
                 else if (asset.assetType == kOLAssetTypeALAsset){
                     [asset loadALAssetWithCompletionHandler:^(ALAsset *asset, NSError *error){
-                        OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
-                        printPhoto.asset = asset;
-                        printPhoto.cropImageSize = self.cropImageSize;
-                        printPhoto.cropImageFrame = self.cropImageFrame;
-                        printPhoto.cropImageRect = self.cropImageRect;
-                        [OLPrintPhoto resizedImageWithPrintPhoto:printPhoto size:destSize cropped:cropped progress:nil completion:^(UIImage *image) {
-                            self.cachedCroppedThumbnailImage = image;
-                            handler(image);
+                        NSBlockOperation *block = [NSBlockOperation blockOperationWithBlock:^{
+                            OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
+                            printPhoto.asset = asset;
+                            printPhoto.cropImageSize = self.cropImageSize;
+                            printPhoto.cropImageFrame = self.cropImageFrame;
+                            printPhoto.cropImageRect = self.cropImageRect;
+                            [OLPrintPhoto resizedImageWithPrintPhoto:printPhoto size:destSize cropped:cropped progress:nil completion:^(UIImage *image) {
+                                self.cachedCroppedThumbnailImage = image;
+                                handler(image);
+                            }];
                         }];
+                        block.queuePriority = NSOperationQueuePriorityHigh;
+                        [[OLPrintPhoto imageOperationQueue] addOperation:block];
                     }];
                 }
                 else{
                     [asset dataWithCompletionHandler:^(NSData *data, NSError *error){
-                        OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
-                        printPhoto.asset = [OLAsset assetWithImageAsJPEG:[UIImage imageWithData:data]];
-                        printPhoto.cropImageSize = self.cropImageSize;
-                        printPhoto.cropImageFrame = self.cropImageFrame;
-                        printPhoto.cropImageRect = self.cropImageRect;
-                        [OLPrintPhoto resizedImageWithPrintPhoto:printPhoto size:destSize cropped:cropped progress:nil completion:^(UIImage *image) {
-                            self.cachedCroppedThumbnailImage = image;
-                            handler(image);
+                        NSBlockOperation *block = [NSBlockOperation blockOperationWithBlock:^{
+                            OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
+                            printPhoto.asset = [OLAsset assetWithImageAsJPEG:[UIImage imageWithData:data]];
+                            printPhoto.cropImageSize = self.cropImageSize;
+                            printPhoto.cropImageFrame = self.cropImageFrame;
+                            printPhoto.cropImageRect = self.cropImageRect;
+                            [OLPrintPhoto resizedImageWithPrintPhoto:printPhoto size:destSize cropped:cropped progress:nil completion:^(UIImage *image) {
+                                self.cachedCroppedThumbnailImage = image;
+                                handler(image);
+                            }];
                         }];
+                        block.queuePriority = NSOperationQueuePriorityHigh;
+                        [[OLPrintPhoto imageOperationQueue] addOperation:block];
                     }];
                 }
             }
