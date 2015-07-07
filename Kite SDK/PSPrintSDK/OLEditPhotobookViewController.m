@@ -641,7 +641,7 @@ UINavigationControllerDelegate>
         return CGSizeMake(self.view.frame.size.width, 20);
     }
     else if (indexPath.section == kSectionCover){
-        return CGSizeMake(self.view.frame.size.width, [self cellHeightForSize:self.view.frame.size] + 20);
+        return CGSizeMake(self.view.frame.size.width, [self cellHeightForSize:self.view.frame.size] + 10);
     }
     else {
         return CGSizeMake(self.view.frame.size.width, [self cellHeightForSize:self.view.frame.size]);

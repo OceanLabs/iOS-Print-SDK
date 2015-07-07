@@ -58,7 +58,7 @@ static const CGFloat kBookEdgePadding = 38;
 @property (strong, nonatomic) UIDynamicAnimator* dynamicAnimator;
 @property (strong, nonatomic) UIDynamicItemBehavior* inertiaBehavior;
 
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *topMarginCon;
+@property (weak, nonatomic) NSLayoutConstraint *topMarginCon;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *bottomMarginCon;
 
 @property (strong, nonatomic) IBOutlet UIView *bookCover;
@@ -149,11 +149,8 @@ static const CGFloat kBookEdgePadding = 38;
     NSLayoutConstraint *bookAspectRatioCon = [NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:self.containerView attribute:NSLayoutAttributeHeight multiplier:bookAspectRatio constant:0];
     [self.containerView addConstraint:bookAspectRatioCon];
     
-    NSLayoutConstraint *topDistanceCon = [NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationGreaterThanOrEqual toItem:self.containerView.superview attribute:NSLayoutAttributeTop multiplier:1 constant:20];
-    if (self.editMode && self.startOpen){
-        topDistanceCon.constant = 0;
-    }
-    [self.containerView.superview addConstraint:topDistanceCon];
+    self.topMarginCon = [NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationGreaterThanOrEqual toItem:self.containerView.superview attribute:NSLayoutAttributeTop multiplier:1 constant:20];
+    [self.containerView.superview addConstraint:self.topMarginCon];
     
     self.centerXCon = [NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.containerView.superview attribute:NSLayoutAttributeCenterX multiplier:1 constant:0];
     if ([self isLandscape]){
