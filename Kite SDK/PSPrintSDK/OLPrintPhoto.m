@@ -322,18 +322,23 @@ static NSOperationQueue *imageOperationQueue;
     
     
     [printPhoto getImageWithFullResolution:CGSizeEqualToSize(destSize, CGSizeZero) progress:progressHandler completion:^(UIImage *image) {
-        if (destSize.height != 0 && destSize.width != 0){
-            image = [OLPrintPhoto imageWithImage:image scaledToSize:destSize];
-        }
-        
-        if (![printPhoto isCropped] || !cropped){
-            completionHandler(image);
-            return;
-        }
-        
-        image = [RMImageCropper editedImageFromImage:image andFrame:printPhoto.cropImageFrame andImageRect:printPhoto.cropImageRect andImageViewWidth:printPhoto.cropImageSize.width andImageViewHeight:printPhoto.cropImageSize.height];
-        
-        completionHandler(image);
+        __block UIImage *blockImage = image;
+        NSBlockOperation *block = [NSBlockOperation blockOperationWithBlock:^{
+            if (destSize.height != 0 && destSize.width != 0){
+                blockImage = [OLPrintPhoto imageWithImage:blockImage scaledToSize:destSize];
+            }
+            
+            if (![printPhoto isCropped] || !cropped){
+                completionHandler(blockImage);
+                return;
+            }
+            
+            blockImage = [RMImageCropper editedImageFromImage:blockImage andFrame:printPhoto.cropImageFrame andImageRect:printPhoto.cropImageRect andImageViewWidth:printPhoto.cropImageSize.width andImageViewHeight:printPhoto.cropImageSize.height];
+            
+            completionHandler(blockImage);
+        }];
+        block.queuePriority = NSOperationQueuePriorityHigh;
+        [[OLPrintPhoto imageOperationQueue] addOperation:block];
     }];
     
 }
