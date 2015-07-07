@@ -65,6 +65,7 @@ UINavigationControllerDelegate>
 @property (weak, nonatomic) OLPhotobookViewController *interactionPhotobook;
 @property (strong, nonatomic) OLPrintPhoto *coverPhoto;
 @property (assign, nonatomic) BOOL animating;
+@property (assign, nonatomic) BOOL haveCachedCells;
 
 @end
 
@@ -107,8 +108,11 @@ UINavigationControllerDelegate>
             maxItem = indexPath.item;
         }
     }
-    [self collectionView:self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:maxItem+1 inSection:kSectionPages]];
-    [self collectionView:self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:maxItem+2 inSection:kSectionPages]];
+    if (!self.haveCachedCells){
+        [self collectionView:self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:maxItem+1 inSection:kSectionPages]];
+        [self collectionView:self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:maxItem+2 inSection:kSectionPages]];
+        self.haveCachedCells = YES;
+    }
 }
 
 - (void)viewDidDisappear:(BOOL)animated{
