@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="cpC-15-nyB">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14E46" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="cpC-15-nyB">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
@@ -484,8 +484,8 @@
                         <variation key="default">
                             <mask key="constraints">
                                 <exclude reference="ojV-vO-jP6"/>
-                                <exclude reference="RZd-YG-HVB"/>
                                 <exclude reference="Ev7-5O-KVN"/>
+                                <exclude reference="RZd-YG-HVB"/>
                             </mask>
                         </variation>
                     </view>
@@ -817,7 +817,7 @@
                         <constraints>
                             <constraint firstAttribute="centerY" secondItem="Lhq-zP-RFD" secondAttribute="centerY" id="27J-Pt-tPa"/>
                             <constraint firstItem="bHy-Vg-ZGQ" firstAttribute="trailing" secondItem="mzK-jn-yTP" secondAttribute="trailing" id="63u-s8-xYQ"/>
-                            <constraint firstItem="MuP-1U-Qqd" firstAttribute="top" secondItem="3pJ-t4-8d2" secondAttribute="bottom" id="6rU-Tk-PxI"/>
+                            <constraint firstItem="MuP-1U-Qqd" firstAttribute="top" secondItem="3pJ-t4-8d2" secondAttribute="bottom" placeholder="YES" id="6rU-Tk-PxI"/>
                             <constraint firstAttribute="trailing" secondItem="9bm-Iv-FDI" secondAttribute="trailing" id="7GW-xD-ihN"/>
                             <constraint firstItem="mzK-jn-yTP" firstAttribute="leading" secondItem="tgc-Pj-vj3" secondAttribute="leading" id="9YQ-1g-s3b"/>
                             <constraint firstItem="IFE-q9-rjQ" firstAttribute="leading" secondItem="x7V-bo-RW7" secondAttribute="leading" id="9nt-xL-pda"/>
@@ -2063,7 +2063,6 @@
                             <constraint firstItem="eAv-QL-iu7" firstAttribute="top" relation="greaterThanOrEqual" secondItem="wLR-Iq-33c" secondAttribute="bottom" constant="20" id="6OB-XY-vp2"/>
                             <constraint firstAttribute="centerX" secondItem="P6D-Eb-oaD" secondAttribute="centerX" constant="7" id="Kix-gc-0g0"/>
                             <constraint firstItem="wLR-Iq-33c" firstAttribute="leading" secondItem="xrD-7k-Kti" secondAttribute="leading" priority="750" constant="38" id="Xjf-bl-V0K"/>
-                            <constraint firstItem="wLR-Iq-33c" firstAttribute="top" relation="greaterThanOrEqual" secondItem="LtF-ql-Rxv" secondAttribute="bottom" constant="20" id="bx6-vt-q2D"/>
                             <constraint firstAttribute="centerY" secondItem="wLR-Iq-33c" secondAttribute="centerY" constant="-16" placeholder="YES" id="r8S-W8-SmN"/>
                             <constraint firstItem="P6D-Eb-oaD" firstAttribute="bottom" secondItem="wLR-Iq-33c" secondAttribute="bottom" constant="-15" id="xxK-hn-AB7"/>
                         </constraints>
@@ -2079,7 +2078,6 @@
                         <outlet property="openbookView" destination="rlk-bS-4UT" id="Q1X-2u-4iN"/>
                         <outlet property="pagesLabel" destination="6zv-ER-YtC" id="COA-sz-sqZ"/>
                         <outlet property="pagesLabelContainer" destination="P6D-Eb-oaD" id="H0M-vG-XPI"/>
-                        <outlet property="topMarginCon" destination="bx6-vt-q2D" id="i3p-5O-8FF"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="tsM-51-f4Y" userLabel="First Responder" sceneMemberID="firstResponder"/>

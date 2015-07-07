@@ -24,6 +24,9 @@
 
 - (void)viewDidLoad{
     [super viewDidLoad];
+    
+    [self.imageView.superview addConstraint:[NSLayoutConstraint constraintWithItem:self.imageView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.imageView.superview attribute:NSLayoutAttributeTop multiplier:1 constant:0]];
+    
     [self loadImageWithCompletionHandler:NULL];
 }
 

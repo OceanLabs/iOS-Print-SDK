@@ -61,7 +61,6 @@ static const CGFloat kBookEdgePadding = 38;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *topMarginCon;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *bottomMarginCon;
 
-
 @property (strong, nonatomic) IBOutlet UIView *bookCover;
 @property (assign, nonatomic) BOOL bookClosed;
 @property (weak, nonatomic) IBOutlet UIView *pagesLabelContainer;
@@ -149,6 +148,12 @@ static const CGFloat kBookEdgePadding = 38;
     
     NSLayoutConstraint *bookAspectRatioCon = [NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:self.containerView attribute:NSLayoutAttributeHeight multiplier:bookAspectRatio constant:0];
     [self.containerView addConstraint:bookAspectRatioCon];
+    
+    NSLayoutConstraint *topDistanceCon = [NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationGreaterThanOrEqual toItem:self.containerView.superview attribute:NSLayoutAttributeTop multiplier:1 constant:20];
+    if (self.editMode && self.startOpen){
+        topDistanceCon.constant = 0;
+    }
+    [self.containerView.superview addConstraint:topDistanceCon];
     
     self.centerXCon = [NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.containerView.superview attribute:NSLayoutAttributeCenterX multiplier:1 constant:0];
     if ([self isLandscape]){
@@ -337,7 +342,6 @@ static const CGFloat kBookEdgePadding = 38;
     if (self.editMode && self.bookClosed){
         self.containerView.transform = CGAffineTransformMakeTranslation(-self.containerView.frame.size.width / 4.0, 0);
     }
-
 }
 
 - (BOOL)isLandscape{

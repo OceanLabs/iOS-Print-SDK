@@ -96,10 +96,6 @@ UINavigationControllerDelegate>
 
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
-    for (OLPhotobookViewController *photobook in self.childViewControllers){
-        [photobook.view setNeedsLayout];
-        [photobook.view layoutIfNeeded];
-    }
     
     NSInteger maxItem = -1;
     for (UICollectionViewCell *cell in [self.collectionView visibleCells]){
@@ -645,7 +641,7 @@ UINavigationControllerDelegate>
         return CGSizeMake(self.view.frame.size.width, 20);
     }
     else if (indexPath.section == kSectionCover){
-        return CGSizeMake(self.view.frame.size.width, [self cellHeightForSize:self.view.frame.size] + 10);
+        return CGSizeMake(self.view.frame.size.width, [self cellHeightForSize:self.view.frame.size] + 20);
     }
     else {
         return CGSizeMake(self.view.frame.size.width, [self cellHeightForSize:self.view.frame.size]);
