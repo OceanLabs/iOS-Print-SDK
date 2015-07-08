@@ -459,7 +459,7 @@ static NSString *const kOLKiteABTestAllowMultipleRecipients = @"ly.kite.abtest.a
             cell = [tableView dequeueReusableCellWithIdentifier:kAddDeliveryAddressCell];
             if (cell == nil) {
                 cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:kAddDeliveryAddressCell];
-                if (self.shippingAddresses.count > 0){
+                if (self.shippingAddresses.count > 0 && self.allowsMultipleRecipients){
                     cell.textLabel.text = NSLocalizedStringFromTableInBundle(@"Add Another Recipient", @"KitePrintSDK",[OLConstants bundle], @"");
                 }
                 else{
