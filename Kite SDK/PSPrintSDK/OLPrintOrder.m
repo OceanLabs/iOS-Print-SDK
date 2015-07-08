@@ -384,13 +384,18 @@ static id stringOrEmptyString(NSString *str) {
 
 - (void)discardDuplicateJobs{
     NSMutableSet *uniqJobIds = [[NSMutableSet alloc] init];
+    NSMutableSet *jobsToRemove = [[NSMutableSet alloc] init];
     for (id<OLPrintJob> job in self.jobs){
         if ([uniqJobIds containsObject:job.uuid]){
-            [self removePrintJob:job];
+            [jobsToRemove addObject:job];
         }
         else{
             [uniqJobIds addObject:job.uuid];
         }
+    }
+    
+    for (id<OLPrintJob> job in jobsToRemove) {
+        [self removePrintJob:job];
     }
 }
 
@@ -400,12 +405,17 @@ static id stringOrEmptyString(NSString *str) {
         [self removePrintJob:job];
     }
     
+    NSMutableSet *jobsToAdd = [[NSMutableSet alloc] init];
     for (OLAddress *address in addresses){
         for (id<OLPrintJob> job in jobs){
             id<OLPrintJob> jobCopy = [job copyWithZone:NULL];
             jobCopy.address = address;
-            [self addPrintJob:jobCopy];
+            [jobsToAdd addObject:jobCopy];
         }
+    }
+    
+    for (id<OLPrintJob> job in jobsToAdd){
+        [self addPrintJob:job];
     }
     
 }
