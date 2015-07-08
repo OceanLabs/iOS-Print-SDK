@@ -817,6 +817,7 @@
                         <constraints>
                             <constraint firstAttribute="centerY" secondItem="Lhq-zP-RFD" secondAttribute="centerY" id="27J-Pt-tPa"/>
                             <constraint firstItem="bHy-Vg-ZGQ" firstAttribute="trailing" secondItem="mzK-jn-yTP" secondAttribute="trailing" id="63u-s8-xYQ"/>
+                            <constraint firstItem="IFE-q9-rjQ" firstAttribute="bottom" secondItem="MuP-1U-Qqd" secondAttribute="bottom" id="6qM-nP-HaK"/>
                             <constraint firstItem="MuP-1U-Qqd" firstAttribute="top" secondItem="3pJ-t4-8d2" secondAttribute="bottom" placeholder="YES" id="6rU-Tk-PxI"/>
                             <constraint firstAttribute="trailing" secondItem="9bm-Iv-FDI" secondAttribute="trailing" id="7GW-xD-ihN"/>
                             <constraint firstItem="mzK-jn-yTP" firstAttribute="leading" secondItem="tgc-Pj-vj3" secondAttribute="leading" id="9YQ-1g-s3b"/>
@@ -838,12 +839,23 @@
                             <constraint firstItem="IFE-q9-rjQ" firstAttribute="trailing" secondItem="x7V-bo-RW7" secondAttribute="trailing" id="hWd-9b-xLU"/>
                             <constraint firstItem="wDa-Oe-ITL" firstAttribute="top" secondItem="IFE-q9-rjQ" secondAttribute="bottom" id="if5-uF-2kT"/>
                             <constraint firstItem="mzK-jn-yTP" firstAttribute="top" secondItem="3pJ-t4-8d2" secondAttribute="bottom" id="mFQ-fO-ReA"/>
+                            <constraint firstItem="mzK-jn-yTP" firstAttribute="bottom" secondItem="MuP-1U-Qqd" secondAttribute="bottom" id="owx-II-l0C"/>
                             <constraint firstItem="bHy-Vg-ZGQ" firstAttribute="bottom" secondItem="mzK-jn-yTP" secondAttribute="bottom" id="qSu-yk-yw8"/>
                             <constraint firstItem="mzK-jn-yTP" firstAttribute="width" secondItem="tgc-Pj-vj3" secondAttribute="width" multiplier="0.3" id="qpV-5Q-AOR"/>
                             <constraint firstItem="MuP-1U-Qqd" firstAttribute="leading" secondItem="tgc-Pj-vj3" secondAttribute="leading" id="veM-Nr-bXW"/>
+                            <constraint firstItem="IFE-q9-rjQ" firstAttribute="top" secondItem="MuP-1U-Qqd" secondAttribute="top" id="xbV-MC-1uW"/>
+                            <constraint firstItem="mzK-jn-yTP" firstAttribute="top" secondItem="MuP-1U-Qqd" secondAttribute="top" id="xuc-vF-vt8"/>
                             <constraint firstAttribute="centerX" secondItem="Lhq-zP-RFD" secondAttribute="centerX" id="yrJ-3N-E1R"/>
                             <constraint firstItem="9bm-Iv-FDI" firstAttribute="leading" secondItem="tgc-Pj-vj3" secondAttribute="leading" constant="1" id="z4C-V2-eyZ"/>
                         </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="mFQ-fO-ReA"/>
+                                <exclude reference="et6-2g-Vur"/>
+                                <exclude reference="PHn-l9-d0C"/>
+                                <exclude reference="if5-uF-2kT"/>
+                            </mask>
+                        </variation>
                     </view>
                     <connections>
                         <outlet property="imageView" destination="MuP-1U-Qqd" id="Cte-uc-Ytc"/>

@@ -649,8 +649,8 @@ UINavigationControllerDelegate>
 }
 
 - (CGFloat) cellHeightForSize:(CGSize)size{
-    CGFloat min = MIN(size.width, size.height);
-    return (min) / (self.product.productTemplate.sizeCm.width*2 / self.product.productTemplate.sizeCm.height);
+    CGFloat min = size.width; //MIN(size.width, size.height);
+    return MIN((min) / (self.product.productTemplate.sizeCm.width*2 / self.product.productTemplate.sizeCm.height), (self.view.frame.size.height - ([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height)) * 0.9);
 }
 
 #pragma mark - OLScrollCropView delegate
