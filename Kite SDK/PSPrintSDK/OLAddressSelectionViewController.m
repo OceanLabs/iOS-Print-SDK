@@ -58,7 +58,7 @@ static const NSInteger kRowAddAddressManually = 0;
 
 - (void)viewDidAppear:(BOOL)animated {
     if (self.addressToAddToListOnViewDidAppear) {
-        BOOL insertSection = [OLAddress addressBook].count == 0;
+        BOOL insertSection = [OLAddress addressBook].count != 0 && self.tableView.numberOfSections == 1;
         [self.addressToAddToListOnViewDidAppear saveToAddressBook];
         if (self.allowMultipleSelection) {
             [self.selectedAddresses addObject:self.addressToAddToListOnViewDidAppear];
