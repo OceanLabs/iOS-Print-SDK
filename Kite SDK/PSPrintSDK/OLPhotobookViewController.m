@@ -450,6 +450,7 @@ static const CGFloat kBookEdgePadding = 38;
     OLPhotobookPageContentViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLPhotobookPageViewController"];
     vc.pageIndex = index;
     vc.userSelectedPhotos = self.photobookPhotos;
+    vc.product = self.product;
     vc.view.autoresizingMask = UIViewAutoresizingNone;
     return vc;
 }

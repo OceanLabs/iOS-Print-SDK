@@ -9,6 +9,7 @@
 #import "OLPhotobookPageContentViewController.h"
 #import "OLPrintPhoto.h"
 #import "OLScrollCropViewController.h"
+#import "OLProduct.h"
 
 @interface OLPhotobookPageContentViewController ()
 
@@ -24,8 +25,10 @@
 
 - (void)viewDidLoad{
     [super viewDidLoad];
-    
-    [self.imageView.superview addConstraint:[NSLayoutConstraint constraintWithItem:self.imageView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.imageView.superview attribute:NSLayoutAttributeTop multiplier:1 constant:0]];
+        
+    CGFloat margin = 0.85;
+    [self.imageView.superview addConstraint:[NSLayoutConstraint constraintWithItem:self.imageView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self.imageView.superview attribute:NSLayoutAttributeHeight multiplier:margin constant:0]];
+    [self.imageView.superview addConstraint:[NSLayoutConstraint constraintWithItem:self.imageView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:self.imageView.superview attribute:NSLayoutAttributeWidth multiplier:margin constant:0]];
     
     [self loadImageWithCompletionHandler:NULL];
 }
