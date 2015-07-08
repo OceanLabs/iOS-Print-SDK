@@ -14,6 +14,7 @@
 
 static NSString *const kKeyProductTemplateId = @"co.oceanlabs.pssdk.kKeyProductTemplateId";
 static NSString *const kKeyImages = @"co.oceanlabs.pssdk.kKeyImages";
+static NSString *const kKeyUUID = @"co.oceanlabs.pssdk.kKeyUUID";
 
 static id stringOrEmptyString(NSString *str) {
     return str ? str : @"";
@@ -141,6 +142,7 @@ static id stringOrEmptyString(NSString *str) {
     // Use deep copies for all strong pointers, shallow copies for weak.
     objectCopy.assets = self.assets;
     objectCopy.templateId = self.templateId;
+    objectCopy.uuid = self.uuid;
     return objectCopy;
 }
 
@@ -172,12 +174,14 @@ static id stringOrEmptyString(NSString *str) {
 - (void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:self.templateId forKey:kKeyProductTemplateId];
     [aCoder encodeObject:self.assets forKey:kKeyImages];
+    [aCoder encodeObject:self.uuid forKey:kKeyUUID];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
     if (self = [super init]) {
         self.templateId = [aDecoder decodeObjectForKey:kKeyProductTemplateId];
         self.assets = [aDecoder decodeObjectForKey:kKeyImages];
+        self.uuid = [aDecoder decodeObjectForKey:kKeyUUID];
     }
     
     return self;

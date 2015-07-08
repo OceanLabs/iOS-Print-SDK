@@ -277,6 +277,7 @@ static NSString *const kOLKiteABTestAllowMultipleRecipients = @"ly.kite.abtest.a
     }
     else{
         self.printOrder.shippingAddress = nil;
+        [self.printOrder discardDuplicateJobs];
         [self.printOrder duplicateJobsForAddresses:self.shippingAddresses];
     }
     OLPaymentViewController *vc = [[OLPaymentViewController alloc] initWithPrintOrder:self.printOrder];

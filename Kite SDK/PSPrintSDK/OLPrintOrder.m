@@ -18,6 +18,7 @@
 #import "OLKitePrintSDK.h"
 #import "OLPrintOrderCostRequest.h"
 #import "OLPrintOrderCost.h"
+#import "OLProductPrintJob.h"
 
 static NSString *const kKeyProofOfPayment = @"co.oceanlabs.pssdk.kKeyProofOfPayment";
 static NSString *const kKeyVoucherCode = @"co.oceanlabs.pssdk.kKeyVoucherCode";
@@ -367,6 +368,11 @@ static id stringOrEmptyString(NSString *str) {
     OLCountry *country = self.shippingAddress.country ? self.shippingAddress.country : [OLCountry countryForCurrentLocale];
     hash = 31 * hash + [country.codeAlpha3 hash];
     hash = 31 * hash + [self.promoCode hash];
+    for (id<OLPrintJob> job in self.jobs){
+        if (job.address.country){
+            hash = 32 * hash + [job.address.country.codeAlpha3 hash];
+        }
+    }
     return hash;
 }
 
@@ -395,20 +401,18 @@ static id stringOrEmptyString(NSString *str) {
     }
     
     for (id<OLPrintJob> job in jobsToRemove) {
-        [self removePrintJob:job];
+        [(NSMutableArray *)self.jobs removeObjectIdenticalTo:job];
     }
 }
 
 - (void)duplicateJobsForAddresses:(NSArray *)addresses{
     NSArray *jobs = [[NSArray alloc] initWithArray:self.jobs copyItems:YES];
-    for (id<OLPrintJob> job in self.jobs){
-        [self removePrintJob:job];
-    }
+    [(NSMutableArray *)self.jobs removeAllObjects];
     
-    NSMutableSet *jobsToAdd = [[NSMutableSet alloc] init];
+    NSMutableArray *jobsToAdd = [[NSMutableArray alloc] init];
     for (OLAddress *address in addresses){
         for (id<OLPrintJob> job in jobs){
-            id<OLPrintJob> jobCopy = [job copyWithZone:NULL];
+            id<OLPrintJob> jobCopy = [(NSObject *)job copy];
             jobCopy.address = address;
             [jobsToAdd addObject:jobCopy];
         }
@@ -417,7 +421,6 @@ static id stringOrEmptyString(NSString *str) {
     for (id<OLPrintJob> job in jobsToAdd){
         [self addPrintJob:job];
     }
-    
 }
 
 #pragma mark - OLAssetUploadRequestDelegate methods
