@@ -206,7 +206,9 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
     }
     
     else{
-        [self.operationQueue addOperation:self.templateSyncOperation];
+        if (!self.templateSyncOperation.finished){
+            [self.operationQueue addOperation:self.templateSyncOperation];
+        }
     }
 }
 
