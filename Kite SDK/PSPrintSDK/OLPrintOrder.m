@@ -390,7 +390,7 @@ static id stringOrEmptyString(NSString *str) {
 
 - (void)discardDuplicateJobs{
     NSMutableSet *uniqJobIds = [[NSMutableSet alloc] init];
-    NSMutableSet *jobsToRemove = [[NSMutableSet alloc] init];
+    NSMutableArray *jobsToRemove = [[NSMutableArray alloc] init];
     for (id<OLPrintJob> job in self.jobs){
         if ([uniqJobIds containsObject:job.uuid]){
             [jobsToRemove addObject:job];
