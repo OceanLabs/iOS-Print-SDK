@@ -85,7 +85,7 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
     [super viewDidLoad];
     
 #ifndef OL_NO_ANALYTICS
-    [OLAnalytics trackKiteViewControllerLoaded];
+    [OLAnalytics trackKiteViewControllerLoadedWithEntryPoint:self.printOrder ? @"Shipping Screen" : @"Home Screen"];
 #endif
     
     if (!self.navigationController){
