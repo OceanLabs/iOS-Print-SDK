@@ -395,7 +395,7 @@ static id stringOrEmptyString(NSString *str) {
         if ([uniqJobIds containsObject:job.uuid]){
             [jobsToRemove addObject:job];
         }
-        else{
+        else if (job.extraCopies != -1){
             [uniqJobIds addObject:job.uuid];
         }
     }
@@ -406,14 +406,28 @@ static id stringOrEmptyString(NSString *str) {
 }
 
 - (void)duplicateJobsForAddresses:(NSArray *)addresses{
-    NSArray *jobs = [[NSArray alloc] initWithArray:self.jobs copyItems:YES];
+    NSMutableArray *jobs = [[[NSArray alloc] initWithArray:self.jobs copyItems:YES] mutableCopy];
+    NSMutableArray *jobsToAdd = [[NSMutableArray alloc] init];
+    for (id<OLPrintJob> job in self.jobs){
+        job.address = [addresses firstObject];
+        [jobsToAdd addObject:job];
+        for (NSInteger i = 0; i < job.extraCopies; i++){
+            id<OLPrintJob> jobCopy = [(NSObject *)job copy];
+            [jobs addObject:jobCopy];
+            [jobsToAdd addObject:jobCopy];
+        }
+    }
     [(NSMutableArray *)self.jobs removeAllObjects];
     
-    NSMutableArray *jobsToAdd = [[NSMutableArray alloc] init];
+   
     for (OLAddress *address in addresses){
+        if (address == [addresses firstObject]){
+            continue;
+        }
         for (id<OLPrintJob> job in jobs){
             id<OLPrintJob> jobCopy = [(NSObject *)job copy];
             jobCopy.address = address;
+            jobCopy.extraCopies = -1;
             [jobsToAdd addObject:jobCopy];
         }
     }

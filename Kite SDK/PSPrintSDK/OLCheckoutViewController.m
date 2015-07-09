@@ -273,13 +273,14 @@ static NSString *const kOLKiteABTestAllowMultipleRecipients = @"ly.kite.abtest.a
     
     if (self.shippingAddresses.count == 1){
         self.printOrder.shippingAddress = [self.shippingAddresses firstObject];
-        [self.printOrder discardDuplicateJobs];
     }
     else{
         self.printOrder.shippingAddress = nil;
-        [self.printOrder discardDuplicateJobs];
-        [self.printOrder duplicateJobsForAddresses:self.shippingAddresses];
     }
+    
+    [self.printOrder discardDuplicateJobs];
+    [self.printOrder duplicateJobsForAddresses:self.shippingAddresses];
+    
     OLPaymentViewController *vc = [[OLPaymentViewController alloc] initWithPrintOrder:self.printOrder];
     vc.presentedModally = self.presentedModally;
     vc.delegate = self.delegate;

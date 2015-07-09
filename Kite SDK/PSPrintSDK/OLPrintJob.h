@@ -26,6 +26,7 @@
 @property (nonatomic, readonly) NSArray *currenciesSupported;
 @property (nonatomic, strong) OLAddress *address;
 @property (nonatomic, strong) NSString *uuid;
+@property (assign, nonatomic) NSInteger extraCopies;
 - (NSDecimalNumber *)costInCurrency:(NSString *)currencyCode;
 
 @end
