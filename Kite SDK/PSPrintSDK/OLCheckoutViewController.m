@@ -294,6 +294,7 @@ static NSString *const kOLKiteABTestAllowMultipleRecipients = @"ly.kite.abtest.a
 }
 
 - (void) viewWillAppear:(BOOL)animated{
+    [self.tableView reloadData];
     if (self.kiteLabel){
         [self positionKiteLabel];
     }
