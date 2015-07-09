@@ -233,10 +233,15 @@ static NSString *instagramRedirectURI = nil;
 #endif
 
 + (void)fetchRemotePlistsWithCompletionHandler:(void(^)())handler{
-    [OLKitePrintSDK fetchRemotePlistWithURL:@"https://sdk-static.s3.amazonaws.com/kite-ios-remote.plist" completionHandler:^(NSError *error){
-        [OLKitePrintSDK fetchRemotePlistWithURL:[NSString stringWithFormat:@"https://sdk-static.s3.amazonaws.com/kite-ios-remote-%@.plist", [OLKitePrintSDK apiKey]] completionHandler:^(NSError *error2){
+    [OLKitePrintSDK fetchRemotePlistWithURL:[NSString stringWithFormat:@"https://sdk-static.s3.amazonaws.com/kite-ios-remote-%@.plist", [OLKitePrintSDK apiKey]] completionHandler:^(NSError *error){
+        if (error){
+            [OLKitePrintSDK fetchRemotePlistWithURL:@"https://sdk-static.s3.amazonaws.com/kite-ios-remote.plist" completionHandler:^(NSError *error2){
+                handler();
+            }];
+        }
+        else{
             handler();
-        }];
+        }
     }];
 }
 
