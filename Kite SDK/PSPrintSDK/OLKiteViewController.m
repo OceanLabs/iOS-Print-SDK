@@ -101,8 +101,17 @@ static NSString *const kOLKiteABTestProductDescriptionWithPrintOrder = @"kOLKite
 -(void)viewDidLoad {
     [super viewDidLoad];
     
+    [self setupABTestVariants];
 #ifndef OL_NO_ANALYTICS
-    [OLAnalytics trackKiteViewControllerLoadedWithEntryPoint:self.printOrder ? @"Shipping Screen" : @"Home Screen"];
+    if (self.printOrder && !self.showProductDescriptionWithPrintOrder){
+        [OLAnalytics trackKiteViewControllerLoadedWithEntryPoint:@"Shipping Screen"];
+    }
+    else if(self.printOrder && self.showProductDescriptionWithPrintOrder){
+        [OLAnalytics trackKiteViewControllerLoadedWithEntryPoint:@"Product Description Screen"];
+    }
+    else{
+        [OLAnalytics trackKiteViewControllerLoadedWithEntryPoint:@"Home Screen"];
+    }
 #endif
     
     if (!self.navigationController){
@@ -114,8 +123,6 @@ static NSString *const kOLKiteABTestProductDescriptionWithPrintOrder = @"kOLKite
     if ([OLKitePrintSDK environment] == kOLKitePrintSDKEnvironmentLive){
         [[self.view viewWithTag:9999] removeFromSuperview];
     }
-    
-    [self setupABTestVariants];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
