@@ -61,7 +61,8 @@ UINavigationControllerDelegate>
 @property (strong, nonatomic) NSArray *userSelectedPhotosCopy;
 @property (assign, nonatomic) NSNumber *selectedIndexNumber;
 @property (assign, nonatomic) NSInteger addNewPhotosAtIndex;
-@property (assign, nonatomic) NSInteger interactionImageIndex;
+@property (assign, nonatomic) NSInteger longPressImageIndex;
+@property (assign, nonatomic) NSNumber *replacingImageNumber;
 @property (weak, nonatomic) OLPhotobookViewController *interactionPhotobook;
 @property (strong, nonatomic) OLPrintPhoto *coverPhoto;
 @property (assign, nonatomic) BOOL animating;
@@ -267,20 +268,20 @@ UINavigationControllerDelegate>
 #pragma mark - Menu Actions
 
 - (void)deletePage{
-    if (self.interactionImageIndex == -1){
+    if (self.longPressImageIndex == -1){
         self.coverPhoto = nil;
         self.interactionPhotobook.coverPhoto = nil;
         [self.interactionPhotobook loadCoverPhoto];
         return;
     }
     
-    if ([self.selectedIndexNumber integerValue] == self.interactionImageIndex){
+    if ([self.selectedIndexNumber integerValue] == self.longPressImageIndex){
         [[self findPageForImageIndex:[self.selectedIndexNumber integerValue]] unhighlightImageAtIndex:[self.selectedIndexNumber integerValue]];
         self.selectedIndexNumber = nil;
     }
-    self.photobookPhotos[self.interactionImageIndex] = [NSNull null];
+    self.photobookPhotos[self.longPressImageIndex] = [NSNull null];
     self.interactionPhotobook.userSelectedPhotos = self.photobookPhotos;
-    [[self findPageForImageIndex:self.interactionImageIndex] loadImageWithCompletionHandler:NULL];
+    [[self findPageForImageIndex:self.longPressImageIndex] loadImageWithCompletionHandler:NULL];
 }
 
 - (void)addPage{
@@ -290,13 +291,13 @@ UINavigationControllerDelegate>
 - (void)cropImage{
     OLPrintPhoto *cropPhoto;
     UIImageView *imageView;
-    if (self.interactionImageIndex == -1){
+    if (self.longPressImageIndex == -1){
         cropPhoto = self.coverPhoto;
         imageView = self.interactionPhotobook.coverImageView;
     }
     else{
-        cropPhoto = self.photobookPhotos[self.interactionImageIndex];
-        imageView = [self findPageForImageIndex:self.interactionImageIndex].imageView;
+        cropPhoto = self.photobookPhotos[self.longPressImageIndex];
+        imageView = [self findPageForImageIndex:self.longPressImageIndex].imageView;
     }
     
     UINavigationController *nav = [self.storyboard instantiateViewControllerWithIdentifier:@"CropViewNavigationController"];
@@ -307,6 +308,19 @@ UINavigationControllerDelegate>
         [cropVc setFullImage:image];
         [self presentViewController:nav animated:YES completion:NULL];
     }];
+}
+
+- (void)replaceImage{
+    UIImageView *imageView;
+    if (self.longPressImageIndex == -1){
+        imageView = self.interactionPhotobook.coverImageView;
+    }
+    else{
+        imageView = [self findPageForImageIndex:self.longPressImageIndex].imageView;
+    }
+    
+    self.replacingImageNumber = [NSNumber numberWithInteger:self.longPressImageIndex];
+    [self addMorePhotosFromView:imageView];
 }
 
 #pragma mark - User Actions
@@ -532,17 +546,18 @@ UINavigationControllerDelegate>
         view = (OLImageView *)[photobook.pageController.viewControllers[index % 2] imageView];
     }
     
-    self.interactionImageIndex = index;
+    self.longPressImageIndex = index;
     self.interactionPhotobook = photobook;
     
     view.delegate = self;
     [view becomeFirstResponder];
     UIMenuItem *deleteItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Remove", @"") action:@selector(deletePage)];
     UIMenuItem *cropImageItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Crop", @"") action:@selector(cropImage)];
+    UIMenuItem *replaceImageItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Replace Photo", @"") action:@selector(replaceImage)];
 //    UIMenuItem *addPageItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Add Page", @"") action:@selector(addPage)];
     
     UIMenuController *mc = [UIMenuController sharedMenuController];
-    [mc setMenuItems:@[deleteItem, cropImageItem]];
+    [mc setMenuItems:@[cropImageItem, replaceImageItem, deleteItem]];
     [mc setTargetRect:view.frame inView:view];
     [mc setMenuVisible:YES animated:YES];
 }
@@ -663,7 +678,7 @@ UINavigationControllerDelegate>
 }
 
 -(void)scrollCropViewController:(OLScrollCropViewController *)cropper didFinishCroppingImage:(UIImage *)croppedImage{
-    if (self.interactionImageIndex == -1){
+    if (self.longPressImageIndex == -1){
         [self.coverPhoto unloadImage];
         [self.coverPhoto setAsset:[OLAsset assetWithImageAsJPEG:croppedImage]];
         self.interactionPhotobook.coverPhoto = self.coverPhoto;
@@ -671,10 +686,10 @@ UINavigationControllerDelegate>
         
     }
     else{
-        [self.photobookPhotos[self.interactionImageIndex] unloadImage];
-        [self.photobookPhotos[self.interactionImageIndex] setAsset:[OLAsset assetWithImageAsJPEG:croppedImage]];
+        [self.photobookPhotos[self.longPressImageIndex] unloadImage];
+        [self.photobookPhotos[self.longPressImageIndex] setAsset:[OLAsset assetWithImageAsJPEG:croppedImage]];
         
-        [[self findPageForImageIndex:self.interactionImageIndex] loadImageWithCompletionHandler:NULL];
+        [[self findPageForImageIndex:self.longPressImageIndex] loadImageWithCompletionHandler:NULL];
     }
     
     [cropper dismissViewControllerAnimated:YES completion:NULL];
@@ -821,6 +836,11 @@ UINavigationControllerDelegate>
 }
 
 - (void)assetsPickerController:(CTAssetsPickerController *)picker didFinishPickingAssets:(NSArray *)assets {
+    if (self.replacingImageNumber){
+        self.photobookPhotos[[self.replacingImageNumber integerValue]] = [NSNull null];
+        self.replacingImageNumber = nil;
+    }
+    
     if (self.addNewPhotosAtIndex == -1){
         self.coverPhoto = [[OLPrintPhoto alloc] init];
         self.coverPhoto.asset = [assets firstObject];
@@ -873,6 +893,11 @@ UINavigationControllerDelegate>
 }
 
 - (void)instagramImagePicker:(OLInstagramImagePickerController *)imagePicker didFinishPickingImages:(NSArray *)images {
+    if (self.replacingImageNumber){
+        self.photobookPhotos[[self.replacingImageNumber integerValue]] = [NSNull null];
+        self.replacingImageNumber = nil;
+    }
+    
     if (self.addNewPhotosAtIndex == -1){
         if (images.count > 0){
             self.coverPhoto = [[OLPrintPhoto alloc] init];
@@ -917,6 +942,11 @@ UINavigationControllerDelegate>
 }
 
 - (void)facebookImagePicker:(OLFacebookImagePickerController *)imagePicker didFinishPickingImages:(NSArray *)images {
+    if (self.replacingImageNumber){
+        self.photobookPhotos[[self.replacingImageNumber integerValue]] = [NSNull null];
+        self.replacingImageNumber = nil;
+    }
+    
     if (self.addNewPhotosAtIndex == -1){
         if (images.count > 0){
             self.coverPhoto = [[OLPrintPhoto alloc] init];
