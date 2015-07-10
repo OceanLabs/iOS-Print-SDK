@@ -12,7 +12,7 @@
 
 @interface OLAnalytics : NSObject
 
-+ (void)trackKiteViewControllerLoaded;
++ (void)trackKiteViewControllerLoadedWithEntryPoint:(NSString *)entryPoint;
 + (void)trackProductSelectionScreenViewed;
 + (void)trackProductDescriptionScreenViewed:(NSString *)productName;
 + (void)trackProductTemplateSelectionScreenViewed:(NSString *)productName;
