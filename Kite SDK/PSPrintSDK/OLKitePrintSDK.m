@@ -232,10 +232,23 @@ static NSString *instagramRedirectURI = nil;
 }
 #endif
 
-+ (void)fetchRemotePlist{
++ (void)fetchRemotePlistsWithCompletionHandler:(void(^)())handler{
+    [OLKitePrintSDK fetchRemotePlistWithURL:[NSString stringWithFormat:@"https://sdk-static.s3.amazonaws.com/kite-ios-remote-%@.plist", [OLKitePrintSDK apiKey]] completionHandler:^(NSError *error){
+        if (error){
+            [OLKitePrintSDK fetchRemotePlistWithURL:@"https://sdk-static.s3.amazonaws.com/kite-ios-remote.plist" completionHandler:^(NSError *error2){
+                handler();
+            }];
+        }
+        else{
+            handler();
+        }
+    }];
+}
+
++ (void)fetchRemotePlistWithURL:(NSString *)urlString completionHandler:(void (^)(NSError *error))handler{
     NSDictionary *oldDefaults = [[NSUserDefaults standardUserDefaults] dictionaryRepresentation];
     
-    NSURL *URL = [NSURL URLWithString:@"https://sdk-static.s3.amazonaws.com/kite-ios-remote.plist"];
+    NSURL *URL = [NSURL URLWithString:urlString];
     [[NSUserDefaults standardUserDefaults] registerDefaultsWithURL:URL success:^(NSDictionary *defaults){
         // reset SKLab A/B tests if the experiment version for any test has been bumped. This allows us to default to sticky SkyLab behaviour
         // and when we want to reset things just bump the experiment version.
@@ -250,7 +263,10 @@ static NSString *instagramRedirectURI = nil;
                 }
             }
         }
-    }failure:NULL];
+        handler(nil);
+    }failure:^(NSError *error){
+        handler(error);
+    }];
 }
 
 + (void)checkoutViewControllerForPrintOrder:(OLPrintOrder *)printOrder handler:(void(^)(OLCheckoutViewController *vc))handler{
