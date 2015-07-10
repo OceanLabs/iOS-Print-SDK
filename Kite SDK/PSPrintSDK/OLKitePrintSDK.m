@@ -232,6 +232,22 @@ static NSString *instagramRedirectURI = nil;
 }
 #endif
 
++ (BOOL)loadLocalPlist{
+    NSString *path = [[NSBundle mainBundle] pathForResource:@"OLKitePrintSDKDefaults" ofType:@"plist"];
+    NSDictionary *plist = [[NSDictionary alloc] initWithContentsOfFile:path];
+    if (plist){
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        for (NSString *key in [plist allKeys]){
+            [defaults setObject:plist[key] forKey:key];
+        }
+        [defaults synchronize];
+        return YES;
+    }
+    else{
+        return NO;
+    }
+}
+
 + (void)fetchRemotePlist{
     NSDictionary *oldDefaults = [[NSUserDefaults standardUserDefaults] dictionaryRepresentation];
     

@@ -175,8 +175,8 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
         self.shippingAddress.country = [OLCountry countryForCurrentLocale];
     }
     
-    if (self.printOrder.shippingAddress == nil) {
-        self.printOrder.shippingAddress = self.shippingAddress;
+    if (self.printOrder.shippingAddresses == nil || self.printOrder.shippingAddresses.count == 0) {
+        self.printOrder.shippingAddresses = @[self.shippingAddress];
     }
 }
 
@@ -220,7 +220,7 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
     d[@"phone"] = phone;
     self.printOrder.userData = d;
     
-    self.printOrder.shippingAddress = self.shippingAddress;
+    self.printOrder.shippingAddresses = @[self.shippingAddress];
     OLPaymentViewController *vc = [[OLPaymentViewController alloc] initWithPrintOrder:self.printOrder];
     vc.delegate = self.delegate;
     
