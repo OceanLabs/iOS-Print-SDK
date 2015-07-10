@@ -102,7 +102,6 @@ static NSString *const kOLKiteABTestProductDescriptionWithPrintOrder = @"kOLKite
 -(void)viewDidLoad {
     [super viewDidLoad];
     
-    [self setupABTestVariants];
 #ifndef OL_NO_ANALYTICS
     if (self.printOrder && !self.showProductDescriptionWithPrintOrder){
         [OLAnalytics trackKiteViewControllerLoadedWithEntryPoint:@"Shipping Screen"];
@@ -127,6 +126,10 @@ static NSString *const kOLKiteABTestProductDescriptionWithPrintOrder = @"kOLKite
     [self.transitionOperation addDependency:self.remotePlistSyncOperation];
     
     [OLKitePrintSDK fetchRemotePlistsWithCompletionHandler:^(NSError *error){
+        __weak OLKiteViewController *welf = self;
+        [self.remotePlistSyncOperation addExecutionBlock:^{
+            [welf setupABTestVariants];
+        }];
         [self.operationQueue addOperation:self.remotePlistSyncOperation];
     }];
     
