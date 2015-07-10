@@ -21,9 +21,11 @@
 #import "OLProductGroup.h"
 #import "OLCustomNavigationController.h"
 #import "NSObject+Utils.h"
+#import <SkyLab.h>
 
 static const NSInteger kTagNoProductsAlertView = 99;
 static const NSInteger kTagTemplateSyncFailAlertView = 100;
+static NSString *const kOLKiteABTestProductDescriptionWithPrintOrder = @"kOLKiteABTestProductDescriptionWithPrintOrder";
 
 @interface OLKiteViewController () <UIAlertViewDelegate>
 
@@ -37,6 +39,7 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
 @property (assign, nonatomic) BOOL transitionOnViewDidAppear;
 @property (assign, nonatomic) BOOL seenViewDidAppear;
 @property (assign, nonatomic) BOOL alreadyTransitioned;
+@property (assign, nonatomic) BOOL showProductDescriptionWithPrintOrder;
 
 @end
 
@@ -81,6 +84,20 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
     return self;
 }
 
+- (void)setupABTestVariants {
+    NSDictionary *experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestProductDescriptionWithPrintOrder];
+    if (!experimentDict) {
+        experimentDict = @{@"Yes" : @0.5, @"No" : @0.5};
+    }
+    [SkyLab splitTestWithName:kOLKiteABTestProductDescriptionWithPrintOrder
+                   conditions:@{
+                                @"Yes" : experimentDict[@"Yes"],
+                                @"No" : experimentDict[@"No"]
+                                } block:^(id choice) {
+                                    self.showProductDescriptionWithPrintOrder = [choice isEqualToString:@"Yes"];
+                                }];
+}
+
 -(void)viewDidLoad {
     [super viewDidLoad];
     
@@ -97,6 +114,8 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
     if ([OLKitePrintSDK environment] == kOLKitePrintSDKEnvironmentLive){
         [[self.view viewWithTag:9999] removeFromSuperview];
     }
+    
+    [self setupABTestVariants];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -159,7 +178,7 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
         }
         return;
     }
-    else if (self.printOrder && NO){
+    else if (self.printOrder && !self.showProductDescriptionWithPrintOrder){
         OLCheckoutViewController *vc = [[OLCheckoutViewController alloc] initWithPrintOrder:self.printOrder];
         [[vc navigationItem] setLeftBarButtonItem:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(dismiss)]];
         vc.userEmail = self.userEmail;
@@ -169,7 +188,7 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
         [self fadeToViewController:nvc];
         return;
     }
-    else if (self.printOrder && YES){
+    else if (self.printOrder && self.showProductDescriptionWithPrintOrder){
         OLProductOverviewViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLProductOverviewViewController"];
         vc.product = [OLProduct productWithTemplateId:[[self.printOrder.jobs firstObject] templateId]];
         vc.userEmail = self.userEmail;
