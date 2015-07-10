@@ -114,21 +114,18 @@ static NSString *const kOLKiteABTestProductDescriptionWithPrintOrder = @"kOLKite
     [self.transitionOperation addDependency:self.remotePlistSyncOperation];
     
     [OLKitePrintSDK fetchRemotePlistsWithCompletionHandler:^(NSError *error){
-        __weak OLKiteViewController *welf = self;
-        [self.remotePlistSyncOperation addExecutionBlock:^{
-            [welf setupABTestVariants];
+        [self setupABTestVariants];
 #ifndef OL_NO_ANALYTICS
-            if (self.printOrder && !self.showProductDescriptionWithPrintOrder){
-                [OLAnalytics trackKiteViewControllerLoadedWithEntryPoint:@"Shipping Screen"];
-            }
-            else if(self.printOrder && self.showProductDescriptionWithPrintOrder){
-                [OLAnalytics trackKiteViewControllerLoadedWithEntryPoint:@"Product Description Screen"];
-            }
-            else{
-                [OLAnalytics trackKiteViewControllerLoadedWithEntryPoint:@"Home Screen"];
-            }
+        if (self.printOrder && !self.showProductDescriptionWithPrintOrder){
+            [OLAnalytics trackKiteViewControllerLoadedWithEntryPoint:@"Shipping Screen"];
+        }
+        else if(self.printOrder && self.showProductDescriptionWithPrintOrder){
+            [OLAnalytics trackKiteViewControllerLoadedWithEntryPoint:@"Product Description Screen"];
+        }
+        else{
+            [OLAnalytics trackKiteViewControllerLoadedWithEntryPoint:@"Home Screen"];
+        }
 #endif
-        }];
         [self.operationQueue addOperation:self.remotePlistSyncOperation];
     }];
     
