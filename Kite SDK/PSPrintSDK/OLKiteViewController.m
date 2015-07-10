@@ -102,18 +102,6 @@ static NSString *const kOLKiteABTestProductDescriptionWithPrintOrder = @"kOLKite
 -(void)viewDidLoad {
     [super viewDidLoad];
     
-#ifndef OL_NO_ANALYTICS
-    if (self.printOrder && !self.showProductDescriptionWithPrintOrder){
-        [OLAnalytics trackKiteViewControllerLoadedWithEntryPoint:@"Shipping Screen"];
-    }
-    else if(self.printOrder && self.showProductDescriptionWithPrintOrder){
-        [OLAnalytics trackKiteViewControllerLoadedWithEntryPoint:@"Product Description Screen"];
-    }
-    else{
-        [OLAnalytics trackKiteViewControllerLoadedWithEntryPoint:@"Home Screen"];
-    }
-#endif
-    
     if (!self.navigationController){
         self.navigationBar.hidden = NO;
     }
@@ -129,6 +117,17 @@ static NSString *const kOLKiteABTestProductDescriptionWithPrintOrder = @"kOLKite
         __weak OLKiteViewController *welf = self;
         [self.remotePlistSyncOperation addExecutionBlock:^{
             [welf setupABTestVariants];
+#ifndef OL_NO_ANALYTICS
+            if (self.printOrder && !self.showProductDescriptionWithPrintOrder){
+                [OLAnalytics trackKiteViewControllerLoadedWithEntryPoint:@"Shipping Screen"];
+            }
+            else if(self.printOrder && self.showProductDescriptionWithPrintOrder){
+                [OLAnalytics trackKiteViewControllerLoadedWithEntryPoint:@"Product Description Screen"];
+            }
+            else{
+                [OLAnalytics trackKiteViewControllerLoadedWithEntryPoint:@"Home Screen"];
+            }
+#endif
         }];
         [self.operationQueue addOperation:self.remotePlistSyncOperation];
     }];
@@ -177,28 +176,28 @@ static NSString *const kOLKiteABTestProductDescriptionWithPrintOrder = @"kOLKite
             }
             return;
         }
-else if (self.printOrder && !self.showProductDescriptionWithPrintOrder){
-        OLCheckoutViewController *vc = [[OLCheckoutViewController alloc] initWithPrintOrder:self.printOrder];
-        [[vc navigationItem] setLeftBarButtonItem:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(dismiss)]];
-        vc.userEmail = self.userEmail;
-        vc.userPhone = self.userPhone;
-        vc.kiteDelegate = self.delegate;
-        OLCustomNavigationController *nvc = [[OLCustomNavigationController alloc] initWithRootViewController:vc];
-        [self fadeToViewController:nvc];
-        return;
-    }
-    else if (self.printOrder && self.showProductDescriptionWithPrintOrder){
-        OLProductOverviewViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLProductOverviewViewController"];
-        vc.product = [OLProduct productWithTemplateId:[[self.printOrder.jobs firstObject] templateId]];
-        vc.userEmail = self.userEmail;
-        vc.userPhone = self.userPhone;
-        vc.delegate = self.delegate;
-        [[vc navigationItem] setLeftBarButtonItem:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(dismiss)]];
-        [vc.navigationItem.rightBarButtonItem setTitle:NSLocalizedString(@"Next", @"")];
-        OLCustomNavigationController *nvc = [[OLCustomNavigationController alloc] initWithRootViewController:vc];
-        [self fadeToViewController:nvc];
-        return;
-    }
+        else if (welf.printOrder && !welf.showProductDescriptionWithPrintOrder){
+            OLCheckoutViewController *vc = [[OLCheckoutViewController alloc] initWithPrintOrder:welf.printOrder];
+            [[vc navigationItem] setLeftBarButtonItem:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:welf action:@selector(dismiss)]];
+            vc.userEmail = welf.userEmail;
+            vc.userPhone = welf.userPhone;
+            vc.kiteDelegate = welf.delegate;
+            OLCustomNavigationController *nvc = [[OLCustomNavigationController alloc] initWithRootViewController:vc];
+            [welf fadeToViewController:nvc];
+            return;
+        }
+        else if (welf.printOrder && welf.showProductDescriptionWithPrintOrder){
+            OLProductOverviewViewController *vc = [welf.storyboard instantiateViewControllerWithIdentifier:@"OLProductOverviewViewController"];
+            vc.product = [OLProduct productWithTemplateId:[[welf.printOrder.jobs firstObject] templateId]];
+            vc.userEmail = welf.userEmail;
+            vc.userPhone = welf.userPhone;
+            vc.delegate = welf.delegate;
+            [[vc navigationItem] setLeftBarButtonItem:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:welf action:@selector(dismiss)]];
+            [vc.navigationItem.rightBarButtonItem setTitle:NSLocalizedString(@"Next", @"")];
+            OLCustomNavigationController *nvc = [[OLCustomNavigationController alloc] initWithRootViewController:vc];
+            [welf fadeToViewController:nvc];
+            return;
+        }
         else if (groups.count == 1) {
             OLProductGroup *group = groups[0];
             product = [group.products firstObject];
