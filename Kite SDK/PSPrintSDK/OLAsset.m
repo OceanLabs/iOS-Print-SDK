@@ -11,6 +11,7 @@
 #import "OLURLDataSource.h"
 #import "OLAsset+Private.h"
 #import "OLPrintPhoto.h"
+#import "ALAssetsLibrary+Singleton.h"
 
 #ifdef OL_KITE_OFFER_INSTAGRAM
 #import <OLInstagramImage.h>
@@ -34,7 +35,6 @@ NSString *const kOLMimeTypePNG  = @"image/png";
 @property (nonatomic, strong) NSString *imageFilePath;
 @property (nonatomic, strong) NSData *imageData;
 @property (nonatomic, strong) NSURL *alAssetURL;
-@property (nonatomic, strong) ALAssetsLibrary *alAssetsLibrary;
 @property (nonatomic, strong) ALAsset *alAsset;
 @property (nonatomic, strong) id<OLAssetDataSource> dataSource;
 @property (nonatomic, strong) NSURL *imageURL;
@@ -234,12 +234,10 @@ NSString *const kOLMimeTypePNG  = @"image/png";
             handler(self.alAsset, nil);
         });
     } else {
-        ALAssetsLibrary *assetLibrary = [[ALAssetsLibrary alloc] init];
-        [assetLibrary assetForURL:self.alAssetURL
+        [[ALAssetsLibrary defaultAssetsLibrary] assetForURL:self.alAssetURL
                       resultBlock:^(ALAsset *asset) {
                           dispatch_async(dispatch_get_main_queue(), ^{
                               NSAssert([NSThread isMainThread], @"oops wrong assumption about main thread callback");
-                              self.alAssetsLibrary = assetLibrary;
                               self.alAsset = asset;
                               handler(self.alAsset, nil);
                           });

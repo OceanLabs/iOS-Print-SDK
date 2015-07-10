@@ -10,6 +10,7 @@
 #import <AssetsLibrary/AssetsLibrary.h>
 #import <SDWebImageManager.h>
 #import "RMImageCropper.h"
+#import "ALAssetsLibrary+Singleton.h"
 #ifdef OL_KITE_OFFER_INSTAGRAM
 #import <OLInstagramImage.h>
 #endif
@@ -50,7 +51,6 @@ static NSOperationQueue *imageOperationQueue;
 @end
 
 @interface OLPrintPhoto ()
-@property (nonatomic, strong) ALAssetsLibrary *assetsLibrary;
 @property (nonatomic, strong) UIImage *cachedCroppedThumbnailImage;
 @end
 
@@ -499,8 +499,7 @@ static NSOperationQueue *imageOperationQueue;
         _cropImageSize = [aDecoder decodeCGSizeForKey:kKeyCropImageSize];
         if (self.type == kPrintPhotoAssetTypeALAsset) {
             NSURL *assetURL = [aDecoder decodeObjectForKey:kKeyAsset];
-            ALAssetsLibrary *assetLibrary = [[ALAssetsLibrary alloc] init];
-            [assetLibrary assetForURL:assetURL
+            [[ALAssetsLibrary defaultAssetsLibrary] assetForURL:assetURL
                           resultBlock:^(ALAsset *asset) {
                               NSAssert([NSThread isMainThread], @"oops wrong assumption about main thread callback");
                               if (asset == nil) {
@@ -509,7 +508,6 @@ static NSOperationQueue *imageOperationQueue;
                                   NSData *data = [NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"kite_corrupt" ofType:@"jpg"]];
                                   self.asset = [OLAsset assetWithDataAsJPEG:data];
                               } else {
-                                  self.assetsLibrary = assetLibrary;
                                   self.asset = asset;
                               }
                           }

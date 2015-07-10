@@ -43,6 +43,7 @@
 		2ED5DEBF1AC948C1003301A8 /* LXReorderableCollectionViewFlowLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 2ED5DEBE1AC948C1003301A8 /* LXReorderableCollectionViewFlowLayout.m */; };
 		2EE3C86D1A4ADDDB006446E2 /* OLWhiteSquare.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EE3C86C1A4ADDDA006446E2 /* OLWhiteSquare.m */; };
 		2EE3C8701A4AFB0C006446E2 /* OLKiteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EE3C86F1A4AFB0C006446E2 /* OLKiteViewController.m */; };
+		2EE94D3F1B501D900086590C /* ALAssetsLibrary+Singleton.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EE94D3E1B501D900086590C /* ALAssetsLibrary+Singleton.m */; };
 		3A5ECAA2AA9D4F38934544CA /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 931ABE3568CB40F8892488E2 /* libPods.a */; };
 		3D0D7ACC1AC0C44C00746FC8 /* NSArray+QueryingExtras.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D0D7ACB1AC0C44C00746FC8 /* NSArray+QueryingExtras.m */; };
 		3D17795A1A1E1D6800BE3E58 /* OLCreditCardCaptureViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D1779591A1E1D6800BE3E58 /* OLCreditCardCaptureViewController.m */; };
@@ -208,6 +209,8 @@
 		2EE3C86C1A4ADDDA006446E2 /* OLWhiteSquare.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLWhiteSquare.m; sourceTree = "<group>"; };
 		2EE3C86E1A4AFB0C006446E2 /* OLKiteViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLKiteViewController.h; sourceTree = "<group>"; };
 		2EE3C86F1A4AFB0C006446E2 /* OLKiteViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLKiteViewController.m; sourceTree = "<group>"; };
+		2EE94D3D1B501D900086590C /* ALAssetsLibrary+Singleton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "ALAssetsLibrary+Singleton.h"; path = "PSPrintSDK/Categories/ALAssetsLibrary+Singleton.h"; sourceTree = "<group>"; };
+		2EE94D3E1B501D900086590C /* ALAssetsLibrary+Singleton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "ALAssetsLibrary+Singleton.m"; path = "PSPrintSDK/Categories/ALAssetsLibrary+Singleton.m"; sourceTree = "<group>"; };
 		352445B905BCE0BBF471808D /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		3D0D7ACA1AC0C44C00746FC8 /* NSArray+QueryingExtras.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSArray+QueryingExtras.h"; path = "PSPrintSDK/Categories/NSArray+QueryingExtras.h"; sourceTree = "<group>"; };
 		3D0D7ACB1AC0C44C00746FC8 /* NSArray+QueryingExtras.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSArray+QueryingExtras.m"; path = "PSPrintSDK/Categories/NSArray+QueryingExtras.m"; sourceTree = "<group>"; };
@@ -402,6 +405,8 @@
 				3D8122F21A75A46D004E7297 /* UITableViewController+ScreenWidthFactor.m */,
 				2E455DFE1B1F1BA1001B1718 /* NSDecimalNumber+CostFormatter.h */,
 				2E455DFF1B1F1BA1001B1718 /* NSDecimalNumber+CostFormatter.m */,
+				2EE94D3D1B501D900086590C /* ALAssetsLibrary+Singleton.h */,
+				2EE94D3E1B501D900086590C /* ALAssetsLibrary+Singleton.m */,
 			);
 			name = Categories;
 			path = ..;
@@ -930,6 +935,7 @@
 				2ED5DEBF1AC948C1003301A8 /* LXReorderableCollectionViewFlowLayout.m in Sources */,
 				2E1F69DE1A66999700696286 /* OLPosterSizeSelectionViewController.m in Sources */,
 				CD73BFA7186306550009DE03 /* OLCountry.m in Sources */,
+				2EE94D3F1B501D900086590C /* ALAssetsLibrary+Singleton.m in Sources */,
 				CD73BFB118634ED50009DE03 /* OLConstants.m in Sources */,
 				2EA8BEBA1A484FCB008A9248 /* OLProductOverviewPageContentViewController.m in Sources */,
 				CD382E4A18EB7C6300127F95 /* OLJudoPayCard.m in Sources */,
