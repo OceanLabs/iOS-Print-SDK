@@ -68,7 +68,6 @@ UINavigationControllerDelegate
 @property (weak, nonatomic) IBOutlet UIView *fakeShadowView;
 @property (weak, nonatomic) IBOutlet UIView *openbookView;
 @property (weak, nonatomic) IBOutlet UIView *containerView;
-@property (strong, nonatomic) NSMutableArray *photobookPhotos;
 @property (strong, nonatomic) OLPrintPhoto *croppingPrintPhoto;
 @property (weak, nonatomic) IBOutlet UIImageView *bookImageView;
 @property (assign, nonatomic) NSInteger croppingImageIndex;
@@ -94,6 +93,7 @@ UINavigationControllerDelegate
 
 @property (weak, nonatomic) UIImageView *coverImageView;
 @property (assign, nonatomic) NSInteger addNewPhotosAtIndex;
+@property (strong, nonatomic) NSArray *userSelectedPhotosCopy;
 
 @end
 
@@ -1312,13 +1312,41 @@ UINavigationControllerDelegate
     
     [self.userSelectedPhotos addObjectsFromArray:addArray];
     
-    for (OLPhotobookViewController *photobook in self.childViewControllers){
-        if (!photobook.bookClosed){
-            photobook.userSelectedPhotos = self.photobookPhotos;
-            for (OLPhotobookPageContentViewController *page in photobook.pageController.viewControllers){
-                [page loadImageWithCompletionHandler:NULL];
+    [self updatePhotobookPhotos];
+    for (OLPhotobookPageContentViewController *page in self.pageController.viewControllers){
+        [page loadImageWithCompletionHandler:NULL];
+    }
+    
+}
+
+- (void)updatePhotobookPhotos{
+    if (!self.photobookPhotos){
+        self.userSelectedPhotosCopy = [[NSArray alloc] initWithArray:self.userSelectedPhotos copyItems:NO];
+        self.photobookPhotos = [[NSMutableArray alloc] initWithCapacity:self.product.quantityToFulfillOrder];
+        [self.photobookPhotos addObjectsFromArray:self.userSelectedPhotos];
+        for (NSInteger i = self.userSelectedPhotos.count; i < self.product.quantityToFulfillOrder; i++){
+            [self.photobookPhotos addObject:[NSNull null]];
+        }
+    }
+    else{
+        NSMutableArray *newPhotos = [NSMutableArray arrayWithArray:self.userSelectedPhotos];
+        [newPhotos removeObjectsInArray:self.userSelectedPhotosCopy];
+        for (NSInteger newPhoto = 0; newPhoto < newPhotos.count; newPhoto++){
+            BOOL foundSpot = NO;
+            for (NSInteger bookPhoto = self.addNewPhotosAtIndex; bookPhoto < self.photobookPhotos.count && !foundSpot; bookPhoto++){
+                if (self.photobookPhotos[bookPhoto] == [NSNull null]){
+                    self.photobookPhotos[bookPhoto] = newPhotos[newPhoto];
+                    foundSpot = YES;
+                }
+            }
+            for (NSInteger bookPhoto = 0; bookPhoto < self.addNewPhotosAtIndex && !foundSpot; bookPhoto++){
+                if (self.photobookPhotos[bookPhoto] == [NSNull null]){
+                    self.photobookPhotos[bookPhoto] = newPhotos[newPhoto];
+                    foundSpot = YES;
+                }
             }
         }
+        self.userSelectedPhotosCopy = [[NSArray alloc] initWithArray:self.userSelectedPhotos copyItems:NO];
     }
     
 }

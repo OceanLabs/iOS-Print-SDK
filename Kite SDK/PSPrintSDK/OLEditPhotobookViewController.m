@@ -134,22 +134,11 @@ UINavigationControllerDelegate>
 - (void)proceedToBookReview{
     self.navigationItem.rightBarButtonItem.enabled = NO;
     
-//    NSInteger i = 0;
-//    NSMutableArray *bookPhotos = [[NSMutableArray alloc] init];
-//    for (NSInteger object = 0; object < self.photobookPhotos.count; object++){
-//        if (self.photobookPhotos[object] == [NSNull null]){
-//            [bookPhotos addObject:self.userSelectedPhotos[i % self.userSelectedPhotos.count]];
-//            i++;
-//        }
-//        else{
-//            [bookPhotos addObject:self.photobookPhotos[object]];
-//        }
-//    }
-    
     OLPhotobookViewController *photobook = [self.storyboard instantiateViewControllerWithIdentifier:@"PhotobookViewController"];
     photobook.coverPhoto = self.coverPhoto;
     [photobook loadCoverPhoto];
-    photobook.userSelectedPhotos = self.photobookPhotos;
+    photobook.userSelectedPhotos = self.userSelectedPhotos;
+    photobook.photobookPhotos = self.photobookPhotos;
     photobook.product = self.product;
     photobook.delegate = self.delegate;
     
