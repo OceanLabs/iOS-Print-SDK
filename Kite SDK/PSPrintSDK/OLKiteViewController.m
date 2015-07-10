@@ -159,9 +159,24 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
         }
         return;
     }
-    else if (self.printOrder){
+    else if (self.printOrder && NO){
         OLCheckoutViewController *vc = [[OLCheckoutViewController alloc] initWithPrintOrder:self.printOrder];
         [[vc navigationItem] setLeftBarButtonItem:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(dismiss)]];
+        vc.userEmail = self.userEmail;
+        vc.userPhone = self.userPhone;
+        vc.kiteDelegate = self.delegate;
+        OLCustomNavigationController *nvc = [[OLCustomNavigationController alloc] initWithRootViewController:vc];
+        [self fadeToViewController:nvc];
+        return;
+    }
+    else if (self.printOrder && YES){
+        OLProductOverviewViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLProductOverviewViewController"];
+        vc.product = [OLProduct productWithTemplateId:[[self.printOrder.jobs firstObject] templateId]];
+        vc.userEmail = self.userEmail;
+        vc.userPhone = self.userPhone;
+        vc.delegate = self.delegate;
+        [[vc navigationItem] setLeftBarButtonItem:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(dismiss)]];
+        [vc.navigationItem.rightBarButtonItem setTitle:NSLocalizedString(@"Next", @"")];
         OLCustomNavigationController *nvc = [[OLCustomNavigationController alloc] initWithRootViewController:vc];
         [self fadeToViewController:nvc];
         return;

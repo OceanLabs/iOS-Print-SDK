@@ -67,7 +67,7 @@ static const NSUInteger kSectionErrorRetry = 2;
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     UIViewController *vc = self.parentViewController;
-    BOOL launchedToShipping;
+    BOOL launchedToShipping = NO;
     while (vc) {
         if ([vc isKindOfClass:[OLKiteViewController class]]){
             launchedToShipping = [(OLKiteViewController *)vc printOrder] != nil;
