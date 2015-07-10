@@ -109,6 +109,16 @@ UINavigationControllerDelegate>
         [self collectionView:self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:maxItem+2 inSection:kSectionPages]];
         self.haveCachedCells = YES;
     }
+    
+    for (OLPhotobookViewController *photobook in self.childViewControllers){
+        if (!photobook.bookClosed){
+            photobook.userSelectedPhotos = self.photobookPhotos;
+            for (OLPhotobookPageContentViewController *page in photobook.pageController.viewControllers){
+                [page loadImageWithCompletionHandler:NULL];
+            }
+        }
+    }
+    
 }
 
 - (void)viewDidDisappear:(BOOL)animated{

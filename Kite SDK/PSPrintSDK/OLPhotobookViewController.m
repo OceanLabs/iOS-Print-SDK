@@ -123,6 +123,8 @@ UINavigationControllerDelegate
     for (OLPhotobookPageContentViewController *page in [self.pageController viewControllers]){
         page.userSelectedPhotos = self.photobookPhotos;
     }
+    
+    self.userSelectedPhotosCopy = [[NSArray alloc] initWithArray:userSelectedPhotos copyItems:NO];
 }
 
 - (void)setEditingPageNumber:(NSNumber *)editingPageNumber{
