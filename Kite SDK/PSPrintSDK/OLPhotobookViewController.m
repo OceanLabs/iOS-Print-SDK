@@ -667,13 +667,13 @@ UINavigationControllerDelegate
 }
 
 - (void)onTapGestureRecognized:(UITapGestureRecognizer *)sender{
-    NSInteger index = [[self.pageController.viewControllers objectAtIndex:self.croppingImageIndex] pageIndex];
     if ([sender locationInView:self.pageController.view].x < self.pageController.view.frame.size.width / 2.0){
         self.croppingImageIndex = 0;
     }
     else{
         self.croppingImageIndex = 1;
     }
+    NSInteger index = [[self.pageController.viewControllers objectAtIndex:self.croppingImageIndex] pageIndex];
     
     if (self.editMode){
         OLPhotobookPageContentViewController *page = [self.pageController.viewControllers objectAtIndex:self.croppingImageIndex];
@@ -687,8 +687,6 @@ UINavigationControllerDelegate
         [self addMorePhotosFromView:sender.view];
     }
     else{
-        
-        index = [[self.pageController.viewControllers objectAtIndex:self.croppingImageIndex] pageIndex];
         self.croppingPrintPhoto = self.photobookPhotos[index];
         
         UINavigationController *nav = [self.storyboard instantiateViewControllerWithIdentifier:@"CropViewNavigationController"];
