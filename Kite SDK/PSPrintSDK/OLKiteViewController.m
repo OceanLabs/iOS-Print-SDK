@@ -106,6 +106,10 @@ static NSString *const kOLKiteABTestProductDescriptionWithPrintOrder = @"kOLKite
         self.navigationBar.hidden = NO;
     }
     
+    if (self.printOrder){
+        self.navigationBar.hidden = YES;
+    }
+    
     self.operationQueue = [[NSOperationQueue alloc] init];
     self.templateSyncOperation = [[NSBlockOperation alloc] init];
     self.remotePlistSyncOperation = [[NSBlockOperation alloc] init];
