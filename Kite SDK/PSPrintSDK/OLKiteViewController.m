@@ -180,7 +180,9 @@ static NSString *const kOLKiteABTestProductDescriptionWithPrintOrder = @"kOLKite
             vc.userPhone = welf.userPhone;
             vc.kiteDelegate = welf.delegate;
             OLCustomNavigationController *nvc = [[OLCustomNavigationController alloc] initWithRootViewController:vc];
-            [welf fadeToViewController:nvc];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [welf fadeToViewController:nvc];
+            });
             return;
         }
         else if (welf.printOrder && welf.showProductDescriptionWithPrintOrder){
@@ -192,7 +194,9 @@ static NSString *const kOLKiteABTestProductDescriptionWithPrintOrder = @"kOLKite
             [[vc navigationItem] setLeftBarButtonItem:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:welf action:@selector(dismiss)]];
             [vc.navigationItem.rightBarButtonItem setTitle:NSLocalizedString(@"Next", @"")];
             OLCustomNavigationController *nvc = [[OLCustomNavigationController alloc] initWithRootViewController:vc];
-            [welf fadeToViewController:nvc];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [welf fadeToViewController:nvc];
+            });
             return;
         }
         else if (groups.count == 1) {
