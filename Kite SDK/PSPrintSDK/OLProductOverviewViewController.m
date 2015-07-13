@@ -32,6 +32,7 @@
 @interface OLKiteViewController ()
 
 @property (strong, nonatomic) OLPrintOrder *printOrder;
+@property (assign, nonatomic, readonly) BOOL hidePrice;
 - (void)dismiss;
 
 @end
@@ -49,10 +50,6 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-#ifndef OL_NO_ANALYTICS
-    [OLAnalytics trackProductDescriptionScreenViewed:self.product.productTemplate.name];
-#endif
     
     if (self.product.productTemplate.templateUI == kOLTemplateUIPoster){
         self.title = NSLocalizedString(@"Posters", @"");
@@ -98,6 +95,24 @@
         [self.whiteBox removeFromSuperview];
     }
     //else do nothing, free shipping label will be shown
+    
+    UIViewController *vc = self.parentViewController;
+    while (vc) {
+        if ([vc isKindOfClass:[OLKiteViewController class]]){
+            break;
+        }
+        else{
+            vc = vc.parentViewController;
+        }
+    }
+    if ([(OLKiteViewController *)vc hidePrice]){
+        [self.costLabel removeFromSuperview];
+    }
+    
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackProductDescriptionScreenViewed:self.product.productTemplate.name hidePrice:[(OLKiteViewController *)vc hidePrice]];
+#endif
+    
 }
 
 - (UIViewController *)viewControllerAtIndex:(NSUInteger)index {

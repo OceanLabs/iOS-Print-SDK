@@ -14,7 +14,7 @@
 
 + (void)trackKiteViewControllerLoadedWithEntryPoint:(NSString *)entryPoint;
 + (void)trackProductSelectionScreenViewed;
-+ (void)trackProductDescriptionScreenViewed:(NSString *)productName;
++ (void)trackProductDescriptionScreenViewed:(NSString *)productName hidePrice:(BOOL)hidePrice;
 + (void)trackProductTemplateSelectionScreenViewed:(NSString *)productName;
 + (void)trackProductTypeSelectionScreenViewedWithTemplateClass:(NSString *)templateClassString;
 + (void)trackReviewScreenViewed:(NSString *)productName;
