@@ -100,9 +100,7 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
     }
     
     [self transitionToNextScreen];
-}
-
-- (void)viewWillAppear:(BOOL)animated {
+    
     if (![OLKitePrintSDK cacheTemplates]) {
         [OLProductTemplate deleteCachedTemplates];
         [OLProductTemplate resetTemplates];

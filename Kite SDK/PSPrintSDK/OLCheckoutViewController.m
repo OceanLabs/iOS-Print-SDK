@@ -47,6 +47,7 @@ static NSString *const kOLKiteABTestAllowMultipleRecipients = @"ly.kite.abtest.a
 
 @interface OLCheckoutViewController () <OLAddressPickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate>
 @property (strong, nonatomic) NSMutableArray *shippingAddresses;
+@property (strong, nonatomic) NSMutableArray *selectedShippingAddresses;
 @property (strong, nonatomic) UITextField *textFieldEmail, *textFieldPhone;
 @property (strong, nonatomic) OLPrintOrder *printOrder;
 @property (assign, nonatomic) BOOL presentedModally;
@@ -65,6 +66,13 @@ static NSString *const kOLKiteABTestAllowMultipleRecipients = @"ly.kite.abtest.a
         _shippingAddresses = [[NSMutableArray alloc] init];
     }
     return _shippingAddresses;
+}
+
+-(NSMutableArray *) selectedShippingAddresses{
+    if (!_selectedShippingAddresses){
+        _selectedShippingAddresses = [[NSMutableArray alloc] init];
+    }
+    return _selectedShippingAddresses;
 }
 
 - (id)init {
@@ -271,7 +279,7 @@ static NSString *const kOLKiteABTestAllowMultipleRecipients = @"ly.kite.abtest.a
     d[@"phone"] = phone;
     self.printOrder.userData = d;
     
-    if (self.shippingAddresses.count == 1){
+    if (self.shippingAddresses.count == 1 || self.selectedShippingAddresses.count == 1){
         self.printOrder.shippingAddress = [self.shippingAddresses firstObject];
     }
     else{
@@ -279,7 +287,7 @@ static NSString *const kOLKiteABTestAllowMultipleRecipients = @"ly.kite.abtest.a
     }
     
     [self.printOrder discardDuplicateJobs];
-    [self.printOrder duplicateJobsForAddresses:self.shippingAddresses];
+    [self.printOrder duplicateJobsForAddresses:self.selectedShippingAddresses];
     
     OLPaymentViewController *vc = [[OLPaymentViewController alloc] initWithPrintOrder:self.printOrder];
     vc.presentedModally = self.presentedModally;
@@ -326,7 +334,7 @@ static NSString *const kOLKiteABTestAllowMultipleRecipients = @"ly.kite.abtest.a
      * Only progress to Payment screen if the user has supplied a valid Delivery Address, Email & Telephone number.
      * Otherwise highlight the error to the user.
      */
-    if (self.shippingAddresses.count == 0) {
+    if (self.shippingAddresses.count == 0 || self.selectedShippingAddresses.count == 0) {
         [self scrollSectionToVisible:kSectionDeliveryDetails];
         UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Missing Delivery Address", @"KitePrintSDK", [OLConstants bundle], @"") message:NSLocalizedStringFromTableInBundle(@"Please choose an address to have your order shipped to", @"KitePrintSDK", [OLConstants bundle], @"") delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLConstants bundle], @"") otherButtonTitles:nil];
         [av show];
@@ -455,9 +463,11 @@ static NSString *const kOLKiteABTestAllowMultipleRecipients = @"ly.kite.abtest.a
                 cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:kDeliveryAddressCell];
                 cell.selectionStyle = UITableViewCellSelectionStyleNone;
             }
-                cell.textLabel.textColor = [UIColor blackColor];
-                cell.textLabel.text = [(OLAddress *)self.shippingAddresses[indexPath.row] recipientName];
-                cell.detailTextLabel.text = [(OLAddress *)self.shippingAddresses[indexPath.row] descriptionWithoutRecipient];
+            OLAddress *address = (OLAddress *)self.shippingAddresses[indexPath.row];
+            cell.textLabel.textColor = [UIColor blackColor];
+            cell.imageView.image = [self.selectedShippingAddresses containsObject:address] ? [UIImage imageNamed:@"checkmark_on"] : [UIImage imageNamed:@"checkmark_off"];
+            cell.textLabel.text = [(OLAddress *)self.shippingAddresses[indexPath.row] recipientName];
+            cell.detailTextLabel.text = [address descriptionWithoutRecipient];
         } else {
             cell = [tableView dequeueReusableCellWithIdentifier:kAddDeliveryAddressCell];
             if (cell == nil) {
@@ -545,6 +555,7 @@ static NSString *const kOLKiteABTestAllowMultipleRecipients = @"ly.kite.abtest.a
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
+        [self.selectedShippingAddresses removeObject:self.shippingAddresses[indexPath.row]];
         [self.shippingAddresses removeObjectAtIndex:indexPath.row];
         [self.tableView reloadSections:[[NSIndexSet alloc] initWithIndex:kSectionDeliveryDetails] withRowAnimation:UITableViewRowAnimationFade];
     }
@@ -556,12 +567,27 @@ static NSString *const kOLKiteABTestAllowMultipleRecipients = @"ly.kite.abtest.a
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section == kSectionDeliveryDetails) {
         if (self.offerAddressSearch || [OLAddress addressBook].count > 0 || self.allowsMultipleRecipients) {
-            OLAddressPickerController *addressPicker = [[OLAddressPickerController alloc] init];
-            addressPicker.delegate = self;
-            addressPicker.allowsAddressSearch = self.offerAddressSearch;
-            addressPicker.allowsMultipleSelection = self.allowsMultipleRecipients;
-            addressPicker.selected = self.shippingAddresses;
-            [self presentViewController:addressPicker animated:YES completion:nil];
+            if (self.allowsMultipleRecipients && self.shippingAddresses.count > indexPath.row){
+                OLAddress *address = [OLAddress addressBook][indexPath.row];
+                BOOL selected = YES;
+                if ([self.selectedShippingAddresses containsObject:address]) {
+                    selected = NO;
+                    [self.selectedShippingAddresses removeObject:address];
+                } else {
+                    [self.selectedShippingAddresses addObject:address];
+                }
+                
+                UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+                cell.imageView.image = selected ? [UIImage imageNamed:@"checkmark_on"] : [UIImage imageNamed:@"checkmark_off"];
+            }
+            else{
+                OLAddressPickerController *addressPicker = [[OLAddressPickerController alloc] init];
+                addressPicker.delegate = self;
+                addressPicker.allowsAddressSearch = self.offerAddressSearch;
+                addressPicker.allowsMultipleSelection = self.allowsMultipleRecipients;
+                addressPicker.selected = self.shippingAddresses;
+                [self presentViewController:addressPicker animated:YES completion:nil];
+            }
         } else {
             OLAddressEditViewController *editVc = [[OLAddressEditViewController alloc] init];
             editVc.delegate = self;
@@ -609,7 +635,9 @@ static NSString *const kOLKiteABTestAllowMultipleRecipients = @"ly.kite.abtest.a
 - (void)addressPicker:(OLAddressPickerController *)picker didFinishPickingAddresses:(NSArray/*<OLAddress>*/ *)addresses {
     [self.shippingAddresses removeAllObjects];
     for (OLAddress *address in addresses){
-        [self.shippingAddresses addObject:[address copy]];
+        OLAddress *addressCopy = [address copy];
+        [self.shippingAddresses addObject:addressCopy];
+        [self.selectedShippingAddresses addObject:addressCopy];
     }
     
     NSMutableArray *countries = [[NSMutableArray alloc] init];
