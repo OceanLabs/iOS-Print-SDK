@@ -123,7 +123,7 @@ UINavigationControllerDelegate>
     
     for (OLPhotobookViewController *photobook in self.childViewControllers){
         if (!photobook.bookClosed){
-            photobook.userSelectedPhotos = self.photobookPhotos;
+            photobook.photobookPhotos = self.photobookPhotos;
             for (OLPhotobookPageContentViewController *page in photobook.pageController.viewControllers){
                 [page loadImageWithCompletionHandler:NULL];
             }
@@ -251,18 +251,18 @@ UINavigationControllerDelegate>
 }
 
 - (void)setPageShadowAlpha:(UIView *)view forIndex:(NSInteger)index{
-    if (index % 2 == 0){//LEFT
-        [view viewWithTag:21].alpha = 0;
-        [view viewWithTag:22].alpha = 0;
-        [view viewWithTag:11].alpha = 1;
-        [view viewWithTag:12].alpha = 1;
-    }
-    else{
-        [view viewWithTag:11].alpha = 0;
-        [view viewWithTag:12].alpha = 0;
-        [view viewWithTag:21].alpha = 1;
-        [view viewWithTag:22].alpha = 1;
-    }
+//    if (index % 2 == 0){//LEFT
+//        [view viewWithTag:21].alpha = 0;
+//        [view viewWithTag:22].alpha = 0;
+//        [view viewWithTag:11].alpha = 1;
+//        [view viewWithTag:12].alpha = 1;
+//    }
+//    else{
+//        [view viewWithTag:11].alpha = 0;
+//        [view viewWithTag:12].alpha = 0;
+//        [view viewWithTag:21].alpha = 1;
+//        [view viewWithTag:22].alpha = 1;
+//    }
 }
 
 #pragma mark - Menu Actions
@@ -280,7 +280,7 @@ UINavigationControllerDelegate>
         self.selectedIndexNumber = nil;
     }
     self.photobookPhotos[self.longPressImageIndex] = [NSNull null];
-    self.interactionPhotobook.userSelectedPhotos = self.photobookPhotos;
+    self.interactionPhotobook.photobookPhotos = self.photobookPhotos;
     [[self findPageForImageIndex:self.longPressImageIndex] loadImageWithCompletionHandler:NULL];
 }
 
@@ -431,9 +431,9 @@ UINavigationControllerDelegate>
             } completion:^(BOOL finished){
                 [self swapImageAtIndex:[self.selectedIndexNumber integerValue] withImageAtIndex:page.pageIndex];
                 self.selectedIndexNumber = nil;
-                photobook.userSelectedPhotos = self.photobookPhotos;
+                photobook.photobookPhotos = self.photobookPhotos;
                 
-                [(OLPhotobookViewController *)selectedPage.parentViewController.parentViewController setUserSelectedPhotos:self.photobookPhotos];
+                [(OLPhotobookViewController *)selectedPage.parentViewController.parentViewController setPhotobookPhotos:self.photobookPhotos];
                 [page loadImageWithCompletionHandler:^{
                     [selectedPage loadImageWithCompletionHandler:^{
                         [pageCopy removeFromSuperview];
@@ -455,9 +455,9 @@ UINavigationControllerDelegate>
             }
 
             [self swapImageAtIndex:[self.selectedIndexNumber integerValue] withImageAtIndex:page.pageIndex];
-            photobook.userSelectedPhotos = self.photobookPhotos;
+            photobook.photobookPhotos = self.photobookPhotos;
             for (OLPhotobookViewController *otherPhotobook in self.childViewControllers){
-                otherPhotobook.userSelectedPhotos = self.photobookPhotos;
+                otherPhotobook.photobookPhotos = self.photobookPhotos;
             }
             
             CGFloat x = 0;
@@ -601,7 +601,7 @@ UINavigationControllerDelegate>
             photobook.startOpen = YES;
         }
                 
-        photobook.userSelectedPhotos = self.photobookPhotos;
+        photobook.photobookPhotos = self.photobookPhotos;
         if (indexPath.section == kSectionCover){
             photobook.editingPageNumber = nil;
         }
@@ -816,7 +816,7 @@ UINavigationControllerDelegate>
     [self updatePhotobookPhotos];
     for (OLPhotobookViewController *photobook in self.childViewControllers){
         if (!photobook.bookClosed){
-            photobook.userSelectedPhotos = self.photobookPhotos;
+            photobook.photobookPhotos = self.photobookPhotos;
             for (OLPhotobookPageContentViewController *page in photobook.pageController.viewControllers){
                 [page loadImageWithCompletionHandler:NULL];
             }
