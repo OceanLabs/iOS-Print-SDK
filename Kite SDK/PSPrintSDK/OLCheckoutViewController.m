@@ -472,15 +472,15 @@ static NSString *const kOLKiteABTestAllowMultipleRecipients = @"ly.kite.abtest.a
             cell = [tableView dequeueReusableCellWithIdentifier:kAddDeliveryAddressCell];
             if (cell == nil) {
                 cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:kAddDeliveryAddressCell];
-                if (self.shippingAddresses.count > 0 && self.allowsMultipleRecipients){
-                    cell.textLabel.text = NSLocalizedStringFromTableInBundle(@"Add Another Recipient", @"KitePrintSDK",[OLConstants bundle], @"");
-                }
-                else{
-                    cell.textLabel.text = NSLocalizedStringFromTableInBundle(@"Choose Delivery Address", @"KitePrintSDK", [OLConstants bundle], @"");
-                }
                 cell.textLabel.adjustsFontSizeToFitWidth = YES;
                 cell.textLabel.textColor = kColourLightBlue;
                 cell.selectionStyle = UITableViewCellSelectionStyleNone;
+            }
+            if (self.shippingAddresses.count > 0 && self.allowsMultipleRecipients){
+                cell.textLabel.text = NSLocalizedStringFromTableInBundle(@"Add Another Recipient", @"KitePrintSDK",[OLConstants bundle], @"");
+            }
+            else{
+                cell.textLabel.text = NSLocalizedStringFromTableInBundle(@"Choose Delivery Address", @"KitePrintSDK", [OLConstants bundle], @"");
             }
         }
     } else if (indexPath.section == kSectionEmailAddress) {
