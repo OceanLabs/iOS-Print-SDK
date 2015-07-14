@@ -46,7 +46,6 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
 
 + (void)setCacheTemplates:(BOOL)cache;
 + (BOOL)cacheTemplates;
-+ (void)fetchRemotePlistsWithCompletionHandler:(void(^)())handler;
 
 @end
 
@@ -101,7 +100,7 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
     [self.transitionOperation addDependency:self.templateSyncOperation];
     [self.transitionOperation addDependency:self.remotePlistSyncOperation];
     
-    [OLKitePrintSDK fetchRemotePlistsWithCompletionHandler:^(NSError *error){
+    [OLKiteABTesting fetchRemotePlistsWithCompletionHandler:^(NSError *error){
         [[OLKiteABTesting sharedInstance] setupABTestVariantsWillSkipHomeScreens:self.printOrder != nil];
 #ifndef OL_NO_ANALYTICS
         if (self.printOrder && ![OLKiteABTesting sharedInstance].showProductDescriptionWithPrintOrder){

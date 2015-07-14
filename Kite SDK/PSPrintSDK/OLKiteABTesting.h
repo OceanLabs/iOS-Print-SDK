@@ -17,6 +17,7 @@
 @property (strong, nonatomic) NSString *checkoutScreenType;
 
 + (instancetype)sharedInstance;
++ (void)fetchRemotePlistsWithCompletionHandler:(void(^)())handler;
 
 - (void)setupABTestVariantsWillSkipHomeScreens:(BOOL)skipHomeScreen;
 

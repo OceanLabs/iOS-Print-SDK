@@ -15,9 +15,7 @@
 #import "OLJudoPayCard.h"
 #import "OLProductHomeViewController.h"
 #import "OLIntegratedCheckoutViewController.h"
-#import <SkyLab.h>
 #import "OLKiteABTesting.h"
-#import <NSUserDefaults+GroundControl.h>
 #import "OLAddressEditViewController.h"
 
 static NSString *const kJudoClientId      = @"100170-877";
@@ -229,43 +227,6 @@ static NSString *instagramRedirectURI = nil;
     return instagramClientID;
 }
 #endif
-
-+ (void)fetchRemotePlistsWithCompletionHandler:(void(^)())handler{
-    [OLKitePrintSDK fetchRemotePlistWithURL:[NSString stringWithFormat:@"https://sdk-static.s3.amazonaws.com/kite-ios-remote-%@.plist", [OLKitePrintSDK apiKey]] completionHandler:^(NSError *error){
-        if (error){
-            [OLKitePrintSDK fetchRemotePlistWithURL:@"https://sdk-static.s3.amazonaws.com/kite-ios-remote.plist" completionHandler:^(NSError *error2){
-                handler();
-            }];
-        }
-        else{
-            handler();
-        }
-    }];
-}
-
-+ (void)fetchRemotePlistWithURL:(NSString *)urlString completionHandler:(void (^)(NSError *error))handler{
-    NSDictionary *oldDefaults = [[NSUserDefaults standardUserDefaults] dictionaryRepresentation];
-    
-    NSURL *URL = [NSURL URLWithString:urlString];
-    [[NSUserDefaults standardUserDefaults] registerDefaultsWithURL:URL success:^(NSDictionary *defaults){
-        // reset SKLab A/B tests if the experiment version for any test has been bumped. This allows us to default to sticky SkyLab behaviour
-        // and when we want to reset things just bump the experiment version.
-        for (NSString *key in defaults) {
-            id possibleDict = defaults[key];
-            id oldPossibleDict = oldDefaults[key];
-            if ([possibleDict isKindOfClass:[NSDictionary class]] && [oldPossibleDict isKindOfClass:[NSDictionary class]]) {
-                id experimentVersion = [possibleDict objectForKey:@"Experiment Version"];
-                id oldExperimentVersion = [oldPossibleDict objectForKey:@"Experiment Version"];
-                if ([experimentVersion isKindOfClass:[NSString class]] && [oldExperimentVersion isKindOfClass:[NSString class]] && ![experimentVersion isEqualToString:oldExperimentVersion]) {
-                    [SkyLab resetTestNamed:key];
-                }
-            }
-        }
-        handler(nil);
-    }failure:^(NSError *error){
-        handler(error);
-    }];
-}
 
 + (void)checkoutViewControllerForPrintOrder:(OLPrintOrder *)printOrder handler:(void(^)(OLCheckoutViewController *vc))handler{
     OLCheckoutViewController *vc;

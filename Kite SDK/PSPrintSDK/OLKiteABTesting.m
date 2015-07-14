@@ -8,6 +8,8 @@
 
 #import "OLKiteABTesting.h"
 #import <SkyLab.h>
+#import <NSUserDefaults+GroundControl.h>
+#import "OLKitePrintSDK.h"
 
 static NSString *const kOLKiteABTestProductDescriptionWithPrintOrder = @"kOLKiteABTestProductDescriptionWithPrintOrder";
 static NSString *const kOLKiteABTestOfferAddressSearch = @"ly.kite.abtest.offer_address_search";
@@ -22,6 +24,43 @@ static NSString *const kOLKiteABTestShippingScreen = @"ly.kite.abtest.shippingsc
     static OLKiteABTesting * sharedInstance;
     dispatch_once(&once, ^ { sharedInstance = [[self alloc] init]; });
     return sharedInstance;
+}
+
++ (void)fetchRemotePlistsWithCompletionHandler:(void(^)())handler{
+    [OLKiteABTesting fetchRemotePlistWithURL:[NSString stringWithFormat:@"https://sdk-static.s3.amazonaws.com/kite-ios-remote-%@.plist", [OLKitePrintSDK apiKey]] completionHandler:^(NSError *error){
+        if (error){
+            [OLKiteABTesting fetchRemotePlistWithURL:@"https://sdk-static.s3.amazonaws.com/kite-ios-remote.plist" completionHandler:^(NSError *error2){
+                handler();
+            }];
+        }
+        else{
+            handler();
+        }
+    }];
+}
+
++ (void)fetchRemotePlistWithURL:(NSString *)urlString completionHandler:(void (^)(NSError *error))handler{
+    NSDictionary *oldDefaults = [[NSUserDefaults standardUserDefaults] dictionaryRepresentation];
+    
+    NSURL *URL = [NSURL URLWithString:urlString];
+    [[NSUserDefaults standardUserDefaults] registerDefaultsWithURL:URL success:^(NSDictionary *defaults){
+        // reset SKLab A/B tests if the experiment version for any test has been bumped. This allows us to default to sticky SkyLab behaviour
+        // and when we want to reset things just bump the experiment version.
+        for (NSString *key in defaults) {
+            id possibleDict = defaults[key];
+            id oldPossibleDict = oldDefaults[key];
+            if ([possibleDict isKindOfClass:[NSDictionary class]] && [oldPossibleDict isKindOfClass:[NSDictionary class]]) {
+                id experimentVersion = [possibleDict objectForKey:@"Experiment Version"];
+                id oldExperimentVersion = [oldPossibleDict objectForKey:@"Experiment Version"];
+                if ([experimentVersion isKindOfClass:[NSString class]] && [oldExperimentVersion isKindOfClass:[NSString class]] && ![experimentVersion isEqualToString:oldExperimentVersion]) {
+                    [SkyLab resetTestNamed:key];
+                }
+            }
+        }
+        handler(nil);
+    }failure:^(NSError *error){
+        handler(error);
+    }];
 }
 
 - (void)setupABTestVariantsWillSkipHomeScreens:(BOOL)skipHomeScreen {
