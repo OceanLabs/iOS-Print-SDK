@@ -20,6 +20,8 @@
 #import "OLCustomNavigationController.h"
 #import "UIViewController+TraitCollectionCompatibility.h"
 #import "UIImageView+FadeIn.h"
+#import "OLKiteABTesting.h"
+#import "UIImage+ColorAtPixel.h"
 
 #define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
 
@@ -94,6 +96,14 @@
 #pragma mark - UICollectionViewDelegate Methods
 
 - (CGSize) collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
+    if (indexPath.section == 0 && ![[OLKiteABTesting sharedInstance].qualityBannerType isEqualToString:@"None"]){
+        CGFloat height = 110;
+        if ([self isHorizontalSizeClassCompact]){
+            height = (self.view.frame.size.width * height) / 375.0;
+        }
+        return CGSizeMake(self.view.frame.size.width, height);
+    }
+    
     CGSize size = self.view.bounds.size;
     NSInteger numberOfCells = [self collectionView:collectionView numberOfItemsInSection:indexPath.section];
     CGFloat halfScreenHeight = (size.height - [[UIApplication sharedApplication] statusBarFrame].size.height - self.navigationController.navigationBar.frame.size.height)/2;
@@ -126,6 +136,9 @@
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
+    if (indexPath.section == 0 && ![[OLKiteABTesting sharedInstance].qualityBannerType isEqualToString:@"None"]){
+        return;
+    }
     if (indexPath.item >= self.productGroups.count){
         return;
     }
@@ -148,10 +161,13 @@
 #pragma mark - UICollectionViewDataSource Methods
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
-    return 1;
+    return [[OLKiteABTesting sharedInstance].qualityBannerType isEqualToString:@"None"] ? 1 : 2;
 }
 
 - (NSInteger) collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
+    if (section == 0 && ![[OLKiteABTesting sharedInstance].qualityBannerType isEqualToString:@"None"]){
+        return 1;
+    }
     NSInteger extras = 0;
     NSInteger numberOfProducts = [self.productGroups count];
     
@@ -172,6 +188,14 @@
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
+    if (indexPath.section == 0 && ![[OLKiteABTesting sharedInstance].qualityBannerType isEqualToString:@"None"] ){
+        UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"qualityBanner" forIndexPath:indexPath];
+        UIImageView *imageView = (UIImageView *)[cell viewWithTag:10];
+        imageView.image = [UIImage imageNamed:[NSString stringWithFormat:@"quality-banner%@", [OLKiteABTesting sharedInstance].qualityBannerType]];
+        imageView.backgroundColor = [imageView.image colorAtPixel:CGPointMake(3, 3)];
+        return cell;
+    }
+    
     if (indexPath.item >= self.productGroups.count){
         UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"extraCell" forIndexPath:indexPath];
         [self fixCellFrameOnIOS7:cell];

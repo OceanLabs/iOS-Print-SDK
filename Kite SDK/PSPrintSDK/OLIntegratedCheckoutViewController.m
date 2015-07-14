@@ -37,7 +37,6 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
 - (void)onBackgroundClicked;
 - (BOOL)hasUserProvidedValidDetailsToProgressToPayment;
 - (BOOL)showPhoneEntryField;
-- (void)setupABTestVariants;
 - (NSString *)userEmail;
 - (NSString *)userPhone;
 - (void)recalculateOrderCostIfNewSelectedCountryDiffers:(OLCountry *)selectedCountry;
@@ -62,7 +61,6 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
     if (self = [super initWithStyle:UITableViewStyleGrouped]) {
         self.printOrder = printOrder;
         //[self.printOrder preemptAssetUpload];
-        [super setupABTestVariants];
     }
     
     return self;

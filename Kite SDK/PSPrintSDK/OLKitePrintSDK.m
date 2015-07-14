@@ -16,6 +16,7 @@
 #import "OLProductHomeViewController.h"
 #import "OLIntegratedCheckoutViewController.h"
 #import <SkyLab.h>
+#import "OLKiteABTesting.h"
 #import <NSUserDefaults+GroundControl.h>
 #import "OLAddressEditViewController.h"
 
@@ -40,9 +41,6 @@ static NSString *const kOLAPIEndpointVersion = @"v1.4";
 
 static BOOL useJudoPayForGBP = NO;
 static BOOL cacheTemplates = NO;
-
-static NSString *const kOLKiteABTestShippingScreen = @"ly.kite.abtest.shippingscreen";
-static NSString *const kOLOfferAddressSearch = @"ly.kite.flag.offer_address_search";
 
 #ifdef OL_KITE_OFFER_INSTAGRAM
 static NSString *instagramClientID = nil;
@@ -270,23 +268,14 @@ static NSString *instagramRedirectURI = nil;
 }
 
 + (void)checkoutViewControllerForPrintOrder:(OLPrintOrder *)printOrder handler:(void(^)(OLCheckoutViewController *vc))handler{
-    NSDictionary *experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestShippingScreen];
-    if (!experimentDict){
-        experimentDict = @{@"Classic" : @0.66, @"Integrated" : @0.34}; // There are 3 variants Classic+Address Search, Classic no Address Search & Integrated hence Classic gets 2/3 of the chance here as it will further get split 50:50 between the 2 classic variants internally resulting in 1/3 probability each.
+    OLCheckoutViewController *vc;
+    if ([[OLKiteABTesting sharedInstance].checkoutScreenType isEqualToString:@"Classic"]){
+        vc = [[OLCheckoutViewController alloc] initWithPrintOrder:printOrder];
     }
-    [SkyLab splitTestWithName:kOLKiteABTestShippingScreen conditions:@{
-                                                              @"Classic" : experimentDict[@"Classic"],
-                                                              @"Integrated" : experimentDict[@"Integrated"]
-                                                              }block:^(id choice){
-                                                                  OLCheckoutViewController *vc;
-                                                                  if ([choice isEqualToString:@"Classic"]){
-                                                                      vc = [[OLCheckoutViewController alloc] initWithPrintOrder:printOrder];
-                                                                  }
-                                                                  else{
-                                                                      vc = [[OLIntegratedCheckoutViewController alloc] initWithPrintOrder:printOrder];
-                                                                  }
-                                                                  handler(vc);
-                                                              }];
+    else{
+        vc = [[OLIntegratedCheckoutViewController alloc] initWithPrintOrder:printOrder];
+    }
+    handler(vc);
 }
 
 @end

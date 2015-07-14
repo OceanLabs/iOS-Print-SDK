@@ -21,11 +21,10 @@
 #import "OLProductGroup.h"
 #import "OLCustomNavigationController.h"
 #import "NSObject+Utils.h"
-#import <SkyLab.h>
+#import "OLKiteABTesting.h"
 
 static const NSInteger kTagNoProductsAlertView = 99;
 static const NSInteger kTagTemplateSyncFailAlertView = 100;
-static NSString *const kOLKiteABTestProductDescriptionWithPrintOrder = @"kOLKiteABTestProductDescriptionWithPrintOrder";
 
 @interface OLKiteViewController () <UIAlertViewDelegate>
 
@@ -40,7 +39,6 @@ static NSString *const kOLKiteABTestProductDescriptionWithPrintOrder = @"kOLKite
 @property (strong, nonatomic) NSBlockOperation *templateSyncOperation;
 @property (strong, nonatomic) NSBlockOperation *remotePlistSyncOperation;
 @property (strong, nonatomic) NSBlockOperation *transitionOperation;
-@property (assign, nonatomic) BOOL showProductDescriptionWithPrintOrder;
 
 @end
 
@@ -85,20 +83,6 @@ static NSString *const kOLKiteABTestProductDescriptionWithPrintOrder = @"kOLKite
     return self;
 }
 
-- (void)setupABTestVariants {
-    NSDictionary *experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestProductDescriptionWithPrintOrder];
-    if (!experimentDict) {
-        experimentDict = @{@"Yes" : @0.5, @"No" : @0.5};
-    }
-    [SkyLab splitTestWithName:kOLKiteABTestProductDescriptionWithPrintOrder
-                   conditions:@{
-                                @"Yes" : experimentDict[@"Yes"],
-                                @"No" : experimentDict[@"No"]
-                                } block:^(id choice) {
-                                    self.showProductDescriptionWithPrintOrder = [choice isEqualToString:@"Yes"];
-                                }];
-}
-
 -(void)viewDidLoad {
     [super viewDidLoad];
     
@@ -118,12 +102,12 @@ static NSString *const kOLKiteABTestProductDescriptionWithPrintOrder = @"kOLKite
     [self.transitionOperation addDependency:self.remotePlistSyncOperation];
     
     [OLKitePrintSDK fetchRemotePlistsWithCompletionHandler:^(NSError *error){
-        [self setupABTestVariants];
+        [[OLKiteABTesting sharedInstance] setupABTestVariantsWillSkipHomeScreens:self.printOrder != nil];
 #ifndef OL_NO_ANALYTICS
-        if (self.printOrder && !self.showProductDescriptionWithPrintOrder){
+        if (self.printOrder && ![OLKiteABTesting sharedInstance].showProductDescriptionWithPrintOrder){
             [OLAnalytics trackKiteViewControllerLoadedWithEntryPoint:@"Shipping Screen"];
         }
-        else if(self.printOrder && self.showProductDescriptionWithPrintOrder){
+        else if(self.printOrder && [OLKiteABTesting sharedInstance].showProductDescriptionWithPrintOrder){
             [OLAnalytics trackKiteViewControllerLoadedWithEntryPoint:@"Product Description Screen"];
         }
         else{
@@ -177,7 +161,7 @@ static NSString *const kOLKiteABTestProductDescriptionWithPrintOrder = @"kOLKite
             }
             return;
         }
-        else if (welf.printOrder && !welf.showProductDescriptionWithPrintOrder){
+        else if (welf.printOrder && ![OLKiteABTesting sharedInstance].showProductDescriptionWithPrintOrder){
             OLCheckoutViewController *vc = [[OLCheckoutViewController alloc] initWithPrintOrder:welf.printOrder];
             [[vc navigationItem] setLeftBarButtonItem:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:welf action:@selector(dismiss)]];
             vc.userEmail = welf.userEmail;
@@ -189,7 +173,7 @@ static NSString *const kOLKiteABTestProductDescriptionWithPrintOrder = @"kOLKite
             });
             return;
         }
-        else if (welf.printOrder && welf.showProductDescriptionWithPrintOrder){
+        else if (welf.printOrder && [OLKiteABTesting sharedInstance].showProductDescriptionWithPrintOrder){
             OLProductOverviewViewController *vc = [welf.storyboard instantiateViewControllerWithIdentifier:@"OLProductOverviewViewController"];
             vc.product = [OLProduct productWithTemplateId:[[welf.printOrder.jobs firstObject] templateId]];
             vc.userEmail = welf.userEmail;
