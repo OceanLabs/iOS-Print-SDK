@@ -16,6 +16,10 @@ typedef NS_ENUM(NSUInteger, RMImageCropperMode) {
 @property (nonatomic, copy) void (^tapped)();
 
 - (void)editedImageAsync:(void (^)(UIImage *image))complete;
+- (CGRect)getFrameRect;
+- (CGRect)getImageRect;
+- (CGSize)croppedImageSize;
++ (UIImage *)editedImageFromImage:(UIImage *)image andFrame:(CGRect)frameRect andImageRect:(CGRect)imageRect andImageViewWidth:(CGFloat)width andImageViewHeight:(CGFloat)height;
 
 @end
 

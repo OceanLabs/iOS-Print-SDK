@@ -129,10 +129,8 @@
         }
         else{
             vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OrderReviewViewController"];
-            [self.navigationController pushViewController:vc animated:YES];
         }
     }
-    [vc safePerformSelector:@selector(setAssets:) withObject:self.assets];
     [vc safePerformSelector:@selector(setUserSelectedPhotos:) withObject:self.userSelectedPhotos];
     [vc safePerformSelector:@selector(setDelegate:) withObject:self.delegate];
     [vc safePerformSelector:@selector(setProduct:) withObject:self.product];

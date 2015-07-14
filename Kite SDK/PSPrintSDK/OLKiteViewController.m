@@ -28,6 +28,7 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
 @interface OLKiteViewController () <UIAlertViewDelegate>
 
 @property (strong, nonatomic) NSArray *assets;
+@property (strong, nonatomic) OLPrintOrder *printOrder;
 @property (strong, nonatomic) NSMutableArray *userSelectedPhotos;
 @property (weak, nonatomic) IBOutlet UINavigationBar *navigationBar;
 
@@ -72,11 +73,19 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
     return self;
 }
 
+- (id)initWithPrintOrder:(OLPrintOrder *)printOrder{
+    if ((self = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:nil] instantiateViewControllerWithIdentifier:@"KiteViewController"])) {
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(templateSyncDidFinish:) name:kNotificationTemplateSyncComplete object:nil];
+        self.printOrder = printOrder;
+    }
+    return self;
+}
+
 -(void)viewDidLoad {
     [super viewDidLoad];
     
 #ifndef OL_NO_ANALYTICS
-    [OLAnalytics trackKiteViewControllerLoaded];
+    [OLAnalytics trackKiteViewControllerLoadedWithEntryPoint:self.printOrder ? @"Shipping Screen" : @"Home Screen"];
 #endif
     
     if (!self.navigationController){
@@ -84,6 +93,10 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
     }
     
     [OLKitePrintSDK fetchRemotePlist];
+    
+    if ([OLKitePrintSDK environment] == kOLKitePrintSDKEnvironmentLive){
+        [[self.view viewWithTag:9999] removeFromSuperview];
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -146,6 +159,13 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
         }
         return;
     }
+    else if (self.printOrder){
+        OLCheckoutViewController *vc = [[OLCheckoutViewController alloc] initWithPrintOrder:self.printOrder];
+        [[vc navigationItem] setLeftBarButtonItem:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(dismiss)]];
+        OLCustomNavigationController *nvc = [[OLCustomNavigationController alloc] initWithRootViewController:vc];
+        [self fadeToViewController:nvc];
+        return;
+    }
     else if (groups.count == 1) {
         OLProductGroup *group = groups[0];
         product = [group.products firstObject];
@@ -162,7 +182,6 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
     [vc safePerformSelector:@selector(setUserEmail:) withObject:self.userEmail];
     [vc safePerformSelector:@selector(setUserPhone:) withObject:self.userPhone];
     [vc safePerformSelector:@selector(setFilterProducts:) withObject:self.filterProducts];
-    [vc safePerformSelector:@selector(setAssets:) withObject:[self.assets mutableCopy]];
     [vc safePerformSelector:@selector(setUserSelectedPhotos:) withObject:self.userSelectedPhotos];
     [vc safePerformSelector:@selector(setTemplateClass:) withObject:product.productTemplate.templateClass];
     [[vc navigationItem] setLeftBarButtonItem:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(dismiss)]];

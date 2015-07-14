@@ -13,10 +13,19 @@
 #import <SDWebImageManager.h>
 #import "UIViewController+TraitCollectionCompatibility.h"
 
+@interface OLOrderReviewViewController (Private)
+
+- (void)updateTitleBasedOnSelectedPhotoQuanitity;
+- (BOOL) shouldGoToCheckout;
+- (void) doCheckout;
+- (void)preparePhotosForCheckout;
+-(NSUInteger) totalNumberOfExtras;
+
+@end
+
 @interface OLFrameOrderReviewViewController () <OLScrollCropViewControllerDelegate>
 
 @property (strong, nonatomic) NSMutableArray* framePhotos;
-@property (strong, nonatomic) NSMutableArray* frameAssets;
 @property (weak, nonatomic) OLPrintPhoto *editingPrintPhoto;
 
 @end
@@ -41,21 +50,14 @@ CGFloat margin = 2;
     // ensure order is maxed out by adding duplicates as necessary
     self.framePhotos = [[NSMutableArray alloc] init];
     [self.framePhotos addObjectsFromArray:self.userSelectedPhotos];
-    self.frameAssets = [[NSMutableArray alloc] init];
-    [self.frameAssets addObjectsFromArray:self.assets];
     NSUInteger userSelectedAssetCount = [self.framePhotos count];
     NSUInteger numOrders = (NSUInteger) floor(userSelectedAssetCount + self.product.quantityToFulfillOrder - 1) / self.product.quantityToFulfillOrder;
     NSUInteger duplicatesToFillOrder = numOrders * self.product.quantityToFulfillOrder - userSelectedAssetCount;
     for (NSUInteger i = 0; i < duplicatesToFillOrder; ++i) {
         [self.framePhotos addObject:self.userSelectedPhotos[i % userSelectedAssetCount]];
-        [self.frameAssets addObject:self.assets[i % userSelectedAssetCount]];
     }
     NSLog(@"Adding %lu duplicates to frame", (unsigned long)duplicatesToFillOrder);
     [super viewDidLoad];
-    self.extraCopiesOfAssets = [[NSMutableArray alloc] initWithCapacity:[self.framePhotos count]];
-    for (int i = 0; i < [self.framePhotos count]; i++){
-        [self.extraCopiesOfAssets addObject:@0];
-    }
     
     self.title = NSLocalizedString(@"Review", @"");
     
@@ -71,7 +73,6 @@ CGFloat margin = 2;
     NSIndexPath* indexPath = [collectionView indexPathForItemAtPoint:[gestureRecognizer locationInView:collectionView]];
     
     self.editingPrintPhoto = self.framePhotos[(outerCollectionViewIndexPath.item) * self.product.quantityToFulfillOrder + indexPath.row];
-    self.editingPrintPhoto.asset = self.frameAssets[((outerCollectionViewIndexPath.item) * self.product.quantityToFulfillOrder + indexPath.row)];
     
     UINavigationController *nav = [self.storyboard instantiateViewControllerWithIdentifier:@"CropViewNavigationController"];
     OLScrollCropViewController *cropVc = (id)nav.topViewController;
@@ -103,62 +104,22 @@ CGFloat margin = 2;
     }
 }
 
--(void) doCheckout{
+- (void)preparePhotosForCheckout{
     [self changeOrderOfPhotosInArray:self.framePhotos];
-    [self changeOrderOfPhotosInArray:self.extraCopiesOfAssets];
-    
-    [super doCheckout];
+    self.checkoutPhotos = self.framePhotos;
 }
 
 - (BOOL)shouldShowAddMorePhotos{
     return NO;
 }
 
+-(NSUInteger) totalNumberOfExtras{
+    return 0;
+}
+
 #pragma mark Button Actions
 
-//- (IBAction)onButtonUpArrowClicked:(UIButton *)sender {
-//    UIView* cellContentView = sender.superview;
-//    UIView* cell = cellContentView.superview;
-//    while (![cell isKindOfClass:[UITableViewCell class]]){
-//        cell = cell.superview;
-//    }
-//    NSIndexPath* indexPath = [self.tableView indexPathForCell:(UITableViewCell*)cell];
-//    
-//    for (int i = 0; i < self.product.quantityToFulfillOrder; i++){
-//        NSUInteger extraCopies = [self.extraCopiesOfAssets[(indexPath.item) * self.product.quantityToFulfillOrder + i] integerValue] + 1;
-//        self.extraCopiesOfAssets[(indexPath.item) * self.product.quantityToFulfillOrder + i] = [NSNumber numberWithInteger:extraCopies];
-//    }
-//    UILabel* countLabel = (UILabel *)[cellContentView viewWithTag:30];
-//    [countLabel setText: [NSString stringWithFormat:@"%lu", (unsigned long)[countLabel.text integerValue] + 1]];
-//    
-////    [self updateTitleBasedOnSelectedPhotoQuanitity];
-//}
-
-//- (IBAction)onButtonDownArrowClicked:(UIButton *)sender {
-//    UIView* cellContentView = sender.superview;
-//    UIView* cell = cellContentView.superview;
-//    while (![cell isKindOfClass:[UITableViewCell class]]){
-//        cell = cell.superview;
-//    }
-//    NSIndexPath* indexPath = [self.tableView indexPathForCell:(UITableViewCell*)cell];
-//    
-//    for (int i = 0; i < self.product.quantityToFulfillOrder; i++){
-//        NSUInteger extraCopies = [self.extraCopiesOfAssets[(indexPath.item) * self.product.quantityToFulfillOrder + i] integerValue];
-//        if (extraCopies == 0){
-//            return;
-//        }
-//        extraCopies--;
-//        
-//        self.extraCopiesOfAssets[(indexPath.item) * self.product.quantityToFulfillOrder + i] = [NSNumber numberWithInteger:extraCopies];
-//    }
-//    UILabel* countLabel = (UILabel *)[cellContentView viewWithTag:30];
-//    [countLabel setText: [NSString stringWithFormat:@"%lu", (unsigned long)[countLabel.text integerValue] - 1]];
-//    
-////    [self updateTitleBasedOnSelectedPhotoQuanitity];
-//}
-
 - (IBAction)onButtonNextClicked:(UIBarButtonItem *)sender {
-    self.userSelectedPhotos = self.framePhotos;
     if (![self shouldGoToCheckout]){
         return;
     }
@@ -197,9 +158,6 @@ CGFloat margin = 2;
         }
         
         [view.superview addConstraints:con];
-        
-        UILabel *countLabel = (UILabel *)[cell.contentView viewWithTag:30];
-        [countLabel setText: [NSString stringWithFormat:@"%lu", (unsigned long) (1+[((NSNumber*)[self.extraCopiesOfAssets objectAtIndex:indexPath.item]) integerValue])]];
         
         UICollectionView* innerCollectionView = (UICollectionView*)[cell.contentView viewWithTag:20];
         
@@ -249,7 +207,11 @@ CGFloat margin = 2;
         cellImage.image = nil;
         
         OLPrintPhoto *printPhoto =(OLPrintPhoto*)[self.framePhotos objectAtIndex:indexPath.row + (outerCollectionViewIndexPath.item) * self.product.quantityToFulfillOrder];
-        [printPhoto setImageSize:[self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath] forImageView:cellImage];
+        [printPhoto setImageSize:[self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath] cropped:YES completionHandler:^(UIImage *image){
+            dispatch_async(dispatch_get_main_queue(), ^{
+                cellImage.image = image;
+            });
+        }];
         
         UITapGestureRecognizer* doubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTapGestureThumbnailTapped:)];
         [cellImage addGestureRecognizer:doubleTap];
@@ -307,12 +269,6 @@ CGFloat margin = 2;
     id object = [self.framePhotos objectAtIndex:trueFromIndex];
     [self.framePhotos removeObjectAtIndex:trueFromIndex];
     [self.framePhotos insertObject:object atIndex:trueToIndex];
-    object = [self.extraCopiesOfAssets objectAtIndex:trueFromIndex];
-    [self.extraCopiesOfAssets removeObjectAtIndex:trueFromIndex];
-    [self.extraCopiesOfAssets insertObject:object atIndex:trueToIndex];
-    object = [self.frameAssets objectAtIndex:trueFromIndex];
-    [self.frameAssets removeObjectAtIndex:trueFromIndex];
-    [self.frameAssets insertObject:object atIndex:trueToIndex];
 }
 
 - (void) collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath{

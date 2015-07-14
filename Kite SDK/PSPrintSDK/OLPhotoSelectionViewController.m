@@ -96,6 +96,10 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    self.navigationItem.titleView = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100, 44)];
+    [(UILabel *)self.navigationItem.titleView setTextAlignment:NSTextAlignmentCenter];
+    [(UILabel *)self.navigationItem.titleView setFont:[UIFont preferredFontForTextStyle:UIFontTextStyleHeadline]];
     self.userDisabledPhotos = [[NSMutableArray alloc] init];
     
     self.galleryButton.image = [UIImage imageNamed:@"import_gallery"];
@@ -141,10 +145,6 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     }
     [self onUserSelectedPhotoCountChange];
     
-    for (OLPrintPhoto *printPhoto in self.userSelectedPhotos){
-        [printPhoto unloadImage];
-    }
-    
     if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0){
         UIVisualEffect *blurEffect;
         blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleExtraLight];
@@ -173,8 +173,10 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     }
 }
 
-- (BOOL)prefersStatusBarHidden {
-    return NO;
+- (void)viewDidLayoutSubviews{
+    [super viewDidLayoutSubviews];
+    
+    self.collectionView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
 }
 
 - (BOOL)instagramEnabled{
@@ -197,11 +199,11 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     if (self.userSelectedPhotos.count > 0){
         [self.collectionView reloadData];
     }
+    [self updateTitleBasedOnSelectedPhotoQuanitity];
 }
 
 - (void)viewDidAppear:(BOOL)animated{
     [self updateNoSelectedPhotosView];
-    [self updateTitleBasedOnSelectedPhotoQuanitity];
     [self.collectionView.collectionViewLayout invalidateLayout];
 }
 
@@ -250,17 +252,29 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     }
 }
 
+-(NSUInteger) totalNumberOfExtras{
+    if (self.product.productTemplate.templateUI == kOLTemplateUIFrame || self.product.productTemplate.templateUI == kOLTemplateUIPoster || self.product.productTemplate.templateUI == kOLTemplateUIPhotobook){
+        return 0;
+    }
+    
+    NSUInteger res = 0;
+    for (OLPrintPhoto *photo in self.userSelectedPhotos){
+        res += photo.extraCopies;
+    }
+    return res;
+}
+
 - (void)updateTitleBasedOnSelectedPhotoQuanitity {
     if (self.userSelectedPhotos.count == 0) {
-        [self setTitle:NSLocalizedString(@"Choose Photos", @"")];
+        [(UILabel *)self.navigationItem.titleView setText:NSLocalizedString(@"Choose Photos", @"")];
     } else {
         if (self.product.quantityToFulfillOrder > 1){
-            NSUInteger numOrders = 1 + (MAX(0, self.userSelectedPhotos.count - 1) / self.product.quantityToFulfillOrder);
+            NSUInteger numOrders = 1 + (MAX(0, self.userSelectedPhotos.count - 1 + [self totalNumberOfExtras]) / self.product.quantityToFulfillOrder);
             NSUInteger quanityToFulfilOrder = numOrders * self.product.quantityToFulfillOrder;
-            [self setTitle:[NSString stringWithFormat:@"%lu / %lu", (unsigned long)self.userSelectedPhotos.count - self.userDisabledPhotos.count, (unsigned long)quanityToFulfilOrder]];
+            [(UILabel *)self.navigationItem.titleView setText:[NSString stringWithFormat:@"%lu / %lu", (unsigned long)self.userSelectedPhotos.count - self.userDisabledPhotos.count + [self totalNumberOfExtras], (unsigned long)quanityToFulfilOrder]];
         }
         else{
-            [self setTitle:[NSString stringWithFormat:@"%lu", (unsigned long)self.userSelectedPhotos.count - self.userDisabledPhotos.count]];
+            [(UILabel *)self.navigationItem.titleView setText:[NSString stringWithFormat:@"%lu", (unsigned long)self.userSelectedPhotos.count - self.userDisabledPhotos.count]];
         }
     }
     
@@ -299,16 +313,13 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     
     // First remove any that are not returned.
     NSMutableArray *removeArray = [NSMutableArray arrayWithArray:self.userSelectedPhotos];
-    NSMutableArray *removeAssetArray = [NSMutableArray arrayWithArray:self.assets];
     for (OLPrintPhoto *object in self.userSelectedPhotos) {
         if (![object.asset isKindOfClass:class] || [photoArray containsObjectIdenticalTo:object]) {
-            [removeAssetArray removeObjectAtIndex:[removeArray indexOfObjectIdenticalTo:object]];
             [removeArray removeObjectIdenticalTo:object];
         }
     }
     
     [self.userSelectedPhotos removeObjectsInArray:removeArray];
-    [self.assets removeObjectsInArray:removeAssetArray];
     
     // Second, add the remaining objects to the end of the array without replacing any.
     NSMutableArray *addArray = [NSMutableArray arrayWithArray:photoArray];
@@ -323,7 +334,6 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     }
 
     [self.userSelectedPhotos addObjectsFromArray:addArray];
-    [self.assets addObjectsFromArray:addAssetArray];
     
     // Reload the collection view.
     [self.collectionView reloadData];
@@ -343,9 +353,10 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
     self.rotationSize = size;
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinator> context){
+        [self.collectionView reloadData];
         [self.collectionView.collectionViewLayout invalidateLayout];
     }completion:^(id<UIViewControllerTransitionCoordinator> context){
-        [self.collectionView reloadData];
+        
     }];
 }
 
@@ -409,7 +420,6 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
         [self.indexPathsToRemoveDict[[NSNumber numberWithInteger:section]] addObject:[NSIndexPath indexPathForItem:item inSection:section]];
     }
     for (id photo in self.userDisabledPhotos){
-        [self.assets removeObjectAtIndex:[self.userSelectedPhotos indexOfObject:photo]];
         [self.userSelectedPhotos removeObjectIdenticalTo:photo];
     }
     
@@ -529,6 +539,9 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 
 - (NSUInteger)numberOfCellsPerRow{
     CGSize size = self.rotationSize.width != 0 ? self.rotationSize : self.view.frame.size;
+    if (self.product.quantityToFulfillOrder == 3){
+        return 3;
+    }
     
     if (![self isHorizontalSizeClassCompact]){
         if (size.height > size.width){
@@ -643,6 +656,23 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     
     [self fixCellFrameOnIOS7:cell];
     
+    NSUInteger imageIndex = indexPath.row + indexPath.section * self.product.quantityToFulfillOrder;
+    
+    UILabel *qtyLabel = (UILabel *)[cell.contentView viewWithTag:50];
+    if (self.userSelectedPhotos.count > imageIndex){
+        NSInteger qty = [self.userSelectedPhotos[imageIndex] extraCopies];
+        if (qty > 0 && self.product.productTemplate.templateUI != kOLTemplateUIFrame && self.product.productTemplate.templateUI != kOLTemplateUIPhotobook && self.product.productTemplate.templateUI != kOLTemplateUIPoster){
+            qtyLabel.hidden = NO;
+            qtyLabel.text = [NSString stringWithFormat:@"%ld", qty+1];
+        }
+        else{
+            qtyLabel.hidden = YES;
+        }
+    }
+    else{
+        qtyLabel.hidden = YES;
+    }
+    
     UIImageView *imageView = (UIImageView *) [cell.contentView viewWithTag:40];
     if (imageView != nil) {
         [imageView removeFromSuperview];
@@ -728,10 +758,13 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     NSInteger skipAtNewLine = [self numberOfCellsPerRow] % 2 == 0  && indexPath.item / [self numberOfCellsPerRow] % 2 == 0 ? 1 : 0;
     imageView.backgroundColor = (indexPath.item + skipAtNewLine) % 2 == 0 ? [UIColor colorWithHexString:@"#e6e9ed"] : [UIColor colorWithHexString:@"#dce0e5"];
     
-    NSUInteger imageIndex = indexPath.row + indexPath.section * self.product.quantityToFulfillOrder;
     if (imageIndex < self.userSelectedPhotos.count) {
         OLPrintPhoto *photo = self.userSelectedPhotos[indexPath.row + indexPath.section * self.product.quantityToFulfillOrder];
-        [photo setImageSize:[self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath] forImageView:imageView];
+        [photo setImageSize:[self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath] cropped:YES completionHandler:^(UIImage *image){
+            dispatch_async(dispatch_get_main_queue(), ^{
+                imageView.image = image;
+            });
+        }];
         checkmark.hidden = [self.userDisabledPhotos containsObjectIdenticalTo:photo];
         disabled.hidden = !checkmark.hidden;
     } else {
@@ -776,9 +809,6 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     [self.userSelectedPhotos removeObjectAtIndex:fromIndexPath.item + fromIndexPath.section * self.product.quantityToFulfillOrder];
     [self.userSelectedPhotos insertObject:object atIndex:toIndexPath.item + toIndexPath.section * self.product.quantityToFulfillOrder];
     
-    object = [self.assets objectAtIndex:fromIndexPath.item + fromIndexPath.section * self.product.quantityToFulfillOrder];
-    [self.assets removeObjectAtIndex:fromIndexPath.item + fromIndexPath.section * self.product.quantityToFulfillOrder];
-    [self.assets insertObject:object atIndex:toIndexPath.item + toIndexPath.section * self.product.quantityToFulfillOrder];
 }
 
 - (BOOL)collectionView:(UICollectionView *)collectionView itemAtIndexPath:(NSIndexPath *)fromIndexPath canMoveToIndexPath:(NSIndexPath *)toIndexPath{
@@ -893,7 +923,6 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     }
     [orvc safePerformSelector:@selector(setProduct:) withObject:self.product];
     [orvc safePerformSelector:@selector(setUserSelectedPhotos:) withObject:self.userSelectedPhotos];
-    [orvc safePerformSelector:@selector(setAssets:) withObject:self.assets];
     [self.navigationController pushViewController:orvc animated:YES];
 }
 

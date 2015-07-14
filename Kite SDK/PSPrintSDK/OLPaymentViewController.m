@@ -109,7 +109,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 
 - (OLCheckoutViewController *)shippingScreenOnTheStack {
     NSArray *vcStack = self.navigationController.viewControllers;
-    if ([vcStack[vcStack.count - 2] isKindOfClass:[OLCheckoutViewController class]]) {
+    if (vcStack.count >= 2 && [vcStack[vcStack.count - 2] isKindOfClass:[OLCheckoutViewController class]]) {
         return vcStack[vcStack.count - 2];
     }
     
@@ -141,7 +141,12 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     self.applePayIsAvailable = [self isApplePayAvailable];
 #endif
     
-    self.title = NSLocalizedStringFromTableInBundle(@"Payment", @"KitePrintSDK", [OLConstants bundle], @"");
+    if ([OLKitePrintSDK environment] == kOLKitePrintSDKEnvironmentSandbox){
+        self.title = NSLocalizedStringFromTableInBundle(@"Payment (TEST)", @"KitePrintSDK", [OLConstants bundle], @"");
+    }
+    else{
+        self.title = NSLocalizedStringFromTableInBundle(@"Payment", @"KitePrintSDK", [OLConstants bundle], @"");
+    }
     
     self.sections = [@[kSectionOrderSummary, kSectionPromoCodes, kSectionPayment] mutableCopy];
     
@@ -780,7 +785,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     NSString* sectionString = [self.sections objectAtIndex:section];
     if ([sectionString isEqualToString:kSectionPayment]) {
         if ([OLKitePrintSDK environment] == kOLKitePrintSDKEnvironmentSandbox) {
-            return NSLocalizedStringFromTableInBundle(@"Payment Options (Sandbox)", @"KitePrintSDK", [OLConstants bundle], @"");
+            return NSLocalizedStringFromTableInBundle(@"Payment Options (TEST)", @"KitePrintSDK", [OLConstants bundle], @"");
         } else {
             return NSLocalizedStringFromTableInBundle(@"Payment Options", @"KitePrintSDK", [OLConstants bundle], @"");
         }

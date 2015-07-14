@@ -22,11 +22,17 @@ typedef enum {
 
 @interface OLPrintPhoto : NSObject <OLAssetDataSource>
 
-- (void) setImageSize:(CGSize)destSize forImageView:(UIImageView *)imageView;
+- (void)setImageSize:(CGSize)destSize cropped:(BOOL)cropped completionHandler:(void(^)(UIImage *image))handler;
 - (void)getImageWithProgress:(OLImageEditorImageGetImageProgressHandler)progressHandler completion:(OLImageEditorImageGetImageCompletionHandler)completionHandler;
 - (void)unloadImage;
 
 @property (nonatomic, assign, readonly) PrintPhotoAssetType type;
 @property (nonatomic, strong) id asset;
+@property (assign, nonatomic) NSInteger extraCopies;
+@property (assign, nonatomic) CGRect cropImageRect;
+@property (assign, nonatomic) CGRect cropImageFrame;
+@property (assign, nonatomic) CGSize cropImageSize;
+
+- (BOOL)isCropped;
 
 @end
