@@ -15,6 +15,7 @@
 #import "OLKitePrintSDK.h"
 #import <AFNetworking.h>
 #include <sys/sysctl.h>
+#import "OLKiteABTesting.h"
 
 static NSString *const kKeyUserDistinctId = @"ly.kite.sdk.kKeyUserDistinctId";
 static NSString *const kOLMixpanelToken = @"cdf64507670dd359c43aa8895fb87676";
@@ -105,6 +106,7 @@ static NSString *nonNilStr(NSString *str) {
 
 + (void)trackProductSelectionScreenViewed{
     NSDictionary *dict = [OLAnalytics defaultDictionaryForEventName:@"Product Selection Screen Viewed"];
+    [dict[@"properties"] setObject:nonNilStr([OLKiteABTesting sharedInstance].qualityBannerType) forKey:@"Quality Banner Type"];
     [OLAnalytics sendToMixPanelWithDictionary:dict];
 }
 
