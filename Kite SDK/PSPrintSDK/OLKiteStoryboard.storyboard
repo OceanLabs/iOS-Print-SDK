@@ -2154,6 +2154,58 @@
             </objects>
             <point key="canvasLocation" x="2221" y="-586"/>
         </scene>
+        <!--Info Page View Controller-->
+        <scene sceneID="o1Q-eq-bep">
+            <objects>
+                <viewController storyboardIdentifier="InfoPageViewController" id="yzo-f7-bvR" customClass="OLInfoPageViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="HSQ-wX-igH"/>
+                        <viewControllerLayoutGuide type="bottom" id="SJB-Io-6me"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="Oj8-Sc-lea">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="380" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="1b7-VK-dRV">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <prototypes>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="imageCell" rowHeight="380" id="hbJ-Kj-T6r">
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="hbJ-Kj-T6r" id="R1j-3j-X8t">
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <imageView userInteractionEnabled="NO" tag="10" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="hdM-b0-kDg">
+                                                    <rect key="frame" x="0.0" y="0.0" width="600" height="380"/>
+                                                </imageView>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="hdM-b0-kDg" firstAttribute="top" secondItem="R1j-3j-X8t" secondAttribute="top" id="IqV-mz-zCx"/>
+                                                <constraint firstAttribute="trailing" secondItem="hdM-b0-kDg" secondAttribute="trailing" id="Ke5-BS-A8s"/>
+                                                <constraint firstItem="hdM-b0-kDg" firstAttribute="leading" secondItem="R1j-3j-X8t" secondAttribute="leading" id="Oln-pl-nKh"/>
+                                                <constraint firstAttribute="bottom" secondItem="hdM-b0-kDg" secondAttribute="bottom" id="kzC-PP-5f7"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </prototypes>
+                            </tableView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="1b7-VK-dRV" firstAttribute="bottom" secondItem="SJB-Io-6me" secondAttribute="top" id="Equ-YA-var"/>
+                            <constraint firstItem="1b7-VK-dRV" firstAttribute="top" secondItem="Oj8-Sc-lea" secondAttribute="top" id="ONV-fx-VQ5"/>
+                            <constraint firstItem="1b7-VK-dRV" firstAttribute="leading" secondItem="Oj8-Sc-lea" secondAttribute="leading" id="aUZ-dD-Yz2"/>
+                            <constraint firstAttribute="trailing" secondItem="1b7-VK-dRV" secondAttribute="trailing" id="zkD-d3-qX9"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="tableView" destination="1b7-VK-dRV" id="vlF-ve-0IB"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="nh6-Mc-HHO" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="522" y="-2014"/>
+        </scene>
     </scenes>
     <resources>
         <image name="book" width="579" height="394"/>

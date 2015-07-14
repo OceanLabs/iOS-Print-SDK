@@ -22,6 +22,7 @@
 #import "UIImageView+FadeIn.h"
 #import "OLKiteABTesting.h"
 #import "UIImage+ColorAtPixel.h"
+#import "OLInfoPageViewController.h"
 
 #define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
 
@@ -137,6 +138,9 @@
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
     if (indexPath.section == 0 && ![[OLKiteABTesting sharedInstance].qualityBannerType isEqualToString:@"None"]){
+        OLInfoPageViewController *vc = (OLInfoPageViewController *)[self.storyboard instantiateViewControllerWithIdentifier:@"InfoPageViewController"];
+        vc.imageName = @"quality";
+        [self.navigationController pushViewController:vc animated:YES];
         return;
     }
     if (indexPath.item >= self.productGroups.count){
