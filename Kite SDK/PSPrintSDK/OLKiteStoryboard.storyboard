@@ -179,8 +179,11 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="loadingA" translatesAutoresizingMaskIntoConstraints="NO" id="UMU-vU-w01">
+                                <rect key="frame" x="0.0" y="20" width="600" height="580"/>
+                            </imageView>
                             <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="Pmz-Ej-3cl">
-                                <rect key="frame" x="290" y="290" width="20" height="20"/>
+                                <rect key="frame" x="290" y="288" width="20" height="20"/>
                             </activityIndicatorView>
                             <navigationBar hidden="YES" contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Gf0-5K-EaB">
                                 <rect key="frame" x="0.0" y="20" width="600" height="44"/>
@@ -195,7 +198,7 @@
                                 </items>
                             </navigationBar>
                             <label opaque="NO" userInteractionEnabled="NO" tag="9999" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="TEST ENVIRONMENT" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gBc-WD-lqt">
-                                <rect key="frame" x="216" y="334" width="168.5" height="20.5"/>
+                                <rect key="frame" x="216" y="84" width="168.5" height="20.5"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
@@ -204,15 +207,28 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="Gf0-5K-EaB" firstAttribute="leading" secondItem="0Xh-Kh-s3v" secondAttribute="leading" id="3KY-Wh-ziB"/>
-                            <constraint firstAttribute="centerY" secondItem="Pmz-Ej-3cl" secondAttribute="centerY" id="G30-im-oE3"/>
+                            <constraint firstItem="UMU-vU-w01" firstAttribute="top" secondItem="5Cv-ce-a01" secondAttribute="bottom" id="68w-i8-MTT"/>
+                            <constraint firstAttribute="centerY" secondItem="Pmz-Ej-3cl" secondAttribute="centerY" constant="2" id="G30-im-oE3"/>
+                            <constraint firstItem="UMU-vU-w01" firstAttribute="centerY" secondItem="Pmz-Ej-3cl" secondAttribute="centerY" multiplier="1.04" id="GkG-mn-Pv5"/>
+                            <constraint firstAttribute="trailing" secondItem="UMU-vU-w01" secondAttribute="trailing" id="Gz8-g3-ghJ"/>
                             <constraint firstAttribute="centerX" secondItem="Pmz-Ej-3cl" secondAttribute="centerX" id="OYH-Rg-0dI"/>
-                            <constraint firstItem="gBc-WD-lqt" firstAttribute="top" secondItem="Pmz-Ej-3cl" secondAttribute="bottom" constant="24" id="XU5-O7-g23"/>
+                            <constraint firstItem="XMd-Kw-Bnb" firstAttribute="top" secondItem="UMU-vU-w01" secondAttribute="bottom" id="UdV-Er-671"/>
+                            <constraint firstItem="gBc-WD-lqt" firstAttribute="top" secondItem="Pmz-Ej-3cl" secondAttribute="bottom" constant="-120" id="XU5-O7-g23"/>
+                            <constraint firstItem="UMU-vU-w01" firstAttribute="leading" secondItem="0Xh-Kh-s3v" secondAttribute="leading" id="hIm-4B-6j7"/>
+                            <constraint firstItem="gBc-WD-lqt" firstAttribute="top" secondItem="5Cv-ce-a01" secondAttribute="bottom" constant="64" id="llu-9d-nb9"/>
                             <constraint firstAttribute="trailing" secondItem="Gf0-5K-EaB" secondAttribute="trailing" id="thT-Cx-p6N"/>
                             <constraint firstItem="Gf0-5K-EaB" firstAttribute="top" secondItem="5Cv-ce-a01" secondAttribute="bottom" id="xlR-xs-zeV"/>
                             <constraint firstAttribute="centerX" secondItem="gBc-WD-lqt" secondAttribute="centerX" id="xnO-hN-jGR"/>
                         </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="XU5-O7-g23"/>
+                                <exclude reference="G30-im-oE3"/>
+                            </mask>
+                        </variation>
                     </view>
                     <connections>
+                        <outlet property="loadingImageView" destination="UMU-vU-w01" id="MEY-eI-KuG"/>
                         <outlet property="navigationBar" destination="Gf0-5K-EaB" id="VuD-wt-zWy"/>
                     </connections>
                 </viewController>
@@ -2223,6 +2239,7 @@
         <image name="import_facebook" width="26" height="22"/>
         <image name="import_gallery" width="26" height="22"/>
         <image name="import_instagram" width="26" height="22"/>
+        <image name="loadingA" width="375" height="603"/>
         <image name="page-shadow-left" width="99" height="389"/>
         <image name="page-shadow-right" width="99" height="389"/>
         <image name="photo_frame_1" width="316" height="224"/>

@@ -22,6 +22,7 @@
 #import "OLCustomNavigationController.h"
 #import "NSObject+Utils.h"
 #import "OLKiteABTesting.h"
+#import "UIImage+ColorAtPixel.h"
 
 static const NSInteger kTagNoProductsAlertView = 99;
 static const NSInteger kTagTemplateSyncFailAlertView = 100;
@@ -32,6 +33,7 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
 @property (strong, nonatomic) OLPrintOrder *printOrder;
 @property (strong, nonatomic) NSMutableArray *userSelectedPhotos;
 @property (weak, nonatomic) IBOutlet UINavigationBar *navigationBar;
+@property (weak, nonatomic) IBOutlet UIImageView *loadingImageView;
 
 // Because template sync happens in the constructor it may complete before the OLKiteViewController has appeared. In such a case where sync does
 // complete first we make a note to immediately transition to the appropriate view when the OLKiteViewController does appear:
@@ -85,13 +87,13 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
 -(void)viewDidLoad {
     [super viewDidLoad];
     
-    if (!self.navigationController){
-        self.navigationBar.hidden = NO;
-    }
-    
-    if (self.printOrder){
-        self.navigationBar.hidden = YES;
-    }
+//    if (!self.navigationController){
+//        self.navigationBar.hidden = NO;
+//    }
+//    
+//    if (self.printOrder){
+//        self.navigationBar.hidden = YES;
+//    }
     
     self.operationQueue = [[NSOperationQueue alloc] init];
     self.templateSyncOperation = [[NSBlockOperation alloc] init];
@@ -119,6 +121,8 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
     if ([OLKitePrintSDK environment] == kOLKitePrintSDKEnvironmentLive){
         [[self.view viewWithTag:9999] removeFromSuperview];
     }
+    
+    self.view.backgroundColor = [self.loadingImageView.image colorAtPixel:CGPointMake(3, 3)];
     
     [self transitionToNextScreen];
 }
