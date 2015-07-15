@@ -222,24 +222,35 @@
         return cell;
     }
     
-    static NSString *identifier = @"ProductCell";
+    NSString *identifier = [NSString stringWithFormat:@"ProductCell%@", [OLKiteABTesting sharedInstance].productTileStyle];
     UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
     [self fixCellFrameOnIOS7:cell];
     
     UIImageView *cellImageView = (UIImageView *)[cell.contentView viewWithTag:40];
-
+    
     OLProductGroup *group = self.productGroups[indexPath.item];
     OLProduct *product = [group.products firstObject];
     [product setClassImageToImageView:cellImageView];
-
+    
     UILabel *productTypeLabel = (UILabel *)[cell.contentView viewWithTag:300];
-
+    
     productTypeLabel.text = product.productTemplate.templateClass;
-
-    productTypeLabel.backgroundColor = [product labelColor];
-
+    
     UIActivityIndicatorView *activityIndicator = (id)[cell.contentView viewWithTag:41];
     [activityIndicator startAnimating];
+    
+    if ([[OLKiteABTesting sharedInstance].productTileStyle isEqualToString:@"Classic"]){
+        productTypeLabel.backgroundColor = [product labelColor];
+    }
+    else{
+        UIButton *button = (UIButton *)[cell.contentView viewWithTag:390];
+        button.layer.shadowColor = [[UIColor blackColor] CGColor];
+        button.layer.shadowOpacity = .3;
+        button.layer.shadowOffset = CGSizeMake(0,2);
+        button.layer.shadowRadius = 2;
+        
+        button.backgroundColor = [product labelColor];
+    }
     
     return cell;
 }

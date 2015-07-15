@@ -16,6 +16,7 @@ static NSString *const kOLKiteABTestOfferAddressSearch = @"ly.kite.abtest.offer_
 static NSString *const kOLKiteABTestRequirePhoneNumber = @"ly.kite.abtest.require_phone";
 static NSString *const kOLKiteABTestQualityBannerType = @"ly.kite.abtest.quality_banner_type";
 static NSString *const kOLKiteABTestShippingScreen = @"ly.kite.abtest.shippingscreen";
+static NSString *const kOLKiteABTestProductTileStyle = @"ly.kite.abtest.product_tile_style";
 
 @implementation OLKiteABTesting
 
@@ -66,23 +67,9 @@ static NSString *const kOLKiteABTestShippingScreen = @"ly.kite.abtest.shippingsc
 - (void)setupABTestVariantsWillSkipHomeScreens:(BOOL)skipHomeScreen {
     __block NSDictionary *experimentDict;
     
-    // Show Product Description Screen before shipping when starting with Print Order.
-    if (skipHomeScreen){
-        experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestProductDescriptionWithPrintOrder];
-        if (!experimentDict) {
-            experimentDict = @{@"Yes" : @0.5, @"No" : @0.5};
-        }
-        [SkyLab splitTestWithName:kOLKiteABTestProductDescriptionWithPrintOrder
-                       conditions:@{
-                                    @"Yes" : experimentDict[@"Yes"],
-                                    @"No" : experimentDict[@"No"]
-                                    } block:^(id choice) {
-                                        self.showProductDescriptionWithPrintOrder = [choice isEqualToString:@"Yes"];
-                                    }];
-    }
-    
-    // Quality Banner Type
     if (!skipHomeScreen){
+        
+        // Quality Banner Type
         experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestQualityBannerType];
         if (!experimentDict) {
             experimentDict = @{@"None" : @0.25, @"A" : @0.25, @"B" : @0.25, @"C" : @0.25};
@@ -95,6 +82,36 @@ static NSString *const kOLKiteABTestShippingScreen = @"ly.kite.abtest.shippingsc
                                     @"C" : experimentDict[@"C"]
                                     } block:^(id choice) {
                                         self.qualityBannerType= choice;
+                                    }];
+        
+        // Product Tile Style
+        experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestProductTileStyle];
+        if (!experimentDict) {
+            experimentDict = @{@"Classic" : @0.33, @"A" : @0.33, @"B" : @0.33};
+        }
+        [SkyLab splitTestWithName:kOLKiteABTestProductTileStyle
+                       conditions:@{
+                                    @"Classic" : experimentDict[@"Classic"],
+                                    @"A" : experimentDict[@"A"],
+                                    @"B" : experimentDict[@"B"]
+                                    } block:^(id choice) {
+                                        self.productTileStyle = choice;
+                                    }];
+    }
+    
+    if (skipHomeScreen){
+        
+        // Show Product Description Screen before shipping when starting with Print Order.
+        experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestProductDescriptionWithPrintOrder];
+        if (!experimentDict) {
+            experimentDict = @{@"Yes" : @0.5, @"No" : @0.5};
+        }
+        [SkyLab splitTestWithName:kOLKiteABTestProductDescriptionWithPrintOrder
+                       conditions:@{
+                                    @"Yes" : experimentDict[@"Yes"],
+                                    @"No" : experimentDict[@"No"]
+                                    } block:^(id choice) {
+                                        self.showProductDescriptionWithPrintOrder = [choice isEqualToString:@"Yes"];
                                     }];
     }
     

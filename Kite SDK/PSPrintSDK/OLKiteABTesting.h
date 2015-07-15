@@ -15,6 +15,7 @@
 @property (assign, nonatomic) BOOL requirePhoneNumber;
 @property (strong, nonatomic) NSString *qualityBannerType;
 @property (strong, nonatomic) NSString *checkoutScreenType;
+@property (strong, nonatomic) NSString *productTileStyle;
 
 + (instancetype)sharedInstance;
 + (void)fetchRemotePlistsWithCompletionHandler:(void(^)())handler;
