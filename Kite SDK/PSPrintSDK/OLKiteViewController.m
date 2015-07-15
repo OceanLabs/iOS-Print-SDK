@@ -91,10 +91,6 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
 //    if (!self.navigationController){
 //        self.navigationBar.hidden = NO;
 //    }
-//    
-//    if (self.printOrder){
-//        self.navigationBar.hidden = YES;
-//    }
     
     if (self.printOrder){
         self.customNavigationItem.title = @"";
@@ -107,23 +103,21 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
     [self.transitionOperation addDependency:self.templateSyncOperation];
     [self.transitionOperation addDependency:self.remotePlistSyncOperation];
     
-    [OLKitePrintSDK fetchRemotePlistsWithCompletionHandler:^{
-        NSAssert([NSThread isMainThread], @"assumption about main thread callback is incorrect");
-        [[OLKiteABTesting sharedInstance] setupABTestVariantsWillSkipHomeScreens:self.printOrder != nil];
+    [[OLKiteABTesting sharedInstance] setupABTestVariantsWillSkipHomeScreens:self.printOrder != nil];
+    
 #ifndef OL_NO_ANALYTICS
-        if (self.printOrder && ![OLKiteABTesting sharedInstance].showProductDescriptionWithPrintOrder){
-            [OLAnalytics trackKiteViewControllerLoadedWithEntryPoint:@"Shipping Screen"];
-        }
-        else if(self.printOrder && [OLKiteABTesting sharedInstance].showProductDescriptionWithPrintOrder){
-            [OLAnalytics trackKiteViewControllerLoadedWithEntryPoint:@"Product Description Screen"];
-        }
-        else{
-            [OLAnalytics trackKiteViewControllerLoadedWithEntryPoint:@"Home Screen"];
-        }
+    if (self.printOrder && ![OLKiteABTesting sharedInstance].showProductDescriptionWithPrintOrder){
+        [OLAnalytics trackKiteViewControllerLoadedWithEntryPoint:@"Shipping Screen"];
+    }
+    else if(self.printOrder && [OLKiteABTesting sharedInstance].showProductDescriptionWithPrintOrder){
+        [OLAnalytics trackKiteViewControllerLoadedWithEntryPoint:@"Product Description Screen"];
+    }
+    else{
+        [OLAnalytics trackKiteViewControllerLoadedWithEntryPoint:@"Home Screen"];
+    }
 #endif
-        [self.operationQueue addOperation:self.remotePlistSyncOperation];
-
-    }];
+    
+    [self.operationQueue addOperation:self.remotePlistSyncOperation];
     
     if ([OLKitePrintSDK environment] == kOLKitePrintSDKEnvironmentLive){
         [[self.view viewWithTag:9999] removeFromSuperview];
