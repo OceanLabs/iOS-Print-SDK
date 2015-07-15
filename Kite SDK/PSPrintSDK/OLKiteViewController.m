@@ -138,9 +138,7 @@ static NSString *const kOLKiteABTestProductDescriptionWithPrintOrder = @"kOLKite
     }
     
     [self transitionToNextScreen];
-}
 
-- (void)viewWillAppear:(BOOL)animated {
     if (![OLKitePrintSDK cacheTemplates]) {
         [OLProductTemplate deleteCachedTemplates];
         [OLProductTemplate resetTemplates];
