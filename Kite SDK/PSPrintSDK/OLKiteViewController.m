@@ -88,9 +88,9 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
 -(void)viewDidLoad {
     [super viewDidLoad];
     
-//    if (!self.navigationController){
-//        self.navigationBar.hidden = NO;
-//    }
+    if (!self.navigationController){
+        self.navigationBar.hidden = NO;
+    }
     
     if (self.printOrder){
         self.customNavigationItem.title = @"";
