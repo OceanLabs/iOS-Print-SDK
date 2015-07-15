@@ -33,6 +33,7 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
 @property (strong, nonatomic) OLPrintOrder *printOrder;
 @property (strong, nonatomic) NSMutableArray *userSelectedPhotos;
 @property (weak, nonatomic) IBOutlet UINavigationBar *navigationBar;
+@property (weak, nonatomic) IBOutlet UINavigationItem *customNavigationItem;
 @property (weak, nonatomic) IBOutlet UIImageView *loadingImageView;
 
 // Because template sync happens in the constructor it may complete before the OLKiteViewController has appeared. In such a case where sync does
@@ -95,14 +96,19 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
 //        self.navigationBar.hidden = YES;
 //    }
     
-    self.operationQueue = [[NSOperationQueue alloc] init];
+    if (self.printOrder){
+        self.customNavigationItem.title = @"";
+    }
+    
+    self.operationQueue = [NSOperationQueue mainQueue];
     self.templateSyncOperation = [[NSBlockOperation alloc] init];
     self.remotePlistSyncOperation = [[NSBlockOperation alloc] init];
     self.transitionOperation = [[NSBlockOperation alloc] init];
     [self.transitionOperation addDependency:self.templateSyncOperation];
     [self.transitionOperation addDependency:self.remotePlistSyncOperation];
     
-    [OLKiteABTesting fetchRemotePlistsWithCompletionHandler:^(NSError *error){
+    [OLKitePrintSDK fetchRemotePlistsWithCompletionHandler:^{
+        NSAssert([NSThread isMainThread], @"assumption about main thread callback is incorrect");
         [[OLKiteABTesting sharedInstance] setupABTestVariantsWillSkipHomeScreens:self.printOrder != nil];
 #ifndef OL_NO_ANALYTICS
         if (self.printOrder && ![OLKiteABTesting sharedInstance].showProductDescriptionWithPrintOrder){
@@ -116,6 +122,7 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
         }
 #endif
         [self.operationQueue addOperation:self.remotePlistSyncOperation];
+
     }];
     
     if ([OLKitePrintSDK environment] == kOLKitePrintSDKEnvironmentLive){
@@ -125,9 +132,7 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
     self.view.backgroundColor = [self.loadingImageView.image colorAtPixel:CGPointMake(3, 3)];
     
     [self transitionToNextScreen];
-}
 
-- (void)viewWillAppear:(BOOL)animated {
     if (![OLKitePrintSDK cacheTemplates]) {
         [OLProductTemplate deleteCachedTemplates];
         [OLProductTemplate resetTemplates];
@@ -171,9 +176,8 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
             vc.userPhone = welf.userPhone;
             vc.kiteDelegate = welf.delegate;
             OLCustomNavigationController *nvc = [[OLCustomNavigationController alloc] initWithRootViewController:vc];
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [welf fadeToViewController:nvc];
-            });
+
+            [welf fadeToViewController:nvc];
             return;
         }
         else if (welf.printOrder && [OLKiteABTesting sharedInstance].showProductDescriptionWithPrintOrder){
@@ -185,9 +189,7 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
             [[vc navigationItem] setLeftBarButtonItem:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:welf action:@selector(dismiss)]];
             [vc.navigationItem.rightBarButtonItem setTitle:NSLocalizedString(@"Next", @"")];
             OLCustomNavigationController *nvc = [[OLCustomNavigationController alloc] initWithRootViewController:vc];
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [welf fadeToViewController:nvc];
-            });
+            [welf fadeToViewController:nvc];
             return;
         }
         else if (groups.count == 1) {
@@ -209,9 +211,7 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
         [vc safePerformSelector:@selector(setUserSelectedPhotos:) withObject:welf.userSelectedPhotos];
         [vc safePerformSelector:@selector(setTemplateClass:) withObject:product.productTemplate.templateClass];
         [[vc navigationItem] setLeftBarButtonItem:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:welf action:@selector(dismiss)]];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [welf fadeToViewController:nav];
-        });
+        [welf fadeToViewController:nav];
     }];
     [self.operationQueue addOperation:self.transitionOperation];
 }
@@ -227,6 +227,7 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
 }
 
 - (void)templateSyncDidFinish:(NSNotification *)n{
+    NSAssert([NSThread isMainThread], @"assumption about main thread callback is incorrect");
     if (n.userInfo[kNotificationKeyTemplateSyncError]){
         if ([[OLProductTemplate templates] count] > 0){
             return;

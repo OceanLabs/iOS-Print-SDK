@@ -229,6 +229,7 @@
                     </view>
                     <connections>
                         <outlet property="loadingImageView" destination="UMU-vU-w01" id="MEY-eI-KuG"/>
+                        <outlet property="customNavigationItem" destination="BQx-e8-ao7" id="zWh-eg-7HC"/>
                         <outlet property="navigationBar" destination="Gf0-5K-EaB" id="VuD-wt-zWy"/>
                     </connections>
                 </viewController>

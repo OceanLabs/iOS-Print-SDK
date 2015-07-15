@@ -88,9 +88,21 @@ static const NSUInteger kSectionErrorRetry = 2;
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
-    if (!self.presentedModally) {
+    UIViewController *vc = self.parentViewController;
+    BOOL launchedToShipping = NO;
+    while (vc) {
+        if ([vc isKindOfClass:[OLKiteViewController class]]){
+            launchedToShipping = [(OLKiteViewController *)vc printOrder] != nil;
+            break;
+        }
+        else{
+            vc = vc.parentViewController;
+        }
+    }
+    if (!(self.presentedModally || launchedToShipping)) {
         NSMutableArray *navigationStack = self.navigationController.viewControllers.mutableCopy;
-        if ([navigationStack[navigationStack.count - 2] isKindOfClass:[OLPaymentViewController class]]) {
+        if (navigationStack.count >= 2 &&
+                            [navigationStack[navigationStack.count - 2] isKindOfClass:[OLPaymentViewController class]]) {
             // clear the stack as we don't want the user to be able to return to payment as that stage of the journey is now complete.
             [navigationStack removeObjectsInRange:NSMakeRange(1, navigationStack.count - 2)];
             self.navigationController.viewControllers = navigationStack;
