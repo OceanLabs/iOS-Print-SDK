@@ -25,7 +25,7 @@
 
 static const NSInteger kTagNoProductsAlertView = 99;
 static const NSInteger kTagTemplateSyncFailAlertView = 100;
-static NSString *const kOLKiteABTestProductDescriptionWithPrintOrder = @"kOLKiteABTestProductDescriptionWithPrintOrder";
+static NSString *const kOLKiteABTestProductDescriptionWithPrintOrder = @"ly.kite.abtest.show_product_description_screen";
 
 @interface OLKiteViewController () <UIAlertViewDelegate>
 
