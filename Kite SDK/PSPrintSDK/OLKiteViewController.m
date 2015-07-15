@@ -111,14 +111,15 @@ static NSString *const kOLKiteABTestProductDescriptionWithPrintOrder = @"kOLKite
         self.customNavigationItem.title = @"";
     }
     
-    self.operationQueue = [[NSOperationQueue alloc] init];
+    self.operationQueue = [NSOperationQueue mainQueue];
     self.templateSyncOperation = [[NSBlockOperation alloc] init];
     self.remotePlistSyncOperation = [[NSBlockOperation alloc] init];
     self.transitionOperation = [[NSBlockOperation alloc] init];
     [self.transitionOperation addDependency:self.templateSyncOperation];
     [self.transitionOperation addDependency:self.remotePlistSyncOperation];
     
-    [OLKitePrintSDK fetchRemotePlistsWithCompletionHandler:^(NSError *error){
+    [OLKitePrintSDK fetchRemotePlistsWithCompletionHandler:^{
+        NSAssert([NSThread isMainThread], @"assumption about main thread callback is incorrect");
         [self setupABTestVariants];
 #ifndef OL_NO_ANALYTICS
         if (self.printOrder && !self.showProductDescriptionWithPrintOrder){
@@ -132,6 +133,7 @@ static NSString *const kOLKiteABTestProductDescriptionWithPrintOrder = @"kOLKite
         }
 #endif
         [self.operationQueue addOperation:self.remotePlistSyncOperation];
+
     }];
     
     if ([OLKitePrintSDK environment] == kOLKitePrintSDKEnvironmentLive){
@@ -183,9 +185,8 @@ static NSString *const kOLKiteABTestProductDescriptionWithPrintOrder = @"kOLKite
             vc.userPhone = welf.userPhone;
             vc.kiteDelegate = welf.delegate;
             OLCustomNavigationController *nvc = [[OLCustomNavigationController alloc] initWithRootViewController:vc];
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [welf fadeToViewController:nvc];
-            });
+
+            [welf fadeToViewController:nvc];
             return;
         }
         else if (welf.printOrder && welf.showProductDescriptionWithPrintOrder){
@@ -197,9 +198,7 @@ static NSString *const kOLKiteABTestProductDescriptionWithPrintOrder = @"kOLKite
             [[vc navigationItem] setLeftBarButtonItem:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:welf action:@selector(dismiss)]];
             [vc.navigationItem.rightBarButtonItem setTitle:NSLocalizedString(@"Next", @"")];
             OLCustomNavigationController *nvc = [[OLCustomNavigationController alloc] initWithRootViewController:vc];
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [welf fadeToViewController:nvc];
-            });
+            [welf fadeToViewController:nvc];
             return;
         }
         else if (groups.count == 1) {
@@ -221,9 +220,7 @@ static NSString *const kOLKiteABTestProductDescriptionWithPrintOrder = @"kOLKite
         [vc safePerformSelector:@selector(setUserSelectedPhotos:) withObject:welf.userSelectedPhotos];
         [vc safePerformSelector:@selector(setTemplateClass:) withObject:product.productTemplate.templateClass];
         [[vc navigationItem] setLeftBarButtonItem:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:welf action:@selector(dismiss)]];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [welf fadeToViewController:nav];
-        });
+        [welf fadeToViewController:nav];
     }];
     [self.operationQueue addOperation:self.transitionOperation];
 }
@@ -239,6 +236,7 @@ static NSString *const kOLKiteABTestProductDescriptionWithPrintOrder = @"kOLKite
 }
 
 - (void)templateSyncDidFinish:(NSNotification *)n{
+    NSAssert([NSThread isMainThread], @"assumption about main thread callback is incorrect");
     if (n.userInfo[kNotificationKeyTemplateSyncError]){
         if ([[OLProductTemplate templates] count] > 0){
             return;
