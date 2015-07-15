@@ -29,6 +29,13 @@
 
 @end
 
+@interface OLKiteViewController ()
+
+@property (strong, nonatomic) OLPrintOrder *printOrder;
+- (void)dismiss;
+
+@end
+
 @interface OLProductOverviewViewController () <UIPageViewControllerDataSource, OLProductOverviewPageContentViewControllerDelegate>
 @property (strong, nonatomic) UIPageViewController *pageController;
 @property (strong, nonatomic) IBOutlet UIPageControl *pageControl;
@@ -110,7 +117,27 @@
 }
 
 - (IBAction)onButtonStartClicked:(UIBarButtonItem *)sender {
-    UIViewController *vc;
+    UIViewController *vc = self.parentViewController;
+    OLPrintOrder *printOrder = nil;
+    while (vc) {
+        if ([vc isKindOfClass:[OLKiteViewController class]]){
+            printOrder = [(OLKiteViewController *)vc printOrder];
+            break;
+        }
+        else{
+            vc = vc.parentViewController;
+        }
+    }
+    if (printOrder){
+        OLCheckoutViewController *vc = [[OLCheckoutViewController alloc] initWithPrintOrder:printOrder];
+        [[vc navigationItem] setLeftBarButtonItem:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:(OLKiteViewController *)vc action:@selector(dismiss)]];
+        vc.userEmail = self.userEmail;
+        vc.userPhone = self.userPhone;
+        vc.kiteDelegate = self.delegate;
+        [self.navigationController pushViewController:vc animated:YES];
+        return;
+    }
+    
     if (self.product.productTemplate.templateUI == kOLTemplateUICase){
         vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLCaseViewController"];
     }

@@ -21,9 +21,11 @@
 #import "OLProductGroup.h"
 #import "OLCustomNavigationController.h"
 #import "NSObject+Utils.h"
+#import <SkyLab.h>
 
 static const NSInteger kTagNoProductsAlertView = 99;
 static const NSInteger kTagTemplateSyncFailAlertView = 100;
+static NSString *const kOLKiteABTestProductDescriptionWithPrintOrder = @"kOLKiteABTestProductDescriptionWithPrintOrder";
 
 @interface OLKiteViewController () <UIAlertViewDelegate>
 
@@ -31,12 +33,15 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
 @property (strong, nonatomic) OLPrintOrder *printOrder;
 @property (strong, nonatomic) NSMutableArray *userSelectedPhotos;
 @property (weak, nonatomic) IBOutlet UINavigationBar *navigationBar;
+@property (weak, nonatomic) IBOutlet UINavigationItem *customNavigationItem;
 
 // Because template sync happens in the constructor it may complete before the OLKiteViewController has appeared. In such a case where sync does
 // complete first we make a note to immediately transition to the appropriate view when the OLKiteViewController does appear:
-@property (assign, nonatomic) BOOL transitionOnViewDidAppear;
-@property (assign, nonatomic) BOOL seenViewDidAppear;
-@property (assign, nonatomic) BOOL alreadyTransitioned;
+@property (strong, nonatomic) NSOperationQueue *operationQueue;
+@property (strong, nonatomic) NSBlockOperation *templateSyncOperation;
+@property (strong, nonatomic) NSBlockOperation *remotePlistSyncOperation;
+@property (strong, nonatomic) NSBlockOperation *transitionOperation;
+@property (assign, nonatomic) BOOL showProductDescriptionWithPrintOrder;
 
 @end
 
@@ -44,7 +49,7 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
 
 + (void)setCacheTemplates:(BOOL)cache;
 + (BOOL)cacheTemplates;
-+ (void)fetchRemotePlist;
++ (void)fetchRemotePlistsWithCompletionHandler:(void(^)())handler;
 
 @end
 
@@ -81,50 +86,67 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
     return self;
 }
 
+- (void)setupABTestVariants {
+    NSDictionary *experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestProductDescriptionWithPrintOrder];
+    if (!experimentDict) {
+        experimentDict = @{@"Yes" : @0.5, @"No" : @0.5};
+    }
+    [SkyLab splitTestWithName:kOLKiteABTestProductDescriptionWithPrintOrder
+                   conditions:@{
+                                @"Yes" : experimentDict[@"Yes"],
+                                @"No" : experimentDict[@"No"]
+                                } block:^(id choice) {
+                                    self.showProductDescriptionWithPrintOrder = [choice isEqualToString:@"Yes"];
+                                }];
+}
+
 -(void)viewDidLoad {
     [super viewDidLoad];
-    
-#ifndef OL_NO_ANALYTICS
-    [OLAnalytics trackKiteViewControllerLoadedWithEntryPoint:self.printOrder ? @"Shipping Screen" : @"Home Screen"];
-#endif
     
     if (!self.navigationController){
         self.navigationBar.hidden = NO;
     }
     
-    [OLKitePrintSDK fetchRemotePlist];
+    if (self.printOrder){
+        self.customNavigationItem.title = @"";
+    }
+    
+    self.operationQueue = [NSOperationQueue mainQueue];
+    self.templateSyncOperation = [[NSBlockOperation alloc] init];
+    self.remotePlistSyncOperation = [[NSBlockOperation alloc] init];
+    self.transitionOperation = [[NSBlockOperation alloc] init];
+    [self.transitionOperation addDependency:self.templateSyncOperation];
+    [self.transitionOperation addDependency:self.remotePlistSyncOperation];
+    
+    [OLKitePrintSDK fetchRemotePlistsWithCompletionHandler:^{
+        NSAssert([NSThread isMainThread], @"assumption about main thread callback is incorrect");
+        [self setupABTestVariants];
+#ifndef OL_NO_ANALYTICS
+        if (self.printOrder && !self.showProductDescriptionWithPrintOrder){
+            [OLAnalytics trackKiteViewControllerLoadedWithEntryPoint:@"Shipping Screen"];
+        }
+        else if(self.printOrder && self.showProductDescriptionWithPrintOrder){
+            [OLAnalytics trackKiteViewControllerLoadedWithEntryPoint:@"Product Description Screen"];
+        }
+        else{
+            [OLAnalytics trackKiteViewControllerLoadedWithEntryPoint:@"Home Screen"];
+        }
+#endif
+        [self.operationQueue addOperation:self.remotePlistSyncOperation];
+
+    }];
     
     if ([OLKitePrintSDK environment] == kOLKitePrintSDKEnvironmentLive){
         [[self.view viewWithTag:9999] removeFromSuperview];
     }
-}
+    
+    [self transitionToNextScreen];
 
-- (void)viewWillAppear:(BOOL)animated {
-    if (self.isBeingPresented) {
-        if (![OLKitePrintSDK cacheTemplates]) {
-            [OLProductTemplate deleteCachedTemplates];
-            [OLProductTemplate resetTemplates];
-        }
-        
-        self.alreadyTransitioned = NO;
-        self.transitionOnViewDidAppear = NO;
-        self.seenViewDidAppear = NO;
-        [OLProductTemplate sync];
+    if (![OLKitePrintSDK cacheTemplates]) {
+        [OLProductTemplate deleteCachedTemplates];
+        [OLProductTemplate resetTemplates];
     }
-}
-
--(void) viewDidAppear:(BOOL)animated{
-    self.seenViewDidAppear = YES;
-    
-    if ([[OLProductTemplate templates] count] > 0){
-        self.transitionOnViewDidAppear = YES;
-    }
-    
-    if (self.isBeingPresented && self.transitionOnViewDidAppear) {
-        [self transitionToNextScreen];
-    }
-    
-    self.transitionOnViewDidAppear = NO;
+    [OLProductTemplate sync];
 }
 
 -(IBAction) dismiss{
@@ -132,61 +154,75 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
 }
 
 - (void)transitionToNextScreen{
-    if (self.alreadyTransitioned) {
-        return;
-    }
-    self.alreadyTransitioned = YES;
-    
-    // The screen we transition to will depend on what products are available based on the developers filter preferences.
-    NSArray *groups = [OLProductGroup groupsWithFilters:self.filterProducts];
-    
-    UIStoryboard *sb = [UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:nil];
-    NSString *nextVcNavIdentifier;
-    OLProduct *product;
-    if (groups.count == 0) {
-        if ([UIAlertController class]){
-            UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Store Maintenance", @"") message:NSLocalizedString(@"Our store is currently undergoing maintence so no products are available for purchase at this time. Please try again a little later.", @"") preferredStyle:UIAlertControllerStyleAlert];
-            [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-                [self dismiss];
-            }]];
-            [self presentViewController:ac animated:YES completion:NULL];
+    __weak OLKiteViewController *welf = self;
+    [self.transitionOperation addExecutionBlock:^{
+        // The screen we transition to will depend on what products are available based on the developers filter preferences.
+        NSArray *groups = [OLProductGroup groupsWithFilters:welf.filterProducts];
+        
+        UIStoryboard *sb = [UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:nil];
+        NSString *nextVcNavIdentifier;
+        OLProduct *product;
+        if (groups.count == 0) {
+            if ([UIAlertController class]){
+                UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Store Maintenance", @"") message:NSLocalizedString(@"Our store is currently undergoing maintence so no products are available for purchase at this time. Please try again a little later.", @"") preferredStyle:UIAlertControllerStyleAlert];
+                [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+                    [welf dismiss];
+                }]];
+                [welf presentViewController:ac animated:YES completion:NULL];
+            }
+            else{
+                UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Store Maintenance", @"") message:NSLocalizedString(@"Our store is currently undergoing maintence so no products are available for purchase at this time. Please try again a little later.", @"") delegate:welf cancelButtonTitle:NSLocalizedString(@"OK", @"")  otherButtonTitles:nil];
+                av.tag = kTagNoProductsAlertView;
+                av.delegate = welf;
+                [av show];
+            }
+            return;
         }
-        else{
-            UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Store Maintenance", @"") message:NSLocalizedString(@"Our store is currently undergoing maintence so no products are available for purchase at this time. Please try again a little later.", @"") delegate:self cancelButtonTitle:NSLocalizedString(@"OK", @"")  otherButtonTitles:nil];
-            av.tag = kTagNoProductsAlertView;
-            av.delegate = self;
-            [av show];
+        else if (welf.printOrder && !welf.showProductDescriptionWithPrintOrder){
+            OLCheckoutViewController *vc = [[OLCheckoutViewController alloc] initWithPrintOrder:welf.printOrder];
+            [[vc navigationItem] setLeftBarButtonItem:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:welf action:@selector(dismiss)]];
+            vc.userEmail = welf.userEmail;
+            vc.userPhone = welf.userPhone;
+            vc.kiteDelegate = welf.delegate;
+            OLCustomNavigationController *nvc = [[OLCustomNavigationController alloc] initWithRootViewController:vc];
+
+            [welf fadeToViewController:nvc];
+            return;
         }
-        return;
-    }
-    else if (self.printOrder){
-        OLCheckoutViewController *vc = [[OLCheckoutViewController alloc] initWithPrintOrder:self.printOrder];
-        [[vc navigationItem] setLeftBarButtonItem:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(dismiss)]];
-        OLCustomNavigationController *nvc = [[OLCustomNavigationController alloc] initWithRootViewController:vc];
-        [self fadeToViewController:nvc];
-        return;
-    }
-    else if (groups.count == 1) {
-        OLProductGroup *group = groups[0];
-        product = [group.products firstObject];
-        nextVcNavIdentifier = [OLKiteViewController storyboardIdentifierForGroupSelected:group];
-    }
-    else {
-        // Launch the product home view controller where the top level groups will be displayed
-        nextVcNavIdentifier = @"ProductHomeViewController";
-    }
-    UIViewController *vc = [sb instantiateViewControllerWithIdentifier:nextVcNavIdentifier];
-    UINavigationController *nav = [[OLCustomNavigationController alloc] initWithRootViewController:vc];
-    [vc safePerformSelector:@selector(setProduct:) withObject:product];
-    [vc safePerformSelector:@selector(setDelegate:) withObject:self.delegate];
-    [vc safePerformSelector:@selector(setUserEmail:) withObject:self.userEmail];
-    [vc safePerformSelector:@selector(setUserPhone:) withObject:self.userPhone];
-    [vc safePerformSelector:@selector(setFilterProducts:) withObject:self.filterProducts];
-    [vc safePerformSelector:@selector(setUserSelectedPhotos:) withObject:self.userSelectedPhotos];
-    [vc safePerformSelector:@selector(setTemplateClass:) withObject:product.productTemplate.templateClass];
-    [[vc navigationItem] setLeftBarButtonItem:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(dismiss)]];
-    
-    [self fadeToViewController:nav];
+        else if (welf.printOrder && welf.showProductDescriptionWithPrintOrder){
+            OLProductOverviewViewController *vc = [welf.storyboard instantiateViewControllerWithIdentifier:@"OLProductOverviewViewController"];
+            vc.product = [OLProduct productWithTemplateId:[[welf.printOrder.jobs firstObject] templateId]];
+            vc.userEmail = welf.userEmail;
+            vc.userPhone = welf.userPhone;
+            vc.delegate = welf.delegate;
+            [[vc navigationItem] setLeftBarButtonItem:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:welf action:@selector(dismiss)]];
+            [vc.navigationItem.rightBarButtonItem setTitle:NSLocalizedString(@"Next", @"")];
+            OLCustomNavigationController *nvc = [[OLCustomNavigationController alloc] initWithRootViewController:vc];
+            [welf fadeToViewController:nvc];
+            return;
+        }
+        else if (groups.count == 1) {
+            OLProductGroup *group = groups[0];
+            product = [group.products firstObject];
+            nextVcNavIdentifier = [OLKiteViewController storyboardIdentifierForGroupSelected:group];
+        }
+        else {
+            // Launch the product home view controller where the top level groups will be displayed
+            nextVcNavIdentifier = @"ProductHomeViewController";
+        }
+        UIViewController *vc = [sb instantiateViewControllerWithIdentifier:nextVcNavIdentifier];
+        UINavigationController *nav = [[OLCustomNavigationController alloc] initWithRootViewController:vc];
+        [vc safePerformSelector:@selector(setProduct:) withObject:product];
+        [vc safePerformSelector:@selector(setDelegate:) withObject:welf.delegate];
+        [vc safePerformSelector:@selector(setUserEmail:) withObject:welf.userEmail];
+        [vc safePerformSelector:@selector(setUserPhone:) withObject:welf.userPhone];
+        [vc safePerformSelector:@selector(setFilterProducts:) withObject:welf.filterProducts];
+        [vc safePerformSelector:@selector(setUserSelectedPhotos:) withObject:welf.userSelectedPhotos];
+        [vc safePerformSelector:@selector(setTemplateClass:) withObject:product.productTemplate.templateClass];
+        [[vc navigationItem] setLeftBarButtonItem:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:welf action:@selector(dismiss)]];
+        [welf fadeToViewController:nav];
+    }];
+    [self.operationQueue addOperation:self.transitionOperation];
 }
 
 - (void)fadeToViewController:(UIViewController *)vc{
@@ -196,9 +232,11 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
     [UIView animateWithDuration:0.3 animations:^(void){
         vc.view.alpha = 1;
     } completion:^(BOOL b){}];
+    
 }
 
 - (void)templateSyncDidFinish:(NSNotification *)n{
+    NSAssert([NSThread isMainThread], @"assumption about main thread callback is incorrect");
     if (n.userInfo[kNotificationKeyTemplateSyncError]){
         if ([[OLProductTemplate templates] count] > 0){
             return;
@@ -227,11 +265,10 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
             [av show];
         }
     }
+    
     else{
-        if (self.seenViewDidAppear){
-            [self transitionToNextScreen];
-        } else {
-            self.transitionOnViewDidAppear = YES;
+        if (!self.templateSyncOperation.finished){
+            [self.operationQueue addOperation:self.templateSyncOperation];
         }
     }
 }
