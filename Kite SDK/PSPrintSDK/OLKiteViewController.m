@@ -117,7 +117,9 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
     }
 #endif
     
-    [self.operationQueue addOperation:self.remotePlistSyncOperation];
+    [OLKiteABTesting fetchRemotePlistsWithCompletionHandler:^{
+        [self.operationQueue addOperation:self.remotePlistSyncOperation];
+    }];
     
     if ([OLKitePrintSDK environment] == kOLKitePrintSDKEnvironmentLive){
         [[self.view viewWithTag:9999] removeFromSuperview];
