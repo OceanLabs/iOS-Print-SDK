@@ -184,19 +184,15 @@ id safeObject(id obj){
         [self setupProductTileStyleTest];
         
         [self setupHidePriceTest];
-        [self groupSetupShippingScreenTests];
     }
     else{
         [self setupShowProductDescriptionScreenBeforeShippingTest];
         
         if (self.showProductDescriptionWithPrintOrder){
             [self setupHidePriceTest];
-            [self groupSetupShippingScreenTests];
-        }
-        else{
-            [self groupSetupShippingScreenTests];
         }
     }
+    [self groupSetupShippingScreenTests];
 }
 
 @end
