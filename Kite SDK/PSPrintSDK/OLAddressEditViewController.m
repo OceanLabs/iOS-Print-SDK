@@ -72,7 +72,7 @@ static const NSUInteger kTagLabel = 100;
     NSString *errorMessage;
     if ([self.textFieldFirstName.text isEqualToString:@""] || [self.textFieldLastName.text isEqualToString:@""]){
         flag = NO;
-        errorMessage = NSLocalizedString(@"Please enter your full name.", @"");
+        errorMessage = NSLocalizedString(@"Please enter your first and last name.", @"");
     }
     else if ([self.textFieldLine1.text isEqualToString:@""]){
         flag = NO;
@@ -110,7 +110,8 @@ static const NSUInteger kTagLabel = 100;
 }
 
 - (void)saveAddressAndReturn {
-    self.address.recipientName = self.textFieldFirstName.text;
+    self.address.recipientFirstName = self.textFieldFirstName.text;
+    self.address.recipientLastName = self.textFieldLastName.text;
     self.address.line1 = self.textFieldLine1.text;
     self.address.line2 = self.textFieldLine2.text;
     self.address.city = self.textFieldCity.text;
@@ -182,14 +183,14 @@ static const NSUInteger kTagLabel = 100;
     tf.autocapitalizationType = UITextAutocapitalizationTypeWords;
     switch (indexPath.row) {
         case 0:
-            tf.text = self.address.recipientName;
+            tf.text = self.address.recipientFirstName;
             tf.frame = CGRectMake(20, 0, ((cell.frame.size.width - 20) / 2.0)-10, cell.frame.size.height);
             tf.attributedPlaceholder = [[NSAttributedString alloc] initWithString:NSLocalizedStringFromTableInBundle(@"First Name", @"KitePrintSDK", [NSBundle mainBundle], @"") attributes:@{NSForegroundColorAttributeName : [UIColor colorWithRed:108.0/255.0 green:108.0/255.0 blue:108.0/255.0 alpha:1]}];
             self.textFieldFirstName = tf;
             
             self.textFieldLastName = [[UITextField alloc] initWithFrame:CGRectMake(((cell.frame.size.width - 20) / 2.0)+20, 0, (cell.frame.size.width - 20) / 2.0, cell.frame.size.height)];
             [cell.contentView addSubview:self.textFieldLastName];
-            self.textFieldLastName.text = self.address.recipientName;
+            self.textFieldLastName.text = self.address.recipientLastName;
             self.textFieldLastName.adjustsFontSizeToFitWidth = YES;
             self.textFieldLastName.textColor = [UIColor blackColor];
             self.textFieldLastName.autocorrectionType = UITextAutocorrectionTypeNo;
@@ -296,8 +297,10 @@ static const NSUInteger kTagLabel = 100;
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
     NSString *s = [textField.text stringByReplacingCharactersInRange:range withString:string];
     if (textField == self.textFieldFirstName) {
-        self.address.recipientName = s;
-    } else if (textField == self.textFieldLine1) {
+        self.address.recipientFirstName = s;
+    }else if (textField == self.textFieldLastName) {
+        self.address.recipientLastName = s;
+    }else if (textField == self.textFieldLine1) {
         self.address.line1 = s;
     } else if (textField == self.textFieldLine2) {
         self.address.line2 = s;

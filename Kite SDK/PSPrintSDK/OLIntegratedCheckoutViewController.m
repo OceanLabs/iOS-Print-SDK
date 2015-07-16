@@ -24,6 +24,7 @@ static const NSUInteger kTagLabel = 100;
 static NSString *const kKeyEmailAddress = @"co.oceanlabs.pssdk.kKeyEmailAddress";
 static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
 static NSString *const kKeyRecipientName = @"co.oceanlabs.pssdk.kKeyRecipientName";
+static NSString *const kKeyRecipientFirstName = @"co.oceanlabs.pssdk.kKeyRecipientFirstName";
 static NSString *const kKeyLine1 = @"co.oceanlabs.pssdk.kKeyLine1";
 static NSString *const kKeyLine2 = @"co.oceanlabs.pssdk.kKeyLine2";
 static NSString *const kKeyCity = @"co.oceanlabs.pssdk.kKeyCity";
@@ -46,7 +47,7 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
 
 @interface OLIntegratedCheckoutViewController () <UITextFieldDelegate, OLCountryPickerControllerDelegate, UINavigationControllerDelegate, UITableViewDelegate>
 
-@property (nonatomic, strong) UITextField *textFieldName, *textFieldLine1, *textFieldLine2, *textFieldCity, *textFieldCounty, *textFieldPostCode, *textFieldCountry;
+@property (nonatomic, strong) UITextField *textFieldFirstName, *textFieldLastName, *textFieldLine1, *textFieldLine2, *textFieldCity, *textFieldCounty, *textFieldPostCode, *textFieldCountry;
 @property (weak, nonatomic) UITextField *activeTextView;
 
 @end
@@ -83,9 +84,9 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
 -(BOOL)isValidAddress{
     BOOL flag = YES;
     NSString *errorMessage;
-    if ([self.textFieldName.text isEqualToString:@""]){
+    if ([self.textFieldFirstName.text isEqualToString:@""] || [self.textFieldLastName.text isEqualToString:@""]){
         flag = NO;
-        errorMessage = NSLocalizedString(@"Please enter your full name.", @"");
+        errorMessage = NSLocalizedString(@"Please enter your first and last name.", @"");
     }
     else if ([self.textFieldLine1.text isEqualToString:@""]){
         flag = NO;
@@ -122,8 +123,12 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
     return flag;
 }
 
-- (NSString *)addrName {
-    return self.textFieldName ? self.textFieldName.text : self.shippingAddress.recipientName;
+- (NSString *)addrFirstName {
+    return self.textFieldFirstName ? self.textFieldFirstName.text : self.shippingAddress.recipientFirstName;
+}
+
+- (NSString *)addrLastName {
+    return self.textFieldLastName ? self.textFieldLastName.text : self.shippingAddress.recipientLastName;
 }
 
 - (NSString *)addrLine1 {
@@ -155,7 +160,8 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
         self.shippingAddress = [[OLAddress alloc] init];
     }
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSString *name = [defaults stringForKey:kKeyRecipientName];
+    NSString *firstName = [defaults stringForKey:kKeyRecipientFirstName];
+    NSString *lastName = [defaults stringForKey:kKeyRecipientName];
     NSString *line1 = [defaults stringForKey:kKeyLine1];
     NSString *line2 = [defaults stringForKey:kKeyLine2];
     NSString *city = [defaults stringForKey:kKeyCity];
@@ -163,7 +169,8 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
     NSString *postCode= [defaults stringForKey:kKeyPostCode];
     NSString *country = [defaults stringForKey:kKeyCountry];
     
-    self.shippingAddress.recipientName = name;
+    self.shippingAddress.recipientFirstName = firstName;
+    self.shippingAddress.recipientLastName = lastName;
     self.shippingAddress.line1 = line1;
     self.shippingAddress.line2 = line2;
     self.shippingAddress.city = city;
@@ -181,7 +188,8 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
 }
 
 - (void)onBackgroundClicked {
-    [self.textFieldName resignFirstResponder];
+    [self.textFieldFirstName resignFirstResponder];
+    [self.textFieldLastName resignFirstResponder];
     [self.textFieldLine1 resignFirstResponder];
     [self.textFieldLine2 resignFirstResponder];
     [self.textFieldCounty resignFirstResponder];
@@ -237,7 +245,8 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
     
     NSString *email = [super userEmail];
     NSString *phone = [super userPhone];
-    NSString *name = [self addrName];
+    NSString *firstName = [self addrFirstName];
+    NSString *lastName = [self addrLastName];
     NSString *line1 = [self addrLine1];
     NSString *line2 = [self addrLine2];
     NSString *city = [self addrCity];
@@ -247,7 +256,8 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
     
     [defaults setObject:email forKey:kKeyEmailAddress];
     [defaults setObject:phone forKey:kKeyPhone];
-    [defaults setObject:name forKey:kKeyRecipientName];
+    [defaults setObject:firstName forKey:kKeyRecipientFirstName];
+    [defaults setObject:lastName forKey:kKeyRecipientName];
     [defaults setObject:line1 forKey:kKeyLine1];
     [defaults setObject:line2 forKey:kKeyLine2];
     [defaults setObject:city forKey:kKeyCity];
@@ -279,8 +289,8 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
         switch (indexPath.row) {
             case 0:
                 label.text = NSLocalizedStringFromTableInBundle(@"Name", @"KitePrintSDK", [NSBundle mainBundle], @"");
-                tf.text = self.shippingAddress.recipientName;
-                self.textFieldName = tf;
+                tf.text = self.shippingAddress.recipientFirstName;
+                self.textFieldFirstName = tf;
                 break;
             case 1:
                 label.text = NSLocalizedStringFromTableInBundle(@"Line 1", @"KitePrintSDK", [NSBundle mainBundle], @"");
@@ -381,7 +391,7 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
     if (indexPath.section == kSectionDeliveryDetails){
         switch (indexPath.row) {
             case 0:
-                self.shippingAddress.recipientName = textField.text;
+                self.shippingAddress.recipientFirstName = textField.text;
                 break;
             case 1:
                 self.shippingAddress.line1 = textField.text;
@@ -437,7 +447,9 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
-    if (textField == self.textFieldName) {
+    if (textField == self.textFieldFirstName) {
+        [self.textFieldLastName becomeFirstResponder];
+    } else if (textField == self.textFieldLastName){
         [self.textFieldLine1 becomeFirstResponder];
     } else if (textField == self.textFieldLine1) {
         [self.textFieldLine2 becomeFirstResponder];

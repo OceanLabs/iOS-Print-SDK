@@ -198,7 +198,7 @@ static NSString *nonNilStr(NSString *str) {
     }
     
     if (printOrder.shippingAddress) {
-        p[@"Shipping Recipient"] = nonNilStr(printOrder.shippingAddress.recipientName);
+        p[@"Shipping Recipient"] = nonNilStr(printOrder.shippingAddress.fullNameFromFirstAndLast);
         p[@"Shipping Line 1"] = nonNilStr(printOrder.shippingAddress.line1);
         p[@"Shipping Line 2"] = nonNilStr(printOrder.shippingAddress.line2);
         p[@"Shipping City"] = nonNilStr(printOrder.shippingAddress.city);

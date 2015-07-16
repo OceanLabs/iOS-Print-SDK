@@ -109,7 +109,7 @@ static id stringOrEmptyString(NSString *str) {
     }
     
     // set address
-    NSArray *addrComponents = @[@[stringOrNSNull(self.address.recipientName), @"body-centered"],
+    NSArray *addrComponents = @[@[stringOrNSNull(self.address.fullNameFromFirstAndLast), @"body-centered"],
                                 @[stringOrNSNull(self.address.line1), @"body-centered"],
                                 @[stringOrNSNull(self.address.line2), @"body-centered"],
                                 @[stringOrNSNull(self.address.city), @"body-centered"],
@@ -133,7 +133,7 @@ static id stringOrEmptyString(NSString *str) {
     }
     
     if (self.address) {
-        NSDictionary *shippingAddress = @{@"recipient_name": stringOrEmptyString(self.address.recipientName),
+        NSDictionary *shippingAddress = @{@"recipient_name": stringOrEmptyString(self.address.fullNameFromFirstAndLast),
                                           @"address_line_1": stringOrEmptyString(self.address.line1),
                                           @"address_line_2": stringOrEmptyString(self.address.line2),
                                           @"city": stringOrEmptyString(self.address.city),
