@@ -22,6 +22,36 @@ static NSString *const kKeyPromoDiscount = @"ly.kite.iossdk.kKeyPromoDiscount";
 @property (nonatomic, strong) NSDictionary *promoDiscount;
 @end
 
+@interface OLDecimalNumberBehavior : NSObject <NSDecimalNumberBehaviors>
+
+@end
+
+@implementation OLDecimalNumberBehavior
+
+- (NSRoundingMode)roundingMode{
+    return NSRoundPlain;
+}
+
+- (short)scale{
+    return 2;
+}
+
+- (NSDecimalNumber *)exceptionDuringOperation:(SEL)operation error:(NSCalculationError)error leftOperand:(NSDecimalNumber *)leftOperand rightOperand:(NSDecimalNumber *)rightOperand{
+    if (error != NSCalculationDivideByZero){
+        return nil;
+    }
+    else{
+        NSException* exception = [NSException
+                                  exceptionWithName:@"DivideByZeroException"
+                                  reason:@"Attempted to divide a number by zero."
+                                  userInfo:nil];
+        @throw exception;
+    }
+}
+
+@end
+
+
 @implementation OLPrintOrderCost
 
 - (id)initWithTotalCosts:(NSDictionary/*<String, NSDecimalNumber>*/ *)totalCosts
@@ -57,7 +87,7 @@ static NSString *const kKeyPromoDiscount = @"ly.kite.iossdk.kKeyPromoDiscount";
 }
 
 - (NSDecimalNumber *)totalCostInCurrency:(NSString *)currencyCode {
-    return [NSDecimalNumber decimalNumberWithString:[NSString stringWithFormat:@"%.02f", [[self.totalCosts objectForKey:currencyCode] doubleValue]]];
+    return [[self.totalCosts objectForKey:currencyCode] decimalNumberByRoundingAccordingToBehavior:[[OLDecimalNumberBehavior alloc] init]];
 }
 
 - (NSDecimalNumber *)shippingCostInCurrency:(NSString *)currencyCode {
