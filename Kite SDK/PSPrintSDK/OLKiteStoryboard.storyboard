@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="cpC-15-nyB">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14E46" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="cpC-15-nyB">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
@@ -213,6 +213,7 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="customNavigationItem" destination="BQx-e8-ao7" id="zWh-eg-7HC"/>
                         <outlet property="navigationBar" destination="Gf0-5K-EaB" id="VuD-wt-zWy"/>
                     </connections>
                 </viewController>
@@ -484,8 +485,8 @@
                         <variation key="default">
                             <mask key="constraints">
                                 <exclude reference="ojV-vO-jP6"/>
-                                <exclude reference="RZd-YG-HVB"/>
                                 <exclude reference="Ev7-5O-KVN"/>
+                                <exclude reference="RZd-YG-HVB"/>
                             </mask>
                         </variation>
                     </view>

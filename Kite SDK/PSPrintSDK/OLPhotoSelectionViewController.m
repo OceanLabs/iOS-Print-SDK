@@ -663,7 +663,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
         NSInteger qty = [self.userSelectedPhotos[imageIndex] extraCopies];
         if (qty > 0 && self.product.productTemplate.templateUI != kOLTemplateUIFrame && self.product.productTemplate.templateUI != kOLTemplateUIPhotobook && self.product.productTemplate.templateUI != kOLTemplateUIPoster){
             qtyLabel.hidden = NO;
-            qtyLabel.text = [NSString stringWithFormat:@"%ld", qty+1];
+            qtyLabel.text = [NSString stringWithFormat:@"%ld", (long)qty+1];
         }
         else{
             qtyLabel.hidden = YES;

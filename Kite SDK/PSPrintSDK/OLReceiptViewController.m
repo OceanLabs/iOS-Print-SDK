@@ -17,6 +17,7 @@
 #import <SVProgressHUD.h>
 #import "OLPaymentLineItem.h"
 #import "OLPrintOrderCost.h"
+#import "OLKiteViewController.h"
 
 static const NSUInteger kSectionOrderSummary = 0;
 static const NSUInteger kSectionOrderId = 1;
@@ -25,6 +26,12 @@ static const NSUInteger kSectionErrorRetry = 2;
 @interface OLReceiptViewController ()
 @property (nonatomic, strong) OLPrintOrder *printOrder;
 @property (nonatomic, assign) BOOL presentedModally;
+@end
+
+@interface OLKiteViewController ()
+
+@property (strong, nonatomic) OLPrintOrder *printOrder;
+
 @end
 
 @implementation OLReceiptViewController
@@ -59,7 +66,18 @@ static const NSUInteger kSectionErrorRetry = 2;
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    if (self.presentedModally) {
+    UIViewController *vc = self.parentViewController;
+    BOOL launchedToShipping = NO;
+    while (vc) {
+        if ([vc isKindOfClass:[OLKiteViewController class]]){
+            launchedToShipping = [(OLKiteViewController *)vc printOrder] != nil;
+            break;
+        }
+        else{
+            vc = vc.parentViewController;
+        }
+    }
+    if (self.presentedModally || launchedToShipping) {
         self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Done", @"KitePrintSDK", [OLConstants bundle], @"") style:UIBarButtonItemStylePlain target:self action:@selector(onButtonDoneClicked)];
         self.navigationController.viewControllers = @[self];
         self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
@@ -70,9 +88,21 @@ static const NSUInteger kSectionErrorRetry = 2;
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
-    if (!self.presentedModally) {
+    UIViewController *vc = self.parentViewController;
+    BOOL launchedToShipping = NO;
+    while (vc) {
+        if ([vc isKindOfClass:[OLKiteViewController class]]){
+            launchedToShipping = [(OLKiteViewController *)vc printOrder] != nil;
+            break;
+        }
+        else{
+            vc = vc.parentViewController;
+        }
+    }
+    if (!(self.presentedModally || launchedToShipping)) {
         NSMutableArray *navigationStack = self.navigationController.viewControllers.mutableCopy;
-        if ([navigationStack[navigationStack.count - 2] isKindOfClass:[OLPaymentViewController class]]) {
+        if (navigationStack.count >= 2 &&
+                            [navigationStack[navigationStack.count - 2] isKindOfClass:[OLPaymentViewController class]]) {
             // clear the stack as we don't want the user to be able to return to payment as that stage of the journey is now complete.
             [navigationStack removeObjectsInRange:NSMakeRange(1, navigationStack.count - 2)];
             self.navigationController.viewControllers = navigationStack;

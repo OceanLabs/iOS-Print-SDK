@@ -53,7 +53,7 @@ static NSString *nonNilStr(NSString *str) {
     
     NSURL *baseURL = [NSURL URLWithString:kOLMixpanelURL];
     AFHTTPSessionManager *manager = [[AFHTTPSessionManager alloc] initWithBaseURL:baseURL];
-    [manager POST:@"" parameters:@{@"data" : [jsonData base64EncodedStringWithOptions:0]} success:NULL failure:NULL];
+    [manager POST:@"" parameters:@{@"ip": @"1",@"data" : [jsonData base64EncodedStringWithOptions:0]} success:NULL failure:NULL];
 }
 
 + (NSDictionary *)defaultDictionaryForEventName:(NSString *)eventName{
@@ -70,6 +70,12 @@ static NSString *nonNilStr(NSString *str) {
     }
     NSString *appVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"];
     NSString *apiKey = [OLKitePrintSDK apiKey] == nil ? @"Unknown" : [OLKitePrintSDK apiKey];
+    
+    NSString *localeCountry = @"Unknown";
+    if ([OLCountry countryForCurrentLocale] != nil) {
+        localeCountry = nonNilStr([OLCountry countryForCurrentLocale].name);
+    }
+    
     NSMutableDictionary *propertiesDict = [@{
                                              @"token" : kOLMixpanelToken,
                                              @"distinct_id" : [OLAnalytics userDistinctId],
@@ -83,15 +89,17 @@ static NSString *nonNilStr(NSString *str) {
                                              @"Screen Width" : @([UIScreen mainScreen].bounds.size.width),
                                              @"Environment" : environment,
                                              @"API Key": apiKey,
-                                             @"Kite SDK Version": kOLKiteSDKVersion
+                                             @"Kite SDK Version": kOLKiteSDKVersion,
+                                             @"Locale Country": localeCountry
                                              } mutableCopy];
     NSDictionary *dict = @{@"event" : eventName,
                            @"properties" : propertiesDict};
     return dict;
 }
 
-+ (void)trackKiteViewControllerLoaded{
++ (void)trackKiteViewControllerLoadedWithEntryPoint:(NSString *)entryPoint {
     NSDictionary *dict = [OLAnalytics defaultDictionaryForEventName:@"Kite Loaded"];
+    [dict[@"properties"] setObject:nonNilStr(entryPoint) forKey:@"Entry Point"];
     [OLAnalytics sendToMixPanelWithDictionary:dict];
 }
 

@@ -32,5 +32,6 @@
 @property (copy, nonatomic) NSArray/*<NSString>*/ *filterProducts;
 
 - (id)initWithAssets:(NSArray *)assets;
+- (id)initWithPrintOrder:(OLPrintOrder *)printOrder;
 
 @end
