@@ -22,6 +22,7 @@
 #import "OLPostcardViewController.h"
 #import "NSObject+Utils.h"
 #import "NSDecimalNumber+CostFormatter.h"
+#import "OLKiteABTesting.h"
 
 @interface OLKitePrintSDK (Kite)
 
@@ -32,7 +33,6 @@
 @interface OLKiteViewController ()
 
 @property (strong, nonatomic) OLPrintOrder *printOrder;
-@property (assign, nonatomic, readonly) BOOL hidePrice;
 - (void)dismiss;
 
 @end
@@ -105,12 +105,14 @@
             vc = vc.parentViewController;
         }
     }
-    if ([(OLKiteViewController *)vc hidePrice]){
+    if ([OLKiteABTesting sharedInstance].hidePrice){
         [self.costLabel removeFromSuperview];
+        [self.freePostageLabel removeFromSuperview];
+        [self.whiteBox removeFromSuperview];
     }
     
 #ifndef OL_NO_ANALYTICS
-    [OLAnalytics trackProductDescriptionScreenViewed:self.product.productTemplate.name hidePrice:[(OLKiteViewController *)vc hidePrice]];
+    [OLAnalytics trackProductDescriptionScreenViewed:self.product.productTemplate.name hidePrice:[OLKiteABTesting sharedInstance].hidePrice];
 #endif
     
 }

@@ -69,120 +69,137 @@ id safeObject(id obj){
     }];
 }
 
+- (void)setupQualityBannerTypeTest{
+    NSDictionary *experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestQualityBannerType];
+    if (!experimentDict) {
+        experimentDict = @{@"None" : @0.25, @"A" : @0.25, @"B" : @0.25, @"C" : @0.25};
+    }
+    [SkyLab splitTestWithName:kOLKiteABTestQualityBannerType
+                   conditions:@{
+                                @"None" : safeObject(experimentDict[@"None"]),
+                                @"A" : safeObject(experimentDict[@"A"]),
+                                @"B" : safeObject(experimentDict[@"B"]),
+                                @"C" : safeObject(experimentDict[@"C"])
+                                } block:^(id choice) {
+                                    self.qualityBannerType= choice;
+                                }];
+}
+
+- (void)setupProductTileStyleTest{
+    NSDictionary *experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestProductTileStyle];
+    if (!experimentDict) {
+        experimentDict = @{@"Classic" : @0.33, @"A" : @0.33, @"B" : @0.33};
+    }
+    [SkyLab splitTestWithName:kOLKiteABTestProductTileStyle
+                   conditions:@{
+                                @"Classic" : safeObject(experimentDict[@"Classic"]),
+                                @"A" : safeObject(experimentDict[@"A"]),
+                                @"B" : safeObject(experimentDict[@"B"])
+                                } block:^(id choice) {
+                                    self.productTileStyle = choice;
+                                }];
+}
+
+- (void)setupShowProductDescriptionScreenBeforeShippingTest{
+    NSDictionary *experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestProductDescriptionWithPrintOrder];
+    if (!experimentDict) {
+        experimentDict = @{@"Yes" : @0.5, @"No" : @0.5};
+    }
+    [SkyLab splitTestWithName:kOLKiteABTestProductDescriptionWithPrintOrder
+                   conditions:@{
+                                @"Yes" : safeObject(experimentDict[@"Yes"]),
+                                @"No" : safeObject(experimentDict[@"No"])
+                                } block:^(id choice) {
+                                    self.showProductDescriptionWithPrintOrder = [choice isEqualToString:@"Yes"];
+                                }];
+}
+
+- (void)setupOfferAddressSearchTest{
+    NSDictionary *experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestOfferAddressSearch];
+    if (!experimentDict) {
+        experimentDict = @{@"Yes" : @0.5, @"No" : @0.5};
+    }
+    [SkyLab splitTestWithName:kOLKiteABTestOfferAddressSearch
+                   conditions:@{
+                                @"Yes" : safeObject(experimentDict[@"Yes"]),
+                                @"No" : safeObject(experimentDict[@"No"])
+                                } block:^(id choice) {
+                                    self.offerAddressSearch = [choice isEqualToString:@"Yes"];
+                                }];
+}
+
+- (void)setupRequirePhoneNumberTest{
+    NSDictionary *experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestRequirePhoneNumber];
+    if (!experimentDict) {
+        experimentDict = @{@"Yes" : @0.5, @"No" : @0.5};
+    }
+    [SkyLab splitTestWithName:kOLKiteABTestRequirePhoneNumber
+                   conditions:@{
+                                @"Yes" : safeObject(experimentDict[@"Yes"]),
+                                @"No" : safeObject(experimentDict[@"No"])
+                                } block:^(id choice) {
+                                    self.requirePhoneNumber = [choice isEqualToString:@"Yes"];
+                                }];
+}
+
+- (void)setupShippingScreenTest{
+    NSDictionary *experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestShippingScreen];
+    if (!experimentDict){
+        experimentDict = @{@"Classic" : @0.66, @"Integrated" : @0.34}; // There are 3 variants Classic+Address Search, Classic no Address Search & Integrated hence Classic gets 2/3 of the chance here as it will further get split 50:50 between the 2 classic variants internally resulting in 1/3 probability each.
+    }
+    [SkyLab splitTestWithName:kOLKiteABTestShippingScreen conditions:@{
+                                                                       @"Classic" : safeObject(experimentDict[@"Classic"]),
+                                                                       @"Integrated" : safeObject(experimentDict[@"Integrated"])
+                                                                       }block:^(id choice){
+                                                                           self.checkoutScreenType = choice;
+                                                                       }];
+}
+
+- (void)setupHidePriceTest{
+    NSDictionary *experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestHidePrice];
+    if (!experimentDict) {
+        experimentDict = @{@"Yes" : @0.5, @"No" : @0.5};
+    }
+    [SkyLab splitTestWithName:kOLKiteABTestHidePrice
+                   conditions:@{
+                                @"Yes" : experimentDict[@"Yes"],
+                                @"No" : experimentDict[@"No"]
+                                } block:^(id choice) {
+                                    self.hidePrice = [choice isEqualToString:@"Yes"];
+                                }];
+}
+
+- (void)groupSetupShippingScreenTests{
+    [self setupOfferAddressSearchTest];
+    [self requirePhoneNumber];
+    [self setupShippingScreenTest];
+}
+
 - (void)setupABTestVariantsWillSkipHomeScreens:(BOOL)skipHomeScreen {
-    __block NSDictionary *experimentDict;
-    
-    if (!skipHomeScreen){
+    if (!skipHomeScreen){ //Normal Product Journey
         
-        // Quality Banner Type
-        experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestQualityBannerType];
-        if (!experimentDict) {
-            experimentDict = @{@"None" : @0.25, @"A" : @0.25, @"B" : @0.25, @"C" : @0.25};
-        }
-        [SkyLab splitTestWithName:kOLKiteABTestQualityBannerType
-                       conditions:@{
-                                    @"None" : safeObject(experimentDict[@"None"]),
-                                    @"A" : safeObject(experimentDict[@"A"]),
-                                    @"B" : safeObject(experimentDict[@"B"]),
-                                    @"C" : safeObject(experimentDict[@"C"])
-                                    } block:^(id choice) {
-                                        self.qualityBannerType= choice;
-                                    }];
+        [self setupQualityBannerTypeTest];
+        [self setupProductTileStyleTest];
         
-        // Product Tile Style
-        experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestProductTileStyle];
-        if (!experimentDict) {
-            experimentDict = @{@"Classic" : @0.33, @"A" : @0.33, @"B" : @0.33};
-        }
-        [SkyLab splitTestWithName:kOLKiteABTestProductTileStyle
-                       conditions:@{
-                                    @"Classic" : safeObject(experimentDict[@"Classic"]),
-                                    @"A" : safeObject(experimentDict[@"A"]),
-                                    @"B" : safeObject(experimentDict[@"B"])
-                                    } block:^(id choice) {
-                                        self.productTileStyle = choice;
-                                    }];
-    }
-    
-    if (skipHomeScreen){
-        
-        // Show Product Description Screen before shipping when starting with Print Order.
-        experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestProductDescriptionWithPrintOrder];
-        if (!experimentDict) {
-            experimentDict = @{@"Yes" : @0.5, @"No" : @0.5};
-        }
-        [SkyLab splitTestWithName:kOLKiteABTestProductDescriptionWithPrintOrder
-                       conditions:@{
-                                    @"Yes" : safeObject(experimentDict[@"Yes"]),
-                                    @"No" : safeObject(experimentDict[@"No"])
-                                    } block:^(id choice) {
-                                        self.showProductDescriptionWithPrintOrder = [choice isEqualToString:@"Yes"];
-                                    }];
-    }
-    
-    // We are not sure if we need the following shipping screen tests right away. If we do (ie we have started up using a Print Order), we will execute inline, otherwise we will execute on another thread so we don't block the current thread, so put them in a block.
-    void (^shippingScreenBlock)() = ^() {
-        
-        // Offer Address Search
-        experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestOfferAddressSearch];
-        if (!experimentDict) {
-            experimentDict = @{@"Yes" : @0.5, @"No" : @0.5};
-        }
-        [SkyLab splitTestWithName:kOLKiteABTestOfferAddressSearch
-                       conditions:@{
-                                    @"Yes" : safeObject(experimentDict[@"Yes"]),
-                                    @"No" : safeObject(experimentDict[@"No"])
-                                    } block:^(id choice) {
-                                        self.offerAddressSearch = [choice isEqualToString:@"Yes"];
-                                    }];
-        
-        // Require Phone Number
-        experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestRequirePhoneNumber];
-        if (!experimentDict) {
-            experimentDict = @{@"Yes" : @0.5, @"No" : @0.5};
-        }
-        [SkyLab splitTestWithName:kOLKiteABTestRequirePhoneNumber
-                       conditions:@{
-                                    @"Yes" : safeObject(experimentDict[@"Yes"]),
-                                    @"No" : safeObject(experimentDict[@"No"])
-                                    } block:^(id choice) {
-                                        self.requirePhoneNumber = [choice isEqualToString:@"Yes"];
-                                    }];
-        
-        // Classic vs Integrated Shipping Screen
-        experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestShippingScreen];
-        if (!experimentDict){
-            experimentDict = @{@"Classic" : @0.66, @"Integrated" : @0.34}; // There are 3 variants Classic+Address Search, Classic no Address Search & Integrated hence Classic gets 2/3 of the chance here as it will further get split 50:50 between the 2 classic variants internally resulting in 1/3 probability each.
-        }
-        [SkyLab splitTestWithName:kOLKiteABTestShippingScreen conditions:@{
-                                                                           @"Classic" : safeObject(experimentDict[@"Classic"]),
-                                                                           @"Integrated" : safeObject(experimentDict[@"Integrated"])
-                                                                           }block:^(id choice){
-                                                                               self.checkoutScreenType = choice;
-                                                                           }];
-    };
-    
-    //Execute on current thread or on another thread, depeding on when we need it
-    if (skipHomeScreen && !self.showProductDescriptionWithPrintOrder){
-        shippingScreenBlock();
+        //Execute on another thread because we don't need them immediately
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            [self setupHidePriceTest];
+            [self groupSetupShippingScreenTests];
+        });
     }
     else{
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            shippingScreenBlock();
-        });
+        [self setupShowProductDescriptionScreenBeforeShippingTest];
         
-        if (skipHomeScreen && self.showProductDescriptionWithPrintOrder){
-            experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestHidePrice];
-            if (!experimentDict) {
-                experimentDict = @{@"Yes" : @0.5, @"No" : @0.5};
-            }
-            [SkyLab splitTestWithName:kOLKiteABTestHidePrice
-                           conditions:@{
-                                        @"Yes" : experimentDict[@"Yes"],
-                                        @"No" : experimentDict[@"No"]
-                                        } block:^(id choice) {
-                                            self.hidePrice = [choice isEqualToString:@"Yes"];
-                                        }];
+        if (self.showProductDescriptionWithPrintOrder){
+            [self setupHidePriceTest];
+            
+            //Execute on another thread because we don't need them now
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                [self groupSetupShippingScreenTests];
+            });
+        }
+        else{
+            [self groupSetupShippingScreenTests];
         }
     }
 }
