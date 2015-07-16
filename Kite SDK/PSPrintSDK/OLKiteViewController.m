@@ -27,6 +27,7 @@
 static const NSInteger kTagNoProductsAlertView = 99;
 static const NSInteger kTagTemplateSyncFailAlertView = 100;
 
+
 @interface OLKiteViewController () <UIAlertViewDelegate>
 
 @property (strong, nonatomic) NSArray *assets;

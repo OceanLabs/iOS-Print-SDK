@@ -110,9 +110,10 @@ static NSString *nonNilStr(NSString *str) {
     [OLAnalytics sendToMixPanelWithDictionary:dict];
 }
 
-+ (void)trackProductDescriptionScreenViewed:(NSString *)productName{
++ (void)trackProductDescriptionScreenViewed:(NSString *)productName hidePrice:(BOOL)hidePrice{
     NSDictionary *dict = [OLAnalytics defaultDictionaryForEventName:@"Product Description Screen Viewed"];
     [dict[@"properties"] setObject:productName forKey:@"Product Name"];
+    [dict[@"properties"] setObject:hidePrice ? @"YES" : @"NO" forKey:@"Hide Price on Product Description"];
     [OLAnalytics sendToMixPanelWithDictionary:dict];
 }
 

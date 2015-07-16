@@ -17,6 +17,7 @@ static NSString *const kOLKiteABTestRequirePhoneNumber = @"ly.kite.abtest.requir
 static NSString *const kOLKiteABTestQualityBannerType = @"ly.kite.abtest.quality_banner_type";
 static NSString *const kOLKiteABTestShippingScreen = @"ly.kite.abtest.shippingscreen";
 static NSString *const kOLKiteABTestProductTileStyle = @"ly.kite.abtest.product_tile_style";
+static NSString *const kOLKiteABTestHidePrice = @"ly.kite.abtest.hide_price";
 
 id safeObject(id obj){
     return obj ? obj : @"";
@@ -169,6 +170,20 @@ id safeObject(id obj){
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             shippingScreenBlock();
         });
+        
+        if (skipHomeScreen && self.showProductDescriptionWithPrintOrder){
+            experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestHidePrice];
+            if (!experimentDict) {
+                experimentDict = @{@"Yes" : @0.5, @"No" : @0.5};
+            }
+            [SkyLab splitTestWithName:kOLKiteABTestHidePrice
+                           conditions:@{
+                                        @"Yes" : experimentDict[@"Yes"],
+                                        @"No" : experimentDict[@"No"]
+                                        } block:^(id choice) {
+                                            self.hidePrice = [choice isEqualToString:@"Yes"];
+                                        }];
+        }
     }
 }
 

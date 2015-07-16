@@ -13,6 +13,7 @@
 @property (assign, nonatomic) BOOL showProductDescriptionWithPrintOrder;
 @property (assign, nonatomic) BOOL offerAddressSearch;
 @property (assign, nonatomic) BOOL requirePhoneNumber;
+@property (assign, nonatomic) BOOL hidePrice;
 @property (strong, nonatomic) NSString *qualityBannerType;
 @property (strong, nonatomic) NSString *checkoutScreenType;
 @property (strong, nonatomic) NSString *productTileStyle;
