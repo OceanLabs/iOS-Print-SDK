@@ -111,6 +111,12 @@ static NSString *nonNilStr(NSString *str) {
     [OLAnalytics sendToMixPanelWithDictionary:dict];
 }
 
++ (void)trackQualityInfoScreenViewed{
+    NSDictionary *dict = [OLAnalytics defaultDictionaryForEventName:@"Quality Info Screen Viewed"];
+    [dict[@"properties"] setObject:[OLKiteABTesting sharedInstance].qualityBannerType forKey:@"Quality Banner Type"];
+    [OLAnalytics sendToMixPanelWithDictionary:dict];
+}
+
 + (void)trackProductDescriptionScreenViewed:(NSString *)productName hidePrice:(BOOL)hidePrice{
     NSDictionary *dict = [OLAnalytics defaultDictionaryForEventName:@"Product Description Screen Viewed"];
     [dict[@"properties"] setObject:productName forKey:@"Product Name"];

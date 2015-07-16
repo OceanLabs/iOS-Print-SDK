@@ -22,5 +22,6 @@
 + (void)trackPaymentScreenViewedForOrder:(OLPrintOrder *)printOrder;
 + (void)trackPaymentCompletedForOrder:(OLPrintOrder *)printOrder paymentMethod:(NSString *)method;
 + (void)trackOrderSubmission:(OLPrintOrder *)printOrder;
++ (void)trackQualityInfoScreenViewed;
 
 @end

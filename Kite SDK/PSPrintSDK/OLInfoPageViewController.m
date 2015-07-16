@@ -7,7 +7,7 @@
 //
 
 #import "OLInfoPageViewController.h"
-
+#import "OLAnalytics.h"
 
 @interface OLInfoPageViewController () <UITableViewDataSource, UITableViewDelegate>
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
@@ -26,6 +26,8 @@
     self.navigationItem.titleView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"logo"]];
     CGRect f = self.navigationItem.titleView.frame;
     self.navigationItem.titleView.frame = CGRectMake(f.origin.x, f.origin.y + 25, f.size.width, f.size.height);
+    
+    [OLAnalytics trackQualityInfoScreenViewed];
 }
 
 -(void)viewWillAppear:(BOOL)animated{
