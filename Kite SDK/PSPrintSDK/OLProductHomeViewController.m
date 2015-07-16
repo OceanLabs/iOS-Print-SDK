@@ -250,9 +250,20 @@
         button.layer.shadowRadius = 2;
         
         button.backgroundColor = [product labelColor];
+        
+        [button addTarget:self action:@selector(onButtonCallToActionTapped:) forControlEvents:UIControlEventTouchUpInside];
     }
     
     return cell;
+}
+
+- (void)onButtonCallToActionTapped:(UIButton *)sender{
+    UIView *view = sender.superview;
+    while (![view isKindOfClass:[UICollectionViewCell class]]){
+        view = view.superview;
+    }
+    NSIndexPath *indexPath = [self.collectionView indexPathForCell:(UICollectionViewCell *)view];
+    [self collectionView:self.collectionView didSelectItemAtIndexPath:indexPath];
 }
 
 #pragma mark - Autorotate and Orientation Methods
