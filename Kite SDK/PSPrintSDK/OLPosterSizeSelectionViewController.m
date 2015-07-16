@@ -12,6 +12,7 @@
 #import "OLKiteViewController.h"
 #import "OLAnalytics.h"
 #import "OLKitePrintSDK.h"
+#import "OLKiteABTesting.h"
 
 @interface OLProduct (Private)
 
@@ -21,12 +22,6 @@
 @end
 
 static UIColor *deselectedColor;
-
-@interface OLKiteViewController ()
-
-@property (assign, nonatomic, readonly) BOOL hidePrice;
-
-@end
 
 @interface OLPosterSizeSelectionViewController ()
 @property (weak, nonatomic) IBOutlet UIButton *classicBtn;
@@ -123,12 +118,12 @@ static UIColor *deselectedColor;
         }
     }
     
-    if ([(OLKiteViewController *)vc hidePrice]){
+    if ([OLKiteABTesting sharedInstance].hidePrice){
         [self.priceLabel removeFromSuperview];
     }
     
 #ifndef OL_NO_ANALYTICS
-    [OLAnalytics trackProductDescriptionScreenViewed:@"Posters" hidePrice:[(OLKiteViewController *)vc hidePrice]];
+    [OLAnalytics trackProductDescriptionScreenViewed:@"Posters" hidePrice:[OLKiteABTesting sharedInstance].hidePrice];
 #endif
 }
 
