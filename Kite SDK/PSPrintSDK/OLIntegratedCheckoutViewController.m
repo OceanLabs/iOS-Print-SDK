@@ -17,6 +17,8 @@
 #import "OLAnalytics.h"
 
 static const NSUInteger kSectionDeliveryDetails = 0;
+static const NSUInteger kSectionEmail = 1;
+static const NSUInteger kSectionPhone = 2;
 
 static const NSUInteger kTagTextField = 99;
 static const NSUInteger kTagLabel = 100;
@@ -279,7 +281,6 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
         }
         
         UITextField *tf = (UITextField *) [cell viewWithTag:kTagTextField];
-        UILabel *label = (UILabel *) [cell viewWithTag:kTagLabel];
         tf.enabled = YES;
         tf.returnKeyType = UIReturnKeyNext;
         cell.accessoryType = UITableViewCellAccessoryNone;
@@ -288,46 +289,88 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
         tf.delegate = self;
         switch (indexPath.row) {
             case 0:
-                label.text = NSLocalizedStringFromTableInBundle(@"Name", @"KitePrintSDK", [NSBundle mainBundle], @"");
+                [tf.superview removeConstraints:tf.superview.constraints];
+                tf.translatesAutoresizingMaskIntoConstraints = YES;
                 tf.text = self.shippingAddress.recipientFirstName;
+                tf.frame = CGRectMake(20, 0, ((cell.frame.size.width - 20) / 2.0)-10, cell.frame.size.height);
+                tf.attributedPlaceholder = [[NSAttributedString alloc] initWithString:NSLocalizedStringFromTableInBundle(@"First Name", @"KitePrintSDK", [NSBundle mainBundle], @"") attributes:@{NSForegroundColorAttributeName : [UIColor colorWithRed:108.0/255.0 green:108.0/255.0 blue:108.0/255.0 alpha:1]}];
                 self.textFieldFirstName = tf;
+                self.textFieldFirstName.tag = 1000;
+                
+                self.textFieldLastName = [[UITextField alloc] initWithFrame:CGRectMake(((cell.frame.size.width - 20) / 2.0)+20, 0, (cell.frame.size.width - 20) / 2.0, cell.frame.size.height)];
+                [cell.contentView addSubview:self.textFieldLastName];
+                self.textFieldLastName.text = self.shippingAddress.recipientLastName;
+                self.textFieldLastName.adjustsFontSizeToFitWidth = YES;
+                self.textFieldLastName.textColor = [UIColor blackColor];
+                self.textFieldLastName.autocorrectionType = UITextAutocorrectionTypeNo;
+                self.textFieldLastName.textAlignment = NSTextAlignmentLeft;
+                self.textFieldLastName.tag = kTagTextField;
+                self.textFieldLastName.clearButtonMode = UITextFieldViewModeNever;
+                self.textFieldLastName.delegate = self;
+                self.textFieldLastName.attributedPlaceholder = [[NSAttributedString alloc] initWithString:NSLocalizedStringFromTableInBundle(@"Last Name", @"KitePrintSDK", [NSBundle mainBundle], @"") attributes:@{NSForegroundColorAttributeName : [UIColor colorWithRed:108.0/255.0 green:108.0/255.0 blue:108.0/255.0 alpha:1]}];
+                
+                if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8){
+                    UIView *view = self.textFieldLastName;
+                    view.translatesAutoresizingMaskIntoConstraints = NO;
+                    tf.translatesAutoresizingMaskIntoConstraints = NO;
+                    NSDictionary *views = NSDictionaryOfVariableBindings(view, tf);
+                    NSMutableArray *con = [[NSMutableArray alloc] init];
+                    
+                    NSArray *visuals = @[@"H:|-20-[tf]-0-[view]-0-|"];
+                    
+                    
+                    for (NSString *visual in visuals) {
+                        [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+                    }
+                    
+                    NSLayoutConstraint *centerY = [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:view.superview attribute:NSLayoutAttributeCenterY multiplier:1 constant:0];
+                    [con addObject:centerY];
+                    
+                    [cell addConstraints:con];
+                    
+                    centerY = [NSLayoutConstraint constraintWithItem:tf attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:tf.superview attribute:NSLayoutAttributeCenterY multiplier:1 constant:0];
+                    [cell addConstraint:centerY];
+                    
+                    [cell addConstraint:[NSLayoutConstraint constraintWithItem:tf attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:self.textFieldLastName attribute:NSLayoutAttributeWidth multiplier:1 constant:0]];
+                }
+                
                 break;
             case 1:
-                label.text = NSLocalizedStringFromTableInBundle(@"Line 1", @"KitePrintSDK", [NSBundle mainBundle], @"");
+                tf.attributedPlaceholder = [[NSAttributedString alloc] initWithString:NSLocalizedStringFromTableInBundle(@"Line 1", @"KitePrintSDK", [NSBundle mainBundle], @"") attributes:@{NSForegroundColorAttributeName : [UIColor colorWithRed:108.0/255.0 green:108.0/255.0 blue:108.0/255.0 alpha:1]}];
                 tf.text = self.shippingAddress.line1;
                 self.textFieldLine1 = tf;
                 break;
             case 2:
-                label.text = NSLocalizedStringFromTableInBundle(@"Line 2", @"KitePrintSDK", [NSBundle mainBundle], @"");
+                tf.attributedPlaceholder = [[NSAttributedString alloc] initWithString:NSLocalizedStringFromTableInBundle(@"Line 2", @"KitePrintSDK", [NSBundle mainBundle], @"") attributes:@{NSForegroundColorAttributeName : [UIColor colorWithRed:108.0/255.0 green:108.0/255.0 blue:108.0/255.0 alpha:1]}];
                 tf.text = self.shippingAddress.line2;
                 self.textFieldLine2 = tf;
                 break;
             case 3:
-                label.text = NSLocalizedStringFromTableInBundle(@"City", @"KitePrintSDK", [NSBundle mainBundle], @"");
+                tf.attributedPlaceholder = [[NSAttributedString alloc] initWithString:NSLocalizedStringFromTableInBundle(@"City", @"KitePrintSDK", [NSBundle mainBundle], @"") attributes:@{NSForegroundColorAttributeName : [UIColor colorWithRed:108.0/255.0 green:108.0/255.0 blue:108.0/255.0 alpha:1]}];
                 tf.text = self.shippingAddress.city;
                 self.textFieldCity = tf;
                 break;
             case 4:
                 if (self.shippingAddress.country == [OLCountry countryForCode:@"USA"]) {
-                    label.text = @"State";
+                    tf.attributedPlaceholder = [[NSAttributedString alloc] initWithString:NSLocalizedStringFromTableInBundle(@"State", @"KitePrintSDK", [NSBundle mainBundle], @"") attributes:@{NSForegroundColorAttributeName : [UIColor colorWithRed:108.0/255.0 green:108.0/255.0 blue:108.0/255.0 alpha:1]}];
                 } else {
-                    label.text = NSLocalizedStringFromTableInBundle(@"County", @"KitePrintSDK", [NSBundle mainBundle], @"");
+                    tf.attributedPlaceholder = [[NSAttributedString alloc] initWithString:NSLocalizedStringFromTableInBundle(@"County", @"KitePrintSDK", [NSBundle mainBundle], @"") attributes:@{NSForegroundColorAttributeName : [UIColor colorWithRed:108.0/255.0 green:108.0/255.0 blue:108.0/255.0 alpha:1]}];
                 }
                 tf.text = self.shippingAddress.stateOrCounty;
                 self.textFieldCounty = tf;
                 break;
             case 5:
                 if (self.shippingAddress.country == [OLCountry countryForCode:@"USA"]) {
-                    label.text = @"ZIP Code";
+                    tf.attributedPlaceholder = [[NSAttributedString alloc] initWithString:NSLocalizedStringFromTableInBundle(@"ZIP Code", @"KitePrintSDK", [NSBundle mainBundle], @"") attributes:@{NSForegroundColorAttributeName : [UIColor colorWithRed:108.0/255.0 green:108.0/255.0 blue:108.0/255.0 alpha:1]}];
                 } else {
-                    label.text = NSLocalizedStringFromTableInBundle(@"Postcode", @"KitePrintSDK", [NSBundle mainBundle], @"");
+                    tf.attributedPlaceholder = [[NSAttributedString alloc] initWithString:NSLocalizedStringFromTableInBundle(@"Postcode", @"KitePrintSDK", [NSBundle mainBundle], @"") attributes:@{NSForegroundColorAttributeName : [UIColor colorWithRed:108.0/255.0 green:108.0/255.0 blue:108.0/255.0 alpha:1]}];
                 }
                 tf.text = self.shippingAddress.zipOrPostcode;
                 tf.autocapitalizationType = UITextAutocapitalizationTypeAllCharacters;
                 self.textFieldPostCode = tf;
                 break;
             case 6:
-                label.text = NSLocalizedStringFromTableInBundle(@"Country", @"KitePrintSDK", [NSBundle mainBundle], @"");
+                tf.attributedPlaceholder = [[NSAttributedString alloc] initWithString:NSLocalizedStringFromTableInBundle(@"Country", @"KitePrintSDK", [NSBundle mainBundle], @"") attributes:@{NSForegroundColorAttributeName : [UIColor colorWithRed:108.0/255.0 green:108.0/255.0 blue:108.0/255.0 alpha:1]}];
                 tf.text = self.shippingAddress.country.name;
                 tf.enabled = NO;
                 [tf setNeedsLayout];
@@ -340,6 +383,18 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
 
     } else{
         cell = [super tableView:tableView cellForRowAtIndexPath:indexPath];
+        UITextField *tf = (UITextField *) [cell viewWithTag:kTagTextField];
+        NSString *s;
+        if (indexPath.section == kSectionEmail){
+            s = NSLocalizedString(@"Email", @"");
+        }
+        else if (indexPath.section == kSectionPhone){
+            s = NSLocalizedString(@"Phone", @"");
+        }
+        else{
+            s = @"";
+        }
+        tf.attributedPlaceholder = [[NSAttributedString alloc] initWithString:s attributes:@{NSForegroundColorAttributeName : [UIColor colorWithRed:108.0/255.0 green:108.0/255.0 blue:108.0/255.0 alpha:1]}];
         
     }
     
@@ -391,7 +446,12 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
     if (indexPath.section == kSectionDeliveryDetails){
         switch (indexPath.row) {
             case 0:
-                self.shippingAddress.recipientFirstName = textField.text;
+                if (textField.tag == 1000){
+                    self.shippingAddress.recipientFirstName = self.textFieldFirstName.text;
+                }
+                else{
+                    self.shippingAddress.recipientLastName = textField.text;
+                }
                 break;
             case 1:
                 self.shippingAddress.line1 = textField.text;
@@ -474,18 +534,13 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
 }
 
 - (UITableViewCell *)createTextFieldCellWithReuseIdentifier:(NSString *)identifier title:(NSString *)title keyboardType:(UIKeyboardType)type {
-    UITableViewCell *cell = [[UITableViewCell alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 43)];
+    UITableViewCell *cell = [[UITableViewCell alloc] initWithFrame:CGRectMake(20, 0, [UIScreen mainScreen].bounds.size.width, 43)];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, 11, 110, 21)];
-    titleLabel.text = title;
-    titleLabel.adjustsFontSizeToFitWidth = YES;
-    titleLabel.tag = kTagInputFieldLabel;
-    UITextField *inputField = [[UITextField alloc] initWithFrame:CGRectMake(125, 0, [UIScreen mainScreen].bounds.size.width - 86, 43)];
+    UITextField *inputField = [[UITextField alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 43)];
     inputField.delegate = self;
     inputField.tag = kInputFieldTag;
     [inputField setKeyboardType:type];
     [inputField setReturnKeyType:UIReturnKeyNext];
-    [cell addSubview:titleLabel];
     [cell addSubview:inputField];
     
     if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8){
@@ -494,7 +549,7 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
         NSDictionary *views = NSDictionaryOfVariableBindings(view);
         NSMutableArray *con = [[NSMutableArray alloc] init];
         
-        NSArray *visuals = @[@"H:|-125-[view]-0-|", @"V:[view(43)]"];
+        NSArray *visuals = @[@"H:|-20-[view]-0-|", @"V:[view(43)]"];
         
         
         for (NSString *visual in visuals) {

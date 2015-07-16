@@ -15,7 +15,6 @@
 #import "OLAddressPickerController.h"
 
 static const NSUInteger kTagTextField = 99;
-static const NSUInteger kTagLabel = 100;
 
 @interface OLAddressSelectionViewController ()
 @property (nonatomic, strong) OLAddress *addressToAddToListOnViewDidAppear;
@@ -170,7 +169,7 @@ static const NSUInteger kTagLabel = 100;
         tf.autocorrectionType = UITextAutocorrectionTypeNo;
         tf.textAlignment = NSTextAlignmentLeft;
         tf.tag = kTagTextField;
-        tf.clearButtonMode = UITextFieldViewModeWhileEditing;
+        tf.clearButtonMode = UITextFieldViewModeNever;
         tf.delegate = self;
         
         [cell.contentView addSubview:tf];
@@ -182,7 +181,9 @@ static const NSUInteger kTagLabel = 100;
     cell.accessoryType = UITableViewCellAccessoryNone;
     tf.autocapitalizationType = UITextAutocapitalizationTypeWords;
     switch (indexPath.row) {
-        case 0:
+            case 0:
+            [tf.superview removeConstraints:tf.superview.constraints];
+            tf.translatesAutoresizingMaskIntoConstraints = YES;
             tf.text = self.address.recipientFirstName;
             tf.frame = CGRectMake(20, 0, ((cell.frame.size.width - 20) / 2.0)-10, cell.frame.size.height);
             tf.attributedPlaceholder = [[NSAttributedString alloc] initWithString:NSLocalizedStringFromTableInBundle(@"First Name", @"KitePrintSDK", [NSBundle mainBundle], @"") attributes:@{NSForegroundColorAttributeName : [UIColor colorWithRed:108.0/255.0 green:108.0/255.0 blue:108.0/255.0 alpha:1]}];
@@ -196,9 +197,35 @@ static const NSUInteger kTagLabel = 100;
             self.textFieldLastName.autocorrectionType = UITextAutocorrectionTypeNo;
             self.textFieldLastName.textAlignment = NSTextAlignmentLeft;
             self.textFieldLastName.tag = kTagTextField;
-            self.textFieldLastName.clearButtonMode = UITextFieldViewModeWhileEditing;
+            self.textFieldLastName.clearButtonMode = UITextFieldViewModeNever;
             self.textFieldLastName.delegate = self;
             self.textFieldLastName.attributedPlaceholder = [[NSAttributedString alloc] initWithString:NSLocalizedStringFromTableInBundle(@"Last Name", @"KitePrintSDK", [NSBundle mainBundle], @"") attributes:@{NSForegroundColorAttributeName : [UIColor colorWithRed:108.0/255.0 green:108.0/255.0 blue:108.0/255.0 alpha:1]}];
+            
+            if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8){
+                UIView *view = self.textFieldLastName;
+                view.translatesAutoresizingMaskIntoConstraints = NO;
+                tf.translatesAutoresizingMaskIntoConstraints = NO;
+                NSDictionary *views = NSDictionaryOfVariableBindings(view, tf);
+                NSMutableArray *con = [[NSMutableArray alloc] init];
+                
+                NSArray *visuals = @[@"H:|-20-[tf]-0-[view]-0-|"];
+                
+                
+                for (NSString *visual in visuals) {
+                    [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+                }
+                
+                NSLayoutConstraint *centerY = [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:view.superview attribute:NSLayoutAttributeCenterY multiplier:1 constant:0];
+                [con addObject:centerY];
+                
+                [cell addConstraints:con];
+                
+                centerY = [NSLayoutConstraint constraintWithItem:tf attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:tf.superview attribute:NSLayoutAttributeCenterY multiplier:1 constant:0];
+                [cell addConstraint:centerY];
+                
+                [cell addConstraint:[NSLayoutConstraint constraintWithItem:tf attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:self.textFieldLastName attribute:NSLayoutAttributeWidth multiplier:1 constant:0]];
+            }
+            
             break;
         case 1:
             tf.text = self.address.line1;
