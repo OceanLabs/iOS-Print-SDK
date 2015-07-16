@@ -32,14 +32,16 @@ id safeObject(id obj){
     return sharedInstance;
 }
 
-+ (void)fetchRemotePlistsWithCompletionHandler:(void(^)())handler{
+- (void)fetchRemotePlistsWithCompletionHandler:(void(^)())handler{
     [OLKiteABTesting fetchRemotePlistWithURL:[NSString stringWithFormat:@"https://sdk-static.s3.amazonaws.com/kite-ios-remote-%@.plist", [OLKitePrintSDK apiKey]] completionHandler:^(NSError *error){
         if (error){
             [OLKiteABTesting fetchRemotePlistWithURL:@"https://sdk-static.s3.amazonaws.com/kite-ios-remote.plist" completionHandler:^(NSError *error2){
+                [self setupABTestVariants];
                 handler();
             }];
         }
         else{
+            [self setupABTestVariants];
             handler();
         }
     }];
@@ -175,28 +177,21 @@ id safeObject(id obj){
     [self setupShippingScreenTest];
 }
 
-- (void)setupABTestVariantsWillSkipHomeScreens:(BOOL)skipHomeScreen {
-    if (!skipHomeScreen){ //Normal Product Journey
+- (void)setupABTestVariants{
+    if (!self.skipHomeScreen){ //Normal Product Journey
         
         [self setupQualityBannerTypeTest];
         [self setupProductTileStyleTest];
         
-        //Execute on another thread because we don't need them immediately
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            [self setupHidePriceTest];
-            [self groupSetupShippingScreenTests];
-        });
+        [self setupHidePriceTest];
+        [self groupSetupShippingScreenTests];
     }
     else{
         [self setupShowProductDescriptionScreenBeforeShippingTest];
         
         if (self.showProductDescriptionWithPrintOrder){
             [self setupHidePriceTest];
-            
-            //Execute on another thread because we don't need them now
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-                [self groupSetupShippingScreenTests];
-            });
+            [self groupSetupShippingScreenTests];
         }
         else{
             [self groupSetupShippingScreenTests];

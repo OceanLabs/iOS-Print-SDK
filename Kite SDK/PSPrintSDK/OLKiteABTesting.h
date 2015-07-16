@@ -10,6 +10,8 @@
 
 @interface OLKiteABTesting : NSObject
 
+@property (assign, nonatomic) BOOL skipHomeScreen;
+
 @property (assign, nonatomic) BOOL showProductDescriptionWithPrintOrder;
 @property (assign, nonatomic) BOOL offerAddressSearch;
 @property (assign, nonatomic) BOOL requirePhoneNumber;
@@ -19,8 +21,6 @@
 @property (strong, nonatomic) NSString *productTileStyle;
 
 + (instancetype)sharedInstance;
-+ (void)fetchRemotePlistsWithCompletionHandler:(void(^)())handler;
-
-- (void)setupABTestVariantsWillSkipHomeScreens:(BOOL)skipHomeScreen;
+- (void)fetchRemotePlistsWithCompletionHandler:(void(^)())handler;
 
 @end

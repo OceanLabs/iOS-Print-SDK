@@ -57,7 +57,7 @@ static NSString *const kKeyPromoDiscount = @"ly.kite.iossdk.kKeyPromoDiscount";
 }
 
 - (NSDecimalNumber *)totalCostInCurrency:(NSString *)currencyCode {
-    return [self.totalCosts objectForKey:currencyCode];
+    return [NSDecimalNumber decimalNumberWithString:[NSString stringWithFormat:@"%.02f", [[self.totalCosts objectForKey:currencyCode] doubleValue]]];
 }
 
 - (NSDecimalNumber *)shippingCostInCurrency:(NSString *)currencyCode {

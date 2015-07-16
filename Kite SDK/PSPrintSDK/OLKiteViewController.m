@@ -105,23 +105,22 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
     [self.transitionOperation addDependency:self.templateSyncOperation];
     [self.transitionOperation addDependency:self.remotePlistSyncOperation];
     
-    [OLKiteABTesting fetchRemotePlistsWithCompletionHandler:^{
-        [[OLKiteABTesting sharedInstance] setupABTestVariantsWillSkipHomeScreens:self.printOrder != nil];
+    [OLKiteABTesting sharedInstance].skipHomeScreen = self.printOrder != nil;
+    [[OLKiteABTesting sharedInstance] fetchRemotePlistsWithCompletionHandler:^{
         [self.operationQueue addOperation:self.remotePlistSyncOperation];
-    }];
-    
     
 #ifndef OL_NO_ANALYTICS
-    if (self.printOrder && ![OLKiteABTesting sharedInstance].showProductDescriptionWithPrintOrder){
-        [OLAnalytics trackKiteViewControllerLoadedWithEntryPoint:@"Shipping Screen"];
-    }
-    else if(self.printOrder && [OLKiteABTesting sharedInstance].showProductDescriptionWithPrintOrder){
-        [OLAnalytics trackKiteViewControllerLoadedWithEntryPoint:@"Product Description Screen"];
-    }
-    else{
-        [OLAnalytics trackKiteViewControllerLoadedWithEntryPoint:@"Home Screen"];
-    }
+        if (self.printOrder && ![OLKiteABTesting sharedInstance].showProductDescriptionWithPrintOrder){
+            [OLAnalytics trackKiteViewControllerLoadedWithEntryPoint:@"Shipping Screen"];
+        }
+        else if(self.printOrder && [OLKiteABTesting sharedInstance].showProductDescriptionWithPrintOrder){
+            [OLAnalytics trackKiteViewControllerLoadedWithEntryPoint:@"Product Description Screen"];
+        }
+        else{
+            [OLAnalytics trackKiteViewControllerLoadedWithEntryPoint:@"Home Screen"];
+        }
 #endif
+    }];
     
     
     
