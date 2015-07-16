@@ -18,6 +18,10 @@ static NSString *const kOLKiteABTestQualityBannerType = @"ly.kite.abtest.quality
 static NSString *const kOLKiteABTestShippingScreen = @"ly.kite.abtest.shippingscreen";
 static NSString *const kOLKiteABTestProductTileStyle = @"ly.kite.abtest.product_tile_style";
 
+id safeObject(id obj){
+    return obj ? obj : @"";
+}
+
 @implementation OLKiteABTesting
 
 + (instancetype)sharedInstance {
@@ -50,10 +54,10 @@ static NSString *const kOLKiteABTestProductTileStyle = @"ly.kite.abtest.product_
         for (NSString *key in defaults) {
             id possibleDict = defaults[key];
             id oldPossibleDict = oldDefaults[key];
-            if (([possibleDict isKindOfClass:[NSDictionary class]] && [oldPossibleDict isKindOfClass:[NSDictionary class]]) || !oldPossibleDict) {
+            if ([possibleDict isKindOfClass:[NSDictionary class]] && ([oldPossibleDict isKindOfClass:[NSDictionary class]]|| !oldPossibleDict) ) {
                 id experimentVersion = [possibleDict objectForKey:@"Experiment Version"];
                 id oldExperimentVersion = [oldPossibleDict objectForKey:@"Experiment Version"];
-                if (([experimentVersion isKindOfClass:[NSString class]] && [oldExperimentVersion isKindOfClass:[NSString class]] && ![experimentVersion isEqualToString:oldExperimentVersion]) || !oldExperimentVersion) {
+                if (([experimentVersion isKindOfClass:[NSString class]] && (([oldExperimentVersion isKindOfClass:[NSString class]] && ![experimentVersion isEqualToString:oldExperimentVersion]) || !oldExperimentVersion))) {
                     [SkyLab resetTestNamed:key];
                 }
             }
@@ -76,10 +80,10 @@ static NSString *const kOLKiteABTestProductTileStyle = @"ly.kite.abtest.product_
         }
         [SkyLab splitTestWithName:kOLKiteABTestQualityBannerType
                        conditions:@{
-                                    @"None" : experimentDict[@"None"],
-                                    @"A" : experimentDict[@"A"],
-                                    @"B" : experimentDict[@"B"],
-                                    @"C" : experimentDict[@"C"]
+                                    @"None" : safeObject(experimentDict[@"None"]),
+                                    @"A" : safeObject(experimentDict[@"A"]),
+                                    @"B" : safeObject(experimentDict[@"B"]),
+                                    @"C" : safeObject(experimentDict[@"C"])
                                     } block:^(id choice) {
                                         self.qualityBannerType= choice;
                                     }];
@@ -91,9 +95,9 @@ static NSString *const kOLKiteABTestProductTileStyle = @"ly.kite.abtest.product_
         }
         [SkyLab splitTestWithName:kOLKiteABTestProductTileStyle
                        conditions:@{
-                                    @"Classic" : experimentDict[@"Classic"],
-                                    @"A" : experimentDict[@"A"],
-                                    @"B" : experimentDict[@"B"]
+                                    @"Classic" : safeObject(experimentDict[@"Classic"]),
+                                    @"A" : safeObject(experimentDict[@"A"]),
+                                    @"B" : safeObject(experimentDict[@"B"])
                                     } block:^(id choice) {
                                         self.productTileStyle = choice;
                                     }];
@@ -108,8 +112,8 @@ static NSString *const kOLKiteABTestProductTileStyle = @"ly.kite.abtest.product_
         }
         [SkyLab splitTestWithName:kOLKiteABTestProductDescriptionWithPrintOrder
                        conditions:@{
-                                    @"Yes" : experimentDict[@"Yes"],
-                                    @"No" : experimentDict[@"No"]
+                                    @"Yes" : safeObject(experimentDict[@"Yes"]),
+                                    @"No" : safeObject(experimentDict[@"No"])
                                     } block:^(id choice) {
                                         self.showProductDescriptionWithPrintOrder = [choice isEqualToString:@"Yes"];
                                     }];
@@ -125,8 +129,8 @@ static NSString *const kOLKiteABTestProductTileStyle = @"ly.kite.abtest.product_
         }
         [SkyLab splitTestWithName:kOLKiteABTestOfferAddressSearch
                        conditions:@{
-                                    @"Yes" : experimentDict[@"Yes"],
-                                    @"No" : experimentDict[@"No"]
+                                    @"Yes" : safeObject(experimentDict[@"Yes"]),
+                                    @"No" : safeObject(experimentDict[@"No"])
                                     } block:^(id choice) {
                                         self.offerAddressSearch = [choice isEqualToString:@"Yes"];
                                     }];
@@ -138,8 +142,8 @@ static NSString *const kOLKiteABTestProductTileStyle = @"ly.kite.abtest.product_
         }
         [SkyLab splitTestWithName:kOLKiteABTestRequirePhoneNumber
                        conditions:@{
-                                    @"Yes" : experimentDict[@"Yes"],
-                                    @"No" : experimentDict[@"No"]
+                                    @"Yes" : safeObject(experimentDict[@"Yes"]),
+                                    @"No" : safeObject(experimentDict[@"No"])
                                     } block:^(id choice) {
                                         self.requirePhoneNumber = [choice isEqualToString:@"Yes"];
                                     }];
@@ -150,8 +154,8 @@ static NSString *const kOLKiteABTestProductTileStyle = @"ly.kite.abtest.product_
             experimentDict = @{@"Classic" : @0.66, @"Integrated" : @0.34}; // There are 3 variants Classic+Address Search, Classic no Address Search & Integrated hence Classic gets 2/3 of the chance here as it will further get split 50:50 between the 2 classic variants internally resulting in 1/3 probability each.
         }
         [SkyLab splitTestWithName:kOLKiteABTestShippingScreen conditions:@{
-                                                                           @"Classic" : experimentDict[@"Classic"],
-                                                                           @"Integrated" : experimentDict[@"Integrated"]
+                                                                           @"Classic" : safeObject(experimentDict[@"Classic"]),
+                                                                           @"Integrated" : safeObject(experimentDict[@"Integrated"])
                                                                            }block:^(id choice){
                                                                                
                                                                                self.checkoutScreenType = choice;
