@@ -50,10 +50,10 @@ static NSString *const kOLKiteABTestProductTileStyle = @"ly.kite.abtest.product_
         for (NSString *key in defaults) {
             id possibleDict = defaults[key];
             id oldPossibleDict = oldDefaults[key];
-            if ([possibleDict isKindOfClass:[NSDictionary class]] && [oldPossibleDict isKindOfClass:[NSDictionary class]]) {
+            if (([possibleDict isKindOfClass:[NSDictionary class]] && [oldPossibleDict isKindOfClass:[NSDictionary class]]) || !oldPossibleDict) {
                 id experimentVersion = [possibleDict objectForKey:@"Experiment Version"];
                 id oldExperimentVersion = [oldPossibleDict objectForKey:@"Experiment Version"];
-                if ([experimentVersion isKindOfClass:[NSString class]] && [oldExperimentVersion isKindOfClass:[NSString class]] && ![experimentVersion isEqualToString:oldExperimentVersion]) {
+                if (([experimentVersion isKindOfClass:[NSString class]] && [oldExperimentVersion isKindOfClass:[NSString class]] && ![experimentVersion isEqualToString:oldExperimentVersion]) || !oldExperimentVersion) {
                     [SkyLab resetTestNamed:key];
                 }
             }
