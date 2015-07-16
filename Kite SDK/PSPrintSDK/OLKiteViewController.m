@@ -28,12 +28,14 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
 static NSString *const kOLKiteABTestProductDescriptionWithPrintOrder = @"kOLKiteABTestProductDescriptionWithPrintOrder";
 static NSString *const kOLKiteABTestHidePrice = @"kOLKiteABTestHidePrice";
 
+
 @interface OLKiteViewController () <UIAlertViewDelegate>
 
 @property (strong, nonatomic) NSArray *assets;
 @property (strong, nonatomic) OLPrintOrder *printOrder;
 @property (strong, nonatomic) NSMutableArray *userSelectedPhotos;
 @property (weak, nonatomic) IBOutlet UINavigationBar *navigationBar;
+@property (weak, nonatomic) IBOutlet UINavigationItem *customNavigationItem;
 
 // Because template sync happens in the constructor it may complete before the OLKiteViewController has appeared. In such a case where sync does
 // complete first we make a note to immediately transition to the appropriate view when the OLKiteViewController does appear:
@@ -121,17 +123,18 @@ static NSString *const kOLKiteABTestHidePrice = @"kOLKiteABTestHidePrice";
     }
     
     if (self.printOrder){
-        self.navigationBar.hidden = YES;
+        self.customNavigationItem.title = @"";
     }
     
-    self.operationQueue = [[NSOperationQueue alloc] init];
+    self.operationQueue = [NSOperationQueue mainQueue];
     self.templateSyncOperation = [[NSBlockOperation alloc] init];
     self.remotePlistSyncOperation = [[NSBlockOperation alloc] init];
     self.transitionOperation = [[NSBlockOperation alloc] init];
     [self.transitionOperation addDependency:self.templateSyncOperation];
     [self.transitionOperation addDependency:self.remotePlistSyncOperation];
     
-    [OLKitePrintSDK fetchRemotePlistsWithCompletionHandler:^(NSError *error){
+    [OLKitePrintSDK fetchRemotePlistsWithCompletionHandler:^{
+        NSAssert([NSThread isMainThread], @"assumption about main thread callback is incorrect");
         [self setupABTestVariants];
 #ifndef OL_NO_ANALYTICS
         if (self.printOrder && !self.showProductDescriptionWithPrintOrder){
@@ -145,6 +148,7 @@ static NSString *const kOLKiteABTestHidePrice = @"kOLKiteABTestHidePrice";
         }
 #endif
         [self.operationQueue addOperation:self.remotePlistSyncOperation];
+
     }];
     
     if ([OLKitePrintSDK environment] == kOLKitePrintSDKEnvironmentLive){
@@ -152,9 +156,7 @@ static NSString *const kOLKiteABTestHidePrice = @"kOLKiteABTestHidePrice";
     }
     
     [self transitionToNextScreen];
-}
 
-- (void)viewWillAppear:(BOOL)animated {
     if (![OLKitePrintSDK cacheTemplates]) {
         [OLProductTemplate deleteCachedTemplates];
         [OLProductTemplate resetTemplates];
@@ -198,9 +200,8 @@ static NSString *const kOLKiteABTestHidePrice = @"kOLKiteABTestHidePrice";
             vc.userPhone = welf.userPhone;
             vc.kiteDelegate = welf.delegate;
             OLCustomNavigationController *nvc = [[OLCustomNavigationController alloc] initWithRootViewController:vc];
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [welf fadeToViewController:nvc];
-            });
+
+            [welf fadeToViewController:nvc];
             return;
         }
         else if (welf.printOrder && welf.showProductDescriptionWithPrintOrder){
@@ -212,9 +213,7 @@ static NSString *const kOLKiteABTestHidePrice = @"kOLKiteABTestHidePrice";
             [[vc navigationItem] setLeftBarButtonItem:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:welf action:@selector(dismiss)]];
             [vc.navigationItem.rightBarButtonItem setTitle:NSLocalizedString(@"Next", @"")];
             OLCustomNavigationController *nvc = [[OLCustomNavigationController alloc] initWithRootViewController:vc];
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [welf fadeToViewController:nvc];
-            });
+            [welf fadeToViewController:nvc];
             return;
         }
         else if (groups.count == 1) {
@@ -236,9 +235,7 @@ static NSString *const kOLKiteABTestHidePrice = @"kOLKiteABTestHidePrice";
         [vc safePerformSelector:@selector(setUserSelectedPhotos:) withObject:welf.userSelectedPhotos];
         [vc safePerformSelector:@selector(setTemplateClass:) withObject:product.productTemplate.templateClass];
         [[vc navigationItem] setLeftBarButtonItem:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:welf action:@selector(dismiss)]];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [welf fadeToViewController:nav];
-        });
+        [welf fadeToViewController:nav];
     }];
     [self.operationQueue addOperation:self.transitionOperation];
 }
@@ -254,6 +251,7 @@ static NSString *const kOLKiteABTestHidePrice = @"kOLKiteABTestHidePrice";
 }
 
 - (void)templateSyncDidFinish:(NSNotification *)n{
+    NSAssert([NSThread isMainThread], @"assumption about main thread callback is incorrect");
     if (n.userInfo[kNotificationKeyTemplateSyncError]){
         if ([[OLProductTemplate templates] count] > 0){
             return;

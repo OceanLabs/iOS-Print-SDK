@@ -228,6 +228,7 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="customNavigationItem" destination="BQx-e8-ao7" id="zWh-eg-7HC"/>
                         <outlet property="navigationBar" destination="Gf0-5K-EaB" id="VuD-wt-zWy"/>
                     </connections>
                 </viewController>
