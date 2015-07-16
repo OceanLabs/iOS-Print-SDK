@@ -36,6 +36,9 @@
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="19.6 X 19.6 INCHES" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" adjustsLetterSpacingToFitWidth="YES" preferredMaxLayoutWidth="106.5" translatesAutoresizingMaskIntoConstraints="NO" id="BbI-Sm-L92">
                                 <rect key="frame" x="200" y="555" width="200" height="45"/>
                                 <color key="backgroundColor" red="0.29803921568627451" green="0.53333333333333333" blue="0.90588235294117647" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="45" id="RHz-ib-Iqc"/>
+                                </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="10"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
@@ -51,6 +54,9 @@
                                 <rect key="frame" x="400" y="555" width="200" height="45"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <gestureRecognizers/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="45" id="5TY-jW-PpB"/>
+                                </constraints>
                                 <connections>
                                     <outletCollection property="gestureRecognizers" destination="Jn0-Xv-IxQ" appends="YES" id="QsJ-6q-KcH"/>
                                 </connections>
@@ -60,6 +66,7 @@
                         <constraints>
                             <constraint firstItem="jHu-F3-y31" firstAttribute="top" secondItem="5KW-iO-2Nb" secondAttribute="top" priority="750" id="0KJ-xg-9mf"/>
                             <constraint firstItem="jHu-F3-y31" firstAttribute="top" secondItem="jsU-Jg-zMC" secondAttribute="top" id="13r-f3-dLb"/>
+                            <constraint firstItem="BbI-Sm-L92" firstAttribute="leading" secondItem="IOD-8G-yBt" secondAttribute="leading" priority="750" id="4RX-Hl-081"/>
                             <constraint firstAttribute="width" secondItem="5KW-iO-2Nb" secondAttribute="width" priority="750" id="4Yt-pn-rs7"/>
                             <constraint firstItem="BbI-Sm-L92" firstAttribute="leading" secondItem="5KW-iO-2Nb" secondAttribute="trailing" id="CTY-2U-PDu"/>
                             <constraint firstItem="BbI-Sm-L92" firstAttribute="top" secondItem="5KW-iO-2Nb" secondAttribute="top" id="GDG-VX-DJj"/>
@@ -67,7 +74,10 @@
                             <constraint firstItem="jHu-F3-y31" firstAttribute="leading" secondItem="jsU-Jg-zMC" secondAttribute="leading" id="JvN-2m-SW9"/>
                             <constraint firstItem="BbI-Sm-L92" firstAttribute="width" secondItem="jHu-F3-y31" secondAttribute="width" priority="750" id="MJx-Ri-nuV"/>
                             <constraint firstAttribute="trailing" secondItem="BbI-Sm-L92" secondAttribute="trailing" priority="750" id="MKD-zF-VNB"/>
+                            <constraint firstItem="jsU-Jg-zMC" firstAttribute="leading" secondItem="IOD-8G-yBt" secondAttribute="leading" priority="500" id="N5H-sK-pBE"/>
+                            <constraint firstItem="BbI-Sm-L92" firstAttribute="width" secondItem="jsU-Jg-zMC" secondAttribute="width" id="NLV-vl-tJn"/>
                             <constraint firstItem="5KW-iO-2Nb" firstAttribute="leading" secondItem="IOD-8G-yBt" secondAttribute="leading" id="Of2-cO-fX8"/>
+                            <constraint firstItem="G9u-bX-KKH" firstAttribute="top" secondItem="BbI-Sm-L92" secondAttribute="bottom" id="SMC-16-IsD"/>
                             <constraint firstItem="jHu-F3-y31" firstAttribute="top" secondItem="BbI-Sm-L92" secondAttribute="top" id="a4l-gD-y2q"/>
                             <constraint firstItem="5KW-iO-2Nb" firstAttribute="width" secondItem="jsU-Jg-zMC" secondAttribute="width" priority="750" id="anx-uB-5EP"/>
                             <constraint firstItem="jHu-F3-y31" firstAttribute="width" secondItem="5KW-iO-2Nb" secondAttribute="width" priority="750" id="bC9-FN-qmT"/>
@@ -82,6 +92,7 @@
                             <constraint firstItem="jHu-F3-y31" firstAttribute="leading" secondItem="5KW-iO-2Nb" secondAttribute="trailing" priority="750" id="pxw-4v-6xy"/>
                             <constraint firstItem="BbI-Sm-L92" firstAttribute="height" secondItem="jHu-F3-y31" secondAttribute="height" priority="750" id="q5H-YY-VaM"/>
                             <constraint firstAttribute="trailing" secondItem="jHu-F3-y31" secondAttribute="trailing" id="s1e-3M-mbe"/>
+                            <constraint firstItem="G9u-bX-KKH" firstAttribute="top" secondItem="jHu-F3-y31" secondAttribute="bottom" id="sRH-xK-trG"/>
                             <constraint firstItem="5KW-iO-2Nb" firstAttribute="height" secondItem="jsU-Jg-zMC" secondAttribute="height" priority="750" id="tTt-Zs-wnx"/>
                             <constraint firstItem="G9u-bX-KKH" firstAttribute="top" secondItem="5KW-iO-2Nb" secondAttribute="bottom" id="x9J-Eu-zo5"/>
                         </constraints>
@@ -89,8 +100,12 @@
                             <mask key="constraints">
                                 <exclude reference="anx-uB-5EP"/>
                                 <exclude reference="c4m-fj-9F6"/>
+                                <exclude reference="tTt-Zs-wnx"/>
+                                <exclude reference="GDG-VX-DJj"/>
                                 <exclude reference="MJx-Ri-nuV"/>
+                                <exclude reference="hps-4z-R5L"/>
                                 <exclude reference="q5H-YY-VaM"/>
+                                <exclude reference="0KJ-xg-9mf"/>
                                 <exclude reference="a4l-gD-y2q"/>
                             </mask>
                         </variation>

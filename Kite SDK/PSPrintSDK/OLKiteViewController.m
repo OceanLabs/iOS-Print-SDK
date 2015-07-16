@@ -25,7 +25,9 @@
 
 static const NSInteger kTagNoProductsAlertView = 99;
 static const NSInteger kTagTemplateSyncFailAlertView = 100;
-static NSString *const kOLKiteABTestProductDescriptionWithPrintOrder = @"ly.kite.abtest.show_product_description_screen";
+static NSString *const kOLKiteABTestProductDescriptionWithPrintOrder = @"kOLKiteABTestProductDescriptionWithPrintOrder";
+static NSString *const kOLKiteABTestHidePrice = @"kOLKiteABTestHidePrice";
+
 
 @interface OLKiteViewController () <UIAlertViewDelegate>
 
@@ -42,6 +44,7 @@ static NSString *const kOLKiteABTestProductDescriptionWithPrintOrder = @"ly.kite
 @property (strong, nonatomic) NSBlockOperation *remotePlistSyncOperation;
 @property (strong, nonatomic) NSBlockOperation *transitionOperation;
 @property (assign, nonatomic) BOOL showProductDescriptionWithPrintOrder;
+@property (assign, nonatomic) BOOL hidePrice;
 
 @end
 
@@ -97,6 +100,18 @@ static NSString *const kOLKiteABTestProductDescriptionWithPrintOrder = @"ly.kite
                                 @"No" : experimentDict[@"No"]
                                 } block:^(id choice) {
                                     self.showProductDescriptionWithPrintOrder = [choice isEqualToString:@"Yes"];
+                                }];
+    
+    experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestHidePrice];
+    if (!experimentDict) {
+        experimentDict = @{@"Yes" : @0.5, @"No" : @0.5};
+    }
+    [SkyLab splitTestWithName:kOLKiteABTestHidePrice
+                   conditions:@{
+                                @"Yes" : experimentDict[@"Yes"],
+                                @"No" : experimentDict[@"No"]
+                                } block:^(id choice) {
+                                    self.hidePrice = [choice isEqualToString:@"Yes"];
                                 }];
 }
 
