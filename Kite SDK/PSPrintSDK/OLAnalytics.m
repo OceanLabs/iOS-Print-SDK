@@ -107,6 +107,7 @@ static NSString *nonNilStr(NSString *str) {
 + (void)trackProductSelectionScreenViewed{
     NSDictionary *dict = [OLAnalytics defaultDictionaryForEventName:@"Product Selection Screen Viewed"];
     [dict[@"properties"] setObject:nonNilStr([OLKiteABTesting sharedInstance].qualityBannerType) forKey:@"Quality Banner Type"];
+    [dict[@"properties"] setObject:nonNilStr([OLKiteABTesting sharedInstance].productTileStyle) forKey:@"Product Tile Style"];
     [OLAnalytics sendToMixPanelWithDictionary:dict];
 }
 
