@@ -103,7 +103,11 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
     [self.transitionOperation addDependency:self.templateSyncOperation];
     [self.transitionOperation addDependency:self.remotePlistSyncOperation];
     
-    [[OLKiteABTesting sharedInstance] setupABTestVariantsWillSkipHomeScreens:self.printOrder != nil];
+    [OLKiteABTesting fetchRemotePlistsWithCompletionHandler:^{
+        [[OLKiteABTesting sharedInstance] setupABTestVariantsWillSkipHomeScreens:self.printOrder != nil];
+        [self.operationQueue addOperation:self.remotePlistSyncOperation];
+    }];
+    
     
 #ifndef OL_NO_ANALYTICS
     if (self.printOrder && ![OLKiteABTesting sharedInstance].showProductDescriptionWithPrintOrder){
@@ -117,9 +121,7 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
     }
 #endif
     
-    [OLKiteABTesting fetchRemotePlistsWithCompletionHandler:^{
-        [self.operationQueue addOperation:self.remotePlistSyncOperation];
-    }];
+    
     
     if ([OLKitePrintSDK environment] == kOLKitePrintSDKEnvironmentLive){
         [[self.view viewWithTag:9999] removeFromSuperview];
