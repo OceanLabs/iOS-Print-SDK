@@ -49,6 +49,7 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
 
 + (void)setCacheTemplates:(BOOL)cache;
 + (BOOL)cacheTemplates;
++ (void)checkoutViewControllerForPrintOrder:(OLPrintOrder *)printOrder handler:(void(^)(OLCheckoutViewController *vc))handler;
 
 @end
 
@@ -168,14 +169,16 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
             return;
         }
         else if (welf.printOrder && ![OLKiteABTesting sharedInstance].showProductDescriptionWithPrintOrder){
-            OLCheckoutViewController *vc = [[OLCheckoutViewController alloc] initWithPrintOrder:welf.printOrder];
-            [[vc navigationItem] setLeftBarButtonItem:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:welf action:@selector(dismiss)]];
-            vc.userEmail = welf.userEmail;
-            vc.userPhone = welf.userPhone;
-            vc.kiteDelegate = welf.delegate;
-            OLCustomNavigationController *nvc = [[OLCustomNavigationController alloc] initWithRootViewController:vc];
-
-            [welf fadeToViewController:nvc];
+            [OLKitePrintSDK checkoutViewControllerForPrintOrder:welf.printOrder handler:^(OLCheckoutViewController *vc){
+                [[vc navigationItem] setLeftBarButtonItem:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:welf action:@selector(dismiss)]];
+                vc.userEmail = welf.userEmail;
+                vc.userPhone = welf.userPhone;
+                vc.kiteDelegate = welf.delegate;
+                OLCustomNavigationController *nvc = [[OLCustomNavigationController alloc] initWithRootViewController:vc];
+                
+                [welf fadeToViewController:nvc];
+            }];
+            
             return;
         }
         else if (welf.printOrder && [OLKiteABTesting sharedInstance].showProductDescriptionWithPrintOrder){

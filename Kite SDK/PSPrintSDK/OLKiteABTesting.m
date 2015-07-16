@@ -157,13 +157,12 @@ id safeObject(id obj){
                                                                            @"Classic" : safeObject(experimentDict[@"Classic"]),
                                                                            @"Integrated" : safeObject(experimentDict[@"Integrated"])
                                                                            }block:^(id choice){
-                                                                               
                                                                                self.checkoutScreenType = choice;
                                                                            }];
     };
     
     //Execute on current thread or on another thread, depeding on when we need it
-    if (skipHomeScreen && self.showProductDescriptionWithPrintOrder){
+    if (skipHomeScreen && !self.showProductDescriptionWithPrintOrder){
         shippingScreenBlock();
     }
     else{
