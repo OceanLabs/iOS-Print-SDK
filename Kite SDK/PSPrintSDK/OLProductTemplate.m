@@ -252,9 +252,9 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
     else if ([identifier isEqualToString:@"PHONE_CASE"]){
         return kOLTemplateUICase;
     }
-//    else if ([identifier isEqualToString:@"POSTCARD"]){
-//        return kOLTemplateUIPostcard;
-//    }
+    else if ([identifier isEqualToString:@"POSTCARD"]){
+        return kOLTemplateUIPostcard;
+    }
 //    else if ([identifier isEqualToString:@"PHOTOBOOK"]){
 //                return kOLTemplateUIPhotobook;
 //    }
@@ -280,6 +280,12 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
             break;
         case kOLTemplateUIRectagle:
             return @"Rectangle";
+            break;
+        case kOLTemplateUIPhotobook:
+            return @"Photobook";
+            break;
+        case kOLTemplateUIPostcard:
+            return @"Postcard";
             break;
             
         default:
