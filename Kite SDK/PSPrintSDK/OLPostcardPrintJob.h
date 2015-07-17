@@ -15,6 +15,8 @@
 
 @interface OLPostcardPrintJob : NSObject <OLPrintJob, NSCopying>
 
-- (id)initWithTemplateId:(NSString *)templateId frontImageOLAsset:(OLAsset *)frontImageAsset textOnPhotoImageOLAsset:(OLAsset *)textOnPhotoAsset message:(NSString *)message address:(OLAddress *)address location:(NSArray/*<NSString>*/ *)location;
+- (id)initWithTemplateId:(NSString *)templateId frontImageOLAsset:(OLAsset *)frontImageAsset message:(NSString *)message address:(OLAddress *)address;
+
+@property (nonatomic, strong) OLAsset *backImageAsset;
 
 @end

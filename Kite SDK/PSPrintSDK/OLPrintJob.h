@@ -30,7 +30,7 @@
 
 @interface OLPrintJob : NSObject
 
-+ (id<OLPrintJob>)postcardWithTemplateId:(NSString *)templateId frontImageOLAsset:(OLAsset *)frontImageAsset textOnPhotoImageOLAsset:(OLAsset *)textOnPhotoAsset message:(NSString *)message address:(OLAddress *)address location:(NSArray/*<NSString>*/ *)location;
++ (id<OLPrintJob>)postcardWithTemplateId:(NSString *)templateId frontImageOLAsset:(OLAsset *)frontImageAsset message:(NSString *)message address:(OLAddress *)address;
 
 + (id<OLPrintJob>)printJobWithTemplateId:(NSString *)templateId imageFilePaths:(NSArray/*<NSString>*/ *)imageFilePaths;
 + (id<OLPrintJob>)printJobWithTemplateId:(NSString *)templateId images:(NSArray/*<UIImage>*/ *)images;
