@@ -634,6 +634,7 @@ static NSString *const kOLKiteABTestAllowMultipleRecipients = @"ly.kite.abtest.a
 
 - (void)addressPicker:(OLAddressPickerController *)picker didFinishPickingAddresses:(NSArray/*<OLAddress>*/ *)addresses {
     [self.shippingAddresses removeAllObjects];
+    [self.selectedShippingAddresses removeAllObjects];
     for (OLAddress *address in addresses){
         OLAddress *addressCopy = [address copy];
         [self.shippingAddresses addObject:addressCopy];
