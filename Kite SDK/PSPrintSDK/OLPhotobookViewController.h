@@ -23,6 +23,7 @@
 
 @property (strong, nonatomic) OLProduct *product;
 @property (strong, nonatomic) NSMutableArray *userSelectedPhotos;
+@property (strong, nonatomic) NSMutableArray *photobookPhotos;
 @property (strong, nonatomic) NSNumber *editingPageNumber;
 @property (weak, nonatomic) id<OLKiteDelegate> delegate;
 @property (weak, nonatomic) id<OLPhotobookViewControllerDelegate> photobookDelegate;

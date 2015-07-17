@@ -11,6 +11,7 @@
 #import "OLURLDataSource.h"
 #import "OLAsset+Private.h"
 #import "OLPrintPhoto.h"
+#import "ALAssetsLibrary+Singleton.h"
 
 #ifdef OL_KITE_OFFER_INSTAGRAM
 #import <OLInstagramImage.h>
@@ -34,7 +35,6 @@ NSString *const kOLMimeTypePNG  = @"image/png";
 @property (nonatomic, strong) NSString *imageFilePath;
 @property (nonatomic, strong) NSData *imageData;
 @property (nonatomic, strong) NSURL *alAssetURL;
-@property (nonatomic, strong) ALAssetsLibrary *alAssetsLibrary;
 @property (nonatomic, strong) ALAsset *alAsset;
 @property (nonatomic, strong) id<OLAssetDataSource> dataSource;
 @property (nonatomic, strong) NSURL *imageURL;
@@ -234,17 +234,19 @@ NSString *const kOLMimeTypePNG  = @"image/png";
             handler(self.alAsset, nil);
         });
     } else {
-        ALAssetsLibrary *assetLibrary = [[ALAssetsLibrary alloc] init];
-        [assetLibrary assetForURL:self.alAssetURL
+        [[ALAssetsLibrary defaultAssetsLibrary] assetForURL:self.alAssetURL
                       resultBlock:^(ALAsset *asset) {
-                          NSAssert([NSThread isMainThread], @"oops wrong assumption about main thread callback");
-                          self.alAssetsLibrary = assetLibrary;
-                          self.alAsset = asset;
-                          handler(self.alAsset, nil);
+                          dispatch_async(dispatch_get_main_queue(), ^{
+                              NSAssert([NSThread isMainThread], @"oops wrong assumption about main thread callback");
+                              self.alAsset = asset;
+                              handler(self.alAsset, nil);
+                          });
                       }
                      failureBlock:^(NSError *err) {
-                         NSAssert([NSThread isMainThread], @"oops wrong assumption about main thread callback");
-                         handler(nil, err);
+                         dispatch_async(dispatch_get_main_queue(), ^{
+                             NSAssert([NSThread isMainThread], @"oops wrong assumption about main thread callback");
+                             handler(nil, err);
+                         });
                      }];
     }
 }
@@ -334,19 +336,25 @@ NSString *const kOLMimeTypePNG  = @"image/png";
         case kOLAssetTypeDataSource: {
             NSAssert(self.dataSource, @"oops somehow instantiated a OLAsset in non consistent state");
             [self.dataSource dataWithCompletionHandler:^(NSData *data, NSError *error) {
+                dispatch_async(dispatch_get_main_queue(), ^{
                     handler(data, error);
+                });
             }];
             
             break;
         }
         case kOLAssetTypeImageData: {
+            dispatch_async(dispatch_get_main_queue(), ^{
                 handler([self cropImageWithData:self.imageData], nil);
+            });
             break;
         }
         case kOLAssetTypeImageFilePath: {
+            dispatch_async(dispatch_get_main_queue(), ^{
                 NSError *error = nil;
                 NSData *data = [NSData dataWithContentsOfFile:self.imageFilePath options:0 error:&error];
                 handler([self cropImageWithData:data], error);
+            });
             break;
         }
         case kOLAssetTypeRemoteImageURL: {
