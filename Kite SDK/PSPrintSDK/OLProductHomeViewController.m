@@ -23,6 +23,7 @@
 #import "OLKiteABTesting.h"
 #import "UIImage+ColorAtPixel.h"
 #import "OLInfoPageViewController.h"
+#import <TSMarkdownParser.h>
 
 #define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
 
@@ -44,6 +45,9 @@
 @property (nonatomic, strong) NSArray *productGroups;
 @property (nonatomic, strong) UIImageView *topSurpriseImageView;
 @property (assign, nonatomic) BOOL fromRotation;
+@property (strong, nonatomic) UIView *bannerView;
+@property (strong, nonatomic) NSString *bannerString;
+@property (strong, nonatomic) NSDate *countdownDate;
 @end
 
 @implementation OLProductHomeViewController
@@ -70,6 +74,120 @@
                                                                             action:nil];
     self.automaticallyAdjustsScrollViewInsets = NO;
     self.collectionView.contentInset = UIEdgeInsetsMake([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height, 0, 0, 0);
+    
+    if ([OLKiteABTesting sharedInstance].promoBannerParaText && ![[OLKiteABTesting sharedInstance].promoBannerParaText isEqualToString:@""]){
+        self.bannerView = [[UIView alloc] init];
+        UIView *bannerView = self.bannerView;
+        bannerView.backgroundColor = [UIColor colorWithRed: 0.918 green: 0.11 blue: 0.376 alpha: 1];
+        
+        bannerView.layer.shadowColor = [[UIColor blackColor] CGColor];
+        bannerView.layer.shadowOpacity = .3;
+        bannerView.layer.shadowOffset = CGSizeMake(0,-2);
+        bannerView.layer.shadowRadius = 2;
+        
+        UILabel *label = [[UILabel alloc] init];
+        [bannerView addSubview:label];
+        [self setupBannerLabel:label];
+        
+        [self.navigationController.view addSubview:bannerView];
+        
+        bannerView.translatesAutoresizingMaskIntoConstraints = NO;
+        NSDictionary *views = NSDictionaryOfVariableBindings(bannerView);
+        NSMutableArray *con = [[NSMutableArray alloc] init];
+        
+        NSArray *visuals = @[@"H:|-0-[bannerView]-0-|",
+                             @"V:[bannerView(40)]"];
+        
+        
+        for (NSString *visual in visuals) {
+            [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+        }
+        
+        [bannerView.superview addConstraints:con];
+        
+        [self.navigationController.view addConstraint:[NSLayoutConstraint constraintWithItem:bannerView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.navigationController.view attribute:NSLayoutAttributeBottom multiplier:1 constant:45]];
+    }
+}
+
+- (void)setupBannerLabel:(UILabel *)label{
+    label.translatesAutoresizingMaskIntoConstraints = NO;
+    NSDictionary *views = NSDictionaryOfVariableBindings(label);
+    NSMutableArray *con = [[NSMutableArray alloc] init];
+    
+    NSArray *visuals = @[@"H:|-0-[label]-0-|",
+                         @"V:|-0-[label]-0-|"];
+    
+    
+    for (NSString *visual in visuals) {
+        [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+    }
+    
+    [label.superview addConstraints:con];
+    
+    label.tag = 10;
+    label.minimumScaleFactor = 0.5;
+    label.adjustsFontSizeToFitWidth = YES;
+    label.textAlignment = NSTextAlignmentCenter;
+    label.numberOfLines = 3;
+    
+    self.bannerString = [OLKiteABTesting sharedInstance].promoBannerParaText;
+    if (!self.bannerString || [self.bannerString isEqualToString:@""]){
+        [self.bannerView removeFromSuperview];
+        self.bannerView = nil;
+        return;
+    }
+    
+    NSRange countdownDateRange = [self.bannerString rangeOfString:@"\\[\\[.*\\]\\]" options:NSRegularExpressionSearch];
+    if (countdownDateRange.location != NSNotFound){
+        NSString *countdownString = [self.bannerString substringWithRange:countdownDateRange];
+        countdownString = [countdownString stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"[]"]];
+        
+        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+        [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm O"];
+        self.countdownDate = [dateFormatter dateFromString:countdownString];
+        
+        [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(updateCounter:) userInfo:nil repeats:YES];
+    }
+    
+    [self updateBannerString];
+}
+
+- (void)updateBannerString{
+    NSString *s;
+    if (self.countdownDate){
+        NSUInteger flags = NSCalendarUnitSecond | NSCalendarUnitMinute | NSCalendarUnitHour | NSCalendarUnitDay;
+        NSDateComponents *components = [[NSCalendar currentCalendar] components:flags fromDate:[NSDate date] toDate:self.countdownDate options:0];
+        if ([NSDateComponentsFormatter class]){
+            NSDateComponentsFormatter *formatter = [[NSDateComponentsFormatter alloc] init];
+            formatter.unitsStyle = NSDateComponentsFormatterUnitsStyleAbbreviated;
+            formatter.zeroFormattingBehavior = NSDateComponentsFormatterZeroFormattingBehaviorNone;
+            formatter.allowedUnits = NSCalendarUnitSecond | NSCalendarUnitMinute | NSCalendarUnitHour | NSCalendarUnitDay;
+            s = [formatter stringFromDateComponents:components];
+        }
+        else{
+            s = [NSString stringWithFormat:@"%ld days, %ld:%ld:%ld", (long)components.day, (long)components.hour, (long)components.minute, (long)components.second];
+        }
+    }
+    
+    NSRange countdownDateRange = [self.bannerString rangeOfString:@"\\[\\[.*\\]\\]" options:NSRegularExpressionSearch];
+    s = [self.bannerString stringByReplacingCharactersInRange:countdownDateRange withString:s];
+    NSMutableAttributedString *attributedString = [[[TSMarkdownParser standardParser] attributedStringFromMarkdown:s] mutableCopy];
+    
+    [attributedString addAttribute:NSForegroundColorAttributeName value:[UIColor whiteColor] range:NSMakeRange(0, attributedString.length)];
+    
+    UILabel *label = (UILabel *)[self.bannerView viewWithTag:10];
+    label.attributedText = attributedString;
+    
+}
+
+- (void)updateCounter:(NSTimer *)theTimer {
+    NSDate *now = [NSDate date];
+    // has the target time passed?
+    if ([self.countdownDate earlierDate:now] == self.countdownDate) {
+        [theTimer invalidate];
+    } else {
+        [self updateBannerString];
+    }
 }
 
 
@@ -79,6 +197,23 @@
 
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
+    self.bannerView.hidden = NO;
+    [UIView animateWithDuration:0.25 animations:^{
+        self.bannerView.transform = CGAffineTransformMakeTranslation(0, -45);
+        [self.collectionView setContentInset:UIEdgeInsetsMake(self.collectionView.contentInset.top, 0, 40, 0)];
+    }completion:NULL];
+    [super viewDidAppear:animated];
+}
+
+- (void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
+    [UIView animateWithDuration:0.25 animations:^{
+        self.bannerView.transform = CGAffineTransformMakeTranslation(0, 0);
+        [self.collectionView setContentInset:UIEdgeInsetsMake(self.collectionView.contentInset.top, 0, 0, 0)];
+    }completion:^(BOOL finished){
+        self.bannerView.hidden = YES;
+        self.bannerView.transform = CGAffineTransformIdentity;
+    }];
 }
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {

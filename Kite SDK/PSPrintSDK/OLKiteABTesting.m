@@ -18,6 +18,8 @@ static NSString *const kOLKiteABTestQualityBannerType = @"ly.kite.abtest.quality
 static NSString *const kOLKiteABTestShippingScreen = @"ly.kite.abtest.shippingscreen";
 static NSString *const kOLKiteABTestProductTileStyle = @"ly.kite.abtest.product_tile_style";
 static NSString *const kOLKiteABTestHidePrice = @"ly.kite.abtest.hide_price";
+static NSString *const kOLKiteABTestPromoBannerStyle = @"ly.kite.abtest.promo_banner_style";
+static NSString *const kOLKiteABTestPromoBannerText = @"ly.kite.abtest.promo_banner_text";
 
 id safeObject(id obj){
     return obj ? obj : @"";
@@ -162,6 +164,10 @@ id safeObject(id obj){
     if (!experimentDict) {
         experimentDict = @{@"Yes" : @0.5, @"No" : @0.5};
     }
+    NSMutableDictionary *options = [[NSMutableDictionary alloc] init];
+    for (NSString *s in experimentDict.allKeys){
+        [options setObject:safeObject(experimentDict[s]) forKey:s];
+    }
     [SkyLab splitTestWithName:kOLKiteABTestHidePrice
                    conditions:@{
                                 @"Yes" : experimentDict[@"Yes"],
@@ -169,6 +175,41 @@ id safeObject(id obj){
                                 } block:^(id choice) {
                                     self.hidePrice = [choice isEqualToString:@"Yes"];
                                 }];
+}
+
+- (void)setupPromoBannerTextTest{
+    NSDictionary *experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestPromoBannerText];
+    if (!experimentDict) {
+        return;
+    }
+    
+    // While it is tempting to do the dynamic conditions in other tests as well, DON'T, as typos in the plist can crash the app.
+    NSMutableDictionary *conditions = [[NSMutableDictionary alloc] init];
+    for (NSString *s in experimentDict.allKeys){
+        [conditions setObject:safeObject(experimentDict[s]) forKey:s];
+    }
+    [conditions removeObjectForKey:@"Strings"];
+    [conditions removeObjectForKey:@"Experiment Version"];
+    
+    [SkyLab splitTestWithName:kOLKiteABTestPromoBannerText
+                   conditions:conditions block:^(id choice) {
+                       NSDictionary *dict = [experimentDict objectForKey:@"Strings"];
+                       if (!dict){
+                           return ;
+                       }
+                       NSRange headerRange = [[dict objectForKey:choice] rangeOfString:@"\\<header>.*\\<\\/header>" options:NSRegularExpressionSearch | NSCaseInsensitiveSearch];
+                       if (headerRange.location != NSNotFound){
+                           NSString *s = [[dict objectForKey:choice] substringWithRange:headerRange];
+                           s = [s stringByReplacingOccurrencesOfString:@"<header>" withString:@"" options:NSCaseInsensitiveSearch range:NSMakeRange(0, s.length)];
+                           self.promoBannerHeaderText = [s stringByReplacingOccurrencesOfString:@"</header>" withString:@"" options:NSCaseInsensitiveSearch range:NSMakeRange(0, s.length)];
+                       }
+                       NSRange paraRange = [[dict objectForKey:choice] rangeOfString:@"\\<para>.*\\<\\/para>" options:NSRegularExpressionSearch | NSCaseInsensitiveSearch];
+                       if (paraRange.location != NSNotFound){
+                           NSString *s = [[dict objectForKey:choice] substringWithRange:paraRange];
+                           s = [s stringByReplacingOccurrencesOfString:@"<para>" withString:@"" options:NSCaseInsensitiveSearch range:NSMakeRange(0, s.length)];
+                           self.promoBannerParaText = [s stringByReplacingOccurrencesOfString:@"</para>" withString:@"" options:NSCaseInsensitiveSearch range:NSMakeRange(0, s.length)];
+                       }
+                   }];
 }
 
 - (void)groupSetupShippingScreenTests{
@@ -182,6 +223,7 @@ id safeObject(id obj){
         
         [self setupQualityBannerTypeTest];
         [self setupProductTileStyleTest];
+        [self setupPromoBannerTextTest];
         
         [self setupHidePriceTest];
     }
