@@ -53,7 +53,6 @@ typedef void (^OLProductCostRefreshCompletionHandler)(NSError *error);
 #endif
 
 #ifdef OL_KITE_OFFER_APPLE_PAY
-+ (void)setStripeKey:(NSString *)stripeKey;
 + (NSString *)stripePublishableKey;
 + (void)setApplePayMerchantID:(NSString *)mID;
 + (NSString *)appleMerchantID;
