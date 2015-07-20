@@ -541,7 +541,12 @@ UINavigationControllerDelegate
 }
 
 -(BOOL) shouldGoToCheckout{
-    NSUInteger selectedCount = self.userSelectedPhotos.count;
+    NSUInteger selectedCount = 0;
+    for (id object in self.photobookPhotos){
+        if (object != [NSNull null]){
+            selectedCount++;
+        }
+    }
     NSUInteger numOrders = 1 + (MAX(0, selectedCount - 1) / self.product.quantityToFulfillOrder);
     NSUInteger quantityToFulfilOrder = numOrders * self.product.quantityToFulfillOrder;
     if (selectedCount < quantityToFulfilOrder) {
