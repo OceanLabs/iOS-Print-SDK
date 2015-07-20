@@ -153,7 +153,7 @@
 }
 
 - (void)updateBannerString{
-    NSString *s;
+    NSString *s = self.bannerString;
     if (self.countdownDate){
         NSUInteger flags = NSCalendarUnitSecond | NSCalendarUnitMinute | NSCalendarUnitHour | NSCalendarUnitDay;
         NSDateComponents *components = [[NSCalendar currentCalendar] components:flags fromDate:[NSDate date] toDate:self.countdownDate options:0];
@@ -167,10 +167,11 @@
         else{
             s = [NSString stringWithFormat:@"%ld days, %ld:%ld:%ld", (long)components.day, (long)components.hour, (long)components.minute, (long)components.second];
         }
+        
+        NSRange countdownDateRange = [self.bannerString rangeOfString:@"\\[\\[.*\\]\\]" options:NSRegularExpressionSearch];
+        s = [self.bannerString stringByReplacingCharactersInRange:countdownDateRange withString:s];
     }
     
-    NSRange countdownDateRange = [self.bannerString rangeOfString:@"\\[\\[.*\\]\\]" options:NSRegularExpressionSearch];
-    s = [self.bannerString stringByReplacingCharactersInRange:countdownDateRange withString:s];
     NSMutableAttributedString *attributedString = [[[TSMarkdownParser standardParser] attributedStringFromMarkdown:s] mutableCopy];
     
     [attributedString addAttribute:NSForegroundColorAttributeName value:[UIColor whiteColor] range:NSMakeRange(0, attributedString.length)];
