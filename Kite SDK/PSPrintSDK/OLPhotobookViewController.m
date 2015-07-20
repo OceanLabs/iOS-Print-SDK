@@ -206,7 +206,7 @@ UINavigationControllerDelegate
     
     self.title = NSLocalizedString(@"Review", @""); //[NSString stringWithFormat: NSLocalizedString(@"%d / %d", @""), self.userSelectedPhotos.count, self.product.quantityToFulfillOrder];
     
-    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Back", @"") style:UIBarButtonItemStylePlain target:self action:@selector(onBackButtonTapped)];
+    self.navigationController.interactivePopGestureRecognizer.enabled = NO;
     
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Confirm", @"") style:UIBarButtonItemStylePlain target:self action:@selector(onButtonNextClicked:)];
     
@@ -405,10 +405,6 @@ UINavigationControllerDelegate
             });
         }];
     }];
-}
-
-- (void)onBackButtonTapped{
-    [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator{
