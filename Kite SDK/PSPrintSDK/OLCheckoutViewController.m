@@ -57,6 +57,7 @@ static NSString *const kOLKiteABTestAllowMultipleRecipients = @"ly.kite.abtest.a
 @property (assign, nonatomic) BOOL offerAddressSearch;
 @property (assign, nonatomic) BOOL allowsMultipleRecipients;
 @property (assign, nonatomic) BOOL requirePhoneNumber;
+@property (assign, nonatomic) CGFloat edgeInsetTop;
 @end
 
 @implementation OLCheckoutViewController
@@ -91,7 +92,7 @@ static NSString *const kOLKiteABTestAllowMultipleRecipients = @"ly.kite.abtest.a
         //[self.printOrder preemptAssetUpload];
         [self setupABTestVariants];
     }
-
+    
     return self;
 }
 
@@ -142,7 +143,7 @@ static NSString *const kOLKiteABTestAllowMultipleRecipients = @"ly.kite.abtest.a
                                 } block:^(id choice){
                                     self.allowsMultipleRecipients = [choice isEqualToString:@"Yes"];
                                 }];
-     
+    
 }
 
 - (void)presentViewControllerFrom:(UIViewController *)presentingViewController animated:(BOOL)animated completion:(void (^)(void))completion {
@@ -171,8 +172,14 @@ static NSString *const kOLKiteABTestAllowMultipleRecipients = @"ly.kite.abtest.a
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
     [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinator> context){
+        self.tableView.contentInset = UIEdgeInsetsMake(self.edgeInsetTop, 0, 0, 0);
         [self positionKiteLabel];
-    } completion:NULL];
+    } completion:^(id<UIViewControllerTransitionCoordinator> context){
+    }];
+}
+
+- (CGFloat)edgeInsetTop{
+    return self.navigationController.navigationBar.translucent ? [[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height : 0;
 }
 
 - (void)viewDidLoad {
@@ -193,7 +200,7 @@ static NSString *const kOLKiteABTestAllowMultipleRecipients = @"ly.kite.abtest.a
     self.tableView.tableHeaderView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"checkout_progress_indicator"]];
     self.tableView.tableHeaderView.contentMode = UIViewContentModeCenter;
     self.tableView.tableHeaderView.frame = CGRectMake(0, 0, self.view.frame.size.width, self.tableView.tableHeaderView.frame.size.height);
-
+    
     UITapGestureRecognizer *tgr = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onBackgroundClicked)];
     tgr.cancelsTouchesInView = NO; // allow table cell selection to happen as normal
     [self.tableView addGestureRecognizer:tgr];
@@ -303,6 +310,8 @@ static NSString *const kOLKiteABTestAllowMultipleRecipients = @"ly.kite.abtest.a
 }
 
 - (void) viewWillAppear:(BOOL)animated{
+    self.automaticallyAdjustsScrollViewInsets = NO;
+    self.tableView.contentInset = UIEdgeInsetsMake(self.edgeInsetTop, 0, 0, 0);
     [self.tableView reloadData];
     if (self.kiteLabel){
         [self positionKiteLabel];
@@ -340,7 +349,7 @@ static NSString *const kOLKiteABTestAllowMultipleRecipients = @"ly.kite.abtest.a
         [av show];
         return NO;
     }
-
+    
     if (![OLCheckoutViewController validateEmail:[self userEmail]]) {
         [self scrollSectionToVisible:kSectionEmailAddress];
         UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Invalid Email Address", @"KitePrintSDK", [OLConstants bundle], @"") message:NSLocalizedStringFromTableInBundle(@"Please enter a valid email address", @"KitePrintSDK", [OLConstants bundle], @"") delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLConstants bundle], @"") otherButtonTitles:nil];
@@ -503,7 +512,7 @@ static NSString *const kOLKiteABTestAllowMultipleRecipients = @"ly.kite.abtest.a
             [self populateDefaultEmailAndPhone];
         }
     }
-
+    
     return cell;
 }
 
@@ -511,7 +520,7 @@ static NSString *const kOLKiteABTestAllowMultipleRecipients = @"ly.kite.abtest.a
     UITableViewCell *cell = [[UITableViewCell alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 43)];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 11, 61, 21)];
-
+    
     titleLabel.text = title;
     titleLabel.adjustsFontSizeToFitWidth = YES;
     titleLabel.tag = kTagInputFieldLabel;
@@ -541,7 +550,7 @@ static NSString *const kOLKiteABTestAllowMultipleRecipients = @"ly.kite.abtest.a
         
         [view.superview addConstraints:con];
     }
-
+    
     
     return cell;
 }
@@ -614,20 +623,20 @@ static NSString *const kOLKiteABTestAllowMultipleRecipients = @"ly.kite.abtest.a
 }
 
 - (void)recalculateOrderCostIfNewSelectedCountryDiffers:(NSArray *)selectedCountries {
-//    if (self.printOrder.shippingAddress == nil) {
-//        // just populate with a blank address for now with default local country -- this will get replaced on filling out address and proceeding to the next screen
-//        self.printOrder.shippingAddress = [[OLAddress alloc] init];
-//        self.printOrder.shippingAddress.country = self.shippingAddress ? self.shippingAddress.country : [OLCountry countryForCurrentLocale];
-//    }
-//    
-//    NSMutableArray *countries = [[NSMutableArray alloc] init];
-//    for (OLAddress *address in self.printOrder.shippingAddress){
-//        [countries addObject:address.country];
-//    }
-//    if (![countries isEqualToArray:selectedCountries]) {
-//        // changing destination address voids internal printOrder cached costs, recalc early to speed things up before we hit the Payment screen
-//        [self.printOrder costWithCompletionHandler:nil]; // ignore outcome, internally printOrder caches the result and this will speed up things when we hit the PaymentScreen
-//    }
+    //    if (self.printOrder.shippingAddress == nil) {
+    //        // just populate with a blank address for now with default local country -- this will get replaced on filling out address and proceeding to the next screen
+    //        self.printOrder.shippingAddress = [[OLAddress alloc] init];
+    //        self.printOrder.shippingAddress.country = self.shippingAddress ? self.shippingAddress.country : [OLCountry countryForCurrentLocale];
+    //    }
+    //
+    //    NSMutableArray *countries = [[NSMutableArray alloc] init];
+    //    for (OLAddress *address in self.printOrder.shippingAddress){
+    //        [countries addObject:address.country];
+    //    }
+    //    if (![countries isEqualToArray:selectedCountries]) {
+    //        // changing destination address voids internal printOrder cached costs, recalc early to speed things up before we hit the Payment screen
+    //        [self.printOrder costWithCompletionHandler:nil]; // ignore outcome, internally printOrder caches the result and this will speed up things when we hit the PaymentScreen
+    //    }
 }
 
 #pragma mark - OLAddressPickerController delegate
@@ -681,7 +690,7 @@ static NSString *const kOLKiteABTestAllowMultipleRecipients = @"ly.kite.abtest.a
     
     NSDictionary* info = [aNotification userInfo];
     CGSize kbSize = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
-    UIEdgeInsets contentInsets = UIEdgeInsetsMake([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height, 0.0, kbSize.height, 0.0);
+    UIEdgeInsets contentInsets = UIEdgeInsetsMake(self.edgeInsetTop, 0.0, kbSize.height, 0.0);
     [UIView animateWithDuration:0.1 animations:^{
         self.tableView.contentInset = contentInsets;
         self.tableView.scrollIndicatorInsets = contentInsets;
@@ -691,8 +700,9 @@ static NSString *const kOLKiteABTestAllowMultipleRecipients = @"ly.kite.abtest.a
     // Your application might not need or want this behavior.
     CGRect aRect = self.view.frame;
     aRect.size.height -= kbSize.height;
-    if (!CGRectContainsPoint(aRect, self.activeTextView.frame.origin) ) {
-        CGPoint scrollPoint = CGPointMake(0.0, self.activeTextView.frame.origin.y-kbSize.height);
+    CGPoint p = self.activeTextView.superview.frame.origin;
+    if (!CGRectContainsPoint(aRect, CGPointMake(p.x, p.y + self.activeTextView.frame.size.height)) ) {
+        CGPoint scrollPoint = CGPointMake(0.0, self.activeTextView.superview.frame.origin.y-kbSize.height);
         [self.tableView setContentOffset:scrollPoint animated:YES];
     }
     
@@ -702,7 +712,7 @@ static NSString *const kOLKiteABTestAllowMultipleRecipients = @"ly.kite.abtest.a
 - (void)keyboardWillBeHidden:(NSNotification *)aNotification
 {
     // scroll back..
-    UIEdgeInsets contentInsets = UIEdgeInsetsMake([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height, 0, 0, 0);
+    UIEdgeInsets contentInsets = UIEdgeInsetsMake(self.edgeInsetTop, 0, 0, 0);
     self.tableView.contentInset = contentInsets;
     self.tableView.scrollIndicatorInsets = contentInsets;
 }
