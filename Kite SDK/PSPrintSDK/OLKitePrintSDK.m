@@ -25,8 +25,9 @@ static NSString *const kJudoLiveToken     = @"JjOZ49Z9XCYy2FAc";
 static NSString *const kJudoLiveSecret  = @"b8d5950ec68e27e7dfdb314dbd7160e7421c3bddd4d883d9aef5e94788def934";
 
 static NSString *apiKey = nil;
-static NSString *StripePublishableKey = nil;
-static NSString *kApplePayMerchantID = nil;
+static NSString *const kOLStripePublishableKeyTest = @"pk_test_FxzXniUJWigFysP0bowWbuy3";
+static NSString *const kOLStripePublishableKeyLive = @"pk_live_o1egYds0rWu43ln7FjEyOU5E";
+static NSString *applePayMerchantID = nil;
 static OLKitePrintSDKEnvironment environment;
 
 static NSString *const kOLAPIEndpointLive = @"https://api.kite.ly";
@@ -134,19 +135,18 @@ static NSString *instagramRedirectURI = nil;
 
 #ifdef OL_KITE_OFFER_APPLE_PAY
 + (void)setApplePayMerchantID:(NSString *)mID{
-    kApplePayMerchantID = mID;
-}
-
-+ (void)setStripeKey:(NSString *)stripeKey{
-    StripePublishableKey = stripeKey;
+    applePayMerchantID = mID;
 }
 
 + (NSString *)stripePublishableKey {
-    return StripePublishableKey;
+    switch (environment) {
+        case kOLKitePrintSDKEnvironmentLive: return kOLStripePublishableKeyLive;
+        case kOLKitePrintSDKEnvironmentSandbox: return kOLStripePublishableKeyTest;
+    }
 }
 
 + (NSString *)appleMerchantID {
-    return kApplePayMerchantID;
+    return applePayMerchantID;
 }
 #endif
 

@@ -13,15 +13,10 @@
 #import "OLProductTemplate.h"
 
 static NSString *const kKeyFrontImage = @"co.oceanlabs.pssdk.kKeyFrontImage";
-static NSString *const kKeyTextOnPhotoImage = @"co.oceanlabs.pssdk.kKeyTextOnPhotoImage";
+static NSString *const kKeyBackImage = @"co.oceanlabs.pssdk.kKeyBackImage";
 static NSString *const kKeyMessage = @"co.oceanlabs.pssdk.kKeyMessage";
 static NSString *const kKeyAddress = @"co.oceanlabs.pssdk.kKeyAddress";
-static NSString *const kKeyLocation = @"co.oceanlabs.pssdk.kKeyLocation";
 static NSString *const kKeyProductTemplateId = @"co.oceanlabs.pssdk.kKeyProductTemplateId";
-
-static id stringOrNSNull(NSString *str) {
-    return str ? str : [NSNull null];
-}
 
 static id stringOrEmptyString(NSString *str) {
     return str ? str : @"";
@@ -30,26 +25,31 @@ static id stringOrEmptyString(NSString *str) {
 @interface OLPostcardPrintJob ()
 @property (nonatomic, strong) NSString *templateId;
 @property (nonatomic, strong) OLAsset *frontImageAsset;
-@property (nonatomic, strong) OLAsset *textOnPhotoImageAsset;
+@property (nonatomic, strong) OLAsset *backImageAsset;
 @property (nonatomic, copy) NSString *message;
 @property (nonatomic, strong) OLAddress *address;
-@property (nonatomic, strong) NSArray *location;
 
 @end
 
 @implementation OLPostcardPrintJob
 
 
-- (id)initWithTemplateId:(NSString *)templateId frontImageOLAsset:(OLAsset *)frontImageAsset textOnPhotoImageOLAsset:(OLAsset *)textOnPhotoAsset message:(NSString *)message address:(OLAddress *)address location:(NSArray/*<NSString>*/ *)location; {
+- (id)initWithTemplateId:(NSString *)templateId frontImageOLAsset:(OLAsset *)frontImageAsset message:(NSString *)message address:(OLAddress *)address {
+    return [self initWithTemplateId:templateId frontImageOLAsset:frontImageAsset backImageOLAsset:nil message:message address:address];
+}
+
+- (id)initWithTemplateId:(NSString *)templateId frontImageOLAsset:(OLAsset *)frontImageAsset backImageOLAsset:(OLAsset *)backImageAsset {
+    return [self initWithTemplateId:templateId frontImageOLAsset:frontImageAsset backImageOLAsset:backImageAsset message:nil address:nil];
+}
+
+- (id)initWithTemplateId:(NSString *)templateId frontImageOLAsset:(OLAsset *)frontImageAsset backImageOLAsset:(OLAsset *)backImageAsset message:(NSString *)message address:(OLAddress *)address {
     if (self = [super init]) {
         self.frontImageAsset = frontImageAsset;
-        self.textOnPhotoImageAsset = textOnPhotoAsset;
+        self.backImageAsset = backImageAsset;
         self.message = message;
         self.address = address;
-        self.location = location;
         self.templateId = templateId;
     }
-    
     return self;
 }
 
@@ -74,8 +74,8 @@ static id stringOrEmptyString(NSString *str) {
 }
 
 - (NSArray/*<OLImage>*/ *)assetsForUploading {
-    if (self.textOnPhotoImageAsset) {
-        return @[self.frontImageAsset, self.textOnPhotoImageAsset];
+    if (self.backImageAsset) {
+        return @[self.frontImageAsset, self.backImageAsset];
     } else {
         return @[self.frontImageAsset];
     }
@@ -87,49 +87,15 @@ static id stringOrEmptyString(NSString *str) {
     
     NSMutableDictionary *assets = [[NSMutableDictionary alloc] init];
     json[@"assets"] = assets;
-    assets[@"photo"] = [NSNumber numberWithLongLong:self.frontImageAsset.assetId];
-    if (self.textOnPhotoImageAsset) {
-        assets[@"overlay_image"] = [NSNumber numberWithLongLong:self.textOnPhotoImageAsset.assetId];
+    assets[@"front_image"] = [NSNumber numberWithLongLong:self.frontImageAsset.assetId];
+    
+    if (self.backImageAsset){
+        assets[@"back_image"] = [NSNumber numberWithLongLong:self.frontImageAsset.assetId];
     }
-
-    NSMutableDictionary *frameContents = [[NSMutableDictionary alloc] init];
-    [json setObject:frameContents forKey:@"frame_contents"];
     
     // set message
-    [frameContents setObject:@{@"paragraphs":@[@{@"content":@"15", @"style":@"spacer"}, @{@"content":self.message, @"style":@"body"}]} forKey:@"frame1"];
-    
-    // set location
-    static const NSUInteger kAssetIdLocationIcon = 10;
-    if (self.location.count == 1) {
-        [frameContents setObject:@{@"paragraphs":@[@{@"content":self.location[0], @"style":@"location1"}]} forKey:@"location"];
-        assets[@"location_icon"] = [NSNumber numberWithLongLong:kAssetIdLocationIcon];
-    } else if (self.location.count > 1) {
-        [frameContents setObject:@{@"paragraphs":@[@{@"content":self.location[0], @"style":@"location1"}, @{@"content":self.location[1], @"style":@"location2"}]} forKey:@"location"];
-        assets[@"location_icon"] = [NSNumber numberWithLongLong:kAssetIdLocationIcon];
-    }
-    
-    // set address
-    NSArray *addrComponents = @[@[stringOrNSNull(self.address.recipientName), @"body-centered"],
-                                @[stringOrNSNull(self.address.line1), @"body-centered"],
-                                @[stringOrNSNull(self.address.line2), @"body-centered"],
-                                @[stringOrNSNull(self.address.city), @"body-centered"],
-                                @[stringOrNSNull(self.address.stateOrCounty), @"body-centered"],
-                                @[stringOrNSNull(self.address.zipOrPostcode), @"postcode-or-country"],
-                                @[stringOrNSNull(self.address.country.name), @"postcode-or-country"]];
-    
-    NSUInteger addrComponentId = 0;
-    for (NSArray *addrComponent in addrComponents) {
-        id component = addrComponent[0];
-        NSString *style = addrComponent[1];
-        if ([component isKindOfClass:[NSString class]]) {
-            if ([[component stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet] ] length] > 0) {
-                [frameContents setObject:@{@"paragraphs":@[@{@"content":component, @"style":style}]} forKey:[NSString stringWithFormat:@"addr%lu", (unsigned long)++addrComponentId]];
-            }
-        }
-    }
-    
-    if (addrComponentId == 7) {
-        assets[@"extra_dots"] = [NSNumber numberWithLongLong:11];
+    if (self.message) {
+        [json setObject:self.message forKey:@"message"];
     }
     
     if (self.address) {
@@ -153,13 +119,12 @@ static id stringOrEmptyString(NSString *str) {
 }
 
 - (NSUInteger) hash{
-    NSUInteger result = 1;
+    NSUInteger result = 17;
     if (self.templateId) result *= [self.templateId hash];
     if (self.frontImageAsset) result *= [self.frontImageAsset hash];
-    if (self.textOnPhotoImageAsset) result *= [self.textOnPhotoImageAsset hash];
+    if (self.backImageAsset) result *= [self.backImageAsset hash];
     if (self.message && [self.message hash] > 0) result *= [self.message hash];
     if (self.address) result *= [self.address hash];
-    if (self.location) result *= [self.location hash];
     return result;
 }
 
@@ -175,10 +140,9 @@ static id stringOrEmptyString(NSString *str) {
     BOOL result = YES;
     if (self.templateId) result &= [self.templateId isEqual:printJob.templateId];
     if (self.frontImageAsset) result &= [self.frontImageAsset isEqual:printJob.frontImageAsset];
-    if (self.textOnPhotoImageAsset) result &= [self.textOnPhotoImageAsset isEqual:printJob.textOnPhotoImageAsset];
+    if (self.backImageAsset) result &= [self.backImageAsset isEqual:printJob.backImageAsset];
     if (self.message) result &= [self.message isEqual:printJob.message];
     if (self.address) result &= [self.address isEqual:printJob.address];
-    if (self.location) result &= [self.location isEqual:printJob.location];
     return result;
 }
 
@@ -188,10 +152,8 @@ static id stringOrEmptyString(NSString *str) {
     [aCoder encodeObject:self.frontImageAsset forKey:kKeyFrontImage];
     [aCoder encodeObject:self.message forKey:kKeyMessage];
     [aCoder encodeObject:self.address forKey:kKeyAddress];
-    [aCoder encodeObject:self.location forKey:kKeyLocation];
-    [aCoder encodeObject:self.textOnPhotoImageAsset forKey:kKeyTextOnPhotoImage];
     [aCoder encodeObject:self.templateId forKey:kKeyProductTemplateId];
-    
+    [aCoder encodeObject:self.backImageAsset forKey:kKeyBackImage];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
@@ -199,9 +161,8 @@ static id stringOrEmptyString(NSString *str) {
         self.frontImageAsset = [aDecoder decodeObjectForKey:kKeyFrontImage];
         self.message = [aDecoder decodeObjectForKey:kKeyMessage];
         self.address = [aDecoder decodeObjectForKey:kKeyAddress];
-        self.location = [aDecoder decodeObjectForKey:kKeyLocation];
-        self.textOnPhotoImageAsset = [aDecoder decodeObjectForKey:kKeyTextOnPhotoImage];
         self.templateId = [aDecoder decodeObjectForKey:kKeyProductTemplateId];
+        self.backImageAsset = [aDecoder decodeObjectForKey:kKeyBackImage];
     }
     
     return self;
