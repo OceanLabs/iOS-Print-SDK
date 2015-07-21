@@ -143,7 +143,9 @@
         countdownString = [countdownString stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"[]"]];
         
         NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+        dateFormatter.locale = [NSLocale localeWithLocaleIdentifier:@"en_US"];        
         [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm O"];
+
         self.countdownDate = [dateFormatter dateFromString:countdownString];
         
         [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(updateCounter:) userInfo:nil repeats:YES];
