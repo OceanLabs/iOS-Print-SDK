@@ -46,6 +46,7 @@
 @property (nonatomic, strong) UIImageView *topSurpriseImageView;
 @property (assign, nonatomic) BOOL fromRotation;
 @property (strong, nonatomic) UIView *bannerView;
+@property (strong, nonatomic) UIView *headerView;
 @property (strong, nonatomic) NSString *bannerString;
 @property (strong, nonatomic) NSDate *countdownDate;
 @end
@@ -106,6 +107,74 @@
         [bannerView.superview addConstraints:con];
         
         [self.navigationController.view addConstraint:[NSLayoutConstraint constraintWithItem:bannerView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.navigationController.view attribute:NSLayoutAttributeBottom multiplier:1 constant:45]];
+        
+        if ([OLKiteABTesting sharedInstance].promoBannerHeaderText && ![[OLKiteABTesting sharedInstance].promoBannerHeaderText isEqualToString:@""]){
+            self.headerView = [[UIView alloc] init];
+            self.headerView.backgroundColor = [UIColor colorWithRed: 0.259 green: 0.675 blue: 0.827 alpha: 1];
+            [self.bannerView addSubview:self.headerView];
+            
+            UIView *headerView = self.headerView;
+            headerView.translatesAutoresizingMaskIntoConstraints = NO;
+            NSDictionary *views = NSDictionaryOfVariableBindings(headerView);
+            NSMutableArray *con = [[NSMutableArray alloc] init];
+            
+            NSArray *visuals = @[@"H:[headerView(125)]",
+                                 @"V:|-(-20)-[headerView(30)]"];
+            
+            
+            for (NSString *visual in visuals) {
+                [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+            }
+            
+            [con addObject:[NSLayoutConstraint constraintWithItem:headerView attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:headerView.superview attribute:NSLayoutAttributeCenterX multiplier:1 constant:0]];
+            
+            [headerView.superview addConstraints:con];
+            
+            headerView.layer.shadowColor = [[UIColor blackColor] CGColor];
+            headerView.layer.shadowOpacity = .3;
+            headerView.layer.shadowOffset = CGSizeMake(0,2);
+            headerView.layer.shadowRadius = 2;
+            
+            UIBezierPath* bezierPath = [UIBezierPath bezierPath];
+            [bezierPath moveToPoint: CGPointMake(0, 0)];
+            [bezierPath addLineToPoint: CGPointMake(125, 0)];
+            [bezierPath addLineToPoint: CGPointMake(125, 25)];
+            [bezierPath addLineToPoint: CGPointMake(62.5, 30)];
+            [bezierPath addLineToPoint: CGPointMake(0, 25)];
+            [bezierPath closePath];
+            
+            CAShapeLayer *shape=[CAShapeLayer layer];
+            shape.path=bezierPath.CGPath;
+            headerView.layer.mask = shape;
+            
+            
+            UILabel *headerLabel = [[UILabel alloc] init];
+            headerLabel.tag = 20;
+            headerLabel.adjustsFontSizeToFitWidth = YES;
+            headerLabel.minimumScaleFactor = 0.5;
+            headerLabel.textAlignment = NSTextAlignmentCenter;
+            
+            [headerView addSubview:headerLabel];
+            
+            headerLabel.translatesAutoresizingMaskIntoConstraints = NO;
+            views = NSDictionaryOfVariableBindings(headerLabel);
+            con = [[NSMutableArray alloc] init];
+            
+            visuals = @[@"H:|-5-[headerLabel]-5-|",
+                                 @"V:|-0-[headerLabel]-0-|"];
+            
+            
+            for (NSString *visual in visuals) {
+                [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+            }
+            
+            [headerLabel.superview addConstraints:con];
+
+            NSMutableAttributedString *headerString = [[[TSMarkdownParser standardParser] attributedStringFromMarkdown:[OLKiteABTesting sharedInstance].promoBannerHeaderText] mutableCopy];
+            
+            [headerString addAttribute:NSForegroundColorAttributeName value:[UIColor whiteColor] range:NSMakeRange(0, headerString.length)];
+            headerLabel.attributedText = headerString;
+        }
     }
 }
 
@@ -143,7 +212,7 @@
         countdownString = [countdownString stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"[]"]];
         
         NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-        dateFormatter.locale = [NSLocale localeWithLocaleIdentifier:@"en_US"];        
+        dateFormatter.locale = [NSLocale localeWithLocaleIdentifier:@"en_US"];
         [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm O"];
 
         self.countdownDate = [dateFormatter dateFromString:countdownString];
