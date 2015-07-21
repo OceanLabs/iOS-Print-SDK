@@ -26,6 +26,7 @@
 #import "OLKiteViewController.h"
 #import "OLProductTemplate.h"
 #import "OLProduct.h"
+#import "OLProductPrintJob.h"
 
 @class OLPrintRequest;
 
