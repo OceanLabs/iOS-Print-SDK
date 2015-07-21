@@ -44,6 +44,10 @@
 @property (weak, nonatomic) IBOutlet UILabel *sizeLabel;
 @property (weak, nonatomic) IBOutlet UILabel *freePostageLabel;
 @property (weak, nonatomic) IBOutlet OLWhiteSquare *whiteBox;
+@property (weak, nonatomic) IBOutlet UIButton *callToActionButton;
+@property (weak, nonatomic) IBOutlet UILabel *callToActionLabel;
+@property (weak, nonatomic) IBOutlet UIImageView *callToActionChevron;
+
 @end
 
 @implementation OLProductOverviewViewController
@@ -115,6 +119,16 @@
     [OLAnalytics trackProductDescriptionScreenViewed:self.product.productTemplate.name hidePrice:[OLKiteABTesting sharedInstance].hidePrice];
 #endif
     
+    if ([[OLKiteABTesting sharedInstance].productTileStyle isEqualToString:@"Classic"]){
+        [self.callToActionButton removeFromSuperview];
+        [self.callToActionChevron removeFromSuperview];
+        [self.callToActionLabel removeFromSuperview];
+    }
+    else if ([[OLKiteABTesting sharedInstance].productTileStyle isEqualToString:@"B"]){
+        [self.callToActionChevron removeFromSuperview];
+        self.callToActionLabel.textAlignment = NSTextAlignmentCenter;
+    }
+    
 }
 
 - (UIViewController *)viewControllerAtIndex:(NSUInteger)index {
@@ -133,7 +147,11 @@
     [self onButtonStartClicked:nil];
 }
 
-- (IBAction)onButtonStartClicked:(UIBarButtonItem *)sender {
+- (IBAction)onButtonCallToActionClicked:(id)sender {
+    [self onButtonStartClicked:sender];
+}
+
+- (IBAction)onButtonStartClicked:(id)sender {
     UIViewController *vc = self.parentViewController;
     OLPrintOrder *printOrder = nil;
     while (vc) {
