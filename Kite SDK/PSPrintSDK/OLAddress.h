@@ -14,7 +14,7 @@
 
 @interface OLAddress : NSObject <NSCopying, NSCoding>
 
-+ (OLAddress *)psTeamAddress;
++ (OLAddress *)kiteTeamAddress;
 
 + (OLAddressSearchRequest *)searchForAddressWithCountry:(OLCountry *)country query:(NSString *)q delegate:(id<OLAddressSearchRequestDelegate>)delegate;
 + (OLAddressSearchRequest *)searchForAddress:(OLAddress *)address delegate:(id<OLAddressSearchRequestDelegate>)delegate;

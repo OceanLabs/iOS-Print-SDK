@@ -141,18 +141,20 @@ static NSString *nonNilStr(NSString *str) {
     [OLAnalytics sendToMixPanelWithDictionary:dict];
 }
 
-+ (void)trackPaymentScreenViewedForOrder:(OLPrintOrder *)printOrder{
++ (void)trackPaymentScreenViewedForOrder:(OLPrintOrder *)printOrder applePayIsAvailable:(BOOL)applePayIsAvailable{
     NSDictionary *dict = [OLAnalytics defaultDictionaryForEventName:@"Payment Screen Viewed"];
     NSMutableDictionary *p = [self propertiesForPrintOrder:printOrder];
     [dict[@"properties"] addEntriesFromDictionary:p];
+    [dict[@"properties"] setObject:applePayIsAvailable ? @"Yes" : @"No" forKey:@"Apple Pay Available"];
     [OLAnalytics sendToMixPanelWithDictionary:dict];
 }
 
-+ (void)trackPaymentCompletedForOrder:(OLPrintOrder *)printOrder paymentMethod:(NSString *)method{
++ (void)trackPaymentCompletedForOrder:(OLPrintOrder *)printOrder paymentMethod:(NSString *)method applePayIsAvailable:(BOOL)applePayIsAvailable{
     NSDictionary *dict = [OLAnalytics defaultDictionaryForEventName:@"Payment Completed"];
     NSMutableDictionary *p = [self propertiesForPrintOrder:printOrder];
     p[@"Payment Method"] = method;
     [dict[@"properties"] addEntriesFromDictionary:p];
+    [dict[@"properties"] setObject:applePayIsAvailable ? @"Yes" : @"No" forKey:@"Apple Pay Available"];
     [OLAnalytics sendToMixPanelWithDictionary:dict];
 }
 

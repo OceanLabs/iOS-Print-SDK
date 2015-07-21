@@ -27,7 +27,7 @@ static NSString *const kKeyCountryCode = @"co.oceanlabs.pssdk.kKeyCountryCode";
 
 @implementation OLAddress
 
-+ (OLAddress *)psTeamAddress {
++ (OLAddress *)kiteTeamAddress {
     OLAddress *addr = [[OLAddress alloc] init];
     addr.recipientFirstName = @"Kite";
     addr.recipientLastName = @"Team";
