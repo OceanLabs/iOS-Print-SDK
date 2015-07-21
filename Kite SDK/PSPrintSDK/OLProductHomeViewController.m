@@ -76,7 +76,24 @@
     self.automaticallyAdjustsScrollViewInsets = NO;
     self.collectionView.contentInset = UIEdgeInsetsMake([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height, 0, 0, 0);
     
-    if ([OLKiteABTesting sharedInstance].promoBannerParaText && ![[OLKiteABTesting sharedInstance].promoBannerParaText isEqualToString:@""]){
+    self.bannerString = [OLKiteABTesting sharedInstance].promoBannerText;
+    NSRange countdownDateRange = [self.bannerString rangeOfString:@"\\[\\[.*\\]\\]" options:NSRegularExpressionSearch];
+    if (countdownDateRange.location != NSNotFound){
+        NSString *countdownString = [self.bannerString substringWithRange:countdownDateRange];
+        countdownString = [countdownString stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"[]"]];
+        
+        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+        dateFormatter.locale = [NSLocale localeWithLocaleIdentifier:@"en_US"];
+        [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm O"];
+        
+        self.countdownDate = [dateFormatter dateFromString:countdownString];
+        
+        if (self.countdownDate){
+            [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(updateCounter:) userInfo:nil repeats:YES];
+        }
+    }
+    
+    if ([self promoBannerParaText]){
         self.bannerView = [[UIView alloc] init];
         UIView *bannerView = self.bannerView;
         bannerView.backgroundColor = [UIColor colorWithRed: 0.918 green: 0.11 blue: 0.376 alpha: 1];
@@ -88,7 +105,6 @@
         
         UILabel *label = [[UILabel alloc] init];
         [bannerView addSubview:label];
-        [self setupBannerLabel:label];
         
         [self.navigationController.view addSubview:bannerView];
         
@@ -108,9 +124,8 @@
         
         [self.navigationController.view addConstraint:[NSLayoutConstraint constraintWithItem:bannerView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.navigationController.view attribute:NSLayoutAttributeBottom multiplier:1 constant:45]];
         
-        if ([OLKiteABTesting sharedInstance].promoBannerHeaderText && ![[OLKiteABTesting sharedInstance].promoBannerHeaderText isEqualToString:@""]){
+        if ([self promoBannerHeaderText]){
             self.headerView = [[UIView alloc] init];
-            self.headerView.backgroundColor = [UIColor colorWithRed: 0.259 green: 0.675 blue: 0.827 alpha: 1];
             [self.bannerView addSubview:self.headerView];
             
             UIView *headerView = self.headerView;
@@ -135,6 +150,15 @@
             headerView.layer.shadowOffset = CGSizeMake(0,2);
             headerView.layer.shadowRadius = 2;
             
+            UILabel *headerLabel = [[UILabel alloc] init];
+            headerLabel.tag = 20;
+            headerLabel.backgroundColor = [UIColor colorWithRed: 0.259 green: 0.675 blue: 0.827 alpha: 1];
+            headerLabel.adjustsFontSizeToFitWidth = YES;
+            headerLabel.minimumScaleFactor = 0.5;
+            headerLabel.textAlignment = NSTextAlignmentCenter;
+            headerLabel.layer.borderWidth = 5;
+            headerLabel.layer.borderColor = headerLabel.backgroundColor.CGColor;
+            
             UIBezierPath* bezierPath = [UIBezierPath bezierPath];
             [bezierPath moveToPoint: CGPointMake(0, 0)];
             [bezierPath addLineToPoint: CGPointMake(125, 0)];
@@ -145,14 +169,7 @@
             
             CAShapeLayer *shape=[CAShapeLayer layer];
             shape.path=bezierPath.CGPath;
-            headerView.layer.mask = shape;
-            
-            
-            UILabel *headerLabel = [[UILabel alloc] init];
-            headerLabel.tag = 20;
-            headerLabel.adjustsFontSizeToFitWidth = YES;
-            headerLabel.minimumScaleFactor = 0.5;
-            headerLabel.textAlignment = NSTextAlignmentCenter;
+            headerLabel.layer.mask = shape;
             
             [headerView addSubview:headerLabel];
             
@@ -160,7 +177,7 @@
             views = NSDictionaryOfVariableBindings(headerLabel);
             con = [[NSMutableArray alloc] init];
             
-            visuals = @[@"H:|-5-[headerLabel]-5-|",
+            visuals = @[@"H:|-0-[headerLabel]-0-|",
                                  @"V:|-0-[headerLabel]-0-|"];
             
             
@@ -169,13 +186,39 @@
             }
             
             [headerLabel.superview addConstraints:con];
-
-            NSMutableAttributedString *headerString = [[[TSMarkdownParser standardParser] attributedStringFromMarkdown:[OLKiteABTesting sharedInstance].promoBannerHeaderText] mutableCopy];
-            
-            [headerString addAttribute:NSForegroundColorAttributeName value:[UIColor whiteColor] range:NSMakeRange(0, headerString.length)];
-            headerLabel.attributedText = headerString;
         }
+        [self setupBannerLabel:label];
     }
+}
+
+- (NSString *)promoBannerParaText{
+    NSString *originalString = self.bannerString;
+    if (!originalString || [originalString isEqualToString:@""]){
+        return nil;
+    }
+    NSRange paraRange = [originalString rangeOfString:@"<para>.*<\\/para>" options:NSRegularExpressionSearch | NSCaseInsensitiveSearch];
+    if (paraRange.location != NSNotFound){
+        NSString *s = [originalString substringWithRange:paraRange];
+        s = [s stringByReplacingOccurrencesOfString:@"<para>" withString:@"" options:NSCaseInsensitiveSearch range:NSMakeRange(0, s.length)];
+        return [s stringByReplacingOccurrencesOfString:@"</para>" withString:@"" options:NSCaseInsensitiveSearch range:NSMakeRange(0, s.length)];
+    }
+    
+    return nil;
+}
+
+- (NSString *)promoBannerHeaderText{
+    NSString *originalString = self.bannerString;
+    if (!originalString || [originalString isEqualToString:@""]){
+        return nil;
+    }
+    NSRange headerRange = [originalString rangeOfString:@"<header>.*<\\/header>" options:NSRegularExpressionSearch | NSCaseInsensitiveSearch];
+    if (headerRange.location != NSNotFound){
+        NSString *s = [originalString substringWithRange:headerRange];
+        s = [s stringByReplacingOccurrencesOfString:@"<header>" withString:@"" options:NSCaseInsensitiveSearch range:NSMakeRange(0, s.length)];
+        return [s stringByReplacingOccurrencesOfString:@"</header>" withString:@"" options:NSCaseInsensitiveSearch range:NSMakeRange(0, s.length)];
+    }
+    
+    return nil;
 }
 
 - (void)setupBannerLabel:(UILabel *)label{
@@ -199,32 +242,18 @@
     label.textAlignment = NSTextAlignmentCenter;
     label.numberOfLines = 3;
     
-    self.bannerString = [OLKiteABTesting sharedInstance].promoBannerParaText;
-    if (!self.bannerString || [self.bannerString isEqualToString:@""]){
+    NSString *s = [self promoBannerParaText];
+    if (!s || [s isEqualToString:@""]){
         [self.bannerView removeFromSuperview];
         self.bannerView = nil;
         return;
-    }
-    
-    NSRange countdownDateRange = [self.bannerString rangeOfString:@"\\[\\[.*\\]\\]" options:NSRegularExpressionSearch];
-    if (countdownDateRange.location != NSNotFound){
-        NSString *countdownString = [self.bannerString substringWithRange:countdownDateRange];
-        countdownString = [countdownString stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"[]"]];
-        
-        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-        dateFormatter.locale = [NSLocale localeWithLocaleIdentifier:@"en_US"];
-        [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm O"];
-
-        self.countdownDate = [dateFormatter dateFromString:countdownString];
-        
-        [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(updateCounter:) userInfo:nil repeats:YES];
     }
     
     [self updateBannerString];
 }
 
 - (void)updateBannerString{
-    NSString *s = self.bannerString;
+    NSString *s = [OLKiteABTesting sharedInstance].promoBannerText;
     if (self.countdownDate){
         NSUInteger flags = NSCalendarUnitSecond | NSCalendarUnitMinute | NSCalendarUnitHour | NSCalendarUnitDay;
         NSDateComponents *components = [[NSCalendar currentCalendar] components:flags fromDate:[NSDate date] toDate:self.countdownDate options:0];
@@ -239,17 +268,32 @@
             s = [NSString stringWithFormat:@"%ld days, %ld:%ld:%ld", (long)components.day, (long)components.hour, (long)components.minute, (long)components.second];
         }
         
-        NSRange countdownDateRange = [self.bannerString rangeOfString:@"\\[\\[.*\\]\\]" options:NSRegularExpressionSearch];
-        s = [self.bannerString stringByReplacingCharactersInRange:countdownDateRange withString:s];
+        NSRange countdownDateRange = [[OLKiteABTesting sharedInstance].promoBannerText rangeOfString:@"\\[\\[.*\\]\\]" options:NSRegularExpressionSearch];
+        if (countdownDateRange.location != NSNotFound){
+            s = [[OLKiteABTesting sharedInstance].promoBannerText stringByReplacingCharactersInRange:countdownDateRange withString:s];
+        }
+    }
+    self.bannerString = s;
+    
+    s = [self promoBannerParaText];
+    if (s){
+        NSMutableAttributedString *attributedString = [[[TSMarkdownParser standardParser] attributedStringFromMarkdown:s] mutableCopy];
+        
+        [attributedString addAttribute:NSForegroundColorAttributeName value:[UIColor whiteColor] range:NSMakeRange(0, attributedString.length)];
+        
+        
+        UILabel *label = (UILabel *)[self.bannerView viewWithTag:10];
+        label.attributedText = attributedString;
     }
     
-    NSMutableAttributedString *attributedString = [[[TSMarkdownParser standardParser] attributedStringFromMarkdown:s] mutableCopy];
-    
-    [attributedString addAttribute:NSForegroundColorAttributeName value:[UIColor whiteColor] range:NSMakeRange(0, attributedString.length)];
-    
-    UILabel *label = (UILabel *)[self.bannerView viewWithTag:10];
-    label.attributedText = attributedString;
-    
+    s = [self promoBannerHeaderText];
+    if (s){
+        NSMutableAttributedString *headerString = [[[TSMarkdownParser standardParser] attributedStringFromMarkdown:s] mutableCopy];
+        
+        [headerString addAttribute:NSForegroundColorAttributeName value:[UIColor whiteColor] range:NSMakeRange(0, headerString.length)];
+        UILabel *label = (UILabel *)[self.bannerView viewWithTag:20];
+        label.attributedText = headerString;
+    }
 }
 
 - (void)updateCounter:(NSTimer *)theTimer {

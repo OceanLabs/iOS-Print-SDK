@@ -197,18 +197,7 @@ id safeObject(id obj){
                        if (!dict){
                            return ;
                        }
-                       NSRange headerRange = [[dict objectForKey:choice] rangeOfString:@"\\<header>.*\\<\\/header>" options:NSRegularExpressionSearch | NSCaseInsensitiveSearch];
-                       if (headerRange.location != NSNotFound){
-                           NSString *s = [[dict objectForKey:choice] substringWithRange:headerRange];
-                           s = [s stringByReplacingOccurrencesOfString:@"<header>" withString:@"" options:NSCaseInsensitiveSearch range:NSMakeRange(0, s.length)];
-                           self.promoBannerHeaderText = [s stringByReplacingOccurrencesOfString:@"</header>" withString:@"" options:NSCaseInsensitiveSearch range:NSMakeRange(0, s.length)];
-                       }
-                       NSRange paraRange = [[dict objectForKey:choice] rangeOfString:@"\\<para>.*\\<\\/para>" options:NSRegularExpressionSearch | NSCaseInsensitiveSearch];
-                       if (paraRange.location != NSNotFound){
-                           NSString *s = [[dict objectForKey:choice] substringWithRange:paraRange];
-                           s = [s stringByReplacingOccurrencesOfString:@"<para>" withString:@"" options:NSCaseInsensitiveSearch range:NSMakeRange(0, s.length)];
-                           self.promoBannerParaText = [s stringByReplacingOccurrencesOfString:@"</para>" withString:@"" options:NSCaseInsensitiveSearch range:NSMakeRange(0, s.length)];
-                       }
+                       self.promoBannerText = [dict objectForKey:choice];
                    }];
 }
 
