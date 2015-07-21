@@ -209,7 +209,7 @@ UINavigationControllerDelegate,UICollectionViewDataSource, UICollectionViewDeleg
     
     self.title = NSLocalizedString(@"Review", @""); //[NSString stringWithFormat: NSLocalizedString(@"%d / %d", @""), self.userSelectedPhotos.count, self.product.quantityToFulfillOrder];
     
-    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Back", @"") style:UIBarButtonItemStylePlain target:self action:@selector(onBackButtonTapped)];
+    self.navigationController.interactivePopGestureRecognizer.enabled = NO;
     
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Confirm", @"") style:UIBarButtonItemStylePlain target:self action:@selector(onButtonNextClicked:)];
     
@@ -419,10 +419,6 @@ UINavigationControllerDelegate,UICollectionViewDataSource, UICollectionViewDeleg
     }];
 }
 
-- (void)onBackButtonTapped{
-    [self.navigationController popViewControllerAnimated:YES];
-}
-
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator{
     [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
     self.stranded = NO;
@@ -557,7 +553,12 @@ UINavigationControllerDelegate,UICollectionViewDataSource, UICollectionViewDeleg
 }
 
 -(BOOL) shouldGoToCheckout{
-    NSUInteger selectedCount = self.userSelectedPhotos.count;
+    NSUInteger selectedCount = 0;
+    for (id object in self.photobookPhotos){
+        if (object != [NSNull null]){
+            selectedCount++;
+        }
+    }
     NSUInteger numOrders = 1 + (MAX(0, selectedCount - 1) / self.product.quantityToFulfillOrder);
     NSUInteger quantityToFulfilOrder = numOrders * self.product.quantityToFulfillOrder;
     if (selectedCount < quantityToFulfilOrder) {
