@@ -131,12 +131,15 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
                                                                              style:UIBarButtonItemStyleBordered
                                                                             target:nil
                                                                             action:nil];
+    
+    NSString *applePayAvailableStr = @"N/A";
 #ifdef OL_KITE_OFFER_APPLE_PAY
     self.applePayIsAvailable = [self isApplePayAvailable];
+    applePayAvailableStr = self.applePayIsAvailable ? @"Yes" : @"No";
 #endif
     
 #ifndef OL_NO_ANALYTICS
-    [OLAnalytics trackPaymentScreenViewedForOrder:self.printOrder applePayIsAvailable:self.applePayIsAvailable];
+    [OLAnalytics trackPaymentScreenViewedForOrder:self.printOrder applePayIsAvailable:applePayAvailableStr];
 #endif
     
     if ([OLKitePrintSDK environment] == kOLKitePrintSDKEnvironmentSandbox){
@@ -635,8 +638,13 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     
     self.printOrder.proofOfPayment = proofOfPayment;
     
+    NSString *applePayAvailableStr = @"N/A";
+#ifdef OL_KITE_OFFER_APPLE_PAY
+    applePayAvailableStr = self.applePayIsAvailable ? @"Yes" : @"No";
+#endif
+    
 #ifndef OL_NO_ANALYTICS
-    [OLAnalytics trackPaymentCompletedForOrder:self.printOrder paymentMethod:paymentMethod applePayIsAvailable:self.applePayIsAvailable];
+    [OLAnalytics trackPaymentCompletedForOrder:self.printOrder paymentMethod:paymentMethod applePayIsAvailable:applePayAvailableStr];
 #endif
     
     [[NSNotificationCenter defaultCenter] postNotificationName:kOLNotificationUserCompletedPayment object:self userInfo:@{kOLKeyUserInfoPrintOrder: self.printOrder}];
