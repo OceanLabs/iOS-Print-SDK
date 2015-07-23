@@ -83,7 +83,7 @@ static NSString *const kKeyCountryCode = @"co.oceanlabs.pssdk.kKeyCountryCode";
 }
 
 - (NSString *)fullNameFromFirstAndLast{
-    return [[NSString stringWithFormat:@"%@ %@", self.recipientFirstName ? self.recipientFirstName : @"", self.recipientLastName] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@" "]];
+    return [[NSString stringWithFormat:@"%@ %@", self.recipientFirstName ? self.recipientFirstName : @"", self.recipientLastName ? self.recipientLastName : @""] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@" "]];
 }
 
 - (NSString *)descriptionWithoutRecipient {

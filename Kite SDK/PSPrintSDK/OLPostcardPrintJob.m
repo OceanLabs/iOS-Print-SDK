@@ -100,6 +100,8 @@ static id stringOrEmptyString(NSString *str) {
     
     if (self.address) {
         NSDictionary *shippingAddress = @{@"recipient_name": stringOrEmptyString(self.address.fullNameFromFirstAndLast),
+                                          @"recipient_first_name": stringOrEmptyString(self.address.recipientFirstName),
+                                          @"recipient_last_name": stringOrEmptyString(self.address.recipientLastName),
                                           @"address_line_1": stringOrEmptyString(self.address.line1),
                                           @"address_line_2": stringOrEmptyString(self.address.line2),
                                           @"city": stringOrEmptyString(self.address.city),
