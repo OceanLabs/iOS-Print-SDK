@@ -75,7 +75,7 @@ id safeObject(id obj){
 - (void)setupQualityBannerTypeTest{
     NSDictionary *experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestQualityBannerType];
     if (!experimentDict) {
-        experimentDict = @{@"None" : @0.25, @"A" : @0.25, @"B" : @0.25, @"C" : @0.25};
+        experimentDict = @{@"None" : @1, @"A" : @0, @"B" : @0, @"C" : @0};
     }
     [SkyLab splitTestWithName:kOLKiteABTestQualityBannerType
                    conditions:@{
@@ -91,7 +91,7 @@ id safeObject(id obj){
 - (void)setupProductTileStyleTest{
     NSDictionary *experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestProductTileStyle];
     if (!experimentDict) {
-        experimentDict = @{@"Classic" : @0.33, @"A" : @0.33, @"B" : @0.33};
+        experimentDict = @{@"Classic" : @1, @"A" : @0, @"B" : @0};
     }
     [SkyLab splitTestWithName:kOLKiteABTestProductTileStyle
                    conditions:@{
@@ -161,7 +161,7 @@ id safeObject(id obj){
 - (void)setupHidePriceTest{
     NSDictionary *experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestHidePrice];
     if (!experimentDict) {
-        experimentDict = @{@"Yes" : @0.5, @"No" : @0.5};
+        experimentDict = @{@"Yes" : @0, @"No" : @1};
     }
     [SkyLab splitTestWithName:kOLKiteABTestHidePrice
                    conditions:@{
@@ -175,7 +175,7 @@ id safeObject(id obj){
 - (void)setupOfferPayPalTest{
     NSDictionary *experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestOfferPayPal];
     if (!experimentDict) {
-        experimentDict = @{@"Yes" : @0, @"No" : @1};
+        experimentDict = @{@"Yes" : @0.5, @"No" : @0.5};
     }
     [SkyLab splitTestWithName:kOLKiteABTestOfferPayPal
                    conditions:@{
@@ -188,7 +188,7 @@ id safeObject(id obj){
 
 - (void)groupSetupShippingScreenTests{
     [self setupOfferAddressSearchTest];
-    [self requirePhoneNumber];
+    [self setupRequirePhoneNumberTest];
     [self setupShippingScreenTest];
     [self setupOfferPayPalTest];
 }
