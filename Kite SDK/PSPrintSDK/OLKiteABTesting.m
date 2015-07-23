@@ -18,6 +18,8 @@ static NSString *const kOLKiteABTestQualityBannerType = @"ly.kite.abtest.quality
 static NSString *const kOLKiteABTestShippingScreen = @"ly.kite.abtest.shippingscreen";
 static NSString *const kOLKiteABTestProductTileStyle = @"ly.kite.abtest.product_tile_style";
 static NSString *const kOLKiteABTestHidePrice = @"ly.kite.abtest.hide_price";
+static NSString *const kOLKiteABTestPromoBannerStyle = @"ly.kite.abtest.promo_banner_style";
+static NSString *const kOLKiteABTestPromoBannerText = @"ly.kite.abtest.promo_banner_text";
 static NSString *const kOLKiteABTestOfferPayPal = @"ly.kite.abtest.offer_paypal";
 
 id safeObject(id obj){
@@ -163,6 +165,10 @@ id safeObject(id obj){
     if (!experimentDict) {
         experimentDict = @{@"Yes" : @0, @"No" : @1};
     }
+    NSMutableDictionary *options = [[NSMutableDictionary alloc] init];
+    for (NSString *s in experimentDict.allKeys){
+        [options setObject:safeObject(experimentDict[s]) forKey:s];
+    }
     [SkyLab splitTestWithName:kOLKiteABTestHidePrice
                    conditions:@{
                                 @"Yes" : experimentDict[@"Yes"],
@@ -170,6 +176,28 @@ id safeObject(id obj){
                                 } block:^(id choice) {
                                     self.hidePrice = [choice isEqualToString:@"Yes"];
                                 }];
+}
+
+
+//  Promo strings look like this: @"<header>Hello World!</header><para>Off to the woods</para>"
+- (void)setupPromoBannerTextTest{
+    NSDictionary *experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestPromoBannerText];
+    if (!experimentDict) {
+        return;
+    }
+    
+    // While it is tempting to do the dynamic conditions in other tests as well, DON'T, as typos in the plist can crash the app.
+    NSMutableDictionary *conditions = [[NSMutableDictionary alloc] init];
+    for (NSString *s in experimentDict.allKeys){
+        [conditions setObject:safeObject(experimentDict[s]) forKey:s];
+    }
+
+    [conditions removeObjectForKey:@"Experiment Version"];
+    
+    [SkyLab splitTestWithName:kOLKiteABTestPromoBannerText
+                   conditions:conditions block:^(id choice) {
+                       self.promoBannerText = choice;
+                   }];
 }
 
 - (void)setupOfferPayPalTest{
@@ -198,6 +226,7 @@ id safeObject(id obj){
         
         [self setupQualityBannerTypeTest];
         [self setupProductTileStyleTest];
+        [self setupPromoBannerTextTest];
         
         [self setupHidePriceTest];
     }

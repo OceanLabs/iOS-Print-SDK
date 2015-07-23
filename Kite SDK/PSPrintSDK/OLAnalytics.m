@@ -108,6 +108,7 @@ static NSString *nonNilStr(NSString *str) {
     NSDictionary *dict = [OLAnalytics defaultDictionaryForEventName:@"Product Selection Screen Viewed"];
     [dict[@"properties"] setObject:nonNilStr([OLKiteABTesting sharedInstance].qualityBannerType) forKey:@"Quality Banner Type"];
     [dict[@"properties"] setObject:nonNilStr([OLKiteABTesting sharedInstance].productTileStyle) forKey:@"Product Tile Style"];
+    [dict[@"properties"] setObject:nonNilStr([OLKiteABTesting sharedInstance].promoBannerText) forKey:@"Promo Banner Variant"];
     [OLAnalytics sendToMixPanelWithDictionary:dict];
 }
 
@@ -211,7 +212,7 @@ static NSString *nonNilStr(NSString *str) {
     }
     
     if (printOrder.shippingAddress) {
-        p[@"Shipping Recipient"] = nonNilStr(printOrder.shippingAddress.recipientName);
+        p[@"Shipping Recipient"] = nonNilStr(printOrder.shippingAddress.fullNameFromFirstAndLast);
         p[@"Shipping Line 1"] = nonNilStr(printOrder.shippingAddress.line1);
         p[@"Shipping Line 2"] = nonNilStr(printOrder.shippingAddress.line2);
         p[@"Shipping City"] = nonNilStr(printOrder.shippingAddress.city);
