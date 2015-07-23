@@ -18,6 +18,7 @@ static NSString *const kOLKiteABTestQualityBannerType = @"ly.kite.abtest.quality
 static NSString *const kOLKiteABTestShippingScreen = @"ly.kite.abtest.shippingscreen";
 static NSString *const kOLKiteABTestProductTileStyle = @"ly.kite.abtest.product_tile_style";
 static NSString *const kOLKiteABTestHidePrice = @"ly.kite.abtest.hide_price";
+static NSString *const kOLKiteABTestOfferPayPal = @"ly.kite.abtest.offer_paypal";
 
 id safeObject(id obj){
     return obj ? obj : @"";
@@ -171,10 +172,25 @@ id safeObject(id obj){
                                 }];
 }
 
+- (void)setupOfferPayPalTest{
+    NSDictionary *experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestOfferPayPal];
+    if (!experimentDict) {
+        experimentDict = @{@"Yes" : @0, @"No" : @1};
+    }
+    [SkyLab splitTestWithName:kOLKiteABTestOfferPayPal
+                   conditions:@{
+                                @"Yes" : safeObject(experimentDict[@"Yes"]),
+                                @"No" : safeObject(experimentDict[@"No"])
+                                } block:^(id choice) {
+                                    self.offerPayPal = [choice isEqualToString:@"Yes"];
+                                }];
+}
+
 - (void)groupSetupShippingScreenTests{
     [self setupOfferAddressSearchTest];
     [self requirePhoneNumber];
     [self setupShippingScreenTest];
+    [self setupOfferPayPalTest];
 }
 
 - (void)setupABTestVariants{

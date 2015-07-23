@@ -156,6 +156,7 @@ static NSString *nonNilStr(NSString *str) {
     NSMutableDictionary *p = [self propertiesForPrintOrder:printOrder];
     [dict[@"properties"] addEntriesFromDictionary:p];
     [dict[@"properties"] setObject:applePayIsAvailable ? @"Yes" : @"No" forKey:@"Apple Pay Available"];
+    [dict[@"properties"] setObject:[OLKiteABTesting sharedInstance].offerPayPal ? @"Yes" : @"No" forKey:@"Offer PayPal"];
     [OLAnalytics sendToMixPanelWithDictionary:dict];
 }
 
