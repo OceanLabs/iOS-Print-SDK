@@ -20,6 +20,9 @@
 #import "OLCustomNavigationController.h"
 #import "UIViewController+TraitCollectionCompatibility.h"
 #import "UIImageView+FadeIn.h"
+#import "OLKiteABTesting.h"
+#import "UIImage+ColorAtPixel.h"
+#import "OLInfoPageViewController.h"
 
 #define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
 
@@ -65,11 +68,17 @@
                                                                              style:UIBarButtonItemStyleBordered
                                                                             target:nil
                                                                             action:nil];
+    self.automaticallyAdjustsScrollViewInsets = NO;
+    self.collectionView.contentInset = UIEdgeInsetsMake([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height, 0, 0, 0);
 }
 
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+}
+
+- (void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
 }
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
@@ -86,6 +95,7 @@
     
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinator> context){
         [self.collectionView.collectionViewLayout invalidateLayout];
+        self.collectionView.contentInset = UIEdgeInsetsMake([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height, 0, 0, 0);
     }completion:^(id<UIViewControllerTransitionCoordinator> context){
         [self.collectionView reloadData];
     }];
@@ -95,6 +105,14 @@
 
 - (CGSize) collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
     CGSize size = self.view.bounds.size;
+    if (indexPath.section == 0 && ![[OLKiteABTesting sharedInstance].qualityBannerType isEqualToString:@"None"]){
+        CGFloat height = 110;
+        if ([self isHorizontalSizeClassCompact] && size.height > size.width){
+            height = (self.view.frame.size.width * height) / 375.0;
+        }
+        return CGSizeMake(self.view.frame.size.width, height);
+    }
+    
     NSInteger numberOfCells = [self collectionView:collectionView numberOfItemsInSection:indexPath.section];
     CGFloat halfScreenHeight = (size.height - [[UIApplication sharedApplication] statusBarFrame].size.height - self.navigationController.navigationBar.frame.size.height)/2;
     
@@ -126,6 +144,12 @@
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
+    if (indexPath.section == 0 && ![[OLKiteABTesting sharedInstance].qualityBannerType isEqualToString:@"None"]){
+        OLInfoPageViewController *vc = (OLInfoPageViewController *)[self.storyboard instantiateViewControllerWithIdentifier:@"InfoPageViewController"];
+        vc.imageName = @"quality";
+        [self.navigationController pushViewController:vc animated:YES];
+        return;
+    }
     if (indexPath.item >= self.productGroups.count){
         return;
     }
@@ -148,10 +172,13 @@
 #pragma mark - UICollectionViewDataSource Methods
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
-    return 1;
+    return [[OLKiteABTesting sharedInstance].qualityBannerType isEqualToString:@"None"] ? 1 : 2;
 }
 
 - (NSInteger) collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
+    if (section == 0 && ![[OLKiteABTesting sharedInstance].qualityBannerType isEqualToString:@"None"]){
+        return 1;
+    }
     NSInteger extras = 0;
     NSInteger numberOfProducts = [self.productGroups count];
     
@@ -172,6 +199,14 @@
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
+    if (indexPath.section == 0 && ![[OLKiteABTesting sharedInstance].qualityBannerType isEqualToString:@"None"] ){
+        UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"qualityBanner" forIndexPath:indexPath];
+        UIImageView *imageView = (UIImageView *)[cell viewWithTag:10];
+        imageView.image = [UIImage imageNamed:[NSString stringWithFormat:@"quality-banner%@", [OLKiteABTesting sharedInstance].qualityBannerType]];
+        imageView.backgroundColor = [imageView.image colorAtPixel:CGPointMake(3, 3)];
+        return cell;
+    }
+    
     if (indexPath.item >= self.productGroups.count){
         UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"extraCell" forIndexPath:indexPath];
         [self fixCellFrameOnIOS7:cell];
@@ -187,26 +222,48 @@
         return cell;
     }
     
-    static NSString *identifier = @"ProductCell";
+    NSString *identifier = [NSString stringWithFormat:@"ProductCell%@", [OLKiteABTesting sharedInstance].productTileStyle];
     UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
     [self fixCellFrameOnIOS7:cell];
     
     UIImageView *cellImageView = (UIImageView *)[cell.contentView viewWithTag:40];
-
+    
     OLProductGroup *group = self.productGroups[indexPath.item];
     OLProduct *product = [group.products firstObject];
     [product setClassImageToImageView:cellImageView];
-
+    
     UILabel *productTypeLabel = (UILabel *)[cell.contentView viewWithTag:300];
-
+    
     productTypeLabel.text = product.productTemplate.templateClass;
-
-    productTypeLabel.backgroundColor = [product labelColor];
-
+    
     UIActivityIndicatorView *activityIndicator = (id)[cell.contentView viewWithTag:41];
     [activityIndicator startAnimating];
     
+    if ([[OLKiteABTesting sharedInstance].productTileStyle isEqualToString:@"Classic"]){
+        productTypeLabel.backgroundColor = [product labelColor];
+    }
+    else{
+        UIButton *button = (UIButton *)[cell.contentView viewWithTag:390];
+        button.layer.shadowColor = [[UIColor blackColor] CGColor];
+        button.layer.shadowOpacity = .3;
+        button.layer.shadowOffset = CGSizeMake(0,2);
+        button.layer.shadowRadius = 2;
+        
+        button.backgroundColor = [product labelColor];
+        
+        [button addTarget:self action:@selector(onButtonCallToActionTapped:) forControlEvents:UIControlEventTouchUpInside];
+    }
+    
     return cell;
+}
+
+- (void)onButtonCallToActionTapped:(UIButton *)sender{
+    UIView *view = sender.superview;
+    while (![view isKindOfClass:[UICollectionViewCell class]]){
+        view = view.superview;
+    }
+    NSIndexPath *indexPath = [self.collectionView indexPathForCell:(UICollectionViewCell *)view];
+    [self collectionView:self.collectionView didSelectItemAtIndexPath:indexPath];
 }
 
 #pragma mark - Autorotate and Orientation Methods
