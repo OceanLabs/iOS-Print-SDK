@@ -20,6 +20,7 @@ static NSString *const kOLKiteABTestProductTileStyle = @"ly.kite.abtest.product_
 static NSString *const kOLKiteABTestHidePrice = @"ly.kite.abtest.hide_price";
 static NSString *const kOLKiteABTestPromoBannerStyle = @"ly.kite.abtest.promo_banner_style";
 static NSString *const kOLKiteABTestPromoBannerText = @"ly.kite.abtest.promo_banner_text";
+static NSString *const kOLKiteABTestOfferPayPal = @"ly.kite.abtest.offer_paypal";
 
 id safeObject(id obj){
     return obj ? obj : @"";
@@ -76,7 +77,7 @@ id safeObject(id obj){
 - (void)setupQualityBannerTypeTest{
     NSDictionary *experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestQualityBannerType];
     if (!experimentDict) {
-        experimentDict = @{@"None" : @0.25, @"A" : @0.25, @"B" : @0.25, @"C" : @0.25};
+        experimentDict = @{@"None" : @1, @"A" : @0, @"B" : @0, @"C" : @0};
     }
     [SkyLab splitTestWithName:kOLKiteABTestQualityBannerType
                    conditions:@{
@@ -92,7 +93,7 @@ id safeObject(id obj){
 - (void)setupProductTileStyleTest{
     NSDictionary *experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestProductTileStyle];
     if (!experimentDict) {
-        experimentDict = @{@"Classic" : @0.33, @"A" : @0.33, @"B" : @0.33};
+        experimentDict = @{@"Classic" : @1, @"A" : @0, @"B" : @0};
     }
     [SkyLab splitTestWithName:kOLKiteABTestProductTileStyle
                    conditions:@{
@@ -162,7 +163,7 @@ id safeObject(id obj){
 - (void)setupHidePriceTest{
     NSDictionary *experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestHidePrice];
     if (!experimentDict) {
-        experimentDict = @{@"Yes" : @0.5, @"No" : @0.5};
+        experimentDict = @{@"Yes" : @0, @"No" : @1};
     }
     NSMutableDictionary *options = [[NSMutableDictionary alloc] init];
     for (NSString *s in experimentDict.allKeys){
@@ -177,6 +178,8 @@ id safeObject(id obj){
                                 }];
 }
 
+
+//  Promo strings look like this: @"<header>Hello World!</header><para>Off to the woods</para>"
 - (void)setupPromoBannerTextTest{
     NSDictionary *experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestPromoBannerText];
     if (!experimentDict) {
@@ -188,23 +191,34 @@ id safeObject(id obj){
     for (NSString *s in experimentDict.allKeys){
         [conditions setObject:safeObject(experimentDict[s]) forKey:s];
     }
-    [conditions removeObjectForKey:@"Strings"];
+
     [conditions removeObjectForKey:@"Experiment Version"];
     
     [SkyLab splitTestWithName:kOLKiteABTestPromoBannerText
                    conditions:conditions block:^(id choice) {
-                       NSDictionary *dict = [experimentDict objectForKey:@"Strings"];
-                       if (!dict){
-                           return ;
-                       }
-                       self.promoBannerText = [dict objectForKey:choice];
+                       self.promoBannerText = choice;
                    }];
+}
+
+- (void)setupOfferPayPalTest{
+    NSDictionary *experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestOfferPayPal];
+    if (!experimentDict) {
+        experimentDict = @{@"Yes" : @0.5, @"No" : @0.5};
+    }
+    [SkyLab splitTestWithName:kOLKiteABTestOfferPayPal
+                   conditions:@{
+                                @"Yes" : safeObject(experimentDict[@"Yes"]),
+                                @"No" : safeObject(experimentDict[@"No"])
+                                } block:^(id choice) {
+                                    self.offerPayPal = [choice isEqualToString:@"Yes"];
+                                }];
 }
 
 - (void)groupSetupShippingScreenTests{
     [self setupOfferAddressSearchTest];
-    [self requirePhoneNumber];
+    [self setupRequirePhoneNumberTest];
     [self setupShippingScreenTest];
+    [self setupOfferPayPalTest];
 }
 
 - (void)setupABTestVariants{

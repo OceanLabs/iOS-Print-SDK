@@ -152,18 +152,21 @@ static NSString *nonNilStr(NSString *str) {
     [OLAnalytics sendToMixPanelWithDictionary:dict];
 }
 
-+ (void)trackPaymentScreenViewedForOrder:(OLPrintOrder *)printOrder{
++ (void)trackPaymentScreenViewedForOrder:(OLPrintOrder *)printOrder applePayIsAvailable:(NSString *)applePayIsAvailable{
     NSDictionary *dict = [OLAnalytics defaultDictionaryForEventName:@"Payment Screen Viewed"];
     NSMutableDictionary *p = [self propertiesForPrintOrder:printOrder];
     [dict[@"properties"] addEntriesFromDictionary:p];
+    [dict[@"properties"] setObject:applePayIsAvailable forKey:@"Apple Pay Available"];
+    [dict[@"properties"] setObject:[OLKiteABTesting sharedInstance].offerPayPal ? @"Yes" : @"No" forKey:@"Offer PayPal"];
     [OLAnalytics sendToMixPanelWithDictionary:dict];
 }
 
-+ (void)trackPaymentCompletedForOrder:(OLPrintOrder *)printOrder paymentMethod:(NSString *)method{
++ (void)trackPaymentCompletedForOrder:(OLPrintOrder *)printOrder paymentMethod:(NSString *)method applePayIsAvailable:(NSString *)applePayIsAvailable{
     NSDictionary *dict = [OLAnalytics defaultDictionaryForEventName:@"Payment Completed"];
     NSMutableDictionary *p = [self propertiesForPrintOrder:printOrder];
     p[@"Payment Method"] = method;
     [dict[@"properties"] addEntriesFromDictionary:p];
+    [dict[@"properties"] setObject:applePayIsAvailable forKey:@"Apple Pay Available"];
     [OLAnalytics sendToMixPanelWithDictionary:dict];
 }
 
@@ -209,7 +212,7 @@ static NSString *nonNilStr(NSString *str) {
     }
     
     if (printOrder.shippingAddress) {
-        p[@"Shipping Recipient"] = nonNilStr(printOrder.shippingAddress.recipientName);
+        p[@"Shipping Recipient"] = nonNilStr(printOrder.shippingAddress.fullNameFromFirstAndLast);
         p[@"Shipping Line 1"] = nonNilStr(printOrder.shippingAddress.line1);
         p[@"Shipping Line 2"] = nonNilStr(printOrder.shippingAddress.line2);
         p[@"Shipping City"] = nonNilStr(printOrder.shippingAddress.city);

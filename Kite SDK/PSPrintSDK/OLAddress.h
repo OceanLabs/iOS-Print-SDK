@@ -14,12 +14,13 @@
 
 @interface OLAddress : NSObject <NSCopying, NSCoding>
 
-+ (OLAddress *)psTeamAddress;
++ (OLAddress *)kiteTeamAddress;
 
 + (OLAddressSearchRequest *)searchForAddressWithCountry:(OLCountry *)country query:(NSString *)q delegate:(id<OLAddressSearchRequestDelegate>)delegate;
 + (OLAddressSearchRequest *)searchForAddress:(OLAddress *)address delegate:(id<OLAddressSearchRequestDelegate>)delegate;
 
-@property (nonatomic, copy) NSString *recipientName;
+@property (nonatomic, copy) NSString *recipientFirstName;
+@property (nonatomic, copy) NSString *recipientLastName;
 @property (nonatomic, copy) NSString *line1;
 @property (nonatomic, copy) NSString *line2;
 @property (nonatomic, copy) NSString *city;
@@ -30,5 +31,7 @@
 @property (nonatomic, readonly, getter = isSearchRequiredForFullDetails) BOOL searchRequiredForFullDetails;
 
 @property (nonatomic, readonly) NSString *descriptionWithoutRecipient;
+
+- (NSString *)fullNameFromFirstAndLast;
 
 @end

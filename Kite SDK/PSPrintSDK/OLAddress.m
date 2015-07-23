@@ -12,6 +12,7 @@
 static NSString *const kKeyDisplayName = @"co.oceanlabs.pssdk.kKeyDisplayName";
 static NSString *const kKeyAddressId = @"co.oceanlabs.pssdk.kKeyAddressId";
 static NSString *const kKeyRecipientName = @"co.oceanlabs.pssdk.kKeyRecipientName";
+static NSString *const kKeyRecipientFirstName = @"co.oceanlabs.pssdk.kKeyRecipientFirstName";
 static NSString *const kKeyLine1 = @"co.oceanlabs.pssdk.kKeyLine1";
 static NSString *const kKeyLine2 = @"co.oceanlabs.pssdk.kKeyLine2";
 static NSString *const kKeyCity = @"co.oceanlabs.pssdk.kKeyCity";
@@ -26,9 +27,10 @@ static NSString *const kKeyCountryCode = @"co.oceanlabs.pssdk.kKeyCountryCode";
 
 @implementation OLAddress
 
-+ (OLAddress *)psTeamAddress {
++ (OLAddress *)kiteTeamAddress {
     OLAddress *addr = [[OLAddress alloc] init];
-    addr.recipientName = @"Ps Team";
+    addr.recipientFirstName = @"Kite";
+    addr.recipientLastName = @"Team";
     addr.line1 = @"Eastcastle House";
     addr.line2 = @"27-28 Eastcastle St";
     addr.city  = @"London";
@@ -69,15 +71,19 @@ static NSString *const kKeyCountryCode = @"co.oceanlabs.pssdk.kKeyCountryCode";
     }
     
     NSString *displayName = self.descriptionWithoutRecipient;
-    if (self.recipientName) {
+    if (self.recipientFirstName || self.recipientLastName) {
         if (displayName.length > 0) {
-            return [self.recipientName stringByAppendingFormat:@", %@", self.descriptionWithoutRecipient];
+            return [[self fullNameFromFirstAndLast] stringByAppendingFormat:@", %@", self.descriptionWithoutRecipient];
         } else {
-            return self.recipientName;
+            return [self fullNameFromFirstAndLast];
         }
     }
     
     return displayName;
+}
+
+- (NSString *)fullNameFromFirstAndLast{
+    return [[NSString stringWithFormat:@"%@ %@", self.recipientFirstName ? self.recipientFirstName : @"", self.recipientLastName ? self.recipientLastName : @""] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@" "]];
 }
 
 - (NSString *)descriptionWithoutRecipient {
@@ -116,7 +122,8 @@ static BOOL stringEqualOrBothNil(NSString *a, NSString *b) {
     }
     
     OLAddress *addr = object;
-    return stringEqualOrBothNil(self.recipientName, addr.recipientName)
+    return stringEqualOrBothNil(self.recipientFirstName, addr.recipientFirstName)
+    && stringEqualOrBothNil(self.recipientLastName, addr.recipientLastName)
     && stringEqualOrBothNil(self.line1, addr.line1)
     && stringEqualOrBothNil(self.line2, addr.line2)
     && stringEqualOrBothNil(self.city, addr.city)
@@ -127,7 +134,8 @@ static BOOL stringEqualOrBothNil(NSString *a, NSString *b) {
 
 - (NSUInteger)hash {
     NSMutableArray *components = [[NSMutableArray alloc] init];
-    if (self.recipientName) [components addObject:self.recipientName];
+    if (self.recipientFirstName) [components addObject:self.recipientFirstName];
+    if (self.recipientLastName) [components addObject:self.recipientLastName];
     if (self.line1) [components addObject:self.line1];
     if (self.line2) [components addObject:self.line2];
     if (self.city) [components addObject:self.city];
@@ -149,7 +157,8 @@ static BOOL stringEqualOrBothNil(NSString *a, NSString *b) {
     OLAddress *copy = [[OLAddress alloc] init];
     copy.displayName = self.displayName;
     copy.addressId = self.addressId;
-    copy.recipientName = self.recipientName;
+    copy.recipientFirstName = self.recipientFirstName;
+    copy.recipientLastName = self.recipientLastName;
     copy.line1 = self.line1;
     copy.line2 = self.line2;
     copy.city = self.city;
@@ -165,7 +174,8 @@ static BOOL stringEqualOrBothNil(NSString *a, NSString *b) {
 - (void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:self.displayName forKey:kKeyDisplayName];
     [aCoder encodeObject:self.addressId forKey:kKeyAddressId];
-    [aCoder encodeObject:self.recipientName forKey:kKeyRecipientName];
+    [aCoder encodeObject:self.recipientLastName forKey:kKeyRecipientName];
+    [aCoder encodeObject:self.recipientFirstName forKey:kKeyRecipientFirstName];
     [aCoder encodeObject:self.line1 forKey:kKeyLine1];
     [aCoder encodeObject:self.line2 forKey:kKeyLine2];
     [aCoder encodeObject:self.city forKey:kKeyCity];
@@ -178,7 +188,8 @@ static BOOL stringEqualOrBothNil(NSString *a, NSString *b) {
     if (self = [super init]) {
         self.displayName = [aDecoder decodeObjectForKey:kKeyDisplayName];
         self.addressId = [aDecoder decodeObjectForKey:kKeyAddressId];
-        self.recipientName = [aDecoder decodeObjectForKey:kKeyRecipientName];
+        self.recipientLastName = [aDecoder decodeObjectForKey:kKeyRecipientName];
+        self.recipientFirstName = [aDecoder decodeObjectForKey:kKeyRecipientFirstName];
         self.line1 = [aDecoder decodeObjectForKey:kKeyLine1];
         self.line2 = [aDecoder decodeObjectForKey:kKeyLine2];
         self.city = [aDecoder decodeObjectForKey:kKeyCity];

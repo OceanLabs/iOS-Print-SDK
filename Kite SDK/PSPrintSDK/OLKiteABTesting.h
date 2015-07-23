@@ -16,6 +16,7 @@
 @property (assign, nonatomic) BOOL offerAddressSearch;
 @property (assign, nonatomic) BOOL requirePhoneNumber;
 @property (assign, nonatomic) BOOL hidePrice;
+@property (assign, nonatomic) BOOL offerPayPal;
 @property (strong, nonatomic) NSString *qualityBannerType;
 @property (strong, nonatomic) NSString *checkoutScreenType;
 @property (strong, nonatomic) NSString *productTileStyle;
