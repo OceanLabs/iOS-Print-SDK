@@ -20,6 +20,7 @@
 @property (strong, nonatomic) NSString *qualityBannerType;
 @property (strong, nonatomic) NSString *checkoutScreenType;
 @property (strong, nonatomic) NSString *productTileStyle;
+@property (strong, nonatomic) NSString *promoBannerText;
 
 + (instancetype)sharedInstance;
 - (void)fetchRemotePlistsWithCompletionHandler:(void(^)())handler;
