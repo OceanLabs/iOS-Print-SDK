@@ -22,6 +22,7 @@
 #import "OLPostcardViewController.h"
 #import "NSObject+Utils.h"
 #import "NSDecimalNumber+CostFormatter.h"
+#import "OLKiteABTesting.h"
 
 @interface OLKitePrintSDK (Kite)
 
@@ -43,16 +44,16 @@
 @property (weak, nonatomic) IBOutlet UILabel *sizeLabel;
 @property (weak, nonatomic) IBOutlet UILabel *freePostageLabel;
 @property (weak, nonatomic) IBOutlet OLWhiteSquare *whiteBox;
+@property (weak, nonatomic) IBOutlet UIButton *callToActionButton;
+@property (weak, nonatomic) IBOutlet UILabel *callToActionLabel;
+@property (weak, nonatomic) IBOutlet UIImageView *callToActionChevron;
+
 @end
 
 @implementation OLProductOverviewViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-#ifndef OL_NO_ANALYTICS
-    [OLAnalytics trackProductDescriptionScreenViewed:self.product.productTemplate.name];
-#endif
     
     if (self.product.productTemplate.templateUI == kOLTemplateUIPoster){
         self.title = NSLocalizedString(@"Posters", @"");
@@ -98,6 +99,36 @@
         [self.whiteBox removeFromSuperview];
     }
     //else do nothing, free shipping label will be shown
+    
+    UIViewController *vc = self.parentViewController;
+    while (vc) {
+        if ([vc isKindOfClass:[OLKiteViewController class]]){
+            break;
+        }
+        else{
+            vc = vc.parentViewController;
+        }
+    }
+    if ([OLKiteABTesting sharedInstance].hidePrice){
+        [self.costLabel removeFromSuperview];
+        [self.freePostageLabel removeFromSuperview];
+        [self.whiteBox removeFromSuperview];
+    }
+    
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackProductDescriptionScreenViewed:self.product.productTemplate.name hidePrice:[OLKiteABTesting sharedInstance].hidePrice];
+#endif
+    
+    if ([[OLKiteABTesting sharedInstance].productTileStyle isEqualToString:@"Classic"]){
+        [self.callToActionButton removeFromSuperview];
+        [self.callToActionChevron removeFromSuperview];
+        [self.callToActionLabel removeFromSuperview];
+    }
+    else if ([[OLKiteABTesting sharedInstance].productTileStyle isEqualToString:@"B"]){
+        [self.callToActionChevron removeFromSuperview];
+        self.callToActionLabel.textAlignment = NSTextAlignmentCenter;
+    }
+    
 }
 
 - (UIViewController *)viewControllerAtIndex:(NSUInteger)index {
@@ -116,7 +147,11 @@
     [self onButtonStartClicked:nil];
 }
 
-- (IBAction)onButtonStartClicked:(UIBarButtonItem *)sender {
+- (IBAction)onButtonCallToActionClicked:(id)sender {
+    [self onButtonStartClicked:sender];
+}
+
+- (IBAction)onButtonStartClicked:(id)sender {
     UIViewController *vc = self.parentViewController;
     OLPrintOrder *printOrder = nil;
     while (vc) {

@@ -14,7 +14,7 @@
 
 + (void)trackKiteViewControllerLoadedWithEntryPoint:(NSString *)entryPoint;
 + (void)trackProductSelectionScreenViewed;
-+ (void)trackProductDescriptionScreenViewed:(NSString *)productName;
++ (void)trackProductDescriptionScreenViewed:(NSString *)productName hidePrice:(BOOL)hidePrice;
 + (void)trackProductTemplateSelectionScreenViewed:(NSString *)productName;
 + (void)trackProductTypeSelectionScreenViewedWithTemplateClass:(NSString *)templateClassString;
 + (void)trackReviewScreenViewed:(NSString *)productName;
@@ -22,5 +22,6 @@
 + (void)trackPaymentScreenViewedForOrder:(OLPrintOrder *)printOrder applePayIsAvailable:(NSString *)applePayIsAvailable;
 + (void)trackPaymentCompletedForOrder:(OLPrintOrder *)printOrder paymentMethod:(NSString *)method applePayIsAvailable:(NSString *)applePayIsAvailable;
 + (void)trackOrderSubmission:(OLPrintOrder *)printOrder;
++ (void)trackQualityInfoScreenViewed;
 
 @end

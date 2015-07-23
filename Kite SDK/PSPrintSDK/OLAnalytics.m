@@ -15,6 +15,7 @@
 #import "OLKitePrintSDK.h"
 #import <AFNetworking.h>
 #include <sys/sysctl.h>
+#import "OLKiteABTesting.h"
 
 static NSString *const kKeyUserDistinctId = @"ly.kite.sdk.kKeyUserDistinctId";
 static NSString *const kOLMixpanelToken = @"cdf64507670dd359c43aa8895fb87676";
@@ -105,12 +106,21 @@ static NSString *nonNilStr(NSString *str) {
 
 + (void)trackProductSelectionScreenViewed{
     NSDictionary *dict = [OLAnalytics defaultDictionaryForEventName:@"Product Selection Screen Viewed"];
+    [dict[@"properties"] setObject:nonNilStr([OLKiteABTesting sharedInstance].qualityBannerType) forKey:@"Quality Banner Type"];
+    [dict[@"properties"] setObject:nonNilStr([OLKiteABTesting sharedInstance].productTileStyle) forKey:@"Product Tile Style"];
     [OLAnalytics sendToMixPanelWithDictionary:dict];
 }
 
-+ (void)trackProductDescriptionScreenViewed:(NSString *)productName{
++ (void)trackQualityInfoScreenViewed{
+    NSDictionary *dict = [OLAnalytics defaultDictionaryForEventName:@"Quality Info Screen Viewed"];
+    [dict[@"properties"] setObject:[OLKiteABTesting sharedInstance].qualityBannerType forKey:@"Quality Banner Type"];
+    [OLAnalytics sendToMixPanelWithDictionary:dict];
+}
+
++ (void)trackProductDescriptionScreenViewed:(NSString *)productName hidePrice:(BOOL)hidePrice{
     NSDictionary *dict = [OLAnalytics defaultDictionaryForEventName:@"Product Description Screen Viewed"];
     [dict[@"properties"] setObject:productName forKey:@"Product Name"];
+    [dict[@"properties"] setObject:hidePrice ? @"YES" : @"NO" forKey:@"Hide Price on Product Description"];
     [OLAnalytics sendToMixPanelWithDictionary:dict];
 }
 
@@ -146,6 +156,7 @@ static NSString *nonNilStr(NSString *str) {
     NSMutableDictionary *p = [self propertiesForPrintOrder:printOrder];
     [dict[@"properties"] addEntriesFromDictionary:p];
     [dict[@"properties"] setObject:applePayIsAvailable forKey:@"Apple Pay Available"];
+    [dict[@"properties"] setObject:[OLKiteABTesting sharedInstance].offerPayPal ? @"Yes" : @"No" forKey:@"Offer PayPal"];
     [OLAnalytics sendToMixPanelWithDictionary:dict];
 }
 
