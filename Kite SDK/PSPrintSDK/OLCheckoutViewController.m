@@ -391,7 +391,7 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
                 cell.selectionStyle = UITableViewCellSelectionStyleNone;
             }
                 cell.textLabel.textColor = [UIColor blackColor];
-                cell.textLabel.text = self.shippingAddress.recipientName;
+                cell.textLabel.text = self.shippingAddress.fullNameFromFirstAndLast;
                 cell.detailTextLabel.text = self.shippingAddress.descriptionWithoutRecipient;
         } else {
             cell = [tableView dequeueReusableCellWithIdentifier:kAddDeliveryAddressCell];
