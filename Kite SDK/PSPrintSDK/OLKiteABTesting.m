@@ -222,21 +222,12 @@ id safeObject(id obj){
 }
 
 - (void)setupABTestVariants{
-    if (!self.skipHomeScreen){ //Normal Product Journey
-        
-        [self setupQualityBannerTypeTest];
-        [self setupProductTileStyleTest];
-        [self setupPromoBannerTextTest];
-        
-        [self setupHidePriceTest];
-    }
-    else{
-        [self setupShowProductDescriptionScreenBeforeShippingTest];
-        
-        if (self.showProductDescriptionWithPrintOrder){
-            [self setupHidePriceTest];
-        }
-    }
+    [self setupQualityBannerTypeTest];
+    [self setupProductTileStyleTest];
+    [self setupPromoBannerTextTest];
+    [self setupHidePriceTest];
+    [self setupShowProductDescriptionScreenBeforeShippingTest];
+    [self setupHidePriceTest];
     [self groupSetupShippingScreenTests];
 }
 
