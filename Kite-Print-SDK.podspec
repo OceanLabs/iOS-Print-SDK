@@ -35,9 +35,9 @@ Pod::Spec.new do |spec|
 
   spec.subspec 'ApplePay' do |apple|
     apple.xcconfig	  =  { 'OTHER_CFLAGS' => '$(inherited) -DOL_KITE_OFFER_APPLE_PAY' }
-    apple.dependency	  'Stripe', '2.2.0'
-    apple.dependency	  'Stripe/ApplePay'
-    apple.dependency    'ApplePayStubs'
+    apple.dependency	  'Stripe', '4.0.3'
+    apple.dependency	  'Stripe/ApplePay', '4.0.3'
+    apple.dependency   	  'ApplePayStubs', '0.2'
   end
 
   spec.subspec 'Facebook' do |facebook|
