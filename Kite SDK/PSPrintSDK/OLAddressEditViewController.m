@@ -22,8 +22,10 @@ static const NSUInteger kTagTextField = 99;
 
 @interface OLAddressEditViewController () <UITextFieldDelegate, UINavigationControllerDelegate, OLCountryPickerControllerDelegate>
 @property (nonatomic, strong) OLAddress *address;
+@property (nonatomic, strong) OLAddress *originalAddress; // so we can restore if user returns without saving
 @property (nonatomic, strong) UITextField *textFieldFirstName, *textFieldLastName, *textFieldLine1, *textFieldLine2, *textFieldCity, *textFieldCounty, *textFieldPostCode, *textFieldCountry;
 @property (nonatomic, assign) BOOL editingExistingSavedAddress;
+@property (nonatomic, assign) BOOL userSavedAddress;
 @end
 
 @implementation OLAddressEditViewController
@@ -35,6 +37,8 @@ static const NSUInteger kTagTextField = 99;
 - (id)initWithAddress:(OLAddress *)address {
     if (self = [super initWithStyle:UITableViewStyleGrouped]) {
         self.address = address;
+        self.originalAddress = [address copy];
+        self.userSavedAddress = NO;
         if (self.address == nil) {
             self.address = [[OLAddress alloc] init];
         }
@@ -57,6 +61,22 @@ static const NSUInteger kTagTextField = 99;
     if ([self.navigationController.viewControllers firstObject] == self){
         UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [NSBundle mainBundle], @"") style:UIBarButtonItemStylePlain target:self action:@selector(onCancelButtonClicked)];
         self.navigationItem.leftBarButtonItem = cancelButton;
+    }
+}
+
+- (void)didMoveToParentViewController:(UIViewController *)parent {
+    if (parent == nil) {
+        // we're being popped from the stack, possibly restore original address
+        if (self.editingExistingSavedAddress && !self.userSavedAddress && self.originalAddress != nil) {
+            self.address.recipientFirstName = self.originalAddress.recipientFirstName;
+            self.address.recipientLastName = self.originalAddress.recipientLastName;
+            self.address.line1 = self.originalAddress.line1;
+            self.address.line2 = self.originalAddress.line2;
+            self.address.city = self.originalAddress.city;
+            self.address.stateOrCounty = self.originalAddress.stateOrCounty;
+            self.address.zipOrPostcode = self.originalAddress.zipOrPostcode;
+            self.address.country = self.originalAddress.country;
+        }
     }
 }
 
@@ -109,6 +129,7 @@ static const NSUInteger kTagTextField = 99;
 }
 
 - (void)saveAddressAndReturn {
+    self.userSavedAddress = YES;
     self.address.recipientFirstName = self.textFieldFirstName.text;
     self.address.recipientLastName = self.textFieldLastName.text;
     self.address.line1 = self.textFieldLine1.text;
@@ -192,6 +213,7 @@ static const NSUInteger kTagTextField = 99;
             self.textFieldLastName = [[UITextField alloc] initWithFrame:CGRectMake(((cell.frame.size.width - 20) / 2.0)+20, 0, (cell.frame.size.width - 20) / 2.0, cell.frame.size.height)];
             [cell.contentView addSubview:self.textFieldLastName];
             self.textFieldLastName.text = self.address.recipientLastName;
+            self.textFieldLastName.returnKeyType = UIReturnKeyNext;
             self.textFieldLastName.adjustsFontSizeToFitWidth = YES;
             self.textFieldLastName.textColor = [UIColor blackColor];
             self.textFieldLastName.autocorrectionType = UITextAutocorrectionTypeNo;

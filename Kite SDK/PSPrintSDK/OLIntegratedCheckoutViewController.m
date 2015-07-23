@@ -298,6 +298,7 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
                 self.textFieldLastName = [[UITextField alloc] initWithFrame:CGRectMake(((cell.frame.size.width - 20) / 2.0)+20, 0, (cell.frame.size.width - 20) / 2.0, cell.frame.size.height)];
                 [cell.contentView addSubview:self.textFieldLastName];
                 self.textFieldLastName.text = self.shippingAddress.recipientLastName;
+                self.textFieldLastName.returnKeyType = UIReturnKeyNext;
                 self.textFieldLastName.adjustsFontSizeToFitWidth = YES;
                 self.textFieldLastName.textColor = [UIColor blackColor];
                 self.textFieldLastName.autocorrectionType = UITextAutocorrectionTypeNo;
