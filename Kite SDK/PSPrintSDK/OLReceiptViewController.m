@@ -59,6 +59,7 @@ static const NSUInteger kSectionErrorRetry = 2;
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    self.presentedModally |= ([self.delegate respondsToSelector:@selector(receiptViewControllerShouldBeDismissable)] && [self.delegate receiptViewControllerShouldBeDismissable]);
     if (self.presentedModally) {
         self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Done", @"KitePrintSDK", [OLConstants bundle], @"") style:UIBarButtonItemStylePlain target:self action:@selector(onButtonDoneClicked)];
         self.navigationController.viewControllers = @[self];
