@@ -137,12 +137,8 @@ static NSOperationQueue *imageOperationQueue;
                 else if (asset.assetType == kOLAssetTypeALAsset){
                     [asset loadALAssetWithCompletionHandler:^(ALAsset *asset, NSError *error){
                         NSBlockOperation *block = [NSBlockOperation blockOperationWithBlock:^{
-                            OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
-                            printPhoto.asset = asset;
-                            printPhoto.cropImageSize = self.cropImageSize;
-                            printPhoto.cropImageFrame = self.cropImageFrame;
-                            printPhoto.cropImageRect = self.cropImageRect;
-                            [OLPrintPhoto resizedImageWithPrintPhoto:printPhoto size:destSize cropped:cropped progress:nil completion:^(UIImage *image) {
+                            self.asset = asset;
+                            [OLPrintPhoto resizedImageWithPrintPhoto:self size:destSize cropped:cropped progress:nil completion:^(UIImage *image) {
                                 self.cachedCroppedThumbnailImage = image;
                                 handler(image);
                             }];
@@ -154,12 +150,8 @@ static NSOperationQueue *imageOperationQueue;
                 else{
                     [asset dataWithCompletionHandler:^(NSData *data, NSError *error){
                         NSBlockOperation *block = [NSBlockOperation blockOperationWithBlock:^{
-                            OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
-                            printPhoto.asset = [OLAsset assetWithImageAsJPEG:[UIImage imageWithData:data]];
-                            printPhoto.cropImageSize = self.cropImageSize;
-                            printPhoto.cropImageFrame = self.cropImageFrame;
-                            printPhoto.cropImageRect = self.cropImageRect;
-                            [OLPrintPhoto resizedImageWithPrintPhoto:printPhoto size:destSize cropped:cropped progress:nil completion:^(UIImage *image) {
+                            self.asset = [OLAsset assetWithImageAsJPEG:[UIImage imageWithData:data]];
+                            [OLPrintPhoto resizedImageWithPrintPhoto:self size:destSize cropped:cropped progress:nil completion:^(UIImage *image) {
                                 self.cachedCroppedThumbnailImage = image;
                                 handler(image);
                             }];

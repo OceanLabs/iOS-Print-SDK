@@ -21,11 +21,12 @@
 #import "OLProductGroup.h"
 #import "OLCustomNavigationController.h"
 #import "NSObject+Utils.h"
-#import <SkyLab.h>
+#import "OLKiteABTesting.h"
+#import "UIImage+ColorAtPixel.h"
 
 static const NSInteger kTagNoProductsAlertView = 99;
 static const NSInteger kTagTemplateSyncFailAlertView = 100;
-static NSString *const kOLKiteABTestProductDescriptionWithPrintOrder = @"ly.kite.abtest.show_product_description_screen";
+
 
 @interface OLKiteViewController () <UIAlertViewDelegate>
 
@@ -34,6 +35,7 @@ static NSString *const kOLKiteABTestProductDescriptionWithPrintOrder = @"ly.kite
 @property (strong, nonatomic) NSMutableArray *userSelectedPhotos;
 @property (weak, nonatomic) IBOutlet UINavigationBar *navigationBar;
 @property (weak, nonatomic) IBOutlet UINavigationItem *customNavigationItem;
+@property (weak, nonatomic) IBOutlet UIImageView *loadingImageView;
 
 // Because template sync happens in the constructor it may complete before the OLKiteViewController has appeared. In such a case where sync does
 // complete first we make a note to immediately transition to the appropriate view when the OLKiteViewController does appear:
@@ -41,7 +43,6 @@ static NSString *const kOLKiteABTestProductDescriptionWithPrintOrder = @"ly.kite
 @property (strong, nonatomic) NSBlockOperation *templateSyncOperation;
 @property (strong, nonatomic) NSBlockOperation *remotePlistSyncOperation;
 @property (strong, nonatomic) NSBlockOperation *transitionOperation;
-@property (assign, nonatomic) BOOL showProductDescriptionWithPrintOrder;
 
 @end
 
@@ -49,7 +50,7 @@ static NSString *const kOLKiteABTestProductDescriptionWithPrintOrder = @"ly.kite
 
 + (void)setCacheTemplates:(BOOL)cache;
 + (BOOL)cacheTemplates;
-+ (void)fetchRemotePlistsWithCompletionHandler:(void(^)())handler;
++ (void)checkoutViewControllerForPrintOrder:(OLPrintOrder *)printOrder handler:(void(^)(OLCheckoutViewController *vc))handler;
 
 @end
 
@@ -86,20 +87,6 @@ static NSString *const kOLKiteABTestProductDescriptionWithPrintOrder = @"ly.kite
     return self;
 }
 
-- (void)setupABTestVariants {
-    NSDictionary *experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestProductDescriptionWithPrintOrder];
-    if (!experimentDict) {
-        experimentDict = @{@"Yes" : @0.5, @"No" : @0.5};
-    }
-    [SkyLab splitTestWithName:kOLKiteABTestProductDescriptionWithPrintOrder
-                   conditions:@{
-                                @"Yes" : experimentDict[@"Yes"],
-                                @"No" : experimentDict[@"No"]
-                                } block:^(id choice) {
-                                    self.showProductDescriptionWithPrintOrder = [choice isEqualToString:@"Yes"];
-                                }];
-}
-
 -(void)viewDidLoad {
     [super viewDidLoad];
     
@@ -118,27 +105,30 @@ static NSString *const kOLKiteABTestProductDescriptionWithPrintOrder = @"ly.kite
     [self.transitionOperation addDependency:self.templateSyncOperation];
     [self.transitionOperation addDependency:self.remotePlistSyncOperation];
     
-    [OLKitePrintSDK fetchRemotePlistsWithCompletionHandler:^{
-        NSAssert([NSThread isMainThread], @"assumption about main thread callback is incorrect");
-        [self setupABTestVariants];
+    [OLKiteABTesting sharedInstance].skipHomeScreen = self.printOrder != nil;
+    [[OLKiteABTesting sharedInstance] fetchRemotePlistsWithCompletionHandler:^{
+        [self.operationQueue addOperation:self.remotePlistSyncOperation];
+    
 #ifndef OL_NO_ANALYTICS
-        if (self.printOrder && !self.showProductDescriptionWithPrintOrder){
+        if (self.printOrder && ![OLKiteABTesting sharedInstance].showProductDescriptionWithPrintOrder){
             [OLAnalytics trackKiteViewControllerLoadedWithEntryPoint:@"Shipping Screen"];
         }
-        else if(self.printOrder && self.showProductDescriptionWithPrintOrder){
+        else if(self.printOrder && [OLKiteABTesting sharedInstance].showProductDescriptionWithPrintOrder){
             [OLAnalytics trackKiteViewControllerLoadedWithEntryPoint:@"Product Description Screen"];
         }
         else{
             [OLAnalytics trackKiteViewControllerLoadedWithEntryPoint:@"Home Screen"];
         }
 #endif
-        [self.operationQueue addOperation:self.remotePlistSyncOperation];
-
     }];
+    
+    
     
     if ([OLKitePrintSDK environment] == kOLKitePrintSDKEnvironmentLive){
         [[self.view viewWithTag:9999] removeFromSuperview];
     }
+    
+    self.view.backgroundColor = [self.loadingImageView.image colorAtPixel:CGPointMake(3, 3)];
     
     [self transitionToNextScreen];
 
@@ -178,18 +168,20 @@ static NSString *const kOLKiteABTestProductDescriptionWithPrintOrder = @"ly.kite
             }
             return;
         }
-        else if (welf.printOrder && !welf.showProductDescriptionWithPrintOrder){
-            OLCheckoutViewController *vc = [[OLCheckoutViewController alloc] initWithPrintOrder:welf.printOrder];
-            [[vc navigationItem] setLeftBarButtonItem:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:welf action:@selector(dismiss)]];
-            vc.userEmail = welf.userEmail;
-            vc.userPhone = welf.userPhone;
-            vc.kiteDelegate = welf.delegate;
-            OLCustomNavigationController *nvc = [[OLCustomNavigationController alloc] initWithRootViewController:vc];
-
-            [welf fadeToViewController:nvc];
+        else if (welf.printOrder && ![OLKiteABTesting sharedInstance].showProductDescriptionWithPrintOrder){
+            [OLKitePrintSDK checkoutViewControllerForPrintOrder:welf.printOrder handler:^(OLCheckoutViewController *vc){
+                [[vc navigationItem] setLeftBarButtonItem:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:welf action:@selector(dismiss)]];
+                vc.userEmail = welf.userEmail;
+                vc.userPhone = welf.userPhone;
+                vc.kiteDelegate = welf.delegate;
+                OLCustomNavigationController *nvc = [[OLCustomNavigationController alloc] initWithRootViewController:vc];
+                
+                [welf fadeToViewController:nvc];
+            }];
+            
             return;
         }
-        else if (welf.printOrder && welf.showProductDescriptionWithPrintOrder){
+        else if (welf.printOrder && [OLKiteABTesting sharedInstance].showProductDescriptionWithPrintOrder){
             OLProductOverviewViewController *vc = [welf.storyboard instantiateViewControllerWithIdentifier:@"OLProductOverviewViewController"];
             vc.product = [OLProduct productWithTemplateId:[[welf.printOrder.jobs firstObject] templateId]];
             vc.userEmail = welf.userEmail;
