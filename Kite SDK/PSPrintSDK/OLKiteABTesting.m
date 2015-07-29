@@ -75,6 +75,8 @@ id safeObject(id obj){
 }
 
 - (void)setupQualityBannerTypeTest{
+    self.qualityBannerType = nil;
+    
     NSDictionary *experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestQualityBannerType];
     if (!experimentDict) {
         experimentDict = @{@"None" : @1, @"A" : @0, @"B" : @0, @"C" : @0};
@@ -91,6 +93,8 @@ id safeObject(id obj){
 }
 
 - (void)setupProductTileStyleTest{
+    self.productTileStyle = nil;
+    
     NSDictionary *experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestProductTileStyle];
     if (!experimentDict) {
         experimentDict = @{@"Classic" : @1, @"A" : @0, @"B" : @0};
@@ -106,6 +110,7 @@ id safeObject(id obj){
 }
 
 - (void)setupShowProductDescriptionScreenBeforeShippingTest{
+    self.launchWithPrintOrderVariant = nil;
     NSDictionary *experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestLaunchWithPrintOrderVariant];
     if (!experimentDict) {
         experimentDict = @{@"Checkout" : @0.2, @"Overview-Checkout" : @0.2, @"Review-Overview-Checkout": @0.2, @"Review-Checkout" : @0.2, @"Overview-Review-Checkout" : @0.2};
@@ -123,6 +128,7 @@ id safeObject(id obj){
 }
 
 - (void)setupOfferAddressSearchTest{
+    self.offerAddressSearch = nil;
     NSDictionary *experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestOfferAddressSearch];
     if (!experimentDict) {
         experimentDict = @{@"Yes" : @0.5, @"No" : @0.5};
@@ -137,6 +143,7 @@ id safeObject(id obj){
 }
 
 - (void)setupRequirePhoneNumberTest{
+    self.requirePhoneNumber = nil;
     NSDictionary *experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestRequirePhoneNumber];
     if (!experimentDict) {
         experimentDict = @{@"Yes" : @0.5, @"No" : @0.5};
@@ -151,6 +158,7 @@ id safeObject(id obj){
 }
 
 - (void)setupShippingScreenTest{
+    self.checkoutScreenType = nil;
     NSDictionary *experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestShippingScreen];
     if (!experimentDict){
         experimentDict = @{@"Classic" : @0.66, @"Integrated" : @0.34}; // There are 3 variants Classic+Address Search, Classic no Address Search & Integrated hence Classic gets 2/3 of the chance here as it will further get split 50:50 between the 2 classic variants internally resulting in 1/3 probability each.
@@ -164,6 +172,7 @@ id safeObject(id obj){
 }
 
 - (void)setupHidePriceTest{
+    self.hidePrice = nil;
     NSDictionary *experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestHidePrice];
     if (!experimentDict) {
         experimentDict = @{@"Yes" : @0, @"No" : @1};
@@ -184,6 +193,7 @@ id safeObject(id obj){
 
 //  Promo strings look like this: @"<header>Hello World!</header><para>Off to the woods</para>"
 - (void)setupPromoBannerTextTest{
+    self.promoBannerText = nil;
     NSDictionary *experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestPromoBannerText];
     if (!experimentDict) {
         return;
@@ -191,11 +201,18 @@ id safeObject(id obj){
     
     // While it is tempting to do the dynamic conditions in other tests as well, DON'T, as typos in the plist can crash the app.
     NSMutableDictionary *conditions = [[NSMutableDictionary alloc] init];
-    for (NSString *s in experimentDict.allKeys){
-        [conditions setObject:safeObject(experimentDict[s]) forKey:s];
+    for (NSString *key in experimentDict.allKeys) {
+        id val = experimentDict[key];
+        if ([val isKindOfClass:[NSNumber class]]) {
+            [conditions setObject:safeObject(val) forKey:key];
+        }
     }
 
     [conditions removeObjectForKey:@"Experiment Version"];
+    
+    if (conditions.count == 0) {
+        return;
+    }
     
     [SkyLab splitTestWithName:kOLKiteABTestPromoBannerText
                    conditions:conditions block:^(id choice) {
@@ -204,6 +221,7 @@ id safeObject(id obj){
 }
 
 - (void)setupOfferPayPalTest{
+    self.offerPayPal = nil;
     NSDictionary *experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestOfferPayPal];
     if (!experimentDict) {
         experimentDict = @{@"Yes" : @0.5, @"No" : @0.5};
