@@ -313,23 +313,28 @@
 
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
-    self.bannerView.hidden = NO;
-    [UIView animateWithDuration:0.25 animations:^{
-        self.bannerView.transform = CGAffineTransformMakeTranslation(0, -45);
-        [self.collectionView setContentInset:UIEdgeInsetsMake(self.collectionView.contentInset.top, 0, 40, 0)];
-    }completion:NULL];
-    [super viewDidAppear:animated];
+    
+    if (self.bannerView){
+        self.bannerView.hidden = NO;
+        [UIView animateWithDuration:0.25 animations:^{
+            self.bannerView.transform = CGAffineTransformMakeTranslation(0, -45);
+            [self.collectionView setContentInset:UIEdgeInsetsMake(self.collectionView.contentInset.top, 0, 40, 0)];
+        }completion:NULL];
+    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
-    [UIView animateWithDuration:0.25 animations:^{
-        self.bannerView.transform = CGAffineTransformMakeTranslation(0, 0);
-        [self.collectionView setContentInset:UIEdgeInsetsMake(self.collectionView.contentInset.top, 0, 0, 0)];
-    }completion:^(BOOL finished){
-        self.bannerView.hidden = YES;
-        self.bannerView.transform = CGAffineTransformIdentity;
-    }];
+    
+    if (self.bannerView){
+        [UIView animateWithDuration:0.25 animations:^{
+            self.bannerView.transform = CGAffineTransformMakeTranslation(0, 0);
+            [self.collectionView setContentInset:UIEdgeInsetsMake(self.collectionView.contentInset.top, 0, 0, 0)];
+        }completion:^(BOOL finished){
+            self.bannerView.hidden = YES;
+            self.bannerView.transform = CGAffineTransformIdentity;
+        }];
+    }
 }
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
