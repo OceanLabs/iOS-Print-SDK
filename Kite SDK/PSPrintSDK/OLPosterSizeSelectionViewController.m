@@ -11,6 +11,8 @@
 #import "OLPosterViewController.h"
 #import "OLKiteViewController.h"
 #import "OLAnalytics.h"
+#import "OLKitePrintSDK.h"
+#import "OLKiteABTesting.h"
 
 @interface OLProduct (Private)
 
@@ -20,7 +22,6 @@
 @end
 
 static UIColor *deselectedColor;
-
 
 @interface OLPosterSizeSelectionViewController ()
 @property (weak, nonatomic) IBOutlet UIButton *classicBtn;
@@ -51,10 +52,6 @@ static UIColor *deselectedColor;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
-#ifndef OL_NO_ANALYTICS
-    [OLAnalytics trackProductDescriptionScreenViewed:@"Posters"];
-#endif
     
     self.availableButtons = [@[self.classicBtn, self.grandBtn, self.deluxeBtn] mutableCopy];
     deselectedColor = [UIColor colorWithRed:0.365 green:0.612 blue:0.925 alpha:1]; /*#5d9cec*/
@@ -110,6 +107,24 @@ static UIColor *deselectedColor;
         [self.availableButtons removeAllObjects];
         [self.chooseSizeLabel removeFromSuperview];
     }
+    
+    UIViewController *vc = self.parentViewController;
+    while (vc) {
+        if ([vc isKindOfClass:[OLKiteViewController class]]){
+            break;
+        }
+        else{
+            vc = vc.parentViewController;
+        }
+    }
+    
+    if ([OLKiteABTesting sharedInstance].hidePrice){
+        [self.priceLabel removeFromSuperview];
+    }
+    
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackProductDescriptionScreenViewed:@"Posters" hidePrice:[OLKiteABTesting sharedInstance].hidePrice];
+#endif
 }
 
 - (void)didReceiveMemoryWarning

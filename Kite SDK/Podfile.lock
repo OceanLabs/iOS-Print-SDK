@@ -56,6 +56,7 @@ PODS:
     - Stripe/Core
   - Stripe/Core (4.0.3)
   - SVProgressHUD (1.1.3)
+  - TSMarkdownParser (1.0.17)
   - UICKeyChainStore (2.0.6)
   - UIColor-HexString (1.1.0)
 
@@ -63,7 +64,7 @@ DEPENDENCIES:
   - AFNetworking (~> 2.5.0)
   - ApplePayStubs
   - CSStickyHeaderFlowLayout
-  - CTAssetsPickerController
+  - CTAssetsPickerController (~> 2.9.5)
   - FacebookImagePicker
   - GroundControl
   - InstagramImagePicker
@@ -74,6 +75,7 @@ DEPENDENCIES:
   - Stripe (~> 4.0.3)
   - Stripe/ApplePay
   - SVProgressHUD
+  - TSMarkdownParser
   - UICKeyChainStore (~> 2.0.4)
   - UIColor-HexString
 
@@ -94,6 +96,7 @@ SPEC CHECKSUMS:
   SkyLab: 01d9559bbab2183e54e67dc7a8a12a22b0a4be99
   Stripe: 43a4307dc789483a61668d187c4a917d1348b0b6
   SVProgressHUD: 748080e4f36e603f6c02aec292664239df5279c1
+  TSMarkdownParser: 73006e0687af93a7125d645d7e214724e9476343
   UICKeyChainStore: c5719c814e8bd69e74e4a0fc09daf8f4d6257a59
   UIColor-HexString: f8a5612bd6772fed8db58ee594b42a0b2831750e
 

@@ -15,6 +15,7 @@
 #import "OLKitePrintSDK.h"
 #import <AFNetworking.h>
 #include <sys/sysctl.h>
+#import "OLKiteABTesting.h"
 
 static NSString *const kKeyUserDistinctId = @"ly.kite.sdk.kKeyUserDistinctId";
 static NSString *const kOLMixpanelToken = @"cdf64507670dd359c43aa8895fb87676";
@@ -105,12 +106,22 @@ static NSString *nonNilStr(NSString *str) {
 
 + (void)trackProductSelectionScreenViewed{
     NSDictionary *dict = [OLAnalytics defaultDictionaryForEventName:@"Product Selection Screen Viewed"];
+    [dict[@"properties"] setObject:nonNilStr([OLKiteABTesting sharedInstance].qualityBannerType) forKey:@"Quality Banner Type"];
+    [dict[@"properties"] setObject:nonNilStr([OLKiteABTesting sharedInstance].productTileStyle) forKey:@"Product Tile Style"];
+    [dict[@"properties"] setObject:nonNilStr([OLKiteABTesting sharedInstance].promoBannerText) forKey:@"Promo Banner Variant"];
     [OLAnalytics sendToMixPanelWithDictionary:dict];
 }
 
-+ (void)trackProductDescriptionScreenViewed:(NSString *)productName{
++ (void)trackQualityInfoScreenViewed{
+    NSDictionary *dict = [OLAnalytics defaultDictionaryForEventName:@"Quality Info Screen Viewed"];
+    [dict[@"properties"] setObject:[OLKiteABTesting sharedInstance].qualityBannerType forKey:@"Quality Banner Type"];
+    [OLAnalytics sendToMixPanelWithDictionary:dict];
+}
+
++ (void)trackProductDescriptionScreenViewed:(NSString *)productName hidePrice:(BOOL)hidePrice{
     NSDictionary *dict = [OLAnalytics defaultDictionaryForEventName:@"Product Description Screen Viewed"];
     [dict[@"properties"] setObject:productName forKey:@"Product Name"];
+    [dict[@"properties"] setObject:hidePrice ? @"YES" : @"NO" forKey:@"Hide Price on Product Description"];
     [OLAnalytics sendToMixPanelWithDictionary:dict];
 }
 
@@ -141,20 +152,21 @@ static NSString *nonNilStr(NSString *str) {
     [OLAnalytics sendToMixPanelWithDictionary:dict];
 }
 
-+ (void)trackPaymentScreenViewedForOrder:(OLPrintOrder *)printOrder applePayIsAvailable:(BOOL)applePayIsAvailable{
++ (void)trackPaymentScreenViewedForOrder:(OLPrintOrder *)printOrder applePayIsAvailable:(NSString *)applePayIsAvailable{
     NSDictionary *dict = [OLAnalytics defaultDictionaryForEventName:@"Payment Screen Viewed"];
     NSMutableDictionary *p = [self propertiesForPrintOrder:printOrder];
     [dict[@"properties"] addEntriesFromDictionary:p];
-    [dict[@"properties"] setObject:applePayIsAvailable ? @"Yes" : @"No" forKey:@"Apple Pay Available"];
+    [dict[@"properties"] setObject:applePayIsAvailable forKey:@"Apple Pay Available"];
+    [dict[@"properties"] setObject:[OLKiteABTesting sharedInstance].offerPayPal ? @"Yes" : @"No" forKey:@"Offer PayPal"];
     [OLAnalytics sendToMixPanelWithDictionary:dict];
 }
 
-+ (void)trackPaymentCompletedForOrder:(OLPrintOrder *)printOrder paymentMethod:(NSString *)method applePayIsAvailable:(BOOL)applePayIsAvailable{
++ (void)trackPaymentCompletedForOrder:(OLPrintOrder *)printOrder paymentMethod:(NSString *)method applePayIsAvailable:(NSString *)applePayIsAvailable{
     NSDictionary *dict = [OLAnalytics defaultDictionaryForEventName:@"Payment Completed"];
     NSMutableDictionary *p = [self propertiesForPrintOrder:printOrder];
     p[@"Payment Method"] = method;
     [dict[@"properties"] addEntriesFromDictionary:p];
-    [dict[@"properties"] setObject:applePayIsAvailable ? @"Yes" : @"No" forKey:@"Apple Pay Available"];
+    [dict[@"properties"] setObject:applePayIsAvailable forKey:@"Apple Pay Available"];
     [OLAnalytics sendToMixPanelWithDictionary:dict];
 }
 
@@ -200,7 +212,7 @@ static NSString *nonNilStr(NSString *str) {
     }
     
     if (printOrder.shippingAddress) {
-        p[@"Shipping Recipient"] = nonNilStr(printOrder.shippingAddress.recipientName);
+        p[@"Shipping Recipient"] = nonNilStr(printOrder.shippingAddress.fullNameFromFirstAndLast);
         p[@"Shipping Line 1"] = nonNilStr(printOrder.shippingAddress.line1);
         p[@"Shipping Line 2"] = nonNilStr(printOrder.shippingAddress.line2);
         p[@"Shipping City"] = nonNilStr(printOrder.shippingAddress.city);
