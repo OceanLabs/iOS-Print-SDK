@@ -199,6 +199,14 @@
     else if (numberOfCells == 4){
         return CGSizeMake(size.width/2 - 1, MAX(halfScreenHeight, 233));
     }
+    else if (numberOfCells == 3){
+        if (size.width < size.height){
+            return CGSizeMake(size.width, halfScreenHeight * 0.8);
+        }
+        else{
+            return CGSizeMake(size.width/2 - 1, MAX(halfScreenHeight, 233));
+        }
+    }
     else if (numberOfCells == 2){
         if (size.width < size.height){
             return CGSizeMake(size.width, halfScreenHeight);
