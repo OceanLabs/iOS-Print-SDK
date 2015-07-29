@@ -150,7 +150,7 @@
                     </view>
                     <navigationItem key="navigationItem" title="Product" id="HK2-dQ-xyE">
                         <barButtonItem key="backBarButtonItem" title="Back" id="keO-Ac-jpK"/>
-                        <barButtonItem key="rightBarButtonItem" title="Start" id="YTR-Ny-PZm">
+                        <barButtonItem key="rightBarButtonItem" title="Next" id="YTR-Ny-PZm">
                             <connections>
                                 <action selector="onButtonStartClicked:" destination="TJ8-xQ-5ds" id="fbe-dc-iQY"/>
                             </connections>

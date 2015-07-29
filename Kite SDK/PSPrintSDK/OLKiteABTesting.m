@@ -11,7 +11,7 @@
 #import <NSUserDefaults+GroundControl.h>
 #import "OLKitePrintSDK.h"
 
-static NSString *const kOLKiteABTestProductDescriptionWithPrintOrder = @"ly.kite.abtest.show_product_description_screen";
+static NSString *const kOLKiteABTestLaunchWithPrintOrderVariant = @"ly.kite.abtest.launch_with_print_order_variant";
 static NSString *const kOLKiteABTestOfferAddressSearch = @"ly.kite.abtest.offer_address_search";
 static NSString *const kOLKiteABTestRequirePhoneNumber = @"ly.kite.abtest.require_phone";
 static NSString *const kOLKiteABTestQualityBannerType = @"ly.kite.abtest.quality_banner_type";
@@ -106,16 +106,19 @@ id safeObject(id obj){
 }
 
 - (void)setupShowProductDescriptionScreenBeforeShippingTest{
-    NSDictionary *experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestProductDescriptionWithPrintOrder];
+    NSDictionary *experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestLaunchWithPrintOrderVariant];
     if (!experimentDict) {
-        experimentDict = @{@"Yes" : @0.5, @"No" : @0.5};
+        experimentDict = @{@"Checkout" : @0.2, @"Overview-Checkout" : @0.2, @"Review-Overview-Checkout": @0.2, @"Review-Checkout" : @0.2, @"Overview-Review-Checkout" : @0.2};
     }
-    [SkyLab splitTestWithName:kOLKiteABTestProductDescriptionWithPrintOrder
+    [SkyLab splitTestWithName:kOLKiteABTestLaunchWithPrintOrderVariant
                    conditions:@{
-                                @"Yes" : safeObject(experimentDict[@"Yes"]),
-                                @"No" : safeObject(experimentDict[@"No"])
+                                @"Checkout" : safeObject(experimentDict[@"Checkout"]),
+                                @"Overview-Checkout" : safeObject(experimentDict[@"Overview-Checkout"]),
+                                @"Review-Overview-Checkout" : safeObject(experimentDict[@"Review-Overview-Checkout"]),
+                                @"Review-Checkout" : safeObject(experimentDict[@"Review-Checkout"]),
+                                @"Overview-Review-Checkout" : safeObject(experimentDict[@"Overview-Review-Checkout"])
                                 } block:^(id choice) {
-                                    self.showProductDescriptionWithPrintOrder = [choice isEqualToString:@"Yes"];
+                                    self.launchWithPrintOrderVariant = choice;
                                 }];
 }
 
