@@ -45,6 +45,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 @interface OLKitePrintSDK (Private)
 
 + (OLKiteViewController *)kiteViewControllerInNavStack:(NSArray *)viewControllers;
++ (NSString *)reviewViewControllerIdentifierForTemplateUI:(OLTemplateUI)templateUI photoSelectionScreen:(BOOL)photoSelectionScreen;
 #ifdef OL_KITE_OFFER_INSTAGRAM
 + (NSString *) instagramRedirectURI;
 + (NSString *) instagramSecret;
@@ -663,7 +664,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
         NSInteger qty = [self.userSelectedPhotos[imageIndex] extraCopies];
         if (qty > 0 && self.product.productTemplate.templateUI != kOLTemplateUIFrame && self.product.productTemplate.templateUI != kOLTemplateUIPhotobook && self.product.productTemplate.templateUI != kOLTemplateUIPoster){
             qtyLabel.hidden = NO;
-            qtyLabel.text = [NSString stringWithFormat:@"%ld", qty+1];
+            qtyLabel.text = [NSString stringWithFormat:@"%ld", (long)qty+1];
         }
         else{
             qtyLabel.hidden = YES;
@@ -911,16 +912,8 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 
 -(void)doSegueToOrderPreview{
 //    [OLAnalytics trackPhotosSelectedForOrder];
-    UIViewController* orvc;
-    if (self.product.productTemplate.templateUI == kOLTemplateUIFrame){
-        orvc = [self.storyboard instantiateViewControllerWithIdentifier:@"FrameOrderReviewViewController"];
-    }
-    else if (self.product.productTemplate.templateUI == kOLTemplateUIPhotobook){
-        orvc = [self.storyboard instantiateViewControllerWithIdentifier:@"PhotobookViewController"];
-    }
-    else{
-        orvc = [self.storyboard instantiateViewControllerWithIdentifier:@"OrderReviewViewController"];
-    }
+    UIViewController* orvc = [self.storyboard instantiateViewControllerWithIdentifier:[OLKitePrintSDK reviewViewControllerIdentifierForTemplateUI:self.product.productTemplate.templateUI photoSelectionScreen:NO]];
+    
     [orvc safePerformSelector:@selector(setProduct:) withObject:self.product];
     [orvc safePerformSelector:@selector(setUserSelectedPhotos:) withObject:self.userSelectedPhotos];
     [self.navigationController pushViewController:orvc animated:YES];
