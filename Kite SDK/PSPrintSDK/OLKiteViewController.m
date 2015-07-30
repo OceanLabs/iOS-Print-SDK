@@ -225,10 +225,13 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
 - (void)fadeToViewController:(UIViewController *)vc{
     vc.view.alpha = 0;
     [self addChildViewController:vc];
+    [vc beginAppearanceTransition: YES animated: YES];
     [self.view addSubview:vc.view];
     [UIView animateWithDuration:0.3 animations:^(void){
         vc.view.alpha = 1;
-    } completion:^(BOOL b){}];
+    } completion:^(BOOL b){
+        [vc endAppearanceTransition];
+    }];
     
 }
 
