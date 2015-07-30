@@ -239,4 +239,28 @@ static NSString *instagramRedirectURI = nil;
     handler(vc);
 }
 
++ (NSString *)reviewViewControllerIdentifierForTemplateUI:(OLTemplateUI)templateUI photoSelectionScreen:(BOOL)photoSelectionScreen{
+    if (templateUI == kOLTemplateUICase){
+        return @"OLCaseViewController";
+    }
+    else if (templateUI == kOLTemplateUIPostcard){
+        return @"OLPostcardViewController";
+    }
+    else if (templateUI == kOLTemplateUIPoster){
+        return @"OLSingleImageProductReviewViewController";
+    }
+    else if (templateUI == kOLTemplateUIPhotobook){
+        return @"PhotobookViewController";
+    }
+    else if (photoSelectionScreen){
+        return @"PhotoSelectionViewController";
+    }
+    else if (templateUI == kOLTemplateUIFrame){
+        return @"FrameOrderReviewViewController";
+    }
+    else{
+        return @"OrderReviewViewController";
+    }
+}
+
 @end
