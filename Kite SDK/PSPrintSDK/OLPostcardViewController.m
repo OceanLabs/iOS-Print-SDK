@@ -7,6 +7,8 @@
 //
 
 #import "OLPostcardViewController.h"
+#import "OLAsset+Private.h"
+#import "OLPostcardPrintJob.h"
 
 @interface OLSingleImageProductReviewViewController (Private)
 
@@ -17,10 +19,16 @@
 
 @interface OLPostcardViewController ()
 
-@property (weak, nonatomic) IBOutlet UIImageView *shadowView;
 @property (strong, nonatomic) UIView *postcardBackView;
 @property (assign, nonatomic) BOOL showingBack;
 
+@end
+
+@interface OLKitePrintSDK (InternalUtils)
++ (NSString *)userEmail:(UIViewController *)topVC;
++ (NSString *)userPhone:(UIViewController *)topVC;
++ (id<OLKiteDelegate>)kiteDelegate:(UIViewController *)topVC;
++ (void)checkoutViewControllerForPrintOrder:(OLPrintOrder *)printOrder handler:(void(^)(OLCheckoutViewController *vc))handler;
 @end
 
 @implementation OLPostcardViewController
@@ -31,6 +39,12 @@
     self.postcardBackView.backgroundColor = [UIColor blackColor];
     [self.containerView addSubview:self.postcardBackView];
     self.postcardBackView.hidden = YES;
+    
+    self.containerView.layer.shadowColor = [[UIColor blackColor] CGColor];
+    self.containerView.layer.shadowOpacity = .3;
+    self.containerView.layer.shadowOffset = CGSizeMake(-4,3);
+    self.containerView.layer.shadowRadius = 2;
+
 }
 
 - (void)viewDidLayoutSubviews{
@@ -47,7 +61,57 @@
             self.showingBack = YES;
             self.postcardBackView.hidden = NO;
         }
-    }completion:NULL];
+    }completion:^(BOOL finished){
+        
+    }];
+}
+
+-(void) doCheckout{
+    if (!self.imageCropView.image) {
+        return;
+    }
+    
+    UIImage *croppedImage = self.imageCropView.editedImage;
+    
+    OLAsset *asset = [OLAsset assetWithImageAsJPEG:croppedImage];
+    
+    [asset dataLengthWithCompletionHandler:^(long long dataLength, NSError *error){
+        if (dataLength < 40000){
+            if ([UIAlertController class]){
+                UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Image Is Too Small", @"") message:NSLocalizedString(@"Please zoom out or pick a higher quality image", @"") preferredStyle:UIAlertControllerStyleAlert];
+                [alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", @"") style:UIAlertActionStyleDefault handler:NULL]];
+                [self presentViewController:alert animated:YES completion:NULL];
+            }
+            else{
+                [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Image Too Small", @"") message:NSLocalizedString(@"Please zoom out or pick higher quality image", @"") delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"") otherButtonTitles:nil] show];
+            }
+        }
+        else{
+            
+            
+            NSUInteger iphonePhotoCount = 1;
+            OLPostcardPrintJob *job = [[OLPostcardPrintJob alloc] initWithTemplateId:self.product.templateId frontImageOLAsset:asset message:@" " address:nil];
+            OLPrintOrder *printOrder = [[OLPrintOrder alloc] init];
+            NSDictionary *infoDict = [[NSBundle mainBundle] infoDictionary];
+            NSString *appVersion = [infoDict objectForKey:@"CFBundleShortVersionString"];
+            NSNumber *buildNumber = [infoDict objectForKey:@"CFBundleVersion"];
+            printOrder.userData = @{@"photo_count_iphone": [NSNumber numberWithUnsignedInteger:iphonePhotoCount],
+                                    @"sdk_version": kOLKiteSDKVersion,
+                                    @"platform": @"iOS",
+                                    @"uid": [[[UIDevice currentDevice] identifierForVendor] UUIDString],
+                                    @"app_version": [NSString stringWithFormat:@"Version: %@ (%@)", appVersion, buildNumber]
+                                    };
+            [printOrder addPrintJob:job];
+            
+            [OLKitePrintSDK checkoutViewControllerForPrintOrder:printOrder handler:^(OLCheckoutViewController *vc){
+                vc.userEmail = [OLKitePrintSDK userEmail:self];
+                vc.userPhone = [OLKitePrintSDK userPhone:self];
+                vc.kiteDelegate = [OLKitePrintSDK kiteDelegate:self];
+                
+                [self.navigationController pushViewController:vc animated:YES];
+            }];
+        }
+    }];
 }
 
 #pragma mark - Autorotate and Orientation Methods
