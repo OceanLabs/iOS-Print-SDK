@@ -22,10 +22,13 @@
 #import "OLPostcardViewController.h"
 #import "NSObject+Utils.h"
 #import "NSDecimalNumber+CostFormatter.h"
+#import "OLKiteABTesting.h"
 
 @interface OLKitePrintSDK (Kite)
 
 + (OLKiteViewController *)kiteViewControllerInNavStack:(NSArray *)viewControllers;
++ (NSString *)reviewViewControllerIdentifierForTemplateUI:(OLTemplateUI)templateUI photoSelectionScreen:(BOOL)photoSelectionScreen;
++ (void)checkoutViewControllerForPrintOrder:(OLPrintOrder *)printOrder handler:(void(^)(OLCheckoutViewController *vc))handler;
 
 @end
 
@@ -43,16 +46,16 @@
 @property (weak, nonatomic) IBOutlet UILabel *sizeLabel;
 @property (weak, nonatomic) IBOutlet UILabel *freePostageLabel;
 @property (weak, nonatomic) IBOutlet OLWhiteSquare *whiteBox;
+@property (weak, nonatomic) IBOutlet UIButton *callToActionButton;
+@property (weak, nonatomic) IBOutlet UILabel *callToActionLabel;
+@property (weak, nonatomic) IBOutlet UIImageView *callToActionChevron;
+
 @end
 
 @implementation OLProductOverviewViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-#ifndef OL_NO_ANALYTICS
-    [OLAnalytics trackProductDescriptionScreenViewed:self.product.productTemplate.name];
-#endif
     
     if (self.product.productTemplate.templateUI == kOLTemplateUIPoster){
         self.title = NSLocalizedString(@"Posters", @"");
@@ -98,6 +101,45 @@
         [self.whiteBox removeFromSuperview];
     }
     //else do nothing, free shipping label will be shown
+    
+    UIViewController *vc = self.parentViewController;
+    while (vc) {
+        if ([vc isKindOfClass:[OLKiteViewController class]]){
+            break;
+        }
+        else{
+            vc = vc.parentViewController;
+        }
+    }
+    if ([(OLKiteViewController *)vc printOrder]){
+        if (![[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant isEqualToString:@"Overview-Review-Checkout"]){
+            self.callToActionLabel.text = NSLocalizedString(@"Checkout", @"");
+        }
+        else{
+            self.callToActionLabel.text = NSLocalizedString(@"Review", @"");
+        }
+    }
+    
+    if ([OLKiteABTesting sharedInstance].hidePrice){
+        [self.costLabel removeFromSuperview];
+        [self.freePostageLabel removeFromSuperview];
+        [self.whiteBox removeFromSuperview];
+    }
+    
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackProductDescriptionScreenViewed:self.product.productTemplate.name hidePrice:[OLKiteABTesting sharedInstance].hidePrice];
+#endif
+    
+    if ([[OLKiteABTesting sharedInstance].productTileStyle isEqualToString:@"Classic"]){
+        [self.callToActionButton removeFromSuperview];
+        [self.callToActionChevron removeFromSuperview];
+        [self.callToActionLabel removeFromSuperview];
+    }
+    else if ([[OLKiteABTesting sharedInstance].productTileStyle isEqualToString:@"B"]){
+        [self.callToActionChevron removeFromSuperview];
+        self.callToActionLabel.textAlignment = NSTextAlignmentCenter;
+    }
+    
 }
 
 - (UIViewController *)viewControllerAtIndex:(NSUInteger)index {
@@ -116,7 +158,11 @@
     [self onButtonStartClicked:nil];
 }
 
-- (IBAction)onButtonStartClicked:(UIBarButtonItem *)sender {
+- (IBAction)onButtonCallToActionClicked:(id)sender {
+    [self onButtonStartClicked:sender];
+}
+
+- (IBAction)onButtonStartClicked:(id)sender {
     UIViewController *vc = self.parentViewController;
     OLPrintOrder *printOrder = nil;
     while (vc) {
@@ -129,35 +175,31 @@
         }
     }
     if (printOrder){
-        OLCheckoutViewController *vc = [[OLCheckoutViewController alloc] initWithPrintOrder:printOrder];
-        [[vc navigationItem] setLeftBarButtonItem:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:(OLKiteViewController *)vc action:@selector(dismiss)]];
-        vc.userEmail = self.userEmail;
-        vc.userPhone = self.userPhone;
-        vc.kiteDelegate = self.delegate;
+        UIViewController *vc;
+        if ([[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant isEqualToString:@"Overview-Review-Checkout"]){
+            vc = [self.storyboard instantiateViewControllerWithIdentifier:[OLKitePrintSDK reviewViewControllerIdentifierForTemplateUI:self.product.productTemplate.templateUI photoSelectionScreen:NO]];
+        }
+        else{
+            [OLKitePrintSDK checkoutViewControllerForPrintOrder:printOrder handler:^(OLCheckoutViewController *vc){
+                [[vc navigationItem] setLeftBarButtonItem:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:(OLKiteViewController *)vc action:@selector(dismiss)]];
+                [vc safePerformSelector:@selector(setUserEmail:) withObject:self.userEmail];
+                [vc safePerformSelector:@selector(setUserPhone:) withObject:self.userPhone];
+                [vc safePerformSelector:@selector(setKiteDelegate:) withObject:self.delegate];
+                [vc safePerformSelector:@selector(setProduct:) withObject:self.product];
+                [self.navigationController pushViewController:vc animated:YES];
+            }];
+            return;
+        }
+        [vc safePerformSelector:@selector(setUserEmail:) withObject:self.userEmail];
+        [vc safePerformSelector:@selector(setUserPhone:) withObject:self.userPhone];
+        [vc safePerformSelector:@selector(setKiteDelegate:) withObject:self.delegate];
+        [vc safePerformSelector:@selector(setProduct:) withObject:self.product];
         [self.navigationController pushViewController:vc animated:YES];
         return;
     }
     
-    if (self.product.productTemplate.templateUI == kOLTemplateUICase){
-        vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLCaseViewController"];
-    }
-    else if (self.product.productTemplate.templateUI == kOLTemplateUIPostcard){
-        vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLPostcardViewController"];
-    }
-    else if (self.product.productTemplate.templateUI == kOLTemplateUIPoster){
-        vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLSingleImageProductReviewViewController"];
-    }
-    else{
-        if (![self.delegate respondsToSelector:@selector(kiteControllerShouldAllowUserToAddMorePhotos:)] || [self.delegate kiteControllerShouldAllowUserToAddMorePhotos:[OLKitePrintSDK kiteViewControllerInNavStack:self.navigationController.viewControllers]]){
-            vc = [self.storyboard instantiateViewControllerWithIdentifier:@"PhotoSelectionViewController"];
-        }
-        else if (!(![self.delegate respondsToSelector:@selector(kiteControllerShouldAllowUserToAddMorePhotos:)] || [self.delegate kiteControllerShouldAllowUserToAddMorePhotos:[OLKitePrintSDK kiteViewControllerInNavStack:self.navigationController.viewControllers]]) && self.product.productTemplate.templateUI == kOLTemplateUIPhotobook){
-            vc = [self.storyboard instantiateViewControllerWithIdentifier:@"PhotobookViewController"];
-        }
-        else{
-            vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OrderReviewViewController"];
-        }
-    }
+    vc = [self.storyboard instantiateViewControllerWithIdentifier:[OLKitePrintSDK reviewViewControllerIdentifierForTemplateUI:self.product.productTemplate.templateUI photoSelectionScreen:![self.delegate respondsToSelector:@selector(kiteControllerShouldAllowUserToAddMorePhotos:)] || [self.delegate kiteControllerShouldAllowUserToAddMorePhotos:[OLKitePrintSDK kiteViewControllerInNavStack:self.navigationController.viewControllers]]]];;
+    
     [vc safePerformSelector:@selector(setUserSelectedPhotos:) withObject:self.userSelectedPhotos];
     [vc safePerformSelector:@selector(setDelegate:) withObject:self.delegate];
     [vc safePerformSelector:@selector(setProduct:) withObject:self.product];

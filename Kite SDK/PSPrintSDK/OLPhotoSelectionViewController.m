@@ -45,6 +45,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 @interface OLKitePrintSDK (Private)
 
 + (OLKiteViewController *)kiteViewControllerInNavStack:(NSArray *)viewControllers;
++ (NSString *)reviewViewControllerIdentifierForTemplateUI:(OLTemplateUI)templateUI photoSelectionScreen:(BOOL)photoSelectionScreen;
 #ifdef OL_KITE_OFFER_INSTAGRAM
 + (NSString *) instagramRedirectURI;
 + (NSString *) instagramSecret;
@@ -911,16 +912,8 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 
 -(void)doSegueToOrderPreview{
 //    [OLAnalytics trackPhotosSelectedForOrder];
-    UIViewController* orvc;
-    if (self.product.productTemplate.templateUI == kOLTemplateUIFrame){
-        orvc = [self.storyboard instantiateViewControllerWithIdentifier:@"FrameOrderReviewViewController"];
-    }
-    else if (self.product.productTemplate.templateUI == kOLTemplateUIPhotobook){
-        orvc = [self.storyboard instantiateViewControllerWithIdentifier:@"PhotobookViewController"];
-    }
-    else{
-        orvc = [self.storyboard instantiateViewControllerWithIdentifier:@"OrderReviewViewController"];
-    }
+    UIViewController* orvc = [self.storyboard instantiateViewControllerWithIdentifier:[OLKitePrintSDK reviewViewControllerIdentifierForTemplateUI:self.product.productTemplate.templateUI photoSelectionScreen:NO]];
+    
     [orvc safePerformSelector:@selector(setProduct:) withObject:self.product];
     [orvc safePerformSelector:@selector(setUserSelectedPhotos:) withObject:self.userSelectedPhotos];
     [self.navigationController pushViewController:orvc animated:YES];

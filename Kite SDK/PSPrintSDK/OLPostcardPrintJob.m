@@ -25,6 +25,7 @@ static id stringOrEmptyString(NSString *str) {
 @interface OLPostcardPrintJob ()
 @property (nonatomic, strong) NSString *templateId;
 @property (nonatomic, strong) OLAsset *frontImageAsset;
+@property (nonatomic, strong) OLAsset *backImageAsset;
 @property (nonatomic, copy) NSString *message;
 @property (nonatomic, strong) OLAddress *address;
 
@@ -33,9 +34,18 @@ static id stringOrEmptyString(NSString *str) {
 @implementation OLPostcardPrintJob
 
 
-- (id)initWithTemplateId:(NSString *)templateId frontImageOLAsset:(OLAsset *)frontImageAsset message:(NSString *)message address:(OLAddress *)address; {
+- (id)initWithTemplateId:(NSString *)templateId frontImageOLAsset:(OLAsset *)frontImageAsset message:(NSString *)message address:(OLAddress *)address {
+    return [self initWithTemplateId:templateId frontImageOLAsset:frontImageAsset backImageOLAsset:nil message:message address:address];
+}
+
+- (id)initWithTemplateId:(NSString *)templateId frontImageOLAsset:(OLAsset *)frontImageAsset backImageOLAsset:(OLAsset *)backImageAsset {
+    return [self initWithTemplateId:templateId frontImageOLAsset:frontImageAsset backImageOLAsset:backImageAsset message:nil address:nil];
+}
+
+- (id)initWithTemplateId:(NSString *)templateId frontImageOLAsset:(OLAsset *)frontImageAsset backImageOLAsset:(OLAsset *)backImageAsset message:(NSString *)message address:(OLAddress *)address {
     if (self = [super init]) {
         self.frontImageAsset = frontImageAsset;
+        self.backImageAsset = backImageAsset;
         self.message = message;
         self.address = address;
         self.templateId = templateId;
@@ -84,10 +94,14 @@ static id stringOrEmptyString(NSString *str) {
     }
     
     // set message
-    [json setObject:self.message forKey:@"message"];
+    if (self.message) {
+        [json setObject:self.message forKey:@"message"];
+    }
     
     if (self.address) {
-        NSDictionary *shippingAddress = @{@"recipient_name": stringOrEmptyString(self.address.recipientName),
+        NSDictionary *shippingAddress = @{@"recipient_name": stringOrEmptyString(self.address.fullNameFromFirstAndLast),
+                                          @"recipient_first_name": stringOrEmptyString(self.address.recipientFirstName),
+                                          @"recipient_last_name": stringOrEmptyString(self.address.recipientLastName),
                                           @"address_line_1": stringOrEmptyString(self.address.line1),
                                           @"address_line_2": stringOrEmptyString(self.address.line2),
                                           @"city": stringOrEmptyString(self.address.city),
@@ -107,9 +121,10 @@ static id stringOrEmptyString(NSString *str) {
 }
 
 - (NSUInteger) hash{
-    NSUInteger result = 1;
+    NSUInteger result = 17;
     if (self.templateId) result *= [self.templateId hash];
     if (self.frontImageAsset) result *= [self.frontImageAsset hash];
+    if (self.backImageAsset) result *= [self.backImageAsset hash];
     if (self.message && [self.message hash] > 0) result *= [self.message hash];
     if (self.address) result *= [self.address hash];
     return result;
@@ -127,6 +142,7 @@ static id stringOrEmptyString(NSString *str) {
     BOOL result = YES;
     if (self.templateId) result &= [self.templateId isEqual:printJob.templateId];
     if (self.frontImageAsset) result &= [self.frontImageAsset isEqual:printJob.frontImageAsset];
+    if (self.backImageAsset) result &= [self.backImageAsset isEqual:printJob.backImageAsset];
     if (self.message) result &= [self.message isEqual:printJob.message];
     if (self.address) result &= [self.address isEqual:printJob.address];
     return result;

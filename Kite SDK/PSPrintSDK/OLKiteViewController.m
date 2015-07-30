@@ -21,11 +21,12 @@
 #import "OLProductGroup.h"
 #import "OLCustomNavigationController.h"
 #import "NSObject+Utils.h"
-#import <SkyLab.h>
+#import "OLKiteABTesting.h"
+#import "UIImage+ColorAtPixel.h"
 
 static const NSInteger kTagNoProductsAlertView = 99;
 static const NSInteger kTagTemplateSyncFailAlertView = 100;
-static NSString *const kOLKiteABTestProductDescriptionWithPrintOrder = @"ly.kite.abtest.show_product_description_screen";
+
 
 @interface OLKiteViewController () <UIAlertViewDelegate>
 
@@ -34,6 +35,7 @@ static NSString *const kOLKiteABTestProductDescriptionWithPrintOrder = @"ly.kite
 @property (strong, nonatomic) NSMutableArray *userSelectedPhotos;
 @property (weak, nonatomic) IBOutlet UINavigationBar *navigationBar;
 @property (weak, nonatomic) IBOutlet UINavigationItem *customNavigationItem;
+@property (weak, nonatomic) IBOutlet UIImageView *loadingImageView;
 
 // Because template sync happens in the constructor it may complete before the OLKiteViewController has appeared. In such a case where sync does
 // complete first we make a note to immediately transition to the appropriate view when the OLKiteViewController does appear:
@@ -41,7 +43,6 @@ static NSString *const kOLKiteABTestProductDescriptionWithPrintOrder = @"ly.kite
 @property (strong, nonatomic) NSBlockOperation *templateSyncOperation;
 @property (strong, nonatomic) NSBlockOperation *remotePlistSyncOperation;
 @property (strong, nonatomic) NSBlockOperation *transitionOperation;
-@property (assign, nonatomic) BOOL showProductDescriptionWithPrintOrder;
 
 @end
 
@@ -49,7 +50,8 @@ static NSString *const kOLKiteABTestProductDescriptionWithPrintOrder = @"ly.kite
 
 + (void)setCacheTemplates:(BOOL)cache;
 + (BOOL)cacheTemplates;
-+ (void)fetchRemotePlistsWithCompletionHandler:(void(^)())handler;
++ (void)checkoutViewControllerForPrintOrder:(OLPrintOrder *)printOrder handler:(void(^)(OLCheckoutViewController *vc))handler;
++ (NSString *)reviewViewControllerIdentifierForTemplateUI:(OLTemplateUI)templateUI photoSelectionScreen:(BOOL)photoSelectionScreen;
 
 @end
 
@@ -86,20 +88,6 @@ static NSString *const kOLKiteABTestProductDescriptionWithPrintOrder = @"ly.kite
     return self;
 }
 
-- (void)setupABTestVariants {
-    NSDictionary *experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestProductDescriptionWithPrintOrder];
-    if (!experimentDict) {
-        experimentDict = @{@"Yes" : @0.5, @"No" : @0.5};
-    }
-    [SkyLab splitTestWithName:kOLKiteABTestProductDescriptionWithPrintOrder
-                   conditions:@{
-                                @"Yes" : experimentDict[@"Yes"],
-                                @"No" : experimentDict[@"No"]
-                                } block:^(id choice) {
-                                    self.showProductDescriptionWithPrintOrder = [choice isEqualToString:@"Yes"];
-                                }];
-}
-
 -(void)viewDidLoad {
     [super viewDidLoad];
     
@@ -118,27 +106,25 @@ static NSString *const kOLKiteABTestProductDescriptionWithPrintOrder = @"ly.kite
     [self.transitionOperation addDependency:self.templateSyncOperation];
     [self.transitionOperation addDependency:self.remotePlistSyncOperation];
     
-    [OLKitePrintSDK fetchRemotePlistsWithCompletionHandler:^{
-        NSAssert([NSThread isMainThread], @"assumption about main thread callback is incorrect");
-        [self setupABTestVariants];
+    [OLKiteABTesting sharedInstance].skipHomeScreen = self.printOrder != nil;
+    [[OLKiteABTesting sharedInstance] fetchRemotePlistsWithCompletionHandler:^{
+        [self.operationQueue addOperation:self.remotePlistSyncOperation];
+    
 #ifndef OL_NO_ANALYTICS
-        if (self.printOrder && !self.showProductDescriptionWithPrintOrder){
-            [OLAnalytics trackKiteViewControllerLoadedWithEntryPoint:@"Shipping Screen"];
-        }
-        else if(self.printOrder && self.showProductDescriptionWithPrintOrder){
-            [OLAnalytics trackKiteViewControllerLoadedWithEntryPoint:@"Product Description Screen"];
+        if (self.printOrder){
+            [OLAnalytics trackKiteViewControllerLoadedWithEntryPoint:[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant];
         }
         else{
             [OLAnalytics trackKiteViewControllerLoadedWithEntryPoint:@"Home Screen"];
         }
 #endif
-        [self.operationQueue addOperation:self.remotePlistSyncOperation];
-
     }];
     
     if ([OLKitePrintSDK environment] == kOLKitePrintSDKEnvironmentLive){
         [[self.view viewWithTag:9999] removeFromSuperview];
     }
+    
+    self.view.backgroundColor = [self.loadingImageView.image colorAtPixel:CGPointMake(3, 3)];
     
     [self transitionToNextScreen];
 
@@ -178,23 +164,34 @@ static NSString *const kOLKiteABTestProductDescriptionWithPrintOrder = @"ly.kite
             }
             return;
         }
-        else if (welf.printOrder && !welf.showProductDescriptionWithPrintOrder){
-            OLCheckoutViewController *vc = [[OLCheckoutViewController alloc] initWithPrintOrder:welf.printOrder];
-            [[vc navigationItem] setLeftBarButtonItem:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:welf action:@selector(dismiss)]];
-            vc.userEmail = welf.userEmail;
-            vc.userPhone = welf.userPhone;
-            vc.kiteDelegate = welf.delegate;
-            OLCustomNavigationController *nvc = [[OLCustomNavigationController alloc] initWithRootViewController:vc];
+        else if (welf.printOrder){
+            OLProduct *product = [OLProduct productWithTemplateId:[[welf.printOrder.jobs firstObject] templateId]];
+            NSString *identifier;
+            if ([[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant hasPrefix:@"Overview-"]){
+                identifier = @"OLProductOverviewViewController";
+            }
+            else if ([[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant hasPrefix:@"Review-"] ){
+                identifier = [OLKitePrintSDK reviewViewControllerIdentifierForTemplateUI:product.productTemplate.templateUI photoSelectionScreen:NO];
+            }
+            else{
+                [OLKitePrintSDK checkoutViewControllerForPrintOrder:welf.printOrder handler:^(OLCheckoutViewController *vc){
+                    [[vc navigationItem] setLeftBarButtonItem:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:welf action:@selector(dismiss)]];
+                    vc.userEmail = welf.userEmail;
+                    vc.userPhone = welf.userPhone;
+                    vc.kiteDelegate = welf.delegate;
+                    OLCustomNavigationController *nvc = [[OLCustomNavigationController alloc] initWithRootViewController:vc];
+                    
+                    [welf fadeToViewController:nvc];
+                }];
+                
+                return;
+            }
+            UIViewController *vc = [welf.storyboard instantiateViewControllerWithIdentifier:identifier];
+            [vc safePerformSelector:@selector(setUserEmail:) withObject:welf.userEmail];
+            [vc safePerformSelector:@selector(setUserPhone:) withObject:welf.userPhone];
+            [vc safePerformSelector:@selector(setKiteDelegate:) withObject:welf.delegate];
+            [vc safePerformSelector:@selector(setProduct:) withObject:product];
 
-            [welf fadeToViewController:nvc];
-            return;
-        }
-        else if (welf.printOrder && welf.showProductDescriptionWithPrintOrder){
-            OLProductOverviewViewController *vc = [welf.storyboard instantiateViewControllerWithIdentifier:@"OLProductOverviewViewController"];
-            vc.product = [OLProduct productWithTemplateId:[[welf.printOrder.jobs firstObject] templateId]];
-            vc.userEmail = welf.userEmail;
-            vc.userPhone = welf.userPhone;
-            vc.delegate = welf.delegate;
             [[vc navigationItem] setLeftBarButtonItem:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:welf action:@selector(dismiss)]];
             [vc.navigationItem.rightBarButtonItem setTitle:NSLocalizedString(@"Next", @"")];
             OLCustomNavigationController *nvc = [[OLCustomNavigationController alloc] initWithRootViewController:vc];
@@ -228,10 +225,13 @@ static NSString *const kOLKiteABTestProductDescriptionWithPrintOrder = @"ly.kite
 - (void)fadeToViewController:(UIViewController *)vc{
     vc.view.alpha = 0;
     [self addChildViewController:vc];
+    [vc beginAppearanceTransition: YES animated: YES];
     [self.view addSubview:vc.view];
     [UIView animateWithDuration:0.3 animations:^(void){
         vc.view.alpha = 1;
-    } completion:^(BOOL b){}];
+    } completion:^(BOOL b){
+        [vc endAppearanceTransition];
+    }];
     
 }
 
