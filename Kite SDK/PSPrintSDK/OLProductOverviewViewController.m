@@ -188,7 +188,7 @@
                 [vc safePerformSelector:@selector(setProduct:) withObject:self.product];
                 [self.navigationController pushViewController:vc animated:YES];
             }];
-            
+            return;
         }
         [vc safePerformSelector:@selector(setUserEmail:) withObject:self.userEmail];
         [vc safePerformSelector:@selector(setUserPhone:) withObject:self.userPhone];
