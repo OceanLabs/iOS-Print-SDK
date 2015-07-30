@@ -74,7 +74,6 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
     NSAssert(assets != nil && [assets count] > 0, @"KiteViewController requires assets to print");
     if ((self = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:nil] instantiateViewControllerWithIdentifier:@"KiteViewController"])) {
         self.assets = assets;
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(templateSyncDidFinish:) name:kNotificationTemplateSyncComplete object:nil];
     }
     
     return self;
@@ -82,7 +81,6 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
 
 - (id)initWithPrintOrder:(OLPrintOrder *)printOrder{
     if ((self = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:nil] instantiateViewControllerWithIdentifier:@"KiteViewController"])) {
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(templateSyncDidFinish:) name:kNotificationTemplateSyncComplete object:nil];
         self.printOrder = printOrder;
     }
     return self;
@@ -90,6 +88,8 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
 
 -(void)viewDidLoad {
     [super viewDidLoad];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(templateSyncDidFinish:) name:kNotificationTemplateSyncComplete object:nil];
     
     if (!self.navigationController){
         self.navigationBar.hidden = NO;
