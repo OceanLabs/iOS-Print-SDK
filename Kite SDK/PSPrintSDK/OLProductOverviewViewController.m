@@ -28,6 +28,7 @@
 
 + (OLKiteViewController *)kiteViewControllerInNavStack:(NSArray *)viewControllers;
 + (NSString *)reviewViewControllerIdentifierForTemplateUI:(OLTemplateUI)templateUI photoSelectionScreen:(BOOL)photoSelectionScreen;
++ (void)checkoutViewControllerForPrintOrder:(OLPrintOrder *)printOrder handler:(void(^)(OLCheckoutViewController *vc))handler;
 
 @end
 
@@ -179,8 +180,15 @@
             vc = [self.storyboard instantiateViewControllerWithIdentifier:[OLKitePrintSDK reviewViewControllerIdentifierForTemplateUI:self.product.productTemplate.templateUI photoSelectionScreen:NO]];
         }
         else{
-            vc = [[OLCheckoutViewController alloc] initWithPrintOrder:printOrder];
-            [[vc navigationItem] setLeftBarButtonItem:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:(OLKiteViewController *)vc action:@selector(dismiss)]];
+            [OLKitePrintSDK checkoutViewControllerForPrintOrder:printOrder handler:^(OLCheckoutViewController *vc){
+                [[vc navigationItem] setLeftBarButtonItem:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:(OLKiteViewController *)vc action:@selector(dismiss)]];
+                [vc safePerformSelector:@selector(setUserEmail:) withObject:self.userEmail];
+                [vc safePerformSelector:@selector(setUserPhone:) withObject:self.userPhone];
+                [vc safePerformSelector:@selector(setKiteDelegate:) withObject:self.delegate];
+                [vc safePerformSelector:@selector(setProduct:) withObject:self.product];
+                [self.navigationController pushViewController:vc animated:YES];
+            }];
+            return;
         }
         [vc safePerformSelector:@selector(setUserEmail:) withObject:self.userEmail];
         [vc safePerformSelector:@selector(setUserPhone:) withObject:self.userPhone];
