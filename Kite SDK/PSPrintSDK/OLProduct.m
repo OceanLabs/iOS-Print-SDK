@@ -216,7 +216,7 @@ typedef enum {
 
 - (NSString *) dimensions{
     NSLocale *locale = [NSLocale currentLocale];
-    BOOL isMetric = [[locale objectForKey:NSLocaleUsesMetricSystem] boolValue] && ![[locale objectForKey:NSLocaleCountryCode] isEqualToString:@"GB"];
+    BOOL isMetric = [[locale objectForKey:NSLocaleUsesMetricSystem] boolValue];
     return isMetric ? [self dimensionsInUnits:kSizeUnitsCentimetres] : [self dimensionsInUnits:kSizeUnitsInches];
 }
 
