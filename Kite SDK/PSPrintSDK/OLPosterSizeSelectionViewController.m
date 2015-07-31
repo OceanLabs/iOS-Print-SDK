@@ -8,7 +8,7 @@
 
 #import "OLPosterSizeSelectionViewController.h"
 #import "OLProduct.h"
-#import "OLPosterViewController.h"
+#import "OLOldPosterViewController.h"
 #import "OLKiteViewController.h"
 #import "OLAnalytics.h"
 #import "OLKitePrintSDK.h"
@@ -68,13 +68,13 @@ static UIColor *deselectedColor;
     OLProduct *productA2;
     OLProduct *productA3;
     for (OLProduct *product in [OLProduct productsWithFilters:self.filterProducts]){
-        if ([product.productTemplate.productCode hasSuffix:@"A1"] && product.productTemplate.quantityPerSheet == 1){
+        if ([product.productTemplate.productCode hasSuffix:@"A1"] && product.productTemplate.quantityPerSheet == 35){
             productA1 = product;
         }
-        if ([product.productTemplate.productCode hasSuffix:@"A2"] && product.productTemplate.quantityPerSheet == 1){
+        if ([product.productTemplate.productCode hasSuffix:@"A2"] && product.productTemplate.quantityPerSheet == 35){
             productA2 = product;
         }
-        if ([product.productTemplate.productCode hasSuffix:@"A3"] && product.productTemplate.quantityPerSheet == 1){
+        if ([product.productTemplate.productCode hasSuffix:@"A3"] && product.productTemplate.quantityPerSheet == 35){
             productA3 = product;
         }
     }
@@ -136,7 +136,7 @@ static UIColor *deselectedColor;
 #pragma mark - actions
 - (IBAction)pressedClassic:(UIButton *)sender {
     for (OLProduct *product in [OLProduct products]){
-        if ([product.productTemplate.productCode hasSuffix:@"A3"] && product.productTemplate.quantityPerSheet == 1){
+        if ([product.productTemplate.productCode hasSuffix:@"A3"] && product.productTemplate.quantityPerSheet == 35){
             self.product = product;
         }
     }
@@ -155,7 +155,7 @@ static UIColor *deselectedColor;
 
 - (IBAction)pressedGrand:(UIButton *)sender {
     for (OLProduct *product in [OLProduct products]){
-        if ([product.productTemplate.productCode hasSuffix:@"A2"] && product.productTemplate.quantityPerSheet == 1){
+        if ([product.productTemplate.productCode hasSuffix:@"A2"] && product.productTemplate.quantityPerSheet == 35){
             self.product = product;
         }
     }
@@ -174,7 +174,7 @@ static UIColor *deselectedColor;
 
 - (IBAction)pressedDeluxe:(UIButton *)sender {
     for (OLProduct *product in [OLProduct products]){
-        if ([product.productTemplate.productCode hasSuffix:@"A1"] && product.productTemplate.quantityPerSheet == 1){
+        if ([product.productTemplate.productCode hasSuffix:@"A1"] && product.productTemplate.quantityPerSheet == 35){
             self.product = product;
         }
     }
@@ -193,7 +193,7 @@ static UIColor *deselectedColor;
 }
 
 - (IBAction)pressedContinue {
-    OLPosterViewController *dest = [self.storyboard instantiateViewControllerWithIdentifier:@"OLSingleImageProductReviewViewController"];
+    OLOldPosterViewController *dest = [self.storyboard instantiateViewControllerWithIdentifier:@"OLPosterViewController"];
     dest.product = self.product;
     dest.userSelectedPhotos = self.userSelectedPhotos;
     [self.navigationController pushViewController:dest animated:YES];

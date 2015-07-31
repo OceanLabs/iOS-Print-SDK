@@ -17,7 +17,7 @@
 #import "OLProductTypeSelectionViewController.h"
 #import "OLSingleImageProductReviewViewController.h"
 #import "OLPhotoSelectionViewController.h"
-#import "OLPosterViewController.h"
+#import "OLOldPosterViewController.h"
 #import "OLFrameOrderReviewViewController.h"
 #import "OLPostcardViewController.h"
 #import "NSObject+Utils.h"
