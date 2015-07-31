@@ -197,11 +197,15 @@ typedef enum {
     switch (sizeUnits) {
         case kSizeUnitsCentimetres:
             dimensions = [self dimensionsInCentimetres];
-            unitsName = @"cm";
+            unitsName = NSLocalizedString(@"cm", @"");
             break;
         case kSizeUnitsInches:
             dimensions = [self dimensionsInInches];
             unitsName = NSLocalizedString(@"INCHES", "");
+            if (dimensions.width < 0.1 && dimensions.height < 0.1){
+                dimensions = [self dimensionsInCentimetres];
+                unitsName = NSLocalizedString(@"cm", @"");
+            }
             break;
         default:
             break;
