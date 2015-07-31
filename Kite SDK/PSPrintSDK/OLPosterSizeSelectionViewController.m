@@ -8,11 +8,11 @@
 
 #import "OLPosterSizeSelectionViewController.h"
 #import "OLProduct.h"
-#import "OLOldPosterViewController.h"
 #import "OLKiteViewController.h"
 #import "OLAnalytics.h"
 #import "OLKitePrintSDK.h"
 #import "OLKiteABTesting.h"
+#import "OLPosterViewController.h"
 
 @interface OLProduct (Private)
 
@@ -193,7 +193,7 @@ static UIColor *deselectedColor;
 }
 
 - (IBAction)pressedContinue {
-    OLOldPosterViewController *dest = [self.storyboard instantiateViewControllerWithIdentifier:@"OLPosterViewController"];
+    OLPosterViewController *dest = [self.storyboard instantiateViewControllerWithIdentifier:@"OLPosterViewController"];
     dest.product = self.product;
     dest.userSelectedPhotos = self.userSelectedPhotos;
     [self.navigationController pushViewController:dest animated:YES];
