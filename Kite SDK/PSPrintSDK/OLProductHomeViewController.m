@@ -122,7 +122,7 @@
         
         [bannerView.superview addConstraints:con];
         
-        [self.navigationController.view addConstraint:[NSLayoutConstraint constraintWithItem:bannerView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.navigationController.view attribute:NSLayoutAttributeBottom multiplier:1 constant:45]];
+        [self.navigationController.view addConstraint:[NSLayoutConstraint constraintWithItem:bannerView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.navigationController.view attribute:NSLayoutAttributeBottom multiplier:1 constant:70]];
         
         if ([self promoBannerHeaderText]){
             self.headerView = [[UIView alloc] init];
@@ -317,7 +317,7 @@
     if (self.bannerView){
         self.bannerView.hidden = NO;
         [UIView animateWithDuration:0.25 animations:^{
-            self.bannerView.transform = CGAffineTransformMakeTranslation(0, -45);
+            self.bannerView.transform = CGAffineTransformMakeTranslation(0, -70);
             [self.collectionView setContentInset:UIEdgeInsetsMake(self.collectionView.contentInset.top, 0, 40, 0)];
         }completion:NULL];
     }
