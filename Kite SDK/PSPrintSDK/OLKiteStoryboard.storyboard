@@ -2496,7 +2496,7 @@
                                                     <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <subviews>
-                                                        <activityIndicatorView hidden="YES" opaque="NO" tag="796" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="enB-N0-rs3">
+                                                        <activityIndicatorView hidden="YES" opaque="NO" tag="796" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="enB-N0-rs3">
                                                             <rect key="frame" x="15" y="15" width="20" height="20"/>
                                                         </activityIndicatorView>
                                                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" tag="795" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="8MV-0x-Wks">
@@ -2506,8 +2506,10 @@
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                 </view>
                                                 <constraints>
+                                                    <constraint firstAttribute="centerX" secondItem="enB-N0-rs3" secondAttribute="centerX" id="CKg-uW-Ni5"/>
                                                     <constraint firstAttribute="bottom" secondItem="8MV-0x-Wks" secondAttribute="bottom" id="Cwq-Hh-pCm"/>
                                                     <constraint firstAttribute="trailing" secondItem="8MV-0x-Wks" secondAttribute="trailing" id="DTn-T5-zTl"/>
+                                                    <constraint firstAttribute="centerY" secondItem="enB-N0-rs3" secondAttribute="centerY" id="jeH-CW-0Bb"/>
                                                     <constraint firstItem="8MV-0x-Wks" firstAttribute="top" secondItem="No3-sF-jRp" secondAttribute="top" id="nE7-hr-AhY"/>
                                                     <constraint firstItem="8MV-0x-Wks" firstAttribute="leading" secondItem="No3-sF-jRp" secondAttribute="leading" id="unr-WO-hyh"/>
                                                 </constraints>

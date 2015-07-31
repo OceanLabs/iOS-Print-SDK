@@ -119,8 +119,10 @@
     OLPrintPhoto *printPhoto = self.posterPhotos[indexPath.item];
     
     [printPhoto setImageSize:[self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath] cropped:YES completionHandler:^(UIImage *image){
-        imageView.image = image;
-        [activity stopAnimating];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            imageView.image = image;
+            [activity stopAnimating];
+        });
     }];
     
     return cell;
