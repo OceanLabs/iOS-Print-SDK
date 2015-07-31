@@ -57,6 +57,10 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
 
 @implementation OLKiteViewController
 
+- (UIStatusBarStyle)preferredStatusBarStyle{
+    return [[self.childViewControllers firstObject] preferredStatusBarStyle];
+}
+
 -(NSMutableArray *) userSelectedPhotos{
     if (!_userSelectedPhotos){
         NSMutableArray *mutableUserSelectedPhotos = [[NSMutableArray alloc] init];
