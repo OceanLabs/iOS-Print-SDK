@@ -344,7 +344,9 @@ static id stringOrEmptyString(NSString *str) {
     }
     
     if (self.shippingAddress) {
-        NSDictionary *shippingAddress = @{@"recipient_name": stringOrEmptyString(self.shippingAddress.recipientName),
+        NSDictionary *shippingAddress = @{@"recipient_name": stringOrEmptyString(self.shippingAddress.fullNameFromFirstAndLast),
+                                          @"recipient_first_name": stringOrEmptyString(self.shippingAddress.recipientFirstName),
+                                          @"recipient_last_name": stringOrEmptyString(self.shippingAddress.recipientLastName),
                                           @"address_line_1": stringOrEmptyString(self.shippingAddress.line1),
                                           @"address_line_2": stringOrEmptyString(self.shippingAddress.line2),
                                           @"city": stringOrEmptyString(self.shippingAddress.city),

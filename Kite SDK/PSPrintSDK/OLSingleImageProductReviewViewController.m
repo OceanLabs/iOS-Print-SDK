@@ -15,6 +15,9 @@
 #import "OLKitePrintSDK.h"
 #import <CTAssetsPickerController.h>
 #import "NSArray+QueryingExtras.h"
+#import "OLKiteViewController.h"
+#import "OLKiteABTesting.h"
+#import "NSObject+Utils.h"
 
 #ifdef OL_KITE_OFFER_INSTAGRAM
 #import <OLInstagramImagePickerController.h>
@@ -26,6 +29,12 @@
 #import <OLFacebookImage.h>
 #endif
 
+@interface OLKiteViewController ()
+
+@property (strong, nonatomic) OLPrintOrder *printOrder;
+- (void)dismiss;
+
+@end
 
 @interface OLKitePrintSDK (InternalUtils)
 + (NSString *)userEmail:(UIViewController *)topVC;
@@ -72,6 +81,20 @@ CTAssetsPickerControllerDelegate>
     [OLAnalytics trackReviewScreenViewed:self.product.productTemplate.name];
 #endif
     
+    OLKiteViewController *kiteVc = [self kiteVc];
+    if ([kiteVc printOrder]){
+        self.title = NSLocalizedString(@"Review", @"");
+        self.userSelectedPhotos = [[NSMutableArray alloc] init];
+        for (OLAsset *asset in [[kiteVc.printOrder.jobs firstObject] assetsForUploading]){
+            OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
+            printPhoto.asset = asset;
+            [self.userSelectedPhotos addObject:printPhoto];
+        }
+    }
+    else{
+        [self setTitle:NSLocalizedString(@"Reposition the Photo", @"")];
+    }
+    
     [[self.userSelectedPhotos firstObject] getImageWithProgress:NULL completion:^(UIImage *image){
         self.imageCropView.image = image;
     }];
@@ -85,7 +108,6 @@ CTAssetsPickerControllerDelegate>
                                               style:UIBarButtonItemStylePlain
                                               target:self
                                               action:@selector(onButtonNextClicked)];
-    [self setTitle:NSLocalizedString(@"Reposition the Photo", @"")];
     
     self.quantity = 1;
     [self updateQuantityLabel];
@@ -124,6 +146,20 @@ CTAssetsPickerControllerDelegate>
 
 -(void)onButtonNextClicked{
     [self doCheckout];
+}
+
+- (OLKiteViewController *)kiteVc{
+    UIViewController *vc = self.parentViewController;
+    while (vc) {
+        if ([vc isKindOfClass:[OLKiteViewController class]]){
+            return (OLKiteViewController *)vc;
+            break;
+        }
+        else{
+            vc = vc.parentViewController;
+        }
+    }
+    return nil;
 }
 
 -(void) doCheckout{
@@ -166,15 +202,40 @@ CTAssetsPickerControllerDelegate>
                                     @"uid": [[[UIDevice currentDevice] identifierForVendor] UUIDString],
                                     @"app_version": [NSString stringWithFormat:@"Version: %@ (%@)", appVersion, buildNumber]
                                     };
+            
+            
+            //Check if we have launched with a Print Order
+            OLKiteViewController *kiteVC = [self kiteVc];
+            if ([kiteVC printOrder]){
+                printOrder = [kiteVC printOrder];
+            }
+            
+            for (id<OLPrintJob> job in printOrder.jobs){
+                [printOrder removePrintJob:job];
+            }
             [printOrder addPrintJob:job];
             
-            [OLKitePrintSDK checkoutViewControllerForPrintOrder:printOrder handler:^(OLCheckoutViewController *vc){
-                vc.userEmail = [OLKitePrintSDK userEmail:self];
-                vc.userPhone = [OLKitePrintSDK userPhone:self];
-                vc.kiteDelegate = [OLKitePrintSDK kiteDelegate:self];
-                
+            if ([kiteVC printOrder]){
+                [kiteVC setPrintOrder:printOrder];
+            }
+            
+            if ([kiteVC printOrder] && [[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant isEqualToString:@"Review-Overview-Checkout"]){
+                UIViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLProductOverviewViewController"];
+                [vc safePerformSelector:@selector(setUserEmail:) withObject:[(OLKiteViewController *)vc userEmail]];
+                [vc safePerformSelector:@selector(setUserPhone:) withObject:[(OLKiteViewController *)vc userPhone]];
+                [vc safePerformSelector:@selector(setKiteDelegate:) withObject:self.delegate];
+                [vc safePerformSelector:@selector(setProduct:) withObject:self.product];
                 [self.navigationController pushViewController:vc animated:YES];
-            }];
+            }
+            else{
+                [OLKitePrintSDK checkoutViewControllerForPrintOrder:printOrder handler:^(OLCheckoutViewController *vc){
+                    vc.userEmail = [OLKitePrintSDK userEmail:self];
+                    vc.userPhone = [OLKitePrintSDK userPhone:self];
+                    vc.kiteDelegate = [OLKitePrintSDK kiteDelegate:self];
+                    
+                    [self.navigationController pushViewController:vc animated:YES];
+                }];
+            }
         }
     }];
 }
@@ -217,22 +278,15 @@ CTAssetsPickerControllerDelegate>
     }
 }
 
-- (OLKiteViewController *)kiteViewController {
-    for (UIViewController *vc in self.navigationController.viewControllers) {
-        if ([vc isMemberOfClass:[OLKiteViewController class]]) {
-            return (OLKiteViewController *) vc;
-        }
-    }
-    
-    return nil;
-}
-
 - (BOOL)shouldShowAddMorePhotos{
-    if (![self.delegate respondsToSelector:@selector(kiteControllerShouldAllowUserToAddMorePhotos:)]){
+    if ([[self kiteVc] printOrder]){
+        return NO;
+    }
+    else if (![self.delegate respondsToSelector:@selector(kiteControllerShouldAllowUserToAddMorePhotos:)]){
         return YES;
     }
     else{
-        return [self.delegate kiteControllerShouldAllowUserToAddMorePhotos:[self kiteViewController]];
+        return [self.delegate kiteControllerShouldAllowUserToAddMorePhotos:[self kiteVc]];
     }
 }
 
@@ -424,7 +478,7 @@ CTAssetsPickerControllerDelegate>
 
 - (BOOL)assetsPickerController:(CTAssetsPickerController *)picker isDefaultAssetsGroup:(ALAssetsGroup *)group {
     if ([self.delegate respondsToSelector:@selector(kiteController:isDefaultAssetsGroup:)]) {
-        return [self.delegate kiteController:[self kiteViewController] isDefaultAssetsGroup:group];
+        return [self.delegate kiteController:[self kiteVc] isDefaultAssetsGroup:group];
     }
     
     return NO;

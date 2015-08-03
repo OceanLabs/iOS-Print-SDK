@@ -17,6 +17,7 @@
 #import "OLAddressEditViewController.h"
 #import <SkyLab.h>
 #import "OLProductPrintJob.h"
+#import "OLKiteABTesting.h"
 
 NSString *const kOLNotificationUserSuppliedShippingDetails = @"co.oceanlabs.pssdk.kOLNotificationUserSuppliedShippingDetails";
 NSString *const kOLNotificationUserCompletedPayment = @"co.oceanlabs.pssdk.kOLNotificationUserCompletedPayment";
@@ -34,9 +35,6 @@ static const NSUInteger kSectionCount = 3;
 
 static NSString *const kKeyEmailAddress = @"co.oceanlabs.pssdk.kKeyEmailAddress";
 static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
-static NSString *const kOLKiteABTestOfferAddressSearch = @"ly.kite.abtest.offer_address_search";
-static NSString *const kOLKiteABTestRequirePhoneNumber = @"ly.kite.abtest.require_phone";
-static NSString *const kOLKiteABTestAllowMultipleRecipients = @"ly.kite.abtest.allow_multiple_recipients";
 
 @interface OLPaymentViewController (Private)
 @property (nonatomic, assign) BOOL presentedModally;
@@ -54,10 +52,6 @@ static NSString *const kOLKiteABTestAllowMultipleRecipients = @"ly.kite.abtest.a
 @property (strong, nonatomic) UILabel *kiteLabel;
 @property (strong, nonatomic) NSLayoutConstraint *kiteLabelYCon;
 @property (weak, nonatomic) UITextField *activeTextView;
-@property (assign, nonatomic) BOOL offerAddressSearch;
-@property (assign, nonatomic) BOOL allowsMultipleRecipients;
-@property (assign, nonatomic) BOOL requirePhoneNumber;
-@property (assign, nonatomic) CGFloat edgeInsetTop;
 @end
 
 @implementation OLCheckoutViewController
@@ -79,7 +73,6 @@ static NSString *const kOLKiteABTestAllowMultipleRecipients = @"ly.kite.abtest.a
 - (id)init {
     //NSAssert(NO, @"init is not a valid initializer for OLCheckoutViewController. Use initWithAPIKey:environment:printOrder:, or initWithPrintOrder: instead");
     if (self = [super initWithStyle:UITableViewStyleGrouped]) {
-        [self setupABTestVariants];
     }
     return self;
 }
@@ -90,7 +83,6 @@ static NSString *const kOLKiteABTestAllowMultipleRecipients = @"ly.kite.abtest.a
         [OLKitePrintSDK setAPIKey:apiKey withEnvironment:env];
         self.printOrder = printOrder;
         //[self.printOrder preemptAssetUpload];
-        [self setupABTestVariants];
     }
     
     return self;
@@ -101,49 +93,9 @@ static NSString *const kOLKiteABTestAllowMultipleRecipients = @"ly.kite.abtest.a
     if (self = [super initWithStyle:UITableViewStyleGrouped]) {
         self.printOrder = printOrder;
         //[self.printOrder preemptAssetUpload];
-        [self setupABTestVariants];
     }
     
     return self;
-}
-
-- (void)setupABTestVariants {
-    NSDictionary *experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestOfferAddressSearch];
-    if (!experimentDict) {
-        experimentDict = @{@"Yes" : @0.5, @"No" : @0.5};
-    }
-    [SkyLab splitTestWithName:kOLKiteABTestOfferAddressSearch
-                   conditions:@{
-                                @"Yes" : experimentDict[@"Yes"],
-                                @"No" : experimentDict[@"No"]
-                                } block:^(id choice) {
-                                    self.offerAddressSearch = [choice isEqualToString:@"Yes"];
-                                }];
-    
-    experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestRequirePhoneNumber];
-    if (!experimentDict) {
-        experimentDict = @{@"Yes" : @0.5, @"No" : @0.5};
-    }
-    [SkyLab splitTestWithName:kOLKiteABTestRequirePhoneNumber
-                   conditions:@{
-                                @"Yes" : experimentDict[@"Yes"],
-                                @"No" : experimentDict[@"No"]
-                                } block:^(id choice) {
-                                    self.requirePhoneNumber = [choice isEqualToString:@"Yes"];
-                                }];
-    
-    experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestAllowMultipleRecipients];
-    if (!experimentDict){
-        experimentDict = @{@"Yes" : @0, @"No" : @1};
-    }
-    [SkyLab splitTestWithName:kOLKiteABTestAllowMultipleRecipients
-                   conditions:@{
-                                @"Yes" : experimentDict[@"Yes"],
-                                @"No" : experimentDict[@"No"]
-                                } block:^(id choice){
-                                    self.allowsMultipleRecipients = [choice isEqualToString:@"Yes"];
-                                }];
-    
 }
 
 - (void)presentViewControllerFrom:(UIViewController *)presentingViewController animated:(BOOL)animated completion:(void (^)(void))completion {
@@ -191,9 +143,12 @@ static NSString *const kOLKiteABTestAllowMultipleRecipients = @"ly.kite.abtest.a
     
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Next", @"KitePrintSDK", [OLConstants bundle], @"") style:UIBarButtonItemStylePlain target:self action:@selector(onButtonNextClicked)];
     
-    self.presentedModally = self.parentViewController.isBeingPresented && self.navigationController.viewControllers.lastObject == self;
+    self.presentedModally = self.parentViewController.isBeingPresented || self.navigationController.viewControllers.firstObject == self;
     if (self.presentedModally) {
         self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLConstants bundle], @"") style:UIBarButtonItemStylePlain target:self action:@selector(onButtonCancelClicked)];
+    }
+    else{
+        self.navigationItem.leftBarButtonItem = nil;
     }
     
     self.title = NSLocalizedStringFromTableInBundle(@"Shipping", @"KitePrintSDK", [OLConstants bundle], @"");
@@ -234,7 +189,7 @@ static NSString *const kOLKiteABTestAllowMultipleRecipients = @"ly.kite.abtest.a
 
 - (void)trackViewed{
 #ifndef OL_NO_ANALYTICS
-    if (self.offerAddressSearch) {
+    if ([OLKiteABTesting sharedInstance].offerAddressSearch) {
         [OLAnalytics trackShippingScreenViewedForOrder:self.printOrder variant:@"Classic + Address Search" showPhoneEntryField:[self showPhoneEntryField]];
     } else {
         [OLAnalytics trackShippingScreenViewedForOrder:self.printOrder variant:@"Classic" showPhoneEntryField:[self showPhoneEntryField]];
@@ -419,7 +374,7 @@ static NSString *const kOLKiteABTestAllowMultipleRecipients = @"ly.kite.abtest.a
         return [self.kiteDelegate shouldShowPhoneEntryOnCheckoutScreen]; // delegate overrides whatever the A/B test might say.
     }
     
-    return self.requirePhoneNumber;
+    return [OLKiteABTesting sharedInstance].requirePhoneNumber;
 }
 
 
@@ -475,7 +430,7 @@ static NSString *const kOLKiteABTestAllowMultipleRecipients = @"ly.kite.abtest.a
             OLAddress *address = (OLAddress *)self.shippingAddresses[indexPath.row];
             cell.textLabel.textColor = [UIColor blackColor];
             cell.imageView.image = [self.selectedShippingAddresses containsObject:address] ? [UIImage imageNamed:@"checkmark_on"] : [UIImage imageNamed:@"checkmark_off"];
-            cell.textLabel.text = [(OLAddress *)self.shippingAddresses[indexPath.row] recipientName];
+            cell.textLabel.text = [(OLAddress *)self.shippingAddresses[indexPath.row] fullNameFromFirstAndLast];
             cell.detailTextLabel.text = [address descriptionWithoutRecipient];
         } else {
             cell = [tableView dequeueReusableCellWithIdentifier:kAddDeliveryAddressCell];
@@ -485,7 +440,7 @@ static NSString *const kOLKiteABTestAllowMultipleRecipients = @"ly.kite.abtest.a
                 cell.textLabel.textColor = kColourLightBlue;
                 cell.selectionStyle = UITableViewCellSelectionStyleNone;
             }
-            if (self.shippingAddresses.count > 0 && self.allowsMultipleRecipients){
+            if (self.shippingAddresses.count > 0 && [OLKiteABTesting sharedInstance].allowsMultipleRecipients){
                 cell.textLabel.text = NSLocalizedStringFromTableInBundle(@"Add Another Recipient", @"KitePrintSDK",[OLConstants bundle], @"");
             }
             else{
@@ -575,8 +530,8 @@ static NSString *const kOLKiteABTestAllowMultipleRecipients = @"ly.kite.abtest.a
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section == kSectionDeliveryDetails) {
-        if (self.offerAddressSearch || [OLAddress addressBook].count > 0 || self.allowsMultipleRecipients) {
-            if (self.allowsMultipleRecipients && self.shippingAddresses.count > indexPath.row){
+        if ([OLKiteABTesting sharedInstance].offerAddressSearch || [OLAddress addressBook].count > 0 || [OLKiteABTesting sharedInstance].allowsMultipleRecipients) {
+            if ([OLKiteABTesting sharedInstance].allowsMultipleRecipients && self.shippingAddresses.count > indexPath.row){
                 OLAddress *address = [OLAddress addressBook][indexPath.row];
                 BOOL selected = YES;
                 if ([self.selectedShippingAddresses containsObject:address]) {
@@ -592,8 +547,8 @@ static NSString *const kOLKiteABTestAllowMultipleRecipients = @"ly.kite.abtest.a
             else{
                 OLAddressPickerController *addressPicker = [[OLAddressPickerController alloc] init];
                 addressPicker.delegate = self;
-                addressPicker.allowsAddressSearch = self.offerAddressSearch;
-                addressPicker.allowsMultipleSelection = self.allowsMultipleRecipients;
+                addressPicker.allowsAddressSearch = [OLKiteABTesting sharedInstance].offerAddressSearch;
+                addressPicker.allowsMultipleSelection = [OLKiteABTesting sharedInstance].allowsMultipleRecipients;
                 addressPicker.selected = self.shippingAddresses;
                 [self presentViewController:addressPicker animated:YES completion:nil];
             }

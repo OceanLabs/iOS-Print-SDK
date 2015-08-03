@@ -22,9 +22,19 @@
 #import <CTAssetsPickerController.h>
 #import "UIViewController+TraitCollectionCompatibility.h"
 #import "OLIntegratedCheckoutViewController.h"
+#import "OLKiteViewController.h"
+#import "OLKiteABTesting.h"
+#import "NSObject+Utils.h"
 
 static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 static const NSUInteger kTagAlertViewDeletePhoto = 98;
+
+@interface OLKiteViewController ()
+
+@property (strong, nonatomic) OLPrintOrder *printOrder;
+- (void)dismiss;
+
+@end
 
 @interface OLKitePrintSDK (InternalUtils)
 + (NSString *)userEmail:(UIViewController *)topVC;
@@ -56,6 +66,16 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    OLKiteViewController *kiteVc = [self kiteVc];
+    if ([kiteVc printOrder]){
+        self.userSelectedPhotos = [[NSMutableArray alloc] init];
+        for (OLAsset *asset in [[kiteVc.printOrder.jobs firstObject] assetsForUploading]){
+            OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
+            printPhoto.asset = asset;
+            [self.userSelectedPhotos addObject:printPhoto];
+        }
+    }
     
 #ifndef OL_NO_ANALYTICS
     [OLAnalytics trackReviewScreenViewed:self.product.productTemplate.name];
@@ -121,6 +141,20 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     return YES;
 }
 
+- (OLKiteViewController *)kiteVc{
+    UIViewController *vc = self.parentViewController;
+    while (vc) {
+        if ([vc isKindOfClass:[OLKiteViewController class]]){
+            return (OLKiteViewController *)vc;
+            break;
+        }
+        else{
+            vc = vc.parentViewController;
+        }
+    }
+    return nil;
+}
+
 - (void)doCheckout {
     [self preparePhotosForCheckout];
     
@@ -156,6 +190,13 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
                             @"uid": [[[UIDevice currentDevice] identifierForVendor] UUIDString],
                             @"app_version": [NSString stringWithFormat:@"Version: %@ (%@)", appVersion, buildNumber]
                             };
+    
+    //Check if we have launched with a Print Order
+    OLKiteViewController *kiteVC = [self kiteVc];
+    if ([kiteVC printOrder]){
+        printOrder = [kiteVC printOrder];
+    }
+    
     OLProductPrintJob* printJob = [[OLProductPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:photoAssets];
     printJob.uuid = [[NSUUID UUID] UUIDString];
     for (id<OLPrintJob> job in printOrder.jobs){
@@ -163,14 +204,27 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     }
     [printOrder addPrintJob:printJob];
 
+    if ([kiteVC printOrder]){
+        [kiteVC setPrintOrder:printOrder];
+    }
     
-    [OLKitePrintSDK checkoutViewControllerForPrintOrder:printOrder handler:^(OLCheckoutViewController *vc){
-        vc.userEmail = [OLKitePrintSDK userEmail:self];
-        vc.userPhone = [OLKitePrintSDK userPhone:self];
-        vc.kiteDelegate = [OLKitePrintSDK kiteDelegate:self];
-        
+    if ([kiteVC printOrder] && [[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant isEqualToString:@"Review-Overview-Checkout"]){
+        UIViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLProductOverviewViewController"];
+        [vc safePerformSelector:@selector(setUserEmail:) withObject:[(OLKiteViewController *)vc userEmail]];
+        [vc safePerformSelector:@selector(setUserPhone:) withObject:[(OLKiteViewController *)vc userPhone]];
+        [vc safePerformSelector:@selector(setKiteDelegate:) withObject:self.delegate];
+        [vc safePerformSelector:@selector(setProduct:) withObject:self.product];
         [self.navigationController pushViewController:vc animated:YES];
-    }];
+    }
+    else{
+        [OLKitePrintSDK checkoutViewControllerForPrintOrder:printOrder handler:^(OLCheckoutViewController *vc){
+            vc.userEmail = [OLKitePrintSDK userEmail:self];
+            vc.userPhone = [OLKitePrintSDK userPhone:self];
+            vc.kiteDelegate = [OLKitePrintSDK kiteDelegate:self];
+            
+            [self.navigationController pushViewController:vc animated:YES];
+        }];
+    }
 }
 
 - (OLKiteViewController *)kiteViewController {

@@ -140,7 +140,7 @@ static const NSInteger kRowAddAddressManually = 0;
 //        } else {
 //            cell.imageView.image = nil;
 //        }
-        cell.textLabel.text = address.recipientName;
+        cell.textLabel.text = address.fullNameFromFirstAndLast;
         cell.detailTextLabel.text = address.descriptionWithoutRecipient;
     } else {
         NSAssert(indexPath.section == kSectionAddAddress, @"oops");
@@ -243,7 +243,7 @@ static const NSInteger kRowAddAddressManually = 0;
     [peoplePicker dismissViewControllerAnimated:YES completion:^(void) {
         // create address
         OLAddress *olAddress = [[OLAddress alloc] init];
-        olAddress.recipientName = (__bridge NSString *) ABRecordCopyCompositeName(person);
+        olAddress.recipientLastName = (__bridge NSString *) ABRecordCopyCompositeName(person);
         
         ABMultiValueRef addressProperty = ABRecordCopyValue(person, /*kABPersonAddressProperty*/property);
         CFIndex index = ABMultiValueGetIndexForIdentifier(addressProperty, identifier);

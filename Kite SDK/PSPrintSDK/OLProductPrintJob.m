@@ -124,7 +124,7 @@ static id stringOrEmptyString(NSString *str) {
     json[@"frame_contents"] = @{};
     
     if (self.address) {
-        NSDictionary *shippingAddress = @{@"recipient_name": stringOrEmptyString(self.address.recipientName),
+        NSDictionary *shippingAddress = @{@"recipient_name": stringOrEmptyString(self.address.fullNameFromFirstAndLast),
                                           @"address_line_1": stringOrEmptyString(self.address.line1),
                                           @"address_line_2": stringOrEmptyString(self.address.line2),
                                           @"city": stringOrEmptyString(self.address.city),

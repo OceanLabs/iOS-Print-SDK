@@ -19,8 +19,7 @@
 static NSString *const kAPIKeySandbox = @"REPLACE_WITH_YOUR_API_KEY"; // replace with your Sandbox API key found under the Profile section in the developer portal
 static NSString *const kAPIKeyLive = @"REPLACE_WITH_YOUR_API_KEY"; // replace with your Live API key found under the Profile section in the developer portal
 
-static NSString *const kStripePublishableKey = @"pk_test_6pRNASCoBOKtIshFeQd4XMUh"; // This is a test key. Replace with the live key here.
-static NSString *const kApplePayMerchantIDKey = @"merchant.co.oceanlabs.kite.ly"; // For internal use only.
+static NSString *const kApplePayMerchantIDKey = @"merchant.ly.kite.sdk"; // For internal use only.
 
 @interface ViewController () <CTAssetsPickerControllerDelegate, UINavigationControllerDelegate, OLKiteDelegate>
 @property (weak, nonatomic) IBOutlet UIButton *localPhotosButton;
@@ -104,7 +103,6 @@ static NSString *const kApplePayMerchantIDKey = @"merchant.co.oceanlabs.kite.ly"
     
 #ifdef OL_KITE_OFFER_APPLE_PAY
     [OLKitePrintSDK setApplePayMerchantID:kApplePayMerchantIDKey];
-    [OLKitePrintSDK setStripeKey:kStripePublishableKey];
 #endif
     
     OLKiteViewController *vc = [[OLKiteViewController alloc] initWithAssets:assets];
