@@ -87,6 +87,9 @@
     
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinator> context){
         [self.collectionView.collectionViewLayout invalidateLayout];
+        if (size.height > size.width){
+            [self.collectionView reloadData];
+        }
     }completion:^(id<UIViewControllerTransitionCoordinator> context){
     }];
 }
