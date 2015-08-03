@@ -2479,13 +2479,13 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="poster_shadow" translatesAutoresizingMaskIntoConstraints="NO" id="9cA-Ok-OCr">
-                                <rect key="frame" x="123" y="33" width="354.5" height="492"/>
+                                <rect key="frame" x="127" y="43" width="346.5" height="481"/>
                             </imageView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="OVV-fA-IBb" userLabel="Container View">
-                                <rect key="frame" x="142" y="50" width="316" height="454"/>
+                                <rect key="frame" x="145" y="60" width="309" height="444"/>
                                 <subviews>
-                                    <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" tag="800" contentMode="scaleToFill" misplaced="YES" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="mv0-Qm-fvp">
-                                        <rect key="frame" x="0.0" y="0.0" width="321" height="459"/>
+                                    <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" tag="800" contentMode="scaleToFill" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="mv0-Qm-fvp">
+                                        <rect key="frame" x="0.0" y="0.0" width="309" height="444"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <collectionViewLayout key="collectionViewLayout" id="5xs-Ic-NVA" customClass="LXReorderableCollectionViewFlowLayout"/>
                                         <cells>
@@ -2620,16 +2620,25 @@
                                     </collectionViewCell>
                                 </cells>
                             </collectionView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tap to edit or tap and hold to rearrange the photos" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hQl-Oq-e92">
+                                <rect key="frame" x="5" y="20" width="590" height="20.5"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="0.66666666669999997" green="0.69803921570000005" blue="0.74117647060000003" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" red="0.92549019610000005" green="0.93725490199999995" blue="0.94901960780000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <gestureRecognizers/>
                         <constraints>
                             <constraint firstAttribute="centerX" secondItem="OVV-fA-IBb" secondAttribute="centerX" id="4wb-xF-kNE"/>
-                            <constraint firstItem="OVV-fA-IBb" firstAttribute="top" relation="greaterThanOrEqual" secondItem="aEi-vY-mAN" secondAttribute="bottom" constant="30" id="8SD-SY-1wh"/>
+                            <constraint firstItem="OVV-fA-IBb" firstAttribute="top" relation="greaterThanOrEqual" secondItem="aEi-vY-mAN" secondAttribute="bottom" constant="40" id="8SD-SY-1wh"/>
                             <constraint firstItem="Og0-uF-eaA" firstAttribute="bottom" secondItem="BCp-TW-Lv4" secondAttribute="bottom" id="B1F-1v-siR"/>
+                            <constraint firstItem="hQl-Oq-e92" firstAttribute="leading" secondItem="Gju-sp-OhT" secondAttribute="leading" constant="5" id="FH2-5E-m3N"/>
                             <constraint firstAttribute="trailing" secondItem="OVV-fA-IBb" secondAttribute="trailing" priority="750" constant="20" id="FJ9-7n-2bE"/>
                             <constraint firstAttribute="trailing" secondItem="wXF-N3-6Vb" secondAttribute="trailing" constant="16" id="Gol-lr-4Rb"/>
                             <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="OVV-fA-IBb" secondAttribute="trailing" constant="20" id="Odh-Nl-55c"/>
+                            <constraint firstAttribute="centerX" secondItem="hQl-Oq-e92" secondAttribute="centerX" id="V8g-ON-blb"/>
+                            <constraint firstItem="hQl-Oq-e92" firstAttribute="top" secondItem="aEi-vY-mAN" secondAttribute="bottom" id="YqI-EC-fah"/>
                             <constraint firstItem="zQG-sn-WY1" firstAttribute="top" secondItem="wXF-N3-6Vb" secondAttribute="top" id="a3d-8L-vn8"/>
                             <constraint firstItem="OVV-fA-IBb" firstAttribute="centerX" secondItem="9cA-Ok-OCr" secondAttribute="centerX" id="bH0-Z8-w5P"/>
                             <constraint firstItem="9cA-Ok-OCr" firstAttribute="width" secondItem="OVV-fA-IBb" secondAttribute="width" multiplier="1.12121" id="bSi-aj-O2d"/>
@@ -2637,6 +2646,7 @@
                             <constraint firstItem="OVV-fA-IBb" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="Gju-sp-OhT" secondAttribute="leading" constant="20" id="bvC-qu-DSI"/>
                             <constraint firstItem="9cA-Ok-OCr" firstAttribute="height" secondItem="OVV-fA-IBb" secondAttribute="height" multiplier="1.08439" id="dDU-N2-jwX"/>
                             <constraint firstItem="Og0-uF-eaA" firstAttribute="height" secondItem="BCp-TW-Lv4" secondAttribute="height" id="e14-oF-jkp"/>
+                            <constraint firstAttribute="trailing" secondItem="hQl-Oq-e92" secondAttribute="trailing" constant="5" id="gPv-kd-fna"/>
                             <constraint firstItem="BCp-TW-Lv4" firstAttribute="leading" secondItem="Og0-uF-eaA" secondAttribute="trailing" constant="8" id="hZO-fq-KIU"/>
                             <constraint firstItem="9cA-Ok-OCr" firstAttribute="top" relation="greaterThanOrEqual" secondItem="aEi-vY-mAN" secondAttribute="bottom" constant="2" id="lxP-oZ-I6c"/>
                             <constraint firstItem="zQG-sn-WY1" firstAttribute="top" secondItem="BCp-TW-Lv4" secondAttribute="top" id="m2d-ce-oAg"/>

@@ -68,7 +68,7 @@
                                               style:UIBarButtonItemStylePlain
                                               target:self
                                               action:@selector(doCheckout)];
-    [self setTitle:NSLocalizedString(@"Tap to Crop", @"")];
+    [self setTitle:NSLocalizedString(@"Edit Poster", @"")];
     
     self.numberOfColumns = 5;
     self.numberOfRows = 7;
