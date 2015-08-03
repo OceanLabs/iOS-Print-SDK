@@ -169,6 +169,22 @@
     return YES;
 }
 
+-(void)changeOrderOfPhotosInArray:(NSMutableArray*)array{
+    NSMutableArray* rows = [[NSMutableArray alloc] initWithCapacity:self.numberOfRows];
+    for (NSUInteger rowNumber = 0; rowNumber < self.numberOfRows; rowNumber++){
+        NSMutableArray* row = [[NSMutableArray alloc] initWithCapacity:self.numberOfColumns];
+        for (NSUInteger photoInRow = 0; photoInRow < self.numberOfColumns; photoInRow++){
+            [row addObject:array[rowNumber * (NSInteger)self.numberOfColumns + photoInRow]];
+        }
+        [rows addObject:row];
+    }
+    
+    [array removeAllObjects];
+    for (NSInteger rowNumber = self.numberOfRows - 1; rowNumber >= 0; rowNumber--){
+        [array addObjectsFromArray:rows[rowNumber]];
+    }
+}
+
 - (void)doCheckout{
     NSUInteger iphonePhotoCount = 0;
     for (OLPrintPhoto *photo in self.posterPhotos) {
@@ -186,6 +202,7 @@
             [photoAssets addObject:[OLAsset assetWithDataSource:photo]];
         }
     }
+    [self changeOrderOfPhotosInArray:photoAssets];
     
     
     NSDictionary *infoDict = [[NSBundle mainBundle] infoDictionary];
