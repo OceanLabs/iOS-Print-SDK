@@ -48,6 +48,8 @@ typedef enum {
 @property (assign, nonatomic) CGSize sizePx;
 @property (strong, nonatomic) NSURL *classPhotoURL;
 @property (strong, nonatomic) NSDictionary *shippingCosts;
+@property (assign, nonatomic) NSInteger gridCountX;
+@property (assign, nonatomic) NSInteger gridCountY;
 
 - (id)initWithIdentifier:(NSString *)identifier name:(NSString *)name sheetQuantity:(NSUInteger)quantity sheetCostsByCurrencyCode:(NSDictionary/*<String, NSDecimalNumber>*/*)costs enabled:(BOOL)enabled;
 - (NSDecimalNumber *)costPerSheetInCurrencyCode:(NSString *)currencyCode;

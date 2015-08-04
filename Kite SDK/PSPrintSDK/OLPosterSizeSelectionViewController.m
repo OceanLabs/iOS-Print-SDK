@@ -62,19 +62,25 @@ static UIColor *deselectedColor;
                                    target:self
                                    action:@selector(pressedContinue)];
     self.navigationItem.rightBarButtonItem = nextButton;
+    
+    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Back", @"")
+                                                                             style:UIBarButtonItemStyleBordered
+                                                                            target:nil
+                                                                            action:nil];
+    
     [self setTitle:NSLocalizedString(@"Choose Size", @"")];
     
     OLProduct *productA1;
     OLProduct *productA2;
     OLProduct *productA3;
     for (OLProduct *product in [OLProduct productsWithFilters:self.filterProducts]){
-        if ([product.productTemplate.productCode hasSuffix:@"A1"] && product.productTemplate.quantityPerSheet == 35){
+        if ([product.productTemplate.productCode hasSuffix:@"A1"] && product.productTemplate.gridCountX == self.product.productTemplate.gridCountX && product.productTemplate.gridCountY == self.product.productTemplate.gridCountY){
             productA1 = product;
         }
-        if ([product.productTemplate.productCode hasSuffix:@"A2"] && product.productTemplate.quantityPerSheet == 35){
+        if ([product.productTemplate.productCode hasSuffix:@"A2"] && product.productTemplate.gridCountX == self.product.productTemplate.gridCountX && product.productTemplate.gridCountY == self.product.productTemplate.gridCountY){
             productA2 = product;
         }
-        if ([product.productTemplate.productCode hasSuffix:@"A3"] && product.productTemplate.quantityPerSheet == 35){
+        if ([product.productTemplate.productCode hasSuffix:@"A3"] && product.productTemplate.gridCountX == self.product.productTemplate.gridCountX && product.productTemplate.gridCountY == self.product.productTemplate.gridCountY){
             productA3 = product;
         }
     }
@@ -136,7 +142,7 @@ static UIColor *deselectedColor;
 #pragma mark - actions
 - (IBAction)pressedClassic:(UIButton *)sender {
     for (OLProduct *product in [OLProduct products]){
-        if ([product.productTemplate.productCode hasSuffix:@"A3"] && product.productTemplate.quantityPerSheet == 35){
+        if ([product.productTemplate.productCode hasSuffix:@"A3"] && product.productTemplate.gridCountX == self.product.productTemplate.gridCountX && product.productTemplate.gridCountY == self.product.productTemplate.gridCountY){
             self.product = product;
         }
     }
@@ -155,7 +161,7 @@ static UIColor *deselectedColor;
 
 - (IBAction)pressedGrand:(UIButton *)sender {
     for (OLProduct *product in [OLProduct products]){
-        if ([product.productTemplate.productCode hasSuffix:@"A2"] && product.productTemplate.quantityPerSheet == 35){
+        if ([product.productTemplate.productCode hasSuffix:@"A2"] && product.productTemplate.gridCountX == self.product.productTemplate.gridCountX && product.productTemplate.gridCountY == self.product.productTemplate.gridCountY){
             self.product = product;
         }
     }
@@ -174,7 +180,7 @@ static UIColor *deselectedColor;
 
 - (IBAction)pressedDeluxe:(UIButton *)sender {
     for (OLProduct *product in [OLProduct products]){
-        if ([product.productTemplate.productCode hasSuffix:@"A1"] && product.productTemplate.quantityPerSheet == 35){
+        if ([product.productTemplate.productCode hasSuffix:@"A1"] && product.productTemplate.gridCountX == self.product.productTemplate.gridCountX && product.productTemplate.gridCountY == self.product.productTemplate.gridCountY){
             self.product = product;
         }
     }
@@ -193,7 +199,8 @@ static UIColor *deselectedColor;
 }
 
 - (IBAction)pressedContinue {
-    OLPosterViewController *dest = [self.storyboard instantiateViewControllerWithIdentifier:@"OLPosterViewController"];
+    NSString *identifier = self.product.quantityToFulfillOrder == 1 ? @"OLSingleImageProductReviewViewController" : @"OLPosterViewController";
+    OLPosterViewController *dest = [self.storyboard instantiateViewControllerWithIdentifier:identifier];
     dest.product = self.product;
     dest.userSelectedPhotos = self.userSelectedPhotos;
     [self.navigationController pushViewController:dest animated:YES];

@@ -239,7 +239,8 @@ static NSString *instagramRedirectURI = nil;
     handler(vc);
 }
 
-+ (NSString *)reviewViewControllerIdentifierForTemplateUI:(OLTemplateUI)templateUI photoSelectionScreen:(BOOL)photoSelectionScreen{
++ (NSString *)reviewViewControllerIdentifierForProduct:(OLProduct *)product photoSelectionScreen:(BOOL)photoSelectionScreen{
+    OLTemplateUI templateUI = product.productTemplate.templateUI;
     if (templateUI == kOLTemplateUICase){
         return @"OLCaseViewController";
     }
@@ -247,7 +248,12 @@ static NSString *instagramRedirectURI = nil;
         return @"OLPostcardViewController";
     }
     else if (templateUI == kOLTemplateUIPoster){
-        return @"OLSingleImageProductReviewViewController";
+        if (product.productTemplate.gridCountX == 1 && product.productTemplate.gridCountY == 1){
+            return @"OLSingleImageProductReviewViewController";
+        }
+        else{
+            return @"OLPosterViewController";
+        }
     }
     else if (templateUI == kOLTemplateUIPhotobook){
         return @"PhotobookViewController";

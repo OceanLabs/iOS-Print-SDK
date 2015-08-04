@@ -70,8 +70,8 @@
                                               action:@selector(doCheckout)];
     [self setTitle:NSLocalizedString(@"Edit Poster", @"")];
     
-    self.numberOfColumns = 5;
-    self.numberOfRows = 7;
+    self.numberOfColumns = self.product.productTemplate.gridCountX;
+    self.numberOfRows = self.product.productTemplate.gridCountY;
     
     self.collectionView.delegate = self;
     self.collectionView.dataSource = self;

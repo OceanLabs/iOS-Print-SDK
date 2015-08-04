@@ -51,7 +51,7 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
 + (void)setCacheTemplates:(BOOL)cache;
 + (BOOL)cacheTemplates;
 + (void)checkoutViewControllerForPrintOrder:(OLPrintOrder *)printOrder handler:(void(^)(OLCheckoutViewController *vc))handler;
-+ (NSString *)reviewViewControllerIdentifierForTemplateUI:(OLTemplateUI)templateUI photoSelectionScreen:(BOOL)photoSelectionScreen;
++ (NSString *)reviewViewControllerIdentifierForProduct:(OLProduct *)product photoSelectionScreen:(BOOL)photoSelectionScreen;
 
 @end
 
@@ -171,7 +171,7 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
                 identifier = @"OLProductOverviewViewController";
             }
             else if ([[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant hasPrefix:@"Review-"] ){
-                identifier = [OLKitePrintSDK reviewViewControllerIdentifierForTemplateUI:product.productTemplate.templateUI photoSelectionScreen:NO];
+                identifier = [OLKitePrintSDK reviewViewControllerIdentifierForProduct:product photoSelectionScreen:NO];
             }
             else{
                 [OLKitePrintSDK checkoutViewControllerForPrintOrder:welf.printOrder handler:^(OLCheckoutViewController *vc){
@@ -288,7 +288,14 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
 
 + (NSString *)storyboardIdentifierForGroupSelected:(OLProductGroup *)group{
     OLProduct *product = [group.products firstObject];
-    if (product.productTemplate.templateUI == kOLTemplateUIPoster && group.products.count > 1) {
+    if (product.productTemplate.templateUI == kOLTemplateUIPoster) {
+        NSInteger x = product.productTemplate.gridCountX;
+        NSInteger y = product.productTemplate.gridCountY;
+        for (OLProduct *otherProduct in group.products){
+            if (x != otherProduct.productTemplate.gridCountX || y != otherProduct.productTemplate.gridCountY){
+                return @"OLTypeSelectionViewController";
+            }
+        }
         return @"sizeSelect";
     }
     else if (group.products.count > 1){
