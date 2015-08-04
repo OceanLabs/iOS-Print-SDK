@@ -301,6 +301,14 @@
     // has the target time passed?
     if ([self.countdownDate earlierDate:now] == self.countdownDate) {
         [theTimer invalidate];
+        [UIView animateWithDuration:0.25 animations:^{
+            self.bannerView.transform = CGAffineTransformMakeTranslation(0, 0);
+            [self.collectionView setContentInset:UIEdgeInsetsMake(self.collectionView.contentInset.top, 0, 0, 0)];
+        }completion:^(BOOL finished){
+            [self.bannerView removeFromSuperview];
+            self.bannerView = nil;
+            self.bannerView.transform = CGAffineTransformIdentity;
+        }];
     } else {
         [self updateBannerString];
     }
@@ -313,6 +321,13 @@
 
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
+    
+    NSDate *now = [NSDate date];
+    // has the target time passed?
+    if (self.countdownDate && [self.countdownDate earlierDate:now] == self.countdownDate) {
+        [self.bannerView removeFromSuperview];
+        self.bannerView = nil;
+    }
     
     if (self.bannerView){
         self.bannerView.hidden = NO;
