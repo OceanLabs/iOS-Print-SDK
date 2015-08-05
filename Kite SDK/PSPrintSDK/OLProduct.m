@@ -179,7 +179,7 @@ typedef enum {
     if (self.productTemplate.templateUI == kOLTemplateUIFrame || self.productTemplate.templateUI == kOLTemplateUIPoster || self.productTemplate.templateUI == kOLTemplateUIPostcard || self.productTemplate.templateUI == kOLTemplateUIPhotobook || self.quantityToFulfillOrder == 1 || self.quantityToFulfillOrder == 0){
         return @"";
     }
-    NSString* packOfString = NSLocalizedString(@"PACK OF", @"Example pack of 22");
+    NSString* packOfString = NSLocalizedString(@"Pack of", @"Example pack of 22");
     return [packOfString stringByAppendingFormat:@" %lu\n", (unsigned long)self.quantityToFulfillOrder];
 }
 
@@ -201,7 +201,7 @@ typedef enum {
             break;
         case kSizeUnitsInches:
             dimensions = [self dimensionsInInches];
-            unitsName = NSLocalizedString(@"INCHES", "");
+            unitsName = NSLocalizedString(@"inches", "");
             break;
         default:
             break;
@@ -211,7 +211,7 @@ typedef enum {
     [nf setLocale:[NSLocale currentLocale]];
     [nf setMaximumFractionDigits:1];
     
-    return [NSString stringWithFormat:@"%@ X %@ %@", [nf stringFromNumber:[NSNumber numberWithDouble:dimensions.width]], [nf stringFromNumber:[NSNumber numberWithDouble:dimensions.height]], unitsName];
+    return [NSString stringWithFormat:@"%@ x %@ %@", [nf stringFromNumber:[NSNumber numberWithDouble:dimensions.width]], [nf stringFromNumber:[NSNumber numberWithDouble:dimensions.height]], unitsName];
 }
 
 - (NSString *) dimensions{

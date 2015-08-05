@@ -30,6 +30,7 @@ static NSString *const kKeyImageBorder = @"co.oceanlabs.pssdk.kKeyImageBorder";
 static NSString *const kKeyMaskImageURL = @"co.oceanlabs.pssdk.kKeymaskImageURL";
 static NSString *const kKeySizePx = @"co.oceanlabs.pssdk.kKeySizePx";
 static NSString *const kKeyClassPhotoURL = @"co.oceanlabs.pssdk.kKeyClassPhotoURL";
+static NSString *const kkeyDescription = @"co.oceanlabs.pssdk.kkeyDescription";
 static NSString *const kKeyShippingCosts = @"co.oceanlabs.pssdk.kKeyShippingCosts";
 
 static NSMutableArray *templates;
@@ -316,7 +317,9 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
     [aCoder encodeUIEdgeInsets:self.imageBorder forKey:kKeyImageBorder];
     [aCoder encodeObject:self.maskImageURL forKey:kKeyMaskImageURL];
     [aCoder encodeCGSize:self.sizePx forKey:kKeySizePx];
+    [aCoder encodeObject:self.description forKey:kkeyDescription];
     [aCoder encodeObject:self.classPhotoURL forKey:kKeyClassPhotoURL];
+    [aCoder encodeObject:self.productDescription forKey:kkeyDescription];
     [aCoder encodeObject:self.shippingCosts forKey:kKeyShippingCosts];
 }
 
@@ -341,6 +344,7 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
         _maskImageURL = [aDecoder decodeObjectForKey:kKeyMaskImageURL];
         _sizePx = [aDecoder decodeCGSizeForKey:kKeySizePx];
         _classPhotoURL = [aDecoder decodeObjectForKey:kKeyClassPhotoURL];
+        _productDescription = [aDecoder decodeObjectForKey:kkeyDescription];
         _shippingCosts = [aDecoder decodeObjectForKey:kKeyShippingCosts];
     }
     
