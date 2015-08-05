@@ -131,15 +131,30 @@
     UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
     [self fixCellFrameOnIOS7:cell];
     
+    UIView *view = cell.contentView;
+    view.translatesAutoresizingMaskIntoConstraints = NO;
+    NSDictionary *views = NSDictionaryOfVariableBindings(view);
+    NSMutableArray *con = [[NSMutableArray alloc] init];
+    
+    NSArray *visuals = @[@"H:|-0-[view]-0-|",
+                         @"V:|-0-[view]-0-|"];
+    
+    
+    for (NSString *visual in visuals) {
+        [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+    }
+    
+    [view.superview addConstraints:con];
+    
     UIActivityIndicatorView *activity = (UIActivityIndicatorView *)[cell.contentView viewWithTag:41];
     [activity startAnimating];
     
     OLProduct *product = (OLProduct *)self.products[indexPath.item];
     
-    UIImageView *imageView = (UIImageView *)[cell.contentView viewWithTag:10];
+    UIImageView *imageView = (UIImageView *)[cell.contentView viewWithTag:40];
     [product setCoverImageToImageView:imageView];
     
-    UILabel *textView = (UILabel *)[cell.contentView viewWithTag:20];
+    UILabel *textView = (UILabel *)[cell.contentView viewWithTag:300];
     textView.text = product.productTemplate.templateType;
     
     if ([[OLKiteABTesting sharedInstance].productTileStyle isEqualToString:@"Classic"]){
