@@ -45,6 +45,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 @interface OLKitePrintSDK (Private)
 
 + (OLKiteViewController *)kiteViewControllerInNavStack:(NSArray *)viewControllers;
++ (NSString *)reviewViewControllerIdentifierForTemplateUI:(OLTemplateUI)templateUI photoSelectionScreen:(BOOL)photoSelectionScreen;
 #ifdef OL_KITE_OFFER_INSTAGRAM
 + (NSString *) instagramRedirectURI;
 + (NSString *) instagramSecret;
@@ -911,27 +912,11 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 
 -(void)doSegueToOrderPreview{
 //    [OLAnalytics trackPhotosSelectedForOrder];
-    UIViewController* vc;
-    if (self.product.productTemplate.templateUI == kOLTemplateUIFrame){
-        vc = [self.storyboard instantiateViewControllerWithIdentifier:@"FrameOrderReviewViewController"];
-    }
-    else if (self.product.productTemplate.templateUI == kOLTemplateUIPhotobook){
-        vc = [self.storyboard instantiateViewControllerWithIdentifier:@"PhotobookViewController"];
-        
-        if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8){
-            [vc safePerformSelector:@selector(setProduct:) withObject:self.product];
-            [vc safePerformSelector:@selector(setUserSelectedPhotos:) withObject:self.userSelectedPhotos];
-            
-            [self.navigationController presentViewController:vc animated:YES completion:NULL];
-            return;
-        }
-    }
-    else{
-        vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OrderReviewViewController"];
-    }
-    [vc safePerformSelector:@selector(setProduct:) withObject:self.product];
-    [vc safePerformSelector:@selector(setUserSelectedPhotos:) withObject:self.userSelectedPhotos];
-    [self.navigationController pushViewController:vc animated:YES];
+    UIViewController* orvc = [self.storyboard instantiateViewControllerWithIdentifier:[OLKitePrintSDK reviewViewControllerIdentifierForTemplateUI:self.product.productTemplate.templateUI photoSelectionScreen:NO]];
+    
+    [orvc safePerformSelector:@selector(setProduct:) withObject:self.product];
+    [orvc safePerformSelector:@selector(setUserSelectedPhotos:) withObject:self.userSelectedPhotos];
+    [self.navigationController pushViewController:orvc animated:YES];
 }
 
 #pragma mark - UIAlertViewDelegate methods

@@ -12,7 +12,6 @@
 
 @property (assign, nonatomic) BOOL skipHomeScreen;
 
-@property (assign, nonatomic) BOOL showProductDescriptionWithPrintOrder;
 @property (assign, nonatomic) BOOL offerAddressSearch;
 @property (assign, nonatomic) BOOL requirePhoneNumber;
 @property (assign, nonatomic) BOOL hidePrice;
@@ -21,6 +20,7 @@
 @property (strong, nonatomic) NSString *checkoutScreenType;
 @property (strong, nonatomic) NSString *productTileStyle;
 @property (strong, nonatomic) NSString *promoBannerText;
+@property (strong, nonatomic) NSString *launchWithPrintOrderVariant;
 
 + (instancetype)sharedInstance;
 - (void)fetchRemotePlistsWithCompletionHandler:(void(^)())handler;
