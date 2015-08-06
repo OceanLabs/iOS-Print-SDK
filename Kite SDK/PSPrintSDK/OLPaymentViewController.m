@@ -694,6 +694,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
         OLReceiptViewController *receiptVC = [[OLReceiptViewController alloc] initWithPrintOrder:self.printOrder];
         receiptVC.presentedModally = self.presentedModally;
+        receiptVC.delegate = self.delegate;
         [self.navigationController pushViewController:receiptVC animated:YES];
     }];
 }
