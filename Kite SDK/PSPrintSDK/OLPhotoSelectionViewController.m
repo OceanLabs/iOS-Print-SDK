@@ -711,7 +711,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     
     UIImageView *checkmark = (UIImageView *) [cell.contentView viewWithTag:41];
     if (!checkmark){
-        checkmark = [[UIImageView alloc] initWithFrame:CGRectMake(cell.frame.size.width - 31, 0, 31, 31)];
+        checkmark = [[UIImageView alloc] init];
         checkmark.tag = 41;
         checkmark.clipsToBounds = YES;
         checkmark.contentMode = UIViewContentModeScaleAspectFill;
@@ -723,9 +723,8 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
         NSDictionary *views = NSDictionaryOfVariableBindings(checkmark);
         NSMutableArray *con = [[NSMutableArray alloc] init];
         
-        NSArray *visuals = @[@"H:[checkmark(==31)]",
-                             @"V:[checkmark(==31)]",
-                             @"H:[checkmark]-0-|"];
+        NSArray *visuals = @[@"V:|-2-[checkmark]",
+                             @"H:[checkmark]-2-|"];
         
         for (NSString *visual in visuals) {
             [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
