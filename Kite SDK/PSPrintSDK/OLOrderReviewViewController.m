@@ -122,7 +122,7 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
         self.title = [NSString stringWithFormat:@"%lu / %lu", (unsigned long) (self.userSelectedPhotos.count + [self totalNumberOfExtras]), (unsigned long)quanityToFulfilOrder];
     }
     else{
-        self.title = [NSString stringWithFormat:@"%lu", (unsigned long) (self.userSelectedPhotos.count + [self totalNumberOfExtras])];
+        self.title = NSLocalizedString(@"Review", @"");
     }
 }
 
