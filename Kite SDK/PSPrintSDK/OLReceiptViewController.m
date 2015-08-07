@@ -53,11 +53,49 @@ static const NSUInteger kSectionErrorRetry = 2;
     self.tableView.tableHeaderView.backgroundColor = [UIColor whiteColor];
     self.tableView.tableHeaderView.contentMode = UIViewContentModeCenter;
     
+    NSString *bannerImageName;
     if (self.printOrder.printed) {
-        ((UIImageView *) self.tableView.tableHeaderView).image = [UIImage imageNamed:@"receipt_success"];
+        bannerImageName = @"receipt_success";
     } else {
-        ((UIImageView *) self.tableView.tableHeaderView).image = [UIImage imageNamed:@"receipt_failure"];
+        bannerImageName = @"receipt_failure";
     }
+    
+    UIImage *bannerImage = [UIImage imageNamed:bannerImageName];
+    self.tableView.tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, bannerImage.size.height)];
+    UIImageView *banner = [[UIImageView alloc] initWithImage:bannerImage];
+    UIImageView *bannerBg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:[bannerImageName stringByAppendingString:@"_bg"]]];
+    [self.tableView.tableHeaderView addSubview:bannerBg];
+    [self.tableView.tableHeaderView addSubview:banner];
+    banner.contentMode = UIViewContentModeCenter;
+    bannerBg.contentMode = UIViewContentModeScaleToFill;
+    
+    banner.translatesAutoresizingMaskIntoConstraints = NO;
+    NSDictionary *views = NSDictionaryOfVariableBindings(banner);
+    NSMutableArray *con = [[NSMutableArray alloc] init];
+    
+    NSArray *visuals = @[@"H:|-0-[banner]-0-|",
+                         @"V:|-0-[banner]-0-|"];
+    
+    
+    for (NSString *visual in visuals) {
+        [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+    }
+    
+    [banner.superview addConstraints:con];
+    
+    bannerBg.translatesAutoresizingMaskIntoConstraints = NO;
+    views = NSDictionaryOfVariableBindings(bannerBg);
+    con = [[NSMutableArray alloc] init];
+    
+    visuals = @[@"H:|-0-[bannerBg]-0-|",
+                @"V:|-0-[bannerBg]-0-|"];
+    
+    
+    for (NSString *visual in visuals) {
+        [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+    }
+    
+    [bannerBg.superview addConstraints:con];
 }
 
 - (void)onButtonDoneClicked {

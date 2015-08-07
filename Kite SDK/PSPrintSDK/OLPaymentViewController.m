@@ -165,9 +165,43 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     [self.view addSubview:self.tableView];
     
     if ([self shippingScreenOnTheStack]) {
-        self.tableView.tableHeaderView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"checkout_progress_indicator2"]];
-        self.tableView.tableHeaderView.contentMode = UIViewContentModeCenter;
-        self.tableView.tableHeaderView.frame = CGRectMake(0, 0, self.view.frame.size.width, self.tableView.tableHeaderView.frame.size.height);
+        NSString *bannerImageName = @"checkout_progress_indicator2";
+        UIImage *bannerImage = [UIImage imageNamed:bannerImageName];
+        self.tableView.tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, bannerImage.size.height)];
+        UIImageView *banner = [[UIImageView alloc] initWithImage:bannerImage];
+        UIImageView *bannerBg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:[bannerImageName stringByAppendingString:@"_bg"]]];
+        [self.tableView.tableHeaderView addSubview:bannerBg];
+        [self.tableView.tableHeaderView addSubview:banner];
+        banner.contentMode = UIViewContentModeCenter;
+        bannerBg.contentMode = UIViewContentModeScaleToFill;
+        
+        banner.translatesAutoresizingMaskIntoConstraints = NO;
+        NSDictionary *views = NSDictionaryOfVariableBindings(banner);
+        NSMutableArray *con = [[NSMutableArray alloc] init];
+        
+        NSArray *visuals = @[@"H:|-0-[banner]-0-|",
+                             @"V:|-0-[banner]-0-|"];
+        
+        
+        for (NSString *visual in visuals) {
+            [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+        }
+        
+        [banner.superview addConstraints:con];
+        
+        bannerBg.translatesAutoresizingMaskIntoConstraints = NO;
+        views = NSDictionaryOfVariableBindings(bannerBg);
+        con = [[NSMutableArray alloc] init];
+        
+        visuals = @[@"H:|-0-[bannerBg]-0-|",
+                    @"V:|-0-[bannerBg]-0-|"];
+        
+        
+        for (NSString *visual in visuals) {
+            [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+        }
+        
+        [bannerBg.superview addConstraints:con];
     }
     
 #ifdef OL_KITE_OFFER_APPLE_PAY
