@@ -16,12 +16,18 @@
 #import "UIView+RoundRect.h"
 #import "OLImageView.h"
 #import <CTAssetsPickerController.h>
-#import <OLFacebookImagePickerController.h>
-#import <OLInstagramImagePickerController.h>
 #import "OLKitePrintSDK.h"
 #import "NSArray+QueryingExtras.h"
+
+#ifdef OL_KITE_OFFER_FACEBOOK
+#import <OLFacebookImagePickerController.h>
 #import <OLFacebookImage.h>
+#endif
+
+#ifdef OL_KITE_OFFER_INSTAGRAM
+#import <OLInstagramImagePickerController.h>
 #import <OLInstagramImage.h>
+#endif
 
 #import <MPFlipTransition.h>
 
