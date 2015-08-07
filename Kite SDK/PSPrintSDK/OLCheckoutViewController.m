@@ -44,8 +44,6 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
 #define kColourLightBlue [UIColor colorWithRed:0 / 255.0 green:122 / 255.0 blue:255 / 255.0 alpha:1.0]
 
 @interface OLCheckoutViewController () <OLAddressPickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate>
-@property (strong, nonatomic) NSMutableArray *shippingAddresses;
-@property (strong, nonatomic) NSMutableArray *selectedShippingAddresses;
 @property (strong, nonatomic) UITextField *textFieldEmail, *textFieldPhone;
 @property (strong, nonatomic) OLPrintOrder *printOrder;
 @property (assign, nonatomic) BOOL presentedModally;

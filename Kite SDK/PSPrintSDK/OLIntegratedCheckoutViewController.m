@@ -49,7 +49,6 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
 
 @property (nonatomic, strong) UITextField *textFieldFirstName, *textFieldLastName, *textFieldLine1, *textFieldLine2, *textFieldCity, *textFieldCounty, *textFieldPostCode, *textFieldCountry;
 @property (weak, nonatomic) UITextField *activeTextView;
-@property (strong, nonatomic) OLAddress* shippingAddress;
 
 @end
 
@@ -58,6 +57,18 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
 @dynamic textFieldEmail;
 @dynamic textFieldPhone;
 @dynamic printOrder;
+
+-(OLAddress *) shippingAddress{
+    if (!self.shippingAddresses){
+        self.shippingAddresses = [[NSMutableArray alloc] initWithCapacity:1];
+        self.selectedShippingAddresses = [[NSMutableArray alloc] initWithCapacity:1];
+    }
+    if (self.shippingAddresses.count == 0){
+        [self.shippingAddresses addObject:[[OLAddress alloc] init]];
+        [self.selectedShippingAddresses addObject:self.shippingAddresses.firstObject];
+    }
+    return self.shippingAddresses.firstObject;
+}
 
 - (id)initWithPrintOrder:(OLPrintOrder *)printOrder {
     if (self = [super initWithStyle:UITableViewStyleGrouped]) {
@@ -154,9 +165,6 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
 }
 
 - (void)populateDefaultDeliveryAddress {
-    if (!self.shippingAddress){
-        self.shippingAddress = [[OLAddress alloc] init];
-    }
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSString *firstName = [defaults stringForKey:kKeyRecipientFirstName];
     NSString *lastName = [defaults stringForKey:kKeyRecipientName];
@@ -204,6 +212,8 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
 }
 
 - (void)onButtonNextClicked{
+    self.printOrder.shippingAddress = self.shippingAddress;
+    
     if (![self hasUserProvidedValidDetailsToProgressToPayment]) {
         return;
     }
@@ -226,7 +236,6 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
     d[@"phone"] = phone;
     self.printOrder.userData = d;
     
-    self.printOrder.shippingAddress = self.shippingAddress;
     OLPaymentViewController *vc = [[OLPaymentViewController alloc] initWithPrintOrder:self.printOrder];
     vc.delegate = self.delegate;
     
@@ -409,9 +418,6 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section == kSectionDeliveryDetails) {
         if (indexPath.row == 6) {
-            if (!self.shippingAddress){
-                self.shippingAddress = [[OLAddress alloc] init];
-            }
             
             OLCountryPickerController *controller = [[OLCountryPickerController alloc] init];
             controller.delegate = self;
@@ -488,9 +494,6 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
 -(void) countryPicker:(OLCountryPickerController *)picker didSucceedWithCountries:(NSArray *)countries{
     [super recalculateOrderCostIfNewSelectedCountryDiffers:countries.lastObject];
     
-    if (!self.shippingAddress){
-        self.shippingAddress = [[OLAddress alloc] init];
-    }
     [self dismissViewControllerAnimated:YES completion:nil];
     self.shippingAddress.country = countries.lastObject;
     self.textFieldCountry.text = self.shippingAddress.country.name;
