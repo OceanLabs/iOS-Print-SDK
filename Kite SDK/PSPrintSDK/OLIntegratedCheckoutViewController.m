@@ -21,7 +21,6 @@ static const NSUInteger kSectionEmail = 1;
 static const NSUInteger kSectionPhone = 2;
 
 static const NSUInteger kTagTextField = 99;
-static const NSUInteger kTagLabel = 100;
 
 static NSString *const kKeyEmailAddress = @"co.oceanlabs.pssdk.kKeyEmailAddress";
 static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
