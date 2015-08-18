@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		2E0A72661A6FB07000BC5AE7 /* OLScrollCropViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0A72651A6FB07000BC5AE7 /* OLScrollCropViewController.m */; };
 		2E0E250F1A77997E00808ED8 /* OLAnalytics.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0E250E1A77997E00808ED8 /* OLAnalytics.m */; };
+		2E1068001B83335C00EB4C14 /* UIView+RoundRect.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1067FF1B83335C00EB4C14 /* UIView+RoundRect.m */; };
 		2E1F69DE1A66999700696286 /* OLPosterSizeSelectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1F69DD1A66999700696286 /* OLPosterSizeSelectionViewController.m */; };
 		2E1F69E41A6699AE00696286 /* OLPosterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1F69E31A6699AE00696286 /* OLPosterViewController.m */; };
 		2E20BD861AD4229700FB2446 /* OLCaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E20BD851AD4229700FB2446 /* OLCaseViewController.m */; };
@@ -55,7 +56,6 @@
 		3D8ECA511AD692FA00CFB2C0 /* OLProductGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D8ECA501AD692FA00CFB2C0 /* OLProductGroup.m */; };
 		3DEF0D181A964881000F1E66 /* NSString+Formatting.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DEF0D171A964881000F1E66 /* NSString+Formatting.m */; };
 		3DEF0D1B1A964B4E000F1E66 /* UITextField+Selection.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DEF0D1A1A964B4E000F1E66 /* UITextField+Selection.m */; };
-		3DF9D6FD1B0F618000A40C0C /* UIView+RoundRect.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DF9D6FA1B0F618000A40C0C /* UIView+RoundRect.m */; };
 		3DF9D6FE1B0F618000A40C0C /* UIViewController+TraitCollectionCompatibility.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DF9D6FC1B0F618000A40C0C /* UIViewController+TraitCollectionCompatibility.m */; };
 		3DF9D7011B0F65C700A40C0C /* NSObject+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DF9D7001B0F65C700A40C0C /* NSObject+Utils.m */; };
 		CD382E4A18EB7C6300127F95 /* OLJudoPayCard.m in Sources */ = {isa = PBXBuildFile; fileRef = CD382E4818EB7C6300127F95 /* OLJudoPayCard.m */; };
@@ -123,6 +123,8 @@
 		2E0A72651A6FB07000BC5AE7 /* OLScrollCropViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLScrollCropViewController.m; sourceTree = "<group>"; };
 		2E0E250D1A77997E00808ED8 /* OLAnalytics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLAnalytics.h; sourceTree = "<group>"; };
 		2E0E250E1A77997E00808ED8 /* OLAnalytics.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLAnalytics.m; sourceTree = "<group>"; };
+		2E1067FE1B83335C00EB4C14 /* UIView+RoundRect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIView+RoundRect.h"; path = "PSPrintSDK/Categories/UIView+RoundRect.h"; sourceTree = "<group>"; };
+		2E1067FF1B83335C00EB4C14 /* UIView+RoundRect.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIView+RoundRect.m"; path = "PSPrintSDK/Categories/UIView+RoundRect.m"; sourceTree = "<group>"; };
 		2E1F69DC1A66999700696286 /* OLPosterSizeSelectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLPosterSizeSelectionViewController.h; sourceTree = "<group>"; };
 		2E1F69DD1A66999700696286 /* OLPosterSizeSelectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLPosterSizeSelectionViewController.m; sourceTree = "<group>"; };
 		2E1F69E21A6699AE00696286 /* OLPosterViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLPosterViewController.h; sourceTree = "<group>"; };
@@ -237,8 +239,6 @@
 		3DEF0D171A964881000F1E66 /* NSString+Formatting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSString+Formatting.m"; path = "PSPrintSDK/Categories/NSString+Formatting.m"; sourceTree = "<group>"; };
 		3DEF0D191A964B4E000F1E66 /* UITextField+Selection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UITextField+Selection.h"; path = "PSPrintSDK/Categories/UITextField+Selection.h"; sourceTree = "<group>"; };
 		3DEF0D1A1A964B4E000F1E66 /* UITextField+Selection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UITextField+Selection.m"; path = "PSPrintSDK/Categories/UITextField+Selection.m"; sourceTree = "<group>"; };
-		3DF9D6F91B0F618000A40C0C /* UIView+RoundRect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIView+RoundRect.h"; path = "PSPrintSDK/Categories/UIView+RoundRect.h"; sourceTree = "<group>"; };
-		3DF9D6FA1B0F618000A40C0C /* UIView+RoundRect.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIView+RoundRect.m"; path = "PSPrintSDK/Categories/UIView+RoundRect.m"; sourceTree = "<group>"; };
 		3DF9D6FB1B0F618000A40C0C /* UIViewController+TraitCollectionCompatibility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIViewController+TraitCollectionCompatibility.h"; path = "PSPrintSDK/Categories/UIViewController+TraitCollectionCompatibility.h"; sourceTree = "<group>"; };
 		3DF9D6FC1B0F618000A40C0C /* UIViewController+TraitCollectionCompatibility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIViewController+TraitCollectionCompatibility.m"; path = "PSPrintSDK/Categories/UIViewController+TraitCollectionCompatibility.m"; sourceTree = "<group>"; };
 		3DF9D6FF1B0F65C700A40C0C /* NSObject+Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSObject+Utils.h"; path = "PSPrintSDK/Categories/NSObject+Utils.h"; sourceTree = "<group>"; };
@@ -387,8 +387,6 @@
 			children = (
 				3DF9D6FF1B0F65C700A40C0C /* NSObject+Utils.h */,
 				3DF9D7001B0F65C700A40C0C /* NSObject+Utils.m */,
-				3DF9D6F91B0F618000A40C0C /* UIView+RoundRect.h */,
-				3DF9D6FA1B0F618000A40C0C /* UIView+RoundRect.m */,
 				3DF9D6FB1B0F618000A40C0C /* UIViewController+TraitCollectionCompatibility.h */,
 				3DF9D6FC1B0F618000A40C0C /* UIViewController+TraitCollectionCompatibility.m */,
 				3D0D7ACA1AC0C44C00746FC8 /* NSArray+QueryingExtras.h */,
@@ -405,6 +403,8 @@
 				2E455DFF1B1F1BA1001B1718 /* NSDecimalNumber+CostFormatter.m */,
 				2EF53E391B55421A00BF936A /* UIImage+ColorAtPixel.h */,
 				2EF53E3A1B55421A00BF936A /* UIImage+ColorAtPixel.m */,
+				2E1067FE1B83335C00EB4C14 /* UIView+RoundRect.h */,
+				2E1067FF1B83335C00EB4C14 /* UIView+RoundRect.m */,
 			);
 			name = Categories;
 			path = ..;
@@ -934,6 +934,7 @@
 				3D8122F41A75A46D004E7297 /* UITableViewController+ScreenWidthFactor.m in Sources */,
 				2ED5DEBF1AC948C1003301A8 /* LXReorderableCollectionViewFlowLayout.m in Sources */,
 				2E1F69DE1A66999700696286 /* OLPosterSizeSelectionViewController.m in Sources */,
+				2E1068001B83335C00EB4C14 /* UIView+RoundRect.m in Sources */,
 				CD73BFA7186306550009DE03 /* OLCountry.m in Sources */,
 				CD73BFB118634ED50009DE03 /* OLConstants.m in Sources */,
 				2EA8BEBA1A484FCB008A9248 /* OLProductOverviewPageContentViewController.m in Sources */,
@@ -958,7 +959,6 @@
 				CD73BFAD18631A570009DE03 /* OLBaseRequest.m in Sources */,
 				2E5F802C1B01E5F700095203 /* OLPaymentLineItem.m in Sources */,
 				CD9CF4A5187592A900F067B6 /* OLPrintJob.m in Sources */,
-				3DF9D6FD1B0F618000A40C0C /* UIView+RoundRect.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
