@@ -169,11 +169,18 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         UIImage *bannerImage = [UIImage imageNamed:bannerImageName];
         self.tableView.tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, bannerImage.size.height)];
         UIImageView *banner = [[UIImageView alloc] initWithImage:bannerImage];
-        UIImageView *bannerBg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:[bannerImageName stringByAppendingString:@"_bg"]]];
+        
+        UIImage *bannerBgImage = [UIImage imageNamed:[bannerImageName stringByAppendingString:@"_bg"]];
+        UIImageView *bannerBg = [[UIImageView alloc] initWithImage:bannerBgImage];
         [self.tableView.tableHeaderView addSubview:bannerBg];
         [self.tableView.tableHeaderView addSubview:banner];
+        if (bannerBgImage.size.width > 100){
+            bannerBg.contentMode = UIViewContentModeTop;
+        }
+        else{
+            bannerBg.contentMode = UIViewContentModeScaleToFill;
+        }
         banner.contentMode = UIViewContentModeCenter;
-        bannerBg.contentMode = UIViewContentModeScaleToFill;
         
         banner.translatesAutoresizingMaskIntoConstraints = NO;
         NSDictionary *views = NSDictionaryOfVariableBindings(banner);
