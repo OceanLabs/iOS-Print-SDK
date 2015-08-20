@@ -21,6 +21,10 @@ static NSString *const kKeyPhotobookImages = @"co.oceanlabs.pssdk.kKeyPhotobookI
 
 @implementation OLPhotobookPrintJob
 
+@synthesize address;
+@synthesize uuid;
+@synthesize extraCopies;
+
 - (id)initWithTemplateId:(NSString *)templateId OLAssets:(NSArray/*<OLAssets>*/ *)assets{
     if (self = [super init]){
         for (id asset in assets) {
