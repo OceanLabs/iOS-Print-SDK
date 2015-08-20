@@ -549,6 +549,13 @@ UINavigationControllerDelegate
             selectedCount++;
         }
     }
+    
+    if (selectedCount == 0){
+        UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Oops", @"") message:NSLocalizedString(@"Please add some photos to your photo book", @"") delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"") otherButtonTitles:nil];
+        [av show];
+        return NO;
+    }
+    
     NSUInteger numOrders = 1 + (MAX(0, selectedCount - 1) / self.product.quantityToFulfillOrder);
     NSUInteger quantityToFulfilOrder = numOrders * self.product.quantityToFulfillOrder;
     if (selectedCount < quantityToFulfilOrder) {
