@@ -250,7 +250,7 @@ static NSString *instagramRedirectURI = nil;
         return @"OLSingleImageProductReviewViewController";
     }
     else if (templateUI == kOLTemplateUIPhotobook){
-        return @"PhotobookViewController";
+        return @"OLEditPhotobookViewController";
     }
     else if (photoSelectionScreen){
         return @"PhotoSelectionViewController";
