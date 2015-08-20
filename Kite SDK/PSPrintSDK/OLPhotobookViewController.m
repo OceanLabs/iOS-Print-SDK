@@ -563,11 +563,6 @@ UINavigationControllerDelegate
 }
 
 - (void)doCheckout {
-    NSUInteger iphonePhotoCount = 0;
-    for (OLPrintPhoto *photo in self.userSelectedPhotos) {
-        if (photo.type == kPrintPhotoAssetTypeALAsset) ++iphonePhotoCount;
-    }
-    
     NSInteger i = 0;
     NSMutableArray *bookPhotos = [[NSMutableArray alloc] init];
     for (NSInteger object = 0; object < self.photobookPhotos.count; object++){
@@ -578,6 +573,13 @@ UINavigationControllerDelegate
         else{
             [bookPhotos addObject:self.photobookPhotos[object]];
         }
+    }
+    
+    NSUInteger instagramPhotoCount = 0, facebookPhotoCount = 0, iphonePhotoCount = 0;
+    for (OLPrintPhoto *photo in bookPhotos) {
+        if (photo.type == kPrintPhotoAssetTypeALAsset || photo.type == kPrintPhotoAssetTypeOLAsset) ++iphonePhotoCount;
+        if (photo.type == kPrintPhotoAssetTypeFacebookPhoto) ++facebookPhotoCount;
+        if (photo.type == kPrintPhotoAssetTypeInstagramPhoto) ++instagramPhotoCount;
     }
     
     // Avoid uploading assets if possible. We can avoid uploading where the image already exists at a remote
