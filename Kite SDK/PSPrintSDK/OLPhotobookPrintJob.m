@@ -12,6 +12,7 @@
 
 static NSString *const kKeyPhotobookProductTemplateId = @"co.oceanlabs.pssdk.kKeyPhotobookProductTemplateId";
 static NSString *const kKeyPhotobookImages = @"co.oceanlabs.pssdk.kKeyPhotobookImages";
+static NSString *const kKeyFrontAsset = @"co.oceanlabs.pssdk.kKeyFrontAsset";
 
 @interface OLPhotobookPrintJob ()
 @property (nonatomic, strong) NSString *templateId;
@@ -100,12 +101,14 @@ static NSString *const kKeyPhotobookImages = @"co.oceanlabs.pssdk.kKeyPhotobookI
 - (void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:self.templateId forKey:kKeyPhotobookProductTemplateId];
     [aCoder encodeObject:self.assets forKey:kKeyPhotobookImages];
+    [aCoder encodeObject:self.frontCover forKey:kKeyFrontAsset];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
     if (self = [super init]) {
         self.templateId = [aDecoder decodeObjectForKey:kKeyPhotobookProductTemplateId];
         self.assets = [aDecoder decodeObjectForKey:kKeyPhotobookImages];
+        self.frontCover = [aDecoder decodeObjectForKey:kKeyFrontAsset];
     }
     
     return self;
