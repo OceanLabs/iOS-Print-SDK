@@ -35,6 +35,7 @@
 #import "OLKitePrintSDK.h"
 #import "NSObject+Utils.h"
 #import "UIViewController+TraitCollectionCompatibility.h"
+#import "OLAnalytics.h"
 
 NSInteger OLPhotoSelectionMargin = 0;
 
@@ -97,6 +98,10 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackPhotoSelectionScreenViewed:self.product.productTemplate.name];
+#endif
     
     self.navigationItem.titleView = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100, 44)];
     [(UILabel *)self.navigationItem.titleView setTextAlignment:NSTextAlignmentCenter];
@@ -911,7 +916,6 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 }
 
 -(void)doSegueToOrderPreview{
-//    [OLAnalytics trackPhotosSelectedForOrder];
     UIViewController* orvc = [self.storyboard instantiateViewControllerWithIdentifier:[OLKitePrintSDK reviewViewControllerIdentifierForTemplateUI:self.product.productTemplate.templateUI photoSelectionScreen:NO]];
     
     [orvc safePerformSelector:@selector(setProduct:) withObject:self.product];

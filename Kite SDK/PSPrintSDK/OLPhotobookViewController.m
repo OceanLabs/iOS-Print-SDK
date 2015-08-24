@@ -18,6 +18,7 @@
 #import <CTAssetsPickerController.h>
 #import "OLKitePrintSDK.h"
 #import "NSArray+QueryingExtras.h"
+#import "OLAnalytics.h"
 
 #ifdef OL_KITE_OFFER_FACEBOOK
 #import <OLFacebookImagePickerController.h>
@@ -154,6 +155,10 @@ UINavigationControllerDelegate
 
 - (void)viewDidLoad{
     [super viewDidLoad];
+    
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackReviewScreenViewed:self.product.productTemplate.name];
+#endif
     
     self.pageController = [[UIPageViewController alloc] initWithTransitionStyle:UIPageViewControllerTransitionStylePageCurl navigationOrientation:UIPageViewControllerNavigationOrientationHorizontal options:@{UIPageViewControllerOptionSpineLocationKey : [NSNumber numberWithInt:UIPageViewControllerSpineLocationMid]}];
     self.pageController.dataSource = self;
