@@ -265,6 +265,7 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
 - (void) viewWillAppear:(BOOL)animated{
     self.automaticallyAdjustsScrollViewInsets = NO;
     self.tableView.contentInset = UIEdgeInsetsMake(self.edgeInsetTop, 0, 0, 0);
+    [self.tableView scrollRectToVisible:CGRectMake(0, 0, 10, 10) animated:NO];
     [self.tableView reloadData];
     if (self.kiteLabel){
         [self positionKiteLabel];
