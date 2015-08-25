@@ -202,7 +202,7 @@
     }
     
     //Add quality guarantee
-    s = [s stringByAppendingString:NSLocalizedString(@"**Quality Guarantee**\nWe are confident that you will be more than happy with our products. But just incase, we offer a full refund if you are not 100% happy - Even if it’s just a bad day!", @"")];
+    s = [s stringByAppendingString:NSLocalizedString(@"**Quality Guarantee**\nOur products are of the highest quality and we’re confident you will love yours. If not, we offer a no quibble money back guarantee. Enjoy!", @"")];
     return s;
 }
 
