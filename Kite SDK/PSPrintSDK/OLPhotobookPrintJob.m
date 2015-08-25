@@ -12,6 +12,9 @@
 
 static NSString *const kKeyPhotobookProductTemplateId = @"co.oceanlabs.pssdk.kKeyPhotobookProductTemplateId";
 static NSString *const kKeyPhotobookImages = @"co.oceanlabs.pssdk.kKeyPhotobookImages";
+static NSString *const kKeyPhotobookAddress = @"co.oceanlabs.pssdk.kKeyPhotobookAddress";
+static NSString *const kKeyPhotobookUuid = @"co.oceanlabs.pssdk.kKeyPhotobookUuid";
+static NSString *const kKeyPhotobookExtraCopies = @"co.oceanlabs.pssdk.kKeyPhotobookExtraCopies";
 
 @interface OLPhotobookPrintJob ()
 @property (nonatomic, strong) NSString *templateId;
@@ -104,12 +107,18 @@ static NSString *const kKeyPhotobookImages = @"co.oceanlabs.pssdk.kKeyPhotobookI
 - (void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:self.templateId forKey:kKeyPhotobookProductTemplateId];
     [aCoder encodeObject:self.assets forKey:kKeyPhotobookImages];
+    [aCoder encodeObject:self.uuid forKey:kKeyPhotobookUuid];
+    [aCoder encodeInteger:self.extraCopies forKey:kKeyPhotobookExtraCopies];
+    [aCoder encodeObject:self.address forKey:kKeyPhotobookAddress];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
     if (self = [super init]) {
         self.templateId = [aDecoder decodeObjectForKey:kKeyPhotobookProductTemplateId];
         self.assets = [aDecoder decodeObjectForKey:kKeyPhotobookImages];
+        self.extraCopies = [aDecoder decodeIntegerForKey:kKeyPhotobookExtraCopies];
+        self.uuid = [aDecoder decodeObjectForKey:kKeyPhotobookUuid];
+        self.address = [aDecoder decodeObjectForKey:kKeyPhotobookAddress];
     }
     
     return self;
