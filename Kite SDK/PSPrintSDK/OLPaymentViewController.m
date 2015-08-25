@@ -162,6 +162,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     self.tableView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
+    self.tableView.sectionHeaderHeight = 0;
     [self.view addSubview:self.tableView];
     
     if ([self shippingScreenOnTheStack]) {
