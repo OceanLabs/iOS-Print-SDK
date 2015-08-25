@@ -847,7 +847,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     } else if ([sectionString isEqualToString:kSectionOrderSummary]) {
         return NSLocalizedStringFromTableInBundle(@"Order Summary", @"KitePrintSDK", [OLConstants bundle], @"");
     } else if ([sectionString isEqualToString:kSectionPromoCodes]) {
-        return NSLocalizedStringFromTableInBundle(@"Promotional Codes", @"KitePrintSDK", [OLConstants bundle], @"");
+        return @"";
     } else if ([sectionString isEqualToString:kSectionContinueShopping]) {
         return @""; //Don't need a section title here.
     }
@@ -942,7 +942,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             cell.frame = CGRectMake(0, 0, tableView.frame.size.width, 43);
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
             UITextField *promoCodeTextField = [[UITextField alloc] initWithFrame:CGRectMake(20, 0, self.view.frame.size.width - 20 - 60, 43)];
-            promoCodeTextField.placeholder = NSLocalizedStringFromTableInBundle(@"Code", @"KitePrintSDK", [OLConstants bundle], @"");
+            promoCodeTextField.placeholder = NSLocalizedStringFromTableInBundle(@"Promo Code", @"KitePrintSDK", [OLConstants bundle], @"");
             promoCodeTextField.delegate = self;
             promoCodeTextField.autocapitalizationType = UITextAutocapitalizationTypeNone;
             promoCodeTextField.autocorrectionType = UITextAutocorrectionTypeNo;
