@@ -130,12 +130,7 @@
     [OLAnalytics trackProductDescriptionScreenViewed:self.product.productTemplate.name hidePrice:[OLKiteABTesting sharedInstance].hidePrice];
 #endif
     
-    if ([[OLKiteABTesting sharedInstance].productTileStyle isEqualToString:@"Classic"]){
-        [self.callToActionButton removeFromSuperview];
-        [self.callToActionChevron removeFromSuperview];
-        [self.callToActionLabel removeFromSuperview];
-    }
-    else if ([[OLKiteABTesting sharedInstance].productTileStyle isEqualToString:@"B"]){
+    if ([[OLKiteABTesting sharedInstance].productTileStyle isEqualToString:@"B"]){
         [self.callToActionChevron removeFromSuperview];
         self.callToActionLabel.textAlignment = NSTextAlignmentCenter;
     }
