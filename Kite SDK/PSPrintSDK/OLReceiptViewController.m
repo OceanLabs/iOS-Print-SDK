@@ -63,9 +63,11 @@ static const NSUInteger kSectionErrorRetry = 2;
     UIImage *bannerImage = [UIImage imageNamed:bannerImageName];
     self.tableView.tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, bannerImage.size.height)];
     UIImageView *banner = [[UIImageView alloc] initWithImage:bannerImage];
+    banner.tag = 1100;
     
     UIImage *bannerBgImage = [UIImage imageNamed:[bannerImageName stringByAppendingString:@"_bg"]];
     UIImageView *bannerBg = [[UIImageView alloc] initWithImage:bannerBgImage];
+    bannerBg.tag = 1200;
     [self.tableView.tableHeaderView addSubview:bannerBg];
     [self.tableView.tableHeaderView addSubview:banner];
     if (bannerBgImage.size.width > 100){
@@ -171,7 +173,8 @@ static const NSUInteger kSectionErrorRetry = 2;
             [[[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLConstants bundle], @"") message:error.localizedDescription delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLConstants bundle], @"") otherButtonTitles:nil] show];
         } else {
             [UIView transitionWithView:self.view duration:0.3f options:UIViewAnimationOptionTransitionCrossDissolve animations:^{
-                ((UIImageView *) self.tableView.tableHeaderView).image = [UIImage imageNamed:@"receipt_success"];
+                
+                ((UIImageView *) [self.tableView.tableHeaderView viewWithTag:1100]).image = [UIImage imageNamed:@"receipt_success"];
             } completion:nil];
             
             [self.tableView deleteSections:[NSIndexSet indexSetWithIndex:kSectionErrorRetry] withRowAnimation:UITableViewRowAnimationFade];
