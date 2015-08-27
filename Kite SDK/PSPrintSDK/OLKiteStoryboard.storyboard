@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14E46" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="cpC-15-nyB">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="cpC-15-nyB">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
@@ -2249,16 +2249,16 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="poster_shadow" translatesAutoresizingMaskIntoConstraints="NO" id="EZK-44-nsD">
-                                <rect key="frame" x="115" y="22" width="370" height="514"/>
+                                <rect key="frame" x="119" y="22" width="362" height="503.5"/>
                             </imageView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="F6s-yG-aS1" userLabel="Container View">
-                                <rect key="frame" x="135" y="40" width="330" height="474"/>
+                                <rect key="frame" x="138.5" y="39.5" width="323" height="464.5"/>
                                 <subviews>
                                     <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="AH0-Gr-t3X">
-                                        <rect key="frame" x="155" y="227" width="20" height="20"/>
+                                        <rect key="frame" x="151.5" y="222.5" width="20" height="20"/>
                                     </activityIndicatorView>
                                     <view tag="1" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="N6g-QY-BTJ" customClass="RMImageCropper">
-                                        <rect key="frame" x="0.0" y="0.0" width="330" height="474"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="323" height="464.5"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     </view>
                                 </subviews>
@@ -2373,7 +2373,7 @@
                         <constraints>
                             <constraint firstItem="ZlI-Gw-kac" firstAttribute="leading" secondItem="q2u-GZ-t1x" secondAttribute="trailing" constant="8" id="3e8-fd-LB2"/>
                             <constraint firstItem="ctb-9s-awm" firstAttribute="top" secondItem="68Q-Er-GKw" secondAttribute="top" id="3pE-oh-d00"/>
-                            <constraint firstItem="ZlI-Gw-kac" firstAttribute="top" secondItem="F6s-yG-aS1" secondAttribute="bottom" constant="20" id="5mS-QA-CON"/>
+                            <constraint firstItem="ZlI-Gw-kac" firstAttribute="top" secondItem="F6s-yG-aS1" secondAttribute="bottom" constant="30" id="5mS-QA-CON"/>
                             <constraint firstItem="68Q-Er-GKw" firstAttribute="leading" secondItem="ctb-9s-awm" secondAttribute="trailing" id="9Bg-Wp-t29"/>
                             <constraint firstItem="F6s-yG-aS1" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="OdO-qS-nBf" secondAttribute="leading" constant="20" id="9EE-6I-Yxr"/>
                             <constraint firstItem="q2u-GZ-t1x" firstAttribute="leading" secondItem="OdO-qS-nBf" secondAttribute="leading" constant="16" id="BVf-dh-nMP"/>
