@@ -154,6 +154,8 @@ static id stringOrEmptyString(NSString *str) {
     for (id asset in self.assets) {
         val = 37 * val + [asset hash];
     }
+    
+    val = 38 * val + self.extraCopies;
 
     return val;
 }
