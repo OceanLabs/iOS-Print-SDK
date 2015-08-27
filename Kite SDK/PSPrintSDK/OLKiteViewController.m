@@ -57,6 +57,11 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
 
 @implementation OLKiteViewController
 
+- (void)awakeFromNib{
+    [super awakeFromNib];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(templateSyncDidFinish:) name:kNotificationTemplateSyncComplete object:nil];
+}
+
 - (UIStatusBarStyle)preferredStatusBarStyle{
     return [[self.childViewControllers firstObject] preferredStatusBarStyle];
 }
@@ -92,8 +97,6 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
 
 -(void)viewDidLoad {
     [super viewDidLoad];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(templateSyncDidFinish:) name:kNotificationTemplateSyncComplete object:nil];
     
     if (!self.navigationController){
         self.navigationBar.hidden = NO;
