@@ -85,6 +85,29 @@ static NSString *const kKeyFrontAsset = @"co.oceanlabs.pssdk.kKeyFrontAsset";
     return self.assets;
 }
 
+- (NSUInteger) hash {
+    NSUInteger val = [self.templateId hash];
+    val = 39 * val + [self.frontCover hash];
+    for (id asset in self.assets) {
+        val = 37 * val + [asset hash];
+    }
+    
+    return val;
+}
+
+- (BOOL)isEqual:(id)object {
+    if (self == object) {
+        return YES;
+    }
+    
+    if (![object isKindOfClass:[OLPhotobookPrintJob class]]) {
+        return NO;
+    }
+    OLPhotobookPrintJob* printJob = (OLPhotobookPrintJob*)object;
+    
+    return [self.templateId isEqual:printJob.templateId] && [self.assets isEqual:printJob.assets] && [self.frontCover isEqual:printJob.frontCover];
+}
+
 #pragma mark - NSCopying
 
 - (id)copyWithZone:(NSZone *)zone {
