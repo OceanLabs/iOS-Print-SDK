@@ -22,6 +22,8 @@
 @property (strong, nonatomic) NSString *promoBannerText;
 @property (strong, nonatomic) NSString *launchWithPrintOrderVariant;
 
+@property (strong, nonatomic) NSString *headerLogoURL;
+
 + (instancetype)sharedInstance;
 - (void)fetchRemotePlistsWithCompletionHandler:(void(^)())handler;
 

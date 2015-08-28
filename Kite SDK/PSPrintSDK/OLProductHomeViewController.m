@@ -24,10 +24,9 @@
 #import "UIImage+ColorAtPixel.h"
 #import "OLInfoPageViewController.h"
 #import <TSMarkdownParser.h>
+#import <SDWebImageManager.h>
 
 #define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
-
-static NSString *const kOLKiteThemeHeaderLogoImageURL = @"ly.kite.theme.headerLogoImageURL";
 
 @interface OLProduct (Private)
 
@@ -74,10 +73,11 @@ static NSString *const kOLKiteThemeHeaderLogoImageURL = @"ly.kite.theme.headerLo
                                                                              style:UIBarButtonItemStyleBordered
                                                                             target:nil
                                                                             action:nil];
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    if ([defaults objectForKey:kOLKiteThemeHeaderLogoImageURL]){
-        self.navigationItem.titleView = [[UIImageView alloc] init];
-        [(UIImageView *)self.navigationItem.titleView setAndFadeInImageWithURL:[defaults objectForKey:kOLKiteThemeHeaderLogoImageURL]];
+    NSString *url = [OLKiteABTesting sharedInstance].headerLogoURL;
+    if (url){
+        [[SDWebImageManager sharedManager] downloadImageWithURL:[NSURL URLWithString:url] options:0 progress:NULL completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL){
+        self.navigationItem.titleView = [[UIImageView alloc] initWithImage:image];
+        }];
     }
     else{
         self.title = NSLocalizedString(@"Print Shop", @"");

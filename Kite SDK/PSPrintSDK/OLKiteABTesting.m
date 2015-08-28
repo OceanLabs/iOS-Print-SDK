@@ -22,6 +22,8 @@ static NSString *const kOLKiteABTestPromoBannerStyle = @"ly.kite.abtest.promo_ba
 static NSString *const kOLKiteABTestPromoBannerText = @"ly.kite.abtest.promo_banner_text";
 static NSString *const kOLKiteABTestOfferPayPal = @"ly.kite.abtest.offer_paypal";
 
+static NSString *const kOLKiteThemeHeaderLogoImageURL = @"ly.kite.theme.headerLogoImageURL";
+
 id safeObject(id obj){
     return obj ? obj : @"";
 }
@@ -33,6 +35,11 @@ id safeObject(id obj){
     static OLKiteABTesting * sharedInstance;
     dispatch_once(&once, ^ { sharedInstance = [[self alloc] init]; });
     return sharedInstance;
+}
+
+- (NSString *)headerLogoURL{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    return [defaults objectForKey:kOLKiteThemeHeaderLogoImageURL];
 }
 
 - (void)fetchRemotePlistsWithCompletionHandler:(void(^)())handler{
