@@ -27,6 +27,7 @@
 #import "UIView+RoundRect.h"
 #import "OLBaseRequest.h"
 #import "OLPrintOrderCost.h"
+#import "OLKiteABTesting.h"
 
 #ifdef OL_KITE_OFFER_PAYPAL
 #import <PayPalMobile.h>
@@ -34,6 +35,7 @@
 
 #ifdef OL_KITE_OFFER_APPLE_PAY
 #import <Stripe+ApplePay.h>
+#import <STPTestPaymentAuthorizationViewController.h>
 #endif
 
 @import PassKit;
@@ -117,11 +119,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 
 #ifdef OL_KITE_OFFER_APPLE_PAY
 -(BOOL)isApplePayAvailable{
-    PKPaymentRequest *request = [Stripe
-                                 paymentRequestWithMerchantIdentifier:[OLKitePrintSDK appleMerchantID]
-                                 amount:self.printOrder.cost
-                                 currency:self.printOrder.currencyCode
-                                 description:self.printOrder.paymentDescription];
+    PKPaymentRequest *request = [Stripe paymentRequestWithMerchantIdentifier:[OLKitePrintSDK appleMerchantID]];
     
     return [Stripe canSubmitPaymentRequest:request];
 }
@@ -135,13 +133,14 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
                                                                             target:nil
                                                                             action:nil];
     
-#ifndef OL_NO_ANALYTICS
-    [OLAnalytics trackPaymentScreenViewedForOrder:self.printOrder];
-#endif
-    
-    
+    NSString *applePayAvailableStr = @"N/A";
 #ifdef OL_KITE_OFFER_APPLE_PAY
     self.applePayIsAvailable = [self isApplePayAvailable];
+    applePayAvailableStr = self.applePayIsAvailable ? @"Yes" : @"No";
+#endif
+    
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackPaymentScreenViewedForOrder:self.printOrder applePayIsAvailable:applePayAvailableStr];
 #endif
     
     if ([OLKitePrintSDK environment] == kOLKitePrintSDKEnvironmentSandbox){
@@ -177,10 +176,10 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     CGFloat heightDiff = 52;
 #endif
     
-    self.payWithCreditCardButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 52 - heightDiff, self.view.frame.size.width, 44)];
+    self.payWithCreditCardButton = [[UIButton alloc] initWithFrame:CGRectMake(20, 52 - heightDiff, self.view.frame.size.width - 40, 44)];
     self.payWithCreditCardButton.backgroundColor = [UIColor colorWithRed:55 / 255.0f green:188 / 255.0f blue:155 / 255.0f alpha:1.0];
     [self.payWithCreditCardButton addTarget:self action:@selector(onButtonPayWithCreditCardClicked) forControlEvents:UIControlEventTouchUpInside];
-    [self.payWithCreditCardButton setTitle:NSLocalizedStringFromTableInBundle(@"Pay with Card", @"KitePrintSDK", [OLConstants bundle], @"") forState:UIControlStateNormal];
+    [self.payWithCreditCardButton setTitle:NSLocalizedStringFromTableInBundle(@"Credit Card", @"KitePrintSDK", [OLConstants bundle], @"") forState:UIControlStateNormal];
     [self.payWithCreditCardButton makeRoundRect];
     CGFloat maxY = CGRectGetMaxY(self.payWithCreditCardButton.frame);
     
@@ -188,19 +187,23 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 
     
 #ifdef OL_KITE_OFFER_PAYPAL
-    self.payWithPayPalButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 104 - heightDiff, self.view.frame.size.width, 44)];
-    [self.payWithPayPalButton setTitle:NSLocalizedStringFromTableInBundle(@"Pay with PayPal", @"KitePrintSDK", [OLConstants bundle], @"") forState:UIControlStateNormal];
-    [self.payWithPayPalButton addTarget:self action:@selector(onButtonPayWithPayPalClicked) forControlEvents:UIControlEventTouchUpInside];
-    self.payWithPayPalButton.backgroundColor = [UIColor colorWithRed:74 / 255.0f green:137 / 255.0f blue:220 / 255.0f alpha:1.0];
-    [self.payWithPayPalButton makeRoundRect];
-    maxY = CGRectGetMaxY(self.payWithPayPalButton.frame);
+    if ([OLKiteABTesting sharedInstance].offerPayPal){
+        self.payWithPayPalButton = [[UIButton alloc] initWithFrame:CGRectMake(20, 104 - heightDiff, self.view.frame.size.width - 40, 44)];
+        [self.payWithPayPalButton setTitle:NSLocalizedStringFromTableInBundle(@"PayPal", @"KitePrintSDK", [OLConstants bundle], @"") forState:UIControlStateNormal];
+        [self.payWithPayPalButton addTarget:self action:@selector(onButtonPayWithPayPalClicked) forControlEvents:UIControlEventTouchUpInside];
+        [self.payWithPayPalButton makeRoundRect];
+        self.payWithPayPalButton.backgroundColor = [UIColor colorWithRed:74 / 255.0f green:137 / 255.0f blue:220 / 255.0f alpha:1.0];
+        [self.payWithPayPalButton makeRoundRect];
+        maxY = CGRectGetMaxY(self.payWithPayPalButton.frame);
+    }
 #endif
     
 #ifdef OL_KITE_OFFER_APPLE_PAY
-    self.payWithApplePayButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 44)];
+    self.payWithApplePayButton = [[UIButton alloc] initWithFrame:CGRectMake(20, 0, self.view.frame.size.width-40, 44)];
     self.payWithApplePayButton.backgroundColor = [UIColor blackColor];
+    [self.payWithApplePayButton makeRoundRect];
+    [self.payWithApplePayButton setImage:[UIImage imageNamed:@"button_apple_pay"] forState:UIControlStateNormal];
     [self.payWithApplePayButton addTarget:self action:@selector(onButtonPayWithApplePayClicked) forControlEvents:UIControlEventTouchUpInside];
-    [self.payWithApplePayButton setTitle:NSLocalizedStringFromTableInBundle(@"Pay with Pay", @"KitePrintSDK", [OLConstants bundle], @"") forState:UIControlStateNormal];
 #endif
     
     self.kiteLabel = [[UILabel alloc] init];
@@ -218,8 +221,10 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     [footer addConstraint:[NSLayoutConstraint constraintWithItem:self.kiteLabel attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:footer attribute:NSLayoutAttributeCenterX multiplier:1 constant:0]];
 
 #ifdef OL_KITE_OFFER_PAYPAL
-    [footer addSubview:self.payWithPayPalButton];
-    self.lowestView = self.payWithPayPalButton;
+    if ([OLKiteABTesting sharedInstance].offerPayPal){
+        [footer addSubview:self.payWithPayPalButton];
+        self.lowestView = self.payWithPayPalButton;
+    }
 #endif
     
 #ifdef OL_KITE_OFFER_APPLE_PAY
@@ -244,19 +249,21 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     [view.superview addConstraints:con];
     
 #ifdef OL_KITE_OFFER_PAYPAL
-    view = self.payWithPayPalButton;
-    view.translatesAutoresizingMaskIntoConstraints = NO;
-    views = NSDictionaryOfVariableBindings(view);
-    con = [[NSMutableArray alloc] init];
-    
-    v = [NSString stringWithFormat:@"V:|-%f-[view(44)]", 104 - heightDiff];
-    visuals = @[@"H:|-20-[view]-20-|", v];
-    
-    for (NSString *visual in visuals) {
-        [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+    if ([OLKiteABTesting sharedInstance].offerPayPal){
+        view = self.payWithPayPalButton;
+        view.translatesAutoresizingMaskIntoConstraints = NO;
+        views = NSDictionaryOfVariableBindings(view);
+        con = [[NSMutableArray alloc] init];
+        
+        v = [NSString stringWithFormat:@"V:|-%f-[view(44)]", 104 - heightDiff];
+        visuals = @[@"H:|-20-[view]-20-|", v];
+        
+        for (NSString *visual in visuals) {
+            [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+        }
+        
+        [view.superview addConstraints:con];
     }
-    
-    [view.superview addConstraints:con];
 #endif
     
     self.tableView.tableFooterView = footer;
@@ -441,10 +448,10 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 #ifdef OL_KITE_OFFER_APPLE_PAY
             self.payWithApplePayButton.hidden = NO;
 #endif
-            [self.payWithCreditCardButton setTitle:NSLocalizedStringFromTableInBundle(@"Pay with Credit Card", @"KitePrintSDK", [OLConstants bundle], @"") forState:UIControlStateNormal];
-        }
-        
-        [self.tableView reloadData];
+        [self.payWithCreditCardButton setTitle:NSLocalizedStringFromTableInBundle(@"Credit Card", @"KitePrintSDK", [OLConstants bundle], @"") forState:UIControlStateNormal];
+    }
+    
+    [self.tableView reloadData];
 
     }];
 }
@@ -611,25 +618,22 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 
 #ifdef OL_KITE_OFFER_APPLE_PAY
 - (IBAction)onButtonPayWithApplePayClicked{
-    [self.costRequest cancel];
-    self.costRequest = [self.printOrder costWithCompletionHandler:^(NSDecimalNumber *totalCost, NSDecimalNumber *shippingCost, NSArray *lineItems, NSDictionary *jobCosts, NSError * error){
-        self.costRequest = nil;
-        self.amountPaid = totalCost;
-        PKPaymentRequest *paymentRequest = [Stripe
-                                            paymentRequestWithMerchantIdentifier:[OLKitePrintSDK appleMerchantID]
-                                            amount:totalCost
-                                            currency:self.printOrder.currencyCode
-                                            description:self.printOrder.paymentDescription];
+    PKPaymentRequest *paymentRequest = [Stripe paymentRequestWithMerchantIdentifier:[OLKitePrintSDK appleMerchantID]];
+    paymentRequest.currencyCode = self.printOrder.currencyCode;
+    [self.printOrder costWithCompletionHandler:^(OLPrintOrderCost *cost, NSError *error){
+        PKPaymentSummaryItem *summaryItem = [PKPaymentSummaryItem summaryItemWithLabel:NSLocalizedString(@"kite.ly", @"") amount:[cost totalCostInCurrency:self.printOrder.currencyCode]];
+        paymentRequest.paymentSummaryItems = @[summaryItem];
         UIViewController *paymentController;
-        //#if DEBUG
-        //    paymentController = [[STPTestPaymentAuthorizationViewController alloc]
-        //                         initWithPaymentRequest:paymentRequest];
-        //    paymentController.delegate = self;
-        //#else
-        paymentController = [[PKPaymentAuthorizationViewController alloc]
-                             initWithPaymentRequest:paymentRequest];
-        ((PKPaymentAuthorizationViewController *)paymentController).delegate = self;
-        //#end
+        if ([OLKitePrintSDK environment] == kOLKitePrintSDKEnvironmentSandbox) {
+            paymentController = [[STPTestPaymentAuthorizationViewController alloc]
+                                 initWithPaymentRequest:paymentRequest];
+            ((STPTestPaymentAuthorizationViewController *)paymentController).delegate = self;
+        }
+        else{
+            paymentController = [[PKPaymentAuthorizationViewController alloc]
+                                 initWithPaymentRequest:paymentRequest];
+            ((PKPaymentAuthorizationViewController *)paymentController).delegate = self;
+        }
         [self presentViewController:paymentController animated:YES completion:nil];
     }];
 }
@@ -641,8 +645,13 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     
     self.printOrder.proofOfPayment = proofOfPayment;
     
+    NSString *applePayAvailableStr = @"N/A";
+#ifdef OL_KITE_OFFER_APPLE_PAY
+    applePayAvailableStr = self.applePayIsAvailable ? @"Yes" : @"No";
+#endif
+    
 #ifndef OL_NO_ANALYTICS
-    [OLAnalytics trackPaymentCompletedForOrder:self.printOrder paymentMethod:paymentMethod];
+    [OLAnalytics trackPaymentCompletedForOrder:self.printOrder paymentMethod:paymentMethod applePayIsAvailable:applePayAvailableStr];
 #endif
     
     [[NSNotificationCenter defaultCenter] postNotificationName:kOLNotificationUserCompletedPayment object:self userInfo:@{kOLKeyUserInfoPrintOrder: self.printOrder}];
@@ -667,6 +676,11 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         if (error) {
             handler(PKPaymentAuthorizationStatusFailure);
             [[[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLConstants bundle], @"") message:error.localizedDescription delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLConstants bundle], @"") otherButtonTitles:nil] show];
+        }
+        
+        if (!handlerUsed) {
+            handler(PKPaymentAuthorizationStatusSuccess);
+            handlerUsed = YES;
         }
         
         [[NSNotificationCenter defaultCenter] postNotificationName:kOLNotificationPrintOrderSubmission object:self userInfo:@{kOLKeyUserInfoPrintOrder: self.printOrder}];
@@ -712,19 +726,36 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 
 - (void)handlePaymentAuthorizationWithPayment:(PKPayment *)payment
                                    completion:(void (^)(PKPaymentAuthorizationStatus))completion {
-    [Stripe createTokenWithPayment:payment
-                        completion:^(STPToken *token, NSError *error) {
-                            if (error) {
-                                completion(PKPaymentAuthorizationStatusFailure);
-                                return;
-                            }
-                            [self createBackendChargeWithToken:token completion:completion];
-                        }];
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:[OLKitePrintSDK stripePublishableKey]];
+
+    if ([OLKitePrintSDK environment] == kOLKitePrintSDKEnvironmentSandbox){
+        STPCard *card = [STPCard new];
+        card.number = @"4242424242424242";
+        card.expMonth = 12;
+        card.expYear = 2020;
+        card.cvc = @"123";
+        [client createTokenWithCard:card completion:^(STPToken *token, NSError *error) {
+            if (error) {
+                completion(PKPaymentAuthorizationStatusFailure);
+                return;
+            }
+            [self createBackendChargeWithToken:token completion:completion];
+        }];
+    }
+    else{
+        [client createTokenWithPayment:payment completion:^(STPToken *token, NSError *error) {
+            if (error) {
+                completion(PKPaymentAuthorizationStatusFailure);
+                return;
+            }
+            [self createBackendChargeWithToken:token completion:completion];
+        }];
+    }
 }
 
 - (void)createBackendChargeWithToken:(STPToken *)token
                           completion:(void (^)(PKPaymentAuthorizationStatus))completion {
-    [self submitOrderForPrintingWithProofOfPayment:token.tokenId paymentMethod:@"Apple Pay" completion:^void(PKPaymentAuthorizationStatus status){}];
+    [self submitOrderForPrintingWithProofOfPayment:token.tokenId paymentMethod:@"Apple Pay" completion:completion];
 }
 #endif
 

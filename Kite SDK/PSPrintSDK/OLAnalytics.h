@@ -12,15 +12,16 @@
 
 @interface OLAnalytics : NSObject
 
-+ (void)trackKiteViewControllerLoaded;
++ (void)trackKiteViewControllerLoadedWithEntryPoint:(NSString *)entryPoint;
 + (void)trackProductSelectionScreenViewed;
-+ (void)trackProductDescriptionScreenViewed:(NSString *)productName;
++ (void)trackProductDescriptionScreenViewed:(NSString *)productName hidePrice:(BOOL)hidePrice;
 + (void)trackProductTemplateSelectionScreenViewed:(NSString *)productName;
 + (void)trackProductTypeSelectionScreenViewedWithTemplateClass:(NSString *)templateClassString;
 + (void)trackReviewScreenViewed:(NSString *)productName;
 + (void)trackShippingScreenViewedForOrder:(OLPrintOrder *)printOrder variant:(NSString *)variant showPhoneEntryField:(BOOL)showPhoneEntryField;
-+ (void)trackPaymentScreenViewedForOrder:(OLPrintOrder *)printOrder;
-+ (void)trackPaymentCompletedForOrder:(OLPrintOrder *)printOrder paymentMethod:(NSString *)method;
++ (void)trackPaymentScreenViewedForOrder:(OLPrintOrder *)printOrder applePayIsAvailable:(NSString *)applePayIsAvailable;
++ (void)trackPaymentCompletedForOrder:(OLPrintOrder *)printOrder paymentMethod:(NSString *)method applePayIsAvailable:(NSString *)applePayIsAvailable;
 + (void)trackOrderSubmission:(OLPrintOrder *)printOrder;
++ (void)trackQualityInfoScreenViewed;
 
 @end

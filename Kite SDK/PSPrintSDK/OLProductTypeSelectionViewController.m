@@ -15,6 +15,7 @@
 #import "OLAnalytics.h"
 #import "UIViewController+TraitCollectionCompatibility.h"
 #import "UIImageView+FadeIn.h"
+#import "OLKiteABTesting.h"
 
 #define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
 
@@ -126,7 +127,8 @@
         return cell;
     }
     
-    UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"caseCell" forIndexPath:indexPath];
+    NSString *identifier = [NSString stringWithFormat:@"ProductCell%@", [OLKiteABTesting sharedInstance].productTileStyle];
+    UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
     [self fixCellFrameOnIOS7:cell];
     
     UIActivityIndicatorView *activity = (UIActivityIndicatorView *)[cell.contentView viewWithTag:41];
@@ -137,11 +139,33 @@
     UIImageView *imageView = (UIImageView *)[cell.contentView viewWithTag:10];
     [product setCoverImageToImageView:imageView];
     
-    UITextView *textView = (UITextView *)[cell.contentView viewWithTag:20];
+    UILabel *textView = (UILabel *)[cell.contentView viewWithTag:20];
     textView.text = product.productTemplate.templateType;
-    textView.backgroundColor = product.productTemplate.labelColor;
+    
+    if ([[OLKiteABTesting sharedInstance].productTileStyle isEqualToString:@"Classic"]){
+        textView.backgroundColor = [product labelColor];
+    }
+    else{
+        UIButton *button = (UIButton *)[cell.contentView viewWithTag:390];
+        button.layer.shadowColor = [[UIColor blackColor] CGColor];
+        button.layer.shadowOpacity = .3;
+        button.layer.shadowOffset = CGSizeMake(0,2);
+        button.layer.shadowRadius = 2;
+        
+        button.backgroundColor = [product labelColor];
+        [button addTarget:self action:@selector(onButtonCallToActionTapped:) forControlEvents:UIControlEventTouchUpInside];
+    }
     
     return cell;
+}
+
+- (void)onButtonCallToActionTapped:(UIButton *)sender{
+    UIView *view = sender.superview;
+    while (![view isKindOfClass:[UICollectionViewCell class]]){
+        view = view.superview;
+    }
+    NSIndexPath *indexPath = [self.collectionView indexPathForCell:(UICollectionViewCell *)view];
+    [self collectionView:self.collectionView didSelectItemAtIndexPath:indexPath];
 }
 
 - (NSInteger) collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{

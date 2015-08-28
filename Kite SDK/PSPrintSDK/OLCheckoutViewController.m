@@ -15,7 +15,7 @@
 #import "OLKitePrintSDK.h"
 #import "OLAnalytics.h"
 #import "OLAddressEditViewController.h"
-#import <SkyLab.h>
+#import "OLKiteABTesting.h"
 
 NSString *const kOLNotificationUserSuppliedShippingDetails = @"co.oceanlabs.pssdk.kOLNotificationUserSuppliedShippingDetails";
 NSString *const kOLNotificationUserCompletedPayment = @"co.oceanlabs.pssdk.kOLNotificationUserCompletedPayment";
@@ -33,8 +33,6 @@ static const NSUInteger kSectionCount = 3;
 
 static NSString *const kKeyEmailAddress = @"co.oceanlabs.pssdk.kKeyEmailAddress";
 static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
-static NSString *const kOLKiteABTestOfferAddressSearch = @"ly.kite.abtest.offer_address_search";
-static NSString *const kOLKiteABTestRequirePhoneNumber = @"ly.kite.abtest.require_phone";
 
 @interface OLPaymentViewController (Private)
 @property (nonatomic, assign) BOOL presentedModally;
@@ -51,8 +49,6 @@ static NSString *const kOLKiteABTestRequirePhoneNumber = @"ly.kite.abtest.requir
 @property (strong, nonatomic) UILabel *kiteLabel;
 @property (strong, nonatomic) NSLayoutConstraint *kiteLabelYCon;
 @property (weak, nonatomic) UITextField *activeTextView;
-@property (assign, nonatomic) BOOL offerAddressSearch;
-@property (assign, nonatomic) BOOL requirePhoneNumber;
 @end
 
 @implementation OLCheckoutViewController
@@ -60,7 +56,6 @@ static NSString *const kOLKiteABTestRequirePhoneNumber = @"ly.kite.abtest.requir
 - (id)init {
     //NSAssert(NO, @"init is not a valid initializer for OLCheckoutViewController. Use initWithAPIKey:environment:printOrder:, or initWithPrintOrder: instead");
     if (self = [super initWithStyle:UITableViewStyleGrouped]) {
-        [self setupABTestVariants];
     }
     return self;
 }
@@ -71,7 +66,6 @@ static NSString *const kOLKiteABTestRequirePhoneNumber = @"ly.kite.abtest.requir
         [OLKitePrintSDK setAPIKey:apiKey withEnvironment:env];
         self.printOrder = printOrder;
         //[self.printOrder preemptAssetUpload];
-        [self setupABTestVariants];
     }
 
     return self;
@@ -82,37 +76,9 @@ static NSString *const kOLKiteABTestRequirePhoneNumber = @"ly.kite.abtest.requir
     if (self = [super initWithStyle:UITableViewStyleGrouped]) {
         self.printOrder = printOrder;
         //[self.printOrder preemptAssetUpload];
-        [self setupABTestVariants];
     }
     
     return self;
-}
-
-- (void)setupABTestVariants {
-    NSDictionary *experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestOfferAddressSearch];
-    if (!experimentDict) {
-        experimentDict = @{@"Yes" : @0.5, @"No" : @0.5};
-    }
-    [SkyLab splitTestWithName:kOLKiteABTestOfferAddressSearch
-                   conditions:@{
-                                @"Yes" : experimentDict[@"Yes"],
-                                @"No" : experimentDict[@"No"]
-                                } block:^(id choice) {
-                                    self.offerAddressSearch = [choice isEqualToString:@"Yes"];
-                                }];
-    
-    experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestRequirePhoneNumber];
-    if (!experimentDict) {
-        experimentDict = @{@"Yes" : @0.5, @"No" : @0.5};
-    }
-    [SkyLab splitTestWithName:kOLKiteABTestRequirePhoneNumber
-                   conditions:@{
-                                @"Yes" : experimentDict[@"Yes"],
-                                @"No" : experimentDict[@"No"]
-                                } block:^(id choice) {
-                                    self.requirePhoneNumber = [choice isEqualToString:@"Yes"];
-                                }];
-
 }
 
 - (void)presentViewControllerFrom:(UIViewController *)presentingViewController animated:(BOOL)animated completion:(void (^)(void))completion {
@@ -154,9 +120,12 @@ static NSString *const kOLKiteABTestRequirePhoneNumber = @"ly.kite.abtest.requir
     
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Next", @"KitePrintSDK", [OLConstants bundle], @"") style:UIBarButtonItemStylePlain target:self action:@selector(onButtonNextClicked)];
     
-    self.presentedModally = self.parentViewController.isBeingPresented && self.navigationController.viewControllers.lastObject == self;
+    self.presentedModally = self.parentViewController.isBeingPresented || self.navigationController.viewControllers.firstObject == self;
     if (self.presentedModally) {
         self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLConstants bundle], @"") style:UIBarButtonItemStylePlain target:self action:@selector(onButtonCancelClicked)];
+    }
+    else{
+        self.navigationItem.leftBarButtonItem = nil;
     }
     
     self.title = NSLocalizedStringFromTableInBundle(@"Shipping", @"KitePrintSDK", [OLConstants bundle], @"");
@@ -195,7 +164,7 @@ static NSString *const kOLKiteABTestRequirePhoneNumber = @"ly.kite.abtest.requir
 
 - (void)trackViewed{
 #ifndef OL_NO_ANALYTICS
-    if (self.offerAddressSearch) {
+    if ([OLKiteABTesting sharedInstance].offerAddressSearch) {
         [OLAnalytics trackShippingScreenViewedForOrder:self.printOrder variant:@"Classic + Address Search" showPhoneEntryField:[self showPhoneEntryField]];
     } else {
         [OLAnalytics trackShippingScreenViewedForOrder:self.printOrder variant:@"Classic" showPhoneEntryField:[self showPhoneEntryField]];
@@ -368,7 +337,7 @@ static NSString *const kOLKiteABTestRequirePhoneNumber = @"ly.kite.abtest.requir
         return [self.kiteDelegate shouldShowPhoneEntryOnCheckoutScreen]; // delegate overrides whatever the A/B test might say.
     }
     
-    return self.requirePhoneNumber;
+    return [OLKiteABTesting sharedInstance].requirePhoneNumber;
 }
 
 
@@ -422,7 +391,7 @@ static NSString *const kOLKiteABTestRequirePhoneNumber = @"ly.kite.abtest.requir
                 cell.selectionStyle = UITableViewCellSelectionStyleNone;
             }
                 cell.textLabel.textColor = [UIColor blackColor];
-                cell.textLabel.text = self.shippingAddress.recipientName;
+                cell.textLabel.text = self.shippingAddress.fullNameFromFirstAndLast;
                 cell.detailTextLabel.text = self.shippingAddress.descriptionWithoutRecipient;
         } else {
             cell = [tableView dequeueReusableCellWithIdentifier:kAddDeliveryAddressCell];
@@ -501,10 +470,10 @@ static NSString *const kOLKiteABTestRequirePhoneNumber = @"ly.kite.abtest.requir
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section == kSectionDeliveryDetails) {
-        if (self.offerAddressSearch || [OLAddress addressBook].count > 0) {
+        if ([OLKiteABTesting sharedInstance].offerAddressSearch || [OLAddress addressBook].count > 0) {
             OLAddressPickerController *addressPicker = [[OLAddressPickerController alloc] init];
             addressPicker.delegate = self;
-            addressPicker.allowsAddressSearch = self.offerAddressSearch;
+            addressPicker.allowsAddressSearch = [OLKiteABTesting sharedInstance].offerAddressSearch;
             [self presentViewController:addressPicker animated:YES completion:nil];
         } else {
             OLAddressEditViewController *editVc = [[OLAddressEditViewController alloc] init];

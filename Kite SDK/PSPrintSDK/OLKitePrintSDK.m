@@ -15,8 +15,7 @@
 #import "OLJudoPayCard.h"
 #import "OLProductHomeViewController.h"
 #import "OLIntegratedCheckoutViewController.h"
-#import <SkyLab.h>
-#import <NSUserDefaults+GroundControl.h>
+#import "OLKiteABTesting.h"
 #import "OLAddressEditViewController.h"
 
 static NSString *const kJudoClientId      = @"100170-877";
@@ -26,8 +25,9 @@ static NSString *const kJudoLiveToken     = @"JjOZ49Z9XCYy2FAc";
 static NSString *const kJudoLiveSecret  = @"b8d5950ec68e27e7dfdb314dbd7160e7421c3bddd4d883d9aef5e94788def934";
 
 static NSString *apiKey = nil;
-static NSString *StripePublishableKey = nil;
-static NSString *kApplePayMerchantID = nil;
+static NSString *const kOLStripePublishableKeyTest = @"pk_test_FxzXniUJWigFysP0bowWbuy3";
+static NSString *const kOLStripePublishableKeyLive = @"pk_live_o1egYds0rWu43ln7FjEyOU5E";
+static NSString *applePayMerchantID = nil;
 static OLKitePrintSDKEnvironment environment;
 
 static NSString *const kOLAPIEndpointLive = @"https://api.kite.ly";
@@ -40,9 +40,6 @@ static NSString *const kOLAPIEndpointVersion = @"v1.4";
 
 static BOOL useJudoPayForGBP = NO;
 static BOOL cacheTemplates = NO;
-
-static NSString *const kOLKiteABTestShippingScreen = @"ly.kite.abtest.shippingscreen";
-static NSString *const kOLOfferAddressSearch = @"ly.kite.flag.offer_address_search";
 
 #ifdef OL_KITE_OFFER_INSTAGRAM
 static NSString *instagramClientID = nil;
@@ -138,19 +135,18 @@ static NSString *instagramRedirectURI = nil;
 
 #ifdef OL_KITE_OFFER_APPLE_PAY
 + (void)setApplePayMerchantID:(NSString *)mID{
-    kApplePayMerchantID = mID;
-}
-
-+ (void)setStripeKey:(NSString *)stripeKey{
-    StripePublishableKey = stripeKey;
+    applePayMerchantID = mID;
 }
 
 + (NSString *)stripePublishableKey {
-    return StripePublishableKey;
+    switch (environment) {
+        case kOLKitePrintSDKEnvironmentLive: return kOLStripePublishableKeyLive;
+        case kOLKitePrintSDKEnvironmentSandbox: return kOLStripePublishableKeyTest;
+    }
 }
 
 + (NSString *)appleMerchantID {
-    return kApplePayMerchantID;
+    return applePayMerchantID;
 }
 #endif
 
@@ -232,56 +228,39 @@ static NSString *instagramRedirectURI = nil;
 }
 #endif
 
-+ (void)fetchRemotePlistsWithCompletionHandler:(void(^)())handler{
-    [OLKitePrintSDK fetchRemotePlistWithURL:nil completionHandler:^(NSError *error){
-        [OLKitePrintSDK fetchRemotePlistWithURL:[NSString stringWithFormat:@"https://sdk-static.s3.amazonaws.com/kite-ios-remote-%@.plist", [OLKitePrintSDK apiKey]] completionHandler:^(NSError *error2){
-            handler();
-        }];
-    }];
-}
-
-+ (void)fetchRemotePlistWithURL:(NSString *)urlString completionHandler:(void (^)(NSError *error))handler{
-    NSDictionary *oldDefaults = [[NSUserDefaults standardUserDefaults] dictionaryRepresentation];
-    
-    NSURL *URL = [NSURL URLWithString:urlString ? urlString : @"https://sdk-static.s3.amazonaws.com/kite-ios-remote.plist"];
-    [[NSUserDefaults standardUserDefaults] registerDefaultsWithURL:URL success:^(NSDictionary *defaults){
-        // reset SKLab A/B tests if the experiment version for any test has been bumped. This allows us to default to sticky SkyLab behaviour
-        // and when we want to reset things just bump the experiment version.
-        for (NSString *key in defaults) {
-            id possibleDict = defaults[key];
-            id oldPossibleDict = oldDefaults[key];
-            if ([possibleDict isKindOfClass:[NSDictionary class]] && [oldPossibleDict isKindOfClass:[NSDictionary class]]) {
-                id experimentVersion = [possibleDict objectForKey:@"Experiment Version"];
-                id oldExperimentVersion = [oldPossibleDict objectForKey:@"Experiment Version"];
-                if ([experimentVersion isKindOfClass:[NSString class]] && [oldExperimentVersion isKindOfClass:[NSString class]] && ![experimentVersion isEqualToString:oldExperimentVersion]) {
-                    [SkyLab resetTestNamed:key];
-                }
-            }
-        }
-        handler(nil);
-    }failure:^(NSError *error){
-        handler(error);
-    }];
-}
-
 + (void)checkoutViewControllerForPrintOrder:(OLPrintOrder *)printOrder handler:(void(^)(OLCheckoutViewController *vc))handler{
-    NSDictionary *experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestShippingScreen];
-    if (!experimentDict){
-        experimentDict = @{@"Classic" : @0.66, @"Integrated" : @0.34}; // There are 3 variants Classic+Address Search, Classic no Address Search & Integrated hence Classic gets 2/3 of the chance here as it will further get split 50:50 between the 2 classic variants internally resulting in 1/3 probability each.
+    OLCheckoutViewController *vc;
+    if ([[OLKiteABTesting sharedInstance].checkoutScreenType isEqualToString:@"Classic"]){
+        vc = [[OLCheckoutViewController alloc] initWithPrintOrder:printOrder];
     }
-    [SkyLab splitTestWithName:kOLKiteABTestShippingScreen conditions:@{
-                                                              @"Classic" : experimentDict[@"Classic"],
-                                                              @"Integrated" : experimentDict[@"Integrated"]
-                                                              }block:^(id choice){
-                                                                  OLCheckoutViewController *vc;
-                                                                  if ([choice isEqualToString:@"Classic"]){
-                                                                      vc = [[OLCheckoutViewController alloc] initWithPrintOrder:printOrder];
-                                                                  }
-                                                                  else{
-                                                                      vc = [[OLIntegratedCheckoutViewController alloc] initWithPrintOrder:printOrder];
-                                                                  }
-                                                                  handler(vc);
-                                                              }];
+    else{
+        vc = [[OLIntegratedCheckoutViewController alloc] initWithPrintOrder:printOrder];
+    }
+    handler(vc);
+}
+
++ (NSString *)reviewViewControllerIdentifierForTemplateUI:(OLTemplateUI)templateUI photoSelectionScreen:(BOOL)photoSelectionScreen{
+    if (templateUI == kOLTemplateUICase){
+        return @"OLCaseViewController";
+    }
+    else if (templateUI == kOLTemplateUIPostcard){
+        return @"OLPostcardViewController";
+    }
+    else if (templateUI == kOLTemplateUIPoster){
+        return @"OLSingleImageProductReviewViewController";
+    }
+    else if (templateUI == kOLTemplateUIPhotobook){
+        return @"OLEditPhotobookViewController";
+    }
+    else if (photoSelectionScreen){
+        return @"PhotoSelectionViewController";
+    }
+    else if (templateUI == kOLTemplateUIFrame){
+        return @"FrameOrderReviewViewController";
+    }
+    else{
+        return @"OrderReviewViewController";
+    }
 }
 
 @end

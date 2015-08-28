@@ -8,12 +8,21 @@
 
 #import <UIKit/UIKit.h>
 
+@class OLProduct;
+
 @interface OLPhotobookPageContentViewController : UIViewController
 
 @property (strong, nonatomic) NSMutableArray *userSelectedPhotos;
 @property (assign, nonatomic) NSInteger pageIndex;
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;
+@property (weak, nonatomic) IBOutlet UIImageView *pageShadowLeft2;
+@property (weak, nonatomic) IBOutlet UIImageView *pageShadowRight2;
+@property (strong, nonatomic) OLProduct *product;
 
-- (void)loadImage;
+- (void)loadImageWithCompletionHandler:(void(^)(void))handler;
+- (NSInteger)imageIndexForPoint:(CGPoint)p;
+- (void)highlightImageAtIndex:(NSInteger)index;
+- (void)unhighlightImageAtIndex:(NSInteger)index;
+- (void)clearImage;
 
 @end
