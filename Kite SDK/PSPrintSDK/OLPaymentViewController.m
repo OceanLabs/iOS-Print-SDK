@@ -117,13 +117,17 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     return nil;
 }
 
-#ifdef OL_KITE_OFFER_APPLE_PAY
+
 -(BOOL)isApplePayAvailable{
+#ifdef OL_KITE_OFFER_APPLE_PAY
     PKPaymentRequest *request = [Stripe paymentRequestWithMerchantIdentifier:[OLKitePrintSDK appleMerchantID]];
     
     return [Stripe canSubmitPaymentRequest:request];
-}
+#else
+    return NO;
 #endif
+}
+
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -176,18 +180,21 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     CGFloat heightDiff = 52;
 #endif
     
-    self.payWithCreditCardButton = [[UIButton alloc] initWithFrame:CGRectMake(20, 52 - heightDiff, self.view.frame.size.width - 40, 44)];
-    self.payWithCreditCardButton.backgroundColor = [UIColor colorWithRed:55 / 255.0f green:188 / 255.0f blue:155 / 255.0f alpha:1.0];
-    [self.payWithCreditCardButton addTarget:self action:@selector(onButtonPayWithCreditCardClicked) forControlEvents:UIControlEventTouchUpInside];
-    [self.payWithCreditCardButton setTitle:NSLocalizedStringFromTableInBundle(@"Credit Card", @"KitePrintSDK", [OLConstants bundle], @"") forState:UIControlStateNormal];
-    [self.payWithCreditCardButton makeRoundRect];
-    CGFloat maxY = CGRectGetMaxY(self.payWithCreditCardButton.frame);
-    
-    self.lowestView = self.payWithCreditCardButton;
+    CGFloat maxY = 0;
+    if (![self isApplePayAvailable]){
+        self.payWithCreditCardButton = [[UIButton alloc] initWithFrame:CGRectMake(20, 52 - heightDiff, self.view.frame.size.width - 40, 44)];
+        self.payWithCreditCardButton.backgroundColor = [UIColor colorWithRed:55 / 255.0f green:188 / 255.0f blue:155 / 255.0f alpha:1.0];
+        [self.payWithCreditCardButton addTarget:self action:@selector(onButtonPayWithCreditCardClicked) forControlEvents:UIControlEventTouchUpInside];
+        [self.payWithCreditCardButton setTitle:NSLocalizedStringFromTableInBundle(@"Credit Card", @"KitePrintSDK", [OLConstants bundle], @"") forState:UIControlStateNormal];
+        [self.payWithCreditCardButton makeRoundRect];
+        maxY = CGRectGetMaxY(self.payWithCreditCardButton.frame);
+        
+        self.lowestView = self.payWithCreditCardButton;
+    }
 
     
 #ifdef OL_KITE_OFFER_PAYPAL
-    if ([OLKiteABTesting sharedInstance].offerPayPal){
+    if ([OLKiteABTesting sharedInstance].offerPayPal && ![self isApplePayAvailable]){
         self.payWithPayPalButton = [[UIButton alloc] initWithFrame:CGRectMake(20, 104 - heightDiff, self.view.frame.size.width - 40, 44)];
         [self.payWithPayPalButton setTitle:NSLocalizedStringFromTableInBundle(@"PayPal", @"KitePrintSDK", [OLConstants bundle], @"") forState:UIControlStateNormal];
         [self.payWithPayPalButton addTarget:self action:@selector(onButtonPayWithPayPalClicked) forControlEvents:UIControlEventTouchUpInside];
@@ -204,6 +211,9 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     [self.payWithApplePayButton makeRoundRect];
     [self.payWithApplePayButton setImage:[UIImage imageNamed:@"button_apple_pay"] forState:UIControlStateNormal];
     [self.payWithApplePayButton addTarget:self action:@selector(onButtonPayWithApplePayClicked) forControlEvents:UIControlEventTouchUpInside];
+    if (!self.lowestView){
+        self.lowestView = self.payWithApplePayButton;
+    }
 #endif
     
     self.kiteLabel = [[UILabel alloc] init];
@@ -213,7 +223,9 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     
     maxY += 30;
     UIView *footer = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, maxY)];
-    [footer addSubview:self.payWithCreditCardButton];
+    if (self.payWithCreditCardButton){
+        [footer addSubview:self.payWithCreditCardButton];
+    }
     [footer addSubview:self.kiteLabel];
     
     self.kiteLabel.translatesAutoresizingMaskIntoConstraints = NO;
@@ -221,7 +233,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     [footer addConstraint:[NSLayoutConstraint constraintWithItem:self.kiteLabel attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:footer attribute:NSLayoutAttributeCenterX multiplier:1 constant:0]];
 
 #ifdef OL_KITE_OFFER_PAYPAL
-    if ([OLKiteABTesting sharedInstance].offerPayPal){
+    if ([OLKiteABTesting sharedInstance].offerPayPal && ![self isApplePayAvailable]){
         [footer addSubview:self.payWithPayPalButton];
         self.lowestView = self.payWithPayPalButton;
     }
@@ -233,30 +245,32 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     }
 #endif
     
-    UIView *view = self.payWithCreditCardButton;
-    view.translatesAutoresizingMaskIntoConstraints = NO;
-    NSDictionary *views = NSDictionaryOfVariableBindings(view);
-    NSMutableArray *con = [[NSMutableArray alloc] init];
-    
-    NSString *v = [NSString stringWithFormat:@"V:|-%f-[view(44)]", 52 - heightDiff];
-    NSArray *visuals = @[@"H:|-20-[view]-20-|", v];
-    
-    
-    for (NSString *visual in visuals) {
-        [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+    if (self.payWithCreditCardButton){
+        UIView *view = self.payWithCreditCardButton;
+        view.translatesAutoresizingMaskIntoConstraints = NO;
+        NSDictionary *views = NSDictionaryOfVariableBindings(view);
+        NSMutableArray *con = [[NSMutableArray alloc] init];
+        
+        NSString *v = [NSString stringWithFormat:@"V:|-%f-[view(44)]", 52 - heightDiff];
+        NSArray *visuals = @[@"H:|-20-[view]-20-|", v];
+        
+        
+        for (NSString *visual in visuals) {
+            [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+        }
+        
+        [view.superview addConstraints:con];
     }
     
-    [view.superview addConstraints:con];
-    
 #ifdef OL_KITE_OFFER_PAYPAL
-    if ([OLKiteABTesting sharedInstance].offerPayPal){
-        view = self.payWithPayPalButton;
+    if ([OLKiteABTesting sharedInstance].offerPayPal && ![self isApplePayAvailable]){
+        UIView *view = self.payWithPayPalButton;
         view.translatesAutoresizingMaskIntoConstraints = NO;
-        views = NSDictionaryOfVariableBindings(view);
-        con = [[NSMutableArray alloc] init];
+        NSDictionary *views = NSDictionaryOfVariableBindings(view);
+        NSMutableArray *con = [[NSMutableArray alloc] init];
         
-        v = [NSString stringWithFormat:@"V:|-%f-[view(44)]", 104 - heightDiff];
-        visuals = @[@"H:|-20-[view]-20-|", v];
+        NSString *v = [NSString stringWithFormat:@"V:|-%f-[view(44)]", 104 - heightDiff];
+        NSArray *visuals = @[@"H:|-20-[view]-20-|", v];
         
         for (NSString *visual in visuals) {
             [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
@@ -290,13 +304,13 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     ai.translatesAutoresizingMaskIntoConstraints = NO;
     [self.loadingView addConstraints:@[[NSLayoutConstraint constraintWithItem:ai attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:ai.superview attribute:NSLayoutAttributeCenterY multiplier:1 constant:0],[NSLayoutConstraint constraintWithItem:ai attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:ai.superview attribute:NSLayoutAttributeCenterX multiplier:1 constant:0]]];
     
-    view = self.loadingView;
+    UIView *view = self.loadingView;
     
     view.translatesAutoresizingMaskIntoConstraints = NO;
-    views = NSDictionaryOfVariableBindings(view);
-    con = [[NSMutableArray alloc] init];
+    NSDictionary *views = NSDictionaryOfVariableBindings(view);
+    NSMutableArray *con = [[NSMutableArray alloc] init];
     
-    visuals = @[@"H:|-0-[view]-0-|",
+    NSArray *visuals = @[@"H:|-0-[view]-0-|",
                          @"V:|-0-[view]-0-|"];
     
     
@@ -621,8 +635,18 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     PKPaymentRequest *paymentRequest = [Stripe paymentRequestWithMerchantIdentifier:[OLKitePrintSDK appleMerchantID]];
     paymentRequest.currencyCode = self.printOrder.currencyCode;
     [self.printOrder costWithCompletionHandler:^(OLPrintOrderCost *cost, NSError *error){
-        PKPaymentSummaryItem *summaryItem = [PKPaymentSummaryItem summaryItemWithLabel:NSLocalizedString(@"kite.ly", @"") amount:[cost totalCostInCurrency:self.printOrder.currencyCode]];
-        paymentRequest.paymentSummaryItems = @[summaryItem];
+//        PKPaymentSummaryItem *summaryItem = [PKPaymentSummaryItem summaryItemWithLabel:NSLocalizedString(@"kite.ly", @"") amount:[cost totalCostInCurrency:self.printOrder.currencyCode]];
+        NSMutableArray *lineItems = [[NSMutableArray alloc] init];
+        for (OLPaymentLineItem *item in cost.lineItems){
+            [lineItems addObject:[PKPaymentSummaryItem summaryItemWithLabel:item.description  amount:[item costInCurrency:self.printOrder.currencyCode]]];
+        }
+        [lineItems addObject:[PKPaymentSummaryItem summaryItemWithLabel:NSLocalizedString(@"Total", @"") amount:[cost totalCostInCurrency:self.printOrder.currencyCode]]];
+        paymentRequest.paymentSummaryItems = lineItems;
+        NSUInteger requiredFields = PKAddressFieldPostalAddress | PKAddressFieldName | PKAddressFieldEmail;
+        if ([OLKiteABTesting sharedInstance].requirePhoneNumber){
+            requiredFields = requiredFields | PKAddressFieldPhone;
+        }
+        paymentRequest.requiredShippingAddressFields = requiredFields;
         UIViewController *paymentController;
         if ([OLKitePrintSDK environment] == kOLKitePrintSDKEnvironmentSandbox) {
             paymentController = [[STPTestPaymentAuthorizationViewController alloc]

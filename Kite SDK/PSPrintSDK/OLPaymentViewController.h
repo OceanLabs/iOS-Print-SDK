@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "OLCheckoutDelegate.h"
+#import "OLKiteViewController.h"
 
 @class OLPrintOrder;
 

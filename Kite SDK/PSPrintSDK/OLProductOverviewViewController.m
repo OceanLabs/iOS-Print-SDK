@@ -28,7 +28,7 @@
 
 + (OLKiteViewController *)kiteViewControllerInNavStack:(NSArray *)viewControllers;
 + (NSString *)reviewViewControllerIdentifierForTemplateUI:(OLTemplateUI)templateUI photoSelectionScreen:(BOOL)photoSelectionScreen;
-+ (void)checkoutViewControllerForPrintOrder:(OLPrintOrder *)printOrder handler:(void(^)(OLCheckoutViewController *vc))handler;
++ (void)checkoutViewControllerForPrintOrder:(OLPrintOrder *)printOrder handler:(void(^)(id vc))handler;
 
 @end
 
@@ -180,7 +180,7 @@
             vc = [self.storyboard instantiateViewControllerWithIdentifier:[OLKitePrintSDK reviewViewControllerIdentifierForTemplateUI:self.product.productTemplate.templateUI photoSelectionScreen:NO]];
         }
         else{
-            [OLKitePrintSDK checkoutViewControllerForPrintOrder:printOrder handler:^(OLCheckoutViewController *vc){
+            [OLKitePrintSDK checkoutViewControllerForPrintOrder:printOrder handler:^(id vc){
                 [[vc navigationItem] setLeftBarButtonItem:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:(OLKiteViewController *)vc action:@selector(dismiss)]];
                 [vc safePerformSelector:@selector(setUserEmail:) withObject:self.userEmail];
                 [vc safePerformSelector:@selector(setUserPhone:) withObject:self.userPhone];

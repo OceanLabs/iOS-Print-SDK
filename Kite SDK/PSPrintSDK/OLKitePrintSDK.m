@@ -17,6 +17,10 @@
 #import "OLIntegratedCheckoutViewController.h"
 #import "OLKiteABTesting.h"
 #import "OLAddressEditViewController.h"
+#ifdef OL_KITE_OFFER_APPLE_PAY
+#import <Stripe+ApplePay.h>
+#endif
+#import "OLPaymentViewController.h"
 
 static NSString *const kJudoClientId      = @"100170-877";
 static NSString *const kJudoSandboxToken     = @"oLMiwCPBeLs0iVX4";
@@ -228,7 +232,33 @@ static NSString *instagramRedirectURI = nil;
 }
 #endif
 
-+ (void)checkoutViewControllerForPrintOrder:(OLPrintOrder *)printOrder handler:(void(^)(OLCheckoutViewController *vc))handler{
+#ifdef OL_KITE_OFFER_APPLE_PAY
++(BOOL)isApplePayAvailable{
+    PKPaymentRequest *request = [Stripe paymentRequestWithMerchantIdentifier:[OLKitePrintSDK appleMerchantID]];
+    
+    return [Stripe canSubmitPaymentRequest:request];
+}
+#endif
+
++ (void)checkoutViewControllerForPrintOrder:(OLPrintOrder *)printOrder handler:(void(^)(id vc))handler{
+#ifdef OL_KITE_OFFER_APPLE_PAY
+    if ([OLKitePrintSDK isApplePayAvailable]){
+        OLPaymentViewController *vc = [[OLPaymentViewController alloc] initWithPrintOrder:printOrder];
+        handler(vc);
+    }
+    else{
+        [OLKitePrintSDK shippingControllerForPrintOrder:printOrder handler:handler];
+    }
+    
+#else
+    
+    [OLKitePrintSDK shippingControllerForPrintOrder:printOrder handler:handler];
+    
+#endif
+    
+}
+
++ (void)shippingControllerForPrintOrder:(OLPrintOrder *)printOrder handler:(void(^)(OLCheckoutViewController *vc))handler{
     OLCheckoutViewController *vc;
     if ([[OLKiteABTesting sharedInstance].checkoutScreenType isEqualToString:@"Classic"]){
         vc = [[OLCheckoutViewController alloc] initWithPrintOrder:printOrder];
