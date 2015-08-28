@@ -16,8 +16,8 @@
  * Insert your API keys here. These are found under your profile 
  * by logging in to the developer portal at https://www.kite.ly
  **********************************************************************/
-static NSString *const kAPIKeySandbox = @"2778e89d274cf8ecbbad3fbba180cc5e62d0997c"; // replace with your Sandbox API key found under the Profile section in the developer portal
-static NSString *const kAPIKeyLive = @"5d0be3dd5c0625d1b486daf74fb4f28ca674acfa"; // replace with your Live API key found under the Profile section in the developer portal
+static NSString *const kAPIKeySandbox = @"REPLACE_WITH_YOUR_API_KEY"; // replace with your Sandbox API key found under the Profile section in the developer portal
+static NSString *const kAPIKeyLive = @"REPLACE_WITH_YOUR_API_KEY"; // replace with your Live API key found under the Profile section in the developer portal
 
 static NSString *const kApplePayMerchantIDKey = @"merchant.ly.kite.sdk"; // For internal use only.
 
