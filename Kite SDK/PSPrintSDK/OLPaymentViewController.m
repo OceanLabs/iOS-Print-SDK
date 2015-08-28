@@ -39,6 +39,7 @@
 #endif
 
 @import PassKit;
+@import AddressBook;
 
 static NSString *const kSectionOrderSummary = @"kSectionOrderSummary";
 static NSString *const kSectionPromoCodes = @"kSectionPromoCodes";
@@ -74,6 +75,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 #ifdef OL_KITE_OFFER_APPLE_PAY
 @property (strong, nonatomic) UIButton *payWithApplePayButton;
 @property (assign, nonatomic) BOOL applePayIsAvailable;
+@property (strong, nonatomic) UIButton *moreOptionsButton;
 #endif
 
 @property (strong, nonatomic) UIView *loadingView;
@@ -122,7 +124,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 #ifdef OL_KITE_OFFER_APPLE_PAY
     PKPaymentRequest *request = [Stripe paymentRequestWithMerchantIdentifier:[OLKitePrintSDK appleMerchantID]];
     
-    return [Stripe canSubmitPaymentRequest:request];
+    return [Stripe canSubmitPaymentRequest:request] && !self.showOtherOptions;
 #else
     return NO;
 #endif
@@ -180,14 +182,12 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     CGFloat heightDiff = 52;
 #endif
     
-    CGFloat maxY = 0;
     if (![self isApplePayAvailable]){
         self.payWithCreditCardButton = [[UIButton alloc] initWithFrame:CGRectMake(20, 52 - heightDiff, self.view.frame.size.width - 40, 44)];
         self.payWithCreditCardButton.backgroundColor = [UIColor colorWithRed:55 / 255.0f green:188 / 255.0f blue:155 / 255.0f alpha:1.0];
         [self.payWithCreditCardButton addTarget:self action:@selector(onButtonPayWithCreditCardClicked) forControlEvents:UIControlEventTouchUpInside];
         [self.payWithCreditCardButton setTitle:NSLocalizedStringFromTableInBundle(@"Credit Card", @"KitePrintSDK", [OLConstants bundle], @"") forState:UIControlStateNormal];
         [self.payWithCreditCardButton makeRoundRect];
-        maxY = CGRectGetMaxY(self.payWithCreditCardButton.frame);
         
         self.lowestView = self.payWithCreditCardButton;
     }
@@ -201,7 +201,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         [self.payWithPayPalButton makeRoundRect];
         self.payWithPayPalButton.backgroundColor = [UIColor colorWithRed:74 / 255.0f green:137 / 255.0f blue:220 / 255.0f alpha:1.0];
         [self.payWithPayPalButton makeRoundRect];
-        maxY = CGRectGetMaxY(self.payWithPayPalButton.frame);
+        self.lowestView = self.payWithCreditCardButton;
     }
 #endif
     
@@ -211,8 +211,17 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     [self.payWithApplePayButton makeRoundRect];
     [self.payWithApplePayButton setImage:[UIImage imageNamed:@"button_apple_pay"] forState:UIControlStateNormal];
     [self.payWithApplePayButton addTarget:self action:@selector(onButtonPayWithApplePayClicked) forControlEvents:UIControlEventTouchUpInside];
+    
+    self.moreOptionsButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 84, self.view.frame.size.width, 20)];
+    [self.moreOptionsButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [self.moreOptionsButton setTitle:NSLocalizedString(@"More options", @"") forState:UIControlStateNormal];
+    self.moreOptionsButton.translatesAutoresizingMaskIntoConstraints = NO;
+    
+    [self.moreOptionsButton.titleLabel setFont:[UIFont systemFontOfSize:13]];
+    [self.moreOptionsButton addTarget:self action:@selector(onButtonMoreOptionsClicked) forControlEvents:UIControlEventTouchUpInside];
+    
     if (!self.lowestView){
-        self.lowestView = self.payWithApplePayButton;
+        self.lowestView = self.moreOptionsButton;
     }
 #endif
     
@@ -221,8 +230,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     self.kiteLabel.font = [UIFont systemFontOfSize:13];
     self.kiteLabel.textColor = [UIColor lightGrayColor];
     
-    maxY += 30;
-    UIView *footer = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, maxY)];
+    UIView *footer = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, CGRectGetMaxY(self.lowestView.frame)+30)];
     if (self.payWithCreditCardButton){
         [footer addSubview:self.payWithCreditCardButton];
     }
@@ -242,6 +250,20 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 #ifdef OL_KITE_OFFER_APPLE_PAY
     if (self.applePayIsAvailable){
         [footer addSubview:self.payWithApplePayButton];
+        [footer addSubview:self.moreOptionsButton];
+        UIView *view = self.payWithApplePayButton;
+        UIView *moreOptionsButton = self.moreOptionsButton;
+        view.translatesAutoresizingMaskIntoConstraints = NO;
+        NSDictionary *views = NSDictionaryOfVariableBindings(view, moreOptionsButton);
+        NSMutableArray *con = [[NSMutableArray alloc] init];
+        
+        NSArray *visuals = @[@"H:|-20-[view]-20-|", @"V:|-0-[view(44)]-20-[moreOptionsButton]", @"H:|-0-[moreOptionsButton]-0-|"];
+        
+        for (NSString *visual in visuals) {
+            [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+        }
+        
+        [view.superview addConstraints:con];
     }
 #endif
     
@@ -343,6 +365,13 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     UITapGestureRecognizer *tgr = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onBackgroundClicked)];
     tgr.cancelsTouchesInView = NO; // allow table cell selection to happen as normal
     [self.tableView addGestureRecognizer:tgr];
+}
+
+- (void)onButtonMoreOptionsClicked{
+    OLCheckoutViewController *vc = [[OLCheckoutViewController alloc] initWithPrintOrder:self.printOrder];
+    vc.delegate = self.delegate;
+    vc.showOtherOptions = YES;
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
@@ -750,6 +779,48 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 
 - (void)handlePaymentAuthorizationWithPayment:(PKPayment *)payment
                                    completion:(void (^)(PKPaymentAuthorizationStatus))completion {
+    ABRecordRef address = payment.shippingAddress;
+    OLAddress *shippingAddress = [[OLAddress alloc] init];
+    shippingAddress.recipientFirstName = (__bridge NSString *)ABRecordCopyValue(address, kABPersonFirstNameProperty);
+    shippingAddress.recipientLastName = (__bridge NSString *)ABRecordCopyValue(address, kABPersonLastNameProperty);
+    
+    CFTypeRef values = ABRecordCopyValue(address, kABPersonAddressProperty);
+    for (NSInteger i = 0; i < ABMultiValueGetCount(values); i++){
+        NSDictionary *dict = (__bridge NSDictionary *)ABMultiValueCopyValueAtIndex(values, i);
+        shippingAddress.line1 = [dict objectForKey:(id)kABPersonAddressStreetKey];
+        shippingAddress.city = [dict objectForKey:(id)kABPersonAddressCityKey];
+        shippingAddress.stateOrCounty = [dict objectForKey:(id)kABPersonAddressStateKey];
+        shippingAddress.zipOrPostcode = [dict objectForKey:(id)kABPersonAddressZIPKey];
+        shippingAddress.country = [OLCountry countryForCode:[dict objectForKey:(id)kABPersonAddressCountryCodeKey]];
+        if (!shippingAddress.country){
+            shippingAddress.country = [OLCountry countryForCode:[dict objectForKey:(id)kABPersonAddressCountryKey]];
+        }
+        if (!shippingAddress.country){
+            shippingAddress.country = [OLCountry countryForName:[dict objectForKey:(id)kABPersonAddressCountryKey]];
+        }
+        if (!shippingAddress.country){
+            completion(PKPaymentAuthorizationStatusFailure);
+        }
+    }
+    self.printOrder.shippingAddress = shippingAddress;
+    NSString *email;
+    NSString *phone;
+    NSMutableDictionary *d = [[NSMutableDictionary alloc] init];
+    if (self.printOrder.userData) {
+        d = [self.printOrder.userData mutableCopy];
+    }
+    CFTypeRef emails = ABRecordCopyValue(address, kABPersonEmailProperty);
+    for (NSInteger i = 0; i < ABMultiValueGetCount(emails); i++){
+        email = (__bridge NSString *)(ABMultiValueCopyValueAtIndex(emails, i));
+    }
+    CFTypeRef phones = ABRecordCopyValue(address, kABPersonPhoneProperty);
+    for (NSInteger i = 0; i < ABMultiValueGetCount(phones); i++){
+        phone = (__bridge NSString *)(ABMultiValueCopyValueAtIndex(phones, i));
+    }
+    d[@"email"] = email ? email : @"";
+    d[@"phone"] = phone ? phone : @"";
+    self.printOrder.userData = d;
+    
     STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:[OLKitePrintSDK stripePublishableKey]];
 
     if ([OLKitePrintSDK environment] == kOLKitePrintSDKEnvironmentSandbox){
@@ -775,6 +846,41 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             [self createBackendChargeWithToken:token completion:completion];
         }];
     }
+}
+
+- (void)paymentAuthorizationViewController:(PKPaymentAuthorizationViewController *)controller didSelectShippingAddress:(ABRecordRef)address completion:(void (^)(PKPaymentAuthorizationStatus, NSArray *, NSArray *))completion{
+    OLAddress *shippingAddress = [[OLAddress alloc] init];
+    
+    CFTypeRef values = ABRecordCopyValue(address, kABPersonAddressProperty);
+    for (NSInteger i = 0; i < ABMultiValueGetCount(values); i++){
+        NSDictionary *dict = (__bridge NSDictionary *)ABMultiValueCopyValueAtIndex(values, i);
+        shippingAddress.country = [OLCountry countryForCode:[dict objectForKey:(id)kABPersonAddressCountryCodeKey]];
+        if (!shippingAddress.country){
+            shippingAddress.country = [OLCountry countryForCode:[dict objectForKey:(id)kABPersonAddressCountryKey]];
+        }
+        if (!shippingAddress.country){
+            shippingAddress.country = [OLCountry countryForName:[dict objectForKey:(id)kABPersonAddressCountryKey]];
+        }
+        if (!shippingAddress.country){
+            completion(PKPaymentAuthorizationStatusFailure, nil, nil);
+        }
+    }
+    
+    self.printOrder.shippingAddress = shippingAddress;
+    [self.printOrder costWithCompletionHandler:^(OLPrintOrderCost *cost, NSError *error){
+        [self.tableView reloadData];
+        NSMutableArray *lineItems = [[NSMutableArray alloc] init];
+        for (OLPaymentLineItem *item in cost.lineItems){
+            [lineItems addObject:[PKPaymentSummaryItem summaryItemWithLabel:item.description  amount:[item costInCurrency:self.printOrder.currencyCode]]];
+        }
+        [lineItems addObject:[PKPaymentSummaryItem summaryItemWithLabel:NSLocalizedString(@"Total", @"") amount:[cost totalCostInCurrency:self.printOrder.currencyCode]]];
+        if (!error){
+            completion(PKPaymentAuthorizationStatusSuccess, nil, lineItems);
+        }
+        else{
+            completion(PKPaymentAuthorizationStatusFailure, nil, nil);
+        }
+    }];
 }
 
 - (void)createBackendChargeWithToken:(STPToken *)token

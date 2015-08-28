@@ -15,6 +15,7 @@
 @interface OLPaymentViewController : UIViewController
 
 @property (weak, nonatomic) id<OLCheckoutDelegate> delegate;
+@property (assign, nonatomic) BOOL showOtherOptions;
 
 - (id)initWithPrintOrder:(OLPrintOrder *)printOrder;
 @end
