@@ -213,8 +213,8 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     [self.payWithApplePayButton addTarget:self action:@selector(onButtonPayWithApplePayClicked) forControlEvents:UIControlEventTouchUpInside];
     
     self.moreOptionsButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 84, self.view.frame.size.width, 20)];
-    [self.moreOptionsButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    [self.moreOptionsButton setTitle:NSLocalizedString(@"More options", @"") forState:UIControlStateNormal];
+    [self.moreOptionsButton setTitleColor:[UIColor colorWithRed: 0 green: 0.529 blue: 1 alpha: 1] forState:UIControlStateNormal];
+    [self.moreOptionsButton setTitle:NSLocalizedString(@"More payment options", @"") forState:UIControlStateNormal];
     self.moreOptionsButton.translatesAutoresizingMaskIntoConstraints = NO;
     
     [self.moreOptionsButton.titleLabel setFont:[UIFont systemFontOfSize:13]];
