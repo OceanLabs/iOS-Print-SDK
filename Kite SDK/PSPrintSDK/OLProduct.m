@@ -10,6 +10,8 @@
 #import "OLCountry.h"
 #import "OLProductTemplate.h"
 #import "UIImageView+FadeIn.h"
+#import "NSDecimalNumber+CostFormatter.h"
+#import "OLKiteABTesting.h"
 
 typedef enum {
     kSizeUnitsInches,
@@ -233,6 +235,48 @@ typedef enum {
 
 - (NSString *)description{
     return [self.productTemplate description];
+}
+
+- (NSString *)detailsString{
+    NSString *s = @"";
+    
+    //Add description
+    if (self.productTemplate.productDescription && ![self.productTemplate.productDescription isEqualToString:@""]){
+        s = [s stringByAppendingString:[NSString stringWithFormat:@"**Description**\n%@\n\n", self.productTemplate.productDescription]];
+    }
+    
+    //Add size info
+    OLTemplateUI templateClass = self.productTemplate.templateUI;
+    if (templateClass != kOLTemplateUICase){
+        s = [s stringByAppendingString:[NSString stringWithFormat:@"**Size**\n%@\n\n", self.dimensions]];
+    }
+    
+    //Add qty info
+    if (self.packInfo && ![self.packInfo isEqualToString:@""]){
+        s = [s stringByAppendingString:[NSString stringWithFormat:@"**Quantity**\n%lu\n\n", (unsigned long)self.quantityToFulfillOrder]];
+    }
+    
+    //Add price info
+    if ([OLKiteABTesting sharedInstance].hidePrice){
+        s = [s stringByAppendingString:[NSString stringWithFormat:@"**Price**\n%@\n\n", self.unitCost]];
+    }
+    
+    //Add shipping info
+    NSDecimalNumber *shippingCost = [self.productTemplate shippingCostForCountry:[OLCountry countryForCurrentLocale]];
+    if (shippingCost && [shippingCost doubleValue] != 0){
+        if (![OLKiteABTesting sharedInstance].hidePrice){
+            s = [s stringByAppendingString: [NSString stringWithFormat:NSLocalizedString(@"**Shipping**\n%@\n\n", @""), [shippingCost formatCostForCurrencyCode:[self.productTemplate currencyForCurrentLocale]]]];
+        }
+    }
+    else if (!shippingCost){ // ¯\_(ツ)_/¯ don't assume 0, don't add any shipping info
+    }
+    else{
+        s = [s stringByAppendingString:NSLocalizedString(@"**Shipping**\nFREE\n\n", @"")];
+    }
+    
+    //Add quality guarantee
+    s = [s stringByAppendingString:NSLocalizedString(@"**Quality Guarantee**\nOur products are of the highest quality and we’re confident you will love yours. If not, we offer a no quibble money back guarantee. Enjoy!", @"")];
+    return s;
 }
 
 

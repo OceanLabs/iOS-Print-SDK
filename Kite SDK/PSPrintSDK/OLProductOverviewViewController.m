@@ -30,6 +30,7 @@
 + (OLKiteViewController *)kiteViewControllerInNavStack:(NSArray *)viewControllers;
 + (NSString *)reviewViewControllerIdentifierForTemplateUI:(OLTemplateUI)templateUI photoSelectionScreen:(BOOL)photoSelectionScreen;
 + (void)checkoutViewControllerForPrintOrder:(OLPrintOrder *)printOrder handler:(void(^)(OLCheckoutViewController *vc))handler;
++ (NSString *)detailsBoxStringForProduct:(OLProduct *)product;
 
 @end
 
@@ -115,7 +116,7 @@
         }
     }
     
-    NSMutableAttributedString *attributedString = [[[TSMarkdownParser standardParser] attributedStringFromMarkdown:[self stringForDetailsBox]] mutableCopy];
+    NSMutableAttributedString *attributedString = [[[TSMarkdownParser standardParser] attributedStringFromMarkdown:[self.product detailsString]] mutableCopy];
     
     [attributedString addAttribute:NSForegroundColorAttributeName value:[UIColor colorWithRed: 0.341 green: 0.341 blue: 0.341 alpha: 1] range:NSMakeRange(0, attributedString.length)];
     self.detailsTextLabel.attributedText = attributedString;
@@ -162,48 +163,6 @@
         self.detailsView.backgroundColor = [UIColor whiteColor];
     }
     
-}
-
-- (NSString *)stringForDetailsBox{
-    NSString *s = @"";
-    
-    //Add description
-    if (self.product.productTemplate.productDescription && ![self.product.productTemplate.productDescription isEqualToString:@""]){
-        s = [s stringByAppendingString:[NSString stringWithFormat:@"**Description**\n%@\n\n", self.product.productTemplate.productDescription]];
-    }
-    
-    //Add size info
-    OLTemplateUI templateClass = self.product.productTemplate.templateUI;
-    if (templateClass != kOLTemplateUICase){
-        s = [s stringByAppendingString:[NSString stringWithFormat:@"**Size**\n%@\n\n", self.product.dimensions]];
-    }
-    
-    //Add qty info
-    if (self.product.packInfo && ![self.product.packInfo isEqualToString:@""]){
-        s = [s stringByAppendingString:[NSString stringWithFormat:@"**Quantity**\n%lu\n\n", (unsigned long)self.product.quantityToFulfillOrder]];
-    }
-    
-    //Add price info
-    if ([OLKiteABTesting sharedInstance].hidePrice){
-        s = [s stringByAppendingString:[NSString stringWithFormat:@"**Price**\n%@\n\n", self.product.unitCost]];
-    }
-    
-    //Add shipping info
-    NSDecimalNumber *shippingCost = [self.product.productTemplate shippingCostForCountry:[OLCountry countryForCurrentLocale]];
-    if (shippingCost && [shippingCost doubleValue] != 0){
-        if (![OLKiteABTesting sharedInstance].hidePrice){
-            s = [s stringByAppendingString: [NSString stringWithFormat:NSLocalizedString(@"**Shipping**\n%@\n\n", @""), [shippingCost formatCostForCurrencyCode:[self.product.productTemplate currencyForCurrentLocale]]]];
-        }
-    }
-    else if (!shippingCost){ // ¯\_(ツ)_/¯ don't assume 0, don't add any shipping info
-    }
-    else{
-        s = [s stringByAppendingString:NSLocalizedString(@"**Shipping**\nFREE\n\n", @"")];
-    }
-    
-    //Add quality guarantee
-    s = [s stringByAppendingString:NSLocalizedString(@"**Quality Guarantee**\nOur products are of the highest quality and we’re confident you will love yours. If not, we offer a no quibble money back guarantee. Enjoy!", @"")];
-    return s;
 }
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator{

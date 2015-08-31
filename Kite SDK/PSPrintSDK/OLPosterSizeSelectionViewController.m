@@ -13,6 +13,7 @@
 #import "OLAnalytics.h"
 #import "OLKitePrintSDK.h"
 #import "OLKiteABTesting.h"
+#import <TSMarkdownParser.h>
 
 @interface OLProduct (Private)
 
@@ -27,14 +28,15 @@ static UIColor *deselectedColor;
 @property (weak, nonatomic) IBOutlet UIButton *classicBtn;
 @property (weak, nonatomic) IBOutlet UIButton *grandBtn;
 @property (weak, nonatomic) IBOutlet UIButton *deluxeBtn;
-@property (weak, nonatomic) IBOutlet UILabel *sizeLabel;
-@property (weak, nonatomic) IBOutlet UILabel *shipping;
 @property (weak, nonatomic) IBOutlet UILabel *priceLabel;
-@property (weak, nonatomic) IBOutlet UILabel *posterDimensionLabel;
 @property (weak, nonatomic) IBOutlet UIImageView *productImageView;
 @property (strong, nonatomic) OLProduct *product;
 @property (strong, nonatomic) NSMutableArray *availableButtons;
 @property (weak, nonatomic) IBOutlet UILabel *chooseSizeLabel;
+@property (weak, nonatomic) IBOutlet UIImageView *arrowImageView;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *detailsBoxTopCon;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *detailsViewHeightCon;
+@property (weak, nonatomic) IBOutlet UILabel *detailsTextLabel;
 
 @end
 
@@ -47,6 +49,14 @@ static UIColor *deselectedColor;
         // Custom initialization
     }
     return self;
+}
+
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator{
+    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+    [coordinator animateAlongsideTransition:^(id context){
+        self.detailsViewHeightCon.constant = size.height > size.width ? 450 : 340;
+        self.detailsBoxTopCon.constant = self.detailsBoxTopCon.constant != 0 ? self.detailsViewHeightCon.constant-100 : 0;
+    }completion:NULL];
 }
 
 - (void)viewDidLoad
@@ -63,6 +73,9 @@ static UIColor *deselectedColor;
                                    action:@selector(pressedContinue)];
     self.navigationItem.rightBarButtonItem = nextButton;
     [self setTitle:NSLocalizedString(@"Choose Size", @"")];
+    
+    CGSize size = self.view.frame.size;
+    self.detailsViewHeightCon.constant = size.height > size.width ? 450 : 340;
     
     OLProduct *productA1;
     OLProduct *productA2;
@@ -127,12 +140,6 @@ static UIColor *deselectedColor;
 #endif
 }
 
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
 #pragma mark - actions
 - (IBAction)pressedClassic:(UIButton *)sender {
     for (OLProduct *product in [OLProduct products]){
@@ -146,11 +153,15 @@ static UIColor *deselectedColor;
     [self.grandBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     self.deluxeBtn.backgroundColor = deselectedColor;
     [self.deluxeBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    self.sizeLabel.text = @"A3:";
+//    self.sizeLabel.text = @"A3:";
     [self.product setProductPhotography:0 toImageView:self.productImageView];
-    self.posterDimensionLabel.text = [NSString stringWithFormat:@"%@", self.product.dimensions];
-    [self.posterDimensionLabel sizeToFit];
+    
     self.priceLabel.text = self.product.unitCost;
+    
+    NSMutableAttributedString *attributedString = [[[TSMarkdownParser standardParser] attributedStringFromMarkdown:[self.product detailsString]] mutableCopy];
+    
+    [attributedString addAttribute:NSForegroundColorAttributeName value:[UIColor colorWithRed: 0.341 green: 0.341 blue: 0.341 alpha: 1] range:NSMakeRange(0, attributedString.length)];
+    self.detailsTextLabel.attributedText = attributedString;
 }
 
 - (IBAction)pressedGrand:(UIButton *)sender {
@@ -165,11 +176,15 @@ static UIColor *deselectedColor;
     [self.deluxeBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     self.classicBtn.backgroundColor = deselectedColor;
     [self.classicBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    self.sizeLabel.text = @"A2:";
+//    self.sizeLabel.text = @"A2:";
     [self.product setProductPhotography:0 toImageView:self.productImageView];
-    self.posterDimensionLabel.text = [NSString stringWithFormat:@"%@", self.product.dimensions];
-    [self.posterDimensionLabel sizeToFit];
+    
     self.priceLabel.text = self.product.unitCost;
+    
+    NSMutableAttributedString *attributedString = [[[TSMarkdownParser standardParser] attributedStringFromMarkdown:[self.product detailsString]] mutableCopy];
+    
+    [attributedString addAttribute:NSForegroundColorAttributeName value:[UIColor colorWithRed: 0.341 green: 0.341 blue: 0.341 alpha: 1] range:NSMakeRange(0, attributedString.length)];
+    self.detailsTextLabel.attributedText = attributedString;
 }
 
 - (IBAction)pressedDeluxe:(UIButton *)sender {
@@ -185,11 +200,15 @@ static UIColor *deselectedColor;
     self.deluxeBtn.backgroundColor = [UIColor whiteColor];
     [self.deluxeBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     
-    self.sizeLabel.text = @"A1:";
+//    self.sizeLabel.text = @"A1:";
     [self.product setProductPhotography:0 toImageView:self.productImageView];
-    self.posterDimensionLabel.text = [NSString stringWithFormat:@"%@", self.product.dimensions];
-    [self.posterDimensionLabel sizeToFit];
+    
     self.priceLabel.text = self.product.unitCost;
+    
+    NSMutableAttributedString *attributedString = [[[TSMarkdownParser standardParser] attributedStringFromMarkdown:[self.product detailsString]] mutableCopy];
+    
+    [attributedString addAttribute:NSForegroundColorAttributeName value:[UIColor colorWithRed: 0.341 green: 0.341 blue: 0.341 alpha: 1] range:NSMakeRange(0, attributedString.length)];
+    self.detailsTextLabel.attributedText = attributedString;
 }
 
 - (IBAction)pressedContinue {
@@ -197,6 +216,18 @@ static UIColor *deselectedColor;
     dest.product = self.product;
     dest.userSelectedPhotos = self.userSelectedPhotos;
     [self.navigationController pushViewController:dest animated:YES];
+}
+
+- (IBAction)onLabelDetailsTapped:(UITapGestureRecognizer *)sender {
+    self.detailsBoxTopCon.constant = self.detailsBoxTopCon.constant == 0 ? self.detailsViewHeightCon.constant-100 : 0;
+    [UIView animateWithDuration:0.8 delay:0 usingSpringWithDamping:0.5 initialSpringVelocity:0 options:0 animations:^{
+        self.arrowImageView.transform = self.detailsBoxTopCon.constant == 0 ? CGAffineTransformIdentity : CGAffineTransformMakeRotation(M_PI);
+        [self.view setNeedsLayout];
+        [self.view layoutIfNeeded];
+    }completion:^(BOOL finished){
+        
+    }];
+    
 }
 
 #pragma mark - Autorotate and Orientation Methods

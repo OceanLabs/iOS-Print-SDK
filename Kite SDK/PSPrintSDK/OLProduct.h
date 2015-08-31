@@ -19,11 +19,12 @@
 +(NSArray *)products;
 +(NSArray *)productsWithFilters:(NSArray *)allowedTemplateIds;
 -(instancetype)initWithTemplate:(OLProductTemplate *)template;
-- (NSUInteger) quantityToFulfillOrder;
+- (NSUInteger)quantityToFulfillOrder;
 - (NSString *)templateId;
 - (NSString *)unitCost;
-- (NSString *) packInfo;
-- (NSString *) dimensions;
-+(OLProduct *) productWithTemplateId:(NSString *)templateId;
+- (NSString *)packInfo;
+- (NSString *)dimensions;
+- (NSString *)detailsString;
++(OLProduct *)productWithTemplateId:(NSString *)templateId;
 
 @end
