@@ -18,6 +18,8 @@
 #import "OLPaymentLineItem.h"
 #import "OLPrintOrderCost.h"
 #import "OLKiteViewController.h"
+#import <SDWebImageManager.h>
+#import "OLKiteABTesting.h"
 
 static const NSUInteger kSectionOrderSummary = 0;
 static const NSUInteger kSectionOrderId = 1;
@@ -53,10 +55,17 @@ static const NSUInteger kSectionErrorRetry = 2;
     self.tableView.tableHeaderView.backgroundColor = [UIColor whiteColor];
     self.tableView.tableHeaderView.contentMode = UIViewContentModeCenter;
     
-    if (self.printOrder.printed) {
-        ((UIImageView *) self.tableView.tableHeaderView).image = [UIImage imageNamed:@"receipt_success"];
-    } else {
-        ((UIImageView *) self.tableView.tableHeaderView).image = [UIImage imageNamed:@"receipt_failure"];
+    NSString *url = self.printOrder.printed ? [OLKiteABTesting sharedInstance].receiptSuccessURL : [OLKiteABTesting sharedInstance].receiptFailureURL;
+    if (url){
+        [[SDWebImageManager sharedManager] downloadImageWithURL:[NSURL URLWithString:url] options:0 progress:NULL completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL){
+            image = [UIImage imageWithCGImage:image.CGImage scale:2 orientation:image.imageOrientation];
+            self.tableView.tableHeaderView = [[UIImageView alloc] initWithImage:image];
+            self.tableView.tableHeaderView.contentMode = UIViewContentModeCenter;
+            self.tableView.tableHeaderView.frame = CGRectMake(0, 0, self.view.frame.size.width, self.tableView.tableHeaderView.frame.size.height);
+        }];
+    }
+    else{
+        ((UIImageView *) self.tableView.tableHeaderView).image = [UIImage imageNamed:self.printOrder.printed ? @"receipt_success" : @"receipt_failure"];
     }
 }
 

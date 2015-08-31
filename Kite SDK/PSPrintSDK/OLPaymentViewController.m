@@ -28,6 +28,7 @@
 #import "OLBaseRequest.h"
 #import "OLPrintOrderCost.h"
 #import "OLKiteABTesting.h"
+#import <SDWebImageManager.h>
 
 #ifdef OL_KITE_OFFER_PAYPAL
 #import <PayPalMobile.h>
@@ -165,9 +166,20 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     [self.view addSubview:self.tableView];
     
     if ([self shippingScreenOnTheStack]) {
-        self.tableView.tableHeaderView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"checkout_progress_indicator2"]];
-        self.tableView.tableHeaderView.contentMode = UIViewContentModeCenter;
-        self.tableView.tableHeaderView.frame = CGRectMake(0, 0, self.view.frame.size.width, self.tableView.tableHeaderView.frame.size.height);
+        NSString *url = [OLKiteABTesting sharedInstance].checkoutProgress2URL;
+        if (url){
+            [[SDWebImageManager sharedManager] downloadImageWithURL:[NSURL URLWithString:url] options:0 progress:NULL completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL){
+                image = [UIImage imageWithCGImage:image.CGImage scale:2 orientation:image.imageOrientation];
+                self.tableView.tableHeaderView = [[UIImageView alloc] initWithImage:image];
+                self.tableView.tableHeaderView.contentMode = UIViewContentModeCenter;
+                self.tableView.tableHeaderView.frame = CGRectMake(0, 0, self.view.frame.size.width, self.tableView.tableHeaderView.frame.size.height);
+            }];
+        }
+        else{
+            self.tableView.tableHeaderView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"checkout_progress_indicator2"]];
+            self.tableView.tableHeaderView.contentMode = UIViewContentModeCenter;
+            self.tableView.tableHeaderView.frame = CGRectMake(0, 0, self.view.frame.size.width, self.tableView.tableHeaderView.frame.size.height);
+        }
     }
     
 #ifdef OL_KITE_OFFER_APPLE_PAY

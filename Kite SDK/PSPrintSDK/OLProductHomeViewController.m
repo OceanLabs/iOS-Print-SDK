@@ -25,6 +25,8 @@
 #import "OLInfoPageViewController.h"
 #import <TSMarkdownParser.h>
 #import <SDWebImageManager.h>
+#import <MessageUI/MessageUI.h>
+#import <MessageUI/MFMailComposeViewController.h>
 
 #define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
 
@@ -42,7 +44,7 @@
 
 @end
 
-@interface OLProductHomeViewController () <UICollectionViewDelegateFlowLayout>
+@interface OLProductHomeViewController () <MFMailComposeViewControllerDelegate, UICollectionViewDelegateFlowLayout>
 @property (nonatomic, strong) NSArray *productGroups;
 @property (nonatomic, strong) UIImageView *topSurpriseImageView;
 @property (assign, nonatomic) BOOL fromRotation;
@@ -73,14 +75,26 @@
                                                                              style:UIBarButtonItemStyleBordered
                                                                             target:nil
                                                                             action:nil];
-    NSString *url = [OLKiteABTesting sharedInstance].headerLogoURL;
-    if (url){
-        [[SDWebImageManager sharedManager] downloadImageWithURL:[NSURL URLWithString:url] options:0 progress:NULL completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL){
-        self.navigationItem.titleView = [[UIImageView alloc] initWithImage:image];
+    NSURL *url = [NSURL URLWithString:[OLKiteABTesting sharedInstance].headerLogoURL];
+    if (url && [[SDWebImageManager sharedManager] cachedImageExistsForURL:url]){
+        [[SDWebImageManager sharedManager] downloadImageWithURL:url options:0 progress:NULL completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL){
+            image = [UIImage imageWithCGImage:image.CGImage scale:2 orientation:image.imageOrientation];
+            UIImageView *titleImageView = [[UIImageView alloc] initWithImage:image];
+            titleImageView.alpha = 0;
+            self.navigationItem.titleView = titleImageView;
+            titleImageView.alpha = 0;
+            [UIView animateWithDuration:0.5 animations:^{
+                titleImageView.alpha = 1;
+            }];
         }];
     }
-    else{
+    else if (!url){
         self.title = NSLocalizedString(@"Print Shop", @"");
+    }
+    
+    NSString *supportEmail = [OLKiteABTesting sharedInstance].supportEmail;
+    if (supportEmail){
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"support"] style:UIBarButtonItemStyleDone target:self action:@selector(emailButtonPushed:)];
     }
 
     self.automaticallyAdjustsScrollViewInsets = NO;
@@ -199,6 +213,27 @@
         }
         [self setupBannerLabel:label];
     }
+}
+
+#pragma mark - MFMailComposeViewControllerDelegate methods
+- (IBAction)emailButtonPushed:(id)sender {
+    
+    if([MFMailComposeViewController canSendMail]) {
+        MFMailComposeViewController *mailCont = [[MFMailComposeViewController alloc] init];
+        mailCont.mailComposeDelegate = self;
+        [mailCont setSubject:@""];
+        [mailCont setToRecipients:@[[OLKiteABTesting sharedInstance].supportEmail]];
+        [mailCont setMessageBody:@"" isHTML:NO];
+        [self presentViewController:mailCont animated:YES completion:nil];
+    } else {
+        UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Support", @"") message:[NSString stringWithFormat:NSLocalizedString(@"Please email %@ for support & customer service enquiries.", @""), [OLKiteABTesting sharedInstance].supportEmail] delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"") otherButtonTitles:nil];
+        [av show];
+    }
+}
+
+- (void)mailComposeController:(MFMailComposeViewController*)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error {
+    //handle any error
+    [controller dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (NSString *)promoBannerParaText{
@@ -323,6 +358,20 @@
 
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
+    
+    NSURL *url = [NSURL URLWithString:[OLKiteABTesting sharedInstance].headerLogoURL];
+    if (url && ![[SDWebImageManager sharedManager] cachedImageExistsForURL:url]){
+        [[SDWebImageManager sharedManager] downloadImageWithURL:url options:0 progress:NULL completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL){
+            image = [UIImage imageWithCGImage:image.CGImage scale:2 orientation:image.imageOrientation];
+            UIImageView *titleImageView = [[UIImageView alloc] initWithImage:image];
+            titleImageView.alpha = 0;
+            self.navigationItem.titleView = titleImageView;
+            titleImageView.alpha = 0;
+            [UIView animateWithDuration:0.5 animations:^{
+                titleImageView.alpha = 1;
+            }];
+        }];
+    }
     
     if (self.bannerView){
         self.bannerView.hidden = NO;

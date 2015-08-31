@@ -18,4 +18,13 @@
     }
 }
 
+- (id)safePerformSelectorWithReturn:(SEL)selector withObject:(id)object{
+    if ([self respondsToSelector:selector]){
+        IMP imp = [self methodForSelector:selector];
+        id (*func)(id, SEL, id) = (void *)imp;
+        return func(self, selector, object);
+    }
+    return nil;
+}
+
 @end
