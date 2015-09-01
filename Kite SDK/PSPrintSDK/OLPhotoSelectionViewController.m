@@ -290,13 +290,17 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
         }
         [UIView animateKeyframesWithDuration:0.15 delay:0 options:UIViewKeyframeAnimationOptionBeginFromCurrentState | UIViewAnimationOptionCurveLinear animations:^{
             self.clearButtonContainerView.transform = CGAffineTransformMakeTranslation(0, -40);
+            self.collectionView.contentInset = UIEdgeInsetsMake(self.collectionView.contentInset.top, self.collectionView.contentInset.left, self.collectionView.contentInset.bottom + 40, self.collectionView.contentInset.left);
         }completion:NULL];
     }
     else{
         self.navigationItem.rightBarButtonItem.title = NSLocalizedString(@"Next", @"");
-        [UIView animateKeyframesWithDuration:0.15 delay:0 options:UIViewKeyframeAnimationOptionBeginFromCurrentState | UIViewAnimationOptionCurveLinear animations:^{
-            self.clearButtonContainerView.transform = CGAffineTransformIdentity;
-        }completion:NULL];
+        if (self.clearButtonContainerView.transform.ty != 0){
+            [UIView animateKeyframesWithDuration:0.15 delay:0 options:UIViewKeyframeAnimationOptionBeginFromCurrentState | UIViewAnimationOptionCurveLinear animations:^{
+                self.clearButtonContainerView.transform = CGAffineTransformIdentity;
+                self.collectionView.contentInset = UIEdgeInsetsMake(self.collectionView.contentInset.top, self.collectionView.contentInset.left, 0, self.collectionView.contentInset.left);
+            }completion:NULL];
+        }
     }
 }
 
