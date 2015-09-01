@@ -81,7 +81,12 @@ static NSString *const kKeyPhotobookImages = @"co.oceanlabs.pssdk.kKeyPhotobookI
 }
 
 - (NSArray *)assetsForUploading {
-    return self.assets;
+    if (self.frontCover){
+        return [self.assets arrayByAddingObject:self.frontCover];
+    }
+    else{
+        return self.assets;
+    }
 }
 
 #pragma mark - NSCopying
