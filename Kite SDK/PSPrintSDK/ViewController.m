@@ -120,10 +120,10 @@ static NSString *const kApplePayMerchantIDKey = @"merchant.ly.kite.sdk"; // For 
 
 #pragma mark - UIAlertViewDelegate methods
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-    NSArray *assets = @[[OLAsset assetWithURL:[NSURL URLWithString:@"https://psps.s3.amazonaws.com/sdk_static/1.jpg"]],
-                        [OLAsset assetWithURL:[NSURL URLWithString:@"https://psps.s3.amazonaws.com/sdk_static/2.jpg"]],
-                        [OLAsset assetWithURL:[NSURL URLWithString:@"https://psps.s3.amazonaws.com/sdk_static/3.jpg"]],
-                        [OLAsset assetWithURL:[NSURL URLWithString:@"https://psps.s3.amazonaws.com/sdk_static/4.jpg"]]];
+    NSArray *assets = @[[OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/1.jpg"]],
+                        [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/2.jpg"]],
+                        [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/3.jpg"]],
+                        [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/4.jpg"]]];
     [self printWithAssets:assets];
 }
 

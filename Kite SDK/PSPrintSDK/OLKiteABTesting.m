@@ -36,9 +36,9 @@ id safeObject(id obj){
 }
 
 - (void)fetchRemotePlistsWithCompletionHandler:(void(^)())handler{
-    [OLKiteABTesting fetchRemotePlistWithURL:[NSString stringWithFormat:@"https://sdk-static.s3.amazonaws.com/kite-ios-remote-%@.plist", [OLKitePrintSDK apiKey]] completionHandler:^(NSError *error){
+    [OLKiteABTesting fetchRemotePlistWithURL:[NSString stringWithFormat:@"https://s3.amazonaws.com/sdk-static/kite-ios-remote-%@.plist", [OLKitePrintSDK apiKey]] completionHandler:^(NSError *error){
         if (error){
-            [OLKiteABTesting fetchRemotePlistWithURL:@"https://sdk-static.s3.amazonaws.com/kite-ios-remote.plist" completionHandler:^(NSError *error2){
+            [OLKiteABTesting fetchRemotePlistWithURL:@"https://s3.amazonaws.com/sdk-static/kite-ios-remote.plist" completionHandler:^(NSError *error2){
                 [self setupABTestVariants];
                 handler();
             }];
