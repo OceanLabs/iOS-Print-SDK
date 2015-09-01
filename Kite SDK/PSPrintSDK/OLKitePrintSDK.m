@@ -247,19 +247,17 @@ static NSString *instagramRedirectURI = nil;
     else if (templateUI == kOLTemplateUIPostcard){
         return @"OLPostcardViewController";
     }
-    else if (templateUI == kOLTemplateUIPoster){
-        if (product.productTemplate.gridCountX == 1 && product.productTemplate.gridCountY == 1){
-            return @"OLSingleImageProductReviewViewController";
-        }
-        else{
-            return @"OLPosterViewController";
-        }
+    else if (templateUI == kOLTemplateUIPoster && product.productTemplate.gridCountX == 1 && product.productTemplate.gridCountY == 1){
+        return @"OLSingleImageProductReviewViewController";
     }
     else if (templateUI == kOLTemplateUIPhotobook){
         return @"PhotobookViewController";
     }
     else if (photoSelectionScreen){
         return @"PhotoSelectionViewController";
+    }
+    else if (templateUI == kOLTemplateUIPoster){
+        return @"OLPosterViewController";
     }
     else if (templateUI == kOLTemplateUIFrame){
         return @"FrameOrderReviewViewController";

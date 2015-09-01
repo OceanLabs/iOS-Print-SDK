@@ -13,11 +13,18 @@
 #import "OLKitePrintSDK.h"
 #import "OLKiteABTesting.h"
 #import "OLPosterViewController.h"
+#import "NSObject+Utils.h"
 
 @interface OLProduct (Private)
 
 -(void)setCoverImageToImageView:(UIImageView *)imageView;
 -(void)setProductPhotography:(NSUInteger)i toImageView:(UIImageView *)imageView;
+
+@end
+
+@interface OLKitePrintSDK ()
+
++ (OLKiteViewController *)kiteViewControllerInNavStack:(NSArray *)viewControllers;
 
 @end
 
@@ -32,7 +39,6 @@ static UIColor *deselectedColor;
 @property (weak, nonatomic) IBOutlet UILabel *priceLabel;
 @property (weak, nonatomic) IBOutlet UILabel *posterDimensionLabel;
 @property (weak, nonatomic) IBOutlet UIImageView *productImageView;
-@property (strong, nonatomic) OLProduct *product;
 @property (strong, nonatomic) NSMutableArray *availableButtons;
 @property (weak, nonatomic) IBOutlet UILabel *chooseSizeLabel;
 
@@ -199,10 +205,19 @@ static UIColor *deselectedColor;
 }
 
 - (IBAction)pressedContinue {
-    NSString *identifier = self.product.quantityToFulfillOrder == 1 ? @"OLSingleImageProductReviewViewController" : @"OLPosterViewController";
-    OLPosterViewController *dest = [self.storyboard instantiateViewControllerWithIdentifier:identifier];
-    dest.product = self.product;
-    dest.userSelectedPhotos = self.userSelectedPhotos;
+    NSString *identifier;
+    if (self.product.quantityToFulfillOrder == 1){
+        identifier = @"OLSingleImageProductReviewViewController";
+    }
+    else if ([self.delegate respondsToSelector:@selector(kiteControllerShouldAllowUserToAddMorePhotos:)] || [self.delegate kiteControllerShouldAllowUserToAddMorePhotos:[OLKitePrintSDK kiteViewControllerInNavStack:self.navigationController.viewControllers]]){
+        identifier = @"PhotoSelectionViewController";
+    }
+    else{
+        identifier = @"OLPosterViewController";
+    }
+    UIViewController *dest = [self.storyboard instantiateViewControllerWithIdentifier:identifier];
+    [dest safePerformSelector:@selector(setProduct:) withObject:self.product];
+    [dest safePerformSelector:@selector(setUserSelectedPhotos:) withObject:self.userSelectedPhotos];
     [self.navigationController pushViewController:dest animated:YES];
 }
 
