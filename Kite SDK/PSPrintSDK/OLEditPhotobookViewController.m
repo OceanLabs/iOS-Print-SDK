@@ -68,6 +68,8 @@ UINavigationControllerDelegate>
 @property (assign, nonatomic) BOOL animating;
 @property (assign, nonatomic) BOOL haveCachedCells;
 
+@property (assign, nonatomic) BOOL rotating;
+
 @end
 
 @implementation OLEditPhotobookViewController
@@ -148,16 +150,25 @@ UINavigationControllerDelegate>
 }
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator{
+    
+    NSArray *visibleCells = [self.collectionView indexPathsForVisibleItems];
+    NSIndexPath *midIndexPath = visibleCells[visibleCells.count / 2];
+    
+    self.rotating = YES;
+    [self.collectionView deleteSections:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, 3)]];
     for (OLPhotobookViewController *photobook in self.childViewControllers){
         [photobook viewWillTransitionToSize:CGSizeMake(size.width, [self cellHeightForSize:size]) withTransitionCoordinator:coordinator];
     }
     
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinator> context){
-        [self.collectionView.collectionViewLayout invalidateLayout];
+        
         for (OLPhotobookViewController * photobook in self.childViewControllers){
             photobook.view.frame = CGRectMake(0, 0, size.width, [self cellHeightForSize:size]);
         }
     }completion:^(id<UIViewControllerTransitionCoordinator> context){
+        self.rotating = NO;
+        [self.collectionView insertSections:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, 3)]];
+        [self.collectionView scrollToItemAtIndexPath:midIndexPath atScrollPosition:UICollectionViewScrollPositionTop animated:NO];
     }];
 }
 
@@ -667,7 +678,7 @@ UINavigationControllerDelegate>
 }
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
-    return 3;
+    return self.rotating ? 0 : 3;
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
