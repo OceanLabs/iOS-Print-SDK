@@ -13,6 +13,7 @@
 		2E1F69E41A6699AE00696286 /* OLPosterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1F69E31A6699AE00696286 /* OLPosterViewController.m */; };
 		2E20BD861AD4229700FB2446 /* OLCaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E20BD851AD4229700FB2446 /* OLCaseViewController.m */; };
 		2E20BD891AD42E2200FB2446 /* OLPostcardViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E20BD881AD42E2200FB2446 /* OLPostcardViewController.m */; };
+		2E2632C21B97336700C7D879 /* KitePrintSDKUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E2632C11B97336700C7D879 /* KitePrintSDKUITests.m */; };
 		2E38C0CD1AD5206F008BC28A /* PostcardBackView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2E38C0CC1AD5206F008BC28A /* PostcardBackView.xib */; };
 		2E39CAA31AB894A8008B1EFF /* OLPhotoSelectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E39CAA21AB894A8008B1EFF /* OLPhotoSelectionViewController.m */; };
 		2E39CAA51AB89515008B1EFF /* OLPhotoSelectionButton.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2E39CAA41AB89515008B1EFF /* OLPhotoSelectionButton.xib */; };
@@ -112,6 +113,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		2E2632C41B97336700C7D879 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CD73BF60186215790009DE03 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = CD73BF67186215790009DE03;
+			remoteInfo = KitePrintSDK;
+		};
 		CD73BF8E186215790009DE03 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = CD73BF60186215790009DE03 /* Project object */;
@@ -135,6 +143,9 @@
 		2E20BD851AD4229700FB2446 /* OLCaseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLCaseViewController.m; sourceTree = "<group>"; };
 		2E20BD871AD42E2200FB2446 /* OLPostcardViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLPostcardViewController.h; sourceTree = "<group>"; };
 		2E20BD881AD42E2200FB2446 /* OLPostcardViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLPostcardViewController.m; sourceTree = "<group>"; };
+		2E2632BF1B97336700C7D879 /* KitePrintSDKUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = KitePrintSDKUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		2E2632C11B97336700C7D879 /* KitePrintSDKUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KitePrintSDKUITests.m; sourceTree = "<group>"; };
+		2E2632C31B97336700C7D879 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2E38C0CC1AD5206F008BC28A /* PostcardBackView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PostcardBackView.xib; sourceTree = "<group>"; };
 		2E39CAA11AB894A8008B1EFF /* OLPhotoSelectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLPhotoSelectionViewController.h; sourceTree = "<group>"; };
 		2E39CAA21AB894A8008B1EFF /* OLPhotoSelectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLPhotoSelectionViewController.m; sourceTree = "<group>"; };
@@ -342,6 +353,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		2E2632BC1B97336700C7D879 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		CD73BF65186215790009DE03 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -384,6 +402,15 @@
 				2E676C2A1B33FD70005E068B /* OLImageView.m */,
 			);
 			name = View;
+			sourceTree = "<group>";
+		};
+		2E2632C01B97336700C7D879 /* KitePrintSDKUITests */ = {
+			isa = PBXGroup;
+			children = (
+				2E2632C11B97336700C7D879 /* KitePrintSDKUITests.m */,
+				2E2632C31B97336700C7D879 /* Info.plist */,
+			);
+			path = KitePrintSDKUITests;
 			sourceTree = "<group>";
 		};
 		2E85BC9619A24C9E00EC7CC2 /* Supporting Files */ = {
@@ -500,6 +527,7 @@
 				CD73BFA01862FA210009DE03 /* Sample App */,
 				CD73BF71186215790009DE03 /* Kite Print SDK */,
 				CD73BF90186215790009DE03 /* Kite Print SDK Tests */,
+				2E2632C01B97336700C7D879 /* KitePrintSDKUITests */,
 				CD73BF6A186215790009DE03 /* Frameworks */,
 				CD73BF69186215790009DE03 /* Products */,
 				9CB01DF75C9A736C7333F6D8 /* Pods */,
@@ -511,6 +539,7 @@
 			children = (
 				CD73BF68186215790009DE03 /* KitePrintSDK.app */,
 				CD73BF89186215790009DE03 /* KitePrintSDKTests.xctest */,
+				2E2632BF1B97336700C7D879 /* KitePrintSDKUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -754,6 +783,24 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		2E2632BE1B97336700C7D879 /* KitePrintSDKUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2E2632C81B97336700C7D879 /* Build configuration list for PBXNativeTarget "KitePrintSDKUITests" */;
+			buildPhases = (
+				2E2632BB1B97336700C7D879 /* Sources */,
+				2E2632BC1B97336700C7D879 /* Frameworks */,
+				2E2632BD1B97336700C7D879 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				2E2632C51B97336700C7D879 /* PBXTargetDependency */,
+			);
+			name = KitePrintSDKUITests;
+			productName = KitePrintSDKUITests;
+			productReference = 2E2632BF1B97336700C7D879 /* KitePrintSDKUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 		CD73BF67186215790009DE03 /* KitePrintSDK */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = CD73BF9A186215790009DE03 /* Build configuration list for PBXNativeTarget "KitePrintSDK" */;
@@ -797,9 +844,13 @@
 		CD73BF60186215790009DE03 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0610;
+				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = "Deon Botha";
 				TargetAttributes = {
+					2E2632BE1B97336700C7D879 = {
+						CreatedOnToolsVersion = 7.0;
+						TestTargetID = CD73BF67186215790009DE03;
+					};
 					CD73BF67186215790009DE03 = {
 						DevelopmentTeam = L78L4U72YJ;
 						SystemCapabilities = {
@@ -833,11 +884,19 @@
 			targets = (
 				CD73BF67186215790009DE03 /* KitePrintSDK */,
 				CD73BF88186215790009DE03 /* KitePrintSDKTests */,
+				2E2632BE1B97336700C7D879 /* KitePrintSDKUITests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		2E2632BD1B97336700C7D879 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		CD73BF66186215790009DE03 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -898,6 +957,14 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		2E2632BB1B97336700C7D879 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2E2632C21B97336700C7D879 /* KitePrintSDKUITests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		CD73BF64186215790009DE03 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -997,6 +1064,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		2E2632C51B97336700C7D879 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = CD73BF67186215790009DE03 /* KitePrintSDK */;
+			targetProxy = 2E2632C41B97336700C7D879 /* PBXContainerItemProxy */;
+		};
 		CD73BF8F186215790009DE03 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = CD73BF67186215790009DE03 /* KitePrintSDK */;
@@ -1062,6 +1134,50 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		2E2632C61B97336700C7D879 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				INFOPLIST_FILE = KitePrintSDKUITests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = ly.kite.KitePrintSDKUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_TARGET_NAME = KitePrintSDK;
+				USES_XCTRUNNER = YES;
+			};
+			name = Debug;
+		};
+		2E2632C71B97336700C7D879 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				INFOPLIST_FILE = KitePrintSDKUITests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = ly.kite.KitePrintSDKUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_TARGET_NAME = KitePrintSDK;
+				USES_XCTRUNNER = YES;
+			};
+			name = Release;
+		};
 		CD73BF98186215790009DE03 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1081,6 +1197,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -1161,6 +1278,7 @@
 				);
 				INFOPLIST_FILE = "PSPrintSDK/KitePrintSDK-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ly.kite.sdk;
 				PRODUCT_NAME = KitePrintSDK;
 				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1187,6 +1305,7 @@
 				);
 				INFOPLIST_FILE = "PSPrintSDK/KitePrintSDK-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ly.kite.sdk;
 				PRODUCT_NAME = KitePrintSDK;
 				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1210,6 +1329,7 @@
 					"$(inherited)",
 				);
 				INFOPLIST_FILE = "PSPrintSDKTests/KitePrintSDKTests-Info.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = "co.oceanlabs.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = KitePrintSDKTests;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/KitePrintSDK.app/KitePrintSDK";
 				WRAPPER_EXTENSION = xctest;
@@ -1228,6 +1348,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "PSPrintSDK/KitePrintSDK-Prefix.pch";
 				INFOPLIST_FILE = "PSPrintSDKTests/KitePrintSDKTests-Info.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = "co.oceanlabs.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = KitePrintSDKTests;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/KitePrintSDK.app/KitePrintSDK";
 				WRAPPER_EXTENSION = xctest;
@@ -1237,6 +1358,14 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		2E2632C81B97336700C7D879 /* Build configuration list for PBXNativeTarget "KitePrintSDKUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2E2632C61B97336700C7D879 /* Debug */,
+				2E2632C71B97336700C7D879 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
 		CD73BF63186215790009DE03 /* Build configuration list for PBXProject "KitePrintSDK" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
