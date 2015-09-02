@@ -41,8 +41,10 @@
 	<dict>
 		<key>NSExceptionDomains</key>
 		<dict>
-			<key>s3.amazonaws.com</key>
+			<key>amazonaws.com</key>
 			<dict>
+				<key>NSIncludesSubdomains</key>
+				<true/>
 				<key>NSExceptionRequiresForwardSecrecy</key>
 				<false/>
 			</dict>
