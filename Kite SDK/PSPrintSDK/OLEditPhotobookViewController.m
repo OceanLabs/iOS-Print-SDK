@@ -152,23 +152,27 @@ UINavigationControllerDelegate>
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator{
     
     NSArray *visibleCells = [self.collectionView indexPathsForVisibleItems];
-    NSIndexPath *midIndexPath = visibleCells[visibleCells.count / 2];
+    
+    for (NSIndexPath *indexPath in visibleCells){
+        UICollectionViewCell *cell = [self.collectionView cellForItemAtIndexPath:indexPath];
+        UIView *clone = [cell snapshotViewAfterScreenUpdates:YES];
+        clone.tag = 999;
+        [cell addSubview:clone];
+    }
     
     self.rotating = YES;
     [self.collectionView deleteSections:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, 3)]];
     for (OLPhotobookViewController *photobook in self.childViewControllers){
-        [photobook viewWillTransitionToSize:CGSizeMake(size.width, [self cellHeightForSize:size]) withTransitionCoordinator:coordinator];
+        [photobook.view removeFromSuperview];
+        [photobook removeFromParentViewController];
     }
     
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinator> context){
-        
-        for (OLPhotobookViewController * photobook in self.childViewControllers){
-            photobook.view.frame = CGRectMake(0, 0, size.width, [self cellHeightForSize:size]);
-        }
+       
     }completion:^(id<UIViewControllerTransitionCoordinator> context){
         self.rotating = NO;
         [self.collectionView insertSections:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, 3)]];
-        [self.collectionView scrollToItemAtIndexPath:midIndexPath atScrollPosition:UICollectionViewScrollPositionTop animated:NO];
+        [self.collectionView scrollToItemAtIndexPath:visibleCells.firstObject atScrollPosition:UICollectionViewScrollPositionTop animated:NO];
     }];
 }
 
@@ -600,6 +604,7 @@ UINavigationControllerDelegate>
         cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"helpCell" forIndexPath:indexPath];
         UILabel *label = (UILabel *)[cell viewWithTag:10];
         label.text = NSLocalizedString(@"Tap to swap pages. Hold for more options.", @"");
+        [[cell viewWithTag:999] removeFromSuperview];
         return cell;
     }
     else{
@@ -620,6 +625,7 @@ UINavigationControllerDelegate>
                     }
                 }
                 [cell addSubview:photobook.view];
+                [[cell viewWithTag:999] removeFromSuperview];
                 return cell;
             }
         }
@@ -640,7 +646,11 @@ UINavigationControllerDelegate>
         photobook.delegate = self.delegate;
         photobook.editMode = YES;
         [self addChildViewController:photobook];
+        photobook.view.alpha = 0;
         [cell addSubview:photobook.view];
+        [UIView animateWithDuration:0.15 animations:^{
+            photobook.view.alpha = 1;
+        }];
         CGSize size = [self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath];
         photobook.view.frame = CGRectMake(0, 0, size.width, size.height);
         photobook.view.tag = 10;
@@ -663,7 +673,7 @@ UINavigationControllerDelegate>
             }
         }
     }
-    
+    [[cell viewWithTag:999] removeFromSuperview];
     return cell;
 }
 
