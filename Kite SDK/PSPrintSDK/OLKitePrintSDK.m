@@ -74,7 +74,7 @@ static NSString *instagramRedirectURI = nil;
     return cacheTemplates;
 }
 
-+ (void)setAPIKey:(NSString *)_apiKey withEnvironment:(OLKitePrintSDKEnvironment)_environment {
++ (void)setAPIKey:(NSString *_Nonnull)_apiKey withEnvironment:(OLKitePrintSDKEnvironment)_environment {
     apiKey = _apiKey;
     environment = _environment;
     if (environment == kOLKitePrintSDKEnvironmentLive) {
@@ -90,7 +90,7 @@ static NSString *instagramRedirectURI = nil;
     }
 }
 
-+ (NSString *)apiKey {
++ (NSString *_Nullable)apiKey {
     return apiKey;
 }
 
@@ -110,21 +110,21 @@ static NSString *instagramRedirectURI = nil;
 }
 
 #ifdef OL_KITE_OFFER_PAYPAL
-+ (NSString *)paypalEnvironment {
++ (NSString *_Nonnull)paypalEnvironment {
     switch (environment) {
         case kOLKitePrintSDKEnvironmentLive: return PayPalEnvironmentProduction;
         case kOLKitePrintSDKEnvironmentSandbox: return PayPalEnvironmentSandbox;
     }
 }
 
-+ (NSString *)paypalClientId {
++ (NSString *_Nonnull)paypalClientId {
     switch (environment) {
         case kOLKitePrintSDKEnvironmentLive: return kOLPayPalClientIdLive;
         case kOLKitePrintSDKEnvironmentSandbox: return kOLPayPalClientIdSandbox;
     }
 }
 
-+ (NSString *)paypalReceiverEmail {
++ (NSString *_Nonnull)paypalReceiverEmail {
     switch (environment) {
         case kOLKitePrintSDKEnvironmentLive: return kOLPayPalRecipientEmailLive;
         case kOLKitePrintSDKEnvironmentSandbox: return kOLPayPalRecipientEmailSandbox;
@@ -134,18 +134,18 @@ static NSString *instagramRedirectURI = nil;
 #endif
 
 #ifdef OL_KITE_OFFER_APPLE_PAY
-+ (void)setApplePayMerchantID:(NSString *)mID{
++ (void)setApplePayMerchantID:(NSString *_Nonnull)mID{
     applePayMerchantID = mID;
 }
 
-+ (NSString *)stripePublishableKey {
++ (NSString *_Nonnull)stripePublishableKey {
     switch (environment) {
         case kOLKitePrintSDKEnvironmentLive: return kOLStripePublishableKeyLive;
         case kOLKitePrintSDKEnvironmentSandbox: return kOLStripePublishableKeyTest;
     }
 }
 
-+ (NSString *)appleMerchantID {
++ (NSString *_Nonnull)appleMerchantID {
     return applePayMerchantID;
 }
 #endif
@@ -209,7 +209,7 @@ static NSString *instagramRedirectURI = nil;
 }
 
 #ifdef OL_KITE_OFFER_INSTAGRAM
-+ (void)setInstagramEnabledWithClientID:(NSString *)clientID secret:(NSString *)secret redirectURI:(NSString *)redirectURI {
++ (void)setInstagramEnabledWithClientID:(NSString *_Nonnull)clientID secret:(NSString *_Nonnull)secret redirectURI:(NSString *_Nonnull)redirectURI {
     instagramRedirectURI = redirectURI;
     instagramSecret = secret;
     instagramClientID = clientID;

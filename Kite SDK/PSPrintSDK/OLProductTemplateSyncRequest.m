@@ -16,6 +16,13 @@
 @property (nonatomic, strong) OLBaseRequest *req;
 @end
 
+@interface OLKitePrintSDK (Private)
+
++ (NSString *)apiEndpoint;
++ (NSString *)apiVersion;
+
+@end
+
 @implementation OLProductTemplateSyncRequest
 
 - (void)sync:(OLTemplateSyncRequestCompletionHandler)handler {
