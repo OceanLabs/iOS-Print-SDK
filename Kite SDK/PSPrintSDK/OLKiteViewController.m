@@ -70,7 +70,7 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
     return _userSelectedPhotos;
 }
 
-- (id)initWithAssets:(NSArray *)assets {
+- (instancetype _Nullable)initWithAssets:(NSArray <OLAsset *>* _Nonnull)assets {
     NSAssert(assets != nil && [assets count] > 0, @"KiteViewController requires assets to print");
     if ((self = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:nil] instantiateViewControllerWithIdentifier:@"KiteViewController"])) {
         self.assets = assets;
@@ -80,7 +80,7 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
     return self;
 }
 
-- (id)initWithPrintOrder:(OLPrintOrder *)printOrder{
+- (instancetype _Nullable)initWithPrintOrder:(OLPrintOrder * _Nullable)printOrder{
     if ((self = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:nil] instantiateViewControllerWithIdentifier:@"KiteViewController"])) {
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(templateSyncDidFinish:) name:kNotificationTemplateSyncComplete object:nil];
         self.printOrder = printOrder;
@@ -315,7 +315,7 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
     }
 }
 
-- (NSUInteger)supportedInterfaceOrientations {
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
     if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
         return UIInterfaceOrientationMaskAll;
     }

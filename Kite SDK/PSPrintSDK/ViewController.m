@@ -50,7 +50,7 @@ static NSString *const kApplePayMerchantIDKey = @"merchant.ly.kite.sdk"; // For 
     return NO;
 }
 
-- (NSUInteger)supportedInterfaceOrientations {
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
     return UIInterfaceOrientationMaskPortrait;
 }
 

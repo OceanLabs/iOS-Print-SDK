@@ -12,12 +12,13 @@
 @class OLPrintOrder;
 @class OLKiteViewController;
 @class ALAssetsGroup;
+@class OLAsset;
 
 @protocol OLKiteDelegate <NSObject>
 
 @optional
-- (BOOL)kiteController:(OLKiteViewController *)controller isDefaultAssetsGroup:(ALAssetsGroup *)group;
-- (BOOL)kiteControllerShouldAllowUserToAddMorePhotos:(OLKiteViewController *)controller;
+- (BOOL)kiteController:(OLKiteViewController * _Nullable)controller isDefaultAssetsGroup:(ALAssetsGroup * _Nonnull)group;
+- (BOOL)kiteControllerShouldAllowUserToAddMorePhotos:(OLKiteViewController * _Nullable)controller;
 - (BOOL)shouldShowPhoneEntryOnCheckoutScreen;
 @end
 
@@ -25,13 +26,13 @@
 
 @property (weak, nonatomic) id<OLKiteDelegate> delegate;
 
-@property (copy, nonatomic) NSString *userEmail; // speed up checkout by prepopulating the users email in the Shipping details if you know it
-@property (copy, nonatomic) NSString *userPhone; // speed up checkout by prepopulating the users phone number in the Shipping details if you know it
+@property (copy, nonatomic, nullable) NSString *userEmail; // speed up checkout by prepopulating the users email in the Shipping details if you know it
+@property (copy, nonatomic, nullable) NSString *userPhone; // speed up checkout by prepopulating the users phone number in the Shipping details if you know it
 
 // A set of product template_id strings which if present will restrict which products ultimate show up in the product selection journey
-@property (copy, nonatomic) NSArray/*<NSString>*/ *filterProducts;
+@property (copy, nonatomic, nullable) NSArray/*<NSString>*/ *filterProducts;
 
-- (id)initWithAssets:(NSArray *)assets;
-- (id)initWithPrintOrder:(OLPrintOrder *)printOrder;
+- (instancetype _Nullable)initWithAssets:(NSArray <OLAsset *>* _Nonnull)assets;
+- (instancetype _Nullable)initWithPrintOrder:(OLPrintOrder * _Nullable)printOrder;
 
 @end

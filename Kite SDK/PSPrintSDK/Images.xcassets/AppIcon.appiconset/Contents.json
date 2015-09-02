@@ -1,11 +1,6 @@
 {
   "images" : [
     {
-      "idiom" : "iphone",
-      "size" : "29x29",
-      "scale" : "1x"
-    },
-    {
       "size" : "29x29",
       "idiom" : "iphone",
       "filename" : "Icon-Small@2x-1.png",
@@ -28,16 +23,6 @@
       "idiom" : "iphone",
       "filename" : "Icon-Spotlight-40@3x.png",
       "scale" : "3x"
-    },
-    {
-      "idiom" : "iphone",
-      "size" : "57x57",
-      "scale" : "1x"
-    },
-    {
-      "idiom" : "iphone",
-      "size" : "57x57",
-      "scale" : "2x"
     },
     {
       "size" : "60x60",
@@ -76,26 +61,6 @@
       "scale" : "2x"
     },
     {
-      "idiom" : "ipad",
-      "size" : "50x50",
-      "scale" : "1x"
-    },
-    {
-      "idiom" : "ipad",
-      "size" : "50x50",
-      "scale" : "2x"
-    },
-    {
-      "idiom" : "ipad",
-      "size" : "72x72",
-      "scale" : "1x"
-    },
-    {
-      "idiom" : "ipad",
-      "size" : "72x72",
-      "scale" : "2x"
-    },
-    {
       "size" : "76x76",
       "idiom" : "ipad",
       "filename" : "Icon-76.png",
@@ -106,11 +71,6 @@
       "idiom" : "ipad",
       "filename" : "Icon-76@2x.png",
       "scale" : "2x"
-    },
-    {
-      "idiom" : "car",
-      "size" : "120x120",
-      "scale" : "1x"
     }
   ],
   "info" : {

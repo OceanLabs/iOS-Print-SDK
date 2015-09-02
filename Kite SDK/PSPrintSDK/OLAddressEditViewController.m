@@ -376,7 +376,7 @@ static const NSUInteger kTagTextField = 99;
     }
 }
 
-- (NSUInteger)supportedInterfaceOrientations {
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
     if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
         return UIInterfaceOrientationMaskAll;
     }
