@@ -80,7 +80,6 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
 }
 
 - (id)initWithAssets:(NSArray *)assets {
-    NSAssert(assets != nil && [assets count] > 0, @"KiteViewController requires assets to print");
     if ((self = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:nil] instantiateViewControllerWithIdentifier:@"KiteViewController"])) {
         self.assets = assets;
     }
