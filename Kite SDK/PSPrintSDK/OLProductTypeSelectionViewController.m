@@ -231,7 +231,7 @@
         }
     }
     else{
-        return CGSizeMake(size.width/2 - 1, 233);
+        return CGSizeMake(size.width/2 - 1, 238);
     }
 }
 
