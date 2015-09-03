@@ -12,6 +12,7 @@
 #import "OLOrderReviewViewController.h"
 
 #import <CTAssetsPickerController.h>
+#import "OLAssetsPickerController.h"
 
 #ifdef OL_KITE_OFFER_INSTAGRAM
 #import <OLInstagramImagePickerController.h>
@@ -76,7 +77,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 @property (weak, nonatomic) IBOutlet UIView *facebookContainer;
 
 @property (nonatomic, weak) IBOutlet UICollectionView *collectionView;
-@property (nonatomic, strong) CTAssetsPickerController *picker;
+@property (nonatomic, strong) OLAssetsPickerController *picker;
 @property (strong, nonatomic) NSMutableArray *userDisabledPhotos;
 
 @property (nonatomic, weak) IBOutlet UILabel *chooseImportSourceLabel;
@@ -371,9 +372,20 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 #pragma mark - Actions
 
 - (IBAction)cameraRollSelected:(id)sender {
-    CTAssetsPickerController *picker = [[CTAssetsPickerController alloc] init];
+    CTAssetsPickerController *picker;
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8){
+        picker = (CTAssetsPickerController *)[[OLAssetsPickerController alloc] init];
+        [(OLAssetsPickerController *)picker setAssetsFilter:[ALAssetsFilter allPhotos]];
+    }
+    else{
+        picker = [[CTAssetsPickerController alloc] init];
+        picker.showsEmptyAlbums = NO;
+        PHFetchOptions *options = [[PHFetchOptions alloc] init];
+        options.predicate = [NSPredicate predicateWithFormat:@"mediaType == %d", PHAssetMediaTypeImage];
+        picker.assetsFetchOptions = options;
+    }
+    
     picker.delegate = self;
-    picker.assetsFilter = [ALAssetsFilter allPhotos];
     NSArray *allAssets = [[self createAssetArray] mutableCopy];
     NSMutableArray *alAssets = [[NSMutableArray alloc] init];
     for (id asset in allAssets){
@@ -457,7 +469,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     return nil;
 }
 
-- (BOOL)assetsPickerController:(CTAssetsPickerController *)picker isDefaultAssetsGroup:(ALAssetsGroup *)group {
+- (BOOL)assetsPickerController:(OLAssetsPickerController *)picker isDefaultAssetsGroup:(ALAssetsGroup *)group {
     if ([self.delegate respondsToSelector:@selector(kiteController:isDefaultAssetsGroup:)]) {
         return [self.delegate kiteController:[self kiteViewController] isDefaultAssetsGroup:group];
     }
@@ -478,7 +490,32 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     return YES;
 }
 
-- (BOOL)assetsPickerController:(CTAssetsPickerController *)picker shouldShowAsset:(ALAsset *)asset{
+- (void)assetsPickerController:(CTAssetsPickerController *)picker didSelectAsset:(PHAsset *)asset{
+//    PHContentEditingInputRequestOptions *options = [[PHContentEditingInputRequestOptions alloc] init];
+//    options.networkAccessAllowed = NO;
+//    [asset requestContentEditingInputWithOptions:options completionHandler:^(PHContentEditingInput *contentEditingInput, NSDictionary *info) {
+//        NSString *uti = contentEditingInput.uniformTypeIdentifier;
+//        uti = [uti lowercaseString];
+//        if ([uti containsString:@"jpg"] || [uti containsString:@"jpeg"]) {
+//        } else if ([uti containsString:@"png"]) {
+//        } else {
+//            UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Oops!", @"") message:NSLocalizedString(@"Only JPEG & PNG images are supported", @"") preferredStyle:UIAlertControllerStyleAlert];
+//            [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", @"") style:UIAlertActionStyleDefault handler:NULL]];
+//            [picker presentViewController:ac animated:YES completion:NULL];
+//            [picker deselectAsset:asset];
+//        }
+//    }];
+
+}
+
+//- (BOOL)assetsPickerController:(id)picker shouldEnableAsset:(PHAsset *)asset{
+//    if ([(PHAsset *)asset mediaType] != PHAssetMediaTypeImage){
+//        return NO;
+//    }
+//    return YES;
+//}
+
+- (BOOL)assetsPickerController:(id)picker shouldShowAsset:(id)asset{
     NSString *fileName = [[[asset defaultRepresentation] filename] lowercaseString];
     if (!([fileName hasSuffix:@".jpg"] || [fileName hasSuffix:@".jpeg"] || [fileName hasSuffix:@"png"])) {
         return NO;

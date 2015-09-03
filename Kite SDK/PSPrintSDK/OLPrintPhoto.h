@@ -15,6 +15,7 @@ typedef void (^OLImageEditorImageGetImageProgressHandler)(float progress);
 
 typedef enum {
     kPrintPhotoAssetTypeALAsset,
+    kPrintPhotoAssetTypePHAsset,
     kPrintPhotoAssetTypeOLAsset,
     kPrintPhotoAssetTypeInstagramPhoto,
     kPrintPhotoAssetTypeFacebookPhoto

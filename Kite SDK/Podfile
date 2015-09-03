@@ -1,12 +1,15 @@
+platform :ios, '8.0'
+inhibit_all_warnings!
+
 pod 'SDWebImage'
 pod 'AFNetworking', '~> 2.5.0'
 pod 'SVProgressHUD'
 pod 'PayPal-iOS-SDK', '~> 2.4.2'
 pod 'UICKeyChainStore', '~> 2.0.4'
-pod 'Stripe', '~> 4.0.3'
+pod 'Stripe', '~> 5.1.0'
 pod 'Stripe/ApplePay'
 pod 'ApplePayStubs'
-pod 'CTAssetsPickerController', '~> 2.9.5'
+pod 'CTAssetsPickerController', '~> 3.0.3'
 pod 'InstagramImagePicker'
 pod 'FacebookImagePicker'
 pod 'CSStickyHeaderFlowLayout'

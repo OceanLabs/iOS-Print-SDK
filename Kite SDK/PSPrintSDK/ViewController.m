@@ -8,7 +8,7 @@
 
 #import "ViewController.h"
 #import "OLKitePrintSDK.h"
-#import <CTAssetsPickerController.h>
+#import "OLAssetsPickerController.h"
 
 #import <AssetsLibrary/AssetsLibrary.h>
 
@@ -21,7 +21,7 @@ static NSString *const kAPIKeyLive = @"REPLACE_WITH_YOUR_API_KEY"; // replace wi
 
 static NSString *const kApplePayMerchantIDKey = @"merchant.ly.kite.sdk"; // For internal use only.
 
-@interface ViewController () <CTAssetsPickerControllerDelegate, UINavigationControllerDelegate, OLKiteDelegate>
+@interface ViewController () <OLAssetsPickerControllerDelegate, UINavigationControllerDelegate, OLKiteDelegate>
 @property (weak, nonatomic) IBOutlet UIButton *localPhotosButton;
 @property (weak, nonatomic) IBOutlet UIButton *remotePhotosButton;
 @property (nonatomic, weak) IBOutlet UISegmentedControl *environmentPicker;
@@ -56,7 +56,7 @@ static NSString *const kApplePayMerchantIDKey = @"merchant.ly.kite.sdk"; // For 
 
 - (IBAction)onButtonPrintLocalPhotos:(id)sender {
     if (![self isAPIKeySet]) return;
-    CTAssetsPickerController *picker = [[CTAssetsPickerController alloc] init];
+    OLAssetsPickerController *picker = [[OLAssetsPickerController alloc] init];
     picker.delegate = self;
     picker.assetsFilter = [ALAssetsFilter allPhotos];
     
@@ -142,7 +142,7 @@ static NSString *const kApplePayMerchantIDKey = @"merchant.ly.kite.sdk"; // For 
 
 #pragma mark - CTAssetsPickerControllerDelegate Methods
 
-- (void)assetsPickerController:(CTAssetsPickerController *)picker didFinishPickingAssets:(NSArray *)assets {
+- (void)assetsPickerController:(OLAssetsPickerController *)picker didFinishPickingAssets:(NSArray *)assets {
     [picker dismissViewControllerAnimated:YES completion:^(void){
         NSMutableArray *assetObjects = [[NSMutableArray alloc] initWithCapacity:assets.count];
         for (ALAsset *asset in assets){
@@ -153,14 +153,14 @@ static NSString *const kApplePayMerchantIDKey = @"merchant.ly.kite.sdk"; // For 
     
 }
 
-- (BOOL)assetsPickerController:(CTAssetsPickerController *)picker shouldShowAssetsGroup:(ALAssetsGroup *)group{
+- (BOOL)assetsPickerController:(OLAssetsPickerController *)picker shouldShowAssetsGroup:(ALAssetsGroup *)group{
     if (group.numberOfAssets == 0){
         return NO;
     }
     return YES;
 }
 
-- (BOOL)assetsPickerController:(CTAssetsPickerController *)picker shouldShowAsset:(ALAsset *)asset{
+- (BOOL)assetsPickerController:(OLAssetsPickerController *)picker shouldShowAsset:(ALAsset *)asset{
     NSString *fileName = [[[asset defaultRepresentation] filename] lowercaseString];
     if (!([fileName hasSuffix:@".jpg"] || [fileName hasSuffix:@".jpeg"] || [fileName hasSuffix:@"png"])) {
         return NO;

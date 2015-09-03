@@ -19,7 +19,7 @@
 #import "OLAsset+Private.h"
 #import "OLAnalytics.h"
 #import "OLKitePrintSDK.h"
-#import <CTAssetsPickerController.h>
+#import "OLAssetsPickerController.h"
 #import "UIViewController+TraitCollectionCompatibility.h"
 #import "OLIntegratedCheckoutViewController.h"
 #import "OLKiteViewController.h"

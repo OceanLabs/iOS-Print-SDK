@@ -9,7 +9,7 @@
 #import "OLEditPhotobookViewController.h"
 #import "OLPhotobookViewController.h"
 #import "OLPhotobookPageContentViewController.h"
-#import <CTAssetsPickerController.h>
+#import "OLAssetsPickerController.h"
 #import "OLPrintPhoto.h"
 #import "NSArray+QueryingExtras.h"
 #import "OLImageView.h"
@@ -48,7 +48,7 @@ static const NSInteger kSectionPages = 2;
 #endif
 @end
 
-@interface OLEditPhotobookViewController () <UICollectionViewDelegateFlowLayout, OLPhotobookViewControllerDelegate, CTAssetsPickerControllerDelegate, UIActionSheetDelegate, UIAlertViewDelegate, OLImageViewDelegate, OLScrollCropViewControllerDelegate,
+@interface OLEditPhotobookViewController () <UICollectionViewDelegateFlowLayout, OLPhotobookViewControllerDelegate, OLAssetsPickerControllerDelegate, UIActionSheetDelegate, UIAlertViewDelegate, OLImageViewDelegate, OLScrollCropViewControllerDelegate,
 #ifdef OL_KITE_OFFER_INSTAGRAM
 OLInstagramImagePickerControllerDelegate,
 #endif
@@ -769,7 +769,7 @@ UINavigationControllerDelegate>
 }
 
 - (void)showCameraRollImagePicker{
-    CTAssetsPickerController *picker = [[CTAssetsPickerController alloc] init];
+    OLAssetsPickerController *picker = [[OLAssetsPickerController alloc] init];
     picker.delegate = self;
     picker.assetsFilter = [ALAssetsFilter allPhotos];
     [self presentViewController:picker animated:YES completion:nil];
@@ -843,7 +843,7 @@ UINavigationControllerDelegate>
 
 #pragma mark - CTAssetsPickerControllerDelegate Methods
 
-- (BOOL)assetsPickerController:(CTAssetsPickerController *)picker isDefaultAssetsGroup:(ALAssetsGroup *)group {
+- (BOOL)assetsPickerController:(OLAssetsPickerController *)picker isDefaultAssetsGroup:(ALAssetsGroup *)group {
     if ([self.delegate respondsToSelector:@selector(kiteController:isDefaultAssetsGroup:)]) {
         return [self.delegate kiteController:[self kiteViewController] isDefaultAssetsGroup:group];
     }
@@ -851,7 +851,7 @@ UINavigationControllerDelegate>
     return NO;
 }
 
-- (void)assetsPickerController:(CTAssetsPickerController *)picker didFinishPickingAssets:(NSArray *)assets {
+- (void)assetsPickerController:(OLAssetsPickerController *)picker didFinishPickingAssets:(NSArray *)assets {
     if (self.replacingImageNumber){
         self.photobookPhotos[[self.replacingImageNumber integerValue]] = [NSNull null];
         self.replacingImageNumber = nil;
@@ -877,7 +877,7 @@ UINavigationControllerDelegate>
     [picker dismissViewControllerAnimated:YES completion:^(void){}];
 }
 
-- (BOOL)assetsPickerController:(CTAssetsPickerController *)picker shouldSelectAsset:(ALAsset *)asset{
+- (BOOL)assetsPickerController:(OLAssetsPickerController *)picker shouldSelectAsset:(ALAsset *)asset{
     if (self.addNewPhotosAtIndex == -1){
         return picker.selectedAssets.count == 0;
     }
@@ -886,14 +886,14 @@ UINavigationControllerDelegate>
     }
 }
 
-- (BOOL)assetsPickerController:(CTAssetsPickerController *)picker shouldShowAssetsGroup:(ALAssetsGroup *)group{
+- (BOOL)assetsPickerController:(OLAssetsPickerController *)picker shouldShowAssetsGroup:(ALAssetsGroup *)group{
     if (group.numberOfAssets == 0){
         return NO;
     }
     return YES;
 }
 
-- (BOOL)assetsPickerController:(CTAssetsPickerController *)picker shouldShowAsset:(ALAsset *)asset{
+- (BOOL)assetsPickerController:(OLAssetsPickerController *)picker shouldShowAsset:(ALAsset *)asset{
     NSString *fileName = [[[asset defaultRepresentation] filename] lowercaseString];
     if (!([fileName hasSuffix:@".jpg"] || [fileName hasSuffix:@".jpeg"] || [fileName hasSuffix:@"png"])) {
         return NO;

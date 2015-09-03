@@ -13,7 +13,7 @@
 #import <SDWebImageManager.h>
 #import "OLProductPrintJob.h"
 #import "OLKitePrintSDK.h"
-#import <CTAssetsPickerController.h>
+#import "OLAssetsPickerController.h"
 #import "NSArray+QueryingExtras.h"
 #import "OLKiteViewController.h"
 #import "OLKiteABTesting.h"
@@ -56,7 +56,7 @@ OLInstagramImagePickerControllerDelegate,
 #ifdef OL_KITE_OFFER_FACEBOOK
 OLFacebookImagePickerControllerDelegate,
 #endif
-CTAssetsPickerControllerDelegate>
+OLAssetsPickerControllerDelegate>
 
 @property (weak, nonatomic) IBOutlet UILabel *quantityLabel;
 @property (assign, nonatomic) NSUInteger quantity;
@@ -393,7 +393,7 @@ CTAssetsPickerControllerDelegate>
 }
 
 - (void)showCameraRollImagePicker{
-    CTAssetsPickerController *picker = [[CTAssetsPickerController alloc] init];
+    OLAssetsPickerController *picker = [[OLAssetsPickerController alloc] init];
     picker.delegate = self;
     picker.assetsFilter = [ALAssetsFilter allPhotos];
     NSArray *allAssets = [[self createAssetArray] mutableCopy];
@@ -475,7 +475,7 @@ CTAssetsPickerControllerDelegate>
     [self.imagesCollectionView reloadData];
 }
 
-- (BOOL)assetsPickerController:(CTAssetsPickerController *)picker isDefaultAssetsGroup:(ALAssetsGroup *)group {
+- (BOOL)assetsPickerController:(OLAssetsPickerController *)picker isDefaultAssetsGroup:(ALAssetsGroup *)group {
     if ([self.delegate respondsToSelector:@selector(kiteController:isDefaultAssetsGroup:)]) {
         return [self.delegate kiteController:[self kiteVc] isDefaultAssetsGroup:group];
     }
@@ -483,7 +483,7 @@ CTAssetsPickerControllerDelegate>
     return NO;
 }
 
-- (void)assetsPickerController:(CTAssetsPickerController *)picker didFinishPickingAssets:(NSArray *)assets {
+- (void)assetsPickerController:(OLAssetsPickerController *)picker didFinishPickingAssets:(NSArray *)assets {
     [self populateArrayWithNewArray:assets dataType:[ALAsset class]];
     if (self.imagePicked){
         [self.imagePicked getImageWithProgress:NULL completion:^(UIImage *image){
@@ -496,14 +496,14 @@ CTAssetsPickerControllerDelegate>
     [picker dismissViewControllerAnimated:YES completion:^(void){}];
 }
 
-- (BOOL)assetsPickerController:(CTAssetsPickerController *)picker shouldShowAssetsGroup:(ALAssetsGroup *)group{
+- (BOOL)assetsPickerController:(OLAssetsPickerController *)picker shouldShowAssetsGroup:(ALAssetsGroup *)group{
     if (group.numberOfAssets == 0){
         return NO;
     }
     return YES;
 }
 
-- (BOOL)assetsPickerController:(CTAssetsPickerController *)picker shouldShowAsset:(ALAsset *)asset{
+- (BOOL)assetsPickerController:(OLAssetsPickerController *)picker shouldShowAsset:(ALAsset *)asset{
     NSString *fileName = [[[asset defaultRepresentation] filename] lowercaseString];
     if (!([fileName hasSuffix:@".jpg"] || [fileName hasSuffix:@".jpeg"] || [fileName hasSuffix:@"png"])) {
         return NO;

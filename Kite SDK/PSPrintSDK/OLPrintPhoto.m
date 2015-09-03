@@ -32,6 +32,8 @@ static NSString *const kKeyExtraCopies = @"co.oceanlabs.psprintstudio.kKeyExtraC
 
 static NSOperationQueue *imageOperationQueue;
 
+@import Photos;
+
 @implementation ALAsset (isEqual)
 
 - (NSURL*)defaultURL {
@@ -76,6 +78,9 @@ static NSOperationQueue *imageOperationQueue;
     if ([asset isKindOfClass:[ALAsset class]]) {
         _type = kPrintPhotoAssetTypeALAsset;
     }
+    else if ([asset isKindOfClass:[PHAsset class]]) {
+        _type = kPrintPhotoAssetTypePHAsset;
+    }
     else if ([asset isKindOfClass:[OLAsset class]]){
         _type = kPrintPhotoAssetTypeOLAsset;
     }
@@ -109,7 +114,7 @@ static NSOperationQueue *imageOperationQueue;
     NSBlockOperation *blockOperation = [[NSBlockOperation alloc] init];
     
     [blockOperation addExecutionBlock:^{
-        if (self.type == kPrintPhotoAssetTypeALAsset) {
+        if (self.type == kPrintPhotoAssetTypeALAsset || self.type == kPrintPhotoAssetTypePHAsset) {
             [OLPrintPhoto resizedImageWithPrintPhoto:self size:destSize cropped:cropped progress:nil completion:^(UIImage *image) {
                 self.cachedCroppedThumbnailImage = image;
                 handler(image);
@@ -242,6 +247,16 @@ static NSOperationQueue *imageOperationQueue;
             image = [UIImage imageWithCGImage:[[self.asset defaultRepresentation] fullScreenImage]];
         }
         completionHandler(image);
+    }
+    else if (self.type == kPrintPhotoAssetTypePHAsset){
+        PHImageManager *imageManager = [PHImageManager defaultManager];
+        PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
+        options.deliveryMode = fullResolution ? PHImageRequestOptionsDeliveryModeHighQualityFormat : PHImageRequestOptionsDeliveryModeOpportunistic;
+        options.networkAccessAllowed = YES;
+        CGSize size = fullResolution ? PHImageManagerMaximumSize : CGSizeMake([UIScreen mainScreen].bounds.size.width * [UIScreen mainScreen].scale, [UIScreen mainScreen].bounds.size.height * [UIScreen mainScreen].scale);
+        [imageManager requestImageForAsset:(PHAsset *)self.asset targetSize:size contentMode:PHImageContentModeAspectFill options:options resultHandler:^(UIImage *image, NSDictionary *info){
+            completionHandler(image);
+        }];
     }
 #if defined(OL_KITE_OFFER_INSTAGRAM) || defined(OL_KITE_OFFER_FACEBOOK)
     else if (self.type == kPrintPhotoAssetTypeFacebookPhoto || self.type == kPrintPhotoAssetTypeInstagramPhoto) {

@@ -6,6 +6,8 @@
 //  Copyright (c) 2013 Deon Botha. All rights reserved.
 //
 
+@import Photos;
+
 #import "OLAsset.h"
 #import <AssetsLibrary/AssetsLibrary.h>
 #import "OLURLDataSource.h"
@@ -35,6 +37,7 @@ NSString *const kOLMimeTypePNG  = @"image/png";
 @property (nonatomic, strong) NSString *imageFilePath;
 @property (nonatomic, strong) NSData *imageData;
 @property (nonatomic, strong) NSURL *alAssetURL;
+@property (nonatomic, strong) NSString *phAssetLocalId;
 @property (nonatomic, strong) ALAsset *alAsset;
 @property (nonatomic, strong) id<OLAssetDataSource> dataSource;
 @property (nonatomic, strong) NSURL *imageURL;
@@ -113,6 +116,30 @@ NSString *const kOLMimeTypePNG  = @"image/png";
     return self;
 }
 
+- (id)initWithPHAsset:(PHAsset *)asset {
+    if (self = [super init]) {
+        PHContentEditingInputRequestOptions *options = [[PHContentEditingInputRequestOptions alloc] init];
+        options.networkAccessAllowed = NO;
+        [asset requestContentEditingInputWithOptions:options completionHandler:^(PHContentEditingInput *contentEditingInput, NSDictionary *info) {
+            NSString *uti = contentEditingInput.uniformTypeIdentifier;
+            uti = [uti lowercaseString];
+            if ([uti containsString:@"jpg"] || [uti containsString:@"jpeg"]) {
+                _mimeType = kOLMimeTypeJPEG;
+            } else if ([uti containsString:@"png"]) {
+                _mimeType = kOLMimeTypePNG;
+            } else if (!uti){
+                // Asset is in iCloud, leave MIME type blank for now.
+            }
+            else {
+                NSAssert(NO, @"Only JPEG & PNG images are supported");
+            }
+        }];
+        self.phAssetLocalId = [asset localIdentifier];
+        
+    }
+    return self;
+}
+
 - (id)initWithImageURL:(NSURL *)url mimeType:(NSString *)mimeType {
     if (self = [super init]) {
         _mimeType = mimeType;
@@ -177,6 +204,10 @@ NSString *const kOLMimeTypePNG  = @"image/png";
     return [[OLAsset alloc] initWithALAsset:asset];
 }
 
++ (OLAsset *)assetWithPHAsset:(PHAsset *)asset {
+    return [[OLAsset alloc] initWithPHAsset:asset];
+}
+
 + (OLAsset *)assetWithDataSource:(id<OLAssetDataSource>)dataSource {
     return [[OLAsset alloc] initWithDataSource:dataSource];
 }
@@ -200,6 +231,9 @@ NSString *const kOLMimeTypePNG  = @"image/png";
 + (OLAsset *)assetWithPrintPhoto:(OLPrintPhoto *)printPhoto{
     if ([[printPhoto asset] isKindOfClass: [ALAsset class]]){
         return [OLAsset assetWithALAsset:[printPhoto asset]];
+    }
+    else if ([[printPhoto asset] isKindOfClass: [PHAsset class]]){
+        return [OLAsset assetWithPHAsset:[printPhoto asset]];
     }
 #ifdef OL_KITE_OFFER_INSTAGRAM
     else if ([[printPhoto asset] isKindOfClass: [OLInstagramImage class]]){
