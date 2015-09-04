@@ -68,6 +68,16 @@ static NSOperationQueue *imageOperationQueue;
 
 - (id)init {
     if (self = [super init]) {
+        __weak OLPrintPhoto *welf = self;
+        self.downloadProgress = ^(double progress, NSError *error, BOOL *stop, NSDictionary *info){
+//            NSLog(@"%f %@", progress, error);
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if ([welf.delegate respondsToSelector:@selector(downloadDidProgressWithProgress:error:stop:info:)]){
+                    [welf.delegate downloadDidProgressWithProgress:progress error:error stop:stop info:info];
+                    
+                }
+            });
+        };
     }
     
     return self;
@@ -251,8 +261,10 @@ static NSOperationQueue *imageOperationQueue;
     else if (self.type == kPrintPhotoAssetTypePHAsset){
         PHImageManager *imageManager = [PHImageManager defaultManager];
         PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
+//        options.synchronous = YES;
         options.deliveryMode = fullResolution ? PHImageRequestOptionsDeliveryModeHighQualityFormat : PHImageRequestOptionsDeliveryModeOpportunistic;
         options.networkAccessAllowed = YES;
+        options.progressHandler = self.downloadProgress;
         CGSize size = fullResolution ? PHImageManagerMaximumSize : CGSizeMake([UIScreen mainScreen].bounds.size.width * [UIScreen mainScreen].scale, [UIScreen mainScreen].bounds.size.height * [UIScreen mainScreen].scale);
         [imageManager requestImageForAsset:(PHAsset *)self.asset targetSize:size contentMode:PHImageContentModeAspectFill options:options resultHandler:^(UIImage *image, NSDictionary *info){
             completionHandler(image);

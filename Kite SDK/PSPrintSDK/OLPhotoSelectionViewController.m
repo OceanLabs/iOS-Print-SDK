@@ -37,6 +37,8 @@
 #import "NSObject+Utils.h"
 #import "UIViewController+TraitCollectionCompatibility.h"
 
+#import "OLRemoteImageView.h"
+
 NSInteger OLPhotoSelectionMargin = 0;
 
 #define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
@@ -711,12 +713,12 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
         qtyLabel.hidden = YES;
     }
     
-    UIImageView *imageView = (UIImageView *) [cell.contentView viewWithTag:40];
+    OLRemoteImageView *imageView = (OLRemoteImageView *) [cell.contentView viewWithTag:40];
     if (imageView != nil) {
         [imageView removeFromSuperview];
     }
     cell.contentView.backgroundColor = [UIColor whiteColor];
-    imageView = [[UIImageView alloc] init];
+    imageView = [[OLRemoteImageView alloc] init];
     imageView.tag = 40;
     imageView.clipsToBounds = YES;
     imageView.contentMode = UIViewContentModeScaleAspectFill;
@@ -798,9 +800,12 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     
     if (imageIndex < self.userSelectedPhotos.count) {
         OLPrintPhoto *photo = self.userSelectedPhotos[indexPath.row + indexPath.section * self.product.quantityToFulfillOrder];
+        photo.delegate = imageView;
         [photo setImageSize:[self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath] cropped:YES completionHandler:^(UIImage *image){
             dispatch_async(dispatch_get_main_queue(), ^{
-                imageView.image = image;
+                if (image){
+                    imageView.image = image;
+                }
             });
         }];
         checkmark.hidden = [self.userDisabledPhotos containsObjectIdenticalTo:photo];

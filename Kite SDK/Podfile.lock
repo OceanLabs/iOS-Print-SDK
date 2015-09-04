@@ -30,6 +30,7 @@ PODS:
   - CSStickyHeaderFlowLayout (0.2.8)
   - CTAssetsPickerController (3.0.3):
     - PureLayout (~> 2.0.0)
+  - DACircularProgress (2.3.1)
   - Facebook-iOS-SDK (3.23.2):
     - Bolts (~> 1.0)
   - FacebookImagePicker (1.0.3):
@@ -64,6 +65,7 @@ DEPENDENCIES:
   - ApplePayStubs
   - CSStickyHeaderFlowLayout
   - CTAssetsPickerController (~> 3.0.3)
+  - DACircularProgress
   - FacebookImagePicker
   - GroundControl
   - InstagramImagePicker
@@ -84,6 +86,7 @@ SPEC CHECKSUMS:
   Bolts: d176cb1e0012175589e389a9db49b85e27787576
   CSStickyHeaderFlowLayout: e919dd425fa12bba1155f66d87edfe540eb8f89a
   CTAssetsPickerController: 4673b4b22347325723a4dace00e4bd856c64529b
+  DACircularProgress: 4dd437c0fc3da5161cb289e07ac449493d41db71
   Facebook-iOS-SDK: cd87f0b2f0c1d9574b44e8fa2baacc275524bac3
   FacebookImagePicker: 65ed253b544712e3a4af14eef43600621b639e2d
   GroundControl: fbc762e0097feece7fb6d8cdc8f2747a504a6833
