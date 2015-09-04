@@ -9,8 +9,8 @@
 #import <UIKit/UIKit.h>
 #import "OLPrintPhoto.h"
 
-@interface OLRemoteImageView : UIImageView <OLPrintPhotoDownloadDelegate>
+@interface OLRemoteImageView : UIImageView 
 
-@property (strong, nonatomic) void (^downloadProgress)(BOOL degraded, double progress, NSError *error, BOOL *stop);
+- (void)setProgress:(float)progress;
 
 @end

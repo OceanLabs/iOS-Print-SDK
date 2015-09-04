@@ -44,7 +44,7 @@
     return self;
 }
 
-- (void)downloadDidProgressWithProgress:(double) progress error:(NSError *)error stop:(BOOL *)stop  info:(NSDictionary *)info{
+- (void)setProgress:(float)progress{
     if (progress == 0){
         progress = 0.1;
     }
