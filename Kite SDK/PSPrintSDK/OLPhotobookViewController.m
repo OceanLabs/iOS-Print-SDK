@@ -567,7 +567,7 @@ UINavigationControllerDelegate
 - (void)doCheckout {
     NSUInteger iphonePhotoCount = 0;
     for (OLPrintPhoto *photo in self.userSelectedPhotos) {
-        if (photo.type == kPrintPhotoAssetTypeALAsset) ++iphonePhotoCount;
+        if (photo.type == kPrintPhotoAssetTypeALAsset || photo.type == kPrintPhotoAssetTypePHAsset) ++iphonePhotoCount;
     }
     
     NSInteger i = 0;

@@ -161,7 +161,7 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     
     NSUInteger iphonePhotoCount = 0;
     for (OLPrintPhoto *photo in self.checkoutPhotos) {
-        if (photo.type == kPrintPhotoAssetTypeALAsset) ++iphonePhotoCount;
+        if (photo.type == kPrintPhotoAssetTypeALAsset || photo.type == kPrintPhotoAssetTypePHAsset) ++iphonePhotoCount;
     }
     
     // Avoid uploading assets if possible. We can avoid uploading where the image already exists at a remote
