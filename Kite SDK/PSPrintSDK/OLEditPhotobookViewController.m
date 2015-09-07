@@ -12,7 +12,7 @@
 #import "OLAssetsPickerController.h"
 #import "OLPrintPhoto.h"
 #import "NSArray+QueryingExtras.h"
-#import "OLImageView.h"
+#import "OLPopupOptionsImageView.h"
 #import "OLScrollCropViewController.h"
 #import "OLImageCachingManager.h"
 #import <CTAssetsPickerController.h>
@@ -553,15 +553,15 @@ UINavigationControllerDelegate>
 }
 
 - (void)photobook:(OLPhotobookViewController *)photobook userDidLongPressOnImageWithIndex:(NSInteger)index sender:(UILongPressGestureRecognizer *)sender{
-    OLImageView *view;
+    OLPopupOptionsImageView *view;
     if (index == -1){
-        view = (OLImageView *)sender.view;
+        view = (OLPopupOptionsImageView *)sender.view;
     }
     else{
         if (self.photobookPhotos[index] == (id)[NSNull null]){
             return;
         }
-        view = (OLImageView *)[photobook.pageController.viewControllers[index % 2] imageView];
+        view = (OLPopupOptionsImageView *)[photobook.pageController.viewControllers[index % 2] imageView];
     }
     
     self.longPressImageIndex = index;

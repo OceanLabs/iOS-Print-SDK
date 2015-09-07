@@ -12,6 +12,7 @@
 #import "OLAsset+Private.h"
 #import <SDWebImageManager.h>
 #import "UIViewController+TraitCollectionCompatibility.h"
+#import "OLRemoteImageView.h"
 
 @interface OLOrderReviewViewController (Private)
 
@@ -202,7 +203,7 @@ CGFloat margin = 2;
         
         NSIndexPath* outerCollectionViewIndexPath = [self.collectionView indexPathForCell:(UICollectionViewCell *)view];
         
-        UIImageView* cellImage = (UIImageView*)[cell.contentView viewWithTag:110];
+        OLRemoteImageView* cellImage = (OLRemoteImageView*)[cell.contentView viewWithTag:110];
         cellImage.userInteractionEnabled = YES;
         cellImage.image = nil;
         

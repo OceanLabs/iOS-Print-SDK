@@ -19,9 +19,9 @@
 
 - (void)initializeViews{
     self.loadingView = [[DACircularProgressView alloc] initWithFrame:CGRectMake(0, 0, 20, 20)];
-    self.loadingView.innerTintColor = [UIColor clearColor];
-    self.loadingView.trackTintColor = [UIColor clearColor];
-    self.loadingView.progressTintColor = [UIColor whiteColor];
+    self.loadingView.innerTintColor = [UIColor whiteColor];
+    self.loadingView.trackTintColor = [UIColor whiteColor];
+    self.loadingView.progressTintColor = [UIColor darkGrayColor];
     self.loadingView.thicknessRatio = 1;
     self.loadingView.hidden = YES;
     

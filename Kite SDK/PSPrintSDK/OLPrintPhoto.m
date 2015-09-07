@@ -265,9 +265,11 @@ static NSOperationQueue *imageOperationQueue;
         options.deliveryMode = PHImageRequestOptionsDeliveryModeHighQualityFormat;
         options.networkAccessAllowed = YES;
         options.progressHandler = ^(double progress, NSError *__nullable error, BOOL *stop, NSDictionary *__nullable info){
-            dispatch_async(dispatch_get_main_queue(), ^{
-                progressHandler(progress);
+            if (progressHandler){
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    progressHandler(progress);
                 });
+            }
         };
         CGSize size = fullResolution ? PHImageManagerMaximumSize : CGSizeMake([UIScreen mainScreen].bounds.size.width * [UIScreen mainScreen].scale, [UIScreen mainScreen].bounds.size.height * [UIScreen mainScreen].scale);
         [imageManager requestImageForAsset:(PHAsset *)self.asset targetSize:size contentMode:PHImageContentModeAspectFill options:options resultHandler:^(UIImage *image, NSDictionary *info){

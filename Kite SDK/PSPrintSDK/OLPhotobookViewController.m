@@ -14,7 +14,7 @@
 #import "OLScrollCropViewController.h"
 #import "OLPhotobookPrintJob.h"
 #import "UIView+RoundRect.h"
-#import "OLImageView.h"
+#import "OLPopupOptionsImageView.h"
 #import "OLAssetsPickerController.h"
 #import "OLKitePrintSDK.h"
 #import "NSArray+QueryingExtras.h"
@@ -900,7 +900,7 @@ UINavigationControllerDelegate
             halfBookCoverImageContainer.layer.shouldRasterize = YES;
             halfBookCoverImageContainer.layer.rasterizationScale = [UIScreen mainScreen].scale;
             
-            OLImageView *coverImageView = [[OLImageView alloc] initWithFrame:CGRectMake(0, 0, self.bookCover.frame.size.width / 2.0, self.bookCover.frame.size.height)];
+            OLPopupOptionsImageView *coverImageView = [[OLPopupOptionsImageView alloc] initWithFrame:CGRectMake(0, 0, self.bookCover.frame.size.width / 2.0, self.bookCover.frame.size.height)];
             self.coverImageView = coverImageView;
             [self loadCoverPhoto];
             coverImageView.tag = 18;

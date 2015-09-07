@@ -6,9 +6,9 @@
 //  Copyright (c) 2015 Deon Botha. All rights reserved.
 //
 
-#import "OLImageView.h"
+#import "OLPopupOptionsImageView.h"
 
-@implementation OLImageView
+@implementation OLPopupOptionsImageView
 
 - (BOOL)canBecomeFirstResponder{
     return YES;

@@ -25,6 +25,7 @@
 #import "OLKiteViewController.h"
 #import "OLKiteABTesting.h"
 #import "NSObject+Utils.h"
+#import "OLRemoteImageView.h"
 
 static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 static const NSUInteger kTagAlertViewDeletePhoto = 98;
@@ -405,7 +406,7 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     UIView *oldView = [cell.contentView viewWithTag:10];
     [oldView removeFromSuperview];
     
-    UIImageView *cellImage = [[UIImageView alloc] initWithFrame:borderView.frame];
+    OLRemoteImageView *cellImage = [[OLRemoteImageView alloc] initWithFrame:borderView.frame];
     cellImage.tag = 10;
     cellImage.translatesAutoresizingMaskIntoConstraints = NO;
     cellImage.contentMode = UIViewContentModeScaleAspectFill;
@@ -428,7 +429,9 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     [countLabel setText: [NSString stringWithFormat:@"%ld", (long)[self.userSelectedPhotos[indexPath.item] extraCopies]+1]];
     
     OLPrintPhoto *printPhoto = (OLPrintPhoto*)[self.userSelectedPhotos objectAtIndex:indexPath.item];
-    [printPhoto setImageSize:cellImage.frame.size cropped:YES progress:NULL completionHandler:^(UIImage *image){
+    [printPhoto setImageSize:cellImage.frame.size cropped:YES progress:^(float progress){
+        [cellImage setProgress:progress];
+    } completionHandler:^(UIImage *image){
         dispatch_async(dispatch_get_main_queue(), ^{
             cellImage.image = image;
         });
