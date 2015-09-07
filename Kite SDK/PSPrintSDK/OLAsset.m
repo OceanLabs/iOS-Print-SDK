@@ -340,6 +340,7 @@ NSString *const kOLMimeTypePNG  = @"image/png";
             [[PHImageManager defaultManager] requestImageDataForAsset:asset options:nil resultHandler:^(NSData *imageData, NSString *dataUTI, UIImageOrientation orientation, NSDictionary *info){
                 handler(imageData, nil);
             }];
+            break;
         }
         case kOLAssetTypeDataSource: {
             NSAssert(self.dataSource, @"oops somehow instantiated a OLAsset in non consistent state");

@@ -14,6 +14,8 @@
 #import "NSArray+QueryingExtras.h"
 #import "OLImageView.h"
 #import "OLScrollCropViewController.h"
+#import "OLImageCachingManager.h"
+#import <CTAssetsPickerController.h>
 
 #ifdef OL_KITE_OFFER_INSTAGRAM
 #import <OLInstagramImagePickerController.h>
@@ -48,7 +50,7 @@ static const NSInteger kSectionPages = 2;
 #endif
 @end
 
-@interface OLEditPhotobookViewController () <UICollectionViewDelegateFlowLayout, OLPhotobookViewControllerDelegate, OLAssetsPickerControllerDelegate, UIActionSheetDelegate, UIAlertViewDelegate, OLImageViewDelegate, OLScrollCropViewControllerDelegate,
+@interface OLEditPhotobookViewController () <UICollectionViewDelegateFlowLayout, OLPhotobookViewControllerDelegate, OLAssetsPickerControllerDelegate, CTAssetsPickerControllerDelegate, UIActionSheetDelegate, UIAlertViewDelegate, OLImageViewDelegate, OLScrollCropViewControllerDelegate,
 #ifdef OL_KITE_OFFER_INSTAGRAM
 OLInstagramImagePickerControllerDelegate,
 #endif
@@ -769,9 +771,23 @@ UINavigationControllerDelegate>
 }
 
 - (void)showCameraRollImagePicker{
-    OLAssetsPickerController *picker = [[OLAssetsPickerController alloc] init];
+    CTAssetsPickerController *picker;
+    Class assetClass;
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8){
+        picker = (CTAssetsPickerController *)[[OLAssetsPickerController alloc] init];
+        [(OLAssetsPickerController *)picker setAssetsFilter:[ALAssetsFilter allPhotos]];
+        assetClass = [ALAsset class];
+    }
+    else{
+        picker = [[CTAssetsPickerController alloc] init];
+        picker.showsEmptyAlbums = NO;
+        PHFetchOptions *options = [[PHFetchOptions alloc] init];
+        options.predicate = [NSPredicate predicateWithFormat:@"mediaType == %d", PHAssetMediaTypeImage];
+        picker.assetsFetchOptions = options;
+        assetClass = [PHAsset class];
+    }
+    
     picker.delegate = self;
-    picker.assetsFilter = [ALAssetsFilter allPhotos];
     [self presentViewController:picker animated:YES completion:nil];
 }
 
@@ -851,7 +867,7 @@ UINavigationControllerDelegate>
     return NO;
 }
 
-- (void)assetsPickerController:(OLAssetsPickerController *)picker didFinishPickingAssets:(NSArray *)assets {
+- (void)assetsPickerController:(CTAssetsPickerController *)picker didFinishPickingAssets:(NSArray *)assets {
     if (self.replacingImageNumber){
         self.photobookPhotos[[self.replacingImageNumber integerValue]] = [NSNull null];
         self.replacingImageNumber = nil;
@@ -873,17 +889,9 @@ UINavigationControllerDelegate>
         return;
     }
     
-    [self populateArrayWithNewArray:assets dataType:[ALAsset class]];
+    [self populateArrayWithNewArray:assets dataType:[picker isKindOfClass:[CTAssetsPickerController class]] ? [PHAsset class] : [ALAsset class]];
     [picker dismissViewControllerAnimated:YES completion:^(void){}];
-}
-
-- (BOOL)assetsPickerController:(OLAssetsPickerController *)picker shouldSelectAsset:(ALAsset *)asset{
-    if (self.addNewPhotosAtIndex == -1){
-        return picker.selectedAssets.count == 0;
-    }
-    else{
-        return YES;
-    }
+    
 }
 
 - (BOOL)assetsPickerController:(OLAssetsPickerController *)picker shouldShowAssetsGroup:(ALAssetsGroup *)group{
@@ -893,7 +901,15 @@ UINavigationControllerDelegate>
     return YES;
 }
 
-- (BOOL)assetsPickerController:(OLAssetsPickerController *)picker shouldShowAsset:(ALAsset *)asset{
+- (void)assetsPickerController:(CTAssetsPickerController *)picker didDeSelectAsset:(PHAsset *)asset{
+    [[OLImageCachingManager sharedInstance].photosCachingManager stopCachingImagesForAssets:@[asset] targetSize:[UIScreen mainScreen].bounds.size contentMode:PHImageContentModeAspectFill options:nil];
+}
+
+- (void)assetsPickerController:(CTAssetsPickerController *)picker didSelectAsset:(PHAsset *)asset{
+    [[OLImageCachingManager sharedInstance].photosCachingManager startCachingImagesForAssets:@[asset] targetSize:[UIScreen mainScreen].bounds.size contentMode:PHImageContentModeAspectFill options:nil];
+}
+
+- (BOOL)assetsPickerController:(OLAssetsPickerController *)picker shouldShowAsset:(id)asset{
     NSString *fileName = [[[asset defaultRepresentation] filename] lowercaseString];
     if (!([fileName hasSuffix:@".jpg"] || [fileName hasSuffix:@".jpeg"] || [fileName hasSuffix:@"png"])) {
         return NO;

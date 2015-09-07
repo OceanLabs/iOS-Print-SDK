@@ -376,9 +376,11 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 
 - (IBAction)cameraRollSelected:(id)sender {
     CTAssetsPickerController *picker;
+    Class assetClass;
     if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8){
         picker = (CTAssetsPickerController *)[[OLAssetsPickerController alloc] init];
         [(OLAssetsPickerController *)picker setAssetsFilter:[ALAssetsFilter allPhotos]];
+        assetClass = [ALAsset class];
     }
     else{
         picker = [[CTAssetsPickerController alloc] init];
@@ -386,13 +388,14 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
         PHFetchOptions *options = [[PHFetchOptions alloc] init];
         options.predicate = [NSPredicate predicateWithFormat:@"mediaType == %d", PHAssetMediaTypeImage];
         picker.assetsFetchOptions = options;
+        assetClass = [PHAsset class];
     }
     
     picker.delegate = self;
     NSArray *allAssets = [[self createAssetArray] mutableCopy];
     NSMutableArray *alAssets = [[NSMutableArray alloc] init];
     for (id asset in allAssets){
-        if ([asset isKindOfClass:[ALAsset class]]){
+        if ([asset isKindOfClass:assetClass]){
             [alAssets addObject:asset];
         }
     }
@@ -481,12 +484,12 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 }
 
 - (void)assetsPickerController:(CTAssetsPickerController *)picker didFinishPickingAssets:(NSArray *)assets {
-    [self populateArrayWithNewArray:assets dataType:[ALAsset class]];
+    [self populateArrayWithNewArray:assets dataType:[picker isKindOfClass:[CTAssetsPickerController class]] ? [PHAsset class] : [ALAsset class]];
     [picker dismissViewControllerAnimated:YES completion:^(void){}];
     
 }
 
-- (BOOL)assetsPickerController:(CTAssetsPickerController *)picker shouldShowAssetsGroup:(ALAssetsGroup *)group{
+- (BOOL)assetsPickerController:(OLAssetsPickerController *)picker shouldShowAssetsGroup:(ALAssetsGroup *)group{
     if (group.numberOfAssets == 0){
         return NO;
     }
@@ -499,31 +502,9 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 
 - (void)assetsPickerController:(CTAssetsPickerController *)picker didSelectAsset:(PHAsset *)asset{
     [[OLImageCachingManager sharedInstance].photosCachingManager startCachingImagesForAssets:@[asset] targetSize:[UIScreen mainScreen].bounds.size contentMode:PHImageContentModeAspectFill options:nil];
-//    PHContentEditingInputRequestOptions *options = [[PHContentEditingInputRequestOptions alloc] init];
-//    options.networkAccessAllowed = NO;
-//    [asset requestContentEditingInputWithOptions:options completionHandler:^(PHContentEditingInput *contentEditingInput, NSDictionary *info) {
-//        NSString *uti = contentEditingInput.uniformTypeIdentifier;
-//        uti = [uti lowercaseString];
-//        if ([uti containsString:@"jpg"] || [uti containsString:@"jpeg"]) {
-//        } else if ([uti containsString:@"png"]) {
-//        } else {
-//            UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Oops!", @"") message:NSLocalizedString(@"Only JPEG & PNG images are supported", @"") preferredStyle:UIAlertControllerStyleAlert];
-//            [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", @"") style:UIAlertActionStyleDefault handler:NULL]];
-//            [picker presentViewController:ac animated:YES completion:NULL];
-//            [picker deselectAsset:asset];
-//        }
-//    }];
-
 }
 
-//- (BOOL)assetsPickerController:(id)picker shouldEnableAsset:(PHAsset *)asset{
-//    if ([(PHAsset *)asset mediaType] != PHAssetMediaTypeImage){
-//        return NO;
-//    }
-//    return YES;
-//}
-
-- (BOOL)assetsPickerController:(id)picker shouldShowAsset:(id)asset{
+- (BOOL)assetsPickerController:(OLAssetsPickerController *)picker shouldShowAsset:(id)asset{
     NSString *fileName = [[[asset defaultRepresentation] filename] lowercaseString];
     if (!([fileName hasSuffix:@".jpg"] || [fileName hasSuffix:@".jpeg"] || [fileName hasSuffix:@"png"])) {
         return NO;

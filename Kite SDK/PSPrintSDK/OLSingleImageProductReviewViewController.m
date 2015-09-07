@@ -18,6 +18,8 @@
 #import "OLKiteViewController.h"
 #import "OLKiteABTesting.h"
 #import "NSObject+Utils.h"
+#import "OLImageCachingManager.h"
+#import <CTAssetsPickerController.h>
 
 #ifdef OL_KITE_OFFER_INSTAGRAM
 #import <OLInstagramImagePickerController.h>
@@ -56,7 +58,7 @@ OLInstagramImagePickerControllerDelegate,
 #ifdef OL_KITE_OFFER_FACEBOOK
 OLFacebookImagePickerControllerDelegate,
 #endif
-OLAssetsPickerControllerDelegate>
+OLAssetsPickerControllerDelegate, CTAssetsPickerControllerDelegate>
 
 @property (weak, nonatomic) IBOutlet UILabel *quantityLabel;
 @property (assign, nonatomic) NSUInteger quantity;
@@ -393,13 +395,27 @@ OLAssetsPickerControllerDelegate>
 }
 
 - (void)showCameraRollImagePicker{
-    OLAssetsPickerController *picker = [[OLAssetsPickerController alloc] init];
+    CTAssetsPickerController *picker;
+    Class assetClass;
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8){
+        picker = (CTAssetsPickerController *)[[OLAssetsPickerController alloc] init];
+        [(OLAssetsPickerController *)picker setAssetsFilter:[ALAssetsFilter allPhotos]];
+        assetClass = [ALAsset class];
+    }
+    else{
+        picker = [[CTAssetsPickerController alloc] init];
+        picker.showsEmptyAlbums = NO;
+        PHFetchOptions *options = [[PHFetchOptions alloc] init];
+        options.predicate = [NSPredicate predicateWithFormat:@"mediaType == %d", PHAssetMediaTypeImage];
+        picker.assetsFetchOptions = options;
+        assetClass = [PHAsset class];
+    }
+    
     picker.delegate = self;
-    picker.assetsFilter = [ALAssetsFilter allPhotos];
     NSArray *allAssets = [[self createAssetArray] mutableCopy];
     NSMutableArray *alAssets = [[NSMutableArray alloc] init];
     for (id asset in allAssets){
-        if ([asset isKindOfClass:[ALAsset class]]){
+        if ([asset isKindOfClass:assetClass]){
             [alAssets addObject:asset];
         }
     }
@@ -475,16 +491,26 @@ OLAssetsPickerControllerDelegate>
     [self.imagesCollectionView reloadData];
 }
 
+- (OLKiteViewController *)kiteViewController {
+    for (UIViewController *vc in self.navigationController.viewControllers) {
+        if ([vc isMemberOfClass:[OLKiteViewController class]]) {
+            return (OLKiteViewController *) vc;
+        }
+    }
+    
+    return nil;
+}
+
 - (BOOL)assetsPickerController:(OLAssetsPickerController *)picker isDefaultAssetsGroup:(ALAssetsGroup *)group {
     if ([self.delegate respondsToSelector:@selector(kiteController:isDefaultAssetsGroup:)]) {
-        return [self.delegate kiteController:[self kiteVc] isDefaultAssetsGroup:group];
+        return [self.delegate kiteController:[self kiteViewController] isDefaultAssetsGroup:group];
     }
     
     return NO;
 }
 
-- (void)assetsPickerController:(OLAssetsPickerController *)picker didFinishPickingAssets:(NSArray *)assets {
-    [self populateArrayWithNewArray:assets dataType:[ALAsset class]];
+- (void)assetsPickerController:(CTAssetsPickerController *)picker didFinishPickingAssets:(NSArray *)assets {
+    [self populateArrayWithNewArray:assets dataType:[picker isKindOfClass:[CTAssetsPickerController class]] ? [PHAsset class] : [ALAsset class]];
     if (self.imagePicked){
         [self.imagePicked getImageWithProgress:NULL completion:^(UIImage *image){
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -494,6 +520,7 @@ OLAssetsPickerControllerDelegate>
         self.imagePicked = nil;
     }
     [picker dismissViewControllerAnimated:YES completion:^(void){}];
+    
 }
 
 - (BOOL)assetsPickerController:(OLAssetsPickerController *)picker shouldShowAssetsGroup:(ALAssetsGroup *)group{
@@ -503,7 +530,15 @@ OLAssetsPickerControllerDelegate>
     return YES;
 }
 
-- (BOOL)assetsPickerController:(OLAssetsPickerController *)picker shouldShowAsset:(ALAsset *)asset{
+- (void)assetsPickerController:(CTAssetsPickerController *)picker didDeSelectAsset:(PHAsset *)asset{
+    [[OLImageCachingManager sharedInstance].photosCachingManager stopCachingImagesForAssets:@[asset] targetSize:[UIScreen mainScreen].bounds.size contentMode:PHImageContentModeAspectFill options:nil];
+}
+
+- (void)assetsPickerController:(CTAssetsPickerController *)picker didSelectAsset:(PHAsset *)asset{
+    [[OLImageCachingManager sharedInstance].photosCachingManager startCachingImagesForAssets:@[asset] targetSize:[UIScreen mainScreen].bounds.size contentMode:PHImageContentModeAspectFill options:nil];
+}
+
+- (BOOL)assetsPickerController:(OLAssetsPickerController *)picker shouldShowAsset:(id)asset{
     NSString *fileName = [[[asset defaultRepresentation] filename] lowercaseString];
     if (!([fileName hasSuffix:@".jpg"] || [fileName hasSuffix:@".jpeg"] || [fileName hasSuffix:@"png"])) {
         return NO;

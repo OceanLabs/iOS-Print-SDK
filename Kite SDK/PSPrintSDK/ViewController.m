@@ -9,8 +9,11 @@
 #import "ViewController.h"
 #import "OLKitePrintSDK.h"
 #import "OLAssetsPickerController.h"
+#import "OLImageCachingManager.h"
+#import <CTAssetsPickerController.h>
 
 #import <AssetsLibrary/AssetsLibrary.h>
+@import Photos;
 
 /**********************************************************************
  * Insert your API keys here. These are found under your profile 
@@ -21,7 +24,7 @@ static NSString *const kAPIKeyLive = @"REPLACE_WITH_YOUR_API_KEY"; // replace wi
 
 static NSString *const kApplePayMerchantIDKey = @"merchant.ly.kite.sdk"; // For internal use only.
 
-@interface ViewController () <OLAssetsPickerControllerDelegate, UINavigationControllerDelegate, OLKiteDelegate>
+@interface ViewController () <OLAssetsPickerControllerDelegate, CTAssetsPickerControllerDelegate, UINavigationControllerDelegate, OLKiteDelegate>
 @property (weak, nonatomic) IBOutlet UIButton *localPhotosButton;
 @property (weak, nonatomic) IBOutlet UIButton *remotePhotosButton;
 @property (nonatomic, weak) IBOutlet UISegmentedControl *environmentPicker;
@@ -56,10 +59,23 @@ static NSString *const kApplePayMerchantIDKey = @"merchant.ly.kite.sdk"; // For 
 
 - (IBAction)onButtonPrintLocalPhotos:(id)sender {
     if (![self isAPIKeySet]) return;
-    OLAssetsPickerController *picker = [[OLAssetsPickerController alloc] init];
-    picker.delegate = self;
-    picker.assetsFilter = [ALAssetsFilter allPhotos];
+    CTAssetsPickerController *picker;
+    Class assetClass;
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8){
+        picker = (CTAssetsPickerController *)[[OLAssetsPickerController alloc] init];
+        [(OLAssetsPickerController *)picker setAssetsFilter:[ALAssetsFilter allPhotos]];
+        assetClass = [ALAsset class];
+    }
+    else{
+        picker = [[CTAssetsPickerController alloc] init];
+        picker.showsEmptyAlbums = NO;
+        PHFetchOptions *options = [[PHFetchOptions alloc] init];
+        options.predicate = [NSPredicate predicateWithFormat:@"mediaType == %d", PHAssetMediaTypeImage];
+        picker.assetsFetchOptions = options;
+        assetClass = [PHAsset class];
+    }
     
+    picker.delegate = self;
     [self presentViewController:picker animated:YES completion:nil];
 }
 
@@ -142,11 +158,19 @@ static NSString *const kApplePayMerchantIDKey = @"merchant.ly.kite.sdk"; // For 
 
 #pragma mark - CTAssetsPickerControllerDelegate Methods
 
-- (void)assetsPickerController:(OLAssetsPickerController *)picker didFinishPickingAssets:(NSArray *)assets {
+- (void)assetsPickerController:(CTAssetsPickerController *)picker didFinishPickingAssets:(NSArray *)assets {
     [picker dismissViewControllerAnimated:YES completion:^(void){
         NSMutableArray *assetObjects = [[NSMutableArray alloc] initWithCapacity:assets.count];
-        for (ALAsset *asset in assets){
-            [assetObjects addObject:[OLAsset assetWithALAsset:asset]];
+        for (id asset in assets){
+            if ([asset isKindOfClass:[PHAsset class]]){
+                [assetObjects addObject:[OLAsset assetWithPHAsset:asset]];
+            }
+            else if([asset isKindOfClass:[PHAsset class]]){
+                [assetObjects addObject:[OLAsset assetWithALAsset:asset]];
+            }
+            else{
+                NSLog(@"Oops, don’t recognize class %@, starting with no assets", [asset class]);
+            }
         }
         [self printWithAssets:assetObjects];
     }];
@@ -160,7 +184,15 @@ static NSString *const kApplePayMerchantIDKey = @"merchant.ly.kite.sdk"; // For 
     return YES;
 }
 
-- (BOOL)assetsPickerController:(OLAssetsPickerController *)picker shouldShowAsset:(ALAsset *)asset{
+- (void)assetsPickerController:(CTAssetsPickerController *)picker didDeSelectAsset:(PHAsset *)asset{
+    [[OLImageCachingManager sharedInstance].photosCachingManager stopCachingImagesForAssets:@[asset] targetSize:[UIScreen mainScreen].bounds.size contentMode:PHImageContentModeAspectFill options:nil];
+}
+
+- (void)assetsPickerController:(CTAssetsPickerController *)picker didSelectAsset:(PHAsset *)asset{
+    [[OLImageCachingManager sharedInstance].photosCachingManager startCachingImagesForAssets:@[asset] targetSize:[UIScreen mainScreen].bounds.size contentMode:PHImageContentModeAspectFill options:nil];
+}
+
+- (BOOL)assetsPickerController:(OLAssetsPickerController *)picker shouldShowAsset:(id)asset{
     NSString *fileName = [[[asset defaultRepresentation] filename] lowercaseString];
     if (!([fileName hasSuffix:@".jpg"] || [fileName hasSuffix:@".jpeg"] || [fileName hasSuffix:@"png"])) {
         return NO;

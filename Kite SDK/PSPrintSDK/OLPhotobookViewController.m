@@ -18,6 +18,8 @@
 #import "OLAssetsPickerController.h"
 #import "OLKitePrintSDK.h"
 #import "NSArray+QueryingExtras.h"
+#import "OLImageCachingManager.h"
+#import <CTAssetsPickerController.h>
 
 #ifdef OL_KITE_OFFER_FACEBOOK
 #import <OLFacebookImagePickerController.h>
@@ -60,7 +62,7 @@ static const CGFloat kBookEdgePadding = 38;
 @end
 
 @interface OLPhotobookViewController () <UIPageViewControllerDataSource, UIPageViewControllerDelegate, UIGestureRecognizerDelegate,
-OLAssetsPickerControllerDelegate, UIActionSheetDelegate, UIAlertViewDelegate, OLImageViewDelegate, OLScrollCropViewControllerDelegate,
+OLAssetsPickerControllerDelegate, CTAssetsPickerControllerDelegate, UIActionSheetDelegate, UIAlertViewDelegate, OLImageViewDelegate, OLScrollCropViewControllerDelegate,
 #ifdef OL_KITE_OFFER_INSTAGRAM
 OLInstagramImagePickerControllerDelegate,
 #endif
@@ -1259,9 +1261,23 @@ UINavigationControllerDelegate
 }
 
 - (void)showCameraRollImagePicker{
-    OLAssetsPickerController *picker = [[OLAssetsPickerController alloc] init];
+    CTAssetsPickerController *picker;
+    Class assetClass;
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8){
+        picker = (CTAssetsPickerController *)[[OLAssetsPickerController alloc] init];
+        [(OLAssetsPickerController *)picker setAssetsFilter:[ALAssetsFilter allPhotos]];
+        assetClass = [ALAsset class];
+    }
+    else{
+        picker = [[CTAssetsPickerController alloc] init];
+        picker.showsEmptyAlbums = NO;
+        PHFetchOptions *options = [[PHFetchOptions alloc] init];
+        options.predicate = [NSPredicate predicateWithFormat:@"mediaType == %d", PHAssetMediaTypeImage];
+        picker.assetsFetchOptions = options;
+        assetClass = [PHAsset class];
+    }
+    
     picker.delegate = self;
-    picker.assetsFilter = [ALAssetsFilter allPhotos];
     [self presentViewController:picker animated:YES completion:nil];
 }
 
@@ -1368,7 +1384,7 @@ UINavigationControllerDelegate
     return NO;
 }
 
-- (void)assetsPickerController:(OLAssetsPickerController *)picker didFinishPickingAssets:(NSArray *)assets {
+- (void)assetsPickerController:(CTAssetsPickerController *)picker didFinishPickingAssets:(NSArray *)assets {
     if (self.addNewPhotosAtIndex == -1){
         self.coverPhoto = [[OLPrintPhoto alloc] init];
         self.coverPhoto.asset = [assets firstObject];
@@ -1385,11 +1401,11 @@ UINavigationControllerDelegate
         return;
     }
     
-    [self populateArrayWithNewArray:assets dataType:[ALAsset class]];
+    [self populateArrayWithNewArray:assets dataType:[picker isKindOfClass:[CTAssetsPickerController class]] ? [PHAsset class] : [ALAsset class]];
     [picker dismissViewControllerAnimated:YES completion:^(void){}];
 }
 
-- (BOOL)assetsPickerController:(OLAssetsPickerController *)picker shouldSelectAsset:(ALAsset *)asset{
+- (BOOL)assetsPickerController:(CTAssetsPickerController *)picker shouldSelectAsset:(ALAsset *)asset{
     if (self.addNewPhotosAtIndex == -1){
         return picker.selectedAssets.count == 0;
     }
@@ -1405,13 +1421,22 @@ UINavigationControllerDelegate
     return YES;
 }
 
-- (BOOL)assetsPickerController:(OLAssetsPickerController *)picker shouldShowAsset:(ALAsset *)asset{
+- (void)assetsPickerController:(CTAssetsPickerController *)picker didDeSelectAsset:(PHAsset *)asset{
+    [[OLImageCachingManager sharedInstance].photosCachingManager stopCachingImagesForAssets:@[asset] targetSize:[UIScreen mainScreen].bounds.size contentMode:PHImageContentModeAspectFill options:nil];
+}
+
+- (void)assetsPickerController:(CTAssetsPickerController *)picker didSelectAsset:(PHAsset *)asset{
+    [[OLImageCachingManager sharedInstance].photosCachingManager startCachingImagesForAssets:@[asset] targetSize:[UIScreen mainScreen].bounds.size contentMode:PHImageContentModeAspectFill options:nil];
+}
+
+- (BOOL)assetsPickerController:(OLAssetsPickerController *)picker shouldShowAsset:(id)asset{
     NSString *fileName = [[[asset defaultRepresentation] filename] lowercaseString];
     if (!([fileName hasSuffix:@".jpg"] || [fileName hasSuffix:@".jpeg"] || [fileName hasSuffix:@"png"])) {
         return NO;
     }
     return YES;
 }
+
 
 #ifdef OL_KITE_OFFER_INSTAGRAM
 #pragma mark - OLInstagramImagePickerControllerDelegate Methods
