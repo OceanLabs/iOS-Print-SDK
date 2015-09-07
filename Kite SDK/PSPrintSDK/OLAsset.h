@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 
 @class ALAsset;
+@class PHAsset;
 @class OLPrintPhoto;
 
 typedef void (^GetDataLengthHandler)(long long dataLength, NSError *error);
@@ -34,6 +35,7 @@ extern NSString *const kOLMimeTypePNG;
 + (OLAsset *)assetWithDataAsPNG:(NSData *)data;
 + (OLAsset *)assetWithFilePath:(NSString *)path;
 + (OLAsset *)assetWithALAsset:(ALAsset *)asset;
++ (OLAsset *)assetWithPHAsset:(PHAsset *)asset;
 + (OLAsset *)assetWithDataSource:(id<OLAssetDataSource>)dataSource;
 + (OLAsset *)assetWithURL:(NSURL *)url;
 + (OLAsset *)assetWithPrintPhoto:(OLPrintPhoto *)printPhoto;
@@ -47,9 +49,6 @@ extern NSString *const kOLMimeTypePNG;
  */
 @property (nonatomic, readonly) long long assetId;
 @property (nonatomic, readonly) NSURL *previewURL;
-@property(nonatomic, assign)CGRect cropBox;
-
-@property (nonatomic, readonly, getter = isCropBoxSet) BOOL cropboxSet;
 
 - (void)loadALAssetWithCompletionHandler:(LoadAssetCompletionHandler)handler;
 

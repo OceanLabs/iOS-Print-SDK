@@ -29,6 +29,7 @@ static NSString *const kKeyImageFilePath = @"co.oceanlabs.pssdk.kKeyImageFilePat
 static NSString *const kKeyALAssetURL = @"co.oceanlabs.pssdk.kKeyALAssetURL";
 static NSString *const kKeyDataSource = @"co.oceanlabs.pssdk.kKeyDataSource";
 static NSString *const kKeyImageURL = @"co.oceanlabs.pssdk.kKeyImageURL";
+static NSString *const kKeyPHAssetLocalId = @"co.oceanlabs.pssdk.kKeyPHAssetLocalId";
 
 NSString *const kOLMimeTypeJPEG = @"image/jpeg";
 NSString *const kOLMimeTypePNG  = @"image/png";
@@ -44,33 +45,6 @@ NSString *const kOLMimeTypePNG  = @"image/png";
 @end
 
 @implementation OLAsset
-
-- (BOOL)isCropBoxSet {
-    return self.cropBox.origin.x != 0 || self.cropBox.origin.y != 0 || self.cropBox.size.width != 0 || self.cropBox.size.height != 0;
-}
-
-- (NSData *) cropImageWithData:(NSData *)data{
-    if (![self isCropBoxSet]){
-        return data;
-    }
-    
-    UIImage *image = [UIImage imageWithData:data];
-    
-    CGRect absCropBox = CGRectMake(self.cropBox.origin.x * image.size.width, self.cropBox.origin.y * image.size.height, self.cropBox.size.width * image.size.width, self.cropBox.size.height * image.size.height);
-    
-    CGImageRef imageRef = CGImageCreateWithImageInRect([image CGImage], absCropBox);
-    UIImage *imgs = [UIImage imageWithCGImage:imageRef];
-    CGImageRelease(imageRef);
-    if (imgs){
-        return UIImageJPEGRepresentation(imgs, 0.8);
-    }
-    else{
-        return data;
-    }
-    
-    
-    
-}
 
 - (id)initWithImageData:(NSData *)data mimeType:(NSString *)mimeType {
     if (self = [super init]) {
@@ -118,24 +92,8 @@ NSString *const kOLMimeTypePNG  = @"image/png";
 
 - (id)initWithPHAsset:(PHAsset *)asset {
     if (self = [super init]) {
-        PHContentEditingInputRequestOptions *options = [[PHContentEditingInputRequestOptions alloc] init];
-        options.networkAccessAllowed = NO;
-        [asset requestContentEditingInputWithOptions:options completionHandler:^(PHContentEditingInput *contentEditingInput, NSDictionary *info) {
-            NSString *uti = contentEditingInput.uniformTypeIdentifier;
-            uti = [uti lowercaseString];
-            if ([uti containsString:@"jpg"] || [uti containsString:@"jpeg"]) {
-                _mimeType = kOLMimeTypeJPEG;
-            } else if ([uti containsString:@"png"]) {
-                _mimeType = kOLMimeTypePNG;
-            } else if (!uti){
-                // Asset is in iCloud, leave MIME type blank for now.
-            }
-            else {
-                NSAssert(NO, @"Only JPEG & PNG images are supported");
-            }
-        }];
+        // Asset is in iCloud, leave MIME type blank for now.
         self.phAssetLocalId = [asset localIdentifier];
-        
     }
     return self;
 }
@@ -170,6 +128,8 @@ NSString *const kOLMimeTypePNG  = @"image/png";
         return kOLAssetTypeALAsset;
     } else if (self.dataSource) {
         return kOLAssetTypeDataSource;
+    } else if (self.phAssetLocalId){
+        return kOLAssetTypePHAsset;
     } else {
         NSAssert(NO, @"oops added a new type of asset data source without doing all the real work :)");
         return 0;
@@ -298,13 +258,23 @@ NSString *const kOLMimeTypePNG  = @"image/png";
                         handler(0, error);
                     } else {
                         NSData *data = [NSData dataWithBytesNoCopy:buffer length:buffered freeWhenDone:YES];
-                        handler([self cropImageWithData:data].length, nil);
+                        handler(data.length, nil);
                     }
                 } else {
                     handler(0, error);
                 }
             }];
             break;
+        }
+        case kOLAssetTypePHAsset:{
+            PHAsset *asset = [[PHAsset fetchAssetsWithLocalIdentifiers:@[self.phAssetLocalId] options:nil] firstObject];
+            if (!asset){
+                handler(0, [NSError errorWithDomain:@"ly.kite" code:404 userInfo:@{@"Error" : @"PHAsset does not exist."}]);
+            }
+            [[PHImageManager defaultManager] requestImageDataForAsset:asset options:nil resultHandler:^(NSData *imageData, NSString *dataUTI, UIImageOrientation orientation, NSDictionary *info){
+                handler(imageData.length, nil);
+            }];
+            
         }
         case kOLAssetTypeDataSource: {
             NSAssert(self.dataSource, @"oops somehow instantiated a OLAsset in non consistent state");
@@ -317,21 +287,16 @@ NSString *const kOLMimeTypePNG  = @"image/png";
         }
         case kOLAssetTypeImageData: {
             dispatch_async(dispatch_get_main_queue(), ^{
-                handler([self cropImageWithData:self.imageData].length, nil);
+                handler(self.imageData.length, nil);
             });
             break;
         }
         case kOLAssetTypeImageFilePath: {
             dispatch_async(dispatch_get_main_queue(), ^{
                 NSError *attributesError = nil;
-                if ([self isCropBoxSet]){
-                    handler([NSData dataWithContentsOfFile:self.imageFilePath options:0 error:&attributesError].length, attributesError);
-                }
-                else{
-                    NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:self.imageFilePath error:&attributesError];
-                    NSNumber *fileSizeNumber = [fileAttributes objectForKey:NSFileSize];
-                    handler([fileSizeNumber longLongValue], attributesError);
-                }
+                NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:self.imageFilePath error:&attributesError];
+                NSNumber *fileSizeNumber = [fileAttributes objectForKey:NSFileSize];
+                handler([fileSizeNumber longLongValue], attributesError);
             });
             
             break;
@@ -359,13 +324,22 @@ NSString *const kOLMimeTypePNG  = @"image/png";
                         handler(nil, error);
                     } else {
                         NSData *data = [NSData dataWithBytesNoCopy:buffer length:buffered freeWhenDone:YES];
-                        handler([self cropImageWithData:data], nil);
+                        handler(data, nil);
                     }
                 } else {
                     handler(nil, error);
                 }
             }];
             break;
+        }
+        case kOLAssetTypePHAsset:{
+            PHAsset *asset = [[PHAsset fetchAssetsWithLocalIdentifiers:@[self.phAssetLocalId] options:nil] firstObject];
+            if (!asset){
+                handler(0, [NSError errorWithDomain:@"ly.kite" code:404 userInfo:@{@"Error" : @"PHAsset does not exist."}]);
+            }
+            [[PHImageManager defaultManager] requestImageDataForAsset:asset options:nil resultHandler:^(NSData *imageData, NSString *dataUTI, UIImageOrientation orientation, NSDictionary *info){
+                handler(imageData, nil);
+            }];
         }
         case kOLAssetTypeDataSource: {
             NSAssert(self.dataSource, @"oops somehow instantiated a OLAsset in non consistent state");
@@ -379,7 +353,7 @@ NSString *const kOLMimeTypePNG  = @"image/png";
         }
         case kOLAssetTypeImageData: {
             dispatch_async(dispatch_get_main_queue(), ^{
-                handler([self cropImageWithData:self.imageData], nil);
+                handler(self.imageData, nil);
             });
             break;
         }
@@ -387,7 +361,7 @@ NSString *const kOLMimeTypePNG  = @"image/png";
             dispatch_async(dispatch_get_main_queue(), ^{
                 NSError *error = nil;
                 NSData *data = [NSData dataWithContentsOfFile:self.imageFilePath options:0 error:&error];
-                handler([self cropImageWithData:data], error);
+                handler(data, error);
             });
             break;
         }
@@ -419,6 +393,9 @@ NSString *const kOLMimeTypePNG  = @"image/png";
         case kOLAssetTypeALAsset: {
             return [self.alAssetURL isEqual:[object alAssetURL]];
         }
+        case kOLAssetTypePHAsset: {
+            return [self.phAssetLocalId isEqualToString:[object phAssetLocalId]];
+        }
         case kOLAssetTypeDataSource: {
             NSAssert(self.dataSource, @"oops somehow instantiated a OLAsset in non consistent state");
             return self.dataSource == (id<OLAssetDataSource>) [object dataSource] || [self.dataSource isEqual:[object dataSource]];
@@ -444,6 +421,7 @@ NSString *const kOLMimeTypePNG  = @"image/png";
     [aCoder encodeObject:self.alAssetURL forKey:kKeyALAssetURL];
     [aCoder encodeObject:self.dataSource forKey:kKeyDataSource];
     [aCoder encodeObject:self.imageURL forKey:kKeyImageURL];
+    [aCoder encodeObject:self.phAssetLocalId forKey:kKeyPHAssetLocalId];
     // TODO: encode uploaded including asset id & preview url?!
 }
 
@@ -456,6 +434,7 @@ NSString *const kOLMimeTypePNG  = @"image/png";
         self.alAssetURL = [aDecoder decodeObjectForKey:kKeyALAssetURL];
         self.dataSource = [aDecoder decodeObjectForKey:kKeyDataSource];
         self.imageURL = [aDecoder decodeObjectForKey:kKeyImageURL];
+        self.phAssetLocalId = [aDecoder decodeObjectForKey:kKeyPHAssetLocalId];
     }
     
     return self;
