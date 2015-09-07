@@ -38,6 +38,7 @@
 #import "UIViewController+TraitCollectionCompatibility.h"
 
 #import "OLRemoteImageView.h"
+#import "OLImageCachingManager.h"
 
 NSInteger OLPhotoSelectionMargin = 0;
 
@@ -492,7 +493,12 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     return YES;
 }
 
+- (void)assetsPickerController:(CTAssetsPickerController *)picker didDeSelectAsset:(PHAsset *)asset{
+    [[OLImageCachingManager sharedInstance].photosCachingManager stopCachingImagesForAssets:@[asset] targetSize:[UIScreen mainScreen].bounds.size contentMode:PHImageContentModeAspectFill options:nil];
+}
+
 - (void)assetsPickerController:(CTAssetsPickerController *)picker didSelectAsset:(PHAsset *)asset{
+    [[OLImageCachingManager sharedInstance].photosCachingManager startCachingImagesForAssets:@[asset] targetSize:[UIScreen mainScreen].bounds.size contentMode:PHImageContentModeAspectFill options:nil];
 //    PHContentEditingInputRequestOptions *options = [[PHContentEditingInputRequestOptions alloc] init];
 //    options.networkAccessAllowed = NO;
 //    [asset requestContentEditingInputWithOptions:options completionHandler:^(PHContentEditingInput *contentEditingInput, NSDictionary *info) {
