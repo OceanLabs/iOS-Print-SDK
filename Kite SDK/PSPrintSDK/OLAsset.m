@@ -271,8 +271,18 @@ NSString *const kOLMimeTypePNG  = @"image/png";
             if (!asset){
                 handler(0, [NSError errorWithDomain:@"ly.kite" code:404 userInfo:@{@"Error" : @"PHAsset does not exist."}]);
             }
-            [[PHImageManager defaultManager] requestImageDataForAsset:asset options:nil resultHandler:^(NSData *imageData, NSString *dataUTI, UIImageOrientation orientation, NSDictionary *info){
-                handler(imageData.length, nil);
+            PHImageManager *imageManager = [PHImageManager defaultManager];
+            PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
+            options.synchronous = NO;
+            options.deliveryMode = PHImageRequestOptionsDeliveryModeHighQualityFormat;
+            options.networkAccessAllowed = YES;
+            [imageManager requestImageDataForAsset:asset options:options resultHandler:^(NSData *imageData, NSString *dataUTI, UIImageOrientation orientation, NSDictionary *info){
+                if (!imageData){
+                    handler(0, [NSError errorWithDomain:@"ly.kite" code:404 userInfo:@{@"Error" : @"PHAsset does not exist."}]);
+                }
+                else{
+                    handler(imageData.length, nil);
+                }
             }];
             
         }
@@ -337,8 +347,18 @@ NSString *const kOLMimeTypePNG  = @"image/png";
             if (!asset){
                 handler(0, [NSError errorWithDomain:@"ly.kite" code:404 userInfo:@{@"Error" : @"PHAsset does not exist."}]);
             }
-            [[PHImageManager defaultManager] requestImageDataForAsset:asset options:nil resultHandler:^(NSData *imageData, NSString *dataUTI, UIImageOrientation orientation, NSDictionary *info){
-                handler(imageData, nil);
+            PHImageManager *imageManager = [PHImageManager defaultManager];
+            PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
+            options.synchronous = NO;
+            options.deliveryMode = PHImageRequestOptionsDeliveryModeHighQualityFormat;
+            options.networkAccessAllowed = YES;
+            [imageManager requestImageDataForAsset:asset options:options resultHandler:^(NSData *imageData, NSString *dataUTI, UIImageOrientation orientation, NSDictionary *info){
+                if (!imageData){
+                    handler(nil, [NSError errorWithDomain:@"ly.kite" code:404 userInfo:@{@"Error" : @"PHAsset does not exist."}]);
+                }
+                else{
+                    handler(imageData, nil);
+                }
             }];
             break;
         }

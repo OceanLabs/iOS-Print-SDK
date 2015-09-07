@@ -261,7 +261,7 @@ static NSOperationQueue *imageOperationQueue;
     else if (self.type == kPrintPhotoAssetTypePHAsset){
         PHImageManager *imageManager = [PHImageManager defaultManager];
         PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
-        options.synchronous = YES;
+        options.synchronous = NO;
         options.deliveryMode = PHImageRequestOptionsDeliveryModeHighQualityFormat;
         options.networkAccessAllowed = YES;
         options.progressHandler = ^(double progress, NSError *__nullable error, BOOL *stop, NSDictionary *__nullable info){
@@ -411,6 +411,21 @@ static NSOperationQueue *imageOperationQueue;
             }
         });
     }
+    else if (self.type == kPrintPhotoAssetTypePHAsset){
+        PHImageManager *imageManager = [PHImageManager defaultManager];
+        PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
+        options.synchronous = NO;
+        options.deliveryMode = PHImageRequestOptionsDeliveryModeHighQualityFormat;
+        options.networkAccessAllowed = YES;
+        [imageManager requestImageDataForAsset:self.asset options:options resultHandler:^(NSData *imageData, NSString *dataUTI, UIImageOrientation orientation, NSDictionary *info){
+            if (!imageData){
+                handler(0, [NSError errorWithDomain:@"ly.kite" code:404 userInfo:@{@"Error" : @"PHAsset does not exist."}]);
+            }
+            else{
+                handler(imageData.length, nil);
+            }
+        }];
+    }
 #if defined(OL_KITE_OFFER_INSTAGRAM) || defined(OL_KITE_OFFER_FACEBOOK)
     else if (self.type == kPrintPhotoAssetTypeInstagramPhoto || self.type == kPrintPhotoAssetTypeFacebookPhoto){
         [[SDWebImageManager sharedManager] downloadImageWithURL:[self.asset fullURL] options:0 progress:NULL completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
@@ -456,6 +471,21 @@ static NSOperationQueue *imageOperationQueue;
             NSData *data = [NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"kite_corrupt" ofType:@"jpg"]];
             handler(data, nil);
         }
+    }
+    else if (self.type == kPrintPhotoAssetTypePHAsset){
+        PHImageManager *imageManager = [PHImageManager defaultManager];
+        PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
+        options.synchronous = NO;
+        options.deliveryMode = PHImageRequestOptionsDeliveryModeHighQualityFormat;
+        options.networkAccessAllowed = YES;
+        [imageManager requestImageDataForAsset:self.asset options:options resultHandler:^(NSData *imageData, NSString *dataUTI, UIImageOrientation orientation, NSDictionary *info){
+            if (!imageData){
+                handler(nil, [NSError errorWithDomain:@"ly.kite" code:404 userInfo:@{@"Error" : @"PHAsset does not exist."}]);
+            }
+            else{
+                handler(imageData, nil);
+            }
+        }];
     }
 #if defined(OL_KITE_OFFER_INSTAGRAM) || defined(OL_KITE_OFFER_FACEBOOK)
     else if (self.type == kPrintPhotoAssetTypeFacebookPhoto || self.type == kPrintPhotoAssetTypeInstagramPhoto){
