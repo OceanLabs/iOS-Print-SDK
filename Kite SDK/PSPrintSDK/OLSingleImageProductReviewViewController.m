@@ -20,6 +20,8 @@
 #import "NSObject+Utils.h"
 #import "OLImageCachingManager.h"
 #import <CTAssetsPickerController.h>
+#import "OLRemoteImageView.h"
+#import "OLRemoteImageCropper.h"
 
 #ifdef OL_KITE_OFFER_INSTAGRAM
 #import <OLInstagramImagePickerController.h>
@@ -66,7 +68,7 @@ OLAssetsPickerControllerDelegate, CTAssetsPickerControllerDelegate>
 @property (weak, nonatomic) IBOutlet UICollectionView *imagesCollectionView;
 
 @property (weak, nonatomic) IBOutlet UIView *containerView;
-@property (weak, nonatomic) IBOutlet RMImageCropper *imageCropView;
+@property (weak, nonatomic) IBOutlet OLRemoteImageCropper *imageCropView;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *maskAspectRatio;
 @property (strong, nonatomic) OLPrintPhoto *imagePicked;
 
@@ -304,9 +306,34 @@ OLAssetsPickerControllerDelegate, CTAssetsPickerControllerDelegate>
     if (indexPath.section == [self sectionForImageCells]){
         UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"imageCell" forIndexPath:indexPath];
         
-        UIImageView *imageView = (UIImageView *)[cell.contentView viewWithTag:1];
+        for (UIView *view in cell.subviews){
+            if ([view isKindOfClass:[OLRemoteImageView class]]){
+                [view removeFromSuperview];
+            }
+        }
         
-        [self.userSelectedPhotos[indexPath.item] setImageSize:imageView.frame.size cropped:NO progress:NULL completionHandler:^(UIImage *image){
+        OLRemoteImageView *imageView = [[OLRemoteImageView alloc] initWithFrame:CGRectMake(0, 0, 138, 138)];
+        imageView.tag = 11;
+        imageView.contentMode = UIViewContentModeScaleAspectFill;
+        [cell addSubview:imageView];
+        imageView.translatesAutoresizingMaskIntoConstraints = NO;
+        NSDictionary *views = NSDictionaryOfVariableBindings(imageView);
+        NSMutableArray *con = [[NSMutableArray alloc] init];
+        
+        NSArray *visuals = @[@"H:|-0-[imageView]-0-|",
+                             @"V:|-0-[imageView]-0-|"];
+        
+        
+        for (NSString *visual in visuals) {
+            [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+        }
+        
+        [imageView.superview addConstraints:con];
+
+        
+        [self.userSelectedPhotos[indexPath.item] setImageSize:imageView.frame.size cropped:NO progress:^(float progress){
+            [imageView setProgress:progress];
+        }completionHandler:^(UIImage *image){
             dispatch_async(dispatch_get_main_queue(), ^{
                 imageView.image = image;
             });
@@ -325,8 +352,18 @@ OLAssetsPickerControllerDelegate, CTAssetsPickerControllerDelegate>
 
 - (void) collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
     if (indexPath.section == [self sectionForImageCells]){
+        UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
+        OLRemoteImageView *imageView = (OLRemoteImageView *)[cell viewWithTag:11];
+        if (!imageView.image){
+            return;
+        }
+        
+        OLPrintPhoto *printPhoto = self.userSelectedPhotos[indexPath.item];
+        
         self.imageCropView.image = nil;
-        [self.userSelectedPhotos[indexPath.item] getImageWithProgress:NULL completion:^(UIImage *image){
+        [printPhoto getImageWithProgress:^(float progress){
+//            [self.imageCropView setProgress:progress];
+        }completion:^(UIImage *image){
             dispatch_async(dispatch_get_main_queue(), ^{
                 self.imageCropView.image = image;
             });

@@ -54,6 +54,7 @@
 		2EA8BEBA1A484FCB008A9248 /* OLProductOverviewPageContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA8BEB11A484FCB008A9248 /* OLProductOverviewPageContentViewController.m */; };
 		2EA8BEBC1A484FCB008A9248 /* OLOrderReviewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA8BEB51A484FCB008A9248 /* OLOrderReviewViewController.m */; };
 		2EA8BEBD1A484FCB008A9248 /* OLFrameOrderReviewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA8BEB71A484FCB008A9248 /* OLFrameOrderReviewViewController.m */; };
+		2EAC21541B9EDDC000C41BD4 /* OLRemoteImageCropper.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EAC21531B9EDDC000C41BD4 /* OLRemoteImageCropper.m */; };
 		2EB1C4111B551D6000EFE0D0 /* OLKiteABTesting.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB1C4101B551D6000EFE0D0 /* OLKiteABTesting.m */; };
 		2EB4959C1B303FA8003FB762 /* OLEditPhotobookViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB4959B1B303FA8003FB762 /* OLEditPhotobookViewController.m */; };
 		2EB4BD681AE128740004CEE0 /* OLPhotobookViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB4BD671AE128740004CEE0 /* OLPhotobookViewController.m */; };
@@ -255,6 +256,8 @@
 		2EA8BEB51A484FCB008A9248 /* OLOrderReviewViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLOrderReviewViewController.m; sourceTree = "<group>"; };
 		2EA8BEB61A484FCB008A9248 /* OLFrameOrderReviewViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLFrameOrderReviewViewController.h; sourceTree = "<group>"; };
 		2EA8BEB71A484FCB008A9248 /* OLFrameOrderReviewViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLFrameOrderReviewViewController.m; sourceTree = "<group>"; };
+		2EAC21521B9EDDC000C41BD4 /* OLRemoteImageCropper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLRemoteImageCropper.h; sourceTree = "<group>"; };
+		2EAC21531B9EDDC000C41BD4 /* OLRemoteImageCropper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLRemoteImageCropper.m; sourceTree = "<group>"; };
 		2EB1C40F1B551D6000EFE0D0 /* OLKiteABTesting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLKiteABTesting.h; sourceTree = "<group>"; };
 		2EB1C4101B551D6000EFE0D0 /* OLKiteABTesting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLKiteABTesting.m; sourceTree = "<group>"; };
 		2EB4959A1B303FA8003FB762 /* OLEditPhotobookViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLEditPhotobookViewController.h; sourceTree = "<group>"; };
@@ -442,6 +445,8 @@
 				2E676C2A1B33FD70005E068B /* OLPopupOptionsImageView.m */,
 				2ED3EBB81B996ED3005C1E9F /* OLRemoteImageView.h */,
 				2ED3EBB91B996ED3005C1E9F /* OLRemoteImageView.m */,
+				2EAC21521B9EDDC000C41BD4 /* OLRemoteImageCropper.h */,
+				2EAC21531B9EDDC000C41BD4 /* OLRemoteImageCropper.m */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -1069,6 +1074,7 @@
 				2E21DA551B9843CF00D9162F /* OLAssetsViewCell.m in Sources */,
 				2E5258FE1A9C884700DBC69B /* OLProductTypeSelectionViewController.m in Sources */,
 				CD95AA78186F31BB0097C328 /* OLPrintOrderRequest.m in Sources */,
+				2EAC21541B9EDDC000C41BD4 /* OLRemoteImageCropper.m in Sources */,
 				2E21DA511B9843CF00D9162F /* OLAssetsGroupViewController.m in Sources */,
 				3DEF0D1B1A964B4E000F1E66 /* UITextField+Selection.m in Sources */,
 				3D8122F41A75A46D004E7297 /* UITableViewController+ScreenWidthFactor.m in Sources */,

@@ -337,10 +337,13 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     cropVc.enableCircleMask = self.product.productTemplate.templateUI == kOLTemplateUICircle;
     cropVc.delegate = self;
     cropVc.aspectRatio = [self productAspectRatio];
-    [self.editingPrintPhoto getImageWithProgress:NULL completion:^(UIImage *image){
+    [self.editingPrintPhoto getImageWithProgress:^(float progress){
+        [cropVc.cropView setProgress:progress];
+    }completion:^(UIImage *image){
         [cropVc setFullImage:image];
         [self presentViewController:nav animated:YES completion:NULL];
     }];
+    
 }
 
 - (IBAction)onButtonNextClicked:(UIBarButtonItem *)sender {

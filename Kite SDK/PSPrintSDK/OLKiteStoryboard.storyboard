@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="8173.3" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="cpC-15-nyB">
     <dependencies>
+        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8142"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
@@ -428,7 +429,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nok-mW-saD" customClass="RMImageCropper">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nok-mW-saD" customClass="OLRemoteImageCropper">
                                 <rect key="frame" x="147" y="72" width="306" height="520"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
@@ -1277,7 +1278,7 @@
                                     <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="6Lh-tc-HKt">
                                         <rect key="frame" x="151.5" y="222" width="20" height="20"/>
                                     </activityIndicatorView>
-                                    <view tag="1" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="33O-65-cUP" customClass="RMImageCropper">
+                                    <view tag="1" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="33O-65-cUP" customClass="OLRemoteImageCropper">
                                         <rect key="frame" x="0.0" y="0.0" width="323" height="464"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     </view>
@@ -1354,7 +1355,7 @@
                                             <rect key="frame" x="0.0" y="0.0" width="46" height="46"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView userInteractionEnabled="NO" tag="1" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="jpc-j1-Ne6">
+                                                <imageView userInteractionEnabled="NO" tag="1" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="jpc-j1-Ne6" customClass="OLRemoteImageView">
                                                     <rect key="frame" x="0.0" y="0.0" width="46" height="46"/>
                                                 </imageView>
                                             </subviews>
@@ -2179,7 +2180,7 @@
                                     <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="nYq-bZ-dQ4">
                                         <rect key="frame" x="290" y="202" width="20" height="20"/>
                                     </activityIndicatorView>
-                                    <view tag="1" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Zq4-Xa-eBd" customClass="RMImageCropper">
+                                    <view tag="1" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Zq4-Xa-eBd" customClass="OLRemoteImageCropper">
                                         <rect key="frame" x="20" y="20" width="560" height="384"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     </view>
@@ -2218,7 +2219,7 @@
                                             <rect key="frame" x="0.0" y="0.0" width="46" height="46"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView userInteractionEnabled="NO" tag="1" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="gyI-hq-2cB">
+                                                <imageView userInteractionEnabled="NO" tag="1" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="gyI-hq-2cB" customClass="OLRemoteImageView">
                                                     <rect key="frame" x="0.0" y="0.0" width="46" height="46"/>
                                                 </imageView>
                                             </subviews>
@@ -2446,7 +2447,7 @@
                                     <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="AH0-Gr-t3X">
                                         <rect key="frame" x="155" y="227" width="20" height="20"/>
                                     </activityIndicatorView>
-                                    <view tag="1" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="N6g-QY-BTJ" customClass="RMImageCropper">
+                                    <view tag="1" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="N6g-QY-BTJ" customClass="OLRemoteImageCropper">
                                         <rect key="frame" x="0.0" y="0.0" width="330" height="474"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     </view>
@@ -2517,7 +2518,7 @@
                                             <rect key="frame" x="0.0" y="0.0" width="46" height="46"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView userInteractionEnabled="NO" tag="1" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="CJQ-TQ-6n7">
+                                                <imageView userInteractionEnabled="NO" tag="1" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="CJQ-TQ-6n7" customClass="OLRemoteImageView">
                                                     <rect key="frame" x="0.0" y="0.0" width="46" height="46"/>
                                                 </imageView>
                                             </subviews>

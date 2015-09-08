@@ -28,6 +28,11 @@
     [self addSubview:self.loadingView];
 }
 
+- (void)awakeFromNib{
+    [super awakeFromNib];
+    [self initializeViews];
+}
+
 - (instancetype)init{
     self = [super init];
     if (self){

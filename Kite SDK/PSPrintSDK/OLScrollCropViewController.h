@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "RMImageCropper.h"
+#import "OLRemoteImageCropper.h"
 
 @class OLScrollCropViewController;
 
@@ -22,7 +22,7 @@
 
 @property (strong, nonatomic) UIImage *fullImage;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *aspectRatioConstraint;
-@property (weak, nonatomic) IBOutlet RMImageCropper *cropView;
+@property (weak, nonatomic) IBOutlet OLRemoteImageCropper *cropView;
 @property (assign, nonatomic) CGFloat aspectRatio;
 @property (weak, nonatomic) id<OLScrollCropViewControllerDelegate> delegate;
 @property (assign, nonatomic) BOOL enableCircleMask;
