@@ -240,7 +240,7 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
     self.printOrder.userData = d;
     
     if (self.shippingAddresses.count == 1 || self.selectedShippingAddresses.count == 1){
-        self.printOrder.shippingAddress = [self.shippingAddresses firstObject];
+        self.printOrder.shippingAddress = [self.selectedShippingAddresses firstObject];
     }
     else{
         self.printOrder.shippingAddress = nil;
@@ -531,7 +531,7 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
     if (indexPath.section == kSectionDeliveryDetails) {
         if ([OLKiteABTesting sharedInstance].offerAddressSearch || [OLAddress addressBook].count > 0 || [OLKiteABTesting sharedInstance].allowsMultipleRecipients) {
             if ([OLKiteABTesting sharedInstance].allowsMultipleRecipients && self.shippingAddresses.count > indexPath.row){
-                OLAddress *address = [OLAddress addressBook][indexPath.row];
+                OLAddress *address = self.shippingAddresses[indexPath.row];
                 BOOL selected = YES;
                 if ([self.selectedShippingAddresses containsObject:address]) {
                     selected = NO;
