@@ -92,7 +92,7 @@ NSString *const kOLMimeTypePNG  = @"image/png";
 
 - (id)initWithPHAsset:(PHAsset *)asset {
     if (self = [super init]) {
-        // Asset is in iCloud, leave MIME type blank for now.
+        _mimeType = kOLMimeTypeJPEG;
         self.phAssetLocalId = [asset localIdentifier];
     }
     return self;
@@ -281,6 +281,9 @@ NSString *const kOLMimeTypePNG  = @"image/png";
                     handler(0, [NSError errorWithDomain:@"ly.kite" code:404 userInfo:@{@"Error" : @"PHAsset does not exist."}]);
                 }
                 else{
+                    if ([[dataUTI lowercaseString] containsString:@"png"]){
+                        _mimeType = kOLMimeTypePNG;
+                    }
                     handler(imageData.length, nil);
                 }
             }];
@@ -357,6 +360,9 @@ NSString *const kOLMimeTypePNG  = @"image/png";
                     handler(nil, [NSError errorWithDomain:@"ly.kite" code:404 userInfo:@{@"Error" : @"PHAsset does not exist."}]);
                 }
                 else{
+                    if ([[dataUTI lowercaseString] containsString:@"png"]){
+                        _mimeType = kOLMimeTypePNG;
+                    }
                     handler(imageData, nil);
                 }
             }];
