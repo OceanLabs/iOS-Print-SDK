@@ -178,7 +178,7 @@ static NSString *const kApplePayMerchantIDKey = @"merchant.ly.kite.sdk"; // For 
 }
 
 - (BOOL)kiteControllerShouldAllowUserToAddMorePhotos:(OLKiteViewController *)controller {
-    return YES;
+    return NO;
 }
 
 //- (BOOL)shouldShowPhoneEntryOnCheckoutScreen{

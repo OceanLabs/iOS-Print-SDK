@@ -67,12 +67,13 @@ OLInstagramImagePickerControllerDelegate,
 #ifdef OL_KITE_OFFER_FACEBOOK
 OLFacebookImagePickerControllerDelegate,
 #endif
-UINavigationControllerDelegate
+UINavigationControllerDelegate,UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout
 >
 
 @property (weak, nonatomic) UIPanGestureRecognizer *pageControllerPanGesture;
 @property (weak, nonatomic) IBOutlet UIView *fakeShadowView;
 @property (weak, nonatomic) IBOutlet UIView *openbookView;
+@property (weak, nonatomic) IBOutlet UICollectionView *scrubber;
 @property (weak, nonatomic) IBOutlet UIView *containerView;
 @property (strong, nonatomic) OLPrintPhoto *croppingPrintPhoto;
 @property (weak, nonatomic) IBOutlet UIImageView *bookImageView;
@@ -81,6 +82,7 @@ UINavigationControllerDelegate
 @property (strong, nonatomic) NSLayoutConstraint *widthCon;
 @property (strong, nonatomic) NSLayoutConstraint *widthCon2;
 @property (strong, nonatomic) NSLayoutConstraint *centerYCon;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *scrubberHeightCon;
 
 @property (strong, nonatomic) UIDynamicAnimator* dynamicAnimator;
 @property (strong, nonatomic) UIDynamicItemBehavior* inertiaBehavior;
@@ -98,6 +100,7 @@ UINavigationControllerDelegate
 @property (assign, nonatomic) BOOL haveSeenViewDidAppear;
 
 @property (weak, nonatomic) UIImageView *coverImageView;
+@property (weak, nonatomic) IBOutlet UIView *pagesPreviewContainer;
 @property (assign, nonatomic) NSInteger addNewPhotosAtIndex;
 @property (strong, nonatomic) NSArray *userSelectedPhotosCopy;
 
@@ -288,9 +291,12 @@ UINavigationControllerDelegate
     
     [self updatePagesLabel];
     
-    CGFloat yOffset = !self.editMode ? ([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height)/2.0 : -15;
+    CGFloat yOffset = ([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height)/2.0 - self.scrubber.frame.size.height/2.0;
     if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8){
         yOffset = 22;
+    }
+    if (self.editMode){
+        yOffset = -15;
     }
     self.centerYCon = [NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.containerView.superview attribute:NSLayoutAttributeCenterY multiplier:1 constant:yOffset];
     [self.containerView.superview addConstraint:self.centerYCon];
@@ -334,11 +340,17 @@ UINavigationControllerDelegate
     if (self.editMode && !self.startOpen){
         self.topMarginCon.constant = 10;
         self.bottomMarginCon.constant = 0;
+        [self.scrubber removeFromSuperview];
     }
     else if (self.editMode){
         self.topMarginCon.constant = 10;
         self.bottomMarginCon.constant = 0;
+        [self.scrubber removeFromSuperview];
     }
+
+	self.scrubber.dataSource = self;
+    self.scrubber.delegate = self;
+    [self.pagesPreviewContainer addConstraint:[NSLayoutConstraint constraintWithItem:self.pagesPreviewContainer attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:self.pagesPreviewContainer attribute:NSLayoutAttributeHeight multiplier:[self productAspectRatio] constant:0]];
 }
 
 - (void)updatePagesLabel{
@@ -441,9 +453,13 @@ UINavigationControllerDelegate
         }
         
         CGFloat yOffset = !self.editMode ? ([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height)/2.0 : -15;
+        if (!self.editMode){
+            yOffset -=self.scrubber.frame.size.height/2.0;
+        }
         
         self.centerYCon = [NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.containerView.superview attribute:NSLayoutAttributeCenterY multiplier:1 constant:yOffset];
         [self.containerView.superview addConstraint:self.centerYCon];
+        [self.scrubber reloadData];
     }completion:^(id<UIViewControllerTransitionCoordinator> context){
         if (!self.editMode){
             self.containerView.layer.shadowOpacity = 0;
@@ -663,7 +679,7 @@ UINavigationControllerDelegate
         }];
     }
     else{
-        [self openBook:sender];
+        [self openBook];
     }
 }
 
@@ -843,6 +859,67 @@ UINavigationControllerDelegate
     return !self.animating;
 }
 
+- (void)userDidTouchScrubberAtPoint:(CGPoint)p{
+    if (self.animating){
+        return;
+    }
+    if (self.bookClosed){
+        [self openBook];
+        return;
+    }
+    
+    CGFloat normalizedP = p.x / self.scrubber.frame.size.width;
+    
+    NSInteger page = (self.photobookPhotos.count) * normalizedP;
+    if (page % 2 == 1){
+        page--;
+    }
+    
+    self.pagesLabel.text = [NSString stringWithFormat:@"%ld-%ld of %ld", (long)page+1, (long)page+2, (long)self.product.quantityToFulfillOrder];
+        
+    UIImageView *left = (UIImageView *)[self.pagesPreviewContainer viewWithTag:10];
+    UIImageView *right = (UIImageView *)[self.pagesPreviewContainer viewWithTag:20];
+    
+    if (self.photobookPhotos[page] != (id)[NSNull null]){
+        [(OLPrintPhoto *)self.photobookPhotos[page] setImageSize:left.frame.size cropped:YES completionHandler:^(UIImage *image){
+            left.image = image;
+        }];
+    }
+    else{
+        left.image = nil;
+    }
+    if (self.photobookPhotos[page+1] != (id)[NSNull null]){
+        [(OLPrintPhoto *)self.photobookPhotos[page+1] setImageSize:right.frame.size cropped:YES completionHandler:^(UIImage *image){
+            right.image = image;
+        }];
+    }
+    else{
+        right.image = nil;
+    }
+    
+    self.pagesPreviewContainer.hidden = NO;
+}
+
+- (void)userDidStopTouchingScrubberAtPoint:(CGPoint)p{
+    if (self.bookClosed || self.animating){
+        return;
+    }
+    self.pagesPreviewContainer.hidden = YES;
+    
+    CGFloat normalizedP = p.x / self.scrubber.frame.size.width;
+    
+    NSInteger page = (self.photobookPhotos.count) * normalizedP;
+    if (page % 2 == 1){
+        page--;
+    }
+    
+    OLPhotobookPageContentViewController *vc1 = [self.pageController.viewControllers firstObject];
+    if (vc1.pageIndex != page){
+        [self.pageController setViewControllers:@[[self viewControllerAtIndex:page], [self viewControllerAtIndex:page+1]] direction:vc1.pageIndex < page ? UIPageViewControllerNavigationDirectionForward : UIPageViewControllerNavigationDirectionReverse animated:YES completion:NULL];
+    }
+}
+
+
 #pragma mark - Book related methods
 
 - (void)pageViewController:(UIPageViewController *)pageViewController didFinishAnimating:(BOOL)finished previousViewControllers:(NSArray *)previousViewControllers transitionCompleted:(BOOL)completed{
@@ -864,7 +941,7 @@ UINavigationControllerDelegate
 }
 
 -(void) setUpBookCoverView{
-    UISwipeGestureRecognizer *swipe = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(openBook:)];
+    UISwipeGestureRecognizer *swipe = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(openBook)];
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onCoverTapRecognized:)];
     UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(onCoverLongPressRecognized:)];
     
@@ -1013,17 +1090,19 @@ UINavigationControllerDelegate
     return vc2.pageIndex == self.photobookPhotos.count - 1;
 }
 
-- (void)openBook:(UIGestureRecognizer *)sender{
+- (void)openBook{
     if (self.animating){
         return;
     }
     self.animating = YES;
     self.userHasOpenedBook = YES;
     
+    NSInteger tag = [self isBookAtStart] ? kTagRight : kTagLeft;
+    
     [UIView animateWithDuration:kBookAnimationTime animations:^{
         self.containerView.transform = CGAffineTransformIdentity;
     }completion:^(BOOL completed){}];
-    MPFlipStyle style = sender.view.tag == kTagRight ? MPFlipStyleDefault : MPFlipStyleDirectionBackward;
+    MPFlipStyle style = [self isBookAtStart] ? MPFlipStyleDefault : MPFlipStyleDirectionBackward;
     MPFlipTransition *flipTransition = [[MPFlipTransition alloc] initWithSourceView:self.bookCover destinationView:self.openbookView duration:kBookAnimationTime timingCurve:UIViewAnimationCurveEaseInOut completionAction:MPTransitionActionNone];
     flipTransition.style = style;
     [flipTransition perform:^(BOOL finished){
@@ -1035,7 +1114,7 @@ UINavigationControllerDelegate
         self.openbookView.hidden = NO;
         
         //Fade out shadow of the half-book.
-        UIView *closedPage = [self.bookCover viewWithTag:sender.view.tag];
+        UIView *closedPage = [self.bookCover viewWithTag:tag];
         CABasicAnimation *showAnim = [CABasicAnimation animationWithKeyPath:@"shadowOpacity"];
         showAnim.fromValue = [NSNumber numberWithFloat:0.25];
         showAnim.toValue = [NSNumber numberWithFloat:0.0];
@@ -1199,6 +1278,69 @@ UINavigationControllerDelegate
     else{
         return self.containerView.center.x - self.containerView.frame.size.width / 2  - kBookEdgePadding >= 0;
     }
+}
+
+#pragma mark - CollectionView delegate and dataSource methods
+
+- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
+    return self.editMode ? 0 : 1;
+}
+
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
+    CGFloat numberOfItems = (self.scrubber.frame.size.width+3) / ([self collectionView:collectionView layout:self.scrubber.collectionViewLayout sizeForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]].width+3);
+    
+    return numberOfItems;
+}
+
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
+    UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"pagesCell" forIndexPath:indexPath];
+    
+    UIImageView *left = (UIImageView *)[cell viewWithTag:10];
+    UIImageView *right = (UIImageView *)[cell viewWithTag:20];
+    
+    NSInteger allPages = self.photobookPhotos.count;
+    
+    CGFloat relativeToCollection = (CGFloat)(indexPath.item) / (CGFloat)[self collectionView:collectionView numberOfItemsInSection:indexPath.section];
+        
+    NSInteger relativeToAll = relativeToCollection * allPages;
+    
+    if (relativeToAll % 2 == 1){
+        relativeToAll--;
+    }
+    
+    OLPrintPhoto *printPhoto = [self.photobookPhotos objectAtIndex:relativeToAll];
+    if (printPhoto != (id)[NSNull null]){
+        [printPhoto setImageSize:CGSizeMake(100, 100) cropped:YES completionHandler:^(UIImage *image){
+            left.image = image;
+        }];
+    }
+    else{
+        left.image = nil;
+    }
+        printPhoto = [self.photobookPhotos objectAtIndex:relativeToAll + 1];
+    if (printPhoto != (id)[NSNull null]){
+        [printPhoto setImageSize:CGSizeMake(100, 100) cropped:YES completionHandler:^(UIImage *image){
+            right.image = image;
+        }];
+    }
+    else{
+        right.image = nil;
+    }
+    
+    return cell;
+}
+
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
+    return CGSizeMake(collectionView.frame.size.height * [self productAspectRatio], collectionView.frame.size.height);
+}
+
+- (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout insetForSectionAtIndex:(NSInteger)section{
+    CGSize size = self.view.frame.size;
+    
+    CGSize cellSize = [self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
+    NSInteger numberOfItems = [self collectionView:collectionView numberOfItemsInSection:0];
+    CGFloat diff = size.width - (cellSize.width * numberOfItems + (numberOfItems-1) * 3);
+    return UIEdgeInsetsMake(0, diff/2.0, 0, diff/2.0);
 }
 
 #pragma mark - Adding new images
@@ -1386,6 +1528,7 @@ UINavigationControllerDelegate
     }
     
     [self populateArrayWithNewArray:assets dataType:[ALAsset class]];
+    [self.scrubber reloadData];
     [picker dismissViewControllerAnimated:YES completion:^(void){}];
 }
 
@@ -1440,6 +1583,7 @@ UINavigationControllerDelegate
     }
     
     [self populateArrayWithNewArray:images dataType:[OLInstagramImage class]];
+    [self.scrubber reloadData];
     [self dismissViewControllerAnimated:YES completion:^(void){}];
 }
 
@@ -1483,6 +1627,7 @@ UINavigationControllerDelegate
         return;
     }
     [self populateArrayWithNewArray:images dataType:[OLFacebookImage class]];
+    [self.scrubber reloadData];
     [self dismissViewControllerAnimated:YES completion:^(void){}];
 }
 
