@@ -73,6 +73,13 @@ CGFloat margin = 2;
     
     NSIndexPath* indexPath = [collectionView indexPathForItemAtPoint:[gestureRecognizer locationInView:collectionView]];
     
+    UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
+    OLRemoteImageView *imageView = (OLRemoteImageView *)[cell viewWithTag:110];
+    
+    if (!imageView.image){
+        return;
+    }
+    
     self.editingPrintPhoto = self.framePhotos[(outerCollectionViewIndexPath.item) * self.product.quantityToFulfillOrder + indexPath.row];
     
     UINavigationController *nav = [self.storyboard instantiateViewControllerWithIdentifier:@"CropViewNavigationController"];

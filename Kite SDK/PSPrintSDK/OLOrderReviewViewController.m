@@ -328,6 +328,11 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     while (![cell isKindOfClass:[UICollectionViewCell class]]){
         cell = cell.superview;
     }
+    
+    OLRemoteImageView *imageView = (OLRemoteImageView *)[cell viewWithTag:10];
+    if (!imageView.image){
+        return;
+    }
     NSIndexPath *indexPath = [self.collectionView indexPathForCell:(UICollectionViewCell *)cell];
     
     self.editingPrintPhoto = self.userSelectedPhotos[indexPath.item];
