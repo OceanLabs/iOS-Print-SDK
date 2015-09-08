@@ -82,7 +82,12 @@ static NSString *const kKeyFrontAsset = @"co.oceanlabs.pssdk.kKeyFrontAsset";
 }
 
 - (NSArray *)assetsForUploading {
-    return self.assets;
+    if (self.frontCover){
+        return [self.assets arrayByAddingObject:self.frontCover];
+    }
+    else{
+        return self.assets;
+    }
 }
 
 - (NSUInteger) hash {
