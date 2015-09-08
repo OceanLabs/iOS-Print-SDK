@@ -389,6 +389,13 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
         options.predicate = [NSPredicate predicateWithFormat:@"mediaType == %d", PHAssetMediaTypeImage];
         picker.assetsFetchOptions = options;
         assetClass = [PHAsset class];
+        
+//        PHFetchResult *fetchResult = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeAlbum subtype:PHAssetCollectionSubtypeAny options:nil];
+//        for (PHAssetCollection *collection in fetchResult){
+//            if ([self.delegate respondsToSelector:@selector(kiteController:isDefaultAssetsGroup:)] && [self.delegate kiteController:[self kiteViewController] isDefaultAssetsCollection:collection]) {
+//                picker.defaultAssetCollection = collection;
+//            }
+//        }
     }
     
     picker.delegate = self;
