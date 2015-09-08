@@ -9,6 +9,7 @@
 #import "OLPhotobookPageContentViewController.h"
 #import "OLPrintPhoto.h"
 #import "OLScrollCropViewController.h"
+#import "OLProduct.h"
 
 @interface OLPhotobookPageContentViewController ()
 
@@ -16,6 +17,7 @@
 @property (weak, nonatomic) IBOutlet UIImageView *pageShadowRight;
 @property (weak, nonatomic) IBOutlet UIImageView *pageShadowLeft;
 
+@property (assign, nonatomic) BOOL left;
 
 @end
 
@@ -23,7 +25,12 @@
 
 - (void)viewDidLoad{
     [super viewDidLoad];
-    [self loadImage];
+        
+    CGFloat margin = 0.85;
+    [self.imageView.superview addConstraint:[NSLayoutConstraint constraintWithItem:self.imageView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self.imageView.superview attribute:NSLayoutAttributeHeight multiplier:margin constant:0]];
+    [self.imageView.superview addConstraint:[NSLayoutConstraint constraintWithItem:self.imageView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:self.imageView.superview attribute:NSLayoutAttributeWidth multiplier:margin constant:0]];
+    
+    [self loadImageWithCompletionHandler:NULL];
 }
 
 - (void)viewWillAppear:(BOOL)animated{
@@ -38,25 +45,83 @@
 //}
 
 - (void)setPage:(BOOL)left{
+    self.left = left;
     if (left){
         self.pageBackground.image = [UIImage imageNamed:@"page-left"];
         self.pageShadowLeft.hidden = NO;
         self.pageShadowRight.hidden = YES;
+        self.pageShadowLeft2.hidden = YES;
+        self.pageShadowRight2.hidden = YES;
+
     }
     else{
         self.pageBackground.image = [UIImage imageNamed:@"page-right"];
         self.pageShadowLeft.hidden = YES;
         self.pageShadowRight.hidden = NO;
+        self.pageShadowLeft2.hidden = YES;
+        self.pageShadowRight2.hidden = YES;
     }
 }
 
-- (void)loadImage{
+- (NSInteger)imageIndexForPoint:(CGPoint)p{
+    return self.pageIndex; //only one for now
+}
+
+- (void)unhighlightImageAtIndex:(NSInteger)index{
+    UIView *selectedView = self.imageView; //only one for now
+    
+    selectedView.layer.borderColor = [UIColor clearColor].CGColor;
+    selectedView.layer.borderWidth = 0;
+}
+
+- (void)highlightImageAtIndex:(NSInteger)index{
+    UIView *selectedView = self.imageView; //only one for now
+    
+    selectedView.layer.borderColor = self.view.tintColor.CGColor;
+    selectedView.layer.borderWidth = 3.0;
+}
+
+- (void)clearImage{
+    self.pageShadowLeft2.hidden = YES;
+    self.pageShadowRight2.hidden = YES;
+    self.imageView.image = nil;
+}
+
+- (void)loadImageWithCompletionHandler:(void(^)(void))handler{
     OLPrintPhoto *printPhoto = [self.userSelectedPhotos objectAtIndex:self.pageIndex];
-    [printPhoto getImageWithProgress:NULL completion:^(UIImage *image){
+    if (printPhoto != (id)[NSNull null]){
+        self.imageView.image = nil;
         dispatch_async(dispatch_get_main_queue(), ^{
-            self.imageView.image = image;
+            NSInteger blockIndex = self.pageIndex;
+            
+            [printPhoto setImageSize:self.imageView.frame.size cropped:YES completionHandler:^(UIImage *image){
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if (blockIndex == self.pageIndex){
+                        self.imageView.image = image;
+                        
+                        if (self.left){
+                            self.pageShadowLeft2.hidden = NO;
+                        }
+                        else{
+                            self.pageShadowRight2.hidden = NO;
+                        }
+                    }
+                    if (handler){
+                        handler();
+                    }
+                });
+            }];
         });
-    }];
+    }
+    else{
+        self.pageShadowLeft2.hidden = YES;
+        self.pageShadowRight2.hidden = YES;
+        self.imageView.image = nil;
+        if (handler){
+            handler();
+        }
+        
+    }
 }
 
 @end
