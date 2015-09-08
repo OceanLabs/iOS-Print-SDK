@@ -424,7 +424,14 @@ static NSOperationQueue *imageOperationQueue;
                 handler(0, [NSError errorWithDomain:@"ly.kite" code:404 userInfo:@{@"Error" : @"PHAsset does not exist."}]);
             }
             else{
-                handler(imageData.length, nil);
+                if ([[dataUTI lowercaseString] containsString:@"jpg"] || [[dataUTI lowercaseString] containsString:@"jpeg"] || [[dataUTI lowercaseString] containsString:@"jpg"]){
+                    handler(imageData.length, nil);
+                }
+                else{
+                    [imageManager requestImageForAsset:self.asset targetSize:PHImageManagerMaximumSize contentMode:PHImageContentModeDefault options:options resultHandler:^(UIImage *result, NSDictionary *info){
+                        handler(UIImageJPEGRepresentation(result, 0.7).length, nil);
+                    }];
+                }
             }
         }];
     }
@@ -485,7 +492,14 @@ static NSOperationQueue *imageOperationQueue;
                 handler(nil, [NSError errorWithDomain:@"ly.kite" code:404 userInfo:@{@"Error" : @"PHAsset does not exist."}]);
             }
             else{
-                handler(imageData, nil);
+                if ([[dataUTI lowercaseString] containsString:@"jpg"] || [[dataUTI lowercaseString] containsString:@"jpeg"] || [[dataUTI lowercaseString] containsString:@"jpg"]){
+                    handler(imageData, nil);
+                }
+                else{
+                    [imageManager requestImageForAsset:self.asset targetSize:PHImageManagerMaximumSize contentMode:PHImageContentModeDefault options:options resultHandler:^(UIImage *result, NSDictionary *info){
+                        handler(UIImageJPEGRepresentation(result, 0.7), nil);
+                    }];
+                }
             }
         }];
     }
@@ -572,7 +586,22 @@ static NSOperationQueue *imageOperationQueue;
                              NSData *data = [NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"kite_corrupt" ofType:@"jpg"]];
                              self.asset = [OLAsset assetWithDataAsJPEG:data];
                          }];
-        } else {
+        }
+        else if (self.type == kPrintPhotoAssetTypePHAsset){
+            NSString *localId = [aDecoder decodeObjectForKey:kKeyAsset];
+            PHAsset *asset = localId ? [[PHAsset fetchAssetsWithLocalIdentifiers:@[localId] options:nil] firstObject] : nil;
+            if (!asset){
+                // corrupt asset, user has probably deleted the photo from their device
+                _type = kPrintPhotoAssetTypeOLAsset;
+                NSData *data = [NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"kite_corrupt" ofType:@"jpg"]];
+                self.asset = [OLAsset assetWithDataAsJPEG:data];
+            }
+            else {
+                self.asset = asset;
+            }
+            
+        }
+        else {
             self.asset = [aDecoder decodeObjectForKey:kKeyAsset];
         }
     }
@@ -588,7 +617,11 @@ static NSOperationQueue *imageOperationQueue;
     [aCoder encodeCGSize:self.cropImageSize forKey:kKeyCropImageSize];
     if (self.type == kPrintPhotoAssetTypeALAsset) {
         [aCoder encodeObject:[self.asset valueForProperty:ALAssetPropertyAssetURL] forKey:kKeyAsset];
-    } else {
+    }
+    else if (self.type == kPrintPhotoAssetTypePHAsset){
+        [aCoder encodeObject:[self.asset localIdentifier] forKey:kKeyAsset];
+    }
+    else {
         [aCoder encodeObject:self.asset forKey:kKeyAsset];
     }
 }
