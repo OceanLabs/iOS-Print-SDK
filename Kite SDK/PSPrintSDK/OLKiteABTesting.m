@@ -21,6 +21,8 @@ static NSString *const kOLKiteABTestHidePrice = @"ly.kite.abtest.hide_price";
 static NSString *const kOLKiteABTestPromoBannerStyle = @"ly.kite.abtest.promo_banner_style";
 static NSString *const kOLKiteABTestPromoBannerText = @"ly.kite.abtest.promo_banner_text";
 static NSString *const kOLKiteABTestOfferPayPal = @"ly.kite.abtest.offer_paypal";
+static NSString *const kOLKiteABTestAllowMultipleRecipients = @"ly.kite.abtest.allow_multiple_recipients";
+
 
 id safeObject(id obj){
     return obj ? obj : @"";
@@ -235,11 +237,27 @@ id safeObject(id obj){
                                 }];
 }
 
+- (void)setupAllowMultipleRecipientsTest{
+    self.allowsMultipleRecipients = nil;
+    NSDictionary *experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestAllowMultipleRecipients];
+    if (!experimentDict) {
+        experimentDict = @{@"Yes" : @0, @"No" : @1};
+    }
+    [SkyLab splitTestWithName:kOLKiteABTestAllowMultipleRecipients
+                   conditions:@{
+                                @"Yes" : safeObject(experimentDict[@"Yes"]),
+                                @"No" : safeObject(experimentDict[@"No"])
+                                } block:^(id choice) {
+                                    self.allowsMultipleRecipients = [choice isEqualToString:@"Yes"];
+                                }];
+}
+
 - (void)groupSetupShippingScreenTests{
     [self setupOfferAddressSearchTest];
     [self setupRequirePhoneNumberTest];
     [self setupShippingScreenTest];
     [self setupOfferPayPalTest];
+    [self setupAllowMultipleRecipientsTest];
 }
 
 - (void)setupABTestVariants{

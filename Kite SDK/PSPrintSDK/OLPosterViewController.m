@@ -235,6 +235,7 @@
     }
     
     OLProductPrintJob* printJob = [[OLProductPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:photoAssets];
+	printJob.uuid = [[NSUUID UUID] UUIDString];
     for (id<OLPrintJob> job in printOrder.jobs){
         [printOrder removePrintJob:job];
     }
@@ -253,10 +254,10 @@
         [self.navigationController pushViewController:vc animated:YES];
     }
     else{
-        [OLKitePrintSDK checkoutViewControllerForPrintOrder:printOrder handler:^(OLCheckoutViewController *vc){
-            vc.userEmail = [OLKitePrintSDK userEmail:self];
-            vc.userPhone = [OLKitePrintSDK userPhone:self];
-            vc.kiteDelegate = [OLKitePrintSDK kiteDelegate:self];
+        [OLKitePrintSDK checkoutViewControllerForPrintOrder:printOrder handler:^(id vc){
+            [vc safePerformSelector:@selector(setUserEmail:) withObject:[OLKitePrintSDK userEmail:self]];
+            [vc safePerformSelector:@selector(setUserPhone:) withObject:[OLKitePrintSDK userPhone:self]];
+            [vc safePerformSelector:@selector(setKiteDelegate:) withObject:[OLKitePrintSDK kiteDelegate:self]];
             
             [self.navigationController pushViewController:vc animated:YES];
         }];

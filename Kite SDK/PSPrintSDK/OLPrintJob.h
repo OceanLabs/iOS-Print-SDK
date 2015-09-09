@@ -10,7 +10,7 @@
 @class OLAddress;
 @class OLAsset;
 
-@protocol OLPrintJob <NSObject, NSCoding>
+@protocol OLPrintJob <NSObject, NSCoding, NSCopying>
 
 - (NSDictionary *)jsonRepresentation;
 
@@ -24,6 +24,9 @@
 @property (nonatomic, readonly) NSUInteger quantity;
 @property (nonatomic, readonly) NSString *templateId;
 @property (nonatomic, readonly) NSArray *currenciesSupported;
+@property (nonatomic, strong) OLAddress *address;
+@property (nonatomic, strong) NSString *uuid;
+@property (assign, nonatomic) NSInteger extraCopies;
 - (NSDecimalNumber *)costInCurrency:(NSString *)currencyCode;
 
 @end

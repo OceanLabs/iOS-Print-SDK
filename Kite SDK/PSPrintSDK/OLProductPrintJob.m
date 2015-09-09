@@ -14,6 +14,12 @@
 
 static NSString *const kKeyProductTemplateId = @"co.oceanlabs.pssdk.kKeyProductTemplateId";
 static NSString *const kKeyImages = @"co.oceanlabs.pssdk.kKeyImages";
+static NSString *const kKeyUUID = @"co.oceanlabs.pssdk.kKeyUUID";
+static NSString *const kKeyExtraCopies = @"co.oceanlabs.pssdk.kKeyExtraCopies";
+
+static id stringOrEmptyString(NSString *str) {
+    return str ? str : @"";
+}
 
 @interface OLProductPrintJob ()
 @property (nonatomic, strong) NSString *templateId;
@@ -21,6 +27,10 @@ static NSString *const kKeyImages = @"co.oceanlabs.pssdk.kKeyImages";
 @end
 
 @implementation OLProductPrintJob
+
+@synthesize address;
+@synthesize uuid;
+@synthesize extraCopies;
 
 - (id)initWithTemplateId:(NSString *)templateId imageFilePaths:(NSArray/*<NSString>*/ *)imageFilePaths {
     if (self = [super init]) {
@@ -113,6 +123,18 @@ static NSString *const kKeyImages = @"co.oceanlabs.pssdk.kKeyImages";
     json[@"assets"] = assets;
     json[@"frame_contents"] = @{};
     
+    if (self.address) {
+        NSDictionary *shippingAddress = @{@"recipient_name": stringOrEmptyString(self.address.fullNameFromFirstAndLast),
+                                          @"address_line_1": stringOrEmptyString(self.address.line1),
+                                          @"address_line_2": stringOrEmptyString(self.address.line2),
+                                          @"city": stringOrEmptyString(self.address.city),
+                                          @"county_state": stringOrEmptyString(self.address.stateOrCounty),
+                                          @"postcode": stringOrEmptyString(self.address.zipOrPostcode),
+                                          @"country_code": stringOrEmptyString(self.address.country.codeAlpha3)
+                                          };
+        [json setObject:shippingAddress forKey:@"shipping_address"];
+    }
+    
     return json;
 }
 
@@ -122,6 +144,8 @@ static NSString *const kKeyImages = @"co.oceanlabs.pssdk.kKeyImages";
     // Use deep copies for all strong pointers, shallow copies for weak.
     objectCopy.assets = self.assets;
     objectCopy.templateId = self.templateId;
+    objectCopy.uuid = self.uuid;
+    objectCopy.extraCopies = self.extraCopies;
     return objectCopy;
 }
 
@@ -130,6 +154,8 @@ static NSString *const kKeyImages = @"co.oceanlabs.pssdk.kKeyImages";
     for (id asset in self.assets) {
         val = 37 * val + [asset hash];
     }
+    
+    val = 38 * val + self.extraCopies;
 
     return val;
 }
@@ -153,12 +179,16 @@ static NSString *const kKeyImages = @"co.oceanlabs.pssdk.kKeyImages";
 - (void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:self.templateId forKey:kKeyProductTemplateId];
     [aCoder encodeObject:self.assets forKey:kKeyImages];
+    [aCoder encodeObject:self.uuid forKey:kKeyUUID];
+    [aCoder encodeInteger:self.extraCopies forKey:kKeyExtraCopies];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
     if (self = [super init]) {
         self.templateId = [aDecoder decodeObjectForKey:kKeyProductTemplateId];
         self.assets = [aDecoder decodeObjectForKey:kKeyImages];
+        self.uuid = [aDecoder decodeObjectForKey:kKeyUUID];
+        self.extraCopies = [aDecoder decodeIntegerForKey:kKeyExtraCopies];
     }
     
     return self;

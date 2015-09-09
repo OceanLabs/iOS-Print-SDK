@@ -13,6 +13,9 @@
 static NSString *const kKeyPhotobookProductTemplateId = @"co.oceanlabs.pssdk.kKeyPhotobookProductTemplateId";
 static NSString *const kKeyPhotobookImages = @"co.oceanlabs.pssdk.kKeyPhotobookImages";
 static NSString *const kKeyFrontAsset = @"co.oceanlabs.pssdk.kKeyFrontAsset";
+static NSString *const kKeyPhotobookAddress = @"co.oceanlabs.pssdk.kKeyPhotobookAddress";
+static NSString *const kKeyPhotobookUuid = @"co.oceanlabs.pssdk.kKeyPhotobookUuid";
+static NSString *const kKeyPhotobookExtraCopies = @"co.oceanlabs.pssdk.kKeyPhotobookExtraCopies";
 
 @interface OLPhotobookPrintJob ()
 @property (nonatomic, strong) NSString *templateId;
@@ -21,6 +24,10 @@ static NSString *const kKeyFrontAsset = @"co.oceanlabs.pssdk.kKeyFrontAsset";
 @end
 
 @implementation OLPhotobookPrintJob
+
+@synthesize address;
+@synthesize uuid;
+@synthesize extraCopies;
 
 - (id)initWithTemplateId:(NSString *)templateId OLAssets:(NSArray/*<OLAssets>*/ *)assets{
     if (self = [super init]){
@@ -130,6 +137,9 @@ static NSString *const kKeyFrontAsset = @"co.oceanlabs.pssdk.kKeyFrontAsset";
     [aCoder encodeObject:self.templateId forKey:kKeyPhotobookProductTemplateId];
     [aCoder encodeObject:self.assets forKey:kKeyPhotobookImages];
     [aCoder encodeObject:self.frontCover forKey:kKeyFrontAsset];
+    [aCoder encodeObject:self.uuid forKey:kKeyPhotobookUuid];
+    [aCoder encodeInteger:self.extraCopies forKey:kKeyPhotobookExtraCopies];
+    [aCoder encodeObject:self.address forKey:kKeyPhotobookAddress];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
@@ -137,6 +147,9 @@ static NSString *const kKeyFrontAsset = @"co.oceanlabs.pssdk.kKeyFrontAsset";
         self.templateId = [aDecoder decodeObjectForKey:kKeyPhotobookProductTemplateId];
         self.assets = [aDecoder decodeObjectForKey:kKeyPhotobookImages];
         self.frontCover = [aDecoder decodeObjectForKey:kKeyFrontAsset];
+        self.extraCopies = [aDecoder decodeIntegerForKey:kKeyPhotobookExtraCopies];
+        self.uuid = [aDecoder decodeObjectForKey:kKeyPhotobookUuid];
+        self.address = [aDecoder decodeObjectForKey:kKeyPhotobookAddress];
     }
     
     return self;

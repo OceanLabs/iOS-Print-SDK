@@ -25,6 +25,9 @@ static const NSUInteger kTagInputFieldLabel = 100;
 @property (weak, nonatomic) id<OLCheckoutDelegate> delegate;
 @property (weak, nonatomic) id<OLKiteDelegate> kiteDelegate;
 
+@property (strong, nonatomic) NSMutableArray *shippingAddresses;
+@property (strong, nonatomic) NSMutableArray *selectedShippingAddresses;
+
 @property (copy, nonatomic) NSString *userEmail;
 @property (copy, nonatomic) NSString *userPhone;
 

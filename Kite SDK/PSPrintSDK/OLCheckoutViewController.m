@@ -15,6 +15,8 @@
 #import "OLKitePrintSDK.h"
 #import "OLAnalytics.h"
 #import "OLAddressEditViewController.h"
+#import <SkyLab.h>
+#import "OLProductPrintJob.h"
 #import "OLKiteABTesting.h"
 
 NSString *const kOLNotificationUserSuppliedShippingDetails = @"co.oceanlabs.pssdk.kOLNotificationUserSuppliedShippingDetails";
@@ -42,7 +44,6 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
 #define kColourLightBlue [UIColor colorWithRed:0 / 255.0 green:122 / 255.0 blue:255 / 255.0 alpha:1.0]
 
 @interface OLCheckoutViewController () <OLAddressPickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate>
-@property (strong, nonatomic) OLAddress *shippingAddress;
 @property (strong, nonatomic) UITextField *textFieldEmail, *textFieldPhone;
 @property (strong, nonatomic) OLPrintOrder *printOrder;
 @property (assign, nonatomic) BOOL presentedModally;
@@ -52,6 +53,20 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
 @end
 
 @implementation OLCheckoutViewController
+
+-(NSMutableArray *) shippingAddresses{
+    if (!_shippingAddresses){
+        _shippingAddresses = [[NSMutableArray alloc] init];
+    }
+    return _shippingAddresses;
+}
+
+-(NSMutableArray *) selectedShippingAddresses{
+    if (!_selectedShippingAddresses){
+        _selectedShippingAddresses = [[NSMutableArray alloc] init];
+    }
+    return _selectedShippingAddresses;
+}
 
 - (id)init {
     //NSAssert(NO, @"init is not a valid initializer for OLCheckoutViewController. Use initWithAPIKey:environment:printOrder:, or initWithPrintOrder: instead");
@@ -67,7 +82,7 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
         self.printOrder = printOrder;
         //[self.printOrder preemptAssetUpload];
     }
-
+    
     return self;
 }
 
@@ -107,8 +122,14 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
     [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinator> context){
+        self.tableView.contentInset = UIEdgeInsetsMake(self.edgeInsetTop, 0, 0, 0);
         [self positionKiteLabel];
-    } completion:NULL];
+    } completion:^(id<UIViewControllerTransitionCoordinator> context){
+    }];
+}
+
+- (CGFloat)edgeInsetTop{
+    return self.navigationController.navigationBar.translucent ? [[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height : 0;
 }
 
 - (void)viewDidLoad {
@@ -178,6 +199,8 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
     UITapGestureRecognizer *tgr = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onBackgroundClicked)];
     tgr.cancelsTouchesInView = NO; // allow table cell selection to happen as normal
     [self.tableView addGestureRecognizer:tgr];
+    
+    self.tableView.allowsMultipleSelectionDuringEditing = NO;
     
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 10, 0)];
     
@@ -258,7 +281,16 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
     d[@"phone"] = phone;
     self.printOrder.userData = d;
     
-    self.printOrder.shippingAddress = self.shippingAddress;
+    if (self.shippingAddresses.count == 1 || self.selectedShippingAddresses.count == 1){
+        self.printOrder.shippingAddress = [self.selectedShippingAddresses firstObject];
+    }
+    else{
+        self.printOrder.shippingAddress = nil;
+    }
+    
+    [self.printOrder discardDuplicateJobs];
+    [self.printOrder duplicateJobsForAddresses:self.selectedShippingAddresses];
+    
     OLPaymentViewController *vc = [[OLPaymentViewController alloc] initWithPrintOrder:self.printOrder];
     vc.presentedModally = self.presentedModally;
     vc.delegate = self.delegate;
@@ -274,6 +306,10 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
 }
 
 - (void) viewWillAppear:(BOOL)animated{
+    self.automaticallyAdjustsScrollViewInsets = NO;
+    self.tableView.contentInset = UIEdgeInsetsMake(self.edgeInsetTop, 0, 0, 0);
+    [self.tableView scrollRectToVisible:CGRectMake(0, 0, 10, 10) animated:NO];
+    [self.tableView reloadData];
     if (self.kiteLabel){
         [self positionKiteLabel];
     }
@@ -304,13 +340,13 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
      * Only progress to Payment screen if the user has supplied a valid Delivery Address, Email & Telephone number.
      * Otherwise highlight the error to the user.
      */
-    if (self.shippingAddress == nil) {
+    if (self.shippingAddresses.count == 0 || self.selectedShippingAddresses.count == 0) {
         [self scrollSectionToVisible:kSectionDeliveryDetails];
         UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Missing Delivery Address", @"KitePrintSDK", [OLConstants bundle], @"") message:NSLocalizedStringFromTableInBundle(@"Please choose an address to have your order shipped to", @"KitePrintSDK", [OLConstants bundle], @"") delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLConstants bundle], @"") otherButtonTitles:nil];
         [av show];
         return NO;
     }
-
+    
     if (![OLCheckoutViewController validateEmail:[self userEmail]]) {
         [self scrollSectionToVisible:kSectionEmailAddress];
         UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Invalid Email Address", @"KitePrintSDK", [OLConstants bundle], @"") message:NSLocalizedStringFromTableInBundle(@"Please enter a valid email address", @"KitePrintSDK", [OLConstants bundle], @"") delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLConstants bundle], @"") otherButtonTitles:nil];
@@ -411,7 +447,7 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     if (section == kSectionDeliveryDetails) {
-        return 1;
+        return self.shippingAddresses.count + 1;
     } else if (section == kSectionEmailAddress) {
         return 1;
     } else if (section == kSectionPhoneNumber) {
@@ -427,23 +463,30 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
         static NSString *const kDeliveryAddressCell = @"DeliveryAddressCell";
         static NSString *const kAddDeliveryAddressCell = @"AddDeliveryAddressCell";
         
-        if (self.shippingAddress) {
+        if (self.shippingAddresses.count > indexPath.row) {
             cell = [tableView dequeueReusableCellWithIdentifier:kDeliveryAddressCell];
             if (cell == nil) {
                 cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:kDeliveryAddressCell];
                 cell.selectionStyle = UITableViewCellSelectionStyleNone;
             }
-                cell.textLabel.textColor = [UIColor blackColor];
-                cell.textLabel.text = self.shippingAddress.fullNameFromFirstAndLast;
-                cell.detailTextLabel.text = self.shippingAddress.descriptionWithoutRecipient;
+            OLAddress *address = (OLAddress *)self.shippingAddresses[indexPath.row];
+            cell.textLabel.textColor = [UIColor blackColor];
+            cell.imageView.image = [self.selectedShippingAddresses containsObject:address] ? [UIImage imageNamed:@"checkmark_on"] : [UIImage imageNamed:@"checkmark_off"];
+            cell.textLabel.text = [(OLAddress *)self.shippingAddresses[indexPath.row] fullNameFromFirstAndLast];
+            cell.detailTextLabel.text = [address descriptionWithoutRecipient];
         } else {
             cell = [tableView dequeueReusableCellWithIdentifier:kAddDeliveryAddressCell];
             if (cell == nil) {
                 cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:kAddDeliveryAddressCell];
-                cell.textLabel.text = NSLocalizedStringFromTableInBundle(@"Choose Delivery Address", @"KitePrintSDK", [OLConstants bundle], @"");
                 cell.textLabel.adjustsFontSizeToFitWidth = YES;
                 cell.textLabel.textColor = kColourLightBlue;
                 cell.selectionStyle = UITableViewCellSelectionStyleNone;
+            }
+            if (self.shippingAddresses.count > 0 && [OLKiteABTesting sharedInstance].allowsMultipleRecipients){
+                cell.textLabel.text = NSLocalizedStringFromTableInBundle(@"Add Another Recipient", @"KitePrintSDK",[OLConstants bundle], @"");
+            }
+            else{
+                cell.textLabel.text = NSLocalizedStringFromTableInBundle(@"Choose Delivery Address", @"KitePrintSDK", [OLConstants bundle], @"");
             }
         }
     } else if (indexPath.section == kSectionEmailAddress) {
@@ -466,7 +509,7 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
             [self populateDefaultEmailAndPhone];
         }
     }
-
+    
     return cell;
 }
 
@@ -474,7 +517,7 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
     UITableViewCell *cell = [[UITableViewCell alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 43)];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 11, 61, 21)];
-
+    
     titleLabel.text = title;
     titleLabel.adjustsFontSizeToFitWidth = YES;
     titleLabel.tag = kTagInputFieldLabel;
@@ -504,20 +547,53 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
         
         [view.superview addConstraints:con];
     }
-
+    
     
     return cell;
 }
+
+- (BOOL) tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath{
+    if (indexPath.section != kSectionDeliveryDetails){
+        return NO;
+    }
+    return indexPath.row < self.shippingAddresses.count;
+}
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        [self.selectedShippingAddresses removeObject:self.shippingAddresses[indexPath.row]];
+        [self.shippingAddresses removeObjectAtIndex:indexPath.row];
+        [self.tableView reloadSections:[[NSIndexSet alloc] initWithIndex:kSectionDeliveryDetails] withRowAnimation:UITableViewRowAnimationFade];
+    }
+}
+
 
 #pragma mark - UITableViewDelegate methods
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section == kSectionDeliveryDetails) {
-        if ([OLKiteABTesting sharedInstance].offerAddressSearch || [OLAddress addressBook].count > 0) {
-            OLAddressPickerController *addressPicker = [[OLAddressPickerController alloc] init];
-            addressPicker.delegate = self;
-            addressPicker.allowsAddressSearch = [OLKiteABTesting sharedInstance].offerAddressSearch;
-            [self presentViewController:addressPicker animated:YES completion:nil];
+        if ([OLKiteABTesting sharedInstance].offerAddressSearch || [OLAddress addressBook].count > 0 || [OLKiteABTesting sharedInstance].allowsMultipleRecipients) {
+            if ([OLKiteABTesting sharedInstance].allowsMultipleRecipients && self.shippingAddresses.count > indexPath.row){
+                OLAddress *address = self.shippingAddresses[indexPath.row];
+                BOOL selected = YES;
+                if ([self.selectedShippingAddresses containsObject:address]) {
+                    selected = NO;
+                    [self.selectedShippingAddresses removeObject:address];
+                } else {
+                    [self.selectedShippingAddresses addObject:address];
+                }
+                
+                UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+                cell.imageView.image = selected ? [UIImage imageNamed:@"checkmark_on"] : [UIImage imageNamed:@"checkmark_off"];
+            }
+            else{
+                OLAddressPickerController *addressPicker = [[OLAddressPickerController alloc] init];
+                addressPicker.delegate = self;
+                addressPicker.allowsAddressSearch = [OLKiteABTesting sharedInstance].offerAddressSearch;
+                addressPicker.allowsMultipleSelection = [OLKiteABTesting sharedInstance].allowsMultipleRecipients;
+                addressPicker.selected = self.shippingAddresses;
+                [self presentViewController:addressPicker animated:YES completion:nil];
+            }
         } else {
             OLAddressEditViewController *editVc = [[OLAddressEditViewController alloc] init];
             editVc.delegate = self;
@@ -543,28 +619,41 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
     self.activeTextView = textField;
 }
 
-- (void)recalculateOrderCostIfNewSelectedCountryDiffers:(OLCountry *)selectedCountry {
-    if (self.printOrder.shippingAddress == nil) {
-        // just populate with a blank address for now with default local country -- this will get replaced on filling out address and proceeding to the next screen
-        self.printOrder.shippingAddress = [[OLAddress alloc] init];
-        self.printOrder.shippingAddress.country = self.shippingAddress ? self.shippingAddress.country : [OLCountry countryForCurrentLocale];
-    }
-    
-    if (![self.printOrder.shippingAddress.country isEqual:selectedCountry]) {
-        // changing destination address voids internal printOrder cached costs, recalc early to speed things up before we hit the Payment screen
-        self.printOrder.shippingAddress.country = selectedCountry;
-        [self.printOrder costWithCompletionHandler:nil]; // ignore outcome, internally printOrder caches the result and this will speed up things when we hit the PaymentScreen
-    }
+- (void)recalculateOrderCostIfNewSelectedCountryDiffers:(NSArray *)selectedCountries {
+    //    if (self.printOrder.shippingAddress == nil) {
+    //        // just populate with a blank address for now with default local country -- this will get replaced on filling out address and proceeding to the next screen
+    //        self.printOrder.shippingAddress = [[OLAddress alloc] init];
+    //        self.printOrder.shippingAddress.country = self.shippingAddress ? self.shippingAddress.country : [OLCountry countryForCurrentLocale];
+    //    }
+    //
+    //    NSMutableArray *countries = [[NSMutableArray alloc] init];
+    //    for (OLAddress *address in self.printOrder.shippingAddress){
+    //        [countries addObject:address.country];
+    //    }
+    //    if (![countries isEqualToArray:selectedCountries]) {
+    //        // changing destination address voids internal printOrder cached costs, recalc early to speed things up before we hit the Payment screen
+    //        [self.printOrder costWithCompletionHandler:nil]; // ignore outcome, internally printOrder caches the result and this will speed up things when we hit the PaymentScreen
+    //    }
 }
 
 #pragma mark - OLAddressPickerController delegate
 
 - (void)addressPicker:(OLAddressPickerController *)picker didFinishPickingAddresses:(NSArray/*<OLAddress>*/ *)addresses {
-    [self recalculateOrderCostIfNewSelectedCountryDiffers:[addresses[0] country]];
-    self.shippingAddress = [addresses[0] copy];
+    [self.shippingAddresses removeAllObjects];
+    [self.selectedShippingAddresses removeAllObjects];
+    for (OLAddress *address in addresses){
+        OLAddress *addressCopy = [address copy];
+        [self.shippingAddresses addObject:addressCopy];
+        [self.selectedShippingAddresses addObject:addressCopy];
+    }
+    
+    NSMutableArray *countries = [[NSMutableArray alloc] init];
+    for (OLAddress *address in addresses){
+        [countries addObject:address.country];
+    }
+    [self recalculateOrderCostIfNewSelectedCountryDiffers:addresses];
     [self dismissViewControllerAnimated:YES completion:nil];
-//    [self.tableView reloadData];
-    [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:kSectionDeliveryDetails]] withRowAnimation:UITableViewRowAnimationFade];
+    [self.tableView reloadSections:[[NSIndexSet alloc] initWithIndex:kSectionDeliveryDetails] withRowAnimation:UITableViewRowAnimationFade];
 }
 
 - (void)addressPickerDidCancelPicking:(OLAddressPickerController *)picker {
@@ -598,7 +687,7 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
     
     NSDictionary* info = [aNotification userInfo];
     CGSize kbSize = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
-    UIEdgeInsets contentInsets = UIEdgeInsetsMake([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height, 0.0, kbSize.height, 0.0);
+    UIEdgeInsets contentInsets = UIEdgeInsetsMake(self.edgeInsetTop, 0.0, kbSize.height, 0.0);
     [UIView animateWithDuration:0.1 animations:^{
         self.tableView.contentInset = contentInsets;
         self.tableView.scrollIndicatorInsets = contentInsets;
@@ -608,8 +697,9 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
     // Your application might not need or want this behavior.
     CGRect aRect = self.view.frame;
     aRect.size.height -= kbSize.height;
-    if (!CGRectContainsPoint(aRect, self.activeTextView.frame.origin) ) {
-        CGPoint scrollPoint = CGPointMake(0.0, self.activeTextView.frame.origin.y-kbSize.height);
+    CGPoint p = self.activeTextView.superview.frame.origin;
+    if (!CGRectContainsPoint(aRect, CGPointMake(p.x, p.y + self.activeTextView.frame.size.height)) ) {
+        CGPoint scrollPoint = CGPointMake(0.0, self.activeTextView.superview.frame.origin.y-kbSize.height);
         [self.tableView setContentOffset:scrollPoint animated:YES];
     }
     
@@ -619,7 +709,7 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
 - (void)keyboardWillBeHidden:(NSNotification *)aNotification
 {
     // scroll back..
-    UIEdgeInsets contentInsets = UIEdgeInsetsMake([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height, 0, 0, 0);
+    UIEdgeInsets contentInsets = UIEdgeInsetsMake(self.edgeInsetTop, 0, 0, 0);
     self.tableView.contentInset = contentInsets;
     self.tableView.scrollIndicatorInsets = contentInsets;
 }

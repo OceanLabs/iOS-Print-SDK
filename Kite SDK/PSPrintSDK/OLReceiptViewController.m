@@ -115,6 +115,7 @@ static const NSUInteger kSectionErrorRetry = 2;
     [super viewWillAppear:animated];
     UIViewController *vc = self.parentViewController;
     BOOL launchedToShipping = NO;
+    self.presentedModally |= ([self.delegate respondsToSelector:@selector(receiptViewControllerShouldBeDismissable)] && [self.delegate receiptViewControllerShouldBeDismissable]);
     while (vc) {
         if ([vc isKindOfClass:[OLKiteViewController class]]){
             launchedToShipping = [(OLKiteViewController *)vc printOrder] != nil;

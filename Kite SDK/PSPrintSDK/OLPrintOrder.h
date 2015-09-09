@@ -55,6 +55,8 @@ typedef void (^OLPrintOrderCostCompletionHandler)(OLPrintOrderCost *cost, NSErro
 
 @property (nonatomic, readonly) NSString *paymentDescription;
 
+- (void)discardDuplicateJobs;
+- (void)duplicateJobsForAddresses:(NSArray *)addresses;
 - (void)costWithCompletionHandler:(OLPrintOrderCostCompletionHandler)handler;
 
 @end

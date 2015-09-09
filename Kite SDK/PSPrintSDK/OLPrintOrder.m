@@ -18,6 +18,7 @@
 #import "OLKitePrintSDK.h"
 #import "OLPrintOrderCostRequest.h"
 #import "OLPrintOrderCost.h"
+#import "OLProductPrintJob.h"
 
 static NSString *const kKeyProofOfPayment = @"co.oceanlabs.pssdk.kKeyProofOfPayment";
 static NSString *const kKeyVoucherCode = @"co.oceanlabs.pssdk.kKeyVoucherCode";
@@ -369,7 +370,73 @@ static id stringOrEmptyString(NSString *str) {
     OLCountry *country = self.shippingAddress.country ? self.shippingAddress.country : [OLCountry countryForCurrentLocale];
     hash = 31 * hash + [country.codeAlpha3 hash];
     hash = 31 * hash + [self.promoCode hash];
+    for (id<OLPrintJob> job in self.jobs){
+        if (job.address.country){
+            hash = 32 * hash + [job.address.country.codeAlpha3 hash];
+        }
+    }
     return hash;
+}
+
+- (NSArray *)uniqueJobs{
+    NSMutableArray *uniqJobs = [[NSMutableArray alloc] init];
+    NSMutableSet *uniqJobIds = [[NSMutableSet alloc] init];
+    for (id<OLPrintJob> job in self.jobs){
+        if (![uniqJobIds containsObject:job.uuid]){
+            [uniqJobIds addObject:job.uuid];
+            [uniqJobs addObject:job];
+        }
+    }
+    return uniqJobs;
+}
+
+- (void)discardDuplicateJobs{
+    NSMutableSet *uniqJobIds = [[NSMutableSet alloc] init];
+    NSMutableArray *jobsToRemove = [[NSMutableArray alloc] init];
+    for (id<OLPrintJob> job in self.jobs){
+        if ([uniqJobIds containsObject:job.uuid]){
+            [jobsToRemove addObject:job];
+        }
+        else if (job.extraCopies != -1){
+            [uniqJobIds addObject:job.uuid];
+        }
+    }
+    
+    for (id<OLPrintJob> job in jobsToRemove) {
+        [(NSMutableArray *)self.jobs removeObjectIdenticalTo:job];
+    }
+}
+
+- (void)duplicateJobsForAddresses:(NSArray *)addresses{
+    NSMutableArray *jobs = [[[NSArray alloc] initWithArray:self.jobs copyItems:YES] mutableCopy];
+    NSMutableArray *jobsToAdd = [[NSMutableArray alloc] init];
+    for (id<OLPrintJob> job in self.jobs){
+        job.address = [addresses firstObject];
+        [jobsToAdd addObject:job];
+        for (NSInteger i = 0; i < job.extraCopies; i++){
+            id<OLPrintJob> jobCopy = [(NSObject *)job copy];
+            [jobs addObject:jobCopy];
+            [jobsToAdd addObject:jobCopy];
+        }
+    }
+    [(NSMutableArray *)self.jobs removeAllObjects];
+    
+   
+    for (OLAddress *address in addresses){
+        if (address == [addresses firstObject]){
+            continue;
+        }
+        for (id<OLPrintJob> job in jobs){
+            id<OLPrintJob> jobCopy = [(NSObject *)job copy];
+            jobCopy.address = address;
+            jobCopy.extraCopies = -1;
+            [jobsToAdd addObject:jobCopy];
+        }
+    }
+    
+    for (id<OLPrintJob> job in jobsToAdd){
+        [self addPrintJob:job];
+    }
 }
 
 #pragma mark - OLAssetUploadRequestDelegate methods
