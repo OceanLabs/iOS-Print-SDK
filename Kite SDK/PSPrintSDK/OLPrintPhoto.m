@@ -165,7 +165,6 @@ static NSOperationQueue *imageOperationQueue;
                 else{
                     [asset dataWithCompletionHandler:^(NSData *data, NSError *error){
                         NSBlockOperation *block = [NSBlockOperation blockOperationWithBlock:^{
-                            self.asset = [OLAsset assetWithImageAsJPEG:[UIImage imageWithData:data]];
                             [OLPrintPhoto resizedImageWithPrintPhoto:self size:destSize cropped:cropped progress:progressHandler completion:^(UIImage *image) {
                                 self.cachedCroppedThumbnailImage = image;
                                 handler(image);

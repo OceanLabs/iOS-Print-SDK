@@ -2780,7 +2780,7 @@
                                                         <activityIndicatorView hidden="YES" opaque="NO" tag="796" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="enB-N0-rs3">
                                                             <rect key="frame" x="15" y="15" width="20" height="20"/>
                                                         </activityIndicatorView>
-                                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" tag="795" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="8MV-0x-Wks">
+                                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" tag="795" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="8MV-0x-Wks" customClass="OLRemoteImageView">
                                                             <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                                         </imageView>
                                                     </subviews>
