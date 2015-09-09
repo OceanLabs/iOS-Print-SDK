@@ -243,7 +243,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         [self.payWithPayPalButton makeRoundRect];
         self.payWithPayPalButton.backgroundColor = [UIColor colorWithRed:74 / 255.0f green:137 / 255.0f blue:220 / 255.0f alpha:1.0];
         [self.payWithPayPalButton makeRoundRect];
-        self.lowestView = self.payWithCreditCardButton;
+        self.lowestView = self.payWithPayPalButton;
     }
 #endif
     

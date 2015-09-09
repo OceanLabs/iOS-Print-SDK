@@ -16,6 +16,7 @@
 #import "NSObject+Utils.h"
 #import "OLKitePrintSDK.h"
 #import "OLKiteABTesting.h"
+#import "OLRemoteImageView.h"
 
 @interface OLPosterViewController () <UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UICollectionViewDelegate, LXReorderableCollectionViewDataSource, OLScrollCropViewControllerDelegate>
 
@@ -119,14 +120,16 @@
     UIActivityIndicatorView *activity = (UIActivityIndicatorView *)[cell viewWithTag:796];
     [activity startAnimating];
     
-    UIImageView *imageView = (UIImageView *)[cell viewWithTag:795];
+    OLRemoteImageView *imageView = (OLRemoteImageView *)[cell viewWithTag:795];
     imageView.image = nil;
     imageView.userInteractionEnabled = YES;
     [imageView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onButtonEnhanceClicked:)]];
     
     OLPrintPhoto *printPhoto = self.posterPhotos[indexPath.item];
     
-    [printPhoto setImageSize:[self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath] cropped:YES completionHandler:^(UIImage *image){
+    [printPhoto setImageSize:[self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath] cropped:YES progress:^(float progress){
+        [imageView setProgress:progress];
+    } completionHandler:^(UIImage *image){
         dispatch_async(dispatch_get_main_queue(), ^{
             imageView.image = image;
             [activity stopAnimating];
