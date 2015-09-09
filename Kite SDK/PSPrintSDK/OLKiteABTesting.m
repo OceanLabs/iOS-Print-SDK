@@ -128,7 +128,7 @@ id safeObject(id obj){
 }
 
 - (void)setupOfferAddressSearchTest{
-    self.offerAddressSearch = nil;
+    self.offerAddressSearch = NO;
     NSDictionary *experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestOfferAddressSearch];
     if (!experimentDict) {
         experimentDict = @{@"Yes" : @0.5, @"No" : @0.5};
@@ -143,7 +143,7 @@ id safeObject(id obj){
 }
 
 - (void)setupRequirePhoneNumberTest{
-    self.requirePhoneNumber = nil;
+    self.requirePhoneNumber = NO;
     NSDictionary *experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestRequirePhoneNumber];
     if (!experimentDict) {
         experimentDict = @{@"Yes" : @0.5, @"No" : @0.5};
@@ -172,7 +172,7 @@ id safeObject(id obj){
 }
 
 - (void)setupHidePriceTest{
-    self.hidePrice = nil;
+    self.hidePrice = NO;
     NSDictionary *experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestHidePrice];
     if (!experimentDict) {
         experimentDict = @{@"Yes" : @0, @"No" : @1};
@@ -221,7 +221,7 @@ id safeObject(id obj){
 }
 
 - (void)setupOfferPayPalTest{
-    self.offerPayPal = nil;
+    self.offerPayPal = NO;
     NSDictionary *experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestOfferPayPal];
     if (!experimentDict) {
         experimentDict = @{@"Yes" : @0.5, @"No" : @0.5};

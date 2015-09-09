@@ -68,16 +68,6 @@ static NSOperationQueue *imageOperationQueue;
 
 - (id)init {
     if (self = [super init]) {
-//        __weak OLPrintPhoto *welf = self;
-//        self.downloadProgress = ^(double progress, NSError *error, BOOL *stop, NSDictionary *info){
-////            NSLog(@"%f %@", progress, error);
-//            dispatch_async(dispatch_get_main_queue(), ^{
-//                if ([welf.delegate respondsToSelector:@selector(downloadDidProgressWithProgress:error:stop:info:)]){
-//                    [welf.delegate downloadDidProgressWithProgress:progress error:error stop:stop info:info];
-//                    
-//                }
-//            });
-//        };
     }
     
     return self;
