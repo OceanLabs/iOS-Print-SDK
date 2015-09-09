@@ -10,9 +10,12 @@
 #import "OLPrintOrder.h"
 #import "OLKiteViewController.h"
 
+@class OLProduct;
+
 @interface OLPosterSizeSelectionViewController : UIViewController
 @property (strong, nonatomic) NSMutableArray *userSelectedPhotos;
 @property (weak, nonatomic) id<OLKiteDelegate> delegate;
+@property (strong, nonatomic) OLProduct *product;
 
 @property (copy, nonatomic) NSString *userEmail;
 @property (copy, nonatomic) NSString *userPhone;

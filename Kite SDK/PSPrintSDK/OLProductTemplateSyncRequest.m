@@ -63,6 +63,9 @@
                             
                             NSDictionary *shippingCosts = [template[@"shipping_costs"] isKindOfClass:[NSDictionary class]] ? template[@"shipping_costs"] : nil;
                             
+                            NSNumber *gridCountX = [template[@"grid_count_x"] isKindOfClass:[NSNumber class]] ? template[@"grid_count_x"] : nil;
+                            NSNumber *gridCountY = [template[@"grid_count_y"] isKindOfClass:[NSNumber class]] ? template[@"grid_count_y"] : nil;
+                            
                             if ([name isKindOfClass:[NSString class]]
                                 && [identifier isKindOfClass:[NSString class]]
                                 && [costs isKindOfClass:[NSArray class]]
@@ -180,6 +183,8 @@
                                     t.imageBorder = imageBorder;
                                     t.productDescription = description;
                                     t.shippingCosts = shippingCosts;
+                                    t.gridCountX = [gridCountX integerValue];
+                                    t.gridCountY = [gridCountY integerValue];
                                     [acc addObject:t];
                                 }
                             }

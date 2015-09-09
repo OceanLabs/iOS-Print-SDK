@@ -29,6 +29,7 @@
 @interface OLProductTypeSelectionViewController () <UICollectionViewDelegateFlowLayout>
 
 @property (strong, nonatomic) NSMutableArray *products;
+@property (strong, nonatomic) NSMutableArray *allPosterProducts;
 @property (assign, nonatomic) BOOL fromRotation;
 
 @end
@@ -38,13 +39,28 @@
 -(NSMutableArray *) products{
     if (!_products){
         _products = [[NSMutableArray alloc] init];
+        self.allPosterProducts = [[NSMutableArray alloc] init];
         NSArray *allProducts = [OLProduct productsWithFilters:self.filterProducts];
         for (OLProduct *product in allProducts){
             if (!product.labelColor || product.productTemplate.templateUI == kOLTemplateUINA){
                 continue;
             }
+            if (product.productTemplate.templateUI == kOLTemplateUIPoster){
+                BOOL sameGridTemplate = NO;
+                for (OLProduct *otherProduct in _products){
+                    if (otherProduct.productTemplate.gridCountX == product.productTemplate.gridCountX && otherProduct.productTemplate.gridCountY == product.productTemplate.gridCountY){
+                        sameGridTemplate = YES;
+                        break;
+                    }
+                }
+                if (sameGridTemplate){
+                    [self.allPosterProducts addObject:product];
+                    continue;
+                }
+            }
             if ([product.productTemplate.templateClass isEqualToString:self.templateClass]){
                 [_products addObject:product];
+                [self.allPosterProducts addObject:product];
             }
         }
     }
@@ -95,7 +111,21 @@
     
     OLProduct *product = self.products[indexPath.row];
     
-    OLProductOverviewViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLProductOverviewViewController"];
+    NSString *identifier;
+    if (product.productTemplate.templateUI == kOLTemplateUIPoster){
+        NSInteger x = product.productTemplate.gridCountX;
+        NSInteger y = product.productTemplate.gridCountY;
+        NSString *size = [product.productTemplate.productCode substringFromIndex:product.productTemplate.productCode.length-2];
+        for (OLProduct *otherProduct in self.allPosterProducts){
+            if (![otherProduct.productTemplate.productCode hasSuffix:size] && x == otherProduct.productTemplate.gridCountX && y == otherProduct.productTemplate.gridCountY){
+                identifier = @"sizeSelect";
+            }
+        }
+    }
+    if (!identifier){
+        identifier = @"OLProductOverviewViewController";
+    }
+    OLProductOverviewViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:identifier];
     vc.delegate = self.delegate;
     vc.userSelectedPhotos = self.userSelectedPhotos;
     vc.product = product;

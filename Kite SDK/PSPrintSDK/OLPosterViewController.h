@@ -1,20 +1,15 @@
 //
 //  OLPosterViewController.h
-//  Photo Mosaic
+//  KitePrintSDK
 //
-//  Created by Konstadinos Karayannis on 27/10/14.
-//  Copyright (c) 2014 Ocean Labs App Ltd. All rights reserved.
+//  Created by Konstadinos Karayannis on 31/7/15.
+//  Copyright (c) 2015 Deon Botha. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
-#import "OLPrintOrder.h"
-#import "OLProduct.h"
-#import "OLKiteViewController.h"
+#import "OLSingleImageProductReviewViewController.h"
 
-@interface OLPosterViewController : UIViewController
+@class OLProduct;
 
-@property (strong, nonatomic) NSMutableArray *userSelectedPhotos;
-@property (strong, nonatomic) OLProduct *product;
-@property (weak, nonatomic) id<OLKiteDelegate> delegate;
+@interface OLPosterViewController : OLSingleImageProductReviewViewController
 
 @end

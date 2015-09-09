@@ -32,6 +32,8 @@ static NSString *const kKeySizePx = @"co.oceanlabs.pssdk.kKeySizePx";
 static NSString *const kKeyClassPhotoURL = @"co.oceanlabs.pssdk.kKeyClassPhotoURL";
 static NSString *const kkeyDescription = @"co.oceanlabs.pssdk.kkeyDescription";
 static NSString *const kKeyShippingCosts = @"co.oceanlabs.pssdk.kKeyShippingCosts";
+static NSString *const kKeyGridCountX = @"co.oceanlabs.pssdk.kKeyGridCountX";
+static NSString *const kKeyGridCountY = @"co.oceanlabs.pssdk.kKeyGridCountY";
 
 static NSMutableArray *templates;
 static NSDate *lastSyncDate;
@@ -321,6 +323,8 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
     [aCoder encodeObject:self.classPhotoURL forKey:kKeyClassPhotoURL];
     [aCoder encodeObject:self.productDescription forKey:kkeyDescription];
     [aCoder encodeObject:self.shippingCosts forKey:kKeyShippingCosts];
+    [aCoder encodeInteger:self.gridCountX forKey:kKeyGridCountX];
+    [aCoder encodeInteger:self.gridCountY forKey:kKeyGridCountY];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
@@ -346,6 +350,8 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
         _classPhotoURL = [aDecoder decodeObjectForKey:kKeyClassPhotoURL];
         _productDescription = [aDecoder decodeObjectForKey:kkeyDescription];
         _shippingCosts = [aDecoder decodeObjectForKey:kKeyShippingCosts];
+        _gridCountX = [aDecoder decodeIntegerForKey:kKeyGridCountX];
+        _gridCountY = [aDecoder decodeIntegerForKey:kKeyGridCountY];
     }
     
     return self;
