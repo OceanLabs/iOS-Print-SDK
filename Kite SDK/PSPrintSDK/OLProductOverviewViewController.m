@@ -23,12 +23,14 @@
 #import "NSObject+Utils.h"
 #import "NSDecimalNumber+CostFormatter.h"
 #import "OLKiteABTesting.h"
+#import <TSMarkdownParser.h>
 
 @interface OLKitePrintSDK (Kite)
 
 + (OLKiteViewController *)kiteViewControllerInNavStack:(NSArray *)viewControllers;
 + (NSString *)reviewViewControllerIdentifierForTemplateUI:(OLTemplateUI)templateUI photoSelectionScreen:(BOOL)photoSelectionScreen;
 + (void)checkoutViewControllerForPrintOrder:(OLPrintOrder *)printOrder handler:(void(^)(OLCheckoutViewController *vc))handler;
++ (NSString *)detailsBoxStringForProduct:(OLProduct *)product;
 
 @end
 
@@ -43,12 +45,15 @@
 @property (strong, nonatomic) UIPageViewController *pageController;
 @property (strong, nonatomic) IBOutlet UIPageControl *pageControl;
 @property (weak, nonatomic) IBOutlet UILabel *costLabel;
-@property (weak, nonatomic) IBOutlet UILabel *sizeLabel;
-@property (weak, nonatomic) IBOutlet UILabel *freePostageLabel;
-@property (weak, nonatomic) IBOutlet OLWhiteSquare *whiteBox;
 @property (weak, nonatomic) IBOutlet UIButton *callToActionButton;
 @property (weak, nonatomic) IBOutlet UILabel *callToActionLabel;
 @property (weak, nonatomic) IBOutlet UIImageView *callToActionChevron;
+@property (weak, nonatomic) IBOutlet UILabel *detailsTextLabel;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *detailsBoxTopCon;
+@property (weak, nonatomic) IBOutlet UIImageView *arrowImageView;
+@property (weak, nonatomic) IBOutlet UIView *detailsView;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *detailsViewHeightCon;
+@property (strong, nonatomic) UIVisualEffectView *visualEffectView;
 
 @end
 
@@ -56,6 +61,9 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    CGSize size = self.view.frame.size;
+    self.detailsViewHeightCon.constant = size.height > size.width ? 450 : 340;
     
     if (self.product.productTemplate.templateUI == kOLTemplateUIPoster){
         self.title = NSLocalizedString(@"Posters", @"");
@@ -83,24 +91,12 @@
     pageControl.backgroundColor = [UIColor clearColor];
     pageControl.frame = CGRectMake(0, -200, 100, 100);
     
-    self.costLabel.text = self.product.unitCost;
-    
-    self.sizeLabel.text = [NSString stringWithFormat:@"%@%@", self.product.packInfo, self.product.dimensions];
-    
-    OLTemplateUI templateClass = self.product.productTemplate.templateUI;
-    if (templateClass == kOLTemplateUICase){
-        [self.sizeLabel removeFromSuperview];
+    if ([OLKiteABTesting sharedInstance].hidePrice){
+        [self.costLabel removeFromSuperview];
     }
-    
-    NSDecimalNumber *shippingCost = [self.product.productTemplate shippingCostForCountry:[OLCountry countryForCurrentLocale]];
-    if (shippingCost && [shippingCost doubleValue] != 0){
-        self.freePostageLabel.text = [NSString stringWithFormat:NSLocalizedString(@"Shipping: %@", @""), [shippingCost formatCostForCurrencyCode:[self.product.productTemplate currencyForCurrentLocale]]];
+    else{
+        self.costLabel.text = self.product.unitCost;
     }
-    else if (!shippingCost){ // ¯\_(ツ)_/¯ don't assume 0, remove shipping information altogether
-        [self.freePostageLabel removeFromSuperview];
-        [self.whiteBox removeFromSuperview];
-    }
-    //else do nothing, free shipping label will be shown
     
     UIViewController *vc = self.parentViewController;
     while (vc) {
@@ -120,11 +116,10 @@
         }
     }
     
-    if ([OLKiteABTesting sharedInstance].hidePrice){
-        [self.costLabel removeFromSuperview];
-        [self.freePostageLabel removeFromSuperview];
-        [self.whiteBox removeFromSuperview];
-    }
+    NSMutableAttributedString *attributedString = [[[TSMarkdownParser standardParser] attributedStringFromMarkdown:[self.product detailsString]] mutableCopy];
+    
+    [attributedString addAttribute:NSForegroundColorAttributeName value:[UIColor colorWithRed: 0.341 green: 0.341 blue: 0.341 alpha: 1] range:NSMakeRange(0, attributedString.length)];
+    self.detailsTextLabel.attributedText = attributedString;
     
 #ifndef OL_NO_ANALYTICS
     [OLAnalytics trackProductDescriptionScreenViewed:self.product.productTemplate.name hidePrice:[OLKiteABTesting sharedInstance].hidePrice];
@@ -135,6 +130,42 @@
         self.callToActionLabel.textAlignment = NSTextAlignmentCenter;
     }
     
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0){
+        UIVisualEffect *blurEffect;
+        blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleExtraLight];
+        
+        self.visualEffectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
+        UIView *view = self.visualEffectView;
+        [self.detailsView addSubview:view];
+        [self.detailsView sendSubviewToBack:view];
+        
+        view.translatesAutoresizingMaskIntoConstraints = NO;
+        NSDictionary *views = NSDictionaryOfVariableBindings(view);
+        NSMutableArray *con = [[NSMutableArray alloc] init];
+        
+        NSArray *visuals = @[@"H:|-0-[view]-0-|",
+                             @"V:|-0-[view]-0-|"];
+        
+        
+        for (NSString *visual in visuals) {
+            [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+        }
+        
+        [view.superview addConstraints:con];
+        
+    }
+    else{
+        self.detailsView.backgroundColor = [UIColor whiteColor];
+    }
+    
+}
+
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator{
+    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+    [coordinator animateAlongsideTransition:^(id context){
+        self.detailsViewHeightCon.constant = size.height > size.width ? 450 : 340;
+        self.detailsBoxTopCon.constant = self.detailsBoxTopCon.constant != 0 ? self.detailsViewHeightCon.constant-100 : 0;
+    }completion:NULL];
 }
 
 - (UIViewController *)viewControllerAtIndex:(NSUInteger)index {
@@ -151,6 +182,18 @@
 
 - (IBAction)onTapGestureRecognized:(UITapGestureRecognizer *)sender {
     [self onButtonStartClicked:nil];
+}
+
+- (IBAction)onLabelDetailsTapped:(UITapGestureRecognizer *)sender {
+    self.detailsBoxTopCon.constant = self.detailsBoxTopCon.constant == 0 ? self.detailsViewHeightCon.constant-100 : 0;
+    [UIView animateWithDuration:0.8 delay:0 usingSpringWithDamping:0.5 initialSpringVelocity:0 options:0 animations:^{
+        self.arrowImageView.transform = self.detailsBoxTopCon.constant == 0 ? CGAffineTransformIdentity : CGAffineTransformMakeRotation(M_PI);
+        [self.view setNeedsLayout];
+        [self.view layoutIfNeeded];
+    }completion:^(BOOL finished){
+        
+    }];
+    
 }
 
 - (IBAction)onButtonCallToActionClicked:(id)sender {
@@ -203,7 +246,12 @@
 }
 
 -(void)userDidTapOnImage{
-    [self onButtonStartClicked:nil];
+    if (self.detailsBoxTopCon.constant != 0){
+        [self onLabelDetailsTapped:nil];
+    }
+    else{
+        [self onButtonStartClicked:nil];
+    }
 }
 
 #pragma mark - UIPageViewControllerDataSource

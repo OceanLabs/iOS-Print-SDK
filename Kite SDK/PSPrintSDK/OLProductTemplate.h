@@ -47,6 +47,7 @@ typedef enum {
 @property (strong, nonatomic) NSURL *maskImageURL;
 @property (assign, nonatomic) CGSize sizePx;
 @property (strong, nonatomic) NSURL *classPhotoURL;
+@property (strong, nonatomic) NSString *productDescription;
 @property (strong, nonatomic) NSDictionary *shippingCosts;
 
 - (id)initWithIdentifier:(NSString *)identifier name:(NSString *)name sheetQuantity:(NSUInteger)quantity sheetCostsByCurrencyCode:(NSDictionary/*<String, NSDecimalNumber>*/*)costs enabled:(BOOL)enabled;

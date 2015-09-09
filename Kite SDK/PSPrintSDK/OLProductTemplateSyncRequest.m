@@ -58,6 +58,7 @@
                             id imagesPerSheet = template[@"images_per_page"];
                             id product = template[@"product"];
                             NSNumber *enabledNumber = template[@"enabled"];
+                            NSString *description = template[@"description"];
                             BOOL enabled = enabledNumber == nil ? YES : [enabledNumber boolValue];
                             
                             NSDictionary *shippingCosts = [template[@"shipping_costs"] isKindOfClass:[NSDictionary class]] ? template[@"shipping_costs"] : nil;
@@ -177,6 +178,7 @@
                                     t.sizePx = sizePx;
                                     t.classPhotoURL = [NSURL URLWithString:classPhoto];
                                     t.imageBorder = imageBorder;
+                                    t.productDescription = description;
                                     t.shippingCosts = shippingCosts;
                                     [acc addObject:t];
                                 }
