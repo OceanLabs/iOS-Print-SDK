@@ -602,9 +602,15 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     [self.printOrder costWithCompletionHandler:^(OLPrintOrderCost *cost, NSError *error) {
         // Create a PayPalPayment
         PayPalPayment *payment = [[PayPalPayment alloc] init];
+        NSMutableArray *accArray = [[NSMutableArray alloc] initWithCapacity:cost.lineItems.count];
+        for (OLPaymentLineItem *item in cost.lineItems){
+            [accArray addObject:[PayPalItem itemWithName:item.description withQuantity:1 withPrice:[item costInCurrency:self.printOrder.currencyCode] withCurrency:self.printOrder.currencyCode withSku:nil]];
+        }
+        payment.items = accArray;
         payment.amount = [cost totalCostInCurrency:self.printOrder.currencyCode];
         payment.currencyCode = self.printOrder.currencyCode;
         payment.shortDescription = self.printOrder.paymentDescription;
+        
         NSAssert(payment.processable, @"oops");
         
         PayPalPaymentViewController *paymentViewController;
