@@ -14,6 +14,7 @@
 #import "NSArray+QueryingExtras.h"
 #import "OLImageView.h"
 #import "OLScrollCropViewController.h"
+#import "OLAnalytics.h"
 
 #ifdef OL_KITE_OFFER_INSTAGRAM
 #import <OLInstagramImagePickerController.h>
@@ -79,6 +80,10 @@ UINavigationControllerDelegate>
 
 - (void)viewDidLoad{
     [super viewDidLoad];
+    
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackPhotoSelectionScreenViewed:self.product.productTemplate.name];
+#endif
     
     self.title = NSLocalizedString(@"Move Pages", @"");
     
