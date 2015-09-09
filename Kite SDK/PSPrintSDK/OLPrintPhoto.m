@@ -127,7 +127,7 @@ static NSOperationQueue *imageOperationQueue;
                 
                 if (asset.assetType == kOLAssetTypeRemoteImageURL){
                     if (![self isCropped]){
-                        [self getImageWithFullResolution:YES progress:progressHandler completion:^(UIImage *image){
+                        [self getImageWithSize:CGSizeZero progress:progressHandler completion:^(UIImage *image){
                             self.cachedCroppedThumbnailImage = image;
                             handler(image);
                         }];
@@ -138,6 +138,14 @@ static NSOperationQueue *imageOperationQueue;
                             handler(image);
                         }];
                     }
+                }
+                else if (asset.assetType == kOLAssetTypePHAsset){
+                    PHAsset *asset = [self.asset loadPHAsset];
+                    self.asset = asset;
+                    [OLPrintPhoto resizedImageWithPrintPhoto:self size:destSize cropped:cropped progress:progressHandler completion:^(UIImage *image) {
+                        self.cachedCroppedThumbnailImage = image;
+                        handler(image);
+                    }];
                 }
                 else if (asset.assetType == kOLAssetTypeALAsset){
                     [asset loadALAssetWithCompletionHandler:^(ALAsset *asset, NSError *error){
@@ -168,7 +176,7 @@ static NSOperationQueue *imageOperationQueue;
 #ifdef OL_KITE_OFFER_INSTAGRAM
             else if (self.type == kPrintPhotoAssetTypeInstagramPhoto) {
                 if (![self isCropped]){
-                    [self getImageWithFullResolution:YES progress:progressHandler completion:^(UIImage *image){
+                    [self getImageWithSize:CGSizeZero progress:progressHandler completion:^(UIImage *image){
                         self.cachedCroppedThumbnailImage = image;
                         handler(image);
                     }];
@@ -184,7 +192,7 @@ static NSOperationQueue *imageOperationQueue;
 #ifdef OL_KITE_OFFER_FACEBOOK
             else if (self.type == kPrintPhotoAssetTypeFacebookPhoto){
                 if (![self isCropped]){
-                    [self getImageWithFullResolution:YES progress:progressHandler completion:^(UIImage *image){
+                    [self getImageWithSize:CGSizeZero progress:progressHandler completion:^(UIImage *image){
                         self.cachedCroppedThumbnailImage = image;
                         handler(image);
                     }];
@@ -233,10 +241,11 @@ static NSOperationQueue *imageOperationQueue;
 #endif
 
 - (void)getImageWithProgress:(OLImageEditorImageGetImageProgressHandler)progressHandler completion:(OLImageEditorImageGetImageCompletionHandler)completionHandler {
-    [self getImageWithFullResolution:YES progress:progressHandler completion:completionHandler];
+    [self getImageWithSize:CGSizeZero progress:progressHandler completion:completionHandler];
 }
 
-- (void)getImageWithFullResolution:(BOOL)fullResolution progress:(OLImageEditorImageGetImageProgressHandler)progressHandler completion:(OLImageEditorImageGetImageCompletionHandler)completionHandler {
+- (void)getImageWithSize:(CGSize)size progress:(OLImageEditorImageGetImageProgressHandler)progressHandler completion:(OLImageEditorImageGetImageCompletionHandler)completionHandler {
+    BOOL fullResolution = CGSizeEqualToSize(size, CGSizeZero);
     if (self.type == kPrintPhotoAssetTypeALAsset) {
         UIImage* image;
         if (fullResolution){
@@ -250,7 +259,7 @@ static NSOperationQueue *imageOperationQueue;
     else if (self.type == kPrintPhotoAssetTypePHAsset){
         PHImageManager *imageManager = [PHImageManager defaultManager];
         PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
-        options.synchronous = NO;
+        options.synchronous = YES;
         options.deliveryMode = PHImageRequestOptionsDeliveryModeHighQualityFormat;
         options.networkAccessAllowed = YES;
         options.progressHandler = ^(double progress, NSError *__nullable error, BOOL *stop, NSDictionary *__nullable info){
@@ -260,8 +269,8 @@ static NSOperationQueue *imageOperationQueue;
                 });
             }
         };
-        CGSize size = fullResolution ? PHImageManagerMaximumSize : CGSizeMake([UIScreen mainScreen].bounds.size.width * [UIScreen mainScreen].scale, [UIScreen mainScreen].bounds.size.height * [UIScreen mainScreen].scale);
-        [imageManager requestImageForAsset:(PHAsset *)self.asset targetSize:size contentMode:PHImageContentModeAspectFill options:options resultHandler:^(UIImage *image, NSDictionary *info){
+        CGSize requestSize = fullResolution ? PHImageManagerMaximumSize : size;
+        [imageManager requestImageForAsset:(PHAsset *)self.asset targetSize:requestSize contentMode:PHImageContentModeAspectFill options:options resultHandler:^(UIImage *image, NSDictionary *info){
             completionHandler(image);
         }];
     }
@@ -335,9 +344,9 @@ static NSOperationQueue *imageOperationQueue;
 + (void)resizedImageWithPrintPhoto:(OLPrintPhoto *)printPhoto size:(CGSize)destSize cropped:(BOOL)cropped progress:(OLImageEditorImageGetImageProgressHandler)progressHandler completion:(OLImageEditorImageGetImageCompletionHandler)completionHandler {
     
     
-    [printPhoto getImageWithFullResolution:CGSizeEqualToSize(destSize, CGSizeZero) progress:progressHandler completion:^(UIImage *image) {
+    [printPhoto getImageWithSize:destSize progress:progressHandler completion:^(UIImage *image) {
         __block UIImage *blockImage = image;
-        NSBlockOperation *block = [NSBlockOperation blockOperationWithBlock:^{
+        void (^localBlock)() = ^{
             if (destSize.height != 0 && destSize.width != 0){
                 blockImage = [OLPrintPhoto imageWithImage:blockImage scaledToSize:destSize];
             }
@@ -350,9 +359,15 @@ static NSOperationQueue *imageOperationQueue;
             blockImage = [RMImageCropper editedImageFromImage:blockImage andFrame:printPhoto.cropImageFrame andImageRect:printPhoto.cropImageRect andImageViewWidth:printPhoto.cropImageSize.width andImageViewHeight:printPhoto.cropImageSize.height];
             
             completionHandler(blockImage);
-        }];
-        block.queuePriority = NSOperationQueuePriorityHigh;
-        [[OLPrintPhoto imageOperationQueue] addOperation:block];
+        };
+        if ([NSThread isMainThread]){
+            NSBlockOperation *block = [NSBlockOperation blockOperationWithBlock:localBlock];
+            block.queuePriority = NSOperationQueuePriorityHigh;
+            [[OLPrintPhoto imageOperationQueue] addOperation:block];
+        }
+        else{
+            localBlock();
+        }
     }];
     
 }

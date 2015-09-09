@@ -99,9 +99,11 @@ OLAssetsPickerControllerDelegate, CTAssetsPickerControllerDelegate>
         [self setTitle:NSLocalizedString(@"Reposition the Photo", @"")];
     }
     
-    [[self.userSelectedPhotos firstObject] getImageWithProgress:NULL completion:^(UIImage *image){
-        self.imageCropView.image = image;
-    }];
+    if (self.imageCropView){
+        [[self.userSelectedPhotos firstObject] getImageWithProgress:NULL completion:^(UIImage *image){
+            self.imageCropView.image = image;
+        }];
+    }
     
     for (OLPrintPhoto *printPhoto in self.userSelectedPhotos){
         [printPhoto unloadImage];

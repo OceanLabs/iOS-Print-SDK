@@ -51,5 +51,6 @@ extern NSString *const kOLMimeTypePNG;
 @property (nonatomic, readonly) NSURL *previewURL;
 
 - (void)loadALAssetWithCompletionHandler:(LoadAssetCompletionHandler)handler;
+- (PHAsset *)loadPHAsset;
 
 @end

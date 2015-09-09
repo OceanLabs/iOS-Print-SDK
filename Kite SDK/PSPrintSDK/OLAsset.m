@@ -222,6 +222,10 @@ NSString *const kOLMimeTypePNG  = @"image/png";
     _uploaded = YES;
 }
 
+- (PHAsset *)loadPHAsset{
+    return [[PHAsset fetchAssetsWithLocalIdentifiers:@[self.phAssetLocalId] options:nil] firstObject];
+}
+
 - (void)loadALAssetWithCompletionHandler:(LoadAssetCompletionHandler)handler {
     if (self.alAsset) {
         dispatch_async(dispatch_get_main_queue(), ^{
