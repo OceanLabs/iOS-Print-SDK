@@ -91,7 +91,7 @@ static NSString *token, *secret;
 
 + (void)clearLastUsedCard {
     lastUsedCard = nil;
-    [UICKeyChainStore setData:[NSKeyedArchiver archivedDataWithRootObject:nil] forKey:kKeychainJudoPayLastUsedCardDetails service:kServiceName];
+    [UICKeyChainStore removeItemForKey:kKeychainJudoPayLastUsedCardDetails service:kServiceName];
 }
 
 - (void)saveAsLastUsedCard {

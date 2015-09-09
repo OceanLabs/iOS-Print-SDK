@@ -14,6 +14,13 @@
 #import "OLAsset+Private.h"
 #import <AFNetworking/AFNetworking.h>
 
+@interface OLKitePrintSDK (Private)
+
++ (NSString *)apiEndpoint;
++ (NSString *)apiVersion;
+
+@end
+
 @interface SignedS3RequestUploadDetails : NSObject
 @property (nonatomic, strong) OLAsset *asset;
 @property (nonatomic, strong) NSURL *signedS3UploadReqURL;

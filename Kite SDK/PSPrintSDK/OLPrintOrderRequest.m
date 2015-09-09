@@ -22,6 +22,13 @@
 @property (nonatomic, strong) OLBaseRequest *req;
 @end
 
+@interface OLKitePrintSDK (Private)
+
++ (NSString *)apiEndpoint;
++ (NSString *)apiVersion;
+
+@end
+
 @implementation OLPrintOrderRequest
 
 - (id)initWithPrintOrder:(OLPrintOrder *)printOrder {

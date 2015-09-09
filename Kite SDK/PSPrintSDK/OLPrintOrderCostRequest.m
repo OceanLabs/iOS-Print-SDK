@@ -16,6 +16,13 @@
 #import "OLProductPrintJob.h"
 #import "OLPrintOrderCost.h"
 
+@interface OLKitePrintSDK (Private)
+
++ (NSString *)apiEndpoint;
++ (NSString *)apiVersion;
+
+@end
+
 static NSString *urlencode(NSString *str) {
     NSMutableString *output = [NSMutableString string];
     const unsigned char *source = (const unsigned char *)[str UTF8String];

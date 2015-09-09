@@ -31,32 +31,30 @@
 @class OLPrintRequest;
 
 typedef void (^OLPrintProgressCompletionHandler)(float progress);
-typedef void (^OLPrintCompletionHandler)(NSString *receiptId, NSError *error);
-typedef void (^OLProductCostRefreshCompletionHandler)(NSError *error);
+typedef void (^OLPrintCompletionHandler)(NSString  *_Nullable receiptId, NSError  *_Nullable error);
+typedef void (^OLProductCostRefreshCompletionHandler)(NSError *_Nullable error);
 
 @interface OLKitePrintSDK : NSObject
 
-+ (void)setAPIKey:(NSString *)apiKey withEnvironment:(OLKitePrintSDKEnvironment)environment;
-+ (NSString *)apiKey;
++ (void)setAPIKey:(NSString * _Nonnull)apiKey withEnvironment:(OLKitePrintSDKEnvironment)environment;
++ (NSString *_Nullable)apiKey;
 + (OLKitePrintSDKEnvironment)environment;
-+ (NSString *)apiEndpoint;
-+ (NSString *)apiVersion;
 
 // optionally enable Instagram photo picking functionality (you'll need to take 5 minutes to register your app https://instagram.com/developer/):
 #ifdef OL_KITE_OFFER_INSTAGRAM
-+ (void)setInstagramEnabledWithClientID:(NSString *)clientID secret:(NSString *)secret redirectURI:(NSString *)redirectURI;
++ (void)setInstagramEnabledWithClientID:(NSString *_Nonnull)clientID secret:(NSString *_Nonnull)secret redirectURI:(NSString *_Nonnull)redirectURI;
 #endif
 
 #ifdef OL_KITE_OFFER_PAYPAL
-+ (NSString *)paypalEnvironment;
-+ (NSString *)paypalClientId;
-+ (NSString *)paypalReceiverEmail;
++ (NSString *_Nonnull)paypalEnvironment;
++ (NSString *_Nonnull)paypalClientId;
++ (NSString *_Nonnull)paypalReceiverEmail;
 #endif
 
 #ifdef OL_KITE_OFFER_APPLE_PAY
-+ (NSString *)stripePublishableKey;
-+ (void)setApplePayMerchantID:(NSString *)mID;
-+ (NSString *)appleMerchantID;
++ (NSString *_Nonnull)stripePublishableKey;
++ (void)setApplePayMerchantID:(NSString *_Nonnull)mID;
++ (NSString *_Nonnull)appleMerchantID;
 #endif
 
 @end

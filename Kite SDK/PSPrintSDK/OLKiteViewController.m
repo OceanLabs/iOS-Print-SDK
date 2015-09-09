@@ -79,7 +79,7 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
     return _userSelectedPhotos;
 }
 
-- (id)initWithAssets:(NSArray *)assets {
+- (instancetype)initWithAssets:(NSArray <OLAsset *>* _Nonnull)assets {
     if ((self = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:nil] instantiateViewControllerWithIdentifier:@"KiteViewController"])) {
         self.assets = assets;
     }
@@ -87,7 +87,7 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
     return self;
 }
 
-- (id)initWithPrintOrder:(OLPrintOrder *)printOrder{
+- (instancetype _Nullable)initWithPrintOrder:(OLPrintOrder * _Nullable)printOrder{
     if ((self = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:nil] instantiateViewControllerWithIdentifier:@"KiteViewController"])) {
         self.printOrder = printOrder;
     }
@@ -329,7 +329,7 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
     }
 }
 
-- (NSUInteger)supportedInterfaceOrientations {
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
     if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
         return UIInterfaceOrientationMaskAll;
     }

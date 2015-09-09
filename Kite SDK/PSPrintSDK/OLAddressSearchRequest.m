@@ -13,6 +13,13 @@
 #import "OLCountry.h"
 #import "OLKitePrintSDK.h"
 
+@interface OLKitePrintSDK (Private)
+
++ (NSString *)apiEndpoint;
++ (NSString *)apiVersion;
+
+@end
+
 static NSString *urlEscapeString(NSString *string) {
     NSString * escaped = (NSString *)CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(
                                                                                                NULL,
