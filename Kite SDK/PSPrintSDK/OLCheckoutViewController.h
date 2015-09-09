@@ -28,6 +28,8 @@ static const NSUInteger kTagInputFieldLabel = 100;
 @property (copy, nonatomic) NSString *userEmail;
 @property (copy, nonatomic) NSString *userPhone;
 
+@property (assign, nonatomic) BOOL showOtherOptions;
+
 - (id)initWithPrintOrder:(OLPrintOrder *)printOrder;
 - (id)initWithAPIKey:(NSString *)apiKey environment:(OLKitePrintSDKEnvironment)env printOrder:(OLPrintOrder *)printOrder;
 - (void)presentViewControllerFrom:(UIViewController *)presentingViewController animated:(BOOL)animated completion:(void (^)(void))completion;

@@ -18,5 +18,6 @@
 + (NSArray *)countries;
 + (OLCountry *)countryForCode:(NSString *)code;
 + (OLCountry *)countryForCurrentLocale;
++ (OLCountry *)countryForName:(NSString *)name;
 
 @end

@@ -19,6 +19,7 @@
 #import "OLKitePrintSDK.h"
 #import "NSArray+QueryingExtras.h"
 #import "OLAnalytics.h"
+#import "NSObject+Utils.h"
 
 #ifdef OL_KITE_OFFER_FACEBOOK
 #import <OLFacebookImagePickerController.h>
@@ -42,7 +43,7 @@ static const CGFloat kBookEdgePadding = 38;
 + (NSString *)userEmail:(UIViewController *)topVC;
 + (NSString *)userPhone:(UIViewController *)topVC;
 + (id<OLKiteDelegate>)kiteDelegate:(UIViewController *)topVC;
-+ (void)checkoutViewControllerForPrintOrder:(OLPrintOrder *)printOrder handler:(void(^)(OLCheckoutViewController *vc))handler;
++ (void)checkoutViewControllerForPrintOrder:(OLPrintOrder *)printOrder handler:(void(^)(id vc))handler;
 
 #ifdef OL_KITE_OFFER_INSTAGRAM
 + (NSString *) instagramRedirectURI;
@@ -633,10 +634,11 @@ UINavigationControllerDelegate
     [printOrder addPrintJob:printJob];
     
     
-    [OLKitePrintSDK checkoutViewControllerForPrintOrder:printOrder handler:^(OLCheckoutViewController *vc){
-        vc.userEmail = [OLKitePrintSDK userEmail:self];
-        vc.userPhone = [OLKitePrintSDK userPhone:self];
-        vc.kiteDelegate = [OLKitePrintSDK kiteDelegate:self];
+    [OLKitePrintSDK checkoutViewControllerForPrintOrder:printOrder handler:^(id vc){
+        [vc safePerformSelector:@selector(setUserEmail:) withObject:[OLKitePrintSDK userEmail:self]];
+        [vc safePerformSelector:@selector(setUserPhone:) withObject:[OLKitePrintSDK userPhone:self]];
+        [vc safePerformSelector:@selector(setKiteDelegate:) withObject:[OLKitePrintSDK kiteDelegate:self]];
+
         
         if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8){
             UIViewController *presenting = self.presentingViewController;

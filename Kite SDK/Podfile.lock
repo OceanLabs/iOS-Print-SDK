@@ -1,42 +1,42 @@
 PODS:
-  - AFNetworking (2.5.4):
-    - AFNetworking/NSURLConnection (= 2.5.4)
-    - AFNetworking/NSURLSession (= 2.5.4)
-    - AFNetworking/Reachability (= 2.5.4)
-    - AFNetworking/Security (= 2.5.4)
-    - AFNetworking/Serialization (= 2.5.4)
-    - AFNetworking/UIKit (= 2.5.4)
-  - AFNetworking/NSURLConnection (2.5.4):
+  - AFNetworking (2.6.0):
+    - AFNetworking/NSURLConnection (= 2.6.0)
+    - AFNetworking/NSURLSession (= 2.6.0)
+    - AFNetworking/Reachability (= 2.6.0)
+    - AFNetworking/Security (= 2.6.0)
+    - AFNetworking/Serialization (= 2.6.0)
+    - AFNetworking/UIKit (= 2.6.0)
+  - AFNetworking/NSURLConnection (2.6.0):
     - AFNetworking/Reachability
     - AFNetworking/Security
     - AFNetworking/Serialization
-  - AFNetworking/NSURLSession (2.5.4):
+  - AFNetworking/NSURLSession (2.6.0):
     - AFNetworking/Reachability
     - AFNetworking/Security
     - AFNetworking/Serialization
-  - AFNetworking/Reachability (2.5.4)
-  - AFNetworking/Security (2.5.4)
-  - AFNetworking/Serialization (2.5.4)
-  - AFNetworking/UIKit (2.5.4):
+  - AFNetworking/Reachability (2.6.0)
+  - AFNetworking/Security (2.6.0)
+  - AFNetworking/Serialization (2.6.0)
+  - AFNetworking/UIKit (2.6.0):
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
   - ApplePayStubs (0.2)
-  - Bolts (1.2.0):
-    - Bolts/AppLinks (= 1.2.0)
-    - Bolts/Tasks (= 1.2.0)
-  - Bolts/AppLinks (1.2.0):
+  - Bolts (1.2.1):
+    - Bolts/AppLinks (= 1.2.1)
+    - Bolts/Tasks (= 1.2.1)
+  - Bolts/AppLinks (1.2.1):
     - Bolts/Tasks
-  - Bolts/Tasks (1.2.0)
+  - Bolts/Tasks (1.2.1)
   - CSStickyHeaderFlowLayout (0.2.8)
   - CTAssetsPickerController (2.9.5)
   - Facebook-iOS-SDK (3.23.2):
     - Bolts (~> 1.0)
-  - FacebookImagePicker (1.0.3):
+  - FacebookImagePicker (1.1.0):
     - Facebook-iOS-SDK (~> 3.23.2)
     - SDWebImage (~> 3.7.2)
   - GroundControl (2.1.0):
     - AFNetworking (~> 2.2)
-  - InstagramImagePicker (1.0.8):
+  - InstagramImagePicker (1.1.2):
     - NXOAuth2Client (~> 1.2.8)
     - SDWebImage (~> 3.7.2)
     - UIColor-HexString
@@ -58,7 +58,7 @@ PODS:
   - UIColor-HexString (1.1.0)
 
 DEPENDENCIES:
-  - AFNetworking (~> 2.5.0)
+  - AFNetworking (~> 2.6.0)
   - ApplePayStubs
   - CSStickyHeaderFlowLayout
   - CTAssetsPickerController (~> 2.9.5)
@@ -77,15 +77,15 @@ DEPENDENCIES:
   - UIColor-HexString
 
 SPEC CHECKSUMS:
-  AFNetworking: 05edc0ac4c4c8cf57bcf4b84be5b0744b6d8e71e
+  AFNetworking: 79f7eb1a0fcfa7beb409332b2ca49afe9ce53b05
   ApplePayStubs: 5dd63c36527d1117b2045939fb5b6581b4815433
-  Bolts: d176cb1e0012175589e389a9db49b85e27787576
+  Bolts: 7686a5cb204d1ac54cee26f12d9b7622db3f80d1
   CSStickyHeaderFlowLayout: e919dd425fa12bba1155f66d87edfe540eb8f89a
   CTAssetsPickerController: b413fece2194ae3dbf22fbc544cf6f2a6d516a4d
   Facebook-iOS-SDK: cd87f0b2f0c1d9574b44e8fa2baacc275524bac3
-  FacebookImagePicker: 65ed253b544712e3a4af14eef43600621b639e2d
+  FacebookImagePicker: 2aacdf94272c1fda0dfd2ef819b502de054236b0
   GroundControl: fbc762e0097feece7fb6d8cdc8f2747a504a6833
-  InstagramImagePicker: 9ff8eb307b33b2f61d1287ea0bd425646b031101
+  InstagramImagePicker: 12bee68689e68fd8759ed3eda7aee40ee7cf3aa4
   MPFlipViewController: 86caa6203ca9d35af23cc6b4e1bcf53e53333770
   NXOAuth2Client: 98c4d4c594edd2b289cfc34a8928653e1dab7adf
   PayPal-iOS-SDK: ddbc32428357fdfdfe430dd956125745a7096f24

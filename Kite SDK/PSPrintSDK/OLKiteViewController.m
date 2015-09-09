@@ -50,7 +50,7 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
 
 + (void)setCacheTemplates:(BOOL)cache;
 + (BOOL)cacheTemplates;
-+ (void)checkoutViewControllerForPrintOrder:(OLPrintOrder *)printOrder handler:(void(^)(OLCheckoutViewController *vc))handler;
++ (void)checkoutViewControllerForPrintOrder:(OLPrintOrder *)printOrder handler:(void(^)(id vc))handler;
 + (NSString *)reviewViewControllerIdentifierForTemplateUI:(OLTemplateUI)templateUI photoSelectionScreen:(BOOL)photoSelectionScreen;
 
 @end
@@ -180,11 +180,11 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
                 identifier = [OLKitePrintSDK reviewViewControllerIdentifierForTemplateUI:product.productTemplate.templateUI photoSelectionScreen:NO];
             }
             else{
-                [OLKitePrintSDK checkoutViewControllerForPrintOrder:welf.printOrder handler:^(OLCheckoutViewController *vc){
+                [OLKitePrintSDK checkoutViewControllerForPrintOrder:welf.printOrder handler:^(id vc){
                     [[vc navigationItem] setLeftBarButtonItem:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:welf action:@selector(dismiss)]];
-                    vc.userEmail = welf.userEmail;
-                    vc.userPhone = welf.userPhone;
-                    vc.kiteDelegate = welf.delegate;
+                    [vc safePerformSelector:@selector(setUserEmail:) withObject:welf.userEmail];
+                    [vc safePerformSelector:@selector(setUserPhone:) withObject:welf.userPhone];
+                    [vc safePerformSelector:@selector(setKiteDelegate:) withObject:welf.delegate];
                     OLCustomNavigationController *nvc = [[OLCustomNavigationController alloc] initWithRootViewController:vc];
                     
                     [welf fadeToViewController:nvc];
