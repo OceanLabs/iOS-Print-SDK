@@ -8,11 +8,12 @@
 
 #import "OLCaseViewController.h"
 #import <SDWebImageManager.h>
+#import "OLRemoteImageCropper.h"
 
 @interface OLSingleImageProductReviewViewController (Private)
 
 @property (weak, nonatomic) IBOutlet UIView *containerView;
-@property (weak, nonatomic) IBOutlet RMImageCropper *imageCropView;
+@property (weak, nonatomic) IBOutlet OLRemoteImageCropper *imageCropView;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *maskAspectRatio;
 -(void) doCheckout;
 

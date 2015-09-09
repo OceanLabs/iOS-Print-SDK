@@ -9,12 +9,14 @@
 #import "OLEditPhotobookViewController.h"
 #import "OLPhotobookViewController.h"
 #import "OLPhotobookPageContentViewController.h"
-#import <CTAssetsPickerController.h>
+#import "OLAssetsPickerController.h"
 #import "OLPrintPhoto.h"
 #import "NSArray+QueryingExtras.h"
-#import "OLImageView.h"
+#import "OLPopupOptionsImageView.h"
 #import "OLScrollCropViewController.h"
 #import "OLAnalytics.h"
+#import "OLImageCachingManager.h"
+#import <CTAssetsPickerController.h>
 
 #ifdef OL_KITE_OFFER_INSTAGRAM
 #import <OLInstagramImagePickerController.h>
@@ -49,7 +51,7 @@ static const NSInteger kSectionPages = 2;
 #endif
 @end
 
-@interface OLEditPhotobookViewController () <UICollectionViewDelegateFlowLayout, OLPhotobookViewControllerDelegate, CTAssetsPickerControllerDelegate, UIActionSheetDelegate, UIAlertViewDelegate, OLImageViewDelegate, OLScrollCropViewControllerDelegate,
+@interface OLEditPhotobookViewController () <UICollectionViewDelegateFlowLayout, OLPhotobookViewControllerDelegate, OLAssetsPickerControllerDelegate, CTAssetsPickerControllerDelegate, UIActionSheetDelegate, UIAlertViewDelegate, OLImageViewDelegate, OLScrollCropViewControllerDelegate,
 #ifdef OL_KITE_OFFER_INSTAGRAM
 OLInstagramImagePickerControllerDelegate,
 #endif
@@ -571,15 +573,15 @@ UINavigationControllerDelegate>
 }
 
 - (void)photobook:(OLPhotobookViewController *)photobook userDidLongPressOnImageWithIndex:(NSInteger)index sender:(UILongPressGestureRecognizer *)sender{
-    OLImageView *view;
+    OLPopupOptionsImageView *view;
     if (index == -1){
-        view = (OLImageView *)sender.view;
+        view = (OLPopupOptionsImageView *)sender.view;
     }
     else{
         if (self.photobookPhotos[index] == (id)[NSNull null]){
             return;
         }
-        view = (OLImageView *)[photobook.pageController.viewControllers[index % 2] imageView];
+        view = (OLPopupOptionsImageView *)[photobook.pageController.viewControllers[index % 2] imageView];
     }
     
     self.longPressImageIndex = index;
@@ -795,9 +797,23 @@ UINavigationControllerDelegate>
 }
 
 - (void)showCameraRollImagePicker{
-    CTAssetsPickerController *picker = [[CTAssetsPickerController alloc] init];
+    CTAssetsPickerController *picker;
+    Class assetClass;
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8){
+        picker = (CTAssetsPickerController *)[[OLAssetsPickerController alloc] init];
+        [(OLAssetsPickerController *)picker setAssetsFilter:[ALAssetsFilter allPhotos]];
+        assetClass = [ALAsset class];
+    }
+    else{
+        picker = [[CTAssetsPickerController alloc] init];
+        picker.showsEmptyAlbums = NO;
+        PHFetchOptions *options = [[PHFetchOptions alloc] init];
+        options.predicate = [NSPredicate predicateWithFormat:@"mediaType == %d", PHAssetMediaTypeImage];
+        picker.assetsFetchOptions = options;
+        assetClass = [PHAsset class];
+    }
+    
     picker.delegate = self;
-    picker.assetsFilter = [ALAssetsFilter allPhotos];
     [self presentViewController:picker animated:YES completion:nil];
 }
 
@@ -869,7 +885,7 @@ UINavigationControllerDelegate>
 
 #pragma mark - CTAssetsPickerControllerDelegate Methods
 
-- (BOOL)assetsPickerController:(CTAssetsPickerController *)picker isDefaultAssetsGroup:(ALAssetsGroup *)group {
+- (BOOL)assetsPickerController:(OLAssetsPickerController *)picker isDefaultAssetsGroup:(ALAssetsGroup *)group {
     if ([self.delegate respondsToSelector:@selector(kiteController:isDefaultAssetsGroup:)]) {
         return [self.delegate kiteController:[self kiteViewController] isDefaultAssetsGroup:group];
     }
@@ -899,27 +915,27 @@ UINavigationControllerDelegate>
         return;
     }
     
-    [self populateArrayWithNewArray:assets dataType:[ALAsset class]];
+    [self populateArrayWithNewArray:assets dataType:[picker isKindOfClass:[CTAssetsPickerController class]] ? [PHAsset class] : [ALAsset class]];
     [picker dismissViewControllerAnimated:YES completion:^(void){}];
+    
 }
 
-- (BOOL)assetsPickerController:(CTAssetsPickerController *)picker shouldSelectAsset:(ALAsset *)asset{
-    if (self.addNewPhotosAtIndex == -1){
-        return picker.selectedAssets.count == 0;
-    }
-    else{
-        return YES;
-    }
-}
-
-- (BOOL)assetsPickerController:(CTAssetsPickerController *)picker shouldShowAssetsGroup:(ALAssetsGroup *)group{
+- (BOOL)assetsPickerController:(OLAssetsPickerController *)picker shouldShowAssetsGroup:(ALAssetsGroup *)group{
     if (group.numberOfAssets == 0){
         return NO;
     }
     return YES;
 }
 
-- (BOOL)assetsPickerController:(CTAssetsPickerController *)picker shouldShowAsset:(ALAsset *)asset{
+- (void)assetsPickerController:(CTAssetsPickerController *)picker didDeSelectAsset:(PHAsset *)asset{
+    [[OLImageCachingManager sharedInstance].photosCachingManager stopCachingImagesForAssets:@[asset] targetSize:[UIScreen mainScreen].bounds.size contentMode:PHImageContentModeAspectFill options:nil];
+}
+
+- (void)assetsPickerController:(CTAssetsPickerController *)picker didSelectAsset:(PHAsset *)asset{
+    [[OLImageCachingManager sharedInstance].photosCachingManager startCachingImagesForAssets:@[asset] targetSize:[UIScreen mainScreen].bounds.size contentMode:PHImageContentModeAspectFill options:nil];
+}
+
+- (BOOL)assetsPickerController:(OLAssetsPickerController *)picker shouldShowAsset:(id)asset{
     NSString *fileName = [[[asset defaultRepresentation] filename] lowercaseString];
     if (!([fileName hasSuffix:@".jpg"] || [fileName hasSuffix:@".jpeg"] || [fileName hasSuffix:@"png"])) {
         return NO;

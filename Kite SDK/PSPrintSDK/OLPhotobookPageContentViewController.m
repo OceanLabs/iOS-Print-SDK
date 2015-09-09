@@ -94,7 +94,7 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             NSInteger blockIndex = self.pageIndex;
             
-            [printPhoto setImageSize:self.imageView.frame.size cropped:YES completionHandler:^(UIImage *image){
+            [printPhoto setImageSize:self.imageView.frame.size cropped:YES progress:NULL completionHandler:^(UIImage *image){
                 dispatch_async(dispatch_get_main_queue(), ^{
                     if (blockIndex == self.pageIndex){
                         self.imageView.image = image;

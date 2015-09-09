@@ -12,6 +12,7 @@
 #import "OLAsset+Private.h"
 #import <SDWebImageManager.h>
 #import "UIViewController+TraitCollectionCompatibility.h"
+#import "OLRemoteImageView.h"
 
 @interface OLOrderReviewViewController (Private)
 
@@ -71,6 +72,13 @@ CGFloat margin = 2;
     UICollectionView* collectionView = (UICollectionView*)[outerCollectionViewCell.contentView viewWithTag:20];
     
     NSIndexPath* indexPath = [collectionView indexPathForItemAtPoint:[gestureRecognizer locationInView:collectionView]];
+    
+    UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
+    OLRemoteImageView *imageView = (OLRemoteImageView *)[cell viewWithTag:110];
+    
+    if (!imageView.image){
+        return;
+    }
     
     self.editingPrintPhoto = self.framePhotos[(outerCollectionViewIndexPath.item) * self.product.quantityToFulfillOrder + indexPath.row];
     
@@ -202,12 +210,12 @@ CGFloat margin = 2;
         
         NSIndexPath* outerCollectionViewIndexPath = [self.collectionView indexPathForCell:(UICollectionViewCell *)view];
         
-        UIImageView* cellImage = (UIImageView*)[cell.contentView viewWithTag:110];
+        OLRemoteImageView* cellImage = (OLRemoteImageView*)[cell.contentView viewWithTag:110];
         cellImage.userInteractionEnabled = YES;
         cellImage.image = nil;
         
         OLPrintPhoto *printPhoto =(OLPrintPhoto*)[self.framePhotos objectAtIndex:indexPath.row + (outerCollectionViewIndexPath.item) * self.product.quantityToFulfillOrder];
-        [printPhoto setImageSize:[self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath] cropped:YES completionHandler:^(UIImage *image){
+        [printPhoto setImageSize:[self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath] cropped:YES progress:NULL completionHandler:^(UIImage *image){
             dispatch_async(dispatch_get_main_queue(), ^{
                 cellImage.image = image;
             });

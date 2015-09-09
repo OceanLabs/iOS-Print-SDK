@@ -13,11 +13,15 @@
 #import <SDWebImageManager.h>
 #import "OLProductPrintJob.h"
 #import "OLKitePrintSDK.h"
-#import <CTAssetsPickerController.h>
+#import "OLAssetsPickerController.h"
 #import "NSArray+QueryingExtras.h"
 #import "OLKiteViewController.h"
 #import "OLKiteABTesting.h"
 #import "NSObject+Utils.h"
+#import "OLImageCachingManager.h"
+#import <CTAssetsPickerController.h>
+#import "OLRemoteImageView.h"
+#import "OLRemoteImageCropper.h"
 
 #ifdef OL_KITE_OFFER_INSTAGRAM
 #import <OLInstagramImagePickerController.h>
@@ -56,7 +60,7 @@ OLInstagramImagePickerControllerDelegate,
 #ifdef OL_KITE_OFFER_FACEBOOK
 OLFacebookImagePickerControllerDelegate,
 #endif
-CTAssetsPickerControllerDelegate>
+OLAssetsPickerControllerDelegate, CTAssetsPickerControllerDelegate>
 
 @property (weak, nonatomic) IBOutlet UILabel *quantityLabel;
 @property (assign, nonatomic) NSUInteger quantity;
@@ -64,7 +68,7 @@ CTAssetsPickerControllerDelegate>
 @property (weak, nonatomic) IBOutlet UICollectionView *imagesCollectionView;
 
 @property (weak, nonatomic) IBOutlet UIView *containerView;
-@property (weak, nonatomic) IBOutlet RMImageCropper *imageCropView;
+@property (weak, nonatomic) IBOutlet OLRemoteImageCropper *imageCropView;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *maskAspectRatio;
 @property (strong, nonatomic) OLPrintPhoto *imagePicked;
 
@@ -303,9 +307,34 @@ CTAssetsPickerControllerDelegate>
     if (indexPath.section == [self sectionForImageCells]){
         UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"imageCell" forIndexPath:indexPath];
         
-        UIImageView *imageView = (UIImageView *)[cell.contentView viewWithTag:1];
+        for (UIView *view in cell.subviews){
+            if ([view isKindOfClass:[OLRemoteImageView class]]){
+                [view removeFromSuperview];
+            }
+        }
         
-        [self.userSelectedPhotos[indexPath.item] setImageSize:imageView.frame.size cropped:NO completionHandler:^(UIImage *image){
+        OLRemoteImageView *imageView = [[OLRemoteImageView alloc] initWithFrame:CGRectMake(0, 0, 138, 138)];
+        imageView.tag = 11;
+        imageView.contentMode = UIViewContentModeScaleAspectFill;
+        [cell addSubview:imageView];
+        imageView.translatesAutoresizingMaskIntoConstraints = NO;
+        NSDictionary *views = NSDictionaryOfVariableBindings(imageView);
+        NSMutableArray *con = [[NSMutableArray alloc] init];
+        
+        NSArray *visuals = @[@"H:|-0-[imageView]-0-|",
+                             @"V:|-0-[imageView]-0-|"];
+        
+        
+        for (NSString *visual in visuals) {
+            [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+        }
+        
+        [imageView.superview addConstraints:con];
+
+        
+        [self.userSelectedPhotos[indexPath.item] setImageSize:imageView.frame.size cropped:NO progress:^(float progress){
+            [imageView setProgress:progress];
+        }completionHandler:^(UIImage *image){
             dispatch_async(dispatch_get_main_queue(), ^{
                 imageView.image = image;
             });
@@ -336,8 +365,18 @@ CTAssetsPickerControllerDelegate>
 
 - (void) collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
     if (indexPath.section == [self sectionForImageCells]){
+        UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
+        OLRemoteImageView *imageView = (OLRemoteImageView *)[cell viewWithTag:11];
+        if (!imageView.image){
+            return;
+        }
+        
+        OLPrintPhoto *printPhoto = self.userSelectedPhotos[indexPath.item];
+        
         self.imageCropView.image = nil;
-        [self.userSelectedPhotos[indexPath.item] getImageWithProgress:NULL completion:^(UIImage *image){
+        [printPhoto getImageWithProgress:^(float progress){
+//            [self.imageCropView setProgress:progress];
+        }completion:^(UIImage *image){
             dispatch_async(dispatch_get_main_queue(), ^{
                 self.imageCropView.image = image;
             });
@@ -406,13 +445,27 @@ CTAssetsPickerControllerDelegate>
 }
 
 - (void)showCameraRollImagePicker{
-    CTAssetsPickerController *picker = [[CTAssetsPickerController alloc] init];
+    CTAssetsPickerController *picker;
+    Class assetClass;
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8){
+        picker = (CTAssetsPickerController *)[[OLAssetsPickerController alloc] init];
+        [(OLAssetsPickerController *)picker setAssetsFilter:[ALAssetsFilter allPhotos]];
+        assetClass = [ALAsset class];
+    }
+    else{
+        picker = [[CTAssetsPickerController alloc] init];
+        picker.showsEmptyAlbums = NO;
+        PHFetchOptions *options = [[PHFetchOptions alloc] init];
+        options.predicate = [NSPredicate predicateWithFormat:@"mediaType == %d", PHAssetMediaTypeImage];
+        picker.assetsFetchOptions = options;
+        assetClass = [PHAsset class];
+    }
+    
     picker.delegate = self;
-    picker.assetsFilter = [ALAssetsFilter allPhotos];
     NSArray *allAssets = [[self createAssetArray] mutableCopy];
     NSMutableArray *alAssets = [[NSMutableArray alloc] init];
     for (id asset in allAssets){
-        if ([asset isKindOfClass:[ALAsset class]]){
+        if ([asset isKindOfClass:assetClass]){
             [alAssets addObject:asset];
         }
     }
@@ -488,16 +541,26 @@ CTAssetsPickerControllerDelegate>
     [self.imagesCollectionView reloadData];
 }
 
-- (BOOL)assetsPickerController:(CTAssetsPickerController *)picker isDefaultAssetsGroup:(ALAssetsGroup *)group {
+- (OLKiteViewController *)kiteViewController {
+    for (UIViewController *vc in self.navigationController.viewControllers) {
+        if ([vc isMemberOfClass:[OLKiteViewController class]]) {
+            return (OLKiteViewController *) vc;
+        }
+    }
+    
+    return nil;
+}
+
+- (BOOL)assetsPickerController:(OLAssetsPickerController *)picker isDefaultAssetsGroup:(ALAssetsGroup *)group {
     if ([self.delegate respondsToSelector:@selector(kiteController:isDefaultAssetsGroup:)]) {
-        return [self.delegate kiteController:[self kiteVc] isDefaultAssetsGroup:group];
+        return [self.delegate kiteController:[self kiteViewController] isDefaultAssetsGroup:group];
     }
     
     return NO;
 }
 
 - (void)assetsPickerController:(CTAssetsPickerController *)picker didFinishPickingAssets:(NSArray *)assets {
-    [self populateArrayWithNewArray:assets dataType:[ALAsset class]];
+    [self populateArrayWithNewArray:assets dataType:[picker isKindOfClass:[CTAssetsPickerController class]] ? [PHAsset class] : [ALAsset class]];
     if (self.imagePicked){
         [self.imagePicked getImageWithProgress:NULL completion:^(UIImage *image){
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -507,16 +570,25 @@ CTAssetsPickerControllerDelegate>
         self.imagePicked = nil;
     }
     [picker dismissViewControllerAnimated:YES completion:^(void){}];
+    
 }
 
-- (BOOL)assetsPickerController:(CTAssetsPickerController *)picker shouldShowAssetsGroup:(ALAssetsGroup *)group{
+- (BOOL)assetsPickerController:(OLAssetsPickerController *)picker shouldShowAssetsGroup:(ALAssetsGroup *)group{
     if (group.numberOfAssets == 0){
         return NO;
     }
     return YES;
 }
 
-- (BOOL)assetsPickerController:(CTAssetsPickerController *)picker shouldShowAsset:(ALAsset *)asset{
+- (void)assetsPickerController:(CTAssetsPickerController *)picker didDeSelectAsset:(PHAsset *)asset{
+    [[OLImageCachingManager sharedInstance].photosCachingManager stopCachingImagesForAssets:@[asset] targetSize:[UIScreen mainScreen].bounds.size contentMode:PHImageContentModeAspectFill options:nil];
+}
+
+- (void)assetsPickerController:(CTAssetsPickerController *)picker didSelectAsset:(PHAsset *)asset{
+    [[OLImageCachingManager sharedInstance].photosCachingManager startCachingImagesForAssets:@[asset] targetSize:[UIScreen mainScreen].bounds.size contentMode:PHImageContentModeAspectFill options:nil];
+}
+
+- (BOOL)assetsPickerController:(OLAssetsPickerController *)picker shouldShowAsset:(id)asset{
     NSString *fileName = [[[asset defaultRepresentation] filename] lowercaseString];
     if (!([fileName hasSuffix:@".jpg"] || [fileName hasSuffix:@".jpeg"] || [fileName hasSuffix:@"png"])) {
         return NO;

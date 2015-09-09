@@ -9,7 +9,6 @@
 #import <UIKit/UIKit.h>
 
 #import "OLKitePrintSDK.h"
-#import "RMImageCropper.h"
 
 @class OLProduct;
 

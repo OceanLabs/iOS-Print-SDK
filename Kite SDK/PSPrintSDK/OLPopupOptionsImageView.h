@@ -7,12 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "OLRemoteImageView.h"
 
 @protocol OLImageViewDelegate <NSObject>
 
 @end
 
-@interface OLImageView : UIImageView
+@interface OLPopupOptionsImageView : OLRemoteImageView
 
 @property (weak, nonatomic) id<OLImageViewDelegate> delegate;
 

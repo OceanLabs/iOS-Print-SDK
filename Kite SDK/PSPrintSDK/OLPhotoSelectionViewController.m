@@ -12,6 +12,7 @@
 #import "OLOrderReviewViewController.h"
 
 #import <CTAssetsPickerController.h>
+#import "OLAssetsPickerController.h"
 
 #ifdef OL_KITE_OFFER_INSTAGRAM
 #import <OLInstagramImagePickerController.h>
@@ -36,6 +37,9 @@
 #import "NSObject+Utils.h"
 #import "UIViewController+TraitCollectionCompatibility.h"
 #import "OLAnalytics.h"
+
+#import "OLRemoteImageView.h"
+#import "OLImageCachingManager.h"
 
 NSInteger OLPhotoSelectionMargin = 0;
 
@@ -77,7 +81,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 @property (weak, nonatomic) IBOutlet UIView *facebookContainer;
 
 @property (nonatomic, weak) IBOutlet UICollectionView *collectionView;
-@property (nonatomic, strong) CTAssetsPickerController *picker;
+@property (nonatomic, strong) OLAssetsPickerController *picker;
 @property (strong, nonatomic) NSMutableArray *userDisabledPhotos;
 
 @property (nonatomic, weak) IBOutlet UILabel *chooseImportSourceLabel;
@@ -373,13 +377,34 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 #pragma mark - Actions
 
 - (IBAction)cameraRollSelected:(id)sender {
-    CTAssetsPickerController *picker = [[CTAssetsPickerController alloc] init];
+    CTAssetsPickerController *picker;
+    Class assetClass;
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8){
+        picker = (CTAssetsPickerController *)[[OLAssetsPickerController alloc] init];
+        [(OLAssetsPickerController *)picker setAssetsFilter:[ALAssetsFilter allPhotos]];
+        assetClass = [ALAsset class];
+    }
+    else{
+        picker = [[CTAssetsPickerController alloc] init];
+        picker.showsEmptyAlbums = NO;
+        PHFetchOptions *options = [[PHFetchOptions alloc] init];
+        options.predicate = [NSPredicate predicateWithFormat:@"mediaType == %d", PHAssetMediaTypeImage];
+        picker.assetsFetchOptions = options;
+        assetClass = [PHAsset class];
+        
+//        PHFetchResult *fetchResult = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeAlbum subtype:PHAssetCollectionSubtypeAny options:nil];
+//        for (PHAssetCollection *collection in fetchResult){
+//            if ([self.delegate respondsToSelector:@selector(kiteController:isDefaultAssetsGroup:)] && [self.delegate kiteController:[self kiteViewController] isDefaultAssetsCollection:collection]) {
+//                picker.defaultAssetCollection = collection;
+//            }
+//        }
+    }
+    
     picker.delegate = self;
-    picker.assetsFilter = [ALAssetsFilter allPhotos];
     NSArray *allAssets = [[self createAssetArray] mutableCopy];
     NSMutableArray *alAssets = [[NSMutableArray alloc] init];
     for (id asset in allAssets){
-        if ([asset isKindOfClass:[ALAsset class]]){
+        if ([asset isKindOfClass:assetClass]){
             [alAssets addObject:asset];
         }
     }
@@ -459,7 +484,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     return nil;
 }
 
-- (BOOL)assetsPickerController:(CTAssetsPickerController *)picker isDefaultAssetsGroup:(ALAssetsGroup *)group {
+- (BOOL)assetsPickerController:(OLAssetsPickerController *)picker isDefaultAssetsGroup:(ALAssetsGroup *)group {
     if ([self.delegate respondsToSelector:@selector(kiteController:isDefaultAssetsGroup:)]) {
         return [self.delegate kiteController:[self kiteViewController] isDefaultAssetsGroup:group];
     }
@@ -468,19 +493,27 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 }
 
 - (void)assetsPickerController:(CTAssetsPickerController *)picker didFinishPickingAssets:(NSArray *)assets {
-    [self populateArrayWithNewArray:assets dataType:[ALAsset class]];
+    [self populateArrayWithNewArray:assets dataType:[picker isKindOfClass:[CTAssetsPickerController class]] ? [PHAsset class] : [ALAsset class]];
     [picker dismissViewControllerAnimated:YES completion:^(void){}];
     
 }
 
-- (BOOL)assetsPickerController:(CTAssetsPickerController *)picker shouldShowAssetsGroup:(ALAssetsGroup *)group{
+- (BOOL)assetsPickerController:(OLAssetsPickerController *)picker shouldShowAssetsGroup:(ALAssetsGroup *)group{
     if (group.numberOfAssets == 0){
         return NO;
     }
     return YES;
 }
 
-- (BOOL)assetsPickerController:(CTAssetsPickerController *)picker shouldShowAsset:(ALAsset *)asset{
+- (void)assetsPickerController:(CTAssetsPickerController *)picker didDeSelectAsset:(PHAsset *)asset{
+    [[OLImageCachingManager sharedInstance].photosCachingManager stopCachingImagesForAssets:@[asset] targetSize:[UIScreen mainScreen].bounds.size contentMode:PHImageContentModeAspectFill options:nil];
+}
+
+- (void)assetsPickerController:(CTAssetsPickerController *)picker didSelectAsset:(PHAsset *)asset{
+    [[OLImageCachingManager sharedInstance].photosCachingManager startCachingImagesForAssets:@[asset] targetSize:[UIScreen mainScreen].bounds.size contentMode:PHImageContentModeAspectFill options:nil];
+}
+
+- (BOOL)assetsPickerController:(OLAssetsPickerController *)picker shouldShowAsset:(id)asset{
     NSString *fileName = [[[asset defaultRepresentation] filename] lowercaseString];
     if (!([fileName hasSuffix:@".jpg"] || [fileName hasSuffix:@".jpeg"] || [fileName hasSuffix:@"png"])) {
         return NO;
@@ -682,12 +715,12 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
         qtyLabel.hidden = YES;
     }
     
-    UIImageView *imageView = (UIImageView *) [cell.contentView viewWithTag:40];
+    OLRemoteImageView *imageView = (OLRemoteImageView *) [cell.contentView viewWithTag:40];
     if (imageView != nil) {
         [imageView removeFromSuperview];
     }
     cell.contentView.backgroundColor = [UIColor whiteColor];
-    imageView = [[UIImageView alloc] init];
+    imageView = [[OLRemoteImageView alloc] init];
     imageView.tag = 40;
     imageView.clipsToBounds = YES;
     imageView.contentMode = UIViewContentModeScaleAspectFill;
@@ -768,9 +801,13 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     
     if (imageIndex < self.userSelectedPhotos.count) {
         OLPrintPhoto *photo = self.userSelectedPhotos[indexPath.row + indexPath.section * self.product.quantityToFulfillOrder];
-        [photo setImageSize:[self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath] cropped:YES completionHandler:^(UIImage *image){
+        [photo setImageSize:[self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath] cropped:YES progress:^(float progress){
+            [imageView setProgress:progress];
+        } completionHandler:^(UIImage *image){
             dispatch_async(dispatch_get_main_queue(), ^{
-                imageView.image = image;
+                if (image){
+                    imageView.image = image;
+                }
             });
         }];
         checkmark.hidden = [self.userDisabledPhotos containsObjectIdenticalTo:photo];

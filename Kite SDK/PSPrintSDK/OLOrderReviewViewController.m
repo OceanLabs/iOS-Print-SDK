@@ -19,12 +19,13 @@
 #import "OLAsset+Private.h"
 #import "OLAnalytics.h"
 #import "OLKitePrintSDK.h"
-#import <CTAssetsPickerController.h>
+#import "OLAssetsPickerController.h"
 #import "UIViewController+TraitCollectionCompatibility.h"
 #import "OLIntegratedCheckoutViewController.h"
 #import "OLKiteViewController.h"
 #import "OLKiteABTesting.h"
 #import "NSObject+Utils.h"
+#import "OLRemoteImageView.h"
 
 static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 static const NSUInteger kTagAlertViewDeletePhoto = 98;
@@ -160,7 +161,7 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     
     NSUInteger iphonePhotoCount = 0;
     for (OLPrintPhoto *photo in self.checkoutPhotos) {
-        if (photo.type == kPrintPhotoAssetTypeALAsset) ++iphonePhotoCount;
+        if (photo.type == kPrintPhotoAssetTypeALAsset || photo.type == kPrintPhotoAssetTypePHAsset) ++iphonePhotoCount;
     }
     
     // Avoid uploading assets if possible. We can avoid uploading where the image already exists at a remote
@@ -327,6 +328,11 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     while (![cell isKindOfClass:[UICollectionViewCell class]]){
         cell = cell.superview;
     }
+    
+    OLRemoteImageView *imageView = (OLRemoteImageView *)[cell viewWithTag:10];
+    if (!imageView.image){
+        return;
+    }
     NSIndexPath *indexPath = [self.collectionView indexPathForCell:(UICollectionViewCell *)cell];
     
     self.editingPrintPhoto = self.userSelectedPhotos[indexPath.item];
@@ -336,10 +342,13 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     cropVc.enableCircleMask = self.product.productTemplate.templateUI == kOLTemplateUICircle;
     cropVc.delegate = self;
     cropVc.aspectRatio = [self productAspectRatio];
-    [self.editingPrintPhoto getImageWithProgress:NULL completion:^(UIImage *image){
+    [self.editingPrintPhoto getImageWithProgress:^(float progress){
+        [cropVc.cropView setProgress:progress];
+    }completion:^(UIImage *image){
         [cropVc setFullImage:image];
         [self presentViewController:nav animated:YES completion:NULL];
     }];
+    
 }
 
 - (IBAction)onButtonNextClicked:(UIBarButtonItem *)sender {
@@ -405,7 +414,7 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     UIView *oldView = [cell.contentView viewWithTag:10];
     [oldView removeFromSuperview];
     
-    UIImageView *cellImage = [[UIImageView alloc] initWithFrame:borderView.frame];
+    OLRemoteImageView *cellImage = [[OLRemoteImageView alloc] initWithFrame:borderView.frame];
     cellImage.tag = 10;
     cellImage.translatesAutoresizingMaskIntoConstraints = NO;
     cellImage.contentMode = UIViewContentModeScaleAspectFill;
@@ -428,7 +437,9 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     [countLabel setText: [NSString stringWithFormat:@"%ld", (long)[self.userSelectedPhotos[indexPath.item] extraCopies]+1]];
     
     OLPrintPhoto *printPhoto = (OLPrintPhoto*)[self.userSelectedPhotos objectAtIndex:indexPath.item];
-    [printPhoto setImageSize:cellImage.frame.size cropped:YES completionHandler:^(UIImage *image){
+    [printPhoto setImageSize:cellImage.frame.size cropped:YES progress:^(float progress){
+        [cellImage setProgress:progress];
+    } completionHandler:^(UIImage *image){
         dispatch_async(dispatch_get_main_queue(), ^{
             cellImage.image = image;
         });

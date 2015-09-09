@@ -7,7 +7,6 @@
 //
 
 #import "OLScrollCropViewController.h"
-#import "RMImageCropper.h"
 
 @interface OLScrollCropViewController ()
 
