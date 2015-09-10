@@ -24,9 +24,35 @@ static NSString *const kOLKiteABTestOfferPayPal = @"ly.kite.abtest.offer_paypal"
 static NSString *const kOLKiteABTestAllowMultipleRecipients = @"ly.kite.abtest.allow_multiple_recipients";
 
 
+static NSString *const kOLKiteThemeHeaderLogoImageURL = @"ly.kite.theme.headerLogoImageURL";
+static NSString *const kOLKiteThemeCheckoutProgress1 = @"ly.kite.theme.kOLKiteThemeCheckoutProgress1";
+static NSString *const kOLKiteThemeCheckoutProgress2 = @"ly.kite.theme.kOLKiteThemeCheckoutProgress2";
+static NSString *const kOLKiteThemeCheckoutProgress1Bg = @"ly.kite.theme.kOLKiteThemeCheckoutProgress1Bg";
+static NSString *const kOLKiteThemeCheckoutProgress2Bg = @"ly.kite.theme.kOLKiteThemeCheckoutProgress2Bg";
+static NSString *const kOLKiteThemeReceiptSuccess = @"ly.kite.theme.kOLKiteThemeReceiptSuccess";
+static NSString *const kOLKiteThemeReceiptFailure = @"ly.kite.theme.kOLKiteThemeReceiptFailure";
+static NSString *const kOLKiteThemeReceiptSuccessBg = @"ly.kite.theme.kOLKiteThemeReceiptSuccessBg";
+static NSString *const kOLKiteThemeReceiptFailureBg = @"ly.kite.theme.kOLKiteThemeReceiptFailureBg";
+static NSString *const kOLKiteThemeSupportEmail = @"ly.kite.theme.supportEmail";
+
 id safeObject(id obj){
     return obj ? obj : @"";
 }
+
+@interface OLKiteABTesting ()
+
+@property (assign, nonatomic, readwrite) BOOL offerAddressSearch;
+@property (assign, nonatomic, readwrite) BOOL requirePhoneNumber;
+@property (assign, nonatomic, readwrite) BOOL hidePrice;
+@property (assign, nonatomic, readwrite) BOOL offerPayPal;
+@property (strong, nonatomic, readwrite) NSString *qualityBannerType;
+@property (strong, nonatomic, readwrite) NSString *checkoutScreenType;
+@property (strong, nonatomic, readwrite) NSString *productTileStyle;
+@property (strong, nonatomic, readwrite) NSString *promoBannerText;
+@property (strong, nonatomic, readwrite) NSString *launchWithPrintOrderVariant;
+@property (assign, nonatomic, readwrite) BOOL allowsMultipleRecipients;
+
+@end
 
 @implementation OLKiteABTesting
 
@@ -37,7 +63,72 @@ id safeObject(id obj){
     return sharedInstance;
 }
 
+- (NSString *)headerLogoURL{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    return [defaults objectForKey:kOLKiteThemeHeaderLogoImageURL];
+}
+
+- (NSString *)checkoutProgress1URL{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    return [defaults objectForKey:kOLKiteThemeCheckoutProgress1];
+}
+
+- (NSString *)checkoutProgress2URL{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    return [defaults objectForKey:kOLKiteThemeCheckoutProgress2];
+}
+
+- (NSString *)checkoutProgress1BgURL{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    return [defaults objectForKey:kOLKiteThemeCheckoutProgress1Bg];
+}
+
+- (NSString *)checkoutProgress2BgURL{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    return [defaults objectForKey:kOLKiteThemeCheckoutProgress2Bg];
+}
+
+- (NSString *)receiptSuccessURL{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    return [defaults objectForKey:kOLKiteThemeReceiptSuccess];
+}
+
+- (NSString *)receiptFailureURL{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    return [defaults objectForKey:kOLKiteThemeReceiptFailure];
+}
+
+- (NSString *)receiptSuccessBgURL{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    return [defaults objectForKey:kOLKiteThemeReceiptSuccessBg];
+}
+
+- (NSString *)receiptFailureBgURL{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    return [defaults objectForKey:kOLKiteThemeReceiptFailureBg];
+}
+
+- (NSString *)supportEmail{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    return [defaults objectForKey:kOLKiteThemeSupportEmail];
+}
+
+- (void)resetTheme{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+     [defaults removeObjectForKey:kOLKiteThemeHeaderLogoImageURL];
+     [defaults removeObjectForKey:kOLKiteThemeCheckoutProgress1];
+     [defaults removeObjectForKey:kOLKiteThemeCheckoutProgress2];
+     [defaults removeObjectForKey:kOLKiteThemeCheckoutProgress1Bg];
+     [defaults removeObjectForKey:kOLKiteThemeCheckoutProgress2Bg];
+     [defaults removeObjectForKey:kOLKiteThemeReceiptSuccess];
+     [defaults removeObjectForKey:kOLKiteThemeReceiptFailure];
+     [defaults removeObjectForKey:kOLKiteThemeReceiptSuccessBg];
+     [defaults removeObjectForKey:kOLKiteThemeReceiptFailureBg];
+     [defaults removeObjectForKey:kOLKiteThemeSupportEmail];
+}
+
 - (void)fetchRemotePlistsWithCompletionHandler:(void(^)())handler{
+    [self resetTheme];
     [OLKiteABTesting fetchRemotePlistWithURL:[NSString stringWithFormat:@"https://s3.amazonaws.com/sdk-static/kite-ios-remote-%@.plist", [OLKitePrintSDK apiKey]] completionHandler:^(NSError *error){
         if (error){
             [OLKiteABTesting fetchRemotePlistWithURL:@"https://s3.amazonaws.com/sdk-static/kite-ios-remote.plist" completionHandler:^(NSError *error2){

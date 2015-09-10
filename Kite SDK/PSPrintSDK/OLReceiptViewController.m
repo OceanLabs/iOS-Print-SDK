@@ -19,6 +19,9 @@
 #import "OLPrintOrderCost.h"
 #import "OLOrderReviewViewController.h"
 #import "OLKiteViewController.h"
+#import <SDWebImageManager.h>
+#import "OLKiteABTesting.h"
+#import "UIImage+ColorAtPixel.h"
 
 static const NSUInteger kSectionOrderSummary = 0;
 static const NSUInteger kSectionOrderId = 1;
@@ -51,34 +54,18 @@ static const NSUInteger kSectionErrorRetry = 2;
     return self;
 }
 
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    self.title = @"Receipt";
-    
-    CGFloat width = 320;
-    self.tableView.tableHeaderView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, width, 86)];
-    self.tableView.tableHeaderView.backgroundColor = [UIColor whiteColor];
-    self.tableView.tableHeaderView.contentMode = UIViewContentModeCenter;
-    
-    NSString *bannerImageName;
-    if (self.printOrder.printed) {
-        bannerImageName = @"receipt_success";
-    } else {
-        bannerImageName = @"receipt_failure";
-    }
-    
-    if ([self.delegate respondsToSelector:@selector(footerViewForReceiptViewController:)]){
-        self.tableView.tableFooterView = [(OLOrderReviewViewController *)self.delegate footerViewForReceiptViewController:self];
-    }
-    
-    UIImage *bannerImage = [UIImage imageNamed:bannerImageName];
+- (void)setupBannerImage:(UIImage *)bannerImage withBgImage:(UIImage *)bannerBgImage{
     self.tableView.tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, bannerImage.size.height)];
     UIImageView *banner = [[UIImageView alloc] initWithImage:bannerImage];
-    banner.tag = 1100;
     
-    UIImage *bannerBgImage = [UIImage imageNamed:[bannerImageName stringByAppendingString:@"_bg"]];
-    UIImageView *bannerBg = [[UIImageView alloc] initWithImage:bannerBgImage];
-    bannerBg.tag = 1200;
+    UIImageView *bannerBg;
+    if(bannerBgImage){
+        bannerBg = [[UIImageView alloc] initWithImage:bannerBgImage];
+    }
+    else{
+        bannerBg = [[UIImageView alloc] init];
+        bannerBg.backgroundColor = [bannerImage colorAtPixel:CGPointMake(3, 3)];
+    }
     [self.tableView.tableHeaderView addSubview:bannerBg];
     [self.tableView.tableHeaderView addSubview:banner];
     if (bannerBgImage.size.width > 100){
@@ -116,6 +103,46 @@ static const NSUInteger kSectionErrorRetry = 2;
     }
     
     [bannerBg.superview addConstraints:con];
+}
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    self.title = @"Receipt";
+    
+    NSString *url = self.printOrder.printed ? [OLKiteABTesting sharedInstance].receiptSuccessURL : [OLKiteABTesting sharedInstance].receiptFailureURL;
+    if (url){
+        [[SDWebImageManager sharedManager] downloadImageWithURL:[NSURL URLWithString:url] options:0 progress:NULL completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL){
+            image = [UIImage imageWithCGImage:image.CGImage scale:2 orientation:image.imageOrientation];
+            NSString *bgUrl = self.printOrder.printed ? [OLKiteABTesting sharedInstance].receiptSuccessBgURL : [OLKiteABTesting sharedInstance].receiptFailureBgURL;
+            if (bgUrl){
+                [[SDWebImageManager sharedManager] downloadImageWithURL:[NSURL URLWithString:bgUrl] options:0 progress:NULL completed:^(UIImage *bgImage, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL){
+                    bgImage = [UIImage imageWithCGImage:bgImage.CGImage scale:2 orientation:image.imageOrientation];
+                    [self setupBannerImage:image withBgImage:bgImage];
+                }];
+            }
+            else{
+                [self setupBannerImage:image withBgImage:nil];
+            }
+            
+        }];
+    }
+    else{
+        [self setupBannerImage:[UIImage imageNamed:self.printOrder.printed ? @"receipt_success" : @"receipt_failure"] withBgImage:nil];
+    }
+    
+    
+//	NSString *url = self.printOrder.printed ? [OLKiteABTesting sharedInstance].receiptSuccessURL : [OLKiteABTesting sharedInstance].receiptFailureURL;
+//    if (url){
+//        [[SDWebImageManager sharedManager] downloadImageWithURL:[NSURL URLWithString:url] options:0 progress:NULL completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL){
+//            image = [UIImage imageWithCGImage:image.CGImage scale:2 orientation:image.imageOrientation];
+//            self.tableView.tableHeaderView = [[UIImageView alloc] initWithImage:image];
+//            self.tableView.tableHeaderView.contentMode = UIViewContentModeCenter;
+//            self.tableView.tableHeaderView.frame = CGRectMake(0, 0, self.view.frame.size.width, self.tableView.tableHeaderView.frame.size.height);
+//        }];
+//    }
+//    else{
+//        ((UIImageView *) self.tableView.tableHeaderView).image = [UIImage imageNamed:self.printOrder.printed ? @"receipt_success" : @"receipt_failure"];
+//    }
 }
 
 - (void)onButtonDoneClicked {

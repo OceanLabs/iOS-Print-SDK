@@ -11,5 +11,6 @@
 @interface NSObject (Utils)
 
 - (void)safePerformSelector:(SEL)selector withObject:(id)object;
+- (id)safePerformSelectorWithReturn:(SEL)selector withObject:(id)object;
 
 @end

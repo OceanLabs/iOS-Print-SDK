@@ -12,16 +12,27 @@
 
 @property (assign, nonatomic) BOOL skipHomeScreen;
 
-@property (assign, nonatomic) BOOL offerAddressSearch;
-@property (assign, nonatomic) BOOL requirePhoneNumber;
-@property (assign, nonatomic) BOOL hidePrice;
-@property (assign, nonatomic) BOOL offerPayPal;
-@property (assign, nonatomic) BOOL allowsMultipleRecipients;
-@property (strong, nonatomic) NSString *qualityBannerType;
-@property (strong, nonatomic) NSString *checkoutScreenType;
-@property (strong, nonatomic) NSString *productTileStyle;
-@property (strong, nonatomic) NSString *promoBannerText;
-@property (strong, nonatomic) NSString *launchWithPrintOrderVariant;
+@property (assign, nonatomic, readonly) BOOL offerAddressSearch;
+@property (assign, nonatomic, readonly) BOOL requirePhoneNumber;
+@property (assign, nonatomic, readonly) BOOL hidePrice;
+@property (assign, nonatomic, readonly) BOOL offerPayPal;
+@property (strong, nonatomic, readonly) NSString *qualityBannerType;
+@property (strong, nonatomic, readonly) NSString *checkoutScreenType;
+@property (strong, nonatomic, readonly) NSString *productTileStyle;
+@property (strong, nonatomic, readonly) NSString *promoBannerText;
+@property (strong, nonatomic, readonly) NSString *launchWithPrintOrderVariant;
+@property (assign, nonatomic, readonly) BOOL allowsMultipleRecipients;
+
+@property (strong, nonatomic, readonly) NSString *headerLogoURL;
+@property (strong, nonatomic, readonly) NSString *checkoutProgress1URL;
+@property (strong, nonatomic, readonly) NSString *checkoutProgress2URL;
+@property (strong, nonatomic, readonly) NSString *checkoutProgress1BgURL;
+@property (strong, nonatomic, readonly) NSString *checkoutProgress2BgURL;
+@property (strong, nonatomic, readonly) NSString *receiptSuccessURL;
+@property (strong, nonatomic, readonly) NSString *receiptFailureURL;
+@property (strong, nonatomic, readonly) NSString *receiptSuccessBgURL;
+@property (strong, nonatomic, readonly) NSString *receiptFailureBgURL;
+@property (strong, nonatomic, readonly) NSString *supportEmail;
 
 + (instancetype)sharedInstance;
 - (void)fetchRemotePlistsWithCompletionHandler:(void(^)())handler;

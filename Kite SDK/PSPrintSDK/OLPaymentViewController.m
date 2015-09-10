@@ -28,6 +28,8 @@
 #import "OLBaseRequest.h"
 #import "OLPrintOrderCost.h"
 #import "OLKiteABTesting.h"
+#import <SDWebImageManager.h>
+#import "UIImage+ColorAtPixel.h"
 
 #ifdef OL_KITE_OFFER_PAYPAL
 #import <PayPalMobile.h>
@@ -130,6 +132,57 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 #endif
 }
 
+- (void)setupBannerImage:(UIImage *)bannerImage withBgImage:(UIImage *)bannerBgImage{
+    self.tableView.tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, bannerImage.size.height)];
+    UIImageView *banner = [[UIImageView alloc] initWithImage:bannerImage];
+    
+    UIImageView *bannerBg;
+    if(bannerBgImage){
+        bannerBg = [[UIImageView alloc] initWithImage:bannerBgImage];
+    }
+    else{
+        bannerBg = [[UIImageView alloc] init];
+        bannerBg.backgroundColor = [bannerImage colorAtPixel:CGPointMake(3, 3)];
+    }
+    [self.tableView.tableHeaderView addSubview:bannerBg];
+    [self.tableView.tableHeaderView addSubview:banner];
+    if (bannerBgImage.size.width > 100){
+        bannerBg.contentMode = UIViewContentModeTop;
+    }
+    else{
+        bannerBg.contentMode = UIViewContentModeScaleToFill;
+    }
+    banner.contentMode = UIViewContentModeCenter;
+    
+    banner.translatesAutoresizingMaskIntoConstraints = NO;
+    NSDictionary *views = NSDictionaryOfVariableBindings(banner);
+    NSMutableArray *con = [[NSMutableArray alloc] init];
+    
+    NSArray *visuals = @[@"H:|-0-[banner]-0-|",
+                         @"V:|-0-[banner]-0-|"];
+    
+    
+    for (NSString *visual in visuals) {
+        [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+    }
+    
+    [banner.superview addConstraints:con];
+    
+    bannerBg.translatesAutoresizingMaskIntoConstraints = NO;
+    views = NSDictionaryOfVariableBindings(bannerBg);
+    con = [[NSMutableArray alloc] init];
+    
+    visuals = @[@"H:|-0-[bannerBg]-0-|",
+                @"V:|-0-[bannerBg]-0-|"];
+    
+    
+    for (NSString *visual in visuals) {
+        [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+    }
+    
+    [bannerBg.superview addConstraints:con];
+}
+
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -172,50 +225,27 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     [self.view addSubview:self.tableView];
     
     if ([self shippingScreenOnTheStack]) {
-        NSString *bannerImageName = @"checkout_progress_indicator2";
-        UIImage *bannerImage = [UIImage imageNamed:bannerImageName];
-        self.tableView.tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, bannerImage.size.height)];
-        UIImageView *banner = [[UIImageView alloc] initWithImage:bannerImage];
-        
-        UIImage *bannerBgImage = [UIImage imageNamed:[bannerImageName stringByAppendingString:@"_bg"]];
-        UIImageView *bannerBg = [[UIImageView alloc] initWithImage:bannerBgImage];
-        [self.tableView.tableHeaderView addSubview:bannerBg];
-        [self.tableView.tableHeaderView addSubview:banner];
-        if (bannerBgImage.size.width > 100){
-            bannerBg.contentMode = UIViewContentModeTop;
+        NSString *url = [OLKiteABTesting sharedInstance].checkoutProgress2URL;
+        if (url){
+            [[SDWebImageManager sharedManager] downloadImageWithURL:[NSURL URLWithString:url] options:0 progress:NULL completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL){
+                image = [UIImage imageWithCGImage:image.CGImage scale:2 orientation:image.imageOrientation];
+                NSString *bgUrl = [OLKiteABTesting sharedInstance].checkoutProgress2BgURL;
+                if (bgUrl){
+                    [[SDWebImageManager sharedManager] downloadImageWithURL:[NSURL URLWithString:bgUrl] options:0 progress:NULL completed:^(UIImage *bgImage, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL){
+                        bgImage = [UIImage imageWithCGImage:bgImage.CGImage scale:2 orientation:image.imageOrientation];
+                        [self setupBannerImage:image withBgImage:bgImage];
+                    }];
+                }
+                else{
+                    [self setupBannerImage:image withBgImage:nil];
+                }
+                
+            }];
         }
         else{
-            bannerBg.contentMode = UIViewContentModeScaleToFill;
+            [self setupBannerImage:[UIImage imageNamed:@"checkout_progress_indicator2"] withBgImage:[UIImage imageNamed:@"checkout_progress_indicator2_bg"]];
         }
-        banner.contentMode = UIViewContentModeCenter;
-        
-        banner.translatesAutoresizingMaskIntoConstraints = NO;
-        NSDictionary *views = NSDictionaryOfVariableBindings(banner);
-        NSMutableArray *con = [[NSMutableArray alloc] init];
-        
-        NSArray *visuals = @[@"H:|-0-[banner]-0-|",
-                             @"V:|-0-[banner]-0-|"];
-        
-        
-        for (NSString *visual in visuals) {
-            [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
-        }
-        
-        [banner.superview addConstraints:con];
-        
-        bannerBg.translatesAutoresizingMaskIntoConstraints = NO;
-        views = NSDictionaryOfVariableBindings(bannerBg);
-        con = [[NSMutableArray alloc] init];
-        
-        visuals = @[@"H:|-0-[bannerBg]-0-|",
-                    @"V:|-0-[bannerBg]-0-|"];
-        
-        
-        for (NSString *visual in visuals) {
-            [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
-        }
-        
-        [bannerBg.superview addConstraints:con];
+
     }
     
 #ifdef OL_KITE_OFFER_APPLE_PAY

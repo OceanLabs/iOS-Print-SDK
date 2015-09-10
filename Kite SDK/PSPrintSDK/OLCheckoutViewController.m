@@ -18,6 +18,8 @@
 #import <SkyLab.h>
 #import "OLProductPrintJob.h"
 #import "OLKiteABTesting.h"
+#import <SDWebImageManager.h>
+#import "UIImage+ColorAtPixel.h"
 
 NSString *const kOLNotificationUserSuppliedShippingDetails = @"co.oceanlabs.pssdk.kOLNotificationUserSuppliedShippingDetails";
 NSString *const kOLNotificationUserCompletedPayment = @"co.oceanlabs.pssdk.kOLNotificationUserCompletedPayment";
@@ -132,32 +134,18 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
     return self.navigationController.navigationBar.translucent ? [[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height : 0;
 }
 
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    
-    [self registerForKeyboardNotifications];
-    
-    [self trackViewed];
-    
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Next", @"KitePrintSDK", [OLConstants bundle], @"") style:UIBarButtonItemStylePlain target:self action:@selector(onButtonNextClicked)];
-    
-    self.presentedModally = self.parentViewController.isBeingPresented || self.navigationController.viewControllers.firstObject == self;
-    if (self.presentedModally) {
-        self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLConstants bundle], @"") style:UIBarButtonItemStylePlain target:self action:@selector(onButtonCancelClicked)];
-    }
-    else{
-        self.navigationItem.leftBarButtonItem = nil;
-    }
-    
-    self.title = NSLocalizedStringFromTableInBundle(@"Shipping", @"KitePrintSDK", [OLConstants bundle], @"");
-    
-    NSString *bannerImageName = @"checkout_progress_indicator";
-    UIImage *bannerImage = [UIImage imageNamed:bannerImageName];
+- (void)setupBannerImage:(UIImage *)bannerImage withBgImage:(UIImage *)bannerBgImage{
     self.tableView.tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, bannerImage.size.height)];
     UIImageView *banner = [[UIImageView alloc] initWithImage:bannerImage];
     
-    UIImage *bannerBgImage = [UIImage imageNamed:[bannerImageName stringByAppendingString:@"_bg"]];
-    UIImageView *bannerBg = [[UIImageView alloc] initWithImage:bannerBgImage];
+    UIImageView *bannerBg;
+    if(bannerBgImage){
+        bannerBg = [[UIImageView alloc] initWithImage:bannerBgImage];
+    }
+    else{
+        bannerBg = [[UIImageView alloc] init];
+        bannerBg.backgroundColor = [bannerImage colorAtPixel:CGPointMake(3, 3)];
+    }
     [self.tableView.tableHeaderView addSubview:bannerBg];
     [self.tableView.tableHeaderView addSubview:banner];
     if (bannerBgImage.size.width > 100){
@@ -187,7 +175,7 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
     con = [[NSMutableArray alloc] init];
     
     visuals = @[@"H:|-0-[bannerBg]-0-|",
-                         @"V:|-0-[bannerBg]-0-|"];
+                @"V:|-0-[bannerBg]-0-|"];
     
     
     for (NSString *visual in visuals) {
@@ -195,6 +183,46 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
     }
     
     [bannerBg.superview addConstraints:con];
+}
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    
+    [self registerForKeyboardNotifications];
+    
+    [self trackViewed];
+    
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Next", @"KitePrintSDK", [OLConstants bundle], @"") style:UIBarButtonItemStylePlain target:self action:@selector(onButtonNextClicked)];
+    
+    self.presentedModally = self.parentViewController.isBeingPresented || self.navigationController.viewControllers.firstObject == self;
+    if (self.presentedModally) {
+        self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLConstants bundle], @"") style:UIBarButtonItemStylePlain target:self action:@selector(onButtonCancelClicked)];
+    }
+    else{
+        self.navigationItem.leftBarButtonItem = nil;
+    }
+    
+    self.title = NSLocalizedStringFromTableInBundle(@"Shipping", @"KitePrintSDK", [OLConstants bundle], @"");
+    NSString *url = [OLKiteABTesting sharedInstance].checkoutProgress1URL;
+    if (url){
+        [[SDWebImageManager sharedManager] downloadImageWithURL:[NSURL URLWithString:url] options:0 progress:NULL completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL){
+            image = [UIImage imageWithCGImage:image.CGImage scale:2 orientation:image.imageOrientation];
+            NSString *bgUrl = [OLKiteABTesting sharedInstance].checkoutProgress1BgURL;
+            if (bgUrl){
+                [[SDWebImageManager sharedManager] downloadImageWithURL:[NSURL URLWithString:bgUrl] options:0 progress:NULL completed:^(UIImage *bgImage, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL){
+                    bgImage = [UIImage imageWithCGImage:bgImage.CGImage scale:2 orientation:image.imageOrientation];
+                    [self setupBannerImage:image withBgImage:bgImage];
+                }];
+            }
+            else{
+                [self setupBannerImage:image withBgImage:nil];
+            }
+           
+        }];
+    }
+    else{
+        [self setupBannerImage:[UIImage imageNamed:@"checkout_progress_indicator"] withBgImage:[UIImage imageNamed:@"checkout_progress_indicator_bg"]];
+    }
 
     UITapGestureRecognizer *tgr = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onBackgroundClicked)];
     tgr.cancelsTouchesInView = NO; // allow table cell selection to happen as normal
