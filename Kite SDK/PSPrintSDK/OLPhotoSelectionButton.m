@@ -70,7 +70,7 @@
 }
 
 - (void)setImage:(UIImage *)image {
-    UIImage * __weak tintImage = [image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+    UIImage *tintImage = [image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
     [self.imageView setImage:tintImage];
 }
 

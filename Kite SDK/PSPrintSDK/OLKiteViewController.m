@@ -71,7 +71,16 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
 }
 
 - (id)initWithAssets:(NSArray *)assets {
+    return [self initWithAssets:assets info:nil];
+}
+
+- (id)initWithPrintOrder:(OLPrintOrder *)printOrder{
+    return [self initWithPrintOrder:printOrder info:nil];
+}
+
+- (id)initWithAssets:(NSArray *)assets info:(NSDictionary *)info{
     NSAssert(assets != nil && [assets count] > 0, @"KiteViewController requires assets to print");
+    [OLAnalytics setExtraInfo:info];
     if ((self = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:nil] instantiateViewControllerWithIdentifier:@"KiteViewController"])) {
         self.assets = assets;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(templateSyncDidFinish:) name:kNotificationTemplateSyncComplete object:nil];
@@ -80,7 +89,8 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
     return self;
 }
 
-- (id)initWithPrintOrder:(OLPrintOrder *)printOrder{
+- (id)initWithPrintOrder:(OLPrintOrder *)printOrder info:(NSDictionary *)info{
+    [OLAnalytics setExtraInfo:info];
     if ((self = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:nil] instantiateViewControllerWithIdentifier:@"KiteViewController"])) {
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(templateSyncDidFinish:) name:kNotificationTemplateSyncComplete object:nil];
         self.printOrder = printOrder;

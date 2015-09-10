@@ -33,5 +33,7 @@
 
 - (id)initWithAssets:(NSArray *)assets;
 - (id)initWithPrintOrder:(OLPrintOrder *)printOrder;
+- (id)initWithAssets:(NSArray *)assets info:(NSDictionary *)info;
+- (id)initWithPrintOrder:(OLPrintOrder *)printOrder info:(NSDictionary *)info;
 
 @end
