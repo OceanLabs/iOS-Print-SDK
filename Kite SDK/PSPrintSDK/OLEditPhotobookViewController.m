@@ -160,11 +160,13 @@ UINavigationControllerDelegate>
     
     NSArray *visibleCells = [self.collectionView indexPathsForVisibleItems];
     
-    for (NSIndexPath *indexPath in visibleCells){
-        UICollectionViewCell *cell = [self.collectionView cellForItemAtIndexPath:indexPath];
-        UIView *clone = [cell snapshotViewAfterScreenUpdates:YES];
-        clone.tag = 999;
-        [cell addSubview:clone];
+    if ([self.navigationController topViewController] == self){
+        for (NSIndexPath *indexPath in visibleCells){
+            UICollectionViewCell *cell = [self.collectionView cellForItemAtIndexPath:indexPath];
+            UIView *clone = [cell snapshotViewAfterScreenUpdates:YES];
+            clone.tag = 999;
+            [cell addSubview:clone];
+        }
     }
     
     self.rotating = YES;
