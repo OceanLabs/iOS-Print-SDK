@@ -130,19 +130,9 @@ static const NSUInteger kSectionErrorRetry = 2;
         [self setupBannerImage:[UIImage imageNamed:self.printOrder.printed ? @"receipt_success" : @"receipt_failure"] withBgImage:nil];
     }
     
-    
-//	NSString *url = self.printOrder.printed ? [OLKiteABTesting sharedInstance].receiptSuccessURL : [OLKiteABTesting sharedInstance].receiptFailureURL;
-//    if (url){
-//        [[SDWebImageManager sharedManager] downloadImageWithURL:[NSURL URLWithString:url] options:0 progress:NULL completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL){
-//            image = [UIImage imageWithCGImage:image.CGImage scale:2 orientation:image.imageOrientation];
-//            self.tableView.tableHeaderView = [[UIImageView alloc] initWithImage:image];
-//            self.tableView.tableHeaderView.contentMode = UIViewContentModeCenter;
-//            self.tableView.tableHeaderView.frame = CGRectMake(0, 0, self.view.frame.size.width, self.tableView.tableHeaderView.frame.size.height);
-//        }];
-//    }
-//    else{
-//        ((UIImageView *) self.tableView.tableHeaderView).image = [UIImage imageNamed:self.printOrder.printed ? @"receipt_success" : @"receipt_failure"];
-//    }
+    if ([self.tableView respondsToSelector:@selector(setCellLayoutMarginsFollowReadableWidth:)]){
+        self.tableView.cellLayoutMarginsFollowReadableWidth = NO;
+    }
 }
 
 - (void)onButtonDoneClicked {

@@ -62,6 +62,10 @@ static const NSUInteger kTagTextField = 99;
         UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [NSBundle mainBundle], @"") style:UIBarButtonItemStylePlain target:self action:@selector(onCancelButtonClicked)];
         self.navigationItem.leftBarButtonItem = cancelButton;
     }
+    
+    if ([self.tableView respondsToSelector:@selector(setCellLayoutMarginsFollowReadableWidth:)]){
+        self.tableView.cellLayoutMarginsFollowReadableWidth = NO;
+    }
 }
 
 - (void)didMoveToParentViewController:(UIViewController *)parent {

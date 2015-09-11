@@ -177,6 +177,10 @@ UITableViewDataSource, UITextFieldDelegate>
                                                                              style:UIBarButtonItemStyleDone
                                                                             target:self
                                                                             action:@selector(onButtonPayClicked)];
+    
+    if ([self.tableView respondsToSelector:@selector(setCellLayoutMarginsFollowReadableWidth:)]){
+        self.tableView.cellLayoutMarginsFollowReadableWidth = NO;
+    }
 }
 
 - (NSString *)cardNumber {
