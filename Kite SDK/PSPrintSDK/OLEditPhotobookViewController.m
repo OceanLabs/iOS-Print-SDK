@@ -123,6 +123,8 @@ UINavigationControllerDelegate>
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
     
+    self.navigationController.interactivePopGestureRecognizer.enabled = YES;
+    
     NSInteger maxItem = -1;
     for (UICollectionViewCell *cell in [self.collectionView visibleCells]){
         NSIndexPath *indexPath = [self.collectionView indexPathForCell:cell];

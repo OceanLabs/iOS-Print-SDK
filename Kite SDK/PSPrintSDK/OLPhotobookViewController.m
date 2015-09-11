@@ -220,8 +220,6 @@ UINavigationControllerDelegate
     
     self.title = NSLocalizedString(@"Review", @""); //[NSString stringWithFormat: NSLocalizedString(@"%d / %d", @""), self.userSelectedPhotos.count, self.product.quantityToFulfillOrder];
     
-    self.navigationController.interactivePopGestureRecognizer.enabled = NO;
-    
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Confirm", @"") style:UIBarButtonItemStylePlain target:self action:@selector(onButtonNextClicked:)];
     
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Back", @"")
@@ -349,6 +347,11 @@ UINavigationControllerDelegate
     }
 }
 
+- (void)viewDidDisappear:(BOOL)animated{
+    self.navigationController.interactivePopGestureRecognizer.enabled = YES;
+    [super viewDidDisappear:animated];
+}
+
 - (void)updatePagesLabel{
     int page = self.editingPageNumber ? [self.editingPageNumber intValue] : 0;
     self.pagesLabel.text = [NSString stringWithFormat:@"%d-%d of %ld", page + 1, page + 2, (long)self.product.quantityToFulfillOrder];
@@ -387,6 +390,10 @@ UINavigationControllerDelegate
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
     self.haveSeenViewDidAppear = YES;
+    
+    if (!self.editMode){
+        self.navigationController.interactivePopGestureRecognizer.enabled = NO;
+    }
     
     if (self.bookClosed && !self.editMode){
         [self tease];
@@ -838,6 +845,7 @@ UINavigationControllerDelegate
         CGPoint translation = [(UIPanGestureRecognizer *)gestureRecognizer translationInView:self.containerView];
         BOOL draggingLeft = translation.x < 0;
         BOOL draggingRight = translation.x > 0;
+
         if (([self isContainerViewAtRightEdge:NO] && draggingLeft) || ([self isContainerViewAtLeftEdge:NO] && draggingRight)){
             return YES;
         }
