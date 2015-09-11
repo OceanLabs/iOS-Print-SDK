@@ -80,7 +80,17 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
     return _userSelectedPhotos;
 }
 
-- (instancetype)initWithAssets:(NSArray <OLAsset *>* _Nonnull)assets {
+- (instancetype _Nullable)initWithAssets:(NSArray <OLAsset *>*_Nonnull)assets{
+    return [self initWithAssets:assets info:nil];
+}
+
+- (instancetype _Nullable)initWithPrintOrder:(OLPrintOrder *_Nullable)printOrder{
+    return [self initWithPrintOrder:printOrder info:nil];
+}
+
+- (instancetype _Nullable)initWithAssets:(NSArray <OLAsset *>*_Nonnull)assets info:(NSDictionary *_Nullable)info{
+    NSAssert(assets != nil && [assets count] > 0, @"KiteViewController requires assets to print");
+    [OLAnalytics setExtraInfo:info];
     if ((self = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:nil] instantiateViewControllerWithIdentifier:@"KiteViewController"])) {
         self.assets = assets;
     }
@@ -88,7 +98,8 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
     return self;
 }
 
-- (instancetype _Nullable)initWithPrintOrder:(OLPrintOrder * _Nullable)printOrder{
+- (instancetype _Nullable)initWithPrintOrder:(OLPrintOrder *_Nullable)printOrder info:(NSDictionary * _Nullable)info{
+    [OLAnalytics setExtraInfo:info];
     if ((self = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:nil] instantiateViewControllerWithIdentifier:@"KiteViewController"])) {
         self.printOrder = printOrder;
     }

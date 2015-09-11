@@ -32,7 +32,9 @@
 // A set of product template_id strings which if present will restrict which products ultimate show up in the product selection journey
 @property (copy, nonatomic, nullable) NSArray/*<NSString>*/ *filterProducts;
 
-- (instancetype _Nullable)initWithAssets:(NSArray <OLAsset *>* _Nonnull)assets;
-- (instancetype _Nullable)initWithPrintOrder:(OLPrintOrder * _Nullable)printOrder;
+- (instancetype _Nullable)initWithAssets:(NSArray <OLAsset *>*_Nonnull)assets;
+- (instancetype _Nullable)initWithPrintOrder:(OLPrintOrder *_Nullable)printOrder;
+- (instancetype _Nullable)initWithAssets:(NSArray <OLAsset *>*_Nonnull)assets info:(NSDictionary *_Nullable)info;
+- (instancetype _Nullable)initWithPrintOrder:(OLPrintOrder *_Nullable)printOrder info:(NSDictionary * _Nullable)info;
 
 @end
