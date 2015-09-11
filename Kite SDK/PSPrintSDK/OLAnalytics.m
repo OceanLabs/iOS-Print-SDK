@@ -95,6 +95,10 @@ static NSString *nonNilStr(NSString *str) {
                                              @"Kite SDK Version": kOLKiteSDKVersion,
                                              @"Locale Country": localeCountry
                                              } mutableCopy];
+    if (extraInfo){
+        propertiesDict[@"App Extra Info"] = extraInfo;
+    }
+    
     NSDictionary *dict = @{@"event" : eventName,
                            @"properties" : propertiesDict};
     return dict;
@@ -230,10 +234,6 @@ static NSString *nonNilStr(NSString *str) {
 //        p[@"Cost"] = [cost stringValue];
 //    }
     p[@"Job Count"] = [NSString stringWithFormat:@"%lu",  (unsigned long) printOrder.jobs.count];
-    
-    if (extraInfo){
-        p[@"App Extra Info"] = extraInfo;
-    }
     
     return p;
 }
