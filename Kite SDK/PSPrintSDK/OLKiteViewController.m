@@ -109,6 +109,8 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
 -(void)viewDidLoad {
     [super viewDidLoad];
     
+    [[NSURLCache sharedURLCache] removeAllCachedResponses];
+    
     if (!self.navigationController){
         self.navigationBar.hidden = NO;
     }
