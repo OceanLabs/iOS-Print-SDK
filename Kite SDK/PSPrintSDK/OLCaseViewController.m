@@ -52,7 +52,6 @@
             self.visualEffectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
             UIView *view = self.visualEffectView;
             [view.layer setMasksToBounds:YES];
-            [view.layer setCornerRadius:45.0f];
             [self.containerView insertSubview:view belowSubview:self.maskActivityIndicator];
             
             view.translatesAutoresizingMaskIntoConstraints = NO;
@@ -86,6 +85,10 @@
     [self maskWithImage:tempMask targetView:self.imageCropView];
     
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
+}
+
+- (void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
     [self downloadMask];
 }
 

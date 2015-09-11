@@ -2,11 +2,11 @@
   "images" : [
     {
       "idiom" : "universal",
-      "scale" : "1x",
-      "filename" : "dummy mask.png"
+      "scale" : "1x"
     },
     {
       "idiom" : "universal",
+      "filename" : "mask_IP6P-CS.png",
       "scale" : "2x"
     },
     {
