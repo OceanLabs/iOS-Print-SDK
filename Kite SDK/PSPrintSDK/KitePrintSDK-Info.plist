@@ -69,6 +69,13 @@
 				<key>NSExceptionRequiresForwardSecrecy</key>
 				<false/>
 			</dict>
+			<key>facebook.com</key>
+			<dict>
+				<key>NSIncludesSubdomains</key>
+				<true/>
+				<key>NSExceptionRequiresForwardSecrecy</key>
+				<false/>
+			</dict>
 			<key>instagram.com</key>
 			<dict>
 				<key>NSExceptionRequiresForwardSecrecy</key>
