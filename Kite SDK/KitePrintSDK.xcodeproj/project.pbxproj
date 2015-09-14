@@ -68,7 +68,6 @@
 		2EE94D3F1B501D900086590C /* ALAssetsLibrary+Singleton.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EE94D3E1B501D900086590C /* ALAssetsLibrary+Singleton.m */; };
 		2EF53E3B1B55421A00BF936A /* UIImage+ColorAtPixel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EF53E3A1B55421A00BF936A /* UIImage+ColorAtPixel.m */; };
 		2EF53E3E1B5549B900BF936A /* OLInfoPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EF53E3D1B5549B900BF936A /* OLInfoPageViewController.m */; };
-		2EF560771A93608E00224EBA /* UIView+RoundRect.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EF560751A93608E00224EBA /* UIView+RoundRect.m */; };
 		2EF8BA9F1B99E9E4009BC73B /* OLImageCachingManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EF8BA9E1B99E9E4009BC73B /* OLImageCachingManager.m */; };
 		3A5ECAA2AA9D4F38934544CA /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 931ABE3568CB40F8892488E2 /* libPods.a */; };
 		3D0D7ACC1AC0C44C00746FC8 /* NSArray+QueryingExtras.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D0D7ACB1AC0C44C00746FC8 /* NSArray+QueryingExtras.m */; };
@@ -294,7 +293,6 @@
 		2EF53E3C1B5549B900BF936A /* OLInfoPageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLInfoPageViewController.h; sourceTree = "<group>"; };
 		2EF53E3D1B5549B900BF936A /* OLInfoPageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLInfoPageViewController.m; sourceTree = "<group>"; };
 		2EF53E3F1B56429D00BF936A /* KitePrintSDK.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = KitePrintSDK.entitlements; sourceTree = "<group>"; };
-		2EF560751A93608E00224EBA /* UIView+RoundRect.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+RoundRect.m"; sourceTree = "<group>"; };
 		2EF8BA9D1B99E9E4009BC73B /* OLImageCachingManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLImageCachingManager.h; sourceTree = "<group>"; };
 		2EF8BA9E1B99E9E4009BC73B /* OLImageCachingManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLImageCachingManager.m; sourceTree = "<group>"; };
 		352445B905BCE0BBF471808D /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
@@ -1168,7 +1166,6 @@
 				2E39CAA31AB894A8008B1EFF /* OLPhotoSelectionViewController.m in Sources */,
 				CD550A68187B30D200782D75 /* OLAddressLookupViewController.m in Sources */,
 				2EB1C4111B551D6000EFE0D0 /* OLKiteABTesting.m in Sources */,
-				2EF560771A93608E00224EBA /* UIView+RoundRect.m in Sources */,
 				2EA8BEB81A484FCB008A9248 /* OLProductHomeViewController.m in Sources */,
 				2EA829341B9DE54100A9208E /* UIImage+OLAssetsPickerController.m in Sources */,
 				CD93BB30187842AB00316492 /* OLAddressSelectionViewController.m in Sources */,

@@ -48,6 +48,7 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
 
 @interface OLProductTemplate ()
 @property (nonatomic, strong) NSDictionary/*<NSString, NSDecimalNumber>*/ *costsByCurrencyCode;
+@property (nonatomic, assign, readwrite) NSUInteger quantityPerSheet;
 @end
 
 @interface OLCountry (Private)
@@ -81,6 +82,13 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
     else{
         return self.name;
     }
+}
+
+- (NSUInteger)quantityPerSheet{
+    if (self.templateUI == kOLTemplateUIPhotobook){
+        return _quantityPerSheet % 2 == 0 ? _quantityPerSheet : _quantityPerSheet + 1;
+    }
+    return _quantityPerSheet;
 }
 
 - (NSDecimalNumber *)costPerSheetInCurrencyCode:(NSString *)currencyCode {

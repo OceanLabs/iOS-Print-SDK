@@ -132,7 +132,7 @@ UINavigationControllerDelegate>
             maxItem = indexPath.item;
         }
     }
-    if (!self.haveCachedCells){
+    if (!self.haveCachedCells && self.product.quantityToFulfillOrder > (maxItem+1) * 2){
         [self collectionView:self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:maxItem+1 inSection:kSectionPages]];
         [self collectionView:self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:maxItem+2 inSection:kSectionPages]];
         self.haveCachedCells = YES;
