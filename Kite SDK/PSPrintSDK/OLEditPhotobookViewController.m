@@ -210,13 +210,12 @@ UINavigationControllerDelegate>
     if (!self.photobookPhotos){
         self.userSelectedPhotosCopy = [[NSArray alloc] initWithArray:self.userSelectedPhotos copyItems:NO];
         self.photobookPhotos = [[NSMutableArray alloc] initWithCapacity:self.product.quantityToFulfillOrder];
-        [self.photobookPhotos addObjectsFromArray:self.userSelectedPhotos];
-        for (NSInteger i = self.userSelectedPhotos.count; i < self.product.quantityToFulfillOrder; i++){
-            [self.photobookPhotos addObject:[NSNull null]];
+        for (NSInteger i = 0; i < self.product.quantityToFulfillOrder; i++){
+            [self.photobookPhotos addObject:i < self.userSelectedPhotos.count ? self.userSelectedPhotos[i] : [NSNull null]];
         }
     }
     else{
-        NSMutableArray *newPhotos = [NSMutableArray arrayWithArray:self.userSelectedPhotos];
+        NSMutableArray *newPhotos = [NSMutableArray arrayWithArray:[self.userSelectedPhotos subarrayWithRange:NSMakeRange(0, MIN(self.userSelectedPhotos.count, self.product.quantityToFulfillOrder))]];
         [newPhotos removeObjectsInArray:self.userSelectedPhotosCopy];
         for (NSInteger newPhoto = 0; newPhoto < newPhotos.count; newPhoto++){
             BOOL foundSpot = NO;

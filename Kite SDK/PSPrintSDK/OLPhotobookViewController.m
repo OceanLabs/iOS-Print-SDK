@@ -317,7 +317,7 @@ UINavigationControllerDelegate
     }
     
     if (!self.editMode || !self.startOpen){ //Start with book closed
-        [self setUpBookCoverView];
+        [self setUpBookCoverViewForGesture:nil];
         self.bookCover.hidden = NO;
         self.containerView.layer.shadowOpacity = 0;
         
@@ -375,7 +375,12 @@ UINavigationControllerDelegate
     
     if (!self.haveSeenViewDidAppear && [[[UIDevice currentDevice] systemVersion] floatValue] >= 8){
         if (![self isLandscape]){
-            self.containerView.transform = CGAffineTransformMakeTranslation([self xTrasformForBookAtRightEdge], 0);
+            if ((self.containerView.frame.size.width > self.view.frame.size.width - kBookEdgePadding * 2)){
+                self.containerView.transform = CGAffineTransformMakeTranslation([self xTrasformForBookAtRightEdge], 0);
+            }
+            else{
+                [self.containerView.superview addConstraint:self.centerXCon];
+            }
         }
     }
     if (self.editMode && self.bookClosed){
@@ -445,7 +450,7 @@ UINavigationControllerDelegate
     [self.view addConstraint:self.widthCon];
     
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinator> context){
-        [self setUpBookCoverView];
+        [self setUpBookCoverViewForGesture:nil];
         if (size.width > size.height){
             self.containerView.transform = CGAffineTransformIdentity;
         }
@@ -589,7 +594,7 @@ UINavigationControllerDelegate
     NSMutableArray *bookPhotos = [[NSMutableArray alloc] init];
     for (NSInteger object = 0; object < self.photobookPhotos.count; object++){
         if (self.photobookPhotos[object] == [NSNull null]){
-            [bookPhotos addObject:self.userSelectedPhotos[i % self.userSelectedPhotos.count]];
+            [bookPhotos addObject:self.photobookPhotos[i % self.photobookPhotos.count]];
             i++;
         }
         else{
@@ -745,12 +750,12 @@ UINavigationControllerDelegate
         if (draggingLeft && [self isBookAtEnd]) {
             recognizer.enabled = NO;
             recognizer.enabled = YES;
-            [self closeBookBack];
+            [self closeBookBackForGesture:recognizer];
         }
         else if (draggingRight && [self isBookAtStart]) {
             recognizer.enabled = NO;
             recognizer.enabled = YES;
-            [self closeBookFront];
+            [self closeBookFrontForGesture:recognizer];
         }
         return;
     }
@@ -891,14 +896,17 @@ UINavigationControllerDelegate
     }
 }
 
--(void) setUpBookCoverView{
+-(void) setUpBookCoverViewForGesture:(UIPanGestureRecognizer *)sender{
     UISwipeGestureRecognizer *swipe = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(openBook:)];
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onCoverTapRecognized:)];
     UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(onCoverLongPressRecognized:)];
     
     UIView *halfBookCoverImageContainer;
     
-    if ([self isBookAtStart]){
+    CGPoint translation = [sender translationInView:self.containerView];
+    BOOL draggingRight = translation.x >= 0;
+    
+    if ([self isBookAtStart] && (!sender || draggingRight)){
         halfBookCoverImageContainer = [self.bookCover viewWithTag:kTagRight];
         [self.bookCover viewWithTag:kTagLeft].hidden = YES;
         if (!halfBookCoverImageContainer){
@@ -1099,12 +1107,12 @@ UINavigationControllerDelegate
     
 }
 
-- (void)closeBookFront{
+- (void)closeBookFrontForGesture:(UIPanGestureRecognizer *)sender{
     if (self.animating || self.editMode){
         return;
     }
     self.animating = YES;
-    [self setUpBookCoverView];
+    [self setUpBookCoverViewForGesture:sender];
     self.bookCover.hidden = NO;
     
     //Fade in shadow of the half-book.
@@ -1151,12 +1159,12 @@ UINavigationControllerDelegate
         self.bookClosed = YES;
     }];
 }
-- (void)closeBookBack{
+- (void)closeBookBackForGesture:(UIPanGestureRecognizer *)sender{
     if (self.animating || self.editMode){
         return;
     }
     self.animating = YES;
-    [self setUpBookCoverView];
+    [self setUpBookCoverViewForGesture:sender];
     self.bookCover.hidden = NO;
     
     // Turn off containerView shadow because we will be animating that. Will use bookCover view shadow for the duration of the animation.
