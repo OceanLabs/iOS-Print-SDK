@@ -178,12 +178,14 @@ static NSOperationQueue *imageOperationQueue;
                 if (![self isCropped]){
                     [self getImageWithSize:CGSizeZero progress:progressHandler completion:^(UIImage *image){
                         self.cachedCroppedThumbnailImage = image;
+                        progressHandler(1);
                         handler(image);
                     }];
                 }
                 else{
                     [OLPrintPhoto resizedImageWithPrintPhoto:self size:destSize cropped:cropped progress:progressHandler completion:^(UIImage *image) {
                         self.cachedCroppedThumbnailImage = image;
+                        progressHandler(1);
                         handler(image);
                     }];
                 }
@@ -194,12 +196,14 @@ static NSOperationQueue *imageOperationQueue;
                 if (![self isCropped]){
                     [self getImageWithSize:CGSizeZero progress:progressHandler completion:^(UIImage *image){
                         self.cachedCroppedThumbnailImage = image;
+                        progressHandler(1);
                         handler(image);
                     }];
                 }
                 else{
                     [OLPrintPhoto resizedImageWithPrintPhoto:self size:destSize cropped:cropped progress:progressHandler completion:^(UIImage *image) {
                         self.cachedCroppedThumbnailImage = image;
+                        progressHandler(1);
                         handler(image);
                     }];
                 }
@@ -223,7 +227,11 @@ static NSOperationQueue *imageOperationQueue;
 
 #if defined(OL_KITE_OFFER_INSTAGRAM) || defined(OL_KITE_OFFER_FACEBOOK)
 - (void)downloadFullImageWithProgress:(OLImageEditorImageGetImageProgressHandler)progressHandler completion:(OLImageEditorImageGetImageCompletionHandler)completionHandler {
-    if (progressHandler) progressHandler(0.05f); // small bit of fake inital progress to get progress bars displaying
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (progressHandler){
+            progressHandler(0.05f); // small bit of fake inital progress to get progress bars displaying
+        }
+    });
     [[SDWebImageManager sharedManager] downloadImageWithURL:[self.asset fullURL] options:0 progress:^(NSInteger receivedSize, NSInteger expectedSize) {
         dispatch_async(dispatch_get_main_queue(), ^{
             if (progressHandler) {

@@ -50,9 +50,15 @@
 }
 
 - (void)setProgress:(float)progress{
-    if (progress == 0){
-        progress = 0.1;
+    if (progress == 1 && self.loadingView.progress < 0.1){
+        self.loadingView.hidden = YES;
+        return;
     }
+    
+    if (progress == 0){
+        progress = 0.05;
+    }
+    
     self.loadingView.hidden = NO;
     [self.loadingView setProgress:progress animated:YES];
     
