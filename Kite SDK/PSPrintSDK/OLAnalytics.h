@@ -24,4 +24,6 @@
 + (void)trackOrderSubmission:(OLPrintOrder *)printOrder;
 + (void)trackQualityInfoScreenViewed;
 
++ (void)setExtraInfo:(NSDictionary *)info;
+
 @end

@@ -21,6 +21,8 @@ static NSString *const kKeyUserDistinctId = @"ly.kite.sdk.kKeyUserDistinctId";
 static NSString *const kOLMixpanelToken = @"cdf64507670dd359c43aa8895fb87676";
 static NSString *const kOLMixpanelURL = @"https://api.mixpanel.com/track/";
 
+static NSDictionary *extraInfo;
+
 @implementation OLAnalytics
 
 static NSString *nonNilStr(NSString *str) {
@@ -93,6 +95,10 @@ static NSString *nonNilStr(NSString *str) {
                                              @"Kite SDK Version": kOLKiteSDKVersion,
                                              @"Locale Country": localeCountry
                                              } mutableCopy];
+    if (extraInfo){
+        propertiesDict[@"App Extra Info"] = extraInfo;
+    }
+    
     NSDictionary *dict = @{@"event" : eventName,
                            @"properties" : propertiesDict};
     return dict;
@@ -238,6 +244,10 @@ static NSString *nonNilStr(NSString *str) {
         [productNames addObject:[OLProduct productWithTemplateId:printJob.templateId].productTemplate.name];
     }
     return productNames;
+}
+
++ (void)setExtraInfo:(NSDictionary *)info{
+    extraInfo = info;
 }
 
 @end
