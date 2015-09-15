@@ -10,6 +10,7 @@
 #import "OLPrintPhoto.h"
 #import "OLScrollCropViewController.h"
 #import "OLProduct.h"
+#import "OLRemoteImageView.h"
 
 @interface OLPhotobookPageContentViewController ()
 
@@ -94,7 +95,9 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             NSInteger blockIndex = self.pageIndex;
             
-            [printPhoto setImageSize:self.imageView.frame.size cropped:YES progress:NULL completionHandler:^(UIImage *image){
+            [printPhoto setImageSize:self.imageView.frame.size cropped:YES progress:^(float progress){
+                [self.imageView setProgress:progress];
+            }completionHandler:^(UIImage *image){
                 dispatch_async(dispatch_get_main_queue(), ^{
                     if (blockIndex == self.pageIndex){
                         self.imageView.image = image;
