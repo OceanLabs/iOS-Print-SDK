@@ -329,7 +329,7 @@ id safeObject(id obj){
 }
 
 - (void)setupAllowMultipleRecipientsTest{
-    self.allowsMultipleRecipients = nil;
+    self.allowsMultipleRecipients = NO;
     NSDictionary *experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestAllowMultipleRecipients];
     if (!experimentDict) {
         experimentDict = @{@"Yes" : @0, @"No" : @1};
