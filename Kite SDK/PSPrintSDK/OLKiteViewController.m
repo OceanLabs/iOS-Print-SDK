@@ -274,7 +274,7 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
         }
         
         NSError *error = n.userInfo[kNotificationKeyTemplateSyncError];
-        NSString *message = NSLocalizedString(@"There was problem getting Print Shop products. Check your Internet connectivity or try again later.", @"");
+        NSString *message = NSLocalizedString(@"There was a problem getting Print Shop products. Check your Internet connectivity or try again later.", @"");
         if (error.code == kOLKiteSDKErrorCodeMaintenanceMode) {
             message = kOLKiteSDKErrorMessageMaintenanceMode;
         }

@@ -306,6 +306,15 @@ UINavigationControllerDelegate>
 //    }
 }
 
+- (void)updateUserSelectedPhotos{
+    [self.userSelectedPhotos removeAllObjects];
+    for (OLPrintPhoto *item in self.photobookPhotos){
+        if (![item isKindOfClass:[NSNull class]]){
+            [self.userSelectedPhotos addObject:item];
+        }
+    }
+}
+
 #pragma mark - Menu Actions
 
 - (void)deletePage{
@@ -321,6 +330,7 @@ UINavigationControllerDelegate>
         self.selectedIndexNumber = nil;
     }
     self.photobookPhotos[self.longPressImageIndex] = [NSNull null];
+    [self updateUserSelectedPhotos];
     self.interactionPhotobook.photobookPhotos = self.photobookPhotos;
     [[self findPageForImageIndex:self.longPressImageIndex] loadImageWithCompletionHandler:NULL];
 }
@@ -883,7 +893,7 @@ UINavigationControllerDelegate>
             }
         }
     }
-    
+    [self updateUserSelectedPhotos];
 }
 
 #pragma mark - CTAssetsPickerControllerDelegate Methods

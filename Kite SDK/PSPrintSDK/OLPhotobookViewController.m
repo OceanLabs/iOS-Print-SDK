@@ -703,6 +703,15 @@ UINavigationControllerDelegate
     }
 }
 
+- (void)updateUserSelectedPhotos{
+    [self.userSelectedPhotos removeAllObjects];
+    for (OLPrintPhoto *item in self.photobookPhotos){
+        if (![item isKindOfClass:[NSNull class]]){
+            [self.userSelectedPhotos addObject:item];
+        }
+    }
+}
+
 - (void)onTapGestureRecognized:(UITapGestureRecognizer *)sender{
     if ([sender locationInView:self.pageController.view].x < self.pageController.view.frame.size.width / 2.0){
         self.croppingImageIndex = 0;
@@ -1373,7 +1382,7 @@ UINavigationControllerDelegate
     for (OLPhotobookPageContentViewController *page in self.pageController.viewControllers){
         [page loadImageWithCompletionHandler:NULL];
     }
-    
+    [self updateUserSelectedPhotos];
 }
 
 - (void)updatePhotobookPhotos{
