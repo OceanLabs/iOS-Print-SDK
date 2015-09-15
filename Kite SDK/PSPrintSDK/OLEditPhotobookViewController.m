@@ -162,7 +162,7 @@ UINavigationControllerDelegate>
     
     NSArray *visibleCells = [self.collectionView indexPathsForVisibleItems];
     
-    if ([self.navigationController topViewController] == self){
+    if ([self.navigationController topViewController] == self && !self.presentedViewController){
         for (NSIndexPath *indexPath in visibleCells){
             UICollectionViewCell *cell = [self.collectionView cellForItemAtIndexPath:indexPath];
             UIView *clone = [cell snapshotViewAfterScreenUpdates:YES];

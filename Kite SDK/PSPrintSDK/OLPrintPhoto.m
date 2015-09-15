@@ -178,14 +178,18 @@ static NSOperationQueue *imageOperationQueue;
                 if (![self isCropped]){
                     [self getImageWithSize:CGSizeZero progress:progressHandler completion:^(UIImage *image){
                         self.cachedCroppedThumbnailImage = image;
-                        progressHandler(1);
+                        if (progressHandler){
+                            progressHandler(1);
+                        }
                         handler(image);
                     }];
                 }
                 else{
                     [OLPrintPhoto resizedImageWithPrintPhoto:self size:destSize cropped:cropped progress:progressHandler completion:^(UIImage *image) {
                         self.cachedCroppedThumbnailImage = image;
-                        progressHandler(1);
+                        if (progressHandler){
+                            progressHandler(1);
+                        }
                         handler(image);
                     }];
                 }
@@ -196,14 +200,18 @@ static NSOperationQueue *imageOperationQueue;
                 if (![self isCropped]){
                     [self getImageWithSize:CGSizeZero progress:progressHandler completion:^(UIImage *image){
                         self.cachedCroppedThumbnailImage = image;
-                        progressHandler(1);
+                        if (progressHandler){
+                            progressHandler(1);
+                        }
                         handler(image);
                     }];
                 }
                 else{
                     [OLPrintPhoto resizedImageWithPrintPhoto:self size:destSize cropped:cropped progress:progressHandler completion:^(UIImage *image) {
                         self.cachedCroppedThumbnailImage = image;
-                        progressHandler(1);
+                        if (progressHandler){
+                            progressHandler(1);
+                        }
                         handler(image);
                     }];
                 }
