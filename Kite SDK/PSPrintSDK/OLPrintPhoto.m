@@ -105,8 +105,8 @@ static NSOperationQueue *imageOperationQueue;
 
 - (void)setImageSize:(CGSize)destSize cropped:(BOOL)cropped progress:(OLImageEditorImageGetImageProgressHandler)progressHandler completionHandler:(void(^)(UIImage *image))handler{
     if (self.cachedCroppedThumbnailImage) {
-        handler(self.cachedCroppedThumbnailImage);
         if ((MAX(destSize.height, destSize.width) * [OLPrintPhoto screenScale] <= MIN(self.cachedCroppedThumbnailImage.size.width, self.cachedCroppedThumbnailImage.size.height))){
+            handler(self.cachedCroppedThumbnailImage);
             return;
         }
     }
@@ -277,7 +277,7 @@ static NSOperationQueue *imageOperationQueue;
                 });
             }
         };
-        CGSize requestSize = fullResolution ? PHImageManagerMaximumSize : size;
+        CGSize requestSize = fullResolution ? PHImageManagerMaximumSize : CGSizeMake(size.width * [OLPrintPhoto screenScale], size.height * [OLPrintPhoto screenScale]);
         [imageManager requestImageForAsset:(PHAsset *)self.asset targetSize:requestSize contentMode:PHImageContentModeAspectFill options:options resultHandler:^(UIImage *image, NSDictionary *info){
             completionHandler(image);
         }];
