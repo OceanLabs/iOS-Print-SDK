@@ -594,7 +594,7 @@ UINavigationControllerDelegate
     NSMutableArray *bookPhotos = [[NSMutableArray alloc] init];
     for (NSInteger object = 0; object < self.photobookPhotos.count; object++){
         if (self.photobookPhotos[object] == [NSNull null]){
-            [bookPhotos addObject:self.photobookPhotos[i % self.photobookPhotos.count]];
+            [bookPhotos addObject:self.userSelectedPhotos[i % self.userSelectedPhotos.count]];
             i++;
         }
         else{
