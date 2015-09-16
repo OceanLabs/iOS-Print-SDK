@@ -13,7 +13,7 @@
 #import "OLConstants.h"
 #import "OLProductTemplate.h"
 #import "OLScrollCropViewController.h"
-#import <SDWebImageManager.h>
+#import <SDWebImage/SDWebImageManager.h>
 #import "OLAsset+Private.h"
 #import "OLAnalytics.h"
 #import "OLKitePrintSDK.h"

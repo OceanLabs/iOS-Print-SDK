@@ -8,7 +8,7 @@
 
 #import "ViewController.h"
 #import "OLKitePrintSDK.h"
-#import <CTAssetsPickerController.h>
+#import <CTAssetsPickerController/CTAssetsPickerController.h>
 
 #import <AssetsLibrary/AssetsLibrary.h>
 

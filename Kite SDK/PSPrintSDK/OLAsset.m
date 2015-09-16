@@ -14,11 +14,11 @@
 #import "ALAssetsLibrary+Singleton.h"
 
 #ifdef OL_KITE_OFFER_INSTAGRAM
-#import <OLInstagramImage.h>
+#import <InstagramImagePicker/OLInstagramImage.h>
 #endif
 
 #ifdef OL_KITE_OFFER_FACEBOOK
-#import <OLFacebookImage.h>
+#import <FacebookImagePicker/OLFacebookImage.h>
 #endif
 
 static NSString *const kKeyMimeType = @"co.oceanlabs.pssdk.kKeyMimeType";

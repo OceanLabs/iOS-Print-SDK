@@ -10,23 +10,23 @@
 #import "OLPrintPhoto.h"
 #import "OLAnalytics.h"
 #import "OLAsset+Private.h"
-#import <SDWebImageManager.h>
+#import <SDWebImage/SDWebImageManager.h>
 #import "OLProductPrintJob.h"
 #import "OLKitePrintSDK.h"
-#import <CTAssetsPickerController.h>
+#import <CTAssetsPickerController/CTAssetsPickerController.h>
 #import "NSArray+QueryingExtras.h"
 #import "OLKiteViewController.h"
 #import "OLKiteABTesting.h"
 #import "NSObject+Utils.h"
 
 #ifdef OL_KITE_OFFER_INSTAGRAM
-#import <OLInstagramImagePickerController.h>
-#import <OLInstagramImage.h>
+#import <InstagramImagePicker/OLInstagramImagePickerController.h>
+#import <InstagramImagePicker/OLInstagramImage.h>
 #endif
 
 #ifdef OL_KITE_OFFER_FACEBOOK
-#import <OLFacebookImagePickerController.h>
-#import <OLFacebookImage.h>
+#import <FacebookImagePicker/OLFacebookImagePickerController.h>
+#import <FacebookImagePicker/OLFacebookImage.h>
 #endif
 
 @interface OLKiteViewController ()

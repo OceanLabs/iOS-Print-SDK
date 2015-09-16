@@ -7,7 +7,7 @@
 //
 
 #import "OLURLDataSource.h"
-#import <SDWebImageManager.h>
+#import <SDWebImage/SDWebImageManager.h>
 
 static NSString *const kKeyURL = @"co.oceanlabs.pssdk.kKeyURL";
 

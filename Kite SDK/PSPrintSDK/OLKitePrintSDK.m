@@ -10,7 +10,7 @@
 #import "OLPayPalCard.h"
 #import "OLProductTemplate.h"
 #ifdef OL_KITE_OFFER_PAYPAL
-#import <PayPalMobile.h>
+#import <PayPal-iOS-SDK/PayPalMobile.h>
 #endif
 #import "OLJudoPayCard.h"
 #import "OLProductHomeViewController.h"

@@ -11,23 +11,23 @@
 #import "OLPrintPhoto.h"
 #import "OLOrderReviewViewController.h"
 
-#import <CTAssetsPickerController.h>
+#import <CTAssetsPickerController/CTAssetsPickerController.h>
 
 #ifdef OL_KITE_OFFER_INSTAGRAM
-#import <OLInstagramImagePickerController.h>
-#import <OLInstagramImage.h>
+#import <InstagramImagePicker/OLInstagramImagePickerController.h>
+#import <InstagramImagePicker/OLInstagramImage.h>
 #endif
 
 #ifdef OL_KITE_OFFER_FACEBOOK
-#import <OLFacebookImagePickerController.h>
-#import <OLFacebookImage.h>
+#import <FacebookImagePicker/OLFacebookImagePickerController.h>
+#import <FacebookImagePicker/OLFacebookImage.h>
 #endif
 
 #import "OLPrintJob.h"
 #import "OLAddress.h"
 #import "OLAsset.h"
 #import "OLProductPrintJob.h"
-#import <UIColor+HexString.h>
+#import <UIColor-HexString/UIColor+HexString.h>
 #import "OLCheckoutViewController.h"
 #import "OLConstants.h"
 #import "LXReorderableCollectionViewFlowLayout.h"

@@ -7,8 +7,8 @@
 //
 
 #import "OLJudoPayCard.h"
-#import <UICKeyChainStore.h>
-#import <AFNetworking.h>
+#import <UICKeyChainStore/UICKeyChainStore.h>
+#import <AFNetworking/AFNetworking.h>
 #import "OLConstants.h"
 
 static NSString *const kKeyNumberMasked = @"co.oceanlabs.judopay.kKeyNumberMasked";

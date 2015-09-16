@@ -7,8 +7,8 @@
 //
 
 #import "OLKiteABTesting.h"
-#import <SkyLab.h>
-#import <NSUserDefaults+GroundControl.h>
+#import <SkyLab/SkyLab.h>
+#import <GroundControl/NSUserDefaults+GroundControl.h>
 #import "OLKitePrintSDK.h"
 
 static NSString *const kOLKiteABTestLaunchWithPrintOrderVariant = @"ly.kite.abtest.launch_with_print_order_variant";

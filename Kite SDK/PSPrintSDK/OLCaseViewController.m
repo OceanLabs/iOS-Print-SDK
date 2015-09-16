@@ -7,7 +7,7 @@
 //
 
 #import "OLCaseViewController.h"
-#import <SDWebImageManager.h>
+#import <SDWebImage/SDWebImageManager.h>
 
 @interface OLSingleImageProductReviewViewController (Private)
 
