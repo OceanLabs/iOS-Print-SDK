@@ -10,7 +10,7 @@
 #import "OLPayPalCard.h"
 #import "OLProductTemplate.h"
 #ifdef OL_KITE_OFFER_PAYPAL
-#import <PayPalMobile.h>
+#import <PayPal-iOS-SDK/PayPalMobile.h>
 #endif
 #import "OLJudoPayCard.h"
 #import "OLProductHomeViewController.h"
@@ -82,14 +82,10 @@ static NSString *instagramRedirectURI = nil;
     apiKey = _apiKey;
     environment = _environment;
     if (environment == kOLKitePrintSDKEnvironmentLive) {
-#ifdef OL_KITE_OFFER_PAYPAL
         [OLPayPalCard setClientId:[self paypalClientId] withEnvironment:kOLPayPalEnvironmentLive];
-#endif
         [OLJudoPayCard setClientId:kJudoClientId token:kJudoLiveToken secret:kJudoLiveSecret withEnvironment:kOLJudoPayEnvironmentLive];
     } else {
-#ifdef OL_KITE_OFFER_PAYPAL
         [OLPayPalCard setClientId:[self paypalClientId] withEnvironment:kOLPayPalEnvironmentSandbox];
-#endif
         [OLJudoPayCard setClientId:kJudoClientId token:kJudoSandboxToken secret:kJudoSandboxSecret withEnvironment:kOLJudoPayEnvironmentSandbox];
     }
 }
@@ -120,6 +116,7 @@ static NSString *instagramRedirectURI = nil;
         case kOLKitePrintSDKEnvironmentSandbox: return PayPalEnvironmentSandbox;
     }
 }
+#endif
 
 + (NSString *_Nonnull)paypalClientId {
     switch (environment) {
@@ -134,8 +131,6 @@ static NSString *instagramRedirectURI = nil;
         case kOLKitePrintSDKEnvironmentSandbox: return kOLPayPalRecipientEmailSandbox;
     }
 }
-
-#endif
 
 #ifdef OL_KITE_OFFER_APPLE_PAY
 + (void)setApplePayMerchantID:(NSString *_Nonnull)mID{

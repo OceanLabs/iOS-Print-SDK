@@ -23,10 +23,10 @@
 #import "OLKiteABTesting.h"
 #import "UIImage+ColorAtPixel.h"
 #import "OLInfoPageViewController.h"
-#import <TSMarkdownParser.h>
-#import <SDWebImageManager.h>
+#import <SDWebImage/SDWebImageManager.h>
 #import <MessageUI/MessageUI.h>
 #import <MessageUI/MFMailComposeViewController.h>
+#import <TSMarkdownParser/TSMarkdownParser.h>
 
 #define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
 

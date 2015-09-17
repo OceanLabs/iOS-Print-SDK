@@ -16,6 +16,7 @@
 #import "UIView+RoundRect.h"
 #import "OLPopupOptionsImageView.h"
 #import "OLAssetsPickerController.h"
+#import <CTAssetsPickerController/CTAssetsPickerController.h>
 #import "OLKitePrintSDK.h"
 #import "NSArray+QueryingExtras.h"
 #import "OLAnalytics.h"
@@ -24,16 +25,16 @@
 #import <CTAssetsPickerController.h>
 
 #ifdef OL_KITE_OFFER_FACEBOOK
-#import <OLFacebookImagePickerController.h>
-#import <OLFacebookImage.h>
+#import <FacebookImagePicker/OLFacebookImagePickerController.h>
+#import <FacebookImagePicker/OLFacebookImage.h>
 #endif
 
 #ifdef OL_KITE_OFFER_INSTAGRAM
-#import <OLInstagramImagePickerController.h>
-#import <OLInstagramImage.h>
+#import <InstagramImagePicker/OLInstagramImagePickerController.h>
+#import <InstagramImagePicker/OLInstagramImage.h>
 #endif
 
-#import <MPFlipTransition.h>
+#import <MPFlipViewController/MPFlipTransition.h>
 
 static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 static const NSUInteger kTagLeft = 10;

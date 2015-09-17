@@ -10,7 +10,7 @@
 #import "OLKitePrintSDK.h"
 #import "OLAssetsPickerController.h"
 #import "OLImageCachingManager.h"
-#import <CTAssetsPickerController.h>
+#import <CTAssetsPickerController/CTAssetsPickerController.h>
 
 #import <AssetsLibrary/AssetsLibrary.h>
 @import Photos;

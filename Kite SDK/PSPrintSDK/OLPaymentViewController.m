@@ -10,7 +10,7 @@
 #import "OLReceiptViewController.h"
 #import "OLPrintOrder.h"
 #import "OLPrintJob.h"
-#import <SVProgressHUD.h>
+#import <SVProgressHUD/SVProgressHUD.h>
 #import "OLPrintOrder+History.h"
 #import "OLPostcardPrintJob.h"
 #import "OLCheckoutViewController.h"
@@ -32,12 +32,12 @@
 #import "UIImage+ColorAtPixel.h"
 
 #ifdef OL_KITE_OFFER_PAYPAL
-#import <PayPalMobile.h>
+#import <PayPal-iOS-SDK/PayPalMobile.h>
 #endif
 
 #ifdef OL_KITE_OFFER_APPLE_PAY
-#import <Stripe+ApplePay.h>
-#import <STPTestPaymentAuthorizationViewController.h>
+#import <Stripe/Stripe+ApplePay.h>
+#import <ApplePayStubs/STPTestPaymentAuthorizationViewController.h>
 #endif
 
 @import PassKit;

@@ -14,7 +14,7 @@
 #import "OLPrintJob.h"
 #import "OLProductTemplate.h"
 #import "OLConstants.h"
-#import <SVProgressHUD.h>
+#import <SVProgressHUD/SVProgressHUD.h>
 #import "OLPaymentLineItem.h"
 #import "OLPrintOrderCost.h"
 #import "OLOrderReviewViewController.h"

@@ -10,6 +10,7 @@
 #import "OLPhotobookViewController.h"
 #import "OLPhotobookPageContentViewController.h"
 #import "OLAssetsPickerController.h"
+#import <CTAssetsPickerController/CTAssetsPickerController.h>
 #import "OLPrintPhoto.h"
 #import "NSArray+QueryingExtras.h"
 #import "OLPopupOptionsImageView.h"
@@ -19,13 +20,13 @@
 #import <CTAssetsPickerController.h>
 
 #ifdef OL_KITE_OFFER_INSTAGRAM
-#import <OLInstagramImagePickerController.h>
-#import <OLInstagramImage.h>
+#import <InstagramImagePicker/OLInstagramImagePickerController.h>
+#import <InstagramImagePicker/OLInstagramImage.h>
 #endif
 
 #ifdef OL_KITE_OFFER_FACEBOOK
-#import <OLFacebookImagePickerController.h>
-#import <OLFacebookImage.h>
+#import <FacebookImagePicker/OLFacebookImagePickerController.h>
+#import <FacebookImagePicker/OLFacebookImage.h>
 #endif
 
 static const NSInteger kSectionCover = 0;

@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name		= 'Kite-Print-SDK'
-  spec.version         	= '3.1.6'
+  spec.version         	= '3.1.9'
   spec.license 		= { :type => 'MIT', :file => 'Kite SDK/LICENSE' }
   spec.homepage         = 'https://github.com/OceanLabs/iOS-Print-SDK'
   spec.authors          = {'Deon Botha' => 'deon@oceanlabs.co'}
@@ -30,13 +30,13 @@ Pod::Spec.new do |spec|
 
   spec.subspec 'PayPal' do |paypal|
     paypal.xcconfig	=  { 'OTHER_CFLAGS' => '$(inherited) -DOL_KITE_OFFER_PAYPAL' }
-    paypal.dependency	'PayPal-iOS-SDK', '~> 2.11.4'
+    paypal.dependency	'PayPal-iOS-SDK', '~> 2.4.2'
   end
 
   spec.subspec 'ApplePay' do |apple|
     apple.xcconfig	  =  { 'OTHER_CFLAGS' => '$(inherited) -DOL_KITE_OFFER_APPLE_PAY' }
-    apple.dependency	  'Stripe', '5.1.0'
-    apple.dependency	  'Stripe/ApplePay', '5.1.0'
+    apple.dependency	  'Stripe', '5.1.4'
+    apple.dependency	  'Stripe/ApplePay', '5.1.4'
     apple.dependency   	  'ApplePayStubs', '0.2'
   end
 

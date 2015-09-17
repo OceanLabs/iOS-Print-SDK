@@ -12,7 +12,7 @@
 #import "OLCountryPickerController.h"
 #import "OLAddressEditViewController.h"
 #import "OLConstants.h"
-#import <SVProgressHUD.h>
+#import <SVProgressHUD/SVProgressHUD.h>
 
 //static const NSUInteger kMaxInFlightRequests = 5;
 

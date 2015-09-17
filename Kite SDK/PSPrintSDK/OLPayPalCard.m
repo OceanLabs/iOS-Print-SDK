@@ -8,7 +8,7 @@
 
 #import "OLPayPalCard.h"
 #import "OLConstants.h"
-#import <AFNetworking.h>
+#import <AFNetworking/AFNetworking.h>
 
 static NSString *const kKeyNumberMasked = @"co.oceanlabs.paypal.kKeyNumberMasked";
 static NSString *const kKeyCardType = @"co.oceanlabs.paypal.kKeyCardtype";

@@ -13,7 +13,7 @@
 #import "OLProduct.h"
 #import "OLPrintJob.h"
 #import "OLKitePrintSDK.h"
-#import <AFNetworking.h>
+#import <AFNetworking/AFNetworking.h>
 #include <sys/sysctl.h>
 #import "OLKiteABTesting.h"
 
