@@ -62,6 +62,35 @@ If you'd like to offer your users the opportunity to add photos via Instagram or
 
 PayPal functionality is also optional although recommended as you'll typically see a higher conversion rate with it.
 
+### iOS 9+ Security
+
+Xcode 7 includes some new security features. In order to connect to the Kite servers you will need to add some exceptions to your project's info plist file. We need to add forward secrecy exceptions for Amazon S3 (which Kite uses) and PayPal (which is used for credit card processing even if you don't opt for PayPal integration). The following is what you need to copy your app's info plist:
+
+```
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSExceptionDomains</key>
+		<dict>
+			<key>paypal.com</key>
+			<dict>
+				<key>NSExceptionRequiresForwardSecrecy</key>
+				<false/>
+				<key>NSIncludesSubdomains</key>
+				<true/>
+			</dict>
+			<key>amazonaws.com</key>
+			<dict>
+				<key>NSExceptionRequiresForwardSecrecy</key>
+				<false/>
+				<key>NSIncludesSubdomains</key>
+				<true/>
+			</dict>
+		</dict>
+	</dict>
+```
+
+There are a few more entries to add if you opt for Facebook and Instagram integration as mentioned above. More info [here](Kite SDK/docs/social_photo_sources.md).
+
 ## Use Cases
 
 The Print SDK supports two primary use cases: **Kite Print Shop Experience**, and **Custom User Experience**.
