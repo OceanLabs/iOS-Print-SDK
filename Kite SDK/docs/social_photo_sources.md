@@ -30,7 +30,16 @@ That's all there is to do -- an Instagram button should now appear on photo sele
 
     1. Creating and configuring a Facebook App
     2. Configuring your iOS Apps `.plist`
-    3. Handle Facebook responses in `application:openURL:sourceApplication:annotation:`
+    3. Handle Facebook responses in `application:openURL:sourceApplication:annotation:` and `application:didFinishLaunchingWithOptions:launchOptions`
+    For example:
+    ```
+    - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    return [[FBSDKApplicationDelegate sharedInstance] application:application didFinishLaunchingWithOptions:launchOptions];
+    }
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
+    return [[FBSDKApplicationDelegate sharedInstance] application:application openURL:url sourceApplication:sourceApplication annotation:annotation];
+}
+    ```
 
 4. Xcode 7 includes some new security features. In order to connect to the social services above you will need to add some more exceptions to your project's info plist file (in addition to the ones that Kite requires).
 We need to add forward secrecy exceptions for Facebook's and Instagram's CDNs. The following is what you need to copy your app's info plist, which includes anything that is needed by Kite as well:
