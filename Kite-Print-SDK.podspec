@@ -13,7 +13,7 @@ Pod::Spec.new do |spec|
   spec.dependency	'AFNetworking', '~> 2.5.0'
   spec.dependency	'UICKeyChainStore', '~> 2.0.4'
   spec.dependency	'CSStickyHeaderFlowLayout', '~> 0.2.4'
-  spec.dependency	'CTAssetsPickerController', '~> 2.9.3'
+  spec.dependency	'CTAssetsPickerController', '~> 3.0.3'
   spec.dependency	'GroundControl', '~> 2.1.0'
   spec.dependency	'SkyLab', '~> 1.0.0'
   spec.dependency	'MPFlipViewController', '~> 0.0.2'
@@ -30,7 +30,7 @@ Pod::Spec.new do |spec|
 
   spec.subspec 'PayPal' do |paypal|
     paypal.xcconfig	=  { 'OTHER_CFLAGS' => '$(inherited) -DOL_KITE_OFFER_PAYPAL' }
-    paypal.dependency	'PayPal-iOS-SDK', '~> 2.4.2'
+    paypal.dependency	'PayPal-iOS-SDK', '~> 2.12.1'
   end
 
   spec.subspec 'ApplePay' do |apple|
