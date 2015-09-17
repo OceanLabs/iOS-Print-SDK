@@ -319,7 +319,7 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
 
 + (NSString *)storyboardIdentifierForGroupSelected:(OLProductGroup *)group{
     OLProduct *product = [group.products firstObject];
-    if (product.productTemplate.templateUI == kOLTemplateUIPoster) {
+    if (product.productTemplate.templateUI == kOLTemplateUIPoster && group.products.count > 1) {
         NSInteger x = product.productTemplate.gridCountX;
         NSInteger y = product.productTemplate.gridCountY;
         for (OLProduct *otherProduct in group.products){

@@ -21,21 +21,31 @@ PODS:
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
   - ApplePayStubs (0.2)
-  - Bolts (1.2.1):
-    - Bolts/AppLinks (= 1.2.1)
-    - Bolts/Tasks (= 1.2.1)
-  - Bolts/AppLinks (1.2.1):
+  - Bolts (1.2.2):
+    - Bolts/AppLinks (= 1.2.2)
+    - Bolts/Tasks (= 1.2.2)
+  - Bolts/AppLinks (1.2.2):
     - Bolts/Tasks
-  - Bolts/Tasks (1.2.1)
+  - Bolts/Tasks (1.2.2)
   - CSStickyHeaderFlowLayout (0.2.9)
   - CTAssetsPickerController (3.0.3):
     - PureLayout (~> 2.0.0)
   - DACircularProgress (2.3.1)
-  - Facebook-iOS-SDK (3.23.2):
-    - Bolts (~> 1.0)
-  - FacebookImagePicker (1.1.0):
-    - Facebook-iOS-SDK (~> 3.23.2)
+  - FacebookImagePicker (2.0.3):
+    - FBSDKCoreKit (~> 4.6.0)
+    - FBSDKLoginKit (~> 4.6.0)
     - SDWebImage (~> 3.7.2)
+  - FBSDKCoreKit (4.6.0):
+    - Bolts (~> 1.1)
+    - FBSDKCoreKit/arc (= 4.6.0)
+    - FBSDKCoreKit/no-arc (= 4.6.0)
+  - FBSDKCoreKit/arc (4.6.0):
+    - Bolts (~> 1.1)
+  - FBSDKCoreKit/no-arc (4.6.0):
+    - Bolts (~> 1.1)
+    - FBSDKCoreKit/arc
+  - FBSDKLoginKit (4.6.0):
+    - FBSDKCoreKit
   - GroundControl (2.1.0):
     - AFNetworking (~> 2.2)
   - InstagramImagePicker (1.1.2):
@@ -83,12 +93,13 @@ DEPENDENCIES:
 SPEC CHECKSUMS:
   AFNetworking: 05edc0ac4c4c8cf57bcf4b84be5b0744b6d8e71e
   ApplePayStubs: 5dd63c36527d1117b2045939fb5b6581b4815433
-  Bolts: 7686a5cb204d1ac54cee26f12d9b7622db3f80d1
+  Bolts: 20a2bd788273360cb1e31530dc19b8544eef2544
   CSStickyHeaderFlowLayout: ece83dad3a1528af8b5a25bda3aa12536624ac65
   CTAssetsPickerController: 4673b4b22347325723a4dace00e4bd856c64529b
   DACircularProgress: 4dd437c0fc3da5161cb289e07ac449493d41db71
-  Facebook-iOS-SDK: cd87f0b2f0c1d9574b44e8fa2baacc275524bac3
-  FacebookImagePicker: 2aacdf94272c1fda0dfd2ef819b502de054236b0
+  FacebookImagePicker: f351870240d013c28342745bf3fcbf885f8c8c76
+  FBSDKCoreKit: 9954492d90c5fd65ae831395697a1660360d61f1
+  FBSDKLoginKit: 3d07febbfa884b9878cacba54f705bb41f07d4b6
   GroundControl: fbc762e0097feece7fb6d8cdc8f2747a504a6833
   InstagramImagePicker: 12bee68689e68fd8759ed3eda7aee40ee7cf3aa4
   MPFlipViewController: 86caa6203ca9d35af23cc6b4e1bcf53e53333770
