@@ -10,7 +10,7 @@
 #import "OLKitePrintSDK.h"
 
 #ifdef OL_KITE_OFFER_FACEBOOK
-#import <FacebookSDK/FacebookSDK.h>
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 #endif
 @implementation AppDelegate
 
@@ -47,7 +47,10 @@
 
 #ifdef OL_KITE_OFFER_FACEBOOK
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
-    BOOL wasHandled = [FBAppCall handleOpenURL:url sourceApplication:sourceApplication];
+    BOOL wasHandled = [[FBSDKApplicationDelegate sharedInstance] application:application
+                                                                     openURL:url
+                                                           sourceApplication:sourceApplication
+                                                                  annotation:annotation];
     return wasHandled;
 }
 #endif
