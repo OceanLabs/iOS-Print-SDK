@@ -37,7 +37,7 @@ Use our SDK to unlock hidden revenue streams and add value for your users. *In u
 
 ## Requirements
 
-* Xcode 5 and iOS SDK 7
+* Xcode 7
 * iOS 7.0+ target deployment
 
 ## Installation
