@@ -16,13 +16,14 @@
 #import "UIView+RoundRect.h"
 #import "OLPopupOptionsImageView.h"
 #import "OLAssetsPickerController.h"
+#ifdef OL_KITE_AT_LEAST_IOS8
 #import <CTAssetsPickerController/CTAssetsPickerController.h>
+#endif
 #import "OLKitePrintSDK.h"
 #import "NSArray+QueryingExtras.h"
 #import "OLAnalytics.h"
 #import "NSObject+Utils.h"
 #import "OLImageCachingManager.h"
-#import <CTAssetsPickerController.h>
 
 #ifdef OL_KITE_OFFER_FACEBOOK
 #import <FacebookImagePicker/OLFacebookImagePickerController.h>
@@ -65,7 +66,11 @@ static const CGFloat kBookEdgePadding = 38;
 @end
 
 @interface OLPhotobookViewController () <UIPageViewControllerDataSource, UIPageViewControllerDelegate, UIGestureRecognizerDelegate,
-OLAssetsPickerControllerDelegate, CTAssetsPickerControllerDelegate, UIActionSheetDelegate, UIAlertViewDelegate, OLImageViewDelegate, OLScrollCropViewControllerDelegate,
+OLAssetsPickerControllerDelegate,
+#ifdef OL_KITE_AT_LEAST_IOS8
+CTAssetsPickerControllerDelegate,
+#endif
+UIActionSheetDelegate, UIAlertViewDelegate, OLImageViewDelegate, OLScrollCropViewControllerDelegate,
 #ifdef OL_KITE_OFFER_INSTAGRAM
 OLInstagramImagePickerControllerDelegate,
 #endif
@@ -224,7 +229,7 @@ UINavigationControllerDelegate
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Confirm", @"") style:UIBarButtonItemStylePlain target:self action:@selector(onButtonNextClicked:)];
     
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Back", @"")
-                                                                             style:UIBarButtonItemStyleBordered
+                                                                             style:UIBarButtonItemStylePlain
                                                                             target:nil
                                                                             action:nil];
     
@@ -1305,23 +1310,26 @@ UINavigationControllerDelegate
 }
 
 - (void)showCameraRollImagePicker{
-    CTAssetsPickerController *picker;
+    UIViewController *picker;
     Class assetClass;
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8){
-        picker = (CTAssetsPickerController *)[[OLAssetsPickerController alloc] init];
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8 || !definesAtLeastiOS8){
+        picker = [[OLAssetsPickerController alloc] init];
         [(OLAssetsPickerController *)picker setAssetsFilter:[ALAssetsFilter allPhotos]];
         assetClass = [ALAsset class];
+        ((OLAssetsPickerController *)picker).delegate = self;
     }
+#ifdef OL_KITE_AT_LEAST_IOS8
     else{
         picker = [[CTAssetsPickerController alloc] init];
-        picker.showsEmptyAlbums = NO;
+        ((CTAssetsPickerController *)picker).showsEmptyAlbums = NO;
         PHFetchOptions *options = [[PHFetchOptions alloc] init];
         options.predicate = [NSPredicate predicateWithFormat:@"mediaType == %d", PHAssetMediaTypeImage];
-        picker.assetsFetchOptions = options;
+        ((CTAssetsPickerController *)picker).assetsFetchOptions = options;
         assetClass = [PHAsset class];
+        ((CTAssetsPickerController *)picker).delegate = self;
     }
+#endif
     
-    picker.delegate = self;
     [self presentViewController:picker animated:YES completion:nil];
 }
 
@@ -1428,7 +1436,7 @@ UINavigationControllerDelegate
     return NO;
 }
 
-- (void)assetsPickerController:(CTAssetsPickerController *)picker didFinishPickingAssets:(NSArray *)assets {
+- (void)assetsPickerController:(id)picker didFinishPickingAssets:(NSArray *)assets {
     if (self.addNewPhotosAtIndex == -1){
         self.coverPhoto = [[OLPrintPhoto alloc] init];
         self.coverPhoto.asset = [assets firstObject];
@@ -1445,11 +1453,11 @@ UINavigationControllerDelegate
         return;
     }
     
-    [self populateArrayWithNewArray:assets dataType:[picker isKindOfClass:[CTAssetsPickerController class]] ? [PHAsset class] : [ALAsset class]];
+    [self populateArrayWithNewArray:assets dataType:[picker isKindOfClass:[OLAssetsPickerController class]] ? [ALAsset class] : [PHAsset class]];
     [picker dismissViewControllerAnimated:YES completion:^(void){}];
 }
 
-- (BOOL)assetsPickerController:(CTAssetsPickerController *)picker shouldSelectAsset:(ALAsset *)asset{
+- (BOOL)assetsPickerController:(OLAssetsPickerController *)picker shouldSelectAsset:(ALAsset *)asset{
     if (self.addNewPhotosAtIndex == -1){
         return picker.selectedAssets.count == 0;
     }
@@ -1465,6 +1473,8 @@ UINavigationControllerDelegate
     return YES;
 }
 
+
+#ifdef OL_KITE_AT_LEAST_IOS8
 - (void)assetsPickerController:(CTAssetsPickerController *)picker didDeSelectAsset:(PHAsset *)asset{
     PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
     options.networkAccessAllowed = YES;
@@ -1476,6 +1486,7 @@ UINavigationControllerDelegate
     options.networkAccessAllowed = YES;
     [[OLImageCachingManager sharedInstance].photosCachingManager startCachingImagesForAssets:@[asset] targetSize:PHImageManagerMaximumSize contentMode:PHImageContentModeAspectFill options:options];
 }
+#endif
 
 - (BOOL)assetsPickerController:(OLAssetsPickerController *)picker shouldShowAsset:(id)asset{
     NSString *fileName = [[[asset defaultRepresentation] filename] lowercaseString];

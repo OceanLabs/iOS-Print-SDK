@@ -14,13 +14,14 @@
 #import "OLProductPrintJob.h"
 #import "OLKitePrintSDK.h"
 #import "OLAssetsPickerController.h"
+#ifdef OL_KITE_AT_LEAST_IOS8
 #import <CTAssetsPickerController/CTAssetsPickerController.h>
+#endif
 #import "NSArray+QueryingExtras.h"
 #import "OLKiteViewController.h"
 #import "OLKiteABTesting.h"
 #import "NSObject+Utils.h"
 #import "OLImageCachingManager.h"
-#import <CTAssetsPickerController.h>
 #import "OLRemoteImageView.h"
 #import "OLRemoteImageCropper.h"
 
@@ -61,7 +62,10 @@ OLInstagramImagePickerControllerDelegate,
 #ifdef OL_KITE_OFFER_FACEBOOK
 OLFacebookImagePickerControllerDelegate,
 #endif
-OLAssetsPickerControllerDelegate, CTAssetsPickerControllerDelegate>
+#ifdef OL_KITE_AT_LEAST_IOS8
+CTAssetsPickerControllerDelegate,
+#endif
+OLAssetsPickerControllerDelegate>
 
 @property (weak, nonatomic) IBOutlet UILabel *quantityLabel;
 @property (assign, nonatomic) NSUInteger quantity;
@@ -449,23 +453,26 @@ OLAssetsPickerControllerDelegate, CTAssetsPickerControllerDelegate>
 }
 
 - (void)showCameraRollImagePicker{
-    CTAssetsPickerController *picker;
+    UIViewController *picker;
     Class assetClass;
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8){
-        picker = (CTAssetsPickerController *)[[OLAssetsPickerController alloc] init];
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8 || !definesAtLeastiOS8){
+        picker = [[OLAssetsPickerController alloc] init];
         [(OLAssetsPickerController *)picker setAssetsFilter:[ALAssetsFilter allPhotos]];
         assetClass = [ALAsset class];
+        ((OLAssetsPickerController *)picker).delegate = self;
     }
+#ifdef OL_KITE_AT_LEAST_IOS8
     else{
         picker = [[CTAssetsPickerController alloc] init];
-        picker.showsEmptyAlbums = NO;
+        ((CTAssetsPickerController *)picker).showsEmptyAlbums = NO;
         PHFetchOptions *options = [[PHFetchOptions alloc] init];
         options.predicate = [NSPredicate predicateWithFormat:@"mediaType == %d", PHAssetMediaTypeImage];
-        picker.assetsFetchOptions = options;
+        ((CTAssetsPickerController *)picker).assetsFetchOptions = options;
         assetClass = [PHAsset class];
+        ((CTAssetsPickerController *)picker).delegate = self;
     }
+#endif
     
-    picker.delegate = self;
     NSArray *allAssets = [[self createAssetArray] mutableCopy];
     NSMutableArray *alAssets = [[NSMutableArray alloc] init];
     for (id asset in allAssets){
@@ -473,7 +480,7 @@ OLAssetsPickerControllerDelegate, CTAssetsPickerControllerDelegate>
             [alAssets addObject:asset];
         }
     }
-    picker.selectedAssets = alAssets;
+    [(id)picker setSelectedAssets:alAssets];
     [self presentViewController:picker animated:YES completion:nil];
 }
 
@@ -563,8 +570,8 @@ OLAssetsPickerControllerDelegate, CTAssetsPickerControllerDelegate>
     return NO;
 }
 
-- (void)assetsPickerController:(CTAssetsPickerController *)picker didFinishPickingAssets:(NSArray *)assets {
-    [self populateArrayWithNewArray:assets dataType:[picker isKindOfClass:[CTAssetsPickerController class]] ? [PHAsset class] : [ALAsset class]];
+- (void)assetsPickerController:(id)picker didFinishPickingAssets:(NSArray *)assets {
+    [self populateArrayWithNewArray:assets dataType:[picker isKindOfClass:[OLAssetsPickerController class]] ? [ALAsset class] : [PHAsset class]];
     if (self.imagePicked){
         [self.imagePicked getImageWithProgress:NULL completion:^(UIImage *image){
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -584,6 +591,7 @@ OLAssetsPickerControllerDelegate, CTAssetsPickerControllerDelegate>
     return YES;
 }
 
+#ifdef OL_KITE_AT_LEAST_IOS8
 - (void)assetsPickerController:(CTAssetsPickerController *)picker didDeSelectAsset:(PHAsset *)asset{
     PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
     options.networkAccessAllowed = YES;
@@ -595,6 +603,7 @@ OLAssetsPickerControllerDelegate, CTAssetsPickerControllerDelegate>
     options.networkAccessAllowed = YES;
     [[OLImageCachingManager sharedInstance].photosCachingManager startCachingImagesForAssets:@[asset] targetSize:PHImageManagerMaximumSize contentMode:PHImageContentModeAspectFill options:options];
 }
+#endif
 
 - (BOOL)assetsPickerController:(OLAssetsPickerController *)picker shouldShowAsset:(id)asset{
     NSString *fileName = [[[asset defaultRepresentation] filename] lowercaseString];

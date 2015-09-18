@@ -10,14 +10,15 @@
 #import "OLPhotobookViewController.h"
 #import "OLPhotobookPageContentViewController.h"
 #import "OLAssetsPickerController.h"
+#ifdef OL_KITE_AT_LEAST_IOS8
 #import <CTAssetsPickerController/CTAssetsPickerController.h>
+#endif
 #import "OLPrintPhoto.h"
 #import "NSArray+QueryingExtras.h"
 #import "OLPopupOptionsImageView.h"
 #import "OLScrollCropViewController.h"
 #import "OLAnalytics.h"
 #import "OLImageCachingManager.h"
-#import <CTAssetsPickerController.h>
 
 #ifdef OL_KITE_OFFER_INSTAGRAM
 #import <InstagramImagePicker/OLInstagramImagePickerController.h>
@@ -52,7 +53,11 @@ static const NSInteger kSectionPages = 2;
 #endif
 @end
 
-@interface OLEditPhotobookViewController () <UICollectionViewDelegateFlowLayout, OLPhotobookViewControllerDelegate, OLAssetsPickerControllerDelegate, CTAssetsPickerControllerDelegate, UIActionSheetDelegate, UIAlertViewDelegate, OLImageViewDelegate, OLScrollCropViewControllerDelegate,
+@interface OLEditPhotobookViewController () <UICollectionViewDelegateFlowLayout, OLPhotobookViewControllerDelegate, OLAssetsPickerControllerDelegate,
+#ifdef OL_KITE_AT_LEAST_IOS8
+CTAssetsPickerControllerDelegate,
+#endif
+UIActionSheetDelegate, UIAlertViewDelegate, OLImageViewDelegate, OLScrollCropViewControllerDelegate,
 #ifdef OL_KITE_OFFER_INSTAGRAM
 OLInstagramImagePickerControllerDelegate,
 #endif
@@ -93,7 +98,7 @@ UINavigationControllerDelegate>
     self.title = NSLocalizedString(@"Move Pages", @"");
     
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Back", @"")
-                                                                             style:UIBarButtonItemStyleBordered
+                                                                             style:UIBarButtonItemStylePlain
                                                                             target:nil
                                                                             action:nil];
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]
@@ -811,23 +816,26 @@ UINavigationControllerDelegate>
 }
 
 - (void)showCameraRollImagePicker{
-    CTAssetsPickerController *picker;
+    UIViewController *picker;
     Class assetClass;
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8){
-        picker = (CTAssetsPickerController *)[[OLAssetsPickerController alloc] init];
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8 || !definesAtLeastiOS8){
+        picker = [[OLAssetsPickerController alloc] init];
         [(OLAssetsPickerController *)picker setAssetsFilter:[ALAssetsFilter allPhotos]];
         assetClass = [ALAsset class];
+        ((OLAssetsPickerController *)picker).delegate = self;
     }
+#ifdef OL_KITE_AT_LEAST_IOS8
     else{
         picker = [[CTAssetsPickerController alloc] init];
-        picker.showsEmptyAlbums = NO;
+        ((CTAssetsPickerController *)picker).showsEmptyAlbums = NO;
         PHFetchOptions *options = [[PHFetchOptions alloc] init];
         options.predicate = [NSPredicate predicateWithFormat:@"mediaType == %d", PHAssetMediaTypeImage];
-        picker.assetsFetchOptions = options;
+        ((CTAssetsPickerController *)picker).assetsFetchOptions = options;
         assetClass = [PHAsset class];
+        ((CTAssetsPickerController *)picker).delegate = self;
     }
+#endif
     
-    picker.delegate = self;
     [self presentViewController:picker animated:YES completion:nil];
 }
 
@@ -907,7 +915,7 @@ UINavigationControllerDelegate>
     return NO;
 }
 
-- (void)assetsPickerController:(CTAssetsPickerController *)picker didFinishPickingAssets:(NSArray *)assets {
+- (void)assetsPickerController:(id)picker didFinishPickingAssets:(NSArray *)assets {
     if (self.replacingImageNumber){
         self.photobookPhotos[[self.replacingImageNumber integerValue]] = [NSNull null];
         self.replacingImageNumber = nil;
@@ -929,7 +937,7 @@ UINavigationControllerDelegate>
         return;
     }
     
-    [self populateArrayWithNewArray:assets dataType:[picker isKindOfClass:[CTAssetsPickerController class]] ? [PHAsset class] : [ALAsset class]];
+    [self populateArrayWithNewArray:assets dataType:[picker isKindOfClass:[OLAssetsPickerController class]] ? [ALAsset class] : [PHAsset class]];
     [picker dismissViewControllerAnimated:YES completion:^(void){}];
     
 }
@@ -941,6 +949,7 @@ UINavigationControllerDelegate>
     return YES;
 }
 
+#ifdef OL_KITE_AT_LEAST_IOS8
 - (void)assetsPickerController:(CTAssetsPickerController *)picker didDeSelectAsset:(PHAsset *)asset{
     PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
     options.networkAccessAllowed = YES;
@@ -952,6 +961,7 @@ UINavigationControllerDelegate>
     options.networkAccessAllowed = YES;
     [[OLImageCachingManager sharedInstance].photosCachingManager startCachingImagesForAssets:@[asset] targetSize:PHImageManagerMaximumSize contentMode:PHImageContentModeAspectFill options:options];
 }
+#endif
 
 - (BOOL)assetsPickerController:(OLAssetsPickerController *)picker shouldShowAsset:(id)asset{
     NSString *fileName = [[[asset defaultRepresentation] filename] lowercaseString];

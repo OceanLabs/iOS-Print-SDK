@@ -12,7 +12,10 @@
 #import "OLOrderReviewViewController.h"
 
 #import "OLAssetsPickerController.h"
+
+#ifdef OL_KITE_AT_LEAST_IOS8
 #import <CTAssetsPickerController/CTAssetsPickerController.h>
+#endif
 
 #ifdef OL_KITE_OFFER_INSTAGRAM
 #import <InstagramImagePicker/OLInstagramImagePickerController.h>
@@ -60,7 +63,10 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 @end
 
 @interface OLPhotoSelectionViewController () <UINavigationControllerDelegate,
+#ifdef OL_KITE_AT_LEAST_IOS8
                                             CTAssetsPickerControllerDelegate,
+#endif
+                                            OLAssetsPickerControllerDelegate,
                                             UICollectionViewDataSource,
                                             UICollectionViewDelegate,
                                             UICollectionViewDelegateFlowLayout,
@@ -377,30 +383,26 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 #pragma mark - Actions
 
 - (IBAction)cameraRollSelected:(id)sender {
-    CTAssetsPickerController *picker;
+    UIViewController *picker;
     Class assetClass;
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8){
-        picker = (CTAssetsPickerController *)[[OLAssetsPickerController alloc] init];
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8 || !definesAtLeastiOS8){
+        picker = [[OLAssetsPickerController alloc] init];
         [(OLAssetsPickerController *)picker setAssetsFilter:[ALAssetsFilter allPhotos]];
         assetClass = [ALAsset class];
+        ((OLAssetsPickerController *)picker).delegate = self;
     }
+#ifdef OL_KITE_AT_LEAST_IOS8
     else{
         picker = [[CTAssetsPickerController alloc] init];
-        picker.showsEmptyAlbums = NO;
+        ((CTAssetsPickerController *)picker).showsEmptyAlbums = NO;
         PHFetchOptions *options = [[PHFetchOptions alloc] init];
         options.predicate = [NSPredicate predicateWithFormat:@"mediaType == %d", PHAssetMediaTypeImage];
-        picker.assetsFetchOptions = options;
+        ((CTAssetsPickerController *)picker).assetsFetchOptions = options;
         assetClass = [PHAsset class];
-        
-//        PHFetchResult *fetchResult = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeAlbum subtype:PHAssetCollectionSubtypeAny options:nil];
-//        for (PHAssetCollection *collection in fetchResult){
-//            if ([self.delegate respondsToSelector:@selector(kiteController:isDefaultAssetsGroup:)] && [self.delegate kiteController:[self kiteViewController] isDefaultAssetsCollection:collection]) {
-//                picker.defaultAssetCollection = collection;
-//            }
-//        }
+        ((CTAssetsPickerController *)picker).delegate = self;
     }
+#endif
     
-    picker.delegate = self;
     NSArray *allAssets = [[self createAssetArray] mutableCopy];
     NSMutableArray *alAssets = [[NSMutableArray alloc] init];
     for (id asset in allAssets){
@@ -408,7 +410,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
             [alAssets addObject:asset];
         }
     }
-    picker.selectedAssets = alAssets;
+    [(id)picker setSelectedAssets:alAssets];
     [self presentViewController:picker animated:YES completion:nil];
 }
 
@@ -492,8 +494,8 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     return NO;
 }
 
-- (void)assetsPickerController:(CTAssetsPickerController *)picker didFinishPickingAssets:(NSArray *)assets {
-    [self populateArrayWithNewArray:assets dataType:[picker isKindOfClass:[CTAssetsPickerController class]] ? [PHAsset class] : [ALAsset class]];
+- (void)assetsPickerController:(id)picker didFinishPickingAssets:(NSArray *)assets {
+    [self populateArrayWithNewArray:assets dataType:[picker isKindOfClass:[OLAssetsPickerController class]] ? [ALAsset class] : [PHAsset class]];
     [picker dismissViewControllerAnimated:YES completion:^(void){}];
     
 }
@@ -505,6 +507,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     return YES;
 }
 
+#ifdef OL_KITE_AT_LEAST_IOS8
 - (void)assetsPickerController:(CTAssetsPickerController *)picker didDeSelectAsset:(PHAsset *)asset{
     PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
     options.networkAccessAllowed = YES;
@@ -516,6 +519,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     options.networkAccessAllowed = YES;
     [[OLImageCachingManager sharedInstance].photosCachingManager startCachingImagesForAssets:@[asset] targetSize:PHImageManagerMaximumSize contentMode:PHImageContentModeAspectFill options:options];
 }
+#endif
 
 - (BOOL)assetsPickerController:(OLAssetsPickerController *)picker shouldShowAsset:(id)asset{
     NSString *fileName = [[[asset defaultRepresentation] filename] lowercaseString];

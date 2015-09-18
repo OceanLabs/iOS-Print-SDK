@@ -13,7 +13,6 @@ Pod::Spec.new do |spec|
   spec.dependency	'AFNetworking', '~> 2.5.0'
   spec.dependency	'UICKeyChainStore', '~> 2.0.4'
   spec.dependency	'CSStickyHeaderFlowLayout', '~> 0.2.4'
-  spec.dependency	'CTAssetsPickerController', '~> 3.0.3'
   spec.dependency	'GroundControl', '~> 2.1.0'
   spec.dependency	'SkyLab', '~> 1.0.0'
   spec.dependency	'MPFlipViewController', '~> 0.0.2'
@@ -48,6 +47,11 @@ Pod::Spec.new do |spec|
   spec.subspec 'Instagram' do |instagram|
     instagram.xcconfig =  { 'OTHER_CFLAGS' => '$(inherited) -DOL_KITE_OFFER_INSTAGRAM' }
     instagram.dependency 'InstagramImagePicker'
+  end
+
+  spec.subspec 'iOS8' do |ios8|
+    ios8.xcconfig =  { 'OTHER_CFLAGS' => '$(inherited) -DOL_KITE_AT_LEAST_IOS8' }
+    ios8.dependency	'CTAssetsPickerController', '~> 3.0.3'
   end
 
 end
