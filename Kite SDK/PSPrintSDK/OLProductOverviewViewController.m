@@ -58,11 +58,20 @@
 
 @implementation OLProductOverviewViewController
 
+- (CGFloat)detailsBoxHeight{
+    if ([self respondsToSelector:@selector(traitCollection)]){
+        return self.traitCollection.verticalSizeClass == UIUserInterfaceSizeClassCompact ? 340 : 450;
+    }
+    else{
+        return 340;
+    }
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     
     CGSize size = self.view.frame.size;
-    self.detailsViewHeightCon.constant = size.height > size.width ? 450 : 340;
+    self.detailsViewHeightCon.constant = size.height > size.width ? 450 : [self detailsBoxHeight];
     
     if (self.product.productTemplate.templateUI == kOLTemplateUIPoster){
         self.title = NSLocalizedString(@"Posters", @"");
@@ -162,7 +171,7 @@
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator{
     [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
     [coordinator animateAlongsideTransition:^(id context){
-        self.detailsViewHeightCon.constant = size.height > size.width ? 450 : 340;
+        self.detailsViewHeightCon.constant = size.height > size.width ? 450 : [self detailsBoxHeight];
         self.detailsBoxTopCon.constant = self.detailsBoxTopCon.constant != 0 ? self.detailsViewHeightCon.constant-100 : 0;
     }completion:NULL];
 }
