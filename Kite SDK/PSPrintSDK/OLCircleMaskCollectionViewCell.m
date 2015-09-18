@@ -10,8 +10,8 @@
 
 @implementation OLCircleMaskCollectionViewCell
 
--(void)layoutSubviews{
-    [super layoutSubviews];
+- (void)drawRect:(CGRect)rect{
+    [super drawRect:rect];
     
     if (self.enableMask){
         UIImageView *imageView = (UIImageView *)[self.contentView viewWithTag:10];

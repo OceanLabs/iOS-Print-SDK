@@ -103,6 +103,10 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinator> context){
         [self.collectionView.collectionViewLayout invalidateLayout];
+        for (NSIndexPath *indexPath in visibleCells){
+            UICollectionViewCell *cell = [self.collectionView cellForItemAtIndexPath:indexPath];
+            [cell setNeedsDisplay];
+        }
     }completion:^(id<UIViewControllerTransitionCoordinator> context){
     }];
 }
@@ -447,6 +451,7 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     
     if (self.product.productTemplate.templateUI == kOLTemplateUICircle){
         cell.enableMask = YES;
+        [cell setNeedsDisplay];
     }
     
     UIEdgeInsets b = self.product.productTemplate.imageBorder;
