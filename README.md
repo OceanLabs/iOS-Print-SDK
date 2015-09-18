@@ -62,6 +62,23 @@ If you'd like to offer your users the opportunity to add photos via Instagram or
 
 PayPal functionality is also optional although recommended as you'll typically see a higher conversion rate with it.
 
+### Quick Integration
+We really mean it when we say integration can be done in minutes.
+* Step 1: Import the SDK
+```
+#import <OLKitePrintSDK.h>
+```
+* Step 2: Set the API key and the environment:
+```
+[OLKitePrintSDK setAPIKey:@"YOUR_API_KEY" withEnvironment:kOLKitePrintSDKEnvironmentLive]; //Or kOLKitePrintSDKEnvironmentSandbox for testing
+```
+* Step 3: Create and present Kite:
+```
+OLKiteViewController *vc = [[OLKiteViewController alloc] initWithAssets:@[[OLAsset assetWithImageAsJPEG:YOUR_UIIMAGE_OBJECT]]]];
+[self presentViewController:vc animated:YES completion:NULL];
+```
+* Step 4: Profit! 
+
 ### iOS 9+ Security
 
 Xcode 7 includes some new security features. In order to connect to the Kite servers you will need to add some exceptions to your project's info plist file. We need to add forward secrecy exceptions for Amazon S3 (which Kite uses) and PayPal (which is used for credit card processing even if you don't opt for PayPal integration). The following is what you need to copy your app's info plist:
