@@ -107,7 +107,7 @@ UINavigationControllerDelegate
 @property (assign, nonatomic) BOOL userHasOpenedBook;
 @property (assign, nonatomic) BOOL haveSeenViewDidAppear;
 
-@property (weak, nonatomic) UIImageView *coverImageView;
+@property (weak, nonatomic) OLPopupOptionsImageView *coverImageView;
 @property (assign, nonatomic) NSInteger addNewPhotosAtIndex;
 @property (strong, nonatomic) NSArray *userSelectedPhotosCopy;
 
@@ -487,7 +487,9 @@ UINavigationControllerDelegate
     }
     __weak OLPhotobookViewController *welf = self;
     if (self.coverImageView){
-        [self.coverPhoto setImageSize:self.coverImageView.frame.size cropped:YES progress:NULL completionHandler:^(UIImage *image){
+        [self.coverPhoto setImageSize:self.coverImageView.frame.size cropped:YES progress:^(float progress){
+            [welf.coverImageView setProgress:progress];
+        }completionHandler:^(UIImage *image){
             dispatch_async(dispatch_get_main_queue(), ^{
                 welf.coverImageView.image = image;
             });
