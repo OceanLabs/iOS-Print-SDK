@@ -106,9 +106,14 @@ UINavigationControllerDelegate, OLKiteDelegate>
 }
 
 - (BOOL)isAPIKeySet {
-    if ([[self apiKey] isEqualToString:@"REPLACE_WITH_YOUR_API_KEY"]) {
-        [[[UIAlertView alloc] initWithTitle:@"API Key Required" message:@"Set your API keys at the top of ViewController.m before you can print. This can be found under your profile at http://kite.ly" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
-        return NO;
+    if (![[[NSProcessInfo processInfo]environment][@"OL_KITE_UI_TEST"] isEqualToString:@"1"]){
+        if ([[self apiKey] isEqualToString:@"REPLACE_WITH_YOUR_API_KEY"] && ![OLKitePrintSDK apiKey]) {
+            [[[UIAlertView alloc] initWithTitle:@"API Key Required" message:@"Set your API keys at the top of ViewController.m before you can print. This can be found under your profile at http://kite.ly" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+            return NO;
+        }
+    }
+    else{
+        [OLKitePrintSDK setAPIKey:[[NSProcessInfo processInfo]environment][@"TEST_API_KEY"] withEnvironment:kOLKitePrintSDKEnvironmentSandbox];
     }
     
     return YES;
@@ -123,9 +128,10 @@ UINavigationControllerDelegate, OLKiteDelegate>
 }
 
 - (void)printWithAssets:(NSArray *)assets {
-    if (![self isAPIKeySet]) return;
-
-    [OLKitePrintSDK setAPIKey:[self apiKey] withEnvironment:[self environment]];
+    if (![[[NSProcessInfo processInfo]environment][@"OL_KITE_UI_TEST"] isEqualToString:@"1"]){
+        if (![self isAPIKeySet]) return;
+        [OLKitePrintSDK setAPIKey:[self apiKey] withEnvironment:[self environment]];
+    }
     
 #ifdef OL_KITE_OFFER_APPLE_PAY
     [OLKitePrintSDK setApplePayMerchantID:kApplePayMerchantIDKey];
