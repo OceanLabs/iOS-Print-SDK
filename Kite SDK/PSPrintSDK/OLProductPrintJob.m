@@ -32,7 +32,7 @@ static id stringOrEmptyString(NSString *str) {
 @synthesize uuid;
 @synthesize extraCopies;
 
-- (id)initWithTemplateId:(NSString *)templateId imageFilePaths:(NSArray/*<NSString>*/ *)imageFilePaths {
+- (instancetype)initWithTemplateId:(NSString *)templateId imageFilePaths:(NSArray/*<NSString>*/ *)imageFilePaths {
     if (self = [super init]) {
         NSMutableArray *assets = [[NSMutableArray alloc] init];
         for (id imagePath in imageFilePaths) {
@@ -47,7 +47,7 @@ static id stringOrEmptyString(NSString *str) {
     return self;
 }
 
-- (id)initWithTemplateId:(NSString *)templateId images:(NSArray/*<UIImage>*/ *)images {
+- (instancetype)initWithTemplateId:(NSString *)templateId images:(NSArray/*<UIImage>*/ *)images {
     if (self = [super init]) {
         NSMutableArray *assets = [[NSMutableArray alloc] init];
         for (id image in images) {
@@ -62,7 +62,7 @@ static id stringOrEmptyString(NSString *str) {
     return self;
 }
 
-- (id)initWithTemplateId:(NSString *)templateId OLAssets:(NSArray/*<OLAssets>*/ *)assets {
+- (instancetype)initWithTemplateId:(NSString *)templateId OLAssets:(NSArray/*<OLAssets>*/ *)assets {
     if (self = [super init]) {
         for (id asset in assets) {
             NSAssert([asset isKindOfClass:[OLAsset class]], @"OLProductPrintJob initWithProduct:OLAssets: requires an NSArray of OLAsset not: %@", [asset class]);
@@ -75,7 +75,7 @@ static id stringOrEmptyString(NSString *str) {
     return self;
 }
 
-- (id)initWithTemplateId:(NSString *)templateId dataSources:(NSArray/*<id<OLAssetDataSource> >*/ *)dataSources {
+- (instancetype)initWithTemplateId:(NSString *)templateId dataSources:(NSArray/*<id<OLAssetDataSource> >*/ *)dataSources {
     NSMutableArray *assets = [[NSMutableArray alloc] init];
     for (id dataSource in dataSources) {
         NSAssert([dataSource conformsToProtocol:@protocol(OLAssetDataSource)], @"The object you provided of type %@ does not conform to the OLAssetDataSource protocol", [dataSource class]);

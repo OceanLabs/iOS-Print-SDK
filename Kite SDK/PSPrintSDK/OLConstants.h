@@ -30,12 +30,6 @@
 #import "OLProduct.h"
 #import "OLProductPrintJob.h"
 
-@class OLPrintRequest;
-
-typedef void (^OLPrintProgressCompletionHandler)(float progress);
-typedef void (^OLPrintCompletionHandler)(NSString  *_Nullable receiptId, NSError  *_Nullable error);
-typedef void (^OLProductCostRefreshCompletionHandler)(NSError *_Nullable error);
-
 #ifdef OL_KITE_AT_LEAST_IOS8
 static BOOL definesAtLeastiOS8 = YES;
 #else
