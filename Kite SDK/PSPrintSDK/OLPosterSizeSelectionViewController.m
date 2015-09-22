@@ -228,7 +228,7 @@ static UIColor *deselectedColor;
     if (self.product.quantityToFulfillOrder == 1){
         identifier = @"OLSingleImageProductReviewViewController";
     }
-    else if ([self.delegate respondsToSelector:@selector(kiteControllerShouldAllowUserToAddMorePhotos:)] || [self.delegate kiteControllerShouldAllowUserToAddMorePhotos:[OLKitePrintSDK kiteViewControllerInNavStack:self.navigationController.viewControllers]]){
+    else if (![self.delegate respondsToSelector:@selector(kiteControllerShouldAllowUserToAddMorePhotos:)] || [self.delegate kiteControllerShouldAllowUserToAddMorePhotos:[OLKitePrintSDK kiteViewControllerInNavStack:self.navigationController.viewControllers]]){
         identifier = @"PhotoSelectionViewController";
     }
     else{
