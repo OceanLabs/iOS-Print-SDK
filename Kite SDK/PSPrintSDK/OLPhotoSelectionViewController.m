@@ -486,6 +486,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     return nil;
 }
 
+#if __IPHONE_OS_VERSION_MIN_REQUIRED < 80000
 - (BOOL)assetsPickerController:(OLAssetsPickerController *)picker isDefaultAssetsGroup:(ALAssetsGroup *)group {
     if ([self.delegate respondsToSelector:@selector(kiteController:isDefaultAssetsGroup:)]) {
         return [self.delegate kiteController:[self kiteViewController] isDefaultAssetsGroup:group];
@@ -493,6 +494,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     
     return NO;
 }
+#endif
 
 - (void)assetsPickerController:(id)picker didFinishPickingAssets:(NSArray *)assets {
     [self populateArrayWithNewArray:assets dataType:[picker isKindOfClass:[OLAssetsPickerController class]] ? [ALAsset class] : [PHAsset class]];

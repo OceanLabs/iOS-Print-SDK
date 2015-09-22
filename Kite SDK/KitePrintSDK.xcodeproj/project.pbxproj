@@ -598,6 +598,8 @@
 				CD73BFB018634ED50009DE03 /* OLConstants.m */,
 				2E0E250D1A77997E00808ED8 /* OLAnalytics.h */,
 				2E0E250E1A77997E00808ED8 /* OLAnalytics.m */,
+				2EB1C40F1B551D6000EFE0D0 /* OLKiteABTesting.h */,
+				2EB1C4101B551D6000EFE0D0 /* OLKiteABTesting.m */,
 			);
 			name = Util;
 			sourceTree = "<group>";
@@ -761,8 +763,6 @@
 				2E8C29EC1B18D1AC0045DC21 /* OLPrintOrderCostRequest.m */,
 				CD73BFA81863180A0009DE03 /* OLAddressSearchRequest.h */,
 				CD73BFA91863180A0009DE03 /* OLAddressSearchRequest.m */,
-				2EB1C40F1B551D6000EFE0D0 /* OLKiteABTesting.h */,
-				2EB1C4101B551D6000EFE0D0 /* OLKiteABTesting.m */,
 			);
 			name = API;
 			sourceTree = "<group>";

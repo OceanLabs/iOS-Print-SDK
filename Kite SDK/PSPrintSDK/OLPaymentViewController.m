@@ -50,6 +50,18 @@ static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
 
 @interface OLKitePrintSDK (Private)
 + (BOOL)useJudoPayForGBP;
+
+#ifdef OL_KITE_OFFER_PAYPAL
++ (NSString *_Nonnull)paypalEnvironment;
++ (NSString *_Nonnull)paypalClientId;
++ (NSString *_Nonnull)paypalReceiverEmail;
+#endif
+
+#ifdef OL_KITE_OFFER_APPLE_PAY
++ (NSString *_Nonnull)stripePublishableKey;
++ (NSString *_Nonnull)appleMerchantID;
+#endif
+
 @end
 
 @interface OLReceiptViewController (Private)

@@ -1429,7 +1429,7 @@ UINavigationControllerDelegate
 }
 
 #pragma mark - CTAssetsPickerControllerDelegate Methods
-
+#if __IPHONE_OS_VERSION_MIN_REQUIRED < 80000
 - (BOOL)assetsPickerController:(OLAssetsPickerController *)picker isDefaultAssetsGroup:(ALAssetsGroup *)group {
     if ([self.delegate respondsToSelector:@selector(kiteController:isDefaultAssetsGroup:)]) {
         return [self.delegate kiteController:[self kiteViewController] isDefaultAssetsGroup:group];
@@ -1437,6 +1437,7 @@ UINavigationControllerDelegate
     
     return NO;
 }
+#endif
 
 - (void)assetsPickerController:(id)picker didFinishPickingAssets:(NSArray *)assets {
     if (self.addNewPhotosAtIndex == -1){
