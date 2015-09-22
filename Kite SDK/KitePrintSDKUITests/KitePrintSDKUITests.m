@@ -91,10 +91,15 @@
     [self waitForExpectationsWithTimeout:50 handler:nil];
     
     [element swipeUp];
-    [element swipeUp];
     
     XCUIElementQuery *collectionViewsQuery = app.collectionViews;
-    [collectionViewsQuery.staticTexts[@"Photo Books"] tap];
+    XCUIElement *photobookElement = collectionViewsQuery.staticTexts[@"Photo Books"];
+    
+    while (![photobookElement exists]){
+        [element swipeUp];
+    }
+    
+    [photobookElement tap];
     [collectionViewsQuery.staticTexts[@"A5 Landscape"] tap];
     [app.navigationBars[@"A5 Landscape Photobook"].buttons[@"Next"] tap];
     [app.navigationBars[@"Move Pages"].buttons[@"Next"] tap];
