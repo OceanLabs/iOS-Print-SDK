@@ -921,7 +921,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     d[@"phone"] = phone ? phone : @"";
     self.printOrder.userData = d;
     
-    if (![OLCheckoutViewController validateEmail:d[@"email"]]){
+    if (![OLCheckoutViewController validateEmail:d[@"email"]] && [OLKitePrintSDK environment] == kOLKitePrintSDKEnvironmentLive){
         completion(PKPaymentAuthorizationStatusInvalidShippingContact);
         return;
     }
