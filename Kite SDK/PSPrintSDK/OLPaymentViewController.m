@@ -48,6 +48,12 @@ static NSString *const kSectionPromoCodes = @"kSectionPromoCodes";
 static NSString *const kSectionPayment = @"kSectionPayment";
 static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
 
+@interface OLCheckoutViewController (Private)
+
++ (BOOL)validateEmail:(NSString *)candidate;
+
+@end
+
 @interface OLKitePrintSDK (Private)
 + (BOOL)useJudoPayForGBP;
 
@@ -257,12 +263,12 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         else{
             [self setupBannerImage:[UIImage imageNamed:@"checkout_progress_indicator2"] withBgImage:[UIImage imageNamed:@"checkout_progress_indicator2_bg"]];
         }
-
+        
     }
     
 #ifdef OL_KITE_OFFER_APPLE_PAY
     CGFloat heightDiff = self.applePayIsAvailable ? 0 : 52;
-#else 
+#else
     CGFloat heightDiff = 52;
 #endif
     
@@ -275,7 +281,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         
         self.lowestView = self.payWithCreditCardButton;
     }
-
+    
     
 #ifdef OL_KITE_OFFER_PAYPAL
     if ([OLKiteABTesting sharedInstance].offerPayPal && ![self isApplePayAvailable]){
@@ -323,7 +329,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     self.kiteLabel.translatesAutoresizingMaskIntoConstraints = NO;
     
     [footer addConstraint:[NSLayoutConstraint constraintWithItem:self.kiteLabel attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:footer attribute:NSLayoutAttributeCenterX multiplier:1 constant:0]];
-
+    
 #ifdef OL_KITE_OFFER_PAYPAL
     if ([OLKiteABTesting sharedInstance].offerPayPal && ![self isApplePayAvailable]){
         [footer addSubview:self.payWithPayPalButton];
@@ -441,7 +447,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     }
     
     [view.superview addConstraints:con];
-
+    
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardDidShow:) name:UIKeyboardDidShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
@@ -500,7 +506,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     [PayPalMobile initializeWithClientIdsForEnvironments:@{[OLKitePrintSDK paypalEnvironment] : [OLKitePrintSDK paypalClientId]}];
     [PayPalMobile preconnectWithEnvironment:[OLKitePrintSDK paypalEnvironment]];
 #endif
-
+    
 #ifdef OL_KITE_OFFER_APPLE_PAY
     [Stripe setDefaultPublishableKey:[OLKitePrintSDK stripePublishableKey]];
 #endif
@@ -517,6 +523,10 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     }
     
     [self positionKiteLabel];
+    
+    if (self.applePayIsAvailable){
+        [self.printOrder discardDuplicateJobs];
+    }
 }
 
 - (void)costCalculationCompletedWithError:(NSError *)error {
@@ -579,11 +589,11 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 #ifdef OL_KITE_OFFER_APPLE_PAY
             self.payWithApplePayButton.hidden = NO;
 #endif
-        [self.payWithCreditCardButton setTitle:NSLocalizedStringFromTableInBundle(@"Credit Card", @"KitePrintSDK", [OLConstants bundle], @"") forState:UIControlStateNormal];
-    }
-    
-    [self.tableView reloadData];
-
+            [self.payWithCreditCardButton setTitle:NSLocalizedStringFromTableInBundle(@"Credit Card", @"KitePrintSDK", [OLConstants bundle], @"") forState:UIControlStateNormal];
+        }
+        
+        [self.tableView reloadData];
+        
     }];
 }
 
@@ -640,7 +650,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         // Clear promo code
         [self applyPromoCode:nil];
     } else {
-
+        
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wundeclared-selector"
         // Ugly bit of code for S9, it's such a small bit of work it doesn't warrant forking the repo & associated overhead just to add client side promo rejection
@@ -752,7 +762,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     PKPaymentRequest *paymentRequest = [Stripe paymentRequestWithMerchantIdentifier:[OLKitePrintSDK appleMerchantID]];
     paymentRequest.currencyCode = self.printOrder.currencyCode;
     [self.printOrder costWithCompletionHandler:^(OLPrintOrderCost *cost, NSError *error){
-//        PKPaymentSummaryItem *summaryItem = [PKPaymentSummaryItem summaryItemWithLabel:NSLocalizedString(@"kite.ly", @"") amount:[cost totalCostInCurrency:self.printOrder.currencyCode]];
+        //        PKPaymentSummaryItem *summaryItem = [PKPaymentSummaryItem summaryItemWithLabel:NSLocalizedString(@"kite.ly", @"") amount:[cost totalCostInCurrency:self.printOrder.currencyCode]];
         NSMutableArray *lineItems = [[NSMutableArray alloc] init];
         for (OLPaymentLineItem *item in cost.lineItems){
             [lineItems addObject:[PKPaymentSummaryItem summaryItemWithLabel:item.description  amount:[item costInCurrency:self.printOrder.currencyCode]]];
@@ -911,8 +921,13 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     d[@"phone"] = phone ? phone : @"";
     self.printOrder.userData = d;
     
+    if (![OLCheckoutViewController validateEmail:d[@"email"]]){
+        completion(PKPaymentAuthorizationStatusInvalidShippingContact);
+        return;
+    }
+    
     STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:[OLKitePrintSDK stripePublishableKey]];
-
+    
     if ([OLKitePrintSDK environment] == kOLKitePrintSDKEnvironmentSandbox){
         STPCard *card = [STPCard new];
         card.number = @"4242424242424242";
@@ -957,6 +972,11 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     }
     
     self.printOrder.shippingAddress = shippingAddress;
+    for (id<OLPrintJob> printJob in self.printOrder.jobs){
+        if ([printJob respondsToSelector:@selector(setAddress:)]){
+            [printJob setAddress:nil];
+        }
+    }
     [self.printOrder costWithCompletionHandler:^(OLPrintOrderCost *cost, NSError *error){
         [self.tableView reloadData];
         NSMutableArray *lineItems = [[NSMutableArray alloc] init];
@@ -977,6 +997,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
                           completion:(void (^)(PKPaymentAuthorizationStatus))completion {
     [self submitOrderForPrintingWithProofOfPayment:token.tokenId paymentMethod:@"Apple Pay" completion:completion];
 }
+
 #endif
 
 #pragma mark - UITableViewDataSource methods
@@ -1110,7 +1131,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             
             [view.superview addConstraints:con];
         }
-
+        
         
     } else if ([sectionString isEqualToString:kSectionPromoCodes]) {
         static NSString *const CellIdentifier = @"PromoCodeCell";
@@ -1174,8 +1195,8 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
                 
                 [view.superview addConstraints:con];
             }
-
-
+            
+            
             
             self.promoTextField = promoCodeTextField;
             self.promoApplyButton = applyButton;
