@@ -263,7 +263,7 @@
         return [s stringByReplacingOccurrencesOfString:@"</header>" withString:@"" options:NSCaseInsensitiveSearch range:NSMakeRange(0, s.length)];
     }
     
-    return nil;
+    return originalString;
 }
 
 - (void)setupBannerLabel:(UILabel *)label{
