@@ -127,7 +127,7 @@ static const NSUInteger kSectionErrorRetry = 2;
         }];
     }
     else{
-        [self setupBannerImage:[UIImage imageNamed:self.printOrder.printed ? @"receipt_success" : @"receipt_failure"] withBgImage:nil];
+        [self setupBannerImage:[UIImage imageNamed:self.printOrder.printed ? @"receipt_success" : @"receipt_failure"] withBgImage:[UIImage imageNamed:self.printOrder.printed ? @"receipt_success_bg" : @"receipt_failure_bg"]];
     }
     
     if ([self.tableView respondsToSelector:@selector(setCellLayoutMarginsFollowReadableWidth:)]){
@@ -178,7 +178,7 @@ static const NSUInteger kSectionErrorRetry = 2;
     if (!(self.presentedModally || launchedToShipping)) {
         NSMutableArray *navigationStack = self.navigationController.viewControllers.mutableCopy;
         if (navigationStack.count >= 2 &&
-                            [navigationStack[navigationStack.count - 2] isKindOfClass:[OLPaymentViewController class]]) {
+            [navigationStack[navigationStack.count - 2] isKindOfClass:[OLPaymentViewController class]]) {
             // clear the stack as we don't want the user to be able to return to payment as that stage of the journey is now complete.
             [navigationStack removeObjectsInRange:NSMakeRange(1, navigationStack.count - 2)];
             self.navigationController.viewControllers = navigationStack;
@@ -197,7 +197,7 @@ static const NSUInteger kSectionErrorRetry = 2;
     } completionHandler:^(NSString *orderIdReceipt, NSError *error) {
         [self.printOrder saveToHistory]; // save again as the print order has it's receipt set if it was successful, otherwise last error is set
         [SVProgressHUD dismiss];
-
+        
         if (error) {
             [[[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLConstants bundle], @"") message:error.localizedDescription delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLConstants bundle], @"") otherButtonTitles:nil] show];
         } else {
@@ -278,7 +278,7 @@ static const NSUInteger kSectionErrorRetry = 2;
                 [receipt appendString:@"PROMO-"];
                 [receipt appendString:self.printOrder.promoCode];
             }
- 
+            
             cell.textLabel.text = receipt;
         }
     } else if (indexPath.section == kSectionOrderSummary) {
@@ -333,7 +333,7 @@ static const NSUInteger kSectionErrorRetry = 2;
         
         cell.textLabel.text = NSLocalizedStringFromTableInBundle(@"Retry", @"KitePrintSDK", [OLConstants bundle], @"");
     }
-
+    
     return cell;
 }
 
