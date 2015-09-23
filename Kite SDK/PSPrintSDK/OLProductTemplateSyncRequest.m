@@ -11,6 +11,7 @@
 #import "OLKitePrintSDK.h"
 #import "OLProductTemplate.h"
 #import "OLConstants.h"
+#import "OLKiteABTesting.h"
 
 @interface OLProductTemplateSyncRequest ()
 @property (nonatomic, strong) OLBaseRequest *req;
@@ -53,6 +54,11 @@
                     if ([next isKindOfClass:[NSString class]]) {
                         nextPage = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", [OLKitePrintSDK apiEndpoint], next]];
                     }
+                }
+                
+                id userConfig = json[@"user_config"];
+                if ([userConfig isKindOfClass:[NSDictionary class]]){
+                    [[OLKiteABTesting sharedInstance] setUserConfig:userConfig];
                 }
                 
                 id objects = json[@"objects"];

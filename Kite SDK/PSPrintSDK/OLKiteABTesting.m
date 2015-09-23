@@ -23,17 +23,16 @@ static NSString *const kOLKiteABTestPromoBannerText = @"ly.kite.abtest.promo_ban
 static NSString *const kOLKiteABTestOfferPayPal = @"ly.kite.abtest.offer_paypal";
 static NSString *const kOLKiteABTestAllowMultipleRecipients = @"ly.kite.abtest.allow_multiple_recipients";
 
-
-static NSString *const kOLKiteThemeHeaderLogoImageURL = @"ly.kite.theme.headerLogoImageURL";
-static NSString *const kOLKiteThemeCheckoutProgress1 = @"ly.kite.theme.kOLKiteThemeCheckoutProgress1";
-static NSString *const kOLKiteThemeCheckoutProgress2 = @"ly.kite.theme.kOLKiteThemeCheckoutProgress2";
-static NSString *const kOLKiteThemeCheckoutProgress1Bg = @"ly.kite.theme.kOLKiteThemeCheckoutProgress1Bg";
-static NSString *const kOLKiteThemeCheckoutProgress2Bg = @"ly.kite.theme.kOLKiteThemeCheckoutProgress2Bg";
-static NSString *const kOLKiteThemeReceiptSuccess = @"ly.kite.theme.kOLKiteThemeReceiptSuccess";
-static NSString *const kOLKiteThemeReceiptFailure = @"ly.kite.theme.kOLKiteThemeReceiptFailure";
-static NSString *const kOLKiteThemeReceiptSuccessBg = @"ly.kite.theme.kOLKiteThemeReceiptSuccessBg";
-static NSString *const kOLKiteThemeReceiptFailureBg = @"ly.kite.theme.kOLKiteThemeReceiptFailureBg";
-static NSString *const kOLKiteThemeSupportEmail = @"ly.kite.theme.supportEmail";
+static NSString *const kOLKiteThemeHeaderLogoImageURL = @"themeLogoImageURL";
+static NSString *const kOLKiteThemeCheckoutProgress1 = @"themeCheckoutProgress1";
+static NSString *const kOLKiteThemeCheckoutProgress2 = @"themeCheckoutProgress2";
+static NSString *const kOLKiteThemeCheckoutProgress1Bg = @"themeCheckoutProgress1Bg";
+static NSString *const kOLKiteThemeCheckoutProgress2Bg = @"themeCheckoutProgress2Bg";
+static NSString *const kOLKiteThemeReceiptSuccess = @"themeReceiptSuccess";
+static NSString *const kOLKiteThemeReceiptFailure = @"themeReceiptFailure";
+static NSString *const kOLKiteThemeReceiptSuccessBg = @"themeReceiptSuccessBg";
+static NSString *const kOLKiteThemeReceiptFailureBg = @"themeReceiptFailureBg";
+static NSString *const kOLKiteThemeSupportEmail = @"themeSupportEmail";
 
 id safeObject(id obj){
     return obj ? obj : @"";
@@ -61,6 +60,21 @@ id safeObject(id obj){
     static OLKiteABTesting * sharedInstance;
     dispatch_once(&once, ^ { sharedInstance = [[self alloc] init]; });
     return sharedInstance;
+}
+
+- (void)setUserConfig:(NSDictionary *)userConfig{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults setObject:self.userConfig[kOLKiteThemeHeaderLogoImageURL] forKey:kOLKiteThemeHeaderLogoImageURL];
+    [defaults setObject:self.userConfig[kOLKiteThemeCheckoutProgress1] forKey:kOLKiteThemeCheckoutProgress1];
+    [defaults setObject:self.userConfig[kOLKiteThemeCheckoutProgress2] forKey:kOLKiteThemeCheckoutProgress2];
+    [defaults setObject:self.userConfig[kOLKiteThemeCheckoutProgress1Bg] forKey:kOLKiteThemeCheckoutProgress1Bg];
+    [defaults setObject:self.userConfig[kOLKiteThemeCheckoutProgress2Bg] forKey:kOLKiteThemeCheckoutProgress2Bg];
+    [defaults setObject:self.userConfig[kOLKiteThemeReceiptSuccess] forKey:kOLKiteThemeReceiptSuccess];
+    [defaults setObject:self.userConfig[kOLKiteThemeReceiptFailure] forKey:kOLKiteThemeReceiptFailure];
+    [defaults setObject:self.userConfig[kOLKiteThemeReceiptSuccessBg] forKey:kOLKiteThemeReceiptSuccessBg];
+    [defaults setObject:self.userConfig[kOLKiteThemeReceiptFailureBg] forKey:kOLKiteThemeReceiptFailureBg];
+    [defaults setObject:self.userConfig[kOLKiteThemeSupportEmail] forKey:kOLKiteThemeSupportEmail];
+    [defaults synchronize];
 }
 
 - (NSString *)headerLogoURL{
@@ -283,10 +297,18 @@ id safeObject(id obj){
                                 }];
 }
 
-
-//  Promo strings look like this: @"<header>Hello World!</header><para>Off to the woods</para>"
+/**
+ *  Promo strings look like this: @"<header>Hello World!</header><para>Off to the woods in [[2015-08-04 18:05 GMT+3]]</para>"
+ */
 - (void)setupPromoBannerTextTest{
     self.promoBannerText = nil;
+    
+    NSString *userConfig = self.userConfig[@"banner_message"];
+    if (userConfig && ![userConfig isEqualToString:@""]){
+        self.promoBannerText = userConfig;
+        return;
+    }
+    
     NSDictionary *experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestPromoBannerText];
     if (!experimentDict) {
         return;

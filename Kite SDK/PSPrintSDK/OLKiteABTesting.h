@@ -34,6 +34,8 @@
 @property (strong, nonatomic, readonly) NSString *receiptFailureBgURL;
 @property (strong, nonatomic, readonly) NSString *supportEmail;
 
+@property (strong, nonatomic) NSDictionary *userConfig;
+
 + (instancetype)sharedInstance;
 - (void)fetchRemotePlistsWithCompletionHandler:(void(^)())handler;
 
