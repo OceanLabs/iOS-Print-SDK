@@ -138,7 +138,7 @@
         self.callToActionLabel.textAlignment = NSTextAlignmentCenter;
     }
     
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0){
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0 && self.detailsView){
         UIVisualEffect *blurEffect;
         blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleExtraLight];
         
