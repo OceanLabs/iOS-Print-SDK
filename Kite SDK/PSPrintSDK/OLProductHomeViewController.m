@@ -248,7 +248,7 @@
         return [s stringByReplacingOccurrencesOfString:@"</para>" withString:@"" options:NSCaseInsensitiveSearch range:NSMakeRange(0, s.length)];
     }
     
-    return nil;
+    return originalString;
 }
 
 - (NSString *)promoBannerHeaderText{
@@ -263,7 +263,7 @@
         return [s stringByReplacingOccurrencesOfString:@"</header>" withString:@"" options:NSCaseInsensitiveSearch range:NSMakeRange(0, s.length)];
     }
     
-    return originalString;
+    return nil;
 }
 
 - (void)setupBannerLabel:(UILabel *)label{
