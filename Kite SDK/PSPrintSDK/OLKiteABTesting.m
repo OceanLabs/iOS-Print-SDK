@@ -77,6 +77,15 @@ id safeObject(id obj){
     [defaults synchronize];
 }
 
+- (NSString *)promoBannerText{
+    NSString *userConfig = self.userConfig[@"banner_message"];
+    if (userConfig && ![userConfig isEqualToString:@""]){
+        return  userConfig;
+    }
+    
+    return _promoBannerText;
+}
+
 - (NSString *)headerLogoURL{
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     return [defaults objectForKey:kOLKiteThemeHeaderLogoImageURL];
@@ -129,16 +138,16 @@ id safeObject(id obj){
 
 - (void)resetTheme{
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-     [defaults removeObjectForKey:kOLKiteThemeHeaderLogoImageURL];
-     [defaults removeObjectForKey:kOLKiteThemeCheckoutProgress1];
-     [defaults removeObjectForKey:kOLKiteThemeCheckoutProgress2];
-     [defaults removeObjectForKey:kOLKiteThemeCheckoutProgress1Bg];
-     [defaults removeObjectForKey:kOLKiteThemeCheckoutProgress2Bg];
-     [defaults removeObjectForKey:kOLKiteThemeReceiptSuccess];
-     [defaults removeObjectForKey:kOLKiteThemeReceiptFailure];
-     [defaults removeObjectForKey:kOLKiteThemeReceiptSuccessBg];
-     [defaults removeObjectForKey:kOLKiteThemeReceiptFailureBg];
-     [defaults removeObjectForKey:kOLKiteThemeSupportEmail];
+    [defaults removeObjectForKey:kOLKiteThemeHeaderLogoImageURL];
+    [defaults removeObjectForKey:kOLKiteThemeCheckoutProgress1];
+    [defaults removeObjectForKey:kOLKiteThemeCheckoutProgress2];
+    [defaults removeObjectForKey:kOLKiteThemeCheckoutProgress1Bg];
+    [defaults removeObjectForKey:kOLKiteThemeCheckoutProgress2Bg];
+    [defaults removeObjectForKey:kOLKiteThemeReceiptSuccess];
+    [defaults removeObjectForKey:kOLKiteThemeReceiptFailure];
+    [defaults removeObjectForKey:kOLKiteThemeReceiptSuccessBg];
+    [defaults removeObjectForKey:kOLKiteThemeReceiptFailureBg];
+    [defaults removeObjectForKey:kOLKiteThemeSupportEmail];
 }
 
 - (void)fetchRemotePlistsWithCompletionHandler:(void(^)())handler{
@@ -303,12 +312,6 @@ id safeObject(id obj){
 - (void)setupPromoBannerTextTest{
     self.promoBannerText = nil;
     
-    NSString *userConfig = self.userConfig[@"banner_message"];
-    if (userConfig && ![userConfig isEqualToString:@""]){
-        self.promoBannerText = userConfig;
-        return;
-    }
-    
     NSDictionary *experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestPromoBannerText];
     if (!experimentDict) {
         return;
@@ -322,7 +325,7 @@ id safeObject(id obj){
             [conditions setObject:safeObject(val) forKey:key];
         }
     }
-
+    
     [conditions removeObjectForKey:@"Experiment Version"];
     
     if (conditions.count == 0) {
