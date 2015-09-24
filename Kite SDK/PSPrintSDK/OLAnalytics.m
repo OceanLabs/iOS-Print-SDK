@@ -95,8 +95,12 @@ static NSString *nonNilStr(NSString *str) {
                                              @"Kite SDK Version": kOLKiteSDKVersion,
                                              @"Locale Country": localeCountry
                                              } mutableCopy];
-    if (extraInfo){
-        propertiesDict[@"App Extra Info"] = extraInfo;
+    if ([extraInfo isKindOfClass:[NSDictionary class]]){
+        for (id key in extraInfo.allKeys){
+            if ([key isKindOfClass:[NSString class]]){
+                propertiesDict[[@"App Extra-" stringByAppendingString:key]] = extraInfo[key];
+            }
+        }
     }
     
     NSDictionary *dict = @{@"event" : eventName,
