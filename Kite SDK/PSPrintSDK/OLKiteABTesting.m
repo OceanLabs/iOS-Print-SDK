@@ -63,17 +63,18 @@ id safeObject(id obj){
 }
 
 - (void)setUserConfig:(NSDictionary *)userConfig{
+    _userConfig = userConfig;
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    [defaults setObject:self.userConfig[kOLKiteThemeHeaderLogoImageURL] forKey:kOLKiteThemeHeaderLogoImageURL];
-    [defaults setObject:self.userConfig[kOLKiteThemeCheckoutProgress1] forKey:kOLKiteThemeCheckoutProgress1];
-    [defaults setObject:self.userConfig[kOLKiteThemeCheckoutProgress2] forKey:kOLKiteThemeCheckoutProgress2];
-    [defaults setObject:self.userConfig[kOLKiteThemeCheckoutProgress1Bg] forKey:kOLKiteThemeCheckoutProgress1Bg];
-    [defaults setObject:self.userConfig[kOLKiteThemeCheckoutProgress2Bg] forKey:kOLKiteThemeCheckoutProgress2Bg];
-    [defaults setObject:self.userConfig[kOLKiteThemeReceiptSuccess] forKey:kOLKiteThemeReceiptSuccess];
-    [defaults setObject:self.userConfig[kOLKiteThemeReceiptFailure] forKey:kOLKiteThemeReceiptFailure];
-    [defaults setObject:self.userConfig[kOLKiteThemeReceiptSuccessBg] forKey:kOLKiteThemeReceiptSuccessBg];
-    [defaults setObject:self.userConfig[kOLKiteThemeReceiptFailureBg] forKey:kOLKiteThemeReceiptFailureBg];
-    [defaults setObject:self.userConfig[kOLKiteThemeSupportEmail] forKey:kOLKiteThemeSupportEmail];
+    [defaults setObject:userConfig[kOLKiteThemeHeaderLogoImageURL] forKey:kOLKiteThemeHeaderLogoImageURL];
+    [defaults setObject:userConfig[kOLKiteThemeCheckoutProgress1] forKey:kOLKiteThemeCheckoutProgress1];
+    [defaults setObject:userConfig[kOLKiteThemeCheckoutProgress2] forKey:kOLKiteThemeCheckoutProgress2];
+    [defaults setObject:userConfig[kOLKiteThemeCheckoutProgress1Bg] forKey:kOLKiteThemeCheckoutProgress1Bg];
+    [defaults setObject:userConfig[kOLKiteThemeCheckoutProgress2Bg] forKey:kOLKiteThemeCheckoutProgress2Bg];
+    [defaults setObject:userConfig[kOLKiteThemeReceiptSuccess] forKey:kOLKiteThemeReceiptSuccess];
+    [defaults setObject:userConfig[kOLKiteThemeReceiptFailure] forKey:kOLKiteThemeReceiptFailure];
+    [defaults setObject:userConfig[kOLKiteThemeReceiptSuccessBg] forKey:kOLKiteThemeReceiptSuccessBg];
+    [defaults setObject:userConfig[kOLKiteThemeReceiptFailureBg] forKey:kOLKiteThemeReceiptFailureBg];
+    [defaults setObject:userConfig[kOLKiteThemeSupportEmail] forKey:kOLKiteThemeSupportEmail];
     [defaults synchronize];
 }
 
