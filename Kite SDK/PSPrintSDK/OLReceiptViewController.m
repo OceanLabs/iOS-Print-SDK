@@ -133,6 +133,10 @@ static const NSUInteger kSectionErrorRetry = 2;
     if ([self.tableView respondsToSelector:@selector(setCellLayoutMarginsFollowReadableWidth:)]){
         self.tableView.cellLayoutMarginsFollowReadableWidth = NO;
     }
+    
+    if ([self.delegate respondsToSelector:@selector(footerViewForReceiptViewController:)]){
+        self.tableView.tableFooterView = [(OLOrderReviewViewController *)self.delegate footerViewForReceiptViewController:self];
+    }
 }
 
 - (void)onButtonDoneClicked {
