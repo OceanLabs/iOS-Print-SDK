@@ -66,8 +66,8 @@ UINavigationControllerDelegate, OLKiteDelegate>
 
 - (IBAction)onButtonPrintLocalPhotos:(id)sender {
     if (![self isAPIKeySet]) return;
-    UIViewController *picker;
-    Class assetClass;
+    __block UIViewController *picker;
+    __block Class assetClass;
     if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8 || !definesAtLeastiOS8){
         picker = [[OLAssetsPickerController alloc] init];
         [(OLAssetsPickerController *)picker setAssetsFilter:[ALAssetsFilter allPhotos]];
@@ -76,17 +76,34 @@ UINavigationControllerDelegate, OLKiteDelegate>
     }
 #ifdef OL_KITE_AT_LEAST_IOS8
     else{
-        picker = [[CTAssetsPickerController alloc] init];
-        ((CTAssetsPickerController *)picker).showsEmptyAlbums = NO;
-        PHFetchOptions *options = [[PHFetchOptions alloc] init];
-        options.predicate = [NSPredicate predicateWithFormat:@"mediaType == %d", PHAssetMediaTypeImage];
-        ((CTAssetsPickerController *)picker).assetsFetchOptions = options;
-        assetClass = [PHAsset class];
-        ((CTAssetsPickerController *)picker).delegate = self;
+        if ([PHPhotoLibrary authorizationStatus] == PHAuthorizationStatusNotDetermined){
+            [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status){
+                if (status == PHAuthorizationStatusAuthorized){
+                    picker = [[CTAssetsPickerController alloc] init];
+                    ((CTAssetsPickerController *)picker).showsEmptyAlbums = NO;
+                    PHFetchOptions *options = [[PHFetchOptions alloc] init];
+                    options.predicate = [NSPredicate predicateWithFormat:@"mediaType == %d", PHAssetMediaTypeImage];
+                    ((CTAssetsPickerController *)picker).assetsFetchOptions = options;
+                    assetClass = [PHAsset class];
+                    ((CTAssetsPickerController *)picker).delegate = self;
+                    [self presentViewController:picker animated:YES completion:nil];
+                }
+            }];
+        }
+        else{
+            picker = [[CTAssetsPickerController alloc] init];
+            ((CTAssetsPickerController *)picker).showsEmptyAlbums = NO;
+            PHFetchOptions *options = [[PHFetchOptions alloc] init];
+            options.predicate = [NSPredicate predicateWithFormat:@"mediaType == %d", PHAssetMediaTypeImage];
+            ((CTAssetsPickerController *)picker).assetsFetchOptions = options;
+            assetClass = [PHAsset class];
+            ((CTAssetsPickerController *)picker).delegate = self;
+        }
     }
 #endif
-    
-    [self presentViewController:picker animated:YES completion:nil];
+    if (picker){
+        [self presentViewController:picker animated:YES completion:nil];
+    }
 }
 
 - (NSString *)apiKey {
