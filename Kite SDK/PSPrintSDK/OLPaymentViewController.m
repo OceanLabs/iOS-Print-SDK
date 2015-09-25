@@ -843,11 +843,13 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         [self.printOrder saveToHistory]; // save again as the print order has it's receipt set if it was successful, otherwise last error is set
         [SVProgressHUD dismiss];
         [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
-        OLReceiptViewController *receiptVC = [[OLReceiptViewController alloc] initWithPrintOrder:self.printOrder];
-        receiptVC.delegate = self.delegate;
-        receiptVC.presentedModally = self.presentedModally;
-        receiptVC.delegate = self.delegate;
-        [self.navigationController pushViewController:receiptVC animated:YES];
+        if (!self.applePayIsAvailable){
+            OLReceiptViewController *receiptVC = [[OLReceiptViewController alloc] initWithPrintOrder:self.printOrder];
+            receiptVC.delegate = self.delegate;
+            receiptVC.presentedModally = self.presentedModally;
+            receiptVC.delegate = self.delegate;
+            [self.navigationController pushViewController:receiptVC animated:YES];
+        }
     }];
 }
 
@@ -874,7 +876,13 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 }
 
 - (void)paymentAuthorizationViewControllerDidFinish:(PKPaymentAuthorizationViewController *)controller {
-    [self dismissViewControllerAnimated:YES completion:nil];
+    [self dismissViewControllerAnimated:YES completion:^{
+        OLReceiptViewController *receiptVC = [[OLReceiptViewController alloc] initWithPrintOrder:self.printOrder];
+        receiptVC.delegate = self.delegate;
+        receiptVC.presentedModally = self.presentedModally;
+        receiptVC.delegate = self.delegate;
+        [self.navigationController pushViewController:receiptVC animated:YES];
+    }];
 }
 
 - (void)handlePaymentAuthorizationWithPayment:(PKPayment *)payment
