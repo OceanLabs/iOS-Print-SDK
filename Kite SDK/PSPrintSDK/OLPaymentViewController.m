@@ -92,6 +92,9 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 @property (strong, nonatomic) UIButton *payWithCreditCardButton;
 @property (strong, nonatomic) UILabel *kiteLabel;
 
+@property (strong, nonatomic) NSBlockOperation *applePayDismissOperation;
+@property (strong, nonatomic) NSBlockOperation *transitionBlockOperation;
+
 #ifdef OL_KITE_OFFER_APPLE_PAY
 @property (strong, nonatomic) UIButton *payWithApplePayButton;
 @property (assign, nonatomic) BOOL applePayIsAvailable;
@@ -759,10 +762,11 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 
 #ifdef OL_KITE_OFFER_APPLE_PAY
 - (IBAction)onButtonPayWithApplePayClicked{
+    self.applePayDismissOperation = [[NSBlockOperation alloc] init];
+    
     PKPaymentRequest *paymentRequest = [Stripe paymentRequestWithMerchantIdentifier:[OLKitePrintSDK appleMerchantID]];
     paymentRequest.currencyCode = self.printOrder.currencyCode;
     [self.printOrder costWithCompletionHandler:^(OLPrintOrderCost *cost, NSError *error){
-        //        PKPaymentSummaryItem *summaryItem = [PKPaymentSummaryItem summaryItemWithLabel:NSLocalizedString(@"kite.ly", @"") amount:[cost totalCostInCurrency:self.printOrder.currencyCode]];
         NSMutableArray *lineItems = [[NSMutableArray alloc] init];
         for (OLPaymentLineItem *item in cost.lineItems){
             [lineItems addObject:[PKPaymentSummaryItem summaryItemWithLabel:item.description  amount:[item costInCurrency:self.printOrder.currencyCode]]];
@@ -843,13 +847,18 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         [self.printOrder saveToHistory]; // save again as the print order has it's receipt set if it was successful, otherwise last error is set
         [SVProgressHUD dismiss];
         [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
-        if (!self.applePayIsAvailable){
+        self.transitionBlockOperation = [[NSBlockOperation alloc] init];
+        [self.transitionBlockOperation addExecutionBlock:^{
             OLReceiptViewController *receiptVC = [[OLReceiptViewController alloc] initWithPrintOrder:self.printOrder];
             receiptVC.delegate = self.delegate;
             receiptVC.presentedModally = self.presentedModally;
             receiptVC.delegate = self.delegate;
             [self.navigationController pushViewController:receiptVC animated:YES];
+        }];
+        if (self.applePayIsAvailable){
+            [self.transitionBlockOperation addDependency:self.applePayDismissOperation];
         }
+        [[NSOperationQueue mainQueue] addOperation:self.transitionBlockOperation];
     }];
 }
 
@@ -877,11 +886,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 
 - (void)paymentAuthorizationViewControllerDidFinish:(PKPaymentAuthorizationViewController *)controller {
     [self dismissViewControllerAnimated:YES completion:^{
-        OLReceiptViewController *receiptVC = [[OLReceiptViewController alloc] initWithPrintOrder:self.printOrder];
-        receiptVC.delegate = self.delegate;
-        receiptVC.presentedModally = self.presentedModally;
-        receiptVC.delegate = self.delegate;
-        [self.navigationController pushViewController:receiptVC animated:YES];
+        [[NSOperationQueue mainQueue] addOperation:self.applePayDismissOperation];
     }];
 }
 
