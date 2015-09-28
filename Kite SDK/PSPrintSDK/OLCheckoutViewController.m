@@ -15,10 +15,10 @@
 #import "OLKitePrintSDK.h"
 #import "OLAnalytics.h"
 #import "OLAddressEditViewController.h"
-#import <SkyLab.h>
+#import <SkyLab/SkyLab.h>
 #import "OLProductPrintJob.h"
 #import "OLKiteABTesting.h"
-#import <SDWebImageManager.h>
+#import <SDWebImage/SDWebImageManager.h>
 #import "UIImage+ColorAtPixel.h"
 
 NSString *const kOLNotificationUserSuppliedShippingDetails = @"co.oceanlabs.pssdk.kOLNotificationUserSuppliedShippingDetails";
