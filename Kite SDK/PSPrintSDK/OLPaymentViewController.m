@@ -527,7 +527,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     
     [self positionKiteLabel];
     
-    if ([self applePayIsAvailable]){
+    if ([self isApplePayAvailable]){
         [self.printOrder discardDuplicateJobs];
     }
 }
