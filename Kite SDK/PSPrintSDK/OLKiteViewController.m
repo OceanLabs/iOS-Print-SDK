@@ -23,7 +23,7 @@
 #import "NSObject+Utils.h"
 #import "OLKiteABTesting.h"
 #import "UIImage+ColorAtPixel.h"
-#import <SDWebImagePrefetcher.h>
+#import <SDWebImage/SDWebImagePrefetcher.h>
 
 static const NSInteger kTagNoProductsAlertView = 99;
 static const NSInteger kTagTemplateSyncFailAlertView = 100;
