@@ -50,4 +50,8 @@ Pod::Spec.new do |spec|
     instagram.dependency 'InstagramImagePicker'
   end
 
+  spec.subspec 'iOS8' do |ios8|
+    ios8.xcconfig =  { 'OTHER_CFLAGS' => '$(inherited) -DOL_KITE_AT_LEAST_IOS8' }
+  end
+
 end
