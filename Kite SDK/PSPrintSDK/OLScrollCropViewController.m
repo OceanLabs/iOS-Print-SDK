@@ -7,7 +7,6 @@
 //
 
 #import "OLScrollCropViewController.h"
-#import "RMImageCropper.h"
 
 @interface OLScrollCropViewController ()
 
@@ -89,7 +88,7 @@
     }
 }
 
-- (NSUInteger)supportedInterfaceOrientations {
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
     if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
         return UIInterfaceOrientationMaskAll;
     }

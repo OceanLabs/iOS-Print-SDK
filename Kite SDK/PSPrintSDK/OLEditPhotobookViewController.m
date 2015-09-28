@@ -9,11 +9,16 @@
 #import "OLEditPhotobookViewController.h"
 #import "OLPhotobookViewController.h"
 #import "OLPhotobookPageContentViewController.h"
+#import "OLAssetsPickerController.h"
+#ifdef OL_KITE_AT_LEAST_IOS8
 #import <CTAssetsPickerController/CTAssetsPickerController.h>
+#endif
 #import "OLPrintPhoto.h"
 #import "NSArray+QueryingExtras.h"
-#import "OLImageView.h"
+#import "OLPopupOptionsImageView.h"
 #import "OLScrollCropViewController.h"
+#import "OLAnalytics.h"
+#import "OLImageCachingManager.h"
 
 #ifdef OL_KITE_OFFER_INSTAGRAM
 #import <InstagramImagePicker/OLInstagramImagePickerController.h>
@@ -39,7 +44,7 @@ static const NSInteger kSectionPages = 2;
 + (NSString *)userEmail:(UIViewController *)topVC;
 + (NSString *)userPhone:(UIViewController *)topVC;
 + (id<OLKiteDelegate>)kiteDelegate:(UIViewController *)topVC;
-+ (void)checkoutViewControllerForPrintOrder:(OLPrintOrder *)printOrder handler:(void(^)(OLCheckoutViewController *vc))handler;
++ (void)checkoutViewControllerForPrintOrder:(OLPrintOrder *)printOrder handler:(void(^)(id vc))handler;
 
 #ifdef OL_KITE_OFFER_INSTAGRAM
 + (NSString *) instagramRedirectURI;
@@ -48,7 +53,11 @@ static const NSInteger kSectionPages = 2;
 #endif
 @end
 
-@interface OLEditPhotobookViewController () <UICollectionViewDelegateFlowLayout, OLPhotobookViewControllerDelegate, CTAssetsPickerControllerDelegate, UIActionSheetDelegate, UIAlertViewDelegate, OLImageViewDelegate, OLScrollCropViewControllerDelegate,
+@interface OLEditPhotobookViewController () <UICollectionViewDelegateFlowLayout, OLPhotobookViewControllerDelegate, OLAssetsPickerControllerDelegate,
+#ifdef OL_KITE_AT_LEAST_IOS8
+CTAssetsPickerControllerDelegate,
+#endif
+UIActionSheetDelegate, UIAlertViewDelegate, OLImageViewDelegate, OLScrollCropViewControllerDelegate,
 #ifdef OL_KITE_OFFER_INSTAGRAM
 OLInstagramImagePickerControllerDelegate,
 #endif
@@ -68,6 +77,8 @@ UINavigationControllerDelegate>
 @property (assign, nonatomic) BOOL animating;
 @property (assign, nonatomic) BOOL haveCachedCells;
 
+@property (assign, nonatomic) BOOL rotating;
+
 @end
 
 @implementation OLEditPhotobookViewController
@@ -80,10 +91,14 @@ UINavigationControllerDelegate>
 - (void)viewDidLoad{
     [super viewDidLoad];
     
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackPhotoSelectionScreenViewed:self.product.productTemplate.name];
+#endif
+    
     self.title = NSLocalizedString(@"Move Pages", @"");
     
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Back", @"")
-                                                                             style:UIBarButtonItemStyleBordered
+                                                                             style:UIBarButtonItemStylePlain
                                                                             target:nil
                                                                             action:nil];
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]
@@ -114,6 +129,8 @@ UINavigationControllerDelegate>
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
     
+    self.navigationController.interactivePopGestureRecognizer.enabled = YES;
+    
     NSInteger maxItem = -1;
     for (UICollectionViewCell *cell in [self.collectionView visibleCells]){
         NSIndexPath *indexPath = [self.collectionView indexPathForCell:cell];
@@ -121,7 +138,7 @@ UINavigationControllerDelegate>
             maxItem = indexPath.item;
         }
     }
-    if (!self.haveCachedCells){
+    if (!self.haveCachedCells && self.product.quantityToFulfillOrder > (maxItem+1) * 2){
         [self collectionView:self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:maxItem+1 inSection:kSectionPages]];
         [self collectionView:self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:maxItem+2 inSection:kSectionPages]];
         self.haveCachedCells = YES;
@@ -148,16 +165,31 @@ UINavigationControllerDelegate>
 }
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator{
+    
+    NSArray *visibleCells = [self.collectionView indexPathsForVisibleItems];
+    
+    if ([self.navigationController topViewController] == self && !self.presentedViewController){
+        for (NSIndexPath *indexPath in visibleCells){
+            UICollectionViewCell *cell = [self.collectionView cellForItemAtIndexPath:indexPath];
+            UIView *clone = [cell snapshotViewAfterScreenUpdates:YES];
+            clone.tag = 999;
+            [cell addSubview:clone];
+        }
+    }
+    
+    self.rotating = YES;
+    [self.collectionView deleteSections:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, 3)]];
     for (OLPhotobookViewController *photobook in self.childViewControllers){
-        [photobook viewWillTransitionToSize:CGSizeMake(size.width, [self cellHeightForSize:size]) withTransitionCoordinator:coordinator];
+        [photobook.view removeFromSuperview];
+        [photobook removeFromParentViewController];
     }
     
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinator> context){
-        [self.collectionView.collectionViewLayout invalidateLayout];
-        for (OLPhotobookViewController * photobook in self.childViewControllers){
-            photobook.view.frame = CGRectMake(0, 0, size.width, [self cellHeightForSize:size]);
-        }
+       
     }completion:^(id<UIViewControllerTransitionCoordinator> context){
+        self.rotating = NO;
+        [self.collectionView insertSections:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, 3)]];
+        [self.collectionView scrollToItemAtIndexPath:visibleCells.firstObject atScrollPosition:UICollectionViewScrollPositionTop animated:NO];
     }];
 }
 
@@ -184,13 +216,12 @@ UINavigationControllerDelegate>
     if (!self.photobookPhotos){
         self.userSelectedPhotosCopy = [[NSArray alloc] initWithArray:self.userSelectedPhotos copyItems:NO];
         self.photobookPhotos = [[NSMutableArray alloc] initWithCapacity:self.product.quantityToFulfillOrder];
-        [self.photobookPhotos addObjectsFromArray:self.userSelectedPhotos];
-        for (NSInteger i = self.userSelectedPhotos.count; i < self.product.quantityToFulfillOrder; i++){
-            [self.photobookPhotos addObject:[NSNull null]];
+        for (NSInteger i = 0; i < self.product.quantityToFulfillOrder; i++){
+            [self.photobookPhotos addObject:i < self.userSelectedPhotos.count ? self.userSelectedPhotos[i] : [NSNull null]];
         }
     }
     else{
-        NSMutableArray *newPhotos = [NSMutableArray arrayWithArray:self.userSelectedPhotos];
+        NSMutableArray *newPhotos = [NSMutableArray arrayWithArray:[self.userSelectedPhotos subarrayWithRange:NSMakeRange(0, MIN(self.userSelectedPhotos.count, self.product.quantityToFulfillOrder))]];
         [newPhotos removeObjectsInArray:self.userSelectedPhotosCopy];
         for (NSInteger newPhoto = 0; newPhoto < newPhotos.count; newPhoto++){
             BOOL foundSpot = NO;
@@ -281,6 +312,15 @@ UINavigationControllerDelegate>
 //    }
 }
 
+- (void)updateUserSelectedPhotos{
+    [self.userSelectedPhotos removeAllObjects];
+    for (OLPrintPhoto *item in self.photobookPhotos){
+        if (![item isKindOfClass:[NSNull class]]){
+            [self.userSelectedPhotos addObject:item];
+        }
+    }
+}
+
 #pragma mark - Menu Actions
 
 - (void)deletePage{
@@ -296,6 +336,7 @@ UINavigationControllerDelegate>
         self.selectedIndexNumber = nil;
     }
     self.photobookPhotos[self.longPressImageIndex] = [NSNull null];
+    [self updateUserSelectedPhotos];
     self.interactionPhotobook.photobookPhotos = self.photobookPhotos;
     [[self findPageForImageIndex:self.longPressImageIndex] loadImageWithCompletionHandler:NULL];
 }
@@ -551,15 +592,15 @@ UINavigationControllerDelegate>
 }
 
 - (void)photobook:(OLPhotobookViewController *)photobook userDidLongPressOnImageWithIndex:(NSInteger)index sender:(UILongPressGestureRecognizer *)sender{
-    OLImageView *view;
+    OLPopupOptionsImageView *view;
     if (index == -1){
-        view = (OLImageView *)sender.view;
+        view = (OLPopupOptionsImageView *)sender.view;
     }
     else{
         if (self.photobookPhotos[index] == (id)[NSNull null]){
             return;
         }
-        view = (OLImageView *)[photobook.pageController.viewControllers[index % 2] imageView];
+        view = (OLPopupOptionsImageView *)[photobook.pageController.viewControllers[index % 2] imageView];
     }
     
     self.longPressImageIndex = index;
@@ -589,6 +630,7 @@ UINavigationControllerDelegate>
         cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"helpCell" forIndexPath:indexPath];
         UILabel *label = (UILabel *)[cell viewWithTag:10];
         label.text = NSLocalizedString(@"Tap to swap pages. Hold for more options.", @"");
+        [[cell viewWithTag:999] removeFromSuperview];
         return cell;
     }
     else{
@@ -609,10 +651,11 @@ UINavigationControllerDelegate>
                     }
                 }
                 [cell addSubview:photobook.view];
+                [[cell viewWithTag:999] removeFromSuperview];
                 return cell;
             }
         }
-        OLPhotobookViewController *photobook = [self.storyboard instantiateViewControllerWithIdentifier:@"PhotobookViewController"];
+        OLPhotobookViewController *photobook = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:nil] instantiateViewControllerWithIdentifier:@"PhotobookViewController"];
         if (indexPath.section == kSectionPages){
             photobook.startOpen = YES;
         }
@@ -629,7 +672,11 @@ UINavigationControllerDelegate>
         photobook.delegate = self.delegate;
         photobook.editMode = YES;
         [self addChildViewController:photobook];
+        photobook.view.alpha = 0;
         [cell addSubview:photobook.view];
+        [UIView animateWithDuration:0.15 animations:^{
+            photobook.view.alpha = 1;
+        }];
         CGSize size = [self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath];
         photobook.view.frame = CGRectMake(0, 0, size.width, size.height);
         photobook.view.tag = 10;
@@ -652,7 +699,7 @@ UINavigationControllerDelegate>
             }
         }
     }
-    
+    [[cell viewWithTag:999] removeFromSuperview];
     return cell;
 }
 
@@ -667,7 +714,7 @@ UINavigationControllerDelegate>
 }
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
-    return 3;
+    return self.rotating ? 0 : 3;
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
@@ -769,10 +816,45 @@ UINavigationControllerDelegate>
 }
 
 - (void)showCameraRollImagePicker{
-    CTAssetsPickerController *picker = [[CTAssetsPickerController alloc] init];
-    picker.delegate = self;
-    picker.assetsFilter = [ALAssetsFilter allPhotos];
-    [self presentViewController:picker animated:YES completion:nil];
+    __block UIViewController *picker;
+    __block Class assetClass;
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8 || !definesAtLeastiOS8){
+        picker = [[OLAssetsPickerController alloc] init];
+        [(OLAssetsPickerController *)picker setAssetsFilter:[ALAssetsFilter allPhotos]];
+        assetClass = [ALAsset class];
+        ((OLAssetsPickerController *)picker).delegate = self;
+    }
+#ifdef OL_KITE_AT_LEAST_IOS8
+    else{
+        if ([PHPhotoLibrary authorizationStatus] == PHAuthorizationStatusNotDetermined){
+            [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status){
+                if (status == PHAuthorizationStatusAuthorized){
+                    picker = [[CTAssetsPickerController alloc] init];
+                    ((CTAssetsPickerController *)picker).showsEmptyAlbums = NO;
+                    PHFetchOptions *options = [[PHFetchOptions alloc] init];
+                    options.predicate = [NSPredicate predicateWithFormat:@"mediaType == %d", PHAssetMediaTypeImage];
+                    ((CTAssetsPickerController *)picker).assetsFetchOptions = options;
+                    assetClass = [PHAsset class];
+                    ((CTAssetsPickerController *)picker).delegate = self;
+                    [self presentViewController:picker animated:YES completion:nil];
+                }
+            }];
+        }
+        else{
+            picker = [[CTAssetsPickerController alloc] init];
+            ((CTAssetsPickerController *)picker).showsEmptyAlbums = NO;
+            PHFetchOptions *options = [[PHFetchOptions alloc] init];
+            options.predicate = [NSPredicate predicateWithFormat:@"mediaType == %d", PHAssetMediaTypeImage];
+            ((CTAssetsPickerController *)picker).assetsFetchOptions = options;
+            assetClass = [PHAsset class];
+            ((CTAssetsPickerController *)picker).delegate = self;
+        }
+    }
+#endif
+    
+    if (picker){
+        [self presentViewController:picker animated:YES completion:nil];
+    }
 }
 
 - (void)showFacebookImagePicker{
@@ -838,20 +920,22 @@ UINavigationControllerDelegate>
             }
         }
     }
-    
+    [self updateUserSelectedPhotos];
 }
 
 #pragma mark - CTAssetsPickerControllerDelegate Methods
 
-- (BOOL)assetsPickerController:(CTAssetsPickerController *)picker isDefaultAssetsGroup:(ALAssetsGroup *)group {
+#if __IPHONE_OS_VERSION_MIN_REQUIRED < 80000
+- (BOOL)assetsPickerController:(OLAssetsPickerController *)picker isDefaultAssetsGroup:(ALAssetsGroup *)group {
     if ([self.delegate respondsToSelector:@selector(kiteController:isDefaultAssetsGroup:)]) {
         return [self.delegate kiteController:[self kiteViewController] isDefaultAssetsGroup:group];
     }
     
     return NO;
 }
+#endif
 
-- (void)assetsPickerController:(CTAssetsPickerController *)picker didFinishPickingAssets:(NSArray *)assets {
+- (void)assetsPickerController:(id)picker didFinishPickingAssets:(NSArray *)assets {
     if (self.replacingImageNumber){
         self.photobookPhotos[[self.replacingImageNumber integerValue]] = [NSNull null];
         self.replacingImageNumber = nil;
@@ -873,27 +957,33 @@ UINavigationControllerDelegate>
         return;
     }
     
-    [self populateArrayWithNewArray:assets dataType:[ALAsset class]];
+    [self populateArrayWithNewArray:assets dataType:[picker isKindOfClass:[OLAssetsPickerController class]] ? [ALAsset class] : [PHAsset class]];
     [picker dismissViewControllerAnimated:YES completion:^(void){}];
+    
 }
 
-- (BOOL)assetsPickerController:(CTAssetsPickerController *)picker shouldSelectAsset:(ALAsset *)asset{
-    if (self.addNewPhotosAtIndex == -1){
-        return picker.selectedAssets.count == 0;
-    }
-    else{
-        return YES;
-    }
-}
-
-- (BOOL)assetsPickerController:(CTAssetsPickerController *)picker shouldShowAssetsGroup:(ALAssetsGroup *)group{
+- (BOOL)assetsPickerController:(OLAssetsPickerController *)picker shouldShowAssetsGroup:(ALAssetsGroup *)group{
     if (group.numberOfAssets == 0){
         return NO;
     }
     return YES;
 }
 
-- (BOOL)assetsPickerController:(CTAssetsPickerController *)picker shouldShowAsset:(ALAsset *)asset{
+#ifdef OL_KITE_AT_LEAST_IOS8
+- (void)assetsPickerController:(CTAssetsPickerController *)picker didDeSelectAsset:(PHAsset *)asset{
+    PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
+    options.networkAccessAllowed = YES;
+    [[OLImageCachingManager sharedInstance].photosCachingManager stopCachingImagesForAssets:@[asset] targetSize:PHImageManagerMaximumSize contentMode:PHImageContentModeAspectFill options:options];
+}
+
+- (void)assetsPickerController:(CTAssetsPickerController *)picker didSelectAsset:(PHAsset *)asset{
+    PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
+    options.networkAccessAllowed = YES;
+    [[OLImageCachingManager sharedInstance].photosCachingManager startCachingImagesForAssets:@[asset] targetSize:PHImageManagerMaximumSize contentMode:PHImageContentModeAspectFill options:options];
+}
+#endif
+
+- (BOOL)assetsPickerController:(OLAssetsPickerController *)picker shouldShowAsset:(id)asset{
     NSString *fileName = [[[asset defaultRepresentation] filename] lowercaseString];
     if (!([fileName hasSuffix:@".jpg"] || [fileName hasSuffix:@".jpeg"] || [fileName hasSuffix:@"png"])) {
         return NO;
@@ -1063,7 +1153,7 @@ UINavigationControllerDelegate>
     }
 }
 
-- (NSUInteger)supportedInterfaceOrientations {
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
     if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
         return UIInterfaceOrientationMaskAll;
     }

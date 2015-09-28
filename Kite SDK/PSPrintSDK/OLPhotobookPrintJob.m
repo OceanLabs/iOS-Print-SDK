@@ -12,6 +12,10 @@
 
 static NSString *const kKeyPhotobookProductTemplateId = @"co.oceanlabs.pssdk.kKeyPhotobookProductTemplateId";
 static NSString *const kKeyPhotobookImages = @"co.oceanlabs.pssdk.kKeyPhotobookImages";
+static NSString *const kKeyFrontAsset = @"co.oceanlabs.pssdk.kKeyFrontAsset";
+static NSString *const kKeyPhotobookAddress = @"co.oceanlabs.pssdk.kKeyPhotobookAddress";
+static NSString *const kKeyPhotobookUuid = @"co.oceanlabs.pssdk.kKeyPhotobookUuid";
+static NSString *const kKeyPhotobookExtraCopies = @"co.oceanlabs.pssdk.kKeyPhotobookExtraCopies";
 
 @interface OLPhotobookPrintJob ()
 @property (nonatomic, strong) NSString *templateId;
@@ -20,6 +24,10 @@ static NSString *const kKeyPhotobookImages = @"co.oceanlabs.pssdk.kKeyPhotobookI
 @end
 
 @implementation OLPhotobookPrintJob
+
+@synthesize address;
+@synthesize uuid;
+@synthesize extraCopies;
 
 - (id)initWithTemplateId:(NSString *)templateId OLAssets:(NSArray/*<OLAssets>*/ *)assets{
     if (self = [super init]){
@@ -89,6 +97,29 @@ static NSString *const kKeyPhotobookImages = @"co.oceanlabs.pssdk.kKeyPhotobookI
     }
 }
 
+- (NSUInteger) hash {
+    NSUInteger val = [self.templateId hash];
+    val = 39 * val + [self.frontCover hash];
+    for (id asset in self.assets) {
+        val = 37 * val + [asset hash];
+    }
+    
+    return val;
+}
+
+- (BOOL)isEqual:(id)object {
+    if (self == object) {
+        return YES;
+    }
+    
+    if (![object isKindOfClass:[OLPhotobookPrintJob class]]) {
+        return NO;
+    }
+    OLPhotobookPrintJob* printJob = (OLPhotobookPrintJob*)object;
+    
+    return [self.templateId isEqual:printJob.templateId] && [self.assets isEqual:printJob.assets] && [self.frontCover isEqual:printJob.frontCover];
+}
+
 #pragma mark - NSCopying
 
 - (id)copyWithZone:(NSZone *)zone {
@@ -105,12 +136,20 @@ static NSString *const kKeyPhotobookImages = @"co.oceanlabs.pssdk.kKeyPhotobookI
 - (void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:self.templateId forKey:kKeyPhotobookProductTemplateId];
     [aCoder encodeObject:self.assets forKey:kKeyPhotobookImages];
+    [aCoder encodeObject:self.frontCover forKey:kKeyFrontAsset];
+    [aCoder encodeObject:self.uuid forKey:kKeyPhotobookUuid];
+    [aCoder encodeInteger:self.extraCopies forKey:kKeyPhotobookExtraCopies];
+    [aCoder encodeObject:self.address forKey:kKeyPhotobookAddress];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
     if (self = [super init]) {
         self.templateId = [aDecoder decodeObjectForKey:kKeyPhotobookProductTemplateId];
         self.assets = [aDecoder decodeObjectForKey:kKeyPhotobookImages];
+        self.frontCover = [aDecoder decodeObjectForKey:kKeyFrontAsset];
+        self.extraCopies = [aDecoder decodeIntegerForKey:kKeyPhotobookExtraCopies];
+        self.uuid = [aDecoder decodeObjectForKey:kKeyPhotobookUuid];
+        self.address = [aDecoder decodeObjectForKey:kKeyPhotobookAddress];
     }
     
     return self;

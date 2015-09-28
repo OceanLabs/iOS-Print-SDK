@@ -29,6 +29,7 @@
 @interface OLProductTypeSelectionViewController () <UICollectionViewDelegateFlowLayout>
 
 @property (strong, nonatomic) NSMutableArray *products;
+@property (strong, nonatomic) NSMutableArray *allPosterProducts;
 @property (assign, nonatomic) BOOL fromRotation;
 
 @end
@@ -38,13 +39,28 @@
 -(NSMutableArray *) products{
     if (!_products){
         _products = [[NSMutableArray alloc] init];
+        self.allPosterProducts = [[NSMutableArray alloc] init];
         NSArray *allProducts = [OLProduct productsWithFilters:self.filterProducts];
         for (OLProduct *product in allProducts){
             if (!product.labelColor || product.productTemplate.templateUI == kOLTemplateUINA){
                 continue;
             }
+            if (product.productTemplate.templateUI == kOLTemplateUIPoster){
+                BOOL sameGridTemplate = NO;
+                for (OLProduct *otherProduct in _products){
+                    if (otherProduct.productTemplate.gridCountX == product.productTemplate.gridCountX && otherProduct.productTemplate.gridCountY == product.productTemplate.gridCountY){
+                        sameGridTemplate = YES;
+                        break;
+                    }
+                }
+                if (sameGridTemplate){
+                    [self.allPosterProducts addObject:product];
+                    continue;
+                }
+            }
             if ([product.productTemplate.templateClass isEqualToString:self.templateClass]){
                 [_products addObject:product];
+                [self.allPosterProducts addObject:product];
             }
         }
     }
@@ -52,15 +68,10 @@
 }
 
 - (void)viewDidLoad{
-    if ([[self.products firstObject] productTemplate].templateUI == kOLTemplateUICase){
-        self.title = NSLocalizedString(@"Choose Device", @"");
-    }
-    else{
-        self.title = NSLocalizedString(@"Choose Size", @"");
-    }
+    self.title = NSLocalizedString(self.templateClass, @"");
     
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Back", @"")
-                                                                             style:UIBarButtonItemStyleBordered
+                                                                             style:UIBarButtonItemStylePlain
                                                                             target:nil
                                                                             action:nil];
     
@@ -95,7 +106,21 @@
     
     OLProduct *product = self.products[indexPath.row];
     
-    OLProductOverviewViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLProductOverviewViewController"];
+    NSString *identifier;
+    if (product.productTemplate.templateUI == kOLTemplateUIPoster){
+        NSInteger x = product.productTemplate.gridCountX;
+        NSInteger y = product.productTemplate.gridCountY;
+        NSString *size = [product.productTemplate.productCode substringFromIndex:product.productTemplate.productCode.length-2];
+        for (OLProduct *otherProduct in self.allPosterProducts){
+            if (![otherProduct.productTemplate.productCode hasSuffix:size] && x == otherProduct.productTemplate.gridCountX && y == otherProduct.productTemplate.gridCountY){
+                identifier = @"sizeSelect";
+            }
+        }
+    }
+    if (!identifier){
+        identifier = @"OLProductOverviewViewController";
+    }
+    OLProductOverviewViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:identifier];
     vc.delegate = self.delegate;
     vc.userSelectedPhotos = self.userSelectedPhotos;
     vc.product = product;
@@ -131,15 +156,30 @@
     UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
     [self fixCellFrameOnIOS7:cell];
     
+    UIView *view = cell.contentView;
+    view.translatesAutoresizingMaskIntoConstraints = NO;
+    NSDictionary *views = NSDictionaryOfVariableBindings(view);
+    NSMutableArray *con = [[NSMutableArray alloc] init];
+    
+    NSArray *visuals = @[@"H:|-0-[view]-0-|",
+                         @"V:|-0-[view]-0-|"];
+    
+    
+    for (NSString *visual in visuals) {
+        [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+    }
+    
+    [view.superview addConstraints:con];
+    
     UIActivityIndicatorView *activity = (UIActivityIndicatorView *)[cell.contentView viewWithTag:41];
     [activity startAnimating];
     
     OLProduct *product = (OLProduct *)self.products[indexPath.item];
     
-    UIImageView *imageView = (UIImageView *)[cell.contentView viewWithTag:10];
+    UIImageView *imageView = (UIImageView *)[cell.contentView viewWithTag:40];
     [product setCoverImageToImageView:imageView];
     
-    UILabel *textView = (UILabel *)[cell.contentView viewWithTag:20];
+    UILabel *textView = (UILabel *)[cell.contentView viewWithTag:300];
     textView.text = product.productTemplate.templateType;
     
     if ([[OLKiteABTesting sharedInstance].productTileStyle isEqualToString:@"Classic"]){
@@ -199,6 +239,14 @@
     else if (numberOfCells == 4){
         return CGSizeMake(size.width/2 - 1, MAX(halfScreenHeight, 233));
     }
+    else if (numberOfCells == 3){
+        if (size.width < size.height){
+            return CGSizeMake(size.width, halfScreenHeight * 0.8);
+        }
+        else{
+            return CGSizeMake(size.width/2 - 1, MAX(halfScreenHeight, 233));
+        }
+    }
     else if (numberOfCells == 2){
         if (size.width < size.height){
             return CGSizeMake(size.width, halfScreenHeight);
@@ -208,7 +256,7 @@
         }
     }
     else{
-        return CGSizeMake(size.width/2 - 1, 233);
+        return CGSizeMake(size.width/2 - 1, 238);
     }
 }
 
@@ -224,7 +272,7 @@
     }
 }
 
-- (NSUInteger)supportedInterfaceOrientations {
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
     if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
         return UIInterfaceOrientationMaskAll;
     }

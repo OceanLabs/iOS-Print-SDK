@@ -1,0 +1,27 @@
+{
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "F61DC60BC95E56633C6D23109E750F3609E16C8F" : 0,
+    "98E520DDA0AE776CF47A7A4A2C7C2ABBE041AE69" : 0
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "0B2FBC93-3D22-431F-B53A-EB76A20DFDBA",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "98E520DDA0AE776CF47A7A4A2C7C2ABBE041AE69" : ""
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "KitePrintSDK",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "KitePrintSDK.xcworkspace",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/OceanLabs\/iOS-Print-SDK.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "98E520DDA0AE776CF47A7A4A2C7C2ABBE041AE69"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "F61DC60BC95E56633C6D23109E750F3609E16C8F"
+    }
+  ]
+}

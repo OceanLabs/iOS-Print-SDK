@@ -16,6 +16,13 @@
 #import "OLProductPrintJob.h"
 #import "OLPrintOrderCost.h"
 
+@interface OLKitePrintSDK (Private)
+
++ (NSString *)apiEndpoint;
++ (NSString *)apiVersion;
+
+@end
+
 static NSString *urlencode(NSString *str) {
     NSMutableString *output = [NSMutableString string];
     const unsigned char *source = (const unsigned char *)[str UTF8String];
@@ -50,7 +57,12 @@ static NSUInteger cacheOrderHash; // cached response is only valid for orders wi
 - (NSString *)stringFromOrder:(OLPrintOrder *)order {
     NSString *basketString = @"";
     for (id<OLPrintJob> job in order.jobs){
-        basketString = [basketString stringByAppendingString:[NSString stringWithFormat:@"%@:%d,", [job templateId], (int)[job quantity]]];
+        if (job.address){
+            basketString = [basketString stringByAppendingString:[NSString stringWithFormat:@"%@:%d:%@,", [job templateId], (int)[job quantity], job.address.country.codeAlpha3]];
+        }
+        else{
+            basketString = [basketString stringByAppendingString:[NSString stringWithFormat:@"%@:%d,", [job templateId], (int)[job quantity]]];
+        }
     }
     basketString = [basketString stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@","]];
 
@@ -58,6 +70,12 @@ static NSUInteger cacheOrderHash; // cached response is only valid for orders wi
                            @"shipping_country_code" : order.shippingAddress.country ? [order.shippingAddress.country codeAlpha3] : [[OLCountry countryForCurrentLocale] codeAlpha3],
                            @"promo_code" : order.promoCode ? urlencode(order.promoCode) : @""
                            };
+    
+    NSDictionary *extraDict = [order.userData objectForKey:@"extra_dict_for_cost"];
+    if (extraDict && [extraDict isKindOfClass:[NSDictionary class]]){
+        dict = [dict mutableCopy];
+        [dict setValue:[extraDict objectForKey:[[extraDict allKeys] firstObject]] forKey:[[extraDict allKeys] firstObject]];
+    }
 
     NSString *orderString = @"";
     for (NSString *key in [dict allKeys]){

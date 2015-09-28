@@ -11,9 +11,17 @@
 #import "OLKitePrintSDK.h"
 #import "OLProductTemplate.h"
 #import "OLConstants.h"
+#import "OLKiteABTesting.h"
 
 @interface OLProductTemplateSyncRequest ()
 @property (nonatomic, strong) OLBaseRequest *req;
+@end
+
+@interface OLKitePrintSDK (Private)
+
++ (NSString *)apiEndpoint;
++ (NSString *)apiVersion;
+
 @end
 
 @implementation OLProductTemplateSyncRequest
@@ -48,6 +56,11 @@
                     }
                 }
                 
+                id userConfig = json[@"user_config"];
+                if ([userConfig isKindOfClass:[NSDictionary class]]){
+                    [[OLKiteABTesting sharedInstance] setUserConfig:userConfig];
+                }
+                
                 id objects = json[@"objects"];
                 if ([objects isKindOfClass:[NSArray class]]) {
                     for (id template in objects) {
@@ -58,9 +71,13 @@
                             id imagesPerSheet = template[@"images_per_page"];
                             id product = template[@"product"];
                             NSNumber *enabledNumber = template[@"enabled"];
+                            NSString *description = template[@"description"];
                             BOOL enabled = enabledNumber == nil ? YES : [enabledNumber boolValue];
                             
                             NSDictionary *shippingCosts = [template[@"shipping_costs"] isKindOfClass:[NSDictionary class]] ? template[@"shipping_costs"] : nil;
+                            
+                            NSNumber *gridCountX = [template[@"grid_count_x"] isKindOfClass:[NSNumber class]] ? template[@"grid_count_x"] : nil;
+                            NSNumber *gridCountY = [template[@"grid_count_y"] isKindOfClass:[NSNumber class]] ? template[@"grid_count_y"] : nil;
                             
                             if ([name isKindOfClass:[NSString class]]
                                 && [identifier isKindOfClass:[NSString class]]
@@ -177,7 +194,10 @@
                                     t.sizePx = sizePx;
                                     t.classPhotoURL = [NSURL URLWithString:classPhoto];
                                     t.imageBorder = imageBorder;
+                                    t.productDescription = description;
                                     t.shippingCosts = shippingCosts;
+                                    t.gridCountX = [gridCountX integerValue];
+                                    t.gridCountY = [gridCountY integerValue];
                                     [acc addObject:t];
                                 }
                             }

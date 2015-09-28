@@ -17,6 +17,10 @@
 #import "OLIntegratedCheckoutViewController.h"
 #import "OLKiteABTesting.h"
 #import "OLAddressEditViewController.h"
+#ifdef OL_KITE_OFFER_APPLE_PAY
+#import <Stripe+ApplePay.h>
+#endif
+#import "OLPaymentViewController.h"
 
 static NSString *const kJudoClientId      = @"100170-877";
 static NSString *const kJudoSandboxToken     = @"oLMiwCPBeLs0iVX4";
@@ -74,7 +78,7 @@ static NSString *instagramRedirectURI = nil;
     return cacheTemplates;
 }
 
-+ (void)setAPIKey:(NSString *)_apiKey withEnvironment:(OLKitePrintSDKEnvironment)_environment {
++ (void)setAPIKey:(NSString *_Nonnull)_apiKey withEnvironment:(OLKitePrintSDKEnvironment)_environment {
     apiKey = _apiKey;
     environment = _environment;
     if (environment == kOLKitePrintSDKEnvironmentLive) {
@@ -86,7 +90,7 @@ static NSString *instagramRedirectURI = nil;
     }
 }
 
-+ (NSString *)apiKey {
++ (NSString *_Nullable)apiKey {
     return apiKey;
 }
 
@@ -106,7 +110,7 @@ static NSString *instagramRedirectURI = nil;
 }
 
 #ifdef OL_KITE_OFFER_PAYPAL
-+ (NSString *)paypalEnvironment {
++ (NSString *_Nonnull)paypalEnvironment {
     switch (environment) {
         case kOLKitePrintSDKEnvironmentLive: return PayPalEnvironmentProduction;
         case kOLKitePrintSDKEnvironmentSandbox: return PayPalEnvironmentSandbox;
@@ -114,14 +118,14 @@ static NSString *instagramRedirectURI = nil;
 }
 #endif
 
-+ (NSString *)paypalClientId {
++ (NSString *_Nonnull)paypalClientId {
     switch (environment) {
         case kOLKitePrintSDKEnvironmentLive: return kOLPayPalClientIdLive;
         case kOLKitePrintSDKEnvironmentSandbox: return kOLPayPalClientIdSandbox;
     }
 }
 
-+ (NSString *)paypalReceiverEmail {
++ (NSString *_Nonnull)paypalReceiverEmail {
     switch (environment) {
         case kOLKitePrintSDKEnvironmentLive: return kOLPayPalRecipientEmailLive;
         case kOLKitePrintSDKEnvironmentSandbox: return kOLPayPalRecipientEmailSandbox;
@@ -129,18 +133,18 @@ static NSString *instagramRedirectURI = nil;
 }
 
 #ifdef OL_KITE_OFFER_APPLE_PAY
-+ (void)setApplePayMerchantID:(NSString *)mID{
++ (void)setApplePayMerchantID:(NSString *_Nonnull)mID{
     applePayMerchantID = mID;
 }
 
-+ (NSString *)stripePublishableKey {
++ (NSString *_Nonnull)stripePublishableKey {
     switch (environment) {
         case kOLKitePrintSDKEnvironmentLive: return kOLStripePublishableKeyLive;
         case kOLKitePrintSDKEnvironmentSandbox: return kOLStripePublishableKeyTest;
     }
 }
 
-+ (NSString *)appleMerchantID {
++ (NSString *_Nonnull)appleMerchantID {
     return applePayMerchantID;
 }
 #endif
@@ -204,7 +208,7 @@ static NSString *instagramRedirectURI = nil;
 }
 
 #ifdef OL_KITE_OFFER_INSTAGRAM
-+ (void)setInstagramEnabledWithClientID:(NSString *)clientID secret:(NSString *)secret redirectURI:(NSString *)redirectURI {
++ (void)setInstagramEnabledWithClientID:(NSString *_Nonnull)clientID secret:(NSString *_Nonnull)secret redirectURI:(NSString *_Nonnull)redirectURI {
     instagramRedirectURI = redirectURI;
     instagramSecret = secret;
     instagramClientID = clientID;
@@ -223,7 +227,33 @@ static NSString *instagramRedirectURI = nil;
 }
 #endif
 
-+ (void)checkoutViewControllerForPrintOrder:(OLPrintOrder *)printOrder handler:(void(^)(OLCheckoutViewController *vc))handler{
+#ifdef OL_KITE_OFFER_APPLE_PAY
++(BOOL)isApplePayAvailable{
+    PKPaymentRequest *request = [Stripe paymentRequestWithMerchantIdentifier:[OLKitePrintSDK appleMerchantID]];
+    
+    return [Stripe canSubmitPaymentRequest:request];
+}
+#endif
+
++ (void)checkoutViewControllerForPrintOrder:(OLPrintOrder *)printOrder handler:(void(^)(id vc))handler{
+#ifdef OL_KITE_OFFER_APPLE_PAY
+    if ([OLKitePrintSDK isApplePayAvailable]){
+        OLPaymentViewController *vc = [[OLPaymentViewController alloc] initWithPrintOrder:printOrder];
+        handler(vc);
+    }
+    else{
+        [OLKitePrintSDK shippingControllerForPrintOrder:printOrder handler:handler];
+    }
+    
+#else
+    
+    [OLKitePrintSDK shippingControllerForPrintOrder:printOrder handler:handler];
+    
+#endif
+    
+}
+
++ (void)shippingControllerForPrintOrder:(OLPrintOrder *)printOrder handler:(void(^)(OLCheckoutViewController *vc))handler{
     OLCheckoutViewController *vc;
     if ([[OLKiteABTesting sharedInstance].checkoutScreenType isEqualToString:@"Classic"]){
         vc = [[OLCheckoutViewController alloc] initWithPrintOrder:printOrder];
@@ -234,14 +264,15 @@ static NSString *instagramRedirectURI = nil;
     handler(vc);
 }
 
-+ (NSString *)reviewViewControllerIdentifierForTemplateUI:(OLTemplateUI)templateUI photoSelectionScreen:(BOOL)photoSelectionScreen{
++ (NSString *)reviewViewControllerIdentifierForProduct:(OLProduct *)product photoSelectionScreen:(BOOL)photoSelectionScreen{
+    OLTemplateUI templateUI = product.productTemplate.templateUI;
     if (templateUI == kOLTemplateUICase){
         return @"OLCaseViewController";
     }
     else if (templateUI == kOLTemplateUIPostcard){
         return @"OLPostcardViewController";
     }
-    else if (templateUI == kOLTemplateUIPoster){
+    else if (templateUI == kOLTemplateUIPoster && product.productTemplate.gridCountX == 1 && product.productTemplate.gridCountY == 1){
         return @"OLSingleImageProductReviewViewController";
     }
     else if (templateUI == kOLTemplateUIPhotobook){
@@ -249,6 +280,9 @@ static NSString *instagramRedirectURI = nil;
     }
     else if (photoSelectionScreen){
         return @"PhotoSelectionViewController";
+    }
+    else if (templateUI == kOLTemplateUIPoster){
+        return @"OLPosterViewController";
     }
     else if (templateUI == kOLTemplateUIFrame){
         return @"FrameOrderReviewViewController";

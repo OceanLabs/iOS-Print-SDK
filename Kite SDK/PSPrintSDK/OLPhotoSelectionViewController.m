@@ -11,7 +11,11 @@
 #import "OLPrintPhoto.h"
 #import "OLOrderReviewViewController.h"
 
+#import "OLAssetsPickerController.h"
+
+#ifdef OL_KITE_AT_LEAST_IOS8
 #import <CTAssetsPickerController/CTAssetsPickerController.h>
+#endif
 
 #ifdef OL_KITE_OFFER_INSTAGRAM
 #import <InstagramImagePicker/OLInstagramImagePickerController.h>
@@ -35,6 +39,10 @@
 #import "OLKitePrintSDK.h"
 #import "NSObject+Utils.h"
 #import "UIViewController+TraitCollectionCompatibility.h"
+#import "OLAnalytics.h"
+
+#import "OLRemoteImageView.h"
+#import "OLImageCachingManager.h"
 
 NSInteger OLPhotoSelectionMargin = 0;
 
@@ -45,7 +53,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 @interface OLKitePrintSDK (Private)
 
 + (OLKiteViewController *)kiteViewControllerInNavStack:(NSArray *)viewControllers;
-+ (NSString *)reviewViewControllerIdentifierForTemplateUI:(OLTemplateUI)templateUI photoSelectionScreen:(BOOL)photoSelectionScreen;
++ (NSString *)reviewViewControllerIdentifierForProduct:(OLProduct *)product photoSelectionScreen:(BOOL)photoSelectionScreen;
 #ifdef OL_KITE_OFFER_INSTAGRAM
 + (NSString *) instagramRedirectURI;
 + (NSString *) instagramSecret;
@@ -55,7 +63,10 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 @end
 
 @interface OLPhotoSelectionViewController () <UINavigationControllerDelegate,
+#ifdef OL_KITE_AT_LEAST_IOS8
                                             CTAssetsPickerControllerDelegate,
+#endif
+                                            OLAssetsPickerControllerDelegate,
                                             UICollectionViewDataSource,
                                             UICollectionViewDelegate,
                                             UICollectionViewDelegateFlowLayout,
@@ -76,7 +87,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 @property (weak, nonatomic) IBOutlet UIView *facebookContainer;
 
 @property (nonatomic, weak) IBOutlet UICollectionView *collectionView;
-@property (nonatomic, strong) CTAssetsPickerController *picker;
+@property (nonatomic, strong) OLAssetsPickerController *picker;
 @property (strong, nonatomic) NSMutableArray *userDisabledPhotos;
 
 @property (nonatomic, weak) IBOutlet UILabel *chooseImportSourceLabel;
@@ -97,6 +108,10 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackPhotoSelectionScreenViewed:self.product.productTemplate.name];
+#endif
     
     self.navigationItem.titleView = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100, 44)];
     [(UILabel *)self.navigationItem.titleView setTextAlignment:NSTextAlignmentCenter];
@@ -290,32 +305,33 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
         }
         [UIView animateKeyframesWithDuration:0.15 delay:0 options:UIViewKeyframeAnimationOptionBeginFromCurrentState | UIViewAnimationOptionCurveLinear animations:^{
             self.clearButtonContainerView.transform = CGAffineTransformMakeTranslation(0, -40);
+            self.collectionView.contentInset = UIEdgeInsetsMake(self.collectionView.contentInset.top, self.collectionView.contentInset.left, self.collectionView.contentInset.bottom + 40, self.collectionView.contentInset.left);
         }completion:NULL];
     }
     else{
         self.navigationItem.rightBarButtonItem.title = NSLocalizedString(@"Next", @"");
-        [UIView animateKeyframesWithDuration:0.15 delay:0 options:UIViewKeyframeAnimationOptionBeginFromCurrentState | UIViewAnimationOptionCurveLinear animations:^{
-            self.clearButtonContainerView.transform = CGAffineTransformIdentity;
-        }completion:NULL];
+        if (self.clearButtonContainerView.transform.ty != 0){
+            [UIView animateKeyframesWithDuration:0.15 delay:0 options:UIViewKeyframeAnimationOptionBeginFromCurrentState | UIViewAnimationOptionCurveLinear animations:^{
+                self.clearButtonContainerView.transform = CGAffineTransformIdentity;
+                self.collectionView.contentInset = UIEdgeInsetsMake(self.collectionView.contentInset.top, self.collectionView.contentInset.left, 0, self.collectionView.contentInset.left);
+            }completion:NULL];
+        }
     }
 }
 
 - (void)populateArrayWithNewArray:(NSArray *)array dataType:(Class)class {
     NSMutableArray *photoArray = [[NSMutableArray alloc] initWithCapacity:array.count];
-    NSMutableArray *assetArray = [[NSMutableArray alloc] initWithCapacity:array.count];
     
     for (id object in array) {
         OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
         printPhoto.asset = object;
         [photoArray addObject:printPhoto];
-        
-        [assetArray addObject:[OLAsset assetWithPrintPhoto:printPhoto]];
     }
     
     // First remove any that are not returned.
     NSMutableArray *removeArray = [NSMutableArray arrayWithArray:self.userSelectedPhotos];
     for (OLPrintPhoto *object in self.userSelectedPhotos) {
-        if (![object.asset isKindOfClass:class] || [photoArray containsObjectIdenticalTo:object]) {
+        if (![object.asset isKindOfClass:class] || [photoArray containsObject:object]) {
             [removeArray removeObjectIdenticalTo:object];
         }
     }
@@ -324,13 +340,9 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     
     // Second, add the remaining objects to the end of the array without replacing any.
     NSMutableArray *addArray = [NSMutableArray arrayWithArray:photoArray];
-    NSMutableArray *addAssetArray = [NSMutableArray arrayWithArray:assetArray];
     for (id object in self.userSelectedPhotos) {
-        OLAsset *asset = [OLAsset assetWithPrintPhoto:object];
-        
-        if ([addAssetArray containsObject:asset]){
-            [addArray removeObjectAtIndex:[addAssetArray indexOfObject:asset]];
-            [addAssetArray removeObject:asset];
+        if ([addArray containsObject:object]){
+            [addArray removeObject:object];
         }
     }
 
@@ -371,18 +383,61 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 #pragma mark - Actions
 
 - (IBAction)cameraRollSelected:(id)sender {
-    CTAssetsPickerController *picker = [[CTAssetsPickerController alloc] init];
-    picker.delegate = self;
-    picker.assetsFilter = [ALAssetsFilter allPhotos];
-    NSArray *allAssets = [[self createAssetArray] mutableCopy];
-    NSMutableArray *alAssets = [[NSMutableArray alloc] init];
-    for (id asset in allAssets){
-        if ([asset isKindOfClass:[ALAsset class]]){
-            [alAssets addObject:asset];
+    __block UIViewController *picker;
+    __block Class assetClass;
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8 || !definesAtLeastiOS8){
+        picker = [[OLAssetsPickerController alloc] init];
+        [(OLAssetsPickerController *)picker setAssetsFilter:[ALAssetsFilter allPhotos]];
+        assetClass = [ALAsset class];
+        ((OLAssetsPickerController *)picker).delegate = self;
+    }
+#ifdef OL_KITE_AT_LEAST_IOS8
+    else{
+        if ([PHPhotoLibrary authorizationStatus] == PHAuthorizationStatusNotDetermined){
+            [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status){
+                if (status == PHAuthorizationStatusAuthorized){
+                    picker = [[CTAssetsPickerController alloc] init];
+                    ((CTAssetsPickerController *)picker).showsEmptyAlbums = NO;
+                    PHFetchOptions *options = [[PHFetchOptions alloc] init];
+                    options.predicate = [NSPredicate predicateWithFormat:@"mediaType == %d", PHAssetMediaTypeImage];
+                    ((CTAssetsPickerController *)picker).assetsFetchOptions = options;
+                    assetClass = [PHAsset class];
+                    ((CTAssetsPickerController *)picker).delegate = self;
+                    NSArray *allAssets = [[self createAssetArray] mutableCopy];
+                    NSMutableArray *alAssets = [[NSMutableArray alloc] init];
+                    for (id asset in allAssets){
+                        if ([asset isKindOfClass:assetClass]){
+                            [alAssets addObject:asset];
+                        }
+                    }
+                    [(id)picker setSelectedAssets:alAssets];
+                    [self presentViewController:picker animated:YES completion:nil];
+                }
+            }];
+        }
+        else{
+            picker = [[CTAssetsPickerController alloc] init];
+            ((CTAssetsPickerController *)picker).showsEmptyAlbums = NO;
+            PHFetchOptions *options = [[PHFetchOptions alloc] init];
+            options.predicate = [NSPredicate predicateWithFormat:@"mediaType == %d", PHAssetMediaTypeImage];
+            ((CTAssetsPickerController *)picker).assetsFetchOptions = options;
+            assetClass = [PHAsset class];
+            ((CTAssetsPickerController *)picker).delegate = self;
         }
     }
-    picker.selectedAssets = alAssets;
-    [self presentViewController:picker animated:YES completion:nil];
+#endif
+    
+    if (picker){
+        NSArray *allAssets = [[self createAssetArray] mutableCopy];
+        NSMutableArray *alAssets = [[NSMutableArray alloc] init];
+        for (id asset in allAssets){
+            if ([asset isKindOfClass:assetClass]){
+                [alAssets addObject:asset];
+            }
+        }
+        [(id)picker setSelectedAssets:alAssets];
+        [self presentViewController:picker animated:YES completion:nil];
+    }
 }
 
 - (IBAction)instagramSelected:(id)sender {
@@ -457,28 +512,44 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     return nil;
 }
 
-- (BOOL)assetsPickerController:(CTAssetsPickerController *)picker isDefaultAssetsGroup:(ALAssetsGroup *)group {
+#if __IPHONE_OS_VERSION_MIN_REQUIRED < 80000
+- (BOOL)assetsPickerController:(OLAssetsPickerController *)picker isDefaultAssetsGroup:(ALAssetsGroup *)group {
     if ([self.delegate respondsToSelector:@selector(kiteController:isDefaultAssetsGroup:)]) {
         return [self.delegate kiteController:[self kiteViewController] isDefaultAssetsGroup:group];
     }
     
     return NO;
 }
+#endif
 
-- (void)assetsPickerController:(CTAssetsPickerController *)picker didFinishPickingAssets:(NSArray *)assets {
-    [self populateArrayWithNewArray:assets dataType:[ALAsset class]];
+- (void)assetsPickerController:(id)picker didFinishPickingAssets:(NSArray *)assets {
+    [self populateArrayWithNewArray:assets dataType:[picker isKindOfClass:[OLAssetsPickerController class]] ? [ALAsset class] : [PHAsset class]];
     [picker dismissViewControllerAnimated:YES completion:^(void){}];
     
 }
 
-- (BOOL)assetsPickerController:(CTAssetsPickerController *)picker shouldShowAssetsGroup:(ALAssetsGroup *)group{
+- (BOOL)assetsPickerController:(OLAssetsPickerController *)picker shouldShowAssetsGroup:(ALAssetsGroup *)group{
     if (group.numberOfAssets == 0){
         return NO;
     }
     return YES;
 }
 
-- (BOOL)assetsPickerController:(CTAssetsPickerController *)picker shouldShowAsset:(ALAsset *)asset{
+#ifdef OL_KITE_AT_LEAST_IOS8
+- (void)assetsPickerController:(CTAssetsPickerController *)picker didDeSelectAsset:(PHAsset *)asset{
+    PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
+    options.networkAccessAllowed = YES;
+    [[OLImageCachingManager sharedInstance].photosCachingManager stopCachingImagesForAssets:@[asset] targetSize:PHImageManagerMaximumSize contentMode:PHImageContentModeAspectFill options:options];
+}
+
+- (void)assetsPickerController:(CTAssetsPickerController *)picker didSelectAsset:(PHAsset *)asset{
+    PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
+    options.networkAccessAllowed = YES;
+    [[OLImageCachingManager sharedInstance].photosCachingManager startCachingImagesForAssets:@[asset] targetSize:PHImageManagerMaximumSize contentMode:PHImageContentModeAspectFill options:options];
+}
+#endif
+
+- (BOOL)assetsPickerController:(OLAssetsPickerController *)picker shouldShowAsset:(id)asset{
     NSString *fileName = [[[asset defaultRepresentation] filename] lowercaseString];
     if (!([fileName hasSuffix:@".jpg"] || [fileName hasSuffix:@".jpeg"] || [fileName hasSuffix:@"png"])) {
         return NO;
@@ -634,6 +705,12 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     else if (templateUI == kOLTemplateUIPhotobook){
         title = [[NSString alloc]initWithFormat:@"#%ld Photobook", (long)indexPath.section + 1];
     }
+    else if (templateUI == kOLTemplateUIPoster){
+        title = [[NSString alloc]initWithFormat:@"#%ld Poster", (long)indexPath.section + 1];
+    }
+    else if (templateUI == kOLTemplateUIPostcard){
+        title = [[NSString alloc]initWithFormat:@"#%ld Postcard", (long)indexPath.section + 1];
+    }
     else{
         title = [[NSString alloc]initWithFormat:@"#%ld Pack of %lu %@", (long)indexPath.section + 1, (unsigned long)self.product.quantityToFulfillOrder, self.product.productTemplate.name];
     }
@@ -674,12 +751,12 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
         qtyLabel.hidden = YES;
     }
     
-    UIImageView *imageView = (UIImageView *) [cell.contentView viewWithTag:40];
+    OLRemoteImageView *imageView = (OLRemoteImageView *) [cell.contentView viewWithTag:40];
     if (imageView != nil) {
         [imageView removeFromSuperview];
     }
     cell.contentView.backgroundColor = [UIColor whiteColor];
-    imageView = [[UIImageView alloc] init];
+    imageView = [[OLRemoteImageView alloc] init];
     imageView.tag = 40;
     imageView.clipsToBounds = YES;
     imageView.contentMode = UIViewContentModeScaleAspectFill;
@@ -705,7 +782,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     
     UIImageView *checkmark = (UIImageView *) [cell.contentView viewWithTag:41];
     if (!checkmark){
-        checkmark = [[UIImageView alloc] initWithFrame:CGRectMake(cell.frame.size.width - 31, 0, 31, 31)];
+        checkmark = [[UIImageView alloc] init];
         checkmark.tag = 41;
         checkmark.clipsToBounds = YES;
         checkmark.contentMode = UIViewContentModeScaleAspectFill;
@@ -717,9 +794,8 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
         NSDictionary *views = NSDictionaryOfVariableBindings(checkmark);
         NSMutableArray *con = [[NSMutableArray alloc] init];
         
-        NSArray *visuals = @[@"H:[checkmark(==31)]",
-                             @"V:[checkmark(==31)]",
-                             @"H:[checkmark]-0-|"];
+        NSArray *visuals = @[@"V:|-2-[checkmark]",
+                             @"H:[checkmark]-2-|"];
         
         for (NSString *visual in visuals) {
             [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
@@ -761,9 +837,13 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     
     if (imageIndex < self.userSelectedPhotos.count) {
         OLPrintPhoto *photo = self.userSelectedPhotos[indexPath.row + indexPath.section * self.product.quantityToFulfillOrder];
-        [photo setImageSize:[self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath] cropped:YES completionHandler:^(UIImage *image){
+        [photo setImageSize:[self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath] cropped:YES progress:^(float progress){
+            [imageView setProgress:progress];
+        } completionHandler:^(UIImage *image){
             dispatch_async(dispatch_get_main_queue(), ^{
-                imageView.image = image;
+                if (image){
+                    imageView.image = image;
+                }
             });
         }];
         checkmark.hidden = [self.userDisabledPhotos containsObjectIdenticalTo:photo];
@@ -911,8 +991,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 }
 
 -(void)doSegueToOrderPreview{
-//    [OLAnalytics trackPhotosSelectedForOrder];
-    UIViewController* orvc = [self.storyboard instantiateViewControllerWithIdentifier:[OLKitePrintSDK reviewViewControllerIdentifierForTemplateUI:self.product.productTemplate.templateUI photoSelectionScreen:NO]];
+    UIViewController* orvc = [self.storyboard instantiateViewControllerWithIdentifier:[OLKitePrintSDK reviewViewControllerIdentifierForProduct:self.product photoSelectionScreen:NO]];
     
     [orvc safePerformSelector:@selector(setProduct:) withObject:self.product];
     [orvc safePerformSelector:@selector(setUserSelectedPhotos:) withObject:self.userSelectedPhotos];
@@ -941,7 +1020,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     }
 }
 
-- (NSUInteger)supportedInterfaceOrientations {
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
     if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
         return UIInterfaceOrientationMaskAll;
     }

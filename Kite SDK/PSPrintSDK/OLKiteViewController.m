@@ -23,6 +23,7 @@
 #import "NSObject+Utils.h"
 #import "OLKiteABTesting.h"
 #import "UIImage+ColorAtPixel.h"
+#import <SDWebImagePrefetcher.h>
 
 static const NSInteger kTagNoProductsAlertView = 99;
 static const NSInteger kTagTemplateSyncFailAlertView = 100;
@@ -50,12 +51,21 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
 
 + (void)setCacheTemplates:(BOOL)cache;
 + (BOOL)cacheTemplates;
-+ (void)checkoutViewControllerForPrintOrder:(OLPrintOrder *)printOrder handler:(void(^)(OLCheckoutViewController *vc))handler;
-+ (NSString *)reviewViewControllerIdentifierForTemplateUI:(OLTemplateUI)templateUI photoSelectionScreen:(BOOL)photoSelectionScreen;
++ (void)checkoutViewControllerForPrintOrder:(OLPrintOrder *)printOrder handler:(void(^)(id vc))handler;
++ (NSString *)reviewViewControllerIdentifierForProduct:(OLProduct *)product photoSelectionScreen:(BOOL)photoSelectionScreen;
 
 @end
 
 @implementation OLKiteViewController
+
+- (void)awakeFromNib{
+    [super awakeFromNib];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(templateSyncDidFinish:) name:kNotificationTemplateSyncComplete object:nil];
+}
+
+- (UIStatusBarStyle)preferredStatusBarStyle{
+    return [[self.childViewControllers firstObject] preferredStatusBarStyle];
+}
 
 -(NSMutableArray *) userSelectedPhotos{
     if (!_userSelectedPhotos){
@@ -70,29 +80,26 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
     return _userSelectedPhotos;
 }
 
-- (id)initWithAssets:(NSArray *)assets {
+- (instancetype _Nullable)initWithAssets:(NSArray <OLAsset *>*_Nonnull)assets{
     return [self initWithAssets:assets info:nil];
 }
 
-- (id)initWithPrintOrder:(OLPrintOrder *)printOrder{
+- (instancetype _Nullable)initWithPrintOrder:(OLPrintOrder *_Nullable)printOrder{
     return [self initWithPrintOrder:printOrder info:nil];
 }
 
-- (id)initWithAssets:(NSArray *)assets info:(NSDictionary *)info{
-    NSAssert(assets != nil && [assets count] > 0, @"KiteViewController requires assets to print");
+- (instancetype _Nullable)initWithAssets:(NSArray <OLAsset *>*_Nonnull)assets info:(NSDictionary *_Nullable)info{
     [OLAnalytics setExtraInfo:info];
     if ((self = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:nil] instantiateViewControllerWithIdentifier:@"KiteViewController"])) {
         self.assets = assets;
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(templateSyncDidFinish:) name:kNotificationTemplateSyncComplete object:nil];
     }
     
     return self;
 }
 
-- (id)initWithPrintOrder:(OLPrintOrder *)printOrder info:(NSDictionary *)info{
+- (instancetype _Nullable)initWithPrintOrder:(OLPrintOrder *_Nullable)printOrder info:(NSDictionary * _Nullable)info{
     [OLAnalytics setExtraInfo:info];
     if ((self = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:nil] instantiateViewControllerWithIdentifier:@"KiteViewController"])) {
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(templateSyncDidFinish:) name:kNotificationTemplateSyncComplete object:nil];
         self.printOrder = printOrder;
     }
     return self;
@@ -100,6 +107,8 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
 
 -(void)viewDidLoad {
     [super viewDidLoad];
+    
+    [[NSURLCache sharedURLCache] removeAllCachedResponses];
     
     if (!self.navigationController){
         self.navigationBar.hidden = NO;
@@ -181,14 +190,14 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
                 identifier = @"OLProductOverviewViewController";
             }
             else if ([[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant hasPrefix:@"Review-"] ){
-                identifier = [OLKitePrintSDK reviewViewControllerIdentifierForTemplateUI:product.productTemplate.templateUI photoSelectionScreen:NO];
+                identifier = [OLKitePrintSDK reviewViewControllerIdentifierForProduct:product photoSelectionScreen:NO];
             }
             else{
-                [OLKitePrintSDK checkoutViewControllerForPrintOrder:welf.printOrder handler:^(OLCheckoutViewController *vc){
+                [OLKitePrintSDK checkoutViewControllerForPrintOrder:welf.printOrder handler:^(id vc){
                     [[vc navigationItem] setLeftBarButtonItem:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:welf action:@selector(dismiss)]];
-                    vc.userEmail = welf.userEmail;
-                    vc.userPhone = welf.userPhone;
-                    vc.kiteDelegate = welf.delegate;
+                    [vc safePerformSelector:@selector(setUserEmail:) withObject:welf.userEmail];
+                    [vc safePerformSelector:@selector(setUserPhone:) withObject:welf.userPhone];
+                    [vc safePerformSelector:@selector(setKiteDelegate:) withObject:welf.delegate];
                     OLCustomNavigationController *nvc = [[OLCustomNavigationController alloc] initWithRootViewController:vc];
                     
                     [welf fadeToViewController:nvc];
@@ -228,6 +237,16 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
         [vc safePerformSelector:@selector(setTemplateClass:) withObject:product.productTemplate.templateClass];
         [[vc navigationItem] setLeftBarButtonItem:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:welf action:@selector(dismiss)]];
         [welf fadeToViewController:nav];
+        
+        //Prefetch themed-SDK images
+        NSMutableArray *URLsToDownload = [[NSMutableArray alloc] init];
+        for (NSString *s in @[@"checkoutProgress1URL", @"checkoutProgress2URL", @"checkoutProgress1BgURL", @"checkoutProgress2BgURL", @"receiptSuccessURL", @"receiptSuccessBgURL", @"receiptFailureURL", @"receiptFailureBgURL"]){
+            NSURL *url = [NSURL URLWithString:[[OLKiteABTesting sharedInstance] safePerformSelectorWithReturn:NSSelectorFromString(s) withObject:nil]];
+            if (url){
+                [URLsToDownload addObject:url];
+            }
+        }
+        [[SDWebImagePrefetcher sharedImagePrefetcher] prefetchURLs:URLsToDownload];
     }];
     [self.operationQueue addOperation:self.transitionOperation];
 }
@@ -249,11 +268,12 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
     NSAssert([NSThread isMainThread], @"assumption about main thread callback is incorrect");
     if (n.userInfo[kNotificationKeyTemplateSyncError]){
         if ([[OLProductTemplate templates] count] > 0){
+            [self.operationQueue addOperation:self.templateSyncOperation];
             return;
         }
         
         NSError *error = n.userInfo[kNotificationKeyTemplateSyncError];
-        NSString *message = NSLocalizedString(@"There was problem getting Print Shop products. Check your Internet connectivity or try again later.", @"");
+        NSString *message = NSLocalizedString(@"There was a problem getting Print Shop products. Check your Internet connectivity or try again later.", @"");
         if (error.code == kOLKiteSDKErrorCodeMaintenanceMode) {
             message = kOLKiteSDKErrorMessageMaintenanceMode;
         }
@@ -299,6 +319,13 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
 + (NSString *)storyboardIdentifierForGroupSelected:(OLProductGroup *)group{
     OLProduct *product = [group.products firstObject];
     if (product.productTemplate.templateUI == kOLTemplateUIPoster && group.products.count > 1) {
+        NSInteger x = product.productTemplate.gridCountX;
+        NSInteger y = product.productTemplate.gridCountY;
+        for (OLProduct *otherProduct in group.products){
+            if (x != otherProduct.productTemplate.gridCountX || y != otherProduct.productTemplate.gridCountY){
+                return @"OLTypeSelectionViewController";
+            }
+        }
         return @"sizeSelect";
     }
     else if (group.products.count > 1){
@@ -325,7 +352,7 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
     }
 }
 
-- (NSUInteger)supportedInterfaceOrientations {
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
     if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
         return UIInterfaceOrientationMaskAll;
     }

@@ -17,6 +17,7 @@
 + (void)trackProductDescriptionScreenViewed:(NSString *)productName hidePrice:(BOOL)hidePrice;
 + (void)trackProductTemplateSelectionScreenViewed:(NSString *)productName;
 + (void)trackProductTypeSelectionScreenViewedWithTemplateClass:(NSString *)templateClassString;
++ (void)trackPhotoSelectionScreenViewed:(NSString *)productName;
 + (void)trackReviewScreenViewed:(NSString *)productName;
 + (void)trackShippingScreenViewedForOrder:(OLPrintOrder *)printOrder variant:(NSString *)variant showPhoneEntryField:(BOOL)showPhoneEntryField;
 + (void)trackPaymentScreenViewedForOrder:(OLPrintOrder *)printOrder applePayIsAvailable:(NSString *)applePayIsAvailable;

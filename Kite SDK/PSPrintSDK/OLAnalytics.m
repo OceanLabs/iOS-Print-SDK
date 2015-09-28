@@ -147,6 +147,12 @@ static NSString *nonNilStr(NSString *str) {
     [OLAnalytics sendToMixPanelWithDictionary:dict];
 }
 
++ (void)trackPhotoSelectionScreenViewed:(NSString *)productName{
+    NSDictionary *dict = [OLAnalytics defaultDictionaryForEventName:@"Photo Selection Screen Viewed"];
+    [dict[@"properties"] setObject:productName forKey:@"Product Name"];
+    [OLAnalytics sendToMixPanelWithDictionary:dict];
+}
+
 + (void)trackReviewScreenViewed:(NSString *)productName{
     NSDictionary *dict = [OLAnalytics defaultDictionaryForEventName:@"Review Screen Viewed"];
     [dict[@"properties"] setObject:productName forKey:@"Product Name"];

@@ -15,6 +15,7 @@ typedef void (^OLImageEditorImageGetImageProgressHandler)(float progress);
 
 typedef enum {
     kPrintPhotoAssetTypeALAsset,
+    kPrintPhotoAssetTypePHAsset,
     kPrintPhotoAssetTypeOLAsset,
     kPrintPhotoAssetTypeInstagramPhoto,
     kPrintPhotoAssetTypeFacebookPhoto
@@ -22,7 +23,7 @@ typedef enum {
 
 @interface OLPrintPhoto : NSObject <OLAssetDataSource>
 
-- (void)setImageSize:(CGSize)destSize cropped:(BOOL)cropped completionHandler:(void(^)(UIImage *image))handler;
+- (void)setImageSize:(CGSize)destSize cropped:(BOOL)cropped progress:(OLImageEditorImageGetImageProgressHandler)progressHandler completionHandler:(void(^)(UIImage *image))handler;
 - (void)getImageWithProgress:(OLImageEditorImageGetImageProgressHandler)progressHandler completion:(OLImageEditorImageGetImageCompletionHandler)completionHandler;
 - (void)unloadImage;
 

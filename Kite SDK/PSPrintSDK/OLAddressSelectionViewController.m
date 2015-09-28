@@ -49,6 +49,9 @@ static const NSInteger kRowAddAddressManually = 0;
     self.tableView.allowsMultipleSelection = self.allowMultipleSelection;
     self.allowMultipleSelection = _allowMultipleSelection;
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Done", @"KitePrinSDK", [OLConstants bundle], @"") style:UIBarButtonItemStyleDone target:self action:@selector(onButtonCancelClicked)];
+    if ([self.tableView respondsToSelector:@selector(setCellLayoutMarginsFollowReadableWidth:)]){
+        self.tableView.cellLayoutMarginsFollowReadableWidth = NO;
+    }
 }
 
 - (void)setAllowMultipleSelection:(BOOL)allowMultipleSelection {
@@ -56,25 +59,9 @@ static const NSInteger kRowAddAddressManually = 0;
     self.tableView.allowsMultipleSelection = _allowMultipleSelection;
 }
 
-- (void)viewDidAppear:(BOOL)animated {
-    if (self.addressToAddToListOnViewDidAppear) {
-        BOOL insertSection = [OLAddress addressBook].count == 0;
-        [self.addressToAddToListOnViewDidAppear saveToAddressBook];
-        if (self.allowMultipleSelection) {
-            [self.selectedAddresses addObject:self.addressToAddToListOnViewDidAppear];
-        }
-        else{
-            [self.selectedAddresses removeAllObjects];
-            [self.selectedAddresses addObject:self.addressToAddToListOnViewDidAppear];
-        }
-        if (insertSection) {
-            [self.tableView insertSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
-        } else {
-            [self.tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:[OLAddress addressBook].count - 1 inSection:kSectionAddressList]] withRowAnimation:UITableViewRowAnimationFade];
-        }
-        
-        self.addressToAddToListOnViewDidAppear = nil;
-    }
+- (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    [self.tableView reloadData];
 }
 
 - (NSArray *)selected {
@@ -299,7 +286,7 @@ static const NSInteger kRowAddAddressManually = 0;
     }
 }
 
-- (NSUInteger)supportedInterfaceOrientations {
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
     if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
         return UIInterfaceOrientationMaskAll;
     }

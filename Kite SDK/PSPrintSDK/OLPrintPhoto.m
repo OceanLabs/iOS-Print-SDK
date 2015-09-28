@@ -32,6 +32,8 @@ static NSString *const kKeyExtraCopies = @"co.oceanlabs.psprintstudio.kKeyExtraC
 
 static NSOperationQueue *imageOperationQueue;
 
+@import Photos;
+
 @implementation ALAsset (isEqual)
 
 - (NSURL*)defaultURL {
@@ -76,6 +78,9 @@ static NSOperationQueue *imageOperationQueue;
     if ([asset isKindOfClass:[ALAsset class]]) {
         _type = kPrintPhotoAssetTypeALAsset;
     }
+    else if ([asset isKindOfClass:[PHAsset class]]) {
+        _type = kPrintPhotoAssetTypePHAsset;
+    }
     else if ([asset isKindOfClass:[OLAsset class]]){
         _type = kPrintPhotoAssetTypeOLAsset;
     }
@@ -98,10 +103,10 @@ static NSOperationQueue *imageOperationQueue;
     return 2; //Should be [UIScreen mainScreen].scale but the 6 Plus chokes on 3x images.
 }
 
-- (void)setImageSize:(CGSize)destSize cropped:(BOOL)cropped completionHandler:(void(^)(UIImage *image))handler{
+- (void)setImageSize:(CGSize)destSize cropped:(BOOL)cropped progress:(OLImageEditorImageGetImageProgressHandler)progressHandler completionHandler:(void(^)(UIImage *image))handler{
     if (self.cachedCroppedThumbnailImage) {
-        handler(self.cachedCroppedThumbnailImage);
         if ((MAX(destSize.height, destSize.width) * [OLPrintPhoto screenScale] <= MIN(self.cachedCroppedThumbnailImage.size.width, self.cachedCroppedThumbnailImage.size.height))){
+            handler(self.cachedCroppedThumbnailImage);
             return;
         }
     }
@@ -109,8 +114,8 @@ static NSOperationQueue *imageOperationQueue;
     NSBlockOperation *blockOperation = [[NSBlockOperation alloc] init];
     
     [blockOperation addExecutionBlock:^{
-        if (self.type == kPrintPhotoAssetTypeALAsset) {
-            [OLPrintPhoto resizedImageWithPrintPhoto:self size:destSize cropped:cropped progress:nil completion:^(UIImage *image) {
+        if (self.type == kPrintPhotoAssetTypeALAsset || self.type == kPrintPhotoAssetTypePHAsset) {
+            [OLPrintPhoto resizedImageWithPrintPhoto:self size:destSize cropped:cropped progress:progressHandler completion:^(UIImage *image) {
                 self.cachedCroppedThumbnailImage = image;
                 handler(image);
                 
@@ -122,23 +127,31 @@ static NSOperationQueue *imageOperationQueue;
                 
                 if (asset.assetType == kOLAssetTypeRemoteImageURL){
                     if (![self isCropped]){
-                        [self getImageWithFullResolution:YES progress:NULL completion:^(UIImage *image){
+                        [self getImageWithSize:CGSizeZero progress:progressHandler completion:^(UIImage *image){
                             self.cachedCroppedThumbnailImage = image;
                             handler(image);
                         }];
                     }
                     else{
-                        [OLPrintPhoto resizedImageWithPrintPhoto:self size:destSize cropped:cropped progress:nil completion:^(UIImage *image) {
+                        [OLPrintPhoto resizedImageWithPrintPhoto:self size:destSize cropped:cropped progress:progressHandler completion:^(UIImage *image) {
                             self.cachedCroppedThumbnailImage = image;
                             handler(image);
                         }];
                     }
                 }
+                else if (asset.assetType == kOLAssetTypePHAsset){
+                    PHAsset *asset = [self.asset loadPHAsset];
+                    self.asset = asset;
+                    [OLPrintPhoto resizedImageWithPrintPhoto:self size:destSize cropped:cropped progress:progressHandler completion:^(UIImage *image) {
+                        self.cachedCroppedThumbnailImage = image;
+                        handler(image);
+                    }];
+                }
                 else if (asset.assetType == kOLAssetTypeALAsset){
                     [asset loadALAssetWithCompletionHandler:^(ALAsset *asset, NSError *error){
                         NSBlockOperation *block = [NSBlockOperation blockOperationWithBlock:^{
                             self.asset = asset;
-                            [OLPrintPhoto resizedImageWithPrintPhoto:self size:destSize cropped:cropped progress:nil completion:^(UIImage *image) {
+                            [OLPrintPhoto resizedImageWithPrintPhoto:self size:destSize cropped:cropped progress:progressHandler completion:^(UIImage *image) {
                                 self.cachedCroppedThumbnailImage = image;
                                 handler(image);
                             }];
@@ -150,8 +163,7 @@ static NSOperationQueue *imageOperationQueue;
                 else{
                     [asset dataWithCompletionHandler:^(NSData *data, NSError *error){
                         NSBlockOperation *block = [NSBlockOperation blockOperationWithBlock:^{
-                            self.asset = [OLAsset assetWithImageAsJPEG:[UIImage imageWithData:data]];
-                            [OLPrintPhoto resizedImageWithPrintPhoto:self size:destSize cropped:cropped progress:nil completion:^(UIImage *image) {
+                            [OLPrintPhoto resizedImageWithPrintPhoto:self size:destSize cropped:cropped progress:progressHandler completion:^(UIImage *image) {
                                 self.cachedCroppedThumbnailImage = image;
                                 handler(image);
                             }];
@@ -164,14 +176,20 @@ static NSOperationQueue *imageOperationQueue;
 #ifdef OL_KITE_OFFER_INSTAGRAM
             else if (self.type == kPrintPhotoAssetTypeInstagramPhoto) {
                 if (![self isCropped]){
-                    [self getImageWithFullResolution:YES progress:NULL completion:^(UIImage *image){
+                    [self getImageWithSize:CGSizeZero progress:progressHandler completion:^(UIImage *image){
                         self.cachedCroppedThumbnailImage = image;
+                        if (progressHandler){
+                            progressHandler(1);
+                        }
                         handler(image);
                     }];
                 }
                 else{
-                    [OLPrintPhoto resizedImageWithPrintPhoto:self size:destSize cropped:cropped progress:nil completion:^(UIImage *image) {
+                    [OLPrintPhoto resizedImageWithPrintPhoto:self size:destSize cropped:cropped progress:progressHandler completion:^(UIImage *image) {
                         self.cachedCroppedThumbnailImage = image;
+                        if (progressHandler){
+                            progressHandler(1);
+                        }
                         handler(image);
                     }];
                 }
@@ -180,14 +198,20 @@ static NSOperationQueue *imageOperationQueue;
 #ifdef OL_KITE_OFFER_FACEBOOK
             else if (self.type == kPrintPhotoAssetTypeFacebookPhoto){
                 if (![self isCropped]){
-                    [self getImageWithFullResolution:YES progress:NULL completion:^(UIImage *image){
+                    [self getImageWithSize:CGSizeZero progress:progressHandler completion:^(UIImage *image){
                         self.cachedCroppedThumbnailImage = image;
+                        if (progressHandler){
+                            progressHandler(1);
+                        }
                         handler(image);
                     }];
                 }
                 else{
-                    [OLPrintPhoto resizedImageWithPrintPhoto:self size:destSize cropped:cropped progress:nil completion:^(UIImage *image) {
+                    [OLPrintPhoto resizedImageWithPrintPhoto:self size:destSize cropped:cropped progress:progressHandler completion:^(UIImage *image) {
                         self.cachedCroppedThumbnailImage = image;
+                        if (progressHandler){
+                            progressHandler(1);
+                        }
                         handler(image);
                     }];
                 }
@@ -211,7 +235,11 @@ static NSOperationQueue *imageOperationQueue;
 
 #if defined(OL_KITE_OFFER_INSTAGRAM) || defined(OL_KITE_OFFER_FACEBOOK)
 - (void)downloadFullImageWithProgress:(OLImageEditorImageGetImageProgressHandler)progressHandler completion:(OLImageEditorImageGetImageCompletionHandler)completionHandler {
-    if (progressHandler) progressHandler(0.05f); // small bit of fake inital progress to get progress bars displaying
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (progressHandler){
+            progressHandler(0.05f); // small bit of fake inital progress to get progress bars displaying
+        }
+    });
     [[SDWebImageManager sharedManager] downloadImageWithURL:[self.asset fullURL] options:0 progress:^(NSInteger receivedSize, NSInteger expectedSize) {
         dispatch_async(dispatch_get_main_queue(), ^{
             if (progressHandler) {
@@ -229,10 +257,11 @@ static NSOperationQueue *imageOperationQueue;
 #endif
 
 - (void)getImageWithProgress:(OLImageEditorImageGetImageProgressHandler)progressHandler completion:(OLImageEditorImageGetImageCompletionHandler)completionHandler {
-    [self getImageWithFullResolution:YES progress:progressHandler completion:completionHandler];
+    [self getImageWithSize:CGSizeZero progress:progressHandler completion:completionHandler];
 }
 
-- (void)getImageWithFullResolution:(BOOL)fullResolution progress:(OLImageEditorImageGetImageProgressHandler)progressHandler completion:(OLImageEditorImageGetImageCompletionHandler)completionHandler {
+- (void)getImageWithSize:(CGSize)size progress:(OLImageEditorImageGetImageProgressHandler)progressHandler completion:(OLImageEditorImageGetImageCompletionHandler)completionHandler {
+    BOOL fullResolution = CGSizeEqualToSize(size, CGSizeZero);
     if (self.type == kPrintPhotoAssetTypeALAsset) {
         UIImage* image;
         if (fullResolution){
@@ -242,6 +271,24 @@ static NSOperationQueue *imageOperationQueue;
             image = [UIImage imageWithCGImage:[[self.asset defaultRepresentation] fullScreenImage]];
         }
         completionHandler(image);
+    }
+    else if (self.type == kPrintPhotoAssetTypePHAsset){
+        PHImageManager *imageManager = [PHImageManager defaultManager];
+        PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
+        options.synchronous = YES;
+        options.deliveryMode = PHImageRequestOptionsDeliveryModeHighQualityFormat;
+        options.networkAccessAllowed = YES;
+        options.progressHandler = ^(double progress, NSError *__nullable error, BOOL *stop, NSDictionary *__nullable info){
+            if (progressHandler){
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    progressHandler(progress);
+                });
+            }
+        };
+        CGSize requestSize = fullResolution ? PHImageManagerMaximumSize : CGSizeMake(size.width * [OLPrintPhoto screenScale], size.height * [OLPrintPhoto screenScale]);
+        [imageManager requestImageForAsset:(PHAsset *)self.asset targetSize:requestSize contentMode:PHImageContentModeAspectFill options:options resultHandler:^(UIImage *image, NSDictionary *info){
+            completionHandler(image);
+        }];
     }
 #if defined(OL_KITE_OFFER_INSTAGRAM) || defined(OL_KITE_OFFER_FACEBOOK)
     else if (self.type == kPrintPhotoAssetTypeFacebookPhoto || self.type == kPrintPhotoAssetTypeInstagramPhoto) {
@@ -313,9 +360,9 @@ static NSOperationQueue *imageOperationQueue;
 + (void)resizedImageWithPrintPhoto:(OLPrintPhoto *)printPhoto size:(CGSize)destSize cropped:(BOOL)cropped progress:(OLImageEditorImageGetImageProgressHandler)progressHandler completion:(OLImageEditorImageGetImageCompletionHandler)completionHandler {
     
     
-    [printPhoto getImageWithFullResolution:CGSizeEqualToSize(destSize, CGSizeZero) progress:progressHandler completion:^(UIImage *image) {
+    [printPhoto getImageWithSize:destSize progress:progressHandler completion:^(UIImage *image) {
         __block UIImage *blockImage = image;
-        NSBlockOperation *block = [NSBlockOperation blockOperationWithBlock:^{
+        void (^localBlock)() = ^{
             if (destSize.height != 0 && destSize.width != 0){
                 blockImage = [OLPrintPhoto imageWithImage:blockImage scaledToSize:destSize];
             }
@@ -328,9 +375,15 @@ static NSOperationQueue *imageOperationQueue;
             blockImage = [RMImageCropper editedImageFromImage:blockImage andFrame:printPhoto.cropImageFrame andImageRect:printPhoto.cropImageRect andImageViewWidth:printPhoto.cropImageSize.width andImageViewHeight:printPhoto.cropImageSize.height];
             
             completionHandler(blockImage);
-        }];
-        block.queuePriority = NSOperationQueuePriorityHigh;
-        [[OLPrintPhoto imageOperationQueue] addOperation:block];
+        };
+        if ([NSThread isMainThread]){
+            NSBlockOperation *block = [NSBlockOperation blockOperationWithBlock:localBlock];
+            block.queuePriority = NSOperationQueuePriorityHigh;
+            [[OLPrintPhoto imageOperationQueue] addOperation:block];
+        }
+        else{
+            localBlock();
+        }
     }];
     
 }
@@ -380,6 +433,28 @@ static NSOperationQueue *imageOperationQueue;
             }
         });
     }
+    else if (self.type == kPrintPhotoAssetTypePHAsset){
+        PHImageManager *imageManager = [PHImageManager defaultManager];
+        PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
+        options.synchronous = NO;
+        options.deliveryMode = PHImageRequestOptionsDeliveryModeHighQualityFormat;
+        options.networkAccessAllowed = YES;
+        [imageManager requestImageDataForAsset:self.asset options:options resultHandler:^(NSData *imageData, NSString *dataUTI, UIImageOrientation orientation, NSDictionary *info){
+            if (!imageData){
+                handler(0, [NSError errorWithDomain:@"ly.kite" code:404 userInfo:@{@"Error" : @"PHAsset does not exist."}]);
+            }
+            else{
+                if ([[dataUTI lowercaseString] containsString:@"jpg"] || [[dataUTI lowercaseString] containsString:@"jpeg"] || [[dataUTI lowercaseString] containsString:@"jpg"]){
+                    handler(imageData.length, nil);
+                }
+                else{
+                    [imageManager requestImageForAsset:self.asset targetSize:PHImageManagerMaximumSize contentMode:PHImageContentModeDefault options:options resultHandler:^(UIImage *result, NSDictionary *info){
+                        handler(UIImageJPEGRepresentation(result, 0.7).length, nil);
+                    }];
+                }
+            }
+        }];
+    }
 #if defined(OL_KITE_OFFER_INSTAGRAM) || defined(OL_KITE_OFFER_FACEBOOK)
     else if (self.type == kPrintPhotoAssetTypeInstagramPhoto || self.type == kPrintPhotoAssetTypeFacebookPhoto){
         [[SDWebImageManager sharedManager] downloadImageWithURL:[self.asset fullURL] options:0 progress:NULL completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
@@ -425,6 +500,28 @@ static NSOperationQueue *imageOperationQueue;
             NSData *data = [NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"kite_corrupt" ofType:@"jpg"]];
             handler(data, nil);
         }
+    }
+    else if (self.type == kPrintPhotoAssetTypePHAsset){
+        PHImageManager *imageManager = [PHImageManager defaultManager];
+        PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
+        options.synchronous = NO;
+        options.deliveryMode = PHImageRequestOptionsDeliveryModeHighQualityFormat;
+        options.networkAccessAllowed = YES;
+        [imageManager requestImageDataForAsset:self.asset options:options resultHandler:^(NSData *imageData, NSString *dataUTI, UIImageOrientation orientation, NSDictionary *info){
+            if (!imageData){
+                handler(nil, [NSError errorWithDomain:@"ly.kite" code:404 userInfo:@{@"Error" : @"PHAsset does not exist."}]);
+            }
+            else{
+                if ([[dataUTI lowercaseString] containsString:@"jpg"] || [[dataUTI lowercaseString] containsString:@"jpeg"] || [[dataUTI lowercaseString] containsString:@"jpg"]){
+                    handler(imageData, nil);
+                }
+                else{
+                    [imageManager requestImageForAsset:self.asset targetSize:PHImageManagerMaximumSize contentMode:PHImageContentModeDefault options:options resultHandler:^(UIImage *result, NSDictionary *info){
+                        handler(UIImageJPEGRepresentation(result, 0.7), nil);
+                    }];
+                }
+            }
+        }];
     }
 #if defined(OL_KITE_OFFER_INSTAGRAM) || defined(OL_KITE_OFFER_FACEBOOK)
     else if (self.type == kPrintPhotoAssetTypeFacebookPhoto || self.type == kPrintPhotoAssetTypeInstagramPhoto){
@@ -509,7 +606,22 @@ static NSOperationQueue *imageOperationQueue;
                              NSData *data = [NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"kite_corrupt" ofType:@"jpg"]];
                              self.asset = [OLAsset assetWithDataAsJPEG:data];
                          }];
-        } else {
+        }
+        else if (self.type == kPrintPhotoAssetTypePHAsset){
+            NSString *localId = [aDecoder decodeObjectForKey:kKeyAsset];
+            PHAsset *asset = localId ? [[PHAsset fetchAssetsWithLocalIdentifiers:@[localId] options:nil] firstObject] : nil;
+            if (!asset){
+                // corrupt asset, user has probably deleted the photo from their device
+                _type = kPrintPhotoAssetTypeOLAsset;
+                NSData *data = [NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"kite_corrupt" ofType:@"jpg"]];
+                self.asset = [OLAsset assetWithDataAsJPEG:data];
+            }
+            else {
+                self.asset = asset;
+            }
+            
+        }
+        else {
             self.asset = [aDecoder decodeObjectForKey:kKeyAsset];
         }
     }
@@ -525,7 +637,11 @@ static NSOperationQueue *imageOperationQueue;
     [aCoder encodeCGSize:self.cropImageSize forKey:kKeyCropImageSize];
     if (self.type == kPrintPhotoAssetTypeALAsset) {
         [aCoder encodeObject:[self.asset valueForProperty:ALAssetPropertyAssetURL] forKey:kKeyAsset];
-    } else {
+    }
+    else if (self.type == kPrintPhotoAssetTypePHAsset){
+        [aCoder encodeObject:[self.asset localIdentifier] forKey:kKeyAsset];
+    }
+    else {
         [aCoder encodeObject:self.asset forKey:kKeyAsset];
     }
 }

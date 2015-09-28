@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name		= 'Kite-Print-SDK'
-  spec.version         	= '3.2.0'
+  spec.version         	= '4.0.0'
   spec.license 		= { :type => 'MIT', :file => 'Kite SDK/LICENSE' }
   spec.homepage         = 'https://github.com/OceanLabs/iOS-Print-SDK'
   spec.authors          = {'Deon Botha' => 'deon@oceanlabs.co'}
@@ -13,12 +13,12 @@ Pod::Spec.new do |spec|
   spec.dependency	'AFNetworking', '~> 2.5.0'
   spec.dependency	'UICKeyChainStore', '~> 2.0.4'
   spec.dependency	'CSStickyHeaderFlowLayout', '~> 0.2.4'
-  spec.dependency	'CTAssetsPickerController', '~> 2.9.3'
   spec.dependency	'GroundControl', '~> 2.1.0'
   spec.dependency	'SkyLab', '~> 1.0.0'
   spec.dependency	'MPFlipViewController', '~> 0.0.2'
   spec.dependency	'UIColor-HexString'
   spec.dependency	'TSMarkdownParser', '~> 1.0.17'
+  spec.dependency 'DACircularProgress'
   spec.requires_arc	= true
   spec.platform		= :ios, '7.0'
   spec.social_media_url	= 'https://twitter.com/dbotha'
@@ -30,7 +30,7 @@ Pod::Spec.new do |spec|
 
   spec.subspec 'PayPal' do |paypal|
     paypal.xcconfig	=  { 'OTHER_CFLAGS' => '$(inherited) -DOL_KITE_OFFER_PAYPAL' }
-    paypal.dependency	'PayPal-iOS-SDK', '~> 2.4.2'
+    paypal.dependency	'PayPal-iOS-SDK', '~> 2.12.1'
   end
 
   spec.subspec 'ApplePay' do |apple|
@@ -48,6 +48,11 @@ Pod::Spec.new do |spec|
   spec.subspec 'Instagram' do |instagram|
     instagram.xcconfig =  { 'OTHER_CFLAGS' => '$(inherited) -DOL_KITE_OFFER_INSTAGRAM' }
     instagram.dependency 'InstagramImagePicker'
+  end
+
+  spec.subspec 'iOS8' do |ios8|
+    ios8.xcconfig =  { 'OTHER_CFLAGS' => '$(inherited) -DOL_KITE_AT_LEAST_IOS8' }
+    ios8.dependency	'CTAssetsPickerController', '~> 3.0.3'
   end
 
 end

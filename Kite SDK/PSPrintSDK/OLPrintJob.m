@@ -37,4 +37,9 @@
     return [[OLProductPrintJob alloc] initWithTemplateId:templateId dataSources:dataSources];
 }
 
+-(instancetype)init{
+    NSAssert(NO, @"Not meant to be instantiated. Take a look at OLProductPrintJob instead");
+    return nil;
+}
+
 @end

@@ -6,57 +6,58 @@
 //  Copyright (c) 2013 Deon Botha. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
-
-#import "OLCheckoutViewController.h"
-#import "OLPrintEnvironment.h"
-#import "OLAddressPickerController.h"
-#import "OLAddress.h"
-#import "OLAddress+AddressBook.h"
-#import "OLCountry.h"
-#import "OLCountryPickerController.h"
-#import "OLPayPalCard.h"
-#import "OLAsset.h"
-#import "OLPrintJob.h"
-#import "OLPrintOrder.h"
-#import "OLPrintOrder+History.h"
-#import "OLProductTemplate.h"
 #import "OLConstants.h"
-#import "OLCheckoutDelegate.h"
-#import "OLKiteViewController.h"
-#import "OLProductTemplate.h"
-#import "OLProduct.h"
-#import "OLProductPrintJob.h"
 
-@class OLPrintRequest;
-
-typedef void (^OLPrintProgressCompletionHandler)(float progress);
-typedef void (^OLPrintCompletionHandler)(NSString *receiptId, NSError *error);
-typedef void (^OLProductCostRefreshCompletionHandler)(NSError *error);
-
+/**
+ *  Use the methods in this class to set up the Kite SDK
+ */
 @interface OLKitePrintSDK : NSObject
 
-+ (void)setAPIKey:(NSString *)apiKey withEnvironment:(OLKitePrintSDKEnvironment)environment;
-+ (NSString *)apiKey;
+/**
+ *  Initialize the Kite SDK with a Kite API key, which you can find at https://kite.ly
+ *
+ *  @param apiKey      The API key
+ *  @param environment Specify Sandbox or Live payment environment
+ */
++ (void)setAPIKey:(NSString * _Nonnull)apiKey withEnvironment:(OLKitePrintSDKEnvironment)environment;
+
+/**
+ *  The API key previously set
+ *
+ *  @see +setAPIKey:withEnvironment:
+ *
+ *  @return The API key
+ */
++ (NSString *_Nullable)apiKey;
+
+/**
+ *  The payment environment previously set
+ *
+ *  @see +setAPIKey:withEnvironment:
+ *
+ *  @return The payment environment
+ */
 + (OLKitePrintSDKEnvironment)environment;
-+ (NSString *)apiEndpoint;
-+ (NSString *)apiVersion;
 
-// optionally enable Instagram photo picking functionality (you'll need to take 5 minutes to register your app https://instagram.com/developer/):
 #ifdef OL_KITE_OFFER_INSTAGRAM
-+ (void)setInstagramEnabledWithClientID:(NSString *)clientID secret:(NSString *)secret redirectURI:(NSString *)redirectURI;
-#endif
-
-#ifdef OL_KITE_OFFER_PAYPAL
-+ (NSString *)paypalEnvironment;
-+ (NSString *)paypalClientId;
-+ (NSString *)paypalReceiverEmail;
+/**
+ *  Optionally enable Instagram photo picking functionality (you'll need to take 5 minutes to register your app https://instagram.com/developer/)
+ *  After you have registered, call this method to set everything up.
+ *
+ *  @param clientID    Your Instagram app's clientID
+ *  @param secret      Your Instagram app's secret
+ *  @param redirectURI Your Instagram app's redirectURI
+ */
++ (void)setInstagramEnabledWithClientID:(NSString *_Nonnull)clientID secret:(NSString *_Nonnull)secret redirectURI:(NSString *_Nonnull)redirectURI;
 #endif
 
 #ifdef OL_KITE_OFFER_APPLE_PAY
-+ (NSString *)stripePublishableKey;
-+ (void)setApplePayMerchantID:(NSString *)mID;
-+ (NSString *)appleMerchantID;
+/**
+ *  Optionally enable Apple Pay in your app. Use this method to set your Apple Pay Merchant ID. However there is an extra step involved to get your certificate to Kite's Stripe account for payment validations. Please get in touch with Kite for this: hello@kite.ly
+ *
+ *  @param mID Your merchant ID
+ */
++ (void)setApplePayMerchantID:(NSString *_Nonnull)mID;
 #endif
 
 @end

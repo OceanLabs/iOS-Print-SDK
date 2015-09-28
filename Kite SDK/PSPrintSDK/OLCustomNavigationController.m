@@ -17,7 +17,7 @@
     return [vc shouldAutorotate];
 }
 
-- (NSUInteger)supportedInterfaceOrientations{
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations{
     UIViewController *vc;
     if (self.presentedViewController) vc = self.presentedViewController;
     else vc = [self topViewController];

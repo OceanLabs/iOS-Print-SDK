@@ -14,10 +14,16 @@
 #import "OLScrollCropViewController.h"
 #import "OLPhotobookPrintJob.h"
 #import "UIView+RoundRect.h"
-#import "OLImageView.h"
+#import "OLPopupOptionsImageView.h"
+#import "OLAssetsPickerController.h"
+#ifdef OL_KITE_AT_LEAST_IOS8
 #import <CTAssetsPickerController/CTAssetsPickerController.h>
+#endif
 #import "OLKitePrintSDK.h"
 #import "NSArray+QueryingExtras.h"
+#import "OLAnalytics.h"
+#import "NSObject+Utils.h"
+#import "OLImageCachingManager.h"
 
 #ifdef OL_KITE_OFFER_FACEBOOK
 #import <FacebookImagePicker/OLFacebookImagePickerController.h>
@@ -41,7 +47,7 @@ static const CGFloat kBookEdgePadding = 38;
 + (NSString *)userEmail:(UIViewController *)topVC;
 + (NSString *)userPhone:(UIViewController *)topVC;
 + (id<OLKiteDelegate>)kiteDelegate:(UIViewController *)topVC;
-+ (void)checkoutViewControllerForPrintOrder:(OLPrintOrder *)printOrder handler:(void(^)(OLCheckoutViewController *vc))handler;
++ (void)checkoutViewControllerForPrintOrder:(OLPrintOrder *)printOrder handler:(void(^)(id vc))handler;
 
 #ifdef OL_KITE_OFFER_INSTAGRAM
 + (NSString *) instagramRedirectURI;
@@ -60,7 +66,11 @@ static const CGFloat kBookEdgePadding = 38;
 @end
 
 @interface OLPhotobookViewController () <UIPageViewControllerDataSource, UIPageViewControllerDelegate, UIGestureRecognizerDelegate,
-CTAssetsPickerControllerDelegate, UIActionSheetDelegate, UIAlertViewDelegate, OLImageViewDelegate, OLScrollCropViewControllerDelegate,
+OLAssetsPickerControllerDelegate,
+#ifdef OL_KITE_AT_LEAST_IOS8
+CTAssetsPickerControllerDelegate,
+#endif
+UIActionSheetDelegate, UIAlertViewDelegate, OLImageViewDelegate, OLScrollCropViewControllerDelegate,
 #ifdef OL_KITE_OFFER_INSTAGRAM
 OLInstagramImagePickerControllerDelegate,
 #endif
@@ -97,7 +107,7 @@ UINavigationControllerDelegate
 @property (assign, nonatomic) BOOL userHasOpenedBook;
 @property (assign, nonatomic) BOOL haveSeenViewDidAppear;
 
-@property (weak, nonatomic) UIImageView *coverImageView;
+@property (weak, nonatomic) OLPopupOptionsImageView *coverImageView;
 @property (assign, nonatomic) NSInteger addNewPhotosAtIndex;
 @property (strong, nonatomic) NSArray *userSelectedPhotosCopy;
 
@@ -154,6 +164,10 @@ UINavigationControllerDelegate
 
 - (void)viewDidLoad{
     [super viewDidLoad];
+    
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackReviewScreenViewed:self.product.productTemplate.name];
+#endif
     
     self.pageController = [[UIPageViewController alloc] initWithTransitionStyle:UIPageViewControllerTransitionStylePageCurl navigationOrientation:UIPageViewControllerNavigationOrientationHorizontal options:@{UIPageViewControllerOptionSpineLocationKey : [NSNumber numberWithInt:UIPageViewControllerSpineLocationMid]}];
     self.pageController.dataSource = self;
@@ -212,12 +226,10 @@ UINavigationControllerDelegate
     
     self.title = NSLocalizedString(@"Review", @""); //[NSString stringWithFormat: NSLocalizedString(@"%d / %d", @""), self.userSelectedPhotos.count, self.product.quantityToFulfillOrder];
     
-    self.navigationController.interactivePopGestureRecognizer.enabled = NO;
-    
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Confirm", @"") style:UIBarButtonItemStylePlain target:self action:@selector(onButtonNextClicked:)];
     
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Back", @"")
-                                                                             style:UIBarButtonItemStyleBordered
+                                                                             style:UIBarButtonItemStylePlain
                                                                             target:nil
                                                                             action:nil];
     
@@ -311,7 +323,7 @@ UINavigationControllerDelegate
     }
     
     if (!self.editMode || !self.startOpen){ //Start with book closed
-        [self setUpBookCoverView];
+        [self setUpBookCoverViewForGesture:nil];
         self.bookCover.hidden = NO;
         self.containerView.layer.shadowOpacity = 0;
         
@@ -341,6 +353,11 @@ UINavigationControllerDelegate
     }
 }
 
+- (void)viewDidDisappear:(BOOL)animated{
+    self.navigationController.interactivePopGestureRecognizer.enabled = YES;
+    [super viewDidDisappear:animated];
+}
+
 - (void)updatePagesLabel{
     int page = self.editingPageNumber ? [self.editingPageNumber intValue] : 0;
     self.pagesLabel.text = [NSString stringWithFormat:@"%d-%d of %ld", page + 1, page + 2, (long)self.product.quantityToFulfillOrder];
@@ -364,7 +381,12 @@ UINavigationControllerDelegate
     
     if (!self.haveSeenViewDidAppear && [[[UIDevice currentDevice] systemVersion] floatValue] >= 8){
         if (![self isLandscape]){
-            self.containerView.transform = CGAffineTransformMakeTranslation([self xTrasformForBookAtRightEdge], 0);
+            if ((self.containerView.frame.size.width > self.view.frame.size.width - kBookEdgePadding * 2)){
+                self.containerView.transform = CGAffineTransformMakeTranslation([self xTrasformForBookAtRightEdge], 0);
+            }
+            else{
+                [self.containerView.superview addConstraint:self.centerXCon];
+            }
         }
     }
     if (self.editMode && self.bookClosed){
@@ -379,6 +401,10 @@ UINavigationControllerDelegate
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
     self.haveSeenViewDidAppear = YES;
+    
+    if (!self.editMode){
+        self.navigationController.interactivePopGestureRecognizer.enabled = NO;
+    }
     
     if (self.bookClosed && !self.editMode){
         [self tease];
@@ -430,7 +456,7 @@ UINavigationControllerDelegate
     [self.view addConstraint:self.widthCon];
     
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinator> context){
-        [self setUpBookCoverView];
+        [self setUpBookCoverViewForGesture:nil];
         if (size.width > size.height){
             self.containerView.transform = CGAffineTransformIdentity;
         }
@@ -461,7 +487,9 @@ UINavigationControllerDelegate
     }
     __weak OLPhotobookViewController *welf = self;
     if (self.coverImageView){
-        [self.coverPhoto setImageSize:self.coverImageView.frame.size cropped:YES completionHandler:^(UIImage *image){
+        [self.coverPhoto setImageSize:self.coverImageView.frame.size cropped:YES progress:^(float progress){
+            [welf.coverImageView setProgress:progress];
+        }completionHandler:^(UIImage *image){
             dispatch_async(dispatch_get_main_queue(), ^{
                 welf.coverImageView.image = image;
             });
@@ -549,6 +577,13 @@ UINavigationControllerDelegate
             selectedCount++;
         }
     }
+    
+    if (selectedCount == 0){
+        UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Oops", @"") message:NSLocalizedString(@"Please add some photos to your photo book", @"") delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"") otherButtonTitles:nil];
+        [av show];
+        return NO;
+    }
+    
     NSUInteger numOrders = 1 + (MAX(0, selectedCount - 1) / self.product.quantityToFulfillOrder);
     NSUInteger quantityToFulfilOrder = numOrders * self.product.quantityToFulfillOrder;
     if (selectedCount < quantityToFulfilOrder) {
@@ -563,11 +598,6 @@ UINavigationControllerDelegate
 }
 
 - (void)doCheckout {
-    NSUInteger iphonePhotoCount = 0;
-    for (OLPrintPhoto *photo in self.userSelectedPhotos) {
-        if (photo.type == kPrintPhotoAssetTypeALAsset) ++iphonePhotoCount;
-    }
-    
     NSInteger i = 0;
     NSMutableArray *bookPhotos = [[NSMutableArray alloc] init];
     for (NSInteger object = 0; object < self.photobookPhotos.count; object++){
@@ -578,6 +608,13 @@ UINavigationControllerDelegate
         else{
             [bookPhotos addObject:self.photobookPhotos[object]];
         }
+    }
+    
+    NSUInteger instagramPhotoCount = 0, facebookPhotoCount = 0, iphonePhotoCount = 0;
+    for (OLPrintPhoto *photo in bookPhotos) {
+        if (photo.type == kPrintPhotoAssetTypeALAsset || photo.type == kPrintPhotoAssetTypeOLAsset || photo.type == kPrintPhotoAssetTypePHAsset) ++iphonePhotoCount;
+        if (photo.type == kPrintPhotoAssetTypeFacebookPhoto) ++facebookPhotoCount;
+        if (photo.type == kPrintPhotoAssetTypeInstagramPhoto) ++instagramPhotoCount;
     }
     
     // Avoid uploading assets if possible. We can avoid uploading where the image already exists at a remote
@@ -612,17 +649,18 @@ UINavigationControllerDelegate
                             @"app_version": [NSString stringWithFormat:@"Version: %@ (%@)", appVersion, buildNumber]
                             };
     OLPhotobookPrintJob* printJob = [[OLPhotobookPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:photoAssets];
+    printJob.uuid = [[NSUUID UUID] UUIDString];
     printJob.frontCover = self.coverPhoto ? [OLAsset assetWithDataSource:self.coverPhoto] : nil;
     for (id<OLPrintJob> job in printOrder.jobs){
         [printOrder removePrintJob:job];
     }
     [printOrder addPrintJob:printJob];
     
-    
-    [OLKitePrintSDK checkoutViewControllerForPrintOrder:printOrder handler:^(OLCheckoutViewController *vc){
-        vc.userEmail = [OLKitePrintSDK userEmail:self];
-        vc.userPhone = [OLKitePrintSDK userPhone:self];
-        vc.kiteDelegate = [OLKitePrintSDK kiteDelegate:self];
+    [OLKitePrintSDK checkoutViewControllerForPrintOrder:printOrder handler:^(id vc){
+        [vc safePerformSelector:@selector(setUserEmail:) withObject:[OLKitePrintSDK userEmail:self]];
+        [vc safePerformSelector:@selector(setUserPhone:) withObject:[OLKitePrintSDK userPhone:self]];
+        [vc safePerformSelector:@selector(setKiteDelegate:) withObject:[OLKitePrintSDK kiteDelegate:self]];
+
         
         if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8){
             UIViewController *presenting = self.presentingViewController;
@@ -673,6 +711,15 @@ UINavigationControllerDelegate
     }
 }
 
+- (void)updateUserSelectedPhotos{
+    [self.userSelectedPhotos removeAllObjects];
+    for (OLPrintPhoto *item in self.photobookPhotos){
+        if (![item isKindOfClass:[NSNull class]]){
+            [self.userSelectedPhotos addObject:item];
+        }
+    }
+}
+
 - (void)onTapGestureRecognized:(UITapGestureRecognizer *)sender{
     if ([sender locationInView:self.pageController.view].x < self.pageController.view.frame.size.width / 2.0){
         self.croppingImageIndex = 0;
@@ -720,12 +767,12 @@ UINavigationControllerDelegate
         if (draggingLeft && [self isBookAtEnd]) {
             recognizer.enabled = NO;
             recognizer.enabled = YES;
-            [self closeBookBack];
+            [self closeBookBackForGesture:recognizer];
         }
         else if (draggingRight && [self isBookAtStart]) {
             recognizer.enabled = NO;
             recognizer.enabled = YES;
-            [self closeBookFront];
+            [self closeBookFrontForGesture:recognizer];
         }
         return;
     }
@@ -744,8 +791,10 @@ UINavigationControllerDelegate
         [recognizer setTranslation:CGPointMake(0, 0) inView:self.containerView];
         
         if ([self isContainerViewAtRightEdge:NO]){
-            recognizer.enabled = NO;
-            recognizer.enabled = YES;
+            if ([[[UIDevice currentDevice] systemVersion] floatValue] < 9){
+                recognizer.enabled = NO;
+                recognizer.enabled = YES;
+            }
             [UIView animateWithDuration:0.1 delay:0 options:UIViewAnimationOptionBeginFromCurrentState  animations:^{
                 self.containerView.transform = CGAffineTransformMakeTranslation(-self.containerView.frame.size.width + self.view.frame.size.width - kBookEdgePadding * 2, 0);
             } completion:NULL];
@@ -820,6 +869,7 @@ UINavigationControllerDelegate
         CGPoint translation = [(UIPanGestureRecognizer *)gestureRecognizer translationInView:self.containerView];
         BOOL draggingLeft = translation.x < 0;
         BOOL draggingRight = translation.x > 0;
+
         if (([self isContainerViewAtRightEdge:NO] && draggingLeft) || ([self isContainerViewAtLeftEdge:NO] && draggingRight)){
             return YES;
         }
@@ -863,14 +913,17 @@ UINavigationControllerDelegate
     }
 }
 
--(void) setUpBookCoverView{
+-(void) setUpBookCoverViewForGesture:(UIPanGestureRecognizer *)sender{
     UISwipeGestureRecognizer *swipe = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(openBook:)];
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onCoverTapRecognized:)];
     UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(onCoverLongPressRecognized:)];
     
     UIView *halfBookCoverImageContainer;
     
-    if ([self isBookAtStart]){
+    CGPoint translation = [sender translationInView:self.containerView];
+    BOOL draggingRight = translation.x >= 0;
+    
+    if ([self isBookAtStart] && (!sender || draggingRight)){
         halfBookCoverImageContainer = [self.bookCover viewWithTag:kTagRight];
         [self.bookCover viewWithTag:kTagLeft].hidden = YES;
         if (!halfBookCoverImageContainer){
@@ -898,7 +951,7 @@ UINavigationControllerDelegate
             halfBookCoverImageContainer.layer.shouldRasterize = YES;
             halfBookCoverImageContainer.layer.rasterizationScale = [UIScreen mainScreen].scale;
             
-            OLImageView *coverImageView = [[OLImageView alloc] initWithFrame:CGRectMake(0, 0, self.bookCover.frame.size.width / 2.0, self.bookCover.frame.size.height)];
+            OLPopupOptionsImageView *coverImageView = [[OLPopupOptionsImageView alloc] initWithFrame:CGRectMake(0, 0, self.bookCover.frame.size.width / 2.0, self.bookCover.frame.size.height)];
             self.coverImageView = coverImageView;
             [self loadCoverPhoto];
             coverImageView.tag = 18;
@@ -1071,12 +1124,12 @@ UINavigationControllerDelegate
     
 }
 
-- (void)closeBookFront{
+- (void)closeBookFrontForGesture:(UIPanGestureRecognizer *)sender{
     if (self.animating || self.editMode){
         return;
     }
     self.animating = YES;
-    [self setUpBookCoverView];
+    [self setUpBookCoverViewForGesture:sender];
     self.bookCover.hidden = NO;
     
     //Fade in shadow of the half-book.
@@ -1123,12 +1176,12 @@ UINavigationControllerDelegate
         self.bookClosed = YES;
     }];
 }
-- (void)closeBookBack{
+- (void)closeBookBackForGesture:(UIPanGestureRecognizer *)sender{
     if (self.animating || self.editMode){
         return;
     }
     self.animating = YES;
-    [self setUpBookCoverView];
+    [self setUpBookCoverViewForGesture:sender];
     self.bookCover.hidden = NO;
     
     // Turn off containerView shadow because we will be animating that. Will use bookCover view shadow for the duration of the animation.
@@ -1259,10 +1312,45 @@ UINavigationControllerDelegate
 }
 
 - (void)showCameraRollImagePicker{
-    CTAssetsPickerController *picker = [[CTAssetsPickerController alloc] init];
-    picker.delegate = self;
-    picker.assetsFilter = [ALAssetsFilter allPhotos];
-    [self presentViewController:picker animated:YES completion:nil];
+    __block UIViewController *picker;
+    __block Class assetClass;
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8 || !definesAtLeastiOS8){
+        picker = [[OLAssetsPickerController alloc] init];
+        [(OLAssetsPickerController *)picker setAssetsFilter:[ALAssetsFilter allPhotos]];
+        assetClass = [ALAsset class];
+        ((OLAssetsPickerController *)picker).delegate = self;
+    }
+#ifdef OL_KITE_AT_LEAST_IOS8
+    else{
+        if ([PHPhotoLibrary authorizationStatus] == PHAuthorizationStatusNotDetermined){
+            [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status){
+                if (status == PHAuthorizationStatusAuthorized){
+                    picker = [[CTAssetsPickerController alloc] init];
+                    ((CTAssetsPickerController *)picker).showsEmptyAlbums = NO;
+                    PHFetchOptions *options = [[PHFetchOptions alloc] init];
+                    options.predicate = [NSPredicate predicateWithFormat:@"mediaType == %d", PHAssetMediaTypeImage];
+                    ((CTAssetsPickerController *)picker).assetsFetchOptions = options;
+                    assetClass = [PHAsset class];
+                    ((CTAssetsPickerController *)picker).delegate = self;
+                    [self presentViewController:picker animated:YES completion:nil];
+                }
+            }];
+        }
+        else{
+            picker = [[CTAssetsPickerController alloc] init];
+            ((CTAssetsPickerController *)picker).showsEmptyAlbums = NO;
+            PHFetchOptions *options = [[PHFetchOptions alloc] init];
+            options.predicate = [NSPredicate predicateWithFormat:@"mediaType == %d", PHAssetMediaTypeImage];
+            ((CTAssetsPickerController *)picker).assetsFetchOptions = options;
+            assetClass = [PHAsset class];
+            ((CTAssetsPickerController *)picker).delegate = self;
+        }
+    }
+#endif
+    
+    if (picker){
+        [self presentViewController:picker animated:YES completion:nil];
+    }
 }
 
 - (void)showFacebookImagePicker{
@@ -1323,7 +1411,7 @@ UINavigationControllerDelegate
     for (OLPhotobookPageContentViewController *page in self.pageController.viewControllers){
         [page loadImageWithCompletionHandler:NULL];
     }
-    
+    [self updateUserSelectedPhotos];
 }
 
 - (void)updatePhotobookPhotos{
@@ -1359,16 +1447,17 @@ UINavigationControllerDelegate
 }
 
 #pragma mark - CTAssetsPickerControllerDelegate Methods
-
-- (BOOL)assetsPickerController:(CTAssetsPickerController *)picker isDefaultAssetsGroup:(ALAssetsGroup *)group {
+#if __IPHONE_OS_VERSION_MIN_REQUIRED < 80000
+- (BOOL)assetsPickerController:(OLAssetsPickerController *)picker isDefaultAssetsGroup:(ALAssetsGroup *)group {
     if ([self.delegate respondsToSelector:@selector(kiteController:isDefaultAssetsGroup:)]) {
         return [self.delegate kiteController:[self kiteViewController] isDefaultAssetsGroup:group];
     }
     
     return NO;
 }
+#endif
 
-- (void)assetsPickerController:(CTAssetsPickerController *)picker didFinishPickingAssets:(NSArray *)assets {
+- (void)assetsPickerController:(id)picker didFinishPickingAssets:(NSArray *)assets {
     if (self.addNewPhotosAtIndex == -1){
         self.coverPhoto = [[OLPrintPhoto alloc] init];
         self.coverPhoto.asset = [assets firstObject];
@@ -1385,11 +1474,11 @@ UINavigationControllerDelegate
         return;
     }
     
-    [self populateArrayWithNewArray:assets dataType:[ALAsset class]];
+    [self populateArrayWithNewArray:assets dataType:[picker isKindOfClass:[OLAssetsPickerController class]] ? [ALAsset class] : [PHAsset class]];
     [picker dismissViewControllerAnimated:YES completion:^(void){}];
 }
 
-- (BOOL)assetsPickerController:(CTAssetsPickerController *)picker shouldSelectAsset:(ALAsset *)asset{
+- (BOOL)assetsPickerController:(OLAssetsPickerController *)picker shouldSelectAsset:(ALAsset *)asset{
     if (self.addNewPhotosAtIndex == -1){
         return picker.selectedAssets.count == 0;
     }
@@ -1398,20 +1487,36 @@ UINavigationControllerDelegate
     }
 }
 
-- (BOOL)assetsPickerController:(CTAssetsPickerController *)picker shouldShowAssetsGroup:(ALAssetsGroup *)group{
+- (BOOL)assetsPickerController:(OLAssetsPickerController *)picker shouldShowAssetsGroup:(ALAssetsGroup *)group{
     if (group.numberOfAssets == 0){
         return NO;
     }
     return YES;
 }
 
-- (BOOL)assetsPickerController:(CTAssetsPickerController *)picker shouldShowAsset:(ALAsset *)asset{
+
+#ifdef OL_KITE_AT_LEAST_IOS8
+- (void)assetsPickerController:(CTAssetsPickerController *)picker didDeSelectAsset:(PHAsset *)asset{
+    PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
+    options.networkAccessAllowed = YES;
+    [[OLImageCachingManager sharedInstance].photosCachingManager stopCachingImagesForAssets:@[asset] targetSize:PHImageManagerMaximumSize contentMode:PHImageContentModeAspectFill options:options];
+}
+
+- (void)assetsPickerController:(CTAssetsPickerController *)picker didSelectAsset:(PHAsset *)asset{
+    PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
+    options.networkAccessAllowed = YES;
+    [[OLImageCachingManager sharedInstance].photosCachingManager startCachingImagesForAssets:@[asset] targetSize:PHImageManagerMaximumSize contentMode:PHImageContentModeAspectFill options:options];
+}
+#endif
+
+- (BOOL)assetsPickerController:(OLAssetsPickerController *)picker shouldShowAsset:(id)asset{
     NSString *fileName = [[[asset defaultRepresentation] filename] lowercaseString];
     if (!([fileName hasSuffix:@".jpg"] || [fileName hasSuffix:@".jpeg"] || [fileName hasSuffix:@"png"])) {
         return NO;
     }
     return YES;
 }
+
 
 #ifdef OL_KITE_OFFER_INSTAGRAM
 #pragma mark - OLInstagramImagePickerControllerDelegate Methods
@@ -1557,7 +1662,7 @@ UINavigationControllerDelegate
     }
 }
 
-- (NSUInteger)supportedInterfaceOrientations {
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
     if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
         return UIInterfaceOrientationMaskAll;
     }

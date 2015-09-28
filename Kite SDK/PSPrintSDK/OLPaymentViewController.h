@@ -8,12 +8,14 @@
 
 #import <UIKit/UIKit.h>
 #import "OLCheckoutDelegate.h"
+#import "OLKiteViewController.h"
 
 @class OLPrintOrder;
 
 @interface OLPaymentViewController : UIViewController
 
 @property (weak, nonatomic) id<OLCheckoutDelegate> delegate;
+@property (assign, nonatomic) BOOL showOtherOptions;
 
 - (id)initWithPrintOrder:(OLPrintOrder *)printOrder;
 @end

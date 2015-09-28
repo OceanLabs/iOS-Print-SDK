@@ -11,9 +11,44 @@
 
 @interface OLProductPrintJob : NSObject <OLPrintJob, NSCopying>
 
-- (id)initWithTemplateId:(NSString *)templateId imageFilePaths:(NSArray/*<NSString>*/ *)imageFilePaths;
-- (id)initWithTemplateId:(NSString *)templateId images:(NSArray/*<UIImage>*/ *)images;
-- (id)initWithTemplateId:(NSString *)templateId OLAssets:(NSArray/*<OLAssets>*/ *)assets;
-- (id)initWithTemplateId:(NSString *)templateId dataSources:(NSArray/*<id<OLAssetDataSource> >*/ *)dataSources;
+/**
+ *  Creates and returns a print job
+ *
+ *  @param templateId     The template ID of this job
+ *  @param imageFilePaths The file paths of the images to print
+ *
+ *  @return The print job
+ */
+- (instancetype)initWithTemplateId:(NSString *)templateId imageFilePaths:(NSArray<NSString *> *)imageFilePaths;
+
+/**
+ *  Creates and returns a print job
+ *
+ *  @param templateId The template ID of this job
+ *  @param images     The images to print
+ *
+ *  @return The print job
+ */
+- (instancetype)initWithTemplateId:(NSString *)templateId images:(NSArray<UIImage *> *)images;
+
+/**
+ *  Creates and returns a print job
+ *
+ *  @param templateId The template ID of this job
+ *  @param assets     The assets to print
+ *
+ *  @return The print job
+ */
+- (instancetype)initWithTemplateId:(NSString *)templateId OLAssets:(NSArray<OLAsset *> *)assets;
+
+/**
+ *  Creates and returns a print job
+ *
+ *  @param templateId  The template ID of this job
+ *  @param dataSources The custom data source objects to print
+ *
+ *  @return The print job
+ */
+- (instancetype)initWithTemplateId:(NSString *)templateId dataSources:(NSArray<id<OLAssetDataSource>> *)dataSources;
 
 @end

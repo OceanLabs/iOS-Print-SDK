@@ -10,6 +10,8 @@
 #import "OLCountry.h"
 #import "OLProductTemplate.h"
 #import "UIImageView+FadeIn.h"
+#import "NSDecimalNumber+CostFormatter.h"
+#import "OLKiteABTesting.h"
 
 typedef enum {
     kSizeUnitsInches,
@@ -179,7 +181,7 @@ typedef enum {
     if (self.productTemplate.templateUI == kOLTemplateUIFrame || self.productTemplate.templateUI == kOLTemplateUIPoster || self.productTemplate.templateUI == kOLTemplateUIPostcard || self.productTemplate.templateUI == kOLTemplateUIPhotobook || self.quantityToFulfillOrder == 1 || self.quantityToFulfillOrder == 0){
         return @"";
     }
-    NSString* packOfString = NSLocalizedString(@"PACK OF", @"Example pack of 22");
+    NSString* packOfString = NSLocalizedString(@"Pack of", @"Example pack of 22");
     return [packOfString stringByAppendingFormat:@" %lu\n", (unsigned long)self.quantityToFulfillOrder];
 }
 
@@ -197,11 +199,15 @@ typedef enum {
     switch (sizeUnits) {
         case kSizeUnitsCentimetres:
             dimensions = [self dimensionsInCentimetres];
-            unitsName = @"cm";
+            unitsName = NSLocalizedString(@"cm", @"");
             break;
         case kSizeUnitsInches:
             dimensions = [self dimensionsInInches];
-            unitsName = NSLocalizedString(@"INCHES", "");
+            unitsName = NSLocalizedString(@"inches", "");
+            if (dimensions.width < 0.1 && dimensions.height < 0.1){
+                dimensions = [self dimensionsInCentimetres];
+                unitsName = NSLocalizedString(@"cm", @"");
+            }
             break;
         default:
             break;
@@ -211,12 +217,12 @@ typedef enum {
     [nf setLocale:[NSLocale currentLocale]];
     [nf setMaximumFractionDigits:1];
     
-    return [NSString stringWithFormat:@"%@ X %@ %@", [nf stringFromNumber:[NSNumber numberWithDouble:dimensions.width]], [nf stringFromNumber:[NSNumber numberWithDouble:dimensions.height]], unitsName];
+    return [NSString stringWithFormat:@"%@ x %@ %@", [nf stringFromNumber:[NSNumber numberWithDouble:dimensions.width]], [nf stringFromNumber:[NSNumber numberWithDouble:dimensions.height]], unitsName];
 }
 
 - (NSString *) dimensions{
     NSLocale *locale = [NSLocale currentLocale];
-    BOOL isMetric = [[locale objectForKey:NSLocaleUsesMetricSystem] boolValue] && ![[locale objectForKey:NSLocaleCountryCode] isEqualToString:@"GB"];
+    BOOL isMetric = [[locale objectForKey:NSLocaleUsesMetricSystem] boolValue];
     return isMetric ? [self dimensionsInUnits:kSizeUnitsCentimetres] : [self dimensionsInUnits:kSizeUnitsInches];
 }
 
@@ -233,6 +239,48 @@ typedef enum {
 
 - (NSString *)description{
     return [self.productTemplate description];
+}
+
+- (NSString *)detailsString{
+    NSString *s = @"";
+    
+    //Add description
+    if (self.productTemplate.productDescription && ![self.productTemplate.productDescription isEqualToString:@""]){
+        s = [s stringByAppendingString:[NSString stringWithFormat:@"**Description**\n%@\n\n", self.productTemplate.productDescription]];
+    }
+    
+    //Add size info
+    OLTemplateUI templateClass = self.productTemplate.templateUI;
+    if (templateClass != kOLTemplateUICase){
+        s = [s stringByAppendingString:[NSString stringWithFormat:@"**Size**\n%@\n\n", self.dimensions]];
+    }
+    
+    //Add qty info
+    if (self.packInfo && ![self.packInfo isEqualToString:@""]){
+        s = [s stringByAppendingString:[NSString stringWithFormat:@"**Quantity**\n%lu\n\n", (unsigned long)self.quantityToFulfillOrder]];
+    }
+    
+    //Add price info
+    if ([OLKiteABTesting sharedInstance].hidePrice){
+        s = [s stringByAppendingString:[NSString stringWithFormat:@"**Price**\n%@\n\n", self.unitCost]];
+    }
+    
+    //Add shipping info
+    NSDecimalNumber *shippingCost = [self.productTemplate shippingCostForCountry:[OLCountry countryForCurrentLocale]];
+    if (shippingCost && [shippingCost doubleValue] != 0){
+        if (![OLKiteABTesting sharedInstance].hidePrice){
+            s = [s stringByAppendingString: [NSString stringWithFormat:NSLocalizedString(@"**Shipping**\n%@\n\n", @""), [shippingCost formatCostForCurrencyCode:[self.productTemplate currencyForCurrentLocale]]]];
+        }
+    }
+    else if (!shippingCost){ // ¯\_(ツ)_/¯ don't assume 0, don't add any shipping info
+    }
+    else{
+        s = [s stringByAppendingString:NSLocalizedString(@"**Shipping**\nFREE\n\n", @"")];
+    }
+    
+    //Add quality guarantee
+    s = [s stringByAppendingString:NSLocalizedString(@"**Quality Guarantee**\nOur products are of the highest quality and we’re confident you will love yours. If not, we offer a no quibble money back guarantee. Enjoy!", @"")];
+    return s;
 }
 
 

@@ -37,7 +37,7 @@ Use our SDK to unlock hidden revenue streams and add value for your users. *In u
 
 ## Requirements
 
-* Xcode 5 and iOS SDK 7
+* Xcode 7
 * iOS 7.0+ target deployment
 
 ## Installation
@@ -61,6 +61,52 @@ The SDK includes lots of optional functionality enabled via CocoaPod Subspecs so
 If you'd like to offer your users the opportunity to add photos via Instagram or Facebook then uncomment the appropriate lines above and follow the instructions to [Enable Facebook & Instagram Photo Selection](Kite SDK/docs/social_photo_sources.md).
 
 PayPal functionality is also optional although recommended as you'll typically see a higher conversion rate with it.
+
+### Quick Integration
+We really mean it when we say integration can be done in minutes.
+* Step 1: Import the SDK
+```
+#import <OLKitePrintSDK.h>
+```
+* Step 2: Set the API key and the environment:
+```
+[OLKitePrintSDK setAPIKey:@"YOUR_API_KEY" withEnvironment:kOLKitePrintSDKEnvironmentLive]; //Or kOLKitePrintSDKEnvironmentSandbox for testing
+```
+* Step 3: Create and present Kite:
+```
+OLKiteViewController *vc = [[OLKiteViewController alloc] initWithAssets:@[[OLAsset assetWithImageAsJPEG:YOUR_UIIMAGE_OBJECT]]]];
+[self presentViewController:vc animated:YES completion:NULL];
+```
+* Step 4: Profit! 
+
+### iOS 9+ Security
+
+Xcode 7 includes some new security features. In order to connect to the Kite servers you will need to add some exceptions to your project's info plist file. We need to add forward secrecy exceptions for Amazon S3 (which Kite uses) and PayPal (which is used for credit card processing even if you don't opt for PayPal integration). The following is what you need to copy your app's info plist:
+
+```
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSExceptionDomains</key>
+		<dict>
+			<key>paypal.com</key>
+			<dict>
+				<key>NSExceptionRequiresForwardSecrecy</key>
+				<false/>
+				<key>NSIncludesSubdomains</key>
+				<true/>
+			</dict>
+			<key>amazonaws.com</key>
+			<dict>
+				<key>NSExceptionRequiresForwardSecrecy</key>
+				<false/>
+				<key>NSIncludesSubdomains</key>
+				<true/>
+			</dict>
+		</dict>
+	</dict>
+```
+
+There are a few more entries to add if you opt for Facebook and Instagram integration as mentioned above. More info [here](Kite SDK/docs/social_photo_sources.md).
 
 ## Use Cases
 

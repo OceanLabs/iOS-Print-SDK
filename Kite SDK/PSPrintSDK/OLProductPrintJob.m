@@ -14,6 +14,12 @@
 
 static NSString *const kKeyProductTemplateId = @"co.oceanlabs.pssdk.kKeyProductTemplateId";
 static NSString *const kKeyImages = @"co.oceanlabs.pssdk.kKeyImages";
+static NSString *const kKeyUUID = @"co.oceanlabs.pssdk.kKeyUUID";
+static NSString *const kKeyExtraCopies = @"co.oceanlabs.pssdk.kKeyExtraCopies";
+
+static id stringOrEmptyString(NSString *str) {
+    return str ? str : @"";
+}
 
 @interface OLProductPrintJob ()
 @property (nonatomic, strong) NSString *templateId;
@@ -22,7 +28,11 @@ static NSString *const kKeyImages = @"co.oceanlabs.pssdk.kKeyImages";
 
 @implementation OLProductPrintJob
 
-- (id)initWithTemplateId:(NSString *)templateId imageFilePaths:(NSArray/*<NSString>*/ *)imageFilePaths {
+@synthesize address;
+@synthesize uuid;
+@synthesize extraCopies;
+
+- (instancetype)initWithTemplateId:(NSString *)templateId imageFilePaths:(NSArray/*<NSString>*/ *)imageFilePaths {
     if (self = [super init]) {
         NSMutableArray *assets = [[NSMutableArray alloc] init];
         for (id imagePath in imageFilePaths) {
@@ -37,7 +47,7 @@ static NSString *const kKeyImages = @"co.oceanlabs.pssdk.kKeyImages";
     return self;
 }
 
-- (id)initWithTemplateId:(NSString *)templateId images:(NSArray/*<UIImage>*/ *)images {
+- (instancetype)initWithTemplateId:(NSString *)templateId images:(NSArray/*<UIImage>*/ *)images {
     if (self = [super init]) {
         NSMutableArray *assets = [[NSMutableArray alloc] init];
         for (id image in images) {
@@ -52,7 +62,7 @@ static NSString *const kKeyImages = @"co.oceanlabs.pssdk.kKeyImages";
     return self;
 }
 
-- (id)initWithTemplateId:(NSString *)templateId OLAssets:(NSArray/*<OLAssets>*/ *)assets {
+- (instancetype)initWithTemplateId:(NSString *)templateId OLAssets:(NSArray/*<OLAssets>*/ *)assets {
     if (self = [super init]) {
         for (id asset in assets) {
             NSAssert([asset isKindOfClass:[OLAsset class]], @"OLProductPrintJob initWithProduct:OLAssets: requires an NSArray of OLAsset not: %@", [asset class]);
@@ -65,7 +75,7 @@ static NSString *const kKeyImages = @"co.oceanlabs.pssdk.kKeyImages";
     return self;
 }
 
-- (id)initWithTemplateId:(NSString *)templateId dataSources:(NSArray/*<id<OLAssetDataSource> >*/ *)dataSources {
+- (instancetype)initWithTemplateId:(NSString *)templateId dataSources:(NSArray/*<id<OLAssetDataSource> >*/ *)dataSources {
     NSMutableArray *assets = [[NSMutableArray alloc] init];
     for (id dataSource in dataSources) {
         NSAssert([dataSource conformsToProtocol:@protocol(OLAssetDataSource)], @"The object you provided of type %@ does not conform to the OLAssetDataSource protocol", [dataSource class]);
@@ -113,6 +123,18 @@ static NSString *const kKeyImages = @"co.oceanlabs.pssdk.kKeyImages";
     json[@"assets"] = assets;
     json[@"frame_contents"] = @{};
     
+    if (self.address) {
+        NSDictionary *shippingAddress = @{@"recipient_name": stringOrEmptyString(self.address.fullNameFromFirstAndLast),
+                                          @"address_line_1": stringOrEmptyString(self.address.line1),
+                                          @"address_line_2": stringOrEmptyString(self.address.line2),
+                                          @"city": stringOrEmptyString(self.address.city),
+                                          @"county_state": stringOrEmptyString(self.address.stateOrCounty),
+                                          @"postcode": stringOrEmptyString(self.address.zipOrPostcode),
+                                          @"country_code": stringOrEmptyString(self.address.country.codeAlpha3)
+                                          };
+        [json setObject:shippingAddress forKey:@"shipping_address"];
+    }
+    
     return json;
 }
 
@@ -122,6 +144,8 @@ static NSString *const kKeyImages = @"co.oceanlabs.pssdk.kKeyImages";
     // Use deep copies for all strong pointers, shallow copies for weak.
     objectCopy.assets = self.assets;
     objectCopy.templateId = self.templateId;
+    objectCopy.uuid = self.uuid;
+    objectCopy.extraCopies = self.extraCopies;
     return objectCopy;
 }
 
@@ -130,6 +154,8 @@ static NSString *const kKeyImages = @"co.oceanlabs.pssdk.kKeyImages";
     for (id asset in self.assets) {
         val = 37 * val + [asset hash];
     }
+    
+    val = 38 * val + self.extraCopies;
 
     return val;
 }
@@ -153,12 +179,16 @@ static NSString *const kKeyImages = @"co.oceanlabs.pssdk.kKeyImages";
 - (void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:self.templateId forKey:kKeyProductTemplateId];
     [aCoder encodeObject:self.assets forKey:kKeyImages];
+    [aCoder encodeObject:self.uuid forKey:kKeyUUID];
+    [aCoder encodeInteger:self.extraCopies forKey:kKeyExtraCopies];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
     if (self = [super init]) {
         self.templateId = [aDecoder decodeObjectForKey:kKeyProductTemplateId];
         self.assets = [aDecoder decodeObjectForKey:kKeyImages];
+        self.uuid = [aDecoder decodeObjectForKey:kKeyUUID];
+        self.extraCopies = [aDecoder decodeIntegerForKey:kKeyExtraCopies];
     }
     
     return self;

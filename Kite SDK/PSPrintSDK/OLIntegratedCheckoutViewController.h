@@ -11,7 +11,6 @@
 
 @interface OLIntegratedCheckoutViewController : OLCheckoutViewController
 
-@property (strong, nonatomic) OLAddress* shippingAddress;
 @property (strong, nonatomic) UITextField* textFieldEmail;
 @property (strong, nonatomic) UITextField* textFieldPhone;
 @property (strong, nonatomic) OLPrintOrder* printOrder;

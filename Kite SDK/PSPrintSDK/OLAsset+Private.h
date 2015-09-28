@@ -10,6 +10,7 @@
 
 typedef enum {
     kOLAssetTypeALAsset,
+    kOLAssetTypePHAsset,
     kOLAssetTypeRemoteImageURL,
     kOLAssetTypeImageFilePath,
     kOLAssetTypeImageData,

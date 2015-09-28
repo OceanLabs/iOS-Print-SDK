@@ -44,6 +44,17 @@ BOOL _inEurope;
     return country;
 }
 
++ (OLCountry *)countryForName:(NSString *)name {
+    NSArray *countries = [OLCountry countries];
+    for (OLCountry *country in countries) {
+        if ([[country.name uppercaseString] isEqualToString:[name uppercaseString]]) {
+            return country;
+        }
+    }
+    
+    return nil;
+}
+
 + (OLCountry *)countryForCode:(NSString *)code {
     code = [code uppercaseString];
     NSArray *countries = [OLCountry countries];

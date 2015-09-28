@@ -8,9 +8,15 @@
 
 #import "ViewController.h"
 #import "OLKitePrintSDK.h"
+#import "OLAssetsPickerController.h"
+#import "OLImageCachingManager.h"
+
+#ifdef OL_KITE_AT_LEAST_IOS8
 #import <CTAssetsPickerController/CTAssetsPickerController.h>
+#endif
 
 #import <AssetsLibrary/AssetsLibrary.h>
+@import Photos;
 
 /**********************************************************************
  * Insert your API keys here. These are found under your profile 
@@ -21,7 +27,11 @@ static NSString *const kAPIKeyLive = @"REPLACE_WITH_YOUR_API_KEY"; // replace wi
 
 static NSString *const kApplePayMerchantIDKey = @"merchant.ly.kite.sdk"; // For internal use only.
 
-@interface ViewController () <CTAssetsPickerControllerDelegate, UINavigationControllerDelegate, OLKiteDelegate>
+@interface ViewController () <OLAssetsPickerControllerDelegate,
+#ifdef OL_KITE_AT_LEAST_IOS8
+CTAssetsPickerControllerDelegate,
+#endif
+UINavigationControllerDelegate, OLKiteDelegate>
 @property (weak, nonatomic) IBOutlet UIButton *localPhotosButton;
 @property (weak, nonatomic) IBOutlet UIButton *remotePhotosButton;
 @property (nonatomic, weak) IBOutlet UISegmentedControl *environmentPicker;
@@ -50,17 +60,50 @@ static NSString *const kApplePayMerchantIDKey = @"merchant.ly.kite.sdk"; // For 
     return NO;
 }
 
-- (NSUInteger)supportedInterfaceOrientations {
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
     return UIInterfaceOrientationMaskPortrait;
 }
 
 - (IBAction)onButtonPrintLocalPhotos:(id)sender {
     if (![self isAPIKeySet]) return;
-    CTAssetsPickerController *picker = [[CTAssetsPickerController alloc] init];
-    picker.delegate = self;
-    picker.assetsFilter = [ALAssetsFilter allPhotos];
-    
-    [self presentViewController:picker animated:YES completion:nil];
+    __block UIViewController *picker;
+    __block Class assetClass;
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8 || !definesAtLeastiOS8){
+        picker = [[OLAssetsPickerController alloc] init];
+        [(OLAssetsPickerController *)picker setAssetsFilter:[ALAssetsFilter allPhotos]];
+        assetClass = [ALAsset class];
+        ((OLAssetsPickerController *)picker).delegate = self;
+    }
+#ifdef OL_KITE_AT_LEAST_IOS8
+    else{
+        if ([PHPhotoLibrary authorizationStatus] == PHAuthorizationStatusNotDetermined){
+            [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status){
+                if (status == PHAuthorizationStatusAuthorized){
+                    picker = [[CTAssetsPickerController alloc] init];
+                    ((CTAssetsPickerController *)picker).showsEmptyAlbums = NO;
+                    PHFetchOptions *options = [[PHFetchOptions alloc] init];
+                    options.predicate = [NSPredicate predicateWithFormat:@"mediaType == %d", PHAssetMediaTypeImage];
+                    ((CTAssetsPickerController *)picker).assetsFetchOptions = options;
+                    assetClass = [PHAsset class];
+                    ((CTAssetsPickerController *)picker).delegate = self;
+                    [self presentViewController:picker animated:YES completion:nil];
+                }
+            }];
+        }
+        else{
+            picker = [[CTAssetsPickerController alloc] init];
+            ((CTAssetsPickerController *)picker).showsEmptyAlbums = NO;
+            PHFetchOptions *options = [[PHFetchOptions alloc] init];
+            options.predicate = [NSPredicate predicateWithFormat:@"mediaType == %d", PHAssetMediaTypeImage];
+            ((CTAssetsPickerController *)picker).assetsFetchOptions = options;
+            assetClass = [PHAsset class];
+            ((CTAssetsPickerController *)picker).delegate = self;
+        }
+    }
+#endif
+    if (picker){
+        [self presentViewController:picker animated:YES completion:nil];
+    }
 }
 
 - (NSString *)apiKey {
@@ -80,9 +123,14 @@ static NSString *const kApplePayMerchantIDKey = @"merchant.ly.kite.sdk"; // For 
 }
 
 - (BOOL)isAPIKeySet {
-    if ([[self apiKey] isEqualToString:@"REPLACE_WITH_YOUR_API_KEY"]) {
-        [[[UIAlertView alloc] initWithTitle:@"API Key Required" message:@"Set your API keys at the top of ViewController.m before you can print. This can be found under your profile at http://kite.ly" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
-        return NO;
+    if (![[[NSProcessInfo processInfo]environment][@"OL_KITE_UI_TEST"] isEqualToString:@"1"]){
+        if ([[self apiKey] isEqualToString:@"REPLACE_WITH_YOUR_API_KEY"] && ![OLKitePrintSDK apiKey]) {
+            [[[UIAlertView alloc] initWithTitle:@"API Key Required" message:@"Set your API keys at the top of ViewController.m before you can print. This can be found under your profile at http://kite.ly" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+            return NO;
+        }
+    }
+    else{
+        [OLKitePrintSDK setAPIKey:[[NSProcessInfo processInfo]environment][@"TEST_API_KEY"] withEnvironment:kOLKitePrintSDKEnvironmentSandbox];
     }
     
     return YES;
@@ -97,9 +145,10 @@ static NSString *const kApplePayMerchantIDKey = @"merchant.ly.kite.sdk"; // For 
 }
 
 - (void)printWithAssets:(NSArray *)assets {
-    if (![self isAPIKeySet]) return;
-
-    [OLKitePrintSDK setAPIKey:[self apiKey] withEnvironment:[self environment]];
+    if (![[[NSProcessInfo processInfo]environment][@"OL_KITE_UI_TEST"] isEqualToString:@"1"]){
+        if (![self isAPIKeySet]) return;
+        [OLKitePrintSDK setAPIKey:[self apiKey] withEnvironment:[self environment]];
+    }
     
 #ifdef OL_KITE_OFFER_APPLE_PAY
     [OLKitePrintSDK setApplePayMerchantID:kApplePayMerchantIDKey];
@@ -120,10 +169,11 @@ static NSString *const kApplePayMerchantIDKey = @"merchant.ly.kite.sdk"; // For 
 
 #pragma mark - UIAlertViewDelegate methods
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-    NSArray *assets = @[[OLAsset assetWithURL:[NSURL URLWithString:@"http://psps.s3.amazonaws.com/sdk_static/1.jpg"]],
-                        [OLAsset assetWithURL:[NSURL URLWithString:@"http://psps.s3.amazonaws.com/sdk_static/2.jpg"]],
-                        [OLAsset assetWithURL:[NSURL URLWithString:@"http://psps.s3.amazonaws.com/sdk_static/3.jpg"]],
-                        [OLAsset assetWithURL:[NSURL URLWithString:@"http://psps.s3.amazonaws.com/sdk_static/4.jpg"]]];
+    NSArray *assets = @[[OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/1.jpg"]],
+                        [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/2.jpg"]],
+                        [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/3.jpg"]],
+                        [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/4.jpg"]]];
+    
     [self printWithAssets:assets];
 }
 
@@ -141,26 +191,48 @@ static NSString *const kApplePayMerchantIDKey = @"merchant.ly.kite.sdk"; // For 
 }
 
 #pragma mark - CTAssetsPickerControllerDelegate Methods
-
-- (void)assetsPickerController:(CTAssetsPickerController *)picker didFinishPickingAssets:(NSArray *)assets {
+- (void)assetsPickerController:(id)picker didFinishPickingAssets:(NSArray *)assets {
     [picker dismissViewControllerAnimated:YES completion:^(void){
         NSMutableArray *assetObjects = [[NSMutableArray alloc] initWithCapacity:assets.count];
-        for (ALAsset *asset in assets){
-            [assetObjects addObject:[OLAsset assetWithALAsset:asset]];
+        for (id asset in assets){
+            if ([asset isKindOfClass:[PHAsset class]]){
+                [assetObjects addObject:[OLAsset assetWithPHAsset:asset]];
+            }
+            else if([asset isKindOfClass:[ALAsset class]]){
+                [assetObjects addObject:[OLAsset assetWithALAsset:asset]];
+            }
+            else{
+                NSLog(@"Oops, don’t recognize class %@, starting with no assets", [asset class]);
+            }
         }
         [self printWithAssets:assetObjects];
     }];
     
 }
 
-- (BOOL)assetsPickerController:(CTAssetsPickerController *)picker shouldShowAssetsGroup:(ALAssetsGroup *)group{
+#ifdef OL_KITE_AT_LEAST_IOS8
+- (void)assetsPickerController:(CTAssetsPickerController *)picker didDeSelectAsset:(PHAsset *)asset{
+    PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
+    options.networkAccessAllowed = YES;
+    [[OLImageCachingManager sharedInstance].photosCachingManager stopCachingImagesForAssets:@[asset] targetSize:PHImageManagerMaximumSize contentMode:PHImageContentModeAspectFill options:options];
+}
+
+- (void)assetsPickerController:(CTAssetsPickerController *)picker didSelectAsset:(PHAsset *)asset{
+    PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
+    options.networkAccessAllowed = YES;
+    [[OLImageCachingManager sharedInstance].photosCachingManager startCachingImagesForAssets:@[asset] targetSize:PHImageManagerMaximumSize contentMode:PHImageContentModeAspectFill options:options];
+}
+
+#endif
+
+- (BOOL)assetsPickerController:(OLAssetsPickerController *)picker shouldShowAssetsGroup:(ALAssetsGroup *)group{
     if (group.numberOfAssets == 0){
         return NO;
     }
     return YES;
 }
 
-- (BOOL)assetsPickerController:(CTAssetsPickerController *)picker shouldShowAsset:(ALAsset *)asset{
+- (BOOL)assetsPickerController:(OLAssetsPickerController *)picker shouldShowAsset:(id)asset{
     NSString *fileName = [[[asset defaultRepresentation] filename] lowercaseString];
     if (!([fileName hasSuffix:@".jpg"] || [fileName hasSuffix:@".jpeg"] || [fileName hasSuffix:@"png"])) {
         return NO;

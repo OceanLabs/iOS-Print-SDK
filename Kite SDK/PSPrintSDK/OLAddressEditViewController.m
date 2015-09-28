@@ -62,6 +62,10 @@ static const NSUInteger kTagTextField = 99;
         UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [NSBundle mainBundle], @"") style:UIBarButtonItemStylePlain target:self action:@selector(onCancelButtonClicked)];
         self.navigationItem.leftBarButtonItem = cancelButton;
     }
+    
+    if ([self.tableView respondsToSelector:@selector(setCellLayoutMarginsFollowReadableWidth:)]){
+        self.tableView.cellLayoutMarginsFollowReadableWidth = NO;
+    }
 }
 
 - (void)didMoveToParentViewController:(UIViewController *)parent {
@@ -147,13 +151,17 @@ static const NSUInteger kTagTextField = 99;
             vc.addressToAddToListOnViewDidAppear = self.address;
         }
         [self.address saveToAddressBook];
-        [vc.delegate addressSelectionController:vc didFinishPickingAddresses:@[self.address]];
+        if (vc.allowMultipleSelection){
+            [self.navigationController popToRootViewControllerAnimated:YES];
+        }
+        else{
+            [vc.delegate addressSelectionController:vc didFinishPickingAddresses:@[self.address]];
+        }
     }
     else if ([vc.delegate respondsToSelector:@selector(addressPicker:didFinishPickingAddresses:)]){
         [self.address saveToAddressBook];
         [(id)(vc.delegate) addressPicker:nil didFinishPickingAddresses:@[self.address]];
     }
-//    [self.navigationController popToRootViewControllerAnimated:YES];
 }
 
 - (void)onCancelButtonClicked{
@@ -376,7 +384,7 @@ static const NSUInteger kTagTextField = 99;
     }
 }
 
-- (NSUInteger)supportedInterfaceOrientations {
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
     if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
         return UIInterfaceOrientationMaskAll;
     }

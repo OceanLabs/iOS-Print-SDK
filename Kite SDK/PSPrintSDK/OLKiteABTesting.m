@@ -21,10 +21,37 @@ static NSString *const kOLKiteABTestHidePrice = @"ly.kite.abtest.hide_price";
 static NSString *const kOLKiteABTestPromoBannerStyle = @"ly.kite.abtest.promo_banner_style";
 static NSString *const kOLKiteABTestPromoBannerText = @"ly.kite.abtest.promo_banner_text";
 static NSString *const kOLKiteABTestOfferPayPal = @"ly.kite.abtest.offer_paypal";
+static NSString *const kOLKiteABTestAllowMultipleRecipients = @"ly.kite.abtest.allow_multiple_recipients";
+
+static NSString *const kOLKiteThemeHeaderLogoImageURL = @"themeLogoImageURL";
+static NSString *const kOLKiteThemeCheckoutProgress1 = @"themeCheckoutProgress1";
+static NSString *const kOLKiteThemeCheckoutProgress2 = @"themeCheckoutProgress2";
+static NSString *const kOLKiteThemeCheckoutProgress1Bg = @"themeCheckoutProgress1Bg";
+static NSString *const kOLKiteThemeCheckoutProgress2Bg = @"themeCheckoutProgress2Bg";
+static NSString *const kOLKiteThemeReceiptSuccess = @"themeReceiptSuccess";
+static NSString *const kOLKiteThemeReceiptFailure = @"themeReceiptFailure";
+static NSString *const kOLKiteThemeReceiptSuccessBg = @"themeReceiptSuccessBg";
+static NSString *const kOLKiteThemeReceiptFailureBg = @"themeReceiptFailureBg";
+static NSString *const kOLKiteThemeSupportEmail = @"themeSupportEmail";
 
 id safeObject(id obj){
     return obj ? obj : @"";
 }
+
+@interface OLKiteABTesting ()
+
+@property (assign, nonatomic, readwrite) BOOL offerAddressSearch;
+@property (assign, nonatomic, readwrite) BOOL requirePhoneNumber;
+@property (assign, nonatomic, readwrite) BOOL hidePrice;
+@property (assign, nonatomic, readwrite) BOOL offerPayPal;
+@property (strong, nonatomic, readwrite) NSString *qualityBannerType;
+@property (strong, nonatomic, readwrite) NSString *checkoutScreenType;
+@property (strong, nonatomic, readwrite) NSString *productTileStyle;
+@property (strong, nonatomic, readwrite) NSString *promoBannerText;
+@property (strong, nonatomic, readwrite) NSString *launchWithPrintOrderVariant;
+@property (assign, nonatomic, readwrite) BOOL allowsMultipleRecipients;
+
+@end
 
 @implementation OLKiteABTesting
 
@@ -35,10 +62,100 @@ id safeObject(id obj){
     return sharedInstance;
 }
 
+- (void)setUserConfig:(NSDictionary *)userConfig{
+    _userConfig = userConfig;
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults setObject:userConfig[kOLKiteThemeHeaderLogoImageURL] forKey:kOLKiteThemeHeaderLogoImageURL];
+    [defaults setObject:userConfig[kOLKiteThemeCheckoutProgress1] forKey:kOLKiteThemeCheckoutProgress1];
+    [defaults setObject:userConfig[kOLKiteThemeCheckoutProgress2] forKey:kOLKiteThemeCheckoutProgress2];
+    [defaults setObject:userConfig[kOLKiteThemeCheckoutProgress1Bg] forKey:kOLKiteThemeCheckoutProgress1Bg];
+    [defaults setObject:userConfig[kOLKiteThemeCheckoutProgress2Bg] forKey:kOLKiteThemeCheckoutProgress2Bg];
+    [defaults setObject:userConfig[kOLKiteThemeReceiptSuccess] forKey:kOLKiteThemeReceiptSuccess];
+    [defaults setObject:userConfig[kOLKiteThemeReceiptFailure] forKey:kOLKiteThemeReceiptFailure];
+    [defaults setObject:userConfig[kOLKiteThemeReceiptSuccessBg] forKey:kOLKiteThemeReceiptSuccessBg];
+    [defaults setObject:userConfig[kOLKiteThemeReceiptFailureBg] forKey:kOLKiteThemeReceiptFailureBg];
+    [defaults setObject:userConfig[kOLKiteThemeSupportEmail] forKey:kOLKiteThemeSupportEmail];
+    [defaults synchronize];
+}
+
+- (NSString *)promoBannerText{
+    NSString *userConfig = self.userConfig[@"banner_message"];
+    if (userConfig && ![userConfig isEqualToString:@""]){
+        return  userConfig;
+    }
+    
+    return _promoBannerText;
+}
+
+- (NSString *)headerLogoURL{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    return [defaults objectForKey:kOLKiteThemeHeaderLogoImageURL];
+}
+
+- (NSString *)checkoutProgress1URL{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    return [defaults objectForKey:kOLKiteThemeCheckoutProgress1];
+}
+
+- (NSString *)checkoutProgress2URL{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    return [defaults objectForKey:kOLKiteThemeCheckoutProgress2];
+}
+
+- (NSString *)checkoutProgress1BgURL{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    return [defaults objectForKey:kOLKiteThemeCheckoutProgress1Bg];
+}
+
+- (NSString *)checkoutProgress2BgURL{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    return [defaults objectForKey:kOLKiteThemeCheckoutProgress2Bg];
+}
+
+- (NSString *)receiptSuccessURL{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    return [defaults objectForKey:kOLKiteThemeReceiptSuccess];
+}
+
+- (NSString *)receiptFailureURL{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    return [defaults objectForKey:kOLKiteThemeReceiptFailure];
+}
+
+- (NSString *)receiptSuccessBgURL{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    return [defaults objectForKey:kOLKiteThemeReceiptSuccessBg];
+}
+
+- (NSString *)receiptFailureBgURL{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    return [defaults objectForKey:kOLKiteThemeReceiptFailureBg];
+}
+
+- (NSString *)supportEmail{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    return [defaults objectForKey:kOLKiteThemeSupportEmail];
+}
+
+- (void)resetTheme{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults removeObjectForKey:kOLKiteThemeHeaderLogoImageURL];
+    [defaults removeObjectForKey:kOLKiteThemeCheckoutProgress1];
+    [defaults removeObjectForKey:kOLKiteThemeCheckoutProgress2];
+    [defaults removeObjectForKey:kOLKiteThemeCheckoutProgress1Bg];
+    [defaults removeObjectForKey:kOLKiteThemeCheckoutProgress2Bg];
+    [defaults removeObjectForKey:kOLKiteThemeReceiptSuccess];
+    [defaults removeObjectForKey:kOLKiteThemeReceiptFailure];
+    [defaults removeObjectForKey:kOLKiteThemeReceiptSuccessBg];
+    [defaults removeObjectForKey:kOLKiteThemeReceiptFailureBg];
+    [defaults removeObjectForKey:kOLKiteThemeSupportEmail];
+}
+
 - (void)fetchRemotePlistsWithCompletionHandler:(void(^)())handler{
-    [OLKiteABTesting fetchRemotePlistWithURL:[NSString stringWithFormat:@"https://sdk-static.s3.amazonaws.com/kite-ios-remote-%@.plist", [OLKitePrintSDK apiKey]] completionHandler:^(NSError *error){
+    [self resetTheme];
+    [OLKiteABTesting fetchRemotePlistWithURL:[NSString stringWithFormat:@"https://s3.amazonaws.com/sdk-static/kite-ios-remote-%@.plist", [OLKitePrintSDK apiKey]] completionHandler:^(NSError *error){
         if (error){
-            [OLKiteABTesting fetchRemotePlistWithURL:@"https://sdk-static.s3.amazonaws.com/kite-ios-remote.plist" completionHandler:^(NSError *error2){
+            [OLKiteABTesting fetchRemotePlistWithURL:@"https://s3.amazonaws.com/sdk-static/kite-ios-remote.plist" completionHandler:^(NSError *error2){
                 [self setupABTestVariants];
                 handler();
             }];
@@ -128,7 +245,7 @@ id safeObject(id obj){
 }
 
 - (void)setupOfferAddressSearchTest{
-    self.offerAddressSearch = nil;
+    self.offerAddressSearch = NO;
     NSDictionary *experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestOfferAddressSearch];
     if (!experimentDict) {
         experimentDict = @{@"Yes" : @0.5, @"No" : @0.5};
@@ -143,7 +260,7 @@ id safeObject(id obj){
 }
 
 - (void)setupRequirePhoneNumberTest{
-    self.requirePhoneNumber = nil;
+    self.requirePhoneNumber = NO;
     NSDictionary *experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestRequirePhoneNumber];
     if (!experimentDict) {
         experimentDict = @{@"Yes" : @0.5, @"No" : @0.5};
@@ -172,7 +289,7 @@ id safeObject(id obj){
 }
 
 - (void)setupHidePriceTest{
-    self.hidePrice = nil;
+    self.hidePrice = NO;
     NSDictionary *experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestHidePrice];
     if (!experimentDict) {
         experimentDict = @{@"Yes" : @0, @"No" : @1};
@@ -190,10 +307,12 @@ id safeObject(id obj){
                                 }];
 }
 
-
-//  Promo strings look like this: @"<header>Hello World!</header><para>Off to the woods</para>"
+/**
+ *  Promo strings look like this: @"<header>Hello World!</header><para>Off to the woods in [[2015-08-04 18:05 GMT+3]]</para>"
+ */
 - (void)setupPromoBannerTextTest{
     self.promoBannerText = nil;
+    
     NSDictionary *experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestPromoBannerText];
     if (!experimentDict) {
         return;
@@ -207,7 +326,7 @@ id safeObject(id obj){
             [conditions setObject:safeObject(val) forKey:key];
         }
     }
-
+    
     [conditions removeObjectForKey:@"Experiment Version"];
     
     if (conditions.count == 0) {
@@ -221,7 +340,7 @@ id safeObject(id obj){
 }
 
 - (void)setupOfferPayPalTest{
-    self.offerPayPal = nil;
+    self.offerPayPal = NO;
     NSDictionary *experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestOfferPayPal];
     if (!experimentDict) {
         experimentDict = @{@"Yes" : @0.5, @"No" : @0.5};
@@ -235,11 +354,27 @@ id safeObject(id obj){
                                 }];
 }
 
+- (void)setupAllowMultipleRecipientsTest{
+    self.allowsMultipleRecipients = NO;
+    NSDictionary *experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestAllowMultipleRecipients];
+    if (!experimentDict) {
+        experimentDict = @{@"Yes" : @0, @"No" : @1};
+    }
+    [SkyLab splitTestWithName:kOLKiteABTestAllowMultipleRecipients
+                   conditions:@{
+                                @"Yes" : safeObject(experimentDict[@"Yes"]),
+                                @"No" : safeObject(experimentDict[@"No"])
+                                } block:^(id choice) {
+                                    self.allowsMultipleRecipients = [choice isEqualToString:@"Yes"];
+                                }];
+}
+
 - (void)groupSetupShippingScreenTests{
     [self setupOfferAddressSearchTest];
     [self setupRequirePhoneNumberTest];
     [self setupShippingScreenTest];
     [self setupOfferPayPalTest];
+    [self setupAllowMultipleRecipientsTest];
 }
 
 - (void)setupABTestVariants{

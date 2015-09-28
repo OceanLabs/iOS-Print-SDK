@@ -7,12 +7,13 @@
 //
 
 #import "OLCaseViewController.h"
+#import "OLRemoteImageCropper.h"
 #import <SDWebImage/SDWebImageManager.h>
 
 @interface OLSingleImageProductReviewViewController (Private)
 
 @property (weak, nonatomic) IBOutlet UIView *containerView;
-@property (weak, nonatomic) IBOutlet RMImageCropper *imageCropView;
+@property (weak, nonatomic) IBOutlet OLRemoteImageCropper *imageCropView;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *maskAspectRatio;
 -(void) doCheckout;
 
@@ -35,7 +36,7 @@
     self.downloadedMask = NO;
     
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Back", @"")
-                                                                             style:UIBarButtonItemStyleBordered
+                                                                             style:UIBarButtonItemStylePlain
                                                                             target:nil
                                                                             action:nil];
 }
@@ -51,7 +52,6 @@
             self.visualEffectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
             UIView *view = self.visualEffectView;
             [view.layer setMasksToBounds:YES];
-            [view.layer setCornerRadius:45.0f];
             [self.containerView insertSubview:view belowSubview:self.maskActivityIndicator];
             
             view.translatesAutoresizingMaskIntoConstraints = NO;
@@ -85,6 +85,10 @@
     [self maskWithImage:tempMask targetView:self.imageCropView];
     
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
+}
+
+- (void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
     [self downloadMask];
 }
 
@@ -168,7 +172,7 @@
     }
 }
 
-- (NSUInteger)supportedInterfaceOrientations {
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
     if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
         return UIInterfaceOrientationMaskAll;
     }

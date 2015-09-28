@@ -1,48 +1,55 @@
 //
 //  OLPosterViewController.m
-//  Photo Mosaic
+//  KitePrintSDK
 //
-//  Created by Konstadinos Karayannis on 27/10/14.
-//  Copyright (c) 2014 Ocean Labs App Ltd. All rights reserved.
+//  Created by Konstadinos Karayannis on 31/7/15.
+//  Copyright (c) 2015 Deon Botha. All rights reserved.
 //
 
 #import "OLPosterViewController.h"
+#import "OLProduct.h"
+#import "OLAnalytics.h"
 #import "OLPrintPhoto.h"
-#import "OLProductPrintJob.h"
-#import "OLCheckoutViewController.h"
-#import "OLConstants.h"
-#import "OLProductTemplate.h"
+#import "LXReorderableCollectionViewFlowLayout.h"
 #import "OLScrollCropViewController.h"
+#import "OLKiteViewController.h"
+#import "NSObject+Utils.h"
 #import <SDWebImage/SDWebImageManager.h>
 #import "OLAsset+Private.h"
 #import "OLAnalytics.h"
 #import "OLKitePrintSDK.h"
+#import "OLKiteABTesting.h"
+#import "OLRemoteImageView.h"
+
+@interface OLPosterViewController () <UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UICollectionViewDelegate, LXReorderableCollectionViewDataSource, OLScrollCropViewControllerDelegate>
+
+@property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
+@property (strong, nonatomic) NSMutableArray *posterPhotos;
+@property (assign, nonatomic) CGFloat numberOfRows;
+@property (assign, nonatomic) CGFloat numberOfColumns;
+@property (weak, nonatomic) OLPrintPhoto *editingPrintPhoto;
+
+@end
+
+@interface OLSingleImageProductReviewViewController (Private) <UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UICollectionViewDelegate>
+
+@end
 
 @interface OLKitePrintSDK (InternalUtils)
 + (NSString *)userEmail:(UIViewController *)topVC;
 + (NSString *)userPhone:(UIViewController *)topVC;
 + (id<OLKiteDelegate>)kiteDelegate:(UIViewController *)topVC;
++ (void)checkoutViewControllerForPrintOrder:(OLPrintOrder *)printOrder handler:(void(^)(OLCheckoutViewController *vc))handler;
 @end
 
-@interface OLPosterViewController () <UINavigationControllerDelegate, OLScrollCropViewControllerDelegate>
+@interface OLKiteViewController ()
 
-@property (strong, nonatomic) NSMutableArray *imageViews;
-@property (strong, nonatomic) NSMutableArray *posterPhotos;
-@property (strong, nonatomic) NSNumber *selectedImage;
-@property (assign, nonatomic) BOOL hasShownHelp;
-@property (weak, nonatomic) UIImageView *imageTapped;
-@property (weak, nonatomic) OLPrintPhoto *editingPrintPhoto;
+@property (strong, nonatomic) OLPrintOrder *printOrder;
+- (void)dismiss;
 
 @end
 
 @implementation OLPosterViewController
-
--(NSMutableArray *) posterPhotos{
-    if (!_posterPhotos){
-        _posterPhotos = [[NSMutableArray alloc] init];
-    }
-    return _posterPhotos;
-}
 
 -(void)viewDidLoad{
     [super viewDidLoad];
@@ -51,79 +58,151 @@
     [OLAnalytics trackReviewScreenViewed:self.product.productTemplate.name];
 #endif
     
+    self.posterPhotos = [[NSMutableArray alloc] initWithCapacity:self.product.quantityToFulfillOrder];
     [self.posterPhotos addObjectsFromArray:self.userSelectedPhotos];
     
-    self.imageViews = [[NSMutableArray alloc] initWithCapacity:self.product.quantityToFulfillOrder];
     for (NSUInteger i = 0; i < self.product.quantityToFulfillOrder; i++){
-        UIView *view = [self.view viewWithTag:i + 1];
-        if (view){
-            [self.imageViews addObject:view];
-        }
-        
         if (self.posterPhotos.count < self.product.quantityToFulfillOrder){
             [self.posterPhotos addObject:self.userSelectedPhotos[i % self.userSelectedPhotos.count]];
         }
     }
-        
+    
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]
-                                   initWithTitle:@"Next"
-                                   style:UIBarButtonItemStylePlain
-                                   target:self
-                                   action:@selector(onButtonNextClicked)];
-    [self setTitle:NSLocalizedString(@"Tap to Crop", @"")];
+                                              initWithTitle:@"Next"
+                                              style:UIBarButtonItemStylePlain
+                                              target:self
+                                              action:@selector(doCheckout)];
+    [self setTitle:NSLocalizedString(@"Edit Poster", @"")];
+    
+    self.numberOfColumns = self.product.productTemplate.gridCountX;
+    self.numberOfRows = self.product.productTemplate.gridCountY;
+    
+    self.collectionView.delegate = self;
+    self.collectionView.dataSource = self;
 }
 
--(void)viewWillAppear:(BOOL)animated{
-    [super viewWillAppear:animated];
-    [self.view layoutIfNeeded];
-    [self reloadImageViews];
+- (void)viewDidLayoutSubviews{
+    [super viewDidLayoutSubviews];
+    [self.collectionView.collectionViewLayout invalidateLayout];
 }
 
--(void)reloadImageViews {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        for (NSUInteger i = 0; i < MIN([self.imageViews count], [self.posterPhotos count]); i++) {
-            
-            OLPrintPhoto *printPhoto = (OLPrintPhoto*)[self.posterPhotos objectAtIndex:i];
-            [printPhoto setImageSize:[(UIView *)self.imageViews[i] frame].size cropped:YES completionHandler:^(UIImage *image){
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [self.imageViews[i] setImage:image];
-                });
-            }];
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+    
+    [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinator> context){
+        [self.collectionView.collectionViewLayout invalidateLayout];
+        if (size.height > size.width){
+            [self.collectionView reloadData];
         }
-    });
-}
-- (IBAction)onGestureRecognizerTapped:(UITapGestureRecognizer *)sender {
-    [self userDidTapOnImage:(UIImageView *)sender.view];
-}
-
-- (IBAction)userDidTapOnImage:(UIImageView *)imageView {
-    self.selectedImage = [NSNumber numberWithInteger:imageView.tag];
-    [self doCrop];
-    return;
-}
-
--(void)onButtonNextClicked{
-    [self doCheckout];
-}
-
--(void)doCrop{
-    self.editingPrintPhoto = self.userSelectedPhotos[0];
-    
-    UINavigationController *nav = [self.storyboard instantiateViewControllerWithIdentifier:@"CropViewNavigationController"];
-    OLScrollCropViewController *cropVc = (id)nav.topViewController;
-    cropVc.delegate = self;
-    cropVc.aspectRatio = [(UIView *)self.imageViews[0] frame].size.height / [(UIView *)self.imageViews[0] frame].size.width;
-    
-    [self.editingPrintPhoto getImageWithProgress:NULL completion:^(UIImage *image){
-        [cropVc setFullImage:image];
-        [self presentViewController:nav animated:YES completion:NULL];
+    }completion:^(id<UIViewControllerTransitionCoordinator> context){
     }];
 }
 
--(void) doCheckout{
+- (NSInteger) numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
+    if (collectionView.tag != 800){
+        return [super numberOfSectionsInCollectionView:collectionView];
+    }
+    
+    return 1;
+}
+
+- (NSInteger) collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
+    if (collectionView.tag != 800){
+        return [super collectionView:collectionView numberOfItemsInSection:section];
+    }
+    
+    return self.product.quantityToFulfillOrder;
+}
+
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
+    if (collectionView.tag != 800){
+        return [super collectionView:collectionView cellForItemAtIndexPath:indexPath];
+    }
+    
+    UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"photoCell" forIndexPath:indexPath];
+    UIActivityIndicatorView *activity = (UIActivityIndicatorView *)[cell viewWithTag:796];
+    [activity startAnimating];
+    
+    OLRemoteImageView *imageView = (OLRemoteImageView *)[cell viewWithTag:795];
+    imageView.image = nil;
+    imageView.userInteractionEnabled = YES;
+    [imageView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onButtonEnhanceClicked:)]];
+    
+    OLPrintPhoto *printPhoto = self.posterPhotos[indexPath.item];
+    
+    [printPhoto setImageSize:[self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath] cropped:YES progress:^(float progress){
+        [imageView setProgress:progress];
+    } completionHandler:^(UIImage *image){
+        dispatch_async(dispatch_get_main_queue(), ^{
+            imageView.image = image;
+            [activity stopAnimating];
+        });
+    }];
+    
+    return cell;
+}
+
+- (CGSize) collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
+    if (collectionView.tag != 800){
+        return [super collectionView:collectionView layout:collectionViewLayout sizeForItemAtIndexPath:indexPath];
+    }
+    
+    CGFloat margin = [self collectionView:collectionView layout:collectionView.collectionViewLayout minimumInteritemSpacingForSectionAtIndex:indexPath.section];
+    CGSize size = collectionView.frame.size;
+    CGFloat width = (size.width - (self.numberOfColumns - 1) * margin)/ self.numberOfColumns;
+    CGFloat height = (size.height - (self.numberOfRows - 1) * margin) / self.numberOfRows;
+    return CGSizeMake(width, height);
+}
+
+- (CGFloat) collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section{
+    if (collectionView.tag != 800){
+        return [super collectionView:collectionView layout:collectionViewLayout minimumInteritemSpacingForSectionAtIndex:section];
+    }
+    return 2;
+}
+
+- (CGFloat) collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section{
+    if (collectionView.tag != 800){
+        return [super collectionView:collectionView layout:collectionViewLayout minimumLineSpacingForSectionAtIndex:section];
+    }
+    return 2;
+}
+
+- (void)collectionView:(UICollectionView *)collectionView itemAtIndexPath:(NSIndexPath *)fromIndexPath didMoveToIndexPath:(NSIndexPath *)toIndexPath {
+    
+    id object = [self.posterPhotos objectAtIndex:fromIndexPath.item];
+    [self.posterPhotos removeObjectAtIndex:fromIndexPath.item];
+    [self.posterPhotos insertObject:object atIndex:toIndexPath.item];
+}
+
+- (BOOL)collectionView:(UICollectionView *)collectionView itemAtIndexPath:(NSIndexPath *)fromIndexPath canMoveToIndexPath:(NSIndexPath *)toIndexPath{
+    return YES;
+}
+
+- (BOOL)collectionView:(UICollectionView *)collectionView canMoveItemAtIndexPath:(NSIndexPath *)indexPath{
+    return YES;
+}
+
+-(void)changeOrderOfPhotosInArray:(NSMutableArray*)array{
+    NSMutableArray* rows = [[NSMutableArray alloc] initWithCapacity:self.numberOfRows];
+    for (NSUInteger rowNumber = 0; rowNumber < self.numberOfRows; rowNumber++){
+        NSMutableArray* row = [[NSMutableArray alloc] initWithCapacity:self.numberOfColumns];
+        for (NSUInteger photoInRow = 0; photoInRow < self.numberOfColumns; photoInRow++){
+            [row addObject:array[rowNumber * (NSInteger)self.numberOfColumns + photoInRow]];
+        }
+        [rows addObject:row];
+    }
+    
+    [array removeAllObjects];
+    for (NSInteger rowNumber = self.numberOfRows - 1; rowNumber >= 0; rowNumber--){
+        [array addObjectsFromArray:rows[rowNumber]];
+    }
+}
+
+- (void)doCheckout{
     NSUInteger iphonePhotoCount = 0;
     for (OLPrintPhoto *photo in self.posterPhotos) {
-        if (photo.type == kPrintPhotoAssetTypeALAsset) ++iphonePhotoCount;
+        if (photo.type == kPrintPhotoAssetTypeALAsset || photo.type == kPrintPhotoAssetTypePHAsset) ++iphonePhotoCount;
     }
     
     // Avoid uploading assets if possible. We can avoid uploading where the image already exists at a remote
@@ -137,27 +216,98 @@
             [photoAssets addObject:[OLAsset assetWithDataSource:photo]];
         }
     }
+    [self changeOrderOfPhotosInArray:photoAssets];
     
     
-    OLProductPrintJob *job = [[OLProductPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:@[[photoAssets firstObject]]]; //Only adding the first photo since we only support buying one image at a time.
-    OLPrintOrder *printOrder = [[OLPrintOrder alloc] init];
     NSDictionary *infoDict = [[NSBundle mainBundle] infoDictionary];
     NSString *appVersion = [infoDict objectForKey:@"CFBundleShortVersionString"];
     NSNumber *buildNumber = [infoDict objectForKey:@"CFBundleVersion"];
+    
+    OLPrintOrder *printOrder = [[OLPrintOrder alloc] init];
     printOrder.userData = @{@"photo_count_iphone": [NSNumber numberWithUnsignedInteger:iphonePhotoCount],
                             @"sdk_version": kOLKiteSDKVersion,
                             @"platform": @"iOS",
                             @"uid": [[[UIDevice currentDevice] identifierForVendor] UUIDString],
                             @"app_version": [NSString stringWithFormat:@"Version: %@ (%@)", appVersion, buildNumber]
                             };
-    [printOrder addPrintJob:job];
     
-    OLCheckoutViewController *vc = [[OLCheckoutViewController alloc] initWithPrintOrder:printOrder];
-    vc.userEmail = [OLKitePrintSDK userEmail:self];
-    vc.userPhone = [OLKitePrintSDK userPhone:self];
-    vc.kiteDelegate = [OLKitePrintSDK kiteDelegate:self];
+    //Check if we have launched with a Print Order
+    OLKiteViewController *kiteVC = [self kiteVc];
+    if ([kiteVC printOrder]){
+        printOrder = [kiteVC printOrder];
+    }
     
-    [self.navigationController pushViewController:vc animated:YES];
+    OLProductPrintJob* printJob = [[OLProductPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:photoAssets];
+	printJob.uuid = [[NSUUID UUID] UUIDString];
+    for (id<OLPrintJob> job in printOrder.jobs){
+        [printOrder removePrintJob:job];
+    }
+    [printOrder addPrintJob:printJob];
+    
+    if ([kiteVC printOrder]){
+        [kiteVC setPrintOrder:printOrder];
+    }
+    
+    if ([kiteVC printOrder] && [[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant isEqualToString:@"Review-Overview-Checkout"]){
+        UIViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLProductOverviewViewController"];
+        [vc safePerformSelector:@selector(setUserEmail:) withObject:[(OLKiteViewController *)vc userEmail]];
+        [vc safePerformSelector:@selector(setUserPhone:) withObject:[(OLKiteViewController *)vc userPhone]];
+        [vc safePerformSelector:@selector(setKiteDelegate:) withObject:self.delegate];
+        [vc safePerformSelector:@selector(setProduct:) withObject:self.product];
+        [self.navigationController pushViewController:vc animated:YES];
+    }
+    else{
+        [OLKitePrintSDK checkoutViewControllerForPrintOrder:printOrder handler:^(id vc){
+            [vc safePerformSelector:@selector(setUserEmail:) withObject:[OLKitePrintSDK userEmail:self]];
+            [vc safePerformSelector:@selector(setUserPhone:) withObject:[OLKitePrintSDK userPhone:self]];
+            [vc safePerformSelector:@selector(setKiteDelegate:) withObject:[OLKitePrintSDK kiteDelegate:self]];
+            
+            [self.navigationController pushViewController:vc animated:YES];
+        }];
+    }
+}
+
+- (OLKiteViewController *)kiteVc{
+    UIViewController *vc = self.parentViewController;
+    while (vc) {
+        if ([vc isKindOfClass:[OLKiteViewController class]]){
+            return (OLKiteViewController *)vc;
+            break;
+        }
+        else{
+            vc = vc.parentViewController;
+        }
+    }
+    return nil;
+}
+
+- (IBAction)onButtonEnhanceClicked:(id)sender {
+    UIView *cellContentView;
+    if ([sender isKindOfClass: [UIButton class]]){
+        cellContentView = [(UIButton *)sender superview];
+    }
+    else if ([sender isKindOfClass:[UITapGestureRecognizer class]]){
+        cellContentView = [(UITapGestureRecognizer *)sender view];
+    }
+    UIView *cell = cellContentView.superview;
+    while (![cell isKindOfClass:[UICollectionViewCell class]]){
+        cell = cell.superview;
+    }
+    NSIndexPath *indexPath = [self.collectionView indexPathForCell:(UICollectionViewCell *)cell];
+    
+    self.editingPrintPhoto = self.posterPhotos[indexPath.item];
+    
+    UINavigationController *nav = [self.storyboard instantiateViewControllerWithIdentifier:@"CropViewNavigationController"];
+    OLScrollCropViewController *cropVc = (id)nav.topViewController;
+    cropVc.enableCircleMask = self.product.productTemplate.templateUI == kOLTemplateUICircle;
+    cropVc.delegate = self;
+    
+    CGSize cellSize = [self collectionView:self.collectionView layout:self.collectionView.collectionViewLayout sizeForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
+    cropVc.aspectRatio = cellSize.height / cellSize.width;
+    [self.editingPrintPhoto getImageWithProgress:NULL completion:^(UIImage *image){
+        [cropVc setFullImage:image];
+        [self presentViewController:nav animated:YES completion:NULL];
+    }];
 }
 
 #pragma mark - OLImageEditorViewControllerDelegate methods
@@ -168,14 +318,13 @@
 
 -(void)scrollCropViewController:(OLScrollCropViewController *)cropper didFinishCroppingImage:(UIImage *)croppedImage{
     [self.editingPrintPhoto unloadImage];
-    self.editingPrintPhoto.asset = [OLAsset assetWithImageAsJPEG:croppedImage];
     
-    self.posterPhotos[0] = self.editingPrintPhoto;
+    self.editingPrintPhoto.cropImageFrame = [cropper.cropView getFrameRect];
+    self.editingPrintPhoto.cropImageRect = [cropper.cropView getImageRect];
+    self.editingPrintPhoto.cropImageSize = [cropper.cropView croppedImageSize];
     
-    [self reloadImageViews];
-    
+    [self.collectionView reloadData];
     [cropper dismissViewControllerAnimated:YES completion:NULL];
-    
 }
 
 #pragma mark - Autorotate and Orientation Methods
@@ -190,7 +339,7 @@
     }
 }
 
-- (NSUInteger)supportedInterfaceOrientations {
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
     if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
         return UIInterfaceOrientationMaskAll;
     }
