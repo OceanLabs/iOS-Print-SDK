@@ -385,7 +385,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 - (IBAction)cameraRollSelected:(id)sender {
     __block UIViewController *picker;
     __block Class assetClass;
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8 || ![CTAssetsPickerController class]){
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8 || !definesAtLeastiOS8){
         picker = [[OLAssetsPickerController alloc] init];
         [(OLAssetsPickerController *)picker setAssetsFilter:[ALAssetsFilter allPhotos]];
         assetClass = [ALAsset class];
