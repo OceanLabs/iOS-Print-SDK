@@ -28,7 +28,7 @@
 #import "OLBaseRequest.h"
 #import "OLPrintOrderCost.h"
 #import "OLKiteABTesting.h"
-#import <SDWebImageManager.h>
+#import <SDWebImage/SDWebImageManager.h>
 #import "UIImage+ColorAtPixel.h"
 
 #ifdef OL_KITE_OFFER_PAYPAL
@@ -527,7 +527,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     
     [self positionKiteLabel];
     
-    if (self.applePayIsAvailable){
+    if ([self applePayIsAvailable]){
         [self.printOrder discardDuplicateJobs];
     }
 }
