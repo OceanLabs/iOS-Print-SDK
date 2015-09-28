@@ -93,7 +93,7 @@
     }
     
     NSString *supportEmail = [OLKiteABTesting sharedInstance].supportEmail;
-    if (supportEmail){
+    if (supportEmail && ![supportEmail isEqualToString:@""]){
         self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"support"] style:UIBarButtonItemStyleDone target:self action:@selector(emailButtonPushed:)];
     }
 
