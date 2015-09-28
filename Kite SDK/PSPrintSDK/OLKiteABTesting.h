@@ -8,6 +8,17 @@
 
 #import <Foundation/Foundation.h>
 
+static NSString *const kOLKiteThemeHeaderLogoImageURL = @"themeLogoImageURL";
+static NSString *const kOLKiteThemeCheckoutProgress1 = @"themeCheckoutProgress1";
+static NSString *const kOLKiteThemeCheckoutProgress2 = @"themeCheckoutProgress2";
+static NSString *const kOLKiteThemeCheckoutProgress1Bg = @"themeCheckoutProgress1Bg";
+static NSString *const kOLKiteThemeCheckoutProgress2Bg = @"themeCheckoutProgress2Bg";
+static NSString *const kOLKiteThemeReceiptSuccess = @"themeReceiptSuccess";
+static NSString *const kOLKiteThemeReceiptFailure = @"themeReceiptFailure";
+static NSString *const kOLKiteThemeReceiptSuccessBg = @"themeReceiptSuccessBg";
+static NSString *const kOLKiteThemeReceiptFailureBg = @"themeReceiptFailureBg";
+static NSString *const kOLKiteThemeSupportEmail = @"themeSupportEmail";
+
 @interface OLKiteABTesting : NSObject
 
 @property (assign, nonatomic) BOOL skipHomeScreen;
@@ -38,5 +49,6 @@
 
 + (instancetype)sharedInstance;
 - (void)fetchRemotePlistsWithCompletionHandler:(void(^)())handler;
+- (void)prefetchRemoteImages;
 
 @end
