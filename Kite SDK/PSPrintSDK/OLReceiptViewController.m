@@ -19,7 +19,7 @@
 #import "OLPrintOrderCost.h"
 #import "OLOrderReviewViewController.h"
 #import "OLKiteViewController.h"
-#import <SDWebImageManager.h>
+#import <SDWebImage/SDWebImageManager.h>
 #import "OLKiteABTesting.h"
 #import "UIImage+ColorAtPixel.h"
 
