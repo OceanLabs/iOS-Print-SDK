@@ -10,6 +10,7 @@
 #import <SkyLab/SkyLab.h>
 #import <GroundControl/NSUserDefaults+GroundControl.h>
 #import "OLKitePrintSDK.h"
+#import <SDWebImage/SDWebImageManager.h>
 
 static NSString *const kOLKiteABTestLaunchWithPrintOrderVariant = @"ly.kite.abtest.launch_with_print_order_variant";
 static NSString *const kOLKiteABTestOfferAddressSearch = @"ly.kite.abtest.offer_address_search";
@@ -22,17 +23,6 @@ static NSString *const kOLKiteABTestPromoBannerStyle = @"ly.kite.abtest.promo_ba
 static NSString *const kOLKiteABTestPromoBannerText = @"ly.kite.abtest.promo_banner_text";
 static NSString *const kOLKiteABTestOfferPayPal = @"ly.kite.abtest.offer_paypal";
 static NSString *const kOLKiteABTestAllowMultipleRecipients = @"ly.kite.abtest.allow_multiple_recipients";
-
-static NSString *const kOLKiteThemeHeaderLogoImageURL = @"themeLogoImageURL";
-static NSString *const kOLKiteThemeCheckoutProgress1 = @"themeCheckoutProgress1";
-static NSString *const kOLKiteThemeCheckoutProgress2 = @"themeCheckoutProgress2";
-static NSString *const kOLKiteThemeCheckoutProgress1Bg = @"themeCheckoutProgress1Bg";
-static NSString *const kOLKiteThemeCheckoutProgress2Bg = @"themeCheckoutProgress2Bg";
-static NSString *const kOLKiteThemeReceiptSuccess = @"themeReceiptSuccess";
-static NSString *const kOLKiteThemeReceiptFailure = @"themeReceiptFailure";
-static NSString *const kOLKiteThemeReceiptSuccessBg = @"themeReceiptSuccessBg";
-static NSString *const kOLKiteThemeReceiptFailureBg = @"themeReceiptFailureBg";
-static NSString *const kOLKiteThemeSupportEmail = @"themeSupportEmail";
 
 id safeObject(id obj){
     return obj ? obj : @"";
@@ -65,17 +55,87 @@ id safeObject(id obj){
 - (void)setUserConfig:(NSDictionary *)userConfig{
     _userConfig = userConfig;
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    [defaults setObject:userConfig[kOLKiteThemeHeaderLogoImageURL] forKey:kOLKiteThemeHeaderLogoImageURL];
-    [defaults setObject:userConfig[kOLKiteThemeCheckoutProgress1] forKey:kOLKiteThemeCheckoutProgress1];
-    [defaults setObject:userConfig[kOLKiteThemeCheckoutProgress2] forKey:kOLKiteThemeCheckoutProgress2];
-    [defaults setObject:userConfig[kOLKiteThemeCheckoutProgress1Bg] forKey:kOLKiteThemeCheckoutProgress1Bg];
-    [defaults setObject:userConfig[kOLKiteThemeCheckoutProgress2Bg] forKey:kOLKiteThemeCheckoutProgress2Bg];
-    [defaults setObject:userConfig[kOLKiteThemeReceiptSuccess] forKey:kOLKiteThemeReceiptSuccess];
-    [defaults setObject:userConfig[kOLKiteThemeReceiptFailure] forKey:kOLKiteThemeReceiptFailure];
-    [defaults setObject:userConfig[kOLKiteThemeReceiptSuccessBg] forKey:kOLKiteThemeReceiptSuccessBg];
-    [defaults setObject:userConfig[kOLKiteThemeReceiptFailureBg] forKey:kOLKiteThemeReceiptFailureBg];
-    [defaults setObject:userConfig[kOLKiteThemeSupportEmail] forKey:kOLKiteThemeSupportEmail];
+    
+    NSString *s;
+    NSString *user = [userConfig[@"user_type"] lowercaseString];
+    if ([user isEqualToString:@"kite_test"] || [user isEqualToString:@"standard"]) {
+        user = nil;
+    }
+    
+    s = userConfig[kOLKiteThemeHeaderLogoImageURL];
+    if (!s && user){
+        s = [NSString stringWithFormat:@"https://s3.amazonaws.com/sdk-static/themes/%@/logo.png", user];
+    }
+    [defaults setObject:s forKey:kOLKiteThemeHeaderLogoImageURL];
+    
+    s = userConfig[kOLKiteThemeCheckoutProgress1];
+    if (!s && user){
+        s = [NSString stringWithFormat:@"https://s3.amazonaws.com/sdk-static/themes/%@/checkout_progress_indicator.png", user];
+    }
+    [defaults setObject:s forKey:kOLKiteThemeCheckoutProgress1];
+    
+    s = userConfig[kOLKiteThemeCheckoutProgress2];
+    if (!s && user){
+        s = [NSString stringWithFormat:@"https://s3.amazonaws.com/sdk-static/themes/%@/checkout_progress_indicator2.png", user];
+    }
+    [defaults setObject:s forKey:kOLKiteThemeCheckoutProgress2];
+    
+    s = userConfig[kOLKiteThemeCheckoutProgress1Bg];
+    if (!s && user){
+        s = [NSString stringWithFormat:@"https://s3.amazonaws.com/sdk-static/themes/%@/checkout_progress_indicator_bg.png", user];
+    }
+    [defaults setObject:s forKey:kOLKiteThemeCheckoutProgress1Bg];
+    
+    s = userConfig[kOLKiteThemeCheckoutProgress2Bg];
+    if (!s && user){
+        s = [NSString stringWithFormat:@"https://s3.amazonaws.com/sdk-static/themes/%@/checkout_progress_indicator2_bg.png", user];
+    }
+    [defaults setObject:s forKey:kOLKiteThemeCheckoutProgress2Bg];
+    
+    s = userConfig[kOLKiteThemeReceiptSuccess];
+    if (!s && user){
+        s = [NSString stringWithFormat:@"https://s3.amazonaws.com/sdk-static/themes/%@/receipt_success.png", user];
+    }
+    [defaults setObject:s forKey:kOLKiteThemeReceiptSuccess];
+    
+    s = userConfig[kOLKiteThemeReceiptFailure];
+    if (!s && user){
+        s = [NSString stringWithFormat:@"https://s3.amazonaws.com/sdk-static/themes/%@/receipt_failure.png", user];
+    }
+    [defaults setObject:s forKey:kOLKiteThemeReceiptFailure];
+    
+    s = userConfig[kOLKiteThemeReceiptSuccessBg];
+    if (!s && user){
+        s = [NSString stringWithFormat:@"https://s3.amazonaws.com/sdk-static/themes/%@/receipt_success_bg.png", user];
+    }
+    [defaults setObject:s forKey:kOLKiteThemeReceiptSuccessBg];
+    
+    s = userConfig[kOLKiteThemeReceiptFailureBg];
+    if (!s && user){
+        s = [NSString stringWithFormat:@"https://s3.amazonaws.com/sdk-static/themes/%@/receipt_failure_bg.png", user];
+    }
+    [defaults setObject:s forKey:kOLKiteThemeReceiptFailureBg];
+    
+    s = userConfig[kOLKiteThemeSupportEmail];
+    if (!s && user){
+        s = [NSString stringWithFormat:@"appsupport@%@.com", user];
+    }
+    [defaults setObject:s forKey:kOLKiteThemeSupportEmail];
     [defaults synchronize];
+}
+
+- (void)prefetchRemoteImages{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    for (NSString *s in @[kOLKiteThemeHeaderLogoImageURL, kOLKiteThemeCheckoutProgress1, kOLKiteThemeCheckoutProgress2, kOLKiteThemeCheckoutProgress1Bg, kOLKiteThemeCheckoutProgress2Bg, kOLKiteThemeReceiptSuccess, kOLKiteThemeReceiptFailure, kOLKiteThemeReceiptSuccessBg, kOLKiteThemeReceiptFailureBg]){
+        NSURL *url = [NSURL URLWithString:[defaults objectForKey:s]];
+        if (url){
+            [[SDWebImageManager sharedManager] downloadImageWithURL:url options:0 progress:NULL completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL){
+                if (!image){
+                    [defaults removeObjectForKey:s];
+                }
+            }];
+        }
+    }
 }
 
 - (NSString *)promoBannerText{

@@ -23,7 +23,6 @@
 #import "NSObject+Utils.h"
 #import "OLKiteABTesting.h"
 #import "UIImage+ColorAtPixel.h"
-#import <SDWebImage/SDWebImagePrefetcher.h>
 
 static const NSInteger kTagNoProductsAlertView = 99;
 static const NSInteger kTagTemplateSyncFailAlertView = 100;
@@ -239,14 +238,7 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
         [welf fadeToViewController:nav];
         
         //Prefetch themed-SDK images
-        NSMutableArray *URLsToDownload = [[NSMutableArray alloc] init];
-        for (NSString *s in @[@"checkoutProgress1URL", @"checkoutProgress2URL", @"checkoutProgress1BgURL", @"checkoutProgress2BgURL", @"receiptSuccessURL", @"receiptSuccessBgURL", @"receiptFailureURL", @"receiptFailureBgURL"]){
-            NSURL *url = [NSURL URLWithString:[[OLKiteABTesting sharedInstance] safePerformSelectorWithReturn:NSSelectorFromString(s) withObject:nil]];
-            if (url){
-                [URLsToDownload addObject:url];
-            }
-        }
-        [[SDWebImagePrefetcher sharedImagePrefetcher] prefetchURLs:URLsToDownload];
+        [[OLKiteABTesting sharedInstance] prefetchRemoteImages];
     }];
     [self.operationQueue addOperation:self.transitionOperation];
 }
