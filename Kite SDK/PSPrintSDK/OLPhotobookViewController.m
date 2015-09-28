@@ -1314,7 +1314,7 @@ UINavigationControllerDelegate
 - (void)showCameraRollImagePicker{
     __block UIViewController *picker;
     __block Class assetClass;
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8 || !definesAtLeastiOS8){
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8 || ![CTAssetsPickerController class]){
         picker = [[OLAssetsPickerController alloc] init];
         [(OLAssetsPickerController *)picker setAssetsFilter:[ALAssetsFilter allPhotos]];
         assetClass = [ALAsset class];

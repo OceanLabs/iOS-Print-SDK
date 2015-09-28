@@ -30,12 +30,6 @@
 #import "OLProduct.h"
 #import "OLProductPrintJob.h"
 
-#ifdef OL_KITE_AT_LEAST_IOS8
-static BOOL definesAtLeastiOS8 = YES;
-#else
-static BOOL definesAtLeastiOS8 = NO;
-#endif
-
 extern NSString *_Nonnull const kOLKiteSDKErrorDomain;
 extern NSString *_Nonnull const kOLKiteSDKVersion;
 extern const NSInteger kOLKiteSDKErrorCodeRequestInProgress;

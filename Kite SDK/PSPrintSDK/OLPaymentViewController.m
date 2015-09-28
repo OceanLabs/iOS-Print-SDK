@@ -848,14 +848,15 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         [SVProgressHUD dismiss];
         [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
         self.transitionBlockOperation = [[NSBlockOperation alloc] init];
+        __weak OLPaymentViewController *welf = self;
         [self.transitionBlockOperation addExecutionBlock:^{
-            OLReceiptViewController *receiptVC = [[OLReceiptViewController alloc] initWithPrintOrder:self.printOrder];
-            receiptVC.delegate = self.delegate;
-            receiptVC.presentedModally = self.presentedModally;
-            receiptVC.delegate = self.delegate;
-            [self.navigationController pushViewController:receiptVC animated:YES];
+            OLReceiptViewController *receiptVC = [[OLReceiptViewController alloc] initWithPrintOrder:welf.printOrder];
+            receiptVC.delegate = welf.delegate;
+            receiptVC.presentedModally = welf.presentedModally;
+            receiptVC.delegate = welf.delegate;
+            [welf.navigationController pushViewController:receiptVC animated:YES];
         }];
-        if (self.applePayIsAvailable){
+        if ([self isApplePayAvailable]){
             [self.transitionBlockOperation addDependency:self.applePayDismissOperation];
         }
         [[NSOperationQueue mainQueue] addOperation:self.transitionBlockOperation];
