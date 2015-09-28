@@ -12,7 +12,7 @@
 #import "OLAnalytics.h"
 #import "OLKitePrintSDK.h"
 #import "OLKiteABTesting.h"
-#import <TSMarkdownParser.h>
+#import <TSMarkdownParser/TSMarkdownParser.h>
 #import "OLPosterViewController.h"
 #import "NSObject+Utils.h"
 
