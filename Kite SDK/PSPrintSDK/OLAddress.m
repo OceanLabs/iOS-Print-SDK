@@ -86,6 +86,22 @@ static NSString *const kKeyCountryCode = @"co.oceanlabs.pssdk.kKeyCountryCode";
     return [[NSString stringWithFormat:@"%@ %@", self.recipientFirstName ? self.recipientFirstName : @"", self.recipientLastName ? self.recipientLastName : @""] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@" "]];
 }
 
+- (BOOL)isValidAddress{
+    if (!self.recipientFirstName || [self.recipientFirstName isEqualToString:@""] || !self.recipientLastName || [self.recipientLastName isEqualToString:@""]){
+        return NO;
+    }
+    else if (!self.line1 || [self.line1 isEqualToString:@""]){
+        return NO;
+    }
+    else if (!self.zipOrPostcode || [self.zipOrPostcode isEqualToString:@""]){
+        return NO;
+    }
+    else if (!self.country){
+        return NO;
+    }
+    return YES;
+}
+
 - (NSString *)descriptionWithoutRecipient {
     NSString *displayName = @"";
     NSMutableArray *addrParts = [[NSMutableArray alloc] init];

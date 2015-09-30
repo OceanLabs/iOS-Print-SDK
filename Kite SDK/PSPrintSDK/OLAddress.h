@@ -33,5 +33,6 @@
 @property (nonatomic, readonly) NSString *descriptionWithoutRecipient;
 
 - (NSString *)fullNameFromFirstAndLast;
+- (BOOL) isValidAddress;
 
 @end

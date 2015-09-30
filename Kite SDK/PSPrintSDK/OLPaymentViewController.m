@@ -896,12 +896,12 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
                                    completion:(void (^)(PKPaymentAuthorizationStatus))completion {
     ABRecordRef address = payment.shippingAddress;
     OLAddress *shippingAddress = [[OLAddress alloc] init];
-    shippingAddress.recipientFirstName = (__bridge NSString *)ABRecordCopyValue(address, kABPersonFirstNameProperty);
-    shippingAddress.recipientLastName = (__bridge NSString *)ABRecordCopyValue(address, kABPersonLastNameProperty);
+    shippingAddress.recipientFirstName = (__bridge_transfer NSString *)ABRecordCopyValue(address, kABPersonFirstNameProperty);
+    shippingAddress.recipientLastName = (__bridge_transfer NSString *)ABRecordCopyValue(address, kABPersonLastNameProperty);
     
     CFTypeRef values = ABRecordCopyValue(address, kABPersonAddressProperty);
     for (NSInteger i = 0; i < ABMultiValueGetCount(values); i++){
-        NSDictionary *dict = (__bridge NSDictionary *)ABMultiValueCopyValueAtIndex(values, i);
+        NSDictionary *dict = (__bridge_transfer NSDictionary *)ABMultiValueCopyValueAtIndex(values, i);
         shippingAddress.line1 = [dict objectForKey:(id)kABPersonAddressStreetKey];
         shippingAddress.city = [dict objectForKey:(id)kABPersonAddressCityKey];
         shippingAddress.stateOrCounty = [dict objectForKey:(id)kABPersonAddressStateKey];
@@ -917,6 +917,12 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             completion(PKPaymentAuthorizationStatusFailure);
         }
     }
+    
+    if (![shippingAddress isValidAddress]){
+        completion(PKPaymentAuthorizationStatusInvalidShippingPostalAddress);
+        return;
+    }
+    
     self.printOrder.shippingAddress = shippingAddress;
     NSString *email;
     NSString *phone;
@@ -926,11 +932,11 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     }
     CFTypeRef emails = ABRecordCopyValue(address, kABPersonEmailProperty);
     for (NSInteger i = 0; i < ABMultiValueGetCount(emails); i++){
-        email = (__bridge NSString *)(ABMultiValueCopyValueAtIndex(emails, i));
+        email = (__bridge_transfer NSString *)(ABMultiValueCopyValueAtIndex(emails, i));
     }
     CFTypeRef phones = ABRecordCopyValue(address, kABPersonPhoneProperty);
     for (NSInteger i = 0; i < ABMultiValueGetCount(phones); i++){
-        phone = (__bridge NSString *)(ABMultiValueCopyValueAtIndex(phones, i));
+        phone = (__bridge_transfer NSString *)(ABMultiValueCopyValueAtIndex(phones, i));
     }
     d[@"email"] = email ? email : @"";
     d[@"phone"] = phone ? phone : @"";
