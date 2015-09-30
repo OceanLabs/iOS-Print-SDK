@@ -31,9 +31,11 @@ static NSString *const kKeyPhotobookExtraCopies = @"co.oceanlabs.pssdk.kKeyPhoto
 
 - (id)initWithTemplateId:(NSString *)templateId OLAssets:(NSArray/*<OLAssets>*/ *)assets{
     if (self = [super init]){
+#ifdef DEBUG
         for (id asset in assets) {
             NSAssert([asset isKindOfClass:[OLAsset class]], @"OLPhotobookPrintJob initWithProduct:OLAssets: requires an NSArray of OLAsset not: %@", [asset class]);
         }
+#endif
         
         self.assets = assets;
         self.templateId = templateId;

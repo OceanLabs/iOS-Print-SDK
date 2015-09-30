@@ -39,8 +39,6 @@ static NSString *const kRegexAmex = @"^3[47][0-9]{2}$";
 static NSString *const kRegexDinersClub = @"^3(?:0[0-5]|[68][0-9])[0-9]$";
 static NSString *const kRegexDiscover = @"^6(?:011|5[0-9]{2})$";
 
-static NSString *const kCardIOAppToken = @"f1d07b66ad21407daf153c0ac66c09d7";
-
 static CardType getCardType(NSString *cardNumber) {
     if(cardNumber.length < 4) {
         return kCardTypeUnknown;
@@ -295,7 +293,6 @@ UITableViewDataSource, UITextFieldDelegate>
 #ifdef OL_KITE_OFFER_PAYPAL
     
     CardIOPaymentViewController *scanViewController = [[CardIOPaymentViewController alloc] initWithPaymentDelegate:self];
-    scanViewController.appToken = kCardIOAppToken; // get your app token from the card.io website
     scanViewController.disableManualEntryButtons = YES;
     scanViewController.collectCVV = NO;
     scanViewController.collectExpiry = NO;
@@ -389,39 +386,39 @@ UITableViewDataSource, UITextFieldDelegate>
         textField.placeholder = NSLocalizedString(@"Card Number", @"");
         self.textFieldCardNumber = textField;
         
-//#ifdef OL_KITE_OFFER_PAYPAL
-//        if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]){
-//            AVAuthorizationStatus authStatus = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];
-//            if ((authStatus == AVAuthorizationStatusAuthorized || authStatus == AVAuthorizationStatusNotDetermined || authStatus == AVAuthorizationStatusDenied)){
-//                UIButton *cameraIcon = [[UIButton alloc] initWithFrame:CGRectMake(self.tableView.frame.size.width - 43, 0, 43, 43)];
-//                [cameraIcon setImage:[UIImage imageNamed:@"button_camera"] forState:UIControlStateNormal];
-//                [cameraIcon addTarget:self action:@selector(showCardScanner) forControlEvents:UIControlEventTouchUpInside];
-//                [cell.contentView addSubview:cameraIcon];
-//                
-//                if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
-//                    UIView *view = cameraIcon;
-//                    view.translatesAutoresizingMaskIntoConstraints = NO;
-//                    NSDictionary *views = NSDictionaryOfVariableBindings(view);
-//                    NSMutableArray *con = [[NSMutableArray alloc] init];
-//                    
-//                    NSArray *visuals = @[@"H:[view(43)]-0-|",
-//                                         @"V:[view(43)]"];
-//                    
-//                    
-//                    for (NSString *visual in visuals) {
-//                        [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
-//                    }
-//                    
-//                    NSLayoutConstraint *centerY = [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:view.superview attribute:NSLayoutAttributeCenterY multiplier:1 constant:0];
-//                    [con addObject:centerY];
-//                    
-//                    [view.superview addConstraints:con];
-//                }
-//
-//            }
-//        }
-//        
-//#endif
+#ifdef OL_KITE_OFFER_PAYPAL
+        if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]){
+            AVAuthorizationStatus authStatus = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];
+            if ((authStatus == AVAuthorizationStatusAuthorized || authStatus == AVAuthorizationStatusNotDetermined || authStatus == AVAuthorizationStatusDenied)){
+                UIButton *cameraIcon = [[UIButton alloc] initWithFrame:CGRectMake(self.tableView.frame.size.width - 43, 0, 43, 43)];
+                [cameraIcon setImage:[UIImage imageNamed:@"button_camera"] forState:UIControlStateNormal];
+                [cameraIcon addTarget:self action:@selector(showCardScanner) forControlEvents:UIControlEventTouchUpInside];
+                [cell.contentView addSubview:cameraIcon];
+                
+                if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
+                    UIView *view = cameraIcon;
+                    view.translatesAutoresizingMaskIntoConstraints = NO;
+                    NSDictionary *views = NSDictionaryOfVariableBindings(view);
+                    NSMutableArray *con = [[NSMutableArray alloc] init];
+                    
+                    NSArray *visuals = @[@"H:[view(43)]-0-|",
+                                         @"V:[view(43)]"];
+                    
+                    
+                    for (NSString *visual in visuals) {
+                        [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+                    }
+                    
+                    NSLayoutConstraint *centerY = [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:view.superview attribute:NSLayoutAttributeCenterY multiplier:1 constant:0];
+                    [con addObject:centerY];
+                    
+                    [view.superview addConstraints:con];
+                }
+
+            }
+        }
+        
+#endif
         
     } else if (indexPath.section == kOLSectionExpiryDate) {
         textField.placeholder = NSLocalizedString(@"MM/YY", @"");

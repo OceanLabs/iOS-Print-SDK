@@ -450,9 +450,11 @@ static id stringOrEmptyString(NSString *str) {
 
 - (void)assetUploadRequest:(OLAssetUploadRequest *)req didSucceedWithAssets:(NSArray/*<OLAsset>*/ *)assets {
     NSAssert(self.assetsToUpload.count == assets.count, @"Oops there should be a 1:1 relationship between uploaded assets and submitted, currently its: %lu:%lu", (unsigned long) self.assetsToUpload.count, (unsigned long) assets.count);
+#ifdef DEBUG
     for (OLAsset *asset in assets) {
         NSAssert([self.assetsToUpload containsObject:asset], @"oops");
     }
+#endif
     
     // make sure all job assets have asset ids & preview urls. We need to do this because we optimize the asset upload to avoid uploading
     // assets that are considered to have duplicate contents
@@ -466,13 +468,14 @@ static id stringOrEmptyString(NSString *str) {
         }
     }
     
+#ifdef DEBUG
     // sanity check all assets are uploaded
     for (id<OLPrintJob> job in self.jobs) {
         for (OLAsset *jobAsset in job.assetsForUploading) {
-            BOOL isUploaded = jobAsset.isUploaded;
-            NSAssert(isUploaded, @"oops all assets should have been uploaded");
+            NSAssert(jobAsset.isUploaded, @"oops all assets should have been uploaded");
         }
     }
+#endif
     
     self.assetUploadComplete = YES;
     self.assetsToUpload = nil;
