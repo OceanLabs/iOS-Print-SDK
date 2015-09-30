@@ -9,7 +9,9 @@
 #import "OLKiteUtils.h"
 #import "OLKitePrintSDK.h"
 #import "OLProductHomeViewController.h"
+#ifdef OL_KITE_OFFER_APPLE_PAY
 #import <Stripe/Stripe+ApplePay.h>
+#endif
 #import "OLPaymentViewController.h"
 #import "OLKiteABTesting.h"
 #import "OLCheckoutViewController.h"
