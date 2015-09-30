@@ -212,6 +212,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 }
 
 - (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
     if (self.userSelectedPhotos.count > 0){
         [self.collectionView reloadData];
     }
@@ -219,6 +220,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 }
 
 - (void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
     [self updateNoSelectedPhotosView];
     [self.collectionView.collectionViewLayout invalidateLayout];
 }

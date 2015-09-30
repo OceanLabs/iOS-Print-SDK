@@ -338,20 +338,13 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
 }
 
 - (void) viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
     self.automaticallyAdjustsScrollViewInsets = NO;
     self.tableView.contentInset = UIEdgeInsetsMake(self.edgeInsetTop, 0, 0, 0);
     [self.tableView scrollRectToVisible:CGRectMake(0, 0, 10, 10) animated:NO];
     [self.tableView reloadData];
     if (self.kiteLabel){
         [self positionKiteLabel];
-    }
-}
-
-- (void) viewWillDisappear:(BOOL)animated {
-    if ([self.navigationController.viewControllers indexOfObject:self] == NSNotFound) {
-        // back button pressed. we're going back to photo selection view so lets cancel any
-        // preempted asset upload
-        //[self.printOrder cancelSubmissionOrPreemptedAssetUpload];
     }
 }
 
