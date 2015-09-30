@@ -16,7 +16,7 @@
 
 @interface OLKiteUtils : NSObject
 
-+ (NSBundle *)KiteBundle;
++ (NSBundle *)kiteBundle;
 
 + (NSString *)userEmail:(UIViewController *)topVC;
 

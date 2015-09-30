@@ -25,7 +25,7 @@
 
 @implementation OLKiteUtils
 
-+ (NSBundle *)KiteBundle{
++ (NSBundle *)kiteBundle{
     return [NSBundle bundleForClass:[OLKiteViewController class]];
 }
 

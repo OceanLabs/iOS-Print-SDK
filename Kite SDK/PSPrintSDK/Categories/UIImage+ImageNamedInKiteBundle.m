@@ -12,22 +12,12 @@
 @implementation UIImage (ImageNamedInKiteBundle)
 
 + (UIImage*)imageNamedInKiteBundle:(NSString*)name{
-    UIImage *image;
-    
-    image = [UIImage imageNamed:[NSString stringWithFormat:@"Kite_Print_SDK.bundle/%@",name]];
-    if (image) {
-        return image;
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8){
+        return [UIImage imageNamed:name];
     }
-    
-    image = [UIImage imageWithContentsOfFile:[[[OLKiteUtils KiteBundle] resourcePath] stringByAppendingPathComponent:name]];
-    
-    if (image){
-        return image;
+    else{
+        return [UIImage imageNamed:name inBundle:[OLKiteUtils kiteBundle] compatibleWithTraitCollection:nil];
     }
-    
-    image = [UIImage imageNamed:name];
-    
-    return image;
 }
 
 @end
