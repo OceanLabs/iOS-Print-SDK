@@ -105,7 +105,7 @@
     
 #else
     
-    [OLKitePrintSDK shippingControllerForPrintOrder:printOrder handler:handler];
+    [OLKiteUtils shippingControllerForPrintOrder:printOrder handler:handler];
     
 #endif
     
