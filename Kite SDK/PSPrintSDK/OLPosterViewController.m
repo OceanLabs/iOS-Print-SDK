@@ -20,6 +20,7 @@
 #import "OLKitePrintSDK.h"
 #import "OLKiteABTesting.h"
 #import "OLRemoteImageView.h"
+#import "OLKiteUtils.h"
 
 @interface OLPosterViewController () <UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UICollectionViewDelegate, LXReorderableCollectionViewDataSource, OLScrollCropViewControllerDelegate>
 
@@ -33,13 +34,6 @@
 
 @interface OLSingleImageProductReviewViewController (Private) <UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UICollectionViewDelegate>
 
-@end
-
-@interface OLKitePrintSDK (InternalUtils)
-+ (NSString *)userEmail:(UIViewController *)topVC;
-+ (NSString *)userPhone:(UIViewController *)topVC;
-+ (id<OLKiteDelegate>)kiteDelegate:(UIViewController *)topVC;
-+ (void)checkoutViewControllerForPrintOrder:(OLPrintOrder *)printOrder handler:(void(^)(OLCheckoutViewController *vc))handler;
 @end
 
 @interface OLKiteViewController ()
@@ -257,10 +251,10 @@
         [self.navigationController pushViewController:vc animated:YES];
     }
     else{
-        [OLKitePrintSDK checkoutViewControllerForPrintOrder:printOrder handler:^(id vc){
-            [vc safePerformSelector:@selector(setUserEmail:) withObject:[OLKitePrintSDK userEmail:self]];
-            [vc safePerformSelector:@selector(setUserPhone:) withObject:[OLKitePrintSDK userPhone:self]];
-            [vc safePerformSelector:@selector(setKiteDelegate:) withObject:[OLKitePrintSDK kiteDelegate:self]];
+        [OLKiteUtils checkoutViewControllerForPrintOrder:printOrder handler:^(id vc){
+            [vc safePerformSelector:@selector(setUserEmail:) withObject:[OLKiteUtils userEmail:self]];
+            [vc safePerformSelector:@selector(setUserPhone:) withObject:[OLKiteUtils userPhone:self]];
+            [vc safePerformSelector:@selector(setKiteDelegate:) withObject:[OLKiteUtils kiteDelegate:self]];
             
             [self.navigationController pushViewController:vc animated:YES];
         }];

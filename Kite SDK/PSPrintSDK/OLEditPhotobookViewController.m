@@ -10,6 +10,7 @@
 #import "OLPhotobookViewController.h"
 #import "OLPhotobookPageContentViewController.h"
 #import "OLAssetsPickerController.h"
+#import "OLKiteUtils.h"
 #ifdef OL_KITE_AT_LEAST_IOS8
 #import <CTAssetsPickerController/CTAssetsPickerController.h>
 #endif
@@ -41,11 +42,6 @@ static const NSInteger kSectionPages = 2;
 @end
 
 @interface OLKitePrintSDK (InternalUtils)
-+ (NSString *)userEmail:(UIViewController *)topVC;
-+ (NSString *)userPhone:(UIViewController *)topVC;
-+ (id<OLKiteDelegate>)kiteDelegate:(UIViewController *)topVC;
-+ (void)checkoutViewControllerForPrintOrder:(OLPrintOrder *)printOrder handler:(void(^)(id vc))handler;
-
 #ifdef OL_KITE_OFFER_INSTAGRAM
 + (NSString *) instagramRedirectURI;
 + (NSString *) instagramSecret;

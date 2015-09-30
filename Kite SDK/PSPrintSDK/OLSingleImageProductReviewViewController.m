@@ -14,6 +14,7 @@
 #import "OLProductPrintJob.h"
 #import "OLKitePrintSDK.h"
 #import "OLAssetsPickerController.h"
+#import "OLKiteUtils.h"
 #ifdef OL_KITE_AT_LEAST_IOS8
 #import <CTAssetsPickerController/CTAssetsPickerController.h>
 #endif
@@ -43,11 +44,6 @@
 @end
 
 @interface OLKitePrintSDK (InternalUtils)
-+ (NSString *)userEmail:(UIViewController *)topVC;
-+ (NSString *)userPhone:(UIViewController *)topVC;
-+ (id<OLKiteDelegate>)kiteDelegate:(UIViewController *)topVC;
-+ (void)checkoutViewControllerForPrintOrder:(OLPrintOrder *)printOrder handler:(void(^)(id vc))handler;
-
 #ifdef OL_KITE_OFFER_INSTAGRAM
 + (NSString *) instagramRedirectURI;
 + (NSString *) instagramSecret;
@@ -239,10 +235,10 @@ OLAssetsPickerControllerDelegate>
                 [self.navigationController pushViewController:vc animated:YES];
             }
             else{
-                [OLKitePrintSDK checkoutViewControllerForPrintOrder:printOrder handler:^(id vc){
-                    [vc safePerformSelector:@selector(setUserEmail:) withObject:[OLKitePrintSDK userEmail:self]];
-                    [vc safePerformSelector:@selector(setUserPhone:) withObject:[OLKitePrintSDK userPhone:self]];
-                    [vc safePerformSelector:@selector(setKiteDelegate:) withObject:[OLKitePrintSDK kiteDelegate:self]];
+                [OLKiteUtils checkoutViewControllerForPrintOrder:printOrder handler:^(id vc){
+                    [vc safePerformSelector:@selector(setUserEmail:) withObject:[OLKiteUtils userEmail:self]];
+                    [vc safePerformSelector:@selector(setUserPhone:) withObject:[OLKiteUtils userPhone:self]];
+                    [vc safePerformSelector:@selector(setKiteDelegate:) withObject:[OLKiteUtils kiteDelegate:self]];
 
                     
                     [self.navigationController pushViewController:vc animated:YES];

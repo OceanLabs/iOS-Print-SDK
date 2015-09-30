@@ -34,12 +34,13 @@
 }
 
 - (void)setupView {
-    self.contentView =  [[NSBundle mainBundle] loadNibNamed:@"OLPhotoSelectionButton" owner:self options:nil][0];
+    NSBundle *currentBundle = [NSBundle bundleForClass:[OLPhotoSelectionButton class]];
+    self.contentView =  [currentBundle loadNibNamed:@"OLPhotoSelectionButton" owner:self options:nil][0];
     self.contentView.backgroundColor = [UIColor whiteColor];
     
     NSDictionary *views = NSDictionaryOfVariableBindings(_contentView);
     [self addSubview:_contentView];
-
+    
     self.contentView.translatesAutoresizingMaskIntoConstraints = NO;
     [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0-[_contentView]-0-|"
                                                                  options:0
@@ -99,7 +100,7 @@
         self.tintColor = [UIColor whiteColor];
         self.titleLabel.textColor = [UIColor whiteColor];
     }
-
+    
     [super setHighlighted:highlighted];
 }
 

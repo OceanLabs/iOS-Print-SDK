@@ -43,6 +43,8 @@
 		2E8C29F01B18D1E10045DC21 /* OLPrintOrderCost.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E8C29EF1B18D1E10045DC21 /* OLPrintOrderCost.m */; };
 		2E973EEE1A7A5D0E00488212 /* OLCircleMaskCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E973EED1A7A5D0E00488212 /* OLCircleMaskCollectionViewCell.m */; };
 		2E9965AA1ABC7035007F010F /* OLCustomNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E9965A91ABC7035007F010F /* OLCustomNavigationController.m */; };
+		2EA13E201BBC2202005F3D71 /* UIImage+ImageNamedInKiteBundle.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA13E1F1BBC2202005F3D71 /* UIImage+ImageNamedInKiteBundle.m */; settings = {ASSET_TAGS = (); }; };
+		2EA13E231BBC242F005F3D71 /* OLKiteUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA13E221BBC242F005F3D71 /* OLKiteUtils.m */; settings = {ASSET_TAGS = (); }; };
 		2EA8292E1B9DE54100A9208E /* ALAsset+OLAccessibilityLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA829211B9DE54100A9208E /* ALAsset+OLAccessibilityLabel.m */; };
 		2EA8292F1B9DE54100A9208E /* ALAsset+OLAssetType.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA829231B9DE54100A9208E /* ALAsset+OLAssetType.m */; };
 		2EA829301B9DE54100A9208E /* ALAsset+OLIsEqual.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA829251B9DE54100A9208E /* ALAsset+OLIsEqual.m */; };
@@ -243,6 +245,10 @@
 		2E973EED1A7A5D0E00488212 /* OLCircleMaskCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLCircleMaskCollectionViewCell.m; sourceTree = "<group>"; };
 		2E9965A81ABC7035007F010F /* OLCustomNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLCustomNavigationController.h; sourceTree = "<group>"; };
 		2E9965A91ABC7035007F010F /* OLCustomNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLCustomNavigationController.m; sourceTree = "<group>"; };
+		2EA13E1E1BBC2202005F3D71 /* UIImage+ImageNamedInKiteBundle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIImage+ImageNamedInKiteBundle.h"; path = "PSPrintSDK/Categories/UIImage+ImageNamedInKiteBundle.h"; sourceTree = "<group>"; };
+		2EA13E1F1BBC2202005F3D71 /* UIImage+ImageNamedInKiteBundle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIImage+ImageNamedInKiteBundle.m"; path = "PSPrintSDK/Categories/UIImage+ImageNamedInKiteBundle.m"; sourceTree = "<group>"; };
+		2EA13E211BBC242F005F3D71 /* OLKiteUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLKiteUtils.h; sourceTree = "<group>"; };
+		2EA13E221BBC242F005F3D71 /* OLKiteUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLKiteUtils.m; sourceTree = "<group>"; };
 		2EA829201B9DE54100A9208E /* ALAsset+OLAccessibilityLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "ALAsset+OLAccessibilityLabel.h"; path = "Categories/ALAsset+OLAccessibilityLabel.h"; sourceTree = "<group>"; };
 		2EA829211B9DE54100A9208E /* ALAsset+OLAccessibilityLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "ALAsset+OLAccessibilityLabel.m"; path = "Categories/ALAsset+OLAccessibilityLabel.m"; sourceTree = "<group>"; };
 		2EA829221B9DE54100A9208E /* ALAsset+OLAssetType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "ALAsset+OLAssetType.h"; path = "Categories/ALAsset+OLAssetType.h"; sourceTree = "<group>"; };
@@ -553,6 +559,8 @@
 				2EF53E3A1B55421A00BF936A /* UIImage+ColorAtPixel.m */,
 				2E1067FE1B83335C00EB4C14 /* UIView+RoundRect.h */,
 				2E1067FF1B83335C00EB4C14 /* UIView+RoundRect.m */,
+				2EA13E1E1BBC2202005F3D71 /* UIImage+ImageNamedInKiteBundle.h */,
+				2EA13E1F1BBC2202005F3D71 /* UIImage+ImageNamedInKiteBundle.m */,
 			);
 			name = Categories;
 			path = ..;
@@ -600,6 +608,8 @@
 				2E0E250E1A77997E00808ED8 /* OLAnalytics.m */,
 				2EB1C40F1B551D6000EFE0D0 /* OLKiteABTesting.h */,
 				2EB1C4101B551D6000EFE0D0 /* OLKiteABTesting.m */,
+				2EA13E211BBC242F005F3D71 /* OLKiteUtils.h */,
+				2EA13E221BBC242F005F3D71 /* OLKiteUtils.m */,
 			);
 			name = Util;
 			sourceTree = "<group>";
@@ -1091,12 +1101,14 @@
 				3D0D7ACC1AC0C44C00746FC8 /* NSArray+QueryingExtras.m in Sources */,
 				2EA8292E1B9DE54100A9208E /* ALAsset+OLAccessibilityLabel.m in Sources */,
 				CD97569518E083E3007CA090 /* PrintOrderHistoryViewController.m in Sources */,
+				2EA13E201BBC2202005F3D71 /* UIImage+ImageNamedInKiteBundle.m in Sources */,
 				2E21DA521B9843CF00D9162F /* OLAssetsPageViewController.m in Sources */,
 				2EA8BEBC1A484FCB008A9248 /* OLOrderReviewViewController.m in Sources */,
 				2E3F96AF1A4967FF005C0EA3 /* OLProduct.m in Sources */,
 				2EE3C86D1A4ADDDB006446E2 /* OLWhiteSquare.m in Sources */,
 				2E39CAA81AB89541008B1EFF /* OLPhotoSelectionButton.m in Sources */,
 				CD93BB3E187882A300316492 /* OLAddressEditViewController.m in Sources */,
+				2EA13E231BBC242F005F3D71 /* OLKiteUtils.m in Sources */,
 				2EA829301B9DE54100A9208E /* ALAsset+OLIsEqual.m in Sources */,
 				2E21DA541B9843CF00D9162F /* OLAssetsSupplementaryView.m in Sources */,
 				2E20BD861AD4229700FB2446 /* OLCaseViewController.m in Sources */,

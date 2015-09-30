@@ -9,6 +9,7 @@
 #import "OLCaseViewController.h"
 #import "OLRemoteImageCropper.h"
 #import <SDWebImage/SDWebImageManager.h>
+#import "UIImage+ImageNamedInKiteBundle.h"
 
 @interface OLSingleImageProductReviewViewController (Private)
 
@@ -73,7 +74,7 @@
         
     }
     
-    UIImage *tempMask = [UIImage imageNamed:@"dummy mask"];
+    UIImage *tempMask = [UIImage imageNamedInKiteBundle:@"dummy mask"];
     [self.containerView removeConstraint:self.maskAspectRatio];
     NSLayoutConstraint *con = [NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self.containerView attribute:NSLayoutAttributeWidth multiplier:tempMask.size.height / tempMask.size.width constant:0];
     [self.containerView addConstraints:@[con]];

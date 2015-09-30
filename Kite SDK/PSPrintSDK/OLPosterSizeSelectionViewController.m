@@ -15,17 +15,12 @@
 #import <TSMarkdownParser/TSMarkdownParser.h>
 #import "OLPosterViewController.h"
 #import "NSObject+Utils.h"
+#import "OLKiteUtils.h"
 
 @interface OLProduct (Private)
 
 -(void)setCoverImageToImageView:(UIImageView *)imageView;
 -(void)setProductPhotography:(NSUInteger)i toImageView:(UIImageView *)imageView;
-
-@end
-
-@interface OLKitePrintSDK ()
-
-+ (OLKiteViewController *)kiteViewControllerInNavStack:(NSArray *)viewControllers;
 
 @end
 
@@ -228,7 +223,7 @@ static UIColor *deselectedColor;
     if (self.product.quantityToFulfillOrder == 1){
         identifier = @"OLSingleImageProductReviewViewController";
     }
-    else if (![self.delegate respondsToSelector:@selector(kiteControllerShouldAllowUserToAddMorePhotos:)] || [self.delegate kiteControllerShouldAllowUserToAddMorePhotos:[OLKitePrintSDK kiteViewControllerInNavStack:self.navigationController.viewControllers]]){
+    else if (![self.delegate respondsToSelector:@selector(kiteControllerShouldAllowUserToAddMorePhotos:)] || [self.delegate kiteControllerShouldAllowUserToAddMorePhotos:[OLKiteUtils kiteViewControllerInNavStack:self.navigationController.viewControllers]]){
         identifier = @"PhotoSelectionViewController";
     }
     else{
