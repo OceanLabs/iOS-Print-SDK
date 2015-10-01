@@ -651,7 +651,7 @@ UINavigationControllerDelegate>
                 return cell;
             }
         }
-        OLPhotobookViewController *photobook = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:nil] instantiateViewControllerWithIdentifier:@"PhotobookViewController"];
+        OLPhotobookViewController *photobook = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteBundle]] instantiateViewControllerWithIdentifier:@"PhotobookViewController"];
         if (indexPath.section == kSectionPages){
             photobook.startOpen = YES;
         }
