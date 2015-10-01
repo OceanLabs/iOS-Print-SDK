@@ -37,6 +37,7 @@
 #endif
 
 #import <MPFlipViewController/MPFlipTransition.h>
+#import "UIImage+ImageNamedInKiteBundle.h"
 
 static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 static const NSUInteger kTagLeft = 10;
@@ -928,7 +929,7 @@ UINavigationControllerDelegate
             halfBookCoverImageContainer.tag = kTagRight;
             swipe.direction = UISwipeGestureRecognizerDirectionLeft;
             
-            UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:[self productAspectRatio]/2.0 < 1 ? @"book-cover-right" : @"book-cover-right-landscape"]];
+            UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamedInKiteBundle:[self productAspectRatio]/2.0 < 1 ? @"book-cover-right" : @"book-cover-right-landscape"]];
             imageView.contentMode = UIViewContentModeScaleAspectFill;
             [imageView makeRoundRectWithRadius:3];
             imageView.tag = 17;
@@ -1028,7 +1029,7 @@ UINavigationControllerDelegate
             [halfBookCoverImageContainer addGestureRecognizer:tap];
             [halfBookCoverImageContainer addGestureRecognizer:swipe];
             
-            UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:[self productAspectRatio]/2.0 < 1 ? @"book-cover-left" : @"book-cover-left-landscape"]];
+            UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamedInKiteBundle:[self productAspectRatio]/2.0 < 1 ? @"book-cover-left" : @"book-cover-left-landscape"]];
             imageView.contentMode = UIViewContentModeScaleAspectFill;
             [imageView makeRoundRectWithRadius:3];
             [halfBookCoverImageContainer addSubview:imageView];

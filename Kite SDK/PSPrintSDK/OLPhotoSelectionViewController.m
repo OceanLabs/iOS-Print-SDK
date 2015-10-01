@@ -44,6 +44,7 @@
 
 #import "OLRemoteImageView.h"
 #import "OLImageCachingManager.h"
+#import "UIImage+ImageNamedInKiteBundle.h"
 
 NSInteger OLPhotoSelectionMargin = 0;
 
@@ -117,15 +118,15 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     [(UILabel *)self.navigationItem.titleView setFont:[UIFont preferredFontForTextStyle:UIFontTextStyleHeadline]];
     self.userDisabledPhotos = [[NSMutableArray alloc] init];
     
-    self.galleryButton.image = [UIImage imageNamed:@"import_gallery"];
+    self.galleryButton.image = [UIImage imageNamedInKiteBundle:@"import_gallery"];
     self.galleryButton.title = NSLocalizedString(@"Camera Roll", @"");
     self.galleryButton.mainColor = [UIColor colorWithHexString:@"#48cfad"];
     
-    self.instagramButton.image = [UIImage imageNamed:@"import_instagram"];
+    self.instagramButton.image = [UIImage imageNamedInKiteBundle:@"import_instagram"];
     self.instagramButton.title = NSLocalizedString(@"Instagram", @"");
     self.instagramButton.mainColor = [UIColor colorWithHexString:@"#f6bb42"];
     
-    self.facebookButton.image = [UIImage imageNamed:@"import_facebook"];
+    self.facebookButton.image = [UIImage imageNamedInKiteBundle:@"import_facebook"];
     self.facebookButton.title = NSLocalizedString(@"Facebook", @"");
     self.facebookButton.mainColor = [UIColor colorWithHexString:@"#5d9cec"];
     
@@ -804,7 +805,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
         
         [cell.contentView addConstraints:con];
         
-        checkmark.image = [UIImage imageNamed:@"checkmark"];
+        checkmark.image = [UIImage imageNamedInKiteBundle:@"checkmark"];
         checkmark.hidden = YES;
     }
     

@@ -19,6 +19,7 @@
 #import "UITextField+Selection.h"
 #import "UIView+RoundRect.h"
 #import "OLPrintOrderCost.h"
+#import "UIImage+ImageNamedInKiteBundle.h"
 
 static const NSUInteger kOLSectionCardNumber = 0;
 static const NSUInteger kOLSectionExpiryDate = 1;
@@ -391,7 +392,7 @@ UITableViewDataSource, UITextFieldDelegate>
             AVAuthorizationStatus authStatus = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];
             if ((authStatus == AVAuthorizationStatusAuthorized || authStatus == AVAuthorizationStatusNotDetermined || authStatus == AVAuthorizationStatusDenied)){
                 UIButton *cameraIcon = [[UIButton alloc] initWithFrame:CGRectMake(self.tableView.frame.size.width - 43, 0, 43, 43)];
-                [cameraIcon setImage:[UIImage imageNamed:@"button_camera"] forState:UIControlStateNormal];
+                [cameraIcon setImage:[UIImage imageNamedInKiteBundle:@"button_camera"] forState:UIControlStateNormal];
                 [cameraIcon addTarget:self action:@selector(showCardScanner) forControlEvents:UIControlEventTouchUpInside];
                 [cell.contentView addSubview:cameraIcon];
                 

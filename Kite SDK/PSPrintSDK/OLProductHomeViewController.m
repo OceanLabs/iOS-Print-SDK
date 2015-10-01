@@ -27,6 +27,7 @@
 #import <MessageUI/MessageUI.h>
 #import <MessageUI/MFMailComposeViewController.h>
 #import <TSMarkdownParser/TSMarkdownParser.h>
+#import "UIImage+ImageNamedInKiteBundle.h"
 
 #define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
 
@@ -94,7 +95,7 @@
     
     NSString *supportEmail = [OLKiteABTesting sharedInstance].supportEmail;
     if (supportEmail && ![supportEmail isEqualToString:@""]){
-        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"support"] style:UIBarButtonItemStyleDone target:self action:@selector(emailButtonPushed:)];
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamedInKiteBundle:@"support"] style:UIBarButtonItemStyleDone target:self action:@selector(emailButtonPushed:)];
     }
 
     self.automaticallyAdjustsScrollViewInsets = NO;
@@ -540,7 +541,7 @@
     if (indexPath.section == 0 && ![[OLKiteABTesting sharedInstance].qualityBannerType isEqualToString:@"None"] ){
         UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"qualityBanner" forIndexPath:indexPath];
         UIImageView *imageView = (UIImageView *)[cell viewWithTag:10];
-        imageView.image = [UIImage imageNamed:[NSString stringWithFormat:@"quality-banner%@", [OLKiteABTesting sharedInstance].qualityBannerType]];
+        imageView.image = [UIImage imageNamedInKiteBundle:[NSString stringWithFormat:@"quality-banner%@", [OLKiteABTesting sharedInstance].qualityBannerType]];
         imageView.backgroundColor = [imageView.image colorAtPixel:CGPointMake(3, 3)];
         return cell;
     }

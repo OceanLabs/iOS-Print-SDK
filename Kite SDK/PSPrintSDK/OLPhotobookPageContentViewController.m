@@ -11,6 +11,7 @@
 #import "OLScrollCropViewController.h"
 #import "OLProduct.h"
 #import "OLRemoteImageView.h"
+#import "UIImage+ImageNamedInKiteBundle.h"
 
 @interface OLPhotobookPageContentViewController ()
 
@@ -48,7 +49,7 @@
 - (void)setPage:(BOOL)left{
     self.left = left;
     if (left){
-        self.pageBackground.image = [UIImage imageNamed:@"page-left"];
+        self.pageBackground.image = [UIImage imageNamedInKiteBundle:@"page-left"];
         self.pageShadowLeft.hidden = NO;
         self.pageShadowRight.hidden = YES;
         self.pageShadowLeft2.hidden = YES;
@@ -56,7 +57,7 @@
 
     }
     else{
-        self.pageBackground.image = [UIImage imageNamed:@"page-right"];
+        self.pageBackground.image = [UIImage imageNamedInKiteBundle:@"page-right"];
         self.pageShadowLeft.hidden = YES;
         self.pageShadowRight.hidden = NO;
         self.pageShadowLeft2.hidden = YES;

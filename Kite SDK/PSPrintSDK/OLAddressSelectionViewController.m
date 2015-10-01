@@ -13,6 +13,7 @@
 #import "OLAddressEditViewController.h"
 #import "OLAddressLookupViewController.h"
 #import "OLConstants.h"
+#import "UIImage+ImageNamedInKiteBundle.h"
 
 static const NSInteger kSectionAddressList = 0;
 static const NSInteger kSectionAddAddress = 1;
@@ -128,7 +129,7 @@ static const NSInteger kRowAddAddressManually = 0;
         
         OLAddress *address = [OLAddress addressBook][indexPath.row];
         
-        cell.imageView.image = [self.selectedAddresses containsObject:address] ? [UIImage imageNamed:@"checkmark_on"] : nil;
+        cell.imageView.image = [self.selectedAddresses containsObject:address] ? [UIImage imageNamedInKiteBundle:@"checkmark_on"] : nil;
         cell.textLabel.text = address.fullNameFromFirstAndLast;
         cell.detailTextLabel.text = address.descriptionWithoutRecipient;
     } else {
@@ -192,7 +193,7 @@ static const NSInteger kRowAddAddressManually = 0;
             }
             
             UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-            cell.imageView.image = selected ? [UIImage imageNamed:@"checkmark_on"] : nil;
+            cell.imageView.image = selected ? [UIImage imageNamedInKiteBundle:@"checkmark_on"] : nil;
         }
     } else if (indexPath.section == kSectionAddAddress) {
         

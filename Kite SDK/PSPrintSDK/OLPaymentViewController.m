@@ -30,6 +30,7 @@
 #import "OLKiteABTesting.h"
 #import <SDWebImage/SDWebImageManager.h>
 #import "UIImage+ColorAtPixel.h"
+#import "UIImage+ImageNamedInKiteBundle.h"
 
 #ifdef OL_KITE_OFFER_PAYPAL
 #import <PayPal-iOS-SDK/PayPalMobile.h>
@@ -264,7 +265,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             }];
         }
         else{
-            [self setupBannerImage:[UIImage imageNamed:@"checkout_progress_indicator2"] withBgImage:[UIImage imageNamed:@"checkout_progress_indicator2_bg"]];
+            [self setupBannerImage:[UIImage imageNamedInKiteBundle:@"checkout_progress_indicator2"] withBgImage:[UIImage imageNamedInKiteBundle:@"checkout_progress_indicator2_bg"]];
         }
         
     }
@@ -302,7 +303,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     self.payWithApplePayButton = [[UIButton alloc] initWithFrame:CGRectMake(20, 0, self.view.frame.size.width-40, 44)];
     self.payWithApplePayButton.backgroundColor = [UIColor blackColor];
     [self.payWithApplePayButton makeRoundRect];
-    [self.payWithApplePayButton setImage:[UIImage imageNamed:@"button_apple_pay"] forState:UIControlStateNormal];
+    [self.payWithApplePayButton setImage:[UIImage imageNamedInKiteBundle:@"button_apple_pay"] forState:UIControlStateNormal];
     [self.payWithApplePayButton addTarget:self action:@selector(onButtonPayWithApplePayClicked) forControlEvents:UIControlEventTouchUpInside];
     
     self.moreOptionsButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 84, self.view.frame.size.width, 20)];

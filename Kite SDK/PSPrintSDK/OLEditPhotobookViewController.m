@@ -258,8 +258,8 @@ UINavigationControllerDelegate>
 }
 
 - (void)addPageShadowsToView:(UIView *)view{
-//    UIImage *leftImage = [UIImage imageNamed:@"page-shadow-left"];
-//    UIImage *rightImage = [UIImage imageNamed:@"page-shadow-right"];
+//    UIImage *leftImage = [UIImage imageNamedInKiteBundle:@"page-shadow-left"];
+//    UIImage *rightImage = [UIImage imageNamedInKiteBundle:@"page-shadow-right"];
 //    
 //    UIImageView *left1 = [[UIImageView alloc] initWithImage:leftImage];
 //    left1.contentMode = UIViewContentModeScaleToFill;

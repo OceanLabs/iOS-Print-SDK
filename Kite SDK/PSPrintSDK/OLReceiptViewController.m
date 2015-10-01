@@ -22,6 +22,7 @@
 #import <SDWebImage/SDWebImageManager.h>
 #import "OLKiteABTesting.h"
 #import "UIImage+ColorAtPixel.h"
+#import "UIImage+ImageNamedInKiteBundle.h"
 
 static const NSUInteger kSectionOrderSummary = 0;
 static const NSUInteger kSectionOrderId = 1;
@@ -127,7 +128,7 @@ static const NSUInteger kSectionErrorRetry = 2;
         }];
     }
     else{
-        [self setupBannerImage:[UIImage imageNamed:self.printOrder.printed ? @"receipt_success" : @"receipt_failure"] withBgImage:[UIImage imageNamed:self.printOrder.printed ? @"receipt_success_bg" : @"receipt_failure_bg"]];
+        [self setupBannerImage:[UIImage imageNamedInKiteBundle:self.printOrder.printed ? @"receipt_success" : @"receipt_failure"] withBgImage:[UIImage imageNamedInKiteBundle:self.printOrder.printed ? @"receipt_success_bg" : @"receipt_failure_bg"]];
     }
     
     if ([self.tableView respondsToSelector:@selector(setCellLayoutMarginsFollowReadableWidth:)]){
@@ -207,7 +208,7 @@ static const NSUInteger kSectionErrorRetry = 2;
         } else {
             [UIView transitionWithView:self.view duration:0.3f options:UIViewAnimationOptionTransitionCrossDissolve animations:^{
                 
-                ((UIImageView *) [self.tableView.tableHeaderView viewWithTag:1100]).image = [UIImage imageNamed:@"receipt_success"];
+                ((UIImageView *) [self.tableView.tableHeaderView viewWithTag:1100]).image = [UIImage imageNamedInKiteBundle:@"receipt_success"];
             } completion:nil];
             
             [self.tableView deleteSections:[NSIndexSet indexSetWithIndex:kSectionErrorRetry] withRowAnimation:UITableViewRowAnimationFade];
