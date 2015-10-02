@@ -31,6 +31,8 @@ static NSString *const kKeyShippingAddress = @"co.oceanlabs.pssdk.kKeyShippingAd
 static NSString *const kKeyLastPrintError = @"co.oceanlabs.pssdk.kKeyLastPrintError";
 static NSString *const kKeyLastPrintSubmissionDate = @"co.oceanlabs.pssdk.kKeyLastPrintSubmissionDate";
 static NSString *const kKeyCurrencyCode = @"co.oceanlabs.pssdk.kKeyCurrencyCode";
+static NSString *const kKeyOrderEmail = @"co.oceanlabs.pssdk.kKeyOrderEmail";
+static NSString *const kKeyOrderPhone = @"co.oceanlabs.pssdk.kKeyOrderPhone";
 
 static NSMutableArray *inProgressPrintOrders; // Tracks all currently in progress print orders. This is useful as it means they won't be dealloc'd if a user doesn't come a strong reference to them but still expects the completion handler callback
 
@@ -343,6 +345,13 @@ static id stringOrEmptyString(NSString *str) {
         [jobs addObject:[printJob jsonRepresentation]];
     }
     
+    if (self.phone){
+        [json setObject:self.phone forKey:@"phone"];
+    }
+    if (self.email){
+        [json setObject:self.email forKey:@"email"];
+    }
+    
     if (self.shippingAddress) {
         NSDictionary *shippingAddress = @{@"recipient_name": stringOrEmptyString(self.shippingAddress.fullNameFromFirstAndLast),
                                           @"recipient_first_name": stringOrEmptyString(self.shippingAddress.recipientFirstName),
@@ -528,6 +537,8 @@ static id stringOrEmptyString(NSString *str) {
     [aCoder encodeObject:self.lastPrintSubmissionDate forKey:kKeyLastPrintSubmissionDate];
     [aCoder encodeObject:_currencyCode forKey:kKeyCurrencyCode];
     [aCoder encodeObject:self.finalCost forKey:kKeyFinalCost];
+    [aCoder encodeObject:self.email forKey:kKeyOrderEmail];
+    [aCoder encodeObject:self.phone forKey:kKeyOrderPhone];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
@@ -544,6 +555,8 @@ static id stringOrEmptyString(NSString *str) {
             _lastPrintSubmissionDate = [aDecoder decodeObjectForKey:kKeyLastPrintSubmissionDate];
             _currencyCode = [aDecoder decodeObjectForKey:kKeyCurrencyCode];
             _finalCost = [aDecoder decodeObjectForKey:kKeyFinalCost];
+            _email = [aDecoder decodeObjectForKey:kKeyOrderEmail];
+            _phone = [aDecoder decodeObjectForKey:kKeyOrderPhone];
         }
         return self;
         

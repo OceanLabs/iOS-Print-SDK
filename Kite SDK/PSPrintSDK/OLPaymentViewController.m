@@ -941,6 +941,10 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     }
     d[@"email"] = email ? email : @"";
     d[@"phone"] = phone ? phone : @"";
+    
+    self.printOrder.email = email;
+    self.printOrder.phone = phone;
+    
     self.printOrder.userData = d;
     
     if (![OLCheckoutViewController validateEmail:d[@"email"]] && [OLKitePrintSDK environment] == kOLKitePrintSDKEnvironmentLive){
