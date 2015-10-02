@@ -73,6 +73,11 @@
     
     self.collectionView.delegate = self;
     self.collectionView.dataSource = self;
+    
+    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Back", @"")
+                                                                             style:UIBarButtonItemStylePlain
+                                                                            target:nil
+                                                                            action:nil];
 }
 
 - (void)viewDidLayoutSubviews{
