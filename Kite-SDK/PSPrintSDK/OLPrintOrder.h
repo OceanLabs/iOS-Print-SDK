@@ -15,9 +15,32 @@
 
 @protocol OLPrintJob;
 
+/**
+ *  Progress handler for OLPrintOrder upload
+ *
+ *  @param totalAssetsUploaded            The number of assets uploaded
+ *  @param totalAssetsToUpload            The number of assets to be uploaded
+ *  @param totalAssetBytesWritten         The number of asset bytes uploaded
+ *  @param totalAssetBytesExpectedToWrite The number of asset bytes expected to be uploaded
+ *  @param totalBytesWritten              The number of bytes uploaded
+ *  @param totalBytesExpectedToWrite      The number of bytes expected to be uploaded
+ */
 typedef void (^OLPrintOrderProgressHandler)(NSUInteger totalAssetsUploaded, NSUInteger totalAssetsToUpload, long long totalAssetBytesWritten, long long totalAssetBytesExpectedToWrite, long long totalBytesWritten, long long totalBytesExpectedToWrite);
+
+/**
+ *  Completion handler for OLPrintOrder upload
+ *
+ *  @param orderIdReceipt The order receipt
+ *  @param error          The error
+ */
 typedef void (^OLPrintOrderCompletionHandler)(NSString *orderIdReceipt, NSError *error);
 
+/**
+ *  Completion handler for order cost
+ *
+ *  @param cost  The cost
+ *  @param error The error
+ */
 typedef void (^OLPrintOrderCostCompletionHandler)(OLPrintOrderCost *cost, NSError * error);
 
 

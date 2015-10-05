@@ -19,6 +19,7 @@ profile
 DerivedData
 *.hmap
 *.ipa
+KitePrintSDK-appledocs
 
 # CocoaPods
 Pods

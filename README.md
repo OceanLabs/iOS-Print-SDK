@@ -1,6 +1,6 @@
 # iOS Print SDK
 
-![Kite](Kite SDK/docs/kite.png)
+![Kite](Kite-SDK/docs/kite.png)
 [![Build Status](https://travis-ci.org/OceanLabs/iOS-Print-SDK.svg?branch=master)](https://travis-ci.org/OceanLabs/iOS-Print-SDK)
 
 The Kite Print SDK makes it easy to add print on demand functionality to your app.
@@ -58,7 +58,7 @@ pod "Kite-Print-SDK/PayPal"
 
 The SDK includes lots of optional functionality enabled via CocoaPod Subspecs so that you can pick and choose your setup.
 
-If you'd like to offer your users the opportunity to add photos via Instagram or Facebook then uncomment the appropriate lines above and follow the instructions to [Enable Facebook & Instagram Photo Selection](Kite SDK/docs/social_photo_sources.md).
+If you'd like to offer your users the opportunity to add photos via Instagram or Facebook then uncomment the appropriate lines above and follow the instructions to [Enable Facebook & Instagram Photo Selection](Kite-SDK/docs/social_photo_sources.md).
 
 PayPal functionality is also optional although recommended as you'll typically see a higher conversion rate with it.
 
@@ -106,7 +106,7 @@ Xcode 7 includes some new security features. In order to connect to the Kite ser
 	</dict>
 ```
 
-There are a few more entries to add if you opt for Facebook and Instagram integration as mentioned above. More info [here](Kite SDK/docs/social_photo_sources.md).
+There are a few more entries to add if you opt for Facebook and Instagram integration as mentioned above. More info [here](Kite-SDK/docs/social_photo_sources.md).
 
 ## Use Cases
 
@@ -114,7 +114,7 @@ The Print SDK supports two primary use cases: **Kite Print Shop Experience**, an
 
 ### Kite Print Shop User Experience
 
-![Kite](Kite SDK/docs/print-shop1.jpg)
+![Kite](Kite-SDK/docs/print-shop1.jpg)
 
 The Kite Print SDK includes a robust product selection, photo editing and payment experience that's proven to convert well with users. It can take care of everything for you, no need to spend time building any user interfaces.
 
@@ -122,16 +122,16 @@ This is the quickest approach to integration and perfect if you don't want to sp
 
 To use our Print Shop experience:
 
-1. [Create and present (or push) an `OLKiteViewController`](Kite SDK/docs/print_shop.md) passing it an array of photos, we'll do the rest.
+1. [Create and present (or push) an `OLKiteViewController`](Kite-SDK/docs/print_shop.md) passing it an array of photos, we'll do the rest.
 2. [Register your payment details](https://www.kite.ly/accounts/billing/) with us so that we can pay you when your users place orders
 
 
 ### Custom User Experience
 You can build your own UI if you don't want to use or customize the provided Print Shop experience. You can still use the Print SDK to handle the print order creation and submission:
 
-1. [Create a print order](Kite SDK/docs/create_print_order.md) representing the product(s) you wish to have printed and posted
-2. [Set the shipping address](Kite SDK/docs/shipping.md) to which the order will be delivered
-3. [Take payment from the user](Kite SDK/docs/payment.md) for the order and submit it to our servers for printing and posting
+1. [Create a print order](Kite-SDK/docs/create_print_order.md) representing the product(s) you wish to have printed and posted
+2. [Set the shipping address](Kite-SDK/docs/shipping.md) to which the order will be delivered
+3. [Take payment from the user](Kite-SDK/docs/payment.md) for the order and submit it to our servers for printing and posting
 4. [Register your payment details](https://www.kite.ly/accounts/billing/) with us so that we can pay you when your users place orders
 
 ## Credentials & Environments
@@ -163,4 +163,4 @@ We also have a [REST print API](https://www.kite.ly/docs/1.1/) for those who pre
 
 ## License
 
-Kite iOS Print SDK is available under a modified MIT license. See the [LICENSE](Kite SDK/LICENSE) file for more info.
+Kite iOS Print SDK is available under a modified MIT license. See the [LICENSE](Kite-SDK/LICENSE) file for more info.

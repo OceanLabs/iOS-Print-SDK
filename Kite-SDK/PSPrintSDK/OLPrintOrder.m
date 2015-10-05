@@ -452,7 +452,7 @@ static id stringOrEmptyString(NSString *str) {
 
 - (void)assetUploadRequest:(OLAssetUploadRequest *)req didProgressWithTotalAssetsUploaded:(NSUInteger)totalAssetsUploaded totalAssetsToUpload:(NSUInteger)totalAssetsToUpload bytesWritten:(long long)bytesWritten totalAssetBytesWritten:(long long)totalAssetBytesWritten totalAssetBytesExpectedToWrite:(long long)totalAssetBytesExpectedToWrite {
     self.totalBytesWritten += (NSUInteger) bytesWritten;
-    if (self.userSubmittedForPrinting) {
+    if (self.userSubmittedForPrinting && self.progressHandler) {
         self.progressHandler(totalAssetsUploaded, totalAssetsToUpload, totalAssetBytesWritten, totalAssetBytesExpectedToWrite, self.totalBytesWritten, self.totalBytesExpectedToWrite);
     }
 }

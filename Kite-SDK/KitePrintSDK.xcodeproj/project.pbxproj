@@ -3,8 +3,22 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 46;
+	objectVersion = 47;
 	objects = {
+
+/* Begin PBXAggregateTarget section */
+		2E4CAF081BC25F0A0089FA26 /* Docs */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 2E4CAF0B1BC25F0A0089FA26 /* Build configuration list for PBXAggregateTarget "Docs" */;
+			buildPhases = (
+				2E4CAF0C1BC25F120089FA26 /* ShellScript */,
+			);
+			dependencies = (
+			);
+			name = Docs;
+			productName = Docs;
+		};
+/* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
 		2E0A72661A6FB07000BC5AE7 /* OLScrollCropViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0A72651A6FB07000BC5AE7 /* OLScrollCropViewController.m */; };
@@ -963,11 +977,14 @@
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 0700;
-				ORGANIZATIONNAME = "Deon Botha";
+				ORGANIZATIONNAME = Kite.ly;
 				TargetAttributes = {
 					2E2632BE1B97336700C7D879 = {
 						CreatedOnToolsVersion = 7.0;
 						TestTargetID = CD73BF67186215790009DE03;
+					};
+					2E4CAF081BC25F0A0089FA26 = {
+						CreatedOnToolsVersion = 7.0.1;
 					};
 					CD73BF67186215790009DE03 = {
 						DevelopmentTeam = L78L4U72YJ;
@@ -983,7 +1000,7 @@
 				};
 			};
 			buildConfigurationList = CD73BF63186215790009DE03 /* Build configuration list for PBXProject "KitePrintSDK" */;
-			compatibilityVersion = "Xcode 3.2";
+			compatibilityVersion = "Xcode 6.3";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -1003,6 +1020,7 @@
 				CD73BF67186215790009DE03 /* KitePrintSDK */,
 				CD73BF88186215790009DE03 /* KitePrintSDKTests */,
 				2E2632BE1B97336700C7D879 /* KitePrintSDKUITests */,
+				2E4CAF081BC25F0A0089FA26 /* Docs */,
 			);
 		};
 /* End PBXProject section */
@@ -1056,6 +1074,19 @@
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
+		};
+		2E4CAF0C1BC25F120089FA26 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PROJECT_DIR}/docs/appledoc/appledoc\" \\\n--templates \"${PROJECT_DIR}/docs/appledoc/Templates\" \\\n--project-name \"${PROJECT_NAME}\" \\\n--project-company \"Kite.ly\" \\\n--company-id \"ly.kite\" \\\n--output \"${PROJECT_DIR}/docs/appledoc/${PROJECT_NAME}-appledocs\" \\\n--install-docset \\\n--logformat xcode \\\n--keep-intermediate-files \\\n--no-repeat-first-par \\\n--no-warn-invalid-crossref \\\n--merge-categories \\\n--exit-threshold 2 \\\n--docset-platform-family iphoneos \\\n--ignore \"*.m\" \\\n--index-desc \"${PROJECT_DIR}/docs/appledoc-intro.md\" \\\n\"${PROJECT_DIR}/PSPrintSDK/OLAsset.h\" \"${PROJECT_DIR}/PSPrintSDK/OLKiteViewController.h\" \"${PROJECT_DIR}/PSPrintSDK/OLKitePrintSDK.h\" \"${PROJECT_DIR}/PSPrintSDK/OLPrintJob.h\" \"${PROJECT_DIR}/PSPrintSDK/OLPrintOrder.h\"\n\n#\"${PROJECT_DIR}/PSPrintSDK\"\n#--include \"${PROJECT_DIR}/${PROJECT_NAME}/Documentation/Images\"\n#--ignore \"LoadableCategory.h\" \\\n#--index-desc \"${PROJECT_DIR}/readme.markdown\"\n";
 		};
 		70ABE1D4C54646F489CBD9EE /* Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1317,6 +1348,22 @@
 			};
 			name = Release;
 		};
+		2E4CAF091BC25F0A0089FA26 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		2E4CAF0A1BC25F0A0089FA26 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+			};
+			name = Release;
+		};
 		CD73BF98186215790009DE03 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1496,6 +1543,15 @@
 			buildConfigurations = (
 				2E2632C61B97336700C7D879 /* Debug */,
 				2E2632C71B97336700C7D879 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2E4CAF0B1BC25F0A0089FA26 /* Build configuration list for PBXAggregateTarget "Docs" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2E4CAF091BC25F0A0089FA26 /* Debug */,
+				2E4CAF0A1BC25F0A0089FA26 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
