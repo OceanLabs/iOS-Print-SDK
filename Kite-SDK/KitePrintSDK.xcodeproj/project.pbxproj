@@ -538,6 +538,109 @@
 			path = KitePrintSDKUITests;
 			sourceTree = "<group>";
 		};
+		2E4CAF101BC293EA0089FA26 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				2EA8BEAC1A484FCB008A9248 /* OLProductHomeViewController.h */,
+				2EA8BEAD1A484FCB008A9248 /* OLProductHomeViewController.m */,
+				2E5258FC1A9C884700DBC69B /* OLProductTypeSelectionViewController.h */,
+				2E5258FD1A9C884700DBC69B /* OLProductTypeSelectionViewController.m */,
+				2E1F69DC1A66999700696286 /* OLPosterSizeSelectionViewController.h */,
+				2E1F69DD1A66999700696286 /* OLPosterSizeSelectionViewController.m */,
+				2EA8BEAE1A484FCB008A9248 /* OLProductOverviewViewController.h */,
+				2EA8BEAF1A484FCB008A9248 /* OLProductOverviewViewController.m */,
+				2EA8BEB01A484FCB008A9248 /* OLProductOverviewPageContentViewController.h */,
+				2EA8BEB11A484FCB008A9248 /* OLProductOverviewPageContentViewController.m */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		2E4CAF111BC293FC0089FA26 /* Edit-Review */ = {
+			isa = PBXGroup;
+			children = (
+				2E39CAA11AB894A8008B1EFF /* OLPhotoSelectionViewController.h */,
+				2E39CAA21AB894A8008B1EFF /* OLPhotoSelectionViewController.m */,
+				2EA8BEB41A484FCB008A9248 /* OLOrderReviewViewController.h */,
+				2EA8BEB51A484FCB008A9248 /* OLOrderReviewViewController.m */,
+				2EA8BEB61A484FCB008A9248 /* OLFrameOrderReviewViewController.h */,
+				2EA8BEB71A484FCB008A9248 /* OLFrameOrderReviewViewController.m */,
+				2E74A9CF1B6B7827001AE97B /* OLPosterViewController.h */,
+				2E74A9D01B6B7827001AE97B /* OLPosterViewController.m */,
+				2E5258FF1A9C91DF00DBC69B /* OLSingleImageProductReviewViewController.h */,
+				2E5259001A9C91DF00DBC69B /* OLSingleImageProductReviewViewController.m */,
+				2E20BD841AD4229700FB2446 /* OLCaseViewController.h */,
+				2E20BD851AD4229700FB2446 /* OLCaseViewController.m */,
+				2E20BD871AD42E2200FB2446 /* OLPostcardViewController.h */,
+				2E20BD881AD42E2200FB2446 /* OLPostcardViewController.m */,
+				2EB4BD661AE128740004CEE0 /* OLPhotobookViewController.h */,
+				2EB4BD671AE128740004CEE0 /* OLPhotobookViewController.m */,
+				2EB4BD691AE13F520004CEE0 /* OLPhotobookPageContentViewController.h */,
+				2EB4BD6A1AE13F520004CEE0 /* OLPhotobookPageContentViewController.m */,
+				2EB4959A1B303FA8003FB762 /* OLEditPhotobookViewController.h */,
+				2EB4959B1B303FA8003FB762 /* OLEditPhotobookViewController.m */,
+			);
+			name = "Edit-Review";
+			sourceTree = "<group>";
+		};
+		2E4CAF121BC2940A0089FA26 /* Shipping-Payment */ = {
+			isa = PBXGroup;
+			children = (
+				CDA8BF5518D70D0F00D835BB /* OLCheckoutViewController.h */,
+				CDA8BF5118D70D0F00D835BB /* OLCheckoutViewController.m */,
+				2E5F80301B04A22500095203 /* OLIntegratedCheckoutViewController.h */,
+				2E5F80311B04A22500095203 /* OLIntegratedCheckoutViewController.m */,
+				2E5E0C141993840600C34D5C /* OLCheckoutDelegate.h */,
+				CDA8BF5218D70D0F00D835BB /* OLPaymentViewController.h */,
+				CDA8BF5018D70D0F00D835BB /* OLPaymentViewController.m */,
+				CDA8BF5318D70D0F00D835BB /* OLReceiptViewController.h */,
+				CDA8BF5418D70D0F00D835BB /* OLReceiptViewController.m */,
+				3D1779581A1E1D6800BE3E58 /* OLCreditCardCaptureViewController.h */,
+				3D1779591A1E1D6800BE3E58 /* OLCreditCardCaptureViewController.m */,
+				CD93BB2B18783B8E00316492 /* OLAddressPickerController.h */,
+				CD93BB2C18783B8E00316492 /* OLAddressPickerController.m */,
+				CD93BB2E187842AB00316492 /* OLAddressSelectionViewController.h */,
+				CD93BB2F187842AB00316492 /* OLAddressSelectionViewController.m */,
+				CD550A66187B30D200782D75 /* OLAddressLookupViewController.h */,
+				CD550A67187B30D200782D75 /* OLAddressLookupViewController.m */,
+				CD93BB3C187882A300316492 /* OLAddressEditViewController.h */,
+				CD93BB3D187882A300316492 /* OLAddressEditViewController.m */,
+				CD93BB431878DFA300316492 /* OLCountryPickerController.h */,
+				CD93BB441878DFA300316492 /* OLCountryPickerController.m */,
+			);
+			name = "Shipping-Payment";
+			sourceTree = "<group>";
+		};
+		2E4CAF131BC2941E0089FA26 /* Other */ = {
+			isa = PBXGroup;
+			children = (
+				2E21DA261B98436E00D9162F /* OLAssetsPickerController */,
+				2ED5DEB01AC94337003301A8 /* LXReorderableCollectionViewFlowLayout */,
+				3D8122E21A759E41004E7297 /* RMImageCropper */,
+				2E0A72641A6FB07000BC5AE7 /* OLScrollCropViewController.h */,
+				2E0A72651A6FB07000BC5AE7 /* OLScrollCropViewController.m */,
+				2E9965A81ABC7035007F010F /* OLCustomNavigationController.h */,
+				2E9965A91ABC7035007F010F /* OLCustomNavigationController.m */,
+				2EF53E3C1B5549B900BF936A /* OLInfoPageViewController.h */,
+				2EF53E3D1B5549B900BF936A /* OLInfoPageViewController.m */,
+				2EE3C86E1A4AFB0C006446E2 /* OLKiteViewController.h */,
+				2EE3C86F1A4AFB0C006446E2 /* OLKiteViewController.m */,
+			);
+			name = Other;
+			sourceTree = "<group>";
+		};
+		2E4CAF141BC294F30089FA26 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				CD76969C18685B5C006D4A26 /* Address */,
+				CD76969D1868DE51006D4A26 /* API */,
+				CDAFE005186D9C5E003572FE /* Asset */,
+				CD550BD61886BF6000782D75 /* Payment */,
+				CD7696A11868DE7A006D4A26 /* Print */,
+				3DE2B0C01A77D2290092D97F /* Util */,
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
 		2E85BC9619A24C9E00EC7CC2 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
@@ -693,17 +796,11 @@
 		CD73BF71186215790009DE03 /* Kite Print SDK */ = {
 			isa = PBXGroup;
 			children = (
-				2E21DA261B98436E00D9162F /* OLAssetsPickerController */,
+				2E4CAF141BC294F30089FA26 /* Model */,
 				2E0DB88E1A6402D9001032E3 /* View */,
-				CDA8BF4F18D70CF500D835BB /* PrintShop */,
-				CD76969C18685B5C006D4A26 /* Address */,
-				CD550BD61886BF6000782D75 /* Payment */,
-				CDAFE005186D9C5E003572FE /* Asset */,
-				CD76969D1868DE51006D4A26 /* API */,
-				CD7696A11868DE7A006D4A26 /* Print */,
+				CDA8BF4F18D70CF500D835BB /* Controller */,
 				2E85BC9619A24C9E00EC7CC2 /* Supporting Files */,
 				2EA8BEC11A48509E008A9248 /* Categories */,
-				3DE2B0C01A77D2290092D97F /* Util */,
 				2EA8BEAA1A484CA7008A9248 /* OLKiteStoryboard.storyboard */,
 				CD93BB471879EA4F00316492 /* KitePrintSDK.xcassets */,
 			);
@@ -761,7 +858,6 @@
 		CD76969C18685B5C006D4A26 /* Address */ = {
 			isa = PBXGroup;
 			children = (
-				CD93BB461878DFAA00316492 /* Picker */,
 				CD73BFA21862FC510009DE03 /* OLAddress.h */,
 				CD73BFA31862FC510009DE03 /* OLAddress.m */,
 				CD93BB3218785D3B00316492 /* OLAddress+AddressBook.h */,
@@ -823,79 +919,15 @@
 			name = Print;
 			sourceTree = "<group>";
 		};
-		CD93BB461878DFAA00316492 /* Picker */ = {
+		CDA8BF4F18D70CF500D835BB /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				CD93BB2B18783B8E00316492 /* OLAddressPickerController.h */,
-				CD93BB2C18783B8E00316492 /* OLAddressPickerController.m */,
-				CD93BB2E187842AB00316492 /* OLAddressSelectionViewController.h */,
-				CD93BB2F187842AB00316492 /* OLAddressSelectionViewController.m */,
-				CD550A66187B30D200782D75 /* OLAddressLookupViewController.h */,
-				CD550A67187B30D200782D75 /* OLAddressLookupViewController.m */,
-				CD93BB3C187882A300316492 /* OLAddressEditViewController.h */,
-				CD93BB3D187882A300316492 /* OLAddressEditViewController.m */,
-				CD93BB431878DFA300316492 /* OLCountryPickerController.h */,
-				CD93BB441878DFA300316492 /* OLCountryPickerController.m */,
+				2E4CAF101BC293EA0089FA26 /* Products */,
+				2E4CAF111BC293FC0089FA26 /* Edit-Review */,
+				2E4CAF121BC2940A0089FA26 /* Shipping-Payment */,
+				2E4CAF131BC2941E0089FA26 /* Other */,
 			);
-			name = Picker;
-			sourceTree = "<group>";
-		};
-		CDA8BF4F18D70CF500D835BB /* PrintShop */ = {
-			isa = PBXGroup;
-			children = (
-				2ED5DEB01AC94337003301A8 /* LXReorderableCollectionViewFlowLayout */,
-				3D8122E21A759E41004E7297 /* RMImageCropper */,
-				2EE3C86E1A4AFB0C006446E2 /* OLKiteViewController.h */,
-				2EE3C86F1A4AFB0C006446E2 /* OLKiteViewController.m */,
-				2EA8BEAC1A484FCB008A9248 /* OLProductHomeViewController.h */,
-				2EA8BEAD1A484FCB008A9248 /* OLProductHomeViewController.m */,
-				2E5258FC1A9C884700DBC69B /* OLProductTypeSelectionViewController.h */,
-				2E5258FD1A9C884700DBC69B /* OLProductTypeSelectionViewController.m */,
-				2E1F69DC1A66999700696286 /* OLPosterSizeSelectionViewController.h */,
-				2E1F69DD1A66999700696286 /* OLPosterSizeSelectionViewController.m */,
-				2EA8BEAE1A484FCB008A9248 /* OLProductOverviewViewController.h */,
-				2EA8BEAF1A484FCB008A9248 /* OLProductOverviewViewController.m */,
-				2EA8BEB01A484FCB008A9248 /* OLProductOverviewPageContentViewController.h */,
-				2EA8BEB11A484FCB008A9248 /* OLProductOverviewPageContentViewController.m */,
-				2E39CAA11AB894A8008B1EFF /* OLPhotoSelectionViewController.h */,
-				2E39CAA21AB894A8008B1EFF /* OLPhotoSelectionViewController.m */,
-				2EA8BEB41A484FCB008A9248 /* OLOrderReviewViewController.h */,
-				2EA8BEB51A484FCB008A9248 /* OLOrderReviewViewController.m */,
-				2EA8BEB61A484FCB008A9248 /* OLFrameOrderReviewViewController.h */,
-				2EA8BEB71A484FCB008A9248 /* OLFrameOrderReviewViewController.m */,
-				2E74A9CF1B6B7827001AE97B /* OLPosterViewController.h */,
-				2E74A9D01B6B7827001AE97B /* OLPosterViewController.m */,
-				2E5258FF1A9C91DF00DBC69B /* OLSingleImageProductReviewViewController.h */,
-				2E5259001A9C91DF00DBC69B /* OLSingleImageProductReviewViewController.m */,
-				2E20BD841AD4229700FB2446 /* OLCaseViewController.h */,
-				2E20BD851AD4229700FB2446 /* OLCaseViewController.m */,
-				2E20BD871AD42E2200FB2446 /* OLPostcardViewController.h */,
-				2E20BD881AD42E2200FB2446 /* OLPostcardViewController.m */,
-				2EB4BD661AE128740004CEE0 /* OLPhotobookViewController.h */,
-				2EB4BD671AE128740004CEE0 /* OLPhotobookViewController.m */,
-				2EB4BD691AE13F520004CEE0 /* OLPhotobookPageContentViewController.h */,
-				2EB4BD6A1AE13F520004CEE0 /* OLPhotobookPageContentViewController.m */,
-				2EB4959A1B303FA8003FB762 /* OLEditPhotobookViewController.h */,
-				2EB4959B1B303FA8003FB762 /* OLEditPhotobookViewController.m */,
-				CDA8BF5518D70D0F00D835BB /* OLCheckoutViewController.h */,
-				CDA8BF5118D70D0F00D835BB /* OLCheckoutViewController.m */,
-				2E5F80301B04A22500095203 /* OLIntegratedCheckoutViewController.h */,
-				2E5F80311B04A22500095203 /* OLIntegratedCheckoutViewController.m */,
-				2E5E0C141993840600C34D5C /* OLCheckoutDelegate.h */,
-				CDA8BF5218D70D0F00D835BB /* OLPaymentViewController.h */,
-				CDA8BF5018D70D0F00D835BB /* OLPaymentViewController.m */,
-				CDA8BF5318D70D0F00D835BB /* OLReceiptViewController.h */,
-				CDA8BF5418D70D0F00D835BB /* OLReceiptViewController.m */,
-				3D1779581A1E1D6800BE3E58 /* OLCreditCardCaptureViewController.h */,
-				3D1779591A1E1D6800BE3E58 /* OLCreditCardCaptureViewController.m */,
-				2E0A72641A6FB07000BC5AE7 /* OLScrollCropViewController.h */,
-				2E0A72651A6FB07000BC5AE7 /* OLScrollCropViewController.m */,
-				2E9965A81ABC7035007F010F /* OLCustomNavigationController.h */,
-				2E9965A91ABC7035007F010F /* OLCustomNavigationController.m */,
-				2EF53E3C1B5549B900BF936A /* OLInfoPageViewController.h */,
-				2EF53E3D1B5549B900BF936A /* OLInfoPageViewController.m */,
-			);
-			name = PrintShop;
+			name = Controller;
 			sourceTree = "<group>";
 		};
 		CDAFE005186D9C5E003572FE /* Asset */ = {
