@@ -12,8 +12,28 @@
 @class PHAsset;
 @class OLPrintPhoto;
 
+/**
+ *  Handler to get the data length
+ *
+ *  @param dataLength The data length
+ *  @param error      The error
+ */
 typedef void (^GetDataLengthHandler)(long long dataLength, NSError *error);
+
+/**
+ *  Handler to get the data
+ *
+ *  @param data  The data
+ *  @param error The error
+ */
 typedef void (^GetDataHandler)(NSData *data, NSError *error);
+
+/**
+ *  Completion handler when loading the ALAsset
+ *
+ *  @param asset The ALAsset
+ *  @param error The error
+ */
 typedef void (^LoadAssetCompletionHandler)(ALAsset *asset, NSError *error);
 
 extern NSString *const kOLMimeTypeJPEG;
@@ -51,6 +71,9 @@ extern NSString *const kOLMimeTypePNG;
 - (void)cancelAnyLoadingOfData;
 @end
 
+/**
+ *  This object holds the image data to be sent for printing. Supports various formats such as jpeg/png data, UIIMage, URLs, ALAssets, PHAssets and file paths
+ */
 @interface OLAsset : NSObject <NSCoding>
 
 /**
