@@ -15,11 +15,11 @@
 - (NSString *)sandboxKey;
 @end
 
-@interface PS_SDKTests : XCTestCase
+@interface OLSDKModelTests : XCTestCase
 
 @end
 
-@implementation PS_SDKTests
+@implementation OLSDKModelTests
 
 - (void)setUp
 {

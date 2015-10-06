@@ -8,10 +8,10 @@
 
 #import <Foundation/Foundation.h>
 
-typedef void (^TemplateSyncHandler)(NSError *error);
+typedef void (^TemplateSyncHandler)(NSError *_Nullable error);
 
-extern NSString *const kNotificationTemplateSyncComplete;
-extern NSString *const kNotificationKeyTemplateSyncError;
+extern NSString *_Nonnull const kNotificationTemplateSyncComplete;
+extern NSString *_Nonnull const kNotificationKeyTemplateSyncError;
 
 typedef enum {
     kOLTemplateUINA,
@@ -28,42 +28,43 @@ typedef enum {
 @class OLCountry;
 
 @interface OLProductTemplate : NSObject <NSCoding>
-@property (nonatomic, copy, readonly) NSString *identifier;
-@property (nonatomic, copy, readonly) NSString *name;
+@property (nonatomic, copy, readonly) NSString *_Nonnull identifier;
+@property (nonatomic, copy, readonly) NSString *_Nonnull name;
 @property (nonatomic, assign, readonly) NSUInteger quantityPerSheet;
 @property (nonatomic, assign, readonly) BOOL enabled;
-@property (nonatomic, readonly) NSArray *currenciesSupported;
-@property (strong, nonatomic) NSURL *coverPhotoURL;
-@property (strong, nonatomic) NSArray *productPhotographyURLs;
+@property (nonatomic, readonly) NSArray *_Nonnull currenciesSupported;
+@property (strong, nonatomic) NSURL *_Nullable coverPhotoURL;
+@property (strong, nonatomic) NSArray *_Nullable productPhotographyURLs;
 @property (assign, nonatomic) OLTemplateUI templateUI;
-@property (strong, nonatomic) NSString *templateClass;
-@property (strong, nonatomic) NSString *templateType;
-@property (strong, nonatomic) UIColor *labelColor;
+@property (strong, nonatomic) NSString *_Nullable templateClass;
+@property (strong, nonatomic) NSString *_Nullable templateType;
+@property (strong, nonatomic) UIColor *_Nullable labelColor;
 @property (assign, nonatomic) CGSize sizeCm;
 @property (assign, nonatomic) CGSize sizeInches;
-@property (strong, nonatomic) NSString *productCode;
+@property (strong, nonatomic) NSString *_Nullable productCode;
 @property (assign, nonatomic) UIEdgeInsets imageBleed;
 @property (assign, nonatomic) UIEdgeInsets imageBorder;
-@property (strong, nonatomic) NSURL *maskImageURL;
+@property (strong, nonatomic) NSURL *_Nullable maskImageURL;
 @property (assign, nonatomic) CGSize sizePx;
-@property (strong, nonatomic) NSURL *classPhotoURL;
-@property (strong, nonatomic) NSString *productDescription;
-@property (strong, nonatomic) NSDictionary *shippingCosts;
+@property (strong, nonatomic) NSURL *_Nullable classPhotoURL;
+@property (strong, nonatomic) NSString *_Nullable productDescription;
+@property (strong, nonatomic) NSDictionary *_Nullable shippingCosts;
 @property (assign, nonatomic) NSInteger gridCountX;
 @property (assign, nonatomic) NSInteger gridCountY;
 
-- (id)initWithIdentifier:(NSString *)identifier name:(NSString *)name sheetQuantity:(NSUInteger)quantity sheetCostsByCurrencyCode:(NSDictionary/*<String, NSDecimalNumber>*/*)costs enabled:(BOOL)enabled;
-- (NSDecimalNumber *)costPerSheetInCurrencyCode:(NSString *)currencyCode;
-- (NSDecimalNumber *)shippingCostForCountry:(OLCountry *)country;
-- (NSString *)currencyForCurrentLocale;
-+ (OLTemplateUI)templateUIWithIdentifier:(NSString *)identifier;
-+ (NSString *)templateUIStringWithTemplateClass:(OLTemplateUI)templateClass;
+- (instancetype _Nonnull)initWithIdentifier:(NSString *_Nonnull)identifier name:(NSString *_Nonnull)name sheetQuantity:(NSUInteger)quantity sheetCostsByCurrencyCode:(NSDictionary<NSString *, NSDecimalNumber *> *_Nullable)costs enabled:(BOOL)enabled;
+- (NSDecimalNumber *_Nullable)costPerSheetInCurrencyCode:(NSString *_Nonnull)currencyCode;
+- (NSDecimalNumber *_Nullable)shippingCostForCountry:(OLCountry *_Nonnull)country;
+- (NSString *_Nonnull)currencyForCurrentLocale;
++ (OLTemplateUI)templateUIWithIdentifier:(NSString *_Nonnull)identifier;
++ (NSString *_Nonnull)templateUIStringWithTemplateClass:(OLTemplateUI)templateClass;
 
 + (void)sync;
++ (void)syncWithCompletionHandler:(void(^_Nullable)(NSArray <OLProductTemplate *>* _Nullable templates, NSError * _Nullable error))handler;
 + (BOOL)isSyncInProgress;
-+ (OLProductTemplate *)templateWithId:(NSString *)identifier;
-+ (NSArray *)templates;
-+ (NSDate *)lastSyncDate;
++ (OLProductTemplate *_Nullable)templateWithId:(NSString *_Nonnull)identifier;
++ (NSArray *_Nullable)templates;
++ (NSDate *_Nullable)lastSyncDate;
 + (void) resetTemplates;
 + (void) deleteCachedTemplates;
 

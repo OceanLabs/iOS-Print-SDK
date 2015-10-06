@@ -47,7 +47,7 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
 @end
 
 @interface OLProductTemplate ()
-@property (nonatomic, strong) NSDictionary/*<NSString, NSDecimalNumber>*/ *costsByCurrencyCode;
+@property (nonatomic, strong) NSDictionary<NSString *, NSDecimalNumber *> *costsByCurrencyCode;
 @property (nonatomic, assign, readwrite) NSUInteger quantityPerSheet;
 @end
 
@@ -57,7 +57,7 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
 
 @implementation OLProductTemplate
 
-- (id)initWithIdentifier:(NSString *)identifier name:(NSString *)name sheetQuantity:(NSUInteger)quantity sheetCostsByCurrencyCode:(NSDictionary/*<String, NSDecimalNumber>*/*)costs enabled:(BOOL)enabled {
+- (instancetype _Nonnull)initWithIdentifier:(NSString *_Nonnull)identifier name:(NSString *_Nonnull)name sheetQuantity:(NSUInteger)quantity sheetCostsByCurrencyCode:(NSDictionary<NSString *, NSDecimalNumber *> *_Nullable)costs enabled:(BOOL)enabled {
     if (self = [super init]) {
         _identifier = identifier;
         _name = name;
@@ -140,14 +140,24 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
 }
 
 + (void)sync {
+    [OLProductTemplate syncWithCompletionHandler:NULL];
+}
+
++ (void)syncWithCompletionHandler:(void(^_Nullable)(NSArray <OLProductTemplate *>* _Nullable templates, NSError * _Nullable error))handler{
     if (inProgressSyncRequest == nil) {
         inProgressSyncRequest = [[OLProductTemplateSyncRequest alloc] init];
         [inProgressSyncRequest sync:^(NSArray *templates_, NSError *error) {
             inProgressSyncRequest = nil;
             if (error) {
+                if (handler){
+                    handler(nil, error);
+                }
                 [[NSNotificationCenter defaultCenter] postNotificationName:kNotificationTemplateSyncComplete object:self userInfo:@{kNotificationKeyTemplateSyncError: error}];
             } else {
                 [self saveTemplatesAsLatest:templates_];
+                if (handler){
+                    handler(templates_, nil);
+                }
                 [[NSNotificationCenter defaultCenter] postNotificationName:kNotificationTemplateSyncComplete object:self userInfo:nil];
             }
         }];
@@ -158,7 +168,7 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
     return inProgressSyncRequest != nil;
 }
 
-+ (OLProductTemplate *)templateWithId:(NSString *)identifier {
++ (OLProductTemplate *_Nullable)templateWithId:(NSString *_Nonnull)identifier {
     NSArray *templates = [OLProductTemplate templates];
     for (OLProductTemplate *template in templates) {
         if ([template.identifier isEqualToString:identifier]) {
@@ -178,7 +188,7 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
     }
 }
 
-+ (NSDate *)lastSyncDate {
++ (NSDate *_Nullable)lastSyncDate {
     return lastSyncDate;
 }
 
@@ -222,7 +232,7 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
 }
 
 
-+ (NSArray *)templates {
++ (NSArray *_Nullable)templates {
     if (!templates) {
         NSArray *components = [NSKeyedUnarchiver unarchiveObjectWithFile:[OLProductTemplate templatesFilePath]];
         if (!components) {
