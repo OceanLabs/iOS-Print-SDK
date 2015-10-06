@@ -77,7 +77,7 @@
                                                                             target:nil
                                                                             action:nil];
     NSURL *url = [NSURL URLWithString:[OLKiteABTesting sharedInstance].headerLogoURL];
-    if (url && [[SDWebImageManager sharedManager] cachedImageExistsForURL:url]){
+    if (url && [[SDWebImageManager sharedManager] cachedImageExistsForURL:url] && [self isMemberOfClass:[OLProductHomeViewController class]]){
         [[SDWebImageManager sharedManager] downloadImageWithURL:url options:0 progress:NULL completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL){
             image = [UIImage imageWithCGImage:image.CGImage scale:2 orientation:image.imageOrientation];
             UIImageView *titleImageView = [[UIImageView alloc] initWithImage:image];
@@ -89,7 +89,7 @@
             }];
         }];
     }
-    else if (!url){
+    else if (!url && [self isMemberOfClass:[OLProductHomeViewController class]]){
         self.title = NSLocalizedString(@"Print Shop", @"");
     }
     
@@ -369,7 +369,7 @@
     [super viewDidAppear:animated];
     
     NSURL *url = [NSURL URLWithString:[OLKiteABTesting sharedInstance].headerLogoURL];
-    if (url && ![[SDWebImageManager sharedManager] cachedImageExistsForURL:url]){
+    if (url && ![[SDWebImageManager sharedManager] cachedImageExistsForURL:url] && [self isMemberOfClass:[OLProductHomeViewController class]]){
         [[SDWebImageManager sharedManager] downloadImageWithURL:url options:0 progress:NULL completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL){
             image = [UIImage imageWithCGImage:image.CGImage scale:2 orientation:image.imageOrientation];
             UIImageView *titleImageView = [[UIImageView alloc] initWithImage:image];

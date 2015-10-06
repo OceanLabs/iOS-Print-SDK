@@ -616,14 +616,14 @@
 				2E21DA261B98436E00D9162F /* OLAssetsPickerController */,
 				2ED5DEB01AC94337003301A8 /* LXReorderableCollectionViewFlowLayout */,
 				3D8122E21A759E41004E7297 /* RMImageCropper */,
+				2EE3C86E1A4AFB0C006446E2 /* OLKiteViewController.h */,
+				2EE3C86F1A4AFB0C006446E2 /* OLKiteViewController.m */,
 				2E0A72641A6FB07000BC5AE7 /* OLScrollCropViewController.h */,
 				2E0A72651A6FB07000BC5AE7 /* OLScrollCropViewController.m */,
 				2E9965A81ABC7035007F010F /* OLCustomNavigationController.h */,
 				2E9965A91ABC7035007F010F /* OLCustomNavigationController.m */,
 				2EF53E3C1B5549B900BF936A /* OLInfoPageViewController.h */,
 				2EF53E3D1B5549B900BF936A /* OLInfoPageViewController.m */,
-				2EE3C86E1A4AFB0C006446E2 /* OLKiteViewController.h */,
-				2EE3C86F1A4AFB0C006446E2 /* OLKiteViewController.m */,
 			);
 			name = Other;
 			sourceTree = "<group>";
