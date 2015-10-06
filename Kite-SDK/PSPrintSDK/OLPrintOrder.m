@@ -192,7 +192,7 @@ static id stringOrEmptyString(NSString *str) {
     }
     
     if (self.costReq != nil) {
-        return; // request already in progress. 
+        return; // request already in progress.
     }
     
     self.costReq = [[OLPrintOrderCostRequest alloc] init];
@@ -289,7 +289,7 @@ static id stringOrEmptyString(NSString *str) {
     self.totalBytesExpectedToWrite = 0;
     __block NSUInteger outstandingLengthCallbacks = self.assetsToUpload.count;
     __block NSError *previousError = nil;
-    for (OLAsset *asset in self.assetsToUpload) {        
+    for (OLAsset *asset in self.assetsToUpload) {
         [asset dataLengthWithCompletionHandler:^(long long dataLength, NSError *error) {
             if (previousError) {
                 return;
@@ -322,7 +322,7 @@ static id stringOrEmptyString(NSString *str) {
 
 - (NSDictionary *)jsonRepresentation {
     NSMutableDictionary *json = [[NSMutableDictionary alloc] init];
-
+    
     if (self.proofOfPayment) {
         [json setObject:self.proofOfPayment forKey:@"proof_of_payment"];
     }
@@ -340,7 +340,7 @@ static id stringOrEmptyString(NSString *str) {
     if (self.userData) {
         [json setObject:self.userData forKey:@"user_data"];
     }
-
+    
     for (id<OLPrintJob> printJob in self.jobs) {
         [jobs addObject:[printJob jsonRepresentation]];
     }
@@ -430,7 +430,7 @@ static id stringOrEmptyString(NSString *str) {
     }
     [(NSMutableArray *)self.jobs removeAllObjects];
     
-   
+    
     for (OLAddress *address in addresses){
         if (address == [addresses firstObject]){
             continue;

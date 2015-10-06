@@ -1,7 +1,7 @@
 Pod::Spec.new do |spec|
   spec.name		= 'Kite-Print-SDK'
   spec.version         	= '4.1.0'
-  spec.license 		= { :type => 'MIT', :file => 'Kite SDK/LICENSE' }
+  spec.license 		= { :type => 'MIT', :file => 'Kite-SDK/LICENSE' }
   spec.homepage         = 'https://github.com/OceanLabs/iOS-Print-SDK'
   spec.authors          = {'Deon Botha' => 'deon@oceanlabs.co'}
   spec.summary          = "Add physical print functionality in minutes! Print magnets, photo prints, postcards, polaroids, posters, stickers, canvas', phone cases, etc"
