@@ -20,23 +20,27 @@
 
 @interface OLProductOrderTests : XCTestCase
 
-@property (strong, nonatomic) XCTestExpectation *expectation;
-
 @end
 
 @implementation OLProductOrderTests
 
+#pragma mark XCTest methods
+
 - (void)setUp {
     [super setUp];
-    self.expectation = [self expectationWithDescription:@"Print order submitted"];
-    
+
     [OLKitePrintSDK setAPIKey:@"a45bf7f39523d31aa1ca4ecf64d422b4d810d9c4" withEnvironment:kOLKitePrintSDKEnvironmentSandbox];
+    
+    
+    [self templateSyncWithSuccessHandler:NULL];
 }
 
 - (void)tearDown {
     // Put teardown code here. This method is called after the invocation of each test method in the class.
     [super tearDown];
 }
+
+#pragma mark Image helper methods
 
 - (NSArray *)urlAssets{
     NSArray *assets = @[[OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/1.jpg"]],
@@ -46,7 +50,28 @@
     return assets;
 }
 
+- (NSArray *)imageAssets{
+    return @[[OLAsset assetWithImageAsJPEG:[self downloadImage]]];
+}
+
+- (UIImage *)downloadImage{
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Download image complete"];
+    __block UIImage *downloadedImage;
+    [[SDWebImageManager sharedManager] downloadImageWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/1.jpg"] options:0 progress:NULL completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL){
+        downloadedImage = image;
+        [expectation fulfill];
+    }];
+    
+    [self waitForExpectationsWithTimeout:60 handler:nil];
+    
+    return downloadedImage;
+}
+
+#pragma mark Kite SDK helper methods
+
 - (void)submitOrder:(OLPrintOrder *)printOrder WithSuccessHandler:(void(^)())handler{
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Print order submitted"];
+    
     STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:[OLKitePrintSDK stripePublishableKey]];
     
     STPCard *card = [STPCard new];
@@ -66,12 +91,14 @@
                 XCTFail(@"Failed to submit order to Kite with: %@", error);
             }
             [printOrder saveToHistory];
-            handler();
+            [expectation fulfill];
+            if (handler) handler();
         }];
     }];
 }
 
 - (void)templateSyncWithSuccessHandler:(void(^)())handler{
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Template Sync Completed"];
     [OLProductTemplate syncWithCompletionHandler:^(NSArray <OLProductTemplate *>* _Nullable templates, NSError * _Nullable error){
         if (error){
             XCTFail(@"Template Sync Request failed with: %@", error);
@@ -79,40 +106,31 @@
         if ([templates count] == 0){
             XCTFail(@"Template Sync returned 0 templates. Maintenance mode?");
         }
-        
-        handler();
+        [expectation fulfill];
+        if (handler) handler();
     }];
 }
 
-- (void)testSquaresOrderWithURLAssets{
-    [self templateSyncWithSuccessHandler:^{
-        OLProductPrintJob *job = [OLPrintJob printJobWithTemplateId:@"squares" OLAssets:[self urlAssets]];
-        OLPrintOrder *printOrder = [[OLPrintOrder alloc] init];
-        printOrder.shippingAddress = [OLAddress kiteTeamAddress];
-        [printOrder addPrintJob:job];
-        
-        [self submitOrder:printOrder WithSuccessHandler:^{
-            [self.expectation fulfill];
-        }];
-        
-    }];
+#pragma mark Test cases
 
+- (void)testSquaresOrderWithURLAssets{
+    OLProductPrintJob *job = [OLPrintJob printJobWithTemplateId:@"squares" OLAssets:[self urlAssets]];
+    OLPrintOrder *printOrder = [[OLPrintOrder alloc] init];
+    printOrder.shippingAddress = [OLAddress kiteTeamAddress];
+    [printOrder addPrintJob:job];
+    
+    [self submitOrder:printOrder WithSuccessHandler:NULL];
+    
     [self waitForExpectationsWithTimeout:60 handler:nil];
 }
 
-- (void)testSquaresOrderWithImageAsset{
-    [self templateSyncWithSuccessHandler:^{
-        [[SDWebImageManager sharedManager] downloadImageWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/1.jpg"] options:0 progress:NULL completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL){
-            OLProductPrintJob *job = [OLPrintJob printJobWithTemplateId:@"squares" OLAssets:@[[OLAsset assetWithImageAsJPEG:image]]];
-            OLPrintOrder *printOrder = [[OLPrintOrder alloc] init];
-            printOrder.shippingAddress = [OLAddress kiteTeamAddress];
-            [printOrder addPrintJob:job];
-            
-            [self submitOrder:printOrder WithSuccessHandler:^{
-                [self.expectation fulfill];
-            }];
-        }];
-    }];
+- (void)testSquaresOrderWithImageAssets{
+    OLProductPrintJob *job = [OLPrintJob printJobWithTemplateId:@"squares" OLAssets:[self imageAssets]];
+    OLPrintOrder *printOrder = [[OLPrintOrder alloc] init];
+    printOrder.shippingAddress = [OLAddress kiteTeamAddress];
+    [printOrder addPrintJob:job];
+    
+    [self submitOrder:printOrder WithSuccessHandler:NULL];
     
     [self waitForExpectationsWithTimeout:60 handler:nil];
 }
