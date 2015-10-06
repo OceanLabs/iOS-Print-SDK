@@ -94,7 +94,7 @@
     }
     
     NSString *supportEmail = [OLKiteABTesting sharedInstance].supportEmail;
-    if (supportEmail && ![supportEmail isEqualToString:@""]){
+    if (supportEmail && ![supportEmail isEqualToString:@""] && [self isMemberOfClass:[OLProductHomeViewController class]]){
         self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamedInKiteBundle:@"support"] style:UIBarButtonItemStyleDone target:self action:@selector(emailButtonPushed:)];
     }
 
