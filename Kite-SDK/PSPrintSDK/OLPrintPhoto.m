@@ -509,15 +509,38 @@ static NSOperationQueue *imageOperationQueue;
         options.networkAccessAllowed = YES;
         [imageManager requestImageDataForAsset:self.asset options:options resultHandler:^(NSData *imageData, NSString *dataUTI, UIImageOrientation orientation, NSDictionary *info){
             if (!imageData){
-                handler(nil, [NSError errorWithDomain:@"ly.kite" code:404 userInfo:@{@"Error" : @"PHAsset does not exist."}]);
+                NSData *data = [NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"kite_corrupt" ofType:@"jpg"]];
+                handler(data, nil);
             }
             else{
                 if ([[dataUTI lowercaseString] containsString:@"jpg"] || [[dataUTI lowercaseString] containsString:@"jpeg"] || [[dataUTI lowercaseString] containsString:@"jpg"]){
-                    handler(imageData, nil);
+                    [self dataWithData:imageData withCompletionHandler:^(NSData *data, NSError *error){
+                        if (!error){
+                            handler(data, nil);
+                        }
+                        else{
+                            NSData *data = [NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"kite_corrupt" ofType:@"jpg"]];
+                            handler(data, nil);
+                        }
+                    }];
                 }
                 else{
                     [imageManager requestImageForAsset:self.asset targetSize:PHImageManagerMaximumSize contentMode:PHImageContentModeDefault options:options resultHandler:^(UIImage *result, NSDictionary *info){
-                        handler(UIImageJPEGRepresentation(result, 0.7), nil);
+                        if (result){
+                            [self dataWithImage:result withCompletionHandler:^(NSData *data, NSError *error){
+                                if (!error){
+                                    handler(data, nil);
+                                }
+                                else{
+                                    NSData *data = [NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"kite_corrupt" ofType:@"jpg"]];
+                                    handler(data, nil);
+                                }
+                            }];
+                        }
+                        else{
+                            NSData *data = [NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"kite_corrupt" ofType:@"jpg"]];
+                            handler(data, nil);
+                        }
                     }];
                 }
             }
@@ -575,6 +598,18 @@ static NSOperationQueue *imageOperationQueue;
         handler(UIImageJPEGRepresentation(image, 0.7), nil);
     }];
 
+}
+
+- (void)dataWithData:(NSData *)data withCompletionHandler:(GetDataHandler)handler{
+    OLPrintPhoto *photo = [[OLPrintPhoto alloc] init];
+    photo.asset = [OLAsset assetWithImageAsJPEG:[UIImage imageWithData:data]];
+    photo.cropImageRect = self.cropImageRect;
+    photo.cropImageFrame = self.cropImageFrame;
+    photo.cropImageSize = self.cropImageSize;
+    [OLPrintPhoto resizedImageWithPrintPhoto:photo size:CGSizeZero cropped:YES progress:NULL completion:^(UIImage *image){
+        handler(UIImageJPEGRepresentation(image, 0.7), nil);
+    }];
+    
 }
 
 #pragma mark - NSCoding protocol methods
