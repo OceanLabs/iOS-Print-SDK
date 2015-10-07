@@ -10,6 +10,7 @@
 #import "OLPostcardPrintJob.h"
 #import "OLProductPrintJob.h"
 #import "OLAsset.h"
+#import "OLPhotobookPrintJob.h"
 
 @implementation OLPrintJob
 
@@ -21,19 +22,27 @@
     return [[OLPostcardPrintJob alloc] initWithTemplateId:templateId frontImageOLAsset:frontImageAsset backImageOLAsset:backImageAsset];
 }
 
-+ (id<OLPrintJob>)printJobWithTemplateId:(NSString *)templateId imageFilePaths:(NSArray/*<NSString>*/ *)imageFilePaths {
++ (id<OLPrintJob>)photobookWithTemplateId:(NSString *)templateId OLAssets:(NSArray <OLAsset *> *)assets frontCoverOLAsset:(OLAsset *)frontCover backCoverOLAsset:(OLAsset *)backCover{
+    OLPhotobookPrintJob *job = [[OLPhotobookPrintJob alloc] initWithTemplateId:templateId OLAssets:assets];
+    job.frontCover = frontCover;
+    job.backCover = backCover;
+    
+    return job;
+}
+
++ (id<OLPrintJob>)printJobWithTemplateId:(NSString *)templateId imageFilePaths:(NSArray<NSString *> *)imageFilePaths {
     return [[OLProductPrintJob alloc] initWithTemplateId:templateId imageFilePaths:imageFilePaths];
 }
 
-+ (id<OLPrintJob>)printJobWithTemplateId:(NSString *)templateId images:(NSArray/*<UIImage>*/ *)images {
++ (id<OLPrintJob>)printJobWithTemplateId:(NSString *)templateId images:(NSArray<UIImage *> *)images {
     return [[OLProductPrintJob alloc] initWithTemplateId:templateId images:images];
 }
 
-+ (id<OLPrintJob>)printJobWithTemplateId:(NSString *)templateId OLAssets:(NSArray/*<OLAssets>*/ *)assets {
++ (id<OLPrintJob>)printJobWithTemplateId:(NSString *)templateId OLAssets:(NSArray<OLAsset *> *)assets {
     return [[OLProductPrintJob alloc] initWithTemplateId:templateId OLAssets:assets];
 }
 
-+ (id<OLPrintJob>)printJobWithTemplateId:(NSString *)templateId dataSources:(NSArray/*<id<OLAssetDataSource> >*/ *)dataSources {
++ (id<OLPrintJob>)printJobWithTemplateId:(NSString *)templateId dataSources:(NSArray<id<OLAssetDataSource>> *)dataSources {
     return [[OLProductPrintJob alloc] initWithTemplateId:templateId dataSources:dataSources];
 }
 

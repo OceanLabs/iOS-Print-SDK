@@ -9,7 +9,6 @@
 #import <XCTest/XCTest.h>
 #import "OLProductTemplate.h"
 #import "OLKitePrintSDK.h"
-#import "OLPrintOrderCost.h"
 #import <SDWebImage/SDWebImageManager.h>
 
 @interface OLKitePrintSDK (PrivateMethods)
@@ -33,6 +32,7 @@
     
     
     [self templateSyncWithSuccessHandler:NULL];
+    [self waitForExpectationsWithTimeout:60 handler:nil];
 }
 
 - (void)tearDown {
@@ -42,7 +42,7 @@
 
 #pragma mark Image helper methods
 
-- (NSArray *)urlAssets{
+- (NSArray <OLAsset *>*)urlAssets{
     NSArray *assets = @[[OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/1.jpg"]],
                         [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/2.jpg"]],
                         [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/3.jpg"]],
@@ -50,7 +50,7 @@
     return assets;
 }
 
-- (NSArray *)imageAssets{
+- (NSArray <OLAsset *>*)imageAssets{
     return @[[OLAsset assetWithImageAsJPEG:[self downloadImage]]];
 }
 
@@ -129,6 +129,18 @@
 
 - (void)testSquaresOrderWithImageAssets{
     OLProductPrintJob *job = [OLPrintJob printJobWithTemplateId:@"squares" OLAssets:[self imageAssets]];
+    OLPrintOrder *printOrder = [[OLPrintOrder alloc] init];
+    printOrder.shippingAddress = [OLAddress kiteTeamAddress];
+    [printOrder addPrintJob:job];
+    
+    [self submitOrder:printOrder WithSuccessHandler:NULL];
+    
+    [self waitForExpectationsWithTimeout:60 handler:nil];
+}
+
+- (void)testPhotobookOrderWithURLAssets{
+    OLPhotobookPrintJob *job = [OLPrintJob photobookWithTemplateId:@"photobook_small_landscape" OLAssets:[self urlAssets] frontCoverOLAsset:[self urlAssets].firstObject backCoverOLAsset:[self urlAssets].lastObject];
+    
     OLPrintOrder *printOrder = [[OLPrintOrder alloc] init];
     printOrder.shippingAddress = [OLAddress kiteTeamAddress];
     [printOrder addPrintJob:job];

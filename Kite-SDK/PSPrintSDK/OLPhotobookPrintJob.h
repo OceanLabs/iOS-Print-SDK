@@ -11,7 +11,8 @@
 
 @interface OLPhotobookPrintJob : NSObject <OLPrintJob, NSCopying>
 
-- (id)initWithTemplateId:(NSString *)templateId OLAssets:(NSArray/*<OLAssets>*/ *)assets;
+- (id)initWithTemplateId:(NSString *)templateId OLAssets:(NSArray <OLAsset *>*)assets;
 @property (strong, nonatomic) OLAsset *frontCover;
+@property (strong, nonatomic) OLAsset *backCover;
 
 @end

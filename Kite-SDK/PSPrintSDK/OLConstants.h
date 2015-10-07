@@ -29,6 +29,9 @@
 #import "OLProductTemplate.h"
 #import "OLProduct.h"
 #import "OLProductPrintJob.h"
+#import "OLPhotobookPrintJob.h"
+#import "OLPostcardPrintJob.h"
+#import "OLPrintOrderCost.h"
 
 #ifdef OL_KITE_AT_LEAST_IOS8
 static BOOL definesAtLeastiOS8 = YES;

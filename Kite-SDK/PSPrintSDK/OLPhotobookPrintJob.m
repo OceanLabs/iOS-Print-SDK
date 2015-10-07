@@ -13,6 +13,7 @@
 static NSString *const kKeyPhotobookProductTemplateId = @"co.oceanlabs.pssdk.kKeyPhotobookProductTemplateId";
 static NSString *const kKeyPhotobookImages = @"co.oceanlabs.pssdk.kKeyPhotobookImages";
 static NSString *const kKeyFrontAsset = @"co.oceanlabs.pssdk.kKeyFrontAsset";
+static NSString *const kKeyBackAsset = @"co.oceanlabs.pssdk.kKeyBackAsset";
 static NSString *const kKeyPhotobookAddress = @"co.oceanlabs.pssdk.kKeyPhotobookAddress";
 static NSString *const kKeyPhotobookUuid = @"co.oceanlabs.pssdk.kKeyPhotobookUuid";
 static NSString *const kKeyPhotobookExtraCopies = @"co.oceanlabs.pssdk.kKeyPhotobookExtraCopies";
@@ -29,7 +30,7 @@ static NSString *const kKeyPhotobookExtraCopies = @"co.oceanlabs.pssdk.kKeyPhoto
 @synthesize uuid;
 @synthesize extraCopies;
 
-- (id)initWithTemplateId:(NSString *)templateId OLAssets:(NSArray/*<OLAssets>*/ *)assets{
+- (id)initWithTemplateId:(NSString *)templateId OLAssets:(NSArray<OLAsset *> *)assets{
     if (self = [super init]){
 #ifdef DEBUG
         for (id asset in assets) {
@@ -60,7 +61,7 @@ static NSString *const kKeyPhotobookExtraCopies = @"co.oceanlabs.pssdk.kKeyPhoto
     json[@"template_id"] = [OLProductTemplate templateWithId:self.templateId].identifier;
     json[@"assets"] = @{
                         @"front_cover" : self.frontCover ? [NSString stringWithFormat:@"%lld", self.frontCover.assetId] : @"",
-//                        @"back_cover" : @"",
+                        @"back_cover" : self.backCover ? [NSString stringWithFormat:@"%lld", self.backCover.assetId] : @"",
                         @"pages" : pages
                         };
     json[@"options"] = @{
@@ -91,17 +92,21 @@ static NSString *const kKeyPhotobookExtraCopies = @"co.oceanlabs.pssdk.kKeyPhoto
 }
 
 - (NSArray *)assetsForUploading {
+    NSMutableArray *assets = [[NSMutableArray alloc] init];
+    [assets addObjectsFromArray:self.assets];
     if (self.frontCover){
-        return [self.assets arrayByAddingObject:self.frontCover];
+        [assets addObject:self.frontCover];
     }
-    else{
-        return self.assets;
+    if (self.backCover){
+        [assets addObject:self.backCover];
     }
+    return assets;
 }
 
 - (NSUInteger) hash {
     NSUInteger val = [self.templateId hash];
     val = 39 * val + [self.frontCover hash];
+    val = 36 * val + [self.backCover hash];
     for (id asset in self.assets) {
         val = 37 * val + [asset hash];
     }
@@ -119,7 +124,7 @@ static NSString *const kKeyPhotobookExtraCopies = @"co.oceanlabs.pssdk.kKeyPhoto
     }
     OLPhotobookPrintJob* printJob = (OLPhotobookPrintJob*)object;
     
-    return [self.templateId isEqual:printJob.templateId] && [self.assets isEqual:printJob.assets] && [self.frontCover isEqual:printJob.frontCover];
+    return [self.templateId isEqual:printJob.templateId] && [self.assets isEqual:printJob.assets] && [self.frontCover isEqual:printJob.frontCover] && [self.backCover isEqual:printJob.backCover];
 }
 
 #pragma mark - NSCopying
@@ -130,6 +135,8 @@ static NSString *const kKeyPhotobookExtraCopies = @"co.oceanlabs.pssdk.kKeyPhoto
     // Use deep copies for all strong pointers, shallow copies for weak.
     objectCopy.assets = self.assets;
     objectCopy.templateId = self.templateId;
+    objectCopy.frontCover = self.frontCover;
+    objectCopy.backCover = self.backCover;
     return objectCopy;
 }
 
@@ -139,6 +146,7 @@ static NSString *const kKeyPhotobookExtraCopies = @"co.oceanlabs.pssdk.kKeyPhoto
     [aCoder encodeObject:self.templateId forKey:kKeyPhotobookProductTemplateId];
     [aCoder encodeObject:self.assets forKey:kKeyPhotobookImages];
     [aCoder encodeObject:self.frontCover forKey:kKeyFrontAsset];
+    [aCoder encodeObject:self.backCover forKey:kKeyBackAsset];
     [aCoder encodeObject:self.uuid forKey:kKeyPhotobookUuid];
     [aCoder encodeInteger:self.extraCopies forKey:kKeyPhotobookExtraCopies];
     [aCoder encodeObject:self.address forKey:kKeyPhotobookAddress];
@@ -149,6 +157,7 @@ static NSString *const kKeyPhotobookExtraCopies = @"co.oceanlabs.pssdk.kKeyPhoto
         self.templateId = [aDecoder decodeObjectForKey:kKeyPhotobookProductTemplateId];
         self.assets = [aDecoder decodeObjectForKey:kKeyPhotobookImages];
         self.frontCover = [aDecoder decodeObjectForKey:kKeyFrontAsset];
+        self.backCover = [aDecoder decodeObjectForKey:kKeyBackAsset];
         self.extraCopies = [aDecoder decodeIntegerForKey:kKeyPhotobookExtraCopies];
         self.uuid = [aDecoder decodeObjectForKey:kKeyPhotobookUuid];
         self.address = [aDecoder decodeObjectForKey:kKeyPhotobookAddress];

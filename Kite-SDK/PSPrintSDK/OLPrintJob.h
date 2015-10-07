@@ -88,13 +88,24 @@
  *  Creates and returns a postcard print job
  *
  *  @param templateId      The template ID of this job
- *  @param frontImageAsset he image to print on the front of the postcard
- *  @param backImageAsset  he image to print on the back of the postcard
+ *  @param frontImageAsset The image to print on the front of the postcard
+ *  @param backImageAsset  The image to print on the back of the postcard
  *
  *  @return The postcard print job
  */
 + (id<OLPrintJob>)postcardWithTemplateId:(NSString *)templateId frontImageOLAsset:(OLAsset *)frontImageAsset backImageOLAsset:(OLAsset *)backImageAsset;
 
+/**
+ *  Creates and returns a photo book print job
+ *
+ *  @param templateId The template ID of this job
+ *  @param assets     The assets to print inside the book
+ *  @param frontCover The image to print on the front cover
+ *  @param backCover  The image to print on the back cover
+ *
+ *  @return The photo book print job
+ */
++ (id<OLPrintJob>)photobookWithTemplateId:(NSString *)templateId OLAssets:(NSArray <OLAsset *> *)assets frontCoverOLAsset:(OLAsset *)frontCover backCoverOLAsset:(OLAsset *)backCover;
 
 /**
  *  Creates and returns a print job
