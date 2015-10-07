@@ -9,7 +9,7 @@
 #import <XCTest/XCTest.h>
 #import "OLProductTemplate.h"
 #import "OLKitePrintSDK.h"
-#import <Stripe.h>
+#import "OLPrintOrderCost.h"
 #import <SDWebImage/SDWebImageManager.h>
 
 @interface OLKitePrintSDK (PrivateMethods)
@@ -72,27 +72,30 @@
 - (void)submitOrder:(OLPrintOrder *)printOrder WithSuccessHandler:(void(^)())handler{
     XCTestExpectation *expectation = [self expectationWithDescription:@"Print order submitted"];
     
-    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:[OLKitePrintSDK stripePublishableKey]];
-    
-    STPCard *card = [STPCard new];
+    OLPayPalCard *card = [[OLPayPalCard alloc] init];
+    card.type = kOLPayPalCardTypeVisa;
     card.number = @"4242424242424242";
-    card.expMonth = 12;
-    card.expYear = 2020;
-    card.cvc = @"123";
-    [client createTokenWithCard:card completion:^(STPToken *token, NSError *error) {
+    card.expireMonth = 12;
+    card.expireYear = 2020;
+    card.cvv2 = @"111";
+    
+    [printOrder costWithCompletionHandler:^(OLPrintOrderCost *cost, NSError *error){
         if (error) {
-            XCTFail(@"Failed to create Stripe token with: %@", error);
+            XCTFail(@"Failed to get order cost with: %@", error);
         }
-        printOrder.proofOfPayment = token.tokenId;
-        
-        
-        [printOrder submitForPrintingWithProgressHandler:NULL completionHandler:^(NSString *orderIdReceipt, NSError *error) {
+        [card chargeCard:[cost totalCostInCurrency:printOrder.currencyCode] currencyCode:printOrder.currencyCode description:printOrder.paymentDescription completionHandler:^(NSString *proofOfPayment, NSError *error) {
             if (error) {
-                XCTFail(@"Failed to submit order to Kite with: %@", error);
+                XCTFail(@"Failed to charge card with: %@", error);
             }
-            [printOrder saveToHistory];
-            [expectation fulfill];
-            if (handler) handler();
+            printOrder.proofOfPayment = proofOfPayment;
+            [printOrder submitForPrintingWithProgressHandler:NULL completionHandler:^(NSString *orderIdReceipt, NSError *error) {
+                if (error) {
+                    XCTFail(@"Failed to submit order to Kite with: %@", error);
+                }
+                [printOrder saveToHistory];
+                [expectation fulfill];
+                if (handler) handler();
+            }];
         }];
     }];
 }
