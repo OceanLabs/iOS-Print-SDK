@@ -10,6 +10,7 @@
 #import "OLProductTemplate.h"
 #import "OLKitePrintSDK.h"
 #import <SDWebImage/SDWebImageManager.h>
+#import <Stripe/Stripe.h>
 
 @interface OLKitePrintSDK (PrivateMethods)
 
@@ -70,6 +71,38 @@
 #pragma mark Kite SDK helper methods
 
 - (void)submitOrder:(OLPrintOrder *)printOrder WithSuccessHandler:(void(^)())handler{
+    [self submitStripeOrder:printOrder WithSuccessHandler:handler];
+}
+
+- (void)submitStripeOrder:(OLPrintOrder *)printOrder WithSuccessHandler:(void(^)())handler{
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Print order submitted"];
+    
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:[OLKitePrintSDK stripePublishableKey]];
+    
+    STPCard *card = [STPCard new];
+    card.number = @"4242424242424242";
+    card.expMonth = 12;
+    card.expYear = 2020;
+    card.cvc = @"123";
+    [client createTokenWithCard:card completion:^(STPToken *token, NSError *error) {
+        if (error) {
+            XCTFail(@"Failed to create Stripe token with: %@", error);
+        }
+        printOrder.proofOfPayment = token.tokenId;
+        
+        
+        [printOrder submitForPrintingWithProgressHandler:NULL completionHandler:^(NSString *orderIdReceipt, NSError *error) {
+            if (error) {
+                XCTFail(@"Failed to submit order to Kite with: %@", error);
+            }
+            [printOrder saveToHistory];
+            [expectation fulfill];
+            if (handler) handler();
+        }];
+    }];
+}
+
+- (void)submitPayPalOrder:(OLPrintOrder *)printOrder WithSuccessHandler:(void(^)())handler{
     XCTestExpectation *expectation = [self expectationWithDescription:@"Print order submitted"];
     
     OLPayPalCard *card = [[OLPayPalCard alloc] init];
@@ -139,7 +172,19 @@
 }
 
 - (void)testPhotobookOrderWithURLAssets{
-    OLPhotobookPrintJob *job = [OLPrintJob photobookWithTemplateId:@"photobook_small_landscape" OLAssets:[self urlAssets] frontCoverOLAsset:[self urlAssets].firstObject backCoverOLAsset:[self urlAssets].lastObject];
+    OLPhotobookPrintJob *job = [OLPrintJob photobookWithTemplateId:@"rpi_wrap_300x300_sm" OLAssets:[self urlAssets] frontCoverOLAsset:[self urlAssets].firstObject backCoverOLAsset:[self urlAssets].lastObject];
+    
+    OLPrintOrder *printOrder = [[OLPrintOrder alloc] init];
+    printOrder.shippingAddress = [OLAddress kiteTeamAddress];
+    [printOrder addPrintJob:job];
+    
+    [self submitOrder:printOrder WithSuccessHandler:NULL];
+    
+    [self waitForExpectationsWithTimeout:60 handler:nil];
+}
+
+- (void)testPostcardOrderWithURLAssets{
+    id<OLPrintJob> job = [OLPrintJob postcardWithTemplateId:@"postcard" frontImageOLAsset:[self urlAssets].firstObject backImageOLAsset:[self urlAssets].lastObject];
     
     OLPrintOrder *printOrder = [[OLPrintOrder alloc] init];
     printOrder.shippingAddress = [OLAddress kiteTeamAddress];
