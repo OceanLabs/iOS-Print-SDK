@@ -33,6 +33,7 @@ static NSString *apiKey = nil;
 static NSString *const kOLStripePublishableKeyTest = @"pk_test_FxzXniUJWigFysP0bowWbuy3";
 static NSString *const kOLStripePublishableKeyLive = @"pk_live_o1egYds0rWu43ln7FjEyOU5E";
 static NSString *applePayMerchantID = nil;
+static NSString *applePayPayToString = nil;
 static OLKitePrintSDKEnvironment environment;
 
 static NSString *const kOLAPIEndpointLive = @"https://api.kite.ly";
@@ -130,6 +131,27 @@ static NSString *instagramRedirectURI = nil;
 #ifdef OL_KITE_OFFER_APPLE_PAY
 + (void)setApplePayMerchantID:(NSString *_Nonnull)mID{
     applePayMerchantID = mID;
+}
+
++ (void)setApplePayPayToString:(NSString *_Nonnull)name{
+    applePayPayToString = name;
+}
+
++ (NSString *)applePayPayToString{
+    if (applePayPayToString){
+        return applePayPayToString;
+    }
+    else{
+        NSDictionary *info = [[NSBundle mainBundle] infoDictionary];
+        NSString *bundleName = nil;
+        if ([info objectForKey:@"CFBundleDisplayName"] == nil) {
+            bundleName = [[[NSBundle mainBundle] infoDictionary] objectForKey:(NSString *) kCFBundleNameKey];
+        } else {
+            bundleName = [NSString stringWithFormat:@"%@", [info objectForKey:@"CFBundleDisplayName"]];
+        }
+        
+        return [NSString stringWithFormat:@"Kite.ly (via %@)", bundleName];
+    }
 }
 
 + (NSString *_Nonnull)stripePublishableKey {

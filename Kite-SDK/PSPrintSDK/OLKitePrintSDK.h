@@ -58,6 +58,14 @@
  *  @param mID Your merchant ID
  */
 + (void)setApplePayMerchantID:(NSString *_Nonnull)mID;
+
+/**
+ *  Apple Pay requires a name that appears next to the Total and should be the name of the business that they are paying. This should be recognizable to the user and will appear on their credit card statement. If this is not set it will appear as "Kite.ly (via YOUR_APP_NAME)
+ *
+ *  @warning This can cause App Store Review rejections if the value set is not proper
+ *  @param name The name of the business that you w
+ */
++ (void)setApplePayPayToString:(NSString *_Nonnull)name;
 #endif
 
 @end

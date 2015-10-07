@@ -895,9 +895,9 @@
 		CD7696A11868DE7A006D4A26 /* Print */ = {
 			isa = PBXGroup;
 			children = (
-				CDE5DDCD18E5BE40000FF3B5 /* OLPrintEnvironment.h */,
 				CD73BFB218635F170009DE03 /* OLKitePrintSDK.h */,
 				CD73BFB318635F170009DE03 /* OLKitePrintSDK.m */,
+				CDE5DDCD18E5BE40000FF3B5 /* OLPrintEnvironment.h */,
 				CD9D6AE2187188BE001CD1F9 /* OLPrintJob.h */,
 				CD9CF4A4187592A900F067B6 /* OLPrintJob.m */,
 				CD9D6AE3187189BF001CD1F9 /* OLPostcardPrintJob.h */,
