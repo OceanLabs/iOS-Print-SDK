@@ -445,7 +445,7 @@ static NSOperationQueue *imageOperationQueue;
                 handler(data, nil);
             }
             else{
-                if ([[dataUTI lowercaseString] containsString:@"jpg"] || [[dataUTI lowercaseString] containsString:@"jpeg"] || [[dataUTI lowercaseString] containsString:@"jpg"]){
+                if ([[dataUTI lowercaseString] containsString:@"jpg"] || [[dataUTI lowercaseString] containsString:@"jpeg"] || [[dataUTI lowercaseString] containsString:@"png"]){
                     [self dataWithData:imageData withCompletionHandler:^(NSData *data, NSError *error){
                         if (!error){
                             handler(data, nil);

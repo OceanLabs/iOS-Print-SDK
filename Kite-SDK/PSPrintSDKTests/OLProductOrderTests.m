@@ -11,6 +11,9 @@
 #import "OLKitePrintSDK.h"
 #import <SDWebImage/SDWebImageManager.h>
 #import <Stripe/Stripe.h>
+#import "OLPrintPhoto.h"
+
+@import Photos;
 
 @interface OLKitePrintSDK (PrivateMethods)
 
@@ -72,6 +75,18 @@
 
 - (void)submitOrder:(OLPrintOrder *)printOrder WithSuccessHandler:(void(^)())handler{
     [self submitStripeOrder:printOrder WithSuccessHandler:handler];
+}
+
+- (void)submitJobs:(NSArray <id<OLPrintJob>>*)jobs{
+    OLPrintOrder *printOrder = [[OLPrintOrder alloc] init];
+    printOrder.shippingAddress = [OLAddress kiteTeamAddress];
+    for (id<OLPrintJob> job in jobs){
+        [printOrder addPrintJob:job];
+    }
+    
+    [self submitOrder:printOrder WithSuccessHandler:NULL];
+    
+    [self waitForExpectationsWithTimeout:60 handler:nil];
 }
 
 - (void)submitStripeOrder:(OLPrintOrder *)printOrder WithSuccessHandler:(void(^)())handler{
@@ -149,50 +164,80 @@
 
 #pragma mark Test cases
 
-- (void)testSquaresOrderWithURLAssets{
+- (void)testSquaresOrderWithURLOLAssets{
     OLProductPrintJob *job = [OLPrintJob printJobWithTemplateId:@"squares" OLAssets:[self urlAssets]];
-    OLPrintOrder *printOrder = [[OLPrintOrder alloc] init];
-    printOrder.shippingAddress = [OLAddress kiteTeamAddress];
-    [printOrder addPrintJob:job];
-    
-    [self submitOrder:printOrder WithSuccessHandler:NULL];
-    
-    [self waitForExpectationsWithTimeout:60 handler:nil];
+    [self submitJobs:@[job]];
 }
 
-- (void)testSquaresOrderWithImageAssets{
+- (void)testSquaresOrderWithImageOLAssets{
     OLProductPrintJob *job = [OLPrintJob printJobWithTemplateId:@"squares" OLAssets:[self imageAssets]];
-    OLPrintOrder *printOrder = [[OLPrintOrder alloc] init];
-    printOrder.shippingAddress = [OLAddress kiteTeamAddress];
-    [printOrder addPrintJob:job];
-    
-    [self submitOrder:printOrder WithSuccessHandler:NULL];
-    
-    [self waitForExpectationsWithTimeout:60 handler:nil];
+    [self submitJobs:@[job]];
 }
 
-- (void)testPhotobookOrderWithURLAssets{
+- (void)testSquaresOrderWithDataOLAssets{
+    NSData *data = [NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"kite_corrupt" ofType:@"jpg"]];
+    
+    if (!data){
+        XCTFail(@"No data");
+    }
+    
+    OLProductPrintJob *job = [OLPrintJob printJobWithTemplateId:@"squares" OLAssets:@[[OLAsset assetWithDataAsJPEG:data]]];
+    [self submitJobs:@[job]];
+}
+
+- (void)testSquaresOrderWithPHAssetOLAssets{
+    PHFetchResult *fetchResult = [PHAsset fetchAssetsWithMediaType:PHAssetMediaTypeImage options:nil];
+    
+    if (fetchResult.count == 0){
+        XCTFail(@"There are no assets available");
+    }
+    
+    PHAsset *asset = [fetchResult objectAtIndex:arc4random() % fetchResult.count];
+
+    OLProductPrintJob *job = [OLPrintJob printJobWithTemplateId:@"squares" OLAssets:@[[OLAsset assetWithPHAsset:asset]]];
+    [self submitJobs:@[job]];
+}
+
+- (void)testSquaresOrderWithURLOLAssetPrintPhotos{
+    OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
+    printPhoto.asset = [self urlAssets].firstObject;
+    
+    OLProductPrintJob *job = [OLPrintJob printJobWithTemplateId:@"squares" OLAssets:@[[OLAsset assetWithDataSource:printPhoto]]];
+    [self submitJobs:@[job]];
+}
+
+- (void)testSquaresOrderWithImageOLAssetPrintPhotos{
+    OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
+    printPhoto.asset = [self imageAssets].firstObject;
+    
+    OLProductPrintJob *job = [OLPrintJob printJobWithTemplateId:@"squares" OLAssets:@[[OLAsset assetWithDataSource:printPhoto]]];
+    [self submitJobs:@[job]];
+}
+
+- (void)testSquaresOrderWithPHAssetPrintPhotos{
+    PHFetchResult *fetchResult = [PHAsset fetchAssetsWithMediaType:PHAssetMediaTypeImage options:nil];
+    
+    if (fetchResult.count == 0){
+        XCTFail(@"There are no assets available");
+    }
+    
+    PHAsset *asset = [fetchResult objectAtIndex:arc4random() % fetchResult.count];
+    
+    OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
+    printPhoto.asset = asset;
+    
+    OLProductPrintJob *job = [OLPrintJob printJobWithTemplateId:@"squares" OLAssets:@[[OLAsset assetWithDataSource:printPhoto]]];
+    [self submitJobs:@[job]];
+}
+
+- (void)testPhotobookOrderWithURLOLAssets{
     OLPhotobookPrintJob *job = [OLPrintJob photobookWithTemplateId:@"rpi_wrap_300x300_sm" OLAssets:[self urlAssets] frontCoverOLAsset:[self urlAssets].firstObject backCoverOLAsset:[self urlAssets].lastObject];
-    
-    OLPrintOrder *printOrder = [[OLPrintOrder alloc] init];
-    printOrder.shippingAddress = [OLAddress kiteTeamAddress];
-    [printOrder addPrintJob:job];
-    
-    [self submitOrder:printOrder WithSuccessHandler:NULL];
-    
-    [self waitForExpectationsWithTimeout:60 handler:nil];
+    [self submitJobs:@[job]];
 }
 
-- (void)testPostcardOrderWithURLAssets{
+- (void)testPostcardOrderWithURLOLAssets{
     id<OLPrintJob> job = [OLPrintJob postcardWithTemplateId:@"postcard" frontImageOLAsset:[self urlAssets].firstObject backImageOLAsset:[self urlAssets].lastObject];
-    
-    OLPrintOrder *printOrder = [[OLPrintOrder alloc] init];
-    printOrder.shippingAddress = [OLAddress kiteTeamAddress];
-    [printOrder addPrintJob:job];
-    
-    [self submitOrder:printOrder WithSuccessHandler:NULL];
-    
-    [self waitForExpectationsWithTimeout:60 handler:nil];
+    [self submitJobs:@[job]];
 }
 
 @end

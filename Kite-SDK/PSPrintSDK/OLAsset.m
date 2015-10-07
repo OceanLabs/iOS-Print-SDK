@@ -291,7 +291,7 @@ NSString *const kOLMimeTypePNG  = @"image/png";
                     handler(imageData.length, nil);
                 }
             }];
-            
+            break;
         }
         case kOLAssetTypeDataSource: {
             NSAssert(self.dataSource, @"oops somehow instantiated a OLAsset in non consistent state");
