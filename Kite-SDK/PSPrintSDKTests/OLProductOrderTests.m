@@ -12,6 +12,7 @@
 #import <SDWebImage/SDWebImageManager.h>
 #import <Stripe/Stripe.h>
 #import "OLPrintPhoto.h"
+#import "OLKiteTestHelper.h"
 
 @import Photos;
 
@@ -40,35 +41,7 @@
 }
 
 - (void)tearDown {
-    // Put teardown code here. This method is called after the invocation of each test method in the class.
     [super tearDown];
-}
-
-#pragma mark Image helper methods
-
-- (NSArray <OLAsset *>*)urlAssets{
-    NSArray *assets = @[[OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/1.jpg"]],
-                        [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/2.jpg"]],
-                        [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/3.jpg"]],
-                        [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/4.jpg"]]];
-    return assets;
-}
-
-- (NSArray <OLAsset *>*)imageAssets{
-    return @[[OLAsset assetWithImageAsJPEG:[self downloadImage]]];
-}
-
-- (UIImage *)downloadImage{
-    XCTestExpectation *expectation = [self expectationWithDescription:@"Download image complete"];
-    __block UIImage *downloadedImage;
-    [[SDWebImageManager sharedManager] downloadImageWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/1.jpg"] options:0 progress:NULL completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL){
-        downloadedImage = image;
-        [expectation fulfill];
-    }];
-    
-    [self waitForExpectationsWithTimeout:60 handler:nil];
-    
-    return downloadedImage;
 }
 
 #pragma mark Kite SDK helper methods
@@ -165,12 +138,12 @@
 #pragma mark Test cases
 
 - (void)testSquaresOrderWithURLOLAssets{
-    OLProductPrintJob *job = [OLPrintJob printJobWithTemplateId:@"squares" OLAssets:[self urlAssets]];
+    OLProductPrintJob *job = [OLPrintJob printJobWithTemplateId:@"squares" OLAssets:[OLKiteTestHelper urlAssets]];
     [self submitJobs:@[job]];
 }
 
 - (void)testSquaresOrderWithImageOLAssets{
-    OLProductPrintJob *job = [OLPrintJob printJobWithTemplateId:@"squares" OLAssets:[self imageAssets]];
+    OLProductPrintJob *job = [OLPrintJob printJobWithTemplateId:@"squares" OLAssets:[OLKiteTestHelper imageAssets]];
     [self submitJobs:@[job]];
 }
 
@@ -200,7 +173,7 @@
 
 - (void)testSquaresOrderWithURLOLAssetPrintPhotos{
     OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
-    printPhoto.asset = [self urlAssets].firstObject;
+    printPhoto.asset = [OLKiteTestHelper urlAssets].firstObject;
     
     OLProductPrintJob *job = [OLPrintJob printJobWithTemplateId:@"squares" OLAssets:@[[OLAsset assetWithDataSource:printPhoto]]];
     [self submitJobs:@[job]];
@@ -208,7 +181,7 @@
 
 - (void)testSquaresOrderWithImageOLAssetPrintPhotos{
     OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
-    printPhoto.asset = [self imageAssets].firstObject;
+    printPhoto.asset = [OLKiteTestHelper imageAssets].firstObject;
     
     OLProductPrintJob *job = [OLPrintJob printJobWithTemplateId:@"squares" OLAssets:@[[OLAsset assetWithDataSource:printPhoto]]];
     [self submitJobs:@[job]];
@@ -231,12 +204,12 @@
 }
 
 - (void)testPhotobookOrderWithURLOLAssets{
-    OLPhotobookPrintJob *job = [OLPrintJob photobookWithTemplateId:@"rpi_wrap_300x300_sm" OLAssets:[self urlAssets] frontCoverOLAsset:[self urlAssets].firstObject backCoverOLAsset:[self urlAssets].lastObject];
+    OLPhotobookPrintJob *job = [OLPrintJob photobookWithTemplateId:@"rpi_wrap_300x300_sm" OLAssets:[OLKiteTestHelper urlAssets] frontCoverOLAsset:[OLKiteTestHelper urlAssets].firstObject backCoverOLAsset:[OLKiteTestHelper urlAssets].lastObject];
     [self submitJobs:@[job]];
 }
 
 - (void)testPostcardOrderWithURLOLAssets{
-    id<OLPrintJob> job = [OLPrintJob postcardWithTemplateId:@"postcard" frontImageOLAsset:[self urlAssets].firstObject backImageOLAsset:[self urlAssets].lastObject];
+    id<OLPrintJob> job = [OLPrintJob postcardWithTemplateId:@"postcard" frontImageOLAsset:[OLKiteTestHelper urlAssets].firstObject backImageOLAsset:[OLKiteTestHelper urlAssets].lastObject];
     [self submitJobs:@[job]];
 }
 

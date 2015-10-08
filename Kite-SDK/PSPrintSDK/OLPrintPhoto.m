@@ -11,6 +11,7 @@
 #import <SDWebImage/SDWebImageManager.h>
 #import "RMImageCropper.h"
 #import "ALAssetsLibrary+Singleton.h"
+#import "OLKiteUtils.h"
 #ifdef OL_KITE_OFFER_INSTAGRAM
 #import <InstagramImagePicker/OLInstagramImage.h>
 #endif
@@ -429,7 +430,7 @@ static NSOperationQueue *imageOperationQueue;
             UIImage *image = [UIImage imageWithCGImage:[rep fullResolutionImage] scale:rep.scale orientation:orientation];
             [self dataWithImage:image withCompletionHandler:handler];
         } else {
-            NSData *data = [NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"kite_corrupt" ofType:@"jpg"]];
+            NSData *data = [NSData dataWithContentsOfFile:[[OLKiteUtils kiteBundle] pathForResource:@"kite_corrupt" ofType:@"jpg"]];
             handler(data, nil);
         }
     }
@@ -441,7 +442,7 @@ static NSOperationQueue *imageOperationQueue;
         options.networkAccessAllowed = YES;
         [imageManager requestImageDataForAsset:self.asset options:options resultHandler:^(NSData *imageData, NSString *dataUTI, UIImageOrientation orientation, NSDictionary *info){
             if (!imageData){
-                NSData *data = [NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"kite_corrupt" ofType:@"jpg"]];
+                NSData *data = [NSData dataWithContentsOfFile:[[OLKiteUtils kiteBundle] pathForResource:@"kite_corrupt" ofType:@"jpg"]];
                 handler(data, nil);
             }
             else{
@@ -451,7 +452,7 @@ static NSOperationQueue *imageOperationQueue;
                             handler(data, nil);
                         }
                         else{
-                            NSData *data = [NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"kite_corrupt" ofType:@"jpg"]];
+                            NSData *data = [NSData dataWithContentsOfFile:[[OLKiteUtils kiteBundle] pathForResource:@"kite_corrupt" ofType:@"jpg"]];
                             handler(data, nil);
                         }
                     }];
@@ -464,13 +465,13 @@ static NSOperationQueue *imageOperationQueue;
                                     handler(data, nil);
                                 }
                                 else{
-                                    NSData *data = [NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"kite_corrupt" ofType:@"jpg"]];
+                                    NSData *data = [NSData dataWithContentsOfFile:[[OLKiteUtils kiteBundle] pathForResource:@"kite_corrupt" ofType:@"jpg"]];
                                     handler(data, nil);
                                 }
                             }];
                         }
                         else{
-                            NSData *data = [NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"kite_corrupt" ofType:@"jpg"]];
+                            NSData *data = [NSData dataWithContentsOfFile:[[OLKiteUtils kiteBundle] pathForResource:@"kite_corrupt" ofType:@"jpg"]];
                             handler(data, nil);
                         }
                     }];
@@ -561,7 +562,7 @@ static NSOperationQueue *imageOperationQueue;
                                                         if (asset == nil) {
                                                             // corrupt asset, user has probably deleted the photo from their device
                                                             _type = kPrintPhotoAssetTypeOLAsset;
-                                                            NSData *data = [NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"kite_corrupt" ofType:@"jpg"]];
+                                                            NSData *data = [NSData dataWithContentsOfFile:[[OLKiteUtils kiteBundle] pathForResource:@"kite_corrupt" ofType:@"jpg"]];
                                                             self.asset = [OLAsset assetWithDataAsJPEG:data];
                                                         } else {
                                                             self.asset = asset;
@@ -570,7 +571,7 @@ static NSOperationQueue *imageOperationQueue;
                                                    failureBlock:^(NSError *err) {
                                                        NSAssert([NSThread isMainThread], @"oops wrong assumption about main thread callback");
                                                        _type = kPrintPhotoAssetTypeOLAsset;
-                                                       NSData *data = [NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"kite_corrupt" ofType:@"jpg"]];
+                                                       NSData *data = [NSData dataWithContentsOfFile:[[OLKiteUtils kiteBundle] pathForResource:@"kite_corrupt" ofType:@"jpg"]];
                                                        self.asset = [OLAsset assetWithDataAsJPEG:data];
                                                    }];
         }
@@ -580,7 +581,7 @@ static NSOperationQueue *imageOperationQueue;
             if (!asset){
                 // corrupt asset, user has probably deleted the photo from their device
                 _type = kPrintPhotoAssetTypeOLAsset;
-                NSData *data = [NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"kite_corrupt" ofType:@"jpg"]];
+                NSData *data = [NSData dataWithContentsOfFile:[[OLKiteUtils kiteBundle] pathForResource:@"kite_corrupt" ofType:@"jpg"]];
                 self.asset = [OLAsset assetWithDataAsJPEG:data];
             }
             else {

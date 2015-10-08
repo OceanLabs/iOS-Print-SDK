@@ -240,7 +240,9 @@ typedef void (^UploadAssetsCompletionHandler)(NSError *error);
         if (error) {
             notifiedDelegateOfSomeOutcome = YES;
             [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
-            [zelf.delegate assetUploadRequest:zelf didFailWithError:error];
+            if ([zelf.delegate respondsToSelector:@selector(assetUploadRequest:didFailWithError:)]){
+                [zelf.delegate assetUploadRequest:zelf didFailWithError:error];
+            }
             return;
         }
         
@@ -248,7 +250,9 @@ typedef void (^UploadAssetsCompletionHandler)(NSError *error);
             NSAssert(!error, @"errors should be covered above");
             notifiedDelegateOfSomeOutcome = YES;
             [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
-            [zelf.delegate assetUploadRequest:zelf didSucceedWithAssets:assets];
+            if ([zelf.delegate respondsToSelector:@selector(assetUploadRequest:didSucceedWithAssets:)]){
+                [zelf.delegate assetUploadRequest:zelf didSucceedWithAssets:assets];
+            }
         }
     };
     
@@ -261,7 +265,9 @@ typedef void (^UploadAssetsCompletionHandler)(NSError *error);
             if (error && !notifiedDelegateOfSomeOutcome) {
                 notifiedDelegateOfSomeOutcome = YES;
                 [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
-                [zelf.delegate assetUploadRequest:zelf didFailWithError:error];
+                if ([zelf.delegate respondsToSelector:@selector(assetUploadRequest:didFailWithError:)]){
+                    [zelf.delegate assetUploadRequest:zelf didFailWithError:error];
+                }
                 return;
             }
             
@@ -296,12 +302,15 @@ typedef void (^UploadAssetsCompletionHandler)(NSError *error);
             handler(error);
             return;
         }
-        
-        [zelf.delegate assetUploadRequest:zelf didProgressWithTotalAssetsUploaded:uploadedAssetAccumulator.count totalAssetsToUpload:totalAssetsToUpload bytesWritten:0 totalAssetBytesWritten:0 totalAssetBytesExpectedToWrite:assetData.length];
+        if ([zelf.delegate respondsToSelector:@selector(assetUploadRequest:didProgressWithTotalAssetsUploaded:totalAssetsToUpload:bytesWritten:totalAssetBytesWritten:totalAssetBytesExpectedToWrite:)]){
+            [zelf.delegate assetUploadRequest:zelf didProgressWithTotalAssetsUploaded:uploadedAssetAccumulator.count totalAssetsToUpload:totalAssetsToUpload bytesWritten:0 totalAssetBytesWritten:0 totalAssetBytesExpectedToWrite:assetData.length];
+        }
         [self uploadData:assetData mimeType:detailsForAssetToUpload.asset.mimeType toS3WithSignedRequestURL:detailsForAssetToUpload.signedS3UploadReqURL progress:^(long long bytesWritten, long long totalBytesWritten, long long totalBytesExpectedToWrite) {
             if (zelf.cancelled) return;
             NSAssert([NSThread isMainThread], @"Oops we should be calling back on the main thread");
-            [zelf.delegate assetUploadRequest:zelf didProgressWithTotalAssetsUploaded:uploadedAssetAccumulator.count totalAssetsToUpload:totalAssetsToUpload bytesWritten:bytesWritten totalAssetBytesWritten:totalBytesWritten totalAssetBytesExpectedToWrite:totalBytesExpectedToWrite];
+            if ([zelf.delegate respondsToSelector:@selector(assetUploadRequest:didProgressWithTotalAssetsUploaded:totalAssetsToUpload:bytesWritten:totalAssetBytesWritten:totalAssetBytesExpectedToWrite:)]){
+                [zelf.delegate assetUploadRequest:zelf didProgressWithTotalAssetsUploaded:uploadedAssetAccumulator.count totalAssetsToUpload:totalAssetsToUpload bytesWritten:bytesWritten totalAssetBytesWritten:totalBytesWritten totalAssetBytesExpectedToWrite:totalBytesExpectedToWrite];
+            }
         } completion:^(NSError *error) {
             if (zelf.cancelled) return;
             

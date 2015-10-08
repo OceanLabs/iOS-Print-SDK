@@ -16,6 +16,8 @@
  */
 @protocol OLAssetUploadRequestDelegate <NSObject>
 
+@optional
+
 /**
  *  Notifies the delegate that the upload has progressed.
  *
