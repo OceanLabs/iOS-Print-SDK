@@ -215,7 +215,7 @@ typedef void (^UploadAssetsCompletionHandler)(NSError *error);
     [self uploadOLAssets:@[asset]];
 }
 
-- (void)uploadOLAssets:(NSArray/*<OLAsset>*/ *)assets {
+- (void)uploadOLAssets:(NSArray<OLAsset *> *)assets {
     NSMutableArray *imageURLAssets = [[NSMutableArray alloc] init];
     NSMutableArray *assetsToUpload = [[NSMutableArray alloc] init];
     
