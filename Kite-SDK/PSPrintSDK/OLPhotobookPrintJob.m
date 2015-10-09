@@ -9,6 +9,7 @@
 #import "OLPhotobookPrintJob.h"
 #import "OLProductTemplate.h"
 #import "OLAsset.h"
+#import "OLAddress.h"
 
 static NSString *const kKeyPhotobookProductTemplateId = @"co.oceanlabs.pssdk.kKeyPhotobookProductTemplateId";
 static NSString *const kKeyPhotobookImages = @"co.oceanlabs.pssdk.kKeyPhotobookImages";
@@ -17,11 +18,12 @@ static NSString *const kKeyBackAsset = @"co.oceanlabs.pssdk.kKeyBackAsset";
 static NSString *const kKeyPhotobookAddress = @"co.oceanlabs.pssdk.kKeyPhotobookAddress";
 static NSString *const kKeyPhotobookUuid = @"co.oceanlabs.pssdk.kKeyPhotobookUuid";
 static NSString *const kKeyPhotobookExtraCopies = @"co.oceanlabs.pssdk.kKeyPhotobookExtraCopies";
+static NSString *const kKeyPhotobookPrintJobOptions = @"co.oceanlabs.pssdk.kKeyPhotobookPrintJobOptions";
 
 @interface OLPhotobookPrintJob ()
 @property (nonatomic, strong) NSString *templateId;
 @property (nonatomic, strong) NSArray *assets;
-@property (strong, nonatomic) NSString *spineColor;
+@property (strong, nonatomic) NSMutableDictionary *options;
 @end
 
 @implementation OLPhotobookPrintJob
@@ -30,17 +32,28 @@ static NSString *const kKeyPhotobookExtraCopies = @"co.oceanlabs.pssdk.kKeyPhoto
 @synthesize uuid;
 @synthesize extraCopies;
 
+-(NSMutableDictionary *) options{
+    if (!_options){
+        _options = [[NSMutableDictionary alloc] init];
+        _options[@"spine_color"] = @"#FFFFFF";
+    }
+    return _options;
+}
+
+- (void)setValue:(NSString *)value forOption:(NSString *)option{
+    self.options[option] = value;
+}
+
 - (id)initWithTemplateId:(NSString *)templateId OLAssets:(NSArray<OLAsset *> *)assets{
     if (self = [super init]){
 #ifdef DEBUG
         for (id asset in assets) {
-            NSAssert([asset isKindOfClass:[OLAsset class]], @"OLPhotobookPrintJob initWithProduct:OLAssets: requires an NSArray of OLAsset not: %@", [asset class]);
+            NSAssert([asset isKindOfClass:[OLAsset class]], @"initWithTemplateId:OLAssets: requires an NSArray of OLAsset not: %@", [asset class]);
         }
 #endif
         
         self.assets = assets;
         self.templateId = templateId;
-        self.spineColor = @"#FFFFFF";
     }
     
     return self;
@@ -64,9 +77,7 @@ static NSString *const kKeyPhotobookExtraCopies = @"co.oceanlabs.pssdk.kKeyPhoto
                         @"back_cover" : self.backCover ? [NSString stringWithFormat:@"%lld", self.backCover.assetId] : @"",
                         @"pages" : pages
                         };
-    json[@"options"] = @{
-                         @"spine_color" : self.spineColor
-                         };
+    json[@"options"] = self.options;
     
     return json;
 }
@@ -111,6 +122,10 @@ static NSString *const kKeyPhotobookExtraCopies = @"co.oceanlabs.pssdk.kKeyPhoto
         val = 37 * val + [asset hash];
     }
     
+    val = 38 * val + self.extraCopies;
+    val = 39 * val + [self.options hash];
+    val = 40 * val + [self.address hash];
+    
     return val;
 }
 
@@ -124,7 +139,7 @@ static NSString *const kKeyPhotobookExtraCopies = @"co.oceanlabs.pssdk.kKeyPhoto
     }
     OLPhotobookPrintJob* printJob = (OLPhotobookPrintJob*)object;
     
-    return [self.templateId isEqual:printJob.templateId] && [self.assets isEqual:printJob.assets] && [self.frontCover isEqual:printJob.frontCover] && [self.backCover isEqual:printJob.backCover];
+    return [self.templateId isEqual:printJob.templateId] && [self.assets isEqual:printJob.assets] && [self.frontCover isEqual:printJob.frontCover] && [self.backCover isEqual:printJob.backCover] && [self.options isEqualToDictionary:printJob.options];
 }
 
 #pragma mark - NSCopying
@@ -137,6 +152,9 @@ static NSString *const kKeyPhotobookExtraCopies = @"co.oceanlabs.pssdk.kKeyPhoto
     objectCopy.templateId = self.templateId;
     objectCopy.frontCover = self.frontCover;
     objectCopy.backCover = self.backCover;
+    objectCopy.options = self.options;
+    objectCopy.uuid = self.uuid;
+    objectCopy.extraCopies = self.extraCopies;
     return objectCopy;
 }
 
@@ -150,6 +168,7 @@ static NSString *const kKeyPhotobookExtraCopies = @"co.oceanlabs.pssdk.kKeyPhoto
     [aCoder encodeObject:self.uuid forKey:kKeyPhotobookUuid];
     [aCoder encodeInteger:self.extraCopies forKey:kKeyPhotobookExtraCopies];
     [aCoder encodeObject:self.address forKey:kKeyPhotobookAddress];
+    [aCoder encodeObject:self.options forKey:kKeyPhotobookPrintJobOptions];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
@@ -161,6 +180,7 @@ static NSString *const kKeyPhotobookExtraCopies = @"co.oceanlabs.pssdk.kKeyPhoto
         self.extraCopies = [aDecoder decodeIntegerForKey:kKeyPhotobookExtraCopies];
         self.uuid = [aDecoder decodeObjectForKey:kKeyPhotobookUuid];
         self.address = [aDecoder decodeObjectForKey:kKeyPhotobookAddress];
+        self.options = [aDecoder decodeObjectForKey:kKeyPhotobookPrintJobOptions];
     }
     
     return self;

@@ -11,6 +11,7 @@
 #import "OLProductPrintJob.h"
 #import "OLAsset.h"
 #import "OLPhotobookPrintJob.h"
+#import "OLApparelPrintJob.h"
 
 @implementation OLPrintJob
 
@@ -27,6 +28,11 @@
     job.frontCover = frontCover;
     job.backCover = backCover;
     
+    return job;
+}
+
++ (id<OLPrintJob>)apparelWithTemplateId:(NSString *)templateId OLAssets:(NSDictionary<NSString *, OLAsset *> *)assets{
+    OLApparelPrintJob *job = [[OLApparelPrintJob alloc] initWithTemplateId:templateId OLAssets:assets];
     return job;
 }
 

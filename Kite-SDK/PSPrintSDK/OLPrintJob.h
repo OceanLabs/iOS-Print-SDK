@@ -24,6 +24,8 @@
  */
 - (NSDictionary *)jsonRepresentation;
 
+- (void)setValue:(NSString *)value forOption:(NSString *)option;
+
 /**
  *  An array of the OLAssets that need to be uploaded
  */
@@ -106,6 +108,16 @@
  *  @return The photo book print job
  */
 + (id<OLPrintJob>)photobookWithTemplateId:(NSString *)templateId OLAssets:(NSArray <OLAsset *> *)assets frontCoverOLAsset:(OLAsset *)frontCover backCoverOLAsset:(OLAsset *)backCover;
+
+/**
+ *  Creates and returns an apparel print job
+ *
+ *  @param templateId The template ID of this job
+ *  @param assets     The dictionary of OLAssets. Please find a list of keys here: https://www.kite.ly/docs/?objective_c#ordering-apparel
+ *
+ *  @return The apparel print job
+ */
++ (id<OLPrintJob>)apparelWithTemplateId:(NSString *)templateId OLAssets:(NSDictionary<NSString *, OLAsset *> *)assets;
 
 /**
  *  Creates and returns a print job

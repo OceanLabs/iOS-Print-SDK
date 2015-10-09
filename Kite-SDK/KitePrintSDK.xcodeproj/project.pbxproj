@@ -38,6 +38,7 @@
 		2E21DA561B9843CF00D9162F /* OLAssetsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E21DA411B9843CF00D9162F /* OLAssetsViewController.m */; };
 		2E21DA571B9843CF00D9162F /* OLAssetsViewControllerTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E21DA431B9843CF00D9162F /* OLAssetsViewControllerTransition.m */; };
 		2E2632C21B97336700C7D879 /* KitePrintSDKUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E2632C11B97336700C7D879 /* KitePrintSDKUITests.m */; };
+		2E333CCA1BC7D1850092E42A /* OLApparelPrintJob.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E333CC91BC7D1850092E42A /* OLApparelPrintJob.m */; settings = {ASSET_TAGS = (); }; };
 		2E38C0CD1AD5206F008BC28A /* PostcardBackView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2E38C0CC1AD5206F008BC28A /* PostcardBackView.xib */; };
 		2E39CAA31AB894A8008B1EFF /* OLPhotoSelectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E39CAA21AB894A8008B1EFF /* OLPhotoSelectionViewController.m */; };
 		2E39CAA51AB89515008B1EFF /* OLPhotoSelectionButton.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2E39CAA41AB89515008B1EFF /* OLPhotoSelectionButton.xib */; };
@@ -208,6 +209,8 @@
 		2E2632BF1B97336700C7D879 /* KitePrintSDKUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = KitePrintSDKUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		2E2632C11B97336700C7D879 /* KitePrintSDKUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KitePrintSDKUITests.m; sourceTree = "<group>"; };
 		2E2632C31B97336700C7D879 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2E333CC91BC7D1850092E42A /* OLApparelPrintJob.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLApparelPrintJob.m; sourceTree = "<group>"; };
+		2E333CCB1BC7D19E0092E42A /* OLApparelPrintJob.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLApparelPrintJob.h; sourceTree = "<group>"; };
 		2E38C0CC1AD5206F008BC28A /* PostcardBackView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PostcardBackView.xib; sourceTree = "<group>"; };
 		2E39CAA11AB894A8008B1EFF /* OLPhotoSelectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLPhotoSelectionViewController.h; sourceTree = "<group>"; };
 		2E39CAA21AB894A8008B1EFF /* OLPhotoSelectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLPhotoSelectionViewController.m; sourceTree = "<group>"; };
@@ -918,6 +921,8 @@
 				CD9D6AE4187189BF001CD1F9 /* OLPostcardPrintJob.m */,
 				2E768F531B394372009BAC18 /* OLPhotobookPrintJob.h */,
 				2E768F541B394372009BAC18 /* OLPhotobookPrintJob.m */,
+				2E333CCB1BC7D19E0092E42A /* OLApparelPrintJob.h */,
+				2E333CC91BC7D1850092E42A /* OLApparelPrintJob.m */,
 				CD9CF4A118758BDF00F067B6 /* OLProductPrintJob.h */,
 				CD9CF4A218758BDF00F067B6 /* OLProductPrintJob.m */,
 				CD9D6AE71871B5C7001CD1F9 /* OLPrintOrder.h */,
@@ -1229,6 +1234,7 @@
 				2E20BD861AD4229700FB2446 /* OLCaseViewController.m in Sources */,
 				CD73BF82186215790009DE03 /* ViewController.m in Sources */,
 				2EA8BEBD1A484FCB008A9248 /* OLFrameOrderReviewViewController.m in Sources */,
+				2E333CCA1BC7D1850092E42A /* OLApparelPrintJob.m in Sources */,
 				2EE3C8701A4AFB0C006446E2 /* OLKiteViewController.m in Sources */,
 				2E20BD891AD42E2200FB2446 /* OLPostcardViewController.m in Sources */,
 				2EB4BD6B1AE13F520004CEE0 /* OLPhotobookPageContentViewController.m in Sources */,
