@@ -284,6 +284,10 @@ typedef enum {
     return s;
 }
 
+- (BOOL)isValidProductForUI{
+    return self.labelColor && self.productTemplate.templateUI != kOLTemplateUINA;
+}
+
 
 
 @end

@@ -187,10 +187,10 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
         else if (welf.printOrder){
             OLProduct *product = [OLProduct productWithTemplateId:[[welf.printOrder.jobs firstObject] templateId]];
             NSString *identifier;
-            if ([[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant hasPrefix:@"Overview-"]){
+            if ([[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant hasPrefix:@"Overview-"] && [product isValidProductForUI]){
                 identifier = @"OLProductOverviewViewController";
             }
-            else if ([[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant hasPrefix:@"Review-"] ){
+            else if ([[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant hasPrefix:@"Review-"] && [product isValidProductForUI]){
                 identifier = [OLKiteUtils reviewViewControllerIdentifierForProduct:product photoSelectionScreen:NO];
             }
             else{

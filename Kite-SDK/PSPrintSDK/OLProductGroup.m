@@ -41,7 +41,7 @@ static OLProductGroup *findGroupWithTemplateClass(NSArray *groups, NSString *tem
     NSArray *allProducts = [OLProduct productsWithFilters:templateIds];
     
     for (OLProduct *product in allProducts){
-        if (!product.labelColor || product.productTemplate.templateUI == kOLTemplateUINA){
+        if (![product isValidProductForUI]){
             continue;
         }
         
