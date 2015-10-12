@@ -60,6 +60,10 @@
     [self submitOrder:printOrder WithSuccessHandler:NULL];
     
     [self waitForExpectationsWithTimeout:60 handler:nil];
+    
+    if (![printOrder.receipt hasPrefix:@"PS"]){
+        XCTFail(@"Order does not have valid receipt");
+    }
 }
 
 - (void)submitStripeOrder:(OLPrintOrder *)printOrder WithSuccessHandler:(void(^)())handler{

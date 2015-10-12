@@ -82,6 +82,9 @@
                                                   XCTFail(@"Order submission failed with: %@", error);
                                               }
                                               // If there is no error then you can display a success outcome to the user
+                                              if (![order.receipt hasPrefix:@"PS"]){
+                                                  XCTFail(@"Order does not have valid receipt");
+                                              }
                                               [expectation fulfill];
                                           }];
             }];
@@ -147,6 +150,9 @@
                                                   XCTFail(@"Order submission failed with: %@", error);
                                               }
                                               // If there is no error then you can display a success outcome to the user
+                                              if (![order.receipt hasPrefix:@"PS"]){
+                                                  XCTFail(@"Order does not have valid receipt");
+                                              }
                                               [expectation fulfill];
                                           }];
             }];
@@ -212,6 +218,9 @@
                                                   XCTFail(@"Order submission failed with: %@", error);
                                               }
                                               // If there is no error then you can display a success outcome to the user
+                                              if (![order.receipt hasPrefix:@"PS"]){
+                                                  XCTFail(@"Order does not have valid receipt");
+                                              }
                                               [expectation fulfill];
                                           }];
             }];
@@ -277,6 +286,9 @@
                                                   XCTFail(@"Order submission failed with: %@", error);
                                               }
                                               // If there is no error then you can display a success outcome to the user
+                                              if (![order.receipt hasPrefix:@"PS"]){
+                                                  XCTFail(@"Order does not have valid receipt");
+                                              }
                                               [expectation fulfill];
                                           }];
             }];
@@ -341,6 +353,9 @@
                                                   XCTFail(@"Order submission failed with: %@", error);
                                               }
                                               // If there is no error then you can display a success outcome to the user
+                                              if (![order.receipt hasPrefix:@"PS"]){
+                                                  XCTFail(@"Order does not have valid receipt");
+                                              }
                                               [expectation fulfill];
                                           }];
             }];
@@ -399,6 +414,9 @@
                                                   XCTFail(@"Order submission failed with: %@", error);
                                               }
                                               // If there is no error then you can display a success outcome to the user
+                                              if (![order.receipt hasPrefix:@"PS"]){
+                                                  XCTFail(@"Order does not have valid receipt");
+                                              }
                                               [expectation fulfill];
                                           }];
             }];
