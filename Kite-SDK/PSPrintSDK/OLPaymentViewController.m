@@ -61,7 +61,6 @@ static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
 #ifdef OL_KITE_OFFER_PAYPAL
 + (NSString *_Nonnull)paypalEnvironment;
 + (NSString *_Nonnull)paypalClientId;
-+ (NSString *_Nonnull)paypalReceiverEmail;
 #endif
 
 #ifdef OL_KITE_OFFER_APPLE_PAY

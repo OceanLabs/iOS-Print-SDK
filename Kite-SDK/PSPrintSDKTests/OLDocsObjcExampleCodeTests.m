@@ -36,9 +36,7 @@
                         [OLAsset assetWithURL:[NSURL URLWithString:@"http://psps.s3.amazonaws.com/sdk_static/1.jpg"]]
                         ];
     [OLProductTemplate syncWithCompletionHandler:^(NSArray <OLProductTemplate *>* _Nullable templates, NSError * _Nullable error){
-        if (error){
-            XCTFail(@"Template sync failed with: %@", error);
-        }
+        XCTAssert(!error, @"Template sync failed with: %@", error);
         
         id<OLPrintJob> iPhone6Case = [OLPrintJob printJobWithTemplateId:@"i6_case" OLAssets:assets];
         id<OLPrintJob> poster = [OLPrintJob printJobWithTemplateId:@"a1_poster" OLAssets:assets];
@@ -67,24 +65,19 @@
         card.cvv2 = @"123";
         
         [order costWithCompletionHandler:^(OLPrintOrderCost *cost, NSError *error){
-            if (error){
-                XCTFail(@"Cost request failed with: %@", error);
-            }
+            XCTAssert(!error, @"Cost request failed with: %@", error);
+            
             [card chargeCard:[cost totalCostInCurrency:order.currencyCode] currencyCode:order.currencyCode description:@"A Kite order!" completionHandler:^(NSString *proofOfPayment, NSError *error) {
-                if (error){
-                    XCTFail(@"Charging card failed with: %@", error);
-                }
+                XCTAssert(!error, @"Charging card failed with: %@", error);
+                
                 // if no error occured set the OLPrintOrder proofOfPayment to the one provided and submit the order
                 order.proofOfPayment = proofOfPayment;
                 [order submitForPrintingWithProgressHandler:nil
                                           completionHandler:^(NSString *orderIdReceipt, NSError *error) {
-                                              if (error){
-                                                  XCTFail(@"Order submission failed with: %@", error);
-                                              }
+                                              XCTAssert(!error, @"Order submission failed with: %@", error);
                                               // If there is no error then you can display a success outcome to the user
-                                              if (![order.receipt hasPrefix:@"PS"]){
-                                                  XCTFail(@"Order does not have valid receipt");
-                                              }
+                                              XCTAssert(order.printed, @"Order not printed");
+                                              XCTAssert([order.receipt hasPrefix:@"PS"], @"Order does not have valid receipt");
                                               [expectation fulfill];
                                           }];
             }];
@@ -107,9 +100,8 @@
                         [OLAsset assetWithURL:[NSURL URLWithString:@"http://psps.s3.amazonaws.com/sdk_static/4.jpg"]]
                         ];
     [OLProductTemplate syncWithCompletionHandler:^(NSArray* templates, NSError *error){
-        if (error){
-            XCTFail(@"Template sync failed with: %@", error);
-        }
+        XCTAssert(!error, @"Template sync failed with: %@", error);
+        
         id<OLPrintJob> squarePrints = [OLPrintJob printJobWithTemplateId:@"squares" OLAssets:assets];
         
         OLPrintOrder *order = [[OLPrintOrder alloc] init];
@@ -135,24 +127,20 @@
         card.cvv2 = @"123";
         
         [order costWithCompletionHandler:^(OLPrintOrderCost *cost, NSError *error){
-            if (error){
-                XCTFail(@"Cost request failed with: %@", error);
-            }
+            XCTAssert(!error, @"Cost request failed with: %@", error);
+            
             [card chargeCard:[cost totalCostInCurrency:order.currencyCode] currencyCode:order.currencyCode description:@"A Kite order!" completionHandler:^(NSString *proofOfPayment, NSError *error) {
-                if (error){
-                    XCTFail(@"Card charge failed with: %@", error);
-                }
+                XCTAssert(!error, @"Card charge failed with: %@", error);
+                
                 // if no error occured set the OLPrintOrder proofOfPayment to the one provided and submit the order
                 order.proofOfPayment = proofOfPayment;
                 [order submitForPrintingWithProgressHandler:nil
                                           completionHandler:^(NSString *orderIdReceipt, NSError *error) {
-                                              if (error){
-                                                  XCTFail(@"Order submission failed with: %@", error);
-                                              }
+                                              XCTAssert(!error, @"Order submission failed with: %@", error);
+                                              
                                               // If there is no error then you can display a success outcome to the user
-                                              if (![order.receipt hasPrefix:@"PS"]){
-                                                  XCTFail(@"Order does not have valid receipt");
-                                              }
+                                              XCTAssert(order.printed, @"Order not printed");
+                                              XCTAssert([order.receipt hasPrefix:@"PS"], @"Order does not have valid receipt");
                                               [expectation fulfill];
                                           }];
             }];
@@ -172,9 +160,7 @@
                         [OLAsset assetWithURL:[NSURL URLWithString:@"http://psps.s3.amazonaws.com/sdk_static/1.jpg"]]
                         ];
     [OLProductTemplate syncWithCompletionHandler:^(NSArray* templates, NSError *error){
-        if (error){
-            XCTFail(@"Template sync failed with: %@", error);
-        }
+        XCTAssert(!error, @"Template sync failed with: %@", error);
         id<OLPrintJob> ipadAirCase = [OLPrintJob printJobWithTemplateId:@"ipad_air_case" OLAssets:assets];
         id<OLPrintJob> galaxyS5Case = [OLPrintJob printJobWithTemplateId:@"samsung_s5_case" OLAssets:assets];
         [galaxyS5Case setValue:@"matte" forOption:@"case_style"];
@@ -203,24 +189,20 @@
         card.cvv2 = @"123";
         
         [order costWithCompletionHandler:^(OLPrintOrderCost *cost, NSError *error){
-            if (error){
-                XCTFail(@"Cost request failed with: %@", error);
-            }
+            XCTAssert(!error, @"Cost request failed with: %@", error);
+            
             [card chargeCard:[cost totalCostInCurrency:order.currencyCode] currencyCode:order.currencyCode description:@"A Kite order!" completionHandler:^(NSString *proofOfPayment, NSError *error) {
-                if (error){
-                    XCTFail(@"Card charge failed with: %@", error);
-                }
+                XCTAssert(!error, @"Card charge failed with: %@", error);
+                
                 // if no error occured set the OLPrintOrder proofOfPayment to the one provided and submit the order
                 order.proofOfPayment = proofOfPayment;
                 [order submitForPrintingWithProgressHandler:nil
                                           completionHandler:^(NSString *orderIdReceipt, NSError *error) {
-                                              if (error){
-                                                  XCTFail(@"Order submission failed with: %@", error);
-                                              }
+                                              XCTAssert(!error, @"Order submission failed with: %@", error);
+                                              
                                               // If there is no error then you can display a success outcome to the user
-                                              if (![order.receipt hasPrefix:@"PS"]){
-                                                  XCTFail(@"Order does not have valid receipt");
-                                              }
+                                              XCTAssert(order.printed, @"Order not printed");
+                                              XCTAssert([order.receipt hasPrefix:@"PS"], @"Order does not have valid receipt");
                                               [expectation fulfill];
                                           }];
             }];
@@ -237,13 +219,12 @@
     XCTestExpectation *expectation = [self expectationWithDescription:@"Print order submitted"];
     
     NSDictionary *assets = @{
-                        @"center_chest": [OLAsset assetWithURL:[NSURL URLWithString:@"http://psps.s3.amazonaws.com/sdk_static/1.jpg"]],
-                        @"center_back":[OLAsset assetWithURL:[NSURL URLWithString:@"http://psps.s3.amazonaws.com/sdk_static/2.jpg"]]
-                        };
+                             @"center_chest": [OLAsset assetWithURL:[NSURL URLWithString:@"http://psps.s3.amazonaws.com/sdk_static/1.jpg"]],
+                             @"center_back":[OLAsset assetWithURL:[NSURL URLWithString:@"http://psps.s3.amazonaws.com/sdk_static/2.jpg"]]
+                             };
     [OLProductTemplate syncWithCompletionHandler:^(NSArray* templates, NSError *error){
-        if (error){
-            XCTFail(@"Template sync failed with: %@", error);
-        }
+        XCTAssert(!error, @"Template sync failed with: %@", error);
+        
         id<OLPrintJob> tshirt = [OLPrintJob apparelWithTemplateId:@"gildan_tshirt" OLAssets:assets];
         [tshirt setValue:@"M" forOption:@"garment_size"];
         [tshirt setValue:@"white" forOption:@"garment_color"];
@@ -271,24 +252,20 @@
         card.cvv2 = @"123";
         
         [order costWithCompletionHandler:^(OLPrintOrderCost *cost, NSError *error){
-            if (error){
-                XCTFail(@"Cost request failed with: %@", error);
-            }
+            XCTAssert(!error, @"Cost request failed with: %@", error);
+            
             [card chargeCard:[cost totalCostInCurrency:order.currencyCode] currencyCode:order.currencyCode description:@"A Kite order!" completionHandler:^(NSString *proofOfPayment, NSError *error) {
-                if (error){
-                    XCTFail(@"Card charge failed with: %@", error);
-                }
+                XCTAssert(!error, @"Card charge failed with: %@", error);
+                
                 // if no error occured set the OLPrintOrder proofOfPayment to the one provided and submit the order
                 order.proofOfPayment = proofOfPayment;
                 [order submitForPrintingWithProgressHandler:nil
                                           completionHandler:^(NSString *orderIdReceipt, NSError *error) {
-                                              if (error){
-                                                  XCTFail(@"Order submission failed with: %@", error);
-                                              }
+                                              XCTAssert(!error, @"Order submission failed with: %@", error);
+                                              
                                               // If there is no error then you can display a success outcome to the user
-                                              if (![order.receipt hasPrefix:@"PS"]){
-                                                  XCTFail(@"Order does not have valid receipt");
-                                              }
+                                              XCTAssert(order.printed, @"Order not printed");
+                                              XCTAssert([order.receipt hasPrefix:@"PS"], @"Order does not have valid receipt");
                                               [expectation fulfill];
                                           }];
             }];
@@ -309,9 +286,8 @@
                         ];
     OLAsset *frontCoverAsset = [OLAsset assetWithURL:[NSURL URLWithString:@"http://psps.s3.amazonaws.com/sdk_static/4.jpg"]];
     [OLProductTemplate syncWithCompletionHandler:^(NSArray* templates, NSError *error){
-        if (error){
-            XCTFail(@"Template sync failed with: %@", error);
-        }
+        XCTAssert(!error, @"Template sync failed with: %@", error);
+        
         id<OLPrintJob> photobook = [OLPrintJob photobookWithTemplateId:@"photobook_small_portrait" OLAssets:assets frontCoverOLAsset:frontCoverAsset backCoverOLAsset:nil];
         [photobook setValue:@"#FFFFFF" forOption:@"spine_color"];
         
@@ -338,24 +314,19 @@
         card.cvv2 = @"123";
         
         [order costWithCompletionHandler:^(OLPrintOrderCost *cost, NSError *error){
-            if (error){
-                XCTFail(@"Cost request failed with: %@", error);
-            }
+            XCTAssert(!error, @"Cost request failed with: %@", error);
+            
             [card chargeCard:[cost totalCostInCurrency:order.currencyCode] currencyCode:order.currencyCode description:@"A Kite order!" completionHandler:^(NSString *proofOfPayment, NSError *error) {
-                if (error){
-                    XCTFail(@"Card charge failed with: %@", error);
-                }
+                XCTAssert(!error, @"Card charge failed with: %@", error);
+                
                 // if no error occured set the OLPrintOrder proofOfPayment to the one provided and submit the order
                 order.proofOfPayment = proofOfPayment;
                 [order submitForPrintingWithProgressHandler:nil
                                           completionHandler:^(NSString *orderIdReceipt, NSError *error) {
-                                              if (error){
-                                                  XCTFail(@"Order submission failed with: %@", error);
-                                              }
+                                              XCTAssert(!error, @"Order submission failed with: %@", error);
                                               // If there is no error then you can display a success outcome to the user
-                                              if (![order.receipt hasPrefix:@"PS"]){
-                                                  XCTFail(@"Order does not have valid receipt");
-                                              }
+                                              XCTAssert(order.printed, @"Order not printed");
+                                              XCTAssert([order.receipt hasPrefix:@"PS"], @"Order does not have valid receipt");
                                               [expectation fulfill];
                                           }];
             }];
@@ -371,9 +342,8 @@
     OLAsset *frontImage = [OLAsset assetWithURL:[NSURL URLWithString:@"http://psps.s3.amazonaws.com/sdk_static/4.jpg"]];
     
     [OLProductTemplate syncWithCompletionHandler:^(NSArray* templates, NSError *error){
-        if (error){
-            XCTFail(@"Template sync failed with: %@", error);
-        }
+        XCTAssert(!error, @"Template sync failed with: %@", error);
+        
         id<OLPrintJob> postcard = [OLPrintJob postcardWithTemplateId:@"postcard" frontImageOLAsset:frontImage message:@"Hello World!" address:nil];
         
         OLPrintOrder *order = [[OLPrintOrder alloc] init];
@@ -399,24 +369,20 @@
         card.cvv2 = @"123";
         
         [order costWithCompletionHandler:^(OLPrintOrderCost *cost, NSError *error){
-            if (error){
-                XCTFail(@"Cost request failed with: %@", error);
-            }
+            XCTAssert(!error, @"Cost request failed with: %@", error);
+            
             [card chargeCard:[cost totalCostInCurrency:order.currencyCode] currencyCode:order.currencyCode description:@"A Kite order!" completionHandler:^(NSString *proofOfPayment, NSError *error) {
-                if (error){
-                    XCTFail(@"Card charge failed with: %@", error);
-                }
+                XCTAssert(!error, @"Card charge failed with: %@", error);
+                
                 // if no error occured set the OLPrintOrder proofOfPayment to the one provided and submit the order
                 order.proofOfPayment = proofOfPayment;
                 [order submitForPrintingWithProgressHandler:nil
                                           completionHandler:^(NSString *orderIdReceipt, NSError *error) {
-                                              if (error){
-                                                  XCTFail(@"Order submission failed with: %@", error);
-                                              }
+                                              XCTAssert(!error, @"Order submission failed with: %@", error);
+                                              
                                               // If there is no error then you can display a success outcome to the user
-                                              if (![order.receipt hasPrefix:@"PS"]){
-                                                  XCTFail(@"Order does not have valid receipt");
-                                              }
+                                              XCTAssert(order.printed, @"Order not printed");
+                                              XCTAssert([order.receipt hasPrefix:@"PS"], @"Order does not have valid receipt");
                                               [expectation fulfill];
                                           }];
             }];

@@ -51,7 +51,7 @@ static NSString *const kKeyPhotobookPrintJobOptions = @"co.oceanlabs.pssdk.kKeyP
             NSAssert([asset isKindOfClass:[OLAsset class]], @"initWithTemplateId:OLAssets: requires an NSArray of OLAsset not: %@", [asset class]);
         }
 #endif
-        
+        self.uuid = [[NSUUID UUID] UUIDString];
         self.assets = assets;
         self.templateId = templateId;
     }

@@ -387,18 +387,6 @@ static id stringOrEmptyString(NSString *str) {
     return hash;
 }
 
-- (NSArray *)uniqueJobs{
-    NSMutableArray *uniqJobs = [[NSMutableArray alloc] init];
-    NSMutableSet *uniqJobIds = [[NSMutableSet alloc] init];
-    for (id<OLPrintJob> job in self.jobs){
-        if (![uniqJobIds containsObject:job.uuid]){
-            [uniqJobIds addObject:job.uuid];
-            [uniqJobs addObject:job];
-        }
-    }
-    return uniqJobs;
-}
-
 - (void)discardDuplicateJobs{
     NSMutableSet *uniqJobIds = [[NSMutableSet alloc] init];
     NSMutableArray *jobsToRemove = [[NSMutableArray alloc] init];

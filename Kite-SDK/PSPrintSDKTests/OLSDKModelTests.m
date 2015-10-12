@@ -65,146 +65,89 @@
     NSString *input = @"";
     NSString *expected = @"";
     NSString *actual = [NSString stringByFormattingCreditCardNumber:input];
-    if (![actual isEqualToString:expected]){
-        XCTFail(@"Credit card number formatter does not work properly. Expected: %@ but got: %@", expected, actual);
-    }
+    XCTAssert([actual isEqualToString:expected], @"Credit card number formatter does not work properly. Expected: %@ but got: %@", expected, actual);
     
     input = @"123";
     expected = @"123";
     actual = [NSString stringByFormattingCreditCardNumber:input];
-    if (![actual isEqualToString:expected]){
-        XCTFail(@"Credit card number formatter does not work properly. Expected: %@ but got: %@", expected, actual);
-    }
+    XCTAssert([actual isEqualToString:expected], @"Credit card number formatter does not work properly. Expected: %@ but got: %@", expected, actual);
     
     input = @"1234";
     expected = @"1234";
     actual = [NSString stringByFormattingCreditCardNumber:input];
-    if (![actual isEqualToString:expected]){
-        XCTFail(@"Credit card number formatter does not work properly. Expected: %@ but got: %@", expected, actual);
-    }
+    XCTAssert([actual isEqualToString:expected], @"Credit card number formatter does not work properly. Expected: %@ but got: %@", expected, actual);
     
     input = @"12345";
     expected = @"1234 5";
     actual = [NSString stringByFormattingCreditCardNumber:input];
-    if (![actual isEqualToString:expected]){
-        XCTFail(@"Credit card number formatter does not work properly. Expected: %@ but got: %@", expected, actual);
-    }
+    XCTAssert([actual isEqualToString:expected], @"Credit card number formatter does not work properly. Expected: %@ but got: %@", expected, actual);
     
     input = @"123456789abcdefg";
     expected = @"1234 5678 9abc defg";
     actual = [NSString stringByFormattingCreditCardNumber:input];
-    if (![actual isEqualToString:expected]){
-        XCTFail(@"Credit card number formatter does not work properly. Expected: %@ but got: %@", expected, actual);
-    }
+    XCTAssert([actual isEqualToString:expected], @"Credit card number formatter does not work properly. Expected: %@ but got: %@", expected, actual);
     
     input = @"123456789abcdefgh";
     expected = @"1234 5678 9abc defg";
     actual = [NSString stringByFormattingCreditCardNumber:input];
-    if (![actual isEqualToString:expected]){
-        XCTFail(@"Credit card number formatter does not work properly. Expected: %@ but got: %@", expected, actual);
-    }
+    XCTAssert([actual isEqualToString:expected], @"Credit card number formatter does not work properly. Expected: %@ but got: %@", expected, actual);
     
     input = @"123456789abcdefghijk";
     expected = @"1234 5678 9abc defg";
     actual = [NSString stringByFormattingCreditCardNumber:input];
-    if (![actual isEqualToString:expected]){
-        XCTFail(@"Credit card number formatter does not work properly. Expected: %@ but got: %@", expected, actual);
-    }
+    XCTAssert([actual isEqualToString:expected], @"Credit card number formatter does not work properly. Expected: %@ but got: %@", expected, actual);
 }
 
 - (void)testOLCountries{
     OLCountry *country = [OLCountry countryForCode:@"GBR"];
-    if (![country isInEurope]){
-        XCTFail(@"UK should be in Europe");
-    }
+    XCTAssert([country isInEurope], @"UK should be in Europe");
     
     country = [OLCountry countryForName:@"United States"];
-    if ([country isInEurope]){
-        XCTFail(@"US should not be in Europe");
-    }
+    XCTAssert(![country isInEurope], @"US should not be in Europe");
     
     country = [OLCountry countryForCode:@"ABC"];
-    if (country){
-        XCTFail(@"No such country should exist");
-    }
-    country = [OLCountry countryForName:@"FOOBAR"];
-    if (country){
-        XCTFail(@"There should be no such country");
-    }
+    XCTAssert(!country, @"No such country should exist");
     
-    if ([OLCountry isValidCurrencyCode:@"ABC"]){
-        XCTFail(@"There should be no such currency code");
-    }
-    if (![OLCountry isValidCurrencyCode:@"EUR"]){
-        XCTFail(@"There should be such a currency code");
-    }
+    country = [OLCountry countryForName:@"FOOBAR"];
+    XCTAssert(!country, @"No such country should exist");
+    
+    XCTAssert(![OLCountry isValidCurrencyCode:@"ABC"], @"There should be no such currency code");
+    XCTAssert([OLCountry isValidCurrencyCode:@"EUR"], @"There should be such a currency code");
+    
 }
 
 - (void)testOLKitePrintSDK{
     //Live
     [OLKitePrintSDK setAPIKey:@"a45bf7f39523d31aa1ca4ecf64d422b4d810d9c4" withEnvironment:kOLKitePrintSDKEnvironmentLive];
-    if ([OLKitePrintSDK environment] != kOLKitePrintSDKEnvironmentLive){
-        XCTFail(@"Environment fail");
-    }
-    if (![[OLKitePrintSDK paypalEnvironment] isEqualToString:PayPalEnvironmentProduction]){
-        XCTFail(@"PayPal environment fail");
-    }
-    if (![OLKitePrintSDK paypalClientId] || [[OLKitePrintSDK paypalClientId] isEqualToString:@""]){
-        XCTFail(@"No PayPal client ID");
-    }
-    
-    if(![OLKitePrintSDK stripePublishableKey] || [[OLKitePrintSDK stripePublishableKey] isEqualToString:@""]){
-        XCTFail(@"Stripe key fail");
-    }
-    
+    XCTAssert([OLKitePrintSDK environment] == kOLKitePrintSDKEnvironmentLive, @"Environment fail");
+    XCTAssert([[OLKitePrintSDK paypalEnvironment] isEqualToString:PayPalEnvironmentProduction], @"PayPal environment fail");
+    XCTAssert([OLKitePrintSDK paypalClientId] && ![[OLKitePrintSDK paypalClientId] isEqualToString:@""],@"No PayPal client ID");
+    XCTAssert([OLKitePrintSDK stripePublishableKey] && ![[OLKitePrintSDK stripePublishableKey] isEqualToString:@""],@"Stripe key fail");
     
     //Sandbox
     [OLKitePrintSDK setAPIKey:@"a45bf7f39523d31aa1ca4ecf64d422b4d810d9c4" withEnvironment:kOLKitePrintSDKEnvironmentSandbox];
-    if (![[OLKitePrintSDK paypalEnvironment] isEqualToString:PayPalEnvironmentSandbox]){
-        XCTFail(@"PayPal environment fail");
-    }
-    if (![OLKitePrintSDK paypalClientId] || [[OLKitePrintSDK paypalClientId] isEqualToString:@""]){
-        XCTFail(@"No PayPal client ID");
-    }
-    
-    if(![OLKitePrintSDK stripePublishableKey] || [[OLKitePrintSDK stripePublishableKey] isEqualToString:@""]){
-        XCTFail(@"Stripe key fail");
-    }
+    XCTAssert([OLKitePrintSDK environment] == kOLKitePrintSDKEnvironmentSandbox, @"Environment fail");
+    XCTAssert([[OLKitePrintSDK paypalEnvironment] isEqualToString:PayPalEnvironmentSandbox], @"PayPal environment fail");
+    XCTAssert([OLKitePrintSDK paypalClientId] && ![[OLKitePrintSDK paypalClientId] isEqualToString:@""], @"No PayPal client ID");
+    XCTAssert([OLKitePrintSDK stripePublishableKey] && ![[OLKitePrintSDK stripePublishableKey] isEqualToString:@""], @"Stripe key fail");
     
     [OLKitePrintSDK setUseJudoPayForGBP:NO];
-    if ([OLKitePrintSDK useJudoPayForGBP]){
-        XCTFail(@"Judopay fail");
-    }
+    XCTAssert(![OLKitePrintSDK useJudoPayForGBP], @"Judopay fail");
     
     [OLKitePrintSDK setCacheTemplates:NO];
-    if ([OLKitePrintSDK cacheTemplates]){
-        XCTFail(@"Cache templates fail");
-    }
+    XCTAssert(![OLKitePrintSDK cacheTemplates], @"Cache templates fail");
     
     [OLKitePrintSDK setApplePayMerchantID:@"merchant"];
-    if (![[OLKitePrintSDK appleMerchantID] isEqualToString:@"merchant"]){
-        XCTFail(@"Merchant fail");
-    }
+    XCTAssert([[OLKitePrintSDK appleMerchantID] isEqualToString:@"merchant"], @"Merchant fail");
+    XCTAssert([[OLKitePrintSDK applePayPayToString] isEqualToString:@"Kite.ly (via Kite.ly)"], @"Pay to test fail");
     
-    if (![[OLKitePrintSDK applePayPayToString] isEqualToString:@"Kite.ly (via Kite.ly)"]){
-        XCTFail(@"Pay to test fail");
-    }
     [OLKitePrintSDK setApplePayPayToString:@"Kite Test"];
-    if (![[OLKitePrintSDK applePayPayToString] isEqualToString:@"Kite Test"]){
-        XCTFail(@"Pay to test fail");
-    }
+    XCTAssert([[OLKitePrintSDK applePayPayToString] isEqualToString:@"Kite Test"], @"Pay to test fail");
     
     [OLKitePrintSDK setInstagramEnabledWithClientID:@"client" secret:@"secret" redirectURI:@"redirect"];
-    if (![[OLKitePrintSDK instagramClientID] isEqualToString:@"client"]){
-        XCTFail(@"Instagram Fail");
-    }
-    if (![[OLKitePrintSDK instagramSecret] isEqualToString:@"secret"]){
-        XCTFail(@"Instagram Fail");
-    }
-    if (![[OLKitePrintSDK instagramRedirectURI] isEqualToString:@"redirect"]){
-        XCTFail(@"Instagram Fail");
-    }
-    
+    XCTAssert([[OLKitePrintSDK instagramClientID] isEqualToString:@"client"], @"Instagram Fail");
+    XCTAssert([[OLKitePrintSDK instagramSecret] isEqualToString:@"secret"], @"Instagram Fail");
+    XCTAssert([[OLKitePrintSDK instagramRedirectURI] isEqualToString:@"redirect"], @"Instagram Fail");
 }
 
 @end

@@ -53,7 +53,7 @@ static id stringOrEmptyString(NSString *str) {
             NSAssert([imagePath isKindOfClass:[NSString class]], @"OLProductPrintJob initWithProduct:imageFilePaths: requires an NSArray of NSString not: %@", [imagePath class]);
             [assets addObject:[OLAsset assetWithFilePath:imagePath]];
         }
-        
+        self.uuid = [[NSUUID UUID] UUIDString];
         self.assets = assets;
         self.templateId = templateId;
     }
@@ -68,7 +68,7 @@ static id stringOrEmptyString(NSString *str) {
             NSAssert([image isKindOfClass:[UIImage class]], @"OLProductPrintJob initWithProduct:images: requires an NSArray of UIImage not: %@", [image class]);
             [assets addObject:[OLAsset assetWithImageAsJPEG:image]];
         }
-        
+        self.uuid = [[NSUUID UUID] UUIDString];
         self.assets = assets;
         self.templateId = templateId;
     }
@@ -83,7 +83,7 @@ static id stringOrEmptyString(NSString *str) {
             NSAssert([asset isKindOfClass:[OLAsset class]], @"OLProductPrintJob initWithProduct:OLAssets: requires an NSArray of OLAsset not: %@", [asset class]);
         }
 #endif
-        
+        self.uuid = [[NSUUID UUID] UUIDString];
         self.assets = assets;
         self.templateId = templateId;
     }

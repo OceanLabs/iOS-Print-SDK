@@ -59,6 +59,7 @@ static id stringOrEmptyString(NSString *str) {
 
 - (id)initWithTemplateId:(NSString *)templateId frontImageOLAsset:(OLAsset *)frontImageAsset backImageOLAsset:(OLAsset *)backImageAsset message:(NSString *)message address:(OLAddress *)theAddress {
     if (self = [super init]) {
+        self.uuid = [[NSUUID UUID] UUIDString];
         self.frontImageAsset = frontImageAsset;
         self.backImageAsset = backImageAsset;
         self.message = message;

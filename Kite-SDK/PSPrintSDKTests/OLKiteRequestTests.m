@@ -33,12 +33,8 @@
     [self.expectation fulfill];
     
     for (OLAsset *asset in assets){
-        if (![asset isUploaded]){
-            XCTFail(@"Asset not really uploaded");
-        }
-        if (![asset assetId]){
-            XCTFail(@"Invalid Asset ID");
-        }
+            XCTAssert([asset isUploaded], @"Asset not really uploaded");
+            XCTAssert([asset assetId], @"Invalid Asset ID");
     }
 }
 
