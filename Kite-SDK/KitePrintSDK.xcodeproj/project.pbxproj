@@ -1609,6 +1609,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
+					OL_KITE_OFFER_APPLE_PAY,
 				);
 				INFOPLIST_FILE = "PSPrintSDKTests/KitePrintSDKTests-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
@@ -1628,6 +1629,11 @@
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "PSPrintSDK/KitePrintSDK-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"COCOAPODS=1",
+					OL_KITE_OFFER_APPLE_PAY,
+				);
 				INFOPLIST_FILE = "PSPrintSDKTests/KitePrintSDKTests-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "co.oceanlabs.${PRODUCT_NAME:rfc1034identifier}";

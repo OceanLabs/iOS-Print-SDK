@@ -121,13 +121,6 @@ static NSString *instagramRedirectURI = nil;
     }
 }
 
-+ (NSString *_Nonnull)paypalReceiverEmail {
-    switch (environment) {
-        case kOLKitePrintSDKEnvironmentLive: return kOLPayPalRecipientEmailLive;
-        case kOLKitePrintSDKEnvironmentSandbox: return kOLPayPalRecipientEmailSandbox;
-    }
-}
-
 #ifdef OL_KITE_OFFER_APPLE_PAY
 + (void)setApplePayMerchantID:(NSString *_Nonnull)mID{
     applePayMerchantID = mID;
