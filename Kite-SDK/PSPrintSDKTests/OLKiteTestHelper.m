@@ -9,6 +9,8 @@
 #import "OLKiteTestHelper.h"
 #import "OLKitePrintSDK.h"
 
+@import Photos;
+
 @implementation OLKiteTestHelper
 
 #pragma mark Image helper methods
@@ -29,6 +31,18 @@
 + (NSArray <OLAsset *>*)imageAssets{
     
     return @[[OLAsset assetWithImageAsJPEG:[UIImage imageWithData:[OLKiteTestHelper testImageData]]]];
+}
+
++ (PHAsset *)aPHAsset{
+    PHFetchResult *fetchResult = [PHAsset fetchAssetsWithMediaType:PHAssetMediaTypeImage options:nil];
+    
+    return [fetchResult objectAtIndex:fetchResult.count-1];
+}
+
++ (OLPrintPhoto *)aPrintPhoto{
+    OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
+    printPhoto.asset = (OLAsset *)[OLKiteTestHelper imageAssets].firstObject;
+    return printPhoto;
 }
 
 @end

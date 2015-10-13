@@ -9,11 +9,15 @@
 #import <Foundation/Foundation.h>
 
 @class OLAsset;
+@class OLPrintPhoto;
+@class PHAsset;
 
 @interface OLKiteTestHelper : NSObject
 
 + (NSArray <OLAsset *>*)urlAssets;
 + (NSArray <OLAsset *>*)imageAssets;
 + (NSData *)testImageData;
++ (PHAsset *)aPHAsset;
++ (OLPrintPhoto *)aPrintPhoto;
 
 @end

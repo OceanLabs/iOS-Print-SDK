@@ -52,6 +52,8 @@
 		2E5F80321B04A22500095203 /* OLIntegratedCheckoutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E5F80311B04A22500095203 /* OLIntegratedCheckoutViewController.m */; };
 		2E676C2B1B33FD70005E068B /* OLPopupOptionsImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E676C2A1B33FD70005E068B /* OLPopupOptionsImageView.m */; };
 		2E7483511BCCFB5900360550 /* 2.png in Resources */ = {isa = PBXBuildFile; fileRef = 2E7483501BCCFB5900360550 /* 2.png */; settings = {ASSET_TAGS = (); }; };
+		2E7483531BCD11F800360550 /* ViewControllerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E7483521BCD11F800360550 /* ViewControllerTests.m */; settings = {ASSET_TAGS = (); }; };
+		2E7483551BCD1DF500360550 /* OLPrintPhotoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E7483541BCD1DF500360550 /* OLPrintPhotoTests.m */; settings = {ASSET_TAGS = (); }; };
 		2E74A9D11B6B7827001AE97B /* OLPosterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E74A9D01B6B7827001AE97B /* OLPosterViewController.m */; };
 		2E768F551B394372009BAC18 /* OLPhotobookPrintJob.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E768F541B394372009BAC18 /* OLPhotobookPrintJob.m */; };
 		2E7D1C8F1BC41C7D009227EE /* OLProductOrderTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E7D1C8E1BC41C7D009227EE /* OLProductOrderTests.m */; settings = {ASSET_TAGS = (); }; };
@@ -236,6 +238,8 @@
 		2E676C291B33FD70005E068B /* OLPopupOptionsImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLPopupOptionsImageView.h; sourceTree = "<group>"; };
 		2E676C2A1B33FD70005E068B /* OLPopupOptionsImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLPopupOptionsImageView.m; sourceTree = "<group>"; };
 		2E7483501BCCFB5900360550 /* 2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 2.png; sourceTree = "<group>"; };
+		2E7483521BCD11F800360550 /* ViewControllerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewControllerTests.m; sourceTree = "<group>"; };
+		2E7483541BCD1DF500360550 /* OLPrintPhotoTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLPrintPhotoTests.m; sourceTree = "<group>"; };
 		2E74A9CF1B6B7827001AE97B /* OLPosterViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLPosterViewController.h; sourceTree = "<group>"; };
 		2E74A9D01B6B7827001AE97B /* OLPosterViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLPosterViewController.m; sourceTree = "<group>"; };
 		2E768F531B394372009BAC18 /* OLPhotobookPrintJob.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLPhotobookPrintJob.h; sourceTree = "<group>"; };
@@ -841,6 +845,8 @@
 			isa = PBXGroup;
 			children = (
 				CD73BF96186215790009DE03 /* OLSDKModelTests.m */,
+				2E7483521BCD11F800360550 /* ViewControllerTests.m */,
+				2E7483541BCD1DF500360550 /* OLPrintPhotoTests.m */,
 				2E924BE11BC6A0C80038938A /* OLKiteRequestTests.m */,
 				2E7D1C8E1BC41C7D009227EE /* OLProductOrderTests.m */,
 				2ECC95691BC6B88F00F44CE1 /* OLDocsObjcExampleCodeTests.m */,
@@ -1321,11 +1327,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2E7483531BCD11F800360550 /* ViewControllerTests.m in Sources */,
 				2E924BE21BC6A0C80038938A /* OLKiteRequestTests.m in Sources */,
 				2E924BE51BC6A3A00038938A /* OLKiteTestHelper.m in Sources */,
 				2ECC956A1BC6B88F00F44CE1 /* OLDocsObjcExampleCodeTests.m in Sources */,
 				CD73BF97186215790009DE03 /* OLSDKModelTests.m in Sources */,
 				2E7D1C8F1BC41C7D009227EE /* OLProductOrderTests.m in Sources */,
+				2E7483551BCD1DF500360550 /* OLPrintPhotoTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
