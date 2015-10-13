@@ -168,7 +168,7 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
         UIStoryboard *sb = [UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:currentBundle];
         NSString *nextVcNavIdentifier;
         OLProduct *product;
-        if (groups.count == 0) {
+        if (groups.count == 0 && !([OLProductTemplate templates].count != 0 && welf.printOrder)) {
             if ([UIAlertController class]){
                 UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Store Maintenance", @"") message:NSLocalizedString(@"Our store is currently undergoing maintence so no products are available for purchase at this time. Please try again a little later.", @"") preferredStyle:UIAlertControllerStyleAlert];
                 [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
