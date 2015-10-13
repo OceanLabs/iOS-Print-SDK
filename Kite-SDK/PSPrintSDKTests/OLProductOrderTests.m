@@ -13,6 +13,7 @@
 #import <Stripe/Stripe.h>
 #import "OLPrintPhoto.h"
 #import "OLKiteTestHelper.h"
+#import <AssetsLibrary/AssetsLibrary.h>
 
 @import Photos;
 
@@ -159,8 +160,16 @@
     [self submitJobs:@[job]];
 }
 
-- (void)testSquaresOrderWithDataOLAssets{
-    NSData *data = [NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"kite_corrupt" ofType:@"jpg"]];
+- (void)testSquaresOrderWithJpgDataOLAssets{
+    NSData *data = [NSData dataWithContentsOfFile:[[NSBundle bundleForClass:[OLProductOrderTests class]] pathForResource:@"1" ofType:@"jpg"]];
+    XCTAssert(data, @"No data");
+    
+    OLProductPrintJob *job = [OLPrintJob printJobWithTemplateId:@"squares" OLAssets:@[[OLAsset assetWithDataAsJPEG:data]]];
+    [self submitJobs:@[job]];
+}
+
+- (void)testSquaresOrderWithPngDataOLAssets{
+    NSData *data = [NSData dataWithContentsOfFile:[[NSBundle bundleForClass:[OLProductOrderTests class]] pathForResource:@"2" ofType:@"png"]];
     XCTAssert(data, @"No data");
     
     OLProductPrintJob *job = [OLPrintJob printJobWithTemplateId:@"squares" OLAssets:@[[OLAsset assetWithDataAsJPEG:data]]];
@@ -168,7 +177,7 @@
 }
 
 - (void)testSquaresOrderWithImages{
-    NSData *data = [NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"kite_corrupt" ofType:@"jpg"]];
+    NSData *data = [NSData dataWithContentsOfFile:[[NSBundle bundleForClass:[OLProductOrderTests class]] pathForResource:@"1" ofType:@"jpg"]];
     XCTAssert(data, @"No data");
     
     UIImage *image = [UIImage imageWithData:data];
@@ -179,7 +188,7 @@
 }
 
 - (void)testSquaresOrderWithFilePaths{
-    NSString *path = [[NSBundle mainBundle] pathForResource:@"kite_corrupt" ofType:@"jpg"];
+    NSString *path = [[NSBundle bundleForClass:[OLProductOrderTests class]] pathForResource:@"1" ofType:@"jpg"];
     XCTAssert(path, @"No path");
     
     OLProductPrintJob *job = [OLPrintJob printJobWithTemplateId:@"squares" imageFilePaths:@[path]];
@@ -193,6 +202,31 @@
     PHAsset *asset = [fetchResult objectAtIndex:arc4random() % fetchResult.count];
     
     OLProductPrintJob *job = [OLPrintJob printJobWithTemplateId:@"squares" OLAssets:@[[OLAsset assetWithPHAsset:asset]]];
+    [self submitJobs:@[job]];
+}
+
+- (void)testSquaresOrderWithALAssetOLAssets{
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Get ALAsset"];
+    
+    ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
+    __block ALAsset *asset;
+    [library enumerateGroupsWithTypes: ALAssetsGroupAll usingBlock:^(ALAssetsGroup *group, BOOL *stop){
+        [group enumerateAssetsAtIndexes:[NSIndexSet indexSetWithIndex:0] options:0 usingBlock:^(ALAsset *result, NSUInteger index, BOOL *groupStop){
+            if (!*stop && !*groupStop){
+                asset = result;
+                [expectation fulfill];
+            }
+            *stop = YES;
+            *groupStop = YES;
+        }];
+    }failureBlock:NULL];
+    
+    [self waitForExpectationsWithTimeout:15 handler:NULL];
+    
+    OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
+    printPhoto.asset = asset;
+    
+    OLProductPrintJob *job = [OLPrintJob printJobWithTemplateId:@"squares" OLAssets:@[[OLAsset assetWithPrintPhoto:printPhoto]]];
     [self submitJobs:@[job]];
 }
 
@@ -212,6 +246,14 @@
     [self submitJobs:@[job]];
 }
 
+- (void)testSquaresOrderWithImageOLAssetPrintPhotoOLAsset{
+    OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
+    printPhoto.asset = [OLKiteTestHelper imageAssets].firstObject;
+    
+    OLProductPrintJob *job = [OLPrintJob printJobWithTemplateId:@"squares" OLAssets:@[[OLAsset assetWithPrintPhoto:printPhoto]]];
+    [self submitJobs:@[job]];
+}
+
 - (void)testSquaresOrderWithPHAssetPrintPhotos{
     PHFetchResult *fetchResult = [PHAsset fetchAssetsWithMediaType:PHAssetMediaTypeImage options:nil];
     XCTAssert(fetchResult.count > 0, @"There are no assets available");
@@ -222,6 +264,25 @@
     printPhoto.asset = asset;
     
     OLProductPrintJob *job = [OLPrintJob printJobWithTemplateId:@"squares" OLAssets:@[[OLAsset assetWithDataSource:printPhoto]]];
+    [self submitJobs:@[job]];
+}
+
+- (void)testSquaresOrderWithPHAssetPrintPhotoOLAsset{
+    PHFetchResult *fetchResult = [PHAsset fetchAssetsWithMediaType:PHAssetMediaTypeImage options:nil];
+    XCTAssert(fetchResult.count > 0, @"There are no assets available");
+    
+    PHAsset *asset = [fetchResult objectAtIndex:arc4random() % fetchResult.count];
+    
+    OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
+    printPhoto.asset = asset;
+    
+    OLAsset *olAsset = [OLAsset assetWithPrintPhoto:printPhoto];
+    
+    PHAsset *loadedAsset = [olAsset loadPHAsset];
+    
+    XCTAssert([[loadedAsset localIdentifier] isEqualToString:[asset localIdentifier]], @"Local IDs should match");
+    
+    OLProductPrintJob *job = [OLPrintJob printJobWithTemplateId:@"squares" OLAssets:@[olAsset]];
     [self submitJobs:@[job]];
 }
 
@@ -300,7 +361,7 @@
         
         id<OLPrintJob> squarePrints = [OLPrintJob printJobWithTemplateId:@"squares" OLAssets:assets];
         
-        OLPrintOrder *order = [[OLPrintOrder alloc] init];
+        __block OLPrintOrder *order = [[OLPrintOrder alloc] init];
         [order addPrintJob:squarePrints];
         
         OLAddress *a    = [[OLAddress alloc] init];
@@ -329,7 +390,7 @@
             [card chargeCard:[cost totalCostInCurrency:order.currencyCode] currencyCode:order.currencyCode description:[order paymentDescription] completionHandler:^(NSString *proofOfPayment, NSError *error) {
                 XCTAssert(!error, @"Card charge failed with: %@", error);
                 
-                [OLPrintOrder submitJob:squarePrints withProofOfPayment:proofOfPayment forPrintingWithProgressHandler:NULL completionHandler:^(NSString *orderIdReceipt, NSError *error) {
+                order = [OLPrintOrder submitJob:squarePrints withProofOfPayment:proofOfPayment forPrintingWithProgressHandler:NULL completionHandler:^(NSString *orderIdReceipt, NSError *error) {
                     XCTAssert(!error, @"Order submission failed with: %@", error);
                     
                     // If there is no error then you can display a success outcome to the user

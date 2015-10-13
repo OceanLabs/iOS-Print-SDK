@@ -184,7 +184,7 @@ NSString *const kOLMimeTypePNG  = @"image/png";
         // Worst case scenario where we will need to download the entire image first and just assume it's a JPEG.
         return [OLAsset assetWithDataSource:[[OLURLDataSource alloc] initWithURLString:urlStr]];
     }
-    
+
     return nil;
 }
 

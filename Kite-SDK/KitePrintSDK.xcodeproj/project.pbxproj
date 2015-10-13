@@ -51,6 +51,7 @@
 		2E5F802C1B01E5F700095203 /* OLPaymentLineItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E5F802B1B01E5F700095203 /* OLPaymentLineItem.m */; };
 		2E5F80321B04A22500095203 /* OLIntegratedCheckoutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E5F80311B04A22500095203 /* OLIntegratedCheckoutViewController.m */; };
 		2E676C2B1B33FD70005E068B /* OLPopupOptionsImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E676C2A1B33FD70005E068B /* OLPopupOptionsImageView.m */; };
+		2E7483511BCCFB5900360550 /* 2.png in Resources */ = {isa = PBXBuildFile; fileRef = 2E7483501BCCFB5900360550 /* 2.png */; settings = {ASSET_TAGS = (); }; };
 		2E74A9D11B6B7827001AE97B /* OLPosterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E74A9D01B6B7827001AE97B /* OLPosterViewController.m */; };
 		2E768F551B394372009BAC18 /* OLPhotobookPrintJob.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E768F541B394372009BAC18 /* OLPhotobookPrintJob.m */; };
 		2E7D1C8F1BC41C7D009227EE /* OLProductOrderTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E7D1C8E1BC41C7D009227EE /* OLProductOrderTests.m */; settings = {ASSET_TAGS = (); }; };
@@ -234,6 +235,7 @@
 		2E5F80311B04A22500095203 /* OLIntegratedCheckoutViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLIntegratedCheckoutViewController.m; sourceTree = "<group>"; };
 		2E676C291B33FD70005E068B /* OLPopupOptionsImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLPopupOptionsImageView.h; sourceTree = "<group>"; };
 		2E676C2A1B33FD70005E068B /* OLPopupOptionsImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLPopupOptionsImageView.m; sourceTree = "<group>"; };
+		2E7483501BCCFB5900360550 /* 2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 2.png; sourceTree = "<group>"; };
 		2E74A9CF1B6B7827001AE97B /* OLPosterViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLPosterViewController.h; sourceTree = "<group>"; };
 		2E74A9D01B6B7827001AE97B /* OLPosterViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLPosterViewController.m; sourceTree = "<group>"; };
 		2E768F531B394372009BAC18 /* OLPhotobookPrintJob.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLPhotobookPrintJob.h; sourceTree = "<group>"; };
@@ -854,6 +856,7 @@
 			isa = PBXGroup;
 			children = (
 				2EDBFAAF1BC698F2007BDB83 /* 1.jpg */,
+				2E7483501BCCFB5900360550 /* 2.png */,
 				CD73BF93186215790009DE03 /* InfoPlist.strings */,
 				CD73BF92186215790009DE03 /* KitePrintSDKTests-Info.plist */,
 			);
@@ -1111,6 +1114,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2E7483511BCCFB5900360550 /* 2.png in Resources */,
 				CD73BF95186215790009DE03 /* InfoPlist.strings in Resources */,
 				2EDBFAB01BC698F2007BDB83 /* 1.jpg in Resources */,
 			);

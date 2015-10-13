@@ -150,4 +150,36 @@
     XCTAssert([[OLKitePrintSDK instagramRedirectURI] isEqualToString:@"redirect"], @"Instagram Fail");
 }
 
+- (void)testInstantiateOLPrintJobException{
+    @try {
+        id job = [[OLPrintJob alloc] init];
+        XCTAssert(!job, @"Should throw exception");
+    }
+    @catch (NSException *exception) {
+        //All good
+    }
+}
+
+- (void)testOLAssetDataEquality{
+    NSData *data = [NSData dataWithContentsOfFile:[[NSBundle bundleForClass:[OLSDKModelTests class]] pathForResource:@"1" ofType:@"jpg"]];
+    XCTAssert(data, @"No data");
+    
+    OLAsset *asset1 = [OLAsset assetWithDataAsJPEG:data];
+    
+    OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
+    printPhoto.asset = asset1;
+    OLAsset *asset2 = [OLAsset assetWithPrintPhoto:printPhoto];
+    
+    XCTAssert([asset1 isEqual:asset2], @"OLAssets should be equal");
+    XCTAssert([asset1 hash] == [asset2 hash], @"OLAsset hashes should be equal");
+    
+    NSData *data1 = [NSKeyedArchiver archivedDataWithRootObject:asset1];
+    NSData *data2 = [NSKeyedArchiver archivedDataWithRootObject:asset2];
+    asset1 = (OLAsset *)[NSKeyedUnarchiver unarchiveObjectWithData:data1];
+    asset2 = (OLAsset *)[NSKeyedUnarchiver unarchiveObjectWithData:data2];
+    
+    XCTAssert([asset1 isEqual:asset2], @"OLAssets should be equal");
+    XCTAssert([asset1 hash] == [asset2 hash], @"OLAsset hashes should be equal");
+}
+
 @end
