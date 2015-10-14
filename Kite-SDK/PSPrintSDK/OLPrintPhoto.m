@@ -321,43 +321,6 @@ static NSOperationQueue *imageOperationQueue;
     return !CGRectIsEmpty(self.cropImageFrame) || !CGRectIsEmpty(self.cropImageRect) || !CGSizeEqualToSize(self.cropImageSize, CGSizeZero);
 }
 
-+ (void)transform:(CGAffineTransform *)transform andSize:(CGSize *)size forOrientation:(UIImageOrientation)orientation {
-    *transform = CGAffineTransformIdentity;
-    BOOL transpose = NO;
-    
-    switch(orientation)
-    {
-        case UIImageOrientationUp:// EXIF 1
-        case UIImageOrientationUpMirrored:{ // EXIF 2
-        } break;
-        case UIImageOrientationDown: // EXIF 3
-        case UIImageOrientationDownMirrored: { // EXIF 4
-            *transform = CGAffineTransformMakeRotation(M_PI);
-        } break;
-        case UIImageOrientationLeftMirrored: // EXIF 5
-        case UIImageOrientationLeft: {// EXIF 6
-            *transform = CGAffineTransformMakeRotation(M_PI_2);
-            transpose = YES;
-        } break;
-        case UIImageOrientationRightMirrored: // EXIF 7
-        case UIImageOrientationRight: { // EXIF 8
-            *transform = CGAffineTransformMakeRotation(-M_PI_2);
-            transpose = YES;
-        } break;
-        default:
-            break;
-    }
-    
-    if(orientation == UIImageOrientationUpMirrored || orientation == UIImageOrientationDownMirrored ||
-       orientation == UIImageOrientationLeftMirrored || orientation == UIImageOrientationRightMirrored) {
-        *transform = CGAffineTransformScale(*transform, -1, 1);
-    }
-    
-    if(transpose) {
-        *size = CGSizeMake(size->height, size->width);
-    }
-}
-
 + (void)resizedImageWithPrintPhoto:(OLPrintPhoto *)printPhoto size:(CGSize)destSize cropped:(BOOL)cropped progress:(OLImageEditorImageGetImageProgressHandler)progressHandler completion:(OLImageEditorImageGetImageCompletionHandler)completionHandler {
     
     
