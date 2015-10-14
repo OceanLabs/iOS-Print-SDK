@@ -16,6 +16,7 @@
 #import "UIView+RoundRect.h"
 #import "OLPopupOptionsImageView.h"
 #import "OLAssetsPickerController.h"
+#import "OLKiteUtils.h"
 #ifdef OL_KITE_AT_LEAST_IOS8
 #import <CTAssetsPickerController/CTAssetsPickerController.h>
 #endif
@@ -36,6 +37,7 @@
 #endif
 
 #import <MPFlipViewController/MPFlipTransition.h>
+#import "UIImage+ImageNamedInKiteBundle.h"
 
 static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 static const NSUInteger kTagLeft = 10;
@@ -44,10 +46,6 @@ static const CGFloat kBookAnimationTime = 0.8;
 static const CGFloat kBookEdgePadding = 38;
 
 @interface OLKitePrintSDK (InternalUtils)
-+ (NSString *)userEmail:(UIViewController *)topVC;
-+ (NSString *)userPhone:(UIViewController *)topVC;
-+ (id<OLKiteDelegate>)kiteDelegate:(UIViewController *)topVC;
-+ (void)checkoutViewControllerForPrintOrder:(OLPrintOrder *)printOrder handler:(void(^)(id vc))handler;
 
 #ifdef OL_KITE_OFFER_INSTAGRAM
 + (NSString *) instagramRedirectURI;
@@ -656,10 +654,10 @@ UINavigationControllerDelegate
     }
     [printOrder addPrintJob:printJob];
     
-    [OLKitePrintSDK checkoutViewControllerForPrintOrder:printOrder handler:^(id vc){
-        [vc safePerformSelector:@selector(setUserEmail:) withObject:[OLKitePrintSDK userEmail:self]];
-        [vc safePerformSelector:@selector(setUserPhone:) withObject:[OLKitePrintSDK userPhone:self]];
-        [vc safePerformSelector:@selector(setKiteDelegate:) withObject:[OLKitePrintSDK kiteDelegate:self]];
+    [OLKiteUtils checkoutViewControllerForPrintOrder:printOrder handler:^(id vc){
+        [vc safePerformSelector:@selector(setUserEmail:) withObject:[OLKiteUtils userEmail:self]];
+        [vc safePerformSelector:@selector(setUserPhone:) withObject:[OLKiteUtils userPhone:self]];
+        [vc safePerformSelector:@selector(setKiteDelegate:) withObject:[OLKiteUtils kiteDelegate:self]];
 
         
         if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8){
@@ -931,7 +929,7 @@ UINavigationControllerDelegate
             halfBookCoverImageContainer.tag = kTagRight;
             swipe.direction = UISwipeGestureRecognizerDirectionLeft;
             
-            UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:[self productAspectRatio]/2.0 < 1 ? @"book-cover-right" : @"book-cover-right-landscape"]];
+            UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamedInKiteBundle:[self productAspectRatio]/2.0 < 1 ? @"book-cover-right" : @"book-cover-right-landscape"]];
             imageView.contentMode = UIViewContentModeScaleAspectFill;
             [imageView makeRoundRectWithRadius:3];
             imageView.tag = 17;
@@ -1031,7 +1029,7 @@ UINavigationControllerDelegate
             [halfBookCoverImageContainer addGestureRecognizer:tap];
             [halfBookCoverImageContainer addGestureRecognizer:swipe];
             
-            UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:[self productAspectRatio]/2.0 < 1 ? @"book-cover-left" : @"book-cover-left-landscape"]];
+            UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamedInKiteBundle:[self productAspectRatio]/2.0 < 1 ? @"book-cover-left" : @"book-cover-left-landscape"]];
             imageView.contentMode = UIViewContentModeScaleAspectFill;
             [imageView makeRoundRectWithRadius:3];
             [halfBookCoverImageContainer addSubview:imageView];
@@ -1497,12 +1495,18 @@ UINavigationControllerDelegate
 
 #ifdef OL_KITE_AT_LEAST_IOS8
 - (void)assetsPickerController:(CTAssetsPickerController *)picker didDeSelectAsset:(PHAsset *)asset{
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8){
+        return;
+    }
     PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
     options.networkAccessAllowed = YES;
     [[OLImageCachingManager sharedInstance].photosCachingManager stopCachingImagesForAssets:@[asset] targetSize:PHImageManagerMaximumSize contentMode:PHImageContentModeAspectFill options:options];
 }
 
 - (void)assetsPickerController:(CTAssetsPickerController *)picker didSelectAsset:(PHAsset *)asset{
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8){
+        return;
+    }
     PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
     options.networkAccessAllowed = YES;
     [[OLImageCachingManager sharedInstance].photosCachingManager startCachingImagesForAssets:@[asset] targetSize:PHImageManagerMaximumSize contentMode:PHImageContentModeAspectFill options:options];

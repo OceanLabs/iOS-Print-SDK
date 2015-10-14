@@ -8,6 +8,7 @@
 
 #import "OLInfoPageViewController.h"
 #import "OLAnalytics.h"
+#import "UIImage+ImageNamedInKiteBundle.h"
 
 @interface OLInfoPageViewController () <UITableViewDataSource, UITableViewDelegate>
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
@@ -21,9 +22,9 @@
     [super viewDidLoad];
     self.tableView.dataSource = self;
     self.tableView.delegate = self;
-    self.image = [UIImage imageNamed:self.imageName];
+    self.image = [UIImage imageNamedInKiteBundle:self.imageName];
     
-    self.navigationItem.titleView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"logo"]];
+    self.navigationItem.titleView = [[UIImageView alloc] initWithImage:[UIImage imageNamedInKiteBundle:@"logo"]];
     CGRect f = self.navigationItem.titleView.frame;
     self.navigationItem.titleView.frame = CGRectMake(f.origin.x, f.origin.y + 25, f.size.width, f.size.height);
     
@@ -31,6 +32,7 @@
 }
 
 -(void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
     [self.navigationController setNavigationBarHidden:NO animated:animated];
 }
 

@@ -19,7 +19,7 @@
 
 - (UIInterfaceOrientationMask)supportedInterfaceOrientations{
     UIViewController *vc;
-    if (self.presentedViewController) vc = self.presentedViewController;
+    if (self.presentedViewController && ![self.presentedViewController isKindOfClass:[UIAlertController class]]) vc = self.presentedViewController;
     else vc = [self topViewController];
     return [vc supportedInterfaceOrientations];
 }

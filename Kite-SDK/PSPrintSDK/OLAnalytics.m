@@ -20,6 +20,7 @@
 static NSString *const kKeyUserDistinctId = @"ly.kite.sdk.kKeyUserDistinctId";
 static NSString *const kOLMixpanelToken = @"cdf64507670dd359c43aa8895fb87676";
 static NSString *const kOLMixpanelURL = @"https://api.mixpanel.com/track/";
+static NSString *const kKeySDKLaunchCount = @"ly.kite.sdk.kKeySDKLaunchCount";
 
 static NSDictionary *extraInfo;
 
@@ -27,6 +28,19 @@ static NSDictionary *extraInfo;
 
 static NSString *nonNilStr(NSString *str) {
     return str == nil ? @"" : str;
+}
+
++ (void)incrementLaunchSDKCount{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSNumber *n = [defaults objectForKey:kKeySDKLaunchCount];
+    
+    if (!n){
+        n = [NSNumber numberWithInteger:0];
+    }
+    
+    n = [NSNumber numberWithInteger:[n integerValue] + 1];
+    [defaults setObject:n forKey:kKeySDKLaunchCount];
+    [defaults synchronize];
 }
 
 + (NSString *)userDistinctId{
@@ -103,12 +117,20 @@ static NSString *nonNilStr(NSString *str) {
         }
     }
     
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSNumber *n = [defaults objectForKey:kKeySDKLaunchCount];
+    if (n){
+        propertiesDict[@"SDK Launch Count"] = n;
+    }
+    
     NSDictionary *dict = @{@"event" : eventName,
                            @"properties" : propertiesDict};
     return dict;
 }
 
 + (void)trackKiteViewControllerLoadedWithEntryPoint:(NSString *)entryPoint {
+    [OLAnalytics incrementLaunchSDKCount];
+    
     NSDictionary *dict = [OLAnalytics defaultDictionaryForEventName:@"Kite Loaded"];
     [dict[@"properties"] setObject:nonNilStr(entryPoint) forKey:@"Entry Point"];
     [OLAnalytics sendToMixPanelWithDictionary:dict];
@@ -239,10 +261,6 @@ static NSString *nonNilStr(NSString *str) {
         p[@"Shipping Country Code3"] = nonNilStr(printOrder.shippingAddress.country.codeAlpha3);
     }
     
-//    if ([printOrder.currenciesSupported containsObject:@"GBP"]) {
-//        NSDecimalNumber *cost = [printOrder costInCurrency:@"GBP"];
-//        p[@"Cost"] = [cost stringValue];
-//    }
     p[@"Job Count"] = [NSString stringWithFormat:@"%lu",  (unsigned long) printOrder.jobs.count];
     
     return p;

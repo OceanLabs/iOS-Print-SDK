@@ -40,9 +40,11 @@
 #import "NSObject+Utils.h"
 #import "UIViewController+TraitCollectionCompatibility.h"
 #import "OLAnalytics.h"
+#import "OLKiteUtils.h"
 
 #import "OLRemoteImageView.h"
 #import "OLImageCachingManager.h"
+#import "UIImage+ImageNamedInKiteBundle.h"
 
 NSInteger OLPhotoSelectionMargin = 0;
 
@@ -52,8 +54,6 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 
 @interface OLKitePrintSDK (Private)
 
-+ (OLKiteViewController *)kiteViewControllerInNavStack:(NSArray *)viewControllers;
-+ (NSString *)reviewViewControllerIdentifierForProduct:(OLProduct *)product photoSelectionScreen:(BOOL)photoSelectionScreen;
 #ifdef OL_KITE_OFFER_INSTAGRAM
 + (NSString *) instagramRedirectURI;
 + (NSString *) instagramSecret;
@@ -118,15 +118,15 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     [(UILabel *)self.navigationItem.titleView setFont:[UIFont preferredFontForTextStyle:UIFontTextStyleHeadline]];
     self.userDisabledPhotos = [[NSMutableArray alloc] init];
     
-    self.galleryButton.image = [UIImage imageNamed:@"import_gallery"];
+    self.galleryButton.image = [UIImage imageNamedInKiteBundle:@"import_gallery"];
     self.galleryButton.title = NSLocalizedString(@"Camera Roll", @"");
     self.galleryButton.mainColor = [UIColor colorWithHexString:@"#48cfad"];
     
-    self.instagramButton.image = [UIImage imageNamed:@"import_instagram"];
+    self.instagramButton.image = [UIImage imageNamedInKiteBundle:@"import_instagram"];
     self.instagramButton.title = NSLocalizedString(@"Instagram", @"");
     self.instagramButton.mainColor = [UIColor colorWithHexString:@"#f6bb42"];
     
-    self.facebookButton.image = [UIImage imageNamed:@"import_facebook"];
+    self.facebookButton.image = [UIImage imageNamedInKiteBundle:@"import_facebook"];
     self.facebookButton.title = NSLocalizedString(@"Facebook", @"");
     self.facebookButton.mainColor = [UIColor colorWithHexString:@"#5d9cec"];
     
@@ -212,6 +212,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 }
 
 - (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
     if (self.userSelectedPhotos.count > 0){
         [self.collectionView reloadData];
     }
@@ -219,6 +220,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 }
 
 - (void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
     [self updateNoSelectedPhotosView];
     [self.collectionView.collectionViewLayout invalidateLayout];
 }
@@ -537,12 +539,18 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 
 #ifdef OL_KITE_AT_LEAST_IOS8
 - (void)assetsPickerController:(CTAssetsPickerController *)picker didDeSelectAsset:(PHAsset *)asset{
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8){
+        return;
+    }
     PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
     options.networkAccessAllowed = YES;
     [[OLImageCachingManager sharedInstance].photosCachingManager stopCachingImagesForAssets:@[asset] targetSize:PHImageManagerMaximumSize contentMode:PHImageContentModeAspectFill options:options];
 }
 
 - (void)assetsPickerController:(CTAssetsPickerController *)picker didSelectAsset:(PHAsset *)asset{
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8){
+        return;
+    }
     PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
     options.networkAccessAllowed = YES;
     [[OLImageCachingManager sharedInstance].photosCachingManager startCachingImagesForAssets:@[asset] targetSize:PHImageManagerMaximumSize contentMode:PHImageContentModeAspectFill options:options];
@@ -803,7 +811,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
         
         [cell.contentView addConstraints:con];
         
-        checkmark.image = [UIImage imageNamed:@"checkmark"];
+        checkmark.image = [UIImage imageNamedInKiteBundle:@"checkmark"];
         checkmark.hidden = YES;
     }
     
@@ -991,7 +999,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 }
 
 -(void)doSegueToOrderPreview{
-    UIViewController* orvc = [self.storyboard instantiateViewControllerWithIdentifier:[OLKitePrintSDK reviewViewControllerIdentifierForProduct:self.product photoSelectionScreen:NO]];
+    UIViewController* orvc = [self.storyboard instantiateViewControllerWithIdentifier:[OLKiteUtils reviewViewControllerIdentifierForProduct:self.product photoSelectionScreen:NO]];
     
     [orvc safePerformSelector:@selector(setProduct:) withObject:self.product];
     [orvc safePerformSelector:@selector(setUserSelectedPhotos:) withObject:self.userSelectedPhotos];

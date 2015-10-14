@@ -13,9 +13,7 @@
 #import "OLAddressEditViewController.h"
 #import "OLAddressLookupViewController.h"
 #import "OLConstants.h"
-
-#import <AddressBook/ABPerson.h>
-#import <AddressBookUI/AddressBookUI.h>
+#import "UIImage+ImageNamedInKiteBundle.h"
 
 static const NSInteger kSectionAddressList = 0;
 static const NSInteger kSectionAddAddress = 1;
@@ -24,7 +22,7 @@ static const NSInteger kSectionAddAddress = 1;
 static const NSInteger kRowAddAddressSearch = 1;
 static const NSInteger kRowAddAddressManually = 0;
 
-@interface OLAddressSelectionViewController () <ABPeoplePickerNavigationControllerDelegate>
+@interface OLAddressSelectionViewController ()
 @property (strong, nonatomic) NSMutableSet *selectedAddresses;
 @property (strong, nonatomic) OLAddress *addressToAddToListOnViewDidAppear;
 @end
@@ -93,13 +91,6 @@ static const NSInteger kRowAddAddressManually = 0;
     }
 }
 
-- (void)onButtonAddFromContactsClicked {
-    ABPeoplePickerNavigationController *picker = [[ABPeoplePickerNavigationController alloc] init];
-    picker.peoplePickerDelegate = self;
-    picker.displayedProperties = @[[NSNumber numberWithInteger:kABPersonAddressProperty]];
-    [self presentViewController:picker animated:YES completion:nil];
-}
-
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -138,11 +129,7 @@ static const NSInteger kRowAddAddressManually = 0;
         
         OLAddress *address = [OLAddress addressBook][indexPath.row];
         
-//        if (self.tableView.allowsMultipleSelection) {
-            cell.imageView.image = [self.selectedAddresses containsObject:address] ? [UIImage imageNamed:@"checkmark_on"] : nil;
-//        } else {
-//            cell.imageView.image = nil;
-//        }
+        cell.imageView.image = [self.selectedAddresses containsObject:address] ? [UIImage imageNamedInKiteBundle:@"checkmark_on"] : nil;
         cell.textLabel.text = address.fullNameFromFirstAndLast;
         cell.detailTextLabel.text = address.descriptionWithoutRecipient;
     } else {
@@ -153,9 +140,6 @@ static const NSInteger kRowAddAddressManually = 0;
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:kManageCellIdentifier];
         }
         
-//        if (indexPath.row == kRowAddAddressFromContacts) {
-//            cell.textLabel.text = NSLocalizedStringFromTableInBundle(@"Add Address from Contacts", @"KitePrintSDK", [OLConstants bundle], @"");
-//        } else
         if (indexPath.row == kRowAddAddressSearch) {
             cell.textLabel.text = NSLocalizedStringFromTableInBundle(@"Search for Address", @"KitePrintSDK", [OLConstants bundle], @"");
         } else {
@@ -209,12 +193,10 @@ static const NSInteger kRowAddAddressManually = 0;
             }
             
             UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-            cell.imageView.image = selected ? [UIImage imageNamed:@"checkmark_on"] : nil;
+            cell.imageView.image = selected ? [UIImage imageNamedInKiteBundle:@"checkmark_on"] : nil;
         }
     } else if (indexPath.section == kSectionAddAddress) {
-//        if (indexPath.row == kRowAddAddressFromContacts) {
-//            [self onButtonAddFromContactsClicked];
-//    }
+        
         if (indexPath.row == kRowAddAddressManually) {
             [self.navigationController pushViewController:[[OLAddressEditViewController alloc] init] animated:YES];
         } else if (indexPath.row == kRowAddAddressSearch) {
@@ -229,49 +211,6 @@ static const NSInteger kRowAddAddressManually = 0;
         OLAddress *address = [OLAddress addressBook][indexPath.row];
         [self.navigationController pushViewController:[[OLAddressEditViewController alloc] initWithAddress:address] animated:YES];
     }
-}
-
-#pragma mark - ABPeoplePickerNavigationControllerDelegate methods
-
-
-- (void)peoplePickerNavigationControllerDidCancel:(ABPeoplePickerNavigationController *)peoplePicker {
-    [self dismissViewControllerAnimated:YES completion:nil];
-}
-
-- (BOOL)peoplePickerNavigationController:(ABPeoplePickerNavigationController *)peoplePicker shouldContinueAfterSelectingPerson:(ABRecordRef)person {
-    return YES;
-}
-
-- (BOOL)peoplePickerNavigationController:(ABPeoplePickerNavigationController *)peoplePicker shouldContinueAfterSelectingPerson:(ABRecordRef)person property:(ABPropertyID)property identifier:(ABMultiValueIdentifier)identifier {
-    [peoplePicker dismissViewControllerAnimated:YES completion:^(void) {
-        // create address
-        OLAddress *olAddress = [[OLAddress alloc] init];
-        olAddress.recipientLastName = (__bridge NSString *) ABRecordCopyCompositeName(person);
-        
-        ABMultiValueRef addressProperty = ABRecordCopyValue(person, /*kABPersonAddressProperty*/property);
-        CFIndex index = ABMultiValueGetIndexForIdentifier(addressProperty, identifier);
-        NSArray *addr = (__bridge NSArray *) ABMultiValueCopyArrayOfAllValues(addressProperty);
-        if (addr.count <= index) {
-            // can't get the address :( TODO: why?! I had a crashlytics crash below on addr objectAtIndex:index
-            return;
-        }
-        NSDictionary *address = [addr objectAtIndex:index];
-        
-        NSString *streets = [address objectForKey:(NSString *)kABPersonAddressStreetKey];
-        NSArray *splitStreets = [streets componentsSeparatedByString:@"\n"];
-        
-        olAddress.line1 = splitStreets.count > 0 ? [splitStreets objectAtIndex:0] : @"";
-        olAddress.line2 = splitStreets.count > 1 ? [splitStreets objectAtIndex:1] : @"";
-        olAddress.city = [address objectForKey:(NSString *)kABPersonAddressCityKey];
-        olAddress.stateOrCounty = [address objectForKey:(NSString *)kABPersonAddressStateKey];
-        olAddress.zipOrPostcode = [address objectForKey:(NSString *)kABPersonAddressZIPKey];
-        NSString *countryCode = [address objectForKey:(NSString *)kABPersonAddressCountryCodeKey];
-        olAddress.country = [OLCountry countryForCode:countryCode];
-        
-        [self.navigationController pushViewController:[[OLAddressEditViewController alloc] initWithAddress:olAddress] animated:YES];
-    }];
-    
-    return NO;
 }
 
 #pragma mark - Autorotate and Orientation Methods

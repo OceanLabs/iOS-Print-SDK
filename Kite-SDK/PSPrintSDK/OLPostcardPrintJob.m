@@ -17,6 +17,7 @@ static NSString *const kKeyBackImage = @"co.oceanlabs.pssdk.kKeyBackImage";
 static NSString *const kKeyMessage = @"co.oceanlabs.pssdk.kKeyMessage";
 static NSString *const kKeyAddress = @"co.oceanlabs.pssdk.kKeyAddress";
 static NSString *const kKeyProductTemplateId = @"co.oceanlabs.pssdk.kKeyProductTemplateId";
+static NSString *const kKeyPostcardPrintJobOptions = @"co.oceanlabs.pssdk.kKeyPostcardPrintJobOptions";
 
 static id stringOrEmptyString(NSString *str) {
     return str ? str : @"";
@@ -27,6 +28,7 @@ static id stringOrEmptyString(NSString *str) {
 @property (nonatomic, strong) OLAsset *frontImageAsset;
 @property (nonatomic, strong) OLAsset *backImageAsset;
 @property (nonatomic, copy) NSString *message;
+@property (strong, nonatomic) NSMutableDictionary *options;
 
 @end
 
@@ -35,6 +37,17 @@ static id stringOrEmptyString(NSString *str) {
 @synthesize address;
 @synthesize uuid;
 @synthesize extraCopies;
+
+-(NSMutableDictionary *) options{
+    if (!_options){
+        _options = [[NSMutableDictionary alloc] init];
+    }
+    return _options;
+}
+
+- (void)setValue:(NSString *)value forOption:(NSString *)option{
+    self.options[option] = value;
+}
 
 - (id)initWithTemplateId:(NSString *)templateId frontImageOLAsset:(OLAsset *)frontImageAsset message:(NSString *)message address:(OLAddress *)theAddress {
     return [self initWithTemplateId:templateId frontImageOLAsset:frontImageAsset backImageOLAsset:nil message:message address:theAddress];
@@ -46,6 +59,7 @@ static id stringOrEmptyString(NSString *str) {
 
 - (id)initWithTemplateId:(NSString *)templateId frontImageOLAsset:(OLAsset *)frontImageAsset backImageOLAsset:(OLAsset *)backImageAsset message:(NSString *)message address:(OLAddress *)theAddress {
     if (self = [super init]) {
+        self.uuid = [[NSUUID UUID] UUIDString];
         self.frontImageAsset = frontImageAsset;
         self.backImageAsset = backImageAsset;
         self.message = message;
@@ -100,6 +114,8 @@ static id stringOrEmptyString(NSString *str) {
         [json setObject:self.message forKey:@"message"];
     }
     
+    json[@"options"] = self.options;
+    
     if (self.address) {
         NSDictionary *shippingAddress = @{@"recipient_name": stringOrEmptyString(self.address.fullNameFromFirstAndLast),
                                           @"recipient_first_name": stringOrEmptyString(self.address.recipientFirstName),
@@ -129,6 +145,7 @@ static id stringOrEmptyString(NSString *str) {
     if (self.backImageAsset) result *= [self.backImageAsset hash];
     if (self.message && [self.message hash] > 0) result *= [self.message hash];
     if (self.address) result *= [self.address hash];
+    result = 18 * result + [self.options hash];
     return result;
 }
 
@@ -147,6 +164,7 @@ static id stringOrEmptyString(NSString *str) {
     if (self.backImageAsset) result &= [self.backImageAsset isEqual:printJob.backImageAsset];
     if (self.message) result &= [self.message isEqual:printJob.message];
     if (self.address) result &= [self.address isEqual:printJob.address];
+    result &= [self.options isEqualToDictionary:printJob.options];
     return result;
 }
 
@@ -158,6 +176,7 @@ static id stringOrEmptyString(NSString *str) {
     [aCoder encodeObject:self.address forKey:kKeyAddress];
     [aCoder encodeObject:self.templateId forKey:kKeyProductTemplateId];
     [aCoder encodeObject:self.backImageAsset forKey:kKeyBackImage];
+    [aCoder encodeObject:self.options forKey:kKeyPostcardPrintJobOptions];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
@@ -167,6 +186,7 @@ static id stringOrEmptyString(NSString *str) {
         self.address = [aDecoder decodeObjectForKey:kKeyAddress];
         self.templateId = [aDecoder decodeObjectForKey:kKeyProductTemplateId];
         self.backImageAsset = [aDecoder decodeObjectForKey:kKeyBackImage];
+        self.options = [aDecoder decodeObjectForKey:kKeyPostcardPrintJobOptions];
     }
     
     return self;

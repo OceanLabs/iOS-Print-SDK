@@ -232,6 +232,9 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
         d = [self.printOrder.userData mutableCopy];
     }
     
+    self.printOrder.email = email;
+    self.printOrder.phone = phone;
+    
     d[@"email"] = email;
     d[@"phone"] = phone;
     self.printOrder.userData = d;

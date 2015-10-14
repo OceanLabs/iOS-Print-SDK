@@ -12,6 +12,7 @@
 #import "UIImageView+FadeIn.h"
 #import "NSDecimalNumber+CostFormatter.h"
 #import "OLKiteABTesting.h"
+#import "UIImage+ImageNamedInKiteBundle.h"
 
 typedef enum {
     kSizeUnitsInches,
@@ -72,7 +73,7 @@ typedef enum {
 -(void)setCoverImageToImageView:(UIImageView *)imageView{
     UIImage *image;
     if ([self.coverPhoto isKindOfClass:[NSString class]]){
-        image = [UIImage imageNamed:self.coverPhoto];
+        image = [UIImage imageNamedInKiteBundle:self.coverPhoto];
     }
     else if ([self.coverPhoto isKindOfClass:[UIImage class]]){
         image = self.coverPhoto;
@@ -92,7 +93,7 @@ typedef enum {
 -(void)setClassImageToImageView:(UIImageView *)imageView{
     UIImage *image;
     if ([self.coverPhoto isKindOfClass:[NSString class]]){
-        image = [UIImage imageNamed:self.coverPhoto];
+        image = [UIImage imageNamedInKiteBundle:self.coverPhoto];
     }
     else if ([self.coverPhoto isKindOfClass:[UIImage class]]){
         image = self.coverPhoto;
@@ -119,7 +120,7 @@ typedef enum {
 -(void)setProductPhotography:(NSUInteger)i toImageView:(UIImageView *)imageView{
     UIImage *image;
     if ([self.productPhotos[i] isKindOfClass:[NSString class]]){
-        image = [UIImage imageNamed:self.productPhotos[i]];
+        image = [UIImage imageNamedInKiteBundle:self.productPhotos[i]];
     }
     else if ([self.productPhotos[i] isKindOfClass:[UIImage class]]){
         image = self.productPhotos[i];
@@ -281,6 +282,10 @@ typedef enum {
     //Add quality guarantee
     s = [s stringByAppendingString:NSLocalizedString(@"**Quality Guarantee**\nOur products are of the highest quality and we’re confident you will love yours. If not, we offer a no quibble money back guarantee. Enjoy!", @"")];
     return s;
+}
+
+- (BOOL)isValidProductForUI{
+    return self.labelColor && self.productTemplate.templateUI != kOLTemplateUINA;
 }
 
 

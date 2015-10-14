@@ -1,10 +1,12 @@
 platform :ios, '8.0'
 inhibit_all_warnings!
 
+link_with 'KitePrintSDK', 'KitePrintSDKTests'
+
 pod 'SDWebImage'
 pod 'AFNetworking', '~> 2.5.0'
 pod 'SVProgressHUD'
-pod 'PayPal-iOS-SDK', '~> 2.12.1'
+pod 'PayPal-iOS-SDK', '~> 2.12.3'
 pod 'UICKeyChainStore', '~> 2.0.4'
 pod 'Stripe', '~> 5.1.4'
 pod 'Stripe/ApplePay'

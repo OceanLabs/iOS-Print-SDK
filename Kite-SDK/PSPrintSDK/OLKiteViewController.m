@@ -23,6 +23,7 @@
 #import "NSObject+Utils.h"
 #import "OLKiteABTesting.h"
 #import "UIImage+ColorAtPixel.h"
+#import "OLKiteUtils.h"
 
 static const NSInteger kTagNoProductsAlertView = 99;
 static const NSInteger kTagTemplateSyncFailAlertView = 100;
@@ -50,8 +51,6 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
 
 + (void)setCacheTemplates:(BOOL)cache;
 + (BOOL)cacheTemplates;
-+ (void)checkoutViewControllerForPrintOrder:(OLPrintOrder *)printOrder handler:(void(^)(id vc))handler;
-+ (NSString *)reviewViewControllerIdentifierForProduct:(OLProduct *)product photoSelectionScreen:(BOOL)photoSelectionScreen;
 
 @end
 
@@ -89,7 +88,8 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
 
 - (instancetype _Nullable)initWithAssets:(NSArray <OLAsset *>*_Nonnull)assets info:(NSDictionary *_Nullable)info{
     [OLAnalytics setExtraInfo:info];
-    if ((self = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:nil] instantiateViewControllerWithIdentifier:@"KiteViewController"])) {
+    NSBundle *currentBundle = [NSBundle bundleForClass:[OLKiteViewController class]];
+    if ((self = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:currentBundle] instantiateViewControllerWithIdentifier:@"KiteViewController"])) {
         self.assets = assets;
     }
     
@@ -98,7 +98,8 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
 
 - (instancetype _Nullable)initWithPrintOrder:(OLPrintOrder *_Nullable)printOrder info:(NSDictionary * _Nullable)info{
     [OLAnalytics setExtraInfo:info];
-    if ((self = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:nil] instantiateViewControllerWithIdentifier:@"KiteViewController"])) {
+    NSBundle *currentBundle = [NSBundle bundleForClass:[OLKiteViewController class]];
+    if ((self = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:currentBundle] instantiateViewControllerWithIdentifier:@"KiteViewController"])) {
         self.printOrder = printOrder;
     }
     return self;
@@ -127,7 +128,7 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
     [OLKiteABTesting sharedInstance].skipHomeScreen = self.printOrder != nil;
     [[OLKiteABTesting sharedInstance] fetchRemotePlistsWithCompletionHandler:^{
         [self.operationQueue addOperation:self.remotePlistSyncOperation];
-    
+        
 #ifndef OL_NO_ANALYTICS
         if (self.printOrder){
             [OLAnalytics trackKiteViewControllerLoadedWithEntryPoint:[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant];
@@ -145,7 +146,7 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
     self.view.backgroundColor = [self.loadingImageView.image colorAtPixel:CGPointMake(3, 3)];
     
     [self transitionToNextScreen];
-
+    
     if (![OLKitePrintSDK cacheTemplates]) {
         [OLProductTemplate deleteCachedTemplates];
         [OLProductTemplate resetTemplates];
@@ -154,7 +155,7 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
 }
 
 -(IBAction) dismiss{
-        [self dismissViewControllerAnimated:YES completion:^{}];
+    [self dismissViewControllerAnimated:YES completion:^{}];
 }
 
 - (void)transitionToNextScreen{
@@ -163,10 +164,11 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
         // The screen we transition to will depend on what products are available based on the developers filter preferences.
         NSArray *groups = [OLProductGroup groupsWithFilters:welf.filterProducts];
         
-        UIStoryboard *sb = [UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:nil];
+        NSBundle *currentBundle = [NSBundle bundleForClass:[OLKiteViewController class]];
+        UIStoryboard *sb = [UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:currentBundle];
         NSString *nextVcNavIdentifier;
         OLProduct *product;
-        if (groups.count == 0) {
+        if (groups.count == 0 && !([OLProductTemplate templates].count != 0 && welf.printOrder)) {
             if ([UIAlertController class]){
                 UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Store Maintenance", @"") message:NSLocalizedString(@"Our store is currently undergoing maintence so no products are available for purchase at this time. Please try again a little later.", @"") preferredStyle:UIAlertControllerStyleAlert];
                 [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
@@ -185,14 +187,14 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
         else if (welf.printOrder){
             OLProduct *product = [OLProduct productWithTemplateId:[[welf.printOrder.jobs firstObject] templateId]];
             NSString *identifier;
-            if ([[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant hasPrefix:@"Overview-"]){
+            if ([[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant hasPrefix:@"Overview-"] && [product isValidProductForUI]){
                 identifier = @"OLProductOverviewViewController";
             }
-            else if ([[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant hasPrefix:@"Review-"] ){
-                identifier = [OLKitePrintSDK reviewViewControllerIdentifierForProduct:product photoSelectionScreen:NO];
+            else if ([[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant hasPrefix:@"Review-"] && [product isValidProductForUI]){
+                identifier = [OLKiteUtils reviewViewControllerIdentifierForProduct:product photoSelectionScreen:NO];
             }
             else{
-                [OLKitePrintSDK checkoutViewControllerForPrintOrder:welf.printOrder handler:^(id vc){
+                [OLKiteUtils checkoutViewControllerForPrintOrder:welf.printOrder handler:^(id vc){
                     [[vc navigationItem] setLeftBarButtonItem:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:welf action:@selector(dismiss)]];
                     [vc safePerformSelector:@selector(setUserEmail:) withObject:welf.userEmail];
                     [vc safePerformSelector:@selector(setUserPhone:) withObject:welf.userPhone];
@@ -209,7 +211,7 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
             [vc safePerformSelector:@selector(setUserPhone:) withObject:welf.userPhone];
             [vc safePerformSelector:@selector(setKiteDelegate:) withObject:welf.delegate];
             [vc safePerformSelector:@selector(setProduct:) withObject:product];
-
+            
             [[vc navigationItem] setLeftBarButtonItem:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:welf action:@selector(dismiss)]];
             [vc.navigationItem.rightBarButtonItem setTitle:NSLocalizedString(@"Next", @"")];
             OLCustomNavigationController *nvc = [[OLCustomNavigationController alloc] initWithRootViewController:vc];

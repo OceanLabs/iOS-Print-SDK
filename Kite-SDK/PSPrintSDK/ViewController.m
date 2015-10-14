@@ -25,7 +25,8 @@
 static NSString *const kAPIKeySandbox = @"REPLACE_WITH_YOUR_API_KEY"; // replace with your Sandbox API key found under the Profile section in the developer portal
 static NSString *const kAPIKeyLive = @"REPLACE_WITH_YOUR_API_KEY"; // replace with your Live API key found under the Profile section in the developer portal
 
-static NSString *const kApplePayMerchantIDKey = @"merchant.ly.kite.sdk"; // For internal use only.
+static NSString *const kApplePayMerchantIDKey = @"merchant.ly.kite.sdk"; // Replace with your merchant ID
+static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your business name
 
 @interface ViewController () <OLAssetsPickerControllerDelegate,
 #ifdef OL_KITE_AT_LEAST_IOS8
@@ -152,6 +153,7 @@ UINavigationControllerDelegate, OLKiteDelegate>
     
 #ifdef OL_KITE_OFFER_APPLE_PAY
     [OLKitePrintSDK setApplePayMerchantID:kApplePayMerchantIDKey];
+    [OLKitePrintSDK setApplePayPayToString:kApplePayBusinessName];
 #endif
     
     OLKiteViewController *vc = [[OLKiteViewController alloc] initWithAssets:assets];

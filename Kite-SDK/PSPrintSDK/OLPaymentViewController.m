@@ -30,6 +30,7 @@
 #import "OLKiteABTesting.h"
 #import <SDWebImage/SDWebImageManager.h>
 #import "UIImage+ColorAtPixel.h"
+#import "UIImage+ImageNamedInKiteBundle.h"
 
 #ifdef OL_KITE_OFFER_PAYPAL
 #import <PayPal-iOS-SDK/PayPalMobile.h>
@@ -60,12 +61,12 @@ static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
 #ifdef OL_KITE_OFFER_PAYPAL
 + (NSString *_Nonnull)paypalEnvironment;
 + (NSString *_Nonnull)paypalClientId;
-+ (NSString *_Nonnull)paypalReceiverEmail;
 #endif
 
 #ifdef OL_KITE_OFFER_APPLE_PAY
 + (NSString *_Nonnull)stripePublishableKey;
 + (NSString *_Nonnull)appleMerchantID;
++ (NSString *)applePayPayToString;
 #endif
 
 @end
@@ -264,7 +265,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             }];
         }
         else{
-            [self setupBannerImage:[UIImage imageNamed:@"checkout_progress_indicator2"] withBgImage:[UIImage imageNamed:@"checkout_progress_indicator2_bg"]];
+            [self setupBannerImage:[UIImage imageNamedInKiteBundle:@"checkout_progress_indicator2"] withBgImage:[UIImage imageNamedInKiteBundle:@"checkout_progress_indicator2_bg"]];
         }
         
     }
@@ -302,7 +303,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     self.payWithApplePayButton = [[UIButton alloc] initWithFrame:CGRectMake(20, 0, self.view.frame.size.width-40, 44)];
     self.payWithApplePayButton.backgroundColor = [UIColor blackColor];
     [self.payWithApplePayButton makeRoundRect];
-    [self.payWithApplePayButton setImage:[UIImage imageNamed:@"button_apple_pay"] forState:UIControlStateNormal];
+    [self.payWithApplePayButton setImage:[UIImage imageNamedInKiteBundle:@"button_apple_pay"] forState:UIControlStateNormal];
     [self.payWithApplePayButton addTarget:self action:@selector(onButtonPayWithApplePayClicked) forControlEvents:UIControlEventTouchUpInside];
     
     self.moreOptionsButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 84, self.view.frame.size.width, 20)];
@@ -707,7 +708,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 
 - (void)payWithExistingPayPalCard:(OLPayPalCard *)card {
     if ([OLKitePrintSDK useJudoPayForGBP]) {
-        NSAssert(![self.printOrder.currencyCode isEqualToString:@"GBP"], @"JudoPay should be used for GBP orders (and only for OceanLabs internal use)");
+        NSAssert(![self.printOrder.currencyCode isEqualToString:@"GBP"], @"JudoPay should be used for GBP orders (and only for Kite internal use)");
     }
     [SVProgressHUD showWithStatus:NSLocalizedStringFromTableInBundle(@"Processing", @"KitePrintSDK", [OLConstants bundle], @"") maskType:SVProgressHUDMaskTypeBlack];
     [self.printOrder costWithCompletionHandler:^(OLPrintOrderCost *cost, NSError *error) {
@@ -725,7 +726,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 }
 
 - (void)payWithExistingJudoPayCard:(OLJudoPayCard *)card {
-    NSAssert([self.printOrder.currencyCode isEqualToString:@"GBP"], @"JudoPay should only be used for GBP orders (and only for OceanLabs internal use)");
+    NSAssert([self.printOrder.currencyCode isEqualToString:@"GBP"], @"JudoPay should only be used for GBP orders (and only for Kite internal use)");
     [SVProgressHUD showWithStatus:NSLocalizedStringFromTableInBundle(@"Processing", @"KitePrintSDK", [OLConstants bundle], @"") maskType:SVProgressHUDMaskTypeBlack];
     [self.printOrder costWithCompletionHandler:^(OLPrintOrderCost *cost, NSError *error) {
         [card chargeCard:[cost totalCostInCurrency:@"GBP"] currency:kOLJudoPayCurrencyGBP description:self.printOrder.paymentDescription completionHandler:^(NSString *proofOfPayment, NSError *error) {
@@ -771,7 +772,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         for (OLPaymentLineItem *item in cost.lineItems){
             [lineItems addObject:[PKPaymentSummaryItem summaryItemWithLabel:item.description  amount:[item costInCurrency:self.printOrder.currencyCode]]];
         }
-        [lineItems addObject:[PKPaymentSummaryItem summaryItemWithLabel:NSLocalizedString(@"Total", @"") amount:[cost totalCostInCurrency:self.printOrder.currencyCode]]];
+        [lineItems addObject:[PKPaymentSummaryItem summaryItemWithLabel:[OLKitePrintSDK applePayPayToString] amount:[cost totalCostInCurrency:self.printOrder.currencyCode]]];
         paymentRequest.paymentSummaryItems = lineItems;
         NSUInteger requiredFields = PKAddressFieldPostalAddress | PKAddressFieldName | PKAddressFieldEmail;
         if ([OLKiteABTesting sharedInstance].requirePhoneNumber){
@@ -825,8 +826,9 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         }
         
         const float step = (1.0f / totalAssetsToUpload);
+        NSUInteger totalURLAssets = self.printOrder.totalAssetsToUpload - totalAssetsToUpload;
         float progress = totalAssetsUploaded * step + (totalAssetBytesWritten / (float) totalAssetBytesExpectedToWrite) * step;
-        [SVProgressHUD showProgress:progress status:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Uploading Images \n%lu / %lu", @"KitePrintSDK", [OLConstants bundle], @""), (unsigned long) totalAssetsUploaded + 1, (unsigned long) totalAssetsToUpload] maskType:SVProgressHUDMaskTypeBlack];
+        [SVProgressHUD showProgress:progress status:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Uploading Images \n%lu / %lu", @"KitePrintSDK", [OLConstants bundle], @""), (unsigned long) totalAssetsUploaded + 1 + totalURLAssets, (unsigned long) self.printOrder.totalAssetsToUpload] maskType:SVProgressHUDMaskTypeBlack];
     } completionHandler:^(NSString *orderIdReceipt, NSError *error) {
         if (error) {
             handler(PKPaymentAuthorizationStatusFailure);
@@ -895,12 +897,12 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
                                    completion:(void (^)(PKPaymentAuthorizationStatus))completion {
     ABRecordRef address = payment.shippingAddress;
     OLAddress *shippingAddress = [[OLAddress alloc] init];
-    shippingAddress.recipientFirstName = (__bridge NSString *)ABRecordCopyValue(address, kABPersonFirstNameProperty);
-    shippingAddress.recipientLastName = (__bridge NSString *)ABRecordCopyValue(address, kABPersonLastNameProperty);
+    shippingAddress.recipientFirstName = (__bridge_transfer NSString *)ABRecordCopyValue(address, kABPersonFirstNameProperty);
+    shippingAddress.recipientLastName = (__bridge_transfer NSString *)ABRecordCopyValue(address, kABPersonLastNameProperty);
     
     CFTypeRef values = ABRecordCopyValue(address, kABPersonAddressProperty);
     for (NSInteger i = 0; i < ABMultiValueGetCount(values); i++){
-        NSDictionary *dict = (__bridge NSDictionary *)ABMultiValueCopyValueAtIndex(values, i);
+        NSDictionary *dict = (__bridge_transfer NSDictionary *)ABMultiValueCopyValueAtIndex(values, i);
         shippingAddress.line1 = [dict objectForKey:(id)kABPersonAddressStreetKey];
         shippingAddress.city = [dict objectForKey:(id)kABPersonAddressCityKey];
         shippingAddress.stateOrCounty = [dict objectForKey:(id)kABPersonAddressStateKey];
@@ -916,6 +918,12 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             completion(PKPaymentAuthorizationStatusFailure);
         }
     }
+    
+    if (![shippingAddress isValidAddress]){
+        completion(PKPaymentAuthorizationStatusInvalidShippingPostalAddress);
+        return;
+    }
+    
     self.printOrder.shippingAddress = shippingAddress;
     NSString *email;
     NSString *phone;
@@ -925,14 +933,18 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     }
     CFTypeRef emails = ABRecordCopyValue(address, kABPersonEmailProperty);
     for (NSInteger i = 0; i < ABMultiValueGetCount(emails); i++){
-        email = (__bridge NSString *)(ABMultiValueCopyValueAtIndex(emails, i));
+        email = (__bridge_transfer NSString *)(ABMultiValueCopyValueAtIndex(emails, i));
     }
     CFTypeRef phones = ABRecordCopyValue(address, kABPersonPhoneProperty);
     for (NSInteger i = 0; i < ABMultiValueGetCount(phones); i++){
-        phone = (__bridge NSString *)(ABMultiValueCopyValueAtIndex(phones, i));
+        phone = (__bridge_transfer NSString *)(ABMultiValueCopyValueAtIndex(phones, i));
     }
     d[@"email"] = email ? email : @"";
     d[@"phone"] = phone ? phone : @"";
+    
+    self.printOrder.email = email;
+    self.printOrder.phone = phone;
+    
     self.printOrder.userData = d;
     
     if (![OLCheckoutViewController validateEmail:d[@"email"]] && [OLKitePrintSDK environment] == kOLKitePrintSDKEnvironmentLive){
@@ -997,7 +1009,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         for (OLPaymentLineItem *item in cost.lineItems){
             [lineItems addObject:[PKPaymentSummaryItem summaryItemWithLabel:item.description  amount:[item costInCurrency:self.printOrder.currencyCode]]];
         }
-        [lineItems addObject:[PKPaymentSummaryItem summaryItemWithLabel:NSLocalizedString(@"Total", @"") amount:[cost totalCostInCurrency:self.printOrder.currencyCode]]];
+        [lineItems addObject:[PKPaymentSummaryItem summaryItemWithLabel:[OLKitePrintSDK applePayPayToString] amount:[cost totalCostInCurrency:self.printOrder.currencyCode]]];
         if (!error){
             completion(PKPaymentAuthorizationStatusSuccess, nil, lineItems);
         }

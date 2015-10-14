@@ -21,6 +21,7 @@
 #import <Stripe+ApplePay.h>
 #endif
 #import "OLPaymentViewController.h"
+#import "OLKiteUtils.h"
 
 static NSString *const kJudoClientId      = @"100170-877";
 static NSString *const kJudoSandboxToken     = @"oLMiwCPBeLs0iVX4";
@@ -32,6 +33,7 @@ static NSString *apiKey = nil;
 static NSString *const kOLStripePublishableKeyTest = @"pk_test_FxzXniUJWigFysP0bowWbuy3";
 static NSString *const kOLStripePublishableKeyLive = @"pk_live_o1egYds0rWu43ln7FjEyOU5E";
 static NSString *applePayMerchantID = nil;
+static NSString *applePayPayToString = nil;
 static OLKitePrintSDKEnvironment environment;
 
 static NSString *const kOLAPIEndpointLive = @"https://api.kite.ly";
@@ -50,12 +52,6 @@ static NSString *instagramClientID = nil;
 static NSString *instagramSecret = nil;
 static NSString *instagramRedirectURI = nil;
 #endif
-
-@interface OLKitePrintSDK (InternalUtils)
-+ (NSString *)userEmail:(UIViewController *)topVC;
-+ (NSString *)userPhone:(UIViewController *)topVC;
-+ (id<OLKiteDelegate>)kiteDelegate:(UIViewController *)topVC;
-@end
 
 @implementation OLKitePrintSDK
 
@@ -125,16 +121,30 @@ static NSString *instagramRedirectURI = nil;
     }
 }
 
-+ (NSString *_Nonnull)paypalReceiverEmail {
-    switch (environment) {
-        case kOLKitePrintSDKEnvironmentLive: return kOLPayPalRecipientEmailLive;
-        case kOLKitePrintSDKEnvironmentSandbox: return kOLPayPalRecipientEmailSandbox;
-    }
-}
-
 #ifdef OL_KITE_OFFER_APPLE_PAY
 + (void)setApplePayMerchantID:(NSString *_Nonnull)mID{
     applePayMerchantID = mID;
+}
+
++ (void)setApplePayPayToString:(NSString *_Nonnull)name{
+    applePayPayToString = name;
+}
+
++ (NSString *)applePayPayToString{
+    if (applePayPayToString){
+        return applePayPayToString;
+    }
+    else{
+        NSDictionary *info = [[NSBundle mainBundle] infoDictionary];
+        NSString *bundleName = nil;
+        if ([info objectForKey:@"CFBundleDisplayName"] == nil) {
+            bundleName = [[[NSBundle mainBundle] infoDictionary] objectForKey:(NSString *) kCFBundleNameKey];
+        } else {
+            bundleName = [NSString stringWithFormat:@"%@", [info objectForKey:@"CFBundleDisplayName"]];
+        }
+        
+        return [NSString stringWithFormat:@"Kite.ly (via %@)", bundleName];
+    }
 }
 
 + (NSString *_Nonnull)stripePublishableKey {
@@ -149,63 +159,7 @@ static NSString *instagramRedirectURI = nil;
 }
 #endif
 
-#pragma mark - Internal Kite Utils (May be better to move these to their own source file longer term
-
-+ (NSString *)userEmail:(UIViewController *)topVC {
-    OLKiteViewController *kiteVC = [self kiteViewControllerInNavStack:topVC.navigationController.viewControllers];
-    OLProductHomeViewController *homeVC = [self homeViewControllerInNavStack:topVC.navigationController.viewControllers];
-    if (kiteVC) {
-        return kiteVC.userEmail;
-    } else if (homeVC) {
-        return homeVC.userEmail;
-    }
-    
-    return nil;
-}
-
-+ (NSString *)userPhone:(UIViewController *)topVC {
-    OLKiteViewController *kiteVC = [self kiteViewControllerInNavStack:topVC.navigationController.viewControllers];
-    OLProductHomeViewController *homeVC = [self homeViewControllerInNavStack:topVC.navigationController.viewControllers];
-    if (kiteVC) {
-        return kiteVC.userPhone;
-    } else if (homeVC) {
-        return homeVC.userPhone;
-    }
-    
-    return nil;
-}
-
-+ (id<OLKiteDelegate>)kiteDelegate:(UIViewController *)topVC {
-    OLKiteViewController *kiteVC = [self kiteViewControllerInNavStack:topVC.navigationController.viewControllers];
-    OLProductHomeViewController *homeVC = [self homeViewControllerInNavStack:topVC.navigationController.viewControllers];
-    if (kiteVC) {
-        return kiteVC.delegate;
-    } else if (homeVC) {
-        return homeVC.delegate;
-    }
-    
-    return nil;
-}
-
-+ (OLKiteViewController *)kiteViewControllerInNavStack:(NSArray *)viewControllers {
-    for (UIViewController *vc in viewControllers) {
-        if ([vc isMemberOfClass:[OLKiteViewController class]]) {
-            return (OLKiteViewController *) vc;
-        }
-    }
-    
-    return nil;
-}
-
-+ (OLProductHomeViewController *)homeViewControllerInNavStack:(NSArray *)viewControllers {
-    for (UIViewController *vc in viewControllers) {
-        if ([vc isMemberOfClass:[OLProductHomeViewController class]]) {
-            return (OLProductHomeViewController *) vc;
-        }
-    }
-    
-    return nil;
-}
+#pragma mark - Internal
 
 #ifdef OL_KITE_OFFER_INSTAGRAM
 + (void)setInstagramEnabledWithClientID:(NSString *_Nonnull)clientID secret:(NSString *_Nonnull)secret redirectURI:(NSString *_Nonnull)redirectURI {
@@ -226,70 +180,5 @@ static NSString *instagramRedirectURI = nil;
     return instagramClientID;
 }
 #endif
-
-#ifdef OL_KITE_OFFER_APPLE_PAY
-+(BOOL)isApplePayAvailable{
-    PKPaymentRequest *request = [Stripe paymentRequestWithMerchantIdentifier:[OLKitePrintSDK appleMerchantID]];
-    
-    return [Stripe canSubmitPaymentRequest:request];
-}
-#endif
-
-+ (void)checkoutViewControllerForPrintOrder:(OLPrintOrder *)printOrder handler:(void(^)(id vc))handler{
-#ifdef OL_KITE_OFFER_APPLE_PAY
-    if ([OLKitePrintSDK isApplePayAvailable]){
-        OLPaymentViewController *vc = [[OLPaymentViewController alloc] initWithPrintOrder:printOrder];
-        handler(vc);
-    }
-    else{
-        [OLKitePrintSDK shippingControllerForPrintOrder:printOrder handler:handler];
-    }
-    
-#else
-    
-    [OLKitePrintSDK shippingControllerForPrintOrder:printOrder handler:handler];
-    
-#endif
-    
-}
-
-+ (void)shippingControllerForPrintOrder:(OLPrintOrder *)printOrder handler:(void(^)(OLCheckoutViewController *vc))handler{
-    OLCheckoutViewController *vc;
-    if ([[OLKiteABTesting sharedInstance].checkoutScreenType isEqualToString:@"Classic"]){
-        vc = [[OLCheckoutViewController alloc] initWithPrintOrder:printOrder];
-    }
-    else{
-        vc = [[OLIntegratedCheckoutViewController alloc] initWithPrintOrder:printOrder];
-    }
-    handler(vc);
-}
-
-+ (NSString *)reviewViewControllerIdentifierForProduct:(OLProduct *)product photoSelectionScreen:(BOOL)photoSelectionScreen{
-    OLTemplateUI templateUI = product.productTemplate.templateUI;
-    if (templateUI == kOLTemplateUICase){
-        return @"OLCaseViewController";
-    }
-    else if (templateUI == kOLTemplateUIPostcard){
-        return @"OLPostcardViewController";
-    }
-    else if (templateUI == kOLTemplateUIPoster && product.productTemplate.gridCountX == 1 && product.productTemplate.gridCountY == 1){
-        return @"OLSingleImageProductReviewViewController";
-    }
-    else if (templateUI == kOLTemplateUIPhotobook){
-        return @"OLEditPhotobookViewController";
-    }
-    else if (photoSelectionScreen){
-        return @"PhotoSelectionViewController";
-    }
-    else if (templateUI == kOLTemplateUIPoster){
-        return @"OLPosterViewController";
-    }
-    else if (templateUI == kOLTemplateUIFrame){
-        return @"FrameOrderReviewViewController";
-    }
-    else{
-        return @"OrderReviewViewController";
-    }
-}
 
 @end

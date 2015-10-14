@@ -16,6 +16,8 @@ static NSString *const kKeyProductTemplateId = @"co.oceanlabs.pssdk.kKeyProductT
 static NSString *const kKeyImages = @"co.oceanlabs.pssdk.kKeyImages";
 static NSString *const kKeyUUID = @"co.oceanlabs.pssdk.kKeyUUID";
 static NSString *const kKeyExtraCopies = @"co.oceanlabs.pssdk.kKeyExtraCopies";
+static NSString *const kKeyProductPringJobAddress = @"co.oceanlabs.pssdk.kKeyProductPringJobAddress";
+static NSString *const kKeyProductPrintJobOptions = @"co.oceanlabs.pssdk.kKeyProductPrintJobOptions";
 
 static id stringOrEmptyString(NSString *str) {
     return str ? str : @"";
@@ -24,6 +26,7 @@ static id stringOrEmptyString(NSString *str) {
 @interface OLProductPrintJob ()
 @property (nonatomic, strong) NSString *templateId;
 @property (nonatomic, strong) NSArray *assets;
+@property (strong, nonatomic) NSMutableDictionary *options;
 @end
 
 @implementation OLProductPrintJob
@@ -32,14 +35,25 @@ static id stringOrEmptyString(NSString *str) {
 @synthesize uuid;
 @synthesize extraCopies;
 
-- (instancetype)initWithTemplateId:(NSString *)templateId imageFilePaths:(NSArray/*<NSString>*/ *)imageFilePaths {
+-(NSMutableDictionary *) options{
+    if (!_options){
+        _options = [[NSMutableDictionary alloc] init];
+    }
+    return _options;
+}
+
+- (void)setValue:(NSString *)value forOption:(NSString *)option{
+    self.options[option] = value;
+}
+
+- (instancetype)initWithTemplateId:(NSString *)templateId imageFilePaths:(NSArray<NSString *> *)imageFilePaths {
     if (self = [super init]) {
         NSMutableArray *assets = [[NSMutableArray alloc] init];
         for (id imagePath in imageFilePaths) {
             NSAssert([imagePath isKindOfClass:[NSString class]], @"OLProductPrintJob initWithProduct:imageFilePaths: requires an NSArray of NSString not: %@", [imagePath class]);
             [assets addObject:[OLAsset assetWithFilePath:imagePath]];
         }
-        
+        self.uuid = [[NSUUID UUID] UUIDString];
         self.assets = assets;
         self.templateId = templateId;
     }
@@ -47,14 +61,14 @@ static id stringOrEmptyString(NSString *str) {
     return self;
 }
 
-- (instancetype)initWithTemplateId:(NSString *)templateId images:(NSArray/*<UIImage>*/ *)images {
+- (instancetype)initWithTemplateId:(NSString *)templateId images:(NSArray<UIImage *> *)images {
     if (self = [super init]) {
         NSMutableArray *assets = [[NSMutableArray alloc] init];
         for (id image in images) {
             NSAssert([image isKindOfClass:[UIImage class]], @"OLProductPrintJob initWithProduct:images: requires an NSArray of UIImage not: %@", [image class]);
             [assets addObject:[OLAsset assetWithImageAsJPEG:image]];
         }
-        
+        self.uuid = [[NSUUID UUID] UUIDString];
         self.assets = assets;
         self.templateId = templateId;
     }
@@ -62,12 +76,14 @@ static id stringOrEmptyString(NSString *str) {
     return self;
 }
 
-- (instancetype)initWithTemplateId:(NSString *)templateId OLAssets:(NSArray/*<OLAssets>*/ *)assets {
+- (instancetype)initWithTemplateId:(NSString *)templateId OLAssets:(NSArray<OLAsset *> *)assets {
     if (self = [super init]) {
+#ifdef DEBUG
         for (id asset in assets) {
             NSAssert([asset isKindOfClass:[OLAsset class]], @"OLProductPrintJob initWithProduct:OLAssets: requires an NSArray of OLAsset not: %@", [asset class]);
         }
-        
+#endif
+        self.uuid = [[NSUUID UUID] UUIDString];
         self.assets = assets;
         self.templateId = templateId;
     }
@@ -75,7 +91,7 @@ static id stringOrEmptyString(NSString *str) {
     return self;
 }
 
-- (instancetype)initWithTemplateId:(NSString *)templateId dataSources:(NSArray/*<id<OLAssetDataSource> >*/ *)dataSources {
+- (instancetype)initWithTemplateId:(NSString *)templateId dataSources:(NSArray<id<OLAssetDataSource>> *)dataSources {
     NSMutableArray *assets = [[NSMutableArray alloc] init];
     for (id dataSource in dataSources) {
         NSAssert([dataSource conformsToProtocol:@protocol(OLAssetDataSource)], @"The object you provided of type %@ does not conform to the OLAssetDataSource protocol", [dataSource class]);
@@ -123,6 +139,8 @@ static id stringOrEmptyString(NSString *str) {
     json[@"assets"] = assets;
     json[@"frame_contents"] = @{};
     
+    json[@"options"] = self.options;
+    
     if (self.address) {
         NSDictionary *shippingAddress = @{@"recipient_name": stringOrEmptyString(self.address.fullNameFromFirstAndLast),
                                           @"address_line_1": stringOrEmptyString(self.address.line1),
@@ -146,6 +164,7 @@ static id stringOrEmptyString(NSString *str) {
     objectCopy.templateId = self.templateId;
     objectCopy.uuid = self.uuid;
     objectCopy.extraCopies = self.extraCopies;
+    objectCopy.options = self.options;
     return objectCopy;
 }
 
@@ -156,6 +175,10 @@ static id stringOrEmptyString(NSString *str) {
     }
     
     val = 38 * val + self.extraCopies;
+    
+    val = 39 * val + [self.options hash];
+    
+    val = 40 * val + [self.address hash];
 
     return val;
 }
@@ -170,7 +193,7 @@ static id stringOrEmptyString(NSString *str) {
     }
     OLProductPrintJob* printJob = (OLProductPrintJob*)object;
     
-    return [self.templateId isEqual:printJob.templateId] && [self.assets isEqual:printJob.assets];
+    return [self.templateId isEqual:printJob.templateId] && [self.assets isEqual:printJob.assets] && [self.options isEqualToDictionary:printJob.options];
 }
 
 
@@ -181,6 +204,8 @@ static id stringOrEmptyString(NSString *str) {
     [aCoder encodeObject:self.assets forKey:kKeyImages];
     [aCoder encodeObject:self.uuid forKey:kKeyUUID];
     [aCoder encodeInteger:self.extraCopies forKey:kKeyExtraCopies];
+    [aCoder encodeObject:self.options forKey:kKeyProductPrintJobOptions];
+    [aCoder encodeObject:self.address forKey:kKeyProductPringJobAddress];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
@@ -189,6 +214,8 @@ static id stringOrEmptyString(NSString *str) {
         self.assets = [aDecoder decodeObjectForKey:kKeyImages];
         self.uuid = [aDecoder decodeObjectForKey:kKeyUUID];
         self.extraCopies = [aDecoder decodeIntegerForKey:kKeyExtraCopies];
+        self.options = [aDecoder decodeObjectForKey:kKeyProductPrintJobOptions];
+        self.address = [aDecoder decodeObjectForKey:kKeyProductPringJobAddress];
     }
     
     return self;

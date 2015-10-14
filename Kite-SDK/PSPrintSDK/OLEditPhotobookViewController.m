@@ -10,6 +10,7 @@
 #import "OLPhotobookViewController.h"
 #import "OLPhotobookPageContentViewController.h"
 #import "OLAssetsPickerController.h"
+#import "OLKiteUtils.h"
 #ifdef OL_KITE_AT_LEAST_IOS8
 #import <CTAssetsPickerController/CTAssetsPickerController.h>
 #endif
@@ -41,11 +42,6 @@ static const NSInteger kSectionPages = 2;
 @end
 
 @interface OLKitePrintSDK (InternalUtils)
-+ (NSString *)userEmail:(UIViewController *)topVC;
-+ (NSString *)userPhone:(UIViewController *)topVC;
-+ (id<OLKiteDelegate>)kiteDelegate:(UIViewController *)topVC;
-+ (void)checkoutViewControllerForPrintOrder:(OLPrintOrder *)printOrder handler:(void(^)(id vc))handler;
-
 #ifdef OL_KITE_OFFER_INSTAGRAM
 + (NSString *) instagramRedirectURI;
 + (NSString *) instagramSecret;
@@ -262,8 +258,8 @@ UINavigationControllerDelegate>
 }
 
 - (void)addPageShadowsToView:(UIView *)view{
-//    UIImage *leftImage = [UIImage imageNamed:@"page-shadow-left"];
-//    UIImage *rightImage = [UIImage imageNamed:@"page-shadow-right"];
+//    UIImage *leftImage = [UIImage imageNamedInKiteBundle:@"page-shadow-left"];
+//    UIImage *rightImage = [UIImage imageNamedInKiteBundle:@"page-shadow-right"];
 //    
 //    UIImageView *left1 = [[UIImageView alloc] initWithImage:leftImage];
 //    left1.contentMode = UIViewContentModeScaleToFill;
@@ -655,7 +651,7 @@ UINavigationControllerDelegate>
                 return cell;
             }
         }
-        OLPhotobookViewController *photobook = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:nil] instantiateViewControllerWithIdentifier:@"PhotobookViewController"];
+        OLPhotobookViewController *photobook = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteBundle]] instantiateViewControllerWithIdentifier:@"PhotobookViewController"];
         if (indexPath.section == kSectionPages){
             photobook.startOpen = YES;
         }
@@ -971,12 +967,18 @@ UINavigationControllerDelegate>
 
 #ifdef OL_KITE_AT_LEAST_IOS8
 - (void)assetsPickerController:(CTAssetsPickerController *)picker didDeSelectAsset:(PHAsset *)asset{
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8){
+        return;
+    }
     PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
     options.networkAccessAllowed = YES;
     [[OLImageCachingManager sharedInstance].photosCachingManager stopCachingImagesForAssets:@[asset] targetSize:PHImageManagerMaximumSize contentMode:PHImageContentModeAspectFill options:options];
 }
 
 - (void)assetsPickerController:(CTAssetsPickerController *)picker didSelectAsset:(PHAsset *)asset{
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8){
+        return;
+    }
     PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
     options.networkAccessAllowed = YES;
     [[OLImageCachingManager sharedInstance].photosCachingManager startCachingImagesForAssets:@[asset] targetSize:PHImageManagerMaximumSize contentMode:PHImageContentModeAspectFill options:options];

@@ -50,6 +50,16 @@ typedef void (^OLPrintOrderCostCompletionHandler)(OLPrintOrderCost *cost, NSErro
 @interface OLPrintOrder : NSObject <NSCoding>
 
 /**
+ *  The customer's email address
+ */
+@property (strong, nonatomic) NSString *email;
+
+/**
+ *  The customer's phone number
+ */
+@property (strong, nonatomic) NSString *phone;
+
+/**
  *  Create, submit for printing, and return a new OLPrintOrder object, based on a single job.
  *
  *  @param job               The job to form the print order

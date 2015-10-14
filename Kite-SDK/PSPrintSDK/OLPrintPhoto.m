@@ -11,6 +11,7 @@
 #import <SDWebImage/SDWebImageManager.h>
 #import "RMImageCropper.h"
 #import "ALAssetsLibrary+Singleton.h"
+#import "OLKiteUtils.h"
 #ifdef OL_KITE_OFFER_INSTAGRAM
 #import <InstagramImagePicker/OLInstagramImage.h>
 #endif
@@ -320,43 +321,6 @@ static NSOperationQueue *imageOperationQueue;
     return !CGRectIsEmpty(self.cropImageFrame) || !CGRectIsEmpty(self.cropImageRect) || !CGSizeEqualToSize(self.cropImageSize, CGSizeZero);
 }
 
-+ (void)transform:(CGAffineTransform *)transform andSize:(CGSize *)size forOrientation:(UIImageOrientation)orientation {
-    *transform = CGAffineTransformIdentity;
-    BOOL transpose = NO;
-    
-    switch(orientation)
-    {
-        case UIImageOrientationUp:// EXIF 1
-        case UIImageOrientationUpMirrored:{ // EXIF 2
-        } break;
-        case UIImageOrientationDown: // EXIF 3
-        case UIImageOrientationDownMirrored: { // EXIF 4
-            *transform = CGAffineTransformMakeRotation(M_PI);
-        } break;
-        case UIImageOrientationLeftMirrored: // EXIF 5
-        case UIImageOrientationLeft: {// EXIF 6
-            *transform = CGAffineTransformMakeRotation(M_PI_2);
-            transpose = YES;
-        } break;
-        case UIImageOrientationRightMirrored: // EXIF 7
-        case UIImageOrientationRight: { // EXIF 8
-            *transform = CGAffineTransformMakeRotation(-M_PI_2);
-            transpose = YES;
-        } break;
-        default:
-            break;
-    }
-    
-    if(orientation == UIImageOrientationUpMirrored || orientation == UIImageOrientationDownMirrored ||
-       orientation == UIImageOrientationLeftMirrored || orientation == UIImageOrientationRightMirrored) {
-        *transform = CGAffineTransformScale(*transform, -1, 1);
-    }
-    
-    if(transpose) {
-        *size = CGSizeMake(size->height, size->width);
-    }
-}
-
 + (void)resizedImageWithPrintPhoto:(OLPrintPhoto *)printPhoto size:(CGSize)destSize cropped:(BOOL)cropped progress:(OLImageEditorImageGetImageProgressHandler)progressHandler completion:(OLImageEditorImageGetImageCompletionHandler)completionHandler {
     
     
@@ -411,77 +375,9 @@ static NSOperationQueue *imageOperationQueue;
 }
 
 - (void)dataLengthWithCompletionHandler:(GetDataLengthHandler)handler {
-    if (self.type == kPrintPhotoAssetTypeALAsset) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            ALAssetRepresentation *assetRepresentation = [self.asset defaultRepresentation];
-            if (assetRepresentation) {
-                if (![self isCropped]){
-                    handler(assetRepresentation.size, nil);
-                }
-                else{
-                    [self dataWithCompletionHandler:^(NSData *data, NSError *error){
-                        handler(data.length, error);
-                    }];
-                }
-                
-            } else {
-                // unfortunately the image is no longer available, it's likely the user deleted it from their device hence
-                // the asset uri is now pointing to nothing. In this case we fall back to a default "corrupt" image so that
-                // things still work as expected just nothing nice will get printed.
-                NSData *data = [NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"kite_corrupt" ofType:@"jpg"]];
-                handler(data.length, nil);
-            }
-        });
-    }
-    else if (self.type == kPrintPhotoAssetTypePHAsset){
-        PHImageManager *imageManager = [PHImageManager defaultManager];
-        PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
-        options.synchronous = NO;
-        options.deliveryMode = PHImageRequestOptionsDeliveryModeHighQualityFormat;
-        options.networkAccessAllowed = YES;
-        [imageManager requestImageDataForAsset:self.asset options:options resultHandler:^(NSData *imageData, NSString *dataUTI, UIImageOrientation orientation, NSDictionary *info){
-            if (!imageData){
-                handler(0, [NSError errorWithDomain:@"ly.kite" code:404 userInfo:@{@"Error" : @"PHAsset does not exist."}]);
-            }
-            else{
-                if ([[dataUTI lowercaseString] containsString:@"jpg"] || [[dataUTI lowercaseString] containsString:@"jpeg"] || [[dataUTI lowercaseString] containsString:@"jpg"]){
-                    handler(imageData.length, nil);
-                }
-                else{
-                    [imageManager requestImageForAsset:self.asset targetSize:PHImageManagerMaximumSize contentMode:PHImageContentModeDefault options:options resultHandler:^(UIImage *result, NSDictionary *info){
-                        handler(UIImageJPEGRepresentation(result, 0.7).length, nil);
-                    }];
-                }
-            }
-        }];
-    }
-#if defined(OL_KITE_OFFER_INSTAGRAM) || defined(OL_KITE_OFFER_FACEBOOK)
-    else if (self.type == kPrintPhotoAssetTypeInstagramPhoto || self.type == kPrintPhotoAssetTypeFacebookPhoto){
-        [[SDWebImageManager sharedManager] downloadImageWithURL:[self.asset fullURL] options:0 progress:NULL completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
-            if (finished) {
-                if (![self isCropped]){
-                    NSUInteger length = UIImageJPEGRepresentation(image, 0.7).length;
-                    handler(length, error);
-                }
-                else{
-                    [self dataWithCompletionHandler:^(NSData *data, NSError *error){
-                        handler(data.length, error);
-                    }];
-                }
-            }
-        }];
-    }
-#endif
-    else if (self.type == kPrintPhotoAssetTypeOLAsset){
-        if (![self isCropped]){
-            [(OLAsset *)self.asset dataLengthWithCompletionHandler:handler];
-        }
-        else{
-            [self dataWithCompletionHandler:^(NSData *data, NSError *error){
-                handler(data.length, error);
-            }];
-        }
-    }
+    [self dataWithCompletionHandler:^(NSData *data, NSError *error){
+        handler(data.length, error);
+    }];
 }
 
 - (void)dataWithCompletionHandler:(GetDataHandler)handler {
@@ -497,7 +393,7 @@ static NSOperationQueue *imageOperationQueue;
             UIImage *image = [UIImage imageWithCGImage:[rep fullResolutionImage] scale:rep.scale orientation:orientation];
             [self dataWithImage:image withCompletionHandler:handler];
         } else {
-            NSData *data = [NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"kite_corrupt" ofType:@"jpg"]];
+            NSData *data = [NSData dataWithContentsOfFile:[[OLKiteUtils kiteBundle] pathForResource:@"kite_corrupt" ofType:@"jpg"]];
             handler(data, nil);
         }
     }
@@ -507,21 +403,24 @@ static NSOperationQueue *imageOperationQueue;
         options.synchronous = NO;
         options.deliveryMode = PHImageRequestOptionsDeliveryModeHighQualityFormat;
         options.networkAccessAllowed = YES;
-        [imageManager requestImageDataForAsset:self.asset options:options resultHandler:^(NSData *imageData, NSString *dataUTI, UIImageOrientation orientation, NSDictionary *info){
-            if (!imageData){
-                handler(nil, [NSError errorWithDomain:@"ly.kite" code:404 userInfo:@{@"Error" : @"PHAsset does not exist."}]);
+        [imageManager requestImageForAsset:self.asset targetSize:PHImageManagerMaximumSize contentMode:PHImageContentModeDefault options:options resultHandler:^(UIImage *result, NSDictionary *info){
+            if (result){
+                [self dataWithImage:result withCompletionHandler:^(NSData *data, NSError *error){
+                    if (!error){
+                        handler(data, nil);
+                    }
+                    else{
+                        NSData *data = [NSData dataWithContentsOfFile:[[OLKiteUtils kiteBundle] pathForResource:@"kite_corrupt" ofType:@"jpg"]];
+                        handler(data, nil);
+                    }
+                }];
             }
             else{
-                if ([[dataUTI lowercaseString] containsString:@"jpg"] || [[dataUTI lowercaseString] containsString:@"jpeg"] || [[dataUTI lowercaseString] containsString:@"jpg"]){
-                    handler(imageData, nil);
-                }
-                else{
-                    [imageManager requestImageForAsset:self.asset targetSize:PHImageManagerMaximumSize contentMode:PHImageContentModeDefault options:options resultHandler:^(UIImage *result, NSDictionary *info){
-                        handler(UIImageJPEGRepresentation(result, 0.7), nil);
-                    }];
-                }
+                NSData *data = [NSData dataWithContentsOfFile:[[OLKiteUtils kiteBundle] pathForResource:@"kite_corrupt" ofType:@"jpg"]];
+                handler(data, nil);
             }
         }];
+        
     }
 #if defined(OL_KITE_OFFER_INSTAGRAM) || defined(OL_KITE_OFFER_FACEBOOK)
     else if (self.type == kPrintPhotoAssetTypeFacebookPhoto || self.type == kPrintPhotoAssetTypeInstagramPhoto){
@@ -574,7 +473,7 @@ static NSOperationQueue *imageOperationQueue;
     [OLPrintPhoto resizedImageWithPrintPhoto:photo size:CGSizeZero cropped:YES progress:NULL completion:^(UIImage *image){
         handler(UIImageJPEGRepresentation(image, 0.7), nil);
     }];
-
+    
 }
 
 #pragma mark - NSCoding protocol methods
@@ -589,23 +488,23 @@ static NSOperationQueue *imageOperationQueue;
         if (self.type == kPrintPhotoAssetTypeALAsset) {
             NSURL *assetURL = [aDecoder decodeObjectForKey:kKeyAsset];
             [[ALAssetsLibrary defaultAssetsLibrary] assetForURL:assetURL
-                          resultBlock:^(ALAsset *asset) {
-                              NSAssert([NSThread isMainThread], @"oops wrong assumption about main thread callback");
-                              if (asset == nil) {
-                                  // corrupt asset, user has probably deleted the photo from their device
-                                  _type = kPrintPhotoAssetTypeOLAsset;
-                                  NSData *data = [NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"kite_corrupt" ofType:@"jpg"]];
-                                  self.asset = [OLAsset assetWithDataAsJPEG:data];
-                              } else {
-                                  self.asset = asset;
-                              }
-                          }
-                         failureBlock:^(NSError *err) {
-                             NSAssert([NSThread isMainThread], @"oops wrong assumption about main thread callback");
-                             _type = kPrintPhotoAssetTypeOLAsset;
-                             NSData *data = [NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"kite_corrupt" ofType:@"jpg"]];
-                             self.asset = [OLAsset assetWithDataAsJPEG:data];
-                         }];
+                                                    resultBlock:^(ALAsset *asset) {
+                                                        NSAssert([NSThread isMainThread], @"oops wrong assumption about main thread callback");
+                                                        if (asset == nil) {
+                                                            // corrupt asset, user has probably deleted the photo from their device
+                                                            _type = kPrintPhotoAssetTypeOLAsset;
+                                                            NSData *data = [NSData dataWithContentsOfFile:[[OLKiteUtils kiteBundle] pathForResource:@"kite_corrupt" ofType:@"jpg"]];
+                                                            self.asset = [OLAsset assetWithDataAsJPEG:data];
+                                                        } else {
+                                                            self.asset = asset;
+                                                        }
+                                                    }
+                                                   failureBlock:^(NSError *err) {
+                                                       NSAssert([NSThread isMainThread], @"oops wrong assumption about main thread callback");
+                                                       _type = kPrintPhotoAssetTypeOLAsset;
+                                                       NSData *data = [NSData dataWithContentsOfFile:[[OLKiteUtils kiteBundle] pathForResource:@"kite_corrupt" ofType:@"jpg"]];
+                                                       self.asset = [OLAsset assetWithDataAsJPEG:data];
+                                                   }];
         }
         else if (self.type == kPrintPhotoAssetTypePHAsset){
             NSString *localId = [aDecoder decodeObjectForKey:kKeyAsset];
@@ -613,7 +512,7 @@ static NSOperationQueue *imageOperationQueue;
             if (!asset){
                 // corrupt asset, user has probably deleted the photo from their device
                 _type = kPrintPhotoAssetTypeOLAsset;
-                NSData *data = [NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"kite_corrupt" ofType:@"jpg"]];
+                NSData *data = [NSData dataWithContentsOfFile:[[OLKiteUtils kiteBundle] pathForResource:@"kite_corrupt" ofType:@"jpg"]];
                 self.asset = [OLAsset assetWithDataAsJPEG:data];
             }
             else {

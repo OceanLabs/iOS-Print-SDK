@@ -8,6 +8,7 @@
 
 #import "UIImage+OLAssetsPickerController.h"
 #import "NSBundle+OLAssetsPickerController.h"
+#import "OLKiteUtils.h"
 
 @implementation UIImage (OLAssetsPickerController)
 
@@ -15,7 +16,7 @@
 {
     if ([UIImage respondsToSelector:@selector(imageNamed:inBundle:compatibleWithTraitCollection:)])
     {
-        return [UIImage imageNamed:name inBundle:[NSBundle mainBundle] compatibleWithTraitCollection:nil];
+        return [UIImage imageNamed:name inBundle:[OLKiteUtils kiteBundle] compatibleWithTraitCollection:nil];
     }
     else
     {

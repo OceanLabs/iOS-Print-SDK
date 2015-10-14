@@ -20,6 +20,7 @@
 #import "OLKiteABTesting.h"
 #import <SDWebImage/SDWebImageManager.h>
 #import "UIImage+ColorAtPixel.h"
+#import "UIImage+ImageNamedInKiteBundle.h"
 
 NSString *const kOLNotificationUserSuppliedShippingDetails = @"co.oceanlabs.pssdk.kOLNotificationUserSuppliedShippingDetails";
 NSString *const kOLNotificationUserCompletedPayment = @"co.oceanlabs.pssdk.kOLNotificationUserCompletedPayment";
@@ -221,7 +222,7 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
         }];
     }
     else{
-        [self setupBannerImage:[UIImage imageNamed:@"checkout_progress_indicator"] withBgImage:[UIImage imageNamed:@"checkout_progress_indicator_bg"]];
+        [self setupBannerImage:[UIImage imageNamedInKiteBundle:@"checkout_progress_indicator"] withBgImage:[UIImage imageNamedInKiteBundle:@"checkout_progress_indicator_bg"]];
     }
 
     UITapGestureRecognizer *tgr = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onBackgroundClicked)];
@@ -309,6 +310,9 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
         d = [self.printOrder.userData mutableCopy];
     }
     
+    self.printOrder.email = email;
+    self.printOrder.phone = phone;
+    
     d[@"email"] = email;
     d[@"phone"] = phone;
     self.printOrder.userData = d;
@@ -338,20 +342,13 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
 }
 
 - (void) viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
     self.automaticallyAdjustsScrollViewInsets = NO;
     self.tableView.contentInset = UIEdgeInsetsMake(self.edgeInsetTop, 0, 0, 0);
     [self.tableView scrollRectToVisible:CGRectMake(0, 0, 10, 10) animated:NO];
     [self.tableView reloadData];
     if (self.kiteLabel){
         [self positionKiteLabel];
-    }
-}
-
-- (void) viewWillDisappear:(BOOL)animated {
-    if ([self.navigationController.viewControllers indexOfObject:self] == NSNotFound) {
-        // back button pressed. we're going back to photo selection view so lets cancel any
-        // preempted asset upload
-        //[self.printOrder cancelSubmissionOrPreemptedAssetUpload];
     }
 }
 
@@ -503,7 +500,7 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
             }
             OLAddress *address = (OLAddress *)self.shippingAddresses[indexPath.row];
             cell.textLabel.textColor = [UIColor blackColor];
-            cell.imageView.image = [self.selectedShippingAddresses containsObject:address] ? [UIImage imageNamed:@"checkmark_on"] : [UIImage imageNamed:@"checkmark_off"];
+            cell.imageView.image = [self.selectedShippingAddresses containsObject:address] ? [UIImage imageNamedInKiteBundle:@"checkmark_on"] : [UIImage imageNamedInKiteBundle:@"checkmark_off"];
             cell.textLabel.text = [(OLAddress *)self.shippingAddresses[indexPath.row] fullNameFromFirstAndLast];
             cell.detailTextLabel.text = [address descriptionWithoutRecipient];
         } else {
@@ -616,7 +613,7 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
                 }
                 
                 UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-                cell.imageView.image = selected ? [UIImage imageNamed:@"checkmark_on"] : [UIImage imageNamed:@"checkmark_off"];
+                cell.imageView.image = selected ? [UIImage imageNamedInKiteBundle:@"checkmark_on"] : [UIImage imageNamedInKiteBundle:@"checkmark_off"];
             }
             else{
                 OLAddressPickerController *addressPicker = [[OLAddressPickerController alloc] init];

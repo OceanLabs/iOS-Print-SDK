@@ -25,6 +25,7 @@
 - (NSString *)packInfo;
 - (NSString *)dimensions;
 - (NSString *)detailsString;
+- (BOOL)isValidProductForUI;
 +(OLProduct *)productWithTemplateId:(NSString *)templateId;
 
 @end

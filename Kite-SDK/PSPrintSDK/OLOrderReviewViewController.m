@@ -25,6 +25,7 @@
 #import "OLKiteABTesting.h"
 #import "NSObject+Utils.h"
 #import "OLRemoteImageView.h"
+#import "OLKiteUtils.h"
 
 static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 static const NSUInteger kTagAlertViewDeletePhoto = 98;
@@ -34,13 +35,6 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
 @property (strong, nonatomic) OLPrintOrder *printOrder;
 - (void)dismiss;
 
-@end
-
-@interface OLKitePrintSDK (InternalUtils)
-+ (NSString *)userEmail:(UIViewController *)topVC;
-+ (NSString *)userPhone:(UIViewController *)topVC;
-+ (id<OLKiteDelegate>)kiteDelegate:(UIViewController *)topVC;
-+ (void)checkoutViewControllerForPrintOrder:(OLPrintOrder *)printOrder handler:(void(^)(id vc))handler;
 @end
 
 @interface OLOrderReviewViewController () <OLCheckoutDelegate, UIAlertViewDelegate, UICollectionViewDelegateFlowLayout>
@@ -221,10 +215,10 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
         [self.navigationController pushViewController:vc animated:YES];
     }
     else{
-        [OLKitePrintSDK checkoutViewControllerForPrintOrder:printOrder handler:^(id vc){
-            [vc safePerformSelector:@selector(setUserEmail:) withObject:[OLKitePrintSDK userEmail:self]];
-            [vc safePerformSelector:@selector(setUserPhone:) withObject:[OLKitePrintSDK userPhone:self]];
-            [vc safePerformSelector:@selector(setKiteDelegate:) withObject:[OLKitePrintSDK kiteDelegate:self]];
+        [OLKiteUtils checkoutViewControllerForPrintOrder:printOrder handler:^(id vc){
+            [vc safePerformSelector:@selector(setUserEmail:) withObject:[OLKiteUtils userEmail:self]];
+            [vc safePerformSelector:@selector(setUserPhone:) withObject:[OLKiteUtils userPhone:self]];
+            [vc safePerformSelector:@selector(setKiteDelegate:) withObject:[OLKiteUtils kiteDelegate:self]];
             
             [self.navigationController pushViewController:vc animated:YES];
         }];

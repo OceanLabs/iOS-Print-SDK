@@ -68,6 +68,7 @@
 }
 
 - (void)viewDidLoad{
+    [super viewDidLoad];
     self.title = NSLocalizedString(self.templateClass, @"");
     
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Back", @"")

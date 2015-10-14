@@ -31,6 +31,8 @@ static NSString *const kKeyShippingAddress = @"co.oceanlabs.pssdk.kKeyShippingAd
 static NSString *const kKeyLastPrintError = @"co.oceanlabs.pssdk.kKeyLastPrintError";
 static NSString *const kKeyLastPrintSubmissionDate = @"co.oceanlabs.pssdk.kKeyLastPrintSubmissionDate";
 static NSString *const kKeyCurrencyCode = @"co.oceanlabs.pssdk.kKeyCurrencyCode";
+static NSString *const kKeyOrderEmail = @"co.oceanlabs.pssdk.kKeyOrderEmail";
+static NSString *const kKeyOrderPhone = @"co.oceanlabs.pssdk.kKeyOrderPhone";
 
 static NSMutableArray *inProgressPrintOrders; // Tracks all currently in progress print orders. This is useful as it means they won't be dealloc'd if a user doesn't come a strong reference to them but still expects the completion handler callback
 
@@ -190,7 +192,7 @@ static id stringOrEmptyString(NSString *str) {
     }
     
     if (self.costReq != nil) {
-        return; // request already in progress. 
+        return; // request already in progress.
     }
     
     self.costReq = [[OLPrintOrderCostRequest alloc] init];
@@ -287,7 +289,7 @@ static id stringOrEmptyString(NSString *str) {
     self.totalBytesExpectedToWrite = 0;
     __block NSUInteger outstandingLengthCallbacks = self.assetsToUpload.count;
     __block NSError *previousError = nil;
-    for (OLAsset *asset in self.assetsToUpload) {        
+    for (OLAsset *asset in self.assetsToUpload) {
         [asset dataLengthWithCompletionHandler:^(long long dataLength, NSError *error) {
             if (previousError) {
                 return;
@@ -320,7 +322,7 @@ static id stringOrEmptyString(NSString *str) {
 
 - (NSDictionary *)jsonRepresentation {
     NSMutableDictionary *json = [[NSMutableDictionary alloc] init];
-
+    
     if (self.proofOfPayment) {
         [json setObject:self.proofOfPayment forKey:@"proof_of_payment"];
     }
@@ -338,9 +340,16 @@ static id stringOrEmptyString(NSString *str) {
     if (self.userData) {
         [json setObject:self.userData forKey:@"user_data"];
     }
-
+    
     for (id<OLPrintJob> printJob in self.jobs) {
         [jobs addObject:[printJob jsonRepresentation]];
+    }
+    
+    if (self.phone){
+        [json setObject:self.phone forKey:@"phone"];
+    }
+    if (self.email){
+        [json setObject:self.email forKey:@"email"];
     }
     
     if (self.shippingAddress) {
@@ -378,18 +387,6 @@ static id stringOrEmptyString(NSString *str) {
     return hash;
 }
 
-- (NSArray *)uniqueJobs{
-    NSMutableArray *uniqJobs = [[NSMutableArray alloc] init];
-    NSMutableSet *uniqJobIds = [[NSMutableSet alloc] init];
-    for (id<OLPrintJob> job in self.jobs){
-        if (![uniqJobIds containsObject:job.uuid]){
-            [uniqJobIds addObject:job.uuid];
-            [uniqJobs addObject:job];
-        }
-    }
-    return uniqJobs;
-}
-
 - (void)discardDuplicateJobs{
     NSMutableSet *uniqJobIds = [[NSMutableSet alloc] init];
     NSMutableArray *jobsToRemove = [[NSMutableArray alloc] init];
@@ -421,7 +418,7 @@ static id stringOrEmptyString(NSString *str) {
     }
     [(NSMutableArray *)self.jobs removeAllObjects];
     
-   
+    
     for (OLAddress *address in addresses){
         if (address == [addresses firstObject]){
             continue;
@@ -448,11 +445,13 @@ static id stringOrEmptyString(NSString *str) {
     }
 }
 
-- (void)assetUploadRequest:(OLAssetUploadRequest *)req didSucceedWithAssets:(NSArray/*<OLAsset>*/ *)assets {
+- (void)assetUploadRequest:(OLAssetUploadRequest *)req didSucceedWithAssets:(NSArray<OLAsset *> *)assets {
     NSAssert(self.assetsToUpload.count == assets.count, @"Oops there should be a 1:1 relationship between uploaded assets and submitted, currently its: %lu:%lu", (unsigned long) self.assetsToUpload.count, (unsigned long) assets.count);
+#ifdef DEBUG
     for (OLAsset *asset in assets) {
         NSAssert([self.assetsToUpload containsObject:asset], @"oops");
     }
+#endif
     
     // make sure all job assets have asset ids & preview urls. We need to do this because we optimize the asset upload to avoid uploading
     // assets that are considered to have duplicate contents
@@ -466,13 +465,14 @@ static id stringOrEmptyString(NSString *str) {
         }
     }
     
+#ifdef DEBUG
     // sanity check all assets are uploaded
     for (id<OLPrintJob> job in self.jobs) {
         for (OLAsset *jobAsset in job.assetsForUploading) {
-            BOOL isUploaded = jobAsset.isUploaded;
-            NSAssert(isUploaded, @"oops all assets should have been uploaded");
+            NSAssert(jobAsset.isUploaded, @"oops all assets should have been uploaded");
         }
     }
+#endif
     
     self.assetUploadComplete = YES;
     self.assetsToUpload = nil;
@@ -525,6 +525,8 @@ static id stringOrEmptyString(NSString *str) {
     [aCoder encodeObject:self.lastPrintSubmissionDate forKey:kKeyLastPrintSubmissionDate];
     [aCoder encodeObject:_currencyCode forKey:kKeyCurrencyCode];
     [aCoder encodeObject:self.finalCost forKey:kKeyFinalCost];
+    [aCoder encodeObject:self.email forKey:kKeyOrderEmail];
+    [aCoder encodeObject:self.phone forKey:kKeyOrderPhone];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
@@ -541,6 +543,8 @@ static id stringOrEmptyString(NSString *str) {
             _lastPrintSubmissionDate = [aDecoder decodeObjectForKey:kKeyLastPrintSubmissionDate];
             _currencyCode = [aDecoder decodeObjectForKey:kKeyCurrencyCode];
             _finalCost = [aDecoder decodeObjectForKey:kKeyFinalCost];
+            _email = [aDecoder decodeObjectForKey:kKeyOrderEmail];
+            _phone = [aDecoder decodeObjectForKey:kKeyOrderPhone];
         }
         return self;
         
