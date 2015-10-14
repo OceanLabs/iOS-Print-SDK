@@ -14,6 +14,7 @@
 #import "OLAsset+Private.h"
 #import "OLPrintPhoto.h"
 #import "ALAssetsLibrary+Singleton.h"
+#import "OLKiteUtils.h"
 
 #ifdef OL_KITE_OFFER_INSTAGRAM
 #import <InstagramImagePicker/OLInstagramImage.h>
@@ -273,22 +274,22 @@ NSString *const kOLMimeTypePNG  = @"image/png";
         case kOLAssetTypePHAsset:{
             PHAsset *asset = [[PHAsset fetchAssetsWithLocalIdentifiers:@[self.phAssetLocalId] options:nil] firstObject];
             if (!asset){
-                handler(0, [NSError errorWithDomain:@"ly.kite" code:404 userInfo:@{@"Error" : @"PHAsset does not exist."}]);
+                NSData *data = [NSData dataWithContentsOfFile:[[OLKiteUtils kiteBundle] pathForResource:@"kite_corrupt" ofType:@"jpg"]];
+                handler(data.length, nil);
+                return;
             }
             PHImageManager *imageManager = [PHImageManager defaultManager];
             PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
             options.synchronous = NO;
             options.deliveryMode = PHImageRequestOptionsDeliveryModeHighQualityFormat;
             options.networkAccessAllowed = YES;
-            [imageManager requestImageDataForAsset:asset options:options resultHandler:^(NSData *imageData, NSString *dataUTI, UIImageOrientation orientation, NSDictionary *info){
-                if (!imageData){
-                    handler(0, [NSError errorWithDomain:@"ly.kite" code:404 userInfo:@{@"Error" : @"PHAsset does not exist."}]);
+            [imageManager requestImageForAsset:asset targetSize:PHImageManagerMaximumSize contentMode:PHImageContentModeDefault options:options resultHandler:^(UIImage *result, NSDictionary *info){
+                if (result){
+                    handler(UIImageJPEGRepresentation(result, 0.7).length, nil);
                 }
                 else{
-                    if ([[dataUTI lowercaseString] containsString:@"png"]){
-                        _mimeType = kOLMimeTypePNG;
-                    }
-                    handler(imageData.length, nil);
+                    NSData *data = [NSData dataWithContentsOfFile:[[OLKiteUtils kiteBundle] pathForResource:@"kite_corrupt" ofType:@"jpg"]];
+                    handler(data.length, nil);
                 }
             }];
             break;
@@ -352,22 +353,22 @@ NSString *const kOLMimeTypePNG  = @"image/png";
         case kOLAssetTypePHAsset:{
             PHAsset *asset = [[PHAsset fetchAssetsWithLocalIdentifiers:@[self.phAssetLocalId] options:nil] firstObject];
             if (!asset){
-                handler(0, [NSError errorWithDomain:@"ly.kite" code:404 userInfo:@{@"Error" : @"PHAsset does not exist."}]);
+                NSData *data = [NSData dataWithContentsOfFile:[[OLKiteUtils kiteBundle] pathForResource:@"kite_corrupt" ofType:@"jpg"]];
+                handler(data, nil);
+                return;
             }
             PHImageManager *imageManager = [PHImageManager defaultManager];
             PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
             options.synchronous = NO;
             options.deliveryMode = PHImageRequestOptionsDeliveryModeHighQualityFormat;
             options.networkAccessAllowed = YES;
-            [imageManager requestImageDataForAsset:asset options:options resultHandler:^(NSData *imageData, NSString *dataUTI, UIImageOrientation orientation, NSDictionary *info){
-                if (!imageData){
-                    handler(nil, [NSError errorWithDomain:@"ly.kite" code:404 userInfo:@{@"Error" : @"PHAsset does not exist."}]);
+            [imageManager requestImageForAsset:asset targetSize:PHImageManagerMaximumSize contentMode:PHImageContentModeDefault options:options resultHandler:^(UIImage *result, NSDictionary *info){
+                if (result){
+                    handler(UIImageJPEGRepresentation(result, 0.7), nil);
                 }
                 else{
-                    if ([[dataUTI lowercaseString] containsString:@"png"]){
-                        _mimeType = kOLMimeTypePNG;
-                    }
-                    handler(imageData, nil);
+                    NSData *data = [NSData dataWithContentsOfFile:[[OLKiteUtils kiteBundle] pathForResource:@"kite_corrupt" ofType:@"jpg"]];
+                    handler(data, nil);
                 }
             }];
             break;

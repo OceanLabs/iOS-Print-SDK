@@ -440,44 +440,24 @@ static NSOperationQueue *imageOperationQueue;
         options.synchronous = NO;
         options.deliveryMode = PHImageRequestOptionsDeliveryModeHighQualityFormat;
         options.networkAccessAllowed = YES;
-        [imageManager requestImageDataForAsset:self.asset options:options resultHandler:^(NSData *imageData, NSString *dataUTI, UIImageOrientation orientation, NSDictionary *info){
-            if (!imageData){
+        [imageManager requestImageForAsset:self.asset targetSize:PHImageManagerMaximumSize contentMode:PHImageContentModeDefault options:options resultHandler:^(UIImage *result, NSDictionary *info){
+            if (result){
+                [self dataWithImage:result withCompletionHandler:^(NSData *data, NSError *error){
+                    if (!error){
+                        handler(data, nil);
+                    }
+                    else{
+                        NSData *data = [NSData dataWithContentsOfFile:[[OLKiteUtils kiteBundle] pathForResource:@"kite_corrupt" ofType:@"jpg"]];
+                        handler(data, nil);
+                    }
+                }];
+            }
+            else{
                 NSData *data = [NSData dataWithContentsOfFile:[[OLKiteUtils kiteBundle] pathForResource:@"kite_corrupt" ofType:@"jpg"]];
                 handler(data, nil);
             }
-            else{
-                if ([[dataUTI lowercaseString] containsString:@"jpg"] || [[dataUTI lowercaseString] containsString:@"jpeg"] || [[dataUTI lowercaseString] containsString:@"png"]){
-                    [self dataWithData:imageData withCompletionHandler:^(NSData *data, NSError *error){
-                        if (!error){
-                            handler(data, nil);
-                        }
-                        else{
-                            NSData *data = [NSData dataWithContentsOfFile:[[OLKiteUtils kiteBundle] pathForResource:@"kite_corrupt" ofType:@"jpg"]];
-                            handler(data, nil);
-                        }
-                    }];
-                }
-                else{
-                    [imageManager requestImageForAsset:self.asset targetSize:PHImageManagerMaximumSize contentMode:PHImageContentModeDefault options:options resultHandler:^(UIImage *result, NSDictionary *info){
-                        if (result){
-                            [self dataWithImage:result withCompletionHandler:^(NSData *data, NSError *error){
-                                if (!error){
-                                    handler(data, nil);
-                                }
-                                else{
-                                    NSData *data = [NSData dataWithContentsOfFile:[[OLKiteUtils kiteBundle] pathForResource:@"kite_corrupt" ofType:@"jpg"]];
-                                    handler(data, nil);
-                                }
-                            }];
-                        }
-                        else{
-                            NSData *data = [NSData dataWithContentsOfFile:[[OLKiteUtils kiteBundle] pathForResource:@"kite_corrupt" ofType:@"jpg"]];
-                            handler(data, nil);
-                        }
-                    }];
-                }
-            }
         }];
+        
     }
 #if defined(OL_KITE_OFFER_INSTAGRAM) || defined(OL_KITE_OFFER_FACEBOOK)
     else if (self.type == kPrintPhotoAssetTypeFacebookPhoto || self.type == kPrintPhotoAssetTypeInstagramPhoto){
@@ -524,18 +504,6 @@ static NSOperationQueue *imageOperationQueue;
 - (void)dataWithImage:(UIImage *)image withCompletionHandler:(GetDataHandler)handler{
     OLPrintPhoto *photo = [[OLPrintPhoto alloc] init];
     photo.asset = [OLAsset assetWithImageAsJPEG:image];
-    photo.cropImageRect = self.cropImageRect;
-    photo.cropImageFrame = self.cropImageFrame;
-    photo.cropImageSize = self.cropImageSize;
-    [OLPrintPhoto resizedImageWithPrintPhoto:photo size:CGSizeZero cropped:YES progress:NULL completion:^(UIImage *image){
-        handler(UIImageJPEGRepresentation(image, 0.7), nil);
-    }];
-    
-}
-
-- (void)dataWithData:(NSData *)data withCompletionHandler:(GetDataHandler)handler{
-    OLPrintPhoto *photo = [[OLPrintPhoto alloc] init];
-    photo.asset = [OLAsset assetWithImageAsJPEG:[UIImage imageWithData:data]];
     photo.cropImageRect = self.cropImageRect;
     photo.cropImageFrame = self.cropImageFrame;
     photo.cropImageSize = self.cropImageSize;
