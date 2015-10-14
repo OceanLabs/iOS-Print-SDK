@@ -1365,6 +1365,7 @@ UINavigationControllerDelegate
     OLInstagramImagePickerController *picker = nil;
     picker = [[OLInstagramImagePickerController alloc] initWithClientId:[OLKitePrintSDK instagramClientID] secret:[OLKitePrintSDK instagramSecret] redirectURI:[OLKitePrintSDK instagramRedirectURI]];
     picker.delegate = self;
+    picker.selected = @[];
     [self presentViewController:picker animated:YES completion:nil];
 #endif
 }

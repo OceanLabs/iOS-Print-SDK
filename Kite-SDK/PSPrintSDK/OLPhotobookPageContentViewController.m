@@ -28,9 +28,8 @@
 - (void)viewDidLoad{
     [super viewDidLoad];
         
-    CGFloat margin = 0.85;
-    [self.imageView.superview addConstraint:[NSLayoutConstraint constraintWithItem:self.imageView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self.imageView.superview attribute:NSLayoutAttributeHeight multiplier:margin constant:0]];
-    [self.imageView.superview addConstraint:[NSLayoutConstraint constraintWithItem:self.imageView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:self.imageView.superview attribute:NSLayoutAttributeWidth multiplier:margin constant:0]];
+    [self.imageView.superview addConstraint:[NSLayoutConstraint constraintWithItem:self.imageView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self.imageView.superview attribute:NSLayoutAttributeHeight multiplier:1-self.product.productTemplate.imageBorder.top*2 constant:0]];
+    [self.imageView.superview addConstraint:[NSLayoutConstraint constraintWithItem:self.imageView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:self.imageView.superview attribute:NSLayoutAttributeWidth multiplier:1-self.product.productTemplate.imageBorder.left*2 constant:0]];
     
     [self loadImageWithCompletionHandler:NULL];
 }
