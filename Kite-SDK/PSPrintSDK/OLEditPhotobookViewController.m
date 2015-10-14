@@ -258,54 +258,58 @@ UINavigationControllerDelegate>
 }
 
 - (void)addPageShadowsToView:(UIView *)view{
-//    UIImage *leftImage = [UIImage imageNamedInKiteBundle:@"page-shadow-left"];
-//    UIImage *rightImage = [UIImage imageNamedInKiteBundle:@"page-shadow-right"];
-//    
-//    UIImageView *left1 = [[UIImageView alloc] initWithImage:leftImage];
-//    left1.contentMode = UIViewContentModeScaleToFill;
-//    left1.tag = 11;
-//    left1.translatesAutoresizingMaskIntoConstraints = NO;
-//    [view addSubview:left1];
-//    
-//    UIImageView *left2 = [[UIImageView alloc] initWithImage:leftImage];
-//    left2.contentMode = UIViewContentModeScaleToFill;
-//    left2.tag = 12;
-//    left2.translatesAutoresizingMaskIntoConstraints = NO;
-//    [view addSubview:left2];
-//    
-//    UIImageView *right1 = [[UIImageView alloc] initWithImage:rightImage];
-//    right1.contentMode = UIViewContentModeScaleToFill;
-//    right1.tag = 21;
-//    right1.translatesAutoresizingMaskIntoConstraints = NO;
-//    [view addSubview:right1];
-//    
-//    UIImageView *right2 = [[UIImageView alloc] initWithImage:rightImage];
-//    right2.contentMode = UIViewContentModeScaleToFill;
-//    right2.tag = 22;
-//    right2.translatesAutoresizingMaskIntoConstraints = NO;
-//    [view addSubview:right2];
-//    
-//    CGFloat shadowWidth = view.frame.size.width * 0.3;
-//    
-//    left1.frame = CGRectMake(view.frame.size.width - shadowWidth, 0, shadowWidth, view.frame.size.height);
-//    left2.frame = CGRectMake(view.frame.size.width - shadowWidth, 0, shadowWidth, view.frame.size.height);
-//    right1.frame = CGRectMake(0, 0, shadowWidth, view.frame.size.height);
-//    right2.frame = CGRectMake(0, 0, shadowWidth, view.frame.size.height);
+    if (self.product.productTemplate.imageBorder.top == 0 && self.product.productTemplate.imageBorder.left == 0 && [[[UIDevice currentDevice] systemVersion] floatValue] >= 8){
+        UIImage *leftImage = [UIImage imageNamed:@"page-shadow-left" inBundle:[OLKiteUtils kiteBundle] compatibleWithTraitCollection:self.traitCollection];
+        UIImage *rightImage = [UIImage imageNamed:@"page-shadow-right" inBundle:[OLKiteUtils kiteBundle] compatibleWithTraitCollection:self.traitCollection];
+
+        UIImageView *left1 = [[UIImageView alloc] initWithImage:leftImage];
+        left1.contentMode = UIViewContentModeScaleToFill;
+        left1.tag = 11;
+//        left1.translatesAutoresizingMaskIntoConstraints = NO;
+        [view addSubview:left1];
+        
+//        UIImageView *left2 = [[UIImageView alloc] initWithImage:leftImage];
+//        left2.contentMode = UIViewContentModeScaleToFill;
+//        left2.tag = 12;
+//        left2.translatesAutoresizingMaskIntoConstraints = NO;
+//        [view addSubview:left2];
+        
+        UIImageView *right1 = [[UIImageView alloc] initWithImage:rightImage];
+        right1.contentMode = UIViewContentModeScaleToFill;
+        right1.tag = 21;
+//        right1.translatesAutoresizingMaskIntoConstraints = NO;
+        [view addSubview:right1];
+        
+//        UIImageView *right2 = [[UIImageView alloc] initWithImage:rightImage];
+//        right2.contentMode = UIViewContentModeScaleToFill;
+//        right2.tag = 22;
+//        right2.translatesAutoresizingMaskIntoConstraints = NO;
+//        [view addSubview:right2];
+        
+        CGFloat shadowWidth = view.frame.size.width * 0.3;
+
+        left1.frame = CGRectMake(view.frame.size.width - shadowWidth, 0, shadowWidth, view.frame.size.height);
+//        left2.frame = CGRectMake(view.frame.size.width - shadowWidth, 0, shadowWidth, view.frame.size.height);
+        right1.frame = CGRectMake(0, 0, shadowWidth, view.frame.size.height);
+//        right2.frame = CGRectMake(0, 0, shadowWidth, view.frame.size.height);
+    }
 }
 
 - (void)setPageShadowAlpha:(UIView *)view forIndex:(NSInteger)index{
-//    if (index % 2 == 0){//LEFT
-//        [view viewWithTag:21].alpha = 0;
-//        [view viewWithTag:22].alpha = 0;
-//        [view viewWithTag:11].alpha = 1;
-//        [view viewWithTag:12].alpha = 1;
-//    }
-//    else{
-//        [view viewWithTag:11].alpha = 0;
-//        [view viewWithTag:12].alpha = 0;
-//        [view viewWithTag:21].alpha = 1;
-//        [view viewWithTag:22].alpha = 1;
-//    }
+    if (self.product.productTemplate.imageBorder.top == 0 && self.product.productTemplate.imageBorder.left == 0){
+        if (index % 2 == 0){//LEFT
+            [view viewWithTag:21].alpha = 0;
+            [view viewWithTag:22].alpha = 0;
+            [view viewWithTag:11].alpha = 1;
+            [view viewWithTag:12].alpha = 1;
+        }
+        else{
+            [view viewWithTag:11].alpha = 0;
+            [view viewWithTag:12].alpha = 0;
+            [view viewWithTag:21].alpha = 1;
+            [view viewWithTag:22].alpha = 1;
+        }
+    }
 }
 
 - (void)updateUserSelectedPhotos{
@@ -867,6 +871,7 @@ UINavigationControllerDelegate>
     OLInstagramImagePickerController *picker = nil;
     picker = [[OLInstagramImagePickerController alloc] initWithClientId:[OLKitePrintSDK instagramClientID] secret:[OLKitePrintSDK instagramSecret] redirectURI:[OLKitePrintSDK instagramRedirectURI]];
     picker.delegate = self;
+    picker.selected = @[];
     [self presentViewController:picker animated:YES completion:nil];
 #endif
 }
