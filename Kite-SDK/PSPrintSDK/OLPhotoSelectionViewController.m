@@ -120,15 +120,15 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     
     self.galleryButton.image = [UIImage imageNamedInKiteBundle:@"import_gallery"];
     self.galleryButton.title = NSLocalizedString(@"Camera Roll", @"");
-    self.galleryButton.mainColor = [UIColor colorWithHexString:@"#48cfad"];
+    self.galleryButton.mainColor = [UIColor colorWithRed:0.227 green:0.706 blue:0.600 alpha:1.000];
     
     self.instagramButton.image = [UIImage imageNamedInKiteBundle:@"import_instagram"];
     self.instagramButton.title = NSLocalizedString(@"Instagram", @"");
-    self.instagramButton.mainColor = [UIColor colorWithHexString:@"#f6bb42"];
+    self.instagramButton.mainColor = [UIColor colorWithRed:0.965 green:0.733 blue:0.259 alpha:1.000];
     
     self.facebookButton.image = [UIImage imageNamedInKiteBundle:@"import_facebook"];
     self.facebookButton.title = NSLocalizedString(@"Facebook", @"");
-    self.facebookButton.mainColor = [UIColor colorWithHexString:@"#5d9cec"];
+    self.facebookButton.mainColor = [UIColor colorWithRed:0.290 green:0.537 blue:0.863 alpha:1.000];
     
     [self.buttonFacebookImport setBackgroundImage:[self imageWithColor:[UIColor colorWithHexString:@"#497aba"]] forState:UIControlStateHighlighted];
     [self.buttonGalleryImport setBackgroundImage:[self imageWithColor:[UIColor colorWithHexString:@"#369c82"]] forState:UIControlStateHighlighted];
