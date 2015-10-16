@@ -58,10 +58,10 @@ static NSUInteger cacheOrderHash; // cached response is only valid for orders wi
     NSString *basketString = @"";
     for (id<OLPrintJob> job in order.jobs){
         if (job.address){
-            basketString = [basketString stringByAppendingString:[NSString stringWithFormat:@"%@:%d:%@,", [job templateId], (int)[job quantity], job.address.country.codeAlpha3]];
+            basketString = [basketString stringByAppendingString:[NSString stringWithFormat:@"%@:%d:%@,", [job templateId], (int)[job quantity] * (int)([job extraCopies]+1), job.address.country.codeAlpha3]];
         }
         else{
-            basketString = [basketString stringByAppendingString:[NSString stringWithFormat:@"%@:%d,", [job templateId], (int)[job quantity]]];
+            basketString = [basketString stringByAppendingString:[NSString stringWithFormat:@"%@:%d,", [job templateId], (int)[job quantity] * (int)([job extraCopies]+1)]];
         }
     }
     basketString = [basketString stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@","]];
