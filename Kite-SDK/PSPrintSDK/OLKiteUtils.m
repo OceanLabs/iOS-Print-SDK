@@ -30,7 +30,7 @@
 }
 
 + (NSString *)userEmail:(UIViewController *)topVC {
-    OLKiteViewController *kiteVC = [self kiteViewControllerInNavStack:topVC.navigationController.viewControllers];
+    OLKiteViewController *kiteVC = [self kiteVcForViewController:topVC];
     OLProductHomeViewController *homeVC = [self homeViewControllerInNavStack:topVC.navigationController.viewControllers];
     if (kiteVC) {
         return kiteVC.userEmail;
@@ -42,7 +42,7 @@
 }
 
 + (NSString *)userPhone:(UIViewController *)topVC {
-    OLKiteViewController *kiteVC = [self kiteViewControllerInNavStack:topVC.navigationController.viewControllers];
+    OLKiteViewController *kiteVC = [self kiteVcForViewController:topVC];
     OLProductHomeViewController *homeVC = [self homeViewControllerInNavStack:topVC.navigationController.viewControllers];
     if (kiteVC) {
         return kiteVC.userPhone;
@@ -54,22 +54,12 @@
 }
 
 + (id<OLKiteDelegate>)kiteDelegate:(UIViewController *)topVC {
-    OLKiteViewController *kiteVC = [self kiteViewControllerInNavStack:topVC.navigationController.viewControllers];
+    OLKiteViewController *kiteVC = [self kiteVcForViewController:topVC];
     OLProductHomeViewController *homeVC = [self homeViewControllerInNavStack:topVC.navigationController.viewControllers];
     if (kiteVC) {
         return kiteVC.delegate;
     } else if (homeVC) {
         return homeVC.delegate;
-    }
-    
-    return nil;
-}
-
-+ (OLKiteViewController *)kiteViewControllerInNavStack:(NSArray *)viewControllers {
-    for (UIViewController *vc in viewControllers) {
-        if ([vc isMemberOfClass:[OLKiteViewController class]]) {
-            return (OLKiteViewController *) vc;
-        }
     }
     
     return nil;
@@ -148,6 +138,20 @@
     else{
         return @"OrderReviewViewController";
     }
+}
+
++ (OLKiteViewController *)kiteVcForViewController:(UIViewController *)vc{
+    vc = vc.parentViewController;
+    while (vc) {
+        if ([vc isKindOfClass:[OLKiteViewController class]]){
+            return (OLKiteViewController *)vc;
+            break;
+        }
+        else{
+            vc = vc.parentViewController;
+        }
+    }
+    return nil;
 }
 
 @end

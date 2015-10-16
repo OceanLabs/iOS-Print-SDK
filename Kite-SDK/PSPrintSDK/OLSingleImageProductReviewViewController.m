@@ -86,8 +86,8 @@ OLAssetsPickerControllerDelegate>
     [OLAnalytics trackReviewScreenViewed:self.product.productTemplate.name];
 #endif
     
-    OLKiteViewController *kiteVc = [self kiteVc];
-    if ([kiteVc printOrder]){
+    OLKiteViewController *kiteVc = [OLKiteUtils kiteVcForViewController:self];
+    if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder){
         self.title = NSLocalizedString(@"Review", @"");
         self.userSelectedPhotos = [[NSMutableArray alloc] init];
         for (OLAsset *asset in [[kiteVc.printOrder.jobs firstObject] assetsForUploading]){
@@ -155,20 +155,6 @@ OLAssetsPickerControllerDelegate>
     [self doCheckout];
 }
 
-- (OLKiteViewController *)kiteVc{
-    UIViewController *vc = self.parentViewController;
-    while (vc) {
-        if ([vc isKindOfClass:[OLKiteViewController class]]){
-            return (OLKiteViewController *)vc;
-            break;
-        }
-        else{
-            vc = vc.parentViewController;
-        }
-    }
-    return nil;
-}
-
 -(void) doCheckout{
     if (!self.imageCropView.image) {
         return;
@@ -199,7 +185,7 @@ OLAssetsPickerControllerDelegate>
             NSUInteger iphonePhotoCount = 1;
             OLProductPrintJob *job = [[OLProductPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:assetArray];
             job.uuid = [[NSUUID UUID] UUIDString];
-            OLPrintOrder *printOrder = [[OLPrintOrder alloc] init];
+            OLPrintOrder *printOrder = [OLKiteUtils kiteVcForViewController:self].printOrder;
             NSDictionary *infoDict = [[NSBundle mainBundle] infoDictionary];
             NSString *appVersion = [infoDict objectForKey:@"CFBundleShortVersionString"];
             NSNumber *buildNumber = [infoDict objectForKey:@"CFBundleVersion"];
@@ -211,22 +197,12 @@ OLAssetsPickerControllerDelegate>
                                     };
             
             
-            //Check if we have launched with a Print Order
-            OLKiteViewController *kiteVC = [self kiteVc];
-            if ([kiteVC printOrder]){
-                printOrder = [kiteVC printOrder];
-            }
+            //TODO: Check if we have launched with a Print Order and remove the editing print job
+//                [printOrder removePrintJob:self.editingPrintJob];
             
-            for (id<OLPrintJob> job in printOrder.jobs){
-                [printOrder removePrintJob:job];
-            }
             [printOrder addPrintJob:job];
             
-            if ([kiteVC printOrder]){
-                [kiteVC setPrintOrder:printOrder];
-            }
-            
-            if ([kiteVC printOrder] && [[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant isEqualToString:@"Review-Overview-Checkout"]){
+            if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder && [[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant isEqualToString:@"Review-Overview-Checkout"]){
                 UIViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLProductOverviewViewController"];
                 [vc safePerformSelector:@selector(setUserEmail:) withObject:[(OLKiteViewController *)vc userEmail]];
                 [vc safePerformSelector:@selector(setUserPhone:) withObject:[(OLKiteViewController *)vc userPhone]];
@@ -287,14 +263,11 @@ OLAssetsPickerControllerDelegate>
 }
 
 - (BOOL)shouldShowAddMorePhotos{
-    if ([[self kiteVc] printOrder]){
-        return NO;
-    }
-    else if (![self.delegate respondsToSelector:@selector(kiteControllerShouldAllowUserToAddMorePhotos:)]){
+    if (![self.delegate respondsToSelector:@selector(kiteControllerShouldAllowUserToAddMorePhotos:)]){
         return YES;
     }
     else{
-        return [self.delegate kiteControllerShouldAllowUserToAddMorePhotos:[self kiteVc]];
+        return [self.delegate kiteControllerShouldAllowUserToAddMorePhotos:[OLKiteUtils kiteVcForViewController:self]];
     }
 }
 
@@ -572,16 +545,6 @@ OLAssetsPickerControllerDelegate>
     [self.userSelectedPhotos addObjectsFromArray:addArray];
     
     [self.imagesCollectionView reloadData];
-}
-
-- (OLKiteViewController *)kiteViewController {
-    for (UIViewController *vc in self.navigationController.viewControllers) {
-        if ([vc isMemberOfClass:[OLKiteViewController class]]) {
-            return (OLKiteViewController *) vc;
-        }
-    }
-    
-    return nil;
 }
 
 #if __IPHONE_OS_VERSION_MIN_REQUIRED < 80000

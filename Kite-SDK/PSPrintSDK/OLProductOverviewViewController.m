@@ -201,24 +201,13 @@
 }
 
 - (IBAction)onButtonStartClicked:(id)sender {
-    UIViewController *vc = self.parentViewController;
-    OLPrintOrder *printOrder = nil;
-    while (vc) {
-        if ([vc isKindOfClass:[OLKiteViewController class]]){
-            printOrder = [(OLKiteViewController *)vc printOrder];
-            break;
-        }
-        else{
-            vc = vc.parentViewController;
-        }
-    }
-    if (printOrder){
+    if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder){
         UIViewController *vc;
         if ([[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant isEqualToString:@"Overview-Review-Checkout"]){
             vc = [self.storyboard instantiateViewControllerWithIdentifier:[OLKiteUtils reviewViewControllerIdentifierForProduct:self.product photoSelectionScreen:NO]];
         }
         else{
-            [OLKiteUtils checkoutViewControllerForPrintOrder:printOrder handler:^(id vc){
+            [OLKiteUtils checkoutViewControllerForPrintOrder:[OLKiteUtils kiteVcForViewController:self].printOrder handler:^(id vc){
                 [[vc navigationItem] setLeftBarButtonItem:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:(OLKiteViewController *)vc action:@selector(dismiss)]];
                 [vc safePerformSelector:@selector(setUserEmail:) withObject:self.userEmail];
                 [vc safePerformSelector:@selector(setUserPhone:) withObject:self.userPhone];
@@ -236,7 +225,7 @@
         return;
     }
     
-    vc = [self.storyboard instantiateViewControllerWithIdentifier:[OLKiteUtils reviewViewControllerIdentifierForProduct:self.product photoSelectionScreen:![self.delegate respondsToSelector:@selector(kiteControllerShouldAllowUserToAddMorePhotos:)] || [self.delegate kiteControllerShouldAllowUserToAddMorePhotos:[OLKiteUtils kiteViewControllerInNavStack:self.navigationController.viewControllers]]]];
+    UIViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:[OLKiteUtils reviewViewControllerIdentifierForProduct:self.product photoSelectionScreen:![self.delegate respondsToSelector:@selector(kiteControllerShouldAllowUserToAddMorePhotos:)] || [self.delegate kiteControllerShouldAllowUserToAddMorePhotos:[OLKiteUtils kiteVcForViewController:self]]]];
     
     [vc safePerformSelector:@selector(setUserSelectedPhotos:) withObject:self.userSelectedPhotos];
     [vc safePerformSelector:@selector(setDelegate:) withObject:self.delegate];

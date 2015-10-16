@@ -13,7 +13,6 @@
 @protocol OLCheckoutDelegate <NSObject>
 
 @optional
-- (BOOL)shouldShowContinueShoppingButton;
 - (void)userDidTapContinueShoppingButton;
 - (BOOL)receiptViewControllerShouldBeDismissable;
 

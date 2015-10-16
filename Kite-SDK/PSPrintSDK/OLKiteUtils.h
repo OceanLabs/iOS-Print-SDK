@@ -24,9 +24,9 @@
 
 + (id<OLKiteDelegate>)kiteDelegate:(UIViewController *)topVC;
 
-+ (OLKiteViewController *)kiteViewControllerInNavStack:(NSArray *)viewControllers;
-
 + (OLProductHomeViewController *)homeViewControllerInNavStack:(NSArray *)viewControllers;
+
++ (OLKiteViewController *)kiteVcForViewController:(UIViewController *)vc;
 
 #ifdef OL_KITE_OFFER_APPLE_PAY
 +(BOOL)isApplePayAvailable;

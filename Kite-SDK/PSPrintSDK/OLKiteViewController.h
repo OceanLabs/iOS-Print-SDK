@@ -45,6 +45,14 @@
  *  @return A boolean value of whether or not we should ask the user for their phone number at checkout.
  */
 - (BOOL)shouldShowPhoneEntryOnCheckoutScreen;
+
+/**
+ *  Asks the delegate if we should show a Continue Shopping button on the payment screen.
+ *
+ *  @return Boolean value for showing the Continue Shooping button or not.
+ */
+- (BOOL)shouldShowContinueShoppingButton;
+
 @end
 
 /**

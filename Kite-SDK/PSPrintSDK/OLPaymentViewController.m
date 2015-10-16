@@ -33,6 +33,8 @@
 #import "UIImage+ImageNamedInKiteBundle.h"
 #import "UIImageView+FadeIn.h"
 #import "NSDecimalNumber+CostFormatter.h"
+#import "OLKiteUtils.h"
+#import "OLKiteViewController.h"
 
 #ifdef OL_KITE_OFFER_PAYPAL
 #import <PayPal-iOS-SDK/PayPalMobile.h>
@@ -758,8 +760,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     }
     else{ // Try as best we can to go to the beginning of the app
         NSMutableArray *navigationStack = self.navigationController.viewControllers.mutableCopy;
-        if (navigationStack.count > 2 && [navigationStack[navigationStack.count - 2] isKindOfClass:[OLCheckoutViewController class]]) {
-            // clear the stack as we don't want the user to be able to return to payment as that stage of the journey is now complete.
+        if (navigationStack.count > 2) {
             [navigationStack removeObjectsInRange:NSMakeRange(1, navigationStack.count - 2)];
             self.navigationController.viewControllers = navigationStack;
             [self.navigationController popViewControllerAnimated:YES];
@@ -954,7 +955,8 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 #pragma mark - UITableViewDataSource methods
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    if ([self.delegate respondsToSelector:@selector(shouldShowContinueShoppingButton)] && [self.delegate shouldShowContinueShoppingButton]){
+    id<OLKiteDelegate> kiteDelegate = [OLKiteUtils kiteDelegate:self];
+    if ([kiteDelegate respondsToSelector:@selector(shouldShowContinueShoppingButton)] && [kiteDelegate shouldShowContinueShoppingButton]){
         return 2;
     }
     else{
@@ -1007,7 +1009,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         return 40;
     }
     else{
-        return 45;
+        return 47;
     }
 }
 
