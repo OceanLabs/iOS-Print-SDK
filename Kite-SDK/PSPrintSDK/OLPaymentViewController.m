@@ -31,6 +31,8 @@
 #import <SDWebImage/SDWebImageManager.h>
 #import "UIImage+ColorAtPixel.h"
 #import "UIImage+ImageNamedInKiteBundle.h"
+#import "UIImageView+FadeIn.h"
+#import "NSDecimalNumber+CostFormatter.h"
 
 #ifdef OL_KITE_OFFER_PAYPAL
 #import <PayPal-iOS-SDK/PayPalMobile.h>
@@ -79,40 +81,35 @@ static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
 - (BOOL)hasCachedCost;
 @end
 
+@interface OLProduct (Private)
+- (NSDecimalNumber*) unitCostDecimalNumber;
+@end
+
 @interface OLPaymentViewController () <
 #ifdef OL_KITE_OFFER_PAYPAL
 PayPalPaymentDelegate,
 #endif
-UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavigationControllerDelegate>
+UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavigationControllerDelegate, UITableViewDelegate>
 
 @property (strong, nonatomic) OLPrintOrder *printOrder;
 @property (strong, nonatomic) OLPayPalCard *card;
-@property (strong, nonatomic) UITextField *promoTextField;
-@property (strong, nonatomic) UIButton *promoApplyButton;
 @property (assign, nonatomic) BOOL clearPromoCode;
-@property (strong, nonatomic) UIButton *payWithCreditCardButton;
-@property (strong, nonatomic) UILabel *kiteLabel;
 
 @property (strong, nonatomic) NSBlockOperation *applePayDismissOperation;
 @property (strong, nonatomic) NSBlockOperation *transitionBlockOperation;
 
-#ifdef OL_KITE_OFFER_APPLE_PAY
-@property (strong, nonatomic) UIButton *payWithApplePayButton;
-@property (assign, nonatomic) BOOL applePayIsAvailable;
-@property (strong, nonatomic) UIButton *moreOptionsButton;
-#endif
-
 @property (strong, nonatomic) UIView *loadingView;
-@property (strong, nonatomic) UITableView *tableView;
-@property (strong, nonatomic) NSString *paymentCurrencyCode;
-@property (strong, nonatomic) NSMutableArray* sections;
 
-@property (strong, nonatomic) NSLayoutConstraint *kiteLabelYCon;
-@property (strong, nonatomic) UIView *lowestView;
+@property (weak, nonatomic) IBOutlet UIButton *paymentButton1;
+@property (weak, nonatomic) IBOutlet UIButton *paymentButton2;
+@property (weak, nonatomic) IBOutlet UILabel *totalCostLabel;
+@property (weak, nonatomic) IBOutlet UILabel *promoCodeCostLabel;
+@property (weak, nonatomic) IBOutlet UILabel *shippingCostLabel;
+@property (weak, nonatomic) IBOutlet UITextField *promoCodeTextField;
+@property (weak, nonatomic) IBOutlet UILabel *shippingTypeLabel;
+@property (weak, nonatomic) IBOutlet UIButton *shippingButton;
+@property (weak, nonatomic) IBOutlet UITableView *tableView;
 
-#ifdef OL_KITE_OFFER_PAYPAL
-@property (strong, nonatomic) UIButton *payWithPayPalButton;
-#endif
 
 @end
 
@@ -127,7 +124,8 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 @implementation OLPaymentViewController
 
 - (id)initWithPrintOrder:(OLPrintOrder *)printOrder {
-    if (self = [super init]) {
+    NSBundle *currentBundle = [NSBundle bundleForClass:[OLKiteViewController class]];
+    if ((self = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:currentBundle] instantiateViewControllerWithIdentifier:@"OLPaymentViewController"])) {
         self.printOrder = printOrder;
     }
     
@@ -143,15 +141,18 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     return nil;
 }
 
-
 -(BOOL)isApplePayAvailable{
 #ifdef OL_KITE_OFFER_APPLE_PAY
     PKPaymentRequest *request = [Stripe paymentRequestWithMerchantIdentifier:[OLKitePrintSDK appleMerchantID]];
     
-    return [Stripe canSubmitPaymentRequest:request] && !self.showOtherOptions;
+    return [Stripe canSubmitPaymentRequest:request];
 #else
     return NO;
 #endif
+}
+
+-(BOOL)shouldShowApplePay{
+    return [self isApplePayAvailable] && !self.showOtherOptions;
 }
 
 - (void)setupBannerImage:(UIImage *)bannerImage withBgImage:(UIImage *)bannerBgImage{
@@ -216,8 +217,15 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     
     NSString *applePayAvailableStr = @"N/A";
 #ifdef OL_KITE_OFFER_APPLE_PAY
-    self.applePayIsAvailable = [self isApplePayAvailable];
-    applePayAvailableStr = self.applePayIsAvailable ? @"Yes" : @"No";
+    if ([self isApplePayAvailable] && [self shouldShowApplePay]){
+        applePayAvailableStr = @"Yes";
+    }
+    else if ([self isApplePayAvailable] && ![self shouldShowApplePay]){
+        applePayAvailableStr = @"Other Options";
+    }
+    else{
+        applePayAvailableStr = @"No";
+    }
 #endif
     
 #ifndef OL_NO_ANALYTICS
@@ -231,20 +239,9 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         self.title = NSLocalizedStringFromTableInBundle(@"Payment", @"KitePrintSDK", [OLConstants bundle], @"");
     }
     
-    self.sections = [@[kSectionOrderSummary, kSectionPromoCodes, kSectionPayment] mutableCopy];
-    
-    if ([self.delegate respondsToSelector:@selector(shouldShowContinueShoppingButton)]) {
-        if ([self.delegate shouldShowContinueShoppingButton]){
-            [self.sections insertObject:kSectionContinueShopping atIndex:1];
-        }
-    }
-    
-    self.tableView = [[UITableView alloc] initWithFrame:self.view.frame style:UITableViewStyleGrouped];
-    self.tableView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     self.tableView.sectionHeaderHeight = 0;
-    [self.view addSubview:self.tableView];
     
     if ([self shippingScreenOnTheStack]) {
         NSString *url = [OLKiteABTesting sharedInstance].checkoutProgress2URL;
@@ -270,133 +267,30 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         
     }
     
-#ifdef OL_KITE_OFFER_APPLE_PAY
-    CGFloat heightDiff = self.applePayIsAvailable ? 0 : 52;
-#else
-    CGFloat heightDiff = 52;
-#endif
-    
-    if (![self isApplePayAvailable]){
-        self.payWithCreditCardButton = [[UIButton alloc] initWithFrame:CGRectMake(20, 52 - heightDiff, self.view.frame.size.width - 40, 44)];
-        self.payWithCreditCardButton.backgroundColor = [UIColor colorWithRed:55 / 255.0f green:188 / 255.0f blue:155 / 255.0f alpha:1.0];
-        [self.payWithCreditCardButton addTarget:self action:@selector(onButtonPayWithCreditCardClicked) forControlEvents:UIControlEventTouchUpInside];
-        [self.payWithCreditCardButton setTitle:NSLocalizedStringFromTableInBundle(@"Credit Card", @"KitePrintSDK", [OLConstants bundle], @"") forState:UIControlStateNormal];
-        [self.payWithCreditCardButton makeRoundRect];
-        
-        self.lowestView = self.payWithCreditCardButton;
-    }
+    [self.paymentButton1 makeRoundRect];
+    [self.paymentButton2 makeRoundRect];
     
     
 #ifdef OL_KITE_OFFER_PAYPAL
-    if ([OLKiteABTesting sharedInstance].offerPayPal && ![self isApplePayAvailable]){
-        self.payWithPayPalButton = [[UIButton alloc] initWithFrame:CGRectMake(20, 104 - heightDiff, self.view.frame.size.width - 40, 44)];
-        [self.payWithPayPalButton setTitle:NSLocalizedStringFromTableInBundle(@"PayPal", @"KitePrintSDK", [OLConstants bundle], @"") forState:UIControlStateNormal];
-        [self.payWithPayPalButton addTarget:self action:@selector(onButtonPayWithPayPalClicked) forControlEvents:UIControlEventTouchUpInside];
-        [self.payWithPayPalButton makeRoundRect];
-        self.payWithPayPalButton.backgroundColor = [UIColor colorWithRed:74 / 255.0f green:137 / 255.0f blue:220 / 255.0f alpha:1.0];
-        [self.payWithPayPalButton makeRoundRect];
-        self.lowestView = self.payWithPayPalButton;
+    if ([OLKiteABTesting sharedInstance].offerPayPal && ![self shouldShowApplePay]){
+        //TODO: Set up paypal here
     }
 #endif
     
 #ifdef OL_KITE_OFFER_APPLE_PAY
-    self.payWithApplePayButton = [[UIButton alloc] initWithFrame:CGRectMake(20, 0, self.view.frame.size.width-40, 44)];
-    self.payWithApplePayButton.backgroundColor = [UIColor blackColor];
-    [self.payWithApplePayButton makeRoundRect];
-    [self.payWithApplePayButton setImage:[UIImage imageNamedInKiteBundle:@"button_apple_pay"] forState:UIControlStateNormal];
-    [self.payWithApplePayButton addTarget:self action:@selector(onButtonPayWithApplePayClicked) forControlEvents:UIControlEventTouchUpInside];
-    
-    self.moreOptionsButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 84, self.view.frame.size.width, 20)];
-    [self.moreOptionsButton setTitleColor:[UIColor colorWithRed: 0 green: 0.529 blue: 1 alpha: 1] forState:UIControlStateNormal];
-    [self.moreOptionsButton setTitle:NSLocalizedString(@"More payment options", @"") forState:UIControlStateNormal];
-    self.moreOptionsButton.translatesAutoresizingMaskIntoConstraints = NO;
-    
-    [self.moreOptionsButton.titleLabel setFont:[UIFont systemFontOfSize:13]];
-    [self.moreOptionsButton addTarget:self action:@selector(onButtonMoreOptionsClicked) forControlEvents:UIControlEventTouchUpInside];
-    
-    if (!self.lowestView){
-        self.lowestView = self.moreOptionsButton;
+    if ([self shouldShowApplePay]){
+        //TODO set up apple pay here
+        [self.paymentButton1 setImage:[UIImage imageNamedInKiteBundle:@"button_apple_pay"] forState:UIControlStateNormal];
+        [self.paymentButton1 setTitle:nil forState:UIControlStateNormal];
+        [self.paymentButton1 setBackgroundColor:[UIColor blackColor]];
+        [self.paymentButton1 addTarget:self action:@selector(onButtonPayWithApplePayClicked) forControlEvents:UIControlEventTouchUpInside];
+        
+        [self.paymentButton2 setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+        [self.paymentButton2 setBackgroundColor:[UIColor colorWithRed:1.000 green:0.841 blue:0.000 alpha:1.000]];
+        [self.paymentButton2 setTitle:NSLocalizedString(@"Checkout", @"") forState:UIControlStateNormal];
+        [self.paymentButton2 addTarget:self action:@selector(onButtonMoreOptionsClicked) forControlEvents:UIControlEventTouchUpInside];
     }
 #endif
-    
-    self.kiteLabel = [[UILabel alloc] init];
-    self.kiteLabel.text = NSLocalizedString(@"Powered by Kite.ly", @"");
-    self.kiteLabel.font = [UIFont systemFontOfSize:13];
-    self.kiteLabel.textColor = [UIColor lightGrayColor];
-    
-    UIView *footer = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, CGRectGetMaxY(self.lowestView.frame)+30)];
-    if (self.payWithCreditCardButton){
-        [footer addSubview:self.payWithCreditCardButton];
-    }
-    [footer addSubview:self.kiteLabel];
-    
-    self.kiteLabel.translatesAutoresizingMaskIntoConstraints = NO;
-    
-    [footer addConstraint:[NSLayoutConstraint constraintWithItem:self.kiteLabel attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:footer attribute:NSLayoutAttributeCenterX multiplier:1 constant:0]];
-    
-#ifdef OL_KITE_OFFER_PAYPAL
-    if ([OLKiteABTesting sharedInstance].offerPayPal && ![self isApplePayAvailable]){
-        [footer addSubview:self.payWithPayPalButton];
-        self.lowestView = self.payWithPayPalButton;
-    }
-#endif
-    
-#ifdef OL_KITE_OFFER_APPLE_PAY
-    if (self.applePayIsAvailable){
-        [footer addSubview:self.payWithApplePayButton];
-        [footer addSubview:self.moreOptionsButton];
-        UIView *view = self.payWithApplePayButton;
-        UIView *moreOptionsButton = self.moreOptionsButton;
-        view.translatesAutoresizingMaskIntoConstraints = NO;
-        NSDictionary *views = NSDictionaryOfVariableBindings(view, moreOptionsButton);
-        NSMutableArray *con = [[NSMutableArray alloc] init];
-        
-        NSArray *visuals = @[@"H:|-20-[view]-20-|", @"V:|-0-[view(44)]-20-[moreOptionsButton]", @"H:|-0-[moreOptionsButton]-0-|"];
-        
-        for (NSString *visual in visuals) {
-            [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
-        }
-        
-        [view.superview addConstraints:con];
-    }
-#endif
-    
-    if (self.payWithCreditCardButton){
-        UIView *view = self.payWithCreditCardButton;
-        view.translatesAutoresizingMaskIntoConstraints = NO;
-        NSDictionary *views = NSDictionaryOfVariableBindings(view);
-        NSMutableArray *con = [[NSMutableArray alloc] init];
-        
-        NSString *v = [NSString stringWithFormat:@"V:|-%f-[view(44)]", 52 - heightDiff];
-        NSArray *visuals = @[@"H:|-20-[view]-20-|", v];
-        
-        
-        for (NSString *visual in visuals) {
-            [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
-        }
-        
-        [view.superview addConstraints:con];
-    }
-    
-#ifdef OL_KITE_OFFER_PAYPAL
-    if ([OLKiteABTesting sharedInstance].offerPayPal && ![self isApplePayAvailable]){
-        UIView *view = self.payWithPayPalButton;
-        view.translatesAutoresizingMaskIntoConstraints = NO;
-        NSDictionary *views = NSDictionaryOfVariableBindings(view);
-        NSMutableArray *con = [[NSMutableArray alloc] init];
-        
-        NSString *v = [NSString stringWithFormat:@"V:|-%f-[view(44)]", 104 - heightDiff];
-        NSArray *visuals = @[@"H:|-20-[view]-20-|", v];
-        
-        for (NSString *visual in visuals) {
-            [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
-        }
-        
-        [view.superview addConstraints:con];
-    }
-#endif
-    
-    self.tableView.tableFooterView = footer;
     
     [self updateViewsBasedOnPromoCodeChange]; // initialise based on promo state
     
@@ -472,36 +366,20 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     [self.navigationController pushViewController:vc animated:YES];
 }
 
-- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
-    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
-    [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinator> context){
-        [self positionKiteLabel];
-    } completion:NULL];
-}
-
 - (void)onBackgroundClicked {
-    [self.promoTextField resignFirstResponder];
+    [self.promoCodeTextField resignFirstResponder];
 }
 
 - (void)keyboardDidShow:(NSNotification *)notification {
     NSDictionary *userInfo = [notification userInfo];
     CGSize size = [[userInfo objectForKey: UIKeyboardFrameEndUserInfoKey] CGRectValue].size;
-    CGRect frame = CGRectMake(self.tableView.frame.origin.x,
-                              self.tableView.frame.origin.y,
-                              self.tableView.frame.size.width,
-                              self.tableView.frame.size.height - size.height);
-    self.tableView.frame = frame;
-    self.tableView.clipsToBounds = NO;
+    // TODO move promo code field up
 }
 
 - (void)keyboardWillHide:(NSNotification *)notification {
     NSDictionary *userInfo = [notification userInfo];
     CGSize size = [[userInfo objectForKey: UIKeyboardFrameEndUserInfoKey] CGRectValue].size;
-    self.tableView.frame = CGRectMake(self.tableView.frame.origin.x,
-                                      self.tableView.frame.origin.y,
-                                      self.tableView.frame.size.width,
-                                      self.tableView.frame.size.height + size.height);
-    self.tableView.clipsToBounds = YES;
+    // TODO move promo code field down
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -526,9 +404,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         }];
     }
     
-    [self positionKiteLabel];
-    
-    if ([self isApplePayAvailable]){
+    if ([self shouldShowApplePay]){
         [self.printOrder discardDuplicateJobs];
     }
 }
@@ -547,17 +423,6 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             self.loadingView.hidden = YES;
         }];
     }
-}
-
-- (void)positionKiteLabel {
-    [self.kiteLabel.superview removeConstraint:self.kiteLabelYCon];
-    
-    CGSize size = self.view.frame.size;
-    CGFloat navBarHeight = [[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height;
-    CGFloat blankSpace = MAX(size.height - self.tableView.contentSize.height - navBarHeight + 5, 10);
-    
-    self.kiteLabelYCon = [NSLayoutConstraint constraintWithItem:self.kiteLabel attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.lowestView attribute:NSLayoutAttributeBottom multiplier:1 constant:blankSpace];
-    [self.kiteLabel.superview addConstraint:self.kiteLabelYCon];
 }
 
 - (void)dealloc {
@@ -580,40 +445,25 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         NSComparisonResult result = [[cost totalCostInCurrency:self.printOrder.currencyCode] compare:[NSDecimalNumber zero]];
         if (result == NSOrderedAscending || result == NSOrderedSame) {
 #ifdef OL_KITE_OFFER_PAYPAL
-            self.payWithPayPalButton.hidden = YES;
+            self.paymentButton1.hidden = YES;
 #endif
 #ifdef OL_KITE_OFFER_APPLE_PAY
-            self.payWithApplePayButton.hidden = YES;
+            self.paymentButton1.hidden = YES;
 #endif
-            [self.payWithCreditCardButton setTitle:NSLocalizedStringFromTableInBundle(@"Checkout for Free!", @"KitePrintSDK", [OLConstants bundle], @"") forState:UIControlStateNormal];
+            [self.paymentButton2 setTitle:NSLocalizedStringFromTableInBundle(@"Checkout for Free!", @"KitePrintSDK", [OLConstants bundle], @"") forState:UIControlStateNormal];
         } else {
 #ifdef OL_KITE_OFFER_PAYPAL
-            self.payWithPayPalButton.hidden = NO;
+            self.paymentButton1.hidden = NO;
 #endif
 #ifdef OL_KITE_OFFER_APPLE_PAY
-            self.payWithApplePayButton.hidden = NO;
+            self.paymentButton1.hidden = NO;
 #endif
-            [self.payWithCreditCardButton setTitle:NSLocalizedStringFromTableInBundle(@"Credit Card", @"KitePrintSDK", [OLConstants bundle], @"") forState:UIControlStateNormal];
+            [self.paymentButton2 setTitle:NSLocalizedStringFromTableInBundle(@"Credit Card", @"KitePrintSDK", [OLConstants bundle], @"") forState:UIControlStateNormal];
         }
         
         [self.tableView reloadData];
         
     }];
-}
-
-- (void)onButtonContinueShoppingClicked:(id)sender {
-    if (self.delegate && [self.delegate respondsToSelector:@selector(userDidTapContinueShoppingButton)]){
-        [self.delegate userDidTapContinueShoppingButton];
-    }
-    else{ // Try as best we can to go to the beginning of the app
-        NSMutableArray *navigationStack = self.navigationController.viewControllers.mutableCopy;
-        if (navigationStack.count > 2 && [navigationStack[navigationStack.count - 2] isKindOfClass:[OLCheckoutViewController class]]) {
-            // clear the stack as we don't want the user to be able to return to payment as that stage of the journey is now complete.
-            [navigationStack removeObjectsInRange:NSMakeRange(1, navigationStack.count - 2)];
-            self.navigationController.viewControllers = navigationStack;
-            [self.navigationController popViewControllerAnimated:YES];
-        }
-    }
 }
 
 - (void)applyPromoCode:(NSString *)promoCode {
@@ -659,7 +509,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 #pragma clang diagnostic ignored "-Wundeclared-selector"
         // Ugly bit of code for S9, it's such a small bit of work it doesn't warrant forking the repo & associated overhead just to add client side promo rejection
         if ([self.delegate respondsToSelector:@selector(shouldAcceptPromoCode:)]) {
-            NSString *rejectMessage = [self.delegate performSelector:@selector(shouldAcceptPromoCode:) withObject:self.promoTextField.text];
+            NSString *rejectMessage = [self.delegate performSelector:@selector(shouldAcceptPromoCode:) withObject:self.promoCodeTextField.text];
             if (rejectMessage) {
                 [[[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Oops", @"KitePrintSDK", [OLConstants bundle], @"") message:rejectMessage delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLConstants bundle], @"") otherButtonTitles:nil] show];
                 
@@ -670,7 +520,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         }
 #pragma clang diagnostic pop
         
-        NSString *promoCode = [self.promoTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+        NSString *promoCode = [self.promoCodeTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
         [self applyPromoCode:promoCode];
     }
 }
@@ -803,7 +653,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     
     NSString *applePayAvailableStr = @"N/A";
 #ifdef OL_KITE_OFFER_APPLE_PAY
-    applePayAvailableStr = self.applePayIsAvailable ? @"Yes" : @"No";
+    applePayAvailableStr = [self shouldShowApplePay] ? @"Yes" : @"No";
 #endif
     
 #ifndef OL_NO_ANALYTICS
@@ -858,12 +708,71 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             receiptVC.delegate = welf.delegate;
             [welf.navigationController pushViewController:receiptVC animated:YES];
         }];
-        if ([self isApplePayAvailable]){
+        if ([self shouldShowApplePay]){
             [self.transitionBlockOperation addDependency:self.applePayDismissOperation];
         }
         [[NSOperationQueue mainQueue] addOperation:self.transitionBlockOperation];
     }];
 }
+
+- (IBAction)onButtonMinusClicked:(UIButton *)sender {
+    UIView* cellContentView = sender.superview;
+    UIView* cell = cellContentView.superview;
+    while (![cell isKindOfClass:[UITableViewCell class]]){
+        cell = cell.superview;
+    }
+    NSIndexPath* indexPath = [self.tableView indexPathForCell:(UITableViewCell*)cell];
+    OLProductPrintJob* printJob = ((OLProductPrintJob*)[self.printOrder.jobs objectAtIndex:indexPath.row]);
+    
+    if (printJob.extraCopies == 0){
+        if ([UIAlertController class]){
+            UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Delete Item", @"") message:NSLocalizedString(@"Are you sure you want to delete this item?", @"") preferredStyle:UIAlertControllerStyleAlert];
+            [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"") style:UIAlertActionStyleCancel handler:NULL]];
+            [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Yes", @"") style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action){
+                [self.printOrder removePrintJob:printJob];
+                [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationAutomatic];
+            }]];
+            [self presentViewController:ac animated:YES completion:NULL];
+        }
+    }
+    else{
+        printJob.extraCopies--;
+        
+        [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
+    }
+}
+- (IBAction)onButtonPlusClicked:(UIButton *)sender {
+    UIView* cellContentView = sender.superview;
+    UIView* cell = cellContentView.superview;
+    while (![cell isKindOfClass:[UITableViewCell class]]){
+        cell = cell.superview;
+    }
+    NSIndexPath* indexPath = [self.tableView indexPathForCell:(UITableViewCell*)cell];
+    OLProductPrintJob* printJob = ((OLProductPrintJob*)[self.printOrder.jobs objectAtIndex:indexPath.row]);
+    
+    printJob.extraCopies += 1;
+    
+    [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
+}
+- (IBAction)onButtonEditClicked:(UIButton *)sender {
+    
+}
+- (IBAction)onButtonContinueShoppingClicked:(UIButton *)sender {
+    if (self.delegate && [self.delegate respondsToSelector:@selector(userDidTapContinueShoppingButton)]){
+        [self.delegate userDidTapContinueShoppingButton];
+    }
+    else{ // Try as best we can to go to the beginning of the app
+        NSMutableArray *navigationStack = self.navigationController.viewControllers.mutableCopy;
+        if (navigationStack.count > 2 && [navigationStack[navigationStack.count - 2] isKindOfClass:[OLCheckoutViewController class]]) {
+            // clear the stack as we don't want the user to be able to return to payment as that stage of the journey is now complete.
+            [navigationStack removeObjectsInRange:NSMakeRange(1, navigationStack.count - 2)];
+            self.navigationController.viewControllers = navigationStack;
+            [self.navigationController popViewControllerAnimated:YES];
+        }
+    }
+}
+
+
 
 #pragma mark - PayPalPaymentDelegate methods
 
@@ -1029,224 +938,55 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 #pragma mark - UITableViewDataSource methods
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return [self.sections count];
+    if ([self.delegate respondsToSelector:@selector(shouldShowContinueShoppingButton)] && [self.delegate shouldShowContinueShoppingButton]){
+        return 2;
+    }
+    else{
+        return 1;
+    }
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    NSString* sectionString = [self.sections objectAtIndex:section];
-    if ([sectionString isEqualToString:kSectionOrderSummary]) {
-        __block NSUInteger count = 0;
-        [self.printOrder costWithCompletionHandler:^(OLPrintOrderCost *cost, NSError *error) {
-            // this will actually do the right thing. Either this will callback immediately because printOrder
-            // has cached costs and the count will be updated before below conditionals are hit or it will make an async request and count will remain 0 for below.
-            count = cost.lineItems.count;
-        }];
-        if (count <= 1) {
-            return count;
-        } else {
-            return count + 1; // additional cell to show total
-        }
-    }
-    else if ([sectionString isEqualToString:kSectionContinueShopping]){
-        return 1;
-    }
-    else if ([sectionString isEqualToString:kSectionPromoCodes]){
-        return 1;
-    }
-    else if ([sectionString isEqualToString:kSectionPayment]){
-        return 0;
+    if (section == 0){
+        return self.printOrder.jobs.count;
     }
     else{
-        return 0;
+        return 1;
     }
-}
-
-- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    NSString* sectionString = [self.sections objectAtIndex:section];
-    if ([sectionString isEqualToString:kSectionPayment]) {
-        if ([OLKitePrintSDK environment] == kOLKitePrintSDKEnvironmentSandbox) {
-            return NSLocalizedStringFromTableInBundle(@"Payment Options (TEST)", @"KitePrintSDK", [OLConstants bundle], @"");
-        } else {
-            return NSLocalizedStringFromTableInBundle(@"Payment Options", @"KitePrintSDK", [OLConstants bundle], @"");
-        }
-    } else if ([sectionString isEqualToString:kSectionOrderSummary]) {
-        return NSLocalizedStringFromTableInBundle(@"Order Summary", @"KitePrintSDK", [OLConstants bundle], @"");
-    } else if ([sectionString isEqualToString:kSectionPromoCodes]) {
-        return @"";
-    } else if ([sectionString isEqualToString:kSectionContinueShopping]) {
-        return @""; //Don't need a section title here.
-    }
-    
-    return @"";
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = nil;
-    NSString* sectionString = [self.sections objectAtIndex:indexPath.section];
-    if ([sectionString isEqualToString:kSectionOrderSummary]) {
-        static NSString *const CellIdentifier = @"JobCostSummaryCell";
-        cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-        if (cell == nil) {
-            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier];
-            cell.textLabel.font = [UIFont systemFontOfSize:14];
-            cell.detailTextLabel.font = [UIFont systemFontOfSize:14];
-            cell.textLabel.adjustsFontSizeToFitWidth = YES;
-            cell.detailTextLabel.adjustsFontSizeToFitWidth = YES;
-            cell.textLabel.minimumScaleFactor = 0.5;
-            cell.detailTextLabel.minimumScaleFactor = 0.5;
-            cell.selectionStyle = UITableViewCellSelectionStyleNone;
-        }
+    if (indexPath.section == 0){
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"jobCell"];
+        UIImageView *imageView = (UIImageView *)[cell.contentView viewWithTag:20];
+        UILabel *quantityLabel = (UILabel *)[cell.contentView viewWithTag:30];
+        UILabel *productNameLabel = (UILabel *)[cell.contentView viewWithTag:50];
+        UILabel *priceLabel = (UILabel *)[cell.contentView viewWithTag:70];
         
-        [self.printOrder costWithCompletionHandler:^(OLPrintOrderCost *orderCost, NSError *error) {
-            NSArray *lineItems = orderCost.lineItems;
-            NSDecimalNumber *totalCost = [orderCost totalCostInCurrency:self.printOrder.currencyCode];
-            
-            BOOL total = indexPath.row >= lineItems.count;
-            NSDecimalNumber *cost;
-            NSString *currencyCode = self.printOrder.currencyCode;
-            if (total) {
-                cell.textLabel.text = NSLocalizedStringFromTableInBundle(@"Total", @"KitePrintSDK", [OLConstants bundle], @"");
-                cell.textLabel.font = [UIFont boldSystemFontOfSize:cell.textLabel.font.pointSize];
-                cell.detailTextLabel.font = [UIFont boldSystemFontOfSize:cell.detailTextLabel.font.pointSize];
-                
-                cost = totalCost;
-                
-                NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
-                [formatter setNumberStyle:NSNumberFormatterCurrencyStyle];
-                [formatter setCurrencyCode:currencyCode];
-                cell.detailTextLabel.text = [formatter stringFromNumber:totalCost];
-            }
-            else{
-                OLPaymentLineItem *item = lineItems[indexPath.row];
-                cell.textLabel.text = item.description;
-                cell.textLabel.font = [UIFont systemFontOfSize:cell.textLabel.font.pointSize];
-                cell.detailTextLabel.font = [UIFont systemFontOfSize:cell.detailTextLabel.font.pointSize];
-                cell.detailTextLabel.text = [item costStringInCurrency:self.printOrder.currencyCode];
-            }
-        }];
+        id<OLPrintJob> job = self.printOrder.jobs[indexPath.row];
+        OLProduct *product = [OLProduct productWithTemplateId:[job templateId]];
+        
+        [imageView setAndFadeInImageWithURL:product.productTemplate.coverPhotoURL];
+        quantityLabel.text = [NSString stringWithFormat:@"%ld", (long)[job extraCopies]+1];
+        productNameLabel.text = product.productTemplate.name;
+        priceLabel.text = [[[product unitCostDecimalNumber] decimalNumberByMultiplyingBy:[NSDecimalNumber decimalNumberWithString:[NSString stringWithFormat:@"%ld", (long)[job extraCopies]+1]]]formatCostForCurrencyCode:self.printOrder.currencyCode];
         
         return cell;
-    } else if ([sectionString isEqualToString:kSectionContinueShopping]) {
-        static NSString *const CellIdentifier = @"ContinueShoppingCell";
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
-        cell.frame = CGRectMake(0, 0, tableView.frame.size.width, 44);
-        cell.selectionStyle = UITableViewCellSelectionStyleNone;
-        UIButton *continueShoppingButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        [continueShoppingButton setTitle:NSLocalizedStringFromTableInBundle(@"Continue Shopping", @"KitePrintSDK", [OLConstants bundle], @"") forState:UIControlStateNormal];
-        continueShoppingButton.frame = cell.frame;
-        continueShoppingButton.titleLabel.adjustsFontSizeToFitWidth = YES;
-        continueShoppingButton.titleLabel.minimumScaleFactor = 0.5;
-        [continueShoppingButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        [continueShoppingButton setBackgroundColor:[UIColor colorWithRed:74 / 255.0f green:137 / 255.0f blue:220 / 255.0f alpha:1.0]];
-        [continueShoppingButton addTarget:self action:@selector(onButtonContinueShoppingClicked:) forControlEvents:UIControlEventTouchUpInside];
-        [cell addSubview:continueShoppingButton];
-        
-        if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8){
-            UIView *view = continueShoppingButton;
-            view.translatesAutoresizingMaskIntoConstraints = NO;
-            NSDictionary *views = NSDictionaryOfVariableBindings(view);
-            NSMutableArray *con = [[NSMutableArray alloc] init];
-            
-            NSArray *visuals = @[@"H:|-0-[view]-0-|",
-                                 @"V:|-0-[view]-0-|"];
-            
-            
-            for (NSString *visual in visuals) {
-                [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
-            }
-            
-            [view.superview addConstraints:con];
-        }
-        
-        
-    } else if ([sectionString isEqualToString:kSectionPromoCodes]) {
-        static NSString *const CellIdentifier = @"PromoCodeCell";
-        cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-        if (cell == nil) {
-            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
-            cell.frame = CGRectMake(0, 0, tableView.frame.size.width, 43);
-            cell.selectionStyle = UITableViewCellSelectionStyleNone;
-            UITextField *promoCodeTextField = [[UITextField alloc] initWithFrame:CGRectMake(20, 0, self.view.frame.size.width - 20 - 60, 43)];
-            promoCodeTextField.placeholder = NSLocalizedStringFromTableInBundle(@"Promo Code", @"KitePrintSDK", [OLConstants bundle], @"");
-            promoCodeTextField.delegate = self;
-            promoCodeTextField.autocapitalizationType = UITextAutocapitalizationTypeNone;
-            promoCodeTextField.autocorrectionType = UITextAutocorrectionTypeNo;
-            promoCodeTextField.spellCheckingType = UITextSpellCheckingTypeNo;
-            
-            UIButton *applyButton = [UIButton buttonWithType:UIButtonTypeCustom];
-            [applyButton setTitle:NSLocalizedStringFromTableInBundle(@"Apply", @"KitePrintSDK", [OLConstants bundle], @"") forState:UIControlStateNormal];
-            applyButton.frame = CGRectMake(self.view.frame.size.width - 60, 7, 40, 30);
-            applyButton.titleLabel.adjustsFontSizeToFitWidth = YES;
-            applyButton.titleLabel.minimumScaleFactor = 0.5;
-            [applyButton setTitleColor:[UIColor colorWithRed:0 green:122 / 255.0 blue:255 / 255.0 alpha:1.0f] forState:UIControlStateNormal];
-            [applyButton setTitleColor:[UIColor colorWithRed:146 / 255.0 green:146 / 255.0 blue:146 / 255.0 alpha:1.0f] forState:UIControlStateDisabled];
-            applyButton.enabled = NO;
-            
-            [applyButton addTarget:self action:@selector(onButtonApplyPromoCodeClicked:) forControlEvents:UIControlEventTouchUpInside];
-            [cell addSubview:promoCodeTextField];
-            [cell addSubview:applyButton];
-            
-            if ([[[UIDevice currentDevice] systemVersion] floatValue] >=8){
-                UIView *view = promoCodeTextField;
-                view.translatesAutoresizingMaskIntoConstraints = NO;
-                NSDictionary *views = NSDictionaryOfVariableBindings(view);
-                NSMutableArray *con = [[NSMutableArray alloc] init];
-                
-                NSArray *visuals = @[@"H:|-20-[view]-60-|", @"V:[view(43)]"];
-                
-                
-                for (NSString *visual in visuals) {
-                    [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
-                }
-                
-                [view.superview addConstraints:con];
-                
-                NSLayoutConstraint *centerY = [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:view.superview attribute:NSLayoutAttributeCenterY multiplier:1 constant:0];
-                [con addObject:centerY];
-                
-                view = applyButton;
-                view.translatesAutoresizingMaskIntoConstraints = NO;
-                views = NSDictionaryOfVariableBindings(view);
-                con = [[NSMutableArray alloc] init];
-                
-                visuals = @[@"H:[view(60)]-0-|"];
-                
-                
-                for (NSString *visual in visuals) {
-                    [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
-                }
-                
-                NSLayoutConstraint *buttonCenterY = [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:view.superview attribute:NSLayoutAttributeCenterY multiplier:1 constant:0];
-                [con addObject:buttonCenterY];
-                
-                [view.superview addConstraints:con];
-            }
-            
-            
-            
-            self.promoTextField = promoCodeTextField;
-            self.promoApplyButton = applyButton;
-        }
-        
-        if (self.printOrder.promoCode) {
-            self.promoTextField.text = self.printOrder.promoCode;
-            self.promoTextField.textColor = [UIColor lightGrayColor];
-            self.promoTextField.enabled = NO;
-            self.promoApplyButton.enabled = YES;
-            [self.promoApplyButton setTitle:NSLocalizedStringFromTableInBundle(@"Clear", @"KitePrintSDK", [OLConstants bundle], @"") forState:UIControlStateNormal];
-            [self.promoApplyButton sizeToFit];
-            self.clearPromoCode = YES;
-        } else {
-            self.promoTextField.text = @"";
-            self.promoTextField.textColor = [UIColor darkTextColor];
-            self.promoTextField.enabled = YES;
-            self.promoApplyButton.enabled = NO;
-            [self.promoApplyButton setTitle:NSLocalizedStringFromTableInBundle(@"Apply", @"KitePrintSDK", [OLConstants bundle], @"") forState:UIControlStateNormal];
-            [self.promoApplyButton sizeToFit];
-            self.clearPromoCode = NO;
-        }
     }
-    return cell;
+    else{
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"continueCell"];
+        
+        return cell;
+    }
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+    if (indexPath.section == 0){
+        return 40;
+    }
+    else{
+        return 45;
+    }
 }
 
 #pragma mark - UIActionSheetDelegate methods
@@ -1263,17 +1003,6 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             [self payWithExistingPayPalCard:[OLPayPalCard lastUsedCard]];
         }
     }
-}
-
-#pragma mark - UITextFieldDelegate methods
-
-- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
-    if (textField == self.promoTextField) {
-        NSString *newPromoText = [textField.text stringByReplacingCharactersInRange:range withString:string];
-        self.promoApplyButton.enabled = newPromoText.length > 0;
-    }
-    
-    return YES;
 }
 
 #pragma mark - UIAlertViewDelegate methods
