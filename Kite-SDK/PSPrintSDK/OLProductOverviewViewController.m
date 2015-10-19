@@ -188,7 +188,6 @@
     self.detailsBoxTopCon.constant = self.detailsBoxTopCon.constant == 0 ? self.detailsViewHeightCon.constant-100 : 0;
     [UIView animateWithDuration:0.8 delay:0 usingSpringWithDamping:0.5 initialSpringVelocity:0 options:0 animations:^{
         self.arrowImageView.transform = self.detailsBoxTopCon.constant == 0 ? CGAffineTransformIdentity : CGAffineTransformMakeRotation(M_PI);
-        [self.view setNeedsLayout];
         [self.view layoutIfNeeded];
     }completion:^(BOOL finished){
         
@@ -251,6 +250,35 @@
     }
     else{
         [self onButtonStartClicked:nil];
+    }
+}
+- (IBAction)onPanGestureRecognized:(UIPanGestureRecognizer *)gesture {
+    
+    static CGFloat originalY;
+    
+    if (gesture.state == UIGestureRecognizerStateBegan){
+        originalY = self.detailsBoxTopCon.constant;
+        [self.view layoutIfNeeded];
+    }
+    else if (gesture.state == UIGestureRecognizerStateChanged){
+        CGPoint translate = [gesture translationInView:gesture.view.superview];
+        self.detailsBoxTopCon.constant = MIN(originalY - translate.y, self.detailsViewHeightCon.constant);
+        
+        CGFloat percentComplete = self.detailsBoxTopCon.constant / (self.detailsViewHeightCon.constant-100.0);
+        self.arrowImageView.transform = CGAffineTransformMakeRotation(M_PI * MIN(percentComplete, 1));
+    }
+    else if (gesture.state == UIGestureRecognizerStateEnded ||
+             gesture.state == UIGestureRecognizerStateFailed ||
+             gesture.state == UIGestureRecognizerStateCancelled){
+        CGFloat percentComplete = self.detailsBoxTopCon.constant / (self.detailsViewHeightCon.constant-100.0);
+        CGFloat time = [gesture velocityInView:gesture.view].y < 0 ? ABS(0.8 - (0.8 * percentComplete)) : ABS(0.8 * percentComplete);
+        self.detailsBoxTopCon.constant = [gesture velocityInView:gesture.view].y < 0 ? self.detailsViewHeightCon.constant-100 : 0;
+        [UIView animateWithDuration:time delay:0 usingSpringWithDamping:0.5 initialSpringVelocity:0 options:0 animations:^{
+            self.arrowImageView.transform = [gesture velocityInView:gesture.view].y > 0 ? CGAffineTransformIdentity : CGAffineTransformMakeRotation(M_PI);
+            [self.view layoutIfNeeded];
+        }completion:^(BOOL finished){
+            
+        }];
     }
 }
 
