@@ -25,6 +25,7 @@
 #import "OLImageCachingManager.h"
 #import "OLRemoteImageView.h"
 #import "OLRemoteImageCropper.h"
+#import "OLAsset+Private.h"
 
 #ifdef OL_KITE_OFFER_INSTAGRAM
 #import <InstagramImagePicker/OLInstagramImagePickerController.h>
@@ -72,12 +73,25 @@ OLAssetsPickerControllerDelegate>
 @property (weak, nonatomic) IBOutlet OLRemoteImageCropper *imageCropView;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *maskAspectRatio;
 @property (strong, nonatomic) OLPrintPhoto *imagePicked;
+@property (strong, nonatomic) OLPrintPhoto *imageDisplayed;
 
 -(void) doCheckout;
 
 @end
 
 @implementation OLSingleImageProductReviewViewController
+
+-(id<OLPrintJob>)editingPrintJob{
+    if (_editingPrintJob){
+        return _editingPrintJob;
+    }
+    else if([OLKiteABTesting sharedInstance].launchedWithPrintOrder){
+        OLKiteViewController *kiteVc = [OLKiteUtils kiteVcForViewController:self];
+        return [kiteVc.printOrder.jobs firstObject];
+    }
+    
+    return nil;
+}
 
 -(void)viewDidLoad{
     [super viewDidLoad];
@@ -86,35 +100,44 @@ OLAssetsPickerControllerDelegate>
     [OLAnalytics trackReviewScreenViewed:self.product.productTemplate.name];
 #endif
     
-    OLKiteViewController *kiteVc = [OLKiteUtils kiteVcForViewController:self];
-    if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder){
-        self.title = NSLocalizedString(@"Review", @"");
+    if (self.editingPrintJob){
         self.userSelectedPhotos = [[NSMutableArray alloc] init];
-        for (OLAsset *asset in [[kiteVc.printOrder.jobs firstObject] assetsForUploading]){
-            OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
-            printPhoto.asset = asset;
-            [self.userSelectedPhotos addObject:printPhoto];
+        for (OLAsset *asset in [self.editingPrintJob assetsForUploading]){
+            if ([asset.dataSource isKindOfClass:[OLPrintPhoto class]]){
+                [self.userSelectedPhotos addObject:asset.dataSource];
+            }
+            else{
+                OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
+                printPhoto.asset = asset;
+                [self.userSelectedPhotos addObject:printPhoto];
+            }
         }
     }
-    else{
-        [self setTitle:NSLocalizedString(@"Reposition the Photo", @"")];
-    }
+    
+    self.title = NSLocalizedString(@"Reposition the Photo", @"");
     
     if (self.imageCropView){
         [[self.userSelectedPhotos firstObject] getImageWithProgress:NULL completion:^(UIImage *image){
             self.imageCropView.image = image;
         }];
+        self.imageDisplayed = [self.userSelectedPhotos firstObject];
     }
     
     for (OLPrintPhoto *printPhoto in self.userSelectedPhotos){
         [printPhoto unloadImage];
     }
     
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]
-                                              initWithTitle:@"Next"
-                                              style:UIBarButtonItemStylePlain
-                                              target:self
-                                              action:@selector(onButtonNextClicked)];
+    if (!self.navigationItem.rightBarButtonItem){
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]
+                                                  initWithTitle:NSLocalizedString(@"Next", @"")
+                                                  style:UIBarButtonItemStylePlain
+                                                  target:self
+                                                  action:@selector(onButtonNextClicked)];
+    }
+    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Back", @"")
+                                                                             style:UIBarButtonItemStylePlain
+                                                                            target:nil
+                                                                            action:nil];
     
     self.quantity = 1;
     [self updateQuantityLabel];
@@ -155,14 +178,13 @@ OLAssetsPickerControllerDelegate>
     [self doCheckout];
 }
 
--(void) doCheckout{
-    if (!self.imageCropView.image) {
-        return;
-    }
+- (void)saveJobWithCompletionHandler:(void(^)())handler{
     
-    UIImage *croppedImage = self.imageCropView.editedImage;
+    self.imageDisplayed.cropImageFrame = [self.imageCropView getFrameRect];
+    self.imageDisplayed.cropImageRect = [self.imageCropView getImageRect];
+    self.imageDisplayed.cropImageSize = [self.imageCropView croppedImageSize];
     
-    OLAsset *asset = [OLAsset assetWithImageAsJPEG:croppedImage];
+    OLAsset *asset = [OLAsset assetWithDataSource:self.imageDisplayed];
     
     [asset dataLengthWithCompletionHandler:^(long long dataLength, NSError *error){
         if (dataLength < 40000){
@@ -207,30 +229,42 @@ OLAssetsPickerControllerDelegate>
             self.editingPrintJob = job;
             if ([printOrder.jobs containsObject:self.editingPrintJob]){
                 id<OLPrintJob> existingJob = printOrder.jobs[[printOrder.jobs indexOfObject:self.editingPrintJob]];
-                    [existingJob setExtraCopies:[existingJob extraCopies]+1];
+                [existingJob setExtraCopies:[existingJob extraCopies]+1];
             }
             else{
                 [printOrder addPrintJob:self.editingPrintJob];
             }
-            
-            if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder && [[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant isEqualToString:@"Review-Overview-Checkout"]){
-                UIViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLProductOverviewViewController"];
-                [vc safePerformSelector:@selector(setUserEmail:) withObject:[(OLKiteViewController *)vc userEmail]];
-                [vc safePerformSelector:@selector(setUserPhone:) withObject:[(OLKiteViewController *)vc userPhone]];
-                [vc safePerformSelector:@selector(setKiteDelegate:) withObject:self.delegate];
-                [vc safePerformSelector:@selector(setProduct:) withObject:self.product];
-                [self.navigationController pushViewController:vc animated:YES];
-            }
-            else{
-                [OLKiteUtils checkoutViewControllerForPrintOrder:printOrder handler:^(id vc){
-                    [vc safePerformSelector:@selector(setUserEmail:) withObject:[OLKiteUtils userEmail:self]];
-                    [vc safePerformSelector:@selector(setUserPhone:) withObject:[OLKiteUtils userPhone:self]];
-                    [vc safePerformSelector:@selector(setKiteDelegate:) withObject:[OLKiteUtils kiteDelegate:self]];
+        }
+        
+        if (handler){
+            handler();
+        }
+    }];
+}
 
-                    
-                    [self.navigationController pushViewController:vc animated:YES];
-                }];
-            }
+-(void) doCheckout{
+    if (!self.imageCropView.image) {
+        return;
+    }
+    
+    [self saveJobWithCompletionHandler:^{
+        if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder && [[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant isEqualToString:@"Review-Overview-Checkout"]){
+            UIViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLProductOverviewViewController"];
+            [vc safePerformSelector:@selector(setUserEmail:) withObject:[(OLKiteViewController *)vc userEmail]];
+            [vc safePerformSelector:@selector(setUserPhone:) withObject:[(OLKiteViewController *)vc userPhone]];
+            [vc safePerformSelector:@selector(setKiteDelegate:) withObject:self.delegate];
+            [vc safePerformSelector:@selector(setProduct:) withObject:self.product];
+            [self.navigationController pushViewController:vc animated:YES];
+        }
+        else{
+            OLPrintOrder *printOrder = [OLKiteUtils kiteVcForViewController:self].printOrder;
+            [OLKiteUtils checkoutViewControllerForPrintOrder:printOrder handler:^(id vc){
+                [vc safePerformSelector:@selector(setUserEmail:) withObject:[OLKiteUtils userEmail:self]];
+                [vc safePerformSelector:@selector(setUserPhone:) withObject:[OLKiteUtils userPhone:self]];
+                [vc safePerformSelector:@selector(setKiteDelegate:) withObject:[OLKiteUtils kiteDelegate:self]];
+                
+                [self.navigationController pushViewController:vc animated:YES];
+            }];
         }
     }];
 }
@@ -359,10 +393,10 @@ OLAssetsPickerControllerDelegate>
             return;
         }
         
-        OLPrintPhoto *printPhoto = self.userSelectedPhotos[indexPath.item];
+        self.imageDisplayed = self.userSelectedPhotos[indexPath.item];
         
         self.imageCropView.image = nil;
-        [printPhoto getImageWithProgress:^(float progress){
+        [self.imageDisplayed getImageWithProgress:^(float progress){
 //            [self.imageCropView setProgress:progress];
         }completion:^(UIImage *image){
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -576,6 +610,7 @@ OLAssetsPickerControllerDelegate>
                 self.imageCropView.image = image;
             });
         }];
+        self.imageDisplayed = self.imagePicked;
         self.imagePicked = nil;
     }
     [picker dismissViewControllerAnimated:YES completion:^(void){}];
@@ -632,6 +667,7 @@ OLAssetsPickerControllerDelegate>
                 self.imageCropView.image = image;
             });
         }];
+        self.imageDisplayed = self.imagePicked;
         self.imagePicked = nil;
     }
     [self dismissViewControllerAnimated:YES completion:^(void){}];
@@ -657,6 +693,7 @@ OLAssetsPickerControllerDelegate>
                 self.imageCropView.image = image;
             });
         }];
+        self.imageDisplayed = self.imagePicked;
         self.imagePicked = nil;
     }
     [self dismissViewControllerAnimated:YES completion:^(void){}];

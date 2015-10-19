@@ -39,4 +39,6 @@
 
 - (void)loadCoverPhoto;
 
+- (void)saveJobWithCompletionHandler:(void(^)())handler;
+
 @end

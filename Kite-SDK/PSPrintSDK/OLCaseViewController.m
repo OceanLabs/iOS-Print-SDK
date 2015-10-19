@@ -35,11 +35,6 @@
     [super viewDidLoad];
     
     self.downloadedMask = NO;
-    
-    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Back", @"")
-                                                                             style:UIBarButtonItemStylePlain
-                                                                            target:nil
-                                                                            action:nil];
 }
 
 -(void)viewWillAppear:(BOOL)animated{

@@ -21,4 +21,6 @@
 @property (strong, nonatomic) NSMutableArray *checkoutPhotos;
 @property (strong, nonatomic) id<OLPrintJob> editingPrintJob;
 
+- (void)saveJobWithCompletionHandler:(void(^)())handler;
+
 @end

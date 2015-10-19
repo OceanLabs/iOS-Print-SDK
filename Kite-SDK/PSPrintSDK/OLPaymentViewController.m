@@ -35,6 +35,10 @@
 #import "NSDecimalNumber+CostFormatter.h"
 #import "OLKiteUtils.h"
 #import "OLKiteViewController.h"
+#import "OLOrderReviewViewController.h"
+#import "OLPhotoSelectionViewController.h"
+#import "OLPhotobookViewController.h"
+#import "NSObject+Utils.h"
 
 #ifdef OL_KITE_OFFER_PAYPAL
 #import <PayPal-iOS-SDK/PayPalMobile.h>
@@ -532,6 +536,52 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     }
 }
 
+- (BOOL)shouldShowAddMorePhotos{
+    if (![self.kiteDelegate respondsToSelector:@selector(kiteControllerShouldAllowUserToAddMorePhotos:)]){
+        return YES;
+    }
+    else{
+        return [self.kiteDelegate kiteControllerShouldAllowUserToAddMorePhotos:[OLKiteUtils kiteVcForViewController:self]];
+    }
+}
+
+- (void)presentNavViewControllerWithControllers:(NSArray *)vcs{
+    OLCustomNavigationController *navController = [[OLCustomNavigationController alloc] init];
+    
+    navController.viewControllers = vcs;
+    UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Cancel", "")
+                                                                   style:UIBarButtonItemStyleDone target:self
+                                                                  action:@selector(dismissPresentedViewController)];
+    UIBarButtonItem *saveButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Save", "")
+                                                                   style:UIBarButtonItemStyleDone target:self
+                                                                  action:@selector(saveAndDismissReviewController)];
+    
+    ((UIViewController *)[vcs firstObject]).navigationItem.leftBarButtonItem = doneButton;
+    ((UIViewController *)[vcs lastObject]).navigationItem.rightBarButtonItem = saveButton;
+    
+    [self presentViewController:navController animated:YES completion:NULL];
+}
+
+- (void)saveAndDismissReviewController{
+    OLCustomNavigationController *nvc = (OLCustomNavigationController *)self.presentedViewController;
+    if (![nvc isKindOfClass:[OLCustomNavigationController class]]){
+        return;
+    }
+    
+    OLOrderReviewViewController *vc = nvc.viewControllers.lastObject;
+    if ([vc respondsToSelector:@selector(saveJobWithCompletionHandler:)]){
+        [vc saveJobWithCompletionHandler:^{
+            [self dismissPresentedViewController];
+        }];
+    }
+}
+
+- (void)dismissPresentedViewController{
+    [self dismissViewControllerAnimated:YES completion:^{
+        [self updateViewsBasedOnCostUpdate];
+    }];
+}
+
 - (void)applyPromoCode:(NSString *)promoCode {
     if (promoCode != nil) {
         [SVProgressHUD showWithStatus:NSLocalizedStringFromTableInBundle(@"Checking Code", @"KitePrintSDK", [OLConstants bundle], @"")];
@@ -753,7 +803,35 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 }
 
 - (IBAction)onButtonEditClicked:(UIButton *)sender {
+    CGPoint buttonPosition = [sender convertPoint:CGPointZero toView:self.tableView];
+    NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:buttonPosition];
+    OLProductPrintJob* printJob = ((OLProductPrintJob*)[self.printOrder.jobs objectAtIndex:indexPath.row]);
+    OLProduct *product = [OLProduct productWithTemplateId:printJob.templateId];
     
+    OLOrderReviewViewController* orvc = (OLOrderReviewViewController *)[self.storyboard instantiateViewControllerWithIdentifier:[OLKiteUtils reviewViewControllerIdentifierForProduct:product photoSelectionScreen:NO]];
+    orvc.product = product;
+    [orvc safePerformSelector:@selector(setEditingPrintJob:) withObject:printJob];
+    if ([self shouldShowAddMorePhotos] && product.productTemplate.templateUI != kOLTemplateUICase && product.productTemplate.templateUI != kOLTemplateUIPhotobook && product.productTemplate.templateUI != kOLTemplateUIPostcard){
+        OLPhotoSelectionViewController *photoVc = [self.storyboard instantiateViewControllerWithIdentifier:@"PhotoSelectionViewController"];
+        photoVc.product = product;
+        [self presentNavViewControllerWithControllers:@[photoVc, orvc]];
+    }
+    else if (product.productTemplate.templateUI == kOLTemplateUIPhotobook){
+        OLPhotobookViewController *photobookVc = [self.storyboard instantiateViewControllerWithIdentifier:@"PhotobookViewController"];
+        photobookVc.product = product;
+        
+        if ([printJob isKindOfClass:[OLPhotobookPrintJob class]] && [(OLPhotobookPrintJob *)printJob frontCover]){
+            OLPrintPhoto *coverPhoto = [[OLPrintPhoto alloc] init];
+            coverPhoto.asset = [(OLPhotobookPrintJob *)printJob frontCover];
+            
+            photobookVc.coverPhoto = coverPhoto;
+        }
+        
+        [self presentNavViewControllerWithControllers:@[orvc, photobookVc]];
+    }
+    else{
+        [self presentNavViewControllerWithControllers:@[orvc]];
+    }
 }
 
 - (IBAction)onButtonContinueShoppingClicked:(UIButton *)sender {
@@ -954,6 +1032,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         UIImageView *imageView = (UIImageView *)[cell.contentView viewWithTag:20];
         UILabel *quantityLabel = (UILabel *)[cell.contentView viewWithTag:30];
         UILabel *productNameLabel = (UILabel *)[cell.contentView viewWithTag:50];
+        UIButton *editButton = (UIButton *)[cell.contentView viewWithTag:60];
         UILabel *priceLabel = (UILabel *)[cell.contentView viewWithTag:70];
         
         id<OLPrintJob> job = self.printOrder.jobs[indexPath.row];
@@ -968,6 +1047,10 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         }
         else{
             priceLabel.text = nil;
+        }
+        
+        if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8){
+            editButton.hidden = YES;
         }
         
         return cell;

@@ -38,6 +38,7 @@
 
 #import <MPFlipViewController/MPFlipTransition.h>
 #import "UIImage+ImageNamedInKiteBundle.h"
+#import "OLKiteABTesting.h"
 
 static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 static const NSUInteger kTagLeft = 10;
@@ -120,6 +121,18 @@ UINavigationControllerDelegate
 
 @implementation OLPhotobookViewController
 
+-(id<OLPrintJob>)editingPrintJob{
+    if (_editingPrintJob){
+        return _editingPrintJob;
+    }
+    else if([OLKiteABTesting sharedInstance].launchedWithPrintOrder){
+        OLKiteViewController *kiteVc = [OLKiteUtils kiteVcForViewController:self];
+        return [kiteVc.printOrder.jobs firstObject];
+    }
+    
+    return nil;
+}
+
 -(UIDynamicAnimator*) dynamicAnimator{
     if (!_dynamicAnimator) _dynamicAnimator = [[UIDynamicAnimator alloc] initWithReferenceView:self.view];
     return _dynamicAnimator;
@@ -169,6 +182,15 @@ UINavigationControllerDelegate
 
 - (void)viewDidLoad{
     [super viewDidLoad];
+    
+    if (self.editingPrintJob){
+        self.userSelectedPhotos = [[NSMutableArray alloc] init];
+        for (OLAsset *asset in [self.editingPrintJob assetsForUploading]){
+            OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
+            printPhoto.asset = asset;
+            [self.userSelectedPhotos addObject:printPhoto];
+        }
+    }
     
 #ifndef OL_NO_ANALYTICS
     [OLAnalytics trackReviewScreenViewed:self.product.productTemplate.name];
@@ -229,9 +251,15 @@ UINavigationControllerDelegate
     [self.pageController.view addGestureRecognizer:panGesture];
     [self.pageController.view addGestureRecognizer:longPressGesture];
     
-    self.title = NSLocalizedString(@"Review", @""); //[NSString stringWithFormat: NSLocalizedString(@"%d / %d", @""), self.userSelectedPhotos.count, self.product.quantityToFulfillOrder];
+    self.title = NSLocalizedString(@"Review", @"");
     
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Confirm", @"") style:UIBarButtonItemStylePlain target:self action:@selector(onButtonNextClicked:)];
+    if (!self.navigationItem.rightBarButtonItem){
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]
+                                                  initWithTitle:NSLocalizedString(@"Next", @"")
+                                                  style:UIBarButtonItemStylePlain
+                                                  target:self
+                                                  action:@selector(onButtonNextClicked:)];
+    }
     
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Back", @"")
                                                                              style:UIBarButtonItemStylePlain
@@ -602,7 +630,7 @@ UINavigationControllerDelegate
     return YES;
 }
 
-- (void)doCheckout {
+- (void)saveJobWithCompletionHandler:(void(^)())handler{
     NSInteger i = 0;
     NSMutableArray *bookPhotos = [[NSMutableArray alloc] init];
     for (NSInteger object = 0; object < self.photobookPhotos.count; object++){
@@ -675,6 +703,15 @@ UINavigationControllerDelegate
         [printOrder addPrintJob:self.editingPrintJob];
     }
     
+    if (handler){
+        handler();
+    }
+}
+
+- (void)doCheckout {
+    [self saveJobWithCompletionHandler:NULL];
+    
+    OLPrintOrder *printOrder = [OLKiteUtils kiteVcForViewController:self].printOrder;
     [OLKiteUtils checkoutViewControllerForPrintOrder:printOrder handler:^(id vc){
         [vc safePerformSelector:@selector(setUserEmail:) withObject:[OLKiteUtils userEmail:self]];
         [vc safePerformSelector:@selector(setUserPhone:) withObject:[OLKiteUtils userPhone:self]];

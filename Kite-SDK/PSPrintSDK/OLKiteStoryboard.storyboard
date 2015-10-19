@@ -749,7 +749,7 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cV5-4n-Kc8">
                                 <rect key="frame" x="0.0" y="416" width="600" height="35"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ehs-mV-jG4">
+                                    <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ehs-mV-jG4">
                                         <rect key="frame" x="42" y="4" width="53" height="27"/>
                                         <animations/>
                                         <fontDescription key="fontDescription" type="system" weight="medium" pointSize="12.5"/>
@@ -827,7 +827,13 @@
                                                     <animations/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="63" id="OII-3o-mlf"/>
+                                                        <constraint firstAttribute="width" secondItem="vZZ-Rv-gmm" secondAttribute="height" multiplier="63:43" id="VU3-IW-xui"/>
                                                     </constraints>
+                                                    <variation key="default">
+                                                        <mask key="constraints">
+                                                            <exclude reference="OII-3o-mlf"/>
+                                                        </mask>
+                                                    </variation>
                                                 </imageView>
                                                 <button opaque="NO" tag="40" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BrU-jR-Zm0">
                                                     <rect key="frame" x="93" y="3" width="21" height="37"/>

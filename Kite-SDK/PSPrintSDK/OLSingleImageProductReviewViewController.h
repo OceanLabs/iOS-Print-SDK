@@ -20,4 +20,6 @@
 
 @property (strong, nonatomic) id<OLPrintJob> editingPrintJob;
 
+- (void)saveJobWithCompletionHandler:(void(^)())handler;
+
 @end
