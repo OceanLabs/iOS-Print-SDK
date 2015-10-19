@@ -183,8 +183,6 @@ OLAssetsPickerControllerDelegate>
             }
             
             NSUInteger iphonePhotoCount = 1;
-            OLProductPrintJob *job = [[OLProductPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:assetArray];
-            job.uuid = [[NSUUID UUID] UUIDString];
             OLPrintOrder *printOrder = [OLKiteUtils kiteVcForViewController:self].printOrder;
             NSDictionary *infoDict = [[NSBundle mainBundle] infoDictionary];
             NSString *appVersion = [infoDict objectForKey:@"CFBundleShortVersionString"];
@@ -196,11 +194,24 @@ OLAssetsPickerControllerDelegate>
                                     @"app_version": [NSString stringWithFormat:@"Version: %@ (%@)", appVersion, buildNumber]
                                     };
             
-            
-            //TODO: Check if we have launched with a Print Order and remove the editing print job
-//                [printOrder removePrintJob:self.editingPrintJob];
-            
-            [printOrder addPrintJob:job];
+            OLProductPrintJob *job = [[OLProductPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:assetArray];
+            if (self.editingPrintJob && [printOrder.jobs containsObject:self.editingPrintJob]){
+                id<OLPrintJob> existingJob = printOrder.jobs[[printOrder.jobs indexOfObject:self.editingPrintJob]];
+                if ([existingJob extraCopies] > 0){
+                    [existingJob setExtraCopies:[existingJob extraCopies]-1];
+                }
+                else{
+                    [printOrder removePrintJob:self.editingPrintJob];
+                }
+            }
+            self.editingPrintJob = job;
+            if ([printOrder.jobs containsObject:self.editingPrintJob]){
+                id<OLPrintJob> existingJob = printOrder.jobs[[printOrder.jobs indexOfObject:self.editingPrintJob]];
+                    [existingJob setExtraCopies:[existingJob extraCopies]+1];
+            }
+            else{
+                [printOrder addPrintJob:self.editingPrintJob];
+            }
             
             if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder && [[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant isEqualToString:@"Review-Overview-Checkout"]){
                 UIViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLProductOverviewViewController"];

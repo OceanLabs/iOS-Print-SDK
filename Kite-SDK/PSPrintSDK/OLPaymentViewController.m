@@ -308,7 +308,6 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     self.promoCodeTextField.delegate = self;
     
     UITapGestureRecognizer *tgr = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onBackgroundClicked)];
-    tgr.cancelsTouchesInView = NO; // allow table cell selection to happen as normal
     [self.view addGestureRecognizer:tgr];
     
     if ([self.tableView respondsToSelector:@selector(setCellLayoutMarginsFollowReadableWidth:)]){
@@ -454,6 +453,85 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     }];
 }
 
+- (void)submitOrderForPrintingWithProofOfPayment:(NSString *)proofOfPayment paymentMethod:(NSString *)paymentMethod completion:(void (^)(PKPaymentAuthorizationStatus)) handler{
+    
+    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
+    
+    self.printOrder.proofOfPayment = proofOfPayment;
+    
+    NSString *applePayAvailableStr = @"N/A";
+#ifdef OL_KITE_OFFER_APPLE_PAY
+    applePayAvailableStr = [self shouldShowApplePay] ? @"Yes" : @"No";
+#endif
+    
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackPaymentCompletedForOrder:self.printOrder paymentMethod:paymentMethod applePayIsAvailable:applePayAvailableStr];
+#endif
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:kOLNotificationUserCompletedPayment object:self userInfo:@{kOLKeyUserInfoPrintOrder: self.printOrder}];
+    [self.printOrder saveToHistory];
+    
+    __block BOOL handlerUsed = NO;
+    
+    [SVProgressHUD showWithStatus:NSLocalizedStringFromTableInBundle(@"Processing", @"KitePrintSDK", [OLConstants bundle], @"") maskType:SVProgressHUDMaskTypeBlack];
+    [self.printOrder submitForPrintingWithProgressHandler:^(NSUInteger totalAssetsUploaded, NSUInteger totalAssetsToUpload,
+                                                            long long totalAssetBytesWritten, long long totalAssetBytesExpectedToWrite,
+                                                            long long totalBytesWritten, long long totalBytesExpectedToWrite) {
+        [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
+        if (!handlerUsed) {
+            handler(PKPaymentAuthorizationStatusSuccess);
+            handlerUsed = YES;
+        }
+        
+        const float step = (1.0f / totalAssetsToUpload);
+        NSUInteger totalURLAssets = self.printOrder.totalAssetsToUpload - totalAssetsToUpload;
+        float progress = totalAssetsUploaded * step + (totalAssetBytesWritten / (float) totalAssetBytesExpectedToWrite) * step;
+        [SVProgressHUD showProgress:progress status:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Uploading Images \n%lu / %lu", @"KitePrintSDK", [OLConstants bundle], @""), (unsigned long) totalAssetsUploaded + 1 + totalURLAssets, (unsigned long) self.printOrder.totalAssetsToUpload] maskType:SVProgressHUDMaskTypeBlack];
+    } completionHandler:^(NSString *orderIdReceipt, NSError *error) {
+        if (error) {
+            handler(PKPaymentAuthorizationStatusFailure);
+            [[[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLConstants bundle], @"") message:error.localizedDescription delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLConstants bundle], @"") otherButtonTitles:nil] show];
+        }
+        
+        if (!handlerUsed) {
+            handler(PKPaymentAuthorizationStatusSuccess);
+            handlerUsed = YES;
+        }
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:kOLNotificationPrintOrderSubmission object:self userInfo:@{kOLKeyUserInfoPrintOrder: self.printOrder}];
+        
+#ifndef OL_NO_ANALYTICS
+        [OLAnalytics trackOrderSubmission:self.printOrder];
+#endif
+        
+        [self.printOrder saveToHistory]; // save again as the print order has it's receipt set if it was successful, otherwise last error is set
+        [SVProgressHUD dismiss];
+        [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+        self.transitionBlockOperation = [[NSBlockOperation alloc] init];
+        __weak OLPaymentViewController *welf = self;
+        [self.transitionBlockOperation addExecutionBlock:^{
+            OLReceiptViewController *receiptVC = [[OLReceiptViewController alloc] initWithPrintOrder:welf.printOrder];
+            receiptVC.delegate = welf.delegate;
+            receiptVC.presentedModally = welf.presentedModally;
+            receiptVC.delegate = welf.delegate;
+            [welf.navigationController pushViewController:receiptVC animated:YES];
+        }];
+        if ([self shouldShowApplePay]){
+            [self.transitionBlockOperation addDependency:self.applePayDismissOperation];
+        }
+        [[NSOperationQueue mainQueue] addOperation:self.transitionBlockOperation];
+    }];
+}
+
+- (void)popToHome{
+    NSMutableArray *navigationStack = self.navigationController.viewControllers.mutableCopy;
+    if (navigationStack.count > 2) {
+        [navigationStack removeObjectsInRange:NSMakeRange(1, navigationStack.count - 2)];
+        self.navigationController.viewControllers = navigationStack;
+        [self.navigationController popViewControllerAnimated:YES];
+    }
+}
+
 - (void)applyPromoCode:(NSString *)promoCode {
     if (promoCode != nil) {
         [SVProgressHUD showWithStatus:NSLocalizedStringFromTableInBundle(@"Checking Code", @"KitePrintSDK", [OLConstants bundle], @"")];
@@ -486,6 +564,8 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         }
     }];
 }
+
+#pragma mark Button Actions
 
 - (IBAction)onButtonApplyPromoCodeClicked:(id)sender {
     if (self.clearPromoCode) {
@@ -633,83 +713,9 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 }
 #endif
 
-- (void)submitOrderForPrintingWithProofOfPayment:(NSString *)proofOfPayment paymentMethod:(NSString *)paymentMethod completion:(void (^)(PKPaymentAuthorizationStatus)) handler{
-    
-    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
-    
-    self.printOrder.proofOfPayment = proofOfPayment;
-    
-    NSString *applePayAvailableStr = @"N/A";
-#ifdef OL_KITE_OFFER_APPLE_PAY
-    applePayAvailableStr = [self shouldShowApplePay] ? @"Yes" : @"No";
-#endif
-    
-#ifndef OL_NO_ANALYTICS
-    [OLAnalytics trackPaymentCompletedForOrder:self.printOrder paymentMethod:paymentMethod applePayIsAvailable:applePayAvailableStr];
-#endif
-    
-    [[NSNotificationCenter defaultCenter] postNotificationName:kOLNotificationUserCompletedPayment object:self userInfo:@{kOLKeyUserInfoPrintOrder: self.printOrder}];
-    [self.printOrder saveToHistory];
-    
-    __block BOOL handlerUsed = NO;
-    
-    [SVProgressHUD showWithStatus:NSLocalizedStringFromTableInBundle(@"Processing", @"KitePrintSDK", [OLConstants bundle], @"") maskType:SVProgressHUDMaskTypeBlack];
-    [self.printOrder submitForPrintingWithProgressHandler:^(NSUInteger totalAssetsUploaded, NSUInteger totalAssetsToUpload,
-                                                            long long totalAssetBytesWritten, long long totalAssetBytesExpectedToWrite,
-                                                            long long totalBytesWritten, long long totalBytesExpectedToWrite) {
-        [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
-        if (!handlerUsed) {
-            handler(PKPaymentAuthorizationStatusSuccess);
-            handlerUsed = YES;
-        }
-        
-        const float step = (1.0f / totalAssetsToUpload);
-        NSUInteger totalURLAssets = self.printOrder.totalAssetsToUpload - totalAssetsToUpload;
-        float progress = totalAssetsUploaded * step + (totalAssetBytesWritten / (float) totalAssetBytesExpectedToWrite) * step;
-        [SVProgressHUD showProgress:progress status:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Uploading Images \n%lu / %lu", @"KitePrintSDK", [OLConstants bundle], @""), (unsigned long) totalAssetsUploaded + 1 + totalURLAssets, (unsigned long) self.printOrder.totalAssetsToUpload] maskType:SVProgressHUDMaskTypeBlack];
-    } completionHandler:^(NSString *orderIdReceipt, NSError *error) {
-        if (error) {
-            handler(PKPaymentAuthorizationStatusFailure);
-            [[[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLConstants bundle], @"") message:error.localizedDescription delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLConstants bundle], @"") otherButtonTitles:nil] show];
-        }
-        
-        if (!handlerUsed) {
-            handler(PKPaymentAuthorizationStatusSuccess);
-            handlerUsed = YES;
-        }
-        
-        [[NSNotificationCenter defaultCenter] postNotificationName:kOLNotificationPrintOrderSubmission object:self userInfo:@{kOLKeyUserInfoPrintOrder: self.printOrder}];
-        
-#ifndef OL_NO_ANALYTICS
-        [OLAnalytics trackOrderSubmission:self.printOrder];
-#endif
-        
-        [self.printOrder saveToHistory]; // save again as the print order has it's receipt set if it was successful, otherwise last error is set
-        [SVProgressHUD dismiss];
-        [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
-        self.transitionBlockOperation = [[NSBlockOperation alloc] init];
-        __weak OLPaymentViewController *welf = self;
-        [self.transitionBlockOperation addExecutionBlock:^{
-            OLReceiptViewController *receiptVC = [[OLReceiptViewController alloc] initWithPrintOrder:welf.printOrder];
-            receiptVC.delegate = welf.delegate;
-            receiptVC.presentedModally = welf.presentedModally;
-            receiptVC.delegate = welf.delegate;
-            [welf.navigationController pushViewController:receiptVC animated:YES];
-        }];
-        if ([self shouldShowApplePay]){
-            [self.transitionBlockOperation addDependency:self.applePayDismissOperation];
-        }
-        [[NSOperationQueue mainQueue] addOperation:self.transitionBlockOperation];
-    }];
-}
-
 - (IBAction)onButtonMinusClicked:(UIButton *)sender {
-    UIView* cellContentView = sender.superview;
-    UIView* cell = cellContentView.superview;
-    while (![cell isKindOfClass:[UITableViewCell class]]){
-        cell = cell.superview;
-    }
-    NSIndexPath* indexPath = [self.tableView indexPathForCell:(UITableViewCell*)cell];
+    CGPoint buttonPosition = [sender convertPoint:CGPointZero toView:self.tableView];
+    NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:buttonPosition];
     OLProductPrintJob* printJob = ((OLProductPrintJob*)[self.printOrder.jobs objectAtIndex:indexPath.row]);
     
     if (printJob.extraCopies == 0){
@@ -733,12 +739,8 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 }
 
 - (IBAction)onButtonPlusClicked:(UIButton *)sender {
-    UIView* cellContentView = sender.superview;
-    UIView* cell = cellContentView.superview;
-    while (![cell isKindOfClass:[UITableViewCell class]]){
-        cell = cell.superview;
-    }
-    NSIndexPath* indexPath = [self.tableView indexPathForCell:(UITableViewCell*)cell];
+    CGPoint buttonPosition = [sender convertPoint:CGPointZero toView:self.tableView];
+    NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:buttonPosition];
     OLProductPrintJob* printJob = ((OLProductPrintJob*)[self.printOrder.jobs objectAtIndex:indexPath.row]);
     
     printJob.extraCopies += 1;
@@ -759,35 +761,8 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         [self.delegate userDidTapContinueShoppingButton];
     }
     else{ // Try as best we can to go to the beginning of the app
-        NSMutableArray *navigationStack = self.navigationController.viewControllers.mutableCopy;
-        if (navigationStack.count > 2) {
-            [navigationStack removeObjectsInRange:NSMakeRange(1, navigationStack.count - 2)];
-            self.navigationController.viewControllers = navigationStack;
-            [self.navigationController popViewControllerAnimated:YES];
-        }
+        [self popToHome];
     }
-}
-
-- (BOOL)textFieldShouldReturn:(UITextField *)textField {
-    [textField resignFirstResponder];
-    self.printOrder.promoCode = textField.text;
-    [self updateViewsBasedOnCostUpdate];
-    return NO;
-}
-
-- (BOOL) tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath{
-    return indexPath.section == 0;
-}
-
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        [self.printOrder removePrintJob:self.printOrder.jobs[indexPath.row]];
-        [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationAutomatic];
-    }
-}
-
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView{
-    [self textFieldShouldReturn:self.promoCodeTextField];
 }
 
 
@@ -1011,6 +986,33 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     else{
         return 47;
     }
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+    [textField resignFirstResponder];
+    self.printOrder.promoCode = textField.text;
+    [self updateViewsBasedOnCostUpdate];
+    return NO;
+}
+
+- (BOOL) tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath{
+    return indexPath.section == 0;
+}
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        [self.printOrder removePrintJob:self.printOrder.jobs[indexPath.row]];
+        if (self.printOrder.jobs.count > 0){
+            [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationAutomatic];
+        }
+        else{
+            [self popToHome];
+        }
+    }
+}
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView{
+    [self textFieldShouldReturn:self.promoCodeTextField];
 }
 
 #pragma mark - UIActionSheetDelegate methods

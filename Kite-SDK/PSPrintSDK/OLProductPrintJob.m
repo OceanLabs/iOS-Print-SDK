@@ -193,7 +193,7 @@ static id stringOrEmptyString(NSString *str) {
     }
     OLProductPrintJob* printJob = (OLProductPrintJob*)object;
     
-    return [self.templateId isEqual:printJob.templateId] && [self.assets isEqual:printJob.assets] && [self.options isEqualToDictionary:printJob.options];
+    return [self.templateId isEqual:printJob.templateId] && [self.assets isEqualToArray:printJob.assets] && [self.options isEqualToDictionary:printJob.options];
 }
 
 

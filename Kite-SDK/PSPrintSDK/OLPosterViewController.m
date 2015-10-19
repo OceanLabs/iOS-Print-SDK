@@ -66,6 +66,10 @@
                                               style:UIBarButtonItemStylePlain
                                               target:self
                                               action:@selector(doCheckout)];
+    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Back", @"")
+                                                                             style:UIBarButtonItemStylePlain
+                                                                            target:nil
+                                                                            action:nil];
     [self setTitle:NSLocalizedString(@"Edit Poster", @"")];
     
     self.numberOfColumns = self.product.productTemplate.gridCountX;
@@ -230,12 +234,24 @@
                             @"app_version": [NSString stringWithFormat:@"Version: %@ (%@)", appVersion, buildNumber]
                             };
     
-    OLProductPrintJob* printJob = [[OLProductPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:photoAssets];
-	printJob.uuid = [[NSUUID UUID] UUIDString];
-    for (id<OLPrintJob> job in printOrder.jobs){
-        [printOrder removePrintJob:job];
+    OLProductPrintJob *job = [[OLProductPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:photoAssets];
+    if (self.editingPrintJob && [printOrder.jobs containsObject:self.editingPrintJob]){
+        id<OLPrintJob> existingJob = printOrder.jobs[[printOrder.jobs indexOfObject:self.editingPrintJob]];
+        if ([existingJob extraCopies] > 0){
+            [existingJob setExtraCopies:[existingJob extraCopies]-1];
+        }
+        else{
+            [printOrder removePrintJob:self.editingPrintJob];
+        }
     }
-    [printOrder addPrintJob:printJob];
+    self.editingPrintJob = job;
+    if ([printOrder.jobs containsObject:self.editingPrintJob]){
+        id<OLPrintJob> existingJob = printOrder.jobs[[printOrder.jobs indexOfObject:self.editingPrintJob]];
+        [existingJob setExtraCopies:[existingJob extraCopies]+1];
+    }
+    else{
+        [printOrder addPrintJob:self.editingPrintJob];
+    }
     
     
     if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder && [[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant isEqualToString:@"Review-Overview-Checkout"]){

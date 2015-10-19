@@ -35,6 +35,8 @@
 @property (strong, nonatomic) OLPrintPhoto *coverPhoto;
 @property (weak, nonatomic) IBOutlet UILabel *pagesLabel;
 
+@property (strong, nonatomic) id<OLPrintJob> editingPrintJob;
+
 - (void)loadCoverPhoto;
 
 @end
