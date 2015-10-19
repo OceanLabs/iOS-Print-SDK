@@ -1,7 +1,7 @@
 # iOS Print SDK
 
 ![Kite](Kite-SDK/docs/kite.png)
-[![Build Status](https://travis-ci.org/OceanLabs/iOS-Print-SDK.svg?branch=master)](https://travis-ci.org/OceanLabs/iOS-Print-SDK)
+[![Build Status](https://travis-ci.org/OceanLabs/iOS-Print-SDK.svg?branch=master)](https://travis-ci.org/OceanLabs/iOS-Print-SDK) [![Coverage Status](https://coveralls.io/repos/OceanLabs/iOS-Print-SDK/badge.svg?branch=master&service=github)](https://coveralls.io/github/OceanLabs/iOS-Print-SDK?branch=master)
 
 The Kite Print SDK makes it easy to add print on demand functionality to your app.
 
@@ -77,7 +77,7 @@ We really mean it when we say integration can be done in minutes.
 OLKiteViewController *vc = [[OLKiteViewController alloc] initWithAssets:@[[OLAsset assetWithImageAsJPEG:YOUR_UIIMAGE_OBJECT]]]];
 [self presentViewController:vc animated:YES completion:NULL];
 ```
-* Step 4: Profit! 
+* Step 4: Profit!
 
 ### iOS 9+ Security
 
