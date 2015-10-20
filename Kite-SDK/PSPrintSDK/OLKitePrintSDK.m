@@ -49,6 +49,7 @@ static NSString *const kOLAPIEndpointVersion = @"v1.4";
 static BOOL useJudoPayForGBP = NO;
 static BOOL cacheTemplates = NO;
 static BOOL useStaging = NO;
+static BOOL isUnitTesting = NO;
 
 #ifdef OL_KITE_OFFER_INSTAGRAM
 static NSString *instagramClientID = nil;
@@ -79,6 +80,14 @@ static NSString *instagramRedirectURI = nil;
 
 + (void)setUseStaging:(BOOL)staging{
     useStaging = staging;
+}
+
++ (void)setIsUnitTesting{
+    isUnitTesting = YES;
+}
+
++ (BOOL)isUnitTesting{
+    return isUnitTesting;
 }
 
 + (void)setAPIKey:(NSString *_Nonnull)_apiKey withEnvironment:(OLKitePrintSDKEnvironment)_environment {
