@@ -22,8 +22,8 @@
 #import "NSObject+Utils.h"
 #import "NSDecimalNumber+CostFormatter.h"
 #import "OLKiteABTesting.h"
-#import <TSMarkdownParser/TSMarkdownParser.h>
 #import "OLKiteUtils.h"
+#import "OLProductDetailsViewController.h"
 
 @interface OLKiteViewController ()
 
@@ -39,31 +39,21 @@
 @property (weak, nonatomic) IBOutlet UIButton *callToActionButton;
 @property (weak, nonatomic) IBOutlet UILabel *callToActionLabel;
 @property (weak, nonatomic) IBOutlet UIImageView *callToActionChevron;
-@property (weak, nonatomic) IBOutlet UILabel *detailsTextLabel;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *detailsBoxTopCon;
 @property (weak, nonatomic) IBOutlet UIImageView *arrowImageView;
 @property (weak, nonatomic) IBOutlet UIView *detailsView;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *detailsViewHeightCon;
-@property (strong, nonatomic) UIVisualEffectView *visualEffectView;
+
+@property (strong, nonatomic) OLProductDetailsViewController *productDetails;
 
 @end
 
 @implementation OLProductOverviewViewController
 
-- (CGFloat)detailsBoxHeight{
-    if ([self respondsToSelector:@selector(traitCollection)]){
-        return self.traitCollection.verticalSizeClass == UIUserInterfaceSizeClassCompact ? 340 : 450;
-    }
-    else{
-        return 340;
-    }
-}
-
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    CGSize size = self.view.frame.size;
-    self.detailsViewHeightCon.constant = size.height > size.width ? 450 : [self detailsBoxHeight];
+    [self setupDetailsView];
     
     if (self.product.productTemplate.templateUI == kOLTemplateUIPoster){
         self.title = NSLocalizedString(@"Posters", @"");
@@ -116,11 +106,6 @@
         }
     }
     
-    NSMutableAttributedString *attributedString = [[[TSMarkdownParser standardParser] attributedStringFromMarkdown:[self.product detailsString]] mutableCopy];
-    
-    [attributedString addAttribute:NSForegroundColorAttributeName value:[UIColor colorWithRed: 0.341 green: 0.341 blue: 0.341 alpha: 1] range:NSMakeRange(0, attributedString.length)];
-    self.detailsTextLabel.attributedText = attributedString;
-    
 #ifndef OL_NO_ANALYTICS
     [OLAnalytics trackProductDescriptionScreenViewed:self.product.productTemplate.name hidePrice:[OLKiteABTesting sharedInstance].hidePrice];
 #endif
@@ -130,40 +115,12 @@
         self.callToActionLabel.textAlignment = NSTextAlignmentCenter;
     }
     
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0 && self.detailsView){
-        UIVisualEffect *blurEffect;
-        blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleExtraLight];
-        
-        self.visualEffectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
-        UIView *view = self.visualEffectView;
-        [self.detailsView addSubview:view];
-        [self.detailsView sendSubviewToBack:view];
-        
-        view.translatesAutoresizingMaskIntoConstraints = NO;
-        NSDictionary *views = NSDictionaryOfVariableBindings(view);
-        NSMutableArray *con = [[NSMutableArray alloc] init];
-        
-        NSArray *visuals = @[@"H:|-0-[view]-0-|",
-                             @"V:|-0-[view]-0-|"];
-        
-        
-        for (NSString *visual in visuals) {
-            [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
-        }
-        
-        [view.superview addConstraints:con];
-        
-    }
-    else{
-        self.detailsView.backgroundColor = [UIColor whiteColor];
-    }
-    
 }
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator{
     [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
     [coordinator animateAlongsideTransition:^(id context){
-        self.detailsViewHeightCon.constant = size.height > size.width ? 450 : [self detailsBoxHeight];
+        self.detailsViewHeightCon.constant = size.height > size.width ? 450 : [self.productDetails recommendedDetailsBoxHeight];
         self.detailsBoxTopCon.constant = self.detailsBoxTopCon.constant != 0 ? self.detailsViewHeightCon.constant-100 : 0;
     }completion:NULL];
 }
@@ -178,6 +135,31 @@
     vc.product = self.product;
     vc.delegate = self;
     return vc;
+}
+
+- (void)setupDetailsView{
+    self.productDetails = [self.storyboard instantiateViewControllerWithIdentifier:@"OLProductDetailsViewController"];
+    self.productDetails.product = self.product;
+    [self addChildViewController:self.productDetails];
+    [self.detailsView addSubview:self.productDetails.view];
+    UIView *detailsVcView = self.productDetails.view;
+    
+    detailsVcView.translatesAutoresizingMaskIntoConstraints = NO;
+    NSDictionary *views = NSDictionaryOfVariableBindings(detailsVcView);
+    NSMutableArray *con = [[NSMutableArray alloc] init];
+    
+    NSArray *visuals = @[@"H:|-0-[detailsVcView]-0-|",
+                         @"V:|-0-[detailsVcView]-0-|"];
+    
+    
+    for (NSString *visual in visuals) {
+        [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+    }
+    
+    [detailsVcView.superview addConstraints:con];
+    
+    CGSize size = self.view.frame.size;
+    self.detailsViewHeightCon.constant = size.height > size.width ? 450 : [self.productDetails recommendedDetailsBoxHeight];
 }
 
 - (IBAction)onTapGestureRecognized:(UITapGestureRecognizer *)sender {
