@@ -51,6 +51,7 @@ typedef enum {
 @property (strong, nonatomic) NSDictionary *_Nullable shippingCosts;
 @property (assign, nonatomic) NSInteger gridCountX;
 @property (assign, nonatomic) NSInteger gridCountY;
+@property (strong, nonatomic) NSDictionary *_Nullable supportedOptions;
 
 - (instancetype _Nonnull)initWithIdentifier:(NSString *_Nonnull)identifier name:(NSString *_Nonnull)name sheetQuantity:(NSUInteger)quantity sheetCostsByCurrencyCode:(NSDictionary<NSString *, NSDecimalNumber *> *_Nullable)costs enabled:(BOOL)enabled;
 - (NSDecimalNumber *_Nullable)costPerSheetInCurrencyCode:(NSString *_Nonnull)currencyCode;

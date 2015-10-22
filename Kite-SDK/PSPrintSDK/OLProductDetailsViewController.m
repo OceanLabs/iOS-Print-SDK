@@ -7,11 +7,12 @@
 //
 
 #import "OLProductDetailsViewController.h"
+#import "OLProductOptionsViewController.h"
 #import <TSMarkdownParser/TSMarkdownParser.h>
 
 @interface OLProductDetailsViewController ()
 
-@property (strong, nonatomic) UIVisualEffectView *visualEffectView;
+@property (weak, nonatomic) IBOutlet UIView *moreOptionsView;
 
 @end
 
@@ -20,34 +21,7 @@
 - (void)viewDidLoad{
     [super viewDidLoad];
     
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0){
-        UIVisualEffect *blurEffect;
-        blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleExtraLight];
-        
-        self.visualEffectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
-        UIView *view = self.visualEffectView;
-        [self.view addSubview:view];
-        [self.view sendSubviewToBack:view];
-        self.view.backgroundColor = [UIColor clearColor];
-        
-        view.translatesAutoresizingMaskIntoConstraints = NO;
-        NSDictionary *views = NSDictionaryOfVariableBindings(view);
-        NSMutableArray *con = [[NSMutableArray alloc] init];
-        
-        NSArray *visuals = @[@"H:|-0-[view]-0-|",
-                             @"V:|-0-[view]-0-|"];
-        
-        
-        for (NSString *visual in visuals) {
-            [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
-        }
-        
-        [view.superview addConstraints:con];
-        
-    }
-    else{
-        self.view.backgroundColor = [UIColor whiteColor];
-    }
+    self.view.backgroundColor = [UIColor clearColor];
     
     NSMutableAttributedString *attributedString = [[[TSMarkdownParser standardParser] attributedStringFromMarkdown:[self.product detailsString]] mutableCopy];
     
@@ -63,5 +37,20 @@
         return 340;
     }
 }
+
+- (IBAction)onOptionsClicked:(UIButton *)sender {
+    self.moreOptionsView.backgroundColor = [UIColor clearColor];
+    OLProductOptionsViewController *options = [self.storyboard instantiateViewControllerWithIdentifier:@"OLProductOptionsViewController"];
+    options.product = self.product;
+    [self.navigationController pushViewController:options animated:YES];
+}
+
+- (IBAction)onOptionsTouchDown:(UIButton *)sender {
+    self.moreOptionsView.backgroundColor = [UIColor whiteColor];
+}
+- (IBAction)optionsCanceled:(UIButton *)sender {
+    self.moreOptionsView.backgroundColor = [UIColor clearColor];
+}
+
 
 @end

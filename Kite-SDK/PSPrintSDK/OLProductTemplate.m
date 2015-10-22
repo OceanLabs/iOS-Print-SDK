@@ -75,6 +75,10 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
     return [documentDirPath stringByAppendingPathComponent:@"co.oceanlabs.pssdk.Templates"];
 }
 
+- (NSDictionary *)supportedOptions{
+    return @{@"Case Style" : @[@"Glossy", @"Matte"]};
+}
+
 - (NSString *)templateType{
     if (_templateType && ![_templateType isEqualToString:@""]){
         return _templateType;

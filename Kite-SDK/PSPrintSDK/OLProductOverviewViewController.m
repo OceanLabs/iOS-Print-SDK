@@ -140,9 +140,42 @@
 - (void)setupDetailsView{
     self.productDetails = [self.storyboard instantiateViewControllerWithIdentifier:@"OLProductDetailsViewController"];
     self.productDetails.product = self.product;
-    [self addChildViewController:self.productDetails];
-    [self.detailsView addSubview:self.productDetails.view];
-    UIView *detailsVcView = self.productDetails.view;
+    
+    UINavigationController *nvc = [[UINavigationController alloc] initWithRootViewController:self.productDetails];
+    nvc.navigationBarHidden = YES;
+    
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0){
+        UIVisualEffect *blurEffect;
+        blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleExtraLight];
+        
+        UIVisualEffectView *visualEffectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
+        UIView *view = visualEffectView;
+        [nvc.view addSubview:view];
+        [nvc.view sendSubviewToBack:view];
+        nvc.view.backgroundColor = [UIColor clearColor];
+        
+        view.translatesAutoresizingMaskIntoConstraints = NO;
+        NSDictionary *views = NSDictionaryOfVariableBindings(view);
+        NSMutableArray *con = [[NSMutableArray alloc] init];
+        
+        NSArray *visuals = @[@"H:|-0-[view]-0-|",
+                             @"V:|-0-[view]-0-|"];
+        
+        
+        for (NSString *visual in visuals) {
+            [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+        }
+        
+        [view.superview addConstraints:con];
+        
+    }
+    else{
+        nvc.view.backgroundColor = [UIColor whiteColor];
+    }
+    
+    [self addChildViewController:nvc];
+    [self.detailsView addSubview:nvc.view];
+    UIView *detailsVcView = nvc.view;
     
     detailsVcView.translatesAutoresizingMaskIntoConstraints = NO;
     NSDictionary *views = NSDictionaryOfVariableBindings(detailsVcView);
