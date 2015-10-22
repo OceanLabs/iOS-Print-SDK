@@ -1007,6 +1007,7 @@
 				CD73BF65186215790009DE03 /* Frameworks */,
 				CD73BF66186215790009DE03 /* Resources */,
 				70ABE1D4C54646F489CBD9EE /* Copy Pods Resources */,
+				BF20929F4C8EFE75F54624C6 /* Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -1026,6 +1027,7 @@
 				CD73BF86186215790009DE03 /* Frameworks */,
 				CD73BF87186215790009DE03 /* Resources */,
 				E8BA98406F7415491BE91DFD /* Copy Pods Resources */,
+				457FC382E83C78790C5EDB39 /* Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -1172,6 +1174,21 @@
 			shellPath = /bin/sh;
 			shellScript = "\"${PROJECT_DIR}/docs/appledoc/appledoc\" \\\n--templates \"${PROJECT_DIR}/docs/appledoc/Templates\" \\\n--project-name \"${PROJECT_NAME}\" \\\n--project-company \"Kite.ly\" \\\n--company-id \"ly.kite\" \\\n--output \"${PROJECT_DIR}/docs/appledoc/${PROJECT_NAME}-appledocs\" \\\n--install-docset \\\n--logformat xcode \\\n--keep-intermediate-files \\\n--no-repeat-first-par \\\n--no-warn-invalid-crossref \\\n--merge-categories \\\n--exit-threshold 2 \\\n--docset-platform-family iphoneos \\\n--warn-undocumented-member \\\n--warn-missing-arg \\\n--warn-unknown-directive \\\n--warn-empty-description \\\n--warn-undocumented-object \\\n--warn-missing-company-id \\\n--keep-undocumented-objects \\\n--keep-undocumented-members \\\n--ignore \"*.m\" \\\n--index-desc \"${PROJECT_DIR}/docs/appledoc-intro.md\" \\\n\"${PROJECT_DIR}/PSPrintSDK/OLAsset.h\" \"${PROJECT_DIR}/PSPrintSDK/OLKiteViewController.h\" \"${PROJECT_DIR}/PSPrintSDK/OLKitePrintSDK.h\" \"${PROJECT_DIR}/PSPrintSDK/OLPrintJob.h\" \"${PROJECT_DIR}/PSPrintSDK/OLPrintOrder.h\" \"${PROJECT_DIR}/PSPrintSDK/OLAssetUploadRequest.h\"\n";
 		};
+		457FC382E83C78790C5EDB39 /* Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		70ABE1D4C54646F489CBD9EE /* Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1185,6 +1202,21 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		BF20929F4C8EFE75F54624C6 /* Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		E8BA98406F7415491BE91DFD /* Copy Pods Resources */ = {

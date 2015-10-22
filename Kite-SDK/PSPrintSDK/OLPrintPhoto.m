@@ -403,24 +403,22 @@ static NSOperationQueue *imageOperationQueue;
         options.synchronous = NO;
         options.deliveryMode = PHImageRequestOptionsDeliveryModeHighQualityFormat;
         options.networkAccessAllowed = YES;
-        [imageManager requestImageForAsset:self.asset targetSize:PHImageManagerMaximumSize contentMode:PHImageContentModeDefault options:options resultHandler:^(UIImage *result, NSDictionary *info){
-            if (result){
-                [self dataWithImage:result withCompletionHandler:^(NSData *data, NSError *error){
-                    if (!error){
-                        handler(data, nil);
-                    }
-                    else{
-                        NSData *data = [NSData dataWithContentsOfFile:[[OLKiteUtils kiteBundle] pathForResource:@"kite_corrupt" ofType:@"jpg"]];
-                        handler(data, nil);
-                    }
-                }];
-            }
-            else{
+        [imageManager requestImageDataForAsset:self.asset options:options resultHandler:^(NSData *imageData, NSString *dataUTI, UIImageOrientation orientation, NSDictionary *info){
+            if (!imageData){
                 NSData *data = [NSData dataWithContentsOfFile:[[OLKiteUtils kiteBundle] pathForResource:@"kite_corrupt" ofType:@"jpg"]];
                 handler(data, nil);
             }
+            else{
+                if ([[dataUTI lowercaseString] containsString:@"jpg"] || [[dataUTI lowercaseString] containsString:@"jpeg"] || [[dataUTI lowercaseString] containsString:@"jpg"]){
+                    handler(imageData, nil);
+                }
+                else{
+                    [imageManager requestImageForAsset:self.asset targetSize:PHImageManagerMaximumSize contentMode:PHImageContentModeDefault options:options resultHandler:^(UIImage *result, NSDictionary *info){
+                        handler(UIImageJPEGRepresentation(result, 0.7), nil);
+                    }];
+                }
+            }
         }];
-        
     }
 #if defined(OL_KITE_OFFER_INSTAGRAM) || defined(OL_KITE_OFFER_FACEBOOK)
     else if (self.type == kPrintPhotoAssetTypeFacebookPhoto || self.type == kPrintPhotoAssetTypeInstagramPhoto){
