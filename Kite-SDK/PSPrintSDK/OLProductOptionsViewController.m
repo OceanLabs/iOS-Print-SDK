@@ -7,6 +7,7 @@
 //
 
 #import "OLProductOptionsViewController.h"
+#import "UIImage+ImageNamedInKiteBundle.h"
 
 @interface OLProductOptionsViewController ()<UITableViewDataSource, UITableViewDelegate>
 
@@ -70,11 +71,30 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"optionCell"];
+    
+    UIImageView *imageView = (UIImageView *)[cell viewWithTag:10];
+    if (indexPath.row == 0){
+        imageView.image = [UIImage imageNamedInKiteBundle:@"checkmark-on"];
+    }
+    
+    
+    UILabel *label = (UILabel *)[cell viewWithTag:20];
+    label.text = [(NSArray *)(self.product.productTemplate.supportedOptions[self.product.productTemplate.supportedOptions.allKeys[indexPath.section]]) objectAtIndex:indexPath.row];
+    
     return cell;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section{
     return self.product.productTemplate.supportedOptions.allKeys[section];
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    [tableView reloadData];
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.15 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+        [self.navigationController popViewControllerAnimated:YES];
+    });
+    
 }
 
 @end
