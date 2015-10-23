@@ -77,7 +77,7 @@ We really mean it when we say integration can be done in minutes.
 OLKiteViewController *vc = [[OLKiteViewController alloc] initWithAssets:@[[OLAsset assetWithImageAsJPEG:YOUR_UIIMAGE_OBJECT]]]];
 [self presentViewController:vc animated:YES completion:NULL];
 ```
-* Step 4: Profit! 
+* Step 4: Profit!
 
 ### iOS 9+ Security
 
