@@ -50,6 +50,21 @@ typedef enum {
     return filteredProducts;
 }
 
+-(NSMutableDictionary *) selectedOptions{
+    if (!_selectedOptions){
+        _selectedOptions = [[NSMutableDictionary alloc] init];
+        
+        OLProductTemplate *template = self.productTemplate;
+        for (NSString *key in template.supportedOptions.allKeys){
+            id firstOption = [template.supportedOptions[key] firstObject];
+            if (firstOption){
+                _selectedOptions[key] = firstOption;
+            }
+        }
+    }
+    return _selectedOptions;
+}
+
 - (UIColor *)labelColor{
     return self.productTemplate.labelColor;
 }

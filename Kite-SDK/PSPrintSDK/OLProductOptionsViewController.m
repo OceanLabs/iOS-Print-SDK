@@ -72,14 +72,16 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"optionCell"];
     
-    UIImageView *imageView = (UIImageView *)[cell viewWithTag:10];
-    if (indexPath.row == 0){
-        imageView.image = [UIImage imageNamedInKiteBundle:@"checkmark-on"];
-    }
-    
-    
     UILabel *label = (UILabel *)[cell viewWithTag:20];
     label.text = [(NSArray *)(self.product.productTemplate.supportedOptions[self.product.productTemplate.supportedOptions.allKeys[indexPath.section]]) objectAtIndex:indexPath.row];
+    
+    UIImageView *imageView = (UIImageView *)[cell viewWithTag:10];
+    if ([self.product.selectedOptions[[self tableView:tableView titleForHeaderInSection:indexPath.section]] isEqualToString:label.text]){
+        imageView.image = [[UIImage imageNamedInKiteBundle:@"checkmark_on"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+    }
+    else{
+        imageView.image = nil;
+    }
     
     return cell;
 }
@@ -89,12 +91,12 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    UITableViewCell *cell = [self tableView:tableView cellForRowAtIndexPath:indexPath];
+    UILabel *label = (UILabel *)[cell viewWithTag:20];
+    
+    self.product.selectedOptions[[self tableView:tableView titleForHeaderInSection:indexPath.section]] = label.text;
+    
     [tableView reloadData];
-    
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.15 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-        [self.navigationController popViewControllerAnimated:YES];
-    });
-    
 }
 
 @end

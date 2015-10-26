@@ -199,6 +199,11 @@ OLAssetsPickerControllerDelegate>
             NSUInteger iphonePhotoCount = 1;
             OLProductPrintJob *job = [[OLProductPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:assetArray];
             job.uuid = [[NSUUID UUID] UUIDString];
+            
+            for (NSString *key in self.product.selectedOptions.allKeys){
+                [job setValue:self.product.selectedOptions[key] forOption:key];
+            }
+            
             OLPrintOrder *printOrder = [[OLPrintOrder alloc] init];
             NSDictionary *infoDict = [[NSBundle mainBundle] infoDictionary];
             NSString *appVersion = [infoDict objectForKey:@"CFBundleShortVersionString"];

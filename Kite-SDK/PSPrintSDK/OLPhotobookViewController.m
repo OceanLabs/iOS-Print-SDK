@@ -649,6 +649,11 @@ UINavigationControllerDelegate
     OLPhotobookPrintJob* printJob = [[OLPhotobookPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:photoAssets];
     printJob.uuid = [[NSUUID UUID] UUIDString];
     printJob.frontCover = self.coverPhoto ? [OLAsset assetWithDataSource:self.coverPhoto] : nil;
+    
+    for (NSString *key in self.product.selectedOptions.allKeys){
+        [printJob setValue:self.product.selectedOptions[key] forOption:key];
+    }
+    
     for (id<OLPrintJob> job in printOrder.jobs){
         [printOrder removePrintJob:job];
     }

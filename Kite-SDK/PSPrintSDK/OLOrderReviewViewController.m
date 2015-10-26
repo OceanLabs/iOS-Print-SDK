@@ -197,6 +197,11 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     
     OLProductPrintJob* printJob = [[OLProductPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:photoAssets];
     printJob.uuid = [[NSUUID UUID] UUIDString];
+    
+    for (NSString *key in self.product.selectedOptions.allKeys){
+        [printJob setValue:self.product.selectedOptions[key] forOption:key];
+    }
+    
     for (id<OLPrintJob> job in printOrder.jobs){
         [printOrder removePrintJob:job];
     }
