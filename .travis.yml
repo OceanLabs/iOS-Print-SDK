@@ -2,7 +2,6 @@ language: objective-c
 osx_image: xcode7.1
 podfile: Kite-SDK/Podfile
 script:
-  - xcrun simctl delete unavailable
   - xcrun simctl list
   - chmod +x Kite-SDK/enable_photos.perl
   - ./Kite-SDK/enable_photos.perl
