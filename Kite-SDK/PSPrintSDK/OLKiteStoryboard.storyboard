@@ -189,7 +189,7 @@
                     </connections>
                 </panGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="1364" y="133"/>
+            <point key="canvasLocation" x="1357" y="158"/>
         </scene>
         <!--Product Details View Controller-->
         <scene sceneID="Pxv-Ji-vpc">
@@ -351,7 +351,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="yvN-qa-nzR" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1373" y="906"/>
+            <point key="canvasLocation" x="1357" y="905"/>
         </scene>
         <!--Product Overview Page Content View Controller-->
         <scene sceneID="0If-qa-Bx3">
@@ -401,7 +401,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="493" y="918"/>
+            <point key="canvasLocation" x="493" y="905"/>
         </scene>
         <!--Kite View Controller-->
         <scene sceneID="Ayk-NT-sQ7">
@@ -479,7 +479,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hQe-al-rzP" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1078" y="-1411"/>
+            <point key="canvasLocation" x="-1100" y="-1408"/>
         </scene>
         <!--Custom Navigation Controller-->
         <scene sceneID="Xb6-HD-CEQ">
@@ -495,7 +495,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dKy-nE-KFa" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1968" y="-622"/>
+            <point key="canvasLocation" x="-1969" y="-586"/>
         </scene>
         <!--Frame Order Review View Controller-->
         <scene sceneID="6Dd-YI-JlP">
@@ -611,7 +611,7 @@
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="EcN-mE-tcF" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2965" y="174"/>
+            <point key="canvasLocation" x="2961" y="133"/>
         </scene>
         <!--Product Options View Controller-->
         <scene sceneID="HEA-qU-rt3">
@@ -716,7 +716,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Hdh-79-pnW" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1364" y="1677"/>
+            <point key="canvasLocation" x="1357" y="1676"/>
         </scene>
         <!--Scroll Crop View Controller-->
         <scene sceneID="FtM-aT-ojK">
@@ -1157,7 +1157,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="1364" y="-536"/>
+            <point key="canvasLocation" x="1364" y="-586"/>
         </scene>
         <!--Edit Photobook View Controller-->
         <scene sceneID="HfJ-UO-EWf">
@@ -1644,7 +1644,7 @@
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bnp-ON-2Gu" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1097" y="-622"/>
+            <point key="canvasLocation" x="-1100" y="-586"/>
         </scene>
         <!--Custom Navigation Controller-->
         <scene sceneID="86d-z2-lD3">
@@ -2243,7 +2243,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="pcz-Pp-cBS" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="512" y="133"/>
+            <point key="canvasLocation" x="486" y="158"/>
         </scene>
         <!--Order Review View Controller-->
         <scene sceneID="dR2-z7-yB6">
@@ -2371,7 +2371,7 @@
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="BnY-BO-vim" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2237" y="174"/>
+            <point key="canvasLocation" x="2209" y="133"/>
         </scene>
         <!--Custom Navigation Controller-->
         <scene sceneID="H4p-Au-Z7f">
@@ -2390,7 +2390,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Mck-VB-k6Y" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="493" y="-536"/>
+            <point key="canvasLocation" x="486" y="-586"/>
         </scene>
         <!--Product Type Selection View Controller-->
         <scene sceneID="VME-6Y-RI6">
@@ -2660,7 +2660,7 @@
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Vsq-oC-uOo" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-373" y="-606"/>
+            <point key="canvasLocation" x="-381" y="-586"/>
         </scene>
         <!--Postcard View Controller-->
         <scene sceneID="dKq-W6-rsf">
