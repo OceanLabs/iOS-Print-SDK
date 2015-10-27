@@ -92,13 +92,15 @@
     return self.product.productTemplate.supportedOptions.allKeys[section];
 }
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+- (BOOL)tableView:(UITableView *)tableView shouldHighlightRowAtIndexPath:(NSIndexPath *)indexPath{
     UITableViewCell *cell = [self tableView:tableView cellForRowAtIndexPath:indexPath];
     UILabel *label = (UILabel *)[cell viewWithTag:20];
     
     self.product.selectedOptions[[self tableView:tableView titleForHeaderInSection:indexPath.section]] = label.text;
     
     [tableView reloadData];
+    
+    return NO;
 }
 
 @end

@@ -13,6 +13,8 @@
 @interface OLProductDetailsViewController ()
 
 @property (weak, nonatomic) IBOutlet UIView *moreOptionsView;
+@property (weak, nonatomic) IBOutlet UILabel *selectedOptionLabel;
+@property (weak, nonatomic) IBOutlet UILabel *optionLabel;
 
 @end
 
@@ -31,6 +33,18 @@
     if (self.product.productTemplate.supportedOptions.allKeys.count == 0){
         [self.moreOptionsView removeFromSuperview];
     }
+    else if (self.product.productTemplate.supportedOptions.allKeys.count != 1){
+        [self.selectedOptionLabel removeFromSuperview];
+    }
+}
+
+- (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    
+    if (self.product.productTemplate.supportedOptions.allKeys.count == 1){
+        self.optionLabel.text = self.product.productTemplate.supportedOptions.allKeys.firstObject;
+        self.selectedOptionLabel.text = self.product.selectedOptions[self.product.productTemplate.supportedOptions.allKeys.firstObject];
+    }
 }
 
 - (CGFloat)recommendedDetailsBoxHeight{
@@ -43,17 +57,9 @@
 }
 
 - (IBAction)onOptionsClicked:(UIButton *)sender {
-    self.moreOptionsView.backgroundColor = [UIColor clearColor];
     OLProductOptionsViewController *options = [self.storyboard instantiateViewControllerWithIdentifier:@"OLProductOptionsViewController"];
     options.product = self.product;
     [self.navigationController pushViewController:options animated:YES];
-}
-
-- (IBAction)onOptionsTouchDown:(UIButton *)sender {
-    self.moreOptionsView.backgroundColor = [UIColor whiteColor];
-}
-- (IBAction)optionsCanceled:(UIButton *)sender {
-    self.moreOptionsView.backgroundColor = [UIColor clearColor];
 }
 
 
