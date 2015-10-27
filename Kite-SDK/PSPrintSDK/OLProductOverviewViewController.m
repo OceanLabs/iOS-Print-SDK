@@ -280,7 +280,7 @@
 }
 
 -(void)userDidTapOnImage{
-    if (self.detailsBoxTopCon.constant != 0){
+    if (self.detailsBoxTopCon.constant != self.originalBoxConstraint){
         [self onLabelDetailsTapped:nil];
     }
     else{
@@ -307,7 +307,7 @@
              gesture.state == UIGestureRecognizerStateCancelled){
         CGFloat percentComplete = self.detailsBoxTopCon.constant / (self.detailsViewHeightCon.constant-100.0);
         CGFloat time = [gesture velocityInView:gesture.view].y < 0 ? ABS(0.8 - (0.8 * percentComplete)) : ABS(0.8 * percentComplete);
-        self.detailsBoxTopCon.constant = [gesture velocityInView:gesture.view].y < 0 ? self.detailsViewHeightCon.constant-100 : 0;
+        self.detailsBoxTopCon.constant = [gesture velocityInView:gesture.view].y < 0 ? self.detailsViewHeightCon.constant-100 : self.originalBoxConstraint;
         [UIView animateWithDuration:time delay:0 usingSpringWithDamping:0.5 initialSpringVelocity:0 options:0 animations:^{
             self.arrowImageView.transform = [gesture velocityInView:gesture.view].y > 0 ? CGAffineTransformIdentity : CGAffineTransformMakeRotation(M_PI);
             [self.view layoutIfNeeded];
