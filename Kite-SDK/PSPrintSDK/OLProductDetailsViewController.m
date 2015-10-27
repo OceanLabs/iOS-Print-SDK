@@ -25,7 +25,7 @@
     
     NSMutableAttributedString *attributedString = [[[TSMarkdownParser standardParser] attributedStringFromMarkdown:[self.product detailsString]] mutableCopy];
     
-    [attributedString addAttribute:NSForegroundColorAttributeName value:[UIColor colorWithWhite:0.341 alpha:1.000] range:NSMakeRange(0, attributedString.length)];
+    [attributedString addAttribute:NSForegroundColorAttributeName value:self.detailsTextLabel.tintColor range:NSMakeRange(0, attributedString.length)];
     self.detailsTextLabel.attributedText = attributedString;
     
     if (self.product.productTemplate.supportedOptions.allKeys.count == 0){

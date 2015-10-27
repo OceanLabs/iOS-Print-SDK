@@ -243,7 +243,6 @@
                                         <rect key="frame" x="20" y="54" width="560" height="357"/>
                                         <animations/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <color key="textColor" red="0.3411764705882353" green="0.3411764705882353" blue="0.3411764705882353" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="F0g-2t-10C">
@@ -259,9 +258,6 @@
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uFk-yq-p6d">
                                                 <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
                                                 <animations/>
-                                                <state key="normal">
-                                                    <color key="titleColor" red="0.3411764706" green="0.3411764706" blue="0.3411764706" alpha="1" colorSpace="calibratedRGB"/>
-                                                </state>
                                                 <connections>
                                                     <action selector="onOptionsClicked:" destination="Ygu-dA-Csx" eventType="touchUpInside" id="KjW-yG-CxL"/>
                                                     <action selector="onOptionsTouchDown:" destination="Ygu-dA-Csx" eventType="touchDown" id="Ck0-Rl-OeC"/>
