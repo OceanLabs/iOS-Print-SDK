@@ -229,11 +229,17 @@
     if (printOrder){
         UIViewController *vc;
         if ([[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant isEqualToString:@"Overview-Review-Checkout"]){
-            vc = [self.storyboard instantiateViewControllerWithIdentifier:[OLKiteUtils reviewViewControllerIdentifierForProduct:self.product photoSelectionScreen:NO]];
+            BOOL photoSelection = ![self.delegate respondsToSelector:@selector(kiteControllerShouldAllowUserToAddMorePhotos:)];
+            if (!photoSelection){
+                photoSelection = [self.delegate kiteControllerShouldAllowUserToAddMorePhotos:nil]; //TODO fix this on new payment branch
+            }
+            vc = [self.storyboard instantiateViewControllerWithIdentifier:[OLKiteUtils reviewViewControllerIdentifierForProduct:self.product photoSelectionScreen:photoSelection]];
         }
         else{
             [OLKiteUtils checkoutViewControllerForPrintOrder:printOrder handler:^(id vc){
-                [[vc navigationItem] setLeftBarButtonItem:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:(OLKiteViewController *)vc action:@selector(dismiss)]];
+                if ([[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant isEqualToString:@"Checkout"]){
+                    [[vc navigationItem] setLeftBarButtonItem:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:(OLKiteViewController *)vc action:@selector(dismiss)]];
+                }
                 [vc safePerformSelector:@selector(setUserEmail:) withObject:self.userEmail];
                 [vc safePerformSelector:@selector(setUserPhone:) withObject:self.userPhone];
                 [vc safePerformSelector:@selector(setKiteDelegate:) withObject:self.delegate];

@@ -62,7 +62,7 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     [super viewDidLoad];
     
     OLKiteViewController *kiteVc = [self kiteVc];
-    if ([kiteVc printOrder]){
+    if ([kiteVc printOrder] && !self.userSelectedPhotos){
         self.userSelectedPhotos = [[NSMutableArray alloc] init];
         for (OLAsset *asset in [[kiteVc.printOrder.jobs firstObject] assetsForUploading]){
             OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];

@@ -87,7 +87,7 @@ OLAssetsPickerControllerDelegate>
 #endif
     
     OLKiteViewController *kiteVc = [self kiteVc];
-    if ([kiteVc printOrder]){
+    if ([kiteVc printOrder] && !self.userSelectedPhotos){
         self.title = NSLocalizedString(@"Review", @"");
         self.userSelectedPhotos = [[NSMutableArray alloc] init];
         for (OLAsset *asset in [[kiteVc.printOrder.jobs firstObject] assetsForUploading]){
