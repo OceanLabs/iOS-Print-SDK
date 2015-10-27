@@ -60,6 +60,10 @@
     OLProductOptionsViewController *options = [self.storyboard instantiateViewControllerWithIdentifier:@"OLProductOptionsViewController"];
     options.product = self.product;
     [self.navigationController pushViewController:options animated:YES];
+    
+    if ([self.delegate respondsToSelector:@selector(optionsButtonClicked)]){
+        [self.delegate optionsButtonClicked];
+    }
 }
 
 

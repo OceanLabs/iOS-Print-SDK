@@ -32,7 +32,7 @@
 
 @end
 
-@interface OLProductOverviewViewController () <UIPageViewControllerDataSource, OLProductOverviewPageContentViewControllerDelegate>
+@interface OLProductOverviewViewController () <UIPageViewControllerDataSource, OLProductOverviewPageContentViewControllerDelegate, OLProductDetailsDelegate>
 @property (strong, nonatomic) UIPageViewController *pageController;
 @property (strong, nonatomic) IBOutlet UIPageControl *pageControl;
 @property (weak, nonatomic) IBOutlet UILabel *costLabel;
@@ -43,6 +43,7 @@
 @property (weak, nonatomic) IBOutlet UIImageView *arrowImageView;
 @property (weak, nonatomic) IBOutlet UIView *detailsView;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *detailsViewHeightCon;
+@property (assign, nonatomic) CGFloat originalBoxConstraint;
 
 @property (strong, nonatomic) OLProductDetailsViewController *productDetails;
 
@@ -115,14 +116,26 @@
         self.callToActionLabel.textAlignment = NSTextAlignmentCenter;
     }
     
+    self.originalBoxConstraint = self.detailsBoxTopCon.constant;
+    
 }
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator{
     [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
     [coordinator animateAlongsideTransition:^(id context){
         self.detailsViewHeightCon.constant = size.height > size.width ? 450 : [self.productDetails recommendedDetailsBoxHeight];
-        self.detailsBoxTopCon.constant = self.detailsBoxTopCon.constant != 0 ? self.detailsViewHeightCon.constant-100 : 0;
+        self.detailsBoxTopCon.constant = ![self boxIsHidden] ? self.detailsViewHeightCon.constant-100 : self.originalBoxConstraint;
     }completion:NULL];
+}
+
+- (BOOL)boxIsHidden{
+    return self.detailsBoxTopCon.constant == self.originalBoxConstraint;
+}
+
+- (void)optionsButtonClicked{
+    if ([self boxIsHidden]){
+        [self onLabelDetailsTapped:nil];
+    }
 }
 
 - (UIViewController *)viewControllerAtIndex:(NSUInteger)index {
@@ -140,6 +153,7 @@
 - (void)setupDetailsView{
     self.productDetails = [self.storyboard instantiateViewControllerWithIdentifier:@"OLProductDetailsViewController"];
     self.productDetails.product = self.product;
+    self.productDetails.delegate = self;
     
     UINavigationController *nvc = [[UINavigationController alloc] initWithRootViewController:self.productDetails];
     nvc.navigationBarHidden = YES;
@@ -200,7 +214,7 @@
 }
 
 - (IBAction)onLabelDetailsTapped:(UITapGestureRecognizer *)sender {
-    self.detailsBoxTopCon.constant = self.detailsBoxTopCon.constant == 0 ? self.detailsViewHeightCon.constant-100 : 0;
+    self.detailsBoxTopCon.constant = self.detailsBoxTopCon.constant == self.originalBoxConstraint ? self.detailsViewHeightCon.constant-100 : self.originalBoxConstraint;
     [UIView animateWithDuration:0.8 delay:0 usingSpringWithDamping:0.5 initialSpringVelocity:0 options:0 animations:^{
         self.arrowImageView.transform = self.detailsBoxTopCon.constant == 0 ? CGAffineTransformIdentity : CGAffineTransformMakeRotation(M_PI);
         [self.view layoutIfNeeded];

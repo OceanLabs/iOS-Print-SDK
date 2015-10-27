@@ -9,10 +9,17 @@
 #import <UIKit/UIKit.h>
 #import "OLProduct.h"
 
+@protocol OLProductDetailsDelegate <NSObject>
+
+-(void)optionsButtonClicked;
+
+@end
+
 @interface OLProductDetailsViewController : UIViewController
 
 @property (weak, nonatomic) IBOutlet UILabel *detailsTextLabel;
 @property (strong, nonatomic) OLProduct *product;
+@property (weak, nonatomic) id<OLProductDetailsDelegate> delegate;
 
 - (CGFloat)recommendedDetailsBoxHeight;
 
