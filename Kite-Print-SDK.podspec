@@ -30,7 +30,7 @@ Pod::Spec.new do |spec|
 
   spec.subspec 'PayPal' do |paypal|
     paypal.xcconfig	=  { 'OTHER_CFLAGS' => '$(inherited) -DOL_KITE_OFFER_PAYPAL' }
-    paypal.dependency	'PayPal-iOS-SDK', '~> 2.12.3'
+    paypal.dependency	'PayPal-iOS-SDK', '~> 2.12.4'
   end
 
   spec.subspec 'ApplePay' do |apple|
