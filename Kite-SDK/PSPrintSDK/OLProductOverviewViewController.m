@@ -134,7 +134,7 @@
 
 - (void)optionsButtonClicked{
     if ([self boxIsHidden]){
-        [self onLabelDetailsTapped:nil];
+        [self onLabelDetailsTapped:nil useSpringAnimation:NO];
     }
 }
 
@@ -213,15 +213,22 @@
     [self onButtonStartClicked:nil];
 }
 
-- (IBAction)onLabelDetailsTapped:(UITapGestureRecognizer *)sender {
+- (void)onLabelDetailsTapped:(UITapGestureRecognizer *)sender useSpringAnimation:(BOOL)spring{
+    if (self.detailsBoxTopCon.constant != self.originalBoxConstraint){
+        [(UINavigationController *)self.productDetails.parentViewController popToRootViewControllerAnimated:YES];
+    }
     self.detailsBoxTopCon.constant = self.detailsBoxTopCon.constant == self.originalBoxConstraint ? self.detailsViewHeightCon.constant-100 : self.originalBoxConstraint;
-    [UIView animateWithDuration:0.8 delay:0 usingSpringWithDamping:0.5 initialSpringVelocity:0 options:0 animations:^{
-        self.arrowImageView.transform = self.detailsBoxTopCon.constant == 0 ? CGAffineTransformIdentity : CGAffineTransformMakeRotation(M_PI);
+    [UIView animateWithDuration:spring ? 0.8 : 0.4 delay:0 usingSpringWithDamping:spring ? 0.5 : 1 initialSpringVelocity:0 options:0 animations:^{
+        self.arrowImageView.transform = self.detailsBoxTopCon.constant == self.originalBoxConstraint ? CGAffineTransformIdentity : CGAffineTransformMakeRotation(M_PI);
         [self.view layoutIfNeeded];
     }completion:^(BOOL finished){
         
     }];
     
+}
+
+- (IBAction)onLabelDetailsTapped:(UITapGestureRecognizer *)sender{
+    [self onLabelDetailsTapped:sender useSpringAnimation:YES];
 }
 
 - (IBAction)onButtonCallToActionClicked:(id)sender {
@@ -281,7 +288,7 @@
 
 -(void)userDidTapOnImage{
     if (self.detailsBoxTopCon.constant != self.originalBoxConstraint){
-        [self onLabelDetailsTapped:nil];
+        [self onLabelDetailsTapped:nil useSpringAnimation:YES];
     }
     else{
         [self onButtonStartClicked:nil];
@@ -299,16 +306,27 @@
         CGPoint translate = [gesture translationInView:gesture.view.superview];
         self.detailsBoxTopCon.constant = MIN(originalY - translate.y, self.detailsViewHeightCon.constant);
         
-        CGFloat percentComplete = self.detailsBoxTopCon.constant / (self.detailsViewHeightCon.constant-100.0);
+        CGFloat percentComplete = MAX(self.detailsBoxTopCon.constant - self.originalBoxConstraint, 0) / (self.detailsViewHeightCon.constant-100.0-self.originalBoxConstraint);
         self.arrowImageView.transform = CGAffineTransformMakeRotation(M_PI * MIN(percentComplete, 1));
+        
+        if (translate.y != 0){
+            [(UINavigationController *)self.productDetails.parentViewController popToRootViewControllerAnimated:YES];
+        }
     }
     else if (gesture.state == UIGestureRecognizerStateEnded ||
              gesture.state == UIGestureRecognizerStateFailed ||
              gesture.state == UIGestureRecognizerStateCancelled){
-        CGFloat percentComplete = self.detailsBoxTopCon.constant / (self.detailsViewHeightCon.constant-100.0);
-        CGFloat time = [gesture velocityInView:gesture.view].y < 0 ? ABS(0.8 - (0.8 * percentComplete)) : ABS(0.8 * percentComplete);
-        self.detailsBoxTopCon.constant = [gesture velocityInView:gesture.view].y < 0 ? self.detailsViewHeightCon.constant-100 : self.originalBoxConstraint;
-        [UIView animateWithDuration:time delay:0 usingSpringWithDamping:0.5 initialSpringVelocity:0 options:0 animations:^{
+        
+        CGFloat start = self.detailsBoxTopCon.constant;
+        self.detailsBoxTopCon.constant = [gesture velocityInView:gesture.view].y < 0 ? self.detailsViewHeightCon.constant-100.0 : self.originalBoxConstraint;
+        
+        CGFloat distance = ABS(start - self.detailsBoxTopCon.constant);
+        CGFloat total = self.detailsViewHeightCon.constant-100.0-self.originalBoxConstraint;
+        CGFloat percentComplete = 1 - distance / total;
+
+        CGFloat damping = ABS(0.5 + (0.5 * percentComplete)*(0.5 * percentComplete));
+        CGFloat time = ABS(0.8 - (0.8 * percentComplete));
+        [UIView animateWithDuration:time delay:0 usingSpringWithDamping:damping initialSpringVelocity:0 options:0 animations:^{
             self.arrowImageView.transform = [gesture velocityInView:gesture.view].y > 0 ? CGAffineTransformIdentity : CGAffineTransformMakeRotation(M_PI);
             [self.view layoutIfNeeded];
         }completion:^(BOOL finished){

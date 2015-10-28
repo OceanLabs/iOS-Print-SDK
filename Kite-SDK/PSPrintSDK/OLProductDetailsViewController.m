@@ -59,7 +59,9 @@
 - (IBAction)onOptionsClicked:(UIButton *)sender {
     OLProductOptionsViewController *options = [self.storyboard instantiateViewControllerWithIdentifier:@"OLProductOptionsViewController"];
     options.product = self.product;
-    [self.navigationController pushViewController:options animated:YES];
+    [UIView animateWithDuration:0.25 animations:^{
+        [self.navigationController pushViewController:options animated:YES];
+    }];
     
     if ([self.delegate respondsToSelector:@selector(optionsButtonClicked)]){
         [self.delegate optionsButtonClicked];
