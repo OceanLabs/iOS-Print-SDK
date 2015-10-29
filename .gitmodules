@@ -13,3 +13,6 @@
 [submodule "Kite-SDK/vendor/MPFlipViewController"]
 	path = Kite-SDK/vendor/MPFlipViewController
 	url = https://github.com/mpospese/MPFlipViewController.git
+[submodule "Kite-SDK/vendor/DACircularProgress"]
+	path = Kite-SDK/vendor/DACircularProgress
+	url = https://github.com/danielamitay/DACircularProgress.git

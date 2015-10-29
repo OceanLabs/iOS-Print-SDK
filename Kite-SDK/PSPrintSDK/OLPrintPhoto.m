@@ -8,7 +8,7 @@
 
 #import "OLPrintPhoto.h"
 #import <AssetsLibrary/AssetsLibrary.h>
-#import <SDWebImage/SDWebImageManager.h>
+#import "SDWebImageManager.h"
 #import "RMImageCropper.h"
 #import "ALAssetsLibrary+Singleton.h"
 #import "OLKiteUtils.h"
