@@ -6,6 +6,7 @@
   "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
     "DE1BCDB9BD2BF95E86A6E4610C039E0FEADFD758" : 0,
     "9015EB48116202885FDED716D35167A5D0CCD9C6" : 0,
+    "9E1ECC80773D1F4F22D03CB4DEA298B3CB57FAF5" : 0,
     "117B65B3A14F5CB598DC962723F820AC63399A6A" : 0,
     "98E520DDA0AE776CF47A7A4A2C7C2ABBE041AE69" : 0,
     "52A24398B96ECA98EF0E72469CA9225C49AA7C9D" : 0,
@@ -17,6 +18,7 @@
   "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
     "DE1BCDB9BD2BF95E86A6E4610C039E0FEADFD758" : "iOS-Print-SDK\/Kite-SDK\/vendor\/MPFlipViewController\/",
     "9015EB48116202885FDED716D35167A5D0CCD9C6" : "iOS-Print-SDK\/Kite-SDK\/vendor\/TSMarkdownParser\/",
+    "9E1ECC80773D1F4F22D03CB4DEA298B3CB57FAF5" : "iOS-Print-SDK\/Kite-SDK\/vendor\/SVProgressHUD\/",
     "117B65B3A14F5CB598DC962723F820AC63399A6A" : "iOS-Print-SDK\/Kite-SDK\/vendor\/SkyLab\/",
     "98E520DDA0AE776CF47A7A4A2C7C2ABBE041AE69" : "iOS-Print-SDK\/",
     "52A24398B96ECA98EF0E72469CA9225C49AA7C9D" : "iOS-Print-SDK\/Kite-SDK\/vendor\/DACircularProgress\/",
@@ -52,6 +54,11 @@
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:OceanLabs\/iOS-Print-SDK.git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "98E520DDA0AE776CF47A7A4A2C7C2ABBE041AE69"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/TransitApp\/SVProgressHUD.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "9E1ECC80773D1F4F22D03CB4DEA298B3CB57FAF5"
     },
     {
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/AFNetworking\/AFNetworking.git",

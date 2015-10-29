@@ -10,7 +10,7 @@
 #import "OLReceiptViewController.h"
 #import "OLPrintOrder.h"
 #import "OLPrintJob.h"
-#import <SVProgressHUD/SVProgressHUD.h>
+#import "SVProgressHUD.h"
 #import "OLPrintOrder+History.h"
 #import "OLPostcardPrintJob.h"
 #import "OLCheckoutViewController.h"
@@ -28,7 +28,7 @@
 #import "OLBaseRequest.h"
 #import "OLPrintOrderCost.h"
 #import "OLKiteABTesting.h"
-#import <SDWebImage/SDWebImageManager.h>
+#import "SDWebImageManager.h"
 #import "UIImage+ColorAtPixel.h"
 #import "UIImage+ImageNamedInKiteBundle.h"
 

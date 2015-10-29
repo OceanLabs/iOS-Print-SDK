@@ -190,6 +190,10 @@
 		E29C840C1BE286280041D4CF /* DACircularProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C84091BE286280041D4CF /* DACircularProgressView.m */; };
 		E29C840D1BE286280041D4CF /* DALabeledCircularProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C840B1BE286280041D4CF /* DALabeledCircularProgressView.m */; };
 		E29C84111BE286C40041D4CF /* TSMarkdownParser.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C84101BE286C40041D4CF /* TSMarkdownParser.m */; };
+		E29C841B1BE2877A0041D4CF /* SVIndefiniteAnimatedView.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C84141BE2877A0041D4CF /* SVIndefiniteAnimatedView.m */; };
+		E29C841C1BE2877A0041D4CF /* SVProgressHUD.bundle in Resources */ = {isa = PBXBuildFile; fileRef = E29C84161BE2877A0041D4CF /* SVProgressHUD.bundle */; };
+		E29C841D1BE2877A0041D4CF /* SVProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C84181BE2877A0041D4CF /* SVProgressHUD.m */; };
+		E29C841E1BE2877A0041D4CF /* SVRadialGradientLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C841A1BE2877A0041D4CF /* SVRadialGradientLayer.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -559,6 +563,14 @@
 		E29C840B1BE286280041D4CF /* DALabeledCircularProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DALabeledCircularProgressView.m; path = vendor/DACircularProgress/DACircularProgress/DALabeledCircularProgressView.m; sourceTree = "<group>"; };
 		E29C840F1BE286C40041D4CF /* TSMarkdownParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TSMarkdownParser.h; path = vendor/TSMarkdownParser/TSMarkdownParser/TSMarkdownParser.h; sourceTree = "<group>"; };
 		E29C84101BE286C40041D4CF /* TSMarkdownParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TSMarkdownParser.m; path = vendor/TSMarkdownParser/TSMarkdownParser/TSMarkdownParser.m; sourceTree = "<group>"; };
+		E29C84131BE2877A0041D4CF /* SVIndefiniteAnimatedView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SVIndefiniteAnimatedView.h; path = vendor/SVProgressHUD/SVProgressHUD/SVIndefiniteAnimatedView.h; sourceTree = "<group>"; };
+		E29C84141BE2877A0041D4CF /* SVIndefiniteAnimatedView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SVIndefiniteAnimatedView.m; path = vendor/SVProgressHUD/SVProgressHUD/SVIndefiniteAnimatedView.m; sourceTree = "<group>"; };
+		E29C84151BE2877A0041D4CF /* SVProgressHUD-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "SVProgressHUD-Prefix.pch"; path = "vendor/SVProgressHUD/SVProgressHUD/SVProgressHUD-Prefix.pch"; sourceTree = "<group>"; };
+		E29C84161BE2877A0041D4CF /* SVProgressHUD.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = SVProgressHUD.bundle; path = vendor/SVProgressHUD/SVProgressHUD/SVProgressHUD.bundle; sourceTree = "<group>"; };
+		E29C84171BE2877A0041D4CF /* SVProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SVProgressHUD.h; path = vendor/SVProgressHUD/SVProgressHUD/SVProgressHUD.h; sourceTree = "<group>"; };
+		E29C84181BE2877A0041D4CF /* SVProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SVProgressHUD.m; path = vendor/SVProgressHUD/SVProgressHUD/SVProgressHUD.m; sourceTree = "<group>"; };
+		E29C84191BE2877A0041D4CF /* SVRadialGradientLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SVRadialGradientLayer.h; path = vendor/SVProgressHUD/SVProgressHUD/SVRadialGradientLayer.h; sourceTree = "<group>"; };
+		E29C841A1BE2877A0041D4CF /* SVRadialGradientLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SVRadialGradientLayer.m; path = vendor/SVProgressHUD/SVProgressHUD/SVRadialGradientLayer.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1090,6 +1102,7 @@
 		E29C839D1BE275C40041D4CF /* Vendor */ = {
 			isa = PBXGroup;
 			children = (
+				E29C84121BE287130041D4CF /* SVProgressHUD */,
 				E29C840E1BE286A20041D4CF /* TSMarkdownParser */,
 				E29C84071BE286110041D4CF /* DACircularProgress */,
 				E29C83F81BE2853F0041D4CF /* MPFlipViewController */,
@@ -1224,6 +1237,21 @@
 			name = TSMarkdownParser;
 			sourceTree = "<group>";
 		};
+		E29C84121BE287130041D4CF /* SVProgressHUD */ = {
+			isa = PBXGroup;
+			children = (
+				E29C84131BE2877A0041D4CF /* SVIndefiniteAnimatedView.h */,
+				E29C84141BE2877A0041D4CF /* SVIndefiniteAnimatedView.m */,
+				E29C84151BE2877A0041D4CF /* SVProgressHUD-Prefix.pch */,
+				E29C84161BE2877A0041D4CF /* SVProgressHUD.bundle */,
+				E29C84171BE2877A0041D4CF /* SVProgressHUD.h */,
+				E29C84181BE2877A0041D4CF /* SVProgressHUD.m */,
+				E29C84191BE2877A0041D4CF /* SVRadialGradientLayer.h */,
+				E29C841A1BE2877A0041D4CF /* SVRadialGradientLayer.m */,
+			);
+			name = SVProgressHUD;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1355,6 +1383,7 @@
 				2E39CAA51AB89515008B1EFF /* OLPhotoSelectionButton.xib in Resources */,
 				2E85BC9919A24CB200EC7CC2 /* KitePrintSDK.strings in Resources */,
 				CD73BF84186215790009DE03 /* Images.xcassets in Resources */,
+				E29C841C1BE2877A0041D4CF /* SVProgressHUD.bundle in Resources */,
 				CD93BB481879EA4F00316492 /* KitePrintSDK.xcassets in Resources */,
 				CD73BF76186215790009DE03 /* InfoPlist.strings in Resources */,
 				3D6CDAAD1B1F41AE00786478 /* kite_corrupt.jpg in Resources */,
@@ -1450,6 +1479,7 @@
 			files = (
 				CDE0744B188D7730009ADFA2 /* OLURLDataSource.m in Sources */,
 				E29C83C81BE276050041D4CF /* SDWebImagePrefetcher.m in Sources */,
+				E29C841B1BE2877A0041D4CF /* SVIndefiniteAnimatedView.m in Sources */,
 				2E0A72661A6FB07000BC5AE7 /* OLScrollCropViewController.m in Sources */,
 				2E8C29ED1B18D1AC0045DC21 /* OLPrintOrderCostRequest.m in Sources */,
 				2EF53E3E1B5549B900BF936A /* OLInfoPageViewController.m in Sources */,
@@ -1464,6 +1494,7 @@
 				E29C840C1BE286280041D4CF /* DACircularProgressView.m in Sources */,
 				2E676C2B1B33FD70005E068B /* OLPopupOptionsImageView.m in Sources */,
 				E29C83F11BE2829C0041D4CF /* AFHTTPSessionManager.m in Sources */,
+				E29C841D1BE2877A0041D4CF /* SVProgressHUD.m in Sources */,
 				3D0D7ACC1AC0C44C00746FC8 /* NSArray+QueryingExtras.m in Sources */,
 				2EA8292E1B9DE54100A9208E /* ALAsset+OLAccessibilityLabel.m in Sources */,
 				CD97569518E083E3007CA090 /* PrintOrderHistoryViewController.m in Sources */,
@@ -1474,6 +1505,7 @@
 				2E3F96AF1A4967FF005C0EA3 /* OLProduct.m in Sources */,
 				2EE3C86D1A4ADDDB006446E2 /* OLWhiteSquare.m in Sources */,
 				2E39CAA81AB89541008B1EFF /* OLPhotoSelectionButton.m in Sources */,
+				E29C841E1BE2877A0041D4CF /* SVRadialGradientLayer.m in Sources */,
 				E29C84111BE286C40041D4CF /* TSMarkdownParser.m in Sources */,
 				E29C83F51BE2829C0041D4CF /* AFURLRequestSerialization.m in Sources */,
 				CD93BB3E187882A300316492 /* OLAddressEditViewController.m in Sources */,
