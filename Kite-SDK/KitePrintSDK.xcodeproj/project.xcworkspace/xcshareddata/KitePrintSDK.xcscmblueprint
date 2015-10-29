@@ -7,6 +7,7 @@
     "701B5006D938B65FD42237DDAF25824304CA7A66" : 0,
     "E28E36D423EC87798E52E2BF482E9F7A1E6479D6" : 0,
     "98E520DDA0AE776CF47A7A4A2C7C2ABBE041AE69" : 0,
+    "DD20A1A48C66B5213E0FEBB87A95EF51D6C6F3E8" : 0,
     "117B65B3A14F5CB598DC962723F820AC63399A6A" : 0
   },
   "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "6F77CFD9-0E83-4062-AC28-1F4AB1A98ECF",
@@ -14,6 +15,7 @@
     "701B5006D938B65FD42237DDAF25824304CA7A66" : "iOS-Print-SDK\/Kite-SDK\/vendor\/CSStickyHeaderFlowLayout\/",
     "E28E36D423EC87798E52E2BF482E9F7A1E6479D6" : "iOS-Print-SDK\/Kite-SDK\/vendor\/SDWebImage\/",
     "98E520DDA0AE776CF47A7A4A2C7C2ABBE041AE69" : "iOS-Print-SDK\/",
+    "DD20A1A48C66B5213E0FEBB87A95EF51D6C6F3E8" : "iOS-Print-SDK\/Kite-SDK\/vendor\/AFNetworking\/",
     "117B65B3A14F5CB598DC962723F820AC63399A6A" : "iOS-Print-SDK\/Kite-SDK\/vendor\/SkyLab\/"
   },
   "DVTSourceControlWorkspaceBlueprintNameKey" : "KitePrintSDK",
@@ -34,6 +36,11 @@
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:OceanLabs\/iOS-Print-SDK.git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "98E520DDA0AE776CF47A7A4A2C7C2ABBE041AE69"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/AFNetworking\/AFNetworking.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "DD20A1A48C66B5213E0FEBB87A95EF51D6C6F3E8"
     },
     {
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/rs\/SDWebImage.git",

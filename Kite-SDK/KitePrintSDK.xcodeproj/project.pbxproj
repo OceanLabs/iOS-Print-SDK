@@ -174,6 +174,15 @@
 		E29C83D31BE277E60041D4CF /* SkyLab.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C83D21BE277E60041D4CF /* SkyLab.m */; };
 		E29C83D91BE280EA0041D4CF /* CSStickyHeaderFlowLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C83D61BE280EA0041D4CF /* CSStickyHeaderFlowLayout.m */; };
 		E29C83DA1BE280EA0041D4CF /* CSStickyHeaderFlowLayoutAttributes.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C83D81BE280EA0041D4CF /* CSStickyHeaderFlowLayoutAttributes.m */; };
+		E29C83EF1BE2829C0041D4CF /* AFHTTPRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C83DD1BE2829C0041D4CF /* AFHTTPRequestOperation.m */; };
+		E29C83F01BE2829C0041D4CF /* AFHTTPRequestOperationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C83DF1BE2829C0041D4CF /* AFHTTPRequestOperationManager.m */; };
+		E29C83F11BE2829C0041D4CF /* AFHTTPSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C83E11BE2829C0041D4CF /* AFHTTPSessionManager.m */; };
+		E29C83F21BE2829C0041D4CF /* AFNetworkReachabilityManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C83E41BE2829C0041D4CF /* AFNetworkReachabilityManager.m */; };
+		E29C83F31BE2829C0041D4CF /* AFSecurityPolicy.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C83E61BE2829C0041D4CF /* AFSecurityPolicy.m */; };
+		E29C83F41BE2829C0041D4CF /* AFURLConnectionOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C83E81BE2829C0041D4CF /* AFURLConnectionOperation.m */; };
+		E29C83F51BE2829C0041D4CF /* AFURLRequestSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C83EA1BE2829C0041D4CF /* AFURLRequestSerialization.m */; };
+		E29C83F61BE2829C0041D4CF /* AFURLResponseSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C83EC1BE2829C0041D4CF /* AFURLResponseSerialization.m */; };
+		E29C83F71BE2829C0041D4CF /* AFURLSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C83EE1BE2829C0041D4CF /* AFURLSessionManager.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -508,6 +517,25 @@
 		E29C83D61BE280EA0041D4CF /* CSStickyHeaderFlowLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CSStickyHeaderFlowLayout.m; path = vendor/CSStickyHeaderFlowLayout/Classes/CSStickyHeaderFlowLayout.m; sourceTree = "<group>"; };
 		E29C83D71BE280EA0041D4CF /* CSStickyHeaderFlowLayoutAttributes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CSStickyHeaderFlowLayoutAttributes.h; path = vendor/CSStickyHeaderFlowLayout/Classes/CSStickyHeaderFlowLayoutAttributes.h; sourceTree = "<group>"; };
 		E29C83D81BE280EA0041D4CF /* CSStickyHeaderFlowLayoutAttributes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CSStickyHeaderFlowLayoutAttributes.m; path = vendor/CSStickyHeaderFlowLayout/Classes/CSStickyHeaderFlowLayoutAttributes.m; sourceTree = "<group>"; };
+		E29C83DC1BE2829C0041D4CF /* AFHTTPRequestOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFHTTPRequestOperation.h; path = vendor/AFNetworking/AFNetworking/AFHTTPRequestOperation.h; sourceTree = "<group>"; };
+		E29C83DD1BE2829C0041D4CF /* AFHTTPRequestOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFHTTPRequestOperation.m; path = vendor/AFNetworking/AFNetworking/AFHTTPRequestOperation.m; sourceTree = "<group>"; };
+		E29C83DE1BE2829C0041D4CF /* AFHTTPRequestOperationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFHTTPRequestOperationManager.h; path = vendor/AFNetworking/AFNetworking/AFHTTPRequestOperationManager.h; sourceTree = "<group>"; };
+		E29C83DF1BE2829C0041D4CF /* AFHTTPRequestOperationManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFHTTPRequestOperationManager.m; path = vendor/AFNetworking/AFNetworking/AFHTTPRequestOperationManager.m; sourceTree = "<group>"; };
+		E29C83E01BE2829C0041D4CF /* AFHTTPSessionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFHTTPSessionManager.h; path = vendor/AFNetworking/AFNetworking/AFHTTPSessionManager.h; sourceTree = "<group>"; };
+		E29C83E11BE2829C0041D4CF /* AFHTTPSessionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFHTTPSessionManager.m; path = vendor/AFNetworking/AFNetworking/AFHTTPSessionManager.m; sourceTree = "<group>"; };
+		E29C83E21BE2829C0041D4CF /* AFNetworking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFNetworking.h; path = vendor/AFNetworking/AFNetworking/AFNetworking.h; sourceTree = "<group>"; };
+		E29C83E31BE2829C0041D4CF /* AFNetworkReachabilityManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFNetworkReachabilityManager.h; path = vendor/AFNetworking/AFNetworking/AFNetworkReachabilityManager.h; sourceTree = "<group>"; };
+		E29C83E41BE2829C0041D4CF /* AFNetworkReachabilityManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFNetworkReachabilityManager.m; path = vendor/AFNetworking/AFNetworking/AFNetworkReachabilityManager.m; sourceTree = "<group>"; };
+		E29C83E51BE2829C0041D4CF /* AFSecurityPolicy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFSecurityPolicy.h; path = vendor/AFNetworking/AFNetworking/AFSecurityPolicy.h; sourceTree = "<group>"; };
+		E29C83E61BE2829C0041D4CF /* AFSecurityPolicy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFSecurityPolicy.m; path = vendor/AFNetworking/AFNetworking/AFSecurityPolicy.m; sourceTree = "<group>"; };
+		E29C83E71BE2829C0041D4CF /* AFURLConnectionOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFURLConnectionOperation.h; path = vendor/AFNetworking/AFNetworking/AFURLConnectionOperation.h; sourceTree = "<group>"; };
+		E29C83E81BE2829C0041D4CF /* AFURLConnectionOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFURLConnectionOperation.m; path = vendor/AFNetworking/AFNetworking/AFURLConnectionOperation.m; sourceTree = "<group>"; };
+		E29C83E91BE2829C0041D4CF /* AFURLRequestSerialization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFURLRequestSerialization.h; path = vendor/AFNetworking/AFNetworking/AFURLRequestSerialization.h; sourceTree = "<group>"; };
+		E29C83EA1BE2829C0041D4CF /* AFURLRequestSerialization.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFURLRequestSerialization.m; path = vendor/AFNetworking/AFNetworking/AFURLRequestSerialization.m; sourceTree = "<group>"; };
+		E29C83EB1BE2829C0041D4CF /* AFURLResponseSerialization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFURLResponseSerialization.h; path = vendor/AFNetworking/AFNetworking/AFURLResponseSerialization.h; sourceTree = "<group>"; };
+		E29C83EC1BE2829C0041D4CF /* AFURLResponseSerialization.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFURLResponseSerialization.m; path = vendor/AFNetworking/AFNetworking/AFURLResponseSerialization.m; sourceTree = "<group>"; };
+		E29C83ED1BE2829C0041D4CF /* AFURLSessionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFURLSessionManager.h; path = vendor/AFNetworking/AFNetworking/AFURLSessionManager.h; sourceTree = "<group>"; };
+		E29C83EE1BE2829C0041D4CF /* AFURLSessionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFURLSessionManager.m; path = vendor/AFNetworking/AFNetworking/AFURLSessionManager.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1039,6 +1067,7 @@
 		E29C839D1BE275C40041D4CF /* Vendor */ = {
 			isa = PBXGroup;
 			children = (
+				E29C83DB1BE282700041D4CF /* AFNetworking */,
 				E29C83D41BE280B00041D4CF /* CSStickyHeaderFlowLayout */,
 				E29C83D01BE277CF0041D4CF /* SkyLab */,
 				E29C839E1BE275CE0041D4CF /* SDWebImage */,
@@ -1104,6 +1133,32 @@
 				E29C83D81BE280EA0041D4CF /* CSStickyHeaderFlowLayoutAttributes.m */,
 			);
 			name = CSStickyHeaderFlowLayout;
+			sourceTree = "<group>";
+		};
+		E29C83DB1BE282700041D4CF /* AFNetworking */ = {
+			isa = PBXGroup;
+			children = (
+				E29C83DC1BE2829C0041D4CF /* AFHTTPRequestOperation.h */,
+				E29C83DD1BE2829C0041D4CF /* AFHTTPRequestOperation.m */,
+				E29C83DE1BE2829C0041D4CF /* AFHTTPRequestOperationManager.h */,
+				E29C83DF1BE2829C0041D4CF /* AFHTTPRequestOperationManager.m */,
+				E29C83E01BE2829C0041D4CF /* AFHTTPSessionManager.h */,
+				E29C83E11BE2829C0041D4CF /* AFHTTPSessionManager.m */,
+				E29C83E21BE2829C0041D4CF /* AFNetworking.h */,
+				E29C83E31BE2829C0041D4CF /* AFNetworkReachabilityManager.h */,
+				E29C83E41BE2829C0041D4CF /* AFNetworkReachabilityManager.m */,
+				E29C83E51BE2829C0041D4CF /* AFSecurityPolicy.h */,
+				E29C83E61BE2829C0041D4CF /* AFSecurityPolicy.m */,
+				E29C83E71BE2829C0041D4CF /* AFURLConnectionOperation.h */,
+				E29C83E81BE2829C0041D4CF /* AFURLConnectionOperation.m */,
+				E29C83E91BE2829C0041D4CF /* AFURLRequestSerialization.h */,
+				E29C83EA1BE2829C0041D4CF /* AFURLRequestSerialization.m */,
+				E29C83EB1BE2829C0041D4CF /* AFURLResponseSerialization.h */,
+				E29C83EC1BE2829C0041D4CF /* AFURLResponseSerialization.m */,
+				E29C83ED1BE2829C0041D4CF /* AFURLSessionManager.h */,
+				E29C83EE1BE2829C0041D4CF /* AFURLSessionManager.m */,
+			);
+			name = AFNetworking;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1340,8 +1395,10 @@
 				2EF53E3B1B55421A00BF936A /* UIImage+ColorAtPixel.m in Sources */,
 				CDA8BF5718D70D0F00D835BB /* OLCheckoutViewController.m in Sources */,
 				2EB4BD681AE128740004CEE0 /* OLPhotobookViewController.m in Sources */,
+				E29C83F21BE2829C0041D4CF /* AFNetworkReachabilityManager.m in Sources */,
 				2E21DA4E1B9843CF00D9162F /* OLAssetItemViewController.m in Sources */,
 				2E676C2B1B33FD70005E068B /* OLPopupOptionsImageView.m in Sources */,
+				E29C83F11BE2829C0041D4CF /* AFHTTPSessionManager.m in Sources */,
 				3D0D7ACC1AC0C44C00746FC8 /* NSArray+QueryingExtras.m in Sources */,
 				2EA8292E1B9DE54100A9208E /* ALAsset+OLAccessibilityLabel.m in Sources */,
 				CD97569518E083E3007CA090 /* PrintOrderHistoryViewController.m in Sources */,
@@ -1352,6 +1409,7 @@
 				2E3F96AF1A4967FF005C0EA3 /* OLProduct.m in Sources */,
 				2EE3C86D1A4ADDDB006446E2 /* OLWhiteSquare.m in Sources */,
 				2E39CAA81AB89541008B1EFF /* OLPhotoSelectionButton.m in Sources */,
+				E29C83F51BE2829C0041D4CF /* AFURLRequestSerialization.m in Sources */,
 				CD93BB3E187882A300316492 /* OLAddressEditViewController.m in Sources */,
 				2EA13E231BBC242F005F3D71 /* OLKiteUtils.m in Sources */,
 				2EA829301B9DE54100A9208E /* ALAsset+OLIsEqual.m in Sources */,
@@ -1363,6 +1421,7 @@
 				2EA8BEBD1A484FCB008A9248 /* OLFrameOrderReviewViewController.m in Sources */,
 				2E333CCA1BC7D1850092E42A /* OLApparelPrintJob.m in Sources */,
 				2EE3C8701A4AFB0C006446E2 /* OLKiteViewController.m in Sources */,
+				E29C83F31BE2829C0041D4CF /* AFSecurityPolicy.m in Sources */,
 				2E20BD891AD42E2200FB2446 /* OLPostcardViewController.m in Sources */,
 				2EB4BD6B1AE13F520004CEE0 /* OLPhotobookPageContentViewController.m in Sources */,
 				2E21DA571B9843CF00D9162F /* OLAssetsViewControllerTransition.m in Sources */,
@@ -1370,6 +1429,7 @@
 				3D8122F31A75A46D004E7297 /* UIImageView+FadeIn.m in Sources */,
 				CD73BFAA1863180A0009DE03 /* OLAddressSearchRequest.m in Sources */,
 				CD550BDC1886BF8B00782D75 /* OLPayPalCard.m in Sources */,
+				E29C83F61BE2829C0041D4CF /* AFURLResponseSerialization.m in Sources */,
 				CD9CF4A318758BDF00F067B6 /* OLProductPrintJob.m in Sources */,
 				2E5259011A9C91DF00DBC69B /* OLSingleImageProductReviewViewController.m in Sources */,
 				E29C83C71BE276050041D4CF /* SDWebImageManager.m in Sources */,
@@ -1405,12 +1465,14 @@
 				CD97569118D8FDF4007CA090 /* OLProductTemplateSyncRequest.m in Sources */,
 				2E21DA531B9843CF00D9162F /* OLAssetsPickerController.m in Sources */,
 				E29C83C61BE276050041D4CF /* SDWebImageDownloaderOperation.m in Sources */,
+				E29C83EF1BE2829C0041D4CF /* AFHTTPRequestOperation.m in Sources */,
 				2EA829311B9DE54100A9208E /* ALAssetsGroup+OLIsEqual.m in Sources */,
 				2E21DA551B9843CF00D9162F /* OLAssetsViewCell.m in Sources */,
 				2E5258FE1A9C884700DBC69B /* OLProductTypeSelectionViewController.m in Sources */,
 				CD95AA78186F31BB0097C328 /* OLPrintOrderRequest.m in Sources */,
 				2EAC21541B9EDDC000C41BD4 /* OLRemoteImageCropper.m in Sources */,
 				2E21DA511B9843CF00D9162F /* OLAssetsGroupViewController.m in Sources */,
+				E29C83F01BE2829C0041D4CF /* AFHTTPRequestOperationManager.m in Sources */,
 				3DEF0D1B1A964B4E000F1E66 /* UITextField+Selection.m in Sources */,
 				3D8122F41A75A46D004E7297 /* UITableViewController+ScreenWidthFactor.m in Sources */,
 				2ED5DEBF1AC948C1003301A8 /* LXReorderableCollectionViewFlowLayout.m in Sources */,
@@ -1433,10 +1495,12 @@
 				2E21DA501B9843CF00D9162F /* OLAssetsGroupViewCell.m in Sources */,
 				E29C83C41BE276050041D4CF /* SDWebImageDecoder.m in Sources */,
 				CD9D6AE5187189BF001CD1F9 /* OLPostcardPrintJob.m in Sources */,
+				E29C83F71BE2829C0041D4CF /* AFURLSessionManager.m in Sources */,
 				3DF9D7011B0F65C700A40C0C /* NSObject+Utils.m in Sources */,
 				2E0E250F1A77997E00808ED8 /* OLAnalytics.m in Sources */,
 				2E973EEE1A7A5D0E00488212 /* OLCircleMaskCollectionViewCell.m in Sources */,
 				3D17795A1A1E1D6800BE3E58 /* OLCreditCardCaptureViewController.m in Sources */,
+				E29C83F41BE2829C0041D4CF /* AFURLConnectionOperation.m in Sources */,
 				2E39CAA31AB894A8008B1EFF /* OLPhotoSelectionViewController.m in Sources */,
 				CD550A68187B30D200782D75 /* OLAddressLookupViewController.m in Sources */,
 				2EB1C4111B551D6000EFE0D0 /* OLKiteABTesting.m in Sources */,
