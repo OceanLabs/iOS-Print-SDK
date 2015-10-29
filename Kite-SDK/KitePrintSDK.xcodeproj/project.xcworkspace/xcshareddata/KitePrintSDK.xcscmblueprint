@@ -13,7 +13,8 @@
     "52A24398B96ECA98EF0E72469CA9225C49AA7C9D" : 0,
     "E28E36D423EC87798E52E2BF482E9F7A1E6479D6" : 0,
     "701B5006D938B65FD42237DDAF25824304CA7A66" : 0,
-    "DD20A1A48C66B5213E0FEBB87A95EF51D6C6F3E8" : 0
+    "DD20A1A48C66B5213E0FEBB87A95EF51D6C6F3E8" : 0,
+    "D6BE2D61E9BC08BACB7354BA664FBBA6CB260E4C" : 0
   },
   "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "6F77CFD9-0E83-4062-AC28-1F4AB1A98ECF",
   "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
@@ -26,7 +27,8 @@
     "52A24398B96ECA98EF0E72469CA9225C49AA7C9D" : "iOS-Print-SDK\/Kite-SDK\/vendor\/DACircularProgress\/",
     "E28E36D423EC87798E52E2BF482E9F7A1E6479D6" : "iOS-Print-SDK\/Kite-SDK\/vendor\/SDWebImage\/",
     "701B5006D938B65FD42237DDAF25824304CA7A66" : "iOS-Print-SDK\/Kite-SDK\/vendor\/CSStickyHeaderFlowLayout\/",
-    "DD20A1A48C66B5213E0FEBB87A95EF51D6C6F3E8" : "iOS-Print-SDK\/Kite-SDK\/vendor\/AFNetworking\/"
+    "DD20A1A48C66B5213E0FEBB87A95EF51D6C6F3E8" : "iOS-Print-SDK\/Kite-SDK\/vendor\/AFNetworking\/",
+    "D6BE2D61E9BC08BACB7354BA664FBBA6CB260E4C" : "iOS-Print-SDK\/Kite-SDK\/vendor\/UIColor-HexString\/"
   },
   "DVTSourceControlWorkspaceBlueprintNameKey" : "KitePrintSDK",
   "DVTSourceControlWorkspaceBlueprintVersion" : 204,
@@ -66,6 +68,11 @@
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/TransitApp\/SVProgressHUD.git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "9E1ECC80773D1F4F22D03CB4DEA298B3CB57FAF5"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/kevinrenskers\/UIColor-HexString.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "D6BE2D61E9BC08BACB7354BA664FBBA6CB260E4C"
     },
     {
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/AFNetworking\/AFNetworking.git",
