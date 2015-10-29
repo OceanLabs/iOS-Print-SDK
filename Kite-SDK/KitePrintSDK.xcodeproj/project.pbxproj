@@ -172,6 +172,8 @@
 		E29C83CE1BE276050041D4CF /* UIImageView+WebCache.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C83BD1BE276050041D4CF /* UIImageView+WebCache.m */; };
 		E29C83CF1BE276050041D4CF /* UIView+WebCacheOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C83BF1BE276050041D4CF /* UIView+WebCacheOperation.m */; };
 		E29C83D31BE277E60041D4CF /* SkyLab.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C83D21BE277E60041D4CF /* SkyLab.m */; };
+		E29C83D91BE280EA0041D4CF /* CSStickyHeaderFlowLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C83D61BE280EA0041D4CF /* CSStickyHeaderFlowLayout.m */; };
+		E29C83DA1BE280EA0041D4CF /* CSStickyHeaderFlowLayoutAttributes.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C83D81BE280EA0041D4CF /* CSStickyHeaderFlowLayoutAttributes.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -502,6 +504,10 @@
 		E29C83BF1BE276050041D4CF /* UIView+WebCacheOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIView+WebCacheOperation.m"; path = "vendor/SDWebImage/SDWebImage/UIView+WebCacheOperation.m"; sourceTree = "<group>"; };
 		E29C83D11BE277E60041D4CF /* SkyLab.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SkyLab.h; path = vendor/SkyLab/SkyLab/SkyLab.h; sourceTree = "<group>"; };
 		E29C83D21BE277E60041D4CF /* SkyLab.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SkyLab.m; path = vendor/SkyLab/SkyLab/SkyLab.m; sourceTree = "<group>"; };
+		E29C83D51BE280EA0041D4CF /* CSStickyHeaderFlowLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CSStickyHeaderFlowLayout.h; path = vendor/CSStickyHeaderFlowLayout/Classes/CSStickyHeaderFlowLayout.h; sourceTree = "<group>"; };
+		E29C83D61BE280EA0041D4CF /* CSStickyHeaderFlowLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CSStickyHeaderFlowLayout.m; path = vendor/CSStickyHeaderFlowLayout/Classes/CSStickyHeaderFlowLayout.m; sourceTree = "<group>"; };
+		E29C83D71BE280EA0041D4CF /* CSStickyHeaderFlowLayoutAttributes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CSStickyHeaderFlowLayoutAttributes.h; path = vendor/CSStickyHeaderFlowLayout/Classes/CSStickyHeaderFlowLayoutAttributes.h; sourceTree = "<group>"; };
+		E29C83D81BE280EA0041D4CF /* CSStickyHeaderFlowLayoutAttributes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CSStickyHeaderFlowLayoutAttributes.m; path = vendor/CSStickyHeaderFlowLayout/Classes/CSStickyHeaderFlowLayoutAttributes.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1033,6 +1039,7 @@
 		E29C839D1BE275C40041D4CF /* Vendor */ = {
 			isa = PBXGroup;
 			children = (
+				E29C83D41BE280B00041D4CF /* CSStickyHeaderFlowLayout */,
 				E29C83D01BE277CF0041D4CF /* SkyLab */,
 				E29C839E1BE275CE0041D4CF /* SDWebImage */,
 			);
@@ -1086,6 +1093,17 @@
 				E29C83D21BE277E60041D4CF /* SkyLab.m */,
 			);
 			name = SkyLab;
+			sourceTree = "<group>";
+		};
+		E29C83D41BE280B00041D4CF /* CSStickyHeaderFlowLayout */ = {
+			isa = PBXGroup;
+			children = (
+				E29C83D51BE280EA0041D4CF /* CSStickyHeaderFlowLayout.h */,
+				E29C83D61BE280EA0041D4CF /* CSStickyHeaderFlowLayout.m */,
+				E29C83D71BE280EA0041D4CF /* CSStickyHeaderFlowLayoutAttributes.h */,
+				E29C83D81BE280EA0041D4CF /* CSStickyHeaderFlowLayoutAttributes.m */,
+			);
+			name = CSStickyHeaderFlowLayout;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1360,6 +1378,7 @@
 				2E74A9D11B6B7827001AE97B /* OLPosterViewController.m in Sources */,
 				2ED3EBBA1B996ED3005C1E9F /* OLRemoteImageView.m in Sources */,
 				2E8C29F01B18D1E10045DC21 /* OLPrintOrderCost.m in Sources */,
+				E29C83DA1BE280EA0041D4CF /* CSStickyHeaderFlowLayoutAttributes.m in Sources */,
 				2EB4959C1B303FA8003FB762 /* OLEditPhotobookViewController.m in Sources */,
 				3D8122EE1A759F42004E7297 /* UIView+RMUtils.m in Sources */,
 				CD550B191881E1E600782D75 /* OLPrintOrder+History.m in Sources */,
@@ -1423,6 +1442,7 @@
 				2EB1C4111B551D6000EFE0D0 /* OLKiteABTesting.m in Sources */,
 				2EA8BEB81A484FCB008A9248 /* OLProductHomeViewController.m in Sources */,
 				2EA829341B9DE54100A9208E /* UIImage+OLAssetsPickerController.m in Sources */,
+				E29C83D91BE280EA0041D4CF /* CSStickyHeaderFlowLayout.m in Sources */,
 				CD93BB30187842AB00316492 /* OLAddressSelectionViewController.m in Sources */,
 				2EA8292F1B9DE54100A9208E /* ALAsset+OLAssetType.m in Sources */,
 				3D8122ED1A759F42004E7297 /* RMImageCropper.m in Sources */,

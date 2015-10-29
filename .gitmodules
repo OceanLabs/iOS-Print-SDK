@@ -4,3 +4,6 @@
 [submodule "Kite-SDK/vendor/SkyLab"]
 	path = Kite-SDK/vendor/SkyLab
 	url = https://github.com/mattt/SkyLab.git
+[submodule "Kite-SDK/vendor/CSStickyHeaderFlowLayout"]
+	path = Kite-SDK/vendor/CSStickyHeaderFlowLayout
+	url = https://github.com/jamztang/CSStickyHeaderFlowLayout.git
