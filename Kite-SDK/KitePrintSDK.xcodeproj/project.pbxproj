@@ -94,7 +94,6 @@
 		2EF53E3B1B55421A00BF936A /* UIImage+ColorAtPixel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EF53E3A1B55421A00BF936A /* UIImage+ColorAtPixel.m */; };
 		2EF53E3E1B5549B900BF936A /* OLInfoPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EF53E3D1B5549B900BF936A /* OLInfoPageViewController.m */; };
 		2EF8BA9F1B99E9E4009BC73B /* OLImageCachingManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EF8BA9E1B99E9E4009BC73B /* OLImageCachingManager.m */; };
-		3A5ECAA2AA9D4F38934544CA /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 931ABE3568CB40F8892488E2 /* libPods.a */; };
 		3D0D7ACC1AC0C44C00746FC8 /* NSArray+QueryingExtras.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D0D7ACB1AC0C44C00746FC8 /* NSArray+QueryingExtras.m */; };
 		3D17795A1A1E1D6800BE3E58 /* OLCreditCardCaptureViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D1779591A1E1D6800BE3E58 /* OLCreditCardCaptureViewController.m */; };
 		3D6CDAAD1B1F41AE00786478 /* kite_corrupt.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 3D6CDAAC1B1F41AE00786478 /* kite_corrupt.jpg */; };
@@ -107,7 +106,6 @@
 		3DEF0D1B1A964B4E000F1E66 /* UITextField+Selection.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DEF0D1A1A964B4E000F1E66 /* UITextField+Selection.m */; };
 		3DF9D6FE1B0F618000A40C0C /* UIViewController+TraitCollectionCompatibility.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DF9D6FC1B0F618000A40C0C /* UIViewController+TraitCollectionCompatibility.m */; };
 		3DF9D7011B0F65C700A40C0C /* NSObject+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DF9D7001B0F65C700A40C0C /* NSObject+Utils.m */; };
-		78AB271E7E061EC3F731E945 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 931ABE3568CB40F8892488E2 /* libPods.a */; };
 		CD382E4A18EB7C6300127F95 /* OLJudoPayCard.m in Sources */ = {isa = PBXBuildFile; fileRef = CD382E4818EB7C6300127F95 /* OLJudoPayCard.m */; };
 		CD550A68187B30D200782D75 /* OLAddressLookupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CD550A67187B30D200782D75 /* OLAddressLookupViewController.m */; };
 		CD550B191881E1E600782D75 /* OLPrintOrder+History.m in Sources */ = {isa = PBXBuildFile; fileRef = CD550B181881E1E600782D75 /* OLPrintOrder+History.m */; };
@@ -196,6 +194,7 @@
 		E29C841E1BE2877A0041D4CF /* SVRadialGradientLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C841A1BE2877A0041D4CF /* SVRadialGradientLayer.m */; };
 		E29C84221BE2880E0041D4CF /* UICKeyChainStore.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C84211BE2880E0041D4CF /* UICKeyChainStore.m */; };
 		E29C84261BE288D30041D4CF /* UIColor+HexString.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C84251BE288D30041D4CF /* UIColor+HexString.m */; };
+		E29C842A1BE289400041D4CF /* NSUserDefaults+GroundControl.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C84291BE289400041D4CF /* NSUserDefaults+GroundControl.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -577,6 +576,8 @@
 		E29C84211BE2880E0041D4CF /* UICKeyChainStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UICKeyChainStore.m; path = vendor/UICKeyChainStore/Lib/UICKeyChainStore/UICKeyChainStore.m; sourceTree = "<group>"; };
 		E29C84241BE288D30041D4CF /* UIColor+HexString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIColor+HexString.h"; path = "vendor/UIColor-HexString/UIColor+HexString.h"; sourceTree = "<group>"; };
 		E29C84251BE288D30041D4CF /* UIColor+HexString.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIColor+HexString.m"; path = "vendor/UIColor-HexString/UIColor+HexString.m"; sourceTree = "<group>"; };
+		E29C84281BE289400041D4CF /* NSUserDefaults+GroundControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSUserDefaults+GroundControl.h"; path = "vendor/GroundControl/GroundControl/NSUserDefaults+GroundControl.h"; sourceTree = "<group>"; };
+		E29C84291BE289400041D4CF /* NSUserDefaults+GroundControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSUserDefaults+GroundControl.m"; path = "vendor/GroundControl/GroundControl/NSUserDefaults+GroundControl.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -597,7 +598,6 @@
 				CD73BF6E186215790009DE03 /* CoreGraphics.framework in Frameworks */,
 				CD73BF70186215790009DE03 /* UIKit.framework in Frameworks */,
 				CD73BF6C186215790009DE03 /* Foundation.framework in Frameworks */,
-				3A5ECAA2AA9D4F38934544CA /* libPods.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -608,7 +608,6 @@
 				CD73BF8B186215790009DE03 /* XCTest.framework in Frameworks */,
 				CD73BF8D186215790009DE03 /* UIKit.framework in Frameworks */,
 				CD73BF8C186215790009DE03 /* Foundation.framework in Frameworks */,
-				78AB271E7E061EC3F731E945 /* libPods.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1108,6 +1107,7 @@
 		E29C839D1BE275C40041D4CF /* Vendor */ = {
 			isa = PBXGroup;
 			children = (
+				E29C84271BE289270041D4CF /* GroundControl */,
 				E29C84231BE288B70041D4CF /* UIColor-HexString */,
 				E29C841F1BE287E50041D4CF /* UICKeyChainStore */,
 				E29C84121BE287130041D4CF /* SVProgressHUD */,
@@ -1278,6 +1278,15 @@
 			name = "UIColor-HexString";
 			sourceTree = "<group>";
 		};
+		E29C84271BE289270041D4CF /* GroundControl */ = {
+			isa = PBXGroup;
+			children = (
+				E29C84281BE289400041D4CF /* NSUserDefaults+GroundControl.h */,
+				E29C84291BE289400041D4CF /* NSUserDefaults+GroundControl.m */,
+			);
+			name = GroundControl;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1320,12 +1329,9 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = CD73BF9D186215790009DE03 /* Build configuration list for PBXNativeTarget "KitePrintSDKTests" */;
 			buildPhases = (
-				2CCAE6EA7586E62DC1E24679 /* Check Pods Manifest.lock */,
 				CD73BF85186215790009DE03 /* Sources */,
 				CD73BF86186215790009DE03 /* Frameworks */,
 				CD73BF87186215790009DE03 /* Resources */,
-				E8BA98406F7415491BE91DFD /* Copy Pods Resources */,
-				457FC382E83C78790C5EDB39 /* Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -1430,21 +1436,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		2CCAE6EA7586E62DC1E24679 /* Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Check Pods Manifest.lock";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
-			showEnvVarsInLog = 0;
-		};
 		2E4CAF0C1BC25F120089FA26 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1457,36 +1448,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PROJECT_DIR}/docs/appledoc/appledoc\" \\\n--templates \"${PROJECT_DIR}/docs/appledoc/Templates\" \\\n--project-name \"${PROJECT_NAME}\" \\\n--project-company \"Kite.ly\" \\\n--company-id \"ly.kite\" \\\n--output \"${PROJECT_DIR}/docs/appledoc/${PROJECT_NAME}-appledocs\" \\\n--install-docset \\\n--logformat xcode \\\n--keep-intermediate-files \\\n--no-repeat-first-par \\\n--no-warn-invalid-crossref \\\n--merge-categories \\\n--exit-threshold 2 \\\n--docset-platform-family iphoneos \\\n--warn-undocumented-member \\\n--warn-missing-arg \\\n--warn-unknown-directive \\\n--warn-empty-description \\\n--warn-undocumented-object \\\n--warn-missing-company-id \\\n--keep-undocumented-objects \\\n--keep-undocumented-members \\\n--ignore \"*.m\" \\\n--index-desc \"${PROJECT_DIR}/docs/appledoc-intro.md\" \\\n\"${PROJECT_DIR}/PSPrintSDK/OLAsset.h\" \"${PROJECT_DIR}/PSPrintSDK/OLKiteViewController.h\" \"${PROJECT_DIR}/PSPrintSDK/OLKitePrintSDK.h\" \"${PROJECT_DIR}/PSPrintSDK/OLPrintJob.h\" \"${PROJECT_DIR}/PSPrintSDK/OLPrintOrder.h\" \"${PROJECT_DIR}/PSPrintSDK/OLAssetUploadRequest.h\"\n";
-		};
-		457FC382E83C78790C5EDB39 /* Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Embed Pods Frameworks";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		E8BA98406F7415491BE91DFD /* Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-resources.sh\"\n";
-			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -1515,6 +1476,7 @@
 				E29C84041BE2855F0041D4CF /* MPFlipTransition.m in Sources */,
 				CDA8BF5718D70D0F00D835BB /* OLCheckoutViewController.m in Sources */,
 				2EB4BD681AE128740004CEE0 /* OLPhotobookViewController.m in Sources */,
+				E29C842A1BE289400041D4CF /* NSUserDefaults+GroundControl.m in Sources */,
 				E29C83F21BE2829C0041D4CF /* AFNetworkReachabilityManager.m in Sources */,
 				2E21DA4E1B9843CF00D9162F /* OLAssetItemViewController.m in Sources */,
 				E29C840C1BE286280041D4CF /* DACircularProgressView.m in Sources */,
@@ -1925,11 +1887,7 @@
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "PSPrintSDK/KitePrintSDK-Prefix.pch";
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-					OL_KITE_OFFER_APPLE_PAY,
-				);
+				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited)";
 				INFOPLIST_FILE = "PSPrintSDKTests/KitePrintSDKTests-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "co.oceanlabs.${PRODUCT_NAME:rfc1034identifier}";
@@ -1948,11 +1906,7 @@
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "PSPrintSDK/KitePrintSDK-Prefix.pch";
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"$(inherited)",
-					"COCOAPODS=1",
-					OL_KITE_OFFER_APPLE_PAY,
-				);
+				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited)";
 				INFOPLIST_FILE = "PSPrintSDKTests/KitePrintSDKTests-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "co.oceanlabs.${PRODUCT_NAME:rfc1034identifier}";

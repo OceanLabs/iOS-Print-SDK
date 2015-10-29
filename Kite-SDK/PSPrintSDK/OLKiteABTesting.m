@@ -8,7 +8,7 @@
 
 #import "OLKiteABTesting.h"
 #import "SkyLab.h"
-#import <GroundControl/NSUserDefaults+GroundControl.h>
+#import "NSUserDefaults+GroundControl.h"
 #import "OLKitePrintSDK.h"
 #import "SDWebImageManager.h"
 

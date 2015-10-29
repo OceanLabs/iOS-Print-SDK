@@ -28,3 +28,6 @@
 [submodule "Kite-SDK/vendor/UIColor-HexString"]
 	path = Kite-SDK/vendor/UIColor-HexString
 	url = https://github.com/kevinrenskers/UIColor-HexString.git
+[submodule "Kite-SDK/vendor/GroundControl"]
+	path = Kite-SDK/vendor/GroundControl
+	url = https://github.com/mattt/GroundControl.git
