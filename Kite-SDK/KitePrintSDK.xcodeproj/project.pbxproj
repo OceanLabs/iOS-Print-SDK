@@ -183,6 +183,10 @@
 		E29C83F51BE2829C0041D4CF /* AFURLRequestSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C83EA1BE2829C0041D4CF /* AFURLRequestSerialization.m */; };
 		E29C83F61BE2829C0041D4CF /* AFURLResponseSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C83EC1BE2829C0041D4CF /* AFURLResponseSerialization.m */; };
 		E29C83F71BE2829C0041D4CF /* AFURLSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C83EE1BE2829C0041D4CF /* AFURLSessionManager.m */; };
+		E29C84031BE2855F0041D4CF /* MPAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C83FA1BE2855F0041D4CF /* MPAnimation.m */; };
+		E29C84041BE2855F0041D4CF /* MPFlipTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C83FD1BE2855F0041D4CF /* MPFlipTransition.m */; };
+		E29C84051BE2855F0041D4CF /* MPFlipViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C83FF1BE2855F0041D4CF /* MPFlipViewController.m */; };
+		E29C84061BE2855F0041D4CF /* MPTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C84011BE2855F0041D4CF /* MPTransition.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -536,6 +540,16 @@
 		E29C83EC1BE2829C0041D4CF /* AFURLResponseSerialization.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFURLResponseSerialization.m; path = vendor/AFNetworking/AFNetworking/AFURLResponseSerialization.m; sourceTree = "<group>"; };
 		E29C83ED1BE2829C0041D4CF /* AFURLSessionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFURLSessionManager.h; path = vendor/AFNetworking/AFNetworking/AFURLSessionManager.h; sourceTree = "<group>"; };
 		E29C83EE1BE2829C0041D4CF /* AFURLSessionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFURLSessionManager.m; path = vendor/AFNetworking/AFNetworking/AFURLSessionManager.m; sourceTree = "<group>"; };
+		E29C83F91BE2855F0041D4CF /* MPAnimation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPAnimation.h; path = vendor/MPFlipViewController/Container/MPAnimation.h; sourceTree = "<group>"; };
+		E29C83FA1BE2855F0041D4CF /* MPAnimation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MPAnimation.m; path = vendor/MPFlipViewController/Container/MPAnimation.m; sourceTree = "<group>"; };
+		E29C83FB1BE2855F0041D4CF /* MPFlipEnumerations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPFlipEnumerations.h; path = vendor/MPFlipViewController/Container/MPFlipEnumerations.h; sourceTree = "<group>"; };
+		E29C83FC1BE2855F0041D4CF /* MPFlipTransition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPFlipTransition.h; path = vendor/MPFlipViewController/Container/MPFlipTransition.h; sourceTree = "<group>"; };
+		E29C83FD1BE2855F0041D4CF /* MPFlipTransition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MPFlipTransition.m; path = vendor/MPFlipViewController/Container/MPFlipTransition.m; sourceTree = "<group>"; };
+		E29C83FE1BE2855F0041D4CF /* MPFlipViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPFlipViewController.h; path = vendor/MPFlipViewController/Container/MPFlipViewController.h; sourceTree = "<group>"; };
+		E29C83FF1BE2855F0041D4CF /* MPFlipViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MPFlipViewController.m; path = vendor/MPFlipViewController/Container/MPFlipViewController.m; sourceTree = "<group>"; };
+		E29C84001BE2855F0041D4CF /* MPTransition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPTransition.h; path = vendor/MPFlipViewController/Container/MPTransition.h; sourceTree = "<group>"; };
+		E29C84011BE2855F0041D4CF /* MPTransition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MPTransition.m; path = vendor/MPFlipViewController/Container/MPTransition.m; sourceTree = "<group>"; };
+		E29C84021BE2855F0041D4CF /* MPTransitionEnumerations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPTransitionEnumerations.h; path = vendor/MPFlipViewController/Container/MPTransitionEnumerations.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1067,6 +1081,7 @@
 		E29C839D1BE275C40041D4CF /* Vendor */ = {
 			isa = PBXGroup;
 			children = (
+				E29C83F81BE2853F0041D4CF /* MPFlipViewController */,
 				E29C83DB1BE282700041D4CF /* AFNetworking */,
 				E29C83D41BE280B00041D4CF /* CSStickyHeaderFlowLayout */,
 				E29C83D01BE277CF0041D4CF /* SkyLab */,
@@ -1159,6 +1174,23 @@
 				E29C83EE1BE2829C0041D4CF /* AFURLSessionManager.m */,
 			);
 			name = AFNetworking;
+			sourceTree = "<group>";
+		};
+		E29C83F81BE2853F0041D4CF /* MPFlipViewController */ = {
+			isa = PBXGroup;
+			children = (
+				E29C83F91BE2855F0041D4CF /* MPAnimation.h */,
+				E29C83FA1BE2855F0041D4CF /* MPAnimation.m */,
+				E29C83FB1BE2855F0041D4CF /* MPFlipEnumerations.h */,
+				E29C83FC1BE2855F0041D4CF /* MPFlipTransition.h */,
+				E29C83FD1BE2855F0041D4CF /* MPFlipTransition.m */,
+				E29C83FE1BE2855F0041D4CF /* MPFlipViewController.h */,
+				E29C83FF1BE2855F0041D4CF /* MPFlipViewController.m */,
+				E29C84001BE2855F0041D4CF /* MPTransition.h */,
+				E29C84011BE2855F0041D4CF /* MPTransition.m */,
+				E29C84021BE2855F0041D4CF /* MPTransitionEnumerations.h */,
+			);
+			name = MPFlipViewController;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1393,6 +1425,7 @@
 				2E5F80321B04A22500095203 /* OLIntegratedCheckoutViewController.m in Sources */,
 				3D8ECA511AD692FA00CFB2C0 /* OLProductGroup.m in Sources */,
 				2EF53E3B1B55421A00BF936A /* UIImage+ColorAtPixel.m in Sources */,
+				E29C84041BE2855F0041D4CF /* MPFlipTransition.m in Sources */,
 				CDA8BF5718D70D0F00D835BB /* OLCheckoutViewController.m in Sources */,
 				2EB4BD681AE128740004CEE0 /* OLPhotobookViewController.m in Sources */,
 				E29C83F21BE2829C0041D4CF /* AFNetworkReachabilityManager.m in Sources */,
@@ -1458,6 +1491,7 @@
 				2E455E001B1F1BA1001B1718 /* NSDecimalNumber+CostFormatter.m in Sources */,
 				E29C83CC1BE276050041D4CF /* UIImage+WebP.m in Sources */,
 				3DF9D6FE1B0F618000A40C0C /* UIViewController+TraitCollectionCompatibility.m in Sources */,
+				E29C84031BE2855F0041D4CF /* MPAnimation.m in Sources */,
 				2EA8BEB91A484FCB008A9248 /* OLProductOverviewViewController.m in Sources */,
 				CD93BB3418785D3B00316492 /* OLAddress+AddressBook.m in Sources */,
 				E29C83C51BE276050041D4CF /* SDWebImageDownloader.m in Sources */,
@@ -1495,6 +1529,7 @@
 				2E21DA501B9843CF00D9162F /* OLAssetsGroupViewCell.m in Sources */,
 				E29C83C41BE276050041D4CF /* SDWebImageDecoder.m in Sources */,
 				CD9D6AE5187189BF001CD1F9 /* OLPostcardPrintJob.m in Sources */,
+				E29C84061BE2855F0041D4CF /* MPTransition.m in Sources */,
 				E29C83F71BE2829C0041D4CF /* AFURLSessionManager.m in Sources */,
 				3DF9D7011B0F65C700A40C0C /* NSObject+Utils.m in Sources */,
 				2E0E250F1A77997E00808ED8 /* OLAnalytics.m in Sources */,
@@ -1513,6 +1548,7 @@
 				2E21DA561B9843CF00D9162F /* OLAssetsViewController.m in Sources */,
 				CD93BB451878DFA300316492 /* OLCountryPickerController.m in Sources */,
 				CD73BFAD18631A570009DE03 /* OLBaseRequest.m in Sources */,
+				E29C84051BE2855F0041D4CF /* MPFlipViewController.m in Sources */,
 				2E768F551B394372009BAC18 /* OLPhotobookPrintJob.m in Sources */,
 				2E5F802C1B01E5F700095203 /* OLPaymentLineItem.m in Sources */,
 				CD9CF4A5187592A900F067B6 /* OLPrintJob.m in Sources */,

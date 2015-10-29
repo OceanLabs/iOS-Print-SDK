@@ -36,7 +36,7 @@
 #import <InstagramImagePicker/OLInstagramImage.h>
 #endif
 
-#import <MPFlipViewController/MPFlipTransition.h>
+#import "MPFlipTransition.h"
 #import "UIImage+ImageNamedInKiteBundle.h"
 
 static const NSUInteger kTagAlertViewSelectMorePhotos = 99;

@@ -1,0 +1,425 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		4D09C382157CC025000CFE0F /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D09C381157CC025000CFE0F /* UIKit.framework */; };
+		4D09C384157CC025000CFE0F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D09C383157CC025000CFE0F /* Foundation.framework */; };
+		4D09C386157CC025000CFE0F /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D09C385157CC025000CFE0F /* CoreGraphics.framework */; };
+		4D09C38C157CC025000CFE0F /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4D09C38A157CC025000CFE0F /* InfoPlist.strings */; };
+		4D09C38E157CC025000CFE0F /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D09C38D157CC025000CFE0F /* main.m */; };
+		4D09C392157CC025000CFE0F /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D09C391157CC025000CFE0F /* AppDelegate.m */; };
+		4D09C395157CC025000CFE0F /* MainStoryboard_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4D09C393157CC025000CFE0F /* MainStoryboard_iPhone.storyboard */; };
+		4D09C398157CC025000CFE0F /* MainStoryboard_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4D09C396157CC025000CFE0F /* MainStoryboard_iPad.storyboard */; };
+		4D09C39B157CC025000CFE0F /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D09C39A157CC025000CFE0F /* ViewController.m */; };
+		4D09C3A8157CC288000CFE0F /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D09C3A7157CC288000CFE0F /* QuartzCore.framework */; };
+		4D09C3B4157CC63E000CFE0F /* matrix_01.png in Resources */ = {isa = PBXBuildFile; fileRef = 4D09C3AC157CC63E000CFE0F /* matrix_01.png */; };
+		4D09C3B5157CC63E000CFE0F /* matrix_01@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4D09C3AD157CC63E000CFE0F /* matrix_01@2x.png */; };
+		4D09C3B8157CC63E000CFE0F /* matrix_02.png in Resources */ = {isa = PBXBuildFile; fileRef = 4D09C3B0157CC63E000CFE0F /* matrix_02.png */; };
+		4D09C3B9157CC63E000CFE0F /* matrix_02@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4D09C3B1157CC63E000CFE0F /* matrix_02@2x.png */; };
+		4D09C3BA157CC63E000CFE0F /* matrix_03.png in Resources */ = {isa = PBXBuildFile; fileRef = 4D09C3B2157CC63E000CFE0F /* matrix_03.png */; };
+		4D09C3BB157CC63E000CFE0F /* matrix_03@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4D09C3B3157CC63E000CFE0F /* matrix_03@2x.png */; };
+		4D09C3BE157CC6BA000CFE0F /* MPAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D09C3BD157CC69E000CFE0F /* MPAnimation.m */; };
+		4D09C3C1157CC71B000CFE0F /* MPFlipViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D09C3C0157CC71B000CFE0F /* MPFlipViewController.m */; };
+		4D09C3D4157E16DB000CFE0F /* MPFlipTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D09C3CE157E16DB000CFE0F /* MPFlipTransition.m */; };
+		4D09C3D5157E16DB000CFE0F /* MPTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D09C3CF157E16DB000CFE0F /* MPTransition.m */; };
+		4D09C3D9157E38ED000CFE0F /* ContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D09C3D8157E38ED000CFE0F /* ContentViewController.m */; };
+		4D16417215989D76004FD2DC /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 4D16417115989D76004FD2DC /* Icon.png */; };
+		4D16417515989D7B004FD2DC /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4D16417415989D7B004FD2DC /* Icon@2x.png */; };
+		4D16417715989D84004FD2DC /* Icon-72.png in Resources */ = {isa = PBXBuildFile; fileRef = 4D16417615989D84004FD2DC /* Icon-72.png */; };
+		4D16417915989D88004FD2DC /* Icon-72@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4D16417815989D88004FD2DC /* Icon-72@2x.png */; };
+		4D3916B6160D735300514EFD /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4D3916B5160D735300514EFD /* Default-568h@2x.png */; };
+		4D4D4E1815AAE2F4003DA356 /* Pattern - Aged Paper@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4D4D4E1515AAE2F4003DA356 /* Pattern - Aged Paper@2x.png */; };
+		4D4D4E1915AAE2F4003DA356 /* Pattern - Apple Wood@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4D4D4E1615AAE2F4003DA356 /* Pattern - Apple Wood@2x.png */; };
+		4D4D4E1A15AAE2F4003DA356 /* Pattern - Corkboard@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4D4D4E1715AAE2F4003DA356 /* Pattern - Corkboard@2x.png */; };
+		4D8A25CD1595CFC000789655 /* Pattern - Aged Paper.png in Resources */ = {isa = PBXBuildFile; fileRef = 4D8A25CA1595CFC000789655 /* Pattern - Aged Paper.png */; };
+		4D8A25CE1595CFC000789655 /* Pattern - Apple Wood.png in Resources */ = {isa = PBXBuildFile; fileRef = 4D8A25CB1595CFC000789655 /* Pattern - Apple Wood.png */; };
+		4D8A25CF1595CFC000789655 /* Pattern - Corkboard.png in Resources */ = {isa = PBXBuildFile; fileRef = 4D8A25CC1595CFC000789655 /* Pattern - Corkboard.png */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		4D09C37D157CC025000CFE0F /* MPFlipViewController.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MPFlipViewController.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		4D09C381157CC025000CFE0F /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		4D09C383157CC025000CFE0F /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		4D09C385157CC025000CFE0F /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		4D09C389157CC025000CFE0F /* MPFlipViewController-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "MPFlipViewController-Info.plist"; sourceTree = "<group>"; };
+		4D09C38B157CC025000CFE0F /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		4D09C38D157CC025000CFE0F /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		4D09C38F157CC025000CFE0F /* MPFlipViewController-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MPFlipViewController-Prefix.pch"; sourceTree = "<group>"; };
+		4D09C390157CC025000CFE0F /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		4D09C391157CC025000CFE0F /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		4D09C394157CC025000CFE0F /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/MainStoryboard_iPhone.storyboard; sourceTree = "<group>"; };
+		4D09C397157CC025000CFE0F /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/MainStoryboard_iPad.storyboard; sourceTree = "<group>"; };
+		4D09C399157CC025000CFE0F /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		4D09C39A157CC025000CFE0F /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		4D09C3A7157CC288000CFE0F /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		4D09C3A9157CC496000CFE0F /* Source Code License.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = "Source Code License.rtf"; sourceTree = "<group>"; };
+		4D09C3AA157CC496000CFE0F /* README.md */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
+		4D09C3AC157CC63E000CFE0F /* matrix_01.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = matrix_01.png; sourceTree = "<group>"; };
+		4D09C3AD157CC63E000CFE0F /* matrix_01@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "matrix_01@2x.png"; sourceTree = "<group>"; };
+		4D09C3B0157CC63E000CFE0F /* matrix_02.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = matrix_02.png; sourceTree = "<group>"; };
+		4D09C3B1157CC63E000CFE0F /* matrix_02@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "matrix_02@2x.png"; sourceTree = "<group>"; };
+		4D09C3B2157CC63E000CFE0F /* matrix_03.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = matrix_03.png; sourceTree = "<group>"; };
+		4D09C3B3157CC63E000CFE0F /* matrix_03@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "matrix_03@2x.png"; sourceTree = "<group>"; };
+		4D09C3BC157CC69E000CFE0F /* MPAnimation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPAnimation.h; sourceTree = "<group>"; };
+		4D09C3BD157CC69E000CFE0F /* MPAnimation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPAnimation.m; sourceTree = "<group>"; };
+		4D09C3BF157CC71B000CFE0F /* MPFlipViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPFlipViewController.h; sourceTree = "<group>"; };
+		4D09C3C0157CC71B000CFE0F /* MPFlipViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPFlipViewController.m; sourceTree = "<group>"; };
+		4D09C3CE157E16DB000CFE0F /* MPFlipTransition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPFlipTransition.m; sourceTree = "<group>"; };
+		4D09C3CF157E16DB000CFE0F /* MPTransition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPTransition.m; sourceTree = "<group>"; };
+		4D09C3D0157E16DB000CFE0F /* MPFlipEnumerations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPFlipEnumerations.h; sourceTree = "<group>"; };
+		4D09C3D1157E16DB000CFE0F /* MPFlipTransition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPFlipTransition.h; sourceTree = "<group>"; };
+		4D09C3D2157E16DB000CFE0F /* MPTransition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPTransition.h; sourceTree = "<group>"; };
+		4D09C3D3157E16DB000CFE0F /* MPTransitionEnumerations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPTransitionEnumerations.h; sourceTree = "<group>"; };
+		4D09C3D7157E38ED000CFE0F /* ContentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContentViewController.h; sourceTree = "<group>"; };
+		4D09C3D8157E38ED000CFE0F /* ContentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContentViewController.m; sourceTree = "<group>"; };
+		4D16417115989D76004FD2DC /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
+		4D16417415989D7B004FD2DC /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon@2x.png"; sourceTree = "<group>"; };
+		4D16417615989D84004FD2DC /* Icon-72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-72.png"; sourceTree = "<group>"; };
+		4D16417815989D88004FD2DC /* Icon-72@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-72@2x.png"; sourceTree = "<group>"; };
+		4D3916B5160D735300514EFD /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
+		4D4D4E1515AAE2F4003DA356 /* Pattern - Aged Paper@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Pattern - Aged Paper@2x.png"; sourceTree = "<group>"; };
+		4D4D4E1615AAE2F4003DA356 /* Pattern - Apple Wood@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Pattern - Apple Wood@2x.png"; sourceTree = "<group>"; };
+		4D4D4E1715AAE2F4003DA356 /* Pattern - Corkboard@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Pattern - Corkboard@2x.png"; sourceTree = "<group>"; };
+		4D8A25CA1595CFC000789655 /* Pattern - Aged Paper.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Pattern - Aged Paper.png"; sourceTree = "<group>"; };
+		4D8A25CB1595CFC000789655 /* Pattern - Apple Wood.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Pattern - Apple Wood.png"; sourceTree = "<group>"; };
+		4D8A25CC1595CFC000789655 /* Pattern - Corkboard.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Pattern - Corkboard.png"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		4D09C37A157CC025000CFE0F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4D09C3A8157CC288000CFE0F /* QuartzCore.framework in Frameworks */,
+				4D09C382157CC025000CFE0F /* UIKit.framework in Frameworks */,
+				4D09C384157CC025000CFE0F /* Foundation.framework in Frameworks */,
+				4D09C386157CC025000CFE0F /* CoreGraphics.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		4D09C372157CC025000CFE0F = {
+			isa = PBXGroup;
+			children = (
+				4D3916B5160D735300514EFD /* Default-568h@2x.png */,
+				4D16417815989D88004FD2DC /* Icon-72@2x.png */,
+				4D16417615989D84004FD2DC /* Icon-72.png */,
+				4D16417415989D7B004FD2DC /* Icon@2x.png */,
+				4D16417115989D76004FD2DC /* Icon.png */,
+				4D09C3AA157CC496000CFE0F /* README.md */,
+				4D09C3A9157CC496000CFE0F /* Source Code License.rtf */,
+				4D09C387157CC025000CFE0F /* Demo */,
+				4D09C3A6157CC197000CFE0F /* Container */,
+				4D09C380157CC025000CFE0F /* Frameworks */,
+				4D09C37E157CC025000CFE0F /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		4D09C37E157CC025000CFE0F /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				4D09C37D157CC025000CFE0F /* MPFlipViewController.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		4D09C380157CC025000CFE0F /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				4D09C3A7157CC288000CFE0F /* QuartzCore.framework */,
+				4D09C381157CC025000CFE0F /* UIKit.framework */,
+				4D09C383157CC025000CFE0F /* Foundation.framework */,
+				4D09C385157CC025000CFE0F /* CoreGraphics.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		4D09C387157CC025000CFE0F /* Demo */ = {
+			isa = PBXGroup;
+			children = (
+				4D09C3AB157CC5BE000CFE0F /* Images */,
+				4D09C390157CC025000CFE0F /* AppDelegate.h */,
+				4D09C391157CC025000CFE0F /* AppDelegate.m */,
+				4D09C393157CC025000CFE0F /* MainStoryboard_iPhone.storyboard */,
+				4D09C396157CC025000CFE0F /* MainStoryboard_iPad.storyboard */,
+				4D09C399157CC025000CFE0F /* ViewController.h */,
+				4D09C39A157CC025000CFE0F /* ViewController.m */,
+				4D09C388157CC025000CFE0F /* Supporting Files */,
+				4D09C3D7157E38ED000CFE0F /* ContentViewController.h */,
+				4D09C3D8157E38ED000CFE0F /* ContentViewController.m */,
+			);
+			path = Demo;
+			sourceTree = "<group>";
+		};
+		4D09C388157CC025000CFE0F /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				4D09C389157CC025000CFE0F /* MPFlipViewController-Info.plist */,
+				4D09C38A157CC025000CFE0F /* InfoPlist.strings */,
+				4D09C38D157CC025000CFE0F /* main.m */,
+				4D09C38F157CC025000CFE0F /* MPFlipViewController-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		4D09C3A6157CC197000CFE0F /* Container */ = {
+			isa = PBXGroup;
+			children = (
+				4D09C3BC157CC69E000CFE0F /* MPAnimation.h */,
+				4D09C3BD157CC69E000CFE0F /* MPAnimation.m */,
+				4D09C3BF157CC71B000CFE0F /* MPFlipViewController.h */,
+				4D09C3C0157CC71B000CFE0F /* MPFlipViewController.m */,
+				4D09C3D0157E16DB000CFE0F /* MPFlipEnumerations.h */,
+				4D09C3D3157E16DB000CFE0F /* MPTransitionEnumerations.h */,
+				4D09C3D1157E16DB000CFE0F /* MPFlipTransition.h */,
+				4D09C3CE157E16DB000CFE0F /* MPFlipTransition.m */,
+				4D09C3D2157E16DB000CFE0F /* MPTransition.h */,
+				4D09C3CF157E16DB000CFE0F /* MPTransition.m */,
+			);
+			path = Container;
+			sourceTree = "<group>";
+		};
+		4D09C3AB157CC5BE000CFE0F /* Images */ = {
+			isa = PBXGroup;
+			children = (
+				4D09C3AC157CC63E000CFE0F /* matrix_01.png */,
+				4D09C3AD157CC63E000CFE0F /* matrix_01@2x.png */,
+				4D09C3B0157CC63E000CFE0F /* matrix_02.png */,
+				4D09C3B1157CC63E000CFE0F /* matrix_02@2x.png */,
+				4D09C3B2157CC63E000CFE0F /* matrix_03.png */,
+				4D09C3B3157CC63E000CFE0F /* matrix_03@2x.png */,
+				4D8A25CA1595CFC000789655 /* Pattern - Aged Paper.png */,
+				4D4D4E1515AAE2F4003DA356 /* Pattern - Aged Paper@2x.png */,
+				4D8A25CB1595CFC000789655 /* Pattern - Apple Wood.png */,
+				4D4D4E1615AAE2F4003DA356 /* Pattern - Apple Wood@2x.png */,
+				4D8A25CC1595CFC000789655 /* Pattern - Corkboard.png */,
+				4D4D4E1715AAE2F4003DA356 /* Pattern - Corkboard@2x.png */,
+			);
+			name = Images;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		4D09C37C157CC025000CFE0F /* MPFlipViewController */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4D09C39E157CC025000CFE0F /* Build configuration list for PBXNativeTarget "MPFlipViewController" */;
+			buildPhases = (
+				4D09C379157CC025000CFE0F /* Sources */,
+				4D09C37A157CC025000CFE0F /* Frameworks */,
+				4D09C37B157CC025000CFE0F /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MPFlipViewController;
+			productName = MPFlipViewController;
+			productReference = 4D09C37D157CC025000CFE0F /* MPFlipViewController.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		4D09C374157CC025000CFE0F /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0430;
+				ORGANIZATIONNAME = "Mark Pospesel";
+			};
+			buildConfigurationList = 4D09C377157CC025000CFE0F /* Build configuration list for PBXProject "MPFlipViewController" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 4D09C372157CC025000CFE0F;
+			productRefGroup = 4D09C37E157CC025000CFE0F /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				4D09C37C157CC025000CFE0F /* MPFlipViewController */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		4D09C37B157CC025000CFE0F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4D09C38C157CC025000CFE0F /* InfoPlist.strings in Resources */,
+				4D09C395157CC025000CFE0F /* MainStoryboard_iPhone.storyboard in Resources */,
+				4D09C398157CC025000CFE0F /* MainStoryboard_iPad.storyboard in Resources */,
+				4D09C3B4157CC63E000CFE0F /* matrix_01.png in Resources */,
+				4D09C3B5157CC63E000CFE0F /* matrix_01@2x.png in Resources */,
+				4D09C3B8157CC63E000CFE0F /* matrix_02.png in Resources */,
+				4D09C3B9157CC63E000CFE0F /* matrix_02@2x.png in Resources */,
+				4D09C3BA157CC63E000CFE0F /* matrix_03.png in Resources */,
+				4D09C3BB157CC63E000CFE0F /* matrix_03@2x.png in Resources */,
+				4D8A25CD1595CFC000789655 /* Pattern - Aged Paper.png in Resources */,
+				4D8A25CE1595CFC000789655 /* Pattern - Apple Wood.png in Resources */,
+				4D8A25CF1595CFC000789655 /* Pattern - Corkboard.png in Resources */,
+				4D16417215989D76004FD2DC /* Icon.png in Resources */,
+				4D16417515989D7B004FD2DC /* Icon@2x.png in Resources */,
+				4D16417715989D84004FD2DC /* Icon-72.png in Resources */,
+				4D16417915989D88004FD2DC /* Icon-72@2x.png in Resources */,
+				4D4D4E1815AAE2F4003DA356 /* Pattern - Aged Paper@2x.png in Resources */,
+				4D4D4E1915AAE2F4003DA356 /* Pattern - Apple Wood@2x.png in Resources */,
+				4D4D4E1A15AAE2F4003DA356 /* Pattern - Corkboard@2x.png in Resources */,
+				4D3916B6160D735300514EFD /* Default-568h@2x.png in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		4D09C379157CC025000CFE0F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4D09C38E157CC025000CFE0F /* main.m in Sources */,
+				4D09C392157CC025000CFE0F /* AppDelegate.m in Sources */,
+				4D09C39B157CC025000CFE0F /* ViewController.m in Sources */,
+				4D09C3BE157CC6BA000CFE0F /* MPAnimation.m in Sources */,
+				4D09C3C1157CC71B000CFE0F /* MPFlipViewController.m in Sources */,
+				4D09C3D4157E16DB000CFE0F /* MPFlipTransition.m in Sources */,
+				4D09C3D5157E16DB000CFE0F /* MPTransition.m in Sources */,
+				4D09C3D9157E38ED000CFE0F /* ContentViewController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		4D09C38A157CC025000CFE0F /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				4D09C38B157CC025000CFE0F /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		4D09C393157CC025000CFE0F /* MainStoryboard_iPhone.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				4D09C394157CC025000CFE0F /* en */,
+			);
+			name = MainStoryboard_iPhone.storyboard;
+			sourceTree = "<group>";
+		};
+		4D09C396157CC025000CFE0F /* MainStoryboard_iPad.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				4D09C397157CC025000CFE0F /* en */,
+			);
+			name = MainStoryboard_iPad.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		4D09C39C157CC025000CFE0F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		4D09C39D157CC025000CFE0F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		4D09C39F157CC025000CFE0F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Demo/MPFlipViewController-Prefix.pch";
+				INFOPLIST_FILE = "Demo/MPFlipViewController-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		4D09C3A0157CC025000CFE0F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Demo/MPFlipViewController-Prefix.pch";
+				INFOPLIST_FILE = "Demo/MPFlipViewController-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		4D09C377157CC025000CFE0F /* Build configuration list for PBXProject "MPFlipViewController" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4D09C39C157CC025000CFE0F /* Debug */,
+				4D09C39D157CC025000CFE0F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4D09C39E157CC025000CFE0F /* Build configuration list for PBXNativeTarget "MPFlipViewController" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4D09C39F157CC025000CFE0F /* Debug */,
+				4D09C3A0157CC025000CFE0F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 4D09C374157CC025000CFE0F /* Project object */;
+}

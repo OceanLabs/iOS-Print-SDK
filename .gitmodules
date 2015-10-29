@@ -10,3 +10,6 @@
 [submodule "Kite-SDK/vendor/AFNetworking"]
 	path = Kite-SDK/vendor/AFNetworking
 	url = https://github.com/AFNetworking/AFNetworking.git
+[submodule "Kite-SDK/vendor/MPFlipViewController"]
+	path = Kite-SDK/vendor/MPFlipViewController
+	url = https://github.com/mpospese/MPFlipViewController.git
