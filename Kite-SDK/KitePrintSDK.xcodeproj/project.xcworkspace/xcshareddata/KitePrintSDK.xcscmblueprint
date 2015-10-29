@@ -1,0 +1,37 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "98E520DDA0AE776CF47A7A4A2C7C2ABBE041AE69",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "E28E36D423EC87798E52E2BF482E9F7A1E6479D6" : 0,
+    "117B65B3A14F5CB598DC962723F820AC63399A6A" : 0,
+    "98E520DDA0AE776CF47A7A4A2C7C2ABBE041AE69" : 0
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "6F77CFD9-0E83-4062-AC28-1F4AB1A98ECF",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "E28E36D423EC87798E52E2BF482E9F7A1E6479D6" : "iOS-Print-SDK\/Kite-SDK\/vendor\/SDWebImage\/",
+    "117B65B3A14F5CB598DC962723F820AC63399A6A" : "iOS-Print-SDK\/Kite-SDK\/vendor\/SkyLab\/",
+    "98E520DDA0AE776CF47A7A4A2C7C2ABBE041AE69" : "iOS-Print-SDK\/"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "KitePrintSDK",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "Kite-SDK\/KitePrintSDK.xcodeproj",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/mattt\/SkyLab.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "117B65B3A14F5CB598DC962723F820AC63399A6A"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:OceanLabs\/iOS-Print-SDK.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "98E520DDA0AE776CF47A7A4A2C7C2ABBE041AE69"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/rs\/SDWebImage.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "E28E36D423EC87798E52E2BF482E9F7A1E6479D6"
+    }
+  ]
+}

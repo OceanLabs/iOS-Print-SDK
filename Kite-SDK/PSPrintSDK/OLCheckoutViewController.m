@@ -15,10 +15,10 @@
 #import "OLKitePrintSDK.h"
 #import "OLAnalytics.h"
 #import "OLAddressEditViewController.h"
-#import <SkyLab/SkyLab.h>
+#import "SkyLab.h"
 #import "OLProductPrintJob.h"
 #import "OLKiteABTesting.h"
-#import <SDWebImage/SDWebImageManager.h>
+#import "SDWebImageManager.h"
 #import "UIImage+ColorAtPixel.h"
 #import "UIImage+ImageNamedInKiteBundle.h"
 

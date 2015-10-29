@@ -1,0 +1,6 @@
+[submodule "Kite-SDK/vendor/SDWebImage"]
+	path = Kite-SDK/vendor/SDWebImage
+	url = https://github.com/rs/SDWebImage.git
+[submodule "Kite-SDK/vendor/SkyLab"]
+	path = Kite-SDK/vendor/SkyLab
+	url = https://github.com/mattt/SkyLab.git
