@@ -189,6 +189,7 @@
 		E29C84061BE2855F0041D4CF /* MPTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C84011BE2855F0041D4CF /* MPTransition.m */; };
 		E29C840C1BE286280041D4CF /* DACircularProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C84091BE286280041D4CF /* DACircularProgressView.m */; };
 		E29C840D1BE286280041D4CF /* DALabeledCircularProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C840B1BE286280041D4CF /* DALabeledCircularProgressView.m */; };
+		E29C84111BE286C40041D4CF /* TSMarkdownParser.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C84101BE286C40041D4CF /* TSMarkdownParser.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -556,6 +557,8 @@
 		E29C84091BE286280041D4CF /* DACircularProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DACircularProgressView.m; path = vendor/DACircularProgress/DACircularProgress/DACircularProgressView.m; sourceTree = "<group>"; };
 		E29C840A1BE286280041D4CF /* DALabeledCircularProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DALabeledCircularProgressView.h; path = vendor/DACircularProgress/DACircularProgress/DALabeledCircularProgressView.h; sourceTree = "<group>"; };
 		E29C840B1BE286280041D4CF /* DALabeledCircularProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DALabeledCircularProgressView.m; path = vendor/DACircularProgress/DACircularProgress/DALabeledCircularProgressView.m; sourceTree = "<group>"; };
+		E29C840F1BE286C40041D4CF /* TSMarkdownParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TSMarkdownParser.h; path = vendor/TSMarkdownParser/TSMarkdownParser/TSMarkdownParser.h; sourceTree = "<group>"; };
+		E29C84101BE286C40041D4CF /* TSMarkdownParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TSMarkdownParser.m; path = vendor/TSMarkdownParser/TSMarkdownParser/TSMarkdownParser.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1087,6 +1090,7 @@
 		E29C839D1BE275C40041D4CF /* Vendor */ = {
 			isa = PBXGroup;
 			children = (
+				E29C840E1BE286A20041D4CF /* TSMarkdownParser */,
 				E29C84071BE286110041D4CF /* DACircularProgress */,
 				E29C83F81BE2853F0041D4CF /* MPFlipViewController */,
 				E29C83DB1BE282700041D4CF /* AFNetworking */,
@@ -1209,6 +1213,15 @@
 				E29C840B1BE286280041D4CF /* DALabeledCircularProgressView.m */,
 			);
 			name = DACircularProgress;
+			sourceTree = "<group>";
+		};
+		E29C840E1BE286A20041D4CF /* TSMarkdownParser */ = {
+			isa = PBXGroup;
+			children = (
+				E29C840F1BE286C40041D4CF /* TSMarkdownParser.h */,
+				E29C84101BE286C40041D4CF /* TSMarkdownParser.m */,
+			);
+			name = TSMarkdownParser;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1461,6 +1474,7 @@
 				2E3F96AF1A4967FF005C0EA3 /* OLProduct.m in Sources */,
 				2EE3C86D1A4ADDDB006446E2 /* OLWhiteSquare.m in Sources */,
 				2E39CAA81AB89541008B1EFF /* OLPhotoSelectionButton.m in Sources */,
+				E29C84111BE286C40041D4CF /* TSMarkdownParser.m in Sources */,
 				E29C83F51BE2829C0041D4CF /* AFURLRequestSerialization.m in Sources */,
 				CD93BB3E187882A300316492 /* OLAddressEditViewController.m in Sources */,
 				2EA13E231BBC242F005F3D71 /* OLKiteUtils.m in Sources */,

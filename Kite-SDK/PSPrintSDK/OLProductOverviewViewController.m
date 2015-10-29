@@ -22,7 +22,7 @@
 #import "NSObject+Utils.h"
 #import "NSDecimalNumber+CostFormatter.h"
 #import "OLKiteABTesting.h"
-#import <TSMarkdownParser/TSMarkdownParser.h>
+#import "TSMarkdownParser.h"
 #import "OLKiteUtils.h"
 
 @interface OLKiteViewController ()
