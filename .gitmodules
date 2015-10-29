@@ -28,3 +28,6 @@
 [submodule "Kite-SDK/vendor/GroundControl"]
 	path = Kite-SDK/vendor/GroundControl
 	url = https://github.com/mattt/GroundControl.git
+[submodule "Kite-SDK/vendor/CSStickyHeaderFlowLayout"]
+	path = Kite-SDK/vendor/CSStickyHeaderFlowLayout
+	url = https://github.com/OceanLabs/CSStickyHeaderFlowLayout
