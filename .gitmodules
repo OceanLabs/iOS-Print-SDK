@@ -22,3 +22,6 @@
 [submodule "Kite-SDK/vendor/SVProgressHUD"]
 	path = Kite-SDK/vendor/SVProgressHUD
 	url = https://github.com/TransitApp/SVProgressHUD.git
+[submodule "Kite-SDK/vendor/UICKeyChainStore"]
+	path = Kite-SDK/vendor/UICKeyChainStore
+	url = https://github.com/kishikawakatsumi/UICKeyChainStore.git

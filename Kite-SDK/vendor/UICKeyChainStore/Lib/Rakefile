@@ -1,0 +1,114 @@
+require 'xcjobs'
+
+def destinations
+  if ENV['CIRCLECI']
+      [ 'name=iPhone 6,OS=9.0',
+        'name=iPhone 6 Plus,OS=9.0'
+      ]
+  else
+    [ 'name=iPad 2,OS=8.1',
+      'name=iPad Air,OS=8.1',
+      'name=iPhone 4s,OS=8.1',
+      'name=iPhone 5,OS=8.1',
+      'name=iPhone 5s,OS=8.1',
+      'name=iPhone 6,OS=8.1',
+      'name=iPhone 6 Plus,OS=8.1',
+      'name=iPhone 6,OS=9.0',
+      'name=iPhone 6 Plus,OS=9.0',
+      'name=iPhone 6,OS=9.1',
+      'name=iPhone 6 Plus,OS=9.1'
+    ]
+  end
+end
+
+XCJobs::Build.new('build:ios:simulator') do |t|
+  t.project = 'UICKeyChainStore'
+  t.scheme = 'UICKeyChainStore-iOS'
+  t.sdk = 'iphonesimulator'
+  t.configuration = 'Release'
+  t.build_dir = 'build'
+  t.formatter = 'xcpretty -c'
+  t.add_build_setting('CODE_SIGN_IDENTITY', '')
+  t.add_build_setting('CODE_SIGNING_REQUIRED', 'NO')
+end
+
+XCJobs::Build.new('build:ios:device') do |t|
+  t.project = 'UICKeyChainStore'
+  t.scheme = 'UICKeyChainStore-iOS'
+  t.sdk = 'iphoneos'
+  t.configuration = 'Release'
+  t.build_dir = 'build'
+  t.formatter = 'xcpretty -c'
+  t.add_build_setting('CODE_SIGN_IDENTITY', '')
+  t.add_build_setting('CODE_SIGNING_REQUIRED', 'NO')
+end
+
+XCJobs::Build.new('build:tvos:simulator') do |t|
+  t.project = 'UICKeyChainStore'
+  t.scheme = 'UICKeyChainStore-tvOS'
+  t.sdk = 'appletvsimulator'
+  t.configuration = 'Release'
+  t.build_dir = 'build'
+  t.formatter = 'xcpretty -c'
+  t.add_build_setting('CODE_SIGN_IDENTITY', '')
+  t.add_build_setting('CODE_SIGNING_REQUIRED', 'NO')
+end
+
+XCJobs::Build.new('build:tvos:device') do |t|
+  t.project = 'UICKeyChainStore'
+  t.scheme = 'UICKeyChainStore-tvOS'
+  t.sdk = 'appletvos'
+  t.configuration = 'Release'
+  t.build_dir = 'build'
+  t.formatter = 'xcpretty -c'
+  t.add_build_setting('CODE_SIGN_IDENTITY', '')
+  t.add_build_setting('CODE_SIGNING_REQUIRED', 'NO')
+end
+
+XCJobs::Build.new('build:osx') do |t|
+  t.project = 'UICKeyChainStore'
+  t.scheme = 'UICKeyChainStore-Mac'
+  t.configuration = 'Release'
+  t.build_dir = 'build'
+  t.formatter = 'xcpretty -c'
+  t.add_build_setting('CODE_SIGN_IDENTITY', '')
+  t.add_build_setting('CODE_SIGNING_REQUIRED', 'NO')
+end
+
+XCJobs::Test.new('test:ios') do |t|
+  t.project = 'UICKeyChainStore'
+  t.scheme = 'UICKeyChainStore-iOS'
+  t.configuration = 'Release'
+  t.build_dir = 'build'
+  destinations.each do |destination|
+    t.add_destination(destination)
+  end
+  t.coverage = true
+  t.formatter = 'xcpretty -c'
+end
+
+XCJobs::Test.new('test:tvos') do |t|
+  t.project = 'UICKeyChainStore'
+  t.scheme = 'UICKeyChainStore-tvOS'
+  t.sdk = 'appletvsimulator'
+  t.configuration = 'Release'
+  t.coverage = true
+  t.build_dir = 'build'
+  t.formatter = 'xcpretty -c'
+end
+
+XCJobs::Test.new('test:osx') do |t|
+  t.project = 'UICKeyChainStore'
+  t.scheme = 'UICKeyChainStore-Mac'
+  t.sdk = 'macosx'
+  t.configuration = 'Release'
+  t.coverage = true
+  t.build_dir = 'build'
+  t.formatter = 'xcpretty -c'
+end
+
+XCJobs::Coverage::Coveralls.new() do |t|
+  t.repo_token = 'tfWwD7PGboq20ffdQf14RhQnyYzckQVgE'
+  t.add_extension('.m')
+  t.add_exclude('Lib/UICKeyChainStoreTests')
+end

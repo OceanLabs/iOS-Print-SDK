@@ -194,6 +194,7 @@
 		E29C841C1BE2877A0041D4CF /* SVProgressHUD.bundle in Resources */ = {isa = PBXBuildFile; fileRef = E29C84161BE2877A0041D4CF /* SVProgressHUD.bundle */; };
 		E29C841D1BE2877A0041D4CF /* SVProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C84181BE2877A0041D4CF /* SVProgressHUD.m */; };
 		E29C841E1BE2877A0041D4CF /* SVRadialGradientLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C841A1BE2877A0041D4CF /* SVRadialGradientLayer.m */; };
+		E29C84221BE2880E0041D4CF /* UICKeyChainStore.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C84211BE2880E0041D4CF /* UICKeyChainStore.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -571,6 +572,8 @@
 		E29C84181BE2877A0041D4CF /* SVProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SVProgressHUD.m; path = vendor/SVProgressHUD/SVProgressHUD/SVProgressHUD.m; sourceTree = "<group>"; };
 		E29C84191BE2877A0041D4CF /* SVRadialGradientLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SVRadialGradientLayer.h; path = vendor/SVProgressHUD/SVProgressHUD/SVRadialGradientLayer.h; sourceTree = "<group>"; };
 		E29C841A1BE2877A0041D4CF /* SVRadialGradientLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SVRadialGradientLayer.m; path = vendor/SVProgressHUD/SVProgressHUD/SVRadialGradientLayer.m; sourceTree = "<group>"; };
+		E29C84201BE2880E0041D4CF /* UICKeyChainStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UICKeyChainStore.h; path = vendor/UICKeyChainStore/Lib/UICKeyChainStore/UICKeyChainStore.h; sourceTree = "<group>"; };
+		E29C84211BE2880E0041D4CF /* UICKeyChainStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UICKeyChainStore.m; path = vendor/UICKeyChainStore/Lib/UICKeyChainStore/UICKeyChainStore.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1102,6 +1105,7 @@
 		E29C839D1BE275C40041D4CF /* Vendor */ = {
 			isa = PBXGroup;
 			children = (
+				E29C841F1BE287E50041D4CF /* UICKeyChainStore */,
 				E29C84121BE287130041D4CF /* SVProgressHUD */,
 				E29C840E1BE286A20041D4CF /* TSMarkdownParser */,
 				E29C84071BE286110041D4CF /* DACircularProgress */,
@@ -1250,6 +1254,15 @@
 				E29C841A1BE2877A0041D4CF /* SVRadialGradientLayer.m */,
 			);
 			name = SVProgressHUD;
+			sourceTree = "<group>";
+		};
+		E29C841F1BE287E50041D4CF /* UICKeyChainStore */ = {
+			isa = PBXGroup;
+			children = (
+				E29C84201BE2880E0041D4CF /* UICKeyChainStore.h */,
+				E29C84211BE2880E0041D4CF /* UICKeyChainStore.m */,
+			);
+			name = UICKeyChainStore;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1602,6 +1615,7 @@
 				3D17795A1A1E1D6800BE3E58 /* OLCreditCardCaptureViewController.m in Sources */,
 				E29C83F41BE2829C0041D4CF /* AFURLConnectionOperation.m in Sources */,
 				2E39CAA31AB894A8008B1EFF /* OLPhotoSelectionViewController.m in Sources */,
+				E29C84221BE2880E0041D4CF /* UICKeyChainStore.m in Sources */,
 				CD550A68187B30D200782D75 /* OLAddressLookupViewController.m in Sources */,
 				2EB1C4111B551D6000EFE0D0 /* OLKiteABTesting.m in Sources */,
 				2EA8BEB81A484FCB008A9248 /* OLProductHomeViewController.m in Sources */,
