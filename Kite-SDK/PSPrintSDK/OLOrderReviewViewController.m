@@ -290,15 +290,15 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     NSInteger extraCopies = [self.userSelectedPhotos[indexPath.item] extraCopies];
     if (extraCopies == 0){
         if ([UIAlertController class]){
-            UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Delete?", @"") message:NSLocalizedString(@"Do you want to delete this photo?", @"") preferredStyle:UIAlertControllerStyleAlert];
-            [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Yes, delete it", @"") style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action){
+            UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Remove?", @"") message:NSLocalizedString(@"Do you want to remove this photo?", @"") preferredStyle:UIAlertControllerStyleAlert];
+            [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Yes, remove it", @"") style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action){
                 [self deletePhotoAtIndex:indexPath.item];
             }]];
             [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"No, keep it", @"") style:UIAlertActionStyleCancel handler:^(UIAlertAction *action){}]];
             [self presentViewController:ac animated:YES completion:NULL];
         }
         else{
-            UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Delete?", @"") message:NSLocalizedString(@"Do you want to delete this photo?", @"") delegate:self cancelButtonTitle:NSLocalizedString(@"Yes, delete it", @"") otherButtonTitles:NSLocalizedString(@"No, keep it", @""), nil];
+            UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Remove?", @"") message:NSLocalizedString(@"Do you want to remove this photo?", @"") delegate:self cancelButtonTitle:NSLocalizedString(@"Yes, remove it", @"") otherButtonTitles:NSLocalizedString(@"No, keep it", @""), nil];
             self.indexOfPhotoToDelete = indexPath.item;
             av.tag = kTagAlertViewDeletePhoto;
             [av show];
