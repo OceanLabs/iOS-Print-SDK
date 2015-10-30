@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name		= 'Kite-Print-SDK'
-  spec.version         	= '4.1.3'
+  spec.version         	= '4.1.4'
   spec.license 		= { :type => 'MIT', :file => 'Kite-SDK/LICENSE' }
   spec.homepage         = 'https://github.com/OceanLabs/iOS-Print-SDK'
   spec.authors          = {'Deon Botha' => 'deon@oceanlabs.co'}
@@ -10,7 +10,7 @@ Pod::Spec.new do |spec|
   spec.resources        = ['Kite-SDK/PSPrintSDK/KitePrintSDK.xcassets', 'Kite-SDK/*.lproj', 'Kite-SDK/PSPrintSDK/OLKiteStoryboard.storyboard', 'Kite-SDK/PSPrintSDK/OLPhotoSelectionButton.xib', 'Kite-SDK/PSPrintSDK/kite_corrupt.jpg']
   spec.dependency	'SDWebImage', '~> 3.7.2'
   spec.dependency	'SVProgressHUD'
-  spec.dependency	'AFNetworking', '~> 2.5.0'
+  spec.dependency	'AFNetworking', '~> 2.6.1'
   spec.dependency	'UICKeyChainStore', '~> 2.0.4'
   spec.dependency	'CSStickyHeaderFlowLayout', '~> 0.2.4'
   spec.dependency	'GroundControl', '~> 2.1.0'
