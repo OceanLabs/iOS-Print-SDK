@@ -542,7 +542,7 @@
 		3D1779571A1E076600BE3E58 /* CardIOViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CardIOViewDelegate.h; sourceTree = "<group>"; };
 		3D1779581A1E1D6800BE3E58 /* OLCreditCardCaptureViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLCreditCardCaptureViewController.h; sourceTree = "<group>"; };
 		3D1779591A1E1D6800BE3E58 /* OLCreditCardCaptureViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLCreditCardCaptureViewController.m; sourceTree = "<group>"; };
-		3D6CDAAC1B1F41AE00786478 /* kite_corrupt.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = kite_corrupt.jpg; path = PSPrintSDK/kite_corrupt.jpg; sourceTree = "<group>"; };
+		3D6CDAAC1B1F41AE00786478 /* kite_corrupt.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = kite_corrupt.jpg; sourceTree = "<group>"; };
 		3D8122E91A759F42004E7297 /* RMImageCropper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RMImageCropper.h; path = RMImageCropper/RMImageCropper.h; sourceTree = "<group>"; };
 		3D8122EA1A759F42004E7297 /* RMImageCropper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RMImageCropper.m; path = RMImageCropper/RMImageCropper.m; sourceTree = "<group>"; };
 		3D8122EB1A759F42004E7297 /* UIView+RMUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIView+RMUtils.h"; path = "RMImageCropper/UIView+RMUtils.h"; sourceTree = "<group>"; };
@@ -783,10 +783,8 @@
 		2E0DB88E1A6402D9001032E3 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				2E38C0CC1AD5206F008BC28A /* PostcardBackView.xib */,
 				2E39CAA61AB89541008B1EFF /* OLPhotoSelectionButton.h */,
 				2E39CAA71AB89541008B1EFF /* OLPhotoSelectionButton.m */,
-				2E39CAA41AB89515008B1EFF /* OLPhotoSelectionButton.xib */,
 				2EE3C86B1A4ADDDA006446E2 /* OLWhiteSquare.h */,
 				2EE3C86C1A4ADDDA006446E2 /* OLWhiteSquare.m */,
 				2E973EEC1A7A5D0E00488212 /* OLCircleMaskCollectionViewCell.h */,
@@ -958,8 +956,6 @@
 		2E85BC9619A24C9E00EC7CC2 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				3D6CDAAC1B1F41AE00786478 /* kite_corrupt.jpg */,
-				2E85BC9719A24CB200EC7CC2 /* KitePrintSDK.strings */,
 			);
 			name = "Supporting Files";
 			path = ..;
@@ -1118,8 +1114,7 @@
 				CDA8BF4F18D70CF500D835BB /* Controller */,
 				2E85BC9619A24C9E00EC7CC2 /* Supporting Files */,
 				2EA8BEC11A48509E008A9248 /* Categories */,
-				2EA8BEAA1A484CA7008A9248 /* OLKiteStoryboard.storyboard */,
-				CD93BB471879EA4F00316492 /* KitePrintSDK.xcassets */,
+				E29C862E1BE3C4640041D4CF /* Resources */,
 			);
 			name = "Kite Print SDK";
 			path = PSPrintSDK;
@@ -1457,6 +1452,19 @@
 				E29C86211BE3BCA80041D4CF /* KiteSDK-Prefix.pch */,
 			);
 			path = KiteSDK;
+			sourceTree = "<group>";
+		};
+		E29C862E1BE3C4640041D4CF /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				3D6CDAAC1B1F41AE00786478 /* kite_corrupt.jpg */,
+				2E85BC9719A24CB200EC7CC2 /* KitePrintSDK.strings */,
+				2E38C0CC1AD5206F008BC28A /* PostcardBackView.xib */,
+				2E39CAA41AB89515008B1EFF /* OLPhotoSelectionButton.xib */,
+				CD93BB471879EA4F00316492 /* KitePrintSDK.xcassets */,
+				2EA8BEAA1A484CA7008A9248 /* OLKiteStoryboard.storyboard */,
+			);
+			name = Resources;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1990,6 +1998,7 @@
 				2E85BC9F19A24CBE00EC7CC2 /* el */,
 			);
 			name = KitePrintSDK.strings;
+			path = ..;
 			sourceTree = "<group>";
 		};
 		CD73BF74186215790009DE03 /* InfoPlist.strings */ = {
