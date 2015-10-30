@@ -54,6 +54,6 @@ Under the Build Phases tab add `KitePrintSDK` to `Target Dependencies` and `libK
 
 ![Add Header Search Paths](build_phases.gif)
 
-Finally add all resources found under `KitePrintSDK.xcproj/Kite Print SDK/Resources` folder to `Copy Bundle Resources`
+Finally add all resources found under `KitePrintSDK.xcproj/Kite Print SDK/Resources` group to `Copy Bundle Resources`
 
 ![Add Resources](assets.gif)
