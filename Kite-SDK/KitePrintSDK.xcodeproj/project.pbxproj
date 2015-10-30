@@ -718,7 +718,7 @@
 		E29C84131BE2877A0041D4CF /* SVIndefiniteAnimatedView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SVIndefiniteAnimatedView.h; path = vendor/SVProgressHUD/SVProgressHUD/SVIndefiniteAnimatedView.h; sourceTree = "<group>"; };
 		E29C84141BE2877A0041D4CF /* SVIndefiniteAnimatedView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SVIndefiniteAnimatedView.m; path = vendor/SVProgressHUD/SVProgressHUD/SVIndefiniteAnimatedView.m; sourceTree = "<group>"; };
 		E29C84151BE2877A0041D4CF /* SVProgressHUD-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "SVProgressHUD-Prefix.pch"; path = "vendor/SVProgressHUD/SVProgressHUD/SVProgressHUD-Prefix.pch"; sourceTree = "<group>"; };
-		E29C84161BE2877A0041D4CF /* SVProgressHUD.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = SVProgressHUD.bundle; path = vendor/SVProgressHUD/SVProgressHUD/SVProgressHUD.bundle; sourceTree = "<group>"; };
+		E29C84161BE2877A0041D4CF /* SVProgressHUD.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = SVProgressHUD.bundle; path = ../vendor/SVProgressHUD/SVProgressHUD/SVProgressHUD.bundle; sourceTree = "<group>"; };
 		E29C84171BE2877A0041D4CF /* SVProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SVProgressHUD.h; path = vendor/SVProgressHUD/SVProgressHUD/SVProgressHUD.h; sourceTree = "<group>"; };
 		E29C84181BE2877A0041D4CF /* SVProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SVProgressHUD.m; path = vendor/SVProgressHUD/SVProgressHUD/SVProgressHUD.m; sourceTree = "<group>"; };
 		E29C84191BE2877A0041D4CF /* SVRadialGradientLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SVRadialGradientLayer.h; path = vendor/SVProgressHUD/SVProgressHUD/SVRadialGradientLayer.h; sourceTree = "<group>"; };
@@ -1410,7 +1410,6 @@
 				E29C84131BE2877A0041D4CF /* SVIndefiniteAnimatedView.h */,
 				E29C84141BE2877A0041D4CF /* SVIndefiniteAnimatedView.m */,
 				E29C84151BE2877A0041D4CF /* SVProgressHUD-Prefix.pch */,
-				E29C84161BE2877A0041D4CF /* SVProgressHUD.bundle */,
 				E29C84171BE2877A0041D4CF /* SVProgressHUD.h */,
 				E29C84181BE2877A0041D4CF /* SVProgressHUD.m */,
 				E29C84191BE2877A0041D4CF /* SVRadialGradientLayer.h */,
@@ -1457,6 +1456,7 @@
 		E29C862E1BE3C4640041D4CF /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				E29C84161BE2877A0041D4CF /* SVProgressHUD.bundle */,
 				3D6CDAAC1B1F41AE00786478 /* kite_corrupt.jpg */,
 				2E85BC9719A24CB200EC7CC2 /* KitePrintSDK.strings */,
 				2E38C0CC1AD5206F008BC28A /* PostcardBackView.xib */,
