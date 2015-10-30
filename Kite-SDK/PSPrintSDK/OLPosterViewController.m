@@ -239,8 +239,8 @@
     OLProductPrintJob* printJob = [[OLProductPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:photoAssets];
 	printJob.uuid = [[NSUUID UUID] UUIDString];
     
-    for (NSString *key in self.product.selectedOptions.allKeys){
-        [printJob setValue:self.product.selectedOptions[key] forOption:key];
+    for (NSString *option in self.product.selectedOptions.allKeys){
+        [printJob setValue:self.product.selectedOptions[option] forOption:option];
     }
     
     for (id<OLPrintJob> job in printOrder.jobs){

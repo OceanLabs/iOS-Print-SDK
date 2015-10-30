@@ -30,10 +30,10 @@
     [attributedString addAttribute:NSForegroundColorAttributeName value:self.detailsTextLabel.tintColor range:NSMakeRange(0, attributedString.length)];
     self.detailsTextLabel.attributedText = attributedString;
     
-    if (self.product.productTemplate.supportedOptions.allKeys.count == 0){
+    if (self.product.productTemplate.options.count == 0){
         [self.moreOptionsView removeFromSuperview];
     }
-    else if (self.product.productTemplate.supportedOptions.allKeys.count != 1){
+    else if (self.product.productTemplate.options.count != 1){
         [self.selectedOptionLabel removeFromSuperview];
     }
 }
@@ -41,9 +41,10 @@
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     
-    if (self.product.productTemplate.supportedOptions.allKeys.count == 1){
-        self.optionLabel.text = self.product.productTemplate.supportedOptions.allKeys.firstObject;
-        self.selectedOptionLabel.text = self.product.selectedOptions[self.product.productTemplate.supportedOptions.allKeys.firstObject];
+    if (self.product.productTemplate.options.count == 1){
+        OLProductTemplateOption *option = self.product.productTemplate.options.firstObject;
+        self.optionLabel.text = option.name;
+        self.selectedOptionLabel.text = [option nameForSelection:self.product.selectedOptions[[option code]]];
     }
 }
 

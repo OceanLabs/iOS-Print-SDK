@@ -62,11 +62,11 @@
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
-    return self.product.productTemplate.supportedOptions.allKeys.count;
+    return self.product.productTemplate.options.count;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    return [(NSArray *)(self.product.productTemplate.supportedOptions[self.product.productTemplate.supportedOptions.allKeys[section]]) count];
+    return [self.product.productTemplate.options[section] selections].count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -75,10 +75,11 @@
     cell.contentView.backgroundColor = [UIColor clearColor];
     
     UILabel *label = (UILabel *)[cell viewWithTag:20];
-    label.text = [(NSArray *)(self.product.productTemplate.supportedOptions[self.product.productTemplate.supportedOptions.allKeys[indexPath.section]]) objectAtIndex:indexPath.row];
+    OLProductTemplateOption *option = self.product.productTemplate.options[indexPath.section];
+    label.text = [option nameForSelection:option.selections[indexPath.row]];
     
     UIImageView *imageView = (UIImageView *)[cell viewWithTag:10];
-    if ([self.product.selectedOptions[[self tableView:tableView titleForHeaderInSection:indexPath.section]] isEqualToString:label.text]){
+    if ([self.product.selectedOptions[option.code] isEqualToString:option.selections[indexPath.row]]){
         imageView.image = [[UIImage imageNamedInKiteBundle:@"checkmark_on"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
     }
     else{
@@ -89,14 +90,13 @@
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section{
-    return self.product.productTemplate.supportedOptions.allKeys[section];
+    OLProductTemplateOption *option = self.product.productTemplate.options[section];
+    return option.name;
 }
 
 - (BOOL)tableView:(UITableView *)tableView shouldHighlightRowAtIndexPath:(NSIndexPath *)indexPath{
-    UITableViewCell *cell = [self tableView:tableView cellForRowAtIndexPath:indexPath];
-    UILabel *label = (UILabel *)[cell viewWithTag:20];
-    
-    self.product.selectedOptions[[self tableView:tableView titleForHeaderInSection:indexPath.section]] = label.text;
+    OLProductTemplateOption *option = self.product.productTemplate.options[indexPath.section];
+    self.product.selectedOptions[option.code] = option.selections[indexPath.row];
     
     [tableView reloadData];
     

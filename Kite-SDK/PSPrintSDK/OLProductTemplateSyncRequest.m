@@ -99,6 +99,7 @@
                                 NSString *code;
                                 CGSize sizePx = CGSizeZero;
                                 NSString *classPhoto;
+                                NSArray *supportedOptions;
                                 if (product){
                                     coverPhoto = [product[@"ios_sdk_cover_photo"] isKindOfClass:[NSString class]] ? product[@"ios_sdk_cover_photo"] : nil;
                                     
@@ -115,6 +116,8 @@
                                     productType = [product[@"ios_sdk_product_type"] isKindOfClass:[NSString class]] ? product[@"ios_sdk_product_type"] : nil;
                                     
                                     uiClass = [product[@"ios_sdk_ui_class"] isKindOfClass:[NSString class]] ? product[@"ios_sdk_ui_class"] : nil;
+                                    
+                                    supportedOptions = [product[@"supported_options"] isKindOfClass:[NSArray class]] ? product[@"supported_options"] : nil;
                                     
                                     NSArray *colorArray = [product[@"ios_sdk_label_color"] isKindOfClass:[NSArray class]] ? product[@"ios_sdk_label_color"] : nil;
                                     if (colorArray){
@@ -198,6 +201,7 @@
                                     t.shippingCosts = shippingCosts;
                                     t.gridCountX = [gridCountX integerValue];
                                     t.gridCountY = [gridCountY integerValue];
+                                    t.supportedOptions = supportedOptions;
                                     [acc addObject:t];
                                 }
                             }

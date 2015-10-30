@@ -13,6 +13,7 @@
 #import "NSDecimalNumber+CostFormatter.h"
 #import "OLKiteABTesting.h"
 #import "UIImage+ImageNamedInKiteBundle.h"
+#import "OLProductTemplateOption.h"
 
 typedef enum {
     kSizeUnitsInches,
@@ -54,12 +55,9 @@ typedef enum {
     if (!_selectedOptions){
         _selectedOptions = [[NSMutableDictionary alloc] init];
         
-        OLProductTemplate *template = self.productTemplate;
-        for (NSString *key in template.supportedOptions.allKeys){
-            id firstOption = [template.supportedOptions[key] firstObject];
-            if (firstOption){
-                _selectedOptions[key] = firstOption;
-            }
+        OLProductTemplateOption *firstOption = [self.productTemplate.options firstObject];
+        if (firstOption.selections.count > 0){
+            _selectedOptions[firstOption.code] = firstOption.selections.firstObject;
         }
     }
     return _selectedOptions;

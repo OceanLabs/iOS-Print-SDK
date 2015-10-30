@@ -34,6 +34,7 @@ static NSString *const kkeyDescription = @"co.oceanlabs.pssdk.kkeyDescription";
 static NSString *const kKeyShippingCosts = @"co.oceanlabs.pssdk.kKeyShippingCosts";
 static NSString *const kKeyGridCountX = @"co.oceanlabs.pssdk.kKeyGridCountX";
 static NSString *const kKeyGridCountY = @"co.oceanlabs.pssdk.kKeyGridCountY";
+static NSString *const kKeySupportedOptions = @"co.oceanlabs.pssdk.kKeySupportedOptions";
 
 static NSMutableArray *templates;
 static NSDate *lastSyncDate;
@@ -49,6 +50,8 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
 @interface OLProductTemplate ()
 @property (nonatomic, strong) NSDictionary<NSString *, NSDecimalNumber *> *costsByCurrencyCode;
 @property (nonatomic, assign, readwrite) NSUInteger quantityPerSheet;
+@property (strong, nonatomic) NSArray *_Nullable supportedOptions;
+@property (strong, nonatomic, readwrite) NSArray <OLProductTemplateOption *>*_Nullable options;
 @end
 
 @interface OLCountry (Private)
@@ -75,8 +78,15 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
     return [documentDirPath stringByAppendingPathComponent:@"co.oceanlabs.pssdk.Templates"];
 }
 
-- (NSDictionary *)supportedOptions{
-    return @{@"Case Style" : @[@"Glossy", @"Matte"]};
+- (void)setSupportedOptions:(NSArray *_Nullable)supportedOptions{
+    _supportedOptions = supportedOptions;
+    NSMutableArray *options = [[NSMutableArray alloc] init];
+    for (NSDictionary *option in supportedOptions){
+        if ([option isKindOfClass:[NSDictionary class]]){
+            [options addObject:[[OLProductTemplateOption alloc] initWithDictionary:option]];
+        }
+    }
+    self.options = options;
 }
 
 - (NSString *)templateType{
@@ -347,6 +357,7 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
     [aCoder encodeObject:self.shippingCosts forKey:kKeyShippingCosts];
     [aCoder encodeInteger:self.gridCountX forKey:kKeyGridCountX];
     [aCoder encodeInteger:self.gridCountY forKey:kKeyGridCountY];
+    [aCoder encodeObject:self.supportedOptions forKey:kKeySupportedOptions];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
@@ -374,6 +385,7 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
         _shippingCosts = [aDecoder decodeObjectForKey:kKeyShippingCosts];
         _gridCountX = [aDecoder decodeIntegerForKey:kKeyGridCountX];
         _gridCountY = [aDecoder decodeIntegerForKey:kKeyGridCountY];
+        self.supportedOptions = [aDecoder decodeObjectForKey:kKeySupportedOptions];
     }
     
     return self;

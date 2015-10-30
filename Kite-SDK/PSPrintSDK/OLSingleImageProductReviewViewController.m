@@ -25,6 +25,7 @@
 #import "OLImageCachingManager.h"
 #import "OLRemoteImageView.h"
 #import "OLRemoteImageCropper.h"
+#import "OLProductTemplateOption.h"
 
 #ifdef OL_KITE_OFFER_INSTAGRAM
 #import <InstagramImagePicker/OLInstagramImagePickerController.h>
@@ -200,8 +201,8 @@ OLAssetsPickerControllerDelegate>
             OLProductPrintJob *job = [[OLProductPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:assetArray];
             job.uuid = [[NSUUID UUID] UUIDString];
             
-            for (NSString *key in self.product.selectedOptions.allKeys){
-                [job setValue:self.product.selectedOptions[key] forOption:key];
+            for (NSString *option in self.product.selectedOptions.allKeys){
+                [job setValue:self.product.selectedOptions[option] forOption:option];
             }
             
             OLPrintOrder *printOrder = [[OLPrintOrder alloc] init];
