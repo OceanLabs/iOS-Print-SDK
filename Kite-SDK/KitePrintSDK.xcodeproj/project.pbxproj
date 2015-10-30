@@ -214,7 +214,6 @@
 		E29C859D1BE3B5C50041D4CF /* SVProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C84181BE2877A0041D4CF /* SVProgressHUD.m */; };
 		E29C859E1BE3B5C50041D4CF /* NSArray+QueryingExtras.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D0D7ACB1AC0C44C00746FC8 /* NSArray+QueryingExtras.m */; };
 		E29C859F1BE3B5C50041D4CF /* ALAsset+OLAccessibilityLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA829211B9DE54100A9208E /* ALAsset+OLAccessibilityLabel.m */; };
-		E29C85A01BE3B5C50041D4CF /* PrintOrderHistoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CD97569418E083E3007CA090 /* PrintOrderHistoryViewController.m */; };
 		E29C85A11BE3B5C50041D4CF /* UIImage+ImageNamedInKiteBundle.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA13E1F1BBC2202005F3D71 /* UIImage+ImageNamedInKiteBundle.m */; };
 		E29C85A21BE3B5C50041D4CF /* OLAssetsPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E21DA381B9843CF00D9162F /* OLAssetsPageViewController.m */; };
 		E29C85A31BE3B5C50041D4CF /* UIView+WebCacheOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C83BF1BE276050041D4CF /* UIView+WebCacheOperation.m */; };
@@ -232,7 +231,6 @@
 		E29C85AF1BE3B5C50041D4CF /* OLCaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E20BD851AD4229700FB2446 /* OLCaseViewController.m */; };
 		E29C85B01BE3B5C50041D4CF /* UIImageView+WebCache.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C83BD1BE276050041D4CF /* UIImageView+WebCache.m */; };
 		E29C85B11BE3B5C50041D4CF /* NSData+ImageContentType.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C83A21BE276050041D4CF /* NSData+ImageContentType.m */; };
-		E29C85B21BE3B5C50041D4CF /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CD73BF81186215790009DE03 /* ViewController.m */; };
 		E29C85B31BE3B5C50041D4CF /* OLFrameOrderReviewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA8BEB71A484FCB008A9248 /* OLFrameOrderReviewViewController.m */; };
 		E29C85B41BE3B5C50041D4CF /* OLApparelPrintJob.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E333CC91BC7D1850092E42A /* OLApparelPrintJob.m */; };
 		E29C85B51BE3B5C50041D4CF /* OLKiteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EE3C86F1A4AFB0C006446E2 /* OLKiteViewController.m */; };
@@ -258,7 +256,6 @@
 		E29C85C91BE3B5C50041D4CF /* UIView+RMUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D8122EC1A759F42004E7297 /* UIView+RMUtils.m */; };
 		E29C85CA1BE3B5C50041D4CF /* OLPrintOrder+History.m in Sources */ = {isa = PBXBuildFile; fileRef = CD550B181881E1E600782D75 /* OLPrintOrder+History.m */; };
 		E29C85CB1BE3B5C50041D4CF /* OLAsset.m in Sources */ = {isa = PBXBuildFile; fileRef = CDAFE007186D9C6C003572FE /* OLAsset.m */; };
-		E29C85CC1BE3B5C50041D4CF /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = CD73BF7B186215790009DE03 /* AppDelegate.m */; };
 		E29C85CD1BE3B5C50041D4CF /* OLProductTemplate.m in Sources */ = {isa = PBXBuildFile; fileRef = CD97568D18D8D147007CA090 /* OLProductTemplate.m */; };
 		E29C85CE1BE3B5C50041D4CF /* OLPaymentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CDA8BF5018D70D0F00D835BB /* OLPaymentViewController.m */; };
 		E29C85CF1BE3B5C50041D4CF /* NSDateFormatter+OLTimeIntervalFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA8292B1B9DE54100A9208E /* NSDateFormatter+OLTimeIntervalFormatter.m */; };
@@ -1844,7 +1841,6 @@
 				E29C859D1BE3B5C50041D4CF /* SVProgressHUD.m in Sources */,
 				E29C859E1BE3B5C50041D4CF /* NSArray+QueryingExtras.m in Sources */,
 				E29C859F1BE3B5C50041D4CF /* ALAsset+OLAccessibilityLabel.m in Sources */,
-				E29C85A01BE3B5C50041D4CF /* PrintOrderHistoryViewController.m in Sources */,
 				E29C85A11BE3B5C50041D4CF /* UIImage+ImageNamedInKiteBundle.m in Sources */,
 				E29C85A21BE3B5C50041D4CF /* OLAssetsPageViewController.m in Sources */,
 				E29C85A31BE3B5C50041D4CF /* UIView+WebCacheOperation.m in Sources */,
@@ -1862,7 +1858,6 @@
 				E29C85AF1BE3B5C50041D4CF /* OLCaseViewController.m in Sources */,
 				E29C85B01BE3B5C50041D4CF /* UIImageView+WebCache.m in Sources */,
 				E29C85B11BE3B5C50041D4CF /* NSData+ImageContentType.m in Sources */,
-				E29C85B21BE3B5C50041D4CF /* ViewController.m in Sources */,
 				E29C85B31BE3B5C50041D4CF /* OLFrameOrderReviewViewController.m in Sources */,
 				E29C85B41BE3B5C50041D4CF /* OLApparelPrintJob.m in Sources */,
 				E29C85B51BE3B5C50041D4CF /* OLKiteViewController.m in Sources */,
@@ -1888,7 +1883,6 @@
 				E29C85C91BE3B5C50041D4CF /* UIView+RMUtils.m in Sources */,
 				E29C85CA1BE3B5C50041D4CF /* OLPrintOrder+History.m in Sources */,
 				E29C85CB1BE3B5C50041D4CF /* OLAsset.m in Sources */,
-				E29C85CC1BE3B5C50041D4CF /* AppDelegate.m in Sources */,
 				E29C85CD1BE3B5C50041D4CF /* OLProductTemplate.m in Sources */,
 				E29C85CE1BE3B5C50041D4CF /* OLPaymentViewController.m in Sources */,
 				E29C85CF1BE3B5C50041D4CF /* NSDateFormatter+OLTimeIntervalFormatter.m in Sources */,
