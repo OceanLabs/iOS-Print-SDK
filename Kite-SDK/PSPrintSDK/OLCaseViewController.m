@@ -8,7 +8,7 @@
 
 #import "OLCaseViewController.h"
 #import "OLRemoteImageCropper.h"
-#import <SDWebImage/SDWebImageManager.h>
+#import "SDWebImageManager.h"
 #import "UIImage+ImageNamedInKiteBundle.h"
 
 @interface OLSingleImageProductReviewViewController (Private)

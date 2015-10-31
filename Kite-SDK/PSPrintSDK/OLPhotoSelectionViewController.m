@@ -31,7 +31,7 @@
 #import "OLAddress.h"
 #import "OLAsset.h"
 #import "OLProductPrintJob.h"
-#import <UIColor-HexString/UIColor+HexString.h>
+#import "UIColor+HexString.h"
 #import "OLCheckoutViewController.h"
 #import "OLConstants.h"
 #import "LXReorderableCollectionViewFlowLayout.h"

@@ -14,7 +14,7 @@
 #import "OLScrollCropViewController.h"
 #import "OLKiteViewController.h"
 #import "NSObject+Utils.h"
-#import <SDWebImage/SDWebImageManager.h>
+#import "SDWebImageManager.h"
 #import "OLAsset+Private.h"
 #import "OLAnalytics.h"
 #import "OLKitePrintSDK.h"

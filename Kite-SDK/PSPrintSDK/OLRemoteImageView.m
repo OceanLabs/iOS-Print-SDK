@@ -7,7 +7,7 @@
 //
 
 #import "OLRemoteImageView.h"
-#import <DACircularProgress/DACircularProgressView.h>
+#import "DACircularProgressView.h"
 
 @interface OLRemoteImageView ()
 

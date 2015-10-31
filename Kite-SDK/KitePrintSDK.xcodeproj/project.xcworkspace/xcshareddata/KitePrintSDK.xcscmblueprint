@@ -17,7 +17,7 @@
     "9015EB48116202885FDED716D35167A5D0CCD9C6" : 0,
     "5928309140879E871CA2C91C35635A4223DBC07C" : 0
   },
-  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "0B2FBC93-3D22-431F-B53A-EB76A20DFDBA",
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "6F77CFD9-0E83-4062-AC28-1F4AB1A98ECF",
   "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
     "E28E36D423EC87798E52E2BF482E9F7A1E6479D6" : "iOS-Print-SDK\/Kite-SDK\/vendor\/SDWebImage\/",
     "9E1ECC80773D1F4F22D03CB4DEA298B3CB57FAF5" : "iOS-Print-SDK\/Kite-SDK\/vendor\/SVProgressHUD\/",
@@ -34,7 +34,7 @@
   },
   "DVTSourceControlWorkspaceBlueprintNameKey" : "KitePrintSDK",
   "DVTSourceControlWorkspaceBlueprintVersion" : 204,
-  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "Kite-SDK\/KitePrintSDK.xcworkspace",
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "Kite-SDK\/KitePrintSDK.xcodeproj",
   "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
     {
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/mattt\/SkyLab.git",
@@ -52,7 +52,7 @@
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "5928309140879E871CA2C91C35635A4223DBC07C"
     },
     {
-      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/OceanLabs\/CSStickyHeaderFlowLayout",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/jamztang\/CSStickyHeaderFlowLayout.git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "701B5006D938B65FD42237DDAF25824304CA7A66"
     },
