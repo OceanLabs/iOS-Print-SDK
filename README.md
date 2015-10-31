@@ -81,7 +81,8 @@ We really mean it when we say integration can be done in minutes.
 ```
 * Step 3: Create and present Kite:
 ```
-OLKiteViewController *vc = [[OLKiteViewController alloc] initWithAssets:@[[OLAsset assetWithImageAsJPEG:YOUR_UIIMAGE_OBJECT]]]];
+OLKiteViewController *vc = [[OLKiteViewController alloc] initWithAssets:@[[OLAsset assetWithURL:[NSURL URLWithString:@"http://psps.s3.amazonaws.com/sdk_static/4.jpg"]],
+    ]]];
 [self presentViewController:vc animated:YES completion:NULL];
 ```
 * Step 4: Profit!
