@@ -4,7 +4,7 @@ inhibit_all_warnings!
 link_with 'KitePrintSDK', 'KitePrintSDKTests'
 
 pod 'SDWebImage'
-pod 'AFNetworking', '~> 2.5.0'
+pod 'AFNetworking', '~> 2.6.1'
 pod 'SVProgressHUD'
 pod 'PayPal-iOS-SDK', '~> 2.12.3'
 pod 'UICKeyChainStore', '~> 2.0.4'
