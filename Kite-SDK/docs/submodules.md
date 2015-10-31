@@ -50,10 +50,15 @@ If you added the submodule in a directory outside of the root `PROJECT_DIR` make
 
 Step 5. Configure Build Phases
 -----------
-Under the Build Phases tab add `KitePrintSDK` to `Target Dependencies` and `libKiteSDK.a` to `Link Binary with Libraries`
+Under the Build Phases tab add `KitePrintSDK` to `Target Dependencies` phase and `libKiteSDK.a` to `Link Binary with Libraries` phase.
 
 ![Add Header Search Paths](build_phases.gif)
 
-Finally add all resources found under `KitePrintSDK.xcproj/Kite Print SDK/Resources` group to `Copy Bundle Resources`
+Finally add all resources found under `KitePrintSDK.xcproj/Kite Print SDK/Resources` group to `Copy Bundle Resources` phase.
 
 ![Add Resources](assets.gif)
+
+Done
+-----------
+
+You're now ready to start using the SDK, see the [Quick Integration Guide](https://github.com/OceanLabs/iOS-Print-SDK#quick-integration) for how to be up and running in 5 minutes.
