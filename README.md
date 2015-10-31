@@ -41,6 +41,9 @@ Use our SDK to unlock hidden revenue streams and add value for your users. *In u
 * iOS 7.0+ target deployment
 
 ## Installation
+
+The recommended approach for installing is via the CocoaPods, however we also support adding the SDK via git submodules.
+
 ### CocoaPods
 
 [CocoaPods](http://cocoapods.org) is a dependency manager for Objective-C, which automates and simplifies the process of using 3rd-party libraries like the Kite Print SDK in your projects. If you're using it just add the following to your Podfile:
@@ -61,6 +64,10 @@ The SDK includes lots of optional functionality enabled via CocoaPod Subspecs so
 If you'd like to offer your users the opportunity to add photos via Instagram or Facebook then uncomment the appropriate lines above and follow the instructions to [Enable Facebook & Instagram Photo Selection](Kite-SDK/docs/social_photo_sources.md).
 
 PayPal functionality is also optional although recommended as you'll typically see a higher conversion rate with it.
+
+### Git submodules
+
+See our [Git submodule installation guide](Kite-SDK/docs/submodules.md)
 
 ### Quick Integration
 We really mean it when we say integration can be done in minutes.
