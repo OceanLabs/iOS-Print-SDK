@@ -10,9 +10,7 @@
 #import "OLProductTemplate.h"
 #import "OLKitePrintSDK.h"
 #import "SDWebImageManager.h"
-#ifdef OL_KITE_OFFER_APPLE_PAY
 #import <Stripe/Stripe.h>
-#endif
 #import "OLPrintPhoto.h"
 #import "OLKiteTestHelper.h"
 #import <AssetsLibrary/AssetsLibrary.h>
@@ -88,7 +86,6 @@
 
 
 - (void)submitStripeOrder:(OLPrintOrder *)printOrder WithSuccessHandler:(void(^)())handler{
-    #ifdef OL_KITE_OFFER_APPLE_PAY
     XCTestExpectation *expectation = [self expectationWithDescription:@"Print order submitted"];
     
     STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:[OLKitePrintSDK stripePublishableKey]];
@@ -110,7 +107,6 @@
             if (handler) handler();
         }];
     }];
-    #endif
 }
 
 - (void)submitPayPalOrder:(OLPrintOrder *)printOrder WithSuccessHandler:(void(^)())handler{
