@@ -686,7 +686,7 @@ UINavigationControllerDelegate
     OLPhotobookPrintJob *job = [[OLPhotobookPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:photoAssets];
     job.frontCover = self.coverPhoto ? [OLAsset assetWithDataSource:self.coverPhoto] : nil;
 	for (NSString *option in self.product.selectedOptions.allKeys){
-        [printJob setValue:self.product.selectedOptions[option] forOption:option];
+        [job setValue:self.product.selectedOptions[option] forOption:option];
     }
     if (self.editingPrintJob && [printOrder.jobs containsObject:self.editingPrintJob]){
         id<OLPrintJob> existingJob = printOrder.jobs[[printOrder.jobs indexOfObject:self.editingPrintJob]];

@@ -209,10 +209,6 @@ OLAssetsPickerControllerDelegate>
             NSUInteger iphonePhotoCount = 1;
             OLPrintOrder *printOrder = [OLKiteUtils kiteVcForViewController:self].printOrder;
 
-			for (NSString *option in self.product.selectedOptions.allKeys){
-                [job setValue:self.product.selectedOptions[option] forOption:option];
-            }
-
             NSDictionary *infoDict = [[NSBundle mainBundle] infoDictionary];
             NSString *appVersion = [infoDict objectForKey:@"CFBundleShortVersionString"];
             NSNumber *buildNumber = [infoDict objectForKey:@"CFBundleVersion"];
@@ -224,6 +220,9 @@ OLAssetsPickerControllerDelegate>
                                     };
             
             OLProductPrintJob *job = [[OLProductPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:assetArray];
+            for (NSString *option in self.product.selectedOptions.allKeys){
+                [job setValue:self.product.selectedOptions[option] forOption:option];
+            }
             if (self.editingPrintJob && [printOrder.jobs containsObject:self.editingPrintJob]){
                 id<OLPrintJob> existingJob = printOrder.jobs[[printOrder.jobs indexOfObject:self.editingPrintJob]];
                 if ([existingJob extraCopies] > 0){

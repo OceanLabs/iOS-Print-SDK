@@ -249,7 +249,7 @@
     self.editingPrintJob = job;
 
 	for (NSString *option in self.product.selectedOptions.allKeys){
-        [printJob setValue:self.product.selectedOptions[option] forOption:option];
+        [job setValue:self.product.selectedOptions[option] forOption:option];
     }
 
     if ([printOrder.jobs containsObject:self.editingPrintJob]){

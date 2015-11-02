@@ -207,7 +207,7 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
         id<OLPrintJob> existingJob = printOrder.jobs[[printOrder.jobs indexOfObject:self.editingPrintJob]];
         [existingJob setExtraCopies:[existingJob extraCopies]+1];
 		for (NSString *option in self.product.selectedOptions.allKeys){
-        	[printJob setValue:self.product.selectedOptions[option] forOption:option];
+        	[job setValue:self.product.selectedOptions[option] forOption:option];
     	}
     }
     else{
