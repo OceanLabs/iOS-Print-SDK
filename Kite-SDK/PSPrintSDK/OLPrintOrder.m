@@ -44,6 +44,10 @@ static id stringOrEmptyString(NSString *str) {
 + (NSDictionary *)cachedResponseForOrder:(OLPrintOrder *)order;
 @end
 
+@interface OLKitePrintSDK (Private)
++(BOOL)isUnitTesting;
+@end
+
 @interface OLPrintOrder () <OLAssetUploadRequestDelegate, OLPrintOrderRequestDelegate>
 @property (nonatomic, copy) OLPrintOrderProgressHandler progressHandler;
 @property (nonatomic, copy) OLPrintOrderCompletionHandler completionHandler;
@@ -66,6 +70,8 @@ static id stringOrEmptyString(NSString *str) {
 @end
 
 @implementation OLPrintOrder
+
+@synthesize userData=_userData;
 
 + (void)initialize {
     if (!inProgressPrintOrders) {
@@ -120,6 +126,20 @@ static id stringOrEmptyString(NSString *str) {
 - (void)setUserData:(NSDictionary *)userData {
     NSAssert([NSJSONSerialization isValidJSONObject:userData], @"Only valid JSON structures are accepted as user data");
     _userData = userData;
+}
+
+- (NSDictionary *)userData{
+    if ([OLKitePrintSDK isUnitTesting]){
+        if (_userData){
+            NSMutableDictionary *mutableCopy = [_userData mutableCopy];
+            mutableCopy[@"automated_test_order"] = @YES;
+            return mutableCopy;
+        }
+        else{
+            return @{@"automated_test_order" : @YES};
+        }
+    }
+    return _userData;
 }
 
 - (NSArray *)currenciesSupported {

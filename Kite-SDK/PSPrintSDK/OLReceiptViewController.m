@@ -14,12 +14,12 @@
 #import "OLPrintJob.h"
 #import "OLProductTemplate.h"
 #import "OLConstants.h"
-#import <SVProgressHUD/SVProgressHUD.h>
+#import "SVProgressHUD.h"
 #import "OLPaymentLineItem.h"
 #import "OLPrintOrderCost.h"
 #import "OLOrderReviewViewController.h"
 #import "OLKiteViewController.h"
-#import <SDWebImage/SDWebImageManager.h>
+#import "SDWebImageManager.h"
 #import "OLKiteABTesting.h"
 #import "UIImage+ColorAtPixel.h"
 #import "UIImage+ImageNamedInKiteBundle.h"

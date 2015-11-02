@@ -38,6 +38,8 @@ static OLKitePrintSDKEnvironment environment;
 
 static NSString *const kOLAPIEndpointLive = @"https://api.kite.ly";
 static NSString *const kOLAPIEndpointSandbox = @"https://api.kite.ly";
+static NSString *const kOLStagingEndpointLive = @"https://staging.kite.ly";
+static NSString *const kOLStagingEndpointSandbox = @"https://staging.kite.ly";
 static NSString *const kOLPayPalClientIdLive = @"ASYVBBCHF_KwVUstugKy4qvpQaPlUeE_5beKRJHpIP2d3SA_jZrsaUDTmLQY";
 static NSString *const kOLPayPalClientIdSandbox = @"AcEcBRDxqcCKiikjm05FyD4Sfi4pkNP98AYN67sr3_yZdBe23xEk0qhdhZLM";
 static NSString *const kOLPayPalRecipientEmailLive = @"hello@kite.ly";
@@ -46,6 +48,8 @@ static NSString *const kOLAPIEndpointVersion = @"v1.4";
 
 static BOOL useJudoPayForGBP = NO;
 static BOOL cacheTemplates = NO;
+static BOOL useStaging = NO;
+static BOOL isUnitTesting = NO;
 
 #ifdef OL_KITE_OFFER_INSTAGRAM
 static NSString *instagramClientID = nil;
@@ -74,6 +78,18 @@ static NSString *instagramRedirectURI = nil;
     return cacheTemplates;
 }
 
++ (void)setUseStaging:(BOOL)staging{
+    useStaging = staging;
+}
+
++ (void)setIsUnitTesting{
+    isUnitTesting = YES;
+}
+
++ (BOOL)isUnitTesting{
+    return isUnitTesting;
+}
+
 + (void)setAPIKey:(NSString *_Nonnull)_apiKey withEnvironment:(OLKitePrintSDKEnvironment)_environment {
     apiKey = _apiKey;
     environment = _environment;
@@ -95,9 +111,17 @@ static NSString *instagramRedirectURI = nil;
 }
 
 + (NSString *)apiEndpoint {
-    switch (environment) {
-        case kOLKitePrintSDKEnvironmentLive: return kOLAPIEndpointLive;
-        case kOLKitePrintSDKEnvironmentSandbox: return kOLAPIEndpointSandbox;
+    if (useStaging){
+        switch (environment) {
+            case kOLKitePrintSDKEnvironmentLive: return kOLStagingEndpointLive;
+            case kOLKitePrintSDKEnvironmentSandbox: return kOLStagingEndpointSandbox;
+        }
+    }
+    else{
+        switch (environment) {
+            case kOLKitePrintSDKEnvironmentLive: return kOLAPIEndpointLive;
+            case kOLKitePrintSDKEnvironmentSandbox: return kOLAPIEndpointSandbox;
+        }
     }
 }
 

@@ -22,8 +22,8 @@
 #import "NSObject+Utils.h"
 #import "NSDecimalNumber+CostFormatter.h"
 #import "OLKiteABTesting.h"
-#import <TSMarkdownParser/TSMarkdownParser.h>
 #import "OLKiteUtils.h"
+#import "OLProductDetailsViewController.h"
 
 @interface OLKiteViewController ()
 
@@ -32,38 +32,29 @@
 
 @end
 
-@interface OLProductOverviewViewController () <UIPageViewControllerDataSource, OLProductOverviewPageContentViewControllerDelegate>
+@interface OLProductOverviewViewController () <UIPageViewControllerDataSource, OLProductOverviewPageContentViewControllerDelegate, OLProductDetailsDelegate>
 @property (strong, nonatomic) UIPageViewController *pageController;
 @property (strong, nonatomic) IBOutlet UIPageControl *pageControl;
 @property (weak, nonatomic) IBOutlet UILabel *costLabel;
 @property (weak, nonatomic) IBOutlet UIButton *callToActionButton;
 @property (weak, nonatomic) IBOutlet UILabel *callToActionLabel;
 @property (weak, nonatomic) IBOutlet UIImageView *callToActionChevron;
-@property (weak, nonatomic) IBOutlet UILabel *detailsTextLabel;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *detailsBoxTopCon;
 @property (weak, nonatomic) IBOutlet UIImageView *arrowImageView;
 @property (weak, nonatomic) IBOutlet UIView *detailsView;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *detailsViewHeightCon;
-@property (strong, nonatomic) UIVisualEffectView *visualEffectView;
+@property (assign, nonatomic) CGFloat originalBoxConstraint;
+
+@property (strong, nonatomic) OLProductDetailsViewController *productDetails;
 
 @end
 
 @implementation OLProductOverviewViewController
 
-- (CGFloat)detailsBoxHeight{
-    if ([self respondsToSelector:@selector(traitCollection)]){
-        return self.traitCollection.verticalSizeClass == UIUserInterfaceSizeClassCompact ? 340 : 450;
-    }
-    else{
-        return 340;
-    }
-}
-
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    CGSize size = self.view.frame.size;
-    self.detailsViewHeightCon.constant = size.height > size.width ? 450 : [self detailsBoxHeight];
+    [self setupDetailsView];
     
     if (self.product.productTemplate.templateUI == kOLTemplateUIPoster){
         self.title = NSLocalizedString(@"Posters", @"");
@@ -116,11 +107,6 @@
         }
     }
     
-    NSMutableAttributedString *attributedString = [[[TSMarkdownParser standardParser] attributedStringFromMarkdown:[self.product detailsString]] mutableCopy];
-    
-    [attributedString addAttribute:NSForegroundColorAttributeName value:[UIColor colorWithRed: 0.341 green: 0.341 blue: 0.341 alpha: 1] range:NSMakeRange(0, attributedString.length)];
-    self.detailsTextLabel.attributedText = attributedString;
-    
 #ifndef OL_NO_ANALYTICS
     [OLAnalytics trackProductDescriptionScreenViewed:self.product.productTemplate.name hidePrice:[OLKiteABTesting sharedInstance].hidePrice];
 #endif
@@ -130,14 +116,57 @@
         self.callToActionLabel.textAlignment = NSTextAlignmentCenter;
     }
     
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0 && self.detailsView){
+    self.originalBoxConstraint = self.detailsBoxTopCon.constant;
+    
+}
+
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator{
+    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+    [coordinator animateAlongsideTransition:^(id context){
+        self.detailsViewHeightCon.constant = size.height > size.width ? 450 : [self.productDetails recommendedDetailsBoxHeight];
+        self.detailsBoxTopCon.constant = ![self boxIsHidden] ? self.detailsViewHeightCon.constant-100 : self.originalBoxConstraint;
+    }completion:NULL];
+}
+
+- (BOOL)boxIsHidden{
+    return self.detailsBoxTopCon.constant == self.originalBoxConstraint;
+}
+
+- (void)optionsButtonClicked{
+    if ([self boxIsHidden]){
+        [self onLabelDetailsTapped:nil useSpringAnimation:NO];
+    }
+}
+
+- (UIViewController *)viewControllerAtIndex:(NSUInteger)index {
+    if (index == NSNotFound || index >= self.product.productPhotos.count) {
+        return nil;
+    }
+    
+    OLProductOverviewPageContentViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"ProductOverviewPageContentViewController"];
+    vc.pageIndex = index;
+    vc.product = self.product;
+    vc.delegate = self;
+    return vc;
+}
+
+- (void)setupDetailsView{
+    self.productDetails = [self.storyboard instantiateViewControllerWithIdentifier:@"OLProductDetailsViewController"];
+    self.productDetails.product = self.product;
+    self.productDetails.delegate = self;
+    
+    UINavigationController *nvc = [[UINavigationController alloc] initWithRootViewController:self.productDetails];
+    nvc.navigationBarHidden = YES;
+    
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0){
         UIVisualEffect *blurEffect;
         blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleExtraLight];
         
-        self.visualEffectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
-        UIView *view = self.visualEffectView;
-        [self.detailsView addSubview:view];
-        [self.detailsView sendSubviewToBack:view];
+        UIVisualEffectView *visualEffectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
+        UIView *view = visualEffectView;
+        [nvc.view addSubview:view];
+        [nvc.view sendSubviewToBack:view];
+        nvc.view.backgroundColor = [UIColor clearColor];
         
         view.translatesAutoresizingMaskIntoConstraints = NO;
         NSDictionary *views = NSDictionaryOfVariableBindings(view);
@@ -155,45 +184,51 @@
         
     }
     else{
-        self.detailsView.backgroundColor = [UIColor whiteColor];
+        nvc.view.backgroundColor = [UIColor whiteColor];
     }
     
-}
-
-- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator{
-    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
-    [coordinator animateAlongsideTransition:^(id context){
-        self.detailsViewHeightCon.constant = size.height > size.width ? 450 : [self detailsBoxHeight];
-        self.detailsBoxTopCon.constant = self.detailsBoxTopCon.constant != 0 ? self.detailsViewHeightCon.constant-100 : 0;
-    }completion:NULL];
-}
-
-- (UIViewController *)viewControllerAtIndex:(NSUInteger)index {
-    if (index == NSNotFound || index >= self.product.productPhotos.count) {
-        return nil;
+    [self addChildViewController:nvc];
+    [self.detailsView addSubview:nvc.view];
+    UIView *detailsVcView = nvc.view;
+    
+    detailsVcView.translatesAutoresizingMaskIntoConstraints = NO;
+    NSDictionary *views = NSDictionaryOfVariableBindings(detailsVcView);
+    NSMutableArray *con = [[NSMutableArray alloc] init];
+    
+    NSArray *visuals = @[@"H:|-0-[detailsVcView]-0-|",
+                         @"V:|-0-[detailsVcView]-0-|"];
+    
+    
+    for (NSString *visual in visuals) {
+        [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
     }
     
-    OLProductOverviewPageContentViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"ProductOverviewPageContentViewController"];
-    vc.pageIndex = index;
-    vc.product = self.product;
-    vc.delegate = self;
-    return vc;
+    [detailsVcView.superview addConstraints:con];
+    
+    CGSize size = self.view.frame.size;
+    self.detailsViewHeightCon.constant = size.height > size.width ? 450 : [self.productDetails recommendedDetailsBoxHeight];
 }
 
 - (IBAction)onTapGestureRecognized:(UITapGestureRecognizer *)sender {
     [self onButtonStartClicked:nil];
 }
 
-- (IBAction)onLabelDetailsTapped:(UITapGestureRecognizer *)sender {
-    self.detailsBoxTopCon.constant = self.detailsBoxTopCon.constant == 0 ? self.detailsViewHeightCon.constant-100 : 0;
-    [UIView animateWithDuration:0.8 delay:0 usingSpringWithDamping:0.5 initialSpringVelocity:0 options:0 animations:^{
-        self.arrowImageView.transform = self.detailsBoxTopCon.constant == 0 ? CGAffineTransformIdentity : CGAffineTransformMakeRotation(M_PI);
-        [self.view setNeedsLayout];
+- (void)onLabelDetailsTapped:(UITapGestureRecognizer *)sender useSpringAnimation:(BOOL)spring{
+    if (self.detailsBoxTopCon.constant != self.originalBoxConstraint){
+        [(UINavigationController *)self.productDetails.parentViewController popToRootViewControllerAnimated:YES];
+    }
+    self.detailsBoxTopCon.constant = self.detailsBoxTopCon.constant == self.originalBoxConstraint ? self.detailsViewHeightCon.constant-100 : self.originalBoxConstraint;
+    [UIView animateWithDuration:spring ? 0.8 : 0.4 delay:0 usingSpringWithDamping:spring ? 0.5 : 1 initialSpringVelocity:0 options:0 animations:^{
+        self.arrowImageView.transform = self.detailsBoxTopCon.constant == self.originalBoxConstraint ? CGAffineTransformIdentity : CGAffineTransformMakeRotation(M_PI);
         [self.view layoutIfNeeded];
     }completion:^(BOOL finished){
         
     }];
     
+}
+
+- (IBAction)onLabelDetailsTapped:(UITapGestureRecognizer *)sender{
+    [self onLabelDetailsTapped:sender useSpringAnimation:YES];
 }
 
 - (IBAction)onButtonCallToActionClicked:(id)sender {
@@ -204,11 +239,17 @@
     if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder){
         UIViewController *vc;
         if ([[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant isEqualToString:@"Overview-Review-Checkout"]){
-            vc = [self.storyboard instantiateViewControllerWithIdentifier:[OLKiteUtils reviewViewControllerIdentifierForProduct:self.product photoSelectionScreen:NO]];
+            BOOL photoSelection = ![self.delegate respondsToSelector:@selector(kiteControllerShouldAllowUserToAddMorePhotos:)];
+            if (!photoSelection){
+                photoSelection = [self.delegate kiteControllerShouldAllowUserToAddMorePhotos:nil]; //TODO fix this on new payment branch
+            }
+            vc = [self.storyboard instantiateViewControllerWithIdentifier:[OLKiteUtils reviewViewControllerIdentifierForProduct:self.product photoSelectionScreen:photoSelection]];
         }
         else{
             [OLKiteUtils checkoutViewControllerForPrintOrder:[OLKiteUtils kiteVcForViewController:self].printOrder handler:^(id vc){
-                [[vc navigationItem] setLeftBarButtonItem:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:(OLKiteViewController *)vc action:@selector(dismiss)]];
+                if ([[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant isEqualToString:@"Checkout"]){
+                    [[vc navigationItem] setLeftBarButtonItem:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:(OLKiteViewController *)vc action:@selector(dismiss)]];
+                }
                 [vc safePerformSelector:@selector(setUserEmail:) withObject:self.userEmail];
                 [vc safePerformSelector:@selector(setUserPhone:) withObject:self.userPhone];
                 [vc safePerformSelector:@selector(setKiteDelegate:) withObject:self.delegate];
@@ -235,11 +276,51 @@
 }
 
 -(void)userDidTapOnImage{
-    if (self.detailsBoxTopCon.constant != 0){
-        [self onLabelDetailsTapped:nil];
+    if (self.detailsBoxTopCon.constant != self.originalBoxConstraint){
+        [self onLabelDetailsTapped:nil useSpringAnimation:YES];
     }
     else{
         [self onButtonStartClicked:nil];
+    }
+}
+- (IBAction)onPanGestureRecognized:(UIPanGestureRecognizer *)gesture {
+    
+    static CGFloat originalY;
+    
+    if (gesture.state == UIGestureRecognizerStateBegan){
+        originalY = self.detailsBoxTopCon.constant;
+        [self.view layoutIfNeeded];
+    }
+    else if (gesture.state == UIGestureRecognizerStateChanged){
+        CGPoint translate = [gesture translationInView:gesture.view.superview];
+        self.detailsBoxTopCon.constant = MIN(originalY - translate.y, self.detailsViewHeightCon.constant);
+        
+        CGFloat percentComplete = MAX(self.detailsBoxTopCon.constant - self.originalBoxConstraint, 0) / (self.detailsViewHeightCon.constant-100.0-self.originalBoxConstraint);
+        self.arrowImageView.transform = CGAffineTransformMakeRotation(M_PI * MIN(percentComplete, 1));
+        
+        if (translate.y != 0){
+            [(UINavigationController *)self.productDetails.parentViewController popToRootViewControllerAnimated:YES];
+        }
+    }
+    else if (gesture.state == UIGestureRecognizerStateEnded ||
+             gesture.state == UIGestureRecognizerStateFailed ||
+             gesture.state == UIGestureRecognizerStateCancelled){
+        
+        CGFloat start = self.detailsBoxTopCon.constant;
+        self.detailsBoxTopCon.constant = [gesture velocityInView:gesture.view].y < 0 ? self.detailsViewHeightCon.constant-100.0 : self.originalBoxConstraint;
+        
+        CGFloat distance = ABS(start - self.detailsBoxTopCon.constant);
+        CGFloat total = self.detailsViewHeightCon.constant-100.0-self.originalBoxConstraint;
+        CGFloat percentComplete = 1 - distance / total;
+
+        CGFloat damping = ABS(0.5 + (0.5 * percentComplete)*(0.5 * percentComplete));
+        CGFloat time = ABS(0.8 - (0.8 * percentComplete));
+        [UIView animateWithDuration:time delay:0 usingSpringWithDamping:damping initialSpringVelocity:0 options:0 animations:^{
+            self.arrowImageView.transform = [gesture velocityInView:gesture.view].y > 0 ? CGAffineTransformIdentity : CGAffineTransformMakeRotation(M_PI);
+            [self.view layoutIfNeeded];
+        }completion:^(BOOL finished){
+            
+        }];
     }
 }
 

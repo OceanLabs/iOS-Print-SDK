@@ -9,7 +9,7 @@
 #import <XCTest/XCTest.h>
 #import "OLProductTemplate.h"
 #import "OLKitePrintSDK.h"
-#import <SDWebImage/SDWebImageManager.h>
+#import "SDWebImageManager.h"
 #import <Stripe/Stripe.h>
 #import "OLPrintPhoto.h"
 #import "OLKiteTestHelper.h"
@@ -24,6 +24,7 @@
 @interface OLKitePrintSDK (PrivateMethods)
 
 + (NSString *_Nonnull)stripePublishableKey;
++ (BOOL)setIsUnitTesting;
 
 @end
 
@@ -39,7 +40,7 @@
     [super setUp];
     
     [OLKitePrintSDK setAPIKey:@"a45bf7f39523d31aa1ca4ecf64d422b4d810d9c4" withEnvironment:kOLKitePrintSDKEnvironmentSandbox];
-    
+    [OLKitePrintSDK setIsUnitTesting];
     
     [self templateSyncWithSuccessHandler:NULL];
     [self waitForExpectationsWithTimeout:60 handler:nil];
@@ -83,6 +84,7 @@
     
     return printOrder;
 }
+
 
 - (void)submitStripeOrder:(OLPrintOrder *)printOrder WithSuccessHandler:(void(^)())handler{
     XCTestExpectation *expectation = [self expectationWithDescription:@"Print order submitted"];

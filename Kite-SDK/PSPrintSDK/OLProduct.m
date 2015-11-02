@@ -13,6 +13,7 @@
 #import "NSDecimalNumber+CostFormatter.h"
 #import "OLKiteABTesting.h"
 #import "UIImage+ImageNamedInKiteBundle.h"
+#import "OLProductTemplateOption.h"
 
 typedef enum {
     kSizeUnitsInches,
@@ -48,6 +49,18 @@ typedef enum {
         }
     }
     return filteredProducts;
+}
+
+-(NSMutableDictionary *) selectedOptions{
+    if (!_selectedOptions){
+        _selectedOptions = [[NSMutableDictionary alloc] init];
+        
+        OLProductTemplateOption *firstOption = [self.productTemplate.options firstObject];
+        if (firstOption.selections.count > 0){
+            _selectedOptions[firstOption.code] = firstOption.selections.firstObject;
+        }
+    }
+    return _selectedOptions;
 }
 
 - (UIColor *)labelColor{

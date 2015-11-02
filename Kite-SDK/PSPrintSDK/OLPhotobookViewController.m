@@ -36,7 +36,7 @@
 #import <InstagramImagePicker/OLInstagramImage.h>
 #endif
 
-#import <MPFlipViewController/MPFlipTransition.h>
+#import "MPFlipTransition.h"
 #import "UIImage+ImageNamedInKiteBundle.h"
 #import "OLKiteABTesting.h"
 
@@ -685,6 +685,9 @@ UINavigationControllerDelegate
     
     OLPhotobookPrintJob *job = [[OLPhotobookPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:photoAssets];
     job.frontCover = self.coverPhoto ? [OLAsset assetWithDataSource:self.coverPhoto] : nil;
+	for (NSString *option in self.product.selectedOptions.allKeys){
+        [printJob setValue:self.product.selectedOptions[option] forOption:option];
+    }
     if (self.editingPrintJob && [printOrder.jobs containsObject:self.editingPrintJob]){
         id<OLPrintJob> existingJob = printOrder.jobs[[printOrder.jobs indexOfObject:self.editingPrintJob]];
         if ([existingJob extraCopies] > 0){

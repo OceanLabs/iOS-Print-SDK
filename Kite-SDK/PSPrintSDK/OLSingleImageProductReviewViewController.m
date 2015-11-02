@@ -10,7 +10,7 @@
 #import "OLPrintPhoto.h"
 #import "OLAnalytics.h"
 #import "OLAsset+Private.h"
-#import <SDWebImage/SDWebImageManager.h>
+#import "SDWebImageManager.h"
 #import "OLProductPrintJob.h"
 #import "OLKitePrintSDK.h"
 #import "OLAssetsPickerController.h"
@@ -26,6 +26,7 @@
 #import "OLRemoteImageView.h"
 #import "OLRemoteImageCropper.h"
 #import "OLAsset+Private.h"
+#import "OLProductTemplateOption.h"
 
 #ifdef OL_KITE_OFFER_INSTAGRAM
 #import <InstagramImagePicker/OLInstagramImagePickerController.h>
@@ -100,7 +101,8 @@ OLAssetsPickerControllerDelegate>
     [OLAnalytics trackReviewScreenViewed:self.product.productTemplate.name];
 #endif
     
-    if (self.editingPrintJob){
+    if (self.editingPrintJob && !self.userSelectedPhotos){
+		self.title = NSLocalizedString(@"Review", @"");
         self.userSelectedPhotos = [[NSMutableArray alloc] init];
         for (OLAsset *asset in [self.editingPrintJob assetsForUploading]){
             if ([asset.dataSource isKindOfClass:[OLPrintPhoto class]]){
@@ -206,6 +208,11 @@ OLAssetsPickerControllerDelegate>
             
             NSUInteger iphonePhotoCount = 1;
             OLPrintOrder *printOrder = [OLKiteUtils kiteVcForViewController:self].printOrder;
+
+			for (NSString *option in self.product.selectedOptions.allKeys){
+                [job setValue:self.product.selectedOptions[option] forOption:option];
+            }
+
             NSDictionary *infoDict = [[NSBundle mainBundle] infoDictionary];
             NSString *appVersion = [infoDict objectForKey:@"CFBundleShortVersionString"];
             NSNumber *buildNumber = [infoDict objectForKey:@"CFBundleVersion"];

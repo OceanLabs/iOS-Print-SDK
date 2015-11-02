@@ -14,7 +14,7 @@
 #import "OLScrollCropViewController.h"
 #import "OLKiteViewController.h"
 #import "NSObject+Utils.h"
-#import <SDWebImage/SDWebImageManager.h>
+#import "SDWebImageManager.h"
 #import "OLAsset+Private.h"
 #import "OLAnalytics.h"
 #import "OLKitePrintSDK.h"
@@ -247,6 +247,11 @@
         }
     }
     self.editingPrintJob = job;
+
+	for (NSString *option in self.product.selectedOptions.allKeys){
+        [printJob setValue:self.product.selectedOptions[option] forOption:option];
+    }
+
     if ([printOrder.jobs containsObject:self.editingPrintJob]){
         id<OLPrintJob> existingJob = printOrder.jobs[[printOrder.jobs indexOfObject:self.editingPrintJob]];
         [existingJob setExtraCopies:[existingJob extraCopies]+1];

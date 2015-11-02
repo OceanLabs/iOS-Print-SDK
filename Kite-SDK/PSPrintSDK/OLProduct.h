@@ -15,6 +15,7 @@
 @property (strong, nonatomic) OLProductTemplate *productTemplate;
 @property (strong, nonatomic) id coverPhoto;
 @property (strong, nonatomic) NSArray *productPhotos;
+@property (strong, nonatomic) NSMutableDictionary *selectedOptions;
 
 +(NSArray *)products;
 +(NSArray *)productsWithFilters:(NSArray *)allowedTemplateIds;

@@ -7,7 +7,7 @@
 //
 
 #import "OLCreditCardCaptureViewController.h"
-#import <SVProgressHUD/SVProgressHUD.h>
+#import "SVProgressHUD.h"
 #import "OLConstants.h"
 #import "OLPayPalCard.h"
 #import "OLJudoPayCard.h"

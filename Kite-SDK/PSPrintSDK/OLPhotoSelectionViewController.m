@@ -31,7 +31,7 @@
 #import "OLAddress.h"
 #import "OLAsset.h"
 #import "OLProductPrintJob.h"
-#import <UIColor-HexString/UIColor+HexString.h>
+#import "UIColor+HexString.h"
 #import "OLCheckoutViewController.h"
 #import "OLConstants.h"
 #import "LXReorderableCollectionViewFlowLayout.h"
@@ -41,6 +41,7 @@
 #import "UIViewController+TraitCollectionCompatibility.h"
 #import "OLAnalytics.h"
 #import "OLKiteUtils.h"
+#import "OLKiteABTesting.h"
 
 #import "OLRemoteImageView.h"
 #import "OLImageCachingManager.h"
@@ -104,7 +105,29 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 @property (strong, nonatomic) NSMutableDictionary *indexPathsToRemoveDict;
 @end
 
+@interface OLKiteViewController ()
+
+@property (strong, nonatomic) OLPrintOrder *printOrder;
+- (void)dismiss;
+
+@end
+
 @implementation OLPhotoSelectionViewController
+
+// TODO: remove this on the new payment screen branch
+- (OLKiteViewController *)kiteVc{
+    UIViewController *vc = self.parentViewController;
+    while (vc) {
+        if ([vc isKindOfClass:[OLKiteViewController class]]){
+            return (OLKiteViewController *)vc;
+            break;
+        }
+        else{
+            vc = vc.parentViewController;
+        }
+    }
+    return nil;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -112,6 +135,17 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 #ifndef OL_NO_ANALYTICS
     [OLAnalytics trackPhotoSelectionScreenViewed:self.product.productTemplate.name];
 #endif
+    
+    //TODO: change this in the new payment screen branch
+    OLKiteViewController *kiteVc = [self kiteVc];
+    if ([kiteVc printOrder] && !self.userSelectedPhotos){
+        self.userSelectedPhotos = [[NSMutableArray alloc] init];
+        for (OLAsset *asset in [[kiteVc.printOrder.jobs firstObject] assetsForUploading]){
+            OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
+            printPhoto.asset = asset;
+            [self.userSelectedPhotos addObject:printPhoto];
+        }
+    }
     
     self.navigationItem.titleView = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100, 44)];
     [(UILabel *)self.navigationItem.titleView setTextAlignment:NSTextAlignmentCenter];
