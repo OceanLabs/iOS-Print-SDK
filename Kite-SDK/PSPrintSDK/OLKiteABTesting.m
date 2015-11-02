@@ -7,10 +7,10 @@
 //
 
 #import "OLKiteABTesting.h"
-#import <SkyLab/SkyLab.h>
-#import <GroundControl/NSUserDefaults+GroundControl.h>
+#import "SkyLab.h"
+#import "NSUserDefaults+GroundControl.h"
 #import "OLKitePrintSDK.h"
-#import <SDWebImage/SDWebImageManager.h>
+#import "SDWebImageManager.h"
 
 static NSString *const kOLKiteABTestLaunchWithPrintOrderVariant = @"ly.kite.abtest.launch_with_print_order_variant";
 static NSString *const kOLKiteABTestOfferAddressSearch = @"ly.kite.abtest.offer_address_search";

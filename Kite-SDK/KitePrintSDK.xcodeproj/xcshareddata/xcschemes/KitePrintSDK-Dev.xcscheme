@@ -14,37 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "1F422DB77B01C3DCC7A4CFB2C0449FFB"
-               BuildableName = "libPods.a"
-               BlueprintName = "Pods"
-               ReferencedContainer = "container:Pods/Pods.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "CD73BF67186215790009DE03"
-               BuildableName = "KitePrintSDK.app"
-               BlueprintName = "KitePrintSDK"
-               ReferencedContainer = "container:KitePrintSDK.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "NO"
-            buildForArchiving = "NO"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "CD73BF88186215790009DE03"
-               BuildableName = "KitePrintSDKTests.xctest"
-               BlueprintName = "KitePrintSDKTests"
+               BlueprintIdentifier = "2EADD7E31BE79D6D0051CD31"
+               BuildableName = "KitePrintSDK-Dev.app"
+               BlueprintName = "KitePrintSDK-Dev"
                ReferencedContainer = "container:KitePrintSDK.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -58,7 +30,7 @@
       codeCoverageEnabled = "YES">
       <Testables>
          <TestableReference
-            skipped = "YES">
+            skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "CD73BF88186215790009DE03"
@@ -81,9 +53,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "CD73BF67186215790009DE03"
-            BuildableName = "KitePrintSDK.app"
-            BlueprintName = "KitePrintSDK"
+            BlueprintIdentifier = "2EADD7E31BE79D6D0051CD31"
+            BuildableName = "KitePrintSDK-Dev.app"
+            BlueprintName = "KitePrintSDK-Dev"
             ReferencedContainer = "container:KitePrintSDK.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -104,9 +76,9 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "CD73BF67186215790009DE03"
-            BuildableName = "KitePrintSDK.app"
-            BlueprintName = "KitePrintSDK"
+            BlueprintIdentifier = "2EADD7E31BE79D6D0051CD31"
+            BuildableName = "KitePrintSDK-Dev.app"
+            BlueprintName = "KitePrintSDK-Dev"
             ReferencedContainer = "container:KitePrintSDK.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -123,9 +95,9 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "CD73BF67186215790009DE03"
-            BuildableName = "KitePrintSDK.app"
-            BlueprintName = "KitePrintSDK"
+            BlueprintIdentifier = "2EADD7E31BE79D6D0051CD31"
+            BuildableName = "KitePrintSDK-Dev.app"
+            BlueprintName = "KitePrintSDK-Dev"
             ReferencedContainer = "container:KitePrintSDK.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>

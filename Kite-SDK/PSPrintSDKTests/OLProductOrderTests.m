@@ -9,7 +9,7 @@
 #import <XCTest/XCTest.h>
 #import "OLProductTemplate.h"
 #import "OLKitePrintSDK.h"
-#import <SDWebImage/SDWebImageManager.h>
+#import "SDWebImageManager.h"
 #import <Stripe/Stripe.h>
 #import "OLPrintPhoto.h"
 #import "OLKiteTestHelper.h"
@@ -84,6 +84,7 @@
     
     return printOrder;
 }
+
 
 - (void)submitStripeOrder:(OLPrintOrder *)printOrder WithSuccessHandler:(void(^)())handler{
     XCTestExpectation *expectation = [self expectationWithDescription:@"Print order submitted"];

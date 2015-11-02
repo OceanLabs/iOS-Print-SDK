@@ -10,7 +10,9 @@
 #import "ViewController.h"
 #import "NSString+Formatting.h"
 #import "OLKitePrintSDK.h"
+#ifdef OL_KITE_OFFER_PAYPAL
 #import <PayPal-iOS-SDK/PayPalMobile.h>
+#endif
 
 @interface ViewController (Private)
 - (NSString *)liveKey;
@@ -116,6 +118,7 @@
     
 }
 
+#ifdef OL_KITE_OFFER_PAYPAL
 - (void)testOLKitePrintSDK{
     //Live
     [OLKitePrintSDK setAPIKey:@"a45bf7f39523d31aa1ca4ecf64d422b4d810d9c4" withEnvironment:kOLKitePrintSDKEnvironmentLive];
@@ -149,6 +152,7 @@
     XCTAssert([[OLKitePrintSDK instagramSecret] isEqualToString:@"secret"], @"Instagram Fail");
     XCTAssert([[OLKitePrintSDK instagramRedirectURI] isEqualToString:@"redirect"], @"Instagram Fail");
 }
+#endif
 
 - (void)testInstantiateOLPrintJobException{
     @try {

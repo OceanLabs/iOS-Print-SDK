@@ -10,7 +10,7 @@
 #import "OLPrintPhoto.h"
 #import "OLAnalytics.h"
 #import "OLAsset+Private.h"
-#import <SDWebImage/SDWebImageManager.h>
+#import "SDWebImageManager.h"
 #import "OLProductPrintJob.h"
 #import "OLKitePrintSDK.h"
 #import "OLAssetsPickerController.h"

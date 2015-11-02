@@ -12,7 +12,7 @@
 #import "OLKitePrintSDK.h"
 #import "OLAsset.h"
 #import "OLAsset+Private.h"
-#import <AFNetworking/AFNetworking.h>
+#import "AFNetworking.h"
 
 @interface OLKitePrintSDK (Private)
 

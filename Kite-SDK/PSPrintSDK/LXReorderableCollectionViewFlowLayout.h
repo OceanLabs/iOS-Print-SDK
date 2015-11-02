@@ -6,7 +6,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <CSStickyHeaderFlowLayout/CSStickyHeaderFlowLayout.h>
+#import "CSStickyHeaderFlowLayout.h"
 
 @interface LXReorderableCollectionViewFlowLayout : CSStickyHeaderFlowLayout <UIGestureRecognizerDelegate>
 

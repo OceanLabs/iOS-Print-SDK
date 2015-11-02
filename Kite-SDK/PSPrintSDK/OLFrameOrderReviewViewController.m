@@ -10,7 +10,7 @@
 #import "OLPrintPhoto.h"
 #import "OLProduct.h"
 #import "OLAsset+Private.h"
-#import <SDWebImage/SDWebImageManager.h>
+#import "SDWebImageManager.h"
 #import "UIViewController+TraitCollectionCompatibility.h"
 #import "OLRemoteImageView.h"
 

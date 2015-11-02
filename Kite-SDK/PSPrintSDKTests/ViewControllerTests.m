@@ -161,7 +161,7 @@
 
 - (void)testCompleteCaseJourney{
     OLProductHomeViewController *productHomeVc = [self loadKiteViewController];
-    [self chooseClass:@"Phone Cases" onOLProductHomeViewController:productHomeVc];
+    [self chooseClass:@"Snap Cases" onOLProductHomeViewController:productHomeVc];
     
     OLProductTypeSelectionViewController *productTypeVc = (OLProductTypeSelectionViewController *)productHomeVc.navigationController.topViewController;
     XCTAssert([productTypeVc isKindOfClass:[OLProductTypeSelectionViewController class]]);
