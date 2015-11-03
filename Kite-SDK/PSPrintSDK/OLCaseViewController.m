@@ -26,6 +26,7 @@
 @property (strong, nonatomic) UIVisualEffectView *visualEffectView;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *maskActivityIndicator;
 @property (strong, nonatomic) UIImage *maskImage;
+@property (strong, nonatomic) OLPrintPhoto *imageDisplayed;
 
 @end
 
@@ -121,6 +122,8 @@
             self.downloadedMask = YES;
             [self.maskActivityIndicator removeFromSuperview];
             self.maskActivityIndicator = nil;
+            
+            self.imageCropView.imageView.transform = self.imageDisplayed.cropTransform;
         }
     }];
 }

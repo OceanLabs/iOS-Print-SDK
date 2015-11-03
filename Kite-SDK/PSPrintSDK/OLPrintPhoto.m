@@ -28,6 +28,7 @@ static NSString *const kKeyAsset = @"co.oceanlabs.psprintstudio.kKeyAsset";
 static NSString *const kKeyCropFrameRect = @"co.oceanlabs.psprintstudio.kKeyCropFrameRect";
 static NSString *const kKeyCropImageRect = @"co.oceanlabs.psprintstudio.kKeyCropImageRect";
 static NSString *const kKeyCropImageSize = @"co.oceanlabs.psprintstudio.kKeyCropImageSize";
+static NSString *const kKeyCropTransform = @"co.oceanlabs.psprintstudio.kKeyCropTransform";
 
 static NSString *const kKeyExtraCopies = @"co.oceanlabs.psprintstudio.kKeyExtraCopies";
 
@@ -72,6 +73,13 @@ static NSOperationQueue *imageOperationQueue;
     }
     
     return self;
+}
+
+-(CGAffineTransform) cropTransform{
+    if (CGAffineTransformEqualToTransform(_cropTransform, CGAffineTransformMake(0, 0, 0, 0, 0, 0))){
+        _cropTransform = CGAffineTransformIdentity;
+    }
+    return _cropTransform;
 }
 
 - (void)setAsset:(id)asset {
@@ -483,6 +491,7 @@ static NSOperationQueue *imageOperationQueue;
         _cropImageFrame = [aDecoder decodeCGRectForKey:kKeyCropFrameRect];
         _cropImageRect = [aDecoder decodeCGRectForKey:kKeyCropImageRect];
         _cropImageSize = [aDecoder decodeCGSizeForKey:kKeyCropImageSize];
+        _cropTransform = [aDecoder decodeCGAffineTransformForKey:kKeyCropTransform];
         if (self.type == kPrintPhotoAssetTypeALAsset) {
             NSURL *assetURL = [aDecoder decodeObjectForKey:kKeyAsset];
             [[ALAssetsLibrary defaultAssetsLibrary] assetForURL:assetURL
@@ -532,6 +541,7 @@ static NSOperationQueue *imageOperationQueue;
     [aCoder encodeCGRect:self.cropImageFrame forKey:kKeyCropFrameRect];
     [aCoder encodeCGRect:self.cropImageRect forKey:kKeyCropImageRect];
     [aCoder encodeCGSize:self.cropImageSize forKey:kKeyCropImageSize];
+    [aCoder encodeCGAffineTransform:self.cropTransform forKey:kKeyCropTransform];
     if (self.type == kPrintPhotoAssetTypeALAsset) {
         [aCoder encodeObject:[self.asset valueForProperty:ALAssetPropertyAssetURL] forKey:kKeyAsset];
     }

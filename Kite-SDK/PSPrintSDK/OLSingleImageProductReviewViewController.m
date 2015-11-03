@@ -25,6 +25,7 @@
 #import "OLImageCachingManager.h"
 #import "OLRemoteImageView.h"
 #import "OLRemoteImageCropper.h"
+#import "OLAsset+Private.h"
 #import "OLProductTemplateOption.h"
 
 #ifdef OL_KITE_OFFER_INSTAGRAM
@@ -73,6 +74,7 @@ OLAssetsPickerControllerDelegate>
 @property (weak, nonatomic) IBOutlet OLRemoteImageCropper *imageCropView;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *maskAspectRatio;
 @property (strong, nonatomic) OLPrintPhoto *imagePicked;
+@property (strong, nonatomic) OLPrintPhoto *imageDisplayed;
 
 -(void) doCheckout;
 
@@ -102,9 +104,11 @@ OLAssetsPickerControllerDelegate>
     }
     
     if (self.imageCropView){
-        [[self.userSelectedPhotos firstObject] getImageWithProgress:NULL completion:^(UIImage *image){
+        OLPrintPhoto *photo = [self.userSelectedPhotos firstObject];
+        [photo getImageWithProgress:NULL completion:^(UIImage *image){
             self.imageCropView.image = image;
         }];
+        self.imageDisplayed = photo;
     }
     
     for (OLPrintPhoto *printPhoto in self.userSelectedPhotos){
@@ -134,6 +138,7 @@ OLAssetsPickerControllerDelegate>
 
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
+    self.imageCropView.imageView.transform = self.imageDisplayed.cropTransform;
 }
 
 - (void) updateQuantityLabel{
@@ -175,9 +180,12 @@ OLAssetsPickerControllerDelegate>
         return;
     }
     
-    UIImage *croppedImage = self.imageCropView.editedImage;
+    self.imageDisplayed.cropImageFrame = [self.imageCropView getFrameRect];
+    self.imageDisplayed.cropImageRect = [self.imageCropView getImageRect];
+    self.imageDisplayed.cropImageSize = [self.imageCropView croppedImageSize];
+    self.imageDisplayed.cropTransform = self.imageCropView.imageView.transform;
     
-    OLAsset *asset = [OLAsset assetWithImageAsJPEG:croppedImage];
+    OLAsset *asset = [OLAsset assetWithDataSource:self.imageDisplayed];
     
     [asset dataLengthWithCompletionHandler:^(long long dataLength, NSError *error){
         if (dataLength < 40000){
@@ -381,10 +389,10 @@ OLAssetsPickerControllerDelegate>
             return;
         }
         
-        OLPrintPhoto *printPhoto = self.userSelectedPhotos[indexPath.item];
+        self.imageDisplayed = self.userSelectedPhotos[indexPath.item];
         
         self.imageCropView.image = nil;
-        [printPhoto getImageWithProgress:^(float progress){
+        [self.imageDisplayed getImageWithProgress:^(float progress){
 //            [self.imageCropView setProgress:progress];
         }completion:^(UIImage *image){
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -608,6 +616,7 @@ OLAssetsPickerControllerDelegate>
                 self.imageCropView.image = image;
             });
         }];
+        self.imageDisplayed = self.imagePicked;
         self.imagePicked = nil;
     }
     [picker dismissViewControllerAnimated:YES completion:^(void){}];
@@ -664,6 +673,7 @@ OLAssetsPickerControllerDelegate>
                 self.imageCropView.image = image;
             });
         }];
+        self.imageDisplayed = self.imagePicked;
         self.imagePicked = nil;
     }
     [self dismissViewControllerAnimated:YES completion:^(void){}];
@@ -689,6 +699,7 @@ OLAssetsPickerControllerDelegate>
                 self.imageCropView.image = image;
             });
         }];
+        self.imageDisplayed = self.imagePicked;
         self.imagePicked = nil;
     }
     [self dismissViewControllerAnimated:YES completion:^(void){}];

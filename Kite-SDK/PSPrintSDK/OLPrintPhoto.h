@@ -33,6 +33,7 @@ typedef enum {
 @property (assign, nonatomic) CGRect cropImageRect;
 @property (assign, nonatomic) CGRect cropImageFrame;
 @property (assign, nonatomic) CGSize cropImageSize;
+@property (assign, nonatomic) CGAffineTransform cropTransform;
 
 - (BOOL)isCropped;
 

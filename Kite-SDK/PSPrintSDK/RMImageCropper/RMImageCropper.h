@@ -13,6 +13,7 @@ typedef NS_ENUM(NSUInteger, RMImageCropperMode) {
 @property (nonatomic, assign) BOOL enabled;
 @property (nonatomic, assign) RMImageCropperMode initialScale;
 @property (nonatomic, assign) RMImageCropperMode minimumScale;
+@property (nonatomic, strong) UIImageView *imageView;
 @property (nonatomic, copy) void (^tapped)();
 
 - (void)editedImageAsync:(void (^)(UIImage *image))complete;
