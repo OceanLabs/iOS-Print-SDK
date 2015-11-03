@@ -119,10 +119,11 @@ OLAssetsPickerControllerDelegate>
     self.title = NSLocalizedString(@"Reposition the Photo", @"");
     
     if (self.imageCropView){
-        [[self.userSelectedPhotos firstObject] getImageWithProgress:NULL completion:^(UIImage *image){
+        OLPrintPhoto *photo = [self.userSelectedPhotos firstObject];
+        [photo getImageWithProgress:NULL completion:^(UIImage *image){
             self.imageCropView.image = image;
         }];
-        self.imageDisplayed = [self.userSelectedPhotos firstObject];
+        self.imageDisplayed = photo;
     }
     
     for (OLPrintPhoto *printPhoto in self.userSelectedPhotos){
@@ -158,6 +159,7 @@ OLAssetsPickerControllerDelegate>
 
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
+    self.imageCropView.imageView.transform = self.imageDisplayed.cropTransform;
 }
 
 - (void) updateQuantityLabel{
@@ -185,6 +187,7 @@ OLAssetsPickerControllerDelegate>
     self.imageDisplayed.cropImageFrame = [self.imageCropView getFrameRect];
     self.imageDisplayed.cropImageRect = [self.imageCropView getImageRect];
     self.imageDisplayed.cropImageSize = [self.imageCropView croppedImageSize];
+    self.imageDisplayed.cropTransform = self.imageCropView.imageView.transform;
     
     OLAsset *asset = [OLAsset assetWithDataSource:self.imageDisplayed];
     

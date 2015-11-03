@@ -4,7 +4,6 @@
 
 @interface RMImageCropper ()
 
-@property (nonatomic, strong) UIImageView *imageView;
 @property (nonatomic, strong) NSTimer *decelerationTimer;
 @property (nonatomic, strong) NSTimer *elasticityTimer;
 @property (nonatomic, assign) CGAffineTransform scaleTransform;
