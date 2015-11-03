@@ -39,6 +39,7 @@
 #import "OLPhotoSelectionViewController.h"
 #import "OLPhotobookViewController.h"
 #import "NSObject+Utils.h"
+#import "OLProductOverviewViewController.h"
 
 #ifdef OL_KITE_OFFER_PAYPAL
 #import <PayPal-iOS-SDK/PayPalMobile.h>
@@ -56,6 +57,10 @@ static NSString *const kSectionOrderSummary = @"kSectionOrderSummary";
 static NSString *const kSectionPromoCodes = @"kSectionPromoCodes";
 static NSString *const kSectionPayment = @"kSectionPayment";
 static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
+
+@interface OLProductPrintJob ()
+@property (strong, nonatomic) NSMutableDictionary *options;
+@end
 
 @interface OLCheckoutViewController (Private)
 
@@ -870,13 +875,20 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     OLProductPrintJob* printJob = ((OLProductPrintJob*)[self.printOrder.jobs objectAtIndex:indexPath.row]);
     OLProduct *product = [OLProduct productWithTemplateId:printJob.templateId];
     
+    for (NSString *option in printJob.options.allKeys){
+        product.selectedOptions[option] = printJob.options[option];
+    }
+    
+    OLProductOverviewViewController *overviewVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLProductOverviewViewController"];
+    overviewVc.product = product;
+    
     OLOrderReviewViewController* orvc = (OLOrderReviewViewController *)[self.storyboard instantiateViewControllerWithIdentifier:[OLKiteUtils reviewViewControllerIdentifierForProduct:product photoSelectionScreen:NO]];
     orvc.product = product;
     [orvc safePerformSelector:@selector(setEditingPrintJob:) withObject:printJob];
     if ([self shouldShowAddMorePhotos] && product.productTemplate.templateUI != kOLTemplateUICase && product.productTemplate.templateUI != kOLTemplateUIPhotobook && product.productTemplate.templateUI != kOLTemplateUIPostcard){
         OLPhotoSelectionViewController *photoVc = [self.storyboard instantiateViewControllerWithIdentifier:@"PhotoSelectionViewController"];
         photoVc.product = product;
-        [self presentNavViewControllerWithControllers:@[photoVc, orvc]];
+        [self presentNavViewControllerWithControllers:@[overviewVc, photoVc, orvc]];
     }
     else if (product.productTemplate.templateUI == kOLTemplateUIPhotobook){
         OLPhotobookViewController *photobookVc = [self.storyboard instantiateViewControllerWithIdentifier:@"PhotobookViewController"];
@@ -889,10 +901,10 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             photobookVc.coverPhoto = coverPhoto;
         }
         
-        [self presentNavViewControllerWithControllers:@[orvc, photobookVc]];
+        [self presentNavViewControllerWithControllers:@[overviewVc, orvc, photobookVc]];
     }
     else{
-        [self presentNavViewControllerWithControllers:@[orvc]];
+        [self presentNavViewControllerWithControllers:@[overviewVc, orvc]];
     }
 }
 
@@ -1126,10 +1138,10 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     if (indexPath.section == 0){
-        return 40;
+        return 55;
     }
     else{
-        return 47;
+        return 40;
     }
 }
 
