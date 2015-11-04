@@ -32,6 +32,8 @@ static NSString *const kKeyCropTransform = @"co.oceanlabs.psprintstudio.kKeyCrop
 
 static NSString *const kKeyExtraCopies = @"co.oceanlabs.psprintstudio.kKeyExtraCopies";
 
+static CGFloat screenScale = 2.0;
+
 static NSOperationQueue *imageOperationQueue;
 
 @import Photos;
@@ -108,13 +110,32 @@ static NSOperationQueue *imageOperationQueue;
     }
 }
 
-+ (CGFloat)screenScale{
-    return 2; //Should be [UIScreen mainScreen].scale but the 6 Plus chokes on 3x images.
++ (void)calcScreenScaleForTraitCollection:(UITraitCollection *)traitCollection{
+    //Should be [UIScreen mainScreen].scale but the 6 Plus with it's 1GB RAM chokes on 3x images.
+    CGFloat scale = [UIScreen mainScreen].scale;
+    if (scale == 2.0 || scale == 1.0){
+        screenScale = scale;
+    }
+    else if (!traitCollection){
+        scale = 2.0;
+    }
+    else{
+        UIImage *ram1GbImage = [UIImage imageNamed:@"ram-1" inBundle:[OLKiteUtils kiteBundle] compatibleWithTraitCollection:traitCollection];
+        UIImage *ramThisDeviceImage = [UIImage imageNamed:@"ram" inBundle:[OLKiteUtils kiteBundle] compatibleWithTraitCollection:traitCollection];
+        NSData *ram1Gb = UIImagePNGRepresentation(ram1GbImage);
+        NSData *ramThisDevice = UIImagePNGRepresentation(ramThisDeviceImage);
+        if ([ram1Gb isEqualToData:ramThisDevice]){
+            screenScale = 2.0;
+        }
+        else{
+            screenScale = scale;
+        }
+    }
 }
 
 - (void)setImageSize:(CGSize)destSize cropped:(BOOL)cropped progress:(OLImageEditorImageGetImageProgressHandler)progressHandler completionHandler:(void(^)(UIImage *image))handler{
     if (self.cachedCroppedThumbnailImage) {
-        if ((MAX(destSize.height, destSize.width) * [OLPrintPhoto screenScale] <= MIN(self.cachedCroppedThumbnailImage.size.width, self.cachedCroppedThumbnailImage.size.height))){
+        if ((MAX(destSize.height, destSize.width) * screenScale <= MIN(self.cachedCroppedThumbnailImage.size.width, self.cachedCroppedThumbnailImage.size.height))){
             handler(self.cachedCroppedThumbnailImage);
             return;
         }
@@ -294,7 +315,7 @@ static NSOperationQueue *imageOperationQueue;
                 });
             }
         };
-        CGSize requestSize = fullResolution ? PHImageManagerMaximumSize : CGSizeMake(size.width * [OLPrintPhoto screenScale], size.height * [OLPrintPhoto screenScale]);
+        CGSize requestSize = fullResolution ? PHImageManagerMaximumSize : CGSizeMake(size.width * screenScale, size.height * screenScale);
         [imageManager requestImageForAsset:(PHAsset *)self.asset targetSize:requestSize contentMode:PHImageContentModeAspectFill options:options resultHandler:^(UIImage *image, NSDictionary *info){
             completionHandler(image);
         }];
@@ -363,7 +384,7 @@ static NSOperationQueue *imageOperationQueue;
 +(UIImage*)imageWithImage:(UIImage*) sourceImage scaledToSize:(CGSize) i_size
 {
     
-    CGFloat scaleFactor = (MAX(i_size.width, i_size.height) * [OLPrintPhoto screenScale]) / MIN(sourceImage.size.height, sourceImage.size.width);
+    CGFloat scaleFactor = (MAX(i_size.width, i_size.height) * screenScale) / MIN(sourceImage.size.height, sourceImage.size.width);
     
     CGFloat newHeight = sourceImage.size.height * scaleFactor;
     CGFloat newWidth = sourceImage.size.width * scaleFactor;
