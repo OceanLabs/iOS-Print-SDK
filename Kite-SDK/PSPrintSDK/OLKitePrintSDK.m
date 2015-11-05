@@ -182,17 +182,17 @@ static NSString *instagramRedirectURI = nil;
     }
 }
 
++ (NSString *_Nonnull)appleMerchantID {
+    return applePayMerchantID;
+}
+#endif
+
 + (NSString *_Nonnull)stripePublishableKey {
     switch (environment) {
         case kOLKitePrintSDKEnvironmentLive: return kOLStripePublishableKeyLive;
         case kOLKitePrintSDKEnvironmentSandbox: return kOLStripePublishableKeyTest;
     }
 }
-
-+ (NSString *_Nonnull)appleMerchantID {
-    return applePayMerchantID;
-}
-#endif
 
 #pragma mark - Internal
 
