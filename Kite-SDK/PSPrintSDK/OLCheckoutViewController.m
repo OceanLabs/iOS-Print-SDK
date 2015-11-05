@@ -247,7 +247,8 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
     
     if (self.printOrder.shippingAddress){ //Only for single addresses
         self.shippingAddresses = [@[self.printOrder.shippingAddress] mutableCopy];
-        self.selectedShippingAddresses = self.shippingAddresses;
+        self.selectedShippingAddresses = [[NSMutableArray alloc] init];
+        [self.selectedShippingAddresses addObject:self.printOrder.shippingAddress];
     }
     
     if ([self.tableView respondsToSelector:@selector(setCellLayoutMarginsFollowReadableWidth:)]){
