@@ -81,6 +81,7 @@ static CardType getCardType(NSString *cardNumber) {
 
 @interface OLKitePrintSDK (Private)
 + (BOOL)useJudoPayForGBP;
++ (BOOL)useStripeForCreditCards;
 @end
 
 @interface OLCreditCardCaptureRootController : UITableViewController <UITableViewDelegate,
@@ -253,18 +254,42 @@ UITableViewDataSource, UITextFieldDelegate>
         }
     }
     
-    OLPayPalCard *card = [[OLPayPalCard alloc] init];
-    card.type = paypalCard;
-    card.number = [self cardNumber];
-    card.expireMonth = expireMonth;
-    card.expireYear = expireYear;
-    card.cvv2 = [self cardCVV];
-    
-    [self storeAndChargeCard:card];
+    if ([OLKitePrintSDK useStripeForCreditCards]){
+        OLStripeCard *card = [[OLStripeCard alloc] init];
+        card.number = [self cardNumber];
+        card.expireMonth = expireMonth;
+        card.expireYear = expireYear;
+        card.cvv2 = [self cardCVV];
+        
+        [SVProgressHUD setDefaultMaskType:SVProgressHUDMaskTypeBlack];
+        [SVProgressHUD showWithStatus:NSLocalizedStringFromTableInBundle(@"Processing", @"KitePrintSDK", [OLConstants bundle], @"")];
+        [card chargeCard:nil currencyCode:nil description:nil completionHandler:^(NSString *proofOfPayment, NSError *error) {
+            if (error) {
+                [SVProgressHUD dismiss];
+                [[[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLConstants bundle], @"") message:error.localizedDescription delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLConstants bundle], @"") otherButtonTitles:nil] show];
+                return;
+            }
+            
+            [SVProgressHUD dismiss];
+            [self.delegate creditCardCaptureController:(OLCreditCardCaptureViewController *) self.navigationController didFinishWithProofOfPayment:proofOfPayment];
+            [card saveAsLastUsedCard];
+        }];
+    }
+    else{
+        OLPayPalCard *card = [[OLPayPalCard alloc] init];
+        card.type = paypalCard;
+        card.number = [self cardNumber];
+        card.expireMonth = expireMonth;
+        card.expireYear = expireYear;
+        card.cvv2 = [self cardCVV];
+        
+        [self storeAndChargeCard:card];
+    }
 }
 
-- (void)storeAndChargeCard:(OLPayPalCard *)card{
-    [SVProgressHUD showWithStatus:NSLocalizedStringFromTableInBundle(@"Processing", @"KitePrintSDK", [OLConstants bundle], @"") maskType:SVProgressHUDMaskTypeBlack];
+- (void)storeAndChargeCard:(id)card{
+    [SVProgressHUD setDefaultMaskType:SVProgressHUDMaskTypeBlack];
+    [SVProgressHUD showWithStatus:NSLocalizedStringFromTableInBundle(@"Processing", @"KitePrintSDK", [OLConstants bundle], @"")];
     [card storeCardWithCompletionHandler:^(NSError *error) {
         // ignore error as I'd rather the user gets a nice checkout experience than we store the card in PayPal vault.
         [self.printOrder costWithCompletionHandler:^(OLPrintOrderCost *cost, NSError *error) {

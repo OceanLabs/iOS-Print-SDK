@@ -172,7 +172,8 @@
     
     OLAddress *address = self.searchResults[indexPath.row];
     if (address.isSearchRequiredForFullDetails) {
-        [SVProgressHUD showWithStatus:@"Fetching Address Details" maskType:SVProgressHUDMaskTypeBlack];
+        [SVProgressHUD setDefaultMaskType:SVProgressHUDMaskTypeBlack];
+        [SVProgressHUD showWithStatus:@"Fetching Address Details"];
         [self.inProgressRequest  cancelSearch];
         self.progressToEditViewControllerOnUniqueAddressResult = YES;
         OLAddressSearchRequest *req = [OLAddress searchForAddress:address delegate:self];

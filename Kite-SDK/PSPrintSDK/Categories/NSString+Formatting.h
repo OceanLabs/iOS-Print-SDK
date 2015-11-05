@@ -13,5 +13,6 @@
 + (NSString *)stringByTrimmingSpecialCharacters:(NSString *)input;
 + (NSString *)stringByFormattingCreditCardExpiry:(NSString *)input;
 + (NSString *)stringByFormattingCreditCardNumber:(NSString *)input;
++ (NSString *)stringByURLEncoding:(NSString *)string;
 
 @end

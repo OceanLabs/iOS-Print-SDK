@@ -57,6 +57,7 @@ static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
 
 @interface OLKitePrintSDK (Private)
 + (BOOL)useJudoPayForGBP;
++ (BOOL)useStripeForCreditCards;
 
 #ifdef OL_KITE_OFFER_PAYPAL
 + (NSString *_Nonnull)paypalEnvironment;
@@ -720,9 +721,13 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             
             id card = [OLPayPalCard lastUsedCard];
             
-            if ([OLKitePrintSDK useJudoPayForGBP] && [self.printOrder.currencyCode isEqualToString:@"GBP"]) {
+            if ([OLKitePrintSDK useStripeForCreditCards]){
+                card = [OLStripeCard lastUsedCard];
+            }
+            else if ([OLKitePrintSDK useJudoPayForGBP] && [self.printOrder.currencyCode isEqualToString:@"GBP"]) {
                 card = [OLJudoPayCard lastUsedCard];
             }
+            
             
             if (card == nil) {
                 [self payWithNewCard];
@@ -734,7 +739,10 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
                             [self payWithNewCard];
                     }]];
                     [ac addAction:[UIAlertAction actionWithTitle:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Pay with card ending %@", @"KitePrintSDK", [OLConstants bundle], @""), [[card numberMasked] substringFromIndex:[[card numberMasked] length] - 4]]  style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
-                        if ([OLKitePrintSDK useJudoPayForGBP] && [self.printOrder.currencyCode isEqualToString:@"GBP"]) {
+                        
+                        if ([OLKitePrintSDK useStripeForCreditCards]){
+                            [self payWithExistingStripeCard:[OLStripeCard lastUsedCard]];
+                        } else if ([OLKitePrintSDK useJudoPayForGBP] && [self.printOrder.currencyCode isEqualToString:@"GBP"]) {
                             [self payWithExistingJudoPayCard:[OLJudoPayCard lastUsedCard]];
                         } else {
                             [self payWithExistingPayPalCard:[OLPayPalCard lastUsedCard]];
@@ -763,7 +771,33 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     if ([OLKitePrintSDK useJudoPayForGBP]) {
         NSAssert(![self.printOrder.currencyCode isEqualToString:@"GBP"], @"JudoPay should be used for GBP orders (and only for Kite internal use)");
     }
-    [SVProgressHUD showWithStatus:NSLocalizedStringFromTableInBundle(@"Processing", @"KitePrintSDK", [OLConstants bundle], @"") maskType:SVProgressHUDMaskTypeBlack];
+    [SVProgressHUD setDefaultMaskType:SVProgressHUDMaskTypeBlack];
+    [SVProgressHUD showWithStatus:NSLocalizedStringFromTableInBundle(@"Processing", @"KitePrintSDK", [OLConstants bundle], @"")];
+    [self.printOrder costWithCompletionHandler:^(OLPrintOrderCost *cost, NSError *error) {
+        [card chargeCard:[cost totalCostInCurrency:self.printOrder.currencyCode] currencyCode:self.printOrder.currencyCode description:self.printOrder.paymentDescription completionHandler:^(NSString *proofOfPayment, NSError *error) {
+            if (error) {
+                [SVProgressHUD dismiss];
+                if ([UIAlertController class]){
+                    UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLConstants bundle], @"") message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
+                    [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLConstants bundle], @"") style:UIAlertActionStyleDefault handler:NULL]];
+                    [self presentViewController:ac animated:YES completion:NULL];
+                }
+                else{
+                    UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLConstants bundle], @"") message:error.localizedDescription delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLConstants bundle], @"") otherButtonTitles:nil];
+                    [av show];
+                }
+                return;
+            }
+            
+            [self submitOrderForPrintingWithProofOfPayment:proofOfPayment paymentMethod:@"Credit Card" completion:^void(PKPaymentAuthorizationStatus status){}];
+            [card saveAsLastUsedCard];
+        }];
+    }];
+}
+
+- (void)payWithExistingStripeCard:(OLStripeCard *)card {
+    [SVProgressHUD setDefaultMaskType:SVProgressHUDMaskTypeBlack];
+    [SVProgressHUD showWithStatus:NSLocalizedStringFromTableInBundle(@"Processing", @"KitePrintSDK", [OLConstants bundle], @"")];
     [self.printOrder costWithCompletionHandler:^(OLPrintOrderCost *cost, NSError *error) {
         [card chargeCard:[cost totalCostInCurrency:self.printOrder.currencyCode] currencyCode:self.printOrder.currencyCode description:self.printOrder.paymentDescription completionHandler:^(NSString *proofOfPayment, NSError *error) {
             if (error) {
@@ -788,7 +822,8 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 
 - (void)payWithExistingJudoPayCard:(OLJudoPayCard *)card {
     NSAssert([self.printOrder.currencyCode isEqualToString:@"GBP"], @"JudoPay should only be used for GBP orders (and only for Kite internal use)");
-    [SVProgressHUD showWithStatus:NSLocalizedStringFromTableInBundle(@"Processing", @"KitePrintSDK", [OLConstants bundle], @"") maskType:SVProgressHUDMaskTypeBlack];
+    [SVProgressHUD setDefaultMaskType:SVProgressHUDMaskTypeBlack];
+    [SVProgressHUD showWithStatus:NSLocalizedStringFromTableInBundle(@"Processing", @"KitePrintSDK", [OLConstants bundle], @"")];
     [self.printOrder costWithCompletionHandler:^(OLPrintOrderCost *cost, NSError *error) {
         [card chargeCard:[cost totalCostInCurrency:@"GBP"] currency:kOLJudoPayCurrencyGBP description:self.printOrder.paymentDescription completionHandler:^(NSString *proofOfPayment, NSError *error) {
             if (error) {
@@ -810,6 +845,8 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         }];
     }];
 }
+
+
 
 #ifdef OL_KITE_OFFER_PAYPAL
 - (IBAction)onButtonPayWithPayPalClicked {
@@ -884,7 +921,8 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     
     __block BOOL handlerUsed = NO;
     
-    [SVProgressHUD showWithStatus:NSLocalizedStringFromTableInBundle(@"Processing", @"KitePrintSDK", [OLConstants bundle], @"") maskType:SVProgressHUDMaskTypeBlack];
+    [SVProgressHUD setDefaultMaskType:SVProgressHUDMaskTypeBlack];
+    [SVProgressHUD showWithStatus:NSLocalizedStringFromTableInBundle(@"Processing", @"KitePrintSDK", [OLConstants bundle], @"")];
     [self.printOrder submitForPrintingWithProgressHandler:^(NSUInteger totalAssetsUploaded, NSUInteger totalAssetsToUpload,
                                                             long long totalAssetBytesWritten, long long totalAssetBytesExpectedToWrite,
                                                             long long totalBytesWritten, long long totalBytesExpectedToWrite) {
@@ -897,7 +935,8 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         const float step = (1.0f / totalAssetsToUpload);
         NSUInteger totalURLAssets = self.printOrder.totalAssetsToUpload - totalAssetsToUpload;
         float progress = totalAssetsUploaded * step + (totalAssetBytesWritten / (float) totalAssetBytesExpectedToWrite) * step;
-        [SVProgressHUD showProgress:progress status:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Uploading Images \n%lu / %lu", @"KitePrintSDK", [OLConstants bundle], @""), (unsigned long) totalAssetsUploaded + 1 + totalURLAssets, (unsigned long) self.printOrder.totalAssetsToUpload] maskType:SVProgressHUDMaskTypeBlack];
+        [SVProgressHUD setDefaultMaskType:SVProgressHUDMaskTypeBlack];
+        [SVProgressHUD showProgress:progress status:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Uploading Images \n%lu / %lu", @"KitePrintSDK", [OLConstants bundle], @""), (unsigned long) totalAssetsUploaded + 1 + totalURLAssets, (unsigned long) self.printOrder.totalAssetsToUpload]];
     } completionHandler:^(NSString *orderIdReceipt, NSError *error) {
         if (error) {
             handler(PKPaymentAuthorizationStatusFailure);
@@ -1334,7 +1373,9 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         [self payWithNewCard];
     } else if (buttonIndex == 1) {
         // pay with existing card
-        if ([OLKitePrintSDK useJudoPayForGBP] && [self.printOrder.currencyCode isEqualToString:@"GBP"]) {
+        if ([OLKitePrintSDK useStripeForCreditCards]){
+            [self payWithExistingStripeCard:[OLStripeCard lastUsedCard]];
+        } else if ([OLKitePrintSDK useJudoPayForGBP] && [self.printOrder.currencyCode isEqualToString:@"GBP"]) {
             [self payWithExistingJudoPayCard:[OLJudoPayCard lastUsedCard]];
         } else {
             [self payWithExistingPayPalCard:[OLPayPalCard lastUsedCard]];

@@ -10,7 +10,6 @@
 #import "OLProductTemplate.h"
 #import "OLKitePrintSDK.h"
 #import "SDWebImageManager.h"
-#import <Stripe/Stripe.h>
 #import "OLPrintPhoto.h"
 #import "OLKiteTestHelper.h"
 #import <AssetsLibrary/AssetsLibrary.h>
@@ -89,17 +88,15 @@
 - (void)submitStripeOrder:(OLPrintOrder *)printOrder WithSuccessHandler:(void(^)())handler{
     XCTestExpectation *expectation = [self expectationWithDescription:@"Print order submitted"];
     
-    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:[OLKitePrintSDK stripePublishableKey]];
-    
-    STPCard *card = [STPCard new];
+    OLStripeCard *card = [[OLStripeCard alloc] init];
     card.number = @"4242424242424242";
-    card.expMonth = 12;
-    card.expYear = 2020;
-    card.cvc = @"123";
-    [client createTokenWithCard:card completion:^(STPToken *token, NSError *error) {
-        XCTAssert(!error, @"Failed to create Stripe token with: %@", error);
-        printOrder.proofOfPayment = token.tokenId;
-        
+    card.expireMonth = 12;
+    card.expireYear = 2020;
+    card.cvv2 = @"111";
+    
+    [card chargeCard:nil currencyCode:nil description:nil completionHandler:^(NSString *proofOfPayment, NSError *error){
+        printOrder.proofOfPayment = proofOfPayment;
+        XCTAssert(!error, @"Stripe error: %@", error);
         [printOrder submitForPrintingWithProgressHandler:NULL completionHandler:^(NSString *orderIdReceipt, NSError *error) {
             XCTAssert(!error, @"Failed to submit order to Kite with: %@", error);
             
