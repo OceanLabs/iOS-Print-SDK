@@ -427,27 +427,39 @@ static NSOperationQueue *imageOperationQueue;
         }
     }
     else if (self.type == kPrintPhotoAssetTypePHAsset){
-        PHImageManager *imageManager = [PHImageManager defaultManager];
-        PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
-        options.synchronous = NO;
-        options.deliveryMode = PHImageRequestOptionsDeliveryModeHighQualityFormat;
-        options.networkAccessAllowed = YES;
-        [imageManager requestImageDataForAsset:self.asset options:options resultHandler:^(NSData *imageData, NSString *dataUTI, UIImageOrientation orientation, NSDictionary *info){
-            if (!imageData){
-                NSData *data = [NSData dataWithContentsOfFile:[[OLKiteUtils kiteBundle] pathForResource:@"kite_corrupt" ofType:@"jpg"]];
-                handler(data, nil);
-            }
-            else{
-                if ([[dataUTI lowercaseString] containsString:@"jpg"] || [[dataUTI lowercaseString] containsString:@"jpeg"] || [[dataUTI lowercaseString] containsString:@"jpg"]){
-                    handler(imageData, nil);
-                }
-                else{
-                    [imageManager requestImageForAsset:self.asset targetSize:PHImageManagerMaximumSize contentMode:PHImageContentModeDefault options:options resultHandler:^(UIImage *result, NSDictionary *info){
-                        handler(UIImageJPEGRepresentation(result, 0.7), nil);
+        NSBlockOperation *block = [[NSBlockOperation alloc] init];
+        [block addExecutionBlock:^{
+            PHImageManager *imageManager = [PHImageManager defaultManager];
+            PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
+            options.synchronous = YES;
+            options.deliveryMode = PHImageRequestOptionsDeliveryModeHighQualityFormat;
+            options.networkAccessAllowed = YES;
+            
+            [imageManager requestImageForAsset:self.asset targetSize:PHImageManagerMaximumSize contentMode:PHImageContentModeDefault options:options resultHandler:^(UIImage *result, NSDictionary *info){
+                if (result){
+                    [self dataWithImage:result withCompletionHandler:^(NSData *data, NSError *error){
+                        if (!error){
+                            dispatch_async(dispatch_get_main_queue(), ^{
+                                handler(data, nil);
+                            });
+                        }
+                        else{
+                            NSData *data = [NSData dataWithContentsOfFile:[[OLKiteUtils kiteBundle] pathForResource:@"kite_corrupt" ofType:@"jpg"]];
+                            dispatch_async(dispatch_get_main_queue(), ^{
+                                handler(data, nil);
+                            });
+                        }
                     }];
                 }
-            }
+                else{
+                    NSData *data = [NSData dataWithContentsOfFile:[[OLKiteUtils kiteBundle] pathForResource:@"kite_corrupt" ofType:@"jpg"]];
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        handler(data, nil);
+                    });
+                }
+            }];
         }];
+        [imageOperationQueue addOperation:block];
     }
 #if defined(OL_KITE_OFFER_INSTAGRAM) || defined(OL_KITE_OFFER_FACEBOOK)
     else if (self.type == kPrintPhotoAssetTypeFacebookPhoto || self.type == kPrintPhotoAssetTypeInstagramPhoto){
