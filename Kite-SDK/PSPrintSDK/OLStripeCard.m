@@ -106,8 +106,17 @@ static OLStripeCard *lastUsedCard;
     [[session uploadTaskWithRequest:request fromData:data completionHandler:^(NSData *data, NSURLResponse *response, NSError *error){
         dispatch_async(dispatch_get_main_queue(), ^{
             if (!error){
-                NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
-                handler(json[@"id"], nil);
+                NSError *error;
+                NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+                if (error){
+                    handler(nil, [NSError errorWithDomain:@"com.stripe" code:400 userInfo:@{NSLocalizedDescriptionKey : NSLocalizedString(@"There was an error trying to validate the card. Please try again later.", @"")}]);
+                }
+                else if (json[@"error"]){
+                    handler(nil, [NSError errorWithDomain:@"com.stripe" code:400 userInfo:@{NSLocalizedDescriptionKey : json[@"error"][@"message"]}]);
+                }
+                else{
+                    handler(json[@"id"], nil);
+                }
             }
             else{
                 handler(nil, error);
