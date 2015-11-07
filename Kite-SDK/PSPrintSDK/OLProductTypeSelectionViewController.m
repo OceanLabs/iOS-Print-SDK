@@ -82,7 +82,7 @@
                                                                             target:nil
                                                                             action:nil];
     
-    if ([UITraitCollection class] && self.traitCollection.forceTouchCapability == UIForceTouchCapabilityAvailable){
+    if ([UITraitCollection class] && [self.traitCollection respondsToSelector:@selector(forceTouchCapability)] && self.traitCollection.forceTouchCapability == UIForceTouchCapabilityAvailable){
         [self registerForPreviewingWithDelegate:self sourceView:self.collectionView];
     }
     
