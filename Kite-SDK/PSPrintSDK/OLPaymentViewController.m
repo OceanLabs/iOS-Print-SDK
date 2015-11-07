@@ -90,6 +90,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 @property (strong, nonatomic) OLPayPalCard *card;
 @property (strong, nonatomic) UITextField *promoTextField;
 @property (strong, nonatomic) UIButton *promoApplyButton;
+@property (strong, nonatomic) NSString *tempPromoCode;
 @property (assign, nonatomic) BOOL clearPromoCode;
 @property (strong, nonatomic) UIButton *payWithCreditCardButton;
 @property (strong, nonatomic) UILabel *kiteLabel;
@@ -475,6 +476,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
     BOOL keyboardIsVisible = [self.promoTextField isFirstResponder];
+    self.tempPromoCode = self.promoTextField.text;
     [self.promoTextField resignFirstResponder];
     [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinator> context){
@@ -1338,8 +1340,6 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
                 [view.superview addConstraints:con];
             }
             
-            
-            
             self.promoTextField = promoCodeTextField;
             self.promoApplyButton = applyButton;
         }
@@ -1360,6 +1360,10 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             [self.promoApplyButton setTitle:NSLocalizedStringFromTableInBundle(@"Apply", @"KitePrintSDK", [OLConstants bundle], @"") forState:UIControlStateNormal];
             [self.promoApplyButton sizeToFit];
             self.clearPromoCode = NO;
+        }
+        if (self.tempPromoCode){
+            self.promoTextField.text = self.tempPromoCode;
+            self.tempPromoCode = nil;
         }
     }
     return cell;
