@@ -62,6 +62,12 @@ static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
 @property (strong, nonatomic) NSMutableDictionary *options;
 @end
 
+@interface OLProduct (PrivateMethods)
+
+- (NSDecimalNumber*) unitCostDecimalNumber;
+
+@end
+
 @interface OLCheckoutViewController (Private)
 
 + (BOOL)validateEmail:(NSString *)candidate;
@@ -512,6 +518,35 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         }
         else{
             self.promoCodeCostLabel.text = [promoCost formatCostForCurrencyCode:self.printOrder.currencyCode];
+        }
+        [self validateTemplatePricing];
+    }];
+}
+
+/**
+ *  The price on the line items on this screen are the prices from the templates. To avoid the situation where the template prices have changed and we don't know about it, do a comparison between the expected cost (based on the known template prices) and the actual prices that we got from the /cost endpoint. If we detect a discrepancy, resync the templates here.
+ */
+- (void)validateTemplatePricing{
+    double expectedCost = 0.0;
+    for (id<OLPrintJob> job in self.printOrder.jobs){
+        OLProductTemplate *template = [OLProductTemplate templateWithId:[job templateId]];
+        
+        NSDecimalNumber *sheetCost = [template costPerSheetInCurrencyCode:[self.printOrder currencyCode]];
+        NSUInteger sheetQuanity = template.quantityPerSheet == 0 ? 1 : template.quantityPerSheet;
+        NSUInteger numSheets = (NSUInteger) ceil([OLProduct productWithTemplateId:[job templateId]].quantityToFulfillOrder / sheetQuanity);
+        NSDecimalNumber *unitCost = [sheetCost decimalNumberByMultiplyingBy:[NSDecimalNumber decimalNumberWithString:[NSString stringWithFormat:@"%lu", (unsigned long)numSheets]]];
+        
+        expectedCost += unitCost.doubleValue * ([job extraCopies] + 1);
+    }
+    [self.printOrder costWithCompletionHandler:^(OLPrintOrderCost *cost, NSError *error){
+        double actualCost = [cost totalCostInCurrency:self.printOrder.currencyCode].doubleValue;
+        actualCost -= [cost shippingCostInCurrency:self.printOrder.currencyCode].doubleValue;
+        actualCost -= [cost promoCodeDiscountInCurrency:self.printOrder.currencyCode].doubleValue;
+        
+        if (actualCost != expectedCost){
+            [OLProductTemplate syncWithCompletionHandler:^(NSArray *templates, NSError *error){
+                [self.tableView reloadData];
+            }];
         }
     }];
 }
