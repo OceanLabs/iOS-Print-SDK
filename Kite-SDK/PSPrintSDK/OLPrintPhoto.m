@@ -463,7 +463,7 @@ static NSOperationQueue *imageOperationQueue;
                 }
             }];
         }];
-        [imageOperationQueue addOperation:block];
+        [[OLPrintPhoto imageOperationQueue] addOperation:block];
     }
 #if defined(OL_KITE_OFFER_INSTAGRAM) || defined(OL_KITE_OFFER_FACEBOOK)
     else if (self.type == kPrintPhotoAssetTypeFacebookPhoto || self.type == kPrintPhotoAssetTypeInstagramPhoto){
