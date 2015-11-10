@@ -65,6 +65,7 @@ static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
 @interface OLCheckoutViewController (Private)
 
 + (BOOL)validateEmail:(NSString *)candidate;
+- (void)onButtonDoneClicked;
 
 @end
 
@@ -326,7 +327,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     }
 }
 
-- (IBAction)onButtonMoreOptionsClicked{
+- (IBAction)onButtonMoreOptionsClicked:(id)sender{
     self.poweredByKiteLabelBottomCon.constant = -110;
     [UIView animateWithDuration:0.25 animations:^{
         [self.view layoutIfNeeded];
@@ -338,7 +339,9 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         
         self.poweredByKiteLabelBottomCon.constant = 5;
         self.shippingDetailsCon.constant = 2;
-        self.backToApplePayButton.hidden = NO;
+        if (sender){
+            self.backToApplePayButton.hidden = NO;
+        }
         [UIView animateWithDuration:0.25 animations:^{
             [self.view layoutIfNeeded];
             self.shippingDetailsBox.alpha = 1;
@@ -473,20 +476,23 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 #ifdef OL_KITE_OFFER_APPLE_PAY
             self.paymentButton1.hidden = YES;
 #endif
+            if ([self shouldShowApplePay] && self.paymentButton2.tag != 7777){
+                [self onButtonMoreOptionsClicked:nil];
+            }
             [self.paymentButton2 setTitle:NSLocalizedStringFromTableInBundle(@"Checkout for Free!", @"KitePrintSDK", [OLConstants bundle], @"") forState:UIControlStateNormal];
-        } else {
+            self.paymentButton2.tag = 7777; //Tag button to know it is showing free checkout;
+        }
+        else {
 #ifdef OL_KITE_OFFER_PAYPAL
             self.paymentButton1.hidden = NO;
 #endif
 #ifdef OL_KITE_OFFER_APPLE_PAY
             self.paymentButton1.hidden = NO;
 #endif
-            if ([self shouldShowApplePay]){
-                [self.paymentButton2 setTitle:NSLocalizedString(@"Checkout", @"") forState:UIControlStateNormal];
+            if ([self shouldShowApplePay] && self.paymentButton2.tag == 7777){
+                [self onButtonBackToApplePayClicked:nil];
             }
-            else{
-                [self.paymentButton2 setTitle:NSLocalizedStringFromTableInBundle(@"Credit Card", @"KitePrintSDK", [OLConstants bundle], @"") forState:UIControlStateNormal];
-            }
+            [self.paymentButton2 setTitle:NSLocalizedStringFromTableInBundle(@"Credit Card", @"KitePrintSDK", [OLConstants bundle], @"") forState:UIControlStateNormal];
         }
         
         [self.tableView reloadData];
@@ -712,6 +718,17 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 }
 
 - (IBAction)onButtonPayWithCreditCardClicked {
+    if (!self.printOrder.shippingAddress){
+        [UIView animateWithDuration:0.1 animations:^{
+            self.shippingDetailsBox.transform = CGAffineTransformMakeTranslation(-10, 0);
+        } completion:^(BOOL finished){
+            [UIView animateWithDuration:0.25 delay:0 usingSpringWithDamping:0.5 initialSpringVelocity:0 options:0 animations:^{
+                self.shippingDetailsBox.transform = CGAffineTransformIdentity;
+            }completion:NULL];
+        }];
+        return;
+    }
+    
     [self.printOrder costWithCompletionHandler:^(OLPrintOrderCost *cost, NSError *error) {
         NSComparisonResult result = [[cost totalCostInCurrency:self.printOrder.currencyCode] compare:[NSDecimalNumber zero]];
         if (result == NSOrderedAscending || result == NSOrderedSame) {
@@ -952,6 +969,15 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     }
 }
 
+- (IBAction)onShippingDetailsGestureRecognized:(id)sender {
+    [OLKiteUtils shippingControllerForPrintOrder:self.printOrder handler:^(id vc){
+        OLCustomNavigationController *nvc = [[OLCustomNavigationController alloc] initWithRootViewController:vc];
+        [[(UINavigationController *)vc view] class]; //force viewDidLoad;
+        [(OLCheckoutViewController *)vc navigationItem].rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:vc action:@selector(onButtonDoneClicked)];
+        
+        [self presentViewController:nvc animated:YES completion:NULL];
+    }];
+}
 
 #pragma mark - PayPalPaymentDelegate methods
 

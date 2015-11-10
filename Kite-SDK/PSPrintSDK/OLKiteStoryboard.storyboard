@@ -1025,7 +1025,7 @@
                                             <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                         <connections>
-                                            <action selector="onButtonMoreOptionsClicked" destination="awx-dV-KVo" eventType="touchUpInside" id="Frd-cn-der"/>
+                                            <action selector="onButtonMoreOptionsClicked:" destination="awx-dV-KVo" eventType="touchUpInside" id="Xm5-5A-GYq"/>
                                         </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="$00.00" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4OU-Aa-wXY">
@@ -1076,16 +1076,17 @@
                                     <constraint firstItem="8uC-bu-fzK" firstAttribute="leading" secondItem="M4Z-g2-rfc" secondAttribute="leading" constant="8" id="q4N-2L-knv"/>
                                 </constraints>
                             </view>
-                            <view alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9gd-BD-JKl" userLabel="Shiping Details">
+                            <view alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9gd-BD-JKl" userLabel="Delivery Details">
                                 <rect key="frame" x="0.0" y="453" width="600" height="35"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zBV-LU-9Ss">
-                                        <rect key="frame" x="42" y="2" width="58" height="30"/>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zBV-LU-9Ss">
+                                        <rect key="frame" x="42" y="2" width="110" height="30"/>
                                         <animations/>
                                         <fontDescription key="fontDescription" type="system" weight="medium" pointSize="15"/>
-                                        <state key="normal" title="Address">
-                                            <color key="titleColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
+                                        <state key="normal" title="Delivery Details"/>
+                                        <connections>
+                                            <action selector="onShippingDetailsGestureRecognized:" destination="awx-dV-KVo" eventType="touchUpInside" id="af6-g2-djp"/>
+                                        </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="&gt;" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="muS-Fe-vK0">
                                         <rect key="frame" x="582" y="8" width="9.5" height="18"/>
@@ -1101,6 +1102,7 @@
                                 </subviews>
                                 <animations/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <gestureRecognizers/>
                                 <constraints>
                                     <constraint firstItem="zBV-LU-9Ss" firstAttribute="leading" secondItem="IxK-MF-m7k" secondAttribute="trailing" constant="10" id="8RU-FX-VJD"/>
                                     <constraint firstItem="muS-Fe-vK0" firstAttribute="centerY" secondItem="9gd-BD-JKl" secondAttribute="centerY" id="8nd-di-7c0"/>
@@ -1110,6 +1112,9 @@
                                     <constraint firstItem="IxK-MF-m7k" firstAttribute="leading" secondItem="9gd-BD-JKl" secondAttribute="leading" constant="15" id="kkz-jX-15d"/>
                                     <constraint firstItem="IxK-MF-m7k" firstAttribute="centerY" secondItem="9gd-BD-JKl" secondAttribute="centerY" id="ksc-Qc-IUQ"/>
                                 </constraints>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="pWr-y6-QIP" appends="YES" id="Z2p-zb-isu"/>
+                                </connections>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cV5-4n-Kc8" userLabel="Shipping Method">
                                 <rect key="frame" x="0.0" y="453" width="600" height="35"/>
@@ -1393,6 +1398,11 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xLG-fm-2sD" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="pWr-y6-QIP">
+                    <connections>
+                        <action selector="onShippingDetailsGestureRecognized:" destination="awx-dV-KVo" id="yBo-JE-5bm"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="3001" y="-586"/>
         </scene>

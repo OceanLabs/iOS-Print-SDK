@@ -13,6 +13,7 @@
 @class OLKiteViewController;
 @class OLPrintOrder;
 @class OLProduct;
+@class OLCheckoutViewController;
 
 @interface OLKiteUtils : NSObject
 
@@ -34,5 +35,6 @@
 
 + (void)checkoutViewControllerForPrintOrder:(OLPrintOrder *)printOrder handler:(void(^)(id vc))handler;
 + (NSString *)reviewViewControllerIdentifierForProduct:(OLProduct *)product photoSelectionScreen:(BOOL)photoSelectionScreen;
++ (void)shippingControllerForPrintOrder:(OLPrintOrder *)printOrder handler:(void(^)(OLCheckoutViewController *vc))handler;
 
 @end

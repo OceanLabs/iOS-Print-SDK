@@ -294,7 +294,12 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
     [self.textFieldPhone resignFirstResponder];
 }
 
-- (void)onButtonNextClicked {
+- (void)onButtonDoneClicked{
+    [self checkAndSaveAddress];
+    [self dismissViewControllerAnimated:YES completion:NULL];
+}
+
+- (void)checkAndSaveAddress{
     if (![self hasUserProvidedValidDetailsToProgressToPayment]) {
         return;
     }
@@ -327,18 +332,23 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
     [self.printOrder discardDuplicateJobs];
     [self.printOrder duplicateJobsForAddresses:self.selectedShippingAddresses];
     
-    OLPaymentViewController *vc = [[OLPaymentViewController alloc] initWithPrintOrder:self.printOrder];
-    vc.presentedModally = self.presentedModally;
-    vc.delegate = self.delegate;
-    vc.kiteDelegate = self.kiteDelegate;
-    vc.showOtherOptions = self.showOtherOptions;
-    
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     [defaults setObject:email forKey:kKeyEmailAddress];
     [defaults setObject:phone forKey:kKeyPhone];
     [defaults synchronize];
     
     [[NSNotificationCenter defaultCenter] postNotificationName:kOLNotificationUserSuppliedShippingDetails object:self userInfo:@{kOLKeyUserInfoPrintOrder: self.printOrder}];
+}
+
+- (void)onButtonNextClicked {
+    [self checkAndSaveAddress];
+    
+    OLPaymentViewController *vc = [[OLPaymentViewController alloc] initWithPrintOrder:self.printOrder];
+    vc.presentedModally = self.presentedModally;
+    vc.delegate = self.delegate;
+    vc.kiteDelegate = self.kiteDelegate;
+    vc.showOtherOptions = self.showOtherOptions;
+    
     [self.navigationController pushViewController:vc animated:YES];
 }
 
