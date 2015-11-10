@@ -184,9 +184,9 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
 
 + (OLProductTemplate *_Nullable)templateWithId:(NSString *_Nonnull)identifier {
     NSArray *templates = [OLProductTemplate templates];
-    for (OLProductTemplate *template in templates) {
-        if ([template.identifier isEqualToString:identifier]) {
-            return template;
+    for (OLProductTemplate *productTemplate in templates) {
+        if ([productTemplate.identifier isEqualToString:identifier]) {
+            return productTemplate;
         }
     }
     
@@ -211,13 +211,13 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
     NSMutableArray *plist = [[NSMutableArray alloc] initWithContentsOfFile:path];
     
     NSMutableArray *templates = [[NSMutableArray alloc] init];
-    for (id template in plist) {
-        if ([template isKindOfClass:[NSDictionary class]]) {
-            id templateId = template[@"OLTemplateId"];
-            id templateName = template[@"OLTemplateName"];
-            id sheetQuantity = template[@"OLSheetQuanity"];
-            id enabled = template[@"OLEnabled"] ? template[@"OLEnabled"] : [NSNumber numberWithInt:1];
-            id sheetCosts = template[@"OLSheetCosts"];
+    for (id productTemplate in plist) {
+        if ([productTemplate isKindOfClass:[NSDictionary class]]) {
+            id templateId = productTemplate[@"OLTemplateId"];
+            id templateName = productTemplate[@"OLTemplateName"];
+            id sheetQuantity = productTemplate[@"OLSheetQuanity"];
+            id enabled = productTemplate[@"OLEnabled"] ? productTemplate[@"OLEnabled"] : [NSNumber numberWithInt:1];
+            id sheetCosts = productTemplate[@"OLSheetCosts"];
             if ([templateId isKindOfClass:[NSString class]] && [templateName isKindOfClass:[NSString class]]
                 && [sheetQuantity isKindOfClass:[NSNumber class]] && [enabled isKindOfClass:[NSNumber class]]
                 && [sheetCosts isKindOfClass:[NSDictionary class]]) {
