@@ -1008,7 +1008,9 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 
 - (void)paymentAuthorizationViewControllerDidFinish:(PKPaymentAuthorizationViewController *)controller {
     [self dismissViewControllerAnimated:YES completion:^{
-        [[NSOperationQueue mainQueue] addOperation:self.applePayDismissOperation];
+        if (!self.applePayDismissOperation.finished){
+            [[NSOperationQueue mainQueue] addOperation:self.applePayDismissOperation];
+        }
     }];
 }
 
