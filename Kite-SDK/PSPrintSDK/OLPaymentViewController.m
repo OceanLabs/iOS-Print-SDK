@@ -766,8 +766,8 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
                             [self payWithExistingPayPalCard:[OLPayPalCard lastUsedCard]];
                         }
                     }]];
-                    ac.popoverPresentationController.sourceView = self.payWithCreditCardButton;
-                    ac.popoverPresentationController.sourceRect = self.payWithCreditCardButton.frame;
+                    ac.popoverPresentationController.sourceView = self.paymentButton2;
+                    ac.popoverPresentationController.sourceRect = self.paymentButton2.frame;
                     [self presentViewController:ac animated:YES completion:NULL];
                 }
                 else{
