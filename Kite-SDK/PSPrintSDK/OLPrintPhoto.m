@@ -258,6 +258,10 @@ static NSOperationQueue *imageOperationQueue;
         OLPrintPhoto *other = object;
         retVal &= (other.type == self.type);
         retVal &= ([other.asset isEqual:self.asset]);
+        retVal &= CGRectEqualToRect(self.cropImageRect, other.cropImageRect);
+        retVal &= CGRectEqualToRect(self.cropImageFrame, other.cropImageFrame);
+        retVal &= CGSizeEqualToSize(self.cropImageSize, other.cropImageSize);
+        retVal &= CGAffineTransformEqualToTransform(self.cropTransform, other.cropTransform);
     }
     
     return retVal;
