@@ -123,6 +123,13 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *promoBoxBottomCon;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *promoBoxTopCon;
 @property (weak, nonatomic) IBOutlet UIView *promoBox;
+@property (weak, nonatomic) IBOutlet UILabel *poweredByKiteLabel;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *poweredByKiteLabelBottomCon;
+@property (weak, nonatomic) IBOutlet UIView *shippingDetailsBox;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *shippingDetailsCon;
+@property (weak, nonatomic) IBOutlet UIButton *backToApplePayButton;
+@property (weak, nonatomic) IBOutlet UIButton *payWithApplePayButton;
+@property (weak, nonatomic) IBOutlet UIButton *checkoutButton;
 
 
 
@@ -285,26 +292,21 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     
     [self.paymentButton1 makeRoundRect];
     [self.paymentButton2 makeRoundRect];
+    [self.payWithApplePayButton makeRoundRect];
+    [self.checkoutButton makeRoundRect];
     
     
 #ifdef OL_KITE_OFFER_PAYPAL
     if ([OLKiteABTesting sharedInstance].offerPayPal && ![self shouldShowApplePay]){
-        //TODO: Set up paypal here
+        self.payWithApplePayButton.hidden = YES;
+        self.checkoutButton.hidden = YES;
     }
 #endif
     
 #ifdef OL_KITE_OFFER_APPLE_PAY
     if ([self shouldShowApplePay]){
-        //TODO set up apple pay here
-        [self.paymentButton1 setImage:[UIImage imageNamedInKiteBundle:@"button_apple_pay"] forState:UIControlStateNormal];
-        [self.paymentButton1 setTitle:nil forState:UIControlStateNormal];
-        [self.paymentButton1 setBackgroundColor:[UIColor blackColor]];
-        [self.paymentButton1 addTarget:self action:@selector(onButtonPayWithApplePayClicked) forControlEvents:UIControlEventTouchUpInside];
-        
-        [self.paymentButton2 setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-        [self.paymentButton2 setBackgroundColor:[UIColor colorWithRed:1.000 green:0.841 blue:0.000 alpha:1.000]];
-        [self.paymentButton2 setTitle:NSLocalizedString(@"Checkout", @"") forState:UIControlStateNormal];
-        [self.paymentButton2 addTarget:self action:@selector(onButtonMoreOptionsClicked) forControlEvents:UIControlEventTouchUpInside];
+        self.paymentButton1.hidden = YES;
+        self.paymentButton2.hidden = YES;
     }
 #endif
     
@@ -324,11 +326,44 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     }
 }
 
-- (void)onButtonMoreOptionsClicked{
-    OLCheckoutViewController *vc = [[OLCheckoutViewController alloc] initWithPrintOrder:self.printOrder];
-    vc.delegate = self.delegate;
-    vc.showOtherOptions = YES;
-    [self.navigationController pushViewController:vc animated:YES];
+- (IBAction)onButtonMoreOptionsClicked{
+    self.poweredByKiteLabelBottomCon.constant = -110;
+    [UIView animateWithDuration:0.25 animations:^{
+        [self.view layoutIfNeeded];
+    } completion:^(BOOL finished){
+        self.payWithApplePayButton.hidden = YES;
+        self.checkoutButton.hidden = YES;
+        self.paymentButton1.hidden = NO;
+        self.paymentButton2.hidden = NO;
+        
+        self.poweredByKiteLabelBottomCon.constant = 5;
+        self.shippingDetailsCon.constant = 2;
+        self.backToApplePayButton.hidden = NO;
+        [UIView animateWithDuration:0.25 animations:^{
+            [self.view layoutIfNeeded];
+            self.shippingDetailsBox.alpha = 1;
+        }];
+    }];
+}
+
+- (IBAction)onButtonBackToApplePayClicked:(UIButton *)sender {
+    self.poweredByKiteLabelBottomCon.constant = -110;
+    [UIView animateWithDuration:0.25 animations:^{
+        [self.view layoutIfNeeded];
+    } completion:^(BOOL finished){
+        self.payWithApplePayButton.hidden = NO;
+        self.checkoutButton.hidden = NO;
+        self.paymentButton1.hidden = YES;
+        self.paymentButton2.hidden = YES;
+        
+        self.poweredByKiteLabelBottomCon.constant = 5;
+        self.shippingDetailsCon.constant = -35;
+        self.backToApplePayButton.hidden = YES;
+        [UIView animateWithDuration:0.25 animations:^{
+            [self.view layoutIfNeeded];
+            self.shippingDetailsBox.alpha = 0;
+        }];
+    }];
 }
 
 - (void)onBackgroundClicked {
