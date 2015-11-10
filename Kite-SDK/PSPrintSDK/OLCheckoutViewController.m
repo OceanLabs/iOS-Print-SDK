@@ -125,7 +125,7 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
     [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinator> context){
-        self.tableView.contentInset = UIEdgeInsetsMake(self.edgeInsetTop, 0, 0, 0);
+//        self.tableView.contentInset = UIEdgeInsetsMake(self.edgeInsetTop, 0, 0, 0);
         [self positionKiteLabel];
     } completion:^(id<UIViewControllerTransitionCoordinator> context){
     }];
@@ -135,56 +135,7 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
     return self.navigationController.navigationBar.translucent ? [[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height : 0;
 }
 
-- (void)setupBannerImage:(UIImage *)bannerImage withBgImage:(UIImage *)bannerBgImage{
-    self.tableView.tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, bannerImage.size.height)];
-    UIImageView *banner = [[UIImageView alloc] initWithImage:bannerImage];
-    
-    UIImageView *bannerBg;
-    if(bannerBgImage){
-        bannerBg = [[UIImageView alloc] initWithImage:bannerBgImage];
-    }
-    else{
-        bannerBg = [[UIImageView alloc] init];
-        bannerBg.backgroundColor = [bannerImage colorAtPixel:CGPointMake(3, 3)];
-    }
-    [self.tableView.tableHeaderView addSubview:bannerBg];
-    [self.tableView.tableHeaderView addSubview:banner];
-    if (bannerBgImage.size.width > 100){
-        bannerBg.contentMode = UIViewContentModeTop;
-    }
-    else{
-        bannerBg.contentMode = UIViewContentModeScaleToFill;
-    }
-    banner.contentMode = UIViewContentModeCenter;
-    
-    banner.translatesAutoresizingMaskIntoConstraints = NO;
-    NSDictionary *views = NSDictionaryOfVariableBindings(banner);
-    NSMutableArray *con = [[NSMutableArray alloc] init];
-    
-    NSArray *visuals = @[@"H:|-0-[banner]-0-|",
-                         @"V:|-0-[banner]-0-|"];
-    
-    
-    for (NSString *visual in visuals) {
-        [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
-    }
-    
-    [banner.superview addConstraints:con];
-    
-    bannerBg.translatesAutoresizingMaskIntoConstraints = NO;
-    views = NSDictionaryOfVariableBindings(bannerBg);
-    con = [[NSMutableArray alloc] init];
-    
-    visuals = @[@"H:|-0-[bannerBg]-0-|",
-                @"V:|-0-[bannerBg]-0-|"];
-    
-    
-    for (NSString *visual in visuals) {
-        [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
-    }
-    
-    [bannerBg.superview addConstraints:con];
-}
+
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -204,26 +155,6 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
     }
     
     self.title = NSLocalizedStringFromTableInBundle(@"Shipping", @"KitePrintSDK", [OLConstants bundle], @"");
-    NSString *url = [OLKiteABTesting sharedInstance].checkoutProgress1URL;
-    if (url){
-        [[SDWebImageManager sharedManager] downloadImageWithURL:[NSURL URLWithString:url] options:0 progress:NULL completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL){
-            image = [UIImage imageWithCGImage:image.CGImage scale:2 orientation:image.imageOrientation];
-            NSString *bgUrl = [OLKiteABTesting sharedInstance].checkoutProgress1BgURL;
-            if (bgUrl){
-                [[SDWebImageManager sharedManager] downloadImageWithURL:[NSURL URLWithString:bgUrl] options:0 progress:NULL completed:^(UIImage *bgImage, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL){
-                    bgImage = [UIImage imageWithCGImage:bgImage.CGImage scale:2 orientation:image.imageOrientation];
-                    [self setupBannerImage:image withBgImage:bgImage];
-                }];
-            }
-            else{
-                [self setupBannerImage:image withBgImage:nil];
-            }
-           
-        }];
-    }
-    else{
-        [self setupBannerImage:[UIImage imageNamedInKiteBundle:@"checkout_progress_indicator"] withBgImage:[UIImage imageNamedInKiteBundle:@"checkout_progress_indicator_bg"]];
-    }
 
     UITapGestureRecognizer *tgr = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onBackgroundClicked)];
     tgr.cancelsTouchesInView = NO; // allow table cell selection to happen as normal
@@ -249,6 +180,10 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
         self.shippingAddresses = [@[self.printOrder.shippingAddress] mutableCopy];
         self.selectedShippingAddresses = [[NSMutableArray alloc] init];
         [self.selectedShippingAddresses addObject:self.printOrder.shippingAddress];
+    }
+    else if(self.printOrder.shippingAddressesOfJobs.count > 0){
+        self.shippingAddresses = [self.printOrder.shippingAddressesOfJobs mutableCopy];
+        self.selectedShippingAddresses = [self.printOrder.shippingAddressesOfJobs mutableCopy];
     }
     
     if ([self.tableView respondsToSelector:@selector(setCellLayoutMarginsFollowReadableWidth:)]){
@@ -360,9 +295,9 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
 
 - (void) viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
-    self.automaticallyAdjustsScrollViewInsets = NO;
-    self.tableView.contentInset = UIEdgeInsetsMake(self.edgeInsetTop, 0, 0, 0);
-    [self.tableView scrollRectToVisible:CGRectMake(0, 0, 10, 10) animated:NO];
+//    self.automaticallyAdjustsScrollViewInsets = NO;
+//    self.tableView.contentInset = UIEdgeInsetsMake(self.edgeInsetTop, 0, 0, 0);
+//    [self.tableView scrollRectToVisible:CGRectMake(0, 0, 10, 10) animated:NO];
     [self.tableView reloadData];
     if (self.kiteLabel){
         [self positionKiteLabel];

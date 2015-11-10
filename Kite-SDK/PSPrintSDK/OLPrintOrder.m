@@ -430,11 +430,6 @@ static id stringOrEmptyString(NSString *str) {
     for (id<OLPrintJob> job in self.jobs){
         job.address = [addresses firstObject];
         [jobsToAdd addObject:job];
-//        for (NSInteger i = 0; i < job.extraCopies; i++){
-//            id<OLPrintJob> jobCopy = [(NSObject *)job copy];
-//            [jobs addObject:jobCopy];
-//            [jobsToAdd addObject:jobCopy];
-//        }
     }
     [(NSMutableArray *)self.jobs removeAllObjects];
     
@@ -446,7 +441,6 @@ static id stringOrEmptyString(NSString *str) {
         for (id<OLPrintJob> job in jobs){
             id<OLPrintJob> jobCopy = [(NSObject *)job copy];
             jobCopy.address = address;
-//            jobCopy.extraCopies = -1;
             [jobsToAdd addObject:jobCopy];
         }
     }
@@ -454,6 +448,16 @@ static id stringOrEmptyString(NSString *str) {
     for (id<OLPrintJob> job in jobsToAdd){
         [self addPrintJob:job];
     }
+}
+
+- (NSArray <OLAddress *>*)shippingAddressesOfJobs{
+    NSMutableArray *addresses = [[NSMutableArray alloc] init];
+    for (id<OLPrintJob> job in self.jobs){
+        if ([job address]){
+            [addresses addObject:[job address]];
+        }
+    }
+    return addresses;
 }
 
 #pragma mark - OLAssetUploadRequestDelegate methods

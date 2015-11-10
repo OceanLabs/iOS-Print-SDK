@@ -196,4 +196,11 @@ typedef void (^OLPrintOrderCostCompletionHandler)(OLPrintOrderCost *cost, NSErro
  */
 - (void)costWithCompletionHandler:(OLPrintOrderCostCompletionHandler)handler;
 
+/**
+ *  Return the shipping addresses of all jobs
+ *
+ *  @return The shipping addresses.
+ */
+- (NSArray <OLAddress *>*)shippingAddressesOfJobs;
+
 @end

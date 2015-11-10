@@ -180,56 +180,56 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     return [self isApplePayAvailable] && !self.showOtherOptions;
 }
 
-- (void)setupBannerImage:(UIImage *)bannerImage withBgImage:(UIImage *)bannerBgImage{
-    self.tableView.tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, bannerImage.size.height + 20)];
-    UIImageView *banner = [[UIImageView alloc] initWithImage:bannerImage];
-    
-    UIImageView *bannerBg;
-    if(bannerBgImage){
-        bannerBg = [[UIImageView alloc] initWithImage:bannerBgImage];
-    }
-    else{
-        bannerBg = [[UIImageView alloc] init];
-        bannerBg.backgroundColor = [bannerImage colorAtPixel:CGPointMake(3, 3)];
-    }
-    [self.tableView.tableHeaderView addSubview:bannerBg];
-    [self.tableView.tableHeaderView addSubview:banner];
-    if (bannerBgImage.size.width > 100){
-        bannerBg.contentMode = UIViewContentModeTop;
-    }
-    else{
-        bannerBg.contentMode = UIViewContentModeScaleToFill;
-    }
-    banner.contentMode = UIViewContentModeCenter;
-    
-    banner.translatesAutoresizingMaskIntoConstraints = NO;
-    NSDictionary *views = NSDictionaryOfVariableBindings(banner);
-    NSMutableArray *con = [[NSMutableArray alloc] init];
-    
-    NSArray *visuals = @[@"H:|-0-[banner]-0-|",
-                         @"V:|-0-[banner]-0-|"];
-    
-    
-    for (NSString *visual in visuals) {
-        [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
-    }
-    
-    [banner.superview addConstraints:con];
-    
-    bannerBg.translatesAutoresizingMaskIntoConstraints = NO;
-    views = NSDictionaryOfVariableBindings(bannerBg);
-    con = [[NSMutableArray alloc] init];
-    
-    visuals = @[@"H:|-0-[bannerBg]-0-|",
-                @"V:|-0-[bannerBg]-0-|"];
-    
-    
-    for (NSString *visual in visuals) {
-        [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
-    }
-    
-    [bannerBg.superview addConstraints:con];
-}
+//- (void)setupBannerImage:(UIImage *)bannerImage withBgImage:(UIImage *)bannerBgImage{
+//    self.tableView.tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, bannerImage.size.height + 20)];
+//    UIImageView *banner = [[UIImageView alloc] initWithImage:bannerImage];
+//    
+//    UIImageView *bannerBg;
+//    if(bannerBgImage){
+//        bannerBg = [[UIImageView alloc] initWithImage:bannerBgImage];
+//    }
+//    else{
+//        bannerBg = [[UIImageView alloc] init];
+//        bannerBg.backgroundColor = [bannerImage colorAtPixel:CGPointMake(3, 3)];
+//    }
+//    [self.tableView.tableHeaderView addSubview:bannerBg];
+//    [self.tableView.tableHeaderView addSubview:banner];
+//    if (bannerBgImage.size.width > 100){
+//        bannerBg.contentMode = UIViewContentModeTop;
+//    }
+//    else{
+//        bannerBg.contentMode = UIViewContentModeScaleToFill;
+//    }
+//    banner.contentMode = UIViewContentModeCenter;
+//    
+//    banner.translatesAutoresizingMaskIntoConstraints = NO;
+//    NSDictionary *views = NSDictionaryOfVariableBindings(banner);
+//    NSMutableArray *con = [[NSMutableArray alloc] init];
+//    
+//    NSArray *visuals = @[@"H:|-0-[banner]-0-|",
+//                         @"V:|-0-[banner]-0-|"];
+//    
+//    
+//    for (NSString *visual in visuals) {
+//        [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+//    }
+//    
+//    [banner.superview addConstraints:con];
+//    
+//    bannerBg.translatesAutoresizingMaskIntoConstraints = NO;
+//    views = NSDictionaryOfVariableBindings(bannerBg);
+//    con = [[NSMutableArray alloc] init];
+//    
+//    visuals = @[@"H:|-0-[bannerBg]-0-|",
+//                @"V:|-0-[bannerBg]-0-|"];
+//    
+//    
+//    for (NSString *visual in visuals) {
+//        [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+//    }
+//    
+//    [bannerBg.superview addConstraints:con];
+//}
 
 
 - (void)viewDidLoad {
@@ -268,29 +268,29 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     self.tableView.dataSource = self;
     self.tableView.sectionHeaderHeight = 0;
     
-    if ([self shippingScreenOnTheStack]) {
-        NSString *url = [OLKiteABTesting sharedInstance].checkoutProgress2URL;
-        if (url){
-            [[SDWebImageManager sharedManager] downloadImageWithURL:[NSURL URLWithString:url] options:0 progress:NULL completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL){
-                image = [UIImage imageWithCGImage:image.CGImage scale:2 orientation:image.imageOrientation];
-                NSString *bgUrl = [OLKiteABTesting sharedInstance].checkoutProgress2BgURL;
-                if (bgUrl){
-                    [[SDWebImageManager sharedManager] downloadImageWithURL:[NSURL URLWithString:bgUrl] options:0 progress:NULL completed:^(UIImage *bgImage, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL){
-                        bgImage = [UIImage imageWithCGImage:bgImage.CGImage scale:2 orientation:image.imageOrientation];
-                        [self setupBannerImage:image withBgImage:bgImage];
-                    }];
-                }
-                else{
-                    [self setupBannerImage:image withBgImage:nil];
-                }
-                
-            }];
-        }
-        else{
-            [self setupBannerImage:[UIImage imageNamedInKiteBundle:@"checkout_progress_indicator2"] withBgImage:[UIImage imageNamedInKiteBundle:@"checkout_progress_indicator2_bg"]];
-        }
-        
-    }
+//    if ([self shippingScreenOnTheStack]) {
+//        NSString *url = [OLKiteABTesting sharedInstance].checkoutProgress2URL;
+//        if (url){
+//            [[SDWebImageManager sharedManager] downloadImageWithURL:[NSURL URLWithString:url] options:0 progress:NULL completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL){
+//                image = [UIImage imageWithCGImage:image.CGImage scale:2 orientation:image.imageOrientation];
+//                NSString *bgUrl = [OLKiteABTesting sharedInstance].checkoutProgress2BgURL;
+//                if (bgUrl){
+//                    [[SDWebImageManager sharedManager] downloadImageWithURL:[NSURL URLWithString:bgUrl] options:0 progress:NULL completed:^(UIImage *bgImage, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL){
+//                        bgImage = [UIImage imageWithCGImage:bgImage.CGImage scale:2 orientation:image.imageOrientation];
+//                        [self setupBannerImage:image withBgImage:bgImage];
+//                    }];
+//                }
+//                else{
+//                    [self setupBannerImage:image withBgImage:nil];
+//                }
+//                
+//            }];
+//        }
+//        else{
+//            [self setupBannerImage:[UIImage imageNamedInKiteBundle:@"checkout_progress_indicator2"] withBgImage:[UIImage imageNamedInKiteBundle:@"checkout_progress_indicator2_bg"]];
+//        }
+//        
+//    }
     
     [self.paymentButton1 makeRoundRect];
     [self.paymentButton2 makeRoundRect];
@@ -351,6 +351,9 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 }
 
 - (IBAction)onButtonBackToApplePayClicked:(UIButton *)sender {
+    [self.printOrder discardDuplicateJobs];
+    [self.tableView reloadData];
+    
     self.poweredByKiteLabelBottomCon.constant = -110;
     [UIView animateWithDuration:0.25 animations:^{
         [self.view layoutIfNeeded];
@@ -420,10 +423,6 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             [self costCalculationCompletedWithError:error];
         }];
     }
-    
-    if ([self shouldShowApplePay]){
-        [self.printOrder discardDuplicateJobs];
-    }
 }
 
 - (void)costCalculationCompletedWithError:(NSError *)error {
@@ -457,7 +456,6 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)updateViewsBasedOnCostUpdate {
@@ -538,7 +536,8 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     
     __block BOOL handlerUsed = NO;
     
-    [SVProgressHUD showWithStatus:NSLocalizedStringFromTableInBundle(@"Processing", @"KitePrintSDK", [OLConstants bundle], @"") maskType:SVProgressHUDMaskTypeBlack];
+    [SVProgressHUD setDefaultMaskType:SVProgressHUDMaskTypeBlack];
+    [SVProgressHUD showWithStatus:NSLocalizedStringFromTableInBundle(@"Processing", @"KitePrintSDK", [OLConstants bundle], @"")];
     [self.printOrder submitForPrintingWithProgressHandler:^(NSUInteger totalAssetsUploaded, NSUInteger totalAssetsToUpload,
                                                             long long totalAssetBytesWritten, long long totalAssetBytesExpectedToWrite,
                                                             long long totalBytesWritten, long long totalBytesExpectedToWrite) {
@@ -551,7 +550,8 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         const float step = (1.0f / totalAssetsToUpload);
         NSUInteger totalURLAssets = self.printOrder.totalAssetsToUpload - totalAssetsToUpload;
         float progress = totalAssetsUploaded * step + (totalAssetBytesWritten / (float) totalAssetBytesExpectedToWrite) * step;
-        [SVProgressHUD showProgress:progress status:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Uploading Images \n%lu / %lu", @"KitePrintSDK", [OLConstants bundle], @""), (unsigned long) totalAssetsUploaded + 1 + totalURLAssets, (unsigned long) self.printOrder.totalAssetsToUpload] maskType:SVProgressHUDMaskTypeBlack];
+        [SVProgressHUD setDefaultMaskType:SVProgressHUDMaskTypeBlack];
+        [SVProgressHUD showProgress:progress status:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Uploading Images \n%lu / %lu", @"KitePrintSDK", [OLConstants bundle], @""), (unsigned long) totalAssetsUploaded + 1 + totalURLAssets, (unsigned long) self.printOrder.totalAssetsToUpload]];
     } completionHandler:^(NSString *orderIdReceipt, NSError *error) {
         if (error) {
             handler(PKPaymentAuthorizationStatusFailure);
@@ -719,11 +719,13 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 }
 
 - (IBAction)onButtonPayWithCreditCardClicked {
-    if (!self.printOrder.shippingAddress){
+    if (!self.printOrder.shippingAddress && self.printOrder.shippingAddressesOfJobs.count == 0){
         [UIView animateWithDuration:0.1 animations:^{
+            self.shippingDetailsBox.backgroundColor = [UIColor colorWithWhite:0.929 alpha:1.000];
             self.shippingDetailsBox.transform = CGAffineTransformMakeTranslation(-10, 0);
         } completion:^(BOOL finished){
             [UIView animateWithDuration:0.25 delay:0 usingSpringWithDamping:0.5 initialSpringVelocity:0 options:0 animations:^{
+                self.shippingDetailsBox.backgroundColor = [UIColor whiteColor];
                 self.shippingDetailsBox.transform = CGAffineTransformIdentity;
             }completion:NULL];
         }];
@@ -869,6 +871,19 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 
 #ifdef OL_KITE_OFFER_PAYPAL
 - (IBAction)onButtonPayWithPayPalClicked {
+    if (!self.printOrder.shippingAddress && self.printOrder.shippingAddressesOfJobs.count == 0){
+        [UIView animateWithDuration:0.1 animations:^{
+            self.shippingDetailsBox.backgroundColor = [UIColor colorWithWhite:0.929 alpha:1.000];
+            self.shippingDetailsBox.transform = CGAffineTransformMakeTranslation(-10, 0);
+        } completion:^(BOOL finished){
+            [UIView animateWithDuration:0.25 delay:0 usingSpringWithDamping:0.5 initialSpringVelocity:0 options:0 animations:^{
+                self.shippingDetailsBox.backgroundColor = [UIColor whiteColor];
+                self.shippingDetailsBox.transform = CGAffineTransformIdentity;
+            }completion:NULL];
+        }];
+        return;
+    }
+    
     [self.printOrder costWithCompletionHandler:^(OLPrintOrderCost *cost, NSError *error) {
         // Create a PayPalPayment
         PayPalPayment *payment = [[PayPalPayment alloc] init];
