@@ -117,9 +117,9 @@ static id stringOrEmptyString(NSString *str) {
 }
 
 - (NSDecimalNumber *)costInCurrency:(NSString *)currencyCode {
-    OLProductTemplate *template = [OLProductTemplate templateWithId:self.templateId];
-    NSUInteger expectedQuantity = template.quantityPerSheet;
-    NSDecimalNumber *cost = [template costPerSheetInCurrencyCode:currencyCode];
+    OLProductTemplate *productTemplate = [OLProductTemplate templateWithId:self.templateId];
+    NSUInteger expectedQuantity = productTemplate.quantityPerSheet;
+    NSDecimalNumber *cost = [productTemplate costPerSheetInCurrencyCode:currencyCode];
     NSUInteger numOrders = (NSUInteger) floorf((self.quantity + expectedQuantity - 1)  / expectedQuantity);
     return (NSDecimalNumber *) [cost decimalNumberByMultiplyingBy:(NSDecimalNumber *) [NSDecimalNumber numberWithUnsignedInteger:numOrders]];
 }
@@ -130,8 +130,11 @@ static id stringOrEmptyString(NSString *str) {
 
 - (NSDictionary *)jsonRepresentation {
     NSMutableArray *assets = [[NSMutableArray alloc] init];
-    for (OLAsset *asset in self.assets) {
-        [assets addObject:[NSString stringWithFormat:@"%lld", asset.assetId]];
+    
+    for (NSInteger i = -1; i < self.extraCopies; i++) {
+        for (OLAsset *asset in self.assets) {
+            [assets addObject:[NSString stringWithFormat:@"%lld", asset.assetId]];
+        }
     }
     
     NSMutableDictionary *json = [[NSMutableDictionary alloc] init];

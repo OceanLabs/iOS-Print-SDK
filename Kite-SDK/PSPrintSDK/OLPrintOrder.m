@@ -430,11 +430,11 @@ static id stringOrEmptyString(NSString *str) {
     for (id<OLPrintJob> job in self.jobs){
         job.address = [addresses firstObject];
         [jobsToAdd addObject:job];
-        for (NSInteger i = 0; i < job.extraCopies; i++){
-            id<OLPrintJob> jobCopy = [(NSObject *)job copy];
-            [jobs addObject:jobCopy];
-            [jobsToAdd addObject:jobCopy];
-        }
+//        for (NSInteger i = 0; i < job.extraCopies; i++){
+//            id<OLPrintJob> jobCopy = [(NSObject *)job copy];
+//            [jobs addObject:jobCopy];
+//            [jobsToAdd addObject:jobCopy];
+//        }
     }
     [(NSMutableArray *)self.jobs removeAllObjects];
     
@@ -446,7 +446,7 @@ static id stringOrEmptyString(NSString *str) {
         for (id<OLPrintJob> job in jobs){
             id<OLPrintJob> jobCopy = [(NSObject *)job copy];
             jobCopy.address = address;
-            jobCopy.extraCopies = -1;
+//            jobCopy.extraCopies = -1;
             [jobsToAdd addObject:jobCopy];
         }
     }

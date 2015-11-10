@@ -14,14 +14,25 @@
     UIViewController *vc;
     if (self.presentedViewController) vc = self.presentedViewController;
     else vc = [self topViewController];
-    return [vc shouldAutorotate];
+    if (![vc isKindOfClass:[UIAlertController class]]){
+        return [vc shouldAutorotate];
+    }
+    else{
+        return NO;
+    }
+    
 }
 
 - (UIInterfaceOrientationMask)supportedInterfaceOrientations{
     UIViewController *vc;
     if (self.presentedViewController && ![self.presentedViewController isKindOfClass:[UIAlertController class]]) vc = self.presentedViewController;
     else vc = [self topViewController];
-    return [vc supportedInterfaceOrientations];
+    if (![vc isKindOfClass:[UIAlertController class]]){
+        return [vc supportedInterfaceOrientations];
+    }
+    else{
+        return UIInterfaceOrientationMaskPortrait;
+    }
 }
 
 @end

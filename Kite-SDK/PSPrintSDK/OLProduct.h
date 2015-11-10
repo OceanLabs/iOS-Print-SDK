@@ -19,7 +19,7 @@
 
 +(NSArray *)products;
 +(NSArray *)productsWithFilters:(NSArray *)allowedTemplateIds;
--(instancetype)initWithTemplate:(OLProductTemplate *)template;
+-(instancetype)initWithTemplate:(OLProductTemplate *)productTemplate;
 - (NSUInteger)quantityToFulfillOrder;
 - (NSString *)templateId;
 - (NSString *)unitCost;

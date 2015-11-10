@@ -26,9 +26,9 @@ typedef enum {
     static NSMutableArray *products = nil;
     NSArray *templates = [OLProductTemplate templates];
     products = [[NSMutableArray alloc] initWithCapacity:[templates count]];
-    for (OLProductTemplate *template in templates){
-        if (template.enabled){
-            OLProduct *product = [[OLProduct alloc] initWithTemplate:template];
+    for (OLProductTemplate *productTemplate in templates){
+        if (productTemplate.enabled){
+            OLProduct *product = [[OLProduct alloc] initWithTemplate:productTemplate];
             [products addObject: product];
         }
     }
@@ -71,10 +71,10 @@ typedef enum {
     return self.productTemplate.quantityPerSheet;
 }
 
--(instancetype)initWithTemplate:(OLProductTemplate *)template{
+-(instancetype)initWithTemplate:(OLProductTemplate *)productTemplate{
     self = [super init];
     if (self) {
-        _productTemplate = template;
+        _productTemplate = productTemplate;
     }
     return self;
 }
@@ -119,8 +119,8 @@ typedef enum {
         [imageView setAndFadeInImageWithURL:self.coverPhoto];
     }
     else{
-        OLProductTemplate *template = self.productTemplate;
-        if (template.classPhotoURL && ![[template.classPhotoURL absoluteString] isEqualToString:@""]){
+        OLProductTemplate *productTemplate = self.productTemplate;
+        if (productTemplate.classPhotoURL && ![[productTemplate.classPhotoURL absoluteString] isEqualToString:@""]){
             [imageView setAndFadeInImageWithURL:self.productTemplate.classPhotoURL];
         }
         else{
@@ -154,14 +154,14 @@ typedef enum {
 
 - (NSString *)currencyCode {
     NSString *code = [OLCountry countryForCurrentLocale].currencyCode;
-    OLProductTemplate *template = [OLProductTemplate templateWithId:self.templateId];
-    if (![template.currenciesSupported containsObject:code]) {
+    OLProductTemplate *productTemplate = [OLProductTemplate templateWithId:self.templateId];
+    if (![productTemplate.currenciesSupported containsObject:code]) {
         // preferred currency fallback order if users local currency isn't supported: USD, GBP, EUR
-        if ([template.currenciesSupported containsObject:@"USD"]) {
+        if ([productTemplate.currenciesSupported containsObject:@"USD"]) {
             code = @"USD";
-        } else if ([template.currenciesSupported containsObject:@"GBP"]) {
+        } else if ([productTemplate.currenciesSupported containsObject:@"GBP"]) {
             code = @"GBP";
-        } else if ([template.currenciesSupported containsObject:@"EUR"]) {
+        } else if ([productTemplate.currenciesSupported containsObject:@"EUR"]) {
             code = @"EUR";
         }
     }
@@ -178,10 +178,10 @@ typedef enum {
 }
 
 - (NSDecimalNumber*) unitCostDecimalNumber {
-    OLProductTemplate *template = [OLProductTemplate templateWithId:self.templateId];
+    OLProductTemplate *productTemplate = [OLProductTemplate templateWithId:self.templateId];
     
-    NSDecimalNumber *sheetCost = [template costPerSheetInCurrencyCode:[self currencyCode]];
-    NSUInteger sheetQuanity = template.quantityPerSheet == 0 ? 1 : template.quantityPerSheet;
+    NSDecimalNumber *sheetCost = [productTemplate costPerSheetInCurrencyCode:[self currencyCode]];
+    NSUInteger sheetQuanity = productTemplate.quantityPerSheet == 0 ? 1 : productTemplate.quantityPerSheet;
     NSUInteger numSheets = (NSUInteger) ceil(self.quantityToFulfillOrder / sheetQuanity);
     NSDecimalNumber *unitCost = [sheetCost decimalNumberByMultiplyingBy:[NSDecimalNumber decimalNumberWithString:[NSString stringWithFormat:@"%lu", (unsigned long)numSheets]]];
     return unitCost;
