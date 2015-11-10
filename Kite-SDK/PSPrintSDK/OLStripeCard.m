@@ -73,9 +73,9 @@ static OLStripeCard *lastUsedCard;
     _expireYear = expireYear;
 }
 
-- (void)storeCardWithCompletionHandler:(OLStripeCardStoreCompletionHandler)handler {
-   
-}
+//- (void)storeCardWithCompletionHandler:(OLStripeCardStoreCompletionHandler)handler {
+//   
+//}
 
 - (void)chargeCard:(NSDecimalNumber *)amount currencyCode:(NSString *)currencyCode description:(NSString *)description completionHandler:(OLStripeCardChargeCompletionHandler)handler {
     NSDictionary *params = @{@"number": self.number,

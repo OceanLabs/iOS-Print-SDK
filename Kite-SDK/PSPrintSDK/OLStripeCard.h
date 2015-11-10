@@ -18,7 +18,7 @@ typedef void (^OLStripeCardChargeCompletionHandler)(NSString *proofOfPayment, NS
 + (void)clearLastUsedCard;
 - (void)saveAsLastUsedCard;
 
-- (void)storeCardWithCompletionHandler:(OLStripeCardStoreCompletionHandler)handler;
+//- (void)storeCardWithCompletionHandler:(OLStripeCardStoreCompletionHandler)handler;
 - (void)chargeCard:(NSDecimalNumber *)amount currencyCode:(NSString *)currencyCode description:(NSString *)description completionHandler:(OLStripeCardChargeCompletionHandler)handler;
 
 @property (nonatomic, copy) NSString *number;
