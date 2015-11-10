@@ -245,6 +245,12 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
     
     [self.printOrder costWithCompletionHandler:nil]; // ignore outcome, internally printOrder caches the result and this will speed up things when we hit the PaymentScreen *if* the user doesn't change destination shipping country as the voids shipping price
     
+    if (self.printOrder.shippingAddress && [self.printOrder.shippingAddress isValidAddress]){ //Only for single addresses
+        self.shippingAddresses = [@[self.printOrder.shippingAddress] mutableCopy];
+        self.selectedShippingAddresses = [[NSMutableArray alloc] init];
+        [self.selectedShippingAddresses addObject:self.printOrder.shippingAddress];
+    }
+    
     if ([self.tableView respondsToSelector:@selector(setCellLayoutMarginsFollowReadableWidth:)]){
         self.tableView.cellLayoutMarginsFollowReadableWidth = NO;
     }

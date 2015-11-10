@@ -9,6 +9,7 @@
 #import "OLKitePrintSDK.h"
 #import "OLPayPalCard.h"
 #import "OLProductTemplate.h"
+#import "OLStripeCard.h"
 #ifdef OL_KITE_OFFER_PAYPAL
 #import <PayPal-iOS-SDK/PayPalMobile.h>
 #endif
@@ -47,6 +48,7 @@ static NSString *const kOLPayPalRecipientEmailSandbox = @"sandbox-merchant@kite.
 static NSString *const kOLAPIEndpointVersion = @"v1.4";
 
 static BOOL useJudoPayForGBP = NO;
+static BOOL useStripeForCreditCards = NO;
 static BOOL cacheTemplates = NO;
 static BOOL useStaging = NO;
 static BOOL isUnitTesting = NO;
@@ -65,6 +67,14 @@ static NSString *instagramRedirectURI = nil;
 
 + (void)setUseJudoPayForGBP:(BOOL)use {
     useJudoPayForGBP = use;
+}
+
++ (BOOL)useStripeForCreditCards {
+    return useStripeForCreditCards;
+}
+
++ (void)setUseStripeForCreditCards:(BOOL)use {
+    useStripeForCreditCards = use;
 }
 
 + (void)setCacheTemplates:(BOOL)cache{
@@ -93,6 +103,7 @@ static NSString *instagramRedirectURI = nil;
 + (void)setAPIKey:(NSString *_Nonnull)_apiKey withEnvironment:(OLKitePrintSDKEnvironment)_environment {
     apiKey = _apiKey;
     environment = _environment;
+    [OLStripeCard setClientId:[self stripePublishableKey]];
     if (environment == kOLKitePrintSDKEnvironmentLive) {
         [OLPayPalCard setClientId:[self paypalClientId] withEnvironment:kOLPayPalEnvironmentLive];
         [OLJudoPayCard setClientId:kJudoClientId token:kJudoLiveToken secret:kJudoLiveSecret withEnvironment:kOLJudoPayEnvironmentLive];
@@ -171,17 +182,17 @@ static NSString *instagramRedirectURI = nil;
     }
 }
 
++ (NSString *_Nonnull)appleMerchantID {
+    return applePayMerchantID;
+}
+#endif
+
 + (NSString *_Nonnull)stripePublishableKey {
     switch (environment) {
         case kOLKitePrintSDKEnvironmentLive: return kOLStripePublishableKeyLive;
         case kOLKitePrintSDKEnvironmentSandbox: return kOLStripePublishableKeyTest;
     }
 }
-
-+ (NSString *_Nonnull)appleMerchantID {
-    return applePayMerchantID;
-}
-#endif
 
 #pragma mark - Internal
 

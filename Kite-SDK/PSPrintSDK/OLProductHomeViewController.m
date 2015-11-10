@@ -45,7 +45,7 @@
 
 @end
 
-@interface OLProductHomeViewController () <MFMailComposeViewControllerDelegate, UICollectionViewDelegateFlowLayout>
+@interface OLProductHomeViewController () <MFMailComposeViewControllerDelegate, UICollectionViewDelegateFlowLayout, UIViewControllerPreviewingDelegate>
 @property (nonatomic, strong) NSArray *productGroups;
 @property (nonatomic, strong) UIImageView *topSurpriseImageView;
 @property (assign, nonatomic) BOOL fromRotation;
@@ -96,6 +96,10 @@
     NSString *supportEmail = [OLKiteABTesting sharedInstance].supportEmail;
     if (supportEmail && ![supportEmail isEqualToString:@""] && [self isMemberOfClass:[OLProductHomeViewController class]]){
         self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamedInKiteBundle:@"support"] style:UIBarButtonItemStyleDone target:self action:@selector(emailButtonPushed:)];
+    }
+    
+    if ([UITraitCollection class] && [self.traitCollection respondsToSelector:@selector(forceTouchCapability)] && self.traitCollection.forceTouchCapability == UIForceTouchCapabilityAvailable){
+        [self registerForPreviewingWithDelegate:self sourceView:self.collectionView];
     }
 
     self.automaticallyAdjustsScrollViewInsets = NO;
@@ -483,14 +487,30 @@
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
+    UIViewController *vc = [self viewControllerForItemAtIndexPath:indexPath];
+    if (vc){
+        [self.navigationController pushViewController:vc animated:YES];
+    }
+}
+
+- (UIViewController *)previewingContext:(id<UIViewControllerPreviewing>)previewingContext viewControllerForLocation:(CGPoint)location{
+    NSIndexPath *indexPath = [self.collectionView indexPathForItemAtPoint:location];
+    return [self viewControllerForItemAtIndexPath:indexPath];
+}
+
+- (void)previewingContext:(id<UIViewControllerPreviewing>)previewingContext commitViewController:(UIViewController *)viewControllerToCommit{
+    [self.navigationController pushViewController:viewControllerToCommit animated:NO];
+}
+
+- (UIViewController *)viewControllerForItemAtIndexPath:(NSIndexPath *)indexPath{
     if (indexPath.section == 0 && ![[OLKiteABTesting sharedInstance].qualityBannerType isEqualToString:@"None"]){
         OLInfoPageViewController *vc = (OLInfoPageViewController *)[self.storyboard instantiateViewControllerWithIdentifier:@"InfoPageViewController"];
         vc.imageName = @"quality";
         [self.navigationController pushViewController:vc animated:YES];
-        return;
+        return nil;
     }
     if (indexPath.item >= self.productGroups.count){
-        return;
+        return nil;
     }
     
     OLProductGroup *group = self.productGroups[indexPath.row];
@@ -505,7 +525,7 @@
     [vc safePerformSelector:@selector(setTemplateClass:) withObject:product.productTemplate.templateClass];
     [vc safePerformSelector:@selector(setProduct:) withObject:product];
     
-    [self.navigationController pushViewController:vc animated:YES];
+    return vc;
 }
 
 #pragma mark - UICollectionViewDataSource Methods

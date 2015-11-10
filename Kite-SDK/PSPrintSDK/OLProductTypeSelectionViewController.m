@@ -26,7 +26,7 @@
 
 @end
 
-@interface OLProductTypeSelectionViewController () <UICollectionViewDelegateFlowLayout>
+@interface OLProductTypeSelectionViewController () <UICollectionViewDelegateFlowLayout, UIViewControllerPreviewingDelegate>
 
 @property (strong, nonatomic) NSMutableArray *products;
 @property (strong, nonatomic) NSMutableArray *allPosterProducts;
@@ -67,6 +67,12 @@
     return _products;
 }
 
+- (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    
+    [self.collectionView.collectionViewLayout invalidateLayout];
+}
+
 - (void)viewDidLoad{
     [super viewDidLoad];
     self.title = NSLocalizedString(self.templateClass, @"");
@@ -75,6 +81,10 @@
                                                                              style:UIBarButtonItemStylePlain
                                                                             target:nil
                                                                             action:nil];
+    
+    if ([UITraitCollection class] && [self.traitCollection respondsToSelector:@selector(forceTouchCapability)] && self.traitCollection.forceTouchCapability == UIForceTouchCapabilityAvailable){
+        [self registerForPreviewingWithDelegate:self sourceView:self.collectionView];
+    }
     
 #ifndef OL_NO_ANALYTICS
     [OLAnalytics trackProductTypeSelectionScreenViewedWithTemplateClass:self.templateClass];
@@ -101,8 +111,24 @@
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
+    UIViewController *vc = [self viewControllerForItemAtIndexPath:indexPath];
+    if (vc){
+        [self.navigationController pushViewController:vc animated:YES];
+    }
+}
+
+- (UIViewController *)previewingContext:(id<UIViewControllerPreviewing>)previewingContext viewControllerForLocation:(CGPoint)location{
+    NSIndexPath *indexPath = [self.collectionView indexPathForItemAtPoint:location];
+    return [self viewControllerForItemAtIndexPath:indexPath];
+}
+
+- (void)previewingContext:(id<UIViewControllerPreviewing>)previewingContext commitViewController:(UIViewController *)viewControllerToCommit{
+    [self.navigationController pushViewController:viewControllerToCommit animated:NO];
+}
+
+- (UIViewController *)viewControllerForItemAtIndexPath:(NSIndexPath *)indexPath{
     if (indexPath.item >= self.products.count){
-        return;
+        return nil;
     }
     
     OLProduct *product = self.products[indexPath.row];
@@ -126,7 +152,7 @@
     vc.userSelectedPhotos = self.userSelectedPhotos;
     vc.product = product;
     
-    [self.navigationController pushViewController:vc animated:YES];
+    return vc;
 }
 
 - (void)fixCellFrameOnIOS7:(UICollectionViewCell *)cell {

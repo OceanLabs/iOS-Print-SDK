@@ -63,21 +63,21 @@
                 
                 id objects = json[@"objects"];
                 if ([objects isKindOfClass:[NSArray class]]) {
-                    for (id template in objects) {
-                        if ([template isKindOfClass:[NSDictionary class]]) {
-                            id name = template[@"name"];
-                            id identifier = template[@"template_id"];
-                            id costs = template[@"cost"];
-                            id imagesPerSheet = template[@"images_per_page"];
-                            id product = template[@"product"];
-                            NSNumber *enabledNumber = template[@"enabled"];
-                            NSString *description = template[@"description"];
+                    for (id productTemplate in objects) {
+                        if ([productTemplate isKindOfClass:[NSDictionary class]]) {
+                            id name = productTemplate[@"name"];
+                            id identifier = productTemplate[@"template_id"];
+                            id costs = productTemplate[@"cost"];
+                            id imagesPerSheet = productTemplate[@"images_per_page"];
+                            id product = productTemplate[@"product"];
+                            NSNumber *enabledNumber = productTemplate[@"enabled"];
+                            NSString *description = productTemplate[@"description"];
                             BOOL enabled = enabledNumber == nil ? YES : [enabledNumber boolValue];
                             
-                            NSDictionary *shippingCosts = [template[@"shipping_costs"] isKindOfClass:[NSDictionary class]] ? template[@"shipping_costs"] : nil;
+                            NSDictionary *shippingCosts = [productTemplate[@"shipping_costs"] isKindOfClass:[NSDictionary class]] ? productTemplate[@"shipping_costs"] : nil;
                             
-                            NSNumber *gridCountX = [template[@"grid_count_x"] isKindOfClass:[NSNumber class]] ? template[@"grid_count_x"] : nil;
-                            NSNumber *gridCountY = [template[@"grid_count_y"] isKindOfClass:[NSNumber class]] ? template[@"grid_count_y"] : nil;
+                            NSNumber *gridCountX = [productTemplate[@"grid_count_x"] isKindOfClass:[NSNumber class]] ? productTemplate[@"grid_count_x"] : nil;
+                            NSNumber *gridCountY = [productTemplate[@"grid_count_y"] isKindOfClass:[NSNumber class]] ? productTemplate[@"grid_count_y"] : nil;
                             
                             if ([name isKindOfClass:[NSString class]]
                                 && [identifier isKindOfClass:[NSString class]]

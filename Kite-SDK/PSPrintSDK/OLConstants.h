@@ -18,6 +18,7 @@
 #import "OLCountry.h"
 #import "OLCountryPickerController.h"
 #import "OLPayPalCard.h"
+#import "OLStripeCard.h"
 #import "OLAsset.h"
 #import "OLPrintJob.h"
 #import "OLPrintOrder.h"

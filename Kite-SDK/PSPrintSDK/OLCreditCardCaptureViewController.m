@@ -12,7 +12,7 @@
 #import "OLPayPalCard.h"
 #import "OLJudoPayCard.h"
 #import "OLPrintOrder.h"
-#import "CardIO.h"
+//#import "CardIO.h"
 #import "OLKitePrintSDK.h"
 #import <AVFoundation/AVFoundation.h>
 #import "NSString+Formatting.h"
@@ -81,12 +81,13 @@ static CardType getCardType(NSString *cardNumber) {
 
 @interface OLKitePrintSDK (Private)
 + (BOOL)useJudoPayForGBP;
++ (BOOL)useStripeForCreditCards;
 @end
 
 @interface OLCreditCardCaptureRootController : UITableViewController <UITableViewDelegate,
-#ifdef OL_KITE_OFFER_PAYPAL
-CardIOPaymentViewControllerDelegate,
-#endif
+//#ifdef OL_KITE_OFFER_PAYPAL
+//CardIOPaymentViewControllerDelegate,
+//#endif
 UITableViewDataSource, UITextFieldDelegate>
 @property (nonatomic, strong) UITextField *textFieldCardNumber, *textFieldExpiryDate, *textFieldCVV;
 @property (nonatomic, strong) OLPrintOrder *printOrder;
@@ -253,18 +254,50 @@ UITableViewDataSource, UITextFieldDelegate>
         }
     }
     
-    OLPayPalCard *card = [[OLPayPalCard alloc] init];
-    card.type = paypalCard;
-    card.number = [self cardNumber];
-    card.expireMonth = expireMonth;
-    card.expireYear = expireYear;
-    card.cvv2 = [self cardCVV];
-    
-    [self storeAndChargeCard:card];
+    if ([OLKitePrintSDK useStripeForCreditCards]){
+        OLStripeCard *card = [[OLStripeCard alloc] init];
+        card.number = [self cardNumber];
+        card.expireMonth = expireMonth;
+        card.expireYear = expireYear;
+        card.cvv2 = [self cardCVV];
+        
+        [SVProgressHUD setDefaultMaskType:SVProgressHUDMaskTypeBlack];
+        [SVProgressHUD showWithStatus:NSLocalizedStringFromTableInBundle(@"Processing", @"KitePrintSDK", [OLConstants bundle], @"")];
+        [card chargeCard:nil currencyCode:nil description:nil completionHandler:^(NSString *proofOfPayment, NSError *error) {
+            if (error) {
+                [SVProgressHUD dismiss];
+                if ([UIAlertController class]){
+                    UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLConstants bundle], @"") message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
+                    [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLConstants bundle], @"") style:UIAlertActionStyleDefault handler:NULL]];
+                    [self presentViewController:ac animated:YES completion:NULL];
+                }
+                else{
+                    UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLConstants bundle], @"") message:error.localizedDescription delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLConstants bundle], @"") otherButtonTitles:nil];
+                    [av show];
+                }
+                return;
+            }
+            
+            [SVProgressHUD dismiss];
+            [self.delegate creditCardCaptureController:(OLCreditCardCaptureViewController *) self.navigationController didFinishWithProofOfPayment:proofOfPayment];
+            [card saveAsLastUsedCard];
+        }];
+    }
+    else{
+        OLPayPalCard *card = [[OLPayPalCard alloc] init];
+        card.type = paypalCard;
+        card.number = [self cardNumber];
+        card.expireMonth = expireMonth;
+        card.expireYear = expireYear;
+        card.cvv2 = [self cardCVV];
+        
+        [self storeAndChargeCard:card];
+    }
 }
 
-- (void)storeAndChargeCard:(OLPayPalCard *)card{
-    [SVProgressHUD showWithStatus:NSLocalizedStringFromTableInBundle(@"Processing", @"KitePrintSDK", [OLConstants bundle], @"") maskType:SVProgressHUDMaskTypeBlack];
+- (void)storeAndChargeCard:(id)card{
+    [SVProgressHUD setDefaultMaskType:SVProgressHUDMaskTypeBlack];
+    [SVProgressHUD showWithStatus:NSLocalizedStringFromTableInBundle(@"Processing", @"KitePrintSDK", [OLConstants bundle], @"")];
     [card storeCardWithCompletionHandler:^(NSError *error) {
         // ignore error as I'd rather the user gets a nice checkout experience than we store the card in PayPal vault.
         [self.printOrder costWithCompletionHandler:^(OLPrintOrderCost *cost, NSError *error) {
@@ -290,42 +323,42 @@ UITableViewDataSource, UITextFieldDelegate>
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
-- (void) showCardScanner{
-#ifdef OL_KITE_OFFER_PAYPAL
-    
-    CardIOPaymentViewController *scanViewController = [[CardIOPaymentViewController alloc] initWithPaymentDelegate:self];
-    scanViewController.disableManualEntryButtons = YES;
-    scanViewController.collectCVV = NO;
-    scanViewController.collectExpiry = NO;
-    scanViewController.suppressScanConfirmation = YES;
-    
-    AVAuthorizationStatus authStatus = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];
-    if (authStatus == AVAuthorizationStatusNotDetermined){
-        [AVCaptureDevice requestAccessForMediaType:AVMediaTypeVideo completionHandler:^(BOOL granted){
-            if (granted){
-                [self presentViewController:scanViewController animated:YES completion:nil];
-            }
-        }];
-    }
-    else if (authStatus == AVAuthorizationStatusDenied){
-        if ([UIAlertController class]){
-            UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Camera Permission Denied", @"") message:NSLocalizedString(@"You have previously denied acces to the camera. If you wish to use the camera to scan your card, please allow access to the camera in the Settings app.", @"") preferredStyle:UIAlertControllerStyleAlert];
-            [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Settings", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
-                [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
-            }]];
-            [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"") style:UIAlertActionStyleCancel handler:NULL]];
-            [self presentViewController:ac animated:YES completion:NULL];
-        }
-        else{
-            UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Camera Permission Denied", @"") message:NSLocalizedString(@"You have previously denied acces to the camera. If you wish to use the camera to scan your card, please allow access to the camera in the Settings app.", @"") delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"") otherButtonTitles:nil];
-            [av show];
-        }
-    }
-    else{
-        [self presentViewController:scanViewController animated:YES completion:nil];
-    }
-#endif
-}
+//- (void) showCardScanner{
+//#ifdef OL_KITE_OFFER_PAYPAL
+//    
+//    CardIOPaymentViewController *scanViewController = [[CardIOPaymentViewController alloc] initWithPaymentDelegate:self];
+//    scanViewController.disableManualEntryButtons = YES;
+//    scanViewController.collectCVV = NO;
+//    scanViewController.collectExpiry = NO;
+//    scanViewController.suppressScanConfirmation = YES;
+//    
+//    AVAuthorizationStatus authStatus = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];
+//    if (authStatus == AVAuthorizationStatusNotDetermined){
+//        [AVCaptureDevice requestAccessForMediaType:AVMediaTypeVideo completionHandler:^(BOOL granted){
+//            if (granted){
+//                [self presentViewController:scanViewController animated:YES completion:nil];
+//            }
+//        }];
+//    }
+//    else if (authStatus == AVAuthorizationStatusDenied){
+//        if ([UIAlertController class]){
+//            UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Camera Permission Denied", @"") message:NSLocalizedString(@"You have previously denied acces to the camera. If you wish to use the camera to scan your card, please allow access to the camera in the Settings app.", @"") preferredStyle:UIAlertControllerStyleAlert];
+//            [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Settings", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
+//                [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
+//            }]];
+//            [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"") style:UIAlertActionStyleCancel handler:NULL]];
+//            [self presentViewController:ac animated:YES completion:NULL];
+//        }
+//        else{
+//            UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Camera Permission Denied", @"") message:NSLocalizedString(@"You have previously denied acces to the camera. If you wish to use the camera to scan your card, please allow access to the camera in the Settings app.", @"") delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"") otherButtonTitles:nil];
+//            [av show];
+//        }
+//    }
+//    else{
+//        [self presentViewController:scanViewController animated:YES completion:nil];
+//    }
+//#endif
+//}
 
 #pragma mark - UITableViewDataSource methods
 
@@ -387,39 +420,39 @@ UITableViewDataSource, UITextFieldDelegate>
         textField.placeholder = NSLocalizedString(@"Card Number", @"");
         self.textFieldCardNumber = textField;
         
-#ifdef OL_KITE_OFFER_PAYPAL
-        if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]){
-            AVAuthorizationStatus authStatus = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];
-            if ((authStatus == AVAuthorizationStatusAuthorized || authStatus == AVAuthorizationStatusNotDetermined || authStatus == AVAuthorizationStatusDenied)){
-                UIButton *cameraIcon = [[UIButton alloc] initWithFrame:CGRectMake(self.tableView.frame.size.width - 43, 0, 43, 43)];
-                [cameraIcon setImage:[UIImage imageNamedInKiteBundle:@"button_camera"] forState:UIControlStateNormal];
-                [cameraIcon addTarget:self action:@selector(showCardScanner) forControlEvents:UIControlEventTouchUpInside];
-                [cell.contentView addSubview:cameraIcon];
-                
-                if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
-                    UIView *view = cameraIcon;
-                    view.translatesAutoresizingMaskIntoConstraints = NO;
-                    NSDictionary *views = NSDictionaryOfVariableBindings(view);
-                    NSMutableArray *con = [[NSMutableArray alloc] init];
-                    
-                    NSArray *visuals = @[@"H:[view(43)]-0-|",
-                                         @"V:[view(43)]"];
-                    
-                    
-                    for (NSString *visual in visuals) {
-                        [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
-                    }
-                    
-                    NSLayoutConstraint *centerY = [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:view.superview attribute:NSLayoutAttributeCenterY multiplier:1 constant:0];
-                    [con addObject:centerY];
-                    
-                    [view.superview addConstraints:con];
-                }
-
-            }
-        }
-        
-#endif
+//#ifdef OL_KITE_OFFER_PAYPAL
+//        if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]){
+//            AVAuthorizationStatus authStatus = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];
+//            if ((authStatus == AVAuthorizationStatusAuthorized || authStatus == AVAuthorizationStatusNotDetermined || authStatus == AVAuthorizationStatusDenied)){
+//                UIButton *cameraIcon = [[UIButton alloc] initWithFrame:CGRectMake(self.tableView.frame.size.width - 43, 0, 43, 43)];
+//                [cameraIcon setImage:[UIImage imageNamedInKiteBundle:@"button_camera"] forState:UIControlStateNormal];
+//                [cameraIcon addTarget:self action:@selector(showCardScanner) forControlEvents:UIControlEventTouchUpInside];
+//                [cell.contentView addSubview:cameraIcon];
+//                
+//                if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
+//                    UIView *view = cameraIcon;
+//                    view.translatesAutoresizingMaskIntoConstraints = NO;
+//                    NSDictionary *views = NSDictionaryOfVariableBindings(view);
+//                    NSMutableArray *con = [[NSMutableArray alloc] init];
+//                    
+//                    NSArray *visuals = @[@"H:[view(43)]-0-|",
+//                                         @"V:[view(43)]"];
+//                    
+//                    
+//                    for (NSString *visual in visuals) {
+//                        [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+//                    }
+//                    
+//                    NSLayoutConstraint *centerY = [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:view.superview attribute:NSLayoutAttributeCenterY multiplier:1 constant:0];
+//                    [con addObject:centerY];
+//                    
+//                    [view.superview addConstraints:con];
+//                }
+//
+//            }
+//        }
+//        
+//#endif
         
     } else if (indexPath.section == kOLSectionExpiryDate) {
         textField.placeholder = NSLocalizedString(@"MM/YY", @"");
@@ -481,18 +514,18 @@ UITableViewDataSource, UITextFieldDelegate>
 
 #pragma mark - CardIOPaymentViewControllerDelegate methods
 
-#ifdef OL_KITE_OFFER_PAYPAL
-- (void)userDidCancelPaymentViewController:(CardIOPaymentViewController *)paymentViewController {
-    [self.textFieldCardNumber becomeFirstResponder];
-    [self dismissViewControllerAnimated:YES completion:nil];
-}
-
-- (void)userDidProvideCreditCardInfo:(CardIOCreditCardInfo *)cardInfo inPaymentViewController:(CardIOPaymentViewController *)paymentViewController {
-    [self.textFieldExpiryDate becomeFirstResponder];
-    self.textFieldCardNumber.text = [NSString stringByFormattingCreditCardNumber:cardInfo.cardNumber];
-    [self dismissViewControllerAnimated:YES completion:^(){}];
-}
-#endif
+//#ifdef OL_KITE_OFFER_PAYPAL
+//- (void)userDidCancelPaymentViewController:(CardIOPaymentViewController *)paymentViewController {
+//    [self.textFieldCardNumber becomeFirstResponder];
+//    [self dismissViewControllerAnimated:YES completion:nil];
+//}
+//
+//- (void)userDidProvideCreditCardInfo:(CardIOCreditCardInfo *)cardInfo inPaymentViewController:(CardIOPaymentViewController *)paymentViewController {
+//    [self.textFieldExpiryDate becomeFirstResponder];
+//    self.textFieldCardNumber.text = [NSString stringByFormattingCreditCardNumber:cardInfo.cardNumber];
+//    [self dismissViewControllerAnimated:YES completion:^(){}];
+//}
+//#endif
 
 #pragma mark - Autorotate and Orientation Methods
 // Currently here to disable landscape orientations and rotation on iOS 7. When support is dropped, these can be deleted.

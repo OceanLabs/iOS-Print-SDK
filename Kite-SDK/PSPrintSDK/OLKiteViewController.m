@@ -127,6 +127,8 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
         self.customNavigationItem.title = @"";
     }
     
+    [OLPrintPhoto calcScreenScaleForTraitCollection:self.traitCollection];
+    
     self.operationQueue = [NSOperationQueue mainQueue];
     self.templateSyncOperation = [[NSBlockOperation alloc] init];
     self.remotePlistSyncOperation = [[NSBlockOperation alloc] init];

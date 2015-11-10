@@ -78,9 +78,9 @@ static NSString *const kKeyApparelPrintJobOptions = @"co.oceanlabs.pssdk.kKeyApp
 }
 
 - (NSDecimalNumber *)costInCurrency:(NSString *)currencyCode {
-    OLProductTemplate *template = [OLProductTemplate templateWithId:self.templateId];
-    NSUInteger expectedQuantity = template.quantityPerSheet;
-    NSDecimalNumber *cost = [template costPerSheetInCurrencyCode:currencyCode];
+    OLProductTemplate *productTemplate = [OLProductTemplate templateWithId:self.templateId];
+    NSUInteger expectedQuantity = productTemplate.quantityPerSheet;
+    NSDecimalNumber *cost = [productTemplate costPerSheetInCurrencyCode:currencyCode];
     NSUInteger numOrders = (NSUInteger) floorf((self.quantity + expectedQuantity - 1)  / expectedQuantity);
     return (NSDecimalNumber *) [cost decimalNumberByMultiplyingBy:(NSDecimalNumber *) [NSDecimalNumber numberWithUnsignedInteger:numOrders]];
 }
