@@ -110,6 +110,18 @@ static const NSUInteger kSectionErrorRetry = 2;
     [super viewDidLoad];
     self.title = @"Receipt";
     
+    [self setupHeader];
+    
+    if ([self.tableView respondsToSelector:@selector(setCellLayoutMarginsFollowReadableWidth:)]){
+        self.tableView.cellLayoutMarginsFollowReadableWidth = NO;
+    }
+    
+    if ([self.delegate respondsToSelector:@selector(footerViewForReceiptViewController:)]){
+        self.tableView.tableFooterView = [(OLOrderReviewViewController *)self.delegate footerViewForReceiptViewController:self];
+    }
+}
+
+- (void)setupHeader{
     NSString *url = self.printOrder.printed ? [OLKiteABTesting sharedInstance].receiptSuccessURL : [OLKiteABTesting sharedInstance].receiptFailureURL;
     if (url){
         [[SDWebImageManager sharedManager] downloadImageWithURL:[NSURL URLWithString:url] options:0 progress:NULL completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL){
@@ -129,14 +141,6 @@ static const NSUInteger kSectionErrorRetry = 2;
     }
     else{
         [self setupBannerImage:[UIImage imageNamedInKiteBundle:self.printOrder.printed ? @"receipt_success" : @"receipt_failure"] withBgImage:[UIImage imageNamedInKiteBundle:self.printOrder.printed ? @"receipt_success_bg" : @"receipt_failure_bg"]];
-    }
-    
-    if ([self.tableView respondsToSelector:@selector(setCellLayoutMarginsFollowReadableWidth:)]){
-        self.tableView.cellLayoutMarginsFollowReadableWidth = NO;
-    }
-    
-    if ([self.delegate respondsToSelector:@selector(footerViewForReceiptViewController:)]){
-        self.tableView.tableFooterView = [(OLOrderReviewViewController *)self.delegate footerViewForReceiptViewController:self];
     }
 }
 
@@ -209,8 +213,7 @@ static const NSUInteger kSectionErrorRetry = 2;
             [[[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLConstants bundle], @"") message:error.localizedDescription delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLConstants bundle], @"") otherButtonTitles:nil] show];
         } else {
             [UIView transitionWithView:self.view duration:0.3f options:UIViewAnimationOptionTransitionCrossDissolve animations:^{
-                
-                ((UIImageView *) [self.tableView.tableHeaderView viewWithTag:1100]).image = [UIImage imageNamedInKiteBundle:@"receipt_success"];
+                [self setupHeader];
             } completion:nil];
             
             [self.tableView deleteSections:[NSIndexSet indexSetWithIndex:kSectionErrorRetry] withRowAnimation:UITableViewRowAnimationFade];
