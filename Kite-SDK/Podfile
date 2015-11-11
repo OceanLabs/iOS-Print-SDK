@@ -1,7 +1,7 @@
 platform :ios, '8.0'
 inhibit_all_warnings!
 
-link_with 'KitePrintSDK-Dev', 'KitePrintSDKTests'
+link_with 'KiteSDK-Demo', 'KitePrintSDKTests'
 
 pod 'SDWebImage'
 pod 'AFNetworking', '~> 2.6.1'
