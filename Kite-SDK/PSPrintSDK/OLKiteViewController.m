@@ -157,7 +157,12 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
 }
 
 -(IBAction) dismiss{
-    [self dismissViewControllerAnimated:YES completion:^{}];
+    if ([self.delegate respondsToSelector:@selector(kiteControllerDidFinish:)]){
+        [self.delegate kiteControllerDidFinish:self];
+    }
+    else{
+        [self dismissViewControllerAnimated:YES completion:^{}];
+    }
 }
 
 - (void)transitionToNextScreen{

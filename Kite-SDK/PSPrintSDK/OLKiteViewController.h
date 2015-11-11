@@ -45,6 +45,13 @@
  *  @return A boolean value of whether or not we should ask the user for their phone number at checkout.
  */
 - (BOOL)shouldShowPhoneEntryOnCheckoutScreen;
+
+/**
+ *  Notifies the delegate that KiteViewController has finished and should be dismissed as the delegate sees fit. If this method is not implemented, then KiteViewController dismisses itself.
+ *
+ *  @param controller The KiteViewController
+ */
+- (void)kiteControllerDidFinish:(OLKiteViewController * _Nonnull)controller;
 @end
 
 /**
