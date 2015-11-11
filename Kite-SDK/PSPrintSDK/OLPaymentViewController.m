@@ -738,7 +738,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
                     UIAlertController *ac = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
                     [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLConstants bundle], @"")  style:UIAlertActionStyleCancel handler:NULL]];
                     [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"Pay with new card", @"KitePrintSDK", [OLConstants bundle], @"")  style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
-                            [self payWithNewCard];
+                        [self payWithNewCard];
                     }]];
                     [ac addAction:[UIAlertAction actionWithTitle:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Pay with card ending %@", @"KitePrintSDK", [OLConstants bundle], @""), [[card numberMasked] substringFromIndex:[[card numberMasked] length] - 4]]  style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
                         
@@ -1021,9 +1021,18 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 
 - (void)paymentAuthorizationViewControllerDidFinish:(PKPaymentAuthorizationViewController *)controller {
     [self dismissViewControllerAnimated:YES completion:^{
-        if (!self.applePayDismissOperation.finished){
-            [[NSOperationQueue mainQueue] addOperation:self.applePayDismissOperation];
-        }
+        [self.printOrder costWithCompletionHandler:^(id cost, NSError *error){
+            if (!self.applePayDismissOperation.finished){
+                [[NSOperationQueue mainQueue] addOperation:self.applePayDismissOperation];
+            }
+            if (error){
+                UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Oops!", @"") message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
+                [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
+                    [self.navigationController popViewControllerAnimated:YES];
+                }]];
+                [self presentViewController:ac animated:YES completion:NULL];
+            }
+        }];
     }];
 }
 
@@ -1148,6 +1157,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             completion(PKPaymentAuthorizationStatusSuccess, nil, lineItems);
         }
         else{
+            self.printOrder.shippingAddress = nil;
             completion(PKPaymentAuthorizationStatusFailure, nil, nil);
         }
     }];

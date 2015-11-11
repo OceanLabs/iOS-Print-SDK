@@ -14,11 +14,18 @@
 #import "OLKiteABTesting.h"
 #import "UIImage+ImageNamedInKiteBundle.h"
 #import "OLProductTemplateOption.h"
+#import "OLKitePrintSDK.h"
 
 typedef enum {
     kSizeUnitsInches,
     kSizeUnitsCentimetres
 } SizeUnits;
+
+@interface OLKitePrintSDK (Private)
+
++ (NSString *)qualityGuaranteeString;
+
+@end
 
 @implementation OLProduct
 
@@ -293,7 +300,7 @@ typedef enum {
     }
     
     //Add quality guarantee
-    s = [s stringByAppendingString:NSLocalizedString(@"**Quality Guarantee**\nOur products are of the highest quality and we’re confident you will love yours. If not, we offer a no quibble money back guarantee. Enjoy!", @"")];
+    s = [s stringByAppendingString:[OLKitePrintSDK qualityGuaranteeString]];
     return s;
 }
 
