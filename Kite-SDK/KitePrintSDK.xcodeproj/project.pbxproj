@@ -2257,7 +2257,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "co.oceanlabs.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = KitePrintSDKTests;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/KitePrintSDK-Dev.app/KitePrintSDK-Dev";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/KiteSDK-Demo.app/KiteSDK-Demo";
 				WRAPPER_EXTENSION = xctest;
 			};
 			name = Debug;
@@ -2276,7 +2276,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "co.oceanlabs.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = KitePrintSDKTests;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/KitePrintSDK-Dev.app/KitePrintSDK-Dev";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/KiteSDK-Demo.app/KiteSDK-Demo";
 				WRAPPER_EXTENSION = xctest;
 			};
 			name = Release;
