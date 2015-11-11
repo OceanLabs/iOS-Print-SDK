@@ -559,7 +559,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     
     NSString *applePayAvailableStr = @"N/A";
 #ifdef OL_KITE_OFFER_APPLE_PAY
-    applePayAvailableStr = [self shouldShowApplePay] ? @"Yes" : @"No";
+    applePayAvailableStr = [self isApplePayAvailable] ? @"Yes" : @"No";
 #endif
     
 #ifndef OL_NO_ANALYTICS
@@ -588,25 +588,8 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         [SVProgressHUD setDefaultMaskType:SVProgressHUDMaskTypeBlack];
         [SVProgressHUD showProgress:progress status:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Uploading Images \n%lu / %lu", @"KitePrintSDK", [OLConstants bundle], @""), (unsigned long) totalAssetsUploaded + 1 + totalURLAssets, (unsigned long) self.printOrder.totalAssetsToUpload]];
     } completionHandler:^(NSString *orderIdReceipt, NSError *error) {
-        if (error) {
-            handler(PKPaymentAuthorizationStatusFailure);
-            [[[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLConstants bundle], @"") message:error.localizedDescription delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLConstants bundle], @"") otherButtonTitles:nil] show];
-        }
-        
-        if (!handlerUsed) {
-            handler(PKPaymentAuthorizationStatusSuccess);
-            handlerUsed = YES;
-        }
-        
-        [[NSNotificationCenter defaultCenter] postNotificationName:kOLNotificationPrintOrderSubmission object:self userInfo:@{kOLKeyUserInfoPrintOrder: self.printOrder}];
-        
-#ifndef OL_NO_ANALYTICS
-        [OLAnalytics trackOrderSubmission:self.printOrder];
-#endif
-        
         [self.printOrder saveToHistory]; // save again as the print order has it's receipt set if it was successful, otherwise last error is set
-        [SVProgressHUD dismiss];
-        [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+        
         self.transitionBlockOperation = [[NSBlockOperation alloc] init];
         __weak OLPaymentViewController *welf = self;
         [self.transitionBlockOperation addExecutionBlock:^{
@@ -614,12 +597,50 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             receiptVC.delegate = welf.delegate;
             receiptVC.presentedModally = welf.presentedModally;
             receiptVC.delegate = welf.delegate;
-            [welf.navigationController pushViewController:receiptVC animated:YES];
+            if (!welf.presentedViewController) {
+                [welf.navigationController pushViewController:receiptVC animated:YES];
+            }
         }];
-        if ([self shouldShowApplePay]){
+        if ([self isApplePayAvailable]){
             [self.transitionBlockOperation addDependency:self.applePayDismissOperation];
         }
-        [[NSOperationQueue mainQueue] addOperation:self.transitionBlockOperation];
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:kOLNotificationPrintOrderSubmission object:self userInfo:@{kOLKeyUserInfoPrintOrder: self.printOrder}];
+        
+        [SVProgressHUD dismiss];
+        [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+        
+        if (error) {
+            if (!handlerUsed) {
+                handler(PKPaymentAuthorizationStatusFailure);
+                handlerUsed = YES;
+            }
+            if ([UIAlertController class]){
+                UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLConstants bundle], @"") message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
+                [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLConstants bundle], @"") style:UIAlertActionStyleDefault handler:^(id action){
+                    [[NSOperationQueue mainQueue] addOperation:self.transitionBlockOperation];
+                }]];
+                [self presentViewController:ac animated:YES completion:NULL];
+            }
+            else{
+                UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLConstants bundle], @"") message:error.localizedDescription delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLConstants bundle], @"") otherButtonTitles:nil];
+                [av show];
+            }
+            return;
+        }
+        
+        if (!handlerUsed) {
+            handler(PKPaymentAuthorizationStatusSuccess);
+            handlerUsed = YES;
+        }
+        
+#ifndef OL_NO_ANALYTICS
+        [OLAnalytics trackOrderSubmission:self.printOrder];
+#endif
+        
+        if (!self.presentedViewController){
+            [[NSOperationQueue mainQueue] addOperation:self.transitionBlockOperation];
+        }
     }];
 }
 
