@@ -8,7 +8,7 @@
 
 #import "OLProductDetailsViewController.h"
 #import "OLProductOptionsViewController.h"
-#import <TSMarkdownParser/TSMarkdownParser.h>
+#import "TSMarkdownParser.h"
 
 @interface OLProductDetailsViewController ()
 

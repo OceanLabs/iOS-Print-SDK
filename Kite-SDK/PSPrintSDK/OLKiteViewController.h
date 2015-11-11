@@ -53,6 +53,13 @@
  */
 - (BOOL)shouldShowContinueShoppingButton;
 
+
+/**
+ *  Notifies the delegate that KiteViewController has finished and should be dismissed as the delegate sees fit. If this method is not implemented, then KiteViewController dismisses itself.
+ *
+ *  @param controller The KiteViewController
+ */
+- (void)kiteControllerDidFinish:(OLKiteViewController * _Nonnull)controller;
 @end
 
 /**
