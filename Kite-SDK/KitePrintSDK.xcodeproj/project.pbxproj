@@ -2722,6 +2722,10 @@
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				WARNING_CFLAGS = (
+					"-Wno-shorten-64-to-32",
+					"-Wno-absolute-value",
+				);
 			};
 			name = Debug;
 		};
@@ -2741,6 +2745,10 @@
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				WARNING_CFLAGS = (
+					"-Wno-shorten-64-to-32",
+					"-Wno-absolute-value",
+				);
 			};
 			name = Release;
 		};
