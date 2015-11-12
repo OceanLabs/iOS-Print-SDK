@@ -43,6 +43,39 @@ typedef void (^OLPrintOrderCompletionHandler)(NSString *orderIdReceipt, NSError 
  */
 typedef void (^OLPrintOrderCostCompletionHandler)(OLPrintOrderCost *cost, NSError * error);
 
+/**
+ *   States for the order submission status.
+ */
+typedef NS_ENUM(NSInteger, OLPrintOrderSubmitStatus) {
+    /**
+     *  The order was canceleld (eg refunded)
+     */
+    OLPrintOrderSubmitStatusCancelled = -2,
+    /**
+     *  The order did not validate (eg credit card declined)
+     */
+    OLPrintOrderSubmitStatusError = -1,
+    /**
+     *  Status unknown (eg order not submitted)
+     */
+    OLPrintOrderSubmitStatusUnknown = 0,
+    /**
+     *  Order received by Kite
+     */
+    OLPrintOrderSubmitStatusReceived = 1,
+    /**
+     *  Order accepted by Kite
+     */
+    OLPrintOrderSubmitStatusAccepted = 2,
+    /**
+     *  Order validated
+     */
+    OLPrintOrderSubmitStatusValidated = 3,
+    /**
+     *  Order processed
+     */
+    OLPrintOrderSubmitStatusProcessed = 4
+};
 
 /**
  *  The print order object, which can have multiple jobs and is ultimately submitted to Kite for printing.
@@ -70,6 +103,15 @@ typedef void (^OLPrintOrderCostCompletionHandler)(OLPrintOrderCost *cost, NSErro
  *  @return The print order
  */
 + (OLPrintOrder *)submitJob:(id<OLPrintJob>)job withProofOfPayment:(NSString *)proofOfPayment forPrintingWithProgressHandler:(OLPrintOrderProgressHandler)progressHandler completionHandler:(OLPrintOrderCompletionHandler)completionHandler;
+
+/**
+ *  Returns the OLPrintOrderSubmissionStatus from an NSString
+ *
+ *  @param identifier The NSString status
+ *
+ *  @return The enum version of the status
+ */
++ (OLPrintOrderSubmitStatus)submitStatusFromIdentifier:(NSString *)identifier;
 
 /**
  *  Add a print job to the print order
@@ -175,6 +217,16 @@ typedef void (^OLPrintOrderCostCompletionHandler)(OLPrintOrderCost *cost, NSErro
  *  A description of the payment
  */
 @property (nonatomic, readonly) NSString *paymentDescription;
+
+/**
+ *  State of the print order submission.
+ */
+@property (assign, nonatomic, readonly) OLPrintOrderSubmitStatus submitStatus;
+
+/**
+ *  The error message when the order submit status has changed to Error
+ */
+@property (strong, nonatomic) NSString *submitStatusErrorMessage;
 
 /**
  *  If duplicate jobs are found, discard

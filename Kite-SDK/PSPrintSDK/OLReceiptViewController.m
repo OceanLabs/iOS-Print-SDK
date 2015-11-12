@@ -23,6 +23,7 @@
 #import "OLKiteABTesting.h"
 #import "UIImage+ColorAtPixel.h"
 #import "UIImage+ImageNamedInKiteBundle.h"
+#import "OLCustomNavigationController.h"
 
 static const NSUInteger kSectionOrderSummary = 0;
 static const NSUInteger kSectionOrderId = 1;
@@ -31,6 +32,10 @@ static const NSUInteger kSectionErrorRetry = 2;
 @interface OLReceiptViewController ()
 @property (nonatomic, strong) OLPrintOrder *printOrder;
 @property (nonatomic, assign) BOOL presentedModally;
+@end
+
+@interface OLPrintOrder (Private)
+- (void)validateOrderSubmissionWithCompletionHandler:(void(^)(NSString *orderIdReceipt, NSError *error))handler;
 @end
 
 @interface OLOrderReviewViewController (Private)
@@ -195,6 +200,54 @@ static const NSUInteger kSectionErrorRetry = 2;
     }
 }
 
+- (void)onButtonRetryClicked{
+    if (self.printOrder.submitStatus == OLPrintOrderSubmitStatusError){
+        if ([UIAlertController class]){
+            UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLConstants bundle], @"") message:self.printOrder.submitStatusErrorMessage preferredStyle:UIAlertControllerStyleAlert];
+            [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"Retry", @"KitePrintSDK", [OLConstants bundle], @"") style:UIAlertActionStyleDefault handler:^(id action){
+                OLPaymentViewController *vc = [[OLPaymentViewController alloc] initWithPrintOrder:self.printOrder];
+                OLCustomNavigationController *nvc = [[OLCustomNavigationController alloc] initWithRootViewController:vc];
+                [self presentViewController:nvc animated:YES completion:NULL];
+            }]];
+            [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"") style:UIAlertActionStyleCancel handler:NULL]];
+            [self presentViewController:ac animated:YES completion:NULL];
+        }
+        else{
+            UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLConstants bundle], @"") message:self.printOrder.submitStatusErrorMessage delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLConstants bundle], @"") otherButtonTitles:nil];
+            [av show];
+            OLPaymentViewController *vc = [[OLPaymentViewController alloc] initWithPrintOrder:self.printOrder];
+            OLCustomNavigationController *nvc = [[OLCustomNavigationController alloc] initWithRootViewController:vc];
+            [self presentViewController:nvc animated:YES completion:NULL];
+        }
+        return;
+    }
+    else if (self.printOrder.submitStatus == OLPrintOrderSubmitStatusAccepted || self.printOrder.submitStatus == OLPrintOrderSubmitStatusReceived){
+        [SVProgressHUD setDefaultMaskType:SVProgressHUDMaskTypeBlack];
+        [SVProgressHUD showWithStatus:@"Processing"];
+        [self.printOrder validateOrderSubmissionWithCompletionHandler:^(NSString *orderReceipt, NSError *error){
+            [SVProgressHUD dismiss];
+            if (error){
+                if ([UIAlertController class]){
+                    UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLConstants bundle], @"") message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
+                    [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLConstants bundle], @"") style:UIAlertActionStyleDefault handler:NULL]];
+                    [self presentViewController:ac animated:YES completion:NULL];
+                }
+                else{
+                    UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLConstants bundle], @"") message:error.localizedDescription delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLConstants bundle], @"") otherButtonTitles:nil];
+                    [av show];
+                }
+            }
+            else{
+                [self retryWasSuccessful];
+            }
+        }];
+        return;
+    }
+    else{
+        [self retrySubmittingOrderForPrinting];
+    }
+}
+
 - (void)retrySubmittingOrderForPrinting {
     [SVProgressHUD setDefaultMaskType:SVProgressHUDMaskTypeBlack];
     [SVProgressHUD showWithStatus:@"Processing"];
@@ -212,14 +265,18 @@ static const NSUInteger kSectionErrorRetry = 2;
         if (error) {
             [[[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLConstants bundle], @"") message:error.localizedDescription delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLConstants bundle], @"") otherButtonTitles:nil] show];
         } else {
-            [UIView transitionWithView:self.view duration:0.3f options:UIViewAnimationOptionTransitionCrossDissolve animations:^{
-                [self setupHeader];
-            } completion:nil];
-            
-            [self.tableView deleteSections:[NSIndexSet indexSetWithIndex:kSectionErrorRetry] withRowAnimation:UITableViewRowAnimationFade];
-            [self.tableView reloadData];
+            [self retryWasSuccessful];
         }
     }];
+}
+
+- (void)retryWasSuccessful{
+    [UIView transitionWithView:self.view duration:0.3f options:UIViewAnimationOptionTransitionCrossDissolve animations:^{
+        [self setupHeader];
+    } completion:nil];
+    
+    [self.tableView deleteSections:[NSIndexSet indexSetWithIndex:kSectionErrorRetry] withRowAnimation:UITableViewRowAnimationFade];
+    [self.tableView reloadData];
 }
 
 #pragma mark - UITableViewDataSource methods
@@ -354,7 +411,7 @@ static const NSUInteger kSectionErrorRetry = 2;
         return;
     }
     
-    [self retrySubmittingOrderForPrinting];
+    [self onButtonRetryClicked];
 }
 
 #pragma mark - Autorotate and Orientation Methods

@@ -939,13 +939,23 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         NSUInteger totalURLAssets = self.printOrder.totalAssetsToUpload - totalAssetsToUpload;
         float progress = totalAssetsUploaded * step + (totalAssetBytesWritten / (float) totalAssetBytesExpectedToWrite) * step;
         [SVProgressHUD setDefaultMaskType:SVProgressHUDMaskTypeBlack];
+        if (progress < 1.0){
         [SVProgressHUD showProgress:progress status:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Uploading Images \n%lu / %lu", @"KitePrintSDK", [OLConstants bundle], @""), (unsigned long) totalAssetsUploaded + 1 + totalURLAssets, (unsigned long) self.printOrder.totalAssetsToUpload]];
+        }
+        else{
+             [SVProgressHUD showWithStatus:NSLocalizedStringFromTableInBundle(@"Processing", @"KitePrintSDK", [OLConstants bundle], @"")];
+        }
     } completionHandler:^(NSString *orderIdReceipt, NSError *error) {
         [self.printOrder saveToHistory]; // save again as the print order has it's receipt set if it was successful, otherwise last error is set
         
         self.transitionBlockOperation = [[NSBlockOperation alloc] init];
         __weak OLPaymentViewController *welf = self;
         [self.transitionBlockOperation addExecutionBlock:^{
+            if ([welf.navigationController.presentingViewController isKindOfClass:[OLReceiptViewController class]]){
+                [(UITableView *)[(OLReceiptViewController *)welf.navigationController.presentingViewController tableView] reloadData];
+                [welf.navigationController.presentingViewController dismissViewControllerAnimated:YES completion:NULL];
+                return ;
+            }
             OLReceiptViewController *receiptVC = [[OLReceiptViewController alloc] initWithPrintOrder:welf.printOrder];
             receiptVC.delegate = welf.delegate;
             receiptVC.presentedModally = welf.presentedModally;
