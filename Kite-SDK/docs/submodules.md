@@ -58,6 +58,12 @@ Finally add all resources found under `KitePrintSDK.xcproj/Kite Print SDK/Resour
 
 ![Add Resources](assets.gif)
 
+Duplicate Symbol errors
+-----------
+If you're already using and linking against some of the Kite SDK's dependencies (i.e. AFNetworking) you may find that you hit up against duplicate symbol errors. These are very easy to resolve, simple select the `KitePrintSDK.xcodeproj` within your workspace, then select the `KiteSDK` target, and then from within the `Link Binary With Libraries` build phase remove the offending dependencies that you're already compiling and linking into your own project.
+
+![Add Resources](duplicate_symbols.gif)
+
 Done
 -----------
 
