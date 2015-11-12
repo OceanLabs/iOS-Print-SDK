@@ -172,7 +172,6 @@
 		E22058601BF3AAF0009CFAF6 /* AFURLRequestSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C83EA1BE2829C0041D4CF /* AFURLRequestSerialization.m */; };
 		E22058621BF3AAF0009CFAF6 /* AFURLResponseSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C83EC1BE2829C0041D4CF /* AFURLResponseSerialization.m */; };
 		E22058641BF3AAF0009CFAF6 /* AFURLSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C83EE1BE2829C0041D4CF /* AFURLSessionManager.m */; };
-		E22058651BF3AB64009CFAF6 /* libAFNetworking.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E22058491BF3A984009CFAF6 /* libAFNetworking.a */; };
 		E22058781BF3F732009CFAF6 /* NSUserDefaults+GroundControl.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C84291BE289400041D4CF /* NSUserDefaults+GroundControl.m */; };
 		E22058791BF3F757009CFAF6 /* libGroundControl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E220586F1BF3EA8C009CFAF6 /* libGroundControl.a */; };
 		E22058871BF3F7DB009CFAF6 /* UIColor+HexString.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C84251BE288D30041D4CF /* UIColor+HexString.m */; };
@@ -944,7 +943,6 @@
 				E22058971BF3F8B2009CFAF6 /* libUICKeyChainStore.a in Frameworks */,
 				E22058881BF3F854009CFAF6 /* libUIColor-HexString.a in Frameworks */,
 				E22058791BF3F757009CFAF6 /* libGroundControl.a in Frameworks */,
-				E22058651BF3AB64009CFAF6 /* libAFNetworking.a in Frameworks */,
 				E29C86201BE3B8E70041D4CF /* Foundation.framework in Frameworks */,
 				E29C861D1BE3B70B0041D4CF /* UIKit.framework in Frameworks */,
 				E29C861C1BE3B7060041D4CF /* CoreGraphics.framework in Frameworks */,
