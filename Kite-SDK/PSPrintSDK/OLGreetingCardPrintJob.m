@@ -6,7 +6,7 @@
 //  Copyright (c) 2013 Deon Botha. All rights reserved.
 //
 
-#import "OLPostcardPrintJob.h"
+#import "OLGreetingCardPrintJob.h"
 #import "OLAddress.h"
 #import "OLCountry.h"
 #import "OLAsset.h"
@@ -14,6 +14,7 @@
 
 static NSString *const kKeyFrontImage = @"co.oceanlabs.pssdk.kKeyFrontImage";
 static NSString *const kKeyBackImage = @"co.oceanlabs.pssdk.kKeyBackImage";
+static NSString *const kKeyInsideRightImage = @"co.oceanlabs.pssdk.kKeyInsideRightImage";
 static NSString *const kKeyMessage = @"co.oceanlabs.pssdk.kKeyMessage";
 static NSString *const kKeyAddress = @"co.oceanlabs.pssdk.kKeyAddress";
 static NSString *const kKeyProductTemplateId = @"co.oceanlabs.pssdk.kKeyProductTemplateId";
@@ -23,16 +24,17 @@ static id stringOrEmptyString(NSString *str) {
     return str ? str : @"";
 }
 
-@interface OLPostcardPrintJob ()
+@interface OLGreetingCardPrintJob ()
 @property (nonatomic, strong) NSString *templateId;
 @property (nonatomic, strong) OLAsset *frontImageAsset;
 @property (nonatomic, strong) OLAsset *backImageAsset;
+@property (strong, nonatomic) OLAsset *insideRightImageAsset;
 @property (nonatomic, copy) NSString *message;
 @property (strong, nonatomic) NSMutableDictionary *options;
 
 @end
 
-@implementation OLPostcardPrintJob
+@implementation OLGreetingCardPrintJob
 
 @synthesize address;
 @synthesize uuid;
@@ -48,22 +50,12 @@ static id stringOrEmptyString(NSString *str) {
 - (void)setValue:(NSString *)value forOption:(NSString *)option{
     self.options[option] = value;
 }
-
-- (id)initWithTemplateId:(NSString *)templateId frontImageOLAsset:(OLAsset *)frontImageAsset message:(NSString *)message address:(OLAddress *)theAddress {
-    return [self initWithTemplateId:templateId frontImageOLAsset:frontImageAsset backImageOLAsset:nil message:message address:theAddress];
-}
-
-- (id)initWithTemplateId:(NSString *)templateId frontImageOLAsset:(OLAsset *)frontImageAsset backImageOLAsset:(OLAsset *)backImageAsset {
-    return [self initWithTemplateId:templateId frontImageOLAsset:frontImageAsset backImageOLAsset:backImageAsset message:nil address:nil];
-}
-
-- (id)initWithTemplateId:(NSString *)templateId frontImageOLAsset:(OLAsset *)frontImageAsset backImageOLAsset:(OLAsset *)backImageAsset message:(NSString *)message address:(OLAddress *)theAddress {
+- (id)initWithTemplateId:(NSString *)templateId frontImageOLAsset:(OLAsset *)frontImageAsset backImageOLAsset:(OLAsset *)backImageAsset insideRightImageAsset:(OLAsset *)insideAsset {
     if (self = [super init]) {
         self.uuid = [[NSUUID UUID] UUIDString];
         self.frontImageAsset = frontImageAsset;
         self.backImageAsset = backImageAsset;
-        self.message = message;
-        self.address = theAddress;
+        self.insideRightImageAsset = insideAsset;
         self.templateId = templateId;
     }
     return self;
@@ -89,7 +81,7 @@ static id stringOrEmptyString(NSString *str) {
     return [OLProductTemplate templateWithId:self.templateId].currenciesSupported;
 }
 
-- (NSArray/*<OLImage>*/ *)assetsForUploading {
+- (NSArray<OLAsset *> *)assetsForUploading {
     if (self.backImageAsset) {
         return @[self.frontImageAsset, self.backImageAsset];
     } else {
@@ -107,6 +99,9 @@ static id stringOrEmptyString(NSString *str) {
     
     if (self.backImageAsset){
         assets[@"back_image"] = [NSNumber numberWithLongLong:self.backImageAsset.assetId];
+    }
+    if (self.insideRightImageAsset){
+        assets[@"inside_right_image"] = [NSNumber numberWithLongLong:self.insideRightImageAsset.assetId];
     }
     
     // set message
@@ -143,6 +138,7 @@ static id stringOrEmptyString(NSString *str) {
     if (self.templateId) result *= [self.templateId hash];
     if (self.frontImageAsset) result *= [self.frontImageAsset hash];
     if (self.backImageAsset) result *= [self.backImageAsset hash];
+    if (self.insideRightImageAsset) result *= [self.insideRightImageAsset hash];
     if (self.message && [self.message hash] > 0) result *= [self.message hash];
     if (self.address) result *= [self.address hash];
     result = 18 * result + [self.options hash];
@@ -154,14 +150,15 @@ static id stringOrEmptyString(NSString *str) {
         return YES;
     }
     
-    if (![object isKindOfClass:[OLPostcardPrintJob class]]) {
+    if (![object isKindOfClass:[OLGreetingCardPrintJob class]]) {
         return NO;
     }
-    OLPostcardPrintJob* printJob = (OLPostcardPrintJob*)object;
+    OLGreetingCardPrintJob* printJob = (OLGreetingCardPrintJob*)object;
     BOOL result = YES;
     if (self.templateId) result &= [self.templateId isEqual:printJob.templateId];
     if (self.frontImageAsset) result &= [self.frontImageAsset isEqual:printJob.frontImageAsset];
     if (self.backImageAsset) result &= [self.backImageAsset isEqual:printJob.backImageAsset];
+    if (self.insideRightImageAsset) result &= [self.insideRightImageAsset isEqual:printJob.insideRightImageAsset];
     if (self.message) result &= [self.message isEqual:printJob.message];
     if (self.address) result &= [self.address isEqual:printJob.address];
     result &= [self.options isEqualToDictionary:printJob.options];
@@ -173,6 +170,7 @@ static id stringOrEmptyString(NSString *str) {
 - (void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:self.frontImageAsset forKey:kKeyFrontImage];
     [aCoder encodeObject:self.backImageAsset forKey:kKeyBackImage];
+    [aCoder encodeObject:self.insideRightImageAsset forKey:kKeyInsideRightImage];
     [aCoder encodeObject:self.message forKey:kKeyMessage];
     [aCoder encodeObject:self.address forKey:kKeyAddress];
     [aCoder encodeObject:self.templateId forKey:kKeyProductTemplateId];
@@ -184,6 +182,7 @@ static id stringOrEmptyString(NSString *str) {
     if (self = [super init]) {
         self.frontImageAsset = [aDecoder decodeObjectForKey:kKeyFrontImage];
         self.backImageAsset = [aDecoder decodeObjectForKey:kKeyBackImage];
+        self.insideRightImageAsset = [aDecoder decodeObjectForKey:kKeyInsideRightImage];
         self.message = [aDecoder decodeObjectForKey:kKeyMessage];
         self.address = [aDecoder decodeObjectForKey:kKeyAddress];
         self.templateId = [aDecoder decodeObjectForKey:kKeyProductTemplateId];
