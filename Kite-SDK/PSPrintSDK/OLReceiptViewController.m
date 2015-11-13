@@ -204,7 +204,7 @@ static const NSUInteger kSectionErrorRetry = 2;
     if (self.printOrder.submitStatus == OLPrintOrderSubmitStatusError){
         if ([UIAlertController class]){
             UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLConstants bundle], @"") message:self.printOrder.submitStatusErrorMessage preferredStyle:UIAlertControllerStyleAlert];
-            [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"Retry", @"KitePrintSDK", [OLConstants bundle], @"") style:UIAlertActionStyleDefault handler:^(id action){
+            [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"New Payment", @"KitePrintSDK", [OLConstants bundle], @"") style:UIAlertActionStyleDefault handler:^(id action){
                 OLPaymentViewController *vc = [[OLPaymentViewController alloc] initWithPrintOrder:self.printOrder];
                 OLCustomNavigationController *nvc = [[OLCustomNavigationController alloc] initWithRootViewController:vc];
                 [self presentViewController:nvc animated:YES completion:NULL];

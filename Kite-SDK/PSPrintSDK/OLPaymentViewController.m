@@ -216,6 +216,10 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
                                                                             target:nil
                                                                             action:nil];
     
+    if (self.navigationController.viewControllers.firstObject == self){
+        self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(dismiss)];
+    }
+    
     NSString *applePayAvailableStr = @"N/A";
 #ifdef OL_KITE_OFFER_APPLE_PAY
     self.applePayIsAvailable = [self isApplePayAvailable];
@@ -465,6 +469,10 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     if ([self.tableView respondsToSelector:@selector(setCellLayoutMarginsFollowReadableWidth:)]){
         self.tableView.cellLayoutMarginsFollowReadableWidth = NO;
     }
+}
+
+- (void)dismiss{
+    [self.navigationController.presentingViewController dismissViewControllerAnimated:YES completion:NULL];
 }
 
 - (void)onButtonMoreOptionsClicked{

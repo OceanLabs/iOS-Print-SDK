@@ -55,6 +55,19 @@ NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@/order/%@", 
         if (httpStatusCode >= 200 & httpStatusCode <= 299) {
             self.req = nil;
             
+            id errorObj = json[@"error"];
+            if ([errorObj isKindOfClass:[NSDictionary class]]) {
+                id errorMessage = errorObj[@"message"];
+                if ([errorMessage isKindOfClass:[NSString class]]) {
+                    NSError *error = [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeServerFault userInfo:@{NSLocalizedDescriptionKey:errorMessage}];
+                    self.req = nil;
+                    self.printOrder.submitStatus = OLPrintOrderSubmitStatusError;
+                    self.printOrder.submitStatusErrorMessage = (NSString *)errorMessage;
+                    handler(OLPrintOrderSubmitStatusError, error);
+                    return;
+                }
+            }
+            
             id status = json[@"status"];
             if ([status isKindOfClass:[NSString class]]){
                 self.printOrder.submitStatus = [OLPrintOrder submitStatusFromIdentifier:status];
