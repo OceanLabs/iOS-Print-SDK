@@ -15,10 +15,11 @@
 static NSString *const kKeyFrontImage = @"co.oceanlabs.pssdk.kKeyFrontImage";
 static NSString *const kKeyBackImage = @"co.oceanlabs.pssdk.kKeyBackImage";
 static NSString *const kKeyInsideRightImage = @"co.oceanlabs.pssdk.kKeyInsideRightImage";
+static NSString *const kKeyInsideLeftImage = @"co.oceanlabs.pssdk.kKeyInsideLeftImage";
 static NSString *const kKeyMessage = @"co.oceanlabs.pssdk.kKeyMessage";
 static NSString *const kKeyAddress = @"co.oceanlabs.pssdk.kKeyAddress";
 static NSString *const kKeyProductTemplateId = @"co.oceanlabs.pssdk.kKeyProductTemplateId";
-static NSString *const kKeyPostcardPrintJobOptions = @"co.oceanlabs.pssdk.kKeyPostcardPrintJobOptions";
+static NSString *const kKeyPrintJobOptions = @"co.oceanlabs.pssdk.kKeyPrintJobOptions";
 
 static id stringOrEmptyString(NSString *str) {
     return str ? str : @"";
@@ -29,6 +30,7 @@ static id stringOrEmptyString(NSString *str) {
 @property (nonatomic, strong) OLAsset *frontImageAsset;
 @property (nonatomic, strong) OLAsset *backImageAsset;
 @property (strong, nonatomic) OLAsset *insideRightImageAsset;
+@property (strong, nonatomic) OLAsset *insideLeftImageAsset;
 @property (nonatomic, copy) NSString *message;
 @property (strong, nonatomic) NSMutableDictionary *options;
 
@@ -50,12 +52,13 @@ static id stringOrEmptyString(NSString *str) {
 - (void)setValue:(NSString *)value forOption:(NSString *)option{
     self.options[option] = value;
 }
-- (id)initWithTemplateId:(NSString *)templateId frontImageOLAsset:(OLAsset *)frontImageAsset backImageOLAsset:(OLAsset *)backImageAsset insideRightImageAsset:(OLAsset *)insideAsset {
+- (id)initWithTemplateId:(NSString *)templateId frontImageOLAsset:(OLAsset *)frontImageAsset backImageOLAsset:(OLAsset *)backImageAsset insideRightImageAsset:(OLAsset *)insideRightImageAsset insideLeftImageAsset:(OLAsset *)insideLeftImageAsset {
     if (self = [super init]) {
         self.uuid = [[NSUUID UUID] UUIDString];
         self.frontImageAsset = frontImageAsset;
         self.backImageAsset = backImageAsset;
-        self.insideRightImageAsset = insideAsset;
+        self.insideRightImageAsset = insideRightImageAsset;
+        self.insideLeftImageAsset = insideLeftImageAsset;
         self.templateId = templateId;
     }
     return self;
@@ -139,6 +142,7 @@ static id stringOrEmptyString(NSString *str) {
     if (self.frontImageAsset) result *= [self.frontImageAsset hash];
     if (self.backImageAsset) result *= [self.backImageAsset hash];
     if (self.insideRightImageAsset) result *= [self.insideRightImageAsset hash];
+    if (self.insideLeftImageAsset) result *= [self.insideLeftImageAsset hash];
     if (self.message && [self.message hash] > 0) result *= [self.message hash];
     if (self.address) result *= [self.address hash];
     result = 18 * result + [self.options hash];
@@ -159,6 +163,7 @@ static id stringOrEmptyString(NSString *str) {
     if (self.frontImageAsset) result &= [self.frontImageAsset isEqual:printJob.frontImageAsset];
     if (self.backImageAsset) result &= [self.backImageAsset isEqual:printJob.backImageAsset];
     if (self.insideRightImageAsset) result &= [self.insideRightImageAsset isEqual:printJob.insideRightImageAsset];
+    if (self.insideLeftImageAsset) result &= [self.insideLeftImageAsset isEqual:printJob.insideLeftImageAsset];
     if (self.message) result &= [self.message isEqual:printJob.message];
     if (self.address) result &= [self.address isEqual:printJob.address];
     result &= [self.options isEqualToDictionary:printJob.options];
@@ -171,11 +176,12 @@ static id stringOrEmptyString(NSString *str) {
     [aCoder encodeObject:self.frontImageAsset forKey:kKeyFrontImage];
     [aCoder encodeObject:self.backImageAsset forKey:kKeyBackImage];
     [aCoder encodeObject:self.insideRightImageAsset forKey:kKeyInsideRightImage];
+    [aCoder encodeObject:self.insideLeftImageAsset forKey:kKeyInsideLeftImage];
     [aCoder encodeObject:self.message forKey:kKeyMessage];
     [aCoder encodeObject:self.address forKey:kKeyAddress];
     [aCoder encodeObject:self.templateId forKey:kKeyProductTemplateId];
     [aCoder encodeObject:self.backImageAsset forKey:kKeyBackImage];
-    [aCoder encodeObject:self.options forKey:kKeyPostcardPrintJobOptions];
+    [aCoder encodeObject:self.options forKey:kKeyPrintJobOptions];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
@@ -183,11 +189,12 @@ static id stringOrEmptyString(NSString *str) {
         self.frontImageAsset = [aDecoder decodeObjectForKey:kKeyFrontImage];
         self.backImageAsset = [aDecoder decodeObjectForKey:kKeyBackImage];
         self.insideRightImageAsset = [aDecoder decodeObjectForKey:kKeyInsideRightImage];
+        self.insideLeftImageAsset = [aDecoder decodeObjectForKey:kKeyInsideLeftImage];
         self.message = [aDecoder decodeObjectForKey:kKeyMessage];
         self.address = [aDecoder decodeObjectForKey:kKeyAddress];
         self.templateId = [aDecoder decodeObjectForKey:kKeyProductTemplateId];
         self.backImageAsset = [aDecoder decodeObjectForKey:kKeyBackImage];
-        self.options = [aDecoder decodeObjectForKey:kKeyPostcardPrintJobOptions];
+        self.options = [aDecoder decodeObjectForKey:kKeyPrintJobOptions];
     }
     
     return self;
