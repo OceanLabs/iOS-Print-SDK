@@ -98,6 +98,19 @@
 + (id<OLPrintJob>)postcardWithTemplateId:(NSString *)templateId frontImageOLAsset:(OLAsset *)frontImageAsset backImageOLAsset:(OLAsset *)backImageAsset;
 
 /**
+ *  Creates and returns a greeting card print job
+ *
+ *  @param templateId              The template ID of this job
+ *  @param frontImageAsset         The image to print on the front of the greeting card
+ *  @param backImageAsset          The image to print on the back of the greeting card
+ *  @param insideRightImageAsset   The image to print on the right side inside the greeting card
+ *  @param insideLeftImageAsset    The image to print on the left side inside the greeting card
+ *
+ *  @return The greeting card print job
+ */
++ (id<OLPrintJob>)greetingCardWithTemplateId:(NSString *)templateId frontImageOLAsset:(OLAsset *)frontImageAsset backImageOLAsset:(OLAsset *)backImageAsset insideRightImageAsset:(OLAsset *)insideRightImageAsset insideLeftImageAsset:(OLAsset *)insideLeftImageAsset;
+
+/**
  *  Creates and returns a photo book print job
  *
  *  @param templateId The template ID of this job

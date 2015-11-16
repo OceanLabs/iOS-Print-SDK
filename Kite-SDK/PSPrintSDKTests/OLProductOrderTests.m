@@ -308,6 +308,11 @@
     [self submitJobs:@[job]];
 }
 
+- (void)testGreetingCardOrderWithURLOLAssets{
+    id<OLPrintJob> job = [OLPrintJob greetingCardWithTemplateId:@"greeting_cards_a5" frontImageOLAsset:[OLKiteTestHelper urlAssets].firstObject backImageOLAsset:[OLKiteTestHelper urlAssets].lastObject insideRightImageAsset:[OLKiteTestHelper urlAssets][1] insideLeftImageAsset:[OLKiteTestHelper urlAssets][2]];
+    [self submitJobs:@[job]];
+}
+
 - (void)testMultipleAddressesManual{
     OLProductPrintJob *job1 = [OLPrintJob printJobWithTemplateId:@"squares" OLAssets:@[[OLKiteTestHelper urlAssets].firstObject]];
     OLProductPrintJob *job2 = [OLPrintJob printJobWithTemplateId:@"squares" OLAssets:@[[OLKiteTestHelper urlAssets].lastObject]];
