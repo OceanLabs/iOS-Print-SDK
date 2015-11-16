@@ -7,6 +7,7 @@
 //
 
 #import "OLScrollCropViewController.h"
+#import "OLPrintPhoto.h"
 
 @interface OLScrollCropViewController ()
 
@@ -45,12 +46,16 @@
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     [self.cropView removeConstraint:self.aspectRatioConstraint];
-    NSLayoutConstraint *con = [NSLayoutConstraint constraintWithItem:self.cropView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self.cropView attribute:NSLayoutAttributeWidth multiplier:self.aspectRatio constant:0];
-    [self.cropView addConstraints:@[con]];
+    self.aspectRatioConstraint = [NSLayoutConstraint constraintWithItem:self.cropView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self.cropView attribute:NSLayoutAttributeWidth multiplier:self.aspectRatio constant:0];
+    [self.cropView addConstraints:@[self.aspectRatioConstraint]];
     
+    if (self.edits.counterClockwiseRotations > 0){
+        self.fullImage = [UIImage imageWithCGImage:self.fullImage.CGImage scale:self.fullImage.scale orientation:[OLPhotoEdits orientationForNumberOfCounterClockwiseRotations:self.edits.counterClockwiseRotations andInitialOrientation:self.fullImage.imageOrientation]];
+    }
     [self.cropView setImage:self.fullImage];
     [self.view setNeedsLayout];
     [self.view layoutIfNeeded];
+    self.cropView.imageView.transform = self.edits.cropTransform;
 }
 
 -(void)viewDidLayoutSubviews{
@@ -65,6 +70,10 @@
 }
 
 - (IBAction)onBarButtonDoneTapped:(UIBarButtonItem *)sender {
+    self.edits.cropImageRect = [self.cropView getImageRect];
+    self.edits.cropImageFrame = [self.cropView getFrameRect];
+    self.edits.cropImageSize = [self.cropView croppedImageSize];
+    
     if ([self.delegate respondsToSelector:@selector(scrollCropViewController:didFinishCroppingImage:)]){
         [self.delegate scrollCropViewController:self didFinishCroppingImage:[self.cropView editedImage]];
     }
@@ -74,6 +83,30 @@
     if ([self.delegate respondsToSelector:@selector(scrollCropViewControllerDidCancel:)]){
         [self.delegate scrollCropViewControllerDidCancel:self];
     }
+}
+
+- (IBAction)onButtonHorizontalFlipClicked:(id)sender {
+    
+}
+
+- (IBAction)onButtonRotateClicked:(id)sender {
+    self.edits.counterClockwiseRotations = (self.edits.counterClockwiseRotations + 1) % 4;
+    CGAffineTransform transform = self.cropView.imageView.transform;
+    [UIView animateWithDuration:0.25 animations:^{
+        self.cropView.transform = CGAffineTransformMakeRotation(-M_PI_2);
+    } completion:^(BOOL finished){
+        self.aspectRatio = 1/self.aspectRatio;
+        [self.cropView removeConstraint:self.aspectRatioConstraint];
+        self.aspectRatioConstraint = [NSLayoutConstraint constraintWithItem:self.cropView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self.cropView attribute:NSLayoutAttributeWidth multiplier:self.aspectRatio constant:0];
+        [self.cropView addConstraints:@[self.aspectRatioConstraint]];
+        [self.view layoutIfNeeded];
+        
+        self.cropView.transform = CGAffineTransformIdentity;
+        [self.cropView setImage:[UIImage imageWithCGImage:self.cropView.imageView.image.CGImage scale:self.cropView.imageView.image.scale orientation:[OLPhotoEdits orientationForNumberOfCounterClockwiseRotations:1 andInitialOrientation:self.cropView.imageView.image.imageOrientation]]];
+        [self.view setNeedsLayout];
+        [self.view layoutIfNeeded];
+        self.cropView.imageView.transform = transform;
+    }];
 }
 
 #pragma mark - Autorotate and Orientation Methods

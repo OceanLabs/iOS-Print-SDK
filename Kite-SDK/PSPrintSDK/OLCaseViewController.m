@@ -123,7 +123,7 @@
             [self.maskActivityIndicator removeFromSuperview];
             self.maskActivityIndicator = nil;
             
-            self.imageCropView.imageView.transform = self.imageDisplayed.cropTransform;
+            self.imageCropView.imageView.transform = self.imageDisplayed.edits.cropTransform;
         }
     }];
 }

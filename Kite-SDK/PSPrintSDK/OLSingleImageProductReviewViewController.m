@@ -138,7 +138,7 @@ OLAssetsPickerControllerDelegate>
 
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
-    self.imageCropView.imageView.transform = self.imageDisplayed.cropTransform;
+    self.imageCropView.imageView.transform = self.imageDisplayed.edits.cropTransform;
 }
 
 - (void) updateQuantityLabel{
@@ -180,10 +180,10 @@ OLAssetsPickerControllerDelegate>
         return;
     }
     
-    self.imageDisplayed.cropImageFrame = [self.imageCropView getFrameRect];
-    self.imageDisplayed.cropImageRect = [self.imageCropView getImageRect];
-    self.imageDisplayed.cropImageSize = [self.imageCropView croppedImageSize];
-    self.imageDisplayed.cropTransform = self.imageCropView.imageView.transform;
+    self.imageDisplayed.edits.cropImageFrame = [self.imageCropView getFrameRect];
+    self.imageDisplayed.edits.cropImageRect = [self.imageCropView getImageRect];
+    self.imageDisplayed.edits.cropImageSize = [self.imageCropView croppedImageSize];
+    self.imageDisplayed.edits.cropTransform = self.imageCropView.imageView.transform;
     
     OLAsset *asset = [OLAsset assetWithDataSource:self.imageDisplayed];
     

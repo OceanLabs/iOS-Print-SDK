@@ -10,6 +10,7 @@
 #import "OLRemoteImageCropper.h"
 
 @class OLScrollCropViewController;
+@class OLPhotoEdits;
 
 @protocol OLScrollCropViewControllerDelegate <NSObject>
 
@@ -21,6 +22,7 @@
 @interface OLScrollCropViewController : UIViewController
 
 @property (strong, nonatomic) UIImage *fullImage;
+@property (copy, nonatomic) OLPhotoEdits *edits;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *aspectRatioConstraint;
 @property (weak, nonatomic) IBOutlet OLRemoteImageCropper *cropView;
 @property (assign, nonatomic) CGFloat aspectRatio;

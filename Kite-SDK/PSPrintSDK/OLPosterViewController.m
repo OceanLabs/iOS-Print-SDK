@@ -323,9 +323,10 @@
 -(void)scrollCropViewController:(OLScrollCropViewController *)cropper didFinishCroppingImage:(UIImage *)croppedImage{
     [self.editingPrintPhoto unloadImage];
     
-    self.editingPrintPhoto.cropImageFrame = [cropper.cropView getFrameRect];
-    self.editingPrintPhoto.cropImageRect = [cropper.cropView getImageRect];
-    self.editingPrintPhoto.cropImageSize = [cropper.cropView croppedImageSize];
+    self.editingPrintPhoto.edits.cropImageFrame = [cropper.cropView getFrameRect];
+    self.editingPrintPhoto.edits.cropImageRect = [cropper.cropView getImageRect];
+    self.editingPrintPhoto.edits.cropImageSize = [cropper.cropView croppedImageSize];
+    self.editingPrintPhoto.edits.cropTransform = [cropper.cropView.imageView transform];
     
     [self.collectionView reloadData];
     [cropper dismissViewControllerAnimated:YES completion:NULL];

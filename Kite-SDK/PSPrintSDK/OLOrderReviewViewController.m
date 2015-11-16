@@ -349,6 +349,7 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
         [cropVc.cropView setProgress:progress];
     }completion:^(UIImage *image){
         [cropVc setFullImage:image];
+        cropVc.edits = self.editingPrintPhoto.edits;
         [self presentViewController:nav animated:YES completion:NULL];
     }];
     
@@ -544,9 +545,7 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
 -(void)scrollCropViewController:(OLScrollCropViewController *)cropper didFinishCroppingImage:(UIImage *)croppedImage{
     [self.editingPrintPhoto unloadImage];
     
-    self.editingPrintPhoto.cropImageFrame = [cropper.cropView getFrameRect];
-    self.editingPrintPhoto.cropImageRect = [cropper.cropView getImageRect];
-    self.editingPrintPhoto.cropImageSize = [cropper.cropView croppedImageSize];
+    self.editingPrintPhoto.edits = cropper.edits;
     
     [self.collectionView reloadData];
     [cropper dismissViewControllerAnimated:YES completion:NULL];

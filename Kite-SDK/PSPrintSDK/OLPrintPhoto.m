@@ -24,11 +24,7 @@
 
 static NSString *const kKeyType = @"co.oceanlabs.psprintstudio.kKeyType";
 static NSString *const kKeyAsset = @"co.oceanlabs.psprintstudio.kKeyAsset";
-
-static NSString *const kKeyCropFrameRect = @"co.oceanlabs.psprintstudio.kKeyCropFrameRect";
-static NSString *const kKeyCropImageRect = @"co.oceanlabs.psprintstudio.kKeyCropImageRect";
-static NSString *const kKeyCropImageSize = @"co.oceanlabs.psprintstudio.kKeyCropImageSize";
-static NSString *const kKeyCropTransform = @"co.oceanlabs.psprintstudio.kKeyCropTransform";
+static NSString *const kKeyEdits = @"co.oceanlabs.psprintstudio.kKeyEdits";
 
 static NSString *const kKeyExtraCopies = @"co.oceanlabs.psprintstudio.kKeyExtraCopies";
 
@@ -77,11 +73,11 @@ static NSOperationQueue *imageOperationQueue;
     return self;
 }
 
--(CGAffineTransform) cropTransform{
-    if (CGAffineTransformEqualToTransform(_cropTransform, CGAffineTransformMake(0, 0, 0, 0, 0, 0))){
-        _cropTransform = CGAffineTransformIdentity;
+-(OLPhotoEdits *) edits{
+    if (!_edits){
+        _edits = [[OLPhotoEdits alloc] init];
     }
-    return _cropTransform;
+    return _edits;
 }
 
 - (void)setAsset:(id)asset {
@@ -111,7 +107,7 @@ static NSOperationQueue *imageOperationQueue;
 }
 
 + (void)calcScreenScaleForTraitCollection:(UITraitCollection *)traitCollection{
-    //Should be [UIScreen mainScreen].scale but the 6 Plus with it's 1GB RAM chokes on 3x images.
+    //Should be [UIScreen mainScreen].scale but the 6 Plus with its 1GB RAM chokes on 3x images.
     CGFloat scale = [UIScreen mainScreen].scale;
     if (scale == 2.0 || scale == 1.0){
         screenScale = scale;
@@ -156,7 +152,7 @@ static NSOperationQueue *imageOperationQueue;
                 OLAsset *asset = (OLAsset *)self.asset;
                 
                 if (asset.assetType == kOLAssetTypeRemoteImageURL){
-                    if (![self isCropped]){
+                    if (![self isEdited]){
                         [self getImageWithSize:CGSizeZero progress:progressHandler completion:^(UIImage *image){
                             self.cachedCroppedThumbnailImage = image;
                             handler(image);
@@ -205,7 +201,7 @@ static NSOperationQueue *imageOperationQueue;
             }
 #ifdef OL_KITE_OFFER_INSTAGRAM
             else if (self.type == kPrintPhotoAssetTypeInstagramPhoto) {
-                if (![self isCropped]){
+                if (![self isEdited]){
                     [self getImageWithSize:CGSizeZero progress:progressHandler completion:^(UIImage *image){
                         self.cachedCroppedThumbnailImage = image;
                         if (progressHandler){
@@ -227,7 +223,7 @@ static NSOperationQueue *imageOperationQueue;
 #endif
 #ifdef OL_KITE_OFFER_FACEBOOK
             else if (self.type == kPrintPhotoAssetTypeFacebookPhoto){
-                if (![self isCropped]){
+                if (![self isEdited]){
                     [self getImageWithSize:CGSizeZero progress:progressHandler completion:^(UIImage *image){
                         self.cachedCroppedThumbnailImage = image;
                         if (progressHandler){
@@ -258,10 +254,10 @@ static NSOperationQueue *imageOperationQueue;
         OLPrintPhoto *other = object;
         retVal &= (other.type == self.type);
         retVal &= ([other.asset isEqual:self.asset]);
-        retVal &= CGRectEqualToRect(self.cropImageRect, other.cropImageRect);
-        retVal &= CGRectEqualToRect(self.cropImageFrame, other.cropImageFrame);
-        retVal &= CGSizeEqualToSize(self.cropImageSize, other.cropImageSize);
-        retVal &= CGAffineTransformEqualToTransform(self.cropTransform, other.cropTransform);
+        retVal &= CGRectEqualToRect(self.edits.cropImageRect, other.edits.cropImageRect);
+        retVal &= CGRectEqualToRect(self.edits.cropImageFrame, other.edits.cropImageFrame);
+        retVal &= CGSizeEqualToSize(self.edits.cropImageSize, other.edits.cropImageSize);
+        retVal &= CGAffineTransformEqualToTransform(self.edits.cropTransform, other.edits.cropTransform);
     }
     
     return retVal;
@@ -350,8 +346,8 @@ static NSOperationQueue *imageOperationQueue;
     self.cachedCroppedThumbnailImage = nil; // we can always recreate this
 }
 
-- (BOOL)isCropped{
-    return !CGRectIsEmpty(self.cropImageFrame) || !CGRectIsEmpty(self.cropImageRect) || !CGSizeEqualToSize(self.cropImageSize, CGSizeZero);
+- (BOOL)isEdited{
+    return !CGRectIsEmpty(self.edits.cropImageFrame) || !CGRectIsEmpty(self.edits.cropImageRect) || !CGSizeEqualToSize(self.edits.cropImageSize, CGSizeZero) || self.edits.counterClockwiseRotations > 0 || self.edits.flipHorizontal;
 }
 
 + (void)resizedImageWithPrintPhoto:(OLPrintPhoto *)printPhoto size:(CGSize)destSize cropped:(BOOL)cropped progress:(OLImageEditorImageGetImageProgressHandler)progressHandler completion:(OLImageEditorImageGetImageCompletionHandler)completionHandler {
@@ -364,12 +360,16 @@ static NSOperationQueue *imageOperationQueue;
                 blockImage = [OLPrintPhoto imageWithImage:blockImage scaledToSize:destSize];
             }
             
-            if (![printPhoto isCropped] || !cropped){
+            if (![printPhoto isEdited] || !cropped){
                 completionHandler(blockImage);
                 return;
             }
             
-            blockImage = [RMImageCropper editedImageFromImage:blockImage andFrame:printPhoto.cropImageFrame andImageRect:printPhoto.cropImageRect andImageViewWidth:printPhoto.cropImageSize.width andImageViewHeight:printPhoto.cropImageSize.height];
+            if (printPhoto.edits.counterClockwiseRotations > 0){
+                blockImage = [UIImage imageWithCGImage:blockImage.CGImage scale:blockImage.scale orientation:[OLPhotoEdits orientationForNumberOfCounterClockwiseRotations:printPhoto.edits.counterClockwiseRotations andInitialOrientation:blockImage.imageOrientation]];
+            }
+            
+            blockImage = [RMImageCropper editedImageFromImage:blockImage andFrame:printPhoto.edits.cropImageFrame andImageRect:printPhoto.edits.cropImageRect andImageViewWidth:printPhoto.edits.cropImageSize.width andImageViewHeight:printPhoto.edits.cropImageSize.height];
             
             completionHandler(blockImage);
         };
@@ -510,9 +510,10 @@ static NSOperationQueue *imageOperationQueue;
 - (void)dataWithImage:(UIImage *)image withCompletionHandler:(GetDataHandler)handler{
     OLPrintPhoto *photo = [[OLPrintPhoto alloc] init];
     photo.asset = [OLAsset assetWithImageAsJPEG:image];
-    photo.cropImageRect = self.cropImageRect;
-    photo.cropImageFrame = self.cropImageFrame;
-    photo.cropImageSize = self.cropImageSize;
+    photo.edits.cropImageRect = self.edits.cropImageRect;
+    photo.edits.cropImageFrame = self.edits.cropImageFrame;
+    photo.edits.cropImageSize = self.edits.cropImageSize;
+    photo.edits.cropTransform = self.edits.cropTransform;
     [OLPrintPhoto resizedImageWithPrintPhoto:photo size:CGSizeZero cropped:YES progress:NULL completion:^(UIImage *image){
         handler(UIImageJPEGRepresentation(image, 0.7), nil);
     }];
@@ -525,10 +526,7 @@ static NSOperationQueue *imageOperationQueue;
     if (self = [super init]) {
         _type = [aDecoder decodeIntForKey:kKeyType];
         _extraCopies = [aDecoder decodeIntForKey:kKeyExtraCopies];
-        _cropImageFrame = [aDecoder decodeCGRectForKey:kKeyCropFrameRect];
-        _cropImageRect = [aDecoder decodeCGRectForKey:kKeyCropImageRect];
-        _cropImageSize = [aDecoder decodeCGSizeForKey:kKeyCropImageSize];
-        _cropTransform = [aDecoder decodeCGAffineTransformForKey:kKeyCropTransform];
+        _edits = [aDecoder decodeObjectForKey:kKeyEdits];
         if (self.type == kPrintPhotoAssetTypeALAsset) {
             NSURL *assetURL = [aDecoder decodeObjectForKey:kKeyAsset];
             [[ALAssetsLibrary defaultAssetsLibrary] assetForURL:assetURL
@@ -575,10 +573,7 @@ static NSOperationQueue *imageOperationQueue;
 - (void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeInteger:self.type forKey:kKeyType];
     [aCoder encodeInteger:self.extraCopies forKey:kKeyExtraCopies];
-    [aCoder encodeCGRect:self.cropImageFrame forKey:kKeyCropFrameRect];
-    [aCoder encodeCGRect:self.cropImageRect forKey:kKeyCropImageRect];
-    [aCoder encodeCGSize:self.cropImageSize forKey:kKeyCropImageSize];
-    [aCoder encodeCGAffineTransform:self.cropTransform forKey:kKeyCropTransform];
+    [aCoder encodeObject:self.edits forKey:kKeyEdits];
     if (self.type == kPrintPhotoAssetTypeALAsset) {
         [aCoder encodeObject:[self.asset valueForProperty:ALAssetPropertyAssetURL] forKey:kKeyAsset];
     }

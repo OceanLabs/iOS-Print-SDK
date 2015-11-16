@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 
 #import "OLAsset.h"
+#import "OLPhotoEdits.h"
 
 typedef void (^OLImageEditorImageGetImageCompletionHandler)(UIImage *image);
 typedef void (^OLImageEditorImageGetImageProgressHandler)(float progress);
@@ -31,11 +32,6 @@ typedef enum {
 @property (nonatomic, assign, readonly) PrintPhotoAssetType type;
 @property (nonatomic, strong) id asset;
 @property (assign, nonatomic) NSInteger extraCopies;
-@property (assign, nonatomic) CGRect cropImageRect;
-@property (assign, nonatomic) CGRect cropImageFrame;
-@property (assign, nonatomic) CGSize cropImageSize;
-@property (assign, nonatomic) CGAffineTransform cropTransform;
-
-- (BOOL)isCropped;
+@property (strong, nonatomic) OLPhotoEdits *edits;
 
 @end
