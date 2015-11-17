@@ -842,7 +842,8 @@
                                         </connections>
                                     </barButtonItem>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="qnt-T5-uhi"/>
-                                    <barButtonItem title="Done" style="plain" id="rOv-Mh-sME">
+                                    <barButtonItem enabled="NO" title="Done" style="plain" id="rOv-Mh-sME">
+                                        <color key="tintColor" red="1" green="0.89411764709999997" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                         <connections>
                                             <action selector="onBarButtonDoneTapped:" destination="lkU-BR-804" id="bmz-Ef-d4l"/>
                                         </connections>
@@ -924,6 +925,7 @@
                     <connections>
                         <outlet property="aspectRatioConstraint" destination="ImC-Qv-Ju3" id="p9Y-jB-by8"/>
                         <outlet property="cropView" destination="nok-mW-saD" id="qFn-PP-Pwf"/>
+                        <outlet property="doneButton" destination="rOv-Mh-sME" id="Gxi-2S-ZIN"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qG7-3J-9cO" userLabel="First Responder" sceneMemberID="firstResponder"/>

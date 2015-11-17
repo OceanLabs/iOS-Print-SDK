@@ -5,8 +5,15 @@ typedef NS_ENUM(NSUInteger, RMImageCropperMode) {
     RMImageCropperModeAspectFit
 };
 
+@class RMImageCropper;
+
+@protocol RMImageCropperDelegate <NSObject>
+- (void)imageCropperDidTransformImage:(RMImageCropper *)imageCropper;
+@end
+
 @interface RMImageCropper : UIView <UIGestureRecognizerDelegate>
 
+@property (nonatomic, weak) id<RMImageCropperDelegate> delegate;
 @property (nonatomic, assign) NSInteger minimum;
 @property (nonatomic, strong) UIImage * image;
 @property (nonatomic, readonly) UIImage * editedImage;

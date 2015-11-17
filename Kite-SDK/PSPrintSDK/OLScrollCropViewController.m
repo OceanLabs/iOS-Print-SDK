@@ -9,7 +9,8 @@
 #import "OLScrollCropViewController.h"
 #import "OLPrintPhoto.h"
 
-@interface OLScrollCropViewController ()
+@interface OLScrollCropViewController () <RMImageCropperDelegate>
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *doneButton;
 
 @end
 
@@ -32,15 +33,7 @@
         self.navigationItem.rightBarButtonItem = item;
     }
     
-    UIButton *cancelButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 40, 20)];
-    [cancelButton addTarget:self action:@selector(onBarButtonCancelTapped:) forControlEvents:UIControlEventTouchUpInside];
-    [cancelButton setTitle: NSLocalizedString(@"Cancel", @"") forState:UIControlStateNormal];
-    [cancelButton setTitleColor:self.view.tintColor forState:UIControlStateNormal];
-    [cancelButton.titleLabel setFont:[UIFont boldSystemFontOfSize:18]];
-    [cancelButton sizeToFit];
-    
-    UIBarButtonItem *cancelItem =[[UIBarButtonItem alloc] initWithCustomView:cancelButton];
-    self.navigationItem.leftBarButtonItem = cancelItem;
+    self.cropView.delegate = self;
 }
 
 -(void)viewWillAppear:(BOOL)animated{
@@ -115,8 +108,16 @@
         [self.view layoutIfNeeded];
         self.cropView.imageView.transform = transform;
         [(UIBarButtonItem *)sender setEnabled:YES];
+        self.doneButton.enabled = YES;
     }];
 }
+
+#pragma mark - RMImageCropperDelegate methods
+
+- (void)imageCropperDidTransformImage:(RMImageCropper *)imageCropper {
+    self.doneButton.enabled = YES;
+}
+
 
 #pragma mark - Autorotate and Orientation Methods
 // Currently here to disable landscape orientations and rotation on iOS 7. When support is dropped, these can be deleted.
