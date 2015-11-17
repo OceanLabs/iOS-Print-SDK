@@ -93,6 +93,8 @@
     [(UIBarButtonItem *)sender setEnabled:NO];
     self.edits.counterClockwiseRotations = (self.edits.counterClockwiseRotations + 1) % 4;
     CGAffineTransform transform = self.cropView.imageView.transform;
+    transform.tx = self.cropView.imageView.transform.ty;
+    transform.ty = -self.cropView.imageView.transform.tx;
     [UIView animateWithDuration:0.25 delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
         self.cropView.transform = CGAffineTransformMakeRotation(-M_PI_2);
     } completion:^(BOOL finished){
