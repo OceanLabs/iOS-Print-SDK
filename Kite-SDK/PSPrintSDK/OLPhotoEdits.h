@@ -16,7 +16,10 @@
 @property (assign, nonatomic) CGAffineTransform cropTransform;
 @property (assign, nonatomic) NSInteger counterClockwiseRotations;
 @property (assign, nonatomic) BOOL flipHorizontal;
+@property (assign, nonatomic) BOOL flipVertical;
 
-+ (UIImageOrientation)orientationForNumberOfCounterClockwiseRotations:(NSInteger)number andInitialOrientation:(UIImageOrientation)orientation;
+- (void)performHorizontalFlipEditFromOrientation:(UIImageOrientation)orientation;
+
++ (UIImageOrientation)orientationForNumberOfCounterClockwiseRotations:(NSInteger)number andInitialOrientation:(UIImageOrientation)orientation horizontalFlip:(BOOL)horizontalFlip verticalFlip:(BOOL)verticalFlip;
 
 @end

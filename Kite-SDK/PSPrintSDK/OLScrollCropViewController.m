@@ -42,8 +42,8 @@
     self.aspectRatioConstraint = [NSLayoutConstraint constraintWithItem:self.cropView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self.cropView attribute:NSLayoutAttributeWidth multiplier:self.aspectRatio constant:0];
     [self.cropView addConstraints:@[self.aspectRatioConstraint]];
     
-    if (self.edits.counterClockwiseRotations > 0){
-        self.fullImage = [UIImage imageWithCGImage:self.fullImage.CGImage scale:self.fullImage.scale orientation:[OLPhotoEdits orientationForNumberOfCounterClockwiseRotations:self.edits.counterClockwiseRotations andInitialOrientation:self.fullImage.imageOrientation]];
+    if (self.edits.counterClockwiseRotations > 0 || self.edits.flipHorizontal){
+        self.fullImage = [UIImage imageWithCGImage:self.fullImage.CGImage scale:self.fullImage.scale orientation:[OLPhotoEdits orientationForNumberOfCounterClockwiseRotations:self.edits.counterClockwiseRotations andInitialOrientation:self.fullImage.imageOrientation horizontalFlip:self.edits.flipHorizontal verticalFlip:self.edits.flipVertical]];
     }
     [self.cropView setImage:self.fullImage];
     [self.view setNeedsLayout];
@@ -84,7 +84,9 @@
 }
 
 - (IBAction)onButtonHorizontalFlipClicked:(id)sender {
-    
+    [self.edits performHorizontalFlipEditFromOrientation:self.cropView.imageView.image.imageOrientation];
+        [self.cropView setImage:[UIImage imageWithCGImage:self.cropView.imageView.image.CGImage scale:self.cropView.imageView.image.scale orientation:[OLPhotoEdits orientationForNumberOfCounterClockwiseRotations:0 andInitialOrientation:self.cropView.imageView.image.imageOrientation horizontalFlip:YES verticalFlip:NO]]];
+        self.doneButton.enabled = YES;
 }
 
 - (IBAction)onButtonRotateClicked:(id)sender {
@@ -103,7 +105,7 @@
         [self.view layoutIfNeeded];
         
         self.cropView.transform = CGAffineTransformIdentity;
-        [self.cropView setImage:[UIImage imageWithCGImage:self.cropView.imageView.image.CGImage scale:self.cropView.imageView.image.scale orientation:[OLPhotoEdits orientationForNumberOfCounterClockwiseRotations:1 andInitialOrientation:self.cropView.imageView.image.imageOrientation]]];
+        [self.cropView setImage:[UIImage imageWithCGImage:self.cropView.imageView.image.CGImage scale:self.cropView.imageView.image.scale orientation:[OLPhotoEdits orientationForNumberOfCounterClockwiseRotations:1 andInitialOrientation:self.cropView.imageView.image.imageOrientation horizontalFlip:NO verticalFlip:NO]]];
         [self.view setNeedsLayout];
         [self.view layoutIfNeeded];
         self.cropView.imageView.transform = transform;

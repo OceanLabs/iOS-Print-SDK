@@ -311,7 +311,7 @@ CGFloat const RESET_DURATION = 0.10f;
             return initImage;
             break;
             
-        case UIImageOrientationUpMirrored: //EXIF = 2
+        case UIImageOrientationDownMirrored: //EXIF = 2
             transform = CGAffineTransformMakeTranslation(imageSize.width, 0.0);
             transform = CGAffineTransformScale(transform, -1.0, 1.0);
             break;
@@ -321,7 +321,7 @@ CGFloat const RESET_DURATION = 0.10f;
             transform = CGAffineTransformRotate(transform, 0);
             break;
             
-        case UIImageOrientationDownMirrored: //EXIF = 4
+        case UIImageOrientationUpMirrored: //EXIF = 4
             transform = CGAffineTransformMakeTranslation(0.0, imageSize.height);
             transform = CGAffineTransformScale(transform, 1.0, -1.0);
             break;

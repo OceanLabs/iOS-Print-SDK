@@ -362,8 +362,8 @@ static NSOperationQueue *imageOperationQueue;
                 return;
             }
             
-            if (printPhoto.edits.counterClockwiseRotations > 0){
-                blockImage = [UIImage imageWithCGImage:blockImage.CGImage scale:blockImage.scale orientation:[OLPhotoEdits orientationForNumberOfCounterClockwiseRotations:printPhoto.edits.counterClockwiseRotations andInitialOrientation:blockImage.imageOrientation]];
+            if (printPhoto.edits.counterClockwiseRotations > 0 || printPhoto.edits.flipHorizontal){
+                blockImage = [UIImage imageWithCGImage:blockImage.CGImage scale:blockImage.scale orientation:[OLPhotoEdits orientationForNumberOfCounterClockwiseRotations:printPhoto.edits.counterClockwiseRotations andInitialOrientation:blockImage.imageOrientation horizontalFlip:printPhoto.edits verticalFlip:printPhoto.edits.flipVertical]];
             }
             
             blockImage = [RMImageCropper editedImageFromImage:blockImage andFrame:printPhoto.edits.cropImageFrame andImageRect:printPhoto.edits.cropImageRect andImageViewWidth:printPhoto.edits.cropImageSize.width andImageViewHeight:printPhoto.edits.cropImageSize.height];
