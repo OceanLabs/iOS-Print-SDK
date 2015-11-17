@@ -726,7 +726,7 @@
                         <viewControllerLayoutGuide type="top" id="hcp-Sa-ZAv"/>
                         <viewControllerLayoutGuide type="bottom" id="uNG-6s-nO8"/>
                     </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="onG-Z7-5X1">
+                    <view key="view" clipsSubviews="YES" contentMode="scaleToFill" id="onG-Z7-5X1">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
