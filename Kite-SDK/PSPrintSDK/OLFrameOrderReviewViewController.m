@@ -82,14 +82,14 @@ CGFloat margin = 2;
     
     self.editingPrintPhoto = self.framePhotos[(outerCollectionViewIndexPath.item) * self.product.quantityToFulfillOrder + indexPath.row];
     
-    UINavigationController *nav = [self.storyboard instantiateViewControllerWithIdentifier:@"CropViewNavigationController"];
-    OLScrollCropViewController *cropVc = (id)nav.topViewController;
+    OLScrollCropViewController *cropVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLScrollCropViewController"];
     cropVc.delegate = self;
     cropVc.aspectRatio = 1;
     
     [self.editingPrintPhoto getImageWithProgress:NULL completion:^(UIImage *image){
         [cropVc setFullImage:image];
-        [self presentViewController:nav animated:YES completion:NULL];
+        cropVc.edits = self.editingPrintPhoto.edits;
+        [self presentViewController:cropVc animated:YES completion:NULL];
     }];
 }
 

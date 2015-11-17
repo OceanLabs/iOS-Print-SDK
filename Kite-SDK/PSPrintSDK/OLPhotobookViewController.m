@@ -693,14 +693,13 @@ UINavigationControllerDelegate
     }
     else if (self.coverPhoto){
         self.croppingPrintPhoto = self.coverPhoto;
-        UINavigationController *nav = [self.storyboard instantiateViewControllerWithIdentifier:@"CropViewNavigationController"];
-        OLScrollCropViewController *cropVc = (id)nav.topViewController;
+        OLScrollCropViewController *cropVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLScrollCropViewController"];
         cropVc.delegate = self;
         UIImageView *imageView = [(OLPhotobookPageContentViewController *)[[self.pageController viewControllers] firstObject] imageView];
         cropVc.aspectRatio = imageView.frame.size.height / imageView.frame.size.width;
         [self.croppingPrintPhoto getImageWithProgress:NULL completion:^(UIImage *image){
             [cropVc setFullImage:image];
-            [self presentViewController:nav animated:YES completion:NULL];
+            [self presentViewController:cropVc animated:YES completion:NULL];
         }];
     }
     else{
@@ -746,14 +745,14 @@ UINavigationControllerDelegate
     else{
         self.croppingPrintPhoto = self.photobookPhotos[index];
         
-        UINavigationController *nav = [self.storyboard instantiateViewControllerWithIdentifier:@"CropViewNavigationController"];
-        OLScrollCropViewController *cropVc = (id)nav.topViewController;
+        OLScrollCropViewController *cropVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLScrollCropViewController"];
         cropVc.delegate = self;
         UIImageView *imageView = [(OLPhotobookPageContentViewController *)[[self.pageController viewControllers] firstObject] imageView];
         cropVc.aspectRatio = imageView.frame.size.height / imageView.frame.size.width;
         [self.croppingPrintPhoto getImageWithProgress:NULL completion:^(UIImage *image){
             [cropVc setFullImage:image];
-            [self presentViewController:nav animated:YES completion:NULL];
+            cropVc.edits = self.croppingPrintPhoto.edits;
+            [self presentViewController:cropVc animated:YES completion:NULL];
         }];
     }
 }

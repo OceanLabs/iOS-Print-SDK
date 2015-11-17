@@ -340,8 +340,7 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     
     self.editingPrintPhoto = self.userSelectedPhotos[indexPath.item];
     
-    UINavigationController *nav = [self.storyboard instantiateViewControllerWithIdentifier:@"CropViewNavigationController"];
-    OLScrollCropViewController *cropVc = (id)nav.topViewController;
+    OLScrollCropViewController *cropVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLScrollCropViewController"];
     cropVc.enableCircleMask = self.product.productTemplate.templateUI == kOLTemplateUICircle;
     cropVc.delegate = self;
     cropVc.aspectRatio = [self productAspectRatio];
@@ -350,7 +349,7 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     }completion:^(UIImage *image){
         [cropVc setFullImage:image];
         cropVc.edits = self.editingPrintPhoto.edits;
-        [self presentViewController:nav animated:YES completion:NULL];
+        [self presentViewController:cropVc animated:YES completion:NULL];
     }];
     
 }

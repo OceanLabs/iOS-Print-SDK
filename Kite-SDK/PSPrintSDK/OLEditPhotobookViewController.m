@@ -357,13 +357,13 @@ UINavigationControllerDelegate>
         imageView = [self findPageForImageIndex:self.longPressImageIndex].imageView;
     }
     
-    UINavigationController *nav = [self.storyboard instantiateViewControllerWithIdentifier:@"CropViewNavigationController"];
-    OLScrollCropViewController *cropVc = (id)nav.topViewController;
+    OLScrollCropViewController *cropVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLScrollCropViewController"];
     cropVc.delegate = self;
     cropVc.aspectRatio = imageView.frame.size.height / imageView.frame.size.width;
     [cropPhoto getImageWithProgress:NULL completion:^(UIImage *image){
         [cropVc setFullImage:image];
-        [self presentViewController:nav animated:YES completion:NULL];
+        cropVc.edits = cropPhoto.edits;
+        [self presentViewController:cropVc animated:YES completion:NULL];
     }];
 }
 
