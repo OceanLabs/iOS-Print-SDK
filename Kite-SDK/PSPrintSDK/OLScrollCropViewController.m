@@ -90,9 +90,10 @@
 }
 
 - (IBAction)onButtonRotateClicked:(id)sender {
+    [(UIBarButtonItem *)sender setEnabled:NO];
     self.edits.counterClockwiseRotations = (self.edits.counterClockwiseRotations + 1) % 4;
     CGAffineTransform transform = self.cropView.imageView.transform;
-    [UIView animateWithDuration:0.25 animations:^{
+    [UIView animateWithDuration:0.25 delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
         self.cropView.transform = CGAffineTransformMakeRotation(-M_PI_2);
     } completion:^(BOOL finished){
         self.aspectRatio = 1/self.aspectRatio;
@@ -106,6 +107,7 @@
         [self.view setNeedsLayout];
         [self.view layoutIfNeeded];
         self.cropView.imageView.transform = transform;
+        [(UIBarButtonItem *)sender setEnabled:YES];
     }];
 }
 

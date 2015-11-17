@@ -79,4 +79,19 @@ static NSString *const kKeyFlipHorizontal = @"co.oceanlabs.psprintstudio.kKeyFli
     return copy;
 }
 
+- (BOOL)isEqual:(id)object{
+    BOOL retVal = [object class] == [self class];
+    if (retVal) {
+        OLPhotoEdits *other = object;
+        retVal &= CGRectEqualToRect(self.cropImageRect, other.cropImageRect);
+        retVal &= CGRectEqualToRect(self.cropImageFrame, other.cropImageFrame);
+        retVal &= CGSizeEqualToSize(self.cropImageSize, other.cropImageSize);
+        retVal &= CGAffineTransformEqualToTransform(self.cropTransform, other.cropTransform);
+        retVal &= self.counterClockwiseRotations == other.counterClockwiseRotations;
+        retVal &= self.flipHorizontal == self.flipHorizontal;
+    }
+    
+    return retVal;
+}
+
 @end

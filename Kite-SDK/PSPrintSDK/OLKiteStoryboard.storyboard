@@ -822,13 +822,15 @@
                                 <rect key="frame" x="0.0" y="556" width="600" height="44"/>
                                 <animations/>
                                 <items>
-                                    <barButtonItem title="Horizontal" id="SMk-47-EtC">
+                                    <barButtonItem image="tool_fliphorizontal" id="SMk-47-EtC">
+                                        <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <connections>
                                             <action selector="onButtonHorizontalFlipClicked:" destination="lkU-BR-804" id="5uz-ZW-BlG"/>
                                         </connections>
                                     </barButtonItem>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="cFR-mf-z7v"/>
-                                    <barButtonItem title="Rotate" id="mhy-JJ-w1G">
+                                    <barButtonItem image="tool_rotate" id="mhy-JJ-w1G">
+                                        <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <connections>
                                             <action selector="onButtonRotateClicked:" destination="lkU-BR-804" id="t0q-gS-dEv"/>
                                         </connections>
@@ -890,7 +892,7 @@
                             <constraint firstItem="5Ml-FB-tKs" firstAttribute="trailing" secondItem="nok-mW-saD" secondAttribute="trailing" constant="2" id="q3r-VB-fgJ"/>
                             <constraint firstItem="uNG-6s-nO8" firstAttribute="top" secondItem="qk7-Gg-AZh" secondAttribute="bottom" id="tHO-OA-P4H"/>
                             <constraint firstItem="Qn0-C6-SBY" firstAttribute="leading" secondItem="qk7-Gg-AZh" secondAttribute="trailing" id="xW8-1K-hdg"/>
-                            <constraint firstItem="uNG-6s-nO8" firstAttribute="top" relation="greaterThanOrEqual" secondItem="nok-mW-saD" secondAttribute="bottom" constant="8" id="yAk-ch-LPF"/>
+                            <constraint firstItem="uNG-6s-nO8" firstAttribute="top" relation="greaterThanOrEqual" secondItem="nok-mW-saD" secondAttribute="bottom" constant="50" id="yAk-ch-LPF"/>
                         </constraints>
                         <variation key="default">
                             <mask key="constraints">
@@ -3489,6 +3491,8 @@
         <image name="poster_shadow" width="295" height="414"/>
         <image name="right chevron" width="12" height="19"/>
         <image name="template chevron" width="12" height="19"/>
+        <image name="tool_fliphorizontal" width="30" height="30"/>
+        <image name="tool_rotate" width="30" height="30"/>
     </resources>
     <color key="tintColor" red="0.0" green="0.52941179275512695" blue="1" alpha="1" colorSpace="deviceRGB"/>
 </document>

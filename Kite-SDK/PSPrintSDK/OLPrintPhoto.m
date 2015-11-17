@@ -254,10 +254,7 @@ static NSOperationQueue *imageOperationQueue;
         OLPrintPhoto *other = object;
         retVal &= (other.type == self.type);
         retVal &= ([other.asset isEqual:self.asset]);
-        retVal &= CGRectEqualToRect(self.edits.cropImageRect, other.edits.cropImageRect);
-        retVal &= CGRectEqualToRect(self.edits.cropImageFrame, other.edits.cropImageFrame);
-        retVal &= CGSizeEqualToSize(self.edits.cropImageSize, other.edits.cropImageSize);
-        retVal &= CGAffineTransformEqualToTransform(self.edits.cropTransform, other.edits.cropTransform);
+        retVal &= [self.edits isEqual: other.edits];
     }
     
     return retVal;
@@ -510,10 +507,8 @@ static NSOperationQueue *imageOperationQueue;
 - (void)dataWithImage:(UIImage *)image withCompletionHandler:(GetDataHandler)handler{
     OLPrintPhoto *photo = [[OLPrintPhoto alloc] init];
     photo.asset = [OLAsset assetWithImageAsJPEG:image];
-    photo.edits.cropImageRect = self.edits.cropImageRect;
-    photo.edits.cropImageFrame = self.edits.cropImageFrame;
-    photo.edits.cropImageSize = self.edits.cropImageSize;
-    photo.edits.cropTransform = self.edits.cropTransform;
+    photo.edits = self.edits;
+    
     [OLPrintPhoto resizedImageWithPrintPhoto:photo size:CGSizeZero cropped:YES progress:NULL completion:^(UIImage *image){
         handler(UIImageJPEGRepresentation(image, 0.7), nil);
     }];
