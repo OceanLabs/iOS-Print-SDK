@@ -867,6 +867,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         payment.amount = [cost totalCostInCurrency:self.printOrder.currencyCode];
         payment.currencyCode = self.printOrder.currencyCode;
         payment.shortDescription = self.printOrder.paymentDescription;
+        payment.intent = PayPalPaymentIntentAuthorize;
         NSAssert(payment.processable, @"oops");
         
         PayPalPaymentViewController *paymentViewController;

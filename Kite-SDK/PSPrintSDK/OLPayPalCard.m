@@ -204,7 +204,7 @@ static NSString *typeToString(OLPayPalCardType type) {
             total = [NSString stringWithFormat:@"%.0f", [amount doubleValue]]; // no decimal places allowed for YEN
         }
         
-        NSDictionary *paymentJSON = @{@"intent": @"sale",
+        NSDictionary *paymentJSON = @{@"intent": @"authorize",
                                  @"payer": @{
                                          @"payment_method": @"credit_card",
                                          @"funding_instruments": @[fundingInstrument]
