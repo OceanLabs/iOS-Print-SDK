@@ -225,6 +225,7 @@
 		E244531B1BFD2C810086BF03 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E244531A1BFD2C810086BF03 /* MessageUI.framework */; };
 		E244531D1BFD2C8C0086BF03 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E244531C1BFD2C8C0086BF03 /* MobileCoreServices.framework */; };
 		E244531F1BFD2C910086BF03 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E244531E1BFD2C910086BF03 /* SystemConfiguration.framework */; };
+		E24453231BFD2DC40086BF03 /* OLPayPalDummy.m in Sources */ = {isa = PBXBuildFile; fileRef = E24453211BFD2D810086BF03 /* OLPayPalDummy.m */; };
 		E29C858B1BE3B5C50041D4CF /* OLURLDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = CDE0744A188D7730009ADFA2 /* OLURLDataSource.m */; };
 		E29C858E1BE3B5C50041D4CF /* OLScrollCropViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0A72651A6FB07000BC5AE7 /* OLScrollCropViewController.m */; };
 		E29C858F1BE3B5C50041D4CF /* OLPrintOrderCostRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E8C29EC1B18D1AC0045DC21 /* OLPrintOrderCostRequest.m */; };
@@ -772,6 +773,8 @@
 		E244531A1BFD2C810086BF03 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		E244531C1BFD2C8C0086BF03 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		E244531E1BFD2C910086BF03 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		E24453201BFD2D810086BF03 /* OLPayPalDummy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLPayPalDummy.h; sourceTree = "<group>"; };
+		E24453211BFD2D810086BF03 /* OLPayPalDummy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLPayPalDummy.m; sourceTree = "<group>"; };
 		E29C83A11BE276050041D4CF /* NSData+ImageContentType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSData+ImageContentType.h"; path = "vendor/SDWebImage/SDWebImage/NSData+ImageContentType.h"; sourceTree = "<group>"; };
 		E29C83A21BE276050041D4CF /* NSData+ImageContentType.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSData+ImageContentType.m"; path = "vendor/SDWebImage/SDWebImage/NSData+ImageContentType.m"; sourceTree = "<group>"; };
 		E29C83A31BE276050041D4CF /* SDImageCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SDImageCache.h; path = vendor/SDWebImage/SDWebImage/SDImageCache.h; sourceTree = "<group>"; };
@@ -1716,6 +1719,8 @@
 			isa = PBXGroup;
 			children = (
 				E29C86211BE3BCA80041D4CF /* KiteSDK-Prefix.pch */,
+				E24453201BFD2D810086BF03 /* OLPayPalDummy.h */,
+				E24453211BFD2D810086BF03 /* OLPayPalDummy.m */,
 			);
 			path = KiteSDK;
 			sourceTree = "<group>";
@@ -2523,6 +2528,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E24453231BFD2DC40086BF03 /* OLPayPalDummy.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
