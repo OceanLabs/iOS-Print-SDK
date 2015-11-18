@@ -122,18 +122,18 @@ static NSString *instagramRedirectURI = nil;
 }
 
 + (NSString *)apiEndpoint {
-//    if (useStaging){
+    if (useStaging){
         switch (environment) {
             case kOLKitePrintSDKEnvironmentLive: return kOLStagingEndpointLive;
             case kOLKitePrintSDKEnvironmentSandbox: return kOLStagingEndpointSandbox;
         }
-//    }
-//    else{
-//        switch (environment) {
-//            case kOLKitePrintSDKEnvironmentLive: return kOLAPIEndpointLive;
-//            case kOLKitePrintSDKEnvironmentSandbox: return kOLAPIEndpointSandbox;
-//        }
-//    }
+    }
+    else{
+        switch (environment) {
+            case kOLKitePrintSDKEnvironmentLive: return kOLAPIEndpointLive;
+            case kOLKitePrintSDKEnvironmentSandbox: return kOLAPIEndpointSandbox;
+        }
+    }
 }
 
 + (NSString *)apiVersion{

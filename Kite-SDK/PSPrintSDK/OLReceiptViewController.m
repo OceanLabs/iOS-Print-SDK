@@ -29,7 +29,7 @@ static const NSUInteger kSectionOrderSummary = 0;
 static const NSUInteger kSectionOrderId = 1;
 static const NSUInteger kSectionErrorRetry = 2;
 
-@interface OLReceiptViewController ()
+@interface OLReceiptViewController () <OLCheckoutDelegate>
 @property (nonatomic, strong) OLPrintOrder *printOrder;
 @property (nonatomic, assign) BOOL presentedModally;
 @end
@@ -202,10 +202,12 @@ static const NSUInteger kSectionErrorRetry = 2;
 
 - (void)onButtonRetryClicked{
     if (self.printOrder.submitStatus == OLPrintOrderSubmitStatusError){
+        [self.printOrder cancelSubmissionOrPreemptedAssetUpload];
         if ([UIAlertController class]){
             UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLConstants bundle], @"") message:self.printOrder.submitStatusErrorMessage preferredStyle:UIAlertControllerStyleAlert];
             [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"New Payment", @"KitePrintSDK", [OLConstants bundle], @"") style:UIAlertActionStyleDefault handler:^(id action){
                 OLPaymentViewController *vc = [[OLPaymentViewController alloc] initWithPrintOrder:self.printOrder];
+                vc.delegate = self;
                 OLCustomNavigationController *nvc = [[OLCustomNavigationController alloc] initWithRootViewController:vc];
                 [self presentViewController:nvc animated:YES completion:NULL];
             }]];
@@ -216,6 +218,7 @@ static const NSUInteger kSectionErrorRetry = 2;
             UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLConstants bundle], @"") message:self.printOrder.submitStatusErrorMessage delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLConstants bundle], @"") otherButtonTitles:nil];
             [av show];
             OLPaymentViewController *vc = [[OLPaymentViewController alloc] initWithPrintOrder:self.printOrder];
+            vc.delegate = self;
             OLCustomNavigationController *nvc = [[OLCustomNavigationController alloc] initWithRootViewController:vc];
             [self presentViewController:nvc animated:YES completion:NULL];
         }
@@ -249,6 +252,7 @@ static const NSUInteger kSectionErrorRetry = 2;
 }
 
 - (void)retrySubmittingOrderForPrinting {
+    [self.printOrder cancelSubmissionOrPreemptedAssetUpload];
     [SVProgressHUD setDefaultMaskType:SVProgressHUDMaskTypeBlack];
     [SVProgressHUD showWithStatus:@"Processing"];
     [self.printOrder submitForPrintingWithProgressHandler:^(NSUInteger totalAssetsUploaded, NSUInteger totalAssetsToUpload,
@@ -277,6 +281,12 @@ static const NSUInteger kSectionErrorRetry = 2;
     
     [self.tableView deleteSections:[NSIndexSet indexSetWithIndex:kSectionErrorRetry] withRowAnimation:UITableViewRowAnimationFade];
     [self.tableView reloadData];
+}
+
+#pragma mark - Checkout delegate
+
+- (BOOL)shouldDismissPaymentViewControllerAfterPayment{
+    return YES;
 }
 
 #pragma mark - UITableViewDataSource methods

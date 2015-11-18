@@ -960,8 +960,8 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         self.transitionBlockOperation = [[NSBlockOperation alloc] init];
         __weak OLPaymentViewController *welf = self;
         [self.transitionBlockOperation addExecutionBlock:^{
-            if ([welf.navigationController.presentingViewController isKindOfClass:[OLReceiptViewController class]]){
-                [(UITableView *)[(OLReceiptViewController *)welf.navigationController.presentingViewController tableView] reloadData];
+            if ([welf.delegate respondsToSelector:@selector(shouldDismissPaymentViewControllerAfterPayment)] && self.delegate.shouldDismissPaymentViewControllerAfterPayment){
+                [(UITableView *)[(OLReceiptViewController *)welf.delegate tableView] reloadData];
                 [welf.navigationController.presentingViewController dismissViewControllerAnimated:YES completion:NULL];
                 return ;
             }
@@ -990,7 +990,9 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             if ([UIAlertController class]){
                 UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLConstants bundle], @"") message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
                 [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLConstants bundle], @"") style:UIAlertActionStyleDefault handler:^(id action){
-                    [[NSOperationQueue mainQueue] addOperation:self.transitionBlockOperation];
+                    if (error.code != kOLKiteSDKErrorCodeOrderValidationFailed){
+                        [[NSOperationQueue mainQueue] addOperation:self.transitionBlockOperation];
+                    }
                 }]];
                 [self presentViewController:ac animated:YES completion:NULL];
             }
@@ -1025,7 +1027,9 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 
 - (void)payPalPaymentViewController:(PayPalPaymentViewController *)paymentViewController didCompletePayment:(PayPalPayment *)completedPayment {
     [self dismissViewControllerAnimated:YES completion:nil];
-    [self submitOrderForPrintingWithProofOfPayment:completedPayment.confirmation[@"response"][@"id"] paymentMethod:@"PayPal" completion:^void(PKPaymentAuthorizationStatus status){}];
+    NSString *token = completedPayment.confirmation[@"response"][@"id"];
+    token = [token stringByReplacingCharactersInRange:NSMakeRange(0, 3) withString:@"PAUTH"];
+    [self submitOrderForPrintingWithProofOfPayment:token paymentMethod:@"PayPal" completion:^void(PKPaymentAuthorizationStatus status){}];
 }
 #endif
 
@@ -1127,7 +1131,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
                 completion(PKPaymentAuthorizationStatusFailure);
                 return;
             }
-            [self createBackendChargeWithToken:token completion:completion];
+            [self submitOrderForPrintingWithProofOfPayment:token.tokenId paymentMethod:@"Apple Pay" completion:completion];
         }];
     }
     else{
@@ -1136,7 +1140,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
                 completion(PKPaymentAuthorizationStatusFailure);
                 return;
             }
-            [self createBackendChargeWithToken:token completion:completion];
+            [self submitOrderForPrintingWithProofOfPayment:token.tokenId paymentMethod:@"Apple Pay" completion:completion];
         }];
     }
 }
@@ -1180,11 +1184,6 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             completion(PKPaymentAuthorizationStatusFailure, nil, nil);
         }
     }];
-}
-
-- (void)createBackendChargeWithToken:(STPToken *)token
-                          completion:(void (^)(PKPaymentAuthorizationStatus))completion {
-    [self submitOrderForPrintingWithProofOfPayment:token.tokenId paymentMethod:@"Apple Pay" completion:completion];
 }
 
 #endif

@@ -59,7 +59,7 @@ NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@/order/%@", 
             if ([errorObj isKindOfClass:[NSDictionary class]]) {
                 id errorMessage = errorObj[@"message"];
                 if ([errorMessage isKindOfClass:[NSString class]]) {
-                    NSError *error = [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeServerFault userInfo:@{NSLocalizedDescriptionKey:errorMessage}];
+                    NSError *error = [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeOrderValidationFailed userInfo:@{NSLocalizedDescriptionKey:errorMessage}];
                     self.req = nil;
                     self.printOrder.submitStatus = OLPrintOrderSubmitStatusError;
                     self.printOrder.submitStatusErrorMessage = (NSString *)errorMessage;

@@ -239,7 +239,9 @@ static NSString *typeToString(OLPayPalCardType type) {
                     return;
                 }
                 
-                handler(paymentId, nil);
+                NSString *token = paymentId;
+                token = [token stringByReplacingCharactersInRange:NSMakeRange(0, 3) withString:@"PAUTH"];
+                handler(token, nil);
                 
             } else {
                 id errorMessage = [responseObject objectForKey:@"message"];
