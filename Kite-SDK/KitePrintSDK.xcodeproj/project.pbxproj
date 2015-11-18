@@ -215,6 +215,7 @@
 		E22059121BF3FBB6009CFAF6 /* UIImageView+WebCache.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C83BD1BE276050041D4CF /* UIImageView+WebCache.m */; };
 		E22059131BF3FBB6009CFAF6 /* UIView+WebCacheOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C83BF1BE276050041D4CF /* UIView+WebCacheOperation.m */; };
 		E22059141BF3FBCF009CFAF6 /* libSDWebImage.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E22058FD1BF3FB71009CFAF6 /* libSDWebImage.a */; };
+		E24452FF1BFD22820086BF03 /* libPayPalMobile.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E24452ED1BFD20D80086BF03 /* libPayPalMobile.a */; };
 		E29C858B1BE3B5C50041D4CF /* OLURLDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = CDE0744A188D7730009ADFA2 /* OLURLDataSource.m */; };
 		E29C858E1BE3B5C50041D4CF /* OLScrollCropViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0A72651A6FB07000BC5AE7 /* OLScrollCropViewController.m */; };
 		E29C858F1BE3B5C50041D4CF /* OLPrintOrderCostRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E8C29EC1B18D1AC0045DC21 /* OLPrintOrderCostRequest.m */; };
@@ -736,6 +737,16 @@
 		E22058DE1BF3FAA7009CFAF6 /* libCSSStickyHeaderFlowLayout.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libCSSStickyHeaderFlowLayout.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		E22058EE1BF3FB20009CFAF6 /* libSkyLab.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libSkyLab.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		E22058FD1BF3FB71009CFAF6 /* libSDWebImage.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libSDWebImage.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		E24452E61BFD20C80086BF03 /* PayPalConfiguration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PayPalConfiguration.h; path = "vendor/PayPal-iOS-SDK/PayPalMobile/PayPalConfiguration.h"; sourceTree = "<group>"; };
+		E24452E71BFD20C80086BF03 /* PayPalFuturePaymentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PayPalFuturePaymentViewController.h; path = "vendor/PayPal-iOS-SDK/PayPalMobile/PayPalFuturePaymentViewController.h"; sourceTree = "<group>"; };
+		E24452E81BFD20C80086BF03 /* PayPalMobile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PayPalMobile.h; path = "vendor/PayPal-iOS-SDK/PayPalMobile/PayPalMobile.h"; sourceTree = "<group>"; };
+		E24452E91BFD20C80086BF03 /* PayPalOAuthScopes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PayPalOAuthScopes.h; path = "vendor/PayPal-iOS-SDK/PayPalMobile/PayPalOAuthScopes.h"; sourceTree = "<group>"; };
+		E24452EA1BFD20C80086BF03 /* PayPalPayment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PayPalPayment.h; path = "vendor/PayPal-iOS-SDK/PayPalMobile/PayPalPayment.h"; sourceTree = "<group>"; };
+		E24452EB1BFD20C80086BF03 /* PayPalPaymentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PayPalPaymentViewController.h; path = "vendor/PayPal-iOS-SDK/PayPalMobile/PayPalPaymentViewController.h"; sourceTree = "<group>"; };
+		E24452EC1BFD20C80086BF03 /* PayPalProfileSharingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PayPalProfileSharingViewController.h; path = "vendor/PayPal-iOS-SDK/PayPalMobile/PayPalProfileSharingViewController.h"; sourceTree = "<group>"; };
+		E24452ED1BFD20D80086BF03 /* libPayPalMobile.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libPayPalMobile.a; path = "vendor/PayPal-iOS-SDK/PayPalMobile/libPayPalMobile.a"; sourceTree = "<group>"; };
+		E24452F61BFD21660086BF03 /* PayPal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PayPal.h; sourceTree = "<group>"; };
+		E24452F81BFD21660086BF03 /* PayPal.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PayPal.m; sourceTree = "<group>"; };
 		E29C83A11BE276050041D4CF /* NSData+ImageContentType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSData+ImageContentType.h"; path = "vendor/SDWebImage/SDWebImage/NSData+ImageContentType.h"; sourceTree = "<group>"; };
 		E29C83A21BE276050041D4CF /* NSData+ImageContentType.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSData+ImageContentType.m"; path = "vendor/SDWebImage/SDWebImage/NSData+ImageContentType.m"; sourceTree = "<group>"; };
 		E29C83A31BE276050041D4CF /* SDImageCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SDImageCache.h; path = vendor/SDWebImage/SDWebImage/SDImageCache.h; sourceTree = "<group>"; };
@@ -950,6 +961,7 @@
 				E22058791BF3F757009CFAF6 /* libGroundControl.a in Frameworks */,
 				E22058651BF3AB64009CFAF6 /* libAFNetworking.a in Frameworks */,
 				E29C86201BE3B8E70041D4CF /* Foundation.framework in Frameworks */,
+				E24452FF1BFD22820086BF03 /* libPayPalMobile.a in Frameworks */,
 				E29C861D1BE3B70B0041D4CF /* UIKit.framework in Frameworks */,
 				E29C861C1BE3B7060041D4CF /* CoreGraphics.framework in Frameworks */,
 				E29C861B1BE3B6000041D4CF /* AddressBookUI.framework in Frameworks */,
@@ -1246,6 +1258,7 @@
 				CD73BF90186215790009DE03 /* Kite Print SDK Tests */,
 				2E2632C01B97336700C7D879 /* KitePrintSDKUITests */,
 				E29C85711BE3B4290041D4CF /* KiteSDK */,
+				E24452F51BFD21660086BF03 /* PayPal */,
 				CD73BF6A186215790009DE03 /* Frameworks */,
 				CD73BF69186215790009DE03 /* Products */,
 				E29C839D1BE275C40041D4CF /* Vendor */,
@@ -1456,9 +1469,34 @@
 			name = Asset;
 			sourceTree = "<group>";
 		};
+		E24452E51BFD1FCA0086BF03 /* PayPal */ = {
+			isa = PBXGroup;
+			children = (
+				E24452ED1BFD20D80086BF03 /* libPayPalMobile.a */,
+				E24452E61BFD20C80086BF03 /* PayPalConfiguration.h */,
+				E24452E71BFD20C80086BF03 /* PayPalFuturePaymentViewController.h */,
+				E24452E81BFD20C80086BF03 /* PayPalMobile.h */,
+				E24452E91BFD20C80086BF03 /* PayPalOAuthScopes.h */,
+				E24452EA1BFD20C80086BF03 /* PayPalPayment.h */,
+				E24452EB1BFD20C80086BF03 /* PayPalPaymentViewController.h */,
+				E24452EC1BFD20C80086BF03 /* PayPalProfileSharingViewController.h */,
+			);
+			name = PayPal;
+			sourceTree = "<group>";
+		};
+		E24452F51BFD21660086BF03 /* PayPal */ = {
+			isa = PBXGroup;
+			children = (
+				E24452F61BFD21660086BF03 /* PayPal.h */,
+				E24452F81BFD21660086BF03 /* PayPal.m */,
+			);
+			path = PayPal;
+			sourceTree = "<group>";
+		};
 		E29C839D1BE275C40041D4CF /* Vendor */ = {
 			isa = PBXGroup;
 			children = (
+				E24452E51BFD1FCA0086BF03 /* PayPal */,
 				E29C84271BE289270041D4CF /* GroundControl */,
 				E29C84231BE288B70041D4CF /* UIColor-HexString */,
 				E29C841F1BE287E50041D4CF /* UICKeyChainStore */,
@@ -2684,6 +2722,10 @@
 				);
 				INFOPLIST_FILE = "KitePrintSDK-Dev-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/vendor/PayPal-iOS-SDK/PayPalMobile",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = ly.kite.sdk;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
@@ -2715,6 +2757,10 @@
 				);
 				INFOPLIST_FILE = "KitePrintSDK-Dev-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/vendor/PayPal-iOS-SDK/PayPalMobile",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = ly.kite.sdk;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
@@ -3318,9 +3364,18 @@
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_PREFIX_HEADER = "KiteSDK/KiteSDK-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+					"OL_KITE_OFFER_PAYPAL=1",
+				);
 				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/vendor/PayPal-iOS-SDK/PayPalMobile",
+				);
 				MTL_ENABLE_DEBUG_INFO = YES;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -3341,9 +3396,14 @@
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_PREFIX_HEADER = "KiteSDK/KiteSDK-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = "OL_KITE_OFFER_PAYPAL=1";
 				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/vendor/PayPal-iOS-SDK/PayPalMobile",
+				);
 				MTL_ENABLE_DEBUG_INFO = NO;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
