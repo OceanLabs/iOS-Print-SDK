@@ -216,8 +216,8 @@
 		E22059131BF3FBB6009CFAF6 /* UIView+WebCacheOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C83BF1BE276050041D4CF /* UIView+WebCacheOperation.m */; };
 		E22059141BF3FBCF009CFAF6 /* libSDWebImage.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E22058FD1BF3FB71009CFAF6 /* libSDWebImage.a */; };
 		E244530E1BFD2C230086BF03 /* libPayPalMobile.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E24452ED1BFD20D80086BF03 /* libPayPalMobile.a */; };
-		E244530F1BFD2C3B0086BF03 /* libPayPal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E24453051BFD2C1D0086BF03 /* libPayPal.a */; };
 		E24453231BFD2DC40086BF03 /* OLPayPalDummy.m in Sources */ = {isa = PBXBuildFile; fileRef = E24453211BFD2D810086BF03 /* OLPayPalDummy.m */; };
+		E244533A1BFD355B0086BF03 /* libPayPal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E24453051BFD2C1D0086BF03 /* libPayPal.a */; };
 		E29C858B1BE3B5C50041D4CF /* OLURLDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = CDE0744A188D7730009ADFA2 /* OLURLDataSource.m */; };
 		E29C858E1BE3B5C50041D4CF /* OLScrollCropViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0A72651A6FB07000BC5AE7 /* OLScrollCropViewController.m */; };
 		E29C858F1BE3B5C50041D4CF /* OLPrintOrderCostRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E8C29EC1B18D1AC0045DC21 /* OLPrintOrderCostRequest.m */; };
@@ -977,7 +977,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E244530F1BFD2C3B0086BF03 /* libPayPal.a in Frameworks */,
+				E244533A1BFD355B0086BF03 /* libPayPal.a in Frameworks */,
 				E22059141BF3FBCF009CFAF6 /* libSDWebImage.a in Frameworks */,
 				E22058F81BF3FB48009CFAF6 /* libSkyLab.a in Frameworks */,
 				E22058E91BF3FAFE009CFAF6 /* libCSSStickyHeaderFlowLayout.a in Frameworks */,
