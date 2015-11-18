@@ -185,7 +185,7 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     printOrder.userData = @{@"photo_count_iphone": [NSNumber numberWithUnsignedInteger:iphonePhotoCount],
                             @"sdk_version": kOLKiteSDKVersion,
                             @"platform": @"iOS",
-                            @"uid": [[[UIDevice currentDevice] identifierForVendor] UUIDString],
+                            @"uid": [OLAnalytics userDistinctId],
                             @"app_version": [NSString stringWithFormat:@"Version: %@ (%@)", appVersion, buildNumber]
                             };
     
