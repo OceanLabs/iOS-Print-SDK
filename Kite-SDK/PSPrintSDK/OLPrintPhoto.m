@@ -344,7 +344,7 @@ static NSOperationQueue *imageOperationQueue;
 }
 
 - (BOOL)isEdited{
-    return !CGRectIsEmpty(self.edits.cropImageFrame) || !CGRectIsEmpty(self.edits.cropImageRect) || !CGSizeEqualToSize(self.edits.cropImageSize, CGSizeZero) || self.edits.counterClockwiseRotations > 0 || self.edits.flipHorizontal;
+    return !CGRectIsEmpty(self.edits.cropImageFrame) || !CGRectIsEmpty(self.edits.cropImageRect) || !CGSizeEqualToSize(self.edits.cropImageSize, CGSizeZero) || self.edits.counterClockwiseRotations > 0 || self.edits.flipHorizontal || self.edits.flipVertical;
 }
 
 + (void)resizedImageWithPrintPhoto:(OLPrintPhoto *)printPhoto size:(CGSize)destSize cropped:(BOOL)cropped progress:(OLImageEditorImageGetImageProgressHandler)progressHandler completion:(OLImageEditorImageGetImageCompletionHandler)completionHandler {
@@ -353,6 +353,10 @@ static NSOperationQueue *imageOperationQueue;
     [printPhoto getImageWithSize:destSize progress:progressHandler completion:^(UIImage *image) {
         __block UIImage *blockImage = image;
         void (^localBlock)() = ^{
+            if (printPhoto.edits.counterClockwiseRotations > 0 || printPhoto.edits.flipHorizontal || printPhoto.edits.flipVertical){
+                blockImage = [UIImage imageWithCGImage:blockImage.CGImage scale:blockImage.scale orientation:[OLPhotoEdits orientationForNumberOfCounterClockwiseRotations:printPhoto.edits.counterClockwiseRotations andInitialOrientation:blockImage.imageOrientation horizontalFlip:printPhoto.edits.flipHorizontal verticalFlip:printPhoto.edits.flipVertical]];
+            }
+            
             if (destSize.height != 0 && destSize.width != 0){
                 blockImage = [OLPrintPhoto imageWithImage:blockImage scaledToSize:destSize];
             }
@@ -360,10 +364,6 @@ static NSOperationQueue *imageOperationQueue;
             if (![printPhoto isEdited] || !cropped){
                 completionHandler(blockImage);
                 return;
-            }
-            
-            if (printPhoto.edits.counterClockwiseRotations > 0 || printPhoto.edits.flipHorizontal){
-                blockImage = [UIImage imageWithCGImage:blockImage.CGImage scale:blockImage.scale orientation:[OLPhotoEdits orientationForNumberOfCounterClockwiseRotations:printPhoto.edits.counterClockwiseRotations andInitialOrientation:blockImage.imageOrientation horizontalFlip:printPhoto.edits verticalFlip:printPhoto.edits.flipVertical]];
             }
             
             blockImage = [RMImageCropper editedImageFromImage:blockImage andFrame:printPhoto.edits.cropImageFrame andImageRect:printPhoto.edits.cropImageRect andImageViewWidth:printPhoto.edits.cropImageSize.width andImageViewHeight:printPhoto.edits.cropImageSize.height];

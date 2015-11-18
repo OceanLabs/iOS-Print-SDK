@@ -122,10 +122,10 @@ static NSString *const kKeyFlipVertical = @"co.oceanlabs.psprintstudio.kKeyFlipV
                 newOrientation = UIImageOrientationUpMirrored;
                 break;
             case UIImageOrientationLeft:
-                newOrientation = UIImageOrientationRightMirrored;
+                newOrientation = UIImageOrientationLeftMirrored;
                 break;
             case UIImageOrientationRight:
-                newOrientation = UIImageOrientationLeftMirrored;
+                newOrientation = UIImageOrientationRightMirrored;
                 break;
             case UIImageOrientationDown:
                 newOrientation = UIImageOrientationDownMirrored;
@@ -154,10 +154,10 @@ static NSString *const kKeyFlipVertical = @"co.oceanlabs.psprintstudio.kKeyFlipV
                 newOrientation = UIImageOrientationDownMirrored;
                 break;
             case UIImageOrientationLeft:
-                newOrientation = UIImageOrientationLeftMirrored;
+                newOrientation = UIImageOrientationRightMirrored;
                 break;
             case UIImageOrientationRight:
-                newOrientation = UIImageOrientationRightMirrored;
+                newOrientation = UIImageOrientationLeftMirrored;
                 break;
             case UIImageOrientationDown:
                 newOrientation = UIImageOrientationUpMirrored;
@@ -166,10 +166,10 @@ static NSString *const kKeyFlipVertical = @"co.oceanlabs.psprintstudio.kKeyFlipV
                 newOrientation = UIImageOrientationDown;
                 break;
             case UIImageOrientationLeftMirrored:
-                newOrientation = UIImageOrientationLeft;
+                newOrientation = UIImageOrientationRight;
                 break;
             case UIImageOrientationRightMirrored:
-                newOrientation = UIImageOrientationRight;
+                newOrientation = UIImageOrientationLeft;
                 break;
             case UIImageOrientationDownMirrored:
                 newOrientation = UIImageOrientationUp;
