@@ -74,6 +74,8 @@ static id stringOrEmptyString(NSString *str) {
 @property (assign, nonatomic) OLPrintOrderSubmitStatus submitStatus;
 @property (assign, nonatomic) NSInteger numberOfTimesPolledForSubmissionStatus;
 
+@property (nonatomic, readwrite) NSString *receipt;
+
 @end
 
 @implementation OLPrintOrder

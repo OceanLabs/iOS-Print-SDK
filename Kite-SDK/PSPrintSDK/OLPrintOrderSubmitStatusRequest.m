@@ -20,6 +20,7 @@
 @interface OLPrintOrder (Private)
 
 @property (assign, nonatomic) OLPrintOrderSubmitStatus submitStatus;
+@property (nonatomic, readwrite) NSString *receipt;
 
 @end
 
@@ -55,10 +56,18 @@ NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@/order/%@", 
         if (httpStatusCode >= 200 & httpStatusCode <= 299) {
             self.req = nil;
             
+            id status = json[@"status"];
+            
             id errorObj = json[@"error"];
             if ([errorObj isKindOfClass:[NSDictionary class]]) {
                 id errorMessage = errorObj[@"message"];
-                if ([errorMessage isKindOfClass:[NSString class]]) {
+                id errorCode = errorObj[@"code"];
+                id successPrintId = errorObj[@"print_order_id"];
+                if ([errorCode isEqualToString:@"E20"] && [successPrintId isKindOfClass:[NSString class]]){
+                    self.printOrder.receipt = successPrintId;
+                    status = @"Validated";
+                }
+                else if ([errorMessage isKindOfClass:[NSString class]]) {
                     NSError *error = [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeOrderValidationFailed userInfo:@{NSLocalizedDescriptionKey:errorMessage}];
                     self.req = nil;
                     self.printOrder.submitStatus = OLPrintOrderSubmitStatusError;
@@ -68,7 +77,6 @@ NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@/order/%@", 
                 }
             }
             
-            id status = json[@"status"];
             if ([status isKindOfClass:[NSString class]]){
                 self.printOrder.submitStatus = [OLPrintOrder submitStatusFromIdentifier:status];
                 handler(self.printOrder.submitStatus, nil);
