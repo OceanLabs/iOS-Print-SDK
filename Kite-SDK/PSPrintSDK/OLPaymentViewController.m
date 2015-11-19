@@ -33,7 +33,7 @@
 #import "UIImage+ImageNamedInKiteBundle.h"
 
 #ifdef OL_KITE_OFFER_PAYPAL
-#import <PayPal-iOS-SDK/PayPalMobile.h>
+#import "PayPalMobile.h"
 #endif
 
 #ifdef OL_KITE_OFFER_APPLE_PAY

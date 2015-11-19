@@ -118,7 +118,9 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
         self.customNavigationItem.title = @"";
     }
     
-    [OLPrintPhoto calcScreenScaleForTraitCollection:self.traitCollection];
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
+        [OLPrintPhoto calcScreenScaleForTraitCollection:self.traitCollection];
+    }
     
     self.operationQueue = [NSOperationQueue mainQueue];
     self.templateSyncOperation = [[NSBlockOperation alloc] init];

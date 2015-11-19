@@ -31,3 +31,6 @@
 [submodule "Kite-SDK/vendor/CSStickyHeaderFlowLayout"]
 	path = Kite-SDK/vendor/CSStickyHeaderFlowLayout
 	url = https://github.com/OceanLabs/CSStickyHeaderFlowLayout
+[submodule "Kite-SDK/vendor/PayPal-iOS-SDK"]
+	path = Kite-SDK/vendor/PayPal-iOS-SDK
+	url = https://github.com/paypal/PayPal-iOS-SDK.git
