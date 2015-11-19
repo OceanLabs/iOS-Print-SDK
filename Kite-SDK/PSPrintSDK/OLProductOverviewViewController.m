@@ -234,18 +234,7 @@
 }
 
 - (IBAction)onButtonStartClicked:(id)sender {
-    UIViewController *vc = self.parentViewController;
-    OLPrintOrder *printOrder = nil;
-    while (vc) {
-        if ([vc isKindOfClass:[OLKiteViewController class]]){
-            printOrder = [(OLKiteViewController *)vc printOrder];
-            break;
-        }
-        else{
-            vc = vc.parentViewController;
-        }
-    }
-    if (printOrder){
+    if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder){
         UIViewController *vc;
         if ([[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant isEqualToString:@"Overview-Review-Checkout"]){
             BOOL photoSelection = ![self.delegate respondsToSelector:@selector(kiteControllerShouldAllowUserToAddMorePhotos:)];
@@ -255,7 +244,7 @@
             vc = [self.storyboard instantiateViewControllerWithIdentifier:[OLKiteUtils reviewViewControllerIdentifierForProduct:self.product photoSelectionScreen:photoSelection]];
         }
         else{
-            [OLKiteUtils checkoutViewControllerForPrintOrder:printOrder handler:^(id vc){
+            [OLKiteUtils checkoutViewControllerForPrintOrder:[OLKiteUtils kiteVcForViewController:self].printOrder handler:^(id vc){
                 if ([[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant isEqualToString:@"Checkout"]){
                     [[vc navigationItem] setLeftBarButtonItem:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:(OLKiteViewController *)vc action:@selector(dismiss)]];
                 }
@@ -275,7 +264,7 @@
         return;
     }
     
-    vc = [self.storyboard instantiateViewControllerWithIdentifier:[OLKiteUtils reviewViewControllerIdentifierForProduct:self.product photoSelectionScreen:![self.delegate respondsToSelector:@selector(kiteControllerShouldAllowUserToAddMorePhotos:)] || [self.delegate kiteControllerShouldAllowUserToAddMorePhotos:[OLKiteUtils kiteViewControllerInNavStack:self.navigationController.viewControllers]]]];
+    UIViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:[OLKiteUtils reviewViewControllerIdentifierForProduct:self.product photoSelectionScreen:![self.delegate respondsToSelector:@selector(kiteControllerShouldAllowUserToAddMorePhotos:)] || [self.delegate kiteControllerShouldAllowUserToAddMorePhotos:[OLKiteUtils kiteVcForViewController:self]]]];
     
     [vc safePerformSelector:@selector(setUserSelectedPhotos:) withObject:self.userSelectedPhotos];
     [vc safePerformSelector:@selector(setDelegate:) withObject:self.delegate];

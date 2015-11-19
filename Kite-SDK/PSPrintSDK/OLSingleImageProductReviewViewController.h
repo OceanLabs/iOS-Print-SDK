@@ -18,4 +18,8 @@
 @property (strong, nonatomic) NSMutableArray *userSelectedPhotos;
 @property (weak, nonatomic) id<OLKiteDelegate> delegate;
 
+@property (strong, nonatomic) id<OLPrintJob> editingPrintJob;
+
+- (void)saveJobWithCompletionHandler:(void(^)())handler;
+
 @end

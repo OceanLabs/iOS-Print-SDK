@@ -262,6 +262,11 @@ UINavigationControllerDelegate, OLKiteDelegate>
 - (IBAction)onButtonKiteClicked:(UIButton *)sender {
     [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://www.kite.ly"]];
 }
+
+- (BOOL)shouldShowContinueShoppingButton{
+    return YES;
+}
+
 #pragma mark - notification events
 
 // useful if you want to fire off Anlaytic events for conversion funnel analysis, etc.

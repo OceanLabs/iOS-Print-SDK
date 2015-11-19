@@ -49,6 +49,18 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
 
 @implementation OLOrderReviewViewController
 
+-(id<OLPrintJob>)editingPrintJob{
+    if (_editingPrintJob){
+        return _editingPrintJob;
+    }
+    else if([OLKiteABTesting sharedInstance].launchedWithPrintOrder){
+        OLKiteViewController *kiteVc = [OLKiteUtils kiteVcForViewController:self];
+        return [kiteVc.printOrder.jobs firstObject];
+    }
+    
+    return nil;
+}
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -62,10 +74,9 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
 {
     [super viewDidLoad];
     
-    OLKiteViewController *kiteVc = [self kiteVc];
-    if ([kiteVc printOrder] && !self.userSelectedPhotos){
+    if (self.editingPrintJob){
         self.userSelectedPhotos = [[NSMutableArray alloc] init];
-        for (OLAsset *asset in [[kiteVc.printOrder.jobs firstObject] assetsForUploading]){
+        for (OLAsset *asset in [self.editingPrintJob assetsForUploading]){
             OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
             printPhoto.asset = asset;
             [self.userSelectedPhotos addObject:printPhoto];
@@ -82,7 +93,13 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
                                                                              style:UIBarButtonItemStylePlain
                                                                             target:nil
                                                                             action:nil];
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Confirm", @"") style:UIBarButtonItemStylePlain target:self action:@selector(onButtonNextClicked:)];
+    if (!self.navigationItem.rightBarButtonItem){
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]
+                                                  initWithTitle:NSLocalizedString(@"Next", @"")
+                                                  style:UIBarButtonItemStylePlain
+                                                  target:self
+                                                  action:@selector(onButtonNextClicked:)];
+    }
 }
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
@@ -129,21 +146,7 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     return YES;
 }
 
-- (OLKiteViewController *)kiteVc{
-    UIViewController *vc = self.parentViewController;
-    while (vc) {
-        if ([vc isKindOfClass:[OLKiteViewController class]]){
-            return (OLKiteViewController *)vc;
-            break;
-        }
-        else{
-            vc = vc.parentViewController;
-        }
-    }
-    return nil;
-}
-
-- (void)doCheckout {
+- (void)saveJobWithCompletionHandler:(void(^)())handler{
     [self preparePhotosForCheckout];
     
     NSUInteger iphonePhotoCount = 0;
@@ -174,7 +177,7 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     NSString *appVersion = [infoDict objectForKey:@"CFBundleShortVersionString"];
     NSNumber *buildNumber = [infoDict objectForKey:@"CFBundleVersion"];
     
-    OLPrintOrder *printOrder = [[OLPrintOrder alloc] init];
+    OLPrintOrder *printOrder = [OLKiteUtils kiteVcForViewController:self].printOrder;
     printOrder.userData = @{@"photo_count_iphone": [NSNumber numberWithUnsignedInteger:iphonePhotoCount],
                             @"sdk_version": kOLKiteSDKVersion,
                             @"platform": @"iOS",
@@ -182,29 +185,39 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
                             @"app_version": [NSString stringWithFormat:@"Version: %@ (%@)", appVersion, buildNumber]
                             };
     
-    //Check if we have launched with a Print Order
-    OLKiteViewController *kiteVC = [self kiteVc];
-    if ([kiteVC printOrder]){
-        printOrder = [kiteVC printOrder];
+    OLProductPrintJob *job = [[OLProductPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:photoAssets];
+    if (self.editingPrintJob && [printOrder.jobs containsObject:self.editingPrintJob]){
+        id<OLPrintJob> existingJob = printOrder.jobs[[printOrder.jobs indexOfObject:self.editingPrintJob]];
+        if ([existingJob extraCopies] > 0){
+            [existingJob setExtraCopies:[existingJob extraCopies]-1];
+        }
+        else{
+            [printOrder removePrintJob:self.editingPrintJob];
+        }
+    }
+    self.editingPrintJob = job;
+    if ([printOrder.jobs containsObject:self.editingPrintJob]){
+        id<OLPrintJob> existingJob = printOrder.jobs[[printOrder.jobs indexOfObject:self.editingPrintJob]];
+        [existingJob setExtraCopies:[existingJob extraCopies]+1];
+		for (NSString *option in self.product.selectedOptions.allKeys){
+        	[job setValue:self.product.selectedOptions[option] forOption:option];
+    	}
+    }
+    else{
+        [printOrder addPrintJob:self.editingPrintJob];
     }
     
-    OLProductPrintJob* printJob = [[OLProductPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:photoAssets];
-    printJob.uuid = [[NSUUID UUID] UUIDString];
-    
-    for (NSString *option in self.product.selectedOptions.allKeys){
-        [printJob setValue:self.product.selectedOptions[option] forOption:option];
+    if (handler){
+        handler();
     }
-    
-    for (id<OLPrintJob> job in printOrder.jobs){
-        [printOrder removePrintJob:job];
-    }
-    [printOrder addPrintJob:printJob];
+}
 
-    if ([kiteVC printOrder]){
-        [kiteVC setPrintOrder:printOrder];
-    }
+- (void)doCheckout {
+    [self saveJobWithCompletionHandler:NULL];
     
-    if ([kiteVC printOrder] && [[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant isEqualToString:@"Review-Overview-Checkout"]){
+    OLPrintOrder *printOrder = [OLKiteUtils kiteVcForViewController:self].printOrder;
+    
+    if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder && [[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant isEqualToString:@"Review-Overview-Checkout"]){
         UIViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLProductOverviewViewController"];
         [vc safePerformSelector:@selector(setUserEmail:) withObject:[(OLKiteViewController *)vc userEmail]];
         [vc safePerformSelector:@selector(setUserPhone:) withObject:[(OLKiteViewController *)vc userPhone]];
@@ -221,16 +234,6 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
             [self.navigationController pushViewController:vc animated:YES];
         }];
     }
-}
-
-- (OLKiteViewController *)kiteViewController {
-    for (UIViewController *vc in self.navigationController.viewControllers) {
-        if ([vc isMemberOfClass:[OLKiteViewController class]]) {
-            return (OLKiteViewController *) vc;
-        }
-    }
-    
-    return nil;
 }
 
 - (void) deletePhotoAtIndex:(NSUInteger)index{

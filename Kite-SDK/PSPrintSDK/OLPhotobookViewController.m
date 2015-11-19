@@ -38,6 +38,7 @@
 
 #import "MPFlipTransition.h"
 #import "UIImage+ImageNamedInKiteBundle.h"
+#import "OLKiteABTesting.h"
 
 static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 static const NSUInteger kTagLeft = 10;
@@ -52,6 +53,13 @@ static const CGFloat kBookEdgePadding = 38;
 + (NSString *) instagramSecret;
 + (NSString *) instagramClientID;
 #endif
+@end
+
+@interface OLKiteViewController ()
+
+@property (strong, nonatomic) OLPrintOrder *printOrder;
+- (void)dismiss;
+
 @end
 
 @interface MPFlipTransition (Private)
@@ -113,6 +121,18 @@ UINavigationControllerDelegate
 
 @implementation OLPhotobookViewController
 
+-(id<OLPrintJob>)editingPrintJob{
+    if (_editingPrintJob){
+        return _editingPrintJob;
+    }
+    else if([OLKiteABTesting sharedInstance].launchedWithPrintOrder){
+        OLKiteViewController *kiteVc = [OLKiteUtils kiteVcForViewController:self];
+        return [kiteVc.printOrder.jobs firstObject];
+    }
+    
+    return nil;
+}
+
 -(UIDynamicAnimator*) dynamicAnimator{
     if (!_dynamicAnimator) _dynamicAnimator = [[UIDynamicAnimator alloc] initWithReferenceView:self.view];
     return _dynamicAnimator;
@@ -162,6 +182,15 @@ UINavigationControllerDelegate
 
 - (void)viewDidLoad{
     [super viewDidLoad];
+    
+    if (self.editingPrintJob){
+        self.userSelectedPhotos = [[NSMutableArray alloc] init];
+        for (OLAsset *asset in [self.editingPrintJob assetsForUploading]){
+            OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
+            printPhoto.asset = asset;
+            [self.userSelectedPhotos addObject:printPhoto];
+        }
+    }
     
 #ifndef OL_NO_ANALYTICS
     [OLAnalytics trackReviewScreenViewed:self.product.productTemplate.name];
@@ -222,9 +251,15 @@ UINavigationControllerDelegate
     [self.pageController.view addGestureRecognizer:panGesture];
     [self.pageController.view addGestureRecognizer:longPressGesture];
     
-    self.title = NSLocalizedString(@"Review", @""); //[NSString stringWithFormat: NSLocalizedString(@"%d / %d", @""), self.userSelectedPhotos.count, self.product.quantityToFulfillOrder];
+    self.title = NSLocalizedString(@"Review", @"");
     
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Confirm", @"") style:UIBarButtonItemStylePlain target:self action:@selector(onButtonNextClicked:)];
+    if (!self.navigationItem.rightBarButtonItem){
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]
+                                                  initWithTitle:NSLocalizedString(@"Next", @"")
+                                                  style:UIBarButtonItemStylePlain
+                                                  target:self
+                                                  action:@selector(onButtonNextClicked:)];
+    }
     
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Back", @"")
                                                                              style:UIBarButtonItemStylePlain
@@ -595,7 +630,7 @@ UINavigationControllerDelegate
     return YES;
 }
 
-- (void)doCheckout {
+- (void)saveJobWithCompletionHandler:(void(^)())handler{
     NSInteger i = 0;
     NSMutableArray *bookPhotos = [[NSMutableArray alloc] init];
     for (NSInteger object = 0; object < self.photobookPhotos.count; object++){
@@ -639,26 +674,47 @@ UINavigationControllerDelegate
     NSString *appVersion = [infoDict objectForKey:@"CFBundleShortVersionString"];
     NSNumber *buildNumber = [infoDict objectForKey:@"CFBundleVersion"];
     
-    OLPrintOrder *printOrder = [[OLPrintOrder alloc] init];
+    OLPrintOrder *printOrder = [OLKiteUtils kiteVcForViewController:self].printOrder;
     printOrder.userData = @{@"photo_count_iphone": [NSNumber numberWithUnsignedInteger:iphonePhotoCount],
                             @"sdk_version": kOLKiteSDKVersion,
                             @"platform": @"iOS",
                             @"uid": [OLAnalytics userDistinctId],
                             @"app_version": [NSString stringWithFormat:@"Version: %@ (%@)", appVersion, buildNumber]
                             };
-    OLPhotobookPrintJob* printJob = [[OLPhotobookPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:photoAssets];
-    printJob.uuid = [[NSUUID UUID] UUIDString];
-    printJob.frontCover = self.coverPhoto ? [OLAsset assetWithDataSource:self.coverPhoto] : nil;
     
-    for (NSString *option in self.product.selectedOptions.allKeys){
-        [printJob setValue:self.product.selectedOptions[option] forOption:option];
+    
+    OLPhotobookPrintJob *job = [[OLPhotobookPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:photoAssets];
+    job.frontCover = self.coverPhoto ? [OLAsset assetWithDataSource:self.coverPhoto] : nil;
+	for (NSString *option in self.product.selectedOptions.allKeys){
+        [job setValue:self.product.selectedOptions[option] forOption:option];
+    }
+    if (self.editingPrintJob && [printOrder.jobs containsObject:self.editingPrintJob]){
+        id<OLPrintJob> existingJob = printOrder.jobs[[printOrder.jobs indexOfObject:self.editingPrintJob]];
+        if ([existingJob extraCopies] > 0){
+            [existingJob setExtraCopies:[existingJob extraCopies]-1];
+        }
+        else{
+            [printOrder removePrintJob:self.editingPrintJob];
+        }
+    }
+    self.editingPrintJob = job;
+    if ([printOrder.jobs containsObject:self.editingPrintJob]){
+        id<OLPrintJob> existingJob = printOrder.jobs[[printOrder.jobs indexOfObject:self.editingPrintJob]];
+        [existingJob setExtraCopies:[existingJob extraCopies]+1];
+    }
+    else{
+        [printOrder addPrintJob:self.editingPrintJob];
     }
     
-    for (id<OLPrintJob> job in printOrder.jobs){
-        [printOrder removePrintJob:job];
+    if (handler){
+        handler();
     }
-    [printOrder addPrintJob:printJob];
+}
+
+- (void)doCheckout {
+    [self saveJobWithCompletionHandler:NULL];
     
+    OLPrintOrder *printOrder = [OLKiteUtils kiteVcForViewController:self].printOrder;
     [OLKiteUtils checkoutViewControllerForPrintOrder:printOrder handler:^(id vc){
         [vc safePerformSelector:@selector(setUserEmail:) withObject:[OLKiteUtils userEmail:self]];
         [vc safePerformSelector:@selector(setUserPhone:) withObject:[OLKiteUtils userPhone:self]];
@@ -1628,16 +1684,6 @@ UINavigationControllerDelegate
 #else
     return NO;
 #endif
-}
-
-- (OLKiteViewController *)kiteViewController {
-    for (UIViewController *vc in self.navigationController.viewControllers) {
-        if ([vc isMemberOfClass:[OLKiteViewController class]]) {
-            return (OLKiteViewController *) vc;
-        }
-    }
-    
-    return nil;
 }
 
 #pragma mark UIActionSheet Delegate (only used on iOS 7)
