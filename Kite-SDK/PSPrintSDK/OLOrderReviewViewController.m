@@ -26,6 +26,7 @@
 #import "NSObject+Utils.h"
 #import "OLRemoteImageView.h"
 #import "OLKiteUtils.h"
+#import "DALabeledCircularProgressView.h"
 
 static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 static const NSUInteger kTagAlertViewDeletePhoto = 98;
@@ -75,7 +76,7 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     [OLAnalytics trackReviewScreenViewed:self.product.productTemplate.name];
 #endif
     
-    [self updateTitleBasedOnSelectedPhotoQuanitity];
+    self.title = NSLocalizedString(@"Review", @"");
     
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Back", @"")
                                                                              style:UIBarButtonItemStylePlain
@@ -111,17 +112,6 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
         res += photo.extraCopies;
     }
     return res;
-}
-
-- (void)updateTitleBasedOnSelectedPhotoQuanitity {
-    if (self.product.quantityToFulfillOrder > 1){
-        NSUInteger numOrders = 1 + (MAX(0, self.userSelectedPhotos.count - 1 + [self totalNumberOfExtras]) / self.product.quantityToFulfillOrder);
-        NSUInteger quanityToFulfilOrder = numOrders * self.product.quantityToFulfillOrder;
-        self.title = [NSString stringWithFormat:@"%lu / %lu", (unsigned long) (self.userSelectedPhotos.count + [self totalNumberOfExtras]), (unsigned long)quanityToFulfilOrder];
-    }
-    else{
-        self.title = NSLocalizedString(@"Review", @"");
-    }
 }
 
 -(BOOL) shouldGoToCheckout{
@@ -175,8 +165,11 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     for (NSUInteger i = 0; i < duplicatesToFillOrder; ++i) {
         [photoAssets addObject:photoAssets[i % userSelectedAssetCount]];
     }
+    
+#ifdef OL_VERBOSE
     NSLog(@"Adding %lu duplicates", (unsigned long)duplicatesToFillOrder);
-        
+#endif
+    
     NSDictionary *infoDict = [[NSBundle mainBundle] infoDictionary];
     NSString *appVersion = [infoDict objectForKey:@"CFBundleShortVersionString"];
     NSNumber *buildNumber = [infoDict objectForKey:@"CFBundleVersion"];
@@ -240,19 +233,13 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     return nil;
 }
 
-- (void)onUserSelectedPhotoCountChange {
-    [self updateTitleBasedOnSelectedPhotoQuanitity];
-}
-
 - (void) deletePhotoAtIndex:(NSUInteger)index{
     [self.userSelectedPhotos removeObjectAtIndex:index];
     
     if (self.userSelectedPhotos.count == 0){
         [self.navigationController popViewControllerAnimated:YES];
     }
-    
-    [self updateTitleBasedOnSelectedPhotoQuanitity];
-    
+        
     [self.collectionView deleteItemsAtIndexPaths:@[[NSIndexPath indexPathForItem:index inSection:0]]];
 }
 
@@ -281,7 +268,35 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     UILabel* countLabel = (UILabel *)[cellContentView viewWithTag:30];
     [countLabel setText: [NSString stringWithFormat:@"%lu", (unsigned long)extraCopies + 1]];
     
-    [self updateTitleBasedOnSelectedPhotoQuanitity];
+    NSUInteger numOrders = 1 + (MAX(0, self.userSelectedPhotos.count - 1 + [self totalNumberOfExtras]) / self.product.quantityToFulfillOrder);
+    NSUInteger quanityToFulfilOrder = numOrders * self.product.quantityToFulfillOrder;
+    
+    UIView *totalCountContainer = [cell viewWithTag:110];
+    
+    DALabeledCircularProgressView *circle = (DALabeledCircularProgressView *)[cell viewWithTag:120];
+    if (!circle){
+        circle = [[DALabeledCircularProgressView alloc] initWithFrame:countLabel.bounds];
+        circle.innerTintColor = [UIColor whiteColor];
+        circle.trackTintColor = [UIColor lightGrayColor];
+        circle.progressTintColor = [UIColor colorWithRed:0.290 green:0.537 blue:0.863 alpha:1.000];
+        circle.progressLabel.font = [UIFont systemFontOfSize:10];
+        circle.tag = 120;
+        [totalCountContainer addSubview:circle];
+        [circle setProgress:(CGFloat) (self.userSelectedPhotos.count + [self totalNumberOfExtras]) / (CGFloat)quanityToFulfilOrder animated:NO];
+    }
+    
+    circle.progressLabel.text = [NSString stringWithFormat:@"%lu/%lu", (unsigned long) (self.userSelectedPhotos.count + [self totalNumberOfExtras]), (unsigned long)quanityToFulfilOrder];
+    [circle setProgress:(CGFloat) (self.userSelectedPhotos.count + [self totalNumberOfExtras]) / (CGFloat)quanityToFulfilOrder animated:YES];
+    
+    [UIView animateKeyframesWithDuration:2.30 delay:0 options:UIViewKeyframeAnimationOptionBeginFromCurrentState animations:^{
+        [UIView addKeyframeWithRelativeStartTime:0 relativeDuration:0.01 animations:^{
+            circle.transform = CGAffineTransformMakeTranslation(0, -circle.frame.size.height - 10);
+        }];
+        [UIView addKeyframeWithRelativeStartTime:0.869565217 relativeDuration:1 animations:^{
+            circle.transform = CGAffineTransformIdentity;
+        }];
+    } completion:nil];
+    
 }
 
 - (IBAction)onButtonDownArrowClicked:(UIButton *)sender {
@@ -316,7 +331,34 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     UILabel* countLabel = (UILabel *)[cellContentView viewWithTag:30];
     [countLabel setText: [NSString stringWithFormat:@"%lu", (unsigned long)extraCopies + 1]];
     
-    [self updateTitleBasedOnSelectedPhotoQuanitity];
+    NSUInteger numOrders = 1 + (MAX(0, self.userSelectedPhotos.count - 1 + [self totalNumberOfExtras]) / self.product.quantityToFulfillOrder);
+    NSUInteger quanityToFulfilOrder = numOrders * self.product.quantityToFulfillOrder;
+    
+    UIView *totalCountContainer = [cell viewWithTag:110];
+    
+    DALabeledCircularProgressView *circle = (DALabeledCircularProgressView *)[cell viewWithTag:120];
+    if (!circle){
+        circle = [[DALabeledCircularProgressView alloc] initWithFrame:countLabel.bounds];
+        circle.innerTintColor = [UIColor whiteColor];
+        circle.trackTintColor = [UIColor lightGrayColor];
+        circle.progressTintColor = [UIColor colorWithRed:0.290 green:0.537 blue:0.863 alpha:1.000];
+        circle.progressLabel.font = [UIFont systemFontOfSize:10];
+        circle.tag = 120;
+        [totalCountContainer addSubview:circle];
+        [circle setProgress:(CGFloat) (self.userSelectedPhotos.count + [self totalNumberOfExtras]) / (CGFloat)quanityToFulfilOrder animated:NO];
+    }
+    
+    circle.progressLabel.text = [NSString stringWithFormat:@"%lu/%lu", (unsigned long) (self.userSelectedPhotos.count + [self totalNumberOfExtras]), (unsigned long)quanityToFulfilOrder];
+    [circle setProgress:(CGFloat) (self.userSelectedPhotos.count + [self totalNumberOfExtras]) / (CGFloat)quanityToFulfilOrder animated:YES];
+    
+    [UIView animateKeyframesWithDuration:2.30 delay:0 options:UIViewKeyframeAnimationOptionBeginFromCurrentState animations:^{
+        [UIView addKeyframeWithRelativeStartTime:0 relativeDuration:0.01 animations:^{
+            circle.transform = CGAffineTransformMakeTranslation(0, -circle.frame.size.height - 10);
+        }];
+        [UIView addKeyframeWithRelativeStartTime:0.869565217 relativeDuration:1 animations:^{
+            circle.transform = CGAffineTransformIdentity;
+        }];
+    } completion:nil];
 }
 
 - (IBAction)onButtonEnhanceClicked:(id)sender {

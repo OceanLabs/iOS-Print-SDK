@@ -1945,6 +1945,15 @@
                                             <animations/>
                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         </view>
+                                        <activityIndicatorView opaque="NO" tag="278" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="dSM-Tk-2t9">
+                                            <rect key="frame" x="150" y="130" width="20" height="20"/>
+                                            <animations/>
+                                        </activityIndicatorView>
+                                        <view tag="110" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gbK-oP-fYd" userLabel="CircleProgress">
+                                            <rect key="frame" x="65" y="285" width="46" height="46"/>
+                                            <animations/>
+                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        </view>
                                         <button opaque="NO" tag="13" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ywb-1O-Wlz">
                                             <rect key="frame" x="20" y="285" width="46" height="46"/>
                                             <animations/>
@@ -1980,10 +1989,6 @@
                                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                             </state>
                                         </button>
-                                        <activityIndicatorView opaque="NO" tag="278" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="dSM-Tk-2t9">
-                                            <rect key="frame" x="150" y="130" width="20" height="20"/>
-                                            <animations/>
-                                        </activityIndicatorView>
                                     </subviews>
                                     <animations/>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -1992,7 +1997,9 @@
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstItem="dyy-fJ-b3t" firstAttribute="bottom" secondItem="ywb-1O-Wlz" secondAttribute="bottom" id="9H1-YB-HwR"/>
+                                    <constraint firstItem="gbK-oP-fYd" firstAttribute="bottom" secondItem="qCO-0F-q7E" secondAttribute="bottom" id="9Vk-8h-r81"/>
                                     <constraint firstAttribute="bottom" secondItem="ywb-1O-Wlz" secondAttribute="bottom" constant="20" id="A4g-4a-0Ah"/>
+                                    <constraint firstItem="gbK-oP-fYd" firstAttribute="leading" secondItem="qCO-0F-q7E" secondAttribute="leading" id="Dj5-H4-r2d"/>
                                     <constraint firstItem="ywb-1O-Wlz" firstAttribute="top" secondItem="6rZ-As-Bvm" secondAttribute="bottom" constant="5" id="ELX-hz-H1k"/>
                                     <constraint firstItem="6rZ-As-Bvm" firstAttribute="centerX" secondItem="dSM-Tk-2t9" secondAttribute="centerX" placeholder="YES" id="FYX-0w-5xf"/>
                                     <constraint firstItem="qCO-0F-q7E" firstAttribute="leading" secondItem="ywb-1O-Wlz" secondAttribute="trailing" constant="-1" id="Pgk-fm-fFu"/>
@@ -2005,6 +2012,8 @@
                                     <constraint firstItem="qCO-0F-q7E" firstAttribute="bottom" secondItem="ywb-1O-Wlz" secondAttribute="bottom" id="gwW-rP-xPV"/>
                                     <constraint firstItem="iox-F6-2wa" firstAttribute="top" secondItem="ywb-1O-Wlz" secondAttribute="top" id="kpk-Se-UoD"/>
                                     <constraint firstItem="6rZ-As-Bvm" firstAttribute="leading" secondItem="ywb-1O-Wlz" secondAttribute="leading" id="ogh-de-PxG"/>
+                                    <constraint firstItem="gbK-oP-fYd" firstAttribute="top" secondItem="qCO-0F-q7E" secondAttribute="top" id="qjn-4R-58h"/>
+                                    <constraint firstItem="gbK-oP-fYd" firstAttribute="trailing" secondItem="qCO-0F-q7E" secondAttribute="trailing" id="r9e-hd-ra2"/>
                                     <constraint firstItem="dyy-fJ-b3t" firstAttribute="leading" secondItem="iox-F6-2wa" secondAttribute="trailing" constant="6" id="rq4-ec-91f"/>
                                     <constraint firstItem="6rZ-As-Bvm" firstAttribute="centerY" secondItem="dSM-Tk-2t9" secondAttribute="centerY" placeholder="YES" id="sk1-Rm-9dg"/>
                                     <constraint firstItem="qCO-0F-q7E" firstAttribute="width" secondItem="ywb-1O-Wlz" secondAttribute="width" id="vo8-cp-kZ5"/>
