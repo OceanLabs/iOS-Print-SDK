@@ -335,6 +335,10 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 }
 
 - (IBAction)onButtonMoreOptionsClicked:(id)sender{
+    if (![self.printOrder.shippingAddress isValidAddress]){
+        self.printOrder.shippingAddress = nil;
+    }
+    
     self.poweredByKiteLabelBottomCon.constant = -110;
     [UIView animateWithDuration:0.25 animations:^{
         [self.view layoutIfNeeded];
