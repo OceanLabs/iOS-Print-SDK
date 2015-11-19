@@ -161,6 +161,8 @@
 		2EADD85F1BE79D6D0051CD31 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CD73BF7D186215790009DE03 /* Main.storyboard */; };
 		2ECC956A1BC6B88F00F44CE1 /* OLDocsObjcExampleCodeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2ECC95691BC6B88F00F44CE1 /* OLDocsObjcExampleCodeTests.m */; };
 		2EDBFAB01BC698F2007BDB83 /* 1.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 2EDBFAAF1BC698F2007BDB83 /* 1.jpg */; };
+		2EF4392B1BF4D15E0006C123 /* OLPrintOrderSubmitStatusRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EF4392A1BF4D15E0006C123 /* OLPrintOrderSubmitStatusRequest.m */; };
+		2EF4392C1BF4D15E0006C123 /* OLPrintOrderSubmitStatusRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EF4392A1BF4D15E0006C123 /* OLPrintOrderSubmitStatusRequest.m */; };
 		7D6213DEB708F5F5E6617BF1 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 931ABE3568CB40F8892488E2 /* libPods.a */; };
 		CD73BF8B186215790009DE03 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD73BF8A186215790009DE03 /* XCTest.framework */; };
 		CD73BF8C186215790009DE03 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD73BF6B186215790009DE03 /* Foundation.framework */; };
@@ -628,6 +630,8 @@
 		2EE3C86F1A4AFB0C006446E2 /* OLKiteViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLKiteViewController.m; sourceTree = "<group>"; };
 		2EE94D3D1B501D900086590C /* ALAssetsLibrary+Singleton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "ALAssetsLibrary+Singleton.h"; path = "PSPrintSDK/Categories/ALAssetsLibrary+Singleton.h"; sourceTree = "<group>"; };
 		2EE94D3E1B501D900086590C /* ALAssetsLibrary+Singleton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "ALAssetsLibrary+Singleton.m"; path = "PSPrintSDK/Categories/ALAssetsLibrary+Singleton.m"; sourceTree = "<group>"; };
+		2EF439291BF4D15E0006C123 /* OLPrintOrderSubmitStatusRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLPrintOrderSubmitStatusRequest.h; sourceTree = "<group>"; };
+		2EF4392A1BF4D15E0006C123 /* OLPrintOrderSubmitStatusRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLPrintOrderSubmitStatusRequest.m; sourceTree = "<group>"; };
 		2EF53E391B55421A00BF936A /* UIImage+ColorAtPixel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIImage+ColorAtPixel.h"; path = "PSPrintSDK/Categories/UIImage+ColorAtPixel.h"; sourceTree = "<group>"; };
 		2EF53E3A1B55421A00BF936A /* UIImage+ColorAtPixel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIImage+ColorAtPixel.m"; path = "PSPrintSDK/Categories/UIImage+ColorAtPixel.m"; sourceTree = "<group>"; };
 		2EF53E3C1B5549B900BF936A /* OLInfoPageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLInfoPageViewController.h; sourceTree = "<group>"; };
@@ -1440,6 +1444,8 @@
 				CD95AA77186F31BB0097C328 /* OLPrintOrderRequest.m */,
 				2E8C29EB1B18D1AC0045DC21 /* OLPrintOrderCostRequest.h */,
 				2E8C29EC1B18D1AC0045DC21 /* OLPrintOrderCostRequest.m */,
+				2EF439291BF4D15E0006C123 /* OLPrintOrderSubmitStatusRequest.h */,
+				2EF4392A1BF4D15E0006C123 /* OLPrintOrderSubmitStatusRequest.m */,
 				CD73BFA81863180A0009DE03 /* OLAddressSearchRequest.h */,
 				CD73BFA91863180A0009DE03 /* OLAddressSearchRequest.m */,
 			);
@@ -2365,6 +2371,7 @@
 				2EADD83A1BE79D6D0051CD31 /* OLPostcardPrintJob.m in Sources */,
 				2EADD83B1BE79D6D0051CD31 /* NSObject+Utils.m in Sources */,
 				2EADD83C1BE79D6D0051CD31 /* OLAnalytics.m in Sources */,
+				2EF4392B1BF4D15E0006C123 /* OLPrintOrderSubmitStatusRequest.m in Sources */,
 				2EADD83D1BE79D6D0051CD31 /* OLCircleMaskCollectionViewCell.m in Sources */,
 				2EADD83E1BE79D6D0051CD31 /* OLCreditCardCaptureViewController.m in Sources */,
 				2EADD83F1BE79D6D0051CD31 /* OLPhotoSelectionViewController.m in Sources */,
@@ -2620,6 +2627,7 @@
 				E29C86041BE3B5C50041D4CF /* OLCreditCardCaptureViewController.m in Sources */,
 				E29C86061BE3B5C50041D4CF /* OLPhotoSelectionViewController.m in Sources */,
 				E29C86081BE3B5C50041D4CF /* OLAddressLookupViewController.m in Sources */,
+				2EF4392C1BF4D15E0006C123 /* OLPrintOrderSubmitStatusRequest.m in Sources */,
 				E29C86091BE3B5C50041D4CF /* OLKiteABTesting.m in Sources */,
 				E29C860A1BE3B5C50041D4CF /* OLProductHomeViewController.m in Sources */,
 				E29C860C1BE3B5C50041D4CF /* UIImage+OLAssetsPickerController.m in Sources */,
@@ -2785,6 +2793,7 @@
 					OL_KITE_OFFER_INSTAGRAM,
 					OL_KITE_OFFER_FACEBOOK,
 					OL_KITE_OFFER_PAYPAL,
+					OL_KITE_VERBOSE,
 				);
 				INFOPLIST_FILE = "KitePrintSDK-Dev-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;

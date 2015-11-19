@@ -16,6 +16,7 @@
 - (BOOL)shouldShowContinueShoppingButton;
 - (void)userDidTapContinueShoppingButton;
 - (BOOL)receiptViewControllerShouldBeDismissable;
+- (BOOL)shouldDismissPaymentViewControllerAfterPayment;
 
 - (void)checkoutViewControllerDidCancel:(OLCheckoutViewController *)controller;
 

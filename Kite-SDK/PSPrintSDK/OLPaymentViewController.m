@@ -216,6 +216,10 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
                                                                             target:nil
                                                                             action:nil];
     
+    if (self.navigationController.viewControllers.firstObject == self){
+        self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(dismiss)];
+    }
+    
     NSString *applePayAvailableStr = @"N/A";
 #ifdef OL_KITE_OFFER_APPLE_PAY
     self.applePayIsAvailable = [self isApplePayAvailable];
@@ -465,6 +469,10 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     if ([self.tableView respondsToSelector:@selector(setCellLayoutMarginsFollowReadableWidth:)]){
         self.tableView.cellLayoutMarginsFollowReadableWidth = NO;
     }
+}
+
+- (void)dismiss{
+    [self.navigationController.presentingViewController dismissViewControllerAnimated:YES completion:NULL];
 }
 
 - (void)onButtonMoreOptionsClicked{
@@ -859,6 +867,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         payment.amount = [cost totalCostInCurrency:self.printOrder.currencyCode];
         payment.currencyCode = self.printOrder.currencyCode;
         payment.shortDescription = self.printOrder.paymentDescription;
+        payment.intent = PayPalPaymentIntentAuthorize;
         NSAssert(payment.processable, @"oops");
         
         PayPalPaymentViewController *paymentViewController;
@@ -939,13 +948,23 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         NSUInteger totalURLAssets = self.printOrder.totalAssetsToUpload - totalAssetsToUpload;
         float progress = totalAssetsUploaded * step + (totalAssetBytesWritten / (float) totalAssetBytesExpectedToWrite) * step;
         [SVProgressHUD setDefaultMaskType:SVProgressHUDMaskTypeBlack];
+        if (progress < 1.0){
         [SVProgressHUD showProgress:progress status:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Uploading Images \n%lu / %lu", @"KitePrintSDK", [OLConstants bundle], @""), (unsigned long) totalAssetsUploaded + 1 + totalURLAssets, (unsigned long) self.printOrder.totalAssetsToUpload]];
+        }
+        else{
+             [SVProgressHUD showWithStatus:NSLocalizedStringFromTableInBundle(@"Processing", @"KitePrintSDK", [OLConstants bundle], @"")];
+        }
     } completionHandler:^(NSString *orderIdReceipt, NSError *error) {
         [self.printOrder saveToHistory]; // save again as the print order has it's receipt set if it was successful, otherwise last error is set
         
         self.transitionBlockOperation = [[NSBlockOperation alloc] init];
         __weak OLPaymentViewController *welf = self;
         [self.transitionBlockOperation addExecutionBlock:^{
+            if ([welf.delegate respondsToSelector:@selector(shouldDismissPaymentViewControllerAfterPayment)] && self.delegate.shouldDismissPaymentViewControllerAfterPayment){
+                [(UITableView *)[(OLReceiptViewController *)welf.delegate tableView] reloadData];
+                [welf.navigationController.presentingViewController dismissViewControllerAnimated:YES completion:NULL];
+                return ;
+            }
             OLReceiptViewController *receiptVC = [[OLReceiptViewController alloc] initWithPrintOrder:welf.printOrder];
             receiptVC.delegate = welf.delegate;
             receiptVC.presentedModally = welf.presentedModally;
@@ -971,7 +990,9 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             if ([UIAlertController class]){
                 UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLConstants bundle], @"") message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
                 [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLConstants bundle], @"") style:UIAlertActionStyleDefault handler:^(id action){
-                    [[NSOperationQueue mainQueue] addOperation:self.transitionBlockOperation];
+                    if (error.code != kOLKiteSDKErrorCodeOrderValidationFailed){
+                        [[NSOperationQueue mainQueue] addOperation:self.transitionBlockOperation];
+                    }
                 }]];
                 [self presentViewController:ac animated:YES completion:NULL];
             }
@@ -1006,7 +1027,9 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 
 - (void)payPalPaymentViewController:(PayPalPaymentViewController *)paymentViewController didCompletePayment:(PayPalPayment *)completedPayment {
     [self dismissViewControllerAnimated:YES completion:nil];
-    [self submitOrderForPrintingWithProofOfPayment:completedPayment.confirmation[@"response"][@"id"] paymentMethod:@"PayPal" completion:^void(PKPaymentAuthorizationStatus status){}];
+    NSString *token = completedPayment.confirmation[@"response"][@"id"];
+    token = [token stringByReplacingCharactersInRange:NSMakeRange(0, 3) withString:@"PAUTH"];
+    [self submitOrderForPrintingWithProofOfPayment:token paymentMethod:@"PayPal" completion:^void(PKPaymentAuthorizationStatus status){}];
 }
 #endif
 
@@ -1108,7 +1131,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
                 completion(PKPaymentAuthorizationStatusFailure);
                 return;
             }
-            [self createBackendChargeWithToken:token completion:completion];
+            [self submitOrderForPrintingWithProofOfPayment:token.tokenId paymentMethod:@"Apple Pay" completion:completion];
         }];
     }
     else{
@@ -1117,7 +1140,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
                 completion(PKPaymentAuthorizationStatusFailure);
                 return;
             }
-            [self createBackendChargeWithToken:token completion:completion];
+            [self submitOrderForPrintingWithProofOfPayment:token.tokenId paymentMethod:@"Apple Pay" completion:completion];
         }];
     }
 }
@@ -1161,11 +1184,6 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             completion(PKPaymentAuthorizationStatusFailure, nil, nil);
         }
     }];
-}
-
-- (void)createBackendChargeWithToken:(STPToken *)token
-                          completion:(void (^)(PKPaymentAuthorizationStatus))completion {
-    [self submitOrderForPrintingWithProofOfPayment:token.tokenId paymentMethod:@"Apple Pay" completion:completion];
 }
 
 #endif

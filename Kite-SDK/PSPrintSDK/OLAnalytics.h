@@ -27,5 +27,6 @@
 
 + (void)incrementLaunchSDKCount;
 + (void)setExtraInfo:(NSDictionary *)info;
++ (NSString *)userDistinctId;
 
 @end
