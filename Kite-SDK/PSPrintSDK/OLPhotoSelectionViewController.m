@@ -197,7 +197,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     
     if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0){
         UIVisualEffect *blurEffect;
-        blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleExtraLight];
+        blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleDark];
         
         self.visualEffectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
         UIView *view = self.visualEffectView;
@@ -219,7 +219,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
         
     }
     else{
-        self.clearButtonContainerView.backgroundColor = [UIColor whiteColor];
+        self.clearButtonContainerView.backgroundColor = [UIColor blackColor];
     }
 }
 
@@ -822,6 +822,31 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     
     imageView.image = nil;
     
+    UIView *disabled = [cell.contentView viewWithTag:42];
+    if (!disabled){
+        disabled = [[UIView alloc] init];
+        disabled.tag = 42;
+        disabled.translatesAutoresizingMaskIntoConstraints = NO;
+        
+        [cell.contentView addSubview:disabled];
+        
+        // Auto autolayout constraints to the cell.
+        NSDictionary *views = NSDictionaryOfVariableBindings(disabled);
+        NSMutableArray *con = [[NSMutableArray alloc] init];
+        
+        NSArray *visuals = @[@"H:|-0-[disabled]-0-|",
+                             @"V:|-0-[disabled]-0-|"];
+        
+        
+        for (NSString *visual in visuals) {
+            [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+        }
+        
+        [cell.contentView addConstraints:con];
+        
+        disabled.backgroundColor = [UIColor colorWithRed:0.5 green:0.5 blue:0.5 alpha:0.5];
+    }
+    
     UIImageView *checkmark = (UIImageView *) [cell.contentView viewWithTag:41];
     if (!checkmark){
         checkmark = [[UIImageView alloc] init];
@@ -847,31 +872,6 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
         
         checkmark.image = [UIImage imageNamedInKiteBundle:@"checkmark"];
         checkmark.hidden = YES;
-    }
-    
-    UIView *disabled = [cell.contentView viewWithTag:42];
-    if (!disabled){
-        disabled = [[UIView alloc] init];
-        disabled.tag = 42;
-        disabled.translatesAutoresizingMaskIntoConstraints = NO;
-        
-        [cell.contentView addSubview:disabled];
-        
-        // Auto autolayout constraints to the cell.
-        NSDictionary *views = NSDictionaryOfVariableBindings(disabled);
-        NSMutableArray *con = [[NSMutableArray alloc] init];
-        
-        NSArray *visuals = @[@"H:|-0-[disabled]-0-|",
-                             @"V:|-0-[disabled]-0-|"];
-
-        
-        for (NSString *visual in visuals) {
-            [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
-        }
-        
-        [cell.contentView addConstraints:con];
-        
-        disabled.backgroundColor = [UIColor colorWithRed:0.5 green:0.5 blue:0.5 alpha:0.5];
     }
     
     NSInteger skipAtNewLine = [self numberOfCellsPerRow] % 2 == 0  && indexPath.item / [self numberOfCellsPerRow] % 2 == 0 ? 1 : 0;
@@ -915,11 +915,16 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     }
     
     UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
-    UIView *checkmark = [cell viewWithTag:41];
-    checkmark.hidden = [self.userDisabledPhotos containsObjectIdenticalTo:photo] || photoIndex >= [self.userSelectedPhotos count];
-    
+    UIImageView *checkmark = [cell viewWithTag:41];
     UIView *disabled = [cell viewWithTag:42];
-    disabled.hidden = !checkmark.hidden || photoIndex >= [self.userSelectedPhotos count];
+    if ([self.userDisabledPhotos containsObjectIdenticalTo:photo] && photoIndex < [self.userSelectedPhotos count]){
+        checkmark.image = [UIImage imageNamedInKiteBundle:@"red-x"];
+        disabled.hidden = NO;
+    }
+    else if (photoIndex < [self.userSelectedPhotos count]){
+        checkmark.image = [UIImage imageNamedInKiteBundle:@"checkmark"];
+        disabled.hidden = YES;
+    }
     
     [self updateTitleBasedOnSelectedPhotoQuanitity];
     
