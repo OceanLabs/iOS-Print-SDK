@@ -15,6 +15,14 @@
 @property (weak, nonatomic) IBOutlet UIView *moreOptionsView;
 @property (weak, nonatomic) IBOutlet UILabel *selectedOptionLabel;
 @property (weak, nonatomic) IBOutlet UILabel *optionLabel;
+@property (weak, nonatomic) IBOutlet UIImageView *chevron;
+
+@end
+
+@interface OLProductOverViewViewController
+
+- (IBAction)onLabelDetailsTapped:(UITapGestureRecognizer *)sender;
+@property (strong, nonatomic) UILabel *detailsTextLabel;
 
 @end
 
@@ -66,6 +74,12 @@
     
     if ([self.delegate respondsToSelector:@selector(optionsButtonClicked)]){
         [self.delegate optionsButtonClicked];
+    }
+}
+
+- (IBAction)onDetailsAreaTapped:(UITapGestureRecognizer *)sender {
+    if ([self.delegate respondsToSelector:@selector(onLabelDetailsTapped:)]){
+        [self.delegate performSelector:@selector(onLabelDetailsTapped:) withObject:nil];
     }
 }
 

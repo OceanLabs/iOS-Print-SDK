@@ -37,8 +37,6 @@
 @property (strong, nonatomic) IBOutlet UIPageControl *pageControl;
 @property (weak, nonatomic) IBOutlet UILabel *costLabel;
 @property (weak, nonatomic) IBOutlet UIButton *callToActionButton;
-@property (weak, nonatomic) IBOutlet UILabel *callToActionLabel;
-@property (weak, nonatomic) IBOutlet UIImageView *callToActionChevron;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *detailsBoxTopCon;
 @property (weak, nonatomic) IBOutlet UIImageView *arrowImageView;
 @property (weak, nonatomic) IBOutlet UIView *detailsView;
@@ -100,21 +98,16 @@
     }
     if ([(OLKiteViewController *)vc printOrder]){
         if (![[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant isEqualToString:@"Overview-Review-Checkout"]){
-            self.callToActionLabel.text = NSLocalizedString(@"Checkout", @"");
+            [self.callToActionButton setTitle: NSLocalizedString(@"Checkout", @"") forState:UIControlStateNormal];
         }
         else{
-            self.callToActionLabel.text = NSLocalizedString(@"Review", @"");
+            [self.callToActionButton setTitle: NSLocalizedString(@"Review", @"")forState:UIControlStateNormal];
         }
     }
     
 #ifndef OL_NO_ANALYTICS
     [OLAnalytics trackProductDescriptionScreenViewed:self.product.productTemplate.name hidePrice:[OLKiteABTesting sharedInstance].hidePrice];
 #endif
-    
-    if ([[OLKiteABTesting sharedInstance].productTileStyle isEqualToString:@"B"]){
-        [self.callToActionChevron removeFromSuperview];
-        self.callToActionLabel.textAlignment = NSTextAlignmentCenter;
-    }
     
     self.originalBoxConstraint = self.detailsBoxTopCon.constant;
     
@@ -154,6 +147,11 @@
     self.productDetails = [self.storyboard instantiateViewControllerWithIdentifier:@"OLProductDetailsViewController"];
     self.productDetails.product = self.product;
     self.productDetails.delegate = self;
+    
+    [self.productDetails view]; //Access the view to force the ViewController to load
+    
+    self.arrowImageView = self.productDetails.arrowImageView;
+    self.costLabel = self.productDetails.priceLabel;
     
     UINavigationController *nvc = [[UINavigationController alloc] initWithRootViewController:self.productDetails];
     nvc.navigationBarHidden = YES;

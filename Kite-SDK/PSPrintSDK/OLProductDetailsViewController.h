@@ -21,6 +21,9 @@
 @property (strong, nonatomic) OLProduct *product;
 @property (weak, nonatomic) id<OLProductDetailsDelegate> delegate;
 
+@property (weak, nonatomic) IBOutlet UIImageView *arrowImageView;
+@property (weak, nonatomic) IBOutlet UILabel *priceLabel;
+
 - (CGFloat)recommendedDetailsBoxHeight;
 
 @end
