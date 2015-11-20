@@ -97,7 +97,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 @property (nonatomic, weak) IBOutlet UIButton *buttonNext;
 @property (nonatomic, weak) IBOutlet UIView *noSelectedPhotosView;
 @property (weak, nonatomic) IBOutlet UIView *clearButtonContainerView;
-@property (weak, nonatomic) IBOutlet UIButton *clearButton;
+//@property (weak, nonatomic) IBOutlet UIButton *clearButton;
 @property (strong, nonatomic) UIVisualEffectView *visualEffectView;
 
 @property (assign, nonatomic) CGSize rotationSize;
@@ -195,32 +195,6 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     }
     [self onUserSelectedPhotoCountChange];
     
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0){
-        UIVisualEffect *blurEffect;
-        blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleDark];
-        
-        self.visualEffectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
-        UIView *view = self.visualEffectView;
-        [self.clearButtonContainerView insertSubview:view belowSubview:self.clearButton];
-        
-        view.translatesAutoresizingMaskIntoConstraints = NO;
-        NSDictionary *views = NSDictionaryOfVariableBindings(view);
-        NSMutableArray *con = [[NSMutableArray alloc] init];
-        
-        NSArray *visuals = @[@"H:|-0-[view]-0-|",
-                             @"V:|-0-[view]-0-|"];
-        
-        
-        for (NSString *visual in visuals) {
-            [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
-        }
-        
-        [view.superview addConstraints:con];
-        
-    }
-    else{
-        self.clearButtonContainerView.backgroundColor = [UIColor blackColor];
-    }
 }
 
 - (void)viewDidLayoutSubviews{
@@ -333,12 +307,12 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     if ([self.userDisabledPhotos count] > 0){
         self.navigationItem.rightBarButtonItem.title = NSLocalizedString(@"Cancel", @"");
         
-        if ([self.userDisabledPhotos count] == 1){
-            [self.clearButton setTitle:[NSString stringWithFormat:NSLocalizedString(@"Clear %lu Photo", @""), (unsigned long)[self.userDisabledPhotos count]] forState:UIControlStateNormal];
-        }
-        else{
-            [self.clearButton setTitle:[NSString stringWithFormat:NSLocalizedString(@"Clear %lu Photos", @""), (unsigned long)[self.userDisabledPhotos count]] forState:UIControlStateNormal];
-        }
+//        if ([self.userDisabledPhotos count] == 1){
+//            [self.clearButton setTitle:[NSString stringWithFormat:NSLocalizedString(@"Clear %lu Photo", @""), (unsigned long)[self.userDisabledPhotos count]] forState:UIControlStateNormal];
+//        }
+//        else{
+//            [self.clearButton setTitle:[NSString stringWithFormat:NSLocalizedString(@"Clear %lu Photos", @""), (unsigned long)[self.userDisabledPhotos count]] forState:UIControlStateNormal];
+//        }
         [UIView animateKeyframesWithDuration:0.15 delay:0 options:UIViewKeyframeAnimationOptionBeginFromCurrentState | UIViewAnimationOptionCurveLinear animations:^{
             self.clearButtonContainerView.transform = CGAffineTransformMakeTranslation(0, -40);
             self.collectionView.contentInset = UIEdgeInsetsMake(self.collectionView.contentInset.top, self.collectionView.contentInset.left, self.collectionView.contentInset.bottom + 40, self.collectionView.contentInset.left);
@@ -497,7 +471,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 #endif
 }
 
-- (IBAction)onButtonClearClicked:(UIButton *)sender {
+- (IBAction)onButtonClearClicked:(id)sender {
     NSInteger initialSections = [self numberOfSectionsInCollectionView:self.collectionView];
     
     self.indexPathsToRemoveDict = [[NSMutableDictionary alloc] init];
@@ -888,8 +862,8 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
                 }
             });
         }];
-        checkmark.hidden = [self.userDisabledPhotos containsObjectIdenticalTo:photo];
-        disabled.hidden = !checkmark.hidden;
+        checkmark.hidden = ![self.userDisabledPhotos containsObjectIdenticalTo:photo];
+        disabled.hidden = checkmark.hidden;
     } else {
         [imageView setImage:nil];
         checkmark.hidden = YES;
@@ -918,11 +892,11 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     UIImageView *checkmark = [cell viewWithTag:41];
     UIView *disabled = [cell viewWithTag:42];
     if ([self.userDisabledPhotos containsObjectIdenticalTo:photo] && photoIndex < [self.userSelectedPhotos count]){
-        checkmark.image = [UIImage imageNamedInKiteBundle:@"red-x"];
+        checkmark.hidden = NO;
         disabled.hidden = NO;
     }
     else if (photoIndex < [self.userSelectedPhotos count]){
-        checkmark.image = [UIImage imageNamedInKiteBundle:@"checkmark"];
+        checkmark.hidden = YES;
         disabled.hidden = YES;
     }
     

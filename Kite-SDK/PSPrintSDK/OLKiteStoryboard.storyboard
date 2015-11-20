@@ -1592,33 +1592,17 @@
                                     <outlet property="delegate" destination="5M4-me-Xph" id="OaF-iV-1RJ"/>
                                 </connections>
                             </collectionView>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ihm-7V-1WO" userLabel="ClearButtonView">
-                                <rect key="frame" x="0.0" y="600" width="600" height="40"/>
-                                <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ABl-be-HjV">
-                                        <rect key="frame" x="0.0" y="0.0" width="600" height="40"/>
-                                        <animations/>
-                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="16"/>
-                                        <state key="normal" title="Clear 1 Photo">
-                                            <color key="titleColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                            <color key="titleShadowColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <connections>
-                                            <action selector="onButtonClearClicked:" destination="5M4-me-Xph" eventType="touchUpInside" id="MKU-4m-l64"/>
-                                        </connections>
-                                    </button>
-                                </subviews>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qWq-HB-FzX">
+                                <rect key="frame" x="0.0" y="600" width="600" height="44"/>
                                 <animations/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                <constraints>
-                                    <constraint firstAttribute="trailing" secondItem="ABl-be-HjV" secondAttribute="trailing" id="V9g-7R-IJK"/>
-                                    <constraint firstAttribute="bottom" secondItem="ABl-be-HjV" secondAttribute="bottom" id="X5c-fj-ju9"/>
-                                    <constraint firstItem="ABl-be-HjV" firstAttribute="leading" secondItem="ihm-7V-1WO" secondAttribute="leading" id="cMV-jI-XGW"/>
-                                    <constraint firstItem="ABl-be-HjV" firstAttribute="top" secondItem="ihm-7V-1WO" secondAttribute="top" id="dPC-GU-YyO"/>
-                                    <constraint firstAttribute="height" constant="40" id="gC0-oE-htC"/>
-                                </constraints>
-                            </view>
+                                <items>
+                                    <barButtonItem systemItem="trash" id="E9L-Sk-dCC">
+                                        <connections>
+                                            <action selector="onButtonClearClicked:" destination="5M4-me-Xph" id="whi-YR-PIj"/>
+                                        </connections>
+                                    </barButtonItem>
+                                </items>
+                            </toolbar>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Bco-ct-3Yg" customClass="OLPhotoSelectionButton">
                                 <rect key="frame" x="0.0" y="20" width="200" height="67"/>
                                 <animations/>
@@ -1690,7 +1674,7 @@
                                                 </constraints>
                                             </imageView>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="CAMERA ROLL" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Y2I-vU-6IN">
-                                                <rect key="frame" x="34" y="16" width="346" height="20"/>
+                                                <rect key="frame" x="34" y="16" width="346" height="20.5"/>
                                                 <animations/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -1735,7 +1719,7 @@
                                                 </constraints>
                                             </imageView>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="INSTAGRAM" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="S65-CE-JlZ">
-                                                <rect key="frame" x="34" y="16" width="346" height="20"/>
+                                                <rect key="frame" x="34" y="16" width="346" height="20.5"/>
                                                 <animations/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -1780,7 +1764,7 @@
                                                 </constraints>
                                             </imageView>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="FACEBOOK" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pNE-NE-5ba">
-                                                <rect key="frame" x="34" y="16" width="346" height="20"/>
+                                                <rect key="frame" x="34" y="16" width="346" height="20.5"/>
                                                 <animations/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -1840,7 +1824,6 @@
                         <constraints>
                             <constraint firstItem="7XX-0J-tJc" firstAttribute="leading" secondItem="H6l-Sv-Ai2" secondAttribute="leading" id="1Bz-RV-IeD"/>
                             <constraint firstItem="Bco-ct-3Yg" firstAttribute="height" secondItem="9nk-DX-0TW" secondAttribute="height" id="1eq-Iq-MkA"/>
-                            <constraint firstItem="SHl-5H-G7O" firstAttribute="top" secondItem="ihm-7V-1WO" secondAttribute="bottom" constant="-40" id="2oX-7s-3D1"/>
                             <constraint firstItem="Bco-ct-3Yg" firstAttribute="height" secondItem="TIp-Hm-PTo" secondAttribute="height" id="6xo-KW-gGX"/>
                             <constraint firstItem="9nk-DX-0TW" firstAttribute="leading" secondItem="Bco-ct-3Yg" secondAttribute="trailing" priority="750" id="7TB-bO-5yf"/>
                             <constraint firstItem="Bco-ct-3Yg" firstAttribute="top" secondItem="Prc-x4-bQB" secondAttribute="bottom" id="9e4-gB-SEF"/>
@@ -1850,7 +1833,6 @@
                             <constraint firstItem="934-Aw-K7I" firstAttribute="leading" secondItem="H6l-Sv-Ai2" secondAttribute="leading" id="HIm-aR-y7v"/>
                             <constraint firstItem="7XX-0J-tJc" firstAttribute="top" secondItem="Prc-x4-bQB" secondAttribute="bottom" constant="67" id="I9v-K1-9wH"/>
                             <constraint firstItem="Bco-ct-3Yg" firstAttribute="width" secondItem="9nk-DX-0TW" secondAttribute="width" id="K1V-k7-Mib"/>
-                            <constraint firstAttribute="trailing" secondItem="ihm-7V-1WO" secondAttribute="trailing" id="OsP-Pf-05f"/>
                             <constraint firstItem="TIp-Hm-PTo" firstAttribute="top" secondItem="Prc-x4-bQB" secondAttribute="bottom" id="PbE-A6-fuF"/>
                             <constraint firstItem="Bco-ct-3Yg" firstAttribute="width" secondItem="TIp-Hm-PTo" secondAttribute="width" id="QHS-Ta-w7V"/>
                             <constraint firstAttribute="trailing" secondItem="934-Aw-K7I" secondAttribute="trailing" id="VEj-lt-L4U"/>
@@ -1859,12 +1841,14 @@
                             <constraint firstItem="TIp-Hm-PTo" firstAttribute="leading" secondItem="Bco-ct-3Yg" secondAttribute="trailing" id="bwg-7T-isz"/>
                             <constraint firstAttribute="trailing" secondItem="TIp-Hm-PTo" secondAttribute="trailing" priority="750" id="eCp-ch-ZTw"/>
                             <constraint firstAttribute="trailing" secondItem="7XX-0J-tJc" secondAttribute="trailing" id="eJZ-KS-LOB"/>
+                            <constraint firstItem="SHl-5H-G7O" firstAttribute="top" secondItem="qWq-HB-FzX" secondAttribute="bottom" constant="-44" id="jsf-cX-5kc"/>
                             <constraint firstItem="9nk-DX-0TW" firstAttribute="leading" secondItem="TIp-Hm-PTo" secondAttribute="trailing" id="k4m-yc-3zH"/>
                             <constraint firstItem="9nk-DX-0TW" firstAttribute="top" secondItem="Prc-x4-bQB" secondAttribute="bottom" id="kzv-d4-7qc"/>
                             <constraint firstItem="R1h-WW-in1" firstAttribute="top" secondItem="Prc-x4-bQB" secondAttribute="bottom" constant="90" id="l0B-mQ-mo9"/>
                             <constraint firstItem="SHl-5H-G7O" firstAttribute="top" secondItem="7XX-0J-tJc" secondAttribute="bottom" id="lMV-dK-VcX"/>
                             <constraint firstItem="934-Aw-K7I" firstAttribute="top" secondItem="Prc-x4-bQB" secondAttribute="bottom" id="uBG-kJ-jpw"/>
-                            <constraint firstItem="ihm-7V-1WO" firstAttribute="leading" secondItem="H6l-Sv-Ai2" secondAttribute="leading" id="yrt-fq-wPM"/>
+                            <constraint firstItem="qWq-HB-FzX" firstAttribute="leading" secondItem="H6l-Sv-Ai2" secondAttribute="leading" id="wrj-5N-Pxl"/>
+                            <constraint firstAttribute="trailing" secondItem="qWq-HB-FzX" secondAttribute="trailing" id="xD0-6m-Usz"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Choose Photos" id="tKz-hT-vzu">
@@ -1882,8 +1866,7 @@
                         <outlet property="buttonNext" destination="b0B-Ki-nCb" id="6YU-d8-7LH"/>
                         <outlet property="cameraRollContainer" destination="ygM-3Q-VpC" id="lww-HG-txe"/>
                         <outlet property="chooseImportSourceLabel" destination="Qmw-15-obN" id="KvT-Nk-W95"/>
-                        <outlet property="clearButton" destination="ABl-be-HjV" id="OmM-5J-0YH"/>
-                        <outlet property="clearButtonContainerView" destination="ihm-7V-1WO" id="V4F-Oo-lHd"/>
+                        <outlet property="clearButtonContainerView" destination="qWq-HB-FzX" id="QLT-9W-jgq"/>
                         <outlet property="collectionView" destination="7XX-0J-tJc" id="trV-ag-XzR"/>
                         <outlet property="facebookButton" destination="9nk-DX-0TW" id="QKz-Lx-xnM"/>
                         <outlet property="facebookContainer" destination="LFC-nl-Cex" id="WtE-cJ-1pA"/>
