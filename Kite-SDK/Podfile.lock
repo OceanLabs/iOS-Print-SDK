@@ -21,12 +21,12 @@ PODS:
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
   - ApplePayStubs (0.2)
-  - Bolts (1.4.0):
-    - Bolts/AppLinks (= 1.4.0)
-    - Bolts/Tasks (= 1.4.0)
-  - Bolts/AppLinks (1.4.0):
+  - Bolts (1.5.0):
+    - Bolts/AppLinks (= 1.5.0)
+    - Bolts/Tasks (= 1.5.0)
+  - Bolts/AppLinks (1.5.0):
     - Bolts/Tasks
-  - Bolts/Tasks (1.4.0)
+  - Bolts/Tasks (1.5.0)
   - CSStickyHeaderFlowLayout (0.2.10)
   - CTAssetsPickerController (3.0.4):
     - PureLayout (~> 2.0.0)
@@ -54,7 +54,7 @@ PODS:
     - UIColor-HexString
   - MPFlipViewController (0.0.2)
   - NXOAuth2Client (1.2.8)
-  - PayPal-iOS-SDK/Core (2.12.6)
+  - PayPal-iOS-SDK/Core (2.12.7)
   - PureLayout (2.0.6)
   - SDWebImage (3.7.3):
     - SDWebImage/Core (= 3.7.3)
@@ -93,7 +93,7 @@ DEPENDENCIES:
 SPEC CHECKSUMS:
   AFNetworking: cb8d14a848e831097108418f5d49217339d4eb60
   ApplePayStubs: 5dd63c36527d1117b2045939fb5b6581b4815433
-  Bolts: 0e9bce58b9b9f5e8a7a4d47b16d2fabec289072b
+  Bolts: 722ab9a4f8b50fc4ed1b9998a5a7a2b3f16d80b4
   CSStickyHeaderFlowLayout: 5366582779d8b7c9ba9b9cc729c218cc23888776
   CTAssetsPickerController: 3faf5972938986c355c420f617e83842499639b7
   DACircularProgress: 4dd437c0fc3da5161cb289e07ac449493d41db71
@@ -104,7 +104,7 @@ SPEC CHECKSUMS:
   InstagramImagePicker: 7bf666580d1c6f8fd3885cb37d0c6809e60758b4
   MPFlipViewController: 86caa6203ca9d35af23cc6b4e1bcf53e53333770
   NXOAuth2Client: 98c4d4c594edd2b289cfc34a8928653e1dab7adf
-  PayPal-iOS-SDK: bdb07beae25f733e0dddfcf169e241bcaa65d831
+  PayPal-iOS-SDK: 401d441844bd6f0e08905dcdd7795f44c5ecef6c
   PureLayout: f25f0bb904d5ccfe6e31da3cb869185259f02e0d
   SDWebImage: 1d2b1a1efda1ade1b00b6f8498865f8ddedc8a84
   SkyLab: 01d9559bbab2183e54e67dc7a8a12a22b0a4be99

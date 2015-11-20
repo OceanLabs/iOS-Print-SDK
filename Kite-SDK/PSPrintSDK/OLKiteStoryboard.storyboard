@@ -3136,7 +3136,7 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <pageControl opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" numberOfPages="3" translatesAutoresizingMaskIntoConstraints="NO" id="4xs-oO-L3J">
-                                <rect key="frame" x="20" y="389" width="560" height="37"/>
+                                <rect key="frame" x="20" y="462" width="560" height="37"/>
                                 <animations/>
                             </pageControl>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SLj-fW-sSB" userLabel="Details view">
@@ -3185,7 +3185,7 @@
                             <constraint firstItem="JzC-Vn-8gQ" firstAttribute="top" secondItem="SLj-fW-sSB" secondAttribute="top" constant="44" id="GzY-ur-lyS"/>
                             <constraint firstItem="SLj-fW-sSB" firstAttribute="top" secondItem="WAl-EY-ayd" secondAttribute="bottom" id="ILO-LI-T0Q"/>
                             <constraint firstAttribute="trailing" secondItem="JzC-Vn-8gQ" secondAttribute="trailing" id="Lbt-Cp-FXI"/>
-                            <constraint firstItem="CGe-VX-l02" firstAttribute="top" secondItem="4xs-oO-L3J" secondAttribute="bottom" constant="174" id="MB3-KW-XCY"/>
+                            <constraint firstItem="CGe-VX-l02" firstAttribute="top" secondItem="4xs-oO-L3J" secondAttribute="bottom" constant="101" id="MB3-KW-XCY"/>
                             <constraint firstItem="SLj-fW-sSB" firstAttribute="leading" secondItem="vq9-l7-2iv" secondAttribute="leading" id="TaH-xr-rse"/>
                             <constraint firstItem="CGe-VX-l02" firstAttribute="top" secondItem="JzC-Vn-8gQ" secondAttribute="bottom" id="Yf3-oJ-8dZ"/>
                             <constraint firstItem="JzC-Vn-8gQ" firstAttribute="leading" secondItem="vq9-l7-2iv" secondAttribute="leading" id="aCX-Xw-8RY"/>
