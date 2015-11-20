@@ -21,6 +21,7 @@
     [super viewDidLoad];
     
     [self.cropView setClipsToBounds:NO];
+    self.cropView.backgroundColor = [UIColor clearColor];
     
     if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8){
         UIButton *doneButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 40, 20)];
@@ -98,20 +99,37 @@
     CGAffineTransform transform = self.cropView.imageView.transform;
     transform.tx = self.cropView.imageView.transform.ty;
     transform.ty = -self.cropView.imageView.transform.tx;
+    
+    CGRect cropboxRect = self.cropView.frame;
+    
+    UIImage *newImage = [UIImage imageWithCGImage:self.fullImage.CGImage scale:self.cropView.imageView.image.scale orientation:[OLPhotoEdits orientationForNumberOfCounterClockwiseRotations:self.edits.counterClockwiseRotations andInitialOrientation:self.initialOrientation horizontalFlip:self.edits.flipHorizontal verticalFlip:self.edits.flipVertical]];
+    CGFloat imageAspectRatio = newImage.size.height/newImage.size.width;
+    
     [UIView animateWithDuration:0.25 delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
         self.cropView.transform = CGAffineTransformMakeRotation(-M_PI_2);
-    } completion:^(BOOL finished){
-        self.aspectRatio = 1/self.aspectRatio;
-        [self.cropView removeConstraint:self.aspectRatioConstraint];
-        self.aspectRatioConstraint = [NSLayoutConstraint constraintWithItem:self.cropView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self.cropView attribute:NSLayoutAttributeWidth multiplier:self.aspectRatio constant:0];
-        [self.cropView addConstraints:@[self.aspectRatioConstraint]];
-        [self.view layoutIfNeeded];
         
+        CGFloat boxWidth = self.cropView.frame.size.width;
+        CGFloat boxHeight = self.cropView.frame.size.height;
+        
+        CGFloat imageWidth;
+        CGFloat imageHeight;
+        
+        if (imageAspectRatio > 1.0){
+            imageHeight = boxHeight;
+            imageWidth = boxHeight * imageAspectRatio;
+        }
+        else{
+            imageWidth = boxWidth;
+            imageHeight = boxWidth / imageAspectRatio;
+        }
+        
+        self.cropView.imageView.frame = CGRectMake((boxHeight - imageWidth)/ 2.0, (boxWidth - imageHeight) / 2.0, imageWidth, imageHeight);
+        
+    } completion:^(BOOL finished){
         self.cropView.transform = CGAffineTransformIdentity;
-        [self.cropView setImage:[UIImage imageWithCGImage:self.fullImage.CGImage scale:self.cropView.imageView.image.scale orientation:[OLPhotoEdits orientationForNumberOfCounterClockwiseRotations:self.edits.counterClockwiseRotations andInitialOrientation:self.initialOrientation horizontalFlip:self.edits.flipHorizontal verticalFlip:self.edits.flipVertical]]];
-        [self.view setNeedsLayout];
-        [self.view layoutIfNeeded];
-        self.cropView.imageView.transform = transform;
+        self.cropView.frame = cropboxRect;
+        [self.cropView setImage:newImage];
+        
         [(UIBarButtonItem *)sender setEnabled:YES];
         self.doneButton.enabled = YES;
     }];
