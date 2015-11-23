@@ -402,7 +402,13 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
 - (void)populateDefaultEmailAndPhone {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSString *email = [defaults stringForKey:kKeyEmailAddress];
+    if (!email){
+        email = _userEmail;
+    }
     NSString *phone = [defaults stringForKey:kKeyPhone];
+    if (!phone){
+        phone = _userPhone;
+    }
     if (self.textFieldEmail.text.length == 0) {
         if (email.length > 0) {
             self.textFieldEmail.text = email;

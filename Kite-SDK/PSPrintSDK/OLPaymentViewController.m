@@ -20,6 +20,7 @@
 #import "OLProductTemplate.h"
 #import "OLCountry.h"
 #import "OLJudoPayCard.h"
+#import "NSObject+Utils.h"
 #import "OLConstants.h"
 #import "OLCreditCardCaptureViewController.h"
 #import "OLAnalytics.h"
@@ -471,6 +472,8 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     OLCheckoutViewController *vc = [[OLCheckoutViewController alloc] initWithPrintOrder:self.printOrder];
     vc.delegate = self.delegate;
     vc.showOtherOptions = YES;
+    [vc safePerformSelector:@selector(setUserEmail:) withObject:self.userEmail];
+    [vc safePerformSelector:@selector(setUserPhone:) withObject:self.userPhone];
     [self.navigationController pushViewController:vc animated:YES];
 }
 

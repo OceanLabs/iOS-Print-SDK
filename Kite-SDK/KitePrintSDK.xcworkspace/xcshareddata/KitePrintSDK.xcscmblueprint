@@ -10,6 +10,7 @@
     "52A24398B96ECA98EF0E72469CA9225C49AA7C9D" : 0,
     "9C20F25BF6BBE50E6A8BA209D271436D4B8C9DA6" : 0,
     "701B5006D938B65FD42237DDAF25824304CA7A66" : 0,
+    "DEF69B637476FC5A11C1E68BB97C88EC6D295A4E" : 0,
     "117B65B3A14F5CB598DC962723F820AC63399A6A" : 0,
     "98E520DDA0AE776CF47A7A4A2C7C2ABBE041AE69" : 0,
     "DE1BCDB9BD2BF95E86A6E4610C039E0FEADFD758" : 0,
@@ -25,6 +26,7 @@
     "52A24398B96ECA98EF0E72469CA9225C49AA7C9D" : "iOS-Print-SDK\/Kite-SDK\/vendor\/DACircularProgress\/",
     "9C20F25BF6BBE50E6A8BA209D271436D4B8C9DA6" : "iOS-Print-SDK\/Kite-SDK\/vendor\/GroundControl\/",
     "701B5006D938B65FD42237DDAF25824304CA7A66" : "iOS-Print-SDK\/Kite-SDK\/vendor\/CSStickyHeaderFlowLayout\/",
+    "DEF69B637476FC5A11C1E68BB97C88EC6D295A4E" : "iOS-Print-SDK\/Kite-SDK\/vendor\/PayPal-iOS-SDK\/",
     "117B65B3A14F5CB598DC962723F820AC63399A6A" : "iOS-Print-SDK\/Kite-SDK\/vendor\/SkyLab\/",
     "98E520DDA0AE776CF47A7A4A2C7C2ABBE041AE69" : "iOS-Print-SDK\/",
     "DE1BCDB9BD2BF95E86A6E4610C039E0FEADFD758" : "iOS-Print-SDK\/Kite-SDK\/vendor\/MPFlipViewController\/",
@@ -90,6 +92,11 @@
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/mpospese\/MPFlipViewController.git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "DE1BCDB9BD2BF95E86A6E4610C039E0FEADFD758"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/paypal\/PayPal-iOS-SDK.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "DEF69B637476FC5A11C1E68BB97C88EC6D295A4E"
     },
     {
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/rs\/SDWebImage.git",
