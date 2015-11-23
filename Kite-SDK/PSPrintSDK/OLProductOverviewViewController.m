@@ -96,7 +96,7 @@
             vc = vc.parentViewController;
         }
     }
-    if ([(OLKiteViewController *)vc printOrder]){
+    if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder){
         if (![[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant isEqualToString:@"Overview-Review-Checkout"]){
             [self.callToActionButton setTitle: NSLocalizedString(@"Checkout", @"") forState:UIControlStateNormal];
         }
