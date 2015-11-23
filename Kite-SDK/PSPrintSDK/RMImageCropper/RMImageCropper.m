@@ -326,7 +326,7 @@ CGFloat const RESET_DURATION = 0.10f;
             transform = CGAffineTransformScale(transform, 1.0, -1.0);
             break;
             
-        case UIImageOrientationLeftMirrored: //EXIF = 5
+        case UIImageOrientationRightMirrored: //EXIF = 5
             boundHeight = bounds.size.height;
             bounds.size.height = bounds.size.width;
             bounds.size.width = boundHeight;
@@ -343,7 +343,7 @@ CGFloat const RESET_DURATION = 0.10f;
             transform = CGAffineTransformRotate(transform, 3.0 * M_PI / 2.0);
             break;
             
-        case UIImageOrientationRightMirrored: //EXIF = 7
+        case UIImageOrientationLeftMirrored: //EXIF = 7
             boundHeight = bounds.size.height;
             bounds.size.height = bounds.size.width;
             bounds.size.width = boundHeight;
