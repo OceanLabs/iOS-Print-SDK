@@ -659,6 +659,10 @@ CGFloat const RESET_DURATION = 0.10f;
 
 #pragma mark - Size & Translation
 
+- (BOOL)isCorrecting{
+    return self.elasticityTimer || self.decelerationTimer;
+}
+
 - (void)correctSizeAndTranslationErrors
 {
     if ([self isImageSizeOutOfBounds])
