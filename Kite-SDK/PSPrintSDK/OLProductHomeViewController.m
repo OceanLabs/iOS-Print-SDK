@@ -101,9 +101,6 @@
     if ([UITraitCollection class] && [self.traitCollection respondsToSelector:@selector(forceTouchCapability)] && self.traitCollection.forceTouchCapability == UIForceTouchCapabilityAvailable){
         [self registerForPreviewingWithDelegate:self sourceView:self.collectionView];
     }
-
-    self.automaticallyAdjustsScrollViewInsets = NO;
-    self.collectionView.contentInset = UIEdgeInsetsMake([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height, 0, 0, 0);
     
     self.bannerString = [OLKiteABTesting sharedInstance].promoBannerText;
     NSRange countdownDateRange = [self.bannerString rangeOfString:@"\\[\\[.*\\]\\]" options:NSRegularExpressionSearch];
@@ -430,7 +427,6 @@
     
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinator> context){
         [self.collectionView.collectionViewLayout invalidateLayout];
-        self.collectionView.contentInset = UIEdgeInsetsMake([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height, 0, 0, 0);
     }completion:^(id<UIViewControllerTransitionCoordinator> context){
         [self.collectionView reloadData];
     }];
