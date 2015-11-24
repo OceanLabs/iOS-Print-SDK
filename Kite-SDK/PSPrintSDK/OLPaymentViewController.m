@@ -1391,11 +1391,13 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         return cell;
     }
     else if (indexPath.section == 0 && self.printOrder.jobs.count == 0){
-        return [tableView dequeueReusableCellWithIdentifier:@"emptyCell"];
+        UITableViewCell *cell =  [tableView dequeueReusableCellWithIdentifier:@"emptyCell"];
+        cell.backgroundColor = [UIColor clearColor];
+        return cell;
     }
     else{
         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"continueCell"];
-        
+        cell.backgroundColor = [UIColor clearColor];
         return cell;
     }
 }
