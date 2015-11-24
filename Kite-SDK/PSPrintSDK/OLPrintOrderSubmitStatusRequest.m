@@ -19,7 +19,8 @@
 
 @interface OLPrintOrder (Private)
 
-@property (assign, nonatomic) OLPrintOrderSubmitStatus submitStatus;
+@property (strong, nonatomic, readwrite) NSString *submitStatusErrorMessage;
+@property (assign, nonatomic, readwrite) OLPrintOrderSubmitStatus submitStatus;
 @property (nonatomic, readwrite) NSString *receipt;
 
 @end
@@ -79,10 +80,12 @@ NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@/order/%@", 
             
             if ([status isKindOfClass:[NSString class]]){
                 self.printOrder.submitStatus = [OLPrintOrder submitStatusFromIdentifier:status];
+                self.req = nil;
                 handler(self.printOrder.submitStatus, nil);
                 return;
             }
             
+            self.req = nil;
             handler(OLPrintOrderSubmitStatusUnknown, [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeServerFault userInfo:@{NSLocalizedDescriptionKey: NSLocalizedStringFromTableInBundle(@"Failed to validate the order. Please try again.", @"KitePrintSDK", [OLConstants bundle], @"")}]);
         } else {
             id errorObj = json[@"error"];

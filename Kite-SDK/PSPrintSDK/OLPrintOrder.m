@@ -71,7 +71,8 @@ static id stringOrEmptyString(NSString *str) {
 @property (nonatomic, strong) OLPrintOrderCostRequest *costReq;
 @property (strong, nonatomic) NSMutableArray *costCompletionHandlers;
 
-@property (assign, nonatomic) OLPrintOrderSubmitStatus submitStatus;
+@property (assign, nonatomic, readwrite) OLPrintOrderSubmitStatus submitStatus;
+@property (strong, nonatomic, readwrite) NSString *submitStatusErrorMessage;
 @property (assign, nonatomic) NSInteger numberOfTimesPolledForSubmissionStatus;
 
 @property (nonatomic, readwrite) NSString *receipt;
@@ -598,7 +599,8 @@ static id stringOrEmptyString(NSString *str) {
 #ifdef OL_KITE_VERBOSE
             NSLog(@"Print order submit status request finished with status:%lu", (unsigned long)status);
 #endif
-           handler(self.receipt, error);
+            self.numberOfTimesPolledForSubmissionStatus = 0;
+            handler(self.receipt, error);
         }
     }];
 }

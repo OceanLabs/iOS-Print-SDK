@@ -226,7 +226,7 @@ typedef NS_ENUM(NSInteger, OLPrintOrderSubmitStatus) {
 /**
  *  The error message when the order submit status has changed to Error
  */
-@property (strong, nonatomic) NSString *submitStatusErrorMessage;
+@property (strong, nonatomic, readonly) NSString *submitStatusErrorMessage;
 
 /**
  *  If duplicate jobs are found, discard
