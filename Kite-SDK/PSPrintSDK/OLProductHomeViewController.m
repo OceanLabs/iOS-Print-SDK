@@ -28,8 +28,16 @@
 #import <MessageUI/MFMailComposeViewController.h>
 #import "TSMarkdownParser.h"
 #import "UIImage+ImageNamedInKiteBundle.h"
+#import "OLKiteUtils.h"
 
 #define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
+
+@interface OLKiteViewController ()
+
+@property (strong, nonatomic) OLPrintOrder *printOrder;
+- (void)dismiss;
+
+@end
 
 @interface OLProduct (Private)
 
@@ -639,6 +647,18 @@
     NSIndexPath *indexPath = [self.collectionView indexPathForCell:(UICollectionViewCell *)view];
     [self collectionView:self.collectionView didSelectItemAtIndexPath:indexPath];
 }
+
+- (IBAction)onButtonBasketClicked:(UIBarButtonItem *)sender {
+    OLPrintOrder *printOrder = [OLKiteUtils kiteVcForViewController:self].printOrder;
+    [OLKiteUtils checkoutViewControllerForPrintOrder:printOrder handler:^(id vc){
+        [vc safePerformSelector:@selector(setUserEmail:) withObject:[OLKiteUtils userEmail:self]];
+        [vc safePerformSelector:@selector(setUserPhone:) withObject:[OLKiteUtils userPhone:self]];
+        [vc safePerformSelector:@selector(setKiteDelegate:) withObject:[OLKiteUtils kiteDelegate:self]];
+        
+        [self presentViewController:vc animated:YES completion:NULL];
+    }];
+}
+
 
 #pragma mark - Autorotate and Orientation Methods
 // Currently here to disable landscape orientations and rotation on iOS 7. When support is dropped, these can be deleted.
