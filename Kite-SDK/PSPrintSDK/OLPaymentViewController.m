@@ -106,6 +106,9 @@ static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
 
 @interface OLPrintOrder (Private)
 - (BOOL)hasCachedCost;
+@property (strong, nonatomic, readwrite) NSString *submitStatusErrorMessage;
+@property (strong, nonatomic, readwrite) NSString *submitStatus;
+@property (nonatomic, readwrite) NSString *receipt;
 @end
 
 @interface OLProduct (Private)
@@ -659,10 +662,14 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
                 handler(PKPaymentAuthorizationStatusFailure);
                 handlerUsed = YES;
             }
+            [self.printOrder cancelSubmissionOrPreemptedAssetUpload];
             if ([UIAlertController class]){
                 UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLConstants bundle], @"") message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
                 [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLConstants bundle], @"") style:UIAlertActionStyleDefault handler:^(id action){
                     if (error.code != kOLKiteSDKErrorCodeOrderValidationFailed){
+                        self.printOrder.receipt = nil;
+                        self.printOrder.submitStatus = OLPrintOrderSubmitStatusUnknown;
+                        self.printOrder.submitStatusErrorMessage = nil;
                         [[NSOperationQueue mainQueue] addOperation:self.transitionBlockOperation];
                     }
                 }]];
@@ -670,10 +677,13 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             }
             else{
                 UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLConstants bundle], @"") message:error.localizedDescription delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLConstants bundle], @"") otherButtonTitles:nil];
+                self.printOrder.receipt = nil;
+                self.printOrder.submitStatus = OLPrintOrderSubmitStatusUnknown;
+                self.printOrder.submitStatusErrorMessage = nil;
+                [[NSOperationQueue mainQueue] addOperation:self.transitionBlockOperation];
                 [av show];
             }
             return;
-        }
         
         if (!handlerUsed) {
             handler(PKPaymentAuthorizationStatusSuccess);
@@ -1261,6 +1271,8 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
                 completion(PKPaymentAuthorizationStatusFailure);
                 return;
             }
+            self.printOrder.email = @"test-order@kite.ly";
+            d[@"email"] = self.printOrder.email;
             [self submitOrderForPrintingWithProofOfPayment:token.tokenId paymentMethod:@"Apple Pay" completion:completion];
         }];
     }
