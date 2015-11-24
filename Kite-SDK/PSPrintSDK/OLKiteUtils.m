@@ -84,21 +84,8 @@
 #endif
 
 + (void)checkoutViewControllerForPrintOrder:(OLPrintOrder *)printOrder handler:(void(^)(id vc))handler{
-#ifdef OL_KITE_OFFER_APPLE_PAY
-    if ([OLKiteUtils isApplePayAvailable]){
-        OLPaymentViewController *vc = [[OLPaymentViewController alloc] initWithPrintOrder:printOrder];
-        handler(vc);
-    }
-    else{
-        [OLKiteUtils shippingControllerForPrintOrder:printOrder handler:handler];
-    }
-    
-#else
-    
-    [OLKiteUtils shippingControllerForPrintOrder:printOrder handler:handler];
-    
-#endif
-    
+    OLPaymentViewController *vc = [[OLPaymentViewController alloc] initWithPrintOrder:printOrder];
+    handler(vc);
 }
 
 + (void)shippingControllerForPrintOrder:(OLPrintOrder *)printOrder handler:(void(^)(OLCheckoutViewController *vc))handler{

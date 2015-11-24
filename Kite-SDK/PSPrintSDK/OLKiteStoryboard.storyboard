@@ -966,6 +966,31 @@
                                         <animations/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                     </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="emptyCell" rowHeight="40" id="1VB-MF-1ox">
+                                        <rect key="frame" x="0.0" y="125" width="600" height="40"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="1VB-MF-1ox" id="QdV-Q6-bK0">
+                                            <rect key="frame" x="0.0" y="0.0" width="600" height="40"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Basket is empty" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rd6-BO-03Y">
+                                                    <rect key="frame" x="239.5" y="9.5" width="121.5" height="20.5"/>
+                                                    <animations/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <animations/>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                            <constraints>
+                                                <constraint firstItem="Rd6-BO-03Y" firstAttribute="centerX" secondItem="QdV-Q6-bK0" secondAttribute="centerX" id="hv8-9b-Rc8"/>
+                                                <constraint firstItem="Rd6-BO-03Y" firstAttribute="centerY" secondItem="QdV-Q6-bK0" secondAttribute="centerY" id="wmq-pC-3QA"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <animations/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                    </tableViewCell>
                                 </prototypes>
                             </tableView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HkN-AG-Mcs">
@@ -1798,7 +1823,16 @@
                             <outlet property="delegate" destination="U81-HI-b1P" id="3XJ-gy-F1G"/>
                         </connections>
                     </collectionView>
-                    <navigationItem key="navigationItem" id="kbc-Pe-how"/>
+                    <navigationItem key="navigationItem" id="kbc-Pe-how">
+                        <barButtonItem key="rightBarButtonItem" image="cart" id="Yhz-SH-j9y">
+                            <connections>
+                                <action selector="onButtonBasketClicked:" destination="U81-HI-b1P" id="3Qe-yZ-XwW"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="basketButton" destination="Yhz-SH-j9y" id="XmD-R7-X33"/>
+                    </connections>
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bnp-ON-2Gu" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -3874,6 +3908,7 @@
         <image name="button_apple_pay" width="140" height="44"/>
         <image name="button_arrow_down" width="45" height="45"/>
         <image name="button_arrow_up" width="45" height="45"/>
+        <image name="cart" width="22" height="18"/>
         <image name="crop-corner-dl" width="23" height="23"/>
         <image name="crop-corner-dr" width="23" height="23"/>
         <image name="crop-corner-ul" width="23" height="23"/>
