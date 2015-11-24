@@ -88,12 +88,26 @@
 }
 
 - (IBAction)onButtonHorizontalFlipClicked:(id)sender {
+    if (self.cropView.isCorrecting){
+        return;
+    }
+    
     [self.edits performHorizontalFlipEditFromOrientation:self.cropView.imageView.image.imageOrientation];
+    
+    [UIView transitionWithView:self.cropView.imageView duration:0.5 options:UIViewAnimationOptionTransitionFlipFromRight animations:^{
+        
         [self.cropView setImage:[UIImage imageWithCGImage:self.fullImage.CGImage scale:self.cropView.imageView.image.scale orientation:[OLPhotoEdits orientationForNumberOfCounterClockwiseRotations:self.edits.counterClockwiseRotations andInitialOrientation:self.initialOrientation horizontalFlip:self.edits.flipHorizontal verticalFlip:self.edits.flipVertical]]];
-        self.doneButton.enabled = YES;
+        
+    }completion:NULL];
+    
+    self.doneButton.enabled = YES;
 }
 
 - (IBAction)onButtonRotateClicked:(id)sender {
+    if (self.cropView.isCorrecting){
+        return;
+    }
+    
     [(UIBarButtonItem *)sender setEnabled:NO];
     self.edits.counterClockwiseRotations = (self.edits.counterClockwiseRotations + 1) % 4;
     CGAffineTransform transform = self.cropView.imageView.transform;
