@@ -212,7 +212,8 @@ UINavigationControllerDelegate>
     if (!self.photobookPhotos){
         self.userSelectedPhotosCopy = [[NSArray alloc] initWithArray:self.userSelectedPhotos copyItems:NO];
         self.photobookPhotos = [[NSMutableArray alloc] initWithCapacity:self.product.quantityToFulfillOrder];
-        for (NSInteger i = 0; i < self.product.quantityToFulfillOrder; i++){
+        for (NSInteger i = 1; i < self.product.quantityToFulfillOrder + 1; i++){
+            self.coverPhoto = self.userSelectedPhotos.firstObject;
             [self.photobookPhotos addObject:i < self.userSelectedPhotos.count ? self.userSelectedPhotos[i] : [NSNull null]];
         }
     }
@@ -663,6 +664,9 @@ UINavigationControllerDelegate>
         photobook.photobookPhotos = self.photobookPhotos;
         if (indexPath.section == kSectionCover){
             photobook.editingPageNumber = nil;
+            
+            photobook.coverPhoto = self.coverPhoto;
+            [photobook loadCoverPhoto];
         }
         else{
             photobook.editingPageNumber = [NSNumber numberWithInteger:indexPath.item * 2];
