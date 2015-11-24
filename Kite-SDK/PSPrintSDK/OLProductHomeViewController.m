@@ -32,13 +32,6 @@
 
 #define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
 
-@interface OLKiteViewController ()
-
-@property (strong, nonatomic) OLPrintOrder *printOrder;
-- (void)dismiss;
-
-@end
-
 @interface OLProduct (Private)
 
 -(void)setCoverImageToImageView:(UIImageView *)imageView;
@@ -50,6 +43,8 @@
 @interface OLKiteViewController (Private)
 
 + (NSString *)storyboardIdentifierForGroupSelected:(OLProductGroup *)group;
+@property (strong, nonatomic) OLPrintOrder *printOrder;
+- (void)dismiss;
 
 @end
 
@@ -60,6 +55,7 @@
 @property (strong, nonatomic) UIView *bannerView;
 @property (strong, nonatomic) UIView *headerView;
 @property (strong, nonatomic) NSString *bannerString;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *basketButton;
 @property (strong, nonatomic) NSDate *countdownDate;
 @end
 
@@ -655,7 +651,10 @@
         [vc safePerformSelector:@selector(setUserPhone:) withObject:[OLKiteUtils userPhone:self]];
         [vc safePerformSelector:@selector(setKiteDelegate:) withObject:[OLKiteUtils kiteDelegate:self]];
         
-        [self presentViewController:vc animated:YES completion:NULL];
+        [(UIViewController *)vc navigationItem].leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:vc action:@selector(dismiss)];
+        
+        OLCustomNavigationController *nvc = [[OLCustomNavigationController alloc] initWithRootViewController:vc];
+        [self presentViewController:nvc animated:YES completion:NULL];
     }];
 }
 

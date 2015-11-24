@@ -318,7 +318,9 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     }
 #endif
     
-    [self updateViewsBasedOnCostUpdate]; // initialise based on promo state
+    if (self.printOrder.jobs.count > 0){
+        [self updateViewsBasedOnCostUpdate];
+    }
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardDidShow:) name:UIKeyboardDidShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
@@ -425,13 +427,15 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     [Stripe setDefaultPublishableKey:[OLKitePrintSDK stripePublishableKey]];
 #endif
     
-    if ([self.printOrder hasCachedCost]) {
-        [self.tableView reloadData];
-        [self updateViewsBasedOnCostUpdate];
-    } else {
-        [self.printOrder costWithCompletionHandler:^(OLPrintOrderCost *cost, NSError *error) {
-            [self costCalculationCompletedWithError:error];
-        }];
+    if (self.printOrder.jobs.count > 0){
+        if ([self.printOrder hasCachedCost]) {
+            [self.tableView reloadData];
+            [self updateViewsBasedOnCostUpdate];
+        } else {
+            [self.printOrder costWithCompletionHandler:^(OLPrintOrderCost *cost, NSError *error) {
+                [self costCalculationCompletedWithError:error];
+            }];
+        }
     }
 }
 
@@ -1259,17 +1263,20 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     id<OLKiteDelegate> kiteDelegate = [OLKiteUtils kiteDelegate:self];
-    if ([kiteDelegate respondsToSelector:@selector(shouldShowContinueShoppingButton)] && [kiteDelegate shouldShowContinueShoppingButton]){
-        return 2;
+    if ([kiteDelegate respondsToSelector:@selector(shouldShowContinueShoppingButton)] && ![kiteDelegate shouldShowContinueShoppingButton]){
+        return 1;
     }
     else{
-        return 1;
+        return 2;
     }
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if (section == 0){
+    if (section == 0 && self.printOrder.jobs.count > 0){
         return self.printOrder.jobs.count;
+    }
+    else if (section == 0 && self.printOrder.jobs.count == 0){
+        return 1;
     }
     else{
         return 1;
@@ -1277,7 +1284,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (indexPath.section == 0){
+    if (indexPath.section == 0 && self.printOrder.jobs.count > 0){
         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"jobCell"];
         UIImageView *imageView = (UIImageView *)[cell.contentView viewWithTag:20];
         UILabel *quantityLabel = (UILabel *)[cell.contentView viewWithTag:30];
@@ -1305,6 +1312,9 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         
         return cell;
     }
+    else if (indexPath.section == 0 && self.printOrder.jobs.count == 0){
+        return [tableView dequeueReusableCellWithIdentifier:@"emptyCell"];
+    }
     else{
         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"continueCell"];
         
@@ -1324,7 +1334,9 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
     [textField resignFirstResponder];
     self.printOrder.promoCode = textField.text;
-    [self updateViewsBasedOnCostUpdate];
+    if (self.printOrder.jobs.count > 0){
+        [self updateViewsBasedOnCostUpdate];
+    }
     return NO;
 }
 
