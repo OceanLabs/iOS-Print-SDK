@@ -24,8 +24,6 @@
 #import "UIImage+ColorAtPixel.h"
 #import "OLInfoPageViewController.h"
 #import "SDWebImageManager.h"
-#import <MessageUI/MessageUI.h>
-#import <MessageUI/MFMailComposeViewController.h>
 #import "TSMarkdownParser.h"
 #import "UIImage+ImageNamedInKiteBundle.h"
 #import "OLKiteUtils.h"
@@ -55,7 +53,7 @@
 
 @end
 
-@interface OLProductHomeViewController () <MFMailComposeViewControllerDelegate, UICollectionViewDelegateFlowLayout, UIViewControllerPreviewingDelegate>
+@interface OLProductHomeViewController () <UICollectionViewDelegateFlowLayout, UIViewControllerPreviewingDelegate>
 @property (nonatomic, strong) NSArray *productGroups;
 @property (nonatomic, strong) UIImageView *topSurpriseImageView;
 @property (assign, nonatomic) BOOL fromRotation;
@@ -102,11 +100,6 @@
     }
     else if (!url && [self isMemberOfClass:[OLProductHomeViewController class]]){
         self.title = NSLocalizedString(@"Print Shop", @"");
-    }
-    
-    NSString *supportEmail = [OLKiteABTesting sharedInstance].supportEmail;
-    if (supportEmail && ![supportEmail isEqualToString:@""] && [self isMemberOfClass:[OLProductHomeViewController class]]){
-        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamedInKiteBundle:@"support"] style:UIBarButtonItemStyleDone target:self action:@selector(emailButtonPushed:)];
     }
     
     if ([UITraitCollection class] && [self.traitCollection respondsToSelector:@selector(forceTouchCapability)] && self.traitCollection.forceTouchCapability == UIForceTouchCapabilityAvailable){
@@ -226,27 +219,6 @@
         }
         [self setupBannerLabel:label];
     }
-}
-
-#pragma mark - MFMailComposeViewControllerDelegate methods
-- (IBAction)emailButtonPushed:(id)sender {
-    
-    if([MFMailComposeViewController canSendMail]) {
-        MFMailComposeViewController *mailCont = [[MFMailComposeViewController alloc] init];
-        mailCont.mailComposeDelegate = self;
-        [mailCont setSubject:@""];
-        [mailCont setToRecipients:@[[OLKiteABTesting sharedInstance].supportEmail]];
-        [mailCont setMessageBody:@"" isHTML:NO];
-        [self presentViewController:mailCont animated:YES completion:nil];
-    } else {
-        UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Support", @"") message:[NSString stringWithFormat:NSLocalizedString(@"Please email %@ for support & customer service enquiries.", @""), [OLKiteABTesting sharedInstance].supportEmail] delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"") otherButtonTitles:nil];
-        [av show];
-    }
-}
-
-- (void)mailComposeController:(MFMailComposeViewController*)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error {
-    //handle any error
-    [controller dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (NSString *)promoBannerParaText{

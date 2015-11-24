@@ -3925,12 +3925,12 @@
                                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" tag="100" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="12 x Square Prints" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PS6-La-wG1">
                                             <rect key="frame" x="10" y="2" width="557" height="21"/>
                                             <animations/>
-                                            <fontDescription key="fontDescription" name="SourceSansPro-Regular" family="Source Sans Pro" pointSize="18"/>
+                                            <fontDescription key="fontDescription" name="SourceSansPro-Regular" family="Source Sans Pro" pointSize="17"/>
                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" tag="101" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="24 Sept 13" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uIy-17-c8f">
-                                            <rect key="frame" x="12" y="20" width="485" height="21"/>
+                                            <rect key="frame" x="12" y="20" width="500" height="21"/>
                                             <animations/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="21" id="M5H-Hr-HPc"/>
@@ -3939,7 +3939,7 @@
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" tag="102" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="£9.99" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Ekr-4w-04C">
-                                            <rect key="frame" x="458" y="0.0" width="89" height="42"/>
+                                            <rect key="frame" x="473" y="0.0" width="89" height="42"/>
                                             <animations/>
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="89" id="7zC-c0-0q7"/>
@@ -3955,7 +3955,7 @@
                                         <constraint firstItem="PS6-La-wG1" firstAttribute="top" secondItem="9nc-2C-aWq" secondAttribute="topMargin" constant="-6" id="CX5-gw-cof"/>
                                         <constraint firstAttribute="bottom" secondItem="Ekr-4w-04C" secondAttribute="bottom" constant="1.5" id="CrH-hS-3cw"/>
                                         <constraint firstItem="PS6-La-wG1" firstAttribute="leading" secondItem="9nc-2C-aWq" secondAttribute="leading" constant="10" id="MoR-U4-p9z"/>
-                                        <constraint firstAttribute="trailing" secondItem="Ekr-4w-04C" secondAttribute="trailing" constant="20" id="R3n-I8-q1l"/>
+                                        <constraint firstAttribute="trailing" secondItem="Ekr-4w-04C" secondAttribute="trailing" constant="5" id="R3n-I8-q1l"/>
                                         <constraint firstAttribute="trailingMargin" secondItem="PS6-La-wG1" secondAttribute="trailing" constant="-8" id="VNr-hu-7hr"/>
                                         <constraint firstItem="Ekr-4w-04C" firstAttribute="leading" secondItem="uIy-17-c8f" secondAttribute="trailing" constant="-39" id="h4c-Jq-mOf"/>
                                         <constraint firstItem="uIy-17-c8f" firstAttribute="top" secondItem="PS6-La-wG1" secondAttribute="bottom" constant="-3" id="mf5-HZ-zK0"/>

@@ -73,6 +73,7 @@ static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
 @interface OLOrdersViewController (Private)
 
 - (void)dismiss;
+- (IBAction)emailButtonPushed:(id)sender;
 
 @end
 
@@ -684,6 +685,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
                 [av show];
             }
             return;
+        }
         
         if (!handlerUsed) {
             handler(PKPaymentAuthorizationStatusSuccess);
@@ -715,7 +717,12 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 - (void)onBarButtonOrdersClicked{
     OLOrdersViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLOrdersViewController"];
     
-    [(UIViewController *)vc navigationItem].rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:vc action:@selector(dismiss)];
+    [(UIViewController *)vc navigationItem].leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:vc action:@selector(dismiss)];
+    
+    NSString *supportEmail = [OLKiteABTesting sharedInstance].supportEmail;
+    if (supportEmail && ![supportEmail isEqualToString:@""]){
+        vc.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamedInKiteBundle:@"support"] style:UIBarButtonItemStyleDone target:vc action:@selector(emailButtonPushed:)];
+    }
     
     OLCustomNavigationController *nvc = [[OLCustomNavigationController alloc] initWithRootViewController:vc];
     [self presentViewController:nvc animated:YES completion:NULL];

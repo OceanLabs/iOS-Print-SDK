@@ -12,10 +12,13 @@
 #import "OLPrintJob.h"
 #import "OLPrintOrder+History.h"
 #import "OLPrintOrderCost.h"
+#import <MessageUI/MessageUI.h>
+#import <MessageUI/MFMailComposeViewController.h>
+#import "OLKiteABTesting.h"
 
 static const NSInteger kSectionCompletedOrders = 0;
 
-@interface OLOrdersViewController ()
+@interface OLOrdersViewController () <MFMailComposeViewControllerDelegate>
 @end
 
 @implementation OLOrdersViewController
@@ -71,10 +74,8 @@ static const NSInteger kSectionCompletedOrders = 0;
         cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
         NSArray *printOrders = [OLPrintOrder printOrderHistory];
         OLPrintOrder *order = printOrders[printOrders.count - (indexPath.row + 1)];
-        UIImageView *imageView = (UIImageView *) [cell.contentView viewWithTag:99];
-        imageView.image = [UIImage imageNamed:@"icon_squares"];
-        UILabel *titleLabel = (UILabel *) [cell.contentView viewWithTag:100];
-        UILabel *subtitleLabel = (UILabel *) [cell.contentView viewWithTag:101];
+        UILabel *titleLabel = (UILabel *) [cell.contentView viewWithTag:101];
+        UILabel *subtitleLabel = (UILabel *) [cell.contentView viewWithTag:100];
         UILabel *priceLabel = (UILabel *) [cell.contentView viewWithTag:102];
         
         NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
@@ -85,7 +86,12 @@ static const NSInteger kSectionCompletedOrders = 0;
         NSString *s = @"";
         for (id <OLPrintJob> job in order.jobs){
             OLProduct *product = [OLProduct productWithTemplateId:job.templateId];
-            s = [[s stringByAppendingString:product.productTemplate.name] stringByAppendingString:@", "];
+            if (product.productTemplate){
+                s = [[s stringByAppendingString:product.productTemplate.name] stringByAppendingString:@", "];
+            }
+            else{
+                s = [[s stringByAppendingString:job.templateId] stringByAppendingString:@", "];
+            }
         }
         
         s = [s stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@", "]];
@@ -114,9 +120,29 @@ static const NSInteger kSectionCompletedOrders = 0;
         NSArray *printOrders = [OLPrintOrder printOrderHistory];
         OLPrintOrder *order = printOrders[printOrders.count - (indexPath.row + 1)];
         OLReceiptViewController *receiptVC = [[OLReceiptViewController alloc] initWithPrintOrder:order];
-        self.navigationController.navigationBar.tintColor = [UIColor blackColor];
         [self.navigationController pushViewController:receiptVC animated:YES];
     }
+}
+
+#pragma mark - MFMailComposeViewControllerDelegate methods
+- (IBAction)emailButtonPushed:(id)sender {
+    
+    if([MFMailComposeViewController canSendMail]) {
+        MFMailComposeViewController *mailCont = [[MFMailComposeViewController alloc] init];
+        mailCont.mailComposeDelegate = self;
+        [mailCont setSubject:@""];
+        [mailCont setToRecipients:@[[OLKiteABTesting sharedInstance].supportEmail]];
+        [mailCont setMessageBody:@"" isHTML:NO];
+        [self presentViewController:mailCont animated:YES completion:nil];
+    } else {
+        UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Support", @"") message:[NSString stringWithFormat:NSLocalizedString(@"Please email %@ for support & customer service enquiries.", @""), [OLKiteABTesting sharedInstance].supportEmail] delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"") otherButtonTitles:nil];
+        [av show];
+    }
+}
+
+- (void)mailComposeController:(MFMailComposeViewController*)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error {
+    //handle any error
+    [controller dismissViewControllerAnimated:YES completion:nil];
 }
 
 #pragma mark - Autorotate and Orientation Methods
