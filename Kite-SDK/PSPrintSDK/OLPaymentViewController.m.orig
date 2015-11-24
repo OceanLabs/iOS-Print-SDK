@@ -41,7 +41,6 @@
 #import "OLPhotobookViewController.h"
 #import "NSObject+Utils.h"
 #import "OLProductOverviewViewController.h"
-#import "OLOrdersViewController.h"
 
 #ifdef OL_KITE_OFFER_PAYPAL
 #import "PayPalMobile.h"
@@ -67,12 +66,6 @@ static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
 @interface OLProduct (PrivateMethods)
 
 - (NSDecimalNumber*) unitCostDecimalNumber;
-
-@end
-
-@interface OLOrdersViewController (Private)
-
-- (void)dismiss;
 
 @end
 
@@ -348,10 +341,10 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     }
 }
 
+<<<<<<< HEAD
 - (void)dismiss{
     [self.navigationController.presentingViewController dismissViewControllerAnimated:YES completion:NULL];
-}
-
+=======
 - (void)onButtonMoreOptionsClicked{
     OLCheckoutViewController *vc = [[OLCheckoutViewController alloc] initWithPrintOrder:self.printOrder];
     vc.delegate = self.delegate;
@@ -359,6 +352,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     [vc safePerformSelector:@selector(setUserEmail:) withObject:self.userEmail];
     [vc safePerformSelector:@selector(setUserPhone:) withObject:self.userPhone];
     [self.navigationController pushViewController:vc animated:YES];
+>>>>>>> master
 }
 
 - (IBAction)onButtonMoreOptionsClicked:(id)sender{
@@ -697,18 +691,6 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         self.navigationController.viewControllers = navigationStack;
         [self.navigationController popViewControllerAnimated:YES];
     }
-    else if (navigationStack.firstObject == self){
-        [self dismiss];
-    }
-}
-
-- (void)onBarButtonOrdersClicked{
-    OLOrdersViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLOrdersViewController"];
-    
-    [(UIViewController *)vc navigationItem].rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:vc action:@selector(dismiss)];
-    
-    OLCustomNavigationController *nvc = [[OLCustomNavigationController alloc] initWithRootViewController:vc];
-    [self presentViewController:nvc animated:YES completion:NULL];
 }
 
 - (BOOL)shouldShowAddMorePhotos{
@@ -1178,7 +1160,6 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
                 [[NSOperationQueue mainQueue] addOperation:self.applePayDismissOperation];
             }
             if (error){
-                //Apple Pay only available on ios 8+ so no need to worry about UIAlertController not available.
                 UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Oops!", @"") message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
                 [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
                     [self.navigationController popViewControllerAnimated:YES];
