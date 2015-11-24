@@ -89,6 +89,9 @@
 }
 
 - (void)loadImageWithCompletionHandler:(void(^)(void))handler{
+    if (self.pageIndex >= self.userSelectedPhotos.count){
+        return;
+    }
     OLPrintPhoto *printPhoto = [self.userSelectedPhotos objectAtIndex:self.pageIndex];
     if (printPhoto != (id)[NSNull null]){
         self.imageView.image = nil;
