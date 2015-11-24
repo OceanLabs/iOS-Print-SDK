@@ -17,6 +17,8 @@
 @property (weak, nonatomic) id<OLCheckoutDelegate> delegate;
 @property (weak, nonatomic) id<OLKiteDelegate> kiteDelegate;
 @property (assign, nonatomic) BOOL showOtherOptions;
+@property (strong, nonatomic) NSString *userEmail;
+@property (strong, nonatomic) NSString *userPhone;
 
 - (id)initWithPrintOrder:(OLPrintOrder *)printOrder;
 @end
