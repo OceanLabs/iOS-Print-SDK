@@ -25,9 +25,16 @@
 #import "NSObject+Utils.h"
 #import "OLRemoteImageView.h"
 #import "OLKiteUtils.h"
+#import "OLPaymentViewController.h"
 
 static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 static const NSUInteger kTagAlertViewDeletePhoto = 98;
+
+@interface OLPaymentViewController (Private)
+
+-(void)saveAndDismissReviewController;
+
+@end
 
 @interface OLKiteViewController ()
 
@@ -81,6 +88,14 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
 #ifndef OL_NO_ANALYTICS
     [OLAnalytics trackReviewScreenViewed:self.product.productTemplate.name];
 #endif
+    
+    UIViewController *paymentVc = [(UINavigationController *)self.presentingViewController viewControllers].lastObject;
+    if ([paymentVc respondsToSelector:@selector(saveAndDismissReviewController)]){
+        UIBarButtonItem *saveButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Save", "")
+                                                                       style:UIBarButtonItemStyleDone target:paymentVc
+                                                                      action:@selector(saveAndDismissReviewController)];
+        self.navigationItem.rightBarButtonItem = saveButton;
+    }
     
     [self updateTitleBasedOnSelectedPhotoQuanitity];
     

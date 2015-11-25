@@ -27,6 +27,7 @@
 #import "OLRemoteImageCropper.h"
 #import "OLAsset+Private.h"
 #import "OLProductTemplateOption.h"
+#import "OLPaymentViewController.h"
 
 #ifdef OL_KITE_OFFER_INSTAGRAM
 #import <InstagramImagePicker/OLInstagramImagePickerController.h>
@@ -37,6 +38,12 @@
 #import <FacebookImagePicker/OLFacebookImagePickerController.h>
 #import <FacebookImagePicker/OLFacebookImage.h>
 #endif
+
+@interface OLPaymentViewController (Private)
+
+-(void)saveAndDismissReviewController;
+
+@end
 
 @interface OLPrintOrder (Private)
 
@@ -103,6 +110,14 @@ OLAssetsPickerControllerDelegate>
 #ifndef OL_NO_ANALYTICS
     [OLAnalytics trackReviewScreenViewed:self.product.productTemplate.name];
 #endif
+    
+    UIViewController *paymentVc = [(UINavigationController *)self.presentingViewController viewControllers].lastObject;
+    if ([paymentVc respondsToSelector:@selector(saveAndDismissReviewController)]){
+        UIBarButtonItem *saveButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Save", "")
+                                                                       style:UIBarButtonItemStyleDone target:paymentVc
+                                                                      action:@selector(saveAndDismissReviewController)];
+        self.navigationItem.rightBarButtonItem = saveButton;
+    }
     
     self.title = NSLocalizedString(@"Reposition the Photo", @"");
     

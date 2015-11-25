@@ -663,12 +663,9 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Cancel", "")
                                                                    style:UIBarButtonItemStyleDone target:self
                                                                   action:@selector(dismissPresentedViewController)];
-    UIBarButtonItem *saveButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Save", "")
-                                                                   style:UIBarButtonItemStyleDone target:self
-                                                                  action:@selector(saveAndDismissReviewController)];
+    
     
     ((UIViewController *)[vcs firstObject]).navigationItem.leftBarButtonItem = doneButton;
-    ((UIViewController *)[vcs lastObject]).navigationItem.rightBarButtonItem = saveButton;
     
     [self presentViewController:navController animated:YES completion:NULL];
 }
@@ -1062,6 +1059,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         [userSelectedPhotos addObject:printPhoto];
     }
     [orvc safePerformSelector:@selector(setUserSelectedPhotos:) withObject:userSelectedPhotos];
+    [overviewVc safePerformSelector:@selector(setUserSelectedPhotos:) withObject:userSelectedPhotos];
     
     [orvc safePerformSelector:@selector(setEditingPrintJob:) withObject:printJob];
     if ([self shouldShowAddMorePhotos] && product.productTemplate.templateUI != kOLTemplateUICase && product.productTemplate.templateUI != kOLTemplateUIPhotobook && product.productTemplate.templateUI != kOLTemplateUIPostcard){

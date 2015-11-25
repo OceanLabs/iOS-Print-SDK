@@ -39,12 +39,19 @@
 #import "MPFlipTransition.h"
 #import "UIImage+ImageNamedInKiteBundle.h"
 #import "OLKiteABTesting.h"
+#import "OLPaymentViewController.h"
 
 static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 static const NSUInteger kTagLeft = 10;
 static const NSUInteger kTagRight = 20;
 static const CGFloat kBookAnimationTime = 0.8;
 static const CGFloat kBookEdgePadding = 38;
+
+@interface OLPaymentViewController (Private)
+
+-(void)saveAndDismissReviewController;
+
+@end
 
 @interface OLKitePrintSDK (InternalUtils)
 
@@ -189,13 +196,12 @@ UINavigationControllerDelegate
 - (void)viewDidLoad{
     [super viewDidLoad];
     
-    if (self.editingPrintJob){
-        self.userSelectedPhotos = [[NSMutableArray alloc] init];
-        for (OLAsset *asset in [self.editingPrintJob assetsForUploading]){
-            OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
-            printPhoto.asset = asset;
-            [self.userSelectedPhotos addObject:printPhoto];
-        }
+    UIViewController *paymentVc = [(UINavigationController *)self.presentingViewController viewControllers].lastObject;
+    if ([paymentVc respondsToSelector:@selector(saveAndDismissReviewController)]){
+        UIBarButtonItem *saveButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Save", "")
+                                                                       style:UIBarButtonItemStyleDone target:paymentVc
+                                                                      action:@selector(saveAndDismissReviewController)];
+        self.navigationItem.rightBarButtonItem = saveButton;
     }
     
 #ifndef OL_NO_ANALYTICS
