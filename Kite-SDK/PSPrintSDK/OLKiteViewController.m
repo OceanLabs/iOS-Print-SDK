@@ -328,6 +328,10 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
     }
 }
 
+- (NSArray *)viewControllers{
+    return [(UINavigationController *)self.childViewControllers.firstObject viewControllers];
+}
+
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
     if (alertView.tag == kTagTemplateSyncFailAlertView) {
         if (buttonIndex == 0){

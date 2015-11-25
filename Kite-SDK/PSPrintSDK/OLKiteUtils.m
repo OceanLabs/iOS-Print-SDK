@@ -127,8 +127,8 @@
     }
 }
 
-+ (OLKiteViewController *)kiteVcForViewController:(UIViewController *)vc{
-    vc = vc.parentViewController;
++ (OLKiteViewController *)kiteVcForViewController:(UIViewController *)theVc{
+    UIViewController *vc = theVc.parentViewController;
     while (vc) {
         if ([vc isKindOfClass:[OLKiteViewController class]]){
             return (OLKiteViewController *)vc;
@@ -138,6 +138,17 @@
             vc = vc.parentViewController;
         }
     }
+    vc = theVc.presentingViewController;
+    while (vc) {
+        if ([vc isKindOfClass:[OLKiteViewController class]]){
+            return (OLKiteViewController *)vc;
+            break;
+        }
+        else{
+            vc = vc.presentingViewController;
+        }
+    }
+    
     return nil;
 }
 

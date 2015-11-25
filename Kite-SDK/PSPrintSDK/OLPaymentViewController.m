@@ -1288,7 +1288,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     id<OLKiteDelegate> kiteDelegate = [OLKiteUtils kiteDelegate:self];
-    if ([kiteDelegate respondsToSelector:@selector(shouldShowContinueShoppingButton)] && ![kiteDelegate shouldShowContinueShoppingButton]){
+    if (([kiteDelegate respondsToSelector:@selector(shouldShowContinueShoppingButton)] && ![kiteDelegate shouldShowContinueShoppingButton]) || [OLKiteABTesting sharedInstance].launchedWithPrintOrder){
         return 1;
     }
     else{
@@ -1320,7 +1320,10 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         id<OLPrintJob> job = self.printOrder.jobs[indexPath.row];
         OLProduct *product = [OLProduct productWithTemplateId:[job templateId]];
         
-        [imageView setAndFadeInImageWithURL:product.productTemplate.coverPhotoURL];
+        [SDWebImageManager.sharedManager downloadImageWithURL:product.productTemplate.coverPhotoURL options:0 progress:NULL completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
+            imageView.image = image;
+        }];
+        
         quantityLabel.text = [NSString stringWithFormat:@"%ld", (long)[job extraCopies]+1];
         productNameLabel.text = product.productTemplate.name;
         

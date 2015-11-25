@@ -833,16 +833,6 @@
                                                     <animations/>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 </view>
-                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bLL-az-WMS">
-                                                    <rect key="frame" x="142" y="1" width="60" height="55"/>
-                                                    <animations/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="width" constant="60" id="k8d-zE-VIx"/>
-                                                    </constraints>
-                                                    <connections>
-                                                        <action selector="onButtonEditClicked:" destination="awx-dV-KVo" eventType="touchUpInside" id="gKF-gL-Fme"/>
-                                                    </connections>
-                                                </button>
                                                 <button opaque="NO" tag="10" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2h9-jt-kQc">
                                                     <rect key="frame" x="4" y="4" width="33" height="47"/>
                                                     <animations/>
@@ -919,6 +909,16 @@
                                                     <fontDescription key="fontDescription" name="OpenSans-Semibold" family="Open Sans" pointSize="11.199999809265137"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bLL-az-WMS">
+                                                    <rect key="frame" x="142" y="1" width="60" height="55"/>
+                                                    <animations/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="60" id="k8d-zE-VIx"/>
+                                                    </constraints>
+                                                    <connections>
+                                                        <action selector="onButtonEditClicked:" destination="awx-dV-KVo" eventType="touchUpInside" id="gKF-gL-Fme"/>
+                                                    </connections>
+                                                </button>
                                             </subviews>
                                             <animations/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
