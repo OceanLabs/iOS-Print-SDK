@@ -181,6 +181,12 @@ static NSString *nonNilStr(NSString *str) {
     [OLAnalytics sendToMixPanelWithDictionary:dict];
 }
 
++ (void)trackContinueShoppingButtonPressed:(NSNumber *)numberOfJobsInBasket{
+    NSDictionary *dict = [OLAnalytics defaultDictionaryForEventName:@"Continue Shopping Button Pressed"];
+    [dict[@"properties"] setObject:numberOfJobsInBasket forKey:@"Number of Jobs in Basket"];
+    [OLAnalytics sendToMixPanelWithDictionary:dict];
+}
+
 + (void)trackShippingScreenViewedForOrder:(OLPrintOrder *)printOrder variant:(NSString *)variant showPhoneEntryField:(BOOL)showPhoneEntryField {
     NSDictionary *dict = [OLAnalytics defaultDictionaryForEventName:@"Shipping Screen Viewed"];
     NSMutableDictionary *p = [self propertiesForPrintOrder:printOrder];

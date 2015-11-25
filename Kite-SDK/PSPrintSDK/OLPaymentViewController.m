@@ -1075,6 +1075,8 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 }
 
 - (IBAction)onButtonContinueShoppingClicked:(UIButton *)sender {
+    [OLAnalytics trackContinueShoppingButtonPressed:[NSNumber numberWithInteger:self.printOrder.jobs.count]];
+    
     if (self.delegate && [self.delegate respondsToSelector:@selector(userDidTapContinueShoppingButton)]){
         [self.delegate userDidTapContinueShoppingButton];
     }
