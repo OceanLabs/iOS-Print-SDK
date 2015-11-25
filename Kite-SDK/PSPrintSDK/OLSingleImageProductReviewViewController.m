@@ -65,9 +65,6 @@ CTAssetsPickerControllerDelegate,
 #endif
 OLAssetsPickerControllerDelegate>
 
-@property (weak, nonatomic) IBOutlet UILabel *quantityLabel;
-@property (assign, nonatomic) NSUInteger quantity;
-
 @property (weak, nonatomic) IBOutlet UICollectionView *imagesCollectionView;
 
 @property (weak, nonatomic) IBOutlet UIView *containerView;
@@ -142,9 +139,6 @@ OLAssetsPickerControllerDelegate>
                                                                             target:nil
                                                                             action:nil];
     
-    self.quantity = 1;
-    [self updateQuantityLabel];
-    
     self.imagesCollectionView.dataSource = self;
     self.imagesCollectionView.delegate = self;
     
@@ -162,23 +156,7 @@ OLAssetsPickerControllerDelegate>
     self.imageCropView.imageView.transform = self.imageDisplayed.edits.cropTransform;
 }
 
-- (void) updateQuantityLabel{
-    self.quantityLabel.text = [NSString stringWithFormat:@"%lu", (unsigned long)self.quantity];
-}
-
-- (IBAction)onButtonDownArrowClicked:(UIButton *)sender {
-    if (self.quantity > 1){
-        self.quantity--;
-        [self updateQuantityLabel];
-    }
-}
-
-- (IBAction)onButtonUpArrowClicked:(UIButton *)sender {
-    self.quantity++;
-    [self updateQuantityLabel];
-}
-
--(void)onButtonNextClicked{
+-(IBAction)onButtonNextClicked{
     [self doCheckout];
 }
 
@@ -204,10 +182,7 @@ OLAssetsPickerControllerDelegate>
         }
         else{
             
-            NSMutableArray *assetArray = [[NSMutableArray alloc] initWithCapacity:self.quantity];
-            for (NSInteger i = 0; i < self.quantity; i++){
-                [assetArray addObject:asset];
-            }
+            NSArray *assetArray = @[asset];
             
             NSUInteger iphonePhotoCount = 1;
             OLPrintOrder *printOrder = [OLKiteUtils kiteVcForViewController:self].printOrder;
