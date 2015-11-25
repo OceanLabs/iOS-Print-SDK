@@ -614,15 +614,16 @@ OLAssetsPickerControllerDelegate>
 - (void)assetsPickerController:(id)picker didFinishPickingAssets:(NSArray *)assets {
     [self populateArrayWithNewArray:assets dataType:[picker isKindOfClass:[OLAssetsPickerController class]] ? [ALAsset class] : [PHAsset class]];
     if (self.imagePicked){
+        self.imageDisplayed = self.imagePicked;
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             [self.imagePicked getImageWithProgress:NULL completion:^(UIImage *image){
                 dispatch_async(dispatch_get_main_queue(), ^{
                     self.imageCropView.image = image;
+                    self.imagePicked = nil;
                 });
             }];
         });
-        self.imageDisplayed = self.imagePicked;
-        self.imagePicked = nil;
+        
     }
     [picker dismissViewControllerAnimated:YES completion:^(void){}];
     

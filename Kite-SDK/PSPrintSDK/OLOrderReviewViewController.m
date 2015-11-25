@@ -9,7 +9,6 @@
 #import "OLOrderReviewViewController.h"
 #import "OLPrintPhoto.h"
 #import "OLAsset.h"
-#import "OLCheckoutViewController.h"
 #import "OLProductPrintJob.h"
 #import "OLConstants.h"
 #import "OLCheckoutDelegate.h"

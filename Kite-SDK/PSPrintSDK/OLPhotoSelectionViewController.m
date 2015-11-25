@@ -32,7 +32,6 @@
 #import "OLAsset.h"
 #import "OLProductPrintJob.h"
 #import "UIColor+HexString.h"
-#import "OLCheckoutViewController.h"
 #import "OLConstants.h"
 #import "LXReorderableCollectionViewFlowLayout.h"
 #import "NSArray+QueryingExtras.h"

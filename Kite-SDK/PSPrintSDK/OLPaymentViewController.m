@@ -356,15 +356,6 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     [self.navigationController.presentingViewController dismissViewControllerAnimated:YES completion:NULL];
 }
 
-- (void)onButtonMoreOptionsClicked{
-    OLCheckoutViewController *vc = [[OLCheckoutViewController alloc] initWithPrintOrder:self.printOrder];
-    vc.delegate = self.delegate;
-    vc.showOtherOptions = YES;
-    [vc safePerformSelector:@selector(setUserEmail:) withObject:self.userEmail];
-    [vc safePerformSelector:@selector(setUserPhone:) withObject:self.userPhone];
-    [self.navigationController pushViewController:vc animated:YES];
-}
-
 - (IBAction)onButtonMoreOptionsClicked:(id)sender{
     if (![self.printOrder.shippingAddress isValidAddress]){
         self.printOrder.shippingAddress = nil;
@@ -1159,6 +1150,8 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         OLCustomNavigationController *nvc = [[OLCustomNavigationController alloc] initWithRootViewController:vc];
         [[(UINavigationController *)vc view] class]; //force viewDidLoad;
         [(OLCheckoutViewController *)vc navigationItem].rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:vc action:@selector(onButtonDoneClicked)];
+        [vc safePerformSelector:@selector(setUserEmail:) withObject:self.userEmail];
+        [vc safePerformSelector:@selector(setUserPhone:) withObject:self.userPhone];
         
         [self presentViewController:nvc animated:YES completion:NULL];
     }];

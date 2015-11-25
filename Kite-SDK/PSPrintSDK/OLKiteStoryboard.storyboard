@@ -876,14 +876,14 @@
                                                         <action selector="onButtonPlusClicked:" destination="awx-dV-KVo" eventType="touchUpInside" id="j3n-ca-EU7"/>
                                                     </connections>
                                                 </button>
-                                                <label opaque="NO" userInteractionEnabled="NO" tag="50" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Poster" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ui0-Vq-4uT">
+                                                <label opaque="NO" userInteractionEnabled="NO" tag="50" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Poster" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Ui0-Vq-4uT">
                                                     <rect key="frame" x="148" y="5" width="44.5" height="18"/>
                                                     <animations/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" tag="70" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="$00.00" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kd7-xh-0Sj">
+                                                <label opaque="NO" userInteractionEnabled="NO" tag="70" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" text="$00.00" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kd7-xh-0Sj">
                                                     <rect key="frame" x="535" y="5" width="49.5" height="18"/>
                                                     <animations/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="15"/>
@@ -916,6 +916,7 @@
                                             <animations/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                             <constraints>
+                                                <constraint firstItem="kd7-xh-0Sj" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="Ui0-Vq-4uT" secondAttribute="trailing" constant="5" id="49c-zR-Jdg"/>
                                                 <constraint firstItem="2h9-jt-kQc" firstAttribute="leading" secondItem="KRh-SE-wkM" secondAttribute="leading" constant="4" id="5jz-Bl-eq1"/>
                                                 <constraint firstItem="o0Q-h1-w3b" firstAttribute="top" secondItem="yfC-Fj-2FI" secondAttribute="top" constant="5" id="AHR-nO-k65"/>
                                                 <constraint firstAttribute="bottom" secondItem="xPd-zg-lTZ" secondAttribute="bottom" constant="6" id="AQX-2J-KUH"/>
