@@ -64,6 +64,12 @@ static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
 @property (strong, nonatomic) NSMutableDictionary *options;
 @end
 
+@interface OLKiteViewController ()
+
+@property (strong, nonatomic) OLPrintOrder *printOrder;
+
+@end
+
 @interface OLProduct (PrivateMethods)
 
 - (NSDecimalNumber*) unitCostDecimalNumber;
@@ -566,6 +572,12 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             receiptVC.delegate = welf.delegate;
             if (!welf.presentedViewController) {
                 [welf.navigationController pushViewController:receiptVC animated:YES];
+                
+                NSArray *jobs = [NSArray arrayWithArray:welf.printOrder.jobs];
+                for (id job in jobs){
+                    [welf.printOrder removePrintJob:job];
+                    [welf.printOrder saveOrder];
+                }
             }
         }];
         if ([self isApplePayAvailable] && self.applePayDismissOperation){
@@ -766,7 +778,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 }
 
 - (IBAction)onButtonPayWithCreditCardClicked {
-    if (self.printOrder.shippingAddressesOfJobs.count == 0){
+    if (self.printOrder.jobs.count == 0){
         return;
     }
     
@@ -922,10 +934,10 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 
 #ifdef OL_KITE_OFFER_PAYPAL
 - (IBAction)onButtonPayWithPayPalClicked {
-    if (self.printOrder.shippingAddressesOfJobs.count == 0){
+    if (self.printOrder.jobs.count == 0){
         return;
     }
-    if (!self.printOrder.shippingAddress){
+    if ((!self.printOrder.shippingAddress && self.printOrder.shippingAddressesOfJobs.count == 0) || !self.printOrder.email){
         [UIView animateWithDuration:0.1 animations:^{
             self.shippingDetailsBox.backgroundColor = [UIColor colorWithWhite:0.929 alpha:1.000];
             self.shippingDetailsBox.transform = CGAffineTransformMakeTranslation(-10, 0);
@@ -958,7 +970,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 
 #ifdef OL_KITE_OFFER_APPLE_PAY
 - (IBAction)onButtonPayWithApplePayClicked{
-    if (self.printOrder.shippingAddressesOfJobs.count == 0){
+    if (self.printOrder.jobs.count == 0){
         return;
     }
     

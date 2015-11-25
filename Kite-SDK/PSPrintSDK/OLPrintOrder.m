@@ -413,7 +413,9 @@ static id stringOrEmptyString(NSString *str) {
     }
     
     for (id<OLPrintJob> printJob in self.jobs) {
-        [jobs addObject:[printJob jsonRepresentation]];
+        for (NSInteger i = -1; i < printJob.extraCopies; i++) {
+            [jobs addObject:[printJob jsonRepresentation]];
+        }
     }
     
     if (self.phone){

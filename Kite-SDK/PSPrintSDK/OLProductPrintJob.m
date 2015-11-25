@@ -131,10 +131,8 @@ static id stringOrEmptyString(NSString *str) {
 - (NSDictionary *)jsonRepresentation {
     NSMutableArray *assets = [[NSMutableArray alloc] init];
     
-    for (NSInteger i = -1; i < self.extraCopies; i++) {
-        for (OLAsset *asset in self.assets) {
-            [assets addObject:[NSString stringWithFormat:@"%lld", asset.assetId]];
-        }
+    for (OLAsset *asset in self.assets) {
+        [assets addObject:[NSString stringWithFormat:@"%lld", asset.assetId]];
     }
     
     NSMutableDictionary *json = [[NSMutableDictionary alloc] init];
