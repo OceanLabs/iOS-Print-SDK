@@ -54,6 +54,13 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
 
 @end
 
+@interface OLPrintOrder (Private)
+
+- (void)saveOrder;
++ (id)loadOrder;
+
+@end
+
 @implementation OLKiteViewController
 
 - (void)awakeFromNib{
@@ -62,6 +69,9 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
 }
 
 -(OLPrintOrder *) printOrder{
+    if (!_printOrder){
+        _printOrder = [OLPrintOrder loadOrder];
+    }
     if (!_printOrder){
         _printOrder = [[OLPrintOrder alloc] init];
     }

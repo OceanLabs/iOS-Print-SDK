@@ -36,6 +36,12 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
 
 @end
 
+@interface OLPrintOrder (Private)
+
+- (void)saveOrder;
+
+@end
+
 @interface OLOrderReviewViewController () <OLCheckoutDelegate, UIAlertViewDelegate, UICollectionViewDelegateFlowLayout>
 
 @property (weak, nonatomic) OLPrintPhoto *editingPrintPhoto;
@@ -71,15 +77,6 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
-    if (self.editingPrintJob){
-        self.userSelectedPhotos = [[NSMutableArray alloc] init];
-        for (OLAsset *asset in [self.editingPrintJob assetsForUploading]){
-            OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
-            printPhoto.asset = asset;
-            [self.userSelectedPhotos addObject:printPhoto];
-        }
-    }
     
 #ifndef OL_NO_ANALYTICS
     [OLAnalytics trackReviewScreenViewed:self.product.productTemplate.name];
@@ -215,6 +212,8 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     else{
         [printOrder addPrintJob:self.editingPrintJob];
     }
+    
+    [printOrder saveOrder];
     
     if (handler){
         handler();

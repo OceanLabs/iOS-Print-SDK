@@ -38,6 +38,12 @@
 #import <FacebookImagePicker/OLFacebookImage.h>
 #endif
 
+@interface OLPrintOrder (Private)
+
+- (void)saveOrder;
+
+@end
+
 @interface OLKiteViewController ()
 
 @property (strong, nonatomic) OLPrintOrder *printOrder;
@@ -97,21 +103,6 @@ OLAssetsPickerControllerDelegate>
 #ifndef OL_NO_ANALYTICS
     [OLAnalytics trackReviewScreenViewed:self.product.productTemplate.name];
 #endif
-    
-    if (self.editingPrintJob && !self.userSelectedPhotos){
-		self.title = NSLocalizedString(@"Review", @"");
-        self.userSelectedPhotos = [[NSMutableArray alloc] init];
-        for (OLAsset *asset in [self.editingPrintJob assetsForUploading]){
-            if ([asset.dataSource isKindOfClass:[OLPrintPhoto class]]){
-                [self.userSelectedPhotos addObject:asset.dataSource];
-            }
-            else{
-                OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
-                printPhoto.asset = asset;
-                [self.userSelectedPhotos addObject:printPhoto];
-            }
-        }
-    }
     
     self.title = NSLocalizedString(@"Reposition the Photo", @"");
     
@@ -179,46 +170,47 @@ OLAssetsPickerControllerDelegate>
             else{
                 [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Image Too Small", @"") message:NSLocalizedString(@"Please zoom out or pick higher quality image", @"") delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"") otherButtonTitles:nil] show];
             }
+            return;
         }
-        else{
-            
-            NSArray *assetArray = @[asset];
-            
-            NSUInteger iphonePhotoCount = 1;
-            OLPrintOrder *printOrder = [OLKiteUtils kiteVcForViewController:self].printOrder;
-
-            NSDictionary *infoDict = [[NSBundle mainBundle] infoDictionary];
-            NSString *appVersion = [infoDict objectForKey:@"CFBundleShortVersionString"];
-            NSNumber *buildNumber = [infoDict objectForKey:@"CFBundleVersion"];
-            printOrder.userData = @{@"photo_count_iphone": [NSNumber numberWithUnsignedInteger:iphonePhotoCount],
-                                    @"sdk_version": kOLKiteSDKVersion,
-                                    @"platform": @"iOS",
-                                    @"uid": [OLAnalytics userDistinctId],
-                                    @"app_version": [NSString stringWithFormat:@"Version: %@ (%@)", appVersion, buildNumber]
-                                    };
-            
-            OLProductPrintJob *job = [[OLProductPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:assetArray];
-            for (NSString *option in self.product.selectedOptions.allKeys){
-                [job setValue:self.product.selectedOptions[option] forOption:option];
-            }
-            if (self.editingPrintJob && [printOrder.jobs containsObject:self.editingPrintJob]){
-                id<OLPrintJob> existingJob = printOrder.jobs[[printOrder.jobs indexOfObject:self.editingPrintJob]];
-                if ([existingJob extraCopies] > 0){
-                    [existingJob setExtraCopies:[existingJob extraCopies]-1];
-                }
-                else{
-                    [printOrder removePrintJob:self.editingPrintJob];
-                }
-            }
-            self.editingPrintJob = job;
-            if ([printOrder.jobs containsObject:self.editingPrintJob]){
-                id<OLPrintJob> existingJob = printOrder.jobs[[printOrder.jobs indexOfObject:self.editingPrintJob]];
-                [existingJob setExtraCopies:[existingJob extraCopies]+1];
+        
+        NSArray *assetArray = @[asset];
+        
+        NSUInteger iphonePhotoCount = 1;
+        OLPrintOrder *printOrder = [OLKiteUtils kiteVcForViewController:self].printOrder;
+        
+        NSDictionary *infoDict = [[NSBundle mainBundle] infoDictionary];
+        NSString *appVersion = [infoDict objectForKey:@"CFBundleShortVersionString"];
+        NSNumber *buildNumber = [infoDict objectForKey:@"CFBundleVersion"];
+        printOrder.userData = @{@"photo_count_iphone": [NSNumber numberWithUnsignedInteger:iphonePhotoCount],
+                                @"sdk_version": kOLKiteSDKVersion,
+                                @"platform": @"iOS",
+                                @"uid": [OLAnalytics userDistinctId],
+                                @"app_version": [NSString stringWithFormat:@"Version: %@ (%@)", appVersion, buildNumber]
+                                };
+        
+        OLProductPrintJob *job = [[OLProductPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:assetArray];
+        for (NSString *option in self.product.selectedOptions.allKeys){
+            [job setValue:self.product.selectedOptions[option] forOption:option];
+        }
+        if (self.editingPrintJob && [printOrder.jobs containsObject:self.editingPrintJob]){
+            id<OLPrintJob> existingJob = printOrder.jobs[[printOrder.jobs indexOfObject:self.editingPrintJob]];
+            if ([existingJob extraCopies] > 0){
+                [existingJob setExtraCopies:[existingJob extraCopies]-1];
             }
             else{
-                [printOrder addPrintJob:self.editingPrintJob];
+                [printOrder removePrintJob:self.editingPrintJob];
             }
         }
+        self.editingPrintJob = job;
+        if ([printOrder.jobs containsObject:self.editingPrintJob]){
+            id<OLPrintJob> existingJob = printOrder.jobs[[printOrder.jobs indexOfObject:self.editingPrintJob]];
+            [existingJob setExtraCopies:[existingJob extraCopies]+1];
+        }
+        else{
+            [printOrder addPrintJob:self.editingPrintJob];
+        }
+        
+        [printOrder saveOrder];
         
         if (handler){
             handler();
@@ -336,7 +328,7 @@ OLAssetsPickerControllerDelegate>
         }
         
         [imageView.superview addConstraints:con];
-
+        
         
         [self.userSelectedPhotos[indexPath.item] setImageSize:imageView.frame.size cropped:NO progress:^(float progress){
             [imageView setProgress:progress];
@@ -381,7 +373,7 @@ OLAssetsPickerControllerDelegate>
         
         self.imageCropView.image = nil;
         [self.imageDisplayed getImageWithProgress:^(float progress){
-//            [self.imageCropView setProgress:progress];
+            //            [self.imageCropView setProgress:progress];
         }completion:^(UIImage *image){
             dispatch_async(dispatch_get_main_queue(), ^{
                 self.imageCropView.image = image;

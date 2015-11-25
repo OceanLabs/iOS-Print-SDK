@@ -22,6 +22,12 @@
 #import "OLRemoteImageView.h"
 #import "OLKiteUtils.h"
 
+@interface OLPrintOrder (Private)
+
+- (void)saveOrder;
+
+@end
+
 @interface OLPosterViewController () <UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UICollectionViewDelegate, LXReorderableCollectionViewDataSource, OLScrollCropViewControllerDelegate>
 
 @property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
@@ -260,6 +266,7 @@
         [printOrder addPrintJob:self.editingPrintJob];
     }
     
+    [printOrder saveOrder];
     
     if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder && [[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant isEqualToString:@"Review-Overview-Checkout"]){
         UIViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLProductOverviewViewController"];

@@ -107,6 +107,7 @@ static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
 
 @interface OLPrintOrder (Private)
 - (BOOL)hasCachedCost;
+- (void)saveOrder;
 @property (strong, nonatomic, readwrite) NSString *submitStatusErrorMessage;
 @property (strong, nonatomic, readwrite) NSString *submitStatus;
 @property (nonatomic, readwrite) NSString *receipt;
@@ -1009,6 +1010,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
                 [self.printOrder removePrintJob:printJob];
                 [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationAutomatic];
                 [self updateViewsBasedOnCostUpdate];
+                [self.printOrder saveOrder];
             }]];
             [self presentViewController:ac animated:YES completion:NULL];
         }
@@ -1018,6 +1020,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         
         [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
         [self updateViewsBasedOnCostUpdate];
+        [self.printOrder saveOrder];
     }
 }
 
@@ -1033,6 +1036,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     }
     
     [self updateViewsBasedOnCostUpdate];
+    [self.printOrder saveOrder];
 }
 
 - (IBAction)onButtonEditClicked:(UIButton *)sender {
@@ -1048,17 +1052,29 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     OLProductOverviewViewController *overviewVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLProductOverviewViewController"];
     overviewVc.product = product;
     
-    OLOrderReviewViewController* orvc = (OLOrderReviewViewController *)[self.storyboard instantiateViewControllerWithIdentifier:[OLKiteUtils reviewViewControllerIdentifierForProduct:product photoSelectionScreen:NO]];
-    orvc.product = product;
+    UIViewController* orvc = [self.storyboard instantiateViewControllerWithIdentifier:[OLKiteUtils reviewViewControllerIdentifierForProduct:product photoSelectionScreen:NO]];
+    [orvc safePerformSelector:@selector(setProduct:) withObject:product];
+    
+    NSMutableArray *userSelectedPhotos = [[NSMutableArray alloc] init];
+    for (OLAsset *asset in [printJob assetsForUploading]){
+        OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
+        printPhoto.asset = asset;
+        [userSelectedPhotos addObject:printPhoto];
+    }
+    [orvc safePerformSelector:@selector(setUserSelectedPhotos:) withObject:userSelectedPhotos];
+    
     [orvc safePerformSelector:@selector(setEditingPrintJob:) withObject:printJob];
     if ([self shouldShowAddMorePhotos] && product.productTemplate.templateUI != kOLTemplateUICase && product.productTemplate.templateUI != kOLTemplateUIPhotobook && product.productTemplate.templateUI != kOLTemplateUIPostcard){
         OLPhotoSelectionViewController *photoVc = [self.storyboard instantiateViewControllerWithIdentifier:@"PhotoSelectionViewController"];
         photoVc.product = product;
+        photoVc.userSelectedPhotos = userSelectedPhotos;
         [self presentNavViewControllerWithControllers:@[overviewVc, photoVc, orvc]];
     }
     else if (product.productTemplate.templateUI == kOLTemplateUIPhotobook){
         OLPhotobookViewController *photobookVc = [self.storyboard instantiateViewControllerWithIdentifier:@"PhotobookViewController"];
         photobookVc.product = product;
+        photobookVc.photobookPhotos = [orvc safePerformSelectorWithReturn:@selector(photobookPhotos) withObject:nil];
+        photobookVc.userSelectedPhotos = userSelectedPhotos;
         
         if ([printJob isKindOfClass:[OLPhotobookPrintJob class]] && [(OLPhotobookPrintJob *)printJob frontCover]){
             OLPrintPhoto *coverPhoto = [[OLPrintPhoto alloc] init];
@@ -1358,7 +1374,8 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         [self.printOrder removePrintJob:self.printOrder.jobs[indexPath.row]];
-            [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationAutomatic];
+        [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationAutomatic];
+        [self.printOrder saveOrder];
     }
 }
 

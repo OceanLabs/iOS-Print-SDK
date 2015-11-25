@@ -511,6 +511,21 @@ static id stringOrEmptyString(NSString *str) {
     return addresses;
 }
 
++ (NSString *)orderFilePath {
+    NSArray * urls = [[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask];
+    NSString *documentDirPath = [(NSURL *)[urls objectAtIndex:0] path];
+    return [documentDirPath stringByAppendingPathComponent:@"ly.kite.sdk.basket"];
+}
+
+- (void)saveOrder {
+    [[UIApplication sharedApplication] setApplicationIconBadgeNumber:self.jobs.count];
+    [NSKeyedArchiver archiveRootObject:self toFile:[OLPrintOrder orderFilePath]];
+}
+
++ (id)loadOrder {
+    return [NSKeyedUnarchiver unarchiveObjectWithFile:[OLPrintOrder orderFilePath]];
+}
+
 #pragma mark - OLAssetUploadRequestDelegate methods
 
 - (void)assetUploadRequest:(OLAssetUploadRequest *)req didProgressWithTotalAssetsUploaded:(NSUInteger)totalAssetsUploaded totalAssetsToUpload:(NSUInteger)totalAssetsToUpload bytesWritten:(long long)bytesWritten totalAssetBytesWritten:(long long)totalAssetBytesWritten totalAssetBytesExpectedToWrite:(long long)totalAssetBytesExpectedToWrite {

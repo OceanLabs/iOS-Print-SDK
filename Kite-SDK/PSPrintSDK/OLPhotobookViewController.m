@@ -62,6 +62,12 @@ static const CGFloat kBookEdgePadding = 38;
 
 @end
 
+@interface OLPrintOrder (Private)
+
+- (void)saveOrder;
+
+@end
+
 @interface MPFlipTransition (Private)
 
 - (void)animateFlip1:(BOOL)isFallingBack fromProgress:(CGFloat)fromProgress toProgress:(CGFloat)toProgress withCompletion:(void (^)(BOOL finished))completion;
@@ -705,6 +711,8 @@ UINavigationControllerDelegate
     else{
         [printOrder addPrintJob:self.editingPrintJob];
     }
+    
+    [printOrder saveOrder];
     
     if (handler){
         handler();
