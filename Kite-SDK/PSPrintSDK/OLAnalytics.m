@@ -275,7 +275,10 @@ static NSString *nonNilStr(NSString *str) {
 + (NSMutableArray*) listOfProductNamesForJobsInOrder:(OLPrintOrder*) printOrder{
     NSMutableArray* productNames = [[NSMutableArray alloc] initWithCapacity:[printOrder.jobs count]];
     for (id<OLPrintJob> printJob in printOrder.jobs){
-        [productNames addObject:[OLProduct productWithTemplateId:printJob.templateId].productTemplate.name];
+        id name = [OLProduct productWithTemplateId:printJob.templateId].productTemplate.name;
+        if (name){
+            [productNames addObject:name];
+         }
     }
     return productNames;
 }

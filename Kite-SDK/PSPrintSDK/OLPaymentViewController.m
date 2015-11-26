@@ -192,6 +192,21 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     return nil;
 }
 
+- (void)sanitizeBasket{
+    NSMutableArray *templateIds = [[NSMutableArray alloc] init];
+    for (OLProductTemplate *template in [OLProductTemplate templates]){
+        [templateIds addObject:template.identifier];
+    }
+    
+    NSArray *jobs = [NSArray arrayWithArray:self.printOrder.jobs];
+    for (id<OLPrintJob> job in jobs){
+        if (![templateIds containsObject:[job templateId]]){
+            [self.printOrder removePrintJob:job];
+            [self.printOrder saveOrder];
+        }
+    }
+}
+
 -(BOOL)isApplePayAvailable{
 #ifdef OL_KITE_OFFER_APPLE_PAY
     PKPaymentRequest *request = [Stripe paymentRequestWithMerchantIdentifier:[OLKitePrintSDK appleMerchantID]];
@@ -217,6 +232,8 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     if (self.navigationController.viewControllers.firstObject == self){
         self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(dismiss)];
     }
+    
+    [self sanitizeBasket];
     
     NSString *applePayAvailableStr = @"N/A";
 #ifdef OL_KITE_OFFER_APPLE_PAY
