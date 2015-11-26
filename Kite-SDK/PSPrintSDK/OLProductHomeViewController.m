@@ -527,6 +527,7 @@
     
     OLProductGroup *group = self.productGroups[indexPath.row];
     OLProduct *product = [group.products firstObject];
+    product.uuid = nil;
     NSString *identifier = [OLKiteViewController storyboardIdentifierForGroupSelected:group];
     
     id vc = [self.storyboard instantiateViewControllerWithIdentifier:identifier];

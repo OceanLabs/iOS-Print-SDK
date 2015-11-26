@@ -134,6 +134,7 @@
     }
     
     OLProduct *product = self.products[indexPath.row];
+    product.uuid = nil;
     
     NSString *identifier;
     if (product.productTemplate.templateUI == kOLTemplateUIPoster){

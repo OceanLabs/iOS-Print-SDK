@@ -207,13 +207,15 @@ OLAssetsPickerControllerDelegate>
         for (NSString *option in self.product.selectedOptions.allKeys){
             [job setValue:self.product.selectedOptions[option] forOption:option];
         }
-        if (self.editingPrintJob && [printOrder.jobs containsObject:self.editingPrintJob]){
-            id<OLPrintJob> existingJob = printOrder.jobs[[printOrder.jobs indexOfObject:self.editingPrintJob]];
-            if ([existingJob extraCopies] > 0){
-                [existingJob setExtraCopies:[existingJob extraCopies]-1];
-            }
-            else{
-                [printOrder removePrintJob:self.editingPrintJob];
+        for (id<OLPrintJob> existingJob in printOrder.jobs){
+            if ([existingJob.uuid isEqualToString:self.product.uuid]){
+                if ([existingJob extraCopies] > 0){
+                    [existingJob setExtraCopies:[existingJob extraCopies]-1];
+                }
+                else{
+                    [printOrder removePrintJob:existingJob];
+                }
+                job.uuid = self.product.uuid;
             }
         }
         self.editingPrintJob = job;
