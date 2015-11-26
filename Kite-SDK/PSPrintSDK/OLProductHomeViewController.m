@@ -347,6 +347,36 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    
+    OLPrintOrder *printOrder = [OLKiteUtils kiteVcForViewController:self].printOrder;
+    UIButton *basketButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    basketButton.frame = CGRectMake(0,0,44,44);
+    [basketButton addTarget:self action:@selector(onButtonBasketClicked:) forControlEvents:UIControlEventTouchUpInside];
+    
+    [basketButton setImage:[UIImage imageNamedInKiteBundle:@"cart"] forState:UIControlStateNormal];
+    
+    if (printOrder.jobs.count != 0){
+        NSUInteger count = printOrder.jobs.count;
+        for (id<OLPrintJob> job in printOrder.jobs){
+            count += [job extraCopies];
+        }
+        
+        UILabel *qtyLabel = [[UILabel alloc] initWithFrame:CGRectMake(25, 10, 10, 10)];
+        qtyLabel.font = [UIFont systemFontOfSize:9];
+        qtyLabel.textAlignment = NSTextAlignmentCenter;
+        qtyLabel.backgroundColor = [UIColor redColor];
+        qtyLabel.textColor = [UIColor whiteColor];
+        qtyLabel.text = [NSString stringWithFormat:@"%lu", (unsigned long)count];
+        qtyLabel.minimumScaleFactor = 0.5;
+        
+        CALayer *layer = [qtyLabel layer];
+        [layer setMasksToBounds:YES];
+        [layer setCornerRadius:5];
+        
+        [basketButton addSubview:qtyLabel];
+    }
+    
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:basketButton];
 }
 
 - (void)viewDidAppear:(BOOL)animated{
