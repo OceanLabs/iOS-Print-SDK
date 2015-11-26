@@ -132,7 +132,6 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 
 @property (strong, nonatomic) OLPrintOrder *printOrder;
 @property (strong, nonatomic) OLPayPalCard *card;
-@property (assign, nonatomic) BOOL clearPromoCode;
 
 @property (strong, nonatomic) NSBlockOperation *applePayDismissOperation;
 @property (strong, nonatomic) NSBlockOperation *transitionBlockOperation;
@@ -378,6 +377,8 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 
 - (void)keyboardWillHide:(NSNotification *)notification {
     if ([self.promoCodeTextField isFirstResponder]){
+        [self onButtonApplyPromoCodeClicked:nil];
+        
         self.promoBoxBottomCon.constant = 2;
         self.promoBoxTopCon.constant = 2;
         [UIView animateWithDuration:[notification.userInfo[UIKeyboardAnimationDurationUserInfoKey] doubleValue] animations:^{
@@ -792,7 +793,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 #pragma mark Button Actions
 
 - (IBAction)onButtonApplyPromoCodeClicked:(id)sender {
-    if (self.clearPromoCode) {
+    if ([self.promoCodeTextField.text isEqualToString:@""]) {
         // Clear promo code
         [self applyPromoCode:nil];
     } else {
