@@ -505,11 +505,13 @@
 
 - (UIViewController *)previewingContext:(id<UIViewControllerPreviewing>)previewingContext viewControllerForLocation:(CGPoint)location{
     NSIndexPath *indexPath = [self.collectionView indexPathForItemAtPoint:location];
+    UICollectionViewCell *cell = [self.collectionView cellForItemAtIndexPath:indexPath];
+    [previewingContext setSourceRect:cell.frame];
     return [self viewControllerForItemAtIndexPath:indexPath];
 }
 
 - (void)previewingContext:(id<UIViewControllerPreviewing>)previewingContext commitViewController:(UIViewController *)viewControllerToCommit{
-    [self.navigationController pushViewController:viewControllerToCommit animated:NO];
+    [self.navigationController pushViewController:viewControllerToCommit animated:YES];
 }
 
 - (UIViewController *)viewControllerForItemAtIndexPath:(NSIndexPath *)indexPath{

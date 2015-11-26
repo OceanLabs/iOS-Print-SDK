@@ -128,7 +128,7 @@ static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
 #ifdef OL_KITE_OFFER_PAYPAL
 PayPalPaymentDelegate,
 #endif
-UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavigationControllerDelegate, UITableViewDelegate, UIScrollViewDelegate>
+UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavigationControllerDelegate, UITableViewDelegate, UIScrollViewDelegate, UIViewControllerPreviewingDelegate>
 
 @property (strong, nonatomic) OLPrintOrder *printOrder;
 @property (strong, nonatomic) OLPayPalCard *card;
@@ -249,6 +249,10 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     [self.paymentButton2 makeRoundRect];
     [self.payWithApplePayButton makeRoundRect];
     [self.checkoutButton makeRoundRect];
+    
+    if ([UITraitCollection class] && [self.traitCollection respondsToSelector:@selector(forceTouchCapability)] && self.traitCollection.forceTouchCapability == UIForceTouchCapabilityAvailable){
+        [self registerForPreviewingWithDelegate:self sourceView:self.tableView];
+    }
     
     
 #ifdef OL_KITE_OFFER_PAYPAL
@@ -687,7 +691,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     }
 }
 
-- (void)presentNavViewControllerWithControllers:(NSArray *)vcs{
+- (UINavigationController *)navViewControllerWithControllers:(NSArray *)vcs{
     OLCustomNavigationController *navController = [[OLCustomNavigationController alloc] init];
     
     navController.viewControllers = vcs;
@@ -698,7 +702,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     
     ((UIViewController *)[vcs firstObject]).navigationItem.leftBarButtonItem = doneButton;
     
-    [self presentViewController:navController animated:YES completion:NULL];
+    return navController;
 }
 
 - (void)saveAndDismissReviewController{
@@ -1071,53 +1075,8 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 - (IBAction)onButtonEditClicked:(UIButton *)sender {
     CGPoint buttonPosition = [sender convertPoint:CGPointZero toView:self.tableView];
     NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:buttonPosition];
-    OLProductPrintJob* printJob = ((OLProductPrintJob*)[self.printOrder.jobs objectAtIndex:indexPath.row]);
-    OLProduct *product = [OLProduct productWithTemplateId:printJob.templateId];
     
-    for (NSString *option in printJob.options.allKeys){
-        product.selectedOptions[option] = printJob.options[option];
-    }
-    
-    OLProductOverviewViewController *overviewVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLProductOverviewViewController"];
-    overviewVc.product = product;
-    
-    UIViewController* orvc = [self.storyboard instantiateViewControllerWithIdentifier:[OLKiteUtils reviewViewControllerIdentifierForProduct:product photoSelectionScreen:NO]];
-    [orvc safePerformSelector:@selector(setProduct:) withObject:product];
-    
-    NSMutableArray *userSelectedPhotos = [[NSMutableArray alloc] init];
-    for (OLAsset *asset in [printJob assetsForUploading]){
-        OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
-        printPhoto.asset = asset;
-        [userSelectedPhotos addObject:printPhoto];
-    }
-    [orvc safePerformSelector:@selector(setUserSelectedPhotos:) withObject:userSelectedPhotos];
-    [overviewVc safePerformSelector:@selector(setUserSelectedPhotos:) withObject:userSelectedPhotos];
-    
-    [orvc safePerformSelector:@selector(setEditingPrintJob:) withObject:printJob];
-    if ([self shouldShowAddMorePhotos] && product.productTemplate.templateUI != kOLTemplateUICase && product.productTemplate.templateUI != kOLTemplateUIPhotobook && product.productTemplate.templateUI != kOLTemplateUIPostcard){
-        OLPhotoSelectionViewController *photoVc = [self.storyboard instantiateViewControllerWithIdentifier:@"PhotoSelectionViewController"];
-        photoVc.product = product;
-        photoVc.userSelectedPhotos = userSelectedPhotos;
-        [self presentNavViewControllerWithControllers:@[overviewVc, photoVc, orvc]];
-    }
-    else if (product.productTemplate.templateUI == kOLTemplateUIPhotobook){
-        OLPhotobookViewController *photobookVc = [self.storyboard instantiateViewControllerWithIdentifier:@"PhotobookViewController"];
-        photobookVc.product = product;
-        photobookVc.photobookPhotos = [orvc safePerformSelectorWithReturn:@selector(photobookPhotos) withObject:nil];
-        photobookVc.userSelectedPhotos = userSelectedPhotos;
-        
-        if ([printJob isKindOfClass:[OLPhotobookPrintJob class]] && [(OLPhotobookPrintJob *)printJob frontCover]){
-            OLPrintPhoto *coverPhoto = [[OLPrintPhoto alloc] init];
-            coverPhoto.asset = [(OLPhotobookPrintJob *)printJob frontCover];
-            
-            photobookVc.coverPhoto = coverPhoto;
-        }
-        
-        [self presentNavViewControllerWithControllers:@[overviewVc, orvc, photobookVc]];
-    }
-    else{
-        [self presentNavViewControllerWithControllers:@[overviewVc, orvc]];
-    }
+    [self presentViewController:[self viewControllerForItemAtIndexPath:indexPath] animated:YES completion:NULL];;
 }
 
 - (IBAction)onButtonContinueShoppingClicked:(UIButton *)sender {
@@ -1418,6 +1377,67 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
     [self textFieldShouldReturn:self.promoCodeTextField];
+}
+
+- (UIViewController *)previewingContext:(id<UIViewControllerPreviewing>)previewingContext viewControllerForLocation:(CGPoint)location{
+    NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:location];
+    UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
+    [previewingContext setSourceRect:cell.frame];
+    return [self viewControllerForItemAtIndexPath:indexPath];
+}
+
+- (void)previewingContext:(id<UIViewControllerPreviewing>)previewingContext commitViewController:(UIViewController *)viewControllerToCommit{
+    [self presentViewController:viewControllerToCommit animated:YES completion:NULL];
+}
+
+- (UIViewController *)viewControllerForItemAtIndexPath:(NSIndexPath *)indexPath{
+    OLProductPrintJob* printJob = ((OLProductPrintJob*)[self.printOrder.jobs objectAtIndex:indexPath.row]);
+    OLProduct *product = [OLProduct productWithTemplateId:printJob.templateId];
+    
+    for (NSString *option in printJob.options.allKeys){
+        product.selectedOptions[option] = printJob.options[option];
+    }
+    
+    OLProductOverviewViewController *overviewVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLProductOverviewViewController"];
+    overviewVc.product = product;
+    
+    UIViewController* orvc = [self.storyboard instantiateViewControllerWithIdentifier:[OLKiteUtils reviewViewControllerIdentifierForProduct:product photoSelectionScreen:NO]];
+    [orvc safePerformSelector:@selector(setProduct:) withObject:product];
+    
+    NSMutableArray *userSelectedPhotos = [[NSMutableArray alloc] init];
+    for (OLAsset *asset in [printJob assetsForUploading]){
+        OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
+        printPhoto.asset = asset;
+        [userSelectedPhotos addObject:printPhoto];
+    }
+    [orvc safePerformSelector:@selector(setUserSelectedPhotos:) withObject:userSelectedPhotos];
+    [overviewVc safePerformSelector:@selector(setUserSelectedPhotos:) withObject:userSelectedPhotos];
+    
+    [orvc safePerformSelector:@selector(setEditingPrintJob:) withObject:printJob];
+    if ([self shouldShowAddMorePhotos] && product.productTemplate.templateUI != kOLTemplateUICase && product.productTemplate.templateUI != kOLTemplateUIPhotobook && product.productTemplate.templateUI != kOLTemplateUIPostcard){
+        OLPhotoSelectionViewController *photoVc = [self.storyboard instantiateViewControllerWithIdentifier:@"PhotoSelectionViewController"];
+        photoVc.product = product;
+        photoVc.userSelectedPhotos = userSelectedPhotos;
+        return [self navViewControllerWithControllers:@[overviewVc, photoVc, orvc]];
+    }
+    else if (product.productTemplate.templateUI == kOLTemplateUIPhotobook){
+        OLPhotobookViewController *photobookVc = [self.storyboard instantiateViewControllerWithIdentifier:@"PhotobookViewController"];
+        photobookVc.product = product;
+        photobookVc.photobookPhotos = [orvc safePerformSelectorWithReturn:@selector(photobookPhotos) withObject:nil];
+        photobookVc.userSelectedPhotos = userSelectedPhotos;
+        
+        if ([printJob isKindOfClass:[OLPhotobookPrintJob class]] && [(OLPhotobookPrintJob *)printJob frontCover]){
+            OLPrintPhoto *coverPhoto = [[OLPrintPhoto alloc] init];
+            coverPhoto.asset = [(OLPhotobookPrintJob *)printJob frontCover];
+            
+            photobookVc.coverPhoto = coverPhoto;
+        }
+        
+        return [self navViewControllerWithControllers:@[overviewVc, orvc, photobookVc]];
+    }
+    else{
+        return [self navViewControllerWithControllers:@[overviewVc, orvc]];
+    }
 }
 
 #pragma mark - UIActionSheetDelegate methods
