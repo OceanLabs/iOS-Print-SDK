@@ -117,6 +117,7 @@ static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
 @property (strong, nonatomic, readwrite) NSString *submitStatusErrorMessage;
 @property (strong, nonatomic, readwrite) NSString *submitStatus;
 @property (nonatomic, readwrite) NSString *receipt;
+@property (strong, nonatomic) OLPrintOrderCost *finalCost;
 @end
 
 @interface OLProduct (Private)
@@ -424,6 +425,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     if (self.printOrder.jobs.count == 0){
         self.totalCostLabel.text = [[NSDecimalNumber decimalNumberWithString:@"0.00"] formatCostForCurrencyCode:[[OLCountry countryForCurrentLocale] currencyCode]];
         self.shippingCostLabel.text = [[NSDecimalNumber decimalNumberWithString:@"0.00"] formatCostForCurrencyCode:[[OLCountry countryForCurrentLocale] currencyCode]];
+        self.promoCodeCostLabel.text = @"";
         return;
     }
     
@@ -573,11 +575,8 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             if (!welf.presentedViewController) {
                 [welf.navigationController pushViewController:receiptVC animated:YES];
                 
-                NSArray *jobs = [NSArray arrayWithArray:welf.printOrder.jobs];
-                for (id job in jobs){
-                    [welf.printOrder removePrintJob:job];
-                    [welf.printOrder saveOrder];
-                }
+                [OLKiteUtils kiteVcForViewController:welf].printOrder = [[OLPrintOrder alloc] init];
+                [[OLKiteUtils kiteVcForViewController:welf].printOrder saveOrder];
             }
         }];
         if ([self isApplePayAvailable] && self.applePayDismissOperation){
@@ -604,15 +603,23 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
                         self.printOrder.submitStatusErrorMessage = nil;
                         [[NSOperationQueue mainQueue] addOperation:self.transitionBlockOperation];
                     }
+                    else{
+                        self.printOrder.finalCost = nil;
+                    }
                 }]];
                 [self presentViewController:ac animated:YES completion:NULL];
             }
             else{
                 UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLConstants bundle], @"") message:error.localizedDescription delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLConstants bundle], @"") otherButtonTitles:nil];
-                self.printOrder.receipt = nil;
-                self.printOrder.submitStatus = OLPrintOrderSubmitStatusUnknown;
-                self.printOrder.submitStatusErrorMessage = nil;
-                [[NSOperationQueue mainQueue] addOperation:self.transitionBlockOperation];
+                if (error.code != kOLKiteSDKErrorCodeOrderValidationFailed){
+                    self.printOrder.receipt = nil;
+                    self.printOrder.submitStatus = OLPrintOrderSubmitStatusUnknown;
+                    self.printOrder.submitStatusErrorMessage = nil;
+                    [[NSOperationQueue mainQueue] addOperation:self.transitionBlockOperation];
+                }
+                else{
+                    self.printOrder.finalCost = nil;
+                }
                 [av show];
             }
             return;
@@ -1018,11 +1025,12 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Yes", @"") style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action){
                 [self.printOrder removePrintJob:printJob];
                 [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationAutomatic];
-                [self updateViewsBasedOnCostUpdate];
                 [self.printOrder saveOrder];
+                [self updateViewsBasedOnCostUpdate];
             }]];
             [self presentViewController:ac animated:YES completion:NULL];
         }
+        //on iOS 7, just delete without prompt
     }
     else{
         printJob.extraCopies--;
@@ -1392,6 +1400,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         [self.printOrder removePrintJob:self.printOrder.jobs[indexPath.row]];
         [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationAutomatic];
         [self.printOrder saveOrder];
+        [self updateViewsBasedOnCostUpdate];
     }
 }
 

@@ -398,8 +398,9 @@ static id stringOrEmptyString(NSString *str) {
         [json setObject:self.proofOfPayment forKey:@"proof_of_payment"];
     }
     
-    if (self.currencyCode && self.cachedCost) {
-        [json setObject:@{@"currency": self.currencyCode, @"amount" : [self.cachedCost totalCostInCurrency:self.currencyCode]} forKey:@"customer_payment"];
+    if (self.currencyCode && (self.cachedCost || self.finalCost)) {
+        OLPrintOrderCost *cost = self.cachedCost ? self.cachedCost : self.finalCost;
+        [json setObject:@{@"currency": self.currencyCode, @"amount" : [cost totalCostInCurrency:self.currencyCode]} forKey:@"customer_payment"];
     }
     
     if (self.promoCode) {
