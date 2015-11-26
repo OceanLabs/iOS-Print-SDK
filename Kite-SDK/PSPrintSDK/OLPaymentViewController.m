@@ -604,7 +604,19 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
                         [[NSOperationQueue mainQueue] addOperation:self.transitionBlockOperation];
                     }
                     else{
-                        self.printOrder.finalCost = nil;
+                        [self.printOrder deleteFromHistory];
+                        
+                        OLPrintOrder *freshPrintOrder = [[OLPrintOrder alloc] init];
+                        for (id<OLPrintJob> job in self.printOrder.jobs){
+                            [freshPrintOrder addPrintJob:job];
+                        }
+                        freshPrintOrder.email = self.printOrder.email;
+                        freshPrintOrder.phone = self.printOrder.phone;
+                        freshPrintOrder.promoCode = self.printOrder.promoCode;
+                        freshPrintOrder.shippingAddress = self.printOrder.shippingAddress;
+                        [OLKiteUtils kiteVcForViewController:self].printOrder = freshPrintOrder;
+                        self.printOrder = freshPrintOrder;
+                        [self.printOrder saveOrder];
                     }
                 }]];
                 [self presentViewController:ac animated:YES completion:NULL];
