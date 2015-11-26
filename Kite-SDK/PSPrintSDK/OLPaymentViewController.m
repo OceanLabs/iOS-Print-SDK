@@ -1151,6 +1151,9 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     [self dismissViewControllerAnimated:YES completion:^{
         [self.printOrder costWithCompletionHandler:^(id cost, NSError *error){
             if (!self.applePayDismissOperation.finished){
+                if (![[NSOperationQueue mainQueue].operations containsObject:self.transitionBlockOperation]){
+                    [[NSOperationQueue mainQueue] addOperation:self.transitionBlockOperation];
+                }
                 [[NSOperationQueue mainQueue] addOperation:self.applePayDismissOperation];
             }
             if (error){

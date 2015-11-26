@@ -155,19 +155,8 @@ static const NSUInteger kSectionErrorRetry = 2;
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    UIViewController *vc = self.parentViewController;
-    BOOL launchedToShipping = NO;
-    self.presentedModally |= ([self.delegate respondsToSelector:@selector(receiptViewControllerShouldBeDismissable)] && [self.delegate receiptViewControllerShouldBeDismissable]);
-    while (vc) {
-        if ([vc isKindOfClass:[OLKiteViewController class]]){
-            launchedToShipping = [(OLKiteViewController *)vc printOrder] != nil;
-            break;
-        }
-        else{
-            vc = vc.parentViewController;
-        }
-    }
-    if (self.presentedModally || launchedToShipping) {
+    
+    if (self.presentedModally || [OLKiteABTesting sharedInstance].launchedWithPrintOrder) {
         self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Done", @"KitePrintSDK", [OLConstants bundle], @"") style:UIBarButtonItemStylePlain target:self action:@selector(onButtonDoneClicked)];
         self.navigationController.viewControllers = @[self];
         self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
@@ -178,18 +167,7 @@ static const NSUInteger kSectionErrorRetry = 2;
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
-    UIViewController *vc = self.parentViewController;
-    BOOL launchedToShipping = NO;
-    while (vc) {
-        if ([vc isKindOfClass:[OLKiteViewController class]]){
-            launchedToShipping = [(OLKiteViewController *)vc printOrder] != nil;
-            break;
-        }
-        else{
-            vc = vc.parentViewController;
-        }
-    }
-    if (!(self.presentedModally || launchedToShipping)) {
+    if (!(self.presentedModally || [OLKiteABTesting sharedInstance].launchedWithPrintOrder)) {
         NSMutableArray *navigationStack = self.navigationController.viewControllers.mutableCopy;
         if (navigationStack.count >= 2 &&
             [navigationStack[navigationStack.count - 2] isKindOfClass:[OLPaymentViewController class]]) {

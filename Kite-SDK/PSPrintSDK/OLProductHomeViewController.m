@@ -42,6 +42,7 @@
 @interface OLPaymentViewController ()
 
 - (void)onBarButtonOrdersClicked;
+@property (assign, nonatomic) BOOL presentedModally;
 
 @end
 
@@ -655,6 +656,7 @@
         [vc safePerformSelector:@selector(setUserEmail:) withObject:[OLKiteUtils userEmail:self]];
         [vc safePerformSelector:@selector(setUserPhone:) withObject:[OLKiteUtils userPhone:self]];
         [vc safePerformSelector:@selector(setKiteDelegate:) withObject:[OLKiteUtils kiteDelegate:self]];
+        [(OLPaymentViewController *)vc setPresentedModally:YES];
         
         [(UIViewController *)vc navigationItem].leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:vc action:@selector(dismiss)];
         
