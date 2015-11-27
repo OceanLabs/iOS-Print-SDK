@@ -30,12 +30,6 @@
 static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 static const NSUInteger kTagAlertViewDeletePhoto = 98;
 
-@interface OLPaymentViewController (Private)
-
--(void)saveAndDismissReviewController;
-
-@end
-
 @interface OLKiteViewController ()
 
 @property (strong, nonatomic) OLPrintOrder *printOrder;
@@ -88,14 +82,6 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
 #ifndef OL_NO_ANALYTICS
     [OLAnalytics trackReviewScreenViewed:self.product.productTemplate.name];
 #endif
-    
-    UIViewController *paymentVc = [(UINavigationController *)self.presentingViewController viewControllers].lastObject;
-    if ([paymentVc respondsToSelector:@selector(saveAndDismissReviewController)]){
-        UIBarButtonItem *saveButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Save", "")
-                                                                       style:UIBarButtonItemStyleDone target:paymentVc
-                                                                      action:@selector(saveAndDismissReviewController)];
-        self.navigationItem.rightBarButtonItem = saveButton;
-    }
     
     [self updateTitleBasedOnSelectedPhotoQuanitity];
     
@@ -207,7 +193,8 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
                             };
     
     OLProductPrintJob *job = [[OLProductPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:photoAssets];
-    for (id<OLPrintJob> existingJob in printOrder.jobs){
+    NSArray *jobs = [NSArray arrayWithArray:printOrder.jobs];
+    for (id<OLPrintJob> existingJob in jobs){
         if ([existingJob.uuid isEqualToString:self.product.uuid]){
             if ([existingJob extraCopies] > 0){
                 [existingJob setExtraCopies:[existingJob extraCopies]-1];

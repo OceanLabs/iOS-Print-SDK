@@ -2007,6 +2007,7 @@
                     <navigationItem key="navigationItem" id="MzK-fr-8PT"/>
                     <connections>
                         <outlet property="containerView" destination="nF0-F4-GDd" id="Di5-5U-EhN"/>
+                        <outlet property="ctaButton" destination="gw5-Cz-eSf" id="8by-s2-BIc"/>
                         <outlet property="imageCropView" destination="33O-65-cUP" id="jv4-S5-bTo"/>
                         <outlet property="imagesCollectionView" destination="EHT-PN-hHa" id="Rur-Im-C98"/>
                         <outlet property="maskActivityIndicator" destination="3eC-J9-SCj" id="qxu-Q4-fT7"/>
@@ -3225,6 +3226,7 @@
                     <navigationItem key="navigationItem" id="sGX-Vh-ezf"/>
                     <connections>
                         <outlet property="containerView" destination="F6s-yG-aS1" id="Gan-vf-O94"/>
+                        <outlet property="ctaButton" destination="ZlI-Gw-kac" id="nej-Y4-ywi"/>
                         <outlet property="imageCropView" destination="N6g-QY-BTJ" id="BEf-w7-x49"/>
                         <outlet property="imagesCollectionView" destination="q2u-GZ-t1x" id="GKe-r4-hwJ"/>
                         <outlet property="maskAspectRatio" destination="s04-2s-DNA" id="ZiT-bx-wbS"/>
@@ -3495,6 +3497,7 @@
                     <connections>
                         <outlet property="collectionView" destination="mv0-Qm-fvp" id="vSM-E6-ca3"/>
                         <outlet property="containerView" destination="OVV-fA-IBb" id="od2-10-0Se"/>
+                        <outlet property="ctaButton" destination="BCp-TW-Lv4" id="SEz-Cc-Wnl"/>
                         <outlet property="imagesCollectionView" destination="Og0-uF-eaA" id="H9q-ap-vWR"/>
                         <outlet property="maskAspectRatio" destination="Dbf-Ex-tjE" id="V1P-7L-Nqq"/>
                     </connections>

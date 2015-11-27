@@ -47,12 +47,6 @@ static const NSUInteger kTagRight = 20;
 static const CGFloat kBookAnimationTime = 0.8;
 static const CGFloat kBookEdgePadding = 38;
 
-@interface OLPaymentViewController (Private)
-
--(void)saveAndDismissReviewController;
-
-@end
-
 @interface OLKitePrintSDK (InternalUtils)
 
 #ifdef OL_KITE_OFFER_INSTAGRAM
@@ -195,14 +189,6 @@ UINavigationControllerDelegate
 
 - (void)viewDidLoad{
     [super viewDidLoad];
-    
-    UIViewController *paymentVc = [(UINavigationController *)self.presentingViewController viewControllers].lastObject;
-    if ([paymentVc respondsToSelector:@selector(saveAndDismissReviewController)]){
-        UIBarButtonItem *saveButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Save", "")
-                                                                       style:UIBarButtonItemStyleDone target:paymentVc
-                                                                      action:@selector(saveAndDismissReviewController)];
-        self.navigationItem.rightBarButtonItem = saveButton;
-    }
     
 #ifndef OL_NO_ANALYTICS
     [OLAnalytics trackReviewScreenViewed:self.product.productTemplate.name];
@@ -700,7 +686,8 @@ UINavigationControllerDelegate
 	for (NSString *option in self.product.selectedOptions.allKeys){
         [job setValue:self.product.selectedOptions[option] forOption:option];
     }
-    for (id<OLPrintJob> existingJob in printOrder.jobs){
+    NSArray *jobs = [NSArray arrayWithArray:printOrder.jobs];
+    for (id<OLPrintJob> existingJob in jobs){
         if ([existingJob.uuid isEqualToString:self.product.uuid]){
             if ([existingJob extraCopies] > 0){
                 [existingJob setExtraCopies:[existingJob extraCopies]-1];

@@ -39,12 +39,6 @@
 #import <FacebookImagePicker/OLFacebookImage.h>
 #endif
 
-@interface OLPaymentViewController (Private)
-
--(void)saveAndDismissReviewController;
-
-@end
-
 @interface OLPrintOrder (Private)
 
 - (void)saveOrder;
@@ -110,14 +104,6 @@ OLAssetsPickerControllerDelegate>
 #ifndef OL_NO_ANALYTICS
     [OLAnalytics trackReviewScreenViewed:self.product.productTemplate.name];
 #endif
-    
-    UIViewController *paymentVc = [(UINavigationController *)self.presentingViewController viewControllers].lastObject;
-    if ([paymentVc respondsToSelector:@selector(saveAndDismissReviewController)]){
-        UIBarButtonItem *saveButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Save", "")
-                                                                       style:UIBarButtonItemStyleDone target:paymentVc
-                                                                      action:@selector(saveAndDismissReviewController)];
-        self.navigationItem.rightBarButtonItem = saveButton;
-    }
     
     self.title = NSLocalizedString(@"Reposition the Photo", @"");
     
@@ -207,7 +193,8 @@ OLAssetsPickerControllerDelegate>
         for (NSString *option in self.product.selectedOptions.allKeys){
             [job setValue:self.product.selectedOptions[option] forOption:option];
         }
-        for (id<OLPrintJob> existingJob in printOrder.jobs){
+        NSArray *jobs = [NSArray arrayWithArray:printOrder.jobs];
+        for (id<OLPrintJob> existingJob in jobs){
             if ([existingJob.uuid isEqualToString:self.product.uuid]){
                 if ([existingJob extraCopies] > 0){
                     [existingJob setExtraCopies:[existingJob extraCopies]-1];

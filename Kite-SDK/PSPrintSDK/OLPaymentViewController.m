@@ -42,6 +42,7 @@
 #import "NSObject+Utils.h"
 #import "OLProductOverviewViewController.h"
 #import "OLOrdersViewController.h"
+#import "OLSingleImageProductReviewViewController.h"
 
 #ifdef OL_KITE_OFFER_PAYPAL
 #import "PayPalMobile.h"
@@ -73,6 +74,18 @@ static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
 @interface OLProduct (PrivateMethods)
 
 - (NSDecimalNumber*) unitCostDecimalNumber;
+
+@end
+
+@interface OLSingleImageProductReviewViewController ()
+
+- (void)onButtonNextClicked;
+
+@end
+
+@interface OLAsset (Private)
+
+@property (strong, nonatomic) id<OLAssetDataSource> dataSource;
 
 @end
 
@@ -1411,6 +1424,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 - (UIViewController *)viewControllerForItemAtIndexPath:(NSIndexPath *)indexPath{
     OLProductPrintJob* printJob = ((OLProductPrintJob*)[self.printOrder.jobs objectAtIndex:indexPath.row]);
     OLProduct *product = [OLProduct productWithTemplateId:printJob.templateId];
+    product.uuid = printJob.uuid;
     
     for (NSString *option in printJob.options.allKeys){
         product.selectedOptions[option] = printJob.options[option];
@@ -1426,12 +1440,30 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     for (OLAsset *asset in [printJob assetsForUploading]){
         OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
         printPhoto.asset = asset;
+        
+        if ([asset.dataSource isKindOfClass:[OLPrintPhoto class]]){
+            printPhoto = (OLPrintPhoto *)asset.dataSource;
+        }
+        
         [userSelectedPhotos addObject:printPhoto];
     }
     [orvc safePerformSelector:@selector(setUserSelectedPhotos:) withObject:userSelectedPhotos];
     [overviewVc safePerformSelector:@selector(setUserSelectedPhotos:) withObject:userSelectedPhotos];
     
     [orvc safePerformSelector:@selector(setEditingPrintJob:) withObject:printJob];
+    
+    if ([orvc isKindOfClass:[OLSingleImageProductReviewViewController class]]){
+        [orvc view]; //Force the ViewController to load
+        UIButton *ctaButton = [(OLSingleImageProductReviewViewController *)orvc ctaButton];
+        [ctaButton setTitle:NSLocalizedString(@"Save", @"") forState:UIControlStateNormal];
+        [ctaButton removeTarget:orvc action:@selector(onButtonNextClicked) forControlEvents:UIControlEventTouchUpInside];
+        [ctaButton addTarget:self action:@selector(saveAndDismissReviewController) forControlEvents:UIControlEventTouchUpInside];
+    }
+    UIBarButtonItem *saveButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Save", "")
+                                                                   style:UIBarButtonItemStyleDone target:self
+                                                                  action:@selector(saveAndDismissReviewController)];
+    orvc.navigationItem.rightBarButtonItem = saveButton;
+    
     if ([self shouldShowAddMorePhotos] && product.productTemplate.templateUI != kOLTemplateUICase && product.productTemplate.templateUI != kOLTemplateUIPhotobook && product.productTemplate.templateUI != kOLTemplateUIPostcard){
         OLPhotoSelectionViewController *photoVc = [self.storyboard instantiateViewControllerWithIdentifier:@"PhotoSelectionViewController"];
         photoVc.product = product;
