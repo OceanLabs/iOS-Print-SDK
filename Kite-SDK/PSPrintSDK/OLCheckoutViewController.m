@@ -236,15 +236,14 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
 }
 
 - (void)onButtonDoneClicked{
+    if (![self hasUserProvidedValidDetailsToProgressToPayment]) {
+        return;
+    }
     [self checkAndSaveAddress];
     [self dismissViewControllerAnimated:YES completion:NULL];
 }
 
 - (void)checkAndSaveAddress{
-    if (![self hasUserProvidedValidDetailsToProgressToPayment]) {
-        return;
-    }
-    
     [self.textFieldEmail resignFirstResponder];
     [self.textFieldPhone resignFirstResponder];
     
@@ -282,6 +281,9 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
 }
 
 - (void)onButtonNextClicked {
+    if (![self hasUserProvidedValidDetailsToProgressToPayment]) {
+        return;
+    }
     [self checkAndSaveAddress];
     
     OLPaymentViewController *vc = [[OLPaymentViewController alloc] initWithPrintOrder:self.printOrder];
