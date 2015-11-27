@@ -521,7 +521,6 @@ static id stringOrEmptyString(NSString *str) {
 }
 
 - (void)saveOrder {
-    [[UIApplication sharedApplication] setApplicationIconBadgeNumber:self.jobs.count];
     [NSKeyedArchiver archiveRootObject:self toFile:[OLPrintOrder orderFilePath]];
 }
 
