@@ -695,6 +695,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 }
 
 - (void)popToHome{
+    // Try as best we can to go to the beginning of the app
     NSMutableArray *navigationStack = self.navigationController.viewControllers.mutableCopy;
     if (navigationStack.count > 2) {
         [navigationStack removeObjectsInRange:NSMakeRange(1, navigationStack.count - 2)];
@@ -749,11 +750,23 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         return;
     }
     
-    OLOrderReviewViewController *vc = nvc.viewControllers.lastObject;
-    if ([vc respondsToSelector:@selector(saveJobWithCompletionHandler:)]){
-        [vc saveJobWithCompletionHandler:^{
+    OLOrderReviewViewController *editingVc = nvc.viewControllers.lastObject;
+    if ([editingVc respondsToSelector:@selector(saveJobWithCompletionHandler:)]){
+        [editingVc saveJobWithCompletionHandler:^{
             [self dismissPresentedViewController];
         }];
+        
+        //If the user edits the job that they just created, prevent them from going back
+        NSMutableArray *navigationStack = [self.navigationController.viewControllers mutableCopy];
+        if (navigationStack.count > 1){
+            UIViewController *reviewVc = navigationStack[navigationStack.count-2];
+            OLProduct *reviewProduct = [reviewVc safePerformSelectorWithReturn:@selector(product) withObject:nil];
+            OLProduct *editingProduct = [editingVc safePerformSelectorWithReturn:@selector(product) withObject:nil];
+            if ([reviewProduct.uuid isEqualToString:editingProduct.uuid]){
+                [navigationStack removeObjectsInRange:NSMakeRange(1, navigationStack.count - 2)];
+                self.navigationController.viewControllers = navigationStack;
+            }
+        }
     }
 }
 
@@ -1123,7 +1136,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     if (self.delegate && [self.delegate respondsToSelector:@selector(userDidTapContinueShoppingButton)]){
         [self.delegate userDidTapContinueShoppingButton];
     }
-    else{ // Try as best we can to go to the beginning of the app
+    else{
         [self popToHome];
     }
 }
