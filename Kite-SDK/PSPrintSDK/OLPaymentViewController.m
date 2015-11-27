@@ -286,12 +286,16 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     }
 #endif
     
-#ifdef OL_KITE_OFFER_APPLE_PAY
     if ([self shouldShowApplePay]){
         self.paymentButton1.hidden = YES;
         self.paymentButton2.hidden = YES;
     }
-#endif
+    else{
+        self.payWithApplePayButton.hidden = YES;
+        self.checkoutButton.hidden = YES;
+        self.shippingDetailsCon.constant = 2;
+        self.shippingDetailsBox.alpha = 1;
+    }
     
     [self updateViewsBasedOnCostUpdate];
     
