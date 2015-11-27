@@ -666,11 +666,7 @@ UINavigationControllerDelegate
     // URL and the user did not manipulate it in any way.
     NSMutableArray *photoAssets = [[NSMutableArray alloc] init];
     for (OLPrintPhoto *photo in bookPhotos) {
-        if(photo.type == kPrintPhotoAssetTypeOLAsset){
-            [photoAssets addObject:photo.asset];
-        } else {
-            [photoAssets addObject:[OLAsset assetWithDataSource:photo]];
-        }
+        [photoAssets addObject:[OLAsset assetWithDataSource:photo]];
     }
     
     // ensure order is maxed out by adding duplicates as necessary

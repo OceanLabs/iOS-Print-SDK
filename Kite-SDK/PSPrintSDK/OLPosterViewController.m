@@ -210,7 +210,7 @@
     }
 }
 
-- (void)doCheckout{
+- (void)saveJobWithCompletionHandler:(void (^)())handler{
     NSUInteger iphonePhotoCount = 0;
     for (OLPrintPhoto *photo in self.posterPhotos) {
         if (photo.type == kPrintPhotoAssetTypeALAsset || photo.type == kPrintPhotoAssetTypePHAsset) ++iphonePhotoCount;
@@ -220,12 +220,7 @@
     // URL and the user did not manipulate it in any way.
     NSMutableArray *photoAssets = [[NSMutableArray alloc] init];
     for (OLPrintPhoto *photo in self.posterPhotos) {
-        if(photo.type == kPrintPhotoAssetTypeOLAsset){
-            [photoAssets addObject:photo.asset];
-        }
-        else {
-            [photoAssets addObject:[OLAsset assetWithDataSource:photo]];
-        }
+        [photoAssets addObject:[OLAsset assetWithDataSource:photo]];
     }
     [self changeOrderOfPhotosInArray:photoAssets];
     
@@ -255,11 +250,11 @@
         }
     }
     self.editingPrintJob = job;
-
-	for (NSString *option in self.product.selectedOptions.allKeys){
+    
+    for (NSString *option in self.product.selectedOptions.allKeys){
         [job setValue:self.product.selectedOptions[option] forOption:option];
     }
-
+    
     if ([printOrder.jobs containsObject:self.editingPrintJob]){
         id<OLPrintJob> existingJob = printOrder.jobs[[printOrder.jobs indexOfObject:self.editingPrintJob]];
         [existingJob setExtraCopies:[existingJob extraCopies]+1];
@@ -270,6 +265,15 @@
     
     [printOrder saveOrder];
     
+    if (handler){
+        handler();
+    }
+}
+
+- (void)doCheckout{
+    [self saveJobWithCompletionHandler:NULL];
+    
+    OLPrintOrder *printOrder = [OLKiteUtils kiteVcForViewController:self].printOrder;
     if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder && [[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant isEqualToString:@"Review-Overview-Checkout"]){
         UIViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLProductOverviewViewController"];
         [vc safePerformSelector:@selector(setUserEmail:) withObject:[(OLKiteViewController *)vc userEmail]];
@@ -327,10 +331,7 @@
 -(void)scrollCropViewController:(OLScrollCropViewController *)cropper didFinishCroppingImage:(UIImage *)croppedImage{
     [self.editingPrintPhoto unloadImage];
     
-    self.editingPrintPhoto.edits.cropImageFrame = [cropper.cropView getFrameRect];
-    self.editingPrintPhoto.edits.cropImageRect = [cropper.cropView getImageRect];
-    self.editingPrintPhoto.edits.cropImageSize = [cropper.cropView croppedImageSize];
-    self.editingPrintPhoto.edits.cropTransform = [cropper.cropView.imageView transform];
+    self.editingPrintPhoto.edits = cropper.edits;
     
     [self.collectionView reloadData];
     [cropper dismissViewControllerAnimated:YES completion:NULL];
