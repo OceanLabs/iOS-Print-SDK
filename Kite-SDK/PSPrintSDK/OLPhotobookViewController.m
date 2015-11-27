@@ -769,6 +769,7 @@ UINavigationControllerDelegate
         cropVc.aspectRatio = imageView.frame.size.height / imageView.frame.size.width;
         [self.croppingPrintPhoto getImageWithProgress:NULL completion:^(UIImage *image){
             [cropVc setFullImage:image];
+            cropVc.edits = self.croppingPrintPhoto.edits;
             [self presentViewController:cropVc animated:YES completion:NULL];
         }];
     }
