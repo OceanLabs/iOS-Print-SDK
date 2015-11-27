@@ -1447,6 +1447,11 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         
         [userSelectedPhotos addObject:printPhoto];
     }
+    
+    if (product.productTemplate.templateUI == kOLTemplateUIFrame){
+        [OLKiteUtils reverseRowsOfPhotosInArray:userSelectedPhotos forProduct:product];
+    }
+    
     [orvc safePerformSelector:@selector(setUserSelectedPhotos:) withObject:userSelectedPhotos];
     [overviewVc safePerformSelector:@selector(setUserSelectedPhotos:) withObject:userSelectedPhotos];
     

@@ -369,6 +369,7 @@
         qtyLabel.textColor = [UIColor whiteColor];
         qtyLabel.text = [NSString stringWithFormat:@"%lu", (unsigned long)count];
         qtyLabel.minimumScaleFactor = 0.5;
+        qtyLabel.adjustsFontSizeToFitWidth = YES;
         
         CALayer *layer = [qtyLabel layer];
         [layer setMasksToBounds:YES];
