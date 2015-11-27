@@ -77,11 +77,6 @@ static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
 
 @end
 
-@interface OLSingleImageProductReviewViewController ()
-
-- (void)onButtonNextClicked;
-
-@end
 
 @interface OLAsset (Private)
 
@@ -1456,18 +1451,6 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     [overviewVc safePerformSelector:@selector(setUserSelectedPhotos:) withObject:userSelectedPhotos];
     
     [orvc safePerformSelector:@selector(setEditingPrintJob:) withObject:printJob];
-    
-    if ([orvc isKindOfClass:[OLSingleImageProductReviewViewController class]]){
-        [orvc view]; //Force the ViewController to load
-        UIButton *ctaButton = [(OLSingleImageProductReviewViewController *)orvc ctaButton];
-        [ctaButton setTitle:NSLocalizedString(@"Save", @"") forState:UIControlStateNormal];
-        [ctaButton removeTarget:orvc action:@selector(onButtonNextClicked) forControlEvents:UIControlEventTouchUpInside];
-        [ctaButton addTarget:self action:@selector(saveAndDismissReviewController) forControlEvents:UIControlEventTouchUpInside];
-    }
-    UIBarButtonItem *saveButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Save", "")
-                                                                   style:UIBarButtonItemStyleDone target:self
-                                                                  action:@selector(saveAndDismissReviewController)];
-    orvc.navigationItem.rightBarButtonItem = saveButton;
     
     if ([self shouldShowAddMorePhotos] && product.productTemplate.templateUI != kOLTemplateUICase && product.productTemplate.templateUI != kOLTemplateUIPhotobook && product.productTemplate.templateUI != kOLTemplateUIPostcard){
         OLPhotoSelectionViewController *photoVc = [self.storyboard instantiateViewControllerWithIdentifier:@"PhotoSelectionViewController"];
