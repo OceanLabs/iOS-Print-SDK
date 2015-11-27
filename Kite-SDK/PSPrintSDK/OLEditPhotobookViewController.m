@@ -212,8 +212,12 @@ UINavigationControllerDelegate>
     if (!self.photobookPhotos){
         self.userSelectedPhotosCopy = [[NSArray alloc] initWithArray:self.userSelectedPhotos copyItems:NO];
         self.photobookPhotos = [[NSMutableArray alloc] initWithCapacity:self.product.quantityToFulfillOrder];
-        for (NSInteger i = 1; i < self.product.quantityToFulfillOrder + 1; i++){
+        NSInteger start = 0;
+        if (!self.coverPhoto){
             self.coverPhoto = self.userSelectedPhotos.firstObject;
+            start++;
+        }
+        for (NSInteger i = start; i < self.product.quantityToFulfillOrder + start; i++){
             [self.photobookPhotos addObject:i < self.userSelectedPhotos.count ? self.userSelectedPhotos[i] : [NSNull null]];
         }
     }

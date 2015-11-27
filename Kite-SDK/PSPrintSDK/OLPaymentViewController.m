@@ -1477,6 +1477,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             coverPhoto.asset = [(OLPhotobookPrintJob *)printJob frontCover];
             
             photobookVc.coverPhoto = coverPhoto;
+            [orvc safePerformSelector:@selector(setCoverPhoto:) withObject:coverPhoto];
         }
         
         return [self navViewControllerWithControllers:@[overviewVc, orvc, photobookVc]];
