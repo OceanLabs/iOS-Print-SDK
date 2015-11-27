@@ -1384,6 +1384,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             editButton.hidden = YES;
             largeEditButton.hidden = YES;
         }
+        cell.backgroundColor = [UIColor clearColor];
         
         return cell;
     }

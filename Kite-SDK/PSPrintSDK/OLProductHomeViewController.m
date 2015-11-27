@@ -355,28 +355,26 @@
     basketButton.frame = CGRectMake(0,0,44,44);
     [basketButton addTarget:self action:@selector(onButtonBasketClicked:) forControlEvents:UIControlEventTouchUpInside];
     
-    [basketButton setImage:[UIImage imageNamedInKiteBundle:@"cart"] forState:UIControlStateNormal];
-    
     if (printOrder.jobs.count != 0){
+        [basketButton setImage:[UIImage imageNamedInKiteBundle:@"cart-full"] forState:UIControlStateNormal];
+        
         NSUInteger count = printOrder.jobs.count;
         for (id<OLPrintJob> job in printOrder.jobs){
             count += [job extraCopies];
         }
         
-        UILabel *qtyLabel = [[UILabel alloc] initWithFrame:CGRectMake(25, 10, 10, 10)];
+        UILabel *qtyLabel = [[UILabel alloc] initWithFrame:CGRectMake(24, 11.5, 10, 10)];
         qtyLabel.font = [UIFont systemFontOfSize:9];
         qtyLabel.textAlignment = NSTextAlignmentCenter;
-        qtyLabel.backgroundColor = [UIColor redColor];
         qtyLabel.textColor = [UIColor whiteColor];
         qtyLabel.text = [NSString stringWithFormat:@"%lu", (unsigned long)count];
         qtyLabel.minimumScaleFactor = 0.5;
         qtyLabel.adjustsFontSizeToFitWidth = YES;
         
-        CALayer *layer = [qtyLabel layer];
-        [layer setMasksToBounds:YES];
-        [layer setCornerRadius:5];
-        
         [basketButton addSubview:qtyLabel];
+    }
+    else{
+        [basketButton setImage:[UIImage imageNamedInKiteBundle:@"cart-empty"] forState:UIControlStateNormal];
     }
     
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:basketButton];
