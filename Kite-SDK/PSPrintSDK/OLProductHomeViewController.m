@@ -50,6 +50,7 @@
 
 + (NSString *)storyboardIdentifierForGroupSelected:(OLProductGroup *)group;
 @property (strong, nonatomic) OLPrintOrder *printOrder;
+@property (strong, nonatomic) NSMutableArray *userSelectedPhotos;
 - (void)dismiss;
 
 @end
@@ -529,6 +530,9 @@
     OLProductGroup *group = self.productGroups[indexPath.row];
     OLProduct *product = [group.products firstObject];
     product.uuid = nil;
+    [OLKiteUtils kiteVcForViewController:self].userSelectedPhotos = nil;
+    self.userSelectedPhotos = [OLKiteUtils kiteVcForViewController:self].userSelectedPhotos;
+    
     NSString *identifier = [OLKiteViewController storyboardIdentifierForGroupSelected:group];
     
     id vc = [self.storyboard instantiateViewControllerWithIdentifier:identifier];

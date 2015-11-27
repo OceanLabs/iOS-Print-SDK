@@ -465,6 +465,14 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     
     
     [self.printOrder costWithCompletionHandler:^(OLPrintOrderCost *cost, NSError *error) {
+        //Small chance that the request started before we emptied the basket. 
+        if (self.printOrder.jobs.count == 0){
+            self.totalCostLabel.text = [[NSDecimalNumber decimalNumberWithString:@"0.00"] formatCostForCurrencyCode:[[OLCountry countryForCurrentLocale] currencyCode]];
+            self.shippingCostLabel.text = [[NSDecimalNumber decimalNumberWithString:@"0.00"] formatCostForCurrencyCode:[[OLCountry countryForCurrentLocale] currencyCode]];
+            self.promoCodeCostLabel.text = @"";
+            return;
+        }
+        
         // impossible for an error to exist as we checked for cachedcost path above...
         NSAssert(error == nil, @"Print order did not actually have a cached cost...");
         NSComparisonResult result = [[cost totalCostInCurrency:self.printOrder.currencyCode] compare:[NSDecimalNumber zero]];
