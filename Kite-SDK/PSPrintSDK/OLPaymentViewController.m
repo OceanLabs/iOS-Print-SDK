@@ -469,7 +469,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     
     
     [self.printOrder costWithCompletionHandler:^(OLPrintOrderCost *cost, NSError *error) {
-        //Small chance that the request started before we emptied the basket. 
+        //Small chance that the request started before we emptied the basket.
         if (self.printOrder.jobs.count == 0){
             self.totalCostLabel.text = [[NSDecimalNumber decimalNumberWithString:@"0.00"] formatCostForCurrencyCode:[[OLCountry countryForCurrentLocale] currencyCode]];
             self.shippingCostLabel.text = [[NSDecimalNumber decimalNumberWithString:@"0.00"] formatCostForCurrencyCode:[[OLCountry countryForCurrentLocale] currencyCode]];
@@ -631,10 +631,6 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
         
         if (error) {
-            if (!handlerUsed) {
-                handler(PKPaymentAuthorizationStatusFailure);
-                handlerUsed = YES;
-            }
             [self.printOrder cancelSubmissionOrPreemptedAssetUpload];
             if ([UIAlertController class]){
                 UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLConstants bundle], @"") message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
@@ -661,7 +657,13 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
                         [self.printOrder saveOrder];
                     }
                 }]];
-                [self presentViewController:ac animated:YES completion:NULL];
+                NSBlockOperation *presentAlertBlock = [NSBlockOperation blockOperationWithBlock:^{
+                    [self presentViewController:ac animated:YES completion:NULL];
+                }];
+                if ([self isApplePayAvailable] && self.applePayDismissOperation){
+                    [presentAlertBlock addDependency:self.applePayDismissOperation];
+                }
+                [[NSOperationQueue mainQueue] addOperation:presentAlertBlock];
             }
             else{
                 UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLConstants bundle], @"") message:error.localizedDescription delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLConstants bundle], @"") otherButtonTitles:nil];
@@ -1065,16 +1067,9 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         }
         paymentRequest.requiredShippingAddressFields = requiredFields;
         UIViewController *paymentController;
-        if ([OLKitePrintSDK environment] == kOLKitePrintSDKEnvironmentSandbox) {
-            paymentController = [[STPTestPaymentAuthorizationViewController alloc]
-                                 initWithPaymentRequest:paymentRequest];
-            ((STPTestPaymentAuthorizationViewController *)paymentController).delegate = self;
-        }
-        else{
-            paymentController = [[PKPaymentAuthorizationViewController alloc]
-                                 initWithPaymentRequest:paymentRequest];
-            ((PKPaymentAuthorizationViewController *)paymentController).delegate = self;
-        }
+        paymentController = [[PKPaymentAuthorizationViewController alloc]
+                             initWithPaymentRequest:paymentRequest];
+        ((PKPaymentAuthorizationViewController *)paymentController).delegate = self;
         [self presentViewController:paymentController animated:YES completion:nil];
     }];
 }
@@ -1181,9 +1176,6 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     [self dismissViewControllerAnimated:YES completion:^{
         [self.printOrder costWithCompletionHandler:^(id cost, NSError *error){
             if (!self.applePayDismissOperation.finished){
-                if (![[NSOperationQueue mainQueue].operations containsObject:self.transitionBlockOperation]){
-                    [[NSOperationQueue mainQueue] addOperation:self.transitionBlockOperation];
-                }
                 [[NSOperationQueue mainQueue] addOperation:self.applePayDismissOperation];
             }
             if (error){
@@ -1259,31 +1251,13 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     
     STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:[OLKitePrintSDK stripePublishableKey]];
     
-    if ([OLKitePrintSDK environment] == kOLKitePrintSDKEnvironmentSandbox){
-        STPCard *card = [STPCard new];
-        card.number = @"4242424242424242";
-        card.expMonth = 12;
-        card.expYear = 2020;
-        card.cvc = @"123";
-        [client createTokenWithCard:card completion:^(STPToken *token, NSError *error) {
-            if (error) {
-                completion(PKPaymentAuthorizationStatusFailure);
-                return;
-            }
-            self.printOrder.email = @"test-order@kite.ly";
-            d[@"email"] = self.printOrder.email;
-            [self submitOrderForPrintingWithProofOfPayment:token.tokenId paymentMethod:@"Apple Pay" completion:completion];
-        }];
-    }
-    else{
-        [client createTokenWithPayment:payment completion:^(STPToken *token, NSError *error) {
-            if (error) {
-                completion(PKPaymentAuthorizationStatusFailure);
-                return;
-            }
-            [self submitOrderForPrintingWithProofOfPayment:token.tokenId paymentMethod:@"Apple Pay" completion:completion];
-        }];
-    }
+    [client createTokenWithPayment:payment completion:^(STPToken *token, NSError *error) {
+        if (error) {
+            completion(PKPaymentAuthorizationStatusFailure);
+            return;
+        }
+        [self submitOrderForPrintingWithProofOfPayment:token.tokenId paymentMethod:@"Apple Pay" completion:completion];
+    }];
 }
 
 - (void)paymentAuthorizationViewController:(PKPaymentAuthorizationViewController *)controller didSelectShippingAddress:(ABRecordRef)address completion:(void (^)(PKPaymentAuthorizationStatus, NSArray<PKShippingMethod *> *, NSArray <PKPaymentSummaryItem *>*))completion{
