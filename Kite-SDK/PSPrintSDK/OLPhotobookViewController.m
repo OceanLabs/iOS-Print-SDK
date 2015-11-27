@@ -1524,7 +1524,7 @@ UINavigationControllerDelegate
 #if __IPHONE_OS_VERSION_MIN_REQUIRED < 80000
 - (BOOL)assetsPickerController:(OLAssetsPickerController *)picker isDefaultAssetsGroup:(ALAssetsGroup *)group {
     if ([self.delegate respondsToSelector:@selector(kiteController:isDefaultAssetsGroup:)]) {
-        return [self.delegate kiteController:[self kiteViewController] isDefaultAssetsGroup:group];
+        return [self.delegate kiteController:[OLKiteUtils kiteVcForViewController:self] isDefaultAssetsGroup:group];
     }
     
     return NO;

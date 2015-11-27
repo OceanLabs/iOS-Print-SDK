@@ -1343,6 +1343,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         UILabel *quantityLabel = (UILabel *)[cell.contentView viewWithTag:30];
         UILabel *productNameLabel = (UILabel *)[cell.contentView viewWithTag:50];
         UIButton *editButton = (UIButton *)[cell.contentView viewWithTag:60];
+        UIButton *largeEditButton = (UIButton *)[cell.contentView viewWithTag:61];
         UILabel *priceLabel = (UILabel *)[cell.contentView viewWithTag:70];
         
         id<OLPrintJob> job = self.printOrder.jobs[indexPath.row];
@@ -1364,6 +1365,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         
         if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8){
             editButton.hidden = YES;
+            largeEditButton.hidden = YES;
         }
         
         return cell;
