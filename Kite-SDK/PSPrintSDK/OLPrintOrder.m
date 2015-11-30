@@ -89,14 +89,6 @@ static id stringOrEmptyString(NSString *str) {
     }
 }
 
-+ (OLPrintOrder *)submitJob:(id<OLPrintJob>)job withProofOfPayment:(NSString *)proofOfPayment forPrintingWithProgressHandler:(OLPrintOrderProgressHandler)progressHandler completionHandler:(OLPrintOrderCompletionHandler)completionHandler {
-    OLPrintOrder *printOrder = [[OLPrintOrder alloc] init];
-    [printOrder addPrintJob:job];
-    printOrder.proofOfPayment = proofOfPayment;
-    [printOrder submitForPrintingWithProgressHandler:progressHandler completionHandler:completionHandler];
-    return printOrder;
-}
-
 + (OLPrintOrderSubmitStatus)submitStatusFromIdentifier:(NSString *)identifier{
     if ([identifier isEqualToString:@"Received"]){
         return OLPrintOrderSubmitStatusReceived;
@@ -420,10 +412,10 @@ static id stringOrEmptyString(NSString *str) {
     }
     
     if (self.phone){
-        [json setObject:self.phone forKey:@"phone"];
+        [json setObject:self.phone forKey:@"customer_phone"];
     }
     if (self.email){
-        [json setObject:self.email forKey:@"email"];
+        [json setObject:self.email forKey:@"customer_email"];
     }
     
     if (self.shippingAddress) {

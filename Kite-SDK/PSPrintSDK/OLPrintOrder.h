@@ -93,18 +93,6 @@ typedef NS_ENUM(NSInteger, OLPrintOrderSubmitStatus) {
 @property (strong, nonatomic) NSString *phone;
 
 /**
- *  Create, submit for printing, and return a new OLPrintOrder object, based on a single job.
- *
- *  @param job               The job to form the print order
- *  @param proofOfPayment    The proof of payment to validate that user has actually paid for the job
- *  @param progressHandler   Block to track progress
- *  @param completionHandler Block to execute on completion
- *
- *  @return The print order
- */
-+ (OLPrintOrder *)submitJob:(id<OLPrintJob>)job withProofOfPayment:(NSString *)proofOfPayment forPrintingWithProgressHandler:(OLPrintOrderProgressHandler)progressHandler completionHandler:(OLPrintOrderCompletionHandler)completionHandler;
-
-/**
  *  Returns the OLPrintOrderSubmissionStatus from an NSString
  *
  *  @param identifier The NSString status

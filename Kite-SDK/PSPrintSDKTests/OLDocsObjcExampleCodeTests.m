@@ -51,6 +51,7 @@
         OLPrintOrder *order = [[OLPrintOrder alloc] init];
         [order addPrintJob:iPhone6Case];
         [order addPrintJob:poster];
+        order.email = @"ios_unit_test@kite.ly";
         
         OLAddress *a    = [[OLAddress alloc] init];
         a.recipientFirstName = @"Deon";
@@ -113,6 +114,7 @@
         
         OLPrintOrder *order = [[OLPrintOrder alloc] init];
         [order addPrintJob:squarePrints];
+        order.email = @"ios_unit_test@kite.ly";
         
         OLAddress *a    = [[OLAddress alloc] init];
         a.recipientFirstName = @"Deon";
@@ -175,6 +177,7 @@
         OLPrintOrder *order = [[OLPrintOrder alloc] init];
         [order addPrintJob:ipadAirCase];
         [order addPrintJob:galaxyS5Case];
+        order.email = @"ios_unit_test@kite.ly";
         
         OLAddress *a    = [[OLAddress alloc] init];
         a.recipientFirstName = @"Deon";
@@ -238,6 +241,7 @@
         
         OLPrintOrder *order = [[OLPrintOrder alloc] init];
         [order addPrintJob:tshirt];
+        order.email = @"ios_unit_test@kite.ly";
         
         OLAddress *a    = [[OLAddress alloc] init];
         a.recipientFirstName = @"Deon";
@@ -300,6 +304,7 @@
         
         OLPrintOrder *order = [[OLPrintOrder alloc] init];
         [order addPrintJob:photobook];
+        order.email = @"ios_unit_test@kite.ly";
         
         OLAddress *a    = [[OLAddress alloc] init];
         a.recipientFirstName = @"Deon";
@@ -355,6 +360,7 @@
         
         OLPrintOrder *order = [[OLPrintOrder alloc] init];
         [order addPrintJob:postcard];
+        order.email = @"ios_unit_test@kite.ly";
         
         OLAddress *a    = [[OLAddress alloc] init];
         a.recipientFirstName = @"Deon";
