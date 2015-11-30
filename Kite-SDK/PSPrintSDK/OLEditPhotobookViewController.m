@@ -201,6 +201,7 @@ UINavigationControllerDelegate>
     photobook.delegate = self.delegate;
     
     if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8){
+        photobook.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
         [self.navigationController presentViewController:photobook animated:YES completion:NULL];
         return;
     }
@@ -368,6 +369,7 @@ UINavigationControllerDelegate>
     [cropPhoto getImageWithProgress:NULL completion:^(UIImage *image){
         [cropVc setFullImage:image];
         cropVc.edits = cropPhoto.edits;
+        cropVc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
         [self presentViewController:cropVc animated:YES completion:NULL];
     }];
 }
@@ -844,6 +846,7 @@ UINavigationControllerDelegate>
                     ((CTAssetsPickerController *)picker).assetsFetchOptions = options;
                     assetClass = [PHAsset class];
                     ((CTAssetsPickerController *)picker).delegate = self;
+                    picker.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
                     [self presentViewController:picker animated:YES completion:nil];
                 }
             }];
@@ -861,6 +864,7 @@ UINavigationControllerDelegate>
 #endif
     
     if (picker){
+        picker.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
         [self presentViewController:picker animated:YES completion:nil];
     }
 }
@@ -870,6 +874,7 @@ UINavigationControllerDelegate>
     OLFacebookImagePickerController *picker = nil;
     picker = [[OLFacebookImagePickerController alloc] init];
     picker.delegate = self;
+    picker.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
     [self presentViewController:picker animated:YES completion:nil];
 #endif
 }
@@ -880,6 +885,7 @@ UINavigationControllerDelegate>
     picker = [[OLInstagramImagePickerController alloc] initWithClientId:[OLKitePrintSDK instagramClientID] secret:[OLKitePrintSDK instagramSecret] redirectURI:[OLKitePrintSDK instagramRedirectURI]];
     picker.delegate = self;
     picker.selected = @[];
+    picker.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
     [self presentViewController:picker animated:YES completion:nil];
 #endif
 }

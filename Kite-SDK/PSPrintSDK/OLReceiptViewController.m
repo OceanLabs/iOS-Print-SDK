@@ -24,6 +24,7 @@
 #import "UIImage+ColorAtPixel.h"
 #import "UIImage+ImageNamedInKiteBundle.h"
 #import "OLCustomNavigationController.h"
+#import "OLKiteUtils.h"
 
 static const NSUInteger kSectionOrderSummary = 0;
 static const NSUInteger kSectionOrderId = 1;
@@ -187,6 +188,7 @@ static const NSUInteger kSectionErrorRetry = 2;
                 OLPaymentViewController *vc = [[OLPaymentViewController alloc] initWithPrintOrder:self.printOrder];
                 vc.delegate = self;
                 OLCustomNavigationController *nvc = [[OLCustomNavigationController alloc] initWithRootViewController:vc];
+                nvc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
                 [self presentViewController:nvc animated:YES completion:NULL];
             }]];
             [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"") style:UIAlertActionStyleCancel handler:NULL]];
@@ -198,6 +200,7 @@ static const NSUInteger kSectionErrorRetry = 2;
             OLPaymentViewController *vc = [[OLPaymentViewController alloc] initWithPrintOrder:self.printOrder];
             vc.delegate = self;
             OLCustomNavigationController *nvc = [[OLCustomNavigationController alloc] initWithRootViewController:vc];
+            nvc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
             [self presentViewController:nvc animated:YES completion:NULL];
         }
         return;

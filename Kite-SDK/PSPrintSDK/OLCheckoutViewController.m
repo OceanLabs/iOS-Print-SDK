@@ -21,6 +21,7 @@
 #import "SDWebImageManager.h"
 #import "UIImage+ColorAtPixel.h"
 #import "UIImage+ImageNamedInKiteBundle.h"
+#import "OLKiteUtils.h"
 
 NSString *const kOLNotificationUserSuppliedShippingDetails = @"co.oceanlabs.pssdk.kOLNotificationUserSuppliedShippingDetails";
 NSString *const kOLNotificationUserCompletedPayment = @"co.oceanlabs.pssdk.kOLNotificationUserCompletedPayment";
@@ -101,6 +102,7 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
 
 - (void)presentViewControllerFrom:(UIViewController *)presentingViewController animated:(BOOL)animated completion:(void (^)(void))completion {
     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:self];
+    navController.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
     [presentingViewController presentViewController:navController animated:animated completion:completion];
 }
 
@@ -581,12 +583,15 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
                 addressPicker.allowsAddressSearch = [OLKiteABTesting sharedInstance].offerAddressSearch;
                 addressPicker.allowsMultipleSelection = [OLKiteABTesting sharedInstance].allowsMultipleRecipients;
                 addressPicker.selected = self.shippingAddresses;
+                addressPicker.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
                 [self presentViewController:addressPicker animated:YES completion:nil];
             }
         } else {
             OLAddressEditViewController *editVc = [[OLAddressEditViewController alloc] init];
             editVc.delegate = self;
-            [self presentViewController:[[UINavigationController alloc] initWithRootViewController:editVc] animated:YES completion:nil];
+            UINavigationController *nvc = [[UINavigationController alloc] initWithRootViewController:editVc];
+            nvc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
+            [self presentViewController:nvc animated:YES completion:nil];
         }
     }
 }

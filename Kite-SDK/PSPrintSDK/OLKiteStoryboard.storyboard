@@ -896,8 +896,8 @@
                                                         <color key="titleColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                                     </state>
                                                 </button>
-                                                <label opaque="NO" userInteractionEnabled="NO" tag="30" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="1" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="o0Q-h1-w3b">
-                                                    <rect key="frame" x="79" y="9" width="15" height="15"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" tag="30" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="o0Q-h1-w3b">
+                                                    <rect key="frame" x="80" y="9" width="15" height="15"/>
                                                     <animations/>
                                                     <color key="backgroundColor" white="1" alpha="0.94999999999999996" colorSpace="calibratedWhite"/>
                                                     <constraints>
@@ -1243,6 +1243,9 @@
                                             <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
+                                        <connections>
+                                            <action selector="pressedContinue" destination="CMl-an-8wL" eventType="touchUpInside" id="dQL-Od-B7Z"/>
+                                        </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Start creating" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5vO-8l-GGd">
                                         <rect key="frame" x="50" y="294" width="500" height="19.5"/>
@@ -3897,6 +3900,29 @@
                                         <constraint firstItem="Ekr-4w-04C" firstAttribute="leading" secondItem="uIy-17-c8f" secondAttribute="trailing" constant="-39" id="h4c-Jq-mOf"/>
                                         <constraint firstItem="uIy-17-c8f" firstAttribute="top" secondItem="PS6-La-wG1" secondAttribute="bottom" constant="-3" id="mf5-HZ-zK0"/>
                                         <constraint firstItem="uIy-17-c8f" firstAttribute="leading" secondItem="9nc-2C-aWq" secondAttribute="leading" constant="12" id="pwE-uO-nPn"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                                <animations/>
+                            </tableViewCell>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="50" reuseIdentifier="noOrdersCell" id="0RL-hs-5MN">
+                                <rect key="frame" x="0.0" y="157.5" width="600" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="0RL-hs-5MN" id="WT2-kS-N4h">
+                                    <rect key="frame" x="0.0" y="0.0" width="600" height="43.5"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Buy some products &amp; they'll appear here!" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FJx-R9-sWd">
+                                            <rect key="frame" x="142.5" y="11.5" width="315.5" height="20.5"/>
+                                            <animations/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                    <animations/>
+                                    <constraints>
+                                        <constraint firstItem="FJx-R9-sWd" firstAttribute="centerY" secondItem="WT2-kS-N4h" secondAttribute="centerY" id="1dD-4X-MIZ"/>
+                                        <constraint firstItem="FJx-R9-sWd" firstAttribute="centerX" secondItem="WT2-kS-N4h" secondAttribute="centerX" id="Ycc-6D-hp8"/>
                                     </constraints>
                                 </tableViewCellContentView>
                                 <animations/>

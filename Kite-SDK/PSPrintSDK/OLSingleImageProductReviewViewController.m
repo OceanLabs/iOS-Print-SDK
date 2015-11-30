@@ -493,6 +493,7 @@ OLAssetsPickerControllerDelegate>
                         }
                     }
                     [(id)picker setSelectedAssets:alAssets];
+                    picker.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
                     [self presentViewController:picker animated:YES completion:nil];
                 }
             }];
@@ -518,6 +519,7 @@ OLAssetsPickerControllerDelegate>
             }
         }
         [(id)picker setSelectedAssets:alAssets];
+        picker.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
         [self presentViewController:picker animated:YES completion:nil];
     }
 }
@@ -528,6 +530,7 @@ OLAssetsPickerControllerDelegate>
     picker = [[OLFacebookImagePickerController alloc] init];
     picker.delegate = self;
     picker.selected = [self createAssetArray];
+    picker.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
     [self presentViewController:picker animated:YES completion:nil];
 #endif
 }
@@ -538,6 +541,7 @@ OLAssetsPickerControllerDelegate>
     picker = [[OLInstagramImagePickerController alloc] initWithClientId:[OLKitePrintSDK instagramClientID] secret:[OLKitePrintSDK instagramSecret] redirectURI:[OLKitePrintSDK instagramRedirectURI]];
     picker.delegate = self;
     picker.selected = [self createAssetArray];
+    picker.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
     [self presentViewController:picker animated:YES completion:nil];
 #endif
 }

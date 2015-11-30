@@ -382,7 +382,7 @@
 
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
-    
+        
     NSURL *url = [NSURL URLWithString:[OLKiteABTesting sharedInstance].headerLogoURL];
     if (url && ![[SDWebImageManager sharedManager] cachedImageExistsForURL:url] && [self isMemberOfClass:[OLProductHomeViewController class]]){
         [[SDWebImageManager sharedManager] downloadImageWithURL:url options:0 progress:NULL completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL){
@@ -449,7 +449,7 @@
 #pragma mark - UICollectionViewDelegate Methods
 
 - (CGSize) collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
-    CGSize size = self.view.bounds.size;
+    CGSize size = self.view.frame.size;
     if (indexPath.section == 0 && ![[OLKiteABTesting sharedInstance].qualityBannerType isEqualToString:@"None"]){
         CGFloat height = 110;
         if ([self isHorizontalSizeClassCompact] && size.height > size.width){
@@ -669,6 +669,7 @@
         [(UIViewController *)vc navigationItem].rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamedInKiteBundle:@"menu_button_orders"] style:UIBarButtonItemStylePlain target:vc action:@selector(onBarButtonOrdersClicked)];
         
         OLCustomNavigationController *nvc = [[OLCustomNavigationController alloc] initWithRootViewController:vc];
+        nvc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
         [self presentViewController:nvc animated:YES completion:NULL];
     }];
 }

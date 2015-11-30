@@ -368,6 +368,7 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     }completion:^(UIImage *image){
         [cropVc setFullImage:image];
         cropVc.edits = self.editingPrintPhoto.edits;
+        cropVc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
         [self presentViewController:cropVc animated:YES completion:NULL];
     }];
     

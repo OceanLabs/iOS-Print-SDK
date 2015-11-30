@@ -394,6 +394,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
                         }
                     }
                     [(id)picker setSelectedAssets:alAssets];
+                    picker.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
                     [self presentViewController:picker animated:YES completion:nil];
                 }
             }];
@@ -419,6 +420,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
             }
         }
         [(id)picker setSelectedAssets:alAssets];
+        picker.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
         [self presentViewController:picker animated:YES completion:nil];
     }
 }
@@ -430,6 +432,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     
     picker.delegate = self;
     picker.selected = [self createAssetArray];
+    picker.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
     [self presentViewController:picker animated:YES completion:nil];
 #endif
 }
@@ -440,6 +443,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     picker = [[OLFacebookImagePickerController alloc] init];
     picker.delegate = self;
     picker.selected = [self createAssetArray];
+    picker.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
     [self presentViewController:picker animated:YES completion:nil];
 #endif
 }

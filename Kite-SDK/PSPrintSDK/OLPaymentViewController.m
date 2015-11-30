@@ -731,6 +731,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     }
     
     OLCustomNavigationController *nvc = [[OLCustomNavigationController alloc] initWithRootViewController:vc];
+    nvc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
     [self presentViewController:nvc animated:YES completion:NULL];
 }
 
@@ -935,6 +936,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 - (void)payWithNewCard {
     OLCreditCardCaptureViewController *ccCaptureController = [[OLCreditCardCaptureViewController alloc] initWithPrintOrder:self.printOrder];
     ccCaptureController.delegate = self;
+    ccCaptureController.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
     [self presentViewController:ccCaptureController animated:YES completion:nil];
 }
 
@@ -1050,6 +1052,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         PayPalConfiguration *payPalConfiguration = [[PayPalConfiguration alloc] init];
         payPalConfiguration.acceptCreditCards = NO;
         paymentViewController = [[PayPalPaymentViewController alloc] initWithPayment:payment configuration:payPalConfiguration delegate:self];
+        paymentViewController.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
         [self presentViewController:paymentViewController animated:YES completion:nil];
     }];
 }
@@ -1133,7 +1136,9 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     CGPoint buttonPosition = [sender convertPoint:CGPointZero toView:self.tableView];
     NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:buttonPosition];
     
-    [self presentViewController:[self viewControllerForItemAtIndexPath:indexPath] animated:YES completion:NULL];;
+    UIViewController *vc = [self viewControllerForItemAtIndexPath:indexPath];
+    vc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
+    [self presentViewController:vc animated:YES completion:NULL];;
 }
 
 - (IBAction)onButtonContinueShoppingClicked:(UIButton *)sender {
@@ -1155,6 +1160,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         [vc safePerformSelector:@selector(setUserEmail:) withObject:self.userEmail];
         [vc safePerformSelector:@selector(setUserPhone:) withObject:self.userPhone];
         
+        nvc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
         [self presentViewController:nvc animated:YES completion:NULL];
     }];
 }
@@ -1429,6 +1435,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 }
 
 - (void)previewingContext:(id<UIViewControllerPreviewing>)previewingContext commitViewController:(UIViewController *)viewControllerToCommit{
+    viewControllerToCommit.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
     [self presentViewController:viewControllerToCommit animated:YES completion:NULL];
 }
 

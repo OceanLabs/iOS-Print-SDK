@@ -281,6 +281,24 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
     [self addChildViewController:vc];
     [vc beginAppearanceTransition: YES animated: YES];
     [self.view addSubview:vc.view];
+    
+    UIView *view = vc.view;
+    
+    view.translatesAutoresizingMaskIntoConstraints = NO;
+    NSDictionary *views = NSDictionaryOfVariableBindings(view);
+    NSMutableArray *con = [[NSMutableArray alloc] init];
+    
+    NSArray *visuals = @[@"H:|-0-[view]-0-|",
+                         @"V:|-0-[view]-0-|"];
+    
+    
+    for (NSString *visual in visuals) {
+        [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+    }
+    
+    [view.superview addConstraints:con];
+
+    
     [UIView animateWithDuration:0.3 animations:^(void){
         vc.view.alpha = 1;
     } completion:^(BOOL b){

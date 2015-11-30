@@ -15,8 +15,8 @@
 #import <MessageUI/MessageUI.h>
 #import <MessageUI/MFMailComposeViewController.h>
 #import "OLKiteABTesting.h"
-
-static const NSInteger kSectionCompletedOrders = 0;
+#import "OLKiteUtils.h"
+#import "OLKiteViewController.h"
 
 @interface OLOrdersViewController () <MFMailComposeViewControllerDelegate>
 @end
@@ -34,42 +34,27 @@ static const NSInteger kSectionCompletedOrders = 0;
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self setTitle:NSLocalizedString(@"Orders", @"")];
-    
-    if ([OLPrintOrder printOrderHistory].count == 0) {
-        UILabel* noOrdersLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 100)];
-        noOrdersLabel.text = NSLocalizedString(@"Buy some products & they'll appear here!", @"");
-        noOrdersLabel.textAlignment = NSTextAlignmentCenter;
-        noOrdersLabel.adjustsFontSizeToFitWidth = YES;
-        [self.view addSubview:noOrdersLabel];
-    }
 }
 
 #pragma mark - UITableViewDataSource methods
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    if (section == kSectionCompletedOrders) {
-        return NSLocalizedString(@"Completed Orders", "");
-    }
-    return @"";
+    return NSLocalizedString(@"Completed Orders", "");
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    if ([OLPrintOrder printOrderHistory].count > 0) {
-        return 1;
-    }
-    
-    return 0;
+    return 1;
 }
 
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return [OLPrintOrder printOrderHistory].count;
+    return MAX([OLPrintOrder printOrderHistory].count, 1);
 }
 
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = nil;
-    if (indexPath.section == kSectionCompletedOrders) {
+    if ([OLPrintOrder printOrderHistory].count > 0){
         static NSString *CellIdentifier = @"OrderCell";
         cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
         NSArray *printOrders = [OLPrintOrder printOrderHistory];
@@ -107,7 +92,10 @@ static const NSInteger kSectionCompletedOrders = 0;
             priceLabel.text = [formatter stringFromNumber:[cost totalCostInCurrency:order.currencyCode]];
         }];
     }
-    
+    else{
+        cell = [tableView dequeueReusableCellWithIdentifier:@"noOrdersCell"];
+//        cell.backgroundColor = [UIColor clearColor];
+    }
     return cell;
 }
 
@@ -116,12 +104,10 @@ static const NSInteger kSectionCompletedOrders = 0;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (indexPath.section == kSectionCompletedOrders) {
-        NSArray *printOrders = [OLPrintOrder printOrderHistory];
-        OLPrintOrder *order = printOrders[printOrders.count - (indexPath.row + 1)];
-        OLReceiptViewController *receiptVC = [[OLReceiptViewController alloc] initWithPrintOrder:order];
-        [self.navigationController pushViewController:receiptVC animated:YES];
-    }
+    NSArray *printOrders = [OLPrintOrder printOrderHistory];
+    OLPrintOrder *order = printOrders[printOrders.count - (indexPath.row + 1)];
+    OLReceiptViewController *receiptVC = [[OLReceiptViewController alloc] initWithPrintOrder:order];
+    [self.navigationController pushViewController:receiptVC animated:YES];
 }
 
 #pragma mark - MFMailComposeViewControllerDelegate methods
@@ -133,6 +119,7 @@ static const NSInteger kSectionCompletedOrders = 0;
         [mailCont setSubject:@""];
         [mailCont setToRecipients:@[[OLKiteABTesting sharedInstance].supportEmail]];
         [mailCont setMessageBody:@"" isHTML:NO];
+        mailCont.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
         [self presentViewController:mailCont animated:YES completion:nil];
     } else {
         UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Support", @"") message:[NSString stringWithFormat:NSLocalizedString(@"Please email %@ for support & customer service enquiries.", @""), [OLKiteABTesting sharedInstance].supportEmail] delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"") otherButtonTitles:nil];
