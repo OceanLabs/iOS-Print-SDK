@@ -101,11 +101,13 @@
     OLKiteViewController *vc = [[OLKiteViewController alloc] initWithAssets:@[]];
     UINavigationController *rootVc = (UINavigationController *)[[UIApplication sharedApplication].delegate window].rootViewController;
     
+    sleep(2);
     [rootVc.topViewController presentViewController:vc animated:YES completion:^{
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             while (vc.childViewControllers.count == 0) {
                 sleep(1);
             }
+            
             UINavigationController *nav = (UINavigationController *)vc.childViewControllers.firstObject;
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
                 if ([nav.topViewController isKindOfClass:[OLProductHomeViewController class]]){
