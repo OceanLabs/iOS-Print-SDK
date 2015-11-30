@@ -61,6 +61,8 @@ static NSString *const kSectionPromoCodes = @"kSectionPromoCodes";
 static NSString *const kSectionPayment = @"kSectionPayment";
 static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
 
+static BOOL haveLoadedAtLeastOnce = NO;
+
 @interface OLProductPrintJob ()
 @property (strong, nonatomic) NSMutableDictionary *options;
 @end
@@ -310,6 +312,15 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     
     if ([self.tableView respondsToSelector:@selector(setCellLayoutMarginsFollowReadableWidth:)]){
         self.tableView.cellLayoutMarginsFollowReadableWidth = NO;
+    }
+}
+
+- (void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
+    
+    if (!haveLoadedAtLeastOnce){
+        haveLoadedAtLeastOnce = YES;
+        [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationAutomatic];
     }
 }
 
@@ -1317,7 +1328,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     if (section == 0 && self.printOrder.jobs.count > 0){
-        return self.printOrder.jobs.count;
+        return haveLoadedAtLeastOnce ? self.printOrder.jobs.count : 1;
     }
     else if (section == 0 && self.printOrder.jobs.count == 0){
         return 1;
@@ -1328,7 +1339,10 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (indexPath.section == 0 && self.printOrder.jobs.count > 0){
+    if (indexPath.section == 0 && !haveLoadedAtLeastOnce){
+        return [tableView dequeueReusableCellWithIdentifier:@"loadingCell"];
+    }
+    else if (indexPath.section == 0 && self.printOrder.jobs.count > 0){
         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"jobCell"];
         UIImageView *imageView = (UIImageView *)[cell.contentView viewWithTag:20];
         UILabel *quantityLabel = (UILabel *)[cell.contentView viewWithTag:30];
