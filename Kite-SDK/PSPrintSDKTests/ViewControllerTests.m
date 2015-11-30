@@ -126,9 +126,9 @@
     return resultVc;
 }
 
-- (void)testKiteViewControllerSyncsAndLoadsProductHome{
-    [self loadKiteViewController];
-}
+//- (void)testKiteViewControllerSyncsAndLoadsProductHome{
+//    [self loadKiteViewController];
+//}
 
 - (void)chooseClass:(NSString *)class onOLProductHomeViewController:(OLProductHomeViewController *)productHome{
     XCTestExpectation *expectation = [self expectationWithDescription:@"Wait for vc push"];
