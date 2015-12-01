@@ -11,6 +11,7 @@
 #import "OLPrintPhoto.h"
 #import "OLOrderReviewViewController.h"
 
+#import "UIView+RoundRect.h"
 #import "OLAssetsPickerController.h"
 
 #ifdef OL_KITE_AT_LEAST_IOS8
@@ -79,24 +80,13 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
                                             LXReorderableCollectionViewDataSource,
                                             UICollectionViewDelegateFlowLayout>
 
-@property (nonatomic, weak) IBOutlet OLPhotoSelectionButton *galleryButton;
-@property (nonatomic, weak) IBOutlet OLPhotoSelectionButton *instagramButton;
-@property (nonatomic, weak) IBOutlet OLPhotoSelectionButton *facebookButton;
-@property (weak, nonatomic) IBOutlet UIView *cameraRollContainer;
-@property (weak, nonatomic) IBOutlet UIView *instagramContainer;
-@property (weak, nonatomic) IBOutlet UIView *facebookContainer;
-
 @property (nonatomic, weak) IBOutlet UICollectionView *collectionView;
+@property (strong, nonatomic) IBOutlet UICollectionView *sourcesCollectionView;
 @property (nonatomic, strong) OLAssetsPickerController *picker;
 @property (strong, nonatomic) NSMutableArray *userDisabledPhotos;
 
-@property (nonatomic, weak) IBOutlet UILabel *chooseImportSourceLabel;
-@property (nonatomic, weak) IBOutlet UIButton *buttonGalleryImport, *buttonInstagramImport, *buttonFacebookImport;
-
 @property (nonatomic, weak) IBOutlet UIButton *buttonNext;
-@property (nonatomic, weak) IBOutlet UIView *noSelectedPhotosView;
 @property (weak, nonatomic) IBOutlet UIView *clearButtonContainerView;
-//@property (weak, nonatomic) IBOutlet UIButton *clearButton;
 @property (strong, nonatomic) UIVisualEffectView *visualEffectView;
 
 @property (assign, nonatomic) CGSize rotationSize;
@@ -120,52 +110,21 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     [OLAnalytics trackPhotoSelectionScreenViewed:self.product.productTemplate.name];
 #endif
     
+    self.sourcesCollectionView.delegate = self;
+    self.sourcesCollectionView.dataSource = self;
+    
     self.navigationItem.titleView = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100, 44)];
     [(UILabel *)self.navigationItem.titleView setTextAlignment:NSTextAlignmentCenter];
     [(UILabel *)self.navigationItem.titleView setFont:[UIFont preferredFontForTextStyle:UIFontTextStyleHeadline]];
     self.userDisabledPhotos = [[NSMutableArray alloc] init];
     
-    self.galleryButton.image = [UIImage imageNamedInKiteBundle:@"import_gallery"];
-    self.galleryButton.title = NSLocalizedString(@"Camera Roll", @"");
-    self.galleryButton.mainColor = [UIColor colorWithRed:0.227 green:0.706 blue:0.600 alpha:1.000];
-    
-    self.instagramButton.image = [UIImage imageNamedInKiteBundle:@"import_instagram"];
-    self.instagramButton.title = NSLocalizedString(@"Instagram", @"");
-    self.instagramButton.mainColor = [UIColor colorWithRed:0.965 green:0.733 blue:0.259 alpha:1.000];
-    
-    self.facebookButton.image = [UIImage imageNamedInKiteBundle:@"import_facebook"];
-    self.facebookButton.title = NSLocalizedString(@"Facebook", @"");
-    self.facebookButton.mainColor = [UIColor colorWithRed:0.290 green:0.537 blue:0.863 alpha:1.000];
-    
-    [self.buttonFacebookImport setBackgroundImage:[self imageWithColor:[UIColor colorWithHexString:@"#497aba"]] forState:UIControlStateHighlighted];
-    [self.buttonGalleryImport setBackgroundImage:[self imageWithColor:[UIColor colorWithHexString:@"#369c82"]] forState:UIControlStateHighlighted];
-    [self.buttonInstagramImport setBackgroundImage:[self imageWithColor:[UIColor colorWithHexString:@"#c29334"]] forState:UIControlStateHighlighted];
-    
     self.rotationSize = CGSizeZero;
-    
-    if (![self instagramEnabled]){
-        [self.instagramButton removeFromSuperview];
-        [self.buttonInstagramImport removeFromSuperview];
-        [self.instagramContainer removeFromSuperview];
-    }
-    
-    if (![self facebookEnabled]){
-        [self.facebookButton removeFromSuperview];
-        [self.buttonFacebookImport removeFromSuperview];
-        [self.facebookContainer removeFromSuperview];
-    }
     
     LXReorderableCollectionViewFlowLayout *layout = (LXReorderableCollectionViewFlowLayout *)[self.collectionView collectionViewLayout];
     layout.headerReferenceSize = CGSizeMake(0, 50);
     
     [self.collectionView registerClass:[UICollectionReusableView class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"headerView"];
     
-    if (self.userSelectedPhotos.count > 0) {
-            self.noSelectedPhotosView.alpha = 0;
-    }
-    else if (self.userSelectedPhotos.count == 0) {
-            self.noSelectedPhotosView.alpha = 1;
-    }
     [self onUserSelectedPhotoCountChange];
     
 }
@@ -202,7 +161,6 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
-    [self updateNoSelectedPhotosView];
     [self.collectionView.collectionViewLayout invalidateLayout];
 }
 
@@ -229,26 +187,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     }
     [self.userDisabledPhotos removeObjectsInArray:toRemove];
     
-    [self updateNoSelectedPhotosView];
     [self updateTitleBasedOnSelectedPhotoQuanitity];
-}
-
-- (void)updateNoSelectedPhotosView {
-    NSTimeInterval delay = 0.35;
-    NSTimeInterval duration = 0.3;
-    self.collectionView.alpha = self.userSelectedPhotos.count == 0 ? 0 : 1;
-    if (self.userSelectedPhotos.count > 0 && self.noSelectedPhotosView.alpha >= 0.9f) {
-        self.noSelectedPhotosView.alpha = 1;
-        [UIView animateWithDuration:duration delay:delay options:UIViewAnimationOptionCurveEaseIn animations:^{
-            self.noSelectedPhotosView.alpha = 0;
-        } completion:^(BOOL finished) {}];
-    }
-    else if (self.userSelectedPhotos.count == 0 && self.noSelectedPhotosView.alpha <= 0.1f) {
-        self.noSelectedPhotosView.alpha = 0;
-        [UIView animateWithDuration:duration delay:delay options:UIViewAnimationOptionCurveEaseIn animations:^{
-            self.noSelectedPhotosView.alpha = 1;
-        } completion:^(BOOL finished) {}];
-    }
 }
 
 -(NSUInteger) totalNumberOfExtras{
@@ -280,12 +219,6 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     if ([self.userDisabledPhotos count] > 0){
         self.navigationItem.rightBarButtonItem.title = NSLocalizedString(@"Cancel", @"");
         
-//        if ([self.userDisabledPhotos count] == 1){
-//            [self.clearButton setTitle:[NSString stringWithFormat:NSLocalizedString(@"Clear %lu Photo", @""), (unsigned long)[self.userDisabledPhotos count]] forState:UIControlStateNormal];
-//        }
-//        else{
-//            [self.clearButton setTitle:[NSString stringWithFormat:NSLocalizedString(@"Clear %lu Photos", @""), (unsigned long)[self.userDisabledPhotos count]] forState:UIControlStateNormal];
-//        }
         [UIView animateKeyframesWithDuration:0.15 delay:0 options:UIViewKeyframeAnimationOptionBeginFromCurrentState | UIViewAnimationOptionCurveLinear animations:^{
             self.clearButtonContainerView.transform = CGAffineTransformMakeTranslation(0, -40);
             self.collectionView.contentInset = UIEdgeInsetsMake(self.collectionView.contentInset.top, self.collectionView.contentInset.left, self.collectionView.contentInset.bottom + 40, self.collectionView.contentInset.left);
@@ -482,7 +415,6 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     }completion:^(BOOL finished){
         [self.indexPathsToRemoveDict removeAllObjects];
         [self.collectionView performSelector:@selector(reloadData) withObject:0 afterDelay:0.05];
-        [self updateNoSelectedPhotosView];
     }];
     
 }
@@ -633,83 +565,105 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    if ([self shouldGroupPhotosInOneSection]){
-        return self.userSelectedPhotos.count;
-    }
-    
-    NSInteger number = self.product.quantityToFulfillOrder;
-    NSInteger removedImagesInOtherSections = 0;
-    for (NSNumber *sectionNumber in self.indexPathsToRemoveDict.allKeys){
-        NSNumber *n = [NSNumber numberWithLong:[sectionNumber longValue]];
-        if ([n integerValue] != section){
-            removedImagesInOtherSections += [self.indexPathsToRemoveDict[n] count];
+    if (collectionView.tag == 10){
+        if ([self shouldGroupPhotosInOneSection]){
+            return self.userSelectedPhotos.count;
         }
+        
+        NSInteger number = self.product.quantityToFulfillOrder;
+        NSInteger removedImagesInOtherSections = 0;
+        for (NSNumber *sectionNumber in self.indexPathsToRemoveDict.allKeys){
+            NSNumber *n = [NSNumber numberWithLong:[sectionNumber longValue]];
+            if ([n integerValue] != section){
+                removedImagesInOtherSections += [self.indexPathsToRemoveDict[n] count];
+            }
+        }
+        NSInteger removedImagesInThisSection = [self.indexPathsToRemoveDict[[NSNumber numberWithInteger:section]] count];
+        NSInteger finalNumberOfPhotosRemoved = removedImagesInThisSection + removedImagesInOtherSections;
+        
+        return MIN(MAX(self.userSelectedPhotos.count + finalNumberOfPhotosRemoved, number * [self numberOfCellsPerRow]), self.product.quantityToFulfillOrder) - removedImagesInThisSection;
     }
-    NSInteger removedImagesInThisSection = [self.indexPathsToRemoveDict[[NSNumber numberWithInteger:section]] count];
-    NSInteger finalNumberOfPhotosRemoved = removedImagesInThisSection + removedImagesInOtherSections;
-
-    return MIN(MAX(self.userSelectedPhotos.count + finalNumberOfPhotosRemoved, number * [self numberOfCellsPerRow]), self.product.quantityToFulfillOrder) - removedImagesInThisSection;
+    else{
+        NSInteger sources = 1;
+        if ([self facebookEnabled]){
+            sources++;
+        }
+        if ([self instagramEnabled]){
+            sources++;
+        }
+        return sources;
+    }
 }
 
 - (NSInteger) numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
-    if ([self shouldGroupPhotosInOneSection]){
+    if (collectionView.tag == 10){
+        if ([self shouldGroupPhotosInOneSection]){
+            return 1;
+        }
+        
+        NSInteger removedImagesCount = 0;
+        for (NSNumber *section in self.indexPathsToRemoveDict.allKeys){
+            NSNumber *n = [NSNumber numberWithLong:[section longValue]];
+            removedImagesCount += [self.indexPathsToRemoveDict[n] count];
+        }
+        NSInteger finalNumberOfPhotos = self.userSelectedPhotos.count;
+        return ceil(finalNumberOfPhotos / (double)self.product.quantityToFulfillOrder);
+    }
+    else{
         return 1;
     }
-    
-    NSInteger removedImagesCount = 0;
-    for (NSNumber *section in self.indexPathsToRemoveDict.allKeys){
-        NSNumber *n = [NSNumber numberWithLong:[section longValue]];
-        removedImagesCount += [self.indexPathsToRemoveDict[n] count];
-    }
-    NSInteger finalNumberOfPhotos = self.userSelectedPhotos.count;
-    return ceil(finalNumberOfPhotos / (double)self.product.quantityToFulfillOrder);
 }
 
 - (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath{
-    UICollectionReusableView *cell = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"headerView" forIndexPath:indexPath];
-    cell.backgroundColor = [UIColor colorWithHexString:@"#ECEFF2"];
-    
-    UILabel *label = (UILabel *)[cell viewWithTag:77];
-    if (!label){
-        label = [[UILabel alloc] init];
-        label.tag = 77;
-        [cell addSubview:label];
+    if (collectionView.tag == 10){
+        UICollectionReusableView *cell = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"headerView" forIndexPath:indexPath];
+        cell.backgroundColor = [UIColor colorWithHexString:@"#ECEFF2"];
         
-        label.translatesAutoresizingMaskIntoConstraints = NO;
-        NSDictionary *views = NSDictionaryOfVariableBindings(label);
-        NSMutableArray *con = [[NSMutableArray alloc] init];
-        
-        NSArray *visuals = @[@"H:|-20-[label]-0-|",
-                             @"V:|-0-[label]-0-|"];
-        
-        
-        for (NSString *visual in visuals) {
-            [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+        UILabel *label = (UILabel *)[cell viewWithTag:77];
+        if (!label){
+            label = [[UILabel alloc] init];
+            label.tag = 77;
+            [cell addSubview:label];
+            
+            label.translatesAutoresizingMaskIntoConstraints = NO;
+            NSDictionary *views = NSDictionaryOfVariableBindings(label);
+            NSMutableArray *con = [[NSMutableArray alloc] init];
+            
+            NSArray *visuals = @[@"H:|-20-[label]-0-|",
+                                 @"V:|-0-[label]-0-|"];
+            
+            
+            for (NSString *visual in visuals) {
+                [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+            }
+            
+            [label.superview addConstraints:con];
         }
         
-        [label.superview addConstraints:con];
-    }
-    
-    NSString *title;
-    OLTemplateUI templateUI = [OLProductTemplate templateWithId:self.product.templateId].templateUI;
-    if (templateUI == kOLTemplateUIFrame){
-        title = [[NSString alloc]initWithFormat:@"#%ld Frame", (long)indexPath.section + 1];
-    }
-    else if (templateUI == kOLTemplateUIPhotobook){
-        title = [[NSString alloc]initWithFormat:@"#%ld Photobook", (long)indexPath.section + 1];
-    }
-    else if (templateUI == kOLTemplateUIPoster){
-        title = [[NSString alloc]initWithFormat:@"#%ld Poster", (long)indexPath.section + 1];
-    }
-    else if (templateUI == kOLTemplateUIPostcard){
-        title = [[NSString alloc]initWithFormat:@"#%ld Postcard", (long)indexPath.section + 1];
+        NSString *title;
+        OLTemplateUI templateUI = [OLProductTemplate templateWithId:self.product.templateId].templateUI;
+        if (templateUI == kOLTemplateUIFrame){
+            title = [[NSString alloc]initWithFormat:@"#%ld Frame", (long)indexPath.section + 1];
+        }
+        else if (templateUI == kOLTemplateUIPhotobook){
+            title = [[NSString alloc]initWithFormat:@"#%ld Photobook", (long)indexPath.section + 1];
+        }
+        else if (templateUI == kOLTemplateUIPoster){
+            title = [[NSString alloc]initWithFormat:@"#%ld Poster", (long)indexPath.section + 1];
+        }
+        else if (templateUI == kOLTemplateUIPostcard){
+            title = [[NSString alloc]initWithFormat:@"#%ld Postcard", (long)indexPath.section + 1];
+        }
+        else{
+            title = [[NSString alloc]initWithFormat:@"#%ld Pack of %lu %@", (long)indexPath.section + 1, (unsigned long)self.product.quantityToFulfillOrder, self.product.productTemplate.name];
+        }
+        label.text = title;
+        
+        return cell;
     }
     else{
-        title = [[NSString alloc]initWithFormat:@"#%ld Pack of %lu %@", (long)indexPath.section + 1, (unsigned long)self.product.quantityToFulfillOrder, self.product.productTemplate.name];
+        return nil;
     }
-    label.text = title;
-    
-    return cell;
 }
 
 - (void)fixCellFrameOnIOS7:(UICollectionViewCell *)cell {
@@ -720,167 +674,198 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     }
 }
 
-- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView
-                  cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-    static NSString *identifier = @"PhotoCell";
-    UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
-    
-    [self fixCellFrameOnIOS7:cell];
-    
-    NSUInteger imageIndex = indexPath.row + indexPath.section * self.product.quantityToFulfillOrder;
-    
-    UILabel *qtyLabel = (UILabel *)[cell.contentView viewWithTag:50];
-    if (self.userSelectedPhotos.count > imageIndex){
-        NSInteger qty = [self.userSelectedPhotos[imageIndex] extraCopies];
-        if (qty > 0 && self.product.productTemplate.templateUI != kOLTemplateUIFrame && self.product.productTemplate.templateUI != kOLTemplateUIPhotobook && self.product.productTemplate.templateUI != kOLTemplateUIPoster){
-            qtyLabel.hidden = NO;
-            qtyLabel.text = [NSString stringWithFormat:@"%ld", (long)qty+1];
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
+    if (collectionView.tag == 10){
+        static NSString *identifier = @"PhotoCell";
+        UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
+        
+        [self fixCellFrameOnIOS7:cell];
+        
+        NSUInteger imageIndex = indexPath.row + indexPath.section * self.product.quantityToFulfillOrder;
+        
+        UILabel *qtyLabel = (UILabel *)[cell.contentView viewWithTag:50];
+        if (self.userSelectedPhotos.count > imageIndex){
+            NSInteger qty = [self.userSelectedPhotos[imageIndex] extraCopies];
+            if (qty > 0 && self.product.productTemplate.templateUI != kOLTemplateUIFrame && self.product.productTemplate.templateUI != kOLTemplateUIPhotobook && self.product.productTemplate.templateUI != kOLTemplateUIPoster){
+                qtyLabel.hidden = NO;
+                qtyLabel.text = [NSString stringWithFormat:@"%ld", (long)qty+1];
+            }
+            else{
+                qtyLabel.hidden = YES;
+            }
         }
         else{
             qtyLabel.hidden = YES;
         }
+        
+        OLRemoteImageView *imageView = (OLRemoteImageView *) [cell.contentView viewWithTag:40];
+        if (imageView != nil) {
+            [imageView removeFromSuperview];
+        }
+        cell.contentView.backgroundColor = [UIColor whiteColor];
+        imageView = [[OLRemoteImageView alloc] init];
+        imageView.tag = 40;
+        imageView.clipsToBounds = YES;
+        imageView.contentMode = UIViewContentModeScaleAspectFill;
+        imageView.translatesAutoresizingMaskIntoConstraints = NO;
+        
+        [cell.contentView addSubview:imageView];
+        [cell.contentView sendSubviewToBack:imageView];
+        
+        // Auto autolayout constraints to the cell.
+        NSDictionary *views = NSDictionaryOfVariableBindings(imageView);
+        NSMutableArray *con = [[NSMutableArray alloc] init];
+        
+        NSArray *visuals = @[@"H:|-0-[imageView]-0-|",
+                             @"V:|-0-[imageView]-0-|"];
+        
+        for (NSString *visual in visuals) {
+            [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+        }
+        
+        [cell.contentView addConstraints:con];
+        
+        imageView.image = nil;
+        
+        UIView *disabled = [cell.contentView viewWithTag:42];
+        if (!disabled){
+            disabled = [[UIView alloc] init];
+            disabled.tag = 42;
+            disabled.translatesAutoresizingMaskIntoConstraints = NO;
+            
+            [cell.contentView addSubview:disabled];
+            
+            // Auto autolayout constraints to the cell.
+            NSDictionary *views = NSDictionaryOfVariableBindings(disabled);
+            NSMutableArray *con = [[NSMutableArray alloc] init];
+            
+            NSArray *visuals = @[@"H:|-0-[disabled]-0-|",
+                                 @"V:|-0-[disabled]-0-|"];
+            
+            
+            for (NSString *visual in visuals) {
+                [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+            }
+            
+            [cell.contentView addConstraints:con];
+            
+            disabled.backgroundColor = [UIColor colorWithRed:0.5 green:0.5 blue:0.5 alpha:0.5];
+        }
+        
+        UIImageView *checkmark = (UIImageView *) [cell.contentView viewWithTag:41];
+        if (!checkmark){
+            checkmark = [[UIImageView alloc] init];
+            checkmark.tag = 41;
+            checkmark.clipsToBounds = YES;
+            checkmark.contentMode = UIViewContentModeScaleAspectFill;
+            checkmark.translatesAutoresizingMaskIntoConstraints = NO;
+            
+            [cell.contentView addSubview:checkmark];
+            
+            // Auto autolayout constraints to the cell.
+            NSDictionary *views = NSDictionaryOfVariableBindings(checkmark);
+            NSMutableArray *con = [[NSMutableArray alloc] init];
+            
+            NSArray *visuals = @[@"V:|-2-[checkmark]",
+                                 @"H:[checkmark]-2-|"];
+            
+            for (NSString *visual in visuals) {
+                [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+            }
+            
+            [cell.contentView addConstraints:con];
+            
+            checkmark.image = [UIImage imageNamedInKiteBundle:@"checkmark"];
+            checkmark.hidden = YES;
+        }
+        
+        NSInteger skipAtNewLine = [self numberOfCellsPerRow] % 2 == 0  && indexPath.item / [self numberOfCellsPerRow] % 2 == 0 ? 1 : 0;
+        imageView.backgroundColor = (indexPath.item + skipAtNewLine) % 2 == 0 ? [UIColor colorWithHexString:@"#e6e9ed"] : [UIColor colorWithHexString:@"#dce0e5"];
+        
+        if (imageIndex < self.userSelectedPhotos.count) {
+            OLPrintPhoto *photo = self.userSelectedPhotos[indexPath.row + indexPath.section * self.product.quantityToFulfillOrder];
+            [photo setImageSize:[self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath] cropped:YES progress:^(float progress){
+                [imageView setProgress:progress];
+            } completionHandler:^(UIImage *image){
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if (image){
+                        imageView.image = image;
+                    }
+                });
+            }];
+            checkmark.hidden = ![self.userDisabledPhotos containsObjectIdenticalTo:photo];
+            disabled.hidden = checkmark.hidden;
+        } else {
+            [imageView setImage:nil];
+            checkmark.hidden = YES;
+            disabled.hidden = YES;
+        }
+        
+        return cell;
     }
     else{
-        qtyLabel.hidden = YES;
-    }
-    
-    OLRemoteImageView *imageView = (OLRemoteImageView *) [cell.contentView viewWithTag:40];
-    if (imageView != nil) {
-        [imageView removeFromSuperview];
-    }
-    cell.contentView.backgroundColor = [UIColor whiteColor];
-    imageView = [[OLRemoteImageView alloc] init];
-    imageView.tag = 40;
-    imageView.clipsToBounds = YES;
-    imageView.contentMode = UIViewContentModeScaleAspectFill;
-    imageView.translatesAutoresizingMaskIntoConstraints = NO;
-    
-    [cell.contentView addSubview:imageView];
-    [cell.contentView sendSubviewToBack:imageView];
-    
-    // Auto autolayout constraints to the cell.
-    NSDictionary *views = NSDictionaryOfVariableBindings(imageView);
-    NSMutableArray *con = [[NSMutableArray alloc] init];
-    
-    NSArray *visuals = @[@"H:|-0-[imageView]-0-|",
-                         @"V:|-0-[imageView]-0-|"];
-    
-    for (NSString *visual in visuals) {
-        [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
-    }
-    
-    [cell.contentView addConstraints:con];
-    
-    imageView.image = nil;
-    
-    UIView *disabled = [cell.contentView viewWithTag:42];
-    if (!disabled){
-        disabled = [[UIView alloc] init];
-        disabled.tag = 42;
-        disabled.translatesAutoresizingMaskIntoConstraints = NO;
+        UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"sourceCell" forIndexPath:indexPath];
         
-        [cell.contentView addSubview:disabled];
-        
-        // Auto autolayout constraints to the cell.
-        NSDictionary *views = NSDictionaryOfVariableBindings(disabled);
-        NSMutableArray *con = [[NSMutableArray alloc] init];
-        
-        NSArray *visuals = @[@"H:|-0-[disabled]-0-|",
-                             @"V:|-0-[disabled]-0-|"];
-        
-        
-        for (NSString *visual in visuals) {
-            [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+        OLPhotoSelectionButton *button = [cell viewWithTag:11];
+        [button makeRoundRectWithRadius:22];
+        if (indexPath.item == 0){
+            button.image = [UIImage imageNamedInKiteBundle:@"import_gallery"];
+            button.mainColor = [UIColor colorWithRed:0.227 green:0.706 blue:0.600 alpha:1.000];
+            [button addTarget:self action:@selector(cameraRollSelected:) forControlEvents:UIControlEventTouchUpInside];
+        }
+        else if (indexPath.item == 1){
+            button.image = [UIImage imageNamedInKiteBundle:@"import_facebook"];
+            button.mainColor = [UIColor colorWithRed:0.290 green:0.537 blue:0.863 alpha:1.000];
+            [button addTarget:self action:@selector(facebookSelected:) forControlEvents:UIControlEventTouchUpInside];
+        }
+        else if (indexPath.item == 2){
+            button.image = [UIImage imageNamedInKiteBundle:@"import_instagram"];
+            button.mainColor = [UIColor colorWithRed:0.965 green:0.733 blue:0.259 alpha:1.000];
+            [button addTarget:self action:@selector(instagramSelected:) forControlEvents:UIControlEventTouchUpInside];
         }
         
-        [cell.contentView addConstraints:con];
-        
-        disabled.backgroundColor = [UIColor colorWithRed:0.5 green:0.5 blue:0.5 alpha:0.5];
+        return cell;
     }
-    
-    UIImageView *checkmark = (UIImageView *) [cell.contentView viewWithTag:41];
-    if (!checkmark){
-        checkmark = [[UIImageView alloc] init];
-        checkmark.tag = 41;
-        checkmark.clipsToBounds = YES;
-        checkmark.contentMode = UIViewContentModeScaleAspectFill;
-        checkmark.translatesAutoresizingMaskIntoConstraints = NO;
-        
-        [cell.contentView addSubview:checkmark];
-        
-        // Auto autolayout constraints to the cell.
-        NSDictionary *views = NSDictionaryOfVariableBindings(checkmark);
-        NSMutableArray *con = [[NSMutableArray alloc] init];
-        
-        NSArray *visuals = @[@"V:|-2-[checkmark]",
-                             @"H:[checkmark]-2-|"];
-        
-        for (NSString *visual in visuals) {
-            [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
-        }
-        
-        [cell.contentView addConstraints:con];
-        
-        checkmark.image = [UIImage imageNamedInKiteBundle:@"checkmark"];
-        checkmark.hidden = YES;
-    }
-    
-    NSInteger skipAtNewLine = [self numberOfCellsPerRow] % 2 == 0  && indexPath.item / [self numberOfCellsPerRow] % 2 == 0 ? 1 : 0;
-    imageView.backgroundColor = (indexPath.item + skipAtNewLine) % 2 == 0 ? [UIColor colorWithHexString:@"#e6e9ed"] : [UIColor colorWithHexString:@"#dce0e5"];
-    
-    if (imageIndex < self.userSelectedPhotos.count) {
-        OLPrintPhoto *photo = self.userSelectedPhotos[indexPath.row + indexPath.section * self.product.quantityToFulfillOrder];
-        [photo setImageSize:[self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath] cropped:YES progress:^(float progress){
-            [imageView setProgress:progress];
-        } completionHandler:^(UIImage *image){
-            dispatch_async(dispatch_get_main_queue(), ^{
-                if (image){
-                    imageView.image = image;
-                }
-            });
-        }];
-        checkmark.hidden = ![self.userDisabledPhotos containsObjectIdenticalTo:photo];
-        disabled.hidden = checkmark.hidden;
-    } else {
-        [imageView setImage:nil];
-        checkmark.hidden = YES;
-        disabled.hidden = YES;
-    }
-    
-    return cell;
 }
 
 #pragma mark - UICollectionViewDelegate Methods
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
-    id photo;
-    NSInteger photoIndex = indexPath.row + indexPath.section * self.product.quantityToFulfillOrder;
-    if (photoIndex < [self.userSelectedPhotos count]){
-        photo = self.userSelectedPhotos[photoIndex];
-        if ([self.userDisabledPhotos containsObjectIdenticalTo:photo]){
-            [self.userDisabledPhotos removeObjectIdenticalTo:photo];
+    if (collectionView.tag == 10){
+        id photo;
+        NSInteger photoIndex = indexPath.row + indexPath.section * self.product.quantityToFulfillOrder;
+        if (photoIndex < [self.userSelectedPhotos count]){
+            photo = self.userSelectedPhotos[photoIndex];
+            if ([self.userDisabledPhotos containsObjectIdenticalTo:photo]){
+                [self.userDisabledPhotos removeObjectIdenticalTo:photo];
+            }
+            else{
+                [self.userDisabledPhotos addObject:photo];
+            }
         }
-        else{
-            [self.userDisabledPhotos addObject:photo];
+        
+        UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
+        UIImageView *checkmark = [cell viewWithTag:41];
+        UIView *disabled = [cell viewWithTag:42];
+        if ([self.userDisabledPhotos containsObjectIdenticalTo:photo] && photoIndex < [self.userSelectedPhotos count]){
+            checkmark.hidden = NO;
+            disabled.hidden = NO;
         }
+        else if (photoIndex < [self.userSelectedPhotos count]){
+            checkmark.hidden = YES;
+            disabled.hidden = YES;
+        }
+        
+        [self updateTitleBasedOnSelectedPhotoQuanitity];
+        
+        [collectionView deselectItemAtIndexPath:indexPath animated:NO];
     }
-    
-    UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
-    UIImageView *checkmark = [cell viewWithTag:41];
-    UIView *disabled = [cell viewWithTag:42];
-    if ([self.userDisabledPhotos containsObjectIdenticalTo:photo] && photoIndex < [self.userSelectedPhotos count]){
-        checkmark.hidden = NO;
-        disabled.hidden = NO;
+    else{
+        
     }
-    else if (photoIndex < [self.userSelectedPhotos count]){
-        checkmark.hidden = YES;
-        disabled.hidden = YES;
-    }
-    
-    [self updateTitleBasedOnSelectedPhotoQuanitity];
-    
-    [collectionView deselectItemAtIndexPath:indexPath animated:NO];
 }
+
+#pragma mark LXReorderableCollectionViewFlowLayoutDelegate
 
 - (void)collectionView:(UICollectionView *)collectionView itemAtIndexPath:(NSIndexPath *)fromIndexPath didMoveToIndexPath:(NSIndexPath *)toIndexPath {
     
@@ -911,17 +896,28 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     return YES;
 }
 
+#pragma mark UICollectionViewLayoutDelegate
+
 - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section{
-    return OLPhotoSelectionMargin;
+    if (collectionView.tag == 10){
+        return OLPhotoSelectionMargin;
+    }
+    else{
+        return 0;
+    }
 }
 
 - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section{
-    return OLPhotoSelectionMargin;
+    if (collectionView.tag == 10){
+        return OLPhotoSelectionMargin;
+    }
+    else{
+        return 0;
+    }
 }
 
-- (CGSize)collectionView:(UICollectionView *)collectionView
-                  layout:(UICollectionViewLayout *)collectionViewLayout
-  sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
+    if (collectionView.tag == 10){
     CGSize size = self.view.bounds.size;
     
     if (self.rotationSize.width != 0){
@@ -931,28 +927,40 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     float numberOfCellsPerRow = [self numberOfCellsPerRow];
     CGFloat width = ceilf(size.width/numberOfCellsPerRow);
     CGFloat height = width;
-    
-//    if (indexPath.item % [self numberOfCellsPerRow] == 2) {
-//        width = size.width - 2 * width;
-//    }
+
 
     return CGSizeMake(width, height);
+    }
+    else{
+        return CGSizeMake(60, collectionView.frame.size.height);
+    }
 }
 
 - (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout insetForSectionAtIndex:(NSInteger)section{
     CGSize size = self.rotationSize.width != 0 ? self.rotationSize : self.view.frame.size;
     
+    if (collectionView.tag == 10){
     CGSize cellSize = [self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
     CGFloat diff = size.width - (cellSize.width * [self numberOfCellsPerRow]);
     return UIEdgeInsetsMake(0, diff/2.0, 0, diff/2.0);
+    }
+    else{
+        CGFloat margin = (size.width - [self collectionView:collectionView numberOfItemsInSection:0] * [self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]].width)/2.0;
+        return UIEdgeInsetsMake(0, margin, 0, margin);
+    }
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section{
-    if ([self shouldGroupPhotosInOneSection]){
-        return CGSizeZero;
+    if (collectionView.tag == 10){
+        if ([self shouldGroupPhotosInOneSection]){
+            return CGSizeZero;
+        }
+        else{
+            return CGSizeMake(self.view.frame.size.width, 50);
+        }
     }
     else{
-        return CGSizeMake(self.view.frame.size.width, 50);
+        return CGSizeZero;
     }
 }
 
