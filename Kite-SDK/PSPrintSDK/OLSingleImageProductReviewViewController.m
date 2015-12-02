@@ -6,28 +6,31 @@
 //  Copyright (c) 2015 Deon Botha. All rights reserved.
 //
 
-#import "OLSingleImageProductReviewViewController.h"
-#import "OLPrintPhoto.h"
+#import "NSArray+QueryingExtras.h"
+#import "NSObject+Utils.h"
 #import "OLAnalytics.h"
 #import "OLAsset+Private.h"
-#import "SDWebImageManager.h"
-#import "OLProductPrintJob.h"
-#import "OLKitePrintSDK.h"
-#import "OLAssetsPickerController.h"
-#import "OLKiteUtils.h"
-#ifdef OL_KITE_AT_LEAST_IOS8
-#import <CTAssetsPickerController/CTAssetsPickerController.h>
-#endif
-#import "NSArray+QueryingExtras.h"
-#import "OLKiteViewController.h"
-#import "OLKiteABTesting.h"
-#import "NSObject+Utils.h"
-#import "OLImageCachingManager.h"
-#import "OLRemoteImageView.h"
-#import "OLRemoteImageCropper.h"
 #import "OLAsset+Private.h"
-#import "OLProductTemplateOption.h"
+#import "OLAssetsPickerController.h"
+#import "OLCustomPhotoSource.h"
+#import "OLImageCachingManager.h"
+#import "OLKiteABTesting.h"
+#import "OLKitePrintSDK.h"
+#import "OLKiteUtils.h"
+#import "OLKiteViewController.h"
 #import "OLPaymentViewController.h"
+#import "OLPrintPhoto.h"
+#import "OLProductPrintJob.h"
+#import "OLProductTemplateOption.h"
+#import "OLRemoteImageCropper.h"
+#import "OLRemoteImageView.h"
+#import "OLSingleImageProductReviewViewController.h"
+#import "SDWebImageManager.h"
+
+#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_SOURCES
+#import "OLCustomPhotoSource.h"
+#import <KITAssetsPickerController.h>
+#endif
 
 #ifdef OL_KITE_OFFER_INSTAGRAM
 #import <InstagramImagePicker/OLInstagramImagePickerController.h>
@@ -37,6 +40,10 @@
 #ifdef OL_KITE_OFFER_FACEBOOK
 #import <FacebookImagePicker/OLFacebookImagePickerController.h>
 #import <FacebookImagePicker/OLFacebookImage.h>
+#endif
+
+#ifdef OL_KITE_AT_LEAST_IOS8
+#import <CTAssetsPickerController/CTAssetsPickerController.h>
 #endif
 
 @interface OLPaymentViewController (Private)
@@ -54,6 +61,7 @@
 @interface OLKiteViewController ()
 
 @property (strong, nonatomic) OLPrintOrder *printOrder;
+@property (strong, nonatomic) NSMutableArray <OLCustomPhotoSource *> *customImageProviders;
 - (void)dismiss;
 
 @end
@@ -75,6 +83,9 @@ OLFacebookImagePickerControllerDelegate,
 #endif
 #ifdef OL_KITE_AT_LEAST_IOS8
 CTAssetsPickerControllerDelegate,
+#endif
+#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_SOURCES
+KITAssetsPickerControllerDelegate,
 #endif
 OLAssetsPickerControllerDelegate>
 
@@ -267,22 +278,6 @@ OLAssetsPickerControllerDelegate>
     }];
 }
 
-- (BOOL)instagramEnabled{
-#ifdef OL_KITE_OFFER_INSTAGRAM
-    return [OLKitePrintSDK instagramSecret] && ![[OLKitePrintSDK instagramSecret] isEqualToString:@""] && [OLKitePrintSDK instagramClientID] && ![[OLKitePrintSDK instagramClientID] isEqualToString:@""] && [OLKitePrintSDK instagramRedirectURI] && ![[OLKitePrintSDK instagramRedirectURI] isEqualToString:@""];
-#else
-    return NO;
-#endif
-}
-
-- (BOOL)facebookEnabled{
-#ifdef OL_KITE_OFFER_FACEBOOK
-    return YES;
-#else
-    return NO;
-#endif
-}
-
 #pragma mark CollectionView delegate and data source
 
 - (NSInteger) sectionForMoreCell{
@@ -402,22 +397,34 @@ OLAssetsPickerControllerDelegate>
             });
         }];
     }
-    else if ([self instagramEnabled] || [self facebookEnabled]){
+    else if ([OLKiteUtils instagramEnabled] || [OLKiteUtils facebookEnabled]){
         if ([UIAlertController class]){
             UIAlertController *ac = [UIAlertController alertControllerWithTitle:nil message:NSLocalizedString(@"Add photos from:", @"") preferredStyle:UIAlertControllerStyleActionSheet];
             [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Camera Roll", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
                 [self showCameraRollImagePicker];
             }]];
-            if ([self instagramEnabled]){
+            if ([OLKiteUtils instagramEnabled]){
                 [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Instagram", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
                     [self showInstagramImagePicker];
                 }]];
             }
-            if ([self facebookEnabled]){
+            if ([OLKiteUtils facebookEnabled]){
                 [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Facebook", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
                     [self showFacebookImagePicker];
                 }]];
             }
+#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_SOURCES
+            for (OLCustomPhotoSource *provider in [OLKiteUtils kiteVcForViewController:self].customImageProviders){
+                [ac addAction:[UIAlertAction actionWithTitle:provider.name style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
+                    KITAssetsPickerController *vc = [[KITAssetsPickerController alloc] init];
+                    vc.delegate = self;
+                    vc.collectionDataSources = provider.collections;
+                    vc.selectedAssets = [[self createAssetArray] mutableCopy];
+                    vc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
+                    [self presentViewController:vc animated:YES completion:NULL];
+                }]];
+            }
+#endif
             
             [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"") style:UIAlertActionStyleCancel handler:^(UIAlertAction *action){
                 [ac dismissViewControllerAnimated:YES completion:NULL];
@@ -428,18 +435,18 @@ OLAssetsPickerControllerDelegate>
         }
         else{
             UIActionSheet *as;
-            if ([self instagramEnabled] && [self facebookEnabled]){
+            if ([OLKiteUtils instagramEnabled] && [OLKiteUtils facebookEnabled]){
                 as = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"Add photos from:", @"") delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", @"") destructiveButtonTitle:nil otherButtonTitles:NSLocalizedString(@"Camera Roll", @""),
                       NSLocalizedString(@"Instagram", @""),
                       NSLocalizedString(@"Facebook", @""),
                       nil];
             }
-            else if ([self instagramEnabled]){
+            else if ([OLKiteUtils instagramEnabled]){
                 as = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"Add photos from:", @"") delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", @"") destructiveButtonTitle:nil otherButtonTitles:NSLocalizedString(@"Camera Roll", @""),
                       NSLocalizedString(@"Instagram", @""),
                       nil];
             }
-            else if ([self facebookEnabled]){
+            else if ([OLKiteUtils facebookEnabled]){
                 as = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"Add photos from:", @"") delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", @"") destructiveButtonTitle:nil otherButtonTitles:NSLocalizedString(@"Camera Roll", @""),
                       NSLocalizedString(@"Facebook", @""),
                       nil];
@@ -459,7 +466,12 @@ OLAssetsPickerControllerDelegate>
 - (NSArray *)createAssetArray {
     NSMutableArray *array = [[NSMutableArray alloc] initWithCapacity:self.userSelectedPhotos.count];
     for (OLPrintPhoto *object in self.userSelectedPhotos) {
-        [array addObject:object.asset];
+        if ([object.asset isKindOfClass:[OLAsset class]] && [object.asset dataSource]){
+            [array addObject:[object.asset dataSource]];
+        }
+        else if (![object.asset isKindOfClass:[OLAsset class]]){
+            [array addObject:object.asset];
+        }
     }
     return array;
 }
@@ -563,7 +575,18 @@ OLAssetsPickerControllerDelegate>
     // First remove any that are not returned.
     NSMutableArray *removeArray = [NSMutableArray arrayWithArray:self.userSelectedPhotos];
     for (OLPrintPhoto *object in self.userSelectedPhotos) {
-        if (![object.asset isKindOfClass:class] || [photoArray containsObjectIdenticalTo:object]) {
+        if ([object.asset isKindOfClass:[OLAsset class]] && [object.asset isKindOfClass:class]){
+            for (OLPrintPhoto *addedPhoto in photoArray){
+                if ([addedPhoto.asset isKindOfClass:[OLAsset class]] && (![[object.asset dataSource] isEqual:[addedPhoto.asset dataSource]] || ![[[object.asset dataSource] class] isKindOfClass:[[addedPhoto.asset dataSource] class]])){
+                    [removeArray removeObjectIdenticalTo:object];
+                }
+            }
+        }
+        else if (![object.asset isKindOfClass:class]) {
+            [removeArray removeObjectIdenticalTo:object];
+        }
+        
+        if([photoArray containsObject:object]){
             [removeArray removeObjectIdenticalTo:object];
         }
     }
@@ -605,7 +628,29 @@ OLAssetsPickerControllerDelegate>
 #endif
 
 - (void)assetsPickerController:(id)picker didFinishPickingAssets:(NSArray *)assets {
-    [self populateArrayWithNewArray:assets dataType:[picker isKindOfClass:[OLAssetsPickerController class]] ? [ALAsset class] : [PHAsset class]];
+    Class assetClass;
+    if ([picker isKindOfClass:[OLAssetsPickerController class]]){
+        assetClass = [ALAsset class];
+    }
+#ifdef OL_KITE_AT_LEAST_IOS8
+    else if ([picker isKindOfClass:[CTAssetsPickerController class]]){
+        assetClass = [PHAsset class];
+    }
+#endif
+#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_SOURCES
+    else if ([picker isKindOfClass:[KITAssetsPickerController class]]){
+        assetClass = [OLAsset class];
+        NSMutableArray *olAssets = [[NSMutableArray alloc] init];
+        for (id<OLAssetDataSource> asset in assets){
+            if ([asset respondsToSelector:@selector(dataWithCompletionHandler:)]){
+                [olAssets addObject:[OLAsset assetWithDataSource:asset]];
+            }
+        }
+        assets = olAssets;
+    }
+#endif
+    [self populateArrayWithNewArray:assets dataType:assetClass];
+    
     if (self.imagePicked){
         self.imageDisplayed = self.imagePicked;
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
@@ -634,6 +679,9 @@ OLAssetsPickerControllerDelegate>
     if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8){
         return;
     }
+    if (![asset isKindOfClass:[PHAsset class]]){
+        return;
+    }
     PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
     options.networkAccessAllowed = YES;
     [[OLImageCachingManager sharedInstance].photosCachingManager stopCachingImagesForAssets:@[asset] targetSize:PHImageManagerMaximumSize contentMode:PHImageContentModeAspectFill options:options];
@@ -641,6 +689,9 @@ OLAssetsPickerControllerDelegate>
 
 - (void)assetsPickerController:(CTAssetsPickerController *)picker didSelectAsset:(PHAsset *)asset{
     if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8){
+        return;
+    }
+    if (![asset isKindOfClass:[PHAsset class]]){
         return;
     }
     PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
@@ -716,7 +767,7 @@ OLAssetsPickerControllerDelegate>
         [self showCameraRollImagePicker];
     }
     else if (buttonIndex == 1){
-        if ([self instagramEnabled]){
+        if ([OLKiteUtils instagramEnabled]){
             [self showInstagramImagePicker];
         }
         else{
