@@ -236,7 +236,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     for (OLPrintPhoto *object in self.userSelectedPhotos) {
         if ([object.asset isKindOfClass:[OLAsset class]] && [object.asset isKindOfClass:class]){
             for (OLPrintPhoto *addedPhoto in photoArray){
-                if ([addedPhoto.asset isKindOfClass:[OLAsset class]] && ![[object.asset dataSource] isEqual:[addedPhoto.asset dataSource]]){
+                if ([addedPhoto.asset isKindOfClass:[OLAsset class]] && (![[object.asset dataSource] isEqual:[addedPhoto.asset dataSource]] || ![[[object.asset dataSource] class] isKindOfClass:[[addedPhoto.asset dataSource] class]])){
                     [removeArray removeObjectIdenticalTo:object];
                 }
             }
@@ -271,7 +271,12 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 - (NSArray *)createAssetArray {
     NSMutableArray *array = [[NSMutableArray alloc] initWithCapacity:self.userSelectedPhotos.count];
     for (OLPrintPhoto *object in self.userSelectedPhotos) {
-        [array addObject:object.asset];
+        if ([object.asset isKindOfClass:[OLAsset class]] && [object.asset dataSource]){
+            [array addObject:[object.asset dataSource]];
+        }
+        else if (![object.asset isKindOfClass:[OLAsset class]]){
+            [array addObject:object.asset];
+        }
     }
     return array;
 }
@@ -384,6 +389,8 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     KITAssetsPickerController *vc = [[KITAssetsPickerController alloc] init];
     vc.delegate = self;
     vc.collectionDataSources = [[OLKiteUtils kiteVcForViewController:self].customImageProviders.firstObject collections];
+    vc.selectedAssets = [[self createAssetArray] mutableCopy];
+    vc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
     [self presentViewController:vc animated:YES completion:NULL];
 }
 #endif
@@ -463,7 +470,9 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
         assetClass = [OLAsset class];
         NSMutableArray *olAssets = [[NSMutableArray alloc] init];
         for (id<OLAssetDataSource> asset in assets){
-            [olAssets addObject:[OLAsset assetWithDataSource:asset]];
+            if ([asset respondsToSelector:@selector(dataWithCompletionHandler:)]){
+                [olAssets addObject:[OLAsset assetWithDataSource:asset]];
+            }
         }
         assets = olAssets;
     }
