@@ -110,7 +110,8 @@ NSString *const kOLMimeTypePNG  = @"image/png";
 
 - (id)initWithDataSource:(id<OLAssetDataSource>)dataSource {
     if (self = [super init]) {
-        NSAssert([dataSource conformsToProtocol:@protocol(OLAssetDataSource)], @"Oops your class %@ does not conform to the OLAssetDataSource protocol", [dataSource class]);
+        NSAssert([dataSource respondsToSelector:@selector(dataWithCompletionHandler:)], @"Oops your class %@ does not conform to the OLAssetDataSource protocol", [dataSource class]);
+         NSAssert([dataSource respondsToSelector:@selector(dataLengthWithCompletionHandler:)], @"Oops your class %@ does not conform to the OLAssetDataSource protocol", [dataSource class]);
         _mimeType = dataSource.mimeType;
         self.dataSource = dataSource;
     }

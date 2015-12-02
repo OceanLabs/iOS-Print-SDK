@@ -6,13 +6,10 @@
 //  Copyright (c) 2013 Ocean Labs. All rights reserved.
 //
 
-#import "OLPhotoSelectionViewController.h"
-#import "OLPhotoSelectionButton.h"
-#import "OLPrintPhoto.h"
-#import "OLOrderReviewViewController.h"
-
-#import "UIView+RoundRect.h"
-#import "OLAssetsPickerController.h"
+#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_SOURCES
+#import "OLCustomPhotoSource.h"
+#import <KITAssetsPickerController.h>
+#endif
 
 #ifdef OL_KITE_AT_LEAST_IOS8
 #import <CTAssetsPickerController/CTAssetsPickerController.h>
@@ -28,24 +25,29 @@
 #import <FacebookImagePicker/OLFacebookImage.h>
 #endif
 
-#import "OLPrintJob.h"
-#import "OLAddress.h"
-#import "OLAsset.h"
-#import "OLProductPrintJob.h"
-#import "UIColor+HexString.h"
-#import "OLConstants.h"
 #import "LXReorderableCollectionViewFlowLayout.h"
 #import "NSArray+QueryingExtras.h"
-#import "OLKitePrintSDK.h"
 #import "NSObject+Utils.h"
-#import "UIViewController+TraitCollectionCompatibility.h"
+#import "OLAddress.h"
 #import "OLAnalytics.h"
-#import "OLKiteUtils.h"
-#import "OLKiteABTesting.h"
-
-#import "OLRemoteImageView.h"
+#import "OLAsset.h"
+#import "OLAssetsPickerController.h"
+#import "OLConstants.h"
 #import "OLImageCachingManager.h"
+#import "OLKiteABTesting.h"
+#import "OLKitePrintSDK.h"
+#import "OLKiteUtils.h"
+#import "OLOrderReviewViewController.h"
+#import "OLPhotoSelectionButton.h"
+#import "OLPhotoSelectionViewController.h"
+#import "OLPrintJob.h"
+#import "OLPrintPhoto.h"
+#import "OLProductPrintJob.h"
+#import "OLRemoteImageView.h"
+#import "UIColor+HexString.h"
 #import "UIImage+ImageNamedInKiteBundle.h"
+#import "UIView+RoundRect.h"
+#import "UIViewController+TraitCollectionCompatibility.h"
 
 NSInteger OLPhotoSelectionMargin = 0;
 
@@ -77,25 +79,26 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 #ifdef OL_KITE_OFFER_FACEBOOK
                                             OLFacebookImagePickerControllerDelegate,
 #endif
+#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_SOURCES
+                                            KITAssetsPickerControllerDelegate,
+#endif
                                             LXReorderableCollectionViewDataSource,
                                             UICollectionViewDelegateFlowLayout>
 
+@property (assign, nonatomic) CGSize rotationSize;
+@property (nonatomic, strong) OLAssetsPickerController *picker;
+@property (nonatomic, weak) IBOutlet UIButton *buttonNext;
 @property (nonatomic, weak) IBOutlet UICollectionView *collectionView;
 @property (strong, nonatomic) IBOutlet UICollectionView *sourcesCollectionView;
-@property (nonatomic, strong) OLAssetsPickerController *picker;
 @property (strong, nonatomic) NSMutableArray *userDisabledPhotos;
-
-@property (nonatomic, weak) IBOutlet UIButton *buttonNext;
-@property (weak, nonatomic) IBOutlet UIView *clearButtonContainerView;
-@property (strong, nonatomic) UIVisualEffectView *visualEffectView;
-
-@property (assign, nonatomic) CGSize rotationSize;
-
 @property (strong, nonatomic) NSMutableDictionary *indexPathsToRemoveDict;
+@property (strong, nonatomic) UIVisualEffectView *visualEffectView;
+@property (weak, nonatomic) IBOutlet UIView *clearButtonContainerView;
+
 @end
 
 @interface OLKiteViewController ()
-
+@property (strong, nonatomic) NSMutableArray <OLCustomPhotoSource *> *customImageProviders;
 @property (strong, nonatomic) OLPrintOrder *printOrder;
 - (void)dismiss;
 
@@ -133,22 +136,6 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     [super viewDidLayoutSubviews];
     
     self.collectionView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
-}
-
-- (BOOL)instagramEnabled{
-#ifdef OL_KITE_OFFER_INSTAGRAM
-    return [OLKitePrintSDK instagramSecret] && ![[OLKitePrintSDK instagramSecret] isEqualToString:@""] && [OLKitePrintSDK instagramClientID] && ![[OLKitePrintSDK instagramClientID] isEqualToString:@""] && [OLKitePrintSDK instagramRedirectURI] && ![[OLKitePrintSDK instagramRedirectURI] isEqualToString:@""];
-#else 
-    return NO;
-#endif
-}
-
-- (BOOL)facebookEnabled{
-#ifdef OL_KITE_OFFER_FACEBOOK
-    return YES;
-#else
-    return NO;
-#endif
 }
 
 - (void)viewWillAppear:(BOOL)animated{
@@ -381,6 +368,15 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 #endif
 }
 
+#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_SOURCES
+- (void)customProviderSelected:(OLPhotoSelectionButton *)sender{
+    KITAssetsPickerController *vc = [[KITAssetsPickerController alloc] init];
+    vc.delegate = self;
+    vc.collectionDataSources = [[OLKiteUtils kiteVcForViewController:self].customImageProviders.firstObject collections];
+    [self presentViewController:vc animated:YES completion:NULL];
+}
+#endif
+
 - (IBAction)onButtonClearClicked:(id)sender {
     NSInteger initialSections = [self numberOfSectionsInCollectionView:self.collectionView];
     
@@ -442,7 +438,26 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 #endif
 
 - (void)assetsPickerController:(id)picker didFinishPickingAssets:(NSArray *)assets {
-    [self populateArrayWithNewArray:assets dataType:[picker isKindOfClass:[OLAssetsPickerController class]] ? [ALAsset class] : [PHAsset class]];
+    Class assetClass;
+    if ([picker isKindOfClass:[OLAssetsPickerController class]]){
+        assetClass = [ALAsset class];
+    }
+#ifdef OL_KITE_AT_LEAST_IOS8
+    else if ([picker isKindOfClass:[CTAssetsPickerController class]]){
+        assetClass = [PHAsset class];
+    }
+#endif
+#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_SOURCES
+    else if ([picker isKindOfClass:[KITAssetsPickerController class]]){
+        assetClass = [OLAsset class];
+        NSMutableArray *olAssets = [[NSMutableArray alloc] init];
+        for (id<OLAssetDataSource> asset in assets){
+            [olAssets addObject:[OLAsset assetWithDataSource:asset]];
+        }
+        assets = olAssets;
+    }
+#endif
+    [self populateArrayWithNewArray:assets dataType:assetClass];
     [picker dismissViewControllerAnimated:YES completion:^(void){}];
     
 }
@@ -459,6 +474,9 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8){
         return;
     }
+    if (![asset isKindOfClass:[PHAsset class]]){
+        return;
+    }
     PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
     options.networkAccessAllowed = YES;
     [[OLImageCachingManager sharedInstance].photosCachingManager stopCachingImagesForAssets:@[asset] targetSize:PHImageManagerMaximumSize contentMode:PHImageContentModeAspectFill options:options];
@@ -466,6 +484,9 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 
 - (void)assetsPickerController:(CTAssetsPickerController *)picker didSelectAsset:(PHAsset *)asset{
     if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8){
+        return;
+    }
+    if (![asset isKindOfClass:[PHAsset class]]){
         return;
     }
     PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
@@ -585,12 +606,15 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     }
     else{
         NSInteger sources = 1;
-        if ([self facebookEnabled]){
+        if ([OLKiteUtils facebookEnabled]){
             sources++;
         }
-        if ([self instagramEnabled]){
+        if ([OLKiteUtils instagramEnabled]){
             sources++;
         }
+#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_SOURCES
+        sources += [OLKiteUtils kiteVcForViewController:self].customImageProviders.count;
+#endif
         return sources;
     }
 }
@@ -813,6 +837,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
             button.mainColor = [UIColor colorWithRed:0.227 green:0.706 blue:0.600 alpha:1.000];
             [button addTarget:self action:@selector(cameraRollSelected:) forControlEvents:UIControlEventTouchUpInside];
         }
+        //TODO: Facebook and/or Instagram might not be enabled
         else if (indexPath.item == 1){
             button.image = [UIImage imageNamedInKiteBundle:@"import_facebook"];
             button.mainColor = [UIColor colorWithRed:0.290 green:0.537 blue:0.863 alpha:1.000];
@@ -823,6 +848,13 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
             button.mainColor = [UIColor colorWithRed:0.965 green:0.733 blue:0.259 alpha:1.000];
             [button addTarget:self action:@selector(instagramSelected:) forControlEvents:UIControlEventTouchUpInside];
         }
+#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_SOURCES
+        else{
+            button.image = [[OLKiteUtils kiteVcForViewController:self].customImageProviders.firstObject icon];
+            button.mainColor = [UIColor grayColor];
+            [button addTarget:self action:@selector(customProviderSelected:) forControlEvents:UIControlEventTouchUpInside];
+        }
+#endif
         
         return cell;
     }

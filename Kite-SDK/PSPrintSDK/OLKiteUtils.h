@@ -31,6 +31,9 @@
 
 +(void)reverseRowsOfPhotosInArray:(NSMutableArray*)array forProduct:(OLProduct *)product;
 
++ (BOOL)facebookEnabled;
++ (BOOL)instagramEnabled;
+
 #ifdef OL_KITE_OFFER_APPLE_PAY
 +(BOOL)isApplePayAvailable;
 #endif

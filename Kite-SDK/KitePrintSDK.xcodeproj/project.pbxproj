@@ -21,6 +21,10 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		2E0804B81C0DECE300F50D42 /* OLCustomPhotoSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0804B71C0DECE300F50D42 /* OLCustomPhotoSource.m */; };
+		2E0804B91C0DECE300F50D42 /* OLCustomPhotoSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0804B71C0DECE300F50D42 /* OLCustomPhotoSource.m */; };
+		2E0804BE1C0DF70200F50D42 /* CTAssetCollectionDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0804BB1C0DF70200F50D42 /* CTAssetCollectionDataSource.m */; };
+		2E0804BF1C0DF70200F50D42 /* CTAssetDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0804BD1C0DF70200F50D42 /* CTAssetDataSource.m */; };
 		2E2632C21B97336700C7D879 /* KitePrintSDKUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E2632C11B97336700C7D879 /* KitePrintSDKUITests.m */; };
 		2E482B7A1BEB4C7D007460EA /* OLStripeCard.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E482B781BEB4C7D007460EA /* OLStripeCard.m */; };
 		2E482B7B1BEB4C7D007460EA /* OLStripeCard.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E482B781BEB4C7D007460EA /* OLStripeCard.m */; };
@@ -463,6 +467,12 @@
 
 /* Begin PBXFileReference section */
 		019C40BD2A43BA8D3D0AC726 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
+		2E0804B61C0DECE300F50D42 /* OLCustomPhotoSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLCustomPhotoSource.h; sourceTree = "<group>"; };
+		2E0804B71C0DECE300F50D42 /* OLCustomPhotoSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLCustomPhotoSource.m; sourceTree = "<group>"; };
+		2E0804BA1C0DF70200F50D42 /* CTAssetCollectionDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CTAssetCollectionDataSource.h; sourceTree = "<group>"; };
+		2E0804BB1C0DF70200F50D42 /* CTAssetCollectionDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CTAssetCollectionDataSource.m; sourceTree = "<group>"; };
+		2E0804BC1C0DF70200F50D42 /* CTAssetDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CTAssetDataSource.h; sourceTree = "<group>"; };
+		2E0804BD1C0DF70200F50D42 /* CTAssetDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CTAssetDataSource.m; sourceTree = "<group>"; };
 		2E0A72641A6FB07000BC5AE7 /* OLScrollCropViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLScrollCropViewController.h; sourceTree = "<group>"; };
 		2E0A72651A6FB07000BC5AE7 /* OLScrollCropViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLScrollCropViewController.m; sourceTree = "<group>"; };
 		2E0E250D1A77997E00808ED8 /* OLAnalytics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLAnalytics.h; sourceTree = "<group>"; };
@@ -1409,6 +1419,10 @@
 				CD73BF81186215790009DE03 /* ViewController.m */,
 				CD97569318E083E3007CA090 /* PrintOrderHistoryViewController.h */,
 				CD97569418E083E3007CA090 /* PrintOrderHistoryViewController.m */,
+				2E0804BA1C0DF70200F50D42 /* CTAssetCollectionDataSource.h */,
+				2E0804BB1C0DF70200F50D42 /* CTAssetCollectionDataSource.m */,
+				2E0804BC1C0DF70200F50D42 /* CTAssetDataSource.h */,
+				2E0804BD1C0DF70200F50D42 /* CTAssetDataSource.m */,
 				CD73BF83186215790009DE03 /* Images.xcassets */,
 				CD73BF72186215790009DE03 /* Supporting Files */,
 			);
@@ -1511,6 +1525,8 @@
 				2E8FD26F1BF9E73B00F4FC5A /* OLPhotoEdits.m */,
 				2E3F96B01A49ACF4005C0EA3 /* OLPrintPhoto.h */,
 				2E3F96B11A49ACF4005C0EA3 /* OLPrintPhoto.m */,
+				2E0804B61C0DECE300F50D42 /* OLCustomPhotoSource.h */,
+				2E0804B71C0DECE300F50D42 /* OLCustomPhotoSource.m */,
 			);
 			name = Asset;
 			sourceTree = "<group>";
@@ -2324,6 +2340,7 @@
 				2EADD8101BE79D6D0051CD31 /* UIView+RMUtils.m in Sources */,
 				2EADD8111BE79D6D0051CD31 /* OLPrintOrder+History.m in Sources */,
 				2EADD8121BE79D6D0051CD31 /* OLAsset.m in Sources */,
+				2E0804BE1C0DF70200F50D42 /* CTAssetCollectionDataSource.m in Sources */,
 				2EADD8131BE79D6D0051CD31 /* AppDelegate.m in Sources */,
 				2EADD8141BE79D6D0051CD31 /* OLProductTemplate.m in Sources */,
 				2EADD8151BE79D6D0051CD31 /* OLPaymentViewController.m in Sources */,
@@ -2352,10 +2369,12 @@
 				2EADD82B1BE79D6D0051CD31 /* LXReorderableCollectionViewFlowLayout.m in Sources */,
 				2EADD82C1BE79D6D0051CD31 /* OLPosterSizeSelectionViewController.m in Sources */,
 				2EADD82D1BE79D6D0051CD31 /* OLImageCachingManager.m in Sources */,
+				2E0804BF1C0DF70200F50D42 /* CTAssetDataSource.m in Sources */,
 				2EADD82E1BE79D6D0051CD31 /* UIView+RoundRect.m in Sources */,
 				2EADD82F1BE79D6D0051CD31 /* OLCountry.m in Sources */,
 				2EADD8301BE79D6D0051CD31 /* OLAssetScrollView.m in Sources */,
 				2EADD8311BE79D6D0051CD31 /* ALAssetsLibrary+Singleton.m in Sources */,
+				2E0804B81C0DECE300F50D42 /* OLCustomPhotoSource.m in Sources */,
 				2EADD8321BE79D6D0051CD31 /* OLConstants.m in Sources */,
 				2EADD8331BE79D6D0051CD31 /* OLProductOverviewPageContentViewController.m in Sources */,
 				2EADD8341BE79D6D0051CD31 /* OLJudoPayCard.m in Sources */,
@@ -2533,6 +2552,7 @@
 			files = (
 				E29C858B1BE3B5C50041D4CF /* OLURLDataSource.m in Sources */,
 				E29C858E1BE3B5C50041D4CF /* OLScrollCropViewController.m in Sources */,
+				2E0804B91C0DECE300F50D42 /* OLCustomPhotoSource.m in Sources */,
 				E29C858F1BE3B5C50041D4CF /* OLPrintOrderCostRequest.m in Sources */,
 				E29C85901BE3B5C50041D4CF /* OLInfoPageViewController.m in Sources */,
 				E29C85911BE3B5C50041D4CF /* OLIntegratedCheckoutViewController.m in Sources */,
@@ -2777,6 +2797,7 @@
 					OL_KITE_OFFER_FACEBOOK,
 					OL_KITE_OFFER_PAYPAL,
 					OL_KITE_VERBOSE,
+					OL_KITE_OFFER_CUSTOM_IMAGE_SOURCES,
 				);
 				INFOPLIST_FILE = "KitePrintSDK-Dev-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
@@ -2812,6 +2833,7 @@
 					OL_KITE_OFFER_INSTAGRAM,
 					OL_KITE_OFFER_FACEBOOK,
 					OL_KITE_OFFER_PAYPAL,
+					OL_KITE_OFFER_CUSTOM_IMAGE_SOURCES,
 				);
 				INFOPLIST_FILE = "KitePrintSDK-Dev-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;

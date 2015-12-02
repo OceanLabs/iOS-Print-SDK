@@ -10,6 +10,7 @@
 #import "OLKitePrintSDK.h"
 #import "OLAssetsPickerController.h"
 #import "OLImageCachingManager.h"
+#import "CTAssetCollectionDataSource.h"
 
 #ifdef OL_KITE_AT_LEAST_IOS8
 #import <CTAssetsPickerController/CTAssetsPickerController.h>
@@ -160,6 +161,7 @@ UINavigationControllerDelegate, OLKiteDelegate>
     vc.userEmail = @"";
     vc.userPhone = @"";
     vc.delegate = self;
+    [vc addCustomPhotoProviderWithCollections:@[[[CTAssetCollectionDataSource alloc] init]] name:@"Cats" icon:[UIImage imageNamed:@"cat"]];
     [self presentViewController:vc animated:YES completion:NULL];
 
 }

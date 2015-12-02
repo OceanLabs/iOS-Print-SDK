@@ -5,6 +5,7 @@
   },
   "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
     "E28E36D423EC87798E52E2BF482E9F7A1E6479D6" : 0,
+    "E762C42BC8C71A1AD1A00E2FC726C42A9BF54268" : 0,
     "9E1ECC80773D1F4F22D03CB4DEA298B3CB57FAF5" : 0,
     "DD20A1A48C66B5213E0FEBB87A95EF51D6C6F3E8" : 0,
     "52A24398B96ECA98EF0E72469CA9225C49AA7C9D" : 0,
@@ -21,6 +22,7 @@
   "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "0B2FBC93-3D22-431F-B53A-EB76A20DFDBA",
   "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
     "E28E36D423EC87798E52E2BF482E9F7A1E6479D6" : "iOS-Print-SDK\/Kite-SDK\/vendor\/SDWebImage\/",
+    "E762C42BC8C71A1AD1A00E2FC726C42A9BF54268" : "KITAssetsPickerController\/",
     "9E1ECC80773D1F4F22D03CB4DEA298B3CB57FAF5" : "iOS-Print-SDK\/Kite-SDK\/vendor\/SVProgressHUD\/",
     "DD20A1A48C66B5213E0FEBB87A95EF51D6C6F3E8" : "iOS-Print-SDK\/Kite-SDK\/vendor\/AFNetworking\/",
     "52A24398B96ECA98EF0E72469CA9225C49AA7C9D" : "iOS-Print-SDK\/Kite-SDK\/vendor\/DACircularProgress\/",
@@ -102,6 +104,11 @@
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/rs\/SDWebImage.git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "E28E36D423EC87798E52E2BF482E9F7A1E6479D6"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/chiunam\/CTAssetsPickerController.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "E762C42BC8C71A1AD1A00E2FC726C42A9BF54268"
     }
   ]
 }

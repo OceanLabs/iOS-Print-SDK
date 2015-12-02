@@ -21,6 +21,12 @@
 
 +(NSString *)appleMerchantID;
 
+#ifdef OL_KITE_OFFER_INSTAGRAM
++ (NSString *) instagramRedirectURI;
++ (NSString *) instagramSecret;
++ (NSString *) instagramClientID;
+#endif
+
 @end
 
 @implementation OLKiteUtils
@@ -51,6 +57,22 @@
     }
     
     return nil;
+}
+
++ (BOOL)instagramEnabled{
+#ifdef OL_KITE_OFFER_INSTAGRAM
+    return [OLKitePrintSDK instagramSecret] && ![[OLKitePrintSDK instagramSecret] isEqualToString:@""] && [OLKitePrintSDK instagramClientID] && ![[OLKitePrintSDK instagramClientID] isEqualToString:@""] && [OLKitePrintSDK instagramRedirectURI] && ![[OLKitePrintSDK instagramRedirectURI] isEqualToString:@""];
+#else
+    return NO;
+#endif
+}
+
++ (BOOL)facebookEnabled{
+#ifdef OL_KITE_OFFER_FACEBOOK
+    return YES;
+#else
+    return NO;
+#endif
 }
 
 + (id<OLKiteDelegate>)kiteDelegate:(UIViewController *)topVC {

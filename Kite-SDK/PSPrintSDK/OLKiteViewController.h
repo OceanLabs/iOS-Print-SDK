@@ -13,6 +13,10 @@
 @class ALAssetsGroup;
 @class OLAsset;
 
+#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_SOURCES
+@protocol KITAssetCollectionDataSource;
+#endif
+
 /**
  *  The delegate object if available will be asked for information
  */
@@ -124,5 +128,16 @@
  *  @return An instance of OLKiteViewController to present
  */
 - (instancetype _Nullable)initWithPrintOrder:(OLPrintOrder *_Nullable)printOrder info:(NSDictionary * _Nullable)info;
+
+#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_SOURCES
+/**
+ *  Add a custom source for the photo picker
+ *
+ *  @param collections An array of photo collections(albums)
+ *  @param name        The name for the source
+ *  @param image       An image to be used as an icon
+ */
+- (void)addCustomPhotoProviderWithCollections:(NSArray <id<KITAssetCollectionDataSource>>*_Nonnull)collections name:(NSString *_Nullable)name icon:(UIImage *_Nullable)image;
+#endif
 
 @end
