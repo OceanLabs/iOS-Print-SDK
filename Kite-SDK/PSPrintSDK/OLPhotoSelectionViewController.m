@@ -234,7 +234,18 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     // First remove any that are not returned.
     NSMutableArray *removeArray = [NSMutableArray arrayWithArray:self.userSelectedPhotos];
     for (OLPrintPhoto *object in self.userSelectedPhotos) {
-        if (![object.asset isKindOfClass:class] || [photoArray containsObject:object]) {
+        if ([object.asset isKindOfClass:[OLAsset class]] && [object.asset isKindOfClass:class]){
+            for (OLPrintPhoto *addedPhoto in photoArray){
+                if ([addedPhoto.asset isKindOfClass:[OLAsset class]] && ![[object.asset dataSource] isEqual:[addedPhoto.asset dataSource]]){
+                    [removeArray removeObjectIdenticalTo:object];
+                }
+            }
+        }
+        else if (![object.asset isKindOfClass:class]) {
+            [removeArray removeObjectIdenticalTo:object];
+        }
+        
+        if([photoArray containsObject:object]){
             [removeArray removeObjectIdenticalTo:object];
         }
     }
@@ -631,7 +642,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
             removedImagesCount += [self.indexPathsToRemoveDict[n] count];
         }
         NSInteger finalNumberOfPhotos = self.userSelectedPhotos.count;
-        return ceil(finalNumberOfPhotos / (double)self.product.quantityToFulfillOrder);
+        return MAX(ceil(finalNumberOfPhotos / (double)self.product.quantityToFulfillOrder), 1);
     }
     else{
         return 1;
