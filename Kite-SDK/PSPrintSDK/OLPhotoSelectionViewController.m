@@ -94,6 +94,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 @property (strong, nonatomic) NSMutableDictionary *indexPathsToRemoveDict;
 @property (strong, nonatomic) UIVisualEffectView *visualEffectView;
 @property (weak, nonatomic) IBOutlet UIView *clearButtonContainerView;
+@property (assign, nonatomic) NSInteger customProvidersStartAtIndex;
 
 @end
 
@@ -129,6 +130,14 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     [self.collectionView registerClass:[UICollectionReusableView class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"headerView"];
     
     [self onUserSelectedPhotoCountChange];
+    
+    self.customProvidersStartAtIndex = 1;
+    if ([OLKiteUtils facebookEnabled]){
+        self.customProvidersStartAtIndex++;
+    }
+    if ([OLKiteUtils instagramEnabled]){
+        self.customProvidersStartAtIndex++;
+    }
     
 }
 
@@ -386,9 +395,12 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 
 #ifdef OL_KITE_OFFER_CUSTOM_IMAGE_SOURCES
 - (void)customProviderSelected:(OLPhotoSelectionButton *)sender{
+    CGPoint buttonPosition = [sender convertPoint:CGPointZero toView:self.sourcesCollectionView];
+    NSIndexPath *indexPath = [self.sourcesCollectionView indexPathForItemAtPoint:buttonPosition];
+    
     KITAssetsPickerController *vc = [[KITAssetsPickerController alloc] init];
     vc.delegate = self;
-    vc.collectionDataSources = [[OLKiteUtils kiteVcForViewController:self].customImageProviders.firstObject collections];
+    vc.collectionDataSources = [[OLKiteUtils kiteVcForViewController:self].customImageProviders[indexPath.item - self.customProvidersStartAtIndex] collections];
     vc.selectedAssets = [[self createAssetArray] mutableCopy];
     vc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
     [self presentViewController:vc animated:YES completion:NULL];
@@ -857,20 +869,24 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
             button.mainColor = [UIColor colorWithRed:0.227 green:0.706 blue:0.600 alpha:1.000];
             [button addTarget:self action:@selector(cameraRollSelected:) forControlEvents:UIControlEventTouchUpInside];
         }
-        //TODO: Facebook and/or Instagram might not be enabled
-        else if (indexPath.item == 1){
+        else if (indexPath.item == 1 && [OLKiteUtils facebookEnabled]){
             button.image = [UIImage imageNamedInKiteBundle:@"import_facebook"];
             button.mainColor = [UIColor colorWithRed:0.290 green:0.537 blue:0.863 alpha:1.000];
             [button addTarget:self action:@selector(facebookSelected:) forControlEvents:UIControlEventTouchUpInside];
         }
-        else if (indexPath.item == 2){
+        else if (indexPath.item == 1 && ![OLKiteUtils facebookEnabled] && [OLKiteUtils instagramEnabled]){
+            button.image = [UIImage imageNamedInKiteBundle:@"import_instagram"];
+            button.mainColor = [UIColor colorWithRed:0.965 green:0.733 blue:0.259 alpha:1.000];
+            [button addTarget:self action:@selector(instagramSelected:) forControlEvents:UIControlEventTouchUpInside];
+        }
+        else if (indexPath.item == 2 && [OLKiteUtils facebookEnabled] && [OLKiteUtils instagramEnabled]){
             button.image = [UIImage imageNamedInKiteBundle:@"import_instagram"];
             button.mainColor = [UIColor colorWithRed:0.965 green:0.733 blue:0.259 alpha:1.000];
             [button addTarget:self action:@selector(instagramSelected:) forControlEvents:UIControlEventTouchUpInside];
         }
 #ifdef OL_KITE_OFFER_CUSTOM_IMAGE_SOURCES
         else{
-            button.image = [[OLKiteUtils kiteVcForViewController:self].customImageProviders.firstObject icon];
+            button.image = [[OLKiteUtils kiteVcForViewController:self].customImageProviders[indexPath.item - self.customProvidersStartAtIndex] icon];
             button.mainColor = [UIColor grayColor];
             [button addTarget:self action:@selector(customProviderSelected:) forControlEvents:UIControlEventTouchUpInside];
         }

@@ -10,7 +10,8 @@
 #import "OLKitePrintSDK.h"
 #import "OLAssetsPickerController.h"
 #import "OLImageCachingManager.h"
-#import "CTAssetCollectionDataSource.h"
+#import "CatsAssetCollectionDataSource.h"
+#import "DogsAssetCollectionDataSource.h"
 
 #ifdef OL_KITE_AT_LEAST_IOS8
 #import <CTAssetsPickerController/CTAssetsPickerController.h>
@@ -161,7 +162,8 @@ UINavigationControllerDelegate, OLKiteDelegate>
     vc.userEmail = @"";
     vc.userPhone = @"";
     vc.delegate = self;
-    [vc addCustomPhotoProviderWithCollections:@[[[CTAssetCollectionDataSource alloc] init]] name:@"Cats" icon:[UIImage imageNamed:@"cat"]];
+    [vc addCustomPhotoProviderWithCollections:@[[[CatsAssetCollectionDataSource alloc] init]] name:@"Cats" icon:[UIImage imageNamed:@"cat"]];
+    [vc addCustomPhotoProviderWithCollections:@[[[DogsAssetCollectionDataSource alloc] init]] name:@"Dogs" icon:[UIImage imageNamed:@"dog"]];
     [self presentViewController:vc animated:YES completion:NULL];
 
 }

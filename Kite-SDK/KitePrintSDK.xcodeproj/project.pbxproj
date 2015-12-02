@@ -23,11 +23,12 @@
 /* Begin PBXBuildFile section */
 		2E0804B81C0DECE300F50D42 /* OLCustomPhotoSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0804B71C0DECE300F50D42 /* OLCustomPhotoSource.m */; };
 		2E0804B91C0DECE300F50D42 /* OLCustomPhotoSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0804B71C0DECE300F50D42 /* OLCustomPhotoSource.m */; };
-		2E0804BE1C0DF70200F50D42 /* CTAssetCollectionDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0804BB1C0DF70200F50D42 /* CTAssetCollectionDataSource.m */; };
-		2E0804BF1C0DF70200F50D42 /* CTAssetDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0804BD1C0DF70200F50D42 /* CTAssetDataSource.m */; };
+		2E0804BE1C0DF70200F50D42 /* CatsAssetCollectionDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0804BB1C0DF70200F50D42 /* CatsAssetCollectionDataSource.m */; };
+		2E0804BF1C0DF70200F50D42 /* AssetDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0804BD1C0DF70200F50D42 /* AssetDataSource.m */; };
 		2E2632C21B97336700C7D879 /* KitePrintSDKUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E2632C11B97336700C7D879 /* KitePrintSDKUITests.m */; };
 		2E482B7A1BEB4C7D007460EA /* OLStripeCard.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E482B781BEB4C7D007460EA /* OLStripeCard.m */; };
 		2E482B7B1BEB4C7D007460EA /* OLStripeCard.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E482B781BEB4C7D007460EA /* OLStripeCard.m */; };
+		2E4DF45E1C0F150400EA66FE /* DogsAssetCollectionDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E4DF45D1C0F150400EA66FE /* DogsAssetCollectionDataSource.m */; };
 		2E4FC90E1C04A4F4000143F5 /* OLOrdersViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E4FC90D1C04A4F4000143F5 /* OLOrdersViewController.m */; };
 		2E4FC90F1C04A4F4000143F5 /* OLOrdersViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E4FC90D1C04A4F4000143F5 /* OLOrdersViewController.m */; };
 		2E645B351BE7D16E009B662B /* OLProductDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EAD11511BD79ED0000BC80E /* OLProductDetailsViewController.m */; };
@@ -469,10 +470,10 @@
 		019C40BD2A43BA8D3D0AC726 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		2E0804B61C0DECE300F50D42 /* OLCustomPhotoSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLCustomPhotoSource.h; sourceTree = "<group>"; };
 		2E0804B71C0DECE300F50D42 /* OLCustomPhotoSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLCustomPhotoSource.m; sourceTree = "<group>"; };
-		2E0804BA1C0DF70200F50D42 /* CTAssetCollectionDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CTAssetCollectionDataSource.h; sourceTree = "<group>"; };
-		2E0804BB1C0DF70200F50D42 /* CTAssetCollectionDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CTAssetCollectionDataSource.m; sourceTree = "<group>"; };
-		2E0804BC1C0DF70200F50D42 /* CTAssetDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CTAssetDataSource.h; sourceTree = "<group>"; };
-		2E0804BD1C0DF70200F50D42 /* CTAssetDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CTAssetDataSource.m; sourceTree = "<group>"; };
+		2E0804BA1C0DF70200F50D42 /* CatsAssetCollectionDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CatsAssetCollectionDataSource.h; sourceTree = "<group>"; };
+		2E0804BB1C0DF70200F50D42 /* CatsAssetCollectionDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CatsAssetCollectionDataSource.m; sourceTree = "<group>"; };
+		2E0804BC1C0DF70200F50D42 /* AssetDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AssetDataSource.h; sourceTree = "<group>"; };
+		2E0804BD1C0DF70200F50D42 /* AssetDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AssetDataSource.m; sourceTree = "<group>"; };
 		2E0A72641A6FB07000BC5AE7 /* OLScrollCropViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLScrollCropViewController.h; sourceTree = "<group>"; };
 		2E0A72651A6FB07000BC5AE7 /* OLScrollCropViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLScrollCropViewController.m; sourceTree = "<group>"; };
 		2E0E250D1A77997E00808ED8 /* OLAnalytics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLAnalytics.h; sourceTree = "<group>"; };
@@ -525,6 +526,8 @@
 		2E455DFF1B1F1BA1001B1718 /* NSDecimalNumber+CostFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSDecimalNumber+CostFormatter.m"; path = "PSPrintSDK/Categories/NSDecimalNumber+CostFormatter.m"; sourceTree = "<group>"; };
 		2E482B771BEB4C7D007460EA /* OLStripeCard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLStripeCard.h; sourceTree = "<group>"; };
 		2E482B781BEB4C7D007460EA /* OLStripeCard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLStripeCard.m; sourceTree = "<group>"; };
+		2E4DF45D1C0F150400EA66FE /* DogsAssetCollectionDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DogsAssetCollectionDataSource.m; sourceTree = "<group>"; };
+		2E4DF4601C0F152900EA66FE /* DogsAssetCollectionDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DogsAssetCollectionDataSource.h; sourceTree = "<group>"; };
 		2E4FC90C1C04A4F4000143F5 /* OLOrdersViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLOrdersViewController.h; sourceTree = "<group>"; };
 		2E4FC90D1C04A4F4000143F5 /* OLOrdersViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLOrdersViewController.m; sourceTree = "<group>"; };
 		2E5258FC1A9C884700DBC69B /* OLProductTypeSelectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLProductTypeSelectionViewController.h; sourceTree = "<group>"; };
@@ -1194,6 +1197,19 @@
 			name = Model;
 			sourceTree = "<group>";
 		};
+		2E4DF4611C0F153A00EA66FE /* Custom Asset Providers */ = {
+			isa = PBXGroup;
+			children = (
+				2E0804BA1C0DF70200F50D42 /* CatsAssetCollectionDataSource.h */,
+				2E0804BB1C0DF70200F50D42 /* CatsAssetCollectionDataSource.m */,
+				2E4DF4601C0F152900EA66FE /* DogsAssetCollectionDataSource.h */,
+				2E4DF45D1C0F150400EA66FE /* DogsAssetCollectionDataSource.m */,
+				2E0804BC1C0DF70200F50D42 /* AssetDataSource.h */,
+				2E0804BD1C0DF70200F50D42 /* AssetDataSource.m */,
+			);
+			name = "Custom Asset Providers";
+			sourceTree = "<group>";
+		};
 		2E85BC9619A24C9E00EC7CC2 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
@@ -1419,10 +1435,7 @@
 				CD73BF81186215790009DE03 /* ViewController.m */,
 				CD97569318E083E3007CA090 /* PrintOrderHistoryViewController.h */,
 				CD97569418E083E3007CA090 /* PrintOrderHistoryViewController.m */,
-				2E0804BA1C0DF70200F50D42 /* CTAssetCollectionDataSource.h */,
-				2E0804BB1C0DF70200F50D42 /* CTAssetCollectionDataSource.m */,
-				2E0804BC1C0DF70200F50D42 /* CTAssetDataSource.h */,
-				2E0804BD1C0DF70200F50D42 /* CTAssetDataSource.m */,
+				2E4DF4611C0F153A00EA66FE /* Custom Asset Providers */,
 				CD73BF83186215790009DE03 /* Images.xcassets */,
 				CD73BF72186215790009DE03 /* Supporting Files */,
 			);
@@ -2312,6 +2325,7 @@
 				2EADD7F61BE79D6D0051CD31 /* OLOrderReviewViewController.m in Sources */,
 				2EADD7F71BE79D6D0051CD31 /* OLProduct.m in Sources */,
 				2EADD7F81BE79D6D0051CD31 /* OLWhiteSquare.m in Sources */,
+				2E4DF45E1C0F150400EA66FE /* DogsAssetCollectionDataSource.m in Sources */,
 				2E7F516D1BF5FBB100A78718 /* OLGreetingCardPrintJob.m in Sources */,
 				2EADD7F91BE79D6D0051CD31 /* OLPhotoSelectionButton.m in Sources */,
 				2EADD7FA1BE79D6D0051CD31 /* OLAddressEditViewController.m in Sources */,
@@ -2340,7 +2354,7 @@
 				2EADD8101BE79D6D0051CD31 /* UIView+RMUtils.m in Sources */,
 				2EADD8111BE79D6D0051CD31 /* OLPrintOrder+History.m in Sources */,
 				2EADD8121BE79D6D0051CD31 /* OLAsset.m in Sources */,
-				2E0804BE1C0DF70200F50D42 /* CTAssetCollectionDataSource.m in Sources */,
+				2E0804BE1C0DF70200F50D42 /* CatsAssetCollectionDataSource.m in Sources */,
 				2EADD8131BE79D6D0051CD31 /* AppDelegate.m in Sources */,
 				2EADD8141BE79D6D0051CD31 /* OLProductTemplate.m in Sources */,
 				2EADD8151BE79D6D0051CD31 /* OLPaymentViewController.m in Sources */,
@@ -2369,7 +2383,7 @@
 				2EADD82B1BE79D6D0051CD31 /* LXReorderableCollectionViewFlowLayout.m in Sources */,
 				2EADD82C1BE79D6D0051CD31 /* OLPosterSizeSelectionViewController.m in Sources */,
 				2EADD82D1BE79D6D0051CD31 /* OLImageCachingManager.m in Sources */,
-				2E0804BF1C0DF70200F50D42 /* CTAssetDataSource.m in Sources */,
+				2E0804BF1C0DF70200F50D42 /* AssetDataSource.m in Sources */,
 				2EADD82E1BE79D6D0051CD31 /* UIView+RoundRect.m in Sources */,
 				2EADD82F1BE79D6D0051CD31 /* OLCountry.m in Sources */,
 				2EADD8301BE79D6D0051CD31 /* OLAssetScrollView.m in Sources */,
