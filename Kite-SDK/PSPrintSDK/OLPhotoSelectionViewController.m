@@ -530,6 +530,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     options.networkAccessAllowed = YES;
     [[OLImageCachingManager sharedInstance].photosCachingManager startCachingImagesForAssets:@[asset] targetSize:PHImageManagerMaximumSize contentMode:PHImageContentModeAspectFill options:options];
 }
+#endif
 
 - (BOOL)assetsPickerController:(id)picker shouldSelectAsset:(id)asset
 {
@@ -538,18 +539,44 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     }
     NSInteger max = self.product.quantityToFulfillOrder;
     
-    NSMutableArray *tempUserSelected = self.userSelectedPhotos;
+    NSMutableArray *tempUserSelected = [[NSMutableArray alloc] init];
+    [tempUserSelected addObjectsFromArray:self.userSelectedPhotos];
+    
+    NSArray *assets;
     if ([picker respondsToSelector:@selector(selectedAssets)]){
-        [self populateArrayWithNewArray:[picker selectedAssets] dataType:[asset class]];
+        assets = [picker selectedAssets];
     }
     else if ([picker respondsToSelector:@selector(selected)]){
-        [self populateArrayWithNewArray:[picker selected] dataType:[asset class]];
+        assets = [picker selected];
     }
     else{ // ¯\_(ツ)_/¯
         return YES;
     }
     
-    // show alert gracefully
+    Class assetClass;
+    if ([picker isKindOfClass:[OLAssetsPickerController class]]){
+        assetClass = [ALAsset class];
+    }
+#ifdef OL_KITE_AT_LEAST_IOS8
+    else if ([picker isKindOfClass:[CTAssetsPickerController class]]){
+        assetClass = [PHAsset class];
+    }
+#endif
+#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_SOURCES
+    else if ([picker isKindOfClass:[KITAssetsPickerController class]]){
+        assetClass = [OLAsset class];
+        NSMutableArray *olAssets = [[NSMutableArray alloc] init];
+        for (id<OLAssetDataSource> asset in assets){
+            if ([asset respondsToSelector:@selector(dataWithCompletionHandler:)]){
+                [olAssets addObject:[OLAsset assetWithDataSource:asset]];
+            }
+        }
+        assets = olAssets;
+    }
+#endif
+    [self populateArrayWithNewArray:assets dataType:assetClass];
+    
+    // show alert
     if (self.userSelectedPhotos.count >= max)
     {
         if ([UIAlertController class]){
@@ -575,10 +602,10 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     
     // limit selection to max
     BOOL result = (self.userSelectedPhotos.count < max);
-    self.userSelectedPhotos = tempUserSelected;
+    [self.userSelectedPhotos removeAllObjects];
+    [self.userSelectedPhotos addObjectsFromArray:tempUserSelected];
     return result;
 }
-#endif
 
 - (BOOL)assetsPickerController:(OLAssetsPickerController *)picker shouldShowAsset:(id)asset{
     NSString *fileName = [[[asset defaultRepresentation] filename] lowercaseString];
