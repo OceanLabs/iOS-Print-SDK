@@ -12,7 +12,7 @@
 #import "OLAsset+Private.h"
 #import "OLAsset+Private.h"
 #import "OLAssetsPickerController.h"
-#import "OLCustomPhotoSource.h"
+#import "OLCustomPhotoProvider.h"
 #import "OLImageCachingManager.h"
 #import "OLKiteABTesting.h"
 #import "OLKitePrintSDK.h"
@@ -27,8 +27,8 @@
 #import "OLSingleImageProductReviewViewController.h"
 #import "SDWebImageManager.h"
 
-#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_SOURCES
-#import "OLCustomPhotoSource.h"
+#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
+#import "OLCustomPhotoProvider.h"
 #import <KITAssetsPickerController.h>
 #endif
 
@@ -61,7 +61,7 @@
 @interface OLKiteViewController ()
 
 @property (strong, nonatomic) OLPrintOrder *printOrder;
-@property (strong, nonatomic) NSMutableArray <OLCustomPhotoSource *> *customImageProviders;
+@property (strong, nonatomic) NSMutableArray <OLCustomPhotoProvider *> *customImageProviders;
 - (void)dismiss;
 
 @end
@@ -84,7 +84,7 @@ OLFacebookImagePickerControllerDelegate,
 #ifdef OL_KITE_AT_LEAST_IOS8
 CTAssetsPickerControllerDelegate,
 #endif
-#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_SOURCES
+#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
 KITAssetsPickerControllerDelegate,
 #endif
 OLAssetsPickerControllerDelegate>
@@ -413,8 +413,8 @@ OLAssetsPickerControllerDelegate>
                     [self showFacebookImagePicker];
                 }]];
             }
-#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_SOURCES
-            for (OLCustomPhotoSource *provider in [OLKiteUtils kiteVcForViewController:self].customImageProviders){
+#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
+            for (OLCustomPhotoProvider *provider in [OLKiteUtils kiteVcForViewController:self].customImageProviders){
                 [ac addAction:[UIAlertAction actionWithTitle:provider.name style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
                     KITAssetsPickerController *vc = [[KITAssetsPickerController alloc] init];
                     vc.delegate = self;
@@ -439,7 +439,7 @@ OLAssetsPickerControllerDelegate>
                 as = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"Add photos from:", @"") delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", @"") destructiveButtonTitle:nil otherButtonTitles:NSLocalizedString(@"Camera Roll", @""),
                       NSLocalizedString(@"Instagram", @""),
                       NSLocalizedString(@"Facebook", @""),
-#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_SOURCES
+#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
                       [[OLKiteUtils kiteVcForViewController:self].customImageProviders.firstObject name],
 #endif
                       nil];
@@ -447,7 +447,7 @@ OLAssetsPickerControllerDelegate>
             else if ([OLKiteUtils instagramEnabled]){
                 as = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"Add photos from:", @"") delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", @"") destructiveButtonTitle:nil otherButtonTitles:NSLocalizedString(@"Camera Roll", @""),
                       NSLocalizedString(@"Instagram", @""),
-#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_SOURCES
+#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
                       [[OLKiteUtils kiteVcForViewController:self].customImageProviders.firstObject name],
 #endif
                       nil];
@@ -455,14 +455,14 @@ OLAssetsPickerControllerDelegate>
             else if ([OLKiteUtils facebookEnabled]){
                 as = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"Add photos from:", @"") delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", @"") destructiveButtonTitle:nil otherButtonTitles:NSLocalizedString(@"Camera Roll", @""),
                       NSLocalizedString(@"Facebook", @""),
-#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_SOURCES
+#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
                       [[OLKiteUtils kiteVcForViewController:self].customImageProviders.firstObject name],
 #endif
                       nil];
             }
             else{
                 as = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"Add photos from:", @"") delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", @"") destructiveButtonTitle:nil otherButtonTitles:NSLocalizedString(@"Camera Roll", @""),
-#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_SOURCES
+#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
                       [[OLKiteUtils kiteVcForViewController:self].customImageProviders.firstObject name],
 #endif
                       nil];
@@ -649,7 +649,7 @@ OLAssetsPickerControllerDelegate>
         assetClass = [PHAsset class];
     }
 #endif
-#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_SOURCES
+#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
     else if ([picker isKindOfClass:[KITAssetsPickerController class]]){
         assetClass = [OLAsset class];
         NSMutableArray *olAssets = [[NSMutableArray alloc] init];
@@ -785,7 +785,7 @@ OLAssetsPickerControllerDelegate>
         else if ([OLKiteUtils facebookEnabled]){
             [self showFacebookImagePicker];
         }
-#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_SOURCES
+#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
         else{
             KITAssetsPickerController *vc = [[KITAssetsPickerController alloc] init];
             vc.delegate = self;

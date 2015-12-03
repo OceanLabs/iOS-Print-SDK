@@ -25,8 +25,8 @@
 #import "UIImage+ColorAtPixel.h"
 #import "OLKiteUtils.h"
 
-#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_SOURCES
-#import "OLCustomPhotoSource.h"
+#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
+#import "OLCustomPhotoProvider.h"
 #endif
 
 static const NSInteger kTagNoProductsAlertView = 99;
@@ -41,7 +41,7 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
 @property (weak, nonatomic) IBOutlet UINavigationBar *navigationBar;
 @property (weak, nonatomic) IBOutlet UINavigationItem *customNavigationItem;
 @property (weak, nonatomic) IBOutlet UIImageView *loadingImageView;
-@property (strong, nonatomic) NSMutableArray <OLCustomPhotoSource *> *customImageProviders;
+@property (strong, nonatomic) NSMutableArray <OLCustomPhotoProvider *> *customImageProviders;
 
 
 // Because template sync happens in the constructor it may complete before the OLKiteViewController has appeared. In such a case where sync does
@@ -129,12 +129,12 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
     return self;
 }
 
-#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_SOURCES
+#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
 - (void)addCustomPhotoProviderWithCollections:(NSArray <id<KITAssetCollectionDataSource>>*_Nonnull)collections name:(NSString *_Nullable)name icon:(UIImage *_Nullable)image{
     if (!self.customImageProviders){
-        self.customImageProviders = [[NSMutableArray<OLCustomPhotoSource *> alloc] init];
+        self.customImageProviders = [[NSMutableArray<OLCustomPhotoProvider *> alloc] init];
     }
-    [self.customImageProviders addObject:[[OLCustomPhotoSource alloc] initWithCollections:collections name:name icon:image]];
+    [self.customImageProviders addObject:[[OLCustomPhotoProvider alloc] initWithCollections:collections name:name icon:image]];
 }
 #endif
 

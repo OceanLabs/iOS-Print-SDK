@@ -2181,7 +2181,7 @@
                         <outlet property="buttonNext" destination="b0B-Ki-nCb" id="6YU-d8-7LH"/>
                         <outlet property="clearButtonContainerView" destination="qWq-HB-FzX" id="QLT-9W-jgq"/>
                         <outlet property="collectionView" destination="7XX-0J-tJc" id="trV-ag-XzR"/>
-                        <outlet property="sourcesCollectionView" destination="YLm-oG-uOz" id="Pxy-5d-PEy"/>
+                        <outlet property="providersCollectionView" destination="YLm-oG-uOz" id="3fi-NC-dQo"/>
                         <outlet property="view" destination="H6l-Sv-Ai2" id="3gW-lU-9Gh"/>
                     </connections>
                 </viewController>

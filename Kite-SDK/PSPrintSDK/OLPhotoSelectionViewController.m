@@ -6,8 +6,8 @@
 //  Copyright (c) 2013 Ocean Labs. All rights reserved.
 //
 
-#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_SOURCES
-#import "OLCustomPhotoSource.h"
+#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
+#import "OLCustomPhotoProvider.h"
 #import <KITAssetsPickerController.h>
 #endif
 
@@ -79,7 +79,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 #ifdef OL_KITE_OFFER_FACEBOOK
                                             OLFacebookImagePickerControllerDelegate,
 #endif
-#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_SOURCES
+#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
                                             KITAssetsPickerControllerDelegate,
 #endif
                                             LXReorderableCollectionViewDataSource,
@@ -89,7 +89,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 @property (nonatomic, strong) OLAssetsPickerController *picker;
 @property (nonatomic, weak) IBOutlet UIButton *buttonNext;
 @property (nonatomic, weak) IBOutlet UICollectionView *collectionView;
-@property (strong, nonatomic) IBOutlet UICollectionView *sourcesCollectionView;
+@property (strong, nonatomic) IBOutlet UICollectionView *providersCollectionView;
 @property (strong, nonatomic) NSMutableArray *userDisabledPhotos;
 @property (strong, nonatomic) NSMutableDictionary *indexPathsToRemoveDict;
 @property (strong, nonatomic) UIVisualEffectView *visualEffectView;
@@ -99,7 +99,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 @end
 
 @interface OLKiteViewController ()
-@property (strong, nonatomic) NSMutableArray <OLCustomPhotoSource *> *customImageProviders;
+@property (strong, nonatomic) NSMutableArray <OLCustomPhotoProvider *> *customImageProviders;
 @property (strong, nonatomic) OLPrintOrder *printOrder;
 - (void)dismiss;
 
@@ -114,8 +114,8 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     [OLAnalytics trackPhotoSelectionScreenViewed:self.product.productTemplate.name];
 #endif
     
-    self.sourcesCollectionView.delegate = self;
-    self.sourcesCollectionView.dataSource = self;
+    self.providersCollectionView.delegate = self;
+    self.providersCollectionView.dataSource = self;
     
     self.navigationItem.titleView = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100, 44)];
     [(UILabel *)self.navigationItem.titleView setTextAlignment:NSTextAlignmentCenter];
@@ -398,10 +398,10 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 #endif
 }
 
-#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_SOURCES
+#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
 - (void)customProviderSelected:(OLPhotoSelectionButton *)sender{
-    CGPoint buttonPosition = [sender convertPoint:CGPointZero toView:self.sourcesCollectionView];
-    NSIndexPath *indexPath = [self.sourcesCollectionView indexPathForItemAtPoint:buttonPosition];
+    CGPoint buttonPosition = [sender convertPoint:CGPointZero toView:self.providersCollectionView];
+    NSIndexPath *indexPath = [self.providersCollectionView indexPathForItemAtPoint:buttonPosition];
     
     KITAssetsPickerController *vc = [[KITAssetsPickerController alloc] init];
     vc.delegate = self;
@@ -482,7 +482,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
         assetClass = [PHAsset class];
     }
 #endif
-#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_SOURCES
+#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
     else if ([picker isKindOfClass:[KITAssetsPickerController class]]){
         assetClass = [OLAsset class];
         NSMutableArray *olAssets = [[NSMutableArray alloc] init];
@@ -562,7 +562,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
         assetClass = [PHAsset class];
     }
 #endif
-#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_SOURCES
+#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
     else if ([picker isKindOfClass:[KITAssetsPickerController class]]){
         assetClass = [OLAsset class];
         NSMutableArray *olAssets = [[NSMutableArray alloc] init];
@@ -731,7 +731,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
         if ([OLKiteUtils instagramEnabled]){
             sources++;
         }
-#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_SOURCES
+#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
         sources += [OLKiteUtils kiteVcForViewController:self].customImageProviders.count;
 #endif
         return sources;
@@ -971,7 +971,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
             button.mainColor = [UIColor colorWithRed:0.965 green:0.733 blue:0.259 alpha:1.000];
             [button addTarget:self action:@selector(instagramSelected:) forControlEvents:UIControlEventTouchUpInside];
         }
-#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_SOURCES
+#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
         else{
             button.image = [[OLKiteUtils kiteVcForViewController:self].customImageProviders[indexPath.item - self.customProvidersStartAtIndex] icon];
             button.mainColor = [UIColor grayColor];

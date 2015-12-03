@@ -13,7 +13,7 @@
 @class ALAssetsGroup;
 @class OLAsset;
 
-#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_SOURCES
+#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
 @protocol KITAssetCollectionDataSource;
 #endif
 
@@ -129,7 +129,7 @@
  */
 - (instancetype _Nullable)initWithPrintOrder:(OLPrintOrder *_Nullable)printOrder info:(NSDictionary * _Nullable)info;
 
-#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_SOURCES
+#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
 /**
  *  Add a custom source for the photo picker
  *
