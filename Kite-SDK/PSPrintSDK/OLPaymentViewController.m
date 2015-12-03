@@ -901,16 +901,9 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         }
         paymentRequest.requiredShippingAddressFields = requiredFields;
         UIViewController *paymentController;
-        if ([OLKitePrintSDK environment] == kOLKitePrintSDKEnvironmentSandbox) {
-            paymentController = [[STPTestPaymentAuthorizationViewController alloc]
-                                 initWithPaymentRequest:paymentRequest];
-            ((STPTestPaymentAuthorizationViewController *)paymentController).delegate = self;
-        }
-        else{
-            paymentController = [[PKPaymentAuthorizationViewController alloc]
-                                 initWithPaymentRequest:paymentRequest];
-            ((PKPaymentAuthorizationViewController *)paymentController).delegate = self;
-        }
+        paymentController = [[PKPaymentAuthorizationViewController alloc]
+                             initWithPaymentRequest:paymentRequest];
+        ((PKPaymentAuthorizationViewController *)paymentController).delegate = self;
         [self presentViewController:paymentController animated:YES completion:nil];
     }];
 }
@@ -1131,31 +1124,13 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     
     STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:[OLKitePrintSDK stripePublishableKey]];
     
-    if ([OLKitePrintSDK environment] == kOLKitePrintSDKEnvironmentSandbox){
-        STPCard *card = [STPCard new];
-        card.number = @"4242424242424242";
-        card.expMonth = 12;
-        card.expYear = 2020;
-        card.cvc = @"123";
-        [client createTokenWithCard:card completion:^(STPToken *token, NSError *error) {
-            if (error) {
-                completion(PKPaymentAuthorizationStatusFailure);
-                return;
-            }
-            self.printOrder.email = @"test-order@kite.ly";
-            d[@"email"] = self.printOrder.email;
-            [self submitOrderForPrintingWithProofOfPayment:token.tokenId paymentMethod:@"Apple Pay" completion:completion];
-        }];
-    }
-    else{
-        [client createTokenWithPayment:payment completion:^(STPToken *token, NSError *error) {
-            if (error) {
-                completion(PKPaymentAuthorizationStatusFailure);
-                return;
-            }
-            [self submitOrderForPrintingWithProofOfPayment:token.tokenId paymentMethod:@"Apple Pay" completion:completion];
-        }];
-    }
+    [client createTokenWithPayment:payment completion:^(STPToken *token, NSError *error) {
+        if (error) {
+            completion(PKPaymentAuthorizationStatusFailure);
+            return;
+        }
+        [self submitOrderForPrintingWithProofOfPayment:token.tokenId paymentMethod:@"Apple Pay" completion:completion];
+    }];
 }
 
 - (void)paymentAuthorizationViewController:(PKPaymentAuthorizationViewController *)controller didSelectShippingAddress:(ABRecordRef)address completion:(void (^)(PKPaymentAuthorizationStatus, NSArray<PKShippingMethod *> *, NSArray <PKPaymentSummaryItem *>*))completion{
