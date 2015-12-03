@@ -158,6 +158,10 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     LXReorderableCollectionViewFlowLayout *layout = (LXReorderableCollectionViewFlowLayout *)[self.collectionView collectionViewLayout];
     layout.headerReferenceSize = CGSizeMake(0, 50);
     
+    if ((self.product.productTemplate.templateUI == kOLTemplateUICase || self.product.productTemplate.templateUI == kOLTemplateUIPoster || self.product.productTemplate.templateUI == kOLTemplateUIPostcard || self.product.productTemplate.templateUI == kOLTemplateUIPhotobook) && self.userSelectedPhotos.count > self.product.quantityToFulfillOrder){
+        self.userSelectedPhotos = [[self.userSelectedPhotos subarrayWithRange:NSMakeRange(0, self.product.quantityToFulfillOrder)] mutableCopy];
+    }
+    
     [self.collectionView registerClass:[UICollectionReusableView class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"headerView"];
     
     if (self.userSelectedPhotos.count > 0) {
@@ -393,6 +397,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
                             [alAssets addObject:asset];
                         }
                     }
+                    
                     [(id)picker setSelectedAssets:alAssets];
                     picker.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
                     [self presentViewController:picker animated:YES completion:nil];
@@ -540,6 +545,54 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     options.networkAccessAllowed = YES;
     [[OLImageCachingManager sharedInstance].photosCachingManager startCachingImagesForAssets:@[asset] targetSize:PHImageManagerMaximumSize contentMode:PHImageContentModeAspectFill options:options];
 }
+
+- (BOOL)assetsPickerController:(id)picker shouldSelectAsset:(id)asset
+{
+    if (self.product.productTemplate.templateUI != kOLTemplateUICase && self.product.productTemplate.templateUI != kOLTemplateUIPoster && self.product.productTemplate.templateUI != kOLTemplateUIPostcard && self.product.productTemplate.templateUI != kOLTemplateUIPhotobook){
+        return YES;
+    }
+    NSInteger max = self.product.quantityToFulfillOrder;
+    
+    NSMutableArray *tempUserSelected = self.userSelectedPhotos;
+    if ([picker respondsToSelector:@selector(selectedAssets)]){
+        [self populateArrayWithNewArray:[picker selectedAssets] dataType:[asset class]];
+    }
+    else if ([picker respondsToSelector:@selector(selected)]){
+        [self populateArrayWithNewArray:[picker selected] dataType:[asset class]];
+    }
+    else{ // ¯\_(ツ)_/¯
+        return YES;
+    }
+    
+    // show alert gracefully
+    if (self.userSelectedPhotos.count >= max)
+    {
+        if ([UIAlertController class]){
+            UIAlertController *alert =
+            [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Maximum Photos Reached", @"")
+                                                message:[NSString stringWithFormat:max == 1 ? NSLocalizedString(@"Please select only %ld photo", @"") : NSLocalizedString(@"Please select not more than %ld photos", @""), (long)max]
+                                         preferredStyle:UIAlertControllerStyleAlert];
+            
+            UIAlertAction *action =
+            [UIAlertAction actionWithTitle:NSLocalizedString(@"OK", @"")
+                                     style:UIAlertActionStyleDefault
+                                   handler:nil];
+            
+            [alert addAction:action];
+            
+            [picker presentViewController:alert animated:YES completion:nil];
+        }
+        else{
+            UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Maximum Photos Reached", @"") message:[NSString stringWithFormat:max == 1 ? NSLocalizedString(@"Please select only %ld photo", @"") : NSLocalizedString(@"Please select not more than %ld photos", @""), (long)max] delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"") otherButtonTitles:nil];
+            [av show];
+        }
+    }
+    
+    // limit selection to max
+    BOOL result = (self.userSelectedPhotos.count < max);
+    self.userSelectedPhotos = tempUserSelected;
+    return result;
+}
 #endif
 
 - (BOOL)assetsPickerController:(OLAssetsPickerController *)picker shouldShowAsset:(id)asset{
@@ -565,6 +618,9 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 - (void)instagramImagePickerDidCancelPickingImages:(OLInstagramImagePickerController *)imagePicker {
     [self dismissViewControllerAnimated:YES completion:nil];
 }
+- (BOOL)instagramImagePicker:(OLInstagramImagePickerController *)imagePicker shouldSelectImage:(OLInstagramImage *)image{
+    return [self assetsPickerController:(id)imagePicker shouldSelectAsset:(id)image];
+}
 #endif
 
 #ifdef OL_KITE_OFFER_FACEBOOK
@@ -581,6 +637,10 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 
 - (void)facebookImagePickerDidCancelPickingImages:(OLFacebookImagePickerController *)imagePicker {
     [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (BOOL)facebookImagePicker:(OLFacebookImagePickerController *)imagePicker shouldSelectImage:(OLFacebookImage *)image{
+    return [self assetsPickerController:(id)imagePicker shouldSelectAsset:(id)image];
 }
 #endif
 
