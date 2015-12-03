@@ -1073,18 +1073,18 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
     if (collectionView.tag == 10){
-    CGSize size = self.view.bounds.size;
-    
-    if (self.rotationSize.width != 0){
-        size = self.rotationSize;
-    }
-    
-    float numberOfCellsPerRow = [self numberOfCellsPerRow];
-    CGFloat width = ceilf(size.width/numberOfCellsPerRow);
-    CGFloat height = width;
-
-
-    return CGSizeMake(width, height);
+        CGSize size = self.view.bounds.size;
+        
+        if (self.rotationSize.width != 0){
+            size = self.rotationSize;
+        }
+        
+        float numberOfCellsPerRow = [self numberOfCellsPerRow];
+        CGFloat width = ceilf(size.width/numberOfCellsPerRow);
+        CGFloat height = width;
+        
+        
+        return CGSizeMake(width, height);
     }
     else{
         return CGSizeMake(60, collectionView.frame.size.height);
@@ -1100,7 +1100,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     return UIEdgeInsetsMake(0, diff/2.0, 0, diff/2.0);
     }
     else{
-        CGFloat margin = (size.width - [self collectionView:collectionView numberOfItemsInSection:0] * [self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]].width)/2.0;
+        CGFloat margin = MAX((size.width - [self collectionView:collectionView numberOfItemsInSection:0] * [self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]].width)/2.0, 0);
         return UIEdgeInsetsMake(0, margin, 0, margin);
     }
 }
