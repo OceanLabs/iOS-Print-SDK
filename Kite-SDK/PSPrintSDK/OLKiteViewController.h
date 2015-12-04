@@ -44,6 +44,15 @@
 - (BOOL)kiteControllerShouldAllowUserToAddMorePhotos:(OLKiteViewController * _Nullable)controller;
 
 /**
+ *  Disallow access to camera roll photos.
+ *
+ *  @param controller The active OLKiteViewController
+ *
+ *  @return A boolean value of whether or not we should allow the user to add more photos from the camera roll.
+ */
+- (BOOL)kiteControllerShouldDisableCameraRoll:(OLKiteViewController * _Nullable)controller;
+
+/**
  *  Asks the delegate if we should ask the user for their phone number at checkout. If this is not specified, the behavior is random.
  *
  *  @return A boolean value of whether or not we should ask the user for their phone number at checkout.

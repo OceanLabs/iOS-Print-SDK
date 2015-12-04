@@ -783,18 +783,31 @@ UINavigationControllerDelegate>
 
 - (void)addMorePhotosFromView:(UIView *)view{
     BOOL customProviders = NO;
+    NSInteger numberOfProviders = 0;
 #ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
-    if ([OLKiteUtils kiteVcForViewController:self].customImageProviders.count > 0){
-        customProviders = YES;
-    }
+    NSInteger numberOfCustomProviders = [OLKiteUtils kiteVcForViewController:self].customImageProviders.count;
+    customProviders = numberOfCustomProviders > 0;
+    numberOfProviders += numberOfCustomProviders;
 #endif
     
-    if ([OLKiteUtils instagramEnabled] || [OLKiteUtils facebookEnabled] || customProviders){
+    if ([OLKiteUtils cameraRollEnabled:self]){
+        numberOfProviders++;
+    }
+    if ([OLKiteUtils facebookEnabled]){
+        numberOfProviders++;
+    }
+    if ([OLKiteUtils instagramEnabled]){
+        numberOfProviders++;
+    }
+    
+    if (numberOfProviders > 1){
         if ([UIAlertController class]){
             UIAlertController *ac = [UIAlertController alertControllerWithTitle:nil message:NSLocalizedString(@"Add photos from:", @"") preferredStyle:UIAlertControllerStyleActionSheet];
-            [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Camera Roll", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
-                [self showCameraRollImagePicker];
-            }]];
+            if ([OLKiteUtils cameraRollEnabled:self]){
+                [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Camera Roll", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
+                    [self showCameraRollImagePicker];
+                }]];
+            }
             if ([OLKiteUtils instagramEnabled]){
                 [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Instagram", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
                     [self showInstagramImagePicker];
@@ -808,11 +821,7 @@ UINavigationControllerDelegate>
 #ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
             for (OLCustomPhotoProvider *provider in [OLKiteUtils kiteVcForViewController:self].customImageProviders){
                 [ac addAction:[UIAlertAction actionWithTitle:provider.name style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
-                    KITAssetsPickerController *vc = [[KITAssetsPickerController alloc] init];
-                    vc.delegate = self;
-                    vc.collectionDataSources = provider.collections;
-                    vc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
-                    [self presentViewController:vc animated:YES completion:NULL];
+                    [self showPickerForProvider:provider];
                 }]];
             }
 #endif
@@ -825,44 +834,47 @@ UINavigationControllerDelegate>
             [self presentViewController:ac animated:YES completion:NULL];
         }
         else{
-            UIActionSheet *as;
-            if ([OLKiteUtils instagramEnabled] && [OLKiteUtils facebookEnabled]){
-                as = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"Add photos from:", @"") delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", @"") destructiveButtonTitle:nil otherButtonTitles:NSLocalizedString(@"Camera Roll", @""),
-                      NSLocalizedString(@"Instagram", @""),
-                      NSLocalizedString(@"Facebook", @""),
-#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
-                      [[OLKiteUtils kiteVcForViewController:self].customImageProviders.firstObject name],
-#endif
-                      nil];
+            UIActionSheet *as = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"Add photos from:", @"")
+                                                            delegate:self
+                                                   cancelButtonTitle:nil
+                                              destructiveButtonTitle:nil
+                                                   otherButtonTitles:nil];
+            
+            if ([OLKiteUtils cameraRollEnabled:self]){
+                [as addButtonWithTitle:NSLocalizedString(@"Camera Roll", @"")];
             }
-            else if ([OLKiteUtils instagramEnabled]){
-                as = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"Add photos from:", @"") delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", @"") destructiveButtonTitle:nil otherButtonTitles:NSLocalizedString(@"Camera Roll", @""),
-                      NSLocalizedString(@"Instagram", @""),
-#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
-                      [[OLKiteUtils kiteVcForViewController:self].customImageProviders.firstObject name],
-#endif
-                      nil];
+            if ([OLKiteUtils facebookEnabled]){
+                [as addButtonWithTitle:@"Facebook"];
             }
-            else if ([OLKiteUtils facebookEnabled]){
-                as = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"Add photos from:", @"") delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", @"") destructiveButtonTitle:nil otherButtonTitles:NSLocalizedString(@"Camera Roll", @""),
-                      NSLocalizedString(@"Facebook", @""),
-#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
-                      [[OLKiteUtils kiteVcForViewController:self].customImageProviders.firstObject name],
-#endif
-                      nil];
+            if ([OLKiteUtils instagramEnabled]){
+                [as addButtonWithTitle:@"Instagram"];
             }
-            else{
-                as = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"Add photos from:", @"") delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", @"") destructiveButtonTitle:nil otherButtonTitles:NSLocalizedString(@"Camera Roll", @""),
 #ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
-                      [[OLKiteUtils kiteVcForViewController:self].customImageProviders.firstObject name],
-#endif
-                      nil];
+            for (OLCustomPhotoProvider *provider in [OLKiteUtils kiteVcForViewController:self].customImageProviders){
+                [as addButtonWithTitle:provider.name];
             }
+#endif
+            as.cancelButtonIndex = [as addButtonWithTitle:@"Cancel"];
+            
             [as showInView:self.view];
         }
     }
     else{
-        [self showCameraRollImagePicker];
+        if ([OLKiteUtils cameraRollEnabled:self]){
+            [self showCameraRollImagePicker];
+        }
+        else if ([OLKiteUtils facebookEnabled]){
+            [self showFacebookImagePicker];
+        }
+        else if ([OLKiteUtils instagramEnabled]){
+            [self showInstagramImagePicker];
+        }
+#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
+        else{
+            [self showPickerForProvider:[OLKiteUtils kiteVcForViewController:self].customImageProviders.firstObject];
+        }
+#endif
+        
     }
 }
 
@@ -931,6 +943,16 @@ UINavigationControllerDelegate>
 #endif
 }
 
+#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
+- (void)showPickerForProvider:(OLCustomPhotoProvider *)provider{
+    KITAssetsPickerController *vc = [[KITAssetsPickerController alloc] init];
+    vc.delegate = self;
+    vc.collectionDataSources = provider.collections;
+    vc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
+    [self presentViewController:vc animated:YES completion:NULL];
+}
+#endif
+
 - (void)populateArrayWithNewArray:(NSArray *)array dataType:(Class)class {
     NSMutableArray *photoArray = [[NSMutableArray alloc] initWithCapacity:array.count];
     NSMutableArray *assetArray = [[NSMutableArray alloc] initWithCapacity:array.count];
@@ -995,7 +1017,7 @@ UINavigationControllerDelegate>
 #if __IPHONE_OS_VERSION_MIN_REQUIRED < 80000
 - (BOOL)assetsPickerController:(OLAssetsPickerController *)picker isDefaultAssetsGroup:(ALAssetsGroup *)group {
     if ([self.delegate respondsToSelector:@selector(kiteController:isDefaultAssetsGroup:)]) {
-        return [self.delegate kiteController:[self kiteViewController] isDefaultAssetsGroup:group];
+        return [self.delegate kiteController:[OLKiteUtils kiteVcForViewController:self] isDefaultAssetsGroup:group];
     }
     
     return NO;
@@ -1101,6 +1123,16 @@ UINavigationControllerDelegate>
 }
 
 - (void)instagramImagePicker:(OLInstagramImagePickerController *)imagePicker didFinishPickingImages:(NSArray *)images {
+#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
+    NSMutableArray *assets = [[NSMutableArray alloc] init];
+    for (id<OLAssetDataSource> asset in images){
+        if ([asset isKindOfClass:[OLInstagramImage class]]){
+            [assets addObject:asset];
+        }
+    }
+    images = assets;
+#endif
+    
     if (self.replacingImageNumber){
         self.photobookPhotos[[self.replacingImageNumber integerValue]] = [NSNull null];
         self.replacingImageNumber = nil;
@@ -1150,6 +1182,16 @@ UINavigationControllerDelegate>
 }
 
 - (void)facebookImagePicker:(OLFacebookImagePickerController *)imagePicker didFinishPickingImages:(NSArray *)images {
+#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
+    NSMutableArray *assets = [[NSMutableArray alloc] init];
+    for (id<OLAssetDataSource> asset in images){
+        if ([asset isKindOfClass:[OLFacebookImage class]]){
+            [assets addObject:asset];
+        }
+    }
+    images = assets;
+#endif
+    
     if (self.replacingImageNumber){
         self.photobookPhotos[[self.replacingImageNumber integerValue]] = [NSNull null];
         self.replacingImageNumber = nil;
@@ -1193,36 +1235,22 @@ UINavigationControllerDelegate>
 #pragma mark UIActionSheet Delegate (only used on iOS 7)
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex{
-    if (buttonIndex == 0){
-        [self showCameraRollImagePicker];
-    }
-    else if (buttonIndex == 1){
-        if ([OLKiteUtils instagramEnabled]){
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+        if (buttonIndex == [OLKiteUtils cameraRollProviderIndex:self]){
+            [self showCameraRollImagePicker];
+        }
+        else if (buttonIndex == [OLKiteUtils instagramProviderIndex:self]){
             [self showInstagramImagePicker];
         }
-        else if ([OLKiteUtils facebookEnabled]){
+        else if (buttonIndex == [OLKiteUtils facebookProviderIndex:self]){
             [self showFacebookImagePicker];
         }
 #ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
         else{
-            KITAssetsPickerController *vc = [[KITAssetsPickerController alloc] init];
-            vc.delegate = self;
-            vc.collectionDataSources = [[OLKiteUtils kiteVcForViewController:self].customImageProviders.firstObject collections];
-            vc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
-            [self presentViewController:vc animated:YES completion:NULL];
+            [self showPickerForProvider:[OLKiteUtils kiteVcForViewController:self].customImageProviders[buttonIndex - [OLKiteUtils customProvidersStartIndex:self]]];
         }
 #endif
-    }
-    else if (buttonIndex == 2 && [OLKiteUtils facebookEnabled]){
-        [self showFacebookImagePicker];
-    }
-    else{
-        KITAssetsPickerController *vc = [[KITAssetsPickerController alloc] init];
-        vc.delegate = self;
-        vc.collectionDataSources = [[OLKiteUtils kiteVcForViewController:self].customImageProviders.firstObject collections];
-        vc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
-        [self presentViewController:vc animated:YES completion:NULL];
-    }
+    });
 }
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{

@@ -233,11 +233,7 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
                 identifier = @"OLProductOverviewViewController";
             }
             else if ([[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant hasPrefix:@"Review-"] && [product isValidProductForUI]){
-                BOOL photoSelection = ![welf.delegate respondsToSelector:@selector(kiteControllerShouldAllowUserToAddMorePhotos:)];
-                if (!photoSelection){
-                    photoSelection = [welf.delegate kiteControllerShouldAllowUserToAddMorePhotos:welf];
-                }
-                identifier = [OLKiteUtils reviewViewControllerIdentifierForProduct:product photoSelectionScreen:photoSelection];
+                identifier = [OLKiteUtils reviewViewControllerIdentifierForProduct:product photoSelectionScreen:[OLKiteUtils imageProvidersAvailable:welf]];
             }
             else{
                 [OLKiteUtils checkoutViewControllerForPrintOrder:welf.printOrder handler:^(id vc){

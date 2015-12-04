@@ -25,12 +25,12 @@
 
 + (id<OLKiteDelegate>)kiteDelegate:(UIViewController *)topVC;
 
-+ (OLProductHomeViewController *)homeViewControllerInNavStack:(NSArray *)viewControllers;
-
 + (OLKiteViewController *)kiteVcForViewController:(UIViewController *)vc;
 
 +(void)reverseRowsOfPhotosInArray:(NSMutableArray*)array forProduct:(OLProduct *)product;
 
++ (BOOL)imageProvidersAvailable:(UIViewController *)topVc;
++ (BOOL)cameraRollEnabled:(UIViewController *)topVc;
 + (BOOL)facebookEnabled;
 + (BOOL)instagramEnabled;
 
@@ -41,5 +41,12 @@
 + (void)checkoutViewControllerForPrintOrder:(OLPrintOrder *)printOrder handler:(void(^)(id vc))handler;
 + (NSString *)reviewViewControllerIdentifierForProduct:(OLProduct *)product photoSelectionScreen:(BOOL)photoSelectionScreen;
 + (void)shippingControllerForPrintOrder:(OLPrintOrder *)printOrder handler:(void(^)(OLCheckoutViewController *vc))handler;
+
++ (NSInteger)cameraRollProviderIndex:(UIViewController *)topVc;
++ (NSInteger)facebookProviderIndex:(UIViewController *)topVc;
++ (NSInteger)instagramProviderIndex:(UIViewController *)topVc;
+#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
++ (NSInteger)customProvidersStartIndex:(UIViewController *)topVc;
+#endif
 
 @end

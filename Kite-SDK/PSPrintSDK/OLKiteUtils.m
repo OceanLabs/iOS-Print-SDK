@@ -16,6 +16,9 @@
 #import "OLKiteABTesting.h"
 #import "OLCheckoutViewController.h"
 #import "OLIntegratedCheckoutViewController.h"
+#import "OLKiteViewController.h"
+
+@class OLCustomPhotoProvider;
 
 @interface OLKitePrintSDK (Private)
 
@@ -29,6 +32,10 @@
 
 @end
 
+@interface OLKiteViewController (Private)
+@property (strong, nonatomic) NSMutableArray <OLCustomPhotoProvider *> *customImageProviders;
+@end
+
 @implementation OLKiteUtils
 
 + (NSBundle *)kiteBundle{
@@ -37,26 +44,12 @@
 
 + (NSString *)userEmail:(UIViewController *)topVC {
     OLKiteViewController *kiteVC = [self kiteVcForViewController:topVC];
-    OLProductHomeViewController *homeVC = [self homeViewControllerInNavStack:topVC.navigationController.viewControllers];
-    if (kiteVC) {
-        return kiteVC.userEmail;
-    } else if (homeVC) {
-        return homeVC.userEmail;
-    }
-    
-    return nil;
+    return kiteVC.userEmail;
 }
 
 + (NSString *)userPhone:(UIViewController *)topVC {
     OLKiteViewController *kiteVC = [self kiteVcForViewController:topVC];
-    OLProductHomeViewController *homeVC = [self homeViewControllerInNavStack:topVC.navigationController.viewControllers];
-    if (kiteVC) {
-        return kiteVC.userPhone;
-    } else if (homeVC) {
-        return homeVC.userPhone;
-    }
-    
-    return nil;
+    return kiteVC.userPhone;
 }
 
 + (BOOL)instagramEnabled{
@@ -75,26 +68,98 @@
 #endif
 }
 
-+ (id<OLKiteDelegate>)kiteDelegate:(UIViewController *)topVC {
-    OLKiteViewController *kiteVC = [self kiteVcForViewController:topVC];
-    OLProductHomeViewController *homeVC = [self homeViewControllerInNavStack:topVC.navigationController.viewControllers];
-    if (kiteVC) {
-        return kiteVC.delegate;
-    } else if (homeVC) {
-        return homeVC.delegate;
++ (BOOL)imageProvidersAvailable:(UIViewController *)topVc{
+    OLKiteViewController *kiteVc = [OLKiteUtils kiteVcForViewController:topVc];
+    id<OLKiteDelegate> delegate = kiteVc.delegate;
+    
+    if ([delegate respondsToSelector:@selector(kiteControllerShouldAllowUserToAddMorePhotos:)] && ![delegate kiteControllerShouldAllowUserToAddMorePhotos:kiteVc]){
+        return NO;
     }
     
-    return nil;
+    BOOL customProvidersAvailable = NO;
+#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
+    customProvidersAvailable = kiteVc.customImageProviders.count > 0;
+#endif
+    
+    return [OLKiteUtils cameraRollEnabled:topVc] || [OLKiteUtils instagramEnabled] || [OLKiteUtils facebookEnabled] || customProvidersAvailable;
 }
 
-+ (OLProductHomeViewController *)homeViewControllerInNavStack:(NSArray *)viewControllers {
-    for (UIViewController *vc in viewControllers) {
-        if ([vc isMemberOfClass:[OLProductHomeViewController class]]) {
-            return (OLProductHomeViewController *) vc;
-        }
++ (BOOL)cameraRollEnabled:(UIViewController *)topVc{
+    OLKiteViewController *kiteVc = [OLKiteUtils kiteVcForViewController:topVc];
+    id<OLKiteDelegate> delegate = kiteVc.delegate;
+    
+    if ([delegate respondsToSelector:@selector(kiteControllerShouldDisableCameraRoll:)] && [delegate kiteControllerShouldDisableCameraRoll:kiteVc]){
+        return NO;
     }
     
-    return nil;
+    return YES;
+}
+
++ (NSInteger)cameraRollProviderIndex:(UIViewController *)topVc{
+    NSInteger index = -1;
+    if ([OLKiteUtils cameraRollEnabled:topVc]){
+        index++;
+    }
+    
+    return index;
+}
+
++ (NSInteger)facebookProviderIndex:(UIViewController *)topVc{
+    NSInteger index = -1;
+    if (![OLKiteUtils facebookEnabled]){
+        return index;
+    }
+    else{
+        index++;
+    }
+    
+    if ([OLKiteUtils cameraRollEnabled:topVc]){
+        index++;
+    }
+    
+    return index;
+}
+
++ (NSInteger)instagramProviderIndex:(UIViewController *)topVc{
+    NSInteger index = -1;
+    if (![OLKiteUtils instagramEnabled]){
+        return index;
+    }
+    else{
+        index++;
+    }
+    
+    if ([OLKiteUtils cameraRollEnabled:topVc]){
+        index++;
+    }
+    if ([OLKiteUtils facebookEnabled]){
+        index++;
+    }
+    
+    return index;
+}
+
+#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
++ (NSInteger)customProvidersStartIndex:(UIViewController *)topVc{
+    NSInteger index = 0;
+
+    if ([OLKiteUtils cameraRollEnabled:topVc]){
+        index++;
+    }
+    if ([OLKiteUtils facebookEnabled]){
+        index++;
+    }
+    if ([OLKiteUtils instagramEnabled]){
+        index++;
+    }
+    
+    return index;
+}
+#endif
+
++ (id<OLKiteDelegate>)kiteDelegate:(UIViewController *)topVC {
+    OLKiteViewController *kiteVC = [self kiteVcForViewController:topVC];
+    return kiteVC.delegate;
 }
 
 #ifdef OL_KITE_OFFER_APPLE_PAY
@@ -169,6 +234,10 @@
 }
 
 + (OLKiteViewController *)kiteVcForViewController:(UIViewController *)theVc{
+    if ([theVc isKindOfClass:[OLKiteViewController class]]){
+        return theVc;
+    }
+    
     UIViewController *vc = theVc.parentViewController;
     while (vc) {
         if ([vc isKindOfClass:[OLKiteViewController class]]){

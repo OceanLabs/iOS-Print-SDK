@@ -94,7 +94,6 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 @property (strong, nonatomic) NSMutableDictionary *indexPathsToRemoveDict;
 @property (strong, nonatomic) UIVisualEffectView *visualEffectView;
 @property (weak, nonatomic) IBOutlet UIView *clearButtonContainerView;
-@property (assign, nonatomic) NSInteger customProvidersStartAtIndex;
 
 @end
 
@@ -134,15 +133,6 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     [self.collectionView registerClass:[UICollectionReusableView class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"headerView"];
     
     [self onUserSelectedPhotoCountChange];
-    
-    self.customProvidersStartAtIndex = 1;
-    if ([OLKiteUtils facebookEnabled]){
-        self.customProvidersStartAtIndex++;
-    }
-    if ([OLKiteUtils instagramEnabled]){
-        self.customProvidersStartAtIndex++;
-    }
-    
 }
 
 - (void)viewDidLayoutSubviews{
@@ -300,6 +290,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinator> context){
         [self.collectionView reloadData];
         [self.collectionView.collectionViewLayout invalidateLayout];
+        [self.providersCollectionView.collectionViewLayout invalidateLayout];
     }completion:^(id<UIViewControllerTransitionCoordinator> context){
         
     }];
@@ -405,7 +396,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     
     KITAssetsPickerController *vc = [[KITAssetsPickerController alloc] init];
     vc.delegate = self;
-    vc.collectionDataSources = [[OLKiteUtils kiteVcForViewController:self].customImageProviders[indexPath.item - self.customProvidersStartAtIndex] collections];
+    vc.collectionDataSources = [[OLKiteUtils kiteVcForViewController:self].customImageProviders[indexPath.item - [OLKiteUtils customProvidersStartIndex:self]] collections];
     vc.selectedAssets = [[self createAssetArray] mutableCopy];
     vc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
     [self presentViewController:vc animated:YES completion:NULL];
@@ -623,6 +614,16 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 }
 
 - (void)instagramImagePicker:(OLInstagramImagePickerController *)imagePicker didFinishPickingImages:(NSArray *)images {
+#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
+    NSMutableArray *assets = [[NSMutableArray alloc] init];
+    for (id<OLAssetDataSource> asset in images){
+        if ([asset isKindOfClass:[OLInstagramImage class]]){
+            [assets addObject:asset];
+        }
+    }
+    images = assets;
+#endif
+    
     [self populateArrayWithNewArray:images dataType:[OLInstagramImage class]];
     [self dismissViewControllerAnimated:YES completion:^(void){}];
 }
@@ -643,6 +644,16 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 }
 
 - (void)facebookImagePicker:(OLFacebookImagePickerController *)imagePicker didFinishPickingImages:(NSArray *)images {
+#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
+    NSMutableArray *assets = [[NSMutableArray alloc] init];
+    for (id<OLAssetDataSource> asset in images){
+        if ([asset isKindOfClass:[OLFacebookImage class]]){
+            [assets addObject:asset];
+        }
+    }
+    images = assets;
+#endif
+    
     [self populateArrayWithNewArray:images dataType:[OLFacebookImage class]];
     [self dismissViewControllerAnimated:YES completion:^(void){}];
 }
@@ -724,17 +735,20 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
         return MIN(MAX(self.userSelectedPhotos.count + finalNumberOfPhotosRemoved, number * [self numberOfCellsPerRow]), self.product.quantityToFulfillOrder) - removedImagesInThisSection;
     }
     else{
-        NSInteger sources = 1;
+        NSInteger providers = 0;
+        if ([OLKiteUtils cameraRollEnabled:self]){
+            providers++;
+        }
         if ([OLKiteUtils facebookEnabled]){
-            sources++;
+            providers++;
         }
         if ([OLKiteUtils instagramEnabled]){
-            sources++;
+            providers++;
         }
 #ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
-        sources += [OLKiteUtils kiteVcForViewController:self].customImageProviders.count;
+        providers += [OLKiteUtils kiteVcForViewController:self].customImageProviders.count;
 #endif
-        return sources;
+        return providers;
     }
 }
 
@@ -951,29 +965,24 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
         
         OLPhotoSelectionButton *button = [cell viewWithTag:11];
         [button makeRoundRectWithRadius:22];
-        if (indexPath.item == 0){
+        if (indexPath.item == [OLKiteUtils cameraRollProviderIndex:self]){
             button.image = [UIImage imageNamedInKiteBundle:@"import_gallery"];
             button.mainColor = [UIColor colorWithRed:0.227 green:0.706 blue:0.600 alpha:1.000];
             [button addTarget:self action:@selector(cameraRollSelected:) forControlEvents:UIControlEventTouchUpInside];
         }
-        else if (indexPath.item == 1 && [OLKiteUtils facebookEnabled]){
+        else if (indexPath.item == [OLKiteUtils facebookProviderIndex:self]){
             button.image = [UIImage imageNamedInKiteBundle:@"import_facebook"];
             button.mainColor = [UIColor colorWithRed:0.290 green:0.537 blue:0.863 alpha:1.000];
             [button addTarget:self action:@selector(facebookSelected:) forControlEvents:UIControlEventTouchUpInside];
         }
-        else if (indexPath.item == 1 && ![OLKiteUtils facebookEnabled] && [OLKiteUtils instagramEnabled]){
-            button.image = [UIImage imageNamedInKiteBundle:@"import_instagram"];
-            button.mainColor = [UIColor colorWithRed:0.965 green:0.733 blue:0.259 alpha:1.000];
-            [button addTarget:self action:@selector(instagramSelected:) forControlEvents:UIControlEventTouchUpInside];
-        }
-        else if (indexPath.item == 2 && [OLKiteUtils facebookEnabled] && [OLKiteUtils instagramEnabled]){
+        else if (indexPath.item == [OLKiteUtils instagramProviderIndex:self]){
             button.image = [UIImage imageNamedInKiteBundle:@"import_instagram"];
             button.mainColor = [UIColor colorWithRed:0.965 green:0.733 blue:0.259 alpha:1.000];
             [button addTarget:self action:@selector(instagramSelected:) forControlEvents:UIControlEventTouchUpInside];
         }
 #ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
         else{
-            button.image = [[OLKiteUtils kiteVcForViewController:self].customImageProviders[indexPath.item - self.customProvidersStartAtIndex] icon];
+            button.image = [[OLKiteUtils kiteVcForViewController:self].customImageProviders[indexPath.item - [OLKiteUtils customProvidersStartIndex:self]] icon];
             button.mainColor = [UIColor grayColor];
             [button addTarget:self action:@selector(customProviderSelected:) forControlEvents:UIControlEventTouchUpInside];
         }
