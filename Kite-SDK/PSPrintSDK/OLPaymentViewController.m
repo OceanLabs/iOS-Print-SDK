@@ -979,10 +979,6 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
         
         if (error) {
-            if (!handlerUsed) {
-                handler(PKPaymentAuthorizationStatusFailure);
-                handlerUsed = YES;
-            }
             [self.printOrder cancelSubmissionOrPreemptedAssetUpload];
             if ([UIAlertController class]){
                 UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLConstants bundle], @"") message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
@@ -994,7 +990,14 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
                         [[NSOperationQueue mainQueue] addOperation:self.transitionBlockOperation];
                     }
                 }]];
-                [self presentViewController:ac animated:YES completion:NULL];
+                NSBlockOperation *presentAlertBlock = [NSBlockOperation blockOperationWithBlock:^{
+                    [self presentViewController:ac animated:YES completion:NULL];
+                }];
+                if ([self isApplePayAvailable] && self.applePayDismissOperation){
+                    [presentAlertBlock addDependency:self.applePayDismissOperation];
+                }
+                [[NSOperationQueue mainQueue] addOperation:presentAlertBlock];
+
             }
             else{
                 UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLConstants bundle], @"") message:error.localizedDescription delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLConstants bundle], @"") otherButtonTitles:nil];
@@ -1053,6 +1056,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
                 [[NSOperationQueue mainQueue] addOperation:self.applePayDismissOperation];
             }
             if (error){
+                //Apple Pay only available on ios 8+ so no need to worry about UIAlertController not available.
                 UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Oops!", @"") message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
                 [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
                     [self.navigationController popViewControllerAnimated:YES];
