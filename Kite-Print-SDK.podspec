@@ -50,4 +50,9 @@ Pod::Spec.new do |spec|
     instagram.dependency 'InstagramImagePicker'
   end
 
+  spec.subspec 'Providers' do |providers|
+    providers.xcconfig =  { 'OTHER_CFLAGS' => '$(inherited) -DOL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS' }
+    providers.dependency 'KITAssetsPickerController'
+  end
+
 end

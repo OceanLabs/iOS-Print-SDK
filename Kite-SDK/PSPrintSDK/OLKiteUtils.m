@@ -235,7 +235,7 @@
 
 + (OLKiteViewController *)kiteVcForViewController:(UIViewController *)theVc{
     if ([theVc isKindOfClass:[OLKiteViewController class]]){
-        return theVc;
+        return (OLKiteViewController *)theVc;
     }
     
     UIViewController *vc = theVc.parentViewController;
