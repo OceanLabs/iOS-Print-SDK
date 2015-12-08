@@ -145,6 +145,12 @@ UINavigationControllerDelegate>
     [super viewDidDisappear:animated];
     
     self.navigationItem.rightBarButtonItem.enabled = YES;
+    
+#ifndef OL_NO_ANALYTICS
+    if (!self.navigationController){
+        [OLAnalytics trackPhotoSelectionScreenHitBack:self.product.productTemplate.name];
+    }
+#endif
 }
 
 - (void)viewWillAppear:(BOOL)animated{
@@ -826,6 +832,9 @@ UINavigationControllerDelegate>
 }
 
 - (void)showCameraRollImagePicker{
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackPhotoProviderPicked:@"Camera Roll" forProductName:self.product.productTemplate.name];
+#endif
     __block UIViewController *picker;
     __block Class assetClass;
     if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8 || !definesAtLeastiOS8){
@@ -871,6 +880,9 @@ UINavigationControllerDelegate>
 
 - (void)showFacebookImagePicker{
 #ifdef OL_KITE_OFFER_FACEBOOK
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackPhotoProviderPicked:@"Facebook" forProductName:self.product.productTemplate.name];
+#endif
     OLFacebookImagePickerController *picker = nil;
     picker = [[OLFacebookImagePickerController alloc] init];
     picker.delegate = self;
@@ -881,6 +893,9 @@ UINavigationControllerDelegate>
 
 - (void)showInstagramImagePicker{
 #ifdef OL_KITE_OFFER_INSTAGRAM
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackPhotoProviderPicked:@"Instagram" forProductName:self.product.productTemplate.name];
+#endif
     OLInstagramImagePickerController *picker = nil;
     picker = [[OLInstagramImagePickerController alloc] initWithClientId:[OLKitePrintSDK instagramClientID] secret:[OLKitePrintSDK instagramSecret] redirectURI:[OLKitePrintSDK instagramRedirectURI]];
     picker.delegate = self;
@@ -951,6 +966,7 @@ UINavigationControllerDelegate>
 #endif
 
 - (void)assetsPickerController:(id)picker didFinishPickingAssets:(NSArray *)assets {
+    NSInteger originalCount = self.userSelectedPhotos.count;
     if (self.replacingImageNumber){
         self.photobookPhotos[[self.replacingImageNumber integerValue]] = [NSNull null];
         self.replacingImageNumber = nil;
@@ -973,6 +989,9 @@ UINavigationControllerDelegate>
     }
     
     [self populateArrayWithNewArray:assets dataType:[picker isKindOfClass:[OLAssetsPickerController class]] ? [ALAsset class] : [PHAsset class]];
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackPhotoProvider:@"Camera Roll" numberOfPhotosAdded:self.userSelectedPhotos.count - originalCount forProductName:self.product.productTemplate.name];
+#endif
     [picker dismissViewControllerAnimated:YES completion:^(void){}];
     
 }
@@ -1020,6 +1039,7 @@ UINavigationControllerDelegate>
 }
 
 - (void)instagramImagePicker:(OLInstagramImagePickerController *)imagePicker didFinishPickingImages:(NSArray *)images {
+    NSInteger originalCount = self.userSelectedPhotos.count;
     if (self.replacingImageNumber){
         self.photobookPhotos[[self.replacingImageNumber integerValue]] = [NSNull null];
         self.replacingImageNumber = nil;
@@ -1044,6 +1064,9 @@ UINavigationControllerDelegate>
     }
     
     [self populateArrayWithNewArray:images dataType:[OLInstagramImage class]];
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackPhotoProvider:@"Instagram" numberOfPhotosAdded:self.userSelectedPhotos.count - originalCount forProductName:self.product.productTemplate.name];
+#endif
     [self dismissViewControllerAnimated:YES completion:^(void){}];
 }
 
@@ -1069,6 +1092,7 @@ UINavigationControllerDelegate>
 }
 
 - (void)facebookImagePicker:(OLFacebookImagePickerController *)imagePicker didFinishPickingImages:(NSArray *)images {
+    NSInteger originalCount = self.userSelectedPhotos.count;
     if (self.replacingImageNumber){
         self.photobookPhotos[[self.replacingImageNumber integerValue]] = [NSNull null];
         self.replacingImageNumber = nil;
@@ -1092,6 +1116,9 @@ UINavigationControllerDelegate>
         return;
     }
     [self populateArrayWithNewArray:images dataType:[OLFacebookImage class]];
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackPhotoProvider:@"Facebook" numberOfPhotosAdded:self.userSelectedPhotos.count - originalCount forProductName:self.product.productTemplate.name];
+#endif
     [self dismissViewControllerAnimated:YES completion:^(void){}];
 }
 

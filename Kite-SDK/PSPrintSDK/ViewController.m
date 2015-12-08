@@ -22,7 +22,7 @@
  * Insert your API keys here. These are found under your profile 
  * by logging in to the developer portal at https://www.kite.ly
  **********************************************************************/
-static NSString *const kAPIKeySandbox = @"REPLACE_WITH_YOUR_API_KEY"; // replace with your Sandbox API key found under the Profile section in the developer portal
+static NSString *const kAPIKeySandbox = @"a45bf7f39523d31aa1ca4ecf64d422b4d810d9c4"; // replace with your Sandbox API key found under the Profile section in the developer portal
 static NSString *const kAPIKeyLive = @"REPLACE_WITH_YOUR_API_KEY"; // replace with your Live API key found under the Profile section in the developer portal
 
 static NSString *const kApplePayMerchantIDKey = @"merchant.ly.kite.sdk"; // Replace with your merchant ID
@@ -47,10 +47,6 @@ UINavigationControllerDelegate, OLKiteDelegate>
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onUserSuppliedShippingDetails:) name:kOLNotificationUserSuppliedShippingDetails object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onUserCompletedPayment:) name:kOLNotificationUserCompletedPayment object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onPrintOrderSubmission:) name:kOLNotificationPrintOrderSubmission object:nil];
     
 #ifdef OL_KITE_OFFER_INSTAGRAM
     [OLKitePrintSDK setInstagramEnabledWithClientID:@"a6a09c92a14d488baa471e5209906d3d" secret:@"bfb814274cd041a5b7e06f32608e0e87" redirectURI:@"kite://instagram-callback"];
@@ -267,21 +263,8 @@ UINavigationControllerDelegate, OLKiteDelegate>
     return YES;
 }
 
-#pragma mark - notification events
-
-// useful if you want to fire off Anlaytic events for conversion funnel analysis, etc.
-
-- (void)onUserSuppliedShippingDetails:(NSNotification*)n {
-    NSLog(@"onUserSuppliedShippingDetails for print order with shipping address: %@", [n.userInfo[kOLKeyUserInfoPrintOrder] shippingAddress] );
-}
-
-- (void)onUserCompletedPayment:(NSNotification*)n {
-    NSLog(@"onUserCompletedPayment for print order with proof of payment: %@", [n.userInfo[kOLKeyUserInfoPrintOrder] proofOfPayment]);
-}
-
-- (void)onPrintOrderSubmission:(NSNotification*)n {
-    NSLog(@"onPrintOrderSubmission for print order with order receipt: %@", [n.userInfo[kOLKeyUserInfoPrintOrder] receipt]);
-    _printOrder = [[OLPrintOrder alloc] init];
+- (void)logKiteAnalyticsEventWithInfo:(NSDictionary *)info{
+    NSLog(@"%@", info);
 }
 
 @end

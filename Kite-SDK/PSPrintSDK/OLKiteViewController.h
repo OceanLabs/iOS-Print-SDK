@@ -60,6 +60,15 @@
  *  @param controller The KiteViewController
  */
 - (void)kiteControllerDidFinish:(OLKiteViewController * _Nonnull)controller;
+
+/**
+ *  Notifies the delegate of an analytics event.
+ *
+ *  @param info The dictionary containing the information about the event
+ */
+- (void)logKiteAnalyticsEventWithInfo:(NSDictionary *_Nonnull)info;
+
+
 @end
 
 /**
