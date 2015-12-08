@@ -658,6 +658,15 @@
 
 - (IBAction)onButtonBasketClicked:(UIBarButtonItem *)sender {
     OLPrintOrder *printOrder = [OLKiteUtils kiteVcForViewController:self].printOrder;
+    
+#ifndef OL_NO_ANALYTICS
+    NSUInteger count = printOrder.jobs.count;
+    for (id<OLPrintJob> job in printOrder.jobs){
+        count += [job extraCopies];
+    }
+    [OLAnalytics trackBasketIconTappedWithNumberBadged:count];
+#endif
+    
     [OLKiteUtils checkoutViewControllerForPrintOrder:printOrder handler:^(id vc){
         [vc safePerformSelector:@selector(setUserEmail:) withObject:[OLKiteUtils userEmail:self]];
         [vc safePerformSelector:@selector(setUserPhone:) withObject:[OLKiteUtils userPhone:self]];

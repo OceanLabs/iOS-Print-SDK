@@ -147,6 +147,7 @@ static __weak id<OLKiteDelegate> kiteDelegate;
     if (order){
         dict[@"Number of Items in Order"] = [NSNumber numberWithInteger:[order.jobs count]];
         dict[@"Total Number of Photos in Order"] = [NSNumber numberWithInteger:order.totalAssetsToUpload];
+        dict[@"Products In Order"] = [OLAnalytics listOfProductNamesForJobsInOrder:order];
     }
     if (info){
         [dict addEntriesFromDictionary:info];
@@ -375,13 +376,13 @@ static __weak id<OLKiteDelegate> kiteDelegate;
 }
 
 + (void)trackPhotoSelectionScreenNumberOfPhotosRemoved:(NSUInteger)number forProductName:(NSString *)productName{
-    NSString *eventName = @"Review Screen Did Enter Crop Screen";
+    NSString *eventName = @"Photo Selection Screen Removed Photos";
 //    NSDictionary *dict = [OLAnalytics defaultDictionaryForEventName:eventName];
 //    [dict[@"properties"] setObject:nonNilStr(productName) forKey:@"Product Name"];
 //    [dict[@"properties"] setObject:[NSNumber numberWithInteger:number] forKey:@"Number of Photos Removed"];
 //    [OLAnalytics sendToMixPanelWithDictionary:dict];
     
-    [OLAnalytics reportAnalyticsEventToDelegate:eventName job:nil printOrder:nil extraInfo:@{@"Product Name" : productName}];
+    [OLAnalytics reportAnalyticsEventToDelegate:eventName job:nil printOrder:nil extraInfo:@{@"Product Name" : productName, @"Number of Photos Removed" : [NSNumber numberWithInteger:number]}];
 }
 
 + (void)trackPaymentScreenDidDeleteItem:(id<OLPrintJob>)item inOrder:(OLPrintOrder *)printOrder applePayIsAvailable:(NSString *)applePayIsAvailable{
@@ -429,6 +430,11 @@ static __weak id<OLKiteDelegate> kiteDelegate;
 //    NSDictionary *dict = [OLAnalytics defaultDictionaryForEventName:eventName];
 //    [OLAnalytics sendToMixPanelWithDictionary:dict];
     
+    [OLAnalytics reportAnalyticsEventToDelegate:eventName job:nil printOrder:printOrder extraInfo:nil];
+}
+
++ (void)trackBasketScreenHitBackForOrder:(OLPrintOrder *)printOrder applePayIsAvailable:(NSString *)applePayIsAvailable{
+    NSString *eventName = @"Basket Screen Hit Cancel";
     [OLAnalytics reportAnalyticsEventToDelegate:eventName job:nil printOrder:printOrder extraInfo:nil];
 }
 
@@ -487,6 +493,10 @@ static __weak id<OLKiteDelegate> kiteDelegate;
 //    [OLAnalytics sendToMixPanelWithDictionary:dict];
     
     [OLAnalytics reportAnalyticsEventToDelegate:eventName job:nil printOrder:nil extraInfo:@{@"Product Name" : productName}];
+}
+
++ (void)trackBasketIconTappedWithNumberBadged:(NSInteger)number{
+    [OLAnalytics reportAnalyticsEventToDelegate:@"Basket Icon Tapped" job:nil printOrder:nil extraInfo:@{@"Number of Items on Basket Icon Badge" : [NSNumber numberWithInteger:number]}];
 }
 
 + (void)setKiteDelegate:(id<OLKiteDelegate>)kd{
