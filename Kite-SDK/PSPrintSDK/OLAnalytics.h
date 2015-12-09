@@ -35,6 +35,14 @@
 + (void)trackReviewScreenEnteredCropScreenForProductName:(NSString *)productName;
 + (void)trackReviewScreenIncrementedPhotoQtyForProductName:(NSString *)productName;
 + (void)trackReviewScreenDecrementedPhotoQtyForProductName:(NSString *)productName;
++ (void)trackDetailsViewProductOptionsTappedForProductName:(NSString *)productName;
++ (void)trackDetailsViewProductOptionsHitBackForProductName:(NSString *)productName;
++ (void)trackDetailsViewProductOptionsSelectedOption:(NSString *)option forProductName:(NSString *)productName;
++ (void)trackOrderHistoryScreenViewed;
++ (void)trackOrderHistoryScreenDismissed;
++ (void)trackQualityScreenHitBack;
++ (void)trackFeedbackButtonTapped;
++ (void)trackFeedbackScreenFinishedWithResult:(NSInteger)result;
 + (void)trackContinueShoppingButtonPressed:(OLPrintOrder *)printOrder;
 + (void)trackShippingScreenViewedForOrder:(OLPrintOrder *)printOrder variant:(NSString *)variant showPhoneEntryField:(BOOL)showPhoneEntryField;
 + (void)trackPaymentScreenViewedForOrder:(OLPrintOrder *)printOrder applePayIsAvailable:(NSString *)applePayIsAvailable;

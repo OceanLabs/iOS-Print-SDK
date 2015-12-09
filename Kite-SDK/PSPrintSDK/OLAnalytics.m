@@ -316,6 +316,38 @@ static __weak id<OLKiteDelegate> kiteDelegate;
     [OLAnalytics reportAnalyticsEventToDelegate:eventName job:nil printOrder:nil extraInfo:@{@"Product Name" : productName, @"Photo Source" : nonNilStr(provider)}];
 }
 
++ (void)trackQualityScreenHitBack{
+    [OLAnalytics reportAnalyticsEventToDelegate:@"Quality Info Screen Hit Back" job:nil printOrder:nil extraInfo:nil];
+}
+
++ (void)trackFeedbackScreenFinishedWithResult:(NSInteger)result{
+    [OLAnalytics reportAnalyticsEventToDelegate:@"Feedback Button" job:nil printOrder:nil extraInfo:@{@"Result" : [NSNumber numberWithInteger:result]}];
+}
+
++ (void)trackOrderHistoryScreenViewed{
+    [OLAnalytics reportAnalyticsEventToDelegate:@"Order History Viewed" job:nil printOrder:nil extraInfo:nil];
+}
+
++ (void)trackOrderHistoryScreenDismissed{
+    [OLAnalytics reportAnalyticsEventToDelegate:@"Order History Dismissed" job:nil printOrder:nil extraInfo:nil];
+}
+
++ (void)trackFeedbackButtonTapped{
+    [OLAnalytics reportAnalyticsEventToDelegate:@"Feedback Button Tapped" job:nil printOrder:nil extraInfo:nil];
+}
+
++ (void)trackDetailsViewProductOptionsTappedForProductName:(NSString *)productName{
+    [OLAnalytics reportAnalyticsEventToDelegate:@"Details View Product Options Tapped" job:nil printOrder:nil extraInfo:@{@"Product Name" : productName}];
+}
+
++ (void)trackDetailsViewProductOptionsHitBackForProductName:(NSString *)productName{
+    [OLAnalytics reportAnalyticsEventToDelegate:@"Details View Product Options Hit Back" job:nil printOrder:nil extraInfo:@{@"Product Name" : productName}];
+}
+
++ (void)trackDetailsViewProductOptionsSelectedOption:(NSString *)option forProductName:(NSString *)productName{
+    [OLAnalytics reportAnalyticsEventToDelegate:@"Details View Product Options Selected Option" job:nil printOrder:nil extraInfo:@{@"Product Name" : productName, @"Selected Option" : nonNilStr(option)}];
+}
+
 + (void)trackPaymentScreenHitItemQtyDownForItem:(id<OLPrintJob>)item inOrder:(OLPrintOrder *)printOrder applePayIsAvailable:(NSString *)applePayIsAvailable{
     NSString *eventName = @"Payment Screen Item Quantity Down";
 //    NSDictionary *dict = [OLAnalytics defaultDictionaryForEventName:eventName];

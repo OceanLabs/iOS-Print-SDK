@@ -8,6 +8,7 @@
 
 #import "OLProductOptionsViewController.h"
 #import "UIImage+ImageNamedInKiteBundle.h"
+#import "OLAnalytics.h"
 
 @interface OLProductOptionsViewController ()<UITableViewDataSource, UITableViewDelegate>
 
@@ -57,6 +58,16 @@
     self.tableView.delegate = self;
 }
 
+- (void)viewDidDisappear:(BOOL)animated{
+    [super viewDidDisappear:animated];
+    
+    if (!self.navigationController){
+#ifndef OL_NO_ANALYTICS
+        [OLAnalytics trackDetailsViewProductOptionsHitBackForProductName:self.product.productTemplate.name];
+#endif
+    }
+}
+
 - (IBAction)onButtonBackTapped:(UIButton *)sender {
     [self.navigationController popViewControllerAnimated:YES];
 }
@@ -97,6 +108,10 @@
 - (BOOL)tableView:(UITableView *)tableView shouldHighlightRowAtIndexPath:(NSIndexPath *)indexPath{
     OLProductTemplateOption *option = self.product.productTemplate.options[indexPath.section];
     self.product.selectedOptions[option.code] = option.selections[indexPath.row];
+    
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackDetailsViewProductOptionsSelectedOption:[option nameForSelection:option.selections[indexPath.row]] forProductName:self.product.productTemplate.name];
+#endif
     
     [tableView reloadData];
     
