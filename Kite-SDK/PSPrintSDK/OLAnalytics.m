@@ -16,11 +16,14 @@
 #import "AFNetworking.h"
 #include <sys/sysctl.h>
 #import "OLKiteABTesting.h"
+#import "UICKeyChainStore.h"
 
 static NSString *const kKeyUserDistinctId = @"ly.kite.sdk.kKeyUserDistinctId";
 static NSString *const kOLMixpanelToken = @"cdf64507670dd359c43aa8895fb87676";
 static NSString *const kOLMixpanelURL = @"https://api.mixpanel.com/track/";
 static NSString *const kKeySDKLaunchCount = @"ly.kite.sdk.kKeySDKLaunchCount";
+
+static NSString *const kKeyServiceName = @"ly.kite.sdk.kKeyServiceName";
 
 static NSDictionary *extraInfo;
 
@@ -44,14 +47,19 @@ static NSString *nonNilStr(NSString *str) {
 }
 
 + (NSString *)userDistinctId{
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSString *distId = [defaults objectForKey:kKeyUserDistinctId];
-    if (!distId){
-        distId = [[NSUUID UUID] UUIDString];
-        [defaults setObject:distId forKey:kKeyUserDistinctId];
-        [defaults synchronize];
+    UICKeyChainStore *keychain = [UICKeyChainStore keyChainStoreWithService:kKeyServiceName];
+    NSData *data = [keychain dataForKey:kKeyUserDistinctId];
+    NSString *uuid;
+    if (data){
+        uuid = [NSKeyedUnarchiver unarchiveObjectWithData:data];
     }
-    return distId;
+    else{
+        uuid = [[NSUUID UUID] UUIDString];
+        keychain.synchronizable = YES;
+        [keychain setData:[NSKeyedArchiver archivedDataWithRootObject:uuid] forKey:kKeyUserDistinctId];
+    }
+    
+    return uuid;
 }
 
 + (NSString *) platform{
