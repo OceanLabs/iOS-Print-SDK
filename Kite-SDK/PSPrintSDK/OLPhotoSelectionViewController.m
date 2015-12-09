@@ -553,7 +553,9 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     }
     NSInteger max = self.product.quantityToFulfillOrder;
     
-    NSMutableArray *tempUserSelected = self.userSelectedPhotos;
+    NSMutableArray *tempUserSelected = [[NSMutableArray alloc] init];
+    [tempUserSelected addObjectsFromArray:self.userSelectedPhotos];
+
     if ([picker respondsToSelector:@selector(selectedAssets)]){
         [self populateArrayWithNewArray:[picker selectedAssets] dataType:[asset class]];
     }
@@ -590,7 +592,8 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     
     // limit selection to max
     BOOL result = (self.userSelectedPhotos.count < max);
-    self.userSelectedPhotos = tempUserSelected;
+    [self.userSelectedPhotos removeAllObjects];
+    [self.userSelectedPhotos addObjectsFromArray:tempUserSelected];
     return result;
 }
 #endif
