@@ -205,7 +205,9 @@ UINavigationControllerDelegate
     }
     
 #ifndef OL_NO_ANALYTICS
-    [OLAnalytics trackReviewScreenViewed:self.product.productTemplate.name];
+    if (!self.editMode){
+        [OLAnalytics trackReviewScreenViewed:self.product.productTemplate.name];
+    }
 #endif
     
     self.pageController = [[UIPageViewController alloc] initWithTransitionStyle:UIPageViewControllerTransitionStylePageCurl navigationOrientation:UIPageViewControllerNavigationOrientationHorizontal options:@{UIPageViewControllerOptionSpineLocationKey : [NSNumber numberWithInt:UIPageViewControllerSpineLocationMid]}];
@@ -401,10 +403,10 @@ UINavigationControllerDelegate
 - (void)viewDidDisappear:(BOOL)animated{
     self.navigationController.interactivePopGestureRecognizer.enabled = YES;
     [super viewDidDisappear:animated];
-        
+    
 #ifndef OL_NO_ANALYTICS
     if (!self.navigationController && !self.editMode){
-        [OLAnalytics trackReviewScreenViewed:self.product.productTemplate.name];
+        [OLAnalytics trackReviewScreenHitBack:self.product.productTemplate.name numberOfPhotos:self.userSelectedPhotos.count];
     }
 #endif
 }
@@ -699,7 +701,7 @@ UINavigationControllerDelegate
     
     OLPhotobookPrintJob *job = [[OLPhotobookPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:photoAssets];
     job.frontCover = self.coverPhoto ? [OLAsset assetWithDataSource:self.coverPhoto] : nil;
-	for (NSString *option in self.product.selectedOptions.allKeys){
+    for (NSString *option in self.product.selectedOptions.allKeys){
         [job setValue:self.product.selectedOptions[option] forOption:option];
     }
     NSArray *jobs = [NSArray arrayWithArray:printOrder.jobs];
@@ -739,7 +741,7 @@ UINavigationControllerDelegate
         [vc safePerformSelector:@selector(setUserEmail:) withObject:[OLKiteUtils userEmail:self]];
         [vc safePerformSelector:@selector(setUserPhone:) withObject:[OLKiteUtils userPhone:self]];
         [vc safePerformSelector:@selector(setKiteDelegate:) withObject:[OLKiteUtils kiteDelegate:self]];
-
+        
         
         if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8){
             UIViewController *presenting = self.presentingViewController;
@@ -950,7 +952,7 @@ UINavigationControllerDelegate
         CGPoint translation = [(UIPanGestureRecognizer *)gestureRecognizer translationInView:self.containerView];
         BOOL draggingLeft = translation.x < 0;
         BOOL draggingRight = translation.x > 0;
-
+        
         if (([self isContainerViewAtRightEdge:NO] && draggingLeft) || ([self isContainerViewAtLeftEdge:NO] && draggingRight)){
             return YES;
         }

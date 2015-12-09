@@ -458,6 +458,14 @@ static __weak id<OLKiteDelegate> kiteDelegate;
     [OLAnalytics reportAnalyticsEventToDelegate:eventName job:item printOrder:printOrder extraInfo:nil];
 }
 
++ (void)trackPaymentScreenHitCheckoutForOrder:(OLPrintOrder *)printOrder{
+    [OLAnalytics reportAnalyticsEventToDelegate:@"Payment Screen Hit Checkout" job:nil printOrder:printOrder extraInfo:nil];
+}
+
++ (void)trackPaymentScreenHitBackToApplePayForOrder:(OLPrintOrder *)printOrder{
+    [OLAnalytics reportAnalyticsEventToDelegate:@"Payment Screen Hit Back to Apple Pay" job:nil printOrder:printOrder extraInfo:nil];
+}
+
 + (void)trackReviewScreenDeletedPhotoForProductName:(NSString *)productName{
     NSString *eventName = @"Review Screen Deleted Photo";
 //    NSDictionary *dict = [OLAnalytics defaultDictionaryForEventName:eventName];

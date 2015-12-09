@@ -117,7 +117,7 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     
 #ifndef OL_NO_ANALYTICS
     if (!self.navigationController){
-        [OLAnalytics trackReviewScreenViewed:self.product.productTemplate.name];
+        [OLAnalytics trackReviewScreenHitBack:self.product.productTemplate.name numberOfPhotos:self.userSelectedPhotos.count];
     }
 #endif
 }

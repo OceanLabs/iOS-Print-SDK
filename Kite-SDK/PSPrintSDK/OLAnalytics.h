@@ -45,6 +45,8 @@
 + (void)trackBasketScreenHitBackForOrder:(OLPrintOrder *)printOrder applePayIsAvailable:(NSString *)applePayIsAvailable;
 + (void)trackPaymentScreenHitEditItemDone:(id<OLPrintJob>)item inOrder:(OLPrintOrder *)printOrder applePayIsAvailable:(NSString *)applePayIsAvailable;
 + (void)trackPaymentScreenDidDeleteItem:(id<OLPrintJob>)item inOrder:(OLPrintOrder *)printOrder applePayIsAvailable:(NSString *)applePayIsAvailable;
++ (void)trackPaymentScreenHitCheckoutForOrder:(OLPrintOrder *)printOrder;
++ (void)trackPaymentScreenHitBackToApplePayForOrder:(OLPrintOrder *)printOrder;
 + (void)trackPaymentCompletedForOrder:(OLPrintOrder *)printOrder paymentMethod:(NSString *)method applePayIsAvailable:(NSString *)applePayIsAvailable;
 + (void)trackBasketIconTappedWithNumberBadged:(NSInteger)number;
 + (void)trackOrderSubmission:(OLPrintOrder *)printOrder;

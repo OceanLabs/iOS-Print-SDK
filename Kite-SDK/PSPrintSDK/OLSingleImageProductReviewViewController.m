@@ -76,7 +76,7 @@ OLFacebookImagePickerControllerDelegate,
 #ifdef OL_KITE_AT_LEAST_IOS8
 CTAssetsPickerControllerDelegate,
 #endif
-OLAssetsPickerControllerDelegate>
+OLAssetsPickerControllerDelegate, RMImageCropperDelegate>
 
 @property (weak, nonatomic) IBOutlet UICollectionView *imagesCollectionView;
 
@@ -89,6 +89,8 @@ OLAssetsPickerControllerDelegate>
 -(void) doCheckout;
 
 @end
+
+static BOOL hasMoved;
 
 @implementation OLSingleImageProductReviewViewController
 
@@ -125,6 +127,7 @@ OLAssetsPickerControllerDelegate>
     self.title = NSLocalizedString(@"Reposition the Photo", @"");
     
     if (self.imageCropView){
+        self.imageCropView.delegate = self;
         OLPrintPhoto *photo = [self.userSelectedPhotos firstObject];
         [photo getImageWithProgress:NULL completion:^(UIImage *image){
             self.imageCropView.image = image;
@@ -162,6 +165,7 @@ OLAssetsPickerControllerDelegate>
 
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
+    hasMoved = NO;
     self.imageCropView.imageView.transform = self.imageDisplayed.edits.cropTransform;
 }
 
@@ -170,7 +174,7 @@ OLAssetsPickerControllerDelegate>
     
 #ifndef OL_NO_ANALYTICS
     if (!self.navigationController){
-        [OLAnalytics trackReviewScreenViewed:self.product.productTemplate.name];
+        [OLAnalytics trackReviewScreenHitBack:self.product.productTemplate.name numberOfPhotos:self.userSelectedPhotos.count];
     }
 #endif
 }
@@ -290,6 +294,15 @@ OLAssetsPickerControllerDelegate>
     return YES;
 #else
     return NO;
+#endif
+}
+
+- (void)imageCropperDidTransformImage:(RMImageCropper *)imageCropper{
+#ifndef OL_NO_ANALYTICS
+    if (!hasMoved){
+        hasMoved = YES;
+        [OLAnalytics trackReviewScreenDidCropPhotoForProductName:self.product.productTemplate.name];
+    }
 #endif
 }
 

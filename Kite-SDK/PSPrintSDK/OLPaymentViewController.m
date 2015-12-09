@@ -342,6 +342,9 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 }
 
 - (IBAction)onButtonMoreOptionsClicked:(id)sender{
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackPaymentScreenHitCheckoutForOrder:self.printOrder];
+#endif
     if (![self.printOrder.shippingAddress isValidAddress]){
         self.printOrder.shippingAddress = nil;
     }
@@ -368,6 +371,10 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 }
 
 - (IBAction)onButtonBackToApplePayClicked:(UIButton *)sender {
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackPaymentScreenHitBackToApplePayForOrder:self.printOrder];
+#endif
+    
     [self.printOrder discardDuplicateJobs];
     [self.tableView reloadData];
     
