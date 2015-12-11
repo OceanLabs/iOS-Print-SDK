@@ -31,6 +31,8 @@
 #import <FacebookImagePicker/OLFacebookImage.h>
 #endif
 
+#import "UIViewController+OLMethods.h"
+
 static const NSInteger kSectionCover = 0;
 static const NSInteger kSectionHelp = 1;
 static const NSInteger kSectionPages = 2;
@@ -155,6 +157,8 @@ UINavigationControllerDelegate>
 
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
+    
+    [self addBasketIconToTopRight];
     
     for (OLPhotobookViewController *photobook in self.childViewControllers){
         if (!photobook.bookClosed){

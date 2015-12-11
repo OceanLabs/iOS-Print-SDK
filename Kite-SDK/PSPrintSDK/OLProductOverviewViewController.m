@@ -24,6 +24,7 @@
 #import "OLKiteABTesting.h"
 #import "OLKiteUtils.h"
 #import "OLProductDetailsViewController.h"
+#import "UIViewController+OLMethods.h"
 
 @interface OLKiteViewController ()
 
@@ -121,6 +122,12 @@
         [OLAnalytics trackProductDescriptionScreenHitBack:self.product.productTemplate.name hidePrice:[OLKiteABTesting sharedInstance].hidePrice];
     }
 #endif
+}
+
+- (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    
+    [self addBasketIconToTopRight];
 }
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator{

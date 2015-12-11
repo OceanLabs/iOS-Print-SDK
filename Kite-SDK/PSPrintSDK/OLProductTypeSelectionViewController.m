@@ -17,6 +17,7 @@
 #import "UIImageView+FadeIn.h"
 #import "OLKiteABTesting.h"
 #import "OLKiteUtils.h"
+#import "UIViewController+OLMethods.h"
 
 #define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
 
@@ -76,6 +77,8 @@
 
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
+    
+    [self addBasketIconToTopRight];
     
     [self.collectionView.collectionViewLayout invalidateLayout];
 }

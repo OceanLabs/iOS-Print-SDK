@@ -45,6 +45,7 @@
 #import "OLRemoteImageView.h"
 #import "OLImageCachingManager.h"
 #import "UIImage+ImageNamedInKiteBundle.h"
+#import "UIViewController+OLMethods.h"
 
 NSInteger OLPhotoSelectionMargin = 0;
 
@@ -198,6 +199,8 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
+    [self addBasketIconToTopRight];
+    
     if (self.userSelectedPhotos.count > 0){
         [self.collectionView reloadData];
     }

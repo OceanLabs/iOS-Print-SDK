@@ -26,6 +26,7 @@
 #import "OLRemoteImageView.h"
 #import "OLKiteUtils.h"
 #import "OLPaymentViewController.h"
+#import "UIViewController+OLMethods.h"
 
 static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 static const NSUInteger kTagAlertViewDeletePhoto = 98;
@@ -120,6 +121,12 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
         [OLAnalytics trackReviewScreenHitBack:self.product.productTemplate.name numberOfPhotos:self.userSelectedPhotos.count];
     }
 #endif
+}
+
+- (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    
+    [self addBasketIconToTopRight];
 }
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {

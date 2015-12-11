@@ -28,6 +28,7 @@
 #import "OLAsset+Private.h"
 #import "OLProductTemplateOption.h"
 #import "OLPaymentViewController.h"
+#import "UIViewController+OLMethods.h"
 
 #ifdef OL_KITE_OFFER_INSTAGRAM
 #import <InstagramImagePicker/OLInstagramImagePickerController.h>
@@ -165,6 +166,7 @@ static BOOL hasMoved;
 
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
+    [self addBasketIconToTopRight];
     hasMoved = NO;
     self.imageCropView.imageView.transform = self.imageDisplayed.edits.cropTransform;
 }

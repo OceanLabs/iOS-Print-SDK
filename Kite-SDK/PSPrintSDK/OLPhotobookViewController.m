@@ -40,6 +40,7 @@
 #import "UIImage+ImageNamedInKiteBundle.h"
 #import "OLKiteABTesting.h"
 #import "OLPaymentViewController.h"
+#import "UIViewController+OLMethods.h"
 
 static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 static const NSUInteger kTagLeft = 10;
@@ -490,6 +491,13 @@ UINavigationControllerDelegate
             });
         }];
     }];
+}
+
+- (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    if (!self.editMode){
+        [self addBasketIconToTopRight];
+    }
 }
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator{
