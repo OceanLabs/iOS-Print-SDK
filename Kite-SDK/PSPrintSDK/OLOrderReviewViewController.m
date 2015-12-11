@@ -50,7 +50,7 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
 
 @end
 
-@interface OLOrderReviewViewController () <OLCheckoutDelegate, UIAlertViewDelegate, UICollectionViewDelegateFlowLayout, UIScrollViewDelegate>
+@interface OLOrderReviewViewController () <OLCheckoutDelegate, UIAlertViewDelegate, UICollectionViewDelegateFlowLayout>
 
 @property (weak, nonatomic) OLPrintPhoto *editingPrintPhoto;
 @property (strong, nonatomic) UIView *addMorePhotosView;
@@ -131,6 +131,11 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
         [OLAnalytics trackReviewScreenHitBack:self.product.productTemplate.name numberOfPhotos:self.userSelectedPhotos.count];
     }
 #endif
+}
+
+- (void)viewDidLayoutSubviews{
+    [super viewDidLayoutSubviews];
+    self.nextButton.frame = CGRectMake(0, self.view.frame.size.height - 44 + self.collectionView.contentOffset.y, self.view.frame.size.width, 44);
 }
 
 - (void)viewWillAppear:(BOOL)animated{

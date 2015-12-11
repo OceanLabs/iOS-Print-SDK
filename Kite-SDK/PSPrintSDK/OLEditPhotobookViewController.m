@@ -74,6 +74,7 @@ UINavigationControllerDelegate>
 @property (strong, nonatomic) OLPrintPhoto *coverPhoto;
 @property (assign, nonatomic) BOOL animating;
 @property (assign, nonatomic) BOOL haveCachedCells;
+@property (strong, nonatomic) UIButton *nextButton;
 
 @property (assign, nonatomic) BOOL rotating;
 
@@ -122,6 +123,15 @@ UINavigationControllerDelegate>
 
     
     [self updatePhotobookPhotos];
+    
+    self.nextButton = [[UIButton alloc] init];
+    [self.nextButton.titleLabel setFont:[UIFont systemFontOfSize:17]];
+    [self.nextButton setTitle:NSLocalizedString(@"Next", @"") forState:UIControlStateNormal];
+    [self.nextButton addTarget:self action:@selector(onButtonNextClicked) forControlEvents:UIControlEventTouchUpInside];
+    [self.nextButton setBackgroundColor:[UIColor colorWithRed:0.549 green:0.737 blue:0.749 alpha:1.000]];
+    [self.nextButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    self.nextButton.frame = CGRectMake(0, self.view.frame.size.height - 44 - ([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height), self.view.frame.size.width, 44);
+    [self.collectionView addSubview:self.nextButton];
 }
 
 - (void)viewDidAppear:(BOOL)animated{
@@ -170,6 +180,11 @@ UINavigationControllerDelegate>
     }
 }
 
+- (void)viewDidLayoutSubviews{
+    [super viewDidLayoutSubviews];
+    self.nextButton.frame = CGRectMake(0, self.view.frame.size.height - 44 + self.collectionView.contentOffset.y, self.view.frame.size.width, 44);
+}
+
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator{
     
     NSArray *visibleCells = [self.collectionView indexPathsForVisibleItems];
@@ -191,7 +206,7 @@ UINavigationControllerDelegate>
     }
     
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinator> context){
-       
+        self.nextButton.frame = CGRectMake(0, self.view.frame.size.height - 44 + self.collectionView.contentOffset.y, self.view.frame.size.width, 44);
     }completion:^(id<UIViewControllerTransitionCoordinator> context){
         self.rotating = NO;
         [self.collectionView insertSections:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, 3)]];
@@ -335,6 +350,12 @@ UINavigationControllerDelegate>
             [self.userSelectedPhotos addObject:item];
         }
     }
+}
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView{
+    CGRect headerFrame = self.nextButton.frame;
+    headerFrame.origin.y = self.view.frame.size.height - 44 + scrollView.contentOffset.y ;
+    self.nextButton.frame = headerFrame;
 }
 
 #pragma mark - Menu Actions
