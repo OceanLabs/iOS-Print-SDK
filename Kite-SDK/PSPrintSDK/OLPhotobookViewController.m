@@ -205,7 +205,9 @@ UINavigationControllerDelegate
     }
     
 #ifndef OL_NO_ANALYTICS
-    [OLAnalytics trackReviewScreenViewed:self.product.productTemplate.name];
+    if (!self.editMode){
+        [OLAnalytics trackReviewScreenViewed:self.product.productTemplate.name];
+    }
 #endif
     
     self.pageController = [[UIPageViewController alloc] initWithTransitionStyle:UIPageViewControllerTransitionStylePageCurl navigationOrientation:UIPageViewControllerNavigationOrientationHorizontal options:@{UIPageViewControllerOptionSpineLocationKey : [NSNumber numberWithInt:UIPageViewControllerSpineLocationMid]}];
@@ -401,6 +403,12 @@ UINavigationControllerDelegate
 - (void)viewDidDisappear:(BOOL)animated{
     self.navigationController.interactivePopGestureRecognizer.enabled = YES;
     [super viewDidDisappear:animated];
+    
+#ifndef OL_NO_ANALYTICS
+    if (!self.navigationController && !self.editMode){
+        [OLAnalytics trackReviewScreenHitBack:self.product.productTemplate.name numberOfPhotos:self.userSelectedPhotos.count];
+    }
+#endif
 }
 
 - (void)updatePagesLabel{
@@ -693,7 +701,7 @@ UINavigationControllerDelegate
     
     OLPhotobookPrintJob *job = [[OLPhotobookPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:photoAssets];
     job.frontCover = self.coverPhoto ? [OLAsset assetWithDataSource:self.coverPhoto] : nil;
-	for (NSString *option in self.product.selectedOptions.allKeys){
+    for (NSString *option in self.product.selectedOptions.allKeys){
         [job setValue:self.product.selectedOptions[option] forOption:option];
     }
     NSArray *jobs = [NSArray arrayWithArray:printOrder.jobs];
@@ -733,7 +741,7 @@ UINavigationControllerDelegate
         [vc safePerformSelector:@selector(setUserEmail:) withObject:[OLKiteUtils userEmail:self]];
         [vc safePerformSelector:@selector(setUserPhone:) withObject:[OLKiteUtils userPhone:self]];
         [vc safePerformSelector:@selector(setKiteDelegate:) withObject:[OLKiteUtils kiteDelegate:self]];
-
+        
         
         if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8){
             UIViewController *presenting = self.presentingViewController;
@@ -944,7 +952,7 @@ UINavigationControllerDelegate
         CGPoint translation = [(UIPanGestureRecognizer *)gestureRecognizer translationInView:self.containerView];
         BOOL draggingLeft = translation.x < 0;
         BOOL draggingRight = translation.x > 0;
-
+        
         if (([self isContainerViewAtRightEdge:NO] && draggingLeft) || ([self isContainerViewAtLeftEdge:NO] && draggingRight)){
             return YES;
         }
@@ -1387,6 +1395,9 @@ UINavigationControllerDelegate
 }
 
 - (void)showCameraRollImagePicker{
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackPhotoProviderPicked:@"Camera Roll" forProductName:self.product.productTemplate.name];
+#endif
     __block UIViewController *picker;
     __block Class assetClass;
     if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8 || !definesAtLeastiOS8){
@@ -1432,6 +1443,9 @@ UINavigationControllerDelegate
 
 - (void)showFacebookImagePicker{
 #ifdef OL_KITE_OFFER_FACEBOOK
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackPhotoProviderPicked:@"Facebook" forProductName:self.product.productTemplate.name];
+#endif
     OLFacebookImagePickerController *picker = nil;
     picker = [[OLFacebookImagePickerController alloc] init];
     picker.delegate = self;
@@ -1442,6 +1456,9 @@ UINavigationControllerDelegate
 
 - (void)showInstagramImagePicker{
 #ifdef OL_KITE_OFFER_INSTAGRAM
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackPhotoProviderPicked:@"Instagram" forProductName:self.product.productTemplate.name];
+#endif
     OLInstagramImagePickerController *picker = nil;
     picker = [[OLInstagramImagePickerController alloc] initWithClientId:[OLKitePrintSDK instagramClientID] secret:[OLKitePrintSDK instagramSecret] redirectURI:[OLKitePrintSDK instagramRedirectURI]];
     picker.delegate = self;
@@ -1538,7 +1555,11 @@ UINavigationControllerDelegate
 #endif
 
 - (void)assetsPickerController:(id)picker didFinishPickingAssets:(NSArray *)assets {
+    NSInteger originalCount = self.userSelectedPhotos.count;
     if (self.addNewPhotosAtIndex == -1){
+#ifndef OL_NO_ANALYTICS
+        [OLAnalytics trackPhotoProvider:@"Camera Roll" numberOfPhotosAdded:1 forProductName:self.product.productTemplate.name];
+#endif
         self.coverPhoto = [[OLPrintPhoto alloc] init];
         self.coverPhoto.asset = [assets firstObject];
         
@@ -1555,6 +1576,9 @@ UINavigationControllerDelegate
     }
     
     [self populateArrayWithNewArray:assets dataType:[picker isKindOfClass:[OLAssetsPickerController class]] ? [ALAsset class] : [PHAsset class]];
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackPhotoProvider:@"Camera Roll" numberOfPhotosAdded:self.userSelectedPhotos.count - originalCount forProductName:self.product.productTemplate.name];
+#endif
     [picker dismissViewControllerAnimated:YES completion:^(void){}];
 }
 
@@ -1612,6 +1636,7 @@ UINavigationControllerDelegate
 }
 
 - (void)instagramImagePicker:(OLInstagramImagePickerController *)imagePicker didFinishPickingImages:(NSArray *)images {
+    NSInteger originalCount = self.userSelectedPhotos.count;
     if (self.addNewPhotosAtIndex == -1){
         if (images.count > 0){
             self.coverPhoto = [[OLPrintPhoto alloc] init];
@@ -1631,6 +1656,9 @@ UINavigationControllerDelegate
     }
     
     [self populateArrayWithNewArray:images dataType:[OLInstagramImage class]];
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackPhotoProvider:@"Instagram" numberOfPhotosAdded:self.userSelectedPhotos.count - originalCount forProductName:self.product.productTemplate.name];
+#endif
     [self dismissViewControllerAnimated:YES completion:^(void){}];
 }
 
@@ -1656,6 +1684,7 @@ UINavigationControllerDelegate
 }
 
 - (void)facebookImagePicker:(OLFacebookImagePickerController *)imagePicker didFinishPickingImages:(NSArray *)images {
+    NSInteger originalCount = self.userSelectedPhotos.count;
     if (self.addNewPhotosAtIndex == -1){
         if (images.count > 0){
             self.coverPhoto = [[OLPrintPhoto alloc] init];
@@ -1674,6 +1703,9 @@ UINavigationControllerDelegate
         return;
     }
     [self populateArrayWithNewArray:images dataType:[OLFacebookImage class]];
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackPhotoProvider:@"Facebook" numberOfPhotosAdded:self.userSelectedPhotos.count - originalCount forProductName:self.product.productTemplate.name];
+#endif
     [self dismissViewControllerAnimated:YES completion:^(void){}];
 }
 

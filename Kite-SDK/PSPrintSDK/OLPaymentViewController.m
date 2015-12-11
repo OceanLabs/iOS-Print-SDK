@@ -324,11 +324,27 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     }
 }
 
+- (void)viewDidDisappear:(BOOL)animated{
+    [super viewDidDisappear:animated];
+    
+#ifndef OL_NO_ANALYTICS
+    if (!self.navigationController){
+        [OLAnalytics trackPaymentScreenHitBackForOrder:self.printOrder applePayIsAvailable:[self isApplePayAvailable] ? @"Yes" : @"No"];
+    }
+#endif
+}
+
 - (void)dismiss{
     [self.navigationController.presentingViewController dismissViewControllerAnimated:YES completion:NULL];
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackBasketScreenHitBackForOrder:self.printOrder applePayIsAvailable:[self isApplePayAvailable] ? @"Yes" : @"No"];
+#endif
 }
 
 - (IBAction)onButtonMoreOptionsClicked:(id)sender{
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackPaymentScreenHitCheckoutForOrder:self.printOrder];
+#endif
     if (![self.printOrder.shippingAddress isValidAddress]){
         self.printOrder.shippingAddress = nil;
     }
@@ -355,6 +371,10 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 }
 
 - (IBAction)onButtonBackToApplePayClicked:(UIButton *)sender {
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackPaymentScreenHitBackToApplePayForOrder:self.printOrder];
+#endif
+    
     [self.printOrder discardDuplicateJobs];
     [self.tableView reloadData];
     
@@ -721,6 +741,10 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 }
 
 - (void)onBarButtonOrdersClicked{
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackOrderHistoryScreenViewed];
+#endif
+    
     OLOrdersViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLOrdersViewController"];
     
     [(UIViewController *)vc navigationItem].leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:vc action:@selector(dismiss)];
@@ -768,6 +792,9 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     if ([editingVc respondsToSelector:@selector(saveJobWithCompletionHandler:)]){
         [editingVc saveJobWithCompletionHandler:^{
             [self dismissPresentedViewController];
+#ifndef OL_NO_ANALYTICS
+            [OLAnalytics trackPaymentScreenHitEditItem:editingVc.editingPrintJob inOrder:self.printOrder applePayIsAvailable:[self isApplePayAvailable] ? @"Yes" : @"No"];
+#endif
         }];
         
         //If the user edits the job that they just created, prevent them from going back
@@ -1099,6 +1126,9 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Delete Item", @"") message:NSLocalizedString(@"Are you sure you want to delete this item?", @"") preferredStyle:UIAlertControllerStyleAlert];
             [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"") style:UIAlertActionStyleCancel handler:NULL]];
             [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Yes", @"") style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action){
+#ifndef OL_NO_ANALYTICS
+                [OLAnalytics trackPaymentScreenDidDeleteItem:printJob inOrder:self.printOrder applePayIsAvailable:[self isApplePayAvailable] ? @"Yes" : @"No"];
+#endif
                 [self.printOrder removePrintJob:printJob];
                 [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationAutomatic];
                 [self.printOrder saveOrder];
@@ -1106,7 +1136,16 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             }]];
             [self presentViewController:ac animated:YES completion:NULL];
         }
-        //on iOS 7, just delete without prompt
+        else{ //on iOS 7, just delete without prompt
+#ifndef OL_NO_ANALYTICS
+            [OLAnalytics trackPaymentScreenDidDeleteItem:printJob inOrder:self.printOrder applePayIsAvailable:[self isApplePayAvailable] ? @"Yes" : @"No"];
+#endif
+            [self.printOrder removePrintJob:printJob];
+            [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationAutomatic];
+            [self.printOrder saveOrder];
+            [self updateViewsBasedOnCostUpdate];
+        }
+        
     }
     else{
         printJob.extraCopies--;
@@ -1114,6 +1153,10 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
         [self updateViewsBasedOnCostUpdate];
         [self.printOrder saveOrder];
+        
+#ifndef OL_NO_ANALYTICS
+        [OLAnalytics trackPaymentScreenHitItemQtyDownForItem:printJob inOrder:self.printOrder applePayIsAvailable:[self isApplePayAvailable] ? @"Yes" : @"No"];
+#endif
     }
 }
 
@@ -1130,6 +1173,9 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     
     [self updateViewsBasedOnCostUpdate];
     [self.printOrder saveOrder];
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackPaymentScreenHitItemQtyUpForItem:printJob inOrder:self.printOrder applePayIsAvailable:[self isApplePayAvailable] ? @"Yes" : @"No"];
+#endif
 }
 
 - (IBAction)onButtonEditClicked:(UIButton *)sender {
@@ -1138,11 +1184,17 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     
     UIViewController *vc = [self viewControllerForItemAtIndexPath:indexPath];
     vc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
-    [self presentViewController:vc animated:YES completion:NULL];;
+    [self presentViewController:vc animated:YES completion:NULL];
+#ifndef OL_NO_ANALYTICS
+    OLProductPrintJob* printJob = ((OLProductPrintJob*)[self.printOrder.jobs objectAtIndex:indexPath.row]);
+    [OLAnalytics trackPaymentScreenHitEditItem:printJob inOrder:self.printOrder applePayIsAvailable:[self isApplePayAvailable] ? @"Yes" : @"No"];
+#endif
 }
 
 - (IBAction)onButtonContinueShoppingClicked:(UIButton *)sender {
-    [OLAnalytics trackContinueShoppingButtonPressed:[NSNumber numberWithInteger:self.printOrder.jobs.count]];
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackContinueShoppingButtonPressed:self.printOrder];
+#endif
     
     if (self.delegate && [self.delegate respondsToSelector:@selector(userDidTapContinueShoppingButton)]){
         [self.delegate userDidTapContinueShoppingButton];
@@ -1416,6 +1468,9 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
+#ifndef OL_NO_ANALYTICS
+        [OLAnalytics trackPaymentScreenDidDeleteItem:self.printOrder.jobs[indexPath.row] inOrder:self.printOrder applePayIsAvailable:[self isApplePayAvailable] ? @"Yes" : @"No"];
+#endif
         [self.printOrder removePrintJob:self.printOrder.jobs[indexPath.row]];
         [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationAutomatic];
         [self.printOrder saveOrder];

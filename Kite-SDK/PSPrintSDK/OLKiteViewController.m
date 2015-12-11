@@ -141,6 +141,8 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
         [OLPrintPhoto calcScreenScaleForTraitCollection:self.traitCollection];
     }
     
+    [OLAnalytics setKiteDelegate:self.delegate];
+    
     self.operationQueue = [NSOperationQueue mainQueue];
     self.templateSyncOperation = [[NSBlockOperation alloc] init];
     self.remotePlistSyncOperation = [[NSBlockOperation alloc] init];
@@ -177,6 +179,9 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
 }
 
 -(IBAction) dismiss{
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackKiteDismissed];
+#endif
     if ([self.delegate respondsToSelector:@selector(kiteControllerDidFinish:)]){
         [self.delegate kiteControllerDidFinish:self];
     }

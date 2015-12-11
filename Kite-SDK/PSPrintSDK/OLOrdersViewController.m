@@ -17,6 +17,7 @@
 #import "OLKiteABTesting.h"
 #import "OLKiteUtils.h"
 #import "OLKiteViewController.h"
+#import "OLAnalytics.h"
 
 @interface OLOrdersViewController () <MFMailComposeViewControllerDelegate>
 @end
@@ -100,6 +101,9 @@
 }
 
 - (void)dismiss{
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackOrderHistoryScreenDismissed];
+#endif
     [self.navigationController.presentingViewController dismissViewControllerAnimated:YES completion:NULL];
 }
 
@@ -112,6 +116,9 @@
 
 #pragma mark - MFMailComposeViewControllerDelegate methods
 - (IBAction)emailButtonPushed:(id)sender {
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackFeedbackButtonTapped];
+#endif
     
     if([MFMailComposeViewController canSendMail]) {
         MFMailComposeViewController *mailCont = [[MFMailComposeViewController alloc] init];
@@ -128,6 +135,10 @@
 }
 
 - (void)mailComposeController:(MFMailComposeViewController*)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error {
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackFeedbackScreenFinishedWithResult:result];
+#endif
+    
     //handle any error
     [controller dismissViewControllerAnimated:YES completion:nil];
 }

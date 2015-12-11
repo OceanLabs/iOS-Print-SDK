@@ -76,7 +76,7 @@ OLFacebookImagePickerControllerDelegate,
 #ifdef OL_KITE_AT_LEAST_IOS8
 CTAssetsPickerControllerDelegate,
 #endif
-OLAssetsPickerControllerDelegate>
+OLAssetsPickerControllerDelegate, RMImageCropperDelegate>
 
 @property (weak, nonatomic) IBOutlet UICollectionView *imagesCollectionView;
 
@@ -89,6 +89,8 @@ OLAssetsPickerControllerDelegate>
 -(void) doCheckout;
 
 @end
+
+static BOOL hasMoved;
 
 @implementation OLSingleImageProductReviewViewController
 
@@ -125,6 +127,7 @@ OLAssetsPickerControllerDelegate>
     self.title = NSLocalizedString(@"Reposition the Photo", @"");
     
     if (self.imageCropView){
+        self.imageCropView.delegate = self;
         OLPrintPhoto *photo = [self.userSelectedPhotos firstObject];
         [photo getImageWithProgress:NULL completion:^(UIImage *image){
             self.imageCropView.image = image;
@@ -162,7 +165,18 @@ OLAssetsPickerControllerDelegate>
 
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
+    hasMoved = NO;
     self.imageCropView.imageView.transform = self.imageDisplayed.edits.cropTransform;
+}
+
+- (void)viewDidDisappear:(BOOL)animated{
+    [super viewDidDisappear:animated];
+    
+#ifndef OL_NO_ANALYTICS
+    if (!self.navigationController){
+        [OLAnalytics trackReviewScreenHitBack:self.product.productTemplate.name numberOfPhotos:self.userSelectedPhotos.count];
+    }
+#endif
 }
 
 -(IBAction)onButtonNextClicked{
@@ -280,6 +294,15 @@ OLAssetsPickerControllerDelegate>
     return YES;
 #else
     return NO;
+#endif
+}
+
+- (void)imageCropperDidTransformImage:(RMImageCropper *)imageCropper{
+#ifndef OL_NO_ANALYTICS
+    if (!hasMoved){
+        hasMoved = YES;
+        [OLAnalytics trackReviewScreenDidCropPhotoForProductName:self.product.productTemplate.name];
+    }
 #endif
 }
 
@@ -465,6 +488,9 @@ OLAssetsPickerControllerDelegate>
 }
 
 - (void)showCameraRollImagePicker{
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackPhotoProviderPicked:@"Camera Roll" forProductName:self.product.productTemplate.name];
+#endif
     __block UIViewController *picker;
     __block Class assetClass;
     if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8 || !definesAtLeastiOS8){
@@ -526,6 +552,9 @@ OLAssetsPickerControllerDelegate>
 
 - (void)showFacebookImagePicker{
 #ifdef OL_KITE_OFFER_FACEBOOK
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackPhotoProviderPicked:@"Facebook" forProductName:self.product.productTemplate.name];
+#endif
     OLFacebookImagePickerController *picker = nil;
     picker = [[OLFacebookImagePickerController alloc] init];
     picker.delegate = self;
@@ -537,6 +566,9 @@ OLAssetsPickerControllerDelegate>
 
 - (void)showInstagramImagePicker{
 #ifdef OL_KITE_OFFER_INSTAGRAM
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackPhotoProviderPicked:@"Instagram" forProductName:self.product.productTemplate.name];
+#endif
     OLInstagramImagePickerController *picker = nil;
     picker = [[OLInstagramImagePickerController alloc] initWithClientId:[OLKitePrintSDK instagramClientID] secret:[OLKitePrintSDK instagramSecret] redirectURI:[OLKitePrintSDK instagramRedirectURI]];
     picker.delegate = self;
@@ -605,7 +637,11 @@ OLAssetsPickerControllerDelegate>
 #endif
 
 - (void)assetsPickerController:(id)picker didFinishPickingAssets:(NSArray *)assets {
+    NSInteger originalCount = self.userSelectedPhotos.count;
     [self populateArrayWithNewArray:assets dataType:[picker isKindOfClass:[OLAssetsPickerController class]] ? [ALAsset class] : [PHAsset class]];
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackPhotoProvider:@"Camera Roll" numberOfPhotosAdded:self.userSelectedPhotos.count - originalCount forProductName:self.product.productTemplate.name];
+#endif
     if (self.imagePicked){
         self.imageDisplayed = self.imagePicked;
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
@@ -665,7 +701,11 @@ OLAssetsPickerControllerDelegate>
 }
 
 - (void)instagramImagePicker:(OLInstagramImagePickerController *)imagePicker didFinishPickingImages:(NSArray *)images {
+    NSInteger originalCount = self.userSelectedPhotos.count;
     [self populateArrayWithNewArray:images dataType:[OLInstagramImage class]];
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackPhotoProvider:@"Camera Roll" numberOfPhotosAdded:self.userSelectedPhotos.count - originalCount forProductName:self.product.productTemplate.name];
+#endif
     if (self.imagePicked){
         [self.imagePicked getImageWithProgress:NULL completion:^(UIImage *image){
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -691,7 +731,11 @@ OLAssetsPickerControllerDelegate>
 }
 
 - (void)facebookImagePicker:(OLFacebookImagePickerController *)imagePicker didFinishPickingImages:(NSArray *)images {
+    NSInteger originalCount = self.userSelectedPhotos.count;
     [self populateArrayWithNewArray:images dataType:[OLFacebookImage class]];
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackPhotoProvider:@"Camera Roll" numberOfPhotosAdded:self.userSelectedPhotos.count - originalCount forProductName:self.product.productTemplate.name];
+#endif
     if (self.imagePicked){
         [self.imagePicked getImageWithProgress:NULL completion:^(UIImage *image){
             dispatch_async(dispatch_get_main_queue(), ^{
