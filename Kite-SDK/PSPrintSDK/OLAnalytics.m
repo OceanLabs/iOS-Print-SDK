@@ -56,7 +56,7 @@ static __weak id<OLKiteDelegate> kiteDelegate;
         uuid = [NSKeyedUnarchiver unarchiveObjectWithData:data];
     }
     else{
-        uuid = [[NSUUID UUID] UUIDString];
+        uuid = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
         keychain.synchronizable = YES;
         [keychain setData:[NSKeyedArchiver archivedDataWithRootObject:uuid] forKey:kKeyUserDistinctId];
     }
