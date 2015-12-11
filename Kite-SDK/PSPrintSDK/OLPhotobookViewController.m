@@ -197,10 +197,24 @@ UINavigationControllerDelegate
 - (void)viewDidLoad{
     [super viewDidLoad];
     
+    if (!self.navigationItem.rightBarButtonItem){
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]
+                                                  initWithTitle:NSLocalizedString(@"Next", @"")
+                                                  style:UIBarButtonItemStylePlain
+                                                  target:self
+                                                  action:@selector(onButtonNextClicked:)];
+    }
+    
     UIViewController *paymentVc = [(UINavigationController *)self.presentingViewController viewControllers].lastObject;
     if ([paymentVc respondsToSelector:@selector(saveAndDismissReviewController)]){
-        
+        UIBarButtonItem *saveButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Save", "")
+                                                                       style:UIBarButtonItemStyleDone target:paymentVc
+                                                                      action:@selector(saveAndDismissReviewController)];
+        self.navigationItem.rightBarButtonItem = saveButton;
+
     }
+    
+    
     
 #ifndef OL_NO_ANALYTICS
     if (!self.editMode){
@@ -482,15 +496,15 @@ UINavigationControllerDelegate
     }];
 }
 
-- (void)viewWillAppear:(BOOL)animated{
-    [super viewWillAppear:animated];
-    if (!self.editMode){
-        UIViewController *presentingVc = [(UINavigationController *)self.presentingViewController viewControllers].lastObject;
-        if (![presentingVc isKindOfClass:[OLPaymentViewController class]]){
-            [self addBasketIconToTopRight];
-        }
-    }
-}
+//- (void)viewWillAppear:(BOOL)animated{
+//    [super viewWillAppear:animated];
+//    if (!self.editMode){
+//        UIViewController *presentingVc = [(UINavigationController *)self.presentingViewController viewControllers].lastObject;
+//        if (![presentingVc isKindOfClass:[OLPaymentViewController class]]){
+//            [self addBasketIconToTopRight];
+//        }
+//    }
+//}
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator{
     [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];

@@ -104,12 +104,14 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     [self.nextButton addTarget:self action:@selector(onButtonNextClicked:) forControlEvents:UIControlEventTouchUpInside];
     [self.nextButton setBackgroundColor:[UIColor colorWithRed:0.549 green:0.737 blue:0.749 alpha:1.000]];
     [self.nextButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    self.nextButton.frame = CGRectMake(0, self.view.frame.size.height - 44 - ([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height), self.view.frame.size.width, 44);
+    self.nextButton.frame = CGRectMake(0, self.view.frame.size.height - 40 - ([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height), self.view.frame.size.width, 40);
     [self.collectionView addSubview:self.nextButton];
     
     UIViewController *paymentVc = [(UINavigationController *)self.presentingViewController viewControllers].lastObject;
     if ([paymentVc respondsToSelector:@selector(saveAndDismissReviewController)]){
         [self.nextButton setTitle:NSLocalizedString(@"Save", @"") forState:UIControlStateNormal];
+        [self.nextButton removeTarget:self action:@selector(onButtonNextClicked:) forControlEvents:UIControlEventTouchUpInside];
+        [self.nextButton addTarget:paymentVc action:@selector(saveAndDismissReviewController) forControlEvents:UIControlEventTouchUpInside];
     }
 }
 
@@ -125,7 +127,7 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
 
 - (void)viewDidLayoutSubviews{
     [super viewDidLayoutSubviews];
-    self.nextButton.frame = CGRectMake(0, self.view.frame.size.height - 44 + self.collectionView.contentOffset.y, self.view.frame.size.width, 44);
+    self.nextButton.frame = CGRectMake(0, self.view.frame.size.height - 40 + self.collectionView.contentOffset.y, self.view.frame.size.width, 40);
 }
 
 - (void)viewWillAppear:(BOOL)animated{
@@ -155,14 +157,14 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
             [cell setNeedsDisplay];
         }
         
-        self.nextButton.frame = CGRectMake(0, self.view.frame.size.height - 44 + self.collectionView.contentOffset.y, self.view.frame.size.width, 44);
+        self.nextButton.frame = CGRectMake(0, self.view.frame.size.height - 40 + self.collectionView.contentOffset.y, self.view.frame.size.width, 40);
     }completion:^(id<UIViewControllerTransitionCoordinator> context){
     }];
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
     CGRect headerFrame = self.nextButton.frame;
-    headerFrame.origin.y = self.view.frame.size.height - 44 + scrollView.contentOffset.y ;
+    headerFrame.origin.y = self.view.frame.size.height - 40 + scrollView.contentOffset.y ;
     self.nextButton.frame = headerFrame;
 }
 
