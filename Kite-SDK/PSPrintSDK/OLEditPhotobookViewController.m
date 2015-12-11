@@ -33,6 +33,8 @@
 
 #import "UIViewController+OLMethods.h"
 
+#import "OLPaymentViewController.h"
+
 static const NSInteger kSectionCover = 0;
 static const NSInteger kSectionHelp = 1;
 static const NSInteger kSectionPages = 2;
@@ -100,11 +102,6 @@ UINavigationControllerDelegate>
                                                                              style:UIBarButtonItemStylePlain
                                                                             target:nil
                                                                             action:nil];
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]
-                                              initWithTitle:NSLocalizedString(@"Next", @"")
-                                              style:UIBarButtonItemStylePlain
-                                              target:self
-                                              action:@selector(onButtonNextClicked)];
     
     UIView *view = self.collectionView;
     view.translatesAutoresizingMaskIntoConstraints = NO;
@@ -168,7 +165,10 @@ UINavigationControllerDelegate>
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     
-    [self addBasketIconToTopRight];
+    UIViewController *presentingVc = [(UINavigationController *)self.presentingViewController viewControllers].lastObject;
+    if (![presentingVc isKindOfClass:[OLPaymentViewController class]]){
+        [self addBasketIconToTopRight];
+    }
     
     for (OLPhotobookViewController *photobook in self.childViewControllers){
         if (!photobook.bookClosed){

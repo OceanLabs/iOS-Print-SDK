@@ -25,6 +25,7 @@
 #import "OLKiteUtils.h"
 #import "OLProductDetailsViewController.h"
 #import "UIViewController+OLMethods.h"
+#import "OLPaymentViewController.h"
 
 @interface OLKiteViewController ()
 
@@ -127,7 +128,10 @@
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     
-    [self addBasketIconToTopRight];
+    UIViewController *presentingVc = [(UINavigationController *)self.presentingViewController viewControllers].lastObject;
+    if (![presentingVc isKindOfClass:[OLPaymentViewController class]]){
+        [self addBasketIconToTopRight];
+    }
 }
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator{

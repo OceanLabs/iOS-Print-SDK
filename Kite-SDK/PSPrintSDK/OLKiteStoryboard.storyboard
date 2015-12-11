@@ -1938,10 +1938,10 @@
                                 </connections>
                             </collectionView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0Zs-Gf-EDY">
-                                <rect key="frame" x="0.0" y="556" width="600" height="44"/>
+                                <rect key="frame" x="0.0" y="560" width="600" height="40"/>
                                 <color key="backgroundColor" red="0.54901960780000003" green="0.73725490199999999" blue="0.74901960779999999" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="44" id="AfA-p6-Qin"/>
+                                    <constraint firstAttribute="height" constant="40" id="AfA-p6-Qin"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <state key="normal" title="Next">
@@ -2197,17 +2197,11 @@
                     </view>
                     <navigationItem key="navigationItem" title="Choose Photos" id="tKz-hT-vzu">
                         <barButtonItem key="backBarButtonItem" title="Back" id="VT4-Qp-U1T"/>
-                        <barButtonItem key="rightBarButtonItem" title="Next" id="b0B-Ki-nCb">
-                            <connections>
-                                <action selector="onButtonNextClicked" destination="5M4-me-Xph" id="JJa-yV-2lv"/>
-                            </connections>
-                        </barButtonItem>
                     </navigationItem>
                     <connections>
                         <outlet property="buttonFacebookImport" destination="3Qz-eK-tvU" id="1nW-1a-YZa"/>
                         <outlet property="buttonGalleryImport" destination="R1h-WW-in1" id="OEX-bL-9cY"/>
                         <outlet property="buttonInstagramImport" destination="nlZ-9G-2DN" id="n3b-Da-89z"/>
-                        <outlet property="buttonNext" destination="b0B-Ki-nCb" id="6YU-d8-7LH"/>
                         <outlet property="cameraRollContainer" destination="ygM-3Q-VpC" id="lww-HG-txe"/>
                         <outlet property="chooseImportSourceLabel" destination="Qmw-15-obN" id="KvT-Nk-W95"/>
                         <outlet property="clearButtonContainerView" destination="qWq-HB-FzX" id="QLT-9W-jgq"/>
@@ -3351,11 +3345,6 @@
                     </view>
                     <navigationItem key="navigationItem" title="Product" id="T8H-ze-mZG">
                         <barButtonItem key="backBarButtonItem" title="Back" id="5rw-Ru-hCJ"/>
-                        <barButtonItem key="rightBarButtonItem" title="Next" id="LaU-lz-Bmo">
-                            <connections>
-                                <action selector="onButtonStartClicked:" destination="0Cd-3J-LPU" id="M7g-bY-rtA"/>
-                            </connections>
-                        </barButtonItem>
                     </navigationItem>
                     <connections>
                         <outlet property="callToActionButton" destination="JzC-Vn-8gQ" id="ecX-3P-hiL"/>

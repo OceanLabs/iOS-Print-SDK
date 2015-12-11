@@ -180,7 +180,6 @@ static id stringOrEmptyString(NSString *str) {
     [aCoder encodeObject:self.message forKey:kKeyMessage];
     [aCoder encodeObject:self.address forKey:kKeyAddress];
     [aCoder encodeObject:self.templateId forKey:kKeyProductTemplateId];
-    [aCoder encodeObject:self.backImageAsset forKey:kKeyBackImage];
     [aCoder encodeObject:self.options forKey:kKeyPrintJobOptions];
 }
 
@@ -193,7 +192,6 @@ static id stringOrEmptyString(NSString *str) {
         self.message = [aDecoder decodeObjectForKey:kKeyMessage];
         self.address = [aDecoder decodeObjectForKey:kKeyAddress];
         self.templateId = [aDecoder decodeObjectForKey:kKeyProductTemplateId];
-        self.backImageAsset = [aDecoder decodeObjectForKey:kKeyBackImage];
         self.options = [aDecoder decodeObjectForKey:kKeyPrintJobOptions];
     }
     
