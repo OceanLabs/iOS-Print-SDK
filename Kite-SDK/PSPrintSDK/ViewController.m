@@ -48,10 +48,6 @@ UINavigationControllerDelegate, OLKiteDelegate>
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onUserSuppliedShippingDetails:) name:kOLNotificationUserSuppliedShippingDetails object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onUserCompletedPayment:) name:kOLNotificationUserCompletedPayment object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onPrintOrderSubmission:) name:kOLNotificationPrintOrderSubmission object:nil];
-    
 #ifdef OL_KITE_OFFER_INSTAGRAM
     [OLKitePrintSDK setInstagramEnabledWithClientID:@"a6a09c92a14d488baa471e5209906d3d" secret:@"bfb814274cd041a5b7e06f32608e0e87" redirectURI:@"kite://instagram-callback"];
 #endif
@@ -277,6 +273,10 @@ UINavigationControllerDelegate, OLKiteDelegate>
 - (void)onPrintOrderSubmission:(NSNotification*)n {
     NSLog(@"onPrintOrderSubmission for print order with order receipt: %@", [n.userInfo[kOLKeyUserInfoPrintOrder] receipt]);
     _printOrder = [[OLPrintOrder alloc] init];
+}
+
+- (void)logKiteAnalyticsEventWithInfo:(NSDictionary *)info{
+    NSLog(@"%@", info);
 }
 
 @end

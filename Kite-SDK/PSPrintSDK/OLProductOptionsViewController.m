@@ -8,6 +8,7 @@
 
 #import "OLProductOptionsViewController.h"
 #import "UIImage+ImageNamedInKiteBundle.h"
+#import "OLAnalytics.h"
 
 @interface OLProductOptionsViewController ()<UITableViewDataSource, UITableViewDelegate>
 
@@ -55,6 +56,16 @@
     
     self.tableView.dataSource = self;
     self.tableView.delegate = self;
+}
+
+- (void)viewDidDisappear:(BOOL)animated{
+    [super viewDidDisappear:animated];
+    
+    if (!self.navigationController){
+#ifndef OL_NO_ANALYTICS
+        [OLAnalytics trackDetailsViewProductOptionsHitBackForProductName:self.product.productTemplate.name];
+#endif
+    }
 }
 
 - (IBAction)onButtonBackTapped:(UIButton *)sender {

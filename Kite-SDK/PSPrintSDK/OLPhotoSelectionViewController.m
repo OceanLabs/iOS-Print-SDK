@@ -233,6 +233,16 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     [self.collectionView.collectionViewLayout invalidateLayout];
 }
 
+- (void)viewDidDisappear:(BOOL)animated{
+    [super viewDidDisappear:animated];
+    
+#ifndef OL_NO_ANALYTICS
+    if (!self.navigationController){
+        [OLAnalytics trackPhotoSelectionScreenHitBack:self.product.productTemplate.name];
+    }
+#endif
+}
+
 - (UIImage *)imageWithColor:(UIColor *)color {
     CGRect rect = CGRectMake(0.0f, 0.0f, 1.0f, 1.0f);
     UIGraphicsBeginImageContext(rect.size);
@@ -393,6 +403,9 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 #pragma mark - Actions
 
 - (IBAction)cameraRollSelected:(id)sender {
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackPhotoProviderPicked:@"Camera Roll" forProductName:self.product.productTemplate.name];
+#endif
     __block UIViewController *picker;
     __block Class assetClass;
     if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8 || !definesAtLeastiOS8){
@@ -452,6 +465,9 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 
 - (IBAction)instagramSelected:(id)sender {
 #ifdef OL_KITE_OFFER_INSTAGRAM
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackPhotoProviderPicked:@"Instagram" forProductName:self.product.productTemplate.name];
+#endif
     OLInstagramImagePickerController *picker = nil;
     picker = [[OLInstagramImagePickerController alloc] initWithClientId:[OLKitePrintSDK instagramClientID] secret:[OLKitePrintSDK instagramSecret] redirectURI:[OLKitePrintSDK instagramRedirectURI]];
     
@@ -463,6 +479,9 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 
 - (IBAction)facebookSelected:(id)sender {
 #ifdef OL_KITE_OFFER_FACEBOOK
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackPhotoProviderPicked:@"Facebook" forProductName:self.product.productTemplate.name];
+#endif
     OLFacebookImagePickerController *picker = nil;
     picker = [[OLFacebookImagePickerController alloc] init];
     picker.delegate = self;
@@ -472,6 +491,9 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 }
 
 - (IBAction)onButtonClearClicked:(id)sender {
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackPhotoSelectionScreenNumberOfPhotosRemoved:self.userDisabledPhotos.count forProductName:self.product.productTemplate.name];
+#endif
     NSInteger initialSections = [self numberOfSectionsInCollectionView:self.collectionView];
     
     self.indexPathsToRemoveDict = [[NSMutableDictionary alloc] init];

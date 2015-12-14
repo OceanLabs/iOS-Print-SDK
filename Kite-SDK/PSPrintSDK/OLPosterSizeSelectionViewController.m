@@ -147,6 +147,16 @@ static UIColor *deselectedColor;
 #endif
 }
 
+- (void)viewDidDisappear:(BOOL)animated{
+    [super viewDidDisappear:animated];
+    
+#ifndef OL_NO_ANALYTICS
+    if (!self.navigationController){
+        [OLAnalytics trackProductDescriptionScreenHitBack:@"Posters" hidePrice:[OLKiteABTesting sharedInstance].hidePrice];
+    }
+#endif
+}
+
 #pragma mark - actions
 - (IBAction)pressedClassic:(UIButton *)sender {
     for (OLProduct *product in [OLProduct products]){
