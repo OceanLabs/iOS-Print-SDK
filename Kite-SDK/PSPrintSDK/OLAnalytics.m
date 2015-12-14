@@ -16,11 +16,14 @@
 #import "AFNetworking.h"
 #include <sys/sysctl.h>
 #import "OLKiteABTesting.h"
+#import "UICKeyChainStore.h"
 
 static NSString *const kKeyUserDistinctId = @"ly.kite.sdk.kKeyUserDistinctId";
 static NSString *const kOLMixpanelToken = @"cdf64507670dd359c43aa8895fb87676";
 static NSString *const kOLMixpanelURL = @"https://api.mixpanel.com/track/";
 static NSString *const kKeySDKLaunchCount = @"ly.kite.sdk.kKeySDKLaunchCount";
+
+static NSString *const kKeyServiceName = @"ly.kite.sdk.kKeyServiceName";
 
 static NSDictionary *extraInfo;
 
@@ -46,14 +49,19 @@ static __weak id<OLKiteDelegate> kiteDelegate;
 }
 
 + (NSString *)userDistinctId{
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSString *distId = [defaults objectForKey:kKeyUserDistinctId];
-    if (!distId){
-        distId = [[NSUUID UUID] UUIDString];
-        [defaults setObject:distId forKey:kKeyUserDistinctId];
-        [defaults synchronize];
+    UICKeyChainStore *keychain = [UICKeyChainStore keyChainStoreWithService:kKeyServiceName];
+    NSData *data = [keychain dataForKey:kKeyUserDistinctId];
+    NSString *uuid;
+    if (data){
+        uuid = [NSKeyedUnarchiver unarchiveObjectWithData:data];
     }
-    return distId;
+    else{
+        uuid = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
+        keychain.synchronizable = YES;
+        [keychain setData:[NSKeyedArchiver archivedDataWithRootObject:uuid] forKey:kKeyUserDistinctId];
+    }
+    
+    return uuid;
 }
 
 + (NSString *) platform{
@@ -177,7 +185,7 @@ static __weak id<OLKiteDelegate> kiteDelegate;
 }
 
 + (void)trackProductSelectionScreenViewed{
-    NSString *eventName = @"Product Selection Screen Viewed";
+    NSString *eventName = @"Product Categories Screen Viewed";
     NSDictionary *dict = [OLAnalytics defaultDictionaryForEventName:eventName];
     [dict[@"properties"] setObject:nonNilStr([OLKiteABTesting sharedInstance].qualityBannerType) forKey:@"Quality Banner Type"];
     [dict[@"properties"] setObject:nonNilStr([OLKiteABTesting sharedInstance].productTileStyle) forKey:@"Product Tile Style"];
@@ -207,7 +215,7 @@ static __weak id<OLKiteDelegate> kiteDelegate;
 }
 
 + (void)trackProductTypeSelectionScreenViewedWithTemplateClass:(NSString *)templateClassString{
-    NSString *eventName = @"Device Selection Screen Viewed";
+    NSString *eventName = @"Product Category Screen Viewed";
     NSDictionary *dict = [OLAnalytics defaultDictionaryForEventName:eventName];
     [dict[@"properties"] setObject:nonNilStr(templateClassString) forKey:@"Product Class"];
     [OLAnalytics sendToMixPanelWithDictionary:dict];
@@ -295,7 +303,7 @@ static __weak id<OLKiteDelegate> kiteDelegate;
     //    [dict[@"properties"] setObject:nonNilStr(templateClassString) forKey:@"Template Class"];
     //    [OLAnalytics sendToMixPanelWithDictionary:dict];
     
-    [OLAnalytics reportAnalyticsEventToDelegate:@"Product Type Selection Screen Hit Back" job:nil printOrder:nil extraInfo:@{@"Product Category" : templateClassString}];
+    [OLAnalytics reportAnalyticsEventToDelegate:@"Product Category Screen Hit Back" job:nil printOrder:nil extraInfo:@{@"Product Category" : templateClassString}];
 }
 
 + (void)trackKiteDismissed{
@@ -527,7 +535,7 @@ static __weak id<OLKiteDelegate> kiteDelegate;
 }
 
 + (void)trackPhotoSelectionScreenHitBack:(NSString *)productName{
-    NSString *eventName = @"Pholo Selection Screen Hit Back";
+    NSString *eventName = @"Photo Selection Screen Hit Back";
     //    NSDictionary *dict = [OLAnalytics defaultDictionaryForEventName:eventName];
     //    [dict[@"properties"] setObject:nonNilStr(productName) forKey:@"Product Name"];
     //    [OLAnalytics sendToMixPanelWithDictionary:dict];
