@@ -249,7 +249,7 @@ static __weak id<OLKiteDelegate> kiteDelegate;
     [dict[@"properties"] setObject:productName forKey:@"Product Name"];
     [OLAnalytics sendToMixPanelWithDictionary:dict];
     
-    [OLAnalytics reportAnalyticsEventToDelegate:eventName job:nil printOrder:nil extraInfo:nil];
+    [OLAnalytics reportAnalyticsEventToDelegate:eventName job:nil printOrder:nil extraInfo:@{kOLAnalyticsProductName : productName}];
 }
 
 + (void)trackContinueShoppingButtonPressed:(OLPrintOrder *)printOrder{
