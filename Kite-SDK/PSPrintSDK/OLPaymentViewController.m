@@ -167,7 +167,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 @property (weak, nonatomic) IBOutlet UIButton *backToApplePayButton;
 @property (weak, nonatomic) IBOutlet UIButton *payWithApplePayButton;
 @property (weak, nonatomic) IBOutlet UIButton *checkoutButton;
-
+@property (assign, nonatomic) CGFloat keyboardAnimationPercent;
 
 
 
@@ -301,7 +301,6 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     
     [self updateViewsBasedOnCostUpdate];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardDidShow:) name:UIKeyboardDidShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardDidShow:) name:UIKeyboardWillChangeFrameNotification object:nil];
     
@@ -403,17 +402,21 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 
 - (void)keyboardDidShow:(NSNotification *)notification {
     NSDictionary *userInfo = [notification userInfo];
+    NSInteger animationOptions = [[userInfo objectForKey:UIKeyboardAnimationCurveUserInfoKey] integerValue];
     CGSize size = [[userInfo objectForKey: UIKeyboardFrameEndUserInfoKey] CGRectValue].size;
+    CGFloat time = [[userInfo objectForKey: UIKeyboardAnimationDurationUserInfoKey] doubleValue];
     
     CGFloat diff = size.height - (self.view.frame.size.height - (self.promoBox.frame.origin.y + self.promoBox.frame.size.height));
     
+    
     if (diff > 0){
+        self.keyboardAnimationPercent = diff / size.height;
         if ([self.promoCodeTextField isFirstResponder]){
             self.promoBoxBottomCon.constant = 2 + diff;
             self.promoBoxTopCon.constant = 2 - diff;
-            [UIView animateWithDuration:[notification.userInfo[UIKeyboardAnimationDurationUserInfoKey] doubleValue] animations:^{
+            [UIView animateWithDuration:time * (1 - self.keyboardAnimationPercent) delay:time * self.keyboardAnimationPercent options:animationOptions animations:^{
                 [self.view layoutIfNeeded];
-            }];
+            } completion:^(BOOL completion){}];
         }
     }
 }
@@ -422,11 +425,16 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     if ([self.promoCodeTextField isFirstResponder]){
         [self onButtonApplyPromoCodeClicked:nil];
         
+        NSDictionary *userInfo = [notification userInfo];
+        NSInteger animationOptions = [[userInfo objectForKey:UIKeyboardAnimationCurveUserInfoKey] integerValue];
+        CGFloat time = [[userInfo objectForKey: UIKeyboardAnimationDurationUserInfoKey] doubleValue];
         self.promoBoxBottomCon.constant = 2;
         self.promoBoxTopCon.constant = 2;
-        [UIView animateWithDuration:[notification.userInfo[UIKeyboardAnimationDurationUserInfoKey] doubleValue] animations:^{
-            [self.view layoutIfNeeded];
-        }];
+        [UIView animateKeyframesWithDuration:time  delay:0 options:animationOptions animations:^{
+            [UIView addKeyframeWithRelativeStartTime:0 relativeDuration:time *(1 - self.keyboardAnimationPercent) animations:^{
+                [self.view layoutIfNeeded];
+            }];
+        }completion:NULL];
     }
 }
 
