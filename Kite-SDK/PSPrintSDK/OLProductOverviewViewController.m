@@ -113,6 +113,16 @@
     
 }
 
+- (void)viewDidDisappear:(BOOL)animated{
+    [super viewDidDisappear:animated];
+    
+#ifndef OL_NO_ANALYTICS
+    if (!self.navigationController){
+        [OLAnalytics trackProductDescriptionScreenHitBack:self.product.productTemplate.name hidePrice:[OLKiteABTesting sharedInstance].hidePrice];
+    }
+#endif
+}
+
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator{
     [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
     [coordinator animateAlongsideTransition:^(id context){
@@ -220,7 +230,9 @@
         self.arrowImageView.transform = self.detailsBoxTopCon.constant == self.originalBoxConstraint ? CGAffineTransformIdentity : CGAffineTransformMakeRotation(M_PI);
         [self.view layoutIfNeeded];
     }completion:^(BOOL finished){
-        
+#ifndef OL_NO_ANALYTICS
+        self.detailsBoxTopCon.constant == self.originalBoxConstraint ? [OLAnalytics trackProductDetailsViewClosed:self.product.productTemplate.name hidePrice:[OLKiteABTesting sharedInstance].hidePrice] : [OLAnalytics trackProductDetailsViewOpened:self.product.productTemplate.name hidePrice:[OLKiteABTesting sharedInstance].hidePrice];
+#endif
     }];
     
 }
@@ -321,14 +333,19 @@
         CGFloat distance = ABS(start - self.detailsBoxTopCon.constant);
         CGFloat total = self.detailsViewHeightCon.constant-100.0-self.originalBoxConstraint;
         CGFloat percentComplete = 1 - distance / total;
-
+        
         CGFloat damping = ABS(0.5 + (0.5 * percentComplete)*(0.5 * percentComplete));
         CGFloat time = ABS(0.8 - (0.8 * percentComplete));
+        
+        BOOL opening = [gesture velocityInView:gesture.view].y > 0;
+        
         [UIView animateWithDuration:time delay:0 usingSpringWithDamping:damping initialSpringVelocity:0 options:0 animations:^{
-            self.arrowImageView.transform = [gesture velocityInView:gesture.view].y > 0 ? CGAffineTransformIdentity : CGAffineTransformMakeRotation(M_PI);
+            self.arrowImageView.transform = opening ? CGAffineTransformIdentity : CGAffineTransformMakeRotation(M_PI);
             [self.view layoutIfNeeded];
         }completion:^(BOOL finished){
-            
+#ifndef OL_NO_ANALYTICS
+            opening ? [OLAnalytics trackProductDetailsViewClosed:self.product.productTemplate.name hidePrice:[OLKiteABTesting sharedInstance].hidePrice] : [OLAnalytics trackProductDetailsViewOpened:self.product.productTemplate.name hidePrice:[OLKiteABTesting sharedInstance].hidePrice];
+#endif
         }];
     }
 }

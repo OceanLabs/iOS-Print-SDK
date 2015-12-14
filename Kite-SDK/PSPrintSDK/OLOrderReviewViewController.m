@@ -84,6 +84,16 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Confirm", @"") style:UIBarButtonItemStylePlain target:self action:@selector(onButtonNextClicked:)];
 }
 
+- (void)viewDidDisappear:(BOOL)animated{
+    [super viewDidDisappear:animated];
+    
+#ifndef OL_NO_ANALYTICS
+    if (!self.navigationController){
+        [OLAnalytics trackReviewScreenHitBack:self.product.productTemplate.name numberOfPhotos:self.userSelectedPhotos.count];
+    }
+#endif
+}
+
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
     [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
     
@@ -248,6 +258,9 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
 }
 
 - (void) deletePhotoAtIndex:(NSUInteger)index{
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackReviewScreenDeletedPhotoForProductName:self.product.productTemplate.name];
+#endif
     [self.userSelectedPhotos removeObjectAtIndex:index];
     
     if (self.userSelectedPhotos.count == 0){
@@ -285,6 +298,10 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     [countLabel setText: [NSString stringWithFormat:@"%lu", (unsigned long)extraCopies + 1]];
     
     [self updateTitleBasedOnSelectedPhotoQuanitity];
+    
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackReviewScreenIncrementedPhotoQtyForProductName:self.product.productTemplate.name];
+#endif
 }
 
 - (IBAction)onButtonDownArrowClicked:(UIButton *)sender {
@@ -320,6 +337,10 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     [countLabel setText: [NSString stringWithFormat:@"%lu", (unsigned long)extraCopies + 1]];
     
     [self updateTitleBasedOnSelectedPhotoQuanitity];
+    
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackReviewScreenIncrementedPhotoQtyForProductName:self.product.productTemplate.name];
+#endif
 }
 
 - (IBAction)onButtonEnhanceClicked:(id)sender {
@@ -353,6 +374,10 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
         [cropVc setFullImage:image];
         cropVc.edits = self.editingPrintPhoto.edits;
         [self presentViewController:cropVc animated:YES completion:NULL];
+        
+#ifndef OL_NO_ANALYTICS
+        [OLAnalytics trackReviewScreenEnteredCropScreenForProductName:self.product.productTemplate.name];
+#endif
     }];
     
 }
@@ -546,6 +571,10 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     
     [self.collectionView reloadData];
     [cropper dismissViewControllerAnimated:YES completion:NULL];
+    
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackReviewScreenDidCropPhotoForProductName:self.product.productTemplate.name];
+#endif
 }
 
 #pragma mark - Autorotate and Orientation Methods

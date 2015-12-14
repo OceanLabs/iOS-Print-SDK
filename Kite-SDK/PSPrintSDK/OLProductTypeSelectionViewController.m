@@ -91,6 +91,16 @@
 #endif
 }
 
+- (void)viewDidDisappear:(BOOL)animated{
+    [super viewDidDisappear:animated];
+
+#ifndef OL_NO_ANALYTICS
+    if (!self.navigationController){
+        [OLAnalytics trackProductTypeSelectionScreenHitBackTemplateClass:self.templateClass];
+    }
+#endif
+}
+
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
     [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
     self.fromRotation = YES;

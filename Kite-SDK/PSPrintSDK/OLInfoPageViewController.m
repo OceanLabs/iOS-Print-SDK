@@ -9,6 +9,7 @@
 #import "OLInfoPageViewController.h"
 #import "OLAnalytics.h"
 #import "UIImage+ImageNamedInKiteBundle.h"
+#import "OLAnalytics.h"
 
 @interface OLInfoPageViewController () <UITableViewDataSource, UITableViewDelegate>
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
@@ -31,14 +32,19 @@
     [OLAnalytics trackQualityInfoScreenViewed];
 }
 
+- (void)viewDidDisappear:(BOOL)animated{
+    [super viewDidDisappear:animated];
+    
+#ifndef OL_NO_ANALYTICS
+    if (!self.navigationController){
+        [OLAnalytics trackQualityScreenHitBack];
+    }
+#endif
+}
+
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     [self.navigationController setNavigationBarHidden:NO animated:animated];
-}
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 -(NSInteger) tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
