@@ -554,7 +554,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             self.promoCodeCostLabel.text = nil;
         }
         else{
-            self.promoCodeCostLabel.text = [promoCost formatCostForCurrencyCode:self.printOrder.currencyCode];
+            self.promoCodeCostLabel.text = [NSString stringWithFormat:@"-%@", [promoCost formatCostForCurrencyCode:self.printOrder.currencyCode]];
         }
         [self validateTemplatePricing];
     }];
@@ -819,8 +819,14 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 
 - (void)applyPromoCode:(NSString *)promoCode {
     if (promoCode != nil) {
+        if ([promoCode isEqualToString:self.printOrder.promoCode]){
+            return;
+        }
         [SVProgressHUD showWithStatus:NSLocalizedStringFromTableInBundle(@"Checking Code", @"KitePrintSDK", [OLConstants bundle], @"")];
     } else {
+        if (!self.printOrder.promoCode || [self.printOrder.promoCode isEqualToString:@""]){
+            return;
+        }
         [SVProgressHUD showWithStatus:NSLocalizedStringFromTableInBundle(@"Clearing Code", @"KitePrintSDK", [OLConstants bundle], @"")];
     }
     
