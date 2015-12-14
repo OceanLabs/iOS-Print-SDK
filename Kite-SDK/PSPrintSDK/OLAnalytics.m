@@ -144,7 +144,7 @@ static __weak id<OLKiteDelegate> kiteDelegate;
     if (template){
         dict[kOLAnalyticsProductName] = template.name;
         dict[kOLAnalyticsNumberOfPhotosInItem] = [NSNumber numberWithInteger:[job quantity]];
-        dict[kOLAnalyticsExtraCopies] = [NSNumber numberWithInteger:[job extraCopies]];
+        dict[kOLAnalyticsQuantity] = [NSNumber numberWithInteger:[job extraCopies]+1];
         dict[kOLAnalyticsItemPrice] = nonNilStr([[OLProduct productWithTemplateId:[job templateId]] unitCost]);
     }
     return dict;
