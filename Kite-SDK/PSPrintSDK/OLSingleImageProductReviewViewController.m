@@ -63,7 +63,7 @@ OLFacebookImagePickerControllerDelegate,
 #ifdef OL_KITE_AT_LEAST_IOS8
 CTAssetsPickerControllerDelegate,
 #endif
-OLAssetsPickerControllerDelegate>
+OLAssetsPickerControllerDelegate, RMImageCropperDelegate>
 
 @property (weak, nonatomic) IBOutlet UILabel *quantityLabel;
 @property (assign, nonatomic) NSUInteger quantity;
@@ -79,6 +79,8 @@ OLAssetsPickerControllerDelegate>
 -(void) doCheckout;
 
 @end
+
+static BOOL hasMoved;
 
 @implementation OLSingleImageProductReviewViewController
 
@@ -124,6 +126,10 @@ OLAssetsPickerControllerDelegate>
     self.quantity = 1;
     [self updateQuantityLabel];
     
+    if (self.imageCropView){
+        self.imageCropView.delegate = self;
+    }
+    
     self.imagesCollectionView.dataSource = self;
     self.imagesCollectionView.delegate = self;
     
@@ -138,6 +144,7 @@ OLAssetsPickerControllerDelegate>
 
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
+    hasMoved = NO;
     self.imageCropView.imageView.transform = self.imageDisplayed.edits.cropTransform;
 }
 
@@ -162,7 +169,7 @@ OLAssetsPickerControllerDelegate>
     
 #ifndef OL_NO_ANALYTICS
     if (!self.navigationController){
-        [OLAnalytics trackReviewScreenViewed:self.product.productTemplate.name];
+        [OLAnalytics trackReviewScreenHitBack:self.product.productTemplate.name numberOfPhotos:self.userSelectedPhotos.count];
     }
 #endif
 }
@@ -285,6 +292,15 @@ OLAssetsPickerControllerDelegate>
     return YES;
 #else
     return NO;
+#endif
+}
+
+- (void)imageCropperDidTransformImage:(RMImageCropper *)imageCropper{
+#ifndef OL_NO_ANALYTICS
+    if (!hasMoved){
+        hasMoved = YES;
+        [OLAnalytics trackReviewScreenDidCropPhotoForProductName:self.product.productTemplate.name];
+    }
 #endif
 }
 
