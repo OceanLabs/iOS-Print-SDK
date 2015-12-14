@@ -12,6 +12,25 @@
 @protocol OLPrintJob;
 @protocol OLKiteDelegate;
 
+static NSString *const kOLAnalyticsEventName = @"Event Name";
+static NSString *const kOLAnalyticsProductCategory = @"Product Category";
+static NSString *const kOLAnalyticsProductName = @"Product Name";
+static NSString *const kOLAnalyticsApplePayAvailable = @"Apple Pay Available";
+static NSString *const kOLAnalyticsPaymentMethod = @"Payment Method";
+static NSString *const kOLAnalyticsPhotoSource = @"Photo Source";
+static NSString *const kOLAnalyticsFeedbackResult = @"Feedback Result";
+static NSString *const kOLAnalyticsSelectedOption = @"Selected Option";
+static NSString *const kOLAnalyticsNumberOfPhotos = @"Number of Photos";
+static NSString *const kOLAnalyticsNumberOfPhotosInItem = @"Number of Photos in Item";
+static NSString *const kOLAnalyticsNumberOfPhotosInOrder = @"Number of Unique Photos in Order";
+static NSString *const kOLAnalyticsNumberOnBadge = @"Number of Items on Basket Icon Badge";
+static NSString *const kOLAnalyticsExtraCopies = @"Extra Copies of Item";
+static NSString *const kOLAnalyticsItemsInOrder = @"Items In Order";
+static NSString *const kOLAnalyticsOrderCost = @"Order Cost";
+static NSString *const kOLAnalyticsOrderShippingCost = @"Order Shipping Cost";
+static NSString *const kOLAnalyticsItemPrice = @"Item Price";
+static NSString *const kOLAnalyticsPromoCode = @"Promo Code";
+
 @interface OLAnalytics : NSObject
 
 + (void)trackKiteViewControllerLoadedWithEntryPoint:(NSString *)entryPoint;
