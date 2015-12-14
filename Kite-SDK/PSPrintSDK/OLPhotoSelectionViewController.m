@@ -555,9 +555,12 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 #endif
 
 - (void)assetsPickerController:(id)picker didFinishPickingAssets:(NSArray *)assets {
+    NSInteger originalCount = self.userSelectedPhotos.count;
     [self populateArrayWithNewArray:assets dataType:[picker isKindOfClass:[OLAssetsPickerController class]] ? [ALAsset class] : [PHAsset class]];
     [picker dismissViewControllerAnimated:YES completion:^(void){}];
-    
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackPhotoProvider:@"Camera Roll" numberOfPhotosAdded:self.userSelectedPhotos.count - originalCount forProductName:self.product.productTemplate.name];
+#endif
 }
 
 - (BOOL)assetsPickerController:(OLAssetsPickerController *)picker shouldShowAssetsGroup:(ALAssetsGroup *)group{
@@ -603,8 +606,12 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 }
 
 - (void)instagramImagePicker:(OLInstagramImagePickerController *)imagePicker didFinishPickingImages:(NSArray *)images {
+    NSInteger originalCount = self.userSelectedPhotos.count;
     [self populateArrayWithNewArray:images dataType:[OLInstagramImage class]];
     [self dismissViewControllerAnimated:YES completion:^(void){}];
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackPhotoProvider:@"Instagram" numberOfPhotosAdded:self.userSelectedPhotos.count - originalCount forProductName:self.product.productTemplate.name];
+#endif
 }
 
 - (void)instagramImagePickerDidCancelPickingImages:(OLInstagramImagePickerController *)imagePicker {
@@ -620,8 +627,12 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 }
 
 - (void)facebookImagePicker:(OLFacebookImagePickerController *)imagePicker didFinishPickingImages:(NSArray *)images {
+    NSInteger originalCount = self.userSelectedPhotos.count;
     [self populateArrayWithNewArray:images dataType:[OLFacebookImage class]];
     [self dismissViewControllerAnimated:YES completion:^(void){}];
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackPhotoProvider:@"Facebook" numberOfPhotosAdded:self.userSelectedPhotos.count - originalCount forProductName:self.product.productTemplate.name];
+#endif
 }
 
 - (void)facebookImagePickerDidCancelPickingImages:(OLFacebookImagePickerController *)imagePicker {
