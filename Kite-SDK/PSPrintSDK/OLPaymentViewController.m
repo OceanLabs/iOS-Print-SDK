@@ -1398,7 +1398,11 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section == 0 && !haveLoadedAtLeastOnce){
-        return [tableView dequeueReusableCellWithIdentifier:@"loadingCell"];
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"loadingCell"];
+        UIActivityIndicatorView *activity = [cell viewWithTag:10];
+        [activity startAnimating];
+        
+        return cell;
     }
     else if (indexPath.section == 0 && self.printOrder.jobs.count > 0){
         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"jobCell"];
