@@ -85,11 +85,21 @@ static id stringOrEmptyString(NSString *str) {
 }
 
 - (NSArray<OLAsset *> *)assetsForUploading {
-    if (self.backImageAsset) {
-        return @[self.frontImageAsset, self.backImageAsset];
-    } else {
-        return @[self.frontImageAsset];
+    NSMutableArray *assets = [[NSMutableArray alloc] init];
+    if (self.frontImageAsset){
+        [assets addObject:self.frontImageAsset];
     }
+    if (self.backImageAsset){
+        [assets addObject:self.backImageAsset];
+    }
+    if (self.insideLeftImageAsset){
+        [assets addObject:self.insideLeftImageAsset];
+    }
+    if (self.insideRightImageAsset){
+        [assets addObject:self.insideRightImageAsset];
+    }
+    
+    return assets;
 }
 
 - (NSDictionary *)jsonRepresentation {
@@ -105,6 +115,9 @@ static id stringOrEmptyString(NSString *str) {
     }
     if (self.insideRightImageAsset){
         assets[@"inside_right_image"] = [NSNumber numberWithLongLong:self.insideRightImageAsset.assetId];
+    }
+    if (self.insideLeftImageAsset){
+        assets[@"inside_left_image"] = [NSNumber numberWithLongLong:self.insideLeftImageAsset.assetId];
     }
     
     // set message
