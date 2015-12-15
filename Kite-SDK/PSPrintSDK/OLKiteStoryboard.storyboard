@@ -1749,20 +1749,20 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="poster_shadow" translatesAutoresizingMaskIntoConstraints="NO" id="aRb-s3-73M">
-                                <rect key="frame" x="119" y="20" width="363" height="504"/>
+                                <rect key="frame" x="1" y="136.5" width="599" height="319.5"/>
                             </imageView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nF0-F4-GDd" userLabel="Container View">
-                                <rect key="frame" x="139" y="40" width="323" height="464"/>
+                                <rect key="frame" x="21" y="156.5" width="559" height="279.5"/>
                                 <subviews>
                                     <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="6Lh-tc-HKt">
-                                        <rect key="frame" x="152" y="222" width="20" height="20"/>
+                                        <rect key="frame" x="270" y="129.5" width="20" height="20"/>
                                     </activityIndicatorView>
                                     <view tag="1" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="33O-65-cUP" customClass="OLRemoteImageCropper">
-                                        <rect key="frame" x="0.0" y="0.0" width="323" height="464"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="559" height="279.5"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     </view>
                                     <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="3eC-J9-SCj">
-                                        <rect key="frame" x="152" y="223" width="20" height="20"/>
+                                        <rect key="frame" x="269.5" y="130" width="20" height="20"/>
                                         <color key="color" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                     </activityIndicatorView>
                                 </subviews>
@@ -1771,7 +1771,7 @@
                                     <constraint firstItem="33O-65-cUP" firstAttribute="top" secondItem="nF0-F4-GDd" secondAttribute="top" id="Kmr-Pi-DIN"/>
                                     <constraint firstItem="6Lh-tc-HKt" firstAttribute="centerX" secondItem="33O-65-cUP" secondAttribute="centerX" id="QGI-y9-RDg"/>
                                     <constraint firstAttribute="bottom" secondItem="33O-65-cUP" secondAttribute="bottom" id="RKT-ZU-vV9"/>
-                                    <constraint firstAttribute="width" secondItem="nF0-F4-GDd" secondAttribute="height" multiplier="140:201" id="aPH-cB-xjf"/>
+                                    <constraint firstAttribute="width" secondItem="nF0-F4-GDd" secondAttribute="height" multiplier="2:1" id="aPH-cB-xjf"/>
                                     <constraint firstAttribute="trailing" secondItem="33O-65-cUP" secondAttribute="trailing" id="cva-WG-Dzs"/>
                                     <constraint firstAttribute="centerX" secondItem="3eC-J9-SCj" secondAttribute="centerX" id="ot1-Sw-Nfg"/>
                                     <constraint firstItem="6Lh-tc-HKt" firstAttribute="centerY" secondItem="33O-65-cUP" secondAttribute="centerY" id="pPs-Ku-fV9"/>
@@ -1856,7 +1856,7 @@
                         <constraints>
                             <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="nF0-F4-GDd" secondAttribute="trailing" constant="20" id="5nb-zZ-1qv"/>
                             <constraint firstItem="aRb-s3-73M" firstAttribute="top" secondItem="nF0-F4-GDd" secondAttribute="top" constant="-20" id="8vJ-DU-Ag8"/>
-                            <constraint firstAttribute="centerY" secondItem="nF0-F4-GDd" secondAttribute="centerY" constant="28" id="9iD-gI-xqw"/>
+                            <constraint firstAttribute="centerY" secondItem="nF0-F4-GDd" secondAttribute="centerY" constant="4" id="9iD-gI-xqw"/>
                             <constraint firstItem="EHT-PN-hHa" firstAttribute="leading" secondItem="b43-Nd-ulU" secondAttribute="leading" constant="16" id="AXW-Gy-EXp"/>
                             <constraint firstItem="aRb-s3-73M" firstAttribute="leading" secondItem="nF0-F4-GDd" secondAttribute="leading" constant="-20" id="AhX-hj-7ZS"/>
                             <constraint firstAttribute="centerX" secondItem="nF0-F4-GDd" secondAttribute="centerX" id="CvE-yA-mWQ"/>
@@ -1874,9 +1874,11 @@
                             <constraint firstItem="aRb-s3-73M" firstAttribute="trailing" secondItem="nF0-F4-GDd" secondAttribute="trailing" constant="20" id="xDQ-aC-LlO"/>
                         </constraints>
                     </view>
-                    <extendedEdge key="edgesForExtendedLayout"/>
+                    <extendedEdge key="edgesForExtendedLayout" top="YES"/>
                     <navigationItem key="navigationItem" id="MzK-fr-8PT"/>
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <connections>
+                        <outlet property="centerYCon" destination="9iD-gI-xqw" id="Vs7-Em-I3Q"/>
                         <outlet property="containerView" destination="nF0-F4-GDd" id="Di5-5U-EhN"/>
                         <outlet property="ctaButton" destination="gw5-Cz-eSf" id="8by-s2-BIc"/>
                         <outlet property="imageCropView" destination="33O-65-cUP" id="jv4-S5-bTo"/>

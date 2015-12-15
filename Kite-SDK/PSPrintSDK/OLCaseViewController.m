@@ -27,6 +27,7 @@
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *maskActivityIndicator;
 @property (strong, nonatomic) UIImage *maskImage;
 @property (strong, nonatomic) OLPrintPhoto *imageDisplayed;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *centerYCon;
 
 @end
 
@@ -40,6 +41,8 @@
 
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
+    
+    self.centerYCon.constant = (88.0 - ([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height + 20.0))/2.0;
     
     if (self.downloadedMask){
         return;
@@ -97,6 +100,8 @@
     [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
     
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context){
+        self.centerYCon.constant = (88.0 - ([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height + 20.0))/2.0;
+        [self.view layoutIfNeeded];
         [self maskWithImage:self.maskImage targetView:self.imageCropView];
     }completion:^(id <UIViewControllerTransitionCoordinatorContext> context){}];
 }
