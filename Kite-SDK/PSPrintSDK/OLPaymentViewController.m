@@ -1501,6 +1501,15 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         id<OLPrintJob> job = self.printOrder.jobs[indexPath.row];
         OLProduct *product = [OLProduct productWithTemplateId:[job templateId]];
         
+        if ([OLProductTemplate templateWithId:product.templateId].templateUI == kOLTemplateUINA){
+            editButton.hidden = YES;
+            largeEditButton.hidden = YES;
+        }
+        else{
+            editButton.hidden = NO;
+            largeEditButton.hidden = NO;
+        }
+        
         [SDWebImageManager.sharedManager downloadImageWithURL:product.productTemplate.coverPhotoURL options:0 progress:NULL completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
             imageView.image = image;
         }];

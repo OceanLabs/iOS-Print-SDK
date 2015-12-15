@@ -145,6 +145,7 @@ static id stringOrEmptyString(NSString *str) {
     if (self.backImageAsset) result *= [self.backImageAsset hash];
     if (self.message && [self.message hash] > 0) result *= [self.message hash];
     if (self.address) result *= [self.address hash];
+    if (self.extraCopies) result *= self.extraCopies+1;
     result = 18 * result + [self.options hash];
     return result;
 }
