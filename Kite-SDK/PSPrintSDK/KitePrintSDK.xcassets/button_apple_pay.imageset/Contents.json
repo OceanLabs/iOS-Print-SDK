@@ -6,17 +6,20 @@
     },
     {
       "idiom" : "universal",
-      "scale" : "2x",
-      "filename" : "ApplePayBTN_44pt__black_logo_@2x.png"
+      "filename" : "ApplePayBTN_44pt__black_logo_@2x.png",
+      "scale" : "2x"
     },
     {
       "idiom" : "universal",
-      "scale" : "3x",
-      "filename" : "ApplePayBTN_44pt__black_logo_@3x.png"
+      "filename" : "ApplePayBTN_44pt__black_logo_@3x.png",
+      "scale" : "3x"
     }
   ],
   "info" : {
     "version" : 1,
     "author" : "xcode"
+  },
+  "properties" : {
+    "template-rendering-intent" : "original"
   }
 }

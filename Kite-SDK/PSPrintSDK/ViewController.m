@@ -258,21 +258,9 @@ UINavigationControllerDelegate, OLKiteDelegate>
 - (IBAction)onButtonKiteClicked:(UIButton *)sender {
     [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://www.kite.ly"]];
 }
-#pragma mark - notification events
 
-// useful if you want to fire off Anlaytic events for conversion funnel analysis, etc.
-
-- (void)onUserSuppliedShippingDetails:(NSNotification*)n {
-    NSLog(@"onUserSuppliedShippingDetails for print order with shipping address: %@", [n.userInfo[kOLKeyUserInfoPrintOrder] shippingAddress] );
-}
-
-- (void)onUserCompletedPayment:(NSNotification*)n {
-    NSLog(@"onUserCompletedPayment for print order with proof of payment: %@", [n.userInfo[kOLKeyUserInfoPrintOrder] proofOfPayment]);
-}
-
-- (void)onPrintOrderSubmission:(NSNotification*)n {
-    NSLog(@"onPrintOrderSubmission for print order with order receipt: %@", [n.userInfo[kOLKeyUserInfoPrintOrder] receipt]);
-    _printOrder = [[OLPrintOrder alloc] init];
+- (BOOL)shouldShowContinueShoppingButton{
+    return YES;
 }
 
 - (void)logKiteAnalyticsEventWithInfo:(NSDictionary *)info{

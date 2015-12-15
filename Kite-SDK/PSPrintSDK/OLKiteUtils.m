@@ -30,7 +30,7 @@
 }
 
 + (NSString *)userEmail:(UIViewController *)topVC {
-    OLKiteViewController *kiteVC = [self kiteViewControllerInNavStack:topVC.navigationController.viewControllers];
+    OLKiteViewController *kiteVC = [self kiteVcForViewController:topVC];
     OLProductHomeViewController *homeVC = [self homeViewControllerInNavStack:topVC.navigationController.viewControllers];
     if (kiteVC) {
         return kiteVC.userEmail;
@@ -42,7 +42,7 @@
 }
 
 + (NSString *)userPhone:(UIViewController *)topVC {
-    OLKiteViewController *kiteVC = [self kiteViewControllerInNavStack:topVC.navigationController.viewControllers];
+    OLKiteViewController *kiteVC = [self kiteVcForViewController:topVC];
     OLProductHomeViewController *homeVC = [self homeViewControllerInNavStack:topVC.navigationController.viewControllers];
     if (kiteVC) {
         return kiteVC.userPhone;
@@ -54,22 +54,12 @@
 }
 
 + (id<OLKiteDelegate>)kiteDelegate:(UIViewController *)topVC {
-    OLKiteViewController *kiteVC = [self kiteViewControllerInNavStack:topVC.navigationController.viewControllers];
+    OLKiteViewController *kiteVC = [self kiteVcForViewController:topVC];
     OLProductHomeViewController *homeVC = [self homeViewControllerInNavStack:topVC.navigationController.viewControllers];
     if (kiteVC) {
         return kiteVC.delegate;
     } else if (homeVC) {
         return homeVC.delegate;
-    }
-    
-    return nil;
-}
-
-+ (OLKiteViewController *)kiteViewControllerInNavStack:(NSArray *)viewControllers {
-    for (UIViewController *vc in viewControllers) {
-        if ([vc isMemberOfClass:[OLKiteViewController class]]) {
-            return (OLKiteViewController *) vc;
-        }
     }
     
     return nil;
@@ -94,21 +84,8 @@
 #endif
 
 + (void)checkoutViewControllerForPrintOrder:(OLPrintOrder *)printOrder handler:(void(^)(id vc))handler{
-#ifdef OL_KITE_OFFER_APPLE_PAY
-    if ([OLKiteUtils isApplePayAvailable]){
-        OLPaymentViewController *vc = [[OLPaymentViewController alloc] initWithPrintOrder:printOrder];
-        handler(vc);
-    }
-    else{
-        [OLKiteUtils shippingControllerForPrintOrder:printOrder handler:handler];
-    }
-    
-#else
-    
-    [OLKiteUtils shippingControllerForPrintOrder:printOrder handler:handler];
-    
-#endif
-    
+    OLPaymentViewController *vc = [[OLPaymentViewController alloc] initWithPrintOrder:printOrder];
+    handler(vc);
 }
 
 + (void)shippingControllerForPrintOrder:(OLPrintOrder *)printOrder handler:(void(^)(OLCheckoutViewController *vc))handler{
@@ -148,6 +125,50 @@
     else{
         return @"OrderReviewViewController";
     }
+}
+
++(void)reverseRowsOfPhotosInArray:(NSMutableArray*)array forProduct:(OLProduct *)product{
+    NSUInteger photosPerRow = sqrt(product.quantityToFulfillOrder);
+    NSUInteger numberOfRows = [array count] / photosPerRow;
+    
+    NSMutableArray* rows = [[NSMutableArray alloc] initWithCapacity:numberOfRows];
+    for (NSUInteger rowNumber = 0; rowNumber < numberOfRows; rowNumber++){
+        NSMutableArray* row = [[NSMutableArray alloc] initWithCapacity:photosPerRow];
+        for (NSUInteger photoInRow = 0; photoInRow < photosPerRow; photoInRow++){
+            [row addObject:array[rowNumber * photosPerRow + photoInRow]];
+        }
+        [rows addObject:row];
+    }
+    
+    [array removeAllObjects];
+    for (NSInteger rowNumber = numberOfRows - 1; rowNumber >= 0; rowNumber--){
+        [array addObjectsFromArray:rows[rowNumber]];
+    }
+}
+
++ (OLKiteViewController *)kiteVcForViewController:(UIViewController *)theVc{
+    UIViewController *vc = theVc.parentViewController;
+    while (vc) {
+        if ([vc isKindOfClass:[OLKiteViewController class]]){
+            return (OLKiteViewController *)vc;
+            break;
+        }
+        else{
+            vc = vc.parentViewController;
+        }
+    }
+    vc = theVc.presentingViewController;
+    while (vc) {
+        if ([vc isKindOfClass:[OLKiteViewController class]]){
+            return (OLKiteViewController *)vc;
+            break;
+        }
+        else{
+            vc = vc.presentingViewController;
+        }
+    }
+    
+    return nil;
 }
 
 @end

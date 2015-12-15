@@ -13,9 +13,9 @@
 @protocol OLCheckoutDelegate <NSObject>
 
 @optional
-- (BOOL)shouldShowContinueShoppingButton;
 - (void)userDidTapContinueShoppingButton;
 - (BOOL)receiptViewControllerShouldBeDismissable;
+- (BOOL)shouldDismissPaymentViewControllerAfterPayment;
 
 - (void)checkoutViewControllerDidCancel:(OLCheckoutViewController *)controller;
 

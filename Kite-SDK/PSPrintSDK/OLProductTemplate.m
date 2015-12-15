@@ -190,7 +190,7 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
         }
     }
     
-    NSAssert(NO, @"Template with id '%@' not found. Please ensure you've run OLProductTemplate.sync first if your templates are defined in the developer dashboard", identifier);
+    NSLog(@"Template with id '%@' not found. Please ensure you've run OLProductTemplate.sync first if your templates are defined in the developer dashboard", identifier);
     return nil;
 }
 

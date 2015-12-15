@@ -32,6 +32,13 @@
     self.postcardBackView.backgroundColor = [UIColor blackColor];
     [self.containerView addSubview:self.postcardBackView];
     self.postcardBackView.hidden = YES;
+//    if (!self.navigationItem.rightBarButtonItem){
+//        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]
+//                                                  initWithTitle:NSLocalizedString(@"Next", @"")
+//                                                  style:UIBarButtonItemStylePlain
+//                                                  target:self
+//                                                  action:@selector(onButtonNextClicked)];
+//    }
 }
 
 - (void)viewDidLayoutSubviews{

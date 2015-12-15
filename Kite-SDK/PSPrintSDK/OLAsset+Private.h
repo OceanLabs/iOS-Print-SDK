@@ -18,6 +18,9 @@ typedef enum {
 } OLAssetType;
 
 @interface OLAsset (FriendMethods)
+
+@property (nonatomic, strong) id<OLAssetDataSource> dataSource;
+
 - (void)setUploadedWithAssetId:(long long)assetId previewURL:(NSURL *)previewURL;
 - (void)dataLengthWithCompletionHandler:(GetDataLengthHandler)handler;
 - (void)dataWithCompletionHandler:(GetDataHandler)handler;

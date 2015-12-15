@@ -16,6 +16,7 @@
 #import "UIViewController+TraitCollectionCompatibility.h"
 #import "UIImageView+FadeIn.h"
 #import "OLKiteABTesting.h"
+#import "OLKiteUtils.h"
 
 #define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
 
@@ -23,6 +24,12 @@
 
 -(void)setCoverImageToImageView:(UIImageView *)imageView;
 -(void)setProductPhotography:(NSUInteger)i toImageView:(UIImageView *)imageView;
+
+@end
+
+@interface OLKiteViewController (Private)
+
+@property (strong, nonatomic) NSMutableArray *userSelectedPhotos;
 
 @end
 
@@ -129,11 +136,13 @@
 
 - (UIViewController *)previewingContext:(id<UIViewControllerPreviewing>)previewingContext viewControllerForLocation:(CGPoint)location{
     NSIndexPath *indexPath = [self.collectionView indexPathForItemAtPoint:location];
+    UICollectionViewCell *cell = [self.collectionView cellForItemAtIndexPath:indexPath];
+    [previewingContext setSourceRect:cell.frame];
     return [self viewControllerForItemAtIndexPath:indexPath];
 }
 
 - (void)previewingContext:(id<UIViewControllerPreviewing>)previewingContext commitViewController:(UIViewController *)viewControllerToCommit{
-    [self.navigationController pushViewController:viewControllerToCommit animated:NO];
+    [self.navigationController pushViewController:viewControllerToCommit animated:YES];
 }
 
 - (UIViewController *)viewControllerForItemAtIndexPath:(NSIndexPath *)indexPath{
@@ -142,6 +151,9 @@
     }
     
     OLProduct *product = self.products[indexPath.row];
+    product.uuid = nil;
+    [OLKiteUtils kiteVcForViewController:self].userSelectedPhotos = nil;
+    self.userSelectedPhotos = [OLKiteUtils kiteVcForViewController:self].userSelectedPhotos;
     
     NSString *identifier;
     if (product.productTemplate.templateUI == kOLTemplateUIPoster){

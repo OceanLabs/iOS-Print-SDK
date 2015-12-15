@@ -16,6 +16,7 @@
 @property (strong, nonatomic) id coverPhoto;
 @property (strong, nonatomic) NSArray *productPhotos;
 @property (strong, nonatomic) NSMutableDictionary *selectedOptions;
+@property (strong, nonatomic) NSString *uuid;
 
 +(NSArray *)products;
 +(NSArray *)productsWithFilters:(NSArray *)allowedTemplateIds;

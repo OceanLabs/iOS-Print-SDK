@@ -45,7 +45,7 @@ static NSString *const kOLPayPalClientIdLive = @"ASYVBBCHF_KwVUstugKy4qvpQaPlUeE
 static NSString *const kOLPayPalClientIdSandbox = @"AcEcBRDxqcCKiikjm05FyD4Sfi4pkNP98AYN67sr3_yZdBe23xEk0qhdhZLM";
 static NSString *const kOLPayPalRecipientEmailLive = @"hello@kite.ly";
 static NSString *const kOLPayPalRecipientEmailSandbox = @"sandbox-merchant@kite.ly";
-static NSString *const kOLAPIEndpointVersion = @"v1.4";
+static NSString *const kOLAPIEndpointVersion = @"v2.0";
 
 static BOOL useJudoPayForGBP = NO;
 static BOOL useStripeForCreditCards = NO;
@@ -97,7 +97,7 @@ static NSString *instagramRedirectURI = nil;
 }
 
 + (BOOL)isUnitTesting{
-    return isUnitTesting;
+    return NO;
 }
 
 + (void)setAPIKey:(NSString *_Nonnull)_apiKey withEnvironment:(OLKitePrintSDKEnvironment)_environment {

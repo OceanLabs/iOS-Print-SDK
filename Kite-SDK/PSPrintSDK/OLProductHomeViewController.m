@@ -24,10 +24,10 @@
 #import "UIImage+ColorAtPixel.h"
 #import "OLInfoPageViewController.h"
 #import "SDWebImageManager.h"
-#import <MessageUI/MessageUI.h>
-#import <MessageUI/MFMailComposeViewController.h>
 #import "TSMarkdownParser.h"
 #import "UIImage+ImageNamedInKiteBundle.h"
+#import "OLKiteUtils.h"
+#import "OLPaymentViewController.h"
 
 #define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
 
@@ -39,19 +39,30 @@
 
 @end
 
-@interface OLKiteViewController (Private)
+@interface OLPaymentViewController ()
 
-+ (NSString *)storyboardIdentifierForGroupSelected:(OLProductGroup *)group;
+- (void)onBarButtonOrdersClicked;
+@property (assign, nonatomic) BOOL presentedModally;
 
 @end
 
-@interface OLProductHomeViewController () <MFMailComposeViewControllerDelegate, UICollectionViewDelegateFlowLayout, UIViewControllerPreviewingDelegate>
+@interface OLKiteViewController (Private)
+
++ (NSString *)storyboardIdentifierForGroupSelected:(OLProductGroup *)group;
+@property (strong, nonatomic) OLPrintOrder *printOrder;
+@property (strong, nonatomic) NSMutableArray *userSelectedPhotos;
+- (void)dismiss;
+
+@end
+
+@interface OLProductHomeViewController () <UICollectionViewDelegateFlowLayout, UIViewControllerPreviewingDelegate>
 @property (nonatomic, strong) NSArray *productGroups;
 @property (nonatomic, strong) UIImageView *topSurpriseImageView;
 @property (assign, nonatomic) BOOL fromRotation;
 @property (strong, nonatomic) UIView *bannerView;
 @property (strong, nonatomic) UIView *headerView;
 @property (strong, nonatomic) NSString *bannerString;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *basketButton;
 @property (strong, nonatomic) NSDate *countdownDate;
 @end
 
@@ -91,11 +102,6 @@
     }
     else if (!url && [self isMemberOfClass:[OLProductHomeViewController class]]){
         self.title = NSLocalizedString(@"Print Shop", @"");
-    }
-    
-    NSString *supportEmail = [OLKiteABTesting sharedInstance].supportEmail;
-    if (supportEmail && ![supportEmail isEqualToString:@""] && [self isMemberOfClass:[OLProductHomeViewController class]]){
-        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamedInKiteBundle:@"support"] style:UIBarButtonItemStyleDone target:self action:@selector(emailButtonPushed:)];
     }
     
     if ([UITraitCollection class] && [self.traitCollection respondsToSelector:@selector(forceTouchCapability)] && self.traitCollection.forceTouchCapability == UIForceTouchCapabilityAvailable){
@@ -215,27 +221,6 @@
         }
         [self setupBannerLabel:label];
     }
-}
-
-#pragma mark - MFMailComposeViewControllerDelegate methods
-- (IBAction)emailButtonPushed:(id)sender {
-    
-    if([MFMailComposeViewController canSendMail]) {
-        MFMailComposeViewController *mailCont = [[MFMailComposeViewController alloc] init];
-        mailCont.mailComposeDelegate = self;
-        [mailCont setSubject:@""];
-        [mailCont setToRecipients:@[[OLKiteABTesting sharedInstance].supportEmail]];
-        [mailCont setMessageBody:@"" isHTML:NO];
-        [self presentViewController:mailCont animated:YES completion:nil];
-    } else {
-        UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Support", @"") message:[NSString stringWithFormat:NSLocalizedString(@"Please email %@ for support & customer service enquiries.", @""), [OLKiteABTesting sharedInstance].supportEmail] delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"") otherButtonTitles:nil];
-        [av show];
-    }
-}
-
-- (void)mailComposeController:(MFMailComposeViewController*)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error {
-    //handle any error
-    [controller dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (NSString *)promoBannerParaText{
@@ -364,11 +349,40 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    
+    OLPrintOrder *printOrder = [OLKiteUtils kiteVcForViewController:self].printOrder;
+    UIButton *basketButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    basketButton.frame = CGRectMake(0,0,44,44);
+    [basketButton addTarget:self action:@selector(onButtonBasketClicked:) forControlEvents:UIControlEventTouchUpInside];
+    
+    if (printOrder.jobs.count != 0){
+        [basketButton setImage:[UIImage imageNamedInKiteBundle:@"cart-full"] forState:UIControlStateNormal];
+        
+        NSUInteger count = printOrder.jobs.count;
+        for (id<OLPrintJob> job in printOrder.jobs){
+            count += [job extraCopies];
+        }
+        
+        UILabel *qtyLabel = [[UILabel alloc] initWithFrame:CGRectMake(24, 11.5, 10, 10)];
+        qtyLabel.font = [UIFont systemFontOfSize:9];
+        qtyLabel.textAlignment = NSTextAlignmentCenter;
+        qtyLabel.textColor = [UIColor whiteColor];
+        qtyLabel.text = [NSString stringWithFormat:@"%lu", (unsigned long)count];
+        qtyLabel.minimumScaleFactor = 0.5;
+        qtyLabel.adjustsFontSizeToFitWidth = YES;
+        
+        [basketButton addSubview:qtyLabel];
+    }
+    else{
+        [basketButton setImage:[UIImage imageNamedInKiteBundle:@"cart-empty"] forState:UIControlStateNormal];
+    }
+    
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:basketButton];
 }
 
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
-    
+        
     NSURL *url = [NSURL URLWithString:[OLKiteABTesting sharedInstance].headerLogoURL];
     if (url && ![[SDWebImageManager sharedManager] cachedImageExistsForURL:url] && [self isMemberOfClass:[OLProductHomeViewController class]]){
         [[SDWebImageManager sharedManager] downloadImageWithURL:url options:0 progress:NULL completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL){
@@ -435,7 +449,7 @@
 #pragma mark - UICollectionViewDelegate Methods
 
 - (CGSize) collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
-    CGSize size = self.view.bounds.size;
+    CGSize size = self.view.frame.size;
     if (indexPath.section == 0 && ![[OLKiteABTesting sharedInstance].qualityBannerType isEqualToString:@"None"]){
         CGFloat height = 110;
         if ([self isHorizontalSizeClassCompact] && size.height > size.width){
@@ -491,11 +505,13 @@
 
 - (UIViewController *)previewingContext:(id<UIViewControllerPreviewing>)previewingContext viewControllerForLocation:(CGPoint)location{
     NSIndexPath *indexPath = [self.collectionView indexPathForItemAtPoint:location];
+    UICollectionViewCell *cell = [self.collectionView cellForItemAtIndexPath:indexPath];
+    [previewingContext setSourceRect:cell.frame];
     return [self viewControllerForItemAtIndexPath:indexPath];
 }
 
 - (void)previewingContext:(id<UIViewControllerPreviewing>)previewingContext commitViewController:(UIViewController *)viewControllerToCommit{
-    [self.navigationController pushViewController:viewControllerToCommit animated:NO];
+    [self.navigationController pushViewController:viewControllerToCommit animated:YES];
 }
 
 - (UIViewController *)viewControllerForItemAtIndexPath:(NSIndexPath *)indexPath{
@@ -511,6 +527,10 @@
     
     OLProductGroup *group = self.productGroups[indexPath.row];
     OLProduct *product = [group.products firstObject];
+    product.uuid = nil;
+    [OLKiteUtils kiteVcForViewController:self].userSelectedPhotos = nil;
+    self.userSelectedPhotos = [OLKiteUtils kiteVcForViewController:self].userSelectedPhotos;
+    
     NSString *identifier = [OLKiteViewController storyboardIdentifierForGroupSelected:group];
     
     id vc = [self.storyboard instantiateViewControllerWithIdentifier:identifier];
@@ -635,6 +655,34 @@
     NSIndexPath *indexPath = [self.collectionView indexPathForCell:(UICollectionViewCell *)view];
     [self collectionView:self.collectionView didSelectItemAtIndexPath:indexPath];
 }
+
+- (IBAction)onButtonBasketClicked:(UIBarButtonItem *)sender {
+    OLPrintOrder *printOrder = [OLKiteUtils kiteVcForViewController:self].printOrder;
+    
+#ifndef OL_NO_ANALYTICS
+    NSUInteger count = printOrder.jobs.count;
+    for (id<OLPrintJob> job in printOrder.jobs){
+        count += [job extraCopies];
+    }
+    [OLAnalytics trackBasketIconTappedWithNumberBadged:count];
+#endif
+    
+    [OLKiteUtils checkoutViewControllerForPrintOrder:printOrder handler:^(id vc){
+        [vc safePerformSelector:@selector(setUserEmail:) withObject:[OLKiteUtils userEmail:self]];
+        [vc safePerformSelector:@selector(setUserPhone:) withObject:[OLKiteUtils userPhone:self]];
+        [vc safePerformSelector:@selector(setKiteDelegate:) withObject:[OLKiteUtils kiteDelegate:self]];
+        [(OLPaymentViewController *)vc setPresentedModally:YES];
+        
+        [(UIViewController *)vc navigationItem].leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:vc action:@selector(dismiss)];
+        
+        [(UIViewController *)vc navigationItem].rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamedInKiteBundle:@"menu_button_orders"] style:UIBarButtonItemStylePlain target:vc action:@selector(onBarButtonOrdersClicked)];
+        
+        OLCustomNavigationController *nvc = [[OLCustomNavigationController alloc] initWithRootViewController:vc];
+        nvc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
+        [self presentViewController:nvc animated:YES completion:NULL];
+    }];
+}
+
 
 #pragma mark - Autorotate and Orientation Methods
 // Currently here to disable landscape orientations and rotation on iOS 7. When support is dropped, these can be deleted.

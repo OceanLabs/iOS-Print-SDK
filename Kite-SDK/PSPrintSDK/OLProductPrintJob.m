@@ -131,10 +131,8 @@ static id stringOrEmptyString(NSString *str) {
 - (NSDictionary *)jsonRepresentation {
     NSMutableArray *assets = [[NSMutableArray alloc] init];
     
-    for (NSInteger i = -1; i < self.extraCopies; i++) {
-        for (OLAsset *asset in self.assets) {
-            [assets addObject:[NSString stringWithFormat:@"%lld", asset.assetId]];
-        }
+    for (OLAsset *asset in self.assets) {
+        [assets addObject:[NSString stringWithFormat:@"%lld", asset.assetId]];
     }
     
     NSMutableDictionary *json = [[NSMutableDictionary alloc] init];
@@ -196,7 +194,7 @@ static id stringOrEmptyString(NSString *str) {
     }
     OLProductPrintJob* printJob = (OLProductPrintJob*)object;
     
-    return [self.templateId isEqual:printJob.templateId] && [self.assets isEqual:printJob.assets] && [self.options isEqualToDictionary:printJob.options];
+    return [self.templateId isEqual:printJob.templateId] && [self.assets isEqualToArray:printJob.assets] && [self.options isEqualToDictionary:printJob.options];
 }
 
 
@@ -209,6 +207,8 @@ static id stringOrEmptyString(NSString *str) {
     [aCoder encodeInteger:self.extraCopies forKey:kKeyExtraCopies];
     [aCoder encodeObject:self.options forKey:kKeyProductPrintJobOptions];
     [aCoder encodeObject:self.address forKey:kKeyProductPringJobAddress];
+    [aCoder encodeInteger:self.extraCopies forKey:kKeyExtraCopies];
+    [aCoder encodeObject:self.uuid forKey:kKeyUUID];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
@@ -219,6 +219,8 @@ static id stringOrEmptyString(NSString *str) {
         self.extraCopies = [aDecoder decodeIntegerForKey:kKeyExtraCopies];
         self.options = [aDecoder decodeObjectForKey:kKeyProductPrintJobOptions];
         self.address = [aDecoder decodeObjectForKey:kKeyProductPringJobAddress];
+        self.extraCopies = [aDecoder decodeIntegerForKey:kKeyExtraCopies];
+        self.uuid = [aDecoder decodeObjectForKey:kKeyUUID];
     }
     
     return self;

@@ -21,7 +21,7 @@ static NSString *const kOLKiteThemeSupportEmail = @"themeSupportEmail";
 
 @interface OLKiteABTesting : NSObject
 
-@property (assign, nonatomic) BOOL skipHomeScreen;
+@property (assign, nonatomic) BOOL launchedWithPrintOrder;
 
 @property (assign, nonatomic, readonly) BOOL offerAddressSearch;
 @property (assign, nonatomic, readonly) BOOL requirePhoneNumber;

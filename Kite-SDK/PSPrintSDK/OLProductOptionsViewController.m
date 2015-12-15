@@ -109,6 +109,10 @@
     OLProductTemplateOption *option = self.product.productTemplate.options[indexPath.section];
     self.product.selectedOptions[option.code] = option.selections[indexPath.row];
     
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackDetailsViewProductOptionsSelectedOption:[option nameForSelection:option.selections[indexPath.row]] forProductName:self.product.productTemplate.name];
+#endif
+    
     [tableView reloadData];
     
     return NO;

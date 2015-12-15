@@ -47,12 +47,19 @@
 - (BOOL)shouldShowPhoneEntryOnCheckoutScreen;
 
 /**
+ *  Asks the delegate if we should show a Continue Shopping button on the payment screen.
+ *
+ *  @return Boolean value for showing the Continue Shooping button or not.
+ */
+- (BOOL)shouldShowContinueShoppingButton;
+
+
+/**
  *  Notifies the delegate that KiteViewController has finished and should be dismissed as the delegate sees fit. If this method is not implemented, then KiteViewController dismisses itself.
  *
  *  @param controller The KiteViewController
  */
 - (void)kiteControllerDidFinish:(OLKiteViewController * _Nonnull)controller;
-
 
 /**
  *  Notifies the delegate of an analytics event.

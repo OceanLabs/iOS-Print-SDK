@@ -13,6 +13,7 @@
 @class OLKiteViewController;
 @class OLPrintOrder;
 @class OLProduct;
+@class OLCheckoutViewController;
 
 @interface OLKiteUtils : NSObject
 
@@ -24,9 +25,11 @@
 
 + (id<OLKiteDelegate>)kiteDelegate:(UIViewController *)topVC;
 
-+ (OLKiteViewController *)kiteViewControllerInNavStack:(NSArray *)viewControllers;
-
 + (OLProductHomeViewController *)homeViewControllerInNavStack:(NSArray *)viewControllers;
+
++ (OLKiteViewController *)kiteVcForViewController:(UIViewController *)vc;
+
++(void)reverseRowsOfPhotosInArray:(NSMutableArray*)array forProduct:(OLProduct *)product;
 
 #ifdef OL_KITE_OFFER_APPLE_PAY
 +(BOOL)isApplePayAvailable;
@@ -34,5 +37,6 @@
 
 + (void)checkoutViewControllerForPrintOrder:(OLPrintOrder *)printOrder handler:(void(^)(id vc))handler;
 + (NSString *)reviewViewControllerIdentifierForProduct:(OLProduct *)product photoSelectionScreen:(BOOL)photoSelectionScreen;
++ (void)shippingControllerForPrintOrder:(OLPrintOrder *)printOrder handler:(void(^)(OLCheckoutViewController *vc))handler;
 
 @end

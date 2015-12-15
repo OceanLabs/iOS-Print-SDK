@@ -43,6 +43,39 @@ typedef void (^OLPrintOrderCompletionHandler)(NSString *orderIdReceipt, NSError 
  */
 typedef void (^OLPrintOrderCostCompletionHandler)(OLPrintOrderCost *cost, NSError * error);
 
+/**
+ *   States for the order submission status.
+ */
+typedef NS_ENUM(NSInteger, OLPrintOrderSubmitStatus) {
+    /**
+     *  The order was canceleld (eg refunded)
+     */
+    OLPrintOrderSubmitStatusCancelled = -2,
+    /**
+     *  The order did not validate (eg credit card declined)
+     */
+    OLPrintOrderSubmitStatusError = -1,
+    /**
+     *  Status unknown (eg order not submitted)
+     */
+    OLPrintOrderSubmitStatusUnknown = 0,
+    /**
+     *  Order received by Kite
+     */
+    OLPrintOrderSubmitStatusReceived = 1,
+    /**
+     *  Order accepted by Kite
+     */
+    OLPrintOrderSubmitStatusAccepted = 2,
+    /**
+     *  Order validated
+     */
+    OLPrintOrderSubmitStatusValidated = 3,
+    /**
+     *  Order processed
+     */
+    OLPrintOrderSubmitStatusProcessed = 4
+};
 
 /**
  *  The print order object, which can have multiple jobs and is ultimately submitted to Kite for printing.
@@ -60,16 +93,13 @@ typedef void (^OLPrintOrderCostCompletionHandler)(OLPrintOrderCost *cost, NSErro
 @property (strong, nonatomic) NSString *phone;
 
 /**
- *  Create, submit for printing, and return a new OLPrintOrder object, based on a single job.
+ *  Returns the OLPrintOrderSubmissionStatus from an NSString
  *
- *  @param job               The job to form the print order
- *  @param proofOfPayment    The proof of payment to validate that user has actually paid for the job
- *  @param progressHandler   Block to track progress
- *  @param completionHandler Block to execute on completion
+ *  @param identifier The NSString status
  *
- *  @return The print order
+ *  @return The enum version of the status
  */
-+ (OLPrintOrder *)submitJob:(id<OLPrintJob>)job withProofOfPayment:(NSString *)proofOfPayment forPrintingWithProgressHandler:(OLPrintOrderProgressHandler)progressHandler completionHandler:(OLPrintOrderCompletionHandler)completionHandler;
++ (OLPrintOrderSubmitStatus)submitStatusFromIdentifier:(NSString *)identifier;
 
 /**
  *  Add a print job to the print order
@@ -177,6 +207,16 @@ typedef void (^OLPrintOrderCostCompletionHandler)(OLPrintOrderCost *cost, NSErro
 @property (nonatomic, readonly) NSString *paymentDescription;
 
 /**
+ *  State of the print order submission.
+ */
+@property (assign, nonatomic, readonly) OLPrintOrderSubmitStatus submitStatus;
+
+/**
+ *  The error message when the order submit status has changed to Error
+ */
+@property (strong, nonatomic, readonly) NSString *submitStatusErrorMessage;
+
+/**
  *  If duplicate jobs are found, discard
  */
 - (void)discardDuplicateJobs;
@@ -195,5 +235,12 @@ typedef void (^OLPrintOrderCostCompletionHandler)(OLPrintOrderCost *cost, NSErro
  *  @param handler Block to call when we have the cost ready.
  */
 - (void)costWithCompletionHandler:(OLPrintOrderCostCompletionHandler)handler;
+
+/**
+ *  Return the shipping addresses of all jobs
+ *
+ *  @return The shipping addresses.
+ */
+- (NSArray <OLAddress *>*)shippingAddressesOfJobs;
 
 @end

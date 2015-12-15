@@ -27,6 +27,7 @@
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *maskActivityIndicator;
 @property (strong, nonatomic) UIImage *maskImage;
 @property (strong, nonatomic) OLPrintPhoto *imageDisplayed;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *centerYCon;
 
 @end
 
@@ -36,15 +37,16 @@
     [super viewDidLoad];
     
     self.downloadedMask = NO;
-    
-    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Back", @"")
-                                                                             style:UIBarButtonItemStylePlain
-                                                                            target:nil
-                                                                            action:nil];
 }
 
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
+    
+    self.centerYCon.constant = (88.0 - ([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height + 20.0))/2.0;
+    
+    if (self.downloadedMask){
+        return;
+    }
     
     if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0){
         if (!self.visualEffectView){
@@ -98,11 +100,16 @@
     [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
     
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context){
+        self.centerYCon.constant = (88.0 - ([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height + 20.0))/2.0;
+        [self.view layoutIfNeeded];
         [self maskWithImage:self.maskImage targetView:self.imageCropView];
     }completion:^(id <UIViewControllerTransitionCoordinatorContext> context){}];
 }
 
 - (void)downloadMask {
+    if (self.downloadedMask){
+        return;
+    }
     [[SDWebImageManager sharedManager] downloadImageWithURL:self.product.productTemplate.maskImageURL options:SDWebImageHighPriority progress:NULL completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL){
         [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
         if (error) {

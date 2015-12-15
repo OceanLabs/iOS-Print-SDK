@@ -87,7 +87,11 @@ static NSString *const kKeyPromoDiscount = @"ly.kite.iossdk.kKeyPromoDiscount";
 }
 
 - (NSDecimalNumber *)totalCostInCurrency:(NSString *)currencyCode {
-    return [[self.totalCosts objectForKey:currencyCode] decimalNumberByRoundingAccordingToBehavior:[[OLDecimalNumberBehavior alloc] init]];
+    if ([self.totalCosts.allKeys containsObject:currencyCode]){
+        return [[self.totalCosts objectForKey:currencyCode] decimalNumberByRoundingAccordingToBehavior:[[OLDecimalNumberBehavior alloc] init]];
+    }
+    
+    return nil;
 }
 
 - (NSDecimalNumber *)shippingCostInCurrency:(NSString *)currencyCode {

@@ -19,6 +19,7 @@
 #import "OLPrintOrderCostRequest.h"
 #import "OLPrintOrderCost.h"
 #import "OLProductPrintJob.h"
+#import "OLPrintOrderSubmitStatusRequest.h"
 
 static NSString *const kKeyProofOfPayment = @"co.oceanlabs.pssdk.kKeyProofOfPayment";
 static NSString *const kKeyVoucherCode = @"co.oceanlabs.pssdk.kKeyVoucherCode";
@@ -33,6 +34,8 @@ static NSString *const kKeyLastPrintSubmissionDate = @"co.oceanlabs.pssdk.kKeyLa
 static NSString *const kKeyCurrencyCode = @"co.oceanlabs.pssdk.kKeyCurrencyCode";
 static NSString *const kKeyOrderEmail = @"co.oceanlabs.pssdk.kKeyOrderEmail";
 static NSString *const kKeyOrderPhone = @"co.oceanlabs.pssdk.kKeyOrderPhone";
+static NSString *const kKeyOrderSubmitStatus = @"co.oceanlabs.pssdk.kKeyOrderSubmitStatus";
+static NSString *const kKeyOrderSubmitStatusError = @"co.oceanlabs.pssdk.kKeyOrderSubmitStatusError";
 
 static NSMutableArray *inProgressPrintOrders; // Tracks all currently in progress print orders. This is useful as it means they won't be dealloc'd if a user doesn't come a strong reference to them but still expects the completion handler callback
 
@@ -53,9 +56,10 @@ static id stringOrEmptyString(NSString *str) {
 @property (nonatomic, copy) OLPrintOrderCompletionHandler completionHandler;
 @property (nonatomic, strong) OLAssetUploadRequest *assetUploadReq;
 @property (nonatomic, strong) OLPrintOrderRequest *printOrderReq;
+@property (nonatomic, strong) OLPrintOrderSubmitStatusRequest *printOrderSubmitStatusReq;
 @property (nonatomic, readonly) NSDictionary *jsonRepresentation;
 
-@property (nonatomic, strong) NSMutableArray/*<OLAsset>*/ *assetsToUpload;
+@property (nonatomic, strong) NSMutableArray<OLAsset *> *assetsToUpload;
 @property (nonatomic, assign, getter = isAssetUploadComplete) BOOL assetUploadComplete;
 
 @property (nonatomic, assign) NSInteger storageIdentifier;
@@ -66,6 +70,12 @@ static id stringOrEmptyString(NSString *str) {
 @property (strong, nonatomic) OLPrintOrderCost *finalCost;
 @property (nonatomic, strong) OLPrintOrderCostRequest *costReq;
 @property (strong, nonatomic) NSMutableArray *costCompletionHandlers;
+
+@property (assign, nonatomic, readwrite) OLPrintOrderSubmitStatus submitStatus;
+@property (strong, nonatomic, readwrite) NSString *submitStatusErrorMessage;
+@property (assign, nonatomic) NSInteger numberOfTimesPolledForSubmissionStatus;
+
+@property (nonatomic, readwrite) NSString *receipt;
 
 @end
 
@@ -79,12 +89,28 @@ static id stringOrEmptyString(NSString *str) {
     }
 }
 
-+ (OLPrintOrder *)submitJob:(id<OLPrintJob>)job withProofOfPayment:(NSString *)proofOfPayment forPrintingWithProgressHandler:(OLPrintOrderProgressHandler)progressHandler completionHandler:(OLPrintOrderCompletionHandler)completionHandler {
-    OLPrintOrder *printOrder = [[OLPrintOrder alloc] init];
-    [printOrder addPrintJob:job];
-    printOrder.proofOfPayment = proofOfPayment;
-    [printOrder submitForPrintingWithProgressHandler:progressHandler completionHandler:completionHandler];
-    return printOrder;
++ (OLPrintOrderSubmitStatus)submitStatusFromIdentifier:(NSString *)identifier{
+    if ([identifier isEqualToString:@"Received"]){
+        return OLPrintOrderSubmitStatusReceived;
+    }
+    else if ([identifier isEqualToString:@"Accepted"]){
+        return OLPrintOrderSubmitStatusAccepted;
+    }
+    else if ([identifier isEqualToString:@"Validated"]){
+        return OLPrintOrderSubmitStatusValidated;
+    }
+    else if ([identifier isEqualToString:@"Processed"]){
+        return OLPrintOrderSubmitStatusProcessed;
+    }
+    else if ([identifier isEqualToString:@"Error"]){
+        return OLPrintOrderSubmitStatusError;
+    }
+    else if ([identifier isEqualToString:@"Cancelled"]){
+        return OLPrintOrderSubmitStatusCancelled;
+    }
+    else{
+        return OLPrintOrderSubmitStatusUnknown;
+    }
 }
 
 - (id)init {
@@ -114,7 +140,27 @@ static id stringOrEmptyString(NSString *str) {
 }
 
 - (BOOL)printed {
-    return self.receipt != nil;
+    switch (self.submitStatus) {
+        case OLPrintOrderSubmitStatusUnknown:
+            return self.receipt != nil;
+            break;
+        case OLPrintOrderSubmitStatusReceived:
+            return NO;
+            break;
+        case OLPrintOrderSubmitStatusAccepted:
+            return NO;
+            break;
+        case OLPrintOrderSubmitStatusValidated:
+            return YES;
+            break;
+        case OLPrintOrderSubmitStatusProcessed:
+            return YES;
+            break;
+            
+        default:
+            return NO;
+            break;
+    }
 }
 
 - (BOOL)isAssetUploadInProgress {
@@ -173,9 +219,7 @@ static id stringOrEmptyString(NSString *str) {
         return @"EUR";
     }
     
-    NSAssert(self.currenciesSupported.count > 0, @"currenciesSupported.count == 0. There are %lu jobs that are part of this order", (unsigned long) self.jobs.count);
     code = [self.currenciesSupported firstObject]; // return the first currency supported if the user hasn't specified one explicitly
-    NSAssert(code != nil, @"Please ensure all OLPrintJobs making up a print order have at least one supported currency in common");
     return code;
 }
 
@@ -335,8 +379,7 @@ static id stringOrEmptyString(NSString *str) {
 - (void)setProofOfPayment:(NSString *)proofOfPayment {
     _proofOfPayment = proofOfPayment;
     if (proofOfPayment) {
-        NSAssert([proofOfPayment hasPrefix:@"AP-"] || [proofOfPayment hasPrefix:@"PAY-"] || [proofOfPayment hasPrefix:@"tok_"]
-                 || [proofOfPayment hasPrefix:@"J-"], @"Proof of payment must be a PayPal REST payment confirmation id or a PayPal Adaptive Payment pay key or JudoPay receiptId i.e. PAY-..., AP-... or J-");
+        NSAssert([proofOfPayment hasPrefix:@"AP-"] || [proofOfPayment hasPrefix:@"PAY-"] || [proofOfPayment hasPrefix:@"tok_"] || [proofOfPayment hasPrefix:@"PAUTH-"] || [proofOfPayment hasPrefix:@"J-"], @"Proof of payment must be a PayPal REST payment confirmation id or a PayPal Adaptive Payment pay key or JudoPay receiptId i.e. PAY-..., AP-... or J-");
     }
 }
 
@@ -347,8 +390,9 @@ static id stringOrEmptyString(NSString *str) {
         [json setObject:self.proofOfPayment forKey:@"proof_of_payment"];
     }
     
-    if (self.currencyCode && self.cachedCost) {
-        [json setObject:@{@"currency": self.currencyCode, @"amount" : [self.cachedCost totalCostInCurrency:self.currencyCode]} forKey:@"customer_payment"];
+    if (self.currencyCode && (self.cachedCost || self.finalCost)) {
+        OLPrintOrderCost *cost = self.cachedCost ? self.cachedCost : self.finalCost;
+        [json setObject:@{@"currency": self.currencyCode, @"amount" : [cost totalCostInCurrency:self.currencyCode]} forKey:@"customer_payment"];
     }
     
     if (self.promoCode) {
@@ -362,14 +406,16 @@ static id stringOrEmptyString(NSString *str) {
     }
     
     for (id<OLPrintJob> printJob in self.jobs) {
-        [jobs addObject:[printJob jsonRepresentation]];
+        for (NSInteger i = -1; i < printJob.extraCopies; i++) {
+            [jobs addObject:[printJob jsonRepresentation]];
+        }
     }
     
     if (self.phone){
-        [json setObject:self.phone forKey:@"phone"];
+        [json setObject:self.phone forKey:@"customer_phone"];
     }
     if (self.email){
-        [json setObject:self.email forKey:@"email"];
+        [json setObject:self.email forKey:@"customer_email"];
     }
     
     if (self.shippingAddress) {
@@ -430,11 +476,6 @@ static id stringOrEmptyString(NSString *str) {
     for (id<OLPrintJob> job in self.jobs){
         job.address = [addresses firstObject];
         [jobsToAdd addObject:job];
-//        for (NSInteger i = 0; i < job.extraCopies; i++){
-//            id<OLPrintJob> jobCopy = [(NSObject *)job copy];
-//            [jobs addObject:jobCopy];
-//            [jobsToAdd addObject:jobCopy];
-//        }
     }
     [(NSMutableArray *)self.jobs removeAllObjects];
     
@@ -446,7 +487,6 @@ static id stringOrEmptyString(NSString *str) {
         for (id<OLPrintJob> job in jobs){
             id<OLPrintJob> jobCopy = [(NSObject *)job copy];
             jobCopy.address = address;
-//            jobCopy.extraCopies = -1;
             [jobsToAdd addObject:jobCopy];
         }
     }
@@ -454,6 +494,30 @@ static id stringOrEmptyString(NSString *str) {
     for (id<OLPrintJob> job in jobsToAdd){
         [self addPrintJob:job];
     }
+}
+
+- (NSArray <OLAddress *>*)shippingAddressesOfJobs{
+    NSMutableArray *addresses = [[NSMutableArray alloc] init];
+    for (id<OLPrintJob> job in self.jobs){
+        if ([job address]){
+            [addresses addObject:[job address]];
+        }
+    }
+    return addresses;
+}
+
++ (NSString *)orderFilePath {
+    NSArray * urls = [[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask];
+    NSString *documentDirPath = [(NSURL *)[urls objectAtIndex:0] path];
+    return [documentDirPath stringByAppendingPathComponent:@"ly.kite.sdk.basket"];
+}
+
+- (void)saveOrder {
+    [NSKeyedArchiver archiveRootObject:self toFile:[OLPrintOrder orderFilePath]];
+}
+
++ (id)loadOrder {
+    return [NSKeyedUnarchiver unarchiveObjectWithFile:[OLPrintOrder orderFilePath]];
 }
 
 #pragma mark - OLAssetUploadRequestDelegate methods
@@ -520,7 +584,36 @@ static id stringOrEmptyString(NSString *str) {
     [inProgressPrintOrders removeObject:self];
     _receipt = receipt;
     self.finalCost = self.cachedCost;
-    self.completionHandler(receipt, nil);
+    
+    [self validateOrderSubmissionWithCompletionHandler:self.completionHandler];
+}
+
+- (void)validateOrderSubmissionWithCompletionHandler:(void(^)(NSString *orderIdReceipt, NSError *error))handler{
+    if (self.numberOfTimesPolledForSubmissionStatus > 60){
+        self.numberOfTimesPolledForSubmissionStatus = 0;
+        handler(self.receipt, [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeServerFault userInfo:@{NSLocalizedDescriptionKey: NSLocalizedString(@"Error validating the order. Please try again later.", @"")}]);
+        return;
+    }
+    
+    self.numberOfTimesPolledForSubmissionStatus++;
+#ifdef OL_KITE_VERBOSE
+    NSLog(@"Polling Kite server for order status: %lu", (unsigned long)self.numberOfTimesPolledForSubmissionStatus);
+#endif
+    self.printOrderSubmitStatusReq = [[OLPrintOrderSubmitStatusRequest alloc] initWithPrintOrder:self];
+    [self.printOrderSubmitStatusReq checkStatusWithCompletionHandler:^(OLPrintOrderSubmitStatus status, NSError *error){
+        if (status == OLPrintOrderSubmitStatusAccepted || status == OLPrintOrderSubmitStatusReceived){
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+                [self validateOrderSubmissionWithCompletionHandler:handler];
+            });
+        }
+        else{
+#ifdef OL_KITE_VERBOSE
+            NSLog(@"Print order submit status request finished with status:%lu", (unsigned long)status);
+#endif
+            self.numberOfTimesPolledForSubmissionStatus = 0;
+            handler(self.receipt, error);
+        }
+    }];
 }
 
 - (void)printOrderRequest:(OLPrintOrderRequest *)req didFailWithError:(NSError *)error {
@@ -547,6 +640,8 @@ static id stringOrEmptyString(NSString *str) {
     [aCoder encodeObject:self.finalCost forKey:kKeyFinalCost];
     [aCoder encodeObject:self.email forKey:kKeyOrderEmail];
     [aCoder encodeObject:self.phone forKey:kKeyOrderPhone];
+    [aCoder encodeInteger:self.submitStatus forKey:kKeyOrderSubmitStatus];
+    [aCoder encodeObject:self.submitStatusErrorMessage forKey:kKeyOrderSubmitStatusError];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
@@ -565,6 +660,8 @@ static id stringOrEmptyString(NSString *str) {
             _finalCost = [aDecoder decodeObjectForKey:kKeyFinalCost];
             _email = [aDecoder decodeObjectForKey:kKeyOrderEmail];
             _phone = [aDecoder decodeObjectForKey:kKeyOrderPhone];
+            _submitStatus = [aDecoder decodeIntegerForKey:kKeyOrderSubmitStatus];
+            _submitStatusErrorMessage = [aDecoder decodeObjectForKey:kKeyOrderSubmitStatusError];
         }
         return self;
         

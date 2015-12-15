@@ -24,6 +24,8 @@
 		2E2632C21B97336700C7D879 /* KitePrintSDKUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E2632C11B97336700C7D879 /* KitePrintSDKUITests.m */; };
 		2E482B7A1BEB4C7D007460EA /* OLStripeCard.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E482B781BEB4C7D007460EA /* OLStripeCard.m */; };
 		2E482B7B1BEB4C7D007460EA /* OLStripeCard.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E482B781BEB4C7D007460EA /* OLStripeCard.m */; };
+		2E4FC90E1C04A4F4000143F5 /* OLOrdersViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E4FC90D1C04A4F4000143F5 /* OLOrdersViewController.m */; };
+		2E4FC90F1C04A4F4000143F5 /* OLOrdersViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E4FC90D1C04A4F4000143F5 /* OLOrdersViewController.m */; };
 		2E645B351BE7D16E009B662B /* OLProductDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EAD11511BD79ED0000BC80E /* OLProductDetailsViewController.m */; };
 		2E645B361BE7D170009B662B /* OLProductDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EAD11511BD79ED0000BC80E /* OLProductDetailsViewController.m */; };
 		2E645B371BE7D173009B662B /* OLProductOptionsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EAD11541BD7C716000BC80E /* OLProductOptionsViewController.m */; };
@@ -153,7 +155,6 @@
 		2EADD8561BE79D6D0051CD31 /* OLKiteStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2EA8BEAA1A484CA7008A9248 /* OLKiteStoryboard.storyboard */; };
 		2EADD8571BE79D6D0051CD31 /* PostcardBackView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2E38C0CC1AD5206F008BC28A /* PostcardBackView.xib */; };
 		2EADD8581BE79D6D0051CD31 /* OLPhotoSelectionButton.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2E39CAA41AB89515008B1EFF /* OLPhotoSelectionButton.xib */; };
-		2EADD8591BE79D6D0051CD31 /* KitePrintSDK.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2E85BC9719A24CB200EC7CC2 /* KitePrintSDK.strings */; };
 		2EADD85A1BE79D6D0051CD31 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CD73BF83186215790009DE03 /* Images.xcassets */; };
 		2EADD85C1BE79D6D0051CD31 /* KitePrintSDK.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CD93BB471879EA4F00316492 /* KitePrintSDK.xcassets */; };
 		2EADD85D1BE79D6D0051CD31 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = CD73BF74186215790009DE03 /* InfoPlist.strings */; };
@@ -161,6 +162,8 @@
 		2EADD85F1BE79D6D0051CD31 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CD73BF7D186215790009DE03 /* Main.storyboard */; };
 		2ECC956A1BC6B88F00F44CE1 /* OLDocsObjcExampleCodeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2ECC95691BC6B88F00F44CE1 /* OLDocsObjcExampleCodeTests.m */; };
 		2EDBFAB01BC698F2007BDB83 /* 1.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 2EDBFAAF1BC698F2007BDB83 /* 1.jpg */; };
+		2EF4392B1BF4D15E0006C123 /* OLPrintOrderSubmitStatusRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EF4392A1BF4D15E0006C123 /* OLPrintOrderSubmitStatusRequest.m */; };
+		2EF4392C1BF4D15E0006C123 /* OLPrintOrderSubmitStatusRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EF4392A1BF4D15E0006C123 /* OLPrintOrderSubmitStatusRequest.m */; };
 		7D6213DEB708F5F5E6617BF1 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 931ABE3568CB40F8892488E2 /* libPods.a */; };
 		CD73BF8B186215790009DE03 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD73BF8A186215790009DE03 /* XCTest.framework */; };
 		CD73BF8C186215790009DE03 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD73BF6B186215790009DE03 /* Foundation.framework */; };
@@ -512,6 +515,8 @@
 		2E455DFF1B1F1BA1001B1718 /* NSDecimalNumber+CostFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSDecimalNumber+CostFormatter.m"; path = "PSPrintSDK/Categories/NSDecimalNumber+CostFormatter.m"; sourceTree = "<group>"; };
 		2E482B771BEB4C7D007460EA /* OLStripeCard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLStripeCard.h; sourceTree = "<group>"; };
 		2E482B781BEB4C7D007460EA /* OLStripeCard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLStripeCard.m; sourceTree = "<group>"; };
+		2E4FC90C1C04A4F4000143F5 /* OLOrdersViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLOrdersViewController.h; sourceTree = "<group>"; };
+		2E4FC90D1C04A4F4000143F5 /* OLOrdersViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLOrdersViewController.m; sourceTree = "<group>"; };
 		2E5258FC1A9C884700DBC69B /* OLProductTypeSelectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLProductTypeSelectionViewController.h; sourceTree = "<group>"; };
 		2E5258FD1A9C884700DBC69B /* OLProductTypeSelectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLProductTypeSelectionViewController.m; sourceTree = "<group>"; };
 		2E5258FF1A9C91DF00DBC69B /* OLSingleImageProductReviewViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLSingleImageProductReviewViewController.h; sourceTree = "<group>"; };
@@ -549,13 +554,6 @@
 		2E85BC9319A24BE500EC7CC2 /* el */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = el; path = el.lproj/Main.strings; sourceTree = "<group>"; };
 		2E85BC9419A24BE500EC7CC2 /* el */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = el; path = el.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		2E85BC9519A24BE500EC7CC2 /* el */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = el; path = el.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		2E85BC9819A24CB200EC7CC2 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = PSPrintSDK/en.lproj/KitePrintSDK.strings; sourceTree = "<group>"; };
-		2E85BC9A19A24CB900EC7CC2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/KitePrintSDK.strings; sourceTree = "<group>"; };
-		2E85BC9B19A24CBB00EC7CC2 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/KitePrintSDK.strings; sourceTree = "<group>"; };
-		2E85BC9C19A24CBC00EC7CC2 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/KitePrintSDK.strings; sourceTree = "<group>"; };
-		2E85BC9D19A24CBD00EC7CC2 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/KitePrintSDK.strings; sourceTree = "<group>"; };
-		2E85BC9E19A24CBE00EC7CC2 /* pt */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pt; path = pt.lproj/KitePrintSDK.strings; sourceTree = "<group>"; };
-		2E85BC9F19A24CBE00EC7CC2 /* el */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = el; path = el.lproj/KitePrintSDK.strings; sourceTree = "<group>"; };
 		2E898F851BE37F9B00739F5A /* OLProductTemplateOption.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLProductTemplateOption.h; sourceTree = "<group>"; };
 		2E898F861BE37F9B00739F5A /* OLProductTemplateOption.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLProductTemplateOption.m; sourceTree = "<group>"; };
 		2E8C29EB1B18D1AC0045DC21 /* OLPrintOrderCostRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLPrintOrderCostRequest.h; sourceTree = "<group>"; };
@@ -628,6 +626,8 @@
 		2EE3C86F1A4AFB0C006446E2 /* OLKiteViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLKiteViewController.m; sourceTree = "<group>"; };
 		2EE94D3D1B501D900086590C /* ALAssetsLibrary+Singleton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "ALAssetsLibrary+Singleton.h"; path = "PSPrintSDK/Categories/ALAssetsLibrary+Singleton.h"; sourceTree = "<group>"; };
 		2EE94D3E1B501D900086590C /* ALAssetsLibrary+Singleton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "ALAssetsLibrary+Singleton.m"; path = "PSPrintSDK/Categories/ALAssetsLibrary+Singleton.m"; sourceTree = "<group>"; };
+		2EF439291BF4D15E0006C123 /* OLPrintOrderSubmitStatusRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLPrintOrderSubmitStatusRequest.h; sourceTree = "<group>"; };
+		2EF4392A1BF4D15E0006C123 /* OLPrintOrderSubmitStatusRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLPrintOrderSubmitStatusRequest.m; sourceTree = "<group>"; };
 		2EF53E391B55421A00BF936A /* UIImage+ColorAtPixel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIImage+ColorAtPixel.h"; path = "PSPrintSDK/Categories/UIImage+ColorAtPixel.h"; sourceTree = "<group>"; };
 		2EF53E3A1B55421A00BF936A /* UIImage+ColorAtPixel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIImage+ColorAtPixel.m"; path = "PSPrintSDK/Categories/UIImage+ColorAtPixel.m"; sourceTree = "<group>"; };
 		2EF53E3C1B5549B900BF936A /* OLInfoPageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLInfoPageViewController.h; sourceTree = "<group>"; };
@@ -1105,10 +1105,10 @@
 				2EA8BEB51A484FCB008A9248 /* OLOrderReviewViewController.m */,
 				2EA8BEB61A484FCB008A9248 /* OLFrameOrderReviewViewController.h */,
 				2EA8BEB71A484FCB008A9248 /* OLFrameOrderReviewViewController.m */,
-				2E74A9CF1B6B7827001AE97B /* OLPosterViewController.h */,
-				2E74A9D01B6B7827001AE97B /* OLPosterViewController.m */,
 				2E5258FF1A9C91DF00DBC69B /* OLSingleImageProductReviewViewController.h */,
 				2E5259001A9C91DF00DBC69B /* OLSingleImageProductReviewViewController.m */,
+				2E74A9CF1B6B7827001AE97B /* OLPosterViewController.h */,
+				2E74A9D01B6B7827001AE97B /* OLPosterViewController.m */,
 				2E20BD841AD4229700FB2446 /* OLCaseViewController.h */,
 				2E20BD851AD4229700FB2446 /* OLCaseViewController.m */,
 				2E20BD871AD42E2200FB2446 /* OLPostcardViewController.h */,
@@ -1126,13 +1126,13 @@
 		2E4CAF121BC2940A0089FA26 /* Shipping-Payment */ = {
 			isa = PBXGroup;
 			children = (
+				CDA8BF5218D70D0F00D835BB /* OLPaymentViewController.h */,
+				CDA8BF5018D70D0F00D835BB /* OLPaymentViewController.m */,
 				CDA8BF5518D70D0F00D835BB /* OLCheckoutViewController.h */,
 				CDA8BF5118D70D0F00D835BB /* OLCheckoutViewController.m */,
 				2E5F80301B04A22500095203 /* OLIntegratedCheckoutViewController.h */,
 				2E5F80311B04A22500095203 /* OLIntegratedCheckoutViewController.m */,
 				2E5E0C141993840600C34D5C /* OLCheckoutDelegate.h */,
-				CDA8BF5218D70D0F00D835BB /* OLPaymentViewController.h */,
-				CDA8BF5018D70D0F00D835BB /* OLPaymentViewController.m */,
 				CDA8BF5318D70D0F00D835BB /* OLReceiptViewController.h */,
 				CDA8BF5418D70D0F00D835BB /* OLReceiptViewController.m */,
 				3D1779581A1E1D6800BE3E58 /* OLCreditCardCaptureViewController.h */,
@@ -1163,6 +1163,8 @@
 				2E0A72651A6FB07000BC5AE7 /* OLScrollCropViewController.m */,
 				2E9965A81ABC7035007F010F /* OLCustomNavigationController.h */,
 				2E9965A91ABC7035007F010F /* OLCustomNavigationController.m */,
+				2E4FC90C1C04A4F4000143F5 /* OLOrdersViewController.h */,
+				2E4FC90D1C04A4F4000143F5 /* OLOrdersViewController.m */,
 				2EF53E3C1B5549B900BF936A /* OLInfoPageViewController.h */,
 				2EF53E3D1B5549B900BF936A /* OLInfoPageViewController.m */,
 			);
@@ -1440,6 +1442,8 @@
 				CD95AA77186F31BB0097C328 /* OLPrintOrderRequest.m */,
 				2E8C29EB1B18D1AC0045DC21 /* OLPrintOrderCostRequest.h */,
 				2E8C29EC1B18D1AC0045DC21 /* OLPrintOrderCostRequest.m */,
+				2EF439291BF4D15E0006C123 /* OLPrintOrderSubmitStatusRequest.h */,
+				2EF4392A1BF4D15E0006C123 /* OLPrintOrderSubmitStatusRequest.m */,
 				CD73BFA81863180A0009DE03 /* OLAddressSearchRequest.h */,
 				CD73BFA91863180A0009DE03 /* OLAddressSearchRequest.m */,
 			);
@@ -1720,11 +1724,10 @@
 			children = (
 				E29C84161BE2877A0041D4CF /* SVProgressHUD.bundle */,
 				3D6CDAAC1B1F41AE00786478 /* kite_corrupt.jpg */,
-				2E85BC9719A24CB200EC7CC2 /* KitePrintSDK.strings */,
 				2E38C0CC1AD5206F008BC28A /* PostcardBackView.xib */,
 				2E39CAA41AB89515008B1EFF /* OLPhotoSelectionButton.xib */,
-				CD93BB471879EA4F00316492 /* KitePrintSDK.xcassets */,
 				2EA8BEAA1A484CA7008A9248 /* OLKiteStoryboard.storyboard */,
+				CD93BB471879EA4F00316492 /* KitePrintSDK.xcassets */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -2133,7 +2136,6 @@
 				2EADD8561BE79D6D0051CD31 /* OLKiteStoryboard.storyboard in Resources */,
 				2EADD8571BE79D6D0051CD31 /* PostcardBackView.xib in Resources */,
 				2EADD8581BE79D6D0051CD31 /* OLPhotoSelectionButton.xib in Resources */,
-				2EADD8591BE79D6D0051CD31 /* KitePrintSDK.strings in Resources */,
 				2EADD85A1BE79D6D0051CD31 /* Images.xcassets in Resources */,
 				2EADD85C1BE79D6D0051CD31 /* KitePrintSDK.xcassets in Resources */,
 				2EADD85D1BE79D6D0051CD31 /* InfoPlist.strings in Resources */,
@@ -2358,6 +2360,7 @@
 				2EADD8331BE79D6D0051CD31 /* OLProductOverviewPageContentViewController.m in Sources */,
 				2EADD8341BE79D6D0051CD31 /* OLJudoPayCard.m in Sources */,
 				2EADD8351BE79D6D0051CD31 /* OLReceiptViewController.m in Sources */,
+				2E4FC90E1C04A4F4000143F5 /* OLOrdersViewController.m in Sources */,
 				2EADD8361BE79D6D0051CD31 /* OLAssetUploadRequest.m in Sources */,
 				2EADD8371BE79D6D0051CD31 /* OLAddressPickerController.m in Sources */,
 				2EADD8381BE79D6D0051CD31 /* main.m in Sources */,
@@ -2365,6 +2368,7 @@
 				2EADD83A1BE79D6D0051CD31 /* OLPostcardPrintJob.m in Sources */,
 				2EADD83B1BE79D6D0051CD31 /* NSObject+Utils.m in Sources */,
 				2EADD83C1BE79D6D0051CD31 /* OLAnalytics.m in Sources */,
+				2EF4392B1BF4D15E0006C123 /* OLPrintOrderSubmitStatusRequest.m in Sources */,
 				2EADD83D1BE79D6D0051CD31 /* OLCircleMaskCollectionViewCell.m in Sources */,
 				2EADD83E1BE79D6D0051CD31 /* OLCreditCardCaptureViewController.m in Sources */,
 				2EADD83F1BE79D6D0051CD31 /* OLPhotoSelectionViewController.m in Sources */,
@@ -2620,6 +2624,7 @@
 				E29C86041BE3B5C50041D4CF /* OLCreditCardCaptureViewController.m in Sources */,
 				E29C86061BE3B5C50041D4CF /* OLPhotoSelectionViewController.m in Sources */,
 				E29C86081BE3B5C50041D4CF /* OLAddressLookupViewController.m in Sources */,
+				2EF4392C1BF4D15E0006C123 /* OLPrintOrderSubmitStatusRequest.m in Sources */,
 				E29C86091BE3B5C50041D4CF /* OLKiteABTesting.m in Sources */,
 				E29C860A1BE3B5C50041D4CF /* OLProductHomeViewController.m in Sources */,
 				E29C860C1BE3B5C50041D4CF /* UIImage+OLAssetsPickerController.m in Sources */,
@@ -2629,6 +2634,7 @@
 				E29C86101BE3B5C50041D4CF /* RMImageCropper.m in Sources */,
 				E29C86111BE3B5C50041D4CF /* OLAssetsViewController.m in Sources */,
 				E29C86121BE3B5C50041D4CF /* OLCountryPickerController.m in Sources */,
+				2E4FC90F1C04A4F4000143F5 /* OLOrdersViewController.m in Sources */,
 				E29C86141BE3B5C50041D4CF /* OLBaseRequest.m in Sources */,
 				E29C86161BE3B5C50041D4CF /* OLPhotobookPrintJob.m in Sources */,
 				E29C86171BE3B5C50041D4CF /* OLPaymentLineItem.m in Sources */,
@@ -2647,21 +2653,6 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		2E85BC9719A24CB200EC7CC2 /* KitePrintSDK.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				2E85BC9819A24CB200EC7CC2 /* en */,
-				2E85BC9A19A24CB900EC7CC2 /* Base */,
-				2E85BC9B19A24CBB00EC7CC2 /* fr */,
-				2E85BC9C19A24CBC00EC7CC2 /* de */,
-				2E85BC9D19A24CBD00EC7CC2 /* it */,
-				2E85BC9E19A24CBE00EC7CC2 /* pt */,
-				2E85BC9F19A24CBE00EC7CC2 /* el */,
-			);
-			name = KitePrintSDK.strings;
-			path = ..;
-			sourceTree = "<group>";
-		};
 		CD73BF74186215790009DE03 /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -2785,6 +2776,7 @@
 					OL_KITE_OFFER_INSTAGRAM,
 					OL_KITE_OFFER_FACEBOOK,
 					OL_KITE_OFFER_PAYPAL,
+					OL_KITE_VERBOSE,
 				);
 				INFOPLIST_FILE = "KitePrintSDK-Dev-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
@@ -3682,6 +3674,7 @@
 				E244530D1BFD2C1D0086BF03 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		E29C85781BE3B4290041D4CF /* Build configuration list for PBXNativeTarget "KiteSDK" */ = {
 			isa = XCConfigurationList;

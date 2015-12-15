@@ -28,8 +28,8 @@ PODS:
     - Bolts/Tasks
   - Bolts/Tasks (1.5.0)
   - CSStickyHeaderFlowLayout (0.2.10)
-  - CTAssetsPickerController (3.0.4):
-    - PureLayout (~> 2.0.0)
+  - CTAssetsPickerController (3.1.1):
+    - PureLayout (~> 3.0.0)
   - DACircularProgress (2.3.1)
   - FacebookImagePicker (2.0.6):
     - FBSDKCoreKit (~> 4.6.0)
@@ -55,7 +55,7 @@ PODS:
   - MPFlipViewController (0.0.2)
   - NXOAuth2Client (1.2.8)
   - PayPal-iOS-SDK/Core (2.12.7)
-  - PureLayout (2.0.6)
+  - PureLayout (3.0.1)
   - SDWebImage (3.7.3):
     - SDWebImage/Core (= 3.7.3)
   - SDWebImage/Core (3.7.3)
@@ -74,7 +74,7 @@ DEPENDENCIES:
   - AFNetworking (~> 2.6.1)
   - ApplePayStubs
   - CSStickyHeaderFlowLayout
-  - CTAssetsPickerController (~> 3.0.3)
+  - CTAssetsPickerController (~> 3.1.0)
   - DACircularProgress
   - FacebookImagePicker
   - GroundControl
@@ -95,7 +95,7 @@ SPEC CHECKSUMS:
   ApplePayStubs: 5dd63c36527d1117b2045939fb5b6581b4815433
   Bolts: 722ab9a4f8b50fc4ed1b9998a5a7a2b3f16d80b4
   CSStickyHeaderFlowLayout: 5366582779d8b7c9ba9b9cc729c218cc23888776
-  CTAssetsPickerController: 3faf5972938986c355c420f617e83842499639b7
+  CTAssetsPickerController: 6fba9134a230656ffe34ac0effb0060a1ead65cb
   DACircularProgress: 4dd437c0fc3da5161cb289e07ac449493d41db71
   FacebookImagePicker: 7f3d70cb0a9b22b68dddac46864322d633385e03
   FBSDKCoreKit: 9954492d90c5fd65ae831395697a1660360d61f1
@@ -105,7 +105,7 @@ SPEC CHECKSUMS:
   MPFlipViewController: 86caa6203ca9d35af23cc6b4e1bcf53e53333770
   NXOAuth2Client: 98c4d4c594edd2b289cfc34a8928653e1dab7adf
   PayPal-iOS-SDK: 401d441844bd6f0e08905dcdd7795f44c5ecef6c
-  PureLayout: f25f0bb904d5ccfe6e31da3cb869185259f02e0d
+  PureLayout: f35f5384c9c4e4479df041dbe33ad7577b71ddfb
   SDWebImage: 1d2b1a1efda1ade1b00b6f8498865f8ddedc8a84
   SkyLab: 01d9559bbab2183e54e67dc7a8a12a22b0a4be99
   Stripe: 6864be95b09092f05526bc2e0a50804bc556aa0d

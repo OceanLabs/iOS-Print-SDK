@@ -151,7 +151,6 @@ UINavigationControllerDelegate>
         [OLAnalytics trackPhotoSelectionScreenHitBack:self.product.productTemplate.name];
     }
 #endif
-
 }
 
 - (void)viewWillAppear:(BOOL)animated{
@@ -208,6 +207,7 @@ UINavigationControllerDelegate>
     photobook.delegate = self.delegate;
     
     if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8){
+        photobook.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
         [self.navigationController presentViewController:photobook animated:YES completion:NULL];
         return;
     }
@@ -219,8 +219,15 @@ UINavigationControllerDelegate>
     if (!self.photobookPhotos){
         self.userSelectedPhotosCopy = [[NSArray alloc] initWithArray:self.userSelectedPhotos copyItems:NO];
         self.photobookPhotos = [[NSMutableArray alloc] initWithCapacity:self.product.quantityToFulfillOrder];
-        for (NSInteger i = 1; i < self.product.quantityToFulfillOrder + 1; i++){
+        NSInteger start = 0;
+        if (!self.coverPhoto){
             self.coverPhoto = self.userSelectedPhotos.firstObject;
+            start++;
+        }
+        else if (self.coverPhoto == (id)[NSNull null]){
+            self.coverPhoto = nil;
+        }
+        for (NSInteger i = start; i < self.product.quantityToFulfillOrder + start; i++){
             [self.photobookPhotos addObject:i < self.userSelectedPhotos.count ? self.userSelectedPhotos[i] : [NSNull null]];
         }
     }
@@ -371,6 +378,7 @@ UINavigationControllerDelegate>
     [cropPhoto getImageWithProgress:NULL completion:^(UIImage *image){
         [cropVc setFullImage:image];
         cropVc.edits = cropPhoto.edits;
+        cropVc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
         [self presentViewController:cropVc animated:YES completion:NULL];
     }];
 }
@@ -850,6 +858,7 @@ UINavigationControllerDelegate>
                     ((CTAssetsPickerController *)picker).assetsFetchOptions = options;
                     assetClass = [PHAsset class];
                     ((CTAssetsPickerController *)picker).delegate = self;
+                    picker.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
                     [self presentViewController:picker animated:YES completion:nil];
                 }
             }];
@@ -867,6 +876,7 @@ UINavigationControllerDelegate>
 #endif
     
     if (picker){
+        picker.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
         [self presentViewController:picker animated:YES completion:nil];
     }
 }
@@ -879,6 +889,7 @@ UINavigationControllerDelegate>
     OLFacebookImagePickerController *picker = nil;
     picker = [[OLFacebookImagePickerController alloc] init];
     picker.delegate = self;
+    picker.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
     [self presentViewController:picker animated:YES completion:nil];
 #endif
 }
@@ -892,6 +903,7 @@ UINavigationControllerDelegate>
     picker = [[OLInstagramImagePickerController alloc] initWithClientId:[OLKitePrintSDK instagramClientID] secret:[OLKitePrintSDK instagramSecret] redirectURI:[OLKitePrintSDK instagramRedirectURI]];
     picker.delegate = self;
     picker.selected = @[];
+    picker.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
     [self presentViewController:picker animated:YES completion:nil];
 #endif
 }

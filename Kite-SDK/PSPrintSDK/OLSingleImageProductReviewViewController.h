@@ -17,5 +17,10 @@
 @property (strong, nonatomic) OLProduct *product;
 @property (strong, nonatomic) NSMutableArray *userSelectedPhotos;
 @property (weak, nonatomic) id<OLKiteDelegate> delegate;
+@property (strong, nonatomic) IBOutlet UIButton *ctaButton;
+
+@property (strong, nonatomic) id<OLPrintJob> editingPrintJob;
+
+- (void)saveJobWithCompletionHandler:(void(^)())handler;
 
 @end

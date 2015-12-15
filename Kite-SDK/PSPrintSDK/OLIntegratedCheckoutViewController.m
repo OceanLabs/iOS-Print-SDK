@@ -15,6 +15,8 @@
 #import "OLCountryPickerController.h"
 #import "OLConstants.h"
 #import "OLAnalytics.h"
+#import "OLKiteUtils.h"
+#import "OLKiteViewController.h"
 
 static const NSUInteger kSectionDeliveryDetails = 0;
 static const NSUInteger kSectionEmail = 1;
@@ -429,6 +431,7 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
                 self.shippingAddress.country = [OLCountry countryForCode:@"GBR"];
                 controller.selected = @[self.shippingAddress.country];
             }
+            controller.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
             [self presentViewController:controller animated:YES completion:nil];
         }
         

@@ -21,6 +21,7 @@
 #import "SDWebImageManager.h"
 #import "UIImage+ColorAtPixel.h"
 #import "UIImage+ImageNamedInKiteBundle.h"
+#import "OLKiteUtils.h"
 
 NSString *const kOLNotificationUserSuppliedShippingDetails = @"co.oceanlabs.pssdk.kOLNotificationUserSuppliedShippingDetails";
 NSString *const kOLNotificationUserCompletedPayment = @"co.oceanlabs.pssdk.kOLNotificationUserCompletedPayment";
@@ -101,6 +102,7 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
 
 - (void)presentViewControllerFrom:(UIViewController *)presentingViewController animated:(BOOL)animated completion:(void (^)(void))completion {
     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:self];
+    navController.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
     [presentingViewController presentViewController:navController animated:animated completion:completion];
 }
 
@@ -125,7 +127,7 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
     [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinator> context){
-        self.tableView.contentInset = UIEdgeInsetsMake(self.edgeInsetTop, 0, 0, 0);
+//        self.tableView.contentInset = UIEdgeInsetsMake(self.edgeInsetTop, 0, 0, 0);
         [self positionKiteLabel];
     } completion:^(id<UIViewControllerTransitionCoordinator> context){
     }];
@@ -135,56 +137,7 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
     return self.navigationController.navigationBar.translucent ? [[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height : 0;
 }
 
-- (void)setupBannerImage:(UIImage *)bannerImage withBgImage:(UIImage *)bannerBgImage{
-    self.tableView.tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, bannerImage.size.height)];
-    UIImageView *banner = [[UIImageView alloc] initWithImage:bannerImage];
-    
-    UIImageView *bannerBg;
-    if(bannerBgImage){
-        bannerBg = [[UIImageView alloc] initWithImage:bannerBgImage];
-    }
-    else{
-        bannerBg = [[UIImageView alloc] init];
-        bannerBg.backgroundColor = [bannerImage colorAtPixel:CGPointMake(3, 3)];
-    }
-    [self.tableView.tableHeaderView addSubview:bannerBg];
-    [self.tableView.tableHeaderView addSubview:banner];
-    if (bannerBgImage.size.width > 100){
-        bannerBg.contentMode = UIViewContentModeTop;
-    }
-    else{
-        bannerBg.contentMode = UIViewContentModeScaleToFill;
-    }
-    banner.contentMode = UIViewContentModeCenter;
-    
-    banner.translatesAutoresizingMaskIntoConstraints = NO;
-    NSDictionary *views = NSDictionaryOfVariableBindings(banner);
-    NSMutableArray *con = [[NSMutableArray alloc] init];
-    
-    NSArray *visuals = @[@"H:|-0-[banner]-0-|",
-                         @"V:|-0-[banner]-0-|"];
-    
-    
-    for (NSString *visual in visuals) {
-        [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
-    }
-    
-    [banner.superview addConstraints:con];
-    
-    bannerBg.translatesAutoresizingMaskIntoConstraints = NO;
-    views = NSDictionaryOfVariableBindings(bannerBg);
-    con = [[NSMutableArray alloc] init];
-    
-    visuals = @[@"H:|-0-[bannerBg]-0-|",
-                @"V:|-0-[bannerBg]-0-|"];
-    
-    
-    for (NSString *visual in visuals) {
-        [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
-    }
-    
-    [bannerBg.superview addConstraints:con];
-}
+
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -204,26 +157,6 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
     }
     
     self.title = NSLocalizedStringFromTableInBundle(@"Shipping", @"KitePrintSDK", [OLConstants bundle], @"");
-    NSString *url = [OLKiteABTesting sharedInstance].checkoutProgress1URL;
-    if (url){
-        [[SDWebImageManager sharedManager] downloadImageWithURL:[NSURL URLWithString:url] options:0 progress:NULL completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL){
-            image = [UIImage imageWithCGImage:image.CGImage scale:2 orientation:image.imageOrientation];
-            NSString *bgUrl = [OLKiteABTesting sharedInstance].checkoutProgress1BgURL;
-            if (bgUrl){
-                [[SDWebImageManager sharedManager] downloadImageWithURL:[NSURL URLWithString:bgUrl] options:0 progress:NULL completed:^(UIImage *bgImage, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL){
-                    bgImage = [UIImage imageWithCGImage:bgImage.CGImage scale:2 orientation:image.imageOrientation];
-                    [self setupBannerImage:image withBgImage:bgImage];
-                }];
-            }
-            else{
-                [self setupBannerImage:image withBgImage:nil];
-            }
-           
-        }];
-    }
-    else{
-        [self setupBannerImage:[UIImage imageNamedInKiteBundle:@"checkout_progress_indicator"] withBgImage:[UIImage imageNamedInKiteBundle:@"checkout_progress_indicator_bg"]];
-    }
 
     UITapGestureRecognizer *tgr = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onBackgroundClicked)];
     tgr.cancelsTouchesInView = NO; // allow table cell selection to happen as normal
@@ -249,6 +182,10 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
         self.shippingAddresses = [@[self.printOrder.shippingAddress] mutableCopy];
         self.selectedShippingAddresses = [[NSMutableArray alloc] init];
         [self.selectedShippingAddresses addObject:self.printOrder.shippingAddress];
+    }
+    else if(self.printOrder.shippingAddressesOfJobs.count > 0){
+        self.shippingAddresses = [self.printOrder.shippingAddressesOfJobs mutableCopy];
+        self.selectedShippingAddresses = [self.printOrder.shippingAddressesOfJobs mutableCopy];
     }
     
     if ([self.tableView respondsToSelector:@selector(setCellLayoutMarginsFollowReadableWidth:)]){
@@ -298,6 +235,9 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
 }
 
 - (void)onButtonCancelClicked {
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackShippingScreenHitBackForOrder:self.printOrder];
+#endif
     if ([self.delegate respondsToSelector:@selector(checkoutViewControllerDidCancel:)]) {
         [self.delegate checkoutViewControllerDidCancel:self];
     } else {
@@ -310,11 +250,18 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
     [self.textFieldPhone resignFirstResponder];
 }
 
-- (void)onButtonNextClicked {
+- (void)onButtonDoneClicked{
     if (![self hasUserProvidedValidDetailsToProgressToPayment]) {
         return;
     }
-    
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackShippingScreenHitBackForOrder:self.printOrder];
+#endif
+    [self checkAndSaveAddress];
+    [self dismissViewControllerAnimated:YES completion:NULL];
+}
+
+- (void)checkAndSaveAddress{
     [self.textFieldEmail resignFirstResponder];
     [self.textFieldPhone resignFirstResponder];
     
@@ -343,25 +290,34 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
     [self.printOrder discardDuplicateJobs];
     [self.printOrder duplicateJobsForAddresses:self.selectedShippingAddresses];
     
-    OLPaymentViewController *vc = [[OLPaymentViewController alloc] initWithPrintOrder:self.printOrder];
-    vc.presentedModally = self.presentedModally;
-    vc.delegate = self.delegate;
-    vc.showOtherOptions = self.showOtherOptions;
-    
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     [defaults setObject:email forKey:kKeyEmailAddress];
     [defaults setObject:phone forKey:kKeyPhone];
     [defaults synchronize];
     
     [[NSNotificationCenter defaultCenter] postNotificationName:kOLNotificationUserSuppliedShippingDetails object:self userInfo:@{kOLKeyUserInfoPrintOrder: self.printOrder}];
+}
+
+- (void)onButtonNextClicked {
+    if (![self hasUserProvidedValidDetailsToProgressToPayment]) {
+        return;
+    }
+    [self checkAndSaveAddress];
+    
+    OLPaymentViewController *vc = [[OLPaymentViewController alloc] initWithPrintOrder:self.printOrder];
+    vc.presentedModally = self.presentedModally;
+    vc.delegate = self.delegate;
+    vc.kiteDelegate = self.kiteDelegate;
+    vc.showOtherOptions = self.showOtherOptions;
+    
     [self.navigationController pushViewController:vc animated:YES];
 }
 
 - (void) viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
-    self.automaticallyAdjustsScrollViewInsets = NO;
-    self.tableView.contentInset = UIEdgeInsetsMake(self.edgeInsetTop, 0, 0, 0);
-    [self.tableView scrollRectToVisible:CGRectMake(0, 0, 10, 10) animated:NO];
+//    self.automaticallyAdjustsScrollViewInsets = NO;
+//    self.tableView.contentInset = UIEdgeInsetsMake(self.edgeInsetTop, 0, 0, 0);
+//    [self.tableView scrollRectToVisible:CGRectMake(0, 0, 10, 10) animated:NO];
     [self.tableView reloadData];
     if (self.kiteLabel){
         [self positionKiteLabel];
@@ -643,12 +599,15 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
                 addressPicker.allowsAddressSearch = [OLKiteABTesting sharedInstance].offerAddressSearch;
                 addressPicker.allowsMultipleSelection = [OLKiteABTesting sharedInstance].allowsMultipleRecipients;
                 addressPicker.selected = self.shippingAddresses;
+                addressPicker.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
                 [self presentViewController:addressPicker animated:YES completion:nil];
             }
         } else {
             OLAddressEditViewController *editVc = [[OLAddressEditViewController alloc] init];
             editVc.delegate = self;
-            [self presentViewController:[[UINavigationController alloc] initWithRootViewController:editVc] animated:YES completion:nil];
+            UINavigationController *nvc = [[UINavigationController alloc] initWithRootViewController:editVc];
+            nvc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
+            [self presentViewController:nvc animated:YES completion:nil];
         }
     }
 }

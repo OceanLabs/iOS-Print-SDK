@@ -13,6 +13,8 @@
 #import "OLCountryPickerController.h"
 #import "OLAddressSelectionViewController.h"
 #import "OLAddressPickerController.h"
+#import "OLKiteUtils.h"
+#import "OLKiteViewController.h"
 
 static const NSUInteger kTagTextField = 99;
 
@@ -310,6 +312,7 @@ static const NSUInteger kTagTextField = 99;
         controller.delegate = self;
         OLCountry *selectedCountry = self.address.country;
         controller.selected = @[selectedCountry ? selectedCountry : [OLCountry countryForCode:@"GBR"]];
+        controller.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
         [self presentViewController:controller animated:YES completion:nil];
     }
 }
