@@ -651,11 +651,15 @@
                                             <action selector="onButtonBackToApplePayClicked:" destination="awx-dV-KVo" eventType="touchUpInside" id="jvR-5N-C7F"/>
                                         </connections>
                                     </button>
+                                    <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="wUL-eB-pnZ">
+                                        <rect key="frame" x="547" y="10" width="20" height="20"/>
+                                    </activityIndicatorView>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstItem="Zg1-ja-X5c" firstAttribute="centerY" secondItem="fHD-9P-h6H" secondAttribute="centerY" id="3fy-8Q-e8K"/>
                                     <constraint firstItem="Qkd-Y5-UGT" firstAttribute="leading" secondItem="fHD-9P-h6H" secondAttribute="leading" id="5ar-Er-tdt"/>
+                                    <constraint firstItem="wUL-eB-pnZ" firstAttribute="centerX" secondItem="4OU-Aa-wXY" secondAttribute="centerX" id="6Bj-4Z-Tmn"/>
                                     <constraint firstItem="fHD-9P-h6H" firstAttribute="leading" secondItem="Zg1-ja-X5c" secondAttribute="trailing" constant="8" id="8of-TQ-WOO"/>
                                     <constraint firstItem="Qkd-Y5-UGT" firstAttribute="top" secondItem="fHD-9P-h6H" secondAttribute="top" id="9BS-He-pgu"/>
                                     <constraint firstItem="fHD-9P-h6H" firstAttribute="top" secondItem="70G-qg-h5X" secondAttribute="bottom" constant="7" id="9GA-tQ-eKl"/>
@@ -669,6 +673,7 @@
                                     <constraint firstItem="Zg1-ja-X5c" firstAttribute="leading" secondItem="M4Z-g2-rfc" secondAttribute="leading" constant="8" id="Ne1-OY-CYr"/>
                                     <constraint firstItem="MDv-31-HTi" firstAttribute="top" secondItem="fHD-9P-h6H" secondAttribute="bottom" constant="5" id="OZE-Es-BSV"/>
                                     <constraint firstAttribute="trailing" secondItem="fHD-9P-h6H" secondAttribute="trailing" constant="8" id="SyH-v1-SD5"/>
+                                    <constraint firstItem="wUL-eB-pnZ" firstAttribute="centerY" secondItem="4OU-Aa-wXY" secondAttribute="centerY" id="Tsc-BO-ygM"/>
                                     <constraint firstItem="fHD-9P-h6H" firstAttribute="leading" secondItem="M4Z-g2-rfc" secondAttribute="leading" priority="750" constant="8" id="Tyx-rY-Fr0"/>
                                     <constraint firstAttribute="trailing" secondItem="4OU-Aa-wXY" secondAttribute="trailing" constant="8" id="X6e-I5-3gT"/>
                                     <constraint firstItem="8uC-bu-fzK" firstAttribute="height" secondItem="fHD-9P-h6H" secondAttribute="height" id="cus-rN-2la"/>
@@ -1025,6 +1030,7 @@
                         <outlet property="shippingDetailsCon" destination="ILG-hb-0VZ" id="SJR-bT-5UX"/>
                         <outlet property="shippingTypeLabel" destination="1nJ-Y9-R3Z" id="sfX-G5-26n"/>
                         <outlet property="tableView" destination="4n1-p7-6FT" id="JCo-qi-lti"/>
+                        <outlet property="totalCostActivityIndicator" destination="wUL-eB-pnZ" id="xdO-KT-tkt"/>
                         <outlet property="totalCostLabel" destination="4OU-Aa-wXY" id="4gA-YV-jWg"/>
                     </connections>
                 </viewController>

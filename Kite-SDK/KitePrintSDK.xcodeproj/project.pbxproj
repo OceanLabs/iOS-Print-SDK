@@ -1126,13 +1126,13 @@
 		2E4CAF121BC2940A0089FA26 /* Shipping-Payment */ = {
 			isa = PBXGroup;
 			children = (
+				CDA8BF5218D70D0F00D835BB /* OLPaymentViewController.h */,
+				CDA8BF5018D70D0F00D835BB /* OLPaymentViewController.m */,
 				CDA8BF5518D70D0F00D835BB /* OLCheckoutViewController.h */,
 				CDA8BF5118D70D0F00D835BB /* OLCheckoutViewController.m */,
 				2E5F80301B04A22500095203 /* OLIntegratedCheckoutViewController.h */,
 				2E5F80311B04A22500095203 /* OLIntegratedCheckoutViewController.m */,
 				2E5E0C141993840600C34D5C /* OLCheckoutDelegate.h */,
-				CDA8BF5218D70D0F00D835BB /* OLPaymentViewController.h */,
-				CDA8BF5018D70D0F00D835BB /* OLPaymentViewController.m */,
 				CDA8BF5318D70D0F00D835BB /* OLReceiptViewController.h */,
 				CDA8BF5418D70D0F00D835BB /* OLReceiptViewController.m */,
 				3D1779581A1E1D6800BE3E58 /* OLCreditCardCaptureViewController.h */,

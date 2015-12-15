@@ -167,6 +167,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 @property (weak, nonatomic) IBOutlet UIButton *backToApplePayButton;
 @property (weak, nonatomic) IBOutlet UIButton *payWithApplePayButton;
 @property (weak, nonatomic) IBOutlet UIButton *checkoutButton;
+@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *totalCostActivityIndicator;
 @property (assign, nonatomic) CGFloat keyboardAnimationPercent;
 
 
@@ -243,6 +244,9 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     }
     
     [self sanitizeBasket];
+    
+    self.shippingCostLabel.text = @"";
+    self.promoCodeCostLabel.text = @"";
     
     NSString *applePayAvailableStr = @"N/A";
 #ifdef OL_KITE_OFFER_APPLE_PAY
@@ -423,7 +427,6 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 
 - (void)keyboardWillHide:(NSNotification *)notification {
     if ([self.promoCodeTextField isFirstResponder]){
-        [self onButtonApplyPromoCodeClicked:nil];
         
         NSDictionary *userInfo = [notification userInfo];
         NSInteger animationOptions = [[userInfo objectForKey:UIKeyboardAnimationCurveUserInfoKey] integerValue];
@@ -434,7 +437,11 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             [UIView addKeyframeWithRelativeStartTime:0 relativeDuration:time *(1 - self.keyboardAnimationPercent) animations:^{
                 [self.view layoutIfNeeded];
             }];
-        }completion:NULL];
+        }completion:^(BOOL finished){
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.05 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+                [self onButtonApplyPromoCodeClicked:nil];
+            });
+        }];
     }
 }
 
@@ -502,14 +509,14 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         return;
     }
     
-    self.totalCostLabel.text = NSLocalizedString(@"Loading...", @"");
-    self.shippingCostLabel.text = nil;
-    self.promoCodeCostLabel.text = nil;
-    
+    self.totalCostLabel.hidden = YES;
+    [self.totalCostActivityIndicator startAnimating];
     
     [self.printOrder costWithCompletionHandler:^(OLPrintOrderCost *cost, NSError *error) {
         //Small chance that the request started before we emptied the basket.
         if (self.printOrder.jobs.count == 0){
+            self.totalCostLabel.hidden = NO;
+            [self.totalCostActivityIndicator stopAnimating];
             self.totalCostLabel.text = [[NSDecimalNumber decimalNumberWithString:@"0.00"] formatCostForCurrencyCode:[[OLCountry countryForCurrentLocale] currencyCode]];
             self.shippingCostLabel.text = [[NSDecimalNumber decimalNumberWithString:@"0.00"] formatCostForCurrencyCode:[[OLCountry countryForCurrentLocale] currencyCode]];
             self.promoCodeCostLabel.text = @"";
@@ -547,7 +554,16 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         
         [self.tableView reloadData];
         
+        [UIView animateWithDuration:0.1 animations:^{
+            self.shippingCostLabel.alpha = 0;
+            self.totalCostLabel.alpha = 0;
+            self.totalCostActivityIndicator.alpha = 0;
+        } completion:^(BOOL finished){
+        
         self.totalCostLabel.text = [[cost totalCostInCurrency:self.printOrder.currencyCode] formatCostForCurrencyCode:self.printOrder.currencyCode];
+        self.totalCostLabel.hidden = NO;
+        [self.totalCostActivityIndicator stopAnimating];
+            self.totalCostActivityIndicator.alpha = 1;
         
         NSDecimalNumber *shippingCost = [cost shippingCostInCurrency:self.printOrder.currencyCode];
         if ([shippingCost isEqualToNumber:@0]){
@@ -564,6 +580,11 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         else{
             self.promoCodeCostLabel.text = [NSString stringWithFormat:@"-%@", [promoCost formatCostForCurrencyCode:self.printOrder.currencyCode]];
         }
+            [UIView animateWithDuration:0.1 animations:^{
+                self.shippingCostLabel.alpha = 1;
+                self.totalCostLabel.alpha = 1;
+            }];
+        }];
         [self validateTemplatePricing];
     }];
 }
@@ -867,6 +888,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
                 }
             } else {
                 if (self.printOrder.promoCode) {
+                    sleep(1);
                     [SVProgressHUD showSuccessWithStatus:nil];
                 } else {
                     [SVProgressHUD dismiss];
@@ -1437,12 +1459,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         quantityLabel.text = [NSString stringWithFormat:@"%ld", (long)[job extraCopies]+1];
         productNameLabel.text = product.productTemplate.name;
         
-        if ([self.printOrder hasCachedCost]){
-            priceLabel.text = [[[product unitCostDecimalNumber] decimalNumberByMultiplyingBy:[NSDecimalNumber decimalNumberWithString:[NSString stringWithFormat:@"%ld", (long)[job extraCopies]+1]]]formatCostForCurrencyCode:self.printOrder.currencyCode];
-        }
-        else{
-            priceLabel.text = nil;
-        }
+        priceLabel.text = [[[product unitCostDecimalNumber] decimalNumberByMultiplyingBy:[NSDecimalNumber decimalNumberWithString:[NSString stringWithFormat:@"%ld", (long)[job extraCopies]+1]]]formatCostForCurrencyCode:self.printOrder.currencyCode];
         
         if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8){
             editButton.hidden = YES;
@@ -1475,8 +1492,6 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
     [textField resignFirstResponder];
-    self.printOrder.promoCode = textField.text;
-    [self updateViewsBasedOnCostUpdate];
     return NO;
 }
 
