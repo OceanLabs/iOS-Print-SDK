@@ -525,8 +525,12 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         return;
     }
     
-    self.totalCostLabel.hidden = YES;
-    [self.totalCostActivityIndicator startAnimating];
+    BOOL shouldAnimate = NO;
+    if (!self.printOrder.hasCachedCost){
+        self.totalCostLabel.hidden = YES;
+        [self.totalCostActivityIndicator startAnimating];
+        shouldAnimate = YES;
+    }
     
     [self.printOrder costWithCompletionHandler:^(OLPrintOrderCost *cost, NSError *error) {
         //Small chance that the request started before we emptied the basket.
@@ -587,32 +591,34 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         
         [self.tableView reloadData];
         
-        [UIView animateWithDuration:0.1 animations:^{
-            self.shippingCostLabel.alpha = 0;
-            self.totalCostLabel.alpha = 0;
-            self.totalCostActivityIndicator.alpha = 0;
+        [UIView animateWithDuration:shouldAnimate ? 0.1 : 0 animations:^{
+            if (shouldAnimate){
+                self.shippingCostLabel.alpha = 0;
+                self.totalCostLabel.alpha = 0;
+                self.totalCostActivityIndicator.alpha = 0;
+            }
         } completion:^(BOOL finished){
-        
-        self.totalCostLabel.text = [[cost totalCostInCurrency:self.printOrder.currencyCode] formatCostForCurrencyCode:self.printOrder.currencyCode];
-        self.totalCostLabel.hidden = NO;
-        [self.totalCostActivityIndicator stopAnimating];
+            
+            self.totalCostLabel.text = [[cost totalCostInCurrency:self.printOrder.currencyCode] formatCostForCurrencyCode:self.printOrder.currencyCode];
+            self.totalCostLabel.hidden = NO;
+            [self.totalCostActivityIndicator stopAnimating];
             self.totalCostActivityIndicator.alpha = 1;
-        
-        NSDecimalNumber *shippingCost = [cost shippingCostInCurrency:self.printOrder.currencyCode];
-        if ([shippingCost isEqualToNumber:@0]){
-            self.shippingCostLabel.text = NSLocalizedString(@"FREE", @"");
-        }
-        else{
-            self.shippingCostLabel.text = [shippingCost formatCostForCurrencyCode:self.printOrder.currencyCode];
-        }
-        
-        NSDecimalNumber *promoCost = [cost promoCodeDiscountInCurrency:self.printOrder.currencyCode];
-        if ([promoCost isEqualToNumber:@0]){
-            self.promoCodeCostLabel.text = nil;
-        }
-        else{
-            self.promoCodeCostLabel.text = [NSString stringWithFormat:@"-%@", [promoCost formatCostForCurrencyCode:self.printOrder.currencyCode]];
-        }
+            
+            NSDecimalNumber *shippingCost = [cost shippingCostInCurrency:self.printOrder.currencyCode];
+            if ([shippingCost isEqualToNumber:@0]){
+                self.shippingCostLabel.text = NSLocalizedString(@"FREE", @"");
+            }
+            else{
+                self.shippingCostLabel.text = [shippingCost formatCostForCurrencyCode:self.printOrder.currencyCode];
+            }
+            
+            NSDecimalNumber *promoCost = [cost promoCodeDiscountInCurrency:self.printOrder.currencyCode];
+            if ([promoCost isEqualToNumber:@0]){
+                self.promoCodeCostLabel.text = nil;
+            }
+            else{
+                self.promoCodeCostLabel.text = [NSString stringWithFormat:@"-%@", [promoCost formatCostForCurrencyCode:self.printOrder.currencyCode]];
+            }
             [UIView animateWithDuration:0.1 animations:^{
                 self.shippingCostLabel.alpha = 1;
                 self.totalCostLabel.alpha = 1;
