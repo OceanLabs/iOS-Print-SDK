@@ -91,7 +91,7 @@ static __weak id<OLKiteDelegate> kiteDelegate;
     NSDictionary *info = [[NSBundle mainBundle] infoDictionary];
     NSString *bundleName = nil;
     if ([info objectForKey:@"CFBundleDisplayName"] == nil) {
-         bundleName = [[[NSBundle mainBundle] infoDictionary] objectForKey:(NSString *) kCFBundleNameKey];
+        bundleName = [[[NSBundle mainBundle] infoDictionary] objectForKey:(NSString *) kCFBundleNameKey];
     } else {
         bundleName = [NSString stringWithFormat:@"%@", [info objectForKey:@"CFBundleDisplayName"]];
     }
@@ -249,7 +249,7 @@ static __weak id<OLKiteDelegate> kiteDelegate;
     [dict[@"properties"] setObject:productName forKey:@"Product Name"];
     [OLAnalytics sendToMixPanelWithDictionary:dict];
     
-    [OLAnalytics reportAnalyticsEventToDelegate:eventName job:nil printOrder:nil extraInfo:nil];
+    [OLAnalytics reportAnalyticsEventToDelegate:eventName job:nil printOrder:nil extraInfo:@{kOLAnalyticsProductName : productName}];
 }
 
 + (void)trackContinueShoppingButtonPressed:(OLPrintOrder *)printOrder{
@@ -515,6 +515,10 @@ static __weak id<OLKiteDelegate> kiteDelegate;
 
 + (void)trackPaymentScreenHitBackToApplePayForOrder:(OLPrintOrder *)printOrder{
     [OLAnalytics reportAnalyticsEventToDelegate:@"Payment Screen Hit Back to Apple Pay" job:nil printOrder:printOrder extraInfo:nil];
+}
+
++ (void)trackShippingScreenHitBackForOrder:(OLPrintOrder *)printOrder{
+    [OLAnalytics reportAnalyticsEventToDelegate:@"Shipping Screen Hit Back" job:nil printOrder:printOrder extraInfo:nil];
 }
 
 + (void)trackReviewScreenDeletedPhotoForProductName:(NSString *)productName{

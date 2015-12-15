@@ -278,6 +278,9 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
         //Prefetch themed-SDK images
         [[OLKiteABTesting sharedInstance] prefetchRemoteImages];
     }];
+    
+    [OLAnalytics setKiteDelegate:self.delegate];
+
     [self.operationQueue addOperation:self.transitionOperation];
 }
 

@@ -63,6 +63,7 @@ static NSString *const kOLAnalyticsPromoCode = @"Promo Code";
 + (void)trackFeedbackButtonTapped;
 + (void)trackFeedbackScreenFinishedWithResult:(NSInteger)result;
 + (void)trackContinueShoppingButtonPressed:(OLPrintOrder *)printOrder;
++ (void)trackShippingScreenHitBackForOrder:(OLPrintOrder *)printOrder;
 + (void)trackShippingScreenViewedForOrder:(OLPrintOrder *)printOrder variant:(NSString *)variant showPhoneEntryField:(BOOL)showPhoneEntryField;
 + (void)trackPaymentScreenViewedForOrder:(OLPrintOrder *)printOrder applePayIsAvailable:(NSString *)applePayIsAvailable;
 + (void)trackPaymentScreenHitBackForOrder:(OLPrintOrder *)printOrder applePayIsAvailable:(NSString *)applePayIsAvailable;
