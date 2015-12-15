@@ -1328,6 +1328,9 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 
 - (void)paymentAuthorizationViewControllerDidFinish:(PKPaymentAuthorizationViewController *)controller {
     [self dismissViewControllerAnimated:YES completion:^{
+        if (![[NSOperationQueue mainQueue].operations containsObject:self.transitionBlockOperation] && !self.transitionBlockOperation.finished){
+            [[NSOperationQueue mainQueue] addOperation:self.transitionBlockOperation];
+        }
         [self.printOrder costWithCompletionHandler:^(id cost, NSError *error){
             if (!self.applePayDismissOperation.finished){
                 [[NSOperationQueue mainQueue] addOperation:self.applePayDismissOperation];
