@@ -834,10 +834,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     OLCustomNavigationController *navController = [[OLCustomNavigationController alloc] init];
     
     navController.viewControllers = vcs;
-    UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Cancel", "")
-                                                                   style:UIBarButtonItemStyleDone target:self
-                                                                  action:@selector(dismissPresentedViewController)];
-    
+    UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(dismissPresentedViewController)];
     
     ((UIViewController *)[vcs firstObject]).navigationItem.leftBarButtonItem = doneButton;
     
@@ -853,9 +850,10 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     OLOrderReviewViewController *editingVc = nvc.viewControllers.lastObject;
     if ([editingVc respondsToSelector:@selector(saveJobWithCompletionHandler:)]){
         [editingVc saveJobWithCompletionHandler:^{
+            [self.tableView reloadData];
             [self dismissPresentedViewController];
 #ifndef OL_NO_ANALYTICS
-            [OLAnalytics trackPaymentScreenHitEditItem:editingVc.editingPrintJob inOrder:self.printOrder applePayIsAvailable:[self isApplePayAvailable] ? @"Yes" : @"No"];
+            [OLAnalytics trackPaymentScreenHitEditItemDone:editingVc.editingPrintJob inOrder:self.printOrder applePayIsAvailable:[self isApplePayAvailable] ? @"Yes" : @"No"];
 #endif
         }];
         
@@ -1583,12 +1581,6 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         product.selectedOptions[option] = printJob.options[option];
     }
     
-    OLProductOverviewViewController *overviewVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLProductOverviewViewController"];
-    overviewVc.product = product;
-    
-    UIViewController* orvc = [self.storyboard instantiateViewControllerWithIdentifier:[OLKiteUtils reviewViewControllerIdentifierForProduct:product photoSelectionScreen:NO]];
-    [orvc safePerformSelector:@selector(setProduct:) withObject:product];
-    
     NSMutableArray *userSelectedPhotos = [[NSMutableArray alloc] init];
     for (OLAsset *asset in [printJob assetsForUploading]){
         OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
@@ -1597,7 +1589,6 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         if ([asset.dataSource isKindOfClass:[OLPrintPhoto class]]){
             printPhoto = (OLPrintPhoto *)asset.dataSource;
         }
-        
         [userSelectedPhotos addObject:printPhoto];
     }
     
@@ -1605,35 +1596,18 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         [OLKiteUtils reverseRowsOfPhotosInArray:userSelectedPhotos forProduct:product];
     }
     
-    [orvc safePerformSelector:@selector(setUserSelectedPhotos:) withObject:userSelectedPhotos];
-    [overviewVc safePerformSelector:@selector(setUserSelectedPhotos:) withObject:userSelectedPhotos];
-    
-    [orvc safePerformSelector:@selector(setEditingPrintJob:) withObject:printJob];
-    
     if ([self shouldShowAddMorePhotos] && product.productTemplate.templateUI != kOLTemplateUICase && product.productTemplate.templateUI != kOLTemplateUIPhotobook && product.productTemplate.templateUI != kOLTemplateUIPostcard){
         OLPhotoSelectionViewController *photoVc = [self.storyboard instantiateViewControllerWithIdentifier:@"PhotoSelectionViewController"];
         photoVc.product = product;
         photoVc.userSelectedPhotos = userSelectedPhotos;
-        return [self navViewControllerWithControllers:@[overviewVc, photoVc, orvc]];
-    }
-    else if (product.productTemplate.templateUI == kOLTemplateUIPhotobook){
-        OLPhotobookViewController *photobookVc = [self.storyboard instantiateViewControllerWithIdentifier:@"PhotobookViewController"];
-        photobookVc.product = product;
-        photobookVc.photobookPhotos = [orvc safePerformSelectorWithReturn:@selector(photobookPhotos) withObject:nil];
-        photobookVc.userSelectedPhotos = userSelectedPhotos;
-        
-        if ([printJob isKindOfClass:[OLPhotobookPrintJob class]] && [(OLPhotobookPrintJob *)printJob frontCover]){
-            OLPrintPhoto *coverPhoto = [[OLPrintPhoto alloc] init];
-            coverPhoto.asset = [(OLPhotobookPrintJob *)printJob frontCover];
-            
-            photobookVc.coverPhoto = coverPhoto;
-            [orvc safePerformSelector:@selector(setCoverPhoto:) withObject:coverPhoto];
-        }
-        
-        return [self navViewControllerWithControllers:@[overviewVc, orvc, photobookVc]];
+        return [self navViewControllerWithControllers:@[photoVc]];
     }
     else{
-        return [self navViewControllerWithControllers:@[overviewVc, orvc]];
+        UIViewController* orvc = [self.storyboard instantiateViewControllerWithIdentifier:[OLKiteUtils reviewViewControllerIdentifierForProduct:product photoSelectionScreen:NO]];
+        [orvc safePerformSelector:@selector(setProduct:) withObject:product];
+        [orvc safePerformSelector:@selector(setUserSelectedPhotos:) withObject:userSelectedPhotos];
+        [orvc safePerformSelector:@selector(setEditingPrintJob:) withObject:printJob];
+        return [self navViewControllerWithControllers:@[orvc]];
     }
 }
 
