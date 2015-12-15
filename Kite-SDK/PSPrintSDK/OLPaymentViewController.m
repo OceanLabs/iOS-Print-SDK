@@ -167,6 +167,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 @property (weak, nonatomic) IBOutlet UIButton *backToApplePayButton;
 @property (weak, nonatomic) IBOutlet UIButton *payWithApplePayButton;
 @property (weak, nonatomic) IBOutlet UIButton *checkoutButton;
+@property (weak, nonatomic) IBOutlet UIButton *deliveryDetailsButton;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *totalCostActivityIndicator;
 @property (assign, nonatomic) CGFloat keyboardAnimationPercent;
 
@@ -455,6 +456,21 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 #ifdef OL_KITE_OFFER_APPLE_PAY
     [Stripe setDefaultPublishableKey:[OLKitePrintSDK stripePublishableKey]];
 #endif
+
+    NSString *deliveryDetailsTitle = NSLocalizedString(@"Delivery Details", @"");
+    NSMutableSet *addresses = [[NSMutableSet alloc] init];
+    for (id<OLPrintJob> job in self.printOrder.jobs){
+        if ([job address]){
+            [addresses addObject:[job address]];
+        }
+    }
+    if (addresses.count > 1){
+        deliveryDetailsTitle = [NSString stringWithFormat:NSLocalizedString(@"%lu Delivery Addresses", @""), (unsigned long)addresses.count];
+    }
+    else if ([self.printOrder.shippingAddress isValidAddress]){
+        deliveryDetailsTitle = [self.printOrder.shippingAddress descriptionWithoutRecipient];
+    }
+    [self.deliveryDetailsButton setTitle:deliveryDetailsTitle forState:UIControlStateNormal];
     
     if ([self.printOrder hasCachedCost]) {
         [self.tableView reloadData];
@@ -523,8 +539,25 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             return;
         }
         
-        // impossible for an error to exist as we checked for cachedcost path above...
-        NSAssert(error == nil, @"Print order did not actually have a cached cost...");
+        if (error){
+            [self.totalCostActivityIndicator stopAnimating];
+            if ([UIAlertController class]){
+                UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Oops", @"") message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
+                [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"") style:UIAlertActionStyleCancel handler:^(UIAlertAction *action){
+                    
+                }]];
+                [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Retry", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
+                    [self updateViewsBasedOnCostUpdate];
+                }]];
+                [self presentViewController:ac animated:YES completion:NULL];
+            }
+            else{
+                UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Oops", @"") message:error.localizedDescription delegate:nil cancelButtonTitle:NSLocalizedString(@"Cancel", @"") otherButtonTitles:nil];
+                [av show];
+            }
+            return;
+        }
+        
         NSComparisonResult result = [[cost totalCostInCurrency:self.printOrder.currencyCode] compare:[NSDecimalNumber zero]];
         if (result == NSOrderedAscending || result == NSOrderedSame) {
 #ifdef OL_KITE_OFFER_PAYPAL
@@ -947,6 +980,10 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     }
     
     [self.printOrder costWithCompletionHandler:^(OLPrintOrderCost *cost, NSError *error) {
+        if (!cost){
+            [self updateViewsBasedOnCostUpdate];
+            return;
+        }
         NSComparisonResult result = [[cost totalCostInCurrency:self.printOrder.currencyCode] compare:[NSDecimalNumber zero]];
         if (result == NSOrderedAscending || result == NSOrderedSame) {
             // The user must have a promo code which reduces this order cost to nothing, lucky user :)
@@ -1103,6 +1140,10 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     }
     
     [self.printOrder costWithCompletionHandler:^(OLPrintOrderCost *cost, NSError *error) {
+        if (!cost){
+            [self updateViewsBasedOnCostUpdate];
+            return;
+        }
         // Create a PayPalPayment
         PayPalPayment *payment = [[PayPalPayment alloc] init];
         payment.amount = [cost totalCostInCurrency:self.printOrder.currencyCode];
@@ -1132,6 +1173,10 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     PKPaymentRequest *paymentRequest = [Stripe paymentRequestWithMerchantIdentifier:[OLKitePrintSDK appleMerchantID]];
     paymentRequest.currencyCode = self.printOrder.currencyCode;
     [self.printOrder costWithCompletionHandler:^(OLPrintOrderCost *cost, NSError *error){
+        if (!cost){
+            [self updateViewsBasedOnCostUpdate];
+            return;
+        }
         NSMutableArray *lineItems = [[NSMutableArray alloc] init];
         for (OLPaymentLineItem *item in cost.lineItems){
             [lineItems addObject:[PKPaymentSummaryItem summaryItemWithLabel:item.description  amount:[item costInCurrency:self.printOrder.currencyCode]]];
@@ -1501,13 +1546,15 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-#ifndef OL_NO_ANALYTICS
-        [OLAnalytics trackPaymentScreenDidDeleteItem:self.printOrder.jobs[indexPath.row] inOrder:self.printOrder applePayIsAvailable:[self isApplePayAvailable] ? @"Yes" : @"No"];
-#endif
-        [self.printOrder removePrintJob:self.printOrder.jobs[indexPath.row]];
+        id<OLPrintJob> job = self.printOrder.jobs[indexPath.row];
+        [self.printOrder removePrintJob:job];
         [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationAutomatic];
         [self.printOrder saveOrder];
         [self updateViewsBasedOnCostUpdate];
+        
+#ifndef OL_NO_ANALYTICS
+        [OLAnalytics trackPaymentScreenDidDeleteItem:job inOrder:self.printOrder applePayIsAvailable:[self isApplePayAvailable] ? @"Yes" : @"No"];
+#endif
     }
 }
 

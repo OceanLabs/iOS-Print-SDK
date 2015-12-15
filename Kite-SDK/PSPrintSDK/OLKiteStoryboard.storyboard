@@ -706,6 +706,7 @@
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <gestureRecognizers/>
                                 <constraints>
+                                    <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="zBV-LU-9Ss" secondAttribute="trailing" constant="10" id="0Gd-Oi-bP0"/>
                                     <constraint firstItem="zBV-LU-9Ss" firstAttribute="leading" secondItem="IxK-MF-m7k" secondAttribute="trailing" constant="10" id="8RU-FX-VJD"/>
                                     <constraint firstItem="zBV-LU-9Ss" firstAttribute="centerY" secondItem="IxK-MF-m7k" secondAttribute="centerY" id="CaC-7O-G3I"/>
                                     <constraint firstAttribute="height" constant="35" id="TEZ-Xd-h92"/>
@@ -1014,6 +1015,7 @@
                     <connections>
                         <outlet property="backToApplePayButton" destination="70G-qg-h5X" id="NLt-oJ-Ycb"/>
                         <outlet property="checkoutButton" destination="Qkd-Y5-UGT" id="OGg-n8-wXt"/>
+                        <outlet property="deliveryDetailsButton" destination="zBV-LU-9Ss" id="w8o-TK-4bG"/>
                         <outlet property="payWithApplePayButton" destination="8uC-bu-fzK" id="UNI-KD-4Fg"/>
                         <outlet property="paymentButton1" destination="Zg1-ja-X5c" id="6gc-6F-ZjA"/>
                         <outlet property="paymentButton2" destination="fHD-9P-h6H" id="Xt7-SV-J1x"/>
