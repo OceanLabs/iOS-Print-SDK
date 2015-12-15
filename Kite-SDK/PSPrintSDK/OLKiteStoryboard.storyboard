@@ -696,7 +696,7 @@
                                             <action selector="onShippingDetailsGestureRecognized:" destination="awx-dV-KVo" eventType="touchUpInside" id="af6-g2-djp"/>
                                         </connections>
                                     </button>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="envelope" translatesAutoresizingMaskIntoConstraints="NO" id="IxK-MF-m7k">
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" image="envelope" translatesAutoresizingMaskIntoConstraints="NO" id="IxK-MF-m7k">
                                         <rect key="frame" x="15" y="13" width="14" height="9"/>
                                     </imageView>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="grey-chevron" translatesAutoresizingMaskIntoConstraints="NO" id="JqV-8r-fec">
@@ -706,7 +706,7 @@
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <gestureRecognizers/>
                                 <constraints>
-                                    <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="zBV-LU-9Ss" secondAttribute="trailing" constant="10" id="0Gd-Oi-bP0"/>
+                                    <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="zBV-LU-9Ss" secondAttribute="trailing" constant="20" id="0Gd-Oi-bP0"/>
                                     <constraint firstItem="zBV-LU-9Ss" firstAttribute="leading" secondItem="IxK-MF-m7k" secondAttribute="trailing" constant="10" id="8RU-FX-VJD"/>
                                     <constraint firstItem="zBV-LU-9Ss" firstAttribute="centerY" secondItem="IxK-MF-m7k" secondAttribute="centerY" id="CaC-7O-G3I"/>
                                     <constraint firstAttribute="height" constant="35" id="TEZ-Xd-h92"/>
@@ -1749,20 +1749,20 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="poster_shadow" translatesAutoresizingMaskIntoConstraints="NO" id="aRb-s3-73M">
-                                <rect key="frame" x="1" y="136.5" width="599" height="319.5"/>
+                                <rect key="frame" x="132.5" y="64" width="336" height="464.5"/>
                             </imageView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nF0-F4-GDd" userLabel="Container View">
-                                <rect key="frame" x="21" y="156.5" width="559" height="279.5"/>
+                                <rect key="frame" x="152.5" y="84" width="296" height="424.5"/>
                                 <subviews>
                                     <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="6Lh-tc-HKt">
-                                        <rect key="frame" x="270" y="129.5" width="20" height="20"/>
+                                        <rect key="frame" x="138.5" y="202" width="20" height="20"/>
                                     </activityIndicatorView>
                                     <view tag="1" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="33O-65-cUP" customClass="OLRemoteImageCropper">
-                                        <rect key="frame" x="0.0" y="0.0" width="559" height="279.5"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="296" height="424.5"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     </view>
                                     <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="3eC-J9-SCj">
-                                        <rect key="frame" x="269.5" y="130" width="20" height="20"/>
+                                        <rect key="frame" x="138" y="202.5" width="20" height="20"/>
                                         <color key="color" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                     </activityIndicatorView>
                                 </subviews>
@@ -1771,7 +1771,7 @@
                                     <constraint firstItem="33O-65-cUP" firstAttribute="top" secondItem="nF0-F4-GDd" secondAttribute="top" id="Kmr-Pi-DIN"/>
                                     <constraint firstItem="6Lh-tc-HKt" firstAttribute="centerX" secondItem="33O-65-cUP" secondAttribute="centerX" id="QGI-y9-RDg"/>
                                     <constraint firstAttribute="bottom" secondItem="33O-65-cUP" secondAttribute="bottom" id="RKT-ZU-vV9"/>
-                                    <constraint firstAttribute="width" secondItem="nF0-F4-GDd" secondAttribute="height" multiplier="2:1" id="aPH-cB-xjf"/>
+                                    <constraint firstAttribute="width" secondItem="nF0-F4-GDd" secondAttribute="height" multiplier="140:201" id="aPH-cB-xjf"/>
                                     <constraint firstAttribute="trailing" secondItem="33O-65-cUP" secondAttribute="trailing" id="cva-WG-Dzs"/>
                                     <constraint firstAttribute="centerX" secondItem="3eC-J9-SCj" secondAttribute="centerX" id="ot1-Sw-Nfg"/>
                                     <constraint firstItem="6Lh-tc-HKt" firstAttribute="centerY" secondItem="33O-65-cUP" secondAttribute="centerY" id="pPs-Ku-fV9"/>
