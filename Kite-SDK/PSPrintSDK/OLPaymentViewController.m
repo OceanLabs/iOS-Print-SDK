@@ -302,6 +302,12 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         self.checkoutButton.hidden = YES;
         self.shippingDetailsCon.constant = 2;
         self.shippingDetailsBox.alpha = 1;
+        
+#ifndef OL_KITE_OFFER_PAYPAL
+        self.paymentButton1.hidden = YES;
+        [self.paymentButton2 setTitle:NSLocalizedStringFromTableInBundle(@"Pay with Credit Card", @"KitePrintSDK", [OLConstants bundle], @"") forState:UIControlStateNormal];
+#endif
+        
     }
     
     [self updateViewsBasedOnCostUpdate];
