@@ -20,6 +20,8 @@ static NSString *const kKeyMessage = @"co.oceanlabs.pssdk.kKeyMessage";
 static NSString *const kKeyAddress = @"co.oceanlabs.pssdk.kKeyAddress";
 static NSString *const kKeyProductTemplateId = @"co.oceanlabs.pssdk.kKeyProductTemplateId";
 static NSString *const kKeyPrintJobOptions = @"co.oceanlabs.pssdk.kKeyPrintJobOptions";
+static NSString *const kKeyUUID = @"co.oceanlabs.pssdk.kKeyUUID";
+static NSString *const kKeyExtraCopies = @"co.oceanlabs.pssdk.kKeyExtraCopies";
 
 static id stringOrEmptyString(NSString *str) {
     return str ? str : @"";
@@ -158,6 +160,7 @@ static id stringOrEmptyString(NSString *str) {
     if (self.insideLeftImageAsset) result *= [self.insideLeftImageAsset hash];
     if (self.message && [self.message hash] > 0) result *= [self.message hash];
     if (self.address) result *= [self.address hash];
+    if (self.extraCopies) result *= self.extraCopies+1;
     result = 18 * result + [self.options hash];
     return result;
 }
@@ -194,6 +197,8 @@ static id stringOrEmptyString(NSString *str) {
     [aCoder encodeObject:self.address forKey:kKeyAddress];
     [aCoder encodeObject:self.templateId forKey:kKeyProductTemplateId];
     [aCoder encodeObject:self.options forKey:kKeyPrintJobOptions];
+    [aCoder encodeInteger:self.extraCopies forKey:kKeyExtraCopies];
+    [aCoder encodeObject:self.uuid forKey:kKeyUUID];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
@@ -206,6 +211,8 @@ static id stringOrEmptyString(NSString *str) {
         self.address = [aDecoder decodeObjectForKey:kKeyAddress];
         self.templateId = [aDecoder decodeObjectForKey:kKeyProductTemplateId];
         self.options = [aDecoder decodeObjectForKey:kKeyPrintJobOptions];
+        self.extraCopies = [aDecoder decodeIntegerForKey:kKeyExtraCopies];
+        self.uuid = [aDecoder decodeObjectForKey:kKeyUUID];
     }
     
     return self;
