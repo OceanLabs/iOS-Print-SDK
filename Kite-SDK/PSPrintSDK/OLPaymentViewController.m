@@ -1610,6 +1610,15 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     }
     else{
         UIViewController* orvc = [self.storyboard instantiateViewControllerWithIdentifier:[OLKiteUtils reviewViewControllerIdentifierForProduct:product photoSelectionScreen:NO]];
+        if ([printJob isKindOfClass:[OLPhotobookPrintJob class]] && [(OLPhotobookPrintJob *)printJob frontCover]){
+            OLPrintPhoto *coverPhoto = [[OLPrintPhoto alloc] init];
+            coverPhoto.asset = [(OLPhotobookPrintJob *)printJob frontCover];
+            [orvc safePerformSelector:@selector(setCoverPhoto:) withObject:coverPhoto];
+        }
+        else{
+            [orvc safePerformSelector:@selector(setCoverPhoto:) withObject:[NSNull null]];
+        }
+        
         [orvc safePerformSelector:@selector(setProduct:) withObject:product];
         [orvc safePerformSelector:@selector(setUserSelectedPhotos:) withObject:userSelectedPhotos];
         [orvc safePerformSelector:@selector(setEditingPrintJob:) withObject:printJob];

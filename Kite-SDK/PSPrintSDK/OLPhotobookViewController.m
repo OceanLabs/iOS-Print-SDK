@@ -653,9 +653,13 @@ UINavigationControllerDelegate
 - (void)saveJobWithCompletionHandler:(void(^)())handler{
     NSInteger i = 0;
     NSMutableArray *bookPhotos = [[NSMutableArray alloc] init];
+    NSMutableArray *photobookPhotosClean = [[NSMutableArray alloc] init];
+    [photobookPhotosClean addObjectsFromArray:self.photobookPhotos];
+    [photobookPhotosClean removeObjectIdenticalTo:[NSNull null]];
+    
     for (NSInteger object = 0; object < self.photobookPhotos.count; object++){
         if (self.photobookPhotos[object] == [NSNull null]){
-            [bookPhotos addObject:self.userSelectedPhotos[i % self.userSelectedPhotos.count]];
+            [bookPhotos addObject:photobookPhotosClean[i % photobookPhotosClean.count]];
             i++;
         }
         else{

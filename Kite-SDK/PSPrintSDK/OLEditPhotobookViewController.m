@@ -224,6 +224,9 @@ UINavigationControllerDelegate>
             self.coverPhoto = self.userSelectedPhotos.firstObject;
             start++;
         }
+        else if (self.coverPhoto == (id)[NSNull null]){
+            self.coverPhoto = nil;
+        }
         for (NSInteger i = start; i < self.product.quantityToFulfillOrder + start; i++){
             [self.photobookPhotos addObject:i < self.userSelectedPhotos.count ? self.userSelectedPhotos[i] : [NSNull null]];
         }
