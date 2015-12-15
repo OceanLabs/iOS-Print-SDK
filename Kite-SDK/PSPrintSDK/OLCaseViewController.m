@@ -41,6 +41,10 @@
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     
+    if (self.downloadedMask){
+        return;
+    }
+    
     if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0){
         if (!self.visualEffectView){
             UIVisualEffect *blurEffect;
@@ -98,6 +102,9 @@
 }
 
 - (void)downloadMask {
+    if (self.downloadedMask){
+        return;
+    }
     [[SDWebImageManager sharedManager] downloadImageWithURL:self.product.productTemplate.maskImageURL options:SDWebImageHighPriority progress:NULL completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL){
         [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
         if (error) {
