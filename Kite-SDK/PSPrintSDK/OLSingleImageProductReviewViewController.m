@@ -113,15 +113,17 @@ static BOOL hasMoved;
     [OLAnalytics trackReviewScreenViewed:self.product.productTemplate.name];
 #endif
     
-    UIViewController *paymentVc = [(UINavigationController *)self.presentingViewController viewControllers].lastObject;
-    if ([paymentVc respondsToSelector:@selector(saveAndDismissReviewController)]){
-        UIBarButtonItem *saveButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Save", "")
-                                                                       style:UIBarButtonItemStyleDone target:paymentVc
-                                                                      action:@selector(saveAndDismissReviewController)];
-        self.navigationItem.rightBarButtonItem = saveButton;
-        [self.ctaButton setTitle:NSLocalizedString(@"Save", @"") forState:UIControlStateNormal];
-        [self.ctaButton removeTarget:self action:@selector(onButtonNextClicked) forControlEvents:UIControlEventTouchUpInside];
-        [self.ctaButton addTarget:paymentVc action:@selector(saveAndDismissReviewController) forControlEvents:UIControlEventTouchUpInside];
+    if ([self.presentingViewController respondsToSelector:@selector(viewControllers)]) {
+        UIViewController *paymentVc = [(UINavigationController *)self.presentingViewController viewControllers].lastObject;
+        if ([paymentVc respondsToSelector:@selector(saveAndDismissReviewController)]){
+            UIBarButtonItem *saveButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Save", "")
+                                                                           style:UIBarButtonItemStyleDone target:paymentVc
+                                                                          action:@selector(saveAndDismissReviewController)];
+            self.navigationItem.rightBarButtonItem = saveButton;
+            [self.ctaButton setTitle:NSLocalizedString(@"Save", @"") forState:UIControlStateNormal];
+            [self.ctaButton removeTarget:self action:@selector(onButtonNextClicked) forControlEvents:UIControlEventTouchUpInside];
+            [self.ctaButton addTarget:paymentVc action:@selector(saveAndDismissReviewController) forControlEvents:UIControlEventTouchUpInside];
+        }
     }
     
     self.title = NSLocalizedString(@"Reposition the Photo", @"");
