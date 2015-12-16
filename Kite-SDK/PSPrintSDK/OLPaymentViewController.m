@@ -915,6 +915,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         } else {
             if (cost.promoCodeInvalidReason) {
                 self.printOrder.promoCode = previousCode; // reset print order promo code as it was invalid
+                self.promoCodeTextField.text = previousCode;
                 [SVProgressHUD dismiss];
                 if ([UIAlertController class]){
                     UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLConstants bundle], @"") message:cost.promoCodeInvalidReason preferredStyle:UIAlertControllerStyleAlert];
