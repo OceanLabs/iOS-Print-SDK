@@ -180,6 +180,8 @@ static id stringOrEmptyString(NSString *str) {
     [aCoder encodeObject:self.address forKey:kKeyAddress];
     [aCoder encodeObject:self.templateId forKey:kKeyProductTemplateId];
     [aCoder encodeObject:self.options forKey:kKeyPostcardPrintJobOptions];
+    [aCoder encodeInteger:self.extraCopies forKey:kKeyExtraCopies];
+    [aCoder encodeObject:self.uuid forKey:kKeyUUID];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
@@ -190,6 +192,8 @@ static id stringOrEmptyString(NSString *str) {
         self.address = [aDecoder decodeObjectForKey:kKeyAddress];
         self.templateId = [aDecoder decodeObjectForKey:kKeyProductTemplateId];
         self.options = [aDecoder decodeObjectForKey:kKeyPostcardPrintJobOptions];
+        self.extraCopies = [aDecoder decodeIntegerForKey:kKeyExtraCopies];
+        self.uuid = [aDecoder decodeObjectForKey:kKeyUUID];
     }
     
     return self;
