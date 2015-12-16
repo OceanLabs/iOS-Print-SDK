@@ -128,6 +128,7 @@ static BOOL haveLoadedAtLeastOnce = NO;
 @property (strong, nonatomic, readwrite) NSString *submitStatus;
 @property (nonatomic, readwrite) NSString *receipt;
 @property (strong, nonatomic) OLPrintOrderCost *finalCost;
+@property (nonatomic, strong) OLPrintOrderCostRequest *costReq;
 @end
 
 @interface OLProduct (Private)
@@ -474,11 +475,13 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     }
     [self.deliveryDetailsButton setTitle:deliveryDetailsTitle forState:UIControlStateNormal];
     
-    if ([self.printOrder hasCachedCost]) {
+    if ([self.printOrder hasCachedCost] && !self.printOrder.costReq) {
         [self.tableView reloadData];
         [self updateViewsBasedOnCostUpdate];
     } else {
         if (self.printOrder.jobs.count > 0){
+            self.totalCostLabel.hidden = YES;
+            [self.totalCostActivityIndicator startAnimating];
             [self.printOrder costWithCompletionHandler:^(OLPrintOrderCost *cost, NSError *error) {
                 [self costCalculationCompletedWithError:error];
             }];
@@ -528,7 +531,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     }
     
     BOOL shouldAnimate = NO;
-    if (!self.printOrder.hasCachedCost){
+    if (!self.printOrder.hasCachedCost || self.totalCostActivityIndicator.isAnimating){
         self.totalCostLabel.hidden = YES;
         [self.totalCostActivityIndicator startAnimating];
         shouldAnimate = YES;
