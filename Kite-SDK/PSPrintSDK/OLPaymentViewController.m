@@ -334,14 +334,16 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 - (void)viewDidDisappear:(BOOL)animated{
     [super viewDidDisappear:animated];
     
-#ifndef OL_NO_ANALYTICS
     if (!self.navigationController){
+        [self.printOrder discardDuplicateJobs];
+#ifndef OL_NO_ANALYTICS
         [OLAnalytics trackPaymentScreenHitBackForOrder:self.printOrder applePayIsAvailable:[self isApplePayAvailable] ? @"Yes" : @"No"];
-    }
 #endif
+    }
 }
 
 - (void)dismiss{
+    [self.printOrder discardDuplicateJobs];
     [self.navigationController.presentingViewController dismissViewControllerAnimated:YES completion:NULL];
 #ifndef OL_NO_ANALYTICS
     [OLAnalytics trackBasketScreenHitBackForOrder:self.printOrder applePayIsAvailable:[self isApplePayAvailable] ? @"Yes" : @"No"];
@@ -459,21 +461,6 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 #ifdef OL_KITE_OFFER_APPLE_PAY
     [Stripe setDefaultPublishableKey:[OLKitePrintSDK stripePublishableKey]];
 #endif
-
-    NSString *deliveryDetailsTitle = NSLocalizedString(@"Delivery Details", @"");
-    NSMutableSet *addresses = [[NSMutableSet alloc] init];
-    for (id<OLPrintJob> job in self.printOrder.jobs){
-        if ([job address]){
-            [addresses addObject:[job address]];
-        }
-    }
-    if (addresses.count > 1){
-        deliveryDetailsTitle = [NSString stringWithFormat:NSLocalizedString(@"%lu Delivery Addresses", @""), (unsigned long)addresses.count];
-    }
-    else if ([self.printOrder.shippingAddress isValidAddress]){
-        deliveryDetailsTitle = [self.printOrder.shippingAddress descriptionWithoutRecipient];
-    }
-    [self.deliveryDetailsButton setTitle:deliveryDetailsTitle forState:UIControlStateNormal];
     
     if ([self.printOrder hasCachedCost] && !self.printOrder.costReq) {
         [self.tableView reloadData];
@@ -529,6 +516,21 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         self.promoCodeCostLabel.text = @"";
         return;
     }
+    
+    NSString *deliveryDetailsTitle = NSLocalizedString(@"Delivery Details", @"");
+    NSMutableSet *addresses = [[NSMutableSet alloc] init];
+    for (id<OLPrintJob> job in self.printOrder.jobs){
+        if ([job address]){
+            [addresses addObject:[job address]];
+        }
+    }
+    if (addresses.count > 1){
+        deliveryDetailsTitle = [NSString stringWithFormat:NSLocalizedString(@"%lu Delivery Addresses", @""), (unsigned long)addresses.count];
+    }
+    else if ([self.printOrder.shippingAddress isValidAddress]){
+        deliveryDetailsTitle = [self.printOrder.shippingAddress descriptionWithoutRecipient];
+    }
+    [self.deliveryDetailsButton setTitle:deliveryDetailsTitle forState:UIControlStateNormal];
     
     BOOL shouldAnimate = NO;
     if (!self.printOrder.hasCachedCost || self.totalCostActivityIndicator.isAnimating){
@@ -1504,8 +1506,17 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         UIButton *editButton = (UIButton *)[cell.contentView viewWithTag:60];
         UIButton *largeEditButton = (UIButton *)[cell.contentView viewWithTag:61];
         UILabel *priceLabel = (UILabel *)[cell.contentView viewWithTag:70];
+        UILabel *addressLabel = (UILabel *)[cell.contentView viewWithTag:80];
         
         id<OLPrintJob> job = self.printOrder.jobs[indexPath.row];
+        
+        if ([job address]){
+            addressLabel.text = [[job address] descriptionWithoutRecipient];
+        }
+        else{
+            addressLabel.text = nil;
+        }
+        
         OLProduct *product = [OLProduct productWithTemplateId:[job templateId]];
         
         if ([OLProductTemplate templateWithId:product.templateId].templateUI == kOLTemplateUINA){
@@ -1568,6 +1579,18 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         id<OLPrintJob> job = self.printOrder.jobs[indexPath.row];
         [self.printOrder removePrintJob:job];
+        
+        NSMutableSet *addresses = [[NSMutableSet alloc] init];
+        for (id<OLPrintJob> job in self.printOrder.jobs){
+            if ([job address]){
+                [addresses addObject:[job address]];
+            }
+        }
+        if (addresses.count == 1){
+            self.printOrder.shippingAddress = [addresses anyObject];
+            [self.printOrder discardDuplicateJobs];
+        }
+        
         [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationAutomatic];
         [self.printOrder saveOrder];
         [self updateViewsBasedOnCostUpdate];

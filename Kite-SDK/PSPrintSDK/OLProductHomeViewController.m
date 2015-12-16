@@ -28,6 +28,7 @@
 #import "UIImage+ImageNamedInKiteBundle.h"
 #import "OLKiteUtils.h"
 #import "OLPaymentViewController.h"
+#import "UIViewController+OLMethods.h"
 
 #define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
 
@@ -350,38 +351,13 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    OLPrintOrder *printOrder = [OLKiteUtils kiteVcForViewController:self].printOrder;
-    UIButton *basketButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    basketButton.frame = CGRectMake(0,0,44,44);
-    [basketButton addTarget:self action:@selector(onButtonBasketClicked:) forControlEvents:UIControlEventTouchUpInside];
-    
-    if (printOrder.jobs.count != 0){
-        [basketButton setImage:[UIImage imageNamedInKiteBundle:@"cart-full"] forState:UIControlStateNormal];
-        
-        NSUInteger count = printOrder.jobs.count;
-        for (id<OLPrintJob> job in printOrder.jobs){
-            count += [job extraCopies];
-        }
-        
-        UILabel *qtyLabel = [[UILabel alloc] initWithFrame:CGRectMake(24, 11.5, 10, 10)];
-        qtyLabel.font = [UIFont systemFontOfSize:9];
-        qtyLabel.textAlignment = NSTextAlignmentCenter;
-        qtyLabel.textColor = [UIColor whiteColor];
-        qtyLabel.text = [NSString stringWithFormat:@"%lu", (unsigned long)count];
-        qtyLabel.minimumScaleFactor = 0.5;
-        qtyLabel.adjustsFontSizeToFitWidth = YES;
-        
-        [basketButton addSubview:qtyLabel];
-    }
-    else{
-        [basketButton setImage:[UIImage imageNamedInKiteBundle:@"cart-empty"] forState:UIControlStateNormal];
-    }
-    
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:basketButton];
+    [self addBasketIconToTopRight];
 }
 
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
+    
+    [self addBasketIconToTopRight];
         
     NSURL *url = [NSURL URLWithString:[OLKiteABTesting sharedInstance].headerLogoURL];
     if (url && ![[SDWebImageManager sharedManager] cachedImageExistsForURL:url] && [self isMemberOfClass:[OLProductHomeViewController class]]){
