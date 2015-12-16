@@ -1221,6 +1221,18 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
                 [OLAnalytics trackPaymentScreenDidDeleteItem:printJob inOrder:self.printOrder applePayIsAvailable:[self isApplePayAvailable] ? @"Yes" : @"No"];
 #endif
                 [self.printOrder removePrintJob:printJob];
+                
+                NSMutableSet *addresses = [[NSMutableSet alloc] init];
+                for (id<OLPrintJob> job in self.printOrder.jobs){
+                    if ([job address]){
+                        [addresses addObject:[job address]];
+                    }
+                }
+                if (addresses.count == 1){
+                    self.printOrder.shippingAddress = [addresses anyObject];
+                    [self.printOrder discardDuplicateJobs];
+                }
+                
                 [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationAutomatic];
                 [self.printOrder saveOrder];
                 [self updateViewsBasedOnCostUpdate];
@@ -1232,6 +1244,18 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             [OLAnalytics trackPaymentScreenDidDeleteItem:printJob inOrder:self.printOrder applePayIsAvailable:[self isApplePayAvailable] ? @"Yes" : @"No"];
 #endif
             [self.printOrder removePrintJob:printJob];
+            
+            NSMutableSet *addresses = [[NSMutableSet alloc] init];
+            for (id<OLPrintJob> job in self.printOrder.jobs){
+                if ([job address]){
+                    [addresses addObject:[job address]];
+                }
+            }
+            if (addresses.count == 1){
+                self.printOrder.shippingAddress = [addresses anyObject];
+                [self.printOrder discardDuplicateJobs];
+            }
+            
             [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationAutomatic];
             [self.printOrder saveOrder];
             [self updateViewsBasedOnCostUpdate];
