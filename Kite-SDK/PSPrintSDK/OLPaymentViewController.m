@@ -800,10 +800,8 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 - (void)popToHome{
     // Try as best we can to go to the beginning of the app
     NSMutableArray *navigationStack = self.navigationController.viewControllers.mutableCopy;
-    if (navigationStack.count > 2) {
-        [navigationStack removeObjectsInRange:NSMakeRange(1, navigationStack.count - 2)];
-        self.navigationController.viewControllers = navigationStack;
-        [self.navigationController popViewControllerAnimated:YES];
+    if (navigationStack.count > 1) {
+        [self.navigationController popToRootViewControllerAnimated:YES];
     }
     else if (navigationStack.firstObject == self){
         [self dismiss];
