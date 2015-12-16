@@ -424,9 +424,11 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         if ([self.promoCodeTextField isFirstResponder]){
             self.promoBoxBottomCon.constant = 2 + diff;
             self.promoBoxTopCon.constant = 2 - diff;
-            [UIView animateWithDuration:time * (1 - self.keyboardAnimationPercent) delay:time * self.keyboardAnimationPercent options:animationOptions animations:^{
-                [self.view layoutIfNeeded];
-            } completion:^(BOOL completion){}];
+            [UIView animateKeyframesWithDuration:time  delay:0 options:animationOptions << 16 animations:^{
+                [UIView addKeyframeWithRelativeStartTime:time*(1-self.keyboardAnimationPercent*((1-self.keyboardAnimationPercent))) relativeDuration:time *(1-self.keyboardAnimationPercent) animations:^{
+                    [self.view layoutIfNeeded];
+                }];
+            }completion:^(BOOL finished){}];
         }
     }
 }
@@ -1593,6 +1595,10 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
     [textField resignFirstResponder];
     return NO;
+}
+
+- (BOOL)textFieldShouldBeginEditing:(UITextField *)textField{
+    return self.printOrder.jobs.count > 0;
 }
 
 - (BOOL) tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath{
