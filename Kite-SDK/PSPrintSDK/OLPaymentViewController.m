@@ -291,6 +291,8 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         self.payWithApplePayButton.hidden = YES;
         self.checkoutButton.hidden = YES;
     }
+#else
+    [self.paymentButton1 removeFromSuperview];
 #endif
     
     if ([self shouldShowApplePay]){
