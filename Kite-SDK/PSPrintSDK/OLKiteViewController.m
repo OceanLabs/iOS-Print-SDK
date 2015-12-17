@@ -118,6 +118,7 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
     NSBundle *currentBundle = [NSBundle bundleForClass:[OLKiteViewController class]];
     if ((self = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:currentBundle] instantiateViewControllerWithIdentifier:@"KiteViewController"])) {
         self.printOrder = printOrder;
+        self.assets = [[printOrder.jobs firstObject] assetsForUploading];
         [OLKiteABTesting sharedInstance].launchedWithPrintOrder = printOrder != nil;
     }
     return self;
@@ -247,6 +248,7 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
             [vc safePerformSelector:@selector(setUserPhone:) withObject:welf.userPhone];
             [vc safePerformSelector:@selector(setKiteDelegate:) withObject:welf.delegate];
             [vc safePerformSelector:@selector(setProduct:) withObject:product];
+            [vc safePerformSelector:@selector(setUserSelectedPhotos:) withObject:welf.userSelectedPhotos];
             
             [[vc navigationItem] setLeftBarButtonItem:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:welf action:@selector(dismiss)]];
             [vc.navigationItem.rightBarButtonItem setTitle:NSLocalizedString(@"Next", @"")];
@@ -278,6 +280,9 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
         //Prefetch themed-SDK images
         [[OLKiteABTesting sharedInstance] prefetchRemoteImages];
     }];
+    
+    [OLAnalytics setKiteDelegate:self.delegate];
+
     [self.operationQueue addOperation:self.transitionOperation];
 }
 

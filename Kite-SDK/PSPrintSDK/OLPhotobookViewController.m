@@ -197,21 +197,14 @@ UINavigationControllerDelegate
 - (void)viewDidLoad{
     [super viewDidLoad];
     
-    if (!self.navigationItem.rightBarButtonItem){
-        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]
-                                                  initWithTitle:NSLocalizedString(@"Next", @"")
-                                                  style:UIBarButtonItemStylePlain
-                                                  target:self
-                                                  action:@selector(onButtonNextClicked:)];
-    }
-    
-    UIViewController *paymentVc = [(UINavigationController *)self.presentingViewController viewControllers].lastObject;
-    if ([paymentVc respondsToSelector:@selector(saveAndDismissReviewController)]){
-        UIBarButtonItem *saveButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Save", "")
-                                                                       style:UIBarButtonItemStyleDone target:paymentVc
-                                                                      action:@selector(saveAndDismissReviewController)];
-        self.navigationItem.rightBarButtonItem = saveButton;
-
+    if ([self.presentingViewController respondsToSelector:@selector(viewControllers)]) {
+        UIViewController *paymentVc = [(UINavigationController *)self.presentingViewController viewControllers].lastObject;
+        if ([paymentVc respondsToSelector:@selector(saveAndDismissReviewController)]){
+            UIBarButtonItem *saveButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Save", "")
+                                                                           style:UIBarButtonItemStyleDone target:paymentVc
+                                                                          action:@selector(saveAndDismissReviewController)];
+            self.navigationItem.rightBarButtonItem = saveButton;
+        }
     }
     
     
@@ -496,15 +489,17 @@ UINavigationControllerDelegate
     }];
 }
 
-//- (void)viewWillAppear:(BOOL)animated{
-//    [super viewWillAppear:animated];
-//    if (!self.editMode){
-//        UIViewController *presentingVc = [(UINavigationController *)self.presentingViewController viewControllers].lastObject;
-//        if (![presentingVc isKindOfClass:[OLPaymentViewController class]]){
-//            [self addBasketIconToTopRight];
-//        }
-//    }
-//}
+- (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    if (!self.editMode){
+        if ([self.presentingViewController respondsToSelector:@selector(viewControllers)]) {
+            UIViewController *presentingVc = [(UINavigationController *)self.presentingViewController viewControllers].lastObject;
+            if (![presentingVc isKindOfClass:[OLPaymentViewController class]]){
+                [self addBasketIconToTopRight];
+            }
+        }
+    }
+}
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator{
     [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
@@ -667,9 +662,13 @@ UINavigationControllerDelegate
 - (void)saveJobWithCompletionHandler:(void(^)())handler{
     NSInteger i = 0;
     NSMutableArray *bookPhotos = [[NSMutableArray alloc] init];
+    NSMutableArray *photobookPhotosClean = [[NSMutableArray alloc] init];
+    [photobookPhotosClean addObjectsFromArray:self.photobookPhotos];
+    [photobookPhotosClean removeObjectIdenticalTo:[NSNull null]];
+    
     for (NSInteger object = 0; object < self.photobookPhotos.count; object++){
         if (self.photobookPhotos[object] == [NSNull null]){
-            [bookPhotos addObject:self.userSelectedPhotos[i % self.userSelectedPhotos.count]];
+            [bookPhotos addObject:photobookPhotosClean[i % photobookPhotosClean.count]];
             i++;
         }
         else{

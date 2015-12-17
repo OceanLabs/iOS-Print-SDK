@@ -91,6 +91,15 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     [OLAnalytics trackReviewScreenViewed:self.product.productTemplate.name];
 #endif
     
+    if ([self.presentingViewController respondsToSelector:@selector(viewControllers)]) {
+        UIViewController *paymentVc = [(UINavigationController *)self.presentingViewController viewControllers].lastObject;
+        if ([paymentVc respondsToSelector:@selector(saveAndDismissReviewController)]){
+            [self.nextButton setTitle:NSLocalizedString(@"Save", @"") forState:UIControlStateNormal];
+            [self.nextButton removeTarget:self action:@selector(onButtonNextClicked:) forControlEvents:UIControlEventTouchUpInside];
+            [self.nextButton addTarget:paymentVc action:@selector(saveAndDismissReviewController) forControlEvents:UIControlEventTouchUpInside];
+        }
+    }
+    
     [self updateTitleBasedOnSelectedPhotoQuanitity];
     
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Back", @"")
@@ -133,9 +142,11 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     
-    UIViewController *presentingVc = [(UINavigationController *)self.presentingViewController viewControllers].lastObject;
-    if (![presentingVc isKindOfClass:[OLPaymentViewController class]]){
-        [self addBasketIconToTopRight];
+    if ([self.presentingViewController respondsToSelector:@selector(viewControllers)]) {
+        UIViewController *presentingVc = [(UINavigationController *)self.presentingViewController viewControllers].lastObject;
+        if (![presentingVc isKindOfClass:[OLPaymentViewController class]]){
+            [self addBasketIconToTopRight];
+        }
     }
 }
 
@@ -380,7 +391,7 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     [self updateTitleBasedOnSelectedPhotoQuanitity];
     
 #ifndef OL_NO_ANALYTICS
-    [OLAnalytics trackReviewScreenIncrementedPhotoQtyForProductName:self.product.productTemplate.name];
+    [OLAnalytics trackReviewScreenDecrementedPhotoQtyForProductName:self.product.productTemplate.name];
 #endif
 }
 

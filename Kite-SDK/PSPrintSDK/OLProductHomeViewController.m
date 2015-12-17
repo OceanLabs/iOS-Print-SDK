@@ -346,7 +346,11 @@
 
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
-        
+    
+    if ([OLKiteABTesting sharedInstance].allowsMultipleRecipients){
+        [self addBasketIconToTopRight];
+    }
+    
     NSURL *url = [NSURL URLWithString:[OLKiteABTesting sharedInstance].headerLogoURL];
     if (url && ![[SDWebImageManager sharedManager] cachedImageExistsForURL:url] && [self isMemberOfClass:[OLProductHomeViewController class]]){
         [[SDWebImageManager sharedManager] downloadImageWithURL:url options:0 progress:NULL completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL){

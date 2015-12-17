@@ -114,11 +114,13 @@ static BOOL hasMoved;
     [OLAnalytics trackReviewScreenViewed:self.product.productTemplate.name];
 #endif
     
-    UIViewController *paymentVc = [(UINavigationController *)self.presentingViewController viewControllers].lastObject;
-    if ([paymentVc respondsToSelector:@selector(saveAndDismissReviewController)]){
-        [self.ctaButton setTitle:NSLocalizedString(@"Save", @"") forState:UIControlStateNormal];
-        [self.ctaButton removeTarget:self action:@selector(onButtonNextClicked) forControlEvents:UIControlEventTouchUpInside];
-        [self.ctaButton addTarget:paymentVc action:@selector(saveAndDismissReviewController) forControlEvents:UIControlEventTouchUpInside];
+    if ([self.presentingViewController respondsToSelector:@selector(viewControllers)]) {
+        UIViewController *paymentVc = [(UINavigationController *)self.presentingViewController viewControllers].lastObject;
+        if ([paymentVc respondsToSelector:@selector(saveAndDismissReviewController)]){
+            [self.ctaButton setTitle:NSLocalizedString(@"Save", @"") forState:UIControlStateNormal];
+        	[self.ctaButton removeTarget:self action:@selector(onButtonNextClicked) forControlEvents:UIControlEventTouchUpInside];
+        	[self.ctaButton addTarget:paymentVc action:@selector(saveAndDismissReviewController) forControlEvents:UIControlEventTouchUpInside];
+        }
     }
     
     self.title = NSLocalizedString(@"Reposition the Photo", @"");
@@ -156,9 +158,11 @@ static BOOL hasMoved;
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     
-    UIViewController *presentingVc = [(UINavigationController *)self.presentingViewController viewControllers].lastObject;
-    if (![presentingVc isKindOfClass:[OLPaymentViewController class]]){
-        [self addBasketIconToTopRight];
+    if ([self.presentingViewController respondsToSelector:@selector(viewControllers)]) {
+        UIViewController *presentingVc = [(UINavigationController *)self.presentingViewController viewControllers].lastObject;
+        if (![presentingVc isKindOfClass:[OLPaymentViewController class]]){
+            [self addBasketIconToTopRight];
+        }
     }
     
     hasMoved = NO;
@@ -700,7 +704,7 @@ static BOOL hasMoved;
     NSInteger originalCount = self.userSelectedPhotos.count;
     [self populateArrayWithNewArray:images dataType:[OLInstagramImage class]];
 #ifndef OL_NO_ANALYTICS
-    [OLAnalytics trackPhotoProvider:@"Camera Roll" numberOfPhotosAdded:self.userSelectedPhotos.count - originalCount forProductName:self.product.productTemplate.name];
+    [OLAnalytics trackPhotoProvider:@"Instagram" numberOfPhotosAdded:self.userSelectedPhotos.count - originalCount forProductName:self.product.productTemplate.name];
 #endif
     if (self.imagePicked){
         [self.imagePicked getImageWithProgress:NULL completion:^(UIImage *image){
@@ -730,7 +734,7 @@ static BOOL hasMoved;
     NSInteger originalCount = self.userSelectedPhotos.count;
     [self populateArrayWithNewArray:images dataType:[OLFacebookImage class]];
 #ifndef OL_NO_ANALYTICS
-    [OLAnalytics trackPhotoProvider:@"Camera Roll" numberOfPhotosAdded:self.userSelectedPhotos.count - originalCount forProductName:self.product.productTemplate.name];
+    [OLAnalytics trackPhotoProvider:@"Facebook" numberOfPhotosAdded:self.userSelectedPhotos.count - originalCount forProductName:self.product.productTemplate.name];
 #endif
     if (self.imagePicked){
         [self.imagePicked getImageWithProgress:NULL completion:^(UIImage *image){

@@ -111,6 +111,14 @@
 #endif
 }
 
+- (void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
+    
+    if ([OLKiteABTesting sharedInstance].allowsMultipleRecipients && self.filterProducts){
+        [self addBasketIconToTopRight];
+    }
+}
+
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
     [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
     self.fromRotation = YES;

@@ -125,12 +125,27 @@
 #endif
 }
 
+- (void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
+    
+    if ([self.presentingViewController respondsToSelector:@selector(viewControllers)]) {
+        UIViewController *presentingVc = [(UINavigationController *)self.presentingViewController viewControllers].lastObject;
+        if (![presentingVc isKindOfClass:[OLPaymentViewController class]]){
+            if ([OLKiteABTesting sharedInstance].allowsMultipleRecipients && [OLKiteUtils kiteVcForViewController:self].filterProducts){
+                [self addBasketIconToTopRight];
+            }
+        }
+    }
+}
+
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     
-    UIViewController *presentingVc = [(UINavigationController *)self.presentingViewController viewControllers].lastObject;
-    if (![presentingVc isKindOfClass:[OLPaymentViewController class]]){
-        [self addBasketIconToTopRight];
+    if ([self.presentingViewController respondsToSelector:@selector(viewControllers)]) {
+        UIViewController *presentingVc = [(UINavigationController *)self.presentingViewController viewControllers].lastObject;
+        if (![presentingVc isKindOfClass:[OLPaymentViewController class]]){
+            [self addBasketIconToTopRight];
+        }
     }
 }
 

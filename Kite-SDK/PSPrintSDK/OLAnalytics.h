@@ -12,6 +12,26 @@
 @protocol OLPrintJob;
 @protocol OLKiteDelegate;
 
+static NSString *const kOLAnalyticsEventName = @"Event Name";
+static NSString *const kOLAnalyticsProductCategory = @"Product Category";
+static NSString *const kOLAnalyticsProductName = @"Product Name";
+static NSString *const kOLAnalyticsApplePayAvailable = @"Apple Pay Available";
+static NSString *const kOLAnalyticsPaymentMethod = @"Payment Method";
+static NSString *const kOLAnalyticsPhotoSource = @"Photo Source";
+static NSString *const kOLAnalyticsFeedbackResult = @"Feedback Result";
+static NSString *const kOLAnalyticsSelectedOption = @"Selected Option";
+static NSString *const kOLAnalyticsNumberOfPhotos = @"Number of Photos";
+static NSString *const kOLAnalyticsNumberOfPhotosInItem = @"Number of Photos in Item";
+static NSString *const kOLAnalyticsNumberOfPhotosInOrder = @"Number of Unique Photos in Order";
+static NSString *const kOLAnalyticsNumberOnBadge = @"Number of Items on Basket Icon Badge";
+static NSString *const kOLAnalyticsQuantity = @"Quantity";
+static NSString *const kOLAnalyticsItemsInOrder = @"Items In Order";
+static NSString *const kOLAnalyticsOrderCost = @"Order Cost";
+static NSString *const kOLAnalyticsOrderShippingCost = @"Order Shipping Cost";
+static NSString *const kOLAnalyticsCurrencyCode = @"Currency Code";
+static NSString *const kOLAnalyticsItemPrice = @"Item Price";
+static NSString *const kOLAnalyticsPromoCode = @"Promo Code";
+
 @interface OLAnalytics : NSObject
 
 + (void)trackKiteViewControllerLoadedWithEntryPoint:(NSString *)entryPoint;
@@ -44,6 +64,7 @@
 + (void)trackFeedbackButtonTapped;
 + (void)trackFeedbackScreenFinishedWithResult:(NSInteger)result;
 + (void)trackContinueShoppingButtonPressed:(OLPrintOrder *)printOrder;
++ (void)trackShippingScreenHitBackForOrder:(OLPrintOrder *)printOrder;
 + (void)trackShippingScreenViewedForOrder:(OLPrintOrder *)printOrder variant:(NSString *)variant showPhoneEntryField:(BOOL)showPhoneEntryField;
 + (void)trackPaymentScreenViewedForOrder:(OLPrintOrder *)printOrder applePayIsAvailable:(NSString *)applePayIsAvailable;
 + (void)trackPaymentScreenHitBackForOrder:(OLPrintOrder *)printOrder applePayIsAvailable:(NSString *)applePayIsAvailable;
@@ -51,6 +72,9 @@
 + (void)trackPaymentScreenHitItemQtyDownForItem:(id<OLPrintJob>)item inOrder:(OLPrintOrder *)printOrder applePayIsAvailable:(NSString *)applePayIsAvailable;
 + (void)trackPaymentScreenHitEditItem:(id<OLPrintJob>)item inOrder:(OLPrintOrder *)printOrder applePayIsAvailable:(NSString *)applePayIsAvailable;
 + (void)trackBasketScreenHitBackForOrder:(OLPrintOrder *)printOrder applePayIsAvailable:(NSString *)applePayIsAvailable;
++ (void)trackPaymentScreenSuccessfullyAppliedPromoCode:(NSString *)code forOrder:(OLPrintOrder *)order;
++ (void)trackPaymentScreenPaymentMethodHit:(NSString *)method forOrder:(OLPrintOrder *)order applePayIsAvailable:(NSString *)applePayIsAvailable;
++ (void)trackPaymentScreenPaymentMethodDidCancel:(NSString *)method forOrder:(OLPrintOrder *)order applePayIsAvailable:(NSString *)applePayIsAvailable;
 + (void)trackPaymentScreenHitEditItemDone:(id<OLPrintJob>)item inOrder:(OLPrintOrder *)printOrder applePayIsAvailable:(NSString *)applePayIsAvailable;
 + (void)trackPaymentScreenDidDeleteItem:(id<OLPrintJob>)item inOrder:(OLPrintOrder *)printOrder applePayIsAvailable:(NSString *)applePayIsAvailable;
 + (void)trackPaymentScreenHitCheckoutForOrder:(OLPrintOrder *)printOrder;

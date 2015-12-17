@@ -165,9 +165,11 @@ UINavigationControllerDelegate>
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     
-    UIViewController *presentingVc = [(UINavigationController *)self.presentingViewController viewControllers].lastObject;
-    if (![presentingVc isKindOfClass:[OLPaymentViewController class]]){
-        [self addBasketIconToTopRight];
+    if ([self.presentingViewController respondsToSelector:@selector(viewControllers)]) {
+        UIViewController *presentingVc = [(UINavigationController *)self.presentingViewController viewControllers].lastObject;
+        if (![presentingVc isKindOfClass:[OLPaymentViewController class]]){
+            [self addBasketIconToTopRight];
+        }
     }
     
     for (OLPhotobookViewController *photobook in self.childViewControllers){
@@ -242,6 +244,9 @@ UINavigationControllerDelegate>
         if (!self.coverPhoto){
             self.coverPhoto = self.userSelectedPhotos.firstObject;
             start++;
+        }
+        else if (self.coverPhoto == (id)[NSNull null]){
+            self.coverPhoto = nil;
         }
         for (NSInteger i = start; i < self.product.quantityToFulfillOrder + start; i++){
             [self.photobookPhotos addObject:i < self.userSelectedPhotos.count ? self.userSelectedPhotos[i] : [NSNull null]];

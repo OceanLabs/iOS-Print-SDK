@@ -18,6 +18,8 @@ static NSString *const kKeyMessage = @"co.oceanlabs.pssdk.kKeyMessage";
 static NSString *const kKeyAddress = @"co.oceanlabs.pssdk.kKeyAddress";
 static NSString *const kKeyProductTemplateId = @"co.oceanlabs.pssdk.kKeyProductTemplateId";
 static NSString *const kKeyPostcardPrintJobOptions = @"co.oceanlabs.pssdk.kKeyPostcardPrintJobOptions";
+static NSString *const kKeyUUID = @"co.oceanlabs.pssdk.kKeyUUID";
+static NSString *const kKeyExtraCopies = @"co.oceanlabs.pssdk.kKeyExtraCopies";
 
 static id stringOrEmptyString(NSString *str) {
     return str ? str : @"";
@@ -145,6 +147,7 @@ static id stringOrEmptyString(NSString *str) {
     if (self.backImageAsset) result *= [self.backImageAsset hash];
     if (self.message && [self.message hash] > 0) result *= [self.message hash];
     if (self.address) result *= [self.address hash];
+    if (self.extraCopies) result *= self.extraCopies+1;
     result = 18 * result + [self.options hash];
     return result;
 }
@@ -176,8 +179,9 @@ static id stringOrEmptyString(NSString *str) {
     [aCoder encodeObject:self.message forKey:kKeyMessage];
     [aCoder encodeObject:self.address forKey:kKeyAddress];
     [aCoder encodeObject:self.templateId forKey:kKeyProductTemplateId];
-    [aCoder encodeObject:self.backImageAsset forKey:kKeyBackImage];
     [aCoder encodeObject:self.options forKey:kKeyPostcardPrintJobOptions];
+    [aCoder encodeInteger:self.extraCopies forKey:kKeyExtraCopies];
+    [aCoder encodeObject:self.uuid forKey:kKeyUUID];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
@@ -187,8 +191,9 @@ static id stringOrEmptyString(NSString *str) {
         self.message = [aDecoder decodeObjectForKey:kKeyMessage];
         self.address = [aDecoder decodeObjectForKey:kKeyAddress];
         self.templateId = [aDecoder decodeObjectForKey:kKeyProductTemplateId];
-        self.backImageAsset = [aDecoder decodeObjectForKey:kKeyBackImage];
         self.options = [aDecoder decodeObjectForKey:kKeyPostcardPrintJobOptions];
+        self.extraCopies = [aDecoder decodeIntegerForKey:kKeyExtraCopies];
+        self.uuid = [aDecoder decodeObjectForKey:kKeyUUID];
     }
     
     return self;
