@@ -130,6 +130,7 @@ UINavigationControllerDelegate
 @property (weak, nonatomic) OLPopupOptionsImageView *coverImageView;
 @property (assign, nonatomic) NSInteger addNewPhotosAtIndex;
 @property (strong, nonatomic) NSArray *userSelectedPhotosCopy;
+@property (weak, nonatomic) IBOutlet UIButton *ctaButton;
 
 @end
 
@@ -200,10 +201,9 @@ UINavigationControllerDelegate
     if ([self.presentingViewController respondsToSelector:@selector(viewControllers)]) {
         UIViewController *paymentVc = [(UINavigationController *)self.presentingViewController viewControllers].lastObject;
         if ([paymentVc respondsToSelector:@selector(saveAndDismissReviewController)]){
-            UIBarButtonItem *saveButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Save", "")
-                                                                           style:UIBarButtonItemStyleDone target:paymentVc
-                                                                          action:@selector(saveAndDismissReviewController)];
-            self.navigationItem.rightBarButtonItem = saveButton;
+            [self.ctaButton setTitle:NSLocalizedString(@"Save", @"") forState:UIControlStateNormal];
+            [self.ctaButton removeTarget:self action:@selector(onButtonNextClicked:) forControlEvents:UIControlEventTouchUpInside];
+            [self.ctaButton addTarget:paymentVc action:@selector(saveAndDismissReviewController) forControlEvents:UIControlEventTouchUpInside];
         }
     }
     
@@ -344,7 +344,11 @@ UINavigationControllerDelegate
     
     [self updatePagesLabel];
     
-    CGFloat yOffset = !self.editMode ? ([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height)/2.0 : -15;
+    if (self.editMode){
+        [self.ctaButton removeFromSuperview];
+    }
+    
+    CGFloat yOffset = !self.editMode ? ([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height-self.ctaButton.frame.size.height)/2.0 : -15;
     if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8){
         yOffset = 22;
     }
@@ -528,7 +532,7 @@ UINavigationControllerDelegate
             }
         }
         
-        CGFloat yOffset = !self.editMode ? ([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height)/2.0 : -15;
+        CGFloat yOffset = !self.editMode ? ([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height-self.ctaButton.frame.size.height)/2.0 : -15;
         
         self.centerYCon = [NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.containerView.superview attribute:NSLayoutAttributeCenterY multiplier:1 constant:yOffset];
         [self.containerView.superview addConstraint:self.centerYCon];
@@ -624,7 +628,7 @@ UINavigationControllerDelegate
 
 #pragma mark - Checkout
 
-- (IBAction)onButtonNextClicked:(UIBarButtonItem *)sender {
+- (IBAction)onButtonNextClicked:(UIButton *)sender {
     if (![self shouldGoToCheckout]){
         return;
     }

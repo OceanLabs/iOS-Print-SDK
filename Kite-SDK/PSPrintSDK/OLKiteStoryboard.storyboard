@@ -2861,12 +2861,30 @@
                                     <constraint firstItem="6zv-ER-YtC" firstAttribute="leading" secondItem="P6D-Eb-oaD" secondAttribute="leading" id="tiB-3M-mvy"/>
                                 </constraints>
                             </view>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sot-G1-rGw">
+                                <rect key="frame" x="0.0" y="560" width="600" height="40"/>
+                                <color key="backgroundColor" red="0.12549019610000001" green="0.49803921569999998" blue="0.65490196079999996" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="40" id="HjL-Rw-h8y"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <state key="normal" title="Add to Basket">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="onButtonCallToActionClicked:" destination="0Cd-3J-LPU" eventType="touchUpInside" id="tYU-gP-obi"/>
+                                    <action selector="onButtonNextClicked:" destination="og1-vt-n4Z" eventType="touchUpInside" id="MaT-aB-Gb3"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="0.74509803921568629" green="0.80392156862745101" blue="0.81960784313725488" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <gestureRecognizers/>
                         <constraints>
                             <constraint firstItem="eAv-QL-iu7" firstAttribute="top" relation="greaterThanOrEqual" secondItem="wLR-Iq-33c" secondAttribute="bottom" constant="45" id="6OB-XY-vp2"/>
                             <constraint firstAttribute="centerX" secondItem="P6D-Eb-oaD" secondAttribute="centerX" id="Kix-gc-0g0"/>
+                            <constraint firstItem="sot-G1-rGw" firstAttribute="leading" secondItem="xrD-7k-Kti" secondAttribute="leading" id="MmO-Eb-lON"/>
+                            <constraint firstAttribute="trailing" secondItem="sot-G1-rGw" secondAttribute="trailing" id="QDC-Wp-H5x"/>
+                            <constraint firstItem="eAv-QL-iu7" firstAttribute="top" secondItem="sot-G1-rGw" secondAttribute="bottom" id="Rj1-EO-WbO"/>
                             <constraint firstItem="wLR-Iq-33c" firstAttribute="leading" secondItem="xrD-7k-Kti" secondAttribute="leading" priority="750" constant="38" id="Xjf-bl-V0K"/>
                             <constraint firstAttribute="centerY" secondItem="wLR-Iq-33c" secondAttribute="centerY" constant="-16" placeholder="YES" id="r8S-W8-SmN"/>
                             <constraint firstItem="P6D-Eb-oaD" firstAttribute="bottom" secondItem="wLR-Iq-33c" secondAttribute="bottom" constant="-15" id="xxK-hn-AB7"/>
@@ -2879,6 +2897,7 @@
                         <outlet property="bookImageView" destination="UgD-45-FUC" id="21E-GT-p9J"/>
                         <outlet property="bottomMarginCon" destination="6OB-XY-vp2" id="UJa-Gn-Ee7"/>
                         <outlet property="containerView" destination="wLR-Iq-33c" id="ZB7-ei-MIu"/>
+                        <outlet property="ctaButton" destination="sot-G1-rGw" id="baR-AE-JgQ"/>
                         <outlet property="fakeShadowView" destination="4k7-zt-s1N" id="VDC-XM-Td3"/>
                         <outlet property="openbookView" destination="rlk-bS-4UT" id="Q1X-2u-4iN"/>
                         <outlet property="pagesLabel" destination="6zv-ER-YtC" id="COA-sz-sqZ"/>
@@ -3309,7 +3328,7 @@
                                 <rect key="frame" x="20" y="462" width="560" height="37"/>
                             </pageControl>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SLj-fW-sSB" userLabel="Details view">
-                                <rect key="frame" x="0.0" y="512" width="600" height="450"/>
+                                <rect key="frame" x="0.0" y="516" width="600" height="450"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <gestureRecognizers/>
                                 <constraints>
@@ -3320,14 +3339,14 @@
                                 </connections>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WAl-EY-ayd">
-                                <rect key="frame" x="0.0" y="507" width="600" height="5"/>
+                                <rect key="frame" x="0.0" y="511" width="600" height="5"/>
                                 <color key="backgroundColor" red="0.95294117649999999" green="0.47450980390000003" blue="0.37647058820000001" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="5" id="Eyq-gd-zPV"/>
                                 </constraints>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JzC-Vn-8gQ">
-                                <rect key="frame" x="0.0" y="556" width="600" height="44"/>
+                                <rect key="frame" x="0.0" y="560" width="600" height="40"/>
                                 <color key="backgroundColor" red="0.54901960780000003" green="0.73725490199999999" blue="0.74901960779999999" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="40" id="mET-5O-GuO"/>
