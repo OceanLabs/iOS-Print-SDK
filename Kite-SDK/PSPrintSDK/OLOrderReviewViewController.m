@@ -357,7 +357,7 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     [self updateTitleBasedOnSelectedPhotoQuanitity];
     
 #ifndef OL_NO_ANALYTICS
-    [OLAnalytics trackReviewScreenIncrementedPhotoQtyForProductName:self.product.productTemplate.name];
+    [OLAnalytics trackReviewScreenDecrementedPhotoQtyForProductName:self.product.productTemplate.name];
 #endif
 }
 
