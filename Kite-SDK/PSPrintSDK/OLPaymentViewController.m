@@ -933,15 +933,17 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
                     [av show];
                 }
             } else {
+                [self updateViewsBasedOnCostUpdate];
                 if (self.printOrder.promoCode) {
+#ifndef OL_NO_ANALYTICS
+                    [OLAnalytics trackPaymentScreenSuccessfullyAppliedPromoCode:self.printOrder.promoCode forOrder:self.printOrder];
+#endif
                     sleep(1);
                     [SVProgressHUD showSuccessWithStatus:nil];
                 } else {
                     [SVProgressHUD dismiss];
                 }
             }
-            
-            [self updateViewsBasedOnCostUpdate];
         }
     }];
 }
