@@ -321,7 +321,7 @@ UITableViewDataSource, UITextFieldDelegate>
     [self.textFieldCVV resignFirstResponder];
     [self.textFieldExpiryDate resignFirstResponder];
     if ([self.delegate respondsToSelector:@selector(creditCardCaptureControllerDismissed:)]){
-        [self.delegate creditCardCaptureControllerDismissed:self];
+        [self.delegate creditCardCaptureControllerDismissed:(OLCreditCardCaptureViewController *) self.navigationController];
     }
     else{
         [self dismissViewControllerAnimated:YES completion:nil];
