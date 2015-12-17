@@ -171,6 +171,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 @property (weak, nonatomic) IBOutlet UIButton *deliveryDetailsButton;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *totalCostActivityIndicator;
 @property (assign, nonatomic) CGFloat keyboardAnimationPercent;
+@property (assign, nonatomic) BOOL authorizedApplePay;
 
 
 
@@ -996,6 +997,11 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             [self updateViewsBasedOnCostUpdate];
             return;
         }
+        
+#ifndef OL_NO_ANALYTICS
+        [OLAnalytics trackPaymentScreenPaymentMethodHit:@"Credit Card" forOrder:self.printOrder applePayIsAvailable:[self isApplePayAvailable] ? @"Yes" : @"No"];
+#endif
+        
         NSComparisonResult result = [[cost totalCostInCurrency:self.printOrder.currencyCode] compare:[NSDecimalNumber zero]];
         if (result == NSOrderedAscending || result == NSOrderedSame) {
             // The user must have a promo code which reduces this order cost to nothing, lucky user :)
@@ -1156,6 +1162,10 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             [self updateViewsBasedOnCostUpdate];
             return;
         }
+#ifndef OL_NO_ANALYTICS
+        [OLAnalytics trackPaymentScreenPaymentMethodHit:@"PayPal" forOrder:self.printOrder applePayIsAvailable:[self isApplePayAvailable] ? @"Yes" : @"No"];
+#endif
+        
         // Create a PayPalPayment
         PayPalPayment *payment = [[PayPalPayment alloc] init];
         payment.amount = [cost totalCostInCurrency:self.printOrder.currencyCode];
@@ -1189,6 +1199,10 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             [self updateViewsBasedOnCostUpdate];
             return;
         }
+#ifndef OL_NO_ANALYTICS
+        [OLAnalytics trackPaymentScreenPaymentMethodHit:@"Apple Pay" forOrder:self.printOrder applePayIsAvailable:[self isApplePayAvailable] ? @"Yes" : @"No"];
+#endif
+        
         NSMutableArray *lineItems = [[NSMutableArray alloc] init];
         for (OLPaymentLineItem *item in cost.lineItems){
             [lineItems addObject:[PKPaymentSummaryItem summaryItemWithLabel:item.description  amount:[item costInCurrency:self.printOrder.currencyCode]]];
@@ -1338,6 +1352,9 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 
 #ifdef OL_KITE_OFFER_PAYPAL
 - (void)payPalPaymentDidCancel:(PayPalPaymentViewController *)paymentViewController {
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackPaymentScreenPaymentMethodDidCancel:@"PayPal" forOrder:self.printOrder applePayIsAvailable:[self isApplePayAvailable] ? @"Yes" : @"No"];
+#endif
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
@@ -1355,11 +1372,17 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 - (void)paymentAuthorizationViewController:(PKPaymentAuthorizationViewController *)controller
                        didAuthorizePayment:(PKPayment *)payment
                                 completion:(void (^)(PKPaymentAuthorizationStatus))completion {
+    self.authorizedApplePay = YES;
     [self handlePaymentAuthorizationWithPayment:payment completion:completion];
 }
 
 - (void)paymentAuthorizationViewControllerDidFinish:(PKPaymentAuthorizationViewController *)controller {
     [self dismissViewControllerAnimated:YES completion:^{
+#ifndef OL_NO_ANALYTICS
+        if (!self.authorizedApplePay){
+            [OLAnalytics trackPaymentScreenPaymentMethodDidCancel:@"Apple Pay" forOrder:self.printOrder applePayIsAvailable:[self isApplePayAvailable] ? @"Yes" : @"No"];
+        }
+#endif
         if (![[NSOperationQueue mainQueue].operations containsObject:self.transitionBlockOperation] && !self.transitionBlockOperation.finished){
             [[NSOperationQueue mainQueue] addOperation:self.transitionBlockOperation];
         }
@@ -1733,6 +1756,13 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     [self dismissViewControllerAnimated:YES completion:^{
         [self submitOrderForPrintingWithProofOfPayment:proofOfPayment paymentMethod:@"Credit Card" completion:^void(PKPaymentAuthorizationStatus status){}];
     }];
+}
+
+- (void)creditCardCaptureControllerDismissed:(OLCreditCardCaptureViewController *)vc{
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackPaymentScreenPaymentMethodDidCancel:@"Credit Card" forOrder:self.printOrder applePayIsAvailable:[self isApplePayAvailable] ? @"Yes" : @"No"];
+#endif
+    [self dismissViewControllerAnimated:YES completion:NULL];
 }
 
 #pragma mark - Autorotate and Orientation Methods

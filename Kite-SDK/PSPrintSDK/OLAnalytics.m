@@ -33,6 +33,12 @@ static NSString *nonNilStr(NSString *str) {
 
 static __weak id<OLKiteDelegate> kiteDelegate;
 
+@interface OLProduct (Private)
+
+- (NSDecimalNumber*) unitCostDecimalNumber;
+
+@end
+
 @implementation OLAnalytics
 
 + (void)incrementLaunchSDKCount{
@@ -145,7 +151,7 @@ static __weak id<OLKiteDelegate> kiteDelegate;
         dict[kOLAnalyticsProductName] = template.name;
         dict[kOLAnalyticsNumberOfPhotosInItem] = [NSNumber numberWithInteger:[job quantity]];
         dict[kOLAnalyticsQuantity] = [NSNumber numberWithInteger:[job extraCopies]+1];
-        dict[kOLAnalyticsItemPrice] = nonNilStr([[OLProduct productWithTemplateId:[job templateId]] unitCost]);
+        dict[kOLAnalyticsItemPrice] = [[OLProduct productWithTemplateId:[job templateId]] unitCostDecimalNumber] ? [[OLProduct productWithTemplateId:[job templateId]] unitCostDecimalNumber] : @"";
     }
     return dict;
 }
@@ -172,6 +178,7 @@ static __weak id<OLKiteDelegate> kiteDelegate;
             
             dict[kOLAnalyticsNumberOfPhotosInOrder] = [NSNumber numberWithInteger:order.totalAssetsToUpload];
             dict[kOLAnalyticsPromoCode] = order.promoCode;
+            dict[kOLAnalyticsCurrencyCode] = order.currencyCode;
             [order costWithCompletionHandler:^(OLPrintOrderCost *cost, NSError *error){
                 dict[kOLAnalyticsOrderCost] = [cost totalCostInCurrency:order.currencyCode];
                 dict[kOLAnalyticsOrderShippingCost] = [cost shippingCostInCurrency:order.currencyCode];
@@ -487,6 +494,14 @@ static __weak id<OLKiteDelegate> kiteDelegate;
 + (void)trackBasketScreenHitBackForOrder:(OLPrintOrder *)printOrder applePayIsAvailable:(NSString *)applePayIsAvailable{
     NSString *eventName = @"Basket Screen Hit Cancel";
     [OLAnalytics reportAnalyticsEventToDelegate:eventName job:nil printOrder:printOrder extraInfo:nil];
+}
+
++ (void)trackPaymentScreenPaymentMethodHit:(NSString *)method forOrder:(OLPrintOrder *)order applePayIsAvailable:(NSString *)applePayIsAvailable{
+    [OLAnalytics reportAnalyticsEventToDelegate:@"Payment Screen Payment Method Tapped" job:nil printOrder:order extraInfo:@{kOLAnalyticsPaymentMethod : method}];
+}
+
++ (void)trackPaymentScreenPaymentMethodDidCancel:(NSString *)method forOrder:(OLPrintOrder *)order applePayIsAvailable:(NSString *)applePayIsAvailable{
+    [OLAnalytics reportAnalyticsEventToDelegate:@"Payment Screen Payment Method Did Cancel" job:nil printOrder:order extraInfo:@{kOLAnalyticsPaymentMethod : method}];
 }
 
 + (void)trackReviewScreenIncrementedPhotoQtyForProductName:(NSString *)productName{

@@ -320,7 +320,12 @@ UITableViewDataSource, UITextFieldDelegate>
     [self.textFieldCardNumber resignFirstResponder];
     [self.textFieldCVV resignFirstResponder];
     [self.textFieldExpiryDate resignFirstResponder];
-    [self dismissViewControllerAnimated:YES completion:nil];
+    if ([self.delegate respondsToSelector:@selector(creditCardCaptureControllerDismissed:)]){
+        [self.delegate creditCardCaptureControllerDismissed:self];
+    }
+    else{
+        [self dismissViewControllerAnimated:YES completion:nil];
+    }
 }
 
 //- (void) showCardScanner{
