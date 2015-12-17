@@ -39,6 +39,13 @@
  */
 + (OLKitePrintSDKEnvironment)environment;
 
+/**
+ *  Add a device token for push notifications.
+ *
+ *  @param deviceToken The device token.
+ */
++ (void)addPushDeviceToken:(NSData *_Nonnull)deviceToken;
+
 #ifdef OL_KITE_OFFER_INSTAGRAM
 /**
  *  Optionally enable Instagram photo picking functionality (you'll need to take 5 minutes to register your app https://instagram.com/developer/)
