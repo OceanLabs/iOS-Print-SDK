@@ -13,7 +13,6 @@
 #import "OLKitePrintSDK.h"
 #import "OLProduct.h"
 #import "OLProductOverviewViewController.h"
-#import "OLPosterSizeSelectionViewController.h"
 #import "OLProductTypeSelectionViewController.h"
 #import "OLKitePrintSDK.h"
 #import "OLAnalytics.h"
@@ -375,17 +374,7 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
 
 + (NSString *)storyboardIdentifierForGroupSelected:(OLProductGroup *)group{
     OLProduct *product = [group.products firstObject];
-    if (product.productTemplate.templateUI == kOLTemplateUIPoster && group.products.count > 1) {
-        NSInteger x = product.productTemplate.gridCountX;
-        NSInteger y = product.productTemplate.gridCountY;
-        for (OLProduct *otherProduct in group.products){
-            if (x != otherProduct.productTemplate.gridCountX || y != otherProduct.productTemplate.gridCountY){
-                return @"OLTypeSelectionViewController";
-            }
-        }
-        return @"sizeSelect";
-    }
-    else if (group.products.count > 1){
+    if (group.products.count > 1){
         return @"OLTypeSelectionViewController";
     }
     else {

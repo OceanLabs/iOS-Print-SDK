@@ -10,7 +10,6 @@
 #import "OLProductOverviewPageContentViewController.h"
 #import "OLProduct.h"
 #import "OLOrderReviewViewController.h"
-#import "OLPosterSizeSelectionViewController.h"
 #import "OLWhiteSquare.h"
 #import "OLKiteViewController.h"
 #import "OLAnalytics.h"
