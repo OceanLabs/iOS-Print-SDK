@@ -75,7 +75,7 @@ typedef enum {
 }
 
 -(NSUInteger)quantityToFulfillOrder{
-    return self.productTemplate.quantityPerSheet;
+    return MAX(self.productTemplate.quantityPerSheet, 1);
 }
 
 -(instancetype)initWithTemplate:(OLProductTemplate *)productTemplate{
@@ -177,7 +177,6 @@ typedef enum {
 }
 
 - (NSString *)unitCost {
-    
     NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
     [formatter setNumberStyle:NSNumberFormatterCurrencyStyle];
     [formatter setCurrencyCode:[self currencyCode]];

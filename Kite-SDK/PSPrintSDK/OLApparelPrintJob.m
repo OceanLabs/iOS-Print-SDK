@@ -124,7 +124,7 @@ static NSString *const kKeyApparelPrintJobOptions = @"co.oceanlabs.pssdk.kKeyApp
     }
     OLApparelPrintJob* printJob = (OLApparelPrintJob*)object;
     
-    return [self.templateId isEqual:printJob.templateId] && [self.assets isEqualToDictionary:printJob.assets] && [self.options isEqualToDictionary:printJob.options];
+    return [self.templateId isEqual:printJob.templateId] && [self.assets isEqualToDictionary:printJob.assets] && [self.options isEqualToDictionary:printJob.options] && ((!self.address && !printJob.address) || [self.address isEqual:printJob.address]);
 }
 
 #pragma mark - NSCopying

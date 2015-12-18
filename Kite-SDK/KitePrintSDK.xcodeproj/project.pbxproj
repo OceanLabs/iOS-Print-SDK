@@ -26,6 +26,8 @@
 		2E0804BE1C0DF70200F50D42 /* CatsAssetCollectionDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0804BB1C0DF70200F50D42 /* CatsAssetCollectionDataSource.m */; };
 		2E0804BF1C0DF70200F50D42 /* AssetDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0804BD1C0DF70200F50D42 /* AssetDataSource.m */; };
 		2E2632C21B97336700C7D879 /* KitePrintSDKUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E2632C11B97336700C7D879 /* KitePrintSDKUITests.m */; };
+		2E2E61E71C21826D005CB729 /* UIViewController+OLMethods.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E2E61E61C21826D005CB729 /* UIViewController+OLMethods.m */; };
+		2E2E61E81C21826D005CB729 /* UIViewController+OLMethods.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E2E61E61C21826D005CB729 /* UIViewController+OLMethods.m */; };
 		2E482B7A1BEB4C7D007460EA /* OLStripeCard.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E482B781BEB4C7D007460EA /* OLStripeCard.m */; };
 		2E482B7B1BEB4C7D007460EA /* OLStripeCard.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E482B781BEB4C7D007460EA /* OLStripeCard.m */; };
 		2E4DF45E1C0F150400EA66FE /* DogsAssetCollectionDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E4DF45D1C0F150400EA66FE /* DogsAssetCollectionDataSource.m */; };
@@ -510,6 +512,8 @@
 		2E2632BF1B97336700C7D879 /* KitePrintSDKUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = KitePrintSDKUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		2E2632C11B97336700C7D879 /* KitePrintSDKUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KitePrintSDKUITests.m; sourceTree = "<group>"; };
 		2E2632C31B97336700C7D879 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2E2E61E51C21826D005CB729 /* UIViewController+OLMethods.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIViewController+OLMethods.h"; path = "PSPrintSDK/Categories/UIViewController+OLMethods.h"; sourceTree = "<group>"; };
+		2E2E61E61C21826D005CB729 /* UIViewController+OLMethods.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIViewController+OLMethods.m"; path = "PSPrintSDK/Categories/UIViewController+OLMethods.m"; sourceTree = "<group>"; };
 		2E333CC91BC7D1850092E42A /* OLApparelPrintJob.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLApparelPrintJob.m; sourceTree = "<group>"; };
 		2E333CCB1BC7D19E0092E42A /* OLApparelPrintJob.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLApparelPrintJob.h; sourceTree = "<group>"; };
 		2E38C0CC1AD5206F008BC28A /* PostcardBackView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PostcardBackView.xib; sourceTree = "<group>"; };
@@ -1139,13 +1143,13 @@
 		2E4CAF121BC2940A0089FA26 /* Shipping-Payment */ = {
 			isa = PBXGroup;
 			children = (
+				CDA8BF5218D70D0F00D835BB /* OLPaymentViewController.h */,
+				CDA8BF5018D70D0F00D835BB /* OLPaymentViewController.m */,
 				CDA8BF5518D70D0F00D835BB /* OLCheckoutViewController.h */,
 				CDA8BF5118D70D0F00D835BB /* OLCheckoutViewController.m */,
 				2E5F80301B04A22500095203 /* OLIntegratedCheckoutViewController.h */,
 				2E5F80311B04A22500095203 /* OLIntegratedCheckoutViewController.m */,
 				2E5E0C141993840600C34D5C /* OLCheckoutDelegate.h */,
-				CDA8BF5218D70D0F00D835BB /* OLPaymentViewController.h */,
-				CDA8BF5018D70D0F00D835BB /* OLPaymentViewController.m */,
 				CDA8BF5318D70D0F00D835BB /* OLReceiptViewController.h */,
 				CDA8BF5418D70D0F00D835BB /* OLReceiptViewController.m */,
 				3D1779581A1E1D6800BE3E58 /* OLCreditCardCaptureViewController.h */,
@@ -1245,6 +1249,8 @@
 				2E1067FF1B83335C00EB4C14 /* UIView+RoundRect.m */,
 				2EA13E1E1BBC2202005F3D71 /* UIImage+ImageNamedInKiteBundle.h */,
 				2EA13E1F1BBC2202005F3D71 /* UIImage+ImageNamedInKiteBundle.m */,
+				2E2E61E51C21826D005CB729 /* UIViewController+OLMethods.h */,
+				2E2E61E61C21826D005CB729 /* UIViewController+OLMethods.m */,
 			);
 			name = Categories;
 			path = ..;
@@ -2368,6 +2374,7 @@
 				2EADD81D1BE79D6D0051CD31 /* UIViewController+TraitCollectionCompatibility.m in Sources */,
 				2EADD81E1BE79D6D0051CD31 /* OLProductOverviewViewController.m in Sources */,
 				2EADD81F1BE79D6D0051CD31 /* OLAddress+AddressBook.m in Sources */,
+				2E2E61E71C21826D005CB729 /* UIViewController+OLMethods.m in Sources */,
 				2EADD8201BE79D6D0051CD31 /* OLPrintOrder.m in Sources */,
 				2EADD8211BE79D6D0051CD31 /* OLProductTemplateSyncRequest.m in Sources */,
 				2EADD8221BE79D6D0051CD31 /* OLAssetsPickerController.m in Sources */,
@@ -2644,6 +2651,7 @@
 				E29C85F11BE3B5C50041D4CF /* OLAssetScrollView.m in Sources */,
 				E29C85F21BE3B5C50041D4CF /* ALAssetsLibrary+Singleton.m in Sources */,
 				E29C85F31BE3B5C50041D4CF /* OLConstants.m in Sources */,
+				2E2E61E81C21826D005CB729 /* UIViewController+OLMethods.m in Sources */,
 				E29C85F41BE3B5C50041D4CF /* OLProductOverviewPageContentViewController.m in Sources */,
 				E29C85F61BE3B5C50041D4CF /* OLJudoPayCard.m in Sources */,
 				E29C85F71BE3B5C50041D4CF /* OLReceiptViewController.m in Sources */,

@@ -87,7 +87,7 @@ CTAssetsPickerControllerDelegate,
 #ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
 KITAssetsPickerControllerDelegate,
 #endif
-OLAssetsPickerControllerDelegate>
+OLAssetsPickerControllerDelegate, RMImageCropperDelegate>
 
 @property (weak, nonatomic) IBOutlet UICollectionView *imagesCollectionView;
 
@@ -100,6 +100,8 @@ OLAssetsPickerControllerDelegate>
 -(void) doCheckout;
 
 @end
+
+static BOOL hasMoved;
 
 @implementation OLSingleImageProductReviewViewController
 
@@ -122,20 +124,23 @@ OLAssetsPickerControllerDelegate>
     [OLAnalytics trackReviewScreenViewed:self.product.productTemplate.name];
 #endif
     
-    UIViewController *paymentVc = [(UINavigationController *)self.presentingViewController viewControllers].lastObject;
-    if ([paymentVc respondsToSelector:@selector(saveAndDismissReviewController)]){
-        UIBarButtonItem *saveButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Save", "")
-                                                                       style:UIBarButtonItemStyleDone target:paymentVc
-                                                                      action:@selector(saveAndDismissReviewController)];
-        self.navigationItem.rightBarButtonItem = saveButton;
-        [self.ctaButton setTitle:NSLocalizedString(@"Save", @"") forState:UIControlStateNormal];
-        [self.ctaButton removeTarget:self action:@selector(onButtonNextClicked) forControlEvents:UIControlEventTouchUpInside];
-        [self.ctaButton addTarget:paymentVc action:@selector(saveAndDismissReviewController) forControlEvents:UIControlEventTouchUpInside];
+    if ([self.presentingViewController respondsToSelector:@selector(viewControllers)]) {
+        UIViewController *paymentVc = [(UINavigationController *)self.presentingViewController viewControllers].lastObject;
+        if ([paymentVc respondsToSelector:@selector(saveAndDismissReviewController)]){
+            UIBarButtonItem *saveButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Save", "")
+                                                                           style:UIBarButtonItemStyleDone target:paymentVc
+                                                                          action:@selector(saveAndDismissReviewController)];
+            self.navigationItem.rightBarButtonItem = saveButton;
+            [self.ctaButton setTitle:NSLocalizedString(@"Save", @"") forState:UIControlStateNormal];
+            [self.ctaButton removeTarget:self action:@selector(onButtonNextClicked) forControlEvents:UIControlEventTouchUpInside];
+            [self.ctaButton addTarget:paymentVc action:@selector(saveAndDismissReviewController) forControlEvents:UIControlEventTouchUpInside];
+        }
     }
     
     self.title = NSLocalizedString(@"Reposition the Photo", @"");
     
     if (self.imageCropView){
+        self.imageCropView.delegate = self;
         OLPrintPhoto *photo = [self.userSelectedPhotos firstObject];
         [photo getImageWithProgress:NULL completion:^(UIImage *image){
             self.imageCropView.image = image;
@@ -173,7 +178,18 @@ OLAssetsPickerControllerDelegate>
 
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
+    hasMoved = NO;
     self.imageCropView.imageView.transform = self.imageDisplayed.edits.cropTransform;
+}
+
+- (void)viewDidDisappear:(BOOL)animated{
+    [super viewDidDisappear:animated];
+    
+#ifndef OL_NO_ANALYTICS
+    if (!self.navigationController){
+        [OLAnalytics trackReviewScreenHitBack:self.product.productTemplate.name numberOfPhotos:self.userSelectedPhotos.count];
+    }
+#endif
 }
 
 -(IBAction)onButtonNextClicked{
@@ -276,6 +292,15 @@ OLAssetsPickerControllerDelegate>
             }];
         }
     }];
+}
+
+- (void)imageCropperDidTransformImage:(RMImageCropper *)imageCropper{
+#ifndef OL_NO_ANALYTICS
+    if (!hasMoved){
+        hasMoved = YES;
+        [OLAnalytics trackReviewScreenDidCropPhotoForProductName:self.product.productTemplate.name];
+    }
+#endif
 }
 
 #pragma mark CollectionView delegate and data source
@@ -499,6 +524,9 @@ OLAssetsPickerControllerDelegate>
 }
 
 - (void)showCameraRollImagePicker{
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackPhotoProviderPicked:@"Camera Roll" forProductName:self.product.productTemplate.name];
+#endif
     __block UIViewController *picker;
     __block Class assetClass;
     if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8 || !definesAtLeastiOS8){
@@ -560,6 +588,9 @@ OLAssetsPickerControllerDelegate>
 
 - (void)showFacebookImagePicker{
 #ifdef OL_KITE_OFFER_FACEBOOK
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackPhotoProviderPicked:@"Facebook" forProductName:self.product.productTemplate.name];
+#endif
     OLFacebookImagePickerController *picker = nil;
     picker = [[OLFacebookImagePickerController alloc] init];
     picker.delegate = self;
@@ -571,6 +602,9 @@ OLAssetsPickerControllerDelegate>
 
 - (void)showInstagramImagePicker{
 #ifdef OL_KITE_OFFER_INSTAGRAM
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackPhotoProviderPicked:@"Instagram" forProductName:self.product.productTemplate.name];
+#endif
     OLInstagramImagePickerController *picker = nil;
     picker = [[OLInstagramImagePickerController alloc] initWithClientId:[OLKitePrintSDK instagramClientID] secret:[OLKitePrintSDK instagramSecret] redirectURI:[OLKitePrintSDK instagramRedirectURI]];
     picker.delegate = self;
@@ -660,6 +694,10 @@ OLAssetsPickerControllerDelegate>
 #endif
 
 - (void)assetsPickerController:(id)picker didFinishPickingAssets:(NSArray *)assets {
+    NSInteger originalCount = self.userSelectedPhotos.count;
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackPhotoProvider:@"Camera Roll" numberOfPhotosAdded:self.userSelectedPhotos.count - originalCount forProductName:self.product.productTemplate.name];
+#endif
     Class assetClass;
     if ([picker isKindOfClass:[OLAssetsPickerController class]]){
         assetClass = [ALAsset class];
@@ -748,6 +786,7 @@ OLAssetsPickerControllerDelegate>
 }
 
 - (void)instagramImagePicker:(OLInstagramImagePickerController *)imagePicker didFinishPickingImages:(NSArray *)images {
+    NSInteger originalCount = self.userSelectedPhotos.count;
 #ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
         NSMutableArray *assets = [[NSMutableArray alloc] init];
         for (id<OLAssetDataSource> asset in images){
@@ -759,6 +798,9 @@ OLAssetsPickerControllerDelegate>
 #endif
     
     [self populateArrayWithNewArray:images dataType:[OLInstagramImage class]];
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackPhotoProvider:@"Instagram" numberOfPhotosAdded:self.userSelectedPhotos.count - originalCount forProductName:self.product.productTemplate.name];
+#endif
     if (self.imagePicked){
         [self.imagePicked getImageWithProgress:NULL completion:^(UIImage *image){
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -784,6 +826,7 @@ OLAssetsPickerControllerDelegate>
 }
 
 - (void)facebookImagePicker:(OLFacebookImagePickerController *)imagePicker didFinishPickingImages:(NSArray *)images {
+    NSInteger originalCount = self.userSelectedPhotos.count;
 #ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
     NSMutableArray *assets = [[NSMutableArray alloc] init];
     for (id<OLAssetDataSource> asset in images){
@@ -795,6 +838,9 @@ OLAssetsPickerControllerDelegate>
 #endif
     
     [self populateArrayWithNewArray:images dataType:[OLFacebookImage class]];
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackPhotoProvider:@"Facebook" numberOfPhotosAdded:self.userSelectedPhotos.count - originalCount forProductName:self.product.productTemplate.name];
+#endif
     if (self.imagePicked){
         [self.imagePicked getImageWithProgress:NULL completion:^(UIImage *image){
             dispatch_async(dispatch_get_main_queue(), ^{

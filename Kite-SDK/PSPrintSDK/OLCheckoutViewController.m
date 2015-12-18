@@ -213,6 +213,16 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
 #endif
 }
 
+- (void)viewDidDisappear:(BOOL)animated{
+    [super viewDidDisappear:animated];
+    
+#ifndef OL_NO_ANALYTICS
+    if (!self.navigationController){
+        [OLAnalytics trackShippingScreenHitBackForOrder:self.printOrder];
+    }
+#endif
+}
+
 - (void)positionKiteLabel {
     [self.kiteLabel.superview removeConstraint:self.kiteLabelYCon];
     
@@ -225,6 +235,9 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
 }
 
 - (void)onButtonCancelClicked {
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackShippingScreenHitBackForOrder:self.printOrder];
+#endif
     if ([self.delegate respondsToSelector:@selector(checkoutViewControllerDidCancel:)]) {
         [self.delegate checkoutViewControllerDidCancel:self];
     } else {
@@ -241,6 +254,9 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
     if (![self hasUserProvidedValidDetailsToProgressToPayment]) {
         return;
     }
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackShippingScreenHitBackForOrder:self.printOrder];
+#endif
     [self checkAndSaveAddress];
     [self dismissViewControllerAnimated:YES completion:NULL];
 }

@@ -468,9 +468,15 @@ static id stringOrEmptyString(NSString *str) {
     for (id<OLPrintJob> job in jobsToRemove) {
         [(NSMutableArray *)self.jobs removeObjectIdenticalTo:job];
     }
+    for (id<OLPrintJob> job in self.jobs){
+        job.address = nil;
+    }
 }
 
 - (void)duplicateJobsForAddresses:(NSArray *)addresses{
+    if (addresses.count == 1){
+        return;
+    }
     NSMutableArray *jobs = [[[NSArray alloc] initWithArray:self.jobs copyItems:YES] mutableCopy];
     NSMutableArray *jobsToAdd = [[NSMutableArray alloc] init];
     for (id<OLPrintJob> job in self.jobs){

@@ -89,12 +89,14 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     [OLAnalytics trackReviewScreenViewed:self.product.productTemplate.name];
 #endif
     
-    UIViewController *paymentVc = [(UINavigationController *)self.presentingViewController viewControllers].lastObject;
-    if ([paymentVc respondsToSelector:@selector(saveAndDismissReviewController)]){
-        UIBarButtonItem *saveButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Save", "")
-                                                                       style:UIBarButtonItemStyleDone target:paymentVc
-                                                                      action:@selector(saveAndDismissReviewController)];
-        self.navigationItem.rightBarButtonItem = saveButton;
+    if ([self.presentingViewController respondsToSelector:@selector(viewControllers)]) {
+        UIViewController *paymentVc = [(UINavigationController *)self.presentingViewController viewControllers].lastObject;
+        if ([paymentVc respondsToSelector:@selector(saveAndDismissReviewController)]){
+            UIBarButtonItem *saveButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Save", "")
+                                                                           style:UIBarButtonItemStyleDone target:paymentVc
+                                                                          action:@selector(saveAndDismissReviewController)];
+            self.navigationItem.rightBarButtonItem = saveButton;
+        }
     }
     
     [self updateTitleBasedOnSelectedPhotoQuanitity];
@@ -110,6 +112,16 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
                                                   target:self
                                                   action:@selector(onButtonNextClicked:)];
     }
+}
+
+- (void)viewDidDisappear:(BOOL)animated{
+    [super viewDidDisappear:animated];
+    
+#ifndef OL_NO_ANALYTICS
+    if (!self.navigationController){
+        [OLAnalytics trackReviewScreenHitBack:self.product.productTemplate.name numberOfPhotos:self.userSelectedPhotos.count];
+    }
+#endif
 }
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
@@ -264,6 +276,9 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
 }
 
 - (void) deletePhotoAtIndex:(NSUInteger)index{
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackReviewScreenDeletedPhotoForProductName:self.product.productTemplate.name];
+#endif
     [self.userSelectedPhotos removeObjectAtIndex:index];
     
     if (self.userSelectedPhotos.count == 0){
@@ -301,6 +316,10 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     [countLabel setText: [NSString stringWithFormat:@"%lu", (unsigned long)extraCopies + 1]];
     
     [self updateTitleBasedOnSelectedPhotoQuanitity];
+    
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackReviewScreenIncrementedPhotoQtyForProductName:self.product.productTemplate.name];
+#endif
 }
 
 - (IBAction)onButtonDownArrowClicked:(UIButton *)sender {
@@ -336,6 +355,10 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     [countLabel setText: [NSString stringWithFormat:@"%lu", (unsigned long)extraCopies + 1]];
     
     [self updateTitleBasedOnSelectedPhotoQuanitity];
+    
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackReviewScreenDecrementedPhotoQtyForProductName:self.product.productTemplate.name];
+#endif
 }
 
 - (IBAction)onButtonEnhanceClicked:(id)sender {
@@ -370,6 +393,10 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
         cropVc.edits = self.editingPrintPhoto.edits;
         cropVc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
         [self presentViewController:cropVc animated:YES completion:NULL];
+        
+#ifndef OL_NO_ANALYTICS
+        [OLAnalytics trackReviewScreenEnteredCropScreenForProductName:self.product.productTemplate.name];
+#endif
     }];
     
 }
@@ -563,6 +590,10 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     
     [self.collectionView reloadData];
     [cropper dismissViewControllerAnimated:YES completion:NULL];
+    
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackReviewScreenDidCropPhotoForProductName:self.product.productTemplate.name];
+#endif
 }
 
 #pragma mark - Autorotate and Orientation Methods
