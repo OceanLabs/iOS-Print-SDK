@@ -543,21 +543,6 @@
 		2E7D1C8E1BC41C7D009227EE /* OLProductOrderTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLProductOrderTests.m; sourceTree = "<group>"; };
 		2E7F516C1BF5FBB100A78718 /* OLGreetingCardPrintJob.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLGreetingCardPrintJob.m; sourceTree = "<group>"; };
 		2E7F516F1BF5FBCD00A78718 /* OLGreetingCardPrintJob.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLGreetingCardPrintJob.h; sourceTree = "<group>"; };
-		2E85BC8719A24BAB00EC7CC2 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Main.strings; sourceTree = "<group>"; };
-		2E85BC8819A24BAB00EC7CC2 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		2E85BC8919A24BAB00EC7CC2 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		2E85BC8A19A24BB400EC7CC2 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Main.strings; sourceTree = "<group>"; };
-		2E85BC8B19A24BB400EC7CC2 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		2E85BC8C19A24BB400EC7CC2 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		2E85BC8D19A24BB900EC7CC2 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/Main.strings; sourceTree = "<group>"; };
-		2E85BC8E19A24BB900EC7CC2 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		2E85BC8F19A24BB900EC7CC2 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		2E85BC9019A24BDB00EC7CC2 /* pt */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pt; path = pt.lproj/Main.strings; sourceTree = "<group>"; };
-		2E85BC9119A24BDB00EC7CC2 /* pt */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pt; path = pt.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		2E85BC9219A24BDB00EC7CC2 /* pt */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pt; path = pt.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		2E85BC9319A24BE500EC7CC2 /* el */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = el; path = el.lproj/Main.strings; sourceTree = "<group>"; };
-		2E85BC9419A24BE500EC7CC2 /* el */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = el; path = el.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		2E85BC9519A24BE500EC7CC2 /* el */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = el; path = el.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		2E898F851BE37F9B00739F5A /* OLProductTemplateOption.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLProductTemplateOption.h; sourceTree = "<group>"; };
 		2E898F861BE37F9B00739F5A /* OLProductTemplateOption.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLProductTemplateOption.m; sourceTree = "<group>"; };
 		2E8C29EB1B18D1AC0045DC21 /* OLPrintOrderCostRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLPrintOrderCostRequest.h; sourceTree = "<group>"; };
@@ -2095,11 +2080,6 @@
 			knownRegions = (
 				en,
 				Base,
-				fr,
-				de,
-				it,
-				pt,
-				el,
 			);
 			mainGroup = CD73BF5F186215790009DE03;
 			productRefGroup = CD73BF69186215790009DE03 /* Products */;
@@ -2665,11 +2645,6 @@
 			isa = PBXVariantGroup;
 			children = (
 				CD73BF75186215790009DE03 /* en */,
-				2E85BC8819A24BAB00EC7CC2 /* fr */,
-				2E85BC8B19A24BB400EC7CC2 /* de */,
-				2E85BC8E19A24BB900EC7CC2 /* it */,
-				2E85BC9119A24BDB00EC7CC2 /* pt */,
-				2E85BC9419A24BE500EC7CC2 /* el */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
@@ -2678,11 +2653,6 @@
 			isa = PBXVariantGroup;
 			children = (
 				CD73BF7E186215790009DE03 /* Base */,
-				2E85BC8719A24BAB00EC7CC2 /* fr */,
-				2E85BC8A19A24BB400EC7CC2 /* de */,
-				2E85BC8D19A24BB900EC7CC2 /* it */,
-				2E85BC9019A24BDB00EC7CC2 /* pt */,
-				2E85BC9319A24BE500EC7CC2 /* el */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
@@ -2691,11 +2661,6 @@
 			isa = PBXVariantGroup;
 			children = (
 				CD73BF94186215790009DE03 /* en */,
-				2E85BC8919A24BAB00EC7CC2 /* fr */,
-				2E85BC8C19A24BB400EC7CC2 /* de */,
-				2E85BC8F19A24BB900EC7CC2 /* it */,
-				2E85BC9219A24BDB00EC7CC2 /* pt */,
-				2E85BC9519A24BE500EC7CC2 /* el */,
 			);
 			name = InfoPlist.strings;
 			path = PSPrintSDKTests;
