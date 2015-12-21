@@ -127,7 +127,7 @@
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
     
-    if ([self.presentingViewController respondsToSelector:@selector(viewControllers)]) {
+    if ([self.presentingViewController respondsToSelector:@selector(viewControllers)] || !self.presentingViewController) {
         UIViewController *presentingVc = [(UINavigationController *)self.presentingViewController viewControllers].lastObject;
         if (![presentingVc isKindOfClass:[OLPaymentViewController class]]){
             if ([OLKiteABTesting sharedInstance].allowsMultipleRecipients && [OLKiteUtils kiteVcForViewController:self].filterProducts){

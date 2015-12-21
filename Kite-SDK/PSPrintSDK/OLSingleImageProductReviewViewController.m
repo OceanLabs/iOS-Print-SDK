@@ -114,7 +114,7 @@ static BOOL hasMoved;
     [OLAnalytics trackReviewScreenViewed:self.product.productTemplate.name];
 #endif
     
-    if ([self.presentingViewController respondsToSelector:@selector(viewControllers)]) {
+    if ([self.presentingViewController respondsToSelector:@selector(viewControllers)] || !self.presentingViewController) {
         UIViewController *paymentVc = [(UINavigationController *)self.presentingViewController viewControllers].lastObject;
         if ([paymentVc respondsToSelector:@selector(saveAndDismissReviewController)]){
             [self.ctaButton setTitle:NSLocalizedString(@"Save", @"") forState:UIControlStateNormal];

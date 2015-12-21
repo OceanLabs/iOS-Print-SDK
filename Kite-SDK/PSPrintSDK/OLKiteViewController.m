@@ -373,7 +373,6 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
 }
 
 + (NSString *)storyboardIdentifierForGroupSelected:(OLProductGroup *)group{
-    OLProduct *product = [group.products firstObject];
     if (group.products.count > 1){
         return @"OLTypeSelectionViewController";
     }

@@ -165,7 +165,7 @@ UINavigationControllerDelegate>
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     
-    if ([self.presentingViewController respondsToSelector:@selector(viewControllers)]) {
+    if ([self.presentingViewController respondsToSelector:@selector(viewControllers)] || !self.presentingViewController) {
         UIViewController *presentingVc = [(UINavigationController *)self.presentingViewController viewControllers].lastObject;
         if (![presentingVc isKindOfClass:[OLPaymentViewController class]]){
             [self addBasketIconToTopRight];
