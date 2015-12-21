@@ -142,6 +142,7 @@ UINavigationControllerDelegate
     }
     else if([OLKiteABTesting sharedInstance].launchedWithPrintOrder){
         OLKiteViewController *kiteVc = [OLKiteUtils kiteVcForViewController:self];
+        self.product.uuid = [kiteVc.printOrder.jobs.firstObject uuid];
         return [kiteVc.printOrder.jobs firstObject];
     }
     
@@ -197,6 +198,18 @@ UINavigationControllerDelegate
 
 - (void)viewDidLoad{
     [super viewDidLoad];
+    
+    if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder){
+        if ([[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant isEqualToString:@"Review-Overview-Checkout"]){
+            [self.ctaButton setTitle:NSLocalizedString(@"Next", @"") forState:UIControlStateNormal];
+        }
+        
+        if(!self.editingPrintJob){
+            OLKiteViewController *kiteVc = [OLKiteUtils kiteVcForViewController:self];
+            self.editingPrintJob = [kiteVc.printOrder.jobs firstObject];
+            self.product.uuid = self.editingPrintJob.uuid;
+        }
+    }
     
     if ([self.presentingViewController respondsToSelector:@selector(viewControllers)]) {
         UIViewController *paymentVc = [(UINavigationController *)self.presentingViewController viewControllers].lastObject;

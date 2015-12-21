@@ -134,4 +134,9 @@
  */
 - (instancetype _Nullable)initWithPrintOrder:(OLPrintOrder *_Nullable)printOrder info:(NSDictionary * _Nullable)info;
 
+/**
+ *  Clear all the orders that have been saved in the shopping basket.
+ */
+- (void)clearBasket;
+
 @end

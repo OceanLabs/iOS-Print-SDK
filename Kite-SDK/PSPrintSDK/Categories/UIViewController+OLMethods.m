@@ -16,6 +16,7 @@
 #import "NSObject+Utils.h"
 #import "OLPaymentViewController.h"
 #import "OLCustomNavigationController.h"
+#import "OLKiteABTesting.h"
 
 @interface OLKiteViewController (Private)
 @property (strong, nonatomic) OLPrintOrder *printOrder;
@@ -30,6 +31,10 @@
 @implementation UIViewController (OLMethods)
 
 - (void)addBasketIconToTopRight{
+    if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder){
+        return;
+    }
+    
     OLPrintOrder *printOrder = [OLKiteUtils kiteVcForViewController:self].printOrder;
     UIButton *basketButton = [UIButton buttonWithType:UIButtonTypeCustom];
     basketButton.frame = CGRectMake(0,0,44,44);

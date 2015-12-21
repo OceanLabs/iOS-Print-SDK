@@ -62,18 +62,6 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
 
 @implementation OLOrderReviewViewController
 
--(id<OLPrintJob>)editingPrintJob{
-    if (_editingPrintJob){
-        return _editingPrintJob;
-    }
-    else if([OLKiteABTesting sharedInstance].launchedWithPrintOrder){
-        OLKiteViewController *kiteVc = [OLKiteUtils kiteVcForViewController:self];
-        return [kiteVc.printOrder.jobs firstObject];
-    }
-    
-    return nil;
-}
-
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -110,6 +98,18 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     [self.nextButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     self.nextButton.frame = CGRectMake(0, self.view.frame.size.height - 40 - ([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height), self.view.frame.size.width, 40);
     [self.collectionView addSubview:self.nextButton];
+    
+    if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder){
+        if ([[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant isEqualToString:@"Review-Overview-Checkout"]){
+            [self.nextButton setTitle:NSLocalizedString(@"Next", @"") forState:UIControlStateNormal];
+        }
+        
+        if(!self.editingPrintJob){
+            OLKiteViewController *kiteVc = [OLKiteUtils kiteVcForViewController:self];
+            self.editingPrintJob = [kiteVc.printOrder.jobs firstObject];
+            self.product.uuid = self.editingPrintJob.uuid;
+        }
+    }
     
     if ([self.presentingViewController respondsToSelector:@selector(viewControllers)]) {
         UIViewController *paymentVc = [(UINavigationController *)self.presentingViewController viewControllers].lastObject;

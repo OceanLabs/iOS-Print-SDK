@@ -77,6 +77,11 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
     return _printOrder;
 }
 
+- (void)clearBasket{
+    self.printOrder = [[OLPrintOrder alloc] init];
+    [self.printOrder saveOrder];
+}
+
 - (UIStatusBarStyle)preferredStatusBarStyle{
     return [[self.childViewControllers firstObject] preferredStatusBarStyle];
 }

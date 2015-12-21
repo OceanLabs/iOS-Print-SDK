@@ -87,25 +87,11 @@ OLAssetsPickerControllerDelegate, RMImageCropperDelegate>
 @property (strong, nonatomic) OLPrintPhoto *imagePicked;
 @property (strong, nonatomic) OLPrintPhoto *imageDisplayed;
 
--(void) doCheckout;
-
 @end
 
 static BOOL hasMoved;
 
 @implementation OLSingleImageProductReviewViewController
-
--(id<OLPrintJob>)editingPrintJob{
-    if (_editingPrintJob){
-        return _editingPrintJob;
-    }
-    else if([OLKiteABTesting sharedInstance].launchedWithPrintOrder){
-        OLKiteViewController *kiteVc = [OLKiteUtils kiteVcForViewController:self];
-        return [kiteVc.printOrder.jobs firstObject];
-    }
-    
-    return nil;
-}
 
 -(void)viewDidLoad{
     [super viewDidLoad];
@@ -113,6 +99,18 @@ static BOOL hasMoved;
 #ifndef OL_NO_ANALYTICS
     [OLAnalytics trackReviewScreenViewed:self.product.productTemplate.name];
 #endif
+    
+    if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder){
+        if ([[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant isEqualToString:@"Review-Overview-Checkout"]){
+            [self.ctaButton setTitle:NSLocalizedString(@"Next", @"") forState:UIControlStateNormal];
+        }
+        
+        if(!self.editingPrintJob){
+            OLKiteViewController *kiteVc = [OLKiteUtils kiteVcForViewController:self];
+            self.editingPrintJob = [kiteVc.printOrder.jobs firstObject];
+            self.product.uuid = self.editingPrintJob.uuid;
+        }
+    }
     
     if ([self.presentingViewController respondsToSelector:@selector(viewControllers)] || !self.presentingViewController) {
         UIViewController *paymentVc = [(UINavigationController *)self.presentingViewController viewControllers].lastObject;
