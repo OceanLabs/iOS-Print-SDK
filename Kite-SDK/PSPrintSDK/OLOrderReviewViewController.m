@@ -91,15 +91,6 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     [OLAnalytics trackReviewScreenViewed:self.product.productTemplate.name];
 #endif
     
-    if ([self.presentingViewController respondsToSelector:@selector(viewControllers)]) {
-        UIViewController *paymentVc = [(UINavigationController *)self.presentingViewController viewControllers].lastObject;
-        if ([paymentVc respondsToSelector:@selector(saveAndDismissReviewController)]){
-            [self.nextButton setTitle:NSLocalizedString(@"Save", @"") forState:UIControlStateNormal];
-            [self.nextButton removeTarget:self action:@selector(onButtonNextClicked:) forControlEvents:UIControlEventTouchUpInside];
-            [self.nextButton addTarget:paymentVc action:@selector(saveAndDismissReviewController) forControlEvents:UIControlEventTouchUpInside];
-        }
-    }
-    
     [self updateTitleBasedOnSelectedPhotoQuanitity];
     
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Back", @"")
@@ -107,20 +98,26 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
                                                                             target:nil
                                                                             action:nil];
     
+    [self setupCtaButton];
+}
+
+- (void)setupCtaButton{
     self.nextButton = [[UIButton alloc] init];
     [self.nextButton.titleLabel setFont:[UIFont systemFontOfSize:17]];
     [self.nextButton setTitle:NSLocalizedString(@"Add to Basket", @"") forState:UIControlStateNormal];
     [self.nextButton addTarget:self action:@selector(onButtonNextClicked:) forControlEvents:UIControlEventTouchUpInside];
-    [self.nextButton setBackgroundColor:[UIColor colorWithRed:0.549 green:0.737 blue:0.749 alpha:1.000]];
-    [self.nextButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [self.nextButton setBackgroundColor:[UIColor colorWithRed:1.000 green:0.894 blue:0.000 alpha:1.000]];
+    [self.nextButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     self.nextButton.frame = CGRectMake(0, self.view.frame.size.height - 40 - ([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height), self.view.frame.size.width, 40);
     [self.collectionView addSubview:self.nextButton];
     
-    UIViewController *paymentVc = [(UINavigationController *)self.presentingViewController viewControllers].lastObject;
-    if ([paymentVc respondsToSelector:@selector(saveAndDismissReviewController)]){
-        [self.nextButton setTitle:NSLocalizedString(@"Save", @"") forState:UIControlStateNormal];
-        [self.nextButton removeTarget:self action:@selector(onButtonNextClicked:) forControlEvents:UIControlEventTouchUpInside];
-        [self.nextButton addTarget:paymentVc action:@selector(saveAndDismissReviewController) forControlEvents:UIControlEventTouchUpInside];
+    if ([self.presentingViewController respondsToSelector:@selector(viewControllers)]) {
+        UIViewController *paymentVc = [(UINavigationController *)self.presentingViewController viewControllers].lastObject;
+        if ([paymentVc respondsToSelector:@selector(saveAndDismissReviewController)]){
+            [self.nextButton setTitle:NSLocalizedString(@"Save", @"") forState:UIControlStateNormal];
+            [self.nextButton removeTarget:self action:@selector(onButtonNextClicked:) forControlEvents:UIControlEventTouchUpInside];
+            [self.nextButton addTarget:paymentVc action:@selector(saveAndDismissReviewController) forControlEvents:UIControlEventTouchUpInside];
+        }
     }
 }
 

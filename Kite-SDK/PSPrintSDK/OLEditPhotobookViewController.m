@@ -121,12 +121,16 @@ UINavigationControllerDelegate>
     
     [self updatePhotobookPhotos];
     
+    [self setupCtaButton];
+}
+
+- (void)setupCtaButton{
     self.nextButton = [[UIButton alloc] init];
     [self.nextButton.titleLabel setFont:[UIFont systemFontOfSize:17]];
     [self.nextButton setTitle:NSLocalizedString(@"Next", @"") forState:UIControlStateNormal];
     [self.nextButton addTarget:self action:@selector(onButtonNextClicked) forControlEvents:UIControlEventTouchUpInside];
-    [self.nextButton setBackgroundColor:[UIColor colorWithRed:0.125 green:0.498 blue:0.655 alpha:1.000]];
-    [self.nextButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [self.nextButton setBackgroundColor:[UIColor colorWithRed:1.000 green:0.894 blue:0.000 alpha:1.000]];
+    [self.nextButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     self.nextButton.frame = CGRectMake(0, self.view.frame.size.height - 40 - ([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height), self.view.frame.size.width, 40);
     [self.collectionView addSubview:self.nextButton];
 }
