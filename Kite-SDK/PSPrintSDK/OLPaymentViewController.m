@@ -172,8 +172,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *totalCostActivityIndicator;
 @property (assign, nonatomic) CGFloat keyboardAnimationPercent;
 @property (assign, nonatomic) BOOL authorizedApplePay;
-
-
+@property (assign, nonatomic) BOOL usedContinueShoppingButton;
 
 @end
 
@@ -338,7 +337,9 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     if (!self.navigationController){
         [self.printOrder discardDuplicateJobs];
 #ifndef OL_NO_ANALYTICS
-        [OLAnalytics trackPaymentScreenHitBackForOrder:self.printOrder applePayIsAvailable:[self isApplePayAvailable] ? @"Yes" : @"No"];
+        if (!self.usedContinueShoppingButton){
+            [OLAnalytics trackPaymentScreenHitBackForOrder:self.printOrder applePayIsAvailable:[self isApplePayAvailable] ? @"Yes" : @"No"];
+        }
 #endif
     }
 }
@@ -1325,6 +1326,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 }
 
 - (IBAction)onButtonContinueShoppingClicked:(UIButton *)sender {
+    self.usedContinueShoppingButton = YES;
 #ifndef OL_NO_ANALYTICS
     [OLAnalytics trackContinueShoppingButtonPressed:self.printOrder];
 #endif
