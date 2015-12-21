@@ -63,14 +63,6 @@ CGFloat margin = 2;
     [super viewDidLoad];
     
     self.title = NSLocalizedString(@"Review", @"");
-    
-    if (!self.navigationItem.rightBarButtonItem){
-        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]
-                                                  initWithTitle:NSLocalizedString(@"Next", @"")
-                                                  style:UIBarButtonItemStylePlain
-                                                  target:self
-                                                  action:@selector(onButtonNextClicked:)];
-    }
 }
 
 - (void)onTapGestureThumbnailTapped:(UITapGestureRecognizer*)gestureRecognizer {

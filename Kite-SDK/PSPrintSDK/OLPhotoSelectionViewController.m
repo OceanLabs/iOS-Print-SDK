@@ -45,6 +45,8 @@
 #import "OLRemoteImageView.h"
 #import "OLImageCachingManager.h"
 #import "UIImage+ImageNamedInKiteBundle.h"
+#import "UIViewController+OLMethods.h"
+#import "OLPaymentViewController.h"
 
 NSInteger OLPhotoSelectionMargin = 0;
 
@@ -198,6 +200,14 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
+
+    if ([self.presentingViewController respondsToSelector:@selector(viewControllers)] || !self.presentingViewController) {
+        UIViewController *presentingVc = [(UINavigationController *)self.presentingViewController viewControllers].lastObject;
+        if (![presentingVc isKindOfClass:[OLPaymentViewController class]]){
+            [self addBasketIconToTopRight];
+        }
+    }
+    
     if (self.userSelectedPhotos.count > 0){
         [self.collectionView reloadData];
     }
@@ -292,21 +302,12 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     }
     
     if ([self.userDisabledPhotos count] > 0){
-        self.navigationItem.rightBarButtonItem.title = NSLocalizedString(@"Cancel", @"");
-        
-//        if ([self.userDisabledPhotos count] == 1){
-//            [self.clearButton setTitle:[NSString stringWithFormat:NSLocalizedString(@"Clear %lu Photo", @""), (unsigned long)[self.userDisabledPhotos count]] forState:UIControlStateNormal];
-//        }
-//        else{
-//            [self.clearButton setTitle:[NSString stringWithFormat:NSLocalizedString(@"Clear %lu Photos", @""), (unsigned long)[self.userDisabledPhotos count]] forState:UIControlStateNormal];
-//        }
         [UIView animateKeyframesWithDuration:0.15 delay:0 options:UIViewKeyframeAnimationOptionBeginFromCurrentState | UIViewAnimationOptionCurveLinear animations:^{
             self.clearButtonContainerView.transform = CGAffineTransformMakeTranslation(0, -40);
             self.collectionView.contentInset = UIEdgeInsetsMake(self.collectionView.contentInset.top, self.collectionView.contentInset.left, self.collectionView.contentInset.bottom + 40, self.collectionView.contentInset.left);
         }completion:NULL];
     }
     else{
-        self.navigationItem.rightBarButtonItem.title = NSLocalizedString(@"Next", @"");
         if (self.clearButtonContainerView.transform.ty != 0){
             [UIView animateKeyframesWithDuration:0.15 delay:0 options:UIViewKeyframeAnimationOptionBeginFromCurrentState | UIViewAnimationOptionCurveLinear animations:^{
                 self.clearButtonContainerView.transform = CGAffineTransformIdentity;

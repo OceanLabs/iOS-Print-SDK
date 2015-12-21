@@ -22,12 +22,12 @@
 
 /* Begin PBXBuildFile section */
 		2E2632C21B97336700C7D879 /* KitePrintSDKUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E2632C11B97336700C7D879 /* KitePrintSDKUITests.m */; };
-		2E2E61E71C21826D005CB729 /* UIViewController+OLMethods.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E2E61E61C21826D005CB729 /* UIViewController+OLMethods.m */; };
-		2E2E61E81C21826D005CB729 /* UIViewController+OLMethods.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E2E61E61C21826D005CB729 /* UIViewController+OLMethods.m */; };
 		2E482B7A1BEB4C7D007460EA /* OLStripeCard.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E482B781BEB4C7D007460EA /* OLStripeCard.m */; };
 		2E482B7B1BEB4C7D007460EA /* OLStripeCard.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E482B781BEB4C7D007460EA /* OLStripeCard.m */; };
 		2E4FC90E1C04A4F4000143F5 /* OLOrdersViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E4FC90D1C04A4F4000143F5 /* OLOrdersViewController.m */; };
 		2E4FC90F1C04A4F4000143F5 /* OLOrdersViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E4FC90D1C04A4F4000143F5 /* OLOrdersViewController.m */; };
+		2E53E0CD1C1AEAAD00BF7887 /* UIViewController+OLMethods.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E53E0CC1C1AEAAD00BF7887 /* UIViewController+OLMethods.m */; };
+		2E53E0CE1C1AEAAD00BF7887 /* UIViewController+OLMethods.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E53E0CC1C1AEAAD00BF7887 /* UIViewController+OLMethods.m */; };
 		2E645B351BE7D16E009B662B /* OLProductDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EAD11511BD79ED0000BC80E /* OLProductDetailsViewController.m */; };
 		2E645B361BE7D170009B662B /* OLProductDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EAD11511BD79ED0000BC80E /* OLProductDetailsViewController.m */; };
 		2E645B371BE7D173009B662B /* OLProductOptionsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EAD11541BD7C716000BC80E /* OLProductOptionsViewController.m */; };
@@ -114,7 +114,6 @@
 		2EADD8291BE79D6D0051CD31 /* UITextField+Selection.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DEF0D1A1A964B4E000F1E66 /* UITextField+Selection.m */; };
 		2EADD82A1BE79D6D0051CD31 /* UITableViewController+ScreenWidthFactor.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D8122F21A75A46D004E7297 /* UITableViewController+ScreenWidthFactor.m */; };
 		2EADD82B1BE79D6D0051CD31 /* LXReorderableCollectionViewFlowLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 2ED5DEBE1AC948C1003301A8 /* LXReorderableCollectionViewFlowLayout.m */; };
-		2EADD82C1BE79D6D0051CD31 /* OLPosterSizeSelectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1F69DD1A66999700696286 /* OLPosterSizeSelectionViewController.m */; };
 		2EADD82D1BE79D6D0051CD31 /* OLImageCachingManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EF8BA9E1B99E9E4009BC73B /* OLImageCachingManager.m */; };
 		2EADD82E1BE79D6D0051CD31 /* UIView+RoundRect.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1067FF1B83335C00EB4C14 /* UIView+RoundRect.m */; };
 		2EADD82F1BE79D6D0051CD31 /* OLCountry.m in Sources */ = {isa = PBXBuildFile; fileRef = CD73BFA6186306550009DE03 /* OLCountry.m */; };
@@ -292,7 +291,6 @@
 		E29C85E91BE3B5C50041D4CF /* UITextField+Selection.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DEF0D1A1A964B4E000F1E66 /* UITextField+Selection.m */; };
 		E29C85EA1BE3B5C50041D4CF /* UITableViewController+ScreenWidthFactor.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D8122F21A75A46D004E7297 /* UITableViewController+ScreenWidthFactor.m */; };
 		E29C85EB1BE3B5C50041D4CF /* LXReorderableCollectionViewFlowLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 2ED5DEBE1AC948C1003301A8 /* LXReorderableCollectionViewFlowLayout.m */; };
-		E29C85EC1BE3B5C50041D4CF /* OLPosterSizeSelectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1F69DD1A66999700696286 /* OLPosterSizeSelectionViewController.m */; };
 		E29C85ED1BE3B5C50041D4CF /* OLImageCachingManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EF8BA9E1B99E9E4009BC73B /* OLImageCachingManager.m */; };
 		E29C85EF1BE3B5C50041D4CF /* UIView+RoundRect.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1067FF1B83335C00EB4C14 /* UIView+RoundRect.m */; };
 		E29C85F01BE3B5C50041D4CF /* OLCountry.m in Sources */ = {isa = PBXBuildFile; fileRef = CD73BFA6186306550009DE03 /* OLCountry.m */; };
@@ -471,8 +469,6 @@
 		2E0E250E1A77997E00808ED8 /* OLAnalytics.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLAnalytics.m; sourceTree = "<group>"; };
 		2E1067FE1B83335C00EB4C14 /* UIView+RoundRect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIView+RoundRect.h"; path = "PSPrintSDK/Categories/UIView+RoundRect.h"; sourceTree = "<group>"; };
 		2E1067FF1B83335C00EB4C14 /* UIView+RoundRect.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIView+RoundRect.m"; path = "PSPrintSDK/Categories/UIView+RoundRect.m"; sourceTree = "<group>"; };
-		2E1F69DC1A66999700696286 /* OLPosterSizeSelectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLPosterSizeSelectionViewController.h; sourceTree = "<group>"; };
-		2E1F69DD1A66999700696286 /* OLPosterSizeSelectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLPosterSizeSelectionViewController.m; sourceTree = "<group>"; };
 		2E20BD841AD4229700FB2446 /* OLCaseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLCaseViewController.h; sourceTree = "<group>"; };
 		2E20BD851AD4229700FB2446 /* OLCaseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLCaseViewController.m; sourceTree = "<group>"; };
 		2E20BD871AD42E2200FB2446 /* OLPostcardViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLPostcardViewController.h; sourceTree = "<group>"; };
@@ -525,6 +521,8 @@
 		2E5258FD1A9C884700DBC69B /* OLProductTypeSelectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLProductTypeSelectionViewController.m; sourceTree = "<group>"; };
 		2E5258FF1A9C91DF00DBC69B /* OLSingleImageProductReviewViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLSingleImageProductReviewViewController.h; sourceTree = "<group>"; };
 		2E5259001A9C91DF00DBC69B /* OLSingleImageProductReviewViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLSingleImageProductReviewViewController.m; sourceTree = "<group>"; };
+		2E53E0CB1C1AEAAD00BF7887 /* UIViewController+OLMethods.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIViewController+OLMethods.h"; path = "PSPrintSDK/Categories/UIViewController+OLMethods.h"; sourceTree = "<group>"; };
+		2E53E0CC1C1AEAAD00BF7887 /* UIViewController+OLMethods.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIViewController+OLMethods.m"; path = "PSPrintSDK/Categories/UIViewController+OLMethods.m"; sourceTree = "<group>"; };
 		2E5E0C141993840600C34D5C /* OLCheckoutDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OLCheckoutDelegate.h; sourceTree = "<group>"; };
 		2E5F802A1B01E5F700095203 /* OLPaymentLineItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLPaymentLineItem.h; sourceTree = "<group>"; };
 		2E5F802B1B01E5F700095203 /* OLPaymentLineItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLPaymentLineItem.m; sourceTree = "<group>"; };
@@ -1071,8 +1069,6 @@
 				2EA8BEAD1A484FCB008A9248 /* OLProductHomeViewController.m */,
 				2E5258FC1A9C884700DBC69B /* OLProductTypeSelectionViewController.h */,
 				2E5258FD1A9C884700DBC69B /* OLProductTypeSelectionViewController.m */,
-				2E1F69DC1A66999700696286 /* OLPosterSizeSelectionViewController.h */,
-				2E1F69DD1A66999700696286 /* OLPosterSizeSelectionViewController.m */,
 				2EA8BEAE1A484FCB008A9248 /* OLProductOverviewViewController.h */,
 				2EA8BEAF1A484FCB008A9248 /* OLProductOverviewViewController.m */,
 				2EA8BEB01A484FCB008A9248 /* OLProductOverviewPageContentViewController.h */,
@@ -1184,6 +1180,8 @@
 		2EA8BEC11A48509E008A9248 /* Categories */ = {
 			isa = PBXGroup;
 			children = (
+				2E53E0CB1C1AEAAD00BF7887 /* UIViewController+OLMethods.h */,
+				2E53E0CC1C1AEAAD00BF7887 /* UIViewController+OLMethods.m */,
 				3DF9D6FF1B0F65C700A40C0C /* NSObject+Utils.h */,
 				3DF9D7001B0F65C700A40C0C /* NSObject+Utils.m */,
 				3DF9D6FB1B0F618000A40C0C /* UIViewController+TraitCollectionCompatibility.h */,
@@ -2011,7 +2009,7 @@
 		CD73BF60186215790009DE03 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0700;
+				LastUpgradeCheck = 0720;
 				ORGANIZATIONNAME = Kite.ly;
 				TargetAttributes = {
 					2E2632BE1B97336700C7D879 = {
@@ -2261,6 +2259,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2E53E0CD1C1AEAAD00BF7887 /* UIViewController+OLMethods.m in Sources */,
 				2EADD7E61BE79D6D0051CD31 /* OLURLDataSource.m in Sources */,
 				2EADD7E71BE79D6D0051CD31 /* OLScrollCropViewController.m in Sources */,
 				2EADD7E81BE79D6D0051CD31 /* OLPrintOrderCostRequest.m in Sources */,
@@ -2323,7 +2322,6 @@
 				2EADD81D1BE79D6D0051CD31 /* UIViewController+TraitCollectionCompatibility.m in Sources */,
 				2EADD81E1BE79D6D0051CD31 /* OLProductOverviewViewController.m in Sources */,
 				2EADD81F1BE79D6D0051CD31 /* OLAddress+AddressBook.m in Sources */,
-				2E2E61E71C21826D005CB729 /* UIViewController+OLMethods.m in Sources */,
 				2EADD8201BE79D6D0051CD31 /* OLPrintOrder.m in Sources */,
 				2EADD8211BE79D6D0051CD31 /* OLProductTemplateSyncRequest.m in Sources */,
 				2EADD8221BE79D6D0051CD31 /* OLAssetsPickerController.m in Sources */,
@@ -2337,7 +2335,6 @@
 				2EADD8291BE79D6D0051CD31 /* UITextField+Selection.m in Sources */,
 				2EADD82A1BE79D6D0051CD31 /* UITableViewController+ScreenWidthFactor.m in Sources */,
 				2EADD82B1BE79D6D0051CD31 /* LXReorderableCollectionViewFlowLayout.m in Sources */,
-				2EADD82C1BE79D6D0051CD31 /* OLPosterSizeSelectionViewController.m in Sources */,
 				2EADD82D1BE79D6D0051CD31 /* OLImageCachingManager.m in Sources */,
 				2EADD82E1BE79D6D0051CD31 /* UIView+RoundRect.m in Sources */,
 				2EADD82F1BE79D6D0051CD31 /* OLCountry.m in Sources */,
@@ -2572,6 +2569,7 @@
 				E29C85D41BE3B5C50041D4CF /* OLAddress.m in Sources */,
 				E29C85D61BE3B5C50041D4CF /* OLCustomNavigationController.m in Sources */,
 				2E8FD2711BF9E73B00F4FC5A /* OLPhotoEdits.m in Sources */,
+				2E53E0CE1C1AEAAD00BF7887 /* UIViewController+OLMethods.m in Sources */,
 				E29C85D71BE3B5C50041D4CF /* NSDecimalNumber+CostFormatter.m in Sources */,
 				E29C85D81BE3B5C50041D4CF /* UIViewController+TraitCollectionCompatibility.m in Sources */,
 				2E645B361BE7D170009B662B /* OLProductDetailsViewController.m in Sources */,
@@ -2590,14 +2588,12 @@
 				E29C85E91BE3B5C50041D4CF /* UITextField+Selection.m in Sources */,
 				E29C85EA1BE3B5C50041D4CF /* UITableViewController+ScreenWidthFactor.m in Sources */,
 				E29C85EB1BE3B5C50041D4CF /* LXReorderableCollectionViewFlowLayout.m in Sources */,
-				E29C85EC1BE3B5C50041D4CF /* OLPosterSizeSelectionViewController.m in Sources */,
 				E29C85ED1BE3B5C50041D4CF /* OLImageCachingManager.m in Sources */,
 				E29C85EF1BE3B5C50041D4CF /* UIView+RoundRect.m in Sources */,
 				E29C85F01BE3B5C50041D4CF /* OLCountry.m in Sources */,
 				E29C85F11BE3B5C50041D4CF /* OLAssetScrollView.m in Sources */,
 				E29C85F21BE3B5C50041D4CF /* ALAssetsLibrary+Singleton.m in Sources */,
 				E29C85F31BE3B5C50041D4CF /* OLConstants.m in Sources */,
-				2E2E61E81C21826D005CB729 /* UIViewController+OLMethods.m in Sources */,
 				E29C85F41BE3B5C50041D4CF /* OLProductOverviewPageContentViewController.m in Sources */,
 				E29C85F61BE3B5C50041D4CF /* OLJudoPayCard.m in Sources */,
 				E29C85F71BE3B5C50041D4CF /* OLReceiptViewController.m in Sources */,

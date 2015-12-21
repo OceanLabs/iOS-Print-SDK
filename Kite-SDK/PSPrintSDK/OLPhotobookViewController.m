@@ -40,6 +40,7 @@
 #import "UIImage+ImageNamedInKiteBundle.h"
 #import "OLKiteABTesting.h"
 #import "OLPaymentViewController.h"
+#import "UIViewController+OLMethods.h"
 
 static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 static const NSUInteger kTagLeft = 10;
@@ -129,6 +130,7 @@ UINavigationControllerDelegate
 @property (weak, nonatomic) OLPopupOptionsImageView *coverImageView;
 @property (assign, nonatomic) NSInteger addNewPhotosAtIndex;
 @property (strong, nonatomic) NSArray *userSelectedPhotosCopy;
+@property (weak, nonatomic) IBOutlet UIButton *ctaButton;
 
 @end
 
@@ -199,12 +201,13 @@ UINavigationControllerDelegate
     if ([self.presentingViewController respondsToSelector:@selector(viewControllers)]) {
         UIViewController *paymentVc = [(UINavigationController *)self.presentingViewController viewControllers].lastObject;
         if ([paymentVc respondsToSelector:@selector(saveAndDismissReviewController)]){
-            UIBarButtonItem *saveButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Save", "")
-                                                                           style:UIBarButtonItemStyleDone target:paymentVc
-                                                                          action:@selector(saveAndDismissReviewController)];
-            self.navigationItem.rightBarButtonItem = saveButton;
+            [self.ctaButton setTitle:NSLocalizedString(@"Save", @"") forState:UIControlStateNormal];
+            [self.ctaButton removeTarget:self action:@selector(onButtonNextClicked:) forControlEvents:UIControlEventTouchUpInside];
+            [self.ctaButton addTarget:paymentVc action:@selector(saveAndDismissReviewController) forControlEvents:UIControlEventTouchUpInside];
         }
     }
+    
+    
     
 #ifndef OL_NO_ANALYTICS
     if (!self.editMode){
@@ -268,14 +271,6 @@ UINavigationControllerDelegate
     [self.pageController.view addGestureRecognizer:longPressGesture];
     
     self.title = NSLocalizedString(@"Review", @"");
-    
-    if (!self.navigationItem.rightBarButtonItem){
-        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]
-                                                  initWithTitle:NSLocalizedString(@"Next", @"")
-                                                  style:UIBarButtonItemStylePlain
-                                                  target:self
-                                                  action:@selector(onButtonNextClicked:)];
-    }
     
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Back", @"")
                                                                              style:UIBarButtonItemStylePlain
@@ -349,7 +344,11 @@ UINavigationControllerDelegate
     
     [self updatePagesLabel];
     
-    CGFloat yOffset = !self.editMode ? ([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height)/2.0 : -15;
+    if (self.editMode){
+        [self.ctaButton removeFromSuperview];
+    }
+    
+    CGFloat yOffset = !self.editMode ? ([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height-self.ctaButton.frame.size.height)/2.0 : -15;
     if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8){
         yOffset = 22;
     }
@@ -494,6 +493,18 @@ UINavigationControllerDelegate
     }];
 }
 
+- (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    if (!self.editMode){
+        if ([self.presentingViewController respondsToSelector:@selector(viewControllers)] || !self.presentingViewController) {
+            UIViewController *presentingVc = [(UINavigationController *)self.presentingViewController viewControllers].lastObject;
+            if (![presentingVc isKindOfClass:[OLPaymentViewController class]]){
+                [self addBasketIconToTopRight];
+            }
+        }
+    }
+}
+
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator{
     [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
     self.stranded = NO;
@@ -521,7 +532,7 @@ UINavigationControllerDelegate
             }
         }
         
-        CGFloat yOffset = !self.editMode ? ([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height)/2.0 : -15;
+        CGFloat yOffset = !self.editMode ? ([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height-self.ctaButton.frame.size.height)/2.0 : -15;
         
         self.centerYCon = [NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.containerView.superview attribute:NSLayoutAttributeCenterY multiplier:1 constant:yOffset];
         [self.containerView.superview addConstraint:self.centerYCon];
@@ -617,7 +628,7 @@ UINavigationControllerDelegate
 
 #pragma mark - Checkout
 
-- (IBAction)onButtonNextClicked:(UIBarButtonItem *)sender {
+- (IBAction)onButtonNextClicked:(UIButton *)sender {
     if (![self shouldGoToCheckout]){
         return;
     }

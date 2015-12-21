@@ -26,6 +26,7 @@
 #import "OLRemoteImageView.h"
 #import "OLKiteUtils.h"
 #import "OLPaymentViewController.h"
+#import "UIViewController+OLMethods.h"
 
 static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 static const NSUInteger kTagAlertViewDeletePhoto = 98;
@@ -55,6 +56,7 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
 @property (strong, nonatomic) UIView *addMorePhotosView;
 @property (strong, nonatomic) UIButton *addMorePhotosButton;
 @property (assign, nonatomic) NSUInteger indexOfPhotoToDelete;
+@property (strong, nonatomic) UIButton *nextButton;
 
 @end
 
@@ -92,10 +94,9 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     if ([self.presentingViewController respondsToSelector:@selector(viewControllers)]) {
         UIViewController *paymentVc = [(UINavigationController *)self.presentingViewController viewControllers].lastObject;
         if ([paymentVc respondsToSelector:@selector(saveAndDismissReviewController)]){
-            UIBarButtonItem *saveButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Save", "")
-                                                                           style:UIBarButtonItemStyleDone target:paymentVc
-                                                                          action:@selector(saveAndDismissReviewController)];
-            self.navigationItem.rightBarButtonItem = saveButton;
+            [self.nextButton setTitle:NSLocalizedString(@"Save", @"") forState:UIControlStateNormal];
+            [self.nextButton removeTarget:self action:@selector(onButtonNextClicked:) forControlEvents:UIControlEventTouchUpInside];
+            [self.nextButton addTarget:paymentVc action:@selector(saveAndDismissReviewController) forControlEvents:UIControlEventTouchUpInside];
         }
     }
     
@@ -105,12 +106,21 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
                                                                              style:UIBarButtonItemStylePlain
                                                                             target:nil
                                                                             action:nil];
-    if (!self.navigationItem.rightBarButtonItem){
-        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]
-                                                  initWithTitle:NSLocalizedString(@"Next", @"")
-                                                  style:UIBarButtonItemStylePlain
-                                                  target:self
-                                                  action:@selector(onButtonNextClicked:)];
+    
+    self.nextButton = [[UIButton alloc] init];
+    [self.nextButton.titleLabel setFont:[UIFont systemFontOfSize:17]];
+    [self.nextButton setTitle:NSLocalizedString(@"Add to Basket", @"") forState:UIControlStateNormal];
+    [self.nextButton addTarget:self action:@selector(onButtonNextClicked:) forControlEvents:UIControlEventTouchUpInside];
+    [self.nextButton setBackgroundColor:[UIColor colorWithRed:0.549 green:0.737 blue:0.749 alpha:1.000]];
+    [self.nextButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    self.nextButton.frame = CGRectMake(0, self.view.frame.size.height - 40 - ([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height), self.view.frame.size.width, 40);
+    [self.collectionView addSubview:self.nextButton];
+    
+    UIViewController *paymentVc = [(UINavigationController *)self.presentingViewController viewControllers].lastObject;
+    if ([paymentVc respondsToSelector:@selector(saveAndDismissReviewController)]){
+        [self.nextButton setTitle:NSLocalizedString(@"Save", @"") forState:UIControlStateNormal];
+        [self.nextButton removeTarget:self action:@selector(onButtonNextClicked:) forControlEvents:UIControlEventTouchUpInside];
+        [self.nextButton addTarget:paymentVc action:@selector(saveAndDismissReviewController) forControlEvents:UIControlEventTouchUpInside];
     }
 }
 
@@ -122,6 +132,22 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
         [OLAnalytics trackReviewScreenHitBack:self.product.productTemplate.name numberOfPhotos:self.userSelectedPhotos.count];
     }
 #endif
+}
+
+- (void)viewDidLayoutSubviews{
+    [super viewDidLayoutSubviews];
+    self.nextButton.frame = CGRectMake(0, self.view.frame.size.height - 40 + self.collectionView.contentOffset.y, self.view.frame.size.width, 40);
+}
+
+- (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    
+    if ([self.presentingViewController respondsToSelector:@selector(viewControllers)] || !self.presentingViewController) {
+        UIViewController *presentingVc = [(UINavigationController *)self.presentingViewController viewControllers].lastObject;
+        if (![presentingVc isKindOfClass:[OLPaymentViewController class]]){
+            [self addBasketIconToTopRight];
+        }
+    }
 }
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
@@ -141,8 +167,16 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
             UICollectionViewCell *cell = [self.collectionView cellForItemAtIndexPath:indexPath];
             [cell setNeedsDisplay];
         }
+        
+        self.nextButton.frame = CGRectMake(0, self.view.frame.size.height - 40 + self.collectionView.contentOffset.y, self.view.frame.size.width, 40);
     }completion:^(id<UIViewControllerTransitionCoordinator> context){
     }];
+}
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView{
+    CGRect headerFrame = self.nextButton.frame;
+    headerFrame.origin.y = self.view.frame.size.height - 40 + scrollView.contentOffset.y ;
+    self.nextButton.frame = headerFrame;
 }
 
 -(NSUInteger) totalNumberOfExtras{
