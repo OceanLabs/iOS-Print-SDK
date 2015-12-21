@@ -162,6 +162,9 @@ static BOOL hasMoved;
             [self addBasketIconToTopRight];
         }
     }
+    else{
+        [self addBasketIconToTopRight];
+    }
     
     hasMoved = NO;
     self.imageCropView.imageView.transform = self.imageDisplayed.edits.cropTransform;

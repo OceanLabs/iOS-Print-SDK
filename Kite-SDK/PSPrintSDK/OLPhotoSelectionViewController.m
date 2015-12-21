@@ -201,11 +201,14 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
 
-    if ([self.presentingViewController respondsToSelector:@selector(viewControllers)] || !self.presentingViewController) {
+    if ([self.presentingViewController respondsToSelector:@selector(viewControllers)]) {
         UIViewController *presentingVc = [(UINavigationController *)self.presentingViewController viewControllers].lastObject;
         if (![presentingVc isKindOfClass:[OLPaymentViewController class]]){
             [self addBasketIconToTopRight];
         }
+    }
+    else{
+        [self addBasketIconToTopRight];
     }
     
     if (self.userSelectedPhotos.count > 0){

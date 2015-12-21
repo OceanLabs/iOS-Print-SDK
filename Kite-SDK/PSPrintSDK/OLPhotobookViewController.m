@@ -509,11 +509,14 @@ UINavigationControllerDelegate
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     if (!self.editMode){
-        if ([self.presentingViewController respondsToSelector:@selector(viewControllers)] || !self.presentingViewController) {
+        if ([self.presentingViewController respondsToSelector:@selector(viewControllers)]) {
             UIViewController *presentingVc = [(UINavigationController *)self.presentingViewController viewControllers].lastObject;
             if (![presentingVc isKindOfClass:[OLPaymentViewController class]]){
                 [self addBasketIconToTopRight];
             }
+        }
+        else{
+            [self addBasketIconToTopRight];
         }
     }
 }
