@@ -348,7 +348,9 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     [self.printOrder discardDuplicateJobs];
     [self.navigationController.presentingViewController dismissViewControllerAnimated:YES completion:NULL];
 #ifndef OL_NO_ANALYTICS
-    [OLAnalytics trackBasketScreenHitBackForOrder:self.printOrder applePayIsAvailable:[self isApplePayAvailable] ? @"Yes" : @"No"];
+    if (!self.usedContinueShoppingButton){
+        [OLAnalytics trackBasketScreenHitBackForOrder:self.printOrder applePayIsAvailable:[self isApplePayAvailable] ? @"Yes" : @"No"];
+    }
 #endif
 }
 
