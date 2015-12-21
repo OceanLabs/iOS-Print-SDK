@@ -6,29 +6,27 @@
 //  Copyright (c) 2013 Ocean Labs. All rights reserved.
 //
 
+#import "NSObject+Utils.h"
+#import "OLAnalytics.h"
+#import "OLCustomNavigationController.h"
+#import "OLInfoPageViewController.h"
+#import "OLKiteABTesting.h"
+#import "OLKitePrintSDK.h"
+#import "OLKiteUtils.h"
+#import "OLKiteViewController.h"
+#import "OLProduct.h"
+#import "OLProductGroup.h"
 #import "OLProductHomeViewController.h"
 #import "OLProductOverviewViewController.h"
-#import "OLProductTypeSelectionViewController.h"
 #import "OLProductTemplate.h"
-#import "OLProduct.h"
-#import "OLKiteViewController.h"
-#import "OLKitePrintSDK.h"
-#import "OLPosterSizeSelectionViewController.h"
-#import "OLAnalytics.h"
-#import "OLProductGroup.h"
-#import "NSObject+Utils.h"
-#import "OLCustomNavigationController.h"
-#import "UIViewController+TraitCollectionCompatibility.h"
-#import "UIImageView+FadeIn.h"
-#import "OLKiteABTesting.h"
-#import "UIImage+ColorAtPixel.h"
-#import "OLInfoPageViewController.h"
+#import "OLProductTypeSelectionViewController.h"
 #import "SDWebImageManager.h"
 #import "TSMarkdownParser.h"
+#import "UIImage+ColorAtPixel.h"
 #import "UIImage+ImageNamedInKiteBundle.h"
-#import "OLKiteUtils.h"
-#import "OLPaymentViewController.h"
+#import "UIImageView+FadeIn.h"
 #import "UIViewController+OLMethods.h"
+#import "UIViewController+TraitCollectionCompatibility.h"
 
 #define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
 
@@ -37,13 +35,6 @@
 -(void)setCoverImageToImageView:(UIImageView *)imageView;
 -(void)setClassImageToImageView:(UIImageView *)imageView;
 -(void)setProductPhotography:(NSUInteger)i toImageView:(UIImageView *)imageView;
-
-@end
-
-@interface OLPaymentViewController ()
-
-- (void)onBarButtonOrdersClicked;
-@property (assign, nonatomic) BOOL presentedModally;
 
 @end
 
@@ -63,7 +54,6 @@
 @property (strong, nonatomic) UIView *bannerView;
 @property (strong, nonatomic) UIView *headerView;
 @property (strong, nonatomic) NSString *bannerString;
-@property (weak, nonatomic) IBOutlet UIBarButtonItem *basketButton;
 @property (strong, nonatomic) NSDate *countdownDate;
 @end
 
@@ -357,8 +347,10 @@
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
     
-    [self addBasketIconToTopRight];
-        
+    if ([OLKiteABTesting sharedInstance].allowsMultipleRecipients){
+        [self addBasketIconToTopRight];
+    }
+    
     NSURL *url = [NSURL URLWithString:[OLKiteABTesting sharedInstance].headerLogoURL];
     if (url && ![[SDWebImageManager sharedManager] cachedImageExistsForURL:url] && [self isMemberOfClass:[OLProductHomeViewController class]]){
         [[SDWebImageManager sharedManager] downloadImageWithURL:url options:0 progress:NULL completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL){
@@ -631,34 +623,6 @@
     NSIndexPath *indexPath = [self.collectionView indexPathForCell:(UICollectionViewCell *)view];
     [self collectionView:self.collectionView didSelectItemAtIndexPath:indexPath];
 }
-
-- (IBAction)onButtonBasketClicked:(UIBarButtonItem *)sender {
-    OLPrintOrder *printOrder = [OLKiteUtils kiteVcForViewController:self].printOrder;
-    
-#ifndef OL_NO_ANALYTICS
-    NSUInteger count = printOrder.jobs.count;
-    for (id<OLPrintJob> job in printOrder.jobs){
-        count += [job extraCopies];
-    }
-    [OLAnalytics trackBasketIconTappedWithNumberBadged:count];
-#endif
-    
-    [OLKiteUtils checkoutViewControllerForPrintOrder:printOrder handler:^(id vc){
-        [vc safePerformSelector:@selector(setUserEmail:) withObject:[OLKiteUtils userEmail:self]];
-        [vc safePerformSelector:@selector(setUserPhone:) withObject:[OLKiteUtils userPhone:self]];
-        [vc safePerformSelector:@selector(setKiteDelegate:) withObject:[OLKiteUtils kiteDelegate:self]];
-        [(OLPaymentViewController *)vc setPresentedModally:YES];
-        
-        [(UIViewController *)vc navigationItem].leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:vc action:@selector(dismiss)];
-        
-        [(UIViewController *)vc navigationItem].rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamedInKiteBundle:@"menu_button_orders"] style:UIBarButtonItemStylePlain target:vc action:@selector(onBarButtonOrdersClicked)];
-        
-        OLCustomNavigationController *nvc = [[OLCustomNavigationController alloc] initWithRootViewController:vc];
-        nvc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
-        [self presentViewController:nvc animated:YES completion:NULL];
-    }];
-}
-
 
 #pragma mark - Autorotate and Orientation Methods
 // Currently here to disable landscape orientations and rotation on iOS 7. When support is dropped, these can be deleted.

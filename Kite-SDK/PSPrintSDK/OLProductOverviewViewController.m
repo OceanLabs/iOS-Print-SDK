@@ -10,7 +10,6 @@
 #import "OLProductOverviewPageContentViewController.h"
 #import "OLProduct.h"
 #import "OLOrderReviewViewController.h"
-#import "OLPosterSizeSelectionViewController.h"
 #import "OLWhiteSquare.h"
 #import "OLKiteViewController.h"
 #import "OLAnalytics.h"
@@ -24,6 +23,8 @@
 #import "OLKiteABTesting.h"
 #import "OLKiteUtils.h"
 #import "OLProductDetailsViewController.h"
+#import "UIViewController+OLMethods.h"
+#import "OLPaymentViewController.h"
 
 @interface OLKiteViewController ()
 
@@ -121,6 +122,30 @@
         [OLAnalytics trackProductDescriptionScreenHitBack:self.product.productTemplate.name hidePrice:[OLKiteABTesting sharedInstance].hidePrice];
     }
 #endif
+}
+
+- (void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
+    
+    if ([self.presentingViewController respondsToSelector:@selector(viewControllers)] || !self.presentingViewController) {
+        UIViewController *presentingVc = [(UINavigationController *)self.presentingViewController viewControllers].lastObject;
+        if (![presentingVc isKindOfClass:[OLPaymentViewController class]]){
+            if ([OLKiteABTesting sharedInstance].allowsMultipleRecipients && [OLKiteUtils kiteVcForViewController:self].filterProducts){
+                [self addBasketIconToTopRight];
+            }
+        }
+    }
+}
+
+- (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    
+    if ([self.presentingViewController respondsToSelector:@selector(viewControllers)] || !self.presentingViewController) {
+        UIViewController *presentingVc = [(UINavigationController *)self.presentingViewController viewControllers].lastObject;
+        if (![presentingVc isKindOfClass:[OLPaymentViewController class]]){
+            [self addBasketIconToTopRight];
+        }
+    }
 }
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator{
