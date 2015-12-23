@@ -34,6 +34,7 @@ static NSString *const kOLAnalyticsPromoCode = @"Promo Code";
 
 @interface OLAnalytics : NSObject
 
++ (void)addPushDeviceToken:(NSData *)deviceToken;
 + (void)trackKiteViewControllerLoadedWithEntryPoint:(NSString *)entryPoint;
 + (void)trackKiteDismissed;
 + (void)trackProductSelectionScreenViewed;
