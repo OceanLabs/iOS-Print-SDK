@@ -21,6 +21,8 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		2E14D2D11C2AE9AD00F35403 /* OLImagePreviewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E14D2D01C2AE9AD00F35403 /* OLImagePreviewViewController.m */; };
+		2E14D2D21C2AE9AD00F35403 /* OLImagePreviewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E14D2D01C2AE9AD00F35403 /* OLImagePreviewViewController.m */; };
 		2E2632C21B97336700C7D879 /* KitePrintSDKUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E2632C11B97336700C7D879 /* KitePrintSDKUITests.m */; };
 		2E482B7A1BEB4C7D007460EA /* OLStripeCard.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E482B781BEB4C7D007460EA /* OLStripeCard.m */; };
 		2E482B7B1BEB4C7D007460EA /* OLStripeCard.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E482B781BEB4C7D007460EA /* OLStripeCard.m */; };
@@ -467,6 +469,8 @@
 		2E0E250E1A77997E00808ED8 /* OLAnalytics.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLAnalytics.m; sourceTree = "<group>"; };
 		2E1067FE1B83335C00EB4C14 /* UIView+RoundRect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIView+RoundRect.h"; path = "PSPrintSDK/Categories/UIView+RoundRect.h"; sourceTree = "<group>"; };
 		2E1067FF1B83335C00EB4C14 /* UIView+RoundRect.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIView+RoundRect.m"; path = "PSPrintSDK/Categories/UIView+RoundRect.m"; sourceTree = "<group>"; };
+		2E14D2CF1C2AE9AD00F35403 /* OLImagePreviewViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLImagePreviewViewController.h; sourceTree = "<group>"; };
+		2E14D2D01C2AE9AD00F35403 /* OLImagePreviewViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLImagePreviewViewController.m; sourceTree = "<group>"; };
 		2E20BD841AD4229700FB2446 /* OLCaseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLCaseViewController.h; sourceTree = "<group>"; };
 		2E20BD851AD4229700FB2446 /* OLCaseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLCaseViewController.m; sourceTree = "<group>"; };
 		2E20BD871AD42E2200FB2446 /* OLPostcardViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLPostcardViewController.h; sourceTree = "<group>"; };
@@ -1140,6 +1144,8 @@
 				2EE3C86F1A4AFB0C006446E2 /* OLKiteViewController.m */,
 				2E0A72641A6FB07000BC5AE7 /* OLScrollCropViewController.h */,
 				2E0A72651A6FB07000BC5AE7 /* OLScrollCropViewController.m */,
+				2E14D2CF1C2AE9AD00F35403 /* OLImagePreviewViewController.h */,
+				2E14D2D01C2AE9AD00F35403 /* OLImagePreviewViewController.m */,
 				2E9965A81ABC7035007F010F /* OLCustomNavigationController.h */,
 				2E9965A91ABC7035007F010F /* OLCustomNavigationController.m */,
 				2E4FC90C1C04A4F4000143F5 /* OLOrdersViewController.h */,
@@ -2271,6 +2277,7 @@
 				2EADD7FB1BE79D6D0051CD31 /* OLKiteUtils.m in Sources */,
 				2EADD7FC1BE79D6D0051CD31 /* ALAsset+OLIsEqual.m in Sources */,
 				2EADD7FD1BE79D6D0051CD31 /* OLAssetsSupplementaryView.m in Sources */,
+				2E14D2D11C2AE9AD00F35403 /* OLImagePreviewViewController.m in Sources */,
 				2EADD7FE1BE79D6D0051CD31 /* OLCaseViewController.m in Sources */,
 				2EADD7FF1BE79D6D0051CD31 /* ViewController.m in Sources */,
 				2EADD8001BE79D6D0051CD31 /* OLFrameOrderReviewViewController.m in Sources */,
@@ -2535,6 +2542,7 @@
 				E29C85BD1BE3B5C50041D4CF /* OLPayPalCard.m in Sources */,
 				E29C85BF1BE3B5C50041D4CF /* OLProductPrintJob.m in Sources */,
 				E29C85C01BE3B5C50041D4CF /* OLSingleImageProductReviewViewController.m in Sources */,
+				2E14D2D21C2AE9AD00F35403 /* OLImagePreviewViewController.m in Sources */,
 				E29C85C41BE3B5C50041D4CF /* OLPosterViewController.m in Sources */,
 				E29C85C51BE3B5C50041D4CF /* OLRemoteImageView.m in Sources */,
 				E29C85C61BE3B5C50041D4CF /* OLPrintOrderCost.m in Sources */,

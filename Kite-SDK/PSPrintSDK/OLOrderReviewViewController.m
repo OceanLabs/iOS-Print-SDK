@@ -48,6 +48,7 @@
 #import "OLKiteUtils.h"
 #import "OLPaymentViewController.h"
 #import "UIViewController+OLMethods.h"
+#import "OLImagePreviewViewController.h"
 
 static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 static const NSUInteger kTagAlertViewDeletePhoto = 98;
@@ -71,7 +72,7 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
 
 @end
 
-@interface OLOrderReviewViewController () <OLCheckoutDelegate, UIAlertViewDelegate, UICollectionViewDelegateFlowLayout>
+@interface OLOrderReviewViewController () <OLCheckoutDelegate, UIAlertViewDelegate, UICollectionViewDelegateFlowLayout, UIViewControllerPreviewingDelegate>
 
 @property (weak, nonatomic) OLPrintPhoto *editingPrintPhoto;
 @property (strong, nonatomic) UIView *addMorePhotosView;
@@ -108,6 +109,10 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
                                                                             action:nil];
     
     [self setupCtaButton];
+    
+    if ([UITraitCollection class] && [self.traitCollection respondsToSelector:@selector(forceTouchCapability)] && self.traitCollection.forceTouchCapability == UIForceTouchCapabilityAvailable){
+        [self registerForPreviewingWithDelegate:self sourceView:self.collectionView];
+    }
 }
 
 - (void)setupCtaButton{
@@ -353,6 +358,48 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     else{
         return self.product.productTemplate.sizeCm.height / self.product.productTemplate.sizeCm.width;
     }
+}
+
+- (UIViewController *)previewingContext:(id<UIViewControllerPreviewing>)previewingContext viewControllerForLocation:(CGPoint)location{
+    NSIndexPath *indexPath = [self.collectionView indexPathForItemAtPoint:location];
+    UICollectionViewCell *cell = [self.collectionView cellForItemAtIndexPath:indexPath];
+    
+    OLRemoteImageView *imageView = (OLRemoteImageView *)[cell viewWithTag:10];
+    if (!imageView.image){
+        return nil;
+    }
+    
+    [previewingContext setSourceRect:[cell convertRect:imageView.frame toView:self.collectionView]];
+    
+    self.editingPrintPhoto = self.userSelectedPhotos[indexPath.item];
+    
+    OLImagePreviewViewController *previewVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLImagePreviewViewController"];
+    [self.editingPrintPhoto getImageWithProgress:NULL completion:^(UIImage *image){
+        previewVc.image = image;
+    }];
+    previewVc.providesPresentationContextTransitionStyle = true;
+    previewVc.definesPresentationContext = true;
+    previewVc.modalPresentationStyle = UIModalPresentationOverCurrentContext;
+    return previewVc;
+}
+
+- (void)previewingContext:(id<UIViewControllerPreviewing>)previewingContext commitViewController:(UIViewController *)viewControllerToCommit{
+    OLScrollCropViewController *cropVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLScrollCropViewController"];
+    cropVc.enableCircleMask = self.product.productTemplate.templateUI == kOLTemplateUICircle;
+    cropVc.delegate = self;
+    cropVc.aspectRatio = [self productAspectRatio];
+    [self.editingPrintPhoto getImageWithProgress:^(float progress){
+        [cropVc.cropView setProgress:progress];
+    }completion:^(UIImage *image){
+        [cropVc setFullImage:image];
+        cropVc.edits = self.editingPrintPhoto.edits;
+        cropVc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
+        [self presentViewController:cropVc animated:YES completion:NULL];
+        
+#ifndef OL_NO_ANALYTICS
+        [OLAnalytics trackReviewScreenEnteredCropScreenForProductName:self.product.productTemplate.name];
+#endif
+    }];
 }
 
 #pragma mark Button Actions

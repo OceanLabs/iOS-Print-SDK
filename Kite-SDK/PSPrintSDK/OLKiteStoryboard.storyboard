@@ -556,6 +556,38 @@
             </objects>
             <point key="canvasLocation" x="2209" y="1676"/>
         </scene>
+        <!--Image Preview View Controller-->
+        <scene sceneID="8Tu-YV-F2q">
+            <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="MSf-Yy-h1x" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <viewController storyboardIdentifier="OLImagePreviewViewController" id="o13-56-1Vl" customClass="OLImagePreviewViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="sGk-UT-FGv"/>
+                        <viewControllerLayoutGuide type="bottom" id="RYa-tY-59P"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="XQM-aU-k0a">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="zUO-HA-dsg">
+                                <rect key="frame" x="0.0" y="20" width="600" height="580"/>
+                            </imageView>
+                        </subviews>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="zUO-HA-dsg" secondAttribute="trailing" id="Cea-Z7-cbv"/>
+                            <constraint firstItem="zUO-HA-dsg" firstAttribute="leading" secondItem="XQM-aU-k0a" secondAttribute="leading" id="GeM-mx-VmD"/>
+                            <constraint firstItem="RYa-tY-59P" firstAttribute="top" secondItem="zUO-HA-dsg" secondAttribute="bottom" id="jRB-4D-Cc5"/>
+                            <constraint firstItem="zUO-HA-dsg" firstAttribute="top" secondItem="sGk-UT-FGv" secondAttribute="bottom" id="lcy-xH-48w"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="imageView" destination="zUO-HA-dsg" id="RdX-4j-gs8"/>
+                    </connections>
+                </viewController>
+            </objects>
+            <point key="canvasLocation" x="2209" y="2420"/>
+        </scene>
         <!--Payment View Controller-->
         <scene sceneID="6kq-BL-dwu">
             <objects>
