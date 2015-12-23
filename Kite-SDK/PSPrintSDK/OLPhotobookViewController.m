@@ -6,6 +6,12 @@
 //  Copyright (c) 2015 Deon Botha. All rights reserved.
 //
 
+#ifdef COCOAPODS
+#import <MPFlipViewController/MPFlipTransition.h>
+#else
+#import "MPFlipTransition.h"
+#endif
+
 #import "OLPhotobookViewController.h"
 #import "OLProduct.h"
 #import "OLProductTemplate.h"
@@ -36,7 +42,6 @@
 #import <InstagramImagePicker/OLInstagramImage.h>
 #endif
 
-#import "MPFlipTransition.h"
 #import "UIImage+ImageNamedInKiteBundle.h"
 #import "OLKiteABTesting.h"
 #import "OLPaymentViewController.h"

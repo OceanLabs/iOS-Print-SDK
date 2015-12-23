@@ -6,6 +6,14 @@
 //  Copyright (c) 2013 Ocean Labs. All rights reserved.
 //
 
+#ifdef COCOAPODS
+#import <SDWebImage/SDWebImageManager.h>
+#import <TSMarkdownParser/TSMarkdownParser.h>
+#else
+#import "SDWebImageManager.h"
+#import "TSMarkdownParser.h"
+#endif
+
 #import "NSObject+Utils.h"
 #import "OLAnalytics.h"
 #import "OLCustomNavigationController.h"
@@ -20,8 +28,6 @@
 #import "OLProductOverviewViewController.h"
 #import "OLProductTemplate.h"
 #import "OLProductTypeSelectionViewController.h"
-#import "SDWebImageManager.h"
-#import "TSMarkdownParser.h"
 #import "UIImage+ColorAtPixel.h"
 #import "UIImage+ImageNamedInKiteBundle.h"
 #import "UIImageView+FadeIn.h"

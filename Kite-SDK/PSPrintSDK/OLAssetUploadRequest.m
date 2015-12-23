@@ -6,13 +6,18 @@
 //  Copyright (c) 2013 Deon Botha. All rights reserved.
 //
 
+#ifdef COCOAPODS
+#import <AFNetworking/AFNetworking.h>
+#else
+#import "AFNetworking.h"
+#endif
+
 #import "OLAssetUploadRequest.h"
 #import "OLBaseRequest.h"
 #import "OLConstants.h"
 #import "OLKitePrintSDK.h"
 #import "OLAsset.h"
 #import "OLAsset+Private.h"
-#import "AFNetworking.h"
 
 @interface OLKitePrintSDK (Private)
 

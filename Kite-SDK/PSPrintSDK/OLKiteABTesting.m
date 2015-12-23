@@ -6,11 +6,19 @@
 //  Copyright (c) 2015 Deon Botha. All rights reserved.
 //
 
-#import "OLKiteABTesting.h"
+#ifdef COCOAPODS
+#import <SkyLab/SkyLab.h>
+#import <SDWebImage/SDWebImageManager.h>
+#import <GroundControl/NSUserDefaults+GroundControl.h>
+#else
 #import "SkyLab.h"
-#import "NSUserDefaults+GroundControl.h"
-#import "OLKitePrintSDK.h"
 #import "SDWebImageManager.h"
+#import "NSUserDefaults+GroundControl.h"
+#endif
+
+#import "OLKiteABTesting.h"
+#import "OLKitePrintSDK.h"
+
 
 static NSString *const kOLKiteABTestLaunchWithPrintOrderVariant = @"ly.kite.abtest.launch_with_print_order_variant";
 static NSString *const kOLKiteABTestOfferAddressSearch = @"ly.kite.abtest.offer_address_search";

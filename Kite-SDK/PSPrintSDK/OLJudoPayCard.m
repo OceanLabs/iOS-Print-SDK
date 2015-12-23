@@ -6,9 +6,15 @@
 //  Copyright (c) 2014 Deon Botha. All rights reserved.
 //
 
-#import "OLJudoPayCard.h"
-#import "UICKeyChainStore.h"
+#ifdef COCOAPODS
+#import <AFNetworking/AFNetworking.h>
+#import <UICKeyChainStore/UICKeyChainStore.h>
+#else
 #import "AFNetworking.h"
+#import "UICKeyChainStore.h"
+#endif
+
+#import "OLJudoPayCard.h"
 #import "OLConstants.h"
 
 static NSString *const kKeyNumberMasked = @"co.oceanlabs.judopay.kKeyNumberMasked";

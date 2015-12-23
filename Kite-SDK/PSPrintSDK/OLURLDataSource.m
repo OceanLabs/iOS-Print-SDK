@@ -6,8 +6,13 @@
 //  Copyright (c) 2014 Deon Botha. All rights reserved.
 //
 
-#import "OLURLDataSource.h"
+#ifdef COCOAPODS
+#import <SDWebImage/SDWebImageManager.h>
+#else
 #import "SDWebImageManager.h"
+#endif
+
+#import "OLURLDataSource.h"
 
 static NSString *const kKeyURL = @"co.oceanlabs.pssdk.kKeyURL";
 

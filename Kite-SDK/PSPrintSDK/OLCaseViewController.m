@@ -6,9 +6,14 @@
 //  Copyright (c) 2015 Deon Botha. All rights reserved.
 //
 
+#ifdef COCOAPODS
+#import <SDWebImage/SDWebImageManager.h>
+#else
+#import "SDWebImageManager.h"
+#endif
+
 #import "OLCaseViewController.h"
 #import "OLRemoteImageCropper.h"
-#import "SDWebImageManager.h"
 #import "UIImage+ImageNamedInKiteBundle.h"
 
 @interface OLSingleImageProductReviewViewController (Private)
