@@ -87,6 +87,8 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
                                                                             action:nil];
     
     [self setupCtaButton];
+    
+    self.collectionView.contentInset = UIEdgeInsetsMake(self.collectionView.contentInset.top, self.collectionView.contentInset.left, self.nextButton.frame.size.height, self.collectionView.contentInset.right);
 }
 
 - (void)setupCtaButton{
