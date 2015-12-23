@@ -550,6 +550,20 @@
                         <outlet property="aspectRatioConstraint" destination="ImC-Qv-Ju3" id="p9Y-jB-by8"/>
                         <outlet property="cropView" destination="nok-mW-saD" id="qFn-PP-Pwf"/>
                         <outlet property="doneButton" destination="rOv-Mh-sME" id="Gxi-2S-ZIN"/>
+                        <outletCollection property="allViews" destination="nok-mW-saD" id="hDJ-K2-Sde"/>
+                        <outletCollection property="allViews" destination="Qn0-C6-SBY" id="gL4-5c-hp0"/>
+                        <outletCollection property="allViews" destination="OUl-7d-l9B" id="zQ7-oy-PXG"/>
+                        <outletCollection property="allViews" destination="qk7-Gg-AZh" id="dbo-Ta-3jd"/>
+                        <outletCollection property="allViews" destination="124-aY-wOU" id="ymb-wH-S3Y"/>
+                        <outletCollection property="allViews" destination="BGS-ia-DZN" id="QRO-UM-sRG"/>
+                        <outletCollection property="allViews" destination="5Ml-FB-tKs" id="zPw-Zq-w9c"/>
+                        <outletCollection property="allViews" destination="JBu-Sx-wDM" id="7pd-Ha-3v8"/>
+                        <outletCollection property="allViews" destination="8y6-72-UFe" id="tc4-T9-rY7"/>
+                        <outletCollection property="allViews" destination="zsc-cm-HTN" id="KCM-qe-bWd"/>
+                        <outletCollection property="allViews" destination="f6w-s4-OgW" id="AQj-Jl-sii"/>
+                        <outletCollection property="allViews" destination="TAm-mR-qRl" id="BTV-jo-KNH"/>
+                        <outletCollection property="allViews" destination="y5O-eZ-nT4" id="t1G-2x-LAk"/>
+                        <outletCollection property="allViews" destination="Tki-mw-R7X" id="tTC-lT-6dH"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qG7-3J-9cO" userLabel="First Responder" sceneMemberID="firstResponder"/>

@@ -49,5 +49,6 @@
 @property (assign, nonatomic) CGFloat aspectRatio;
 @property (weak, nonatomic) id<OLScrollCropViewControllerDelegate> delegate;
 @property (assign, nonatomic) BOOL enableCircleMask;
+@property (strong, nonatomic) UIView *previewView;
 
 @end

@@ -34,12 +34,24 @@
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *doneButton;
 @property (assign, nonatomic) NSInteger initialOrientation;
 
+@property (strong, nonatomic) IBOutletCollection(UIView) NSArray *allViews;
+
+
 @end
 
 @implementation OLScrollCropViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    if (self.previewView){
+        self.view.backgroundColor = [UIColor clearColor];
+        [self.view addSubview:self.previewView];
+        [self.view sendSubviewToBack:self.previewView];
+        for (UIView *view in self.allViews){
+            view.alpha = 0;
+        }
+    }
     
     [self.cropView setClipsToBounds:NO];
     self.cropView.backgroundColor = [UIColor clearColor];
@@ -57,6 +69,25 @@
     }
     self.initialOrientation = self.fullImage.imageOrientation;
     self.cropView.delegate = self;
+}
+
+- (void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
+    
+    if (self.previewView){
+        [UIView animateWithDuration:0.25 animations:^{
+            self.previewView.frame = self.cropView.frame;
+        }completion:^(BOOL finished){
+            [UIView animateWithDuration:0.5 animations:^{
+                self.view.backgroundColor = [UIColor blackColor];
+                for (UIView *view in self.allViews){
+                    view.alpha = 1;
+                }
+            } completion:^(BOOL finished){
+                [self.previewView removeFromSuperview];
+            }];
+        }];
+    }
 }
 
 -(void)viewWillAppear:(BOOL)animated{

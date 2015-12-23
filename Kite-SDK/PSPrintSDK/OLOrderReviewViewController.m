@@ -488,13 +488,20 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     cropVc.enableCircleMask = self.product.productTemplate.templateUI == kOLTemplateUICircle;
     cropVc.delegate = self;
     cropVc.aspectRatio = [self productAspectRatio];
+    
+    cropVc.previewView = [imageView snapshotViewAfterScreenUpdates:YES];
+    cropVc.previewView.frame = [cell convertRect:imageView.frame toView:nil];
+    cropVc.providesPresentationContextTransitionStyle = true;
+    cropVc.definesPresentationContext = true;
+    cropVc.modalPresentationStyle = UIModalPresentationOverCurrentContext;
+    
     [self.editingPrintPhoto getImageWithProgress:^(float progress){
         [cropVc.cropView setProgress:progress];
     }completion:^(UIImage *image){
         [cropVc setFullImage:image];
         cropVc.edits = self.editingPrintPhoto.edits;
-        cropVc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
-        [self presentViewController:cropVc animated:YES completion:NULL];
+//        cropVc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
+        [self presentViewController:cropVc animated:NO completion:NULL];
         
 #ifndef OL_NO_ANALYTICS
         [OLAnalytics trackReviewScreenEnteredCropScreenForProductName:self.product.productTemplate.name];
