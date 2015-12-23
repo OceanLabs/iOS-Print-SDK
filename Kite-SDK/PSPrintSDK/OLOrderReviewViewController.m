@@ -110,6 +110,8 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     
     [self setupCtaButton];
     
+    self.collectionView.contentInset = UIEdgeInsetsMake(self.collectionView.contentInset.top, self.collectionView.contentInset.left, self.nextButton.frame.size.height, self.collectionView.contentInset.right);
+    
     if ([UITraitCollection class] && [self.traitCollection respondsToSelector:@selector(forceTouchCapability)] && self.traitCollection.forceTouchCapability == UIForceTouchCapabilityAvailable){
         [self registerForPreviewingWithDelegate:self sourceView:self.collectionView];
     }

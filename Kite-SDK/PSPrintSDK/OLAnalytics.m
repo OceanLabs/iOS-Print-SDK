@@ -591,6 +591,14 @@ static __weak id<OLKiteDelegate> kiteDelegate;
     [OLAnalytics reportAnalyticsEventToDelegate:@"Payment Screen Successfully Applied Promo Code" job:nil printOrder:order extraInfo:@{kOLAnalyticsPromoCode : nonNilStr(code)}];
 }
 
++ (void)trackPaymentScreenUnsuccessfullyAppliedPromoCode:(NSString *)code withError:(NSError *)error forOrder:(OLPrintOrder *)order{
+    [OLAnalytics reportAnalyticsEventToDelegate:@"Payment Screen Promo Code Failed" job:nil printOrder:order extraInfo:@{kOLAnalyticsPromoCode : nonNilStr(code), kOLAnalyticsError : error ? error : @""}];
+}
+
++ (void)trackPaymentScreenDidTapOnPromoCodeBoxforOrder:(OLPrintOrder *)order{
+    [OLAnalytics reportAnalyticsEventToDelegate:@"Payment Screen Did Tap on Promo Code Box" job:nil printOrder:order extraInfo:nil];
+}
+
 + (void)trackPaymentScreenPaymentMethodHit:(NSString *)method forOrder:(OLPrintOrder *)order applePayIsAvailable:(NSString *)applePayIsAvailable{
     [OLAnalytics reportAnalyticsEventToDelegate:@"Payment Screen Payment Method Tapped" job:nil printOrder:order extraInfo:@{kOLAnalyticsPaymentMethod : method}];
 }
