@@ -1490,12 +1490,12 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     CFTypeRef values = ABRecordCopyValue(address, kABPersonAddressProperty);
     for (NSInteger i = 0; i < ABMultiValueGetCount(values); i++){
         NSDictionary *dict = (__bridge NSDictionary *)ABMultiValueCopyValueAtIndex(values, i);
-        shippingAddress.country = [OLCountry countryForCode:[dict objectForKey:(id)kABPersonAddressCountryCodeKey]];
-        if (!shippingAddress.country){
-            shippingAddress.country = [OLCountry countryForCode:[dict objectForKey:(id)kABPersonAddressCountryKey]];
-        }
+        shippingAddress.country = [OLCountry countryForCode:[dict objectForKey:(id)kABPersonAddressCountryKey]];
         if (!shippingAddress.country){
             shippingAddress.country = [OLCountry countryForName:[dict objectForKey:(id)kABPersonAddressCountryKey]];
+        }
+        if (!shippingAddress.country){
+            shippingAddress.country = [OLCountry countryForCode:[dict objectForKey:(id)kABPersonAddressCountryCodeKey]];
         }
         if (!shippingAddress.country){
             completion(PKPaymentAuthorizationStatusFailure, nil, nil);
