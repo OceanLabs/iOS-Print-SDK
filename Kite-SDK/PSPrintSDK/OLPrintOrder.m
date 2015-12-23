@@ -79,6 +79,8 @@ static id stringOrEmptyString(NSString *str) {
 
 @end
 
+static NSBlockOperation *templateSyncOperation;
+
 @implementation OLPrintOrder
 
 @synthesize userData=_userData;
@@ -247,6 +249,24 @@ static id stringOrEmptyString(NSString *str) {
         return;
     }
     
+    if (![OLProductTemplate lastSyncDate] && !templateSyncOperation){
+        templateSyncOperation = [NSBlockOperation blockOperationWithBlock:^{
+            templateSyncOperation = nil;
+        }];
+        [OLProductTemplate syncWithCompletionHandler:^(NSArray *templates, NSError *error){
+            if (error){
+                if (handler){
+                    [self.costCompletionHandlers removeObject:handler];
+                    handler(nil, error);
+                    [[NSOperationQueue mainQueue] addOperation:templateSyncOperation];
+                }
+            }
+            else{
+                [[NSOperationQueue mainQueue] addOperation:templateSyncOperation];
+            }
+        }];
+    }
+    
     if (handler && !self.costCompletionHandlers) {
         self.costCompletionHandlers = [[NSMutableArray alloc] init];
     }
@@ -261,14 +281,20 @@ static id stringOrEmptyString(NSString *str) {
     
     self.costReq = [[OLPrintOrderCostRequest alloc] init];
     [self.costReq orderCost:self completionHandler:^(OLPrintOrderCost *cost, NSError *error) {
-        self.costReq = nil;
-        self.cachedCost = cost;
-        
-        NSArray *handlers = [self.costCompletionHandlers copy];
-        [self.costCompletionHandlers removeAllObjects];
-        for (OLPrintOrderCostCompletionHandler handler in handlers) {
-            handler(cost, error);
+        NSBlockOperation *costResultBlock = [NSBlockOperation blockOperationWithBlock:^{
+            self.costReq = nil;
+            self.cachedCost = cost;
+            
+            NSArray *handlers = [self.costCompletionHandlers copy];
+            [self.costCompletionHandlers removeAllObjects];
+            for (OLPrintOrderCostCompletionHandler handler in handlers) {
+                handler(cost, error);
+            }
+        }];
+        if (templateSyncOperation){
+            [costResultBlock addDependency:templateSyncOperation];
         }
+        [[NSOperationQueue mainQueue] addOperation:costResultBlock];
     }];
 }
 
