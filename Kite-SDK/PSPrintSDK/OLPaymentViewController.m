@@ -911,6 +911,9 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     self.printOrder.promoCode = promoCode;
     [self.printOrder costWithCompletionHandler:^(OLPrintOrderCost *cost, NSError *error) {
         if (error) {
+#ifndef OL_NO_ANALYTICS
+            [OLAnalytics trackPaymentScreenUnsuccessfullyAppliedPromoCode:promoCode withError:error forOrder:self.printOrder];
+#endif
             [SVProgressHUD dismiss];
             if ([UIAlertController class]){
                 UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLConstants bundle], @"") message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
@@ -923,6 +926,9 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             }
         } else {
             if (cost.promoCodeInvalidReason) {
+#ifndef OL_NO_ANALYTICS
+                [OLAnalytics trackPaymentScreenUnsuccessfullyAppliedPromoCode:promoCode withError:[NSError errorWithDomain:@"ly.kite.sdk" code:0 userInfo:@{NSLocalizedDescriptionKey : cost.promoCodeInvalidReason}] forOrder:self.printOrder];
+#endif
                 self.printOrder.promoCode = previousCode; // reset print order promo code as it was invalid
                 self.promoCodeTextField.text = previousCode;
                 [SVProgressHUD dismiss];
@@ -1628,6 +1634,12 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField{
     return self.printOrder.jobs.count > 0;
+}
+
+- (void)textFieldDidBeginEditing:(UITextField *)textField{
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackPaymentScreenDidTapOnPromoCodeBoxforOrder:self.printOrder];
+#endif
 }
 
 - (BOOL) tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath{
