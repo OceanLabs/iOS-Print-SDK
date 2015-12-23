@@ -158,7 +158,6 @@
 		2EADD8581BE79D6D0051CD31 /* OLPhotoSelectionButton.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2E39CAA41AB89515008B1EFF /* OLPhotoSelectionButton.xib */; };
 		2EADD85A1BE79D6D0051CD31 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CD73BF83186215790009DE03 /* Images.xcassets */; };
 		2EADD85C1BE79D6D0051CD31 /* KitePrintSDK.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CD93BB471879EA4F00316492 /* KitePrintSDK.xcassets */; };
-		2EADD85D1BE79D6D0051CD31 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = CD73BF74186215790009DE03 /* InfoPlist.strings */; };
 		2EADD85E1BE79D6D0051CD31 /* kite_corrupt.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 3D6CDAAC1B1F41AE00786478 /* kite_corrupt.jpg */; };
 		2EADD85F1BE79D6D0051CD31 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CD73BF7D186215790009DE03 /* Main.storyboard */; };
 		2ECC956A1BC6B88F00F44CE1 /* OLDocsObjcExampleCodeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2ECC95691BC6B88F00F44CE1 /* OLDocsObjcExampleCodeTests.m */; };
@@ -169,7 +168,6 @@
 		CD73BF8B186215790009DE03 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD73BF8A186215790009DE03 /* XCTest.framework */; };
 		CD73BF8C186215790009DE03 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD73BF6B186215790009DE03 /* Foundation.framework */; };
 		CD73BF8D186215790009DE03 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD73BF6F186215790009DE03 /* UIKit.framework */; };
-		CD73BF95186215790009DE03 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = CD73BF93186215790009DE03 /* InfoPlist.strings */; };
 		CD73BF97186215790009DE03 /* OLSDKModelTests.m in Sources */ = {isa = PBXBuildFile; fileRef = CD73BF96186215790009DE03 /* OLSDKModelTests.m */; };
 		E22058531BF3AAF0009CFAF6 /* AFHTTPRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C83DD1BE2829C0041D4CF /* AFHTTPRequestOperation.m */; };
 		E22058551BF3AAF0009CFAF6 /* AFHTTPRequestOperationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C83DF1BE2829C0041D4CF /* AFHTTPRequestOperationManager.m */; };
@@ -659,7 +657,6 @@
 		CD73BF6D186215790009DE03 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		CD73BF6F186215790009DE03 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		CD73BF73186215790009DE03 /* KitePrintSDK-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "KitePrintSDK-Info.plist"; sourceTree = "<group>"; };
-		CD73BF75186215790009DE03 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		CD73BF77186215790009DE03 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		CD73BF79186215790009DE03 /* KitePrintSDK-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "KitePrintSDK-Prefix.pch"; sourceTree = "<group>"; };
 		CD73BF7A186215790009DE03 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -671,7 +668,6 @@
 		CD73BF89186215790009DE03 /* KitePrintSDKTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = KitePrintSDKTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		CD73BF8A186215790009DE03 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		CD73BF92186215790009DE03 /* KitePrintSDKTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "KitePrintSDKTests-Info.plist"; sourceTree = "<group>"; };
-		CD73BF94186215790009DE03 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		CD73BF96186215790009DE03 /* OLSDKModelTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OLSDKModelTests.m; sourceTree = "<group>"; };
 		CD73BFA21862FC510009DE03 /* OLAddress.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLAddress.h; sourceTree = "<group>"; };
 		CD73BFA31862FC510009DE03 /* OLAddress.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLAddress.m; sourceTree = "<group>"; };
@@ -1353,7 +1349,6 @@
 			children = (
 				CD73BF73186215790009DE03 /* KitePrintSDK-Info.plist */,
 				2EADD8661BE79D6E0051CD31 /* KitePrintSDK-Dev-Info.plist */,
-				CD73BF74186215790009DE03 /* InfoPlist.strings */,
 				CD73BF77186215790009DE03 /* main.m */,
 				CD73BF79186215790009DE03 /* KitePrintSDK-Prefix.pch */,
 			);
@@ -1382,7 +1377,6 @@
 			children = (
 				2EDBFAAF1BC698F2007BDB83 /* 1.jpg */,
 				2E7483501BCCFB5900360550 /* 2.png */,
-				CD73BF93186215790009DE03 /* InfoPlist.strings */,
 				CD73BF92186215790009DE03 /* KitePrintSDKTests-Info.plist */,
 			);
 			name = "Supporting Files";
@@ -2122,7 +2116,6 @@
 				2EADD8581BE79D6D0051CD31 /* OLPhotoSelectionButton.xib in Resources */,
 				2EADD85A1BE79D6D0051CD31 /* Images.xcassets in Resources */,
 				2EADD85C1BE79D6D0051CD31 /* KitePrintSDK.xcassets in Resources */,
-				2EADD85D1BE79D6D0051CD31 /* InfoPlist.strings in Resources */,
 				2EADD85E1BE79D6D0051CD31 /* kite_corrupt.jpg in Resources */,
 				2EADD85F1BE79D6D0051CD31 /* Main.storyboard in Resources */,
 			);
@@ -2133,7 +2126,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				2E7483511BCCFB5900360550 /* 2.png in Resources */,
-				CD73BF95186215790009DE03 /* InfoPlist.strings in Resources */,
 				2EDBFAB01BC698F2007BDB83 /* 1.jpg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2637,14 +2629,6 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		CD73BF74186215790009DE03 /* InfoPlist.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				CD73BF75186215790009DE03 /* en */,
-			);
-			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
 		CD73BF7D186215790009DE03 /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -2652,15 +2636,6 @@
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
-		};
-		CD73BF93186215790009DE03 /* InfoPlist.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				CD73BF94186215790009DE03 /* en */,
-			);
-			name = InfoPlist.strings;
-			path = PSPrintSDKTests;
-			sourceTree = SOURCE_ROOT;
 		};
 /* End PBXVariantGroup section */
 
