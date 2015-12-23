@@ -21,6 +21,7 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		2E14D2CA1C2AD39600F35403 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2E14D2C91C2AD39600F35403 /* Main.storyboard */; };
 		2E2632C21B97336700C7D879 /* KitePrintSDKUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E2632C11B97336700C7D879 /* KitePrintSDKUITests.m */; };
 		2E482B7A1BEB4C7D007460EA /* OLStripeCard.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E482B781BEB4C7D007460EA /* OLStripeCard.m */; };
 		2E482B7B1BEB4C7D007460EA /* OLStripeCard.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E482B781BEB4C7D007460EA /* OLStripeCard.m */; };
@@ -159,7 +160,6 @@
 		2EADD85A1BE79D6D0051CD31 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CD73BF83186215790009DE03 /* Images.xcassets */; };
 		2EADD85C1BE79D6D0051CD31 /* KitePrintSDK.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CD93BB471879EA4F00316492 /* KitePrintSDK.xcassets */; };
 		2EADD85E1BE79D6D0051CD31 /* kite_corrupt.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 3D6CDAAC1B1F41AE00786478 /* kite_corrupt.jpg */; };
-		2EADD85F1BE79D6D0051CD31 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CD73BF7D186215790009DE03 /* Main.storyboard */; };
 		2ECC956A1BC6B88F00F44CE1 /* OLDocsObjcExampleCodeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2ECC95691BC6B88F00F44CE1 /* OLDocsObjcExampleCodeTests.m */; };
 		2EDBFAB01BC698F2007BDB83 /* 1.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 2EDBFAAF1BC698F2007BDB83 /* 1.jpg */; };
 		2EF4392B1BF4D15E0006C123 /* OLPrintOrderSubmitStatusRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EF4392A1BF4D15E0006C123 /* OLPrintOrderSubmitStatusRequest.m */; };
@@ -467,6 +467,7 @@
 		2E0E250E1A77997E00808ED8 /* OLAnalytics.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLAnalytics.m; sourceTree = "<group>"; };
 		2E1067FE1B83335C00EB4C14 /* UIView+RoundRect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIView+RoundRect.h"; path = "PSPrintSDK/Categories/UIView+RoundRect.h"; sourceTree = "<group>"; };
 		2E1067FF1B83335C00EB4C14 /* UIView+RoundRect.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIView+RoundRect.m"; path = "PSPrintSDK/Categories/UIView+RoundRect.m"; sourceTree = "<group>"; };
+		2E14D2C91C2AD39600F35403 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		2E20BD841AD4229700FB2446 /* OLCaseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLCaseViewController.h; sourceTree = "<group>"; };
 		2E20BD851AD4229700FB2446 /* OLCaseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLCaseViewController.m; sourceTree = "<group>"; };
 		2E20BD871AD42E2200FB2446 /* OLPostcardViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLPostcardViewController.h; sourceTree = "<group>"; };
@@ -661,7 +662,6 @@
 		CD73BF79186215790009DE03 /* KitePrintSDK-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "KitePrintSDK-Prefix.pch"; sourceTree = "<group>"; };
 		CD73BF7A186215790009DE03 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		CD73BF7B186215790009DE03 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		CD73BF7E186215790009DE03 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		CD73BF80186215790009DE03 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		CD73BF81186215790009DE03 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		CD73BF83186215790009DE03 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
@@ -1387,9 +1387,9 @@
 			children = (
 				CD73BF7A186215790009DE03 /* AppDelegate.h */,
 				CD73BF7B186215790009DE03 /* AppDelegate.m */,
-				CD73BF7D186215790009DE03 /* Main.storyboard */,
 				CD73BF80186215790009DE03 /* ViewController.h */,
 				CD73BF81186215790009DE03 /* ViewController.m */,
+				2E14D2C91C2AD39600F35403 /* Main.storyboard */,
 				CD97569318E083E3007CA090 /* PrintOrderHistoryViewController.h */,
 				CD97569418E083E3007CA090 /* PrintOrderHistoryViewController.m */,
 				CD73BF83186215790009DE03 /* Images.xcassets */,
@@ -2070,7 +2070,6 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
-				en,
 				Base,
 			);
 			mainGroup = CD73BF5F186215790009DE03;
@@ -2111,13 +2110,13 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2E14D2CA1C2AD39600F35403 /* Main.storyboard in Resources */,
 				2EADD8561BE79D6D0051CD31 /* OLKiteStoryboard.storyboard in Resources */,
 				2EADD8571BE79D6D0051CD31 /* PostcardBackView.xib in Resources */,
 				2EADD8581BE79D6D0051CD31 /* OLPhotoSelectionButton.xib in Resources */,
 				2EADD85A1BE79D6D0051CD31 /* Images.xcassets in Resources */,
 				2EADD85C1BE79D6D0051CD31 /* KitePrintSDK.xcassets in Resources */,
 				2EADD85E1BE79D6D0051CD31 /* kite_corrupt.jpg in Resources */,
-				2EADD85F1BE79D6D0051CD31 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2627,17 +2626,6 @@
 			targetProxy = 2E645B331BE7A3C7009B662B /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
-
-/* Begin PBXVariantGroup section */
-		CD73BF7D186215790009DE03 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				CD73BF7E186215790009DE03 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		2E2632C61B97336700C7D879 /* Debug */ = {
