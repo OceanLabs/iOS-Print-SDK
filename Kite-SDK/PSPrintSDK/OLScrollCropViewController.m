@@ -45,6 +45,7 @@
     
     if (self.previewView){
         self.view.backgroundColor = [UIColor clearColor];
+        self.previewView.alpha = 0.15;
         [self.view addSubview:self.previewView];
         [self.view sendSubviewToBack:self.previewView];
         for (UIView *view in self.allViews){
@@ -74,17 +75,21 @@
     [super viewDidAppear:animated];
     
     if (self.previewView){
-        self.previewSourceView.hidden = YES;
-        [UIView animateWithDuration:0.25 animations:^{
-            self.previewView.frame = self.cropView.frame;
-        }completion:^(BOOL finished){
+        [UIView animateWithDuration:0.10 animations:^{
+            self.previewView.alpha = 1;
+        } completion:^(BOOL finished){
+            self.previewSourceView.hidden = YES;
             [UIView animateWithDuration:0.25 animations:^{
-                self.view.backgroundColor = [UIColor blackColor];
-                for (UIView *view in self.allViews){
-                    view.alpha = 1;
-                }
-            } completion:^(BOOL finished){
-                [self.previewView removeFromSuperview];
+                self.previewView.frame = self.cropView.frame;
+            }completion:^(BOOL finished){
+                [UIView animateWithDuration:0.25 animations:^{
+                    self.view.backgroundColor = [UIColor blackColor];
+                    for (UIView *view in self.allViews){
+                        view.alpha = 1;
+                    }
+                } completion:^(BOOL finished){
+                    [self.previewView removeFromSuperview];
+                }];
             }];
         }];
     }
@@ -166,7 +171,12 @@
                 self.previewView.frame = [self.previewSourceView.superview convertRect:self.previewSourceView.frame toView:nil];
             }completion:^(BOOL finished){
                 self.previewSourceView.hidden = NO;
-                [super dismissViewControllerAnimated:NO completion:completion];
+                [UIView animateWithDuration:0.15 animations:^{
+                    self.previewView.alpha = 0;
+                } completion:^(BOOL finished){
+                    [super dismissViewControllerAnimated:NO completion:completion];
+                }];
+                
             }];
         }];
     }
