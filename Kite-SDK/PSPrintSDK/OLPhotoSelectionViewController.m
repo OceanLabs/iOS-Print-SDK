@@ -107,7 +107,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 #endif
                                             LXReorderableCollectionViewDataSource,
                                             UICollectionViewDelegateFlowLayout,
-UIViewControllerPreviewingDelegate>
+UIViewControllerPreviewingDelegate, OLScrollCropViewControllerDelegate>
 
 @property (nonatomic, weak) IBOutlet OLPhotoSelectionButton *galleryButton;
 @property (nonatomic, weak) IBOutlet OLPhotoSelectionButton *instagramButton;
