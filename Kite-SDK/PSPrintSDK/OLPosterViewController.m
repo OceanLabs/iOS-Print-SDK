@@ -47,6 +47,7 @@
 #import "OLKiteABTesting.h"
 #import "OLRemoteImageView.h"
 #import "OLKiteUtils.h"
+#import "OLImagePreviewViewController.h"
 
 @interface OLPrintOrder (Private)
 
@@ -64,7 +65,7 @@
 
 @end
 
-@interface OLSingleImageProductReviewViewController (Private) <UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UICollectionViewDelegate>
+@interface OLSingleImageProductReviewViewController (Private) <UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UICollectionViewDelegate, UIViewControllerPreviewingDelegate>
 
 @end
 
@@ -80,9 +81,9 @@
 -(void)viewDidLoad{
     [super viewDidLoad];
     
-#ifndef OL_NO_ANALYTICS
-    [OLAnalytics trackReviewScreenViewed:self.product.productTemplate.name];
-#endif
+    if ([UITraitCollection class] && [self.traitCollection respondsToSelector:@selector(forceTouchCapability)] && self.traitCollection.forceTouchCapability == UIForceTouchCapabilityAvailable){
+        [self registerForPreviewingWithDelegate:self sourceView:self.collectionView];
+    }
     
     self.posterPhotos = [[NSMutableArray alloc] initWithCapacity:self.product.quantityToFulfillOrder];
     [self.posterPhotos addObjectsFromArray:self.userSelectedPhotos];
@@ -328,17 +329,71 @@
     
     self.editingPrintPhoto = self.posterPhotos[indexPath.item];
     
+    OLRemoteImageView *imageView = (OLRemoteImageView *)[cell viewWithTag:795];
+    if (!imageView.image){
+        return;
+    }
+    
     OLScrollCropViewController *cropVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLScrollCropViewController"];
     cropVc.enableCircleMask = self.product.productTemplate.templateUI == kOLTemplateUICircle;
     cropVc.delegate = self;
+    
+    cropVc.previewView = [imageView snapshotViewAfterScreenUpdates:YES];
+    cropVc.previewView.frame = [cell convertRect:imageView.frame toView:nil];
+    cropVc.previewSourceView = imageView;
+    cropVc.providesPresentationContextTransitionStyle = true;
+    cropVc.definesPresentationContext = true;
+    cropVc.modalPresentationStyle = UIModalPresentationOverCurrentContext;
     
     CGSize cellSize = [self collectionView:self.collectionView layout:self.collectionView.collectionViewLayout sizeForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
     cropVc.aspectRatio = cellSize.height / cellSize.width;
     [self.editingPrintPhoto getImageWithProgress:NULL completion:^(UIImage *image){
         [cropVc setFullImage:image];
         cropVc.edits = self.editingPrintPhoto.edits;
+//        cropVc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
+        [self presentViewController:cropVc animated:NO completion:NULL];
+    }];
+}
+
+- (UIViewController *)previewingContext:(id<UIViewControllerPreviewing>)previewingContext viewControllerForLocation:(CGPoint)location{
+    NSIndexPath *indexPath = [self.collectionView indexPathForItemAtPoint:location];
+    UICollectionViewCell *cell = [self.collectionView cellForItemAtIndexPath:indexPath];
+    
+    OLRemoteImageView *imageView = (OLRemoteImageView *)[cell viewWithTag:795];
+    if (!imageView.image){
+        return nil;
+    }
+    
+    [previewingContext setSourceRect:[cell convertRect:imageView.frame toView:self.collectionView]];
+    
+    self.editingPrintPhoto = self.posterPhotos[indexPath.item];
+    
+    OLImagePreviewViewController *previewVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLImagePreviewViewController"];
+    [self.editingPrintPhoto getImageWithProgress:NULL completion:^(UIImage *image){
+        previewVc.image = image;
+    }];
+    previewVc.providesPresentationContextTransitionStyle = true;
+    previewVc.definesPresentationContext = true;
+    previewVc.modalPresentationStyle = UIModalPresentationOverCurrentContext;
+    return previewVc;
+}
+
+- (void)previewingContext:(id<UIViewControllerPreviewing>)previewingContext commitViewController:(UIViewController *)viewControllerToCommit{
+    OLScrollCropViewController *cropVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLScrollCropViewController"];
+    cropVc.enableCircleMask = self.product.productTemplate.templateUI == kOLTemplateUICircle;
+    cropVc.delegate = self;
+    cropVc.aspectRatio = 1;
+    [self.editingPrintPhoto getImageWithProgress:^(float progress){
+        [cropVc.cropView setProgress:progress];
+    }completion:^(UIImage *image){
+        [cropVc setFullImage:image];
+        cropVc.edits = self.editingPrintPhoto.edits;
         cropVc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
         [self presentViewController:cropVc animated:YES completion:NULL];
+        
+#ifndef OL_NO_ANALYTICS
+        [OLAnalytics trackReviewScreenEnteredCropScreenForProductName:self.product.productTemplate.name];
+#endif
     }];
 }
 
@@ -353,7 +408,15 @@
     
     self.editingPrintPhoto.edits = cropper.edits;
     
-    [self.collectionView reloadData];
+    NSMutableArray *indexPaths = [[NSMutableArray alloc] init];
+    
+    for (NSInteger i = 0; i < self.posterPhotos.count; i++){
+        if (self.posterPhotos[i] == self.editingPrintPhoto){
+            [indexPaths addObject:[NSIndexPath indexPathForItem:i inSection:0]];
+        }
+    }
+    
+    [self.collectionView reloadItemsAtIndexPaths:indexPaths];
     [cropper dismissViewControllerAnimated:YES completion:NULL];
 }
 
