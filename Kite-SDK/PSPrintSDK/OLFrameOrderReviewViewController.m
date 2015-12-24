@@ -41,6 +41,8 @@
 #import "OLRemoteImageView.h"
 #import "OLKiteUtils.h"
 #import "OLKiteViewController.h"
+#import "OLImagePreviewViewController.h"
+#import "OLAnalytics.h"
 
 @interface OLOrderReviewViewController (Private)
 
@@ -52,7 +54,7 @@
 
 @end
 
-@interface OLFrameOrderReviewViewController () <OLScrollCropViewControllerDelegate>
+@interface OLFrameOrderReviewViewController () <OLScrollCropViewControllerDelegate, UIViewControllerPreviewingDelegate>
 
 @property (strong, nonatomic) NSMutableArray* framePhotos;
 @property (weak, nonatomic) OLPrintPhoto *editingPrintPhoto;
@@ -112,11 +114,18 @@ CGFloat margin = 2;
     cropVc.delegate = self;
     cropVc.aspectRatio = 1;
     
+    cropVc.previewView = [imageView snapshotViewAfterScreenUpdates:YES];
+    cropVc.previewView.frame = [cell convertRect:imageView.frame toView:nil];
+    cropVc.previewSourceView = imageView;
+    cropVc.providesPresentationContextTransitionStyle = true;
+    cropVc.definesPresentationContext = true;
+    cropVc.modalPresentationStyle = UIModalPresentationOverCurrentContext;
+    
     [self.editingPrintPhoto getImageWithProgress:NULL completion:^(UIImage *image){
         [cropVc setFullImage:image];
         cropVc.edits = self.editingPrintPhoto.edits;
-        cropVc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
-        [self presentViewController:cropVc animated:YES completion:NULL];
+//        cropVc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
+        [self presentViewController:cropVc animated:NO completion:NULL];
     }];
 }
 
@@ -150,6 +159,55 @@ CGFloat margin = 2;
 
 -(NSUInteger) totalNumberOfExtras{
     return 0;
+}
+
+- (UIViewController *)previewingContext:(id<UIViewControllerPreviewing>)previewingContext viewControllerForLocation:(CGPoint)location{
+    NSIndexPath *outerCollectionViewIndexPath = [self.collectionView indexPathForItemAtPoint:location];
+    UICollectionViewCell *outerCollectionViewCell = [self.collectionView cellForItemAtIndexPath:outerCollectionViewIndexPath];
+    
+    UICollectionView* collectionView = (UICollectionView*)[outerCollectionViewCell.contentView viewWithTag:20];
+    
+    NSIndexPath* indexPath = [collectionView indexPathForItemAtPoint:[outerCollectionViewCell convertPoint:location fromView:nil]];
+    
+    UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
+    OLRemoteImageView *imageView = (OLRemoteImageView *)[cell viewWithTag:110];
+    
+    OLPrintPhoto *printPhoto =(OLPrintPhoto*)[self.framePhotos objectAtIndex:indexPath.row + (outerCollectionViewIndexPath.item) * self.product.quantityToFulfillOrder];
+    if (!imageView.image){
+        return nil;
+    }
+    
+    [previewingContext setSourceRect:[cell convertRect:imageView.frame toView:self.collectionView]];
+    
+    self.editingPrintPhoto = printPhoto;
+    
+    OLImagePreviewViewController *previewVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLImagePreviewViewController"];
+    [self.editingPrintPhoto getImageWithProgress:NULL completion:^(UIImage *image){
+        previewVc.image = image;
+    }];
+    previewVc.providesPresentationContextTransitionStyle = true;
+    previewVc.definesPresentationContext = true;
+    previewVc.modalPresentationStyle = UIModalPresentationOverCurrentContext;
+    return previewVc;
+}
+
+- (void)previewingContext:(id<UIViewControllerPreviewing>)previewingContext commitViewController:(UIViewController *)viewControllerToCommit{
+    OLScrollCropViewController *cropVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLScrollCropViewController"];
+    cropVc.enableCircleMask = self.product.productTemplate.templateUI == kOLTemplateUICircle;
+    cropVc.delegate = self;
+    cropVc.aspectRatio = 1;
+    [self.editingPrintPhoto getImageWithProgress:^(float progress){
+        [cropVc.cropView setProgress:progress];
+    }completion:^(UIImage *image){
+        [cropVc setFullImage:image];
+        cropVc.edits = self.editingPrintPhoto.edits;
+        cropVc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
+        [self presentViewController:cropVc animated:YES completion:NULL];
+        
+#ifndef OL_NO_ANALYTICS
+        [OLAnalytics trackReviewScreenEnteredCropScreenForProductName:self.product.productTemplate.name];
+#endif
+    }];
 }
 
 #pragma mark Button Actions
