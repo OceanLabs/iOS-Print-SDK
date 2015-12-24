@@ -50,5 +50,6 @@
 @property (weak, nonatomic) id<OLScrollCropViewControllerDelegate> delegate;
 @property (assign, nonatomic) BOOL enableCircleMask;
 @property (strong, nonatomic) UIView *previewView;
+@property (strong, nonatomic) UIView *previewSourceView;
 
 @end

@@ -493,6 +493,7 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     
     cropVc.previewView = [imageView snapshotViewAfterScreenUpdates:YES];
     cropVc.previewView.frame = [cell convertRect:imageView.frame toView:nil];
+    cropVc.previewSourceView = imageView;
     cropVc.providesPresentationContextTransitionStyle = true;
     cropVc.definesPresentationContext = true;
     cropVc.modalPresentationStyle = UIModalPresentationOverCurrentContext;
@@ -500,6 +501,10 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     [self.editingPrintPhoto getImageWithProgress:^(float progress){
         [cropVc.cropView setProgress:progress];
     }completion:^(UIImage *image){
+        [UIView animateWithDuration:0.25 animations:^{
+            self.nextButton.alpha = 0;
+        }];
+        
         [cropVc setFullImage:image];
         cropVc.edits = self.editingPrintPhoto.edits;
 //        cropVc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
@@ -577,6 +582,14 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     cellImage.clipsToBounds = YES;
     [cell.contentView insertSubview:cellImage aboveSubview:activityIndicator];
     
+    if ([self.presentedViewController isKindOfClass:[OLScrollCropViewController class]]){
+        OLScrollCropViewController *cropVc = (OLScrollCropViewController *)self.presentedViewController;
+        if (oldView == cropVc.previewSourceView){
+            cropVc.previewSourceView = cellImage;
+            cellImage.hidden = YES;
+        }
+    }
+    
     cellImage.userInteractionEnabled = YES;
     [cellImage addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onButtonEnhanceClicked:)]];
     
@@ -597,6 +610,7 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
         [cellImage setProgress:progress];
     } completionHandler:^(UIImage *image){
         dispatch_async(dispatch_get_main_queue(), ^{
+            [activityIndicator stopAnimating];
             cellImage.image = image;
         });
     }];
@@ -691,7 +705,12 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
 #pragma mark - OLImageEditorViewControllerDelegate methods
 
 - (void)scrollCropViewControllerDidCancel:(OLScrollCropViewController *)cropper{
-    [cropper dismissViewControllerAnimated:YES completion:NULL];
+    [cropper dismissViewControllerAnimated:YES completion:^{
+        [UIView animateWithDuration:0.25 animations:^{
+            self.nextButton.alpha = 1;
+            self.navigationController.navigationBar.alpha = 1;
+        }];
+    }];
 }
 
 -(void)scrollCropViewController:(OLScrollCropViewController *)cropper didFinishCroppingImage:(UIImage *)croppedImage{
@@ -700,7 +719,12 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     self.editingPrintPhoto.edits = cropper.edits;
     
     [self.collectionView reloadData];
-    [cropper dismissViewControllerAnimated:YES completion:NULL];
+    [cropper dismissViewControllerAnimated:YES completion:^{
+        [UIView animateWithDuration:0.25 animations:^{
+            self.nextButton.alpha = 1;
+            self.navigationController.navigationBar.alpha = 1;
+        }];
+    }];
     
 #ifndef OL_NO_ANALYTICS
     [OLAnalytics trackReviewScreenDidCropPhotoForProductName:self.product.productTemplate.name];

@@ -36,7 +36,6 @@
 
 @property (strong, nonatomic) IBOutletCollection(UIView) NSArray *allViews;
 
-
 @end
 
 @implementation OLScrollCropViewController
@@ -75,10 +74,11 @@
     [super viewDidAppear:animated];
     
     if (self.previewView){
+        self.previewSourceView.hidden = YES;
         [UIView animateWithDuration:0.25 animations:^{
             self.previewView.frame = self.cropView.frame;
         }completion:^(BOOL finished){
-            [UIView animateWithDuration:0.5 animations:^{
+            [UIView animateWithDuration:0.25 animations:^{
                 self.view.backgroundColor = [UIColor blackColor];
                 for (UIView *view in self.allViews){
                     view.alpha = 1;
@@ -131,11 +131,44 @@
     if ([self.delegate respondsToSelector:@selector(scrollCropViewController:didFinishCroppingImage:)]){
         [self.delegate scrollCropViewController:self didFinishCroppingImage:[self.cropView editedImage]];
     }
+    else{
+        [self dismissViewControllerAnimated:YES completion:NULL];
+    }
 }
 
 - (IBAction)onBarButtonCancelTapped:(UIBarButtonItem *)sender {
     if ([self.delegate respondsToSelector:@selector(scrollCropViewControllerDidCancel:)]){
         [self.delegate scrollCropViewControllerDidCancel:self];
+    }
+    else{
+        [self dismissViewControllerAnimated:YES completion:NULL];
+    }
+}
+
+- (void)dismissViewControllerAnimated:(BOOL)flag completion:(void (^)(void))completion{
+    if (!self.previewView){
+        [super dismissViewControllerAnimated:flag completion:completion];
+    }
+    else if (!flag){
+        [super dismissViewControllerAnimated:NO completion:completion];
+    }
+    else{
+        self.previewView = [self.cropView snapshotViewAfterScreenUpdates:YES];
+        self.previewView.frame = self.cropView.frame;
+        [self.view addSubview:self.previewView];
+        [UIView animateWithDuration:0.25 animations:^{
+            self.view.backgroundColor = [UIColor clearColor];
+            for (UIView *view in self.allViews){
+                view.alpha = 0;
+            }
+        } completion:^(BOOL finished){
+            [UIView animateWithDuration:0.25 animations:^{
+                self.previewView.frame = [self.previewSourceView.superview convertRect:self.previewSourceView.frame toView:nil];
+            }completion:^(BOOL finished){
+                self.previewSourceView.hidden = NO;
+                [super dismissViewControllerAnimated:NO completion:completion];
+            }];
+        }];
     }
 }
 
