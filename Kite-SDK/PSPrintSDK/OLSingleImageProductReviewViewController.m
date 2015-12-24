@@ -66,6 +66,8 @@
 #import <FacebookImagePicker/OLFacebookImage.h>
 #endif
 
+#import "OLImagePreviewViewController.h"
+
 @interface OLPaymentViewController (Private)
 
 -(void)saveAndDismissReviewController;
@@ -103,7 +105,7 @@ OLFacebookImagePickerControllerDelegate,
 #ifdef OL_KITE_AT_LEAST_IOS8
 CTAssetsPickerControllerDelegate,
 #endif
-OLAssetsPickerControllerDelegate, RMImageCropperDelegate>
+OLAssetsPickerControllerDelegate, RMImageCropperDelegate, UIViewControllerPreviewingDelegate>
 
 @property (weak, nonatomic) IBOutlet UICollectionView *imagesCollectionView;
 
@@ -112,6 +114,7 @@ OLAssetsPickerControllerDelegate, RMImageCropperDelegate>
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *maskAspectRatio;
 @property (strong, nonatomic) OLPrintPhoto *imagePicked;
 @property (strong, nonatomic) OLPrintPhoto *imageDisplayed;
+@property (strong, nonatomic) NSIndexPath *previewingIndexPath;
 
 @end
 
@@ -125,6 +128,10 @@ static BOOL hasMoved;
 #ifndef OL_NO_ANALYTICS
     [OLAnalytics trackReviewScreenViewed:self.product.productTemplate.name];
 #endif
+    
+    if ([UITraitCollection class] && [self.traitCollection respondsToSelector:@selector(forceTouchCapability)] && self.traitCollection.forceTouchCapability == UIForceTouchCapabilityAvailable){
+        [self registerForPreviewingWithDelegate:self sourceView:self.imagesCollectionView];
+    }
     
     if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder){
         if ([[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant isEqualToString:@"Review-Overview-Checkout"]){
@@ -331,6 +338,33 @@ static BOOL hasMoved;
         [OLAnalytics trackReviewScreenDidCropPhotoForProductName:self.product.productTemplate.name];
     }
 #endif
+}
+
+- (UIViewController *)previewingContext:(id<UIViewControllerPreviewing>)previewingContext viewControllerForLocation:(CGPoint)location{
+    NSIndexPath *indexPath = [self.imagesCollectionView indexPathForItemAtPoint:location];
+    UICollectionViewCell *cell = [self.imagesCollectionView cellForItemAtIndexPath:indexPath];
+    
+    OLRemoteImageView *imageView = (OLRemoteImageView *)[cell viewWithTag:11];
+    if (!imageView.image){
+        return nil;
+    }
+    
+    self.previewingIndexPath = indexPath;
+    
+    [previewingContext setSourceRect:[cell convertRect:imageView.frame toView:self.imagesCollectionView]];
+    
+    OLImagePreviewViewController *previewVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLImagePreviewViewController"];
+    [self.userSelectedPhotos[indexPath.item] getImageWithProgress:NULL completion:^(UIImage *image){
+        previewVc.image = image;
+    }];
+    previewVc.providesPresentationContextTransitionStyle = true;
+    previewVc.definesPresentationContext = true;
+    previewVc.modalPresentationStyle = UIModalPresentationOverCurrentContext;
+    return previewVc;
+}
+
+- (void)previewingContext:(id<UIViewControllerPreviewing>)previewingContext commitViewController:(UIViewController *)viewControllerToCommit{
+    [self collectionView:self.imagesCollectionView didSelectItemAtIndexPath:self.previewingIndexPath];
 }
 
 #pragma mark CollectionView delegate and data source
