@@ -19,7 +19,7 @@
 #import "OLKiteABTesting.h"
 #import "OLAddressEditViewController.h"
 #ifdef OL_KITE_OFFER_APPLE_PAY
-#import <Stripe+ApplePay.h>
+#import "Stripe+ApplePay.h"
 #endif
 #import "OLPaymentViewController.h"
 #import "OLKiteUtils.h"
