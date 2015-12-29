@@ -6,6 +6,14 @@
 //  Copyright (c) 2014 Ocean Labs. All rights reserved.
 //
 
+#ifdef COCOAPODS
+#import <SDWebImage/SDWebImageManager.h>
+#import <SVProgressHUD/SVProgressHUD.h>
+#else
+#import "SDWebImageManager.h"
+#import "SVProgressHUD.h"
+#endif
+
 #import "OLReceiptViewController.h"
 #import "OLPaymentViewController.h"
 #import "Util.h"
@@ -14,12 +22,10 @@
 #import "OLPrintJob.h"
 #import "OLProductTemplate.h"
 #import "OLConstants.h"
-#import "SVProgressHUD.h"
 #import "OLPaymentLineItem.h"
 #import "OLPrintOrderCost.h"
 #import "OLOrderReviewViewController.h"
 #import "OLKiteViewController.h"
-#import "SDWebImageManager.h"
 #import "OLKiteABTesting.h"
 #import "UIImage+ColorAtPixel.h"
 #import "UIImage+ImageNamedInKiteBundle.h"

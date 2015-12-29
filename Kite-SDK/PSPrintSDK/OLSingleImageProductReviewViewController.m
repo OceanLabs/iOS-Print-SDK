@@ -6,11 +6,16 @@
 //  Copyright (c) 2015 Deon Botha. All rights reserved.
 //
 
+#ifdef COCOAPODS
+#import <SDWebImage/SDWebImageManager.h>
+#else
+#import "SDWebImageManager.h"
+#endif
+
 #import "OLSingleImageProductReviewViewController.h"
 #import "OLPrintPhoto.h"
 #import "OLAnalytics.h"
 #import "OLAsset+Private.h"
-#import "SDWebImageManager.h"
 #import "OLProductPrintJob.h"
 #import "OLKitePrintSDK.h"
 #import "OLAssetsPickerController.h"

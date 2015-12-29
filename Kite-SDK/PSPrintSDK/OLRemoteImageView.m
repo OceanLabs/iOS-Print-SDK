@@ -6,8 +6,13 @@
 //  Copyright (c) 2015 Deon Botha. All rights reserved.
 //
 
-#import "OLRemoteImageView.h"
+#ifdef COCOAPODS
+#import <DACircularProgress/DACircularProgressView.h>
+#else
 #import "DACircularProgressView.h"
+#endif
+
+#import "OLRemoteImageView.h"
 
 @interface OLRemoteImageView ()
 

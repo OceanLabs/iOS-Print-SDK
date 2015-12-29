@@ -5,6 +5,13 @@
 //  Created by Deon Botha on 05/01/2014.
 //  Copyright (c) 2014 Ocean Labs. All rights reserved.
 //
+#ifdef COCOAPODS
+#import <SDWebImage/SDWebImageManager.h>
+#import <SkyLab/SkyLab.h>
+#else
+#import "SDWebImageManager.h"
+#import "SkyLab.h"
+#endif
 
 #import "OLCheckoutViewController.h"
 #import "OLPaymentViewController.h"
@@ -15,10 +22,8 @@
 #import "OLKitePrintSDK.h"
 #import "OLAnalytics.h"
 #import "OLAddressEditViewController.h"
-#import "SkyLab.h"
 #import "OLProductPrintJob.h"
 #import "OLKiteABTesting.h"
-#import "SDWebImageManager.h"
 #import "UIImage+ColorAtPixel.h"
 #import "UIImage+ImageNamedInKiteBundle.h"
 #import "OLKiteUtils.h"

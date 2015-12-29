@@ -6,6 +6,12 @@
 //  Copyright (c) 2013 Ocean Labs. All rights reserved.
 //
 
+#ifdef COCOAPODS
+#import <UIColor-HexString/UIColor+HexString.h>
+#else
+#import "UIColor+HexString.h"
+#endif
+
 #import "OLPhotoSelectionViewController.h"
 #import "OLPhotoSelectionButton.h"
 #import "OLPrintPhoto.h"
@@ -31,7 +37,6 @@
 #import "OLAddress.h"
 #import "OLAsset.h"
 #import "OLProductPrintJob.h"
-#import "UIColor+HexString.h"
 #import "OLConstants.h"
 #import "LXReorderableCollectionViewFlowLayout.h"
 #import "NSArray+QueryingExtras.h"

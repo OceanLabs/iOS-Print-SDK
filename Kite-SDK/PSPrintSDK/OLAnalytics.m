@@ -6,6 +6,12 @@
 //  Copyright (c) 2015 Deon Botha. All rights reserved.
 //
 
+#ifdef COCOAPODS
+#import <AFNetworking/AFNetworking.h>
+#else
+#import "AFNetworking.h"
+#endif
+
 #import "OLAnalytics.h"
 #import "OLPrintOrder.h"
 #import "OLAddress.h"
@@ -13,7 +19,6 @@
 #import "OLProduct.h"
 #import "OLPrintJob.h"
 #import "OLKitePrintSDK.h"
-#import "AFNetworking.h"
 #include <sys/sysctl.h>
 #import "OLKiteABTesting.h"
 #import "UICKeyChainStore.h"

@@ -6,9 +6,14 @@
 //  Copyright (c) 2013 Ocean Labs. All rights reserved.
 //
 
+#ifdef COCOAPODS
+#import <SDWebImage/SDWebImageManager.h>
+#else
+#import "SDWebImageManager.h"
+#endif
+
 #import "OLPrintPhoto.h"
 #import <AssetsLibrary/AssetsLibrary.h>
-#import "SDWebImageManager.h"
 #import "RMImageCropper.h"
 #import "ALAssetsLibrary+Singleton.h"
 #import "OLKiteUtils.h"
