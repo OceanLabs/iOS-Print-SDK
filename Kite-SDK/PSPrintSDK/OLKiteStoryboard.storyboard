@@ -377,11 +377,11 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Qn0-C6-SBY">
-                                <rect key="frame" x="592" y="20" width="8" height="580"/>
+                                <rect key="frame" x="592" y="0.0" width="8" height="600"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.75" colorSpace="calibratedWhite"/>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="OUl-7d-l9B">
-                                <rect key="frame" x="0.0" y="20" width="8" height="580"/>
+                                <rect key="frame" x="0.0" y="0.0" width="8" height="600"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.75" colorSpace="calibratedWhite"/>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qk7-Gg-AZh">
@@ -389,7 +389,7 @@
                                 <color key="backgroundColor" white="0.0" alpha="0.75" colorSpace="calibratedWhite"/>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="124-aY-wOU">
-                                <rect key="frame" x="8" y="20" width="584" height="134"/>
+                                <rect key="frame" x="8" y="0.0" width="584" height="154"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.75" colorSpace="calibratedWhite"/>
                             </view>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="crop-corner-ul" translatesAutoresizingMaskIntoConstraints="NO" id="BGS-ia-DZN">
@@ -495,7 +495,7 @@
                             <constraint firstItem="nok-mW-saD" firstAttribute="top" secondItem="hcp-Sa-ZAv" secondAttribute="bottom" priority="750" constant="8" id="H4k-lK-38g"/>
                             <constraint firstItem="uNG-6s-nO8" firstAttribute="top" secondItem="OUl-7d-l9B" secondAttribute="bottom" id="HAn-cd-mvk"/>
                             <constraint firstItem="JBu-Sx-wDM" firstAttribute="top" secondItem="f6w-s4-OgW" secondAttribute="bottom" id="ITc-nM-2aF"/>
-                            <constraint firstItem="Qn0-C6-SBY" firstAttribute="top" secondItem="hcp-Sa-ZAv" secondAttribute="bottom" id="JXz-N4-pTd"/>
+                            <constraint firstItem="Qn0-C6-SBY" firstAttribute="top" secondItem="hcp-Sa-ZAv" secondAttribute="bottom" constant="-20" id="JXz-N4-pTd"/>
                             <constraint firstItem="Qn0-C6-SBY" firstAttribute="leading" secondItem="nok-mW-saD" secondAttribute="trailing" id="Mue-eE-3Jm"/>
                             <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="nok-mW-saD" secondAttribute="trailing" constant="8" id="Nk1-0V-3vy"/>
                             <constraint firstItem="uNG-6s-nO8" firstAttribute="top" secondItem="nok-mW-saD" secondAttribute="bottom" priority="750" constant="8" id="NuE-55-TZV"/>
@@ -506,7 +506,7 @@
                             <constraint firstItem="8y6-72-UFe" firstAttribute="leading" secondItem="TAm-mR-qRl" secondAttribute="trailing" id="W6Z-Mg-ksE"/>
                             <constraint firstItem="y5O-eZ-nT4" firstAttribute="trailing" secondItem="nok-mW-saD" secondAttribute="trailing" constant="1" id="WTY-YE-byn"/>
                             <constraint firstItem="nok-mW-saD" firstAttribute="bottom" secondItem="TAm-mR-qRl" secondAttribute="bottom" constant="-1" id="XVp-m6-WA1"/>
-                            <constraint firstItem="OUl-7d-l9B" firstAttribute="top" secondItem="hcp-Sa-ZAv" secondAttribute="bottom" id="Xsx-eu-ASm"/>
+                            <constraint firstItem="OUl-7d-l9B" firstAttribute="top" secondItem="hcp-Sa-ZAv" secondAttribute="bottom" constant="-20" id="Xsx-eu-ASm"/>
                             <constraint firstItem="nok-mW-saD" firstAttribute="top" secondItem="zsc-cm-HTN" secondAttribute="top" constant="1" id="YaQ-6y-bbd"/>
                             <constraint firstItem="Qn0-C6-SBY" firstAttribute="leading" secondItem="124-aY-wOU" secondAttribute="trailing" id="YuO-6N-0jN"/>
                             <constraint firstItem="nok-mW-saD" firstAttribute="top" secondItem="BGS-ia-DZN" secondAttribute="top" constant="2" id="ZZ5-Iq-f06"/>
@@ -515,7 +515,7 @@
                             <constraint firstAttribute="trailing" secondItem="nok-mW-saD" secondAttribute="trailing" priority="750" constant="8" id="cbV-yc-5n7"/>
                             <constraint firstItem="TAm-mR-qRl" firstAttribute="leading" secondItem="JBu-Sx-wDM" secondAttribute="trailing" id="f5r-bw-E2q"/>
                             <constraint firstItem="uNG-6s-nO8" firstAttribute="top" secondItem="Qn0-C6-SBY" secondAttribute="bottom" id="foV-Yr-oVt"/>
-                            <constraint firstItem="124-aY-wOU" firstAttribute="top" secondItem="hcp-Sa-ZAv" secondAttribute="bottom" id="h4W-C2-zfQ"/>
+                            <constraint firstItem="124-aY-wOU" firstAttribute="top" secondItem="hcp-Sa-ZAv" secondAttribute="bottom" constant="-20" id="h4W-C2-zfQ"/>
                             <constraint firstItem="nok-mW-saD" firstAttribute="leading" secondItem="BGS-ia-DZN" secondAttribute="leading" constant="2" id="hAH-n7-DWE"/>
                             <constraint firstAttribute="centerX" secondItem="nok-mW-saD" secondAttribute="centerX" id="hIf-lk-h6P"/>
                             <constraint firstItem="qk7-Gg-AZh" firstAttribute="leading" secondItem="OUl-7d-l9B" secondAttribute="trailing" id="hcA-SU-J6i"/>
