@@ -51,12 +51,21 @@
 #import "OLSingleImageProductReviewViewController.h"
 
 #ifdef OL_KITE_OFFER_PAYPAL
+#ifdef COCOAPODS
+#import <PayPal-iOS-SDK/PayPalMobile.h>
+#else
 #import "PayPalMobile.h"
 #endif
 
+#endif
+
 #ifdef OL_KITE_OFFER_APPLE_PAY
+#ifdef COCOAPODS
 #import <Stripe/Stripe+ApplePay.h>
-#import <ApplePayStubs/STPTestPaymentAuthorizationViewController.h>
+#else
+#import "Stripe+ApplePay.h"
+#endif
+
 #endif
 
 @import PassKit;

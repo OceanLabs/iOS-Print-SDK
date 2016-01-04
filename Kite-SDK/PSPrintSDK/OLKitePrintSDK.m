@@ -11,7 +11,12 @@
 #import "OLProductTemplate.h"
 #import "OLStripeCard.h"
 #ifdef OL_KITE_OFFER_PAYPAL
+#ifdef COCOAPODS
+#import <PayPal-iOS-SDK/PayPalMobile.h>
+#else
 #import "PayPalMobile.h"
+#endif
+
 #endif
 #import "OLJudoPayCard.h"
 #import "OLProductHomeViewController.h"
@@ -19,7 +24,12 @@
 #import "OLKiteABTesting.h"
 #import "OLAddressEditViewController.h"
 #ifdef OL_KITE_OFFER_APPLE_PAY
-#import <Stripe+ApplePay.h>
+#ifdef COCOAPODS
+#import <Stripe/Stripe+ApplePay.h>
+#else
+#import "Stripe+ApplePay.h"
+#endif
+
 #endif
 #import "OLPaymentViewController.h"
 #import "OLKiteUtils.h"
