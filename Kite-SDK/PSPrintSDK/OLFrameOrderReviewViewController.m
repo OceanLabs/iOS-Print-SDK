@@ -33,6 +33,12 @@
 #import "SDWebImageManager.h"
 #endif
 
+#ifdef COCOAPODS
+#import <SDWebImage/SDWebImageManager.h>
+#else
+#import "SDWebImageManager.h"
+#endif
+
 #import "OLFrameOrderReviewViewController.h"
 #import "OLPrintPhoto.h"
 #import "OLProduct.h"

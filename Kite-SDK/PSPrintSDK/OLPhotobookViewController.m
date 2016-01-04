@@ -33,6 +33,12 @@
 #import "MPFlipTransition.h"
 #endif
 
+#ifdef COCOAPODS
+#import <MPFlipViewController/MPFlipTransition.h>
+#else
+#import "MPFlipTransition.h"
+#endif
+
 #import "OLPhotobookViewController.h"
 #import "OLProduct.h"
 #import "OLProductTemplate.h"

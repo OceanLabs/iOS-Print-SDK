@@ -33,6 +33,12 @@
 #import "UIColor+HexString.h"
 #endif
 
+#ifdef COCOAPODS
+#import <UIColor-HexString/UIColor+HexString.h>
+#else
+#import "UIColor+HexString.h"
+#endif
+
 #import "OLPhotoSelectionViewController.h"
 #import "OLPhotoSelectionButton.h"
 #import "OLPrintPhoto.h"

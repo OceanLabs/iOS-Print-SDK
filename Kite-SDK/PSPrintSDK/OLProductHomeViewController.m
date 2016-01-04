@@ -35,6 +35,14 @@
 #import "TSMarkdownParser.h"
 #endif
 
+#ifdef COCOAPODS
+#import <SDWebImage/SDWebImageManager.h>
+#import <TSMarkdownParser/TSMarkdownParser.h>
+#else
+#import "SDWebImageManager.h"
+#import "TSMarkdownParser.h"
+#endif
+
 #import "NSObject+Utils.h"
 #import "OLAnalytics.h"
 #import "OLCustomNavigationController.h"
