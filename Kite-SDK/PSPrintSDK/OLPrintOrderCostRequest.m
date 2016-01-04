@@ -147,7 +147,7 @@ static NSUInteger cacheOrderHash; // cached response is only valid for orders wi
             if ([errorObj isKindOfClass:[NSDictionary class]]) {
                 id errorMessage = errorObj[@"message"];
                 if ([errorMessage isKindOfClass:[NSString class]]) {
-                    NSError *error = [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeServerFault userInfo:@{NSLocalizedDescriptionKey:errorMessage}];
+                    NSError *error = [NSError errorWithDomain:kOLKiteSDKErrorDomain code:[errorObj[@"code"] integerValue] userInfo:@{NSLocalizedDescriptionKey:errorMessage}];
                     self.req = nil;
                     handler(nil, error);
                     return;
