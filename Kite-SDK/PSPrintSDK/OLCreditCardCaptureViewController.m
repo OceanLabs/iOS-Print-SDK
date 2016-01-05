@@ -25,6 +25,7 @@
 #import "UIView+RoundRect.h"
 #import "OLPrintOrderCost.h"
 #import "UIImage+ImageNamedInKiteBundle.h"
+#import "OLKiteABTesting.h"
 
 static const NSUInteger kOLSectionCardNumber = 0;
 static const NSUInteger kOLSectionExpiryDate = 1;
@@ -106,6 +107,10 @@ UITableViewDataSource, UITextFieldDelegate>
 @end
 
 @implementation OLCreditCardCaptureViewController
+
+- (BOOL)prefersStatusBarHidden {
+    return [OLKiteABTesting sharedInstance].darkTheme;
+}
 
 - (id)initWithPrintOrder:(OLPrintOrder *)printOrder {
     self.rootVC = [[OLCreditCardCaptureRootController alloc] initWithPrintOrder:printOrder];

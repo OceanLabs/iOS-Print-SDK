@@ -18,6 +18,7 @@
 
 #import "OLKiteABTesting.h"
 #import "OLKitePrintSDK.h"
+#import "UIColor+HexString.h"
 
 
 static NSString *const kOLKiteABTestLaunchWithPrintOrderVariant = @"ly.kite.abtest.launch_with_print_order_variant";
@@ -130,6 +131,19 @@ id safeObject(id obj){
     }
     [defaults setObject:s forKey:kOLKiteThemeSupportEmail];
     [defaults synchronize];
+}
+
+- (UIColor *)darkThemeColor1{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    UIColor *color;
+    NSString *hex = [defaults objectForKey:@"ly.kite.theme.dark.color1"];
+    if (hex){
+        color = [UIColor colorWithHexString:hex];
+    }
+    else{
+        color = [UIColor colorWithHexString:@"6867E8"];
+    }
+    return color;
 }
 
 - (void)prefetchRemoteImages{

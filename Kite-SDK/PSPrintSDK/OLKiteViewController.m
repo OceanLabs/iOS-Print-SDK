@@ -82,7 +82,19 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
     [self.printOrder saveOrder];
 }
 
+- (void)setUseDarkTheme:(BOOL)useDarkTheme{
+    _useDarkTheme = useDarkTheme;
+    [OLKiteABTesting sharedInstance].darkTheme = useDarkTheme;
+}
+
+- (BOOL)prefersStatusBarHidden {
+    return self.useDarkTheme;
+}
+
 - (UIStatusBarStyle)preferredStatusBarStyle{
+    if (self.childViewControllers.count == 0){
+        return self.useDarkTheme ? UIStatusBarStyleLightContent : UIStatusBarStyleDefault;
+    }
     return [[self.childViewControllers firstObject] preferredStatusBarStyle];
 }
 
@@ -130,6 +142,12 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
 
 -(void)viewDidLoad {
     [super viewDidLoad];
+    
+    if (self.useDarkTheme){
+        self.navigationBar.barTintColor = [UIColor blackColor];
+        self.navigationBar.tintColor = [UIColor grayColor];
+        self.navigationBar.barStyle = UIBarStyleBlackTranslucent;
+    }
     
     [[NSURLCache sharedURLCache] removeAllCachedResponses];
     

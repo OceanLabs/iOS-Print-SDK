@@ -59,6 +59,10 @@ static const NSUInteger kSectionErrorRetry = 2;
 
 @implementation OLReceiptViewController
 
+- (BOOL)prefersStatusBarHidden {
+    return [OLKiteABTesting sharedInstance].darkTheme;
+}
+
 - (id)initWithPrintOrder:(OLPrintOrder *)printOrder {
     if (self = [super initWithStyle:UITableViewStyleGrouped]) {
         self.printOrder = printOrder;

@@ -42,6 +42,7 @@
 @property (weak, nonatomic) IBOutlet UIImageView *arrowImageView;
 @property (weak, nonatomic) IBOutlet UIView *detailsView;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *detailsViewHeightCon;
+@property (weak, nonatomic) IBOutlet UIView *detailsSeparator;
 @property (assign, nonatomic) CGFloat originalBoxConstraint;
 
 @property (strong, nonatomic) OLProductDetailsViewController *productDetails;
@@ -104,6 +105,13 @@
         else{
             [self.callToActionButton setTitle: NSLocalizedString(@"Review", @"")forState:UIControlStateNormal];
         }
+    }
+    
+    if ([OLKiteABTesting sharedInstance].darkTheme && [OLKiteABTesting sharedInstance].darkThemeColor1){
+        self.callToActionButton.backgroundColor = [OLKiteABTesting sharedInstance].darkThemeColor1;
+        [self.callToActionButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        
+        self.detailsSeparator.backgroundColor = [OLKiteABTesting sharedInstance].darkThemeColor1;
     }
     
 #ifndef OL_NO_ANALYTICS
@@ -197,7 +205,12 @@
     
     if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0){
         UIVisualEffect *blurEffect;
+        if (![OLKiteABTesting sharedInstance].darkTheme){
         blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleExtraLight];
+        }
+        else{
+            blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleDark];
+        }
         
         UIVisualEffectView *visualEffectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
         UIView *view = visualEffectView;

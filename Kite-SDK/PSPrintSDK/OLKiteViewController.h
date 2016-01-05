@@ -94,7 +94,12 @@
 /**
  *  A set of product template_id strings which if present will restrict which products ultimate show up in the product selection journey
  */
-@property (copy, nonatomic, nullable) NSArray/*<NSString>*/ *filterProducts;
+@property (copy, nonatomic, nullable) NSArray<NSString *> *filterProducts;
+
+/**
+ *  Use a dark visual theme.
+ */
+@property (assign, nonatomic) BOOL useDarkTheme;
 
 /**
  *  Initializer that accepts an array of OLAssets for the user to personalize their products with

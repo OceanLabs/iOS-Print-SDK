@@ -2472,8 +2472,8 @@
                                         <exclude reference="hEO-S4-3zj"/>
                                         <exclude reference="u2u-NV-p1E"/>
                                         <exclude reference="y4O-hU-2Wf"/>
-                                        <exclude reference="goi-Ny-diL"/>
                                         <exclude reference="Y3H-Hv-ixq"/>
+                                        <exclude reference="goi-Ny-diL"/>
                                     </mask>
                                 </variation>
                             </collectionViewCell>
@@ -3254,6 +3254,7 @@
                     <connections>
                         <outlet property="callToActionButton" destination="JzC-Vn-8gQ" id="ecX-3P-hiL"/>
                         <outlet property="detailsBoxTopCon" destination="GzY-ur-lyS" id="2Uk-L7-IKM"/>
+                        <outlet property="detailsSeparator" destination="WAl-EY-ayd" id="FC2-yc-mJY"/>
                         <outlet property="detailsView" destination="SLj-fW-sSB" id="KkH-Zd-gs2"/>
                         <outlet property="detailsViewHeightCon" destination="h61-pl-WzY" id="pQK-3P-OsG"/>
                         <outlet property="pageControl" destination="4xs-oO-L3J" id="c7J-yK-5q9"/>
@@ -3445,9 +3446,10 @@
                     <connections>
                         <outlet property="arrowImageView" destination="bMp-Op-YBx" id="dO0-ic-V3Y"/>
                         <outlet property="chevron" destination="RzQ-I4-Pex" id="NT0-Q2-kYY"/>
+                        <outlet property="detailsLabel" destination="CCQ-J9-y3B" id="GVU-Xg-oCe"/>
                         <outlet property="detailsTextLabel" destination="AlQ-Es-3y4" id="7SZ-pF-6LE"/>
                         <outlet property="moreOptionsView" destination="CBY-bq-f6H" id="9Z6-oj-qcg"/>
-                        <outlet property="optionLabel" destination="CWv-nM-a80" id="2KY-dx-0be"/>
+                        <outlet property="optionLabel" destination="x3O-MJ-pMA" id="svG-Js-Jr0"/>
                         <outlet property="priceLabel" destination="X4d-8D-TEz" id="ePR-NJ-tyO"/>
                         <outlet property="selectedOptionLabel" destination="CWv-nM-a80" id="BWP-tf-3jN"/>
                     </connections>

@@ -19,6 +19,7 @@
 #endif
 #import "OLKiteViewController.h"
 #import "OLKiteUtils.h"
+#import "OLKiteABTesting.h"
 
 //static const NSUInteger kMaxInFlightRequests = 5;
 
@@ -42,6 +43,10 @@
 @end
 
 @implementation OLAddressLookupViewController
+
+- (BOOL)prefersStatusBarHidden {
+    return [OLKiteABTesting sharedInstance].darkTheme;
+}
 
 - (id)init {
     if (self = [super initWithStyle:UITableViewStylePlain]) {

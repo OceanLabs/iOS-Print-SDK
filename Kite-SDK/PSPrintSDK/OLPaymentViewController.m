@@ -201,6 +201,10 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 
 @implementation OLPaymentViewController
 
+- (BOOL)prefersStatusBarHidden {
+    return [OLKiteABTesting sharedInstance].darkTheme;
+}
+
 - (id)initWithPrintOrder:(OLPrintOrder *)printOrder {
     NSBundle *currentBundle = [NSBundle bundleForClass:[OLKiteViewController class]];
     if ((self = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:currentBundle] instantiateViewControllerWithIdentifier:@"OLPaymentViewController"])) {

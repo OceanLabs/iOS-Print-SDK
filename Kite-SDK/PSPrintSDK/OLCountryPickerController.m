@@ -9,6 +9,7 @@
 #import "OLCountryPickerController.h"
 #import "OLCountry.h"
 #import "OLConstants.h"
+#import "OLKiteABTesting.h"
 
 @interface OLCountryListController : UITableViewController
 @property (strong, nonatomic) NSMutableArray *selected;
@@ -21,6 +22,9 @@
 
 @implementation OLCountryListController
 
+- (BOOL)prefersStatusBarHidden {
+    return [OLKiteABTesting sharedInstance].darkTheme;
+}
 
 - (id)initWithStyle:(UITableViewStyle)style {
     if (self = [super initWithStyle:style]) {
