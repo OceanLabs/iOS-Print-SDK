@@ -634,11 +634,24 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             [self.paymentButton2 setTitle:NSLocalizedStringFromTableInBundle(@"Credit Card", @"KitePrintSDK", [OLConstants bundle], @"") forState:UIControlStateNormal];
         }
         
-        [self.tableView reloadData];
+        if ([self.tableView numberOfRowsInSection:0] != self.printOrder.jobs.count){
+            [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationNone];
+        }
+        
+        NSString *shippingCostString;
+        NSDecimalNumber *shippingCost = [cost shippingCostInCurrency:self.printOrder.currencyCode];
+        if ([shippingCost isEqualToNumber:@0]){
+            shippingCostString = NSLocalizedString(@"FREE", @"");
+        }
+        else{
+            shippingCostString = [shippingCost formatCostForCurrencyCode:self.printOrder.currencyCode];
+        }
         
         [UIView animateWithDuration:shouldAnimate ? 0.1 : 0 animations:^{
             if (shouldAnimate){
-                self.shippingCostLabel.alpha = 0;
+                if (![self.shippingCostLabel.text isEqualToString:shippingCostString]){
+                    self.shippingCostLabel.alpha = 0;
+                }
                 self.totalCostLabel.alpha = 0;
                 self.totalCostActivityIndicator.alpha = 0;
             }
@@ -649,13 +662,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             [self.totalCostActivityIndicator stopAnimating];
             self.totalCostActivityIndicator.alpha = 1;
             
-            NSDecimalNumber *shippingCost = [cost shippingCostInCurrency:self.printOrder.currencyCode];
-            if ([shippingCost isEqualToNumber:@0]){
-                self.shippingCostLabel.text = NSLocalizedString(@"FREE", @"");
-            }
-            else{
-                self.shippingCostLabel.text = [shippingCost formatCostForCurrencyCode:self.printOrder.currencyCode];
-            }
+            self.shippingCostLabel.text = shippingCostString;
             
             NSDecimalNumber *promoCost = [cost promoCodeDiscountInCurrency:self.printOrder.currencyCode];
             if ([promoCost isEqualToNumber:@0]){
