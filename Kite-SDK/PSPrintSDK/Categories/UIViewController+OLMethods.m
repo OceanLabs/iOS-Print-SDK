@@ -48,7 +48,7 @@
             count += [job extraCopies];
         }
         
-        UILabel *qtyLabel = [[UILabel alloc] initWithFrame:CGRectMake(24, 11.5, 10, 10)];
+        UILabel *qtyLabel = [[UILabel alloc] initWithFrame:CGRectMake(22, 12.5, 10, 10)];
         qtyLabel.font = [UIFont systemFontOfSize:9];
         qtyLabel.textAlignment = NSTextAlignmentCenter;
         qtyLabel.textColor = [UIColor whiteColor];
