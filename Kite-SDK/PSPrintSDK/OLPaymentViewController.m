@@ -1315,9 +1315,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             
             [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationAutomatic];
             [self.printOrder saveOrder];
-            [self.printOrder costWithCompletionHandler:^(OLPrintOrderCost *cost, NSError *error){
-                [self costCalculationCompletedWithError:error];
-            }];
+            [self updateViewsBasedOnCostUpdate];
         }
         
     }
@@ -1325,10 +1323,8 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         printJob.extraCopies--;
         
         [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
-        [self.printOrder costWithCompletionHandler:^(OLPrintOrderCost *cost, NSError *error){
-            [self costCalculationCompletedWithError:error];
-        }];
         [self.printOrder saveOrder];
+        [self updateViewsBasedOnCostUpdate];
         
 #ifndef OL_NO_ANALYTICS
         [OLAnalytics trackPaymentScreenHitItemQtyDownForItem:printJob inOrder:self.printOrder applePayIsAvailable:[self isApplePayAvailable] ? @"Yes" : @"No"];
@@ -1347,10 +1343,8 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
     }
     
-    [self.printOrder costWithCompletionHandler:^(OLPrintOrderCost *cost, NSError *error){
-        [self costCalculationCompletedWithError:error];
-    }];
     [self.printOrder saveOrder];
+    [self updateViewsBasedOnCostUpdate];
 #ifndef OL_NO_ANALYTICS
     [OLAnalytics trackPaymentScreenHitItemQtyUpForItem:printJob inOrder:self.printOrder applePayIsAvailable:[self isApplePayAvailable] ? @"Yes" : @"No"];
 #endif
@@ -1700,9 +1694,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         
         [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationAutomatic];
         [self.printOrder saveOrder];
-        [self.printOrder costWithCompletionHandler:^(OLPrintOrderCost *cost, NSError *error){
-            [self costCalculationCompletedWithError:error];
-        }];
+        [self updateViewsBasedOnCostUpdate];
         
 #ifndef OL_NO_ANALYTICS
         [OLAnalytics trackPaymentScreenDidDeleteItem:job inOrder:self.printOrder applePayIsAvailable:[self isApplePayAvailable] ? @"Yes" : @"No"];
