@@ -282,13 +282,14 @@ id safeObject(id obj){
     
     NSDictionary *experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestProductTileStyle];
     if (!experimentDict) {
-        experimentDict = @{@"Classic" : @1, @"A" : @0, @"B" : @0};
+        experimentDict = @{@"Classic" : @1, @"A" : @0, @"B" : @0, @"Dark" : @0};
     }
     [SkyLab splitTestWithName:kOLKiteABTestProductTileStyle
                    conditions:@{
                                 @"Classic" : safeObject(experimentDict[@"Classic"]),
                                 @"A" : safeObject(experimentDict[@"A"]),
-                                @"B" : safeObject(experimentDict[@"B"])
+                                @"B" : safeObject(experimentDict[@"B"]),
+                                @"Dark" : safeObject(experimentDict[@"Dark"])
                                 } block:^(id choice) {
                                     self.productTileStyle = choice;
                                 }];

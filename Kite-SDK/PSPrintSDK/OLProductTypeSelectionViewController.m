@@ -269,6 +269,10 @@
     if ([[OLKiteABTesting sharedInstance].productTileStyle isEqualToString:@"Classic"]){
         textView.backgroundColor = [product labelColor];
     }
+    else if([[OLKiteABTesting sharedInstance].productTileStyle isEqualToString:@"Dark"]){
+        UIButton *button = (UIButton *)[cell.contentView viewWithTag:390];
+        button.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.8];
+    }
     else{
         UIButton *button = (UIButton *)[cell.contentView viewWithTag:390];
         button.layer.shadowColor = [[UIColor blackColor] CGColor];
@@ -309,26 +313,31 @@
     NSInteger numberOfCells = [self collectionView:collectionView numberOfItemsInSection:indexPath.section];
     CGFloat halfScreenHeight = (size.height - [[UIApplication sharedApplication] statusBarFrame].size.height - self.navigationController.navigationBar.frame.size.height)/2;
     
+    CGFloat height = 233;
+    if ([[OLKiteABTesting sharedInstance].productTileStyle isEqualToString:@"Dark"]){
+        height = 200;
+    }
+    
     if ([self isHorizontalSizeClassCompact] && size.height > size.width) {
         if (numberOfCells == 2){
             return CGSizeMake(size.width, halfScreenHeight);
         }
         else{
-            return CGSizeMake(size.width, 233 * (size.width / 320.0));
+            return CGSizeMake(size.width, height * (size.width / 320.0));
         }
     }
     else if (numberOfCells == 6){
-        return CGSizeMake(size.width/2 - 1, MAX(halfScreenHeight * (2.0 / 3.0), 233));
+        return CGSizeMake(size.width/2 - 1, MAX(halfScreenHeight * (2.0 / 3.0), height));
     }
     else if (numberOfCells == 4){
-        return CGSizeMake(size.width/2 - 1, MAX(halfScreenHeight, 233));
+        return CGSizeMake(size.width/2 - 1, MAX(halfScreenHeight, height));
     }
     else if (numberOfCells == 3){
         if (size.width < size.height){
             return CGSizeMake(size.width, halfScreenHeight * 0.8);
         }
         else{
-            return CGSizeMake(size.width/2 - 1, MAX(halfScreenHeight, 233));
+            return CGSizeMake(size.width/2 - 1, MAX(halfScreenHeight, height));
         }
     }
     else if (numberOfCells == 2){
@@ -340,7 +349,7 @@
         }
     }
     else{
-        return CGSizeMake(size.width/2 - 1, 238);
+        return CGSizeMake(size.width/2 - 1, height);
     }
 }
 
