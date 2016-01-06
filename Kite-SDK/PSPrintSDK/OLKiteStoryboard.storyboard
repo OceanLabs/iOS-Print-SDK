@@ -128,10 +128,10 @@
             </objects>
             <point key="canvasLocation" x="-188" y="-1384"/>
         </scene>
-        <!--Custom Navigation Controller-->
+        <!--Navigation Controller-->
         <scene sceneID="Xb6-HD-CEQ">
             <objects>
-                <navigationController storyboardIdentifier="ProductsNavigationController" definesPresentationContext="YES" useStoryboardIdentifierAsRestorationIdentifier="YES" id="2So-Cm-Lml" customClass="OLCustomNavigationController" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="ProductsNavigationController" definesPresentationContext="YES" useStoryboardIdentifierAsRestorationIdentifier="YES" id="2So-Cm-Lml" customClass="OLNavigationController" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="Hgc-vO-95m">
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -1327,9 +1327,6 @@
                                         <activityIndicatorView opaque="NO" tag="41" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="4m0-bI-Rex">
                                             <rect key="frame" x="139" y="122" width="20" height="20"/>
                                         </activityIndicatorView>
-                                        <imageView userInteractionEnabled="NO" tag="40" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="5kn-pb-JKM">
-                                            <rect key="frame" x="0.0" y="0.0" width="299" height="264"/>
-                                        </imageView>
                                         <button opaque="NO" tag="390" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9Xj-Ye-aiE">
                                             <rect key="frame" x="40" y="188" width="219" height="46"/>
                                             <color key="backgroundColor" red="0.2274509804" green="0.70588235290000001" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -1361,6 +1358,9 @@
                                                 <constraint firstAttribute="width" constant="14" id="7JH-vG-ksf"/>
                                                 <constraint firstAttribute="height" constant="21" id="Xa0-TK-Y9I"/>
                                             </constraints>
+                                        </imageView>
+                                        <imageView userInteractionEnabled="NO" tag="40" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="5kn-pb-JKM">
+                                            <rect key="frame" x="0.0" y="0.0" width="299" height="264"/>
                                         </imageView>
                                     </subviews>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -1466,8 +1466,8 @@
                                     <rect key="frame" x="0.0" y="0.0" width="299" height="264"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <activityIndicatorView opaque="NO" tag="41" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="qrC-XF-3fv">
-                                            <rect key="frame" x="139" y="122" width="20" height="20"/>
+                                        <activityIndicatorView opaque="NO" tag="41" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="white" translatesAutoresizingMaskIntoConstraints="NO" id="qrC-XF-3fv">
+                                            <rect key="frame" x="139" y="99" width="20" height="20"/>
                                         </activityIndicatorView>
                                         <imageView userInteractionEnabled="NO" tag="40" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="3Ix-o5-Cdp">
                                             <rect key="frame" x="0.0" y="0.0" width="299" height="264"/>
@@ -1500,6 +1500,7 @@
                                     </subviews>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 </view>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstItem="cdq-11-PAs" firstAttribute="centerY" secondItem="j0J-rS-amA" secondAttribute="centerY" id="6Hw-rD-hUV"/>
                                     <constraint firstAttribute="bottom" secondItem="3Ix-o5-Cdp" secondAttribute="bottom" id="9Uo-nT-eSo"/>
@@ -1507,9 +1508,9 @@
                                     <constraint firstItem="cdq-11-PAs" firstAttribute="leading" secondItem="j0J-rS-amA" secondAttribute="leading" constant="10" id="J7J-00-0mH"/>
                                     <constraint firstItem="cdq-11-PAs" firstAttribute="leading" secondItem="z8N-Tf-9o7" secondAttribute="leading" constant="15" id="KqE-Il-b0r"/>
                                     <constraint firstItem="3Ix-o5-Cdp" firstAttribute="leading" secondItem="z8N-Tf-9o7" secondAttribute="leading" id="OZO-4T-nkH"/>
-                                    <constraint firstAttribute="centerY" secondItem="qrC-XF-3fv" secondAttribute="centerY" id="Qvw-Dz-tq6"/>
+                                    <constraint firstAttribute="centerY" secondItem="qrC-XF-3fv" secondAttribute="centerY" constant="23" id="Qvw-Dz-tq6"/>
                                     <constraint firstItem="j0J-rS-amA" firstAttribute="leading" secondItem="3Ix-o5-Cdp" secondAttribute="leading" id="RlW-lc-eYf"/>
-                                    <constraint firstAttribute="centerX" secondItem="qrC-XF-3fv" secondAttribute="centerX" constant="0.5" id="W5y-4h-GSe"/>
+                                    <constraint firstAttribute="centerX" secondItem="qrC-XF-3fv" secondAttribute="centerX" id="W5y-4h-GSe"/>
                                     <constraint firstItem="cdq-11-PAs" firstAttribute="centerX" secondItem="j0J-rS-amA" secondAttribute="centerX" id="aXJ-d9-4My"/>
                                     <constraint firstItem="3Ix-o5-Cdp" firstAttribute="top" secondItem="z8N-Tf-9o7" secondAttribute="top" id="apM-nC-mht"/>
                                     <constraint firstAttribute="trailing" secondItem="j0J-rS-amA" secondAttribute="trailing" priority="750" constant="40" id="c7E-bv-O0c"/>
@@ -2054,10 +2055,10 @@
             </objects>
             <point key="canvasLocation" x="1371" y="-594"/>
         </scene>
-        <!--Custom Navigation Controller-->
+        <!--Navigation Controller-->
         <scene sceneID="bei-J9-ysM">
             <objects>
-                <navigationController storyboardIdentifier="OLProductOverviewNavigationViewController" definesPresentationContext="YES" id="NWa-FA-Gox" customClass="OLCustomNavigationController" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="OLProductOverviewNavigationViewController" definesPresentationContext="YES" id="NWa-FA-Gox" customClass="OLNavigationController" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="Y23-h3-81E">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>

@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface OLCustomNavigationController : UINavigationController
+@interface OLNavigationController : UINavigationController
 
 @end

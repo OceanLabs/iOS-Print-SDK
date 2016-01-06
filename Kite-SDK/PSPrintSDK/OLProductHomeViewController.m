@@ -16,7 +16,7 @@
 
 #import "NSObject+Utils.h"
 #import "OLAnalytics.h"
-#import "OLCustomNavigationController.h"
+#import "OLNavigationController.h"
 #import "OLInfoPageViewController.h"
 #import "OLKiteABTesting.h"
 #import "OLKitePrintSDK.h"

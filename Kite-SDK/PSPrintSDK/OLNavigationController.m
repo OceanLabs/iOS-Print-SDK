@@ -6,10 +6,10 @@
 //  Copyright (c) 2015 Deon Botha. All rights reserved.
 //
 
-#import "OLCustomNavigationController.h"
+#import "OLNavigationController.h"
 #import "OLKiteABTesting.h"
 
-@implementation OLCustomNavigationController
+@implementation OLNavigationController
 
 - (void)viewDidLoad{
     [super viewDidLoad];

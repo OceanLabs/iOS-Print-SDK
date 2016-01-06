@@ -18,7 +18,7 @@
 #import "OLAnalytics.h"
 #import "OLPrintPhoto.h"
 #import "OLProductGroup.h"
-#import "OLCustomNavigationController.h"
+#import "OLNavigationController.h"
 #import "NSObject+Utils.h"
 #import "OLKiteABTesting.h"
 #import "UIImage+ColorAtPixel.h"
@@ -258,7 +258,7 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
                     [vc safePerformSelector:@selector(setUserEmail:) withObject:welf.userEmail];
                     [vc safePerformSelector:@selector(setUserPhone:) withObject:welf.userPhone];
                     [vc safePerformSelector:@selector(setKiteDelegate:) withObject:welf.delegate];
-                    OLCustomNavigationController *nvc = [[OLCustomNavigationController alloc] initWithRootViewController:vc];
+                    OLNavigationController *nvc = [[OLNavigationController alloc] initWithRootViewController:vc];
                     
                     [welf fadeToViewController:nvc];
                 }];
@@ -274,7 +274,7 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
             
             [[vc navigationItem] setLeftBarButtonItem:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:welf action:@selector(dismiss)]];
             [vc.navigationItem.rightBarButtonItem setTitle:NSLocalizedString(@"Next", @"")];
-            OLCustomNavigationController *nvc = [[OLCustomNavigationController alloc] initWithRootViewController:vc];
+            OLNavigationController *nvc = [[OLNavigationController alloc] initWithRootViewController:vc];
             [welf fadeToViewController:nvc];
             return;
         }
@@ -288,7 +288,7 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
             nextVcNavIdentifier = @"ProductHomeViewController";
         }
         UIViewController *vc = [sb instantiateViewControllerWithIdentifier:nextVcNavIdentifier];
-        UINavigationController *nav = [[OLCustomNavigationController alloc] initWithRootViewController:vc];
+        UINavigationController *nav = [[OLNavigationController alloc] initWithRootViewController:vc];
         [vc safePerformSelector:@selector(setProduct:) withObject:product];
         [vc safePerformSelector:@selector(setDelegate:) withObject:welf.delegate];
         [vc safePerformSelector:@selector(setUserEmail:) withObject:welf.userEmail];

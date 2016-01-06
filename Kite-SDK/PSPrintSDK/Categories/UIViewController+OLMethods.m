@@ -15,7 +15,7 @@
 #import "OLAnalytics.h"
 #import "NSObject+Utils.h"
 #import "OLPaymentViewController.h"
-#import "OLCustomNavigationController.h"
+#import "OLNavigationController.h"
 #import "OLKiteABTesting.h"
 
 @interface OLKiteViewController (Private)
@@ -88,7 +88,7 @@
 //            [(UIViewController *)vc navigationItem].rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamedInKiteBundle:@"menu_button_orders"] style:UIBarButtonItemStylePlain target:vc action:@selector(onBarButtonOrdersClicked)];
 //        }
         
-        OLCustomNavigationController *nvc = [[OLCustomNavigationController alloc] initWithRootViewController:vc];
+        OLNavigationController *nvc = [[OLNavigationController alloc] initWithRootViewController:vc];
         nvc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
         [self presentViewController:nvc animated:YES completion:NULL];
     }];

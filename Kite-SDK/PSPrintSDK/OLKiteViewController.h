@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "OLViewController.h"
 
 @class OLPrintOrder;
 @class OLKiteViewController;
@@ -74,7 +75,7 @@
 /**
  *  This is the main interface ViewController of the Kite SDK. Create and present an instance of this class and the SDK will take care of the rest.
  */
-@interface OLKiteViewController : UIViewController
+@interface OLKiteViewController : OLViewController
 
 /**
  *  The delegate object that will be asked for information in certain scenarios.
