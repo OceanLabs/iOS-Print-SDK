@@ -1297,9 +1297,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
                 
                 [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationAutomatic];
                 [self.printOrder saveOrder];
-                [self.printOrder costWithCompletionHandler:^(OLPrintOrderCost *cost, NSError *error){
-                    [self costCalculationCompletedWithError:error];
-                }];
+                [self updateViewsBasedOnCostUpdate];
             }]];
             [self presentViewController:ac animated:YES completion:NULL];
         }
@@ -1632,8 +1630,10 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         
         quantityLabel.text = [NSString stringWithFormat:@"%ld", (long)[job extraCopies]+1];
         productNameLabel.text = product.productTemplate.name;
-        
-        priceLabel.text = [[[product unitCostDecimalNumber] decimalNumberByMultiplyingBy:[NSDecimalNumber decimalNumberWithString:[NSString stringWithFormat:@"%ld", (long)[job extraCopies]+1]]]formatCostForCurrencyCode:self.printOrder.currencyCode];
+
+        NSDecimalNumber *numUnitsInJob = (NSDecimalNumber *) [[NSDecimalNumber alloc] initWithFloat:ceil([job assetsForUploading].count / (float) product.quantityToFulfillOrder)];
+
+        priceLabel.text = [[numUnitsInJob decimalNumberByMultiplyingBy:[[product unitCostDecimalNumber] decimalNumberByMultiplyingBy:[NSDecimalNumber decimalNumberWithString:[NSString stringWithFormat:@"%ld", (long)[job extraCopies]+1]]]] formatCostForCurrencyCode:self.printOrder.currencyCode];
         
         if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8){
             editButton.hidden = YES;

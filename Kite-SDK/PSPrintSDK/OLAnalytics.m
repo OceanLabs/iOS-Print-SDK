@@ -156,7 +156,11 @@ static __weak id<OLKiteDelegate> kiteDelegate;
         dict[kOLAnalyticsProductName] = template.name;
         dict[kOLAnalyticsNumberOfPhotosInItem] = [NSNumber numberWithInteger:[job quantity]];
         dict[kOLAnalyticsQuantity] = [NSNumber numberWithInteger:[job extraCopies]+1];
-        dict[kOLAnalyticsItemPrice] = [[OLProduct productWithTemplateId:[job templateId]] unitCostDecimalNumber] ? [[OLProduct productWithTemplateId:[job templateId]] unitCostDecimalNumber] : @"";
+        
+        OLProduct *product = [OLProduct productWithTemplateId:[job templateId]];
+        NSDecimalNumber *numUnitsInJob = (NSDecimalNumber *) [[NSDecimalNumber alloc] initWithFloat:ceil([job assetsForUploading].count / (float) product.quantityToFulfillOrder)];
+        NSDecimalNumber *jobPrice = [numUnitsInJob decimalNumberByMultiplyingBy:[[product unitCostDecimalNumber] decimalNumberByMultiplyingBy:[NSDecimalNumber decimalNumberWithString:[NSString stringWithFormat:@"%ld", (long)[job extraCopies]+1]]]];
+        dict[kOLAnalyticsItemPrice] = jobPrice;
     }
     return dict;
 }
