@@ -29,8 +29,6 @@
 
 + (OLKiteViewController *)kiteVcForViewController:(UIViewController *)vc;
 
-+(void)reverseRowsOfPhotosInArray:(NSMutableArray*)array forProduct:(OLProduct *)product;
-
 #ifdef OL_KITE_OFFER_APPLE_PAY
 +(BOOL)isApplePayAvailable;
 #endif

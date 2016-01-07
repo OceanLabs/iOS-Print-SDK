@@ -33,5 +33,6 @@ typedef enum {
 @property (nonatomic, strong) id asset;
 @property (assign, nonatomic) NSInteger extraCopies;
 @property (strong, nonatomic) OLPhotoEdits *edits;
+@property (strong, nonatomic) NSString *uuid;
 
 @end

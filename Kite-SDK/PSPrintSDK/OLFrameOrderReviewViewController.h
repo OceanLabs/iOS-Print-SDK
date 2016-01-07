@@ -11,4 +11,6 @@
 
 @interface OLFrameOrderReviewViewController : OLOrderReviewViewController <LXReorderableCollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 
++(void)reverseRowsOfPhotosInArray:(NSMutableArray*)array forProduct:(OLProduct *)product;
+
 @end

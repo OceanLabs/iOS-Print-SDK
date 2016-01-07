@@ -49,6 +49,8 @@
 #import "OLProductOverviewViewController.h"
 #import "OLOrdersViewController.h"
 #import "OLSingleImageProductReviewViewController.h"
+#import "OLPosterViewController.h"
+#import "OLFrameOrderReviewViewController.h"
 
 #ifdef OL_KITE_OFFER_PAYPAL
 #ifdef COCOAPODS
@@ -1735,21 +1737,46 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     }
     
     NSMutableArray *userSelectedPhotos = [[NSMutableArray alloc] init];
-    for (OLAsset *asset in [printJob assetsForUploading]){
+    NSMutableSet *addedAssetsUUIDs = [[NSMutableSet alloc] init];
+    
+    NSMutableArray *jobAssets = [[printJob assetsForUploading] mutableCopy];
+    
+    //Special handling of products
+    if (product.productTemplate.templateUI == kOLTemplateUIPhotobook && [(OLPhotobookPrintJob *)printJob frontCover]){
+        //Make sure we don't add the cover photo asset in the book photos
+        OLAsset *asset = [(OLPhotobookPrintJob *)printJob frontCover];
         OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
         printPhoto.asset = asset;
         
         if ([asset.dataSource isKindOfClass:[OLPrintPhoto class]]){
             printPhoto = (OLPrintPhoto *)asset.dataSource;
         }
-        [userSelectedPhotos addObject:printPhoto];
+        if (printPhoto.uuid){
+            [addedAssetsUUIDs addObject:printPhoto.uuid];
+        }
+    }
+    else if (product.productTemplate.templateUI == kOLTemplateUIPoster){
+        [OLPosterViewController changeOrderOfPhotosInArray:jobAssets forProduct:product];
+    }
+    else if (product.productTemplate.templateUI == kOLTemplateUIFrame){
+        [OLFrameOrderReviewViewController reverseRowsOfPhotosInArray:jobAssets forProduct:product];
     }
     
-    if (product.productTemplate.templateUI == kOLTemplateUIFrame || product.productTemplate.templateUI == kOLTemplateUIPoster){
-        [OLKiteUtils reverseRowsOfPhotosInArray:userSelectedPhotos forProduct:product];
+    for (OLAsset *asset in jobAssets){
+        OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
+        printPhoto.asset = asset;
+        
+        if ([asset.dataSource isKindOfClass:[OLPrintPhoto class]]){
+            printPhoto = (OLPrintPhoto *)asset.dataSource;
+        }
+        if (![addedAssetsUUIDs containsObject:printPhoto.uuid]){
+            [addedAssetsUUIDs addObject:printPhoto.uuid];
+            [userSelectedPhotos addObject:printPhoto];
+        }
+    
     }
     
-    if ([self shouldShowAddMorePhotos] && product.productTemplate.templateUI != kOLTemplateUICase && product.productTemplate.templateUI != kOLTemplateUIPhotobook && product.productTemplate.templateUI != kOLTemplateUIPostcard && !(product.productTemplate.templateUI == kOLTemplateUIPoster && product.quantityToFulfillOrder == 1)){
+    if ([self shouldShowAddMorePhotos] && product.productTemplate.templateUI != kOLTemplateUICase && product.productTemplate.templateUI != kOLTemplateUIPhotobook && product.productTemplate.templateUI != kOLTemplateUIPostcard && !(product.productTemplate.templateUI == kOLTemplateUIPoster && product.productTemplate.gridCountX == 1 && product.productTemplate.gridCountY == 1)){
         OLPhotoSelectionViewController *photoVc = [self.storyboard instantiateViewControllerWithIdentifier:@"PhotoSelectionViewController"];
         photoVc.product = product;
         photoVc.userSelectedPhotos = userSelectedPhotos;

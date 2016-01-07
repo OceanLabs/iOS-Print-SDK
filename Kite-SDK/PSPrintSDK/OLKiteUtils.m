@@ -127,25 +127,6 @@
     }
 }
 
-+(void)reverseRowsOfPhotosInArray:(NSMutableArray*)array forProduct:(OLProduct *)product{
-    NSUInteger photosPerRow = sqrt(product.quantityToFulfillOrder);
-    NSUInteger numberOfRows = [array count] / photosPerRow;
-    
-    NSMutableArray* rows = [[NSMutableArray alloc] initWithCapacity:numberOfRows];
-    for (NSUInteger rowNumber = 0; rowNumber < numberOfRows; rowNumber++){
-        NSMutableArray* row = [[NSMutableArray alloc] initWithCapacity:photosPerRow];
-        for (NSUInteger photoInRow = 0; photoInRow < photosPerRow; photoInRow++){
-            [row addObject:array[rowNumber * photosPerRow + photoInRow]];
-        }
-        [rows addObject:row];
-    }
-    
-    [array removeAllObjects];
-    for (NSInteger rowNumber = numberOfRows - 1; rowNumber >= 0; rowNumber--){
-        [array addObjectsFromArray:rows[rowNumber]];
-    }
-}
-
 + (OLKiteViewController *)kiteVcForViewController:(UIViewController *)theVc{
     UIViewController *vc = theVc.parentViewController;
     while (vc) {
