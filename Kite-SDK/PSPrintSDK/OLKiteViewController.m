@@ -324,6 +324,10 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
 - (void)templateSyncDidFinish:(NSNotification *)n{
     NSAssert([NSThread isMainThread], @"assumption about main thread callback is incorrect");
     if (n.userInfo[kNotificationKeyTemplateSyncError]){
+        if (self.templateSyncOperation.finished){
+            return;
+        }
+        
         if ([[OLProductTemplate templates] count] > 0){
             [self.operationQueue addOperation:self.templateSyncOperation];
             return;
