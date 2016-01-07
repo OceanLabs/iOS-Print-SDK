@@ -579,6 +579,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     options.networkAccessAllowed = YES;
     [[OLImageCachingManager sharedInstance].photosCachingManager startCachingImagesForAssets:@[asset] targetSize:PHImageManagerMaximumSize contentMode:PHImageContentModeAspectFill options:options];
 }
+#endif
 
 - (BOOL)assetsPickerController:(id)picker shouldSelectAsset:(id)asset
 {
@@ -630,7 +631,6 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     [self.userSelectedPhotos addObjectsFromArray:tempUserSelected];
     return result;
 }
-#endif
 
 - (BOOL)assetsPickerController:(OLAssetsPickerController *)picker shouldShowAsset:(id)asset{
     NSString *fileName = [[[asset defaultRepresentation] filename] lowercaseString];
