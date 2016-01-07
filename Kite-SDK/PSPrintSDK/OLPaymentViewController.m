@@ -1631,11 +1631,25 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         }];
         
         quantityLabel.text = [NSString stringWithFormat:@"%ld", (long)[job extraCopies]+1];
-        productNameLabel.text = product.productTemplate.name;
 
-        NSDecimalNumber *numUnitsInJob = (NSDecimalNumber *) [[NSDecimalNumber alloc] initWithFloat:ceil([job assetsForUploading].count / (float) product.quantityToFulfillOrder)];
-
+        float numberOfPhotos = [job assetsForUploading].count;
+        if (product.productTemplate.templateUI == kOLTemplateUIPhotobook){
+            // Front cover photo should count towards total photos
+            if ([(OLPhotobookPrintJob *)job frontCover]){
+                numberOfPhotos--;
+            }
+        }
+        
+        NSDecimalNumber *numUnitsInJob = [[NSDecimalNumber alloc] initWithFloat:ceilf(numberOfPhotos / (float) product.quantityToFulfillOrder)];
+        
         priceLabel.text = [[numUnitsInJob decimalNumberByMultiplyingBy:[[product unitCostDecimalNumber] decimalNumberByMultiplyingBy:[NSDecimalNumber decimalNumberWithString:[NSString stringWithFormat:@"%ld", (long)[job extraCopies]+1]]]] formatCostForCurrencyCode:self.printOrder.currencyCode];
+        
+        if ([numUnitsInJob integerValue] == 1){
+            productNameLabel.text = product.productTemplate.name;
+        }
+        else{
+            productNameLabel.text = [NSString stringWithFormat:@"%@ (x %ld)", product.productTemplate.name, (long)[numUnitsInJob integerValue]];
+        }
         
         if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8){
             editButton.hidden = YES;
