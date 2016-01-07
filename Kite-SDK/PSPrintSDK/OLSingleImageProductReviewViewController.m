@@ -55,6 +55,7 @@
 #import "OLProductTemplateOption.h"
 #import "OLPaymentViewController.h"
 #import "UIViewController+OLMethods.h"
+#import "OLScrollCropViewController.h"
 
 #ifdef OL_KITE_OFFER_INSTAGRAM
 #import <InstagramImagePicker/OLInstagramImagePickerController.h>
@@ -105,7 +106,7 @@ OLFacebookImagePickerControllerDelegate,
 #ifdef OL_KITE_AT_LEAST_IOS8
 CTAssetsPickerControllerDelegate,
 #endif
-OLAssetsPickerControllerDelegate, RMImageCropperDelegate, UIViewControllerPreviewingDelegate>
+OLAssetsPickerControllerDelegate, RMImageCropperDelegate, UIViewControllerPreviewingDelegate, OLScrollCropViewControllerDelegate>
 
 @property (weak, nonatomic) IBOutlet UICollectionView *imagesCollectionView;
 
@@ -169,6 +170,8 @@ static BOOL hasMoved;
         [printPhoto unloadImage];
     }
     
+    [self.imageCropView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(enterFullCrop)]];
+    
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Back", @"")
                                                                              style:UIBarButtonItemStylePlain
                                                                             target:nil
@@ -184,6 +187,38 @@ static BOOL hasMoved;
     if ([self shouldShowAddMorePhotos] && self.userSelectedPhotos.count == 0 && [[[UIDevice currentDevice] systemVersion] floatValue] >= 8){
         [self collectionView:self.imagesCollectionView didSelectItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
     }
+}
+
+- (void)enterFullCrop{
+    OLScrollCropViewController *cropVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLScrollCropViewController"];
+    cropVc.enableCircleMask = self.product.productTemplate.templateUI == kOLTemplateUICircle;
+    cropVc.delegate = self;
+    cropVc.aspectRatio = self.imageCropView.frame.size.height / self.imageCropView.frame.size.width;
+    
+    cropVc.previewView = [self.imageCropView snapshotViewAfterScreenUpdates:YES];
+    cropVc.previewView.frame = [self.imageCropView.superview convertRect:self.imageCropView.frame toView:nil];
+    cropVc.previewSourceView = self.imageCropView;
+    cropVc.providesPresentationContextTransitionStyle = true;
+    cropVc.definesPresentationContext = true;
+    cropVc.modalPresentationStyle = UIModalPresentationOverCurrentContext;
+    
+    [self.imageDisplayed getImageWithProgress:^(float progress){
+        [cropVc.cropView setProgress:progress];
+    }completion:^(UIImage *image){
+        [cropVc setFullImage:image];
+        OLPhotoEdits *edits = [[OLPhotoEdits alloc] init];
+        edits.cropImageFrame = [self.imageCropView getFrameRect];
+        edits.cropImageRect = [self.imageCropView getImageRect];
+        edits.cropImageSize = [self.imageCropView croppedImageSize];
+        edits.cropTransform = self.imageCropView.imageView.transform;
+        cropVc.edits = edits;
+        //        cropVc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
+        [self presentViewController:cropVc animated:NO completion:NULL];
+        
+#ifndef OL_NO_ANALYTICS
+        [OLAnalytics trackReviewScreenEnteredCropScreenForProductName:self.product.productTemplate.name];
+#endif
+    }];
 }
 
 -(void)viewWillAppear:(BOOL)animated{
@@ -831,6 +866,33 @@ static BOOL hasMoved;
     else if (buttonIndex == 2){
         [self showFacebookImagePicker];
     }
+}
+
+#pragma mark - OLImageEditorViewControllerDelegate methods
+
+- (void)scrollCropViewControllerDidCancel:(OLScrollCropViewController *)cropper{
+    [cropper dismissViewControllerAnimated:YES completion:^{
+    }];
+}
+
+-(void)scrollCropViewController:(OLScrollCropViewController *)cropper didFinishCroppingImage:(UIImage *)croppedImage{
+    [self.imageDisplayed unloadImage];
+    
+    self.imageDisplayed.edits = cropper.edits;
+    
+    [self.imageDisplayed getImageWithProgress:NULL completion:^(UIImage *image){
+        self.imageCropView.image = image;
+        self.imageCropView.imageView.transform = cropper.edits.cropTransform;
+    }];
+    
+    [cropper dismissViewControllerAnimated:YES completion:^{
+        [UIView animateWithDuration:0.25 animations:^{
+        }];
+    }];
+    
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackReviewScreenDidCropPhotoForProductName:self.product.productTemplate.name];
+#endif
 }
 
 #pragma mark - Autorotate and Orientation Methods
