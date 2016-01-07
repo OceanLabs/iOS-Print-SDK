@@ -1665,7 +1665,7 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <collectionView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" alpha="0.0" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" minimumZoomScale="0.0" maximumZoomScale="0.0" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="7XX-0J-tJc">
-                                <rect key="frame" x="0.0" y="87" width="600" height="513"/>
+                                <rect key="frame" x="0.0" y="87" width="600" height="473"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <collectionViewLayout key="collectionViewLayout" id="DcK-XV-eBn" customClass="LXReorderableCollectionViewFlowLayout"/>
                                 <cells>
@@ -1934,6 +1934,7 @@
                             <constraint firstItem="Bco-ct-3Yg" firstAttribute="height" secondItem="TIp-Hm-PTo" secondAttribute="height" id="6xo-KW-gGX"/>
                             <constraint firstItem="9nk-DX-0TW" firstAttribute="leading" secondItem="Bco-ct-3Yg" secondAttribute="trailing" priority="750" id="7TB-bO-5yf"/>
                             <constraint firstItem="Bco-ct-3Yg" firstAttribute="top" secondItem="Prc-x4-bQB" secondAttribute="bottom" id="9e4-gB-SEF"/>
+                            <constraint firstItem="0Zs-Gf-EDY" firstAttribute="top" secondItem="7XX-0J-tJc" secondAttribute="bottom" id="BDM-GZ-d3e"/>
                             <constraint firstItem="Bco-ct-3Yg" firstAttribute="leading" secondItem="H6l-Sv-Ai2" secondAttribute="leading" id="C3a-eD-lxd"/>
                             <constraint firstItem="Qmw-15-obN" firstAttribute="top" secondItem="Prc-x4-bQB" secondAttribute="bottom" constant="20" id="F6f-ve-u56"/>
                             <constraint firstItem="SHl-5H-G7O" firstAttribute="top" secondItem="934-Aw-K7I" secondAttribute="bottom" id="FtF-wn-6UH"/>
@@ -1960,6 +1961,11 @@
                             <constraint firstAttribute="trailing" secondItem="qWq-HB-FzX" secondAttribute="trailing" id="xD0-6m-Usz"/>
                             <constraint firstItem="SHl-5H-G7O" firstAttribute="top" secondItem="0Zs-Gf-EDY" secondAttribute="bottom" id="ymL-i1-h2W"/>
                         </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="lMV-dK-VcX"/>
+                            </mask>
+                        </variation>
                     </view>
                     <navigationItem key="navigationItem" title="Choose Photos" id="tKz-hT-vzu">
                         <barButtonItem key="backBarButtonItem" title="Back" id="VT4-Qp-U1T"/>
