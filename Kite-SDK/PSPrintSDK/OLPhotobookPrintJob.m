@@ -139,7 +139,7 @@ static NSString *const kKeyPhotobookPrintJobOptions = @"co.oceanlabs.pssdk.kKeyP
     }
     OLPhotobookPrintJob* printJob = (OLPhotobookPrintJob*)object;
     
-    return [self.templateId isEqual:printJob.templateId] && [self.assets isEqualToArray:printJob.assets] && [self.frontCover isEqual:printJob.frontCover] && [self.backCover isEqual:printJob.backCover] && [self.options isEqualToDictionary:printJob.options] && ((!self.address && !printJob.address) || [self.address isEqual:printJob.address]);
+    return [self.templateId isEqual:printJob.templateId] && [self.assets isEqualToArray:printJob.assets] && ([self.frontCover isEqual:printJob.frontCover] || (!self.frontCover && !printJob.frontCover)) && ([self.backCover isEqual:printJob.backCover] || (!self.backCover && !printJob.backCover)) && [self.options isEqualToDictionary:printJob.options] && ((!self.address && !printJob.address) || [self.address isEqual:printJob.address]);
 }
 
 #pragma mark - NSCopying

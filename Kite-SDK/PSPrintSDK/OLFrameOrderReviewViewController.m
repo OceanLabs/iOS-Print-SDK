@@ -119,8 +119,9 @@ CGFloat margin = 2;
 }
 
 - (void)preparePhotosForCheckout{
-    [OLFrameOrderReviewViewController reverseRowsOfPhotosInArray:self.framePhotos forProduct:self.product];
-    self.checkoutPhotos = self.framePhotos;
+    NSMutableArray *reversePhotos = [self.framePhotos mutableCopy];
+    [OLFrameOrderReviewViewController reverseRowsOfPhotosInArray:reversePhotos forProduct:self.product];
+    self.checkoutPhotos = reversePhotos;
 }
 
 - (BOOL)shouldShowAddMorePhotos{

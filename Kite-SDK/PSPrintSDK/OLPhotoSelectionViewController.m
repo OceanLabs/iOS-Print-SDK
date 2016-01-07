@@ -179,6 +179,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     }
     [self onUserSelectedPhotoCountChange];
     
+    self.collectionView.contentInset = UIEdgeInsetsMake(self.collectionView.contentInset.top, self.collectionView.contentInset.left, self.collectionView.contentInset.bottom + self.buttonNext.frame.size.height, self.collectionView.contentInset.right);
 }
 
 - (void)viewDidLayoutSubviews{

@@ -1968,6 +1968,7 @@
                         <outlet property="buttonFacebookImport" destination="3Qz-eK-tvU" id="1nW-1a-YZa"/>
                         <outlet property="buttonGalleryImport" destination="R1h-WW-in1" id="OEX-bL-9cY"/>
                         <outlet property="buttonInstagramImport" destination="nlZ-9G-2DN" id="n3b-Da-89z"/>
+                        <outlet property="buttonNext" destination="0Zs-Gf-EDY" id="heq-1V-RuE"/>
                         <outlet property="cameraRollContainer" destination="ygM-3Q-VpC" id="lww-HG-txe"/>
                         <outlet property="chooseImportSourceLabel" destination="Qmw-15-obN" id="KvT-Nk-W95"/>
                         <outlet property="clearButtonContainerView" destination="qWq-HB-FzX" id="QLT-9W-jgq"/>

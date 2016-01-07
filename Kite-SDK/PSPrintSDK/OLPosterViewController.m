@@ -236,17 +236,18 @@
                             };
     
     OLProductPrintJob *job = [[OLProductPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:photoAssets];
-    for (id<OLPrintJob> existingJob in printOrder.jobs){
-        if ([existingJob.uuid isEqualToString:self.product.uuid]){
-            if ([existingJob extraCopies] > 0){
-                [existingJob setExtraCopies:[existingJob extraCopies]-1];
-            }
-            else{
-                [printOrder removePrintJob:existingJob];
-            }
-            job.uuid = self.product.uuid;
-        }
-    }
+//    for (id<OLPrintJob> existingJob in printOrder.jobs){
+//        if ([existingJob.uuid isEqualToString:self.product.uuid]){
+//            if ([existingJob extraCopies] > 0){
+//                [existingJob setExtraCopies:[existingJob extraCopies]-1];
+//            }
+//            else{
+//                [printOrder removePrintJob:existingJob];
+//            }
+//            job.uuid = self.product.uuid;
+//        }
+//    }
+//    self.product.uuid = job.uuid;
     self.editingPrintJob = job;
     
     for (NSString *option in self.product.selectedOptions.allKeys){
