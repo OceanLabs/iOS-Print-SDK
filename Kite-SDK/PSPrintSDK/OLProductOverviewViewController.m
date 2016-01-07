@@ -33,7 +33,7 @@
 
 @end
 
-@interface OLProductOverviewViewController () <UIPageViewControllerDataSource, OLProductOverviewPageContentViewControllerDelegate, OLProductDetailsDelegate>
+@interface OLProductOverviewViewController () <UIPageViewControllerDataSource, OLProductOverviewPageContentViewControllerDelegate, OLProductDetailsDelegate, UIPageViewControllerDelegate>
 @property (strong, nonatomic) UIPageViewController *pageController;
 @property (strong, nonatomic) IBOutlet UIPageControl *pageControl;
 @property (weak, nonatomic) IBOutlet UILabel *costLabel;
@@ -67,6 +67,7 @@
     
     self.pageController = [[UIPageViewController alloc] initWithTransitionStyle:UIPageViewControllerTransitionStyleScroll navigationOrientation:UIPageViewControllerNavigationOrientationHorizontal options:nil];
     self.pageController.dataSource = self;
+    self.pageController.delegate = self;
     self.pageController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height + 37);
     
     self.pageControl.numberOfPages = self.product.productPhotos.count;
@@ -280,7 +281,7 @@
         if ([[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant isEqualToString:@"Overview-Review-Checkout"]){
             BOOL photoSelection = ![self.delegate respondsToSelector:@selector(kiteControllerShouldAllowUserToAddMorePhotos:)];
             if (!photoSelection){
-                photoSelection = [self.delegate kiteControllerShouldAllowUserToAddMorePhotos:nil]; //TODO fix this on new payment branch
+                photoSelection = [self.delegate kiteControllerShouldAllowUserToAddMorePhotos:[OLKiteUtils kiteVcForViewController:self]];
             }
             vc = [self.storyboard instantiateViewControllerWithIdentifier:[OLKiteUtils reviewViewControllerIdentifierForProduct:self.product photoSelectionScreen:photoSelection]];
         }
@@ -373,7 +374,6 @@
 - (UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerBeforeViewController:(UIViewController *)viewController {
     OLProductOverviewPageContentViewController *vc = (OLProductOverviewPageContentViewController *) viewController;
     vc.delegate = self;
-    self.pageControl.currentPage = vc.pageIndex;
     NSUInteger index = vc.pageIndex - 1;
     if (vc.pageIndex == 0) {
         index = self.product.productPhotos.count - 1;
@@ -384,9 +384,13 @@
 - (UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerAfterViewController:(UIViewController *)viewController {
     OLProductOverviewPageContentViewController *vc = (OLProductOverviewPageContentViewController *) viewController;
     vc.delegate = self;
-    self.pageControl.currentPage = vc.pageIndex;
+
     NSUInteger index = (vc.pageIndex + 1) % self.product.productPhotos.count;
     return [self viewControllerAtIndex:index];
+}
+
+- (void)pageViewController:(UIPageViewController *)pageViewController didFinishAnimating:(BOOL)finished previousViewControllers:(NSArray<UIViewController *> *)previousViewControllers transitionCompleted:(BOOL)completed{
+    self.pageControl.currentPage = [pageViewController.viewControllers.firstObject pageIndex];
 }
 
 - (NSInteger)presentationCountForPageViewController:(UIPageViewController *)pageViewController {
