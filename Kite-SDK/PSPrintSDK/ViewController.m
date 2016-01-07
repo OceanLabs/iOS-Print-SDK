@@ -27,6 +27,16 @@
 //  THE SOFTWARE.
 //
 
+/**********************************************************************
+ * Insert your API keys here. These are found under your profile
+ * by logging in to the developer portal at https://www.kite.ly
+ **********************************************************************/
+static NSString *const kAPIKeySandbox = @"REPLACE_WITH_YOUR_API_KEY"; // replace with your Sandbox API key found under the Profile section in the developer portal
+static NSString *const kAPIKeyLive = @"REPLACE_WITH_YOUR_API_KEY"; // replace with your Live API key found under the Profile section in the developer portal
+
+static NSString *const kApplePayMerchantIDKey = @"merchant.ly.kite.sdk"; // Replace with your merchant ID
+static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your business name
+
 #import "ViewController.h"
 #import "OLKitePrintSDK.h"
 #import "OLAssetsPickerController.h"
@@ -38,16 +48,6 @@
 
 #import <AssetsLibrary/AssetsLibrary.h>
 @import Photos;
-
-/**********************************************************************
- * Insert your API keys here. These are found under your profile 
- * by logging in to the developer portal at https://www.kite.ly
- **********************************************************************/
-static NSString *const kAPIKeySandbox = @"REPLACE_WITH_YOUR_API_KEY"; // replace with your Sandbox API key found under the Profile section in the developer portal
-static NSString *const kAPIKeyLive = @"REPLACE_WITH_YOUR_API_KEY"; // replace with your Live API key found under the Profile section in the developer portal
-
-static NSString *const kApplePayMerchantIDKey = @"merchant.ly.kite.sdk"; // Replace with your merchant ID
-static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your business name
 
 @interface ViewController () <OLAssetsPickerControllerDelegate,
 #ifdef OL_KITE_AT_LEAST_IOS8
