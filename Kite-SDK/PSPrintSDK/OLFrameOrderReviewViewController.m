@@ -135,10 +135,10 @@ CGFloat margin = 2;
     }];
 }
 
--(void)changeOrderOfPhotosInArray:(NSMutableArray*)array{
-    NSUInteger photosPerRow = sqrt(self.product.quantityToFulfillOrder);
++(void)reverseRowsOfPhotosInArray:(NSMutableArray*)array forProduct:(OLProduct *)product{
+    NSUInteger photosPerRow = sqrt(product.quantityToFulfillOrder);
     NSUInteger numberOfRows = [array count] / photosPerRow;
-
+    
     NSMutableArray* rows = [[NSMutableArray alloc] initWithCapacity:numberOfRows];
     for (NSUInteger rowNumber = 0; rowNumber < numberOfRows; rowNumber++){
         NSMutableArray* row = [[NSMutableArray alloc] initWithCapacity:photosPerRow];
@@ -155,8 +155,9 @@ CGFloat margin = 2;
 }
 
 - (void)preparePhotosForCheckout{
-    [self changeOrderOfPhotosInArray:self.framePhotos];
-    self.checkoutPhotos = self.framePhotos;
+    NSMutableArray *reversePhotos = [self.framePhotos mutableCopy];
+    [OLFrameOrderReviewViewController reverseRowsOfPhotosInArray:reversePhotos forProduct:self.product];
+    self.checkoutPhotos = reversePhotos;
 }
 
 - (BOOL)shouldShowAddMorePhotos{

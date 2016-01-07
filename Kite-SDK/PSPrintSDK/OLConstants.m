@@ -29,13 +29,14 @@
 
 #import "OLConstants.h"
 
-NSString *const kOLKiteSDKVersion = @"4.5.8";
+NSString *const kOLKiteSDKVersion = @"4.6.0";
 NSString *const kOLKiteSDKErrorDomain = @"co.oceanlabs.kOLKiteSDKErrorDomain";
 NSString *const kNotificationTemplateSyncComplete = @"co.oceanlabs.pssdk.notification.kNotificationSyncComplete";
 NSString *const kNotificationKeyTemplateSyncError = @"co.oceanlabs.pssdk.notification.kNotificationKeyTemplateSyncError";
 const NSInteger kOLKiteSDKErrorCodeRequestInProgress = 98;
 const NSInteger kOLKiteSDKErrorCodeFullDetailsFetchFailed = 99;
 const NSInteger kOLKiteSDKErrorCodeServerFault = 100;
+const NSInteger kOLKiteSDKErrorCodeProductNotAvailableInRegion = 50;
 const NSInteger kOLKiteSDKErrorCodeUnauthorized = 401;
 const NSInteger kOLKiteSDKErrorCodeRegisteredAssetCountDiscrepency = 101;
 const NSInteger kOLKiteSDKErrorCodeMaintenanceMode = 503;

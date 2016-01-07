@@ -739,7 +739,7 @@ UINavigationControllerDelegate
     // URL and the user did not manipulate it in any way.
     NSMutableArray *photoAssets = [[NSMutableArray alloc] init];
     for (OLPrintPhoto *photo in bookPhotos) {
-        [photoAssets addObject:[OLAsset assetWithDataSource:photo]];
+        [photoAssets addObject:[OLAsset assetWithDataSource:[photo copy]]];
     }
     
     // ensure order is maxed out by adding duplicates as necessary
@@ -769,19 +769,19 @@ UINavigationControllerDelegate
     for (NSString *option in self.product.selectedOptions.allKeys){
         [job setValue:self.product.selectedOptions[option] forOption:option];
     }
-    NSArray *jobs = [NSArray arrayWithArray:printOrder.jobs];
-    for (id<OLPrintJob> existingJob in jobs){
-        if ([existingJob.uuid isEqualToString:self.product.uuid]){
-            if ([existingJob extraCopies] > 0){
-                [existingJob setExtraCopies:[existingJob extraCopies]-1];
-            }
-            else{
-                [printOrder removePrintJob:existingJob];
-            }
-            job.uuid = self.product.uuid;
-        }
-    }
-    self.product.uuid = job.uuid;
+//    NSArray *jobs = [NSArray arrayWithArray:printOrder.jobs];
+//    for (id<OLPrintJob> existingJob in jobs){
+//        if ([existingJob.uuid isEqualToString:self.product.uuid]){
+//            if ([existingJob extraCopies] > 0){
+//                [existingJob setExtraCopies:[existingJob extraCopies]-1];
+//            }
+//            else{
+//                [printOrder removePrintJob:existingJob];
+//            }
+//            job.uuid = self.product.uuid;
+//        }
+//    }
+//    self.product.uuid = job.uuid;
     self.editingPrintJob = job;
     if ([printOrder.jobs containsObject:self.editingPrintJob]){
         id<OLPrintJob> existingJob = printOrder.jobs[[printOrder.jobs indexOfObject:self.editingPrintJob]];

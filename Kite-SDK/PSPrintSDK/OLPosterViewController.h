@@ -33,4 +33,6 @@
 
 @interface OLPosterViewController : OLSingleImageProductReviewViewController
 
++(void)changeOrderOfPhotosInArray:(NSMutableArray*)array forProduct:(OLProduct *)product;
+
 @end

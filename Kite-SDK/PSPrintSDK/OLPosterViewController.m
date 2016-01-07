@@ -220,18 +220,18 @@
     return YES;
 }
 
--(void)changeOrderOfPhotosInArray:(NSMutableArray*)array{
-    NSMutableArray* rows = [[NSMutableArray alloc] initWithCapacity:self.numberOfRows];
-    for (NSUInteger rowNumber = 0; rowNumber < self.numberOfRows; rowNumber++){
-        NSMutableArray* row = [[NSMutableArray alloc] initWithCapacity:self.numberOfColumns];
-        for (NSUInteger photoInRow = 0; photoInRow < self.numberOfColumns; photoInRow++){
-            [row addObject:array[rowNumber * (NSInteger)self.numberOfColumns + photoInRow]];
++(void)changeOrderOfPhotosInArray:(NSMutableArray*)array forProduct:(OLProduct *)product{
+    NSMutableArray* rows = [[NSMutableArray alloc] initWithCapacity:product.productTemplate.gridCountY];
+    for (NSUInteger rowNumber = 0; rowNumber < product.productTemplate.gridCountY; rowNumber++){
+        NSMutableArray* row = [[NSMutableArray alloc] initWithCapacity:product.productTemplate.gridCountX];
+        for (NSUInteger photoInRow = 0; photoInRow < product.productTemplate.gridCountX; photoInRow++){
+            [row addObject:array[rowNumber * (NSInteger)product.productTemplate.gridCountX + photoInRow]];
         }
         [rows addObject:row];
     }
     
     [array removeAllObjects];
-    for (NSInteger rowNumber = self.numberOfRows - 1; rowNumber >= 0; rowNumber--){
+    for (NSInteger rowNumber = product.productTemplate.gridCountY - 1; rowNumber >= 0; rowNumber--){
         [array addObjectsFromArray:rows[rowNumber]];
     }
 }
@@ -246,9 +246,9 @@
     // URL and the user did not manipulate it in any way.
     NSMutableArray *photoAssets = [[NSMutableArray alloc] init];
     for (OLPrintPhoto *photo in self.posterPhotos) {
-        [photoAssets addObject:[OLAsset assetWithDataSource:photo]];
+        [photoAssets addObject:[OLAsset assetWithDataSource:[photo copy]]];
     }
-    [self changeOrderOfPhotosInArray:photoAssets];
+    [OLPosterViewController changeOrderOfPhotosInArray:photoAssets forProduct:self.product];
     
     
     NSDictionary *infoDict = [[NSBundle mainBundle] infoDictionary];
@@ -264,17 +264,18 @@
                             };
     
     OLProductPrintJob *job = [[OLProductPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:photoAssets];
-    for (id<OLPrintJob> existingJob in printOrder.jobs){
-        if ([existingJob.uuid isEqualToString:self.product.uuid]){
-            if ([existingJob extraCopies] > 0){
-                [existingJob setExtraCopies:[existingJob extraCopies]-1];
-            }
-            else{
-                [printOrder removePrintJob:existingJob];
-            }
-            job.uuid = self.product.uuid;
-        }
-    }
+//    for (id<OLPrintJob> existingJob in printOrder.jobs){
+//        if ([existingJob.uuid isEqualToString:self.product.uuid]){
+//            if ([existingJob extraCopies] > 0){
+//                [existingJob setExtraCopies:[existingJob extraCopies]-1];
+//            }
+//            else{
+//                [printOrder removePrintJob:existingJob];
+//            }
+//            job.uuid = self.product.uuid;
+//        }
+//    }
+//    self.product.uuid = job.uuid;
     self.editingPrintJob = job;
     
     for (NSString *option in self.product.selectedOptions.allKeys){
