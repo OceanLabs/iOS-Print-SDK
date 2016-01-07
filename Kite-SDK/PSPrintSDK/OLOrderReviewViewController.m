@@ -227,7 +227,7 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     // URL and the user did not manipulate it in any way.
     NSMutableArray *photoAssets = [[NSMutableArray alloc] init];
     for (OLPrintPhoto *photo in self.checkoutPhotos) {
-        [photoAssets addObject:[OLAsset assetWithDataSource:photo]];
+        [photoAssets addObject:[OLAsset assetWithDataSource:[photo copy]]];
     }
     
     // ensure order is maxed out by adding duplicates as necessary
@@ -255,7 +255,7 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
                             };
     
     OLProductPrintJob *job = [[OLProductPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:photoAssets];
-    NSArray *jobs = [NSArray arrayWithArray:printOrder.jobs];
+//    NSArray *jobs = [NSArray arrayWithArray:printOrder.jobs];
 //    for (id<OLPrintJob> existingJob in jobs){
 //        if ([existingJob.uuid isEqualToString:self.product.uuid]){
 //            if ([existingJob extraCopies] > 0){

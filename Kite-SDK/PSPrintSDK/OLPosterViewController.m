@@ -218,7 +218,7 @@
     // URL and the user did not manipulate it in any way.
     NSMutableArray *photoAssets = [[NSMutableArray alloc] init];
     for (OLPrintPhoto *photo in self.posterPhotos) {
-        [photoAssets addObject:[OLAsset assetWithDataSource:photo]];
+        [photoAssets addObject:[OLAsset assetWithDataSource:[photo copy]]];
     }
     [OLPosterViewController changeOrderOfPhotosInArray:photoAssets forProduct:self.product];
     

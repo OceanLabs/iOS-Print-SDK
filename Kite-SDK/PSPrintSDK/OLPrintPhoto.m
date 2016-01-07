@@ -60,6 +60,7 @@ static NSOperationQueue *imageOperationQueue;
 
 @interface OLPrintPhoto ()
 @property (nonatomic, strong) UIImage *cachedCroppedThumbnailImage;
+@property (nonatomic, assign, readwrite) PrintPhotoAssetType type;
 @end
 
 @implementation OLPrintPhoto
@@ -587,6 +588,17 @@ static NSOperationQueue *imageOperationQueue;
     else {
         [aCoder encodeObject:self.asset forKey:kKeyAsset];
     }
+}
+
+- (id)copyWithZone:(NSZone *)zone{
+    OLPrintPhoto *copy = [[OLPrintPhoto alloc] init];
+    copy.type = self.type;
+    copy.extraCopies = self.extraCopies;
+    copy.edits = [self.edits copyWithZone:zone];
+    copy.uuid = self.uuid;
+    copy.asset = self.asset;
+    
+    return copy;
 }
 
 @end

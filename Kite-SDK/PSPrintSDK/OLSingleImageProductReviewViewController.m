@@ -196,7 +196,7 @@ static BOOL hasMoved;
     self.imageDisplayed.edits.cropImageSize = [self.imageCropView croppedImageSize];
     self.imageDisplayed.edits.cropTransform = self.imageCropView.imageView.transform;
     
-    OLAsset *asset = [OLAsset assetWithDataSource:self.imageDisplayed];
+    OLAsset *asset = [OLAsset assetWithDataSource:[self.imageDisplayed copy]];
     
     [asset dataLengthWithCompletionHandler:^(long long dataLength, NSError *error){
         if (dataLength < 40000){
@@ -230,7 +230,7 @@ static BOOL hasMoved;
         for (NSString *option in self.product.selectedOptions.allKeys){
             [job setValue:self.product.selectedOptions[option] forOption:option];
         }
-        NSArray *jobs = [NSArray arrayWithArray:printOrder.jobs];
+//        NSArray *jobs = [NSArray arrayWithArray:printOrder.jobs];
 //        for (id<OLPrintJob> existingJob in jobs){
 //            if ([existingJob.uuid isEqualToString:self.product.uuid]){
 //                if ([existingJob extraCopies] > 0){
