@@ -160,10 +160,18 @@ static BOOL hasMoved;
     if (self.imageCropView){
         self.imageCropView.delegate = self;
         OLPrintPhoto *photo = [self.userSelectedPhotos firstObject];
-        [photo getImageWithProgress:NULL completion:^(UIImage *image){
-            self.imageCropView.image = image;
-        }];
         self.imageDisplayed = photo;
+        [photo getImageWithProgress:NULL completion:^(UIImage *image){
+            if (self.imageDisplayed.edits.counterClockwiseRotations > 0 || self.imageDisplayed.edits.flipHorizontal || self.imageDisplayed.edits.flipVertical){
+                self.imageCropView.image = [UIImage imageWithCGImage:image.CGImage scale:image.scale orientation:[OLPhotoEdits orientationForNumberOfCounterClockwiseRotations:self.imageDisplayed.edits.counterClockwiseRotations andInitialOrientation:image.imageOrientation horizontalFlip:self.imageDisplayed.edits.flipHorizontal verticalFlip:self.imageDisplayed.edits.flipVertical]];
+            }
+            else{
+                [self.imageCropView setImage:image];
+            }
+            [self.view setNeedsLayout];
+            [self.view layoutIfNeeded];
+            self.imageCropView.imageView.transform = self.imageDisplayed.edits.cropTransform;
+        }];
     }
     
     for (OLPrintPhoto *printPhoto in self.userSelectedPhotos){
@@ -547,9 +555,15 @@ static BOOL hasMoved;
         [self.imageDisplayed getImageWithProgress:^(float progress){
             //            [self.imageCropView setProgress:progress];
         }completion:^(UIImage *image){
-            dispatch_async(dispatch_get_main_queue(), ^{
-                self.imageCropView.image = image;
-            });
+            if (self.imageDisplayed.edits.counterClockwiseRotations > 0 || self.imageDisplayed.edits.flipHorizontal || self.imageDisplayed.edits.flipVertical){
+                self.imageCropView.image = [UIImage imageWithCGImage:image.CGImage scale:image.scale orientation:[OLPhotoEdits orientationForNumberOfCounterClockwiseRotations:self.imageDisplayed.edits.counterClockwiseRotations andInitialOrientation:image.imageOrientation horizontalFlip:self.imageDisplayed.edits.flipHorizontal verticalFlip:self.imageDisplayed.edits.flipVertical]];
+            }
+            else{
+                [self.imageCropView setImage:image];
+            }
+            [self.view setNeedsLayout];
+            [self.view layoutIfNeeded];
+            self.imageCropView.imageView.transform = self.imageDisplayed.edits.cropTransform;
         }];
     }
     else if ([self instagramEnabled] || [self facebookEnabled]){
@@ -912,8 +926,6 @@ static BOOL hasMoved;
     self.imageDisplayed.edits = cropper.edits;
     
     [self.imageDisplayed getImageWithProgress:NULL completion:^(UIImage *image){
-        self.imageCropView.image = image;
-        
         if (self.imageDisplayed.edits.counterClockwiseRotations > 0 || self.imageDisplayed.edits.flipHorizontal || self.imageDisplayed.edits.flipVertical){
             self.imageCropView.image = [UIImage imageWithCGImage:image.CGImage scale:image.scale orientation:[OLPhotoEdits orientationForNumberOfCounterClockwiseRotations:self.imageDisplayed.edits.counterClockwiseRotations andInitialOrientation:image.imageOrientation horizontalFlip:self.imageDisplayed.edits.flipHorizontal verticalFlip:self.imageDisplayed.edits.flipVertical]];
         }
