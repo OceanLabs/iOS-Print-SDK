@@ -67,9 +67,11 @@ static NSString *const kOLKiteThemeSupportEmail = @"themeSupportEmail";
 @property (strong, nonatomic, readonly) NSString *supportEmail;
 
 @property (strong, nonatomic) NSDictionary *userConfig;
+@property (assign, nonatomic) BOOL darkTheme;
 
 + (instancetype)sharedInstance;
 - (void)fetchRemotePlistsWithCompletionHandler:(void(^)())handler;
 - (void)prefetchRemoteImages;
+- (UIColor *)darkThemeColor1;
 
 @end

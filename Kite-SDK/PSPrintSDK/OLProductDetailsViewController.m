@@ -31,6 +31,7 @@
 #import "OLProductOptionsViewController.h"
 #import "TSMarkdownParser.h"
 #import "OLAnalytics.h"
+#import "OLKiteABTesting.h"
 
 @interface OLProductDetailsViewController ()
 
@@ -38,6 +39,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *selectedOptionLabel;
 @property (weak, nonatomic) IBOutlet UILabel *optionLabel;
 @property (weak, nonatomic) IBOutlet UIImageView *chevron;
+@property (weak, nonatomic) IBOutlet UILabel *detailsLabel;
 
 @end
 
@@ -55,9 +57,21 @@
     
     self.view.backgroundColor = [UIColor clearColor];
     
+    if ([OLKiteABTesting sharedInstance].darkTheme){
+        self.detailsLabel.textColor = [UIColor whiteColor];
+        self.optionLabel.textColor = [UIColor whiteColor];
+        self.selectedOptionLabel.textColor = [UIColor whiteColor];
+        self.priceLabel.textColor = [UIColor whiteColor];
+    }
+    
     NSMutableAttributedString *attributedString = [[[TSMarkdownParser standardParser] attributedStringFromMarkdown:[self.product detailsString]] mutableCopy];
     
-    [attributedString addAttribute:NSForegroundColorAttributeName value:self.detailsTextLabel.tintColor range:NSMakeRange(0, attributedString.length)];
+    if ([OLKiteABTesting sharedInstance].darkTheme){
+        [attributedString addAttribute:NSForegroundColorAttributeName value:[UIColor whiteColor] range:NSMakeRange(0, attributedString.length)];
+    }
+    else{
+        [attributedString addAttribute:NSForegroundColorAttributeName value:self.detailsTextLabel.tintColor range:NSMakeRange(0, attributedString.length)];
+    }
     self.detailsTextLabel.attributedText = attributedString;
     
     if (self.product.productTemplate.options.count == 0){

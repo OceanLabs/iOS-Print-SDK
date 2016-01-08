@@ -26,8 +26,49 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
 //
-#import <UIKit/UIKit.h>
 
-@interface OLCustomNavigationController : UINavigationController
+#import "OLNavigationController.h"
+#import "OLKiteABTesting.h"
+
+@implementation OLNavigationController
+
+- (void)viewDidLoad{
+    [super viewDidLoad];
+    
+    if ([OLKiteABTesting sharedInstance].darkTheme){
+        self.navigationBar.barTintColor = [UIColor blackColor];
+        self.navigationBar.tintColor = [UIColor grayColor];
+        self.navigationBar.barStyle = UIBarStyleBlackTranslucent;
+        
+        NSMutableDictionary *attributes = [[NSMutableDictionary alloc] init];
+        [attributes setObject:[UIColor grayColor] forKey:NSForegroundColorAttributeName];
+        self.navigationBar.titleTextAttributes = attributes;
+    }
+}
+
+- (BOOL)shouldAutorotate {
+    UIViewController *vc;
+    if (self.presentedViewController) vc = self.presentedViewController;
+    else vc = [self topViewController];
+    if (![vc isKindOfClass:[UIAlertController class]]){
+        return [vc shouldAutorotate];
+    }
+    else{
+        return NO;
+    }
+    
+}
+
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations{
+    UIViewController *vc;
+    if (self.presentedViewController && ![self.presentedViewController isKindOfClass:[UIAlertController class]]) vc = self.presentedViewController;
+    else vc = [self topViewController];
+    if (![vc isKindOfClass:[UIAlertController class]]){
+        return [vc supportedInterfaceOrientations];
+    }
+    else{
+        return UIInterfaceOrientationMaskPortrait;
+    }
+}
 
 @end

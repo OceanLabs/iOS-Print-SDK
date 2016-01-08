@@ -36,6 +36,7 @@
 #import "OLAddressPickerController.h"
 #import "OLKiteUtils.h"
 #import "OLKiteViewController.h"
+#import "OLKiteABTesting.h"
 
 static const NSUInteger kTagTextField = 99;
 
@@ -52,6 +53,10 @@ static const NSUInteger kTagTextField = 99;
 @end
 
 @implementation OLAddressEditViewController
+
+- (BOOL)prefersStatusBarHidden {
+    return [OLKiteABTesting sharedInstance].darkTheme;
+}
 
 - (id)init {
     return [self initWithAddress:nil];

@@ -29,6 +29,7 @@
 
 #import "OLAddressPickerController.h"
 #import "OLAddressSelectionViewController.h"
+#import "OLKiteABTesting.h"
 
 @interface OLAddressPickerController () <OLAddressSelectionViewControllerDelegate>
 @property (strong, nonatomic) OLAddressSelectionViewController *selectionVC;
@@ -37,6 +38,10 @@
 @implementation OLAddressPickerController
 
 @dynamic delegate;
+
+- (BOOL)prefersStatusBarHidden {
+    return [OLKiteABTesting sharedInstance].darkTheme;
+}
 
 - (id)init {
     OLAddressSelectionViewController *vc = [[OLAddressSelectionViewController alloc] init];

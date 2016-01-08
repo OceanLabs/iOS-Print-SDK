@@ -35,6 +35,7 @@
 #import "OLAddressLookupViewController.h"
 #import "OLConstants.h"
 #import "UIImage+ImageNamedInKiteBundle.h"
+#import "OLKiteABTesting.h"
 
 static const NSInteger kSectionAddressList = 0;
 static const NSInteger kSectionAddAddress = 1;
@@ -49,6 +50,10 @@ static const NSInteger kRowAddAddressManually = 0;
 @end
 
 @implementation OLAddressSelectionViewController
+
+- (BOOL)prefersStatusBarHidden {
+    return [OLKiteABTesting sharedInstance].darkTheme;
+}
 
 - (id)init {
     return [self initWithStyle:UITableViewStyleGrouped];

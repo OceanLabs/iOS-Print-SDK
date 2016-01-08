@@ -28,7 +28,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "OLCustomNavigationController.h"
+#import "OLNavigationController.h"
 
 @class OLCreditCardCaptureViewController;
 @class OLPrintOrder;
@@ -39,7 +39,7 @@
 - (void)creditCardCaptureControllerDismissed:(OLCreditCardCaptureViewController *)vc;
 @end
 
-@interface OLCreditCardCaptureViewController : OLCustomNavigationController
+@interface OLCreditCardCaptureViewController : OLNavigationController
 - (id)initWithPrintOrder:(OLPrintOrder *)printOrder;
 
 @property (nonatomic, weak) id <UINavigationControllerDelegate, OLCreditCardCaptureDelegate> delegate;

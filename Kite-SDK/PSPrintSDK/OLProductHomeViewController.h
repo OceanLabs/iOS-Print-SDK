@@ -30,8 +30,9 @@
 #import <UIKit/UIKit.h>
 #import "OLPrintOrder.h"
 #import "OLKiteViewController.h"
+#import "OLCollectionViewController.h"
 
-@interface OLProductHomeViewController : UICollectionViewController
+@interface OLProductHomeViewController : OLCollectionViewController
 
 @property (strong, nonatomic) NSMutableArray *assets;
 @property (strong, nonatomic) NSMutableArray *userSelectedPhotos;

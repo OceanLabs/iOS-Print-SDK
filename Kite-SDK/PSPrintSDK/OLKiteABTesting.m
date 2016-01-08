@@ -39,6 +39,7 @@
 
 #import "OLKiteABTesting.h"
 #import "OLKitePrintSDK.h"
+#import "UIColor+HexString.h"
 
 
 static NSString *const kOLKiteABTestLaunchWithPrintOrderVariant = @"ly.kite.abtest.launch_with_print_order_variant";
@@ -151,6 +152,19 @@ id safeObject(id obj){
     }
     [defaults setObject:s forKey:kOLKiteThemeSupportEmail];
     [defaults synchronize];
+}
+
+- (UIColor *)darkThemeColor1{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    UIColor *color;
+    NSString *hex = [defaults objectForKey:@"ly.kite.theme.dark.color1"];
+    if (hex){
+        color = [UIColor colorWithHexString:hex];
+    }
+    else{
+        color = [UIColor colorWithHexString:@"6867E8"];
+    }
+    return color;
 }
 
 - (void)prefetchRemoteImages{
@@ -303,13 +317,14 @@ id safeObject(id obj){
     
     NSDictionary *experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestProductTileStyle];
     if (!experimentDict) {
-        experimentDict = @{@"Classic" : @1, @"A" : @0, @"B" : @0};
+        experimentDict = @{@"Classic" : @1, @"A" : @0, @"B" : @0, @"Dark" : @0};
     }
     [SkyLab splitTestWithName:kOLKiteABTestProductTileStyle
                    conditions:@{
                                 @"Classic" : safeObject(experimentDict[@"Classic"]),
                                 @"A" : safeObject(experimentDict[@"A"]),
-                                @"B" : safeObject(experimentDict[@"B"])
+                                @"B" : safeObject(experimentDict[@"B"]),
+                                @"Dark" : safeObject(experimentDict[@"Dark"])
                                 } block:^(id choice) {
                                     self.productTileStyle = choice;
                                 }];

@@ -224,6 +224,10 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 
 @implementation OLPaymentViewController
 
+- (BOOL)prefersStatusBarHidden {
+    return [OLKiteABTesting sharedInstance].darkTheme;
+}
+
 - (id)initWithPrintOrder:(OLPrintOrder *)printOrder {
     NSBundle *currentBundle = [NSBundle bundleForClass:[OLKiteViewController class]];
     if ((self = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:currentBundle] instantiateViewControllerWithIdentifier:@"OLPaymentViewController"])) {
@@ -905,7 +909,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         vc.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamedInKiteBundle:@"support"] style:UIBarButtonItemStyleDone target:vc action:@selector(emailButtonPushed:)];
     }
     
-    OLCustomNavigationController *nvc = [[OLCustomNavigationController alloc] initWithRootViewController:vc];
+    OLNavigationController *nvc = [[OLNavigationController alloc] initWithRootViewController:vc];
     nvc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
     [self presentViewController:nvc animated:YES completion:NULL];
 }
@@ -920,7 +924,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 }
 
 - (UINavigationController *)navViewControllerWithControllers:(NSArray *)vcs{
-    OLCustomNavigationController *navController = [[OLCustomNavigationController alloc] init];
+    OLNavigationController *navController = [[OLNavigationController alloc] init];
     
     navController.viewControllers = vcs;
     UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(dismissPresentedViewController)];
@@ -931,8 +935,8 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 }
 
 - (void)saveAndDismissReviewController{
-    OLCustomNavigationController *nvc = (OLCustomNavigationController *)self.presentedViewController;
-    if (![nvc isKindOfClass:[OLCustomNavigationController class]]){
+    OLNavigationController *nvc = (OLNavigationController *)self.presentedViewController;
+    if (![nvc isKindOfClass:[OLNavigationController class]]){
         return;
     }
     
@@ -1417,7 +1421,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 
 - (IBAction)onShippingDetailsGestureRecognized:(id)sender {
     [OLKiteUtils shippingControllerForPrintOrder:self.printOrder handler:^(id vc){
-        OLCustomNavigationController *nvc = [[OLCustomNavigationController alloc] initWithRootViewController:vc];
+        OLNavigationController *nvc = [[OLNavigationController alloc] initWithRootViewController:vc];
         [[(UINavigationController *)vc view] class]; //force viewDidLoad;
         [(OLCheckoutViewController *)vc navigationItem].rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:vc action:@selector(onButtonDoneClicked)];
         [vc safePerformSelector:@selector(setUserEmail:) withObject:self.userEmail];
