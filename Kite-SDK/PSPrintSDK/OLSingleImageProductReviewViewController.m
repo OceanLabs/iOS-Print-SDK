@@ -55,7 +55,6 @@
 #import "OLProductTemplateOption.h"
 #import "OLPaymentViewController.h"
 #import "UIViewController+OLMethods.h"
-#import "OLScrollCropViewController.h"
 
 #ifdef OL_KITE_OFFER_INSTAGRAM
 #import <InstagramImagePicker/OLInstagramImagePickerController.h>
@@ -106,7 +105,7 @@ OLFacebookImagePickerControllerDelegate,
 #ifdef OL_KITE_AT_LEAST_IOS8
 CTAssetsPickerControllerDelegate,
 #endif
-OLAssetsPickerControllerDelegate, RMImageCropperDelegate, UIViewControllerPreviewingDelegate, OLScrollCropViewControllerDelegate>
+OLAssetsPickerControllerDelegate, RMImageCropperDelegate, UIViewControllerPreviewingDelegate>
 
 @property (weak, nonatomic) IBOutlet UICollectionView *imagesCollectionView;
 
@@ -198,6 +197,7 @@ static BOOL hasMoved;
     cropVc.previewView = [self.imageCropView snapshotViewAfterScreenUpdates:YES];
     cropVc.previewView.frame = [self.imageCropView.superview convertRect:self.imageCropView.frame toView:nil];
     cropVc.previewSourceView = self.imageCropView;
+    cropVc.forceSourceViewDimensions = YES;
     cropVc.providesPresentationContextTransitionStyle = true;
     cropVc.definesPresentationContext = true;
     cropVc.modalPresentationStyle = UIModalPresentationOverCurrentContext;
@@ -206,7 +206,7 @@ static BOOL hasMoved;
         [cropVc.cropView setProgress:progress];
     }completion:^(UIImage *image){
         [cropVc setFullImage:image];
-        OLPhotoEdits *edits = [[OLPhotoEdits alloc] init];
+        OLPhotoEdits *edits = [self.imageDisplayed.edits copy];
         edits.cropImageFrame = [self.imageCropView getFrameRect];
         edits.cropImageRect = [self.imageCropView getImageRect];
         edits.cropImageSize = [self.imageCropView croppedImageSize];
@@ -882,7 +882,16 @@ static BOOL hasMoved;
     
     [self.imageDisplayed getImageWithProgress:NULL completion:^(UIImage *image){
         self.imageCropView.image = image;
-        self.imageCropView.imageView.transform = cropper.edits.cropTransform;
+        
+        if (self.imageDisplayed.edits.counterClockwiseRotations > 0 || self.imageDisplayed.edits.flipHorizontal || self.imageDisplayed.edits.flipVertical){
+            self.imageCropView.image = [UIImage imageWithCGImage:image.CGImage scale:image.scale orientation:[OLPhotoEdits orientationForNumberOfCounterClockwiseRotations:self.imageDisplayed.edits.counterClockwiseRotations andInitialOrientation:image.imageOrientation horizontalFlip:self.imageDisplayed.edits.flipHorizontal verticalFlip:self.imageDisplayed.edits.flipVertical]];
+        }
+        else{
+            [self.imageCropView setImage:image];
+        }
+        [self.view setNeedsLayout];
+        [self.view layoutIfNeeded];
+        self.imageCropView.imageView.transform = self.imageDisplayed.edits.cropTransform;
     }];
     
     [cropper dismissViewControllerAnimated:YES completion:^{

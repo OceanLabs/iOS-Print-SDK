@@ -69,6 +69,23 @@
     }
     self.initialOrientation = self.fullImage.imageOrientation;
     self.cropView.delegate = self;
+    
+    if (self.forceSourceViewDimensions && self.previewSourceView){
+        UIView *view = self.cropView;
+        view.translatesAutoresizingMaskIntoConstraints = NO;
+        NSDictionary *views = NSDictionaryOfVariableBindings(view);
+        NSMutableArray *con = [[NSMutableArray alloc] init];
+        
+        NSArray *visuals = @[[NSString stringWithFormat:@"H:[view(%f)]", self.previewSourceView.frame.size.width]];
+        
+        
+        for (NSString *visual in visuals) {
+            [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+        }
+        
+        [view.superview addConstraints:con];
+
+    }
 }
 
 - (void)viewDidAppear:(BOOL)animated{
@@ -142,6 +159,10 @@
 }
 
 - (IBAction)onBarButtonCancelTapped:(UIBarButtonItem *)sender {
+    if (self.doneButton.enabled && self.previewView){
+        self.previewView = nil;
+        self.previewSourceView.hidden = NO;
+    }
     if ([self.delegate respondsToSelector:@selector(scrollCropViewControllerDidCancel:)]){
         [self.delegate scrollCropViewControllerDidCancel:self];
     }

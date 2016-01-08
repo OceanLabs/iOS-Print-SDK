@@ -30,10 +30,11 @@
 #import <UIKit/UIKit.h>
 
 #import "OLKitePrintSDK.h"
+#import "OLScrollCropViewController.h"
 
 @class OLProduct;
 
-@interface OLSingleImageProductReviewViewController : UIViewController
+@interface OLSingleImageProductReviewViewController : UIViewController <OLScrollCropViewControllerDelegate>
 
 @property (strong, nonatomic) OLProduct *product;
 @property (strong, nonatomic) NSMutableArray *userSelectedPhotos;
