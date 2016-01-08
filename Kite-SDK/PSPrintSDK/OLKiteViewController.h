@@ -121,7 +121,7 @@
 /**
  *  Use a dark visual theme.
  */
-@property (assign, nonatomic) BOOL useDarkTheme;
+//@property (assign, nonatomic) BOOL useDarkTheme;
 
 /**
  *  Initializer that accepts an array of OLAssets for the user to personalize their products with

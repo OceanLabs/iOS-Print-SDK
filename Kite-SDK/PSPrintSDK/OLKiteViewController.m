@@ -58,6 +58,8 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
 @property (weak, nonatomic) IBOutlet UINavigationItem *customNavigationItem;
 @property (weak, nonatomic) IBOutlet UIImageView *loadingImageView;
 
+@property (assign, nonatomic) BOOL useDarkTheme; //XXX: Delete this when exposed in header
+
 // Because template sync happens in the constructor it may complete before the OLKiteViewController has appeared. In such a case where sync does
 // complete first we make a note to immediately transition to the appropriate view when the OLKiteViewController does appear:
 @property (strong, nonatomic) NSOperationQueue *operationQueue;
