@@ -386,7 +386,9 @@ static BOOL hasMoved;
     
     self.previewingIndexPath = indexPath;
     
-    [previewingContext setSourceRect:[cell convertRect:imageView.frame toView:self.imagesCollectionView]];
+    UIImageView *cellImageView = [cell viewWithTag:1];
+    
+    [previewingContext setSourceRect:[cell convertRect:cellImageView.frame toView:self.imagesCollectionView]];
     
     OLImagePreviewViewController *previewVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLImagePreviewViewController"];
     [self.userSelectedPhotos[indexPath.item] getImageWithProgress:NULL completion:^(UIImage *image){
