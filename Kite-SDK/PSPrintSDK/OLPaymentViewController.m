@@ -72,6 +72,7 @@
 #import "OLSingleImageProductReviewViewController.h"
 #import "OLPosterViewController.h"
 #import "OLFrameOrderReviewViewController.h"
+#import "OLAsset+Private.h"
 
 #ifdef OL_KITE_OFFER_PAYPAL
 #ifdef COCOAPODS
@@ -822,29 +823,54 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             [self.printOrder cancelSubmissionOrPreemptedAssetUpload];
             if ([UIAlertController class]){
                 UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLConstants bundle], @"") message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
-                [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLConstants bundle], @"") style:UIAlertActionStyleDefault handler:^(id action){
-                    if (error.code != kOLKiteSDKErrorCodeOrderValidationFailed){
-                        self.printOrder.receipt = nil;
-                        self.printOrder.submitStatus = OLPrintOrderSubmitStatusUnknown;
-                        self.printOrder.submitStatusErrorMessage = nil;
-                        [[NSOperationQueue mainQueue] addOperation:self.transitionBlockOperation];
-                    }
-                    else{
-                        [self.printOrder deleteFromHistory];
-                        
-                        OLPrintOrder *freshPrintOrder = [[OLPrintOrder alloc] init];
-                        for (id<OLPrintJob> job in self.printOrder.jobs){
-                            [freshPrintOrder addPrintJob:job];
+                if (error.code == kOLKiteSDKErrorCodeImagesCorrupt){
+                    [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"View Item", @"") style:UIAlertActionStyleCancel handler:^(id action){
+                        id asset = error.userInfo[@"asset"];
+                        id<OLPrintJob> job;
+                        for (id<OLPrintJob> orderJob in self.printOrder.jobs){
+                            if (job){
+                                break;
+                            }
+                            for (OLAsset *jobAsset in [orderJob assetsForUploading]){
+                                if (asset == jobAsset || asset == jobAsset.dataSource){
+                                    job = orderJob;
+                                    break;
+                                }
+                            }
                         }
-                        freshPrintOrder.email = self.printOrder.email;
-                        freshPrintOrder.phone = self.printOrder.phone;
-                        freshPrintOrder.promoCode = self.printOrder.promoCode;
-                        freshPrintOrder.shippingAddress = self.printOrder.shippingAddress;
-                        [OLKiteUtils kiteVcForViewController:self].printOrder = freshPrintOrder;
-                        self.printOrder = freshPrintOrder;
-                        [self.printOrder saveOrder];
-                    }
-                }]];
+                        
+                        NSInteger jobIndex = [self.printOrder.jobs indexOfObjectIdenticalTo:job];
+                        if (jobIndex != NSNotFound){
+                            [self editJobAtIndexPath:[NSIndexPath indexPathForItem:jobIndex inSection:0]];
+                        }
+                    }]];
+                    [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Not now", @"") style:UIAlertActionStyleDefault handler:NULL]];
+                }
+                else{
+                    [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLConstants bundle], @"") style:UIAlertActionStyleDefault handler:^(id action){
+                        if (error.code != kOLKiteSDKErrorCodeOrderValidationFailed){
+                            self.printOrder.receipt = nil;
+                            self.printOrder.submitStatus = OLPrintOrderSubmitStatusUnknown;
+                            self.printOrder.submitStatusErrorMessage = nil;
+                            [[NSOperationQueue mainQueue] addOperation:self.transitionBlockOperation];
+                        }
+                        else{
+                            [self.printOrder deleteFromHistory];
+                            
+                            OLPrintOrder *freshPrintOrder = [[OLPrintOrder alloc] init];
+                            for (id<OLPrintJob> job in self.printOrder.jobs){
+                                [freshPrintOrder addPrintJob:job];
+                            }
+                            freshPrintOrder.email = self.printOrder.email;
+                            freshPrintOrder.phone = self.printOrder.phone;
+                            freshPrintOrder.promoCode = self.printOrder.promoCode;
+                            freshPrintOrder.shippingAddress = self.printOrder.shippingAddress;
+                            [OLKiteUtils kiteVcForViewController:self].printOrder = freshPrintOrder;
+                            self.printOrder = freshPrintOrder;
+                            [self.printOrder saveOrder];
+                        }
+                    }]];
+                }
                 NSBlockOperation *presentAlertBlock = [NSBlockOperation blockOperationWithBlock:^{
                     [self presentViewController:ac animated:YES completion:NULL];
                 }];
@@ -1396,6 +1422,10 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     CGPoint buttonPosition = [sender convertPoint:CGPointZero toView:self.tableView];
     NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:buttonPosition];
     
+    [self editJobAtIndexPath:indexPath];
+}
+
+- (void)editJobAtIndexPath:(NSIndexPath *)indexPath{
     UIViewController *vc = [self viewControllerForItemAtIndexPath:indexPath];
     vc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
     [self presentViewController:vc animated:YES completion:NULL];

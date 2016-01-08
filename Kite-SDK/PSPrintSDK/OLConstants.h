@@ -74,6 +74,7 @@ extern const NSInteger kOLKiteSDKErrorCodeRegisteredAssetCountDiscrepency;
 extern const NSInteger kOLKiteSDKErrorCodeMaintenanceMode;
 extern const NSInteger kOLKiteSDKErrorCodeOrderValidationFailed;
 extern const NSInteger kOLKiteSDKErrorCodeProductNotAvailableInRegion;
+extern const NSInteger kOLKiteSDKErrorCodeImagesCorrupt;
 
 extern NSString *_Nonnull const kOLKiteSDKErrorMessageUnauthorized;
 extern NSString *_Nonnull const kOLKiteSDKErrorMessageMaintenanceMode;

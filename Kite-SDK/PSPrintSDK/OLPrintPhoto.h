@@ -39,7 +39,8 @@ typedef enum {
     kPrintPhotoAssetTypePHAsset,
     kPrintPhotoAssetTypeOLAsset,
     kPrintPhotoAssetTypeInstagramPhoto,
-    kPrintPhotoAssetTypeFacebookPhoto
+    kPrintPhotoAssetTypeFacebookPhoto,
+    kPrintPhotoAssetTypeCorrupt
 } PrintPhotoAssetType;
 
 @interface OLPrintPhoto : NSObject <OLAssetDataSource, NSCopying, NSCoding>

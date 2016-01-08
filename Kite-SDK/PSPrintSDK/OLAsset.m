@@ -36,6 +36,7 @@
 #import "OLPrintPhoto.h"
 #import "ALAssetsLibrary+Singleton.h"
 #import "OLKiteUtils.h"
+#import "OLConstants.h"
 
 #ifdef OL_KITE_OFFER_INSTAGRAM
 #import <InstagramImagePicker/OLInstagramImage.h>
@@ -309,8 +310,7 @@ NSString *const kOLMimeTypePNG  = @"image/png";
                     handler(UIImageJPEGRepresentation(result, 0.7).length, nil);
                 }
                 else{
-                    NSData *data = [NSData dataWithContentsOfFile:[[OLKiteUtils kiteBundle] pathForResource:@"kite_corrupt" ofType:@"jpg"]];
-                    handler(data.length, nil);
+                    handler(0, [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeImagesCorrupt userInfo:@{NSLocalizedDescriptionKey : info[PHImageErrorKey] ? info[PHImageErrorKey] : NSLocalizedString(@"There was an error getting one of your photos. Please remove or replace it.", @""), @"asset" : self}]);
                 }
             }];
             break;
@@ -319,14 +319,24 @@ NSString *const kOLMimeTypePNG  = @"image/png";
             NSAssert(self.dataSource, @"oops somehow instantiated a OLAsset in non consistent state");
             [self.dataSource dataLengthWithCompletionHandler:^(long long dataLength, NSError *error) {
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    handler(dataLength, error);
+                    if (dataLength > 0){
+                        handler(dataLength, error);
+                    }
+                    else{
+                        handler(0, [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeImagesCorrupt userInfo:@{NSLocalizedDescriptionKey : NSLocalizedString(@"There was an error getting one of your photos. Please remove or replace it.", @""), @"asset" : self}]);
+                    }
                 });
             }];
             break;
         }
         case kOLAssetTypeImageData: {
             dispatch_async(dispatch_get_main_queue(), ^{
-                handler(self.imageData.length, nil);
+                if (self.imageData.length > 0){
+                    handler(self.imageData.length, nil);
+                }
+                else{
+                    handler(0, [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeImagesCorrupt userInfo:@{NSLocalizedDescriptionKey : NSLocalizedString(@"There was an error getting one of your photos. Please remove or replace it.", @""), @"asset" : self}]);
+                }
             });
             break;
         }
@@ -335,7 +345,12 @@ NSString *const kOLMimeTypePNG  = @"image/png";
                 NSError *attributesError = nil;
                 NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:self.imageFilePath error:&attributesError];
                 NSNumber *fileSizeNumber = [fileAttributes objectForKey:NSFileSize];
-                handler([fileSizeNumber longLongValue], attributesError);
+                if ([fileSizeNumber longLongValue] > 0){
+                    handler([fileSizeNumber longLongValue], attributesError);
+                }
+                else{
+                    handler(0, [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeImagesCorrupt userInfo:@{NSLocalizedDescriptionKey : NSLocalizedString(@"There was an error getting one of your photos. Please remove or replace it.", @""), @"asset" : self}]);
+                }
             });
             
             break;
