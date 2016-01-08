@@ -43,7 +43,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    if (self.previewView){
+    if (self.previewView && !self.skipPresentAnimation){
         self.view.backgroundColor = [UIColor clearColor];
         self.previewView.alpha = 0.15;
         [self.view addSubview:self.previewView];
@@ -91,7 +91,7 @@
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
     
-    if (self.previewView){
+    if (self.previewView && !self.skipPresentAnimation){
         [UIView animateWithDuration:0.10 animations:^{
             self.previewView.alpha = 1;
         } completion:^(BOOL finished){

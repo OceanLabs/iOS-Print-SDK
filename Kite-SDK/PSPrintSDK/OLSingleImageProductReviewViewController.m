@@ -131,6 +131,7 @@ static BOOL hasMoved;
     
     if ([UITraitCollection class] && [self.traitCollection respondsToSelector:@selector(forceTouchCapability)] && self.traitCollection.forceTouchCapability == UIForceTouchCapabilityAvailable){
         [self registerForPreviewingWithDelegate:self sourceView:self.imagesCollectionView];
+        [self registerForPreviewingWithDelegate:self sourceView:self.imageCropView];
     }
     
     if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder){
@@ -169,7 +170,7 @@ static BOOL hasMoved;
         [printPhoto unloadImage];
     }
     
-    [self.imageCropView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(enterFullCrop)]];
+    [self.imageCropView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTapGestureRecognized)]];
     
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Back", @"")
                                                                              style:UIBarButtonItemStylePlain
@@ -188,15 +189,23 @@ static BOOL hasMoved;
     }
 }
 
-- (void)enterFullCrop{
+- (void)onTapGestureRecognized{
+    [self enterFullCrop:YES];
+}
+
+- (void)enterFullCrop:(BOOL)animated{
     OLScrollCropViewController *cropVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLScrollCropViewController"];
     cropVc.enableCircleMask = self.product.productTemplate.templateUI == kOLTemplateUICircle;
     cropVc.delegate = self;
     cropVc.aspectRatio = self.imageCropView.frame.size.height / self.imageCropView.frame.size.width;
     
+    if (!animated){
+        cropVc.skipPresentAnimation = YES;
+    }
     cropVc.previewView = [self.imageCropView snapshotViewAfterScreenUpdates:YES];
     cropVc.previewView.frame = [self.imageCropView.superview convertRect:self.imageCropView.frame toView:nil];
     cropVc.previewSourceView = self.imageCropView;
+    
     cropVc.forceSourceViewDimensions = YES;
     cropVc.providesPresentationContextTransitionStyle = true;
     cropVc.definesPresentationContext = true;
@@ -376,32 +385,52 @@ static BOOL hasMoved;
 }
 
 - (UIViewController *)previewingContext:(id<UIViewControllerPreviewing>)previewingContext viewControllerForLocation:(CGPoint)location{
-    NSIndexPath *indexPath = [self.imagesCollectionView indexPathForItemAtPoint:location];
-    UICollectionViewCell *cell = [self.imagesCollectionView cellForItemAtIndexPath:indexPath];
-    
-    OLRemoteImageView *imageView = (OLRemoteImageView *)[cell viewWithTag:11];
-    if (!imageView.image){
+    if (previewingContext.sourceView == self.imagesCollectionView){
+        NSIndexPath *indexPath = [self.imagesCollectionView indexPathForItemAtPoint:location];
+        UICollectionViewCell *cell = [self.imagesCollectionView cellForItemAtIndexPath:indexPath];
+        
+        OLRemoteImageView *imageView = (OLRemoteImageView *)[cell viewWithTag:11];
+        if (!imageView.image){
+            return nil;
+        }
+        
+        self.previewingIndexPath = indexPath;
+        
+        UIImageView *cellImageView = [cell viewWithTag:1];
+        
+        [previewingContext setSourceRect:[cell convertRect:cellImageView.frame toView:self.imagesCollectionView]];
+        
+        OLImagePreviewViewController *previewVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLImagePreviewViewController"];
+        [self.userSelectedPhotos[indexPath.item] getImageWithProgress:NULL completion:^(UIImage *image){
+            previewVc.image = image;
+        }];
+        previewVc.providesPresentationContextTransitionStyle = true;
+        previewVc.definesPresentationContext = true;
+        previewVc.modalPresentationStyle = UIModalPresentationOverCurrentContext;
+        return previewVc;
+    }
+    else if (previewingContext.sourceView == self.imageCropView){
+        OLImagePreviewViewController *previewVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLImagePreviewViewController"];
+        [self.imageDisplayed getImageWithProgress:NULL completion:^(UIImage *image){
+            previewVc.image = image;
+        }];
+        previewVc.providesPresentationContextTransitionStyle = true;
+        previewVc.definesPresentationContext = true;
+        previewVc.modalPresentationStyle = UIModalPresentationOverCurrentContext;
+        return previewVc;
+    }
+    else{
         return nil;
     }
-    
-    self.previewingIndexPath = indexPath;
-    
-    UIImageView *cellImageView = [cell viewWithTag:1];
-    
-    [previewingContext setSourceRect:[cell convertRect:cellImageView.frame toView:self.imagesCollectionView]];
-    
-    OLImagePreviewViewController *previewVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLImagePreviewViewController"];
-    [self.userSelectedPhotos[indexPath.item] getImageWithProgress:NULL completion:^(UIImage *image){
-        previewVc.image = image;
-    }];
-    previewVc.providesPresentationContextTransitionStyle = true;
-    previewVc.definesPresentationContext = true;
-    previewVc.modalPresentationStyle = UIModalPresentationOverCurrentContext;
-    return previewVc;
 }
 
 - (void)previewingContext:(id<UIViewControllerPreviewing>)previewingContext commitViewController:(UIViewController *)viewControllerToCommit{
-    [self collectionView:self.imagesCollectionView didSelectItemAtIndexPath:self.previewingIndexPath];
+    if (previewingContext.sourceView == self.imagesCollectionView){
+        [self collectionView:self.imagesCollectionView didSelectItemAtIndexPath:self.previewingIndexPath];
+    }
+    else if (previewingContext.sourceView == self.imageCropView){
+        [self enterFullCrop:NO];
+    }
 }
 
 #pragma mark CollectionView delegate and data source

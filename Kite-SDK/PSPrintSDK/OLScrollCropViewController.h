@@ -52,5 +52,6 @@
 @property (strong, nonatomic) UIView *previewView;
 @property (strong, nonatomic) UIView *previewSourceView;
 @property (assign, nonatomic) BOOL forceSourceViewDimensions;
+@property (assign, nonatomic) BOOL skipPresentAnimation;
 
 @end
