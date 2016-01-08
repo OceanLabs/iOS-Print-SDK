@@ -93,8 +93,9 @@ CGFloat margin = 2;
     for (NSUInteger i = 0; i < duplicatesToFillOrder; ++i) {
         [self.framePhotos addObject:self.userSelectedPhotos[i % userSelectedAssetCount]];
     }
+#ifdef OL_VERBOSE
     NSLog(@"Adding %lu duplicates to frame", (unsigned long)duplicatesToFillOrder);
-    [super viewDidLoad];
+#endif
     
     self.title = NSLocalizedString(@"Review", @"");
 }
