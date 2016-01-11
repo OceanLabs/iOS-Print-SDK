@@ -219,42 +219,8 @@
 		E22059121BF3FBB6009CFAF6 /* UIImageView+WebCache.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C83BD1BE276050041D4CF /* UIImageView+WebCache.m */; };
 		E22059131BF3FBB6009CFAF6 /* UIView+WebCacheOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C83BF1BE276050041D4CF /* UIView+WebCacheOperation.m */; };
 		E22059141BF3FBCF009CFAF6 /* libSDWebImage.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E22058FD1BF3FB71009CFAF6 /* libSDWebImage.a */; };
-		E22963211C43DC90002A90CA /* CTAssetCheckmark.m in Sources */ = {isa = PBXBuildFile; fileRef = E22962F01C43DC90002A90CA /* CTAssetCheckmark.m */; };
-		E22963221C43DC90002A90CA /* CTAssetCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E22962F21C43DC90002A90CA /* CTAssetCollectionViewCell.m */; };
-		E22963231C43DC90002A90CA /* CTAssetCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E22962F41C43DC90002A90CA /* CTAssetCollectionViewController.m */; };
-		E22963241C43DC90002A90CA /* CTAssetItemViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E22962F61C43DC90002A90CA /* CTAssetItemViewController.m */; };
-		E22963251C43DC90002A90CA /* CTAssetPlayButton.m in Sources */ = {isa = PBXBuildFile; fileRef = E22962F81C43DC90002A90CA /* CTAssetPlayButton.m */; };
-		E22963261C43DC90002A90CA /* CTAssetScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = E22962FA1C43DC90002A90CA /* CTAssetScrollView.m */; };
-		E22963271C43DC90002A90CA /* CTAssetSelectionButton.m in Sources */ = {isa = PBXBuildFile; fileRef = E22962FC1C43DC90002A90CA /* CTAssetSelectionButton.m */; };
 		E22963281C43DC90002A90CA /* CTAssetSelectionLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = E22962FE1C43DC90002A90CA /* CTAssetSelectionLabel.m */; };
-		E22963291C43DC90002A90CA /* CTAssetsGridSelectedView.m in Sources */ = {isa = PBXBuildFile; fileRef = E22963001C43DC90002A90CA /* CTAssetsGridSelectedView.m */; };
-		E229632A1C43DC90002A90CA /* CTAssetsGridView.m in Sources */ = {isa = PBXBuildFile; fileRef = E22963021C43DC90002A90CA /* CTAssetsGridView.m */; };
-		E229632B1C43DC90002A90CA /* CTAssetsGridViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E22963041C43DC90002A90CA /* CTAssetsGridViewCell.m */; };
-		E229632C1C43DC90002A90CA /* CTAssetsGridViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E22963061C43DC90002A90CA /* CTAssetsGridViewController.m */; };
-		E229632D1C43DC90002A90CA /* CTAssetsGridViewFooter.m in Sources */ = {isa = PBXBuildFile; fileRef = E22963081C43DC90002A90CA /* CTAssetsGridViewFooter.m */; };
-		E229632E1C43DC90002A90CA /* CTAssetsGridViewLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = E229630A1C43DC90002A90CA /* CTAssetsGridViewLayout.m */; };
-		E229632F1C43DC90002A90CA /* CTAssetsNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = E229630C1C43DC90002A90CA /* CTAssetsNavigationController.m */; };
-		E22963301C43DC90002A90CA /* CTAssetsPageView.m in Sources */ = {isa = PBXBuildFile; fileRef = E229630E1C43DC90002A90CA /* CTAssetsPageView.m */; };
-		E22963311C43DC90002A90CA /* CTAssetsPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E22963101C43DC90002A90CA /* CTAssetsPageViewController.m */; };
-		E22963321C43DC90002A90CA /* CTAssetsPickerAccessDeniedView.m in Sources */ = {isa = PBXBuildFile; fileRef = E22963121C43DC90002A90CA /* CTAssetsPickerAccessDeniedView.m */; };
-		E22963331C43DC90002A90CA /* CTAssetsPickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = E22963141C43DC90002A90CA /* CTAssetsPickerController.m */; };
-		E22963341C43DC90002A90CA /* CTAssetsPickerNoAssetsView.m in Sources */ = {isa = PBXBuildFile; fileRef = E22963171C43DC90002A90CA /* CTAssetsPickerNoAssetsView.m */; };
-		E22963351C43DC90002A90CA /* CTAssetsViewControllerTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = E22963191C43DC90002A90CA /* CTAssetsViewControllerTransition.m */; };
-		E22963361C43DC90002A90CA /* CTAssetThumbnailOverlay.m in Sources */ = {isa = PBXBuildFile; fileRef = E229631B1C43DC90002A90CA /* CTAssetThumbnailOverlay.m */; };
-		E22963371C43DC90002A90CA /* CTAssetThumbnailStacks.m in Sources */ = {isa = PBXBuildFile; fileRef = E229631D1C43DC90002A90CA /* CTAssetThumbnailStacks.m */; };
-		E22963381C43DC90002A90CA /* CTAssetThumbnailView.m in Sources */ = {isa = PBXBuildFile; fileRef = E229631F1C43DC90002A90CA /* CTAssetThumbnailView.m */; };
-		E229634E1C43DCB5002A90CA /* NSBundle+CTAssetsPickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = E229633D1C43DCB5002A90CA /* NSBundle+CTAssetsPickerController.m */; };
-		E229634F1C43DCB5002A90CA /* NSDateFormatter+CTAssetsPickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = E229633F1C43DCB5002A90CA /* NSDateFormatter+CTAssetsPickerController.m */; };
-		E22963501C43DCB5002A90CA /* NSIndexSet+CTAssetsPickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = E22963411C43DCB5002A90CA /* NSIndexSet+CTAssetsPickerController.m */; };
-		E22963511C43DCB5002A90CA /* NSNumberFormatter+CTAssetsPickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = E22963431C43DCB5002A90CA /* NSNumberFormatter+CTAssetsPickerController.m */; };
-		E22963521C43DCB5002A90CA /* PHAsset+CTAssetsPickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = E22963451C43DCB5002A90CA /* PHAsset+CTAssetsPickerController.m */; };
-		E22963531C43DCB5002A90CA /* PHAssetCollection+CTAssetsPickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = E22963471C43DCB5002A90CA /* PHAssetCollection+CTAssetsPickerController.m */; };
-		E22963541C43DCB5002A90CA /* UICollectionView+CTAssetsPickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = E22963491C43DCB5002A90CA /* UICollectionView+CTAssetsPickerController.m */; };
-		E22963551C43DCB5002A90CA /* UIImage+CTAssetsPickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = E229634B1C43DCB5002A90CA /* UIImage+CTAssetsPickerController.m */; };
-		E22963561C43DCB5002A90CA /* UIViewController+CTAssetsPickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = E229634D1C43DCB5002A90CA /* UIViewController+CTAssetsPickerController.m */; };
-		E22963601C43DCDF002A90CA /* ALView+PureLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = E22963581C43DCDF002A90CA /* ALView+PureLayout.m */; };
 		E22963611C43DCDF002A90CA /* NSArray+PureLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = E229635A1C43DCDF002A90CA /* NSArray+PureLayout.m */; };
-		E22963621C43DCDF002A90CA /* NSLayoutConstraint+PureLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = E229635C1C43DCDF002A90CA /* NSLayoutConstraint+PureLayout.m */; };
 		E22963701C43DD54002A90CA /* ALView+PureLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = E22963581C43DCDF002A90CA /* ALView+PureLayout.m */; };
 		E22963711C43DD57002A90CA /* NSArray+PureLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = E229635A1C43DCDF002A90CA /* NSArray+PureLayout.m */; };
 		E22963721C43DD5B002A90CA /* NSLayoutConstraint+PureLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = E229635C1C43DCDF002A90CA /* NSLayoutConstraint+PureLayout.m */; };
@@ -2549,40 +2515,29 @@
 			buildActionMask = 2147483647;
 			files = (
 				2E53E0CD1C1AEAAD00BF7887 /* UIViewController+OLMethods.m in Sources */,
-				E22963291C43DC90002A90CA /* CTAssetsGridSelectedView.m in Sources */,
 				2EADD7E61BE79D6D0051CD31 /* OLURLDataSource.m in Sources */,
-				E22963551C43DCB5002A90CA /* UIImage+CTAssetsPickerController.m in Sources */,
 				2EADD7E71BE79D6D0051CD31 /* OLScrollCropViewController.m in Sources */,
-				E22963521C43DCB5002A90CA /* PHAsset+CTAssetsPickerController.m in Sources */,
-				E22963241C43DC90002A90CA /* CTAssetItemViewController.m in Sources */,
 				2EADD7E81BE79D6D0051CD31 /* OLPrintOrderCostRequest.m in Sources */,
 				2EADD7E91BE79D6D0051CD31 /* OLInfoPageViewController.m in Sources */,
 				2EADD7EA1BE79D6D0051CD31 /* OLIntegratedCheckoutViewController.m in Sources */,
-				E22963561C43DCB5002A90CA /* UIViewController+CTAssetsPickerController.m in Sources */,
-				E229632A1C43DC90002A90CA /* CTAssetsGridView.m in Sources */,
-				E22963511C43DCB5002A90CA /* NSNumberFormatter+CTAssetsPickerController.m in Sources */,
 				2EADD7EB1BE79D6D0051CD31 /* OLProductGroup.m in Sources */,
 				2EADD7EC1BE79D6D0051CD31 /* UIImage+ColorAtPixel.m in Sources */,
 				2EADD7ED1BE79D6D0051CD31 /* OLCheckoutViewController.m in Sources */,
 				2EADD7EE1BE79D6D0051CD31 /* OLPhotobookViewController.m in Sources */,
 				2EADD7EF1BE79D6D0051CD31 /* OLAssetItemViewController.m in Sources */,
-				E229634F1C43DCB5002A90CA /* NSDateFormatter+CTAssetsPickerController.m in Sources */,
 				2EADD7F01BE79D6D0051CD31 /* OLPopupOptionsImageView.m in Sources */,
 				2EADD7F11BE79D6D0051CD31 /* NSArray+QueryingExtras.m in Sources */,
-				E22963261C43DC90002A90CA /* CTAssetScrollView.m in Sources */,
 				2EADD7F21BE79D6D0051CD31 /* ALAsset+OLAccessibilityLabel.m in Sources */,
 				2EADD7F31BE79D6D0051CD31 /* PrintOrderHistoryViewController.m in Sources */,
 				E22963611C43DCDF002A90CA /* NSArray+PureLayout.m in Sources */,
 				2EADD7F41BE79D6D0051CD31 /* UIImage+ImageNamedInKiteBundle.m in Sources */,
 				2EADD7F51BE79D6D0051CD31 /* OLAssetsPageViewController.m in Sources */,
-				E229632D1C43DC90002A90CA /* CTAssetsGridViewFooter.m in Sources */,
 				2E482B7A1BEB4C7D007460EA /* OLStripeCard.m in Sources */,
 				2E645B371BE7D173009B662B /* OLProductOptionsViewController.m in Sources */,
 				2EADD7F61BE79D6D0051CD31 /* OLOrderReviewViewController.m in Sources */,
 				2EADD7F71BE79D6D0051CD31 /* OLProduct.m in Sources */,
 				2EADD7F81BE79D6D0051CD31 /* OLWhiteSquare.m in Sources */,
 				2E7F516D1BF5FBB100A78718 /* OLGreetingCardPrintJob.m in Sources */,
-				E22963341C43DC90002A90CA /* CTAssetsPickerNoAssetsView.m in Sources */,
 				2EADD7F91BE79D6D0051CD31 /* OLPhotoSelectionButton.m in Sources */,
 				2EADD7FA1BE79D6D0051CD31 /* OLAddressEditViewController.m in Sources */,
 				2EADD7FB1BE79D6D0051CD31 /* OLKiteUtils.m in Sources */,
@@ -2594,23 +2549,17 @@
 				2EADD8011BE79D6D0051CD31 /* OLApparelPrintJob.m in Sources */,
 				2EADD8021BE79D6D0051CD31 /* OLKiteViewController.m in Sources */,
 				2EADD8031BE79D6D0051CD31 /* OLPostcardViewController.m in Sources */,
-				E22963251C43DC90002A90CA /* CTAssetPlayButton.m in Sources */,
 				2EADD8041BE79D6D0051CD31 /* OLPhotobookPageContentViewController.m in Sources */,
 				2EADD8051BE79D6D0051CD31 /* OLAssetsViewControllerTransition.m in Sources */,
 				2EADD8061BE79D6D0051CD31 /* NSBundle+OLAssetsPickerController.m in Sources */,
 				2EADD8071BE79D6D0051CD31 /* UIImageView+FadeIn.m in Sources */,
 				2EADD8081BE79D6D0051CD31 /* OLAddressSearchRequest.m in Sources */,
-				E22963361C43DC90002A90CA /* CTAssetThumbnailOverlay.m in Sources */,
 				2EADD8091BE79D6D0051CD31 /* OLPayPalCard.m in Sources */,
 				2EADD80A1BE79D6D0051CD31 /* OLProductPrintJob.m in Sources */,
 				2EADD80B1BE79D6D0051CD31 /* OLSingleImageProductReviewViewController.m in Sources */,
-				E22963621C43DCDF002A90CA /* NSLayoutConstraint+PureLayout.m in Sources */,
 				2EADD80C1BE79D6D0051CD31 /* OLPosterViewController.m in Sources */,
 				2EADD80D1BE79D6D0051CD31 /* OLRemoteImageView.m in Sources */,
 				2E645B351BE7D16E009B662B /* OLProductDetailsViewController.m in Sources */,
-				E229632F1C43DC90002A90CA /* CTAssetsNavigationController.m in Sources */,
-				E229632E1C43DC90002A90CA /* CTAssetsGridViewLayout.m in Sources */,
-				E22963331C43DC90002A90CA /* CTAssetsPickerController.m in Sources */,
 				2EADD80E1BE79D6D0051CD31 /* OLPrintOrderCost.m in Sources */,
 				2EADD80F1BE79D6D0051CD31 /* OLEditPhotobookViewController.m in Sources */,
 				2EADD8101BE79D6D0051CD31 /* UIView+RMUtils.m in Sources */,
@@ -2634,66 +2583,49 @@
 				2EADD8211BE79D6D0051CD31 /* OLProductTemplateSyncRequest.m in Sources */,
 				2EADD8221BE79D6D0051CD31 /* OLAssetsPickerController.m in Sources */,
 				2EADD8231BE79D6D0051CD31 /* ALAssetsGroup+OLIsEqual.m in Sources */,
-				E22963371C43DC90002A90CA /* CTAssetThumbnailStacks.m in Sources */,
-				E22963321C43DC90002A90CA /* CTAssetsPickerAccessDeniedView.m in Sources */,
 				2EADD8241BE79D6D0051CD31 /* OLAssetsViewCell.m in Sources */,
 				2E645B391BE7D1EE009B662B /* OLProductTemplateOption.m in Sources */,
 				2EADD8251BE79D6D0051CD31 /* OLProductTypeSelectionViewController.m in Sources */,
-				E22963301C43DC90002A90CA /* CTAssetsPageView.m in Sources */,
 				2EADD8261BE79D6D0051CD31 /* OLPrintOrderRequest.m in Sources */,
 				2EADD8271BE79D6D0051CD31 /* OLRemoteImageCropper.m in Sources */,
-				E22963501C43DCB5002A90CA /* NSIndexSet+CTAssetsPickerController.m in Sources */,
 				2EADD8281BE79D6D0051CD31 /* OLAssetsGroupViewController.m in Sources */,
-				E229634E1C43DCB5002A90CA /* NSBundle+CTAssetsPickerController.m in Sources */,
 				2EADD8291BE79D6D0051CD31 /* UITextField+Selection.m in Sources */,
 				2EADD82A1BE79D6D0051CD31 /* UITableViewController+ScreenWidthFactor.m in Sources */,
 				2EADD82B1BE79D6D0051CD31 /* LXReorderableCollectionViewFlowLayout.m in Sources */,
 				2EADD82D1BE79D6D0051CD31 /* OLImageCachingManager.m in Sources */,
-				E22963211C43DC90002A90CA /* CTAssetCheckmark.m in Sources */,
 				2EADD82E1BE79D6D0051CD31 /* UIView+RoundRect.m in Sources */,
 				2EADD82F1BE79D6D0051CD31 /* OLCountry.m in Sources */,
 				2EADD8301BE79D6D0051CD31 /* OLAssetScrollView.m in Sources */,
 				2EADD8311BE79D6D0051CD31 /* ALAssetsLibrary+Singleton.m in Sources */,
 				2EADD8321BE79D6D0051CD31 /* OLConstants.m in Sources */,
 				2EADD8331BE79D6D0051CD31 /* OLProductOverviewPageContentViewController.m in Sources */,
-				E22963231C43DC90002A90CA /* CTAssetCollectionViewController.m in Sources */,
-				E22963221C43DC90002A90CA /* CTAssetCollectionViewCell.m in Sources */,
 				2EADD8341BE79D6D0051CD31 /* OLJudoPayCard.m in Sources */,
 				2EADD8351BE79D6D0051CD31 /* OLReceiptViewController.m in Sources */,
-				E22963351C43DC90002A90CA /* CTAssetsViewControllerTransition.m in Sources */,
 				2E4FC90E1C04A4F4000143F5 /* OLOrdersViewController.m in Sources */,
 				2EADD8361BE79D6D0051CD31 /* OLAssetUploadRequest.m in Sources */,
-				E22963601C43DCDF002A90CA /* ALView+PureLayout.m in Sources */,
 				2EADD8371BE79D6D0051CD31 /* OLAddressPickerController.m in Sources */,
 				2EADD8381BE79D6D0051CD31 /* main.m in Sources */,
 				2EADD8391BE79D6D0051CD31 /* OLAssetsGroupViewCell.m in Sources */,
 				2EADD83A1BE79D6D0051CD31 /* OLPostcardPrintJob.m in Sources */,
-				E229632B1C43DC90002A90CA /* CTAssetsGridViewCell.m in Sources */,
 				2EADD83B1BE79D6D0051CD31 /* NSObject+Utils.m in Sources */,
 				2EADD83C1BE79D6D0051CD31 /* OLAnalytics.m in Sources */,
 				2EF4392B1BF4D15E0006C123 /* OLPrintOrderSubmitStatusRequest.m in Sources */,
 				2EADD83D1BE79D6D0051CD31 /* OLCircleMaskCollectionViewCell.m in Sources */,
 				2EADD83E1BE79D6D0051CD31 /* OLCreditCardCaptureViewController.m in Sources */,
-				E22963271C43DC90002A90CA /* CTAssetSelectionButton.m in Sources */,
 				2EADD83F1BE79D6D0051CD31 /* OLPhotoSelectionViewController.m in Sources */,
 				2EADD8401BE79D6D0051CD31 /* OLAddressLookupViewController.m in Sources */,
 				2EADD8411BE79D6D0051CD31 /* OLKiteABTesting.m in Sources */,
 				2EADD8421BE79D6D0051CD31 /* OLProductHomeViewController.m in Sources */,
 				2E8FD2701BF9E73B00F4FC5A /* OLPhotoEdits.m in Sources */,
 				2EADD8431BE79D6D0051CD31 /* UIImage+OLAssetsPickerController.m in Sources */,
-				E22963541C43DCB5002A90CA /* UICollectionView+CTAssetsPickerController.m in Sources */,
 				2EADD8441BE79D6D0051CD31 /* OLAddressSelectionViewController.m in Sources */,
 				2EADD8451BE79D6D0051CD31 /* ALAsset+OLAssetType.m in Sources */,
 				2EADD8461BE79D6D0051CD31 /* RMImageCropper.m in Sources */,
-				E229632C1C43DC90002A90CA /* CTAssetsGridViewController.m in Sources */,
 				2EADD8471BE79D6D0051CD31 /* OLAssetsViewController.m in Sources */,
 				2EADD8481BE79D6D0051CD31 /* OLCountryPickerController.m in Sources */,
 				2EADD8491BE79D6D0051CD31 /* OLBaseRequest.m in Sources */,
 				2EADD84A1BE79D6D0051CD31 /* OLPhotobookPrintJob.m in Sources */,
-				E22963311C43DC90002A90CA /* CTAssetsPageViewController.m in Sources */,
-				E22963381C43DC90002A90CA /* CTAssetThumbnailView.m in Sources */,
 				2EADD84B1BE79D6D0051CD31 /* OLPaymentLineItem.m in Sources */,
-				E22963531C43DCB5002A90CA /* PHAssetCollection+CTAssetsPickerController.m in Sources */,
 				2EADD84C1BE79D6D0051CD31 /* OLPrintJob.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4033,6 +3965,7 @@
 				E229636F1C43DD21002A90CA /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		E244530B1BFD2C1D0086BF03 /* Build configuration list for PBXNativeTarget "PayPal" */ = {
 			isa = XCConfigurationList;
