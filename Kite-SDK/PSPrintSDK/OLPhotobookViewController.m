@@ -1508,14 +1508,11 @@ UINavigationControllerDelegate
 
 - (void)populateArrayWithNewArray:(NSArray *)array dataType:(Class)class {
     NSMutableArray *photoArray = [[NSMutableArray alloc] initWithCapacity:array.count];
-    NSMutableArray *assetArray = [[NSMutableArray alloc] initWithCapacity:array.count];
     
     for (id object in array) {
         OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
         printPhoto.asset = object;
         [photoArray addObject:printPhoto];
-        
-        [assetArray addObject:[OLAsset assetWithPrintPhoto:printPhoto]];
     }
     
     // First remove any that are not returned.
@@ -1530,13 +1527,9 @@ UINavigationControllerDelegate
     
     // Second, add the remaining objects to the end of the array without replacing any.
     NSMutableArray *addArray = [NSMutableArray arrayWithArray:photoArray];
-    NSMutableArray *addAssetArray = [NSMutableArray arrayWithArray:assetArray];
     for (id object in self.userSelectedPhotos) {
-        OLAsset *asset = [OLAsset assetWithPrintPhoto:object];
-        
-        if ([addAssetArray containsObject:asset]){
-            [addArray removeObjectAtIndex:[addAssetArray indexOfObject:asset]];
-            [addAssetArray removeObject:asset];
+        if ([addArray containsObject:object]){
+            [addArray removeObject:object];
         }
     }
     
@@ -1659,7 +1652,7 @@ UINavigationControllerDelegate
 
 - (BOOL)assetsPickerController:(OLAssetsPickerController *)picker shouldShowAsset:(id)asset{
     NSString *fileName = [[[asset defaultRepresentation] filename] lowercaseString];
-    if (!([fileName hasSuffix:@".jpg"] || [fileName hasSuffix:@".jpeg"] || [fileName hasSuffix:@"png"])) {
+    if (!([fileName hasSuffix:@".jpg"] || [fileName hasSuffix:@".jpeg"] || [fileName hasSuffix:@"png"] || [fileName hasSuffix:@"tiff"])) {
         return NO;
     }
     return YES;
