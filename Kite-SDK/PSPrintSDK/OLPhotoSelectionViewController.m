@@ -20,7 +20,7 @@
 #import "OLAssetsPickerController.h"
 
 #ifdef OL_KITE_AT_LEAST_IOS8
-#import <CTAssetsPickerController/CTAssetsPickerController.h>
+#import "CTAssetsPickerController.h"
 #endif
 
 #ifdef OL_KITE_OFFER_INSTAGRAM
