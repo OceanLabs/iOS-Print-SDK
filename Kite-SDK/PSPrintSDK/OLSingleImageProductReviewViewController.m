@@ -21,7 +21,7 @@
 #import "OLAssetsPickerController.h"
 #import "OLKiteUtils.h"
 #ifdef OL_KITE_AT_LEAST_IOS8
-#import <CTAssetsPickerController/CTAssetsPickerController.h>
+#import "CTAssetsPickerController.h"
 #endif
 #import "NSArray+QueryingExtras.h"
 #import "OLKiteViewController.h"
