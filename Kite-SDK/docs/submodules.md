@@ -50,7 +50,7 @@ If you added the submodule in a directory outside of the root `PROJECT_DIR` make
 
 Step 5. Configure Build Phases
 -----------
-Under the Build Phases tab add `KiteSDK` to `Target Dependencies` phase, then add `libKiteSDK.a` and the `Accelerate.framework` to `Link Binary with Libraries` phase.
+Under the Build Phases tab add `KiteSDK` to `Target Dependencies` phase, then add `libKiteSDK.a`, `Accelerate.framework` and 'Photos.framework' to `Link Binary with Libraries` phase.
 
 ![Add Header Search Paths](build_phases.gif)
 
