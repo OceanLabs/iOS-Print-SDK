@@ -180,7 +180,7 @@ NSString *const kOLMimeTypeTIFF  = @"image/tiff";
 }
 
 + (OLAsset *)assetWithURL:(NSURL *)url {
-    NSAssert([url.scheme isEqualToString:@"file"] || [url.scheme isEqualToString:@"https"], @"bad url scheme (%@), only http & https are supported", url.scheme);
+    NSAssert([url.scheme isEqualToString:@"http"] || [url.scheme isEqualToString:@"https"], @"bad url scheme (%@), only http & https are supported", url.scheme);
     
     NSString *urlStr = url.absoluteString;
     if ([urlStr hasSuffix:@"jpg"] || [urlStr hasSuffix:@"jpeg"]) {
