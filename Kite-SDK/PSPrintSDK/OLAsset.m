@@ -34,6 +34,7 @@ static NSString *const kKeyPHAssetLocalId = @"co.oceanlabs.pssdk.kKeyPHAssetLoca
 
 NSString *const kOLMimeTypeJPEG = @"image/jpeg";
 NSString *const kOLMimeTypePNG  = @"image/png";
+NSString *const kOLMimeTypeTIFF  = @"image/tiff";
 
 @interface OLAsset ()
 @property (nonatomic, strong) NSString *imageFilePath;
@@ -61,12 +62,15 @@ NSString *const kOLMimeTypePNG  = @"image/png";
 - (id)initWithImageFilePath:(NSString *)imageFilePath {
     if (self = [super init]) {
         self.imageFilePath = imageFilePath;
-        if ([imageFilePath hasSuffix:@".jpg"] || [imageFilePath hasSuffix:@".jpeg"]) {
+        NSString *lower = imageFilePath.lowercaseString;
+        if ([lower hasSuffix:@".jpg"] || [lower hasSuffix:@".jpeg"]) {
             _mimeType = kOLMimeTypeJPEG;
-        } else if ([imageFilePath hasSuffix:@".png"]) {
+        } else if ([lower hasSuffix:@".png"]) {
             _mimeType = kOLMimeTypePNG;
+        } else if ([lower hasSuffix:@".tif"] || [lower hasSuffix:@".tiff"]) {
+            _mimeType = kOLMimeTypeTIFF;
         } else {
-            NSAssert(NO, @"Only JPEG & PNG images are supported");
+            NSAssert(NO, @"Only JPEG, PNG & TIFF images are supported");
         }
     }
     
@@ -80,8 +84,10 @@ NSString *const kOLMimeTypePNG  = @"image/png";
             _mimeType = kOLMimeTypeJPEG;
         } else if ([fileName hasSuffix:@".png"]) {
             _mimeType = kOLMimeTypePNG;
+        } else if ([fileName hasSuffix:@".tif"] || [fileName hasSuffix:@".tiff"]) {
+            _mimeType = kOLMimeTypeTIFF;
         } else {
-            NSAssert(NO, @"Only JPEG & PNG images are supported");
+            NSAssert(NO, @"Only JPEG, PNG & TIFF images are supported");
         }
         
         self.alAssetURL = [asset valueForProperty:ALAssetPropertyAssetURL];
@@ -174,13 +180,15 @@ NSString *const kOLMimeTypePNG  = @"image/png";
 }
 
 + (OLAsset *)assetWithURL:(NSURL *)url {
-    NSAssert([url.scheme isEqualToString:@"http"] || [url.scheme isEqualToString:@"https"], @"bad url scheme (%@), only http & https are supported", url.scheme);
+    NSAssert([url.scheme isEqualToString:@"file"] || [url.scheme isEqualToString:@"https"], @"bad url scheme (%@), only http & https are supported", url.scheme);
     
     NSString *urlStr = url.absoluteString;
     if ([urlStr hasSuffix:@"jpg"] || [urlStr hasSuffix:@"jpeg"]) {
         return [[OLAsset alloc] initWithImageURL:url mimeType:kOLMimeTypeJPEG];
     } else if ([urlStr hasSuffix:@"png"]) {
         return [[OLAsset alloc] initWithImageURL:url mimeType:kOLMimeTypePNG];
+    } else if ([urlStr hasSuffix:@"tiff"] || [urlStr hasSuffix:@"tif"]) {
+        return [[OLAsset alloc] initWithImageURL:url mimeType:kOLMimeTypeTIFF];
     } else {
         // Worst case scenario where we will need to download the entire image first and just assume it's a JPEG.
         return [OLAsset assetWithDataSource:[[OLURLDataSource alloc] initWithURLString:urlStr]];
@@ -460,7 +468,15 @@ NSString *const kOLMimeTypePNG  = @"image/png";
 - (id)initWithCoder:(NSCoder *)aDecoder {
     if (self = [super init]) {
         NSString *mimeType = [aDecoder decodeObjectForKey:kKeyMimeType];
-        _mimeType = [kOLMimeTypeJPEG isEqualToString:mimeType] ? kOLMimeTypeJPEG : kOLMimeTypePNG;
+        if ([kOLMimeTypeJPEG isEqualToString:mimeType]) {
+            _mimeType = kOLMimeTypeJPEG;
+        } else if ([kOLMimeTypePNG isEqualToString:mimeType]) {
+            _mimeType = kOLMimeTypePNG;
+        } else if ([kOLMimeTypeTIFF isEqualToString:mimeType]) {
+            _mimeType = kOLMimeTypeTIFF;
+        } else {
+            _mimeType = kOLMimeTypePNG;
+        }
         self.imageFilePath = [aDecoder decodeObjectForKey:kKeyImageFilePath];
         self.imageData = [aDecoder decodeObjectForKey:kKeyImageData];
         self.alAssetURL = [aDecoder decodeObjectForKey:kKeyALAssetURL];
