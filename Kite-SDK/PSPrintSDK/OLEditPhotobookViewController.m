@@ -110,9 +110,6 @@ UINavigationControllerDelegate>
 @property (strong, nonatomic) NSMutableArray *photobookPhotos;
 @property (strong, nonatomic) OLPrintPhoto *coverPhoto;
 @property (weak, nonatomic) OLPhotobookViewController *interactionPhotobook;
-@property (strong, nonatomic) OLPrintPhoto *coverPhoto;
-@property (assign, nonatomic) BOOL animating;
-@property (assign, nonatomic) BOOL haveCachedCells;
 @property (strong, nonatomic) UIButton *nextButton;
 
 @end

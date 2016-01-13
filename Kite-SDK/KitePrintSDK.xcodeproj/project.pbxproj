@@ -266,7 +266,6 @@
 		E22963921C43DDF9002A90CA /* CTAssetThumbnailStacks.m in Sources */ = {isa = PBXBuildFile; fileRef = E229631D1C43DC90002A90CA /* CTAssetThumbnailStacks.m */; };
 		E22963931C43DDFC002A90CA /* CTAssetThumbnailView.m in Sources */ = {isa = PBXBuildFile; fileRef = E229631F1C43DC90002A90CA /* CTAssetThumbnailView.m */; };
 		E22963941C43DE24002A90CA /* libCTAssetsPicker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E22963671C43DD21002A90CA /* libCTAssetsPicker.a */; };
-		E22963961C43DF29002A90CA /* CTAssetsPickerController.bundle in Resources */ = {isa = PBXBuildFile; fileRef = E22963951C43DF29002A90CA /* CTAssetsPickerController.bundle */; };
 		E244530E1BFD2C230086BF03 /* libPayPalMobile.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E24452ED1BFD20D80086BF03 /* libPayPalMobile.a */; };
 		E24453231BFD2DC40086BF03 /* OLPayPalDummy.m in Sources */ = {isa = PBXBuildFile; fileRef = E24453211BFD2D810086BF03 /* OLPayPalDummy.m */; };
 		E244533A1BFD355B0086BF03 /* libPayPal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E24453051BFD2C1D0086BF03 /* libPayPal.a */; };
@@ -2406,7 +2405,6 @@
 				2EADD8561BE79D6D0051CD31 /* OLKiteStoryboard.storyboard in Resources */,
 				2EADD8571BE79D6D0051CD31 /* PostcardBackView.xib in Resources */,
 				2EADD8581BE79D6D0051CD31 /* OLPhotoSelectionButton.xib in Resources */,
-				E22963961C43DF29002A90CA /* CTAssetsPickerController.bundle in Resources */,
 				2EADD85A1BE79D6D0051CD31 /* Images.xcassets in Resources */,
 				2EADD85C1BE79D6D0051CD31 /* KitePrintSDK.xcassets in Resources */,
 				2EADD85E1BE79D6D0051CD31 /* kite_corrupt.jpg in Resources */,

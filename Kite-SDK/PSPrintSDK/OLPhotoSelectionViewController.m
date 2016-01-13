@@ -33,12 +33,6 @@
 #import "UIColor+HexString.h"
 #endif
 
-#ifdef COCOAPODS
-#import <UIColor-HexString/UIColor+HexString.h>
-#else
-#import "UIColor+HexString.h"
-#endif
-
 #import "OLPhotoSelectionViewController.h"
 #import "OLPhotoSelectionButton.h"
 #import "OLPrintPhoto.h"
@@ -82,7 +76,6 @@
 #import "OLPrintPhoto.h"
 #import "OLProductPrintJob.h"
 #import "OLRemoteImageView.h"
-#import "UIColor+HexString.h"
 #import "UIImage+ImageNamedInKiteBundle.h"
 #import "UIViewController+OLMethods.h"
 #import "OLPaymentViewController.h"
@@ -137,9 +130,6 @@ UIViewControllerPreviewingDelegate, OLScrollCropViewControllerDelegate>
 @property (strong, nonatomic) UIVisualEffectView *visualEffectView;
 @property (weak, nonatomic) IBOutlet UIView *clearButtonContainerView;
 
-@property (assign, nonatomic) CGSize rotationSize;
-
-@property (strong, nonatomic) NSMutableDictionary *indexPathsToRemoveDict;
 @property (weak, nonatomic) OLPrintPhoto *editingPrintPhoto;
 @end
 

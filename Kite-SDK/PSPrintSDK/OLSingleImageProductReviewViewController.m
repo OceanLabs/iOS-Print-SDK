@@ -48,7 +48,11 @@
 #import "OLKitePrintSDK.h"
 #import "OLKiteUtils.h"
 #ifdef OL_KITE_AT_LEAST_IOS8
+#ifdef COCOAPODS
+#import <CTAssetsPickerController/CTAssetsPickerController.h>
+#else
 #import "CTAssetsPickerController.h"
+#endif
 #endif
 #import "NSArray+QueryingExtras.h"
 #import "OLKiteViewController.h"
@@ -64,7 +68,6 @@
 #import "OLPaymentViewController.h"
 #import "UIViewController+OLMethods.h"
 #import "OLSingleImageProductReviewViewController.h"
-#import "SDWebImageManager.h"
 
 #ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
 #import "OLCustomPhotoProvider.h"
@@ -82,10 +85,6 @@
 #endif
 
 #import "OLImagePreviewViewController.h"
-
-#ifdef OL_KITE_AT_LEAST_IOS8
-#import <CTAssetsPickerController/CTAssetsPickerController.h>
-#endif
 
 @interface OLPaymentViewController (Private)
 
