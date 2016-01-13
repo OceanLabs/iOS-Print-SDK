@@ -229,8 +229,6 @@
 		E22059121BF3FBB6009CFAF6 /* UIImageView+WebCache.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C83BD1BE276050041D4CF /* UIImageView+WebCache.m */; };
 		E22059131BF3FBB6009CFAF6 /* UIView+WebCacheOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C83BF1BE276050041D4CF /* UIView+WebCacheOperation.m */; };
 		E22059141BF3FBCF009CFAF6 /* libSDWebImage.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E22058FD1BF3FB71009CFAF6 /* libSDWebImage.a */; };
-		E22963281C43DC90002A90CA /* CTAssetSelectionLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = E22962FE1C43DC90002A90CA /* CTAssetSelectionLabel.m */; };
-		E22963611C43DCDF002A90CA /* NSArray+PureLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = E229635A1C43DCDF002A90CA /* NSArray+PureLayout.m */; };
 		E22963701C43DD54002A90CA /* ALView+PureLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = E22963581C43DCDF002A90CA /* ALView+PureLayout.m */; };
 		E22963711C43DD57002A90CA /* NSArray+PureLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = E229635A1C43DCDF002A90CA /* NSArray+PureLayout.m */; };
 		E22963721C43DD5B002A90CA /* NSLayoutConstraint+PureLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = E229635C1C43DCDF002A90CA /* NSLayoutConstraint+PureLayout.m */; };
@@ -1338,14 +1336,6 @@
 				2E0804BD1C0DF70200F50D42 /* AssetDataSource.m */,
 			);
 			name = "Custom Asset Providers";
-			sourceTree = "<group>";
-		};
-		2E85BC9619A24C9E00EC7CC2 /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = "Supporting Files";
-			path = ..;
 			sourceTree = "<group>";
 		};
 		2EA8BEC11A48509E008A9248 /* Categories */ = {
@@ -2569,14 +2559,12 @@
 				2EADD7F11BE79D6D0051CD31 /* NSArray+QueryingExtras.m in Sources */,
 				2EADD7F21BE79D6D0051CD31 /* ALAsset+OLAccessibilityLabel.m in Sources */,
 				2EADD7F31BE79D6D0051CD31 /* PrintOrderHistoryViewController.m in Sources */,
-				E22963611C43DCDF002A90CA /* NSArray+PureLayout.m in Sources */,
 				2EADD7F41BE79D6D0051CD31 /* UIImage+ImageNamedInKiteBundle.m in Sources */,
 				2EADD7F51BE79D6D0051CD31 /* OLAssetsPageViewController.m in Sources */,
 				2E482B7A1BEB4C7D007460EA /* OLStripeCard.m in Sources */,
 				2E645B371BE7D173009B662B /* OLProductOptionsViewController.m in Sources */,
 				2EADD7F61BE79D6D0051CD31 /* OLOrderReviewViewController.m in Sources */,
 				2EADD7F71BE79D6D0051CD31 /* OLProduct.m in Sources */,
-				2EADD7F81BE79D6D0051CD31 /* OLWhiteSquare.m in Sources */,
 				2E4DF45E1C0F150400EA66FE /* DogsAssetCollectionDataSource.m in Sources */,
 				2E7F516D1BF5FBB100A78718 /* OLGreetingCardPrintJob.m in Sources */,
 				2EADD7F91BE79D6D0051CD31 /* OLPhotoSelectionButton.m in Sources */,
@@ -2621,7 +2609,6 @@
 				2EADD81D1BE79D6D0051CD31 /* UIViewController+TraitCollectionCompatibility.m in Sources */,
 				2EADD81E1BE79D6D0051CD31 /* OLProductOverviewViewController.m in Sources */,
 				2EADD81F1BE79D6D0051CD31 /* OLAddress+AddressBook.m in Sources */,
-				E22963281C43DC90002A90CA /* CTAssetSelectionLabel.m in Sources */,
 				2EADD8201BE79D6D0051CD31 /* OLPrintOrder.m in Sources */,
 				2EADD8211BE79D6D0051CD31 /* OLProductTemplateSyncRequest.m in Sources */,
 				2EADD8221BE79D6D0051CD31 /* OLAssetsPickerController.m in Sources */,
@@ -3083,10 +3070,7 @@
 				);
 				INFOPLIST_FILE = "KitePrintSDK-Dev-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/vendor/PayPal-iOS-SDK/PayPalMobile",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = ly.kite.sdk;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
@@ -3119,10 +3103,7 @@
 				);
 				INFOPLIST_FILE = "KitePrintSDK-Dev-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/vendor/PayPal-iOS-SDK/PayPalMobile",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = ly.kite.sdk;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
@@ -3727,7 +3708,7 @@
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/vendor/PureLayout/**";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -3745,7 +3726,7 @@
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/vendor/PureLayout/**";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
