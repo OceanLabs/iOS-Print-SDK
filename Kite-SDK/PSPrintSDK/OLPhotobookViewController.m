@@ -170,8 +170,6 @@ UINavigationControllerDelegate
 @property (weak, nonatomic) IBOutlet UIView *pagesLabelContainer;
 @property (weak, nonatomic) NSLayoutConstraint *topMarginCon;
 @property (weak, nonatomic) OLPopupOptionsImageView *coverImageView;
-@property (assign, nonatomic) NSInteger addNewPhotosAtIndex;
-@property (strong, nonatomic) NSArray *userSelectedPhotosCopy;
 @property (weak, nonatomic) IBOutlet UIButton *ctaButton;
 @property (weak, nonatomic) UIPanGestureRecognizer *pageControllerPanGesture;
 
