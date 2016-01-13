@@ -1,9 +1,30 @@
 //
-//  OLAsset.m
-//  Kite SDK
+//  Modified MIT License
 //
-//  Created by Deon Botha on 27/12/2013.
-//  Copyright (c) 2013 Deon Botha. All rights reserved.
+//  Copyright (c) 2010-2015 Kite Tech Ltd. https://www.kite.ly
+//
+//  Permission is hereby granted, free of charge, to any person obtaining a copy
+//  of this software and associated documentation files (the "Software"), to deal
+//  in the Software without restriction, including without limitation the rights
+//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+//  copies of the Software, and to permit persons to whom the Software is
+//  furnished to do so, subject to the following conditions:
+//
+//  The software MAY ONLY be used with the Kite Tech Ltd platform and MAY NOT be modified
+//  to be used with any competitor platforms. This means the software MAY NOT be modified
+//  to place orders with any competitors to Kite Tech Ltd, all orders MUST go through the
+//  Kite Tech Ltd platform servers.
+//
+//  The above copyright notice and this permission notice shall be included in
+//  all copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+//  THE SOFTWARE.
 //
 
 @import Photos;
@@ -15,6 +36,7 @@
 #import "OLPrintPhoto.h"
 #import "ALAssetsLibrary+Singleton.h"
 #import "OLKiteUtils.h"
+#import "OLConstants.h"
 
 #ifdef OL_KITE_OFFER_INSTAGRAM
 #import <InstagramImagePicker/OLInstagramImage.h>
@@ -34,6 +56,7 @@ static NSString *const kKeyPHAssetLocalId = @"co.oceanlabs.pssdk.kKeyPHAssetLoca
 
 NSString *const kOLMimeTypeJPEG = @"image/jpeg";
 NSString *const kOLMimeTypePNG  = @"image/png";
+NSString *const kOLMimeTypeTIFF  = @"image/tiff";
 
 @interface OLAsset ()
 @property (nonatomic, strong) NSString *imageFilePath;
@@ -61,12 +84,15 @@ NSString *const kOLMimeTypePNG  = @"image/png";
 - (id)initWithImageFilePath:(NSString *)imageFilePath {
     if (self = [super init]) {
         self.imageFilePath = imageFilePath;
-        if ([imageFilePath hasSuffix:@".jpg"] || [imageFilePath hasSuffix:@".jpeg"]) {
+        NSString *lower = imageFilePath.lowercaseString;
+        if ([lower hasSuffix:@".jpg"] || [lower hasSuffix:@".jpeg"]) {
             _mimeType = kOLMimeTypeJPEG;
-        } else if ([imageFilePath hasSuffix:@".png"]) {
+        } else if ([lower hasSuffix:@".png"]) {
             _mimeType = kOLMimeTypePNG;
+        } else if ([lower hasSuffix:@".tif"] || [lower hasSuffix:@".tiff"]) {
+            _mimeType = kOLMimeTypeTIFF;
         } else {
-            NSAssert(NO, @"Only JPEG & PNG images are supported");
+            NSAssert(NO, @"Only JPEG, PNG & TIFF images are supported");
         }
     }
     
@@ -80,8 +106,10 @@ NSString *const kOLMimeTypePNG  = @"image/png";
             _mimeType = kOLMimeTypeJPEG;
         } else if ([fileName hasSuffix:@".png"]) {
             _mimeType = kOLMimeTypePNG;
+        } else if ([fileName hasSuffix:@".tif"] || [fileName hasSuffix:@".tiff"]) {
+            _mimeType = kOLMimeTypeTIFF;
         } else {
-            NSAssert(NO, @"Only JPEG & PNG images are supported");
+            NSAssert(NO, @"Only JPEG, PNG & TIFF images are supported");
         }
         
         self.alAssetURL = [asset valueForProperty:ALAssetPropertyAssetURL];
@@ -182,6 +210,8 @@ NSString *const kOLMimeTypePNG  = @"image/png";
         return [[OLAsset alloc] initWithImageURL:url mimeType:kOLMimeTypeJPEG];
     } else if ([urlStr hasSuffix:@"png"]) {
         return [[OLAsset alloc] initWithImageURL:url mimeType:kOLMimeTypePNG];
+    } else if ([urlStr hasSuffix:@"tiff"] || [urlStr hasSuffix:@"tif"]) {
+        return [[OLAsset alloc] initWithImageURL:url mimeType:kOLMimeTypeTIFF];
     } else {
         // Worst case scenario where we will need to download the entire image first and just assume it's a JPEG.
         return [OLAsset assetWithDataSource:[[OLURLDataSource alloc] initWithURLString:urlStr]];
@@ -289,8 +319,7 @@ NSString *const kOLMimeTypePNG  = @"image/png";
                     handler(UIImageJPEGRepresentation(result, 0.7).length, nil);
                 }
                 else{
-                    NSData *data = [NSData dataWithContentsOfFile:[[OLKiteUtils kiteBundle] pathForResource:@"kite_corrupt" ofType:@"jpg"]];
-                    handler(data.length, nil);
+                    handler(0, [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeImagesCorrupt userInfo:@{NSLocalizedDescriptionKey : info[PHImageErrorKey] ? info[PHImageErrorKey] : NSLocalizedString(@"There was an error getting one of your photos. Please remove or replace it.", @""), @"asset" : self}]);
                 }
             }];
             break;
@@ -299,14 +328,24 @@ NSString *const kOLMimeTypePNG  = @"image/png";
             NSAssert(self.dataSource, @"oops somehow instantiated a OLAsset in non consistent state");
             [self.dataSource dataLengthWithCompletionHandler:^(long long dataLength, NSError *error) {
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    handler(dataLength, error);
+                    if (dataLength > 0){
+                        handler(dataLength, error);
+                    }
+                    else{
+                        handler(0, [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeImagesCorrupt userInfo:@{NSLocalizedDescriptionKey : NSLocalizedString(@"There was an error getting one of your photos. Please remove or replace it.", @""), @"asset" : self}]);
+                    }
                 });
             }];
             break;
         }
         case kOLAssetTypeImageData: {
             dispatch_async(dispatch_get_main_queue(), ^{
-                handler(self.imageData.length, nil);
+                if (self.imageData.length > 0){
+                    handler(self.imageData.length, nil);
+                }
+                else{
+                    handler(0, [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeImagesCorrupt userInfo:@{NSLocalizedDescriptionKey : NSLocalizedString(@"There was an error getting one of your photos. Please remove or replace it.", @""), @"asset" : self}]);
+                }
             });
             break;
         }
@@ -315,7 +354,12 @@ NSString *const kOLMimeTypePNG  = @"image/png";
                 NSError *attributesError = nil;
                 NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:self.imageFilePath error:&attributesError];
                 NSNumber *fileSizeNumber = [fileAttributes objectForKey:NSFileSize];
-                handler([fileSizeNumber longLongValue], attributesError);
+                if ([fileSizeNumber longLongValue] > 0){
+                    handler([fileSizeNumber longLongValue], attributesError);
+                }
+                else{
+                    handler(0, [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeImagesCorrupt userInfo:@{NSLocalizedDescriptionKey : NSLocalizedString(@"There was an error getting one of your photos. Please remove or replace it.", @""), @"asset" : self}]);
+                }
             });
             
             break;
@@ -461,7 +505,15 @@ NSString *const kOLMimeTypePNG  = @"image/png";
 - (id)initWithCoder:(NSCoder *)aDecoder {
     if (self = [super init]) {
         NSString *mimeType = [aDecoder decodeObjectForKey:kKeyMimeType];
-        _mimeType = [kOLMimeTypeJPEG isEqualToString:mimeType] ? kOLMimeTypeJPEG : kOLMimeTypePNG;
+        if ([kOLMimeTypeJPEG isEqualToString:mimeType]) {
+            _mimeType = kOLMimeTypeJPEG;
+        } else if ([kOLMimeTypePNG isEqualToString:mimeType]) {
+            _mimeType = kOLMimeTypePNG;
+        } else if ([kOLMimeTypeTIFF isEqualToString:mimeType]) {
+            _mimeType = kOLMimeTypeTIFF;
+        } else {
+            _mimeType = kOLMimeTypePNG;
+        }
         self.imageFilePath = [aDecoder decodeObjectForKey:kKeyImageFilePath];
         self.imageData = [aDecoder decodeObjectForKey:kKeyImageData];
         self.alAssetURL = [aDecoder decodeObjectForKey:kKeyALAssetURL];

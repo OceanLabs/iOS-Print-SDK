@@ -1,10 +1,43 @@
 //
-//  OLPhotobookViewController.m
-//  KitePrintSDK
+//  Modified MIT License
 //
-//  Created by Konstadinos Karayannis on 4/17/15.
-//  Copyright (c) 2015 Deon Botha. All rights reserved.
+//  Copyright (c) 2010-2015 Kite Tech Ltd. https://www.kite.ly
 //
+//  Permission is hereby granted, free of charge, to any person obtaining a copy
+//  of this software and associated documentation files (the "Software"), to deal
+//  in the Software without restriction, including without limitation the rights
+//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+//  copies of the Software, and to permit persons to whom the Software is
+//  furnished to do so, subject to the following conditions:
+//
+//  The software MAY ONLY be used with the Kite Tech Ltd platform and MAY NOT be modified
+//  to be used with any competitor platforms. This means the software MAY NOT be modified
+//  to place orders with any competitors to Kite Tech Ltd, all orders MUST go through the
+//  Kite Tech Ltd platform servers.
+//
+//  The above copyright notice and this permission notice shall be included in
+//  all copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+//  THE SOFTWARE.
+//
+
+#ifdef COCOAPODS
+#import <MPFlipViewController/MPFlipTransition.h>
+#else
+#import "MPFlipTransition.h"
+#endif
+
+#ifdef COCOAPODS
+#import <MPFlipViewController/MPFlipTransition.h>
+#else
+#import "MPFlipTransition.h"
+#endif
 
 #import "MPFlipTransition.h"
 #import "NSArray+QueryingExtras.h"
@@ -28,7 +61,7 @@
 #import "UIView+RoundRect.h"
 
 #ifdef OL_KITE_AT_LEAST_IOS8
-#import <CTAssetsPickerController/CTAssetsPickerController.h>
+#import "CTAssetsPickerController.h"
 #endif
 
 #ifdef OL_KITE_OFFER_FACEBOOK
@@ -41,6 +74,10 @@
 #import <InstagramImagePicker/OLInstagramImage.h>
 #endif
 
+#import "UIImage+ImageNamedInKiteBundle.h"
+#import "OLKiteABTesting.h"
+#import "OLPaymentViewController.h"
+#import "UIViewController+OLMethods.h"
 #ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
 #import "OLCustomPhotoProvider.h"
 #import <KITAssetsPickerController.h>
@@ -133,6 +170,9 @@ UINavigationControllerDelegate
 @property (weak, nonatomic) IBOutlet UIView *pagesLabelContainer;
 @property (weak, nonatomic) NSLayoutConstraint *topMarginCon;
 @property (weak, nonatomic) OLPopupOptionsImageView *coverImageView;
+@property (assign, nonatomic) NSInteger addNewPhotosAtIndex;
+@property (strong, nonatomic) NSArray *userSelectedPhotosCopy;
+@property (weak, nonatomic) IBOutlet UIButton *ctaButton;
 @property (weak, nonatomic) UIPanGestureRecognizer *pageControllerPanGesture;
 
 @end
@@ -145,6 +185,7 @@ UINavigationControllerDelegate
     }
     else if([OLKiteABTesting sharedInstance].launchedWithPrintOrder){
         OLKiteViewController *kiteVc = [OLKiteUtils kiteVcForViewController:self];
+        self.product.uuid = [kiteVc.printOrder.jobs.firstObject uuid];
         return [kiteVc.printOrder.jobs firstObject];
     }
     
@@ -201,15 +242,28 @@ UINavigationControllerDelegate
 - (void)viewDidLoad{
     [super viewDidLoad];
     
+    if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder){
+        if ([[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant isEqualToString:@"Review-Overview-Checkout"]){
+            [self.ctaButton setTitle:NSLocalizedString(@"Next", @"") forState:UIControlStateNormal];
+        }
+        
+        if(!self.editingPrintJob){
+            OLKiteViewController *kiteVc = [OLKiteUtils kiteVcForViewController:self];
+            self.editingPrintJob = [kiteVc.printOrder.jobs firstObject];
+            self.product.uuid = self.editingPrintJob.uuid;
+        }
+    }
+    
     if ([self.presentingViewController respondsToSelector:@selector(viewControllers)]) {
         UIViewController *paymentVc = [(UINavigationController *)self.presentingViewController viewControllers].lastObject;
         if ([paymentVc respondsToSelector:@selector(saveAndDismissReviewController)]){
-            UIBarButtonItem *saveButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Save", "")
-                                                                           style:UIBarButtonItemStyleDone target:paymentVc
-                                                                          action:@selector(saveAndDismissReviewController)];
-            self.navigationItem.rightBarButtonItem = saveButton;
+            [self.ctaButton setTitle:NSLocalizedString(@"Save", @"") forState:UIControlStateNormal];
+            [self.ctaButton removeTarget:self action:@selector(onButtonNextClicked:) forControlEvents:UIControlEventTouchUpInside];
+            [self.ctaButton addTarget:paymentVc action:@selector(saveAndDismissReviewController) forControlEvents:UIControlEventTouchUpInside];
         }
     }
+    
+    
     
 #ifndef OL_NO_ANALYTICS
     if (!self.editMode){
@@ -273,14 +327,6 @@ UINavigationControllerDelegate
     [self.pageController.view addGestureRecognizer:longPressGesture];
     
     self.title = NSLocalizedString(@"Review", @"");
-    
-    if (!self.navigationItem.rightBarButtonItem){
-        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]
-                                                  initWithTitle:NSLocalizedString(@"Next", @"")
-                                                  style:UIBarButtonItemStylePlain
-                                                  target:self
-                                                  action:@selector(onButtonNextClicked:)];
-    }
     
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Back", @"")
                                                                              style:UIBarButtonItemStylePlain
@@ -354,7 +400,11 @@ UINavigationControllerDelegate
     
     [self updatePagesLabel];
     
-    CGFloat yOffset = !self.editMode ? ([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height)/2.0 : -15;
+    if (self.editMode){
+        [self.ctaButton removeFromSuperview];
+    }
+    
+    CGFloat yOffset = !self.editMode ? ([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height-self.ctaButton.frame.size.height)/2.0 : -15;
     if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8){
         yOffset = 22;
     }
@@ -499,6 +549,21 @@ UINavigationControllerDelegate
     }];
 }
 
+- (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    if (!self.editMode){
+        if ([self.presentingViewController respondsToSelector:@selector(viewControllers)]) {
+            UIViewController *presentingVc = [(UINavigationController *)self.presentingViewController viewControllers].lastObject;
+            if (![presentingVc isKindOfClass:[OLPaymentViewController class]]){
+                [self addBasketIconToTopRight];
+            }
+        }
+        else{
+            [self addBasketIconToTopRight];
+        }
+    }
+}
+
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator{
     [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
     self.stranded = NO;
@@ -526,7 +591,7 @@ UINavigationControllerDelegate
             }
         }
         
-        CGFloat yOffset = !self.editMode ? ([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height)/2.0 : -15;
+        CGFloat yOffset = !self.editMode ? ([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height-self.ctaButton.frame.size.height)/2.0 : -15;
         
         self.centerYCon = [NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.containerView.superview attribute:NSLayoutAttributeCenterY multiplier:1 constant:yOffset];
         [self.containerView.superview addConstraint:self.centerYCon];
@@ -622,7 +687,7 @@ UINavigationControllerDelegate
 
 #pragma mark - Checkout
 
-- (IBAction)onButtonNextClicked:(UIBarButtonItem *)sender {
+- (IBAction)onButtonNextClicked:(UIButton *)sender {
     if (![self shouldGoToCheckout]){
         return;
     }
@@ -685,7 +750,7 @@ UINavigationControllerDelegate
     // URL and the user did not manipulate it in any way.
     NSMutableArray *photoAssets = [[NSMutableArray alloc] init];
     for (OLPrintPhoto *photo in bookPhotos) {
-        [photoAssets addObject:[OLAsset assetWithDataSource:photo]];
+        [photoAssets addObject:[OLAsset assetWithDataSource:[photo copy]]];
     }
     
     // ensure order is maxed out by adding duplicates as necessary
@@ -784,13 +849,21 @@ UINavigationControllerDelegate
         self.croppingPrintPhoto = self.coverPhoto;
         OLScrollCropViewController *cropVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLScrollCropViewController"];
         cropVc.delegate = self;
-        UIImageView *imageView = [(OLPhotobookPageContentViewController *)[[self.pageController viewControllers] firstObject] imageView];
+        UIImageView *imageView = self.coverImageView;
         cropVc.aspectRatio = imageView.frame.size.height / imageView.frame.size.width;
+        
+        cropVc.previewView = [imageView snapshotViewAfterScreenUpdates:YES];
+        cropVc.previewView.frame = [imageView.superview convertRect:imageView.frame toView:nil];
+        cropVc.previewSourceView = imageView;
+        cropVc.providesPresentationContextTransitionStyle = true;
+        cropVc.definesPresentationContext = true;
+        cropVc.modalPresentationStyle = UIModalPresentationOverCurrentContext;
+        
         [self.croppingPrintPhoto getImageWithProgress:NULL completion:^(UIImage *image){
             [cropVc setFullImage:image];
             cropVc.edits = self.croppingPrintPhoto.edits;
-            cropVc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
-            [self presentViewController:cropVc animated:YES completion:NULL];
+//            cropVc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
+            [self presentViewController:cropVc animated:NO completion:NULL];
         }];
     }
     else{
@@ -838,13 +911,22 @@ UINavigationControllerDelegate
         
         OLScrollCropViewController *cropVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLScrollCropViewController"];
         cropVc.delegate = self;
-        UIImageView *imageView = [(OLPhotobookPageContentViewController *)[[self.pageController viewControllers] firstObject] imageView];
+        OLPhotobookPageContentViewController *page = [self.pageController.viewControllers objectAtIndex:self.croppingImageIndex];
+        UIImageView *imageView = [page imageView];
         cropVc.aspectRatio = imageView.frame.size.height / imageView.frame.size.width;
+        
+        cropVc.previewView = [imageView snapshotViewAfterScreenUpdates:YES];
+        cropVc.previewView.frame = [imageView.superview convertRect:imageView.frame toView:nil];
+        cropVc.previewSourceView = imageView;
+        cropVc.providesPresentationContextTransitionStyle = true;
+        cropVc.definesPresentationContext = true;
+        cropVc.modalPresentationStyle = UIModalPresentationOverCurrentContext;
+        
         [self.croppingPrintPhoto getImageWithProgress:NULL completion:^(UIImage *image){
             [cropVc setFullImage:image];
             cropVc.edits = self.croppingPrintPhoto.edits;
-            cropVc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
-            [self presentViewController:cropVc animated:YES completion:NULL];
+//            cropVc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
+            [self presentViewController:cropVc animated:NO completion:NULL];
         }];
     }
 }
@@ -1533,14 +1615,11 @@ UINavigationControllerDelegate
 
 - (void)populateArrayWithNewArray:(NSArray *)array dataType:(Class)class {
     NSMutableArray *photoArray = [[NSMutableArray alloc] initWithCapacity:array.count];
-    NSMutableArray *assetArray = [[NSMutableArray alloc] initWithCapacity:array.count];
     
     for (id object in array) {
         OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
         printPhoto.asset = object;
         [photoArray addObject:printPhoto];
-        
-        [assetArray addObject:[OLAsset assetWithPrintPhoto:printPhoto]];
     }
     
     // First remove any that are not returned.
@@ -1566,13 +1645,9 @@ UINavigationControllerDelegate
     
     // Second, add the remaining objects to the end of the array without replacing any.
     NSMutableArray *addArray = [NSMutableArray arrayWithArray:photoArray];
-    NSMutableArray *addAssetArray = [NSMutableArray arrayWithArray:assetArray];
     for (id object in self.userSelectedPhotos) {
-        OLAsset *asset = [OLAsset assetWithPrintPhoto:object];
-        
-        if ([addAssetArray containsObject:asset]){
-            [addArray removeObjectAtIndex:[addAssetArray indexOfObject:asset]];
-            [addAssetArray removeObject:asset];
+        if ([addArray containsObject:object]){
+            [addArray removeObject:object];
         }
     }
     
@@ -1724,7 +1799,7 @@ UINavigationControllerDelegate
 
 - (BOOL)assetsPickerController:(OLAssetsPickerController *)picker shouldShowAsset:(id)asset{
     NSString *fileName = [[[asset defaultRepresentation] filename] lowercaseString];
-    if (!([fileName hasSuffix:@".jpg"] || [fileName hasSuffix:@".jpeg"] || [fileName hasSuffix:@"png"])) {
+    if (!([fileName hasSuffix:@".jpg"] || [fileName hasSuffix:@".jpeg"] || [fileName hasSuffix:@"png"] || [fileName hasSuffix:@"tiff"])) {
         return NO;
     }
     return YES;

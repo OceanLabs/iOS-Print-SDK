@@ -1,34 +1,67 @@
 //
-//  ProductHomeViewController.m
-//  Kite Print SDK
+//  Modified MIT License
 //
-//  Created by Elliott Minns on 12/12/2013.
-//  Copyright (c) 2013 Ocean Labs. All rights reserved.
+//  Copyright (c) 2010-2015 Kite Tech Ltd. https://www.kite.ly
+//
+//  Permission is hereby granted, free of charge, to any person obtaining a copy
+//  of this software and associated documentation files (the "Software"), to deal
+//  in the Software without restriction, including without limitation the rights
+//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+//  copies of the Software, and to permit persons to whom the Software is
+//  furnished to do so, subject to the following conditions:
+//
+//  The software MAY ONLY be used with the Kite Tech Ltd platform and MAY NOT be modified
+//  to be used with any competitor platforms. This means the software MAY NOT be modified
+//  to place orders with any competitors to Kite Tech Ltd, all orders MUST go through the
+//  Kite Tech Ltd platform servers.
+//
+//  The above copyright notice and this permission notice shall be included in
+//  all copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+//  THE SOFTWARE.
 //
 
-#import "OLProductHomeViewController.h"
-#import "OLProductOverviewViewController.h"
-#import "OLProductTypeSelectionViewController.h"
-#import "OLProductTemplate.h"
-#import "OLProduct.h"
-#import "OLKiteViewController.h"
-#import "OLKitePrintSDK.h"
-#import "OLPosterSizeSelectionViewController.h"
-#import "OLAnalytics.h"
-#import "OLProductGroup.h"
-#import "NSObject+Utils.h"
-#import "OLCustomNavigationController.h"
-#import "UIViewController+TraitCollectionCompatibility.h"
-#import "UIImageView+FadeIn.h"
-#import "OLKiteABTesting.h"
-#import "UIImage+ColorAtPixel.h"
-#import "OLInfoPageViewController.h"
+#ifdef COCOAPODS
+#import <SDWebImage/SDWebImageManager.h>
+#import <TSMarkdownParser/TSMarkdownParser.h>
+#else
 #import "SDWebImageManager.h"
 #import "TSMarkdownParser.h"
-#import "UIImage+ImageNamedInKiteBundle.h"
+#endif
+
+#ifdef COCOAPODS
+#import <SDWebImage/SDWebImageManager.h>
+#import <TSMarkdownParser/TSMarkdownParser.h>
+#else
+#import "SDWebImageManager.h"
+#import "TSMarkdownParser.h"
+#endif
+
+#import "NSObject+Utils.h"
+#import "OLAnalytics.h"
+#import "OLNavigationController.h"
+#import "OLInfoPageViewController.h"
+#import "OLKiteABTesting.h"
+#import "OLKitePrintSDK.h"
 #import "OLKiteUtils.h"
-#import "OLPaymentViewController.h"
+#import "OLKiteViewController.h"
+#import "OLProduct.h"
+#import "OLProductGroup.h"
+#import "OLProductHomeViewController.h"
+#import "OLProductOverviewViewController.h"
+#import "OLProductTemplate.h"
+#import "OLProductTypeSelectionViewController.h"
+#import "UIImage+ColorAtPixel.h"
+#import "UIImage+ImageNamedInKiteBundle.h"
+#import "UIImageView+FadeIn.h"
 #import "UIViewController+OLMethods.h"
+#import "UIViewController+TraitCollectionCompatibility.h"
 
 #define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
 
@@ -37,13 +70,6 @@
 -(void)setCoverImageToImageView:(UIImageView *)imageView;
 -(void)setClassImageToImageView:(UIImageView *)imageView;
 -(void)setProductPhotography:(NSUInteger)i toImageView:(UIImageView *)imageView;
-
-@end
-
-@interface OLPaymentViewController ()
-
-- (void)onBarButtonOrdersClicked;
-@property (assign, nonatomic) BOOL presentedModally;
 
 @end
 
@@ -63,7 +89,6 @@
 @property (strong, nonatomic) UIView *bannerView;
 @property (strong, nonatomic) UIView *headerView;
 @property (strong, nonatomic) NSString *bannerString;
-@property (weak, nonatomic) IBOutlet UIBarButtonItem *basketButton;
 @property (strong, nonatomic) NSDate *countdownDate;
 @end
 
@@ -357,8 +382,10 @@
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
     
-    [self addBasketIconToTopRight];
-        
+    if ([OLKiteABTesting sharedInstance].allowsMultipleRecipients){
+        [self addBasketIconToTopRight];
+    }
+    
     NSURL *url = [NSURL URLWithString:[OLKiteABTesting sharedInstance].headerLogoURL];
     if (url && ![[SDWebImageManager sharedManager] cachedImageExistsForURL:url] && [self isMemberOfClass:[OLProductHomeViewController class]]){
         [[SDWebImageManager sharedManager] downloadImageWithURL:url options:0 progress:NULL completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL){
@@ -437,26 +464,31 @@
     NSInteger numberOfCells = [self collectionView:collectionView numberOfItemsInSection:indexPath.section];
     CGFloat halfScreenHeight = (size.height - [[UIApplication sharedApplication] statusBarFrame].size.height - self.navigationController.navigationBar.frame.size.height)/2;
     
+    CGFloat height = 233;
+    if ([[OLKiteABTesting sharedInstance].productTileStyle isEqualToString:@"Dark"]){
+        height = 200;
+    }
+    
     if ([self isHorizontalSizeClassCompact] && size.height > size.width) {
         if (numberOfCells == 2){
             return CGSizeMake(size.width, halfScreenHeight);
         }
         else{
-            return CGSizeMake(size.width, 233 * (size.width / 320.0));
+            return CGSizeMake(size.width, height * (size.width / 320.0));
         }
     }
     else if (numberOfCells == 6){
-        return CGSizeMake(size.width/2 - 1, MAX(halfScreenHeight * (2.0 / 3.0), 233));
+        return CGSizeMake(size.width/2 - 1, MAX(halfScreenHeight * (2.0 / 3.0), height));
     }
     else if (numberOfCells == 4){
-        return CGSizeMake(size.width/2 - 1, MAX(halfScreenHeight, 233));
+        return CGSizeMake(size.width/2 - 1, MAX(halfScreenHeight, height));
     }
     else if (numberOfCells == 3){
         if (size.width < size.height){
             return CGSizeMake(size.width, halfScreenHeight * 0.8);
         }
         else{
-            return CGSizeMake(size.width/2 - 1, MAX(halfScreenHeight, 233));
+            return CGSizeMake(size.width/2 - 1, MAX(halfScreenHeight, height));
         }
     }
     else if (numberOfCells == 2){
@@ -468,7 +500,7 @@
         }
     }
     else{
-        return CGSizeMake(size.width/2 - 1, 238);
+        return CGSizeMake(size.width/2 - 1, height);
     }
 }
 
@@ -608,6 +640,10 @@
     if ([[OLKiteABTesting sharedInstance].productTileStyle isEqualToString:@"Classic"]){
         productTypeLabel.backgroundColor = [product labelColor];
     }
+    else if([[OLKiteABTesting sharedInstance].productTileStyle isEqualToString:@"Dark"]){
+        UIButton *button = (UIButton *)[cell.contentView viewWithTag:390];
+        button.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.8];
+    }
     else{
         UIButton *button = (UIButton *)[cell.contentView viewWithTag:390];
         button.layer.shadowColor = [[UIColor blackColor] CGColor];
@@ -631,34 +667,6 @@
     NSIndexPath *indexPath = [self.collectionView indexPathForCell:(UICollectionViewCell *)view];
     [self collectionView:self.collectionView didSelectItemAtIndexPath:indexPath];
 }
-
-- (IBAction)onButtonBasketClicked:(UIBarButtonItem *)sender {
-    OLPrintOrder *printOrder = [OLKiteUtils kiteVcForViewController:self].printOrder;
-    
-#ifndef OL_NO_ANALYTICS
-    NSUInteger count = printOrder.jobs.count;
-    for (id<OLPrintJob> job in printOrder.jobs){
-        count += [job extraCopies];
-    }
-    [OLAnalytics trackBasketIconTappedWithNumberBadged:count];
-#endif
-    
-    [OLKiteUtils checkoutViewControllerForPrintOrder:printOrder handler:^(id vc){
-        [vc safePerformSelector:@selector(setUserEmail:) withObject:[OLKiteUtils userEmail:self]];
-        [vc safePerformSelector:@selector(setUserPhone:) withObject:[OLKiteUtils userPhone:self]];
-        [vc safePerformSelector:@selector(setKiteDelegate:) withObject:[OLKiteUtils kiteDelegate:self]];
-        [(OLPaymentViewController *)vc setPresentedModally:YES];
-        
-        [(UIViewController *)vc navigationItem].leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:vc action:@selector(dismiss)];
-        
-        [(UIViewController *)vc navigationItem].rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamedInKiteBundle:@"menu_button_orders"] style:UIBarButtonItemStylePlain target:vc action:@selector(onBarButtonOrdersClicked)];
-        
-        OLCustomNavigationController *nvc = [[OLCustomNavigationController alloc] initWithRootViewController:vc];
-        nvc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
-        [self presentViewController:nvc animated:YES completion:NULL];
-    }];
-}
-
 
 #pragma mark - Autorotate and Orientation Methods
 // Currently here to disable landscape orientations and rotation on iOS 7. When support is dropped, these can be deleted.

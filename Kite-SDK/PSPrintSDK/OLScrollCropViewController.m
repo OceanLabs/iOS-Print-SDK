@@ -1,9 +1,30 @@
 //
-//  OLScrollCropViewController.m
-//  KitePrintSDK
+//  Modified MIT License
 //
-//  Created by Konstadinos Karayannis on 1/21/15.
-//  Copyright (c) 2015 Deon Botha. All rights reserved.
+//  Copyright (c) 2010-2015 Kite Tech Ltd. https://www.kite.ly
+//
+//  Permission is hereby granted, free of charge, to any person obtaining a copy
+//  of this software and associated documentation files (the "Software"), to deal
+//  in the Software without restriction, including without limitation the rights
+//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+//  copies of the Software, and to permit persons to whom the Software is
+//  furnished to do so, subject to the following conditions:
+//
+//  The software MAY ONLY be used with the Kite Tech Ltd platform and MAY NOT be modified
+//  to be used with any competitor platforms. This means the software MAY NOT be modified
+//  to place orders with any competitors to Kite Tech Ltd, all orders MUST go through the
+//  Kite Tech Ltd platform servers.
+//
+//  The above copyright notice and this permission notice shall be included in
+//  all copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+//  THE SOFTWARE.
 //
 
 #import "OLScrollCropViewController.h"
@@ -13,12 +34,24 @@
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *doneButton;
 @property (assign, nonatomic) NSInteger initialOrientation;
 
+@property (strong, nonatomic) IBOutletCollection(UIView) NSArray *allViews;
+
 @end
 
 @implementation OLScrollCropViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    if (self.previewView && !self.skipPresentAnimation){
+        self.view.backgroundColor = [UIColor clearColor];
+        self.previewView.alpha = 0.15;
+        [self.view addSubview:self.previewView];
+        [self.view sendSubviewToBack:self.previewView];
+        for (UIView *view in self.allViews){
+            view.alpha = 0;
+        }
+    }
     
     [self.cropView setClipsToBounds:NO];
     self.cropView.backgroundColor = [UIColor clearColor];
@@ -36,6 +69,47 @@
     }
     self.initialOrientation = self.fullImage.imageOrientation;
     self.cropView.delegate = self;
+    
+    if (self.forceSourceViewDimensions && self.previewSourceView){
+        UIView *view = self.cropView;
+        view.translatesAutoresizingMaskIntoConstraints = NO;
+        NSDictionary *views = NSDictionaryOfVariableBindings(view);
+        NSMutableArray *con = [[NSMutableArray alloc] init];
+        
+        NSArray *visuals = @[[NSString stringWithFormat:@"H:[view(%f)]", self.previewSourceView.frame.size.width]];
+        
+        
+        for (NSString *visual in visuals) {
+            [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+        }
+        
+        [view.superview addConstraints:con];
+
+    }
+}
+
+- (void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
+    
+    if (self.previewView && !self.skipPresentAnimation){
+        [UIView animateWithDuration:0.10 animations:^{
+            self.previewView.alpha = 1;
+        } completion:^(BOOL finished){
+            self.previewSourceView.hidden = YES;
+            [UIView animateWithDuration:0.25 animations:^{
+                self.previewView.frame = self.cropView.frame;
+            }completion:^(BOOL finished){
+                [UIView animateWithDuration:0.25 animations:^{
+                    self.view.backgroundColor = [UIColor blackColor];
+                    for (UIView *view in self.allViews){
+                        view.alpha = 1;
+                    }
+                } completion:^(BOOL finished){
+                    [self.previewView removeFromSuperview];
+                }];
+            }];
+        }];
+    }
 }
 
 -(void)viewWillAppear:(BOOL)animated{
@@ -79,11 +153,53 @@
     if ([self.delegate respondsToSelector:@selector(scrollCropViewController:didFinishCroppingImage:)]){
         [self.delegate scrollCropViewController:self didFinishCroppingImage:[self.cropView editedImage]];
     }
+    else{
+        [self dismissViewControllerAnimated:YES completion:NULL];
+    }
 }
 
 - (IBAction)onBarButtonCancelTapped:(UIBarButtonItem *)sender {
+    if (self.doneButton.enabled && self.previewView){
+        self.previewView = nil;
+        self.previewSourceView.hidden = NO;
+    }
     if ([self.delegate respondsToSelector:@selector(scrollCropViewControllerDidCancel:)]){
         [self.delegate scrollCropViewControllerDidCancel:self];
+    }
+    else{
+        [self dismissViewControllerAnimated:YES completion:NULL];
+    }
+}
+
+- (void)dismissViewControllerAnimated:(BOOL)flag completion:(void (^)(void))completion{
+    if (!self.previewView){
+        [super dismissViewControllerAnimated:flag completion:completion];
+    }
+    else if (!flag){
+        [super dismissViewControllerAnimated:NO completion:completion];
+    }
+    else{
+        self.previewView = [self.cropView snapshotViewAfterScreenUpdates:YES];
+        self.previewView.frame = self.cropView.frame;
+        [self.view addSubview:self.previewView];
+        [UIView animateWithDuration:0.25 animations:^{
+            self.view.backgroundColor = [UIColor clearColor];
+            for (UIView *view in self.allViews){
+                view.alpha = 0;
+            }
+        } completion:^(BOOL finished){
+            [UIView animateWithDuration:0.25 animations:^{
+                self.previewView.frame = [self.previewSourceView.superview convertRect:self.previewSourceView.frame toView:nil];
+            }completion:^(BOOL finished){
+                self.previewSourceView.hidden = NO;
+                [UIView animateWithDuration:0.15 animations:^{
+                    self.previewView.alpha = 0;
+                } completion:^(BOOL finished){
+                    [super dismissViewControllerAnimated:NO completion:completion];
+                }];
+                
+            }];
+        }];
     }
 }
 

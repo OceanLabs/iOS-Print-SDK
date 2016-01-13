@@ -1,9 +1,30 @@
 //
-//  OLCaseSelectionViewController.m
-//  KitePrintSDK
+//  Modified MIT License
 //
-//  Created by Konstadinos Karayannis on 2/24/15.
-//  Copyright (c) 2015 Deon Botha. All rights reserved.
+//  Copyright (c) 2010-2015 Kite Tech Ltd. https://www.kite.ly
+//
+//  Permission is hereby granted, free of charge, to any person obtaining a copy
+//  of this software and associated documentation files (the "Software"), to deal
+//  in the Software without restriction, including without limitation the rights
+//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+//  copies of the Software, and to permit persons to whom the Software is
+//  furnished to do so, subject to the following conditions:
+//
+//  The software MAY ONLY be used with the Kite Tech Ltd platform and MAY NOT be modified
+//  to be used with any competitor platforms. This means the software MAY NOT be modified
+//  to place orders with any competitors to Kite Tech Ltd, all orders MUST go through the
+//  Kite Tech Ltd platform servers.
+//
+//  The above copyright notice and this permission notice shall be included in
+//  all copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+//  THE SOFTWARE.
 //
 
 #import "OLProductTypeSelectionViewController.h"
@@ -17,6 +38,8 @@
 #import "UIImageView+FadeIn.h"
 #import "OLKiteABTesting.h"
 #import "OLKiteUtils.h"
+#import "UIViewController+OLMethods.h"
+#import "NSObject+Utils.h"
 
 #define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
 
@@ -52,7 +75,7 @@
             if (!product.labelColor || product.productTemplate.templateUI == kOLTemplateUINA){
                 continue;
             }
-            if (product.productTemplate.templateUI == kOLTemplateUIPoster){
+            if (product.productTemplate.templateUI == kOLTemplateUIPoster && !self.subtypeSelection){
                 BOOL sameGridTemplate = NO;
                 for (OLProduct *otherProduct in _products){
                     if (otherProduct.productTemplate.gridCountX == product.productTemplate.gridCountX && otherProduct.productTemplate.gridCountY == product.productTemplate.gridCountY){
@@ -71,11 +94,18 @@
             }
         }
     }
+    if (_products.count == 1 && !self.subtypeSelection && [_products.firstObject productTemplate].templateUI == kOLTemplateUIPoster && self.allPosterProducts.count > 1){
+        _products = nil;
+        self.subtypeSelection = YES;
+        return [self products];
+    }
     return _products;
 }
 
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
+    
+    [self addBasketIconToTopRight];
     
     [self.collectionView.collectionViewLayout invalidateLayout];
 }
@@ -106,6 +136,14 @@
         [OLAnalytics trackProductTypeSelectionScreenHitBackTemplateClass:self.templateClass];
     }
 #endif
+}
+
+- (void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
+    
+    if ([OLKiteABTesting sharedInstance].allowsMultipleRecipients && self.filterProducts){
+        [self addBasketIconToTopRight];
+    }
 }
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
@@ -156,14 +194,15 @@
     self.userSelectedPhotos = [OLKiteUtils kiteVcForViewController:self].userSelectedPhotos;
     
     NSString *identifier;
-    if (product.productTemplate.templateUI == kOLTemplateUIPoster){
-        NSInteger x = product.productTemplate.gridCountX;
-        NSInteger y = product.productTemplate.gridCountY;
-        NSString *size = [product.productTemplate.productCode substringFromIndex:product.productTemplate.productCode.length-2];
-        for (OLProduct *otherProduct in self.allPosterProducts){
-            if (![otherProduct.productTemplate.productCode hasSuffix:size] && x == otherProduct.productTemplate.gridCountX && y == otherProduct.productTemplate.gridCountY){
-                identifier = @"sizeSelect";
+    NSMutableArray *posters = [[NSMutableArray alloc] init];
+    if (product.productTemplate.templateUI == kOLTemplateUIPoster && !self.subtypeSelection){
+        for (OLProduct *poster in self.allPosterProducts){
+            if (poster.productTemplate.gridCountX == product.productTemplate.gridCountX && poster.productTemplate.gridCountY == product.productTemplate.gridCountY){
+                [posters addObject:poster];
             }
+        }
+        if (posters.count > 1){
+            identifier = @"OLTypeSelectionViewController";
         }
     }
     if (!identifier){
@@ -172,7 +211,13 @@
     OLProductOverviewViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:identifier];
     vc.delegate = self.delegate;
     vc.userSelectedPhotos = self.userSelectedPhotos;
-    vc.product = product;
+    [vc safePerformSelector:@selector(setProduct:) withObject:product];
+    
+    if ([vc isKindOfClass:[OLProductTypeSelectionViewController class]]){
+        [(OLProductTypeSelectionViewController *)vc setTemplateClass:self.templateClass];
+        [(OLProductTypeSelectionViewController *)vc setSubtypeSelection:YES];
+        [vc safePerformSelector:@selector(setProducts:) withObject:posters];
+    }
     
     return vc;
 }
@@ -229,10 +274,25 @@
     [product setCoverImageToImageView:imageView];
     
     UILabel *textView = (UILabel *)[cell.contentView viewWithTag:300];
-    textView.text = product.productTemplate.templateType;
+    
+    if (product.productTemplate.templateUI == kOLTemplateUIPoster && !self.subtypeSelection){
+        if (product.productTemplate.gridCountX == 1 && product.productTemplate.gridCountY == 1){
+            textView.text = NSLocalizedString(@"Single Photo Poster", @"");
+        }
+        else{
+            textView.text = [NSString stringWithFormat:@"%ldx%ld Collage", (long)product.productTemplate.gridCountX, (long)product.productTemplate.gridCountY];
+        }
+    }
+    else{
+        textView.text = product.productTemplate.templateType;
+    }
     
     if ([[OLKiteABTesting sharedInstance].productTileStyle isEqualToString:@"Classic"]){
         textView.backgroundColor = [product labelColor];
+    }
+    else if([[OLKiteABTesting sharedInstance].productTileStyle isEqualToString:@"Dark"]){
+        UIButton *button = (UIButton *)[cell.contentView viewWithTag:390];
+        button.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.8];
     }
     else{
         UIButton *button = (UIButton *)[cell.contentView viewWithTag:390];
@@ -274,26 +334,31 @@
     NSInteger numberOfCells = [self collectionView:collectionView numberOfItemsInSection:indexPath.section];
     CGFloat halfScreenHeight = (size.height - [[UIApplication sharedApplication] statusBarFrame].size.height - self.navigationController.navigationBar.frame.size.height)/2;
     
+    CGFloat height = 233;
+    if ([[OLKiteABTesting sharedInstance].productTileStyle isEqualToString:@"Dark"]){
+        height = 200;
+    }
+    
     if ([self isHorizontalSizeClassCompact] && size.height > size.width) {
         if (numberOfCells == 2){
             return CGSizeMake(size.width, halfScreenHeight);
         }
         else{
-            return CGSizeMake(size.width, 233 * (size.width / 320.0));
+            return CGSizeMake(size.width, height * (size.width / 320.0));
         }
     }
     else if (numberOfCells == 6){
-        return CGSizeMake(size.width/2 - 1, MAX(halfScreenHeight * (2.0 / 3.0), 233));
+        return CGSizeMake(size.width/2 - 1, MAX(halfScreenHeight * (2.0 / 3.0), height));
     }
     else if (numberOfCells == 4){
-        return CGSizeMake(size.width/2 - 1, MAX(halfScreenHeight, 233));
+        return CGSizeMake(size.width/2 - 1, MAX(halfScreenHeight, height));
     }
     else if (numberOfCells == 3){
         if (size.width < size.height){
             return CGSizeMake(size.width, halfScreenHeight * 0.8);
         }
         else{
-            return CGSizeMake(size.width/2 - 1, MAX(halfScreenHeight, 233));
+            return CGSizeMake(size.width/2 - 1, MAX(halfScreenHeight, height));
         }
     }
     else if (numberOfCells == 2){
@@ -305,7 +370,7 @@
         }
     }
     else{
-        return CGSizeMake(size.width/2 - 1, 238);
+        return CGSizeMake(size.width/2 - 1, height);
     }
 }
 

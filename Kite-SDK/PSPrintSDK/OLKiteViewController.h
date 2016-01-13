@@ -1,12 +1,34 @@
 //
-//  KiteViewController.h
-//  Kite Print SDK
+//  Modified MIT License
 //
-//  Created by Konstadinos Karayannis on 12/24/14.
-//  Copyright (c) 2014 Deon Botha. All rights reserved.
+//  Copyright (c) 2010-2015 Kite Tech Ltd. https://www.kite.ly
+//
+//  Permission is hereby granted, free of charge, to any person obtaining a copy
+//  of this software and associated documentation files (the "Software"), to deal
+//  in the Software without restriction, including without limitation the rights
+//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+//  copies of the Software, and to permit persons to whom the Software is
+//  furnished to do so, subject to the following conditions:
+//
+//  The software MAY ONLY be used with the Kite Tech Ltd platform and MAY NOT be modified
+//  to be used with any competitor platforms. This means the software MAY NOT be modified
+//  to place orders with any competitors to Kite Tech Ltd, all orders MUST go through the
+//  Kite Tech Ltd platform servers.
+//
+//  The above copyright notice and this permission notice shall be included in
+//  all copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+//  THE SOFTWARE.
 //
 
 #import <UIKit/UIKit.h>
+#import "OLViewController.h"
 
 @class OLPrintOrder;
 @class OLKiteViewController;
@@ -87,7 +109,7 @@
 /**
  *  This is the main interface ViewController of the Kite SDK. Create and present an instance of this class and the SDK will take care of the rest.
  */
-@interface OLKiteViewController : UIViewController
+@interface OLKiteViewController : OLViewController
 
 /**
  *  The delegate object that will be asked for information in certain scenarios.
@@ -107,7 +129,12 @@
 /**
  *  A set of product template_id strings which if present will restrict which products ultimate show up in the product selection journey
  */
-@property (copy, nonatomic, nullable) NSArray/*<NSString>*/ *filterProducts;
+@property (copy, nonatomic, nullable) NSArray<NSString *> *filterProducts;
+
+/**
+ *  Use a dark visual theme.
+ */
+//@property (assign, nonatomic) BOOL useDarkTheme;
 
 /**
  *  Initializer that accepts an array of OLAssets for the user to personalize their products with
@@ -146,6 +173,11 @@
  *  @return An instance of OLKiteViewController to present
  */
 - (instancetype _Nullable)initWithPrintOrder:(OLPrintOrder *_Nullable)printOrder info:(NSDictionary * _Nullable)info;
+
+/**
+ *  Clear all the orders that have been saved in the shopping basket.
+ */
+- (void)clearBasket;
 
 #ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
 /**

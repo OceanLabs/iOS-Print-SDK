@@ -1,15 +1,45 @@
 //
-//  OLSingleImageProductReviewViewController.m
-//  KitePrintSDK
+//  Modified MIT License
 //
-//  Created by Konstadinos Karayannis on 2/24/15.
-//  Copyright (c) 2015 Deon Botha. All rights reserved.
+//  Copyright (c) 2010-2015 Kite Tech Ltd. https://www.kite.ly
+//
+//  Permission is hereby granted, free of charge, to any person obtaining a copy
+//  of this software and associated documentation files (the "Software"), to deal
+//  in the Software without restriction, including without limitation the rights
+//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+//  copies of the Software, and to permit persons to whom the Software is
+//  furnished to do so, subject to the following conditions:
+//
+//  The software MAY ONLY be used with the Kite Tech Ltd platform and MAY NOT be modified
+//  to be used with any competitor platforms. This means the software MAY NOT be modified
+//  to place orders with any competitors to Kite Tech Ltd, all orders MUST go through the
+//  Kite Tech Ltd platform servers.
+//
+//  The above copyright notice and this permission notice shall be included in
+//  all copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+//  THE SOFTWARE.
 //
 
 #import "NSArray+QueryingExtras.h"
 #import "NSObject+Utils.h"
+#ifdef COCOAPODS
+#import <SDWebImage/SDWebImageManager.h>
+#else
+#import "SDWebImageManager.h"
+#endif
+
+#import "OLSingleImageProductReviewViewController.h"
+#import "OLPrintPhoto.h"
 #import "OLAnalytics.h"
 #import "OLAsset+Private.h"
+#import "OLProductPrintJob.h"
 #import "OLAsset+Private.h"
 #import "OLAssetsPickerController.h"
 #import "OLCustomPhotoProvider.h"
@@ -17,6 +47,10 @@
 #import "OLKiteABTesting.h"
 #import "OLKitePrintSDK.h"
 #import "OLKiteUtils.h"
+#ifdef OL_KITE_AT_LEAST_IOS8
+#import "CTAssetsPickerController.h"
+#endif
+#import "NSArray+QueryingExtras.h"
 #import "OLKiteViewController.h"
 #import "OLPaymentViewController.h"
 #import "OLPrintPhoto.h"
@@ -24,6 +58,11 @@
 #import "OLProductTemplateOption.h"
 #import "OLRemoteImageCropper.h"
 #import "OLRemoteImageView.h"
+#import "OLRemoteImageCropper.h"
+#import "OLAsset+Private.h"
+#import "OLProductTemplateOption.h"
+#import "OLPaymentViewController.h"
+#import "UIViewController+OLMethods.h"
 #import "OLSingleImageProductReviewViewController.h"
 #import "SDWebImageManager.h"
 
@@ -41,6 +80,8 @@
 #import <FacebookImagePicker/OLFacebookImagePickerController.h>
 #import <FacebookImagePicker/OLFacebookImage.h>
 #endif
+
+#import "OLImagePreviewViewController.h"
 
 #ifdef OL_KITE_AT_LEAST_IOS8
 #import <CTAssetsPickerController/CTAssetsPickerController.h>
@@ -87,7 +128,7 @@ CTAssetsPickerControllerDelegate,
 #ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
 KITAssetsPickerControllerDelegate,
 #endif
-OLAssetsPickerControllerDelegate, RMImageCropperDelegate>
+OLAssetsPickerControllerDelegate, RMImageCropperDelegate, UIViewControllerPreviewingDelegate>
 
 @property (weak, nonatomic) IBOutlet UICollectionView *imagesCollectionView;
 
@@ -96,26 +137,13 @@ OLAssetsPickerControllerDelegate, RMImageCropperDelegate>
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *maskAspectRatio;
 @property (strong, nonatomic) OLPrintPhoto *imagePicked;
 @property (strong, nonatomic) OLPrintPhoto *imageDisplayed;
-
--(void) doCheckout;
+@property (strong, nonatomic) NSIndexPath *previewingIndexPath;
 
 @end
 
 static BOOL hasMoved;
 
 @implementation OLSingleImageProductReviewViewController
-
--(id<OLPrintJob>)editingPrintJob{
-    if (_editingPrintJob){
-        return _editingPrintJob;
-    }
-    else if([OLKiteABTesting sharedInstance].launchedWithPrintOrder){
-        OLKiteViewController *kiteVc = [OLKiteUtils kiteVcForViewController:self];
-        return [kiteVc.printOrder.jobs firstObject];
-    }
-    
-    return nil;
-}
 
 -(void)viewDidLoad{
     [super viewDidLoad];
@@ -124,16 +152,29 @@ static BOOL hasMoved;
     [OLAnalytics trackReviewScreenViewed:self.product.productTemplate.name];
 #endif
     
-    if ([self.presentingViewController respondsToSelector:@selector(viewControllers)]) {
+    if ([UITraitCollection class] && [self.traitCollection respondsToSelector:@selector(forceTouchCapability)] && self.traitCollection.forceTouchCapability == UIForceTouchCapabilityAvailable){
+        [self registerForPreviewingWithDelegate:self sourceView:self.imagesCollectionView];
+        [self registerForPreviewingWithDelegate:self sourceView:self.imageCropView];
+    }
+    
+    if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder){
+        if ([[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant isEqualToString:@"Review-Overview-Checkout"]){
+            [self.ctaButton setTitle:NSLocalizedString(@"Next", @"") forState:UIControlStateNormal];
+        }
+        
+        if(!self.editingPrintJob){
+            OLKiteViewController *kiteVc = [OLKiteUtils kiteVcForViewController:self];
+            self.editingPrintJob = [kiteVc.printOrder.jobs firstObject];
+            self.product.uuid = self.editingPrintJob.uuid;
+        }
+    }
+    
+    if ([self.presentingViewController respondsToSelector:@selector(viewControllers)] || !self.presentingViewController) {
         UIViewController *paymentVc = [(UINavigationController *)self.presentingViewController viewControllers].lastObject;
         if ([paymentVc respondsToSelector:@selector(saveAndDismissReviewController)]){
-            UIBarButtonItem *saveButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Save", "")
-                                                                           style:UIBarButtonItemStyleDone target:paymentVc
-                                                                          action:@selector(saveAndDismissReviewController)];
-            self.navigationItem.rightBarButtonItem = saveButton;
             [self.ctaButton setTitle:NSLocalizedString(@"Save", @"") forState:UIControlStateNormal];
-            [self.ctaButton removeTarget:self action:@selector(onButtonNextClicked) forControlEvents:UIControlEventTouchUpInside];
-            [self.ctaButton addTarget:paymentVc action:@selector(saveAndDismissReviewController) forControlEvents:UIControlEventTouchUpInside];
+        	[self.ctaButton removeTarget:self action:@selector(onButtonNextClicked) forControlEvents:UIControlEventTouchUpInside];
+        	[self.ctaButton addTarget:paymentVc action:@selector(saveAndDismissReviewController) forControlEvents:UIControlEventTouchUpInside];
         }
     }
     
@@ -142,23 +183,26 @@ static BOOL hasMoved;
     if (self.imageCropView){
         self.imageCropView.delegate = self;
         OLPrintPhoto *photo = [self.userSelectedPhotos firstObject];
-        [photo getImageWithProgress:NULL completion:^(UIImage *image){
-            self.imageCropView.image = image;
-        }];
         self.imageDisplayed = photo;
+        [photo getImageWithProgress:NULL completion:^(UIImage *image){
+            if (self.imageDisplayed.edits.counterClockwiseRotations > 0 || self.imageDisplayed.edits.flipHorizontal || self.imageDisplayed.edits.flipVertical){
+                self.imageCropView.image = [UIImage imageWithCGImage:image.CGImage scale:image.scale orientation:[OLPhotoEdits orientationForNumberOfCounterClockwiseRotations:self.imageDisplayed.edits.counterClockwiseRotations andInitialOrientation:image.imageOrientation horizontalFlip:self.imageDisplayed.edits.flipHorizontal verticalFlip:self.imageDisplayed.edits.flipVertical]];
+            }
+            else{
+                [self.imageCropView setImage:image];
+            }
+            [self.view setNeedsLayout];
+            [self.view layoutIfNeeded];
+            self.imageCropView.imageView.transform = self.imageDisplayed.edits.cropTransform;
+        }];
     }
     
     for (OLPrintPhoto *printPhoto in self.userSelectedPhotos){
         [printPhoto unloadImage];
     }
     
-    if (!self.navigationItem.rightBarButtonItem){
-        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]
-                                                  initWithTitle:NSLocalizedString(@"Next", @"")
-                                                  style:UIBarButtonItemStylePlain
-                                                  target:self
-                                                  action:@selector(onButtonNextClicked)];
-    }
+    [self.imageCropView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTapGestureRecognized)]];
+    
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Back", @"")
                                                                              style:UIBarButtonItemStylePlain
                                                                             target:nil
@@ -176,8 +220,60 @@ static BOOL hasMoved;
     }
 }
 
+- (void)onTapGestureRecognized{
+    [self enterFullCrop:YES];
+}
+
+- (void)enterFullCrop:(BOOL)animated{
+    OLScrollCropViewController *cropVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLScrollCropViewController"];
+    cropVc.enableCircleMask = self.product.productTemplate.templateUI == kOLTemplateUICircle;
+    cropVc.delegate = self;
+    cropVc.aspectRatio = self.imageCropView.frame.size.height / self.imageCropView.frame.size.width;
+    
+    if (!animated){
+        cropVc.skipPresentAnimation = YES;
+    }
+    cropVc.previewView = [self.imageCropView snapshotViewAfterScreenUpdates:YES];
+    cropVc.previewView.frame = [self.imageCropView.superview convertRect:self.imageCropView.frame toView:nil];
+    cropVc.previewSourceView = self.imageCropView;
+    
+    cropVc.forceSourceViewDimensions = YES;
+    cropVc.providesPresentationContextTransitionStyle = true;
+    cropVc.definesPresentationContext = true;
+    cropVc.modalPresentationStyle = UIModalPresentationOverCurrentContext;
+    
+    [self.imageDisplayed getImageWithProgress:^(float progress){
+        [cropVc.cropView setProgress:progress];
+    }completion:^(UIImage *image){
+        [cropVc setFullImage:image];
+        OLPhotoEdits *edits = [self.imageDisplayed.edits copy];
+        edits.cropImageFrame = [self.imageCropView getFrameRect];
+        edits.cropImageRect = [self.imageCropView getImageRect];
+        edits.cropImageSize = [self.imageCropView croppedImageSize];
+        edits.cropTransform = self.imageCropView.imageView.transform;
+        cropVc.edits = edits;
+        //        cropVc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
+        [self presentViewController:cropVc animated:NO completion:NULL];
+        
+#ifndef OL_NO_ANALYTICS
+        [OLAnalytics trackReviewScreenEnteredCropScreenForProductName:self.product.productTemplate.name];
+#endif
+    }];
+}
+
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
+    
+    if ([self.presentingViewController respondsToSelector:@selector(viewControllers)]) {
+        UIViewController *presentingVc = [(UINavigationController *)self.presentingViewController viewControllers].lastObject;
+        if (![presentingVc isKindOfClass:[OLPaymentViewController class]]){
+            [self addBasketIconToTopRight];
+        }
+    }
+    else{
+        [self addBasketIconToTopRight];
+    }
+    
     hasMoved = NO;
     self.imageCropView.imageView.transform = self.imageDisplayed.edits.cropTransform;
 }
@@ -203,7 +299,7 @@ static BOOL hasMoved;
     self.imageDisplayed.edits.cropImageSize = [self.imageCropView croppedImageSize];
     self.imageDisplayed.edits.cropTransform = self.imageCropView.imageView.transform;
     
-    OLAsset *asset = [OLAsset assetWithDataSource:self.imageDisplayed];
+    OLAsset *asset = [OLAsset assetWithDataSource:[self.imageDisplayed copy]];
     
     [asset dataLengthWithCompletionHandler:^(long long dataLength, NSError *error){
         if (dataLength < 40000){
@@ -301,6 +397,55 @@ static BOOL hasMoved;
         [OLAnalytics trackReviewScreenDidCropPhotoForProductName:self.product.productTemplate.name];
     }
 #endif
+}
+
+- (UIViewController *)previewingContext:(id<UIViewControllerPreviewing>)previewingContext viewControllerForLocation:(CGPoint)location{
+    if (previewingContext.sourceView == self.imagesCollectionView){
+        NSIndexPath *indexPath = [self.imagesCollectionView indexPathForItemAtPoint:location];
+        UICollectionViewCell *cell = [self.imagesCollectionView cellForItemAtIndexPath:indexPath];
+        
+        OLRemoteImageView *imageView = (OLRemoteImageView *)[cell viewWithTag:11];
+        if (!imageView.image){
+            return nil;
+        }
+        
+        self.previewingIndexPath = indexPath;
+        
+        UIImageView *cellImageView = [cell viewWithTag:1];
+        
+        [previewingContext setSourceRect:[cell convertRect:cellImageView.frame toView:self.imagesCollectionView]];
+        
+        OLImagePreviewViewController *previewVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLImagePreviewViewController"];
+        [self.userSelectedPhotos[indexPath.item] getImageWithProgress:NULL completion:^(UIImage *image){
+            previewVc.image = image;
+        }];
+        previewVc.providesPresentationContextTransitionStyle = true;
+        previewVc.definesPresentationContext = true;
+        previewVc.modalPresentationStyle = UIModalPresentationOverCurrentContext;
+        return previewVc;
+    }
+    else if (previewingContext.sourceView == self.imageCropView){
+        OLImagePreviewViewController *previewVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLImagePreviewViewController"];
+        [self.imageDisplayed getImageWithProgress:NULL completion:^(UIImage *image){
+            previewVc.image = image;
+        }];
+        previewVc.providesPresentationContextTransitionStyle = true;
+        previewVc.definesPresentationContext = true;
+        previewVc.modalPresentationStyle = UIModalPresentationOverCurrentContext;
+        return previewVc;
+    }
+    else{
+        return nil;
+    }
+}
+
+- (void)previewingContext:(id<UIViewControllerPreviewing>)previewingContext commitViewController:(UIViewController *)viewControllerToCommit{
+    if (previewingContext.sourceView == self.imagesCollectionView){
+        [self collectionView:self.imagesCollectionView didSelectItemAtIndexPath:self.previewingIndexPath];
+    }
+    else if (previewingContext.sourceView == self.imageCropView){
+        [self enterFullCrop:NO];
+    }
 }
 
 #pragma mark CollectionView delegate and data source
@@ -427,9 +572,15 @@ static BOOL hasMoved;
         [self.imageDisplayed getImageWithProgress:^(float progress){
             //            [self.imageCropView setProgress:progress];
         }completion:^(UIImage *image){
-            dispatch_async(dispatch_get_main_queue(), ^{
-                self.imageCropView.image = image;
-            });
+            if (self.imageDisplayed.edits.counterClockwiseRotations > 0 || self.imageDisplayed.edits.flipHorizontal || self.imageDisplayed.edits.flipVertical){
+                self.imageCropView.image = [UIImage imageWithCGImage:image.CGImage scale:image.scale orientation:[OLPhotoEdits orientationForNumberOfCounterClockwiseRotations:self.imageDisplayed.edits.counterClockwiseRotations andInitialOrientation:image.imageOrientation horizontalFlip:self.imageDisplayed.edits.flipHorizontal verticalFlip:self.imageDisplayed.edits.flipVertical]];
+            }
+            else{
+                [self.imageCropView setImage:image];
+            }
+            [self.view setNeedsLayout];
+            [self.view layoutIfNeeded];
+            self.imageCropView.imageView.transform = self.imageDisplayed.edits.cropTransform;
         }];
     }
     else if (numberOfProviders > 1){
@@ -628,14 +779,11 @@ static BOOL hasMoved;
 
 - (void)populateArrayWithNewArray:(NSArray *)array dataType:(Class)class {
     NSMutableArray *photoArray = [[NSMutableArray alloc] initWithCapacity:array.count];
-    NSMutableArray *assetArray = [[NSMutableArray alloc] initWithCapacity:array.count];
     
     for (id object in array) {
         OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
         printPhoto.asset = object;
         [photoArray addObject:printPhoto];
-        
-        [assetArray addObject:[OLAsset assetWithPrintPhoto:printPhoto]];
     }
     
     // First remove any that are not returned.
@@ -661,13 +809,9 @@ static BOOL hasMoved;
     
     // Second, add the remaining objects to the end of the array without replacing any.
     NSMutableArray *addArray = [NSMutableArray arrayWithArray:photoArray];
-    NSMutableArray *addAssetArray = [NSMutableArray arrayWithArray:assetArray];
     for (id object in self.userSelectedPhotos) {
-        OLAsset *asset = [OLAsset assetWithPrintPhoto:object];
-        
-        if ([addAssetArray containsObject:asset]){
-            [addArray removeObjectAtIndex:[addAssetArray indexOfObject:asset]];
-            [addAssetArray removeObject:asset];
+        if ([addArray containsObject:object]){
+            [addArray removeObject:object];
         }
     }
     
@@ -772,7 +916,7 @@ static BOOL hasMoved;
 
 - (BOOL)assetsPickerController:(OLAssetsPickerController *)picker shouldShowAsset:(id)asset{
     NSString *fileName = [[[asset defaultRepresentation] filename] lowercaseString];
-    if (!([fileName hasSuffix:@".jpg"] || [fileName hasSuffix:@".jpeg"] || [fileName hasSuffix:@"png"])) {
+    if (!([fileName hasSuffix:@".jpg"] || [fileName hasSuffix:@".jpeg"] || [fileName hasSuffix:@"png"] || [fileName hasSuffix:@"tiff"])) {
         return NO;
     }
     return YES;
@@ -877,6 +1021,40 @@ static BOOL hasMoved;
         }
 #endif
     });
+}
+
+#pragma mark - OLImageEditorViewControllerDelegate methods
+
+- (void)scrollCropViewControllerDidCancel:(OLScrollCropViewController *)cropper{
+    [cropper dismissViewControllerAnimated:YES completion:^{
+    }];
+}
+
+-(void)scrollCropViewController:(OLScrollCropViewController *)cropper didFinishCroppingImage:(UIImage *)croppedImage{
+    [self.imageDisplayed unloadImage];
+    
+    self.imageDisplayed.edits = cropper.edits;
+    
+    [self.imageDisplayed getImageWithProgress:NULL completion:^(UIImage *image){
+        if (self.imageDisplayed.edits.counterClockwiseRotations > 0 || self.imageDisplayed.edits.flipHorizontal || self.imageDisplayed.edits.flipVertical){
+            self.imageCropView.image = [UIImage imageWithCGImage:image.CGImage scale:image.scale orientation:[OLPhotoEdits orientationForNumberOfCounterClockwiseRotations:self.imageDisplayed.edits.counterClockwiseRotations andInitialOrientation:image.imageOrientation horizontalFlip:self.imageDisplayed.edits.flipHorizontal verticalFlip:self.imageDisplayed.edits.flipVertical]];
+        }
+        else{
+            [self.imageCropView setImage:image];
+        }
+        [self.view setNeedsLayout];
+        [self.view layoutIfNeeded];
+        self.imageCropView.imageView.transform = self.imageDisplayed.edits.cropTransform;
+    }];
+    
+    [cropper dismissViewControllerAnimated:YES completion:^{
+        [UIView animateWithDuration:0.25 animations:^{
+        }];
+    }];
+    
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackReviewScreenDidCropPhotoForProductName:self.product.productTemplate.name];
+#endif
 }
 
 #pragma mark - Autorotate and Orientation Methods

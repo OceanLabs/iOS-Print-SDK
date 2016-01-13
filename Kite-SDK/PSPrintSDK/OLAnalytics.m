@@ -1,10 +1,37 @@
 //
-//  OLAnalytics.m
-//  KitePrintSDK
+//  Modified MIT License
 //
-//  Created by Konstadinos Karayannis on 1/27/15.
-//  Copyright (c) 2015 Deon Botha. All rights reserved.
+//  Copyright (c) 2010-2015 Kite Tech Ltd. https://www.kite.ly
 //
+//  Permission is hereby granted, free of charge, to any person obtaining a copy
+//  of this software and associated documentation files (the "Software"), to deal
+//  in the Software without restriction, including without limitation the rights
+//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+//  copies of the Software, and to permit persons to whom the Software is
+//  furnished to do so, subject to the following conditions:
+//
+//  The software MAY ONLY be used with the Kite Tech Ltd platform and MAY NOT be modified
+//  to be used with any competitor platforms. This means the software MAY NOT be modified
+//  to place orders with any competitors to Kite Tech Ltd, all orders MUST go through the
+//  Kite Tech Ltd platform servers.
+//
+//  The above copyright notice and this permission notice shall be included in
+//  all copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+//  THE SOFTWARE.
+//
+
+#ifdef COCOAPODS
+#import <AFNetworking/AFNetworking.h>
+#else
+#import "AFNetworking.h"
+#endif
 
 #import "OLAnalytics.h"
 #import "OLPrintOrder.h"
@@ -13,7 +40,6 @@
 #import "OLProduct.h"
 #import "OLPrintJob.h"
 #import "OLKitePrintSDK.h"
-#import "AFNetworking.h"
 #include <sys/sysctl.h>
 #import "OLKiteABTesting.h"
 #import "UICKeyChainStore.h"
@@ -36,6 +62,13 @@ static __weak id<OLKiteDelegate> kiteDelegate;
 @interface OLProduct (Private)
 
 - (NSDecimalNumber*) unitCostDecimalNumber;
+
+@end
+
+@interface OLKitePrintSDK (Private)
+
++ (NSString *)apiEndpoint;
++ (NSString *)apiVersion;
 
 @end
 
@@ -78,6 +111,64 @@ static __weak id<OLKiteDelegate> kiteDelegate;
     NSString *platform = [NSString stringWithUTF8String:machine];
     free(machine);
     return platform;
+}
+
++ (NSString *)environment {
+    NSString *environment = @"Live";
+#ifdef PAYMENT_SANDBOX
+    environment = @"Development";
+#endif
+    return environment;
+}
+
++ (void)addPushDeviceToken:(NSData *)deviceToken {
+    if (![OLKitePrintSDK apiKey]){
+        NSLog(@"Push token NOT submitted. Please set your API key in OLKitePrintSDK first");
+        return;
+    }
+    
+    const unsigned char *buffer = (const unsigned char *)[deviceToken bytes];
+    if (!buffer) {
+        return;
+    }
+    NSMutableString *hex = [NSMutableString stringWithCapacity:(deviceToken.length * 2)];
+    for (NSUInteger i = 0; i < deviceToken.length; i++) {
+        [hex appendString:[NSString stringWithFormat:@"%02lx", (unsigned long)buffer[i]]];
+    }
+    
+    NSString *pushToken = [NSString stringWithString:hex];
+    if (!pushToken) {
+        return;
+    }
+    
+    NSString *uuid = [self userDistinctId];
+    NSDictionary *properties = @{
+                                 @"uuid": uuid,
+                                 @"set" : @{
+                                         @"push_token" : @{
+                                                 @"platform" : @"iOS",
+                                                 @"token" : pushToken
+                                                 },
+                                         @"platform" : @"iOS",
+                                         @"environment": [self environment]
+                                         }
+                                 };
+    
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    manager.requestSerializer = [AFJSONRequestSerializer serializer];
+    [manager.requestSerializer setValue:[NSString stringWithFormat:@"apikey %@", [OLKitePrintSDK apiKey]] forHTTPHeaderField:@"Authorization"];
+    [manager.requestSerializer setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    [manager POST:[NSString stringWithFormat:@"%@/%@/person/", [OLKitePrintSDK apiEndpoint], [OLKitePrintSDK apiVersion]] parameters:properties success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        if ([operation.response statusCode] >= 200 && [operation.response statusCode] <= 299){
+            NSLog(@"Successfully posted push notification token.");
+        }
+        else{
+            NSLog(@"There was an error posting the push notification token: %ld", (long)[operation.response statusCode]);
+        }
+        
+    }failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"There was an error posting the push notification token: %@", error);
+    }];
 }
 
 + (void)sendToMixPanelWithDictionary:(NSDictionary *)dict{
@@ -151,7 +242,11 @@ static __weak id<OLKiteDelegate> kiteDelegate;
         dict[kOLAnalyticsProductName] = template.name;
         dict[kOLAnalyticsNumberOfPhotosInItem] = [NSNumber numberWithInteger:[job quantity]];
         dict[kOLAnalyticsQuantity] = [NSNumber numberWithInteger:[job extraCopies]+1];
-        dict[kOLAnalyticsItemPrice] = [[OLProduct productWithTemplateId:[job templateId]] unitCostDecimalNumber] ? [[OLProduct productWithTemplateId:[job templateId]] unitCostDecimalNumber] : @"";
+        
+        OLProduct *product = [OLProduct productWithTemplateId:[job templateId]];
+        NSDecimalNumber *numUnitsInJob = (NSDecimalNumber *) [[NSDecimalNumber alloc] initWithFloat:ceil([job assetsForUploading].count / (float) product.quantityToFulfillOrder)];
+        NSDecimalNumber *jobPrice = [numUnitsInJob decimalNumberByMultiplyingBy:[[product unitCostDecimalNumber] decimalNumberByMultiplyingBy:[NSDecimalNumber decimalNumberWithString:[NSString stringWithFormat:@"%ld", (long)[job extraCopies]+1]]]];
+        dict[kOLAnalyticsItemPrice] = jobPrice;
     }
     return dict;
 }
@@ -498,6 +593,14 @@ static __weak id<OLKiteDelegate> kiteDelegate;
 
 + (void)trackPaymentScreenSuccessfullyAppliedPromoCode:(NSString *)code forOrder:(OLPrintOrder *)order{
     [OLAnalytics reportAnalyticsEventToDelegate:@"Payment Screen Successfully Applied Promo Code" job:nil printOrder:order extraInfo:@{kOLAnalyticsPromoCode : nonNilStr(code)}];
+}
+
++ (void)trackPaymentScreenUnsuccessfullyAppliedPromoCode:(NSString *)code withError:(NSError *)error forOrder:(OLPrintOrder *)order{
+    [OLAnalytics reportAnalyticsEventToDelegate:@"Payment Screen Promo Code Failed" job:nil printOrder:order extraInfo:@{kOLAnalyticsPromoCode : nonNilStr(code), kOLAnalyticsError : error ? error : @""}];
+}
+
++ (void)trackPaymentScreenDidTapOnPromoCodeBoxforOrder:(OLPrintOrder *)order{
+    [OLAnalytics reportAnalyticsEventToDelegate:@"Payment Screen Did Tap on Promo Code Box" job:nil printOrder:order extraInfo:nil];
 }
 
 + (void)trackPaymentScreenPaymentMethodHit:(NSString *)method forOrder:(OLPrintOrder *)order applePayIsAvailable:(NSString *)applePayIsAvailable{

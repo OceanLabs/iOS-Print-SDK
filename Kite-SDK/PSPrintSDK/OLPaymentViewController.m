@@ -1,16 +1,44 @@
 //
-//  PaymentViewController.m
-//  Kite Print SDK
+//  Modified MIT License
 //
-//  Created by Deon Botha on 06/01/2014.
-//  Copyright (c) 2014 Ocean Labs. All rights reserved.
+//  Copyright (c) 2010-2015 Kite Tech Ltd. https://www.kite.ly
 //
+//  Permission is hereby granted, free of charge, to any person obtaining a copy
+//  of this software and associated documentation files (the "Software"), to deal
+//  in the Software without restriction, including without limitation the rights
+//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+//  copies of the Software, and to permit persons to whom the Software is
+//  furnished to do so, subject to the following conditions:
+//
+//  The software MAY ONLY be used with the Kite Tech Ltd platform and MAY NOT be modified
+//  to be used with any competitor platforms. This means the software MAY NOT be modified
+//  to place orders with any competitors to Kite Tech Ltd, all orders MUST go through the
+//  Kite Tech Ltd platform servers.
+//
+//  The above copyright notice and this permission notice shall be included in
+//  all copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+//  THE SOFTWARE.
+//
+
+#ifdef COCOAPODS
+#import <SDWebImage/SDWebImageManager.h>
+#import <SVProgressHUD/SVProgressHUD.h>
+#else
+#import "SDWebImageManager.h"
+#import "SVProgressHUD.h"
+#endif
 
 #import "OLPaymentViewController.h"
 #import "OLReceiptViewController.h"
 #import "OLPrintOrder.h"
 #import "OLPrintJob.h"
-#import "SVProgressHUD.h"
 #import "OLPrintOrder+History.h"
 #import "OLPostcardPrintJob.h"
 #import "OLCheckoutViewController.h"
@@ -29,7 +57,6 @@
 #import "OLBaseRequest.h"
 #import "OLPrintOrderCost.h"
 #import "OLKiteABTesting.h"
-#import "SDWebImageManager.h"
 #import "UIImage+ColorAtPixel.h"
 #import "UIImage+ImageNamedInKiteBundle.h"
 #import "UIImageView+FadeIn.h"
@@ -43,14 +70,26 @@
 #import "OLProductOverviewViewController.h"
 #import "OLOrdersViewController.h"
 #import "OLSingleImageProductReviewViewController.h"
+#import "OLPosterViewController.h"
+#import "OLFrameOrderReviewViewController.h"
+#import "OLAsset+Private.h"
 
 #ifdef OL_KITE_OFFER_PAYPAL
+#ifdef COCOAPODS
+#import <PayPal-iOS-SDK/PayPalMobile.h>
+#else
 #import "PayPalMobile.h"
 #endif
 
+#endif
+
 #ifdef OL_KITE_OFFER_APPLE_PAY
+#ifdef COCOAPODS
 #import <Stripe/Stripe+ApplePay.h>
-#import <ApplePayStubs/STPTestPaymentAuthorizationViewController.h>
+#else
+#import "Stripe+ApplePay.h"
+#endif
+
 #endif
 
 @import PassKit;
@@ -172,8 +211,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *totalCostActivityIndicator;
 @property (assign, nonatomic) CGFloat keyboardAnimationPercent;
 @property (assign, nonatomic) BOOL authorizedApplePay;
-
-
+@property (assign, nonatomic) BOOL usedContinueShoppingButton;
 
 @end
 
@@ -186,6 +224,10 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 @end
 
 @implementation OLPaymentViewController
+
+- (BOOL)prefersStatusBarHidden {
+    return [OLKiteABTesting sharedInstance].darkTheme;
+}
 
 - (id)initWithPrintOrder:(OLPrintOrder *)printOrder {
     NSBundle *currentBundle = [NSBundle bundleForClass:[OLKiteViewController class]];
@@ -264,10 +306,6 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     }
 #endif
     
-#ifndef OL_NO_ANALYTICS
-    [OLAnalytics trackPaymentScreenViewedForOrder:self.printOrder applePayIsAvailable:applePayAvailableStr];
-#endif
-    
     if ([OLKitePrintSDK environment] == kOLKitePrintSDKEnvironmentSandbox){
         self.title = NSLocalizedStringFromTableInBundle(@"Payment (TEST)", @"KitePrintSDK", [OLConstants bundle], @"");
     }
@@ -321,6 +359,10 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     if ([self.tableView respondsToSelector:@selector(setCellLayoutMarginsFollowReadableWidth:)]){
         self.tableView.cellLayoutMarginsFollowReadableWidth = NO;
     }
+    
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackPaymentScreenViewedForOrder:self.printOrder applePayIsAvailable:applePayAvailableStr];
+#endif
 }
 
 - (void)viewDidAppear:(BOOL)animated{
@@ -338,7 +380,9 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     if (!self.navigationController){
         [self.printOrder discardDuplicateJobs];
 #ifndef OL_NO_ANALYTICS
-        [OLAnalytics trackPaymentScreenHitBackForOrder:self.printOrder applePayIsAvailable:[self isApplePayAvailable] ? @"Yes" : @"No"];
+        if (!self.usedContinueShoppingButton){
+            [OLAnalytics trackPaymentScreenHitBackForOrder:self.printOrder applePayIsAvailable:[self isApplePayAvailable] ? @"Yes" : @"No"];
+        }
 #endif
     }
 }
@@ -347,7 +391,9 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     [self.printOrder discardDuplicateJobs];
     [self.navigationController.presentingViewController dismissViewControllerAnimated:YES completion:NULL];
 #ifndef OL_NO_ANALYTICS
-    [OLAnalytics trackBasketScreenHitBackForOrder:self.printOrder applePayIsAvailable:[self isApplePayAvailable] ? @"Yes" : @"No"];
+    if (!self.usedContinueShoppingButton){
+        [OLAnalytics trackBasketScreenHitBackForOrder:self.printOrder applePayIsAvailable:[self isApplePayAvailable] ? @"Yes" : @"No"];
+    }
 #endif
 }
 
@@ -479,27 +525,52 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     }
 }
 
-- (void)costCalculationCompletedWithError:(NSError *)error {
-    if (error) {
-        if ([UIAlertController class]){
-            UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLConstants bundle], @"") message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
+- (void)handleCostError:(NSError *)error{
+    if ([UIAlertController class]){
+        UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLConstants bundle], @"") message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
+        if (error.code == kOLKiteSDKErrorCodeProductNotAvailableInRegion){
+            [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLConstants bundle], @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
+                if ([[OLCountry countryForCurrentLocale].codeAlpha3 isEqualToString:self.printOrder.shippingAddress.country.codeAlpha3] || !self.printOrder.shippingAddress.country){
+                    NSMutableArray *navigationStack = [self.navigationController.viewControllers mutableCopy];
+                    if (self.printOrder.jobs.count == 1){
+                        [self.printOrder removePrintJob:self.printOrder.jobs.firstObject];
+                    }
+                    else if (navigationStack.count > 1){
+                        UIViewController *reviewVc = navigationStack[navigationStack.count-2];
+                        if ([reviewVc respondsToSelector:@selector(editingPrintJob)]){
+                            [self.printOrder removePrintJob:[reviewVc performSelector:@selector(editingPrintJob)]];
+                        }
+                    }
+                    [self.printOrder saveOrder];
+                    [self updateViewsBasedOnCostUpdate];
+                }
+            }]];
+        }
+        else{
             [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLConstants bundle], @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
                 [self.navigationController popViewControllerAnimated:YES];
             }]];
+            
             [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"Retry", @"KitePrintSDK", [OLConstants bundle], @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
-                [self.printOrder costWithCompletionHandler:^(OLPrintOrderCost *cost, NSError *error) {
+                [self.printOrder costWithCompletionHandler:^(OLPrintOrderCost *cost, NSError *error){
                     [self costCalculationCompletedWithError:error];
                 }];
             }]];
-            [self presentViewController:ac animated:YES completion:NULL];
         }
-        else{
-            UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLConstants bundle], @"") message:error.localizedDescription delegate:self cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLConstants bundle], @"") otherButtonTitles:NSLocalizedStringFromTableInBundle(@"Retry", @"KitePrintSDK", [OLConstants bundle], @""), nil];
-            av.delegate = self;
-            [av show];
-        }
-    } else {
-        [self.tableView reloadData];
+        [self presentViewController:ac animated:YES completion:NULL];
+    }
+    else{
+        UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLConstants bundle], @"") message:error.localizedDescription delegate:self cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLConstants bundle], @"") otherButtonTitles:NSLocalizedStringFromTableInBundle(@"Retry", @"KitePrintSDK", [OLConstants bundle], @""), nil];
+        av.delegate = self;
+        [av show];
+    }
+}
+
+- (void)costCalculationCompletedWithError:(NSError *)error {
+    [self.totalCostActivityIndicator stopAnimating];
+    if (error) {
+        [self handleCostError:error];
+    }else {
         [self updateViewsBasedOnCostUpdate];
     }
 }
@@ -517,6 +588,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         self.totalCostLabel.text = [[NSDecimalNumber decimalNumberWithString:@"0.00"] formatCostForCurrencyCode:[[OLCountry countryForCurrentLocale] currencyCode]];
         self.shippingCostLabel.text = [[NSDecimalNumber decimalNumberWithString:@"0.00"] formatCostForCurrencyCode:[[OLCountry countryForCurrentLocale] currencyCode]];
         self.promoCodeCostLabel.text = @"";
+        [self.tableView reloadData];
         return;
     }
     
@@ -543,6 +615,8 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     }
     
     [self.printOrder costWithCompletionHandler:^(OLPrintOrderCost *cost, NSError *error) {
+        [self.totalCostActivityIndicator stopAnimating];
+        
         //Small chance that the request started before we emptied the basket.
         if (self.printOrder.jobs.count == 0){
             self.totalCostLabel.hidden = NO;
@@ -554,21 +628,10 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         }
         
         if (error){
-            [self.totalCostActivityIndicator stopAnimating];
-            if ([UIAlertController class]){
-                UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Oops", @"") message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
-                [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"") style:UIAlertActionStyleCancel handler:^(UIAlertAction *action){
-                    
-                }]];
-                [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Retry", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
-                    [self updateViewsBasedOnCostUpdate];
-                }]];
-                [self presentViewController:ac animated:YES completion:NULL];
-            }
-            else{
-                UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Oops", @"") message:error.localizedDescription delegate:nil cancelButtonTitle:NSLocalizedString(@"Cancel", @"") otherButtonTitles:nil];
-                [av show];
-            }
+            [self handleCostError:error];
+        }
+        
+        if (!cost){
             return;
         }
         
@@ -599,11 +662,24 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             [self.paymentButton2 setTitle:NSLocalizedStringFromTableInBundle(@"Credit Card", @"KitePrintSDK", [OLConstants bundle], @"") forState:UIControlStateNormal];
         }
         
-        [self.tableView reloadData];
+        if ([self.tableView numberOfRowsInSection:0] != self.printOrder.jobs.count){
+            [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationNone];
+        }
+        
+        NSString *shippingCostString;
+        NSDecimalNumber *shippingCost = [cost shippingCostInCurrency:self.printOrder.currencyCode];
+        if ([shippingCost isEqualToNumber:@0]){
+            shippingCostString = NSLocalizedString(@"FREE", @"");
+        }
+        else{
+            shippingCostString = [shippingCost formatCostForCurrencyCode:self.printOrder.currencyCode];
+        }
         
         [UIView animateWithDuration:shouldAnimate ? 0.1 : 0 animations:^{
             if (shouldAnimate){
-                self.shippingCostLabel.alpha = 0;
+                if (![self.shippingCostLabel.text isEqualToString:shippingCostString]){
+                    self.shippingCostLabel.alpha = 0;
+                }
                 self.totalCostLabel.alpha = 0;
                 self.totalCostActivityIndicator.alpha = 0;
             }
@@ -614,13 +690,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             [self.totalCostActivityIndicator stopAnimating];
             self.totalCostActivityIndicator.alpha = 1;
             
-            NSDecimalNumber *shippingCost = [cost shippingCostInCurrency:self.printOrder.currencyCode];
-            if ([shippingCost isEqualToNumber:@0]){
-                self.shippingCostLabel.text = NSLocalizedString(@"FREE", @"");
-            }
-            else{
-                self.shippingCostLabel.text = [shippingCost formatCostForCurrencyCode:self.printOrder.currencyCode];
-            }
+            self.shippingCostLabel.text = shippingCostString;
             
             NSDecimalNumber *promoCost = [cost promoCodeDiscountInCurrency:self.printOrder.currencyCode];
             if ([promoCost isEqualToNumber:@0]){
@@ -651,7 +721,17 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         NSUInteger numSheets = (NSUInteger) ceil([OLProduct productWithTemplateId:[job templateId]].quantityToFulfillOrder / sheetQuanity);
         NSDecimalNumber *unitCost = [sheetCost decimalNumberByMultiplyingBy:[NSDecimalNumber decimalNumberWithString:[NSString stringWithFormat:@"%lu", (unsigned long)numSheets]]];
         
-        expectedCost = [expectedCost decimalNumberByAdding:[unitCost decimalNumberByMultiplyingBy:[NSDecimalNumber decimalNumberWithString:[NSString stringWithFormat:@"%ld", (long)([job extraCopies] + 1)]]]];
+        float numberOfPhotos = [job assetsForUploading].count;
+        if (template.templateUI == kOLTemplateUIPhotobook){
+            // Front cover photo should count towards total photos
+            if ([(OLPhotobookPrintJob *)job frontCover]){
+                numberOfPhotos--;
+            }
+        }
+        
+        NSDecimalNumber *numUnitsInJob = [[NSDecimalNumber alloc] initWithFloat:ceilf(numberOfPhotos / (float) MAX(template.quantityPerSheet, 1))];
+        
+        expectedCost = [expectedCost decimalNumberByAdding:[unitCost decimalNumberByMultiplyingBy:[NSDecimalNumber decimalNumberWithString:[NSString stringWithFormat:@"%ld", (long)([job extraCopies] + 1)*[numUnitsInJob integerValue]]]]];
     }
     [self.printOrder costWithCompletionHandler:^(OLPrintOrderCost *cost, NSError *error){
         NSDecimalNumber *actualCost = [cost totalCostInCurrency:self.printOrder.currencyCode];
@@ -743,29 +823,54 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             [self.printOrder cancelSubmissionOrPreemptedAssetUpload];
             if ([UIAlertController class]){
                 UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLConstants bundle], @"") message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
-                [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLConstants bundle], @"") style:UIAlertActionStyleDefault handler:^(id action){
-                    if (error.code != kOLKiteSDKErrorCodeOrderValidationFailed){
-                        self.printOrder.receipt = nil;
-                        self.printOrder.submitStatus = OLPrintOrderSubmitStatusUnknown;
-                        self.printOrder.submitStatusErrorMessage = nil;
-                        [[NSOperationQueue mainQueue] addOperation:self.transitionBlockOperation];
-                    }
-                    else{
-                        [self.printOrder deleteFromHistory];
-                        
-                        OLPrintOrder *freshPrintOrder = [[OLPrintOrder alloc] init];
-                        for (id<OLPrintJob> job in self.printOrder.jobs){
-                            [freshPrintOrder addPrintJob:job];
+                if (error.code == kOLKiteSDKErrorCodeImagesCorrupt){
+                    [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"View Item", @"") style:UIAlertActionStyleCancel handler:^(id action){
+                        id asset = error.userInfo[@"asset"];
+                        id<OLPrintJob> job;
+                        for (id<OLPrintJob> orderJob in self.printOrder.jobs){
+                            if (job){
+                                break;
+                            }
+                            for (OLAsset *jobAsset in [orderJob assetsForUploading]){
+                                if (asset == jobAsset || asset == jobAsset.dataSource){
+                                    job = orderJob;
+                                    break;
+                                }
+                            }
                         }
-                        freshPrintOrder.email = self.printOrder.email;
-                        freshPrintOrder.phone = self.printOrder.phone;
-                        freshPrintOrder.promoCode = self.printOrder.promoCode;
-                        freshPrintOrder.shippingAddress = self.printOrder.shippingAddress;
-                        [OLKiteUtils kiteVcForViewController:self].printOrder = freshPrintOrder;
-                        self.printOrder = freshPrintOrder;
-                        [self.printOrder saveOrder];
-                    }
-                }]];
+                        
+                        NSInteger jobIndex = [self.printOrder.jobs indexOfObjectIdenticalTo:job];
+                        if (jobIndex != NSNotFound){
+                            [self editJobAtIndexPath:[NSIndexPath indexPathForItem:jobIndex inSection:0]];
+                        }
+                    }]];
+                    [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Not now", @"") style:UIAlertActionStyleDefault handler:NULL]];
+                }
+                else{
+                    [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLConstants bundle], @"") style:UIAlertActionStyleDefault handler:^(id action){
+                        if (error.code != kOLKiteSDKErrorCodeOrderValidationFailed){
+                            self.printOrder.receipt = nil;
+                            self.printOrder.submitStatus = OLPrintOrderSubmitStatusUnknown;
+                            self.printOrder.submitStatusErrorMessage = nil;
+                            [[NSOperationQueue mainQueue] addOperation:self.transitionBlockOperation];
+                        }
+                        else{
+                            [self.printOrder deleteFromHistory];
+                            
+                            OLPrintOrder *freshPrintOrder = [[OLPrintOrder alloc] init];
+                            for (id<OLPrintJob> job in self.printOrder.jobs){
+                                [freshPrintOrder addPrintJob:job];
+                            }
+                            freshPrintOrder.email = self.printOrder.email;
+                            freshPrintOrder.phone = self.printOrder.phone;
+                            freshPrintOrder.promoCode = self.printOrder.promoCode;
+                            freshPrintOrder.shippingAddress = self.printOrder.shippingAddress;
+                            [OLKiteUtils kiteVcForViewController:self].printOrder = freshPrintOrder;
+                            self.printOrder = freshPrintOrder;
+                            [self.printOrder saveOrder];
+                        }
+                    }]];
+                }
                 NSBlockOperation *presentAlertBlock = [NSBlockOperation blockOperationWithBlock:^{
                     [self presentViewController:ac animated:YES completion:NULL];
                 }];
@@ -830,13 +935,13 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         vc.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamedInKiteBundle:@"support"] style:UIBarButtonItemStyleDone target:vc action:@selector(emailButtonPushed:)];
     }
     
-    OLCustomNavigationController *nvc = [[OLCustomNavigationController alloc] initWithRootViewController:vc];
+    OLNavigationController *nvc = [[OLNavigationController alloc] initWithRootViewController:vc];
     nvc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
     [self presentViewController:nvc animated:YES completion:NULL];
 }
 
 - (UINavigationController *)navViewControllerWithControllers:(NSArray *)vcs{
-    OLCustomNavigationController *navController = [[OLCustomNavigationController alloc] init];
+    OLNavigationController *navController = [[OLNavigationController alloc] init];
     
     navController.viewControllers = vcs;
     UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(dismissPresentedViewController)];
@@ -847,8 +952,8 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 }
 
 - (void)saveAndDismissReviewController{
-    OLCustomNavigationController *nvc = (OLCustomNavigationController *)self.presentedViewController;
-    if (![nvc isKindOfClass:[OLCustomNavigationController class]]){
+    OLNavigationController *nvc = (OLNavigationController *)self.presentedViewController;
+    if (![nvc isKindOfClass:[OLNavigationController class]]){
         return;
     }
     
@@ -878,7 +983,9 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 
 - (void)dismissPresentedViewController{
     [self dismissViewControllerAnimated:YES completion:^{
-        [self updateViewsBasedOnCostUpdate];
+        [self.printOrder costWithCompletionHandler:^(OLPrintOrderCost *cost, NSError *error){
+            [self costCalculationCompletedWithError:error];
+        }];
     }];
 }
 
@@ -899,18 +1006,16 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     self.printOrder.promoCode = promoCode;
     [self.printOrder costWithCompletionHandler:^(OLPrintOrderCost *cost, NSError *error) {
         if (error) {
+#ifndef OL_NO_ANALYTICS
+            [OLAnalytics trackPaymentScreenUnsuccessfullyAppliedPromoCode:promoCode withError:error forOrder:self.printOrder];
+#endif
             [SVProgressHUD dismiss];
-            if ([UIAlertController class]){
-                UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLConstants bundle], @"") message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
-                [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLConstants bundle], @"") style:UIAlertActionStyleDefault handler:NULL]];
-                [self presentViewController:ac animated:YES completion:NULL];
-            }
-            else{
-                UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLConstants bundle], @"") message:error.localizedDescription delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLConstants bundle], @"") otherButtonTitles:nil];
-                [av show];
-            }
+            [self costCalculationCompletedWithError:error];
         } else {
             if (cost.promoCodeInvalidReason) {
+#ifndef OL_NO_ANALYTICS
+                [OLAnalytics trackPaymentScreenUnsuccessfullyAppliedPromoCode:promoCode withError:[NSError errorWithDomain:@"ly.kite.sdk" code:0 userInfo:@{NSLocalizedDescriptionKey : cost.promoCodeInvalidReason}] forOrder:self.printOrder];
+#endif
                 self.printOrder.promoCode = previousCode; // reset print order promo code as it was invalid
                 self.promoCodeTextField.text = previousCode;
                 [SVProgressHUD dismiss];
@@ -956,7 +1061,9 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
                 [[[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Oops", @"KitePrintSDK", [OLConstants bundle], @"") message:rejectMessage delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLConstants bundle], @"") otherButtonTitles:nil] show];
                 
                 self.printOrder.promoCode = nil;
-                [self updateViewsBasedOnCostUpdate];
+                [self.printOrder costWithCompletionHandler:^(OLPrintOrderCost *cost, NSError *error){
+                    [self costCalculationCompletedWithError:error];
+                }];
                 return;
             }
         }
@@ -1275,8 +1382,8 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         printJob.extraCopies--;
         
         [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
-        [self updateViewsBasedOnCostUpdate];
         [self.printOrder saveOrder];
+        [self updateViewsBasedOnCostUpdate];
         
 #ifndef OL_NO_ANALYTICS
         [OLAnalytics trackPaymentScreenHitItemQtyDownForItem:printJob inOrder:self.printOrder applePayIsAvailable:[self isApplePayAvailable] ? @"Yes" : @"No"];
@@ -1295,8 +1402,8 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
     }
     
-    [self updateViewsBasedOnCostUpdate];
     [self.printOrder saveOrder];
+    [self updateViewsBasedOnCostUpdate];
 #ifndef OL_NO_ANALYTICS
     [OLAnalytics trackPaymentScreenHitItemQtyUpForItem:printJob inOrder:self.printOrder applePayIsAvailable:[self isApplePayAvailable] ? @"Yes" : @"No"];
 #endif
@@ -1306,6 +1413,10 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     CGPoint buttonPosition = [sender convertPoint:CGPointZero toView:self.tableView];
     NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:buttonPosition];
     
+    [self editJobAtIndexPath:indexPath];
+}
+
+- (void)editJobAtIndexPath:(NSIndexPath *)indexPath{
     UIViewController *vc = [self viewControllerForItemAtIndexPath:indexPath];
     vc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
     [self presentViewController:vc animated:YES completion:NULL];
@@ -1316,6 +1427,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 }
 
 - (IBAction)onButtonContinueShoppingClicked:(UIButton *)sender {
+    self.usedContinueShoppingButton = YES;
 #ifndef OL_NO_ANALYTICS
     [OLAnalytics trackContinueShoppingButtonPressed:self.printOrder];
 #endif
@@ -1330,7 +1442,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 
 - (IBAction)onShippingDetailsGestureRecognized:(id)sender {
     [OLKiteUtils shippingControllerForPrintOrder:self.printOrder handler:^(id vc){
-        OLCustomNavigationController *nvc = [[OLCustomNavigationController alloc] initWithRootViewController:vc];
+        OLNavigationController *nvc = [[OLNavigationController alloc] initWithRootViewController:vc];
         [[(UINavigationController *)vc view] class]; //force viewDidLoad;
         [(OLCheckoutViewController *)vc navigationItem].rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:vc action:@selector(onButtonDoneClicked)];
         [vc safePerformSelector:@selector(setUserEmail:) withObject:self.userEmail];
@@ -1471,12 +1583,12 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     CFTypeRef values = ABRecordCopyValue(address, kABPersonAddressProperty);
     for (NSInteger i = 0; i < ABMultiValueGetCount(values); i++){
         NSDictionary *dict = (__bridge NSDictionary *)ABMultiValueCopyValueAtIndex(values, i);
-        shippingAddress.country = [OLCountry countryForCode:[dict objectForKey:(id)kABPersonAddressCountryCodeKey]];
-        if (!shippingAddress.country){
-            shippingAddress.country = [OLCountry countryForCode:[dict objectForKey:(id)kABPersonAddressCountryKey]];
-        }
+        shippingAddress.country = [OLCountry countryForCode:[dict objectForKey:(id)kABPersonAddressCountryKey]];
         if (!shippingAddress.country){
             shippingAddress.country = [OLCountry countryForName:[dict objectForKey:(id)kABPersonAddressCountryKey]];
+        }
+        if (!shippingAddress.country){
+            shippingAddress.country = [OLCountry countryForCode:[dict objectForKey:(id)kABPersonAddressCountryCodeKey]];
         }
         if (!shippingAddress.country){
             completion(PKPaymentAuthorizationStatusFailure, nil, nil);
@@ -1490,7 +1602,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         }
     }
     [self.printOrder costWithCompletionHandler:^(OLPrintOrderCost *cost, NSError *error){
-        [self.tableView reloadData];
+        [self costCalculationCompletedWithError:error];
         NSMutableArray *lineItems = [[NSMutableArray alloc] init];
         for (OLPaymentLineItem *item in cost.lineItems){
             [lineItems addObject:[PKPaymentSummaryItem summaryItemWithLabel:item.description  amount:[item costInCurrency:self.printOrder.currencyCode]]];
@@ -1575,9 +1687,25 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         }];
         
         quantityLabel.text = [NSString stringWithFormat:@"%ld", (long)[job extraCopies]+1];
-        productNameLabel.text = product.productTemplate.name;
+
+        float numberOfPhotos = [job assetsForUploading].count;
+        if (product.productTemplate.templateUI == kOLTemplateUIPhotobook){
+            // Front cover photo should count towards total photos
+            if ([(OLPhotobookPrintJob *)job frontCover]){
+                numberOfPhotos--;
+            }
+        }
         
-        priceLabel.text = [[[product unitCostDecimalNumber] decimalNumberByMultiplyingBy:[NSDecimalNumber decimalNumberWithString:[NSString stringWithFormat:@"%ld", (long)[job extraCopies]+1]]]formatCostForCurrencyCode:self.printOrder.currencyCode];
+        NSDecimalNumber *numUnitsInJob = [[NSDecimalNumber alloc] initWithFloat:ceilf(numberOfPhotos / (float) product.quantityToFulfillOrder)];
+        
+        priceLabel.text = [[numUnitsInJob decimalNumberByMultiplyingBy:[[product unitCostDecimalNumber] decimalNumberByMultiplyingBy:[NSDecimalNumber decimalNumberWithString:[NSString stringWithFormat:@"%ld", (long)[job extraCopies]+1]]]] formatCostForCurrencyCode:self.printOrder.currencyCode];
+        
+        if ([numUnitsInJob integerValue] == 1){
+            productNameLabel.text = product.productTemplate.name;
+        }
+        else{
+            productNameLabel.text = [NSString stringWithFormat:@"%@ (x %ld)", product.productTemplate.name, (long)[numUnitsInJob integerValue]];
+        }
         
         if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8){
             editButton.hidden = YES;
@@ -1615,6 +1743,12 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField{
     return self.printOrder.jobs.count > 0;
+}
+
+- (void)textFieldDidBeginEditing:(UITextField *)textField{
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackPaymentScreenDidTapOnPromoCodeBoxforOrder:self.printOrder];
+#endif
 }
 
 - (BOOL) tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -1673,21 +1807,46 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     }
     
     NSMutableArray *userSelectedPhotos = [[NSMutableArray alloc] init];
-    for (OLAsset *asset in [printJob assetsForUploading]){
+    NSMutableSet *addedAssetsUUIDs = [[NSMutableSet alloc] init];
+    
+    NSMutableArray *jobAssets = [[printJob assetsForUploading] mutableCopy];
+    
+    //Special handling of products
+    if (product.productTemplate.templateUI == kOLTemplateUIPhotobook && [(OLPhotobookPrintJob *)printJob frontCover]){
+        //Make sure we don't add the cover photo asset in the book photos
+        OLAsset *asset = [(OLPhotobookPrintJob *)printJob frontCover];
         OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
         printPhoto.asset = asset;
         
         if ([asset.dataSource isKindOfClass:[OLPrintPhoto class]]){
             printPhoto = (OLPrintPhoto *)asset.dataSource;
         }
-        [userSelectedPhotos addObject:printPhoto];
+        if (printPhoto.uuid){
+            [addedAssetsUUIDs addObject:printPhoto.uuid];
+        }
+    }
+    else if (product.productTemplate.templateUI == kOLTemplateUIPoster){
+        [OLPosterViewController changeOrderOfPhotosInArray:jobAssets forProduct:product];
+    }
+    else if (product.productTemplate.templateUI == kOLTemplateUIFrame){
+        [OLFrameOrderReviewViewController reverseRowsOfPhotosInArray:jobAssets forProduct:product];
     }
     
-    if (product.productTemplate.templateUI == kOLTemplateUIFrame || product.productTemplate.templateUI == kOLTemplateUIPoster){
-        [OLKiteUtils reverseRowsOfPhotosInArray:userSelectedPhotos forProduct:product];
+    for (OLAsset *asset in jobAssets){
+        OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
+        printPhoto.asset = asset;
+        
+        if ([asset.dataSource isKindOfClass:[OLPrintPhoto class]]){
+            printPhoto = (OLPrintPhoto *)asset.dataSource;
+        }
+        if (![addedAssetsUUIDs containsObject:printPhoto.uuid]){
+            [addedAssetsUUIDs addObject:printPhoto.uuid];
+            [userSelectedPhotos addObject:printPhoto];
+        }
+    
     }
     
-    if ([OLKiteUtils imageProvidersAvailable:self] && product.productTemplate.templateUI != kOLTemplateUICase && product.productTemplate.templateUI != kOLTemplateUIPhotobook && product.productTemplate.templateUI != kOLTemplateUIPostcard){
+    if ([OLKiteUtils imageProvidersAvailable:self] && product.productTemplate.templateUI != kOLTemplateUICase && product.productTemplate.templateUI != kOLTemplateUIPhotobook && product.productTemplate.templateUI != kOLTemplateUIPostcard && !(product.productTemplate.templateUI == kOLTemplateUIPoster && product.productTemplate.gridCountX == 1 && product.productTemplate.gridCountY == 1)){
         OLPhotoSelectionViewController *photoVc = [self.storyboard instantiateViewControllerWithIdentifier:@"PhotoSelectionViewController"];
         photoVc.product = product;
         photoVc.userSelectedPhotos = userSelectedPhotos;

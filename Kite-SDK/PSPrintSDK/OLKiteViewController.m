@@ -1,9 +1,30 @@
 //
-//  KiteViewController.m
-//  Kite Print SDK
+//  Modified MIT License
 //
-//  Created by Konstadinos Karayannis on 12/24/14.
-//  Copyright (c) 2014 Deon Botha. All rights reserved.
+//  Copyright (c) 2010-2015 Kite Tech Ltd. https://www.kite.ly
+//
+//  Permission is hereby granted, free of charge, to any person obtaining a copy
+//  of this software and associated documentation files (the "Software"), to deal
+//  in the Software without restriction, including without limitation the rights
+//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+//  copies of the Software, and to permit persons to whom the Software is
+//  furnished to do so, subject to the following conditions:
+//
+//  The software MAY ONLY be used with the Kite Tech Ltd platform and MAY NOT be modified
+//  to be used with any competitor platforms. This means the software MAY NOT be modified
+//  to place orders with any competitors to Kite Tech Ltd, all orders MUST go through the
+//  Kite Tech Ltd platform servers.
+//
+//  The above copyright notice and this permission notice shall be included in
+//  all copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+//  THE SOFTWARE.
 //
 
 #import "OLKiteViewController.h"
@@ -13,13 +34,12 @@
 #import "OLKitePrintSDK.h"
 #import "OLProduct.h"
 #import "OLProductOverviewViewController.h"
-#import "OLPosterSizeSelectionViewController.h"
 #import "OLProductTypeSelectionViewController.h"
 #import "OLKitePrintSDK.h"
 #import "OLAnalytics.h"
 #import "OLPrintPhoto.h"
 #import "OLProductGroup.h"
-#import "OLCustomNavigationController.h"
+#import "OLNavigationController.h"
 #import "NSObject+Utils.h"
 #import "OLKiteABTesting.h"
 #import "UIImage+ColorAtPixel.h"
@@ -43,6 +63,8 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
 @property (weak, nonatomic) IBOutlet UIImageView *loadingImageView;
 @property (strong, nonatomic) NSMutableArray <OLCustomPhotoProvider *> *customImageProviders;
 
+
+@property (assign, nonatomic) BOOL useDarkTheme; //XXX: Delete this when exposed in header
 
 // Because template sync happens in the constructor it may complete before the OLKiteViewController has appeared. In such a case where sync does
 // complete first we make a note to immediately transition to the appropriate view when the OLKiteViewController does appear:
@@ -84,7 +106,24 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
     return _printOrder;
 }
 
+- (void)clearBasket{
+    self.printOrder = [[OLPrintOrder alloc] init];
+    [self.printOrder saveOrder];
+}
+
+- (void)setUseDarkTheme:(BOOL)useDarkTheme{
+    _useDarkTheme = useDarkTheme;
+    [OLKiteABTesting sharedInstance].darkTheme = useDarkTheme;
+}
+
+- (BOOL)prefersStatusBarHidden {
+    return self.useDarkTheme;
+}
+
 - (UIStatusBarStyle)preferredStatusBarStyle{
+    if (self.childViewControllers.count == 0){
+        return self.useDarkTheme ? UIStatusBarStyleLightContent : UIStatusBarStyleDefault;
+    }
     return [[self.childViewControllers firstObject] preferredStatusBarStyle];
 }
 
@@ -141,6 +180,12 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
 
 -(void)viewDidLoad {
     [super viewDidLoad];
+    
+    if (self.useDarkTheme){
+        self.navigationBar.barTintColor = [UIColor blackColor];
+        self.navigationBar.tintColor = [UIColor grayColor];
+        self.navigationBar.barStyle = UIBarStyleBlackTranslucent;
+    }
     
     [[NSURLCache sharedURLCache] removeAllCachedResponses];
     
@@ -247,7 +292,7 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
                     [vc safePerformSelector:@selector(setUserEmail:) withObject:welf.userEmail];
                     [vc safePerformSelector:@selector(setUserPhone:) withObject:welf.userPhone];
                     [vc safePerformSelector:@selector(setKiteDelegate:) withObject:welf.delegate];
-                    OLCustomNavigationController *nvc = [[OLCustomNavigationController alloc] initWithRootViewController:vc];
+                    OLNavigationController *nvc = [[OLNavigationController alloc] initWithRootViewController:vc];
                     
                     [welf fadeToViewController:nvc];
                 }];
@@ -263,7 +308,7 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
             
             [[vc navigationItem] setLeftBarButtonItem:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:welf action:@selector(dismiss)]];
             [vc.navigationItem.rightBarButtonItem setTitle:NSLocalizedString(@"Next", @"")];
-            OLCustomNavigationController *nvc = [[OLCustomNavigationController alloc] initWithRootViewController:vc];
+            OLNavigationController *nvc = [[OLNavigationController alloc] initWithRootViewController:vc];
             [welf fadeToViewController:nvc];
             return;
         }
@@ -277,7 +322,7 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
             nextVcNavIdentifier = @"ProductHomeViewController";
         }
         UIViewController *vc = [sb instantiateViewControllerWithIdentifier:nextVcNavIdentifier];
-        UINavigationController *nav = [[OLCustomNavigationController alloc] initWithRootViewController:vc];
+        UINavigationController *nav = [[OLNavigationController alloc] initWithRootViewController:vc];
         [vc safePerformSelector:@selector(setProduct:) withObject:product];
         [vc safePerformSelector:@selector(setDelegate:) withObject:welf.delegate];
         [vc safePerformSelector:@selector(setUserEmail:) withObject:welf.userEmail];
@@ -331,6 +376,10 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
 - (void)templateSyncDidFinish:(NSNotification *)n{
     NSAssert([NSThread isMainThread], @"assumption about main thread callback is incorrect");
     if (n.userInfo[kNotificationKeyTemplateSyncError]){
+        if (self.templateSyncOperation.finished){
+            return;
+        }
+        
         if ([[OLProductTemplate templates] count] > 0){
             [self.operationQueue addOperation:self.templateSyncOperation];
             return;
@@ -385,18 +434,7 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
 }
 
 + (NSString *)storyboardIdentifierForGroupSelected:(OLProductGroup *)group{
-    OLProduct *product = [group.products firstObject];
-    if (product.productTemplate.templateUI == kOLTemplateUIPoster && group.products.count > 1) {
-        NSInteger x = product.productTemplate.gridCountX;
-        NSInteger y = product.productTemplate.gridCountY;
-        for (OLProduct *otherProduct in group.products){
-            if (x != otherProduct.productTemplate.gridCountX || y != otherProduct.productTemplate.gridCountY){
-                return @"OLTypeSelectionViewController";
-            }
-        }
-        return @"sizeSelect";
-    }
-    else if (group.products.count > 1){
+    if (group.products.count > 1){
         return @"OLTypeSelectionViewController";
     }
     else {

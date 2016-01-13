@@ -34,3 +34,9 @@
 [submodule "Kite-SDK/vendor/PayPal-iOS-SDK"]
 	path = Kite-SDK/vendor/PayPal-iOS-SDK
 	url = https://github.com/paypal/PayPal-iOS-SDK.git
+[submodule "Kite-SDK/vendor/CTAssetsPickerController"]
+	path = Kite-SDK/vendor/CTAssetsPickerController
+	url = http://github.com/chiunam/CTAssetsPickerController
+[submodule "Kite-SDK/vendor/PureLayout"]
+	path = Kite-SDK/vendor/PureLayout
+	url = https://github.com/smileyborg/PureLayout

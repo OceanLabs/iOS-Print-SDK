@@ -1,18 +1,55 @@
 //
-//  PhotoSelectionViewController.m
-//  Print Studio
+//  Modified MIT License
 //
-//  Created by Elliott Minns on 12/12/2013.
-//  Copyright (c) 2013 Ocean Labs. All rights reserved.
+//  Copyright (c) 2010-2015 Kite Tech Ltd. https://www.kite.ly
+//
+//  Permission is hereby granted, free of charge, to any person obtaining a copy
+//  of this software and associated documentation files (the "Software"), to deal
+//  in the Software without restriction, including without limitation the rights
+//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+//  copies of the Software, and to permit persons to whom the Software is
+//  furnished to do so, subject to the following conditions:
+//
+//  The software MAY ONLY be used with the Kite Tech Ltd platform and MAY NOT be modified
+//  to be used with any competitor platforms. This means the software MAY NOT be modified
+//  to place orders with any competitors to Kite Tech Ltd, all orders MUST go through the
+//  Kite Tech Ltd platform servers.
+//
+//  The above copyright notice and this permission notice shall be included in
+//  all copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+//  THE SOFTWARE.
 //
 
+#ifdef COCOAPODS
+#import <UIColor-HexString/UIColor+HexString.h>
+#else
+#import "UIColor+HexString.h"
+#endif
+
+#ifdef COCOAPODS
+#import <UIColor-HexString/UIColor+HexString.h>
+#else
+#import "UIColor+HexString.h"
+#endif
+
+#import "OLPhotoSelectionViewController.h"
+#import "OLPhotoSelectionButton.h"
+#import "OLPrintPhoto.h"
+#import "OLOrderReviewViewController.h"
 #ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
 #import "OLCustomPhotoProvider.h"
 #import <KITAssetsPickerController.h>
 #endif
 
 #ifdef OL_KITE_AT_LEAST_IOS8
-#import <CTAssetsPickerController/CTAssetsPickerController.h>
+#import "CTAssetsPickerController.h"
 #endif
 
 #ifdef OL_KITE_OFFER_INSTAGRAM
@@ -31,6 +68,7 @@
 #import "OLAddress.h"
 #import "OLAnalytics.h"
 #import "OLAsset.h"
+#import "OLProductPrintJob.h"
 #import "OLAssetsPickerController.h"
 #import "OLConstants.h"
 #import "OLImageCachingManager.h"
@@ -46,6 +84,9 @@
 #import "OLRemoteImageView.h"
 #import "UIColor+HexString.h"
 #import "UIImage+ImageNamedInKiteBundle.h"
+#import "UIViewController+OLMethods.h"
+#import "OLPaymentViewController.h"
+#import "OLImagePreviewViewController.h"
 #import "UIView+RoundRect.h"
 #import "UIViewController+TraitCollectionCompatibility.h"
 
@@ -83,7 +124,8 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
                                             KITAssetsPickerControllerDelegate,
 #endif
                                             LXReorderableCollectionViewDataSource,
-                                            UICollectionViewDelegateFlowLayout>
+                                            UICollectionViewDelegateFlowLayout,
+UIViewControllerPreviewingDelegate, OLScrollCropViewControllerDelegate>
 
 @property (assign, nonatomic) CGSize rotationSize;
 @property (nonatomic, strong) OLAssetsPickerController *picker;
@@ -95,6 +137,10 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 @property (strong, nonatomic) UIVisualEffectView *visualEffectView;
 @property (weak, nonatomic) IBOutlet UIView *clearButtonContainerView;
 
+@property (assign, nonatomic) CGSize rotationSize;
+
+@property (strong, nonatomic) NSMutableDictionary *indexPathsToRemoveDict;
+@property (weak, nonatomic) OLPrintPhoto *editingPrintPhoto;
 @end
 
 @interface OLKiteViewController ()
@@ -112,6 +158,10 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 #ifndef OL_NO_ANALYTICS
     [OLAnalytics trackPhotoSelectionScreenViewed:self.product.productTemplate.name];
 #endif
+    
+    if ([UITraitCollection class] && [self.traitCollection respondsToSelector:@selector(forceTouchCapability)] && self.traitCollection.forceTouchCapability == UIForceTouchCapabilityAvailable){
+        [self registerForPreviewingWithDelegate:self sourceView:self.collectionView];
+    }
     
     self.providersCollectionView.delegate = self;
     self.providersCollectionView.dataSource = self;
@@ -143,6 +193,17 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
+
+    if ([self.presentingViewController respondsToSelector:@selector(viewControllers)]) {
+        UIViewController *presentingVc = [(UINavigationController *)self.presentingViewController viewControllers].lastObject;
+        if (![presentingVc isKindOfClass:[OLPaymentViewController class]]){
+            [self addBasketIconToTopRight];
+        }
+    }
+    else{
+        [self addBasketIconToTopRight];
+    }
+    
     if (self.userSelectedPhotos.count > 0){
         [self.collectionView reloadData];
     }
@@ -205,6 +266,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 - (void)updateTitleBasedOnSelectedPhotoQuanitity {
     if (self.userSelectedPhotos.count == 0) {
         [(UILabel *)self.navigationItem.titleView setText:NSLocalizedString(@"Choose Photos", @"")];
+        [(UILabel *)self.navigationItem.titleView sizeToFit];
     } else {
         if (self.product.quantityToFulfillOrder > 1){
             NSUInteger numOrders = 1 + (MAX(0, self.userSelectedPhotos.count - 1 + [self totalNumberOfExtras]) / self.product.quantityToFulfillOrder);
@@ -217,15 +279,12 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     }
     
     if ([self.userDisabledPhotos count] > 0){
-        self.navigationItem.rightBarButtonItem.title = NSLocalizedString(@"Cancel", @"");
-        
         [UIView animateKeyframesWithDuration:0.15 delay:0 options:UIViewKeyframeAnimationOptionBeginFromCurrentState | UIViewAnimationOptionCurveLinear animations:^{
             self.clearButtonContainerView.transform = CGAffineTransformMakeTranslation(0, -40);
             self.collectionView.contentInset = UIEdgeInsetsMake(self.collectionView.contentInset.top, self.collectionView.contentInset.left, self.collectionView.contentInset.bottom + 40, self.collectionView.contentInset.left);
         }completion:NULL];
     }
     else{
-        self.navigationItem.rightBarButtonItem.title = NSLocalizedString(@"Next", @"");
         if (self.clearButtonContainerView.transform.ty != 0){
             [UIView animateKeyframesWithDuration:0.15 delay:0 options:UIViewKeyframeAnimationOptionBeginFromCurrentState | UIViewAnimationOptionCurveLinear animations:^{
                 self.clearButtonContainerView.transform = CGAffineTransformIdentity;
@@ -310,6 +369,63 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     [super didReceiveMemoryWarning];
     for (OLPrintPhoto *photo in self.userSelectedPhotos) {
         [photo unloadImage];
+    }
+}
+
+- (UIViewController *)previewingContext:(id<UIViewControllerPreviewing>)previewingContext viewControllerForLocation:(CGPoint)location{
+    NSIndexPath *indexPath = [self.collectionView indexPathForItemAtPoint:location];
+    UICollectionViewCell *cell = [self.collectionView cellForItemAtIndexPath:indexPath];
+    
+    OLRemoteImageView *imageView = (OLRemoteImageView *)[cell viewWithTag:40];
+    if (!imageView.image){
+        return nil;
+    }
+    
+    NSUInteger imageIndex = indexPath.row + indexPath.section * self.product.quantityToFulfillOrder;
+    if (imageIndex > self.userSelectedPhotos.count){
+        return nil;
+    }
+    
+    [previewingContext setSourceRect:[cell convertRect:imageView.frame toView:self.collectionView]];
+    
+    self.editingPrintPhoto = self.userSelectedPhotos[indexPath.item];
+    
+    OLImagePreviewViewController *previewVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLImagePreviewViewController"];
+    [self.editingPrintPhoto getImageWithProgress:NULL completion:^(UIImage *image){
+        previewVc.image = image;
+    }];
+    previewVc.providesPresentationContextTransitionStyle = true;
+    previewVc.definesPresentationContext = true;
+    previewVc.modalPresentationStyle = UIModalPresentationOverCurrentContext;
+    return previewVc;
+}
+
+- (void)previewingContext:(id<UIViewControllerPreviewing>)previewingContext commitViewController:(UIViewController *)viewControllerToCommit{
+    OLScrollCropViewController *cropVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLScrollCropViewController"];
+    cropVc.enableCircleMask = self.product.productTemplate.templateUI == kOLTemplateUICircle;
+    cropVc.delegate = self;
+    cropVc.aspectRatio = [self productAspectRatio];
+    [self.editingPrintPhoto getImageWithProgress:^(float progress){
+        [cropVc.cropView setProgress:progress];
+    }completion:^(UIImage *image){
+        [cropVc setFullImage:image];
+        cropVc.edits = self.editingPrintPhoto.edits;
+        cropVc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
+        [self presentViewController:cropVc animated:YES completion:NULL];
+        
+#ifndef OL_NO_ANALYTICS
+        [OLAnalytics trackReviewScreenEnteredCropScreenForProductName:self.product.productTemplate.name];
+#endif
+    }];
+}
+
+- (CGFloat) productAspectRatio{
+    UIEdgeInsets b = self.product.productTemplate.imageBorder;
+    if (b.top < b.bottom){ //This is for polaroids, since we don't know its pixel dims
+        return 1;
+    }
+    else{
+        return self.product.productTemplate.sizeCm.height / self.product.productTemplate.sizeCm.width;
     }
 }
 
@@ -625,7 +741,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 
 - (BOOL)assetsPickerController:(OLAssetsPickerController *)picker shouldShowAsset:(id)asset{
     NSString *fileName = [[[asset defaultRepresentation] filename] lowercaseString];
-    if (!([fileName hasSuffix:@".jpg"] || [fileName hasSuffix:@".jpeg"] || [fileName hasSuffix:@"png"])) {
+    if (!([fileName hasSuffix:@".jpg"] || [fileName hasSuffix:@".jpeg"] || [fileName hasSuffix:@"png"] || [fileName hasSuffix:@"tiff"])) {
         return NO;
     }
     return YES;
@@ -1209,6 +1325,25 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
             [self doSegueToOrderPreview];
         }
     }
+}
+
+#pragma mark - OLImageEditorViewControllerDelegate methods
+
+- (void)scrollCropViewControllerDidCancel:(OLScrollCropViewController *)cropper{
+    [cropper dismissViewControllerAnimated:YES completion:NULL];
+}
+
+-(void)scrollCropViewController:(OLScrollCropViewController *)cropper didFinishCroppingImage:(UIImage *)croppedImage{
+    [self.editingPrintPhoto unloadImage];
+    
+    self.editingPrintPhoto.edits = cropper.edits;
+    
+    [self.collectionView reloadData];
+    [cropper dismissViewControllerAnimated:YES completion:NULL];
+    
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackReviewScreenDidCropPhotoForProductName:self.product.productTemplate.name];
+#endif
 }
 
 #pragma mark - Autorotate and Orientation Methods
