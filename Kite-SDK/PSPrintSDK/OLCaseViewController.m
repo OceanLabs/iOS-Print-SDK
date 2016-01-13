@@ -29,8 +29,10 @@
 
 #ifdef COCOAPODS
 #import <SDWebImage/SDWebImageManager.h>
+#import <SDWebImage/SDWebImagePrefetcher.h>
 #else
 #import "SDWebImageManager.h"
+#import "SDWebImagePrefetcher.h"
 #endif
 
 #import "OLCaseViewController.h"
@@ -54,6 +56,9 @@
 @property (strong, nonatomic) UIImage *maskImage;
 @property (strong, nonatomic) OLPrintPhoto *imageDisplayed;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *centerYCon;
+@property (weak, nonatomic) IBOutlet UIImageView *deviceView;
+@property (weak, nonatomic) IBOutlet UIImageView *highlightsView;
+@property (strong, nonatomic) NSOperation *downloadImagesOperation;
 
 @end
 
@@ -61,6 +66,23 @@
 
 -(void)viewDidLoad{
     [super viewDidLoad];
+    
+    self.downloadImagesOperation = [NSBlockOperation blockOperationWithBlock:^{}];
+    NSMutableArray *urls = [[NSMutableArray alloc] init];
+    
+    if (self.product.productTemplate.maskImageURL){
+        [urls addObject:self.product.productTemplate.maskImageURL];
+    }
+    if (self.product.productTemplate.productHighlightsImageURL){
+        [urls addObject:self.product.productTemplate.productHighlightsImageURL];
+    }
+    if (self.product.productTemplate.productBackgroundImageURL){
+        [urls addObject:self.product.productTemplate.productBackgroundImageURL];
+    }
+    
+    [[SDWebImagePrefetcher sharedImagePrefetcher] prefetchURLs:urls progress:NULL completed:^(NSUInteger numberOfCompletedURLs, NSUInteger numberOfSkippedURLs){
+        [[NSOperationQueue mainQueue] addOperation:self.downloadImagesOperation];
+    }];
     
     self.downloadedMask = NO;
 }
@@ -119,7 +141,11 @@
 
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
-    [self downloadMask];
+    NSBlockOperation *block = [NSBlockOperation blockOperationWithBlock:^{
+        [self applyDownloadedMask];
+    }];
+    [block addDependency:self.downloadImagesOperation];
+    [[NSOperationQueue mainQueue] addOperation:block];
 }
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
@@ -132,7 +158,7 @@
     }completion:^(id <UIViewControllerTransitionCoordinatorContext> context){}];
 }
 
-- (void)downloadMask {
+- (void)applyDownloadedMask {
     if (self.downloadedMask){
         return;
     }
@@ -151,6 +177,16 @@
             
             self.maskImage = image;
             [self maskWithImage:self.maskImage targetView:self.imageCropView];
+            
+            [[SDWebImageManager sharedManager] downloadImageWithURL:self.product.productTemplate.productBackgroundImageURL options:SDWebImageHighPriority progress:NULL completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL){
+                self.deviceView.image = image;
+            }];
+             [[SDWebImageManager sharedManager] downloadImageWithURL:self.product.productTemplate.productHighlightsImageURL options:SDWebImageHighPriority progress:NULL completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL){
+                self.highlightsView.image = image;
+             }];
+            
+            
+            
             self.visualEffectView.hidden = YES;
             self.downloadedMask = YES;
             [self.maskActivityIndicator removeFromSuperview];
@@ -193,7 +229,7 @@
     if (buttonIndex == 0) {
         [self.navigationController popViewControllerAnimated:YES];
     } else {
-        [self downloadMask];
+        [self applyDownloadedMask];
     }
 }
 

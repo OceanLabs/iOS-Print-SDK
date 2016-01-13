@@ -67,6 +67,8 @@ typedef enum {
 @property (assign, nonatomic) UIEdgeInsets imageBleed;
 @property (assign, nonatomic) UIEdgeInsets imageBorder;
 @property (strong, nonatomic) NSURL *_Nullable maskImageURL;
+@property (strong, nonatomic) NSURL *_Nullable productBackgroundImageURL;
+@property (strong, nonatomic) NSURL *_Nullable productHighlightsImageURL;
 @property (assign, nonatomic) CGSize sizePx;
 @property (strong, nonatomic) NSURL *_Nullable classPhotoURL;
 @property (strong, nonatomic) NSString *_Nullable productDescription;
