@@ -168,8 +168,6 @@ static BOOL hasMoved;
             else{
                 [self.imageCropView setImage:image];
             }
-            [self.view setNeedsLayout];
-            [self.view layoutIfNeeded];
             self.imageCropView.imageView.transform = self.imageDisplayed.edits.cropTransform;
         }];
     }
