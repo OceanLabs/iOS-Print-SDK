@@ -53,6 +53,10 @@
 
 @end
 
+@interface OLPrintOrder ()
+- (void)saveOrder;
+@end
+
 @interface OLProductOverviewViewController () <UIPageViewControllerDataSource, OLProductOverviewPageContentViewControllerDelegate, OLProductDetailsDelegate, UIPageViewControllerDelegate>
 @property (strong, nonatomic) UIPageViewController *pageController;
 @property (strong, nonatomic) IBOutlet UIPageControl *pageControl;
@@ -66,6 +70,9 @@
 @property (assign, nonatomic) CGFloat originalBoxConstraint;
 
 @property (strong, nonatomic) OLProductDetailsViewController *productDetails;
+
+@property (strong, nonatomic) id<OLPrintJob> editingPrintJob;
+
 
 @end
 
@@ -119,13 +126,16 @@
             vc = vc.parentViewController;
         }
     }
-    if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder){
+    if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder && self.product.productTemplate.templateUI != kOLTemplateUINonCustomizable){
         if (![[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant isEqualToString:@"Overview-Review-Checkout"]){
             [self.callToActionButton setTitle: NSLocalizedString(@"Checkout", @"") forState:UIControlStateNormal];
         }
         else{
             [self.callToActionButton setTitle: NSLocalizedString(@"Review", @"")forState:UIControlStateNormal];
         }
+    }
+    else if (self.product.productTemplate.templateUI == kOLTemplateUINonCustomizable){
+        [self.callToActionButton setTitle: NSLocalizedString(@"Add to Basket", @"")forState:UIControlStateNormal];
     }
     
     if ([OLKiteABTesting sharedInstance].darkTheme && [OLKiteABTesting sharedInstance].darkThemeColor1){
@@ -309,7 +319,7 @@
 }
 
 - (IBAction)onButtonStartClicked:(id)sender {
-    if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder){
+    if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder && self.product.productTemplate.templateUI != kOLTemplateUINonCustomizable){
         UIViewController *vc;
         if ([[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant isEqualToString:@"Overview-Review-Checkout"]){
             BOOL photoSelection = ![self.delegate respondsToSelector:@selector(kiteControllerShouldAllowUserToAddMorePhotos:)];
@@ -338,6 +348,10 @@
         [self.navigationController pushViewController:vc animated:YES];
         return;
     }
+    else if (self.product.productTemplate.templateUI == kOLTemplateUINonCustomizable){
+        [self doCheckout];
+        return;
+    }
     
     UIViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:[OLKiteUtils reviewViewControllerIdentifierForProduct:self.product photoSelectionScreen:![self.delegate respondsToSelector:@selector(kiteControllerShouldAllowUserToAddMorePhotos:)] || [self.delegate kiteControllerShouldAllowUserToAddMorePhotos:[OLKiteUtils kiteVcForViewController:self]]]];
     
@@ -346,6 +360,67 @@
     [vc safePerformSelector:@selector(setProduct:) withObject:self.product];
     
     [self.navigationController pushViewController:vc animated:YES];
+}
+
+- (void)saveJobWithCompletionHandler:(void(^)())handler{
+    NSDictionary *infoDict = [[NSBundle mainBundle] infoDictionary];
+    NSString *appVersion = [infoDict objectForKey:@"CFBundleShortVersionString"];
+    NSNumber *buildNumber = [infoDict objectForKey:@"CFBundleVersion"];
+    
+    OLPrintOrder *printOrder = [OLKiteUtils kiteVcForViewController:self].printOrder;
+    printOrder.userData = @{@"sdk_version": kOLKiteSDKVersion,
+                            @"platform": @"iOS",
+                            @"uid": [OLAnalytics userDistinctId],
+                            @"app_version": [NSString stringWithFormat:@"Version: %@ (%@)", appVersion, buildNumber]
+                            };
+    
+    OLProductPrintJob *job = [[OLProductPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:@[]];
+    NSArray *jobs = [NSArray arrayWithArray:printOrder.jobs];
+    for (id<OLPrintJob> existingJob in jobs){
+        if ([existingJob.uuid isEqualToString:self.product.uuid]){
+            if ([existingJob extraCopies] > 0){
+                [existingJob setExtraCopies:[existingJob extraCopies]-1];
+            }
+            else{
+                [printOrder removePrintJob:existingJob];
+            }
+            job.uuid = self.product.uuid;
+        }
+    }
+    self.product.uuid = job.uuid;
+    self.editingPrintJob = job;
+    if ([printOrder.jobs containsObject:self.editingPrintJob]){
+        id<OLPrintJob> existingJob = printOrder.jobs[[printOrder.jobs indexOfObject:self.editingPrintJob]];
+        [existingJob setExtraCopies:[existingJob extraCopies]+1];
+        for (NSString *option in self.product.selectedOptions.allKeys){
+            [job setValue:self.product.selectedOptions[option] forOption:option];
+        }
+    }
+    else{
+        [printOrder addPrintJob:self.editingPrintJob];
+    }
+    
+    [printOrder saveOrder];
+    
+    if (handler){
+        handler();
+    }
+}
+
+/**
+ *  Will only do checkout on this screen for non-customizable products.
+ */
+- (void)doCheckout {
+    [self saveJobWithCompletionHandler:NULL];
+    
+    OLPrintOrder *printOrder = [OLKiteUtils kiteVcForViewController:self].printOrder;
+        [OLKiteUtils checkoutViewControllerForPrintOrder:printOrder handler:^(id vc){
+            [vc safePerformSelector:@selector(setUserEmail:) withObject:[OLKiteUtils userEmail:self]];
+            [vc safePerformSelector:@selector(setUserPhone:) withObject:[OLKiteUtils userPhone:self]];
+            [vc safePerformSelector:@selector(setKiteDelegate:) withObject:[OLKiteUtils kiteDelegate:self]];
+            
+            [self.navigationController pushViewController:vc animated:YES];
+        }];
 }
 
 -(void)userDidTapOnImage{

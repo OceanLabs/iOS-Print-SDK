@@ -126,6 +126,9 @@ static id stringOrEmptyString(NSString *str) {
 }
 
 - (NSUInteger)quantity {
+    if ([OLProductTemplate templateWithId:self.templateId].templateUI == kOLTemplateUINonCustomizable){
+        return 1;
+    }
     return self.assets.count;
 }
 

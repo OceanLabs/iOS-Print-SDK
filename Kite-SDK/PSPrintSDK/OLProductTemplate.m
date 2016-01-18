@@ -316,6 +316,9 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
     else if ([identifier isEqualToString:@"PHOTOBOOK"]){
         return kOLTemplateUIPhotobook;
     }
+    else if ([identifier isEqualToString:@"NONCUSTOMIZABLE"]){
+        return kOLTemplateUINonCustomizable;
+    }
     return kOLTemplateUINA;
 }
 
@@ -338,6 +341,15 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
             break;
         case kOLTemplateUIRectagle:
             return @"Rectangle";
+            break;
+        case kOLTemplateUINonCustomizable:
+            return @"Non-Customizable";
+            break;
+        case kOLTemplateUIPostcard:
+            return @"Postcard";
+            break;
+        case kOLTemplateUIPhotobook:
+            return @"Photobook";
             break;
             
         default:

@@ -1682,7 +1682,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         
         OLProduct *product = [OLProduct productWithTemplateId:[job templateId]];
         
-        if ([OLProductTemplate templateWithId:product.templateId].templateUI == kOLTemplateUINA){
+        if (product.productTemplate.templateUI == kOLTemplateUINA || product.productTemplate.templateUI == kOLTemplateUINonCustomizable){
             editButton.hidden = YES;
             largeEditButton.hidden = YES;
         }
@@ -1706,6 +1706,9 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         }
         
         NSDecimalNumber *numUnitsInJob = [[NSDecimalNumber alloc] initWithFloat:ceilf(numberOfPhotos / (float) product.quantityToFulfillOrder)];
+        if (product.productTemplate.templateUI == kOLTemplateUINonCustomizable){
+            numUnitsInJob = [NSDecimalNumber decimalNumberWithString:@"1"];
+        }
         
         priceLabel.text = [[numUnitsInJob decimalNumberByMultiplyingBy:[[product unitCostDecimalNumber] decimalNumberByMultiplyingBy:[NSDecimalNumber decimalNumberWithString:[NSString stringWithFormat:@"%ld", (long)[job extraCopies]+1]]]] formatCostForCurrencyCode:self.printOrder.currencyCode];
         

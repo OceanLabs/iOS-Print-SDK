@@ -134,6 +134,9 @@
     else if (templateUI == kOLTemplateUIPhotobook){
         return @"OLEditPhotobookViewController";
     }
+    else if (templateUI == kOLTemplateUINonCustomizable){
+        return @"OLPaymentViewController";
+    }
     else if (photoSelectionScreen){
         return @"PhotoSelectionViewController";
     }
