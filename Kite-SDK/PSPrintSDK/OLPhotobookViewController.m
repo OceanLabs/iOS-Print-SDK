@@ -1078,6 +1078,17 @@ UINavigationControllerDelegate
     }
 }
 
+- (void)setupCoverContentInView:(UIView *)halfBookCoverImageContainer{
+    OLPopupOptionsImageView *coverImageView = [[OLPopupOptionsImageView alloc] initWithFrame:CGRectMake(0, 0, self.bookCover.frame.size.width / 2.0, self.bookCover.frame.size.height)];
+    self.coverImageView = coverImageView;
+    [self loadCoverPhoto];
+    coverImageView.tag = 18;
+    coverImageView.contentMode = UIViewContentModeScaleAspectFill;
+    coverImageView.clipsToBounds = YES;
+    [halfBookCoverImageContainer addSubview:coverImageView];
+    coverImageView.translatesAutoresizingMaskIntoConstraints = NO;
+}
+
 -(void) setUpBookCoverViewForGesture:(UIPanGestureRecognizer *)sender{
     UISwipeGestureRecognizer *swipe = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(openBook:)];
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onCoverTapRecognized:)];
@@ -1116,15 +1127,10 @@ UINavigationControllerDelegate
             halfBookCoverImageContainer.layer.shouldRasterize = YES;
             halfBookCoverImageContainer.layer.rasterizationScale = [UIScreen mainScreen].scale;
             
-            OLPopupOptionsImageView *coverImageView = [[OLPopupOptionsImageView alloc] initWithFrame:CGRectMake(0, 0, self.bookCover.frame.size.width / 2.0, self.bookCover.frame.size.height)];
-            self.coverImageView = coverImageView;
-            [self loadCoverPhoto];
-            coverImageView.tag = 18;
-            coverImageView.contentMode = UIViewContentModeScaleAspectFill;
-            coverImageView.clipsToBounds = YES;
-            [halfBookCoverImageContainer addSubview:coverImageView];
-            coverImageView.translatesAutoresizingMaskIntoConstraints = NO;
+            [self setupCoverContentInView:halfBookCoverImageContainer];
+            
             if (self.editMode){
+                OLPopupOptionsImageView *coverImageView = [halfBookCoverImageContainer viewWithTag:18];
                 coverImageView.userInteractionEnabled = YES;
                 [coverImageView addGestureRecognizer:tap];
                 [coverImageView addGestureRecognizer:longPress];
