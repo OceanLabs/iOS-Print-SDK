@@ -163,6 +163,7 @@ UINavigationControllerDelegate
 @property (assign, nonatomic) NSInteger addNewPhotosAtIndex;
 @property (strong, nonatomic) NSArray *userSelectedPhotosCopy;
 @property (weak, nonatomic) IBOutlet UIButton *ctaButton;
+@property (strong, nonatomic) UILabel *coverHelpLabel;
 
 @end
 
@@ -1183,6 +1184,7 @@ UINavigationControllerDelegate
             helpLabel.font = [UIFont systemFontOfSize:11];
             helpLabel.text = NSLocalizedString(@"Tap to edit", @"");
             helpLabel.translatesAutoresizingMaskIntoConstraints = NO;
+            self.coverHelpLabel = helpLabel;
             [halfBookCoverImageContainer insertSubview:helpLabel belowSubview:coverImageView];
             [halfBookCoverImageContainer addConstraint:[NSLayoutConstraint constraintWithItem:halfBookCoverImageContainer attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:helpLabel attribute:NSLayoutAttributeCenterX multiplier:1 constant:0]];
             [halfBookCoverImageContainer addConstraint:[NSLayoutConstraint constraintWithItem:halfBookCoverImageContainer attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:helpLabel attribute:NSLayoutAttributeCenterY multiplier:1 constant:0]];
