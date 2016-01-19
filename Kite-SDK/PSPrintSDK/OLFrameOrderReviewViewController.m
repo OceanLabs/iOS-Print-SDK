@@ -389,11 +389,15 @@ CGFloat margin = 2;
 
 -(void)scrollCropViewController:(OLScrollCropViewController *)cropper didFinishCroppingImage:(UIImage *)croppedImage{
     [self.editingPrintPhoto unloadImage];
-    self.editingPrintPhoto.asset = [OLAsset assetWithImageAsJPEG:croppedImage];
+    
+    self.editingPrintPhoto.edits = cropper.edits;
     
     [self.collectionView reloadData];
+    [cropper dismissViewControllerAnimated:YES completion:^{}];
     
-    [cropper dismissViewControllerAnimated:YES completion:NULL];
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackReviewScreenDidCropPhotoForProductName:self.product.productTemplate.name];
+#endif
 }
 
 #pragma mark - Autorotate and Orientation Methods
