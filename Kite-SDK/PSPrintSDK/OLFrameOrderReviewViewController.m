@@ -175,7 +175,7 @@ CGFloat margin = 2;
     
     UICollectionView* collectionView = (UICollectionView*)[outerCollectionViewCell.contentView viewWithTag:20];
     
-    NSIndexPath* indexPath = [collectionView indexPathForItemAtPoint:[outerCollectionViewCell convertPoint:location fromView:nil]];
+    NSIndexPath* indexPath = [collectionView indexPathForItemAtPoint:[collectionView convertPoint:location fromView:self.collectionView]];
     
     UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
     OLRemoteImageView *imageView = (OLRemoteImageView *)[cell viewWithTag:110];
