@@ -189,7 +189,7 @@
             }
         } completion:^(BOOL finished){
             [UIView animateWithDuration:0.25 animations:^{
-                self.previewView.frame = [self.previewSourceView.superview convertRect:self.previewSourceView.frame toView:nil];
+                self.previewView.frame = [self.previewSourceView.superview convertRect:self.previewSourceView.frame toView:self.presentingViewController.view];
             }completion:^(BOOL finished){
                 self.previewSourceView.hidden = NO;
                 [UIView animateWithDuration:0.15 animations:^{
