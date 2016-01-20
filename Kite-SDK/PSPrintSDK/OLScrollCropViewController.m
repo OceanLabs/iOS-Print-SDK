@@ -1,7 +1,7 @@
 //
 //  Modified MIT License
 //
-//  Copyright (c) 2010-2015 Kite Tech Ltd. https://www.kite.ly
+//  Copyright (c) 2010-2016 Kite Tech Ltd. https://www.kite.ly
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -189,7 +189,7 @@
             }
         } completion:^(BOOL finished){
             [UIView animateWithDuration:0.25 animations:^{
-                self.previewView.frame = [self.previewSourceView.superview convertRect:self.previewSourceView.frame toView:nil];
+                self.previewView.frame = [self.previewSourceView.superview convertRect:self.previewSourceView.frame toView:self.presentingViewController.view];
             }completion:^(BOOL finished){
                 self.previewSourceView.hidden = NO;
                 [UIView animateWithDuration:0.15 animations:^{

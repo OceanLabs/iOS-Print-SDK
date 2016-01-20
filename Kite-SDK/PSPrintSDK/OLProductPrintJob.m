@@ -1,7 +1,7 @@
 //
 //  Modified MIT License
 //
-//  Copyright (c) 2010-2015 Kite Tech Ltd. https://www.kite.ly
+//  Copyright (c) 2010-2016 Kite Tech Ltd. https://www.kite.ly
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -126,6 +126,9 @@ static id stringOrEmptyString(NSString *str) {
 }
 
 - (NSUInteger)quantity {
+    if ([OLProductTemplate templateWithId:self.templateId].templateUI == kOLTemplateUINonCustomizable){
+        return 1;
+    }
     return self.assets.count;
 }
 

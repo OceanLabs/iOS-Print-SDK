@@ -1,7 +1,7 @@
 //
 //  Modified MIT License
 //  
-//  Copyright (c) 2010-2015 Kite Tech Ltd. https://www.kite.ly
+//  Copyright (c) 2010-2016 Kite Tech Ltd. https://www.kite.ly
 //  
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -49,6 +49,8 @@ static NSString *const kKeyProductCode = @"co.oceanlabs.pssdk.kKeyProductCode";
 static NSString *const kKeyImageBleed = @"co.oceanlabs.pssdk.kKeyImageBleed";
 static NSString *const kKeyImageBorder = @"co.oceanlabs.pssdk.kKeyImageBorder";
 static NSString *const kKeyMaskImageURL = @"co.oceanlabs.pssdk.kKeymaskImageURL";
+static NSString *const kKeyProductBackgroundImageURL = @"co.oceanlabs.pssdk.kKeyProductBackgroundImageURL";
+static NSString *const kKeyProductHighlightsImageURL = @"co.oceanlabs.pssdk.kKeyProductHighlightsImageURL";
 static NSString *const kKeySizePx = @"co.oceanlabs.pssdk.kKeySizePx";
 static NSString *const kKeyClassPhotoURL = @"co.oceanlabs.pssdk.kKeyClassPhotoURL";
 static NSString *const kkeyDescription = @"co.oceanlabs.pssdk.kkeyDescription";
@@ -314,6 +316,9 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
     else if ([identifier isEqualToString:@"PHOTOBOOK"]){
         return kOLTemplateUIPhotobook;
     }
+    else if ([identifier isEqualToString:@"NONCUSTOMIZABLE"]){
+        return kOLTemplateUINonCustomizable;
+    }
     return kOLTemplateUINA;
 }
 
@@ -336,6 +341,15 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
             break;
         case kOLTemplateUIRectagle:
             return @"Rectangle";
+            break;
+        case kOLTemplateUINonCustomizable:
+            return @"Non-Customizable";
+            break;
+        case kOLTemplateUIPostcard:
+            return @"Postcard";
+            break;
+        case kOLTemplateUIPhotobook:
+            return @"Photobook";
             break;
             
         default:
@@ -371,6 +385,8 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
     [aCoder encodeUIEdgeInsets:self.imageBleed forKey:kKeyImageBleed];
     [aCoder encodeUIEdgeInsets:self.imageBorder forKey:kKeyImageBorder];
     [aCoder encodeObject:self.maskImageURL forKey:kKeyMaskImageURL];
+    [aCoder encodeObject:self.productBackgroundImageURL forKey:kKeyProductBackgroundImageURL];
+    [aCoder encodeObject:self.productHighlightsImageURL forKey:kKeyProductHighlightsImageURL];
     [aCoder encodeCGSize:self.sizePx forKey:kKeySizePx];
     [aCoder encodeObject:self.description forKey:kkeyDescription];
     [aCoder encodeObject:self.classPhotoURL forKey:kKeyClassPhotoURL];
@@ -400,6 +416,8 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
         _imageBleed = [aDecoder decodeUIEdgeInsetsForKey:kKeyImageBleed];
         _imageBorder = [aDecoder decodeUIEdgeInsetsForKey:kKeyImageBorder];
         _maskImageURL = [aDecoder decodeObjectForKey:kKeyMaskImageURL];
+        _productBackgroundImageURL = [aDecoder decodeObjectForKey:kKeyProductBackgroundImageURL];
+        _productHighlightsImageURL = [aDecoder decodeObjectForKey:kKeyProductHighlightsImageURL];
         _sizePx = [aDecoder decodeCGSizeForKey:kKeySizePx];
         _classPhotoURL = [aDecoder decodeObjectForKey:kKeyClassPhotoURL];
         _productDescription = [aDecoder decodeObjectForKey:kkeyDescription];

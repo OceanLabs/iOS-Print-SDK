@@ -1,7 +1,7 @@
 //
 //  Modified MIT License
 //
-//  Copyright (c) 2010-2015 Kite Tech Ltd. https://www.kite.ly
+//  Copyright (c) 2010-2016 Kite Tech Ltd. https://www.kite.ly
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -43,7 +43,8 @@ typedef enum {
     kOLTemplateUIPoster,
     kOLTemplateUICase,
     kOLTemplateUIPostcard,
-    kOLTemplateUIPhotobook
+    kOLTemplateUIPhotobook,
+    kOLTemplateUINonCustomizable
 }OLTemplateUI;
 
 @class OLProductTemplateSyncRequest;
@@ -67,6 +68,8 @@ typedef enum {
 @property (assign, nonatomic) UIEdgeInsets imageBleed;
 @property (assign, nonatomic) UIEdgeInsets imageBorder;
 @property (strong, nonatomic) NSURL *_Nullable maskImageURL;
+@property (strong, nonatomic) NSURL *_Nullable productBackgroundImageURL;
+@property (strong, nonatomic) NSURL *_Nullable productHighlightsImageURL;
 @property (assign, nonatomic) CGSize sizePx;
 @property (strong, nonatomic) NSURL *_Nullable classPhotoURL;
 @property (strong, nonatomic) NSString *_Nullable productDescription;

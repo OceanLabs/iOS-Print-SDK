@@ -1,7 +1,7 @@
 //
 //  Modified MIT License
 //
-//  Copyright (c) 2010-2015 Kite Tech Ltd. https://www.kite.ly
+//  Copyright (c) 2010-2016 Kite Tech Ltd. https://www.kite.ly
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -175,7 +175,7 @@ CGFloat margin = 2;
     
     UICollectionView* collectionView = (UICollectionView*)[outerCollectionViewCell.contentView viewWithTag:20];
     
-    NSIndexPath* indexPath = [collectionView indexPathForItemAtPoint:[outerCollectionViewCell convertPoint:location fromView:nil]];
+    NSIndexPath* indexPath = [collectionView indexPathForItemAtPoint:[collectionView convertPoint:location fromView:self.collectionView]];
     
     UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
     OLRemoteImageView *imageView = (OLRemoteImageView *)[cell viewWithTag:110];
@@ -389,11 +389,15 @@ CGFloat margin = 2;
 
 -(void)scrollCropViewController:(OLScrollCropViewController *)cropper didFinishCroppingImage:(UIImage *)croppedImage{
     [self.editingPrintPhoto unloadImage];
-    self.editingPrintPhoto.asset = [OLAsset assetWithImageAsJPEG:croppedImage];
+    
+    self.editingPrintPhoto.edits = cropper.edits;
     
     [self.collectionView reloadData];
+    [cropper dismissViewControllerAnimated:YES completion:^{}];
     
-    [cropper dismissViewControllerAnimated:YES completion:NULL];
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackReviewScreenDidCropPhotoForProductName:self.product.productTemplate.name];
+#endif
 }
 
 #pragma mark - Autorotate and Orientation Methods
