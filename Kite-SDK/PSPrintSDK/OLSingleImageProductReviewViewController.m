@@ -767,6 +767,7 @@ static BOOL hasMoved;
     KITAssetsPickerController *vc = [[KITAssetsPickerController alloc] init];
     vc.delegate = self;
     vc.collectionDataSources = provider.collections;
+    vc.selectedAssets = [[self createAssetArray] mutableCopy];
     vc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
     [self presentViewController:vc animated:YES completion:NULL];
 }

@@ -58,5 +58,17 @@
     return 100;
 }
 
+- (BOOL)isEqual:(id)object{
+    if (![object isKindOfClass:[self class]]) {
+        return NO;
+    }
+    
+    if (object == self) {
+        return YES;
+    }
+    
+    return [self.url isEqualToString:[(AssetDataSource *)object url]];
+}
+
 
 @end
