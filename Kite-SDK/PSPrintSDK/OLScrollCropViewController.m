@@ -140,10 +140,6 @@
     }
 }
 
-- (BOOL)prefersStatusBarHidden {
-    return YES;
-}
-
 - (IBAction)onBarButtonDoneTapped:(UIBarButtonItem *)sender {
     self.edits.cropImageRect = [self.cropView getImageRect];
     self.edits.cropImageFrame = [self.cropView getFrameRect];
