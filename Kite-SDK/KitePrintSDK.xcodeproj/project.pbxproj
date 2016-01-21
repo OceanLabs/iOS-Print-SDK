@@ -1527,7 +1527,6 @@
 				2EADD8661BE79D6E0051CD31 /* KitePrintSDK-Dev-Info.plist */,
 				CD73BF77186215790009DE03 /* main.m */,
 				CD73BF79186215790009DE03 /* KitePrintSDK-Prefix.pch */,
-				2E6E605F1C50384C00829BB7 /* KitePrintSDK.strings */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -1987,6 +1986,7 @@
 		E29C862E1BE3C4640041D4CF /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				2E6E605F1C50384C00829BB7 /* KitePrintSDK.strings */,
 				E22963951C43DF29002A90CA /* CTAssetsPickerController.bundle */,
 				E29C84161BE2877A0041D4CF /* SVProgressHUD.bundle */,
 				3D6CDAAC1B1F41AE00786478 /* kite_corrupt.jpg */,
