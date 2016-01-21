@@ -1649,6 +1649,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"loadingCell"];
         UIActivityIndicatorView *activity = [cell viewWithTag:10];
         [activity startAnimating];
+        cell.backgroundColor = [UIColor clearColor];
         
         return cell;
     }
