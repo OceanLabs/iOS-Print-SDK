@@ -100,7 +100,9 @@ static const CGFloat kBookEdgePadding = 38;
 @interface OLKiteViewController ()
 
 @property (strong, nonatomic) OLPrintOrder *printOrder;
+#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
 @property (strong, nonatomic) NSMutableArray <OLCustomPhotoProvider *> *customImageProviders;
+#endif
 - (void)dismiss;
 
 @end

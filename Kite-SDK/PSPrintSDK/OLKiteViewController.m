@@ -61,7 +61,9 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
 @property (weak, nonatomic) IBOutlet UINavigationBar *navigationBar;
 @property (weak, nonatomic) IBOutlet UINavigationItem *customNavigationItem;
 @property (weak, nonatomic) IBOutlet UIImageView *loadingImageView;
+#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
 @property (strong, nonatomic) NSMutableArray <OLCustomPhotoProvider *> *customImageProviders;
+#endif
 
 
 @property (assign, nonatomic) BOOL useDarkTheme; //XXX: Delete this when exposed in header

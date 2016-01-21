@@ -134,7 +134,9 @@ UIViewControllerPreviewingDelegate, OLScrollCropViewControllerDelegate>
 @end
 
 @interface OLKiteViewController ()
+#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
 @property (strong, nonatomic) NSMutableArray <OLCustomPhotoProvider *> *customImageProviders;
+#endif
 @property (strong, nonatomic) OLPrintOrder *printOrder;
 - (void)dismiss;
 

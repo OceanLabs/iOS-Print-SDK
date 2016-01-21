@@ -71,7 +71,9 @@ static const NSInteger kSectionPages = 2;
 @end
 
 @interface OLKiteViewController (Private)
+#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
 @property (strong, nonatomic) NSMutableArray <OLCustomPhotoProvider *> *customImageProviders;
+#endif
 
 @end
 
