@@ -1,0 +1,63 @@
+
+/* Class = "UINavigationItem"; title = "Products"; ObjectID = "4Zp-AY-ogL"; */
+"4Zp-AY-ogL.title" = "Products";
+
+/* Class = "UILabel"; text = "Polaroid Style Prints"; ObjectID = "Jng-8R-qQc"; */
+"Jng-8R-qQc.text" = "Polaroid Style Prints";
+
+/* Class = "UILabel"; text = "Magnets"; ObjectID = "KZj-nl-o9b"; */
+"KZj-nl-o9b.text" = "Magnets";
+
+/* Class = "UILabel"; text = "Square Prints"; ObjectID = "NVu-rh-1JA"; */
+"NVu-rh-1JA.text" = "Square Prints";
+
+/* Class = "UILabel"; text = "https://www.kite.ly"; ObjectID = "QWq-dR-UOh"; */
+"QWq-dR-UOh.text" = "https://www.kite.ly";
+
+/* Class = "UILabel"; text = "Large Format A1"; ObjectID = "RBE-kZ-OF0"; */
+"RBE-kZ-OF0.text" = "Large Format A1";
+
+/* Class = "UIBarButtonItem"; title = "Cancel"; ObjectID = "TLJ-iA-iSZ"; */
+"TLJ-iA-iSZ.title" = "Cancel";
+
+/* Class = "UINavigationItem"; title = "Kite Print SDK"; ObjectID = "ead-1D-CC7"; */
+"ead-1D-CC7.title" = "Kite Print SDK";
+
+/* Class = "UILabel"; text = "Large Format A2"; ObjectID = "g1Y-LU-1dx"; */
+"g1Y-LU-1dx.text" = "Large Format A2";
+
+/* Class = "UINavigationItem"; title = "Order History"; ObjectID = "gAy-ic-cdD"; */
+"gAy-ic-cdD.title" = "Order History";
+
+/* Class = "UILabel"; text = "Postcard"; ObjectID = "gNT-Xw-JVK"; */
+"gNT-Xw-JVK.text" = "Postcard";
+
+/* Class = "UIBarButtonItem"; title = "Back"; ObjectID = "hMy-LQ-B16"; */
+"hMy-LQ-B16.title" = "Back";
+
+/* Class = "UIButton"; normalTitle = "Print Photos at Remote URLs"; ObjectID = "kvO-to-w6m"; */
+"kvO-to-w6m.normalTitle" = "Print Photos at Remote URLs";
+
+/* Class = "UILabel"; text = "Mini Square Prints"; ObjectID = "ogN-2u-PEy"; */
+"ogN-2u-PEy.text" = "Mini Square Prints";
+
+/* Class = "UILabel"; text = "Title"; ObjectID = "qx9-R6-wsS"; */
+"qx9-R6-wsS.text" = "Title";
+
+/* Class = "UIButton"; normalTitle = "Print Order History"; ObjectID = "vUR-Y7-KCs"; */
+"vUR-Y7-KCs.normalTitle" = "Print Order History";
+
+/* Class = "UILabel"; text = "Large Format A3"; ObjectID = "wOg-6R-wfV"; */
+"wOg-6R-wfV.text" = "Large Format A3";
+
+/* Class = "UILabel"; text = "Mini Polaroid Style Prints"; ObjectID = "xv4-ob-g6k"; */
+"xv4-ob-g6k.text" = "Mini Polaroid Style Prints";
+
+/* Class = "UISegmentedControl"; yCC-yE-an1.segmentTitles[0] = "Sandbox"; ObjectID = "yCC-yE-an1"; */
+"yCC-yE-an1.segmentTitles[0]" = "Sandbox";
+
+/* Class = "UISegmentedControl"; yCC-yE-an1.segmentTitles[1] = "Live"; ObjectID = "yCC-yE-an1"; */
+"yCC-yE-an1.segmentTitles[1]" = "Live";
+
+/* Class = "UIButton"; normalTitle = "Print Local iPhone Photos"; ObjectID = "zH5-iT-gzI"; */
+"zH5-iT-gzI.normalTitle" = "Print Local iPhone Photos";
