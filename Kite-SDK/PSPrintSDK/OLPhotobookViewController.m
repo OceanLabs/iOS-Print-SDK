@@ -1624,18 +1624,17 @@ UINavigationControllerDelegate
     // First remove any that are not returned.
     NSMutableArray *removeArray = [NSMutableArray arrayWithArray:self.userSelectedPhotos];
     for (OLPrintPhoto *object in self.userSelectedPhotos) {
-        if ([object.asset isKindOfClass:[OLAsset class]] && [object.asset isKindOfClass:class]){
-            for (OLPrintPhoto *addedPhoto in photoArray){
-                if ([addedPhoto.asset isKindOfClass:[OLAsset class]] && (![[object.asset dataSource] isEqual:[addedPhoto.asset dataSource]] || ![[[object.asset dataSource] class] isKindOfClass:[[addedPhoto.asset dataSource] class]])){
-                    [removeArray removeObjectIdenticalTo:object];
-                }
+        if ([object.asset isKindOfClass:[OLAsset class]] && [[object.asset dataSource] isKindOfClass:class]){
+            if ([photoArray containsObject:object]){
+                [removeArray removeObjectIdenticalTo:object];
+                [photoArray removeObject:object];
             }
         }
         else if (![object.asset isKindOfClass:class]) {
             [removeArray removeObjectIdenticalTo:object];
         }
         
-        if([photoArray containsObject:object]){
+        else if([photoArray containsObject:object]){
             [removeArray removeObjectIdenticalTo:object];
         }
     }
@@ -1715,7 +1714,6 @@ UINavigationControllerDelegate
 #endif
 #ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
     else if ([picker isKindOfClass:[KITAssetsPickerController class]]){
-        assetClass = [OLAsset class];
         NSMutableArray *olAssets = [[NSMutableArray alloc] init];
         for (id<OLAssetDataSource> asset in assets){
             if ([asset respondsToSelector:@selector(dataWithCompletionHandler:)]){
@@ -1723,6 +1721,7 @@ UINavigationControllerDelegate
             }
         }
         assets = olAssets;
+        assetClass = [[assets.firstObject dataSource] class];
     }
 #endif
     
