@@ -7,7 +7,7 @@ Pod::Spec.new do |spec|
   spec.summary          = "Add physical print functionality in minutes! Print magnets, photo prints, postcards, polaroids, posters, stickers, canvas', phone cases, etc"
   spec.source           = {:git => 'https://github.com/OceanLabs/iOS-Print-SDK.git', :tag => spec.version.to_s }
   spec.source_files     = ['Kite-SDK/PSPrintSDK/OL*.{h,m}', 'Kite-SDK/PSPrintSDK/CardIO*.h', 'Kite-SDK/PSPrintSDK/RMImageCropper/*.{h,m}', 'Kite-SDK/PSPrintSDK/Categories/*.{h,m}', 'Kite-SDK/PSPrintSDK/LXReorderableCollectionViewFlowLayout.{h,m}']
-  spec.resources        = ['Kite-SDK/PSPrintSDK/KitePrintSDK.xcassets', 'Kite-SDK/*.lproj', 'Kite-SDK/PSPrintSDK/OLKiteStoryboard.storyboard', 'Kite-SDK/PSPrintSDK/OLPhotoSelectionButton.xib', 'Kite-SDK/PSPrintSDK/kite_corrupt.jpg']
+  spec.resources        = ['Kite-SDK/PSPrintSDK/KitePrintSDK.xcassets', 'Kite-SDK/*.lproj', 'Kite-SDK/PSPrintSDK/OLPhotoSelectionButton.xib', 'Kite-SDK/PSPrintSDK/kite_corrupt.jpg']
   spec.dependency	'SDWebImage', '~> 3.7.2'
   spec.dependency	'SVProgressHUD'
   spec.dependency	'AFNetworking', '~> 2.6.1'
