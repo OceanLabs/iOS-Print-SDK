@@ -227,7 +227,7 @@ UINavigationControllerDelegate>
 
 - (void)viewDidLayoutSubviews{
     [super viewDidLayoutSubviews];
-    self.nextButton.frame = CGRectMake(0, self.view.frame.size.height - 40 + self.collectionView.contentOffset.y, self.view.frame.size.width, 40);
+    self.nextButton.frame = CGRectMake(0, self.view.frame.size.height - self.nextButton.frame.size.height + self.collectionView.contentOffset.y, self.view.frame.size.width, self.nextButton.frame.size.height);
 }
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator{
@@ -251,7 +251,7 @@ UINavigationControllerDelegate>
     }
     
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinator> context){
-        self.nextButton.frame = CGRectMake(0, self.view.frame.size.height - 40 + self.collectionView.contentOffset.y, self.view.frame.size.width, 40);
+        self.nextButton.frame = CGRectMake(0, self.view.frame.size.height - self.nextButton.frame.size.height + self.collectionView.contentOffset.y, self.view.frame.size.width, self.nextButton.frame.size.height);
     }completion:^(id<UIViewControllerTransitionCoordinator> context){
         self.rotating = NO;
         [self.collectionView insertSections:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, 3)]];
@@ -402,7 +402,7 @@ UINavigationControllerDelegate>
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
     CGRect headerFrame = self.nextButton.frame;
-    headerFrame.origin.y = self.view.frame.size.height - 40 + scrollView.contentOffset.y ;
+    headerFrame.origin.y = self.view.frame.size.height - self.nextButton.frame.size.height + scrollView.contentOffset.y ;
     self.nextButton.frame = headerFrame;
 }
 

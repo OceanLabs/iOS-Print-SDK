@@ -161,7 +161,7 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
 
 - (void)viewDidLayoutSubviews{
     [super viewDidLayoutSubviews];
-    self.nextButton.frame = CGRectMake(0, self.view.frame.size.height - 40 + self.collectionView.contentOffset.y, self.view.frame.size.width, 40);
+    self.nextButton.frame = CGRectMake(0, self.view.frame.size.height - self.nextButton.frame.size.height + self.collectionView.contentOffset.y, self.view.frame.size.width, self.nextButton.frame.size.height);
 }
 
 - (void)viewWillAppear:(BOOL)animated{
@@ -196,15 +196,15 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
             [cell setNeedsDisplay];
         }
         
-        self.nextButton.frame = CGRectMake(0, self.view.frame.size.height - 40 + self.collectionView.contentOffset.y, self.view.frame.size.width, 40);
+        self.nextButton.frame = CGRectMake(0, self.view.frame.size.height - self.nextButton.frame.size.height + self.collectionView.contentOffset.y, self.view.frame.size.width, self.nextButton.frame.size.height);
     }completion:^(id<UIViewControllerTransitionCoordinator> context){
     }];
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
-    CGRect headerFrame = self.nextButton.frame;
-    headerFrame.origin.y = self.view.frame.size.height - 40 + scrollView.contentOffset.y ;
-    self.nextButton.frame = headerFrame;
+    CGRect frame = self.nextButton.frame;
+    frame.origin.y = self.view.frame.size.height - self.nextButton.frame.size.height + scrollView.contentOffset.y ;
+    self.nextButton.frame = frame;
 }
 
 -(NSUInteger) totalNumberOfExtras{
@@ -298,9 +298,9 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     if ([printOrder.jobs containsObject:self.editingPrintJob]){
         id<OLPrintJob> existingJob = printOrder.jobs[[printOrder.jobs indexOfObject:self.editingPrintJob]];
         [existingJob setExtraCopies:[existingJob extraCopies]+1];
-		for (NSString *option in self.product.selectedOptions.allKeys){
-        	[job setValue:self.product.selectedOptions[option] forOption:option];
-    	}
+        for (NSString *option in self.product.selectedOptions.allKeys){
+            [job setValue:self.product.selectedOptions[option] forOption:option];
+        }
     }
     else{
         [printOrder addPrintJob:self.editingPrintJob];
@@ -659,7 +659,6 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     CGFloat width = (imageWidth + b.right + b.left) * screenWidthFactor + margin * 2;
     
     return CGSizeMake(width, height);
-
 }
 
 -(CGFloat)marginBetweenCellsForCollectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout{
