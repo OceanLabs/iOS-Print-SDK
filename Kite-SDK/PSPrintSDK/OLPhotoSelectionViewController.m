@@ -951,40 +951,22 @@ UIViewControllerPreviewingDelegate, OLScrollCropViewControllerDelegate, UIAction
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    if (collectionView.tag == 10){
-        if ([self shouldGroupPhotosInOneSection]){
-            return self.userSelectedPhotos.count;
-        }
-        
-        NSInteger number = self.product.quantityToFulfillOrder;
-        NSInteger removedImagesInOtherSections = 0;
-        for (NSNumber *sectionNumber in self.indexPathsToRemoveDict.allKeys){
-            NSNumber *n = [NSNumber numberWithLong:[sectionNumber longValue]];
-            if ([n integerValue] != section){
-                removedImagesInOtherSections += [self.indexPathsToRemoveDict[n] count];
-            }
-        }
-        NSInteger removedImagesInThisSection = [self.indexPathsToRemoveDict[[NSNumber numberWithInteger:section]] count];
-        NSInteger finalNumberOfPhotosRemoved = removedImagesInThisSection + removedImagesInOtherSections;
-        
-        return MIN(MAX(self.userSelectedPhotos.count + finalNumberOfPhotosRemoved, number * [self numberOfCellsPerRow]), self.product.quantityToFulfillOrder) - removedImagesInThisSection;
+    if ([self shouldGroupPhotosInOneSection]){
+        return self.userSelectedPhotos.count;
     }
-    else{
-        NSInteger providers = 0;
-        if ([OLKiteUtils cameraRollEnabled:self]){
-            providers++;
+    
+    NSInteger number = self.product.quantityToFulfillOrder;
+    NSInteger removedImagesInOtherSections = 0;
+    for (NSNumber *sectionNumber in self.indexPathsToRemoveDict.allKeys){
+        NSNumber *n = [NSNumber numberWithLong:[sectionNumber longValue]];
+        if ([n integerValue] != section){
+            removedImagesInOtherSections += [self.indexPathsToRemoveDict[n] count];
         }
-        if ([OLKiteUtils facebookEnabled]){
-            providers++;
-        }
-        if ([OLKiteUtils instagramEnabled]){
-            providers++;
-        }
-#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
-        providers += [OLKiteUtils kiteVcForViewController:self].customImageProviders.count;
-#endif
-        return providers;
     }
+    NSInteger removedImagesInThisSection = [self.indexPathsToRemoveDict[[NSNumber numberWithInteger:section]] count];
+    NSInteger finalNumberOfPhotosRemoved = removedImagesInThisSection + removedImagesInOtherSections;
+    
+    return MIN(MAX(self.userSelectedPhotos.count + finalNumberOfPhotosRemoved, number * [self numberOfCellsPerRow]), self.product.quantityToFulfillOrder) - removedImagesInThisSection;
 }
 
 - (NSInteger) numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
