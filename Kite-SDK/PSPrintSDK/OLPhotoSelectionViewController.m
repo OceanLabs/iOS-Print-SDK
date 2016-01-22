@@ -273,8 +273,8 @@ UIViewControllerPreviewingDelegate, OLScrollCropViewControllerDelegate, UIAction
     
     if ([self.userDisabledPhotos count] > 0){
         [UIView animateKeyframesWithDuration:0.15 delay:0 options:UIViewKeyframeAnimationOptionBeginFromCurrentState | UIViewAnimationOptionCurveLinear animations:^{
-            self.clearButtonContainerView.transform = CGAffineTransformMakeTranslation(0, -40);
-            self.collectionView.contentInset = UIEdgeInsetsMake(self.collectionView.contentInset.top, self.collectionView.contentInset.left, self.collectionView.contentInset.bottom + 40, self.collectionView.contentInset.left);
+            self.clearButtonContainerView.transform = CGAffineTransformMakeTranslation(0, -self.clearButtonContainerView.frame.size.height);
+            self.collectionView.contentInset = UIEdgeInsetsMake(self.collectionView.contentInset.top, self.collectionView.contentInset.left, self.collectionView.contentInset.bottom + self.clearButtonContainerView.frame.size.height, self.collectionView.contentInset.left);
         }completion:NULL];
     }
     else{
