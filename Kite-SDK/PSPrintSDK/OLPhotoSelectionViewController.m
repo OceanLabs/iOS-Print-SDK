@@ -101,23 +101,23 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 
 @interface OLPhotoSelectionViewController () <UINavigationControllerDelegate,
 #ifdef OL_KITE_AT_LEAST_IOS8
-                                            CTAssetsPickerControllerDelegate,
+CTAssetsPickerControllerDelegate,
 #endif
-                                            OLAssetsPickerControllerDelegate,
-                                            UICollectionViewDataSource,
-                                            UICollectionViewDelegate,
-                                            UICollectionViewDelegateFlowLayout,
+OLAssetsPickerControllerDelegate,
+UICollectionViewDataSource,
+UICollectionViewDelegate,
+UICollectionViewDelegateFlowLayout,
 #ifdef OL_KITE_OFFER_INSTAGRAM
-                                            OLInstagramImagePickerControllerDelegate,
+OLInstagramImagePickerControllerDelegate,
 #endif
 #ifdef OL_KITE_OFFER_FACEBOOK
-                                            OLFacebookImagePickerControllerDelegate,
+OLFacebookImagePickerControllerDelegate,
 #endif
 #ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
-                                            KITAssetsPickerControllerDelegate,
+KITAssetsPickerControllerDelegate,
 #endif
-                                            LXReorderableCollectionViewDataSource,
-                                            UICollectionViewDelegateFlowLayout,
+LXReorderableCollectionViewDataSource,
+UICollectionViewDelegateFlowLayout,
 UIViewControllerPreviewingDelegate, OLScrollCropViewControllerDelegate, UIActionSheetDelegate>
 
 @property (assign, nonatomic) CGSize rotationSize;
@@ -186,7 +186,7 @@ UIViewControllerPreviewingDelegate, OLScrollCropViewControllerDelegate, UIAction
 
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
-
+    
     if ([self.presentingViewController respondsToSelector:@selector(viewControllers)]) {
         UIViewController *presentingVc = [(UINavigationController *)self.presentingViewController viewControllers].lastObject;
         if (![presentingVc isKindOfClass:[OLPaymentViewController class]]){
@@ -323,7 +323,7 @@ UIViewControllerPreviewingDelegate, OLScrollCropViewControllerDelegate, UIAction
             [addArray removeObject:object];
         }
     }
-
+    
     [self.userSelectedPhotos addObjectsFromArray:addArray];
     
     // Reload the collection view.
@@ -688,7 +688,7 @@ UIViewControllerPreviewingDelegate, OLScrollCropViewControllerDelegate, UIAction
 #endif
 
 - (void)assetsPickerController:(id)picker didFinishPickingAssets:(NSArray *)assets {
-	NSInteger originalCount = self.userSelectedPhotos.count;
+    NSInteger originalCount = self.userSelectedPhotos.count;
     Class assetClass;
     if ([picker isKindOfClass:[OLAssetsPickerController class]]){
         assetClass = [ALAsset class];
@@ -970,74 +970,64 @@ UIViewControllerPreviewingDelegate, OLScrollCropViewControllerDelegate, UIAction
 }
 
 - (NSInteger) numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
-    if (collectionView.tag == 10){
-        if ([self shouldGroupPhotosInOneSection]){
-            return 1;
-        }
-        
-        NSInteger removedImagesCount = 0;
-        for (NSNumber *section in self.indexPathsToRemoveDict.allKeys){
-            NSNumber *n = [NSNumber numberWithLong:[section longValue]];
-            removedImagesCount += [self.indexPathsToRemoveDict[n] count];
-        }
-        NSInteger finalNumberOfPhotos = self.userSelectedPhotos.count;
-        return MAX(ceil(finalNumberOfPhotos / (double)self.product.quantityToFulfillOrder), 1);
-    }
-    else{
+    if ([self shouldGroupPhotosInOneSection]){
         return 1;
     }
+    
+    NSInteger removedImagesCount = 0;
+    for (NSNumber *section in self.indexPathsToRemoveDict.allKeys){
+        NSNumber *n = [NSNumber numberWithLong:[section longValue]];
+        removedImagesCount += [self.indexPathsToRemoveDict[n] count];
+    }
+    NSInteger finalNumberOfPhotos = self.userSelectedPhotos.count;
+    return MAX(ceil(finalNumberOfPhotos / (double)self.product.quantityToFulfillOrder), 1);
 }
 
 - (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath{
-    if (collectionView.tag == 10){
-        UICollectionReusableView *cell = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"headerView" forIndexPath:indexPath];
-        cell.backgroundColor = [UIColor colorWithHexString:@"#ECEFF2"];
+    UICollectionReusableView *cell = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"headerView" forIndexPath:indexPath];
+    cell.backgroundColor = [UIColor colorWithHexString:@"#ECEFF2"];
+    
+    UILabel *label = (UILabel *)[cell viewWithTag:77];
+    if (!label){
+        label = [[UILabel alloc] init];
+        label.tag = 77;
+        [cell addSubview:label];
         
-        UILabel *label = (UILabel *)[cell viewWithTag:77];
-        if (!label){
-            label = [[UILabel alloc] init];
-            label.tag = 77;
-            [cell addSubview:label];
-            
-            label.translatesAutoresizingMaskIntoConstraints = NO;
-            NSDictionary *views = NSDictionaryOfVariableBindings(label);
-            NSMutableArray *con = [[NSMutableArray alloc] init];
-            
-            NSArray *visuals = @[@"H:|-20-[label]-0-|",
-                                 @"V:|-0-[label]-0-|"];
-            
-            
-            for (NSString *visual in visuals) {
-                [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
-            }
-            
-            [label.superview addConstraints:con];
+        label.translatesAutoresizingMaskIntoConstraints = NO;
+        NSDictionary *views = NSDictionaryOfVariableBindings(label);
+        NSMutableArray *con = [[NSMutableArray alloc] init];
+        
+        NSArray *visuals = @[@"H:|-20-[label]-0-|",
+                             @"V:|-0-[label]-0-|"];
+        
+        
+        for (NSString *visual in visuals) {
+            [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
         }
         
-        NSString *title;
-        OLTemplateUI templateUI = [OLProductTemplate templateWithId:self.product.templateId].templateUI;
-        if (templateUI == kOLTemplateUIFrame){
-            title = [[NSString alloc]initWithFormat:@"#%ld Frame", (long)indexPath.section + 1];
-        }
-        else if (templateUI == kOLTemplateUIPhotobook){
-            title = [[NSString alloc]initWithFormat:@"#%ld Photobook", (long)indexPath.section + 1];
-        }
-        else if (templateUI == kOLTemplateUIPoster){
-            title = [[NSString alloc]initWithFormat:@"#%ld Poster", (long)indexPath.section + 1];
-        }
-        else if (templateUI == kOLTemplateUIPostcard){
-            title = [[NSString alloc]initWithFormat:@"#%ld Postcard", (long)indexPath.section + 1];
-        }
-        else{
-            title = [[NSString alloc]initWithFormat:@"#%ld Pack of %lu %@", (long)indexPath.section + 1, (unsigned long)self.product.quantityToFulfillOrder, self.product.productTemplate.name];
-        }
-        label.text = title;
-        
-        return cell;
+        [label.superview addConstraints:con];
+    }
+    
+    NSString *title;
+    OLTemplateUI templateUI = [OLProductTemplate templateWithId:self.product.templateId].templateUI;
+    if (templateUI == kOLTemplateUIFrame){
+        title = [[NSString alloc]initWithFormat:@"#%ld Frame", (long)indexPath.section + 1];
+    }
+    else if (templateUI == kOLTemplateUIPhotobook){
+        title = [[NSString alloc]initWithFormat:@"#%ld Photobook", (long)indexPath.section + 1];
+    }
+    else if (templateUI == kOLTemplateUIPoster){
+        title = [[NSString alloc]initWithFormat:@"#%ld Poster", (long)indexPath.section + 1];
+    }
+    else if (templateUI == kOLTemplateUIPostcard){
+        title = [[NSString alloc]initWithFormat:@"#%ld Postcard", (long)indexPath.section + 1];
     }
     else{
-        return nil;
+        title = [[NSString alloc]initWithFormat:@"#%ld Pack of %lu %@", (long)indexPath.section + 1, (unsigned long)self.product.quantityToFulfillOrder, self.product.productTemplate.name];
     }
+    label.text = title;
+    
+    return cell;
 }
 
 - (void)fixCellFrameOnIOS7:(UICollectionViewCell *)cell {
@@ -1243,21 +1233,11 @@ UIViewControllerPreviewingDelegate, OLScrollCropViewControllerDelegate, UIAction
 #pragma mark UICollectionViewLayoutDelegate
 
 - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section{
-    if (collectionView.tag == 10){
-        return OLPhotoSelectionMargin;
-    }
-    else{
-        return 0;
-    }
+    return OLPhotoSelectionMargin;
 }
 
 - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section{
-    if (collectionView.tag == 10){
-        return OLPhotoSelectionMargin;
-    }
-    else{
-        return 0;
-    }
+    return OLPhotoSelectionMargin;
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
@@ -1278,28 +1258,17 @@ UIViewControllerPreviewingDelegate, OLScrollCropViewControllerDelegate, UIAction
 - (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout insetForSectionAtIndex:(NSInteger)section{
     CGSize size = self.rotationSize.width != 0 ? self.rotationSize : self.view.frame.size;
     
-    if (collectionView.tag == 10){
     CGSize cellSize = [self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
     CGFloat diff = size.width - (cellSize.width * [self numberOfCellsPerRow]);
     return UIEdgeInsetsMake(0, diff/2.0, 0, diff/2.0);
-    }
-    else{
-        CGFloat margin = MAX((size.width - [self collectionView:collectionView numberOfItemsInSection:0] * [self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]].width)/2.0, 0);
-        return UIEdgeInsetsMake(0, margin, 0, margin);
-    }
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section{
-    if (collectionView.tag == 10){
-        if ([self shouldGroupPhotosInOneSection]){
-            return CGSizeZero;
-        }
-        else{
-            return CGSizeMake(self.view.frame.size.width, 50);
-        }
+    if ([self shouldGroupPhotosInOneSection]){
+        return CGSizeZero;
     }
     else{
-        return CGSizeZero;
+        return CGSizeMake(self.view.frame.size.width, 50);
     }
 }
 
@@ -1324,7 +1293,7 @@ UIViewControllerPreviewingDelegate, OLScrollCropViewControllerDelegate, UIAction
             [av show];
         }
         return NO;
-    } 
+    }
     
     return YES;
 }

@@ -5,7 +5,7 @@ link_with 'KiteSDK-Demo', 'KitePrintSDKTests'
 
 pod 'SDWebImage'
 pod 'AFNetworking', '~> 2.6.1'
-pod 'SVProgressHUD'
+pod 'SVProgressHUD', '1.1.3'
 pod 'PayPal-iOS-SDK/Core', '~> 2.12.5'
 pod 'UICKeyChainStore', '~> 2.0.4'
 pod 'Stripe', '~> 5.1.4'
