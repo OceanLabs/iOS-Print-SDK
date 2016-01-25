@@ -161,7 +161,7 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
 
 - (void)viewDidLayoutSubviews{
     [super viewDidLayoutSubviews];
-    self.nextButton.frame = CGRectMake(0, self.view.frame.size.height - self.nextButton.frame.size.height + self.collectionView.contentOffset.y, self.view.frame.size.width, self.nextButton.frame.size.height);
+    self.nextButton.frame = CGRectMake(self.nextButton.frame.origin.x, -self.nextButton.frame.origin.x + self.view.frame.size.height - self.nextButton.frame.size.height + self.collectionView.contentOffset.y, self.view.frame.size.width - 2 * self.nextButton.frame.origin.x, self.nextButton.frame.size.height);
 }
 
 - (void)viewWillAppear:(BOOL)animated{
@@ -196,7 +196,7 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
             [cell setNeedsDisplay];
         }
         
-        self.nextButton.frame = CGRectMake(0, self.view.frame.size.height - self.nextButton.frame.size.height + self.collectionView.contentOffset.y, self.view.frame.size.width, self.nextButton.frame.size.height);
+        self.nextButton.frame = CGRectMake(self.nextButton.frame.origin.x, -self.nextButton.frame.origin.x + self.view.frame.size.height - self.nextButton.frame.size.height + self.collectionView.contentOffset.y, self.view.frame.size.width - 2 * self.nextButton.frame.origin.x, self.nextButton.frame.size.height);
     }completion:^(id<UIViewControllerTransitionCoordinator> context){
     }];
 }
@@ -507,7 +507,7 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
         
         [cropVc setFullImage:image];
         cropVc.edits = self.editingPrintPhoto.edits;
-//        cropVc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
+        //        cropVc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
         [self presentViewController:cropVc animated:NO completion:NULL];
         
 #ifndef OL_NO_ANALYTICS

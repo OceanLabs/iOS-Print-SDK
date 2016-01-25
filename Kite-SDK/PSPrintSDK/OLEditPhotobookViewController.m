@@ -151,7 +151,7 @@ UINavigationControllerDelegate>
     }
     
     [view.superview addConstraints:con];
-
+    
     
     [self updatePhotobookPhotos];
     
@@ -227,7 +227,7 @@ UINavigationControllerDelegate>
 
 - (void)viewDidLayoutSubviews{
     [super viewDidLayoutSubviews];
-    self.nextButton.frame = CGRectMake(0, self.view.frame.size.height - self.nextButton.frame.size.height + self.collectionView.contentOffset.y, self.view.frame.size.width, self.nextButton.frame.size.height);
+    self.nextButton.frame = CGRectMake(self.nextButton.frame.origin.x, -self.nextButton.frame.origin.x + self.view.frame.size.height - self.nextButton.frame.size.height + self.collectionView.contentOffset.y, self.view.frame.size.width - 2 * self.nextButton.frame.origin.x, self.nextButton.frame.size.height);
 }
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator{
@@ -251,7 +251,7 @@ UINavigationControllerDelegate>
     }
     
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinator> context){
-        self.nextButton.frame = CGRectMake(0, self.view.frame.size.height - self.nextButton.frame.size.height + self.collectionView.contentOffset.y, self.view.frame.size.width, self.nextButton.frame.size.height);
+        self.nextButton.frame = CGRectMake(self.nextButton.frame.origin.x, -self.nextButton.frame.origin.x + self.view.frame.size.height - self.nextButton.frame.size.height + self.collectionView.contentOffset.y, self.view.frame.size.width - 2 * self.nextButton.frame.origin.x, self.nextButton.frame.size.height);
     }completion:^(id<UIViewControllerTransitionCoordinator> context){
         self.rotating = NO;
         [self.collectionView insertSections:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, 3)]];
@@ -340,37 +340,37 @@ UINavigationControllerDelegate>
     if (self.product.productTemplate.imageBorder.top == 0 && self.product.productTemplate.imageBorder.left == 0 && [[[UIDevice currentDevice] systemVersion] floatValue] >= 8){
         UIImage *leftImage = [UIImage imageNamed:@"page-shadow-left" inBundle:[OLKiteUtils kiteBundle] compatibleWithTraitCollection:self.traitCollection];
         UIImage *rightImage = [UIImage imageNamed:@"page-shadow-right" inBundle:[OLKiteUtils kiteBundle] compatibleWithTraitCollection:self.traitCollection];
-
+        
         UIImageView *left1 = [[UIImageView alloc] initWithImage:leftImage];
         left1.contentMode = UIViewContentModeScaleToFill;
         left1.tag = 11;
-//        left1.translatesAutoresizingMaskIntoConstraints = NO;
+        //        left1.translatesAutoresizingMaskIntoConstraints = NO;
         [view addSubview:left1];
         
-//        UIImageView *left2 = [[UIImageView alloc] initWithImage:leftImage];
-//        left2.contentMode = UIViewContentModeScaleToFill;
-//        left2.tag = 12;
-//        left2.translatesAutoresizingMaskIntoConstraints = NO;
-//        [view addSubview:left2];
+        //        UIImageView *left2 = [[UIImageView alloc] initWithImage:leftImage];
+        //        left2.contentMode = UIViewContentModeScaleToFill;
+        //        left2.tag = 12;
+        //        left2.translatesAutoresizingMaskIntoConstraints = NO;
+        //        [view addSubview:left2];
         
         UIImageView *right1 = [[UIImageView alloc] initWithImage:rightImage];
         right1.contentMode = UIViewContentModeScaleToFill;
         right1.tag = 21;
-//        right1.translatesAutoresizingMaskIntoConstraints = NO;
+        //        right1.translatesAutoresizingMaskIntoConstraints = NO;
         [view addSubview:right1];
         
-//        UIImageView *right2 = [[UIImageView alloc] initWithImage:rightImage];
-//        right2.contentMode = UIViewContentModeScaleToFill;
-//        right2.tag = 22;
-//        right2.translatesAutoresizingMaskIntoConstraints = NO;
-//        [view addSubview:right2];
+        //        UIImageView *right2 = [[UIImageView alloc] initWithImage:rightImage];
+        //        right2.contentMode = UIViewContentModeScaleToFill;
+        //        right2.tag = 22;
+        //        right2.translatesAutoresizingMaskIntoConstraints = NO;
+        //        [view addSubview:right2];
         
         CGFloat shadowWidth = view.frame.size.width * 0.3;
-
+        
         left1.frame = CGRectMake(view.frame.size.width - shadowWidth, 0, shadowWidth, view.frame.size.height);
-//        left2.frame = CGRectMake(view.frame.size.width - shadowWidth, 0, shadowWidth, view.frame.size.height);
+        //        left2.frame = CGRectMake(view.frame.size.width - shadowWidth, 0, shadowWidth, view.frame.size.height);
         right1.frame = CGRectMake(0, 0, shadowWidth, view.frame.size.height);
-//        right2.frame = CGRectMake(0, 0, shadowWidth, view.frame.size.height);
+        //        right2.frame = CGRectMake(0, 0, shadowWidth, view.frame.size.height);
     }
 }
 
@@ -455,7 +455,7 @@ UINavigationControllerDelegate>
     [cropPhoto getImageWithProgress:NULL completion:^(UIImage *image){
         [cropVc setFullImage:image];
         cropVc.edits = cropPhoto.edits;
-//        cropVc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
+        //        cropVc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
         [self presentViewController:cropVc animated:NO completion:NULL];
     }];
 }
@@ -548,7 +548,7 @@ UINavigationControllerDelegate>
         pageCopy.frame = [self.view convertRect:page.imageView.frame fromView:page.view];
         [page clearImage];
         
-    
+        
         if (selectedPage){ //Previously selected page is in view
             [self addPageShadowsToView:pageCopy];
             [self setPageShadowAlpha:pageCopy forIndex:index];
@@ -603,7 +603,7 @@ UINavigationControllerDelegate>
                 [pageCopy viewWithTag:12].alpha = 0;
                 [pageCopy viewWithTag:22].alpha = 0;
             }
-
+            
             [self swapImageAtIndex:[self.selectedIndexNumber integerValue] withImageAtIndex:page.pageIndex];
             photobook.photobookPhotos = self.photobookPhotos;
             for (OLPhotobookViewController *otherPhotobook in self.childViewControllers){
@@ -704,7 +704,7 @@ UINavigationControllerDelegate>
     UIMenuItem *deleteItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Remove", @"") action:@selector(deletePage)];
     UIMenuItem *cropImageItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Crop", @"") action:@selector(cropImage)];
     UIMenuItem *replaceImageItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Replace Photo", @"") action:@selector(replaceImage)];
-//    UIMenuItem *addPageItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Add Page", @"") action:@selector(addPage)];
+    //    UIMenuItem *addPageItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Add Page", @"") action:@selector(addPage)];
     
     UIMenuController *mc = [UIMenuController sharedMenuController];
     [mc setMenuItems:@[cropImageItem, replaceImageItem, deleteItem]];
@@ -752,7 +752,7 @@ UINavigationControllerDelegate>
         if (indexPath.section == kSectionPages){
             photobook.startOpen = YES;
         }
-                
+        
         photobook.photobookPhotos = self.photobookPhotos;
         if (indexPath.section == kSectionCover){
             photobook.editingPageNumber = nil;
