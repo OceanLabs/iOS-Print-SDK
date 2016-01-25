@@ -100,11 +100,6 @@ static NSString *httpMethodString(OLHTTPMethod method) {
         [request setValue:[NSString stringWithFormat:@"%lu", (unsigned long)[request.HTTPBody length]] forHTTPHeaderField:@"Content-Length"];
     }
     
-    NSString *language = [[NSLocale preferredLanguages] firstObject];
-    if (language){
-        [request setValue:language forHTTPHeaderField:@"Accept-Language"];
-    }
-    
     [request setValue:[NSString stringWithFormat: @"Kite SDK iOS v%@", kOLKiteSDKVersion] forHTTPHeaderField:@"User-Agent"];
     [request setValue:[[NSBundle mainBundle] bundleIdentifier] forHTTPHeaderField:@"X-App-Bundle-Id"];
     [request setValue:[self appName] forHTTPHeaderField:@"X-App-Name"];
