@@ -9,7 +9,7 @@ Pod::Spec.new do |spec|
   spec.source_files     = ['Kite-SDK/PSPrintSDK/OL*.{h,m}', 'Kite-SDK/PSPrintSDK/CardIO*.h', 'Kite-SDK/PSPrintSDK/RMImageCropper/*.{h,m}', 'Kite-SDK/PSPrintSDK/Categories/*.{h,m}', 'Kite-SDK/PSPrintSDK/LXReorderableCollectionViewFlowLayout.{h,m}']
   spec.resources        = ['Kite-SDK/PSPrintSDK/KitePrintSDK.xcassets', 'Kite-SDK/*.lproj', 'Kite-SDK/PSPrintSDK/OLPhotoSelectionButton.xib', 'Kite-SDK/PSPrintSDK/kite_corrupt.jpg', 'Kite-SDK/PSPrintSDK/Base.lproj/OLKiteStoryboard.storyboard']
   spec.dependency	'SDWebImage', '~> 3.7.2'
-  spec.dependency	'SVProgressHUD'
+  spec.dependency	'SVProgressHUD', '~> 1.1.3'
   spec.dependency	'AFNetworking', '~> 2.6.1'
   spec.dependency	'UICKeyChainStore', '~> 2.0.4'
   spec.dependency	'CSStickyHeaderFlowLayout', '~> 0.2.4'
