@@ -370,7 +370,7 @@
                             @"app_version": [NSString stringWithFormat:@"Version: %@ (%@)", appVersion, buildNumber]
                             };
     
-    OLProductPrintJob *job = [[OLProductPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:@[]];
+    OLProductPrintJob *job = [[OLProductPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:@[[OLAsset assetWithURL:[NSURL URLWithString:@"https://kite.ly/no-asset.jpg"]]]];
     NSArray *jobs = [NSArray arrayWithArray:printOrder.jobs];
     for (id<OLPrintJob> existingJob in jobs){
         if ([existingJob.uuid isEqualToString:self.product.uuid]){
