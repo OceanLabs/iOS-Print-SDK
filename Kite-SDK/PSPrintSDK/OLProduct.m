@@ -287,7 +287,7 @@ typedef enum {
     
     //Add description
     if (self.productTemplate.productDescription && ![self.productTemplate.productDescription isEqualToString:@""]){
-        s = [s stringByAppendingString:[NSString stringWithFormat:@"**Description**\n%@\n\n", self.productTemplate.productDescription]];
+        s = [s stringByAppendingString:[NSString stringWithFormat:@"**Description**\n%@\n\n", [self.productTemplate.productDescription stringByReplacingOccurrencesOfString:@"\\n" withString:@"\n"]]];
     }
     
     //Add size info
