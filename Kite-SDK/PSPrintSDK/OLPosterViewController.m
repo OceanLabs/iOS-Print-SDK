@@ -47,13 +47,14 @@
 #import "OLScrollCropViewController.h"
 #import "OLKiteViewController.h"
 #import "NSObject+Utils.h"
-#import "OLAsset+Private.h"
 #import "OLAnalytics.h"
 #import "OLKitePrintSDK.h"
 #import "OLKiteABTesting.h"
 #import "OLRemoteImageView.h"
 #import "OLKiteUtils.h"
 #import "OLImagePreviewViewController.h"
+
+CGFloat posterMargin = 2;
 
 @interface OLPrintOrder (Private)
 
@@ -63,15 +64,11 @@
 
 @interface OLPosterViewController () <UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UICollectionViewDelegate, LXReorderableCollectionViewDataSource, OLScrollCropViewControllerDelegate>
 
-@property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
 @property (strong, nonatomic) NSMutableArray *posterPhotos;
 @property (assign, nonatomic) CGFloat numberOfRows;
 @property (assign, nonatomic) CGFloat numberOfColumns;
 @property (weak, nonatomic) OLPrintPhoto *editingPrintPhoto;
-
-@end
-
-@interface OLSingleImageProductReviewViewController (Private) <UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UICollectionViewDelegate, UIViewControllerPreviewingDelegate>
+@property (assign, nonatomic) CGSize rotationSize;
 
 @end
 
@@ -82,23 +79,30 @@
 
 @end
 
+@interface OLOrderReviewViewController (Private) <UICollectionViewDelegateFlowLayout>
+
+- (BOOL) shouldGoToCheckout;
+- (void) doCheckout;
+
+@end
+
 @implementation OLPosterViewController
 
 -(void)viewDidLoad{
     [super viewDidLoad];
     
-    if ([UITraitCollection class] && [self.traitCollection respondsToSelector:@selector(forceTouchCapability)] && self.traitCollection.forceTouchCapability == UIForceTouchCapabilityAvailable){
-        [self registerForPreviewingWithDelegate:self sourceView:self.collectionView];
-    }
-    
-    self.posterPhotos = [[NSMutableArray alloc] initWithCapacity:self.product.quantityToFulfillOrder];
+    // ensure order is maxed out by adding duplicates as necessary
+    self.posterPhotos = [[NSMutableArray alloc] init];
     [self.posterPhotos addObjectsFromArray:self.userSelectedPhotos];
-    
-    for (NSUInteger i = 0; i < self.product.quantityToFulfillOrder; i++){
-        if (self.posterPhotos.count < self.product.quantityToFulfillOrder){
-            [self.posterPhotos addObject:self.userSelectedPhotos[i % self.userSelectedPhotos.count]];
-        }
+    NSUInteger userSelectedAssetCount = [self.posterPhotos count];
+    NSUInteger numOrders = (NSUInteger) floor(userSelectedAssetCount + self.product.quantityToFulfillOrder - 1) / self.product.quantityToFulfillOrder;
+    NSUInteger duplicatesToFillOrder = numOrders * self.product.quantityToFulfillOrder - userSelectedAssetCount;
+    for (NSUInteger i = 0; i < duplicatesToFillOrder; ++i) {
+        [self.posterPhotos addObject:self.userSelectedPhotos[i % userSelectedAssetCount]];
     }
+#ifdef OL_VERBOSE
+    NSLog(@"Adding %lu duplicates to frame", (unsigned long)duplicatesToFillOrder);
+#endif
     
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Back", @"")
                                                                              style:UIBarButtonItemStylePlain
@@ -118,45 +122,90 @@
                                                                             action:nil];
 }
 
-- (void)viewDidLayoutSubviews{
-    [super viewDidLayoutSubviews];
-    [self.collectionView.collectionViewLayout invalidateLayout];
-}
-
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+    self.rotationSize = size;
     [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
     
+    CGSize oldSize = self.view.frame.size;
+    BOOL iPadMutitasking = oldSize.width != size.height || oldSize.height != size.width;
+    
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinator> context){
-        [self.collectionView.collectionViewLayout invalidateLayout];
-        if (size.height > size.width){
+        if (iPadMutitasking){
             [self.collectionView reloadData];
         }
     }completion:^(id<UIViewControllerTransitionCoordinator> context){
+        
     }];
 }
 
 - (NSInteger) numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
-    if (collectionView.tag != 800){
-        return [super numberOfSectionsInCollectionView:collectionView];
-    }
-    
     return 1;
 }
 
+- (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath{
+    UICollectionReusableView * cell = [collectionView dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:@"reviewHeaderCell" forIndexPath:indexPath];
+    return cell;
+}
+
 - (NSInteger) collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
-    if (collectionView.tag != 800){
-        return [super collectionView:collectionView numberOfItemsInSection:section];
+    if (collectionView.tag == 10){
+        int incompleteFrame = ([self.posterPhotos count] % self.product.quantityToFulfillOrder) != 0 ? 1 : 0;
+        return [self.posterPhotos count]/self.product.quantityToFulfillOrder + incompleteFrame;
     }
-    
-    return self.product.quantityToFulfillOrder;
+    else{
+        return self.product.quantityToFulfillOrder;
+    }
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
-    if (collectionView.tag != 800){
-        return [super collectionView:collectionView cellForItemAtIndexPath:indexPath];
+    if (collectionView.tag == 10){
+        UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"posterCell" forIndexPath:indexPath];
+        
+        //Workaround for iOS 7
+        if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8){
+            cell.contentView.frame = cell.bounds;
+            cell.contentView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin |UIViewAutoresizingFlexibleTopMargin |UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleBottomMargin;
+        }
+        
+        UIView *view = cell.contentView;
+        view.translatesAutoresizingMaskIntoConstraints = NO;
+        NSDictionary *views = NSDictionaryOfVariableBindings(view);
+        NSMutableArray *con = [[NSMutableArray alloc] init];
+        
+        NSArray *visuals = @[@"H:|-0-[view]-0-|",
+                             @"V:|-0-[view]-0-|"];
+        
+        
+        for (NSString *visual in visuals) {
+            [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+        }
+        
+        [view.superview addConstraints:con];
+        
+        UICollectionView* innerCollectionView = (UICollectionView*)[cell.contentView viewWithTag:20];
+        
+        innerCollectionView.dataSource = self;
+        innerCollectionView.delegate = self;
+        
+        return cell;
     }
     
     UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"photoCell" forIndexPath:indexPath];
+    
+    
+    //Workaround for iOS 7
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8){
+        cell.contentView.frame = cell.bounds;
+        cell.contentView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin |UIViewAutoresizingFlexibleTopMargin |UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleBottomMargin;
+    }
+    
+    UIView* view = collectionView.superview;
+    while (![view isKindOfClass:[UICollectionViewCell class]]){
+        view = view.superview;
+    }
+    
+    NSIndexPath* outerCollectionViewIndexPath = [self.collectionView indexPathForCell:(UICollectionViewCell *)view];
+    
     UIActivityIndicatorView *activity = (UIActivityIndicatorView *)[cell viewWithTag:796];
     [activity startAnimating];
     
@@ -165,7 +214,7 @@
     imageView.userInteractionEnabled = YES;
     [imageView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onButtonEnhanceClicked:)]];
     
-    OLPrintPhoto *printPhoto = self.posterPhotos[indexPath.item];
+    OLPrintPhoto *printPhoto =(OLPrintPhoto*)[self.posterPhotos objectAtIndex:indexPath.row + (outerCollectionViewIndexPath.item) * self.product.quantityToFulfillOrder];
     
     [printPhoto setImageSize:[self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath] cropped:YES progress:^(float progress){
         [imageView setProgress:progress];
@@ -180,29 +229,33 @@
 }
 
 - (CGSize) collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
-    if (collectionView.tag != 800){
-        return [super collectionView:collectionView layout:collectionViewLayout sizeForItemAtIndexPath:indexPath];
+    if (collectionView.tag == 10){
+        CGSize size = self.rotationSize.width != 0 ? self.rotationSize : self.view.frame.size;
+        size = CGSizeMake(MIN(size.width, size.height), MAX(size.width, size.height));
+        return CGSizeMake(size.width - 30, (size.width-30) * (1.435714286));
     }
     
+    [collectionView setNeedsLayout];
+    [collectionView layoutIfNeeded];
+    
     CGFloat margin = [self collectionView:collectionView layout:collectionView.collectionViewLayout minimumInteritemSpacingForSectionAtIndex:indexPath.section];
-    CGSize size = collectionView.frame.size;
+    CGSize size = CGSizeMake(MIN(collectionView.frame.size.width, collectionView.frame.size.height), MAX(collectionView.frame.size.width, collectionView.frame.size.height));
     CGFloat width = (size.width - (self.numberOfColumns - 1) * margin)/ self.numberOfColumns;
     CGFloat height = (size.height - (self.numberOfRows - 1) * margin) / self.numberOfRows;
     return CGSizeMake(width, height);
 }
 
-- (CGFloat) collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section{
-    if (collectionView.tag != 800){
-        return [super collectionView:collectionView layout:collectionViewLayout minimumInteritemSpacingForSectionAtIndex:section];
-    }
-    return 2;
+- (UIEdgeInsets)collectionView:
+(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout insetForSectionAtIndex:(NSInteger)section {
+    return UIEdgeInsetsMake(0, 0, 0, 0);
 }
 
-- (CGFloat) collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section{
-    if (collectionView.tag != 800){
-        return [super collectionView:collectionView layout:collectionViewLayout minimumLineSpacingForSectionAtIndex:section];
-    }
-    return 2;
+- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section{
+    return posterMargin;
+}
+
+- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section{
+    return posterMargin;
 }
 
 - (void)collectionView:(UICollectionView *)collectionView itemAtIndexPath:(NSIndexPath *)fromIndexPath didMoveToIndexPath:(NSIndexPath *)toIndexPath {
@@ -221,125 +274,64 @@
 }
 
 +(void)changeOrderOfPhotosInArray:(NSMutableArray*)array forProduct:(OLProduct *)product{
-    NSMutableArray* rows = [[NSMutableArray alloc] initWithCapacity:product.productTemplate.gridCountY];
-    for (NSUInteger rowNumber = 0; rowNumber < product.productTemplate.gridCountY; rowNumber++){
-        NSMutableArray* row = [[NSMutableArray alloc] initWithCapacity:product.productTemplate.gridCountX];
-        for (NSUInteger photoInRow = 0; photoInRow < product.productTemplate.gridCountX; photoInRow++){
-            [row addObject:array[rowNumber * (NSInteger)product.productTemplate.gridCountX + photoInRow]];
+    NSMutableArray *subArrays = [[NSMutableArray alloc] init];
+    for (NSInteger i = 0; i < array.count / product.quantityToFulfillOrder; i++) {
+        [subArrays addObject:[[array subarrayWithRange:NSMakeRange(i*product.quantityToFulfillOrder, product.quantityToFulfillOrder)] mutableCopy]];
+    }
+    
+    for (NSMutableArray *subArray in subArrays){
+        NSMutableArray* rows = [[NSMutableArray alloc] initWithCapacity:product.productTemplate.gridCountY];
+        for (NSUInteger rowNumber = 0; rowNumber < product.productTemplate.gridCountY; rowNumber++){
+            NSMutableArray* row = [[NSMutableArray alloc] initWithCapacity:product.productTemplate.gridCountX];
+            for (NSUInteger photoInRow = 0; photoInRow < product.productTemplate.gridCountX; photoInRow++){
+                [row addObject:subArray[rowNumber * (NSInteger)product.productTemplate.gridCountX + photoInRow]];
+            }
+            [rows addObject:row];
         }
-        [rows addObject:row];
+        
+        [subArray removeAllObjects];
+        for (NSInteger rowNumber = product.productTemplate.gridCountY - 1; rowNumber >= 0; rowNumber--){
+            [subArray addObjectsFromArray:rows[rowNumber]];
+        }
     }
     
     [array removeAllObjects];
-    for (NSInteger rowNumber = product.productTemplate.gridCountY - 1; rowNumber >= 0; rowNumber--){
-        [array addObjectsFromArray:rows[rowNumber]];
+    for (NSArray *subArray in subArrays){
+        [array addObjectsFromArray:subArray];
     }
 }
 
-- (void)saveJobWithCompletionHandler:(void (^)())handler{
-    NSUInteger iphonePhotoCount = 0;
-    for (OLPrintPhoto *photo in self.posterPhotos) {
-        if (photo.type == kPrintPhotoAssetTypeALAsset || photo.type == kPrintPhotoAssetTypePHAsset) ++iphonePhotoCount;
-    }
-    
-    // Avoid uploading assets if possible. We can avoid uploading where the image already exists at a remote
-    // URL and the user did not manipulate it in any way.
-    NSMutableArray *photoAssets = [[NSMutableArray alloc] init];
-    for (OLPrintPhoto *photo in self.posterPhotos) {
-        [photoAssets addObject:[OLAsset assetWithDataSource:[photo copy]]];
-    }
-    [OLPosterViewController changeOrderOfPhotosInArray:photoAssets forProduct:self.product];
-    
-    
-    NSDictionary *infoDict = [[NSBundle mainBundle] infoDictionary];
-    NSString *appVersion = [infoDict objectForKey:@"CFBundleShortVersionString"];
-    NSNumber *buildNumber = [infoDict objectForKey:@"CFBundleVersion"];
-    
-    OLPrintOrder *printOrder = [OLKiteUtils kiteVcForViewController:self].printOrder;
-    printOrder.userData = @{@"photo_count_iphone": [NSNumber numberWithUnsignedInteger:iphonePhotoCount],
-                            @"sdk_version": kOLKiteSDKVersion,
-                            @"platform": @"iOS",
-                            @"uid": [OLAnalytics userDistinctId],
-                            @"app_version": [NSString stringWithFormat:@"Version: %@ (%@)", appVersion, buildNumber]
-                            };
-    
-    OLProductPrintJob *job = [[OLProductPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:photoAssets];
-    for (id<OLPrintJob> existingJob in printOrder.jobs){
-        if ([existingJob.uuid isEqualToString:self.product.uuid]){
-            if ([existingJob extraCopies] > 0){
-                [existingJob setExtraCopies:[existingJob extraCopies]-1];
-            }
-            else{
-                [printOrder removePrintJob:existingJob];
-            }
-            job.uuid = self.product.uuid;
-        }
-    }
-    self.product.uuid = job.uuid;
-    self.editingPrintJob = job;
-    
-    for (NSString *option in self.product.selectedOptions.allKeys){
-        [job setValue:self.product.selectedOptions[option] forOption:option];
-    }
-    
-    if ([printOrder.jobs containsObject:self.editingPrintJob]){
-        id<OLPrintJob> existingJob = printOrder.jobs[[printOrder.jobs indexOfObject:self.editingPrintJob]];
-        [existingJob setExtraCopies:[existingJob extraCopies]+1];
-    }
-    else{
-        [printOrder addPrintJob:self.editingPrintJob];
-    }
-    
-    [printOrder saveOrder];
-    
-    if (handler){
-        handler();
-    }
+- (void)preparePhotosForCheckout{
+    NSMutableArray *reversePhotos = [self.posterPhotos mutableCopy];
+    [OLPosterViewController changeOrderOfPhotosInArray:reversePhotos forProduct:self.product];
+    self.checkoutPhotos = reversePhotos;
 }
 
-- (void)doCheckout{
-    [self saveJobWithCompletionHandler:NULL];
+- (IBAction)onButtonNextClicked:(UIBarButtonItem *)sender {
+    if (![self shouldGoToCheckout]){
+        return;
+    }
     
-    OLPrintOrder *printOrder = [OLKiteUtils kiteVcForViewController:self].printOrder;
-    if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder && [[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant isEqualToString:@"Review-Overview-Checkout"]){
-        UIViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLProductOverviewViewController"];
-        [vc safePerformSelector:@selector(setUserEmail:) withObject:[(OLKiteViewController *)vc userEmail]];
-        [vc safePerformSelector:@selector(setUserPhone:) withObject:[(OLKiteViewController *)vc userPhone]];
-        [vc safePerformSelector:@selector(setKiteDelegate:) withObject:self.delegate];
-        [vc safePerformSelector:@selector(setProduct:) withObject:self.product];
-        [self.navigationController pushViewController:vc animated:YES];
-    }
-    else{
-        [OLKiteUtils checkoutViewControllerForPrintOrder:printOrder handler:^(id vc){
-            [vc safePerformSelector:@selector(setUserEmail:) withObject:[OLKiteUtils userEmail:self]];
-            [vc safePerformSelector:@selector(setUserPhone:) withObject:[OLKiteUtils userPhone:self]];
-            [vc safePerformSelector:@selector(setKiteDelegate:) withObject:[OLKiteUtils kiteDelegate:self]];
-            
-            [self.navigationController pushViewController:vc animated:YES];
-        }];
-    }
+    [self doCheckout];
 }
 
 - (IBAction)onButtonEnhanceClicked:(id)sender {
-    UIView *cellContentView;
-    if ([sender isKindOfClass: [UIButton class]]){
-        cellContentView = [(UIButton *)sender superview];
-    }
-    else if ([sender isKindOfClass:[UITapGestureRecognizer class]]){
-        cellContentView = [(UITapGestureRecognizer *)sender view];
-    }
-    UIView *cell = cellContentView.superview;
-    while (![cell isKindOfClass:[UICollectionViewCell class]]){
-        cell = cell.superview;
-    }
-    NSIndexPath *indexPath = [self.collectionView indexPathForCell:(UICollectionViewCell *)cell];
+    UITapGestureRecognizer* gestureRecognizer = sender;
+    NSIndexPath *outerCollectionViewIndexPath = [self.collectionView indexPathForItemAtPoint:[gestureRecognizer locationInView:self.collectionView]];
+    UICollectionViewCell *outerCollectionViewCell = [self.collectionView cellForItemAtIndexPath:outerCollectionViewIndexPath];
     
-    self.editingPrintPhoto = self.posterPhotos[indexPath.item];
+    UICollectionView* collectionView = (UICollectionView*)[outerCollectionViewCell.contentView viewWithTag:20];
     
+    NSIndexPath* indexPath = [collectionView indexPathForItemAtPoint:[gestureRecognizer locationInView:collectionView]];
+    
+    UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
     OLRemoteImageView *imageView = (OLRemoteImageView *)[cell viewWithTag:795];
+    
     if (!imageView.image){
         return;
     }
+    
+    self.editingPrintPhoto = self.posterPhotos[(outerCollectionViewIndexPath.item) * self.product.quantityToFulfillOrder + indexPath.row];
     
     OLScrollCropViewController *cropVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLScrollCropViewController"];
     cropVc.enableCircleMask = self.product.productTemplate.templateUI == kOLTemplateUICircle;
@@ -352,7 +344,7 @@
     cropVc.definesPresentationContext = true;
     cropVc.modalPresentationStyle = UIModalPresentationOverCurrentContext;
     
-    CGSize cellSize = [self collectionView:self.collectionView layout:self.collectionView.collectionViewLayout sizeForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
+    CGSize cellSize = cell.frame.size;
     cropVc.aspectRatio = cellSize.height / cellSize.width;
     [self.editingPrintPhoto getImageWithProgress:NULL completion:^(UIImage *image){
         [cropVc setFullImage:image];
@@ -363,17 +355,24 @@
 }
 
 - (UIViewController *)previewingContext:(id<UIViewControllerPreviewing>)previewingContext viewControllerForLocation:(CGPoint)location{
-    NSIndexPath *indexPath = [self.collectionView indexPathForItemAtPoint:location];
-    UICollectionViewCell *cell = [self.collectionView cellForItemAtIndexPath:indexPath];
+    NSIndexPath *outerCollectionViewIndexPath = [self.collectionView indexPathForItemAtPoint:location];
+    UICollectionViewCell *outerCollectionViewCell = [self.collectionView cellForItemAtIndexPath:outerCollectionViewIndexPath];
     
+    UICollectionView* collectionView = (UICollectionView*)[outerCollectionViewCell.contentView viewWithTag:20];
+    
+    NSIndexPath* indexPath = [collectionView indexPathForItemAtPoint:[collectionView convertPoint:location fromView:self.collectionView]];
+    
+    UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
     OLRemoteImageView *imageView = (OLRemoteImageView *)[cell viewWithTag:795];
+    
+    OLPrintPhoto *printPhoto =(OLPrintPhoto*)[self.posterPhotos objectAtIndex:indexPath.row + (outerCollectionViewIndexPath.item) * self.product.quantityToFulfillOrder];
     if (!imageView.image){
         return nil;
     }
     
     [previewingContext setSourceRect:[cell convertRect:imageView.frame toView:self.collectionView]];
     
-    self.editingPrintPhoto = self.posterPhotos[indexPath.item];
+    self.editingPrintPhoto = printPhoto;
     
     OLImagePreviewViewController *previewVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLImagePreviewViewController"];
     [self.editingPrintPhoto getImageWithProgress:NULL completion:^(UIImage *image){

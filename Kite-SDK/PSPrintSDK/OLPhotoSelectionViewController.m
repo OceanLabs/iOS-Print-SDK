@@ -169,7 +169,7 @@ UIViewControllerPreviewingDelegate, OLScrollCropViewControllerDelegate, UIAction
     LXReorderableCollectionViewFlowLayout *layout = (LXReorderableCollectionViewFlowLayout *)[self.collectionView collectionViewLayout];
     layout.headerReferenceSize = CGSizeMake(0, 50);
     
-    if ((self.product.productTemplate.templateUI == kOLTemplateUICase || self.product.productTemplate.templateUI == kOLTemplateUIPoster || self.product.productTemplate.templateUI == kOLTemplateUIPostcard || self.product.productTemplate.templateUI == kOLTemplateUIPhotobook) && self.userSelectedPhotos.count > self.product.quantityToFulfillOrder){
+    if ((self.product.productTemplate.templateUI == kOLTemplateUICase || self.product.productTemplate.templateUI == kOLTemplateUIPostcard || self.product.productTemplate.templateUI == kOLTemplateUIPhotobook) && self.userSelectedPhotos.count > self.product.quantityToFulfillOrder){
         self.userSelectedPhotos = [[self.userSelectedPhotos subarrayWithRange:NSMakeRange(0, self.product.quantityToFulfillOrder)] mutableCopy];
     }
     
@@ -752,7 +752,7 @@ UIViewControllerPreviewingDelegate, OLScrollCropViewControllerDelegate, UIAction
 
 - (BOOL)assetsPickerController:(id)picker shouldSelectAsset:(id)asset
 {
-    if (self.product.productTemplate.templateUI != kOLTemplateUICase && self.product.productTemplate.templateUI != kOLTemplateUIPoster && self.product.productTemplate.templateUI != kOLTemplateUIPostcard && self.product.productTemplate.templateUI != kOLTemplateUIPhotobook){
+    if (self.product.productTemplate.templateUI != kOLTemplateUICase && self.product.productTemplate.templateUI != kOLTemplateUIPostcard && self.product.productTemplate.templateUI != kOLTemplateUIPhotobook){
         return YES;
     }
     NSInteger max = self.product.quantityToFulfillOrder;
