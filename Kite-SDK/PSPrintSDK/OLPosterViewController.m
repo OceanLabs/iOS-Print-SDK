@@ -228,15 +228,18 @@ CGFloat posterMargin = 2;
     return cell;
 }
 
+- (void) collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath{
+    UICollectionView *innerCollectionView = (id)[cell.contentView viewWithTag:20];
+    [innerCollectionView.collectionViewLayout invalidateLayout];
+    [innerCollectionView reloadData];
+}
+
 - (CGSize) collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
     if (collectionView.tag == 10){
         CGSize size = self.rotationSize.width != 0 ? self.rotationSize : self.view.frame.size;
         size = CGSizeMake(MIN(size.width, size.height), MAX(size.width, size.height));
         return CGSizeMake(size.width - 30, (size.width-30) * (1.435714286));
     }
-    
-    [collectionView setNeedsLayout];
-    [collectionView layoutIfNeeded];
     
     CGFloat margin = [self collectionView:collectionView layout:collectionView.collectionViewLayout minimumInteritemSpacingForSectionAtIndex:indexPath.section];
     CGSize size = CGSizeMake(MIN(collectionView.frame.size.width, collectionView.frame.size.height), MAX(collectionView.frame.size.width, collectionView.frame.size.height));
@@ -258,11 +261,19 @@ CGFloat posterMargin = 2;
     return posterMargin;
 }
 
-- (void)collectionView:(UICollectionView *)collectionView itemAtIndexPath:(NSIndexPath *)fromIndexPath didMoveToIndexPath:(NSIndexPath *)toIndexPath {
+- (void)collectionView:(UICollectionView *)collectionView itemAtIndexPath:(NSIndexPath *)fromIndexPath willMoveToIndexPath:(NSIndexPath *)toIndexPath {
+    UIView* outerCollectionViewCell = collectionView.superview;
+    while (![outerCollectionViewCell isKindOfClass:[UICollectionViewCell class]]){
+        outerCollectionViewCell = outerCollectionViewCell.superview;
+    }
+    NSIndexPath* outerCollectionViewIndexPath = [self.collectionView indexPathForCell:(UICollectionViewCell *)outerCollectionViewCell];
     
-    id object = [self.posterPhotos objectAtIndex:fromIndexPath.item];
-    [self.posterPhotos removeObjectAtIndex:fromIndexPath.item];
-    [self.posterPhotos insertObject:object atIndex:toIndexPath.item];
+    NSInteger trueFromIndex = fromIndexPath.item + (outerCollectionViewIndexPath.item) * self.product.quantityToFulfillOrder;
+    NSInteger trueToIndex = toIndexPath.item + (outerCollectionViewIndexPath.item) * self.product.quantityToFulfillOrder;
+    
+    id object = [self.posterPhotos objectAtIndex:trueFromIndex];
+    [self.posterPhotos removeObjectAtIndex:trueFromIndex];
+    [self.posterPhotos insertObject:object atIndex:trueToIndex];
 }
 
 - (BOOL)collectionView:(UICollectionView *)collectionView itemAtIndexPath:(NSIndexPath *)fromIndexPath canMoveToIndexPath:(NSIndexPath *)toIndexPath{
