@@ -432,7 +432,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 #endif
     
     [self.printOrder discardDuplicateJobs];
-    [self.tableView reloadData];
+    [self updateViewsBasedOnCostUpdate];
     
     self.poweredByKiteLabelBottomCon.constant = -110;
     [UIView animateWithDuration:0.25 animations:^{
