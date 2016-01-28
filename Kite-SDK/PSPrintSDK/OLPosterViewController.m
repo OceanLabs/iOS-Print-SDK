@@ -238,7 +238,7 @@ CGFloat posterMargin = 2;
     if (collectionView.tag == 10){
         CGSize size = self.rotationSize.width != 0 ? self.rotationSize : self.view.frame.size;
         size = CGSizeMake(MIN(size.width, size.height), MAX(size.width, size.height));
-        return CGSizeMake(size.width - 30, (size.width-30) * (1.435714286));
+        return CGSizeMake(size.width - 30, (size.width-30) * (1.392857143));
     }
     
     CGFloat margin = [self collectionView:collectionView layout:collectionView.collectionViewLayout minimumInteritemSpacingForSectionAtIndex:indexPath.section];
