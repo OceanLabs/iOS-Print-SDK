@@ -522,10 +522,20 @@ UIViewControllerPreviewingDelegate, OLScrollCropViewControllerDelegate, UIAction
 
 #ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
 - (void)showPickerForProvider:(OLCustomPhotoProvider *)provider{
-    KITAssetsPickerController *vc = [[KITAssetsPickerController alloc] init];
+    UIViewController<KITCustomAssetPickerController> *vc;
+    if (provider.vc){
+        vc = provider.vc;
+    }
+    else{
+        KITAssetsPickerController *kvc = [[KITAssetsPickerController alloc] init];
+        kvc.collectionDataSources = provider.collections;
+        vc = kvc;
+    }
+    
+    if ([vc respondsToSelector:@selector(setSelectedAssets:)]){
+        [vc performSelector:@selector(setSelectedAssets:) withObject:[[self createAssetArray] mutableCopy]];
+    }
     vc.delegate = self;
-    vc.collectionDataSources = provider.collections;
-    vc.selectedAssets = [[self createAssetArray] mutableCopy];
     vc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
     [self presentViewController:vc animated:YES completion:NULL];
 }

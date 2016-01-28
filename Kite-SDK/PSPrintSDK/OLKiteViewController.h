@@ -37,6 +37,7 @@
 
 #ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
 @protocol KITAssetCollectionDataSource;
+@protocol KITCustomAssetPickerController;
 #endif
 
 /**
@@ -185,9 +186,18 @@
  *
  *  @param collections An array of photo collections(albums)
  *  @param name        The name for the source
- *  @param image       An image to be used as an icon
+ *  @param image       An image to be used as an icon (where applicable)
  */
-- (void)addCustomPhotoProviderWithCollections:(NSArray <id<KITAssetCollectionDataSource>>*_Nonnull)collections name:(NSString *_Nullable)name icon:(UIImage *_Nullable)image;
+- (void)addCustomPhotoProviderWithCollections:(NSArray <id<KITAssetCollectionDataSource>>*_Nonnull)collections name:(NSString *_Nonnull)name icon:(UIImage *_Nullable)image;
+
+/**
+ *  Add your own photo picker.
+ *
+ *  @param vcs   Your view controller
+ *  @param name The name for the source
+ *  @param icon An image to be used as an icon (where applicable)
+ */
+- (void)addCustomPhotoProviderWithViewController:(UIViewController<KITCustomAssetPickerController> *_Nonnull)vc name:(NSString *_Nonnull)name icon:(UIImage *_Nullable)icon;
 #endif
 
 @end

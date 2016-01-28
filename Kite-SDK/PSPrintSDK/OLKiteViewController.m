@@ -172,11 +172,18 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
 }
 
 #ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
-- (void)addCustomPhotoProviderWithCollections:(NSArray <id<KITAssetCollectionDataSource>>*_Nonnull)collections name:(NSString *_Nullable)name icon:(UIImage *_Nullable)image{
+- (void)addCustomPhotoProviderWithCollections:(NSArray <id<KITAssetCollectionDataSource>>*_Nonnull)collections name:(NSString *_Nonnull)name icon:(UIImage *_Nullable)image{
     if (!self.customImageProviders){
         self.customImageProviders = [[NSMutableArray<OLCustomPhotoProvider *> alloc] init];
     }
     [self.customImageProviders addObject:[[OLCustomPhotoProvider alloc] initWithCollections:collections name:name icon:image]];
+}
+
+- (void)addCustomPhotoProviderWithViewController:(UIViewController<KITCustomAssetPickerController> *_Nonnull)vc name:(NSString *_Nonnull)name icon:(UIImage *_Nullable)icon{
+    if (!self.customImageProviders){
+        self.customImageProviders = [[NSMutableArray<OLCustomPhotoProvider *> alloc] init];
+    }
+    [self.customImageProviders addObject:[[OLCustomPhotoProvider alloc] initWithController:vc name:name icon:icon]];
 }
 #endif
 
