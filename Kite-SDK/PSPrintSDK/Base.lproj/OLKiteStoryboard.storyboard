@@ -3210,7 +3210,7 @@ to rearrange the photos</string>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <collectionView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" minimumZoomScale="0.0" maximumZoomScale="0.0" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="GMm-YW-LGw">
-                                <rect key="frame" x="0.0" y="87" width="600" height="473"/>
+                                <rect key="frame" x="0.0" y="20" width="600" height="580"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <collectionViewLayout key="collectionViewLayout" id="wST-9L-MMl" customClass="LXReorderableCollectionViewFlowLayout"/>
                                 <cells>
@@ -3249,10 +3249,10 @@ to rearrange the photos</string>
                                 </connections>
                             </collectionView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RIR-nk-fnW">
-                                <rect key="frame" x="0.0" y="560" width="600" height="40"/>
+                                <rect key="frame" x="56" y="549" width="539" height="46"/>
                                 <color key="backgroundColor" red="0.12549019610000001" green="0.49803921569999998" blue="0.65490196079999996" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="40" id="AG4-fe-DYo"/>
+                                    <constraint firstAttribute="height" constant="46" id="AG4-fe-DYo"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <state key="normal" title="Next">
@@ -3262,8 +3262,76 @@ to rearrange the photos</string>
                                     <action selector="onButtonNextClicked" destination="ohJ-RH-ZBz" eventType="touchUpInside" id="CF4-Bi-Jc6"/>
                                 </connections>
                             </button>
+                            <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sm1-bU-sZ9">
+                                <rect key="frame" x="5" y="549" width="46" height="46"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NpY-nO-DkL">
+                                        <rect key="frame" x="0.0" y="-6.5" width="46" height="55"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="36"/>
+                                        <state key="normal" title="+">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="onButtonAddPhotosClicked:" destination="ohJ-RH-ZBz" eventType="touchUpInside" id="y54-Gm-f5N"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" red="0.2274509804" green="0.70588235290000001" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="NpY-nO-DkL" secondAttribute="trailing" id="0Pp-zr-CLR"/>
+                                    <constraint firstAttribute="width" constant="46" id="6dA-cw-r7z"/>
+                                    <constraint firstAttribute="bottom" secondItem="NpY-nO-DkL" secondAttribute="bottom" constant="8" id="OfD-b0-BCc"/>
+                                    <constraint firstAttribute="trailing" secondItem="NpY-nO-DkL" secondAttribute="trailing" id="QoU-pl-hng"/>
+                                    <constraint firstItem="NpY-nO-DkL" firstAttribute="centerY" secondItem="sm1-bU-sZ9" secondAttribute="centerY" constant="-2" id="XQ4-Rq-c53"/>
+                                    <constraint firstItem="NpY-nO-DkL" firstAttribute="leading" secondItem="sm1-bU-sZ9" secondAttribute="leading" id="XTV-3Q-4yO"/>
+                                    <constraint firstItem="NpY-nO-DkL" firstAttribute="centerX" secondItem="sm1-bU-sZ9" secondAttribute="centerX" id="cec-U4-kJZ"/>
+                                    <constraint firstAttribute="height" constant="46" id="eb9-jm-f97"/>
+                                    <constraint firstItem="NpY-nO-DkL" firstAttribute="top" secondItem="sm1-bU-sZ9" secondAttribute="top" constant="8" id="iUX-OB-4vK"/>
+                                    <constraint firstItem="NpY-nO-DkL" firstAttribute="leading" secondItem="sm1-bU-sZ9" secondAttribute="leading" id="zhl-B3-eiM"/>
+                                </constraints>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="0Pp-zr-CLR"/>
+                                        <exclude reference="OfD-b0-BCc"/>
+                                        <exclude reference="XTV-3Q-4yO"/>
+                                        <exclude reference="cec-U4-kJZ"/>
+                                        <exclude reference="iUX-OB-4vK"/>
+                                    </mask>
+                                </variation>
+                            </view>
+                            <view alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fgj-0T-EIH">
+                                <rect key="frame" x="5" y="419" width="240" height="110"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vIj-e8-74Z">
+                                        <rect key="frame" x="15" y="8" width="217" height="59"/>
+                                        <string key="text">Let's pick
+some images!</string>
+                                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="19"/>
+                                        <color key="textColor" red="0.48627450979999998" green="0.48627450979999998" blue="0.48627450979999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Start by tapping on this button" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DbM-s3-FsX">
+                                        <rect key="frame" x="15" y="69" width="225" height="21"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                        <color key="textColor" red="0.48627450979999998" green="0.48627450979999998" blue="0.48627450979999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <view tag="10" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="mHs-N6-KoG">
+                                        <rect key="frame" x="13" y="103" width="15" height="15"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    </view>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="110" id="0eV-26-mkv"/>
+                                    <constraint firstAttribute="width" constant="240" id="csi-9b-igx"/>
+                                </constraints>
+                            </view>
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xzY-bt-U4S">
-                                <rect key="frame" x="0.0" y="600" width="600" height="44"/>
+                                <rect key="frame" x="0.0" y="600" width="600" height="51"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="51" id="xiB-km-qG7"/>
+                                </constraints>
                                 <items>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="YYD-dM-QMG"/>
                                     <barButtonItem systemItem="trash" id="2YH-7F-HOT">
@@ -3273,36 +3341,29 @@ to rearrange the photos</string>
                                     </barButtonItem>
                                 </items>
                             </toolbar>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="p1h-Vy-3lF" customClass="OLPhotoSelectionButton">
-                                <rect key="frame" x="0.0" y="20" width="600" height="67"/>
-                                <color key="backgroundColor" red="0.28235294119999998" green="0.81176470590000005" blue="0.67843137249999996" alpha="1" colorSpace="calibratedRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="67" id="HTy-YT-bsN"/>
-                                </constraints>
-                                <connections>
-                                    <action selector="onButtonAddPhotosClicked:" destination="ohJ-RH-ZBz" eventType="touchUpInside" id="oA3-XB-3Qa"/>
-                                </connections>
-                            </view>
                         </subviews>
                         <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
+                            <constraint firstItem="sm1-bU-sZ9" firstAttribute="top" secondItem="fgj-0T-EIH" secondAttribute="bottom" constant="20" id="1F2-RR-C7u"/>
+                            <constraint firstItem="8As-oi-N7r" firstAttribute="top" secondItem="GMm-YW-LGw" secondAttribute="bottom" id="1Oy-6f-a2e"/>
+                            <constraint firstItem="sm1-bU-sZ9" firstAttribute="leading" secondItem="Izz-LW-WTZ" secondAttribute="leading" constant="5" id="1eX-HD-IXf"/>
                             <constraint firstItem="8As-oi-N7r" firstAttribute="top" secondItem="GMm-YW-LGw" secondAttribute="bottom" id="3lq-UA-6Ab"/>
-                            <constraint firstItem="8As-oi-N7r" firstAttribute="top" secondItem="xzY-bt-U4S" secondAttribute="bottom" constant="-44" id="CfT-47-2vb"/>
-                            <constraint firstItem="RIR-nk-fnW" firstAttribute="top" secondItem="GMm-YW-LGw" secondAttribute="bottom" id="Fln-cg-Jmy"/>
+                            <constraint firstItem="8As-oi-N7r" firstAttribute="top" secondItem="xzY-bt-U4S" secondAttribute="bottom" constant="-51" id="CfT-47-2vb"/>
+                            <constraint firstItem="RIR-nk-fnW" firstAttribute="top" secondItem="GMm-YW-LGw" secondAttribute="bottom" constant="5" id="Fln-cg-Jmy"/>
                             <constraint firstItem="GMm-YW-LGw" firstAttribute="leading" secondItem="Izz-LW-WTZ" secondAttribute="leading" id="Gbd-HH-hL7"/>
                             <constraint firstAttribute="trailing" secondItem="GMm-YW-LGw" secondAttribute="trailing" id="HZq-od-a01"/>
-                            <constraint firstItem="RIR-nk-fnW" firstAttribute="leading" secondItem="Izz-LW-WTZ" secondAttribute="leading" id="PZl-Jo-2nm"/>
-                            <constraint firstAttribute="trailing" secondItem="p1h-Vy-3lF" secondAttribute="trailing" priority="749" id="QNf-nz-euq"/>
-                            <constraint firstItem="8As-oi-N7r" firstAttribute="top" secondItem="RIR-nk-fnW" secondAttribute="bottom" id="VGX-mt-ySa"/>
+                            <constraint firstItem="fgj-0T-EIH" firstAttribute="leading" secondItem="Izz-LW-WTZ" secondAttribute="leading" constant="5" id="L7k-Yi-AwZ"/>
+                            <constraint firstItem="RIR-nk-fnW" firstAttribute="leading" secondItem="Izz-LW-WTZ" secondAttribute="leading" constant="56" id="PZl-Jo-2nm"/>
+                            <constraint firstItem="8As-oi-N7r" firstAttribute="top" secondItem="RIR-nk-fnW" secondAttribute="bottom" constant="5" id="VGX-mt-ySa"/>
                             <constraint firstAttribute="trailing" secondItem="xzY-bt-U4S" secondAttribute="trailing" id="efV-4C-oaQ"/>
                             <constraint firstItem="xzY-bt-U4S" firstAttribute="leading" secondItem="Izz-LW-WTZ" secondAttribute="leading" id="fHG-h4-ACu"/>
-                            <constraint firstAttribute="trailing" secondItem="RIR-nk-fnW" secondAttribute="trailing" id="ioS-DI-EXo"/>
-                            <constraint firstItem="p1h-Vy-3lF" firstAttribute="top" secondItem="qxB-dU-29s" secondAttribute="bottom" id="kJa-AY-XhK"/>
-                            <constraint firstItem="p1h-Vy-3lF" firstAttribute="leading" secondItem="Izz-LW-WTZ" secondAttribute="leading" id="m2e-pm-dmq"/>
-                            <constraint firstItem="GMm-YW-LGw" firstAttribute="top" secondItem="qxB-dU-29s" secondAttribute="bottom" constant="67" id="s8z-hK-jMf"/>
+                            <constraint firstAttribute="bottomMargin" secondItem="sm1-bU-sZ9" secondAttribute="bottom" constant="5" id="gIl-wz-qGy"/>
+                            <constraint firstAttribute="trailing" secondItem="RIR-nk-fnW" secondAttribute="trailing" constant="5" id="ioS-DI-EXo"/>
+                            <constraint firstItem="GMm-YW-LGw" firstAttribute="top" secondItem="qxB-dU-29s" secondAttribute="bottom" id="s8z-hK-jMf"/>
                         </constraints>
                         <variation key="default">
                             <mask key="constraints">
+                                <exclude reference="Fln-cg-Jmy"/>
                                 <exclude reference="3lq-UA-6Ab"/>
                             </mask>
                         </variation>
@@ -3311,10 +3372,10 @@ to rearrange the photos</string>
                         <barButtonItem key="backBarButtonItem" title="Back" id="pQZ-t7-66K"/>
                     </navigationItem>
                     <connections>
+                        <outlet property="addPhotosHintView" destination="fgj-0T-EIH" id="Fdp-VX-lIV"/>
                         <outlet property="buttonNext" destination="RIR-nk-fnW" id="6l4-UU-Utk"/>
                         <outlet property="clearButtonContainerView" destination="xzY-bt-U4S" id="oeV-Ze-Saq"/>
                         <outlet property="collectionView" destination="GMm-YW-LGw" id="55o-5L-MaP"/>
-                        <outlet property="galleryButton" destination="p1h-Vy-3lF" id="m9s-5m-KYc"/>
                         <outlet property="view" destination="Izz-LW-WTZ" id="SkH-eM-L64"/>
                     </connections>
                 </viewController>

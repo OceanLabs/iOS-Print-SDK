@@ -131,6 +131,8 @@ UIViewControllerPreviewingDelegate, OLScrollCropViewControllerDelegate, UIAction
 @property (strong, nonatomic) IBOutlet OLPhotoSelectionButton *galleryButton;
 
 @property (weak, nonatomic) OLPrintPhoto *editingPrintPhoto;
+@property (weak, nonatomic) IBOutlet UIView *addPhotosHintView;
+
 @end
 
 @interface OLKiteViewController ()
@@ -154,6 +156,8 @@ UIViewControllerPreviewingDelegate, OLScrollCropViewControllerDelegate, UIAction
     if ([UITraitCollection class] && [self.traitCollection respondsToSelector:@selector(forceTouchCapability)] && self.traitCollection.forceTouchCapability == UIForceTouchCapabilityAvailable){
         [self registerForPreviewingWithDelegate:self sourceView:self.collectionView];
     }
+    
+    [self.addPhotosHintView viewWithTag:10].transform = CGAffineTransformMakeRotation(M_PI_4);
     
     self.galleryButton.image = [UIImage imageNamed:@"import_gallery"];
     self.galleryButton.title = NSLocalizedString(@"Add Photos", @"");
@@ -201,6 +205,7 @@ UIViewControllerPreviewingDelegate, OLScrollCropViewControllerDelegate, UIAction
         [self.collectionView reloadData];
     }
     [self updateTitleBasedOnSelectedPhotoQuanitity];
+    [self.collectionView reloadData];
 }
 
 - (void)viewDidAppear:(BOOL)animated{
@@ -257,6 +262,21 @@ UIViewControllerPreviewingDelegate, OLScrollCropViewControllerDelegate, UIAction
 }
 
 - (void)updateTitleBasedOnSelectedPhotoQuanitity {
+    NSTimeInterval delay = 0.35;
+    NSTimeInterval duration = 0.3;
+    if (self.userSelectedPhotos.count > 0 && self.addPhotosHintView.alpha >= 0.9f) {
+        self.addPhotosHintView.alpha = 1;
+        [UIView animateWithDuration:duration delay:delay options:UIViewAnimationOptionCurveEaseIn animations:^{
+            self.addPhotosHintView.alpha = 0;
+        } completion:^(BOOL finished) {}];
+    }
+    else if (self.userSelectedPhotos.count == 0 && self.addPhotosHintView.alpha <= 0.1f) {
+        self.addPhotosHintView.alpha = 0;
+        [UIView animateWithDuration:duration delay:delay options:UIViewAnimationOptionCurveEaseIn animations:^{
+            self.addPhotosHintView.alpha = 1;
+        } completion:^(BOOL finished) {}];
+    }
+    
     if (self.userSelectedPhotos.count == 0) {
         [(UILabel *)self.navigationItem.titleView setText:NSLocalizedString(@"Choose Photos", @"")];
         [(UILabel *)self.navigationItem.titleView sizeToFit];
@@ -422,7 +442,7 @@ UIViewControllerPreviewingDelegate, OLScrollCropViewControllerDelegate, UIAction
 
 #pragma mark - Actions
 
-- (IBAction)onButtonAddPhotosClicked:(OLPhotoSelectionButton *)sender {
+- (IBAction)onButtonAddPhotosClicked:(id)sender {
     BOOL customProviders = NO;
     NSInteger numberOfProviders = 0;
 #ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
@@ -472,7 +492,7 @@ UIViewControllerPreviewingDelegate, OLScrollCropViewControllerDelegate, UIAction
             }]];
             if ([ac respondsToSelector:@selector(popoverPresentationController)]){
                 ac.popoverPresentationController.sourceView = sender;
-                ac.popoverPresentationController.sourceRect = sender.frame;
+                ac.popoverPresentationController.sourceRect = [(UIView *)sender frame];
             }
             [self presentViewController:ac animated:YES completion:NULL];
         }
