@@ -35,6 +35,7 @@ static NSString *const kOLAnalyticsError = @"Error";
 
 @interface OLAnalytics : NSObject
 
++ (void)addPushDeviceToken:(NSData *)deviceToken;
 + (void)trackKiteViewControllerLoadedWithEntryPoint:(NSString *)entryPoint;
 + (void)trackKiteDismissed;
 + (void)trackProductSelectionScreenViewed;

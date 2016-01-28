@@ -150,6 +150,10 @@ static NSString *instagramRedirectURI = nil;
     return kOLAPIEndpointVersion;
 }
 
++ (void) addPushDeviceToken:(NSData *)deviceToken{
+    [OLAnalytics addPushDeviceToken:deviceToken];
+}
+
 #ifdef OL_KITE_OFFER_PAYPAL
 + (NSString *_Nonnull)paypalEnvironment {
     switch (environment) {

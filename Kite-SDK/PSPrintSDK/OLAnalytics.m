@@ -44,6 +44,13 @@ static __weak id<OLKiteDelegate> kiteDelegate;
 
 @end
 
+@interface OLKitePrintSDK (Private)
+
++ (NSString *)apiEndpoint;
++ (NSString *)apiVersion;
+
+@end
+
 @implementation OLAnalytics
 
 + (void)incrementLaunchSDKCount{
@@ -83,6 +90,64 @@ static __weak id<OLKiteDelegate> kiteDelegate;
     NSString *platform = [NSString stringWithUTF8String:machine];
     free(machine);
     return platform;
+}
+
++ (NSString *)environment {
+    NSString *environment = @"Live";
+#ifdef PAYMENT_SANDBOX
+    environment = @"Development";
+#endif
+    return environment;
+}
+
++ (void)addPushDeviceToken:(NSData *)deviceToken {
+    if (![OLKitePrintSDK apiKey]){
+        NSLog(@"Push token NOT submitted. Please set your API key in OLKitePrintSDK first");
+        return;
+    }
+    
+    const unsigned char *buffer = (const unsigned char *)[deviceToken bytes];
+    if (!buffer) {
+        return;
+    }
+    NSMutableString *hex = [NSMutableString stringWithCapacity:(deviceToken.length * 2)];
+    for (NSUInteger i = 0; i < deviceToken.length; i++) {
+        [hex appendString:[NSString stringWithFormat:@"%02lx", (unsigned long)buffer[i]]];
+    }
+    
+    NSString *pushToken = [NSString stringWithString:hex];
+    if (!pushToken) {
+        return;
+    }
+    
+    NSString *uuid = [self userDistinctId];
+    NSDictionary *properties = @{
+                                 @"uuid": uuid,
+                                 @"set" : @{
+                                         @"push_token" : @{
+                                                 @"platform" : @"iOS",
+                                                 @"token" : pushToken
+                                                 },
+                                         @"platform" : @"iOS",
+                                         @"environment": [self environment]
+                                         }
+                                 };
+    
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    manager.requestSerializer = [AFJSONRequestSerializer serializer];
+    [manager.requestSerializer setValue:[NSString stringWithFormat:@"apikey %@", [OLKitePrintSDK apiKey]] forHTTPHeaderField:@"Authorization"];
+    [manager.requestSerializer setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    [manager POST:[NSString stringWithFormat:@"%@/%@/person/", [OLKitePrintSDK apiEndpoint], [OLKitePrintSDK apiVersion]] parameters:properties success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        if ([operation.response statusCode] >= 200 && [operation.response statusCode] <= 299){
+            NSLog(@"Successfully posted push notification token.");
+        }
+        else{
+            NSLog(@"There was an error posting the push notification token: %ld", (long)[operation.response statusCode]);
+        }
+        
+    }failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"There was an error posting the push notification token: %@", error);
+    }];
 }
 
 + (void)sendToMixPanelWithDictionary:(NSDictionary *)dict{

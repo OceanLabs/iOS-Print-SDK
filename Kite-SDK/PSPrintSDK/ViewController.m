@@ -157,6 +157,17 @@ UINavigationControllerDelegate, OLKiteDelegate>
     vc.userPhone = @"";
     vc.delegate = self;
     [self presentViewController:vc animated:YES completion:NULL];
+    
+    //Register for push notifications
+    NSUInteger types = (UIUserNotificationTypeSound | UIUserNotificationTypeAlert | UIUserNotificationTypeBadge);
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
+        [[UIApplication sharedApplication] registerUserNotificationSettings:
+         [UIUserNotificationSettings settingsForTypes:types categories:nil]];
+        [[UIApplication sharedApplication] registerForRemoteNotifications];
+    }
+    //    else {
+    //        [[UIApplication sharedApplication] registerForRemoteNotificationTypes:types];
+    //    }
 
 }
 

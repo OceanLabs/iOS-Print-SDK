@@ -15,12 +15,17 @@
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    
 #ifdef OL_KITE_OFFER_FACEBOOK
     return [[FBSDKApplicationDelegate sharedInstance] application:application
                                     didFinishLaunchingWithOptions:launchOptions];
 #else
     return YES;
 #endif
+}
+
+- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
+    [OLKitePrintSDK addPushDeviceToken:deviceToken];
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application
