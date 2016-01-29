@@ -2784,16 +2784,28 @@ to rearrange the photos</string>
                                     <constraint firstItem="MMm-3c-qfy" firstAttribute="top" relation="greaterThanOrEqual" secondItem="ZFY-qf-fLP" secondAttribute="top" constant="20" id="C83-6N-XKP"/>
                                     <constraint firstAttribute="bottom" secondItem="MMm-3c-qfy" secondAttribute="bottom" priority="750" constant="20" id="CoU-hu-MH9"/>
                                     <constraint firstItem="XqY-KB-pDQ" firstAttribute="height" secondItem="MMm-3c-qfy" secondAttribute="height" multiplier="1.08439" id="GoV-rt-GMs"/>
+                                    <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="XqY-KB-pDQ" secondAttribute="trailing" id="HYd-8J-Ve1"/>
                                     <constraint firstItem="MMm-3c-qfy" firstAttribute="leading" secondItem="ZFY-qf-fLP" secondAttribute="leading" priority="750" constant="20" id="JSE-EZ-BGS"/>
                                     <constraint firstItem="XqY-KB-pDQ" firstAttribute="width" secondItem="MMm-3c-qfy" secondAttribute="width" multiplier="1.12121" id="MdC-Fu-AUN"/>
                                     <constraint firstItem="MMm-3c-qfy" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="ZFY-qf-fLP" secondAttribute="leading" constant="20" id="NNc-BB-SDV"/>
+                                    <constraint firstItem="XqY-KB-pDQ" firstAttribute="top" relation="greaterThanOrEqual" secondItem="ZFY-qf-fLP" secondAttribute="top" id="R9J-Oy-6VD"/>
+                                    <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="XqY-KB-pDQ" secondAttribute="bottom" id="RGn-PN-i98"/>
                                     <constraint firstItem="XqY-KB-pDQ" firstAttribute="centerY" secondItem="MMm-3c-qfy" secondAttribute="centerY" multiplier="1.00743" id="Rcu-OO-ZcN"/>
                                     <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="MMm-3c-qfy" secondAttribute="trailing" constant="20" id="amv-wO-dkQ"/>
                                     <constraint firstItem="MMm-3c-qfy" firstAttribute="top" secondItem="ZFY-qf-fLP" secondAttribute="top" priority="750" constant="20" id="cY9-DK-Rpr"/>
+                                    <constraint firstItem="XqY-KB-pDQ" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="ZFY-qf-fLP" secondAttribute="leading" id="gKL-WT-CgH"/>
                                     <constraint firstItem="MMm-3c-qfy" firstAttribute="width" secondItem="MMm-3c-qfy" secondAttribute="height" multiplier="140:201" id="jw7-4d-M02"/>
                                     <constraint firstAttribute="trailing" secondItem="MMm-3c-qfy" secondAttribute="trailing" priority="750" constant="20" id="nq0-fB-lbq"/>
                                     <constraint firstItem="MMm-3c-qfy" firstAttribute="centerY" secondItem="ZFY-qf-fLP" secondAttribute="centerY" id="uwV-i1-4EW"/>
                                 </constraints>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="A1A-LJ-2lY"/>
+                                        <exclude reference="C83-6N-XKP"/>
+                                        <exclude reference="NNc-BB-SDV"/>
+                                        <exclude reference="amv-wO-dkQ"/>
+                                    </mask>
+                                </variation>
                             </collectionViewCell>
                         </cells>
                         <collectionReusableView key="sectionHeaderView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="reviewHeaderCell" id="Qem-ic-AQ8">
