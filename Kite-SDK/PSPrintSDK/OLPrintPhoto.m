@@ -184,7 +184,9 @@ static NSOperationQueue *imageOperationQueue;
                 if (asset.assetType == kOLAssetTypeRemoteImageURL){
                     [OLPrintPhoto resizedImageWithPrintPhoto:self size:destSize cropped:cropped progress:progressHandler completion:^(UIImage *image) {
                         self.cachedCroppedThumbnailImage = image;
-                        handler(image);
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            handler(image);
+                        });
                     }];
                 }
                 else if (asset.assetType == kOLAssetTypePHAsset){

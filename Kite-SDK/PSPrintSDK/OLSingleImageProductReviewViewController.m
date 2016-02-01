@@ -709,7 +709,9 @@ static BOOL hasMoved;
                     }
                     [(id)picker setSelectedAssets:alAssets];
                     picker.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
-                    [self presentViewController:picker animated:YES completion:nil];
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [self presentViewController:picker animated:YES completion:nil];
+                    });
                 }
             }];
         }

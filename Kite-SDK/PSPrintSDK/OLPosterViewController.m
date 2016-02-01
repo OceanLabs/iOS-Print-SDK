@@ -425,15 +425,7 @@ CGFloat posterMargin = 2;
     
     self.editingPrintPhoto.edits = cropper.edits;
     
-    NSMutableArray *indexPaths = [[NSMutableArray alloc] init];
-    
-    for (NSInteger i = 0; i < self.posterPhotos.count; i++){
-        if (self.posterPhotos[i] == self.editingPrintPhoto){
-            [indexPaths addObject:[NSIndexPath indexPathForItem:i inSection:0]];
-        }
-    }
-    
-    [self.collectionView reloadItemsAtIndexPaths:indexPaths];
+    [self.collectionView reloadData];
     [cropper dismissViewControllerAnimated:YES completion:NULL];
 }
 
