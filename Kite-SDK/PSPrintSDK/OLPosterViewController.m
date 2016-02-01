@@ -345,22 +345,20 @@ CGFloat posterMargin = 2;
     self.editingPrintPhoto = self.posterPhotos[(outerCollectionViewIndexPath.item) * self.product.quantityToFulfillOrder + indexPath.row];
     
     OLScrollCropViewController *cropVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLScrollCropViewController"];
-    cropVc.enableCircleMask = self.product.productTemplate.templateUI == kOLTemplateUICircle;
     cropVc.delegate = self;
+    cropVc.aspectRatio = 1;
     
     cropVc.previewView = [imageView snapshotViewAfterScreenUpdates:YES];
-    cropVc.previewView.frame = [cell convertRect:imageView.frame toView:nil];
+    cropVc.previewView.frame = [imageView.superview convertRect:imageView.frame toView:nil];
     cropVc.previewSourceView = imageView;
     cropVc.providesPresentationContextTransitionStyle = true;
     cropVc.definesPresentationContext = true;
     cropVc.modalPresentationStyle = UIModalPresentationOverCurrentContext;
     
-    CGSize cellSize = cell.frame.size;
-    cropVc.aspectRatio = cellSize.height / cellSize.width;
     [self.editingPrintPhoto getImageWithProgress:NULL completion:^(UIImage *image){
         [cropVc setFullImage:image];
         cropVc.edits = self.editingPrintPhoto.edits;
-//        cropVc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
+        //        cropVc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
         [self presentViewController:cropVc animated:NO completion:NULL];
     }];
 }
@@ -425,8 +423,39 @@ CGFloat posterMargin = 2;
     
     self.editingPrintPhoto.edits = cropper.edits;
     
-    [self.collectionView reloadData];
-    [cropper dismissViewControllerAnimated:YES completion:NULL];
+    //Need to do some work to only reload the proper cells, otherwise the cropped image might zoom to the wrong cell.
+    NSMutableArray *indexPaths = [[NSMutableArray alloc] init];
+    for (NSInteger i = 0; i < self.posterPhotos.count; i++){
+        if (self.posterPhotos[i] == self.editingPrintPhoto){
+            NSInteger outerIndex = i / self.product.quantityToFulfillOrder;
+
+            if (![self.collectionView.indexPathsForVisibleItems containsObject:[NSIndexPath indexPathForItem:outerIndex inSection:0]]){
+                continue;
+            }
+            
+            NSInteger innerIndex = i - outerIndex * self.product.quantityToFulfillOrder;
+            
+            UICollectionViewCell *outerCell = [self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:outerIndex inSection:0]];
+            UICollectionView *innerCollectionView = [outerCell viewWithTag:20];
+            
+            
+            
+            NSIndexPath *innerIndexPath = [NSIndexPath indexPathForItem:innerIndex inSection:0];
+            [indexPaths addObject:innerIndexPath];
+            
+            if (outerIndex != i+1 / self.product.quantityToFulfillOrder){
+                [innerCollectionView reloadItemsAtIndexPaths:indexPaths];
+                [indexPaths removeAllObjects];
+            }
+        }
+    }
+    
+    
+    [cropper dismissViewControllerAnimated:YES completion:^{}];
+    
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackReviewScreenDidCropPhotoForProductName:self.product.productTemplate.name];
+#endif
 }
 
 #pragma mark - Autorotate and Orientation Methods

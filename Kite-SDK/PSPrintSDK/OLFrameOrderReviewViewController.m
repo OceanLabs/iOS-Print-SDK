@@ -392,7 +392,34 @@ CGFloat margin = 2;
     
     self.editingPrintPhoto.edits = cropper.edits;
     
-    [self.collectionView reloadData];
+    //Need to do some work to only reload the proper cells, otherwise the cropped image might zoom to the wrong cell.
+    NSMutableArray *indexPaths = [[NSMutableArray alloc] init];
+    for (NSInteger i = 0; i < self.framePhotos.count; i++){
+        if (self.framePhotos[i] == self.editingPrintPhoto){
+            NSInteger outerIndex = i / self.product.quantityToFulfillOrder;
+            
+            if (![self.collectionView.indexPathsForVisibleItems containsObject:[NSIndexPath indexPathForItem:outerIndex inSection:0]]){
+                continue;
+            }
+            
+            NSInteger innerIndex = i - outerIndex * self.product.quantityToFulfillOrder;
+            
+            UICollectionViewCell *outerCell = [self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:outerIndex inSection:0]];
+            UICollectionView *innerCollectionView = [outerCell viewWithTag:20];
+            
+            
+            
+            NSIndexPath *innerIndexPath = [NSIndexPath indexPathForItem:innerIndex inSection:0];
+            [indexPaths addObject:innerIndexPath];
+            
+            if (outerIndex != i+1 / self.product.quantityToFulfillOrder){
+                [innerCollectionView reloadItemsAtIndexPaths:indexPaths];
+                [indexPaths removeAllObjects];
+            }
+        }
+    }
+    
+    
     [cropper dismissViewControllerAnimated:YES completion:^{}];
     
 #ifndef OL_NO_ANALYTICS
