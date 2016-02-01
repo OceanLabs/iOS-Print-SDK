@@ -326,8 +326,8 @@ to rearrange the photos</string>
                                             </constraints>
                                             <variation key="default">
                                                 <mask key="constraints">
-                                                    <exclude reference="fEF-Oi-IG0"/>
                                                     <exclude reference="An8-Ld-L17"/>
+                                                    <exclude reference="fEF-Oi-IG0"/>
                                                     <exclude reference="LDb-9L-Rpx"/>
                                                 </mask>
                                             </variation>
