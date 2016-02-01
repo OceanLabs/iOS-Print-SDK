@@ -354,13 +354,10 @@ static NSOperationQueue *imageOperationQueue;
         OLAsset *asset = (OLAsset *)self.asset;
         
         if (asset.assetType == kOLAssetTypeRemoteImageURL){
-            NSURLSessionDownloadTask *downloadPhotoTask = [[NSURLSession sharedSession]
-                                                           downloadTaskWithURL:[(OLAsset *)asset imageURL] completionHandler:^(NSURL *location, NSURLResponse *response, NSError *error) {
-                                                               completionHandler([UIImage imageWithData:
-                                                                                  [NSData dataWithContentsOfURL:location]]);
-                                                           }];
-            
-            [downloadPhotoTask resume];
+            [[SDWebImageManager sharedManager] downloadImageWithURL:[(OLAsset *)self.asset imageURL]  options:0 progress:nil completed:
+             ^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL){
+                 completionHandler(image);
+             }];
         }
         else{
             [asset dataWithCompletionHandler:^(NSData *data, NSError *error){
