@@ -139,6 +139,7 @@ OLAssetsPickerControllerDelegate, RMImageCropperDelegate, UIViewControllerPrevie
 @property (strong, nonatomic) OLPrintPhoto *imagePicked;
 @property (strong, nonatomic) OLPrintPhoto *imageDisplayed;
 @property (strong, nonatomic) NSIndexPath *previewingIndexPath;
+@property (nonatomic, copy) void (^saveJobCompletionHandler)();
 
 @end
 
@@ -301,68 +302,82 @@ static BOOL hasMoved;
     self.imageDisplayed.edits.cropImageSize = [self.imageCropView croppedImageSize];
     self.imageDisplayed.edits.cropTransform = self.imageCropView.imageView.transform;
     
+    OLSingleImageProductReviewViewController *this = self;
     OLAsset *asset = [OLAsset assetWithDataSource:[self.imageDisplayed copy]];
-    
     [asset dataLengthWithCompletionHandler:^(long long dataLength, NSError *error){
         if (dataLength < 40000){
             if ([UIAlertController class]){
                 UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Image Is Too Small", @"") message:NSLocalizedString(@"Please zoom out or pick a higher quality image", @"") preferredStyle:UIAlertControllerStyleAlert];
                 [alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", @"") style:UIAlertActionStyleDefault handler:NULL]];
+                [alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Print It Anyway", @"") style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+                    [self saveJobNowWithCompletionHandler:handler];
+                }]];
                 [self presentViewController:alert animated:YES completion:NULL];
             }
             else{
-                [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Image Too Small", @"") message:NSLocalizedString(@"Please zoom out or pick higher quality image", @"") delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"") otherButtonTitles:nil] show];
+                self.saveJobCompletionHandler = handler;
+                UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Image Too Small", @"") message:NSLocalizedString(@"Please zoom out or pick higher quality image", @"") delegate:this cancelButtonTitle:NSLocalizedString(@"OK", @"") otherButtonTitles:@"Print it anyway", nil];
+                av.tag = 100;
+                [av show];
             }
             return;
+            
         }
         
-        NSArray *assetArray = @[asset];
-        
-        NSUInteger iphonePhotoCount = 1;
-        OLPrintOrder *printOrder = [OLKiteUtils kiteVcForViewController:self].printOrder;
-        
-        NSDictionary *infoDict = [[NSBundle mainBundle] infoDictionary];
-        NSString *appVersion = [infoDict objectForKey:@"CFBundleShortVersionString"];
-        NSNumber *buildNumber = [infoDict objectForKey:@"CFBundleVersion"];
-        printOrder.userData = @{@"photo_count_iphone": [NSNumber numberWithUnsignedInteger:iphonePhotoCount],
-                                @"sdk_version": kOLKiteSDKVersion,
-                                @"platform": @"iOS",
-                                @"uid": [OLAnalytics userDistinctId],
-                                @"app_version": [NSString stringWithFormat:@"Version: %@ (%@)", appVersion, buildNumber]
-                                };
-        
-        OLProductPrintJob *job = [[OLProductPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:assetArray];
-        for (NSString *option in self.product.selectedOptions.allKeys){
-            [job setValue:self.product.selectedOptions[option] forOption:option];
-        }
-        NSArray *jobs = [NSArray arrayWithArray:printOrder.jobs];
-        for (id<OLPrintJob> existingJob in jobs){
-            if ([existingJob.uuid isEqualToString:self.product.uuid]){
-                if ([existingJob extraCopies] > 0){
-                    [existingJob setExtraCopies:[existingJob extraCopies]-1];
-                }
-                else{
-                    [printOrder removePrintJob:existingJob];
-                }
-                job.uuid = self.product.uuid;
-            }
-        }
-        self.product.uuid = job.uuid;
-        self.editingPrintJob = job;
-        if ([printOrder.jobs containsObject:self.editingPrintJob]){
-            id<OLPrintJob> existingJob = printOrder.jobs[[printOrder.jobs indexOfObject:self.editingPrintJob]];
-            [existingJob setExtraCopies:[existingJob extraCopies]+1];
-        }
-        else{
-            [printOrder addPrintJob:self.editingPrintJob];
-        }
-        
-        [printOrder saveOrder];
-        
-        if (handler){
-            handler();
-        }
+        [self saveJobNowWithCompletionHandler:handler];
     }];
+}
+
+- (void)saveJobNowWithCompletionHandler:(void(^)())handler {
+    OLAsset *asset = [OLAsset assetWithDataSource:[self.imageDisplayed copy]];
+    NSArray *assetArray = @[asset];
+    
+    NSUInteger iphonePhotoCount = 1;
+    OLPrintOrder *printOrder = [OLKiteUtils kiteVcForViewController:self].printOrder;
+    
+    NSDictionary *infoDict = [[NSBundle mainBundle] infoDictionary];
+    NSString *appVersion = [infoDict objectForKey:@"CFBundleShortVersionString"];
+    NSNumber *buildNumber = [infoDict objectForKey:@"CFBundleVersion"];
+    printOrder.userData = @{@"photo_count_iphone": [NSNumber numberWithUnsignedInteger:iphonePhotoCount],
+                            @"sdk_version": kOLKiteSDKVersion,
+                            @"platform": @"iOS",
+                            @"uid": [OLAnalytics userDistinctId],
+                            @"app_version": [NSString stringWithFormat:@"Version: %@ (%@)", appVersion, buildNumber]
+                            };
+    
+    OLProductPrintJob *job = [[OLProductPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:assetArray];
+    for (NSString *option in self.product.selectedOptions.allKeys){
+        [job setValue:self.product.selectedOptions[option] forOption:option];
+    }
+    NSArray *jobs = [NSArray arrayWithArray:printOrder.jobs];
+    for (id<OLPrintJob> existingJob in jobs){
+        if ([existingJob.uuid isEqualToString:self.product.uuid]){
+            if ([existingJob extraCopies] > 0){
+                [existingJob setExtraCopies:[existingJob extraCopies]-1];
+            }
+            else{
+                [printOrder removePrintJob:existingJob];
+            }
+            job.uuid = self.product.uuid;
+        }
+    }
+    self.product.uuid = job.uuid;
+    self.editingPrintJob = job;
+    if ([printOrder.jobs containsObject:self.editingPrintJob]){
+        id<OLPrintJob> existingJob = printOrder.jobs[[printOrder.jobs indexOfObject:self.editingPrintJob]];
+        [existingJob setExtraCopies:[existingJob extraCopies]+1];
+    }
+    else{
+        [printOrder addPrintJob:self.editingPrintJob];
+    }
+    
+    [printOrder saveOrder];
+    
+    if (handler){
+        handler();
+    }
+    
+    self.saveJobCompletionHandler = nil;
 }
 
 -(void) doCheckout{
@@ -1089,6 +1104,16 @@ static BOOL hasMoved;
     }
     else{
         return UIInterfaceOrientationMaskPortrait;
+    }
+}
+
+#pragma mark - UIAlertViewDelegate
+
+- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
+    if (alertView.tag == 100) {
+        if (buttonIndex == 1) {
+            [self saveJobNowWithCompletionHandler:self.saveJobCompletionHandler];
+        }
     }
 }
 
