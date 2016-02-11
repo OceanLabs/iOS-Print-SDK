@@ -158,6 +158,9 @@ Your Live API Key is used to submit print orders to our servers that will be pri
 
 Logging in to our [Developer Dashboard](https://www.kite.ly) allow's you to dynamically change the end user price i.e. the revenue you want to make on every order. Payment in several currencies is supported so that you can easily localize prices for your users. The dashboard also provides an overview of print order volume and the money you're making.
 
+## ApplePay
+See our [ApplePay setup documentation](Kite-SDK/docs/applepay.md) if you want to enable checkout via ApplePay.
+
 ## Documentation
 
 * These docs in the SDK, which include an overview of usage, step-by-step integration instructions, and sample code
