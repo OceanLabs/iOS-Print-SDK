@@ -20,26 +20,26 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Scan QR Code" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JOI-eQ-7aP">
+                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Scan QR Code" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JOI-eQ-7aP">
                                 <rect key="frame" x="228" y="60" width="144" height="27"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="22"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="2iy-sw-5Zi">
+                            <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="2iy-sw-5Zi">
                                 <rect key="frame" x="180" y="187" width="240" height="240"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="240" id="hY2-a9-3QM"/>
                                     <constraint firstAttribute="height" constant="240" id="tuE-cl-xpQ"/>
                                 </constraints>
                             </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="goo.gl/abcd" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="trE-Pz-Vqg">
+                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="goo.gl/abcd" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="trE-Pz-Vqg">
                                 <rect key="frame" x="231" y="553" width="139" height="30"/>
                                 <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="25"/>
                                 <color key="textColor" red="0.30196078431372547" green="0.69019607843137254" blue="0.8901960784313725" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Please scan the QR code using a QR reader app on your device." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vNB-Ql-dTf">
+                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Please scan the QR code using a QR reader app on your device." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vNB-Ql-dTf">
                                 <rect key="frame" x="171" y="105" width="259" height="41"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="259" id="1F3-fR-3uB"/>
@@ -48,7 +48,7 @@
                                 <color key="textColor" red="0.26666666666666666" green="0.26666666666666666" blue="0.26666666666666666" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Alternatively type the following URL into your mobile browser's address bar" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="efn-xk-ZpI">
+                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Alternatively type the following URL into your mobile browser's address bar" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="efn-xk-ZpI">
                                 <rect key="frame" x="182" y="458" width="236" height="61"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="236" id="QeH-FR-pF0"/>
@@ -57,11 +57,24 @@
                                 <color key="textColor" red="0.2666666667" green="0.2666666667" blue="0.2666666667" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <progressView hidden="YES" opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="trJ-jU-lus">
+                                <rect key="frame" x="150" y="299" width="300" height="2"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="300" id="Usf-nU-opm"/>
+                                </constraints>
+                            </progressView>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="MPJ-cW-GWt">
+                                <rect key="frame" x="290" y="290" width="20" height="20"/>
+                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="trJ-jU-lus" firstAttribute="centerX" secondItem="NMg-jR-zCh" secondAttribute="centerX" id="2gq-UJ-Ivz"/>
+                            <constraint firstItem="trJ-jU-lus" firstAttribute="centerY" secondItem="NMg-jR-zCh" secondAttribute="centerY" id="3be-qq-TJu"/>
+                            <constraint firstItem="MPJ-cW-GWt" firstAttribute="centerX" secondItem="NMg-jR-zCh" secondAttribute="centerX" id="5Nd-GQ-Zsw"/>
                             <constraint firstItem="JOI-eQ-7aP" firstAttribute="top" secondItem="ydD-7p-UKK" secondAttribute="bottom" constant="40" id="5yA-qx-TXj"/>
                             <constraint firstItem="2iy-sw-5Zi" firstAttribute="top" secondItem="vNB-Ql-dTf" secondAttribute="bottom" constant="41" id="9qA-Ru-271"/>
+                            <constraint firstItem="MPJ-cW-GWt" firstAttribute="centerY" secondItem="NMg-jR-zCh" secondAttribute="centerY" id="B7X-WH-er2"/>
                             <constraint firstItem="vNB-Ql-dTf" firstAttribute="top" secondItem="JOI-eQ-7aP" secondAttribute="bottom" constant="18" id="JUk-sq-ZRq"/>
                             <constraint firstItem="efn-xk-ZpI" firstAttribute="top" secondItem="2iy-sw-5Zi" secondAttribute="bottom" constant="31" id="X0s-nk-cvA"/>
                             <constraint firstItem="vNB-Ql-dTf" firstAttribute="centerX" secondItem="NMg-jR-zCh" secondAttribute="centerX" id="ghM-U8-Jtk"/>
@@ -73,7 +86,13 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="activityIndicator" destination="MPJ-cW-GWt" id="mKr-Dy-Wzm"/>
+                        <outlet property="alternateInstructionsLabel" destination="efn-xk-ZpI" id="Mue-Lh-Oqj"/>
+                        <outlet property="downloadProgressView" destination="trJ-jU-lus" id="Z4a-hu-qLw"/>
+                        <outlet property="instructionsLabel" destination="vNB-Ql-dTf" id="vjK-0T-hRl"/>
                         <outlet property="qrCodeImageView" destination="2iy-sw-5Zi" id="OJo-v2-kir"/>
+                        <outlet property="titleLabel" destination="JOI-eQ-7aP" id="XQp-dU-ZvZ"/>
+                        <outlet property="urlLabel" destination="trE-Pz-Vqg" id="rXB-ag-9xt"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="oYN-uJ-Rfi" userLabel="First Responder" sceneMemberID="firstResponder"/>

@@ -8,6 +8,13 @@
 
 #import <UIKit/UIKit.h>
 
-@interface OLQRCodeUploadViewController : UIViewController
+@class OLAsset;
+@class OLQRCodeUploadViewController;
 
+@protocol OLQRCodeUploadViewControllerDelegate <NSObject>
+- (void)qrCodeUpload:(OLQRCodeUploadViewController *)vc didFinishPickingAsset:(OLAsset *)asset;
+@end
+
+@interface OLQRCodeUploadViewController : UIViewController
+@property (nonatomic, weak) id<OLQRCodeUploadViewControllerDelegate> delegate;
 @end

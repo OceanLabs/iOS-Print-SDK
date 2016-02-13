@@ -68,6 +68,8 @@
 #import "OLPaymentViewController.h"
 #import "UIViewController+OLMethods.h"
 #import "OLSingleImageProductReviewViewController.h"
+#import "OLQRCodeUploadViewController.h"
+#import "OLURLDataSource.h"
 
 #ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
 #import "OLCustomPhotoProvider.h"
@@ -118,7 +120,7 @@
 #endif
 @end
 
-@interface OLSingleImageProductReviewViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UINavigationControllerDelegate, UIActionSheetDelegate, UIAlertViewDelegate, UIGestureRecognizerDelegate,
+@interface OLSingleImageProductReviewViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UINavigationControllerDelegate, UIActionSheetDelegate, UIAlertViewDelegate, UIGestureRecognizerDelegate, OLQRCodeUploadViewControllerDelegate,
 #ifdef OL_KITE_OFFER_INSTAGRAM
 OLInstagramImagePickerControllerDelegate,
 #endif
@@ -142,6 +144,7 @@ OLAssetsPickerControllerDelegate, RMImageCropperDelegate, UIViewControllerPrevie
 @property (strong, nonatomic) OLPrintPhoto *imageDisplayed;
 @property (strong, nonatomic) NSIndexPath *previewingIndexPath;
 @property (nonatomic, copy) void (^saveJobCompletionHandler)();
+@property (nonatomic, strong) UITapGestureRecognizer *tapBehindQRUploadModalGestureRecognizer;
 
 @end
 
@@ -627,16 +630,16 @@ static BOOL hasMoved;
             }
             if (qrCodeUploadEnabled) {
                 [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"QR Code", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
-                    UIViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLQRCodeUploadViewController"];
+                    OLQRCodeUploadViewController *vc = (OLQRCodeUploadViewController *) [self.storyboard instantiateViewControllerWithIdentifier:@"OLQRCodeUploadViewController"];
                     vc.modalPresentationStyle = UIModalPresentationFormSheet;
+                    vc.delegate = self;
                     [self presentViewController:vc animated:YES completion:nil];
                     
-                    UITapGestureRecognizer *tapBehindGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTapBehindQRCodeScannerModal:)];
-                    tapBehindGesture.delegate = self;
-                    [tapBehindGesture setNumberOfTapsRequired:1];
-                    [tapBehindGesture setCancelsTouchesInView:NO]; // So the user can still interact with controls in the modal view
-                    [self.view.window addGestureRecognizer:tapBehindGesture];
-                    
+                    self.tapBehindQRUploadModalGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTapBehindQRCodeScannerModal:)];
+                    self.tapBehindQRUploadModalGestureRecognizer.delegate = self;
+                    [self.tapBehindQRUploadModalGestureRecognizer setNumberOfTapsRequired:1];
+                    [self.tapBehindQRUploadModalGestureRecognizer setCancelsTouchesInView:NO]; // So the user can still interact with controls in the modal view
+                    [self.view.window addGestureRecognizer:self.tapBehindQRUploadModalGestureRecognizer];
                 }]];
             }
 #ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
@@ -1071,6 +1074,25 @@ static BOOL hasMoved;
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 #endif
+
+#pragma mark OLQRCodeUploadViewControllerDelegate methods
+- (void)qrCodeUpload:(OLQRCodeUploadViewController *)vc didFinishPickingAsset:(OLAsset *)asset {
+    
+    [self populateArrayWithNewArray:@[asset] dataType:[OLURLDataSource class]];
+    
+    if (self.imagePicked){
+        [self.imagePicked getImageWithProgress:NULL completion:^(UIImage *image){
+            dispatch_async(dispatch_get_main_queue(), ^{
+                self.imageCropView.image = image;
+            });
+        }];
+        self.imageDisplayed = self.imagePicked;
+        self.imagePicked = nil;
+    }
+    [self dismissViewControllerAnimated:YES completion:^(void){}];
+    [self.view.window removeGestureRecognizer:self.tapBehindQRUploadModalGestureRecognizer];
+    self.tapBehindQRUploadModalGestureRecognizer = nil;
+}
 
 #pragma mark UIActionSheet Delegate (only used on iOS 7)
 

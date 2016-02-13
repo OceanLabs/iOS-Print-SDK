@@ -8,8 +8,10 @@
 
 #import <Foundation/Foundation.h>
 
+@class OLAsset;
+
 typedef void (^OLQRCodeUploadedImageDownloadProgressHandler)(NSInteger receivedSize, NSInteger expectedSize);
-typedef void (^OLQRCodeUploadedImageFoundHandler)(UIImage *image);
+typedef void (^OLQRCodeUploadedImageFoundHandler)(OLAsset *asset);
 
 @interface OLQRCodeUploadedImagePoller : NSObject
 
