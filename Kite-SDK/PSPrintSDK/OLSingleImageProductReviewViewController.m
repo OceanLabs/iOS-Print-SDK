@@ -86,6 +86,8 @@
 
 #import "OLImagePreviewViewController.h"
 
+#define SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(v)  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedAscending)
+
 @interface OLPaymentViewController (Private)
 
 -(void)saveAndDismissReviewController;
@@ -116,7 +118,7 @@
 #endif
 @end
 
-@interface OLSingleImageProductReviewViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UINavigationControllerDelegate, UIActionSheetDelegate, UIAlertViewDelegate,
+@interface OLSingleImageProductReviewViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UINavigationControllerDelegate, UIActionSheetDelegate, UIAlertViewDelegate, UIGestureRecognizerDelegate,
 #ifdef OL_KITE_OFFER_INSTAGRAM
 OLInstagramImagePickerControllerDelegate,
 #endif
@@ -577,6 +579,11 @@ static BOOL hasMoved;
         numberOfProviders++;
     }
     
+    BOOL qrCodeUploadEnabled = YES;
+    if (qrCodeUploadEnabled) {
+        numberOfProviders++;
+    }
+    
     if (indexPath.section == [self sectionForImageCells]){
         OLRemoteImageView *imageView = (OLRemoteImageView *)[cell viewWithTag:11];
         if (!imageView.image){
@@ -616,6 +623,20 @@ static BOOL hasMoved;
             if ([OLKiteUtils facebookEnabled]){
                 [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Facebook", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
                     [self showFacebookImagePicker];
+                }]];
+            }
+            if (qrCodeUploadEnabled) {
+                [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"QR Code", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
+                    UIViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLQRCodeUploadViewController"];
+                    vc.modalPresentationStyle = UIModalPresentationFormSheet;
+                    [self presentViewController:vc animated:YES completion:nil];
+                    
+                    UITapGestureRecognizer *tapBehindGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTapBehindQRCodeScannerModal:)];
+                    tapBehindGesture.delegate = self;
+                    [tapBehindGesture setNumberOfTapsRequired:1];
+                    [tapBehindGesture setCancelsTouchesInView:NO]; // So the user can still interact with controls in the modal view
+                    [self.view.window addGestureRecognizer:tapBehindGesture];
+                    
                 }]];
             }
 #ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
@@ -675,6 +696,26 @@ static BOOL hasMoved;
         }
 #endif
         
+    }
+}
+
+- (void)onTapBehindQRCodeScannerModal:(UITapGestureRecognizer *)sender {
+    if (sender.state == UIGestureRecognizerStateEnded) {
+        CGPoint location = [sender locationInView:nil]; // Passing nil gives us coordinates in the window
+        // swap (x,y) on iOS 8 in landscape
+        if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0")) {
+            if (UIInterfaceOrientationIsLandscape([UIApplication sharedApplication].statusBarOrientation)) {
+                location = CGPointMake(location.y, location.x);
+            }
+        }
+        
+        // Convert tap location into the local view's coordinate system. If outside, dismiss the view.
+        if (![self.presentedViewController.view pointInside:[self.presentedViewController.view convertPoint:location fromView:self.view.window] withEvent:nil]) {
+            if(self.presentedViewController) {
+                [self dismissViewControllerAnimated:YES completion:nil];
+                [self.view.window removeGestureRecognizer:sender];
+            }
+        }
     }
 }
 
@@ -1116,5 +1157,20 @@ static BOOL hasMoved;
         }
     }
 }
+
+#pragma mark - UIGestureRecognizer Delegate
+
+- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer {
+    return YES;
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
+    return YES;
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
+    return YES;
+}
+
 
 @end

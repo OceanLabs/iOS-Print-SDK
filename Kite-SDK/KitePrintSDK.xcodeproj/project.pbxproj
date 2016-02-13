@@ -374,6 +374,10 @@
 		E29C861C1BE3B7060041D4CF /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD73BF6D186215790009DE03 /* CoreGraphics.framework */; };
 		E29C861D1BE3B70B0041D4CF /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD73BF6F186215790009DE03 /* UIKit.framework */; };
 		E29C86201BE3B8E70041D4CF /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD73BF6B186215790009DE03 /* Foundation.framework */; };
+		E2AABA111C6CFA2B0007C1D7 /* OLQRCodeUploadViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E2AABA101C6CFA2B0007C1D7 /* OLQRCodeUploadViewController.m */; };
+		E2AABA121C6CFA2B0007C1D7 /* OLQRCodeUploadViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E2AABA101C6CFA2B0007C1D7 /* OLQRCodeUploadViewController.m */; };
+		E2AABA151C6DFC160007C1D7 /* OLQRCodeUploadedImagePoller.m in Sources */ = {isa = PBXBuildFile; fileRef = E2AABA141C6DFC160007C1D7 /* OLQRCodeUploadedImagePoller.m */; };
+		E2AABA161C6DFC160007C1D7 /* OLQRCodeUploadedImagePoller.m in Sources */ = {isa = PBXBuildFile; fileRef = E2AABA141C6DFC160007C1D7 /* OLQRCodeUploadedImagePoller.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -999,6 +1003,10 @@
 		E29C84291BE289400041D4CF /* NSUserDefaults+GroundControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSUserDefaults+GroundControl.m"; path = "vendor/GroundControl/GroundControl/NSUserDefaults+GroundControl.m"; sourceTree = "<group>"; };
 		E29C85701BE3B4290041D4CF /* libKiteSDK.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libKiteSDK.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		E29C86211BE3BCA80041D4CF /* KiteSDK-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "KiteSDK-Prefix.pch"; sourceTree = "<group>"; };
+		E2AABA0F1C6CFA2B0007C1D7 /* OLQRCodeUploadViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLQRCodeUploadViewController.h; sourceTree = "<group>"; };
+		E2AABA101C6CFA2B0007C1D7 /* OLQRCodeUploadViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLQRCodeUploadViewController.m; sourceTree = "<group>"; };
+		E2AABA131C6DFC160007C1D7 /* OLQRCodeUploadedImagePoller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLQRCodeUploadedImagePoller.h; sourceTree = "<group>"; };
+		E2AABA141C6DFC160007C1D7 /* OLQRCodeUploadedImagePoller.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLQRCodeUploadedImagePoller.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1319,6 +1327,8 @@
 				2E837D471C3C1FBB004DA682 /* OLViewController.m */,
 				2E837D4A1C3C221E004DA682 /* OLCollectionViewController.h */,
 				2E837D4B1C3C221E004DA682 /* OLCollectionViewController.m */,
+				E2AABA0F1C6CFA2B0007C1D7 /* OLQRCodeUploadViewController.h */,
+				E2AABA101C6CFA2B0007C1D7 /* OLQRCodeUploadViewController.m */,
 			);
 			name = Other;
 			sourceTree = "<group>";
@@ -1606,6 +1616,8 @@
 				2EF4392A1BF4D15E0006C123 /* OLPrintOrderSubmitStatusRequest.m */,
 				CD73BFA81863180A0009DE03 /* OLAddressSearchRequest.h */,
 				CD73BFA91863180A0009DE03 /* OLAddressSearchRequest.m */,
+				E2AABA131C6DFC160007C1D7 /* OLQRCodeUploadedImagePoller.h */,
+				E2AABA141C6DFC160007C1D7 /* OLQRCodeUploadedImagePoller.m */,
 			);
 			name = API;
 			sourceTree = "<group>";
@@ -2617,6 +2629,7 @@
 				2EADD8161BE79D6D0051CD31 /* NSDateFormatter+OLTimeIntervalFormatter.m in Sources */,
 				2EADD8171BE79D6D0051CD31 /* OLPrintPhoto.m in Sources */,
 				2EADD8181BE79D6D0051CD31 /* OLKitePrintSDK.m in Sources */,
+				E2AABA151C6DFC160007C1D7 /* OLQRCodeUploadedImagePoller.m in Sources */,
 				2EADD8191BE79D6D0051CD31 /* NSString+Formatting.m in Sources */,
 				2EADD81A1BE79D6D0051CD31 /* OLAddress.m in Sources */,
 				2EADD81B1BE79D6D0051CD31 /* OLNavigationController.m in Sources */,
@@ -2671,6 +2684,7 @@
 				2E837D4C1C3C221E004DA682 /* OLCollectionViewController.m in Sources */,
 				2EADD8461BE79D6D0051CD31 /* RMImageCropper.m in Sources */,
 				2EADD8471BE79D6D0051CD31 /* OLAssetsViewController.m in Sources */,
+				E2AABA111C6CFA2B0007C1D7 /* OLQRCodeUploadViewController.m in Sources */,
 				2EADD8481BE79D6D0051CD31 /* OLCountryPickerController.m in Sources */,
 				2EADD8491BE79D6D0051CD31 /* OLBaseRequest.m in Sources */,
 				2EADD84A1BE79D6D0051CD31 /* OLPhotobookPrintJob.m in Sources */,
@@ -2895,6 +2909,7 @@
 				E29C85B71BE3B5C50041D4CF /* OLPostcardViewController.m in Sources */,
 				E29C85B81BE3B5C50041D4CF /* OLPhotobookPageContentViewController.m in Sources */,
 				E29C85B91BE3B5C50041D4CF /* OLAssetsViewControllerTransition.m in Sources */,
+				E2AABA161C6DFC160007C1D7 /* OLQRCodeUploadedImagePoller.m in Sources */,
 				E29C85BA1BE3B5C50041D4CF /* NSBundle+OLAssetsPickerController.m in Sources */,
 				E29C85BB1BE3B5C50041D4CF /* UIImageView+FadeIn.m in Sources */,
 				E29C85BC1BE3B5C50041D4CF /* OLAddressSearchRequest.m in Sources */,
@@ -2950,6 +2965,7 @@
 				E29C85F71BE3B5C50041D4CF /* OLReceiptViewController.m in Sources */,
 				E29C85F81BE3B5C50041D4CF /* OLAssetUploadRequest.m in Sources */,
 				E29C85F91BE3B5C50041D4CF /* OLAddressPickerController.m in Sources */,
+				E2AABA121C6CFA2B0007C1D7 /* OLQRCodeUploadViewController.m in Sources */,
 				E29C85FB1BE3B5C50041D4CF /* main.m in Sources */,
 				E29C85FC1BE3B5C50041D4CF /* OLAssetsGroupViewCell.m in Sources */,
 				E29C85FE1BE3B5C50041D4CF /* OLPostcardPrintJob.m in Sources */,

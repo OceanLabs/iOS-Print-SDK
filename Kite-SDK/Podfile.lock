@@ -31,7 +31,7 @@ PODS:
   - CTAssetsPickerController (3.1.1):
     - PureLayout (~> 3.0.0)
   - DACircularProgress (2.3.1)
-  - FacebookImagePicker (2.0.7):
+  - FacebookImagePicker (2.0.8):
     - FBSDKCoreKit (~> 4.8.0)
     - FBSDKLoginKit (~> 4.8.0)
     - SDWebImage (~> 3.7.2)
@@ -52,6 +52,7 @@ PODS:
     - NXOAuth2Client (~> 1.2.8)
     - SDWebImage (~> 3.7.2)
     - UIColor-HexString
+  - ios-qr-encoder (1.0.4)
   - KITAssetsPickerController (1.0.5):
     - PureLayout (~> 3.0.0)
   - MPFlipViewController (0.0.2)
@@ -81,6 +82,7 @@ DEPENDENCIES:
   - FacebookImagePicker
   - GroundControl
   - InstagramImagePicker
+  - ios-qr-encoder (~> 1.0.4)
   - KITAssetsPickerController
   - MPFlipViewController
   - PayPal-iOS-SDK/Core (~> 2.12.5)
@@ -100,11 +102,12 @@ SPEC CHECKSUMS:
   CSStickyHeaderFlowLayout: 5366582779d8b7c9ba9b9cc729c218cc23888776
   CTAssetsPickerController: 6fba9134a230656ffe34ac0effb0060a1ead65cb
   DACircularProgress: 4dd437c0fc3da5161cb289e07ac449493d41db71
-  FacebookImagePicker: ba3d3fe1c6f48f41f97de0aceeb906b4cc16570e
+  FacebookImagePicker: 888e7554898bea596e88556a935835c6141d8aed
   FBSDKCoreKit: 66a935d17b6e00b6b64e604f2eb9b72c9ab7deb8
   FBSDKLoginKit: d893fcbb98d854496925e9ff73c67b896982d3c4
   GroundControl: fbc762e0097feece7fb6d8cdc8f2747a504a6833
   InstagramImagePicker: 7bf666580d1c6f8fd3885cb37d0c6809e60758b4
+  ios-qr-encoder: f5f654b3d8921caee92564f8c5698b7a699f9dc3
   KITAssetsPickerController: ca392522fb2ae29146b8aaff2286c00e2ba12edc
   MPFlipViewController: 86caa6203ca9d35af23cc6b4e1bcf53e53333770
   NXOAuth2Client: 98c4d4c594edd2b289cfc34a8928653e1dab7adf
