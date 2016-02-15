@@ -52,6 +52,8 @@
 + (BOOL)cameraRollEnabled:(UIViewController *)topVc;
 + (BOOL)facebookEnabled;
 + (BOOL)instagramEnabled;
++ (BOOL)qrCodeUploadEnabled;
++ (void)setQRCodeUploadEnabled:(BOOL)enabled;
 
 #ifdef OL_KITE_OFFER_APPLE_PAY
 +(BOOL)isApplePayAvailable;

@@ -582,8 +582,7 @@ static BOOL hasMoved;
         numberOfProviders++;
     }
     
-    BOOL qrCodeUploadEnabled = YES;
-    if (qrCodeUploadEnabled) {
+    if ([OLKiteUtils qrCodeUploadEnabled]) {
         numberOfProviders++;
     }
     
@@ -628,9 +627,9 @@ static BOOL hasMoved;
                     [self showFacebookImagePicker];
                 }]];
             }
-            if (qrCodeUploadEnabled) {
+            if ([OLKiteUtils qrCodeUploadEnabled]) {
                 [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"QR Code", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
-                    OLQRCodeUploadViewController *vc = (OLQRCodeUploadViewController *) [self.storyboard instantiateViewControllerWithIdentifier:@"OLQRCodeUploadViewController"];
+                    OLQRCodeUploadViewController *vc = (OLQRCodeUploadViewController *) [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:nil] instantiateViewControllerWithIdentifier:@"OLQRCodeUploadViewController"];
                     vc.modalPresentationStyle = UIModalPresentationFormSheet;
                     vc.delegate = self;
                     [self presentViewController:vc animated:YES completion:nil];

@@ -39,6 +39,8 @@
 #import "OLIntegratedCheckoutViewController.h"
 #import "OLKiteViewController.h"
 
+static NSString *const kKeyQRCodeUpload = @"ly.kite.kKeyQRCodeUpload";
+
 @class OLCustomPhotoProvider;
 
 @interface OLKitePrintSDK (Private)
@@ -79,6 +81,14 @@
 #else
     return NO;
 #endif
+}
+
++ (void)setQRCodeUploadEnabled:(BOOL)enabled {
+    [[NSUserDefaults standardUserDefaults] setBool:enabled forKey:kKeyQRCodeUpload];
+}
+
++ (BOOL)qrCodeUploadEnabled {
+    return [[NSUserDefaults standardUserDefaults] boolForKey:kKeyQRCodeUpload];
 }
 
 + (BOOL)facebookEnabled{
