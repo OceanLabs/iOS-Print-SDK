@@ -1627,6 +1627,9 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     if (([kiteDelegate respondsToSelector:@selector(shouldShowContinueShoppingButton)] && ![kiteDelegate shouldShowContinueShoppingButton]) || [OLKiteABTesting sharedInstance].launchedWithPrintOrder){
         return 1;
     }
+    else if (self.navigationController.viewControllers.firstObject == self){
+        return 1;
+    }
     else{
         return 2;
     }
