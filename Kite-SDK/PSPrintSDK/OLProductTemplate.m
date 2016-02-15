@@ -1,9 +1,30 @@
 //
-//  OLProductTemplate.m
-//  Kite SDK
-//
-//  Created by Deon Botha on 18/03/2014.
-//  Copyright (c) 2014 Deon Botha. All rights reserved.
+//  Modified MIT License
+//  
+//  Copyright (c) 2010-2016 Kite Tech Ltd. https://www.kite.ly
+//  
+//  Permission is hereby granted, free of charge, to any person obtaining a copy
+//  of this software and associated documentation files (the "Software"), to deal
+//  in the Software without restriction, including without limitation the rights
+//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+//  copies of the Software, and to permit persons to whom the Software is
+//  furnished to do so, subject to the following conditions:
+//  
+//  The software MAY ONLY be used with the Kite Tech Ltd platform and MAY NOT be modified
+//  to be used with any competitor platforms. This means the software MAY NOT be modified
+//  to place orders with any competitors to Kite Tech Ltd, all orders MUST go through the
+//  Kite Tech Ltd platform servers.
+//  
+//  The above copyright notice and this permission notice shall be included in
+//  all copies or substantial portions of the Software.
+//  
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+//  THE SOFTWARE.
 //
 
 #import "OLProductTemplate.h"
@@ -28,6 +49,8 @@ static NSString *const kKeyProductCode = @"co.oceanlabs.pssdk.kKeyProductCode";
 static NSString *const kKeyImageBleed = @"co.oceanlabs.pssdk.kKeyImageBleed";
 static NSString *const kKeyImageBorder = @"co.oceanlabs.pssdk.kKeyImageBorder";
 static NSString *const kKeyMaskImageURL = @"co.oceanlabs.pssdk.kKeymaskImageURL";
+static NSString *const kKeyProductBackgroundImageURL = @"co.oceanlabs.pssdk.kKeyProductBackgroundImageURL";
+static NSString *const kKeyProductHighlightsImageURL = @"co.oceanlabs.pssdk.kKeyProductHighlightsImageURL";
 static NSString *const kKeySizePx = @"co.oceanlabs.pssdk.kKeySizePx";
 static NSString *const kKeyClassPhotoURL = @"co.oceanlabs.pssdk.kKeyClassPhotoURL";
 static NSString *const kkeyDescription = @"co.oceanlabs.pssdk.kkeyDescription";
@@ -293,6 +316,9 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
     else if ([identifier isEqualToString:@"PHOTOBOOK"]){
         return kOLTemplateUIPhotobook;
     }
+    else if ([identifier isEqualToString:@"NONCUSTOMIZABLE"]){
+        return kOLTemplateUINonCustomizable;
+    }
     return kOLTemplateUINA;
 }
 
@@ -315,6 +341,15 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
             break;
         case kOLTemplateUIRectagle:
             return @"Rectangle";
+            break;
+        case kOLTemplateUINonCustomizable:
+            return @"Non-Customizable";
+            break;
+        case kOLTemplateUIPostcard:
+            return @"Postcard";
+            break;
+        case kOLTemplateUIPhotobook:
+            return @"Photobook";
             break;
             
         default:
@@ -350,6 +385,8 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
     [aCoder encodeUIEdgeInsets:self.imageBleed forKey:kKeyImageBleed];
     [aCoder encodeUIEdgeInsets:self.imageBorder forKey:kKeyImageBorder];
     [aCoder encodeObject:self.maskImageURL forKey:kKeyMaskImageURL];
+    [aCoder encodeObject:self.productBackgroundImageURL forKey:kKeyProductBackgroundImageURL];
+    [aCoder encodeObject:self.productHighlightsImageURL forKey:kKeyProductHighlightsImageURL];
     [aCoder encodeCGSize:self.sizePx forKey:kKeySizePx];
     [aCoder encodeObject:self.description forKey:kkeyDescription];
     [aCoder encodeObject:self.classPhotoURL forKey:kKeyClassPhotoURL];
@@ -379,6 +416,8 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
         _imageBleed = [aDecoder decodeUIEdgeInsetsForKey:kKeyImageBleed];
         _imageBorder = [aDecoder decodeUIEdgeInsetsForKey:kKeyImageBorder];
         _maskImageURL = [aDecoder decodeObjectForKey:kKeyMaskImageURL];
+        _productBackgroundImageURL = [aDecoder decodeObjectForKey:kKeyProductBackgroundImageURL];
+        _productHighlightsImageURL = [aDecoder decodeObjectForKey:kKeyProductHighlightsImageURL];
         _sizePx = [aDecoder decodeCGSizeForKey:kKeySizePx];
         _classPhotoURL = [aDecoder decodeObjectForKey:kKeyClassPhotoURL];
         _productDescription = [aDecoder decodeObjectForKey:kkeyDescription];

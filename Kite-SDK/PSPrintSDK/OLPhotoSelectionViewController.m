@@ -1,9 +1,30 @@
 //
-//  PhotoSelectionViewController.m
-//  Print Studio
+//  Modified MIT License
 //
-//  Created by Elliott Minns on 12/12/2013.
-//  Copyright (c) 2013 Ocean Labs. All rights reserved.
+//  Copyright (c) 2010-2016 Kite Tech Ltd. https://www.kite.ly
+//
+//  Permission is hereby granted, free of charge, to any person obtaining a copy
+//  of this software and associated documentation files (the "Software"), to deal
+//  in the Software without restriction, including without limitation the rights
+//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+//  copies of the Software, and to permit persons to whom the Software is
+//  furnished to do so, subject to the following conditions:
+//
+//  The software MAY ONLY be used with the Kite Tech Ltd platform and MAY NOT be modified
+//  to be used with any competitor platforms. This means the software MAY NOT be modified
+//  to place orders with any competitors to Kite Tech Ltd, all orders MUST go through the
+//  Kite Tech Ltd platform servers.
+//
+//  The above copyright notice and this permission notice shall be included in
+//  all copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+//  THE SOFTWARE.
 //
 
 #ifdef COCOAPODS
@@ -16,8 +37,10 @@
 #import "OLPhotoSelectionButton.h"
 #import "OLPrintPhoto.h"
 #import "OLOrderReviewViewController.h"
-
-#import "OLAssetsPickerController.h"
+#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
+#import "OLCustomPhotoProvider.h"
+#import <KITAssetsPickerController.h>
+#endif
 
 #ifdef OL_KITE_AT_LEAST_IOS8
 #import "CTAssetsPickerController.h"
@@ -33,25 +56,32 @@
 #import <FacebookImagePicker/OLFacebookImage.h>
 #endif
 
-#import "OLPrintJob.h"
-#import "OLAddress.h"
-#import "OLAsset.h"
-#import "OLProductPrintJob.h"
-#import "OLConstants.h"
 #import "LXReorderableCollectionViewFlowLayout.h"
 #import "NSArray+QueryingExtras.h"
-#import "OLKitePrintSDK.h"
 #import "NSObject+Utils.h"
-#import "UIViewController+TraitCollectionCompatibility.h"
+#import "OLAddress.h"
 #import "OLAnalytics.h"
-#import "OLKiteUtils.h"
-#import "OLKiteABTesting.h"
-
-#import "OLRemoteImageView.h"
+#import "OLAsset.h"
+#import "OLProductPrintJob.h"
+#import "OLAssetsPickerController.h"
+#import "OLConstants.h"
 #import "OLImageCachingManager.h"
+#import "OLKiteABTesting.h"
+#import "OLKitePrintSDK.h"
+#import "OLKiteUtils.h"
+#import "OLOrderReviewViewController.h"
+#import "OLPhotoSelectionButton.h"
+#import "OLPhotoSelectionViewController.h"
+#import "OLPrintJob.h"
+#import "OLPrintPhoto.h"
+#import "OLProductPrintJob.h"
+#import "OLRemoteImageView.h"
 #import "UIImage+ImageNamedInKiteBundle.h"
 #import "UIViewController+OLMethods.h"
 #import "OLPaymentViewController.h"
+#import "OLImagePreviewViewController.h"
+#import "UIView+RoundRect.h"
+#import "UIViewController+TraitCollectionCompatibility.h"
 
 NSInteger OLPhotoSelectionMargin = 0;
 
@@ -71,48 +101,44 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 
 @interface OLPhotoSelectionViewController () <UINavigationControllerDelegate,
 #ifdef OL_KITE_AT_LEAST_IOS8
-                                            CTAssetsPickerControllerDelegate,
+CTAssetsPickerControllerDelegate,
 #endif
-                                            OLAssetsPickerControllerDelegate,
-                                            UICollectionViewDataSource,
-                                            UICollectionViewDelegate,
-                                            UICollectionViewDelegateFlowLayout,
+OLAssetsPickerControllerDelegate,
+UICollectionViewDataSource,
+UICollectionViewDelegate,
+UICollectionViewDelegateFlowLayout,
 #ifdef OL_KITE_OFFER_INSTAGRAM
-                                            OLInstagramImagePickerControllerDelegate,
+OLInstagramImagePickerControllerDelegate,
 #endif
 #ifdef OL_KITE_OFFER_FACEBOOK
-                                            OLFacebookImagePickerControllerDelegate,
+OLFacebookImagePickerControllerDelegate,
 #endif
-                                            LXReorderableCollectionViewDataSource,
-                                            UICollectionViewDelegateFlowLayout>
-
-@property (nonatomic, weak) IBOutlet OLPhotoSelectionButton *galleryButton;
-@property (nonatomic, weak) IBOutlet OLPhotoSelectionButton *instagramButton;
-@property (nonatomic, weak) IBOutlet OLPhotoSelectionButton *facebookButton;
-@property (weak, nonatomic) IBOutlet UIView *cameraRollContainer;
-@property (weak, nonatomic) IBOutlet UIView *instagramContainer;
-@property (weak, nonatomic) IBOutlet UIView *facebookContainer;
-
-@property (nonatomic, weak) IBOutlet UICollectionView *collectionView;
-@property (nonatomic, strong) OLAssetsPickerController *picker;
-@property (strong, nonatomic) NSMutableArray *userDisabledPhotos;
-
-@property (nonatomic, weak) IBOutlet UILabel *chooseImportSourceLabel;
-@property (nonatomic, weak) IBOutlet UIButton *buttonGalleryImport, *buttonInstagramImport, *buttonFacebookImport;
-
-@property (nonatomic, weak) IBOutlet UIButton *buttonNext;
-@property (nonatomic, weak) IBOutlet UIView *noSelectedPhotosView;
-@property (weak, nonatomic) IBOutlet UIView *clearButtonContainerView;
-//@property (weak, nonatomic) IBOutlet UIButton *clearButton;
-@property (strong, nonatomic) UIVisualEffectView *visualEffectView;
+#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
+KITAssetsPickerControllerDelegate,
+#endif
+LXReorderableCollectionViewDataSource,
+UICollectionViewDelegateFlowLayout,
+UIViewControllerPreviewingDelegate, OLScrollCropViewControllerDelegate, UIActionSheetDelegate>
 
 @property (assign, nonatomic) CGSize rotationSize;
-
+@property (nonatomic, strong) OLAssetsPickerController *picker;
+@property (nonatomic, weak) IBOutlet UIButton *buttonNext;
+@property (nonatomic, weak) IBOutlet UICollectionView *collectionView;
+@property (strong, nonatomic) NSMutableArray *userDisabledPhotos;
 @property (strong, nonatomic) NSMutableDictionary *indexPathsToRemoveDict;
+@property (strong, nonatomic) UIVisualEffectView *visualEffectView;
+@property (weak, nonatomic) IBOutlet UIView *clearButtonContainerView;
+@property (strong, nonatomic) IBOutlet OLPhotoSelectionButton *galleryButton;
+
+@property (weak, nonatomic) OLPrintPhoto *editingPrintPhoto;
+@property (weak, nonatomic) IBOutlet UIView *addPhotosHintView;
+
 @end
 
 @interface OLKiteViewController ()
-
+#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
+@property (strong, nonatomic) NSMutableArray <OLCustomPhotoProvider *> *customImageProviders;
+#endif
 @property (strong, nonatomic) OLPrintOrder *printOrder;
 - (void)dismiss;
 
@@ -127,58 +153,33 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     [OLAnalytics trackPhotoSelectionScreenViewed:self.product.productTemplate.name];
 #endif
     
+    if ([UITraitCollection class] && [self.traitCollection respondsToSelector:@selector(forceTouchCapability)] && self.traitCollection.forceTouchCapability == UIForceTouchCapabilityAvailable){
+        [self registerForPreviewingWithDelegate:self sourceView:self.collectionView];
+    }
+    
+    [self.addPhotosHintView viewWithTag:10].transform = CGAffineTransformMakeRotation(M_PI_4);
+    
+    self.galleryButton.image = [UIImage imageNamed:@"import_gallery"];
+    self.galleryButton.title = NSLocalizedString(@"Add Photos", @"");
+    self.galleryButton.mainColor = [UIColor colorWithRed:0.227 green:0.706 blue:0.600 alpha:1.000];
+    
     self.navigationItem.titleView = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100, 44)];
     [(UILabel *)self.navigationItem.titleView setTextAlignment:NSTextAlignmentCenter];
     [(UILabel *)self.navigationItem.titleView setFont:[UIFont preferredFontForTextStyle:UIFontTextStyleHeadline]];
     self.userDisabledPhotos = [[NSMutableArray alloc] init];
     
-    self.galleryButton.image = [UIImage imageNamedInKiteBundle:@"import_gallery"];
-    self.galleryButton.title = NSLocalizedString(@"Camera Roll", @"");
-    self.galleryButton.mainColor = [UIColor colorWithRed:0.227 green:0.706 blue:0.600 alpha:1.000];
-    
-    self.instagramButton.image = [UIImage imageNamedInKiteBundle:@"import_instagram"];
-    self.instagramButton.title = NSLocalizedString(@"Instagram", @"");
-    self.instagramButton.mainColor = [UIColor colorWithRed:0.965 green:0.733 blue:0.259 alpha:1.000];
-    
-    self.facebookButton.image = [UIImage imageNamedInKiteBundle:@"import_facebook"];
-    self.facebookButton.title = NSLocalizedString(@"Facebook", @"");
-    self.facebookButton.mainColor = [UIColor colorWithRed:0.290 green:0.537 blue:0.863 alpha:1.000];
-    
-    [self.buttonFacebookImport setBackgroundImage:[self imageWithColor:[UIColor colorWithHexString:@"#497aba"]] forState:UIControlStateHighlighted];
-    [self.buttonGalleryImport setBackgroundImage:[self imageWithColor:[UIColor colorWithHexString:@"#369c82"]] forState:UIControlStateHighlighted];
-    [self.buttonInstagramImport setBackgroundImage:[self imageWithColor:[UIColor colorWithHexString:@"#c29334"]] forState:UIControlStateHighlighted];
-    
     self.rotationSize = CGSizeZero;
-    
-    if (![self instagramEnabled]){
-        [self.instagramButton removeFromSuperview];
-        [self.buttonInstagramImport removeFromSuperview];
-        [self.instagramContainer removeFromSuperview];
-    }
-    
-    if (![self facebookEnabled]){
-        [self.facebookButton removeFromSuperview];
-        [self.buttonFacebookImport removeFromSuperview];
-        [self.facebookContainer removeFromSuperview];
-    }
     
     LXReorderableCollectionViewFlowLayout *layout = (LXReorderableCollectionViewFlowLayout *)[self.collectionView collectionViewLayout];
     layout.headerReferenceSize = CGSizeMake(0, 50);
     
-    if ((self.product.productTemplate.templateUI == kOLTemplateUICase || self.product.productTemplate.templateUI == kOLTemplateUIPoster || self.product.productTemplate.templateUI == kOLTemplateUIPostcard || self.product.productTemplate.templateUI == kOLTemplateUIPhotobook) && self.userSelectedPhotos.count > self.product.quantityToFulfillOrder){
+    if ((self.product.productTemplate.templateUI == kOLTemplateUICase || self.product.productTemplate.templateUI == kOLTemplateUIPostcard || self.product.productTemplate.templateUI == kOLTemplateUIPhotobook) && self.userSelectedPhotos.count > self.product.quantityToFulfillOrder){
         self.userSelectedPhotos = [[self.userSelectedPhotos subarrayWithRange:NSMakeRange(0, self.product.quantityToFulfillOrder)] mutableCopy];
     }
     
     [self.collectionView registerClass:[UICollectionReusableView class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"headerView"];
     
-    if (self.userSelectedPhotos.count > 0) {
-            self.noSelectedPhotosView.alpha = 0;
-    }
-    else if (self.userSelectedPhotos.count == 0) {
-            self.noSelectedPhotosView.alpha = 1;
-    }
     [self onUserSelectedPhotoCountChange];
-    
 }
 
 - (void)viewDidLayoutSubviews{
@@ -187,25 +188,9 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     self.collectionView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
 }
 
-- (BOOL)instagramEnabled{
-#ifdef OL_KITE_OFFER_INSTAGRAM
-    return [OLKitePrintSDK instagramSecret] && ![[OLKitePrintSDK instagramSecret] isEqualToString:@""] && [OLKitePrintSDK instagramClientID] && ![[OLKitePrintSDK instagramClientID] isEqualToString:@""] && [OLKitePrintSDK instagramRedirectURI] && ![[OLKitePrintSDK instagramRedirectURI] isEqualToString:@""];
-#else 
-    return NO;
-#endif
-}
-
-- (BOOL)facebookEnabled{
-#ifdef OL_KITE_OFFER_FACEBOOK
-    return YES;
-#else
-    return NO;
-#endif
-}
-
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
-
+    
     if ([self.presentingViewController respondsToSelector:@selector(viewControllers)]) {
         UIViewController *presentingVc = [(UINavigationController *)self.presentingViewController viewControllers].lastObject;
         if (![presentingVc isKindOfClass:[OLPaymentViewController class]]){
@@ -220,11 +205,11 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
         [self.collectionView reloadData];
     }
     [self updateTitleBasedOnSelectedPhotoQuanitity];
+    [self.collectionView reloadData];
 }
 
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
-    [self updateNoSelectedPhotosView];
     [self.collectionView.collectionViewLayout invalidateLayout];
 }
 
@@ -261,26 +246,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     }
     [self.userDisabledPhotos removeObjectsInArray:toRemove];
     
-    [self updateNoSelectedPhotosView];
     [self updateTitleBasedOnSelectedPhotoQuanitity];
-}
-
-- (void)updateNoSelectedPhotosView {
-    NSTimeInterval delay = 0.35;
-    NSTimeInterval duration = 0.3;
-    self.collectionView.alpha = self.userSelectedPhotos.count == 0 ? 0 : 1;
-    if (self.userSelectedPhotos.count > 0 && self.noSelectedPhotosView.alpha >= 0.9f) {
-        self.noSelectedPhotosView.alpha = 1;
-        [UIView animateWithDuration:duration delay:delay options:UIViewAnimationOptionCurveEaseIn animations:^{
-            self.noSelectedPhotosView.alpha = 0;
-        } completion:^(BOOL finished) {}];
-    }
-    else if (self.userSelectedPhotos.count == 0 && self.noSelectedPhotosView.alpha <= 0.1f) {
-        self.noSelectedPhotosView.alpha = 0;
-        [UIView animateWithDuration:duration delay:delay options:UIViewAnimationOptionCurveEaseIn animations:^{
-            self.noSelectedPhotosView.alpha = 1;
-        } completion:^(BOOL finished) {}];
-    }
 }
 
 -(NSUInteger) totalNumberOfExtras{
@@ -296,6 +262,21 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 }
 
 - (void)updateTitleBasedOnSelectedPhotoQuanitity {
+    NSTimeInterval delay = 0.35;
+    NSTimeInterval duration = 0.3;
+    if (self.userSelectedPhotos.count > 0 && self.addPhotosHintView.alpha >= 0.9f) {
+        self.addPhotosHintView.alpha = 1;
+        [UIView animateWithDuration:duration delay:delay options:UIViewAnimationOptionCurveEaseIn animations:^{
+            self.addPhotosHintView.alpha = 0;
+        } completion:^(BOOL finished) {}];
+    }
+    else if (self.userSelectedPhotos.count == 0 && self.addPhotosHintView.alpha <= 0.1f) {
+        self.addPhotosHintView.alpha = 0;
+        [UIView animateWithDuration:duration delay:delay options:UIViewAnimationOptionCurveEaseIn animations:^{
+            self.addPhotosHintView.alpha = 1;
+        } completion:^(BOOL finished) {}];
+    }
+    
     if (self.userSelectedPhotos.count == 0) {
         [(UILabel *)self.navigationItem.titleView setText:NSLocalizedString(@"Choose Photos", @"")];
         [(UILabel *)self.navigationItem.titleView sizeToFit];
@@ -312,8 +293,8 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     
     if ([self.userDisabledPhotos count] > 0){
         [UIView animateKeyframesWithDuration:0.15 delay:0 options:UIViewKeyframeAnimationOptionBeginFromCurrentState | UIViewAnimationOptionCurveLinear animations:^{
-            self.clearButtonContainerView.transform = CGAffineTransformMakeTranslation(0, -40);
-            self.collectionView.contentInset = UIEdgeInsetsMake(self.collectionView.contentInset.top, self.collectionView.contentInset.left, self.collectionView.contentInset.bottom + 40, self.collectionView.contentInset.left);
+            self.clearButtonContainerView.transform = CGAffineTransformMakeTranslation(0, -self.clearButtonContainerView.frame.size.height);
+            self.collectionView.contentInset = UIEdgeInsetsMake(self.collectionView.contentInset.top, self.collectionView.contentInset.left, self.collectionView.contentInset.bottom + self.clearButtonContainerView.frame.size.height, self.collectionView.contentInset.left);
         }completion:NULL];
     }
     else{
@@ -338,7 +319,17 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     // First remove any that are not returned.
     NSMutableArray *removeArray = [NSMutableArray arrayWithArray:self.userSelectedPhotos];
     for (OLPrintPhoto *object in self.userSelectedPhotos) {
-        if (![object.asset isKindOfClass:class] || [photoArray containsObject:object]) {
+        if ([object.asset isKindOfClass:[OLAsset class]] && [[object.asset dataSource] isKindOfClass:class]){
+            if ([photoArray containsObject:object]){
+                [removeArray removeObjectIdenticalTo:object];
+                [photoArray removeObject:object];
+            }
+        }
+        else if (![object.asset isKindOfClass:class]) {
+            [removeArray removeObjectIdenticalTo:object];
+        }
+        
+        else if([photoArray containsObject:object]){
             [removeArray removeObjectIdenticalTo:object];
         }
     }
@@ -352,7 +343,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
             [addArray removeObject:object];
         }
     }
-
+    
     [self.userSelectedPhotos addObjectsFromArray:addArray];
     
     // Reload the collection view.
@@ -364,7 +355,12 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 - (NSArray *)createAssetArray {
     NSMutableArray *array = [[NSMutableArray alloc] initWithCapacity:self.userSelectedPhotos.count];
     for (OLPrintPhoto *object in self.userSelectedPhotos) {
-        [array addObject:object.asset];
+        if ([object.asset isKindOfClass:[OLAsset class]] && [object.asset dataSource]){
+            [array addObject:[object.asset dataSource]];
+        }
+        else if (![object.asset isKindOfClass:[OLAsset class]]){
+            [array addObject:object.asset];
+        }
     }
     return array;
 }
@@ -387,7 +383,183 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     }
 }
 
+- (UIViewController *)previewingContext:(id<UIViewControllerPreviewing>)previewingContext viewControllerForLocation:(CGPoint)location{
+    NSIndexPath *indexPath = [self.collectionView indexPathForItemAtPoint:location];
+    UICollectionViewCell *cell = [self.collectionView cellForItemAtIndexPath:indexPath];
+    
+    OLRemoteImageView *imageView = (OLRemoteImageView *)[cell viewWithTag:40];
+    if (!imageView.image){
+        return nil;
+    }
+    
+    NSUInteger imageIndex = indexPath.row + indexPath.section * self.product.quantityToFulfillOrder;
+    if (imageIndex > self.userSelectedPhotos.count){
+        return nil;
+    }
+    
+    [previewingContext setSourceRect:[cell convertRect:imageView.frame toView:self.collectionView]];
+    
+    self.editingPrintPhoto = self.userSelectedPhotos[indexPath.item];
+    
+    OLImagePreviewViewController *previewVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLImagePreviewViewController"];
+    [self.editingPrintPhoto getImageWithProgress:NULL completion:^(UIImage *image){
+        previewVc.image = image;
+    }];
+    previewVc.providesPresentationContextTransitionStyle = true;
+    previewVc.definesPresentationContext = true;
+    previewVc.modalPresentationStyle = UIModalPresentationOverCurrentContext;
+    return previewVc;
+}
+
+- (void)previewingContext:(id<UIViewControllerPreviewing>)previewingContext commitViewController:(UIViewController *)viewControllerToCommit{
+    OLScrollCropViewController *cropVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLScrollCropViewController"];
+    cropVc.enableCircleMask = self.product.productTemplate.templateUI == kOLTemplateUICircle;
+    cropVc.delegate = self;
+    cropVc.aspectRatio = [self productAspectRatio];
+    [self.editingPrintPhoto getImageWithProgress:^(float progress){
+        [cropVc.cropView setProgress:progress];
+    }completion:^(UIImage *image){
+        [cropVc setFullImage:image];
+        cropVc.edits = self.editingPrintPhoto.edits;
+        cropVc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
+        [self presentViewController:cropVc animated:YES completion:NULL];
+        
+#ifndef OL_NO_ANALYTICS
+        [OLAnalytics trackReviewScreenEnteredCropScreenForProductName:self.product.productTemplate.name];
+#endif
+    }];
+}
+
+- (CGFloat) productAspectRatio{
+    UIEdgeInsets b = self.product.productTemplate.imageBorder;
+    if (b.top < b.bottom){ //This is for polaroids, since we don't know its pixel dims
+        return 1;
+    }
+    else{
+        return self.product.productTemplate.sizeCm.height / self.product.productTemplate.sizeCm.width;
+    }
+}
+
 #pragma mark - Actions
+
+- (IBAction)onButtonAddPhotosClicked:(id)sender {
+    BOOL customProviders = NO;
+    NSInteger numberOfProviders = 0;
+#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
+    NSInteger numberOfCustomProviders = [OLKiteUtils kiteVcForViewController:self].customImageProviders.count;
+    customProviders = numberOfCustomProviders > 0;
+    numberOfProviders += numberOfCustomProviders;
+#endif
+    
+    if ([OLKiteUtils cameraRollEnabled:self]){
+        numberOfProviders++;
+    }
+    if ([OLKiteUtils facebookEnabled]){
+        numberOfProviders++;
+    }
+    if ([OLKiteUtils instagramEnabled]){
+        numberOfProviders++;
+    }
+    
+    if (numberOfProviders > 1){
+        if ([UIAlertController class]){
+            UIAlertController *ac = [UIAlertController alertControllerWithTitle:nil message:NSLocalizedString(@"Add photos from:", @"") preferredStyle:UIAlertControllerStyleActionSheet];
+            if ([OLKiteUtils cameraRollEnabled:self]){
+                [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Camera Roll", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
+                    [self cameraRollSelected:nil];
+                }]];
+            }
+            if ([OLKiteUtils instagramEnabled]){
+                [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Instagram", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
+                    [self instagramSelected:nil];
+                }]];
+            }
+            if ([OLKiteUtils facebookEnabled]){
+                [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Facebook", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
+                    [self facebookSelected:nil];
+                }]];
+            }
+#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
+            for (OLCustomPhotoProvider *provider in [OLKiteUtils kiteVcForViewController:self].customImageProviders){
+                [ac addAction:[UIAlertAction actionWithTitle:provider.name style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
+                    [self showPickerForProvider:provider];
+                }]];
+            }
+#endif
+            
+            [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"") style:UIAlertActionStyleCancel handler:^(UIAlertAction *action){
+                [ac dismissViewControllerAnimated:YES completion:NULL];
+            }]];
+            if ([ac respondsToSelector:@selector(popoverPresentationController)]){
+                ac.popoverPresentationController.sourceView = sender;
+                ac.popoverPresentationController.sourceRect = [(UIView *)sender frame];
+            }
+            [self presentViewController:ac animated:YES completion:NULL];
+        }
+        else{
+            UIActionSheet *as = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"Add photos from:", @"")
+                                                            delegate:self
+                                                   cancelButtonTitle:nil
+                                              destructiveButtonTitle:nil
+                                                   otherButtonTitles:nil];
+            
+            if ([OLKiteUtils cameraRollEnabled:self]){
+                [as addButtonWithTitle:NSLocalizedString(@"Camera Roll", @"")];
+            }
+            if ([OLKiteUtils facebookEnabled]){
+                [as addButtonWithTitle:@"Facebook"];
+            }
+            if ([OLKiteUtils instagramEnabled]){
+                [as addButtonWithTitle:@"Instagram"];
+            }
+#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
+            for (OLCustomPhotoProvider *provider in [OLKiteUtils kiteVcForViewController:self].customImageProviders){
+                [as addButtonWithTitle:provider.name];
+            }
+#endif
+            as.cancelButtonIndex = [as addButtonWithTitle:@"Cancel"];
+            
+            [as showInView:self.view];
+        }
+    }
+    else{
+        if ([OLKiteUtils cameraRollEnabled:self]){
+            [self cameraRollSelected:nil];
+        }
+        else if ([OLKiteUtils facebookEnabled]){
+            [self facebookSelected:nil];
+        }
+        else if ([OLKiteUtils instagramEnabled]){
+            [self instagramSelected:nil];
+        }
+#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
+        else{
+            [self showPickerForProvider:[OLKiteUtils kiteVcForViewController:self].customImageProviders.firstObject];
+        }
+#endif
+    }
+}
+
+#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
+- (void)showPickerForProvider:(OLCustomPhotoProvider *)provider{
+    UIViewController<KITCustomAssetPickerController> *vc;
+    if (provider.vc){
+        vc = provider.vc;
+    }
+    else{
+        KITAssetsPickerController *kvc = [[KITAssetsPickerController alloc] init];
+        kvc.collectionDataSources = provider.collections;
+        vc = kvc;
+    }
+    
+    if ([vc respondsToSelector:@selector(setSelectedAssets:)]){
+        [vc performSelector:@selector(setSelectedAssets:) withObject:[[self createAssetArray] mutableCopy]];
+    }
+    vc.delegate = self;
+    vc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
+    [self presentViewController:vc animated:YES completion:NULL];
+}
+#endif
 
 - (IBAction)cameraRollSelected:(id)sender {
 #ifndef OL_NO_ANALYTICS
@@ -519,7 +691,6 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     }completion:^(BOOL finished){
         [self.indexPathsToRemoveDict removeAllObjects];
         [self.collectionView performSelector:@selector(reloadData) withObject:0 afterDelay:0.05];
-        [self updateNoSelectedPhotosView];
     }];
     
 }
@@ -548,7 +719,28 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 
 - (void)assetsPickerController:(id)picker didFinishPickingAssets:(NSArray *)assets {
     NSInteger originalCount = self.userSelectedPhotos.count;
-    [self populateArrayWithNewArray:assets dataType:[picker isKindOfClass:[OLAssetsPickerController class]] ? [ALAsset class] : [PHAsset class]];
+    Class assetClass;
+    if ([picker isKindOfClass:[OLAssetsPickerController class]]){
+        assetClass = [ALAsset class];
+    }
+#ifdef OL_KITE_AT_LEAST_IOS8
+    else if ([picker isKindOfClass:[CTAssetsPickerController class]]){
+        assetClass = [PHAsset class];
+    }
+#endif
+#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
+    else if ([picker isKindOfClass:[KITAssetsPickerController class]]){
+        NSMutableArray *olAssets = [[NSMutableArray alloc] init];
+        for (id<OLAssetDataSource> asset in assets){
+            if ([asset respondsToSelector:@selector(dataWithCompletionHandler:)]){
+                [olAssets addObject:[OLAsset assetWithDataSource:asset]];
+            }
+        }
+        assets = olAssets;
+        assetClass = [[assets.firstObject dataSource] class];
+    }
+#endif
+    [self populateArrayWithNewArray:assets dataType:assetClass];
     [picker dismissViewControllerAnimated:YES completion:^(void){}];
 #ifndef OL_NO_ANALYTICS
     [OLAnalytics trackPhotoProvider:@"Camera Roll" numberOfPhotosAdded:self.userSelectedPhotos.count - originalCount forProductName:self.product.productTemplate.name];
@@ -567,6 +759,9 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8){
         return;
     }
+    if (![asset isKindOfClass:[PHAsset class]]){
+        return;
+    }
     PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
     options.networkAccessAllowed = YES;
     [[OLImageCachingManager sharedInstance].photosCachingManager stopCachingImagesForAssets:@[asset] targetSize:PHImageManagerMaximumSize contentMode:PHImageContentModeAspectFill options:options];
@@ -574,6 +769,9 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 
 - (void)assetsPickerController:(CTAssetsPickerController *)picker didSelectAsset:(PHAsset *)asset{
     if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8){
+        return;
+    }
+    if (![asset isKindOfClass:[PHAsset class]]){
         return;
     }
     PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
@@ -584,25 +782,49 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 
 - (BOOL)assetsPickerController:(id)picker shouldSelectAsset:(id)asset
 {
-    if (self.product.productTemplate.templateUI != kOLTemplateUICase && self.product.productTemplate.templateUI != kOLTemplateUIPoster && self.product.productTemplate.templateUI != kOLTemplateUIPostcard && self.product.productTemplate.templateUI != kOLTemplateUIPhotobook){
+    if (self.product.productTemplate.templateUI != kOLTemplateUICase && self.product.productTemplate.templateUI != kOLTemplateUIPostcard && self.product.productTemplate.templateUI != kOLTemplateUIPhotobook){
         return YES;
     }
     NSInteger max = self.product.quantityToFulfillOrder;
     
     NSMutableArray *tempUserSelected = [[NSMutableArray alloc] init];
     [tempUserSelected addObjectsFromArray:self.userSelectedPhotos];
-
+    
+    NSArray *assets;
     if ([picker respondsToSelector:@selector(selectedAssets)]){
-        [self populateArrayWithNewArray:[picker selectedAssets] dataType:[asset class]];
+        assets = [picker selectedAssets];
     }
     else if ([picker respondsToSelector:@selector(selected)]){
-        [self populateArrayWithNewArray:[picker selected] dataType:[asset class]];
+        assets = [picker selected];
     }
     else{ // ¯\_(ツ)_/¯
         return YES;
     }
     
-    // show alert gracefully
+    Class assetClass;
+    if ([picker isKindOfClass:[OLAssetsPickerController class]]){
+        assetClass = [ALAsset class];
+    }
+#ifdef OL_KITE_AT_LEAST_IOS8
+    else if ([picker isKindOfClass:[CTAssetsPickerController class]]){
+        assetClass = [PHAsset class];
+    }
+#endif
+#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
+    else if ([picker isKindOfClass:[KITAssetsPickerController class]]){
+        assetClass = [OLAsset class];
+        NSMutableArray *olAssets = [[NSMutableArray alloc] init];
+        for (id<OLAssetDataSource> asset in assets){
+            if ([asset respondsToSelector:@selector(dataWithCompletionHandler:)]){
+                [olAssets addObject:[OLAsset assetWithDataSource:asset]];
+            }
+        }
+        assets = olAssets;
+    }
+#endif
+    [self populateArrayWithNewArray:assets dataType:assetClass];
+    
+    // show alert
     if (self.userSelectedPhotos.count >= max)
     {
         if ([UIAlertController class]){
@@ -650,6 +872,16 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 
 - (void)instagramImagePicker:(OLInstagramImagePickerController *)imagePicker didFinishPickingImages:(NSArray *)images {
     NSInteger originalCount = self.userSelectedPhotos.count;
+#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
+    NSMutableArray *assets = [[NSMutableArray alloc] init];
+    for (id<OLAssetDataSource> asset in images){
+        if ([asset isKindOfClass:[OLInstagramImage class]]){
+            [assets addObject:asset];
+        }
+    }
+    images = assets;
+#endif
+    
     [self populateArrayWithNewArray:images dataType:[OLInstagramImage class]];
     [self dismissViewControllerAnimated:YES completion:^(void){}];
 #ifndef OL_NO_ANALYTICS
@@ -674,6 +906,16 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 
 - (void)facebookImagePicker:(OLFacebookImagePickerController *)imagePicker didFinishPickingImages:(NSArray *)images {
     NSInteger originalCount = self.userSelectedPhotos.count;
+#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
+    NSMutableArray *assets = [[NSMutableArray alloc] init];
+    for (id<OLAssetDataSource> asset in images){
+        if ([asset isKindOfClass:[OLFacebookImage class]]){
+            [assets addObject:asset];
+        }
+    }
+    images = assets;
+#endif
+    
     [self populateArrayWithNewArray:images dataType:[OLFacebookImage class]];
     [self dismissViewControllerAnimated:YES completion:^(void){}];
 #ifndef OL_NO_ANALYTICS
@@ -753,7 +995,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     }
     NSInteger removedImagesInThisSection = [self.indexPathsToRemoveDict[[NSNumber numberWithInteger:section]] count];
     NSInteger finalNumberOfPhotosRemoved = removedImagesInThisSection + removedImagesInOtherSections;
-
+    
     return MIN(MAX(self.userSelectedPhotos.count + finalNumberOfPhotosRemoved, number * [self numberOfCellsPerRow]), self.product.quantityToFulfillOrder) - removedImagesInThisSection;
 }
 
@@ -768,7 +1010,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
         removedImagesCount += [self.indexPathsToRemoveDict[n] count];
     }
     NSInteger finalNumberOfPhotos = self.userSelectedPhotos.count;
-    return ceil(finalNumberOfPhotos / (double)self.product.quantityToFulfillOrder);
+    return MAX(ceil(finalNumberOfPhotos / (double)self.product.quantityToFulfillOrder), 1);
 }
 
 - (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath{
@@ -826,8 +1068,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     }
 }
 
-- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView
-                  cellForItemAtIndexPath:(NSIndexPath *)indexPath {
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     static NSString *identifier = @"PhotoCell";
     UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
     
@@ -988,6 +1229,8 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     [collectionView deselectItemAtIndexPath:indexPath animated:NO];
 }
 
+#pragma mark LXReorderableCollectionViewFlowLayoutDelegate
+
 - (void)collectionView:(UICollectionView *)collectionView itemAtIndexPath:(NSIndexPath *)fromIndexPath didMoveToIndexPath:(NSIndexPath *)toIndexPath {
     
     id object = [self.userSelectedPhotos objectAtIndex:fromIndexPath.item + fromIndexPath.section * self.product.quantityToFulfillOrder];
@@ -1017,6 +1260,8 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     return YES;
 }
 
+#pragma mark UICollectionViewLayoutDelegate
+
 - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section{
     return OLPhotoSelectionMargin;
 }
@@ -1025,9 +1270,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     return OLPhotoSelectionMargin;
 }
 
-- (CGSize)collectionView:(UICollectionView *)collectionView
-                  layout:(UICollectionViewLayout *)collectionViewLayout
-  sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
     CGSize size = self.view.bounds.size;
     
     if (self.rotationSize.width != 0){
@@ -1038,10 +1281,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
     CGFloat width = ceilf(size.width/numberOfCellsPerRow);
     CGFloat height = width;
     
-//    if (indexPath.item % [self numberOfCellsPerRow] == 2) {
-//        width = size.width - 2 * width;
-//    }
-
+    
     return CGSizeMake(width, height);
 }
 
@@ -1083,7 +1323,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
             [av show];
         }
         return NO;
-    } 
+    }
     
     return YES;
 }
@@ -1110,6 +1350,46 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
             [self doSegueToOrderPreview];
         }
     }
+}
+
+#pragma mark - OLImageEditorViewControllerDelegate methods
+
+- (void)scrollCropViewControllerDidCancel:(OLScrollCropViewController *)cropper{
+    [cropper dismissViewControllerAnimated:YES completion:NULL];
+}
+
+-(void)scrollCropViewController:(OLScrollCropViewController *)cropper didFinishCroppingImage:(UIImage *)croppedImage{
+    [self.editingPrintPhoto unloadImage];
+    
+    self.editingPrintPhoto.edits = cropper.edits;
+    
+    [self.collectionView reloadData];
+    [cropper dismissViewControllerAnimated:YES completion:NULL];
+    
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackReviewScreenDidCropPhotoForProductName:self.product.productTemplate.name];
+#endif
+}
+
+#pragma mark UIActionSheet Delegate (only used on iOS 7)
+
+- (void) actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+        if (buttonIndex == [OLKiteUtils cameraRollProviderIndex:self]){
+            [self cameraRollSelected:nil];
+        }
+        else if (buttonIndex == [OLKiteUtils instagramProviderIndex:self]){
+            [self instagramSelected:nil];
+        }
+        else if (buttonIndex == [OLKiteUtils facebookProviderIndex:self]){
+            [self facebookSelected:nil];
+        }
+#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
+        else{
+            [self showPickerForProvider:[OLKiteUtils kiteVcForViewController:self].customImageProviders[buttonIndex - [OLKiteUtils customProvidersStartIndex:self]]];
+        }
+#endif
+    });
 }
 
 #pragma mark - Autorotate and Orientation Methods

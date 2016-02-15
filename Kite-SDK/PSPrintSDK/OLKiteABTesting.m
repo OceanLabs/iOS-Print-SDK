@@ -1,9 +1,30 @@
 //
-//  OLKiteABTesting.m
-//  KitePrintSDK
+//  Modified MIT License
 //
-//  Created by Konstadinos Karayannis on 14/7/15.
-//  Copyright (c) 2015 Deon Botha. All rights reserved.
+//  Copyright (c) 2010-2016 Kite Tech Ltd. https://www.kite.ly
+//
+//  Permission is hereby granted, free of charge, to any person obtaining a copy
+//  of this software and associated documentation files (the "Software"), to deal
+//  in the Software without restriction, including without limitation the rights
+//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+//  copies of the Software, and to permit persons to whom the Software is
+//  furnished to do so, subject to the following conditions:
+//
+//  The software MAY ONLY be used with the Kite Tech Ltd platform and MAY NOT be modified
+//  to be used with any competitor platforms. This means the software MAY NOT be modified
+//  to place orders with any competitors to Kite Tech Ltd, all orders MUST go through the
+//  Kite Tech Ltd platform servers.
+//
+//  The above copyright notice and this permission notice shall be included in
+//  all copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+//  THE SOFTWARE.
 //
 
 #ifdef COCOAPODS
@@ -18,6 +39,7 @@
 
 #import "OLKiteABTesting.h"
 #import "OLKitePrintSDK.h"
+#import "UIColor+HexString.h"
 
 
 static NSString *const kOLKiteABTestLaunchWithPrintOrderVariant = @"ly.kite.abtest.launch_with_print_order_variant";
@@ -130,6 +152,19 @@ id safeObject(id obj){
     }
     [defaults setObject:s forKey:kOLKiteThemeSupportEmail];
     [defaults synchronize];
+}
+
+- (UIColor *)darkThemeColor1{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    UIColor *color;
+    NSString *hex = [defaults objectForKey:@"ly.kite.theme.dark.color1"];
+    if (hex){
+        color = [UIColor colorWithHexString:hex];
+    }
+    else{
+        color = [UIColor colorWithHexString:@"6867E8"];
+    }
+    return color;
 }
 
 - (void)prefetchRemoteImages{
@@ -282,13 +317,14 @@ id safeObject(id obj){
     
     NSDictionary *experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestProductTileStyle];
     if (!experimentDict) {
-        experimentDict = @{@"Classic" : @1, @"A" : @0, @"B" : @0};
+        experimentDict = @{@"Classic" : @1, @"A" : @0, @"B" : @0, @"Dark" : @0};
     }
     [SkyLab splitTestWithName:kOLKiteABTestProductTileStyle
                    conditions:@{
                                 @"Classic" : safeObject(experimentDict[@"Classic"]),
                                 @"A" : safeObject(experimentDict[@"A"]),
-                                @"B" : safeObject(experimentDict[@"B"])
+                                @"B" : safeObject(experimentDict[@"B"]),
+                                @"Dark" : safeObject(experimentDict[@"Dark"])
                                 } block:^(id choice) {
                                     self.productTileStyle = choice;
                                 }];

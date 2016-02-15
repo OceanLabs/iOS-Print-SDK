@@ -1,9 +1,30 @@
 //
-//  OLKiteUtils.m
-//  KitePrintSDK
+//  Modified MIT License
 //
-//  Created by Konstadinos Karayannis on 9/30/15.
-//  Copyright © 2015 Deon Botha. All rights reserved.
+//  Copyright (c) 2010-2016 Kite Tech Ltd. https://www.kite.ly
+//
+//  Permission is hereby granted, free of charge, to any person obtaining a copy
+//  of this software and associated documentation files (the "Software"), to deal
+//  in the Software without restriction, including without limitation the rights
+//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+//  copies of the Software, and to permit persons to whom the Software is
+//  furnished to do so, subject to the following conditions:
+//
+//  The software MAY ONLY be used with the Kite Tech Ltd platform and MAY NOT be modified
+//  to be used with any competitor platforms. This means the software MAY NOT be modified
+//  to place orders with any competitors to Kite Tech Ltd, all orders MUST go through the
+//  Kite Tech Ltd platform servers.
+//
+//  The above copyright notice and this permission notice shall be included in
+//  all copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+//  THE SOFTWARE.
 //
 
 #import "OLKiteUtils.h"
@@ -16,11 +37,24 @@
 #import "OLKiteABTesting.h"
 #import "OLCheckoutViewController.h"
 #import "OLIntegratedCheckoutViewController.h"
+#import "OLKiteViewController.h"
+
+@class OLCustomPhotoProvider;
 
 @interface OLKitePrintSDK (Private)
 
 +(NSString *)appleMerchantID;
 
+#ifdef OL_KITE_OFFER_INSTAGRAM
++ (NSString *) instagramRedirectURI;
++ (NSString *) instagramSecret;
++ (NSString *) instagramClientID;
+#endif
+
+@end
+
+@interface OLKiteViewController (Private)
+@property (strong, nonatomic) NSMutableArray <OLCustomPhotoProvider *> *customImageProviders;
 @end
 
 @implementation OLKiteUtils
@@ -31,48 +65,122 @@
 
 + (NSString *)userEmail:(UIViewController *)topVC {
     OLKiteViewController *kiteVC = [self kiteVcForViewController:topVC];
-    OLProductHomeViewController *homeVC = [self homeViewControllerInNavStack:topVC.navigationController.viewControllers];
-    if (kiteVC) {
-        return kiteVC.userEmail;
-    } else if (homeVC) {
-        return homeVC.userEmail;
-    }
-    
-    return nil;
+    return kiteVC.userEmail;
 }
 
 + (NSString *)userPhone:(UIViewController *)topVC {
     OLKiteViewController *kiteVC = [self kiteVcForViewController:topVC];
-    OLProductHomeViewController *homeVC = [self homeViewControllerInNavStack:topVC.navigationController.viewControllers];
-    if (kiteVC) {
-        return kiteVC.userPhone;
-    } else if (homeVC) {
-        return homeVC.userPhone;
+    return kiteVC.userPhone;
+}
+
++ (BOOL)instagramEnabled{
+#ifdef OL_KITE_OFFER_INSTAGRAM
+    return [OLKitePrintSDK instagramSecret] && ![[OLKitePrintSDK instagramSecret] isEqualToString:@""] && [OLKitePrintSDK instagramClientID] && ![[OLKitePrintSDK instagramClientID] isEqualToString:@""] && [OLKitePrintSDK instagramRedirectURI] && ![[OLKitePrintSDK instagramRedirectURI] isEqualToString:@""];
+#else
+    return NO;
+#endif
+}
+
++ (BOOL)facebookEnabled{
+#ifdef OL_KITE_OFFER_FACEBOOK
+    return YES;
+#else
+    return NO;
+#endif
+}
+
++ (BOOL)imageProvidersAvailable:(UIViewController *)topVc{
+    OLKiteViewController *kiteVc = [OLKiteUtils kiteVcForViewController:topVc];
+    id<OLKiteDelegate> delegate = kiteVc.delegate;
+    
+    if ([delegate respondsToSelector:@selector(kiteControllerShouldAllowUserToAddMorePhotos:)] && ![delegate kiteControllerShouldAllowUserToAddMorePhotos:kiteVc]){
+        return NO;
     }
     
-    return nil;
+    BOOL customProvidersAvailable = NO;
+#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
+    customProvidersAvailable = kiteVc.customImageProviders.count > 0;
+#endif
+    
+    return [OLKiteUtils cameraRollEnabled:topVc] || [OLKiteUtils instagramEnabled] || [OLKiteUtils facebookEnabled] || customProvidersAvailable;
 }
+
++ (BOOL)cameraRollEnabled:(UIViewController *)topVc{
+    OLKiteViewController *kiteVc = [OLKiteUtils kiteVcForViewController:topVc];
+    id<OLKiteDelegate> delegate = kiteVc.delegate;
+    
+    if ([delegate respondsToSelector:@selector(kiteControllerShouldDisableCameraRoll:)] && [delegate kiteControllerShouldDisableCameraRoll:kiteVc]){
+        return NO;
+    }
+    
+    return YES;
+}
+
++ (NSInteger)cameraRollProviderIndex:(UIViewController *)topVc{
+    NSInteger index = -1;
+    if ([OLKiteUtils cameraRollEnabled:topVc]){
+        index++;
+    }
+    
+    return index;
+}
+
++ (NSInteger)facebookProviderIndex:(UIViewController *)topVc{
+    NSInteger index = -1;
+    if (![OLKiteUtils facebookEnabled]){
+        return index;
+    }
+    else{
+        index++;
+    }
+    
+    if ([OLKiteUtils cameraRollEnabled:topVc]){
+        index++;
+    }
+    
+    return index;
+}
+
++ (NSInteger)instagramProviderIndex:(UIViewController *)topVc{
+    NSInteger index = -1;
+    if (![OLKiteUtils instagramEnabled]){
+        return index;
+    }
+    else{
+        index++;
+    }
+    
+    if ([OLKiteUtils cameraRollEnabled:topVc]){
+        index++;
+    }
+    if ([OLKiteUtils facebookEnabled]){
+        index++;
+    }
+    
+    return index;
+}
+
+#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
++ (NSInteger)customProvidersStartIndex:(UIViewController *)topVc{
+    NSInteger index = 0;
+
+    if ([OLKiteUtils cameraRollEnabled:topVc]){
+        index++;
+    }
+    if ([OLKiteUtils facebookEnabled]){
+        index++;
+    }
+    if ([OLKiteUtils instagramEnabled]){
+        index++;
+    }
+    
+    return index;
+}
+#endif
 
 + (id<OLKiteDelegate>)kiteDelegate:(UIViewController *)topVC {
     OLKiteViewController *kiteVC = [self kiteVcForViewController:topVC];
-    OLProductHomeViewController *homeVC = [self homeViewControllerInNavStack:topVC.navigationController.viewControllers];
-    if (kiteVC) {
-        return kiteVC.delegate;
-    } else if (homeVC) {
-        return homeVC.delegate;
-    }
-    
-    return nil;
-}
-
-+ (OLProductHomeViewController *)homeViewControllerInNavStack:(NSArray *)viewControllers {
-    for (UIViewController *vc in viewControllers) {
-        if ([vc isMemberOfClass:[OLProductHomeViewController class]]) {
-            return (OLProductHomeViewController *) vc;
-        }
-    }
-    
-    return nil;
+    return kiteVC.delegate;
 }
 
 #ifdef OL_KITE_OFFER_APPLE_PAY
@@ -113,6 +221,9 @@
     else if (templateUI == kOLTemplateUIPhotobook){
         return @"OLEditPhotobookViewController";
     }
+    else if (templateUI == kOLTemplateUINonCustomizable){
+        return @"OLPaymentViewController";
+    }
     else if (photoSelectionScreen){
         return @"PhotoSelectionViewController";
     }
@@ -128,6 +239,10 @@
 }
 
 + (OLKiteViewController *)kiteVcForViewController:(UIViewController *)theVc{
+    if ([theVc isKindOfClass:[OLKiteViewController class]]){
+        return (OLKiteViewController *)theVc;
+    }
+    
     UIViewController *vc = theVc.parentViewController;
     while (vc) {
         if ([vc isKindOfClass:[OLKiteViewController class]]){

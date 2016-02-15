@@ -1,16 +1,36 @@
 //
-//  ProductOverviewViewController.m
-//  Kite Print SDK
+//  Modified MIT License
 //
-//  Created by Deon Botha on 03/01/2014.
-//  Copyright (c) 2014 Ocean Labs. All rights reserved.
+//  Copyright (c) 2010-2016 Kite Tech Ltd. https://www.kite.ly
+//
+//  Permission is hereby granted, free of charge, to any person obtaining a copy
+//  of this software and associated documentation files (the "Software"), to deal
+//  in the Software without restriction, including without limitation the rights
+//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+//  copies of the Software, and to permit persons to whom the Software is
+//  furnished to do so, subject to the following conditions:
+//
+//  The software MAY ONLY be used with the Kite Tech Ltd platform and MAY NOT be modified
+//  to be used with any competitor platforms. This means the software MAY NOT be modified
+//  to place orders with any competitors to Kite Tech Ltd, all orders MUST go through the
+//  Kite Tech Ltd platform servers.
+//
+//  The above copyright notice and this permission notice shall be included in
+//  all copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+//  THE SOFTWARE.
 //
 
 #import "OLProductOverviewViewController.h"
 #import "OLProductOverviewPageContentViewController.h"
 #import "OLProduct.h"
 #import "OLOrderReviewViewController.h"
-#import "OLWhiteSquare.h"
 #import "OLKiteViewController.h"
 #import "OLAnalytics.h"
 #import "OLProductTypeSelectionViewController.h"
@@ -33,6 +53,10 @@
 
 @end
 
+@interface OLPrintOrder ()
+- (void)saveOrder;
+@end
+
 @interface OLProductOverviewViewController () <UIPageViewControllerDataSource, OLProductOverviewPageContentViewControllerDelegate, OLProductDetailsDelegate, UIPageViewControllerDelegate>
 @property (strong, nonatomic) UIPageViewController *pageController;
 @property (strong, nonatomic) IBOutlet UIPageControl *pageControl;
@@ -42,9 +66,13 @@
 @property (weak, nonatomic) IBOutlet UIImageView *arrowImageView;
 @property (weak, nonatomic) IBOutlet UIView *detailsView;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *detailsViewHeightCon;
+@property (weak, nonatomic) IBOutlet UIView *detailsSeparator;
 @property (assign, nonatomic) CGFloat originalBoxConstraint;
 
 @property (strong, nonatomic) OLProductDetailsViewController *productDetails;
+
+@property (strong, nonatomic) id<OLPrintJob> editingPrintJob;
+
 
 @end
 
@@ -98,13 +126,23 @@
             vc = vc.parentViewController;
         }
     }
-    if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder){
+    if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder && self.product.productTemplate.templateUI != kOLTemplateUINonCustomizable){
         if (![[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant isEqualToString:@"Overview-Review-Checkout"]){
             [self.callToActionButton setTitle: NSLocalizedString(@"Checkout", @"") forState:UIControlStateNormal];
         }
         else{
             [self.callToActionButton setTitle: NSLocalizedString(@"Review", @"")forState:UIControlStateNormal];
         }
+    }
+    else if (self.product.productTemplate.templateUI == kOLTemplateUINonCustomizable){
+        [self.callToActionButton setTitle: NSLocalizedString(@"Add to Basket", @"")forState:UIControlStateNormal];
+    }
+    
+    if ([OLKiteABTesting sharedInstance].darkTheme && [OLKiteABTesting sharedInstance].darkThemeColor1){
+        self.callToActionButton.backgroundColor = [OLKiteABTesting sharedInstance].darkThemeColor1;
+        [self.callToActionButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        
+        self.detailsSeparator.backgroundColor = [OLKiteABTesting sharedInstance].darkThemeColor1;
     }
     
 #ifndef OL_NO_ANALYTICS
@@ -198,7 +236,12 @@
     
     if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0){
         UIVisualEffect *blurEffect;
+        if (![OLKiteABTesting sharedInstance].darkTheme){
         blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleExtraLight];
+        }
+        else{
+            blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleDark];
+        }
         
         UIVisualEffectView *visualEffectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
         UIView *view = visualEffectView;
@@ -276,14 +319,10 @@
 }
 
 - (IBAction)onButtonStartClicked:(id)sender {
-    if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder){
+    if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder && self.product.productTemplate.templateUI != kOLTemplateUINonCustomizable){
         UIViewController *vc;
         if ([[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant isEqualToString:@"Overview-Review-Checkout"]){
-            BOOL photoSelection = ![self.delegate respondsToSelector:@selector(kiteControllerShouldAllowUserToAddMorePhotos:)];
-            if (!photoSelection){
-                photoSelection = [self.delegate kiteControllerShouldAllowUserToAddMorePhotos:[OLKiteUtils kiteVcForViewController:self]];
-            }
-            vc = [self.storyboard instantiateViewControllerWithIdentifier:[OLKiteUtils reviewViewControllerIdentifierForProduct:self.product photoSelectionScreen:photoSelection]];
+            vc = [self.storyboard instantiateViewControllerWithIdentifier:[OLKiteUtils reviewViewControllerIdentifierForProduct:self.product photoSelectionScreen:[OLKiteUtils imageProvidersAvailable:self]]];
         }
         else{
             [OLKiteUtils checkoutViewControllerForPrintOrder:[OLKiteUtils kiteVcForViewController:self].printOrder handler:^(id vc){
@@ -305,14 +344,79 @@
         [self.navigationController pushViewController:vc animated:YES];
         return;
     }
+    else if (self.product.productTemplate.templateUI == kOLTemplateUINonCustomizable){
+        [self doCheckout];
+        return;
+    }
     
-    UIViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:[OLKiteUtils reviewViewControllerIdentifierForProduct:self.product photoSelectionScreen:![self.delegate respondsToSelector:@selector(kiteControllerShouldAllowUserToAddMorePhotos:)] || [self.delegate kiteControllerShouldAllowUserToAddMorePhotos:[OLKiteUtils kiteVcForViewController:self]]]];
+    UIViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:[OLKiteUtils reviewViewControllerIdentifierForProduct:self.product photoSelectionScreen:[OLKiteUtils imageProvidersAvailable:self]]];
     
     [vc safePerformSelector:@selector(setUserSelectedPhotos:) withObject:self.userSelectedPhotos];
     [vc safePerformSelector:@selector(setDelegate:) withObject:self.delegate];
     [vc safePerformSelector:@selector(setProduct:) withObject:self.product];
     
     [self.navigationController pushViewController:vc animated:YES];
+}
+
+- (void)saveJobWithCompletionHandler:(void(^)())handler{
+    NSDictionary *infoDict = [[NSBundle mainBundle] infoDictionary];
+    NSString *appVersion = [infoDict objectForKey:@"CFBundleShortVersionString"];
+    NSNumber *buildNumber = [infoDict objectForKey:@"CFBundleVersion"];
+    
+    OLPrintOrder *printOrder = [OLKiteUtils kiteVcForViewController:self].printOrder;
+    printOrder.userData = @{@"sdk_version": kOLKiteSDKVersion,
+                            @"platform": @"iOS",
+                            @"uid": [OLAnalytics userDistinctId],
+                            @"app_version": [NSString stringWithFormat:@"Version: %@ (%@)", appVersion, buildNumber]
+                            };
+    
+    OLProductPrintJob *job = [[OLProductPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:@[[OLAsset assetWithURL:[NSURL URLWithString:@"https://kite.ly/no-asset.jpg"]]]];
+    NSArray *jobs = [NSArray arrayWithArray:printOrder.jobs];
+    for (id<OLPrintJob> existingJob in jobs){
+        if ([existingJob.uuid isEqualToString:self.product.uuid]){
+            if ([existingJob extraCopies] > 0){
+                [existingJob setExtraCopies:[existingJob extraCopies]-1];
+            }
+            else{
+                [printOrder removePrintJob:existingJob];
+            }
+            job.uuid = self.product.uuid;
+        }
+    }
+    self.product.uuid = job.uuid;
+    self.editingPrintJob = job;
+    if ([printOrder.jobs containsObject:self.editingPrintJob]){
+        id<OLPrintJob> existingJob = printOrder.jobs[[printOrder.jobs indexOfObject:self.editingPrintJob]];
+        [existingJob setExtraCopies:[existingJob extraCopies]+1];
+        for (NSString *option in self.product.selectedOptions.allKeys){
+            [job setValue:self.product.selectedOptions[option] forOption:option];
+        }
+    }
+    else{
+        [printOrder addPrintJob:self.editingPrintJob];
+    }
+    
+    [printOrder saveOrder];
+    
+    if (handler){
+        handler();
+    }
+}
+
+/**
+ *  Will only do checkout on this screen for non-customizable products.
+ */
+- (void)doCheckout {
+    [self saveJobWithCompletionHandler:NULL];
+    
+    OLPrintOrder *printOrder = [OLKiteUtils kiteVcForViewController:self].printOrder;
+        [OLKiteUtils checkoutViewControllerForPrintOrder:printOrder handler:^(id vc){
+            [vc safePerformSelector:@selector(setUserEmail:) withObject:[OLKiteUtils userEmail:self]];
+            [vc safePerformSelector:@selector(setUserPhone:) withObject:[OLKiteUtils userPhone:self]];
+            [vc safePerformSelector:@selector(setKiteDelegate:) withObject:[OLKiteUtils kiteDelegate:self]];
+            
+            [self.navigationController pushViewController:vc animated:YES];
+        }];
 }
 
 -(void)userDidTapOnImage{

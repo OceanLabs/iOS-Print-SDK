@@ -1,9 +1,30 @@
 //
-//  KiteViewController.m
-//  Kite Print SDK
+//  Modified MIT License
 //
-//  Created by Konstadinos Karayannis on 12/24/14.
-//  Copyright (c) 2014 Deon Botha. All rights reserved.
+//  Copyright (c) 2010-2016 Kite Tech Ltd. https://www.kite.ly
+//
+//  Permission is hereby granted, free of charge, to any person obtaining a copy
+//  of this software and associated documentation files (the "Software"), to deal
+//  in the Software without restriction, including without limitation the rights
+//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+//  copies of the Software, and to permit persons to whom the Software is
+//  furnished to do so, subject to the following conditions:
+//
+//  The software MAY ONLY be used with the Kite Tech Ltd platform and MAY NOT be modified
+//  to be used with any competitor platforms. This means the software MAY NOT be modified
+//  to place orders with any competitors to Kite Tech Ltd, all orders MUST go through the
+//  Kite Tech Ltd platform servers.
+//
+//  The above copyright notice and this permission notice shall be included in
+//  all copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+//  THE SOFTWARE.
 //
 
 #import "OLKiteViewController.h"
@@ -18,11 +39,22 @@
 #import "OLAnalytics.h"
 #import "OLPrintPhoto.h"
 #import "OLProductGroup.h"
-#import "OLCustomNavigationController.h"
+#import "OLNavigationController.h"
 #import "NSObject+Utils.h"
 #import "OLKiteABTesting.h"
 #import "UIImage+ColorAtPixel.h"
 #import "OLKiteUtils.h"
+
+#ifdef COCOAPODS
+#import <SDWebImage/SDImageCache.h>
+#else
+#import "SDImageCache.h"
+#endif
+
+
+#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
+#import "OLCustomPhotoProvider.h"
+#endif
 
 static const NSInteger kTagNoProductsAlertView = 99;
 static const NSInteger kTagTemplateSyncFailAlertView = 100;
@@ -36,6 +68,12 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
 @property (weak, nonatomic) IBOutlet UINavigationBar *navigationBar;
 @property (weak, nonatomic) IBOutlet UINavigationItem *customNavigationItem;
 @property (weak, nonatomic) IBOutlet UIImageView *loadingImageView;
+#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
+@property (strong, nonatomic) NSMutableArray <OLCustomPhotoProvider *> *customImageProviders;
+#endif
+
+
+@property (assign, nonatomic) BOOL useDarkTheme; //XXX: Delete this when exposed in header
 
 // Because template sync happens in the constructor it may complete before the OLKiteViewController has appeared. In such a case where sync does
 // complete first we make a note to immediately transition to the appropriate view when the OLKiteViewController does appear:
@@ -82,7 +120,19 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
     [self.printOrder saveOrder];
 }
 
+- (void)setUseDarkTheme:(BOOL)useDarkTheme{
+    _useDarkTheme = useDarkTheme;
+    [OLKiteABTesting sharedInstance].darkTheme = useDarkTheme;
+}
+
+- (BOOL)prefersStatusBarHidden {
+    return self.useDarkTheme;
+}
+
 - (UIStatusBarStyle)preferredStatusBarStyle{
+    if (self.childViewControllers.count == 0){
+        return self.useDarkTheme ? UIStatusBarStyleLightContent : UIStatusBarStyleDefault;
+    }
     return [[self.childViewControllers firstObject] preferredStatusBarStyle];
 }
 
@@ -128,9 +178,32 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
     return self;
 }
 
+#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
+- (void)addCustomPhotoProviderWithCollections:(NSArray <id<KITAssetCollectionDataSource>>*_Nonnull)collections name:(NSString *_Nonnull)name icon:(UIImage *_Nullable)image{
+    if (!self.customImageProviders){
+        self.customImageProviders = [[NSMutableArray<OLCustomPhotoProvider *> alloc] init];
+    }
+    [self.customImageProviders addObject:[[OLCustomPhotoProvider alloc] initWithCollections:collections name:name icon:image]];
+}
+
+- (void)addCustomPhotoProviderWithViewController:(UIViewController<KITCustomAssetPickerController> *_Nonnull)vc name:(NSString *_Nonnull)name icon:(UIImage *_Nullable)icon{
+    if (!self.customImageProviders){
+        self.customImageProviders = [[NSMutableArray<OLCustomPhotoProvider *> alloc] init];
+    }
+    [self.customImageProviders addObject:[[OLCustomPhotoProvider alloc] initWithController:vc name:name icon:icon]];
+}
+#endif
+
 -(void)viewDidLoad {
     [super viewDidLoad];
     
+    if (self.useDarkTheme){
+        self.navigationBar.barTintColor = [UIColor blackColor];
+        self.navigationBar.tintColor = [UIColor grayColor];
+        self.navigationBar.barStyle = UIBarStyleBlackTranslucent;
+    }
+    
+    [SDImageCache sharedImageCache].maxMemoryCountLimit = 1;
     [[NSURLCache sharedURLCache] removeAllCachedResponses];
     
     if (!self.navigationController){
@@ -228,11 +301,7 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
                 identifier = @"OLProductOverviewViewController";
             }
             else if ([[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant hasPrefix:@"Review-"] && [product isValidProductForUI]){
-                BOOL photoSelection = ![welf.delegate respondsToSelector:@selector(kiteControllerShouldAllowUserToAddMorePhotos:)];
-                if (!photoSelection){
-                    photoSelection = [welf.delegate kiteControllerShouldAllowUserToAddMorePhotos:welf];
-                }
-                identifier = [OLKiteUtils reviewViewControllerIdentifierForProduct:product photoSelectionScreen:photoSelection];
+                identifier = [OLKiteUtils reviewViewControllerIdentifierForProduct:product photoSelectionScreen:[OLKiteUtils imageProvidersAvailable:welf]];
             }
             else{
                 [OLKiteUtils checkoutViewControllerForPrintOrder:welf.printOrder handler:^(id vc){
@@ -240,7 +309,7 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
                     [vc safePerformSelector:@selector(setUserEmail:) withObject:welf.userEmail];
                     [vc safePerformSelector:@selector(setUserPhone:) withObject:welf.userPhone];
                     [vc safePerformSelector:@selector(setKiteDelegate:) withObject:welf.delegate];
-                    OLCustomNavigationController *nvc = [[OLCustomNavigationController alloc] initWithRootViewController:vc];
+                    OLNavigationController *nvc = [[OLNavigationController alloc] initWithRootViewController:vc];
                     
                     [welf fadeToViewController:nvc];
                 }];
@@ -256,7 +325,7 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
             
             [[vc navigationItem] setLeftBarButtonItem:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:welf action:@selector(dismiss)]];
             [vc.navigationItem.rightBarButtonItem setTitle:NSLocalizedString(@"Next", @"")];
-            OLCustomNavigationController *nvc = [[OLCustomNavigationController alloc] initWithRootViewController:vc];
+            OLNavigationController *nvc = [[OLNavigationController alloc] initWithRootViewController:vc];
             [welf fadeToViewController:nvc];
             return;
         }
@@ -270,7 +339,7 @@ static const NSInteger kTagTemplateSyncFailAlertView = 100;
             nextVcNavIdentifier = @"ProductHomeViewController";
         }
         UIViewController *vc = [sb instantiateViewControllerWithIdentifier:nextVcNavIdentifier];
-        UINavigationController *nav = [[OLCustomNavigationController alloc] initWithRootViewController:vc];
+        UINavigationController *nav = [[OLNavigationController alloc] initWithRootViewController:vc];
         [vc safePerformSelector:@selector(setProduct:) withObject:product];
         [vc safePerformSelector:@selector(setDelegate:) withObject:welf.delegate];
         [vc safePerformSelector:@selector(setUserEmail:) withObject:welf.userEmail];

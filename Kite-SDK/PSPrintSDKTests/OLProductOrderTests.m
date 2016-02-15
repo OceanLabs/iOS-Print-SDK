@@ -41,8 +41,6 @@
     [OLKitePrintSDK setAPIKey:@"a45bf7f39523d31aa1ca4ecf64d422b4d810d9c4" withEnvironment:kOLKitePrintSDKEnvironmentSandbox];
     [OLKitePrintSDK setIsUnitTesting];
     
-    [self templateSyncWithSuccessHandler:NULL];
-    [self waitForExpectationsWithTimeout:60 handler:nil];
 }
 
 - (void)tearDown {
@@ -63,7 +61,7 @@
     [printOrder addPrintJob:jobs.firstObject];
     [printOrder removePrintJob:jobs.firstObject];
     
-//    [printOrder setUserData:@{@"Unit Tests" : @YES}];
+    [printOrder setUserData:@{@"Unit Tests" : @YES}];
     
     XCTAssert(printOrder.jobs.count == 0, @"Exptected 0 jobs");
     
@@ -77,7 +75,7 @@
     
     [self submitOrder:printOrder WithSuccessHandler:NULL];
     
-    [self waitForExpectationsWithTimeout:60 handler:nil];
+    [self waitForExpectationsWithTimeout:120 handler:nil];
     
     XCTAssert(printOrder.printed, @"Order not printed");
     XCTAssert([printOrder.receipt hasPrefix:@"PS"], @"Order does not have valid receipt");
@@ -135,18 +133,6 @@
                 if (handler) handler();
             }];
         }];
-    }];
-}
-
-- (void)templateSyncWithSuccessHandler:(void(^)())handler{
-    XCTestExpectation *expectation = [self expectationWithDescription:@"Template Sync Completed"];
-    [OLProductTemplate syncWithCompletionHandler:^(NSArray <OLProductTemplate *>* _Nullable templates, NSError * _Nullable error){
-        XCTAssert(!error, @"Template Sync Request failed with: %@", error);
-        
-        XCTAssert(templates.count > 0, @"Template Sync returned 0 templates. Maintenance mode?");
-        
-        [expectation fulfill];
-        if (handler) handler();
     }];
 }
 
@@ -349,7 +335,7 @@
     
     [self submitOrder:printOrder WithSuccessHandler:NULL];
     
-    [self waitForExpectationsWithTimeout:60 handler:nil];
+    [self waitForExpectationsWithTimeout:120 handler:nil];
     
     XCTAssert(printOrder.printed, @"Order not printed");
     XCTAssert([printOrder.receipt hasPrefix:@"PS"], @"Order does not have valid receipt");

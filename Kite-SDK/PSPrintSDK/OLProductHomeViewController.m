@@ -1,10 +1,39 @@
 //
-//  ProductHomeViewController.m
-//  Kite Print SDK
+//  Modified MIT License
 //
-//  Created by Elliott Minns on 12/12/2013.
-//  Copyright (c) 2013 Ocean Labs. All rights reserved.
+//  Copyright (c) 2010-2016 Kite Tech Ltd. https://www.kite.ly
 //
+//  Permission is hereby granted, free of charge, to any person obtaining a copy
+//  of this software and associated documentation files (the "Software"), to deal
+//  in the Software without restriction, including without limitation the rights
+//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+//  copies of the Software, and to permit persons to whom the Software is
+//  furnished to do so, subject to the following conditions:
+//
+//  The software MAY ONLY be used with the Kite Tech Ltd platform and MAY NOT be modified
+//  to be used with any competitor platforms. This means the software MAY NOT be modified
+//  to place orders with any competitors to Kite Tech Ltd, all orders MUST go through the
+//  Kite Tech Ltd platform servers.
+//
+//  The above copyright notice and this permission notice shall be included in
+//  all copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+//  THE SOFTWARE.
+//
+
+#ifdef COCOAPODS
+#import <SDWebImage/SDWebImageManager.h>
+#import <TSMarkdownParser/TSMarkdownParser.h>
+#else
+#import "SDWebImageManager.h"
+#import "TSMarkdownParser.h"
+#endif
 
 #ifdef COCOAPODS
 #import <SDWebImage/SDWebImageManager.h>
@@ -16,7 +45,7 @@
 
 #import "NSObject+Utils.h"
 #import "OLAnalytics.h"
-#import "OLCustomNavigationController.h"
+#import "OLNavigationController.h"
 #import "OLInfoPageViewController.h"
 #import "OLKiteABTesting.h"
 #import "OLKitePrintSDK.h"
@@ -435,26 +464,31 @@
     NSInteger numberOfCells = [self collectionView:collectionView numberOfItemsInSection:indexPath.section];
     CGFloat halfScreenHeight = (size.height - [[UIApplication sharedApplication] statusBarFrame].size.height - self.navigationController.navigationBar.frame.size.height)/2;
     
+    CGFloat height = 233;
+    if ([[OLKiteABTesting sharedInstance].productTileStyle isEqualToString:@"Dark"]){
+        height = 200;
+    }
+    
     if ([self isHorizontalSizeClassCompact] && size.height > size.width) {
         if (numberOfCells == 2){
             return CGSizeMake(size.width, halfScreenHeight);
         }
         else{
-            return CGSizeMake(size.width, 233 * (size.width / 320.0));
+            return CGSizeMake(size.width, height * (size.width / 320.0));
         }
     }
     else if (numberOfCells == 6){
-        return CGSizeMake(size.width/2 - 1, MAX(halfScreenHeight * (2.0 / 3.0), 233));
+        return CGSizeMake(size.width/2 - 1, MAX(halfScreenHeight * (2.0 / 3.0), height));
     }
     else if (numberOfCells == 4){
-        return CGSizeMake(size.width/2 - 1, MAX(halfScreenHeight, 233));
+        return CGSizeMake(size.width/2 - 1, MAX(halfScreenHeight, height));
     }
     else if (numberOfCells == 3){
         if (size.width < size.height){
             return CGSizeMake(size.width, halfScreenHeight * 0.8);
         }
         else{
-            return CGSizeMake(size.width/2 - 1, MAX(halfScreenHeight, 233));
+            return CGSizeMake(size.width/2 - 1, MAX(halfScreenHeight, height));
         }
     }
     else if (numberOfCells == 2){
@@ -466,7 +500,7 @@
         }
     }
     else{
-        return CGSizeMake(size.width/2 - 1, 238);
+        return CGSizeMake(size.width/2 - 1, height);
     }
 }
 
@@ -605,6 +639,10 @@
     
     if ([[OLKiteABTesting sharedInstance].productTileStyle isEqualToString:@"Classic"]){
         productTypeLabel.backgroundColor = [product labelColor];
+    }
+    else if([[OLKiteABTesting sharedInstance].productTileStyle isEqualToString:@"Dark"]){
+        UIButton *button = (UIButton *)[cell.contentView viewWithTag:390];
+        button.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.8];
     }
     else{
         UIButton *button = (UIButton *)[cell.contentView viewWithTag:390];

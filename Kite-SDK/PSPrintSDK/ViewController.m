@@ -1,25 +1,34 @@
 //
-//  ViewController.m
-//  Kite SDK
+//  Modified MIT License
 //
-//  Created by Deon Botha on 18/12/2013.
-//  Copyright (c) 2013 Deon Botha. All rights reserved.
+//  Copyright (c) 2010-2016 Kite Tech Ltd. https://www.kite.ly
 //
-
-#import "ViewController.h"
-#import "OLKitePrintSDK.h"
-#import "OLAssetsPickerController.h"
-#import "OLImageCachingManager.h"
-
-#ifdef OL_KITE_AT_LEAST_IOS8
-#import <CTAssetsPickerController/CTAssetsPickerController.h>
-#endif
-
-#import <AssetsLibrary/AssetsLibrary.h>
-@import Photos;
+//  Permission is hereby granted, free of charge, to any person obtaining a copy
+//  of this software and associated documentation files (the "Software"), to deal
+//  in the Software without restriction, including without limitation the rights
+//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+//  copies of the Software, and to permit persons to whom the Software is
+//  furnished to do so, subject to the following conditions:
+//
+//  The software MAY ONLY be used with the Kite Tech Ltd platform and MAY NOT be modified
+//  to be used with any competitor platforms. This means the software MAY NOT be modified
+//  to place orders with any competitors to Kite Tech Ltd, all orders MUST go through the
+//  Kite Tech Ltd platform servers.
+//
+//  The above copyright notice and this permission notice shall be included in
+//  all copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+//  THE SOFTWARE.
+//
 
 /**********************************************************************
- * Insert your API keys here. These are found under your profile 
+ * Insert your API keys here. These are found under your profile
  * by logging in to the developer portal at https://www.kite.ly
  **********************************************************************/
 static NSString *const kAPIKeySandbox = @"REPLACE_WITH_YOUR_API_KEY"; // replace with your Sandbox API key found under the Profile section in the developer portal
@@ -27,6 +36,20 @@ static NSString *const kAPIKeyLive = @"REPLACE_WITH_YOUR_API_KEY"; // replace wi
 
 static NSString *const kApplePayMerchantIDKey = @"merchant.ly.kite.sdk"; // Replace with your merchant ID
 static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your business name
+
+#import "ViewController.h"
+#import "OLKitePrintSDK.h"
+#import "OLAssetsPickerController.h"
+#import "OLImageCachingManager.h"
+#import "CatsAssetCollectionDataSource.h"
+#import "DogsAssetCollectionDataSource.h"
+
+#ifdef OL_KITE_AT_LEAST_IOS8
+#import <CTAssetsPickerController/CTAssetsPickerController.h>
+#endif
+
+#import <AssetsLibrary/AssetsLibrary.h>
+@import Photos;
 
 @interface ViewController () <OLAssetsPickerControllerDelegate,
 #ifdef OL_KITE_AT_LEAST_IOS8
@@ -156,8 +179,21 @@ UINavigationControllerDelegate, OLKiteDelegate>
     vc.userEmail = @"";
     vc.userPhone = @"";
     vc.delegate = self;
+    [vc addCustomPhotoProviderWithCollections:@[[[CatsAssetCollectionDataSource alloc] init]] name:@"Cats" icon:[UIImage imageNamed:@"cat"]];
+    [vc addCustomPhotoProviderWithCollections:@[[[DogsAssetCollectionDataSource alloc] init]] name:@"Dogs" icon:[UIImage imageNamed:@"dog"]];
     [self presentViewController:vc animated:YES completion:NULL];
-
+    
+    //Register for push notifications
+    NSUInteger types = (UIUserNotificationTypeSound | UIUserNotificationTypeAlert | UIUserNotificationTypeBadge);
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
+        [[UIApplication sharedApplication] registerUserNotificationSettings:
+         [UIUserNotificationSettings settingsForTypes:types categories:nil]];
+        [[UIApplication sharedApplication] registerForRemoteNotifications];
+    }
+    //    else {
+    //        [[UIApplication sharedApplication] registerForRemoteNotificationTypes:types];
+    //    }
+    
 }
 
 - (IBAction)onButtonPrintRemotePhotos:(id)sender {
@@ -241,9 +277,9 @@ UINavigationControllerDelegate, OLKiteDelegate>
 #pragma mark - OLKiteDelete
 
 - (BOOL)kiteController:(OLKiteViewController *)controller isDefaultAssetsGroup:(ALAssetsGroup *)group {
-//    if ([[group valueForProperty:ALAssetsGroupPropertyName] isEqualToString:@"Instagram"]) {
-//        return YES;
-//    }
+    //    if ([[group valueForProperty:ALAssetsGroupPropertyName] isEqualToString:@"Instagram"]) {
+    //        return YES;
+    //    }
     return NO;
 }
 
