@@ -161,6 +161,9 @@ Logging in to our [Developer Dashboard](https://www.kite.ly) allow's you to dyna
 ## ApplePay
 See our [ApplePay setup documentation](Kite-SDK/docs/applepay.md) if you want to enable checkout via ApplePay.
 
+## SDK Entry Points
+Depending on your use case you might want to launch to a specific product, or even bypass the product selection/creation process entirely and jump straight to the checkout/payment journey. See our [SDK entry point documentation](Kite-SDK/docs/entry_points.md) for more details.
+
 ## Documentation
 
 * These docs in the SDK, which include an overview of usage, step-by-step integration instructions, and sample code
