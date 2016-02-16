@@ -287,6 +287,11 @@ static const NSUInteger kSectionErrorRetry = 2;
 }
 
 - (void)retryWasSuccessful{
+#ifndef OL_NO_ANALYTICS
+    if (self.printOrder.printed){
+        [OLAnalytics trackOrderSubmission:self.printOrder];
+    }
+#endif
     [UIView transitionWithView:self.view duration:0.3f options:UIViewAnimationOptionTransitionCrossDissolve animations:^{
         [self setupHeader];
     } completion:nil];

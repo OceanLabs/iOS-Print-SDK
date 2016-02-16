@@ -903,7 +903,9 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         }
         
 #ifndef OL_NO_ANALYTICS
-        [OLAnalytics trackOrderSubmission:self.printOrder];
+        if (self.printOrder.printed){
+            [OLAnalytics trackOrderSubmission:self.printOrder];
+        }
 #endif
         
         if (!self.presentedViewController){
