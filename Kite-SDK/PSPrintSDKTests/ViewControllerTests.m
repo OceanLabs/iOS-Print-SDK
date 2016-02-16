@@ -10,7 +10,7 @@
 #import "OLKitePrintSDK.h"
 #import "OLProductHomeViewController.h"
 #import "OLPhotoSelectionViewController.h"
-#import "OLCustomNavigationController.h"
+#import "OLNavigationController.h"
 #import "OLKiteTestHelper.h"
 #import "OLProductGroup.h"
 #import "OLProductTypeSelectionViewController.h"

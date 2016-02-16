@@ -1,10 +1,37 @@
 //
-//  FrameOrderReviewViewController.m
-//  Kite Print SDK
+//  Modified MIT License
 //
-//  Created by Kostas Karayannis on 23/07/2014.
-//  Copyright (c) 2014 Ocean Labs. All rights reserved.
+//  Copyright (c) 2010-2016 Kite Tech Ltd. https://www.kite.ly
 //
+//  Permission is hereby granted, free of charge, to any person obtaining a copy
+//  of this software and associated documentation files (the "Software"), to deal
+//  in the Software without restriction, including without limitation the rights
+//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+//  copies of the Software, and to permit persons to whom the Software is
+//  furnished to do so, subject to the following conditions:
+//
+//  The software MAY ONLY be used with the Kite Tech Ltd platform and MAY NOT be modified
+//  to be used with any competitor platforms. This means the software MAY NOT be modified
+//  to place orders with any competitors to Kite Tech Ltd, all orders MUST go through the
+//  Kite Tech Ltd platform servers.
+//
+//  The above copyright notice and this permission notice shall be included in
+//  all copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+//  THE SOFTWARE.
+//
+
+#ifdef COCOAPODS
+#import <SDWebImage/SDWebImageManager.h>
+#else
+#import "SDWebImageManager.h"
+#endif
 
 #ifdef COCOAPODS
 #import <SDWebImage/SDWebImageManager.h>
@@ -20,6 +47,8 @@
 #import "OLRemoteImageView.h"
 #import "OLKiteUtils.h"
 #import "OLKiteViewController.h"
+#import "OLImagePreviewViewController.h"
+#import "OLAnalytics.h"
 
 @interface OLOrderReviewViewController (Private)
 
@@ -31,7 +60,7 @@
 
 @end
 
-@interface OLFrameOrderReviewViewController () <OLScrollCropViewControllerDelegate>
+@interface OLFrameOrderReviewViewController () <OLScrollCropViewControllerDelegate, UIViewControllerPreviewingDelegate>
 
 @property (strong, nonatomic) NSMutableArray* framePhotos;
 @property (weak, nonatomic) OLPrintPhoto *editingPrintPhoto;
@@ -92,11 +121,18 @@ CGFloat margin = 2;
     cropVc.delegate = self;
     cropVc.aspectRatio = 1;
     
+    cropVc.previewView = [imageView snapshotViewAfterScreenUpdates:YES];
+    cropVc.previewView.frame = [cell convertRect:imageView.frame toView:nil];
+    cropVc.previewSourceView = imageView;
+    cropVc.providesPresentationContextTransitionStyle = true;
+    cropVc.definesPresentationContext = true;
+    cropVc.modalPresentationStyle = UIModalPresentationOverCurrentContext;
+    
     [self.editingPrintPhoto getImageWithProgress:NULL completion:^(UIImage *image){
         [cropVc setFullImage:image];
         cropVc.edits = self.editingPrintPhoto.edits;
-        cropVc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
-        [self presentViewController:cropVc animated:YES completion:NULL];
+//        cropVc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
+        [self presentViewController:cropVc animated:NO completion:NULL];
     }];
 }
 
@@ -131,6 +167,55 @@ CGFloat margin = 2;
 
 -(NSUInteger) totalNumberOfExtras{
     return 0;
+}
+
+- (UIViewController *)previewingContext:(id<UIViewControllerPreviewing>)previewingContext viewControllerForLocation:(CGPoint)location{
+    NSIndexPath *outerCollectionViewIndexPath = [self.collectionView indexPathForItemAtPoint:location];
+    UICollectionViewCell *outerCollectionViewCell = [self.collectionView cellForItemAtIndexPath:outerCollectionViewIndexPath];
+    
+    UICollectionView* collectionView = (UICollectionView*)[outerCollectionViewCell.contentView viewWithTag:20];
+    
+    NSIndexPath* indexPath = [collectionView indexPathForItemAtPoint:[collectionView convertPoint:location fromView:self.collectionView]];
+    
+    UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
+    OLRemoteImageView *imageView = (OLRemoteImageView *)[cell viewWithTag:110];
+    
+    OLPrintPhoto *printPhoto =(OLPrintPhoto*)[self.framePhotos objectAtIndex:indexPath.row + (outerCollectionViewIndexPath.item) * self.product.quantityToFulfillOrder];
+    if (!imageView.image){
+        return nil;
+    }
+    
+    [previewingContext setSourceRect:[cell convertRect:imageView.frame toView:self.collectionView]];
+    
+    self.editingPrintPhoto = printPhoto;
+    
+    OLImagePreviewViewController *previewVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLImagePreviewViewController"];
+    [self.editingPrintPhoto getImageWithProgress:NULL completion:^(UIImage *image){
+        previewVc.image = image;
+    }];
+    previewVc.providesPresentationContextTransitionStyle = true;
+    previewVc.definesPresentationContext = true;
+    previewVc.modalPresentationStyle = UIModalPresentationOverCurrentContext;
+    return previewVc;
+}
+
+- (void)previewingContext:(id<UIViewControllerPreviewing>)previewingContext commitViewController:(UIViewController *)viewControllerToCommit{
+    OLScrollCropViewController *cropVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLScrollCropViewController"];
+    cropVc.enableCircleMask = self.product.productTemplate.templateUI == kOLTemplateUICircle;
+    cropVc.delegate = self;
+    cropVc.aspectRatio = 1;
+    [self.editingPrintPhoto getImageWithProgress:^(float progress){
+        [cropVc.cropView setProgress:progress];
+    }completion:^(UIImage *image){
+        [cropVc setFullImage:image];
+        cropVc.edits = self.editingPrintPhoto.edits;
+        cropVc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
+        [self presentViewController:cropVc animated:YES completion:NULL];
+        
+#ifndef OL_NO_ANALYTICS
+        [OLAnalytics trackReviewScreenEnteredCropScreenForProductName:self.product.productTemplate.name];
+#endif
+    }];
 }
 
 #pragma mark Button Actions
@@ -304,11 +389,42 @@ CGFloat margin = 2;
 
 -(void)scrollCropViewController:(OLScrollCropViewController *)cropper didFinishCroppingImage:(UIImage *)croppedImage{
     [self.editingPrintPhoto unloadImage];
-    self.editingPrintPhoto.asset = [OLAsset assetWithImageAsJPEG:croppedImage];
     
-    [self.collectionView reloadData];
+    self.editingPrintPhoto.edits = cropper.edits;
     
-    [cropper dismissViewControllerAnimated:YES completion:NULL];
+    //Need to do some work to only reload the proper cells, otherwise the cropped image might zoom to the wrong cell.
+    NSMutableArray *indexPaths = [[NSMutableArray alloc] init];
+    for (NSInteger i = 0; i < self.framePhotos.count; i++){
+        if (self.framePhotos[i] == self.editingPrintPhoto){
+            NSInteger outerIndex = i / self.product.quantityToFulfillOrder;
+            
+            if (![self.collectionView.indexPathsForVisibleItems containsObject:[NSIndexPath indexPathForItem:outerIndex inSection:0]]){
+                continue;
+            }
+            
+            NSInteger innerIndex = i - outerIndex * self.product.quantityToFulfillOrder;
+            
+            UICollectionViewCell *outerCell = [self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:outerIndex inSection:0]];
+            UICollectionView *innerCollectionView = [outerCell viewWithTag:20];
+            
+            
+            
+            NSIndexPath *innerIndexPath = [NSIndexPath indexPathForItem:innerIndex inSection:0];
+            [indexPaths addObject:innerIndexPath];
+            
+            if (outerIndex != i+1 / self.product.quantityToFulfillOrder){
+                [innerCollectionView reloadItemsAtIndexPaths:indexPaths];
+                [indexPaths removeAllObjects];
+            }
+        }
+    }
+    
+    
+    [cropper dismissViewControllerAnimated:YES completion:^{}];
+    
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackReviewScreenDidCropPhotoForProductName:self.product.productTemplate.name];
+#endif
 }
 
 #pragma mark - Autorotate and Orientation Methods

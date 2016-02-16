@@ -1,15 +1,38 @@
 //
-//  OLCaseViewController.m
-//  KitePrintSDK
+//  Modified MIT License
 //
-//  Created by Konstadinos Karayannis on 4/7/15.
-//  Copyright (c) 2015 Deon Botha. All rights reserved.
+//  Copyright (c) 2010-2016 Kite Tech Ltd. https://www.kite.ly
+//
+//  Permission is hereby granted, free of charge, to any person obtaining a copy
+//  of this software and associated documentation files (the "Software"), to deal
+//  in the Software without restriction, including without limitation the rights
+//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+//  copies of the Software, and to permit persons to whom the Software is
+//  furnished to do so, subject to the following conditions:
+//
+//  The software MAY ONLY be used with the Kite Tech Ltd platform and MAY NOT be modified
+//  to be used with any competitor platforms. This means the software MAY NOT be modified
+//  to place orders with any competitors to Kite Tech Ltd, all orders MUST go through the
+//  Kite Tech Ltd platform servers.
+//
+//  The above copyright notice and this permission notice shall be included in
+//  all copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+//  THE SOFTWARE.
 //
 
 #ifdef COCOAPODS
 #import <SDWebImage/SDWebImageManager.h>
+#import <SDWebImage/SDWebImagePrefetcher.h>
 #else
 #import "SDWebImageManager.h"
+#import "SDWebImagePrefetcher.h"
 #endif
 
 #import "OLCaseViewController.h"
@@ -33,6 +56,9 @@
 @property (strong, nonatomic) UIImage *maskImage;
 @property (strong, nonatomic) OLPrintPhoto *imageDisplayed;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *centerYCon;
+@property (weak, nonatomic) IBOutlet UIImageView *deviceView;
+@property (weak, nonatomic) IBOutlet UIImageView *highlightsView;
+@property (strong, nonatomic) NSOperation *downloadImagesOperation;
 
 @end
 
@@ -40,6 +66,23 @@
 
 -(void)viewDidLoad{
     [super viewDidLoad];
+    
+    self.downloadImagesOperation = [NSBlockOperation blockOperationWithBlock:^{}];
+    NSMutableArray *urls = [[NSMutableArray alloc] init];
+    
+    if (self.product.productTemplate.maskImageURL){
+        [urls addObject:self.product.productTemplate.maskImageURL];
+    }
+    if (self.product.productTemplate.productHighlightsImageURL){
+        [urls addObject:self.product.productTemplate.productHighlightsImageURL];
+    }
+    if (self.product.productTemplate.productBackgroundImageURL){
+        [urls addObject:self.product.productTemplate.productBackgroundImageURL];
+    }
+    
+    [[SDWebImagePrefetcher sharedImagePrefetcher] prefetchURLs:urls progress:NULL completed:^(NSUInteger numberOfCompletedURLs, NSUInteger numberOfSkippedURLs){
+        [[NSOperationQueue mainQueue] addOperation:self.downloadImagesOperation];
+    }];
     
     self.downloadedMask = NO;
 }
@@ -98,7 +141,11 @@
 
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
-    [self downloadMask];
+    NSBlockOperation *block = [NSBlockOperation blockOperationWithBlock:^{
+        [self applyDownloadedMask];
+    }];
+    [block addDependency:self.downloadImagesOperation];
+    [[NSOperationQueue mainQueue] addOperation:block];
 }
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
@@ -111,7 +158,7 @@
     }completion:^(id <UIViewControllerTransitionCoordinatorContext> context){}];
 }
 
-- (void)downloadMask {
+- (void)applyDownloadedMask {
     if (self.downloadedMask){
         return;
     }
@@ -119,6 +166,7 @@
         [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
         if (error) {
             UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Oops", @"")  message:NSLocalizedString(@"Failed to download phone case mask. Please check your internet connectivity and try again", @"")  delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", @"") otherButtonTitles:@"Retry", nil];
+            av.tag = 99;
             [av show];
         } else {
             [self.containerView removeConstraint:self.maskAspectRatio];
@@ -130,6 +178,16 @@
             
             self.maskImage = image;
             [self maskWithImage:self.maskImage targetView:self.imageCropView];
+            
+            [[SDWebImageManager sharedManager] downloadImageWithURL:self.product.productTemplate.productBackgroundImageURL options:SDWebImageHighPriority progress:NULL completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL){
+                self.deviceView.image = image;
+            }];
+             [[SDWebImageManager sharedManager] downloadImageWithURL:self.product.productTemplate.productHighlightsImageURL options:SDWebImageHighPriority progress:NULL completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL){
+                self.highlightsView.image = image;
+             }];
+            
+            
+            
             self.visualEffectView.hidden = YES;
             self.downloadedMask = YES;
             [self.maskActivityIndicator removeFromSuperview];
@@ -169,10 +227,12 @@
 #pragma mark - UIAlertViewDelegate methods
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-    if (buttonIndex == 0) {
-        [self.navigationController popViewControllerAnimated:YES];
-    } else {
-        [self downloadMask];
+    if (alertView.tag == 99) {
+        if (buttonIndex == 0) {
+            [self.navigationController popViewControllerAnimated:YES];
+        } else {
+            [self applyDownloadedMask];
+        }
     }
 }
 

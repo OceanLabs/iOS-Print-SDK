@@ -1,25 +1,47 @@
 //
-//  OLEditPhotobookViewController.m
-//  KitePrintSDK
+//  Modified MIT License
 //
-//  Created by Konstadinos Karayannis on 16/6/15.
-//  Copyright (c) 2015 Deon Botha. All rights reserved.
+//  Copyright (c) 2010-2016 Kite Tech Ltd. https://www.kite.ly
+//
+//  Permission is hereby granted, free of charge, to any person obtaining a copy
+//  of this software and associated documentation files (the "Software"), to deal
+//  in the Software without restriction, including without limitation the rights
+//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+//  copies of the Software, and to permit persons to whom the Software is
+//  furnished to do so, subject to the following conditions:
+//
+//  The software MAY ONLY be used with the Kite Tech Ltd platform and MAY NOT be modified
+//  to be used with any competitor platforms. This means the software MAY NOT be modified
+//  to place orders with any competitors to Kite Tech Ltd, all orders MUST go through the
+//  Kite Tech Ltd platform servers.
+//
+//  The above copyright notice and this permission notice shall be included in
+//  all copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+//  THE SOFTWARE.
 //
 
-#import "OLEditPhotobookViewController.h"
-#import "OLPhotobookViewController.h"
-#import "OLPhotobookPageContentViewController.h"
+#import "NSArray+QueryingExtras.h"
+#import "OLAnalytics.h"
 #import "OLAssetsPickerController.h"
+#import "OLEditPhotobookViewController.h"
+#import "OLImageCachingManager.h"
 #import "OLKiteUtils.h"
+#import "OLPhotobookPageContentViewController.h"
+#import "OLPhotobookViewController.h"
+#import "OLPopupOptionsImageView.h"
+#import "OLPrintPhoto.h"
+#import "OLScrollCropViewController.h"
+
 #ifdef OL_KITE_AT_LEAST_IOS8
 #import "CTAssetsPickerController.h"
 #endif
-#import "OLPrintPhoto.h"
-#import "NSArray+QueryingExtras.h"
-#import "OLPopupOptionsImageView.h"
-#import "OLScrollCropViewController.h"
-#import "OLAnalytics.h"
-#import "OLImageCachingManager.h"
 
 #ifdef OL_KITE_OFFER_INSTAGRAM
 #import <InstagramImagePicker/OLInstagramImagePickerController.h>
@@ -31,6 +53,11 @@
 #import <FacebookImagePicker/OLFacebookImage.h>
 #endif
 
+#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
+#import "OLCustomPhotoProvider.h"
+#import <KITAssetsPickerController.h>
+#endif
+
 #import "UIViewController+OLMethods.h"
 
 #import "OLPaymentViewController.h"
@@ -40,8 +67,13 @@ static const NSInteger kSectionHelp = 1;
 static const NSInteger kSectionPages = 2;
 
 @interface OLPhotobookViewController ()
-
 @property (weak, nonatomic) UIImageView *coverImageView;
+@end
+
+@interface OLKiteViewController (Private)
+#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
+@property (strong, nonatomic) NSMutableArray <OLCustomPhotoProvider *> *customImageProviders;
+#endif
 
 @end
 
@@ -64,21 +96,23 @@ OLInstagramImagePickerControllerDelegate,
 #ifdef OL_KITE_OFFER_FACEBOOK
 OLFacebookImagePickerControllerDelegate,
 #endif
+#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
+KITAssetsPickerControllerDelegate,
+#endif
 UINavigationControllerDelegate>
 
-@property (strong, nonatomic) NSMutableArray *photobookPhotos;
-@property (strong, nonatomic) NSArray *userSelectedPhotosCopy;
-@property (assign, nonatomic) NSNumber *selectedIndexNumber;
+@property (assign, nonatomic) BOOL animating;
+@property (assign, nonatomic) BOOL haveCachedCells;
+@property (assign, nonatomic) BOOL rotating;
 @property (assign, nonatomic) NSInteger addNewPhotosAtIndex;
 @property (assign, nonatomic) NSInteger longPressImageIndex;
 @property (assign, nonatomic) NSNumber *replacingImageNumber;
-@property (weak, nonatomic) OLPhotobookViewController *interactionPhotobook;
+@property (assign, nonatomic) NSNumber *selectedIndexNumber;
+@property (strong, nonatomic) NSArray *userSelectedPhotosCopy;
+@property (strong, nonatomic) NSMutableArray *photobookPhotos;
 @property (strong, nonatomic) OLPrintPhoto *coverPhoto;
-@property (assign, nonatomic) BOOL animating;
-@property (assign, nonatomic) BOOL haveCachedCells;
+@property (weak, nonatomic) OLPhotobookViewController *interactionPhotobook;
 @property (strong, nonatomic) UIButton *nextButton;
-
-@property (assign, nonatomic) BOOL rotating;
 
 @end
 
@@ -117,7 +151,7 @@ UINavigationControllerDelegate>
     }
     
     [view.superview addConstraints:con];
-
+    
     
     [self updatePhotobookPhotos];
     
@@ -193,7 +227,7 @@ UINavigationControllerDelegate>
 
 - (void)viewDidLayoutSubviews{
     [super viewDidLayoutSubviews];
-    self.nextButton.frame = CGRectMake(0, self.view.frame.size.height - 40 + self.collectionView.contentOffset.y, self.view.frame.size.width, 40);
+    self.nextButton.frame = CGRectMake(self.nextButton.frame.origin.x, -self.nextButton.frame.origin.x + self.view.frame.size.height - self.nextButton.frame.size.height + self.collectionView.contentOffset.y, self.view.frame.size.width - 2 * self.nextButton.frame.origin.x, self.nextButton.frame.size.height);
 }
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator{
@@ -217,7 +251,7 @@ UINavigationControllerDelegate>
     }
     
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinator> context){
-        self.nextButton.frame = CGRectMake(0, self.view.frame.size.height - 40 + self.collectionView.contentOffset.y, self.view.frame.size.width, 40);
+        self.nextButton.frame = CGRectMake(self.nextButton.frame.origin.x, -self.nextButton.frame.origin.x + self.view.frame.size.height - self.nextButton.frame.size.height + self.collectionView.contentOffset.y, self.view.frame.size.width - 2 * self.nextButton.frame.origin.x, self.nextButton.frame.size.height);
     }completion:^(id<UIViewControllerTransitionCoordinator> context){
         self.rotating = NO;
         [self.collectionView insertSections:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, 3)]];
@@ -306,37 +340,37 @@ UINavigationControllerDelegate>
     if (self.product.productTemplate.imageBorder.top == 0 && self.product.productTemplate.imageBorder.left == 0 && [[[UIDevice currentDevice] systemVersion] floatValue] >= 8){
         UIImage *leftImage = [UIImage imageNamed:@"page-shadow-left" inBundle:[OLKiteUtils kiteBundle] compatibleWithTraitCollection:self.traitCollection];
         UIImage *rightImage = [UIImage imageNamed:@"page-shadow-right" inBundle:[OLKiteUtils kiteBundle] compatibleWithTraitCollection:self.traitCollection];
-
+        
         UIImageView *left1 = [[UIImageView alloc] initWithImage:leftImage];
         left1.contentMode = UIViewContentModeScaleToFill;
         left1.tag = 11;
-//        left1.translatesAutoresizingMaskIntoConstraints = NO;
+        //        left1.translatesAutoresizingMaskIntoConstraints = NO;
         [view addSubview:left1];
         
-//        UIImageView *left2 = [[UIImageView alloc] initWithImage:leftImage];
-//        left2.contentMode = UIViewContentModeScaleToFill;
-//        left2.tag = 12;
-//        left2.translatesAutoresizingMaskIntoConstraints = NO;
-//        [view addSubview:left2];
+        //        UIImageView *left2 = [[UIImageView alloc] initWithImage:leftImage];
+        //        left2.contentMode = UIViewContentModeScaleToFill;
+        //        left2.tag = 12;
+        //        left2.translatesAutoresizingMaskIntoConstraints = NO;
+        //        [view addSubview:left2];
         
         UIImageView *right1 = [[UIImageView alloc] initWithImage:rightImage];
         right1.contentMode = UIViewContentModeScaleToFill;
         right1.tag = 21;
-//        right1.translatesAutoresizingMaskIntoConstraints = NO;
+        //        right1.translatesAutoresizingMaskIntoConstraints = NO;
         [view addSubview:right1];
         
-//        UIImageView *right2 = [[UIImageView alloc] initWithImage:rightImage];
-//        right2.contentMode = UIViewContentModeScaleToFill;
-//        right2.tag = 22;
-//        right2.translatesAutoresizingMaskIntoConstraints = NO;
-//        [view addSubview:right2];
+        //        UIImageView *right2 = [[UIImageView alloc] initWithImage:rightImage];
+        //        right2.contentMode = UIViewContentModeScaleToFill;
+        //        right2.tag = 22;
+        //        right2.translatesAutoresizingMaskIntoConstraints = NO;
+        //        [view addSubview:right2];
         
         CGFloat shadowWidth = view.frame.size.width * 0.3;
-
+        
         left1.frame = CGRectMake(view.frame.size.width - shadowWidth, 0, shadowWidth, view.frame.size.height);
-//        left2.frame = CGRectMake(view.frame.size.width - shadowWidth, 0, shadowWidth, view.frame.size.height);
+        //        left2.frame = CGRectMake(view.frame.size.width - shadowWidth, 0, shadowWidth, view.frame.size.height);
         right1.frame = CGRectMake(0, 0, shadowWidth, view.frame.size.height);
-//        right2.frame = CGRectMake(0, 0, shadowWidth, view.frame.size.height);
+        //        right2.frame = CGRectMake(0, 0, shadowWidth, view.frame.size.height);
     }
 }
 
@@ -368,7 +402,7 @@ UINavigationControllerDelegate>
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
     CGRect headerFrame = self.nextButton.frame;
-    headerFrame.origin.y = self.view.frame.size.height - 40 + scrollView.contentOffset.y ;
+    headerFrame.origin.y = self.view.frame.size.height - self.nextButton.frame.size.height + scrollView.contentOffset.y ;
     self.nextButton.frame = headerFrame;
 }
 
@@ -411,11 +445,18 @@ UINavigationControllerDelegate>
     OLScrollCropViewController *cropVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLScrollCropViewController"];
     cropVc.delegate = self;
     cropVc.aspectRatio = imageView.frame.size.height / imageView.frame.size.width;
+    
+    cropVc.previewView = [imageView snapshotViewAfterScreenUpdates:YES];
+    cropVc.previewView.frame = [imageView.superview convertRect:imageView.frame toView:nil];
+    cropVc.previewSourceView = imageView;
+    cropVc.providesPresentationContextTransitionStyle = true;
+    cropVc.definesPresentationContext = true;
+    cropVc.modalPresentationStyle = UIModalPresentationOverCurrentContext;
     [cropPhoto getImageWithProgress:NULL completion:^(UIImage *image){
         [cropVc setFullImage:image];
         cropVc.edits = cropPhoto.edits;
-        cropVc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
-        [self presentViewController:cropVc animated:YES completion:NULL];
+        //        cropVc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
+        [self presentViewController:cropVc animated:NO completion:NULL];
     }];
 }
 
@@ -507,7 +548,7 @@ UINavigationControllerDelegate>
         pageCopy.frame = [self.view convertRect:page.imageView.frame fromView:page.view];
         [page clearImage];
         
-    
+        
         if (selectedPage){ //Previously selected page is in view
             [self addPageShadowsToView:pageCopy];
             [self setPageShadowAlpha:pageCopy forIndex:index];
@@ -562,7 +603,7 @@ UINavigationControllerDelegate>
                 [pageCopy viewWithTag:12].alpha = 0;
                 [pageCopy viewWithTag:22].alpha = 0;
             }
-
+            
             [self swapImageAtIndex:[self.selectedIndexNumber integerValue] withImageAtIndex:page.pageIndex];
             photobook.photobookPhotos = self.photobookPhotos;
             for (OLPhotobookViewController *otherPhotobook in self.childViewControllers){
@@ -663,7 +704,7 @@ UINavigationControllerDelegate>
     UIMenuItem *deleteItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Remove", @"") action:@selector(deletePage)];
     UIMenuItem *cropImageItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Crop", @"") action:@selector(cropImage)];
     UIMenuItem *replaceImageItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Replace Photo", @"") action:@selector(replaceImage)];
-//    UIMenuItem *addPageItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Add Page", @"") action:@selector(addPage)];
+    //    UIMenuItem *addPageItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Add Page", @"") action:@selector(addPage)];
     
     UIMenuController *mc = [UIMenuController sharedMenuController];
     [mc setMenuItems:@[cropImageItem, replaceImageItem, deleteItem]];
@@ -707,11 +748,11 @@ UINavigationControllerDelegate>
                 return cell;
             }
         }
-        OLPhotobookViewController *photobook = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteBundle]] instantiateViewControllerWithIdentifier:@"PhotobookViewController"];
+        OLPhotobookViewController *photobook = [self.storyboard instantiateViewControllerWithIdentifier:@"PhotobookViewController"];
         if (indexPath.section == kSectionPages){
             photobook.startOpen = YES;
         }
-                
+        
         photobook.photobookPhotos = self.photobookPhotos;
         if (indexPath.section == kSectionCover){
             photobook.editingPageNumber = nil;
@@ -816,22 +857,49 @@ UINavigationControllerDelegate>
 #pragma mark - Adding new images
 
 - (void)addMorePhotosFromView:(UIView *)view{
-    if ([self instagramEnabled] || [self facebookEnabled]){
+    BOOL customProviders = NO;
+    NSInteger numberOfProviders = 0;
+#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
+    NSInteger numberOfCustomProviders = [OLKiteUtils kiteVcForViewController:self].customImageProviders.count;
+    customProviders = numberOfCustomProviders > 0;
+    numberOfProviders += numberOfCustomProviders;
+#endif
+    
+    if ([OLKiteUtils cameraRollEnabled:self]){
+        numberOfProviders++;
+    }
+    if ([OLKiteUtils facebookEnabled]){
+        numberOfProviders++;
+    }
+    if ([OLKiteUtils instagramEnabled]){
+        numberOfProviders++;
+    }
+    
+    if (numberOfProviders > 1){
         if ([UIAlertController class]){
             UIAlertController *ac = [UIAlertController alertControllerWithTitle:nil message:NSLocalizedString(@"Add photos from:", @"") preferredStyle:UIAlertControllerStyleActionSheet];
-            [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Camera Roll", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
-                [self showCameraRollImagePicker];
-            }]];
-            if ([self instagramEnabled]){
+            if ([OLKiteUtils cameraRollEnabled:self]){
+                [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Camera Roll", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
+                    [self showCameraRollImagePicker];
+                }]];
+            }
+            if ([OLKiteUtils instagramEnabled]){
                 [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Instagram", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
                     [self showInstagramImagePicker];
                 }]];
             }
-            if ([self facebookEnabled]){
+            if ([OLKiteUtils facebookEnabled]){
                 [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Facebook", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
                     [self showFacebookImagePicker];
                 }]];
             }
+#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
+            for (OLCustomPhotoProvider *provider in [OLKiteUtils kiteVcForViewController:self].customImageProviders){
+                [ac addAction:[UIAlertAction actionWithTitle:provider.name style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
+                    [self showPickerForProvider:provider];
+                }]];
+            }
+#endif
             
             [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"") style:UIAlertActionStyleCancel handler:^(UIAlertAction *action){
                 [ac dismissViewControllerAnimated:YES completion:NULL];
@@ -841,32 +909,47 @@ UINavigationControllerDelegate>
             [self presentViewController:ac animated:YES completion:NULL];
         }
         else{
-            UIActionSheet *as;
-            if ([self instagramEnabled] && [self facebookEnabled]){
-                as = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"Add photos from:", @"") delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", @"") destructiveButtonTitle:nil otherButtonTitles:NSLocalizedString(@"Camera Roll", @""),
-                      NSLocalizedString(@"Instagram", @""),
-                      NSLocalizedString(@"Facebook", @""),
-                      nil];
+            UIActionSheet *as = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"Add photos from:", @"")
+                                                            delegate:self
+                                                   cancelButtonTitle:nil
+                                              destructiveButtonTitle:nil
+                                                   otherButtonTitles:nil];
+            
+            if ([OLKiteUtils cameraRollEnabled:self]){
+                [as addButtonWithTitle:NSLocalizedString(@"Camera Roll", @"")];
             }
-            else if ([self instagramEnabled]){
-                as = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"Add photos from:", @"") delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", @"") destructiveButtonTitle:nil otherButtonTitles:NSLocalizedString(@"Camera Roll", @""),
-                      NSLocalizedString(@"Instagram", @""),
-                      nil];
+            if ([OLKiteUtils facebookEnabled]){
+                [as addButtonWithTitle:@"Facebook"];
             }
-            else if ([self facebookEnabled]){
-                as = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"Add photos from:", @"") delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", @"") destructiveButtonTitle:nil otherButtonTitles:NSLocalizedString(@"Camera Roll", @""),
-                      NSLocalizedString(@"Facebook", @""),
-                      nil];
+            if ([OLKiteUtils instagramEnabled]){
+                [as addButtonWithTitle:@"Instagram"];
             }
-            else{
-                as = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"Add photos from:", @"") delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", @"") destructiveButtonTitle:nil otherButtonTitles:NSLocalizedString(@"Camera Roll", @""),
-                      nil];
+#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
+            for (OLCustomPhotoProvider *provider in [OLKiteUtils kiteVcForViewController:self].customImageProviders){
+                [as addButtonWithTitle:provider.name];
             }
+#endif
+            as.cancelButtonIndex = [as addButtonWithTitle:@"Cancel"];
+            
             [as showInView:self.view];
         }
     }
     else{
-        [self showCameraRollImagePicker];
+        if ([OLKiteUtils cameraRollEnabled:self]){
+            [self showCameraRollImagePicker];
+        }
+        else if ([OLKiteUtils facebookEnabled]){
+            [self showFacebookImagePicker];
+        }
+        else if ([OLKiteUtils instagramEnabled]){
+            [self showInstagramImagePicker];
+        }
+#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
+        else{
+            [self showPickerForProvider:[OLKiteUtils kiteVcForViewController:self].customImageProviders.firstObject];
+        }
+#endif
+        
     }
 }
 
@@ -944,6 +1027,24 @@ UINavigationControllerDelegate>
 #endif
 }
 
+#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
+- (void)showPickerForProvider:(OLCustomPhotoProvider *)provider{
+    UIViewController<KITCustomAssetPickerController> *vc;
+    if (provider.vc){
+        vc = provider.vc;
+    }
+    else{
+        KITAssetsPickerController *kvc = [[KITAssetsPickerController alloc] init];
+        kvc.collectionDataSources = provider.collections;
+        vc = kvc;
+    }
+    
+    vc.delegate = self;
+    vc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
+    [self presentViewController:vc animated:YES completion:NULL];
+}
+#endif
+
 - (void)populateArrayWithNewArray:(NSArray *)array dataType:(Class)class {
     NSMutableArray *photoArray = [[NSMutableArray alloc] initWithCapacity:array.count];
     
@@ -956,7 +1057,17 @@ UINavigationControllerDelegate>
     // First remove any that are not returned.
     NSMutableArray *removeArray = [NSMutableArray arrayWithArray:self.userSelectedPhotos];
     for (OLPrintPhoto *object in self.userSelectedPhotos) {
-        if (![object.asset isKindOfClass:class] || [photoArray containsObjectIdenticalTo:object]) {
+        if ([object.asset isKindOfClass:[OLAsset class]] && [[object.asset dataSource] isKindOfClass:class]){
+            if ([photoArray containsObject:object]){
+                [removeArray removeObjectIdenticalTo:object];
+                [photoArray removeObject:object];
+            }
+        }
+        else if (![object.asset isKindOfClass:class]) {
+            [removeArray removeObjectIdenticalTo:object];
+        }
+        
+        else if([photoArray containsObject:object]){
             [removeArray removeObjectIdenticalTo:object];
         }
     }
@@ -990,7 +1101,7 @@ UINavigationControllerDelegate>
 #if __IPHONE_OS_VERSION_MIN_REQUIRED < 80000
 - (BOOL)assetsPickerController:(OLAssetsPickerController *)picker isDefaultAssetsGroup:(ALAssetsGroup *)group {
     if ([self.delegate respondsToSelector:@selector(kiteController:isDefaultAssetsGroup:)]) {
-        return [self.delegate kiteController:[self kiteViewController] isDefaultAssetsGroup:group];
+        return [self.delegate kiteController:[OLKiteUtils kiteVcForViewController:self] isDefaultAssetsGroup:group];
     }
     
     return NO;
@@ -999,6 +1110,28 @@ UINavigationControllerDelegate>
 
 - (void)assetsPickerController:(id)picker didFinishPickingAssets:(NSArray *)assets {
     NSInteger originalCount = self.userSelectedPhotos.count;
+    Class assetClass;
+    if ([picker isKindOfClass:[OLAssetsPickerController class]]){
+        assetClass = [ALAsset class];
+    }
+#ifdef OL_KITE_AT_LEAST_IOS8
+    else if ([picker isKindOfClass:[CTAssetsPickerController class]]){
+        assetClass = [PHAsset class];
+    }
+#endif
+#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
+    else if ([picker isKindOfClass:[KITAssetsPickerController class]]){
+        NSMutableArray *olAssets = [[NSMutableArray alloc] init];
+        for (id<OLAssetDataSource> asset in assets){
+            if ([asset respondsToSelector:@selector(dataWithCompletionHandler:)]){
+                [olAssets addObject:[OLAsset assetWithDataSource:asset]];
+            }
+        }
+        assets = olAssets;
+        assetClass = [[assets.firstObject dataSource] class];
+    }
+#endif
+    
     if (self.replacingImageNumber){
         self.photobookPhotos[[self.replacingImageNumber integerValue]] = [NSNull null];
         self.replacingImageNumber = nil;
@@ -1020,10 +1153,11 @@ UINavigationControllerDelegate>
         return;
     }
     
-    [self populateArrayWithNewArray:assets dataType:[picker isKindOfClass:[OLAssetsPickerController class]] ? [ALAsset class] : [PHAsset class]];
+    [self populateArrayWithNewArray:assets dataType:assetClass];
 #ifndef OL_NO_ANALYTICS
     [OLAnalytics trackPhotoProvider:@"Camera Roll" numberOfPhotosAdded:self.userSelectedPhotos.count - originalCount forProductName:self.product.productTemplate.name];
 #endif
+    
     [picker dismissViewControllerAnimated:YES completion:^(void){}];
     
 }
@@ -1040,6 +1174,9 @@ UINavigationControllerDelegate>
     if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8){
         return;
     }
+    if (![asset isKindOfClass:[PHAsset class]]){
+        return;
+    }
     PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
     options.networkAccessAllowed = YES;
     [[OLImageCachingManager sharedInstance].photosCachingManager stopCachingImagesForAssets:@[asset] targetSize:PHImageManagerMaximumSize contentMode:PHImageContentModeAspectFill options:options];
@@ -1047,6 +1184,9 @@ UINavigationControllerDelegate>
 
 - (void)assetsPickerController:(CTAssetsPickerController *)picker didSelectAsset:(PHAsset *)asset{
     if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8){
+        return;
+    }
+    if (![asset isKindOfClass:[PHAsset class]]){
         return;
     }
     PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
@@ -1072,6 +1212,16 @@ UINavigationControllerDelegate>
 
 - (void)instagramImagePicker:(OLInstagramImagePickerController *)imagePicker didFinishPickingImages:(NSArray *)images {
     NSInteger originalCount = self.userSelectedPhotos.count;
+#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
+    NSMutableArray *assets = [[NSMutableArray alloc] init];
+    for (id<OLAssetDataSource> asset in images){
+        if ([asset isKindOfClass:[OLInstagramImage class]]){
+            [assets addObject:asset];
+        }
+    }
+    images = assets;
+#endif
+    
     if (self.replacingImageNumber){
         self.photobookPhotos[[self.replacingImageNumber integerValue]] = [NSNull null];
         self.replacingImageNumber = nil;
@@ -1125,6 +1275,16 @@ UINavigationControllerDelegate>
 
 - (void)facebookImagePicker:(OLFacebookImagePickerController *)imagePicker didFinishPickingImages:(NSArray *)images {
     NSInteger originalCount = self.userSelectedPhotos.count;
+#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
+    NSMutableArray *assets = [[NSMutableArray alloc] init];
+    for (id<OLAssetDataSource> asset in images){
+        if ([asset isKindOfClass:[OLFacebookImage class]]){
+            [assets addObject:asset];
+        }
+    }
+    images = assets;
+#endif
+    
     if (self.replacingImageNumber){
         self.photobookPhotos[[self.replacingImageNumber integerValue]] = [NSNull null];
         self.replacingImageNumber = nil;
@@ -1168,49 +1328,25 @@ UINavigationControllerDelegate>
 }
 #endif
 
-- (BOOL)instagramEnabled{
-#ifdef OL_KITE_OFFER_INSTAGRAM
-    return [OLKitePrintSDK instagramSecret] && ![[OLKitePrintSDK instagramSecret] isEqualToString:@""] && [OLKitePrintSDK instagramClientID] && ![[OLKitePrintSDK instagramClientID] isEqualToString:@""] && [OLKitePrintSDK instagramRedirectURI] && ![[OLKitePrintSDK instagramRedirectURI] isEqualToString:@""];
-#else
-    return NO;
-#endif
-}
-
-- (BOOL)facebookEnabled{
-#ifdef OL_KITE_OFFER_FACEBOOK
-    return YES;
-#else
-    return NO;
-#endif
-}
-
-- (OLKiteViewController *)kiteViewController {
-    for (UIViewController *vc in self.navigationController.viewControllers) {
-        if ([vc isMemberOfClass:[OLKiteViewController class]]) {
-            return (OLKiteViewController *) vc;
-        }
-    }
-    
-    return nil;
-}
-
 #pragma mark UIActionSheet Delegate (only used on iOS 7)
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex{
-    if (buttonIndex == 0){
-        [self showCameraRollImagePicker];
-    }
-    else if (buttonIndex == 1){
-        if ([self instagramEnabled]){
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+        if (buttonIndex == [OLKiteUtils cameraRollProviderIndex:self]){
+            [self showCameraRollImagePicker];
+        }
+        else if (buttonIndex == [OLKiteUtils instagramProviderIndex:self]){
             [self showInstagramImagePicker];
         }
-        else{
+        else if (buttonIndex == [OLKiteUtils facebookProviderIndex:self]){
             [self showFacebookImagePicker];
         }
-    }
-    else if (buttonIndex == 2){
-        [self showFacebookImagePicker];
-    }
+#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
+        else{
+            [self showPickerForProvider:[OLKiteUtils kiteVcForViewController:self].customImageProviders[buttonIndex - [OLKiteUtils customProvidersStartIndex:self]]];
+        }
+#endif
+    });
 }
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{

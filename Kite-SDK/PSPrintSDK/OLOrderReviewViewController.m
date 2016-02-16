@@ -1,9 +1,30 @@
 //
-//  OrderReviewViewController.m
-//  Kite Print SDK
+//  Modified MIT License
 //
-//  Created by Kostas Karayannis on 17/07/2014.
-//  Copyright (c) 2014 Ocean Labs. All rights reserved.
+//  Copyright (c) 2010-2016 Kite Tech Ltd. https://www.kite.ly
+//
+//  Permission is hereby granted, free of charge, to any person obtaining a copy
+//  of this software and associated documentation files (the "Software"), to deal
+//  in the Software without restriction, including without limitation the rights
+//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+//  copies of the Software, and to permit persons to whom the Software is
+//  furnished to do so, subject to the following conditions:
+//
+//  The software MAY ONLY be used with the Kite Tech Ltd platform and MAY NOT be modified
+//  to be used with any competitor platforms. This means the software MAY NOT be modified
+//  to place orders with any competitors to Kite Tech Ltd, all orders MUST go through the
+//  Kite Tech Ltd platform servers.
+//
+//  The above copyright notice and this permission notice shall be included in
+//  all copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+//  THE SOFTWARE.
 //
 
 #import "OLOrderReviewViewController.h"
@@ -27,6 +48,7 @@
 #import "OLKiteUtils.h"
 #import "OLPaymentViewController.h"
 #import "UIViewController+OLMethods.h"
+#import "OLImagePreviewViewController.h"
 
 static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 static const NSUInteger kTagAlertViewDeletePhoto = 98;
@@ -50,7 +72,7 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
 
 @end
 
-@interface OLOrderReviewViewController () <OLCheckoutDelegate, UIAlertViewDelegate, UICollectionViewDelegateFlowLayout>
+@interface OLOrderReviewViewController () <OLCheckoutDelegate, UIAlertViewDelegate, UICollectionViewDelegateFlowLayout, UIViewControllerPreviewingDelegate>
 
 @property (weak, nonatomic) OLPrintPhoto *editingPrintPhoto;
 @property (strong, nonatomic) UIView *addMorePhotosView;
@@ -89,6 +111,10 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     [self setupCtaButton];
     
     self.collectionView.contentInset = UIEdgeInsetsMake(self.collectionView.contentInset.top, self.collectionView.contentInset.left, self.nextButton.frame.size.height, self.collectionView.contentInset.right);
+    
+    if ([UITraitCollection class] && [self.traitCollection respondsToSelector:@selector(forceTouchCapability)] && self.traitCollection.forceTouchCapability == UIForceTouchCapabilityAvailable){
+        [self registerForPreviewingWithDelegate:self sourceView:self.collectionView];
+    }
 }
 
 - (void)setupCtaButton{
@@ -135,7 +161,7 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
 
 - (void)viewDidLayoutSubviews{
     [super viewDidLayoutSubviews];
-    self.nextButton.frame = CGRectMake(0, self.view.frame.size.height - 40 + self.collectionView.contentOffset.y, self.view.frame.size.width, 40);
+    self.nextButton.frame = CGRectMake(self.nextButton.frame.origin.x, -self.nextButton.frame.origin.x + self.view.frame.size.height - self.nextButton.frame.size.height + self.collectionView.contentOffset.y, self.view.frame.size.width - 2 * self.nextButton.frame.origin.x, self.nextButton.frame.size.height);
 }
 
 - (void)viewWillAppear:(BOOL)animated{
@@ -170,15 +196,15 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
             [cell setNeedsDisplay];
         }
         
-        self.nextButton.frame = CGRectMake(0, self.view.frame.size.height - 40 + self.collectionView.contentOffset.y, self.view.frame.size.width, 40);
+        self.nextButton.frame = CGRectMake(self.nextButton.frame.origin.x, -self.nextButton.frame.origin.x + self.view.frame.size.height - self.nextButton.frame.size.height + self.collectionView.contentOffset.y, self.view.frame.size.width - 2 * self.nextButton.frame.origin.x, self.nextButton.frame.size.height);
     }completion:^(id<UIViewControllerTransitionCoordinator> context){
     }];
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
-    CGRect headerFrame = self.nextButton.frame;
-    headerFrame.origin.y = self.view.frame.size.height - 40 + scrollView.contentOffset.y ;
-    self.nextButton.frame = headerFrame;
+    CGRect frame = self.nextButton.frame;
+    frame.origin.y = self.view.frame.size.height - self.nextButton.frame.size.height + scrollView.contentOffset.y ;
+    self.nextButton.frame = frame;
 }
 
 -(NSUInteger) totalNumberOfExtras{
@@ -272,9 +298,9 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     if ([printOrder.jobs containsObject:self.editingPrintJob]){
         id<OLPrintJob> existingJob = printOrder.jobs[[printOrder.jobs indexOfObject:self.editingPrintJob]];
         [existingJob setExtraCopies:[existingJob extraCopies]+1];
-		for (NSString *option in self.product.selectedOptions.allKeys){
-        	[job setValue:self.product.selectedOptions[option] forOption:option];
-    	}
+        for (NSString *option in self.product.selectedOptions.allKeys){
+            [job setValue:self.product.selectedOptions[option] forOption:option];
+        }
     }
     else{
         [printOrder addPrintJob:self.editingPrintJob];
@@ -334,6 +360,48 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     else{
         return self.product.productTemplate.sizeCm.height / self.product.productTemplate.sizeCm.width;
     }
+}
+
+- (UIViewController *)previewingContext:(id<UIViewControllerPreviewing>)previewingContext viewControllerForLocation:(CGPoint)location{
+    NSIndexPath *indexPath = [self.collectionView indexPathForItemAtPoint:location];
+    UICollectionViewCell *cell = [self.collectionView cellForItemAtIndexPath:indexPath];
+    
+    OLRemoteImageView *imageView = (OLRemoteImageView *)[cell viewWithTag:10];
+    if (!imageView.image){
+        return nil;
+    }
+    
+    [previewingContext setSourceRect:[cell convertRect:imageView.frame toView:self.collectionView]];
+    
+    self.editingPrintPhoto = self.userSelectedPhotos[indexPath.item];
+    
+    OLImagePreviewViewController *previewVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLImagePreviewViewController"];
+    [self.editingPrintPhoto getImageWithProgress:NULL completion:^(UIImage *image){
+        previewVc.image = image;
+    }];
+    previewVc.providesPresentationContextTransitionStyle = true;
+    previewVc.definesPresentationContext = true;
+    previewVc.modalPresentationStyle = UIModalPresentationOverCurrentContext;
+    return previewVc;
+}
+
+- (void)previewingContext:(id<UIViewControllerPreviewing>)previewingContext commitViewController:(UIViewController *)viewControllerToCommit{
+    OLScrollCropViewController *cropVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLScrollCropViewController"];
+    cropVc.enableCircleMask = self.product.productTemplate.templateUI == kOLTemplateUICircle;
+    cropVc.delegate = self;
+    cropVc.aspectRatio = [self productAspectRatio];
+    [self.editingPrintPhoto getImageWithProgress:^(float progress){
+        [cropVc.cropView setProgress:progress];
+    }completion:^(UIImage *image){
+        [cropVc setFullImage:image];
+        cropVc.edits = self.editingPrintPhoto.edits;
+        cropVc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
+        [self presentViewController:cropVc animated:YES completion:NULL];
+        
+#ifndef OL_NO_ANALYTICS
+        [OLAnalytics trackReviewScreenEnteredCropScreenForProductName:self.product.productTemplate.name];
+#endif
+    }];
 }
 
 #pragma mark Button Actions
@@ -422,13 +490,25 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     cropVc.enableCircleMask = self.product.productTemplate.templateUI == kOLTemplateUICircle;
     cropVc.delegate = self;
     cropVc.aspectRatio = [self productAspectRatio];
+    
+    cropVc.previewView = [imageView snapshotViewAfterScreenUpdates:YES];
+    cropVc.previewView.frame = [cell convertRect:imageView.frame toView:nil];
+    cropVc.previewSourceView = imageView;
+    cropVc.providesPresentationContextTransitionStyle = true;
+    cropVc.definesPresentationContext = true;
+    cropVc.modalPresentationStyle = UIModalPresentationOverCurrentContext;
+    
     [self.editingPrintPhoto getImageWithProgress:^(float progress){
         [cropVc.cropView setProgress:progress];
     }completion:^(UIImage *image){
+        [UIView animateWithDuration:0.25 animations:^{
+            self.nextButton.alpha = 0;
+        }];
+        
         [cropVc setFullImage:image];
         cropVc.edits = self.editingPrintPhoto.edits;
-        cropVc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
-        [self presentViewController:cropVc animated:YES completion:NULL];
+        //        cropVc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
+        [self presentViewController:cropVc animated:NO completion:NULL];
         
 #ifndef OL_NO_ANALYTICS
         [OLAnalytics trackReviewScreenEnteredCropScreenForProductName:self.product.productTemplate.name];
@@ -502,6 +582,14 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     cellImage.clipsToBounds = YES;
     [cell.contentView insertSubview:cellImage aboveSubview:activityIndicator];
     
+    if ([self.presentedViewController isKindOfClass:[OLScrollCropViewController class]]){
+        OLScrollCropViewController *cropVc = (OLScrollCropViewController *)self.presentedViewController;
+        if (oldView == cropVc.previewSourceView){
+            cropVc.previewSourceView = cellImage;
+            cellImage.hidden = YES;
+        }
+    }
+    
     cellImage.userInteractionEnabled = YES;
     [cellImage addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onButtonEnhanceClicked:)]];
     
@@ -522,6 +610,7 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
         [cellImage setProgress:progress];
     } completionHandler:^(UIImage *image){
         dispatch_async(dispatch_get_main_queue(), ^{
+            [activityIndicator stopAnimating];
             cellImage.image = image;
         });
     }];
@@ -570,7 +659,6 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     CGFloat width = (imageWidth + b.right + b.left) * screenWidthFactor + margin * 2;
     
     return CGSizeMake(width, height);
-
 }
 
 -(CGFloat)marginBetweenCellsForCollectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout{
@@ -616,7 +704,12 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
 #pragma mark - OLImageEditorViewControllerDelegate methods
 
 - (void)scrollCropViewControllerDidCancel:(OLScrollCropViewController *)cropper{
-    [cropper dismissViewControllerAnimated:YES completion:NULL];
+    [cropper dismissViewControllerAnimated:YES completion:^{
+        [UIView animateWithDuration:0.25 animations:^{
+            self.nextButton.alpha = 1;
+            self.navigationController.navigationBar.alpha = 1;
+        }];
+    }];
 }
 
 -(void)scrollCropViewController:(OLScrollCropViewController *)cropper didFinishCroppingImage:(UIImage *)croppedImage{
@@ -625,7 +718,12 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     self.editingPrintPhoto.edits = cropper.edits;
     
     [self.collectionView reloadData];
-    [cropper dismissViewControllerAnimated:YES completion:NULL];
+    [cropper dismissViewControllerAnimated:YES completion:^{
+        [UIView animateWithDuration:0.25 animations:^{
+            self.nextButton.alpha = 1;
+            self.navigationController.navigationBar.alpha = 1;
+        }];
+    }];
     
 #ifndef OL_NO_ANALYTICS
     [OLAnalytics trackReviewScreenDidCropPhotoForProductName:self.product.productTemplate.name];

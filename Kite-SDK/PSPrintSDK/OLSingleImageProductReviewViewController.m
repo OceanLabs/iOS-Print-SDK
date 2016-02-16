@@ -1,11 +1,34 @@
 //
-//  OLSingleImageProductReviewViewController.m
-//  KitePrintSDK
+//  Modified MIT License
 //
-//  Created by Konstadinos Karayannis on 2/24/15.
-//  Copyright (c) 2015 Deon Botha. All rights reserved.
+//  Copyright (c) 2010-2016 Kite Tech Ltd. https://www.kite.ly
+//
+//  Permission is hereby granted, free of charge, to any person obtaining a copy
+//  of this software and associated documentation files (the "Software"), to deal
+//  in the Software without restriction, including without limitation the rights
+//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+//  copies of the Software, and to permit persons to whom the Software is
+//  furnished to do so, subject to the following conditions:
+//
+//  The software MAY ONLY be used with the Kite Tech Ltd platform and MAY NOT be modified
+//  to be used with any competitor platforms. This means the software MAY NOT be modified
+//  to place orders with any competitors to Kite Tech Ltd, all orders MUST go through the
+//  Kite Tech Ltd platform servers.
+//
+//  The above copyright notice and this permission notice shall be included in
+//  all copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+//  THE SOFTWARE.
 //
 
+#import "NSArray+QueryingExtras.h"
+#import "NSObject+Utils.h"
 #ifdef COCOAPODS
 #import <SDWebImage/SDWebImageManager.h>
 #else
@@ -17,23 +40,39 @@
 #import "OLAnalytics.h"
 #import "OLAsset+Private.h"
 #import "OLProductPrintJob.h"
-#import "OLKitePrintSDK.h"
+#import "OLAsset+Private.h"
 #import "OLAssetsPickerController.h"
+#import "OLCustomPhotoProvider.h"
+#import "OLImageCachingManager.h"
+#import "OLKiteABTesting.h"
+#import "OLKitePrintSDK.h"
 #import "OLKiteUtils.h"
 #ifdef OL_KITE_AT_LEAST_IOS8
+#ifdef COCOAPODS
+#import <CTAssetsPickerController/CTAssetsPickerController.h>
+#else
 #import "CTAssetsPickerController.h"
+#endif
 #endif
 #import "NSArray+QueryingExtras.h"
 #import "OLKiteViewController.h"
-#import "OLKiteABTesting.h"
-#import "NSObject+Utils.h"
-#import "OLImageCachingManager.h"
+#import "OLPaymentViewController.h"
+#import "OLPrintPhoto.h"
+#import "OLProductPrintJob.h"
+#import "OLProductTemplateOption.h"
+#import "OLRemoteImageCropper.h"
 #import "OLRemoteImageView.h"
 #import "OLRemoteImageCropper.h"
 #import "OLAsset+Private.h"
 #import "OLProductTemplateOption.h"
 #import "OLPaymentViewController.h"
 #import "UIViewController+OLMethods.h"
+#import "OLSingleImageProductReviewViewController.h"
+
+#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
+#import "OLCustomPhotoProvider.h"
+#import <KITAssetsPickerController.h>
+#endif
 
 #ifdef OL_KITE_OFFER_INSTAGRAM
 #import <InstagramImagePicker/OLInstagramImagePickerController.h>
@@ -44,6 +83,8 @@
 #import <FacebookImagePicker/OLFacebookImagePickerController.h>
 #import <FacebookImagePicker/OLFacebookImage.h>
 #endif
+
+#import "OLImagePreviewViewController.h"
 
 @interface OLPaymentViewController (Private)
 
@@ -60,6 +101,9 @@
 @interface OLKiteViewController ()
 
 @property (strong, nonatomic) OLPrintOrder *printOrder;
+#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
+@property (strong, nonatomic) NSMutableArray <OLCustomPhotoProvider *> *customImageProviders;
+#endif
 - (void)dismiss;
 
 @end
@@ -82,7 +126,10 @@ OLFacebookImagePickerControllerDelegate,
 #ifdef OL_KITE_AT_LEAST_IOS8
 CTAssetsPickerControllerDelegate,
 #endif
-OLAssetsPickerControllerDelegate, RMImageCropperDelegate>
+#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
+KITAssetsPickerControllerDelegate,
+#endif
+OLAssetsPickerControllerDelegate, RMImageCropperDelegate, UIViewControllerPreviewingDelegate>
 
 @property (weak, nonatomic) IBOutlet UICollectionView *imagesCollectionView;
 
@@ -91,6 +138,8 @@ OLAssetsPickerControllerDelegate, RMImageCropperDelegate>
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *maskAspectRatio;
 @property (strong, nonatomic) OLPrintPhoto *imagePicked;
 @property (strong, nonatomic) OLPrintPhoto *imageDisplayed;
+@property (strong, nonatomic) NSIndexPath *previewingIndexPath;
+@property (nonatomic, copy) void (^saveJobCompletionHandler)();
 
 @end
 
@@ -104,6 +153,11 @@ static BOOL hasMoved;
 #ifndef OL_NO_ANALYTICS
     [OLAnalytics trackReviewScreenViewed:self.product.productTemplate.name];
 #endif
+    
+    if ([UITraitCollection class] && [self.traitCollection respondsToSelector:@selector(forceTouchCapability)] && self.traitCollection.forceTouchCapability == UIForceTouchCapabilityAvailable){
+        [self registerForPreviewingWithDelegate:self sourceView:self.imagesCollectionView];
+        [self registerForPreviewingWithDelegate:self sourceView:self.imageCropView];
+    }
     
     if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder){
         if ([[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant isEqualToString:@"Review-Overview-Checkout"]){
@@ -131,15 +185,23 @@ static BOOL hasMoved;
     if (self.imageCropView){
         self.imageCropView.delegate = self;
         OLPrintPhoto *photo = [self.userSelectedPhotos firstObject];
-        [photo getImageWithProgress:NULL completion:^(UIImage *image){
-            self.imageCropView.image = image;
-        }];
         self.imageDisplayed = photo;
+        [photo getImageWithProgress:NULL completion:^(UIImage *image){
+            if (self.imageDisplayed.edits.counterClockwiseRotations > 0 || self.imageDisplayed.edits.flipHorizontal || self.imageDisplayed.edits.flipVertical){
+                self.imageCropView.image = [UIImage imageWithCGImage:image.CGImage scale:image.scale orientation:[OLPhotoEdits orientationForNumberOfCounterClockwiseRotations:self.imageDisplayed.edits.counterClockwiseRotations andInitialOrientation:image.imageOrientation horizontalFlip:self.imageDisplayed.edits.flipHorizontal verticalFlip:self.imageDisplayed.edits.flipVertical]];
+            }
+            else{
+                [self.imageCropView setImage:image];
+            }
+            self.imageCropView.imageView.transform = self.imageDisplayed.edits.cropTransform;
+        }];
     }
     
     for (OLPrintPhoto *printPhoto in self.userSelectedPhotos){
         [printPhoto unloadImage];
     }
+    
+    [self.imageCropView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTapGestureRecognized)]];
     
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Back", @"")
                                                                              style:UIBarButtonItemStylePlain
@@ -149,13 +211,57 @@ static BOOL hasMoved;
     self.imagesCollectionView.dataSource = self;
     self.imagesCollectionView.delegate = self;
     
-    if (![self shouldShowAddMorePhotos] && self.userSelectedPhotos.count == 1){
+    if (![OLKiteUtils imageProvidersAvailable:self] && self.userSelectedPhotos.count == 1){
         self.imagesCollectionView.hidden = YES;
     }
-    
-    if ([self shouldShowAddMorePhotos] && self.userSelectedPhotos.count == 0 && [[[UIDevice currentDevice] systemVersion] floatValue] >= 8){
+}
+
+- (void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
+    if ([OLKiteUtils imageProvidersAvailable:self] && self.userSelectedPhotos.count == 0 && [[[UIDevice currentDevice] systemVersion] floatValue] >= 8){
         [self collectionView:self.imagesCollectionView didSelectItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
     }
+}
+
+- (void)onTapGestureRecognized{
+    [self enterFullCrop:YES];
+}
+
+- (void)enterFullCrop:(BOOL)animated{
+    OLScrollCropViewController *cropVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLScrollCropViewController"];
+    cropVc.enableCircleMask = self.product.productTemplate.templateUI == kOLTemplateUICircle;
+    cropVc.delegate = self;
+    cropVc.aspectRatio = self.imageCropView.frame.size.height / self.imageCropView.frame.size.width;
+    
+    if (!animated){
+        cropVc.skipPresentAnimation = YES;
+    }
+    cropVc.previewView = [self.imageCropView snapshotViewAfterScreenUpdates:YES];
+    cropVc.previewView.frame = [self.imageCropView.superview convertRect:self.imageCropView.frame toView:nil];
+    cropVc.previewSourceView = self.imageCropView;
+    
+    cropVc.forceSourceViewDimensions = YES;
+    cropVc.providesPresentationContextTransitionStyle = true;
+    cropVc.definesPresentationContext = true;
+    cropVc.modalPresentationStyle = UIModalPresentationOverCurrentContext;
+    
+    [self.imageDisplayed getImageWithProgress:^(float progress){
+        [cropVc.cropView setProgress:progress];
+    }completion:^(UIImage *image){
+        [cropVc setFullImage:image];
+        OLPhotoEdits *edits = [self.imageDisplayed.edits copy];
+        edits.cropImageFrame = [self.imageCropView getFrameRect];
+        edits.cropImageRect = [self.imageCropView getImageRect];
+        edits.cropImageSize = [self.imageCropView croppedImageSize];
+        edits.cropTransform = self.imageCropView.imageView.transform;
+        cropVc.edits = edits;
+        //        cropVc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
+        [self presentViewController:cropVc animated:NO completion:NULL];
+        
+#ifndef OL_NO_ANALYTICS
+        [OLAnalytics trackReviewScreenEnteredCropScreenForProductName:self.product.productTemplate.name];
+#endif
+    }];
 }
 
 -(void)viewWillAppear:(BOOL)animated{
@@ -196,68 +302,82 @@ static BOOL hasMoved;
     self.imageDisplayed.edits.cropImageSize = [self.imageCropView croppedImageSize];
     self.imageDisplayed.edits.cropTransform = self.imageCropView.imageView.transform;
     
+    OLSingleImageProductReviewViewController *this = self;
     OLAsset *asset = [OLAsset assetWithDataSource:[self.imageDisplayed copy]];
-    
     [asset dataLengthWithCompletionHandler:^(long long dataLength, NSError *error){
         if (dataLength < 40000){
             if ([UIAlertController class]){
                 UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Image Is Too Small", @"") message:NSLocalizedString(@"Please zoom out or pick a higher quality image", @"") preferredStyle:UIAlertControllerStyleAlert];
                 [alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", @"") style:UIAlertActionStyleDefault handler:NULL]];
+                [alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Print It Anyway", @"") style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+                    [self saveJobNowWithCompletionHandler:handler];
+                }]];
                 [self presentViewController:alert animated:YES completion:NULL];
             }
             else{
-                [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Image Too Small", @"") message:NSLocalizedString(@"Please zoom out or pick higher quality image", @"") delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"") otherButtonTitles:nil] show];
+                self.saveJobCompletionHandler = handler;
+                UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Image Too Small", @"") message:NSLocalizedString(@"Please zoom out or pick higher quality image", @"") delegate:this cancelButtonTitle:NSLocalizedString(@"OK", @"") otherButtonTitles:@"Print it anyway", nil];
+                av.tag = 100;
+                [av show];
             }
             return;
+            
         }
         
-        NSArray *assetArray = @[asset];
-        
-        NSUInteger iphonePhotoCount = 1;
-        OLPrintOrder *printOrder = [OLKiteUtils kiteVcForViewController:self].printOrder;
-        
-        NSDictionary *infoDict = [[NSBundle mainBundle] infoDictionary];
-        NSString *appVersion = [infoDict objectForKey:@"CFBundleShortVersionString"];
-        NSNumber *buildNumber = [infoDict objectForKey:@"CFBundleVersion"];
-        printOrder.userData = @{@"photo_count_iphone": [NSNumber numberWithUnsignedInteger:iphonePhotoCount],
-                                @"sdk_version": kOLKiteSDKVersion,
-                                @"platform": @"iOS",
-                                @"uid": [OLAnalytics userDistinctId],
-                                @"app_version": [NSString stringWithFormat:@"Version: %@ (%@)", appVersion, buildNumber]
-                                };
-        
-        OLProductPrintJob *job = [[OLProductPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:assetArray];
-        for (NSString *option in self.product.selectedOptions.allKeys){
-            [job setValue:self.product.selectedOptions[option] forOption:option];
-        }
-        NSArray *jobs = [NSArray arrayWithArray:printOrder.jobs];
-        for (id<OLPrintJob> existingJob in jobs){
-            if ([existingJob.uuid isEqualToString:self.product.uuid]){
-                if ([existingJob extraCopies] > 0){
-                    [existingJob setExtraCopies:[existingJob extraCopies]-1];
-                }
-                else{
-                    [printOrder removePrintJob:existingJob];
-                }
-                job.uuid = self.product.uuid;
-            }
-        }
-        self.product.uuid = job.uuid;
-        self.editingPrintJob = job;
-        if ([printOrder.jobs containsObject:self.editingPrintJob]){
-            id<OLPrintJob> existingJob = printOrder.jobs[[printOrder.jobs indexOfObject:self.editingPrintJob]];
-            [existingJob setExtraCopies:[existingJob extraCopies]+1];
-        }
-        else{
-            [printOrder addPrintJob:self.editingPrintJob];
-        }
-        
-        [printOrder saveOrder];
-        
-        if (handler){
-            handler();
-        }
+        [self saveJobNowWithCompletionHandler:handler];
     }];
+}
+
+- (void)saveJobNowWithCompletionHandler:(void(^)())handler {
+    OLAsset *asset = [OLAsset assetWithDataSource:[self.imageDisplayed copy]];
+    NSArray *assetArray = @[asset];
+    
+    NSUInteger iphonePhotoCount = 1;
+    OLPrintOrder *printOrder = [OLKiteUtils kiteVcForViewController:self].printOrder;
+    
+    NSDictionary *infoDict = [[NSBundle mainBundle] infoDictionary];
+    NSString *appVersion = [infoDict objectForKey:@"CFBundleShortVersionString"];
+    NSNumber *buildNumber = [infoDict objectForKey:@"CFBundleVersion"];
+    printOrder.userData = @{@"photo_count_iphone": [NSNumber numberWithUnsignedInteger:iphonePhotoCount],
+                            @"sdk_version": kOLKiteSDKVersion,
+                            @"platform": @"iOS",
+                            @"uid": [OLAnalytics userDistinctId],
+                            @"app_version": [NSString stringWithFormat:@"Version: %@ (%@)", appVersion, buildNumber]
+                            };
+    
+    OLProductPrintJob *job = [[OLProductPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:assetArray];
+    for (NSString *option in self.product.selectedOptions.allKeys){
+        [job setValue:self.product.selectedOptions[option] forOption:option];
+    }
+    NSArray *jobs = [NSArray arrayWithArray:printOrder.jobs];
+    for (id<OLPrintJob> existingJob in jobs){
+        if ([existingJob.uuid isEqualToString:self.product.uuid]){
+            if ([existingJob extraCopies] > 0){
+                [existingJob setExtraCopies:[existingJob extraCopies]-1];
+            }
+            else{
+                [printOrder removePrintJob:existingJob];
+            }
+            job.uuid = self.product.uuid;
+        }
+    }
+    self.product.uuid = job.uuid;
+    self.editingPrintJob = job;
+    if ([printOrder.jobs containsObject:self.editingPrintJob]){
+        id<OLPrintJob> existingJob = printOrder.jobs[[printOrder.jobs indexOfObject:self.editingPrintJob]];
+        [existingJob setExtraCopies:[existingJob extraCopies]+1];
+    }
+    else{
+        [printOrder addPrintJob:self.editingPrintJob];
+    }
+    
+    [printOrder saveOrder];
+    
+    if (handler){
+        handler();
+    }
+    
+    self.saveJobCompletionHandler = nil;
 }
 
 -(void) doCheckout{
@@ -287,22 +407,6 @@ static BOOL hasMoved;
     }];
 }
 
-- (BOOL)instagramEnabled{
-#ifdef OL_KITE_OFFER_INSTAGRAM
-    return [OLKitePrintSDK instagramSecret] && ![[OLKitePrintSDK instagramSecret] isEqualToString:@""] && [OLKitePrintSDK instagramClientID] && ![[OLKitePrintSDK instagramClientID] isEqualToString:@""] && [OLKitePrintSDK instagramRedirectURI] && ![[OLKitePrintSDK instagramRedirectURI] isEqualToString:@""];
-#else
-    return NO;
-#endif
-}
-
-- (BOOL)facebookEnabled{
-#ifdef OL_KITE_OFFER_FACEBOOK
-    return YES;
-#else
-    return NO;
-#endif
-}
-
 - (void)imageCropperDidTransformImage:(RMImageCropper *)imageCropper{
 #ifndef OL_NO_ANALYTICS
     if (!hasMoved){
@@ -312,6 +416,55 @@ static BOOL hasMoved;
 #endif
 }
 
+- (UIViewController *)previewingContext:(id<UIViewControllerPreviewing>)previewingContext viewControllerForLocation:(CGPoint)location{
+    if (previewingContext.sourceView == self.imagesCollectionView){
+        NSIndexPath *indexPath = [self.imagesCollectionView indexPathForItemAtPoint:location];
+        UICollectionViewCell *cell = [self.imagesCollectionView cellForItemAtIndexPath:indexPath];
+        
+        OLRemoteImageView *imageView = (OLRemoteImageView *)[cell viewWithTag:11];
+        if (!imageView.image){
+            return nil;
+        }
+        
+        self.previewingIndexPath = indexPath;
+        
+        UIImageView *cellImageView = [cell viewWithTag:1];
+        
+        [previewingContext setSourceRect:[cell convertRect:cellImageView.frame toView:self.imagesCollectionView]];
+        
+        OLImagePreviewViewController *previewVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLImagePreviewViewController"];
+        [self.userSelectedPhotos[indexPath.item] getImageWithProgress:NULL completion:^(UIImage *image){
+            previewVc.image = image;
+        }];
+        previewVc.providesPresentationContextTransitionStyle = true;
+        previewVc.definesPresentationContext = true;
+        previewVc.modalPresentationStyle = UIModalPresentationOverCurrentContext;
+        return previewVc;
+    }
+    else if (previewingContext.sourceView == self.imageCropView){
+        OLImagePreviewViewController *previewVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLImagePreviewViewController"];
+        [self.imageDisplayed getImageWithProgress:NULL completion:^(UIImage *image){
+            previewVc.image = image;
+        }];
+        previewVc.providesPresentationContextTransitionStyle = true;
+        previewVc.definesPresentationContext = true;
+        previewVc.modalPresentationStyle = UIModalPresentationOverCurrentContext;
+        return previewVc;
+    }
+    else{
+        return nil;
+    }
+}
+
+- (void)previewingContext:(id<UIViewControllerPreviewing>)previewingContext commitViewController:(UIViewController *)viewControllerToCommit{
+    if (previewingContext.sourceView == self.imagesCollectionView){
+        [self collectionView:self.imagesCollectionView didSelectItemAtIndexPath:self.previewingIndexPath];
+    }
+    else if (previewingContext.sourceView == self.imageCropView){
+        [self enterFullCrop:NO];
+    }
+}
+
 #pragma mark CollectionView delegate and data source
 
 - (NSInteger) sectionForMoreCell{
@@ -319,7 +472,7 @@ static BOOL hasMoved;
 }
 
 - (NSInteger) sectionForImageCells{
-    return [self shouldShowAddMorePhotos] ? 1 : 0;
+    return [OLKiteUtils imageProvidersAvailable:self] ? 1 : 0;
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
@@ -334,17 +487,8 @@ static BOOL hasMoved;
     }
 }
 
-- (BOOL)shouldShowAddMorePhotos{
-    if (![self.delegate respondsToSelector:@selector(kiteControllerShouldAllowUserToAddMorePhotos:)]){
-        return YES;
-    }
-    else{
-        return [self.delegate kiteControllerShouldAllowUserToAddMorePhotos:[OLKiteUtils kiteVcForViewController:self]];
-    }
-}
-
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
-    if ([self shouldShowAddMorePhotos]){
+    if ([OLKiteUtils imageProvidersAvailable:self]){
         return 2;
     }
     else{
@@ -413,8 +557,27 @@ static BOOL hasMoved;
 }
 
 - (void) collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
+    UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
+    
+    BOOL customProviders = NO;
+    NSInteger numberOfProviders = 0;
+#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
+    NSInteger numberOfCustomProviders = [OLKiteUtils kiteVcForViewController:self].customImageProviders.count;
+    customProviders = numberOfCustomProviders > 0;
+    numberOfProviders += numberOfCustomProviders;
+#endif
+    
+    if ([OLKiteUtils cameraRollEnabled:self]){
+        numberOfProviders++;
+    }
+    if ([OLKiteUtils facebookEnabled]){
+        numberOfProviders++;
+    }
+    if ([OLKiteUtils instagramEnabled]){
+        numberOfProviders++;
+    }
+    
     if (indexPath.section == [self sectionForImageCells]){
-        UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
         OLRemoteImageView *imageView = (OLRemoteImageView *)[cell viewWithTag:11];
         if (!imageView.image){
             return;
@@ -426,69 +589,104 @@ static BOOL hasMoved;
         [self.imageDisplayed getImageWithProgress:^(float progress){
             //            [self.imageCropView setProgress:progress];
         }completion:^(UIImage *image){
-            dispatch_async(dispatch_get_main_queue(), ^{
-                self.imageCropView.image = image;
-            });
+            if (self.imageDisplayed.edits.counterClockwiseRotations > 0 || self.imageDisplayed.edits.flipHorizontal || self.imageDisplayed.edits.flipVertical){
+                self.imageCropView.image = [UIImage imageWithCGImage:image.CGImage scale:image.scale orientation:[OLPhotoEdits orientationForNumberOfCounterClockwiseRotations:self.imageDisplayed.edits.counterClockwiseRotations andInitialOrientation:image.imageOrientation horizontalFlip:self.imageDisplayed.edits.flipHorizontal verticalFlip:self.imageDisplayed.edits.flipVertical]];
+            }
+            else{
+                [self.imageCropView setImage:image];
+            }
+            [self.view setNeedsLayout];
+            [self.view layoutIfNeeded];
+            self.imageCropView.imageView.transform = self.imageDisplayed.edits.cropTransform;
         }];
     }
-    else if ([self instagramEnabled] || [self facebookEnabled]){
+    else if (numberOfProviders > 1){
         if ([UIAlertController class]){
             UIAlertController *ac = [UIAlertController alertControllerWithTitle:nil message:NSLocalizedString(@"Add photos from:", @"") preferredStyle:UIAlertControllerStyleActionSheet];
-            [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Camera Roll", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
-                [self showCameraRollImagePicker];
-            }]];
-            if ([self instagramEnabled]){
+            if ([OLKiteUtils cameraRollEnabled:self]){
+                [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Camera Roll", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
+                    [self showCameraRollImagePicker];
+                }]];
+            }
+            if ([OLKiteUtils instagramEnabled]){
                 [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Instagram", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
                     [self showInstagramImagePicker];
                 }]];
             }
-            if ([self facebookEnabled]){
+            if ([OLKiteUtils facebookEnabled]){
                 [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Facebook", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
                     [self showFacebookImagePicker];
                 }]];
             }
+#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
+            for (OLCustomPhotoProvider *provider in [OLKiteUtils kiteVcForViewController:self].customImageProviders){
+                [ac addAction:[UIAlertAction actionWithTitle:provider.name style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
+                    [self showPickerForProvider:provider];
+                }]];
+            }
+#endif
             
             [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"") style:UIAlertActionStyleCancel handler:^(UIAlertAction *action){
                 [ac dismissViewControllerAnimated:YES completion:NULL];
             }]];
-            ac.popoverPresentationController.sourceView = collectionView;
-            ac.popoverPresentationController.sourceRect = [collectionView cellForItemAtIndexPath:indexPath].frame;
+            ac.popoverPresentationController.sourceView = cell;
+            ac.popoverPresentationController.sourceRect = cell.frame;
             [self presentViewController:ac animated:YES completion:NULL];
         }
         else{
-            UIActionSheet *as;
-            if ([self instagramEnabled] && [self facebookEnabled]){
-                as = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"Add photos from:", @"") delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", @"") destructiveButtonTitle:nil otherButtonTitles:NSLocalizedString(@"Camera Roll", @""),
-                      NSLocalizedString(@"Instagram", @""),
-                      NSLocalizedString(@"Facebook", @""),
-                      nil];
+            UIActionSheet *as = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"Add photos from:", @"")
+                                                            delegate:self
+                                                   cancelButtonTitle:nil
+                                              destructiveButtonTitle:nil
+                                                   otherButtonTitles:nil];
+            
+            if ([OLKiteUtils cameraRollEnabled:self]){
+                [as addButtonWithTitle:NSLocalizedString(@"Camera Roll", @"")];
             }
-            else if ([self instagramEnabled]){
-                as = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"Add photos from:", @"") delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", @"") destructiveButtonTitle:nil otherButtonTitles:NSLocalizedString(@"Camera Roll", @""),
-                      NSLocalizedString(@"Instagram", @""),
-                      nil];
+            if ([OLKiteUtils facebookEnabled]){
+                [as addButtonWithTitle:@"Facebook"];
             }
-            else if ([self facebookEnabled]){
-                as = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"Add photos from:", @"") delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", @"") destructiveButtonTitle:nil otherButtonTitles:NSLocalizedString(@"Camera Roll", @""),
-                      NSLocalizedString(@"Facebook", @""),
-                      nil];
+            if ([OLKiteUtils instagramEnabled]){
+                [as addButtonWithTitle:@"Instagram"];
             }
-            else{
-                as = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"Add photos from:", @"") delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", @"") destructiveButtonTitle:nil otherButtonTitles:NSLocalizedString(@"Camera Roll", @""),
-                      nil];
+#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
+            for (OLCustomPhotoProvider *provider in [OLKiteUtils kiteVcForViewController:self].customImageProviders){
+                [as addButtonWithTitle:provider.name];
             }
+#endif
+            as.cancelButtonIndex = [as addButtonWithTitle:@"Cancel"];
+            
             [as showInView:self.view];
         }
     }
     else{
-        [self showCameraRollImagePicker];
+        if ([OLKiteUtils cameraRollEnabled:self]){
+            [self showCameraRollImagePicker];
+        }
+        else if ([OLKiteUtils facebookEnabled]){
+            [self showFacebookImagePicker];
+        }
+        else if ([OLKiteUtils instagramEnabled]){
+            [self showInstagramImagePicker];
+        }
+#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
+        else{
+            [self showPickerForProvider:[OLKiteUtils kiteVcForViewController:self].customImageProviders.firstObject];
+        }
+#endif
+        
     }
 }
 
 - (NSArray *)createAssetArray {
     NSMutableArray *array = [[NSMutableArray alloc] initWithCapacity:self.userSelectedPhotos.count];
     for (OLPrintPhoto *object in self.userSelectedPhotos) {
-        [array addObject:object.asset];
+        if ([object.asset isKindOfClass:[OLAsset class]] && [object.asset dataSource]){
+            [array addObject:[object.asset dataSource]];
+        }
+        else if (![object.asset isKindOfClass:[OLAsset class]]){
+            [array addObject:object.asset];
+        }
     }
     return array;
 }
@@ -526,7 +724,9 @@ static BOOL hasMoved;
                     }
                     [(id)picker setSelectedAssets:alAssets];
                     picker.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
-                    [self presentViewController:picker animated:YES completion:nil];
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [self presentViewController:picker animated:YES completion:nil];
+                    });
                 }
             }];
         }
@@ -584,6 +784,27 @@ static BOOL hasMoved;
 #endif
 }
 
+#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
+- (void)showPickerForProvider:(OLCustomPhotoProvider *)provider{
+    UIViewController<KITCustomAssetPickerController> *vc;
+    if (provider.vc){
+        vc = provider.vc;
+    }
+    else{
+        KITAssetsPickerController *kvc = [[KITAssetsPickerController alloc] init];
+        kvc.collectionDataSources = provider.collections;
+        vc = kvc;
+    }
+    
+    if ([vc respondsToSelector:@selector(setSelectedAssets:)]){
+        [vc performSelector:@selector(setSelectedAssets:) withObject:[[self createAssetArray] mutableCopy]];
+    }
+    vc.delegate = self;
+    vc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
+    [self presentViewController:vc animated:YES completion:NULL];
+}
+#endif
+
 #pragma mark - CTAssetsPickerControllerDelegate Methods
 
 - (void)populateArrayWithNewArray:(NSArray *)array dataType:(Class)class {
@@ -598,7 +819,17 @@ static BOOL hasMoved;
     // First remove any that are not returned.
     NSMutableArray *removeArray = [NSMutableArray arrayWithArray:self.userSelectedPhotos];
     for (OLPrintPhoto *object in self.userSelectedPhotos) {
-        if (![object.asset isKindOfClass:class] || [photoArray containsObjectIdenticalTo:object]) {
+        if ([object.asset isKindOfClass:[OLAsset class]] && [[object.asset dataSource] isKindOfClass:class]){
+            if ([photoArray containsObject:object]){
+                [removeArray removeObjectIdenticalTo:object];
+                [photoArray removeObject:object];
+            }
+        }
+        else if (![object.asset isKindOfClass:class]) {
+            [removeArray removeObjectIdenticalTo:object];
+        }
+        
+        else if([photoArray containsObject:object]){
             [removeArray removeObjectIdenticalTo:object];
         }
     }
@@ -637,10 +868,32 @@ static BOOL hasMoved;
 
 - (void)assetsPickerController:(id)picker didFinishPickingAssets:(NSArray *)assets {
     NSInteger originalCount = self.userSelectedPhotos.count;
-    [self populateArrayWithNewArray:assets dataType:[picker isKindOfClass:[OLAssetsPickerController class]] ? [ALAsset class] : [PHAsset class]];
 #ifndef OL_NO_ANALYTICS
     [OLAnalytics trackPhotoProvider:@"Camera Roll" numberOfPhotosAdded:self.userSelectedPhotos.count - originalCount forProductName:self.product.productTemplate.name];
 #endif
+    Class assetClass;
+    if ([picker isKindOfClass:[OLAssetsPickerController class]]){
+        assetClass = [ALAsset class];
+    }
+#ifdef OL_KITE_AT_LEAST_IOS8
+    else if ([picker isKindOfClass:[CTAssetsPickerController class]]){
+        assetClass = [PHAsset class];
+    }
+#endif
+#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
+    else if ([picker isKindOfClass:[KITAssetsPickerController class]]){
+        NSMutableArray *olAssets = [[NSMutableArray alloc] init];
+        for (id<OLAssetDataSource> asset in assets){
+            if ([asset respondsToSelector:@selector(dataWithCompletionHandler:)]){
+                [olAssets addObject:[OLAsset assetWithDataSource:asset]];
+            }
+        }
+        assets = olAssets;
+        assetClass = [[assets.firstObject dataSource] class];
+    }
+#endif
+    [self populateArrayWithNewArray:assets dataType:assetClass];
+    
     if (self.imagePicked){
         self.imageDisplayed = self.imagePicked;
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
@@ -669,6 +922,9 @@ static BOOL hasMoved;
     if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8){
         return;
     }
+    if (![asset isKindOfClass:[PHAsset class]]){
+        return;
+    }
     PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
     options.networkAccessAllowed = YES;
     [[OLImageCachingManager sharedInstance].photosCachingManager stopCachingImagesForAssets:@[asset] targetSize:PHImageManagerMaximumSize contentMode:PHImageContentModeAspectFill options:options];
@@ -676,6 +932,9 @@ static BOOL hasMoved;
 
 - (void)assetsPickerController:(CTAssetsPickerController *)picker didSelectAsset:(PHAsset *)asset{
     if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8){
+        return;
+    }
+    if (![asset isKindOfClass:[PHAsset class]]){
         return;
     }
     PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
@@ -701,6 +960,16 @@ static BOOL hasMoved;
 
 - (void)instagramImagePicker:(OLInstagramImagePickerController *)imagePicker didFinishPickingImages:(NSArray *)images {
     NSInteger originalCount = self.userSelectedPhotos.count;
+#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
+        NSMutableArray *assets = [[NSMutableArray alloc] init];
+        for (id<OLAssetDataSource> asset in images){
+            if ([asset isKindOfClass:[OLInstagramImage class]]){
+                [assets addObject:asset];
+            }
+        }
+        images = assets;
+#endif
+    
     [self populateArrayWithNewArray:images dataType:[OLInstagramImage class]];
 #ifndef OL_NO_ANALYTICS
     [OLAnalytics trackPhotoProvider:@"Instagram" numberOfPhotosAdded:self.userSelectedPhotos.count - originalCount forProductName:self.product.productTemplate.name];
@@ -731,6 +1000,16 @@ static BOOL hasMoved;
 
 - (void)facebookImagePicker:(OLFacebookImagePickerController *)imagePicker didFinishPickingImages:(NSArray *)images {
     NSInteger originalCount = self.userSelectedPhotos.count;
+#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
+    NSMutableArray *assets = [[NSMutableArray alloc] init];
+    for (id<OLAssetDataSource> asset in images){
+        if ([asset isKindOfClass:[OLFacebookImage class]]){
+            [assets addObject:asset];
+        }
+    }
+    images = assets;
+#endif
+    
     [self populateArrayWithNewArray:images dataType:[OLFacebookImage class]];
 #ifndef OL_NO_ANALYTICS
     [OLAnalytics trackPhotoProvider:@"Facebook" numberOfPhotosAdded:self.userSelectedPhotos.count - originalCount forProductName:self.product.productTemplate.name];
@@ -755,20 +1034,56 @@ static BOOL hasMoved;
 #pragma mark UIActionSheet Delegate (only used on iOS 7)
 
 - (void) actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex{
-    if (buttonIndex == 0){
-        [self showCameraRollImagePicker];
-    }
-    else if (buttonIndex == 1){
-        if ([self instagramEnabled]){
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+        if (buttonIndex == [OLKiteUtils cameraRollProviderIndex:self]){
+            [self showCameraRollImagePicker];
+        }
+        else if (buttonIndex == [OLKiteUtils instagramProviderIndex:self]){
             [self showInstagramImagePicker];
         }
-        else{
+        else if (buttonIndex == [OLKiteUtils facebookProviderIndex:self]){
             [self showFacebookImagePicker];
         }
-    }
-    else if (buttonIndex == 2){
-        [self showFacebookImagePicker];
-    }
+#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
+        else{
+            [self showPickerForProvider:[OLKiteUtils kiteVcForViewController:self].customImageProviders[buttonIndex - [OLKiteUtils customProvidersStartIndex:self]]];
+        }
+#endif
+    });
+}
+
+#pragma mark - OLImageEditorViewControllerDelegate methods
+
+- (void)scrollCropViewControllerDidCancel:(OLScrollCropViewController *)cropper{
+    [cropper dismissViewControllerAnimated:YES completion:^{
+    }];
+}
+
+-(void)scrollCropViewController:(OLScrollCropViewController *)cropper didFinishCroppingImage:(UIImage *)croppedImage{
+    [self.imageDisplayed unloadImage];
+    
+    self.imageDisplayed.edits = cropper.edits;
+    
+    [self.imageDisplayed getImageWithProgress:NULL completion:^(UIImage *image){
+        if (self.imageDisplayed.edits.counterClockwiseRotations > 0 || self.imageDisplayed.edits.flipHorizontal || self.imageDisplayed.edits.flipVertical){
+            self.imageCropView.image = [UIImage imageWithCGImage:image.CGImage scale:image.scale orientation:[OLPhotoEdits orientationForNumberOfCounterClockwiseRotations:self.imageDisplayed.edits.counterClockwiseRotations andInitialOrientation:image.imageOrientation horizontalFlip:self.imageDisplayed.edits.flipHorizontal verticalFlip:self.imageDisplayed.edits.flipVertical]];
+        }
+        else{
+            [self.imageCropView setImage:image];
+        }
+        [self.view setNeedsLayout];
+        [self.view layoutIfNeeded];
+        self.imageCropView.imageView.transform = self.imageDisplayed.edits.cropTransform;
+    }];
+    
+    [cropper dismissViewControllerAnimated:YES completion:^{
+        [UIView animateWithDuration:0.25 animations:^{
+        }];
+    }];
+    
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackReviewScreenDidCropPhotoForProductName:self.product.productTemplate.name];
+#endif
 }
 
 #pragma mark - Autorotate and Orientation Methods
@@ -789,6 +1104,16 @@ static BOOL hasMoved;
     }
     else{
         return UIInterfaceOrientationMaskPortrait;
+    }
+}
+
+#pragma mark - UIAlertViewDelegate
+
+- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
+    if (alertView.tag == 100) {
+        if (buttonIndex == 1) {
+            [self saveJobNowWithCompletionHandler:self.saveJobCompletionHandler];
+        }
     }
 }
 

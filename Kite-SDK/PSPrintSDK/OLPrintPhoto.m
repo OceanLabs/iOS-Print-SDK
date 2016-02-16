@@ -1,9 +1,30 @@
 //
-//  PrintPhoto.m
-//  Print Studio
+//  Modified MIT License
 //
-//  Created by Elliott Minns on 16/12/2013.
-//  Copyright (c) 2013 Ocean Labs. All rights reserved.
+//  Copyright (c) 2010-2016 Kite Tech Ltd. https://www.kite.ly
+//
+//  Permission is hereby granted, free of charge, to any person obtaining a copy
+//  of this software and associated documentation files (the "Software"), to deal
+//  in the Software without restriction, including without limitation the rights
+//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+//  copies of the Software, and to permit persons to whom the Software is
+//  furnished to do so, subject to the following conditions:
+//
+//  The software MAY ONLY be used with the Kite Tech Ltd platform and MAY NOT be modified
+//  to be used with any competitor platforms. This means the software MAY NOT be modified
+//  to place orders with any competitors to Kite Tech Ltd, all orders MUST go through the
+//  Kite Tech Ltd platform servers.
+//
+//  The above copyright notice and this permission notice shall be included in
+//  all copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+//  THE SOFTWARE.
 //
 
 #ifdef COCOAPODS
@@ -17,6 +38,7 @@
 #import "RMImageCropper.h"
 #import "ALAssetsLibrary+Singleton.h"
 #import "OLKiteUtils.h"
+#import "OLConstants.h"
 #ifdef OL_KITE_OFFER_INSTAGRAM
 #import <InstagramImagePicker/OLInstagramImage.h>
 #endif
@@ -160,18 +182,12 @@ static NSOperationQueue *imageOperationQueue;
                 OLAsset *asset = (OLAsset *)self.asset;
                 
                 if (asset.assetType == kOLAssetTypeRemoteImageURL){
-                    if (![self isEdited]){
-                        [self getImageWithSize:CGSizeZero progress:progressHandler completion:^(UIImage *image){
-                            self.cachedCroppedThumbnailImage = image;
+                    [OLPrintPhoto resizedImageWithPrintPhoto:self size:destSize cropped:cropped progress:progressHandler completion:^(UIImage *image) {
+                        self.cachedCroppedThumbnailImage = image;
+                        dispatch_async(dispatch_get_main_queue(), ^{
                             handler(image);
-                        }];
-                    }
-                    else{
-                        [OLPrintPhoto resizedImageWithPrintPhoto:self size:destSize cropped:cropped progress:progressHandler completion:^(UIImage *image) {
-                            self.cachedCroppedThumbnailImage = image;
-                            handler(image);
-                        }];
-                    }
+                        });
+                    }];
                 }
                 else if (asset.assetType == kOLAssetTypePHAsset){
                     PHAsset *asset = [self.asset loadPHAsset];
@@ -249,6 +265,10 @@ static NSOperationQueue *imageOperationQueue;
                         handler(image);
                     }];
                 }
+            }
+            else if (self.type == kPrintPhotoAssetTypeCorrupt){
+                NSData *data = [NSData dataWithContentsOfFile:[[OLKiteUtils kiteBundle] pathForResource:@"kite_corrupt" ofType:@"jpg"]];
+                handler([UIImage imageWithData:data]);
             }
 #endif
         }
@@ -345,6 +365,10 @@ static NSOperationQueue *imageOperationQueue;
             }];
         }
     }
+    else if (self.type == kPrintPhotoAssetTypeCorrupt){
+        NSData *data = [NSData dataWithContentsOfFile:[[OLKiteUtils kiteBundle] pathForResource:@"kite_corrupt" ofType:@"jpg"]];
+        completionHandler([UIImage imageWithData:data]);
+    }
 }
 
 - (void)unloadImage {
@@ -429,10 +453,11 @@ static NSOperationQueue *imageOperationQueue;
             }
             
             UIImage *image = [UIImage imageWithCGImage:[rep fullResolutionImage] scale:rep.scale orientation:orientation];
-            [self dataWithImage:image withCompletionHandler:handler];
+            [self dataWithImage:image withCompletionHandler:^(NSData *data){
+                handler(data, nil);
+            }];
         } else {
-            NSData *data = [NSData dataWithContentsOfFile:[[OLKiteUtils kiteBundle] pathForResource:@"kite_corrupt" ofType:@"jpg"]];
-            handler(data, nil);
+            handler(nil, [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeImagesCorrupt userInfo:@{NSLocalizedDescriptionKey : NSLocalizedString(@"One of the images in an item was deleted from your device before we could upload it. Please remove or replace it.", @""), @"asset" : self}]);
         }
     }
     else if (self.type == kPrintPhotoAssetTypePHAsset){
@@ -446,25 +471,14 @@ static NSOperationQueue *imageOperationQueue;
             
             [imageManager requestImageForAsset:self.asset targetSize:PHImageManagerMaximumSize contentMode:PHImageContentModeDefault options:options resultHandler:^(UIImage *result, NSDictionary *info){
                 if (result){
-                    [self dataWithImage:result withCompletionHandler:^(NSData *data, NSError *error){
-                        if (!error){
-                            dispatch_async(dispatch_get_main_queue(), ^{
-                                handler(data, nil);
-                            });
-                        }
-                        else{
-                            NSData *data = [NSData dataWithContentsOfFile:[[OLKiteUtils kiteBundle] pathForResource:@"kite_corrupt" ofType:@"jpg"]];
-                            dispatch_async(dispatch_get_main_queue(), ^{
-                                handler(data, nil);
-                            });
-                        }
+                    [self dataWithImage:result withCompletionHandler:^(NSData *data){
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            handler(data, nil);
+                        });
                     }];
                 }
                 else{
-                    NSData *data = [NSData dataWithContentsOfFile:[[OLKiteUtils kiteBundle] pathForResource:@"kite_corrupt" ofType:@"jpg"]];
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        handler(data, nil);
-                    });
+                    handler(nil, [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeImagesCorrupt userInfo:@{NSLocalizedDescriptionKey : info[PHImageErrorKey] ? info[PHImageErrorKey] : NSLocalizedString(@"There was an error getting one of your photos. Please remove or replace it.", @""), @"asset" : self}]);
                 }
             }];
         }];
@@ -477,7 +491,9 @@ static NSOperationQueue *imageOperationQueue;
                 if (error) {
                     handler(nil, error);
                 } else {
-                    [self dataWithImage:image withCompletionHandler:handler];
+                    [self dataWithImage:image withCompletionHandler:^(NSData *data){
+                        handler(data, nil);
+                    }];
                 }
             }
         }];
@@ -494,7 +510,9 @@ static NSOperationQueue *imageOperationQueue;
                                                                   if (error) {
                                                                       handler(nil, error);
                                                                   } else {
-                                                                      [self dataWithImage:image withCompletionHandler:handler];
+                                                                      [self dataWithImage:image withCompletionHandler:^(NSData *data){
+                                                                          handler(data, nil);
+                                                                      }];
                                                                   }
                                                               }
                                                           }];
@@ -505,20 +523,25 @@ static NSOperationQueue *imageOperationQueue;
                     handler(nil,error);
                 }
                 else{
-                    [self dataWithImage:[UIImage imageWithData:data] withCompletionHandler:handler];
+                    [self dataWithImage:[UIImage imageWithData:data] withCompletionHandler:^(NSData *data){
+                        handler(data, nil);
+                    }];
                 }
             }];
         }
     }
+    else if (self.type == kPrintPhotoAssetTypeCorrupt){
+        handler(0, [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeImagesCorrupt userInfo:@{NSLocalizedDescriptionKey : NSLocalizedString(@"There was an error getting one of your photos. It may have been deleted before we could upload it. Please remove or replace it.", @""), @"asset" : self}]);
+    }
 }
 
-- (void)dataWithImage:(UIImage *)image withCompletionHandler:(GetDataHandler)handler{
+- (void)dataWithImage:(UIImage *)image withCompletionHandler:(void(^)(NSData *data))handler{
     OLPrintPhoto *photo = [[OLPrintPhoto alloc] init];
     photo.asset = [OLAsset assetWithImageAsJPEG:image];
     photo.edits = self.edits;
     
     [OLPrintPhoto resizedImageWithPrintPhoto:photo size:CGSizeZero cropped:YES progress:NULL completion:^(UIImage *image){
-        handler(UIImageJPEGRepresentation(image, 0.7), nil);
+        handler(UIImageJPEGRepresentation(image, 0.7));
     }];
     
 }
@@ -538,18 +561,14 @@ static NSOperationQueue *imageOperationQueue;
                                                         NSAssert([NSThread isMainThread], @"oops wrong assumption about main thread callback");
                                                         if (asset == nil) {
                                                             // corrupt asset, user has probably deleted the photo from their device
-                                                            _type = kPrintPhotoAssetTypeOLAsset;
-                                                            NSData *data = [NSData dataWithContentsOfFile:[[OLKiteUtils kiteBundle] pathForResource:@"kite_corrupt" ofType:@"jpg"]];
-                                                            self.asset = [OLAsset assetWithDataAsJPEG:data];
+                                                            _type = kPrintPhotoAssetTypeCorrupt;
                                                         } else {
                                                             self.asset = asset;
                                                         }
                                                     }
                                                    failureBlock:^(NSError *err) {
                                                        NSAssert([NSThread isMainThread], @"oops wrong assumption about main thread callback");
-                                                       _type = kPrintPhotoAssetTypeOLAsset;
-                                                       NSData *data = [NSData dataWithContentsOfFile:[[OLKiteUtils kiteBundle] pathForResource:@"kite_corrupt" ofType:@"jpg"]];
-                                                       self.asset = [OLAsset assetWithDataAsJPEG:data];
+                                                       _type = kPrintPhotoAssetTypeCorrupt;
                                                    }];
         }
         else if (self.type == kPrintPhotoAssetTypePHAsset){
@@ -557,9 +576,7 @@ static NSOperationQueue *imageOperationQueue;
             PHAsset *asset = localId ? [[PHAsset fetchAssetsWithLocalIdentifiers:@[localId] options:nil] firstObject] : nil;
             if (!asset){
                 // corrupt asset, user has probably deleted the photo from their device
-                _type = kPrintPhotoAssetTypeOLAsset;
-                NSData *data = [NSData dataWithContentsOfFile:[[OLKiteUtils kiteBundle] pathForResource:@"kite_corrupt" ofType:@"jpg"]];
-                self.asset = [OLAsset assetWithDataAsJPEG:data];
+                _type = kPrintPhotoAssetTypeCorrupt;
             }
             else {
                 self.asset = asset;
