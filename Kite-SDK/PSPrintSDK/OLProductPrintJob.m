@@ -132,6 +132,16 @@ static id stringOrEmptyString(NSString *str) {
     return self.assets.count;
 }
 
+- (NSDecimalNumber *)numberOfItemsInJob{
+    OLProductTemplate *template = [OLProductTemplate templateWithId:self.templateId];
+    if (template.templateUI == kOLTemplateUINonCustomizable){
+        return [NSDecimalNumber decimalNumberWithString:@"1"];
+    }
+    
+    float numberOfPhotos = [self assetsForUploading].count;
+    return [[NSDecimalNumber alloc] initWithFloat:ceilf(numberOfPhotos / (float) MAX(template.quantityPerSheet, 1))];
+}
+
 - (NSString *)templateId {
     return _templateId;
 }

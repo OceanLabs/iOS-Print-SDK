@@ -75,6 +75,7 @@ static id stringOrEmptyString(NSString *str) {
 - (void)setValue:(NSString *)value forOption:(NSString *)option{
     self.options[option] = value;
 }
+
 - (id)initWithTemplateId:(NSString *)templateId frontImageOLAsset:(OLAsset *)frontImageAsset backImageOLAsset:(OLAsset *)backImageAsset insideRightImageAsset:(OLAsset *)insideRightImageAsset insideLeftImageAsset:(OLAsset *)insideLeftImageAsset {
     if (self = [super init]) {
         self.uuid = [[NSUUID UUID] UUIDString];
@@ -93,6 +94,10 @@ static id stringOrEmptyString(NSString *str) {
 
 - (NSUInteger)quantity {
     return 1;
+}
+
+- (NSDecimalNumber *)numberOfItemsInJob{
+    return [NSDecimalNumber decimalNumberWithString:@"1"];
 }
 
 - (NSString *)productName {

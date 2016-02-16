@@ -98,6 +98,10 @@ static NSString *const kKeyApparelPrintJobOptions = @"co.oceanlabs.pssdk.kKeyApp
     return 1;
 }
 
+- (NSDecimalNumber *)numberOfItemsInJob{
+    return [NSDecimalNumber decimalNumberWithString:@"1"];
+}
+
 - (NSDecimalNumber *)costInCurrency:(NSString *)currencyCode {
     OLProductTemplate *productTemplate = [OLProductTemplate templateWithId:self.templateId];
     NSUInteger expectedQuantity = productTemplate.quantityPerSheet;

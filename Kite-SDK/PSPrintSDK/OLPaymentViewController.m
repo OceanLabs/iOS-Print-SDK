@@ -730,7 +730,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             }
         }
         
-        NSDecimalNumber *numUnitsInJob = [[NSDecimalNumber alloc] initWithFloat:ceilf(numberOfPhotos / (float) MAX(template.quantityPerSheet, 1))];
+        NSDecimalNumber *numUnitsInJob = [job numberOfItemsInJob];
         
         expectedCost = [expectedCost decimalNumberByAdding:[unitCost decimalNumberByMultiplyingBy:[NSDecimalNumber decimalNumberWithString:[NSString stringWithFormat:@"%ld", (long)([job extraCopies] + 1)*[numUnitsInJob integerValue]]]]];
     }
@@ -1695,18 +1695,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         
         quantityLabel.text = [NSString stringWithFormat:@"%ld", (long)[job extraCopies]+1];
 
-        float numberOfPhotos = [job assetsForUploading].count;
-        if (product.productTemplate.templateUI == kOLTemplateUIPhotobook){
-            // Front cover photo should count towards total photos
-            if ([(OLPhotobookPrintJob *)job frontCover]){
-                numberOfPhotos--;
-            }
-        }
-        
-        NSDecimalNumber *numUnitsInJob = [[NSDecimalNumber alloc] initWithFloat:ceilf(numberOfPhotos / (float) product.quantityToFulfillOrder)];
-        if (product.productTemplate.templateUI == kOLTemplateUINonCustomizable){
-            numUnitsInJob = [NSDecimalNumber decimalNumberWithString:@"1"];
-        }
+        NSDecimalNumber *numUnitsInJob = [job numberOfItemsInJob];
         
         priceLabel.text = [[numUnitsInJob decimalNumberByMultiplyingBy:[[product unitCostDecimalNumber] decimalNumberByMultiplyingBy:[NSDecimalNumber decimalNumberWithString:[NSString stringWithFormat:@"%ld", (long)[job extraCopies]+1]]]] formatCostForCurrencyCode:self.printOrder.currencyCode];
         
