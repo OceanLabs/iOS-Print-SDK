@@ -287,11 +287,13 @@ static const NSUInteger kSectionErrorRetry = 2;
 }
 
 - (void)retryWasSuccessful{
-#ifndef OL_NO_ANALYTICS
     if (self.printOrder.printed){
+        [[NSNotificationCenter defaultCenter] postNotificationName:kOLNotificationPrintOrderSubmission object:self userInfo:@{kOLKeyUserInfoPrintOrder: self.printOrder}];
+#ifndef OL_NO_ANALYTICS
         [OLAnalytics trackOrderSubmission:self.printOrder];
     }
 #endif
+    
     [UIView transitionWithView:self.view duration:0.3f options:UIViewAnimationOptionTransitionCrossDissolve animations:^{
         [self setupHeader];
     } completion:nil];

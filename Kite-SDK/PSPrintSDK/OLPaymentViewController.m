@@ -816,8 +816,6 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             [self.transitionBlockOperation addDependency:self.applePayDismissOperation];
         }
         
-        [[NSNotificationCenter defaultCenter] postNotificationName:kOLNotificationPrintOrderSubmission object:self userInfo:@{kOLKeyUserInfoPrintOrder: self.printOrder}];
-        
         [SVProgressHUD dismiss];
         [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
         
@@ -902,8 +900,9 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             handlerUsed = YES;
         }
         
-#ifndef OL_NO_ANALYTICS
         if (self.printOrder.printed){
+            [[NSNotificationCenter defaultCenter] postNotificationName:kOLNotificationPrintOrderSubmission object:self userInfo:@{kOLKeyUserInfoPrintOrder: self.printOrder}];
+#ifndef OL_NO_ANALYTICS
             [OLAnalytics trackOrderSubmission:self.printOrder];
         }
 #endif
