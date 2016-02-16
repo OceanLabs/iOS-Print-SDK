@@ -109,6 +109,7 @@ static BOOL haveLoadedAtLeastOnce = NO;
 @interface OLKiteViewController ()
 
 @property (strong, nonatomic) OLPrintOrder *printOrder;
+@property (strong, nonatomic) NSMutableArray *userSelectedPhotos;
 
 @end
 
@@ -794,6 +795,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         self.transitionBlockOperation = [[NSBlockOperation alloc] init];
         __weak OLPaymentViewController *welf = self;
         [self.transitionBlockOperation addExecutionBlock:^{
+            [[OLKiteUtils kiteVcForViewController:welf].userSelectedPhotos removeAllObjects];
             if ([welf.delegate respondsToSelector:@selector(shouldDismissPaymentViewControllerAfterPayment)] && self.delegate.shouldDismissPaymentViewControllerAfterPayment){
                 [(UITableView *)[(OLReceiptViewController *)welf.delegate tableView] reloadData];
                 [welf.navigationController.presentingViewController dismissViewControllerAnimated:YES completion:NULL];
