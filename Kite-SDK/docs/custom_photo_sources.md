@@ -28,9 +28,9 @@ There are 2 ways to offer custom photo sources:
 
 2. You can provide your own view controller to be used as a photo source. This involves quite a bit more work on your side but allows for a lot more control. If for example you have invested a lot of effort in efficient caching and navigation of large quantities of photos this method is probably a better fit for you. The photo objects that are returned to the Kite SDK should still conform to the `KITAssetDataSource` protocol.
 
-Tell Kite SDK to use your View Controller using the following method of `OLKiteViewController`
-```obj-c
-- (void)addCustomPhotoProviderWithViewController:(UIViewController<KITCustomAssetPickerController> *_Nonnull)vc name:(NSString *_Nonnull)name icon:(UIImage *_Nullable)icon;
-```
+  Tell Kite SDK to use your View Controller using the following method of `OLKiteViewController`
+  ```obj-c
+  - (void)addCustomPhotoProviderWithViewController:(UIViewController<KITCustomAssetPickerController> *_Nonnull)vc name:(NSString *_Nonnull)name icon:(UIImage *_Nullable)icon;
+  ```
 
-Like the first method, you can call this method as many times as you like, and multiple photo sources will show up next to the standard ones.
+  Like the first method, you can call this method as many times as you like, and multiple photo sources will show up next to the standard ones.
