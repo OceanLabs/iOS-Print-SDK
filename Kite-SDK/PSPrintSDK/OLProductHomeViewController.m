@@ -134,6 +134,11 @@
         [self registerForPreviewingWithDelegate:self sourceView:self.collectionView];
     }
     
+    if ([self isPushed]){
+        self.automaticallyAdjustsScrollViewInsets = NO;
+        self.collectionView.contentInset = UIEdgeInsetsMake([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height, self.collectionView.contentInset.left, self.collectionView.contentInset.bottom, self.collectionView.contentInset.right);
+    }
+    
     self.bannerString = [OLKiteABTesting sharedInstance].promoBannerText;
     NSRange countdownDateRange = [self.bannerString rangeOfString:@"\\[\\[.*\\]\\]" options:NSRegularExpressionSearch];
     if (countdownDateRange.location != NSNotFound){
@@ -376,6 +381,15 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
+    if ([self isPushed]){
+        self.automaticallyAdjustsScrollViewInsets = NO;
+        self.collectionView.contentInset = UIEdgeInsetsMake([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height, self.collectionView.contentInset.left, self.collectionView.contentInset.bottom, self.collectionView.contentInset.right);
+        self.parentViewController.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Back", @"")
+                                                                                 style:UIBarButtonItemStylePlain
+                                                                                target:nil
+                                                                                action:nil];
+    }
+    
     [self addBasketIconToTopRight];
 }
 
@@ -398,6 +412,9 @@
                 titleImageView.alpha = 1;
             }];
         }];
+    }
+    else if (!url && [self isMemberOfClass:[OLProductHomeViewController class]] && [self isPushed]){
+        self.parentViewController.title = NSLocalizedString(@"Print Shop", @"");
     }
     
     NSDate *now = [NSDate date];
@@ -443,6 +460,11 @@
     }
     
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinator> context){
+        if ([self isPushed]){
+            self.automaticallyAdjustsScrollViewInsets = NO;
+            self.collectionView.contentInset = UIEdgeInsetsMake([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height, self.collectionView.contentInset.left, self.collectionView.contentInset.bottom, self.collectionView.contentInset.right);
+        }
+        
         [self.collectionView.collectionViewLayout invalidateLayout];
     }completion:^(id<UIViewControllerTransitionCoordinator> context){
         [self.collectionView reloadData];

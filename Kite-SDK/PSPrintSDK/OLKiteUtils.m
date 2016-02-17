@@ -264,6 +264,12 @@
         }
     }
     
+    for (UIViewController *vc in theVc.navigationController.viewControllers){
+        if ([vc isKindOfClass:[OLKiteViewController class]]){
+            return (OLKiteViewController *)vc;
+        }
+    }
+    
     return nil;
 }
 

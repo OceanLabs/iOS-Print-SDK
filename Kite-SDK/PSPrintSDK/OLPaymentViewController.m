@@ -73,6 +73,7 @@
 #import "OLPosterViewController.h"
 #import "OLFrameOrderReviewViewController.h"
 #import "OLAsset+Private.h"
+#import "UIViewController+OLMethods.h"
 
 #ifdef OL_KITE_OFFER_PAYPAL
 #ifdef COCOAPODS
@@ -368,6 +369,15 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
+    
+    if ([self isPushed]){
+        if ([OLKitePrintSDK environment] == kOLKitePrintSDKEnvironmentSandbox){
+            self.parentViewController.title = NSLocalizedStringFromTableInBundle(@"Payment (TEST)", @"KitePrintSDK", [OLConstants bundle], @"");
+        }
+        else{
+            self.parentViewController.title = NSLocalizedStringFromTableInBundle(@"Payment", @"KitePrintSDK", [OLConstants bundle], @"");
+        }
+    }
     
     if (!haveLoadedAtLeastOnce){
         haveLoadedAtLeastOnce = YES;
@@ -917,7 +927,14 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     // Try as best we can to go to the beginning of the app
     NSMutableArray *navigationStack = self.navigationController.viewControllers.mutableCopy;
     if (navigationStack.count > 1) {
-        [self.navigationController popToRootViewControllerAnimated:YES];
+        NSMutableArray *viewControllers = [[NSMutableArray alloc] init];
+        for (UIViewController *vc in self.navigationController.viewControllers){
+            [viewControllers addObject:vc];
+            if ([vc isKindOfClass:[OLKiteViewController class]]){
+                [self.navigationController setViewControllers:viewControllers animated:YES];
+                break;
+            }
+        }
     }
     else if (navigationStack.firstObject == self){
         [self dismiss];

@@ -83,6 +83,9 @@
         [basketButton setImage:[UIImage imageNamedInKiteBundle:@"cart-empty"] forState:UIControlStateNormal];
     }
     
+    if (self.isPushed){
+        self.parentViewController.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:basketButton];
+    }
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:basketButton];
 }
 
@@ -113,6 +116,10 @@
         nvc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
         [self presentViewController:nvc animated:YES completion:NULL];
     }];
+}
+
+- (BOOL)isPushed{
+    return ![self.navigationController.viewControllers.firstObject isKindOfClass:[OLKiteViewController class]];
 }
 
 @end

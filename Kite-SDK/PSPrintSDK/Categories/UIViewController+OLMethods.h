@@ -32,5 +32,6 @@
 @interface UIViewController (OLMethods)
 
 - (void)addBasketIconToTopRight;
+- (BOOL)isPushed;
 
 @end

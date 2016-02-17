@@ -73,5 +73,6 @@ static NSString *const kOLKiteThemeSupportEmail = @"themeSupportEmail";
 - (void)fetchRemotePlistsWithCompletionHandler:(void(^)())handler;
 - (void)prefetchRemoteImages;
 - (UIColor *)darkThemeColor1;
+- (void)setupABTestVariants;
 
 @end
