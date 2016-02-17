@@ -63,7 +63,7 @@ The SDK includes lots of optional functionality enabled via CocoaPod Subspecs so
 
 If you'd like to offer your users the opportunity to add photos via Instagram or Facebook then uncomment the appropriate lines above and follow the instructions to [Enable Facebook & Instagram Photo Selection](Kite-SDK/docs/social_photo_sources.md).
 
-You can also provide your own photo source (for example from within your app or a custom back end). Please read the documentation [here](Kite-SDK/docs/custom-photo-sources.md). 
+You can also provide your own photo source (for example from within your app or a custom back end). Please read the documentation [here](Kite-SDK/docs/custom_photo_sources.md). 
 
 PayPal functionality is also optional although recommended as you'll typically see a higher conversion rate with it.
 
