@@ -283,6 +283,11 @@ typedef enum {
 }
 
 - (NSString *)detailsString{
+    if (self.productTemplate.productDescriptionMarkdown && ![self.productTemplate.productDescriptionMarkdown isEqualToString:@""]){
+        return [self.productTemplate.productDescriptionMarkdown stringByReplacingOccurrencesOfString:@"\\n" withString:@"\n"];
+    }
+
+    //Fall back to the old field
     NSString *s = @"";
     
     //Add description

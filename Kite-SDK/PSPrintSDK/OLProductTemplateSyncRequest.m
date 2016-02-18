@@ -93,6 +93,7 @@
                             id product = productTemplate[@"product"];
                             NSNumber *enabledNumber = productTemplate[@"enabled"];
                             NSString *description = productTemplate[@"description"];
+                            NSString *descriptionMarkdown = productTemplate[@"description_markdown"];
                             BOOL enabled = enabledNumber == nil ? YES : [enabledNumber boolValue];
                             
                             NSDictionary *shippingCosts = [productTemplate[@"shipping_costs"] isKindOfClass:[NSDictionary class]] ? productTemplate[@"shipping_costs"] : nil;
@@ -225,6 +226,7 @@
                                     t.classPhotoURL = [NSURL URLWithString:classPhoto];
                                     t.imageBorder = imageBorder;
                                     t.productDescription = description;
+                                    t.productDescriptionMarkdown = descriptionMarkdown;
                                     t.shippingCosts = shippingCosts;
                                     t.gridCountX = [gridCountX integerValue];
                                     t.gridCountY = [gridCountY integerValue];
