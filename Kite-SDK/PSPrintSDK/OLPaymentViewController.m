@@ -935,6 +935,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
                 break;
             }
         }
+        [self.navigationController popToRootViewControllerAnimated:YES];
     }
     else if (navigationStack.firstObject == self){
         [self dismiss];
