@@ -629,16 +629,7 @@ static BOOL hasMoved;
             }
             if ([OLKiteUtils qrCodeUploadEnabled]) {
                 [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"QR Code", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
-                    OLQRCodeUploadViewController *vc = (OLQRCodeUploadViewController *) [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:nil] instantiateViewControllerWithIdentifier:@"OLQRCodeUploadViewController"];
-                    vc.modalPresentationStyle = UIModalPresentationFormSheet;
-                    vc.delegate = self;
-                    [self presentViewController:vc animated:YES completion:nil];
-                    
-                    self.tapBehindQRUploadModalGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTapBehindQRCodeScannerModal:)];
-                    self.tapBehindQRUploadModalGestureRecognizer.delegate = self;
-                    [self.tapBehindQRUploadModalGestureRecognizer setNumberOfTapsRequired:1];
-                    [self.tapBehindQRUploadModalGestureRecognizer setCancelsTouchesInView:NO]; // So the user can still interact with controls in the modal view
-                    [self.view.window addGestureRecognizer:self.tapBehindQRUploadModalGestureRecognizer];
+                    [self showQRCodeImagePicker];
                 }]];
             }
 #ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
@@ -825,6 +816,19 @@ static BOOL hasMoved;
     picker.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
     [self presentViewController:picker animated:YES completion:nil];
 #endif
+}
+
+- (void)showQRCodeImagePicker{
+    OLQRCodeUploadViewController *vc = (OLQRCodeUploadViewController *) [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:nil] instantiateViewControllerWithIdentifier:@"OLQRCodeUploadViewController"];
+    vc.modalPresentationStyle = UIModalPresentationFormSheet;
+    vc.delegate = self;
+    [self presentViewController:vc animated:YES completion:nil];
+    
+    self.tapBehindQRUploadModalGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTapBehindQRCodeScannerModal:)];
+    self.tapBehindQRUploadModalGestureRecognizer.delegate = self;
+    [self.tapBehindQRUploadModalGestureRecognizer setNumberOfTapsRequired:1];
+    [self.tapBehindQRUploadModalGestureRecognizer setCancelsTouchesInView:NO]; // So the user can still interact with controls in the modal view
+    [self.view.window addGestureRecognizer:self.tapBehindQRUploadModalGestureRecognizer];
 }
 
 #ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
@@ -1105,6 +1109,9 @@ static BOOL hasMoved;
         }
         else if (buttonIndex == [OLKiteUtils facebookProviderIndex:self]){
             [self showFacebookImagePicker];
+        }
+        else if (buttonIndex == [OLKiteUtils qrCodeProviderStartIndex:self]){
+            [self showQRCodeImagePicker];
         }
 #ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
         else{

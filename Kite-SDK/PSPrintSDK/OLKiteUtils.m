@@ -170,6 +170,22 @@ static NSString *const kKeyQRCodeUpload = @"ly.kite.kKeyQRCodeUpload";
     return index;
 }
 
++ (NSInteger)qrCodeProviderStartIndex:(UIViewController *)topVc{
+    NSInteger index = 0;
+    
+    if ([OLKiteUtils cameraRollEnabled:topVc]){
+        index++;
+    }
+    if ([OLKiteUtils facebookEnabled]){
+        index++;
+    }
+    if ([OLKiteUtils instagramEnabled]){
+        index++;
+    }
+    
+    return index;
+}
+
 #ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
 + (NSInteger)customProvidersStartIndex:(UIViewController *)topVc{
     NSInteger index = 0;
@@ -181,6 +197,9 @@ static NSString *const kKeyQRCodeUpload = @"ly.kite.kKeyQRCodeUpload";
         index++;
     }
     if ([OLKiteUtils instagramEnabled]){
+        index++;
+    }
+    if ([OLKiteUtils qrCodeUploadEnabled]){
         index++;
     }
     
