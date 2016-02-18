@@ -119,7 +119,12 @@
             image = [UIImage imageWithCGImage:image.CGImage scale:2 orientation:image.imageOrientation];
             UIImageView *titleImageView = [[UIImageView alloc] initWithImage:image];
             titleImageView.alpha = 0;
-            self.navigationItem.titleView = titleImageView;
+            if ([self isPushed]){
+                self.parentViewController.navigationItem.titleView = titleImageView;
+            }
+            else{
+                self.navigationItem.titleView = titleImageView;
+            }
             titleImageView.alpha = 0;
             [UIView animateWithDuration:0.5 animations:^{
                 titleImageView.alpha = 1;
@@ -127,13 +132,27 @@
         }];
     }
     else if (!url && [self isMemberOfClass:[OLProductHomeViewController class]]){
-        self.title = NSLocalizedString(@"Print Shop", @"");
+        if ([self isPushed]){
+            self.parentViewController.title = NSLocalizedString(@"Print Shop", @"");
+        }
+        else{
+            self.title = NSLocalizedString(@"Print Shop", @"");
+        }
     }
     
     if ([UITraitCollection class] && [self.traitCollection respondsToSelector:@selector(forceTouchCapability)] && self.traitCollection.forceTouchCapability == UIForceTouchCapabilityAvailable){
         [self registerForPreviewingWithDelegate:self sourceView:self.collectionView];
     }
     
+    if ([self isPushed]){
+        self.automaticallyAdjustsScrollViewInsets = NO;
+        self.collectionView.contentInset = UIEdgeInsetsMake([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height, self.collectionView.contentInset.left, self.collectionView.contentInset.bottom, self.collectionView.contentInset.right);
+    }
+    
+    [self setupBannerView];
+}
+
+- (void)setupBannerView{
     self.bannerString = [OLKiteABTesting sharedInstance].promoBannerText;
     NSRange countdownDateRange = [self.bannerString rangeOfString:@"\\[\\[.*\\]\\]" options:NSRegularExpressionSearch];
     if (countdownDateRange.location != NSNotFound){
@@ -236,7 +255,7 @@
             con = [[NSMutableArray alloc] init];
             
             visuals = @[@"H:|-0-[headerLabel]-0-|",
-                                 @"V:|-0-[headerLabel]-0-|"];
+                        @"V:|-0-[headerLabel]-0-|"];
             
             
             for (NSString *visual in visuals) {
@@ -376,6 +395,10 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
+    if ([self isPushed]){
+        self.automaticallyAdjustsScrollViewInsets = NO;
+        self.collectionView.contentInset = UIEdgeInsetsMake([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height, self.collectionView.contentInset.left, self.collectionView.contentInset.bottom, self.collectionView.contentInset.right);
+    }
     [self addBasketIconToTopRight];
 }
 
@@ -392,7 +415,12 @@
             image = [UIImage imageWithCGImage:image.CGImage scale:2 orientation:image.imageOrientation];
             UIImageView *titleImageView = [[UIImageView alloc] initWithImage:image];
             titleImageView.alpha = 0;
-            self.navigationItem.titleView = titleImageView;
+            if ([self isPushed]){
+                self.parentViewController.navigationItem.titleView = titleImageView;
+            }
+            else{
+                self.navigationItem.titleView = titleImageView;
+            }
             titleImageView.alpha = 0;
             [UIView animateWithDuration:0.5 animations:^{
                 titleImageView.alpha = 1;
@@ -443,6 +471,11 @@
     }
     
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinator> context){
+        if ([self isPushed]){
+            self.automaticallyAdjustsScrollViewInsets = NO;
+            self.collectionView.contentInset = UIEdgeInsetsMake([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height, self.collectionView.contentInset.left, self.collectionView.contentInset.bottom, self.collectionView.contentInset.right);
+        }
+        
         [self.collectionView.collectionViewLayout invalidateLayout];
     }completion:^(id<UIViewControllerTransitionCoordinator> context){
         [self.collectionView reloadData];

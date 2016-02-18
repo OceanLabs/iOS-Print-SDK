@@ -107,6 +107,10 @@ static NSString *const kKeyPhotobookPrintJobOptions = @"co.oceanlabs.pssdk.kKeyP
     return self.assets.count;
 }
 
+- (NSDecimalNumber *)numberOfItemsInJob{
+    return [NSDecimalNumber decimalNumberWithString:@"1"];
+}
+
 - (NSDecimalNumber *)costInCurrency:(NSString *)currencyCode {
     OLProductTemplate *productTemplate = [OLProductTemplate templateWithId:self.templateId];
     NSUInteger expectedQuantity = productTemplate.quantityPerSheet;

@@ -29,8 +29,9 @@
 
 #import <UIKit/UIKit.h>
 #import "OLKitePrintSDK.h"
+#import "OLCollectionViewController.h"
 
-@interface OLProductTypeSelectionViewController : UICollectionViewController
+@interface OLProductTypeSelectionViewController : OLCollectionViewController
 
 @property (strong, nonatomic) NSMutableArray *userSelectedPhotos;
 @property (weak, nonatomic) id<OLKiteDelegate> delegate;

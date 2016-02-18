@@ -30,10 +30,11 @@
 #import <UIKit/UIKit.h>
 #import "OLPrintOrder.h"
 #import "OLKiteViewController.h"
+#import "OLViewController.h"
 
 @class OLProduct;
 
-@interface OLProductOverviewViewController : UIViewController
+@interface OLProductOverviewViewController : OLViewController
 @property (strong, nonatomic) OLProduct *product;
 @property (strong, nonatomic) NSMutableArray *userSelectedPhotos;
 @property (weak, nonatomic) id<OLKiteDelegate> delegate;

@@ -244,7 +244,7 @@ static __weak id<OLKiteDelegate> kiteDelegate;
         dict[kOLAnalyticsQuantity] = [NSNumber numberWithInteger:[job extraCopies]+1];
         
         OLProduct *product = [OLProduct productWithTemplateId:[job templateId]];
-        NSDecimalNumber *numUnitsInJob = (NSDecimalNumber *) [[NSDecimalNumber alloc] initWithFloat:ceil([job assetsForUploading].count / (float) product.quantityToFulfillOrder)];
+        NSDecimalNumber *numUnitsInJob = [job numberOfItemsInJob];
         NSDecimalNumber *jobPrice = [numUnitsInJob decimalNumberByMultiplyingBy:[[product unitCostDecimalNumber] decimalNumberByMultiplyingBy:[NSDecimalNumber decimalNumberWithString:[NSString stringWithFormat:@"%ld", (long)[job extraCopies]+1]]]];
         dict[kOLAnalyticsItemPrice] = jobPrice;
     }

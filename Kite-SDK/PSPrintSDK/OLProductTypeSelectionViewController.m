@@ -105,6 +105,17 @@
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     
+    
+    if ([self isPushed]){
+        self.automaticallyAdjustsScrollViewInsets = NO;
+        self.collectionView.contentInset = UIEdgeInsetsMake([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height, self.collectionView.contentInset.left, self.collectionView.contentInset.bottom, self.collectionView.contentInset.right);
+    
+    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Back", @"")
+                                                                             style:UIBarButtonItemStylePlain
+                                                                            target:nil
+                                                                            action:nil];
+    }
+    
     [self addBasketIconToTopRight];
     
     [self.collectionView.collectionViewLayout invalidateLayout];
@@ -112,7 +123,13 @@
 
 - (void)viewDidLoad{
     [super viewDidLoad];
-    self.title = NSLocalizedString(self.templateClass, @"");
+    
+    if ([self isPushed]){
+        self.parentViewController.title = NSLocalizedString(self.templateClass, @"");
+    }
+    else{
+        self.title = NSLocalizedString(self.templateClass, @"");
+    }
     
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Back", @"")
                                                                              style:UIBarButtonItemStylePlain
@@ -160,6 +177,12 @@
     
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinator> context){
         [self.collectionView.collectionViewLayout invalidateLayout];
+        
+        if ([self isPushed]){
+            self.automaticallyAdjustsScrollViewInsets = NO;
+            self.collectionView.contentInset = UIEdgeInsetsMake([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height, self.collectionView.contentInset.left, self.collectionView.contentInset.bottom, self.collectionView.contentInset.right);
+        }
+
     } completion:^(id<UIViewControllerTransitionCoordinator> context){
         [self.collectionView reloadData];
     }];
