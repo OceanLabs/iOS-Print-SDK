@@ -83,7 +83,12 @@
     
     [self setupDetailsView];
     
-    self.title = self.product.productTemplate.name;
+    if ([self isPushed]){
+        self.parentViewController.title = self.product.productTemplate.name;
+    }
+    else{
+        self.title = self.product.productTemplate.name;
+    }
     
     self.pageController = [[UIPageViewController alloc] initWithTransitionStyle:UIPageViewControllerTransitionStyleScroll navigationOrientation:UIPageViewControllerNavigationOrientationHorizontal options:nil];
     self.pageController.dataSource = self;
@@ -157,10 +162,6 @@
 
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
-    
-    if ([self isPushed]){
-        self.parentViewController.title = self.product.productTemplate.name;
-    }
     
     if ([self.presentingViewController respondsToSelector:@selector(viewControllers)]) {
         UIViewController *presentingVc = [(UINavigationController *)self.presentingViewController viewControllers].lastObject;

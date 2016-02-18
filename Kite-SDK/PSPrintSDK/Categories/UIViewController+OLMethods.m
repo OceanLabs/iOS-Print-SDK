@@ -119,7 +119,12 @@
 }
 
 - (BOOL)isPushed{
-    return ![self.navigationController.viewControllers.firstObject isKindOfClass:[OLKiteViewController class]];
+    for (UIViewController *vc in self.navigationController.viewControllers){
+        if ([vc isKindOfClass:[OLKiteViewController class]]){
+            return YES;
+        }
+    }
+    return NO;
 }
 
 @end

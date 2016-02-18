@@ -123,7 +123,13 @@
 
 - (void)viewDidLoad{
     [super viewDidLoad];
-    self.title = NSLocalizedString(self.templateClass, @"");
+    
+    if ([self isPushed]){
+        self.parentViewController.title = NSLocalizedString(self.templateClass, @"");
+    }
+    else{
+        self.title = NSLocalizedString(self.templateClass, @"");
+    }
     
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Back", @"")
                                                                              style:UIBarButtonItemStylePlain
@@ -151,10 +157,6 @@
 
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
-    
-    if ([self isPushed]){
-        self.parentViewController.title = NSLocalizedString(self.templateClass, @"");
-    }
     
     if ([OLKiteABTesting sharedInstance].allowsMultipleRecipients && self.filterProducts){
         [self addBasketIconToTopRight];

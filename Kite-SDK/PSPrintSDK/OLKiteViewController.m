@@ -388,8 +388,8 @@ static CGFloat fadeTime = 0.3;
 }
 
 - (void)fadeToViewController:(UIViewController *)vc{
-    vc.view.alpha = 0;
     [self addChildViewController:vc];
+    vc.view.alpha = 0;
     [vc beginAppearanceTransition: YES animated: YES];
     [self.view addSubview:vc.view];
     
