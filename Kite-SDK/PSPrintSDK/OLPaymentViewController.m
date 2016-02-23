@@ -1065,6 +1065,14 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     }];
 }
 
+- (BOOL)showPhoneEntryField {
+    if ([self.kiteDelegate respondsToSelector:@selector(shouldShowPhoneEntryOnCheckoutScreen)]) {
+        return [self.kiteDelegate shouldShowPhoneEntryOnCheckoutScreen]; // delegate overrides whatever the A/B test might say.
+    }
+    
+    return [OLKiteABTesting sharedInstance].requirePhoneNumber;
+}
+
 #pragma mark Button Actions
 
 - (IBAction)onButtonApplyPromoCodeClicked:(id)sender {
@@ -1331,7 +1339,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         [lineItems addObject:[PKPaymentSummaryItem summaryItemWithLabel:[OLKitePrintSDK applePayPayToString] amount:[cost totalCostInCurrency:self.printOrder.currencyCode]]];
         paymentRequest.paymentSummaryItems = lineItems;
         NSUInteger requiredFields = PKAddressFieldPostalAddress | PKAddressFieldName | PKAddressFieldEmail;
-        if ([OLKiteABTesting sharedInstance].requirePhoneNumber){
+        if ([self showPhoneEntryField]){
             requiredFields = requiredFields | PKAddressFieldPhone;
         }
         paymentRequest.requiredShippingAddressFields = requiredFields;
