@@ -525,4 +525,24 @@ NSString *const kOLMimeTypeTIFF  = @"image/tiff";
     return self;
 }
 
+- (void)deleteFromDisk{
+    if (self.dataSource && [self.dataSource respondsToSelector:@selector(deleteFromDisk)]){
+        [self.dataSource deleteFromDisk];
+    }
+    else if(self.imageFilePath){
+        NSFileManager *fileManager = [NSFileManager defaultManager];
+        NSError *error;
+        BOOL fileExists = [fileManager fileExistsAtPath:self.imageFilePath];
+        if (fileExists)
+        {
+            BOOL success = [fileManager removeItemAtPath:self.imageFilePath error:&error];
+            if (!success) {
+#ifdef OL_VERBOSE
+                NSLog(@"Error: %@", [error localizedDescription]);
+#endif
+            }
+        }
+    }
+}
+
 @end

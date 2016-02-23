@@ -50,6 +50,11 @@
 #import "UIViewController+OLMethods.h"
 #import "OLImagePreviewViewController.h"
 
+#ifdef OL_KITE_OFFER_ADOBE
+#import <AdobeCreativeSDKImage/AdobeCreativeSDKImage.h>
+#import <AdobeCreativeSDKCore/AdobeCreativeSDKCore.h>
+#endif
+
 static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 static const NSUInteger kTagAlertViewDeletePhoto = 98;
 
@@ -72,7 +77,11 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
 
 @end
 
-@interface OLOrderReviewViewController () <OLCheckoutDelegate, UIAlertViewDelegate, UICollectionViewDelegateFlowLayout, UIViewControllerPreviewingDelegate>
+@interface OLOrderReviewViewController () <OLCheckoutDelegate, UIAlertViewDelegate, UICollectionViewDelegateFlowLayout,
+#ifdef OL_KITE_OFFER_ADOBE
+AdobeUXImageEditorViewControllerDelegate,
+#endif
+UIViewControllerPreviewingDelegate>
 
 @property (weak, nonatomic) OLPrintPhoto *editingPrintPhoto;
 @property (strong, nonatomic) UIView *addMorePhotosView;
@@ -486,29 +495,42 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
     
     self.editingPrintPhoto = self.userSelectedPhotos[indexPath.item];
     
-    OLScrollCropViewController *cropVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLScrollCropViewController"];
-    cropVc.enableCircleMask = self.product.productTemplate.templateUI == kOLTemplateUICircle;
-    cropVc.delegate = self;
-    cropVc.aspectRatio = [self productAspectRatio];
-    
-    cropVc.previewView = [imageView snapshotViewAfterScreenUpdates:YES];
-    cropVc.previewView.frame = [cell convertRect:imageView.frame toView:nil];
-    cropVc.previewSourceView = imageView;
-    cropVc.providesPresentationContextTransitionStyle = true;
-    cropVc.definesPresentationContext = true;
-    cropVc.modalPresentationStyle = UIModalPresentationOverCurrentContext;
-    
-    [self.editingPrintPhoto getImageWithProgress:^(float progress){
-        [cropVc.cropView setProgress:progress];
-    }completion:^(UIImage *image){
+    [self.editingPrintPhoto getImageWithProgress:NULL completion:^(UIImage *image){
+        
+#ifdef OL_KITE_OFFER_ADOBE
+        static NSString* const CreativeSDKClientId = @"e14d465c1526434a9050d8cc16335f43";
+        static NSString* const CreativeSDKClientSecret = @"636960a9-664c-45c7-b8eb-8c1dd6254cba";
+        
+        [[AdobeUXAuthManager sharedManager] setAuthenticationParametersWithClientID:CreativeSDKClientId clientSecret:CreativeSDKClientSecret enableSignUp:true];
+        [AdobeImageEditorCustomization setCropToolPresets:@[@{kAdobeImageEditorCropPresetName:@"", kAdobeImageEditorCropPresetWidth:@1, kAdobeImageEditorCropPresetHeight:[NSNumber numberWithDouble:[self productAspectRatio]]}]];
+        [AdobeImageEditorCustomization setCropToolCustomEnabled:NO];
+        [AdobeImageEditorCustomization setCropToolInvertEnabled:NO];
+        [AdobeImageEditorCustomization setCropToolOriginalEnabled:NO];
+
+
+        AdobeUXImageEditorViewController *editorController = [[AdobeUXImageEditorViewController alloc] initWithImage:image];
+        [editorController setDelegate:self];
+        [self presentViewController:editorController animated:YES completion:nil];
+#else
         [UIView animateWithDuration:0.25 animations:^{
             self.nextButton.alpha = 0;
         }];
+        OLScrollCropViewController *cropVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLScrollCropViewController"];
+        cropVc.enableCircleMask = self.product.productTemplate.templateUI == kOLTemplateUICircle;
+        cropVc.delegate = self;
+        cropVc.aspectRatio = [self productAspectRatio];
         
+        cropVc.previewView = [imageView snapshotViewAfterScreenUpdates:YES];
+        cropVc.previewView.frame = [cell convertRect:imageView.frame toView:nil];
+        cropVc.previewSourceView = imageView;
+        cropVc.providesPresentationContextTransitionStyle = true;
+        cropVc.definesPresentationContext = true;
+        cropVc.modalPresentationStyle = UIModalPresentationOverCurrentContext;
         [cropVc setFullImage:image];
         cropVc.edits = self.editingPrintPhoto.edits;
-        //        cropVc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
+                cropVc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
         [self presentViewController:cropVc animated:NO completion:NULL];
+#endif
         
 #ifndef OL_NO_ANALYTICS
         [OLAnalytics trackReviewScreenEnteredCropScreenForProductName:self.product.productTemplate.name];
@@ -728,6 +750,44 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
 #ifndef OL_NO_ANALYTICS
     [OLAnalytics trackReviewScreenDidCropPhotoForProductName:self.product.productTemplate.name];
 #endif
+}
+
+- (void)photoEditor:(AdobeUXImageEditorViewController *)editor finishedWithImage:(UIImage *)image{
+    [self.editingPrintPhoto unloadImage];
+    
+    OLPrintPhoto *printPhoto = self.editingPrintPhoto;
+    OLPrintPhoto *copy = [printPhoto copy];
+    printPhoto.asset = [OLAsset assetWithImageAsJPEG:image];
+    
+    [self.collectionView reloadData];
+    
+    [editor dismissViewControllerAnimated:YES completion:NULL];
+    
+    [copy getImageWithProgress:NULL completion:^(UIImage *image){
+        [editor enqueueHighResolutionRenderWithImage:image completion:^(UIImage *result, NSError *error) {
+            NSArray * urls = [[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask];
+            NSString *documentDirPath = [[(NSURL *)[urls objectAtIndex:0] path] stringByAppendingPathComponent:@"ol-kite-images"];
+            
+            
+            NSFileManager *fileManager= [NSFileManager defaultManager];
+            BOOL isDir;
+            if(![fileManager fileExistsAtPath:documentDirPath isDirectory:&isDir]){
+                [fileManager createDirectoryAtPath:documentDirPath withIntermediateDirectories:YES attributes:nil error:NULL];
+            }
+            
+            NSData * binaryImageData = UIImageJPEGRepresentation(result, 0.7);
+            
+            NSString *filePath = [documentDirPath stringByAppendingPathComponent:[[[NSUUID UUID] UUIDString] stringByAppendingString:@".jpg"]];
+            [binaryImageData writeToFile:filePath atomically:YES];
+            
+            printPhoto.asset = [OLAsset assetWithFilePath:filePath];
+        }];
+    }];
+    
+}
+
+- (void)photoEditorCanceled:(AdobeUXImageEditorViewController *)editor{
+    [editor dismissViewControllerAnimated:YES completion:NULL];
 }
 
 #pragma mark - Autorotate and Orientation Methods

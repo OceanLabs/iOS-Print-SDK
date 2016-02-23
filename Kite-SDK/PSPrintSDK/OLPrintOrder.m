@@ -252,6 +252,27 @@ static NSBlockOperation *templateSyncOperation;
 
 - (void)removePrintJob:(id<OLPrintJob>)job {
     [(NSMutableArray *) self.jobs removeObject:job];
+    
+    if (self.jobs.count == 0){
+        [self cleanupDisk];
+    }
+    else{
+        [self removeDiskAssetsForJob:job];
+    }
+}
+
+- (void)cleanupDisk{
+    if (self.jobs.count == 0){
+        NSArray * urls = [[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask];
+        NSString *documentDirPath = [[(NSURL *)[urls objectAtIndex:0] path] stringByAppendingPathComponent:@"ol-kite-images"];
+        [[NSFileManager defaultManager] removeItemAtPath:documentDirPath error:nil];
+    }
+}
+
+- (void)removeDiskAssetsForJob:(id<OLPrintJob>)job {
+    for (OLAsset *asset in [job assetsForUploading]){
+        [asset deleteFromDisk];
+    }
 }
 
 - (BOOL)hasCachedCost {
@@ -567,10 +588,13 @@ static NSBlockOperation *templateSyncOperation;
 
 - (void)saveOrder {
     [NSKeyedArchiver archiveRootObject:self toFile:[OLPrintOrder orderFilePath]];
+    [self cleanupDisk];
 }
 
 + (id)loadOrder {
-    return [NSKeyedUnarchiver unarchiveObjectWithFile:[OLPrintOrder orderFilePath]];
+    OLPrintOrder *order = [NSKeyedUnarchiver unarchiveObjectWithFile:[OLPrintOrder orderFilePath]];
+    [order cleanupDisk];
+    return order;
 }
 
 #pragma mark - OLAssetUploadRequestDelegate methods

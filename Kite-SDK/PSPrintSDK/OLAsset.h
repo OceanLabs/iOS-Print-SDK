@@ -90,6 +90,11 @@ extern NSString *const kOLMimeTypePNG;
  *  Optional method to cancel loading of the image (for example downloading from the network)
  */
 - (void)cancelAnyLoadingOfData;
+
+/**
+ *  Optional method to delete any cache files from disk
+ */
+- (void)deleteFromDisk;
 @end
 
 /**
@@ -220,5 +225,10 @@ extern NSString *const kOLMimeTypePNG;
  *  @return The PHAsset
  */
 - (PHAsset *)loadPHAsset;
+
+/**
+ *  Method to delete any cache files from disk
+ */
+- (void)deleteFromDisk;
 
 @end
