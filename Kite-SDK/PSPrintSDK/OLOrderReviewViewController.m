@@ -58,6 +58,13 @@
 static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 static const NSUInteger kTagAlertViewDeletePhoto = 98;
 
+@interface OLKitePrintSDK (Private)
+
++ (NSString *)adobeCreativeSDKClientSecret;
++ (NSString *)adobeCreativeSDKClientID;
+
+@end
+
 @interface OLPaymentViewController (Private)
 
 -(void)saveAndDismissReviewController;
@@ -498,10 +505,7 @@ UIViewControllerPreviewingDelegate>
     [self.editingPrintPhoto getImageWithProgress:NULL completion:^(UIImage *image){
         
 #ifdef OL_KITE_OFFER_ADOBE
-        static NSString* const CreativeSDKClientId = @"e14d465c1526434a9050d8cc16335f43";
-        static NSString* const CreativeSDKClientSecret = @"636960a9-664c-45c7-b8eb-8c1dd6254cba";
-        
-        [[AdobeUXAuthManager sharedManager] setAuthenticationParametersWithClientID:CreativeSDKClientId clientSecret:CreativeSDKClientSecret enableSignUp:true];
+        [[AdobeUXAuthManager sharedManager] setAuthenticationParametersWithClientID:[OLKitePrintSDK adobeCreativeSDKClientID] clientSecret:[OLKitePrintSDK adobeCreativeSDKClientSecret] enableSignUp:true];
         [AdobeImageEditorCustomization setCropToolPresets:@[@{kAdobeImageEditorCropPresetName:@"", kAdobeImageEditorCropPresetWidth:@1, kAdobeImageEditorCropPresetHeight:[NSNumber numberWithDouble:[self productAspectRatio]]}]];
         [AdobeImageEditorCustomization setCropToolCustomEnabled:NO];
         [AdobeImageEditorCustomization setCropToolInvertEnabled:NO];
