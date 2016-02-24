@@ -31,7 +31,7 @@
  * Insert your API keys here. These are found under your profile
  * by logging in to the developer portal at https://www.kite.ly
  **********************************************************************/
-static NSString *const kAPIKeySandbox = @"REPLACE_WITH_YOUR_API_KEY"; // replace with your Sandbox API key found under the Profile section in the developer portal
+static NSString *const kAPIKeySandbox = @"a45bf7f39523d31aa1ca4ecf64d422b4d810d9c4"; // replace with your Sandbox API key found under the Profile section in the developer portal
 static NSString *const kAPIKeyLive = @"REPLACE_WITH_YOUR_API_KEY"; // replace with your Live API key found under the Profile section in the developer portal
 
 static NSString *const kApplePayMerchantIDKey = @"merchant.ly.kite.sdk"; // Replace with your merchant ID
@@ -73,6 +73,15 @@ UINavigationControllerDelegate, OLKiteDelegate>
     
 #ifdef OL_KITE_OFFER_INSTAGRAM
     [OLKitePrintSDK setInstagramEnabledWithClientID:@"a6a09c92a14d488baa471e5209906d3d" secret:@"bfb814274cd041a5b7e06f32608e0e87" redirectURI:@"kite://instagram-callback"];
+#endif
+    
+#ifdef OL_KITE_OFFER_APPLE_PAY
+    [OLKitePrintSDK setApplePayMerchantID:kApplePayMerchantIDKey];
+    [OLKitePrintSDK setApplePayPayToString:kApplePayBusinessName];
+#endif
+    
+#ifdef OL_KITE_OFFER_ADOBE
+    [OLKitePrintSDK setAdobeCreativeSDKEnabledWithClientID:@"e14d465c1526434a9050d8cc16335f43" secret:@"636960a9-664c-45c7-b8eb-8c1dd6254cba"];
 #endif
 }
 
@@ -169,11 +178,6 @@ UINavigationControllerDelegate, OLKiteDelegate>
         if (![self isAPIKeySet]) return;
         [OLKitePrintSDK setAPIKey:[self apiKey] withEnvironment:[self environment]];
     }
-    
-#ifdef OL_KITE_OFFER_APPLE_PAY
-    [OLKitePrintSDK setApplePayMerchantID:kApplePayMerchantIDKey];
-    [OLKitePrintSDK setApplePayPayToString:kApplePayBusinessName];
-#endif
     
     OLKiteViewController *vc = [[OLKiteViewController alloc] initWithAssets:assets];
     vc.userEmail = @"";

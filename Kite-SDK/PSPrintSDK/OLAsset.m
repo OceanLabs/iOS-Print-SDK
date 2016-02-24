@@ -166,10 +166,6 @@ NSString *const kOLMimeTypeTIFF  = @"image/tiff";
     }
 }
 
-- (NSString *)description {
-    return [NSString stringWithFormat:@"[AssetID: %lld URL: %@]", self.assetId, self.imageURL];
-}
-
 + (OLAsset *)assetWithImageAsJPEG:(UIImage *)image {
     return [[OLAsset alloc] initWithImageData:UIImageJPEGRepresentation(image, 0.8) mimeType:kOLMimeTypeJPEG];
 }
@@ -523,6 +519,26 @@ NSString *const kOLMimeTypeTIFF  = @"image/tiff";
     }
     
     return self;
+}
+
+- (void)deleteFromDisk{
+    if (self.dataSource && [self.dataSource respondsToSelector:@selector(deleteFromDisk)]){
+        [self.dataSource deleteFromDisk];
+    }
+    else if(self.imageFilePath){
+        NSFileManager *fileManager = [NSFileManager defaultManager];
+        NSError *error;
+        BOOL fileExists = [fileManager fileExistsAtPath:self.imageFilePath];
+        if (fileExists)
+        {
+            BOOL success = [fileManager removeItemAtPath:self.imageFilePath error:&error];
+            if (!success) {
+#ifdef OL_VERBOSE
+                NSLog(@"Error: %@", [error localizedDescription]);
+#endif
+            }
+        }
+    }
 }
 
 @end

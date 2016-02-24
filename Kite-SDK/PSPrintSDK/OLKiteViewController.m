@@ -95,6 +95,7 @@ static CGFloat fadeTime = 0.3;
 
 @interface OLPrintOrder (Private)
 
+@property (weak, nonatomic) NSArray *userSelectedPhotos;
 - (void)saveOrder;
 + (id)loadOrder;
 
@@ -114,6 +115,7 @@ static CGFloat fadeTime = 0.3;
     if (!_printOrder){
         _printOrder = [[OLPrintOrder alloc] init];
     }
+    _printOrder.userSelectedPhotos = self.userSelectedPhotos;
     return _printOrder;
 }
 
