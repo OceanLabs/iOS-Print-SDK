@@ -546,7 +546,6 @@ UIViewControllerPreviewingDelegate>
         cropVc.modalPresentationStyle = UIModalPresentationOverCurrentContext;
         [cropVc setFullImage:image];
         cropVc.edits = self.editingPrintPhoto.edits;
-                cropVc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
         [self presentViewController:cropVc animated:NO completion:NULL];
 #endif
         
