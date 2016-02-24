@@ -17,7 +17,7 @@ Registering for an Apple Merchant ID
 
 First, you'll need to obtain an Apple Merchant ID. Start by heading to the Registering a Merchant ID page on the Apple Developer website.
 
-Fill out the form with a description and identifier. Your description is for your own records and can be modified in the future (we recommend just using the name of your app). The idenfitier must be unique (across all apps, not just yours) and can't be changed later (although you can always make another one). We recommend using `merchant.com.{your_app_name}`. Save this value for later use when developing your app.
+Fill out the form with a description and identifier. Your description is for your own records and can be modified in the future (we recommend just using the name of your app). The identifier must be unique (across all apps, not just yours) and can't be changed later (although you can always make another one). We recommend using `merchant.com.{your_app_name}`. Save this value for later use when developing your app.
 
 Creating a new Apple Pay certificate
 --------
@@ -38,7 +38,7 @@ You'll be prompted to upload a .certSigningRequest file you received from us. Ch
 SDK Integration
 --------
 
-Finally 
+Finally
 
 ```obj-c
 #ifdef OL_KITE_OFFER_APPLE_PAY
@@ -47,7 +47,6 @@ Finally
 #endif
 ```
 
-Finally ensure ApplePay is enabled in the Capabilities tab of your app build target. 
+Finally ensure ApplePay is enabled in the Capabilities tab of your app build target.
 
 Note that if you integrated the SDK by any means other than CocoaPods you'll need to define the `OL_KITE_OFFER_APPLE_PAY=1` preprocessor macro in the build settings of your application.
-

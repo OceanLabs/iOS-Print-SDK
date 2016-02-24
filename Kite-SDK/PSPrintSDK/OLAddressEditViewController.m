@@ -246,8 +246,10 @@ static const NSUInteger kTagTextField = 99;
             tf.attributedPlaceholder = [[NSAttributedString alloc] initWithString:NSLocalizedStringFromTableInBundle(@"First Name", @"KitePrintSDK", [NSBundle mainBundle], @"") attributes:@{NSForegroundColorAttributeName : [UIColor colorWithRed:108.0/255.0 green:108.0/255.0 blue:108.0/255.0 alpha:1]}];
             self.textFieldFirstName = tf;
             
-            self.textFieldLastName = [[UITextField alloc] initWithFrame:CGRectMake(((cell.frame.size.width - 20) / 2.0)+20, 0, (cell.frame.size.width - 20) / 2.0, cell.frame.size.height)];
-            [cell.contentView addSubview:self.textFieldLastName];
+            if (!self.textFieldLastName){
+                self.textFieldLastName = [[UITextField alloc] initWithFrame:CGRectMake(((cell.frame.size.width - 20) / 2.0)+20, 0, (cell.frame.size.width - 20) / 2.0, cell.frame.size.height)];
+                [cell.contentView addSubview:self.textFieldLastName];
+            }
             self.textFieldLastName.text = self.address.recipientLastName;
             self.textFieldLastName.returnKeyType = UIReturnKeyNext;
             self.textFieldLastName.adjustsFontSizeToFitWidth = YES;
