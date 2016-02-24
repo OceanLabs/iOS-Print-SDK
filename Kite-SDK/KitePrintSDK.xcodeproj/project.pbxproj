@@ -28,7 +28,6 @@
 		2E14D2D11C2AE9AD00F35403 /* OLImagePreviewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E14D2D01C2AE9AD00F35403 /* OLImagePreviewViewController.m */; };
 		2E14D2D21C2AE9AD00F35403 /* OLImagePreviewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E14D2D01C2AE9AD00F35403 /* OLImagePreviewViewController.m */; };
 		2E2632C21B97336700C7D879 /* KitePrintSDKUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E2632C11B97336700C7D879 /* KitePrintSDKUITests.m */; };
-		2E31C00A1C7B20F1009C1E42 /* AdobeCreativeSDKImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E31C0091C7B20F1009C1E42 /* AdobeCreativeSDKImage.framework */; };
 		2E31C00B1C7B2128009C1E42 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E24453101BFD2C460086BF03 /* Accelerate.framework */; };
 		2E31C00D1C7B2139009C1E42 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E31C00C1C7B2139009C1E42 /* CoreData.framework */; };
 		2E31C00F1C7B218D009C1E42 /* libsqlite3.0.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E31C00E1C7B218D009C1E42 /* libsqlite3.0.tbd */; };
@@ -39,9 +38,6 @@
 		2E31C0181C7B2241009C1E42 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E31C0171C7B2240009C1E42 /* StoreKit.framework */; };
 		2E31C0191C7B2253009C1E42 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E244531C1BFD2C8C0086BF03 /* MobileCoreServices.framework */; };
 		2E31C01B1C7B2267009C1E42 /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E31C01A1C7B2267009C1E42 /* libc++.tbd */; };
-		2E31C01F1C7B3AE9009C1E42 /* AdobeCreativeSDKCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E31C01E1C7B3AE9009C1E42 /* AdobeCreativeSDKCore.framework */; };
-		2E31C0211C7B3D51009C1E42 /* AdobeCreativeSDKCoreResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 2E31C0201C7B3D51009C1E42 /* AdobeCreativeSDKCoreResources.bundle */; };
-		2E31C0231C7B4004009C1E42 /* AdobeCreativeSDKImageResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 2E31C0221C7B4004009C1E42 /* AdobeCreativeSDKImageResources.bundle */; };
 		2E482B7A1BEB4C7D007460EA /* OLStripeCard.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E482B781BEB4C7D007460EA /* OLStripeCard.m */; };
 		2E482B7B1BEB4C7D007460EA /* OLStripeCard.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E482B781BEB4C7D007460EA /* OLStripeCard.m */; };
 		2E4DF45E1C0F150400EA66FE /* DogsAssetCollectionDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E4DF45D1C0F150400EA66FE /* DogsAssetCollectionDataSource.m */; };
@@ -584,8 +580,6 @@
 		2E31C0171C7B2240009C1E42 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		2E31C01A1C7B2267009C1E42 /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
 		2E31C01E1C7B3AE9009C1E42 /* AdobeCreativeSDKCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AdobeCreativeSDKCore.framework; sourceTree = "<group>"; };
-		2E31C0201C7B3D51009C1E42 /* AdobeCreativeSDKCoreResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = AdobeCreativeSDKCoreResources.bundle; path = PSPrintSDK/AdobeCreativeSDKCore.framework/Versions/A/Resources/AdobeCreativeSDKCoreResources.bundle; sourceTree = "<group>"; };
-		2E31C0221C7B4004009C1E42 /* AdobeCreativeSDKImageResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = AdobeCreativeSDKImageResources.bundle; path = PSPrintSDK/AdobeCreativeSDKImage.framework/Versions/A/Resources/AdobeCreativeSDKImageResources.bundle; sourceTree = "<group>"; };
 		2E333CC91BC7D1850092E42A /* OLApparelPrintJob.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLApparelPrintJob.m; sourceTree = "<group>"; };
 		2E333CCB1BC7D19E0092E42A /* OLApparelPrintJob.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLApparelPrintJob.h; sourceTree = "<group>"; };
 		2E38C0CC1AD5206F008BC28A /* PostcardBackView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PostcardBackView.xib; sourceTree = "<group>"; };
@@ -1040,7 +1034,6 @@
 			files = (
 				2E31C01B1C7B2267009C1E42 /* libc++.tbd in Frameworks */,
 				2E31C0191C7B2253009C1E42 /* MobileCoreServices.framework in Frameworks */,
-				2E31C01F1C7B3AE9009C1E42 /* AdobeCreativeSDKCore.framework in Frameworks */,
 				2E31C0181C7B2241009C1E42 /* StoreKit.framework in Frameworks */,
 				2E31C0161C7B2237009C1E42 /* QuartzCore.framework in Frameworks */,
 				2E31C0141C7B2231009C1E42 /* OpenGLES.framework in Frameworks */,
@@ -1055,7 +1048,6 @@
 				2EADD8511BE79D6D0051CD31 /* CoreGraphics.framework in Frameworks */,
 				2EADD8521BE79D6D0051CD31 /* UIKit.framework in Frameworks */,
 				2EADD8531BE79D6D0051CD31 /* Foundation.framework in Frameworks */,
-				2E31C00A1C7B20F1009C1E42 /* AdobeCreativeSDKImage.framework in Frameworks */,
 				2EADD8541BE79D6D0051CD31 /* libPods.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1484,8 +1476,6 @@
 		CD73BF5F186215790009DE03 = {
 			isa = PBXGroup;
 			children = (
-				2E31C0221C7B4004009C1E42 /* AdobeCreativeSDKImageResources.bundle */,
-				2E31C0201C7B3D51009C1E42 /* AdobeCreativeSDKCoreResources.bundle */,
 				2E6C20F31BF375EE00109081 /* KiteSDK-Demo.entitlements */,
 				CD73BFA01862FA210009DE03 /* Sample App */,
 				CD73BF71186215790009DE03 /* Kite Print SDK */,
@@ -2466,8 +2456,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2E31C0231C7B4004009C1E42 /* AdobeCreativeSDKImageResources.bundle in Resources */,
-				2E31C0211C7B3D51009C1E42 /* AdobeCreativeSDKCoreResources.bundle in Resources */,
 				2E6E605D1C50384C00829BB7 /* KitePrintSDK.strings in Resources */,
 				2E6E60661C5038AD00829BB7 /* OLKiteStoryboard.storyboard in Resources */,
 				2EADD8571BE79D6D0051CD31 /* PostcardBackView.xib in Resources */,
@@ -3162,10 +3150,9 @@
 					OL_KITE_OFFER_PAYPAL,
 					OL_KITE_VERBOSE,
 					OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS,
-					OL_KITE_OFFER_ADOBE,
 				);
 				INFOPLIST_FILE = "KitePrintSDK-Dev-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -3283,7 +3270,7 @@
 					OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS,
 				);
 				INFOPLIST_FILE = "KitePrintSDK-Dev-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = (
 					"$(inherited)",

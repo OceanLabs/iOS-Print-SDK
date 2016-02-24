@@ -166,10 +166,6 @@ NSString *const kOLMimeTypeTIFF  = @"image/tiff";
     }
 }
 
-- (NSString *)description {
-    return [NSString stringWithFormat:@"[AssetID: %lld URL: %@]", self.assetId, self.imageURL];
-}
-
 + (OLAsset *)assetWithImageAsJPEG:(UIImage *)image {
     return [[OLAsset alloc] initWithImageData:UIImageJPEGRepresentation(image, 0.8) mimeType:kOLMimeTypeJPEG];
 }

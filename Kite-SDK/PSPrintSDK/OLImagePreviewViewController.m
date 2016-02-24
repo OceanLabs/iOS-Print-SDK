@@ -18,8 +18,12 @@
 
 - (void)viewDidLoad{
     [super viewDidLoad];
-    
     self.imageView.image = self.image;
+}
+
+- (void)setImage:(UIImage *)image{
+    _image = image;
+    self.imageView.image = image;
 }
 
 @end

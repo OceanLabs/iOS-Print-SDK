@@ -46,6 +46,7 @@ typedef enum {
 - (void)dataLengthWithCompletionHandler:(GetDataLengthHandler)handler;
 - (void)dataWithCompletionHandler:(GetDataHandler)handler;
 @property (nonatomic, readonly) OLAssetType assetType;
+@property (nonatomic, strong) NSString *imageFilePath;
 @property (nonatomic, strong) NSURL *imageURL; // if this is set no image data is going to be uploaded, rather we will just pass the url to the server and it can fetch the image when printing
 @end
 

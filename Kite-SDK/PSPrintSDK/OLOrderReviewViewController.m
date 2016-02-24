@@ -59,10 +59,10 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 static const NSUInteger kTagAlertViewDeletePhoto = 98;
 
 @interface OLKitePrintSDK (Private)
-
+#ifdef OL_KITE_OFFER_ADOBE
 + (NSString *)adobeCreativeSDKClientSecret;
 + (NSString *)adobeCreativeSDKClientID;
-
+#endif
 @end
 
 @interface OLPaymentViewController (Private)
@@ -402,6 +402,19 @@ UIViewControllerPreviewingDelegate>
 }
 
 - (void)previewingContext:(id<UIViewControllerPreviewing>)previewingContext commitViewController:(UIViewController *)viewControllerToCommit{
+#ifdef OL_KITE_OFFER_ADOBE
+    [[AdobeUXAuthManager sharedManager] setAuthenticationParametersWithClientID:[OLKitePrintSDK adobeCreativeSDKClientID] clientSecret:[OLKitePrintSDK adobeCreativeSDKClientSecret] enableSignUp:true];
+    [AdobeImageEditorCustomization setCropToolPresets:@[@{kAdobeImageEditorCropPresetName:@"", kAdobeImageEditorCropPresetWidth:@1, kAdobeImageEditorCropPresetHeight:[NSNumber numberWithDouble:[self productAspectRatio]]}]];
+    [AdobeImageEditorCustomization setCropToolCustomEnabled:NO];
+    [AdobeImageEditorCustomization setCropToolInvertEnabled:NO];
+    [AdobeImageEditorCustomization setCropToolOriginalEnabled:NO];
+    
+    [self.editingPrintPhoto getImageWithProgress:NULL completion:^(UIImage *image){
+        AdobeUXImageEditorViewController *editorController = [[AdobeUXImageEditorViewController alloc] initWithImage:image];
+        [editorController setDelegate:self];
+        [self presentViewController:editorController animated:YES completion:nil];
+    }];
+#else
     OLScrollCropViewController *cropVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLScrollCropViewController"];
     cropVc.enableCircleMask = self.product.productTemplate.templateUI == kOLTemplateUICircle;
     cropVc.delegate = self;
@@ -413,11 +426,12 @@ UIViewControllerPreviewingDelegate>
         cropVc.edits = self.editingPrintPhoto.edits;
         cropVc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
         [self presentViewController:cropVc animated:YES completion:NULL];
-        
-#ifndef OL_NO_ANALYTICS
-        [OLAnalytics trackReviewScreenEnteredCropScreenForProductName:self.product.productTemplate.name];
-#endif
     }];
+#endif
+    
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackReviewScreenEnteredCropScreenForProductName:self.product.productTemplate.name];
+#endif
 }
 
 #pragma mark Button Actions
@@ -756,6 +770,7 @@ UIViewControllerPreviewingDelegate>
 #endif
 }
 
+#ifdef OL_KITE_OFFER_ADOBE
 - (void)photoEditor:(AdobeUXImageEditorViewController *)editor finishedWithImage:(UIImage *)image{
     [self.editingPrintPhoto unloadImage];
     
@@ -793,6 +808,7 @@ UIViewControllerPreviewingDelegate>
 - (void)photoEditorCanceled:(AdobeUXImageEditorViewController *)editor{
     [editor dismissViewControllerAnimated:YES completion:NULL];
 }
+#endif
 
 #pragma mark - Autorotate and Orientation Methods
 // Currently here to disable landscape orientations and rotation on iOS 7. When support is dropped, these can be deleted.
