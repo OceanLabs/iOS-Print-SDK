@@ -571,7 +571,6 @@
 		2E2632C31B97336700C7D879 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2E2E61E51C21826D005CB729 /* UIViewController+OLMethods.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIViewController+OLMethods.h"; path = "PSPrintSDK/Categories/UIViewController+OLMethods.h"; sourceTree = "<group>"; };
 		2E2E61E61C21826D005CB729 /* UIViewController+OLMethods.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIViewController+OLMethods.m"; path = "PSPrintSDK/Categories/UIViewController+OLMethods.m"; sourceTree = "<group>"; };
-		2E31C0091C7B20F1009C1E42 /* AdobeCreativeSDKImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AdobeCreativeSDKImage.framework; sourceTree = "<group>"; };
 		2E31C00C1C7B2139009C1E42 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		2E31C00E1C7B218D009C1E42 /* libsqlite3.0.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.0.tbd; path = usr/lib/libsqlite3.0.tbd; sourceTree = SDKROOT; };
 		2E31C0101C7B219E009C1E42 /* libz.1.2.5.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.1.2.5.tbd; path = usr/lib/libz.1.2.5.tbd; sourceTree = SDKROOT; };
@@ -579,7 +578,6 @@
 		2E31C0151C7B2237009C1E42 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		2E31C0171C7B2240009C1E42 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		2E31C01A1C7B2267009C1E42 /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
-		2E31C01E1C7B3AE9009C1E42 /* AdobeCreativeSDKCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AdobeCreativeSDKCore.framework; sourceTree = "<group>"; };
 		2E333CC91BC7D1850092E42A /* OLApparelPrintJob.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLApparelPrintJob.m; sourceTree = "<group>"; };
 		2E333CCB1BC7D19E0092E42A /* OLApparelPrintJob.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLApparelPrintJob.h; sourceTree = "<group>"; };
 		2E38C0CC1AD5206F008BC28A /* PostcardBackView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PostcardBackView.xib; sourceTree = "<group>"; };
@@ -2022,8 +2020,6 @@
 		E29C862E1BE3C4640041D4CF /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				2E31C01E1C7B3AE9009C1E42 /* AdobeCreativeSDKCore.framework */,
-				2E31C0091C7B20F1009C1E42 /* AdobeCreativeSDKImage.framework */,
 				2E6E605F1C50384C00829BB7 /* KitePrintSDK.strings */,
 				E22963951C43DF29002A90CA /* CTAssetsPickerController.bundle */,
 				E29C84161BE2877A0041D4CF /* SVProgressHUD.bundle */,
