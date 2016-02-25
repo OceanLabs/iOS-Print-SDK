@@ -163,6 +163,10 @@ Logging in to our [Developer Dashboard](https://www.kite.ly) allow's you to dyna
 ## ApplePay
 See our [ApplePay setup documentation](Kite-SDK/docs/applepay.md) if you want to enable checkout via ApplePay.
 
+## Push Notifications
+
+Push notifications are a powerful marketing tool that if used effectively can increase both user engagement and customer life time value by driving more sales within your application. Kite supports sending push notifications to your customers, see our [Push Notification setup documentation](Kite-SDK/docs/push_notifications.md). 
+
 ## SDK Entry Points
 Depending on your use case you might want to launch to a specific product, or even bypass the product selection/creation process entirely and jump straight to the checkout/payment journey. See our [SDK entry point documentation](Kite-SDK/docs/entry_points.md) for more details.
 

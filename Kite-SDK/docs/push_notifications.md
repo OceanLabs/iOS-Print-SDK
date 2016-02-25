@@ -3,17 +3,6 @@ Configuring Push Notifications
 
 Push notifications are a powerful marketing tool that if used effectively can increase both user engagement and customer life time value by driving more sales within your application. Kite supports sending push notifications to your customers with a bit of configuration.
 
-Prerequisites
---------
-1. [Create a print order](create_print_order.md) representing the product(s) you wish to have printed and posted
-2. [Set the shipping address](shipping.md) to which the order will be delivered
-
-Enabling Push Notifications
---------
-First enable push notifications in your Xcode project. In the Capabilities pane, if Push Notifications isn’t enabled, click the switch in the Push Notifications section.
-
-![Enabling Notifications in Xcode](4_enablepushnotifications_2x.png)
-
 Creating a Universal Push Notification Client SSL Certificate
 --------
 
@@ -61,7 +50,11 @@ Updating your app to send Push Notifications
 --------
 Finally we need to tell our app to register for remote notifications:
 
-1. Register for remote notifications in your `AppDelegate`, be sure to set your Kite API Key & Environment first.
+1. First enable push notifications in your Xcode project. In the Capabilities pane, if Push Notifications isn’t enabled, click the switch in the Push Notifications section.
+
+    ![Enabling Notifications in Xcode](4_enablepushnotifications_2x.png)
+
+2. Register for remote notifications in your `AppDelegate`, be sure to set your Kite API Key & Environment first.
 
  
    ```obj-c
@@ -82,10 +75,15 @@ Finally we need to tell our app to register for remote notifications:
         [OLKitePrintSDK addPushDeviceToken:deviceToken];
     }
     ```
-}
+
+3. Run your application and opt in to receive push notifications. Head over to the [customers section](https://www.kite.ly/customers/) of the dashboard where you should now see an entry (probably anonymous) for yourself. If you don't see an entry check you're dashboard environment (Test / Live) matches the environment you're passing to the SDK -  `kOLKitePrintSDKEnvironmentSandbox` / `kOLKitePrintSDKEnvironmentLive`
 
 
 Sending your first notification
 --------
+
+Head over to the [customers section](https://www.kite.ly/customers/) of the dashboard to begin sending push notifications. The following video provides an introduction:
+
+[![Preview](https://raw.githubusercontent.com/OceanLabs/iOS-Print-SDK/master/Kite-SDK/docs/keychain_export.png)](https://vimeo.com/156610019)
 
 
