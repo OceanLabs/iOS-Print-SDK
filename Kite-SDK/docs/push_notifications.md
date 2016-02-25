@@ -84,6 +84,6 @@ Sending your first notification
 
 Head over to the [customers section](https://www.kite.ly/customers/) of the dashboard to begin sending push notifications. The following video provides an introduction:
 
-[![Preview](https://raw.githubusercontent.com/OceanLabs/iOS-Print-SDK/master/Kite-SDK/docs/keychain_export.png)](https://vimeo.com/156610019)
+[![Preview](https://raw.githubusercontent.com/OceanLabs/iOS-Print-SDK/master/Kite-SDK/docs/push_notifications.png)](https://vimeo.com/156610019)
 
 
