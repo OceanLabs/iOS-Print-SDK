@@ -163,9 +163,6 @@ UIViewControllerPreviewingDelegate, OLScrollCropViewControllerDelegate, UIAction
     self.galleryButton.title = NSLocalizedString(@"Add Photos", @"");
     self.galleryButton.mainColor = [UIColor colorWithRed:0.227 green:0.706 blue:0.600 alpha:1.000];
     
-    self.navigationItem.titleView = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100, 44)];
-    [(UILabel *)self.navigationItem.titleView setTextAlignment:NSTextAlignmentCenter];
-    [(UILabel *)self.navigationItem.titleView setFont:[UIFont preferredFontForTextStyle:UIFontTextStyleHeadline]];
     self.userDisabledPhotos = [[NSMutableArray alloc] init];
     
     self.rotationSize = CGSizeZero;
@@ -278,16 +275,15 @@ UIViewControllerPreviewingDelegate, OLScrollCropViewControllerDelegate, UIAction
     }
     
     if (self.userSelectedPhotos.count == 0) {
-        [(UILabel *)self.navigationItem.titleView setText:NSLocalizedString(@"Choose Photos", @"")];
-        [(UILabel *)self.navigationItem.titleView sizeToFit];
+        self.title = NSLocalizedString(@"Choose Photos", @"");
     } else {
         if (self.product.quantityToFulfillOrder > 1){
             NSUInteger numOrders = 1 + (MAX(0, self.userSelectedPhotos.count - 1 + [self totalNumberOfExtras]) / self.product.quantityToFulfillOrder);
             NSUInteger quanityToFulfilOrder = numOrders * self.product.quantityToFulfillOrder;
-            [(UILabel *)self.navigationItem.titleView setText:[NSString stringWithFormat:@"%lu / %lu", (unsigned long)self.userSelectedPhotos.count - self.userDisabledPhotos.count + [self totalNumberOfExtras], (unsigned long)quanityToFulfilOrder]];
+           self.title = [NSString stringWithFormat:@"%lu / %lu", (unsigned long)self.userSelectedPhotos.count - self.userDisabledPhotos.count + [self totalNumberOfExtras], (unsigned long)quanityToFulfilOrder];
         }
         else{
-            [(UILabel *)self.navigationItem.titleView setText:[NSString stringWithFormat:@"%lu", (unsigned long)self.userSelectedPhotos.count - self.userDisabledPhotos.count]];
+            self.title = [NSString stringWithFormat:@"%lu", (unsigned long)self.userSelectedPhotos.count - self.userDisabledPhotos.count];
         }
     }
     
