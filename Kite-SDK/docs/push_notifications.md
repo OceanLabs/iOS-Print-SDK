@@ -61,7 +61,7 @@ Updating your app to send Push Notifications
 --------
 Finally we need to tell our app to register for remote notifications:
 
-1. Register for remote notifications, be sure to set your Kite API Key & Environment first.
+1. Register for remote notifications in your `AppDelegate`, be sure to set your Kite API Key & Environment first.
 
  
    ```obj-c
@@ -74,6 +74,15 @@ Finally we need to tell our app to register for remote notifications:
         return YES;
     }
     ```
+
+    Next handle the callback when the user opts in to receiving push notifications. Pass the `deviceToken` you receive to the Kite API:    
+    
+    ```obj-c
+    - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
+        [OLKitePrintSDK addPushDeviceToken:deviceToken];
+    }
+    ```
+}
 
 
 Sending your first notification
