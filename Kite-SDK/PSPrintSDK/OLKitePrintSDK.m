@@ -68,10 +68,10 @@ static NSString *applePayMerchantID = nil;
 static NSString *applePayPayToString = nil;
 static OLKitePrintSDKEnvironment environment;
 
-static NSString *const kOLAPIEndpointLive = @"http://192.168.1.17:5000";
-static NSString *const kOLAPIEndpointSandbox = @"http://192.168.1.17:5000";
-static NSString *const kOLStagingEndpointLive = @"http://192.168.1.17:5000";
-static NSString *const kOLStagingEndpointSandbox = @"http://192.168.1.17:5000";
+static NSString *const kOLAPIEndpointLive = @"https://api.kite.ly";
+static NSString *const kOLAPIEndpointSandbox = @"https://api.kite.ly";
+static NSString *const kOLStagingEndpointLive = @"https://staging.kite.ly";
+static NSString *const kOLStagingEndpointSandbox = @"https://staging.kite.ly";
 static NSString *const kOLPayPalClientIdLive = @"ASYVBBCHF_KwVUstugKy4qvpQaPlUeE_5beKRJHpIP2d3SA_jZrsaUDTmLQY";
 static NSString *const kOLPayPalClientIdSandbox = @"AcEcBRDxqcCKiikjm05FyD4Sfi4pkNP98AYN67sr3_yZdBe23xEk0qhdhZLM";
 static NSString *const kOLPayPalRecipientEmailLive = @"hello@kite.ly";
