@@ -38,6 +38,7 @@
 #import "OLPaymentViewController.h"
 #import "OLNavigationController.h"
 #import "OLKiteABTesting.h"
+#import "UIView+RoundRect.h"
 
 @interface OLKiteViewController (Private)
 @property (strong, nonatomic) OLPrintOrder *printOrder;
@@ -69,15 +70,20 @@
             count += [job extraCopies];
         }
         
-        UILabel *qtyLabel = [[UILabel alloc] initWithFrame:CGRectMake(22, 12.5, 10, 10)];
+        UILabel *qtyLabel = [[UILabel alloc] initWithFrame:CGRectMake(20.5, 11, 13, 13)];
         qtyLabel.font = [UIFont systemFontOfSize:9];
         qtyLabel.textAlignment = NSTextAlignmentCenter;
         qtyLabel.textColor = [UIColor whiteColor];
         qtyLabel.text = [NSString stringWithFormat:@"%lu", (unsigned long)count];
         qtyLabel.minimumScaleFactor = 0.5;
         qtyLabel.adjustsFontSizeToFitWidth = YES;
+        qtyLabel.backgroundColor = [UIColor colorWithRed:0.231 green:0.686 blue:0.855 alpha:1.000];
+        [qtyLabel makeRoundRectWithRadius:6.5];
         
         [basketButton addSubview:qtyLabel];
+        if ([basketButton.tintColor isEqual:[UIColor colorWithRed:0.0 green:122.0/255.0 blue:1.0 alpha:1.0]]){
+            basketButton.tintColor = [UIColor colorWithRed:0.349 green:0.361 blue:0.365 alpha:1.000];
+        }
     }
     else{
         [basketButton setImage:[UIImage imageNamedInKiteBundle:@"cart-empty"] forState:UIControlStateNormal];
