@@ -73,6 +73,7 @@
 #import "OLPosterViewController.h"
 #import "OLFrameOrderReviewViewController.h"
 #import "OLAsset+Private.h"
+#import "UIViewController+OLMethods.h"
 
 #ifdef OL_KITE_OFFER_PAYPAL
 #ifdef COCOAPODS
@@ -109,6 +110,7 @@ static BOOL haveLoadedAtLeastOnce = NO;
 @interface OLKiteViewController ()
 
 @property (strong, nonatomic) OLPrintOrder *printOrder;
+@property (strong, nonatomic) NSMutableArray *userSelectedPhotos;
 
 @end
 
@@ -367,6 +369,15 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
+    
+    if ([self isPushed]){
+        if ([OLKitePrintSDK environment] == kOLKitePrintSDKEnvironmentSandbox){
+            self.parentViewController.title = NSLocalizedStringFromTableInBundle(@"Payment (TEST)", @"KitePrintSDK", [OLConstants bundle], @"");
+        }
+        else{
+            self.parentViewController.title = NSLocalizedStringFromTableInBundle(@"Payment", @"KitePrintSDK", [OLConstants bundle], @"");
+        }
+    }
     
     if (!haveLoadedAtLeastOnce){
         haveLoadedAtLeastOnce = YES;
@@ -729,7 +740,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             }
         }
         
-        NSDecimalNumber *numUnitsInJob = [[NSDecimalNumber alloc] initWithFloat:ceilf(numberOfPhotos / (float) MAX(template.quantityPerSheet, 1))];
+        NSDecimalNumber *numUnitsInJob = [job numberOfItemsInJob];
         
         expectedCost = [expectedCost decimalNumberByAdding:[unitCost decimalNumberByMultiplyingBy:[NSDecimalNumber decimalNumberWithString:[NSString stringWithFormat:@"%ld", (long)([job extraCopies] + 1)*[numUnitsInJob integerValue]]]]];
     }
@@ -794,6 +805,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         self.transitionBlockOperation = [[NSBlockOperation alloc] init];
         __weak OLPaymentViewController *welf = self;
         [self.transitionBlockOperation addExecutionBlock:^{
+            [[OLKiteUtils kiteVcForViewController:welf].userSelectedPhotos removeAllObjects];
             if ([welf.delegate respondsToSelector:@selector(shouldDismissPaymentViewControllerAfterPayment)] && self.delegate.shouldDismissPaymentViewControllerAfterPayment){
                 [(UITableView *)[(OLReceiptViewController *)welf.delegate tableView] reloadData];
                 [welf.navigationController.presentingViewController dismissViewControllerAnimated:YES completion:NULL];
@@ -813,8 +825,6 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         if ([self isApplePayAvailable] && self.applePayDismissOperation){
             [self.transitionBlockOperation addDependency:self.applePayDismissOperation];
         }
-        
-        [[NSNotificationCenter defaultCenter] postNotificationName:kOLNotificationPrintOrderSubmission object:self userInfo:@{kOLKeyUserInfoPrintOrder: self.printOrder}];
         
         [SVProgressHUD dismiss];
         [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
@@ -900,8 +910,11 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             handlerUsed = YES;
         }
         
+        if (self.printOrder.printed){
+            [[NSNotificationCenter defaultCenter] postNotificationName:kOLNotificationPrintOrderSubmission object:self userInfo:@{kOLKeyUserInfoPrintOrder: self.printOrder}];
 #ifndef OL_NO_ANALYTICS
-        [OLAnalytics trackOrderSubmission:self.printOrder];
+            [OLAnalytics trackOrderSubmission:self.printOrder];
+        }
 #endif
         
         if (!self.presentedViewController){
@@ -914,6 +927,14 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     // Try as best we can to go to the beginning of the app
     NSMutableArray *navigationStack = self.navigationController.viewControllers.mutableCopy;
     if (navigationStack.count > 1) {
+        NSMutableArray *viewControllers = [[NSMutableArray alloc] init];
+        for (UIViewController *vc in self.navigationController.viewControllers){
+            [viewControllers addObject:vc];
+            if ([vc isKindOfClass:[OLKiteViewController class]]){
+                [self.navigationController setViewControllers:viewControllers animated:YES];
+                break;
+            }
+        }
         [self.navigationController popToRootViewControllerAnimated:YES];
     }
     else if (navigationStack.firstObject == self){
@@ -1042,6 +1063,14 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             }
         }
     }];
+}
+
+- (BOOL)showPhoneEntryField {
+    if ([self.kiteDelegate respondsToSelector:@selector(shouldShowPhoneEntryOnCheckoutScreen)]) {
+        return [self.kiteDelegate shouldShowPhoneEntryOnCheckoutScreen]; // delegate overrides whatever the A/B test might say.
+    }
+    
+    return [OLKiteABTesting sharedInstance].requirePhoneNumber;
 }
 
 #pragma mark Button Actions
@@ -1310,7 +1339,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         [lineItems addObject:[PKPaymentSummaryItem summaryItemWithLabel:[OLKitePrintSDK applePayPayToString] amount:[cost totalCostInCurrency:self.printOrder.currencyCode]]];
         paymentRequest.paymentSummaryItems = lineItems;
         NSUInteger requiredFields = PKAddressFieldPostalAddress | PKAddressFieldName | PKAddressFieldEmail;
-        if ([OLKiteABTesting sharedInstance].requirePhoneNumber){
+        if ([self showPhoneEntryField]){
             requiredFields = requiredFields | PKAddressFieldPhone;
         }
         paymentRequest.requiredShippingAddressFields = requiredFields;
@@ -1447,6 +1476,8 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         [(OLCheckoutViewController *)vc navigationItem].rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:vc action:@selector(onButtonDoneClicked)];
         [vc safePerformSelector:@selector(setUserEmail:) withObject:self.userEmail];
         [vc safePerformSelector:@selector(setUserPhone:) withObject:self.userPhone];
+        [vc safePerformSelector:@selector(setDelegate:) withObject:self.delegate];
+        [vc safePerformSelector:@selector(setKiteDelegate:) withObject:self.kiteDelegate];
         
         nvc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
         [self presentViewController:nvc animated:YES completion:NULL];
@@ -1627,6 +1658,9 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     if (([kiteDelegate respondsToSelector:@selector(shouldShowContinueShoppingButton)] && ![kiteDelegate shouldShowContinueShoppingButton]) || [OLKiteABTesting sharedInstance].launchedWithPrintOrder){
         return 1;
     }
+    else if (self.navigationController.viewControllers.firstObject == self){
+        return 1;
+    }
     else{
         return 2;
     }
@@ -1674,7 +1708,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         
         OLProduct *product = [OLProduct productWithTemplateId:[job templateId]];
         
-        if (product.productTemplate.templateUI == kOLTemplateUINA || product.productTemplate.templateUI == kOLTemplateUINonCustomizable){
+        if (product.productTemplate.templateUI == kOLTemplateUINA || product.productTemplate.templateUI == kOLTemplateUINonCustomizable || [OLKiteUtils assetArrayContainsPDF:[job assetsForUploading]]){
             editButton.hidden = YES;
             largeEditButton.hidden = YES;
         }
@@ -1689,18 +1723,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         
         quantityLabel.text = [NSString stringWithFormat:@"%ld", (long)[job extraCopies]+1];
 
-        float numberOfPhotos = [job assetsForUploading].count;
-        if (product.productTemplate.templateUI == kOLTemplateUIPhotobook){
-            // Front cover photo should count towards total photos
-            if ([(OLPhotobookPrintJob *)job frontCover]){
-                numberOfPhotos--;
-            }
-        }
-        
-        NSDecimalNumber *numUnitsInJob = [[NSDecimalNumber alloc] initWithFloat:ceilf(numberOfPhotos / (float) product.quantityToFulfillOrder)];
-        if (product.productTemplate.templateUI == kOLTemplateUINonCustomizable){
-            numUnitsInJob = [NSDecimalNumber decimalNumberWithString:@"1"];
-        }
+        NSDecimalNumber *numUnitsInJob = [job numberOfItemsInJob];
         
         priceLabel.text = [[numUnitsInJob decimalNumberByMultiplyingBy:[[product unitCostDecimalNumber] decimalNumberByMultiplyingBy:[NSDecimalNumber decimalNumberWithString:[NSString stringWithFormat:@"%ld", (long)[job extraCopies]+1]]]] formatCostForCurrencyCode:self.printOrder.currencyCode];
         

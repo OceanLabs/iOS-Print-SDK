@@ -56,7 +56,8 @@ static NSString *const kKeyPHAssetLocalId = @"co.oceanlabs.pssdk.kKeyPHAssetLoca
 
 NSString *const kOLMimeTypeJPEG = @"image/jpeg";
 NSString *const kOLMimeTypePNG  = @"image/png";
-NSString *const kOLMimeTypeTIFF  = @"image/tiff";
+NSString *const kOLMimeTypeTIFF = @"image/tiff";
+NSString *const kOLMimeTypePDF = @"application/pdf";
 
 @interface OLAsset ()
 @property (nonatomic, strong) NSString *imageFilePath;
@@ -70,7 +71,7 @@ NSString *const kOLMimeTypeTIFF  = @"image/tiff";
 
 @implementation OLAsset
 
-- (id)initWithImageData:(NSData *)data mimeType:(NSString *)mimeType {
+- (instancetype)initWithImageData:(NSData *)data mimeType:(NSString *)mimeType {
     if (self = [super init]) {
         NSAssert(data != nil, @"image data must be non nil");
         NSAssert(mimeType != nil, @"mime type must be non nil");
@@ -81,7 +82,7 @@ NSString *const kOLMimeTypeTIFF  = @"image/tiff";
     return self;
 }
 
-- (id)initWithImageFilePath:(NSString *)imageFilePath {
+- (instancetype)initWithImageFilePath:(NSString *)imageFilePath {
     if (self = [super init]) {
         self.imageFilePath = imageFilePath;
         NSString *lower = imageFilePath.lowercaseString;
@@ -91,15 +92,17 @@ NSString *const kOLMimeTypeTIFF  = @"image/tiff";
             _mimeType = kOLMimeTypePNG;
         } else if ([lower hasSuffix:@".tif"] || [lower hasSuffix:@".tiff"]) {
             _mimeType = kOLMimeTypeTIFF;
+        } else if ([lower hasSuffix:@".pdf"]){
+            _mimeType = kOLMimeTypePDF;
         } else {
-            NSAssert(NO, @"Only JPEG, PNG & TIFF images are supported");
+            NSAssert(NO, @"Only JPEG, PNG & TIFF images and pre-rendered PDF files are supported");
         }
     }
     
     return self;
 }
 
-- (id)initWithALAsset:(ALAsset *)asset {
+- (instancetype)initWithALAsset:(ALAsset *)asset {
     if (self = [super init]) {
         NSString *fileName = [[[asset defaultRepresentation] filename] lowercaseString];
         if ([fileName hasSuffix:@".jpg"] || [fileName hasSuffix:@".jpeg"]) {
@@ -119,7 +122,7 @@ NSString *const kOLMimeTypeTIFF  = @"image/tiff";
     return self;
 }
 
-- (id)initWithPHAsset:(PHAsset *)asset {
+- (instancetype)initWithPHAsset:(PHAsset *)asset {
     if (self = [super init]) {
         _mimeType = kOLMimeTypeJPEG;
         self.phAssetLocalId = [asset localIdentifier];
@@ -127,7 +130,7 @@ NSString *const kOLMimeTypeTIFF  = @"image/tiff";
     return self;
 }
 
-- (id)initWithImageURL:(NSURL *)url mimeType:(NSString *)mimeType {
+- (instancetype)initWithImageURL:(NSURL *)url mimeType:(NSString *)mimeType {
     if (self = [super init]) {
         _mimeType = mimeType;
         _imageURL = url;
@@ -136,7 +139,7 @@ NSString *const kOLMimeTypeTIFF  = @"image/tiff";
     return self;
 }
 
-- (id)initWithDataSource:(id<OLAssetDataSource>)dataSource {
+- (instancetype)initWithDataSource:(id<OLAssetDataSource>)dataSource {
     if (self = [super init]) {
         NSAssert([dataSource respondsToSelector:@selector(dataWithCompletionHandler:)], @"Oops your class %@ does not conform to the OLAssetDataSource protocol", [dataSource class]);
          NSAssert([dataSource respondsToSelector:@selector(dataLengthWithCompletionHandler:)], @"Oops your class %@ does not conform to the OLAssetDataSource protocol", [dataSource class]);
@@ -166,10 +169,6 @@ NSString *const kOLMimeTypeTIFF  = @"image/tiff";
     }
 }
 
-- (NSString *)description {
-    return [NSString stringWithFormat:@"[AssetID: %lld URL: %@]", self.assetId, self.imageURL];
-}
-
 + (OLAsset *)assetWithImageAsJPEG:(UIImage *)image {
     return [[OLAsset alloc] initWithImageData:UIImageJPEGRepresentation(image, 0.8) mimeType:kOLMimeTypeJPEG];
 }
@@ -184,6 +183,10 @@ NSString *const kOLMimeTypeTIFF  = @"image/tiff";
 
 + (OLAsset *)assetWithDataAsPNG:(NSData *)data {
     return [[OLAsset alloc] initWithImageData:data mimeType:kOLMimeTypePNG];
+}
+
++ (OLAsset *)assetWithDataAsPDF:(NSData *)data {
+    return [[OLAsset alloc] initWithImageData:data mimeType:kOLMimeTypePDF];
 }
 
 + (OLAsset *)assetWithFilePath:(NSString *)path {
@@ -212,6 +215,8 @@ NSString *const kOLMimeTypeTIFF  = @"image/tiff";
         return [[OLAsset alloc] initWithImageURL:url mimeType:kOLMimeTypePNG];
     } else if ([urlStr hasSuffix:@"tiff"] || [urlStr hasSuffix:@"tif"]) {
         return [[OLAsset alloc] initWithImageURL:url mimeType:kOLMimeTypeTIFF];
+    } else if ([urlStr hasSuffix:@"pdf"]){
+        return [[OLAsset alloc] initWithImageURL:url mimeType:kOLMimeTypePDF];
     } else {
         // Worst case scenario where we will need to download the entire image first and just assume it's a JPEG.
         return [OLAsset assetWithDataSource:[[OLURLDataSource alloc] initWithURLString:urlStr]];
@@ -523,6 +528,26 @@ NSString *const kOLMimeTypeTIFF  = @"image/tiff";
     }
     
     return self;
+}
+
+- (void)deleteFromDisk{
+    if (self.dataSource && [self.dataSource respondsToSelector:@selector(deleteFromDisk)]){
+        [self.dataSource deleteFromDisk];
+    }
+    else if(self.imageFilePath){
+        NSFileManager *fileManager = [NSFileManager defaultManager];
+        NSError *error;
+        BOOL fileExists = [fileManager fileExistsAtPath:self.imageFilePath];
+        if (fileExists)
+        {
+            BOOL success = [fileManager removeItemAtPath:self.imageFilePath error:&error];
+            if (!success) {
+#ifdef OL_VERBOSE
+                NSLog(@"Error: %@", [error localizedDescription]);
+#endif
+            }
+        }
+    }
 }
 
 @end

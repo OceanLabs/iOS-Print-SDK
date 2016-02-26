@@ -63,6 +63,8 @@ The SDK includes lots of optional functionality enabled via CocoaPod Subspecs so
 
 If you'd like to offer your users the opportunity to add photos via Instagram or Facebook then uncomment the appropriate lines above and follow the instructions to [Enable Facebook & Instagram Photo Selection](Kite-SDK/docs/social_photo_sources.md).
 
+You can also provide your own photo source (for example from within your app or a custom back end). Please read the documentation [here](Kite-SDK/docs/custom_photo_sources.md). 
+
 PayPal functionality is also optional although recommended as you'll typically see a higher conversion rate with it.
 
 ### Git submodules
@@ -160,6 +162,9 @@ Logging in to our [Developer Dashboard](https://www.kite.ly) allow's you to dyna
 
 ## ApplePay
 See our [ApplePay setup documentation](Kite-SDK/docs/applepay.md) if you want to enable checkout via ApplePay.
+
+## SDK Entry Points
+Depending on your use case you might want to launch to a specific product, or even bypass the product selection/creation process entirely and jump straight to the checkout/payment journey. See our [SDK entry point documentation](Kite-SDK/docs/entry_points.md) for more details.
 
 ## Documentation
 

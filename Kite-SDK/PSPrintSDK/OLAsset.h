@@ -59,6 +59,8 @@ typedef void (^LoadAssetCompletionHandler)(ALAsset *asset, NSError *error);
 
 extern NSString *const kOLMimeTypeJPEG;
 extern NSString *const kOLMimeTypePNG;
+extern NSString *const kOLMimeTypeTIFF;
+extern NSString *const kOLMimeTypePDF;
 
 /**
  *  Protocol for a custom class to implement if they want to provide the data for an OLAsset.
@@ -90,6 +92,11 @@ extern NSString *const kOLMimeTypePNG;
  *  Optional method to cancel loading of the image (for example downloading from the network)
  */
 - (void)cancelAnyLoadingOfData;
+
+/**
+ *  Optional method to delete any cache files from disk
+ */
+- (void)deleteFromDisk;
 @end
 
 /**
@@ -132,6 +139,15 @@ extern NSString *const kOLMimeTypePNG;
  *  @return The OLAsset
  */
 + (OLAsset *)assetWithDataAsPNG:(NSData *)data;
+
+/**
+ *  Asset data in the form of a pre-rendered PDF. Using a PDF will not allow any editing functionality.
+ *
+ *  @param data The data
+ *
+ *  @return The OLAsset.
+ */
++ (OLAsset *)assetWithDataAsPDF:(NSData *)data;
 
 /**
  *  Create an asset with a file path
@@ -220,5 +236,10 @@ extern NSString *const kOLMimeTypePNG;
  *  @return The PHAsset
  */
 - (PHAsset *)loadPHAsset;
+
+/**
+ *  Method to delete any cache files from disk
+ */
+- (void)deleteFromDisk;
 
 @end

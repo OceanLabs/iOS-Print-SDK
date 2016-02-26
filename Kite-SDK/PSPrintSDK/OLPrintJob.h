@@ -45,7 +45,20 @@
  */
 - (NSDictionary *)jsonRepresentation;
 
+/**
+ *  Set a value for an option
+ *
+ *  @param value  The value to set
+ *  @param option The option
+ */
 - (void)setValue:(NSString *)value forOption:(NSString *)option;
+
+/**
+ *  Number of items in a job (for example multiple packs of prints in a single job)
+ *
+ *  @return The number of items
+ */
+- (NSDecimalNumber *)numberOfItemsInJob;
 
 /**
  *  An array of the OLAssets that need to be uploaded

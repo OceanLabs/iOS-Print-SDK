@@ -38,6 +38,7 @@
 #import "OLPaymentViewController.h"
 #import "OLNavigationController.h"
 #import "OLKiteABTesting.h"
+#import "UIView+RoundRect.h"
 
 @interface OLKiteViewController (Private)
 @property (strong, nonatomic) OLPrintOrder *printOrder;
@@ -58,29 +59,41 @@
     
     OLPrintOrder *printOrder = [OLKiteUtils kiteVcForViewController:self].printOrder;
     UIButton *basketButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    basketButton.frame = CGRectMake(0,0,44,44);
+    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(6, 3, 44, 44)];
+    imageView.contentMode = UIViewContentModeRight;
+    [basketButton addSubview:imageView];
+    basketButton.frame = CGRectMake(0,0,50,50);
     [basketButton addTarget:self action:@selector(onButtonBasketClicked:) forControlEvents:UIControlEventTouchUpInside];
     
     if (printOrder.jobs.count != 0){
-        [basketButton setImage:[UIImage imageNamedInKiteBundle:@"cart-full"] forState:UIControlStateNormal];
+        [imageView setImage:[UIImage imageNamedInKiteBundle:@"cart-full"]];
         
         NSUInteger count = printOrder.jobs.count;
         for (id<OLPrintJob> job in printOrder.jobs){
             count += [job extraCopies];
         }
         
-        UILabel *qtyLabel = [[UILabel alloc] initWithFrame:CGRectMake(22, 12.5, 10, 10)];
+        UILabel *qtyLabel = [[UILabel alloc] initWithFrame:CGRectMake(37, 14, 13, 13)];
         qtyLabel.font = [UIFont systemFontOfSize:9];
         qtyLabel.textAlignment = NSTextAlignmentCenter;
         qtyLabel.textColor = [UIColor whiteColor];
         qtyLabel.text = [NSString stringWithFormat:@"%lu", (unsigned long)count];
         qtyLabel.minimumScaleFactor = 0.5;
         qtyLabel.adjustsFontSizeToFitWidth = YES;
+        qtyLabel.backgroundColor = [UIColor colorWithRed:0.231 green:0.686 blue:0.855 alpha:1.000];
+        [qtyLabel makeRoundRectWithRadius:6.5];
         
         [basketButton addSubview:qtyLabel];
+        if ([imageView.tintColor isEqual:[UIColor colorWithRed:0.0 green:122.0/255.0 blue:1.0 alpha:1.0]]){
+            imageView.tintColor = [UIColor colorWithRed:0.349 green:0.361 blue:0.365 alpha:1.000];
+        }
     }
     else{
-        [basketButton setImage:[UIImage imageNamedInKiteBundle:@"cart-empty"] forState:UIControlStateNormal];
+        [imageView setImage:[UIImage imageNamedInKiteBundle:@"cart-empty"]];
+    }
+    
+    if (self.isPushed){
+        self.parentViewController.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:basketButton];
     }
     
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:basketButton];
@@ -113,6 +126,15 @@
         nvc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
         [self presentViewController:nvc animated:YES completion:NULL];
     }];
+}
+
+- (BOOL)isPushed{
+    for (UIViewController *vc in self.navigationController.viewControllers){
+        if ([vc isKindOfClass:[OLKiteViewController class]]){
+            return YES;
+        }
+    }
+    return NO;
 }
 
 @end

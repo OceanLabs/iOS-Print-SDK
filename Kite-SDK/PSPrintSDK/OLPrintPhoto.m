@@ -131,6 +131,9 @@ static NSOperationQueue *imageOperationQueue;
         _type = kPrintPhotoAssetTypeFacebookPhoto;
     }
 #endif
+    else if (_type == kPrintPhotoAssetTypeCorrupt){
+        //Loaded asset is corrupt
+    }
     else {
         NSAssert(NO, @"Unknown asset type of class: %@", [asset class]);
     }
@@ -368,6 +371,12 @@ static NSOperationQueue *imageOperationQueue;
     else if (self.type == kPrintPhotoAssetTypeCorrupt){
         NSData *data = [NSData dataWithContentsOfFile:[[OLKiteUtils kiteBundle] pathForResource:@"kite_corrupt" ofType:@"jpg"]];
         completionHandler([UIImage imageWithData:data]);
+    }
+}
+
+- (void)deleteFromDisk{
+    if ([self.asset isKindOfClass:[OLAsset class]]){
+        [self.asset deleteFromDisk];
     }
 }
 

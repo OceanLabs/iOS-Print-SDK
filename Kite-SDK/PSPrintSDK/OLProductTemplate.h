@@ -73,6 +73,7 @@ typedef enum {
 @property (assign, nonatomic) CGSize sizePx;
 @property (strong, nonatomic) NSURL *_Nullable classPhotoURL;
 @property (strong, nonatomic) NSString *_Nullable productDescription;
+@property (strong, nonatomic) NSString *_Nullable productDescriptionMarkdown;
 @property (strong, nonatomic) NSDictionary *_Nullable shippingCosts;
 @property (assign, nonatomic) NSInteger gridCountX;
 @property (assign, nonatomic) NSInteger gridCountY;

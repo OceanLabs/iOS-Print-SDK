@@ -293,7 +293,26 @@ static NSString *const kKeyQRCodeUpload = @"ly.kite.kKeyQRCodeUpload";
         }
     }
     
+    for (UIViewController *vc in theVc.navigationController.viewControllers){
+        if ([vc isKindOfClass:[OLKiteViewController class]]){
+            return (OLKiteViewController *)vc;
+        }
+    }
+    
     return nil;
+}
+
++ (BOOL)assetArrayContainsPDF:(NSArray *)array{
+    for (OLAsset *asset in array){
+        if (![asset isKindOfClass:[OLAsset class]]){
+            continue;
+        }
+        if (asset.mimeType == kOLMimeTypePDF){
+            return YES;
+        }
+    }
+    
+    return NO;
 }
 
 @end

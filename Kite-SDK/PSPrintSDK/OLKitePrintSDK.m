@@ -90,6 +90,11 @@ static NSString *instagramSecret = nil;
 static NSString *instagramRedirectURI = nil;
 #endif
 
+#ifdef OL_KITE_OFFER_ADOBE
+static NSString* creativeSDKClientId = nil;
+static NSString* creativeSDKClientSecret = nil;
+#endif
+
 @implementation OLKitePrintSDK
 
 + (BOOL)useJudoPayForGBP {
@@ -233,13 +238,28 @@ static NSString *instagramRedirectURI = nil;
     return NSLocalizedString(@"**Quality Guarantee**\nOur products are of the highest quality and we’re confident you will love yours. If not, we offer a no quibble money back guarantee. Enjoy!", @"");
 }
 
+#ifdef OL_KITE_OFFER_ADOBE
++ (void)setAdobeCreativeSDKEnabledWithClientID:(NSString *_Nonnull)clientID secret:(NSString *_Nonnull)secret{
+    creativeSDKClientSecret = secret;
+    creativeSDKClientId = clientID;
+}
+
++ (NSString *)adobeCreativeSDKClientSecret{
+    return creativeSDKClientSecret;
+}
+
++ (NSString *)adobeCreativeSDKClientID{
+    return creativeSDKClientId;
+}
+#endif
+
 #pragma mark - Internal
 
 #ifdef OL_KITE_OFFER_INSTAGRAM
 + (void)setInstagramEnabledWithClientID:(NSString *_Nonnull)clientID secret:(NSString *_Nonnull)secret redirectURI:(NSString *_Nonnull)redirectURI {
-    instagramRedirectURI = redirectURI;
     instagramSecret = secret;
     instagramClientID = clientID;
+    instagramRedirectURI = redirectURI;
 }
 
 + (NSString *)instagramRedirectURI {

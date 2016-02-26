@@ -8,6 +8,7 @@
 
 #import "OLCollectionViewController.h"
 #import "OLKiteABTesting.h"
+#import "UIViewController+OLMethods.h"
 
 @implementation OLCollectionViewController
 

@@ -29,7 +29,7 @@
 
 #import "OLConstants.h"
 
-NSString *const kOLKiteSDKVersion = @"4.6.4";
+NSString *const kOLKiteSDKVersion = @"4.8.0";
 NSString *const kOLKiteSDKErrorDomain = @"co.oceanlabs.kOLKiteSDKErrorDomain";
 NSString *const kNotificationTemplateSyncComplete = @"co.oceanlabs.pssdk.notification.kNotificationSyncComplete";
 NSString *const kNotificationKeyTemplateSyncError = @"co.oceanlabs.pssdk.notification.kNotificationKeyTemplateSyncError";
@@ -42,7 +42,6 @@ const NSInteger kOLKiteSDKErrorCodeRegisteredAssetCountDiscrepency = 101;
 const NSInteger kOLKiteSDKErrorCodeMaintenanceMode = 503;
 const NSInteger kOLKiteSDKErrorCodeOrderValidationFailed = 701;
 const NSInteger kOLKiteSDKErrorCodeImagesCorrupt = 702;
-const NSInteger kOLKiteSDKErrorCodeURLShorteningFailed = 801;
 
 NSString *const kOLKiteSDKErrorMessageUnauthorized = @"Unauthorized Kite Print SDK Request. Did you set your API Key and Environment correctly using [OLKitePrintSDK setAPIKey:withEnvironment:]";
 

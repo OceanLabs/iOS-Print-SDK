@@ -96,6 +96,8 @@ static id stringOrEmptyString(NSString *str) {
 @property (strong, nonatomic, readwrite) NSString *submitStatusErrorMessage;
 @property (assign, nonatomic) NSInteger numberOfTimesPolledForSubmissionStatus;
 
+@property (weak, nonatomic) NSArray *userSelectedPhotos;
+
 @property (nonatomic, readwrite) NSString *receipt;
 
 @end
@@ -252,6 +254,45 @@ static NSBlockOperation *templateSyncOperation;
 
 - (void)removePrintJob:(id<OLPrintJob>)job {
     [(NSMutableArray *) self.jobs removeObject:job];
+    
+    [self removeDiskAssetsForJob:job];
+}
+
+- (void)cleanupDisk{
+//    if (self.jobs.count == 0){
+//        NSArray * urls = [[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask];
+//        NSString *documentDirPath = [[(NSURL *)[urls objectAtIndex:0] path] stringByAppendingPathComponent:@"ol-kite-images"];
+//        [[NSFileManager defaultManager] removeItemAtPath:documentDirPath error:nil];
+//    }
+}
+
+- (void)removeDiskAssetsForJob:(id<OLPrintJob>)job {
+    for (OLAsset *asset in [job assetsForUploading]){
+        NSString *filePath;
+        if (asset.imageFilePath) {
+            filePath = asset.imageFilePath;
+        }
+        else if ([asset.dataSource respondsToSelector:@selector(asset)] && [[(OLPrintPhoto *)asset.dataSource asset] respondsToSelector:@selector(imageFilePath)]){
+            filePath = [[(OLPrintPhoto *)asset.dataSource asset] imageFilePath];
+        }
+        if (!filePath){
+            continue;
+        }
+        
+        BOOL found;
+        //Check if one of the assets is still selected
+        for (OLPrintPhoto *printPhoto in self.userSelectedPhotos){
+            if ([printPhoto.asset respondsToSelector:@selector(imageFilePath)]){
+                if ([printPhoto.asset imageFilePath]) {
+                    found = YES;
+                    break;
+                }
+            }
+        }
+        if (!found){
+            [asset deleteFromDisk];
+        }
+    }
 }
 
 - (BOOL)hasCachedCost {
@@ -567,10 +608,13 @@ static NSBlockOperation *templateSyncOperation;
 
 - (void)saveOrder {
     [NSKeyedArchiver archiveRootObject:self toFile:[OLPrintOrder orderFilePath]];
+    [self cleanupDisk];
 }
 
 + (id)loadOrder {
-    return [NSKeyedUnarchiver unarchiveObjectWithFile:[OLPrintOrder orderFilePath]];
+    OLPrintOrder *order = [NSKeyedUnarchiver unarchiveObjectWithFile:[OLPrintOrder orderFilePath]];
+    [order cleanupDisk];
+    return order;
 }
 
 #pragma mark - OLAssetUploadRequestDelegate methods

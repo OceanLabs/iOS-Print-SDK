@@ -83,11 +83,8 @@
     
     [self setupDetailsView];
     
-    if (self.product.productTemplate.templateUI == kOLTemplateUIPoster){
-        self.title = NSLocalizedString(@"Posters", @"");
-    }
-    else if (self.product.productTemplate.templateUI == kOLTemplateUIFrame){
-        self.title = NSLocalizedString(@"Frames", @"");
+    if ([self isPushed]){
+        self.parentViewController.title = self.product.productTemplate.name;
     }
     else{
         self.title = self.product.productTemplate.name;

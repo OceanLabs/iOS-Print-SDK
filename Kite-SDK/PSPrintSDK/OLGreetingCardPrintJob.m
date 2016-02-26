@@ -75,6 +75,7 @@ static id stringOrEmptyString(NSString *str) {
 - (void)setValue:(NSString *)value forOption:(NSString *)option{
     self.options[option] = value;
 }
+
 - (id)initWithTemplateId:(NSString *)templateId frontImageOLAsset:(OLAsset *)frontImageAsset backImageOLAsset:(OLAsset *)backImageAsset insideRightImageAsset:(OLAsset *)insideRightImageAsset insideLeftImageAsset:(OLAsset *)insideLeftImageAsset {
     if (self = [super init]) {
         self.uuid = [[NSUUID UUID] UUIDString];
@@ -93,6 +94,10 @@ static id stringOrEmptyString(NSString *str) {
 
 - (NSUInteger)quantity {
     return 1;
+}
+
+- (NSDecimalNumber *)numberOfItemsInJob{
+    return [NSDecimalNumber decimalNumberWithString:@"1"];
 }
 
 - (NSString *)productName {
@@ -130,18 +135,37 @@ static id stringOrEmptyString(NSString *str) {
     [json setObject:self.templateId forKey:@"template_id"];
     
     NSMutableDictionary *assets = [[NSMutableDictionary alloc] init];
-    json[@"assets"] = assets;
-    assets[@"front_image"] = [NSNumber numberWithLongLong:self.frontImageAsset.assetId];
+    NSMutableDictionary *pdfs = [[NSMutableDictionary alloc] init];
+    
+    assets[@"front_image"] = [NSString stringWithFormat:@"%lld", self.frontImageAsset.assetId];
     
     if (self.backImageAsset){
-        assets[@"back_image"] = [NSNumber numberWithLongLong:self.backImageAsset.assetId];
+        if (self.backImageAsset.mimeType == kOLMimeTypePDF){
+            pdfs[@"back_image"] = [NSString stringWithFormat:@"%lld", self.backImageAsset.assetId];
+        }
+        else{
+            assets[@"back_image"] = [NSString stringWithFormat:@"%lld", self.backImageAsset.assetId];
+        }
     }
     if (self.insideRightImageAsset){
-        assets[@"inside_right_image"] = [NSNumber numberWithLongLong:self.insideRightImageAsset.assetId];
+        if (self.insideRightImageAsset.mimeType == kOLMimeTypePDF){
+            pdfs[@"inside_right_image"] = [NSString stringWithFormat:@"%lld", self.insideRightImageAsset.assetId];
+        }
+        else{
+            assets[@"inside_right_image"] = [NSString stringWithFormat:@"%lld", self.insideRightImageAsset.assetId];
+        }
     }
     if (self.insideLeftImageAsset){
-        assets[@"inside_left_image"] = [NSNumber numberWithLongLong:self.insideLeftImageAsset.assetId];
+        if (self.insideLeftImageAsset.mimeType == kOLMimeTypePDF){
+            pdfs[@"inside_left_image"] = [NSString stringWithFormat:@"%lld", self.insideLeftImageAsset.assetId];
+        }
+        else{
+            assets[@"inside_left_image"] = [NSString stringWithFormat:@"%lld", self.insideLeftImageAsset.assetId];
+        }
     }
+    
+    json[@"assets"] = assets;
+    json[@"pdf"] = pdfs;
     
     // set message
     if (self.message) {

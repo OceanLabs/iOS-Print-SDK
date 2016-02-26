@@ -19,7 +19,7 @@ Overview
 Sample Code
 -----------
 
-1. Initialize the SDK and provide your API Keys (these can be found in the [Credentials](https://www.kite.ly/accounts/credentials/) section of the development dashboard). A typical place for initialization is in your app delegate's `didFinishLaunchingWithOptions:` method.
+1. Initialize the SDK and provide your API Keys (these can be found in the [Credentials](https://www.kite.ly/settings/credentials/) section of the development dashboard). A typical place for initialization is in your app delegate's `didFinishLaunchingWithOptions:` method.
 
     ```obj-c
     #import <OLKitePrintSDK.h>

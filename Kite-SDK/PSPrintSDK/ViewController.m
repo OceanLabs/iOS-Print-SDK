@@ -74,6 +74,11 @@ UINavigationControllerDelegate, OLKiteDelegate>
 #ifdef OL_KITE_OFFER_INSTAGRAM
     [OLKitePrintSDK setInstagramEnabledWithClientID:@"a6a09c92a14d488baa471e5209906d3d" secret:@"bfb814274cd041a5b7e06f32608e0e87" redirectURI:@"kite://instagram-callback"];
 #endif
+    
+#ifdef OL_KITE_OFFER_APPLE_PAY
+    [OLKitePrintSDK setApplePayMerchantID:kApplePayMerchantIDKey];
+    [OLKitePrintSDK setApplePayPayToString:kApplePayBusinessName];
+#endif
 }
 
 - (BOOL)shouldAutorotate {
@@ -169,11 +174,6 @@ UINavigationControllerDelegate, OLKiteDelegate>
         if (![self isAPIKeySet]) return;
         [OLKitePrintSDK setAPIKey:[self apiKey] withEnvironment:[self environment]];
     }
-    
-#ifdef OL_KITE_OFFER_APPLE_PAY
-    [OLKitePrintSDK setApplePayMerchantID:kApplePayMerchantIDKey];
-    [OLKitePrintSDK setApplePayPayToString:kApplePayBusinessName];
-#endif
     
     OLKiteViewController *vc = [[OLKiteViewController alloc] initWithAssets:assets];
     vc.userEmail = @"";
