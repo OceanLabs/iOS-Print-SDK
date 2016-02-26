@@ -87,6 +87,9 @@
     }
     else{
         [basketButton setImage:[UIImage imageNamedInKiteBundle:@"cart-empty"] forState:UIControlStateNormal];
+        if ([basketButton.tintColor isEqual:[UIColor colorWithRed:0.0 green:122.0/255.0 blue:1.0 alpha:1.0]]){
+            basketButton.tintColor = [UIColor colorWithRed:0.349 green:0.361 blue:0.365 alpha:1.000];
+        }
     }
     
     if (self.isPushed){
