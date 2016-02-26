@@ -82,12 +82,18 @@ static NSString *const kKeyApparelPrintJobOptions = @"co.oceanlabs.pssdk.kKeyApp
 
 - (NSDictionary *)jsonRepresentation {
     NSMutableDictionary *json = [[NSMutableDictionary alloc] init];
+    NSMutableDictionary *pdfs = [[NSMutableDictionary alloc] init];
+    
     json[@"template_id"] = [OLProductTemplate templateWithId:self.templateId].identifier;
     
     NSMutableDictionary *assets = [[NSMutableDictionary alloc] init];
     for (NSString *key in [self.assets allKeys]){
+        if ([self.assets[key] mimeType] == kOLMimeTypePDF){
+            [pdfs setObject:[NSString stringWithFormat:@"%lld", [self.assets[key] assetId]] forKey:key];
+        }
         [assets setObject:[NSString stringWithFormat:@"%lld", [self.assets[key] assetId]] forKey:key];
     }
+    json[@"pdf"] = pdfs;
     json[@"assets"] = assets;
     json[@"options"] = self.options;
     

@@ -164,14 +164,21 @@ static id stringOrEmptyString(NSString *str) {
 
 - (NSDictionary *)jsonRepresentation {
     NSMutableArray *assets = [[NSMutableArray alloc] init];
+    NSMutableArray *pdfs = [[NSMutableArray alloc] init];
     
     for (OLAsset *asset in self.assets) {
-        [assets addObject:[NSString stringWithFormat:@"%lld", asset.assetId]];
+        if (asset.mimeType == kOLMimeTypePDF){
+            [pdfs addObject:[NSString stringWithFormat:@"%lld", asset.assetId]];
+        }
+        else{
+            [assets addObject:[NSString stringWithFormat:@"%lld", asset.assetId]];
+        }
     }
     
     NSMutableDictionary *json = [[NSMutableDictionary alloc] init];
     json[@"template_id"] = [OLProductTemplate templateWithId:self.templateId].identifier;
     json[@"assets"] = assets;
+    json[@"pdf"] = [pdfs firstObject];
     json[@"frame_contents"] = @{};
     
     json[@"options"] = self.options;

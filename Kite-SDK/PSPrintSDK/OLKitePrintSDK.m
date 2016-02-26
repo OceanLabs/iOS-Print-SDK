@@ -259,6 +259,7 @@ static NSString* creativeSDKClientSecret = nil;
 + (void)setInstagramEnabledWithClientID:(NSString *_Nonnull)clientID secret:(NSString *_Nonnull)secret redirectURI:(NSString *_Nonnull)redirectURI {
     instagramSecret = secret;
     instagramClientID = clientID;
+    instagramRedirectURI = redirectURI;
 }
 
 + (NSString *)instagramRedirectURI {

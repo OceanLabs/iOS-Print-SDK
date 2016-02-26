@@ -273,4 +273,17 @@
     return nil;
 }
 
++ (BOOL)assetArrayContainsPDF:(NSArray *)array{
+    for (OLAsset *asset in array){
+        if (![asset isKindOfClass:[OLAsset class]]){
+            continue;
+        }
+        if (asset.mimeType == kOLMimeTypePDF){
+            return YES;
+        }
+    }
+    
+    return NO;
+}
+
 @end

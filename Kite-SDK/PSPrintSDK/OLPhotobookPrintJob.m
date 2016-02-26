@@ -85,17 +85,24 @@ static NSString *const kKeyPhotobookPrintJobOptions = @"co.oceanlabs.pssdk.kKeyP
 - (NSDictionary *)jsonRepresentation {
     NSMutableArray *pages = [[NSMutableArray alloc] init];
     for (OLAsset *asset in self.assets) {
+        if (asset.mimeType == kOLMimeTypePDF){
+            [pages addObject:@{
+                              @"pdf" : [NSString stringWithFormat:@"%lld", asset.assetId]
+                              }];
+        }
+        else{
         [pages addObject:@{
                            @"layout" : @"single_centered",
                            @"asset" : [NSString stringWithFormat:@"%lld", asset.assetId]
                            }];
+        }
     }
     
     NSMutableDictionary *json = [[NSMutableDictionary alloc] init];
     json[@"template_id"] = [OLProductTemplate templateWithId:self.templateId].identifier;
     json[@"assets"] = @{
-                        @"front_cover" : self.frontCover ? [NSString stringWithFormat:@"%lld", self.frontCover.assetId] : @"",
-                        @"back_cover" : self.backCover ? [NSString stringWithFormat:@"%lld", self.backCover.assetId] : @"",
+                        self.frontCover.mimeType != kOLMimeTypePDF ? @"front_cover" : @"front_cover_pdf" : self.frontCover ? [NSString stringWithFormat:@"%lld", self.frontCover.assetId] : @"",
+                        self.backCover.mimeType != kOLMimeTypePDF ? @"back_cover" : @"back_cover_pdf" : self.backCover ? [NSString stringWithFormat:@"%lld", self.backCover.assetId] : @"",
                         @"pages" : pages
                         };
     json[@"options"] = self.options;

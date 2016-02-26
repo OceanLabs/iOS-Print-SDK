@@ -129,11 +129,22 @@ static id stringOrEmptyString(NSString *str) {
     [json setObject:self.templateId forKey:@"template_id"];
     
     NSMutableDictionary *assets = [[NSMutableDictionary alloc] init];
-    json[@"assets"] = assets;
-    assets[@"front_image"] = [NSNumber numberWithLongLong:self.frontImageAsset.assetId];
+    NSMutableDictionary *pdfs = [[NSMutableDictionary alloc] init];
+    
+    if (self.frontImageAsset.mimeType == kOLMimeTypePDF){
+        pdfs[@"front_image"] = [NSString stringWithFormat:@"%lld", self.frontImageAsset.assetId];
+    }
+    else{
+        assets[@"front_image"] = [NSString stringWithFormat:@"%lld", self.frontImageAsset.assetId];
+    }
     
     if (self.backImageAsset){
-        assets[@"back_image"] = [NSNumber numberWithLongLong:self.backImageAsset.assetId];
+        if (self.backImageAsset.mimeType == kOLMimeTypePDF){
+            pdfs[@"back_image"] = [NSString stringWithFormat:@"%lld", self.backImageAsset.assetId];
+        }
+        else{
+            assets[@"back_image"] = [NSString stringWithFormat:@"%lld", self.backImageAsset.assetId];
+        }
     }
     
     // set message
@@ -141,6 +152,8 @@ static id stringOrEmptyString(NSString *str) {
         [json setObject:self.message forKey:@"message"];
     }
     
+    json[@"pdf"] = pdfs;
+    json[@"assets"] = assets;
     json[@"options"] = self.options;
     
     if (self.address) {

@@ -48,6 +48,8 @@
 
 + (OLKiteViewController *)kiteVcForViewController:(UIViewController *)vc;
 
++ (BOOL)assetArrayContainsPDF:(NSArray *)array;
+
 + (BOOL)imageProvidersAvailable:(UIViewController *)topVc;
 + (BOOL)cameraRollEnabled:(UIViewController *)topVc;
 + (BOOL)facebookEnabled;
