@@ -298,7 +298,6 @@ static const NSUInteger kSectionErrorRetry = 2;
         [self setupHeader];
     } completion:nil];
     
-    [self.tableView deleteSections:[NSIndexSet indexSetWithIndex:kSectionErrorRetry] withRowAnimation:UITableViewRowAnimationFade];
     [self.tableView reloadData];
 }
 
