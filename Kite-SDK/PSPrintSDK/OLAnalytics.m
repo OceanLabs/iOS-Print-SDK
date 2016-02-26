@@ -48,6 +48,7 @@ static NSString *const kKeyUserDistinctId = @"ly.kite.sdk.kKeyUserDistinctId";
 static NSString *const kOLMixpanelToken = @"cdf64507670dd359c43aa8895fb87676";
 static NSString *const kOLMixpanelURL = @"https://api.mixpanel.com/track/";
 static NSString *const kKeySDKLaunchCount = @"ly.kite.sdk.kKeySDKLaunchCount";
+static NSString *const kKeyOLDevicePushToken = @"ly.kite.sdk.kKeyOLDevicePushToken";
 
 static NSString *const kKeyServiceName = @"ly.kite.sdk.kKeyServiceName";
 
@@ -141,6 +142,12 @@ static __weak id<OLKiteDelegate> kiteDelegate;
         return;
     }
     
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSString *savedToken = [defaults objectForKey:kKeyOLDevicePushToken];
+    if ([savedToken isEqualToString:pushToken]){
+        return;
+    }
+    
     NSString *uuid = [self userDistinctId];
     NSDictionary *properties = @{
                                  @"uuid": uuid,
@@ -161,6 +168,8 @@ static __weak id<OLKiteDelegate> kiteDelegate;
     [manager POST:[NSString stringWithFormat:@"%@/%@/person/", [OLKitePrintSDK apiEndpoint], [OLKitePrintSDK apiVersion]] parameters:properties success:^(AFHTTPRequestOperation *operation, id responseObject) {
         if ([operation.response statusCode] >= 200 && [operation.response statusCode] <= 299){
             NSLog(@"Successfully posted push notification token.");
+            [defaults setObject:pushToken forKey:kKeyOLDevicePushToken];
+            [defaults synchronize];
         }
         else{
             NSLog(@"There was an error posting the push notification token: %ld", (long)[operation.response statusCode]);
