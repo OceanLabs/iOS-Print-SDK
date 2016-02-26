@@ -210,10 +210,6 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
     if (self.shippingAddress.country == nil) {
         self.shippingAddress.country = [OLCountry countryForCurrentLocale];
     }
-    
-    if (self.printOrder.shippingAddress == nil) {
-        self.printOrder.shippingAddress = self.shippingAddress;
-    }
 }
 
 - (void)onBackgroundClicked {
