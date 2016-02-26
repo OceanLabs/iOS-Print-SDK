@@ -79,10 +79,6 @@ UINavigationControllerDelegate, OLKiteDelegate>
     [OLKitePrintSDK setApplePayMerchantID:kApplePayMerchantIDKey];
     [OLKitePrintSDK setApplePayPayToString:kApplePayBusinessName];
 #endif
-    
-#ifdef OL_KITE_OFFER_ADOBE
-    [OLKitePrintSDK setAdobeCreativeSDKEnabledWithClientID:@"e14d465c1526434a9050d8cc16335f43" secret:@"636960a9-664c-45c7-b8eb-8c1dd6254cba"];
-#endif
 }
 
 - (BOOL)shouldAutorotate {
