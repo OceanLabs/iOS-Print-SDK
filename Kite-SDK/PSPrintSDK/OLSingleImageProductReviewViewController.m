@@ -1109,17 +1109,19 @@ static BOOL hasMoved;
 #pragma mark OLQRCodeUploadViewControllerDelegate methods
 - (void)qrCodeUpload:(OLQRCodeUploadViewController *)vc didFinishPickingAsset:(OLAsset *)asset {
     
-    [self populateArrayWithNewArray:@[asset] dataType:[OLURLDataSource class]];
+    OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
+    printPhoto.asset = asset;
+    [self.userSelectedPhotos addObject:printPhoto];
+    self.imagePicked = printPhoto;
     
-    if (self.imagePicked){
-        [self.imagePicked getImageWithProgress:NULL completion:^(UIImage *image){
-            dispatch_async(dispatch_get_main_queue(), ^{
-                self.imageCropView.image = image;
-            });
-        }];
-        self.imageDisplayed = self.imagePicked;
-        self.imagePicked = nil;
-    }
+    [self.imagePicked getImageWithProgress:NULL completion:^(UIImage *image){
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.imageCropView.image = image;
+        });
+    }];
+    self.imageDisplayed = self.imagePicked;
+    self.imagePicked = nil;
+    
     [self dismissViewControllerAnimated:YES completion:^(void){}];
     [self.view.window removeGestureRecognizer:self.tapBehindQRUploadModalGestureRecognizer];
     self.tapBehindQRUploadModalGestureRecognizer = nil;

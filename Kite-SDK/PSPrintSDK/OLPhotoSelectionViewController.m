@@ -83,6 +83,8 @@
 #import "OLImagePreviewViewController.h"
 #import "UIView+RoundRect.h"
 #import "UIViewController+TraitCollectionCompatibility.h"
+#import "OLQRCodeUploadViewController.h"
+#import "OLURLDataSource.h"
 
 #ifdef OL_KITE_OFFER_ADOBE
 #import <AdobeCreativeSDKImage/AdobeCreativeSDKImage.h>
@@ -127,7 +129,9 @@ OLFacebookImagePickerControllerDelegate,
 KITAssetsPickerControllerDelegate,
 #endif
 LXReorderableCollectionViewDataSource,
+UIGestureRecognizerDelegate,
 UICollectionViewDelegateFlowLayout,
+OLQRCodeUploadViewControllerDelegate,
 UIViewControllerPreviewingDelegate, OLScrollCropViewControllerDelegate,
 #ifdef OL_KITE_OFFER_ADOBE
 AdobeUXImageEditorViewControllerDelegate,
@@ -143,6 +147,7 @@ UIActionSheetDelegate>
 @property (strong, nonatomic) UIVisualEffectView *visualEffectView;
 @property (weak, nonatomic) IBOutlet UIView *clearButtonContainerView;
 @property (strong, nonatomic) IBOutlet OLPhotoSelectionButton *galleryButton;
+@property (nonatomic, strong) UITapGestureRecognizer *tapBehindQRUploadModalGestureRecognizer;
 
 @property (weak, nonatomic) OLPrintPhoto *editingPrintPhoto;
 @property (weak, nonatomic) IBOutlet UIView *addPhotosHintView;
@@ -362,6 +367,26 @@ UIActionSheetDelegate>
     [self onUserSelectedPhotoCountChange];
 }
 
+- (void)onTapBehindQRCodeScannerModal:(UITapGestureRecognizer *)sender {
+    if (sender.state == UIGestureRecognizerStateEnded) {
+        CGPoint location = [sender locationInView:nil]; // Passing nil gives us coordinates in the window
+        // swap (x,y) on iOS 8 in landscape
+        if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0) {
+            if (UIInterfaceOrientationIsLandscape([UIApplication sharedApplication].statusBarOrientation)) {
+                location = CGPointMake(location.y, location.x);
+            }
+        }
+        
+        // Convert tap location into the local view's coordinate system. If outside, dismiss the view.
+        if (![self.presentedViewController.view pointInside:[self.presentedViewController.view convertPoint:location fromView:self.view.window] withEvent:nil]) {
+            if(self.presentedViewController) {
+                [self dismissViewControllerAnimated:YES completion:nil];
+                [self.view.window removeGestureRecognizer:sender];
+            }
+        }
+    }
+}
+
 - (NSArray *)createAssetArray {
     NSMutableArray *array = [[NSMutableArray alloc] initWithCapacity:self.userSelectedPhotos.count];
     for (OLPrintPhoto *object in self.userSelectedPhotos) {
@@ -485,6 +510,10 @@ UIActionSheetDelegate>
         numberOfProviders++;
     }
     
+    if ([OLKiteUtils qrCodeUploadEnabled]) {
+        numberOfProviders++;
+    }
+    
     if (numberOfProviders > 1){
         if ([UIAlertController class]){
             UIAlertController *ac = [UIAlertController alertControllerWithTitle:nil message:NSLocalizedString(@"Add photos from:", @"") preferredStyle:UIAlertControllerStyleActionSheet];
@@ -501,6 +530,11 @@ UIActionSheetDelegate>
             if ([OLKiteUtils facebookEnabled]){
                 [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Facebook", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
                     [self facebookSelected:nil];
+                }]];
+            }
+            if ([OLKiteUtils qrCodeUploadEnabled]) {
+                [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"QR Code", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
+                    [self showQRCodeImagePicker];
                 }]];
             }
 #ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
@@ -676,6 +710,19 @@ UIActionSheetDelegate>
     picker.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
     [self presentViewController:picker animated:YES completion:nil];
 #endif
+}
+
+- (void)showQRCodeImagePicker{
+    OLQRCodeUploadViewController *vc = (OLQRCodeUploadViewController *) [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:nil] instantiateViewControllerWithIdentifier:@"OLQRCodeUploadViewController"];
+    vc.modalPresentationStyle = UIModalPresentationFormSheet;
+    vc.delegate = self;
+    [self presentViewController:vc animated:YES completion:nil];
+    
+    self.tapBehindQRUploadModalGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTapBehindQRCodeScannerModal:)];
+    self.tapBehindQRUploadModalGestureRecognizer.delegate = self;
+    [self.tapBehindQRUploadModalGestureRecognizer setNumberOfTapsRequired:1];
+    [self.tapBehindQRUploadModalGestureRecognizer setCancelsTouchesInView:NO]; // So the user can still interact with controls in the modal view
+    [self.view.window addGestureRecognizer:self.tapBehindQRUploadModalGestureRecognizer];
 }
 
 - (IBAction)onButtonClearClicked:(id)sender {
@@ -1366,6 +1413,18 @@ UIActionSheetDelegate>
     [self.navigationController pushViewController:orvc animated:YES];
 }
 
+#pragma mark OLQRCodeUploadViewControllerDelegate methods
+- (void)qrCodeUpload:(OLQRCodeUploadViewController *)vc didFinishPickingAsset:(OLAsset *)asset {
+    
+    OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
+    printPhoto.asset = asset;
+    [self.userSelectedPhotos addObject:printPhoto];
+    
+    [self dismissViewControllerAnimated:YES completion:^(void){}];
+    [self.view.window removeGestureRecognizer:self.tapBehindQRUploadModalGestureRecognizer];
+    self.tapBehindQRUploadModalGestureRecognizer = nil;
+}
+
 #pragma mark - UIAlertViewDelegate methods
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
@@ -1447,6 +1506,9 @@ UIActionSheetDelegate>
         }
         else if (buttonIndex == [OLKiteUtils facebookProviderIndex:self]){
             [self facebookSelected:nil];
+        }
+        else if (buttonIndex == [OLKiteUtils qrCodeProviderStartIndex:self]){
+            [self showQRCodeImagePicker];
         }
 #ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
         else{
