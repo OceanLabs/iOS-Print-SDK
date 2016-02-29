@@ -298,7 +298,6 @@ static const NSUInteger kSectionErrorRetry = 2;
         [self setupHeader];
     } completion:nil];
     
-    [self.tableView deleteSections:[NSIndexSet indexSetWithIndex:kSectionErrorRetry] withRowAnimation:UITableViewRowAnimationFade];
     [self.tableView reloadData];
 }
 
@@ -322,7 +321,10 @@ static const NSUInteger kSectionErrorRetry = 2;
             // has cached costs and the count will be updated before below conditionals are hit or it will make an async request and count will remain 0 for below.
             count = cost.lineItems.count;
         }];
-        if (count <= 1) {
+        if (count == 0){
+            return self.printOrder.jobs.count;
+        }
+        if (count == 1) {
             return count;
         } else {
             return count + 1; // additional cell to show total
@@ -392,30 +394,36 @@ static const NSUInteger kSectionErrorRetry = 2;
         }
         
         [self.printOrder costWithCompletionHandler:^(OLPrintOrderCost *orderCost, NSError *error) {
-            NSArray *lineItems = orderCost.lineItems;
-            NSDecimalNumber *totalCost = [orderCost totalCostInCurrency:self.printOrder.currencyCode];
-            
-            BOOL total = indexPath.row >= lineItems.count;
-            NSDecimalNumber *cost;
-            NSString *currencyCode = self.printOrder.currencyCode;
-            if (total) {
-                cell.textLabel.text = NSLocalizedStringFromTableInBundle(@"Total", @"KitePrintSDK", [OLConstants bundle], @"");
-                cell.textLabel.font = [UIFont boldSystemFontOfSize:cell.textLabel.font.pointSize];
-                cell.detailTextLabel.font = [UIFont boldSystemFontOfSize:cell.detailTextLabel.font.pointSize];
+            if (orderCost){
+                NSArray *lineItems = orderCost.lineItems;
+                NSDecimalNumber *totalCost = [orderCost totalCostInCurrency:self.printOrder.currencyCode];
                 
-                cost = totalCost;
-                
-                NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
-                [formatter setNumberStyle:NSNumberFormatterCurrencyStyle];
-                [formatter setCurrencyCode:currencyCode];
-                cell.detailTextLabel.text = [formatter stringFromNumber:totalCost];
+                BOOL total = indexPath.row >= lineItems.count;
+                NSDecimalNumber *cost;
+                NSString *currencyCode = self.printOrder.currencyCode;
+                if (total) {
+                    cell.textLabel.text = NSLocalizedStringFromTableInBundle(@"Total", @"KitePrintSDK", [OLConstants bundle], @"");
+                    cell.textLabel.font = [UIFont boldSystemFontOfSize:cell.textLabel.font.pointSize];
+                    cell.detailTextLabel.font = [UIFont boldSystemFontOfSize:cell.detailTextLabel.font.pointSize];
+                    
+                    cost = totalCost;
+                    
+                    NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
+                    [formatter setNumberStyle:NSNumberFormatterCurrencyStyle];
+                    [formatter setCurrencyCode:currencyCode];
+                    cell.detailTextLabel.text = [formatter stringFromNumber:totalCost];
+                }
+                else{
+                    OLPaymentLineItem *item = lineItems[indexPath.row];
+                    cell.textLabel.text = item.description;
+                    cell.textLabel.font = [UIFont systemFontOfSize:cell.textLabel.font.pointSize];
+                    cell.detailTextLabel.font = [UIFont systemFontOfSize:cell.detailTextLabel.font.pointSize];
+                    cell.detailTextLabel.text = [item costStringInCurrency:self.printOrder.currencyCode];
+                }
             }
             else{
-                OLPaymentLineItem *item = lineItems[indexPath.row];
-                cell.textLabel.text = item.description;
+                cell.textLabel.text = [self.printOrder.jobs[indexPath.item] name];
                 cell.textLabel.font = [UIFont systemFontOfSize:cell.textLabel.font.pointSize];
-                cell.detailTextLabel.font = [UIFont systemFontOfSize:cell.detailTextLabel.font.pointSize];
-                cell.detailTextLabel.text = [item costStringInCurrency:self.printOrder.currencyCode];
             }
         }];
     } else if (indexPath.section == kSectionErrorRetry) {

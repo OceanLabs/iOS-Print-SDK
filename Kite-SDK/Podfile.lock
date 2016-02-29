@@ -69,7 +69,7 @@ PODS:
     - Stripe/Core
   - Stripe/Core (5.1.4)
   - SVProgressHUD (1.1.3)
-  - TSMarkdownParser (1.0.19)
+  - TSMarkdownParser (1.0.20)
   - UICKeyChainStore (2.0.7)
   - UIColor-HexString (1.2.0)
 
@@ -117,7 +117,7 @@ SPEC CHECKSUMS:
   SkyLab: 01d9559bbab2183e54e67dc7a8a12a22b0a4be99
   Stripe: 6864be95b09092f05526bc2e0a50804bc556aa0d
   SVProgressHUD: 748080e4f36e603f6c02aec292664239df5279c1
-  TSMarkdownParser: 0341662db14b17a13a79f3ddcb08ab7a4b6ed834
+  TSMarkdownParser: 5ef8a617d39f92812860e0a3544348de33abe549
   UICKeyChainStore: 696cd35083f7c8fb5e201d909b7e6aea6b478575
   UIColor-HexString: ef5608be035bb21354d9a69b50251525b431a1e9
 
