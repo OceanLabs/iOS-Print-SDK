@@ -42,6 +42,7 @@ const NSInteger kOLKiteSDKErrorCodeRegisteredAssetCountDiscrepency = 101;
 const NSInteger kOLKiteSDKErrorCodeMaintenanceMode = 503;
 const NSInteger kOLKiteSDKErrorCodeOrderValidationFailed = 701;
 const NSInteger kOLKiteSDKErrorCodeImagesCorrupt = 702;
+const NSInteger kOLKiteSDKErrorCodeURLShorteningFailed = 801;
 
 NSString *const kOLKiteSDKErrorMessageUnauthorized = @"Unauthorized Kite Print SDK Request. Did you set your API Key and Environment correctly using [OLKitePrintSDK setAPIKey:withEnvironment:]";
 
