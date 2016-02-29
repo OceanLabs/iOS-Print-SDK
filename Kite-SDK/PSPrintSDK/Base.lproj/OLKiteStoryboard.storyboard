@@ -1830,6 +1830,34 @@ to rearrange the photos</string>
                                     </collectionViewCell>
                                 </cells>
                             </collectionView>
+                            <view alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0Bh-Hi-gAg">
+                                <rect key="frame" x="16" y="404" width="240" height="110"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="38x-9y-Ixf">
+                                        <rect key="frame" x="15" y="8" width="217" height="59"/>
+                                        <string key="text">Let's pick
+some images!</string>
+                                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="19"/>
+                                        <color key="textColor" red="0.48627450979999998" green="0.48627450979999998" blue="0.48627450979999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Start by tapping on this button" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bYn-AM-Rkc">
+                                        <rect key="frame" x="15" y="69" width="225" height="21"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                        <color key="textColor" red="0.48627450979999998" green="0.48627450979999998" blue="0.48627450979999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <view tag="10" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="TDw-2H-87Y">
+                                        <rect key="frame" x="13" y="103" width="15" height="15"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    </view>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="110" id="Tet-bT-Zih"/>
+                                    <constraint firstAttribute="width" constant="240" id="WFN-B0-8hY"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" red="0.92549019607843142" green="0.93725490196078431" blue="0.94901960784313721" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <gestureRecognizers/>
@@ -1843,6 +1871,8 @@ to rearrange the photos</string>
                             <constraint firstItem="nF0-F4-GDd" firstAttribute="top" relation="greaterThanOrEqual" secondItem="xRf-1g-got" secondAttribute="bottom" constant="20" id="OhO-Pg-eUE"/>
                             <constraint firstItem="nF0-F4-GDd" firstAttribute="leading" secondItem="b43-Nd-ulU" secondAttribute="leading" priority="750" constant="20" id="Pqp-YU-I7m"/>
                             <constraint firstItem="nF0-F4-GDd" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="b43-Nd-ulU" secondAttribute="leading" constant="20" id="QHW-0P-dKc"/>
+                            <constraint firstItem="0Bh-Hi-gAg" firstAttribute="leading" secondItem="EHT-PN-hHa" secondAttribute="leading" id="Ro8-lo-rnv"/>
+                            <constraint firstItem="EHT-PN-hHa" firstAttribute="top" secondItem="0Bh-Hi-gAg" secondAttribute="bottom" constant="20" id="SOk-px-w7C"/>
                             <constraint firstItem="Mvu-z2-gQf" firstAttribute="top" secondItem="gw5-Cz-eSf" secondAttribute="bottom" constant="20" id="T8q-7P-OrL"/>
                             <constraint firstItem="ulu-rb-y7r" firstAttribute="trailing" secondItem="nF0-F4-GDd" secondAttribute="trailing" id="VuM-Ly-CPX"/>
                             <constraint firstItem="ulu-rb-y7r" firstAttribute="leading" secondItem="nF0-F4-GDd" secondAttribute="leading" id="XPG-KL-qhC"/>
@@ -1867,6 +1897,7 @@ to rearrange the photos</string>
                         <outlet property="ctaButton" destination="gw5-Cz-eSf" id="8by-s2-BIc"/>
                         <outlet property="deviceView" destination="aRb-s3-73M" id="X1y-eV-i8F"/>
                         <outlet property="highlightsView" destination="ulu-rb-y7r" id="382-NC-flT"/>
+                        <outlet property="hintView" destination="0Bh-Hi-gAg" id="T9O-RQ-gWD"/>
                         <outlet property="imageCropView" destination="33O-65-cUP" id="jv4-S5-bTo"/>
                         <outlet property="imagesCollectionView" destination="EHT-PN-hHa" id="Rur-Im-C98"/>
                         <outlet property="maskActivityIndicator" destination="3eC-J9-SCj" id="qxu-Q4-fT7"/>
@@ -2711,6 +2742,34 @@ to rearrange the photos</string>
                                     </collectionViewCell>
                                 </cells>
                             </collectionView>
+                            <view alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="abk-We-G3a">
+                                <rect key="frame" x="16" y="404" width="240" height="110"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LIp-dN-4y3">
+                                        <rect key="frame" x="15" y="8" width="217" height="59"/>
+                                        <string key="text">Let's pick
+some images!</string>
+                                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="19"/>
+                                        <color key="textColor" red="0.48627450979999998" green="0.48627450979999998" blue="0.48627450979999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Start by tapping on this button" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UmH-R9-S2V">
+                                        <rect key="frame" x="15" y="69" width="225" height="21"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                        <color key="textColor" red="0.48627450979999998" green="0.48627450979999998" blue="0.48627450979999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <view tag="10" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="UJG-q9-sDe">
+                                        <rect key="frame" x="13" y="103" width="15" height="15"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    </view>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="240" id="KP4-fR-UsN"/>
+                                    <constraint firstAttribute="height" constant="110" id="XDJ-yy-DWS"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" red="0.92549019610000005" green="0.93725490199999995" blue="0.94901960780000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <gestureRecognizers/>
@@ -2728,11 +2787,13 @@ to rearrange the photos</string>
                             <constraint firstItem="F6s-yG-aS1" firstAttribute="leading" secondItem="OdO-qS-nBf" secondAttribute="leading" priority="750" constant="20" id="a1V-1G-eMi"/>
                             <constraint firstAttribute="centerY" secondItem="F6s-yG-aS1" secondAttribute="centerY" priority="750" id="b0D-Tn-EZA"/>
                             <constraint firstItem="EZK-44-nsD" firstAttribute="top" relation="greaterThanOrEqual" secondItem="Na0-YI-rwD" secondAttribute="bottom" constant="2" id="bBA-Tf-NdN"/>
+                            <constraint firstItem="abk-We-G3a" firstAttribute="leading" secondItem="q2u-GZ-t1x" secondAttribute="leading" id="dqj-l3-Kxk"/>
                             <constraint firstItem="EZK-44-nsD" firstAttribute="width" secondItem="F6s-yG-aS1" secondAttribute="width" multiplier="1.12121" id="fPc-6C-i9h"/>
                             <constraint firstItem="EZK-44-nsD" firstAttribute="centerY" secondItem="F6s-yG-aS1" secondAttribute="centerY" multiplier="1.00743" id="mxl-RY-yMV"/>
                             <constraint firstItem="F6s-yG-aS1" firstAttribute="centerX" secondItem="EZK-44-nsD" secondAttribute="centerX" id="oHK-3f-In4"/>
                             <constraint firstAttribute="centerX" secondItem="F6s-yG-aS1" secondAttribute="centerX" id="sPn-1Z-8Ts"/>
                             <constraint firstItem="EZK-44-nsD" firstAttribute="height" secondItem="F6s-yG-aS1" secondAttribute="height" multiplier="1.08439" id="wjT-hq-a64"/>
+                            <constraint firstItem="q2u-GZ-t1x" firstAttribute="top" secondItem="abk-We-G3a" secondAttribute="bottom" constant="20" id="yny-Ue-BNs"/>
                         </constraints>
                     </view>
                     <extendedEdge key="edgesForExtendedLayout" top="YES"/>
@@ -2740,6 +2801,7 @@ to rearrange the photos</string>
                     <connections>
                         <outlet property="containerView" destination="F6s-yG-aS1" id="Gan-vf-O94"/>
                         <outlet property="ctaButton" destination="ZlI-Gw-kac" id="nej-Y4-ywi"/>
+                        <outlet property="hintView" destination="abk-We-G3a" id="GM1-Fi-oWr"/>
                         <outlet property="imageCropView" destination="N6g-QY-BTJ" id="BEf-w7-x49"/>
                         <outlet property="imagesCollectionView" destination="q2u-GZ-t1x" id="GKe-r4-hwJ"/>
                         <outlet property="maskAspectRatio" destination="s04-2s-DNA" id="ZiT-bx-wbS"/>

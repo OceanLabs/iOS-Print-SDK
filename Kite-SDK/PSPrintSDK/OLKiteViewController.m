@@ -242,9 +242,7 @@ static CGFloat fadeTime = 0.3;
     
     if (![OLKitePrintSDK cacheTemplates]) {
         [OLProductTemplate deleteCachedTemplates];
-        if ([[OLProductTemplate lastSyncDate] timeIntervalSinceNow] < -600){
-            [OLProductTemplate resetTemplates];
-        }
+        [OLProductTemplate resetTemplates];
     }
     
     if ([OLProductTemplate templates].count > 0){
