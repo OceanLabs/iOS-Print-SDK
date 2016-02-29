@@ -154,6 +154,7 @@ OLAssetsPickerControllerDelegate, RMImageCropperDelegate, UIViewControllerPrevie
 @property (strong, nonatomic) NSIndexPath *previewingIndexPath;
 @property (nonatomic, copy) void (^saveJobCompletionHandler)();
 
+
 @end
 
 static BOOL hasMoved;
@@ -227,12 +228,19 @@ static BOOL hasMoved;
     if (![OLKiteUtils imageProvidersAvailable:self] && self.userSelectedPhotos.count == 1){
         self.imagesCollectionView.hidden = YES;
     }
+    
+    [self.hintView viewWithTag:10].transform = CGAffineTransformMakeRotation(M_PI_4);
 }
 
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
-    if ([OLKiteUtils imageProvidersAvailable:self] && self.userSelectedPhotos.count == 0 && [[[UIDevice currentDevice] systemVersion] floatValue] >= 8){
-        [self collectionView:self.imagesCollectionView didSelectItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
+    
+    NSTimeInterval delay = 0;
+    NSTimeInterval duration = 0.3;
+    if (self.userSelectedPhotos.count == 0 && self.hintView.alpha <= 0.1f) {
+        [UIView animateWithDuration:duration delay:delay options:UIViewAnimationOptionCurveEaseIn animations:^{
+            self.hintView.alpha = 1;
+        } completion:NULL];
     }
 }
 
@@ -882,6 +890,10 @@ static BOOL hasMoved;
     [self.userSelectedPhotos addObjectsFromArray:addArray];
     
     [self.imagesCollectionView reloadData];
+    
+    if (self.userSelectedPhotos.count > 0){
+        self.hintView.alpha = 0;
+    }
 }
 
 #if __IPHONE_OS_VERSION_MIN_REQUIRED < 80000

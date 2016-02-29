@@ -40,6 +40,7 @@
 @property (strong, nonatomic) NSMutableArray *userSelectedPhotos;
 @property (weak, nonatomic) id<OLKiteDelegate> delegate;
 @property (strong, nonatomic) IBOutlet UIButton *ctaButton;
+@property (weak, nonatomic) IBOutlet UIView *hintView;
 
 @property (strong, nonatomic) id<OLPrintJob> editingPrintJob;
 
