@@ -47,6 +47,7 @@
 #import "OLKiteABTesting.h"
 #import "OLKitePrintSDK.h"
 #import "OLKiteUtils.h"
+#import "OLNavigationController.h"
 #ifdef OL_KITE_AT_LEAST_IOS8
 #ifdef COCOAPODS
 #import <CTAssetsPickerController/CTAssetsPickerController.h>
@@ -70,6 +71,7 @@
 #import "OLSingleImageProductReviewViewController.h"
 #import "OLQRCodeUploadViewController.h"
 #import "OLURLDataSource.h"
+#import "UIViewController+TraitCollectionCompatibility.h"
 
 #ifdef OL_KITE_OFFER_ADOBE
 #import <AdobeCreativeSDKImage/AdobeCreativeSDKImage.h>
@@ -720,6 +722,12 @@ static BOOL hasMoved;
     }
 }
 
+- (void)onQRCodeScannerDidCancel{
+    [self dismissViewControllerAnimated:YES completion:nil];
+    [self.view.window removeGestureRecognizer:self.tapBehindQRUploadModalGestureRecognizer];
+    self.tapBehindQRUploadModalGestureRecognizer = nil;
+}
+
 - (void)onTapBehindQRCodeScannerModal:(UITapGestureRecognizer *)sender {
     if (sender.state == UIGestureRecognizerStateEnded) {
         CGPoint location = [sender locationInView:nil]; // Passing nil gives us coordinates in the window
@@ -735,6 +743,8 @@ static BOOL hasMoved;
             if(self.presentedViewController) {
                 [self dismissViewControllerAnimated:YES completion:nil];
                 [self.view.window removeGestureRecognizer:sender];
+                self.tapBehindQRUploadModalGestureRecognizer = nil;
+
             }
         }
     }
@@ -850,7 +860,14 @@ static BOOL hasMoved;
     OLQRCodeUploadViewController *vc = (OLQRCodeUploadViewController *) [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:nil] instantiateViewControllerWithIdentifier:@"OLQRCodeUploadViewController"];
     vc.modalPresentationStyle = UIModalPresentationFormSheet;
     vc.delegate = self;
-    [self presentViewController:vc animated:YES completion:nil];
+    if ([self isHorizontalSizeClassCompact]){
+        vc.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(onQRCodeScannerDidCancel)];
+        OLNavigationController *nvc = [[OLNavigationController alloc] initWithRootViewController:vc];
+        [self presentViewController:nvc animated:YES completion:nil];
+    }
+    else{
+        [self presentViewController:vc animated:YES completion:nil];
+    }
     
     self.tapBehindQRUploadModalGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTapBehindQRCodeScannerModal:)];
     self.tapBehindQRUploadModalGestureRecognizer.delegate = self;
