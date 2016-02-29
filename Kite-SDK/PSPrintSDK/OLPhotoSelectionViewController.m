@@ -85,6 +85,7 @@
 #import "UIViewController+TraitCollectionCompatibility.h"
 #import "OLQRCodeUploadViewController.h"
 #import "OLURLDataSource.h"
+#import "OLNavigationController.h"
 
 #ifdef OL_KITE_OFFER_ADOBE
 #import <AdobeCreativeSDKImage/AdobeCreativeSDKImage.h>
@@ -712,11 +713,24 @@ UIActionSheetDelegate>
 #endif
 }
 
+- (void)onQRCodeScannerDidCancel{
+    [self dismissViewControllerAnimated:YES completion:nil];
+    [self.view.window removeGestureRecognizer:self.tapBehindQRUploadModalGestureRecognizer];
+    self.tapBehindQRUploadModalGestureRecognizer = nil;
+}
+
 - (void)showQRCodeImagePicker{
     OLQRCodeUploadViewController *vc = (OLQRCodeUploadViewController *) [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:nil] instantiateViewControllerWithIdentifier:@"OLQRCodeUploadViewController"];
     vc.modalPresentationStyle = UIModalPresentationFormSheet;
     vc.delegate = self;
-    [self presentViewController:vc animated:YES completion:nil];
+    if ([self isHorizontalSizeClassCompact]){
+        vc.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(onQRCodeScannerDidCancel)];
+        OLNavigationController *nvc = [[OLNavigationController alloc] initWithRootViewController:vc];
+        [self presentViewController:nvc animated:YES completion:nil];
+    }
+    else{
+        [self presentViewController:vc animated:YES completion:nil];
+    }
     
     self.tapBehindQRUploadModalGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTapBehindQRCodeScannerModal:)];
     self.tapBehindQRUploadModalGestureRecognizer.delegate = self;
