@@ -458,10 +458,8 @@ CGFloat margin = 2;
             NSIndexPath *innerIndexPath = [NSIndexPath indexPathForItem:innerIndex inSection:0];
             [indexPaths addObject:innerIndexPath];
             
-            if (outerIndex != i+1 / self.product.quantityToFulfillOrder){
-                [innerCollectionView reloadItemsAtIndexPaths:indexPaths];
-                [indexPaths removeAllObjects];
-            }
+            [innerCollectionView reloadItemsAtIndexPaths:indexPaths];
+            [indexPaths removeAllObjects];
         }
     }
     
