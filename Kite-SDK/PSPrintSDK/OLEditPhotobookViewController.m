@@ -1177,6 +1177,20 @@ UINavigationControllerDelegate>
         }
     }
     [self updateUserSelectedPhotos];
+    
+    static dispatch_once_t predicate;
+    dispatch_once(&predicate, ^{
+        if (!self.coverPhoto){
+            self.coverPhoto = self.photobookPhotos.firstObject;
+            for (OLPhotobookViewController *photobook in self.childViewControllers){
+                if ([photobook bookClosed]){
+                    photobook.coverPhoto = self.coverPhoto;
+                    [photobook loadCoverPhoto];
+                    break;
+                }
+            }
+        }
+    });
 }
 
 #pragma mark - CTAssetsPickerControllerDelegate Methods
