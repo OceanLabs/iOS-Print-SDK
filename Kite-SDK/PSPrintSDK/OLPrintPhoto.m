@@ -343,7 +343,9 @@ static NSOperationQueue *imageOperationQueue;
                 });
             }
         };
-        CGSize requestSize = fullResolution ? PHImageManagerMaximumSize : CGSizeMake(size.width * screenScale, size.height * screenScale);
+        
+        //Don't request less than a 400x400 image, otherwise the Photos Framework tries to be useful and returns a low-res, prerendered image which loses the rotation metadata (but is rotated correctly). This messes up the rotation from our editor.
+        CGSize requestSize = fullResolution ? PHImageManagerMaximumSize : CGSizeMake(MAX(size.width * screenScale, 400), MAX(size.height * screenScale, 400));
         [imageManager requestImageForAsset:(PHAsset *)self.asset targetSize:requestSize contentMode:PHImageContentModeAspectFill options:options resultHandler:^(UIImage *image, NSDictionary *info){
             completionHandler(image);
         }];
