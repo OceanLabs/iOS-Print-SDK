@@ -91,9 +91,13 @@ static NSString *const kKeyApparelPrintJobOptions = @"co.oceanlabs.pssdk.kKeyApp
         if ([self.assets[key] mimeType] == kOLMimeTypePDF){
             [pdfs setObject:[NSString stringWithFormat:@"%lld", [self.assets[key] assetId]] forKey:key];
         }
-        [assets setObject:[NSString stringWithFormat:@"%lld", [self.assets[key] assetId]] forKey:key];
+        else{
+            [assets setObject:[NSString stringWithFormat:@"%lld", [self.assets[key] assetId]] forKey:key];
+        }
     }
-    json[@"pdf"] = pdfs;
+    if (pdfs.allKeys.count > 0){
+        json[@"pdf"] = pdfs[pdfs.allKeys.firstObject];
+    }
     json[@"assets"] = assets;
     json[@"options"] = self.options;
     
