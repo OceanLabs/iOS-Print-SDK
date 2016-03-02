@@ -1757,13 +1757,20 @@ UINavigationControllerDelegate
     if (!self.photobookPhotos){
         self.userSelectedPhotosCopy = [[NSArray alloc] initWithArray:self.userSelectedPhotos copyItems:NO];
         self.photobookPhotos = [[NSMutableArray alloc] initWithCapacity:self.product.quantityToFulfillOrder];
-        [self.photobookPhotos addObjectsFromArray:self.userSelectedPhotos];
-        for (NSInteger i = self.userSelectedPhotos.count; i < self.product.quantityToFulfillOrder; i++){
-            [self.photobookPhotos addObject:[NSNull null]];
+        NSInteger start = 0;
+        if (!self.coverPhoto){
+            self.coverPhoto = self.userSelectedPhotos.firstObject;
+            start++;
+        }
+        else if (self.coverPhoto == (id)[NSNull null]){
+            self.coverPhoto = nil;
+        }
+        for (NSInteger i = start; i < self.product.quantityToFulfillOrder + start; i++){
+            [self.photobookPhotos addObject:i < self.userSelectedPhotos.count ? self.userSelectedPhotos[i] : [NSNull null]];
         }
     }
     else{
-        NSMutableArray *newPhotos = [NSMutableArray arrayWithArray:self.userSelectedPhotos];
+        NSMutableArray *newPhotos = [NSMutableArray arrayWithArray:[self.userSelectedPhotos subarrayWithRange:NSMakeRange(0, MIN(self.userSelectedPhotos.count, self.product.quantityToFulfillOrder+1))]];
         [newPhotos removeObjectsInArray:self.userSelectedPhotosCopy];
         for (NSInteger newPhoto = 0; newPhoto < newPhotos.count; newPhoto++){
             BOOL foundSpot = NO;
@@ -1847,15 +1854,6 @@ UINavigationControllerDelegate
     [picker dismissViewControllerAnimated:YES completion:^(void){}];
 }
 
-- (BOOL)assetsPickerController:(OLAssetsPickerController *)picker shouldSelectAsset:(ALAsset *)asset{
-    if (self.addNewPhotosAtIndex == -1){
-        return picker.selectedAssets.count == 0;
-    }
-    else{
-        return YES;
-    }
-}
-
 - (BOOL)assetsPickerController:(OLAssetsPickerController *)picker shouldShowAssetsGroup:(ALAssetsGroup *)group{
     if (group.numberOfAssets == 0){
         return NO;
@@ -1895,6 +1893,53 @@ UINavigationControllerDelegate
     if (!([fileName hasSuffix:@".jpg"] || [fileName hasSuffix:@".jpeg"] || [fileName hasSuffix:@"png"] || [fileName hasSuffix:@"tiff"])) {
         return NO;
     }
+    return YES;
+}
+
+- (BOOL)assetsPickerController:(id)picker shouldSelectAsset:(id)asset
+{
+    NSInteger max = self.product.quantityToFulfillOrder;
+    
+    NSArray *assets;
+    if ([picker respondsToSelector:@selector(selectedAssets)]){
+        assets = [picker selectedAssets];
+    }
+    else if ([picker respondsToSelector:@selector(selected)]){
+        assets = [picker selected];
+    }
+    else{ // ¯\_(ツ)_/¯
+        return YES;
+    }
+    
+    if (self.addNewPhotosAtIndex == -1){
+        return assets.count == 0;
+    }
+    
+    // show alert
+    if (self.userSelectedPhotos.count + assets.count >= max)
+    {
+        if ([UIAlertController class]){
+            UIAlertController *alert =
+            [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Maximum Photos Reached", @"")
+                                                message:[NSString stringWithFormat:max == 1 ? NSLocalizedString(@"Please select only %ld photo", @"") : NSLocalizedString(@"Please select not more than %ld photos", @""), (long)max]
+                                         preferredStyle:UIAlertControllerStyleAlert];
+            
+            UIAlertAction *action =
+            [UIAlertAction actionWithTitle:NSLocalizedString(@"OK", @"")
+                                     style:UIAlertActionStyleDefault
+                                   handler:nil];
+            
+            [alert addAction:action];
+            
+            [picker presentViewController:alert animated:YES completion:nil];
+        }
+        else{
+            UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Maximum Photos Reached", @"") message:[NSString stringWithFormat:max == 1 ? NSLocalizedString(@"Please select only %ld photo", @"") : NSLocalizedString(@"Please select not more than %ld photos", @""), (long)max] delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"") otherButtonTitles:nil];
+            [av show];
+        }
+        return NO;
+    }
+    
     return YES;
 }
 
@@ -1952,6 +1997,30 @@ UINavigationControllerDelegate
         return imagePicker.selected.count == 0;
     }
     else{
+        // show alert
+        if (self.userSelectedPhotos.count + imagePicker.selected.count >= self.product.quantityToFulfillOrder)
+        {
+            if ([UIAlertController class]){
+                UIAlertController *alert =
+                [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Maximum Photos Reached", @"")
+                                                    message:[NSString stringWithFormat:self.product.quantityToFulfillOrder == 1 ? NSLocalizedString(@"Please select only %ld photo", @"") : NSLocalizedString(@"Please select not more than %ld photos", @""), (long)self.product.quantityToFulfillOrder]
+                                             preferredStyle:UIAlertControllerStyleAlert];
+                
+                UIAlertAction *action =
+                [UIAlertAction actionWithTitle:NSLocalizedString(@"OK", @"")
+                                         style:UIAlertActionStyleDefault
+                                       handler:nil];
+                
+                [alert addAction:action];
+                
+                [imagePicker presentViewController:alert animated:YES completion:nil];
+            }
+            else{
+                UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Maximum Photos Reached", @"") message:[NSString stringWithFormat:self.product.quantityToFulfillOrder == 1 ? NSLocalizedString(@"Please select only %ld photo", @"") : NSLocalizedString(@"Please select not more than %ld photos", @""), (long)self.product.quantityToFulfillOrder] delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"") otherButtonTitles:nil];
+                [av show];
+            }
+            return NO;
+        }
         return YES;
     }
 }
@@ -2009,6 +2078,30 @@ UINavigationControllerDelegate
         return imagePicker.selected.count == 0;
     }
     else{
+        // show alert
+        if (self.userSelectedPhotos.count + imagePicker.selected.count >= self.product.quantityToFulfillOrder)
+        {
+            if ([UIAlertController class]){
+                UIAlertController *alert =
+                [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Maximum Photos Reached", @"")
+                                                    message:[NSString stringWithFormat:self.product.quantityToFulfillOrder == 1 ? NSLocalizedString(@"Please select only %ld photo", @"") : NSLocalizedString(@"Please select not more than %ld photos", @""), (long)self.product.quantityToFulfillOrder]
+                                             preferredStyle:UIAlertControllerStyleAlert];
+                
+                UIAlertAction *action =
+                [UIAlertAction actionWithTitle:NSLocalizedString(@"OK", @"")
+                                         style:UIAlertActionStyleDefault
+                                       handler:nil];
+                
+                [alert addAction:action];
+                
+                [imagePicker presentViewController:alert animated:YES completion:nil];
+            }
+            else{
+                UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Maximum Photos Reached", @"") message:[NSString stringWithFormat:self.product.quantityToFulfillOrder == 1 ? NSLocalizedString(@"Please select only %ld photo", @"") : NSLocalizedString(@"Please select not more than %ld photos", @""), (long)self.product.quantityToFulfillOrder] delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"") otherButtonTitles:nil];
+                [av show];
+            }
+            return NO;
+        }
         return YES;
     }
 }

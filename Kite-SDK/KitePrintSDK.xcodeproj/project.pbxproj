@@ -1286,12 +1286,12 @@
 				2E20BD851AD4229700FB2446 /* OLCaseViewController.m */,
 				2E20BD871AD42E2200FB2446 /* OLPostcardViewController.h */,
 				2E20BD881AD42E2200FB2446 /* OLPostcardViewController.m */,
+				2EB4959A1B303FA8003FB762 /* OLEditPhotobookViewController.h */,
+				2EB4959B1B303FA8003FB762 /* OLEditPhotobookViewController.m */,
 				2EB4BD661AE128740004CEE0 /* OLPhotobookViewController.h */,
 				2EB4BD671AE128740004CEE0 /* OLPhotobookViewController.m */,
 				2EB4BD691AE13F520004CEE0 /* OLPhotobookPageContentViewController.h */,
 				2EB4BD6A1AE13F520004CEE0 /* OLPhotobookPageContentViewController.m */,
-				2EB4959A1B303FA8003FB762 /* OLEditPhotobookViewController.h */,
-				2EB4959B1B303FA8003FB762 /* OLEditPhotobookViewController.m */,
 			);
 			name = "Edit-Review";
 			sourceTree = "<group>";
