@@ -1316,8 +1316,7 @@ UINavigationControllerDelegate>
     return YES;
 }
 
-- (BOOL)assetsPickerController:(id)picker shouldSelectAsset:(id)asset
-{
+- (BOOL)assetsPickerController:(id)picker shouldSelectAsset:(id)asset{
     NSArray *assets;
     if ([picker respondsToSelector:@selector(selectedAssets)]){
         assets = [picker selectedAssets];
