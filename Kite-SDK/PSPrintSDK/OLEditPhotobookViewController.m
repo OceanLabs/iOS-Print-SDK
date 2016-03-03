@@ -1154,33 +1154,33 @@ UINavigationControllerDelegate>
         [photoArray addObject:printPhoto];
     }
     
-    // First remove any that are not returned.
-    NSMutableArray *removeArray = [NSMutableArray arrayWithArray:self.userSelectedPhotos];
-    for (OLPrintPhoto *object in self.userSelectedPhotos) {
-        if ([object.asset isKindOfClass:[OLAsset class]] && [[object.asset dataSource] isKindOfClass:class]){
-            if ([photoArray containsObject:object]){
-                [removeArray removeObjectIdenticalTo:object];
-                [photoArray removeObject:object];
-            }
-        }
-        else if (![object.asset isKindOfClass:class]) {
-            [removeArray removeObjectIdenticalTo:object];
-        }
-        
-        else if([photoArray containsObject:object]){
-            [removeArray removeObjectIdenticalTo:object];
-        }
-    }
-    
-    [self.userSelectedPhotos removeObjectsInArray:removeArray];
+//    // First remove any that are not returned.
+//    NSMutableArray *removeArray = [NSMutableArray arrayWithArray:self.userSelectedPhotos];
+//    for (OLPrintPhoto *object in self.userSelectedPhotos) {
+//        if ([object.asset isKindOfClass:[OLAsset class]] && [[object.asset dataSource] isKindOfClass:class]){
+//            if ([photoArray containsObject:object]){
+//                [removeArray removeObjectIdenticalTo:object];
+//                [photoArray removeObject:object];
+//            }
+//        }
+//        else if (![object.asset isKindOfClass:class]) {
+//            [removeArray removeObjectIdenticalTo:object];
+//        }
+//        
+//        else if([photoArray containsObject:object]){
+//            [removeArray removeObjectIdenticalTo:object];
+//        }
+//    }
+//    
+//    [self.userSelectedPhotos removeObjectsInArray:removeArray];
     
     // Second, add the remaining objects to the end of the array without replacing any.
     NSMutableArray *addArray = [NSMutableArray arrayWithArray:photoArray];
-    for (id object in self.userSelectedPhotos) {
-        if ([addArray containsObject:object]){
-            [addArray removeObject:object];
-        }
-    }
+//    for (id object in self.userSelectedPhotos) {
+//        if ([addArray containsObject:object]){
+//            [addArray removeObject:object];
+//        }
+//    }
     
     [self.userSelectedPhotos addObjectsFromArray:addArray];
     
