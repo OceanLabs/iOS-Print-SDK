@@ -126,6 +126,7 @@ UINavigationControllerDelegate>
 @property (strong, nonatomic) OLPrintPhoto *coverPhoto;
 @property (weak, nonatomic) OLPhotobookViewController *interactionPhotobook;
 @property (strong, nonatomic) UIButton *nextButton;
+@property (assign, nonatomic) BOOL autoAddedCover;
 
 @end
 
@@ -1178,10 +1179,10 @@ UINavigationControllerDelegate>
     }
     [self updateUserSelectedPhotos];
     
-    static dispatch_once_t predicate;
-    dispatch_once(&predicate, ^{
+    if (!self.autoAddedCover){
+        self.autoAddedCover = YES;
         if (!self.coverPhoto){
-            self.coverPhoto = self.photobookPhotos.firstObject;
+            self.coverPhoto = self.userSelectedPhotos.firstObject;
             for (OLPhotobookViewController *photobook in self.childViewControllers){
                 if ([photobook bookClosed]){
                     photobook.coverPhoto = self.coverPhoto;
@@ -1190,7 +1191,7 @@ UINavigationControllerDelegate>
                 }
             }
         }
-    });
+    }
 }
 
 #pragma mark - CTAssetsPickerControllerDelegate Methods
