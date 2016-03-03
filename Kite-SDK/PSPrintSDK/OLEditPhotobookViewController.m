@@ -203,7 +203,7 @@ UINavigationControllerDelegate>
         self.haveCachedCells = YES;
     }
     
-    if (self.userSelectedPhotos.count == 0 && self.childViewControllers.count > 1){
+    if (self.userSelectedPhotos.count == 0 && self.childViewControllers.count > 1 && !self.coverPhoto){
         [self photobook:self.childViewControllers[1] userDidTapOnImageWithIndex:0];
     }
 }
