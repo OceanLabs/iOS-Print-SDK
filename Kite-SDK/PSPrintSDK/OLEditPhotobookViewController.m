@@ -1336,9 +1336,7 @@ UINavigationControllerDelegate>
         return assets.count == 0;
     }
     
-    // show alert
-    NSInteger coverPhoto = self.coverPhoto ? 1 : 0;
-    if (self.userSelectedPhotos.count + assets.count - coverPhoto >= max)
+    if (self.userSelectedPhotos.count + assets.count >= max)
     {
         if ([UIAlertController class]){
             UIAlertController *alert =
@@ -1424,10 +1422,7 @@ UINavigationControllerDelegate>
         return imagePicker.selected.count == 0;
     }
     else{
-        // show alert
-        NSInteger coverPhoto = self.coverPhoto ? 1 : 0;
-        if (self.userSelectedPhotos.count + imagePicker.selected.count - coverPhoto >= self.product.quantityToFulfillOrder)
-        {
+        if (self.userSelectedPhotos.count + imagePicker.selected.count >= ((NSInteger)self.product.quantityToFulfillOrder)){
             if ([UIAlertController class]){
                 UIAlertController *alert =
                 [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Maximum Photos Reached", @"")
@@ -1511,9 +1506,7 @@ UINavigationControllerDelegate>
         return imagePicker.selected.count == 0;
     }
     else{
-        // show alert
-        NSInteger coverPhoto = self.coverPhoto ? 1 : 0;
-        if (self.userSelectedPhotos.count + imagePicker.selected.count - coverPhoto >= self.product.quantityToFulfillOrder)
+        if (self.userSelectedPhotos.count + imagePicker.selected.count >= self.product.quantityToFulfillOrder)
         {
             if ([UIAlertController class]){
                 UIAlertController *alert =
