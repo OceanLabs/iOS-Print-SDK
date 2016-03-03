@@ -737,7 +737,9 @@ UINavigationControllerDelegate>
     self.longPressImageIndex = index;
     self.interactionPhotobook = photobook;
     
-    view.delegate = self;
+    if ([view respondsToSelector:@selector(setDelegate:)]){
+        view.delegate = self;
+    }
     if (view.isFirstResponder && [UIMenuController sharedMenuController].isMenuVisible){
         return;
     }
