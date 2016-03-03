@@ -731,6 +731,9 @@ UINavigationControllerDelegate>
     self.interactionPhotobook = photobook;
     
     view.delegate = self;
+    if (view.isFirstResponder && [UIMenuController sharedMenuController].isMenuVisible){
+        return;
+    }
     [view becomeFirstResponder];
     UIMenuItem *deleteItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Remove", @"") action:@selector(deletePage)];
     UIMenuItem *cropImageItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Edit", @"") action:@selector(cropImage)];
