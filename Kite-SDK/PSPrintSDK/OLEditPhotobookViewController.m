@@ -555,10 +555,17 @@ UINavigationControllerDelegate>
     }
     self.animating = YES;
     if (index == -1){ //Replace Cover
-        self.addNewPhotosAtIndex = index;
-        [self addMorePhotosFromView:photobook.view];
-        self.animating = NO;
-        return;
+        if (!self.coverPhoto){
+            self.addNewPhotosAtIndex = index;
+            [self addMorePhotosFromView:photobook.view];
+            self.animating = NO;
+            return;
+        }
+        else{
+            self.animating = NO;
+            [self photobook:photobook userDidLongPressOnImageWithIndex:index sender:photobook.coverImageView.gestureRecognizers.firstObject];
+            return;
+        }
     }
     
     OLPhotobookPageContentViewController *page = [self findPageForImageIndex:index];
