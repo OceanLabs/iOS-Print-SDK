@@ -202,6 +202,10 @@ UINavigationControllerDelegate>
         [self collectionView:self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:maxItem+2 inSection:kSectionPages]];
         self.haveCachedCells = YES;
     }
+    
+    if (self.userSelectedPhotos.count == 0 && self.childViewControllers.count > 1){
+        [self photobook:self.childViewControllers[1] userDidTapOnImageWithIndex:0];
+    }
 }
 
 - (void)viewDidDisappear:(BOOL)animated{
