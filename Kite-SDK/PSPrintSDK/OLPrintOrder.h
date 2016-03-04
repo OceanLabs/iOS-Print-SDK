@@ -180,7 +180,7 @@ typedef NS_ENUM(NSInteger, OLPrintOrderSubmitStatus) {
 /**
  *  The jobs to print
  */
-@property (nonatomic, readonly) NSArray *jobs;
+@property (strong, nonatomic, readonly) NSArray *jobs;
 
 /**
  *  The number of assets across all jobs that need uploading

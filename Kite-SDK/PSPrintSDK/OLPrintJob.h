@@ -101,6 +101,11 @@
  */
 @property (assign, nonatomic) NSInteger extraCopies;
 
+/**
+ *  The date the job was added to the basket.
+ */
+@property (strong, nonatomic) NSDate *dateAddedToBasket;
+
 @end
 
 /**

@@ -300,6 +300,7 @@ UIViewControllerPreviewingDelegate>
     NSArray *jobs = [NSArray arrayWithArray:printOrder.jobs];
     for (id<OLPrintJob> existingJob in jobs){
         if ([existingJob.uuid isEqualToString:self.product.uuid]){
+            job.dateAddedToBasket = [existingJob dateAddedToBasket];
             if ([existingJob extraCopies] > 0){
                 [existingJob setExtraCopies:[existingJob extraCopies]-1];
             }

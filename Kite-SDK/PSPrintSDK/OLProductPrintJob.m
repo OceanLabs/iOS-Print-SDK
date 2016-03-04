@@ -39,6 +39,7 @@ static NSString *const kKeyUUID = @"co.oceanlabs.pssdk.kKeyUUID";
 static NSString *const kKeyExtraCopies = @"co.oceanlabs.pssdk.kKeyExtraCopies";
 static NSString *const kKeyProductPringJobAddress = @"co.oceanlabs.pssdk.kKeyProductPringJobAddress";
 static NSString *const kKeyProductPrintJobOptions = @"co.oceanlabs.pssdk.kKeyProductPrintJobOptions";
+static NSString *const kKeyDateAddedToBasket = @"co.oceanlabs.pssdk.kKeyDateAddedToBasket";
 
 static id stringOrEmptyString(NSString *str) {
     return str ? str : @"";
@@ -55,6 +56,7 @@ static id stringOrEmptyString(NSString *str) {
 @synthesize address;
 @synthesize uuid;
 @synthesize extraCopies;
+@synthesize dateAddedToBasket;
 
 -(NSMutableDictionary *) options{
     if (!_options){
@@ -248,6 +250,7 @@ static id stringOrEmptyString(NSString *str) {
     [aCoder encodeInteger:self.extraCopies forKey:kKeyExtraCopies];
     [aCoder encodeObject:self.options forKey:kKeyProductPrintJobOptions];
     [aCoder encodeObject:self.address forKey:kKeyProductPringJobAddress];
+    [aCoder encodeObject:self.dateAddedToBasket forKey:kKeyDateAddedToBasket];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
@@ -258,6 +261,7 @@ static id stringOrEmptyString(NSString *str) {
         self.extraCopies = [aDecoder decodeIntegerForKey:kKeyExtraCopies];
         self.options = [aDecoder decodeObjectForKey:kKeyProductPrintJobOptions];
         self.address = [aDecoder decodeObjectForKey:kKeyProductPringJobAddress];
+        self.dateAddedToBasket = [aDecoder decodeObjectForKey:kKeyDateAddedToBasket];
     }
     
     return self;

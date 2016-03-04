@@ -40,6 +40,7 @@ static NSString *const kKeyPhotobookAddress = @"co.oceanlabs.pssdk.kKeyPhotobook
 static NSString *const kKeyPhotobookUuid = @"co.oceanlabs.pssdk.kKeyPhotobookUuid";
 static NSString *const kKeyPhotobookExtraCopies = @"co.oceanlabs.pssdk.kKeyPhotobookExtraCopies";
 static NSString *const kKeyPhotobookPrintJobOptions = @"co.oceanlabs.pssdk.kKeyPhotobookPrintJobOptions";
+static NSString *const kKeyDateAddedToBasket = @"co.oceanlabs.pssdk.kKeyDateAddedToBasket";
 
 @interface OLPhotobookPrintJob ()
 @property (nonatomic, strong) NSString *templateId;
@@ -52,6 +53,7 @@ static NSString *const kKeyPhotobookPrintJobOptions = @"co.oceanlabs.pssdk.kKeyP
 @synthesize address;
 @synthesize uuid;
 @synthesize extraCopies;
+@synthesize dateAddedToBasket;
 
 -(NSMutableDictionary *) options{
     if (!_options){
@@ -201,6 +203,7 @@ static NSString *const kKeyPhotobookPrintJobOptions = @"co.oceanlabs.pssdk.kKeyP
     [aCoder encodeInteger:self.extraCopies forKey:kKeyPhotobookExtraCopies];
     [aCoder encodeObject:self.address forKey:kKeyPhotobookAddress];
     [aCoder encodeObject:self.options forKey:kKeyPhotobookPrintJobOptions];
+    [aCoder encodeObject:self.dateAddedToBasket forKey:kKeyDateAddedToBasket];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
@@ -213,6 +216,7 @@ static NSString *const kKeyPhotobookPrintJobOptions = @"co.oceanlabs.pssdk.kKeyP
         self.uuid = [aDecoder decodeObjectForKey:kKeyPhotobookUuid];
         self.address = [aDecoder decodeObjectForKey:kKeyPhotobookAddress];
         self.options = [aDecoder decodeObjectForKey:kKeyPhotobookPrintJobOptions];
+        self.dateAddedToBasket = [aDecoder decodeObjectForKey:kKeyDateAddedToBasket];
     }
     
     return self;

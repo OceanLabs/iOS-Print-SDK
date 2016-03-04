@@ -40,6 +40,7 @@ static NSString *const kKeyApparelAddress = @"co.oceanlabs.pssdk.kKeyApparelAddr
 static NSString *const kKeyApparelUuid = @"co.oceanlabs.pssdk.kKeyApparelUuid";
 static NSString *const kKeyApparelExtraCopies = @"co.oceanlabs.pssdk.kKeyApparelExtraCopies";
 static NSString *const kKeyApparelPrintJobOptions = @"co.oceanlabs.pssdk.kKeyApparelPrintJobOptions";
+static NSString *const kKeyDateAddedToBasket = @"co.oceanlabs.pssdk.kKeyDateAddedToBasket";
 
 @interface OLApparelPrintJob ()
 @property (nonatomic, strong) NSString *templateId;
@@ -51,6 +52,7 @@ static NSString *const kKeyApparelPrintJobOptions = @"co.oceanlabs.pssdk.kKeyApp
 @synthesize address;
 @synthesize uuid;
 @synthesize extraCopies;
+@synthesize dateAddedToBasket;
 
 -(NSMutableDictionary *) options{
     if (!_options){
@@ -185,6 +187,7 @@ static NSString *const kKeyApparelPrintJobOptions = @"co.oceanlabs.pssdk.kKeyApp
     [aCoder encodeInteger:self.extraCopies forKey:kKeyApparelExtraCopies];
     [aCoder encodeObject:self.address forKey:kKeyApparelAddress];
     [aCoder encodeObject:self.options forKey:kKeyApparelPrintJobOptions];
+    [aCoder encodeObject:self.dateAddedToBasket forKey:kKeyDateAddedToBasket];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
@@ -195,6 +198,7 @@ static NSString *const kKeyApparelPrintJobOptions = @"co.oceanlabs.pssdk.kKeyApp
         self.uuid = [aDecoder decodeObjectForKey:kKeyApparelUuid];
         self.address = [aDecoder decodeObjectForKey:kKeyApparelAddress];
         self.options = [aDecoder decodeObjectForKey:kKeyApparelPrintJobOptions];
+        self.dateAddedToBasket = [aDecoder decodeObjectForKey:kKeyDateAddedToBasket];
     }
     
     return self;

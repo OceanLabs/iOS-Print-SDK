@@ -2898,8 +2898,8 @@ some images!</string>
                                         <view contentMode="scaleToFill" horizontalCompressionResistancePriority="749" verticalCompressionResistancePriority="749" translatesAutoresizingMaskIntoConstraints="NO" id="MMm-3c-qfy" userLabel="Container View">
                                             <rect key="frame" x="20" y="34" width="325" height="467"/>
                                             <subviews>
-                                                <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" tag="20" contentMode="scaleToFill" misplaced="YES" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="z3K-mE-eiL">
-                                                    <rect key="frame" x="0.0" y="0.0" width="325" height="468"/>
+                                                <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" tag="20" contentMode="scaleToFill" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="z3K-mE-eiL">
+                                                    <rect key="frame" x="0.0" y="0.0" width="325" height="467"/>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                     <collectionViewLayout key="collectionViewLayout" id="5aa-xD-xw5" customClass="LXReorderableCollectionViewFlowLayout"/>
                                                     <cells>
@@ -3442,8 +3442,8 @@ to rearrange the photos</string>
                             <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sm1-bU-sZ9">
                                 <rect key="frame" x="5" y="549" width="46" height="46"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NpY-nO-DkL">
-                                        <rect key="frame" x="0.0" y="-7" width="46" height="56"/>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NpY-nO-DkL">
+                                        <rect key="frame" x="0.0" y="-6.5" width="46" height="55"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="36"/>
                                         <state key="normal" title="+">
                                             <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>

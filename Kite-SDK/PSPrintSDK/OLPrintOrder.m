@@ -83,6 +83,8 @@ static id stringOrEmptyString(NSString *str) {
 @property (nonatomic, strong) NSMutableArray<OLAsset *> *assetsToUpload;
 @property (nonatomic, assign, getter = isAssetUploadComplete) BOOL assetUploadComplete;
 
+@property (strong, nonatomic, readwrite) NSArray *jobs;
+
 @property (nonatomic, assign) NSInteger storageIdentifier;
 @property (nonatomic, assign) BOOL userSubmittedForPrinting;
 @property (nonatomic, assign) NSUInteger totalBytesWritten, totalBytesExpectedToWrite;
@@ -249,7 +251,17 @@ static NSBlockOperation *templateSyncOperation;
 }
 
 - (void)addPrintJob:(id<OLPrintJob>)job {
+    if (![job dateAddedToBasket]){
+        [job setDateAddedToBasket:[NSDate date]];
+    }
+    
     [(NSMutableArray *) self.jobs addObject:job];
+    
+    self.jobs = [[self.jobs sortedArrayUsingComparator:^NSComparisonResult(id a, id b) {
+        NSDate *first = [(id<OLPrintJob>)a dateAddedToBasket];
+        NSDate *second = [(id<OLPrintJob>)b dateAddedToBasket];
+        return [second compare:first];
+    }] mutableCopy];
 }
 
 - (void)removePrintJob:(id<OLPrintJob>)job {
