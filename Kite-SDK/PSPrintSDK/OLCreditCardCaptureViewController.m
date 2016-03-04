@@ -263,6 +263,15 @@ UITableViewDataSource, UITextFieldDelegate>
         return;
     }
     
+    NSUInteger flags = NSCalendarUnitMonth | NSCalendarUnitYear;
+    NSDateComponents *components = [[NSCalendar currentCalendar] components:flags fromDate:[NSDate date]];
+    NSInteger componentsYear = components.year - 2000; //This will obviously cause problems near 2100.
+    if (componentsYear > expireYear || (componentsYear == expireYear && components.month > expireMonth)){
+        NSString *localizedDescription = NSLocalizedStringFromTableInBundle(@"Please enter a card expiry date in the future", @"KitePrintSDK", [OLConstants bundle], @"");
+        [[[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLConstants bundle], @"") message:localizedDescription delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLConstants bundle], @"") otherButtonTitles:nil] show];
+        return;
+    }
+    
     CardType cardType = getCardType(self.textFieldCardNumber.text);
     OLPayPalCardType paypalCard;
     switch (cardType) {
