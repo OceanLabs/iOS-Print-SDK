@@ -534,7 +534,7 @@ UIActionSheetDelegate>
                 }]];
             }
             if ([OLKiteUtils qrCodeUploadEnabled]) {
-                [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"QR Code", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
+                [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Upload from your phone", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
                     [self showQRCodeImagePicker];
                 }]];
             }
@@ -723,7 +723,7 @@ UIActionSheetDelegate>
     OLQRCodeUploadViewController *vc = (OLQRCodeUploadViewController *) [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:nil] instantiateViewControllerWithIdentifier:@"OLQRCodeUploadViewController"];
     vc.modalPresentationStyle = UIModalPresentationFormSheet;
     vc.delegate = self;
-    if ([self isHorizontalSizeClassCompact]){
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone || [self isHorizontalSizeClassCompact]){
         vc.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(onQRCodeScannerDidCancel)];
         OLNavigationController *nvc = [[OLNavigationController alloc] initWithRootViewController:vc];
         [self presentViewController:nvc animated:YES completion:nil];
@@ -1433,6 +1433,8 @@ UIActionSheetDelegate>
     OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
     printPhoto.asset = asset;
     [self.userSelectedPhotos addObject:printPhoto];
+    
+    [self.collectionView reloadData];
     
     [self dismissViewControllerAnimated:YES completion:^(void){}];
     [self.view.window removeGestureRecognizer:self.tapBehindQRUploadModalGestureRecognizer];

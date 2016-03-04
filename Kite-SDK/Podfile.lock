@@ -28,7 +28,7 @@ PODS:
     - Bolts/Tasks
   - Bolts/Tasks (1.6.0)
   - CSStickyHeaderFlowLayout (0.2.10)
-  - CTAssetsPickerController (3.1.1):
+  - CTAssetsPickerController (3.3.1):
     - PureLayout (~> 3.0.0)
   - DACircularProgress (2.3.1)
   - FacebookImagePicker (2.0.8):
@@ -71,13 +71,13 @@ PODS:
   - SVProgressHUD (1.1.3)
   - TSMarkdownParser (1.0.20)
   - UICKeyChainStore (2.0.7)
-  - UIColor-HexString (1.2.0)
+  - UIColor-HexString (1.3.0)
 
 DEPENDENCIES:
   - AFNetworking (~> 2.6.1)
   - ApplePayStubs
   - CSStickyHeaderFlowLayout
-  - CTAssetsPickerController (~> 3.1.0)
+  - CTAssetsPickerController
   - DACircularProgress
   - FacebookImagePicker
   - GroundControl
@@ -100,7 +100,7 @@ SPEC CHECKSUMS:
   ApplePayStubs: 5dd63c36527d1117b2045939fb5b6581b4815433
   Bolts: f52a250053bb517ca874523c3913776359ab3def
   CSStickyHeaderFlowLayout: 5366582779d8b7c9ba9b9cc729c218cc23888776
-  CTAssetsPickerController: 6fba9134a230656ffe34ac0effb0060a1ead65cb
+  CTAssetsPickerController: b1d1d50ab87cf6b8b13531de5f4530482e7e53ed
   DACircularProgress: 4dd437c0fc3da5161cb289e07ac449493d41db71
   FacebookImagePicker: 888e7554898bea596e88556a935835c6141d8aed
   FBSDKCoreKit: 66a935d17b6e00b6b64e604f2eb9b72c9ab7deb8
@@ -119,6 +119,6 @@ SPEC CHECKSUMS:
   SVProgressHUD: 748080e4f36e603f6c02aec292664239df5279c1
   TSMarkdownParser: 5ef8a617d39f92812860e0a3544348de33abe549
   UICKeyChainStore: 696cd35083f7c8fb5e201d909b7e6aea6b478575
-  UIColor-HexString: ef5608be035bb21354d9a69b50251525b431a1e9
+  UIColor-HexString: fadc2e1389db19147ac99dee92222d3bd8bfec4a
 
 COCOAPODS: 0.39.0

@@ -83,6 +83,7 @@ static BOOL useStripeForCreditCards = NO;
 static BOOL cacheTemplates = NO;
 static BOOL useStaging = NO;
 static BOOL isUnitTesting = NO;
+static BOOL QRCodeUploadEnabled = NO;
 
 #ifdef OL_KITE_OFFER_INSTAGRAM
 static NSString *instagramClientID = nil;
@@ -252,6 +253,14 @@ static NSString* creativeSDKClientSecret = nil;
     return creativeSDKClientId;
 }
 #endif
+
++ (void)setQRCodeUploadEnabled:(BOOL)enabled{
+    QRCodeUploadEnabled = enabled;
+}
+
++ (BOOL)QRCodeUploadEnabled{
+    return QRCodeUploadEnabled;
+}
 
 #pragma mark - Internal
 

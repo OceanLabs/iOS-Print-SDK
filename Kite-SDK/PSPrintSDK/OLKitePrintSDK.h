@@ -107,4 +107,11 @@
 + (void)setAdobeCreativeSDKEnabledWithClientID:(NSString *_Nonnull)clientID secret:(NSString *_Nonnull)secret;
 #endif
 
+/**
+ *  Enable ability to upload a photo from another device through the use of a QR code. Useful for Kiosk apps.
+ *
+ *  @param enabled BOOL values
+ */
++ (void)setQRCodeUploadEnabled:(BOOL)enabled;
+
 @end
