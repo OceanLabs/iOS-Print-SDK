@@ -1247,7 +1247,13 @@ UINavigationControllerDelegate>
 #endif
     
     if (self.replacingImageNumber){
-        self.photobookPhotos[[self.replacingImageNumber integerValue]] = [NSNull null];
+        if ([self.replacingImageNumber integerValue] == -1){
+            self.coverPhoto = nil;
+            self.addNewPhotosAtIndex = -1;
+        }
+        else{
+            self.photobookPhotos[[self.replacingImageNumber integerValue]] = [NSNull null];
+        }
         self.replacingImageNumber = nil;
     }
     
