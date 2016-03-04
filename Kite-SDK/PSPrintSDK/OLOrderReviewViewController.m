@@ -756,7 +756,16 @@ UIViewControllerPreviewingDelegate>
     
     self.editingPrintPhoto.edits = cropper.edits;
     
-    [self.collectionView reloadData];
+    //Need to do some work to only reload the proper cells, otherwise the cropped image might zoom to the wrong cell.
+    for (NSInteger i = 0; i < self.userSelectedPhotos.count; i++){
+        if (self.userSelectedPhotos[i] == self.editingPrintPhoto){
+            NSIndexPath *indexPath = [NSIndexPath indexPathForItem:i inSection:0];
+            if (indexPath){
+                [self.collectionView reloadItemsAtIndexPaths:@[indexPath]];
+            }
+        }
+    }
+    
     [cropper dismissViewControllerAnimated:YES completion:^{
         [UIView animateWithDuration:0.25 animations:^{
             self.nextButton.alpha = 1;

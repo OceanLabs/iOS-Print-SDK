@@ -138,6 +138,7 @@ static id stringOrEmptyString(NSString *str) {
     NSMutableDictionary *pdfs = [[NSMutableDictionary alloc] init];
     
     assets[@"front_image"] = [NSString stringWithFormat:@"%lld", self.frontImageAsset.assetId];
+    pdfs[@"front_image"] = [NSString stringWithFormat:@"%lld", self.frontImageAsset.assetId];
     
     if (self.backImageAsset){
         if (self.backImageAsset.mimeType == kOLMimeTypePDF){
@@ -165,7 +166,7 @@ static id stringOrEmptyString(NSString *str) {
     }
     
     json[@"assets"] = assets;
-    json[@"pdf"] = pdfs;
+    json[@"pdf"] = pdfs[@"front_image"];
     
     // set message
     if (self.message) {

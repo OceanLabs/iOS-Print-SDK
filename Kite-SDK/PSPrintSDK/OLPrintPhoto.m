@@ -82,6 +82,7 @@ static NSOperationQueue *imageOperationQueue;
 
 @interface OLPrintPhoto ()
 @property (nonatomic, strong) UIImage *cachedCroppedThumbnailImage;
+@property (assign, nonatomic) BOOL thumbnailIsMaxSize;
 @property (nonatomic, assign, readwrite) PrintPhotoAssetType type;
 @end
 
@@ -164,11 +165,12 @@ static NSOperationQueue *imageOperationQueue;
 
 - (void)setImageSize:(CGSize)destSize cropped:(BOOL)cropped progress:(OLImageEditorImageGetImageProgressHandler)progressHandler completionHandler:(void(^)(UIImage *image))handler{
     if (self.cachedCroppedThumbnailImage) {
-        if ((MAX(destSize.height, destSize.width) * screenScale <= MIN(self.cachedCroppedThumbnailImage.size.width, self.cachedCroppedThumbnailImage.size.height))){
+        if ((MAX(destSize.height, destSize.width) * screenScale <= MIN(self.cachedCroppedThumbnailImage.size.width, self.cachedCroppedThumbnailImage.size.height)) || self.thumbnailIsMaxSize){
             handler(self.cachedCroppedThumbnailImage);
             return;
         }
     }
+    self.thumbnailIsMaxSize = NO;
     
     NSBlockOperation *blockOperation = [[NSBlockOperation alloc] init];
     
@@ -231,6 +233,7 @@ static NSOperationQueue *imageOperationQueue;
                 if (![self isEdited]){
                     [self getImageWithSize:CGSizeZero progress:progressHandler completion:^(UIImage *image){
                         self.cachedCroppedThumbnailImage = image;
+                        self.thumbnailIsMaxSize = YES;
                         if (progressHandler){
                             progressHandler(1);
                         }
@@ -253,6 +256,7 @@ static NSOperationQueue *imageOperationQueue;
                 if (![self isEdited]){
                     [self getImageWithSize:CGSizeZero progress:progressHandler completion:^(UIImage *image){
                         self.cachedCroppedThumbnailImage = image;
+                        self.thumbnailIsMaxSize = YES;
                         if (progressHandler){
                             progressHandler(1);
                         }
@@ -293,11 +297,13 @@ static NSOperationQueue *imageOperationQueue;
 
 #if defined(OL_KITE_OFFER_INSTAGRAM) || defined(OL_KITE_OFFER_FACEBOOK)
 - (void)downloadFullImageWithProgress:(OLImageEditorImageGetImageProgressHandler)progressHandler completion:(OLImageEditorImageGetImageCompletionHandler)completionHandler {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        if (progressHandler){
-            progressHandler(0.05f); // small bit of fake inital progress to get progress bars displaying
-        }
-    });
+    if (![[SDWebImageManager sharedManager] cachedImageExistsForURL:[self.asset fullURL]]){
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (progressHandler){
+                progressHandler(0.05f); // small bit of fake inital progress to get progress bars displaying
+            }
+        });
+    }
     [[SDWebImageManager sharedManager] downloadImageWithURL:[self.asset fullURL] options:0 progress:^(NSInteger receivedSize, NSInteger expectedSize) {
         dispatch_async(dispatch_get_main_queue(), ^{
             if (progressHandler) {
@@ -343,7 +349,9 @@ static NSOperationQueue *imageOperationQueue;
                 });
             }
         };
-        CGSize requestSize = fullResolution ? PHImageManagerMaximumSize : CGSizeMake(size.width * screenScale, size.height * screenScale);
+        
+        //Don't request less than a 400x400 image, otherwise the Photos Framework tries to be useful and returns a low-res, prerendered image which loses the rotation metadata (but is rotated correctly). This messes up the rotation from our editor.
+        CGSize requestSize = fullResolution ? PHImageManagerMaximumSize : CGSizeMake(MAX(size.width * screenScale, 400), MAX(size.height * screenScale, 400));
         [imageManager requestImageForAsset:(PHAsset *)self.asset targetSize:requestSize contentMode:PHImageContentModeAspectFill options:options resultHandler:^(UIImage *image, NSDictionary *info){
             completionHandler(image);
         }];
@@ -357,7 +365,13 @@ static NSOperationQueue *imageOperationQueue;
         OLAsset *asset = (OLAsset *)self.asset;
         
         if (asset.assetType == kOLAssetTypeRemoteImageURL){
-            [[SDWebImageManager sharedManager] downloadImageWithURL:[(OLAsset *)self.asset imageURL]  options:0 progress:nil completed:
+            [[SDWebImageManager sharedManager] downloadImageWithURL:[(OLAsset *)self.asset imageURL]  options:0 progress:^(NSInteger receivedSize, NSInteger expectedSize) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if (progressHandler) {
+                        progressHandler(MAX(0.05f, receivedSize / (float) expectedSize));
+                    }
+                });
+            } completed:
              ^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL){
                  completionHandler(image);
              }];
@@ -403,11 +417,14 @@ static NSOperationQueue *imageOperationQueue;
             }
             
             if (![printPhoto isEdited] || !cropped){
+                printPhoto.thumbnailIsMaxSize = CGSizeEqualToSize(blockImage.size, image.size);
                 completionHandler(blockImage);
                 return;
             }
             
             blockImage = [RMImageCropper editedImageFromImage:blockImage andFrame:printPhoto.edits.cropImageFrame andImageRect:printPhoto.edits.cropImageRect andImageViewWidth:printPhoto.edits.cropImageSize.width andImageViewHeight:printPhoto.edits.cropImageSize.height];
+            
+            printPhoto.thumbnailIsMaxSize = CGSizeEqualToSize(blockImage.size, image.size);
             
             completionHandler(blockImage);
         };
@@ -513,7 +530,7 @@ static NSOperationQueue *imageOperationQueue;
         if (asset.assetType == kOLAssetTypeRemoteImageURL){
             [[SDWebImageManager sharedManager] downloadImageWithURL:[asset imageURL]
                                                             options:0
-                                                           progress:nil
+                                                           progress:NULL
                                                           completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *url) {
                                                               if (finished) {
                                                                   if (error) {

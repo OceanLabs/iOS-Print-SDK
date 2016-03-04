@@ -126,6 +126,7 @@ UINavigationControllerDelegate>
 @property (strong, nonatomic) OLPrintPhoto *coverPhoto;
 @property (weak, nonatomic) OLPhotobookViewController *interactionPhotobook;
 @property (strong, nonatomic) UIButton *nextButton;
+@property (assign, nonatomic) BOOL autoAddedCover;
 
 @end
 
@@ -200,6 +201,10 @@ UINavigationControllerDelegate>
         [self collectionView:self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:maxItem+1 inSection:kSectionPages]];
         [self collectionView:self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:maxItem+2 inSection:kSectionPages]];
         self.haveCachedCells = YES;
+    }
+    
+    if (self.userSelectedPhotos.count == 0 && self.childViewControllers.count > 1 && !self.coverPhoto){
+        [self photobook:self.childViewControllers[1] userDidTapOnImageWithIndex:0];
     }
 }
 
@@ -309,7 +314,7 @@ UINavigationControllerDelegate>
         }
     }
     else{
-        NSMutableArray *newPhotos = [NSMutableArray arrayWithArray:[self.userSelectedPhotos subarrayWithRange:NSMakeRange(0, MIN(self.userSelectedPhotos.count, self.product.quantityToFulfillOrder))]];
+        NSMutableArray *newPhotos = [NSMutableArray arrayWithArray:[self.userSelectedPhotos subarrayWithRange:NSMakeRange(0, MIN(self.userSelectedPhotos.count, self.product.quantityToFulfillOrder+1))]];
         [newPhotos removeObjectsInArray:self.userSelectedPhotosCopy];
         for (NSInteger newPhoto = 0; newPhoto < newPhotos.count; newPhoto++){
             BOOL foundSpot = NO;
@@ -554,10 +559,17 @@ UINavigationControllerDelegate>
     }
     self.animating = YES;
     if (index == -1){ //Replace Cover
-        self.addNewPhotosAtIndex = index;
-        [self addMorePhotosFromView:photobook.view];
-        self.animating = NO;
-        return;
+        if (!self.coverPhoto){
+            self.addNewPhotosAtIndex = index;
+            [self addMorePhotosFromView:photobook.view];
+            self.animating = NO;
+            return;
+        }
+        else{
+            self.animating = NO;
+            [self photobook:photobook userDidLongPressOnImageWithIndex:index sender:photobook.coverImageView.gestureRecognizers.firstObject];
+            return;
+        }
     }
     
     OLPhotobookPageContentViewController *page = [self findPageForImageIndex:index];
@@ -729,7 +741,12 @@ UINavigationControllerDelegate>
     self.longPressImageIndex = index;
     self.interactionPhotobook = photobook;
     
-    view.delegate = self;
+    if ([view respondsToSelector:@selector(setDelegate:)]){
+        view.delegate = self;
+    }
+    if (view.isFirstResponder && [UIMenuController sharedMenuController].isMenuVisible){
+        return;
+    }
     [view becomeFirstResponder];
     UIMenuItem *deleteItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Remove", @"") action:@selector(deletePage)];
     UIMenuItem *cropImageItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Edit", @"") action:@selector(cropImage)];
@@ -1137,33 +1154,33 @@ UINavigationControllerDelegate>
         [photoArray addObject:printPhoto];
     }
     
-    // First remove any that are not returned.
-    NSMutableArray *removeArray = [NSMutableArray arrayWithArray:self.userSelectedPhotos];
-    for (OLPrintPhoto *object in self.userSelectedPhotos) {
-        if ([object.asset isKindOfClass:[OLAsset class]] && [[object.asset dataSource] isKindOfClass:class]){
-            if ([photoArray containsObject:object]){
-                [removeArray removeObjectIdenticalTo:object];
-                [photoArray removeObject:object];
-            }
-        }
-        else if (![object.asset isKindOfClass:class]) {
-            [removeArray removeObjectIdenticalTo:object];
-        }
-        
-        else if([photoArray containsObject:object]){
-            [removeArray removeObjectIdenticalTo:object];
-        }
-    }
-    
-    [self.userSelectedPhotos removeObjectsInArray:removeArray];
+//    // First remove any that are not returned.
+//    NSMutableArray *removeArray = [NSMutableArray arrayWithArray:self.userSelectedPhotos];
+//    for (OLPrintPhoto *object in self.userSelectedPhotos) {
+//        if ([object.asset isKindOfClass:[OLAsset class]] && [[object.asset dataSource] isKindOfClass:class]){
+//            if ([photoArray containsObject:object]){
+//                [removeArray removeObjectIdenticalTo:object];
+//                [photoArray removeObject:object];
+//            }
+//        }
+//        else if (![object.asset isKindOfClass:class]) {
+//            [removeArray removeObjectIdenticalTo:object];
+//        }
+//        
+//        else if([photoArray containsObject:object]){
+//            [removeArray removeObjectIdenticalTo:object];
+//        }
+//    }
+//    
+//    [self.userSelectedPhotos removeObjectsInArray:removeArray];
     
     // Second, add the remaining objects to the end of the array without replacing any.
     NSMutableArray *addArray = [NSMutableArray arrayWithArray:photoArray];
-    for (id object in self.userSelectedPhotos) {
-        if ([addArray containsObject:object]){
-            [addArray removeObject:object];
-        }
-    }
+//    for (id object in self.userSelectedPhotos) {
+//        if ([addArray containsObject:object]){
+//            [addArray removeObject:object];
+//        }
+//    }
     
     [self.userSelectedPhotos addObjectsFromArray:addArray];
     
@@ -1178,10 +1195,10 @@ UINavigationControllerDelegate>
     }
     [self updateUserSelectedPhotos];
     
-    static dispatch_once_t predicate;
-    dispatch_once(&predicate, ^{
+    if (!self.autoAddedCover){
+        self.autoAddedCover = YES;
         if (!self.coverPhoto){
-            self.coverPhoto = self.photobookPhotos.firstObject;
+            self.coverPhoto = self.userSelectedPhotos.firstObject;
             for (OLPhotobookViewController *photobook in self.childViewControllers){
                 if ([photobook bookClosed]){
                     photobook.coverPhoto = self.coverPhoto;
@@ -1190,7 +1207,7 @@ UINavigationControllerDelegate>
                 }
             }
         }
-    });
+    }
 }
 
 #pragma mark - CTAssetsPickerControllerDelegate Methods
@@ -1230,13 +1247,21 @@ UINavigationControllerDelegate>
 #endif
     
     if (self.replacingImageNumber){
-        self.photobookPhotos[[self.replacingImageNumber integerValue]] = [NSNull null];
+        if ([self.replacingImageNumber integerValue] == -1){
+            self.coverPhoto = nil;
+            self.addNewPhotosAtIndex = -1;
+        }
+        else{
+            self.photobookPhotos[[self.replacingImageNumber integerValue]] = [NSNull null];
+        }
         self.replacingImageNumber = nil;
     }
     
     if (self.addNewPhotosAtIndex == -1){
         self.coverPhoto = [[OLPrintPhoto alloc] init];
         self.coverPhoto.asset = [assets firstObject];
+        assets = [assets subarrayWithRange:NSMakeRange(1, assets.count - 1)];
+        self.addNewPhotosAtIndex = 0;
         
         for (OLPhotobookViewController *photobook in self.childViewControllers){
             if ([photobook bookClosed]){
@@ -1245,9 +1270,6 @@ UINavigationControllerDelegate>
                 break;
             }
         }
-        
-        [picker dismissViewControllerAnimated:YES completion:NULL];
-        return;
     }
     
     [self populateArrayWithNewArray:assets dataType:assetClass];
@@ -1300,6 +1322,54 @@ UINavigationControllerDelegate>
     return YES;
 }
 
+- (BOOL)assetsPickerController:(id)picker shouldSelectAsset:(id)asset{
+    NSArray *assets;
+    if ([picker respondsToSelector:@selector(selectedAssets)]){
+        assets = [picker selectedAssets];
+    }
+    else if ([picker respondsToSelector:@selector(selected)]){
+        assets = [picker selected];
+    }
+    else{ // ¯\_(ツ)_/¯
+        return YES;
+    }
+    
+    NSInteger max = self.product.quantityToFulfillOrder;
+    NSInteger current = self.userSelectedPhotos.count + assets.count;
+    if (self.addNewPhotosAtIndex == -1){
+        max++;
+    }
+    if (self.replacingImageNumber){
+        current--;
+    }
+
+    if (current >= max){
+        if ([UIAlertController class]){
+            UIAlertController *alert =
+            [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Maximum Photos Reached", @"")
+                                                message:[NSString stringWithFormat:max == 1 ? NSLocalizedString(@"Please select only %ld photo", @"") : NSLocalizedString(@"Please select not more than %ld photos total", @""), (long)max]
+                                         preferredStyle:UIAlertControllerStyleAlert];
+            
+            UIAlertAction *action =
+            [UIAlertAction actionWithTitle:NSLocalizedString(@"OK", @"")
+                                     style:UIAlertActionStyleDefault
+                                   handler:nil];
+            
+            [alert addAction:action];
+            
+            [picker presentViewController:alert animated:YES completion:nil];
+        }
+        else{
+            UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Maximum Photos Reached", @"") message:[NSString stringWithFormat:max == 1 ? NSLocalizedString(@"Please select only %ld photo", @"") : NSLocalizedString(@"Please select not more than %ld photos total", @""), (long)max] delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"") otherButtonTitles:nil];
+            [av show];
+        }
+        return NO;
+    }
+
+    return YES;
+}
+    
+
 #ifdef OL_KITE_OFFER_INSTAGRAM
 #pragma mark - OLInstagramImagePickerControllerDelegate Methods
 
@@ -1328,6 +1398,8 @@ UINavigationControllerDelegate>
         if (images.count > 0){
             self.coverPhoto = [[OLPrintPhoto alloc] init];
             self.coverPhoto.asset = [images firstObject];
+            images = [images subarrayWithRange:NSMakeRange(1, images.count - 1)];
+            self.addNewPhotosAtIndex = 0;
         }
         
         for (OLPhotobookViewController *photobook in self.childViewControllers){
@@ -1337,9 +1409,6 @@ UINavigationControllerDelegate>
                 break;
             }
         }
-        
-        [imagePicker dismissViewControllerAnimated:YES completion:NULL];
-        return;
     }
     
     [self populateArrayWithNewArray:images dataType:[OLInstagramImage class]];
@@ -1354,12 +1423,38 @@ UINavigationControllerDelegate>
 }
 
 - (BOOL)instagramImagePicker:(OLInstagramImagePickerController *)imagePicker shouldSelectImage:(OLInstagramImage *)image{
+    NSInteger max = self.product.quantityToFulfillOrder;
+    NSInteger current = self.userSelectedPhotos.count + imagePicker.selected.count;
     if (self.addNewPhotosAtIndex == -1){
-        return imagePicker.selected.count == 0;
+        max++;
     }
-    else{
-        return YES;
+    if (self.replacingImageNumber){
+        current--;
     }
+    
+    if (current >= max){
+        if ([UIAlertController class]){
+            UIAlertController *alert =
+            [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Maximum Photos Reached", @"")
+                                                message:[NSString stringWithFormat:self.product.quantityToFulfillOrder == 1 ? NSLocalizedString(@"Please select only %ld photo", @"") : NSLocalizedString(@"Please select not more than %ld photos total", @""), max]
+                                         preferredStyle:UIAlertControllerStyleAlert];
+            
+            UIAlertAction *action =
+            [UIAlertAction actionWithTitle:NSLocalizedString(@"OK", @"")
+                                     style:UIAlertActionStyleDefault
+                                   handler:nil];
+            
+            [alert addAction:action];
+            
+            [imagePicker presentViewController:alert animated:YES completion:nil];
+        }
+        else{
+            UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Maximum Photos Reached", @"") message:[NSString stringWithFormat:self.product.quantityToFulfillOrder == 1 ? NSLocalizedString(@"Please select only %ld photo", @"") : NSLocalizedString(@"Please select not more than %ld photos total", @""), max] delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"") otherButtonTitles:nil];
+            [av show];
+        }
+        return NO;
+    }
+    return YES;
 }
 #endif
 
@@ -1391,6 +1486,8 @@ UINavigationControllerDelegate>
         if (images.count > 0){
             self.coverPhoto = [[OLPrintPhoto alloc] init];
             self.coverPhoto.asset = [images firstObject];
+            images = [images subarrayWithRange:NSMakeRange(1, images.count - 1)];
+            self.addNewPhotosAtIndex = 0;
         }
         
         for (OLPhotobookViewController *photobook in self.childViewControllers){
@@ -1400,9 +1497,6 @@ UINavigationControllerDelegate>
                 break;
             }
         }
-        
-        [imagePicker dismissViewControllerAnimated:YES completion:NULL];
-        return;
     }
     [self populateArrayWithNewArray:images dataType:[OLFacebookImage class]];
 #ifndef OL_NO_ANALYTICS
@@ -1416,12 +1510,38 @@ UINavigationControllerDelegate>
 }
 
 - (BOOL)facebookImagePicker:(OLFacebookImagePickerController *)imagePicker shouldSelectImage:(OLFacebookImage *)image{
+    NSInteger max = self.product.quantityToFulfillOrder;
+    NSInteger current = self.userSelectedPhotos.count + imagePicker.selected.count;
     if (self.addNewPhotosAtIndex == -1){
-        return imagePicker.selected.count == 0;
+        max++;
     }
-    else{
-        return YES;
+    if (self.replacingImageNumber){
+        current--;
     }
+    
+    if (current >= max){
+        if ([UIAlertController class]){
+            UIAlertController *alert =
+            [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Maximum Photos Reached", @"")
+                                                message:[NSString stringWithFormat:self.product.quantityToFulfillOrder == 1 ? NSLocalizedString(@"Please select only %ld photo", @"") : NSLocalizedString(@"Please select not more than %ld photos total", @""), max]
+                                         preferredStyle:UIAlertControllerStyleAlert];
+            
+            UIAlertAction *action =
+            [UIAlertAction actionWithTitle:NSLocalizedString(@"OK", @"")
+                                     style:UIAlertActionStyleDefault
+                                   handler:nil];
+            
+            [alert addAction:action];
+            
+            [imagePicker presentViewController:alert animated:YES completion:nil];
+        }
+        else{
+            UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Maximum Photos Reached", @"") message:[NSString stringWithFormat:self.product.quantityToFulfillOrder == 1 ? NSLocalizedString(@"Please select only %ld photo", @"") : NSLocalizedString(@"Please select not more than %ld photos total", @""), max] delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"") otherButtonTitles:nil];
+            [av show];
+        }
+        return NO;
+    }
+    return YES;
 }
 #endif
 

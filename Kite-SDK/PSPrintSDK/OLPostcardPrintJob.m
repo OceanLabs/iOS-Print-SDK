@@ -152,7 +152,7 @@ static id stringOrEmptyString(NSString *str) {
         [json setObject:self.message forKey:@"message"];
     }
     
-    json[@"pdf"] = pdfs;
+    json[@"pdf"] = pdfs[@"front_image"];
     json[@"assets"] = assets;
     json[@"options"] = self.options;
     

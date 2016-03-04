@@ -359,7 +359,9 @@ CGFloat margin = 2;
         cellImage.image = nil;
         
         OLPrintPhoto *printPhoto =(OLPrintPhoto*)[self.framePhotos objectAtIndex:indexPath.row + (outerCollectionViewIndexPath.item) * self.product.quantityToFulfillOrder];
-        [printPhoto setImageSize:[self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath] cropped:YES progress:NULL completionHandler:^(UIImage *image){
+        [printPhoto setImageSize:[self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath] cropped:YES progress:^(float progress){
+            [cellImage setProgress:progress];
+        }completionHandler:^(UIImage *image){
             dispatch_async(dispatch_get_main_queue(), ^{
                 cellImage.image = image;
             });
@@ -439,7 +441,6 @@ CGFloat margin = 2;
     self.editingPrintPhoto.edits = cropper.edits;
     
     //Need to do some work to only reload the proper cells, otherwise the cropped image might zoom to the wrong cell.
-    NSMutableArray *indexPaths = [[NSMutableArray alloc] init];
     for (NSInteger i = 0; i < self.framePhotos.count; i++){
         if (self.framePhotos[i] == self.editingPrintPhoto){
             NSInteger outerIndex = i / self.product.quantityToFulfillOrder;
@@ -453,14 +454,10 @@ CGFloat margin = 2;
             UICollectionViewCell *outerCell = [self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:outerIndex inSection:0]];
             UICollectionView *innerCollectionView = [outerCell viewWithTag:20];
             
-            
-            
             NSIndexPath *innerIndexPath = [NSIndexPath indexPathForItem:innerIndex inSection:0];
-            [indexPaths addObject:innerIndexPath];
             
-            if (outerIndex != i+1 / self.product.quantityToFulfillOrder){
-                [innerCollectionView reloadItemsAtIndexPaths:indexPaths];
-                [indexPaths removeAllObjects];
+            if (innerIndexPath){
+                [innerCollectionView reloadItemsAtIndexPaths:@[innerIndexPath]];
             }
         }
     }
