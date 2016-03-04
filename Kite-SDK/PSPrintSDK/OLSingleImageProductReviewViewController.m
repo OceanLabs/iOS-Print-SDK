@@ -602,11 +602,9 @@ static BOOL hasMoved;
 - (void) collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
     UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
     
-    BOOL customProviders = NO;
     NSInteger numberOfProviders = 0;
 #ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
     NSInteger numberOfCustomProviders = [OLKiteUtils kiteVcForViewController:self].customImageProviders.count;
-    customProviders = numberOfCustomProviders > 0;
     numberOfProviders += numberOfCustomProviders;
 #endif
     
