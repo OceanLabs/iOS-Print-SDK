@@ -86,7 +86,15 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
 @implementation OLCheckoutViewController
 
 - (BOOL)prefersStatusBarHidden {
-    return [OLKiteABTesting sharedInstance].darkTheme;
+    BOOL hidden = [OLKiteABTesting sharedInstance].darkTheme;
+    
+    if ([self respondsToSelector:@selector(traitCollection)]){
+        if (self.traitCollection.verticalSizeClass == UIUserInterfaceSizeClassCompact && self.view.frame.size.height < self.view.frame.size.width){
+            hidden |= YES;
+        }
+    }
+    
+    return hidden;
 }
 
 -(NSMutableArray *) shippingAddresses{

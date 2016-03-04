@@ -228,7 +228,15 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 @implementation OLPaymentViewController
 
 - (BOOL)prefersStatusBarHidden {
-    return [OLKiteABTesting sharedInstance].darkTheme;
+    BOOL hidden = [OLKiteABTesting sharedInstance].darkTheme;
+    
+    if ([self respondsToSelector:@selector(traitCollection)]){
+        if (self.traitCollection.verticalSizeClass == UIUserInterfaceSizeClassCompact && self.view.frame.size.height < self.view.frame.size.width){
+            hidden |= YES;
+        }
+    }
+    
+    return hidden;
 }
 
 - (id)initWithPrintOrder:(OLPrintOrder *)printOrder {

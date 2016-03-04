@@ -256,6 +256,9 @@ static BOOL hasMoved;
 }
 
 - (void)enterFullCrop:(BOOL)animated{
+    if (!self.imageCropView.imageView.image){
+        return;
+    }
     
 #ifdef OL_KITE_OFFER_ADOBE
     [[AdobeUXAuthManager sharedManager] setAuthenticationParametersWithClientID:[OLKitePrintSDK adobeCreativeSDKClientID] clientSecret:[OLKitePrintSDK adobeCreativeSDKClientSecret] enableSignUp:true];
