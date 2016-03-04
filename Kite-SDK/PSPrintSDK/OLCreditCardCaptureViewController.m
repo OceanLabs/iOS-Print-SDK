@@ -512,6 +512,20 @@ UITableViewDataSource, UITextFieldDelegate>
 
 #pragma mark - UITextFieldDelegate methods
 
+- (BOOL)textFieldShouldReturn:(UITextField *)textField{
+    if (textField == self.textFieldCardNumber){
+        [self.textFieldExpiryDate becomeFirstResponder];
+    }
+    else if (textField == self.textFieldExpiryDate){
+        [self.textFieldCVV becomeFirstResponder];
+    }
+    else if (textField == self.textFieldCVV){
+        [self.textFieldCVV resignFirstResponder];
+    }
+    
+    return YES;
+}
+
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
     if (textField == self.textFieldExpiryDate) {
         self.textFieldExpiryDate.text = [NSString stringByFormattingCreditCardExpiry:[self.textFieldExpiryDate.text stringByReplacingCharactersInRange:range withString:string]];
