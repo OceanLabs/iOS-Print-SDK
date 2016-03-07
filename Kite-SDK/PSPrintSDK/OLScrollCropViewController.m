@@ -119,8 +119,7 @@
     }
 }
 
--(void)viewWillAppear:(BOOL)animated{
-    [super viewWillAppear:animated];
+- (void)setupImage{
     [self.cropView removeConstraint:self.aspectRatioConstraint];
     self.aspectRatioConstraint = [NSLayoutConstraint constraintWithItem:self.cropView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self.cropView attribute:NSLayoutAttributeWidth multiplier:self.aspectRatio constant:0];
     [self.cropView addConstraints:@[self.aspectRatioConstraint]];
@@ -134,6 +133,31 @@
     [self.view setNeedsLayout];
     [self.view layoutIfNeeded];
     self.cropView.imageView.transform = self.edits.cropTransform;
+}
+
+-(void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    [self setupImage];
+}
+
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator{
+    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+    
+    for (NSLayoutConstraint *con in self.cropView.superview.constraints){
+        if ((con.firstItem == self.cropView && con.firstAttribute == NSLayoutAttributeWidth) || (con.firstItem == self.cropView && con.firstAttribute == NSLayoutAttributeHeight)){
+            [self.cropView.superview removeConstraint:con];
+        }
+    }
+    [self.cropView removeConstraint:self.aspectRatioConstraint];
+    self.cropView.imageView.image = nil;
+    self.edits.cropImageRect = [self.cropView getImageRect];
+    self.edits.cropImageFrame = [self.cropView getFrameRect];
+    self.edits.cropImageSize = [self.cropView croppedImageSize];
+    self.edits.cropTransform = [self.cropView.imageView transform];
+    
+    [coordinator animateAlongsideTransition:^(id context){
+        [self setupImage];
+    }completion:NULL];
 }
 
 -(void)viewDidLayoutSubviews{
