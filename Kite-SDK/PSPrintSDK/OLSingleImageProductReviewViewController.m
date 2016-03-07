@@ -285,6 +285,12 @@ static BOOL hasMoved;
     cropVc.previewView.frame = [self.imageCropView.superview convertRect:self.imageCropView.frame toView:nil];
     cropVc.previewSourceView = self.imageCropView;
     
+    for (NSLayoutConstraint *con in self.view.constraints){
+        if ((con.firstItem == self.containerView || con.secondItem == self.containerView) && (con.firstAttribute == NSLayoutAttributeCenterY && con.secondAttribute == NSLayoutAttributeCenterY)){
+            cropVc.centerYConConstant = [NSNumber numberWithDouble:con.constant];
+        }
+    }
+    
     cropVc.forceSourceViewDimensions = YES;
     cropVc.providesPresentationContextTransitionStyle = true;
     cropVc.definesPresentationContext = true;

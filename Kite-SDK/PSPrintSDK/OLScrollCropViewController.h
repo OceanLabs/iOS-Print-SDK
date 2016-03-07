@@ -47,6 +47,7 @@
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *aspectRatioConstraint;
 @property (weak, nonatomic) IBOutlet OLRemoteImageCropper *cropView;
 @property (assign, nonatomic) CGFloat aspectRatio;
+@property (strong, nonatomic) NSNumber *centerYConConstant;
 @property (weak, nonatomic) id<OLScrollCropViewControllerDelegate> delegate;
 @property (assign, nonatomic) BOOL enableCircleMask;
 @property (strong, nonatomic) UIView *previewView;

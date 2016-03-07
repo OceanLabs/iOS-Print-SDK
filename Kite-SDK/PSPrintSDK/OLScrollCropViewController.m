@@ -33,6 +33,9 @@
 @interface OLScrollCropViewController () <RMImageCropperDelegate>
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *doneButton;
 @property (assign, nonatomic) NSInteger initialOrientation;
+@property (weak, nonatomic) IBOutlet UIToolbar *toolbar;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *centerYCon;
+
 
 @property (strong, nonatomic) IBOutletCollection(UIView) NSArray *allViews;
 
@@ -85,6 +88,10 @@
         
         [view.superview addConstraints:con];
 
+    }
+    
+    if (self.centerYConConstant){
+        self.centerYCon.constant = [self.centerYConConstant integerValue];
     }
 }
 
