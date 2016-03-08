@@ -72,4 +72,8 @@
 + (NSInteger)customProvidersStartIndex:(UIViewController *)topVc;
 #endif
 
++ (void)registerDefaultsWithURL:(NSURL *)url
+                        success:(void (^)(NSDictionary *defaults))success
+                        failure:(void (^)(NSError *error))failure;
+
 @end

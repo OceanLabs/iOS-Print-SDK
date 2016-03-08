@@ -46,8 +46,6 @@ PODS:
     - FBSDKCoreKit/arc
   - FBSDKLoginKit (4.8.0):
     - FBSDKCoreKit
-  - GroundControl (2.1.0):
-    - AFNetworking (~> 2.2)
   - InstagramImagePicker (1.1.3):
     - NXOAuth2Client (~> 1.2.8)
     - SDWebImage (~> 3.7.2)
@@ -80,7 +78,6 @@ DEPENDENCIES:
   - CTAssetsPickerController
   - DACircularProgress
   - FacebookImagePicker
-  - GroundControl
   - InstagramImagePicker
   - ios-qr-encoder (~> 1.0.4)
   - KITAssetsPickerController
@@ -105,7 +102,6 @@ SPEC CHECKSUMS:
   FacebookImagePicker: 888e7554898bea596e88556a935835c6141d8aed
   FBSDKCoreKit: 66a935d17b6e00b6b64e604f2eb9b72c9ab7deb8
   FBSDKLoginKit: d893fcbb98d854496925e9ff73c67b896982d3c4
-  GroundControl: fbc762e0097feece7fb6d8cdc8f2747a504a6833
   InstagramImagePicker: 7bf666580d1c6f8fd3885cb37d0c6809e60758b4
   ios-qr-encoder: f5f654b3d8921caee92564f8c5698b7a699f9dc3
   KITAssetsPickerController: ca392522fb2ae29146b8aaff2286c00e2ba12edc

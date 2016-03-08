@@ -43,6 +43,7 @@
 #include <sys/sysctl.h>
 #import "OLKiteABTesting.h"
 #import "UICKeyChainStore.h"
+#import "NSDictionary+RequestParameterData.h"
 
 static NSString *const kKeyUserDistinctId = @"ly.kite.sdk.kKeyUserDistinctId";
 static NSString *const kOLMixpanelToken = @"cdf64507670dd359c43aa8895fb87676";
@@ -160,33 +161,56 @@ static __weak id<OLKiteDelegate> kiteDelegate;
                                          @"environment": [self environment]
                                          }
                                  };
+    NSError *error;
+    NSData * jsonData = [NSJSONSerialization dataWithJSONObject:properties options:NSJSONWritingPrettyPrinted error:&error];
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@/person/", [OLKitePrintSDK apiEndpoint], [OLKitePrintSDK apiVersion]]]];
+    request.HTTPMethod = @"POST";
+    request.HTTPBody = jsonData;
+    [request addValue:[NSString stringWithFormat:@"apikey %@", [OLKitePrintSDK apiKey]] forHTTPHeaderField:@"Authorization"];
+    [request addValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
     
-    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-    manager.requestSerializer = [AFJSONRequestSerializer serializer];
-    [manager.requestSerializer setValue:[NSString stringWithFormat:@"apikey %@", [OLKitePrintSDK apiKey]] forHTTPHeaderField:@"Authorization"];
-    [manager.requestSerializer setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-    [manager POST:[NSString stringWithFormat:@"%@/%@/person/", [OLKitePrintSDK apiEndpoint], [OLKitePrintSDK apiVersion]] parameters:properties success:^(AFHTTPRequestOperation *operation, id responseObject) {
-        if ([operation.response statusCode] >= 200 && [operation.response statusCode] <= 299){
-            NSLog(@"Successfully posted push notification token.");
-            [defaults setObject:pushToken forKey:kKeyOLDevicePushToken];
-            [defaults synchronize];
+    NSURLSessionConfiguration *sessionConfig = [NSURLSessionConfiguration defaultSessionConfiguration];
+    
+    NSURLSession *session = [NSURLSession sessionWithConfiguration:sessionConfig
+                                                          delegate:nil
+                                                     delegateQueue:nil];
+    [[session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        if (error){
+            NSLog(@"There was an error posting the push notification token: %@", error.localizedDescription);
         }
-        else{
-            NSLog(@"There was an error posting the push notification token: %ld", (long)[operation.response statusCode]);
+        else if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
+            if ([(NSHTTPURLResponse *)response statusCode] >= 200 && [(NSHTTPURLResponse *)response statusCode] <= 299){
+                NSLog(@"Successfully posted push notification token.");
+                [defaults setObject:pushToken forKey:kKeyOLDevicePushToken];
+                [defaults synchronize];
+            }
+            else{
+                NSLog(@"There was an error posting the push notification token: %ld", (long)[(NSHTTPURLResponse *)response statusCode]);
+            }
         }
-        
-    }failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"There was an error posting the push notification token: %@", error);
-    }];
+    }] resume];
 }
 
 + (void)sendToMixPanelWithDictionary:(NSDictionary *)dict{
     NSError *error;
     NSData * jsonData = [NSJSONSerialization dataWithJSONObject:dict options:NSJSONWritingPrettyPrinted error:&error];
     
+    NSDictionary *params = @{@"ip": @"1",@"data" : [jsonData base64EncodedStringWithOptions:0]};
+    
     NSURL *baseURL = [NSURL URLWithString:kOLMixpanelURL];
-    AFHTTPSessionManager *manager = [[AFHTTPSessionManager alloc] initWithBaseURL:baseURL];
-    [manager POST:@"" parameters:@{@"ip": @"1",@"data" : [jsonData base64EncodedStringWithOptions:0]} success:NULL failure:NULL];
+    
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:baseURL];
+    request.HTTPMethod = @"POST";
+    request.HTTPBody = [params requestParameterData];
+    [request addValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    [request addValue:@"application/json" forHTTPHeaderField:@"Accept"];
+    
+    NSURLSessionConfiguration *sessionConfig = [NSURLSessionConfiguration defaultSessionConfiguration];
+    
+    NSURLSession *session = [NSURLSession sessionWithConfiguration:sessionConfig
+                                                          delegate:nil
+                                                     delegateQueue:nil];
+    [[session dataTaskWithRequest:request] resume];
 }
 
 + (NSDictionary *)defaultDictionaryForEventName:(NSString *)eventName{

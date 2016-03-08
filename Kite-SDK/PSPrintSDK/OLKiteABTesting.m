@@ -30,16 +30,15 @@
 #ifdef COCOAPODS
 #import <SkyLab/SkyLab.h>
 #import <SDWebImage/SDWebImageManager.h>
-#import <GroundControl/NSUserDefaults+GroundControl.h>
 #else
 #import "SkyLab.h"
 #import "SDWebImageManager.h"
-#import "NSUserDefaults+GroundControl.h"
 #endif
 
 #import "OLKiteABTesting.h"
 #import "OLKitePrintSDK.h"
 #import "UIColor+HexString.h"
+#import "OLKiteUtils.h"
 
 
 static NSString *const kOLKiteABTestLaunchWithPrintOrderVariant = @"ly.kite.abtest.launch_with_print_order_variant";
@@ -274,7 +273,7 @@ id safeObject(id obj){
     NSDictionary *oldDefaults = [[NSUserDefaults standardUserDefaults] dictionaryRepresentation];
     
     NSURL *URL = [NSURL URLWithString:urlString];
-    [[NSUserDefaults standardUserDefaults] registerDefaultsWithURL:URL success:^(NSDictionary *defaults){
+    [OLKiteUtils registerDefaultsWithURL:URL success:^(NSDictionary *defaults){
         // reset SKLab A/B tests if the experiment version for any test has been bumped. This allows us to default to sticky SkyLab behaviour
         // and when we want to reset things just bump the experiment version.
         for (NSString *key in defaults) {

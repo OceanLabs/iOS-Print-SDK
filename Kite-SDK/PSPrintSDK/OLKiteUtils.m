@@ -311,4 +311,25 @@
     return NO;
 }
 
++ (void)registerDefaultsWithURL:(NSURL *)url
+                        success:(void (^)(NSDictionary *defaults))success
+                        failure:(void (^)(NSError *error))failure{
+    NSURLSessionDataTask *downloadTask = [[NSURLSession sharedSession]
+                                          dataTaskWithURL:url completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+                                              if (error){
+                                                  failure(error);
+                                              }
+                                              else if (data){
+                                                  NSURL *fileURL = [NSURL fileURLWithPath:[NSTemporaryDirectory() stringByAppendingPathComponent:@"remote.plist"]];
+                                                  [data writeToURL:fileURL atomically:YES];
+                                                  NSDictionary *dict = [NSDictionary dictionaryWithContentsOfURL:fileURL];
+                                                  NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+                                                  [defaults registerDefaults:dict];
+                                                  [defaults synchronize];
+                                                  success(dict);
+                                              }
+                                          }];
+    [downloadTask resume];
+}
+
 @end
