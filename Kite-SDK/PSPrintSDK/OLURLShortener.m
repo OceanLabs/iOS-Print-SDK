@@ -28,18 +28,19 @@
 //
 
 #import "OLURLShortener.h"
-#import "AFNetworking.h"
 #import "OLConstants.h"
+
+#ifdef COCOAPODS
+#import <AFNetworking/AFNetworking.h>
+#else
+#import "AFNetworking.h"
+#endif
 
 @implementation OLURLShortener
 
 - (void)shortenURL:(NSString *)url handler:(OLURLShortenerHandler)handler {
-    NSString *isGoodEndpoint = [NSString stringWithFormat:@"https://is.gd/create.php?format=json&url=%@", url];
-    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:isGoodEndpoint]];
-    AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
-    operation.responseSerializer = [AFJSONResponseSerializer serializer];
-    
-    [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
+    [manager POST:[NSString stringWithFormat:@"https://is.gd/create.php?format=json&url=%@", url] parameters:nil progress:NULL success:^(NSURLSessionDataTask *task, id responseObject){
         NSDictionary *json = (NSDictionary *)responseObject;
         NSString *shortURL = [json objectForKey:@"shorturl"];
         if (shortURL == nil) {
@@ -47,11 +48,9 @@
         } else {
             handler(shortURL, nil);
         }
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+    }failure:^(NSURLSessionDataTask *task, NSError *error){
         handler(nil, error);
     }];
-    
-    [operation start];
 }
 
 @end

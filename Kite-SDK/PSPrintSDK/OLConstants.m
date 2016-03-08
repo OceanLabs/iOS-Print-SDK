@@ -40,6 +40,7 @@ const NSInteger kOLKiteSDKErrorCodeProductNotAvailableInRegion = 50;
 const NSInteger kOLKiteSDKErrorCodeUnauthorized = 401;
 const NSInteger kOLKiteSDKErrorCodeRegisteredAssetCountDiscrepency = 101;
 const NSInteger kOLKiteSDKErrorCodeMaintenanceMode = 503;
+const NSInteger kOLKiteSDKErrorCodeUnexpectedResponse = 520;
 const NSInteger kOLKiteSDKErrorCodeOrderValidationFailed = 701;
 const NSInteger kOLKiteSDKErrorCodeImagesCorrupt = 702;
 const NSInteger kOLKiteSDKErrorCodeURLShorteningFailed = 801;

@@ -76,6 +76,7 @@ extern const NSInteger kOLKiteSDKErrorCodeOrderValidationFailed;
 extern const NSInteger kOLKiteSDKErrorCodeProductNotAvailableInRegion;
 extern const NSInteger kOLKiteSDKErrorCodeImagesCorrupt;
 extern const NSInteger kOLKiteSDKErrorCodeURLShorteningFailed;
+extern const NSInteger kOLKiteSDKErrorCodeUnexpectedResponse;
 
 extern NSString *_Nonnull const kOLKiteSDKErrorMessageUnauthorized;
 extern NSString *_Nonnull const kOLKiteSDKErrorMessageMaintenanceMode;

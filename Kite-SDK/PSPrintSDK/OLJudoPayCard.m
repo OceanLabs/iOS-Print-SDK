@@ -164,7 +164,7 @@ static NSString *token, *secret;
     
     Card *card = [self createJudoPayCard];
 
-    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
     manager.requestSerializer = [[AFJSONRequestSerializer alloc] init];
     [manager.requestSerializer setAuthorizationHeaderFieldWithUsername:token password:secret];
     [manager.requestSerializer setValue:@"3.0.0" forHTTPHeaderField:@"Api-Version"];
@@ -191,11 +191,17 @@ static NSString *token, *secret;
     }
     
     [manager POST:[NSString stringWithFormat:@"https://%@/transactions/payments", environment == kOLJudoPayEnvironmentLive ? @"partnerapi.judopay.com" : @"partnerapi.judopay-sandbox.com"]
-       parameters:payload
-          success:^(AFHTTPRequestOperation *operation, id responseObject) {
-              [self onSuccessWithStatusCode:(int) [operation.response statusCode] JSON:responseObject completionHandler:handler];
-          } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-              [self onFailureWithStatusCode:(int) [operation.response statusCode] error:error completionHandler:handler];
+       parameters:payload progress:NULL
+          success:^(NSURLSessionDataTask *task, id responseObject) {
+              if ([task.response isKindOfClass:[NSHTTPURLResponse class]]){
+                  NSInteger statusCode = [(NSHTTPURLResponse *)task.response statusCode];
+                  [self onSuccessWithStatusCode:(int) statusCode JSON:responseObject completionHandler:handler];
+              }
+              else{
+                  [self onFailureWithStatusCode:(int) [(NSHTTPURLResponse *)task.response statusCode] error:([NSError errorWithDomain:kOLErrorDomainJudoPay code:kOLKiteSDKErrorCodeUnexpectedResponse userInfo:@{NSLocalizedDescriptionKey: kErrorMessageGenericPaymentFailed}]) completionHandler:handler];
+              }
+          } failure:^(NSURLSessionDataTask *task, NSError *error) {
+              [self onFailureWithStatusCode: (int)kOLKiteSDKErrorCodeUnexpectedResponse error:error completionHandler:handler];
           }];
 }
 

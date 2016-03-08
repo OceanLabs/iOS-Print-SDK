@@ -66,7 +66,7 @@ typedef void (^UploadAssetsCompletionHandler)(NSError *error);
 
 @interface OLAssetUploadRequest ()
 @property (nonatomic, strong) OLBaseRequest *signReq, *registerImageURLAssetsReq;
-@property (nonatomic, strong) AFHTTPRequestOperation *s3UploadOp;
+@property (nonatomic, strong) NSURLSessionDataTask *s3UploadTask;
 @property (nonatomic, assign) BOOL cancelled;
 @end
 
@@ -74,9 +74,9 @@ typedef void (^UploadAssetsCompletionHandler)(NSError *error);
 
 - (void)cancelUpload {
     [self.signReq cancel];
-    [self.s3UploadOp cancel];
+    [self.s3UploadTask cancel];
     self.signReq = nil;
-    self.s3UploadOp = nil;
+    self.s3UploadTask = nil;
     self.cancelled = YES;
 }
 
@@ -212,21 +212,23 @@ typedef void (^UploadAssetsCompletionHandler)(NSError *error);
     [request setTimeoutInterval:120];
     
     __weak OLAssetUploadRequest *zelf = self;
-    self.s3UploadOp = [[AFHTTPRequestOperation alloc] initWithRequest:request];
-    [self.s3UploadOp setUploadProgressBlock:^(NSUInteger bytesWritten, long long totalBytesWritten, long long totalBytesExpectedToWrite) {
-        if (zelf.cancelled) return;
-        progressHandler(bytesWritten, totalBytesWritten, totalBytesExpectedToWrite);
-    }];
     
-    [self.s3UploadOp setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
+    self.s3UploadTask = [manager uploadTaskWithRequest:request fromData:data progress:^(NSProgress *progress){
         if (zelf.cancelled) return;
-        completionHandler(nil);
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            progressHandler(progress.completedUnitCount, progress.completedUnitCount, progress.totalUnitCount);
+        });
+    }completionHandler:^(NSURLResponse *response, id responseObject, NSError *error){
         if (zelf.cancelled) return;
-        completionHandler(error);
+        if (error){
+            completionHandler(error);
+        }
+        else{
+            completionHandler(nil);
+        }
     }];
-    
-    [self.s3UploadOp start];
+    [self.s3UploadTask resume];
 }
 
 - (void)uploadImageAsJPEG:(UIImage *)image {
