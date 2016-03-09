@@ -56,6 +56,7 @@
 		2E7483511BCCFB5900360550 /* 2.png in Resources */ = {isa = PBXBuildFile; fileRef = 2E7483501BCCFB5900360550 /* 2.png */; };
 		2E7483531BCD11F800360550 /* ViewControllerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E7483521BCD11F800360550 /* ViewControllerTests.m */; };
 		2E7483551BCD1DF500360550 /* OLPrintPhotoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E7483541BCD1DF500360550 /* OLPrintPhotoTests.m */; };
+		2E7835B41C902E24007BDF7C /* NSDictionary+RequestParameterData.m in Sources */ = {isa = PBXBuildFile; fileRef = 2ED36B391C8EE4AD00FB2D4A /* NSDictionary+RequestParameterData.m */; };
 		2E7D1C8F1BC41C7D009227EE /* OLProductOrderTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E7D1C8E1BC41C7D009227EE /* OLProductOrderTests.m */; };
 		2E7F516D1BF5FBB100A78718 /* OLGreetingCardPrintJob.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E7F516C1BF5FBB100A78718 /* OLGreetingCardPrintJob.m */; };
 		2E7F516E1BF5FBB100A78718 /* OLGreetingCardPrintJob.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E7F516C1BF5FBB100A78718 /* OLGreetingCardPrintJob.m */; };
@@ -63,6 +64,26 @@
 		2E837D491C3C1FBB004DA682 /* OLViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E837D471C3C1FBB004DA682 /* OLViewController.m */; };
 		2E837D4C1C3C221E004DA682 /* OLCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E837D4B1C3C221E004DA682 /* OLCollectionViewController.m */; };
 		2E837D4D1C3C221E004DA682 /* OLCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E837D4B1C3C221E004DA682 /* OLCollectionViewController.m */; };
+		2E8702841C904918002BE2DA /* AFHTTPSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E87027E1C904918002BE2DA /* AFHTTPSessionManager.m */; };
+		2E8702851C904918002BE2DA /* AFNetworkReachabilityManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E87027F1C904918002BE2DA /* AFNetworkReachabilityManager.m */; };
+		2E8702861C904918002BE2DA /* AFSecurityPolicy.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E8702801C904918002BE2DA /* AFSecurityPolicy.m */; };
+		2E8702871C904918002BE2DA /* AFURLRequestSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E8702811C904918002BE2DA /* AFURLRequestSerialization.m */; };
+		2E8702881C904918002BE2DA /* AFURLResponseSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E8702821C904918002BE2DA /* AFURLResponseSerialization.m */; };
+		2E8702891C904918002BE2DA /* AFURLSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E8702831C904918002BE2DA /* AFURLSessionManager.m */; };
+		2E8702C11C904D63002BE2DA /* KiteSDKFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E8702C01C904D63002BE2DA /* KiteSDKFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2E8702D31C904D63002BE2DA /* KiteSDKFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E8702BE1C904D62002BE2DA /* KiteSDKFramework.framework */; };
+		2E8702D41C904D63002BE2DA /* KiteSDKFramework.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2E8702BE1C904D62002BE2DA /* KiteSDKFramework.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		2E8702DC1C904D8E002BE2DA /* libKiteSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E29C85701BE3B4290041D4CF /* libKiteSDK.a */; };
+		2E8702FB1C90522D002BE2DA /* bitstream.c in Sources */ = {isa = PBXBuildFile; fileRef = 2E8702DD1C9050CA002BE2DA /* bitstream.c */; };
+		2E8702FC1C90522D002BE2DA /* mask.c in Sources */ = {isa = PBXBuildFile; fileRef = 2E8702DE1C9050CA002BE2DA /* mask.c */; };
+		2E8702FD1C90522D002BE2DA /* qrencode.c in Sources */ = {isa = PBXBuildFile; fileRef = 2E8702DF1C9050CA002BE2DA /* qrencode.c */; };
+		2E8702FE1C90522D002BE2DA /* qrinput.c in Sources */ = {isa = PBXBuildFile; fileRef = 2E8702E01C9050CA002BE2DA /* qrinput.c */; };
+		2E8702FF1C90522D002BE2DA /* qrspec.c in Sources */ = {isa = PBXBuildFile; fileRef = 2E8702E11C9050CA002BE2DA /* qrspec.c */; };
+		2E8703001C90522D002BE2DA /* rscode.c in Sources */ = {isa = PBXBuildFile; fileRef = 2E8702E21C9050CA002BE2DA /* rscode.c */; };
+		2E8703011C90522D002BE2DA /* split.c in Sources */ = {isa = PBXBuildFile; fileRef = 2E8702E31C9050CA002BE2DA /* split.c */; };
+		2E8703021C90522D002BE2DA /* UIImage+MDQRCode.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E8702E41C9050CA002BE2DA /* UIImage+MDQRCode.m */; };
+		2E8703031C905248002BE2DA /* libios-qr-encoder.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E8702F21C9051FC002BE2DA /* libios-qr-encoder.a */; };
+		2E8703051C9052C1002BE2DA /* OLQRCodeUploadViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E2AABA101C6CFA2B0007C1D7 /* OLQRCodeUploadViewController.m */; };
 		2E8FD2701BF9E73B00F4FC5A /* OLPhotoEdits.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E8FD26F1BF9E73B00F4FC5A /* OLPhotoEdits.m */; };
 		2E8FD2711BF9E73B00F4FC5A /* OLPhotoEdits.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E8FD26F1BF9E73B00F4FC5A /* OLPhotoEdits.m */; };
 		2E924BE21BC6A0C80038938A /* OLKiteRequestTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E924BE11BC6A0C80038938A /* OLKiteRequestTests.m */; };
@@ -191,15 +212,6 @@
 		CD73BF8C186215790009DE03 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD73BF6B186215790009DE03 /* Foundation.framework */; };
 		CD73BF8D186215790009DE03 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD73BF6F186215790009DE03 /* UIKit.framework */; };
 		CD73BF97186215790009DE03 /* OLSDKModelTests.m in Sources */ = {isa = PBXBuildFile; fileRef = CD73BF96186215790009DE03 /* OLSDKModelTests.m */; };
-		E22058531BF3AAF0009CFAF6 /* AFHTTPRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C83DD1BE2829C0041D4CF /* AFHTTPRequestOperation.m */; };
-		E22058551BF3AAF0009CFAF6 /* AFHTTPRequestOperationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C83DF1BE2829C0041D4CF /* AFHTTPRequestOperationManager.m */; };
-		E22058571BF3AAF0009CFAF6 /* AFHTTPSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C83E11BE2829C0041D4CF /* AFHTTPSessionManager.m */; };
-		E220585A1BF3AAF0009CFAF6 /* AFNetworkReachabilityManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C83E41BE2829C0041D4CF /* AFNetworkReachabilityManager.m */; };
-		E220585C1BF3AAF0009CFAF6 /* AFSecurityPolicy.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C83E61BE2829C0041D4CF /* AFSecurityPolicy.m */; };
-		E220585E1BF3AAF0009CFAF6 /* AFURLConnectionOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C83E81BE2829C0041D4CF /* AFURLConnectionOperation.m */; };
-		E22058601BF3AAF0009CFAF6 /* AFURLRequestSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C83EA1BE2829C0041D4CF /* AFURLRequestSerialization.m */; };
-		E22058621BF3AAF0009CFAF6 /* AFURLResponseSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C83EC1BE2829C0041D4CF /* AFURLResponseSerialization.m */; };
-		E22058641BF3AAF0009CFAF6 /* AFURLSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C83EE1BE2829C0041D4CF /* AFURLSessionManager.m */; };
 		E22058651BF3AB64009CFAF6 /* libAFNetworking.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E22058491BF3A984009CFAF6 /* libAFNetworking.a */; };
 		E22058871BF3F7DB009CFAF6 /* UIColor+HexString.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C84251BE288D30041D4CF /* UIColor+HexString.m */; };
 		E22058881BF3F854009CFAF6 /* libUIColor-HexString.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E220587E1BF3F7AC009CFAF6 /* libUIColor-HexString.a */; };
@@ -250,7 +262,6 @@
 		E22963781C43DD86002A90CA /* PHAssetCollection+CTAssetsPickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = E22963471C43DCB5002A90CA /* PHAssetCollection+CTAssetsPickerController.m */; };
 		E22963791C43DD89002A90CA /* UICollectionView+CTAssetsPickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = E22963491C43DCB5002A90CA /* UICollectionView+CTAssetsPickerController.m */; };
 		E229637A1C43DD8D002A90CA /* UIImage+CTAssetsPickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = E229634B1C43DCB5002A90CA /* UIImage+CTAssetsPickerController.m */; };
-		E229637B1C43DD90002A90CA /* UIViewController+CTAssetsPickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = E229634D1C43DCB5002A90CA /* UIViewController+CTAssetsPickerController.m */; };
 		E229637C1C43DD95002A90CA /* CTAssetCheckmark.m in Sources */ = {isa = PBXBuildFile; fileRef = E22962F01C43DC90002A90CA /* CTAssetCheckmark.m */; };
 		E229637D1C43DD98002A90CA /* CTAssetCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E22962F21C43DC90002A90CA /* CTAssetCollectionViewCell.m */; };
 		E229637E1C43DD9E002A90CA /* CTAssetCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E22962F41C43DC90002A90CA /* CTAssetCollectionViewController.m */; };
@@ -384,7 +395,6 @@
 		E29C861D1BE3B70B0041D4CF /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD73BF6F186215790009DE03 /* UIKit.framework */; };
 		E29C86201BE3B8E70041D4CF /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD73BF6B186215790009DE03 /* Foundation.framework */; };
 		E2AABA111C6CFA2B0007C1D7 /* OLQRCodeUploadViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E2AABA101C6CFA2B0007C1D7 /* OLQRCodeUploadViewController.m */; };
-		E2AABA121C6CFA2B0007C1D7 /* OLQRCodeUploadViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E2AABA101C6CFA2B0007C1D7 /* OLQRCodeUploadViewController.m */; };
 		E2AABA151C6DFC160007C1D7 /* OLQRCodeUploadedImagePoller.m in Sources */ = {isa = PBXBuildFile; fileRef = E2AABA141C6DFC160007C1D7 /* OLQRCodeUploadedImagePoller.m */; };
 		E2AABA161C6DFC160007C1D7 /* OLQRCodeUploadedImagePoller.m in Sources */ = {isa = PBXBuildFile; fileRef = E2AABA141C6DFC160007C1D7 /* OLQRCodeUploadedImagePoller.m */; };
 		E2AABA191C6FC6650007C1D7 /* OLURLShortener.m in Sources */ = {isa = PBXBuildFile; fileRef = E2AABA181C6FC6650007C1D7 /* OLURLShortener.m */; };
@@ -399,9 +409,36 @@
 			remoteGlobalIDString = 2EADD7E31BE79D6D0051CD31;
 			remoteInfo = "KitePrintSDK-Dev";
 		};
+		2E8702D11C904D63002BE2DA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CD73BF60186215790009DE03 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2E8702BD1C904D62002BE2DA;
+			remoteInfo = KiteSDKFramework;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		2E8702D81C904D63002BE2DA /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				2E8702D41C904D63002BE2DA /* KiteSDKFramework.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2E8702F01C9051FC002BE2DA /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "include/$(PRODUCT_NAME)";
+			dstSubfolderSpec = 16;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		E22058471BF3A984009CFAF6 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -634,6 +671,32 @@
 		2E837D471C3C1FBB004DA682 /* OLViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLViewController.m; sourceTree = "<group>"; };
 		2E837D4A1C3C221E004DA682 /* OLCollectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLCollectionViewController.h; sourceTree = "<group>"; };
 		2E837D4B1C3C221E004DA682 /* OLCollectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLCollectionViewController.m; sourceTree = "<group>"; };
+		2E87027E1C904918002BE2DA /* AFHTTPSessionManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = AFHTTPSessionManager.m; path = vendor/AFNetworking/AFNetworking/AFHTTPSessionManager.m; sourceTree = "<group>"; };
+		2E87027F1C904918002BE2DA /* AFNetworkReachabilityManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = AFNetworkReachabilityManager.m; path = vendor/AFNetworking/AFNetworking/AFNetworkReachabilityManager.m; sourceTree = "<group>"; };
+		2E8702801C904918002BE2DA /* AFSecurityPolicy.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = AFSecurityPolicy.m; path = vendor/AFNetworking/AFNetworking/AFSecurityPolicy.m; sourceTree = "<group>"; };
+		2E8702811C904918002BE2DA /* AFURLRequestSerialization.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = AFURLRequestSerialization.m; path = vendor/AFNetworking/AFNetworking/AFURLRequestSerialization.m; sourceTree = "<group>"; };
+		2E8702821C904918002BE2DA /* AFURLResponseSerialization.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = AFURLResponseSerialization.m; path = vendor/AFNetworking/AFNetworking/AFURLResponseSerialization.m; sourceTree = "<group>"; };
+		2E8702831C904918002BE2DA /* AFURLSessionManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = AFURLSessionManager.m; path = vendor/AFNetworking/AFNetworking/AFURLSessionManager.m; sourceTree = "<group>"; };
+		2E8702BE1C904D62002BE2DA /* KiteSDKFramework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = KiteSDKFramework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		2E8702C01C904D63002BE2DA /* KiteSDKFramework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KiteSDKFramework.h; sourceTree = "<group>"; };
+		2E8702C21C904D63002BE2DA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2E8702DD1C9050CA002BE2DA /* bitstream.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = bitstream.c; path = "vendor/ios-qr-encoder/QRCode/QR/libqrencode/bitstream.c"; sourceTree = SOURCE_ROOT; };
+		2E8702DE1C9050CA002BE2DA /* mask.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = mask.c; path = "vendor/ios-qr-encoder/QRCode/QR/libqrencode/mask.c"; sourceTree = SOURCE_ROOT; };
+		2E8702DF1C9050CA002BE2DA /* qrencode.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = qrencode.c; path = "vendor/ios-qr-encoder/QRCode/QR/libqrencode/qrencode.c"; sourceTree = SOURCE_ROOT; };
+		2E8702E01C9050CA002BE2DA /* qrinput.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = qrinput.c; path = "vendor/ios-qr-encoder/QRCode/QR/libqrencode/qrinput.c"; sourceTree = SOURCE_ROOT; };
+		2E8702E11C9050CA002BE2DA /* qrspec.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = qrspec.c; path = "vendor/ios-qr-encoder/QRCode/QR/libqrencode/qrspec.c"; sourceTree = SOURCE_ROOT; };
+		2E8702E21C9050CA002BE2DA /* rscode.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = rscode.c; path = "vendor/ios-qr-encoder/QRCode/QR/libqrencode/rscode.c"; sourceTree = SOURCE_ROOT; };
+		2E8702E31C9050CA002BE2DA /* split.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = split.c; path = "vendor/ios-qr-encoder/QRCode/QR/libqrencode/split.c"; sourceTree = SOURCE_ROOT; };
+		2E8702E41C9050CA002BE2DA /* UIImage+MDQRCode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIImage+MDQRCode.m"; path = "vendor/ios-qr-encoder/QRCode/QR/UIImage+MDQRCode.m"; sourceTree = SOURCE_ROOT; };
+		2E8702F21C9051FC002BE2DA /* libios-qr-encoder.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libios-qr-encoder.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2E8703041C9052A0002BE2DA /* UIImage+MDQRCode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIImage+MDQRCode.h"; path = "vendor/ios-qr-encoder/QRCode/QR/UIImage+MDQRCode.h"; sourceTree = SOURCE_ROOT; };
+		2E8703061C905368002BE2DA /* bitstream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = bitstream.h; path = "vendor/ios-qr-encoder/QRCode/QR/libqrencode/bitstream.h"; sourceTree = SOURCE_ROOT; };
+		2E8703071C905368002BE2DA /* mask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mask.h; path = "vendor/ios-qr-encoder/QRCode/QR/libqrencode/mask.h"; sourceTree = SOURCE_ROOT; };
+		2E8703081C905368002BE2DA /* qrencode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = qrencode.h; path = "vendor/ios-qr-encoder/QRCode/QR/libqrencode/qrencode.h"; sourceTree = SOURCE_ROOT; };
+		2E8703091C905368002BE2DA /* qrinput.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = qrinput.h; path = "vendor/ios-qr-encoder/QRCode/QR/libqrencode/qrinput.h"; sourceTree = SOURCE_ROOT; };
+		2E87030A1C905368002BE2DA /* qrspec.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = qrspec.h; path = "vendor/ios-qr-encoder/QRCode/QR/libqrencode/qrspec.h"; sourceTree = SOURCE_ROOT; };
+		2E87030B1C905368002BE2DA /* rscode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = rscode.h; path = "vendor/ios-qr-encoder/QRCode/QR/libqrencode/rscode.h"; sourceTree = SOURCE_ROOT; };
+		2E87030C1C905368002BE2DA /* split.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = split.h; path = "vendor/ios-qr-encoder/QRCode/QR/libqrencode/split.h"; sourceTree = SOURCE_ROOT; };
 		2E898F851BE37F9B00739F5A /* OLProductTemplateOption.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLProductTemplateOption.h; sourceTree = "<group>"; };
 		2E898F861BE37F9B00739F5A /* OLProductTemplateOption.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLProductTemplateOption.m; sourceTree = "<group>"; };
 		2E8C29EB1B18D1AC0045DC21 /* OLPrintOrderCostRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLPrintOrderCostRequest.h; sourceTree = "<group>"; };
@@ -962,10 +1025,6 @@
 		E29C83D61BE280EA0041D4CF /* CSStickyHeaderFlowLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CSStickyHeaderFlowLayout.m; path = vendor/CSStickyHeaderFlowLayout/Classes/CSStickyHeaderFlowLayout.m; sourceTree = "<group>"; };
 		E29C83D71BE280EA0041D4CF /* CSStickyHeaderFlowLayoutAttributes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CSStickyHeaderFlowLayoutAttributes.h; path = vendor/CSStickyHeaderFlowLayout/Classes/CSStickyHeaderFlowLayoutAttributes.h; sourceTree = "<group>"; };
 		E29C83D81BE280EA0041D4CF /* CSStickyHeaderFlowLayoutAttributes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CSStickyHeaderFlowLayoutAttributes.m; path = vendor/CSStickyHeaderFlowLayout/Classes/CSStickyHeaderFlowLayoutAttributes.m; sourceTree = "<group>"; };
-		E29C83DC1BE2829C0041D4CF /* AFHTTPRequestOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFHTTPRequestOperation.h; path = vendor/AFNetworking/AFNetworking/AFHTTPRequestOperation.h; sourceTree = "<group>"; };
-		E29C83DD1BE2829C0041D4CF /* AFHTTPRequestOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFHTTPRequestOperation.m; path = vendor/AFNetworking/AFNetworking/AFHTTPRequestOperation.m; sourceTree = "<group>"; };
-		E29C83DE1BE2829C0041D4CF /* AFHTTPRequestOperationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFHTTPRequestOperationManager.h; path = vendor/AFNetworking/AFNetworking/AFHTTPRequestOperationManager.h; sourceTree = "<group>"; };
-		E29C83DF1BE2829C0041D4CF /* AFHTTPRequestOperationManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFHTTPRequestOperationManager.m; path = vendor/AFNetworking/AFNetworking/AFHTTPRequestOperationManager.m; sourceTree = "<group>"; };
 		E29C83E01BE2829C0041D4CF /* AFHTTPSessionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFHTTPSessionManager.h; path = vendor/AFNetworking/AFNetworking/AFHTTPSessionManager.h; sourceTree = "<group>"; };
 		E29C83E11BE2829C0041D4CF /* AFHTTPSessionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFHTTPSessionManager.m; path = vendor/AFNetworking/AFNetworking/AFHTTPSessionManager.m; sourceTree = "<group>"; };
 		E29C83E21BE2829C0041D4CF /* AFNetworking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFNetworking.h; path = vendor/AFNetworking/AFNetworking/AFNetworking.h; sourceTree = "<group>"; };
@@ -973,8 +1032,6 @@
 		E29C83E41BE2829C0041D4CF /* AFNetworkReachabilityManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFNetworkReachabilityManager.m; path = vendor/AFNetworking/AFNetworking/AFNetworkReachabilityManager.m; sourceTree = "<group>"; };
 		E29C83E51BE2829C0041D4CF /* AFSecurityPolicy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFSecurityPolicy.h; path = vendor/AFNetworking/AFNetworking/AFSecurityPolicy.h; sourceTree = "<group>"; };
 		E29C83E61BE2829C0041D4CF /* AFSecurityPolicy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFSecurityPolicy.m; path = vendor/AFNetworking/AFNetworking/AFSecurityPolicy.m; sourceTree = "<group>"; };
-		E29C83E71BE2829C0041D4CF /* AFURLConnectionOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFURLConnectionOperation.h; path = vendor/AFNetworking/AFNetworking/AFURLConnectionOperation.h; sourceTree = "<group>"; };
-		E29C83E81BE2829C0041D4CF /* AFURLConnectionOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFURLConnectionOperation.m; path = vendor/AFNetworking/AFNetworking/AFURLConnectionOperation.m; sourceTree = "<group>"; };
 		E29C83E91BE2829C0041D4CF /* AFURLRequestSerialization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFURLRequestSerialization.h; path = vendor/AFNetworking/AFNetworking/AFURLRequestSerialization.h; sourceTree = "<group>"; };
 		E29C83EA1BE2829C0041D4CF /* AFURLRequestSerialization.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFURLRequestSerialization.m; path = vendor/AFNetworking/AFNetworking/AFURLRequestSerialization.m; sourceTree = "<group>"; };
 		E29C83EB1BE2829C0041D4CF /* AFURLResponseSerialization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFURLResponseSerialization.h; path = vendor/AFNetworking/AFNetworking/AFURLResponseSerialization.h; sourceTree = "<group>"; };
@@ -1009,8 +1066,6 @@
 		E29C84211BE2880E0041D4CF /* UICKeyChainStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UICKeyChainStore.m; path = vendor/UICKeyChainStore/Lib/UICKeyChainStore/UICKeyChainStore.m; sourceTree = "<group>"; };
 		E29C84241BE288D30041D4CF /* UIColor+HexString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIColor+HexString.h"; path = "vendor/UIColor-HexString/UIColor+HexString.h"; sourceTree = "<group>"; };
 		E29C84251BE288D30041D4CF /* UIColor+HexString.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIColor+HexString.m"; path = "vendor/UIColor-HexString/UIColor+HexString.m"; sourceTree = "<group>"; };
-		E29C84281BE289400041D4CF /* NSUserDefaults+GroundControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSUserDefaults+GroundControl.h"; path = "vendor/GroundControl/GroundControl/NSUserDefaults+GroundControl.h"; sourceTree = "<group>"; };
-		E29C84291BE289400041D4CF /* NSUserDefaults+GroundControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSUserDefaults+GroundControl.m"; path = "vendor/GroundControl/GroundControl/NSUserDefaults+GroundControl.m"; sourceTree = "<group>"; };
 		E29C85701BE3B4290041D4CF /* libKiteSDK.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libKiteSDK.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		E29C86211BE3BCA80041D4CF /* KiteSDK-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "KiteSDK-Prefix.pch"; sourceTree = "<group>"; };
 		E2AABA0F1C6CFA2B0007C1D7 /* OLQRCodeUploadViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLQRCodeUploadViewController.h; sourceTree = "<group>"; };
@@ -1023,6 +1078,21 @@
 
 /* Begin PBXFrameworksBuildPhase section */
 		2E2632BC1B97336700C7D879 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2E8702BA1C904D62002BE2DA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2E8702DC1C904D8E002BE2DA /* libKiteSDK.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2E8702EF1C9051FC002BE2DA /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1050,6 +1120,7 @@
 				2EADD8521BE79D6D0051CD31 /* UIKit.framework in Frameworks */,
 				2EADD8531BE79D6D0051CD31 /* Foundation.framework in Frameworks */,
 				2EADD8541BE79D6D0051CD31 /* libPods.a in Frameworks */,
+				2E8702D31C904D63002BE2DA /* KiteSDKFramework.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1153,6 +1224,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2E8703031C905248002BE2DA /* libios-qr-encoder.a in Frameworks */,
 				E22963941C43DE24002A90CA /* libCTAssetsPicker.a in Frameworks */,
 				E244533A1BFD355B0086BF03 /* libPayPal.a in Frameworks */,
 				E22059141BF3FBCF009CFAF6 /* libSDWebImage.a in Frameworks */,
@@ -1373,6 +1445,38 @@
 			name = "Custom Asset Providers";
 			sourceTree = "<group>";
 		};
+		2E87028F1C9049DE002BE2DA /* ios-qr-encoder */ = {
+			isa = PBXGroup;
+			children = (
+				2E8703061C905368002BE2DA /* bitstream.h */,
+				2E8703071C905368002BE2DA /* mask.h */,
+				2E8703081C905368002BE2DA /* qrencode.h */,
+				2E8703091C905368002BE2DA /* qrinput.h */,
+				2E87030A1C905368002BE2DA /* qrspec.h */,
+				2E87030B1C905368002BE2DA /* rscode.h */,
+				2E87030C1C905368002BE2DA /* split.h */,
+				2E8702DD1C9050CA002BE2DA /* bitstream.c */,
+				2E8702DE1C9050CA002BE2DA /* mask.c */,
+				2E8702DF1C9050CA002BE2DA /* qrencode.c */,
+				2E8702E01C9050CA002BE2DA /* qrinput.c */,
+				2E8702E11C9050CA002BE2DA /* qrspec.c */,
+				2E8702E21C9050CA002BE2DA /* rscode.c */,
+				2E8702E31C9050CA002BE2DA /* split.c */,
+				2E8703041C9052A0002BE2DA /* UIImage+MDQRCode.h */,
+				2E8702E41C9050CA002BE2DA /* UIImage+MDQRCode.m */,
+			);
+			path = "ios-qr-encoder";
+			sourceTree = "<group>";
+		};
+		2E8702BF1C904D63002BE2DA /* KiteSDKFramework */ = {
+			isa = PBXGroup;
+			children = (
+				2E8702C01C904D63002BE2DA /* KiteSDKFramework.h */,
+				2E8702C21C904D63002BE2DA /* Info.plist */,
+			);
+			path = KiteSDKFramework;
+			sourceTree = "<group>";
+		};
 		2EA8BEC11A48509E008A9248 /* Categories */ = {
 			isa = PBXGroup;
 			children = (
@@ -1479,6 +1583,7 @@
 				CD73BF90186215790009DE03 /* Kite Print SDK Tests */,
 				2E2632C01B97336700C7D879 /* KitePrintSDKUITests */,
 				E29C85711BE3B4290041D4CF /* KiteSDK */,
+				2E8702BF1C904D63002BE2DA /* KiteSDKFramework */,
 				CD73BF6A186215790009DE03 /* Frameworks */,
 				CD73BF69186215790009DE03 /* Products */,
 				E29C839D1BE275C40041D4CF /* Vendor */,
@@ -1505,6 +1610,8 @@
 				E22058FD1BF3FB71009CFAF6 /* libSDWebImage.a */,
 				E24453051BFD2C1D0086BF03 /* libPayPal.a */,
 				E22963671C43DD21002A90CA /* libCTAssetsPicker.a */,
+				2E8702BE1C904D62002BE2DA /* KiteSDKFramework.framework */,
+				2E8702F21C9051FC002BE2DA /* libios-qr-encoder.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1831,10 +1938,10 @@
 		E29C839D1BE275C40041D4CF /* Vendor */ = {
 			isa = PBXGroup;
 			children = (
+				2E87028F1C9049DE002BE2DA /* ios-qr-encoder */,
 				E22962ED1C43DC46002A90CA /* PureLayout */,
 				E22962EC1C43DC0E002A90CA /* CTAssetsPicker */,
 				E24452E51BFD1FCA0086BF03 /* PayPal */,
-				E29C84271BE289270041D4CF /* GroundControl */,
 				E29C84231BE288B70041D4CF /* UIColor-HexString */,
 				E29C841F1BE287E50041D4CF /* UICKeyChainStore */,
 				E29C84121BE287130041D4CF /* SVProgressHUD */,
@@ -1908,10 +2015,12 @@
 		E29C83DB1BE282700041D4CF /* AFNetworking */ = {
 			isa = PBXGroup;
 			children = (
-				E29C83DC1BE2829C0041D4CF /* AFHTTPRequestOperation.h */,
-				E29C83DD1BE2829C0041D4CF /* AFHTTPRequestOperation.m */,
-				E29C83DE1BE2829C0041D4CF /* AFHTTPRequestOperationManager.h */,
-				E29C83DF1BE2829C0041D4CF /* AFHTTPRequestOperationManager.m */,
+				2E87027E1C904918002BE2DA /* AFHTTPSessionManager.m */,
+				2E87027F1C904918002BE2DA /* AFNetworkReachabilityManager.m */,
+				2E8702801C904918002BE2DA /* AFSecurityPolicy.m */,
+				2E8702811C904918002BE2DA /* AFURLRequestSerialization.m */,
+				2E8702821C904918002BE2DA /* AFURLResponseSerialization.m */,
+				2E8702831C904918002BE2DA /* AFURLSessionManager.m */,
 				E29C83E01BE2829C0041D4CF /* AFHTTPSessionManager.h */,
 				E29C83E11BE2829C0041D4CF /* AFHTTPSessionManager.m */,
 				E29C83E21BE2829C0041D4CF /* AFNetworking.h */,
@@ -1919,8 +2028,6 @@
 				E29C83E41BE2829C0041D4CF /* AFNetworkReachabilityManager.m */,
 				E29C83E51BE2829C0041D4CF /* AFSecurityPolicy.h */,
 				E29C83E61BE2829C0041D4CF /* AFSecurityPolicy.m */,
-				E29C83E71BE2829C0041D4CF /* AFURLConnectionOperation.h */,
-				E29C83E81BE2829C0041D4CF /* AFURLConnectionOperation.m */,
 				E29C83E91BE2829C0041D4CF /* AFURLRequestSerialization.h */,
 				E29C83EA1BE2829C0041D4CF /* AFURLRequestSerialization.m */,
 				E29C83EB1BE2829C0041D4CF /* AFURLResponseSerialization.h */,
@@ -2000,15 +2107,6 @@
 			name = "UIColor-HexString";
 			sourceTree = "<group>";
 		};
-		E29C84271BE289270041D4CF /* GroundControl */ = {
-			isa = PBXGroup;
-			children = (
-				E29C84281BE289400041D4CF /* NSUserDefaults+GroundControl.h */,
-				E29C84291BE289400041D4CF /* NSUserDefaults+GroundControl.m */,
-			);
-			name = GroundControl;
-			sourceTree = "<group>";
-		};
 		E29C85711BE3B4290041D4CF /* KiteSDK */ = {
 			isa = PBXGroup;
 			children = (
@@ -2036,6 +2134,17 @@
 		};
 /* End PBXGroup section */
 
+/* Begin PBXHeadersBuildPhase section */
+		2E8702BB1C904D62002BE2DA /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2E8702C11C904D63002BE2DA /* KiteSDKFramework.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
 /* Begin PBXNativeTarget section */
 		2E2632BE1B97336700C7D879 /* KitePrintSDKUITests */ = {
 			isa = PBXNativeTarget;
@@ -2054,6 +2163,41 @@
 			productReference = 2E2632BF1B97336700C7D879 /* KitePrintSDKUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
+		2E8702BD1C904D62002BE2DA /* KiteSDKFramework */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2E8702D51C904D63002BE2DA /* Build configuration list for PBXNativeTarget "KiteSDKFramework" */;
+			buildPhases = (
+				2E8702B91C904D62002BE2DA /* Sources */,
+				2E8702BA1C904D62002BE2DA /* Frameworks */,
+				2E8702BB1C904D62002BE2DA /* Headers */,
+				2E8702BC1C904D62002BE2DA /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = KiteSDKFramework;
+			productName = KiteSDKFramework;
+			productReference = 2E8702BE1C904D62002BE2DA /* KiteSDKFramework.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		2E8702F11C9051FC002BE2DA /* ios-qr-encoder */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2E8702F81C9051FC002BE2DA /* Build configuration list for PBXNativeTarget "ios-qr-encoder" */;
+			buildPhases = (
+				2E8702EE1C9051FC002BE2DA /* Sources */,
+				2E8702EF1C9051FC002BE2DA /* Frameworks */,
+				2E8702F01C9051FC002BE2DA /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "ios-qr-encoder";
+			productName = "ios-qr-encoder";
+			productReference = 2E8702F21C9051FC002BE2DA /* libios-qr-encoder.a */;
+			productType = "com.apple.product-type.library.static";
+		};
 		2EADD7E31BE79D6D0051CD31 /* KiteSDK-Demo */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2EADD8621BE79D6D0051CD31 /* Build configuration list for PBXNativeTarget "KiteSDK-Demo" */;
@@ -2064,10 +2208,12 @@
 				2EADD8551BE79D6D0051CD31 /* Resources */,
 				2EADD8601BE79D6D0051CD31 /* Embed Pods Frameworks */,
 				2EADD8611BE79D6D0051CD31 /* Copy Pods Resources */,
+				2E8702D81C904D63002BE2DA /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				2E8702D21C904D63002BE2DA /* PBXTargetDependency */,
 			);
 			name = "KiteSDK-Demo";
 			productName = PSPrintSDK;
@@ -2332,6 +2478,13 @@
 					2E4CAF081BC25F0A0089FA26 = {
 						CreatedOnToolsVersion = 7.0.1;
 					};
+					2E8702BD1C904D62002BE2DA = {
+						CreatedOnToolsVersion = 7.2;
+						DevelopmentTeam = L78L4U72YJ;
+					};
+					2E8702F11C9051FC002BE2DA = {
+						CreatedOnToolsVersion = 7.2;
+					};
 					2EADD7E31BE79D6D0051CD31 = {
 						DevelopmentTeam = L78L4U72YJ;
 						SystemCapabilities = {
@@ -2405,6 +2558,7 @@
 				2E2632BE1B97336700C7D879 /* KitePrintSDKUITests */,
 				2E4CAF081BC25F0A0089FA26 /* Docs */,
 				E29C856F1BE3B4290041D4CF /* KiteSDK */,
+				2E8702BD1C904D62002BE2DA /* KiteSDKFramework */,
 				E22058481BF3A984009CFAF6 /* AFNetworking */,
 				E220587D1BF3F7AC009CFAF6 /* UIColor-HexString */,
 				E220588C1BF3F868009CFAF6 /* UICKeyChainStore */,
@@ -2417,12 +2571,20 @@
 				E22058FC1BF3FB71009CFAF6 /* SDWebImage */,
 				E24453041BFD2C1D0086BF03 /* PayPal */,
 				E22963661C43DD21002A90CA /* CTAssetsPicker */,
+				2E8702F11C9051FC002BE2DA /* ios-qr-encoder */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		2E2632BD1B97336700C7D879 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2E8702BC1C904D62002BE2DA /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -2567,6 +2729,29 @@
 			buildActionMask = 2147483647;
 			files = (
 				2E2632C21B97336700C7D879 /* KitePrintSDKUITests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2E8702B91C904D62002BE2DA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2E8702EE1C9051FC002BE2DA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2E8702FB1C90522D002BE2DA /* bitstream.c in Sources */,
+				2E8702FC1C90522D002BE2DA /* mask.c in Sources */,
+				2E8702FD1C90522D002BE2DA /* qrencode.c in Sources */,
+				2E8702FE1C90522D002BE2DA /* qrinput.c in Sources */,
+				2E8703051C9052C1002BE2DA /* OLQRCodeUploadViewController.m in Sources */,
+				2E8702FF1C90522D002BE2DA /* qrspec.c in Sources */,
+				2E8703001C90522D002BE2DA /* rscode.c in Sources */,
+				2E8703011C90522D002BE2DA /* split.c in Sources */,
+				2E8703021C90522D002BE2DA /* UIImage+MDQRCode.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2716,15 +2901,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E22058531BF3AAF0009CFAF6 /* AFHTTPRequestOperation.m in Sources */,
-				E22058551BF3AAF0009CFAF6 /* AFHTTPRequestOperationManager.m in Sources */,
-				E22058571BF3AAF0009CFAF6 /* AFHTTPSessionManager.m in Sources */,
-				E220585A1BF3AAF0009CFAF6 /* AFNetworkReachabilityManager.m in Sources */,
-				E220585C1BF3AAF0009CFAF6 /* AFSecurityPolicy.m in Sources */,
-				E220585E1BF3AAF0009CFAF6 /* AFURLConnectionOperation.m in Sources */,
-				E22058601BF3AAF0009CFAF6 /* AFURLRequestSerialization.m in Sources */,
-				E22058621BF3AAF0009CFAF6 /* AFURLResponseSerialization.m in Sources */,
-				E22058641BF3AAF0009CFAF6 /* AFURLSessionManager.m in Sources */,
+				2E8702841C904918002BE2DA /* AFHTTPSessionManager.m in Sources */,
+				2E8702851C904918002BE2DA /* AFNetworkReachabilityManager.m in Sources */,
+				2E8702861C904918002BE2DA /* AFSecurityPolicy.m in Sources */,
+				2E8702871C904918002BE2DA /* AFURLRequestSerialization.m in Sources */,
+				2E8702881C904918002BE2DA /* AFURLResponseSerialization.m in Sources */,
+				2E8702891C904918002BE2DA /* AFURLSessionManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2835,7 +3017,6 @@
 				E22963781C43DD86002A90CA /* PHAssetCollection+CTAssetsPickerController.m in Sources */,
 				E22963791C43DD89002A90CA /* UICollectionView+CTAssetsPickerController.m in Sources */,
 				E229637A1C43DD8D002A90CA /* UIImage+CTAssetsPickerController.m in Sources */,
-				E229637B1C43DD90002A90CA /* UIViewController+CTAssetsPickerController.m in Sources */,
 				E229637C1C43DD95002A90CA /* CTAssetCheckmark.m in Sources */,
 				E229637D1C43DD98002A90CA /* CTAssetCollectionViewCell.m in Sources */,
 				E229637E1C43DD9E002A90CA /* CTAssetCollectionViewController.m in Sources */,
@@ -2948,6 +3129,7 @@
 				E29C85E61BE3B5C50041D4CF /* OLRemoteImageCropper.m in Sources */,
 				E29C85E71BE3B5C50041D4CF /* OLAssetsGroupViewController.m in Sources */,
 				E29C85E91BE3B5C50041D4CF /* UITextField+Selection.m in Sources */,
+				2E7835B41C902E24007BDF7C /* NSDictionary+RequestParameterData.m in Sources */,
 				2E837D4D1C3C221E004DA682 /* OLCollectionViewController.m in Sources */,
 				E29C85EA1BE3B5C50041D4CF /* UITableViewController+ScreenWidthFactor.m in Sources */,
 				E29C85EB1BE3B5C50041D4CF /* LXReorderableCollectionViewFlowLayout.m in Sources */,
@@ -2962,7 +3144,6 @@
 				E29C85F71BE3B5C50041D4CF /* OLReceiptViewController.m in Sources */,
 				E29C85F81BE3B5C50041D4CF /* OLAssetUploadRequest.m in Sources */,
 				E29C85F91BE3B5C50041D4CF /* OLAddressPickerController.m in Sources */,
-				E2AABA121C6CFA2B0007C1D7 /* OLQRCodeUploadViewController.m in Sources */,
 				E29C85FB1BE3B5C50041D4CF /* main.m in Sources */,
 				E29C85FC1BE3B5C50041D4CF /* OLAssetsGroupViewCell.m in Sources */,
 				E29C85FE1BE3B5C50041D4CF /* OLPostcardPrintJob.m in Sources */,
@@ -2999,6 +3180,11 @@
 			isa = PBXTargetDependency;
 			target = 2EADD7E31BE79D6D0051CD31 /* KiteSDK-Demo */;
 			targetProxy = 2E645B331BE7A3C7009B662B /* PBXContainerItemProxy */;
+		};
+		2E8702D21C904D63002BE2DA /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2E8702BD1C904D62002BE2DA /* KiteSDKFramework */;
+			targetProxy = 2E8702D11C904D63002BE2DA /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -3100,6 +3286,102 @@
 			};
 			name = Release;
 		};
+		2E8702D61C904D63002BE2DA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				EMBED_ASSET_PACKS_IN_PRODUCT_BUNDLE = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				INFOPLIST_FILE = KiteSDKFramework/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = ly.kite.KiteSDKFramework;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7 armv7s amd64";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		2E8702D71C904D63002BE2DA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				EMBED_ASSET_PACKS_IN_PRODUCT_BUNDLE = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				INFOPLIST_FILE = KiteSDKFramework/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = ly.kite.KiteSDKFramework;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7 armv7s amd64";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		2E8702F91C9051FC002BE2DA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		2E8702FA1C9051FC002BE2DA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
 		2EADD8631BE79D6D0051CD31 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 352445B905BCE0BBF471808D /* Pods.debug.xcconfig */;
@@ -3129,6 +3411,7 @@
 				);
 				INFOPLIST_FILE = "KitePrintSDK-Dev-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -3246,6 +3529,7 @@
 				);
 				INFOPLIST_FILE = "KitePrintSDK-Dev-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -4041,6 +4325,24 @@
 			buildConfigurations = (
 				2E4CAF091BC25F0A0089FA26 /* Debug */,
 				2E4CAF0A1BC25F0A0089FA26 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2E8702D51C904D63002BE2DA /* Build configuration list for PBXNativeTarget "KiteSDKFramework" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2E8702D61C904D63002BE2DA /* Debug */,
+				2E8702D71C904D63002BE2DA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2E8702F81C9051FC002BE2DA /* Build configuration list for PBXNativeTarget "ios-qr-encoder" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2E8702F91C9051FC002BE2DA /* Debug */,
+				2E8702FA1C9051FC002BE2DA /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

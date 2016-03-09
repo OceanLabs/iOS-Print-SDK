@@ -49,6 +49,16 @@
                ReferencedContainer = "container:KitePrintSDK.xcodeproj">
             </BuildableReference>
          </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "2E8702C61C904D63002BE2DA"
+               BuildableName = "KiteSDKFrameworkTests.xctest"
+               BlueprintName = "KiteSDKFrameworkTests"
+               ReferencedContainer = "container:KitePrintSDK.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
       <MacroExpansion>
          <BuildableReference

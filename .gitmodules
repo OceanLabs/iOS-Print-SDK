@@ -4,9 +4,6 @@
 [submodule "Kite-SDK/vendor/SkyLab"]
 	path = Kite-SDK/vendor/SkyLab
 	url = https://github.com/mattt/SkyLab.git
-[submodule "Kite-SDK/vendor/AFNetworking"]
-	path = Kite-SDK/vendor/AFNetworking
-	url = https://github.com/AFNetworking/AFNetworking.git
 [submodule "Kite-SDK/vendor/MPFlipViewController"]
 	path = Kite-SDK/vendor/MPFlipViewController
 	url = https://github.com/mpospese/MPFlipViewController.git
@@ -37,3 +34,9 @@
 [submodule "Kite-SDK/vendor/PureLayout"]
 	path = Kite-SDK/vendor/PureLayout
 	url = https://github.com/smileyborg/PureLayout
+[submodule "Kite-SDK/vendor/AFNetworking"]
+	path = Kite-SDK/vendor/AFNetworking
+	url = https://github.com/AFNetworking/AFNetworking.git
+[submodule "Kite-SDK/vendor/ios-qr-encoder"]
+	path = Kite-SDK/vendor/ios-qr-encoder
+	url = https://github.com/moqod/ios-qr-code-encoder.git

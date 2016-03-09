@@ -291,7 +291,7 @@ static NSBlockOperation *templateSyncOperation;
             continue;
         }
         
-        BOOL found;
+        BOOL found = NO;
         //Check if one of the assets is still selected
         for (OLPrintPhoto *printPhoto in self.userSelectedPhotos){
             if ([printPhoto.asset respondsToSelector:@selector(imageFilePath)]){

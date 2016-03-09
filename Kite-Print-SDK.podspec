@@ -13,7 +13,6 @@ Pod::Spec.new do |spec|
   spec.dependency	'AFNetworking', '~> 2.6.1'
   spec.dependency	'UICKeyChainStore', '~> 2.0.4'
   spec.dependency	'CSStickyHeaderFlowLayout', '~> 0.2.4'
-  spec.dependency	'GroundControl', '~> 2.1.0'
   spec.dependency	'SkyLab', '~> 1.0.0'
   spec.dependency	'MPFlipViewController', '~> 0.0.2'
   spec.dependency	'UIColor-HexString'
