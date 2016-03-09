@@ -132,7 +132,7 @@
 #endif
 @end
 
-@interface OLSingleImageProductReviewViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UINavigationControllerDelegate, UIActionSheetDelegate, UIAlertViewDelegate, UIGestureRecognizerDelegate, OLQRCodeUploadViewControllerDelegate,
+@interface OLSingleImageProductReviewViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UINavigationControllerDelegate, UIActionSheetDelegate, UIAlertViewDelegate, OLQRCodeUploadViewControllerDelegate, UIGestureRecognizerDelegate,
 #ifdef OL_KITE_OFFER_INSTAGRAM
 OLInstagramImagePickerControllerDelegate,
 #endif
@@ -160,7 +160,6 @@ OLAssetsPickerControllerDelegate, RMImageCropperDelegate, UIViewControllerPrevie
 @property (strong, nonatomic) NSIndexPath *previewingIndexPath;
 @property (nonatomic, copy) void (^saveJobCompletionHandler)();
 @property (nonatomic, strong) UITapGestureRecognizer *tapBehindQRUploadModalGestureRecognizer;
-
 
 @end
 
@@ -222,7 +221,10 @@ static BOOL hasMoved;
         [printPhoto unloadImage];
     }
     
-    [self.imageCropView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTapGestureRecognized)]];
+    UITapGestureRecognizer *gesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTapGestureRecognized)];
+    gesture.delegate = self;
+    [self.imageCropView addGestureRecognizer:gesture];
+    
     
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Back", @"")
                                                                              style:UIBarButtonItemStylePlain
@@ -1309,6 +1311,11 @@ static BOOL hasMoved;
 }
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
+    if ((gestureRecognizer.view == self.imageCropView && [otherGestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]]) || (![otherGestureRecognizer isKindOfClass:[UITapGestureRecognizer class]] && otherGestureRecognizer.state == UIGestureRecognizerStateEnded)){
+        gestureRecognizer.enabled = NO;
+        gestureRecognizer.enabled = YES;
+        return NO;
+    }
     return YES;
 }
 

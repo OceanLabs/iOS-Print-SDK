@@ -71,8 +71,6 @@
 		2E8702881C904918002BE2DA /* AFURLResponseSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E8702821C904918002BE2DA /* AFURLResponseSerialization.m */; };
 		2E8702891C904918002BE2DA /* AFURLSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E8702831C904918002BE2DA /* AFURLSessionManager.m */; };
 		2E8702C11C904D63002BE2DA /* KiteSDKFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E8702C01C904D63002BE2DA /* KiteSDKFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		2E8702D31C904D63002BE2DA /* KiteSDKFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E8702BE1C904D62002BE2DA /* KiteSDKFramework.framework */; };
-		2E8702D41C904D63002BE2DA /* KiteSDKFramework.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2E8702BE1C904D62002BE2DA /* KiteSDKFramework.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		2E8702DC1C904D8E002BE2DA /* libKiteSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E29C85701BE3B4290041D4CF /* libKiteSDK.a */; };
 		2E8702FB1C90522D002BE2DA /* bitstream.c in Sources */ = {isa = PBXBuildFile; fileRef = 2E8702DD1C9050CA002BE2DA /* bitstream.c */; };
 		2E8702FC1C90522D002BE2DA /* mask.c in Sources */ = {isa = PBXBuildFile; fileRef = 2E8702DE1C9050CA002BE2DA /* mask.c */; };
@@ -409,27 +407,9 @@
 			remoteGlobalIDString = 2EADD7E31BE79D6D0051CD31;
 			remoteInfo = "KitePrintSDK-Dev";
 		};
-		2E8702D11C904D63002BE2DA /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = CD73BF60186215790009DE03 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 2E8702BD1C904D62002BE2DA;
-			remoteInfo = KiteSDKFramework;
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		2E8702D81C904D63002BE2DA /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				2E8702D41C904D63002BE2DA /* KiteSDKFramework.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		2E8702F01C9051FC002BE2DA /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1120,7 +1100,6 @@
 				2EADD8521BE79D6D0051CD31 /* UIKit.framework in Frameworks */,
 				2EADD8531BE79D6D0051CD31 /* Foundation.framework in Frameworks */,
 				2EADD8541BE79D6D0051CD31 /* libPods.a in Frameworks */,
-				2E8702D31C904D63002BE2DA /* KiteSDKFramework.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2208,12 +2187,10 @@
 				2EADD8551BE79D6D0051CD31 /* Resources */,
 				2EADD8601BE79D6D0051CD31 /* Embed Pods Frameworks */,
 				2EADD8611BE79D6D0051CD31 /* Copy Pods Resources */,
-				2E8702D81C904D63002BE2DA /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				2E8702D21C904D63002BE2DA /* PBXTargetDependency */,
 			);
 			name = "KiteSDK-Demo";
 			productName = PSPrintSDK;
@@ -3180,11 +3157,6 @@
 			isa = PBXTargetDependency;
 			target = 2EADD7E31BE79D6D0051CD31 /* KiteSDK-Demo */;
 			targetProxy = 2E645B331BE7A3C7009B662B /* PBXContainerItemProxy */;
-		};
-		2E8702D21C904D63002BE2DA /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 2E8702BD1C904D62002BE2DA /* KiteSDKFramework */;
-			targetProxy = 2E8702D11C904D63002BE2DA /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
