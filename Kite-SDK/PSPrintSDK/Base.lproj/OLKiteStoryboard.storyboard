@@ -1841,10 +1841,10 @@ to rearrange the photos</string>
                                 </cells>
                             </collectionView>
                             <view alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0Bh-Hi-gAg">
-                                <rect key="frame" x="16" y="404" width="240" height="110"/>
+                                <rect key="frame" x="16" y="404" width="215" height="110"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="38x-9y-Ixf">
-                                        <rect key="frame" x="15" y="6" width="217" height="67"/>
+                                        <rect key="frame" x="15" y="6" width="200" height="67"/>
                                         <string key="text">Let's pick
 some images!</string>
                                         <fontDescription key="fontDescription" type="system" weight="medium" pointSize="25"/>
@@ -1852,7 +1852,7 @@ some images!</string>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Start by tapping on this button" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bYn-AM-Rkc">
-                                        <rect key="frame" x="15" y="74" width="225" height="21"/>
+                                        <rect key="frame" x="15" y="74" width="200" height="21"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                         <color key="textColor" red="0.48627450979999998" green="0.48627450979999998" blue="0.48627450979999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <nil key="highlightedColor"/>
@@ -1865,7 +1865,7 @@ some images!</string>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="110" id="Tet-bT-Zih"/>
-                                    <constraint firstAttribute="width" constant="240" id="WFN-B0-8hY"/>
+                                    <constraint firstAttribute="width" constant="215" id="WFN-B0-8hY"/>
                                 </constraints>
                             </view>
                         </subviews>
@@ -2753,10 +2753,10 @@ some images!</string>
                                 </cells>
                             </collectionView>
                             <view alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="abk-We-G3a">
-                                <rect key="frame" x="16" y="404" width="240" height="110"/>
+                                <rect key="frame" x="16" y="404" width="215" height="110"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Start by tapping on this button" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UmH-R9-S2V">
-                                        <rect key="frame" x="15" y="74" width="225" height="21"/>
+                                        <rect key="frame" x="15" y="74" width="200" height="21"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                         <color key="textColor" red="0.48627450979999998" green="0.48627450979999998" blue="0.48627450979999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <nil key="highlightedColor"/>
@@ -2766,7 +2766,7 @@ some images!</string>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     </view>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LIp-dN-4y3">
-                                        <rect key="frame" x="15" y="6" width="217" height="67"/>
+                                        <rect key="frame" x="15" y="6" width="200" height="67"/>
                                         <string key="text">Let's pick
 some images!</string>
                                         <fontDescription key="fontDescription" type="system" weight="medium" pointSize="25"/>
@@ -2776,7 +2776,7 @@ some images!</string>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="240" id="KP4-fR-UsN"/>
+                                    <constraint firstAttribute="width" constant="215" id="KP4-fR-UsN"/>
                                     <constraint firstAttribute="height" constant="110" id="XDJ-yy-DWS"/>
                                 </constraints>
                             </view>
@@ -3487,10 +3487,10 @@ to rearrange the photos</string>
                                 </variation>
                             </view>
                             <view alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fgj-0T-EIH">
-                                <rect key="frame" x="5" y="419" width="240" height="110"/>
+                                <rect key="frame" x="5" y="419" width="215" height="110"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vIj-e8-74Z">
-                                        <rect key="frame" x="15" y="6" width="217" height="67"/>
+                                        <rect key="frame" x="15" y="6" width="200" height="67"/>
                                         <string key="text">Let's pick
 some images!</string>
                                         <fontDescription key="fontDescription" type="system" weight="medium" pointSize="25"/>
@@ -3498,7 +3498,7 @@ some images!</string>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Start by tapping on this button" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DbM-s3-FsX">
-                                        <rect key="frame" x="15" y="74" width="225" height="21"/>
+                                        <rect key="frame" x="15" y="74" width="195" height="21"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                         <color key="textColor" red="0.48627450979999998" green="0.48627450979999998" blue="0.48627450979999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <nil key="highlightedColor"/>
@@ -3511,7 +3511,7 @@ some images!</string>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="110" id="0eV-26-mkv"/>
-                                    <constraint firstAttribute="width" constant="240" id="csi-9b-igx"/>
+                                    <constraint firstAttribute="width" constant="215" id="csi-9b-igx"/>
                                 </constraints>
                             </view>
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xzY-bt-U4S">
