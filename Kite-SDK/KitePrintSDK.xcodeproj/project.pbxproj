@@ -202,6 +202,10 @@
 		2EADD85F1BE79D6D0051CD31 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CD73BF7D186215790009DE03 /* Main.storyboard */; };
 		2ECC956A1BC6B88F00F44CE1 /* OLDocsObjcExampleCodeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2ECC95691BC6B88F00F44CE1 /* OLDocsObjcExampleCodeTests.m */; };
 		2ED36B3A1C8EE4AD00FB2D4A /* NSDictionary+RequestParameterData.m in Sources */ = {isa = PBXBuildFile; fileRef = 2ED36B391C8EE4AD00FB2D4A /* NSDictionary+RequestParameterData.m */; };
+		2ED389911C917D2000DC2314 /* OLTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 2ED389901C917D2000DC2314 /* OLTextField.m */; };
+		2ED389921C917D2000DC2314 /* OLTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 2ED389901C917D2000DC2314 /* OLTextField.m */; };
+		2ED389951C918DC100DC2314 /* OLTextOnPhoto.m in Sources */ = {isa = PBXBuildFile; fileRef = 2ED389941C918DC100DC2314 /* OLTextOnPhoto.m */; };
+		2ED389961C918DC100DC2314 /* OLTextOnPhoto.m in Sources */ = {isa = PBXBuildFile; fileRef = 2ED389941C918DC100DC2314 /* OLTextOnPhoto.m */; };
 		2EDBFAB01BC698F2007BDB83 /* 1.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 2EDBFAAF1BC698F2007BDB83 /* 1.jpg */; };
 		2EF4392B1BF4D15E0006C123 /* OLPrintOrderSubmitStatusRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EF4392A1BF4D15E0006C123 /* OLPrintOrderSubmitStatusRequest.m */; };
 		2EF4392C1BF4D15E0006C123 /* OLPrintOrderSubmitStatusRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EF4392A1BF4D15E0006C123 /* OLPrintOrderSubmitStatusRequest.m */; };
@@ -739,6 +743,10 @@
 		2ECC95691BC6B88F00F44CE1 /* OLDocsObjcExampleCodeTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLDocsObjcExampleCodeTests.m; sourceTree = "<group>"; };
 		2ED36B381C8EE4AD00FB2D4A /* NSDictionary+RequestParameterData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSDictionary+RequestParameterData.h"; path = "PSPrintSDK/Categories/NSDictionary+RequestParameterData.h"; sourceTree = "<group>"; };
 		2ED36B391C8EE4AD00FB2D4A /* NSDictionary+RequestParameterData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSDictionary+RequestParameterData.m"; path = "PSPrintSDK/Categories/NSDictionary+RequestParameterData.m"; sourceTree = "<group>"; };
+		2ED3898F1C917D2000DC2314 /* OLTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLTextField.h; sourceTree = "<group>"; };
+		2ED389901C917D2000DC2314 /* OLTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLTextField.m; sourceTree = "<group>"; };
+		2ED389931C918DC100DC2314 /* OLTextOnPhoto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLTextOnPhoto.h; sourceTree = "<group>"; };
+		2ED389941C918DC100DC2314 /* OLTextOnPhoto.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLTextOnPhoto.m; sourceTree = "<group>"; };
 		2ED3EBB81B996ED3005C1E9F /* OLRemoteImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLRemoteImageView.h; sourceTree = "<group>"; };
 		2ED3EBB91B996ED3005C1E9F /* OLRemoteImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLRemoteImageView.m; sourceTree = "<group>"; };
 		2ED5DEBD1AC948C1003301A8 /* LXReorderableCollectionViewFlowLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LXReorderableCollectionViewFlowLayout.h; sourceTree = "<group>"; };
@@ -1241,6 +1249,8 @@
 				2ED3EBB91B996ED3005C1E9F /* OLRemoteImageView.m */,
 				2EAC21521B9EDDC000C41BD4 /* OLRemoteImageCropper.h */,
 				2EAC21531B9EDDC000C41BD4 /* OLRemoteImageCropper.m */,
+				2ED3898F1C917D2000DC2314 /* OLTextField.h */,
+				2ED389901C917D2000DC2314 /* OLTextField.m */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -1791,6 +1801,8 @@
 				2EF8BA9E1B99E9E4009BC73B /* OLImageCachingManager.m */,
 				2E8FD26E1BF9E73B00F4FC5A /* OLPhotoEdits.h */,
 				2E8FD26F1BF9E73B00F4FC5A /* OLPhotoEdits.m */,
+				2ED389931C918DC100DC2314 /* OLTextOnPhoto.h */,
+				2ED389941C918DC100DC2314 /* OLTextOnPhoto.m */,
 				2E3F96B01A49ACF4005C0EA3 /* OLPrintPhoto.h */,
 				2E3F96B11A49ACF4005C0EA3 /* OLPrintPhoto.m */,
 				2E0804B61C0DECE300F50D42 /* OLCustomPhotoProvider.h */,
@@ -2736,6 +2748,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2ED389911C917D2000DC2314 /* OLTextField.m in Sources */,
 				2E53E0CD1C1AEAAD00BF7887 /* UIViewController+OLMethods.m in Sources */,
 				2EADD7E61BE79D6D0051CD31 /* OLURLDataSource.m in Sources */,
 				2EADD7E71BE79D6D0051CD31 /* OLScrollCropViewController.m in Sources */,
@@ -2746,6 +2759,7 @@
 				2EADD7EC1BE79D6D0051CD31 /* UIImage+ColorAtPixel.m in Sources */,
 				2EADD7ED1BE79D6D0051CD31 /* OLCheckoutViewController.m in Sources */,
 				2EADD7EE1BE79D6D0051CD31 /* OLPhotobookViewController.m in Sources */,
+				2ED389951C918DC100DC2314 /* OLTextOnPhoto.m in Sources */,
 				2EADD7EF1BE79D6D0051CD31 /* OLAssetItemViewController.m in Sources */,
 				2EADD7F01BE79D6D0051CD31 /* OLPopupOptionsImageView.m in Sources */,
 				2EADD7F11BE79D6D0051CD31 /* NSArray+QueryingExtras.m in Sources */,
@@ -3082,6 +3096,7 @@
 				E29C85CB1BE3B5C50041D4CF /* OLAsset.m in Sources */,
 				E29C85CD1BE3B5C50041D4CF /* OLProductTemplate.m in Sources */,
 				E29C85CE1BE3B5C50041D4CF /* OLPaymentViewController.m in Sources */,
+				2ED389961C918DC100DC2314 /* OLTextOnPhoto.m in Sources */,
 				E29C85CF1BE3B5C50041D4CF /* NSDateFormatter+OLTimeIntervalFormatter.m in Sources */,
 				E29C85D11BE3B5C50041D4CF /* OLPrintPhoto.m in Sources */,
 				E29C85D21BE3B5C50041D4CF /* OLKitePrintSDK.m in Sources */,
@@ -3114,6 +3129,7 @@
 				E29C85EF1BE3B5C50041D4CF /* UIView+RoundRect.m in Sources */,
 				E29C85F01BE3B5C50041D4CF /* OLCountry.m in Sources */,
 				E29C85F11BE3B5C50041D4CF /* OLAssetScrollView.m in Sources */,
+				2ED389921C917D2000DC2314 /* OLTextField.m in Sources */,
 				E29C85F21BE3B5C50041D4CF /* ALAssetsLibrary+Singleton.m in Sources */,
 				E29C85F31BE3B5C50041D4CF /* OLConstants.m in Sources */,
 				E29C85F41BE3B5C50041D4CF /* OLProductOverviewPageContentViewController.m in Sources */,
@@ -3283,7 +3299,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				VALID_ARCHS = "arm64 armv7 armv7s amd64";
+				VALID_ARCHS = "arm64 armv7 armv7s i386 x86_64";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
@@ -3315,7 +3331,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				VALID_ARCHS = "arm64 armv7 armv7s amd64";
+				VALID_ARCHS = "arm64 armv7 armv7s i386 x86_64";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};

@@ -426,6 +426,27 @@ static NSOperationQueue *imageOperationQueue;
             
             printPhoto.thumbnailIsMaxSize = CGSizeEqualToSize(blockImage.size, image.size);
             
+            
+            for (OLTextOnPhoto *textOnPhoto in printPhoto.edits.textsOnPhoto){
+                UIFont *font = [UIFont systemFontOfSize:30 / printPhoto.edits.cropImageSize.width * blockImage.size.width * image.scale];
+                
+                CGRect imageCroppingRect;
+                
+                imageCroppingRect.origin.x = textOnPhoto.frame.origin.x / printPhoto.edits.cropImageSize.width * blockImage.size.width * blockImage.scale;
+                imageCroppingRect.origin.y = textOnPhoto.frame.origin.y / printPhoto.edits.cropImageSize.height * blockImage.size.height * blockImage.scale;
+                imageCroppingRect.size.width = textOnPhoto.frame.size.width / printPhoto.edits.cropImageSize.width * blockImage.size.width * blockImage.scale;
+                imageCroppingRect.size.height = textOnPhoto.frame.size.height / printPhoto.edits.cropImageSize.height * blockImage.size.height * blockImage.scale;
+                
+                UIGraphicsBeginImageContext(blockImage.size);
+                [blockImage drawInRect:CGRectMake(0,0,blockImage.size.width,blockImage.size.height)];
+                CGRect rect = CGRectMake(imageCroppingRect.origin.x, imageCroppingRect.origin.y, blockImage.size.width, blockImage.size.height);
+                [[UIColor whiteColor] set];
+                [textOnPhoto.text drawInRect:CGRectIntegral(rect) withFont:font];
+                blockImage = UIGraphicsGetImageFromCurrentImageContext();
+                UIGraphicsEndImageContext();
+            }
+            
+            
             completionHandler(blockImage);
         };
         if ([NSThread isMainThread]){

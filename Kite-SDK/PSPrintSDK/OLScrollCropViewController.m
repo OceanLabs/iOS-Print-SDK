@@ -29,12 +29,15 @@
 
 #import "OLScrollCropViewController.h"
 #import "OLPrintPhoto.h"
+#import "OLTextField.h"
 
-@interface OLScrollCropViewController () <RMImageCropperDelegate>
+@interface OLScrollCropViewController () <RMImageCropperDelegate, UITextFieldDelegate, UIGestureRecognizerDelegate>
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *doneButton;
 @property (assign, nonatomic) NSInteger initialOrientation;
 @property (weak, nonatomic) IBOutlet UIToolbar *toolbar;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *centerYCon;
+
+@property (strong, nonatomic) NSMutableArray<OLTextField *> *textFields;
 
 
 @property (strong, nonatomic) IBOutletCollection(UIView) NSArray *allViews;
@@ -43,9 +46,23 @@
 
 @implementation OLScrollCropViewController
 
+-(NSMutableArray *) textFields{
+    if (!_textFields){
+        _textFields = [[NSMutableArray alloc] init];
+    }
+    return _textFields;
+}
+
+- (void)dismissKeyboard{
+    for (OLTextField *textField in self.textFields){
+        if ([textField isFirstResponder]){
+            [textField resignFirstResponder];
+        }
+    }
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
     if (self.previewView && !self.skipPresentAnimation){
         self.view.backgroundColor = [UIColor clearColor];
         self.previewView.alpha = 0.15;
@@ -93,6 +110,10 @@
     if (self.centerYConConstant){
         self.centerYCon.constant = [self.centerYConConstant integerValue];
     }
+    
+    UITapGestureRecognizer *dismissKeyboardTapGesture = [[UITapGestureRecognizer alloc] init];
+    [dismissKeyboardTapGesture addTarget:self action:@selector(dismissKeyboard)];
+    [self.view addGestureRecognizer:dismissKeyboardTapGesture];
 }
 
 - (void)viewDidAppear:(BOOL)animated{
@@ -176,6 +197,13 @@
     self.edits.cropImageFrame = [self.cropView getFrameRect];
     self.edits.cropImageSize = [self.cropView croppedImageSize];
     self.edits.cropTransform = [self.cropView.imageView transform];
+    
+    for (OLTextField *textField in self.textFields){
+        OLTextOnPhoto *textOnPhoto = [[OLTextOnPhoto alloc] init];
+        textOnPhoto.text = textField.text;
+        textOnPhoto.frame = textField.frame;//[self.view convertRect:textField.frame toView:self.cropView];
+        [self.edits.textsOnPhoto addObject:textOnPhoto];
+    }
     
     if ([self.delegate respondsToSelector:@selector(scrollCropViewController:didFinishCroppingImage:)]){
         [self.delegate scrollCropViewController:self didFinishCroppingImage:[self.cropView editedImage]];
@@ -290,6 +318,82 @@
         [(UIBarButtonItem *)sender setEnabled:YES];
         self.doneButton.enabled = YES;
     }];
+}
+
+- (IBAction)onButtonAddTextClicked:(UIBarButtonItem *)sender {
+    OLTextField *textField = [[OLTextField alloc] init];
+    textField.margins = 10;
+    textField.delegate = self;
+    textField.layer.borderWidth = 3;
+    textField.layer.borderColor = self.view.tintColor.CGColor;
+    textField.textColor = [UIColor whiteColor];
+    textField.tintColor = [UIColor whiteColor];
+    [textField setFont:[UIFont systemFontOfSize:30]];
+    
+    UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] init];
+    panGesture.delegate = self;
+    [panGesture addTarget:self action:@selector(onTextfieldGesturePanRecognized:)];
+    [textField addGestureRecognizer:panGesture];
+    
+    [self.cropView addSubview:textField];
+    [textField.superview addConstraint:[NSLayoutConstraint constraintWithItem:textField attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:textField.superview attribute:NSLayoutAttributeCenterX multiplier:1 constant:0]];
+    [textField.superview addConstraint:[NSLayoutConstraint constraintWithItem:textField attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:textField.superview attribute:NSLayoutAttributeCenterY multiplier:1 constant:0]];
+    textField.translatesAutoresizingMaskIntoConstraints = NO;
+    NSDictionary *views = NSDictionaryOfVariableBindings(textField);
+    NSMutableArray *con = [[NSMutableArray alloc] init];
+    
+    NSArray *visuals = @[@"H:[textField(>=100)]",
+                         @"V:[textField(>=40)]"];
+    
+    for (NSString *visual in visuals) {
+        [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+    }
+    
+    [textField.superview addConstraints:con];
+    
+    [textField becomeFirstResponder];
+    [self.textFields addObject:textField];
+
+    self.doneButton.enabled = YES;
+}
+
+- (void)onTextfieldGesturePanRecognized:(UIPanGestureRecognizer *)gesture{
+    
+    static CGAffineTransform original;
+    
+    if (gesture.state == UIGestureRecognizerStateBegan){
+        original = gesture.view.transform;
+    }
+    else if (gesture.state == UIGestureRecognizerStateChanged){
+        CGPoint translate = [gesture translationInView:gesture.view.superview];
+        gesture.view.transform = CGAffineTransformTranslate(original, translate.x, translate.y);
+    }
+}
+
+#pragma mark - UIGestureRecognizerDelegate
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
+    if ([gestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]] && [otherGestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]]){
+        otherGestureRecognizer.enabled = NO;
+        otherGestureRecognizer.enabled = YES;
+    }
+    
+    return NO;
+}
+
+#pragma mark - UITextFieldDelegate
+
+- (BOOL) textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
+    OLTextField *theTextField = (OLTextField *)textField;
+    [theTextField sizeToFit];
+    textField.frame = CGRectMake(theTextField.frame.origin.x, theTextField.frame.origin.y, theTextField.frame.size.width + theTextField.margins*2, theTextField.frame.size.height);
+    
+    return YES;
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField{
+    textField.text = [textField.text stringByAppendingString:@"\n"];
+    return YES;
 }
 
 #pragma mark - RMImageCropperDelegate methods

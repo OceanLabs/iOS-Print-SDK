@@ -39,6 +39,13 @@ static NSString *const kKeyFlipVertical = @"co.oceanlabs.psprintstudio.kKeyFlipV
 
 @implementation OLPhotoEdits
 
+-(NSMutableArray *) textsOnPhoto{
+    if (!_textsOnPhoto){
+        _textsOnPhoto = [[NSMutableArray alloc] init];
+    }
+    return _textsOnPhoto;
+}
+
 -(CGAffineTransform) cropTransform{
     if (CGAffineTransformEqualToTransform(_cropTransform, CGAffineTransformMake(0, 0, 0, 0, 0, 0))){
         _cropTransform = CGAffineTransformIdentity;

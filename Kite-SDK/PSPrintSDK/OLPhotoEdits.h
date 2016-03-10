@@ -28,6 +28,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "OLTextOnPhoto.h"
 
 @interface OLPhotoEdits : NSObject <NSCoding, NSCopying>
 
@@ -38,6 +39,7 @@
 @property (assign, nonatomic) NSInteger counterClockwiseRotations;
 @property (assign, nonatomic) BOOL flipHorizontal;
 @property (assign, nonatomic) BOOL flipVertical;
+@property (strong, nonatomic) NSMutableArray<OLTextOnPhoto *> *textsOnPhoto;
 
 - (void)performHorizontalFlipEditFromOrientation:(UIImageOrientation)orientation;
 
