@@ -1193,10 +1193,11 @@ UINavigationControllerDelegate>
     }
     [self updateUserSelectedPhotos];
     
-    if (!self.autoAddedCover){
+    if (!self.autoAddedCover && self.userSelectedPhotos.count > 0){
         self.autoAddedCover = YES;
         if (!self.coverPhoto){
             self.coverPhoto = self.userSelectedPhotos.firstObject;
+            [self.userSelectedPhotos insertObject:self.coverPhoto atIndex:0];
             for (OLPhotobookViewController *photobook in self.childViewControllers){
                 if ([photobook bookClosed]){
                     photobook.coverPhoto = self.coverPhoto;
