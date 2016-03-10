@@ -31,7 +31,7 @@
  * Insert your API keys here. These are found under your profile
  * by logging in to the developer portal at https://www.kite.ly
  **********************************************************************/
-static NSString *const kAPIKeySandbox = @"REPLACE_WITH_YOUR_API_KEY"; // replace with your Sandbox API key found under the Profile section in the developer portal
+static NSString *const kAPIKeySandbox = @"a45bf7f39523d31aa1ca4ecf64d422b4d810d9c4"; // replace with your Sandbox API key found under the Profile section in the developer portal
 static NSString *const kAPIKeyLive = @"REPLACE_WITH_YOUR_API_KEY"; // replace with your Live API key found under the Profile section in the developer portal
 
 static NSString *const kApplePayMerchantIDKey = @"merchant.ly.kite.sdk"; // Replace with your merchant ID
@@ -175,7 +175,7 @@ UINavigationControllerDelegate, OLKiteDelegate>
         [OLKitePrintSDK setAPIKey:[self apiKey] withEnvironment:[self environment]];
     }
     
-    OLKiteViewController *vc = [[OLKiteViewController alloc] initWithAssets:assets];
+    OLKiteViewController *vc = [[OLKiteViewController alloc] initWithAssets:@[]];
     vc.userEmail = @"";
     vc.userPhone = @"";
     vc.delegate = self;

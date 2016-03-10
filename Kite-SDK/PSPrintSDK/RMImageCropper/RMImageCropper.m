@@ -290,7 +290,18 @@ CGFloat const RESET_DURATION = 0.10f;
     UIImage *croppedImage = [UIImage imageWithCGImage:imageReference scale:image.scale orientation:image.imageOrientation];
     CGImageRelease(imageReference);
     
-    return croppedImage;
+    frameRect = CGRectMake(0, 0, frameRect.size.width * image.scale, frameRect.size.height * image.scale);
+    
+    UIGraphicsBeginImageContextWithOptions(frameRect.size, NO, image.scale);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    CGContextSetRGBFillColor(context, 1.0,1.0,1.0,1.0);
+    CGContextFillRect(context,frameRect);
+    CGContextSaveGState(context);
+    [croppedImage drawInRect:CGRectMake(fabs(croppingRect.origin.x), fabs(croppingRect.origin.y), frameRect.size.width, frameRect.size.height)];
+    UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    return newImage;
 }
 
 +(UIImage*)imageByRotatingImage:(UIImage*)initImage fromImageOrientation:(UIImageOrientation)orientation
@@ -722,7 +733,7 @@ CGFloat const RESET_DURATION = 0.10f;
         if (recognizer.state == UIGestureRecognizerStateEnded || recognizer.state == UIGestureRecognizerStateCancelled || recognizer.state == UIGestureRecognizerStateFailed)
         {
             CGPoint velocity = [recognizer velocityInView:self.imageView];
-            [self startDecelerationWithVelocity:velocity];
+//            [self startDecelerationWithVelocity:velocity];
         }
         
         [self notifyDelegateOfTransform];
