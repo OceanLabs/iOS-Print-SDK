@@ -124,6 +124,7 @@ static BOOL haveLoadedAtLeastOnce = NO;
 @interface OLAsset (Private)
 
 @property (strong, nonatomic) id<OLAssetDataSource> dataSource;
+@property (assign, nonatomic) BOOL corrupt;
 
 @end
 
@@ -1868,6 +1869,9 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     }
     
     for (OLAsset *asset in jobAssets){
+        if ([asset corrupt]){
+            continue;
+        }
         OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
         printPhoto.asset = asset;
         

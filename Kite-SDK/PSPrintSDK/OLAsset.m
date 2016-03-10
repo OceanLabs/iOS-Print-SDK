@@ -67,6 +67,7 @@ NSString *const kOLMimeTypePDF = @"application/pdf";
 @property (nonatomic, strong) ALAsset *alAsset;
 @property (nonatomic, strong) id<OLAssetDataSource> dataSource;
 @property (nonatomic, strong) NSURL *imageURL;
+@property (assign, nonatomic) BOOL corrupt;
 @end
 
 @implementation OLAsset
@@ -310,6 +311,7 @@ NSString *const kOLMimeTypePDF = @"application/pdf";
         case kOLAssetTypePHAsset:{
             PHAsset *asset = [[PHAsset fetchAssetsWithLocalIdentifiers:@[self.phAssetLocalId] options:nil] firstObject];
             if (!asset){
+                self.corrupt = YES;
                 NSData *data = [NSData dataWithContentsOfFile:[[OLKiteUtils kiteBundle] pathForResource:@"kite_corrupt" ofType:@"jpg"]];
                 handler(data.length, nil);
                 return;
@@ -324,6 +326,7 @@ NSString *const kOLMimeTypePDF = @"application/pdf";
                     handler(UIImageJPEGRepresentation(result, 0.7).length, nil);
                 }
                 else{
+                    self.corrupt = YES;
                     handler(0, [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeImagesCorrupt userInfo:@{NSLocalizedDescriptionKey : info[PHImageErrorKey] ? info[PHImageErrorKey] : NSLocalizedString(@"There was an error getting one of your photos. Please remove or replace it.", @""), @"asset" : self}]);
                 }
             }];
@@ -337,6 +340,7 @@ NSString *const kOLMimeTypePDF = @"application/pdf";
                         handler(dataLength, error);
                     }
                     else{
+                        self.corrupt = YES;
                         handler(0, [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeImagesCorrupt userInfo:@{NSLocalizedDescriptionKey : NSLocalizedString(@"There was an error getting one of your photos. Please remove or replace it.", @""), @"asset" : self}]);
                     }
                 });
@@ -349,6 +353,7 @@ NSString *const kOLMimeTypePDF = @"application/pdf";
                     handler(self.imageData.length, nil);
                 }
                 else{
+                    self.corrupt = YES;
                     handler(0, [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeImagesCorrupt userInfo:@{NSLocalizedDescriptionKey : NSLocalizedString(@"There was an error getting one of your photos. Please remove or replace it.", @""), @"asset" : self}]);
                 }
             });
@@ -363,6 +368,7 @@ NSString *const kOLMimeTypePDF = @"application/pdf";
                     handler([fileSizeNumber longLongValue], attributesError);
                 }
                 else{
+                    self.corrupt = YES;
                     handler(0, [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeImagesCorrupt userInfo:@{NSLocalizedDescriptionKey : NSLocalizedString(@"There was an error getting one of your photos. Please remove or replace it.", @""), @"asset" : self}]);
                 }
             });
@@ -403,6 +409,7 @@ NSString *const kOLMimeTypePDF = @"application/pdf";
         case kOLAssetTypePHAsset:{
             PHAsset *asset = [[PHAsset fetchAssetsWithLocalIdentifiers:@[self.phAssetLocalId] options:nil] firstObject];
             if (!asset){
+                self.corrupt = YES;
                 NSData *data = [NSData dataWithContentsOfFile:[[OLKiteUtils kiteBundle] pathForResource:@"kite_corrupt" ofType:@"jpg"]];
                 handler(data, nil);
                 return;
@@ -417,6 +424,7 @@ NSString *const kOLMimeTypePDF = @"application/pdf";
                     handler(UIImageJPEGRepresentation(result, 0.7), nil);
                 }
                 else{
+                    self.corrupt = YES;
                     NSData *data = [NSData dataWithContentsOfFile:[[OLKiteUtils kiteBundle] pathForResource:@"kite_corrupt" ofType:@"jpg"]];
                     handler(data, nil);
                 }
