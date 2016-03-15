@@ -173,10 +173,6 @@ UIActionSheetDelegate>
     
     [self.addPhotosHintView viewWithTag:10].transform = CGAffineTransformMakeRotation(M_PI_4);
     
-    self.galleryButton.image = [UIImage imageNamed:@"import_gallery"];
-    self.galleryButton.title = NSLocalizedString(@"Add Photos", @"");
-    self.galleryButton.mainColor = [UIColor colorWithRed:0.227 green:0.706 blue:0.600 alpha:1.000];
-    
     self.userDisabledPhotos = [[NSMutableArray alloc] init];
     
     self.rotationSize = CGSizeZero;
