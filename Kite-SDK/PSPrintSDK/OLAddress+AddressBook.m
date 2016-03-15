@@ -73,6 +73,14 @@ static NSMutableArray *addressBook;
     }
 }
 
++ (void)clearAddressBook{
+    for (OLAddress *address in [OLAddress addressBook]) {
+            [addressBook removeObject:address];
+            [NSKeyedArchiver archiveRootObject:addressBook toFile:[OLAddress addressBookFilePath]];
+            return;
+    }
+}
+
 + (NSArray *)addressBook {
     if (!addressBook) {
         addressBook = [NSKeyedUnarchiver unarchiveObjectWithFile:[OLAddress addressBookFilePath]];

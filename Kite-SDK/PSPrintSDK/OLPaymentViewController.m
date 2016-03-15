@@ -74,6 +74,7 @@
 #import "OLFrameOrderReviewViewController.h"
 #import "OLAsset+Private.h"
 #import "UIViewController+OLMethods.h"
+#import "OLAddress+AddressBook.h"
 
 #ifdef OL_KITE_OFFER_PAYPAL
 #ifdef COCOAPODS
@@ -378,6 +379,10 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
+    
+    if ([self.kiteDelegate respondsToSelector:@selector(shouldStoreDeliveryAddresses)] && ![self.kiteDelegate shouldStoreDeliveryAddresses]){
+        [OLAddress clearAddressBook];
+    }
     
     if ([self isPushed]){
         if ([OLKitePrintSDK environment] == kOLKitePrintSDKEnvironmentSandbox){
@@ -1480,13 +1485,14 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 
 - (IBAction)onShippingDetailsGestureRecognized:(id)sender {
     [OLKiteUtils shippingControllerForPrintOrder:self.printOrder handler:^(id vc){
-        OLNavigationController *nvc = [[OLNavigationController alloc] initWithRootViewController:vc];
-        [[(UINavigationController *)vc view] class]; //force viewDidLoad;
-        [(OLCheckoutViewController *)vc navigationItem].rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:vc action:@selector(onButtonDoneClicked)];
         [vc safePerformSelector:@selector(setUserEmail:) withObject:self.userEmail];
         [vc safePerformSelector:@selector(setUserPhone:) withObject:self.userPhone];
         [vc safePerformSelector:@selector(setDelegate:) withObject:self.delegate];
         [vc safePerformSelector:@selector(setKiteDelegate:) withObject:self.kiteDelegate];
+        
+        OLNavigationController *nvc = [[OLNavigationController alloc] initWithRootViewController:vc];
+        [[(UINavigationController *)vc view] class]; //force viewDidLoad;
+        [(OLCheckoutViewController *)vc navigationItem].rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:vc action:@selector(onButtonDoneClicked)];
         
         nvc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
         [self presentViewController:nvc animated:YES completion:NULL];

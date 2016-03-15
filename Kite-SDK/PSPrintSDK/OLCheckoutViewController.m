@@ -329,10 +329,12 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
     [self.printOrder discardDuplicateJobs];
     [self.printOrder duplicateJobsForAddresses:self.selectedShippingAddresses];
     
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    [defaults setObject:email forKey:kKeyEmailAddress];
-    [defaults setObject:phone forKey:kKeyPhone];
-    [defaults synchronize];
+    if (![self.kiteDelegate respondsToSelector:@selector(shouldStoreDeliveryAddresses)] || [self.kiteDelegate shouldStoreDeliveryAddresses]){
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        [defaults setObject:email forKey:kKeyEmailAddress];
+        [defaults setObject:phone forKey:kKeyPhone];
+        [defaults synchronize];
+    }
     
     [[NSNotificationCenter defaultCenter] postNotificationName:kOLNotificationUserSuppliedShippingDetails object:self userInfo:@{kOLKeyUserInfoPrintOrder: self.printOrder}];
 }
@@ -405,6 +407,12 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
 }
 
 - (void)populateDefaultEmailAndPhone {
+    if ([self.kiteDelegate respondsToSelector:@selector(shouldStoreDeliveryAddresses)] && ![self.kiteDelegate shouldStoreDeliveryAddresses]){
+        self.textFieldEmail.text = self.printOrder.email;
+        self.textFieldPhone.text = self.printOrder.phone;
+        return;
+    }
+    
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSString *email = [defaults stringForKey:kKeyEmailAddress];
     if (!email){
@@ -434,6 +442,9 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
 
 - (NSString *)userEmail {
     if (self.textFieldEmail == nil) {
+        if ([self.kiteDelegate respondsToSelector:@selector(shouldStoreDeliveryAddresses)] && ![self.kiteDelegate shouldStoreDeliveryAddresses]){
+            return @"";
+        }
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
         NSString *email = [defaults stringForKey:kKeyEmailAddress];
         return email ? email : @"";
@@ -444,6 +455,9 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
 
 - (NSString *)userPhone {
     if (self.textFieldPhone == nil) {
+        if ([self.kiteDelegate respondsToSelector:@selector(shouldStoreDeliveryAddresses)] && ![self.kiteDelegate shouldStoreDeliveryAddresses]){
+            return @"";
+        }
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
         NSString *phone = [defaults stringForKey:kKeyPhone];
         return phone ? phone : @"";

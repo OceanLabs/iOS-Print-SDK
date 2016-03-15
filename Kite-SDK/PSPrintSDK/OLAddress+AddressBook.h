@@ -32,6 +32,7 @@
 @interface OLAddress (AddressBook)
 
 + (NSArray *)addressBook;
++ (void)clearAddressBook;
 - (void)saveToAddressBook;
 - (void)deleteFromAddressBook;
 - (BOOL)isSavedInAddressBook;

@@ -188,24 +188,26 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
 }
 
 - (void)populateDefaultDeliveryAddress {
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSString *firstName = [defaults stringForKey:kKeyRecipientFirstName];
-    NSString *lastName = [defaults stringForKey:kKeyRecipientName];
-    NSString *line1 = [defaults stringForKey:kKeyLine1];
-    NSString *line2 = [defaults stringForKey:kKeyLine2];
-    NSString *city = [defaults stringForKey:kKeyCity];
-    NSString *county = [defaults stringForKey:kKeyCounty];
-    NSString *postCode= [defaults stringForKey:kKeyPostCode];
-    NSString *country = [defaults stringForKey:kKeyCountry];
-    
-    self.shippingAddress.recipientFirstName = firstName;
-    self.shippingAddress.recipientLastName = lastName;
-    self.shippingAddress.line1 = line1;
-    self.shippingAddress.line2 = line2;
-    self.shippingAddress.city = city;
-    self.shippingAddress.stateOrCounty = county;
-    self.shippingAddress.zipOrPostcode = postCode;
-    self.shippingAddress.country = [OLCountry countryForCode:country];
+    if (![self.kiteDelegate respondsToSelector:@selector(shouldStoreDeliveryAddresses)] || [self.kiteDelegate shouldStoreDeliveryAddresses]){
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        NSString *firstName = [defaults stringForKey:kKeyRecipientFirstName];
+        NSString *lastName = [defaults stringForKey:kKeyRecipientName];
+        NSString *line1 = [defaults stringForKey:kKeyLine1];
+        NSString *line2 = [defaults stringForKey:kKeyLine2];
+        NSString *city = [defaults stringForKey:kKeyCity];
+        NSString *county = [defaults stringForKey:kKeyCounty];
+        NSString *postCode= [defaults stringForKey:kKeyPostCode];
+        NSString *country = [defaults stringForKey:kKeyCountry];
+        
+        self.shippingAddress.recipientFirstName = firstName;
+        self.shippingAddress.recipientLastName = lastName;
+        self.shippingAddress.line1 = line1;
+        self.shippingAddress.line2 = line2;
+        self.shippingAddress.city = city;
+        self.shippingAddress.stateOrCounty = county;
+        self.shippingAddress.zipOrPostcode = postCode;
+        self.shippingAddress.country = [OLCountry countryForCode:country];
+    }
     
     if (self.shippingAddress.country == nil) {
         self.shippingAddress.country = [OLCountry countryForCurrentLocale];
@@ -261,15 +263,20 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
     OLPaymentViewController *vc = [[OLPaymentViewController alloc] initWithPrintOrder:self.printOrder];
     vc.delegate = self.delegate;
     
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    [defaults setObject:email forKey:kKeyEmailAddress];
-    [defaults setObject:phone forKey:kKeyPhone];
+    if (![self.kiteDelegate respondsToSelector:@selector(shouldStoreDeliveryAddresses)] || [self.kiteDelegate shouldStoreDeliveryAddresses]){
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        [defaults setObject:email forKey:kKeyEmailAddress];
+        [defaults setObject:phone forKey:kKeyPhone];
+    }
     
     [[NSNotificationCenter defaultCenter] postNotificationName:kOLNotificationUserSuppliedShippingDetails object:self userInfo:@{kOLKeyUserInfoPrintOrder: self.printOrder}];
     [self.navigationController pushViewController:vc animated:YES];
 }
 
 - (void)saveAddress{
+    if ([self.kiteDelegate respondsToSelector:@selector(shouldStoreDeliveryAddresses)] && ![self.kiteDelegate shouldStoreDeliveryAddresses]){
+        return;
+    }
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     
     NSString *email = [super userEmail];
