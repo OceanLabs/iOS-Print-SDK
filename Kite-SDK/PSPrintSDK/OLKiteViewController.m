@@ -169,6 +169,7 @@ static CGFloat fadeTime = 0.3;
     if ((self = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:currentBundle] instantiateViewControllerWithIdentifier:@"KiteViewController"])) {
         self.assets = assets;
     }
+    [OLKiteABTesting sharedInstance].launchedWithPrintOrder = NO;
     
     return self;
 }
