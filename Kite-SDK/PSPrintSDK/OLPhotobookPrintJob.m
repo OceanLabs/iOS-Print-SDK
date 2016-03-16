@@ -130,6 +130,9 @@ static NSString *const kKeyPhotobookPrintJobOptions = @"co.oceanlabs.pssdk.kKeyP
 }
 
 - (NSUInteger)quantity {
+    if ([self.assets.firstObject mimeType] == kOLMimeTypePDF){
+        return MAX([OLProductTemplate templateWithId:self.templateId].quantityPerSheet, 1);
+    }
     return self.assets.count;
 }
 
