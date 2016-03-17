@@ -771,6 +771,28 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     }];
 }
 
+- (void(^)())transistionToReceiptBlock{
+    __weak OLPaymentViewController *welf = self;
+    return ^{
+        [[OLKiteUtils kiteVcForViewController:welf].userSelectedPhotos removeAllObjects];
+        if ([welf.delegate respondsToSelector:@selector(shouldDismissPaymentViewControllerAfterPayment)] && self.delegate.shouldDismissPaymentViewControllerAfterPayment){
+            [(UITableView *)[(OLReceiptViewController *)welf.delegate tableView] reloadData];
+            [welf.navigationController.presentingViewController dismissViewControllerAnimated:YES completion:NULL];
+            return ;
+        }
+        OLReceiptViewController *receiptVC = [[OLReceiptViewController alloc] initWithPrintOrder:welf.printOrder];
+        receiptVC.delegate = welf.delegate;
+        receiptVC.presentedModally = welf.presentedModally;
+        receiptVC.delegate = welf.delegate;
+        if (!welf.presentedViewController) {
+            [welf.navigationController pushViewController:receiptVC animated:YES];
+            
+            [OLKiteUtils kiteVcForViewController:welf].printOrder = [[OLPrintOrder alloc] init];
+            [[OLKiteUtils kiteVcForViewController:welf].printOrder saveOrder];
+        }
+    };
+}
+
 - (void)submitOrderForPrintingWithProofOfPayment:(NSString *)proofOfPayment paymentMethod:(NSString *)paymentMethod completion:(void (^)(PKPaymentAuthorizationStatus)) handler{
     [self.printOrder cancelSubmissionOrPreemptedAssetUpload];
     
@@ -817,25 +839,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         [self.printOrder saveToHistory]; // save again as the print order has it's receipt set if it was successful, otherwise last error is set
         
         self.transitionBlockOperation = [[NSBlockOperation alloc] init];
-        __weak OLPaymentViewController *welf = self;
-        [self.transitionBlockOperation addExecutionBlock:^{
-            [[OLKiteUtils kiteVcForViewController:welf].userSelectedPhotos removeAllObjects];
-            if ([welf.delegate respondsToSelector:@selector(shouldDismissPaymentViewControllerAfterPayment)] && self.delegate.shouldDismissPaymentViewControllerAfterPayment){
-                [(UITableView *)[(OLReceiptViewController *)welf.delegate tableView] reloadData];
-                [welf.navigationController.presentingViewController dismissViewControllerAnimated:YES completion:NULL];
-                return ;
-            }
-            OLReceiptViewController *receiptVC = [[OLReceiptViewController alloc] initWithPrintOrder:welf.printOrder];
-            receiptVC.delegate = welf.delegate;
-            receiptVC.presentedModally = welf.presentedModally;
-            receiptVC.delegate = welf.delegate;
-            if (!welf.presentedViewController) {
-                [welf.navigationController pushViewController:receiptVC animated:YES];
-                
-                [OLKiteUtils kiteVcForViewController:welf].printOrder = [[OLPrintOrder alloc] init];
-                [[OLKiteUtils kiteVcForViewController:welf].printOrder saveOrder];
-            }
-        }];
+        [self.transitionBlockOperation addExecutionBlock:[self transistionToReceiptBlock]];
         if ([self isApplePayAvailable] && self.applePayDismissOperation){
             [self.transitionBlockOperation addDependency:self.applePayDismissOperation];
         }
