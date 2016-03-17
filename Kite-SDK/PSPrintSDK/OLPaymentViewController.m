@@ -74,6 +74,7 @@
 #import "OLFrameOrderReviewViewController.h"
 #import "OLAsset+Private.h"
 #import "UIViewController+OLMethods.h"
+#import "OLAddress+AddressBook.h"
 
 #ifdef OL_KITE_OFFER_PAYPAL
 #ifdef COCOAPODS
@@ -124,6 +125,7 @@ static BOOL haveLoadedAtLeastOnce = NO;
 @interface OLAsset (Private)
 
 @property (strong, nonatomic) id<OLAssetDataSource> dataSource;
+@property (assign, nonatomic) BOOL corrupt;
 
 @end
 
@@ -377,6 +379,10 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
+    
+    if ([self.kiteDelegate respondsToSelector:@selector(shouldStoreDeliveryAddresses)] && ![self.kiteDelegate shouldStoreDeliveryAddresses]){
+        [OLAddress clearAddressBook];
+    }
     
     if ([self isPushed]){
         if ([OLKitePrintSDK environment] == kOLKitePrintSDKEnvironmentSandbox){
@@ -765,6 +771,28 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     }];
 }
 
+- (void(^)())transistionToReceiptBlock{
+    __weak OLPaymentViewController *welf = self;
+    return ^{
+        [[OLKiteUtils kiteVcForViewController:welf].userSelectedPhotos removeAllObjects];
+        if ([welf.delegate respondsToSelector:@selector(shouldDismissPaymentViewControllerAfterPayment)] && self.delegate.shouldDismissPaymentViewControllerAfterPayment){
+            [(UITableView *)[(OLReceiptViewController *)welf.delegate tableView] reloadData];
+            [welf.navigationController.presentingViewController dismissViewControllerAnimated:YES completion:NULL];
+            return ;
+        }
+        OLReceiptViewController *receiptVC = [[OLReceiptViewController alloc] initWithPrintOrder:welf.printOrder];
+        receiptVC.delegate = welf.delegate;
+        receiptVC.presentedModally = welf.presentedModally;
+        receiptVC.delegate = welf.delegate;
+        if (!welf.presentedViewController) {
+            [welf.navigationController pushViewController:receiptVC animated:YES];
+            
+            [OLKiteUtils kiteVcForViewController:welf].printOrder = [[OLPrintOrder alloc] init];
+            [[OLKiteUtils kiteVcForViewController:welf].printOrder saveOrder];
+        }
+    };
+}
+
 - (void)submitOrderForPrintingWithProofOfPayment:(NSString *)proofOfPayment paymentMethod:(NSString *)paymentMethod completion:(void (^)(PKPaymentAuthorizationStatus)) handler{
     [self.printOrder cancelSubmissionOrPreemptedAssetUpload];
     
@@ -811,25 +839,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         [self.printOrder saveToHistory]; // save again as the print order has it's receipt set if it was successful, otherwise last error is set
         
         self.transitionBlockOperation = [[NSBlockOperation alloc] init];
-        __weak OLPaymentViewController *welf = self;
-        [self.transitionBlockOperation addExecutionBlock:^{
-            [[OLKiteUtils kiteVcForViewController:welf].userSelectedPhotos removeAllObjects];
-            if ([welf.delegate respondsToSelector:@selector(shouldDismissPaymentViewControllerAfterPayment)] && self.delegate.shouldDismissPaymentViewControllerAfterPayment){
-                [(UITableView *)[(OLReceiptViewController *)welf.delegate tableView] reloadData];
-                [welf.navigationController.presentingViewController dismissViewControllerAnimated:YES completion:NULL];
-                return ;
-            }
-            OLReceiptViewController *receiptVC = [[OLReceiptViewController alloc] initWithPrintOrder:welf.printOrder];
-            receiptVC.delegate = welf.delegate;
-            receiptVC.presentedModally = welf.presentedModally;
-            receiptVC.delegate = welf.delegate;
-            if (!welf.presentedViewController) {
-                [welf.navigationController pushViewController:receiptVC animated:YES];
-                
-                [OLKiteUtils kiteVcForViewController:welf].printOrder = [[OLPrintOrder alloc] init];
-                [[OLKiteUtils kiteVcForViewController:welf].printOrder saveOrder];
-            }
-        }];
+        [self.transitionBlockOperation addExecutionBlock:[self transistionToReceiptBlock]];
         if ([self isApplePayAvailable] && self.applePayDismissOperation){
             [self.transitionBlockOperation addDependency:self.applePayDismissOperation];
         }
@@ -1479,13 +1489,14 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 
 - (IBAction)onShippingDetailsGestureRecognized:(id)sender {
     [OLKiteUtils shippingControllerForPrintOrder:self.printOrder handler:^(id vc){
-        OLNavigationController *nvc = [[OLNavigationController alloc] initWithRootViewController:vc];
-        [[(UINavigationController *)vc view] class]; //force viewDidLoad;
-        [(OLCheckoutViewController *)vc navigationItem].rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:vc action:@selector(onButtonDoneClicked)];
         [vc safePerformSelector:@selector(setUserEmail:) withObject:self.userEmail];
         [vc safePerformSelector:@selector(setUserPhone:) withObject:self.userPhone];
         [vc safePerformSelector:@selector(setDelegate:) withObject:self.delegate];
         [vc safePerformSelector:@selector(setKiteDelegate:) withObject:self.kiteDelegate];
+        
+        OLNavigationController *nvc = [[OLNavigationController alloc] initWithRootViewController:vc];
+        [[(UINavigationController *)vc view] class]; //force viewDidLoad;
+        [(OLCheckoutViewController *)vc navigationItem].rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:vc action:@selector(onButtonDoneClicked)];
         
         nvc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
         [self presentViewController:nvc animated:YES completion:NULL];
@@ -1868,6 +1879,9 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     }
     
     for (OLAsset *asset in jobAssets){
+        if ([asset corrupt]){
+            continue;
+        }
         OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
         printPhoto.asset = asset;
         

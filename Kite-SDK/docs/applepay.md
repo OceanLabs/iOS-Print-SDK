@@ -49,4 +49,10 @@ Finally
 
 Finally ensure ApplePay is enabled in the Capabilities tab of your app build target.
 
+If you are using CocoaPods please make sure to include the ApplePay subspec by adding the following line to your podfile:
+
+```ruby
+pod 'Kite-Print-SDK/ApplePay'
+```
+
 Note that if you integrated the SDK by any means other than CocoaPods you'll need to define the `OL_KITE_OFFER_APPLE_PAY=1` preprocessor macro in the build settings of your application.

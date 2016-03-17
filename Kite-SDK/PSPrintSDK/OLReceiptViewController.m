@@ -190,7 +190,19 @@ static const NSUInteger kSectionErrorRetry = 2;
 }
 
 - (void)onButtonDoneClicked {
-    [self.parentViewController dismissViewControllerAnimated:YES completion:nil];
+    OLKiteViewController *kiteVc = [OLKiteUtils kiteVcForViewController:self];
+    if  (!kiteVc){
+        [self.parentViewController dismissViewControllerAnimated:YES completion:nil];
+    }
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackKiteDismissed];
+#endif
+    if ([kiteVc.delegate respondsToSelector:@selector(kiteControllerDidFinish:)]){
+        [kiteVc.delegate kiteControllerDidFinish:kiteVc];
+    }
+    else{
+        [kiteVc dismissViewControllerAnimated:YES completion:^{}];
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated {

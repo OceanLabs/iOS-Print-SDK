@@ -86,11 +86,10 @@ static NSString *const kKeyDateAddedToBasket = @"co.oceanlabs.pssdk.kKeyDateAdde
 
 - (NSDictionary *)jsonRepresentation {
     NSMutableArray *pages = [[NSMutableArray alloc] init];
+    NSMutableArray *pdf = [[NSMutableArray alloc] init];
     for (OLAsset *asset in self.assets) {
         if (asset.mimeType == kOLMimeTypePDF){
-            [pages addObject:@{
-                              @"pdf" : [NSString stringWithFormat:@"%lld", asset.assetId]
-                              }];
+            [pdf addObject:[NSString stringWithFormat:@"%lld", asset.assetId]];
         }
         else{
         [pages addObject:@{
@@ -102,17 +101,40 @@ static NSString *const kKeyDateAddedToBasket = @"co.oceanlabs.pssdk.kKeyDateAdde
     
     NSMutableDictionary *json = [[NSMutableDictionary alloc] init];
     json[@"template_id"] = [OLProductTemplate templateWithId:self.templateId].identifier;
-    json[@"assets"] = @{
-                        self.frontCover.mimeType != kOLMimeTypePDF ? @"front_cover" : @"front_cover_pdf" : self.frontCover ? [NSString stringWithFormat:@"%lld", self.frontCover.assetId] : @"",
-                        self.backCover.mimeType != kOLMimeTypePDF ? @"back_cover" : @"back_cover_pdf" : self.backCover ? [NSString stringWithFormat:@"%lld", self.backCover.assetId] : @"",
-                        @"pages" : pages
-                        };
-    json[@"options"] = self.options;
+    json[@"assets"] = [[NSMutableDictionary alloc] init];
+    if (self.frontCover.mimeType == kOLMimeTypePDF){
+        json[@"assets"][@"cover_pdf"] = [NSString stringWithFormat:@"%lld", self.frontCover.assetId];
+    }
+    else if(self.frontCover){
+        json[@"assets"][@"front_cover"] = [NSString stringWithFormat:@"%lld", self.frontCover.assetId];
+    }
+    
+    if (self.backCover.mimeType == kOLMimeTypePDF){
+        json[@"assets"][@"back_cover_pdf"] = [NSString stringWithFormat:@"%lld", self.backCover.assetId];
+    }
+    else if (self.backCover){
+        json[@"assets"][@"back_cover"] = [NSString stringWithFormat:@"%lld", self.backCover.assetId];
+    }
+    
+    if (pages.count > 0){
+        [(NSMutableDictionary *)json[@"assets"] addEntriesFromDictionary:@{@"pages" : pages}];
+    }
+    if (pdf.count > 0){
+        [self.options removeAllObjects];
+        [(NSMutableDictionary *)json[@"assets"] addEntriesFromDictionary:@{@"inside_pdf" : pdf.firstObject}];
+    }
+    
+    if (self.options.allKeys.count > 0){
+        json[@"options"] = self.options;
+    }
     
     return json;
 }
 
 - (NSUInteger)quantity {
+    if ([self.assets.firstObject mimeType] == kOLMimeTypePDF){
+        return MAX([OLProductTemplate templateWithId:self.templateId].quantityPerSheet, 1);
+    }
     return self.assets.count;
 }
 

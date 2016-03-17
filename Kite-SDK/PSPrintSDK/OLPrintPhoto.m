@@ -504,6 +504,7 @@ static NSOperationQueue *imageOperationQueue;
                 handler(data, nil);
             }];
         } else {
+            _type = kPrintPhotoAssetTypeCorrupt;
             handler(nil, [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeImagesCorrupt userInfo:@{NSLocalizedDescriptionKey : NSLocalizedString(@"One of the images in an item was deleted from your device before we could upload it. Please remove or replace it.", @""), @"asset" : self}]);
         }
     }
@@ -525,6 +526,7 @@ static NSOperationQueue *imageOperationQueue;
                     }];
                 }
                 else{
+                    _type = kPrintPhotoAssetTypeCorrupt;
                     handler(nil, [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeImagesCorrupt userInfo:@{NSLocalizedDescriptionKey : info[PHImageErrorKey] ? info[PHImageErrorKey] : NSLocalizedString(@"There was an error getting one of your photos. Please remove or replace it.", @""), @"asset" : self}]);
                 }
             }];
@@ -649,7 +651,7 @@ static NSOperationQueue *imageOperationQueue;
     else if (self.type == kPrintPhotoAssetTypePHAsset){
         [aCoder encodeObject:[self.asset localIdentifier] forKey:kKeyAsset];
     }
-    else {
+    else if (self.type != kPrintPhotoAssetTypeCorrupt){
         [aCoder encodeObject:self.asset forKey:kKeyAsset];
     }
 }

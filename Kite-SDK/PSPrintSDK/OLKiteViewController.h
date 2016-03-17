@@ -67,7 +67,7 @@
 - (BOOL)kiteControllerShouldAllowUserToAddMorePhotos:(OLKiteViewController * _Nullable)controller;
 
 /**
- *  Disallow access to camera roll photos.
+ *  Disallow access to camera roll photos. The default value is NO.
  *
  *  @param controller The active OLKiteViewController
  *
@@ -83,11 +83,18 @@
 - (BOOL)shouldShowPhoneEntryOnCheckoutScreen;
 
 /**
- *  Asks the delegate if we should show a Continue Shopping button on the payment screen.
+ *  Asks the delegate if we should show a Continue Shopping button on the payment screen. The default value is YES.
  *
  *  @return Boolean value for showing the Continue Shooping button or not.
  */
 - (BOOL)shouldShowContinueShoppingButton;
+
+/**
+ *  Asks the delegate whether or not to store the user's delivery address for future use. The default value is YES
+ *
+ *  @return Boolean value for whether or not to store the user's delivery address.
+ */
+- (BOOL)shouldStoreDeliveryAddresses;
 
 
 /**
