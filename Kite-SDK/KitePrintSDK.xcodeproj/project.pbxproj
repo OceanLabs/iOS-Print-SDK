@@ -70,8 +70,6 @@
 		2E8702871C904918002BE2DA /* AFURLRequestSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E8702811C904918002BE2DA /* AFURLRequestSerialization.m */; };
 		2E8702881C904918002BE2DA /* AFURLResponseSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E8702821C904918002BE2DA /* AFURLResponseSerialization.m */; };
 		2E8702891C904918002BE2DA /* AFURLSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E8702831C904918002BE2DA /* AFURLSessionManager.m */; };
-		2E8702C11C904D63002BE2DA /* KiteSDKFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E8702C01C904D63002BE2DA /* KiteSDKFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		2E8702DC1C904D8E002BE2DA /* libKiteSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E29C85701BE3B4290041D4CF /* libKiteSDK.a */; };
 		2E8702FB1C90522D002BE2DA /* bitstream.c in Sources */ = {isa = PBXBuildFile; fileRef = 2E8702DD1C9050CA002BE2DA /* bitstream.c */; };
 		2E8702FC1C90522D002BE2DA /* mask.c in Sources */ = {isa = PBXBuildFile; fileRef = 2E8702DE1C9050CA002BE2DA /* mask.c */; };
 		2E8702FD1C90522D002BE2DA /* qrencode.c in Sources */ = {isa = PBXBuildFile; fileRef = 2E8702DF1C9050CA002BE2DA /* qrencode.c */; };
@@ -657,9 +655,6 @@
 		2E8702811C904918002BE2DA /* AFURLRequestSerialization.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = AFURLRequestSerialization.m; path = vendor/AFNetworking/AFNetworking/AFURLRequestSerialization.m; sourceTree = "<group>"; };
 		2E8702821C904918002BE2DA /* AFURLResponseSerialization.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = AFURLResponseSerialization.m; path = vendor/AFNetworking/AFNetworking/AFURLResponseSerialization.m; sourceTree = "<group>"; };
 		2E8702831C904918002BE2DA /* AFURLSessionManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = AFURLSessionManager.m; path = vendor/AFNetworking/AFNetworking/AFURLSessionManager.m; sourceTree = "<group>"; };
-		2E8702BE1C904D62002BE2DA /* KiteSDKFramework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = KiteSDKFramework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		2E8702C01C904D63002BE2DA /* KiteSDKFramework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KiteSDKFramework.h; sourceTree = "<group>"; };
-		2E8702C21C904D63002BE2DA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2E8702DD1C9050CA002BE2DA /* bitstream.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = bitstream.c; path = "vendor/ios-qr-encoder/QRCode/QR/libqrencode/bitstream.c"; sourceTree = SOURCE_ROOT; };
 		2E8702DE1C9050CA002BE2DA /* mask.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = mask.c; path = "vendor/ios-qr-encoder/QRCode/QR/libqrencode/mask.c"; sourceTree = SOURCE_ROOT; };
 		2E8702DF1C9050CA002BE2DA /* qrencode.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = qrencode.c; path = "vendor/ios-qr-encoder/QRCode/QR/libqrencode/qrencode.c"; sourceTree = SOURCE_ROOT; };
@@ -1064,14 +1059,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		2E8702BA1C904D62002BE2DA /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				2E8702DC1C904D8E002BE2DA /* libKiteSDK.a in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		2E8702EF1C9051FC002BE2DA /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -1447,15 +1434,6 @@
 			path = "ios-qr-encoder";
 			sourceTree = "<group>";
 		};
-		2E8702BF1C904D63002BE2DA /* KiteSDKFramework */ = {
-			isa = PBXGroup;
-			children = (
-				2E8702C01C904D63002BE2DA /* KiteSDKFramework.h */,
-				2E8702C21C904D63002BE2DA /* Info.plist */,
-			);
-			path = KiteSDKFramework;
-			sourceTree = "<group>";
-		};
 		2EA8BEC11A48509E008A9248 /* Categories */ = {
 			isa = PBXGroup;
 			children = (
@@ -1562,7 +1540,6 @@
 				CD73BF90186215790009DE03 /* Kite Print SDK Tests */,
 				2E2632C01B97336700C7D879 /* KitePrintSDKUITests */,
 				E29C85711BE3B4290041D4CF /* KiteSDK */,
-				2E8702BF1C904D63002BE2DA /* KiteSDKFramework */,
 				CD73BF6A186215790009DE03 /* Frameworks */,
 				CD73BF69186215790009DE03 /* Products */,
 				E29C839D1BE275C40041D4CF /* Vendor */,
@@ -1589,7 +1566,6 @@
 				E22058FD1BF3FB71009CFAF6 /* libSDWebImage.a */,
 				E24453051BFD2C1D0086BF03 /* libPayPal.a */,
 				E22963671C43DD21002A90CA /* libCTAssetsPicker.a */,
-				2E8702BE1C904D62002BE2DA /* KiteSDKFramework.framework */,
 				2E8702F21C9051FC002BE2DA /* libios-qr-encoder.a */,
 			);
 			name = Products;
@@ -2113,17 +2089,6 @@
 		};
 /* End PBXGroup section */
 
-/* Begin PBXHeadersBuildPhase section */
-		2E8702BB1C904D62002BE2DA /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				2E8702C11C904D63002BE2DA /* KiteSDKFramework.h in Headers */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXHeadersBuildPhase section */
-
 /* Begin PBXNativeTarget section */
 		2E2632BE1B97336700C7D879 /* KitePrintSDKUITests */ = {
 			isa = PBXNativeTarget;
@@ -2141,24 +2106,6 @@
 			productName = KitePrintSDKUITests;
 			productReference = 2E2632BF1B97336700C7D879 /* KitePrintSDKUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
-		};
-		2E8702BD1C904D62002BE2DA /* KiteSDKFramework */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 2E8702D51C904D63002BE2DA /* Build configuration list for PBXNativeTarget "KiteSDKFramework" */;
-			buildPhases = (
-				2E8702B91C904D62002BE2DA /* Sources */,
-				2E8702BA1C904D62002BE2DA /* Frameworks */,
-				2E8702BB1C904D62002BE2DA /* Headers */,
-				2E8702BC1C904D62002BE2DA /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = KiteSDKFramework;
-			productName = KiteSDKFramework;
-			productReference = 2E8702BE1C904D62002BE2DA /* KiteSDKFramework.framework */;
-			productType = "com.apple.product-type.framework";
 		};
 		2E8702F11C9051FC002BE2DA /* ios-qr-encoder */ = {
 			isa = PBXNativeTarget;
@@ -2455,10 +2402,6 @@
 					2E4CAF081BC25F0A0089FA26 = {
 						CreatedOnToolsVersion = 7.0.1;
 					};
-					2E8702BD1C904D62002BE2DA = {
-						CreatedOnToolsVersion = 7.2;
-						DevelopmentTeam = L78L4U72YJ;
-					};
 					2E8702F11C9051FC002BE2DA = {
 						CreatedOnToolsVersion = 7.2;
 					};
@@ -2535,7 +2478,6 @@
 				2E2632BE1B97336700C7D879 /* KitePrintSDKUITests */,
 				2E4CAF081BC25F0A0089FA26 /* Docs */,
 				E29C856F1BE3B4290041D4CF /* KiteSDK */,
-				2E8702BD1C904D62002BE2DA /* KiteSDKFramework */,
 				E22058481BF3A984009CFAF6 /* AFNetworking */,
 				E220587D1BF3F7AC009CFAF6 /* UIColor-HexString */,
 				E220588C1BF3F868009CFAF6 /* UICKeyChainStore */,
@@ -2555,13 +2497,6 @@
 
 /* Begin PBXResourcesBuildPhase section */
 		2E2632BD1B97336700C7D879 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		2E8702BC1C904D62002BE2DA /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -2706,13 +2641,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				2E2632C21B97336700C7D879 /* KitePrintSDKUITests.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		2E8702B91C904D62002BE2DA /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3255,69 +3183,6 @@
 			buildSettings = {
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
-			};
-			name = Release;
-		};
-		2E8702D61C904D63002BE2DA /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 1;
-				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				EMBED_ASSET_PACKS_IN_PRODUCT_BUNDLE = YES;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				INFOPLIST_FILE = KiteSDKFramework/Info.plist;
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MTL_ENABLE_DEBUG_INFO = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = ly.kite.KiteSDKFramework;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALID_ARCHS = "arm64 armv7 armv7s amd64";
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Debug;
-		};
-		2E8702D71C904D63002BE2DA /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 1;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				EMBED_ASSET_PACKS_IN_PRODUCT_BUNDLE = YES;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				INFOPLIST_FILE = KiteSDKFramework/Info.plist;
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MTL_ENABLE_DEBUG_INFO = NO;
-				PRODUCT_BUNDLE_IDENTIFIER = ly.kite.KiteSDKFramework;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALID_ARCHS = "arm64 armv7 armv7s amd64";
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
 			};
 			name = Release;
 		};
@@ -4295,15 +4160,6 @@
 			buildConfigurations = (
 				2E4CAF091BC25F0A0089FA26 /* Debug */,
 				2E4CAF0A1BC25F0A0089FA26 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		2E8702D51C904D63002BE2DA /* Build configuration list for PBXNativeTarget "KiteSDKFramework" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				2E8702D61C904D63002BE2DA /* Debug */,
-				2E8702D71C904D63002BE2DA /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
