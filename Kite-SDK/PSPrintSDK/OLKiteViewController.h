@@ -96,6 +96,13 @@
  */
 - (BOOL)shouldStoreDeliveryAddresses;
 
+/**
+ *  Asks the delegate whether or not to show a checkbox that allows the user to opt out of emails
+ *
+ *  @return Boolean value for showing the checkbox
+ */
+- (BOOL)shouldShowOptOutOfEmailsCheckbox;
+
 
 /**
  *  Notifies the delegate that KiteViewController has finished and should be dismissed as the delegate sees fit. If this method is not implemented, then KiteViewController dismisses itself.

@@ -57,6 +57,7 @@ static NSString *const kKeyOrderEmail = @"co.oceanlabs.pssdk.kKeyOrderEmail";
 static NSString *const kKeyOrderPhone = @"co.oceanlabs.pssdk.kKeyOrderPhone";
 static NSString *const kKeyOrderSubmitStatus = @"co.oceanlabs.pssdk.kKeyOrderSubmitStatus";
 static NSString *const kKeyOrderSubmitStatusError = @"co.oceanlabs.pssdk.kKeyOrderSubmitStatusError";
+static NSString *const kKeyOrderOptOutOfEmail = @"co.oceanlabs.pssdk.kKeyOrderOptOutOfEmail";
 
 static NSMutableArray *inProgressPrintOrders; // Tracks all currently in progress print orders. This is useful as it means they won't be dealloc'd if a user doesn't come a strong reference to them but still expects the completion handler callback
 
@@ -101,6 +102,8 @@ static id stringOrEmptyString(NSString *str) {
 @property (weak, nonatomic) NSArray *userSelectedPhotos;
 
 @property (nonatomic, readwrite) NSString *receipt;
+
+@property (assign, nonatomic) BOOL optOutOfEmail;
 
 @end
 
@@ -518,6 +521,8 @@ static NSBlockOperation *templateSyncOperation;
         [json setObject:self.email forKey:@"customer_email"];
     }
     
+    [json setObject:self.optOutOfEmail ? @"true" : @"false" forKey:@"opt_out_of_emails"];
+    
     if (self.shippingAddress) {
         NSDictionary *shippingAddress = @{@"recipient_name": stringOrEmptyString(self.shippingAddress.fullNameFromFirstAndLast),
                                           @"recipient_first_name": stringOrEmptyString(self.shippingAddress.recipientFirstName),
@@ -751,6 +756,7 @@ static NSBlockOperation *templateSyncOperation;
     [aCoder encodeObject:self.phone forKey:kKeyOrderPhone];
     [aCoder encodeInteger:self.submitStatus forKey:kKeyOrderSubmitStatus];
     [aCoder encodeObject:self.submitStatusErrorMessage forKey:kKeyOrderSubmitStatusError];
+    [aCoder encodeBool:self.optOutOfEmail forKey:kKeyOrderOptOutOfEmail];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
@@ -771,6 +777,7 @@ static NSBlockOperation *templateSyncOperation;
             _phone = [aDecoder decodeObjectForKey:kKeyOrderPhone];
             _submitStatus = [aDecoder decodeIntegerForKey:kKeyOrderSubmitStatus];
             _submitStatusErrorMessage = [aDecoder decodeObjectForKey:kKeyOrderSubmitStatusError];
+            _optOutOfEmail = [aDecoder decodeBoolForKey:kKeyOrderOptOutOfEmail];
         }
         return self;
         
