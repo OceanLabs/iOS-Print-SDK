@@ -80,9 +80,11 @@
         [urls addObject:self.product.productTemplate.productBackgroundImageURL];
     }
     
-    [[SDWebImagePrefetcher sharedImagePrefetcher] prefetchURLs:urls progress:NULL completed:^(NSUInteger numberOfCompletedURLs, NSUInteger numberOfSkippedURLs){
-        [[NSOperationQueue mainQueue] addOperation:self.downloadImagesOperation];
-    }];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [[SDWebImagePrefetcher sharedImagePrefetcher] prefetchURLs:urls progress:NULL completed:^(NSUInteger numberOfCompletedURLs, NSUInteger numberOfSkippedURLs){
+            [[NSOperationQueue mainQueue] addOperation:self.downloadImagesOperation];
+        }];
+    });
     
     self.downloadedMask = NO;
 }
