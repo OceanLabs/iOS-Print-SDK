@@ -322,6 +322,7 @@
 
 - (IBAction)onButtonAddTextClicked:(UIBarButtonItem *)sender {
     OLTextField *textField = [[OLTextField alloc] init];
+    textField.textAlignment = NSTextAlignmentCenter;
     textField.margins = 10;
     textField.delegate = self;
     textField.layer.borderWidth = 3;
@@ -385,8 +386,10 @@
 
 - (BOOL) textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
     OLTextField *theTextField = (OLTextField *)textField;
+    CGPoint center = textField.center;
     [theTextField sizeToFit];
-    textField.frame = CGRectMake(theTextField.frame.origin.x, theTextField.frame.origin.y, theTextField.frame.size.width + theTextField.margins*2, theTextField.frame.size.height);
+    textField.frame = CGRectMake(theTextField.frame.origin.x, theTextField.frame.origin.y, MAX(theTextField.frame.size.width + theTextField.margins*2, 100), MAX(theTextField.frame.size.height, 40));
+    theTextField.center = center;
     
     return YES;
 }

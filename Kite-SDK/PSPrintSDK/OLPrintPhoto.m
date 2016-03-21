@@ -428,20 +428,21 @@ static NSOperationQueue *imageOperationQueue;
             
             
             for (OLTextOnPhoto *textOnPhoto in printPhoto.edits.textsOnPhoto){
-                UIFont *font = [UIFont systemFontOfSize:30 / printPhoto.edits.cropImageSize.width * blockImage.size.width * image.scale];
+                CGFloat scaling = MIN(blockImage.size.width, blockImage.size.height) / MIN(printPhoto.edits.cropImageSize.width, printPhoto.edits.cropImageSize.height);
+                UIFont *font = [UIFont systemFontOfSize:30.0 * scaling];
                 
-                CGRect imageCroppingRect;
-                
-                imageCroppingRect.origin.x = textOnPhoto.frame.origin.x / printPhoto.edits.cropImageSize.width * blockImage.size.width * blockImage.scale;
-                imageCroppingRect.origin.y = textOnPhoto.frame.origin.y / printPhoto.edits.cropImageSize.height * blockImage.size.height * blockImage.scale;
-                imageCroppingRect.size.width = textOnPhoto.frame.size.width / printPhoto.edits.cropImageSize.width * blockImage.size.width * blockImage.scale;
-                imageCroppingRect.size.height = textOnPhoto.frame.size.height / printPhoto.edits.cropImageSize.height * blockImage.size.height * blockImage.scale;
+                CGRect textRect;
+                textRect.origin.x = textOnPhoto.frame.origin.x * scaling;
+                textRect.origin.y = textOnPhoto.frame.origin.y * scaling;
+                textRect.size.width = textOnPhoto.frame.size.width * scaling;
+                textRect.size.height = textOnPhoto.frame.size.height * scaling;
                 
                 UIGraphicsBeginImageContext(blockImage.size);
                 [blockImage drawInRect:CGRectMake(0,0,blockImage.size.width,blockImage.size.height)];
-                CGRect rect = CGRectMake(imageCroppingRect.origin.x, imageCroppingRect.origin.y, blockImage.size.width, blockImage.size.height);
-                [[UIColor whiteColor] set];
-                [textOnPhoto.text drawInRect:CGRectIntegral(rect) withFont:font];
+                
+                NSMutableParagraphStyle *style = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
+                style.alignment = NSTextAlignmentCenter;
+                [textOnPhoto.text drawInRect:textRect withAttributes:@{NSFontAttributeName : font, NSForegroundColorAttributeName: [UIColor whiteColor], NSParagraphStyleAttributeName : style}];
                 blockImage = UIGraphicsGetImageFromCurrentImageContext();
                 UIGraphicsEndImageContext();
             }

@@ -10,13 +10,13 @@
 
 @implementation OLTextField
 
-- (CGRect)textRectForBounds:(CGRect)bounds {
-    return CGRectMake(bounds.origin.x + self.margins, bounds.origin.y,
-                      bounds.size.width - self.margins * 2, bounds.size.height);
-}
-- (CGRect)editingRectForBounds:(CGRect)bounds {
-    return [self textRectForBounds:bounds];
-}
+//- (CGRect)textRectForBounds:(CGRect)bounds {
+//    return CGRectMake(bounds.origin.x + self.margins, bounds.origin.y,
+//                      bounds.size.width - self.margins * 2, bounds.size.height);
+//}
+//- (CGRect)editingRectForBounds:(CGRect)bounds {
+//    return [self textRectForBounds:bounds];
+//}
 
 
 @end
