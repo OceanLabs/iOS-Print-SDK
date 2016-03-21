@@ -108,10 +108,24 @@
 #endif
 
 /**
- *  Enable ability to upload a photo from another device through the use of a QR code. Useful for Kiosk apps.
+ *  Enable ability to upload a photo from another device through the use of a QR code. Useful for kiosk apps. Default value is NO.
  *
  *  @param enabled BOOL values
  */
 + (void)setQRCodeUploadEnabled:(BOOL)enabled;
+
+/**
+ *  Indicate that the app will be used in a kiosk environment
+ *
+ *  @param enabled Indicate kiosk environment. Default value is NO.
+ */
++ (void)setIsKiosk:(BOOL)enabled;
+
+/**
+ *  Indicates if the app will be used in a kiosk environment or not
+ *
+ *  @return Indicate kiosk environment
+ */
++ (BOOL)isKiosk;
 
 @end
