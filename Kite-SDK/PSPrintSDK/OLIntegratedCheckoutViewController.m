@@ -66,6 +66,7 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
 - (NSString *)userEmail;
 - (NSString *)userPhone;
 - (void)recalculateOrderCostIfNewSelectedCountryDiffers:(OLCountry *)selectedCountry;
+- (void)onButtonCheckboxClicked:(UIButton *)sender;
 
 @end
 

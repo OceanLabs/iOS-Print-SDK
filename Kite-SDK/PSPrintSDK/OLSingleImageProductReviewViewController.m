@@ -333,6 +333,17 @@ static BOOL hasMoved;
     
     hasMoved = NO;
     self.imageCropView.imageView.transform = self.imageDisplayed.edits.cropTransform;
+    
+    id view = [self.view viewWithTag:1010];
+    if ([view isKindOfClass:[UIActivityIndicatorView class]]){
+        [(UIActivityIndicatorView *)view setHidesWhenStopped:YES];
+        if (self.userSelectedPhotos.count > 0){
+            [(UIActivityIndicatorView *)view startAnimating];
+        }
+        else{
+            [(UIActivityIndicatorView *)view stopAnimating];
+        }
+    }
 }
 
 - (void)viewDidDisappear:(BOOL)animated{
@@ -655,6 +666,13 @@ static BOOL hasMoved;
             [self.view setNeedsLayout];
             [self.view layoutIfNeeded];
             self.imageCropView.imageView.transform = self.imageDisplayed.edits.cropTransform;
+            
+            if (self.userSelectedPhotos.count > 0){
+                id view = [self.view viewWithTag:1010];
+                if ([view isKindOfClass:[UIActivityIndicatorView class]]){
+                    [(UIActivityIndicatorView *)view stopAnimating];
+                }
+            }
         }];
     }
     else if (numberOfProviders > 1){
