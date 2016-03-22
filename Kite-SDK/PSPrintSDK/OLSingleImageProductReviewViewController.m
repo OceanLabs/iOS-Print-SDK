@@ -337,7 +337,7 @@ static BOOL hasMoved;
     id view = [self.view viewWithTag:1010];
     if ([view isKindOfClass:[UIActivityIndicatorView class]]){
         [(UIActivityIndicatorView *)view setHidesWhenStopped:YES];
-        if (self.userSelectedPhotos.count > 0){
+        if (self.userSelectedPhotos.count == 0){
             [(UIActivityIndicatorView *)view startAnimating];
         }
         else{
