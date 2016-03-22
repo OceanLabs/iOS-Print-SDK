@@ -333,17 +333,6 @@ static BOOL hasMoved;
     
     hasMoved = NO;
     self.imageCropView.imageView.transform = self.imageDisplayed.edits.cropTransform;
-    
-    id view = [self.view viewWithTag:1010];
-    if ([view isKindOfClass:[UIActivityIndicatorView class]]){
-        [(UIActivityIndicatorView *)view setHidesWhenStopped:YES];
-        if (self.userSelectedPhotos.count == 0){
-            [(UIActivityIndicatorView *)view startAnimating];
-        }
-        else{
-            [(UIActivityIndicatorView *)view stopAnimating];
-        }
-    }
 }
 
 - (void)viewDidDisappear:(BOOL)animated{
@@ -999,6 +988,11 @@ static BOOL hasMoved;
 #endif
 
 - (void)assetsPickerController:(id)picker didFinishPickingAssets:(NSArray *)assets {
+    id view = [self.view viewWithTag:1010];
+    if ([view isKindOfClass:[UIActivityIndicatorView class]]){
+            [(UIActivityIndicatorView *)view startAnimating];
+    }
+    
     NSInteger originalCount = self.userSelectedPhotos.count;
 #ifndef OL_NO_ANALYTICS
     [OLAnalytics trackPhotoProvider:@"Camera Roll" numberOfPhotosAdded:self.userSelectedPhotos.count - originalCount forProductName:self.product.productTemplate.name];
@@ -1098,6 +1092,12 @@ static BOOL hasMoved;
 }
 
 - (void)instagramImagePicker:(OLInstagramImagePickerController *)imagePicker didFinishPickingImages:(NSArray *)images {
+    id view = [self.view viewWithTag:1010];
+    if ([view isKindOfClass:[UIActivityIndicatorView class]]){
+        [(UIActivityIndicatorView *)view startAnimating];
+    }
+    
+    
     NSInteger originalCount = self.userSelectedPhotos.count;
 #ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
         NSMutableArray *assets = [[NSMutableArray alloc] init];
@@ -1145,6 +1145,11 @@ static BOOL hasMoved;
 }
 
 - (void)facebookImagePicker:(OLFacebookImagePickerController *)imagePicker didFinishPickingImages:(NSArray *)images {
+    id view = [self.view viewWithTag:1010];
+    if ([view isKindOfClass:[UIActivityIndicatorView class]]){
+        [(UIActivityIndicatorView *)view startAnimating];
+    }
+    
     NSInteger originalCount = self.userSelectedPhotos.count;
 #ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
     NSMutableArray *assets = [[NSMutableArray alloc] init];
@@ -1186,6 +1191,10 @@ static BOOL hasMoved;
 
 #pragma mark OLQRCodeUploadViewControllerDelegate methods
 - (void)qrCodeUpload:(OLQRCodeUploadViewController *)vc didFinishPickingAsset:(OLAsset *)asset {
+    id view = [self.view viewWithTag:1010];
+    if ([view isKindOfClass:[UIActivityIndicatorView class]]){
+        [(UIActivityIndicatorView *)view startAnimating];
+    }
     
     OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
     printPhoto.asset = asset;
