@@ -1033,6 +1033,13 @@ static BOOL hasMoved;
                 dispatch_async(dispatch_get_main_queue(), ^{
                     self.imageCropView.image = image;
                     self.imagePicked = nil;
+                    
+                    if (self.userSelectedPhotos.count > 0){
+                        id view = [self.view viewWithTag:1010];
+                        if ([view isKindOfClass:[UIActivityIndicatorView class]]){
+                            [(UIActivityIndicatorView *)view stopAnimating];
+                        }
+                    }
                 });
             }];
         });
@@ -1110,6 +1117,13 @@ static BOOL hasMoved;
         [self.imagePicked getImageWithProgress:NULL completion:^(UIImage *image){
             dispatch_async(dispatch_get_main_queue(), ^{
                 self.imageCropView.image = image;
+                
+                if (self.userSelectedPhotos.count > 0){
+                    id view = [self.view viewWithTag:1010];
+                    if ([view isKindOfClass:[UIActivityIndicatorView class]]){
+                        [(UIActivityIndicatorView *)view stopAnimating];
+                    }
+                }
             });
         }];
         self.imageDisplayed = self.imagePicked;
@@ -1150,6 +1164,13 @@ static BOOL hasMoved;
         [self.imagePicked getImageWithProgress:NULL completion:^(UIImage *image){
             dispatch_async(dispatch_get_main_queue(), ^{
                 self.imageCropView.image = image;
+                
+                if (self.userSelectedPhotos.count > 0){
+                    id view = [self.view viewWithTag:1010];
+                    if ([view isKindOfClass:[UIActivityIndicatorView class]]){
+                        [(UIActivityIndicatorView *)view stopAnimating];
+                    }
+                }
             });
         }];
         self.imageDisplayed = self.imagePicked;
@@ -1174,6 +1195,13 @@ static BOOL hasMoved;
     [self.imagePicked getImageWithProgress:NULL completion:^(UIImage *image){
         dispatch_async(dispatch_get_main_queue(), ^{
             self.imageCropView.image = image;
+            
+            if (self.userSelectedPhotos.count > 0){
+                id view = [self.view viewWithTag:1010];
+                if ([view isKindOfClass:[UIActivityIndicatorView class]]){
+                    [(UIActivityIndicatorView *)view stopAnimating];
+                }
+            }
         });
     }];
     self.imageDisplayed = self.imagePicked;
