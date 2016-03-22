@@ -487,7 +487,6 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
 #pragma mark - UITableViewDataSource methods
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    
     return [self showPhoneEntryField] ? kSectionCount : kSectionCount - 1;
 }
 
@@ -501,12 +500,7 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
 
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section {
     if (section == kSectionEmailAddress) {
-        if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8 && [self.kiteDelegate respondsToSelector:@selector(shouldShowOptOutOfEmailsCheckbox)] && [self.kiteDelegate shouldShowOptOutOfEmailsCheckbox]){
-            return NSLocalizedStringFromTableInBundle(@"We'll send you confirmation and order updates. Uncheck the box to opt out of email campaigns.", @"KitePrintSDK", [OLConstants bundle], @"");
-        }
-        else{
-            return NSLocalizedStringFromTableInBundle(@"We'll send you confirmation and order updates.", @"KitePrintSDK", [OLConstants bundle], @"");
-        }
+        return NSLocalizedStringFromTableInBundle(@"We'll send you confirmation and order updates.", @"KitePrintSDK", [OLConstants bundle], @"");
     } else if (section == kSectionPhoneNumber) {
         return NSLocalizedStringFromTableInBundle(@"Required by the postal service in case there are any issues during delivery.", @"KitePrintSDK", [OLConstants bundle], @"");
     }
@@ -529,7 +523,68 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
 - (void)onButtonCheckboxClicked:(UIButton *)sender{
     self.printOrder.optOutOfEmail = !self.printOrder.optOutOfEmail;
     
-    [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:kSectionEmailAddress] withRowAnimation:UITableViewRowAnimationAutomatic];
+    [sender setImage:self.printOrder.optOutOfEmail ? [UIImage imageNamedInKiteBundle:@"checkbox_off"] : [UIImage imageNamedInKiteBundle:@"checkbox_on"] forState:UIControlStateNormal];
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section{
+    if (section == kSectionDeliveryDetails){
+        return 0;
+    }
+    if (section == kSectionEmailAddress && ([[[UIDevice currentDevice] systemVersion] floatValue] < 8 || ![self.kiteDelegate respondsToSelector:@selector(shouldShowOptOutOfEmailsCheckbox)] || ![self.kiteDelegate shouldShowOptOutOfEmailsCheckbox])){
+        return 28;
+    }
+    return 44;
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section{
+    if (section != kSectionEmailAddress){
+        return nil;
+    }
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8 || ![self.kiteDelegate respondsToSelector:@selector(shouldShowOptOutOfEmailsCheckbox)] || ![self.kiteDelegate shouldShowOptOutOfEmailsCheckbox]){
+        return nil;
+    }
+    
+    UIView *cell = [[UIView alloc] init];
+    
+    UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 11, 61, 21)];
+    
+    titleLabel.text = NSLocalizedStringFromTableInBundle(@"We'll send you confirmation and order updates. Uncheck this box to opt out of email campaigns.", @"KitePrintSDK", [OLConstants bundle], @"");
+    titleLabel.adjustsFontSizeToFitWidth = YES;
+    titleLabel.tag = kTagInputFieldLabel;
+    titleLabel.numberOfLines = 3;
+    titleLabel.font = [UIFont systemFontOfSize:13];
+    //            cell.backgroundColor = [UIColor clearColor];
+    titleLabel.textColor = [UIColor darkGrayColor];
+    
+    [cell addSubview:titleLabel];
+    
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8){
+        UIButton *checkbox = [[UIButton alloc] init];
+        [checkbox setImage:self.printOrder.optOutOfEmail ? [UIImage imageNamedInKiteBundle:@"checkbox_off"] : [UIImage imageNamedInKiteBundle:@"checkbox_on"] forState:UIControlStateNormal];
+        [checkbox addTarget:self action:@selector(onButtonCheckboxClicked:) forControlEvents:UIControlEventTouchUpInside];
+        checkbox.translatesAutoresizingMaskIntoConstraints = NO;
+        [titleLabel.superview addSubview:checkbox];
+        
+        titleLabel.translatesAutoresizingMaskIntoConstraints = NO;
+        NSDictionary *views = NSDictionaryOfVariableBindings(titleLabel, checkbox);
+        NSMutableArray *con = [[NSMutableArray alloc] init];
+        
+        NSArray *visuals = @[[NSString stringWithFormat:@"H:|-20-[titleLabel]-5-[checkbox(%f)]-20-|", checkbox.imageView.image.size.width],
+                             @"V:[titleLabel(43)]",
+                             @"V:[checkbox(43)]"];
+        
+        
+        for (NSString *visual in visuals) {
+            [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+        }
+        
+        NSLayoutConstraint *textFieldCenterY = [NSLayoutConstraint constraintWithItem:titleLabel attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:titleLabel.superview attribute:NSLayoutAttributeCenterY multiplier:1 constant:0];
+        NSLayoutConstraint *checkboxCenterY = [NSLayoutConstraint constraintWithItem:checkbox attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:checkbox.superview attribute:NSLayoutAttributeCenterY multiplier:1 constant:0];
+        [con addObjectsFromArray:@[textFieldCenterY, checkboxCenterY]];
+        
+        [titleLabel.superview addConstraints:con];
+    }
+    return cell;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -573,42 +628,6 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
             self.textFieldEmail.autocapitalizationType = UITextAutocapitalizationTypeNone;
             self.textFieldEmail.autocorrectionType = UITextAutocorrectionTypeNo;
             [self populateDefaultEmailAndPhone];
-            
-            UITextField *tf = self.textFieldEmail;
-            if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8 && [self.kiteDelegate respondsToSelector:@selector(shouldShowOptOutOfEmailsCheckbox)] && [self.kiteDelegate shouldShowOptOutOfEmailsCheckbox]){
-                for (NSLayoutConstraint *con in tf.superview.constraints){
-                    if (con.firstItem == tf || con.secondItem == tf){
-                        [tf.superview removeConstraint:con];
-                    }
-                }
-                
-                UIButton *checkbox = [[UIButton alloc] init];
-                [checkbox setImage:self.printOrder.optOutOfEmail ? [UIImage imageNamedInKiteBundle:@"checkbox_off"] : [UIImage imageNamedInKiteBundle:@"checkbox_on"] forState:UIControlStateNormal];
-                [checkbox setTitleColor:[UIColor darkTextColor] forState:UIControlStateNormal];
-                [checkbox addTarget:self action:@selector(onButtonCheckboxClicked:) forControlEvents:UIControlEventTouchUpInside];
-                checkbox.translatesAutoresizingMaskIntoConstraints = NO;
-                [tf.superview addSubview:checkbox];
-                
-                tf.translatesAutoresizingMaskIntoConstraints = NO;
-                NSDictionary *views = NSDictionaryOfVariableBindings(tf, checkbox);
-                NSMutableArray *con = [[NSMutableArray alloc] init];
-                
-                NSArray *visuals = @[@"H:|-86-[tf]-2-[checkbox]-20-|",
-                                     @"V:[tf(43)]",
-                                     @"V:[checkbox(43)]"];
-                
-                
-                for (NSString *visual in visuals) {
-                    [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
-                }
-                
-                NSLayoutConstraint *textFieldCenterY = [NSLayoutConstraint constraintWithItem:tf attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:tf.superview attribute:NSLayoutAttributeCenterY multiplier:1 constant:0];
-                NSLayoutConstraint *checkboxCenterY = [NSLayoutConstraint constraintWithItem:checkbox attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:checkbox.superview attribute:NSLayoutAttributeCenterY multiplier:1 constant:0];
-                [con addObjectsFromArray:@[textFieldCenterY, checkboxCenterY]];
-                
-                [tf.superview addConstraints:con];
-                
-            }
         }
         
     } else if (indexPath.section == kSectionPhoneNumber) {
