@@ -718,6 +718,9 @@ static BOOL hasMoved;
             if ([OLKiteUtils instagramEnabled]){
                 [as addButtonWithTitle:@"Instagram"];
             }
+            if ([OLKiteUtils qrCodeUploadEnabled]){
+                [as addButtonWithTitle:NSLocalizedString(@"Upload from your phone", @"")];
+            }
 #ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
             for (OLCustomPhotoProvider *provider in [OLKiteUtils kiteVcForViewController:self].customImageProviders){
                 [as addButtonWithTitle:provider.name];
