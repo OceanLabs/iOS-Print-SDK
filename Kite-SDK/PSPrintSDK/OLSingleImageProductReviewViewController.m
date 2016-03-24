@@ -642,9 +642,9 @@ static BOOL hasMoved;
         
         self.imageDisplayed = self.userSelectedPhotos[indexPath.item];
         
-        self.imageCropView.image = nil;
+        self.imageCropView.imageView.image = nil;
         [self.imageDisplayed getImageWithProgress:^(float progress){
-            //            [self.imageCropView setProgress:progress];
+            [self.imageCropView setProgress:progress];
         }completion:^(UIImage *image){
             if (self.imageDisplayed.edits.counterClockwiseRotations > 0 || self.imageDisplayed.edits.flipHorizontal || self.imageDisplayed.edits.flipVertical){
                 self.imageCropView.image = [UIImage imageWithCGImage:image.CGImage scale:image.scale orientation:[OLPhotoEdits orientationForNumberOfCounterClockwiseRotations:self.imageDisplayed.edits.counterClockwiseRotations andInitialOrientation:image.imageOrientation horizontalFlip:self.imageDisplayed.edits.flipHorizontal verticalFlip:self.imageDisplayed.edits.flipVertical]];
@@ -1350,6 +1350,16 @@ static BOOL hasMoved;
     else{
         return UIInterfaceOrientationMaskPortrait;
     }
+}
+
+#pragma mark - Tear down and restore
+
+- (void)tearDownLargeObjectsFromMemory{
+    [super tearDownLargeObjectsFromMemory];
+}
+
+- (void)recreateTornDownLargeObjectsToMemory{
+    [super recreateTornDownLargeObjectsToMemory];
 }
 
 #pragma mark - UIAlertViewDelegate

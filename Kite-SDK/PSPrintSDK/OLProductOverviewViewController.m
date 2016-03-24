@@ -57,6 +57,16 @@
 - (void)saveOrder;
 @end
 
+@interface OLProductOverviewPageContentViewController ()
+@property (weak, nonatomic) IBOutlet UIImageView *imageView;
+@end
+
+@interface OLProduct (Private)
+
+-(void)setProductPhotography:(NSUInteger)i toImageView:(UIImageView *)imageView;
+
+@end
+
 @interface OLProductOverviewViewController () <UIPageViewControllerDataSource, OLProductOverviewPageContentViewControllerDelegate, OLProductDetailsDelegate, UIPageViewControllerDelegate>
 @property (strong, nonatomic) UIPageViewController *pageController;
 @property (strong, nonatomic) IBOutlet UIPageControl *pageControl;
@@ -500,6 +510,18 @@
 
 - (NSInteger)presentationIndexForPageViewController:(UIPageViewController *)pageViewController {
     return 1;
+}
+
+#pragma mark - Tear down and restore
+
+- (void)tearDownLargeObjectsFromMemory{
+    [super tearDownLargeObjectsFromMemory];
+    [(OLProductOverviewPageContentViewController *)self.pageController.viewControllers.firstObject imageView].image = nil;
+}
+
+- (void)recreateTornDownLargeObjectsToMemory{
+    [super recreateTornDownLargeObjectsToMemory];
+    [self.product setProductPhotography:[(OLProductOverviewPageContentViewController *)self.pageController.viewControllers.firstObject pageIndex] toImageView:[(OLProductOverviewPageContentViewController *)self.pageController.viewControllers.firstObject imageView]];
 }
 
 #pragma mark - Autorotate and Orientation Methods

@@ -24,4 +24,26 @@
     }
 }
 
+- (void)viewDidDisappear:(BOOL)animated{
+    [super viewDidDisappear:animated];
+    
+    self.isOffScreen = YES;
+    [self tearDownLargeObjectsFromMemory];
+}
+
+- (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    
+    self.isOffScreen = NO;
+    [self recreateTornDownLargeObjectsToMemory];
+}
+
+- (void)tearDownLargeObjectsFromMemory{
+    //To subclass
+}
+
+- (void)recreateTornDownLargeObjectsToMemory{
+    //To subclass
+}
+
 @end

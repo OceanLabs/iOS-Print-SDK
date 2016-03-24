@@ -10,4 +10,8 @@
 
 @interface OLCollectionViewController : UICollectionViewController
 
+@property (assign, nonatomic) BOOL isOffScreen;
+- (void)tearDownLargeObjectsFromMemory;
+- (void)recreateTornDownLargeObjectsToMemory;
+
 @end

@@ -31,7 +31,7 @@
 #import "OLProduct.h"
 #import "OLKiteViewController.h"
 
-@interface OLPhotoSelectionViewController : UIViewController
+@interface OLPhotoSelectionViewController : OLViewController
 @property (nonatomic, strong) OLProduct *product;
 @property (strong, nonatomic) NSMutableArray *userSelectedPhotos;
 @property (weak, nonatomic) id<OLKiteDelegate> delegate;
