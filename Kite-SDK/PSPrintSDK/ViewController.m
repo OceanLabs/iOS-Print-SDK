@@ -287,6 +287,10 @@ UINavigationControllerDelegate, OLKiteDelegate>
     return YES;
 }
 
+//- (BOOL)shouldShowOptOutOfEmailsCheckbox{
+//    return YES;
+//}
+
 //- (BOOL)shouldShowPhoneEntryOnCheckoutScreen{
 //    return YES;
 //}

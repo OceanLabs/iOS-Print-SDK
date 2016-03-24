@@ -66,11 +66,8 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
 - (NSString *)userEmail;
 - (NSString *)userPhone;
 - (void)recalculateOrderCostIfNewSelectedCountryDiffers:(OLCountry *)selectedCountry;
+- (void)onButtonCheckboxClicked:(UIButton *)sender;
 
-@end
-
-@interface OLPrintOrder (PrivateMethods)
-@property (assign, nonatomic) BOOL optOutOfEmail;
 @end
 
 @interface OLIntegratedCheckoutViewController () <UITextFieldDelegate, OLCountryPickerControllerDelegate, UINavigationControllerDelegate, UITableViewDelegate>
@@ -427,41 +424,6 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
         NSString *s;
         if (indexPath.section == kSectionEmail){
             s = NSLocalizedString(@"Email", @"");
-            
-            if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8 && [self.kiteDelegate respondsToSelector:@selector(shouldShowOptOutOfEmailsCheckbox)] && [self.kiteDelegate shouldShowOptOutOfEmailsCheckbox]){
-                for (NSLayoutConstraint *con in tf.superview.constraints){
-                    if (con.firstItem == tf || con.secondItem == tf){
-                        [tf.superview removeConstraint:con];
-                    }
-                }
-                
-                UIButton *checkbox = [[UIButton alloc] init];
-                [checkbox setImage:self.printOrder.optOutOfEmail ? [UIImage imageNamedInKiteBundle:@"checkbox_off"] : [UIImage imageNamedInKiteBundle:@"checkbox_on"] forState:UIControlStateNormal];
-                [checkbox setTitleColor:[UIColor darkTextColor] forState:UIControlStateNormal];
-                [checkbox addTarget:self action:@selector(onButtonCheckboxClicked:) forControlEvents:UIControlEventTouchUpInside];
-                checkbox.translatesAutoresizingMaskIntoConstraints = NO;
-                [tf.superview addSubview:checkbox];
-                
-                tf.translatesAutoresizingMaskIntoConstraints = NO;
-                NSDictionary *views = NSDictionaryOfVariableBindings(tf, checkbox);
-                NSMutableArray *con = [[NSMutableArray alloc] init];
-                
-                NSArray *visuals = @[@"H:|-20-[tf]-2-[checkbox]-20-|",
-                                     @"V:[tf(43)]",
-                                     @"V:[checkbox(43)]"];
-                
-                
-                for (NSString *visual in visuals) {
-                    [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
-                }
-                
-                NSLayoutConstraint *textFieldCenterY = [NSLayoutConstraint constraintWithItem:tf attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:tf.superview attribute:NSLayoutAttributeCenterY multiplier:1 constant:0];
-                NSLayoutConstraint *checkboxCenterY = [NSLayoutConstraint constraintWithItem:checkbox attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:checkbox.superview attribute:NSLayoutAttributeCenterY multiplier:1 constant:0];
-                [con addObjectsFromArray:@[textFieldCenterY, checkboxCenterY]];
-                
-                [tf.superview addConstraints:con];
-
-            }
         }
         else if (indexPath.section == kSectionPhone){
             s = NSLocalizedString(@"Phone", @"");

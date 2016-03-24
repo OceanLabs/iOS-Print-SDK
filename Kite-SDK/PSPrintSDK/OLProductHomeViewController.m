@@ -588,6 +588,9 @@
 #pragma mark - UICollectionViewDataSource Methods
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
+    if (self.isOffScreen){
+        return 0;
+    }
     return [[OLKiteABTesting sharedInstance].qualityBannerType isEqualToString:@"None"] ? 1 : 2;
 }
 
@@ -699,6 +702,18 @@
     }
     NSIndexPath *indexPath = [self.collectionView indexPathForCell:(UICollectionViewCell *)view];
     [self collectionView:self.collectionView didSelectItemAtIndexPath:indexPath];
+}
+
+#pragma mark - Tear down and restore
+
+- (void)tearDownLargeObjectsFromMemory{
+    [super tearDownLargeObjectsFromMemory];
+    [self.collectionView reloadData];
+}
+
+- (void)recreateTornDownLargeObjectsToMemory{
+    [super recreateTornDownLargeObjectsToMemory];
+    [self.collectionView reloadData];
 }
 
 #pragma mark - Autorotate and Orientation Methods

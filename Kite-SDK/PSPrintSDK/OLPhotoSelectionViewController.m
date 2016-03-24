@@ -1504,6 +1504,18 @@ UIActionSheetDelegate>
 }
 #endif
 
+#pragma mark - Tear down and restore
+
+- (void)tearDownLargeObjectsFromMemory{
+    [super tearDownLargeObjectsFromMemory];
+    [self.collectionView reloadData];
+}
+
+- (void)recreateTornDownLargeObjectsToMemory{
+    [super recreateTornDownLargeObjectsToMemory];
+    [self.collectionView reloadData];
+}
+
 #pragma mark UIActionSheet Delegate (only used on iOS 7)
 
 - (void) actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex{

@@ -31,10 +31,11 @@
 #import "OLPrintOrder.h"
 #import "OLScrollCropViewController.h"
 #import "OLKiteViewController.h"
+#import "OLCollectionViewController.h"
 
 @class OLProduct;
 
-@interface OLOrderReviewViewController : UICollectionViewController <UINavigationControllerDelegate, OLScrollCropViewControllerDelegate>
+@interface OLOrderReviewViewController : OLCollectionViewController <UINavigationControllerDelegate, OLScrollCropViewControllerDelegate>
 
 @property (nonatomic, strong) OLProduct *product;
 @property (strong, nonatomic) NSMutableArray *userSelectedPhotos;

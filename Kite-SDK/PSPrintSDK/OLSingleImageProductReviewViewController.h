@@ -34,7 +34,7 @@
 
 @class OLProduct;
 
-@interface OLSingleImageProductReviewViewController : UIViewController <OLScrollCropViewControllerDelegate>
+@interface OLSingleImageProductReviewViewController : OLViewController <OLScrollCropViewControllerDelegate>
 
 @property (strong, nonatomic) OLProduct *product;
 @property (strong, nonatomic) NSMutableArray *userSelectedPhotos;

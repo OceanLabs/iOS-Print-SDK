@@ -642,9 +642,9 @@ static BOOL hasMoved;
         
         self.imageDisplayed = self.userSelectedPhotos[indexPath.item];
         
-        self.imageCropView.image = nil;
+        self.imageCropView.imageView.image = nil;
         [self.imageDisplayed getImageWithProgress:^(float progress){
-            //            [self.imageCropView setProgress:progress];
+            [self.imageCropView setProgress:progress];
         }completion:^(UIImage *image){
             if (self.imageDisplayed.edits.counterClockwiseRotations > 0 || self.imageDisplayed.edits.flipHorizontal || self.imageDisplayed.edits.flipVertical){
                 self.imageCropView.image = [UIImage imageWithCGImage:image.CGImage scale:image.scale orientation:[OLPhotoEdits orientationForNumberOfCounterClockwiseRotations:self.imageDisplayed.edits.counterClockwiseRotations andInitialOrientation:image.imageOrientation horizontalFlip:self.imageDisplayed.edits.flipHorizontal verticalFlip:self.imageDisplayed.edits.flipVertical]];
@@ -655,6 +655,13 @@ static BOOL hasMoved;
             [self.view setNeedsLayout];
             [self.view layoutIfNeeded];
             self.imageCropView.imageView.transform = self.imageDisplayed.edits.cropTransform;
+            
+            if (self.userSelectedPhotos.count > 0){
+                id view = [self.view viewWithTag:1010];
+                if ([view isKindOfClass:[UIActivityIndicatorView class]]){
+                    [(UIActivityIndicatorView *)view stopAnimating];
+                }
+            }
         }];
     }
     else if (numberOfProviders > 1){
@@ -710,6 +717,9 @@ static BOOL hasMoved;
             }
             if ([OLKiteUtils instagramEnabled]){
                 [as addButtonWithTitle:@"Instagram"];
+            }
+            if ([OLKiteUtils qrCodeUploadEnabled]){
+                [as addButtonWithTitle:NSLocalizedString(@"Upload from your phone", @"")];
             }
 #ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
             for (OLCustomPhotoProvider *provider in [OLKiteUtils kiteVcForViewController:self].customImageProviders){
@@ -981,6 +991,11 @@ static BOOL hasMoved;
 #endif
 
 - (void)assetsPickerController:(id)picker didFinishPickingAssets:(NSArray *)assets {
+    id view = [self.view viewWithTag:1010];
+    if ([view isKindOfClass:[UIActivityIndicatorView class]]){
+            [(UIActivityIndicatorView *)view startAnimating];
+    }
+    
     NSInteger originalCount = self.userSelectedPhotos.count;
 #ifndef OL_NO_ANALYTICS
     [OLAnalytics trackPhotoProvider:@"Camera Roll" numberOfPhotosAdded:self.userSelectedPhotos.count - originalCount forProductName:self.product.productTemplate.name];
@@ -1015,6 +1030,13 @@ static BOOL hasMoved;
                 dispatch_async(dispatch_get_main_queue(), ^{
                     self.imageCropView.image = image;
                     self.imagePicked = nil;
+                    
+                    if (self.userSelectedPhotos.count > 0){
+                        id view = [self.view viewWithTag:1010];
+                        if ([view isKindOfClass:[UIActivityIndicatorView class]]){
+                            [(UIActivityIndicatorView *)view stopAnimating];
+                        }
+                    }
                 });
             }];
         });
@@ -1073,6 +1095,12 @@ static BOOL hasMoved;
 }
 
 - (void)instagramImagePicker:(OLInstagramImagePickerController *)imagePicker didFinishPickingImages:(NSArray *)images {
+    id view = [self.view viewWithTag:1010];
+    if ([view isKindOfClass:[UIActivityIndicatorView class]]){
+        [(UIActivityIndicatorView *)view startAnimating];
+    }
+    
+    
     NSInteger originalCount = self.userSelectedPhotos.count;
 #ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
         NSMutableArray *assets = [[NSMutableArray alloc] init];
@@ -1092,6 +1120,13 @@ static BOOL hasMoved;
         [self.imagePicked getImageWithProgress:NULL completion:^(UIImage *image){
             dispatch_async(dispatch_get_main_queue(), ^{
                 self.imageCropView.image = image;
+                
+                if (self.userSelectedPhotos.count > 0){
+                    id view = [self.view viewWithTag:1010];
+                    if ([view isKindOfClass:[UIActivityIndicatorView class]]){
+                        [(UIActivityIndicatorView *)view stopAnimating];
+                    }
+                }
             });
         }];
         self.imageDisplayed = self.imagePicked;
@@ -1113,6 +1148,11 @@ static BOOL hasMoved;
 }
 
 - (void)facebookImagePicker:(OLFacebookImagePickerController *)imagePicker didFinishPickingImages:(NSArray *)images {
+    id view = [self.view viewWithTag:1010];
+    if ([view isKindOfClass:[UIActivityIndicatorView class]]){
+        [(UIActivityIndicatorView *)view startAnimating];
+    }
+    
     NSInteger originalCount = self.userSelectedPhotos.count;
 #ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
     NSMutableArray *assets = [[NSMutableArray alloc] init];
@@ -1132,6 +1172,13 @@ static BOOL hasMoved;
         [self.imagePicked getImageWithProgress:NULL completion:^(UIImage *image){
             dispatch_async(dispatch_get_main_queue(), ^{
                 self.imageCropView.image = image;
+                
+                if (self.userSelectedPhotos.count > 0){
+                    id view = [self.view viewWithTag:1010];
+                    if ([view isKindOfClass:[UIActivityIndicatorView class]]){
+                        [(UIActivityIndicatorView *)view stopAnimating];
+                    }
+                }
             });
         }];
         self.imageDisplayed = self.imagePicked;
@@ -1147,6 +1194,10 @@ static BOOL hasMoved;
 
 #pragma mark OLQRCodeUploadViewControllerDelegate methods
 - (void)qrCodeUpload:(OLQRCodeUploadViewController *)vc didFinishPickingAsset:(OLAsset *)asset {
+    id view = [self.view viewWithTag:1010];
+    if ([view isKindOfClass:[UIActivityIndicatorView class]]){
+        [(UIActivityIndicatorView *)view startAnimating];
+    }
     
     OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
     printPhoto.asset = asset;
@@ -1156,6 +1207,13 @@ static BOOL hasMoved;
     [self.imagePicked getImageWithProgress:NULL completion:^(UIImage *image){
         dispatch_async(dispatch_get_main_queue(), ^{
             self.imageCropView.image = image;
+            
+            if (self.userSelectedPhotos.count > 0){
+                id view = [self.view viewWithTag:1010];
+                if ([view isKindOfClass:[UIActivityIndicatorView class]]){
+                    [(UIActivityIndicatorView *)view stopAnimating];
+                }
+            }
         });
     }];
     self.imageDisplayed = self.imagePicked;
@@ -1292,6 +1350,16 @@ static BOOL hasMoved;
     else{
         return UIInterfaceOrientationMaskPortrait;
     }
+}
+
+#pragma mark - Tear down and restore
+
+- (void)tearDownLargeObjectsFromMemory{
+    [super tearDownLargeObjectsFromMemory];
+}
+
+- (void)recreateTornDownLargeObjectsToMemory{
+    [super recreateTornDownLargeObjectsToMemory];
 }
 
 #pragma mark - UIAlertViewDelegate
