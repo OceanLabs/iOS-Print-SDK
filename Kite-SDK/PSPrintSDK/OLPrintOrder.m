@@ -521,7 +521,7 @@ static NSBlockOperation *templateSyncOperation;
         [json setObject:self.email forKey:@"customer_email"];
     }
     
-    [json setObject:self.optOutOfEmail ? @"true" : @"false" forKey:@"opt_out_of_emails"];
+    [json setObject:self.optOutOfEmail ? @YES : @NO forKey:@"opt_out_of_emails"];
     
     if (self.shippingAddress) {
         NSDictionary *shippingAddress = @{@"recipient_name": stringOrEmptyString(self.shippingAddress.fullNameFromFirstAndLast),
