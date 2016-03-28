@@ -11,6 +11,7 @@
 static NSString *const kKeyTextOnPhotoText = @"co.oceanlabs.psprintstudio.kKeyTextOnPhotoText";
 static NSString *const kKeyTextOnPhotoFrame = @"co.oceanlabs.psprintstudio.kKeyTextOnPhotoFrame";
 static NSString *const kKeyTextOnPhotoTransform = @"co.oceanlabs.psprintstudio.kKeyTextOnPhotoTransform";
+static NSString *const kKeyTextOnPhotoColor = @"co.oceanlabs.psprintstudio.kKeyTextOnPhotoColor";
 
 @implementation OLTextOnPhoto
 
@@ -18,6 +19,7 @@ static NSString *const kKeyTextOnPhotoTransform = @"co.oceanlabs.psprintstudio.k
     [aCoder encodeObject:self.text forKey:kKeyTextOnPhotoText];
     [aCoder encodeCGRect:self.frame forKey:kKeyTextOnPhotoFrame];
     [aCoder encodeCGAffineTransform:self.transform forKey:kKeyTextOnPhotoTransform];
+    [aCoder encodeObject:self.color forKey:kKeyTextOnPhotoColor];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
@@ -25,6 +27,7 @@ static NSString *const kKeyTextOnPhotoTransform = @"co.oceanlabs.psprintstudio.k
         self.text = [aDecoder decodeObjectForKey:kKeyTextOnPhotoText];
         self.frame = [aDecoder decodeCGRectForKey:kKeyTextOnPhotoFrame];
         self.transform = [aDecoder decodeCGAffineTransformForKey:kKeyTextOnPhotoTransform];
+        self.color = [aDecoder decodeObjectForKey:kKeyTextOnPhotoColor];
     }
     return self;
 }
@@ -34,6 +37,7 @@ static NSString *const kKeyTextOnPhotoTransform = @"co.oceanlabs.psprintstudio.k
     copy.text = [self.text copy];
     copy.frame = self.frame;
     copy.transform = self.transform;
+    copy.color = [self.color copy];
     
     return copy;
 }

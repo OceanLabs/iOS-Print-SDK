@@ -38,6 +38,11 @@
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *centerYCon;
 
 @property (strong, nonatomic) NSMutableArray<OLTextField *> *textFields;
+@property (weak, nonatomic) IBOutlet UIView *colorsView;
+@property (weak, nonatomic) IBOutlet UIToolbar *textToolsToolbar;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *colorsViewBottomCon;
+@property (strong, nonatomic) UIVisualEffectView *visualEffectView;
+
 
 
 @property (strong, nonatomic) IBOutletCollection(UIView) NSArray *allViews;
@@ -121,6 +126,39 @@
         textField.text = textOnPhoto.text;
         textField.transform = textOnPhoto.transform;
         [self.edits.textsOnPhoto removeObject:textOnPhoto];
+    }
+    
+    self.textToolsToolbar.transform = CGAffineTransformMakeTranslation(0, -self.textToolsToolbar.frame.origin.x - self.textToolsToolbar.frame.size.height - [[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height);
+    
+    [self registerForKeyboardNotifications];
+    
+    self.colorsView.transform = CGAffineTransformMakeTranslation(self.colorsView.frame.size.width, 0);
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0){
+        UIVisualEffect *blurEffect;
+        blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
+        
+        self.visualEffectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
+        UIView *view = self.visualEffectView;
+        [self.colorsView addSubview:view];
+        [self.colorsView sendSubviewToBack:view];
+        
+        view.translatesAutoresizingMaskIntoConstraints = NO;
+        NSDictionary *views = NSDictionaryOfVariableBindings(view);
+        NSMutableArray *con = [[NSMutableArray alloc] init];
+        
+        NSArray *visuals = @[@"H:|-0-[view]-0-|",
+                             @"V:|-0-[view]-0-|"];
+        
+        
+        for (NSString *visual in visuals) {
+            [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+        }
+        
+        [view.superview addConstraints:con];
+        
+    }
+    else{
+        self.colorsView.backgroundColor = [UIColor whiteColor];
     }
 }
 
@@ -211,6 +249,7 @@
         textOnPhoto.text = textField.text;
         textOnPhoto.frame = textField.frame;
         textOnPhoto.transform = textField.transform;
+        textOnPhoto.color = textField.textColor;
         [self.edits.textsOnPhoto addObject:textOnPhoto];
     }
     
@@ -330,7 +369,8 @@
 }
 
 - (UITextField *)addTextField{
-    OLTextField *textField = [[OLTextField alloc] init];
+    OLTextField *textField = [[OLTextField alloc] initWithFrame:CGRectMake(0, 0, 100, 40)];
+    textField.center = self.cropView.center;
     textField.textAlignment = NSTextAlignmentCenter;
     textField.margins = 10;
     textField.delegate = self;
@@ -373,6 +413,15 @@
     self.doneButton.enabled = YES;
 }
 
+- (IBAction)onColorButtonClicked:(id)sender{
+    for (UITextField *textField in self.textFields){
+        if ([textField isFirstResponder]){
+            [textField setTextColor:[(UIButton *)sender tintColor]];
+            break;
+        }
+    }
+}
+
 - (void)onTextfieldGesturePanRecognized:(UIPanGestureRecognizer *)gesture{
     static CGAffineTransform original;
     
@@ -385,6 +434,67 @@
     }
     
     self.doneButton.enabled = YES;
+}
+
+- (IBAction)onButtonColorTapped:(UIBarButtonItem *)sender {
+    [UIView animateWithDuration:0.15 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
+    self.colorsView.transform = CGAffineTransformIsIdentity(self.colorsView.transform) ? CGAffineTransformMakeTranslation(self.colorsView.frame.size.width, 0) : CGAffineTransformIdentity;
+    } completion:NULL];
+}
+
+
+- (void)dealloc{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+#pragma mark Keyboard Notifications
+
+- (void)registerForKeyboardNotifications
+{
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWasShown:)
+                                                 name:UIKeyboardWillShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWillBeHidden:)
+                                                 name:UIKeyboardWillHideNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWillChangeFrame:)
+                                                 name:UIKeyboardWillChangeFrameNotification object:nil];
+}
+
+- (void)keyboardWasShown:(NSNotification*)aNotification{
+    NSDictionary *info = [aNotification userInfo];
+    NSNumber *durationNumber = [info objectForKey:UIKeyboardAnimationDurationUserInfoKey];
+    NSNumber *curveNumber = [info objectForKey:UIKeyboardAnimationCurveUserInfoKey];
+    
+    [UIView animateWithDuration:[durationNumber doubleValue] delay:0 options:[curveNumber unsignedIntegerValue] animations:^{
+        self.textToolsToolbar.transform = CGAffineTransformIdentity;
+    }completion:NULL];
+    
+}
+
+- (void)keyboardWillBeHidden:(NSNotification*)aNotification{
+    NSDictionary *info = [aNotification userInfo];
+    NSNumber *durationNumber = [info objectForKey:UIKeyboardAnimationDurationUserInfoKey];
+    NSNumber *curveNumber = [info objectForKey:UIKeyboardAnimationCurveUserInfoKey];
+    
+    [UIView animateWithDuration:[durationNumber doubleValue] delay:0 options:[curveNumber unsignedIntegerValue] animations:^{
+        self.colorsView.transform = CGAffineTransformMakeTranslation(self.colorsView.frame.size.width, 0);
+        
+        self.textToolsToolbar.transform = CGAffineTransformMakeTranslation(0, -self.textToolsToolbar.frame.origin.x - self.textToolsToolbar.frame.size.height - [[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height);
+    }completion:NULL];
+}
+
+- (void)keyboardWillChangeFrame:(NSNotification*)aNotification{
+    NSDictionary *info = [aNotification userInfo];
+    NSValue *rectValue = [info objectForKey:UIKeyboardFrameEndUserInfoKey];
+    NSNumber *durationNumber = [info objectForKey:UIKeyboardAnimationDurationUserInfoKey];
+    NSNumber *curveNumber = [info objectForKey:UIKeyboardAnimationCurveUserInfoKey];
+    
+    self.colorsViewBottomCon.constant = [rectValue CGRectValue].size.height;
+    [UIView animateWithDuration:[durationNumber doubleValue] delay:0 options:[curveNumber unsignedIntegerValue] animations:^{
+        [self.view layoutIfNeeded];
+    }completion:NULL];
 }
 
 #pragma mark - UIGestureRecognizerDelegate

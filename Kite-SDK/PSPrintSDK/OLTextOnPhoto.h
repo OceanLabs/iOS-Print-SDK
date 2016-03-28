@@ -13,5 +13,6 @@
 @property (strong, nonatomic) NSString *text;
 @property (assign, nonatomic) CGRect frame;
 @property (assign, nonatomic) CGAffineTransform transform;
+@property (strong, nonatomic) UIColor *color;
 
 @end

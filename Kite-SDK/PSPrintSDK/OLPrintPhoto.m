@@ -442,7 +442,13 @@ static NSOperationQueue *imageOperationQueue;
                 
                 NSMutableParagraphStyle *style = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
                 style.alignment = NSTextAlignmentCenter;
-                [textOnPhoto.text drawInRect:textRect withAttributes:@{NSFontAttributeName : font, NSForegroundColorAttributeName: [UIColor whiteColor], NSParagraphStyleAttributeName : style}];
+                
+                NSMutableDictionary *attributes = [@{NSFontAttributeName : font, NSForegroundColorAttributeName: [UIColor whiteColor], NSParagraphStyleAttributeName : style} mutableCopy];
+                if (textOnPhoto.color){
+                    attributes[NSForegroundColorAttributeName] = textOnPhoto.color;
+                }
+                
+                [textOnPhoto.text drawInRect:textRect withAttributes:attributes];
                 blockImage = UIGraphicsGetImageFromCurrentImageContext();
                 UIGraphicsEndImageContext();
             }
