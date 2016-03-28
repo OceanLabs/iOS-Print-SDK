@@ -129,7 +129,7 @@
 /**
  *  The delegate object that will be asked for information in certain scenarios.
  */
-@property (weak, nonatomic) id<OLKiteDelegate> delegate;
+@property (weak, nonatomic, nullable) id<OLKiteDelegate> delegate;
 
 /**
  *  Speed up checkout by prepopulating the users email in the Shipping details if you know it

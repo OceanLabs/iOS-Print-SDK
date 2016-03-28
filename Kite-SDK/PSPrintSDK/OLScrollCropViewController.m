@@ -114,6 +114,14 @@
     UITapGestureRecognizer *dismissKeyboardTapGesture = [[UITapGestureRecognizer alloc] init];
     [dismissKeyboardTapGesture addTarget:self action:@selector(dismissKeyboard)];
     [self.view addGestureRecognizer:dismissKeyboardTapGesture];
+    
+    NSArray *copy = [[NSArray alloc] initWithArray:self.edits.textsOnPhoto copyItems:NO];
+    for (OLTextOnPhoto *textOnPhoto in copy){
+        UITextField *textField = [self addTextField];
+        textField.text = textOnPhoto.text;
+        textField.transform = textOnPhoto.transform;
+        [self.edits.textsOnPhoto removeObject:textOnPhoto];
+    }
 }
 
 - (void)viewDidAppear:(BOOL)animated{
@@ -201,7 +209,8 @@
     for (OLTextField *textField in self.textFields){
         OLTextOnPhoto *textOnPhoto = [[OLTextOnPhoto alloc] init];
         textOnPhoto.text = textField.text;
-        textOnPhoto.frame = textField.frame;//[self.view convertRect:textField.frame toView:self.cropView];
+        textOnPhoto.frame = textField.frame;
+        textOnPhoto.transform = textField.transform;
         [self.edits.textsOnPhoto addObject:textOnPhoto];
     }
     
@@ -320,12 +329,12 @@
     }];
 }
 
-- (IBAction)onButtonAddTextClicked:(UIBarButtonItem *)sender {
+- (UITextField *)addTextField{
     OLTextField *textField = [[OLTextField alloc] init];
     textField.textAlignment = NSTextAlignmentCenter;
     textField.margins = 10;
     textField.delegate = self;
-    textField.layer.borderWidth = 3;
+    textField.layer.borderWidth = 2;
     textField.layer.borderColor = self.view.tintColor.CGColor;
     textField.textColor = [UIColor whiteColor];
     textField.tintColor = [UIColor whiteColor];
@@ -352,14 +361,19 @@
     
     [textField.superview addConstraints:con];
     
-    [textField becomeFirstResponder];
     [self.textFields addObject:textField];
+    
+    return textField;
+}
+
+- (IBAction)onButtonAddTextClicked:(UIBarButtonItem *)sender {
+    UITextField *textField = [self addTextField];
+    [textField becomeFirstResponder];
 
     self.doneButton.enabled = YES;
 }
 
 - (void)onTextfieldGesturePanRecognized:(UIPanGestureRecognizer *)gesture{
-    
     static CGAffineTransform original;
     
     if (gesture.state == UIGestureRecognizerStateBegan){
@@ -369,6 +383,8 @@
         CGPoint translate = [gesture translationInView:gesture.view.superview];
         gesture.view.transform = CGAffineTransformTranslate(original, translate.x, translate.y);
     }
+    
+    self.doneButton.enabled = YES;
 }
 
 #pragma mark - UIGestureRecognizerDelegate

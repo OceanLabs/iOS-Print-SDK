@@ -8,9 +8,10 @@
 
 #import <Foundation/Foundation.h>
 
-@interface OLTextOnPhoto : NSObject
+@interface OLTextOnPhoto : NSObject <NSCoding, NSCopying>
 
 @property (strong, nonatomic) NSString *text;
 @property (assign, nonatomic) CGRect frame;
+@property (assign, nonatomic) CGAffineTransform transform;
 
 @end
