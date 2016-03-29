@@ -91,6 +91,9 @@
                             id costs = productTemplate[@"cost"];
                             id imagesPerSheet = productTemplate[@"images_per_page"];
                             id product = productTemplate[@"product"];
+                            
+                            NSDictionary *upsellOffers = [productTemplate[@"upsell_offers"] isKindOfClass:[NSArray class]] ? productTemplate[@"upsell_offers"] : nil;
+                            
                             NSNumber *enabledNumber = productTemplate[@"enabled"];
                             NSString *description = productTemplate[@"description"];
                             NSString *descriptionMarkdown = productTemplate[@"description_markdown"];
@@ -231,6 +234,15 @@
                                     t.gridCountX = [gridCountX integerValue];
                                     t.gridCountY = [gridCountY integerValue];
                                     t.supportedOptions = supportedOptions;
+                                    
+                                    NSMutableArray *upsellOffersClean = [[NSMutableArray alloc] init];
+                                    for (id offer in upsellOffers){
+                                        if ([offer isKindOfClass:[NSDictionary class]]){
+                                            [upsellOffersClean addObject:offer];
+                                        }
+                                    }
+                                    t.upsellOffers = upsellOffersClean;
+                                    
                                     [acc addObject:t];
                                 }
                             }

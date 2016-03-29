@@ -86,6 +86,7 @@
 #import "OLQRCodeUploadViewController.h"
 #import "OLURLDataSource.h"
 #import "OLNavigationController.h"
+#import "OLUpsellViewController.h"
 
 #ifdef OL_KITE_OFFER_ADOBE
 #import <AdobeCreativeSDKImage/AdobeCreativeSDKImage.h>
@@ -137,7 +138,7 @@ UIViewControllerPreviewingDelegate, OLScrollCropViewControllerDelegate,
 #ifdef OL_KITE_OFFER_ADOBE
 AdobeUXImageEditorViewControllerDelegate,
 #endif
-UIActionSheetDelegate>
+UIActionSheetDelegate, OLUpsellViewControllerDelegate>
 
 @property (assign, nonatomic) CGSize rotationSize;
 @property (nonatomic, strong) OLAssetsPickerController *picker;
@@ -162,6 +163,11 @@ UIActionSheetDelegate>
 @property (strong, nonatomic) OLPrintOrder *printOrder;
 - (void)dismiss;
 
+@end
+
+@interface OLPrintOrder ()
+@property (strong, nonatomic) NSMutableArray *declinedOffers;
+@property (strong, nonatomic) NSMutableArray *acceptedOffers;
 @end
 
 @implementation OLPhotoSelectionViewController
@@ -1407,9 +1413,115 @@ UIActionSheetDelegate>
     return YES;
 }
 
+- (void)userDidDeclineUpsell:(OLUpsellViewController *)vc{
+    [[OLKiteUtils kiteVcForViewController:self].printOrder.declinedOffers addObject:vc.offer];
+    [vc dismissViewControllerAnimated:NO completion:^{
+        [self doSegueToOrderPreview];
+    }];
+}
+
+- (void)addItemToBasketWithTemplateId:(NSString *)templateId{
+    NSMutableArray *assets = [[NSMutableArray alloc] init];
+    for (OLPrintPhoto *photo in self.userSelectedPhotos){
+        [assets addObject:[OLAsset assetWithDataSource:[photo copy]]];
+    }
+    
+    id<OLPrintJob> job;
+    if ([OLProductTemplate templateWithId:templateId].templateUI == kOLTemplateUIPhotobook){
+        job = [OLPrintJob photobookWithTemplateId:templateId OLAssets:assets frontCoverOLAsset:nil backCoverOLAsset:nil];
+    }
+    else{
+        job = [OLPrintJob printJobWithTemplateId:templateId OLAssets:assets];
+    }
+    
+    [[OLKiteUtils kiteVcForViewController:self].printOrder addPrintJob:job];
+}
+
+- (void)userDidAcceptUpsell:(OLUpsellViewController *)vc{
+    [[OLKiteUtils kiteVcForViewController:self].printOrder.acceptedOffers addObject:vc.offer];
+    [vc dismissViewControllerAnimated:NO completion:^{
+        if ([vc.offer[@"prepopulate_photos"] boolValue]){
+            [self addItemToBasketWithTemplateId:vc.offer[@"offer_template"]];
+            [self doSegueToOrderPreview];
+        }
+        else if ([self.product.templateId isEqualToString:vc.offer[@"offer_template"]]){
+            //Do nothing, stay on this screen
+        }
+        else{
+            [self addItemToBasketWithTemplateId:self.product.templateId];
+            
+            OLProduct *offerProduct = [OLProduct productWithTemplateId:vc.offer[@"offer_template"]];
+            UIViewController *nextVc = [self.storyboard instantiateViewControllerWithIdentifier:[OLKiteUtils reviewViewControllerIdentifierForProduct:offerProduct photoSelectionScreen:[OLKiteUtils imageProvidersAvailable:self]]];
+            [nextVc safePerformSelector:@selector(setKiteDelegate:) withObject:self.delegate];
+            [nextVc safePerformSelector:@selector(setProduct:) withObject:offerProduct];
+            NSMutableArray *stack = [self.navigationController.viewControllers mutableCopy];
+            [stack removeObject:self];
+            [stack addObject:nextVc];
+            [self.navigationController setViewControllers:stack animated:YES];
+        }
+    }];
+}
+
+- (NSDictionary *)upsellOfferToShow{
+    NSArray *upsells = self.product.productTemplate.upsellOffers;
+    if (upsells.count == 0){
+        return nil;
+    }
+    
+    NSDictionary *offerToShow;
+    for (NSDictionary *offer in upsells){
+        //Check if offer is valid for this point
+        if ([offer[@"active"] boolValue] && [offer[@"offer_type"] isEqualToString:@"ITEM_ADD"]){
+            
+            //Check if offer has been accepted/declined before
+            BOOL skip = NO;
+            for (NSDictionary *acceptedOffer in [OLKiteUtils kiteVcForViewController:self].printOrder.acceptedOffers){
+                if ([acceptedOffer[@"id"] integerValue] == [offer[@"id"] integerValue]){
+                    skip = YES;
+                    break;
+                }
+            }
+            for (NSDictionary *declinedOffer in [OLKiteUtils kiteVcForViewController:self].printOrder.declinedOffers){
+                if ([declinedOffer[@"id"] integerValue] == [offer[@"id"] integerValue]){
+                    skip = YES;
+                    break;
+                }
+            }
+            if (skip){
+                continue;
+            }
+            
+            //Find the max priority offer
+            if (!offerToShow || [offerToShow[@"priority"] integerValue] < [offer[@"priority"] integerValue]){
+                offerToShow = offer;
+            }
+        }
+    }
+    
+    return offerToShow;
+}
+
+
 - (IBAction)onButtonNextClicked {
     if ([self shouldGoToOrderPreview]) {
-        [self doSegueToOrderPreview];
+        NSDictionary *offer = [self upsellOfferToShow];
+        BOOL shouldShowOffer = offer != nil;
+        shouldShowOffer &= [offer[@"min_units"] integerValue] <= self.userSelectedPhotos.count;
+        shouldShowOffer &= [offer[@"max_units"] integerValue] == 0 || [offer[@"max_units"] integerValue] >= self.userSelectedPhotos.count;
+        if (shouldShowOffer){
+            OLUpsellViewController *c = [self.storyboard instantiateViewControllerWithIdentifier:@"OLUpsellViewController"];
+            if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8){
+                c.providesPresentationContextTransitionStyle = true;
+                c.definesPresentationContext = true;
+            }
+            c.modalPresentationStyle = UIModalPresentationOverCurrentContext;
+            c.delegate = self;
+            c.offer = offer;
+            [self presentViewController:c animated:NO completion:NULL];
+        }
+        else{
+            [self doSegueToOrderPreview];
+        }
     }
 }
 

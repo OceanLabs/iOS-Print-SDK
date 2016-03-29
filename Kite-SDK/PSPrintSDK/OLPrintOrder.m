@@ -58,6 +58,8 @@ static NSString *const kKeyOrderPhone = @"co.oceanlabs.pssdk.kKeyOrderPhone";
 static NSString *const kKeyOrderSubmitStatus = @"co.oceanlabs.pssdk.kKeyOrderSubmitStatus";
 static NSString *const kKeyOrderSubmitStatusError = @"co.oceanlabs.pssdk.kKeyOrderSubmitStatusError";
 static NSString *const kKeyOrderOptOutOfEmail = @"co.oceanlabs.pssdk.kKeyOrderOptOutOfEmail";
+static NSString *const kKeyOrderDeclinedOffers = @"co.oceanlabs.pssdk.kKeyOrderDeclinedOffers";
+static NSString *const kKeyOrderAcceptedOffers = @"co.oceanlabs.pssdk.kKeyOrderAcceptedOffers";
 
 static NSMutableArray *inProgressPrintOrders; // Tracks all currently in progress print orders. This is useful as it means they won't be dealloc'd if a user doesn't come a strong reference to them but still expects the completion handler callback
 
@@ -104,6 +106,8 @@ static id stringOrEmptyString(NSString *str) {
 @property (nonatomic, readwrite) NSString *receipt;
 
 @property (assign, nonatomic) BOOL optOutOfEmail;
+@property (strong, nonatomic) NSMutableArray *declinedOffers;
+@property (strong, nonatomic) NSMutableArray *acceptedOffers;
 
 @end
 
@@ -112,6 +116,20 @@ static NSBlockOperation *templateSyncOperation;
 @implementation OLPrintOrder
 
 @synthesize userData=_userData;
+
+-(NSMutableArray *) declinedOffers{
+    if (!_declinedOffers){
+        _declinedOffers = [[NSMutableArray alloc] init];
+    }
+    return _declinedOffers;
+}
+
+-(NSMutableArray *) acceptedOffers{
+    if (!_acceptedOffers){
+        _acceptedOffers = [[NSMutableArray alloc] init];
+    }
+    return _acceptedOffers;
+}
 
 + (void)initialize {
     if (!inProgressPrintOrders) {
@@ -624,6 +642,10 @@ static NSBlockOperation *templateSyncOperation;
 }
 
 - (void)saveOrder {
+    if (self.jobs.count == 0){
+        [self.declinedOffers removeAllObjects];
+        [self.acceptedOffers removeAllObjects];
+    }
     [NSKeyedArchiver archiveRootObject:self toFile:[OLPrintOrder orderFilePath]];
     [self cleanupDisk];
 }
@@ -757,6 +779,8 @@ static NSBlockOperation *templateSyncOperation;
     [aCoder encodeInteger:self.submitStatus forKey:kKeyOrderSubmitStatus];
     [aCoder encodeObject:self.submitStatusErrorMessage forKey:kKeyOrderSubmitStatusError];
     [aCoder encodeBool:self.optOutOfEmail forKey:kKeyOrderOptOutOfEmail];
+    [aCoder encodeObject:self.declinedOffers forKey:kKeyOrderDeclinedOffers];
+    [aCoder encodeObject:self.acceptedOffers forKey:kKeyOrderAcceptedOffers];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
@@ -778,6 +802,8 @@ static NSBlockOperation *templateSyncOperation;
             _submitStatus = [aDecoder decodeIntegerForKey:kKeyOrderSubmitStatus];
             _submitStatusErrorMessage = [aDecoder decodeObjectForKey:kKeyOrderSubmitStatusError];
             _optOutOfEmail = [aDecoder decodeBoolForKey:kKeyOrderOptOutOfEmail];
+            _declinedOffers = [aDecoder decodeObjectForKey:kKeyOrderDeclinedOffers];
+            _acceptedOffers = [aDecoder decodeObjectForKey:kKeyOrderAcceptedOffers];
         }
         return self;
         
