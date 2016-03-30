@@ -57,6 +57,7 @@
     [super viewDidLoad];
     
     self.view.backgroundColor = [UIColor clearColor];
+    [self.offerContainerView makeRoundRectWithRadius:2];
     self.offerContainerView.transform = CGAffineTransformMakeTranslation(self.view.frame.size.width, 0);
     
     [self.acceptButton makeRoundRectWithRadius:2];
@@ -100,7 +101,7 @@
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
     [UIView animateWithDuration:0.25 animations:^{
-        self.view.backgroundColor = [UIColor colorWithRed:0.172 green:0.152 blue:0.258 alpha:0.8];
+        self.view.backgroundColor = [UIColor colorWithWhite:0.118 alpha:0.800];
     }];
     
     [UIView animateWithDuration:0.5 delay:0 usingSpringWithDamping:0.6 initialSpringVelocity:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
