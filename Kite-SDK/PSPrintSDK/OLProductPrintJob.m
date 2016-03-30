@@ -40,6 +40,8 @@ static NSString *const kKeyExtraCopies = @"co.oceanlabs.pssdk.kKeyExtraCopies";
 static NSString *const kKeyProductPringJobAddress = @"co.oceanlabs.pssdk.kKeyProductPringJobAddress";
 static NSString *const kKeyProductPrintJobOptions = @"co.oceanlabs.pssdk.kKeyProductPrintJobOptions";
 static NSString *const kKeyDateAddedToBasket = @"co.oceanlabs.pssdk.kKeyDateAddedToBasket";
+static NSString *const kKeyDeclinedOffers = @"co.oceanlabs.pssdk.kKeyDeclinedOffers";
+static NSString *const kKeyAcceptedOffers = @"co.oceanlabs.pssdk.kKeyAcceptedOffers";
 
 static id stringOrEmptyString(NSString *str) {
     return str ? str : @"";
@@ -49,6 +51,8 @@ static id stringOrEmptyString(NSString *str) {
 @property (nonatomic, strong) NSString *templateId;
 @property (nonatomic, strong) NSArray *assets;
 @property (strong, nonatomic) NSMutableDictionary *options;
+@property (strong, nonatomic) NSMutableSet *declinedOffers;
+@property (strong, nonatomic) NSMutableSet *acceptedOffers;
 @end
 
 @implementation OLProductPrintJob
@@ -57,6 +61,20 @@ static id stringOrEmptyString(NSString *str) {
 @synthesize uuid;
 @synthesize extraCopies;
 @synthesize dateAddedToBasket;
+
+-(NSMutableSet *) declinedOffers{
+    if (!_declinedOffers){
+        _declinedOffers = [[NSMutableSet alloc] init];
+    }
+    return _declinedOffers;
+}
+
+-(NSMutableSet *) acceptedOffers{
+    if (!_acceptedOffers){
+        _acceptedOffers = [[NSMutableSet alloc] init];
+    }
+    return _acceptedOffers;
+}
 
 -(NSMutableDictionary *) options{
     if (!_options){
@@ -180,8 +198,17 @@ static id stringOrEmptyString(NSString *str) {
     NSMutableDictionary *json = [[NSMutableDictionary alloc] init];
     json[@"template_id"] = [OLProductTemplate templateWithId:self.templateId].identifier;
     json[@"assets"] = assets;
-    json[@"pdf"] = [pdfs firstObject];
+    if (pdfs.count > 0){
+        json[@"pdf"] = [pdfs firstObject];
+    }
     json[@"frame_contents"] = @{};
+    
+    if (self.acceptedOffers.count > 0){
+        id upsell = [self.acceptedOffers.allObjects.firstObject objectForKey:@"upsell_id"];
+        if (upsell){
+            json[@"upsell_id"] = upsell;
+        }
+    }
     
     json[@"options"] = self.options;
     
@@ -209,6 +236,8 @@ static id stringOrEmptyString(NSString *str) {
     objectCopy.uuid = self.uuid;
     objectCopy.extraCopies = self.extraCopies;
     objectCopy.options = self.options;
+    objectCopy.declinedOffers = self.declinedOffers;
+    objectCopy.acceptedOffers = self.acceptedOffers;
     return objectCopy;
 }
 
@@ -251,6 +280,8 @@ static id stringOrEmptyString(NSString *str) {
     [aCoder encodeObject:self.options forKey:kKeyProductPrintJobOptions];
     [aCoder encodeObject:self.address forKey:kKeyProductPringJobAddress];
     [aCoder encodeObject:self.dateAddedToBasket forKey:kKeyDateAddedToBasket];
+    [aCoder encodeObject:self.declinedOffers forKey:kKeyDeclinedOffers];
+    [aCoder encodeObject:self.acceptedOffers forKey:kKeyAcceptedOffers];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
@@ -262,6 +293,8 @@ static id stringOrEmptyString(NSString *str) {
         self.options = [aDecoder decodeObjectForKey:kKeyProductPrintJobOptions];
         self.address = [aDecoder decodeObjectForKey:kKeyProductPringJobAddress];
         self.dateAddedToBasket = [aDecoder decodeObjectForKey:kKeyDateAddedToBasket];
+        self.declinedOffers = [aDecoder decodeObjectForKey:kKeyDeclinedOffers];
+        self.acceptedOffers = [aDecoder decodeObjectForKey:kKeyAcceptedOffers];
     }
     
     return self;

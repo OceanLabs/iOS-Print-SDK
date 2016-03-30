@@ -48,7 +48,28 @@ typedef enum {
 
 @end
 
+@interface OLProduct ()
+
+@property (strong, nonatomic) NSMutableArray *declinedOffers;
+@property (strong, nonatomic) NSMutableArray *acceptedOffers;
+
+@end
+
 @implementation OLProduct
+
+-(NSMutableArray *) declinedOffers{
+    if (!_declinedOffers){
+        _declinedOffers = [[NSMutableArray alloc] init];
+    }
+    return _declinedOffers;
+}
+
+-(NSMutableArray *) acceptedOffers{
+    if (!_acceptedOffers){
+        _acceptedOffers = [[NSMutableArray alloc] init];
+    }
+    return _acceptedOffers;
+}
 
 +(NSArray *)products{
     static NSMutableArray *products = nil;

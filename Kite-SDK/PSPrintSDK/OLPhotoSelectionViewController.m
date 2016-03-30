@@ -165,7 +165,7 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
 
 @end
 
-@interface OLPrintOrder ()
+@interface OLProduct ()
 @property (strong, nonatomic) NSMutableArray *declinedOffers;
 @property (strong, nonatomic) NSMutableArray *acceptedOffers;
 @end
@@ -199,6 +199,9 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
     [self.collectionView registerClass:[UICollectionReusableView class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"headerView"];
     
     [self onUserSelectedPhotoCountChange];
+    
+    [self.product.acceptedOffers removeAllObjects];
+    [self.product.declinedOffers removeAllObjects];
 }
 
 - (void)viewDidLayoutSubviews{
@@ -1414,7 +1417,7 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
 }
 
 - (void)userDidDeclineUpsell:(OLUpsellViewController *)vc{
-    [[OLKiteUtils kiteVcForViewController:self].printOrder.declinedOffers addObject:vc.offer];
+    [self.product.declinedOffers addObject:vc.offer];
     [vc dismissViewControllerAnimated:NO completion:^{
         [self doSegueToOrderPreview];
     }];
@@ -1438,7 +1441,7 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
 }
 
 - (void)userDidAcceptUpsell:(OLUpsellViewController *)vc{
-    [[OLKiteUtils kiteVcForViewController:self].printOrder.acceptedOffers addObject:vc.offer];
+    [self.product.acceptedOffers addObject:vc.offer];
     [vc dismissViewControllerAnimated:NO completion:^{
         if ([vc.offer[@"prepopulate_photos"] boolValue]){
             [self addItemToBasketWithTemplateId:vc.offer[@"offer_template"]];
@@ -1475,13 +1478,13 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
             
             //Check if offer has been accepted/declined before
             BOOL skip = NO;
-            for (NSDictionary *acceptedOffer in [OLKiteUtils kiteVcForViewController:self].printOrder.acceptedOffers){
+            for (NSDictionary *acceptedOffer in self.product.acceptedOffers){
                 if ([acceptedOffer[@"id"] integerValue] == [offer[@"id"] integerValue]){
                     skip = YES;
                     break;
                 }
             }
-            for (NSDictionary *declinedOffer in [OLKiteUtils kiteVcForViewController:self].printOrder.declinedOffers){
+            for (NSDictionary *declinedOffer in self.product.declinedOffers){
                 if ([declinedOffer[@"id"] integerValue] == [offer[@"id"] integerValue]){
                     skip = YES;
                     break;

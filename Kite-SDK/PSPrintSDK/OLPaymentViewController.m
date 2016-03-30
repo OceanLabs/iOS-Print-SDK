@@ -75,6 +75,7 @@
 #import "OLAsset+Private.h"
 #import "UIViewController+OLMethods.h"
 #import "OLAddress+AddressBook.h"
+#import "NSObject+Utils.h"
 
 #ifdef OL_KITE_OFFER_PAYPAL
 #ifdef COCOAPODS
@@ -106,6 +107,8 @@ static BOOL haveLoadedAtLeastOnce = NO;
 
 @interface OLProductPrintJob ()
 @property (strong, nonatomic) NSMutableDictionary *options;
+@property (strong, nonatomic) NSMutableSet *declinedOffers;
+@property (strong, nonatomic) NSMutableSet *acceptedOffers;
 @end
 
 @interface OLKiteViewController ()
@@ -116,9 +119,9 @@ static BOOL haveLoadedAtLeastOnce = NO;
 @end
 
 @interface OLProduct (PrivateMethods)
-
 - (NSDecimalNumber*) unitCostDecimalNumber;
-
+@property (strong, nonatomic) NSMutableArray *declinedOffers;
+@property (strong, nonatomic) NSMutableArray *acceptedOffers;
 @end
 
 
@@ -172,10 +175,6 @@ static BOOL haveLoadedAtLeastOnce = NO;
 @property (nonatomic, readwrite) NSString *receipt;
 @property (strong, nonatomic) OLPrintOrderCost *finalCost;
 @property (nonatomic, strong) OLPrintOrderCostRequest *costReq;
-@end
-
-@interface OLProduct (Private)
-- (NSDecimalNumber*) unitCostDecimalNumber;
 @end
 
 @interface OLPaymentViewController () <
@@ -1846,6 +1845,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 - (UIViewController *)viewControllerForItemAtIndexPath:(NSIndexPath *)indexPath{
     OLProductPrintJob* printJob = ((OLProductPrintJob*)[self.printOrder.jobs objectAtIndex:indexPath.row]);
     OLProduct *product = [OLProduct productWithTemplateId:printJob.templateId];
+    product.acceptedOffers = [[[printJob safePerformSelectorWithReturn:@selector(acceptedOffers)withObject:nil] allObjects] mutableCopy];
     product.uuid = printJob.uuid;
     
     for (NSString *option in printJob.options.allKeys){

@@ -36,6 +36,7 @@
 #import "OLPaymentLineItem.h"
 #import "OLProductPrintJob.h"
 #import "OLPrintOrderCost.h"
+#import "NSObject+Utils.h"
 
 @interface OLKitePrintSDK (Private)
 
@@ -64,6 +65,11 @@ static NSString *urlencode(NSString *str) {
     return output;
 }
 
+@interface OLProductPrintJob ()
+@property (strong, nonatomic) NSMutableSet *declinedOffers;
+@property (strong, nonatomic) NSMutableSet *acceptedOffers;
+@end
+
 static NSDictionary *cachedResponse; // we cache the last response
 static NSDate *cacheDate;
 static NSUInteger cacheOrderHash; // cached response is only valid for orders with this hash
@@ -78,8 +84,17 @@ static NSUInteger cacheOrderHash; // cached response is only valid for orders wi
 - (NSString *)stringFromOrder:(OLPrintOrder *)order {
     NSString *basketString = @"";
     for (id<OLPrintJob> job in order.jobs){
-        if (job.address){
-            basketString = [basketString stringByAppendingString:[NSString stringWithFormat:@"%@:%d:%@,", [job templateId], (int)[job quantity] * (int)([job extraCopies]+1), job.address.country.codeAlpha3]];
+        OLCountry *country = job.address.country;
+        NSSet *offers = [(NSObject *)job safePerformSelectorWithReturn:@selector(acceptedOffers) withObject:nil];
+        
+        if (offers.count > 0){
+            if (!country){
+                country = [OLCountry countryForCurrentLocale];
+            }
+            basketString = [basketString stringByAppendingString:[NSString stringWithFormat:@"%@:%d:%@:%@,", [job templateId], (int)[job quantity] * (int)([job extraCopies]+1), country.codeAlpha3, [offers.allObjects.firstObject objectForKey:@"id"]]];
+        }
+        else if (country){
+            basketString = [basketString stringByAppendingString:[NSString stringWithFormat:@"%@:%d:%@,", [job templateId], (int)[job quantity] * (int)([job extraCopies]+1), country.codeAlpha3]];
         }
         else{
             basketString = [basketString stringByAppendingString:[NSString stringWithFormat:@"%@:%d,", [job templateId], (int)[job quantity] * (int)([job extraCopies]+1)]];
@@ -89,7 +104,7 @@ static NSUInteger cacheOrderHash; // cached response is only valid for orders wi
 
     NSDictionary *dict = @{@"basket" : basketString,
                            @"shipping_country_code" : order.shippingAddress.country ? [order.shippingAddress.country codeAlpha3] : [[OLCountry countryForCurrentLocale] codeAlpha3],
-                           @"promo_code" : order.promoCode ? urlencode(order.promoCode) : @""
+                           @"promo_code" : order.promoCode ? urlencode(order.promoCode) : @"",
                            };
     
     NSDictionary *extraDict = [order.userData objectForKey:@"extra_dict_for_cost"];

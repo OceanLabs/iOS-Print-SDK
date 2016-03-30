@@ -84,6 +84,16 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
 
 @end
 
+@interface OLProduct ()
+@property (strong, nonatomic) NSMutableArray *declinedOffers;
+@property (strong, nonatomic) NSMutableArray *acceptedOffers;
+@end
+
+@interface OLProductPrintJob ()
+@property (strong, nonatomic) NSMutableSet *declinedOffers;
+@property (strong, nonatomic) NSMutableSet *acceptedOffers;
+@end
+
 @interface OLOrderReviewViewController () <OLCheckoutDelegate, UIAlertViewDelegate, UICollectionViewDelegateFlowLayout,
 #ifdef OL_KITE_OFFER_ADOBE
 AdobeUXImageEditorViewControllerDelegate,
@@ -310,6 +320,8 @@ UIViewControllerPreviewingDelegate>
             job.uuid = self.product.uuid;
         }
     }
+    [job.acceptedOffers addObjectsFromArray:self.product.acceptedOffers];
+    [job.declinedOffers addObjectsFromArray:self.product.declinedOffers];
     self.product.uuid = job.uuid;
     self.editingPrintJob = job;
     if ([printOrder.jobs containsObject:self.editingPrintJob]){

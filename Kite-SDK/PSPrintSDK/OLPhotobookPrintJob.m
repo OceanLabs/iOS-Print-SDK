@@ -41,11 +41,15 @@ static NSString *const kKeyPhotobookUuid = @"co.oceanlabs.pssdk.kKeyPhotobookUui
 static NSString *const kKeyPhotobookExtraCopies = @"co.oceanlabs.pssdk.kKeyPhotobookExtraCopies";
 static NSString *const kKeyPhotobookPrintJobOptions = @"co.oceanlabs.pssdk.kKeyPhotobookPrintJobOptions";
 static NSString *const kKeyDateAddedToBasket = @"co.oceanlabs.pssdk.kKeyDateAddedToBasket";
+static NSString *const kKeyDeclinedOffers = @"co.oceanlabs.pssdk.kKeyDeclinedOffers";
+static NSString *const kKeyAcceptedOffers = @"co.oceanlabs.pssdk.kKeyAcceptedOffers";
 
 @interface OLPhotobookPrintJob ()
 @property (nonatomic, strong) NSString *templateId;
 @property (nonatomic, strong) NSArray *assets;
 @property (strong, nonatomic) NSMutableDictionary *options;
+@property (strong, nonatomic) NSMutableSet *declinedOffers;
+@property (strong, nonatomic) NSMutableSet *acceptedOffers;
 @end
 
 @implementation OLPhotobookPrintJob
@@ -54,6 +58,20 @@ static NSString *const kKeyDateAddedToBasket = @"co.oceanlabs.pssdk.kKeyDateAdde
 @synthesize uuid;
 @synthesize extraCopies;
 @synthesize dateAddedToBasket;
+
+-(NSMutableSet *) declinedOffers{
+    if (!_declinedOffers){
+        _declinedOffers = [[NSMutableSet alloc] init];
+    }
+    return _declinedOffers;
+}
+
+-(NSMutableSet *) acceptedOffers{
+    if (!_acceptedOffers){
+        _acceptedOffers = [[NSMutableSet alloc] init];
+    }
+    return _acceptedOffers;
+}
 
 -(NSMutableDictionary *) options{
     if (!_options){
@@ -114,6 +132,13 @@ static NSString *const kKeyDateAddedToBasket = @"co.oceanlabs.pssdk.kKeyDateAdde
     }
     else if (self.backCover){
         json[@"assets"][@"back_cover"] = [NSString stringWithFormat:@"%lld", self.backCover.assetId];
+    }
+    
+    if (self.acceptedOffers.count > 0){
+        id upsell = [self.acceptedOffers.allObjects.firstObject objectForKey:@"upsell_id"];
+        if (upsell){
+            json[@"upsell_id"] = upsell;
+        }
     }
     
     if (pages.count > 0){
@@ -211,6 +236,8 @@ static NSString *const kKeyDateAddedToBasket = @"co.oceanlabs.pssdk.kKeyDateAdde
     objectCopy.options = self.options;
     objectCopy.uuid = self.uuid;
     objectCopy.extraCopies = self.extraCopies;
+    objectCopy.declinedOffers = self.declinedOffers;
+    objectCopy.acceptedOffers = self.acceptedOffers;
     return objectCopy;
 }
 
@@ -226,6 +253,8 @@ static NSString *const kKeyDateAddedToBasket = @"co.oceanlabs.pssdk.kKeyDateAdde
     [aCoder encodeObject:self.address forKey:kKeyPhotobookAddress];
     [aCoder encodeObject:self.options forKey:kKeyPhotobookPrintJobOptions];
     [aCoder encodeObject:self.dateAddedToBasket forKey:kKeyDateAddedToBasket];
+    [aCoder encodeObject:self.declinedOffers forKey:kKeyDeclinedOffers];
+    [aCoder encodeObject:self.acceptedOffers forKey:kKeyAcceptedOffers];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
@@ -239,6 +268,8 @@ static NSString *const kKeyDateAddedToBasket = @"co.oceanlabs.pssdk.kKeyDateAdde
         self.address = [aDecoder decodeObjectForKey:kKeyPhotobookAddress];
         self.options = [aDecoder decodeObjectForKey:kKeyPhotobookPrintJobOptions];
         self.dateAddedToBasket = [aDecoder decodeObjectForKey:kKeyDateAddedToBasket];
+        self.declinedOffers = [aDecoder decodeObjectForKey:kKeyDeclinedOffers];
+        self.acceptedOffers = [aDecoder decodeObjectForKey:kKeyAcceptedOffers];
     }
     
     return self;
