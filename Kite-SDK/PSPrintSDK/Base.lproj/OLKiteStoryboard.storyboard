@@ -3586,7 +3586,7 @@ some images!</string>
                                 <rect key="frame" x="123" y="122" width="355" height="355"/>
                                 <subviews>
                                     <button opaque="NO" tag="20" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1iR-Pp-XgH">
-                                        <rect key="frame" x="187" y="299" width="157.5" height="46"/>
+                                        <rect key="frame" x="187" y="299" width="158" height="46"/>
                                         <color key="backgroundColor" red="0.40392156862745099" green="0.71372549019607845" blue="0.85882352941176465" alpha="1" colorSpace="custom" customColorSpace="adobeRGB1998"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="138" id="2Fj-VX-zw8"/>
@@ -3607,7 +3607,7 @@ some images!</string>
                                         </connections>
                                     </button>
                                     <button opaque="NO" tag="20" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FD2-Pp-IVG">
-                                        <rect key="frame" x="10" y="299" width="157.5" height="46"/>
+                                        <rect key="frame" x="10" y="299" width="158" height="46"/>
                                         <color key="backgroundColor" red="0.6705882352941176" green="0.6705882352941176" blue="0.6705882352941176" alpha="1" colorSpace="custom" customColorSpace="adobeRGB1998"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="138" id="cJH-Wm-OIf"/>

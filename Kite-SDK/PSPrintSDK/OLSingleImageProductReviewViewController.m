@@ -683,7 +683,7 @@ static BOOL hasMoved;
                 }]];
             }
             if ([OLKiteUtils qrCodeUploadEnabled]) {
-                [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Upload from your phone", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
+                [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Transfer from your phone", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
                     [self showQRCodeImagePicker];
                 }]];
             }
@@ -719,7 +719,7 @@ static BOOL hasMoved;
                 [as addButtonWithTitle:@"Instagram"];
             }
             if ([OLKiteUtils qrCodeUploadEnabled]){
-                [as addButtonWithTitle:NSLocalizedString(@"Upload from your phone", @"")];
+                [as addButtonWithTitle:NSLocalizedString(@"Transfer from your phone", @"")];
             }
 #ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
             for (OLCustomPhotoProvider *provider in [OLKiteUtils kiteVcForViewController:self].customImageProviders){

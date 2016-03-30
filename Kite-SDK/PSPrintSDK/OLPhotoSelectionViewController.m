@@ -534,7 +534,7 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
                 }]];
             }
             if ([OLKiteUtils qrCodeUploadEnabled]) {
-                [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Upload from your phone", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
+                [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Transfer from your phone", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
                     [self showQRCodeImagePicker];
                 }]];
             }
