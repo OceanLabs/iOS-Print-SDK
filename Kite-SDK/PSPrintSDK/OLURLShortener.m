@@ -30,27 +30,49 @@
 #import "OLURLShortener.h"
 #import "OLConstants.h"
 
-#ifdef COCOAPODS
-#import <AFNetworking/AFNetworking.h>
-#else
-#import "AFNetworking.h"
-#endif
-
 @implementation OLURLShortener
 
 - (void)shortenURL:(NSString *)url handler:(OLURLShortenerHandler)handler {
-    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
-    [manager POST:[NSString stringWithFormat:@"https://is.gd/create.php?format=json&url=%@", url] parameters:nil progress:NULL success:^(NSURLSessionDataTask *task, id responseObject){
-        NSDictionary *json = (NSDictionary *)responseObject;
-        NSString *shortURL = [json objectForKey:@"shorturl"];
-        if (shortURL == nil) {
-            handler(nil, [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeURLShorteningFailed userInfo:@{NSLocalizedDescriptionKey: @"URL shortening service is currently unavailable. Please try again."}]);
-        } else {
-            handler(shortURL, nil);
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"https://is.gd/create.php?format=json&url=%@", url]]];
+    request.HTTPMethod = @"POST";
+    
+    NSURLSessionConfiguration *sessionConfig = [NSURLSessionConfiguration defaultSessionConfiguration];
+    
+    NSURLSession *session = [NSURLSession sessionWithConfiguration:sessionConfig
+                                                          delegate:nil
+                                                     delegateQueue:nil];
+    [[session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        if (!error){
+            NSError *JSONError = nil;
+            NSDictionary *dictionary = [NSJSONSerialization JSONObjectWithData:data
+                                                                       options:0
+                                                                         error:&JSONError];
+            
+            if (!JSONError && [dictionary objectForKey:@"shorturl"]){
+                handler([dictionary objectForKey:@"shorturl"], nil);
+            }
+            else{
+                NSError *error = [NSError errorWithDomain:@"" code:0 userInfo:@{NSLocalizedDescriptionKey:NSLocalizedString(@"Failed to get upload URL. Try again later.", @"")}];
+                handler(nil, error);
+            }
         }
-    }failure:^(NSURLSessionDataTask *task, NSError *error){
-        handler(nil, error);
-    }];
+        else{
+            handler(nil, error);
+        }
+    }] resume];
+        
+//    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
+//    [manager POST:[NSString stringWithFormat:@"https://is.gd/create.php?format=json&url=%@", url] parameters:nil progress:NULL success:^(NSURLSessionDataTask *task, id responseObject){
+//        NSDictionary *json = (NSDictionary *)responseObject;
+//        NSString *shortURL = [json objectForKey:@"shorturl"];
+//        if (shortURL == nil) {
+//            handler(nil, [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeURLShorteningFailed userInfo:@{NSLocalizedDescriptionKey: @"URL shortening service is currently unavailable. Please try again."}]);
+//        } else {
+//            handler(shortURL, nil);
+//        }
+//    }failure:^(NSURLSessionDataTask *task, NSError *error){
+//        handler(nil, error);
+//    }];
 }
 
 @end

@@ -27,12 +27,6 @@
 //  THE SOFTWARE.
 //
 
-#ifdef COCOAPODS
-#import <AFNetworking/AFNetworking.h>
-#else
-#import "AFNetworking.h"
-#endif
-
 #import "OLAnalytics.h"
 #import "OLPrintOrder.h"
 #import "OLAddress.h"

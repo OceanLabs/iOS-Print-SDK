@@ -27,12 +27,6 @@
 //  THE SOFTWARE.
 //
 
-#ifdef COCOAPODS
-#import <AFNetworking/AFNetworking.h>
-#else
-#import "AFNetworking.h"
-#endif
-
 #import "OLAssetUploadRequest.h"
 #import "OLBaseRequest.h"
 #import "OLConstants.h"
@@ -64,10 +58,11 @@ typedef void (^UploadToS3CompletionHandler)(NSError *error);
 typedef void (^RegisterImageURLAssetsCompletionHandler)(NSError *error);
 typedef void (^UploadAssetsCompletionHandler)(NSError *error);
 
-@interface OLAssetUploadRequest ()
+@interface OLAssetUploadRequest () <NSURLSessionTaskDelegate>
 @property (nonatomic, strong) OLBaseRequest *signReq, *registerImageURLAssetsReq;
 @property (nonatomic, strong) NSURLSessionDataTask *s3UploadTask;
 @property (nonatomic, assign) BOOL cancelled;
+@property (copy, nonatomic) UploadToS3ProgressHandler progressHandler;
 @end
 
 @implementation OLAssetUploadRequest
@@ -204,6 +199,7 @@ typedef void (^UploadAssetsCompletionHandler)(NSError *error);
 }
 
 - (void)uploadData:(NSData *)data mimeType:(NSString *)mimeType toS3WithSignedRequestURL:(NSURL *)signedS3UploadReqURL progress:(UploadToS3ProgressHandler)progressHandler completion:(UploadToS3CompletionHandler)completionHandler {
+    self.progressHandler = progressHandler;
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:signedS3UploadReqURL];
     [request setHTTPMethod:@"PUT"];
     [request setHTTPBody:data];
@@ -213,22 +209,34 @@ typedef void (^UploadAssetsCompletionHandler)(NSError *error);
     
     __weak OLAssetUploadRequest *zelf = self;
     
-    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
-    self.s3UploadTask = [manager uploadTaskWithRequest:request fromData:data progress:^(NSProgress *progress){
-        if (zelf.cancelled) return;
-        dispatch_async(dispatch_get_main_queue(), ^{
-            progressHandler(progress.completedUnitCount, progress.completedUnitCount, progress.totalUnitCount);
-        });
-    }completionHandler:^(NSURLResponse *response, id responseObject, NSError *error){
+    NSURLSessionConfiguration *sessionConfig = [NSURLSessionConfiguration defaultSessionConfiguration];
+    
+    NSURLSession *session = [NSURLSession sessionWithConfiguration:sessionConfig
+                                                          delegate:self
+                                                     delegateQueue:nil];
+    
+    self.s3UploadTask  = [session uploadTaskWithRequest:request fromData:data completionHandler:^(NSData *data, NSURLResponse *response, NSError *error){
         if (zelf.cancelled) return;
         if (error){
-            completionHandler(error);
+            dispatch_async(dispatch_get_main_queue(), ^{
+                completionHandler(error);
+            });
         }
         else{
-            completionHandler(nil);
+            dispatch_async(dispatch_get_main_queue(), ^{
+                completionHandler(nil);
+            });
         }
     }];
+    
     [self.s3UploadTask resume];
+}
+
+- (void)URLSession:(NSURLSession *)session task:(nonnull NSURLSessionTask *)task didSendBodyData:(int64_t)bytesSent totalBytesSent:(int64_t)totalBytesSent totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend{
+    if (self.cancelled) return;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self.progressHandler(bytesSent, totalBytesSent, totalBytesExpectedToSend);
+    });
 }
 
 - (void)uploadImageAsJPEG:(UIImage *)image {

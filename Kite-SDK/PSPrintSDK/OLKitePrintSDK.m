@@ -39,7 +39,10 @@
 #endif
 
 #endif
+
+#ifdef OL_OFFER_JUDOPAY
 #import "OLJudoPayCard.h"
+#endif
 #import "OLProductHomeViewController.h"
 #import "OLIntegratedCheckoutViewController.h"
 #import "OLKiteABTesting.h"
@@ -78,7 +81,9 @@ static NSString *const kOLPayPalRecipientEmailLive = @"hello@kite.ly";
 static NSString *const kOLPayPalRecipientEmailSandbox = @"sandbox-merchant@kite.ly";
 static NSString *const kOLAPIEndpointVersion = @"v2.0";
 
+#ifdef OL_OFFER_JUDOPAY
 static BOOL useJudoPayForGBP = NO;
+#endif
 static BOOL useStripeForCreditCards = NO;
 static BOOL cacheTemplates = NO;
 static BOOL useStaging = NO;
@@ -99,6 +104,7 @@ static NSString* creativeSDKClientSecret = nil;
 
 @implementation OLKitePrintSDK
 
+#ifdef OL_OFFER_JUDOPAY
 + (BOOL)useJudoPayForGBP {
     return useJudoPayForGBP;
 }
@@ -106,6 +112,7 @@ static NSString* creativeSDKClientSecret = nil;
 + (void)setUseJudoPayForGBP:(BOOL)use {
     useJudoPayForGBP = use;
 }
+#endif
 
 + (BOOL)useStripeForCreditCards {
     return useStripeForCreditCards;
@@ -144,10 +151,14 @@ static NSString* creativeSDKClientSecret = nil;
     [OLStripeCard setClientId:[self stripePublishableKey]];
     if (environment == kOLKitePrintSDKEnvironmentLive) {
         [OLPayPalCard setClientId:[self paypalClientId] withEnvironment:kOLPayPalEnvironmentLive];
+#ifdef OL_OFFER_JUDOPAY
         [OLJudoPayCard setClientId:kJudoClientId token:kJudoLiveToken secret:kJudoLiveSecret withEnvironment:kOLJudoPayEnvironmentLive];
+#endif
     } else {
         [OLPayPalCard setClientId:[self paypalClientId] withEnvironment:kOLPayPalEnvironmentSandbox];
+#ifdef OL_OFFER_JUDOPAY
         [OLJudoPayCard setClientId:kJudoClientId token:kJudoSandboxToken secret:kJudoSandboxSecret withEnvironment:kOLJudoPayEnvironmentSandbox];
+#endif
     }
 }
 
