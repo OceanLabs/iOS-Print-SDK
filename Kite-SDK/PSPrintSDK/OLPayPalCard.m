@@ -122,22 +122,43 @@ static NSString *typeToString(OLPayPalCardType type) {
 }
 
 - (void)getAccessTokenWithCompletionHandler:(OLPayPalCardAccessTokenCompletionHandler)handler {
-    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
-    [manager.requestSerializer setAuthorizationHeaderFieldWithUsername:clientId password:@""];
-    [manager POST:[NSString stringWithFormat:@"https://%@/v1/oauth2/token", environment == kOLPayPalEnvironmentLive ? @"api.paypal.com" : @"api.sandbox.paypal.com"]
-       parameters:@{@"grant_type":@"client_credentials"} progress:NULL
-          success:^(NSURLSessionDataTask *task, id responseObject) {
-        id accessToken = [responseObject objectForKey:@"access_token"];
-        if ([accessToken isKindOfClass:[NSString class]]) {
-            handler(accessToken, nil);
-        } else {
-            // TODO: real response here :)
-            NSError *error = [NSError errorWithDomain:@"" code:0 userInfo:@{NSLocalizedDescriptionKey: @"Failed to validate card details, please try again."}];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"https://%@/v1/oauth2/token", environment == kOLPayPalEnvironmentLive ? @"api.paypal.com" : @"api.sandbox.paypal.com"]]];
+    [request setHTTPMethod:@"POST"];
+    
+    NSData *basicAuthCredentials = [[NSString stringWithFormat:@"%@:%@", clientId, @""] dataUsingEncoding:NSUTF8StringEncoding];
+    NSString *base64AuthCredentials = [basicAuthCredentials base64EncodedStringWithOptions:(NSDataBase64EncodingOptions)0];
+    [request setValue:[NSString stringWithFormat:@"Basic %@", base64AuthCredentials] forHTTPHeaderField:@"Authorization"];
+    [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+    [request setHTTPBody:[@"grant_type=client_credentials" dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    
+    NSURLSessionConfiguration *sessionConfig = [NSURLSessionConfiguration defaultSessionConfiguration];
+    
+    NSURLSession *session = [NSURLSession sessionWithConfiguration:sessionConfig
+                                                          delegate:nil
+                                                     delegateQueue:nil];
+    
+    [[session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error){
+        if (error){
             handler(nil, error);
         }
-    } failure:^(NSURLSessionDataTask *task, NSError *error) {
-        handler(nil, error);
-    }];
+        else if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
+            NSError *JSONError = nil;
+            
+            NSDictionary *dictionary = [NSJSONSerialization JSONObjectWithData:data
+                                                                       options:0
+                                                                         error:&JSONError];
+            
+            id accessToken = [dictionary objectForKey:@"access_token"];
+            if ([accessToken isKindOfClass:[NSString class]] && !JSONError) {
+                handler(accessToken, nil);
+            } else {
+                // TODO: real response here :)
+                NSError *error = [NSError errorWithDomain:@"" code:0 userInfo:@{NSLocalizedDescriptionKey: @"Failed to validate card details, please try again."}];
+                handler(nil, error);
+            }
+        }
+    }] resume];
 }
 
 + (AFHTTPSessionManager *)managerWithAccessToken:(NSString *)accessToken {
