@@ -92,6 +92,9 @@ static NSUInteger cacheOrderHash; // cached response is only valid for orders wi
         if (job.address.country){
             jobDict[@"country_code"] = job.address.country.codeAlpha3;
         }
+        else{
+            jobDict[@"country_code"] = [OLCountry countryForCurrentLocale].codeAlpha3;
+        }
         jobDict[@"template_id"] = job.templateId;
         jobDict[@"quantity"] = [NSNumber numberWithInteger:[job quantity] * ([job extraCopies]+1)];
         [basket addObject:jobDict];
