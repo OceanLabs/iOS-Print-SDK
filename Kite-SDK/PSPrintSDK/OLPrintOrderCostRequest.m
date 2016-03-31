@@ -81,28 +81,23 @@ static NSUInteger cacheOrderHash; // cached response is only valid for orders wi
 
 @implementation OLPrintOrderCostRequest
 
-- (NSString *)stringFromOrder:(OLPrintOrder *)order {
-    NSString *basketString = @"";
+- (NSDictionary *)jsonFromOrder:(OLPrintOrder *)order {
+    NSMutableArray *basket = [[NSMutableArray alloc] initWithCapacity:order.jobs.count];
     for (id<OLPrintJob> job in order.jobs){
-        OLCountry *country = job.address.country;
         NSSet *offers = [(NSObject *)job safePerformSelectorWithReturn:@selector(acceptedOffers) withObject:nil];
-        
-        if (offers.count > 0){
-            if (!country){
-                country = [OLCountry countryForCurrentLocale];
-            }
-            basketString = [basketString stringByAppendingString:[NSString stringWithFormat:@"%@:%d:%@:%@,", [job templateId], (int)[job quantity] * (int)([job extraCopies]+1), country.codeAlpha3, [offers.allObjects.firstObject objectForKey:@"id"]]];
+        NSMutableDictionary *jobDict = [[NSMutableDictionary alloc] init];
+        if (offers.count > 0 && [offers.allObjects.firstObject objectForKey:@"id"]){
+            jobDict[@"upsell_id"] = [offers.allObjects.firstObject objectForKey:@"id"];
         }
-        else if (country){
-            basketString = [basketString stringByAppendingString:[NSString stringWithFormat:@"%@:%d:%@,", [job templateId], (int)[job quantity] * (int)([job extraCopies]+1), country.codeAlpha3]];
+        if (job.address.country){
+            jobDict[@"country_code"] = job.address.country.codeAlpha3;
         }
-        else{
-            basketString = [basketString stringByAppendingString:[NSString stringWithFormat:@"%@:%d,", [job templateId], (int)[job quantity] * (int)([job extraCopies]+1)]];
-        }
+        jobDict[@"template_id"] = job.templateId;
+        jobDict[@"quantity"] = [NSNumber numberWithInteger:[job quantity] * ([job extraCopies]+1)];
+        [basket addObject:jobDict];
     }
-    basketString = [basketString stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@","]];
 
-    NSDictionary *dict = @{@"basket" : basketString,
+    NSDictionary *dict = @{@"basket" : basket,
                            @"shipping_country_code" : order.shippingAddress.country ? [order.shippingAddress.country codeAlpha3] : [[OLCountry countryForCurrentLocale] codeAlpha3],
                            @"promo_code" : order.promoCode ? urlencode(order.promoCode) : @"",
                            };
@@ -113,12 +108,7 @@ static NSUInteger cacheOrderHash; // cached response is only valid for orders wi
         [dict setValue:[extraDict objectForKey:[[extraDict allKeys] firstObject]] forKey:[[extraDict allKeys] firstObject]];
     }
 
-    NSString *orderString = @"";
-    for (NSString *key in [dict allKeys]){
-        orderString = [orderString stringByAppendingString:[NSString stringWithFormat:@"%@=%@&", key, [dict objectForKey:key]]];
-    }
-    orderString = [orderString stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"&"]];
-    return orderString;
+    return dict;
 }
 
 + (NSDictionary *)cachedResponseForOrder:(OLPrintOrder *)order {
@@ -158,9 +148,12 @@ static NSUInteger cacheOrderHash; // cached response is only valid for orders wi
     const NSUInteger hash = order.hash;
     
     NSDictionary *headers = @{@"Authorization": [NSString stringWithFormat:@"ApiKey %@:", [OLKitePrintSDK apiKey]]};
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@/price/?%@", [OLKitePrintSDK apiEndpoint], [OLKitePrintSDK apiVersion], [self stringFromOrder:order]]];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@/price/", [OLKitePrintSDK apiEndpoint], [OLKitePrintSDK apiVersion]]];
     
-    self.req = [[OLBaseRequest alloc] initWithURL:url httpMethod:kOLHTTPMethodGET headers:headers body:nil];
+    NSData *data = [NSJSONSerialization dataWithJSONObject:[self jsonFromOrder:order] options:0 error:nil];
+    NSString *jsonString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    
+    self.req = [[OLBaseRequest alloc] initWithURL:url httpMethod:kOLHTTPMethodPOST headers:headers body:jsonString];
     [self.req startWithCompletionHandler:^(NSInteger httpStatusCode, id json, NSError *error) {
         if (error) {
             self.req = nil;
