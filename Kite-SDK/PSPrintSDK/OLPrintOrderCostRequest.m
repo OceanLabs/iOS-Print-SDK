@@ -97,6 +97,7 @@ static NSUInteger cacheOrderHash; // cached response is only valid for orders wi
         }
         jobDict[@"template_id"] = job.templateId;
         jobDict[@"quantity"] = [NSNumber numberWithInteger:[job quantity] * ([job extraCopies]+1)];
+        jobDict[@"job_id"] = [job uuid];
         [basket addObject:jobDict];
     }
 
