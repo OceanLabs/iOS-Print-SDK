@@ -67,12 +67,6 @@
 		2E837D491C3C1FBB004DA682 /* OLViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E837D471C3C1FBB004DA682 /* OLViewController.m */; };
 		2E837D4C1C3C221E004DA682 /* OLCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E837D4B1C3C221E004DA682 /* OLCollectionViewController.m */; };
 		2E837D4D1C3C221E004DA682 /* OLCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E837D4B1C3C221E004DA682 /* OLCollectionViewController.m */; };
-		2E8702841C904918002BE2DA /* AFHTTPSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E87027E1C904918002BE2DA /* AFHTTPSessionManager.m */; };
-		2E8702851C904918002BE2DA /* AFNetworkReachabilityManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E87027F1C904918002BE2DA /* AFNetworkReachabilityManager.m */; };
-		2E8702861C904918002BE2DA /* AFSecurityPolicy.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E8702801C904918002BE2DA /* AFSecurityPolicy.m */; };
-		2E8702871C904918002BE2DA /* AFURLRequestSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E8702811C904918002BE2DA /* AFURLRequestSerialization.m */; };
-		2E8702881C904918002BE2DA /* AFURLResponseSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E8702821C904918002BE2DA /* AFURLResponseSerialization.m */; };
-		2E8702891C904918002BE2DA /* AFURLSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E8702831C904918002BE2DA /* AFURLSessionManager.m */; };
 		2E8703031C905248002BE2DA /* libios-qr-encoder.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E8702F21C9051FC002BE2DA /* libios-qr-encoder.a */; };
 		2E8FD2701BF9E73B00F4FC5A /* OLPhotoEdits.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E8FD26F1BF9E73B00F4FC5A /* OLPhotoEdits.m */; };
 		2E8FD2711BF9E73B00F4FC5A /* OLPhotoEdits.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E8FD26F1BF9E73B00F4FC5A /* OLPhotoEdits.m */; };
@@ -199,7 +193,6 @@
 		2EA3D3D51C9C04B500B99BCD /* libUICKeyChainStore.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E220588D1BF3F868009CFAF6 /* libUICKeyChainStore.a */; };
 		2EA3D3D61C9C04B500B99BCD /* libUIColor-HexString.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E220587E1BF3F7AC009CFAF6 /* libUIColor-HexString.a */; };
 		2EA3D3D71C9C04B500B99BCD /* (null) in Frameworks */ = {isa = PBXBuildFile; };
-		2EA3D3D81C9C04B500B99BCD /* libAFNetworking.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E22058491BF3A984009CFAF6 /* libAFNetworking.a */; };
 		2EA3D3D91C9C04B500B99BCD /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD73BF6B186215790009DE03 /* Foundation.framework */; };
 		2EA3D3DA1C9C04B500B99BCD /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD73BF6F186215790009DE03 /* UIKit.framework */; };
 		2EA3D3DB1C9C04B500B99BCD /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD73BF6D186215790009DE03 /* CoreGraphics.framework */; };
@@ -330,7 +323,6 @@
 		CD73BF8C186215790009DE03 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD73BF6B186215790009DE03 /* Foundation.framework */; };
 		CD73BF8D186215790009DE03 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD73BF6F186215790009DE03 /* UIKit.framework */; };
 		CD73BF97186215790009DE03 /* OLSDKModelTests.m in Sources */ = {isa = PBXBuildFile; fileRef = CD73BF96186215790009DE03 /* OLSDKModelTests.m */; };
-		E22058651BF3AB64009CFAF6 /* libAFNetworking.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E22058491BF3A984009CFAF6 /* libAFNetworking.a */; };
 		E22058871BF3F7DB009CFAF6 /* UIColor+HexString.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C84251BE288D30041D4CF /* UIColor+HexString.m */; };
 		E22058881BF3F854009CFAF6 /* libUIColor-HexString.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E220587E1BF3F7AC009CFAF6 /* libUIColor-HexString.a */; };
 		E22058961BF3F87F009CFAF6 /* UICKeyChainStore.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C84211BE2880E0041D4CF /* UICKeyChainStore.m */; };
@@ -531,15 +523,6 @@
 
 /* Begin PBXCopyFilesBuildPhase section */
 		2EA3D3DF1C9C04B500B99BCD /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "include/$(PRODUCT_NAME)";
-			dstSubfolderSpec = 16;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		E22058471BF3A984009CFAF6 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "include/$(PRODUCT_NAME)";
@@ -981,7 +964,6 @@
 		CDE0744A188D7730009ADFA2 /* OLURLDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLURLDataSource.m; sourceTree = "<group>"; };
 		CDE5DDCD18E5BE40000FF3B5 /* OLPrintEnvironment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLPrintEnvironment.h; sourceTree = "<group>"; };
 		CDFFA781189D2DF40083BCE7 /* OLAsset+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "OLAsset+Private.h"; sourceTree = "<group>"; };
-		E22058491BF3A984009CFAF6 /* libAFNetworking.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libAFNetworking.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		E220587E1BF3F7AC009CFAF6 /* libUIColor-HexString.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libUIColor-HexString.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E220588D1BF3F868009CFAF6 /* libUICKeyChainStore.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libUICKeyChainStore.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		E220589C1BF3F8C4009CFAF6 /* libSVProgressHUD.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libSVProgressHUD.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1198,7 +1180,6 @@
 				2EA3D3D51C9C04B500B99BCD /* libUICKeyChainStore.a in Frameworks */,
 				2EA3D3D61C9C04B500B99BCD /* libUIColor-HexString.a in Frameworks */,
 				2EA3D3D71C9C04B500B99BCD /* (null) in Frameworks */,
-				2EA3D3D81C9C04B500B99BCD /* libAFNetworking.a in Frameworks */,
 				2EA3D3D91C9C04B500B99BCD /* Foundation.framework in Frameworks */,
 				2EA3D3DA1C9C04B500B99BCD /* UIKit.framework in Frameworks */,
 				2EA3D3DB1C9C04B500B99BCD /* CoreGraphics.framework in Frameworks */,
@@ -1240,13 +1221,6 @@
 				CD73BF8D186215790009DE03 /* UIKit.framework in Frameworks */,
 				CD73BF8C186215790009DE03 /* Foundation.framework in Frameworks */,
 				7D6213DEB708F5F5E6617BF1 /* libPods.a in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		E22058461BF3A984009CFAF6 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1344,7 +1318,6 @@
 				E22058A81BF3F907009CFAF6 /* libSVProgressHUD.a in Frameworks */,
 				E22058971BF3F8B2009CFAF6 /* libUICKeyChainStore.a in Frameworks */,
 				E22058881BF3F854009CFAF6 /* libUIColor-HexString.a in Frameworks */,
-				E22058651BF3AB64009CFAF6 /* libAFNetworking.a in Frameworks */,
 				E29C86201BE3B8E70041D4CF /* Foundation.framework in Frameworks */,
 				E29C861D1BE3B70B0041D4CF /* UIKit.framework in Frameworks */,
 				E29C861C1BE3B7060041D4CF /* CoreGraphics.framework in Frameworks */,
@@ -1698,7 +1671,6 @@
 				2E2632BF1B97336700C7D879 /* KitePrintSDKUITests.xctest */,
 				E29C85701BE3B4290041D4CF /* libKiteSDK.a */,
 				2EADD8651BE79D6D0051CD31 /* KiteSDK-Demo.app */,
-				E22058491BF3A984009CFAF6 /* libAFNetworking.a */,
 				E220587E1BF3F7AC009CFAF6 /* libUIColor-HexString.a */,
 				E220588D1BF3F868009CFAF6 /* libUICKeyChainStore.a */,
 				E220589C1BF3F8C4009CFAF6 /* libSVProgressHUD.a */,
@@ -2309,23 +2281,6 @@
 			productReference = CD73BF89186215790009DE03 /* KitePrintSDKTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		E22058481BF3A984009CFAF6 /* AFNetworking */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = E22058511BF3A984009CFAF6 /* Build configuration list for PBXNativeTarget "AFNetworking" */;
-			buildPhases = (
-				E22058451BF3A984009CFAF6 /* Sources */,
-				E22058461BF3A984009CFAF6 /* Frameworks */,
-				E22058471BF3A984009CFAF6 /* CopyFiles */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = AFNetworking;
-			productName = AFNetworking;
-			productReference = E22058491BF3A984009CFAF6 /* libAFNetworking.a */;
-			productType = "com.apple.product-type.library.static";
-		};
 		E220587D1BF3F7AC009CFAF6 /* UIColor-HexString */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = E22058841BF3F7AC009CFAF6 /* Build configuration list for PBXNativeTarget "UIColor-HexString" */;
@@ -2557,9 +2512,6 @@
 					CD73BF88186215790009DE03 = {
 						TestTargetID = CD73BF67186215790009DE03;
 					};
-					E22058481BF3A984009CFAF6 = {
-						CreatedOnToolsVersion = 7.1;
-					};
 					E220587D1BF3F7AC009CFAF6 = {
 						CreatedOnToolsVersion = 7.1;
 					};
@@ -2620,7 +2572,6 @@
 				2E4CAF081BC25F0A0089FA26 /* Docs */,
 				E29C856F1BE3B4290041D4CF /* KiteSDK */,
 				2EA3D35A1C9C04B500B99BCD /* KiteSDKMinimal */,
-				E22058481BF3A984009CFAF6 /* AFNetworking */,
 				E220587D1BF3F7AC009CFAF6 /* UIColor-HexString */,
 				E220588C1BF3F868009CFAF6 /* UICKeyChainStore */,
 				E220589B1BF3F8C4009CFAF6 /* SVProgressHUD */,
@@ -3044,19 +2995,6 @@
 				CD73BF97186215790009DE03 /* OLSDKModelTests.m in Sources */,
 				2E7D1C8F1BC41C7D009227EE /* OLProductOrderTests.m in Sources */,
 				2E7483551BCD1DF500360550 /* OLPrintPhotoTests.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		E22058451BF3A984009CFAF6 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				2E8702841C904918002BE2DA /* AFHTTPSessionManager.m in Sources */,
-				2E8702851C904918002BE2DA /* AFNetworkReachabilityManager.m in Sources */,
-				2E8702861C904918002BE2DA /* AFSecurityPolicy.m in Sources */,
-				2E8702871C904918002BE2DA /* AFURLRequestSerialization.m in Sources */,
-				2E8702881C904918002BE2DA /* AFURLResponseSerialization.m in Sources */,
-				2E8702891C904918002BE2DA /* AFURLSessionManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3524,7 +3462,6 @@
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
-					"-l\"AFNetworking\"",
 					"-l\"Bolts\"",
 					"-l\"CSStickyHeaderFlowLayout\"",
 					"-l\"CTAssetsPickerController\"",
@@ -3641,7 +3578,6 @@
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
-					"-l\"AFNetworking\"",
 					"-l\"Bolts\"",
 					"-l\"CSStickyHeaderFlowLayout\"",
 					"-l\"CTAssetsPickerController\"",
@@ -3834,49 +3770,6 @@
 				PRODUCT_NAME = KitePrintSDKTests;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/KiteSDK-Demo.app/KiteSDK-Demo";
 				WRAPPER_EXTENSION = xctest;
-			};
-			name = Release;
-		};
-		E220584F1BF3A984009CFAF6 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				DEBUG_INFORMATION_FORMAT = dwarf;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
-				MTL_ENABLE_DEBUG_INFO = YES;
-				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				WARNING_CFLAGS = (
-					"-Wno-shorten-64-to-32",
-					"-Wno-absolute-value",
-				);
-			};
-			name = Debug;
-		};
-		E22058501BF3A984009CFAF6 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
-				MTL_ENABLE_DEBUG_INFO = NO;
-				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				WARNING_CFLAGS = (
-					"-Wno-shorten-64-to-32",
-					"-Wno-absolute-value",
-				);
 			};
 			name = Release;
 		};
@@ -4467,15 +4360,6 @@
 			buildConfigurations = (
 				CD73BF9E186215790009DE03 /* Debug */,
 				CD73BF9F186215790009DE03 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		E22058511BF3A984009CFAF6 /* Build configuration list for PBXNativeTarget "AFNetworking" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				E220584F1BF3A984009CFAF6 /* Debug */,
-				E22058501BF3A984009CFAF6 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
