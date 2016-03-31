@@ -33,10 +33,13 @@
 #import "SVProgressHUD.h"
 #endif
 
+#ifdef OL_OFFER_JUDOPAY
+#import "OLJudoPayCard.h"
+#endif
+
 #import "OLCreditCardCaptureViewController.h"
 #import "OLConstants.h"
 #import "OLPayPalCard.h"
-#import "OLJudoPayCard.h"
 #import "OLPrintOrder.h"
 //#import "CardIO.h"
 #import "OLKitePrintSDK.h"
@@ -107,7 +110,9 @@ static CardType getCardType(NSString *cardNumber) {
 }
 
 @interface OLKitePrintSDK (Private)
+#ifdef OL_OFFER_JUDOPAY
 + (BOOL)useJudoPayForGBP;
+#endif
 + (BOOL)useStripeForCreditCards;
 @end
 

@@ -27,6 +27,8 @@
 //  THE SOFTWARE.
 //
 
+#ifdef OL_OFFER_JUDOPAY
+
 #import <Foundation/Foundation.h>
 
 typedef void (^OLJudoPayCardStoreCompletionHandler)(NSError *error);
@@ -75,3 +77,5 @@ typedef enum {
 @property (nonatomic, readonly, getter = isTokenised) BOOL tokenised;
 
 @end
+
+#endif

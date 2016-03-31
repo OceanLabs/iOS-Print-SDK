@@ -27,6 +27,8 @@
 //  THE SOFTWARE.
 //
 
+#ifdef OL_OFFER_JUDOPAY
+
 #ifdef COCOAPODS
 #import <AFNetworking/AFNetworking.h>
 #import <UICKeyChainStore/UICKeyChainStore.h>
@@ -343,3 +345,5 @@ static NSString *token, *secret;
 }
 
 @end
+
+#endif
