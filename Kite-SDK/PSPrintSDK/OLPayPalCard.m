@@ -139,7 +139,6 @@ static NSString *typeToString(OLPayPalCardType type) {
         }
         else if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
             NSError *JSONError = nil;
-            
             NSDictionary *dictionary = [NSJSONSerialization JSONObjectWithData:data
                                                                        options:0
                                                                          error:&JSONError];
@@ -149,7 +148,7 @@ static NSString *typeToString(OLPayPalCardType type) {
                 handler(accessToken, nil);
             } else {
                 // TODO: real response here :)
-                NSError *error = [NSError errorWithDomain:@"" code:0 userInfo:@{NSLocalizedDescriptionKey: @"Failed to validate card details, please try again."}];
+                NSError *error = [NSError errorWithDomain:@"" code:0 userInfo:@{NSLocalizedDescriptionKey: NSLocalizedString(@"Failed to validate card details, please try again.", @"")}];
                 handler(nil, error);
             }
         }
