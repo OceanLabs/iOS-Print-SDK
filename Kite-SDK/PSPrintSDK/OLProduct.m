@@ -52,6 +52,7 @@ typedef enum {
 
 @property (strong, nonatomic) NSMutableArray *declinedOffers;
 @property (strong, nonatomic) NSMutableArray *acceptedOffers;
+@property (strong, nonatomic) NSDictionary *redeemedOffer;
 
 @end
 
@@ -197,6 +198,23 @@ typedef enum {
     else{
         [imageView setAndFadeInImageWithURL:self.productTemplate.productPhotographyURLs[i % [self.productTemplate.productPhotographyURLs count]]];
     }
+}
+
+- (BOOL)hasOfferIdBeenUsed:(NSUInteger)identifier{
+    for (NSDictionary *acceptedOffer in self.acceptedOffers){
+        if ([acceptedOffer[@"id"] unsignedIntegerValue] == identifier){
+            return YES;
+        }
+    }
+    for (NSDictionary *declinedOffer in self.declinedOffers){
+        if ([declinedOffer[@"id"] unsignedIntegerValue] == identifier){
+            return YES;
+        }
+    }
+    if ([[self.redeemedOffer objectForKey:@"id"] unsignedIntegerValue] == identifier){
+        return YES;
+    }
+    return NO;
 }
 
 #pragma mark Product Info

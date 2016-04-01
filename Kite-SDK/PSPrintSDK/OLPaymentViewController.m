@@ -111,6 +111,7 @@ static BOOL haveLoadedAtLeastOnce = NO;
 @property (strong, nonatomic) NSMutableDictionary *options;
 @property (strong, nonatomic) NSMutableSet *declinedOffers;
 @property (strong, nonatomic) NSMutableSet *acceptedOffers;
+@property (strong, nonatomic) NSDictionary *redeemedOffer;
 @end
 
 @interface OLKiteViewController ()
@@ -124,6 +125,7 @@ static BOOL haveLoadedAtLeastOnce = NO;
 - (NSDecimalNumber*) unitCostDecimalNumber;
 @property (strong, nonatomic) NSMutableArray *declinedOffers;
 @property (strong, nonatomic) NSMutableArray *acceptedOffers;
+@property (strong, nonatomic) NSDictionary *redeemedOffer;
 @end
 
 
@@ -1858,6 +1860,8 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     OLProductPrintJob* printJob = ((OLProductPrintJob*)[self.printOrder.jobs objectAtIndex:indexPath.row]);
     OLProduct *product = [OLProduct productWithTemplateId:printJob.templateId];
     product.acceptedOffers = [[[printJob safePerformSelectorWithReturn:@selector(acceptedOffers)withObject:nil] allObjects] mutableCopy];
+    product.declinedOffers = [[[printJob safePerformSelectorWithReturn:@selector(declinedOffers)withObject:nil] allObjects] mutableCopy];
+    product.redeemedOffer = [printJob safePerformSelectorWithReturn:@selector(redeemedOffer) withObject:nil];
     product.uuid = printJob.uuid;
     
     for (NSString *option in printJob.options.allKeys){

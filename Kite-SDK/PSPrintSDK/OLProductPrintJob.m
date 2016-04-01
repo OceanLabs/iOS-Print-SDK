@@ -42,6 +42,7 @@ static NSString *const kKeyProductPrintJobOptions = @"co.oceanlabs.pssdk.kKeyPro
 static NSString *const kKeyDateAddedToBasket = @"co.oceanlabs.pssdk.kKeyDateAddedToBasket";
 static NSString *const kKeyDeclinedOffers = @"co.oceanlabs.pssdk.kKeyDeclinedOffers";
 static NSString *const kKeyAcceptedOffers = @"co.oceanlabs.pssdk.kKeyAcceptedOffers";
+static NSString *const kKeyRedeemedOffer = @"co.oceanlabs.pssdk.kKeyRedeemedOffer";
 
 static id stringOrEmptyString(NSString *str) {
     return str ? str : @"";
@@ -53,6 +54,7 @@ static id stringOrEmptyString(NSString *str) {
 @property (strong, nonatomic) NSMutableDictionary *options;
 @property (strong, nonatomic) NSMutableSet *declinedOffers;
 @property (strong, nonatomic) NSMutableSet *acceptedOffers;
+@property (strong, nonatomic) NSDictionary *redeemedOffer;
 @end
 
 @implementation OLProductPrintJob
@@ -238,6 +240,7 @@ static id stringOrEmptyString(NSString *str) {
     objectCopy.options = self.options;
     objectCopy.declinedOffers = self.declinedOffers;
     objectCopy.acceptedOffers = self.acceptedOffers;
+    objectCopy.redeemedOffer = self.redeemedOffer;
     return objectCopy;
 }
 
@@ -282,6 +285,7 @@ static id stringOrEmptyString(NSString *str) {
     [aCoder encodeObject:self.dateAddedToBasket forKey:kKeyDateAddedToBasket];
     [aCoder encodeObject:self.declinedOffers forKey:kKeyDeclinedOffers];
     [aCoder encodeObject:self.acceptedOffers forKey:kKeyAcceptedOffers];
+    [aCoder encodeObject:self.redeemedOffer forKey:kKeyRedeemedOffer];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
@@ -295,6 +299,7 @@ static id stringOrEmptyString(NSString *str) {
         self.dateAddedToBasket = [aDecoder decodeObjectForKey:kKeyDateAddedToBasket];
         self.declinedOffers = [aDecoder decodeObjectForKey:kKeyDeclinedOffers];
         self.acceptedOffers = [aDecoder decodeObjectForKey:kKeyAcceptedOffers];
+        self.redeemedOffer = [aDecoder decodeObjectForKey:kKeyRedeemedOffer];
     }
     
     return self;

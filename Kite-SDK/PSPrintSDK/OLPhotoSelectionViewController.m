@@ -162,12 +162,23 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
 #endif
 @property (strong, nonatomic) OLPrintOrder *printOrder;
 - (void)dismiss;
+@end
 
+@interface OLPrintOrder ()
+- (BOOL)hasOfferIdBeenUsed:(NSInteger)identifier;
+@end
+
+@interface OLProductPrintJob ()
+@property (strong, nonatomic) NSMutableSet *declinedOffers;
+@property (strong, nonatomic) NSMutableSet *acceptedOffers;
+@property (strong, nonatomic) NSDictionary *redeemedOffer;
 @end
 
 @interface OLProduct ()
 @property (strong, nonatomic) NSMutableArray *declinedOffers;
 @property (strong, nonatomic) NSMutableArray *acceptedOffers;
+@property (strong, nonatomic) NSDictionary *redeemedOffer;
+- (BOOL)hasOfferIdBeenUsed:(NSUInteger)identifier;
 @end
 
 @implementation OLPhotoSelectionViewController
@@ -199,9 +210,6 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
     [self.collectionView registerClass:[UICollectionReusableView class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"headerView"];
     
     [self onUserSelectedPhotoCountChange];
-    
-    [self.product.acceptedOffers removeAllObjects];
-    [self.product.declinedOffers removeAllObjects];
 }
 
 - (void)viewDidLayoutSubviews{
@@ -1423,7 +1431,7 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
     }];
 }
 
-- (void)addItemToBasketWithTemplateId:(NSString *)templateId{
+- (id<OLPrintJob>)addItemToBasketWithTemplateId:(NSString *)templateId{
     NSMutableArray *assets = [[NSMutableArray alloc] init];
     for (OLPrintPhoto *photo in self.userSelectedPhotos){
         [assets addObject:[OLAsset assetWithDataSource:[photo copy]]];
@@ -1438,20 +1446,24 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
     }
     
     [[OLKiteUtils kiteVcForViewController:self].printOrder addPrintJob:job];
+    return job;
 }
 
 - (void)userDidAcceptUpsell:(OLUpsellViewController *)vc{
     [self.product.acceptedOffers addObject:vc.offer];
     [vc dismissViewControllerAnimated:NO completion:^{
         if ([vc.offer[@"prepopulate_photos"] boolValue]){
-            [self addItemToBasketWithTemplateId:vc.offer[@"offer_template"]];
+            id<OLPrintJob> job = [self addItemToBasketWithTemplateId:vc.offer[@"offer_template"]];
+            [(OLProductPrintJob *)job setRedeemedOffer:vc.offer];
             [self doSegueToOrderPreview];
         }
         else if ([self.product.templateId isEqualToString:vc.offer[@"offer_template"]]){
+            self.product.redeemedOffer = vc.offer;
             //Do nothing, stay on this screen
         }
         else{
-            [self addItemToBasketWithTemplateId:self.product.templateId];
+            id<OLPrintJob> job = [self addItemToBasketWithTemplateId:self.product.templateId];
+            [[(OLProductPrintJob *)job acceptedOffers] addObject:vc.offer];
             
             OLProduct *offerProduct = [OLProduct productWithTemplateId:vc.offer[@"offer_template"]];
             UIViewController *nextVc = [self.storyboard instantiateViewControllerWithIdentifier:[OLKiteUtils reviewViewControllerIdentifierForProduct:offerProduct photoSelectionScreen:[OLKiteUtils imageProvidersAvailable:self]]];
@@ -1476,21 +1488,10 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
         //Check if offer is valid for this point
         if ([offer[@"active"] boolValue] && [offer[@"offer_type"] isEqualToString:@"ITEM_ADD"]){
             
-            //Check if offer has been accepted/declined before
-            BOOL skip = NO;
-            for (NSDictionary *acceptedOffer in self.product.acceptedOffers){
-                if ([acceptedOffer[@"id"] integerValue] == [offer[@"id"] integerValue]){
-                    skip = YES;
-                    break;
-                }
+            if ([self.product hasOfferIdBeenUsed:[offer[@"id"] unsignedIntegerValue]]){
+                continue;
             }
-            for (NSDictionary *declinedOffer in self.product.declinedOffers){
-                if ([declinedOffer[@"id"] integerValue] == [offer[@"id"] integerValue]){
-                    skip = YES;
-                    break;
-                }
-            }
-            if (skip){
+            if ([[OLKiteUtils kiteVcForViewController:self].printOrder hasOfferIdBeenUsed:[offer[@"id"] unsignedIntegerValue]]){
                 continue;
             }
             

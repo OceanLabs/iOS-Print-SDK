@@ -128,7 +128,7 @@
     } completion:NULL];
     
     [UIView animateWithDuration:0.7 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
-        self.offerContainerView.transform = CGAffineTransformRotate(CGAffineTransformMakeTranslation(0, self.view.frame.size.height), M_PI_4);
+        self.offerContainerView.transform = CGAffineTransformRotate(CGAffineTransformMakeTranslation(0, self.view.frame.size.height), -M_PI_4);
     }completion:^(BOOL finished){
         [self.delegate userDidDeclineUpsell:self];
     }];

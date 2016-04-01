@@ -107,6 +107,12 @@ static id stringOrEmptyString(NSString *str) {
 
 @end
 
+@interface OLProductPrintJob ()
+@property (strong, nonatomic) NSMutableSet *declinedOffers;
+@property (strong, nonatomic) NSMutableSet *acceptedOffers;
+@property (strong, nonatomic) NSDictionary *redeemedOffer;
+@end
+
 static NSBlockOperation *templateSyncOperation;
 
 @implementation OLPrintOrder
@@ -632,6 +638,30 @@ static NSBlockOperation *templateSyncOperation;
     OLPrintOrder *order = [NSKeyedUnarchiver unarchiveObjectWithFile:[OLPrintOrder orderFilePath]];
     [order cleanupDisk];
     return order;
+}
+
+- (BOOL)hasOfferIdBeenUsed:(NSUInteger)identifier{
+    for (id<OLPrintJob> job in self.jobs){
+        if (![job respondsToSelector:@selector(acceptedOffers)]){
+            continue;
+        }
+        OLProductPrintJob *printJob = job;
+        for (NSDictionary *acceptedOffer in printJob.acceptedOffers){
+            if ([acceptedOffer[@"id"] unsignedIntegerValue] == identifier){
+                return YES;
+            }
+        }
+        for (NSDictionary *declinedOffer in printJob.declinedOffers){
+            if ([declinedOffer[@"id"] unsignedIntegerValue] == identifier){
+                return YES;
+            }
+        }
+        if ([[printJob.redeemedOffer objectForKey:@"id"] unsignedIntegerValue] == identifier){
+            return YES;
+        }
+        
+    }
+    return NO;
 }
 
 #pragma mark - OLAssetUploadRequestDelegate methods
