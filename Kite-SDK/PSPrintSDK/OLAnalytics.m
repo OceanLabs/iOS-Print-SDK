@@ -402,6 +402,18 @@ static __weak id<OLKiteDelegate> kiteDelegate;
     [OLAnalytics reportAnalyticsEventToDelegate:eventName job:nil printOrder:printOrder extraInfo:nil];
 }
 
++ (void)trackChooseAddressScreenViewed {
+    [OLAnalytics reportAnalyticsEventToDelegate:@"Choose Address Screen Viewed" job:nil printOrder:nil extraInfo:nil];
+}
+
++ (void)trackAddAddressScreenViewed {
+    [OLAnalytics reportAnalyticsEventToDelegate:@"Add Address Screen Viewed" job:nil printOrder:nil extraInfo:nil];
+}
+
++ (void)trackSearchAddressScreenViewed {
+    [OLAnalytics reportAnalyticsEventToDelegate:@"Search Address Screen Viewed" job:nil printOrder:nil extraInfo:nil];
+}
+
 + (void)trackPaymentScreenViewedForOrder:(OLPrintOrder *)printOrder applePayIsAvailable:(NSString *)applePayIsAvailable{
     NSString *eventName = @"Payment Screen Viewed";
     NSDictionary *dict = [OLAnalytics defaultDictionaryForEventName:eventName];
