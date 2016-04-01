@@ -37,6 +37,7 @@
 #import "OLKiteUtils.h"
 #import "OLKiteViewController.h"
 #import "OLKiteABTesting.h"
+#import "OLAnalytics.h"
 
 static const NSUInteger kTagTextField = 99;
 
@@ -85,6 +86,11 @@ static const NSUInteger kTagTextField = 99;
     }
     
     return self;
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [OLAnalytics trackAddAddressScreenViewed];
 }
 
 - (void)viewDidLoad {

@@ -130,6 +130,11 @@
     }
 }
 
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    [OLAnalytics trackSearchAddressScreenViewed];
+}
+
 - (void)setCountry:(OLCountry *)country {
     _country = country;
     self.labelCountry.text = country.name;
