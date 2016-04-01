@@ -1502,8 +1502,6 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
     [self.upsellHintView viewWithTag:10].transform = CGAffineTransformMakeRotation(M_PI_4);
     [(UILabel *)[self.upsellHintView viewWithTag:20] setText:[NSString stringWithFormat:NSLocalizedString(@"Add %ld more images to claim your discount", @""), self.product.quantityToFulfillOrder]];
     
-    self.upsellHintView.frame = [self.collectionView convertRect:[self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:self.sectionsForUpsell-1]].frame toView:self.view];
-    
     NSTimeInterval delay = 0.35;
     NSTimeInterval duration = 0.3;
     [UIView animateWithDuration:duration delay:delay options:UIViewAnimationOptionCurveEaseIn animations:^{
