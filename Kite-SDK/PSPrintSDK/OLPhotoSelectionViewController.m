@@ -150,9 +150,12 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
 @property (weak, nonatomic) IBOutlet UIView *clearButtonContainerView;
 @property (strong, nonatomic) IBOutlet OLPhotoSelectionButton *galleryButton;
 @property (nonatomic, strong) UITapGestureRecognizer *tapBehindQRUploadModalGestureRecognizer;
+@property (weak, nonatomic) IBOutlet UIView *upsellHintView;
 
 @property (weak, nonatomic) OLPrintPhoto *editingPrintPhoto;
 @property (weak, nonatomic) IBOutlet UIView *addPhotosHintView;
+
+@property (assign, nonatomic) NSInteger sectionsForUpsell;
 
 @end
 
@@ -215,7 +218,7 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
 - (void)viewDidLayoutSubviews{
     [super viewDidLayoutSubviews];
     
-    self.collectionView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
+    self.collectionView.contentInset = UIEdgeInsetsMake(0, 0, self.view.frame.size.height - self.buttonNext.frame.origin.y + 5, 0);
 }
 
 - (void)viewWillAppear:(BOOL)animated{
@@ -245,6 +248,8 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
 
 - (void)viewDidDisappear:(BOOL)animated{
     [super viewDidDisappear:animated];
+    
+    self.upsellHintView.alpha = 0;
     
 #ifndef OL_NO_ANALYTICS
     if (!self.navigationController){
@@ -506,6 +511,13 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
 #pragma mark - Actions
 
 - (IBAction)onButtonAddPhotosClicked:(id)sender {
+    if (self.upsellHintView.alpha != 0){
+        NSTimeInterval duration = 0.3;
+        [UIView animateWithDuration:duration delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
+            self.upsellHintView.alpha = 0;
+        } completion:^(BOOL finished) {}];
+    }
+    
     NSInteger numberOfProviders = 0;
 #ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
     NSInteger numberOfCustomProviders = [OLKiteUtils kiteVcForViewController:self].customImageProviders.count;
@@ -1106,7 +1118,7 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
         removedImagesCount += [self.indexPathsToRemoveDict[n] count];
     }
     NSInteger finalNumberOfPhotos = self.userSelectedPhotos.count;
-    return MAX(ceil(finalNumberOfPhotos / (double)self.product.quantityToFulfillOrder), 1);
+    return MAX(MAX(ceil(finalNumberOfPhotos / (double)self.product.quantityToFulfillOrder), 1), self.sectionsForUpsell);
 }
 
 - (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath{
@@ -1296,6 +1308,13 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
 #pragma mark - UICollectionViewDelegate Methods
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
+    if (self.upsellHintView.alpha != 0){
+        NSTimeInterval duration = 0.3;
+        [UIView animateWithDuration:duration delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
+            self.upsellHintView.alpha = 0;
+        } completion:^(BOOL finished) {}];
+    }
+    
     id photo;
     NSInteger photoIndex = indexPath.row + indexPath.section * self.product.quantityToFulfillOrder;
     if (photoIndex < [self.userSelectedPhotos count]){
@@ -1459,7 +1478,9 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
         }
         else if ([self.product.templateId isEqualToString:vc.offer[@"offer_template"]]){
             self.product.redeemedOffer = vc.offer;
-            //Do nothing, stay on this screen
+            self.sectionsForUpsell = [self numberOfSectionsInCollectionView:self.collectionView]+1;
+            [self.collectionView reloadData];
+            [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:self.product.quantityToFulfillOrder-1 inSection:self.sectionsForUpsell-1] atScrollPosition:UICollectionViewScrollPositionBottom animated:YES];
         }
         else{
             id<OLPrintJob> job = [self addItemToBasketWithTemplateId:self.product.templateId];
@@ -1475,6 +1496,30 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
             [self.navigationController setViewControllers:stack animated:YES];
         }
     }];
+}
+
+- (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView{
+    [self.upsellHintView viewWithTag:10].transform = CGAffineTransformMakeRotation(M_PI_4);
+    [(UILabel *)[self.upsellHintView viewWithTag:20] setText:[NSString stringWithFormat:NSLocalizedString(@"Add %ld more images to claim your discount", @""), self.product.quantityToFulfillOrder]];
+    
+    self.upsellHintView.frame = [self.collectionView convertRect:[self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:self.sectionsForUpsell-1]].frame toView:self.view];
+    
+    NSTimeInterval delay = 0.35;
+    NSTimeInterval duration = 0.3;
+    [UIView animateWithDuration:duration delay:delay options:UIViewAnimationOptionCurveEaseIn animations:^{
+        self.upsellHintView.alpha = 1;
+    } completion:^(BOOL finished) {}];
+    
+}
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView{
+    if (self.upsellHintView.alpha == 0){
+        return;
+    }
+    NSTimeInterval duration = 0.3;
+    [UIView animateWithDuration:duration delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
+        self.upsellHintView.alpha = 0;
+    } completion:^(BOOL finished) {}];
 }
 
 - (NSDictionary *)upsellOfferToShow{

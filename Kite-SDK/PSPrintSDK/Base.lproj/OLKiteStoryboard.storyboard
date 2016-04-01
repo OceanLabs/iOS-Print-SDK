@@ -3514,6 +3514,26 @@ some images!</string>
                                     <constraint firstAttribute="width" constant="215" id="csi-9b-igx"/>
                                 </constraints>
                             </view>
+                            <view alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="OXX-dU-mFa">
+                                <rect key="frame" x="5" y="457" width="215" height="72"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" tag="20" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Add 9 more images to claim your discount" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="X3o-WH-nfC">
+                                        <rect key="frame" x="15" y="0.0" width="200" height="72"/>
+                                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
+                                        <color key="textColor" red="0.48627450979999998" green="0.48627450979999998" blue="0.48627450979999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <view tag="10" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wSU-3T-lGd">
+                                        <rect key="frame" x="15" y="65" width="15" height="15"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    </view>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="72" id="aEU-z9-3Q5"/>
+                                    <constraint firstAttribute="width" constant="215" id="pPl-tP-Ci3"/>
+                                </constraints>
+                            </view>
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xzY-bt-U4S">
                                 <rect key="frame" x="0.0" y="600" width="600" height="51"/>
                                 <constraints>
@@ -3539,8 +3559,10 @@ some images!</string>
                             <constraint firstItem="RIR-nk-fnW" firstAttribute="top" secondItem="GMm-YW-LGw" secondAttribute="bottom" constant="5" id="Fln-cg-Jmy"/>
                             <constraint firstItem="GMm-YW-LGw" firstAttribute="leading" secondItem="Izz-LW-WTZ" secondAttribute="leading" id="Gbd-HH-hL7"/>
                             <constraint firstAttribute="trailing" secondItem="GMm-YW-LGw" secondAttribute="trailing" id="HZq-od-a01"/>
+                            <constraint firstItem="sm1-bU-sZ9" firstAttribute="top" secondItem="OXX-dU-mFa" secondAttribute="bottom" constant="20" id="IF0-fb-dxT"/>
                             <constraint firstItem="fgj-0T-EIH" firstAttribute="leading" secondItem="Izz-LW-WTZ" secondAttribute="leading" constant="5" id="L7k-Yi-AwZ"/>
                             <constraint firstItem="RIR-nk-fnW" firstAttribute="leading" secondItem="Izz-LW-WTZ" secondAttribute="leading" constant="56" id="PZl-Jo-2nm"/>
+                            <constraint firstItem="OXX-dU-mFa" firstAttribute="leading" secondItem="Izz-LW-WTZ" secondAttribute="leading" constant="5" id="R9S-Au-TZm"/>
                             <constraint firstItem="8As-oi-N7r" firstAttribute="top" secondItem="RIR-nk-fnW" secondAttribute="bottom" constant="5" id="VGX-mt-ySa"/>
                             <constraint firstAttribute="trailing" secondItem="xzY-bt-U4S" secondAttribute="trailing" id="efV-4C-oaQ"/>
                             <constraint firstItem="xzY-bt-U4S" firstAttribute="leading" secondItem="Izz-LW-WTZ" secondAttribute="leading" id="fHG-h4-ACu"/>
@@ -3563,6 +3585,7 @@ some images!</string>
                         <outlet property="buttonNext" destination="RIR-nk-fnW" id="6l4-UU-Utk"/>
                         <outlet property="clearButtonContainerView" destination="xzY-bt-U4S" id="oeV-Ze-Saq"/>
                         <outlet property="collectionView" destination="GMm-YW-LGw" id="55o-5L-MaP"/>
+                        <outlet property="upsellHintView" destination="OXX-dU-mFa" id="5lm-n1-eft"/>
                         <outlet property="view" destination="Izz-LW-WTZ" id="SkH-eM-L64"/>
                     </connections>
                 </viewController>
