@@ -1478,12 +1478,10 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
             self.product.redeemedOffer = vc.offer;
             self.sectionsForUpsell = [self numberOfSectionsInCollectionView:self.collectionView]+1;
             [self.collectionView reloadData];
-            if (self.collectionView.contentSize.height > self.collectionView.frame.size.height){
             [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:self.product.quantityToFulfillOrder-1 inSection:self.sectionsForUpsell-1] atScrollPosition:UICollectionViewScrollPositionBottom animated:YES];
-            }
-            else{
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
                 [self showUpsellHintView];
-            }
+                });
         }
         else{
             id<OLPrintJob> job = [self addItemToBasketWithTemplateId:self.product.templateId];
@@ -1499,10 +1497,6 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
             [self.navigationController setViewControllers:stack animated:YES];
         }
     }];
-}
-
-- (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView{
-    [self showUpsellHintView];
 }
 
 - (void)showUpsellHintView{
