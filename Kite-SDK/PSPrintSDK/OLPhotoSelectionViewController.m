@@ -410,7 +410,7 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
         if ([object.asset isKindOfClass:[OLAsset class]] && [object.asset dataSource]){
             [array addObject:[object.asset dataSource]];
         }
-        else if (![object.asset isKindOfClass:[OLAsset class]]){
+        else if (![object.asset isKindOfClass:[OLAsset class]] && object.asset){
             [array addObject:object.asset];
         }
     }
