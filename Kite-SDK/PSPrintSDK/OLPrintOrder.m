@@ -646,13 +646,13 @@ static NSBlockOperation *templateSyncOperation;
             continue;
         }
         OLProductPrintJob *printJob = job;
-        for (NSDictionary *acceptedOffer in printJob.acceptedOffers){
-            if ([acceptedOffer[@"id"] unsignedIntegerValue] == identifier){
+        for (OLUpsellOffer *acceptedOffer in printJob.acceptedOffers){
+            if (acceptedOffer.identifier == identifier){
                 return YES;
             }
         }
-        for (NSDictionary *declinedOffer in printJob.declinedOffers){
-            if ([declinedOffer[@"id"] unsignedIntegerValue] == identifier){
+        for (OLUpsellOffer *declinedOffer in printJob.declinedOffers){
+            if (declinedOffer.identifier == identifier){
                 return YES;
             }
         }
