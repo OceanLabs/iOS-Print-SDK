@@ -172,15 +172,15 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
 @end
 
 @interface OLProductPrintJob ()
-@property (strong, nonatomic) NSMutableSet *declinedOffers;
-@property (strong, nonatomic) NSMutableSet *acceptedOffers;
-@property (strong, nonatomic) NSDictionary *redeemedOffer;
+@property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*declinedOffers;
+@property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*acceptedOffers;
+@property (strong, nonatomic) OLUpsellOffer *redeemedOffer;
 @end
 
 @interface OLProduct ()
-@property (strong, nonatomic) NSMutableArray *declinedOffers;
-@property (strong, nonatomic) NSMutableArray *acceptedOffers;
-@property (strong, nonatomic) NSDictionary *redeemedOffer;
+@property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*declinedOffers;
+@property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*acceptedOffers;
+@property (strong, nonatomic) OLUpsellOffer *redeemedOffer;
 - (BOOL)hasOfferIdBeenUsed:(NSUInteger)identifier;
 @end
 
@@ -1469,12 +1469,12 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
 - (void)userDidAcceptUpsell:(OLUpsellViewController *)vc{
     [self.product.acceptedOffers addObject:vc.offer];
     [vc dismissViewControllerAnimated:NO completion:^{
-        if ([vc.offer[@"prepopulate_photos"] boolValue]){
-            id<OLPrintJob> job = [self addItemToBasketWithTemplateId:vc.offer[@"offer_template"]];
+        if (vc.offer.prepopulatePhotos){
+            id<OLPrintJob> job = [self addItemToBasketWithTemplateId:vc.offer.offerTemplate];
             [(OLProductPrintJob *)job setRedeemedOffer:vc.offer];
             [self doSegueToOrderPreview];
         }
-        else if ([self.product.templateId isEqualToString:vc.offer[@"offer_template"]]){
+        else if ([self.product.templateId isEqualToString:vc.offer.offerTemplate]){
             self.product.redeemedOffer = vc.offer;
             self.sectionsForUpsell = [self numberOfSectionsInCollectionView:self.collectionView]+1;
             [self.collectionView reloadData];
@@ -1487,7 +1487,7 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
             id<OLPrintJob> job = [self addItemToBasketWithTemplateId:self.product.templateId];
             [[(OLProductPrintJob *)job acceptedOffers] addObject:vc.offer];
             
-            OLProduct *offerProduct = [OLProduct productWithTemplateId:vc.offer[@"offer_template"]];
+            OLProduct *offerProduct = [OLProduct productWithTemplateId:vc.offer.offerTemplate];
             UIViewController *nextVc = [self.storyboard instantiateViewControllerWithIdentifier:[OLKiteUtils reviewViewControllerIdentifierForProduct:offerProduct photoSelectionScreen:[OLKiteUtils imageProvidersAvailable:self]]];
             [nextVc safePerformSelector:@selector(setKiteDelegate:) withObject:self.delegate];
             [nextVc safePerformSelector:@selector(setProduct:) withObject:offerProduct];
@@ -1520,26 +1520,26 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
     } completion:^(BOOL finished) {}];
 }
 
-- (NSDictionary *)upsellOfferToShow{
+- (OLUpsellOffer *)upsellOfferToShow{
     NSArray *upsells = self.product.productTemplate.upsellOffers;
     if (upsells.count == 0){
         return nil;
     }
     
-    NSDictionary *offerToShow;
-    for (NSDictionary *offer in upsells){
+    OLUpsellOffer *offerToShow;
+    for (OLUpsellOffer *offer in upsells){
         //Check if offer is valid for this point
-        if ([offer[@"active"] boolValue] && [offer[@"offer_type"] isEqualToString:@"ITEM_ADD"]){
+        if (offer.active && offer.type == OLUpsellOfferTypeItemAdd){
             
-            if ([self.product hasOfferIdBeenUsed:[offer[@"id"] unsignedIntegerValue]]){
+            if ([self.product hasOfferIdBeenUsed:offer.identifier]){
                 continue;
             }
-            if ([[OLKiteUtils kiteVcForViewController:self].printOrder hasOfferIdBeenUsed:[offer[@"id"] unsignedIntegerValue]]){
+            if ([[OLKiteUtils kiteVcForViewController:self].printOrder hasOfferIdBeenUsed:offer.identifier]){
                 continue;
             }
             
             //Find the max priority offer
-            if (!offerToShow || [offerToShow[@"priority"] integerValue] < [offer[@"priority"] integerValue]){
+            if (!offerToShow || offerToShow.priority < offer.priority){
                 offerToShow = offer;
             }
         }
@@ -1551,10 +1551,10 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
 
 - (IBAction)onButtonNextClicked {
     if ([self shouldGoToOrderPreview]) {
-        NSDictionary *offer = [self upsellOfferToShow];
+        OLUpsellOffer *offer = [self upsellOfferToShow];
         BOOL shouldShowOffer = offer != nil;
-        shouldShowOffer &= [offer[@"min_units"] integerValue] <= self.userSelectedPhotos.count;
-        shouldShowOffer &= [offer[@"max_units"] integerValue] == 0 || [offer[@"max_units"] integerValue] >= self.userSelectedPhotos.count;
+        shouldShowOffer &= offer.minUnits <= self.userSelectedPhotos.count;
+        shouldShowOffer &= offer.maxUnits == 0 || offer.maxUnits >= self.userSelectedPhotos.count;
         if (shouldShowOffer){
             OLUpsellViewController *c = [self.storyboard instantiateViewControllerWithIdentifier:@"OLUpsellViewController"];
             if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8){

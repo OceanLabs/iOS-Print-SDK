@@ -28,6 +28,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "OLUpsellOffer.h"
 
 @class OLUpsellViewController;
 @protocol OLUpsellViewControllerDelegate <NSObject>
@@ -40,6 +41,6 @@
 @interface OLUpsellViewController : UIViewController
 
 @property (weak, nonatomic) id<OLUpsellViewControllerDelegate> delegate;
-@property (strong, nonatomic) NSDictionary *offer;
+@property (strong, nonatomic) OLUpsellOffer *offer;
 
 @end

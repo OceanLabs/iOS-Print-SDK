@@ -49,9 +49,9 @@ static NSString *const kKeyRedeemedOffer = @"co.oceanlabs.pssdk.kKeyRedeemedOffe
 @property (nonatomic, strong) NSString *templateId;
 @property (nonatomic, strong) NSArray *assets;
 @property (strong, nonatomic) NSMutableDictionary *options;
-@property (strong, nonatomic) NSMutableSet *declinedOffers;
-@property (strong, nonatomic) NSMutableSet *acceptedOffers;
-@property (strong, nonatomic) NSDictionary *redeemedOffer;
+@property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*declinedOffers;
+@property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*acceptedOffers;
+@property (strong, nonatomic) OLUpsellOffer *redeemedOffer;
 @end
 
 @implementation OLPhotobookPrintJob
@@ -137,15 +137,15 @@ static NSString *const kKeyRedeemedOffer = @"co.oceanlabs.pssdk.kKeyRedeemedOffe
     }
     
     if (self.acceptedOffers.count > 0){
-        id upsell = [self.acceptedOffers.allObjects.firstObject objectForKey:@"upsell_id"];
+        NSUInteger upsell = [self.acceptedOffers.allObjects.firstObject identifier];
         if (upsell){
-            json[@"upsell_id"] = upsell;
+            json[@"upsell_id"] = [NSNumber numberWithUnsignedInteger:upsell];
         }
     }
     if (self.redeemedOffer){
-        id redeemed = [self.redeemedOffer objectForKey:@"id"];
+        NSUInteger redeemed = self.redeemedOffer.identifier;
         if (redeemed){
-            json[@"redeemed_upsell"] = redeemed;
+            json[@"redeemed_upsell"] = [NSNumber numberWithUnsignedInteger:redeemed];
         }
     }
     

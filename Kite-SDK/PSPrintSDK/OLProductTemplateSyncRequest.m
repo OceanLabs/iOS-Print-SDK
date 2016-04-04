@@ -235,10 +235,10 @@
                                     t.gridCountY = [gridCountY integerValue];
                                     t.supportedOptions = supportedOptions;
                                     
-                                    NSMutableArray *upsellOffersClean = [[NSMutableArray alloc] init];
-                                    for (id offer in upsellOffers){
-                                        if ([offer isKindOfClass:[NSDictionary class]]){
-                                            [upsellOffersClean addObject:offer];
+                                    NSMutableArray <OLUpsellOffer *>*upsellOffersClean = [[NSMutableArray alloc] init];
+                                    for (NSDictionary *offerDict in upsellOffers){
+                                        if ([offerDict isKindOfClass:[NSDictionary class]]){
+                                            [upsellOffersClean addObject:[OLUpsellOffer upsellOfferWithDictionary:offerDict]];
                                         }
                                     }
                                     t.upsellOffers = upsellOffersClean;

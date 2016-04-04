@@ -108,9 +108,9 @@ static id stringOrEmptyString(NSString *str) {
 @end
 
 @interface OLProductPrintJob ()
-@property (strong, nonatomic) NSMutableSet *declinedOffers;
-@property (strong, nonatomic) NSMutableSet *acceptedOffers;
-@property (strong, nonatomic) NSDictionary *redeemedOffer;
+@property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*declinedOffers;
+@property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*acceptedOffers;
+@property (strong, nonatomic) OLUpsellOffer *redeemedOffer;
 @end
 
 static NSBlockOperation *templateSyncOperation;
@@ -656,7 +656,7 @@ static NSBlockOperation *templateSyncOperation;
                 return YES;
             }
         }
-        if ([[printJob.redeemedOffer objectForKey:@"id"] unsignedIntegerValue] == identifier){
+        if (printJob.redeemedOffer.identifier == identifier){
             return YES;
         }
         

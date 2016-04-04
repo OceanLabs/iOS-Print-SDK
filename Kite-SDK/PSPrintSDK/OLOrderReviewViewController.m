@@ -85,15 +85,15 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
 @end
 
 @interface OLProduct ()
-@property (strong, nonatomic) NSMutableArray *declinedOffers;
-@property (strong, nonatomic) NSMutableArray *acceptedOffers;
-@property (strong, nonatomic) NSDictionary *redeemedOffer;
+@property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*declinedOffers;
+@property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*acceptedOffers;
+@property (strong, nonatomic) OLUpsellOffer *redeemedOffer;
 @end
 
 @interface OLProductPrintJob ()
-@property (strong, nonatomic) NSMutableSet *declinedOffers;
-@property (strong, nonatomic) NSMutableSet *acceptedOffers;
-@property (strong, nonatomic) NSDictionary *redeemedOffer;
+@property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*declinedOffers;
+@property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*acceptedOffers;
+@property (strong, nonatomic) OLUpsellOffer *redeemedOffer;
 @end
 
 @interface OLOrderReviewViewController () <OLCheckoutDelegate, UIAlertViewDelegate, UICollectionViewDelegateFlowLayout,
@@ -322,8 +322,8 @@ UIViewControllerPreviewingDelegate>
             job.uuid = self.product.uuid;
         }
     }
-    [job.acceptedOffers addObjectsFromArray:self.product.acceptedOffers];
-    [job.declinedOffers addObjectsFromArray:self.product.declinedOffers];
+    [job.acceptedOffers addObjectsFromArray:self.product.acceptedOffers.allObjects];
+    [job.declinedOffers addObjectsFromArray:self.product.declinedOffers.allObjects];
     job.redeemedOffer = self.product.redeemedOffer;
     self.product.uuid = job.uuid;
     self.editingPrintJob = job;

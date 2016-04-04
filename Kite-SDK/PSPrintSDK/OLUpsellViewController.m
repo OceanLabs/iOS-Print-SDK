@@ -63,19 +63,17 @@
     [self.acceptButton makeRoundRectWithRadius:2];
     [self.declineButton makeRoundRectWithRadius:2];
     
-    self.product = [OLProduct productWithTemplateId:self.offer[@"offer_template"]];
+    self.product = [OLProduct productWithTemplateId:self.offer.offerTemplate];
     [self.product setCoverImageToImageView:self.imageView];
     
     
     NSDecimalNumber *discountedCost = self.product.unitCostDecimalNumber;
-    if ([self.offer[@"discount_percentage"] isKindOfClass:[NSNumber class]]){
-        
-        NSDecimalNumber *discount = [NSDecimalNumber decimalNumberWithString:@"100.0"];
-        discount = [discount decimalNumberBySubtracting:[NSDecimalNumber decimalNumberWithDecimal:[self.offer[@"discount_percentage"] decimalValue]]];
-        discount = [discount decimalNumberByDividingBy:[NSDecimalNumber decimalNumberWithString:@"100.0"]];
-        discountedCost = [discountedCost decimalNumberByMultiplyingBy:discount];
-        
-    }
+    
+    NSDecimalNumber *discount = [NSDecimalNumber decimalNumberWithString:@"100.0"];
+    discount = [discount decimalNumberBySubtracting:[NSDecimalNumber decimalNumberWithDecimal:[self.offer.discountPercentage decimalValue]]];
+    discount = [discount decimalNumberByDividingBy:[NSDecimalNumber decimalNumberWithString:@"100.0"]];
+    discountedCost = [discountedCost decimalNumberByMultiplyingBy:discount];
+    
     NSString *discountedString = [discountedCost formatCostForCurrencyCode:[self.product currencyCode]];
     NSString *bodyString;
     

@@ -131,15 +131,15 @@ static const CGFloat kBookEdgePadding = 38;
 @end
 
 @interface OLProduct ()
-@property (strong, nonatomic) NSMutableArray *declinedOffers;
-@property (strong, nonatomic) NSMutableArray *acceptedOffers;
-@property (strong, nonatomic) NSDictionary *redeemedOffer;
+@property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*declinedOffers;
+@property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*acceptedOffers;
+@property (strong, nonatomic) OLUpsellOffer *redeemedOffer;
 @end
 
 @interface OLPhotobookPrintJob ()
-@property (strong, nonatomic) NSMutableSet *declinedOffers;
-@property (strong, nonatomic) NSMutableSet *acceptedOffers;
-@property (strong, nonatomic) NSDictionary *redeemedOffer;
+@property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*declinedOffers;
+@property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*acceptedOffers;
+@property (strong, nonatomic) OLUpsellOffer *redeemedOffer;
 @end
 
 @interface OLPhotobookViewController () <UIPageViewControllerDataSource, UIPageViewControllerDelegate, UIGestureRecognizerDelegate,
@@ -854,8 +854,8 @@ UINavigationControllerDelegate
             job.uuid = self.product.uuid;
         }
     }
-    [job.acceptedOffers addObjectsFromArray:self.product.acceptedOffers];
-    [job.declinedOffers addObjectsFromArray:self.product.declinedOffers];
+    [job.acceptedOffers addObjectsFromArray:self.product.acceptedOffers.allObjects];
+    [job.declinedOffers addObjectsFromArray:self.product.declinedOffers.allObjects];
     job.redeemedOffer = self.product.redeemedOffer;
     self.product.uuid = job.uuid;
     self.editingPrintJob = job;

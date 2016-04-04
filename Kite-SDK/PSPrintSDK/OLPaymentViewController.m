@@ -109,9 +109,9 @@ static BOOL haveLoadedAtLeastOnce = NO;
 
 @interface OLProductPrintJob ()
 @property (strong, nonatomic) NSMutableDictionary *options;
-@property (strong, nonatomic) NSMutableSet *declinedOffers;
-@property (strong, nonatomic) NSMutableSet *acceptedOffers;
-@property (strong, nonatomic) NSDictionary *redeemedOffer;
+@property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*declinedOffers;
+@property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*acceptedOffers;
+@property (strong, nonatomic) OLUpsellOffer *redeemedOffer;
 @end
 
 @interface OLKiteViewController ()

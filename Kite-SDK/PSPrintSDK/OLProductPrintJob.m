@@ -52,9 +52,9 @@ static id stringOrEmptyString(NSString *str) {
 @property (nonatomic, strong) NSString *templateId;
 @property (nonatomic, strong) NSArray *assets;
 @property (strong, nonatomic) NSMutableDictionary *options;
-@property (strong, nonatomic) NSMutableSet *declinedOffers;
-@property (strong, nonatomic) NSMutableSet *acceptedOffers;
-@property (strong, nonatomic) NSDictionary *redeemedOffer;
+@property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*declinedOffers;
+@property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*acceptedOffers;
+@property (strong, nonatomic) OLUpsellOffer *redeemedOffer;
 @end
 
 @implementation OLProductPrintJob
@@ -206,9 +206,9 @@ static id stringOrEmptyString(NSString *str) {
     json[@"frame_contents"] = @{};
     
     if (self.acceptedOffers.count > 0){
-        id upsell = [self.acceptedOffers.allObjects.firstObject objectForKey:@"upsell_id"];
+        NSUInteger upsell = [self.acceptedOffers.allObjects.firstObject identifier];
         if (upsell){
-            json[@"upsell_id"] = upsell;
+            json[@"upsell_id"] = [NSNumber numberWithUnsignedInteger:upsell];
         }
     }
     

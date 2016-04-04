@@ -49,25 +49,23 @@ typedef enum {
 @end
 
 @interface OLProduct ()
-
-@property (strong, nonatomic) NSMutableArray *declinedOffers;
-@property (strong, nonatomic) NSMutableArray *acceptedOffers;
-@property (strong, nonatomic) NSDictionary *redeemedOffer;
-
+@property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*declinedOffers;
+@property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*acceptedOffers;
+@property (strong, nonatomic) OLUpsellOffer *redeemedOffer;
 @end
 
 @implementation OLProduct
 
--(NSMutableArray *) declinedOffers{
+-( NSMutableSet <OLUpsellOffer *> *) declinedOffers{
     if (!_declinedOffers){
-        _declinedOffers = [[NSMutableArray alloc] init];
+        _declinedOffers = [[ NSMutableSet <OLUpsellOffer *> alloc] init];
     }
     return _declinedOffers;
 }
 
--(NSMutableArray *) acceptedOffers{
+-( NSMutableSet <OLUpsellOffer *> *) acceptedOffers{
     if (!_acceptedOffers){
-        _acceptedOffers = [[NSMutableArray alloc] init];
+        _acceptedOffers = [[ NSMutableSet <OLUpsellOffer *> alloc] init];
     }
     return _acceptedOffers;
 }
@@ -201,17 +199,17 @@ typedef enum {
 }
 
 - (BOOL)hasOfferIdBeenUsed:(NSUInteger)identifier{
-    for (NSDictionary *acceptedOffer in self.acceptedOffers){
-        if ([acceptedOffer[@"id"] unsignedIntegerValue] == identifier){
+    for (OLUpsellOffer *acceptedOffer in self.acceptedOffers){
+        if (acceptedOffer.identifier == identifier){
             return YES;
         }
     }
-    for (NSDictionary *declinedOffer in self.declinedOffers){
-        if ([declinedOffer[@"id"] unsignedIntegerValue] == identifier){
+    for (OLUpsellOffer *declinedOffer in self.declinedOffers){
+        if (declinedOffer.identifier == identifier){
             return YES;
         }
     }
-    if ([[self.redeemedOffer objectForKey:@"id"] unsignedIntegerValue] == identifier){
+    if (self.redeemedOffer.identifier == identifier){
         return YES;
     }
     return NO;

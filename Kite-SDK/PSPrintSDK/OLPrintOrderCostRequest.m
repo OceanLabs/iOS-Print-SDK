@@ -66,9 +66,9 @@ static NSString *urlencode(NSString *str) {
 }
 
 @interface OLProductPrintJob ()
-@property (strong, nonatomic) NSMutableSet *declinedOffers;
-@property (strong, nonatomic) NSMutableSet *acceptedOffers;
-@property (strong, nonatomic) NSDictionary *redeemedOffer;
+@property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*declinedOffers;
+@property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*acceptedOffers;
+@property (strong, nonatomic) OLUpsellOffer *redeemedOffer;
 
 @end
 
@@ -87,14 +87,14 @@ static NSUInteger cacheOrderHash; // cached response is only valid for orders wi
     NSMutableArray *basket = [[NSMutableArray alloc] initWithCapacity:order.jobs.count];
     for (id<OLPrintJob> job in order.jobs){
         NSMutableDictionary *jobDict = [[NSMutableDictionary alloc] init];
-        NSSet *offers = [(NSObject *)job safePerformSelectorWithReturn:@selector(acceptedOffers) withObject:nil];
-        if (offers.count > 0 && [offers.allObjects.firstObject objectForKey:@"id"]){
-            jobDict[@"triggered_upsell"] = [offers.allObjects.firstObject objectForKey:@"id"];
+        NSSet <OLUpsellOffer *>*offers = [(NSObject *)job safePerformSelectorWithReturn:@selector(acceptedOffers) withObject:nil];
+        if (offers.count > 0 && [offers.allObjects.firstObject identifier]){
+            jobDict[@"triggered_upsell"] = [NSNumber numberWithUnsignedInteger:[offers.allObjects.firstObject identifier]];
         }
         if ([job respondsToSelector:@selector(redeemedOffer)]){
-            id redeemed = [[(OLProductPrintJob *)job redeemedOffer] objectForKey:@"id"];
+            NSUInteger redeemed = [(OLProductPrintJob *)job redeemedOffer].identifier;
             if (redeemed){
-                jobDict[@"redeemed_upsell"] = redeemed;
+                jobDict[@"redeemed_upsell"] = [NSNumber numberWithUnsignedInteger:redeemed];
             }
         }
         if (job.address.country){
