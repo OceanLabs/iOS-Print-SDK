@@ -1904,6 +1904,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         if ([asset.dataSource isKindOfClass:[OLPrintPhoto class]]){
             printPhoto = (OLPrintPhoto *)asset.dataSource;
         }
+        [printPhoto unloadImage];
         if (![addedAssetsUUIDs containsObject:printPhoto.uuid]){
             [addedAssetsUUIDs addObject:printPhoto.uuid];
             [userSelectedPhotos addObject:printPhoto];
