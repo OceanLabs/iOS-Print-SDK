@@ -46,11 +46,11 @@ static NSString *const kKeyOfferMaxUnits = @"co.oceanlabs.pssdk.kKeyOfferMaxUnit
     if ([offerDict[@"priority"] isKindOfClass:[NSNumber class]]){
         offer.priority = [offerDict[@"priority"] integerValue];
     }
-    if ([offerDict[@"min_units"] isKindOfClass:[NSNumber class]]){
-        offer.minUnits = [offerDict[@"min_units"] integerValue];
+    if ([offerDict[@"min_valid_units"] isKindOfClass:[NSNumber class]]){
+        offer.minUnits = [offerDict[@"min_valid_units"] integerValue];
     }
-    if ([offerDict[@"max_units"] isKindOfClass:[NSNumber class]]){
-        offer.maxUnits = [offerDict[@"max_units"] integerValue];
+    if ([offerDict[@"max_valid_units"] isKindOfClass:[NSNumber class]]){
+        offer.maxUnits = [offerDict[@"max_valid_units"] integerValue];
     }
     
     return offer;
