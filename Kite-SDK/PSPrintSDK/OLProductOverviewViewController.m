@@ -45,6 +45,7 @@
 #import "OLProductDetailsViewController.h"
 #import "UIViewController+OLMethods.h"
 #import "OLPaymentViewController.h"
+#import "OLUpsellViewController.h"
 
 @interface OLKiteViewController ()
 
@@ -53,8 +54,23 @@
 
 @end
 
+@interface OLProduct ()
+@property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*declinedOffers;
+@property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*acceptedOffers;
+@property (strong, nonatomic) OLUpsellOffer *redeemedOffer;
+- (BOOL)hasOfferIdBeenUsed:(NSUInteger)identifier;
+@end
+
+@interface OLProductPrintJob ()
+@property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*declinedOffers;
+@property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*acceptedOffers;
+@property (strong, nonatomic) OLUpsellOffer *redeemedOffer;
+
+@end
+
 @interface OLPrintOrder ()
 - (void)saveOrder;
+- (BOOL)hasOfferIdBeenUsed:(NSUInteger)identifier;
 @end
 
 @interface OLProductOverviewPageContentViewController ()
@@ -62,12 +78,11 @@
 @end
 
 @interface OLProduct (Private)
-
 -(void)setProductPhotography:(NSUInteger)i toImageView:(UIImageView *)imageView;
-
+- (BOOL)hasOfferIdBeenUsed:(NSUInteger)identifier;
 @end
 
-@interface OLProductOverviewViewController () <UIPageViewControllerDataSource, OLProductOverviewPageContentViewControllerDelegate, OLProductDetailsDelegate, UIPageViewControllerDelegate>
+@interface OLProductOverviewViewController () <UIPageViewControllerDataSource, OLProductOverviewPageContentViewControllerDelegate, OLProductDetailsDelegate, UIPageViewControllerDelegate, OLUpsellViewControllerDelegate>
 @property (strong, nonatomic) UIPageViewController *pageController;
 @property (strong, nonatomic) IBOutlet UIPageControl *pageControl;
 @property (weak, nonatomic) IBOutlet UILabel *costLabel;
@@ -325,6 +340,55 @@
     [self onButtonStartClicked:sender];
 }
 
+- (OLUpsellOffer *)upsellOfferToShow{
+    NSArray *upsells = self.product.productTemplate.upsellOffers;
+    if (upsells.count == 0){
+        return nil;
+    }
+    
+    OLUpsellOffer *offerToShow;
+    for (OLUpsellOffer *offer in upsells){
+        //Check if offer is valid for this point
+        if (offer.active && offer.type == OLUpsellOfferTypeItemAdd){
+            
+            if ([self.product hasOfferIdBeenUsed:offer.identifier]){
+                continue;
+            }
+            if ([[OLKiteUtils kiteVcForViewController:self].printOrder hasOfferIdBeenUsed:offer.identifier]){
+                continue;
+            }
+            
+            //Find the max priority offer
+            if (!offerToShow || offerToShow.priority < offer.priority){
+                offerToShow = offer;
+            }
+        }
+    }
+    
+    return offerToShow;
+}
+
+-(BOOL) shouldGoToCheckout{
+    OLUpsellOffer *offer = [self upsellOfferToShow];
+    BOOL shouldShowOffer = offer != nil;
+    shouldShowOffer &= offer.minUnits <= self.userSelectedPhotos.count;
+    shouldShowOffer &= offer.maxUnits == 0 || offer.maxUnits >= self.userSelectedPhotos.count;
+    if (shouldShowOffer){
+        OLUpsellViewController *c = [self.storyboard instantiateViewControllerWithIdentifier:@"OLUpsellViewController"];
+        if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8){
+            c.providesPresentationContextTransitionStyle = true;
+            c.definesPresentationContext = true;
+        }
+        c.modalPresentationStyle = UIModalPresentationOverCurrentContext;
+        c.delegate = self;
+        c.offer = offer;
+        [self presentViewController:c animated:NO completion:NULL];
+        return NO;
+    }
+    
+    return YES;
+}
+
 - (IBAction)onButtonStartClicked:(id)sender {
     if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder && self.product.productTemplate.templateUI != kOLTemplateUINonCustomizable){
         UIViewController *vc;
@@ -352,7 +416,9 @@
         return;
     }
     else if (self.product.productTemplate.templateUI == kOLTemplateUINonCustomizable){
-        [self doCheckout];
+        if ([self shouldGoToCheckout]){
+            [self doCheckout];
+        }
         return;
     }
     
@@ -478,6 +544,50 @@
 #endif
         }];
     }
+}
+
+#pragma mark OLUpsellViewControllerDelegate
+
+- (void)userDidDeclineUpsell:(OLUpsellViewController *)vc{
+    [self.product.declinedOffers addObject:vc.offer];
+    [vc dismissViewControllerAnimated:NO completion:^{
+        [self doCheckout];
+    }];
+}
+
+- (id<OLPrintJob>)addItemToBasketWithTemplateId:(NSString *)templateId{
+    NSMutableArray *assets = [[NSMutableArray alloc] init];
+    for (OLPrintPhoto *photo in self.userSelectedPhotos){
+        [assets addObject:[OLAsset assetWithDataSource:[photo copy]]];
+    }
+    
+    id<OLPrintJob> job;
+    if ([OLProductTemplate templateWithId:templateId].templateUI == kOLTemplateUIPhotobook){
+        job = [OLPrintJob photobookWithTemplateId:templateId OLAssets:assets frontCoverOLAsset:nil backCoverOLAsset:nil];
+    }
+    else{
+        job = [OLPrintJob printJobWithTemplateId:templateId OLAssets:assets];
+    }
+    
+    [[OLKiteUtils kiteVcForViewController:self].printOrder addPrintJob:job];
+    return job;
+}
+
+- (void)userDidAcceptUpsell:(OLUpsellViewController *)vc{
+    [self.product.acceptedOffers addObject:vc.offer];
+    [vc dismissViewControllerAnimated:NO completion:^{
+        id<OLPrintJob> job = [self addItemToBasketWithTemplateId:self.product.templateId];
+        [[(OLProductPrintJob *)job acceptedOffers] addObject:vc.offer];
+        
+        OLProduct *offerProduct = [OLProduct productWithTemplateId:vc.offer.offerTemplate];
+        UIViewController *nextVc = [self.storyboard instantiateViewControllerWithIdentifier:[OLKiteUtils reviewViewControllerIdentifierForProduct:offerProduct photoSelectionScreen:[OLKiteUtils imageProvidersAvailable:self]]];
+        [nextVc safePerformSelector:@selector(setKiteDelegate:) withObject:self.delegate];
+        [nextVc safePerformSelector:@selector(setProduct:) withObject:offerProduct];
+        NSMutableArray *stack = [self.navigationController.viewControllers mutableCopy];
+        [stack removeObject:self];
+        [stack addObject:nextVc];
+        [self.navigationController setViewControllers:stack animated:YES];
+    }];
 }
 
 #pragma mark - UIPageViewControllerDataSource

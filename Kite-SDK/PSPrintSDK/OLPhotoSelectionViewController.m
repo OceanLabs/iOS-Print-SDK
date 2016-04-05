@@ -168,7 +168,7 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
 @end
 
 @interface OLPrintOrder ()
-- (BOOL)hasOfferIdBeenUsed:(NSInteger)identifier;
+- (BOOL)hasOfferIdBeenUsed:(NSUInteger)identifier;
 @end
 
 @interface OLProductPrintJob ()

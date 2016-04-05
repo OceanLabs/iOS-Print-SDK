@@ -103,7 +103,7 @@
 @end
 
 @interface OLPrintOrder (Private)
-- (BOOL)hasOfferIdBeenUsed:(NSInteger)identifier;
+- (BOOL)hasOfferIdBeenUsed:(NSUInteger)identifier;
 - (void)saveOrder;
 @end
 
