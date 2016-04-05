@@ -218,7 +218,12 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
 - (void)viewDidLayoutSubviews{
     [super viewDidLayoutSubviews];
     
-    self.collectionView.contentInset = UIEdgeInsetsMake(0, 0, self.view.frame.size.height - self.buttonNext.frame.origin.y + 5, 0);
+    CGFloat sectionHeight = [self collectionView:self.collectionView layout:self.collectionView.collectionViewLayout sizeForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]].height * ceil((CGFloat)self.product.quantityToFulfillOrder / [self numberOfCellsPerRow]);
+    sectionHeight += [self collectionView:self.collectionView layout:self.collectionView.collectionViewLayout referenceSizeForHeaderInSection:0].height;
+    CGFloat whitespaceHeight = MAX(0, self.collectionView.frame.size.height - sectionHeight);
+    self.collectionView.contentInset = UIEdgeInsetsMake(self.collectionView.contentInset.top, self.collectionView.contentInset.left, self.collectionView.contentInset.bottom + whitespaceHeight, self.collectionView.contentInset.right);
+    
+    self.collectionView.contentInset = UIEdgeInsetsMake(0, 0, MAX(self.view.frame.size.height - self.buttonNext.frame.origin.y + 5, whitespaceHeight), 0);
 }
 
 - (void)viewWillAppear:(BOOL)animated{
@@ -1479,9 +1484,6 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
             self.sectionsForUpsell = [self numberOfSectionsInCollectionView:self.collectionView]+1;
             [self.collectionView reloadData];
             [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:self.product.quantityToFulfillOrder-1 inSection:self.sectionsForUpsell-1] atScrollPosition:UICollectionViewScrollPositionBottom animated:YES];
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-                [self showUpsellHintView];
-                });
         }
         else{
             id<OLPrintJob> job = [self addItemToBasketWithTemplateId:self.product.templateId];
@@ -1570,6 +1572,11 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
             [self doSegueToOrderPreview];
         }
     }
+}
+
+- (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView{
+    [self showUpsellHintView];
+    
 }
 
 -(void)doSegueToOrderPreview{
