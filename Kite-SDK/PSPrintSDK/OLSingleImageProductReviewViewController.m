@@ -482,7 +482,7 @@ static BOOL hasMoved;
     OLUpsellOffer *offerToShow;
     for (OLUpsellOffer *offer in upsells){
         //Check if offer is valid for this point
-        if (offer.active && offer.type == OLUpsellOfferTypeItemAdd && ![self.product.templateId isEqualToString:offer.offerTemplate]){
+        if (offer.active && offer.type == OLUpsellOfferTypeItemAdd){
             
             if ([self.product hasOfferIdBeenUsed:offer.identifier]){
                 continue;
@@ -1025,9 +1025,6 @@ static BOOL hasMoved;
             id<OLPrintJob> job = [self addItemToBasketWithTemplateId:vc.offer.offerTemplate];
             [(OLProductPrintJob *)job setRedeemedOffer:vc.offer];
             [self doCheckout];
-        }
-        else if ([self.product.templateId isEqualToString:vc.offer.offerTemplate]){
-            NSAssert(NO, @"Invalid case, should've been discarded earlier");
         }
         else{
             id<OLPrintJob> job = [self addItemToBasketWithTemplateId:self.product.templateId];
