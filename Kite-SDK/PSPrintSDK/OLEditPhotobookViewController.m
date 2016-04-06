@@ -132,6 +132,13 @@ UINavigationControllerDelegate>
 
 @implementation OLEditPhotobookViewController
 
+-(NSMutableArray *) userSelectedPhotos{
+    if (!_userSelectedPhotos){
+        _userSelectedPhotos = [[NSMutableArray alloc] init];
+    }
+    return _userSelectedPhotos;
+}
+
 - (void)setAnimating:(BOOL)animating{
     _animating = animating;
     self.collectionView.scrollEnabled = !animating;
