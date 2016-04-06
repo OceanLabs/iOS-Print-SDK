@@ -31,6 +31,7 @@
 #import "OLUpsellOffer.h"
 
 @class OLUpsellViewController;
+@class OLProduct;
 @protocol OLUpsellViewControllerDelegate <NSObject>
 
 - (void)userDidAcceptUpsell:(OLUpsellViewController *)vc;
@@ -42,5 +43,6 @@
 
 @property (weak, nonatomic) id<OLUpsellViewControllerDelegate> delegate;
 @property (strong, nonatomic) OLUpsellOffer *offer;
+@property (strong, nonatomic) OLProduct *triggeredProduct;
 
 @end

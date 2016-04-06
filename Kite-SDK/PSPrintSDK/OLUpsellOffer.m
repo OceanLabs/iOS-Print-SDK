@@ -17,7 +17,8 @@ static NSString *const kKeyOfferPriority = @"co.oceanlabs.pssdk.kKeyOfferPriorit
 static NSString *const kKeyOfferTemplate = @"co.oceanlabs.pssdk.kKeyOfferTemplate";
 static NSString *const kKeyOfferMinUnits = @"co.oceanlabs.pssdk.kKeyOfferMinUnits";
 static NSString *const kKeyOfferMaxUnits = @"co.oceanlabs.pssdk.kKeyOfferMaxUnits";
-
+static NSString *const kKeyOfferHeaderText = @"co.oceanlabs.pssdk.kKeyOfferHeaderText";
+static NSString *const kKeyOfferText = @"co.oceanlabs.pssdk.kKeyOfferText";
 
 @implementation OLUpsellOffer
 
@@ -52,9 +53,19 @@ static NSString *const kKeyOfferMaxUnits = @"co.oceanlabs.pssdk.kKeyOfferMaxUnit
     if ([offerDict[@"max_valid_units"] isKindOfClass:[NSNumber class]]){
         offer.maxUnits = [offerDict[@"max_valid_units"] integerValue];
     }
+    if ([offerDict[@"upsell_header_text"] isKindOfClass:[NSString class]]){
+        offer.headerText = offerDict[@"upsell_header_text"];
+    }
+    if ([offerDict[@"upsell_text"] isKindOfClass:[NSString class]]){
+        offer.text = offerDict[@"upsell_text"];
+    }
     
     return offer;
 }
+
+//-(BOOL)prepopulatePhotos{
+//    return YES;
+//}
 
 - (id)copyWithZone:(NSZone *)zone{
     OLUpsellOffer *copy = [[OLUpsellOffer alloc] init];
@@ -67,6 +78,8 @@ static NSString *const kKeyOfferMaxUnits = @"co.oceanlabs.pssdk.kKeyOfferMaxUnit
     copy.offerTemplate = [self.offerTemplate copyWithZone:zone];
     copy.maxUnits = self.maxUnits;
     copy.minUnits = self.minUnits;
+    copy.headerText = self.headerText;
+    copy.text = self.text;
     
     return copy;
 }
@@ -82,6 +95,8 @@ static NSString *const kKeyOfferMaxUnits = @"co.oceanlabs.pssdk.kKeyOfferMaxUnit
     [aCoder encodeObject:self.offerTemplate forKey:kKeyOfferTemplate];
     [aCoder encodeInteger:self.maxUnits forKey:kKeyOfferMaxUnits];
     [aCoder encodeInteger:self.minUnits forKey:kKeyOfferMinUnits];
+    [aCoder encodeObject:self.headerText forKey:kKeyOfferHeaderText];
+    [aCoder encodeObject:self.text forKey:kKeyOfferText];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
@@ -95,6 +110,8 @@ static NSString *const kKeyOfferMaxUnits = @"co.oceanlabs.pssdk.kKeyOfferMaxUnit
         self.offerTemplate = [aDecoder decodeObjectForKey:kKeyOfferTemplate];
         self.minUnits = [aDecoder decodeIntegerForKey:kKeyOfferMinUnits];
         self.maxUnits = [aDecoder decodeIntegerForKey:kKeyOfferMaxUnits];
+        self.headerText = [aDecoder decodeObjectForKey:kKeyOfferHeaderText];
+        self.text = [aDecoder decodeObjectForKey:kKeyOfferText];
     }
     
     return self;

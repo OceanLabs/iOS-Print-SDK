@@ -663,9 +663,15 @@ UINavigationControllerDelegate, OLUpsellViewControllerDelegate
 }
 
 - (id<OLPrintJob>)addItemToBasketWithTemplateId:(NSString *)templateId{
+    OLProduct *offerProduct = [OLProduct productWithTemplateId:templateId];
     NSMutableArray *assets = [[NSMutableArray alloc] init];
-    for (OLPrintPhoto *photo in self.userSelectedPhotos){
-        [assets addObject:[OLAsset assetWithDataSource:[photo copy]]];
+    if (offerProduct.quantityToFulfillOrder == 1){
+        [assets addObject:[OLAsset assetWithDataSource:[self.userSelectedPhotos.firstObject copy]]];
+    }
+    else{
+        for (OLPrintPhoto *photo in self.userSelectedPhotos){
+            [assets addObject:[OLAsset assetWithDataSource:[photo copy]]];
+        }
     }
     
     id<OLPrintJob> job;
@@ -689,17 +695,16 @@ UINavigationControllerDelegate, OLUpsellViewControllerDelegate
             [self doCheckout];
         }
         else{
-            id<OLPrintJob> job = [self addItemToBasketWithTemplateId:self.product.templateId];
-            [[(OLPhotobookPrintJob *)job acceptedOffers] addObject:vc.offer];
-            
-            OLProduct *offerProduct = [OLProduct productWithTemplateId:vc.offer.offerTemplate];
-            UIViewController *nextVc = [self.storyboard instantiateViewControllerWithIdentifier:[OLKiteUtils reviewViewControllerIdentifierForProduct:offerProduct photoSelectionScreen:[OLKiteUtils imageProvidersAvailable:self]]];
-            [nextVc safePerformSelector:@selector(setKiteDelegate:) withObject:self.delegate];
-            [nextVc safePerformSelector:@selector(setProduct:) withObject:offerProduct];
-            NSMutableArray *stack = [self.navigationController.viewControllers mutableCopy];
-            [stack removeObject:self];
-            [stack addObject:nextVc];
-            [self.navigationController setViewControllers:stack animated:YES];
+            [self saveJobWithCompletionHandler:^{
+                OLProduct *offerProduct = [OLProduct productWithTemplateId:vc.offer.offerTemplate];
+                UIViewController *nextVc = [self.storyboard instantiateViewControllerWithIdentifier:[OLKiteUtils reviewViewControllerIdentifierForProduct:offerProduct photoSelectionScreen:[OLKiteUtils imageProvidersAvailable:self]]];
+                [nextVc safePerformSelector:@selector(setKiteDelegate:) withObject:self.delegate];
+                [nextVc safePerformSelector:@selector(setProduct:) withObject:offerProduct];
+                NSMutableArray *stack = [self.navigationController.viewControllers mutableCopy];
+                [stack removeObject:self];
+                [stack addObject:nextVc];
+                [self.navigationController setViewControllers:stack animated:YES];
+            }];
         }
     }];
 }
@@ -837,9 +842,11 @@ UINavigationControllerDelegate, OLUpsellViewControllerDelegate
 -(BOOL) shouldGoToCheckout{
     OLUpsellOffer *offer = [self upsellOfferToShow];
     BOOL shouldShowOffer = offer != nil;
-    shouldShowOffer &= offer.minUnits <= self.userSelectedPhotos.count;
-    shouldShowOffer &= offer.maxUnits == 0 || offer.maxUnits >= self.userSelectedPhotos.count;
-    shouldShowOffer &= [OLProduct productWithTemplateId:offer.offerTemplate] != nil;
+    if (offer){
+        shouldShowOffer &= offer.minUnits <= self.userSelectedPhotos.count;
+        shouldShowOffer &= offer.maxUnits == 0 || offer.maxUnits >= self.userSelectedPhotos.count;
+        shouldShowOffer &= [OLProduct productWithTemplateId:offer.offerTemplate] != nil;
+    }
     if (shouldShowOffer){
         OLUpsellViewController *c = [self.storyboard instantiateViewControllerWithIdentifier:@"OLUpsellViewController"];
         if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8){
@@ -849,6 +856,7 @@ UINavigationControllerDelegate, OLUpsellViewControllerDelegate
         c.modalPresentationStyle = UIModalPresentationOverCurrentContext;
         c.delegate = self;
         c.offer = offer;
+        c.triggeredProduct = self.product;
         [self presentViewController:c animated:NO completion:NULL];
         return NO;
     }

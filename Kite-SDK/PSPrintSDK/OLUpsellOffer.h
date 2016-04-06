@@ -24,6 +24,8 @@ typedef enum {
 @property (strong, nonatomic) NSString *offerTemplate;
 @property (assign, nonatomic) NSInteger minUnits;
 @property (assign, nonatomic) NSInteger maxUnits;
+@property (strong, nonatomic) NSString *headerText;
+@property (strong, nonatomic) NSString *text;
 
 + (OLUpsellOffer *)upsellOfferWithDictionary:(NSDictionary *)offerDict;
 

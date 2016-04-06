@@ -1454,9 +1454,15 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
 }
 
 - (id<OLPrintJob>)addItemToBasketWithTemplateId:(NSString *)templateId{
+    OLProduct *offerProduct = [OLProduct productWithTemplateId:templateId];
     NSMutableArray *assets = [[NSMutableArray alloc] init];
-    for (OLPrintPhoto *photo in self.userSelectedPhotos){
-        [assets addObject:[OLAsset assetWithDataSource:[photo copy]]];
+    if (offerProduct.quantityToFulfillOrder == 1){
+        [assets addObject:[OLAsset assetWithDataSource:[self.userSelectedPhotos.firstObject copy]]];
+    }
+    else{
+        for (OLPrintPhoto *photo in self.userSelectedPhotos){
+            [assets addObject:[OLAsset assetWithDataSource:[photo copy]]];
+        }
     }
     
     id<OLPrintJob> job;
@@ -1555,9 +1561,11 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
     if ([self shouldGoToOrderPreview]) {
         OLUpsellOffer *offer = [self upsellOfferToShow];
         BOOL shouldShowOffer = offer != nil;
-        shouldShowOffer &= offer.minUnits <= self.userSelectedPhotos.count;
-        shouldShowOffer &= offer.maxUnits == 0 || offer.maxUnits >= self.userSelectedPhotos.count;
-        shouldShowOffer &= [OLProduct productWithTemplateId:offer.offerTemplate] != nil;
+        if (offer){
+            shouldShowOffer &= offer.minUnits <= self.userSelectedPhotos.count;
+            shouldShowOffer &= offer.maxUnits == 0 || offer.maxUnits >= self.userSelectedPhotos.count;
+            shouldShowOffer &= [OLProduct productWithTemplateId:offer.offerTemplate] != nil;
+        }
         if (shouldShowOffer){
             OLUpsellViewController *c = [self.storyboard instantiateViewControllerWithIdentifier:@"OLUpsellViewController"];
             if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8){
@@ -1567,6 +1575,7 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
             c.modalPresentationStyle = UIModalPresentationOverCurrentContext;
             c.delegate = self;
             c.offer = offer;
+            c.triggeredProduct = self.product;
             [self presentViewController:c animated:NO completion:NULL];
         }
         else{

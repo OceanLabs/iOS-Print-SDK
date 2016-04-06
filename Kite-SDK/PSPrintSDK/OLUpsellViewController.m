@@ -77,13 +77,29 @@
     NSString *discountedString = [discountedCost formatCostForCurrencyCode:[self.product currencyCode]];
     NSString *bodyString;
     
-    if (self.product.quantityToFulfillOrder > 1 && (self.product.productTemplate.templateUI == kOLTemplateUIRectagle || self.product.productTemplate.templateUI == kOLTemplateUICircle)){
-        self.headerLabel.text = [NSString stringWithFormat:NSLocalizedString(@"Add %ld %@!", @""), self.product.quantityToFulfillOrder, self.product.productTemplate.name];
-        bodyString = [NSString stringWithFormat:NSLocalizedString(@"Create another pack for\nonly %@ %@", @""), self.product.unitCost, discountedString];
+    if (self.offer.text){
+        self.headerLabel.text = [self.offer.headerText stringByReplacingOccurrencesOfString:@"[[]]" withString:[NSString stringWithFormat:@"%@ %@", self.product.unitCost, discountedString]];
+        bodyString = [self.offer.text stringByReplacingOccurrencesOfString:@"[[]]" withString:[NSString stringWithFormat:@"%@ %@", self.product.unitCost, discountedString]];
+    }
+    else if ([self.triggeredProduct.templateId isEqualToString:self.offer.offerTemplate]){
+        if (self.product.quantityToFulfillOrder > 1 && (self.product.productTemplate.templateUI == kOLTemplateUIRectagle || self.product.productTemplate.templateUI == kOLTemplateUICircle)){
+            self.headerLabel.text = [NSString stringWithFormat:NSLocalizedString(@"Add %ld %@!", @""), self.product.quantityToFulfillOrder, self.product.productTemplate.name];
+            bodyString = [NSString stringWithFormat:NSLocalizedString(@"Create another pack for\nonly %@ %@", @""), self.product.unitCost, discountedString];
+        }
+        else{
+            self.headerLabel.text = [NSString stringWithFormat:NSLocalizedString(@"Add another %@!", @""), self.product.productTemplate.name];
+            bodyString = [NSString stringWithFormat:NSLocalizedString(@"Create another %@ for\nonly %@ %@", @""), self.product.productTemplate.name, self.product.unitCost, discountedString];
+        }
     }
     else{
-        self.headerLabel.text = [NSString stringWithFormat:NSLocalizedString(@"Add another %@!", @""), self.product.productTemplate.name];
-        bodyString = [NSString stringWithFormat:NSLocalizedString(@"Create another %@ for\nonly %@ %@", @""), self.product.productTemplate.name, self.product.unitCost, discountedString];
+        if (self.product.quantityToFulfillOrder > 1 && (self.product.productTemplate.templateUI == kOLTemplateUIRectagle || self.product.productTemplate.templateUI == kOLTemplateUICircle)){
+            self.headerLabel.text = [NSString stringWithFormat:NSLocalizedString(@"Add %ld %@!", @""), self.product.quantityToFulfillOrder, self.product.productTemplate.name];
+            bodyString = [NSString stringWithFormat:NSLocalizedString(@"Create a pack for\nonly %@ %@", @""), self.product.unitCost, discountedString];
+        }
+        else{
+            self.headerLabel.text = [NSString stringWithFormat:NSLocalizedString(@"Add a %@!", @""), self.product.productTemplate.name];
+            bodyString = [NSString stringWithFormat:NSLocalizedString(@"Create a %@ for\nonly %@ %@", @""), self.product.productTemplate.name, self.product.unitCost, discountedString];
+        }
     }
     
     NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:bodyString attributes:@{NSFontAttributeName : self.bodyLabel.font}];
