@@ -205,11 +205,11 @@ static id stringOrEmptyString(NSString *str) {
     }
     json[@"frame_contents"] = @{};
     
-    if (self.acceptedOffers.count > 0){
-        NSUInteger upsell = [self.acceptedOffers.allObjects.firstObject identifier];
-        if (upsell){
-            json[@"upsell_id"] = [NSNumber numberWithUnsignedInteger:upsell];
-        }
+    if (self.acceptedOffers.count > 0 && [self.acceptedOffers.allObjects.firstObject identifier]){
+        json[@"triggered_upsell"] = [NSNumber numberWithUnsignedInteger:[self.acceptedOffers.allObjects.firstObject identifier]];
+    }
+    if (self.redeemedOffer){
+        json[@"redeemed_upsell"] = [NSNumber numberWithUnsignedInteger:self.redeemedOffer.identifier];
     }
     
     json[@"options"] = self.options;
