@@ -1456,7 +1456,10 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
 - (id<OLPrintJob>)addItemToBasketWithTemplateId:(NSString *)templateId{
     OLProduct *offerProduct = [OLProduct productWithTemplateId:templateId];
     NSMutableArray *assets = [[NSMutableArray alloc] init];
-    if (offerProduct.quantityToFulfillOrder == 1){
+    if (offerProduct.productTemplate.templateUI == kOLTemplateUINonCustomizable){
+        //Do nothing, no assets needed
+    }
+    else if (offerProduct.quantityToFulfillOrder == 1){
         [assets addObject:[OLAsset assetWithDataSource:[self.userSelectedPhotos.firstObject copy]]];
     }
     else{

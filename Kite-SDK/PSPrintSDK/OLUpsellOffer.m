@@ -7,6 +7,7 @@
 //
 
 #import "OLUpsellOffer.h"
+#import "OLProductTemplate.h"
 
 static NSString *const kKeyOfferIdentifier = @"co.oceanlabs.pssdk.kKeyOfferIdentifier";
 static NSString *const kKeyOfferActive = @"co.oceanlabs.pssdk.kKeyOfferActive";
@@ -63,9 +64,14 @@ static NSString *const kKeyOfferText = @"co.oceanlabs.pssdk.kKeyOfferText";
     return offer;
 }
 
-//-(BOOL)prepopulatePhotos{
-//    return YES;
-//}
+-(BOOL)prepopulatePhotos{
+    OLProductTemplate *template = [OLProductTemplate templateWithId:self.offerTemplate];
+    if (template.templateUI == kOLTemplateUINonCustomizable || template.templateUI == kOLTemplateUINA){
+        return YES;
+    }
+    
+    return _prepopulatePhotos;
+}
 
 - (id)copyWithZone:(NSZone *)zone{
     OLUpsellOffer *copy = [[OLUpsellOffer alloc] init];
