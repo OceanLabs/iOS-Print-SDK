@@ -373,6 +373,7 @@
     BOOL shouldShowOffer = offer != nil;
     shouldShowOffer &= offer.minUnits <= self.userSelectedPhotos.count;
     shouldShowOffer &= offer.maxUnits == 0 || offer.maxUnits >= self.userSelectedPhotos.count;
+    shouldShowOffer &= [OLProduct productWithTemplateId:offer.offerTemplate] != nil;
     if (shouldShowOffer){
         OLUpsellViewController *c = [self.storyboard instantiateViewControllerWithIdentifier:@"OLUpsellViewController"];
         if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8){
