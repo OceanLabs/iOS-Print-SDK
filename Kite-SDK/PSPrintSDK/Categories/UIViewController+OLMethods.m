@@ -84,14 +84,20 @@
         [qtyLabel makeRoundRectWithRadius:6.5];
         
         [basketButton addSubview:qtyLabel];
-        if ([imageView.tintColor isEqual:[UIColor colorWithRed:0.0 green:122.0/255.0 blue:1.0 alpha:1.0]]){
+        if ([self.navigationController.navigationBar.tintColor isEqual:[UIColor colorWithRed:0.0 green:122.0/255.0 blue:1.0 alpha:1.0]]){
             imageView.tintColor = [UIColor colorWithRed:0.349 green:0.361 blue:0.365 alpha:1.000];
+        }
+        else{
+            imageView.tintColor = self.navigationController.navigationBar.tintColor;
         }
     }
     else{
         [imageView setImage:[UIImage imageNamedInKiteBundle:@"cart-empty"]];
-        if ([imageView.tintColor isEqual:[UIColor colorWithRed:0.0 green:122.0/255.0 blue:1.0 alpha:1.0]]){
+        if ([self.navigationController.navigationBar.tintColor isEqual:[UIColor colorWithRed:0.0 green:122.0/255.0 blue:1.0 alpha:1.0]]){
             imageView.tintColor = [UIColor colorWithRed:0.349 green:0.361 blue:0.365 alpha:1.000];
+        }
+        else{
+            imageView.tintColor = self.navigationController.navigationBar.tintColor;
         }
     }
     
