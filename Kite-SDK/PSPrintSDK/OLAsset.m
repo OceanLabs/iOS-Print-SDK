@@ -538,24 +538,26 @@ NSString *const kOLMimeTypePDF = @"application/pdf";
     return self;
 }
 
+//If we ever need to enable this again, make sure we only delete our own asset, eg prefix them with OL or something
 - (void)deleteFromDisk{
-    if (self.dataSource && [self.dataSource respondsToSelector:@selector(deleteFromDisk)]){
-        [self.dataSource deleteFromDisk];
-    }
-    else if(self.imageFilePath){
-        NSFileManager *fileManager = [NSFileManager defaultManager];
-        NSError *error;
-        BOOL fileExists = [fileManager fileExistsAtPath:self.imageFilePath];
-        if (fileExists)
-        {
-            BOOL success = [fileManager removeItemAtPath:self.imageFilePath error:&error];
-            if (!success) {
-#ifdef OL_VERBOSE
-                NSLog(@"Error: %@", [error localizedDescription]);
-#endif
-            }
-        }
-    }
+    
+//    if (self.dataSource && [self.dataSource respondsToSelector:@selector(deleteFromDisk)]){
+//        [self.dataSource deleteFromDisk];
+//    }
+//    else if(self.imageFilePath){
+//        NSFileManager *fileManager = [NSFileManager defaultManager];
+//        NSError *error;
+//        BOOL fileExists = [fileManager fileExistsAtPath:self.imageFilePath];
+//        if (fileExists)
+//        {
+//            BOOL success = [fileManager removeItemAtPath:self.imageFilePath error:&error];
+//            if (!success) {
+//#ifdef OL_VERBOSE
+//                NSLog(@"Error: %@", [error localizedDescription]);
+//#endif
+//            }
+//        }
+//    }
 }
 
 @end
