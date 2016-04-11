@@ -33,11 +33,11 @@
     return @[[OLAsset assetWithImageAsJPEG:[UIImage imageWithData:[OLKiteTestHelper testImageData]]]];
 }
 
-+ (PHAsset *)aPHAsset{
-    PHFetchResult *fetchResult = [PHAsset fetchAssetsWithMediaType:PHAssetMediaTypeImage options:nil];
-    
-    return [fetchResult objectAtIndex:fetchResult.count-1];
-}
+//+ (PHAsset *)aPHAsset{
+//    PHFetchResult *fetchResult = [PHAsset fetchAssetsWithMediaType:PHAssetMediaTypeImage options:nil];
+//    
+//    return [fetchResult objectAtIndex:fetchResult.count-1];
+//}
 
 + (OLPrintPhoto *)aPrintPhoto{
     OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];

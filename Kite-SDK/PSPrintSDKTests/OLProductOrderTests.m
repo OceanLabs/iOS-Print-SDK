@@ -183,15 +183,15 @@
     [self submitJobs:@[job]];
 }
 
-- (void)testSquaresOrderWithPHAssetOLAssets{
-    PHFetchResult *fetchResult = [PHAsset fetchAssetsWithMediaType:PHAssetMediaTypeImage options:nil];
-    XCTAssert(fetchResult.count > 0, @"There are no assets available");
-    
-    PHAsset *asset = [fetchResult objectAtIndex:arc4random() % fetchResult.count];
-    
-    OLProductPrintJob *job = [OLPrintJob printJobWithTemplateId:@"squares" OLAssets:@[[OLAsset assetWithPHAsset:asset]]];
-    [self submitJobs:@[job]];
-}
+//- (void)testSquaresOrderWithPHAssetOLAssets{
+//    PHFetchResult *fetchResult = [PHAsset fetchAssetsWithMediaType:PHAssetMediaTypeImage options:nil];
+//    XCTAssert(fetchResult.count > 0, @"There are no assets available");
+//    
+//    PHAsset *asset = [fetchResult objectAtIndex:arc4random() % fetchResult.count];
+//    
+//    OLProductPrintJob *job = [OLPrintJob printJobWithTemplateId:@"squares" OLAssets:@[[OLAsset assetWithPHAsset:asset]]];
+//    [self submitJobs:@[job]];
+//}
 
 - (void)testSquaresOrderWithALAssetOLAssets{
     XCTestExpectation *expectation = [self expectationWithDescription:@"Get ALAsset"];
@@ -242,50 +242,50 @@
     [self submitJobs:@[job]];
 }
 
-- (void)testSquaresOrderWithPHAssetPrintPhotos{
-    PHFetchResult *fetchResult = [PHAsset fetchAssetsWithMediaType:PHAssetMediaTypeImage options:nil];
-    XCTAssert(fetchResult.count > 0, @"There are no assets available");
-    
-    PHAsset *asset = [fetchResult objectAtIndex:arc4random() % fetchResult.count];
-    
-    OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
-    printPhoto.asset = asset;
-    
-    OLProductPrintJob *job = [OLPrintJob printJobWithTemplateId:@"squares" OLAssets:@[[OLAsset assetWithDataSource:printPhoto]]];
-    [self submitJobs:@[job]];
-}
+//- (void)testSquaresOrderWithPHAssetPrintPhotos{
+//    PHFetchResult *fetchResult = [PHAsset fetchAssetsWithMediaType:PHAssetMediaTypeImage options:nil];
+//    XCTAssert(fetchResult.count > 0, @"There are no assets available");
+//    
+//    PHAsset *asset = [fetchResult objectAtIndex:arc4random() % fetchResult.count];
+//    
+//    OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
+//    printPhoto.asset = asset;
+//    
+//    OLProductPrintJob *job = [OLPrintJob printJobWithTemplateId:@"squares" OLAssets:@[[OLAsset assetWithDataSource:printPhoto]]];
+//    [self submitJobs:@[job]];
+//}
 
-- (void)testSquaresOrderWithPHAssetPrintPhotoOLAsset{
-    PHFetchResult *fetchResult = [PHAsset fetchAssetsWithMediaType:PHAssetMediaTypeImage options:nil];
-    XCTAssert(fetchResult.count > 0, @"There are no assets available");
-    
-    PHAsset *asset = [fetchResult objectAtIndex:arc4random() % fetchResult.count];
-    
-    OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
-    printPhoto.asset = asset;
-    
-    OLAsset *olAsset = [OLAsset assetWithPrintPhoto:printPhoto];
-    
-    PHAsset *loadedAsset = [olAsset loadPHAsset];
-    
-    XCTAssert([[loadedAsset localIdentifier] isEqualToString:[asset localIdentifier]], @"Local IDs should match");
-    
-    OLProductPrintJob *job = [OLPrintJob printJobWithTemplateId:@"squares" OLAssets:@[olAsset]];
-    [self submitJobs:@[job]];
-}
+//- (void)testSquaresOrderWithPHAssetPrintPhotoOLAsset{
+//    PHFetchResult *fetchResult = [PHAsset fetchAssetsWithMediaType:PHAssetMediaTypeImage options:nil];
+//    XCTAssert(fetchResult.count > 0, @"There are no assets available");
+//    
+//    PHAsset *asset = [fetchResult objectAtIndex:arc4random() % fetchResult.count];
+//    
+//    OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
+//    printPhoto.asset = asset;
+//    
+//    OLAsset *olAsset = [OLAsset assetWithPrintPhoto:printPhoto];
+//    
+//    PHAsset *loadedAsset = [olAsset loadPHAsset];
+//    
+//    XCTAssert([[loadedAsset localIdentifier] isEqualToString:[asset localIdentifier]], @"Local IDs should match");
+//    
+//    OLProductPrintJob *job = [OLPrintJob printJobWithTemplateId:@"squares" OLAssets:@[olAsset]];
+//    [self submitJobs:@[job]];
+//}
 
-- (void)testSquaresOrderWithPHAssetPrintPhotosDataSource{
-    PHFetchResult *fetchResult = [PHAsset fetchAssetsWithMediaType:PHAssetMediaTypeImage options:nil];
-    XCTAssert(fetchResult.count > 0, @"There are no assets available");
-    
-    PHAsset *asset = [fetchResult objectAtIndex:arc4random() % fetchResult.count];
-    
-    OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
-    printPhoto.asset = asset;
-    
-    OLProductPrintJob *job = [OLPrintJob printJobWithTemplateId:@"squares" dataSources:@[printPhoto]];
-    [self submitJobs:@[job]];
-}
+//- (void)testSquaresOrderWithPHAssetPrintPhotosDataSource{
+//    PHFetchResult *fetchResult = [PHAsset fetchAssetsWithMediaType:PHAssetMediaTypeImage options:nil];
+//    XCTAssert(fetchResult.count > 0, @"There are no assets available");
+//    
+//    PHAsset *asset = [fetchResult objectAtIndex:arc4random() % fetchResult.count];
+//    
+//    OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
+//    printPhoto.asset = asset;
+//    
+//    OLProductPrintJob *job = [OLPrintJob printJobWithTemplateId:@"squares" dataSources:@[printPhoto]];
+//    [self submitJobs:@[job]];
+//}
 
 - (void)testPhotobookOrderWithURLOLAssets{
     OLPhotobookPrintJob *job = [OLPrintJob photobookWithTemplateId:@"rpi_wrap_300x300_sm" OLAssets:[OLKiteTestHelper urlAssets] frontCoverOLAsset:[OLKiteTestHelper urlAssets].firstObject backCoverOLAsset:[OLKiteTestHelper urlAssets].lastObject];
