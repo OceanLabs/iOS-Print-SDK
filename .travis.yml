@@ -4,8 +4,8 @@ podfile: Kite-SDK/Podfile
 script:
   - xcrun simctl list
   - chmod +x Kite-SDK/enable_photos.perl
-  - xctool -workspace Kite-SDK/KitePrintSDK.xcworkspace -scheme KiteSDK-Demo -sdk iphonesimulator install
   - ./Kite-SDK/enable_photos.perl
+  - xctool -workspace Kite-SDK/KitePrintSDK.xcworkspace -scheme KiteSDK-Demo -sdk iphonesimulator ONLY_ACTIVE_ARCH=NO
   - xctool test -workspace Kite-SDK/KitePrintSDK.xcworkspace -scheme KiteSDK-Demo -sdk iphonesimulator ONLY_ACTIVE_ARCH=NO
 before_install:
   - brew uninstall xctool && brew install --HEAD xctool

@@ -183,40 +183,40 @@
     [self submitJobs:@[job]];
 }
 
-//- (void)testSquaresOrderWithPHAssetOLAssets{
-//    PHFetchResult *fetchResult = [PHAsset fetchAssetsWithMediaType:PHAssetMediaTypeImage options:nil];
-//    XCTAssert(fetchResult.count > 0, @"There are no assets available");
-//    
-//    PHAsset *asset = [fetchResult objectAtIndex:arc4random() % fetchResult.count];
-//    
-//    OLProductPrintJob *job = [OLPrintJob printJobWithTemplateId:@"squares" OLAssets:@[[OLAsset assetWithPHAsset:asset]]];
-//    [self submitJobs:@[job]];
-//}
-
-- (void)testSquaresOrderWithALAssetOLAssets{
-    XCTestExpectation *expectation = [self expectationWithDescription:@"Get ALAsset"];
+- (void)testSquaresOrderWithPHAssetOLAssets{
+    PHFetchResult *fetchResult = [PHAsset fetchAssetsWithMediaType:PHAssetMediaTypeImage options:nil];
+    XCTAssert(fetchResult.count > 0, @"There are no assets available");
     
-    ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
-    __block ALAsset *asset;
-    [library enumerateGroupsWithTypes: ALAssetsGroupAll usingBlock:^(ALAssetsGroup *group, BOOL *stop){
-        [group enumerateAssetsAtIndexes:[NSIndexSet indexSetWithIndex:0] options:0 usingBlock:^(ALAsset *result, NSUInteger index, BOOL *groupStop){
-            if (!*stop && !*groupStop){
-                asset = result;
-                [expectation fulfill];
-            }
-            *stop = YES;
-            *groupStop = YES;
-        }];
-    }failureBlock:NULL];
+    PHAsset *asset = [fetchResult objectAtIndex:arc4random() % fetchResult.count];
     
-    [self waitForExpectationsWithTimeout:15 handler:NULL];
-    
-    OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
-    printPhoto.asset = asset;
-    
-    OLProductPrintJob *job = [OLPrintJob printJobWithTemplateId:@"squares" OLAssets:@[[OLAsset assetWithPrintPhoto:printPhoto]]];
+    OLProductPrintJob *job = [OLPrintJob printJobWithTemplateId:@"squares" OLAssets:@[[OLAsset assetWithPHAsset:asset]]];
     [self submitJobs:@[job]];
 }
+
+//- (void)testSquaresOrderWithALAssetOLAssets{
+//    XCTestExpectation *expectation = [self expectationWithDescription:@"Get ALAsset"];
+//    
+//    ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
+//    __block ALAsset *asset;
+//    [library enumerateGroupsWithTypes: ALAssetsGroupAll usingBlock:^(ALAssetsGroup *group, BOOL *stop){
+//        [group enumerateAssetsAtIndexes:[NSIndexSet indexSetWithIndex:0] options:0 usingBlock:^(ALAsset *result, NSUInteger index, BOOL *groupStop){
+//            if (!*stop && !*groupStop){
+//                asset = result;
+//                [expectation fulfill];
+//            }
+//            *stop = YES;
+//            *groupStop = YES;
+//        }];
+//    }failureBlock:NULL];
+//    
+//    [self waitForExpectationsWithTimeout:15 handler:NULL];
+//    
+//    OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
+//    printPhoto.asset = asset;
+//    
+//    OLProductPrintJob *job = [OLPrintJob printJobWithTemplateId:@"squares" OLAssets:@[[OLAsset assetWithPrintPhoto:printPhoto]]];
+//    [self submitJobs:@[job]];
+//}
 
 - (void)testSquaresOrderWithURLOLAssetPrintPhotos{
     OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
