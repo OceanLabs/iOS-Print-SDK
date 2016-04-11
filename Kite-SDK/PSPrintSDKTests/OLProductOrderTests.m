@@ -183,15 +183,15 @@
     [self submitJobs:@[job]];
 }
 
-- (void)testSquaresOrderWithPHAssetOLAssets{
-    PHFetchResult *fetchResult = [PHAsset fetchAssetsWithMediaType:PHAssetMediaTypeImage options:nil];
-    XCTAssert(fetchResult.count > 0, @"There are no assets available");
-    
-    PHAsset *asset = [fetchResult objectAtIndex:arc4random() % fetchResult.count];
-    
-    OLProductPrintJob *job = [OLPrintJob printJobWithTemplateId:@"squares" OLAssets:@[[OLAsset assetWithPHAsset:asset]]];
-    [self submitJobs:@[job]];
-}
+//- (void)testSquaresOrderWithPHAssetOLAssets{
+//    PHFetchResult *fetchResult = [PHAsset fetchAssetsWithMediaType:PHAssetMediaTypeImage options:nil];
+//    XCTAssert(fetchResult.count > 0, @"There are no assets available");
+//    
+//    PHAsset *asset = [fetchResult objectAtIndex:arc4random() % fetchResult.count];
+//    
+//    OLProductPrintJob *job = [OLPrintJob printJobWithTemplateId:@"squares" OLAssets:@[[OLAsset assetWithPHAsset:asset]]];
+//    [self submitJobs:@[job]];
+//}
 
 //- (void)testSquaresOrderWithALAssetOLAssets{
 //    XCTestExpectation *expectation = [self expectationWithDescription:@"Get ALAsset"];
