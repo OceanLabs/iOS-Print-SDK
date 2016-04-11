@@ -176,6 +176,7 @@ static CGFloat fadeTime = 0.3;
     NSBundle *currentBundle = [NSBundle bundleForClass:[OLKiteViewController class]];
     if ((self = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:currentBundle] instantiateViewControllerWithIdentifier:@"KiteViewController"])) {
         self.assets = assets;
+        self.printOrder.userData = info;
     }
     [OLKiteABTesting sharedInstance].launchedWithPrintOrder = NO;
     
@@ -187,6 +188,7 @@ static CGFloat fadeTime = 0.3;
     NSBundle *currentBundle = [NSBundle bundleForClass:[OLKiteViewController class]];
     if ((self = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:currentBundle] instantiateViewControllerWithIdentifier:@"KiteViewController"])) {
         self.printOrder = printOrder;
+        self.printOrder.userData = info;
         self.assets = [[printOrder.jobs firstObject] assetsForUploading];
         [OLKiteABTesting sharedInstance].launchedWithPrintOrder = printOrder != nil;
     }
