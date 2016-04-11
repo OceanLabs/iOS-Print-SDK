@@ -3759,5 +3759,4 @@ only £9.99 £8.99</string>
         <image name="tool_fliphorizontal" width="30" height="30"/>
         <image name="tool_rotate" width="30" height="30"/>
     </resources>
-    <color key="tintColor" red="0.0" green="0.52941179275512695" blue="1" alpha="1" colorSpace="deviceRGB"/>
 </document>
