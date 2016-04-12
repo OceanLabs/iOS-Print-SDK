@@ -206,7 +206,9 @@ static NSBlockOperation *templateSyncOperation;
 }
 
 - (void)setUserData:(NSDictionary *)userData {
-    NSAssert([NSJSONSerialization isValidJSONObject:userData], @"Only valid JSON structures are accepted as user data");
+    if (userData){
+        NSAssert([NSJSONSerialization isValidJSONObject:userData], @"Only valid JSON structures are accepted as user data");
+    }
     _userData = userData;
 }
 
