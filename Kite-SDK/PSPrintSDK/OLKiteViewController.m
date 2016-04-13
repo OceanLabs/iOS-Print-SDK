@@ -195,21 +195,23 @@ static CGFloat fadeTime = 0.3;
     return self;
 }
 
-#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
 - (void)addCustomPhotoProviderWithCollections:(NSArray <id<KITAssetCollectionDataSource>>*_Nonnull)collections name:(NSString *_Nonnull)name icon:(UIImage *_Nullable)image{
+#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
     if (!self.customImageProviders){
         self.customImageProviders = [[NSMutableArray<OLCustomPhotoProvider *> alloc] init];
     }
     [self.customImageProviders addObject:[[OLCustomPhotoProvider alloc] initWithCollections:collections name:name icon:image]];
+#endif
 }
 
 - (void)addCustomPhotoProviderWithViewController:(UIViewController<KITCustomAssetPickerController> *_Nonnull)vc name:(NSString *_Nonnull)name icon:(UIImage *_Nullable)icon{
+#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
     if (!self.customImageProviders){
         self.customImageProviders = [[NSMutableArray<OLCustomPhotoProvider *> alloc] init];
     }
     [self.customImageProviders addObject:[[OLCustomPhotoProvider alloc] initWithController:vc name:name icon:icon]];
-}
 #endif
+}
 
 -(void)viewDidLoad {
     [super viewDidLoad];

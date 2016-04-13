@@ -81,7 +81,11 @@
 
 #ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
 #import "OLCustomPhotoProvider.h"
-#import <KITAssetsPickerController.h>
+#ifdef COCOAPODS
+#import <KITAssetsPickerController/KITAssetsPickerController.h>
+#else
+#import "KITAssetsPickerController.h"
+#endif
 #endif
 
 #ifdef OL_KITE_OFFER_INSTAGRAM
