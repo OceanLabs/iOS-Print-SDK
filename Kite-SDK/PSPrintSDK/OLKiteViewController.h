@@ -35,10 +35,8 @@
 @class ALAssetsGroup;
 @class OLAsset;
 
-#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
 @protocol KITAssetCollectionDataSource;
 @protocol KITCustomAssetPickerController;
-#endif
 
 /**
  *  The delegate object if available will be asked for information
