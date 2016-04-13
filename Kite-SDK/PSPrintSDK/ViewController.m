@@ -175,7 +175,7 @@ UINavigationControllerDelegate, OLKiteDelegate>
         [OLKitePrintSDK setAPIKey:[self apiKey] withEnvironment:[self environment]];
     }
     
-    OLKiteViewController *vc = [[OLKiteViewController alloc] initWithAssets:assets];
+    OLKiteViewController *vc = [[OLKiteViewController alloc] initWithAssets:assets info:nil];
     vc.userEmail = @"";
     vc.userPhone = @"";
     vc.delegate = self;
