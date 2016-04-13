@@ -101,6 +101,9 @@ static CGFloat fadeTime = 0.3;
 
 @end
 
+@class KITCustomAssetPickerController;
+@class KITAssetCollectionDataSource;
+
 @implementation OLKiteViewController
 
 - (void)awakeFromNib{
