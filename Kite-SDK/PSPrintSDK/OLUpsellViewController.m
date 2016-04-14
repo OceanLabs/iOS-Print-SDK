@@ -78,8 +78,8 @@
     NSString *bodyString;
     
     if (self.offer.text){
-        self.headerLabel.text = [self.offer.headerText stringByReplacingOccurrencesOfString:@"[[]]" withString:[NSString stringWithFormat:@"%@ %@", self.product.unitCost, discountedString]];
-        bodyString = [self.offer.text stringByReplacingOccurrencesOfString:@"[[]]" withString:[NSString stringWithFormat:@"%@ %@", self.product.unitCost, discountedString]];
+        self.headerLabel.text = [self.offer.headerText stringByReplacingOccurrencesOfString:@"[[price]]" withString:[NSString stringWithFormat:@"%@ %@", self.product.unitCost, discountedString]];
+        bodyString = [self.offer.text stringByReplacingOccurrencesOfString:@"[[price]]" withString:[NSString stringWithFormat:@"%@ %@", self.product.unitCost, discountedString]];
     }
     else if ([self.triggeredProduct.templateId isEqualToString:self.offer.offerTemplate]){
         if (self.product.quantityToFulfillOrder > 1 && (self.product.productTemplate.templateUI == kOLTemplateUIRectagle || self.product.productTemplate.templateUI == kOLTemplateUICircle)){
