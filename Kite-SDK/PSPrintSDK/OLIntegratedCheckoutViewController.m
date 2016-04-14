@@ -249,18 +249,8 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
     NSString *email = [super userEmail];
     NSString *phone = [super userPhone];
     
-    
-    NSMutableDictionary *d = [[NSMutableDictionary alloc] init];
-    if (self.printOrder.userData) {
-        d = [self.printOrder.userData mutableCopy];
-    }
-    
     self.printOrder.email = email;
     self.printOrder.phone = phone;
-    
-    d[@"email"] = email;
-    d[@"phone"] = phone;
-    self.printOrder.userData = d;
     
     OLPaymentViewController *vc = [[OLPaymentViewController alloc] initWithPrintOrder:self.printOrder];
     vc.delegate = self.delegate;

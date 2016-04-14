@@ -751,14 +751,12 @@ static __weak id<OLKiteDelegate> kiteDelegate;
         p[@"Voucher Code"] = printOrder.promoCode;
     }
     
-    if (printOrder.userData) {
-        if (printOrder.userData[@"email"]) {
-            p[@"Shipping Email"] = printOrder.userData[@"email"];
-        }
-        
-        if (printOrder.userData[@"phone"]) {
-            p[@"Shipping Phone"] = printOrder.userData[@"phone"];
-        }
+    if (printOrder.email) {
+        p[@"Shipping Email"] = printOrder.email;
+    }
+    
+    if (printOrder.phone) {
+        p[@"Shipping Phone"] = printOrder.phone;
     }
     
     if (printOrder.shippingAddress) {

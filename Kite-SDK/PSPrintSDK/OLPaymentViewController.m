@@ -1599,10 +1599,6 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     self.printOrder.shippingAddress = shippingAddress;
     NSString *email;
     NSString *phone;
-    NSMutableDictionary *d = [[NSMutableDictionary alloc] init];
-    if (self.printOrder.userData) {
-        d = [self.printOrder.userData mutableCopy];
-    }
     CFTypeRef emails = ABRecordCopyValue(address, kABPersonEmailProperty);
     for (NSInteger i = 0; i < ABMultiValueGetCount(emails); i++){
         email = (__bridge_transfer NSString *)(ABMultiValueCopyValueAtIndex(emails, i));
@@ -1611,15 +1607,11 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     for (NSInteger i = 0; i < ABMultiValueGetCount(phones); i++){
         phone = (__bridge_transfer NSString *)(ABMultiValueCopyValueAtIndex(phones, i));
     }
-    d[@"email"] = email ? email : @"";
-    d[@"phone"] = phone ? phone : @"";
     
     self.printOrder.email = email;
     self.printOrder.phone = phone;
     
-    self.printOrder.userData = d;
-    
-    if (![OLCheckoutViewController validateEmail:d[@"email"]] && [OLKitePrintSDK environment] == kOLKitePrintSDKEnvironmentLive){
+    if (![OLCheckoutViewController validateEmail:email] && [OLKitePrintSDK environment] == kOLKitePrintSDKEnvironmentLive){
         completion(PKPaymentAuthorizationStatusInvalidShippingContact);
         return;
     }

@@ -311,17 +311,8 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
     NSString *email = [self userEmail];
     NSString *phone = [self userPhone];
     
-    NSMutableDictionary *d = [[NSMutableDictionary alloc] init];
-    if (self.printOrder.userData) {
-        d = [self.printOrder.userData mutableCopy];
-    }
-    
     self.printOrder.email = email;
     self.printOrder.phone = phone;
-    
-    d[@"email"] = email;
-    d[@"phone"] = phone;
-    self.printOrder.userData = d;
     
     if (self.shippingAddresses.count == 1 || self.selectedShippingAddresses.count == 1){
         self.printOrder.shippingAddress = [self.selectedShippingAddresses firstObject];

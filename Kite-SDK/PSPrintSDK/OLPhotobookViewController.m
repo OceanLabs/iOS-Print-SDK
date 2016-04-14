@@ -911,13 +911,6 @@ UINavigationControllerDelegate, OLUpsellViewControllerDelegate
         }
     }
     
-    NSUInteger instagramPhotoCount = 0, facebookPhotoCount = 0, iphonePhotoCount = 0;
-    for (OLPrintPhoto *photo in bookPhotos) {
-        if (photo.type == kPrintPhotoAssetTypeALAsset || photo.type == kPrintPhotoAssetTypeOLAsset || photo.type == kPrintPhotoAssetTypePHAsset) ++iphonePhotoCount;
-        if (photo.type == kPrintPhotoAssetTypeFacebookPhoto) ++facebookPhotoCount;
-        if (photo.type == kPrintPhotoAssetTypeInstagramPhoto) ++instagramPhotoCount;
-    }
-    
     // Avoid uploading assets if possible. We can avoid uploading where the image already exists at a remote
     // URL and the user did not manipulate it in any way.
     NSMutableArray *photoAssets = [[NSMutableArray alloc] init];
@@ -932,21 +925,12 @@ UINavigationControllerDelegate, OLUpsellViewControllerDelegate
     for (NSUInteger i = 0; i < duplicatesToFillOrder; ++i) {
         [photoAssets addObject:photoAssets[i % userSelectedAssetCount]];
     }
-    NSLog(@"Adding %lu duplicates", (unsigned long)duplicatesToFillOrder);
     
-    NSDictionary *infoDict = [[NSBundle mainBundle] infoDictionary];
-    NSString *appVersion = [infoDict objectForKey:@"CFBundleShortVersionString"];
-    NSNumber *buildNumber = [infoDict objectForKey:@"CFBundleVersion"];
+#ifdef OL_VERBOSE
+    NSLog(@"Adding %lu duplicates", (unsigned long)duplicatesToFillOrder);
+#endif
     
     OLPrintOrder *printOrder = [OLKiteUtils kiteVcForViewController:self].printOrder;
-    printOrder.userData = @{@"photo_count_iphone": [NSNumber numberWithUnsignedInteger:iphonePhotoCount],
-                            @"sdk_version": kOLKiteSDKVersion,
-                            @"platform": @"iOS",
-                            @"uid": [OLAnalytics userDistinctId],
-                            @"app_version": [NSString stringWithFormat:@"Version: %@ (%@)", appVersion, buildNumber]
-                            };
-    
-    
     OLPhotobookPrintJob *job = [[OLPhotobookPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:photoAssets];
     job.frontCover = self.coverPhoto ? [OLAsset assetWithDataSource:self.coverPhoto] : nil;
     for (NSString *option in self.product.selectedOptions.allKeys){
