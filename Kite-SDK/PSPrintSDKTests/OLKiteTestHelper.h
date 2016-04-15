@@ -17,7 +17,7 @@
 + (NSArray <OLAsset *>*)urlAssets;
 + (NSArray <OLAsset *>*)imageAssets;
 + (NSData *)testImageData;
-//+ (PHAsset *)aPHAsset;
++ (PHAsset *)aPHAsset;
 + (OLPrintPhoto *)aPrintPhoto;
 
 @end
