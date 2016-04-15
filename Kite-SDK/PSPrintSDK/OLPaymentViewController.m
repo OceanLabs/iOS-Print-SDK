@@ -79,6 +79,15 @@
 #import "OLAddress+AddressBook.h"
 #import "NSObject+Utils.h"
 
+#ifdef OL_KITE_OFFER_PAYPAL
+#ifdef COCOAPODS
+#import <PayPal-iOS-SDK/PayPalMobile.h>
+#else
+#import "PayPalMobile.h"
+#endif
+
+#endif
+
 #ifdef OL_KITE_OFFER_APPLE_PAY
 #ifdef COCOAPODS
 #import <Stripe/Stripe+ApplePay.h>
@@ -173,43 +182,6 @@ static BOOL haveLoadedAtLeastOnce = NO;
 @property (strong, nonatomic) OLPrintOrderCost *finalCost;
 @property (nonatomic, strong) OLPrintOrderCostRequest *costReq;
 @end
-
-#ifdef OL_KITE_OFFER_PAYPAL
-typedef NS_ENUM(NSInteger, PayPalPaymentIntent) {
-    PayPalPaymentIntentSale = 0,
-    PayPalPaymentIntentAuthorize = 1,
-    PayPalPaymentIntentOrder = 2,
-};
-@interface PayPalPayment : NSObject
-@property(nonatomic, copy, readwrite) NSDecimalNumber *amount;
-@property(nonatomic, copy, readwrite) NSString *currencyCode;
-@property(nonatomic, copy, readwrite) NSString *shortDescription;
-@property(nonatomic, assign, readwrite) PayPalPaymentIntent intent;
-@property(nonatomic, assign, readonly) BOOL processable;
-@property(nonatomic, readonly, copy) NSDictionary *confirmation;
-@end
-@class PayPalPaymentViewController;
-@protocol PayPalPaymentDelegate <NSObject>
-@required
-- (void)payPalPaymentDidCancel:(PayPalPaymentViewController *)paymentViewController;
-- (void)payPalPaymentViewController:(PayPalPaymentViewController *)paymentViewController
-                 didCompletePayment:(PayPalPayment *)completedPayment;
-@end
-@interface PayPalConfiguration : NSObject <NSCopying>
-@property(nonatomic, assign, readwrite) BOOL acceptCreditCards;
-@end
-@interface PayPalMobile : NSObject
-+ (void)initializeWithClientIdsForEnvironments:(NSDictionary *)clientIdsForEnvironments;
-+ (void)preconnectWithEnvironment:(NSString *)environment;
-@end
-@interface PayPalPaymentViewController : UINavigationController
-- (instancetype)initWithPayment:(PayPalPayment *)payment
-                  configuration:(PayPalConfiguration *)configuration
-                       delegate:(id<PayPalPaymentDelegate>)delegate;
-@end
-
-#endif
-
 
 @interface OLPaymentViewController () <
 #ifdef OL_KITE_OFFER_PAYPAL
