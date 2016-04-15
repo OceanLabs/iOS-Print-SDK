@@ -152,7 +152,7 @@ static CGFloat fadeTime = 0.3;
 }
 
 -(NSMutableArray *) userSelectedPhotos{
-    if (!_userSelectedPhotos){
+    if (!_userSelectedPhotos || _userSelectedPhotos.count == 0){
         NSMutableArray *mutableUserSelectedPhotos = [[NSMutableArray alloc] init];
         for (id asset in self.assets){
             OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
@@ -359,7 +359,6 @@ static CGFloat fadeTime = 0.3;
             [vc safePerformSelector:@selector(setKiteDelegate:) withObject:welf.delegate];
             [vc safePerformSelector:@selector(setProduct:) withObject:product];
             [vc safePerformSelector:@selector(setUserSelectedPhotos:) withObject:welf.userSelectedPhotos];
-            [vc.navigationItem.rightBarButtonItem setTitle:NSLocalizedString(@"Next", @"")];
             if (self.navigationController.viewControllers.count <= 1){
                 UINavigationController *nvc = [[OLNavigationController alloc] initWithRootViewController:vc];
                 vc.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:welf action:@selector(dismiss)];
