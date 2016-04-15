@@ -31,9 +31,6 @@
 #import "OLPayPalCard.h"
 #import "OLProductTemplate.h"
 #import "OLStripeCard.h"
-#ifdef OL_KITE_OFFER_PAYPAL
-#import "PayPalMobile.h"
-#endif
 
 #ifdef OL_OFFER_JUDOPAY
 #import "OLJudoPayCard.h"
@@ -52,6 +49,9 @@
 #endif
 #import "OLPaymentViewController.h"
 #import "OLKiteUtils.h"
+
+extern NSString *const PayPalEnvironmentProduction;
+extern NSString *const PayPalEnvironmentSandbox;
 
 static NSString *const kJudoClientId      = @"100170-877";
 static NSString *const kJudoSandboxToken     = @"oLMiwCPBeLs0iVX4";
