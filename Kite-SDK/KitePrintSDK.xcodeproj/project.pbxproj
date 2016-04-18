@@ -35,7 +35,6 @@
 		2E31C0121C7B21FF009C1E42 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E244531A1BFD2C810086BF03 /* MessageUI.framework */; };
 		2E31C0141C7B2231009C1E42 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E31C0131C7B2231009C1E42 /* OpenGLES.framework */; };
 		2E31C0161C7B2237009C1E42 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E31C0151C7B2237009C1E42 /* QuartzCore.framework */; };
-		2E31C0181C7B2241009C1E42 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E31C0171C7B2240009C1E42 /* StoreKit.framework */; };
 		2E31C0191C7B2253009C1E42 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E244531C1BFD2C8C0086BF03 /* MobileCoreServices.framework */; };
 		2E31C01B1C7B2267009C1E42 /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E31C01A1C7B2267009C1E42 /* libc++.tbd */; };
 		2E482B7A1BEB4C7D007460EA /* OLStripeCard.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E482B781BEB4C7D007460EA /* OLStripeCard.m */; };
@@ -193,7 +192,6 @@
 		2E898CC91CC518180041CCD8 /* OLPrintJob.m in Sources */ = {isa = PBXBuildFile; fileRef = CD9CF4A4187592A900F067B6 /* OLPrintJob.m */; };
 		2E898CCB1CC518180041CCD8 /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E31C01A1C7B2267009C1E42 /* libc++.tbd */; };
 		2E898CCC1CC518180041CCD8 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E244531C1BFD2C8C0086BF03 /* MobileCoreServices.framework */; };
-		2E898CCD1CC518180041CCD8 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E31C0171C7B2240009C1E42 /* StoreKit.framework */; };
 		2E898CCE1CC518180041CCD8 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E31C0151C7B2237009C1E42 /* QuartzCore.framework */; };
 		2E898CCF1CC518180041CCD8 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E31C0131C7B2231009C1E42 /* OpenGLES.framework */; };
 		2E898CD01CC518180041CCD8 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E244531A1BFD2C810086BF03 /* MessageUI.framework */; };
@@ -843,7 +841,6 @@
 		2E31C0101C7B219E009C1E42 /* libz.1.2.5.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.1.2.5.tbd; path = usr/lib/libz.1.2.5.tbd; sourceTree = SDKROOT; };
 		2E31C0131C7B2231009C1E42 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 		2E31C0151C7B2237009C1E42 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
-		2E31C0171C7B2240009C1E42 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		2E31C01A1C7B2267009C1E42 /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
 		2E333CC91BC7D1850092E42A /* OLApparelPrintJob.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLApparelPrintJob.m; sourceTree = "<group>"; };
 		2E333CCB1BC7D19E0092E42A /* OLApparelPrintJob.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLApparelPrintJob.h; sourceTree = "<group>"; };
@@ -1326,7 +1323,6 @@
 			files = (
 				2E898CCB1CC518180041CCD8 /* libc++.tbd in Frameworks */,
 				2E898CCC1CC518180041CCD8 /* MobileCoreServices.framework in Frameworks */,
-				2E898CCD1CC518180041CCD8 /* StoreKit.framework in Frameworks */,
 				2E898CCE1CC518180041CCD8 /* QuartzCore.framework in Frameworks */,
 				2E898CCF1CC518180041CCD8 /* OpenGLES.framework in Frameworks */,
 				2E898CD01CC518180041CCD8 /* MessageUI.framework in Frameworks */,
@@ -1373,7 +1369,6 @@
 			files = (
 				2E31C01B1C7B2267009C1E42 /* libc++.tbd in Frameworks */,
 				2E31C0191C7B2253009C1E42 /* MobileCoreServices.framework in Frameworks */,
-				2E31C0181C7B2241009C1E42 /* StoreKit.framework in Frameworks */,
 				2E31C0161C7B2237009C1E42 /* QuartzCore.framework in Frameworks */,
 				2E31C0141C7B2231009C1E42 /* OpenGLES.framework in Frameworks */,
 				2E31C0121C7B21FF009C1E42 /* MessageUI.framework in Frameworks */,
@@ -1872,7 +1867,6 @@
 			isa = PBXGroup;
 			children = (
 				2E31C01A1C7B2267009C1E42 /* libc++.tbd */,
-				2E31C0171C7B2240009C1E42 /* StoreKit.framework */,
 				2E31C0151C7B2237009C1E42 /* QuartzCore.framework */,
 				2E31C0131C7B2231009C1E42 /* OpenGLES.framework */,
 				2E31C0101C7B219E009C1E42 /* libz.1.2.5.tbd */,
@@ -2701,6 +2695,14 @@
 					};
 					2E4CAF081BC25F0A0089FA26 = {
 						CreatedOnToolsVersion = 7.0.1;
+					};
+					2E898C4C1CC518180041CCD8 = {
+						DevelopmentTeam = L78L4U72YJ;
+						SystemCapabilities = {
+							com.apple.InAppPurchase = {
+								enabled = 0;
+							};
+						};
 					};
 					2EADD7E31BE79D6D0051CD31 = {
 						DevelopmentTeam = L78L4U72YJ;
@@ -3793,7 +3795,7 @@
 					OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS,
 					"OL_KITE_CI_DEPLOY=ba171b0d91b1418fbd04f7b12af1e37e42d2cb1e",
 				);
-				INFOPLIST_FILE = "KiteSDK-Demo copy2-Info.plist";
+				INFOPLIST_FILE = "KitePrintSDK-Dev-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -3877,7 +3879,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = ly.kite.sdk;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "58c0cd4a-d375-411c-9a4f-050996d68495";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
@@ -3890,8 +3892,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_ENTITLEMENTS = "KiteSDK-Demo.entitlements";
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Kite Tech LTD (L78L4U72YJ)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Kite Tech LTD (L78L4U72YJ)";
 				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -3910,7 +3912,7 @@
 					OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS,
 					"OL_KITE_CI_DEPLOY=ba171b0d91b1418fbd04f7b12af1e37e42d2cb1e",
 				);
-				INFOPLIST_FILE = "KiteSDK-Demo copy2-Info.plist";
+				INFOPLIST_FILE = "KitePrintSDK-Dev-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -3994,7 +3996,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = ly.kite.sdk;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "58c0cd4a-d375-411c-9a4f-050996d68495";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
