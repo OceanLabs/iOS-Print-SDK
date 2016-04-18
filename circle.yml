@@ -6,7 +6,7 @@ machine:
 
 deployment:
   beta_distribution:
-    branch: master
+    branch: beta
     commands:
       - gym
       - ipa distribute:crashlytics
