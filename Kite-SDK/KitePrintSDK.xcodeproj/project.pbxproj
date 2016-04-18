@@ -930,9 +930,7 @@
 		2E87030A1C905368002BE2DA /* qrspec.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = qrspec.h; path = "vendor/ios-qr-encoder/QRCode/QR/libqrencode/qrspec.h"; sourceTree = SOURCE_ROOT; };
 		2E87030B1C905368002BE2DA /* rscode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = rscode.h; path = "vendor/ios-qr-encoder/QRCode/QR/libqrencode/rscode.h"; sourceTree = SOURCE_ROOT; };
 		2E87030C1C905368002BE2DA /* split.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = split.h; path = "vendor/ios-qr-encoder/QRCode/QR/libqrencode/split.h"; sourceTree = SOURCE_ROOT; };
-		2E898C4B1CC513530041CCD8 /* KiteSDK-Demo copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "KiteSDK-Demo copy-Info.plist"; path = "/Users/kostas/Documents/Oceanlabs/iOS-Print-SDK/Kite-SDK/KiteSDK-Demo copy-Info.plist"; sourceTree = "<absolute>"; };
 		2E898CEA1CC518180041CCD8 /* Kite-CI-Deploy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Kite-CI-Deploy.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		2E898CEB1CC518190041CCD8 /* KiteSDK-Demo copy2-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "KiteSDK-Demo copy2-Info.plist"; path = "/Users/kostas/Documents/Oceanlabs/iOS-Print-SDK/Kite-SDK/KiteSDK-Demo copy2-Info.plist"; sourceTree = "<absolute>"; };
 		2E898F851BE37F9B00739F5A /* OLProductTemplateOption.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLProductTemplateOption.h; sourceTree = "<group>"; };
 		2E898F861BE37F9B00739F5A /* OLProductTemplateOption.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLProductTemplateOption.m; sourceTree = "<group>"; };
 		2E8C29EB1B18D1AC0045DC21 /* OLPrintOrderCostRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLPrintOrderCostRequest.h; sourceTree = "<group>"; };
@@ -3774,7 +3772,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_ENTITLEMENTS = "KiteSDK-Demo.entitlements";
-				CODE_SIGN_IDENTITY = "iPhone Developer: Konstadinos Karagiannis (6LVCZ3J5X5)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -3879,7 +3877,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = ly.kite.sdk;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "8d34c73b-18d5-455e-810d-441bfa3efaaa";
+				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
@@ -3996,7 +3994,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = ly.kite.sdk;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "8d34c73b-18d5-455e-810d-441bfa3efaaa";
+				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
@@ -4067,7 +4065,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_ENTITLEMENTS = "KiteSDK-Demo.entitlements";
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Konstadinos Karagiannis (6LVCZ3J5X5)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -4171,7 +4169,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = ly.kite.sdk;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "8d34c73b-18d5-455e-810d-441bfa3efaaa";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
@@ -4287,7 +4285,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = ly.kite.sdk;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "8d34c73b-18d5-455e-810d-441bfa3efaaa";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
