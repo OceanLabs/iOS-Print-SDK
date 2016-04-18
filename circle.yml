@@ -13,3 +13,4 @@ deployment:
           --crashlytics_path Kite-SDK/Crashlytics.framework
           --api_token    "$CRASHLYTICS_API_KEY"
           --build_secret "$CRASHLYTICS_SECRET"
+          --groups "Kite Testers"
