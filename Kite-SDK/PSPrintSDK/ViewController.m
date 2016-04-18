@@ -62,6 +62,10 @@ UINavigationControllerDelegate, OLKiteDelegate>
 @property (nonatomic, strong) OLPrintOrder* printOrder;
 @end
 
+@interface OLKitePrintSDK (Private)
++ (void)setUseStaging:(BOOL)staging;
+@end
+
 @implementation ViewController
 
 -(void)viewDidAppear:(BOOL)animated{
@@ -148,6 +152,10 @@ UINavigationControllerDelegate, OLKiteDelegate>
 }
 
 - (BOOL)isAPIKeySet {
+#ifdef OL_KITE_CI_DEPLOY
+    return YES;
+#endif
+
     if (![[[NSProcessInfo processInfo]environment][@"OL_KITE_UI_TEST"] isEqualToString:@"1"]){
         if ([[self apiKey] isEqualToString:@"REPLACE_WITH_YOUR_API_KEY"] && ![OLKitePrintSDK apiKey]) {
             [[[UIAlertView alloc] initWithTitle:@"API Key Required" message:@"Set your API keys at the top of ViewController.m before you can print. This can be found under your profile at http://kite.ly" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
@@ -170,10 +178,15 @@ UINavigationControllerDelegate, OLKiteDelegate>
 }
 
 - (void)printWithAssets:(NSArray *)assets {
+#ifdef OL_KITE_CI_DEPLOY
+    [self setupCIDeploymentWithAssets:assets];
+    return;
+#else
     if (![[[NSProcessInfo processInfo]environment][@"OL_KITE_UI_TEST"] isEqualToString:@"1"]){
         if (![self isAPIKeySet]) return;
         [OLKitePrintSDK setAPIKey:[self apiKey] withEnvironment:[self environment]];
     }
+#endif
     
     OLKiteViewController *vc = [[OLKiteViewController alloc] initWithAssets:assets];
     vc.userEmail = @"";
@@ -305,6 +318,100 @@ UINavigationControllerDelegate, OLKiteDelegate>
 
 - (void)logKiteAnalyticsEventWithInfo:(NSDictionary *)info{
     NSLog(@"%@", info);
+}
+
+#pragma mark Internal
+
+- (void)setupCIDeploymentWithAssets:(NSArray *)assets{
+    BOOL shouldOfferAPIChange = [[[UIDevice currentDevice] systemVersion] floatValue] >= 8;
+    UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
+    
+    if (!([pasteboard containsPasteboardTypes: [NSArray arrayWithObject:@"public.utf8-plain-text"]] && pasteboard.string.length == 40)) {
+        shouldOfferAPIChange = NO;
+    }
+    
+    if (shouldOfferAPIChange){
+        UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Possible API key detected in clipboard", @"") message:NSLocalizedString(@"Do you want to use this instead of the built-in ones?", @"") preferredStyle:UIAlertControllerStyleAlert];
+        [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"No", @"") style:UIAlertActionStyleDefault handler:^(id action){
+#define STRINGIZE(x) #x
+#define STRINGIZE2(x) STRINGIZE(x)
+#define OL_KITE_CI_DEPLOY_KEY @ STRINGIZE2(OL_KITE_CI_DEPLOY)
+            [OLKitePrintSDK setAPIKey:OL_KITE_CI_DEPLOY_KEY withEnvironment:kOLKitePrintSDKEnvironmentSandbox];
+            
+#ifdef OL_KITE_OFFER_APPLE_PAY
+            [OLKitePrintSDK setApplePayMerchantID:kApplePayMerchantIDKey];
+#endif
+            
+            OLKiteViewController *vc = [[OLKiteViewController alloc] initWithAssets:assets info:@{}];
+            vc.userEmail = @"";
+            vc.userPhone = @"";
+            vc.delegate = self;
+            [vc addCustomPhotoProviderWithCollections:@[[[CatsAssetCollectionDataSource alloc] init]] name:@"Cats" icon:[UIImage imageNamed:@"cat"]];
+            [vc addCustomPhotoProviderWithCollections:@[[[DogsAssetCollectionDataSource alloc] init]] name:@"Dogs" icon:[UIImage imageNamed:@"dog"]];
+            [self presentViewController:vc animated:YES completion:NULL];
+        }]];
+        [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Yes", @"") style:UIAlertActionStyleDefault handler:^(id action){
+            [OLKitePrintSDK setAPIKey:pasteboard.string withEnvironment:[self environment]];
+            
+#ifdef OL_KITE_OFFER_APPLE_PAY
+            [OLKitePrintSDK setApplePayMerchantID:kApplePayMerchantIDKey];
+            [OLKitePrintSDK setApplePayPayToString:kApplePayBusinessName];
+#endif
+            
+            OLKiteViewController *vc = [[OLKiteViewController alloc] initWithAssets:assets];
+            vc.userEmail = @"";
+            vc.userPhone = @"";
+            vc.delegate = self;
+            [self presentViewController:vc animated:YES completion:NULL];
+            
+            //Register for push notifications
+            NSUInteger types = (UIUserNotificationTypeSound | UIUserNotificationTypeAlert | UIUserNotificationTypeBadge);
+            if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
+                [[UIApplication sharedApplication] registerUserNotificationSettings:
+                 [UIUserNotificationSettings settingsForTypes:types categories:nil]];
+                [[UIApplication sharedApplication] registerForRemoteNotifications];
+            }
+            //    else {
+            //        [[UIApplication sharedApplication] registerForRemoteNotificationTypes:types];
+            //    }
+        }]];
+        [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Yes and use staging", @"") style:UIAlertActionStyleDefault handler:^(id action){
+            [OLKitePrintSDK setUseStaging:YES];
+            [OLKitePrintSDK setAPIKey:pasteboard.string withEnvironment:[self environment]];
+            
+#ifdef OL_KITE_OFFER_APPLE_PAY
+            [OLKitePrintSDK setApplePayMerchantID:kApplePayMerchantIDKey];
+            [OLKitePrintSDK setApplePayPayToString:kApplePayBusinessName];
+#endif
+            
+            OLKiteViewController *vc = [[OLKiteViewController alloc] initWithAssets:assets];
+            vc.userEmail = @"";
+            vc.userPhone = @"";
+            vc.delegate = self;
+            [vc addCustomPhotoProviderWithCollections:@[[[CatsAssetCollectionDataSource alloc] init]] name:@"Cats" icon:[UIImage imageNamed:@"cat"]];
+            [vc addCustomPhotoProviderWithCollections:@[[[DogsAssetCollectionDataSource alloc] init]] name:@"Dogs" icon:[UIImage imageNamed:@"dog"]];
+            [self presentViewController:vc animated:YES completion:NULL];
+        }]];
+        [self presentViewController:ac animated:YES completion:NULL];
+    }
+    else{
+#define STRINGIZE(x) #x
+#define STRINGIZE2(x) STRINGIZE(x)
+#define OL_KITE_CI_DEPLOY_KEY @ STRINGIZE2(OL_KITE_CI_DEPLOY)
+        [OLKitePrintSDK setAPIKey:OL_KITE_CI_DEPLOY_KEY withEnvironment:kOLKitePrintSDKEnvironmentSandbox];
+        
+#ifdef OL_KITE_OFFER_APPLE_PAY
+        [OLKitePrintSDK setApplePayMerchantID:kApplePayMerchantIDKey];
+#endif
+        
+        OLKiteViewController *vc = [[OLKiteViewController alloc] initWithAssets:assets];
+        vc.userEmail = @"";
+        vc.userPhone = @"";
+        vc.delegate = self;
+        [vc addCustomPhotoProviderWithCollections:@[[[CatsAssetCollectionDataSource alloc] init]] name:@"Cats" icon:[UIImage imageNamed:@"cat"]];
+        [vc addCustomPhotoProviderWithCollections:@[[[DogsAssetCollectionDataSource alloc] init]] name:@"Dogs" icon:[UIImage imageNamed:@"dog"]];
+        [self presentViewController:vc animated:YES completion:NULL];
+    }
 }
 
 @end
