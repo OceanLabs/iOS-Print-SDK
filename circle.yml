@@ -1,3 +1,15 @@
 machine:
   xcode:
     version: 7.2
+  environment:
+    GYM_CODE_SIGNING_IDENTITY: "iPhone Distribution: Kite Tech LTD (L78L4U72YJ)"
+
+deployment:
+  beta_distribution:
+    branch: master
+    commands:
+      - gym
+      - ipa distribute:crashlytics
+          --crashlytics_path Crashlytics.framework
+          --api_token    "$CRASHLYTICS_API_KEY"
+          --build_secret "$CRASHLYTICS_SECRET"
