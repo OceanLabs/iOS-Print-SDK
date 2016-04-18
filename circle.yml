@@ -10,6 +10,6 @@ deployment:
     commands:
       - gym -w Kite-SDK/KitePrintSDK.xcworkspace -s KiteSDK-Demo
       - ipa distribute:crashlytics
-          --crashlytics_path Crashlytics.framework
+          --crashlytics_path Kite-SDK/Crashlytics.framework
           --api_token    "$CRASHLYTICS_API_KEY"
           --build_secret "$CRASHLYTICS_SECRET"
