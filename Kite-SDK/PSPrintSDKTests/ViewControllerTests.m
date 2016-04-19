@@ -15,6 +15,14 @@
 #import "OLProductGroup.h"
 #import "OLProductTypeSelectionViewController.h"
 #import "NSObject+Utils.h"
+#import "OLOrderReviewViewController.h"
+#import "OLPhotobookViewController.h"
+#import "OLProductOverviewViewController.h"
+#import "OLCaseViewController.h"
+#import "OLKiteUtils.h"
+#import "OLPrintOrder.h"
+#import "OLPaymentViewController.h"
+#import "OLCreditCardCaptureViewController.h"
 
 @import Photos;
 
@@ -22,9 +30,16 @@
 
 @end
 
+@interface OLKitePrintSDK ()
+
++ (BOOL)setUseStripeForCreditCards:(BOOL)use;
+
+@end
+
 @interface OLPhotoSelectionViewController (Private)
 
 -(void)onButtonNextClicked;
+@property (nonatomic, weak) IBOutlet UIButton *buttonNext;
 
 @end
 
@@ -35,12 +50,51 @@
 
 @end
 
+@interface OLKiteViewController ()
+@property (strong, nonatomic) NSMutableArray *userSelectedPhotos;
+@property (strong, nonatomic) OLPrintOrder *printOrder;
+@end
+
 @interface OLProductHomeViewController (Private)
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath;
 - (NSArray *)productGroups;
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView;
+@end
 
+@interface OLOrderReviewViewController ()
+@property (strong, nonatomic) UIButton *nextButton;
+@end
+
+@interface OLPhotobookViewController ()
+@property (weak, nonatomic) IBOutlet UIButton *ctaButton;
+
+@end
+
+@interface OLProductOverviewViewController ()
+@property (weak, nonatomic) IBOutlet UIButton *callToActionButton;
+@end
+
+@interface OLCaseViewController ()
+@property (assign, nonatomic) BOOL downloadedMask;
+@end
+
+@interface OLSingleImageProductReviewViewController ()
+@property (weak, nonatomic) IBOutlet OLRemoteImageCropper *imageCropView;
+@end
+
+@interface OLPaymentViewController ()
+- (IBAction)onButtonPayWithCreditCardClicked;
+@end
+
+@class OLCreditCardCaptureRootController;
+@interface OLCreditCardCaptureViewController ()
+@property (nonatomic, strong) OLCreditCardCaptureRootController *rootVC;
+@end
+
+@interface OLCreditCardCaptureRootController : UITableViewController
+@property (nonatomic, strong) UITextField *textFieldCardNumber, *textFieldExpiryDate, *textFieldCVV;
+- (void)onButtonPayClicked;
 @end
 
 @implementation ViewControllerTests
@@ -98,7 +152,7 @@
     
     __block OLProductHomeViewController *resultVc;
     
-    OLKiteViewController *vc = [[OLKiteViewController alloc] initWithAssets:@[]];
+    OLKiteViewController *vc = [[OLKiteViewController alloc] initWithAssets:@[[OLKiteTestHelper aPrintPhoto].asset]];
     UINavigationController *rootVc = (UINavigationController *)[[UIApplication sharedApplication].delegate window].rootViewController;
     
     sleep(2);
@@ -152,31 +206,90 @@
 
 - (void)tapNextOnViewController:(UIViewController *)vc{
     XCTestExpectation *expectation = [self expectationWithDescription:@"Wait for vc push"];
-    [vc.navigationItem.rightBarButtonItem.target safePerformSelector:vc.navigationItem.rightBarButtonItem.action withObject:nil];
+    
+    UIButton *button;
+    button = (UIButton *)[vc safePerformSelectorWithReturn:@selector(nextButton) withObject:nil];
+    if (!button){
+        button = (UIButton *)[vc safePerformSelectorWithReturn:@selector(ctaButton) withObject:nil];
+    }
+    if (!button){
+        button = (UIButton *)[vc safePerformSelectorWithReturn:@selector(buttonNext) withObject:nil];
+    }
+    if (!button){
+        button = (UIButton *)[vc safePerformSelectorWithReturn:@selector(callToActionButton) withObject:nil];
+    }
+    [button sendActionsForControlEvents:UIControlEventTouchUpInside];
     
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
         [expectation fulfill];
     });
     
-    [self waitForExpectationsWithTimeout:5 handler:NULL];
+    [self waitForExpectationsWithTimeout:10 handler:NULL];
 }
 
-//- (void)testCompleteCaseJourney{
-//    OLProductHomeViewController *productHomeVc = [self loadKiteViewController];
-//    [self chooseClass:@"Snap Cases" onOLProductHomeViewController:productHomeVc];
-//    
-//    OLProductTypeSelectionViewController *productTypeVc = (OLProductTypeSelectionViewController *)productHomeVc.navigationController.topViewController;
-//    XCTAssert([productTypeVc isKindOfClass:[OLProductTypeSelectionViewController class]]);
-//
-//    OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
-//    printPhoto.asset = [OLKiteTestHelper aPHAsset];
-//    
-//    productTypeVc.userSelectedPhotos = [@[printPhoto, [OLKiteTestHelper aPrintPhoto]] mutableCopy];
-//    [self chooseProduct:@"iPhone 6" onOLProductTypeSelectionViewController:productTypeVc];
-//    
-//    [self tapNextOnViewController:productHomeVc.navigationController.topViewController];
-//    [self tapNextOnViewController:productHomeVc.navigationController.topViewController];
-//}
+- (void)testCompleteCaseJourney{
+    [OLKitePrintSDK setUseStripeForCreditCards:YES];
+    
+    OLProductHomeViewController *productHomeVc = [self loadKiteViewController];
+    [self chooseClass:@"Snap Cases" onOLProductHomeViewController:productHomeVc];
+    
+    OLProductTypeSelectionViewController *productTypeVc = (OLProductTypeSelectionViewController *)productHomeVc.navigationController.topViewController;
+    XCTAssert([productTypeVc isKindOfClass:[OLProductTypeSelectionViewController class]]);
+    
+    [self chooseProduct:@"iPhone 6" onOLProductTypeSelectionViewController:productTypeVc];
+    
+    [self tapNextOnViewController:productHomeVc.navigationController.topViewController];
+    
+    OLCaseViewController *caseVc = (OLCaseViewController *)productHomeVc.navigationController.topViewController;
+    XCTAssert([caseVc isKindOfClass:[OLCaseViewController class]]);
+    
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Wait for case mask to download"];
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        while (!caseVc.imageCropView.image || !caseVc.downloadedMask){
+            sleep(3);
+        }
+        [expectation fulfill];
+    });
+    [self waitForExpectationsWithTimeout:120 handler:NULL];
+    
+    OLKiteViewController *kiteVc = [OLKiteUtils kiteVcForViewController:caseVc];
+    OLPrintOrder *printOrder = kiteVc.printOrder;
+    printOrder.shippingAddress = [OLAddress kiteTeamAddress];
+    printOrder.email = @"ios_unit_test@kite.ly";
+    [self tapNextOnViewController:caseVc];
+    
+    OLPaymentViewController *paymentVc = (OLPaymentViewController *)productHomeVc.navigationController.topViewController;
+    XCTAssert([paymentVc isKindOfClass:[OLPaymentViewController class]]);
+
+    [paymentVc onButtonPayWithCreditCardClicked];
+    
+    expectation = [self expectationWithDescription:@"Wait for Payment VC"];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1.5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+        [expectation fulfill];
+    });
+    
+    [self waitForExpectationsWithTimeout:3 handler:NULL];
+    
+    OLCreditCardCaptureViewController *creditCardVc = (OLCreditCardCaptureViewController *)paymentVc.presentedViewController;
+    creditCardVc.rootVC.textFieldCVV.text = @"111";
+    creditCardVc.rootVC.textFieldCardNumber.text = @"4242424242424242";
+    creditCardVc.rootVC.textFieldExpiryDate.text = @"12/20";
+    
+    [creditCardVc.rootVC onButtonPayClicked];
+    
+   expectation = [self expectationWithDescription:@"Wait for order complete"];
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        while (!printOrder.printed) {
+            sleep(3);
+        }
+        [expectation fulfill];
+    });
+    
+    [self waitForExpectationsWithTimeout:120 handler:NULL];
+    
+}
 
 //- (void)testPhotoSelectionScreen{
 //    NSData *data1 = [NSData dataWithContentsOfFile:[[NSBundle bundleForClass:[OLKiteTestHelper class]] pathForResource:@"1" ofType:@"jpg"]];
