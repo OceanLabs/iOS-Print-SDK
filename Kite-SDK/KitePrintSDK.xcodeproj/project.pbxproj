@@ -25,6 +25,14 @@
 		2E0804B91C0DECE300F50D42 /* OLCustomPhotoProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0804B71C0DECE300F50D42 /* OLCustomPhotoProvider.m */; };
 		2E0804BE1C0DF70200F50D42 /* CatsAssetCollectionDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0804BB1C0DF70200F50D42 /* CatsAssetCollectionDataSource.m */; };
 		2E0804BF1C0DF70200F50D42 /* AssetDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0804BD1C0DF70200F50D42 /* AssetDataSource.m */; };
+		2E1327841CC7A8C800387E06 /* bitstream.c in Sources */ = {isa = PBXBuildFile; fileRef = 2E8702DD1C9050CA002BE2DA /* bitstream.c */; };
+		2E1327851CC7A8C800387E06 /* mask.c in Sources */ = {isa = PBXBuildFile; fileRef = 2E8702DE1C9050CA002BE2DA /* mask.c */; };
+		2E1327861CC7A8C800387E06 /* qrencode.c in Sources */ = {isa = PBXBuildFile; fileRef = 2E8702DF1C9050CA002BE2DA /* qrencode.c */; };
+		2E1327871CC7A8C800387E06 /* qrinput.c in Sources */ = {isa = PBXBuildFile; fileRef = 2E8702E01C9050CA002BE2DA /* qrinput.c */; };
+		2E1327881CC7A8C800387E06 /* qrspec.c in Sources */ = {isa = PBXBuildFile; fileRef = 2E8702E11C9050CA002BE2DA /* qrspec.c */; };
+		2E1327891CC7A8C800387E06 /* rscode.c in Sources */ = {isa = PBXBuildFile; fileRef = 2E8702E21C9050CA002BE2DA /* rscode.c */; };
+		2E13278A1CC7A8C800387E06 /* split.c in Sources */ = {isa = PBXBuildFile; fileRef = 2E8702E31C9050CA002BE2DA /* split.c */; };
+		2E13278B1CC7A8C800387E06 /* UIImage+MDQRCode.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E8702E41C9050CA002BE2DA /* UIImage+MDQRCode.m */; };
 		2E14D2D11C2AE9AD00F35403 /* OLImagePreviewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E14D2D01C2AE9AD00F35403 /* OLImagePreviewViewController.m */; };
 		2E14D2D21C2AE9AD00F35403 /* OLImagePreviewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E14D2D01C2AE9AD00F35403 /* OLImagePreviewViewController.m */; };
 		2E2632C21B97336700C7D879 /* KitePrintSDKUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E2632C11B97336700C7D879 /* KitePrintSDKUITests.m */; };
@@ -671,6 +679,15 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		2E1327791CC7A83300387E06 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "include/$(PRODUCT_NAME)";
+			dstSubfolderSpec = 16;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		2EA3D3DF1C9C04B500B99BCD /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -804,6 +821,7 @@
 		2E0E250E1A77997E00808ED8 /* OLAnalytics.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLAnalytics.m; sourceTree = "<group>"; };
 		2E1067FE1B83335C00EB4C14 /* UIView+RoundRect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIView+RoundRect.h"; path = "PSPrintSDK/Categories/UIView+RoundRect.h"; sourceTree = "<group>"; };
 		2E1067FF1B83335C00EB4C14 /* UIView+RoundRect.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIView+RoundRect.m"; path = "PSPrintSDK/Categories/UIView+RoundRect.m"; sourceTree = "<group>"; };
+		2E13277B1CC7A83300387E06 /* libios-qr-encoder.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libios-qr-encoder.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2E14D2CF1C2AE9AD00F35403 /* OLImagePreviewViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLImagePreviewViewController.h; sourceTree = "<group>"; };
 		2E14D2D01C2AE9AD00F35403 /* OLImagePreviewViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLImagePreviewViewController.m; sourceTree = "<group>"; };
 		2E20BD841AD4229700FB2446 /* OLCaseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLCaseViewController.h; sourceTree = "<group>"; };
@@ -1310,6 +1328,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		2E1327781CC7A83300387E06 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		2E2632BC1B97336700C7D879 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -1859,6 +1884,7 @@
 				E22963671C43DD21002A90CA /* libCTAssetsPicker.a */,
 				2EA3D3E31C9C04B500B99BCD /* libKiteSDKMinimal.a */,
 				2E898CEA1CC518180041CCD8 /* Kite-CI-Deploy.app */,
+				2E13277B1CC7A83300387E06 /* libios-qr-encoder.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -2381,6 +2407,23 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		2E13277A1CC7A83300387E06 /* ios-qr-encoder */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2E1327831CC7A83300387E06 /* Build configuration list for PBXNativeTarget "ios-qr-encoder" */;
+			buildPhases = (
+				2E1327771CC7A83300387E06 /* Sources */,
+				2E1327781CC7A83300387E06 /* Frameworks */,
+				2E1327791CC7A83300387E06 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "ios-qr-encoder";
+			productName = "ios-qr-encoder";
+			productReference = 2E13277B1CC7A83300387E06 /* libios-qr-encoder.a */;
+			productType = "com.apple.product-type.library.static";
+		};
 		2E2632BE1B97336700C7D879 /* KitePrintSDKUITests */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2E2632C81B97336700C7D879 /* Build configuration list for PBXNativeTarget "KitePrintSDKUITests" */;
@@ -2690,6 +2733,9 @@
 				LastUpgradeCheck = 0720;
 				ORGANIZATIONNAME = Kite.ly;
 				TargetAttributes = {
+					2E13277A1CC7A83300387E06 = {
+						CreatedOnToolsVersion = 7.3;
+					};
 					2E2632BE1B97336700C7D879 = {
 						CreatedOnToolsVersion = 7.0;
 						TestTargetID = CD73BF67186215790009DE03;
@@ -2788,6 +2834,7 @@
 				E22058FC1BF3FB71009CFAF6 /* SDWebImage */,
 				E24453041BFD2C1D0086BF03 /* PayPal */,
 				E22963661C43DD21002A90CA /* CTAssetsPicker */,
+				2E13277A1CC7A83300387E06 /* ios-qr-encoder */,
 			);
 		};
 /* End PBXProject section */
@@ -3006,6 +3053,21 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		2E1327771CC7A83300387E06 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2E1327841CC7A8C800387E06 /* bitstream.c in Sources */,
+				2E1327851CC7A8C800387E06 /* mask.c in Sources */,
+				2E1327861CC7A8C800387E06 /* qrencode.c in Sources */,
+				2E1327871CC7A8C800387E06 /* qrinput.c in Sources */,
+				2E1327881CC7A8C800387E06 /* qrspec.c in Sources */,
+				2E1327891CC7A8C800387E06 /* rscode.c in Sources */,
+				2E13278A1CC7A8C800387E06 /* split.c in Sources */,
+				2E13278B1CC7A8C800387E06 /* UIImage+MDQRCode.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		2E2632BB1B97336700C7D879 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -3721,6 +3783,41 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		2E1327811CC7A83300387E06 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		2E1327821CC7A83300387E06 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
 		2E2632C61B97336700C7D879 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -4956,6 +5053,14 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		2E1327831CC7A83300387E06 /* Build configuration list for PBXNativeTarget "ios-qr-encoder" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2E1327811CC7A83300387E06 /* Debug */,
+				2E1327821CC7A83300387E06 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
 		2E2632C81B97336700C7D879 /* Build configuration list for PBXNativeTarget "KitePrintSDKUITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
