@@ -209,13 +209,16 @@ static NSString* creativeSDKClientSecret = nil;
     }
 }
 
-#ifdef OL_KITE_OFFER_APPLE_PAY
 + (void)setApplePayMerchantID:(NSString *_Nonnull)mID{
+#ifdef OL_KITE_OFFER_APPLE_PAY
     applePayMerchantID = mID;
+#endif
 }
 
 + (void)setApplePayPayToString:(NSString *_Nonnull)name{
+#ifdef OL_KITE_OFFER_APPLE_PAY
     applePayPayToString = name;
+#endif
 }
 
 + (NSString *)applePayPayToString{
@@ -238,7 +241,6 @@ static NSString* creativeSDKClientSecret = nil;
 + (NSString *_Nonnull)appleMerchantID {
     return applePayMerchantID;
 }
-#endif
 
 + (NSString *_Nonnull)stripePublishableKey {
     switch (environment) {
@@ -284,11 +286,13 @@ static NSString* creativeSDKClientSecret = nil;
 
 #pragma mark - Internal
 
-#ifdef OL_KITE_OFFER_INSTAGRAM
+
 + (void)setInstagramEnabledWithClientID:(NSString *_Nonnull)clientID secret:(NSString *_Nonnull)secret redirectURI:(NSString *_Nonnull)redirectURI {
+#ifdef OL_KITE_OFFER_INSTAGRAM
     instagramSecret = secret;
     instagramClientID = clientID;
     instagramRedirectURI = redirectURI;
+#endif
 }
 
 + (NSString *)instagramRedirectURI {
@@ -302,6 +306,5 @@ static NSString* creativeSDKClientSecret = nil;
 + (NSString *)instagramClientID{
     return instagramClientID;
 }
-#endif
 
 @end

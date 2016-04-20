@@ -194,7 +194,7 @@
 
 /**
  *  Add a custom source for the photo picker
- *  (Needs 'ImageProviders' subspec or this method won't do anything. See
+ *  (Needs the 'ImageProviders' subspec or this method won't do anything. See
  *  https://github.com/OceanLabs/iOS-Print-SDK/blob/master/Kite-SDK/docs/custom_photo_sources.md for details)
  *
  *  @param collections An array of photo collections(albums)
@@ -205,7 +205,7 @@
 
 /**
  *  Add your own photo picker.
- *  (Needs 'ImageProviders' subspec or this method won't do anything. See
+ *  (Needs the 'ImageProviders' subspec or this method won't do anything. See
  *  https://github.com/OceanLabs/iOS-Print-SDK/blob/master/Kite-SDK/docs/custom_photo_sources.md for details)
  *
  *  @param vcs   Your view controller
