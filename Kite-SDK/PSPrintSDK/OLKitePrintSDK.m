@@ -296,15 +296,27 @@ static NSString* creativeSDKClientSecret = nil;
 }
 
 + (NSString *)instagramRedirectURI {
+#ifdef OL_KITE_OFFER_INSTAGRAM
     return instagramRedirectURI;
+#else
+    return nil;
+#endif
 }
 
 + (NSString *)instagramSecret{
+#ifdef OL_KITE_OFFER_INSTAGRAM
     return instagramSecret;
+#else
+    return nil;
+#endif
 }
 
 + (NSString *)instagramClientID{
+#ifdef OL_KITE_OFFER_INSTAGRAM
     return instagramClientID;
+#else
+    return nil;
+#endif
 }
 
 @end
