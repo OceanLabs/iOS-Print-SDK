@@ -91,11 +91,9 @@ static BOOL isUnitTesting = NO;
 static BOOL QRCodeUploadEnabled = NO;
 static BOOL isKiosk = NO;
 
-#ifdef OL_KITE_OFFER_INSTAGRAM
 static NSString *instagramClientID = nil;
 static NSString *instagramSecret = nil;
 static NSString *instagramRedirectURI = nil;
-#endif
 
 #ifdef OL_KITE_OFFER_ADOBE
 static NSString* creativeSDKClientId = nil;
