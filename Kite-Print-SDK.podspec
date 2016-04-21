@@ -30,12 +30,6 @@ Pod::Spec.new do |spec|
   spec.subspec 'PayPal' do |paypal|
     paypal.xcconfig	=  { 'OTHER_CFLAGS' => '$(inherited) -DOL_KITE_OFFER_PAYPAL' }
     paypal.dependency	'PayPal-iOS-SDK/Core', '~> 2.12.6'
-
-    spec.pod_target_xcconfig = {
-        'FRAMEWORK_SEARCH_PATHS' => '$(inherited) $(PODS_ROOT)/PayPal-iOS-SDK',
-        'OTHER_LDFLAGS'          => '$(inherited) -undefined dynamic_lookup'
-    }
-
   end
 
   spec.subspec 'ApplePay' do |apple|
