@@ -61,6 +61,7 @@
 		2E645B381BE7D176009B662B /* OLProductOptionsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EAD11541BD7C716000BC80E /* OLProductOptionsViewController.m */; };
 		2E645B391BE7D1EE009B662B /* OLProductTemplateOption.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E898F861BE37F9B00739F5A /* OLProductTemplateOption.m */; };
 		2E645B3A1BE7D1EF009B662B /* OLProductTemplateOption.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E898F861BE37F9B00739F5A /* OLProductTemplateOption.m */; };
+		2E65E8321CC8BD3E00E9DD98 /* UIViewController+CTAssetsPickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = E229634D1C43DCB5002A90CA /* UIViewController+CTAssetsPickerController.m */; };
 		2E6E605D1C50384C00829BB7 /* KitePrintSDK.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2E6E605F1C50384C00829BB7 /* KitePrintSDK.strings */; };
 		2E6E60661C5038AD00829BB7 /* OLKiteStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2E6E60681C5038AD00829BB7 /* OLKiteStoryboard.storyboard */; };
 		2E7483511BCCFB5900360550 /* 2.png in Resources */ = {isa = PBXBuildFile; fileRef = 2E7483501BCCFB5900360550 /* 2.png */; };
@@ -3575,6 +3576,7 @@
 				E22963761C43DD80002A90CA /* NSNumberFormatter+CTAssetsPickerController.m in Sources */,
 				E22963771C43DD84002A90CA /* PHAsset+CTAssetsPickerController.m in Sources */,
 				E22963781C43DD86002A90CA /* PHAssetCollection+CTAssetsPickerController.m in Sources */,
+				2E65E8321CC8BD3E00E9DD98 /* UIViewController+CTAssetsPickerController.m in Sources */,
 				E22963791C43DD89002A90CA /* UICollectionView+CTAssetsPickerController.m in Sources */,
 				E229637A1C43DD8D002A90CA /* UIImage+CTAssetsPickerController.m in Sources */,
 				E229637C1C43DD95002A90CA /* CTAssetCheckmark.m in Sources */,
@@ -5060,6 +5062,7 @@
 				2E1327821CC7A83300387E06 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		2E2632C81B97336700C7D879 /* Build configuration list for PBXNativeTarget "KitePrintSDKUITests" */ = {
 			isa = XCConfigurationList;
