@@ -111,7 +111,7 @@ static NSUInteger cacheOrderHash; // cached response is only valid for orders wi
 
     NSDictionary *dict = @{@"basket" : basket,
                            @"shipping_country_code" : order.shippingAddress.country ? [order.shippingAddress.country codeAlpha3] : [[OLCountry countryForCurrentLocale] codeAlpha3],
-                           @"promo_code" : order.promoCode ? urlencode(order.promoCode) : @"",
+                           @"promo_code" : order.promoCode ? order.promoCode : @"",
                            };
     
     NSDictionary *extraDict = [order.userData objectForKey:@"extra_dict_for_cost"];
