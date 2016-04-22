@@ -112,6 +112,10 @@ static NSString *const kOLAnalyticsError = @"Error";
 + (void)trackOrderSubmission:(OLPrintOrder *)printOrder;
 + (void)trackQualityInfoScreenViewed;
 
+// upsell events
++ (void)trackUpsellShown:(BOOL)shown;
++ (void)trackUpsellDismissed:(BOOL)optedIn;
+
 + (void)incrementLaunchSDKCount;
 + (void)setExtraInfo:(NSDictionary *)info;
 + (NSString *)userDistinctId;
