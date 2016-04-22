@@ -59,7 +59,7 @@
 
 
 /* No comment provided by engineer. */
-"Clearing Code" = Code de compensation
+"Clearing Code" = "Code de compensation";
 
 
 /* No comment provided by engineer. */
@@ -171,7 +171,7 @@
 
 
 /* No comment provided by engineer. */
-"Only registered %d/%d image URLs with the asset endpoint" ="Nous n'avons pu enregistrer que %1$d/%2$d de l'image";
+"Only registered %d/%d image URLs with the asset endpoint" ="Nous n'avons pu enregistrer que %d/%d de l'image";
 
 
 /* No comment provided by engineer. */
