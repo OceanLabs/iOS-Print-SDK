@@ -41,6 +41,7 @@
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;
 @property (weak, nonatomic) IBOutlet UILabel *headerLabel;
 @property (weak, nonatomic) IBOutlet UILabel *bodyLabel;
+@property (weak, nonatomic) IBOutlet UILabel *bannerLabel;
 @property (strong, nonatomic) OLProduct *product;
 
 @end
@@ -76,6 +77,8 @@
     
     NSString *discountedString = [discountedCost formatCostForCurrencyCode:[self.product currencyCode]];
     NSString *bodyString;
+    
+    self.bannerLabel.text = self.offer.bannerText;
     
     if (self.offer.text){
         self.headerLabel.text = [self.offer.headerText stringByReplacingOccurrencesOfString:@"[[price]]" withString:[NSString stringWithFormat:@"%@ %@", self.product.unitCost, discountedString]];
