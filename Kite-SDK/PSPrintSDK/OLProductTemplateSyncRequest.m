@@ -33,6 +33,7 @@
 #import "OLProductTemplate.h"
 #import "OLConstants.h"
 #import "OLKiteABTesting.h"
+#import "OLKiteTheme.h"
 
 @interface OLProductTemplateSyncRequest ()
 @property (nonatomic, strong) OLBaseRequest *req;
@@ -80,6 +81,35 @@
                 id userConfig = json[@"user_config"];
                 if ([userConfig isKindOfClass:[NSDictionary class]]){
                     [[OLKiteABTesting sharedInstance] setUserConfig:userConfig];
+                }
+                
+                id themeConfig = json[@"kiosk_config"];
+                if ([themeConfig isKindOfClass:[NSDictionary class]]){
+                    id valuesDict = themeConfig[[[NSLocale preferredLanguages] objectAtIndex:0]];
+                    if (!valuesDict){
+                        valuesDict = themeConfig[@"en"];
+                    }
+                    if (!valuesDict && [themeConfig allKeys].count > 0){
+                        valuesDict = themeConfig[[themeConfig allKeys].firstObject];
+                    }
+                    
+                    if (valuesDict){
+                        OLKiteTheme *theme = [[OLKiteTheme alloc] init];
+                        theme.burgerMenuHeader = [NSURL URLWithString:valuesDict[@"kiosk_burger_menu_header"]];
+                        theme.endSessionButton = [NSURL URLWithString:valuesDict[@"kiosk_end_session_button"]];
+                        theme.navigationIcon = [NSURL URLWithString:valuesDict[@"kiosk_navigation_icon"]];
+                        theme.privacyPolicy = [NSURL URLWithString:valuesDict[@"kiosk_privacy_policy_url"]];
+                        theme.receiptLogo = [NSURL URLWithString:valuesDict[@"kiosk_receipt_logo"]];
+                        theme.secretReveal = [NSURL URLWithString:valuesDict[@"kiosk_secret_reveal"]];
+                        theme.shippingOption1 = [NSURL URLWithString:valuesDict[@"kiosk_shipping_option_to_store"]];
+                        theme.shippingOption2 = [NSURL URLWithString:valuesDict[@"kiosk_shipping_option_to_home"]];
+                        theme.startScreen = [NSURL URLWithString:valuesDict[@"kiosk_start_screen"]];
+                        theme.termsAndConditions = [NSURL URLWithString:valuesDict[@"kiosk_terms_and_conditions_url"]];
+                        theme.splashScreen = [NSURL URLWithString:valuesDict[@"kiosk_splash_screen"]];
+                        theme.ctaColor = valuesDict[@"kiosk_cta_color"];
+                        
+                        [[OLKiteABTesting sharedInstance] setTheme:userConfig];
+                    }
                 }
                 
                 id objects = json[@"objects"];

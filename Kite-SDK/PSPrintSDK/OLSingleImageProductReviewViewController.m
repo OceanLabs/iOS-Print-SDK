@@ -215,6 +215,9 @@ static BOOL hasMoved;
         }
     }
     
+    self.ctaButton.titleLabel.adjustsFontSizeToFitWidth = YES;
+    self.ctaButton.titleLabel.minimumScaleFactor = 0.5;
+    
     self.title = NSLocalizedString(@"Reposition the Photo", @"");
     
     if (self.imageCropView){

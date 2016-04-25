@@ -28,6 +28,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "OLKiteTheme.h"
 
 static NSString *const kOLKiteThemeHeaderLogoImageURL = @"themeLogoImageURL";
 static NSString *const kOLKiteThemeCheckoutProgress1 = @"themeCheckoutProgress1";
@@ -67,6 +68,7 @@ static NSString *const kOLKiteThemeSupportEmail = @"themeSupportEmail";
 @property (strong, nonatomic, readonly) NSString *supportEmail;
 
 @property (strong, nonatomic) NSDictionary *userConfig;
+@property (strong, nonatomic) OLKiteTheme *theme;
 @property (assign, nonatomic) BOOL darkTheme;
 
 + (instancetype)sharedInstance;
