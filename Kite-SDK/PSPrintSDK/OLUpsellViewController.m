@@ -32,6 +32,7 @@
 #import "OLProduct.h"
 #import "OLProductTemplate.h"
 #import "NSDecimalNumber+CostFormatter.h"
+#import "OLAnalytics.h"
 
 @interface OLUpsellViewController ()
 
@@ -127,6 +128,7 @@
 }
 
 - (IBAction)acceptButtonAction:(UIButton *)sender {
+    [OLAnalytics trackUpsellDismissed:YES];
     [UIView animateWithDuration:0.25 delay:0.25 options:0 animations:^{
         self.view.backgroundColor = [UIColor clearColor];
     } completion:NULL];
@@ -140,6 +142,7 @@
 }
 
 - (IBAction)declineButtonAction:(UIButton *)sender {
+    [OLAnalytics trackUpsellDismissed:NO];
     [UIView animateWithDuration:0.25 delay:0.25 options:0 animations:^{
         self.view.backgroundColor = [UIColor clearColor];
     } completion:NULL];

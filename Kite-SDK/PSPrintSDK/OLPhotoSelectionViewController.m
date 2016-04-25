@@ -1573,6 +1573,8 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
             shouldShowOffer &= offer.maxUnits == 0 || offer.maxUnits >= self.userSelectedPhotos.count;
             shouldShowOffer &= [OLProduct productWithTemplateId:offer.offerTemplate] != nil;
         }
+        
+        [OLAnalytics trackUpsellShown:shouldShowOffer];
         if (shouldShowOffer){
             OLUpsellViewController *c = [self.storyboard instantiateViewControllerWithIdentifier:@"OLUpsellViewController"];
             if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8){
