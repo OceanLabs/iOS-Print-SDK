@@ -108,7 +108,7 @@
                         theme.splashScreen = [NSURL URLWithString:valuesDict[@"kiosk_splash_screen"]];
                         theme.ctaColor = valuesDict[@"kiosk_cta_color"];
                         
-                        [[OLKiteABTesting sharedInstance] setTheme:userConfig];
+                        [[OLKiteABTesting sharedInstance] setTheme:theme];
                     }
                 }
                 
