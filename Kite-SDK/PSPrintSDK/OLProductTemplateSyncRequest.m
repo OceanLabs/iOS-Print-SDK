@@ -34,6 +34,7 @@
 #import "OLConstants.h"
 #import "OLKiteABTesting.h"
 #import "OLKiteTheme.h"
+#import "OLCountry.h"
 
 @interface OLProductTemplateSyncRequest ()
 @property (nonatomic, strong) OLBaseRequest *req;
@@ -85,6 +86,8 @@
                 
                 id themeConfig = json[@"kiosk_config"];
                 if ([themeConfig isKindOfClass:[NSDictionary class]]){
+                    OLKiteTheme *theme = [[OLKiteTheme alloc] init];
+                    
                     id valuesDict = themeConfig[[[NSLocale preferredLanguages] objectAtIndex:0]];
                     if (!valuesDict){
                         valuesDict = themeConfig[@"en"];
@@ -94,7 +97,7 @@
                     }
                     
                     if (valuesDict){
-                        OLKiteTheme *theme = [[OLKiteTheme alloc] init];
+                        
                         theme.burgerMenuHeader = [NSURL URLWithString:valuesDict[@"kiosk_burger_menu_header"]];
                         theme.endSessionButton = [NSURL URLWithString:valuesDict[@"kiosk_end_session_button"]];
                         theme.navigationIcon = [NSURL URLWithString:valuesDict[@"kiosk_navigation_icon"]];
@@ -107,9 +110,28 @@
                         theme.termsAndConditions = [NSURL URLWithString:valuesDict[@"kiosk_terms_and_conditions_url"]];
                         theme.splashScreen = [NSURL URLWithString:valuesDict[@"kiosk_splash_screen"]];
                         theme.ctaColor = valuesDict[@"kiosk_cta_color"];
-                        
-                        [[OLKiteABTesting sharedInstance] setTheme:theme];
                     }
+                    
+                    if ([themeConfig[@"pay_at_till"] isKindOfClass:[NSNumber class]]){
+                        theme.kioskEnablePayAtTheTill = [themeConfig[@"pay_at_till"] boolValue];
+                    }
+                    
+                    if ([themeConfig[@"ship_to_store"] isKindOfClass:[NSDictionary class]]){
+                        NSDictionary *addressDict = themeConfig[@"ship_to_store"];
+                        OLAddress *address = [[OLAddress alloc] init];
+                        address.recipientFirstName = addressDict[@"recipient_name"];
+                        address.recipientLastName = @".";
+                        address.line1 = addressDict[@"address_line_1"];
+                        address.line2 = addressDict[@"address_line_2"];
+                        address.city = addressDict[@"city"];
+                        address.stateOrCounty = addressDict[@"state"];
+                        address.zipOrPostcode = addressDict[@"postcode"];
+                        address.country = [OLCountry countryForCode:addressDict[@"country"]];
+                    
+                        theme.kioskShipToStoreAddress = address;
+                    }
+                    
+                    [[OLKiteABTesting sharedInstance] setTheme:theme];
                 }
                 
                 id objects = json[@"objects"];

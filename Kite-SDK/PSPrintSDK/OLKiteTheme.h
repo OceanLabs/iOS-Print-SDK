@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "OLAddress.h"
 
 @interface OLKiteTheme : NSObject
 
@@ -23,6 +24,6 @@
 @property (strong, nonatomic) NSURL *receiptLogo;
 @property (strong, nonatomic) NSString *ctaColor;
 @property (assign, nonatomic) BOOL kioskEnablePayAtTheTill;
-@property (assign, nonatomic) BOOL kioskEnableShipToStore;
+@property (assign, nonatomic) OLAddress *kioskShipToStoreAddress;
 
 @end
