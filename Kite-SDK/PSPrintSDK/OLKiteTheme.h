@@ -22,5 +22,7 @@
 @property (strong, nonatomic) NSURL *endSessionButton;
 @property (strong, nonatomic) NSURL *receiptLogo;
 @property (strong, nonatomic) NSString *ctaColor;
+@property (assign, nonatomic) BOOL kioskEnablePayAtTheTill;
+@property (assign, nonatomic) BOOL kioskEnableShipToStore;
 
 @end
