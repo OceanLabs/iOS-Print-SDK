@@ -120,15 +120,15 @@
                     if ([themeConfig[@"ship_to_store"] isKindOfClass:[NSDictionary class]]){
                         NSDictionary *addressDict = themeConfig[@"ship_to_store"];
                         OLAddress *address = [[OLAddress alloc] init];
-                        address.recipientFirstName = addressDict[@"recipient_name"];
+                        address.recipientFirstName = addressDict[@"company_name"];
                         address.recipientLastName = @".";
-                        address.line1 = addressDict[@"address_line_1"];
-                        address.line2 = addressDict[@"address_line_2"];
+                        address.line1 = addressDict[@"shipping_address_1"];
+                        address.line2 = addressDict[@"shipping_address_2"];
                         address.city = addressDict[@"city"];
-                        address.stateOrCounty = addressDict[@"state"];
-                        address.zipOrPostcode = addressDict[@"postcode"];
-                        address.country = [OLCountry countryForCode:addressDict[@"country"]];
-                    
+                        address.stateOrCounty = addressDict[@"county_state"];
+                        address.zipOrPostcode = addressDict[@"postal_code"];
+                        address.country = [OLCountry countryForCode:addressDict[@"country_code"]];
+                        
                         theme.kioskShipToStoreAddress = address;
                     }
                     
@@ -251,7 +251,7 @@
                                         code = [product[@"product_code"] isKindOfClass:[NSString class]] ? product[@"product_code"] : nil;
                                     }
                                 }
-                            
+                                
                                 NSMutableDictionary *costPerSheetByCurrencyCode = [[NSMutableDictionary alloc] init];
                                 for (id cost in costs) {
                                     if ([cost isKindOfClass:[NSDictionary class]]) {
