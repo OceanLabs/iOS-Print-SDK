@@ -1,201 +1,220 @@
+/* No comment provided by engineer. */
+"0Zs-Gf-EDY.normalTitle" = "Suivant";
 
-/* Class = "UIButton"; normalTitle = "Next"; ObjectID = "0Zs-Gf-EDY"; */
-"0Zs-Gf-EDY.normalTitle" = "Next";
 
-/* Class = "UILabel"; text = "free"; ObjectID = "1eS-HW-b8T"; */
-"1eS-HW-b8T.text" = "free";
+/* No comment provided by engineer. */
+"1eS-HW-b8T.text" ="Gratuit";
 
-/* Class = "UILabel"; text = "- (standard)"; ObjectID = "1nJ-Y9-R3Z"; */
+
+/* No comment provided by engineer. */
 "1nJ-Y9-R3Z.text" = "- (standard)";
 
-/* Class = "UIButton"; normalTitle = "-"; ObjectID = "2h9-jt-kQc"; */
+
+/* No comment provided by engineer. */
 "2h9-jt-kQc.normalTitle" = "-";
 
-/* Class = "UILabel"; text = "$00.00"; ObjectID = "4OU-Aa-wXY"; */
-"4OU-Aa-wXY.text" = "$00.00";
 
-/* Class = "UILabel"; text = "Label"; ObjectID = "57a-31-bDV"; */
+/* No comment provided by engineer. */
+"4OU-Aa-wXY.text" = "00,00€";
+
+
+/* No comment provided by engineer. */
 "57a-31-bDV.text" = "Label";
 
-/* Class = "UILabel"; text = "Medium Square Prints"; ObjectID = "5f8-NB-iac"; */
-"5f8-NB-iac.text" = "Medium Square Prints";
 
-/* Class = "UIBarButtonItem"; title = "Back"; ObjectID = "5rw-Ru-hCJ"; */
-"5rw-Ru-hCJ.title" = "Back";
+/* No comment provided by engineer. */
+"5rw-Ru-hCJ.title" = "Retour";
 
-/* Class = "UILabel"; text = "1-2 of 24"; ObjectID = "6zv-ER-YtC"; */
-"6zv-ER-YtC.text" = "1-2 of 24";
 
-/* Class = "UIButton"; normalTitle = "< Apple Pay"; ObjectID = "70G-qg-h5X"; */
+/* No comment provided by engineer. */
+"6zv-ER-YtC.text" = "1-2 sur 24";
+
+
+/* No comment provided by engineer. */
 "70G-qg-h5X.normalTitle" = "< Apple Pay";
 
-/* Class = "UILabel"; text = "Name"; ObjectID = "8kV-ag-lrd"; */
-"8kV-ag-lrd.text" = "Name";
 
-/* Class = "UILabel"; text = "Medium Square Prints"; ObjectID = "ADx-iv-jh9"; */
-"ADx-iv-jh9.text" = "Medium Square Prints";
+/* No comment provided by engineer. */
+"8kV-ag-lrd.text" = "Nom";
 
-/* Class = "UILabel"; text = "Product Details"; ObjectID = "AlQ-Es-3y4"; */
-"AlQ-Es-3y4.text" = "Product Details";
 
-/* Class = "UIButton"; normalTitle = "Add to Basket"; ObjectID = "BCp-TW-Lv4"; */
-"BCp-TW-Lv4.normalTitle" = "Add to Basket";
+/* No comment provided by engineer. */
+"AlQ-Es-3y4.text" = "Détails du produit";
 
-/* Class = "UILabel"; text = "Details"; ObjectID = "CCQ-J9-y3B"; */
-"CCQ-J9-y3B.text" = "Details";
 
-/* Class = "UILabel"; text = "Glossy"; ObjectID = "CWv-nM-a80"; */
-"CWv-nM-a80.text" = "Glossy";
+/* No comment provided by engineer. */
+"BCp-TW-Lv4.normalTitle" = "Ajouter au panier";
 
-/* Class = "UIButton"; normalTitle = "Shipping"; ObjectID = "Ehs-mV-jG4"; */
-"Ehs-mV-jG4.normalTitle" = "Shipping";
 
-/* Class = "UILabel"; text = "£9.99"; ObjectID = "Ekr-4w-04C"; */
-"Ekr-4w-04C.text" = "£9.99";
+/* No comment provided by engineer. */
+"CCQ-J9-y3B.text" = "Détails";
 
-/* Class = "UIButton"; normalTitle = "Back"; ObjectID = "EpU-LD-wFk"; */
-"EpU-LD-wFk.normalTitle" = "Back";
 
-/* Class = "UILabel"; text = "Buy some products & they'll appear here!"; ObjectID = "FJx-R9-sWd"; */
-"FJx-R9-sWd.text" = "Buy some products & they'll appear here!";
+/* No comment provided by engineer. */
+"Ehs-mV-jG4.normalTitle" = "Livraison";
 
-/* Class = "UILabel"; text = "Medium Square Prints"; ObjectID = "IvX-J5-xgp"; */
-"IvX-J5-xgp.text" = "Medium Square Prints";
 
-/* Class = "UIButton"; normalTitle = "Start Creating"; ObjectID = "JzC-Vn-8gQ"; */
-"JzC-Vn-8gQ.normalTitle" = "Start Creating";
+/* No comment provided by engineer. */
+"EpU-LD-wFk.normalTitle" = "Retour";
 
-/* Class = "UILabel"; text = "Powered by Kite.ly"; ObjectID = "MDv-31-HTi"; */
-"MDv-31-HTi.text" = "Powered by Kite.ly";
 
-/* Class = "UILabel"; text = "12 x Square Prints"; ObjectID = "PS6-La-wG1"; */
-"PS6-La-wG1.text" = "12 x Square Prints";
+/* No comment provided by engineer. */
+"FJx-R9-sWd.text" = "Achetez et vos achats apparaitront ici !";
 
-/* Class = "UILabel"; text = "Label"; ObjectID = "PWi-P0-FmF"; */
+
+/* No comment provided by engineer. */
+"JzC-Vn-8gQ.normalTitle" = "Lancer la création";
+
+
+/* No comment provided by engineer. */
+"MDv-31-HTi.text" = "Propulsé Kite.ly";
+
+
+/* No comment provided by engineer. */
+"PS6-La-wG1.text" = "12 x images carrées";
+
+
+/* No comment provided by engineer. */
 "PWi-P0-FmF.text" = "Label";
 
-/* Class = "UILabel"; text = "+"; ObjectID = "Pyk-bN-B1S"; */
+
+/* No comment provided by engineer. */
 "Pyk-bN-B1S.text" = "+";
 
-/* Class = "UIButton"; normalTitle = "Checkout"; ObjectID = "Qkd-Y5-UGT"; */
-"Qkd-Y5-UGT.normalTitle" = "Checkout";
 
-/* Class = "UILabel"; text = "Basket is empty"; ObjectID = "Rd6-BO-03Y"; */
-"Rd6-BO-03Y.text" = "Basket is empty";
+/* No comment provided by engineer. */
+"Qkd-Y5-UGT.normalTitle" = "Régler";
 
-/* Class = "UINavigationItem"; title = "Product"; ObjectID = "T8H-ze-mZG"; */
-"T8H-ze-mZG.title" = "Product";
 
-/* Class = "UIButton"; normalTitle = "Continue Shopping"; ObjectID = "Tx8-Nm-RXb"; */
-"Tx8-Nm-RXb.normalTitle" = "Continue Shopping";
+/* No comment provided by engineer. */
+"Rd6-BO-03Y.text" = "Le panier est vide";
 
-/* Class = "UILabel"; text = "Poster"; ObjectID = "Ui0-Vq-4uT"; */
-"Ui0-Vq-4uT.text" = "Poster";
 
-/* Class = "UIBarButtonItem"; title = "Back"; ObjectID = "VT4-Qp-U1T"; */
-"VT4-Qp-U1T.title" = "Back";
+/* No comment provided by engineer. */
+"T8H-ze-mZG.title" = "Produit";
 
-/* Class = "UILabel"; text = "Medium Square Prints"; ObjectID = "X3v-KF-Lrs"; */
-"X3v-KF-Lrs.text" = "Medium Square Prints";
 
-/* Class = "UILabel"; text = "Price"; ObjectID = "X4d-8D-TEz"; */
-"X4d-8D-TEz.text" = "Price";
+/* No comment provided by engineer. */
+"Tx8-Nm-RXb.normalTitle" = "Poursuivre les achats";
 
-/* Class = "UILabel"; text = "Medium Square Prints"; ObjectID = "XYC-h1-oJj"; */
-"XYC-h1-oJj.text" = "Medium Square Prints";
 
-/* Class = "UIButton"; normalTitle = "Turn Around"; ObjectID = "YIY-zM-rSd"; */
-"YIY-zM-rSd.normalTitle" = "Turn Around";
+/* No comment provided by engineer. */
+"Ui0-Vq-4uT.text" = "Afficher";
 
-/* Class = "UIButton"; normalTitle = "PayPal"; ObjectID = "Zg1-ja-X5c"; */
+
+/* No comment provided by engineer. */
+"VT4-Qp-U1T.title" = "Retour";
+
+
+/* No comment provided by engineer. */
+"X4d-8D-TEz.text" = "Prix";
+
+
+/* No comment provided by engineer. */
+"YIY-zM-rSd.normalTitle" = "Pivoter";
+
+
+/* No comment provided by engineer. */
 "Zg1-ja-X5c.normalTitle" = "PayPal";
 
-/* Class = "UILabel"; text = "+"; ObjectID = "ZgO-Mf-5NM"; */
+
+/* No comment provided by engineer. */
 "ZgO-Mf-5NM.text" = "+";
 
-/* Class = "UIButton"; normalTitle = "Add to Basket"; ObjectID = "ZlI-Gw-kac"; */
-"ZlI-Gw-kac.normalTitle" = "Add to Basket";
 
-/* Class = "UILabel"; text = "Tap to edit or tap and hold to rearrange the photos"; ObjectID = "cFp-1Q-iSs"; */
-"cFp-1Q-iSs.text" = "Tap to edit or tap and hold to rearrange the photos";
+/* No comment provided by engineer. */
+"ZlI-Gw-kac.normalTitle" = "Ajouter au panier";
 
-/* Class = "UILabel"; text = "Medium Square Prints"; ObjectID = "cdq-11-PAs"; */
-"cdq-11-PAs.text" = "Medium Square Prints";
 
-/* Class = "UIButton"; normalTitle = "Edit"; ObjectID = "dyy-fJ-b3t"; */
-"dyy-fJ-b3t.normalTitle" = "Edit";
+/* No comment provided by engineer. */
+"cFp-1Q-iSs.text" = "Cliquez pour modifier ou cliquez et maintenez pour réorganiser les photos";
 
-/* Class = "UIButton"; normalTitle = "  Edit"; ObjectID = "eMc-p1-sXo"; */
-"eMc-p1-sXo.normalTitle" = "  Edit";
 
-/* Class = "UIButton"; normalTitle = "Credit Card"; ObjectID = "fHD-9P-h6H"; */
-"fHD-9P-h6H.normalTitle" = "Credit Card";
+/* No comment provided by engineer. */
+"dyy-fJ-b3t.normalTitle" = "Modifier";
 
-/* Class = "UILabel"; text = "TEST ENVIRONMENT"; ObjectID = "gBc-WD-lqt"; */
-"gBc-WD-lqt.text" = "TEST ENVIRONMENT";
 
-/* Class = "UIButton"; normalTitle = "Add to Basket"; ObjectID = "gw5-Cz-eSf"; */
-"gw5-Cz-eSf.normalTitle" = "Add to Basket";
+/* No comment provided by engineer. */
+"eMc-p1-sXo.normalTitle" = "Modifier";
 
-/* Class = "UILabel"; text = "1"; ObjectID = "hGt-ra-Plw"; */
+
+/* No comment provided by engineer. */
+"fHD-9P-h6H.normalTitle" = "Carte bancaire";
+
+
+/* No comment provided by engineer. */
+"gw5-Cz-eSf.normalTitle" = "Ajouter au panier";
+
+
+/* No comment provided by engineer. */
 "hGt-ra-Plw.text" = "1";
 
-/* Class = "UILabel"; text = "Tap to edit or tap and hold to rearrange the photos"; ObjectID = "hQl-Oq-e92"; */
-"hQl-Oq-e92.text" = "Tap to edit or tap and hold to rearrange the photos";
 
-/* Class = "UINavigationItem"; title = "Orders"; ObjectID = "i2r-9b-5ED"; */
-"i2r-9b-5ED.title" = "Orders";
+/* No comment provided by engineer. */
+"hQl-Oq-e92.text" = "Cliquez pour modifier ou cliquez et maintenez pour réorganiser les photos";
 
-/* Class = "UIButton"; normalTitle = "Button"; ObjectID = "iox-F6-2wa"; */
-"iox-F6-2wa.normalTitle" = "Button";
 
-/* Class = "UILabel"; text = "$00.00"; ObjectID = "kd7-xh-0Sj"; */
-"kd7-xh-0Sj.text" = "$00.00";
+/* No comment provided by engineer. */
+"i2r-9b-5ED.title" = "Commandes";
 
-/* Class = "UILabel"; text = "+"; ObjectID = "lg6-RY-c46"; */
+
+/* No comment provided by engineer. */
+"kd7-xh-0Sj.text" = "00,00€";
+
+
+/* No comment provided by engineer. */
 "lg6-RY-c46.text" = "+";
 
-/* Class = "UILabel"; text = "Total"; ObjectID = "lg7-aH-RJV"; */
+
+/* No comment provided by engineer. */
 "lg7-aH-RJV.text" = "Total";
 
-/* Class = "UILabel"; text = "1"; ObjectID = "o0Q-h1-w3b"; */
+
+/* No comment provided by engineer. */
 "o0Q-h1-w3b.text" = "1";
 
-/* Class = "UITextField"; placeholder = "Promo Code"; ObjectID = "ohh-Wa-CWn"; */
-"ohh-Wa-CWn.placeholder" = "Promo Code";
 
-/* Class = "UILabel"; text = "2"; ObjectID = "qCO-0F-q7E"; */
+/* No comment provided by engineer. */
+"ohh-Wa-CWn.placeholder" = "Code Promo";
+
+
+/* No comment provided by engineer. */
 "qCO-0F-q7E.text" = "2";
 
-/* Class = "UIBarButtonItem"; title = "Done"; ObjectID = "rOv-Mh-sME"; */
-"rOv-Mh-sME.title" = "Done";
 
-/* Class = "UIButton"; normalTitle = "Add to Basket"; ObjectID = "sot-G1-rGw"; */
-"sot-G1-rGw.normalTitle" = "Add to Basket";
+/* No comment provided by engineer. */
+"rOv-Mh-sME.title" = "OK";
 
-/* Class = "UINavigationItem"; title = "Choose Photos"; ObjectID = "tKz-hT-vzu"; */
-"tKz-hT-vzu.title" = "Choose Photos";
 
-/* Class = "UILabel"; text = "24 Sept 13"; ObjectID = "uIy-17-c8f"; */
-"uIy-17-c8f.text" = "24 Sept 13";
+/* No comment provided by engineer. */
+"sot-G1-rGw.normalTitle" = "Ajouter au panier";
 
-/* Class = "UILabel"; text = "Case Finish"; ObjectID = "x3O-MJ-pMA"; */
-"x3O-MJ-pMA.text" = "Case Finish";
 
-/* Class = "UIButton"; normalTitle = "+"; ObjectID = "xPd-zg-lTZ"; */
+/* No comment provided by engineer. */
+"tKz-hT-vzu.title" ="Choisir les photos";
+
+
+/* No comment provided by engineer. */
+"x3O-MJ-pMA.text" = "Finaliser la coque";
+
+
+/* No comment provided by engineer. */
 "xPd-zg-lTZ.normalTitle" = "+";
 
-/* Class = "UILabel"; text = "+"; ObjectID = "xe0-Lb-Ukr"; */
+
+/* No comment provided by engineer. */
 "xe0-Lb-Ukr.text" = "+";
 
-/* Class = "UIButton"; normalTitle = "Button"; ObjectID = "ywb-1O-Wlz"; */
-"ywb-1O-Wlz.normalTitle" = "Button";
 
-/* Class = "UIButton"; normalTitle = "Delivery Details"; ObjectID = "zBV-LU-9Ss"; */
-"zBV-LU-9Ss.normalTitle" = "Delivery Details";
+/* No comment provided by engineer. */
+"ywb-1O-Wlz.normalTitle" = "Bouton";
 
-/* Class = "UILabel"; text = "-$2.50"; ObjectID = "zUB-Xd-gmr"; */
-"zUB-Xd-gmr.text" = "-$2.50";
 
-/* Class = "UILabel"; text = "Name"; ObjectID = "zY2-nf-cFp"; */
-"zY2-nf-cFp.text" = "Name";
+/* No comment provided by engineer. */
+"zBV-LU-9Ss.normalTitle" = "Détails de livraison";
+
+
+/* No comment provided by engineer. */
+"zY2-nf-cFp.text" = "Prénom";
+
+

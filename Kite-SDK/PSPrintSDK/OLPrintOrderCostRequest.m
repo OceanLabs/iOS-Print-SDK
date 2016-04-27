@@ -37,6 +37,7 @@
 #import "OLProductPrintJob.h"
 #import "OLPrintOrderCost.h"
 #import "NSObject+Utils.h"
+#import "OLKiteUtils.h"
 
 @interface OLKitePrintSDK (Private)
 
@@ -44,26 +45,6 @@
 + (NSString *)apiVersion;
 
 @end
-
-static NSString *urlencode(NSString *str) {
-    NSMutableString *output = [NSMutableString string];
-    const unsigned char *source = (const unsigned char *)[str UTF8String];
-    int sourceLen = (int) strlen((const char *)source);
-    for (int i = 0; i < sourceLen; ++i) {
-        const unsigned char thisChar = source[i];
-        if (thisChar == ' ') {
-            [output appendString:@"+"];
-        } else if (thisChar == '.' || thisChar == '-' || thisChar == '_' || thisChar == '~' ||
-                   (thisChar >= 'a' && thisChar <= 'z') ||
-                   (thisChar >= 'A' && thisChar <= 'Z') ||
-                   (thisChar >= '0' && thisChar <= '9')) {
-            [output appendFormat:@"%c", thisChar];
-        } else {
-            [output appendFormat:@"%%%02X", thisChar];
-        }
-    }
-    return output;
-}
 
 @interface OLProductPrintJob ()
 @property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*declinedOffers;
@@ -111,7 +92,7 @@ static NSUInteger cacheOrderHash; // cached response is only valid for orders wi
 
     NSDictionary *dict = @{@"basket" : basket,
                            @"shipping_country_code" : order.shippingAddress.country ? [order.shippingAddress.country codeAlpha3] : [[OLCountry countryForCurrentLocale] codeAlpha3],
-                           @"promo_code" : order.promoCode ? urlencode(order.promoCode) : @"",
+                           @"promo_code" : order.promoCode ? order.promoCode : @"",
                            };
     
     NSDictionary *extraDict = [order.userData objectForKey:@"extra_dict_for_cost"];
@@ -196,7 +177,7 @@ static NSUInteger cacheOrderHash; // cached response is only valid for orders wi
             }
             
             self.req = nil;
-            handler(nil, [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeServerFault userInfo:@{NSLocalizedDescriptionKey: NSLocalizedStringFromTableInBundle(@"Failed to get the price of the order. Please try again.", @"KitePrintSDK", [OLConstants bundle], @"")}]);
+            handler(nil, [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeServerFault userInfo:@{NSLocalizedDescriptionKey: NSLocalizedStringFromTableInBundle(@"Failed to get the price of the order. Please try again.", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")}]);
         }
     }];
 }

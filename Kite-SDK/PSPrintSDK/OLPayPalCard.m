@@ -30,6 +30,7 @@
 #import "OLPayPalCard.h"
 #import "OLConstants.h"
 #import "NSString+Formatting.h"
+#import "OLKiteUtils.h"
 
 static NSString *const kKeyNumberMasked = @"co.oceanlabs.paypal.kKeyNumberMasked";
 static NSString *const kKeyCardType = @"co.oceanlabs.paypal.kKeyCardtype";
@@ -42,9 +43,9 @@ static NSString *const kKeyVaultExpireDate = @"co.oceanlabs.paypal.kKeyVaultExpi
 
 static NSString *const kOLErrorDomainPayPal = @"co.oceanlabs.paypal.kOLErrorDomainPayPal";
 
-#define kErrorMessageGenericPayPalVaultFailure NSLocalizedStringFromTableInBundle(@"Failed to store card details with PayPal. Please try again.", @"KitePrintSDK", [OLConstants bundle], @"")
-#define kErrorMessageBadCardNumber NSLocalizedStringFromTableInBundle(@"Please enter a valid card number", @"KitePrintSDK", [OLConstants bundle], @"")
-#define kErrorMessageBadExpiryDate NSLocalizedStringFromTableInBundle(@"Please enter a card expiry date in the future", @"KitePrintSDK", [OLConstants bundle], @"")
+#define kErrorMessageGenericPayPalVaultFailure NSLocalizedStringFromTableInBundle(@"Failed to store card details with PayPal. Please try again.", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")
+#define kErrorMessageBadCardNumber NSLocalizedStringFromTableInBundle(@"Please enter a valid card number", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")
+#define kErrorMessageBadExpiryDate NSLocalizedStringFromTableInBundle(@"Please enter a card expiry date in the future", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")
 
 
 static NSString *clientId;
@@ -310,7 +311,7 @@ static NSString *typeToString(OLPayPalCardType type) {
                             }
                             
                             if (![paymentState isEqualToString:@"approved"]) {
-                                NSError *error = [NSError errorWithDomain:kOLErrorDomainPayPal code:statusCode userInfo:@{NSLocalizedDescriptionKey: [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Your payment was not approved (transaction state: %@). Please try again.", @"KitePrintSDK", [OLConstants bundle], @""), paymentState]}];
+                                NSError *error = [NSError errorWithDomain:kOLErrorDomainPayPal code:statusCode userInfo:@{NSLocalizedDescriptionKey: [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Your payment was not approved (transaction state: %@). Please try again.", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), paymentState]}];
                                 handler(nil, error);
                                 return;
                             }

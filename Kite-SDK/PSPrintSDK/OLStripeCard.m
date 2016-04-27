@@ -35,8 +35,8 @@ static NSString *const kKeyCustomerId = @"co.oceanlabs.Stripe.kKeyCustomerId";
 
 static NSString *const kOLErrorDomainStripe = @"co.oceanlabs.Stripe.kOLErrorDomainStripe";
 
-#define kErrorMessageBadCardNumber NSLocalizedStringFromTableInBundle(@"Please enter a valid card number", @"KitePrintSDK", [OLConstants bundle], @"")
-#define kErrorMessageBadExpiryDate NSLocalizedStringFromTableInBundle(@"Please enter a card expiry date in the future", @"KitePrintSDK", [OLConstants bundle], @"")
+#define kErrorMessageBadCardNumber NSLocalizedStringFromTableInBundle(@"Please enter a valid card number", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")
+#define kErrorMessageBadExpiryDate NSLocalizedStringFromTableInBundle(@"Please enter a card expiry date in the future", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")
 
 
 static NSString *clientId;

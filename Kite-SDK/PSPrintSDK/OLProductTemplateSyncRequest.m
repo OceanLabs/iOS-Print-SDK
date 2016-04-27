@@ -33,6 +33,9 @@
 #import "OLProductTemplate.h"
 #import "OLConstants.h"
 #import "OLKiteABTesting.h"
+#import "OLKiteTheme.h"
+#import "OLCountry.h"
+#import "OLKiteUtils.h"
 
 @interface OLProductTemplateSyncRequest ()
 @property (nonatomic, strong) OLBaseRequest *req;
@@ -80,6 +83,56 @@
                 id userConfig = json[@"user_config"];
                 if ([userConfig isKindOfClass:[NSDictionary class]]){
                     [[OLKiteABTesting sharedInstance] setUserConfig:userConfig];
+                }
+                
+                id themeConfig = json[@"kiosk_config"];
+                if ([themeConfig isKindOfClass:[NSDictionary class]]){
+                    OLKiteTheme *theme = [[OLKiteTheme alloc] init];
+                    
+                    id valuesDict = themeConfig[[[NSLocale preferredLanguages] objectAtIndex:0]];
+                    if (!valuesDict){
+                        valuesDict = themeConfig[@"en"];
+                    }
+                    if (!valuesDict && [themeConfig allKeys].count > 0){
+                        valuesDict = themeConfig[[themeConfig allKeys].firstObject];
+                    }
+                    
+                    if (valuesDict){
+                        
+                        theme.burgerMenuHeader = [NSURL URLWithString:valuesDict[@"kiosk_burger_menu_header"]];
+                        theme.endSessionButton = [NSURL URLWithString:valuesDict[@"kiosk_end_session_button"]];
+                        theme.navigationIcon = [NSURL URLWithString:valuesDict[@"kiosk_navigation_icon"]];
+                        theme.privacyPolicy = [NSURL URLWithString:valuesDict[@"kiosk_privacy_policy_url"]];
+                        theme.receiptLogo = [NSURL URLWithString:valuesDict[@"kiosk_receipt_logo"]];
+                        theme.secretReveal = [NSURL URLWithString:valuesDict[@"kiosk_secret_reveal"]];
+                        theme.shippingOption1 = [NSURL URLWithString:valuesDict[@"kiosk_shipping_option_to_store"]];
+                        theme.shippingOption2 = [NSURL URLWithString:valuesDict[@"kiosk_shipping_option_to_home"]];
+                        theme.startScreen = [NSURL URLWithString:valuesDict[@"kiosk_start_screen"]];
+                        theme.termsAndConditions = [NSURL URLWithString:valuesDict[@"kiosk_terms_and_conditions_url"]];
+                        theme.splashScreen = [NSURL URLWithString:valuesDict[@"kiosk_splash_screen"]];
+                        theme.ctaColor = valuesDict[@"kiosk_cta_color"];
+                    }
+                    
+                    if ([themeConfig[@"pay_at_till"] isKindOfClass:[NSNumber class]]){
+                        theme.kioskEnablePayAtTheTill = [themeConfig[@"pay_at_till"] boolValue];
+                    }
+                    
+                    if ([themeConfig[@"ship_to_store"] isKindOfClass:[NSDictionary class]]){
+                        NSDictionary *addressDict = themeConfig[@"ship_to_store"];
+                        OLAddress *address = [[OLAddress alloc] init];
+                        address.recipientFirstName = addressDict[@"company_name"];
+                        address.recipientLastName = @".";
+                        address.line1 = addressDict[@"shipping_address_1"];
+                        address.line2 = addressDict[@"shipping_address_2"];
+                        address.city = addressDict[@"city"];
+                        address.stateOrCounty = addressDict[@"county_state"];
+                        address.zipOrPostcode = addressDict[@"postal_code"];
+                        address.country = [OLCountry countryForCode:addressDict[@"country_code"]];
+                        
+                        theme.kioskShipToStoreAddress = address;
+                    }
+                    
+                    [[OLKiteABTesting sharedInstance] setTheme:theme];
                 }
                 
                 id objects = json[@"objects"];
@@ -198,7 +251,7 @@
                                         code = [product[@"product_code"] isKindOfClass:[NSString class]] ? product[@"product_code"] : nil;
                                     }
                                 }
-                            
+                                
                                 NSMutableDictionary *costPerSheetByCurrencyCode = [[NSMutableDictionary alloc] init];
                                 for (id cost in costs) {
                                     if ([cost isKindOfClass:[NSDictionary class]]) {
@@ -267,7 +320,7 @@
                     }
                 }
                 
-                handler(nil, [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeServerFault userInfo:@{NSLocalizedDescriptionKey: NSLocalizedStringFromTableInBundle(@"Failed to synchronize product templates. Please try again.", @"KitePrintSDK", [OLConstants bundle], @"")}]);
+                handler(nil, [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeServerFault userInfo:@{NSLocalizedDescriptionKey: NSLocalizedStringFromTableInBundle(@"Failed to synchronize product templates. Please try again.", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")}]);
             }
         }
     }];

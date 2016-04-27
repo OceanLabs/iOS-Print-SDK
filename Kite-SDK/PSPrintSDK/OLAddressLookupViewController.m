@@ -79,7 +79,7 @@
 
 - (id)init {
     if (self = [super initWithStyle:UITableViewStylePlain]) {
-        self.title = NSLocalizedStringFromTableInBundle(@"Address Search", @"KitePrintSDK", [OLConstants bundle], @"");
+        self.title = NSLocalizedStringFromTableInBundle(@"Address Search", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
     }
     
     return self;
@@ -102,7 +102,7 @@
     self.countryPickerView = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"CountryPickerView"];
     
     UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(15, 0, 110, 44)];
-    label.text = NSLocalizedStringFromTableInBundle(@"Country", @"KitePrintSDK", [OLConstants bundle], @"");
+    label.text = NSLocalizedStringFromTableInBundle(@"Country", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
     
     self.labelCountry = [[UILabel alloc] initWithFrame:CGRectMake(110, 0, 320 - 110, 44)];
     self.labelCountry.adjustsFontSizeToFitWidth = YES;
@@ -139,9 +139,9 @@
     _country = country;
     self.labelCountry.text = country.name;
     if ([country.codeAlpha3 isEqualToString:@"USA"]) {
-        self.searchBar.placeholder = NSLocalizedStringFromTableInBundle(@"Search by street, address or ZIP code", @"KitePrintSDK", [OLConstants bundle], @"");
+        self.searchBar.placeholder = NSLocalizedStringFromTableInBundle(@"Search by street, address or ZIP code", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
     } else {
-        self.searchBar.placeholder = NSLocalizedStringFromTableInBundle(@"Search by postcode, street or address", @"KitePrintSDK", [OLConstants bundle], @"");
+        self.searchBar.placeholder = NSLocalizedStringFromTableInBundle(@"Search by postcode, street or address", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
     }
 }
 

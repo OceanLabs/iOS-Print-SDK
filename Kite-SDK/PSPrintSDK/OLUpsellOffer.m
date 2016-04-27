@@ -20,6 +20,7 @@ static NSString *const kKeyOfferMinUnits = @"co.oceanlabs.pssdk.kKeyOfferMinUnit
 static NSString *const kKeyOfferMaxUnits = @"co.oceanlabs.pssdk.kKeyOfferMaxUnits";
 static NSString *const kKeyOfferHeaderText = @"co.oceanlabs.pssdk.kKeyOfferHeaderText";
 static NSString *const kKeyOfferText = @"co.oceanlabs.pssdk.kKeyOfferText";
+static NSString *const kKeyOfferBannerText = @"co.oceanlabs.pssdk.kKeyOfferBannerText";
 
 @implementation OLUpsellOffer
 
@@ -60,6 +61,9 @@ static NSString *const kKeyOfferText = @"co.oceanlabs.pssdk.kKeyOfferText";
     if ([offerDict[@"upsell_text"] isKindOfClass:[NSString class]]){
         offer.text = offerDict[@"upsell_text"];
     }
+    if ([offerDict[@"upsell_banner_text"] isKindOfClass:[NSString class]]){
+        offer.bannerText = offerDict[@"upsell_banner_text"];
+    }
     
     return offer;
 }
@@ -86,6 +90,7 @@ static NSString *const kKeyOfferText = @"co.oceanlabs.pssdk.kKeyOfferText";
     copy.minUnits = self.minUnits;
     copy.headerText = self.headerText;
     copy.text = self.text;
+    copy.bannerText = self.bannerText;
     
     return copy;
 }
@@ -103,6 +108,7 @@ static NSString *const kKeyOfferText = @"co.oceanlabs.pssdk.kKeyOfferText";
     [aCoder encodeInteger:self.minUnits forKey:kKeyOfferMinUnits];
     [aCoder encodeObject:self.headerText forKey:kKeyOfferHeaderText];
     [aCoder encodeObject:self.text forKey:kKeyOfferText];
+    [aCoder encodeObject:self.bannerText forKey:kKeyOfferBannerText];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
@@ -118,6 +124,7 @@ static NSString *const kKeyOfferText = @"co.oceanlabs.pssdk.kKeyOfferText";
         self.maxUnits = [aDecoder decodeIntegerForKey:kKeyOfferMaxUnits];
         self.headerText = [aDecoder decodeObjectForKey:kKeyOfferHeaderText];
         self.text = [aDecoder decodeObjectForKey:kKeyOfferText];
+        self.bannerText = [aDecoder decodeObjectForKey:kKeyOfferBannerText];
     }
     
     return self;

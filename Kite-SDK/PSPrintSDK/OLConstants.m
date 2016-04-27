@@ -29,7 +29,7 @@
 
 #import "OLConstants.h"
 
-NSString *const kOLKiteSDKVersion = @"5.0.6";
+NSString *const kOLKiteSDKVersion = @"5.0.7";
 NSString *const kOLKiteSDKErrorDomain = @"co.oceanlabs.kOLKiteSDKErrorDomain";
 NSString *const kNotificationTemplateSyncComplete = @"co.oceanlabs.pssdk.notification.kNotificationSyncComplete";
 NSString *const kNotificationKeyTemplateSyncError = @"co.oceanlabs.pssdk.notification.kNotificationKeyTemplateSyncError";
@@ -53,13 +53,5 @@ NSString *const kOLKiteSDKErrorMessageRequestInProgress = @"A request to get cos
 
 @implementation OLConstants
 
-+ (NSBundle *_Nonnull)bundle {
-    NSBundle* bundle;
-    
-    if (!bundle) {
-        bundle = [NSBundle mainBundle];
-    }
-    return bundle;
-}
 
 @end

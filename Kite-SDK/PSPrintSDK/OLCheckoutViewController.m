@@ -189,17 +189,17 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
     
     [self trackViewed];
     
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Next", @"KitePrintSDK", [OLConstants bundle], @"") style:UIBarButtonItemStylePlain target:self action:@selector(onButtonNextClicked)];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Next", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") style:UIBarButtonItemStylePlain target:self action:@selector(onButtonNextClicked)];
     
     self.presentedModally = self.parentViewController.isBeingPresented || self.navigationController.viewControllers.firstObject == self;
     if (self.presentedModally) {
-        self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLConstants bundle], @"") style:UIBarButtonItemStylePlain target:self action:@selector(onButtonCancelClicked)];
+        self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") style:UIBarButtonItemStylePlain target:self action:@selector(onButtonCancelClicked)];
     }
     else{
         self.navigationItem.leftBarButtonItem = nil;
     }
     
-    self.title = NSLocalizedStringFromTableInBundle(@"Shipping", @"KitePrintSDK", [OLConstants bundle], @"");
+    self.title = NSLocalizedStringFromTableInBundle(@"Shipping", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
 
     UITapGestureRecognizer *tgr = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onBackgroundClicked)];
     tgr.cancelsTouchesInView = NO; // allow table cell selection to happen as normal
@@ -379,21 +379,21 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
      */
     if (self.shippingAddresses.count == 0 || self.selectedShippingAddresses.count == 0) {
         [self scrollSectionToVisible:kSectionDeliveryDetails];
-        UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Missing Delivery Address", @"KitePrintSDK", [OLConstants bundle], @"") message:NSLocalizedStringFromTableInBundle(@"Please choose an address to have your order shipped to", @"KitePrintSDK", [OLConstants bundle], @"") delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLConstants bundle], @"") otherButtonTitles:nil];
+        UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Missing Delivery Address", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") message:NSLocalizedStringFromTableInBundle(@"Please choose an address to have your order shipped to", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") otherButtonTitles:nil];
         [av show];
         return NO;
     }
     
     if (![OLCheckoutViewController validateEmail:[self userEmail]]) {
         [self scrollSectionToVisible:kSectionEmailAddress];
-        UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Invalid Email Address", @"KitePrintSDK", [OLConstants bundle], @"") message:NSLocalizedStringFromTableInBundle(@"Please enter a valid email address", @"KitePrintSDK", [OLConstants bundle], @"") delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLConstants bundle], @"") otherButtonTitles:nil];
+        UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Invalid Email Address", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") message:NSLocalizedStringFromTableInBundle(@"Please enter a valid email address", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") otherButtonTitles:nil];
         [av show];
         return NO;
     }
     
     if ([self userPhone].length < kMinPhoneNumberLength && [self showPhoneEntryField]) {
         [self scrollSectionToVisible:kSectionPhoneNumber];
-        UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Invalid Phone Number", @"KitePrintSDK", [OLConstants bundle], @"") message:NSLocalizedStringFromTableInBundle(@"Please enter a valid phone number", @"KitePrintSDK", [OLConstants bundle], @"") delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLConstants bundle], @"") otherButtonTitles:nil];
+        UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Invalid Phone Number", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") message:NSLocalizedStringFromTableInBundle(@"Please enter a valid phone number", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") otherButtonTitles:nil];
         [av show];
         return NO;
     }
@@ -483,7 +483,7 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
     if (section == kSectionDeliveryDetails) {
-        return NSLocalizedStringFromTableInBundle(@"Delivery Details", @"KitePrintSDK", [OLConstants bundle], @"");
+        return NSLocalizedStringFromTableInBundle(@"Delivery Details", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
     } else {
         return nil;
     }
@@ -491,9 +491,9 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
 
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section {
     if (section == kSectionEmailAddress) {
-        return NSLocalizedStringFromTableInBundle(@"We'll send you confirmation and order updates.", @"KitePrintSDK", [OLConstants bundle], @"");
+        return NSLocalizedStringFromTableInBundle(@"We'll send you confirmation and order updates.", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
     } else if (section == kSectionPhoneNumber) {
-        return NSLocalizedStringFromTableInBundle(@"Required by the postal service in case there are any issues during delivery.", @"KitePrintSDK", [OLConstants bundle], @"");
+        return NSLocalizedStringFromTableInBundle(@"Required by the postal service in case there are any issues during delivery.", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
     }
     
     return nil;
@@ -539,7 +539,7 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
     
     UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 11, 61, 21)];
     
-    titleLabel.text = NSLocalizedStringFromTableInBundle(@"We'll send you confirmation and order updates. Uncheck this box to opt out of email campaigns.", @"KitePrintSDK", [OLConstants bundle], @"");
+    titleLabel.text = NSLocalizedStringFromTableInBundle(@"We'll send you confirmation and order updates. Uncheck this box to opt out of email campaigns.", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
     titleLabel.adjustsFontSizeToFitWidth = YES;
     titleLabel.tag = kTagInputFieldLabel;
     titleLabel.numberOfLines = 3;
@@ -604,17 +604,17 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
                 cell.selectionStyle = UITableViewCellSelectionStyleNone;
             }
             if (self.shippingAddresses.count > 0 && [OLKiteABTesting sharedInstance].allowsMultipleRecipients){
-                cell.textLabel.text = NSLocalizedStringFromTableInBundle(@"Add Another Recipient", @"KitePrintSDK",[OLConstants bundle], @"");
+                cell.textLabel.text = NSLocalizedStringFromTableInBundle(@"Add Another Recipient", @"KitePrintSDK",[OLKiteUtils kiteBundle], @"");
             }
             else{
-                cell.textLabel.text = NSLocalizedStringFromTableInBundle(@"Choose Delivery Address", @"KitePrintSDK", [OLConstants bundle], @"");
+                cell.textLabel.text = NSLocalizedStringFromTableInBundle(@"Choose Delivery Address", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
             }
         }
     } else if (indexPath.section == kSectionEmailAddress) {
         static NSString *const TextFieldCell = @"EmailFieldCell";
         cell = [tableView dequeueReusableCellWithIdentifier:TextFieldCell];
         if (cell == nil) {
-            cell = [self createTextFieldCellWithReuseIdentifier:TextFieldCell title:NSLocalizedStringFromTableInBundle(@"Email", @"KitePrintSDK", [OLConstants bundle], @"")  keyboardType:UIKeyboardTypeEmailAddress];
+            cell = [self createTextFieldCellWithReuseIdentifier:TextFieldCell title:NSLocalizedStringFromTableInBundle(@"Email", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")  keyboardType:UIKeyboardTypeEmailAddress];
             self.textFieldEmail = (UITextField *) [cell viewWithTag:kInputFieldTag];
             self.textFieldEmail.autocapitalizationType = UITextAutocapitalizationTypeNone;
             self.textFieldEmail.autocorrectionType = UITextAutocorrectionTypeNo;
@@ -625,7 +625,7 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
         static NSString *const TextFieldCell = @"PhoneFieldCell";
         cell = [tableView dequeueReusableCellWithIdentifier:TextFieldCell];
         if (cell == nil) {
-            cell = [self createTextFieldCellWithReuseIdentifier:TextFieldCell title:NSLocalizedStringFromTableInBundle(@"Phone", @"KitePrintSDK", [OLConstants bundle], @"") keyboardType:UIKeyboardTypePhonePad];
+            cell = [self createTextFieldCellWithReuseIdentifier:TextFieldCell title:NSLocalizedStringFromTableInBundle(@"Phone", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") keyboardType:UIKeyboardTypePhonePad];
             self.textFieldPhone = (UITextField *) [cell viewWithTag:kInputFieldTag];
             [self populateDefaultEmailAndPhone];
         }

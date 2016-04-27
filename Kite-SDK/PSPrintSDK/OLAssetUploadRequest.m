@@ -33,6 +33,7 @@
 #import "OLKitePrintSDK.h"
 #import "OLAsset.h"
 #import "OLAsset+Private.h"
+#import "OLKiteUtils.h"
 
 @interface OLKitePrintSDK (Private)
 
@@ -80,11 +81,11 @@ typedef void (^UploadAssetsCompletionHandler)(NSError *error);
     NSInteger errorCode = kOLKiteSDKErrorCodeServerFault;
     switch (httpStatusCode) {
         case 401:
-            errorMessage = NSLocalizedStringFromTableInBundle(@"401 Unauthorized Request Error whilst trying to upload an asset. Please check you included an Authorization header and that the supplied auth credentials are correct.", @"KitePrintSDK", [OLConstants bundle], @"");
+            errorMessage = NSLocalizedStringFromTableInBundle(@"401 Unauthorized Request Error whilst trying to upload an asset. Please check you included an Authorization header and that the supplied auth credentials are correct.", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
             errorCode = kOLKiteSDKErrorCodeUnauthorized;
             break;
         case 500:
-            errorMessage = NSLocalizedStringFromTableInBundle(@"500 Internal Server Error whilst trying to upload an asset. Please try again.", @"KitePrintSDK", [OLConstants bundle], @"");
+            errorMessage = NSLocalizedStringFromTableInBundle(@"500 Internal Server Error whilst trying to upload an asset. Please try again.", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
             break;
         default:
             break;
@@ -147,7 +148,7 @@ typedef void (^UploadAssetsCompletionHandler)(NSError *error);
         }
         
         if (!error && registeredAssetCount != expectedRegisteredAssetCount) {
-            error = [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeRegisteredAssetCountDiscrepency userInfo:@{NSLocalizedDescriptionKey:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Only registered %d/%d image URLs with the asset endpoint", @"KitePrintSDK", [OLConstants bundle], @""), registeredAssetCount, expectedRegisteredAssetCount]}];
+            error = [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeRegisteredAssetCountDiscrepency userInfo:@{NSLocalizedDescriptionKey:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Only registered %d/%d image URLs with the asset endpoint", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), registeredAssetCount, expectedRegisteredAssetCount]}];
         }
         
         handler(error);

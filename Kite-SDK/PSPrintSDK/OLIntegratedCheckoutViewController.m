@@ -456,7 +456,7 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
     if (section == kSectionDeliveryDetails) {
-        return NSLocalizedStringFromTableInBundle(@"Delivery Address", @"KitePrintSDK", [OLConstants bundle], @"");
+        return NSLocalizedStringFromTableInBundle(@"Delivery Address", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
     } else {
         return nil;
     }

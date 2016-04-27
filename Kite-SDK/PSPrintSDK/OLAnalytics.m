@@ -719,6 +719,24 @@ static __weak id<OLKiteDelegate> kiteDelegate;
     [OLAnalytics reportAnalyticsEventToDelegate:eventName job:nil printOrder:nil extraInfo:@{kOLAnalyticsProductName : productName}];
 }
 
++ (void)trackUpsellShown:(BOOL)shown {
+    NSString *eventName = @"Upsell Screen Viewed";
+    if (shown) {
+        NSDictionary *dict = [OLAnalytics defaultDictionaryForEventName:eventName];
+        [OLAnalytics sendToMixPanelWithDictionary:dict];
+    }
+    [OLAnalytics reportAnalyticsEventToDelegate:eventName job:nil printOrder:nil extraInfo:@{@"Shown": [NSNumber numberWithBool:shown]}];
+}
+
++ (void)trackUpsellDismissed:(BOOL)optedIn {
+    NSString *eventName = @"Upsell Screen Dismissed";
+    NSDictionary *dict = [OLAnalytics defaultDictionaryForEventName:eventName];
+    NSString *how = optedIn ? @"Yes Please" : @"Not Thanks";
+    [dict[@"properties"] setObject:how forKey:@"How"];
+    [OLAnalytics sendToMixPanelWithDictionary:dict];
+    [OLAnalytics reportAnalyticsEventToDelegate:eventName job:nil printOrder:nil extraInfo:@{@"How": how}];
+}
+
 + (void)trackBasketIconTappedWithNumberBadged:(NSInteger)number{
     [OLAnalytics reportAnalyticsEventToDelegate:@"Basket Icon Tapped" job:nil printOrder:nil extraInfo:@{kOLAnalyticsNumberOnBadge : [NSNumber numberWithInteger:number]}];
 }
