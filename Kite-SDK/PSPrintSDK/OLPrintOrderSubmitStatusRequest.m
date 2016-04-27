@@ -30,6 +30,7 @@
 #import "OLPrintOrderSubmitStatusRequest.h"
 #import "OLKitePrintSDK.h"
 #import "OLPrintOrder.h"
+#import "OLKiteUtils.h"
 
 @interface OLKitePrintSDK (Private)
 
@@ -107,7 +108,7 @@ NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@/order/%@", 
             }
             
             self.req = nil;
-            handler(OLPrintOrderSubmitStatusUnknown, [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeServerFault userInfo:@{NSLocalizedDescriptionKey: NSLocalizedStringFromTableInBundle(@"Failed to validate the order. Please try again.", @"KitePrintSDK", [OLConstants bundle], @"")}]);
+            handler(OLPrintOrderSubmitStatusUnknown, [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeServerFault userInfo:@{NSLocalizedDescriptionKey: NSLocalizedStringFromTableInBundle(@"Failed to validate the order. Please try again.", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")}]);
         } else {
             id errorObj = json[@"error"];
             if ([errorObj isKindOfClass:[NSDictionary class]]) {
@@ -123,7 +124,7 @@ NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@/order/%@", 
             }
             
             self.req = nil;
-            handler(self.printOrder.submitStatus, [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeServerFault userInfo:@{NSLocalizedDescriptionKey: NSLocalizedStringFromTableInBundle(@"Failed to validate the order. Please try again.", @"KitePrintSDK", [OLConstants bundle], @"")}]);
+            handler(self.printOrder.submitStatus, [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeServerFault userInfo:@{NSLocalizedDescriptionKey: NSLocalizedStringFromTableInBundle(@"Failed to validate the order. Please try again.", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")}]);
         }
     }];
 }

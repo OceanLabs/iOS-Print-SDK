@@ -730,9 +730,9 @@ static BOOL hasMoved;
     }
     else if (numberOfProviders > 1){
         if ([UIAlertController class]){
-            UIAlertController *ac = [UIAlertController alertControllerWithTitle:nil message:NSLocalizedStringFromTableInBundle(@"Add photos from:", @"KitePrintSDK", [OLConstants bundle], @"") preferredStyle:UIAlertControllerStyleActionSheet];
+            UIAlertController *ac = [UIAlertController alertControllerWithTitle:nil message:NSLocalizedStringFromTableInBundle(@"Add photos from:", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") preferredStyle:UIAlertControllerStyleActionSheet];
             if ([OLKiteUtils cameraRollEnabled:self]){
-                [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"Camera Roll", @"KitePrintSDK", [OLConstants bundle], @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
+                [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"Camera Roll", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
                     [self showCameraRollImagePicker];
                 }]];
             }
@@ -747,7 +747,7 @@ static BOOL hasMoved;
                 }]];
             }
             if ([OLKiteUtils qrCodeUploadEnabled]) {
-                [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"Transfer from your phone", @"KitePrintSDK", [OLConstants bundle], @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
+                [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"Transfer from your phone", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
                     [self showQRCodeImagePicker];
                 }]];
             }
@@ -759,7 +759,7 @@ static BOOL hasMoved;
             }
 #endif
             
-            [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLConstants bundle], @"") style:UIAlertActionStyleCancel handler:^(UIAlertAction *action){
+            [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") style:UIAlertActionStyleCancel handler:^(UIAlertAction *action){
                 [ac dismissViewControllerAnimated:YES completion:NULL];
             }]];
             ac.popoverPresentationController.sourceView = cell;
@@ -767,14 +767,14 @@ static BOOL hasMoved;
             [self presentViewController:ac animated:YES completion:NULL];
         }
         else{
-            UIActionSheet *as = [[UIActionSheet alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Add photos from:", @"KitePrintSDK", [OLConstants bundle], @"")
+            UIActionSheet *as = [[UIActionSheet alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Add photos from:", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")
                                                             delegate:self
                                                    cancelButtonTitle:nil
                                               destructiveButtonTitle:nil
                                                    otherButtonTitles:nil];
             
             if ([OLKiteUtils cameraRollEnabled:self]){
-                [as addButtonWithTitle:NSLocalizedStringFromTableInBundle(@"Camera Roll", @"KitePrintSDK", [OLConstants bundle], @"")];
+                [as addButtonWithTitle:NSLocalizedStringFromTableInBundle(@"Camera Roll", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")];
             }
             if ([OLKiteUtils facebookEnabled]){
                 [as addButtonWithTitle:@"Facebook"];
@@ -783,14 +783,14 @@ static BOOL hasMoved;
                 [as addButtonWithTitle:@"Instagram"];
             }
             if ([OLKiteUtils qrCodeUploadEnabled]){
-                [as addButtonWithTitle:NSLocalizedStringFromTableInBundle(@"Transfer from your phone", @"KitePrintSDK", [OLConstants bundle], @"")];
+                [as addButtonWithTitle:NSLocalizedStringFromTableInBundle(@"Transfer from your phone", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")];
             }
 #ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
             for (OLCustomPhotoProvider *provider in [OLKiteUtils kiteVcForViewController:self].customImageProviders){
                 [as addButtonWithTitle:provider.name];
             }
 #endif
-            as.cancelButtonIndex = [as addButtonWithTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLConstants bundle], @"")];
+            as.cancelButtonIndex = [as addButtonWithTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")];
             
             [as showInView:self.view];
         }

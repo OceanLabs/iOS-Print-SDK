@@ -37,6 +37,7 @@
 #import "OLProductPrintJob.h"
 #import "OLPrintOrderCost.h"
 #import "NSObject+Utils.h"
+#import "OLKiteUtils.h"
 
 @interface OLKitePrintSDK (Private)
 
@@ -176,7 +177,7 @@ static NSUInteger cacheOrderHash; // cached response is only valid for orders wi
             }
             
             self.req = nil;
-            handler(nil, [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeServerFault userInfo:@{NSLocalizedDescriptionKey: NSLocalizedStringFromTableInBundle(@"Failed to get the price of the order. Please try again.", @"KitePrintSDK", [OLConstants bundle], @"")}]);
+            handler(nil, [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeServerFault userInfo:@{NSLocalizedDescriptionKey: NSLocalizedStringFromTableInBundle(@"Failed to get the price of the order. Please try again.", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")}]);
         }
     }];
 }

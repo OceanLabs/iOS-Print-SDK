@@ -84,6 +84,4 @@ extern NSString *_Nonnull const kOLKiteSDKErrorMessageRequestInProgress;
 
 @interface OLConstants : NSObject
 
-+ (NSBundle *_Nonnull)bundle;
-
 @end

@@ -53,13 +53,5 @@ NSString *const kOLKiteSDKErrorMessageRequestInProgress = @"A request to get cos
 
 @implementation OLConstants
 
-+ (NSBundle *_Nonnull)bundle {
-    NSBundle* bundle;
-    
-    if (!bundle) {
-        bundle = [NSBundle mainBundle];
-    }
-    return bundle;
-}
 
 @end
