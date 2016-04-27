@@ -210,8 +210,8 @@ static BOOL hasMoved;
         UIViewController *paymentVc = [(UINavigationController *)self.presentingViewController viewControllers].lastObject;
         if ([paymentVc respondsToSelector:@selector(saveAndDismissReviewController)]){
             [self.ctaButton setTitle:NSLocalizedString(@"Save", @"") forState:UIControlStateNormal];
-        	[self.ctaButton removeTarget:self action:@selector(onButtonNextClicked) forControlEvents:UIControlEventTouchUpInside];
-        	[self.ctaButton addTarget:paymentVc action:@selector(saveAndDismissReviewController) forControlEvents:UIControlEventTouchUpInside];
+            [self.ctaButton removeTarget:self action:@selector(onButtonNextClicked) forControlEvents:UIControlEventTouchUpInside];
+            [self.ctaButton addTarget:paymentVc action:@selector(saveAndDismissReviewController) forControlEvents:UIControlEventTouchUpInside];
         }
     }
     
@@ -730,9 +730,9 @@ static BOOL hasMoved;
     }
     else if (numberOfProviders > 1){
         if ([UIAlertController class]){
-            UIAlertController *ac = [UIAlertController alertControllerWithTitle:nil message:NSLocalizedString(@"Add photos from:", @"") preferredStyle:UIAlertControllerStyleActionSheet];
+            UIAlertController *ac = [UIAlertController alertControllerWithTitle:nil message:NSLocalizedStringFromTableInBundle(@"Add photos from:", @"KitePrintSDK", [OLConstants bundle], @"") preferredStyle:UIAlertControllerStyleActionSheet];
             if ([OLKiteUtils cameraRollEnabled:self]){
-                [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Camera Roll", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
+                [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"Camera Roll", @"KitePrintSDK", [OLConstants bundle], @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
                     [self showCameraRollImagePicker];
                 }]];
             }
@@ -747,7 +747,7 @@ static BOOL hasMoved;
                 }]];
             }
             if ([OLKiteUtils qrCodeUploadEnabled]) {
-                [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Transfer from your phone", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
+                [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"Transfer from your phone", @"KitePrintSDK", [OLConstants bundle], @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
                     [self showQRCodeImagePicker];
                 }]];
             }
@@ -759,7 +759,7 @@ static BOOL hasMoved;
             }
 #endif
             
-            [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"") style:UIAlertActionStyleCancel handler:^(UIAlertAction *action){
+            [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLConstants bundle], @"") style:UIAlertActionStyleCancel handler:^(UIAlertAction *action){
                 [ac dismissViewControllerAnimated:YES completion:NULL];
             }]];
             ac.popoverPresentationController.sourceView = cell;
@@ -767,14 +767,14 @@ static BOOL hasMoved;
             [self presentViewController:ac animated:YES completion:NULL];
         }
         else{
-            UIActionSheet *as = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"Add photos from:", @"")
+            UIActionSheet *as = [[UIActionSheet alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Add photos from:", @"KitePrintSDK", [OLConstants bundle], @"")
                                                             delegate:self
                                                    cancelButtonTitle:nil
                                               destructiveButtonTitle:nil
                                                    otherButtonTitles:nil];
             
             if ([OLKiteUtils cameraRollEnabled:self]){
-                [as addButtonWithTitle:NSLocalizedString(@"Camera Roll", @"")];
+                [as addButtonWithTitle:NSLocalizedStringFromTableInBundle(@"Camera Roll", @"KitePrintSDK", [OLConstants bundle], @"")];
             }
             if ([OLKiteUtils facebookEnabled]){
                 [as addButtonWithTitle:@"Facebook"];
@@ -783,14 +783,14 @@ static BOOL hasMoved;
                 [as addButtonWithTitle:@"Instagram"];
             }
             if ([OLKiteUtils qrCodeUploadEnabled]){
-                [as addButtonWithTitle:NSLocalizedString(@"Transfer from your phone", @"")];
+                [as addButtonWithTitle:NSLocalizedStringFromTableInBundle(@"Transfer from your phone", @"KitePrintSDK", [OLConstants bundle], @"")];
             }
 #ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
             for (OLCustomPhotoProvider *provider in [OLKiteUtils kiteVcForViewController:self].customImageProviders){
                 [as addButtonWithTitle:provider.name];
             }
 #endif
-            as.cancelButtonIndex = [as addButtonWithTitle:@"Cancel"];
+            as.cancelButtonIndex = [as addButtonWithTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLConstants bundle], @"")];
             
             [as showInView:self.view];
         }
@@ -836,7 +836,7 @@ static BOOL hasMoved;
                 [self dismissViewControllerAnimated:YES completion:nil];
                 [self.view.window removeGestureRecognizer:sender];
                 self.tapBehindQRUploadModalGestureRecognizer = nil;
-
+                
             }
         }
     }
@@ -1116,7 +1116,7 @@ static BOOL hasMoved;
 - (void)assetsPickerController:(id)picker didFinishPickingAssets:(NSArray *)assets {
     id view = [self.view viewWithTag:1010];
     if ([view isKindOfClass:[UIActivityIndicatorView class]]){
-            [(UIActivityIndicatorView *)view startAnimating];
+        [(UIActivityIndicatorView *)view startAnimating];
     }
     
     NSInteger originalCount = self.userSelectedPhotos.count;
@@ -1226,13 +1226,13 @@ static BOOL hasMoved;
     
     NSInteger originalCount = self.userSelectedPhotos.count;
 #ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
-        NSMutableArray *assets = [[NSMutableArray alloc] init];
-        for (id<OLAssetDataSource> asset in images){
-            if ([asset isKindOfClass:[OLInstagramImage class]]){
-                [assets addObject:asset];
-            }
+    NSMutableArray *assets = [[NSMutableArray alloc] init];
+    for (id<OLAssetDataSource> asset in images){
+        if ([asset isKindOfClass:[OLInstagramImage class]]){
+            [assets addObject:asset];
         }
-        images = assets;
+    }
+    images = assets;
 #endif
     
     [self populateArrayWithNewArray:images dataType:[OLInstagramImage class]];
@@ -1414,7 +1414,7 @@ static BOOL hasMoved;
     OLPrintPhoto *printPhoto = self.imageDisplayed;
     OLPrintPhoto *copy = [printPhoto copy];
     printPhoto.asset = [OLAsset assetWithImageAsJPEG:image];
-
+    
     self.imageCropView.imageView.image = nil;
     [self.imagesCollectionView reloadData];
     
