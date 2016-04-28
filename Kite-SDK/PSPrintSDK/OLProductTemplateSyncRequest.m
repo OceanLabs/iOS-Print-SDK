@@ -48,6 +48,11 @@
 
 @end
 
+@interface OLAddress ()
+@property (strong, nonatomic) NSString *companyName;
+
+@end
+
 @implementation OLProductTemplateSyncRequest
 
 - (void)sync:(OLTemplateSyncRequestCompletionHandler)handler {
@@ -120,8 +125,7 @@
                     if ([themeConfig[@"ship_to_store"] isKindOfClass:[NSDictionary class]]){
                         NSDictionary *addressDict = themeConfig[@"ship_to_store"];
                         OLAddress *address = [[OLAddress alloc] init];
-                        address.recipientFirstName = addressDict[@"company_name"];
-                        address.recipientLastName = @".";
+                        address.companyName = addressDict[@"company_name"];
                         address.line1 = addressDict[@"shipping_address_1"];
                         address.line2 = addressDict[@"shipping_address_2"];
                         address.city = addressDict[@"city"];
