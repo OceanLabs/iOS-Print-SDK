@@ -59,6 +59,7 @@ static NSString *const kKeyOrderSubmitStatus = @"co.oceanlabs.pssdk.kKeyOrderSub
 static NSString *const kKeyOrderSubmitStatusError = @"co.oceanlabs.pssdk.kKeyOrderSubmitStatusError";
 static NSString *const kKeyOrderOptOutOfEmail = @"co.oceanlabs.pssdk.kKeyOrderOptOutOfEmail";
 static NSString *const kKeyOrderShipToStore = @"co.oceanlabs.pssdk.kKeyOrderShipToStore";
+static NSString *const kKeyOrderPayInStore = @"co.oceanlabs.pssdk.kKeyOrderPayInStore";
 
 static NSMutableArray *inProgressPrintOrders; // Tracks all currently in progress print orders. This is useful as it means they won't be dealloc'd if a user doesn't come a strong reference to them but still expects the completion handler callback
 
@@ -106,6 +107,7 @@ static id stringOrEmptyString(NSString *str) {
 
 @property (assign, nonatomic) BOOL optOutOfEmail;
 @property (assign, nonatomic) BOOL shipToStore;
+@property (assign, nonatomic) BOOL payInStore;
 
 @end
 
@@ -794,6 +796,7 @@ static NSBlockOperation *templateSyncOperation;
     [aCoder encodeObject:self.submitStatusErrorMessage forKey:kKeyOrderSubmitStatusError];
     [aCoder encodeBool:self.optOutOfEmail forKey:kKeyOrderOptOutOfEmail];
     [aCoder encodeBool:self.shipToStore forKey:kKeyOrderShipToStore];
+    [aCoder encodeBool:self.payInStore forKey:kKeyOrderPayInStore];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
@@ -816,6 +819,7 @@ static NSBlockOperation *templateSyncOperation;
             _submitStatusErrorMessage = [aDecoder decodeObjectForKey:kKeyOrderSubmitStatusError];
             _optOutOfEmail = [aDecoder decodeBoolForKey:kKeyOrderOptOutOfEmail];
             _shipToStore = [aDecoder decodeObjectForKey:kKeyOrderShipToStore];
+            _payInStore = [aDecoder decodeObjectForKey:kKeyOrderPayInStore];
         }
         return self;
         
