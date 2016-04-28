@@ -119,6 +119,11 @@ static id stringOrEmptyString(NSString *str) {
 
 static NSBlockOperation *templateSyncOperation;
 
+@interface OLAddress ()
+@property (strong, nonatomic) NSString *companyName;
+
+@end
+
 @implementation OLPrintOrder
 
 @synthesize userData=_userData;
@@ -534,8 +539,8 @@ static NSBlockOperation *templateSyncOperation;
     }
     
     [json setObject:[NSNumber numberWithBool:self.shipToStore] forKey:@"ship_to_store"];
-    
-    [json setObject:self.optOutOfEmail ? @YES : @NO forKey:@"opt_out_of_emails"];
+    [json setObject:[NSNumber numberWithBool:self.payInStore] forKey:@"pay_in_store"];
+    [json setObject:[NSNumber numberWithBool:self.optOutOfEmail] forKey:@"opt_out_of_emails"];
     
     if (self.shippingAddress) {
         NSDictionary *shippingAddress = @{@"recipient_name": stringOrEmptyString(self.shippingAddress.fullNameFromFirstAndLast),
@@ -546,7 +551,8 @@ static NSBlockOperation *templateSyncOperation;
                                           @"city": stringOrEmptyString(self.shippingAddress.city),
                                           @"county_state": stringOrEmptyString(self.shippingAddress.stateOrCounty),
                                           @"postcode": stringOrEmptyString(self.shippingAddress.zipOrPostcode),
-                                          @"country_code": stringOrEmptyString(self.shippingAddress.country.codeAlpha3)
+                                          @"country_code": stringOrEmptyString(self.shippingAddress.country.codeAlpha3),
+                                          @"company_name": stringOrEmptyString(self.shippingAddress.companyName)
                                           };
         [json setObject:shippingAddress forKey:@"shipping_address"];
     }

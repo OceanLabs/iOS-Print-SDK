@@ -40,10 +40,12 @@ static NSString *const kKeyCity = @"co.oceanlabs.pssdk.kKeyCity";
 static NSString *const kKeyStateOrCounty = @"co.oceanlabs.pssdk.kKeyStateOrCounty";
 static NSString *const kKeyZipOrPostcode = @"co.oceanlabs.pssdk.kKeyZipOrPostcode";
 static NSString *const kKeyCountryCode = @"co.oceanlabs.pssdk.kKeyCountryCode";
+static NSString *const kKeyCompanyName = @"co.oceanlabs.pssdk.kKeyCompanyName";
 
 @interface OLAddress ()
 @property (nonatomic, copy) NSString *displayName;
 @property (nonatomic, copy) NSString *addressId;
+@property (strong, nonatomic) NSString *companyName;
 @end
 
 @implementation OLAddress
@@ -166,6 +168,7 @@ static BOOL stringEqualOrBothNil(NSString *a, NSString *b) {
     && stringEqualOrBothNil(self.city, addr.city)
     && stringEqualOrBothNil(self.stateOrCounty, addr.stateOrCounty)
     && stringEqualOrBothNil(self.zipOrPostcode, addr.zipOrPostcode)
+    && stringEqualOrBothNil(self.companyName, addr.companyName)
     && self.country == addr.country;
 }
 
@@ -179,6 +182,7 @@ static BOOL stringEqualOrBothNil(NSString *a, NSString *b) {
     if (self.stateOrCounty) [components addObject:self.stateOrCounty];
     if (self.zipOrPostcode) [components addObject:self.zipOrPostcode];
     if (self.country) [components addObject:self.country];
+    if (self.companyName) [components addObject:self.companyName];
     
     NSUInteger hash = 17;
     for (id component in components) {
@@ -202,6 +206,7 @@ static BOOL stringEqualOrBothNil(NSString *a, NSString *b) {
     copy.stateOrCounty = self.stateOrCounty;
     copy.zipOrPostcode = self.zipOrPostcode;
     copy.country = self.country;
+    copy.companyName = self.companyName;
     NSAssert([copy isEqual:self], @"oops that's some bad copying!");
     return copy;
 }
@@ -219,6 +224,7 @@ static BOOL stringEqualOrBothNil(NSString *a, NSString *b) {
     [aCoder encodeObject:self.stateOrCounty forKey:kKeyStateOrCounty];
     [aCoder encodeObject:self.zipOrPostcode forKey:kKeyZipOrPostcode];
     [aCoder encodeObject:self.country.codeAlpha3 forKey:kKeyCountryCode];
+    [aCoder encodeObject:self.companyName forKey:kKeyCompanyName];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
@@ -233,6 +239,7 @@ static BOOL stringEqualOrBothNil(NSString *a, NSString *b) {
         self.stateOrCounty = [aDecoder decodeObjectForKey:kKeyStateOrCounty];
         self.zipOrPostcode = [aDecoder decodeObjectForKey:kKeyZipOrPostcode];
         self.country = [OLCountry countryForCode:[aDecoder decodeObjectForKey:kKeyCountryCode]];
+        self.companyName = [aDecoder decodeObjectForKey:kKeyCompanyName];
     }
     
     return self;

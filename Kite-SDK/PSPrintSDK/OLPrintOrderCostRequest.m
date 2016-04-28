@@ -55,6 +55,7 @@
 
 @interface OLPrintOrder ()
 @property (assign, nonatomic) BOOL shipToStore;
+@property (assign, nonatomic) BOOL payInStore;
 
 @end
 
@@ -99,7 +100,8 @@ static NSUInteger cacheOrderHash; // cached response is only valid for orders wi
     NSDictionary *dict = @{@"basket" : basket,
                            @"shipping_country_code" : order.shippingAddress.country ? [order.shippingAddress.country codeAlpha3] : [[OLCountry countryForCurrentLocale] codeAlpha3],
                            @"promo_code" : order.promoCode ? order.promoCode : @"",
-                           @"ship_to_store" : [NSNumber numberWithBool:order.shipToStore]
+                           @"ship_to_store" : [NSNumber numberWithBool:order.shipToStore],
+                           @"pay_in_store" : [NSNumber numberWithBool:order.payInStore]
                            };
     
     NSDictionary *extraDict = [order.userData objectForKey:@"extra_dict_for_cost"];
