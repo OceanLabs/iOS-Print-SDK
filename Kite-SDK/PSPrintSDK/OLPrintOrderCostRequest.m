@@ -53,6 +53,11 @@
 
 @end
 
+@interface OLPrintOrder ()
+@property (assign, nonatomic) BOOL shipToStore;
+
+@end
+
 static NSDictionary *cachedResponse; // we cache the last response
 static NSDate *cacheDate;
 static NSUInteger cacheOrderHash; // cached response is only valid for orders with this hash
@@ -84,6 +89,7 @@ static NSUInteger cacheOrderHash; // cached response is only valid for orders wi
         else{
             jobDict[@"country_code"] = order.shippingAddress.country ? [order.shippingAddress.country codeAlpha3] : [[OLCountry countryForCurrentLocale] codeAlpha3];
         }
+        
         jobDict[@"template_id"] = job.templateId;
         jobDict[@"quantity"] = [NSNumber numberWithInteger:[job quantity] * ([job extraCopies]+1)];
         jobDict[@"job_id"] = [job uuid];
@@ -93,6 +99,7 @@ static NSUInteger cacheOrderHash; // cached response is only valid for orders wi
     NSDictionary *dict = @{@"basket" : basket,
                            @"shipping_country_code" : order.shippingAddress.country ? [order.shippingAddress.country codeAlpha3] : [[OLCountry countryForCurrentLocale] codeAlpha3],
                            @"promo_code" : order.promoCode ? order.promoCode : @"",
+                           @"ship_to_store" : [NSNumber numberWithBool:order.shipToStore]
                            };
     
     NSDictionary *extraDict = [order.userData objectForKey:@"extra_dict_for_cost"];

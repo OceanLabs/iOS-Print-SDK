@@ -58,6 +58,7 @@ static NSString *const kKeyOrderPhone = @"co.oceanlabs.pssdk.kKeyOrderPhone";
 static NSString *const kKeyOrderSubmitStatus = @"co.oceanlabs.pssdk.kKeyOrderSubmitStatus";
 static NSString *const kKeyOrderSubmitStatusError = @"co.oceanlabs.pssdk.kKeyOrderSubmitStatusError";
 static NSString *const kKeyOrderOptOutOfEmail = @"co.oceanlabs.pssdk.kKeyOrderOptOutOfEmail";
+static NSString *const kKeyOrderShipToStore = @"co.oceanlabs.pssdk.kKeyOrderShipToStore";
 
 static NSMutableArray *inProgressPrintOrders; // Tracks all currently in progress print orders. This is useful as it means they won't be dealloc'd if a user doesn't come a strong reference to them but still expects the completion handler callback
 
@@ -104,6 +105,7 @@ static id stringOrEmptyString(NSString *str) {
 @property (nonatomic, readwrite) NSString *receipt;
 
 @property (assign, nonatomic) BOOL optOutOfEmail;
+@property (assign, nonatomic) BOOL shipToStore;
 
 @end
 
@@ -529,6 +531,8 @@ static NSBlockOperation *templateSyncOperation;
         [json setObject:self.email forKey:@"customer_email"];
     }
     
+    [json setObject:[NSNumber numberWithBool:self.shipToStore] forKey:@"ship_to_store"];
+    
     [json setObject:self.optOutOfEmail ? @YES : @NO forKey:@"opt_out_of_emails"];
     
     if (self.shippingAddress) {
@@ -789,6 +793,7 @@ static NSBlockOperation *templateSyncOperation;
     [aCoder encodeInteger:self.submitStatus forKey:kKeyOrderSubmitStatus];
     [aCoder encodeObject:self.submitStatusErrorMessage forKey:kKeyOrderSubmitStatusError];
     [aCoder encodeBool:self.optOutOfEmail forKey:kKeyOrderOptOutOfEmail];
+    [aCoder encodeBool:self.shipToStore forKey:kKeyOrderShipToStore];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
@@ -810,6 +815,7 @@ static NSBlockOperation *templateSyncOperation;
             _submitStatus = [aDecoder decodeIntegerForKey:kKeyOrderSubmitStatus];
             _submitStatusErrorMessage = [aDecoder decodeObjectForKey:kKeyOrderSubmitStatusError];
             _optOutOfEmail = [aDecoder decodeBoolForKey:kKeyOrderOptOutOfEmail];
+            _shipToStore = [aDecoder decodeObjectForKey:kKeyOrderShipToStore];
         }
         return self;
         
