@@ -113,8 +113,8 @@
                         theme.ctaColor = valuesDict[@"kiosk_cta_color"];
                     }
                     
-                    if ([themeConfig[@"pay_at_till"] isKindOfClass:[NSNumber class]]){
-                        theme.kioskEnablePayAtTheTill = [themeConfig[@"pay_at_till"] boolValue];
+                    if ([themeConfig[@"remove_payment_gateway"] isKindOfClass:[NSNumber class]]){
+                        theme.kioskEnablePayAtTheTill = [themeConfig[@"remove_payment_gateway"] boolValue];
                     }
                     
                     if ([themeConfig[@"ship_to_store"] isKindOfClass:[NSDictionary class]]){
