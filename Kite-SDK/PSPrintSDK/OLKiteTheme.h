@@ -16,7 +16,8 @@
 @property (strong, nonatomic) NSURL *shippingOption2;
 @property (strong, nonatomic) NSURL *termsAndConditions;
 @property (strong, nonatomic) NSURL *privacyPolicy;
-@property (strong, nonatomic) NSURL *startScreen;
+@property (strong, nonatomic) NSURL *startScreenLandscape;
+@property (strong, nonatomic) NSURL *startScreenPortrait;
 @property (strong, nonatomic) NSURL *splashScreen;
 @property (strong, nonatomic) NSURL *navigationIcon;
 @property (strong, nonatomic) NSURL *burgerMenuHeader;

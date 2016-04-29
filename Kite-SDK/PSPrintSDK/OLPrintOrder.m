@@ -570,6 +570,8 @@ static NSBlockOperation *templateSyncOperation;
     OLCountry *country = self.shippingAddress.country ? self.shippingAddress.country : [OLCountry countryForCurrentLocale];
     hash = 31 * hash + [country.codeAlpha3 hash];
     hash = 31 * hash + [self.promoCode hash];
+    hash = 31 * hash + (self.shipToStore ? 39 : 0);
+    hash = 31 * hash + (self.payInStore ? 73 : 0);
     for (id<OLPrintJob> job in self.jobs){
         if (job.address.country){
             hash = 32 * hash + [job.address.country.codeAlpha3 hash];

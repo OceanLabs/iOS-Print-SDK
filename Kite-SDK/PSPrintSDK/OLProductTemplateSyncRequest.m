@@ -112,7 +112,8 @@
                         theme.secretReveal = [NSURL URLWithString:valuesDict[@"kiosk_secret_reveal"]];
                         theme.shippingOption1 = [NSURL URLWithString:valuesDict[@"kiosk_shipping_option_to_store"]];
                         theme.shippingOption2 = [NSURL URLWithString:valuesDict[@"kiosk_shipping_option_to_home"]];
-                        theme.startScreen = [NSURL URLWithString:valuesDict[@"kiosk_start_screen"]];
+                        theme.startScreenLandscape = [NSURL URLWithString:valuesDict[@"kiosk_start_screen_landscape"]];
+                        theme.startScreenPortrait = [NSURL URLWithString:valuesDict[@"kiosk_start_screen_portrait"]];
                         theme.termsAndConditions = [NSURL URLWithString:valuesDict[@"kiosk_terms_and_conditions_url"]];
                         theme.splashScreen = [NSURL URLWithString:valuesDict[@"kiosk_splash_screen"]];
                         theme.ctaColor = valuesDict[@"kiosk_cta_color"];
