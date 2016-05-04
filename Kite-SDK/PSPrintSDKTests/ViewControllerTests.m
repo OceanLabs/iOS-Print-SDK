@@ -271,7 +271,16 @@
     [self waitForExpectationsWithTimeout:3 handler:NULL];
     
     OLCreditCardCaptureViewController *creditCardVc = (OLCreditCardCaptureViewController *)paymentVc.presentedViewController;
-    XCTAssert([creditCardVc isKindOfClass:[OLCreditCardCaptureRootController class]], @"Got %@, %@ %@", [creditCardVc class], [(UIAlertController *)creditCardVc title], [(UIAlertController *)creditCardVc message]);
+    if (![creditCardVc isKindOfClass:[OLCreditCardCaptureRootController class]]){
+        UIGraphicsBeginImageContextWithOptions(creditCardVc.view.bounds.size, NO, 0.0);
+        [[creditCardVc.view layer] renderInContext:UIGraphicsGetCurrentContext()];
+        UIImage *ViewImage = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+        
+        NSData *pngData = UIImagePNGRepresentation(ViewImage);
+        [pngData writeToFile:@"/Users/distiller/image.png" atomically:NO];
+    }
+    XCTAssert([creditCardVc isKindOfClass:[OLCreditCardCaptureRootController class]], @"Got %@", [creditCardVc class]);
     creditCardVc.rootVC.textFieldCVV.text = @"111";
     creditCardVc.rootVC.textFieldCardNumber.text = @"4242424242424242";
     creditCardVc.rootVC.textFieldExpiryDate.text = @"12/20";
