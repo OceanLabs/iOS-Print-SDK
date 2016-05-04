@@ -80,6 +80,17 @@ static NSOperationQueue *imageOperationQueue;
 
 @end
 
+@implementation PHAsset (isEqual)
+
+- (BOOL)isEqual:(id)object{
+    if(![object isKindOfClass:[PHAsset class]])
+        return NO;
+    
+    return [self.localIdentifier isEqualToString:[object localIdentifier]];
+}
+
+@end
+
 @interface OLPrintPhoto ()
 @property (nonatomic, strong) UIImage *cachedCroppedThumbnailImage;
 @property (assign, nonatomic) BOOL thumbnailIsMaxSize;
