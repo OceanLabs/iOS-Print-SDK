@@ -247,7 +247,7 @@
     XCTestExpectation *expectation = [self expectationWithDescription:@"Wait for book to do the wobble animation"];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        sleep(3);
+        sleep(1);
         [expectation fulfill];
     });
     [self waitForExpectationsWithTimeout:120 handler:NULL];
@@ -271,6 +271,7 @@
     [self waitForExpectationsWithTimeout:3 handler:NULL];
     
     OLCreditCardCaptureViewController *creditCardVc = (OLCreditCardCaptureViewController *)paymentVc.presentedViewController;
+    XCTAssert([creditCardVc isKindOfClass:[OLCreditCardCaptureRootController class]], @"Got %@, %@", [creditCardVc class], creditCardVc);
     creditCardVc.rootVC.textFieldCVV.text = @"111";
     creditCardVc.rootVC.textFieldCardNumber.text = @"4242424242424242";
     creditCardVc.rootVC.textFieldExpiryDate.text = @"12/20";
