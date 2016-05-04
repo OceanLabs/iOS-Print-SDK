@@ -110,6 +110,8 @@
     UINavigationController *rootVc = (UINavigationController *)[[UIApplication sharedApplication].delegate window].rootViewController;
     [rootVc.presentedViewController dismissViewControllerAnimated:NO completion:NULL];
     
+    [OLStripeCard clearLastUsedCard];
+    
     // Put teardown code here. This method is called after the invocation of each test method in the class.
     [super tearDown];
 }
