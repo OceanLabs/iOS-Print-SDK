@@ -271,7 +271,7 @@
     [self waitForExpectationsWithTimeout:3 handler:NULL];
     
     OLCreditCardCaptureViewController *creditCardVc = (OLCreditCardCaptureViewController *)paymentVc.presentedViewController;
-    XCTAssert([creditCardVc isKindOfClass:[OLCreditCardCaptureRootController class]], @"Got %@, %@", [creditCardVc class], creditCardVc);
+    XCTAssert([creditCardVc isKindOfClass:[OLCreditCardCaptureRootController class]], @"Got %@, %@ %@", [creditCardVc class], [(UIAlertController *)creditCardVc title], [(UIAlertController *)creditCardVc message]);
     creditCardVc.rootVC.textFieldCVV.text = @"111";
     creditCardVc.rootVC.textFieldCardNumber.text = @"4242424242424242";
     creditCardVc.rootVC.textFieldExpiryDate.text = @"12/20";
