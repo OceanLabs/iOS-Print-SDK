@@ -104,13 +104,12 @@
     [super setUp];
     // Put setup code here. This method is called before the invocation of each test method in the class.
     [OLKitePrintSDK setAPIKey:@"a45bf7f39523d31aa1ca4ecf64d422b4d810d9c4" withEnvironment:kOLKitePrintSDKEnvironmentSandbox];
+    [OLStripeCard clearLastUsedCard];
 }
 
 - (void)tearDown {
     UINavigationController *rootVc = (UINavigationController *)[[UIApplication sharedApplication].delegate window].rootViewController;
     [rootVc.presentedViewController dismissViewControllerAnimated:NO completion:NULL];
-    
-    [OLStripeCard clearLastUsedCard];
     
     // Put teardown code here. This method is called after the invocation of each test method in the class.
     [super tearDown];
