@@ -281,7 +281,7 @@
         NSData *pngData = UIImagePNGRepresentation(ViewImage);
         [pngData writeToFile:@"/Users/distiller/image.png" atomically:NO];
     }
-    XCTAssert([creditCardVc isKindOfClass:[OLCreditCardCaptureRootController class]], @"Got %@", [creditCardVc class]);
+    XCTAssert([creditCardVc isKindOfClass:[OLCreditCardCaptureViewController class]], @"Got %@", [creditCardVc class]);
     creditCardVc.rootVC.textFieldCVV.text = @"111";
     creditCardVc.rootVC.textFieldCardNumber.text = @"4242424242424242";
     creditCardVc.rootVC.textFieldExpiryDate.text = @"12/20";
