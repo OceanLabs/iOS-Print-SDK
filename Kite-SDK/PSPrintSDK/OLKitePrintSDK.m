@@ -84,7 +84,7 @@ static NSString *const kOLAPIEndpointVersion = @"v2.0";
 #ifdef OL_OFFER_JUDOPAY
 static BOOL useJudoPayForGBP = NO;
 #endif
-static BOOL useStripeForCreditCards = NO;
+static BOOL useStripeForCreditCards = YES;
 static BOOL cacheTemplates = NO;
 static BOOL useStaging = NO;
 static BOOL isUnitTesting = NO;
