@@ -23,6 +23,7 @@
 #import "OLPrintOrder.h"
 #import "OLPaymentViewController.h"
 #import "OLCreditCardCaptureViewController.h"
+#import "OLEditPhotobookViewController.h"
 
 @import Photos;
 
@@ -180,10 +181,6 @@
     return resultVc;
 }
 
-//- (void)testKiteViewControllerSyncsAndLoadsProductHome{
-//    [self loadKiteViewController];
-//}
-
 - (void)chooseClass:(NSString *)class onOLProductHomeViewController:(OLProductHomeViewController *)productHome{
     XCTestExpectation *expectation = [self expectationWithDescription:@"Wait for vc push"];
     [productHome collectionView:productHome.collectionView didSelectItemAtIndexPath:[NSIndexPath indexPathForItem:[self findIndexForClass:class inOLProductHomeViewController:productHome] inSection:[productHome numberOfSectionsInCollectionView:productHome.collectionView]-1]];
@@ -227,9 +224,72 @@
     [self waitForExpectationsWithTimeout:10 handler:NULL];
 }
 
-- (void)testCompleteCaseJourney{
-    [OLKitePrintSDK setUseStripeForCreditCards:YES];
+- (void)testCompletePhotobookJourney{
+    OLProductHomeViewController *productHomeVc = [self loadKiteViewController];
     
+    [self chooseClass:@"Photo Books" onOLProductHomeViewController:productHomeVc];
+    
+    OLProductTypeSelectionViewController *productTypeVc = (OLProductTypeSelectionViewController *)productHomeVc.navigationController.topViewController;
+    XCTAssert([productTypeVc isKindOfClass:[OLProductTypeSelectionViewController class]]);
+    
+    [self chooseProduct:@"A5 Landscape Photobook" onOLProductTypeSelectionViewController:productTypeVc];
+    
+    OLProductOverviewViewController *overviewVc = (OLProductOverviewViewController *)productHomeVc.navigationController.topViewController;
+    overviewVc.userSelectedPhotos = [@[overviewVc.userSelectedPhotos.firstObject, overviewVc.userSelectedPhotos.firstObject, overviewVc.userSelectedPhotos.firstObject, overviewVc.userSelectedPhotos.firstObject, overviewVc.userSelectedPhotos.firstObject, overviewVc.userSelectedPhotos.firstObject, overviewVc.userSelectedPhotos.firstObject, overviewVc.userSelectedPhotos.firstObject, overviewVc.userSelectedPhotos.firstObject, overviewVc.userSelectedPhotos.firstObject, overviewVc.userSelectedPhotos.firstObject, overviewVc.userSelectedPhotos.firstObject, overviewVc.userSelectedPhotos.firstObject, overviewVc.userSelectedPhotos.firstObject, overviewVc.userSelectedPhotos.firstObject, overviewVc.userSelectedPhotos.firstObject, overviewVc.userSelectedPhotos.firstObject, overviewVc.userSelectedPhotos.firstObject, overviewVc.userSelectedPhotos.firstObject, overviewVc.userSelectedPhotos.firstObject, overviewVc.userSelectedPhotos.firstObject, ] mutableCopy];
+    
+    [self tapNextOnViewController:productHomeVc.navigationController.topViewController];
+    
+    OLEditPhotobookViewController *photobookEditVc = (OLEditPhotobookViewController *)productHomeVc.navigationController.topViewController;
+    XCTAssert([photobookEditVc isKindOfClass:[OLEditPhotobookViewController class]]);
+    
+    [self tapNextOnViewController:photobookEditVc];
+    
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Wait for book to do the wobble animation"];
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        sleep(3);
+        [expectation fulfill];
+    });
+    [self waitForExpectationsWithTimeout:120 handler:NULL];
+    
+    OLKiteViewController *kiteVc = [OLKiteUtils kiteVcForViewController:productHomeVc.navigationController.topViewController];
+    OLPrintOrder *printOrder = kiteVc.printOrder;
+    printOrder.shippingAddress = [OLAddress kiteTeamAddress];
+    printOrder.email = @"ios_unit_test@kite.ly";
+    [self tapNextOnViewController:productHomeVc.navigationController.topViewController];
+    
+    OLPaymentViewController *paymentVc = (OLPaymentViewController *)productHomeVc.navigationController.topViewController;
+    XCTAssert([paymentVc isKindOfClass:[OLPaymentViewController class]]);
+    
+    [paymentVc onButtonPayWithCreditCardClicked];
+    
+    expectation = [self expectationWithDescription:@"Wait for Payment VC"];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1.5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+        [expectation fulfill];
+    });
+    
+    [self waitForExpectationsWithTimeout:3 handler:NULL];
+    
+    OLCreditCardCaptureViewController *creditCardVc = (OLCreditCardCaptureViewController *)paymentVc.presentedViewController;
+    creditCardVc.rootVC.textFieldCVV.text = @"111";
+    creditCardVc.rootVC.textFieldCardNumber.text = @"4242424242424242";
+    creditCardVc.rootVC.textFieldExpiryDate.text = @"12/20";
+    
+    [creditCardVc.rootVC onButtonPayClicked];
+    
+    expectation = [self expectationWithDescription:@"Wait for order complete"];
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        while (!printOrder.printed) {
+            sleep(3);
+        }
+        [expectation fulfill];
+    });
+    
+    [self waitForExpectationsWithTimeout:120 handler:NULL];
+}
+
+- (void)testCompleteCaseJourney{
     OLProductHomeViewController *productHomeVc = [self loadKiteViewController];
     [self chooseClass:@"Snap Cases" onOLProductHomeViewController:productHomeVc];
     

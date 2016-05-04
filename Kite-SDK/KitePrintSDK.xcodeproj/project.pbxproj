@@ -35,7 +35,6 @@
 		2E13278B1CC7A8C800387E06 /* UIImage+MDQRCode.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E8702E41C9050CA002BE2DA /* UIImage+MDQRCode.m */; };
 		2E14D2D11C2AE9AD00F35403 /* OLImagePreviewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E14D2D01C2AE9AD00F35403 /* OLImagePreviewViewController.m */; };
 		2E14D2D21C2AE9AD00F35403 /* OLImagePreviewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E14D2D01C2AE9AD00F35403 /* OLImagePreviewViewController.m */; };
-		2E2632C21B97336700C7D879 /* KitePrintSDKUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E2632C11B97336700C7D879 /* KitePrintSDKUITests.m */; };
 		2E2BF4471CCDFAF100725561 /* OLKiteTheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E2BF4461CCDFAF100725561 /* OLKiteTheme.m */; };
 		2E2BF4481CCDFAF100725561 /* OLKiteTheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E2BF4461CCDFAF100725561 /* OLKiteTheme.m */; };
 		2E2BF4491CCDFAF100725561 /* OLKiteTheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E2BF4461CCDFAF100725561 /* OLKiteTheme.m */; };
@@ -855,9 +854,6 @@
 		2E21DA411B9843CF00D9162F /* OLAssetsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLAssetsViewController.m; sourceTree = "<group>"; };
 		2E21DA421B9843CF00D9162F /* OLAssetsViewControllerTransition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLAssetsViewControllerTransition.h; sourceTree = "<group>"; };
 		2E21DA431B9843CF00D9162F /* OLAssetsViewControllerTransition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLAssetsViewControllerTransition.m; sourceTree = "<group>"; };
-		2E2632BF1B97336700C7D879 /* KitePrintSDKUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = KitePrintSDKUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		2E2632C11B97336700C7D879 /* KitePrintSDKUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KitePrintSDKUITests.m; sourceTree = "<group>"; };
-		2E2632C31B97336700C7D879 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2E2BF4451CCDFAF100725561 /* OLKiteTheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLKiteTheme.h; sourceTree = "<group>"; };
 		2E2BF4461CCDFAF100725561 /* OLKiteTheme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLKiteTheme.m; sourceTree = "<group>"; };
 		2E2E61E51C21826D005CB729 /* UIViewController+OLMethods.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIViewController+OLMethods.h"; path = "PSPrintSDK/Categories/UIViewController+OLMethods.h"; sourceTree = "<group>"; };
@@ -1343,13 +1339,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		2E2632BC1B97336700C7D879 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		2E898CCA1CC518180041CCD8 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -1593,15 +1582,6 @@
 				2E21DA431B9843CF00D9162F /* OLAssetsViewControllerTransition.m */,
 			);
 			name = OLAssetsPickerController;
-			sourceTree = "<group>";
-		};
-		2E2632C01B97336700C7D879 /* KitePrintSDKUITests */ = {
-			isa = PBXGroup;
-			children = (
-				2E2632C11B97336700C7D879 /* KitePrintSDKUITests.m */,
-				2E2632C31B97336700C7D879 /* Info.plist */,
-			);
-			path = KitePrintSDKUITests;
 			sourceTree = "<group>";
 		};
 		2E4CAF101BC293EA0089FA26 /* Products */ = {
@@ -1865,7 +1845,6 @@
 				CD73BFA01862FA210009DE03 /* Sample App */,
 				CD73BF71186215790009DE03 /* Kite Print SDK */,
 				CD73BF90186215790009DE03 /* Kite Print SDK Tests */,
-				2E2632C01B97336700C7D879 /* KitePrintSDKUITests */,
 				E29C85711BE3B4290041D4CF /* KiteSDK */,
 				CD73BF6A186215790009DE03 /* Frameworks */,
 				CD73BF69186215790009DE03 /* Products */,
@@ -1878,7 +1857,6 @@
 			isa = PBXGroup;
 			children = (
 				CD73BF89186215790009DE03 /* KitePrintSDKTests.xctest */,
-				2E2632BF1B97336700C7D879 /* KitePrintSDKUITests.xctest */,
 				E29C85701BE3B4290041D4CF /* libKiteSDK.a */,
 				2EADD8651BE79D6D0051CD31 /* KiteSDK-Demo.app */,
 				E220587E1BF3F7AC009CFAF6 /* libUIColor-HexString.a */,
@@ -2434,23 +2412,6 @@
 			productReference = 2E13277B1CC7A83300387E06 /* libios-qr-encoder.a */;
 			productType = "com.apple.product-type.library.static";
 		};
-		2E2632BE1B97336700C7D879 /* KitePrintSDKUITests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 2E2632C81B97336700C7D879 /* Build configuration list for PBXNativeTarget "KitePrintSDKUITests" */;
-			buildPhases = (
-				2E2632BB1B97336700C7D879 /* Sources */,
-				2E2632BC1B97336700C7D879 /* Frameworks */,
-				2E2632BD1B97336700C7D879 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = KitePrintSDKUITests;
-			productName = KitePrintSDKUITests;
-			productReference = 2E2632BF1B97336700C7D879 /* KitePrintSDKUITests.xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
-		};
 		2E898C4C1CC518180041CCD8 /* Kite-CI-Deploy */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2E898CE71CC518180041CCD8 /* Build configuration list for PBXNativeTarget "Kite-CI-Deploy" */;
@@ -2746,10 +2707,6 @@
 					2E13277A1CC7A83300387E06 = {
 						CreatedOnToolsVersion = 7.3;
 					};
-					2E2632BE1B97336700C7D879 = {
-						CreatedOnToolsVersion = 7.0;
-						TestTargetID = CD73BF67186215790009DE03;
-					};
 					2E4CAF081BC25F0A0089FA26 = {
 						CreatedOnToolsVersion = 7.0.1;
 					};
@@ -2829,7 +2786,6 @@
 				2EADD7E31BE79D6D0051CD31 /* KiteSDK-Demo */,
 				2E898C4C1CC518180041CCD8 /* Kite-CI-Deploy */,
 				CD73BF88186215790009DE03 /* KitePrintSDKTests */,
-				2E2632BE1B97336700C7D879 /* KitePrintSDKUITests */,
 				2E4CAF081BC25F0A0089FA26 /* Docs */,
 				E29C856F1BE3B4290041D4CF /* KiteSDK */,
 				2EA3D35A1C9C04B500B99BCD /* KiteSDKMinimal */,
@@ -2850,13 +2806,6 @@
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		2E2632BD1B97336700C7D879 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		2E898CDC1CC518180041CCD8 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -3075,14 +3024,6 @@
 				2E1327891CC7A8C800387E06 /* rscode.c in Sources */,
 				2E13278A1CC7A8C800387E06 /* split.c in Sources */,
 				2E13278B1CC7A8C800387E06 /* UIImage+MDQRCode.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		2E2632BB1B97336700C7D879 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				2E2632C21B97336700C7D879 /* KitePrintSDKUITests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3831,50 +3772,6 @@
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-			};
-			name = Release;
-		};
-		2E2632C61B97336700C7D879 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				DEBUG_INFORMATION_FORMAT = dwarf;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				ENABLE_TESTABILITY = YES;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				INFOPLIST_FILE = KitePrintSDKUITests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MTL_ENABLE_DEBUG_INFO = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = ly.kite.KitePrintSDKUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_TARGET_NAME = KitePrintSDK;
-				USES_XCTRUNNER = YES;
-			};
-			name = Debug;
-		};
-		2E2632C71B97336700C7D879 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				INFOPLIST_FILE = KitePrintSDKUITests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MTL_ENABLE_DEBUG_INFO = NO;
-				PRODUCT_BUNDLE_IDENTIFIER = ly.kite.KitePrintSDKUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_TARGET_NAME = KitePrintSDK;
-				USES_XCTRUNNER = YES;
 			};
 			name = Release;
 		};
@@ -5074,15 +4971,6 @@
 			buildConfigurations = (
 				2E1327811CC7A83300387E06 /* Debug */,
 				2E1327821CC7A83300387E06 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		2E2632C81B97336700C7D879 /* Build configuration list for PBXNativeTarget "KitePrintSDKUITests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				2E2632C61B97336700C7D879 /* Debug */,
-				2E2632C71B97336700C7D879 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
