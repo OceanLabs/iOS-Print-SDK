@@ -24,6 +24,7 @@
 #import "OLPaymentViewController.h"
 #import "OLCreditCardCaptureViewController.h"
 #import "OLEditPhotobookViewController.h"
+#import "OLKiteABTesting.h"
 
 @import Photos;
 
@@ -86,6 +87,16 @@
 
 @interface OLPaymentViewController ()
 - (IBAction)onButtonPayWithCreditCardClicked;
+@end
+
+@interface OLScrollCropViewController ()
+
+- (IBAction)onButtonHorizontalFlipClicked:(id)sender;
+- (IBAction)onButtonRotateClicked:(id)sender;
+@end
+
+@interface OLKiteABTesting ()
+@property (strong, nonatomic, readwrite) NSString *qualityBannerType;
 @end
 
 @class OLCreditCardCaptureRootController;
@@ -362,67 +373,119 @@
     
 }
 
-//- (void)testPhotoSelectionScreen{
-//    NSData *data1 = [NSData dataWithContentsOfFile:[[NSBundle bundleForClass:[OLKiteTestHelper class]] pathForResource:@"1" ofType:@"jpg"]];
-//    NSData *data2 = [NSData dataWithContentsOfFile:[[NSBundle bundleForClass:[OLKiteTestHelper class]] pathForResource:@"2" ofType:@"png"]];
-//    
-//    PHFetchResult *fetchResult = [PHAsset fetchAssetsWithMediaType:PHAssetMediaTypeImage options:nil];
-//    XCTAssert(fetchResult.count > 0, @"There are no assets available");
-//    PHAsset *phAsset = [fetchResult objectAtIndex:arc4random() % fetchResult.count];
-//    
-//    NSArray *olAssets = @[
-//                          [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/1.jpg"]],
-//                          [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/2.jpg"]],
-//                          [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/3.jpg"]],
-//                          [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/4.jpg"]],
-//                          [OLAsset assetWithDataAsJPEG:data1],
-//                          [OLAsset assetWithDataAsPNG:data2],
-//                          [OLAsset assetWithPHAsset:phAsset]
-//                          ];
-//    
-//    NSMutableArray *printPhotos = [[NSMutableArray alloc] initWithCapacity:700];
-//    for (int i = 0; i < 100; i++) {
-//        for (OLAsset *asset in olAssets){
-//            OLPrintPhoto *photo = [[OLPrintPhoto alloc] init];
-//            photo.asset = asset;
-//            [printPhotos addObject:photo];
-//        }
-//    }
-//    
-//    XCTestExpectation *expectation = [self expectationWithDescription:@"Template Sync Completed"];
-//    [self templateSyncWithSuccessHandler:^{
-//        OLProduct *product = [OLProduct productWithTemplateId:@"squares"];
-//        
-//        UIStoryboard *sb = [UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[NSBundle bundleForClass:[OLPhotoSelectionViewController class]]];
-//        XCTAssert(sb);
-//        
-//        OLPhotoSelectionViewController *vc = [sb instantiateViewControllerWithIdentifier:@"PhotoSelectionViewController"];
-//        XCTAssert(vc);
-//        
-//        vc.product = product;
-//        vc.userSelectedPhotos = printPhotos;
-//        
-//        OLCustomNavigationController *nvc = [[OLCustomNavigationController alloc] initWithRootViewController:vc];
-//        
-//        UINavigationController *rootVc = (UINavigationController *)[[UIApplication sharedApplication].delegate window].rootViewController;
-//        
-//        [rootVc.topViewController presentViewController:nvc animated:YES completion:^{
-//            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-//                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1.5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-//                    [vc onButtonNextClicked];
-//                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1.5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-//                        [expectation fulfill];
-//                    });
-//                    //
-//                });
-//                
-//            });
-//        }];
-//        
-//        
-//        
-//    }];
-//    [self waitForExpectationsWithTimeout:60 handler:NULL];
-//}
+- (void)testPhotoSelectionScreen{
+    NSData *data1 = [NSData dataWithContentsOfFile:[[NSBundle bundleForClass:[OLKiteTestHelper class]] pathForResource:@"1" ofType:@"jpg"]];
+    NSData *data2 = [NSData dataWithContentsOfFile:[[NSBundle bundleForClass:[OLKiteTestHelper class]] pathForResource:@"2" ofType:@"png"]];
+    
+    PHFetchResult *fetchResult = [PHAsset fetchAssetsWithMediaType:PHAssetMediaTypeImage options:nil];
+    XCTAssert(fetchResult.count > 0, @"There are no assets available");
+    PHAsset *phAsset = [fetchResult objectAtIndex:arc4random() % fetchResult.count];
+    
+    NSArray *olAssets = @[
+                          [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/1.jpg"]],
+                          [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/2.jpg"]],
+                          [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/3.jpg"]],
+                          [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/4.jpg"]],
+                          [OLAsset assetWithDataAsJPEG:data1],
+                          [OLAsset assetWithDataAsPNG:data2],
+                          [OLAsset assetWithPHAsset:phAsset]
+                          ];
+    
+    NSMutableArray *printPhotos = [[NSMutableArray alloc] initWithCapacity:700];
+    for (int i = 0; i < 100; i++) {
+        for (OLAsset *asset in olAssets){
+            OLPrintPhoto *photo = [[OLPrintPhoto alloc] init];
+            photo.asset = asset;
+            [printPhotos addObject:photo];
+        }
+    }
+    
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Template Sync Completed"];
+    [self templateSyncWithSuccessHandler:^{
+        OLProduct *product = [OLProduct productWithTemplateId:@"squares"];
+        
+        UIStoryboard *sb = [UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[NSBundle bundleForClass:[OLPhotoSelectionViewController class]]];
+        XCTAssert(sb);
+        
+        OLPhotoSelectionViewController *vc = [sb instantiateViewControllerWithIdentifier:@"PhotoSelectionViewController"];
+        XCTAssert(vc);
+        
+        vc.product = product;
+        vc.userSelectedPhotos = printPhotos;
+        
+        OLNavigationController *nvc = [[OLNavigationController alloc] initWithRootViewController:vc];
+        
+        UINavigationController *rootVc = (UINavigationController *)[[UIApplication sharedApplication].delegate window].rootViewController;
+        
+        [rootVc.topViewController presentViewController:nvc animated:YES completion:^{
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1.5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+                    [vc onButtonNextClicked];
+                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1.5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+                        [expectation fulfill];
+                    });
+                    //
+                });
+                
+            });
+        }];
+        
+        
+        
+    }];
+    [self waitForExpectationsWithTimeout:60 handler:NULL];
+}
+
+- (void)testScrollCropViewController{
+    UIStoryboard *sb = [UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[NSBundle bundleForClass:[OLPhotoSelectionViewController class]]];
+    XCTAssert(sb);
+    
+    OLScrollCropViewController *cropVc = [sb instantiateViewControllerWithIdentifier:@"OLScrollCropViewController"];
+    cropVc.enableCircleMask = YES;
+    cropVc.aspectRatio = 1.1;
+    
+    NSData *data1 = [NSData dataWithContentsOfFile:[[NSBundle bundleForClass:[OLKiteTestHelper class]] pathForResource:@"1" ofType:@"jpg"]];
+    [cropVc setFullImage:[UIImage imageWithData:data1]];
+    cropVc.edits = [[OLPhotoEdits alloc] init];
+    
+    UINavigationController *rootVc = (UINavigationController *)[[UIApplication sharedApplication].delegate window].rootViewController;
+    
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Crop animations"];
+    
+    [rootVc.topViewController presentViewController:cropVc animated:YES completion:^{
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1.5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+                [cropVc onButtonHorizontalFlipClicked:nil];
+                
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1.5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+                    [cropVc onButtonRotateClicked:nil];
+                    
+                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1.5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+                        [expectation fulfill];
+                    });
+                });
+            });
+        });
+    }];
+
+    [self waitForExpectationsWithTimeout:60 handler:NULL];
+}
+
+- (void)testInfoPageViewController{
+    OLProductHomeViewController *productHomeVc = [self loadKiteViewController];
+    [OLKiteABTesting sharedInstance].qualityBannerType = @"A";
+    [productHomeVc.collectionView reloadData];
+    
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Wait"];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1.5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+        [productHomeVc collectionView:productHomeVc.collectionView didSelectItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
+        
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1.5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+            [expectation fulfill];
+        });
+    });
+
+    [self waitForExpectationsWithTimeout:60 handler:NULL];
+}
 
 @end

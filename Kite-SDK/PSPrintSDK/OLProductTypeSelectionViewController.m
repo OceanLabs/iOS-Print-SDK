@@ -31,7 +31,6 @@
 #import "OLKitePrintSDK.h"
 #import "OLProduct.h"
 #import "OLSingleImageProductReviewViewController.h"
-#import "UITableViewController+ScreenWidthFactor.h"
 #import "OLProductOverviewViewController.h"
 #import "OLAnalytics.h"
 #import "UIViewController+TraitCollectionCompatibility.h"

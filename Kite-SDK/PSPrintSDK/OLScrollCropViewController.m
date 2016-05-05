@@ -43,6 +43,13 @@
 
 @implementation OLScrollCropViewController
 
+-(OLPhotoEdits *) edits{
+    if (!_edits){
+        _edits = [[OLPhotoEdits alloc] init];
+    }
+    return _edits;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     
