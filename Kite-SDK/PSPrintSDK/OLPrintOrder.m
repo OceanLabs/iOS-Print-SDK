@@ -826,8 +826,8 @@ static NSBlockOperation *templateSyncOperation;
             _submitStatus = [aDecoder decodeIntegerForKey:kKeyOrderSubmitStatus];
             _submitStatusErrorMessage = [aDecoder decodeObjectForKey:kKeyOrderSubmitStatusError];
             _optOutOfEmail = [aDecoder decodeBoolForKey:kKeyOrderOptOutOfEmail];
-            _shipToStore = [aDecoder decodeObjectForKey:kKeyOrderShipToStore];
-            _payInStore = [aDecoder decodeObjectForKey:kKeyOrderPayInStore];
+            _shipToStore = [aDecoder decodeBoolForKey:kKeyOrderShipToStore];
+            _payInStore = [aDecoder decodeBoolForKey:kKeyOrderPayInStore];
         }
         return self;
         
