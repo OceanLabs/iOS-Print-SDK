@@ -32,7 +32,7 @@
 typedef void (^OLStripeCardStoreCompletionHandler)(NSError *error);
 typedef void (^OLStripeCardChargeCompletionHandler)(NSString *proofOfPayment, NSError *error);
 
-@interface OLStripeCard : NSObject <NSSecureCoding>
+@interface OLStripeCard : NSObject /*<NSSecureCoding>*/
 
 + (void)setClientId:(NSString *)clientId;
 + (OLStripeCard *)lastUsedCard;

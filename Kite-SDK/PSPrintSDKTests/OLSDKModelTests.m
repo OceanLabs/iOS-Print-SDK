@@ -188,4 +188,12 @@
     XCTAssert([asset1 hash] == [asset2 hash], @"OLAsset hashes should be equal");
 }
 
+- (void)testPrintJobProductName{
+    id<OLPrintJob> job = [OLPrintJob printJobWithTemplateId:@"squares" images:@[]];
+    XCTAssert([job.productName isEqualToString:[OLProductTemplate templateWithId:@"squares"].name]);
+    
+    job = [OLPrintJob photobookWithTemplateId:@"photobook_small_portrait" OLAssets:@[] frontCoverOLAsset:nil backCoverOLAsset:nil];
+    XCTAssert([job.productName isEqualToString:[OLProductTemplate templateWithId:@"photobook_small_portrait"].name]);
+}
+
 @end

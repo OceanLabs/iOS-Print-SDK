@@ -148,22 +148,22 @@ static OLStripeCard *lastUsedCard;
 
 #pragma mark - NSCoding protocol methods
 
-- (void)encodeWithCoder:(NSCoder *)aCoder {
-    [aCoder encodeObject:self.numberMasked forKey:kKeyNumberMasked];
-    [aCoder encodeObject:self.customerId forKey:kKeyCustomerId];
-}
-
-- (id)initWithCoder:(NSCoder *)aDecoder {
-    if (self = [super init]) {
-        self.numberMasked = [aDecoder decodeObjectOfClass:[NSString class] forKey:kKeyNumberMasked]; // Only store masked version (last 4 digits) of card number for PCI compliance
-        self.customerId = [aDecoder decodeObjectOfClass:[NSString class] forKey:kKeyCustomerId];
-    }
-    
-    return self;
-}
-
-+(BOOL)supportsSecureCoding{
-    return YES;
-}
+//- (void)encodeWithCoder:(NSCoder *)aCoder {
+//    [aCoder encodeObject:self.numberMasked forKey:kKeyNumberMasked];
+//    [aCoder encodeObject:self.customerId forKey:kKeyCustomerId];
+//}
+//
+//- (id)initWithCoder:(NSCoder *)aDecoder {
+//    if (self = [super init]) {
+//        self.numberMasked = [aDecoder decodeObjectOfClass:[NSString class] forKey:kKeyNumberMasked]; // Only store masked version (last 4 digits) of card number for PCI compliance
+//        self.customerId = [aDecoder decodeObjectOfClass:[NSString class] forKey:kKeyCustomerId];
+//    }
+//    
+//    return self;
+//}
+//
+//+(BOOL)supportsSecureCoding{
+//    return YES;
+//}
 
 @end

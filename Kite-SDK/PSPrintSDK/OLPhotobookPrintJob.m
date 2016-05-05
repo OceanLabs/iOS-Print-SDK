@@ -182,14 +182,6 @@ static NSString *const kKeyRedeemedOffer = @"co.oceanlabs.pssdk.kKeyRedeemedOffe
     return [NSDecimalNumber decimalNumberWithString:@"1"];
 }
 
-- (NSDecimalNumber *)costInCurrency:(NSString *)currencyCode {
-    OLProductTemplate *productTemplate = [OLProductTemplate templateWithId:self.templateId];
-    NSUInteger expectedQuantity = productTemplate.quantityPerSheet;
-    NSDecimalNumber *cost = [productTemplate costPerSheetInCurrencyCode:currencyCode];
-    NSUInteger numOrders = (NSUInteger) floorf((self.quantity + expectedQuantity - 1)  / expectedQuantity);
-    return (NSDecimalNumber *) [cost decimalNumberByMultiplyingBy:(NSDecimalNumber *) [NSDecimalNumber numberWithUnsignedInteger:numOrders]];
-}
-
 - (NSArray *)currenciesSupported {
     return [OLProductTemplate templateWithId:self.templateId].currenciesSupported;
 }
