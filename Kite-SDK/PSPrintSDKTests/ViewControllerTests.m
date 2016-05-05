@@ -25,6 +25,10 @@
 #import "OLCreditCardCaptureViewController.h"
 #import "OLEditPhotobookViewController.h"
 #import "OLKiteABTesting.h"
+#import "OLIntegratedCheckoutViewController.h"
+#import "OLAssetsPickerController.h"
+#import "PrintOrderHistoryViewController.h"
+#import "OLAddressEditViewController.h"
 
 @import Photos;
 
@@ -102,6 +106,10 @@
 @class OLCreditCardCaptureRootController;
 @interface OLCreditCardCaptureViewController ()
 @property (nonatomic, strong) OLCreditCardCaptureRootController *rootVC;
+@end
+
+@interface OLCheckoutViewController ()
+- (void)onButtonDoneClicked;
 @end
 
 @interface OLCreditCardCaptureRootController : UITableViewController
@@ -476,7 +484,7 @@
     [OLKiteABTesting sharedInstance].qualityBannerType = @"A";
     [productHomeVc.collectionView reloadData];
     
-    XCTestExpectation *expectation = [self expectationWithDescription:@"Wait"];
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Animations"];
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1.5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
         [productHomeVc collectionView:productHomeVc.collectionView didSelectItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
         
@@ -485,6 +493,91 @@
         });
     });
 
+    [self waitForExpectationsWithTimeout:60 handler:NULL];
+}
+
+- (void)testIntegratedCheckoutViewController{
+    OLPrintOrder *printOrder = [[OLPrintOrder alloc] init];
+    printOrder.shippingAddress = [OLAddress kiteTeamAddress];
+    printOrder.email = @"ios_unit_test@kite.ly";
+    printOrder.phone = @"1234123412";
+    
+    OLIntegratedCheckoutViewController *vc = [[OLIntegratedCheckoutViewController alloc] initWithPrintOrder:printOrder];
+    
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Animations"];
+    OLNavigationController *nvc = [[OLNavigationController alloc] initWithRootViewController:vc];
+    
+    UINavigationController *rootVc = (UINavigationController *)[[UIApplication sharedApplication].delegate window].rootViewController;
+    
+    [rootVc.topViewController presentViewController:nvc animated:YES completion:^{
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1.5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+            [vc onButtonDoneClicked];
+            
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1.5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+                [expectation fulfill];
+            });
+        });
+    }];
+    
+    [self waitForExpectationsWithTimeout:60 handler:NULL];
+
+}
+
+- (void)testBuiltInALAssetImagePickerViewController{
+    OLAssetsPickerController *picker = [[OLAssetsPickerController alloc] init];
+    [(OLAssetsPickerController *)picker setAssetsFilter:[ALAssetsFilter allPhotos]];
+    
+    UINavigationController *rootVc = (UINavigationController *)[[UIApplication sharedApplication].delegate window].rootViewController;
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Animations"];
+    
+    [rootVc.topViewController presentViewController:picker animated:YES completion:^{
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1.5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+            UINavigationController *nav = picker.childViewControllers.firstObject;
+            UITableViewController *tableViewVc = (UITableViewController *)nav.topViewController;
+            [tableViewVc tableView:tableViewVc.tableView didSelectRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
+            
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1.5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+                
+                
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1.5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+                    [expectation fulfill];
+                });
+            });
+        });
+    }];
+    
+    [self waitForExpectationsWithTimeout:60 handler:NULL];
+}
+
+- (void)testPrintOrderHistory{
+    UIStoryboard *sb = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle bundleForClass:[OLPhotoSelectionViewController class]]];
+    XCTAssert(sb);
+    
+    OLScrollCropViewController *vc = [sb instantiateViewControllerWithIdentifier:@"PrintOrderHistoryViewController"];
+    UINavigationController *rootVc = (UINavigationController *)[[UIApplication sharedApplication].delegate window].rootViewController;
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Animations"];
+    
+    [rootVc.topViewController presentViewController:vc animated:YES completion:^{
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1.5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+            [expectation fulfill];
+        });
+    }];
+    
+    [self waitForExpectationsWithTimeout:60 handler:NULL];
+}
+
+- (void)testAddressEditViewController{
+    OLAddressEditViewController *vc = [[OLAddressEditViewController alloc] initWithAddress:[OLAddress kiteTeamAddress]];
+    
+    UINavigationController *rootVc = (UINavigationController *)[[UIApplication sharedApplication].delegate window].rootViewController;
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Animations"];
+    
+    [rootVc.topViewController presentViewController:vc animated:YES completion:^{
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1.5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+            [expectation fulfill];
+        });
+    }];
+    
     [self waitForExpectationsWithTimeout:60 handler:NULL];
 }
 
