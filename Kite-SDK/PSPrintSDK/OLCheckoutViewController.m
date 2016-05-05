@@ -409,11 +409,11 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
     }
     
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSString *email = [defaults stringForKey:kKeyEmailAddress];
+    NSString *email = self.printOrder.email ? self.printOrder.email : [defaults stringForKey:kKeyEmailAddress];
     if (!email){
         email = _userEmail;
     }
-    NSString *phone = [defaults stringForKey:kKeyPhone];
+    NSString *phone = self.printOrder.phone ? self.printOrder.phone : [defaults stringForKey:kKeyPhone];
     if (!phone){
         phone = _userPhone;
     }
