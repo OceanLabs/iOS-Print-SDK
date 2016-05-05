@@ -160,7 +160,6 @@
 		2E898C9D1CC518180041CCD8 /* OLAssetsGroupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E21DA361B9843CF00D9162F /* OLAssetsGroupViewController.m */; };
 		2E898C9E1CC518180041CCD8 /* OLUpsellOffer.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA0087A1CB293A900C23DFA /* OLUpsellOffer.m */; };
 		2E898C9F1CC518180041CCD8 /* UITextField+Selection.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DEF0D1A1A964B4E000F1E66 /* UITextField+Selection.m */; };
-		2E898CA01CC518180041CCD8 /* UITableViewController+ScreenWidthFactor.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D8122F21A75A46D004E7297 /* UITableViewController+ScreenWidthFactor.m */; };
 		2E898CA11CC518180041CCD8 /* LXReorderableCollectionViewFlowLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 2ED5DEBE1AC948C1003301A8 /* LXReorderableCollectionViewFlowLayout.m */; };
 		2E898CA21CC518180041CCD8 /* OLImageCachingManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EF8BA9E1B99E9E4009BC73B /* OLImageCachingManager.m */; };
 		2E898CA31CC518180041CCD8 /* AssetDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0804BD1C0DF70200F50D42 /* AssetDataSource.m */; };
@@ -306,7 +305,6 @@
 		2EA3D3A21C9C04B500B99BCD /* OLAssetsGroupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E21DA361B9843CF00D9162F /* OLAssetsGroupViewController.m */; };
 		2EA3D3A31C9C04B500B99BCD /* UITextField+Selection.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DEF0D1A1A964B4E000F1E66 /* UITextField+Selection.m */; };
 		2EA3D3A41C9C04B500B99BCD /* OLCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E837D4B1C3C221E004DA682 /* OLCollectionViewController.m */; };
-		2EA3D3A51C9C04B500B99BCD /* UITableViewController+ScreenWidthFactor.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D8122F21A75A46D004E7297 /* UITableViewController+ScreenWidthFactor.m */; };
 		2EA3D3A61C9C04B500B99BCD /* LXReorderableCollectionViewFlowLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 2ED5DEBE1AC948C1003301A8 /* LXReorderableCollectionViewFlowLayout.m */; };
 		2EA3D3A71C9C04B500B99BCD /* OLImageCachingManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EF8BA9E1B99E9E4009BC73B /* OLImageCachingManager.m */; };
 		2EA3D3A81C9C04B500B99BCD /* UIView+RoundRect.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1067FF1B83335C00EB4C14 /* UIView+RoundRect.m */; };
@@ -427,7 +425,6 @@
 		2EADD8271BE79D6D0051CD31 /* OLRemoteImageCropper.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EAC21531B9EDDC000C41BD4 /* OLRemoteImageCropper.m */; };
 		2EADD8281BE79D6D0051CD31 /* OLAssetsGroupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E21DA361B9843CF00D9162F /* OLAssetsGroupViewController.m */; };
 		2EADD8291BE79D6D0051CD31 /* UITextField+Selection.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DEF0D1A1A964B4E000F1E66 /* UITextField+Selection.m */; };
-		2EADD82A1BE79D6D0051CD31 /* UITableViewController+ScreenWidthFactor.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D8122F21A75A46D004E7297 /* UITableViewController+ScreenWidthFactor.m */; };
 		2EADD82B1BE79D6D0051CD31 /* LXReorderableCollectionViewFlowLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 2ED5DEBE1AC948C1003301A8 /* LXReorderableCollectionViewFlowLayout.m */; };
 		2EADD82D1BE79D6D0051CD31 /* OLImageCachingManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EF8BA9E1B99E9E4009BC73B /* OLImageCachingManager.m */; };
 		2EADD82E1BE79D6D0051CD31 /* UIView+RoundRect.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1067FF1B83335C00EB4C14 /* UIView+RoundRect.m */; };
@@ -625,7 +622,6 @@
 		E29C85E61BE3B5C50041D4CF /* OLRemoteImageCropper.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EAC21531B9EDDC000C41BD4 /* OLRemoteImageCropper.m */; };
 		E29C85E71BE3B5C50041D4CF /* OLAssetsGroupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E21DA361B9843CF00D9162F /* OLAssetsGroupViewController.m */; };
 		E29C85E91BE3B5C50041D4CF /* UITextField+Selection.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DEF0D1A1A964B4E000F1E66 /* UITextField+Selection.m */; };
-		E29C85EA1BE3B5C50041D4CF /* UITableViewController+ScreenWidthFactor.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D8122F21A75A46D004E7297 /* UITableViewController+ScreenWidthFactor.m */; };
 		E29C85EB1BE3B5C50041D4CF /* LXReorderableCollectionViewFlowLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 2ED5DEBE1AC948C1003301A8 /* LXReorderableCollectionViewFlowLayout.m */; };
 		E29C85ED1BE3B5C50041D4CF /* OLImageCachingManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EF8BA9E1B99E9E4009BC73B /* OLImageCachingManager.m */; };
 		E29C85EF1BE3B5C50041D4CF /* UIView+RoundRect.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1067FF1B83335C00EB4C14 /* UIView+RoundRect.m */; };
@@ -1044,8 +1040,6 @@
 		3D8122EC1A759F42004E7297 /* UIView+RMUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIView+RMUtils.m"; path = "RMImageCropper/UIView+RMUtils.m"; sourceTree = "<group>"; };
 		3D8122EF1A75A46D004E7297 /* UIImageView+FadeIn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIImageView+FadeIn.h"; path = "PSPrintSDK/Categories/UIImageView+FadeIn.h"; sourceTree = "<group>"; };
 		3D8122F01A75A46D004E7297 /* UIImageView+FadeIn.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIImageView+FadeIn.m"; path = "PSPrintSDK/Categories/UIImageView+FadeIn.m"; sourceTree = "<group>"; };
-		3D8122F11A75A46D004E7297 /* UITableViewController+ScreenWidthFactor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UITableViewController+ScreenWidthFactor.h"; path = "PSPrintSDK/Categories/UITableViewController+ScreenWidthFactor.h"; sourceTree = "<group>"; };
-		3D8122F21A75A46D004E7297 /* UITableViewController+ScreenWidthFactor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UITableViewController+ScreenWidthFactor.m"; path = "PSPrintSDK/Categories/UITableViewController+ScreenWidthFactor.m"; sourceTree = "<group>"; };
 		3D8ECA4F1AD692FA00CFB2C0 /* OLProductGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLProductGroup.h; sourceTree = "<group>"; };
 		3D8ECA501AD692FA00CFB2C0 /* OLProductGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLProductGroup.m; sourceTree = "<group>"; };
 		3DEF0D161A964881000F1E66 /* NSString+Formatting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSString+Formatting.h"; path = "PSPrintSDK/Categories/NSString+Formatting.h"; sourceTree = "<group>"; };
@@ -1756,8 +1750,6 @@
 				3DEF0D171A964881000F1E66 /* NSString+Formatting.m */,
 				3D8122EF1A75A46D004E7297 /* UIImageView+FadeIn.h */,
 				3D8122F01A75A46D004E7297 /* UIImageView+FadeIn.m */,
-				3D8122F11A75A46D004E7297 /* UITableViewController+ScreenWidthFactor.h */,
-				3D8122F21A75A46D004E7297 /* UITableViewController+ScreenWidthFactor.m */,
 				2E455DFE1B1F1BA1001B1718 /* NSDecimalNumber+CostFormatter.h */,
 				2E455DFF1B1F1BA1001B1718 /* NSDecimalNumber+CostFormatter.m */,
 				2EE94D3D1B501D900086590C /* ALAssetsLibrary+Singleton.h */,
@@ -3112,7 +3104,6 @@
 				2E898C9D1CC518180041CCD8 /* OLAssetsGroupViewController.m in Sources */,
 				2E898C9E1CC518180041CCD8 /* OLUpsellOffer.m in Sources */,
 				2E898C9F1CC518180041CCD8 /* UITextField+Selection.m in Sources */,
-				2E898CA01CC518180041CCD8 /* UITableViewController+ScreenWidthFactor.m in Sources */,
 				2E898CA11CC518180041CCD8 /* LXReorderableCollectionViewFlowLayout.m in Sources */,
 				2E898CA21CC518180041CCD8 /* OLImageCachingManager.m in Sources */,
 				2E898CA31CC518180041CCD8 /* AssetDataSource.m in Sources */,
@@ -3235,7 +3226,6 @@
 				2EA3D3A21C9C04B500B99BCD /* OLAssetsGroupViewController.m in Sources */,
 				2EA3D3A31C9C04B500B99BCD /* UITextField+Selection.m in Sources */,
 				2EA3D3A41C9C04B500B99BCD /* OLCollectionViewController.m in Sources */,
-				2EA3D3A51C9C04B500B99BCD /* UITableViewController+ScreenWidthFactor.m in Sources */,
 				2EA3D3A61C9C04B500B99BCD /* LXReorderableCollectionViewFlowLayout.m in Sources */,
 				2EA3D3A71C9C04B500B99BCD /* OLImageCachingManager.m in Sources */,
 				2EA3D3A81C9C04B500B99BCD /* UIView+RoundRect.m in Sources */,
@@ -3364,7 +3354,6 @@
 				2EADD8281BE79D6D0051CD31 /* OLAssetsGroupViewController.m in Sources */,
 				2EA0087B1CB293A900C23DFA /* OLUpsellOffer.m in Sources */,
 				2EADD8291BE79D6D0051CD31 /* UITextField+Selection.m in Sources */,
-				2EADD82A1BE79D6D0051CD31 /* UITableViewController+ScreenWidthFactor.m in Sources */,
 				2EADD82B1BE79D6D0051CD31 /* LXReorderableCollectionViewFlowLayout.m in Sources */,
 				2EADD82D1BE79D6D0051CD31 /* OLImageCachingManager.m in Sources */,
 				2E0804BF1C0DF70200F50D42 /* AssetDataSource.m in Sources */,
@@ -3648,7 +3637,6 @@
 				E29C85E91BE3B5C50041D4CF /* UITextField+Selection.m in Sources */,
 				2E7835B41C902E24007BDF7C /* NSDictionary+RequestParameterData.m in Sources */,
 				2E837D4D1C3C221E004DA682 /* OLCollectionViewController.m in Sources */,
-				E29C85EA1BE3B5C50041D4CF /* UITableViewController+ScreenWidthFactor.m in Sources */,
 				E29C85EB1BE3B5C50041D4CF /* LXReorderableCollectionViewFlowLayout.m in Sources */,
 				E29C85ED1BE3B5C50041D4CF /* OLImageCachingManager.m in Sources */,
 				E29C85EF1BE3B5C50041D4CF /* UIView+RoundRect.m in Sources */,
