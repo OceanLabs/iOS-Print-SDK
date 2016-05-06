@@ -29,6 +29,7 @@
 #import "OLAssetsPickerController.h"
 #import "PrintOrderHistoryViewController.h"
 #import "OLAddressEditViewController.h"
+#import "OLTestTapGestureRecognizer.h"
 
 @import Photos;
 
@@ -74,7 +75,8 @@
 
 @interface OLPhotobookViewController ()
 @property (weak, nonatomic) IBOutlet UIButton *ctaButton;
-
+- (void)onTapGestureRecognized:(UITapGestureRecognizer *)sender;
+- (void)onCoverTapRecognized:(UITapGestureRecognizer *)sender;
 @end
 
 @interface OLProductOverviewViewController ()
@@ -281,33 +283,46 @@
     OLEditPhotobookViewController *photobookEditVc = (OLEditPhotobookViewController *)productHomeVc.navigationController.topViewController;
     XCTAssert([photobookEditVc isKindOfClass:[OLEditPhotobookViewController class]]);
     
+    OLPhotobookViewController *photobook = photobookEditVc.childViewControllers[1];
+    OLTestTapGestureRecognizer *tap = [[OLTestTapGestureRecognizer alloc] init];
+    tap.customLocationInView = CGPointMake(100, 100);
+    
+    [self performUIAction:^{
+        [photobook onTapGestureRecognized:tap];
+    }];
+    [self performUIAction:^{
+        [photobook onTapGestureRecognized:tap];
+    }];
+    [self performUIAction:^{
+        [photobook onTapGestureRecognized:tap];
+    }];
+    
+    tap.customLocationInView = CGPointMake(photobook.view.frame.size.width-100, 100);
+    [self performUIAction:^{
+        [photobook onTapGestureRecognized:tap];
+    }];
+    
     [self tapNextOnViewController:photobookEditVc];
     
-    XCTestExpectation *expectation = [self expectationWithDescription:@"Wait for book to do the wobble animation"];
+    photobook = (OLPhotobookViewController *)productHomeVc.navigationController.topViewController;
     
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        sleep(1);
-        [expectation fulfill];
-    });
-    [self waitForExpectationsWithTimeout:120 handler:NULL];
+//    [self performUIAction:^{
+//        [photobook touches]
+//    }
     
     OLKiteViewController *kiteVc = [OLKiteUtils kiteVcForViewController:productHomeVc.navigationController.topViewController];
     OLPrintOrder *printOrder = kiteVc.printOrder;
     printOrder.shippingAddress = [OLAddress kiteTeamAddress];
     printOrder.email = @"ios_unit_test@kite.ly";
+    
     [self tapNextOnViewController:productHomeVc.navigationController.topViewController];
     
     OLPaymentViewController *paymentVc = (OLPaymentViewController *)productHomeVc.navigationController.topViewController;
     XCTAssert([paymentVc isKindOfClass:[OLPaymentViewController class]]);
     
-    [paymentVc onButtonPayWithCreditCardClicked];
-    
-    expectation = [self expectationWithDescription:@"Wait for Payment VC"];
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1.5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-        [expectation fulfill];
-    });
-    
-    [self waitForExpectationsWithTimeout:3 handler:NULL];
+    [self performUIAction:^{
+        [paymentVc onButtonPayWithCreditCardClicked];
+    }];
     
     OLCreditCardCaptureViewController *creditCardVc = (OLCreditCardCaptureViewController *)paymentVc.presentedViewController;
     if (![creditCardVc isKindOfClass:[OLCreditCardCaptureRootController class]]){
@@ -326,7 +341,7 @@
     
     [creditCardVc.rootVC onButtonPayClicked];
     
-    expectation = [self expectationWithDescription:@"Wait for order complete"];
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Wait for order complete"];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         while (!printOrder.printed) {
