@@ -35,15 +35,15 @@
 - (void)viewDidLoad{
     [super viewDidLoad];
     
-    if ([OLKiteABTesting sharedInstance].darkTheme){
-        self.navigationBar.barTintColor = [UIColor blackColor];
-        self.navigationBar.tintColor = [UIColor grayColor];
-        self.navigationBar.barStyle = UIBarStyleBlackTranslucent;
-        
-        NSMutableDictionary *attributes = [[NSMutableDictionary alloc] init];
-        [attributes setObject:[UIColor grayColor] forKey:NSForegroundColorAttributeName];
-        self.navigationBar.titleTextAttributes = attributes;
-    }
+//    if ([OLKiteABTesting sharedInstance].darkTheme){
+//        self.navigationBar.barTintColor = [UIColor blackColor];
+//        self.navigationBar.tintColor = [UIColor grayColor];
+//        self.navigationBar.barStyle = UIBarStyleBlackTranslucent;
+//        
+//        NSMutableDictionary *attributes = [[NSMutableDictionary alloc] init];
+//        [attributes setObject:[UIColor grayColor] forKey:NSForegroundColorAttributeName];
+//        self.navigationBar.titleTextAttributes = attributes;
+//    }
 }
 
 - (BOOL)shouldAutorotate {

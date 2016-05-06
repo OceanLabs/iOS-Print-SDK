@@ -127,10 +127,10 @@ static CGFloat fadeTime = 0.3;
     [self.printOrder saveOrder];
 }
 
-- (void)setUseDarkTheme:(BOOL)useDarkTheme{
-    _useDarkTheme = useDarkTheme;
-    [OLKiteABTesting sharedInstance].darkTheme = useDarkTheme;
-}
+//- (void)setUseDarkTheme:(BOOL)useDarkTheme{
+//    _useDarkTheme = useDarkTheme;
+//    [OLKiteABTesting sharedInstance].darkTheme = useDarkTheme;
+//}
 
 - (BOOL)prefersStatusBarHidden {
     BOOL hidden = self.useDarkTheme;

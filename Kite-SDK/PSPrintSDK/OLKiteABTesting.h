@@ -69,7 +69,7 @@ static NSString *const kOLKiteThemeSupportEmail = @"themeSupportEmail";
 
 @property (strong, nonatomic) NSDictionary *userConfig;
 @property (strong, nonatomic) OLKiteTheme *theme;
-@property (assign, nonatomic) BOOL darkTheme;
+//@property (assign, nonatomic) BOOL darkTheme;
 
 + (instancetype)sharedInstance;
 - (void)fetchRemotePlistsWithCompletionHandler:(void(^)())handler;
