@@ -91,6 +91,8 @@
 
 @interface OLPaymentViewController ()
 - (IBAction)onButtonPayWithCreditCardClicked;
+- (IBAction)onButtonMoreOptionsClicked:(id)sender;
+- (IBAction)onButtonBackToApplePayClicked:(UIButton *)sender;
 @end
 
 @interface OLScrollCropViewController ()
@@ -575,6 +577,39 @@
     [rootVc.topViewController presentViewController:vc animated:YES completion:^{
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1.5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
             [expectation fulfill];
+        });
+    }];
+    
+    [self waitForExpectationsWithTimeout:60 handler:NULL];
+}
+
+- (void)testPaymentViewController{
+    id<OLPrintJob> job = [OLPrintJob printJobWithTemplateId:@"squares" OLAssets:[OLKiteTestHelper urlAssets]];
+    
+    OLPrintOrder *printOrder = [[OLPrintOrder alloc] init];
+    [printOrder addPrintJob:job];
+    printOrder.shippingAddress = [OLAddress kiteTeamAddress];
+    printOrder.email = @"ios_unit_test@kite.ly";
+    printOrder.phone = @"1234123412";
+    
+    UIStoryboard *sb = [UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[NSBundle bundleForClass:[OLPhotoSelectionViewController class]]];
+    XCTAssert(sb);
+    
+    OLPaymentViewController *vc = [sb instantiateViewControllerWithIdentifier:@"OLPaymentViewController"];
+    
+    UINavigationController *rootVc = (UINavigationController *)[[UIApplication sharedApplication].delegate window].rootViewController;
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Animations"];
+    
+    [rootVc.topViewController presentViewController:vc animated:YES completion:^{
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1.5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+            [vc onButtonMoreOptionsClicked:[[UIView alloc] init]];
+            
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1.5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+                
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1.5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+                    [expectation fulfill];
+                });
+            });
         });
     }];
     
