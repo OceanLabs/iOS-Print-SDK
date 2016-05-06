@@ -956,24 +956,24 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     }
 }
 
-- (void)onBarButtonOrdersClicked{
-#ifndef OL_NO_ANALYTICS
-    [OLAnalytics trackOrderHistoryScreenViewed];
-#endif
-    
-    OLOrdersViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLOrdersViewController"];
-    
-    [(UIViewController *)vc navigationItem].leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:vc action:@selector(dismiss)];
-    
-    NSString *supportEmail = [OLKiteABTesting sharedInstance].supportEmail;
-    if (supportEmail && ![supportEmail isEqualToString:@""]){
-        vc.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamedInKiteBundle:@"support"] style:UIBarButtonItemStyleDone target:vc action:@selector(emailButtonPushed:)];
-    }
-    
-    OLNavigationController *nvc = [[OLNavigationController alloc] initWithRootViewController:vc];
-    nvc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
-    [self presentViewController:nvc animated:YES completion:NULL];
-}
+//- (void)onBarButtonOrdersClicked{
+//#ifndef OL_NO_ANALYTICS
+//    [OLAnalytics trackOrderHistoryScreenViewed];
+//#endif
+//    
+//    OLOrdersViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLOrdersViewController"];
+//    
+//    [(UIViewController *)vc navigationItem].leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:vc action:@selector(dismiss)];
+//    
+//    NSString *supportEmail = [OLKiteABTesting sharedInstance].supportEmail;
+//    if (supportEmail && ![supportEmail isEqualToString:@""]){
+//        vc.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamedInKiteBundle:@"support"] style:UIBarButtonItemStyleDone target:vc action:@selector(emailButtonPushed:)];
+//    }
+//    
+//    OLNavigationController *nvc = [[OLNavigationController alloc] initWithRootViewController:vc];
+//    nvc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
+//    [self presentViewController:nvc animated:YES completion:NULL];
+//}
 
 - (UINavigationController *)navViewControllerWithControllers:(NSArray *)vcs{
     OLNavigationController *navController = [[OLNavigationController alloc] init];

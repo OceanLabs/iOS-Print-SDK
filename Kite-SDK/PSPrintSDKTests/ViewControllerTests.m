@@ -89,10 +89,15 @@
 @property (weak, nonatomic) IBOutlet OLRemoteImageCropper *imageCropView;
 @end
 
-@interface OLPaymentViewController ()
+@interface OLPaymentViewController () <UITableViewDataSource>
 - (IBAction)onButtonPayWithCreditCardClicked;
 - (IBAction)onButtonMoreOptionsClicked:(id)sender;
 - (IBAction)onButtonBackToApplePayClicked:(UIButton *)sender;
+@property (weak, nonatomic) IBOutlet UITextField *promoCodeTextField;
+@property (strong, nonatomic) OLPrintOrder *printOrder;
+- (void)onBackgroundClicked;
+@property (weak, nonatomic) IBOutlet UITableView *tableView;
+- (IBAction)onButtonEditClicked:(UIButton *)sender;
 @end
 
 @interface OLScrollCropViewController ()
@@ -240,6 +245,18 @@
     [button sendActionsForControlEvents:UIControlEventTouchUpInside];
     
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+        [expectation fulfill];
+    });
+    
+    [self waitForExpectationsWithTimeout:10 handler:NULL];
+}
+
+- (void)performUIAction:(void(^)())action{
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Wait for animations"];
+    
+    action();
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1.5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
         [expectation fulfill];
     });
     
@@ -584,6 +601,11 @@
 }
 
 - (void)testPaymentViewController{
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Template Sync Completed"];
+    [self templateSyncWithSuccessHandler:^{
+        [expectation fulfill];
+    }];
+    [self waitForExpectationsWithTimeout:60 handler:NULL];
     id<OLPrintJob> job = [OLPrintJob printJobWithTemplateId:@"squares" OLAssets:[OLKiteTestHelper urlAssets]];
     
     OLPrintOrder *printOrder = [[OLPrintOrder alloc] init];
@@ -596,30 +618,45 @@
     XCTAssert(sb);
     
     OLPaymentViewController *vc = [sb instantiateViewControllerWithIdentifier:@"OLPaymentViewController"];
+    vc.printOrder = printOrder;
     
     UINavigationController *rootVc = (UINavigationController *)[[UIApplication sharedApplication].delegate window].rootViewController;
-    XCTestExpectation *expectation = [self expectationWithDescription:@"Animations"];
     
-    [rootVc.topViewController presentViewController:vc animated:YES completion:^{
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1.5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-            [vc onButtonMoreOptionsClicked:[[UIView alloc] init]];
-            
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1.5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-                
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1.5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-                    [expectation fulfill];
-                });
-            });
-        });
+    OLNavigationController *nvc = [[OLNavigationController alloc] initWithRootViewController:vc];
+    [self performUIAction:^{
+        [rootVc.topViewController presentViewController:nvc animated:YES completion:NULL];
+    }];
+    [self performUIAction:^{
+        [vc onButtonMoreOptionsClicked:[[UIView alloc] init]];
     }];
     
-    [self waitForExpectationsWithTimeout:60 handler:NULL];
+    [self performUIAction:^{
+        [vc onButtonBackToApplePayClicked:nil];
+    }];
+    
+    [self performUIAction:^{
+        [vc.promoCodeTextField becomeFirstResponder];
+    }];
+    
+    [self performUIAction:^{
+        [vc onBackgroundClicked];
+    }];
+    
+    [self performUIAction:^{
+        UITableViewCell *cell =  [vc tableView:vc.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
+        UIButton *largeEditButton = (UIButton *)[cell.contentView viewWithTag:61];
+        [largeEditButton sendActionsForControlEvents:UIControlEventTouchUpInside];
+    }];
+    
+    UINavigationController *presentedNav = (UINavigationController *)vc.presentedViewController;
+    [self tapNextOnViewController:presentedNav.topViewController];
+    [self tapNextOnViewController:presentedNav.topViewController];
 }
 
 //- (void)testCompleteAccessoryOrder{
 //    OLProductHomeViewController *productHomeVc = [self loadKiteViewController];
 //    [self chooseClass:@"Accessories" onOLProductHomeViewController:productHomeVc];
-//    
+//
 //    OLProductTypeSelectionViewController *productTypeVc = (OLProductTypeSelectionViewController *)productHomeVc.navigationController.topViewController;
 //    XCTAssert([productTypeVc isKindOfClass:[OLProductTypeSelectionViewController class]]);
 //    
