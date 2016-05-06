@@ -1068,12 +1068,16 @@ UINavigationControllerDelegate>
 #endif
     __block UIViewController *picker;
     __block Class assetClass;
+#ifdef OL_KITE_CI_DEPLOY
+    if (NO){}
+#else
     if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8 || !definesAtLeastiOS8){
         picker = [[OLAssetsPickerController alloc] init];
         [(OLAssetsPickerController *)picker setAssetsFilter:[ALAssetsFilter allPhotos]];
         assetClass = [ALAsset class];
         ((OLAssetsPickerController *)picker).delegate = self;
     }
+#endif
 #ifdef OL_KITE_AT_LEAST_IOS8
     else{
         if ([PHPhotoLibrary authorizationStatus] == PHAuthorizationStatusNotDetermined){
@@ -1102,7 +1106,7 @@ UINavigationControllerDelegate>
         }
     }
 #endif
-    
+    NSAssert(picker, @"Oops, you should be running the KiteSDK-Demo scheme.");
     if (picker){
         picker.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
         [self presentViewController:picker animated:YES completion:nil];
@@ -1235,9 +1239,13 @@ UINavigationControllerDelegate>
 - (void)assetsPickerController:(id)picker didFinishPickingAssets:(NSArray *)assets {
     NSInteger originalCount = self.userSelectedPhotos.count;
     Class assetClass;
+#ifdef OL_KITE_CI_DEPLOY
+    if (NO){}
+#else
     if ([picker isKindOfClass:[OLAssetsPickerController class]]){
         assetClass = [ALAsset class];
     }
+#endif
 #ifdef OL_KITE_AT_LEAST_IOS8
     else if ([picker isKindOfClass:[CTAssetsPickerController class]]){
         assetClass = [PHAsset class];

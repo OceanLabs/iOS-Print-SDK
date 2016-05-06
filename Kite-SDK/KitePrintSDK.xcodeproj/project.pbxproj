@@ -356,23 +356,6 @@
 		2EAB0AC71CDB504C00625BD6 /* OLAssetsViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E21DA3F1B9843CF00D9162F /* OLAssetsViewCell.m */; };
 		2EAB0AC81CDB504C00625BD6 /* OLAssetsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E21DA411B9843CF00D9162F /* OLAssetsViewController.m */; };
 		2EAB0AC91CDB504C00625BD6 /* OLAssetsViewControllerTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E21DA431B9843CF00D9162F /* OLAssetsViewControllerTransition.m */; };
-		2EAB0ACA1CDB504E00625BD6 /* ALAsset+OLAccessibilityLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA829211B9DE54100A9208E /* ALAsset+OLAccessibilityLabel.m */; };
-		2EAB0ACB1CDB504E00625BD6 /* ALAsset+OLAssetType.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA829231B9DE54100A9208E /* ALAsset+OLAssetType.m */; };
-		2EAB0ACC1CDB504E00625BD6 /* ALAsset+OLIsEqual.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA829251B9DE54100A9208E /* ALAsset+OLIsEqual.m */; };
-		2EAB0ACD1CDB504E00625BD6 /* ALAssetsGroup+OLIsEqual.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA829271B9DE54100A9208E /* ALAssetsGroup+OLIsEqual.m */; };
-		2EAB0ACE1CDB504E00625BD6 /* NSBundle+OLAssetsPickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA829291B9DE54100A9208E /* NSBundle+OLAssetsPickerController.m */; };
-		2EAB0ACF1CDB504E00625BD6 /* NSDateFormatter+OLTimeIntervalFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA8292B1B9DE54100A9208E /* NSDateFormatter+OLTimeIntervalFormatter.m */; };
-		2EAB0AD01CDB504E00625BD6 /* UIImage+OLAssetsPickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA8292D1B9DE54100A9208E /* UIImage+OLAssetsPickerController.m */; };
-		2EAB0AD11CDB504E00625BD6 /* OLAssetItemViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E21DA301B9843CF00D9162F /* OLAssetItemViewController.m */; };
-		2EAB0AD21CDB504E00625BD6 /* OLAssetScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E21DA321B9843CF00D9162F /* OLAssetScrollView.m */; };
-		2EAB0AD31CDB504E00625BD6 /* OLAssetsGroupViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E21DA341B9843CF00D9162F /* OLAssetsGroupViewCell.m */; };
-		2EAB0AD41CDB504E00625BD6 /* OLAssetsGroupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E21DA361B9843CF00D9162F /* OLAssetsGroupViewController.m */; };
-		2EAB0AD51CDB504E00625BD6 /* OLAssetsPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E21DA381B9843CF00D9162F /* OLAssetsPageViewController.m */; };
-		2EAB0AD61CDB504E00625BD6 /* OLAssetsPickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E21DA3B1B9843CF00D9162F /* OLAssetsPickerController.m */; };
-		2EAB0AD71CDB504E00625BD6 /* OLAssetsSupplementaryView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E21DA3D1B9843CF00D9162F /* OLAssetsSupplementaryView.m */; };
-		2EAB0AD81CDB504E00625BD6 /* OLAssetsViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E21DA3F1B9843CF00D9162F /* OLAssetsViewCell.m */; };
-		2EAB0AD91CDB504E00625BD6 /* OLAssetsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E21DA411B9843CF00D9162F /* OLAssetsViewController.m */; };
-		2EAB0ADA1CDB504E00625BD6 /* OLAssetsViewControllerTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E21DA431B9843CF00D9162F /* OLAssetsViewControllerTransition.m */; };
 		2EAB0ADB1CDB504E00625BD6 /* ALAsset+OLAccessibilityLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA829211B9DE54100A9208E /* ALAsset+OLAccessibilityLabel.m */; };
 		2EAB0ADC1CDB504E00625BD6 /* ALAsset+OLAssetType.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA829231B9DE54100A9208E /* ALAsset+OLAssetType.m */; };
 		2EAB0ADD1CDB504E00625BD6 /* ALAsset+OLIsEqual.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA829251B9DE54100A9208E /* ALAsset+OLIsEqual.m */; };
@@ -666,12 +649,12 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		2E645B331BE7A3C7009B662B /* PBXContainerItemProxy */ = {
+		2EAB0AEF1CDC833C00625BD6 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = CD73BF60186215790009DE03 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 2EADD7E31BE79D6D0051CD31;
-			remoteInfo = "KitePrintSDK-Dev";
+			remoteGlobalIDString = 2E898C4C1CC518180041CCD8;
+			remoteInfo = "Kite-CI-Deploy";
 		};
 /* End PBXContainerItemProxy section */
 
@@ -2471,7 +2454,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				2E645B341BE7A3C7009B662B /* PBXTargetDependency */,
+				2EAB0AF01CDC833C00625BD6 /* PBXTargetDependency */,
 			);
 			name = KitePrintSDKTests;
 			productName = PSPrintSDKTests;
@@ -2714,7 +2697,7 @@
 						};
 					};
 					CD73BF88186215790009DE03 = {
-						TestTargetID = 2EADD7E31BE79D6D0051CD31;
+						TestTargetID = 2E898C4C1CC518180041CCD8;
 					};
 					E220587D1BF3F7AC009CFAF6 = {
 						CreatedOnToolsVersion = 7.1;
@@ -3021,13 +3004,10 @@
 			files = (
 				2E898C4F1CC518180041CCD8 /* UIViewController+OLMethods.m in Sources */,
 				2E898C501CC518180041CCD8 /* OLURLDataSource.m in Sources */,
-				2EAB0AD61CDB504E00625BD6 /* OLAssetsPickerController.m in Sources */,
 				2E898C511CC518180041CCD8 /* OLScrollCropViewController.m in Sources */,
-				2EAB0ACD1CDB504E00625BD6 /* ALAssetsGroup+OLIsEqual.m in Sources */,
 				2E898C521CC518180041CCD8 /* OLPrintOrderCostRequest.m in Sources */,
 				2E898C531CC518180041CCD8 /* OLInfoPageViewController.m in Sources */,
 				2E898C541CC518180041CCD8 /* OLIntegratedCheckoutViewController.m in Sources */,
-				2EAB0AD91CDB504E00625BD6 /* OLAssetsViewController.m in Sources */,
 				2E898C551CC518180041CCD8 /* OLProductGroup.m in Sources */,
 				2E898C561CC518180041CCD8 /* UIImage+ColorAtPixel.m in Sources */,
 				2E898C571CC518180041CCD8 /* OLCheckoutViewController.m in Sources */,
@@ -3041,34 +3021,25 @@
 				2E898C621CC518180041CCD8 /* OLOrderReviewViewController.m in Sources */,
 				2E898C631CC518180041CCD8 /* OLProduct.m in Sources */,
 				2E898C641CC518180041CCD8 /* DogsAssetCollectionDataSource.m in Sources */,
-				2EAB0AD31CDB504E00625BD6 /* OLAssetsGroupViewCell.m in Sources */,
 				2E898C651CC518180041CCD8 /* OLGreetingCardPrintJob.m in Sources */,
 				2E898C661CC518180041CCD8 /* OLPhotoSelectionButton.m in Sources */,
 				2E898C671CC518180041CCD8 /* OLAddressEditViewController.m in Sources */,
 				2E898C681CC518180041CCD8 /* OLKiteUtils.m in Sources */,
-				2EAB0AD51CDB504E00625BD6 /* OLAssetsPageViewController.m in Sources */,
 				2E898C6B1CC518180041CCD8 /* OLImagePreviewViewController.m in Sources */,
 				2E898C6C1CC518180041CCD8 /* OLCaseViewController.m in Sources */,
-				2EAB0ACB1CDB504E00625BD6 /* ALAsset+OLAssetType.m in Sources */,
 				2E898C6D1CC518180041CCD8 /* ViewController.m in Sources */,
 				2E898C6E1CC518180041CCD8 /* OLFrameOrderReviewViewController.m in Sources */,
 				2E898C6F1CC518180041CCD8 /* OLApparelPrintJob.m in Sources */,
 				2E898C701CC518180041CCD8 /* OLKiteViewController.m in Sources */,
 				2E898C721CC518180041CCD8 /* OLPhotobookPageContentViewController.m in Sources */,
-				2EAB0AD11CDB504E00625BD6 /* OLAssetItemViewController.m in Sources */,
-				2EAB0AD81CDB504E00625BD6 /* OLAssetsViewCell.m in Sources */,
 				2E898C751CC518180041CCD8 /* OLUpsellViewController.m in Sources */,
-				2EAB0ACC1CDB504E00625BD6 /* ALAsset+OLIsEqual.m in Sources */,
 				2E898C761CC518180041CCD8 /* UIImageView+FadeIn.m in Sources */,
 				2E898C771CC518180041CCD8 /* OLAddressSearchRequest.m in Sources */,
-				2EAB0ADA1CDB504E00625BD6 /* OLAssetsViewControllerTransition.m in Sources */,
-				2EAB0ACF1CDB504E00625BD6 /* NSDateFormatter+OLTimeIntervalFormatter.m in Sources */,
 				2E898C781CC518180041CCD8 /* OLPayPalCard.m in Sources */,
 				2E898C791CC518180041CCD8 /* OLProductPrintJob.m in Sources */,
 				2E898C7A1CC518180041CCD8 /* OLSingleImageProductReviewViewController.m in Sources */,
 				2E898C7B1CC518180041CCD8 /* OLPosterViewController.m in Sources */,
 				2E898C7C1CC518180041CCD8 /* OLRemoteImageView.m in Sources */,
-				2EAB0ACE1CDB504E00625BD6 /* NSBundle+OLAssetsPickerController.m in Sources */,
 				2E898C7D1CC518180041CCD8 /* OLProductDetailsViewController.m in Sources */,
 				2E898C7E1CC518180041CCD8 /* OLPrintOrderCost.m in Sources */,
 				2E898C7F1CC518180041CCD8 /* OLEditPhotobookViewController.m in Sources */,
@@ -3077,7 +3048,6 @@
 				2E898C821CC518180041CCD8 /* OLAsset.m in Sources */,
 				2E898C831CC518180041CCD8 /* CatsAssetCollectionDataSource.m in Sources */,
 				2E898C841CC518180041CCD8 /* AppDelegate.m in Sources */,
-				2EAB0AD71CDB504E00625BD6 /* OLAssetsSupplementaryView.m in Sources */,
 				2E898C851CC518180041CCD8 /* OLProductTemplate.m in Sources */,
 				2E898C861CC518180041CCD8 /* OLPaymentViewController.m in Sources */,
 				2E898C881CC518180041CCD8 /* OLPrintPhoto.m in Sources */,
@@ -3094,7 +3064,6 @@
 				2E898C931CC518180041CCD8 /* OLProductTemplateSyncRequest.m in Sources */,
 				2E898C971CC518180041CCD8 /* OLProductTemplateOption.m in Sources */,
 				2E898C981CC518180041CCD8 /* OLProductTypeSelectionViewController.m in Sources */,
-				2EAB0AD41CDB504E00625BD6 /* OLAssetsGroupViewController.m in Sources */,
 				2E898C991CC518180041CCD8 /* OLPrintOrderRequest.m in Sources */,
 				2E898C9A1CC518180041CCD8 /* OLViewController.m in Sources */,
 				2E898C9B1CC518180041CCD8 /* NSDictionary+RequestParameterData.m in Sources */,
@@ -3116,7 +3085,6 @@
 				2E898CAD1CC518180041CCD8 /* OLOrdersViewController.m in Sources */,
 				2E898CAE1CC518180041CCD8 /* OLAssetUploadRequest.m in Sources */,
 				2E898CAF1CC518180041CCD8 /* OLAddressPickerController.m in Sources */,
-				2EAB0AD21CDB504E00625BD6 /* OLAssetScrollView.m in Sources */,
 				2E898CB01CC518180041CCD8 /* main.m in Sources */,
 				2E898CB21CC518180041CCD8 /* OLPostcardPrintJob.m in Sources */,
 				2E898CB31CC518180041CCD8 /* NSObject+Utils.m in Sources */,
@@ -3132,7 +3100,6 @@
 				2E898CBE1CC518180041CCD8 /* OLAddressSelectionViewController.m in Sources */,
 				2E898CC01CC518180041CCD8 /* OLCollectionViewController.m in Sources */,
 				2E898CC11CC518180041CCD8 /* RMImageCropper.m in Sources */,
-				2EAB0AD01CDB504E00625BD6 /* UIImage+OLAssetsPickerController.m in Sources */,
 				2E898CC31CC518180041CCD8 /* OLQRCodeUploadViewController.m in Sources */,
 				2E898CC41CC518180041CCD8 /* OLCountryPickerController.m in Sources */,
 				2E898CC51CC518180041CCD8 /* OLURLShortener.m in Sources */,
@@ -3140,7 +3107,6 @@
 				2E898CC71CC518180041CCD8 /* OLPhotobookPrintJob.m in Sources */,
 				2E898CC81CC518180041CCD8 /* OLPaymentLineItem.m in Sources */,
 				2E898CC91CC518180041CCD8 /* OLPrintJob.m in Sources */,
-				2EAB0ACA1CDB504E00625BD6 /* ALAsset+OLAccessibilityLabel.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3674,10 +3640,10 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		2E645B341BE7A3C7009B662B /* PBXTargetDependency */ = {
+		2EAB0AF01CDC833C00625BD6 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 2EADD7E31BE79D6D0051CD31 /* KiteSDK-Demo */;
-			targetProxy = 2E645B331BE7A3C7009B662B /* PBXContainerItemProxy */;
+			target = 2E898C4C1CC518180041CCD8 /* Kite-CI-Deploy */;
+			targetProxy = 2EAB0AEF1CDC833C00625BD6 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -4385,7 +4351,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "co.oceanlabs.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = KitePrintSDKTests;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/KiteSDK-Demo.app/KiteSDK-Demo";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Kite-CI-Deploy.app/Kite-CI-Deploy";
 				WRAPPER_EXTENSION = xctest;
 			};
 			name = Debug;
@@ -4404,7 +4370,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "co.oceanlabs.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = KitePrintSDKTests;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/KiteSDK-Demo.app/KiteSDK-Demo";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Kite-CI-Deploy.app/Kite-CI-Deploy";
 				WRAPPER_EXTENSION = xctest;
 			};
 			name = Release;

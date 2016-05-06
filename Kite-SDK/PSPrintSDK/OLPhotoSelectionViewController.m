@@ -145,7 +145,6 @@ AdobeUXImageEditorViewControllerDelegate,
 UIActionSheetDelegate, OLUpsellViewControllerDelegate>
 
 @property (assign, nonatomic) CGSize rotationSize;
-@property (nonatomic, strong) OLAssetsPickerController *picker;
 @property (nonatomic, weak) IBOutlet UIButton *buttonNext;
 @property (nonatomic, weak) IBOutlet UICollectionView *collectionView;
 @property (strong, nonatomic) NSMutableArray *userDisabledPhotos;
@@ -656,12 +655,16 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
 #endif
     __block UIViewController *picker;
     __block Class assetClass;
+#ifdef OL_KITE_CI_DEPLOY
+    if (NO){}
+#else
     if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8 || !definesAtLeastiOS8){
         picker = [[OLAssetsPickerController alloc] init];
         [(OLAssetsPickerController *)picker setAssetsFilter:[ALAssetsFilter allPhotos]];
         assetClass = [ALAsset class];
         ((OLAssetsPickerController *)picker).delegate = self;
     }
+#endif
 #ifdef OL_KITE_AT_LEAST_IOS8
     else{
         if ([PHPhotoLibrary authorizationStatus] == PHAuthorizationStatusNotDetermined){
@@ -699,7 +702,7 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
         }
     }
 #endif
-    
+    NSAssert(picker, @"Oops, you should be running the KiteSDK-Demo scheme.");
     if (picker){
         NSArray *allAssets = [[self createAssetArray] mutableCopy];
         NSMutableArray *alAssets = [[NSMutableArray alloc] init];
@@ -835,9 +838,13 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
 - (void)assetsPickerController:(id)picker didFinishPickingAssets:(NSArray *)assets {
     NSInteger originalCount = self.userSelectedPhotos.count;
     Class assetClass;
+#ifdef OL_KITE_CI_DEPLOY
+    if (NO){}
+#else
     if ([picker isKindOfClass:[OLAssetsPickerController class]]){
         assetClass = [ALAsset class];
     }
+#endif
 #ifdef OL_KITE_AT_LEAST_IOS8
     else if ([picker isKindOfClass:[CTAssetsPickerController class]]){
         assetClass = [PHAsset class];
@@ -862,12 +869,14 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
 #endif
 }
 
+#ifndef OL_KITE_CI_DEPLOY
 - (BOOL)assetsPickerController:(OLAssetsPickerController *)picker shouldShowAssetsGroup:(ALAssetsGroup *)group{
     if (group.numberOfAssets == 0){
         return NO;
     }
     return YES;
 }
+#endif
 
 #ifdef OL_KITE_AT_LEAST_IOS8
 - (void)assetsPickerController:(CTAssetsPickerController *)picker didDeSelectAsset:(PHAsset *)asset{
@@ -917,9 +926,13 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
     }
     
     Class assetClass;
+#ifdef OL_KITE_CI_DEPLOY
+    if (NO){}
+#else
     if ([picker isKindOfClass:[OLAssetsPickerController class]]){
         assetClass = [ALAsset class];
     }
+#endif
 #ifdef OL_KITE_AT_LEAST_IOS8
     else if ([picker isKindOfClass:[CTAssetsPickerController class]]){
         assetClass = [PHAsset class];
@@ -970,6 +983,7 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
     return result;
 }
 
+#ifndef OL_KITE_CI_DEPLOY
 - (BOOL)assetsPickerController:(OLAssetsPickerController *)picker shouldShowAsset:(id)asset{
     NSString *fileName = [[[asset defaultRepresentation] filename] lowercaseString];
     if (!([fileName hasSuffix:@".jpg"] || [fileName hasSuffix:@".jpeg"] || [fileName hasSuffix:@"png"] || [fileName hasSuffix:@"tiff"])) {
@@ -977,6 +991,7 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
     }
     return YES;
 }
+#endif
 
 #ifdef OL_KITE_OFFER_INSTAGRAM
 #pragma mark - OLInstagramImagePickerControllerDelegate Methods

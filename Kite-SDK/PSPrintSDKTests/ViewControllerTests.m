@@ -525,31 +525,31 @@
 
 }
 
-- (void)testBuiltInALAssetImagePickerViewController{
-    OLAssetsPickerController *picker = [[OLAssetsPickerController alloc] init];
-    [(OLAssetsPickerController *)picker setAssetsFilter:[ALAssetsFilter allPhotos]];
-    
-    UINavigationController *rootVc = (UINavigationController *)[[UIApplication sharedApplication].delegate window].rootViewController;
-    XCTestExpectation *expectation = [self expectationWithDescription:@"Animations"];
-    
-    [rootVc.topViewController presentViewController:picker animated:YES completion:^{
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1.5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-            UINavigationController *nav = picker.childViewControllers.firstObject;
-            UITableViewController *tableViewVc = (UITableViewController *)nav.topViewController;
-            [tableViewVc tableView:tableViewVc.tableView didSelectRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
-            
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1.5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-                
-                
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1.5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-                    [expectation fulfill];
-                });
-            });
-        });
-    }];
-    
-    [self waitForExpectationsWithTimeout:60 handler:NULL];
-}
+//- (void)testBuiltInALAssetImagePickerViewController{
+//    OLAssetsPickerController *picker = [[OLAssetsPickerController alloc] init];
+//    [(OLAssetsPickerController *)picker setAssetsFilter:[ALAssetsFilter allPhotos]];
+//    
+//    UINavigationController *rootVc = (UINavigationController *)[[UIApplication sharedApplication].delegate window].rootViewController;
+//    XCTestExpectation *expectation = [self expectationWithDescription:@"Animations"];
+//    
+//    [rootVc.topViewController presentViewController:picker animated:YES completion:^{
+//        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1.5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+//            UINavigationController *nav = picker.childViewControllers.firstObject;
+//            UITableViewController *tableViewVc = (UITableViewController *)nav.topViewController;
+//            [tableViewVc tableView:tableViewVc.tableView didSelectRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
+//            
+//            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1.5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+//                
+//                
+//                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1.5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+//                    [expectation fulfill];
+//                });
+//            });
+//        });
+//    }];
+//    
+//    [self waitForExpectationsWithTimeout:60 handler:NULL];
+//}
 
 - (void)testPrintOrderHistory{
     UIStoryboard *sb = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle bundleForClass:[OLPhotoSelectionViewController class]]];
