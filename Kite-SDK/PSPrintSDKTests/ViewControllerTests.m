@@ -429,38 +429,31 @@
     
     XCTestExpectation *expectation = [self expectationWithDescription:@"Template Sync Completed"];
     [self templateSyncWithSuccessHandler:^{
-        OLProduct *product = [OLProduct productWithTemplateId:@"squares"];
-        
-        UIStoryboard *sb = [UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[NSBundle bundleForClass:[OLPhotoSelectionViewController class]]];
-        XCTAssert(sb);
-        
-        OLPhotoSelectionViewController *vc = [sb instantiateViewControllerWithIdentifier:@"PhotoSelectionViewController"];
-        XCTAssert(vc);
-        
-        vc.product = product;
-        vc.userSelectedPhotos = printPhotos;
-        
-        OLNavigationController *nvc = [[OLNavigationController alloc] initWithRootViewController:vc];
-        
-        UINavigationController *rootVc = (UINavigationController *)[[UIApplication sharedApplication].delegate window].rootViewController;
-        
-        [rootVc.topViewController presentViewController:nvc animated:YES completion:^{
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1.5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-                    [vc onButtonNextClicked];
-                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1.5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-                        [expectation fulfill];
-                    });
-                    //
-                });
-                
-            });
-        }];
-        
-        
-        
+        [expectation fulfill];
     }];
     [self waitForExpectationsWithTimeout:60 handler:NULL];
+    
+    OLProduct *product = [OLProduct productWithTemplateId:@"squares"];
+    
+    UIStoryboard *sb = [UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[NSBundle bundleForClass:[OLPhotoSelectionViewController class]]];
+    XCTAssert(sb);
+    
+    OLPhotoSelectionViewController *vc = [sb instantiateViewControllerWithIdentifier:@"PhotoSelectionViewController"];
+    XCTAssert(vc);
+    
+    vc.product = product;
+    vc.userSelectedPhotos = printPhotos;
+    
+    OLNavigationController *nvc = [[OLNavigationController alloc] initWithRootViewController:vc];
+    
+    UINavigationController *rootVc = (UINavigationController *)[[UIApplication sharedApplication].delegate window].rootViewController;
+    
+    [self performUIAction:^{
+        [rootVc.topViewController presentViewController:nvc animated:YES completion:NULL];
+    }];
+    [self performUIAction:^{
+        [vc onButtonNextClicked];
+    }];
 }
 
 - (void)testScrollCropViewController{
@@ -477,25 +470,17 @@
     
     UINavigationController *rootVc = (UINavigationController *)[[UIApplication sharedApplication].delegate window].rootViewController;
     
-    XCTestExpectation *expectation = [self expectationWithDescription:@"Crop animations"];
-    
-    [rootVc.topViewController presentViewController:cropVc animated:YES completion:^{
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1.5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-                [cropVc onButtonHorizontalFlipClicked:nil];
-                
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1.5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-                    [cropVc onButtonRotateClicked:nil];
-                    
-                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1.5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-                        [expectation fulfill];
-                    });
-                });
-            });
-        });
+    [self performUIAction:^{
+        [rootVc.topViewController presentViewController:cropVc animated:YES completion:NULL];
     }];
-
-    [self waitForExpectationsWithTimeout:60 handler:NULL];
+    
+    [self performUIAction:^{
+        [cropVc onButtonHorizontalFlipClicked:nil];
+    }];
+    
+    [self performUIAction:^{
+        [cropVc onButtonRotateClicked:nil];
+    }];
 }
 
 - (void)testInfoPageViewController{
@@ -503,16 +488,9 @@
     [OLKiteABTesting sharedInstance].qualityBannerType = @"A";
     [productHomeVc.collectionView reloadData];
     
-    XCTestExpectation *expectation = [self expectationWithDescription:@"Animations"];
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1.5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+    [self performUIAction:^{
         [productHomeVc collectionView:productHomeVc.collectionView didSelectItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
-        
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1.5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-            [expectation fulfill];
-        });
-    });
-
-    [self waitForExpectationsWithTimeout:60 handler:NULL];
+    }];
 }
 
 - (void)testIntegratedCheckoutViewController{
@@ -522,24 +500,16 @@
     printOrder.phone = @"1234123412";
     
     OLIntegratedCheckoutViewController *vc = [[OLIntegratedCheckoutViewController alloc] initWithPrintOrder:printOrder];
-    
-    XCTestExpectation *expectation = [self expectationWithDescription:@"Animations"];
     OLNavigationController *nvc = [[OLNavigationController alloc] initWithRootViewController:vc];
     
     UINavigationController *rootVc = (UINavigationController *)[[UIApplication sharedApplication].delegate window].rootViewController;
     
-    [rootVc.topViewController presentViewController:nvc animated:YES completion:^{
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1.5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-            [vc onButtonDoneClicked];
-            
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1.5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-                [expectation fulfill];
-            });
-        });
+    [self performUIAction:^{
+        [rootVc.topViewController presentViewController:nvc animated:YES completion:NULL];
     }];
-    
-    [self waitForExpectationsWithTimeout:60 handler:NULL];
-
+    [self performUIAction:^{
+            [vc onButtonDoneClicked];
+    }];
 }
 
 //- (void)testBuiltInALAssetImagePickerViewController{
@@ -574,30 +544,20 @@
     
     OLScrollCropViewController *vc = [sb instantiateViewControllerWithIdentifier:@"PrintOrderHistoryViewController"];
     UINavigationController *rootVc = (UINavigationController *)[[UIApplication sharedApplication].delegate window].rootViewController;
-    XCTestExpectation *expectation = [self expectationWithDescription:@"Animations"];
     
-    [rootVc.topViewController presentViewController:vc animated:YES completion:^{
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1.5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-            [expectation fulfill];
-        });
+    [self performUIAction:^{
+        [rootVc.topViewController presentViewController:vc animated:YES completion:NULL];
     }];
-    
-    [self waitForExpectationsWithTimeout:60 handler:NULL];
 }
 
 - (void)testAddressEditViewController{
     OLAddressEditViewController *vc = [[OLAddressEditViewController alloc] initWithAddress:[OLAddress kiteTeamAddress]];
     
     UINavigationController *rootVc = (UINavigationController *)[[UIApplication sharedApplication].delegate window].rootViewController;
-    XCTestExpectation *expectation = [self expectationWithDescription:@"Animations"];
-    
-    [rootVc.topViewController presentViewController:vc animated:YES completion:^{
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1.5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-            [expectation fulfill];
-        });
+    [self performUIAction:^{
+        [rootVc.topViewController presentViewController:vc animated:YES completion:NULL];
     }];
     
-    [self waitForExpectationsWithTimeout:60 handler:NULL];
 }
 
 - (void)testPaymentViewController{
@@ -642,8 +602,22 @@
         [vc onBackgroundClicked];
     }];
     
+    UITableViewCell *cell =  [vc tableView:vc.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
+    
     [self performUIAction:^{
-        UITableViewCell *cell =  [vc tableView:vc.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
+        UIButton *plusButton = [cell.contentView viewWithTag:40];
+        [plusButton sendActionsForControlEvents:UIControlEventTouchUpInside];
+        XCTAssert([job extraCopies] == 1);
+    }];
+    
+    
+    [self performUIAction:^{
+        UIButton *minusButton = [cell.contentView viewWithTag:10];
+        [minusButton sendActionsForControlEvents:UIControlEventTouchUpInside];
+        XCTAssert([job extraCopies] == 0);
+    }];
+    
+    [self performUIAction:^{
         UIButton *largeEditButton = (UIButton *)[cell.contentView viewWithTag:61];
         [largeEditButton sendActionsForControlEvents:UIControlEventTouchUpInside];
     }];
