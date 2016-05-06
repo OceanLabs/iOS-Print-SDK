@@ -99,7 +99,6 @@
 		2E898C631CC518180041CCD8 /* OLProduct.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E3F96AE1A4967FF005C0EA3 /* OLProduct.m */; };
 		2E898C641CC518180041CCD8 /* DogsAssetCollectionDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E4DF45D1C0F150400EA66FE /* DogsAssetCollectionDataSource.m */; };
 		2E898C651CC518180041CCD8 /* OLGreetingCardPrintJob.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E7F516C1BF5FBB100A78718 /* OLGreetingCardPrintJob.m */; };
-		2E898C661CC518180041CCD8 /* OLPhotoSelectionButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E39CAA71AB89541008B1EFF /* OLPhotoSelectionButton.m */; };
 		2E898C671CC518180041CCD8 /* OLAddressEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CD93BB3D187882A300316492 /* OLAddressEditViewController.m */; };
 		2E898C681CC518180041CCD8 /* OLKiteUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA13E221BBC242F005F3D71 /* OLKiteUtils.m */; };
 		2E898C6B1CC518180041CCD8 /* OLImagePreviewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E14D2D01C2AE9AD00F35403 /* OLImagePreviewViewController.m */; };
@@ -202,7 +201,6 @@
 		2E898CDD1CC518180041CCD8 /* KitePrintSDK.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2E6E605F1C50384C00829BB7 /* KitePrintSDK.strings */; };
 		2E898CDE1CC518180041CCD8 /* OLKiteStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2E6E60681C5038AD00829BB7 /* OLKiteStoryboard.storyboard */; };
 		2E898CDF1CC518180041CCD8 /* PostcardBackView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2E38C0CC1AD5206F008BC28A /* PostcardBackView.xib */; };
-		2E898CE01CC518180041CCD8 /* OLPhotoSelectionButton.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2E39CAA41AB89515008B1EFF /* OLPhotoSelectionButton.xib */; };
 		2E898CE11CC518180041CCD8 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CD73BF83186215790009DE03 /* Images.xcassets */; };
 		2E898CE21CC518180041CCD8 /* KitePrintSDK.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CD93BB471879EA4F00316492 /* KitePrintSDK.xcassets */; };
 		2E898CE31CC518180041CCD8 /* kite_corrupt.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 3D6CDAAC1B1F41AE00786478 /* kite_corrupt.jpg */; };
@@ -233,7 +231,6 @@
 		2EA3D36C1C9C04B500B99BCD /* OLAssetsPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E21DA381B9843CF00D9162F /* OLAssetsPageViewController.m */; };
 		2EA3D36D1C9C04B500B99BCD /* OLOrderReviewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA8BEB51A484FCB008A9248 /* OLOrderReviewViewController.m */; };
 		2EA3D36E1C9C04B500B99BCD /* OLProduct.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E3F96AE1A4967FF005C0EA3 /* OLProduct.m */; };
-		2EA3D36F1C9C04B500B99BCD /* OLPhotoSelectionButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E39CAA71AB89541008B1EFF /* OLPhotoSelectionButton.m */; };
 		2EA3D3701C9C04B500B99BCD /* OLAddressEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CD93BB3D187882A300316492 /* OLAddressEditViewController.m */; };
 		2EA3D3711C9C04B500B99BCD /* OLKiteUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA13E221BBC242F005F3D71 /* OLKiteUtils.m */; };
 		2EA3D3721C9C04B500B99BCD /* ALAsset+OLIsEqual.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA829251B9DE54100A9208E /* ALAsset+OLIsEqual.m */; };
@@ -390,7 +387,6 @@
 		2EADD7F41BE79D6D0051CD31 /* UIImage+ImageNamedInKiteBundle.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA13E1F1BBC2202005F3D71 /* UIImage+ImageNamedInKiteBundle.m */; };
 		2EADD7F61BE79D6D0051CD31 /* OLOrderReviewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA8BEB51A484FCB008A9248 /* OLOrderReviewViewController.m */; };
 		2EADD7F71BE79D6D0051CD31 /* OLProduct.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E3F96AE1A4967FF005C0EA3 /* OLProduct.m */; };
-		2EADD7F91BE79D6D0051CD31 /* OLPhotoSelectionButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E39CAA71AB89541008B1EFF /* OLPhotoSelectionButton.m */; };
 		2EADD7FA1BE79D6D0051CD31 /* OLAddressEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CD93BB3D187882A300316492 /* OLAddressEditViewController.m */; };
 		2EADD7FB1BE79D6D0051CD31 /* OLKiteUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA13E221BBC242F005F3D71 /* OLKiteUtils.m */; };
 		2EADD7FE1BE79D6D0051CD31 /* OLCaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E20BD851AD4229700FB2446 /* OLCaseViewController.m */; };
@@ -465,7 +461,6 @@
 		2EADD8531BE79D6D0051CD31 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD73BF6B186215790009DE03 /* Foundation.framework */; };
 		2EADD8541BE79D6D0051CD31 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 931ABE3568CB40F8892488E2 /* libPods.a */; };
 		2EADD8571BE79D6D0051CD31 /* PostcardBackView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2E38C0CC1AD5206F008BC28A /* PostcardBackView.xib */; };
-		2EADD8581BE79D6D0051CD31 /* OLPhotoSelectionButton.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2E39CAA41AB89515008B1EFF /* OLPhotoSelectionButton.xib */; };
 		2EADD85A1BE79D6D0051CD31 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CD73BF83186215790009DE03 /* Images.xcassets */; };
 		2EADD85C1BE79D6D0051CD31 /* KitePrintSDK.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CD93BB471879EA4F00316492 /* KitePrintSDK.xcassets */; };
 		2EADD85E1BE79D6D0051CD31 /* kite_corrupt.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 3D6CDAAC1B1F41AE00786478 /* kite_corrupt.jpg */; };
@@ -571,7 +566,6 @@
 		E29C85A11BE3B5C50041D4CF /* UIImage+ImageNamedInKiteBundle.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA13E1F1BBC2202005F3D71 /* UIImage+ImageNamedInKiteBundle.m */; };
 		E29C85A41BE3B5C50041D4CF /* OLOrderReviewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA8BEB51A484FCB008A9248 /* OLOrderReviewViewController.m */; };
 		E29C85A51BE3B5C50041D4CF /* OLProduct.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E3F96AE1A4967FF005C0EA3 /* OLProduct.m */; };
-		E29C85A71BE3B5C50041D4CF /* OLPhotoSelectionButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E39CAA71AB89541008B1EFF /* OLPhotoSelectionButton.m */; };
 		E29C85AB1BE3B5C50041D4CF /* OLAddressEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CD93BB3D187882A300316492 /* OLAddressEditViewController.m */; };
 		E29C85AC1BE3B5C50041D4CF /* OLKiteUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA13E221BBC242F005F3D71 /* OLKiteUtils.m */; };
 		E29C85AF1BE3B5C50041D4CF /* OLCaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E20BD851AD4229700FB2446 /* OLCaseViewController.m */; };
@@ -844,9 +838,6 @@
 		2E38C0CC1AD5206F008BC28A /* PostcardBackView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PostcardBackView.xib; sourceTree = "<group>"; };
 		2E39CAA11AB894A8008B1EFF /* OLPhotoSelectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLPhotoSelectionViewController.h; sourceTree = "<group>"; };
 		2E39CAA21AB894A8008B1EFF /* OLPhotoSelectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLPhotoSelectionViewController.m; sourceTree = "<group>"; };
-		2E39CAA41AB89515008B1EFF /* OLPhotoSelectionButton.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OLPhotoSelectionButton.xib; sourceTree = "<group>"; };
-		2E39CAA61AB89541008B1EFF /* OLPhotoSelectionButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLPhotoSelectionButton.h; sourceTree = "<group>"; };
-		2E39CAA71AB89541008B1EFF /* OLPhotoSelectionButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLPhotoSelectionButton.m; sourceTree = "<group>"; };
 		2E3F96AD1A4967FF005C0EA3 /* OLProduct.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLProduct.h; sourceTree = "<group>"; };
 		2E3F96AE1A4967FF005C0EA3 /* OLProduct.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLProduct.m; sourceTree = "<group>"; };
 		2E3F96B01A49ACF4005C0EA3 /* OLPrintPhoto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLPrintPhoto.h; sourceTree = "<group>"; };
@@ -1504,8 +1495,6 @@
 		2E0DB88E1A6402D9001032E3 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				2E39CAA61AB89541008B1EFF /* OLPhotoSelectionButton.h */,
-				2E39CAA71AB89541008B1EFF /* OLPhotoSelectionButton.m */,
 				2E973EEC1A7A5D0E00488212 /* OLCircleMaskCollectionViewCell.h */,
 				2E973EED1A7A5D0E00488212 /* OLCircleMaskCollectionViewCell.m */,
 				2E676C291B33FD70005E068B /* OLPopupOptionsImageView.h */,
@@ -1749,6 +1738,17 @@
 			path = ..;
 			sourceTree = "<group>";
 		};
+		2EAB0AF61CDCDE9900625BD6 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				2E924BE31BC6A3A00038938A /* OLKiteTestHelper.h */,
+				2E924BE41BC6A3A00038938A /* OLKiteTestHelper.m */,
+				2EAB0AF11CDCD57A00625BD6 /* OLTestTapGestureRecognizer.h */,
+				2EAB0AF21CDCD57A00625BD6 /* OLTestTapGestureRecognizer.m */,
+			);
+			name = Helpers;
+			sourceTree = "<group>";
+		};
 		2ED5DEB01AC94337003301A8 /* LXReorderableCollectionViewFlowLayout */ = {
 			isa = PBXGroup;
 			children = (
@@ -1906,15 +1906,12 @@
 			isa = PBXGroup;
 			children = (
 				CD73BF96186215790009DE03 /* OLSDKModelTests.m */,
-				2E7483521BCD11F800360550 /* ViewControllerTests.m */,
 				2E7483541BCD1DF500360550 /* OLPrintPhotoTests.m */,
 				2E924BE11BC6A0C80038938A /* OLKiteRequestTests.m */,
 				2E7D1C8E1BC41C7D009227EE /* OLProductOrderTests.m */,
 				2ECC95691BC6B88F00F44CE1 /* OLDocsObjcExampleCodeTests.m */,
-				2E924BE31BC6A3A00038938A /* OLKiteTestHelper.h */,
-				2E924BE41BC6A3A00038938A /* OLKiteTestHelper.m */,
-				2EAB0AF11CDCD57A00625BD6 /* OLTestTapGestureRecognizer.h */,
-				2EAB0AF21CDCD57A00625BD6 /* OLTestTapGestureRecognizer.m */,
+				2E7483521BCD11F800360550 /* ViewControllerTests.m */,
+				2EAB0AF61CDCDE9900625BD6 /* Helpers */,
 				CD73BF91186215790009DE03 /* Supporting Files */,
 			);
 			name = "Kite Print SDK Tests";
@@ -2360,7 +2357,6 @@
 				E29C84161BE2877A0041D4CF /* SVProgressHUD.bundle */,
 				3D6CDAAC1B1F41AE00786478 /* kite_corrupt.jpg */,
 				2E38C0CC1AD5206F008BC28A /* PostcardBackView.xib */,
-				2E39CAA41AB89515008B1EFF /* OLPhotoSelectionButton.xib */,
 				2E6E60681C5038AD00829BB7 /* OLKiteStoryboard.storyboard */,
 				CD93BB471879EA4F00316492 /* KitePrintSDK.xcassets */,
 			);
@@ -2788,7 +2784,6 @@
 				2E898CDD1CC518180041CCD8 /* KitePrintSDK.strings in Resources */,
 				2E898CDE1CC518180041CCD8 /* OLKiteStoryboard.storyboard in Resources */,
 				2E898CDF1CC518180041CCD8 /* PostcardBackView.xib in Resources */,
-				2E898CE01CC518180041CCD8 /* OLPhotoSelectionButton.xib in Resources */,
 				2E898CE11CC518180041CCD8 /* Images.xcassets in Resources */,
 				2E898CE21CC518180041CCD8 /* KitePrintSDK.xcassets in Resources */,
 				2E898CE31CC518180041CCD8 /* kite_corrupt.jpg in Resources */,
@@ -2803,7 +2798,6 @@
 				2E6E605D1C50384C00829BB7 /* KitePrintSDK.strings in Resources */,
 				2E6E60661C5038AD00829BB7 /* OLKiteStoryboard.storyboard in Resources */,
 				2EADD8571BE79D6D0051CD31 /* PostcardBackView.xib in Resources */,
-				2EADD8581BE79D6D0051CD31 /* OLPhotoSelectionButton.xib in Resources */,
 				2EADD85A1BE79D6D0051CD31 /* Images.xcassets in Resources */,
 				2EADD85C1BE79D6D0051CD31 /* KitePrintSDK.xcassets in Resources */,
 				2EADD85E1BE79D6D0051CD31 /* kite_corrupt.jpg in Resources */,
@@ -3027,7 +3021,6 @@
 				2E898C631CC518180041CCD8 /* OLProduct.m in Sources */,
 				2E898C641CC518180041CCD8 /* DogsAssetCollectionDataSource.m in Sources */,
 				2E898C651CC518180041CCD8 /* OLGreetingCardPrintJob.m in Sources */,
-				2E898C661CC518180041CCD8 /* OLPhotoSelectionButton.m in Sources */,
 				2E898C671CC518180041CCD8 /* OLAddressEditViewController.m in Sources */,
 				2E898C681CC518180041CCD8 /* OLKiteUtils.m in Sources */,
 				2E898C6B1CC518180041CCD8 /* OLImagePreviewViewController.m in Sources */,
@@ -3138,7 +3131,6 @@
 				2EA3D36C1C9C04B500B99BCD /* OLAssetsPageViewController.m in Sources */,
 				2EA3D36D1C9C04B500B99BCD /* OLOrderReviewViewController.m in Sources */,
 				2EA3D36E1C9C04B500B99BCD /* OLProduct.m in Sources */,
-				2EA3D36F1C9C04B500B99BCD /* OLPhotoSelectionButton.m in Sources */,
 				2EA3D3701C9C04B500B99BCD /* OLAddressEditViewController.m in Sources */,
 				2EA3D3711C9C04B500B99BCD /* OLKiteUtils.m in Sources */,
 				2EA3D3721C9C04B500B99BCD /* ALAsset+OLIsEqual.m in Sources */,
@@ -3262,7 +3254,6 @@
 				2E4DF45E1C0F150400EA66FE /* DogsAssetCollectionDataSource.m in Sources */,
 				2EAB0AE41CDB504E00625BD6 /* OLAssetsGroupViewCell.m in Sources */,
 				2E7F516D1BF5FBB100A78718 /* OLGreetingCardPrintJob.m in Sources */,
-				2EADD7F91BE79D6D0051CD31 /* OLPhotoSelectionButton.m in Sources */,
 				2EADD7FA1BE79D6D0051CD31 /* OLAddressEditViewController.m in Sources */,
 				2EADD7FB1BE79D6D0051CD31 /* OLKiteUtils.m in Sources */,
 				2EAB0AE61CDB504E00625BD6 /* OLAssetsPageViewController.m in Sources */,
@@ -3545,7 +3536,6 @@
 				E29C85A41BE3B5C50041D4CF /* OLOrderReviewViewController.m in Sources */,
 				E29C85A51BE3B5C50041D4CF /* OLProduct.m in Sources */,
 				2EAB0AC41CDB504C00625BD6 /* OLAssetsPageViewController.m in Sources */,
-				E29C85A71BE3B5C50041D4CF /* OLPhotoSelectionButton.m in Sources */,
 				E29C85AB1BE3B5C50041D4CF /* OLAddressEditViewController.m in Sources */,
 				E29C85AC1BE3B5C50041D4CF /* OLKiteUtils.m in Sources */,
 				E29C85AF1BE3B5C50041D4CF /* OLCaseViewController.m in Sources */,

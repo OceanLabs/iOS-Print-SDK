@@ -34,7 +34,6 @@
 #endif
 
 #import "OLPhotoSelectionViewController.h"
-#import "OLPhotoSelectionButton.h"
 #import "OLPrintPhoto.h"
 #import "OLOrderReviewViewController.h"
 
@@ -75,7 +74,6 @@
 #import "OLKitePrintSDK.h"
 #import "OLKiteUtils.h"
 #import "OLOrderReviewViewController.h"
-#import "OLPhotoSelectionButton.h"
 #import "OLPhotoSelectionViewController.h"
 #import "OLPrintJob.h"
 #import "OLPrintPhoto.h"
@@ -151,7 +149,6 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
 @property (strong, nonatomic) NSMutableDictionary *indexPathsToRemoveDict;
 @property (strong, nonatomic) UIVisualEffectView *visualEffectView;
 @property (weak, nonatomic) IBOutlet UIView *clearButtonContainerView;
-@property (strong, nonatomic) IBOutlet OLPhotoSelectionButton *galleryButton;
 @property (nonatomic, strong) UITapGestureRecognizer *tapBehindQRUploadModalGestureRecognizer;
 @property (weak, nonatomic) IBOutlet UIView *upsellHintView;
 
