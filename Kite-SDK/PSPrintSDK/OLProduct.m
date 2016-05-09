@@ -228,6 +228,8 @@ typedef enum {
             code = @"GBP";
         } else if ([productTemplate.currenciesSupported containsObject:@"EUR"]) {
             code = @"EUR";
+        } else{
+            code = productTemplate.currenciesSupported.firstObject;
         }
     }
     
