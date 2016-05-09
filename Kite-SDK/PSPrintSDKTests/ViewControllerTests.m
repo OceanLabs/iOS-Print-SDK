@@ -30,6 +30,9 @@
 #import "PrintOrderHistoryViewController.h"
 #import "OLAddressEditViewController.h"
 #import "OLTestTapGestureRecognizer.h"
+#import "OLCustomPhotoProvider.h"
+#import "CatsAssetCollectionDataSource.h"
+#import "DogsAssetCollectionDataSource.h"
 
 @import Photos;
 
@@ -47,6 +50,13 @@
 
 -(void)onButtonNextClicked;
 @property (nonatomic, weak) IBOutlet UIButton *buttonNext;
+- (IBAction)onButtonAddPhotosClicked:(id)sender;
+@property (weak, nonatomic) IBOutlet UIButton *addPhotosButton;
+- (IBAction)cameraRollSelected:(id)sender;
+- (void)showPickerForProvider:(OLCustomPhotoProvider *)provider;
+- (IBAction)instagramSelected:(id)sender;
+- (void)showQRCodeImagePicker;
+- (IBAction)facebookSelected:(id)sender;
 
 @end
 
@@ -60,6 +70,7 @@
 @interface OLKiteViewController ()
 @property (strong, nonatomic) NSMutableArray *userSelectedPhotos;
 @property (strong, nonatomic) OLPrintOrder *printOrder;
+@property (strong, nonatomic) NSMutableArray <OLCustomPhotoProvider *> *customImageProviders;
 @end
 
 @interface OLProductHomeViewController (Private)
@@ -87,8 +98,14 @@
 @property (assign, nonatomic) BOOL downloadedMask;
 @end
 
-@interface OLSingleImageProductReviewViewController ()
+@interface OLSingleImageProductReviewViewController () <UICollectionViewDelegate>
 @property (weak, nonatomic) IBOutlet OLRemoteImageCropper *imageCropView;
+- (void)showCameraRollImagePicker;
+- (void)showFacebookImagePicker;
+- (void)showInstagramImagePicker;
+- (void)showQRCodeImagePicker;
+- (void)showPickerForProvider:(OLCustomPhotoProvider *)provider;
+@property (weak, nonatomic) IBOutlet UICollectionView *imagesCollectionView;
 @end
 
 @interface OLPaymentViewController () <UITableViewDataSource>
@@ -183,6 +200,8 @@
     __block OLProductHomeViewController *resultVc;
     
     OLKiteViewController *vc = [[OLKiteViewController alloc] initWithAssets:@[[OLKiteTestHelper aPrintPhoto].asset]];
+    [vc addCustomPhotoProviderWithCollections:@[[[CatsAssetCollectionDataSource alloc] init]] name:@"Cats" icon:[UIImage imageNamed:@"cat"]];
+    [vc addCustomPhotoProviderWithCollections:@[[[DogsAssetCollectionDataSource alloc] init]] name:@"Dogs" icon:[UIImage imageNamed:@"dog"]];
     UINavigationController *rootVc = (UINavigationController *)[[UIApplication sharedApplication].delegate window].rootViewController;
     
     sleep(2);
@@ -377,6 +396,62 @@
     });
     [self waitForExpectationsWithTimeout:120 handler:NULL];
     
+    [self performUIAction:^{
+        [caseVc collectionView:caseVc.imagesCollectionView didSelectItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
+    }];
+    
+    [self performUIAction:^{
+        [caseVc dismissViewControllerAnimated:YES completion:NULL];
+    }];
+    
+    [self performUIAction:^{
+        [caseVc showCameraRollImagePicker];
+    }];
+    
+    [self performUIAction:^{
+        [caseVc dismissViewControllerAnimated:YES completion:NULL];
+    }];
+    
+    [self performUIAction:^{
+        [caseVc showInstagramImagePicker];
+    }];
+    
+    [self performUIAction:^{
+        [caseVc dismissViewControllerAnimated:YES completion:NULL];
+    }];
+    
+    [self performUIAction:^{
+        [caseVc showFacebookImagePicker];
+    }];
+    
+    [self performUIAction:^{
+        [caseVc dismissViewControllerAnimated:YES completion:NULL];
+    }];
+    
+    [self performUIAction:^{
+        [caseVc showQRCodeImagePicker];
+    }];
+    
+    [self performUIAction:^{
+        [caseVc dismissViewControllerAnimated:YES completion:NULL];
+    }];
+    
+    [self performUIAction:^{
+        [caseVc showPickerForProvider:[OLKiteUtils kiteVcForViewController:caseVc].customImageProviders.firstObject];
+    }];
+    
+    [self performUIAction:^{
+        [caseVc dismissViewControllerAnimated:YES completion:NULL];
+    }];
+    
+    [self performUIAction:^{
+        [caseVc showPickerForProvider:[OLKiteUtils kiteVcForViewController:caseVc].customImageProviders.lastObject];
+    }];
+    
+    [self performUIAction:^{
+        [caseVc dismissViewControllerAnimated:YES completion:NULL];
+    }];
+    
     OLKiteViewController *kiteVc = [OLKiteUtils kiteVcForViewController:caseVc];
     OLPrintOrder *printOrder = kiteVc.printOrder;
     printOrder.shippingAddress = [OLAddress kiteTeamAddress];
@@ -466,6 +541,47 @@
     [self performUIAction:^{
         [rootVc.topViewController presentViewController:nvc animated:YES completion:NULL];
     }];
+    
+    [self performUIAction:^{
+        [vc.addPhotosButton sendActionsForControlEvents:UIControlEventTouchUpInside];
+    }];
+    
+    [self performUIAction:^{
+        [vc dismissViewControllerAnimated:YES completion:NULL];
+    }];
+    
+    [self performUIAction:^{
+        [vc cameraRollSelected:nil];
+    }];
+    
+    [self performUIAction:^{
+        [vc dismissViewControllerAnimated:YES completion:NULL];
+    }];
+    
+    [self performUIAction:^{
+        [vc instagramSelected:nil];
+    }];
+    
+    [self performUIAction:^{
+        [vc dismissViewControllerAnimated:YES completion:NULL];
+    }];
+    
+    [self performUIAction:^{
+        [vc facebookSelected:nil];
+    }];
+    
+    [self performUIAction:^{
+        [vc dismissViewControllerAnimated:YES completion:NULL];
+    }];
+    
+    [self performUIAction:^{
+        [vc showQRCodeImagePicker];
+    }];
+
+    [self performUIAction:^{
+        [vc dismissViewControllerAnimated:YES completion:NULL];
+    }];
+    
     [self performUIAction:^{
         [vc onButtonNextClicked];
     }];

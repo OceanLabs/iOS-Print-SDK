@@ -156,6 +156,7 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
 @property (weak, nonatomic) IBOutlet UIView *addPhotosHintView;
 
 @property (assign, nonatomic) NSInteger sectionsForUpsell;
+@property (weak, nonatomic) IBOutlet UIButton *addPhotosButton;
 
 @end
 
