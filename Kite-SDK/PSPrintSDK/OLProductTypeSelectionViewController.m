@@ -39,6 +39,13 @@
 #import "OLKiteUtils.h"
 #import "UIViewController+OLMethods.h"
 #import "NSObject+Utils.h"
+#import "UIImage+ColorAtPixel.h"
+
+#ifdef COCOAPODS
+#import <SDWebImage/SDWebImageManager.h>
+#else
+#import "SDWebImageManager.h"
+#endif
 
 #define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
 
@@ -257,7 +264,10 @@
         UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"extraCell" forIndexPath:indexPath];
         [self fixCellFrameOnIOS7:cell];
         UIImageView *cellImageView = (UIImageView *)[cell.contentView viewWithTag:40];
-        [cellImageView setAndFadeInImageWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/product_photography/placeholder.png"]];
+        [[SDWebImageManager sharedManager] downloadImageWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/product_photography/placeholder.png"] options:0 progress:NULL completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL){
+            cellImageView.image = image;
+            cell.backgroundColor = [image colorAtPixel:CGPointMake(3, 3)];
+        }];
         if (self.fromRotation){
             self.fromRotation = NO;
             cell.alpha = 0;
@@ -347,18 +357,26 @@
     if (!(numberOfProducts % 2 == 0) && (!([self isHorizontalSizeClassCompact]) || size.height < size.width)){
         extras = 1;
     }
+    if (numberOfProducts == 2){
+        extras = 1;
+    }
     
     return numberOfProducts + extras;
 }
 
 - (CGSize) collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
     CGSize size = self.view.bounds.size;
+    
     NSInteger numberOfCells = [self collectionView:collectionView numberOfItemsInSection:indexPath.section];
     CGFloat halfScreenHeight = (size.height - [[UIApplication sharedApplication] statusBarFrame].size.height - self.navigationController.navigationBar.frame.size.height)/2;
     
     CGFloat height = 233;
-    if ([[OLKiteABTesting sharedInstance].productTileStyle isEqualToString:@"Dark"]){
-        height = 200;
+//    if ([[OLKiteABTesting sharedInstance].productTileStyle isEqualToString:@"Dark"]){
+//        height = 200;
+//    }
+    
+    if (indexPath.item >= self.products.count && self.products.count % 2 == 0){
+        return CGSizeMake(size.width, halfScreenHeight);
     }
     
     if ([self isHorizontalSizeClassCompact] && size.height > size.width) {
@@ -388,7 +406,7 @@
             return CGSizeMake(size.width, halfScreenHeight);
         }
         else{
-            return CGSizeMake(size.width/2 - 1, halfScreenHeight * 2);
+            return CGSizeMake(size.width/2 - 1, halfScreenHeight);
         }
     }
     else{

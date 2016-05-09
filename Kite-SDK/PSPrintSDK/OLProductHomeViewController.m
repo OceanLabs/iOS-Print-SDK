@@ -498,9 +498,9 @@
     CGFloat halfScreenHeight = (size.height - [[UIApplication sharedApplication] statusBarFrame].size.height - self.navigationController.navigationBar.frame.size.height)/2;
     
     CGFloat height = 233;
-    if ([[OLKiteABTesting sharedInstance].productTileStyle isEqualToString:@"Dark"]){
-        height = 200;
-    }
+//    if ([[OLKiteABTesting sharedInstance].productTileStyle isEqualToString:@"Dark"]){
+//        height = 200;
+//    }
     
     if ([self isHorizontalSizeClassCompact] && size.height > size.width) {
         if (numberOfCells == 2){
@@ -529,7 +529,7 @@
             return CGSizeMake(size.width, halfScreenHeight);
         }
         else{
-            return CGSizeMake(size.width/2 - 1, halfScreenHeight * 2);
+            return CGSizeMake(size.width/2 - 1, halfScreenHeight);
         }
     }
     else{
@@ -630,7 +630,10 @@
         UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"extraCell" forIndexPath:indexPath];
         [self fixCellFrameOnIOS7:cell];
         UIImageView *cellImageView = (UIImageView *)[cell.contentView viewWithTag:40];
-        [cellImageView setAndFadeInImageWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/product_photography/placeholder.png"]];
+        [[SDWebImageManager sharedManager] downloadImageWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/product_photography/placeholder.png"] options:0 progress:NULL completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL){
+            cellImageView.image = image;
+            cell.backgroundColor = [image colorAtPixel:CGPointMake(3, 3)];
+        }];
         if (self.fromRotation){
             self.fromRotation = NO;
             cell.alpha = 0;
@@ -676,10 +679,10 @@
     if ([[OLKiteABTesting sharedInstance].productTileStyle isEqualToString:@"Classic"]){
         productTypeLabel.backgroundColor = [product labelColor];
     }
-    else if([[OLKiteABTesting sharedInstance].productTileStyle isEqualToString:@"Dark"]){
-        UIButton *button = (UIButton *)[cell.contentView viewWithTag:390];
-        button.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.8];
-    }
+//    else if([[OLKiteABTesting sharedInstance].productTileStyle isEqualToString:@"Dark"]){
+//        UIButton *button = (UIButton *)[cell.contentView viewWithTag:390];
+//        button.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.8];
+//    }
     else{
         UIButton *button = (UIButton *)[cell.contentView viewWithTag:390];
         button.layer.shadowColor = [[UIColor blackColor] CGColor];
