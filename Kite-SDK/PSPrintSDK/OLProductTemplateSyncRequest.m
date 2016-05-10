@@ -149,7 +149,7 @@
                 if ([objects isKindOfClass:[NSArray class]]) {
                     for (id productTemplate in objects) {
                         if ([productTemplate isKindOfClass:[NSDictionary class]]) {
-                            if (![productTemplate[@"product_active"] boolValue]){
+                            if (![productTemplate[@"active"] boolValue]){
                                 continue;
                             }
                             id name = productTemplate[@"name"];
