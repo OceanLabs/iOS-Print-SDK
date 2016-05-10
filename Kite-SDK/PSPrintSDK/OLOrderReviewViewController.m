@@ -260,10 +260,20 @@ UIViewControllerPreviewingDelegate>
     NSUInteger quantityToFulfilOrder = numOrders * self.product.quantityToFulfillOrder;
     if (selectedCount < quantityToFulfilOrder) {
         NSUInteger canSelectExtraCount = quantityToFulfilOrder - selectedCount;
-        UIAlertView *av = [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:NSLocalizedString(@"You've selected %d photos.", @""),selectedCount] message:[NSString stringWithFormat:NSLocalizedString(@"You can add %d more for the same price.", @""), canSelectExtraCount] delegate:nil cancelButtonTitle:NSLocalizedString(@"Add more", @"") otherButtonTitles:NSLocalizedString(@"Print these", @""), nil];
-        av.tag = kTagAlertViewSelectMorePhotos;
-        av.delegate = self;
-        [av show];
+        if ([UIAlertController class]){
+            UIAlertController *ac = [UIAlertController alertControllerWithTitle:[NSString stringWithFormat:NSLocalizedString(@"You've selected %d photos.", @""),selectedCount] message:[NSString stringWithFormat:NSLocalizedString(@"You can add %d more for the same price.", @""), canSelectExtraCount] preferredStyle:UIAlertControllerStyleAlert];
+            [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Print these", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
+                [self doCheckout];
+            }]];
+            [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Add more", @"") style:UIAlertActionStyleCancel handler:NULL]];
+            [self presentViewController:ac animated:YES completion:NULL];
+        }
+        else{
+            UIAlertView *av = [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:NSLocalizedString(@"You've selected %d photos.", @""),selectedCount] message:[NSString stringWithFormat:NSLocalizedString(@"You can add %d more for the same price.", @""), canSelectExtraCount] delegate:nil cancelButtonTitle:NSLocalizedString(@"Add more", @"") otherButtonTitles:NSLocalizedString(@"Print these", @""), nil];
+            av.tag = kTagAlertViewSelectMorePhotos;
+            av.delegate = self;
+            [av show];
+        }
         return NO;
     }
     return YES;
@@ -480,7 +490,7 @@ UIViewControllerPreviewingDelegate>
             self.indexOfPhotoToDelete = indexPath.item;
             av.tag = kTagAlertViewDeletePhoto;
             [av show];
-        };
+        }
         return;
     }
     extraCopies--;
@@ -726,7 +736,7 @@ UIViewControllerPreviewingDelegate>
     return 0.0;
 }
 
-//#if __IPHONE_OS_VERSION_MIN_REQUIRED < 80000
+#if __IPHONE_OS_VERSION_MIN_REQUIRED < 80000
 #pragma mark - UIAlertViewDelegate methods
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
@@ -741,7 +751,7 @@ UIViewControllerPreviewingDelegate>
         }
     }
 }
-//#endif
+#endif
 
 #pragma mark - OLImageEditorViewControllerDelegate methods
 

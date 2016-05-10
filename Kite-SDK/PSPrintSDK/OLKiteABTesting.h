@@ -69,6 +69,7 @@ static NSString *const kOLKiteThemeSupportEmail = @"themeSupportEmail";
 
 @property (strong, nonatomic) NSDictionary *userConfig;
 @property (strong, nonatomic) OLKiteTheme *theme;
+@property (strong, nonatomic) NSArray *paypalSupportedCurrencies;
 //@property (assign, nonatomic) BOOL darkTheme;
 
 + (instancetype)sharedInstance;

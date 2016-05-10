@@ -44,6 +44,7 @@
 #import "OLCheckoutViewController.h"
 #import "Util.h"
 #import "OLPayPalCard.h"
+#import "NSArray+QueryingExtras.h"
 #import "OLKitePrintSDK.h"
 #import "OLProductTemplate.h"
 #import "OLCountry.h"
@@ -338,6 +339,9 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     if ([OLKiteABTesting sharedInstance].offerPayPal && ![self shouldShowApplePay]){
         self.payWithApplePayButton.hidden = YES;
         self.checkoutButton.hidden = YES;
+    }
+    if (![[OLKiteABTesting sharedInstance].paypalSupportedCurrencies containsObjectIdenticalTo:self.printOrder.currencyCode]){
+        [self.paymentButton1 removeFromSuperview];
     }
 #else
     [self.paymentButton1 removeFromSuperview];

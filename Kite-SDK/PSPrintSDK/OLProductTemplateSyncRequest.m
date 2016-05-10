@@ -90,6 +90,11 @@
                     [[OLKiteABTesting sharedInstance] setUserConfig:userConfig];
                 }
                 
+                id payPalSupportedCurrencies = json[@"paypal_supported_currencies"];
+                if ([payPalSupportedCurrencies isKindOfClass:[NSArray class]]){
+                    [OLKiteABTesting sharedInstance].paypalSupportedCurrencies = payPalSupportedCurrencies;
+                }
+                
                 id themeConfig = json[@"kiosk_config"];
                 if ([themeConfig isKindOfClass:[NSDictionary class]]){
                     OLKiteTheme *theme = [[OLKiteTheme alloc] init];
