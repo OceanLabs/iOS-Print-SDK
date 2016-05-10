@@ -726,7 +726,7 @@ UIViewControllerPreviewingDelegate>
     return 0.0;
 }
 
-#if __IPHONE_OS_VERSION_MIN_REQUIRED < 80000
+//#if __IPHONE_OS_VERSION_MIN_REQUIRED < 80000
 #pragma mark - UIAlertViewDelegate methods
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
@@ -741,7 +741,7 @@ UIViewControllerPreviewingDelegate>
         }
     }
 }
-#endif
+//#endif
 
 #pragma mark - OLImageEditorViewControllerDelegate methods
 

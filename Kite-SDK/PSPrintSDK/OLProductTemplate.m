@@ -138,15 +138,15 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
     NSString *currencyCode = [self currencyForCurrentLocale];
     
     if ([[self.shippingCosts allKeys] containsObject:country.codeAlpha3]){
-        NSString *cost = self.shippingCosts[country.codeAlpha3][currencyCode];
+        NSString *cost = self.shippingCosts[country.codeAlpha3][currencyCode][@"amount"];
         return cost ? [NSDecimalNumber decimalNumberWithString:cost] : nil;
     }
     else if (country.isInEurope){
-        NSString *cost = self.shippingCosts[@"europe"][currencyCode];
+        NSString *cost = self.shippingCosts[@"europe"][currencyCode][@"amount"];
         return cost ? [NSDecimalNumber decimalNumberWithString:cost] : nil;
     }
     else{
-        NSString *cost = self.shippingCosts[@"rest_of_world"][currencyCode];
+        NSString *cost = self.shippingCosts[@"rest_of_world"][currencyCode][@"amount"];
         return cost? [NSDecimalNumber decimalNumberWithString:cost] : nil;
     }
 }

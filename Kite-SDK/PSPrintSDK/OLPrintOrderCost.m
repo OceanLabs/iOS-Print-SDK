@@ -75,8 +75,8 @@ static NSString *const kKeyPromoDiscount = @"ly.kite.iossdk.kKeyPromoDiscount";
 
 @implementation OLPrintOrderCost
 
-- (id)initWithTotalCosts:(NSDictionary/*<String, NSDecimalNumber>*/ *)totalCosts
-           shippingCosts:(NSDictionary/*<String, NSDecimalNumber>*/ *)shippingCosts
+- (id)initWithTotalCosts:(NSDictionary<NSString *, NSDecimalNumber *> *)totalCosts
+           shippingCosts:(NSDictionary<NSString *, NSDecimalNumber *> *)shippingCosts
                 jobCosts:(NSDictionary *)jobCosts lineItems:(NSArray *)lineItems
            promoDiscount:(NSDictionary *)promoDiscount
   promoCodeInvalidReason:(NSString *)invalidReason {
