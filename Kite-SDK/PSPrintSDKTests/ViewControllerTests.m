@@ -564,13 +564,13 @@
         [vc dismissViewControllerAnimated:YES completion:NULL];
     }];
     
-    [self performUIAction:^{
-        [vc instagramSelected:nil];
-    }];
-    
-    [self performUIAction:^{
-        [vc dismissViewControllerAnimated:YES completion:NULL];
-    }];
+//    [self performUIAction:^{
+//        [vc instagramSelected:nil];
+//    }];
+//    
+//    [self performUIAction:^{
+//        [vc dismissViewControllerAnimated:YES completion:NULL];
+//    }];
     
     [self performUIAction:^{
         [vc facebookSelected:nil];

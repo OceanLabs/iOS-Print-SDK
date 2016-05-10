@@ -149,6 +149,9 @@
                 if ([objects isKindOfClass:[NSArray class]]) {
                     for (id productTemplate in objects) {
                         if ([productTemplate isKindOfClass:[NSDictionary class]]) {
+                            if (![productTemplate[@"product_active"] boolValue]){
+                                continue;
+                            }
                             id name = productTemplate[@"name"];
                             id identifier = productTemplate[@"template_id"];
                             id costs = productTemplate[@"cost"];
