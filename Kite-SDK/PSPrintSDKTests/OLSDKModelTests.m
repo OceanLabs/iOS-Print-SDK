@@ -10,6 +10,7 @@
 #import "ViewController.h"
 #import "NSString+Formatting.h"
 #import "OLKitePrintSDK.h"
+#import "OLProductGroup.h"
 #ifdef OL_KITE_OFFER_PAYPAL
 #import <PayPal-iOS-SDK/PayPalMobile.h>
 #endif
@@ -194,6 +195,15 @@
     
     job = [OLPrintJob photobookWithTemplateId:@"photobook_small_portrait" OLAssets:@[] frontCoverOLAsset:nil backCoverOLAsset:nil];
     XCTAssert([job.productName isEqualToString:[OLProductTemplate templateWithId:@"photobook_small_portrait"].name]);
+}
+
+- (void)testProductGroups{
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Template Sync"];
+    [OLProductTemplate syncWithCompletionHandler:^(NSArray *templates, NSError *error){
+        XCTAssert([[OLProductGroup groups] isEqualToArray:[OLProductGroup groupsWithFilters:nil]]);
+        [expectation fulfill];
+    }];
+    [self waitForExpectationsWithTimeout:60 handler:NULL];
 }
 
 @end

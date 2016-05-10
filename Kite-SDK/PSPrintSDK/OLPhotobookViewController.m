@@ -991,6 +991,7 @@ UINavigationControllerDelegate, OLUpsellViewControllerDelegate
     }];
 }
 
+#if __IPHONE_OS_VERSION_MIN_REQUIRED < 80000
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
     if (alertView.tag == kTagAlertViewSelectMorePhotos) {
         if (buttonIndex == 1) {
@@ -998,6 +999,7 @@ UINavigationControllerDelegate, OLUpsellViewControllerDelegate
         }
     }
 }
+#endif
 
 #pragma mark - Gesture recognizers
 
@@ -2213,6 +2215,7 @@ UINavigationControllerDelegate, OLUpsellViewControllerDelegate
 }
 #endif
 
+#if __IPHONE_OS_VERSION_MIN_REQUIRED < 80000
 #pragma mark UIActionSheet Delegate (only used on iOS 7)
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex{
@@ -2254,5 +2257,6 @@ UINavigationControllerDelegate, OLUpsellViewControllerDelegate
         return UIInterfaceOrientationMaskLandscape;
     }
 }
+#endif
 
 @end

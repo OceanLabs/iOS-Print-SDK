@@ -483,6 +483,7 @@ static CGFloat fadeTime = 0.3;
     return [(UINavigationController *)self.childViewControllers.firstObject viewControllers];
 }
 
+#if __IPHONE_OS_VERSION_MIN_REQUIRED < 80000
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
     if (alertView.tag == kTagTemplateSyncFailAlertView) {
         if (buttonIndex == 0){
@@ -495,6 +496,7 @@ static CGFloat fadeTime = 0.3;
         [self dismiss];
     }
 }
+#endif
 
 + (NSString *)storyboardIdentifierForGroupSelected:(OLProductGroup *)group{
     if (group.products.count > 1){
@@ -509,6 +511,7 @@ static CGFloat fadeTime = 0.3;
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
+#if __IPHONE_OS_VERSION_MIN_REQUIRED < 80000
 #pragma mark - Autorotate and Orientation Methods
 // Currently here to disable landscape orientations and rotation on iOS 7. When support is dropped, these can be deleted.
 
@@ -529,5 +532,6 @@ static CGFloat fadeTime = 0.3;
         return UIInterfaceOrientationMaskPortrait;
     }
 }
+#endif
 
 @end

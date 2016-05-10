@@ -1633,6 +1633,7 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
     self.tapBehindQRUploadModalGestureRecognizer = nil;
 }
 
+#if __IPHONE_OS_VERSION_MIN_REQUIRED < 80000
 #pragma mark - UIAlertViewDelegate methods
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
@@ -1642,6 +1643,7 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
         }
     }
 }
+#endif
 
 #pragma mark - OLImageEditorViewControllerDelegate methods
 
@@ -1714,6 +1716,7 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
     [self.collectionView reloadData];
 }
 
+#if __IPHONE_OS_VERSION_MIN_REQUIRED < 80000
 #pragma mark UIActionSheet Delegate (only used on iOS 7)
 
 - (void) actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex{
@@ -1758,5 +1761,6 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
         return UIInterfaceOrientationMaskPortrait;
     }
 }
+#endif
 
 @end

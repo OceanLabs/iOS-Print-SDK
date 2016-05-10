@@ -726,6 +726,7 @@ UIViewControllerPreviewingDelegate>
     return 0.0;
 }
 
+#if __IPHONE_OS_VERSION_MIN_REQUIRED < 80000
 #pragma mark - UIAlertViewDelegate methods
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
@@ -740,6 +741,7 @@ UIViewControllerPreviewingDelegate>
         }
     }
 }
+#endif
 
 #pragma mark - OLImageEditorViewControllerDelegate methods
 
@@ -831,6 +833,7 @@ UIViewControllerPreviewingDelegate>
     [self.collectionView reloadData];
 }
 
+#if __IPHONE_OS_VERSION_MIN_REQUIRED < 80000
 #pragma mark - Autorotate and Orientation Methods
 // Currently here to disable landscape orientations and rotation on iOS 7. When support is dropped, these can be deleted.
 
@@ -851,5 +854,6 @@ UIViewControllerPreviewingDelegate>
         return UIInterfaceOrientationMaskPortrait;
     }
 }
+#endif
 
 @end

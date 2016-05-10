@@ -33,6 +33,7 @@
 #import "OLCustomPhotoProvider.h"
 #import "CatsAssetCollectionDataSource.h"
 #import "DogsAssetCollectionDataSource.h"
+#import "OLUpsellViewController.h"
 
 @import Photos;
 
@@ -141,6 +142,11 @@
 @interface OLCreditCardCaptureRootController : UITableViewController
 @property (nonatomic, strong) UITextField *textFieldCardNumber, *textFieldExpiryDate, *textFieldCVV;
 - (void)onButtonPayClicked;
+@end
+
+@interface OLUpsellViewController ()
+@property (weak, nonatomic) IBOutlet UIButton *acceptButton;
+@property (weak, nonatomic) IBOutlet UIButton *declineButton;
 @end
 
 @implementation ViewControllerTests
@@ -412,13 +418,13 @@
         [caseVc dismissViewControllerAnimated:YES completion:NULL];
     }];
     
-    [self performUIAction:^{
-        [caseVc showInstagramImagePicker];
-    }];
-    
-    [self performUIAction:^{
-        [caseVc dismissViewControllerAnimated:YES completion:NULL];
-    }];
+//    [self performUIAction:^{
+//        [caseVc showInstagramImagePicker];
+//    }];
+//    
+//    [self performUIAction:^{
+//        [caseVc dismissViewControllerAnimated:YES completion:NULL];
+//    }];
     
     [self performUIAction:^{
         [caseVc showFacebookImagePicker];
@@ -582,9 +588,35 @@
         [vc dismissViewControllerAnimated:YES completion:NULL];
     }];
     
+    OLUpsellOffer *offer = [[OLUpsellOffer alloc] init];
+    offer.active = YES;
+    offer.discountPercentage = [NSNumber numberWithInteger:50];
+    offer.offerTemplate = @"squares";
+    offer.identifier = 1;
+    offer.type = OLUpsellOfferTypeItemAdd;
+    offer.prepopulatePhotos = NO;
+    offer.priority = 1;
+    offer.headerText = @"Deal!";
+    offer.text = @"Pray that I don't alter the deal";
+    
+    for (OLProductTemplate *template in [OLProductTemplate templates]){
+        if ([template.identifier isEqualToString:@"squares"]){
+            template.upsellOffers = @[offer];
+        }
+    }
+    
     [self performUIAction:^{
         [vc onButtonNextClicked];
     }];
+    
+    OLUpsellViewController *offerVc = (OLUpsellViewController *)vc.presentedViewController;
+    XCTAssert([offerVc isKindOfClass:[OLUpsellViewController class]], @"No upsell offer shown");
+    
+    [self performUIAction:^{
+        [offerVc.declineButton sendActionsForControlEvents:UIControlEventTouchUpInside];
+    }];
+    
+    
 }
 
 - (void)testScrollCropViewController{
@@ -621,6 +653,10 @@
     
     [self performUIAction:^{
         [productHomeVc collectionView:productHomeVc.collectionView didSelectItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
+    }];
+    
+    [self performUIAction:^{
+        [productHomeVc.navigationController popViewControllerAnimated:YES];
     }];
 }
 
@@ -727,6 +763,7 @@
     
     [self performUIAction:^{
         [vc.promoCodeTextField becomeFirstResponder];
+        vc.promoCodeTextField.text = @"unit-test-promo-code-2014";
     }];
     
     [self performUIAction:^{

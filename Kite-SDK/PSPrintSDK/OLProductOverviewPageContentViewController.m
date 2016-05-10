@@ -63,6 +63,7 @@
     }
 }
 
+#if __IPHONE_OS_VERSION_MIN_REQUIRED < 80000
 #pragma mark - Autorotate and Orientation Methods
 // Currently here to disable landscape orientations and rotation on iOS 7. When support is dropped, these can be deleted.
 
@@ -83,6 +84,7 @@
         return UIInterfaceOrientationMaskPortrait;
     }
 }
+#endif
 
 
 @end
