@@ -132,17 +132,17 @@ static CGFloat fadeTime = 0.3;
 //    [OLKiteABTesting sharedInstance].darkTheme = useDarkTheme;
 //}
 
-- (BOOL)prefersStatusBarHidden {
-    BOOL hidden = self.useDarkTheme;
-    
-    if ([self respondsToSelector:@selector(traitCollection)]){
-        if (self.traitCollection.verticalSizeClass == UIUserInterfaceSizeClassCompact && self.view.frame.size.height < self.view.frame.size.width){
-            hidden |= YES;
-        }
-    }
-    
-    return hidden;
-}
+//- (BOOL)prefersStatusBarHidden {
+//    BOOL hidden = self.useDarkTheme;
+//    
+//    if ([self respondsToSelector:@selector(traitCollection)]){
+//        if (self.traitCollection.verticalSizeClass == UIUserInterfaceSizeClassCompact && self.view.frame.size.height < self.view.frame.size.width){
+//            hidden |= YES;
+//        }
+//    }
+//    
+//    return hidden;
+//}
 
 - (UIStatusBarStyle)preferredStatusBarStyle{
     if (self.childViewControllers.count == 0){

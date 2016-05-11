@@ -149,7 +149,10 @@
                 if ([objects isKindOfClass:[NSArray class]]) {
                     for (id productTemplate in objects) {
                         if ([productTemplate isKindOfClass:[NSDictionary class]]) {
-                            if (![productTemplate[@"active"] boolValue]){
+                            if (![productTemplate[@"active"] boolValue] && [OLKitePrintSDK environment] == kOLKitePrintSDKEnvironmentLive){
+                                continue;
+                            }
+                            else if (![productTemplate[@"sandbox_active"] boolValue] && [OLKitePrintSDK environment] == kOLKitePrintSDKEnvironmentSandbox){
                                 continue;
                             }
                             id name = productTemplate[@"name"];

@@ -197,13 +197,4 @@
     XCTAssert([job.productName isEqualToString:[OLProductTemplate templateWithId:@"photobook_small_portrait"].name]);
 }
 
-- (void)testProductGroups{
-    XCTestExpectation *expectation = [self expectationWithDescription:@"Template Sync"];
-    [OLProductTemplate syncWithCompletionHandler:^(NSArray *templates, NSError *error){
-        XCTAssert([[OLProductGroup groups] isEqualToArray:[OLProductGroup groupsWithFilters:nil]]);
-        [expectation fulfill];
-    }];
-    [self waitForExpectationsWithTimeout:60 handler:NULL];
-}
-
 @end

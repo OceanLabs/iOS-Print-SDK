@@ -106,10 +106,6 @@ static id stringOrEmptyString(NSString *str) {
     return [OLProductTemplate templateWithId:self.templateId].name;
 }
 
-- (NSDecimalNumber *)costInCurrency:(NSString *)currencyCode {
-    return [[OLProductTemplate templateWithId:self.templateId] costPerSheetInCurrencyCode:currencyCode];
-}
-
 - (NSArray *)currenciesSupported {
     return [OLProductTemplate templateWithId:self.templateId].currenciesSupported;
 }

@@ -34,16 +34,24 @@
 #import "CatsAssetCollectionDataSource.h"
 #import "DogsAssetCollectionDataSource.h"
 #import "OLUpsellViewController.h"
+#import "OLPrintOrder+History.h"
+#import "OLFrameOrderReviewViewController.h"
 
 @import Photos;
 
 @interface ViewControllerTests : XCTestCase
+
+@property (strong, nonatomic) NSString *kvoValueToObserve;
+@property (copy, nonatomic) void (^kvoBlockToExecute)();
+@property (weak, nonatomic) id kvoObjectToObserve;
 
 @end
 
 @interface OLKitePrintSDK ()
 
 + (BOOL)setUseStripeForCreditCards:(BOOL)use;
++ (void)setUseStaging:(BOOL)staging;
++ (void)setCacheTemplates:(BOOL)cache;
 
 @end
 
@@ -69,6 +77,7 @@
 @end
 
 @interface OLKiteViewController ()
+- (void)dismiss;
 @property (strong, nonatomic) NSMutableArray *userSelectedPhotos;
 @property (strong, nonatomic) OLPrintOrder *printOrder;
 @property (strong, nonatomic) NSMutableArray <OLCustomPhotoProvider *> *customImageProviders;
@@ -83,6 +92,7 @@
 
 @interface OLOrderReviewViewController ()
 @property (strong, nonatomic) UIButton *nextButton;
+- (void) deletePhotoAtIndex:(NSUInteger)index;
 @end
 
 @interface OLPhotobookViewController ()
@@ -93,6 +103,7 @@
 
 @interface OLProductOverviewViewController ()
 @property (weak, nonatomic) IBOutlet UIButton *callToActionButton;
+- (IBAction)onLabelDetailsTapped:(UITapGestureRecognizer *)sender;
 @end
 
 @interface OLCaseViewController ()
@@ -128,6 +139,7 @@
 
 @interface OLKiteABTesting ()
 @property (strong, nonatomic, readwrite) NSString *qualityBannerType;
+@property (strong, nonatomic, readwrite) NSString *launchWithPrintOrderVariant;
 @end
 
 @class OLCreditCardCaptureRootController;
@@ -155,6 +167,12 @@
     [super setUp];
     // Put setup code here. This method is called before the invocation of each test method in the class.
     [OLKitePrintSDK setAPIKey:@"a45bf7f39523d31aa1ca4ecf64d422b4d810d9c4" withEnvironment:kOLKitePrintSDKEnvironmentSandbox];
+    [OLKitePrintSDK setIsKiosk:NO];
+    [OLKitePrintSDK setUseStripeForCreditCards:YES];
+    [OLKitePrintSDK setUseStaging:NO];
+    [OLKitePrintSDK setCacheTemplates:NO];
+    [OLKitePrintSDK setApplePayPayToString:@"JABBA"];
+    [OLKitePrintSDK setQRCodeUploadEnabled:YES];
     [OLStripeCard clearLastUsedCard];
 }
 
@@ -208,9 +226,9 @@
     OLKiteViewController *vc = [[OLKiteViewController alloc] initWithAssets:@[[OLKiteTestHelper aPrintPhoto].asset]];
     [vc addCustomPhotoProviderWithCollections:@[[[CatsAssetCollectionDataSource alloc] init]] name:@"Cats" icon:[UIImage imageNamed:@"cat"]];
     [vc addCustomPhotoProviderWithCollections:@[[[DogsAssetCollectionDataSource alloc] init]] name:@"Dogs" icon:[UIImage imageNamed:@"dog"]];
+    [vc clearBasket];
     UINavigationController *rootVc = (UINavigationController *)[[UIApplication sharedApplication].delegate window].rootViewController;
     
-    sleep(2);
     [rootVc.topViewController presentViewController:vc animated:YES completion:^{
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             while (vc.childViewControllers.count == 0) {
@@ -288,6 +306,21 @@
     });
     
     [self waitForExpectationsWithTimeout:10 handler:NULL];
+}
+
+- (void)kvoObserveObject:(id)object forValue:(NSString *)value andExecuteBlock:(void(^)())block{
+    self.kvoObjectToObserve = object;
+    self.kvoValueToObserve = value;
+    self.kvoBlockToExecute = block;
+    [self.kvoObjectToObserve addObserver:self forKeyPath:self.kvoValueToObserve options:NSKeyValueObservingOptionNew context:nil];
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context{
+    if ([keyPath isEqualToString:@"launchWithPrintOrderVariant"]){
+        [self.kvoObjectToObserve removeObserver:self forKeyPath:self.kvoValueToObserve];
+        self.kvoBlockToExecute();
+        [self.kvoObjectToObserve addObserver:self forKeyPath:self.kvoValueToObserve options:NSKeyValueObservingOptionNew context:nil];
+    }
 }
 
 - (void)testCompletePhotobookJourney{
@@ -464,6 +497,8 @@
     printOrder.email = @"ios_unit_test@kite.ly";
     [self tapNextOnViewController:caseVc];
     
+    XCTAssert(![printOrder isSavedInHistory], @"Print order should not be in history");
+    
     OLPaymentViewController *paymentVc = (OLPaymentViewController *)productHomeVc.navigationController.topViewController;
     XCTAssert([paymentVc isKindOfClass:[OLPaymentViewController class]]);
 
@@ -494,6 +529,39 @@
     
     [self waitForExpectationsWithTimeout:120 handler:NULL];
     
+    XCTAssert([printOrder isSavedInHistory], @"Print order is not saved in history");
+    
+    [printOrder deleteFromHistory];
+    XCTAssert(![printOrder isSavedInHistory], @"Print order was not deleted from history");
+    
+}
+
+- (void)testProductDescriptionDrawer{
+    OLProduct *product = [OLProduct productWithTemplateId:@"squares"];
+    
+    UIStoryboard *sb = [UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[NSBundle bundleForClass:[OLPhotoSelectionViewController class]]];
+    XCTAssert(sb);
+    
+    OLProductOverviewViewController *vc = [sb instantiateViewControllerWithIdentifier:@"OLProductOverviewViewController"];
+    XCTAssert(vc);
+
+    vc.product = product;
+    
+    OLNavigationController *nvc = [[OLNavigationController alloc] initWithRootViewController:vc];
+    
+    UINavigationController *rootVc = (UINavigationController *)[[UIApplication sharedApplication].delegate window].rootViewController;
+    
+    [self performUIAction:^{
+        [rootVc.topViewController presentViewController:nvc animated:YES completion:NULL];
+    }];
+
+    [self performUIAction:^{
+        [vc onLabelDetailsTapped:nil];
+    }];
+    
+    [self performUIAction:^{
+        [vc onLabelDetailsTapped:nil];
+    }];
 }
 
 - (void)testPhotoSelectionScreen{
@@ -515,12 +583,10 @@
                           ];
     
     NSMutableArray *printPhotos = [[NSMutableArray alloc] initWithCapacity:700];
-    for (int i = 0; i < 100; i++) {
-        for (OLAsset *asset in olAssets){
-            OLPrintPhoto *photo = [[OLPrintPhoto alloc] init];
-            photo.asset = asset;
-            [printPhotos addObject:photo];
-        }
+    for (OLAsset *asset in olAssets){
+        OLPrintPhoto *photo = [[OLPrintPhoto alloc] init];
+        photo.asset = asset;
+        [printPhotos addObject:photo];
     }
     
     XCTestExpectation *expectation = [self expectationWithDescription:@"Template Sync Completed"];
@@ -647,9 +713,10 @@
 }
 
 - (void)testInfoPageViewController{
+    [self kvoObserveObject:[OLKiteABTesting sharedInstance] forValue:@"qualityBannerType" andExecuteBlock:^{
+        [OLKiteABTesting sharedInstance].qualityBannerType = @"A";
+    }];
     OLProductHomeViewController *productHomeVc = [self loadKiteViewController];
-    [OLKiteABTesting sharedInstance].qualityBannerType = @"A";
-    [productHomeVc.collectionView reloadData];
     
     [self performUIAction:^{
         [productHomeVc collectionView:productHomeVc.collectionView didSelectItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
@@ -658,6 +725,8 @@
     [self performUIAction:^{
         [productHomeVc.navigationController popViewControllerAnimated:YES];
     }];
+    
+    [[OLKiteUtils kiteVcForViewController:productHomeVc] dismiss];
 }
 
 - (void)testIntegratedCheckoutViewController{
@@ -741,6 +810,8 @@
     printOrder.email = @"ios_unit_test@kite.ly";
     printOrder.phone = @"1234123412";
     
+    XCTAssert([printOrder.shippingAddress.description isEqualToString:@"Kite Team, Eastcastle House, 27-28 Eastcastle St, London, W1W 8DH, United Kingdom"]);
+    
     UIStoryboard *sb = [UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[NSBundle bundleForClass:[OLPhotoSelectionViewController class]]];
     XCTAssert(sb);
     
@@ -793,6 +864,252 @@
     UINavigationController *presentedNav = (UINavigationController *)vc.presentedViewController;
     [self tapNextOnViewController:presentedNav.topViewController];
     [self tapNextOnViewController:presentedNav.topViewController];
+}
+
+- (void)testCompletePrintsJourney{
+    NSData *data1 = [NSData dataWithContentsOfFile:[[NSBundle bundleForClass:[OLKiteTestHelper class]] pathForResource:@"1" ofType:@"jpg"]];
+    NSData *data2 = [NSData dataWithContentsOfFile:[[NSBundle bundleForClass:[OLKiteTestHelper class]] pathForResource:@"2" ofType:@"png"]];
+    
+    PHFetchResult *fetchResult = [PHAsset fetchAssetsWithMediaType:PHAssetMediaTypeImage options:nil];
+    XCTAssert(fetchResult.count > 0, @"There are no assets available");
+    PHAsset *phAsset = [fetchResult objectAtIndex:arc4random() % fetchResult.count];
+    
+    NSArray *olAssets = @[
+                          [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/1.jpg"]],
+                          [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/2.jpg"]],
+                          [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/3.jpg"]],
+                          [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/4.jpg"]],
+                          [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/1.jpg"]],
+                          [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/2.jpg"]],
+                          [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/3.jpg"]],
+                          [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/4.jpg"]],
+                          [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/1.jpg"]],
+                          [OLAsset assetWithDataAsJPEG:data1],
+                          [OLAsset assetWithDataAsPNG:data2],
+                          [OLAsset assetWithPHAsset:phAsset]
+                          ];
+    
+    NSMutableArray *printPhotos = [[NSMutableArray alloc] initWithCapacity:700];
+    for (OLAsset *asset in olAssets){
+        OLPrintPhoto *photo = [[OLPrintPhoto alloc] init];
+        photo.asset = asset;
+        [printPhotos addObject:photo];
+    }
+    
+    OLProductHomeViewController *productHomeVc = [self loadKiteViewController];
+    [self chooseClass:@"Prints" onOLProductHomeViewController:productHomeVc];
+    
+    OLProductTypeSelectionViewController *productTypeVc = (OLProductTypeSelectionViewController *)productHomeVc.navigationController.topViewController;
+    XCTAssert([productTypeVc isKindOfClass:[OLProductTypeSelectionViewController class]]);
+    
+    [self chooseProduct:@"Squares" onOLProductTypeSelectionViewController:productTypeVc];
+    
+    [self tapNextOnViewController:productHomeVc.navigationController.topViewController];
+    
+    OLPhotoSelectionViewController *photoVc = (OLPhotoSelectionViewController *)productHomeVc.navigationController.topViewController;
+    XCTAssert([photoVc isKindOfClass:[OLPhotoSelectionViewController class]]);
+    
+    photoVc.userSelectedPhotos = printPhotos;
+    
+    [self tapNextOnViewController:photoVc];
+    
+    OLOrderReviewViewController *reviewVc = (OLOrderReviewViewController *)productHomeVc.navigationController.topViewController;
+    XCTAssert([reviewVc isKindOfClass:[OLOrderReviewViewController class]]);
+    
+    UICollectionViewCell *cell = [reviewVc collectionView:reviewVc.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
+    UIButton *button = [cell viewWithTag:12];
+    
+    [self performUIAction:^{
+        [button sendActionsForControlEvents:UIControlEventTouchUpInside];
+    }];
+    
+    button = [cell viewWithTag:13];
+    
+    [self performUIAction:^{
+        [button sendActionsForControlEvents:UIControlEventTouchUpInside];
+    }];
+    
+    [self performUIAction:^{
+        [button sendActionsForControlEvents:UIControlEventTouchUpInside];
+    }];
+    
+    [self performUIAction:^{
+        [reviewVc dismissViewControllerAnimated:YES completion:NULL];
+    }];
+    
+    [self performUIAction:^{
+        NSIndexPath* indexPath = [reviewVc.collectionView indexPathForCell:(UICollectionViewCell *)cell];
+        [reviewVc deletePhotoAtIndex:indexPath.item];
+    }];
+    
+    OLKiteViewController *kiteVc = [OLKiteUtils kiteVcForViewController:reviewVc];
+    OLPrintOrder *printOrder = kiteVc.printOrder;
+    printOrder.shippingAddress = [OLAddress kiteTeamAddress];
+    printOrder.email = @"ios_unit_test@kite.ly";
+    [self tapNextOnViewController:reviewVc];
+    
+    XCTAssert(![printOrder isSavedInHistory], @"Print order should not be in history");
+    
+    OLPaymentViewController *paymentVc = (OLPaymentViewController *)productHomeVc.navigationController.topViewController;
+    XCTAssert([paymentVc isKindOfClass:[OLPaymentViewController class]]);
+    
+    [paymentVc onButtonPayWithCreditCardClicked];
+    
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Wait for Payment VC"];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1.5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+        [expectation fulfill];
+    });
+    
+    [self waitForExpectationsWithTimeout:3 handler:NULL];
+    
+    OLCreditCardCaptureViewController *creditCardVc = (OLCreditCardCaptureViewController *)paymentVc.presentedViewController;
+    creditCardVc.rootVC.textFieldCVV.text = @"111";
+    creditCardVc.rootVC.textFieldCardNumber.text = @"4242424242424242";
+    creditCardVc.rootVC.textFieldExpiryDate.text = @"12/20";
+    
+    [creditCardVc.rootVC onButtonPayClicked];
+    
+    expectation = [self expectationWithDescription:@"Wait for order complete"];
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        while (!printOrder.printed) {
+            sleep(3);
+        }
+        [expectation fulfill];
+    });
+    
+    [self waitForExpectationsWithTimeout:120 handler:NULL];
+}
+
+- (void)testStartWithPrintOrder{
+    [self kvoObserveObject:[OLKiteABTesting sharedInstance] forValue:@"launchWithPrintOrderVariant" andExecuteBlock:^{
+       [OLKiteABTesting sharedInstance].launchWithPrintOrderVariant = @"Checkout";
+    }];
+    
+    id<OLPrintJob> job = [OLPrintJob printJobWithTemplateId:@"squares" OLAssets:[OLKiteTestHelper urlAssets]];
+    
+    OLPrintOrder *printOrder = [[OLPrintOrder alloc] init];
+    [printOrder addPrintJob:job];
+    printOrder.shippingAddress = [OLAddress kiteTeamAddress];
+    printOrder.email = @"ios_unit_test@kite.ly";
+    printOrder.phone = @"1234123412";
+    
+    OLKiteViewController *vc = [[OLKiteViewController alloc] initWithPrintOrder:printOrder];
+    UINavigationController *rootVc = (UINavigationController *)[[UIApplication sharedApplication].delegate window].rootViewController;
+    
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Load KiteViewController"];
+    [rootVc.topViewController presentViewController:vc animated:YES completion:^{
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            while (vc.childViewControllers.count == 0) {
+                sleep(1);
+            }
+            
+            UINavigationController *nav = (UINavigationController *)vc.childViewControllers.firstObject;
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+                if ([nav.parentViewController isKindOfClass:[OLKiteViewController class]]){
+                    [expectation fulfill];
+                }
+                else{
+                    XCTFail(@"Did not show KiteViewController");
+                }
+            });
+            
+        });
+    }];
+
+    [self waitForExpectationsWithTimeout:60 handler:NULL];
+    
+    UINavigationController *nav = (UINavigationController *)vc.childViewControllers.firstObject;
+    XCTAssert([nav.topViewController isKindOfClass:[OLPaymentViewController class]], @"Not showing payment vc");
+}
+
+- (void)testCompleteFramesJourney{
+    NSData *data1 = [NSData dataWithContentsOfFile:[[NSBundle bundleForClass:[OLKiteTestHelper class]] pathForResource:@"1" ofType:@"jpg"]];
+    NSData *data2 = [NSData dataWithContentsOfFile:[[NSBundle bundleForClass:[OLKiteTestHelper class]] pathForResource:@"2" ofType:@"png"]];
+    
+    PHFetchResult *fetchResult = [PHAsset fetchAssetsWithMediaType:PHAssetMediaTypeImage options:nil];
+    XCTAssert(fetchResult.count > 0, @"There are no assets available");
+    PHAsset *phAsset = [fetchResult objectAtIndex:arc4random() % fetchResult.count];
+    
+    NSArray *olAssets = @[
+                          [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/1.jpg"]],
+                          [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/2.jpg"]],
+                          [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/3.jpg"]],
+                          [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/4.jpg"]],
+                          [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/1.jpg"]],
+                          [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/2.jpg"]],
+                          [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/3.jpg"]],
+                          [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/4.jpg"]],
+                          [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/1.jpg"]],
+                          [OLAsset assetWithDataAsJPEG:data1],
+                          [OLAsset assetWithDataAsPNG:data2],
+                          [OLAsset assetWithPHAsset:phAsset]
+                          ];
+    
+    NSMutableArray *printPhotos = [[NSMutableArray alloc] initWithCapacity:700];
+    for (OLAsset *asset in olAssets){
+        OLPrintPhoto *photo = [[OLPrintPhoto alloc] init];
+        photo.asset = asset;
+        [printPhotos addObject:photo];
+    }
+    
+    OLProductHomeViewController *productHomeVc = [self loadKiteViewController];
+    [self chooseClass:@"Frames" onOLProductHomeViewController:productHomeVc];
+    
+    OLProductTypeSelectionViewController *productTypeVc = (OLProductTypeSelectionViewController *)productHomeVc.navigationController.topViewController;
+    XCTAssert([productTypeVc isKindOfClass:[OLProductTypeSelectionViewController class]]);
+    
+    [self chooseProduct:@"Frames 50cm (2x2)" onOLProductTypeSelectionViewController:productTypeVc];
+    
+    [self tapNextOnViewController:productHomeVc.navigationController.topViewController];
+    
+    OLPhotoSelectionViewController *photoVc = (OLPhotoSelectionViewController *)productHomeVc.navigationController.topViewController;
+    XCTAssert([photoVc isKindOfClass:[OLPhotoSelectionViewController class]]);
+    
+    photoVc.userSelectedPhotos = printPhotos;
+    
+    [self tapNextOnViewController:photoVc];
+    
+    OLFrameOrderReviewViewController *reviewVc = (OLFrameOrderReviewViewController *)productHomeVc.navigationController.topViewController;
+    XCTAssert([reviewVc isKindOfClass:[OLFrameOrderReviewViewController class]]);
+    
+    OLKiteViewController *kiteVc = [OLKiteUtils kiteVcForViewController:reviewVc];
+    OLPrintOrder *printOrder = kiteVc.printOrder;
+    printOrder.shippingAddress = [OLAddress kiteTeamAddress];
+    printOrder.email = @"ios_unit_test@kite.ly";
+    [self tapNextOnViewController:reviewVc];
+    
+    XCTAssert(![printOrder isSavedInHistory], @"Print order should not be in history");
+    
+    OLPaymentViewController *paymentVc = (OLPaymentViewController *)productHomeVc.navigationController.topViewController;
+    XCTAssert([paymentVc isKindOfClass:[OLPaymentViewController class]]);
+    
+    [paymentVc onButtonPayWithCreditCardClicked];
+    
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Wait for Payment VC"];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1.5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+        [expectation fulfill];
+    });
+    
+    [self waitForExpectationsWithTimeout:3 handler:NULL];
+    
+    OLCreditCardCaptureViewController *creditCardVc = (OLCreditCardCaptureViewController *)paymentVc.presentedViewController;
+    creditCardVc.rootVC.textFieldCVV.text = @"111";
+    creditCardVc.rootVC.textFieldCardNumber.text = @"4242424242424242";
+    creditCardVc.rootVC.textFieldExpiryDate.text = @"12/20";
+    
+    [creditCardVc.rootVC onButtonPayClicked];
+    
+    expectation = [self expectationWithDescription:@"Wait for order complete"];
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        while (!printOrder.printed) {
+            sleep(3);
+        }
+        [expectation fulfill];
+    });
+    
+    [self waitForExpectationsWithTimeout:120 handler:NULL];
 }
 
 //- (void)testCompleteAccessoryOrder{

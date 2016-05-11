@@ -46,6 +46,7 @@
 //    }
 }
 
+#if __IPHONE_OS_VERSION_MIN_REQUIRED < 80000
 - (BOOL)shouldAutorotate {
     UIViewController *vc;
     if (self.presentedViewController) vc = self.presentedViewController;
@@ -70,5 +71,6 @@
         return UIInterfaceOrientationMaskPortrait;
     }
 }
+#endif
 
 @end

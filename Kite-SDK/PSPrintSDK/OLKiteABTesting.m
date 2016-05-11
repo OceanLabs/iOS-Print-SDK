@@ -153,18 +153,18 @@ id safeObject(id obj){
     [defaults synchronize];
 }
 
-- (UIColor *)darkThemeColor1{
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    UIColor *color;
-    NSString *hex = [defaults objectForKey:@"ly.kite.theme.dark.color1"];
-    if (hex){
-        color = [UIColor colorWithHexString:hex];
-    }
-    else{
-        color = [UIColor colorWithHexString:@"6867E8"];
-    }
-    return color;
-}
+//- (UIColor *)darkThemeColor1{
+//    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+//    UIColor *color;
+//    NSString *hex = [defaults objectForKey:@"ly.kite.theme.dark.color1"];
+//    if (hex){
+//        color = [UIColor colorWithHexString:hex];
+//    }
+//    else{
+//        color = [UIColor colorWithHexString:@"6867E8"];
+//    }
+//    return color;
+//}
 
 - (void)prefetchRemoteImages{
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -192,26 +192,6 @@ id safeObject(id obj){
 - (NSString *)headerLogoURL{
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     return [defaults objectForKey:kOLKiteThemeHeaderLogoImageURL];
-}
-
-- (NSString *)checkoutProgress1URL{
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    return [defaults objectForKey:kOLKiteThemeCheckoutProgress1];
-}
-
-- (NSString *)checkoutProgress2URL{
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    return [defaults objectForKey:kOLKiteThemeCheckoutProgress2];
-}
-
-- (NSString *)checkoutProgress1BgURL{
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    return [defaults objectForKey:kOLKiteThemeCheckoutProgress1Bg];
-}
-
-- (NSString *)checkoutProgress2BgURL{
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    return [defaults objectForKey:kOLKiteThemeCheckoutProgress2Bg];
 }
 
 - (NSString *)receiptSuccessURL{
