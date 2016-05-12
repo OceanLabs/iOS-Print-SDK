@@ -197,4 +197,10 @@
     XCTAssert([job.productName isEqualToString:[OLProductTemplate templateWithId:@"photobook_small_portrait"].name]);
 }
 
+- (void)testCreditCardExpiryFormat{
+    NSString *s = @"1020";
+    s = [NSString stringByFormattingCreditCardExpiry:s];
+    XCTAssert([s isEqualToString:@"10/20"]);
+}
+
 @end

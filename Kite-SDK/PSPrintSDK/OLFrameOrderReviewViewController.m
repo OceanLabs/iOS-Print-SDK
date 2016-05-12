@@ -88,15 +88,6 @@ UIViewControllerPreviewingDelegate>
 
 CGFloat margin = 2;
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -191,10 +182,6 @@ CGFloat margin = 2;
     NSMutableArray *reversePhotos = [self.framePhotos mutableCopy];
     [OLFrameOrderReviewViewController reverseRowsOfPhotosInArray:reversePhotos forProduct:self.product];
     self.checkoutPhotos = reversePhotos;
-}
-
-- (BOOL)shouldShowAddMorePhotos{
-    return NO;
 }
 
 -(NSUInteger) totalNumberOfExtras{

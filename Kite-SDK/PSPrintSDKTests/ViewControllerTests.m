@@ -37,6 +37,7 @@
 #import "OLPrintOrder+History.h"
 #import "OLFrameOrderReviewViewController.h"
 #import "OLInfoPageViewController.h"
+#import "OLImagePreviewViewController.h"
 
 @import Photos;
 
@@ -93,6 +94,8 @@
 
 @interface OLOrderReviewViewController ()
 @property (strong, nonatomic) UIButton *nextButton;
+- (UIViewController *)previewingContext:(id<UIViewControllerPreviewing>)previewingContext viewControllerForLocation:(CGPoint)location;
+- (void)previewingContext:(id<UIViewControllerPreviewing>)previewingContext commitViewController:(UIViewController *)viewControllerToCommit;
 - (void) deletePhotoAtIndex:(NSUInteger)index;
 @end
 
@@ -160,6 +163,11 @@
 @interface OLUpsellViewController ()
 @property (weak, nonatomic) IBOutlet UIButton *acceptButton;
 @property (weak, nonatomic) IBOutlet UIButton *declineButton;
+@end
+
+@interface OLScrollCropViewController ()
+- (IBAction)onBarButtonDoneTapped:(UIBarButtonItem *)sender;
+- (IBAction)onBarButtonCancelTapped:(UIBarButtonItem *)sender;
 @end
 
 @implementation ViewControllerTests
@@ -785,12 +793,18 @@
     UIStoryboard *sb = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle bundleForClass:[OLPhotoSelectionViewController class]]];
     XCTAssert(sb);
     
-    OLScrollCropViewController *vc = [sb instantiateViewControllerWithIdentifier:@"PrintOrderHistoryViewController"];
+    PrintOrderHistoryViewController *vc = [sb instantiateViewControllerWithIdentifier:@"PrintOrderHistoryViewController"];
     UINavigationController *rootVc = (UINavigationController *)[[UIApplication sharedApplication].delegate window].rootViewController;
     
     [self performUIAction:^{
         [rootVc.topViewController presentViewController:vc animated:YES completion:NULL];
     }];
+    
+    if ([OLPrintOrder printOrderHistory].count > 0){
+        [self performUIAction:^{
+            [vc tableView:vc.tableView didSelectRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
+        }];
+    }
 }
 
 - (void)testAddressEditViewController{
@@ -955,8 +969,20 @@
         [button sendActionsForControlEvents:UIControlEventTouchUpInside];
     }];
     
+    XCTAssert([reviewVc.presentedViewController isKindOfClass:[OLScrollCropViewController class]], @"Did not show crop screen");
+    
     [self performUIAction:^{
-        [reviewVc dismissViewControllerAnimated:YES completion:NULL];
+        [(OLScrollCropViewController *)reviewVc.presentedViewController onBarButtonDoneTapped:nil];
+    }];
+    
+    UIViewController *scrollVc = [reviewVc previewingContext:nil viewControllerForLocation:[cell convertPoint:CGPointMake(100, 100) toView:reviewVc.collectionView]];
+    XCTAssert([scrollVc isKindOfClass:[OLImagePreviewViewController class]]);
+    [reviewVc previewingContext:nil commitViewController:scrollVc];
+    
+    XCTAssert([reviewVc.presentedViewController isKindOfClass:[OLScrollCropViewController class]], @"Did not show crop screen");
+    
+    [self performUIAction:^{
+        [(OLScrollCropViewController *)reviewVc.presentedViewController onBarButtonCancelTapped:nil];
     }];
     
     OLKiteViewController *kiteVc = [OLKiteUtils kiteVcForViewController:reviewVc];
