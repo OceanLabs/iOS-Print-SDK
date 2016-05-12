@@ -324,50 +324,6 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
     return kOLTemplateUINA;
 }
 
-+ (NSString *)templateUIStringWithTemplateClass:(OLTemplateUI)templateClass{
-    switch (templateClass) {
-        case kOLTemplateUICase:
-            return @"Case";
-            break;
-        case kOLTemplateUICircle:
-            return @"Circle";
-            break;
-        case kOLTemplateUIFrame:
-            return @"Frame";
-            break;
-        case kOLTemplateUINA:
-            return @"NA Class";
-            break;
-        case kOLTemplateUIPoster:
-            return @"Poster";
-            break;
-        case kOLTemplateUIRectagle:
-            return @"Rectangle";
-            break;
-        case kOLTemplateUINonCustomizable:
-            return @"Non-Customizable";
-            break;
-        case kOLTemplateUIPostcard:
-            return @"Postcard";
-            break;
-        case kOLTemplateUIPhotobook:
-            return @"Photobook";
-            break;
-            
-        default:
-            return @"";
-            break;
-    }
-}
-
-- (NSString *)description {
-    NSMutableString *supportedCurrencies = [[NSMutableString alloc] init];
-    for (NSString *currency in self.costsByCurrencyCode) {
-        [supportedCurrencies appendFormat:@" %@", currency];
-    }
-    return [NSString stringWithFormat:@"%@%@ (%@)%@ quantity: %lu",self.enabled ? @"enabled " : @"disabled ", self.identifier, self.name, supportedCurrencies, (unsigned long) self.quantityPerSheet];
-}
-
 #pragma mark - NSCoding protocol methods
 - (void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:self.identifier forKey:kKeyIdentifier];

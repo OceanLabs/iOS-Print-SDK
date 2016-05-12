@@ -264,20 +264,6 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
 #endif
 }
 
-- (UIImage *)imageWithColor:(UIColor *)color {
-    CGRect rect = CGRectMake(0.0f, 0.0f, 1.0f, 1.0f);
-    UIGraphicsBeginImageContext(rect.size);
-    CGContextRef context = UIGraphicsGetCurrentContext();
-    
-    CGContextSetFillColorWithColor(context, [color CGColor]);
-    CGContextFillRect(context, rect);
-    
-    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    
-    return image;
-}
-
 - (void)onUserSelectedPhotoCountChange {
     NSMutableArray *toRemove = [[NSMutableArray alloc] init];
     for (OLPrintPhoto *printPhoto in self.userDisabledPhotos){
@@ -1703,18 +1689,6 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
     [editor dismissViewControllerAnimated:YES completion:NULL];
 }
 #endif
-
-#pragma mark - Tear down and restore
-
-- (void)tearDownLargeObjectsFromMemory{
-    [super tearDownLargeObjectsFromMemory];
-    [self.collectionView reloadData];
-}
-
-- (void)recreateTornDownLargeObjectsToMemory{
-    [super recreateTornDownLargeObjectsToMemory];
-    [self.collectionView reloadData];
-}
 
 #if __IPHONE_OS_VERSION_MIN_REQUIRED < 80000
 #pragma mark UIActionSheet Delegate (only used on iOS 7)

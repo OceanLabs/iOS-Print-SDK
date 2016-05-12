@@ -87,7 +87,6 @@ typedef enum {
 - (NSString *_Nonnull)currencyForCurrentLocale;
 - (void)setSupportedOptions:(NSArray *_Nullable)options;
 + (OLTemplateUI)templateUIWithIdentifier:(NSString *_Nonnull)identifier;
-+ (NSString *_Nonnull)templateUIStringWithTemplateClass:(OLTemplateUI)templateClass;
 
 + (void)sync;
 + (void)syncWithCompletionHandler:(void(^_Nullable)(NSArray <OLProductTemplate *>* _Nullable templates, NSError * _Nullable error))handler;

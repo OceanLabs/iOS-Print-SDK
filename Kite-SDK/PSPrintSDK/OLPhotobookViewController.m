@@ -499,15 +499,6 @@ UINavigationControllerDelegate, OLUpsellViewControllerDelegate
     [self dismissViewControllerAnimated:YES completion:NULL];
 }
 
-- (BOOL)prefersStatusBarHidden{
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8){
-        return YES;
-    }
-    else{
-        return [super prefersStatusBarHidden];
-    }
-}
-
 - (void)viewDidLayoutSubviews{
     [super viewDidLayoutSubviews];
     

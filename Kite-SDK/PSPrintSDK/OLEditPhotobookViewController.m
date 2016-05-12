@@ -455,10 +455,6 @@ UINavigationControllerDelegate>
     [[self findPageForImageIndex:self.longPressImageIndex] loadImageWithCompletionHandler:NULL];
 }
 
-- (void)addPage{
-    
-}
-
 - (void)cropImage{
     OLPrintPhoto *cropPhoto;
     UIImageView *imageView;
