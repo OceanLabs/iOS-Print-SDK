@@ -75,7 +75,7 @@ static CGFloat fadeTime = 0.3;
 #endif
 
 
-@property (assign, nonatomic) BOOL useDarkTheme; //XXX: Delete this when exposed in header
+//@property (assign, nonatomic) BOOL useDarkTheme; //XXX: Delete this when exposed in header
 
 // Because template sync happens in the constructor it may complete before the OLKiteViewController has appeared. In such a case where sync does
 // complete first we make a note to immediately transition to the appropriate view when the OLKiteViewController does appear:
@@ -144,12 +144,12 @@ static CGFloat fadeTime = 0.3;
 //    return hidden;
 //}
 
-- (UIStatusBarStyle)preferredStatusBarStyle{
-    if (self.childViewControllers.count == 0){
-        return self.useDarkTheme ? UIStatusBarStyleLightContent : UIStatusBarStyleDefault;
-    }
-    return [[self.childViewControllers firstObject] preferredStatusBarStyle];
-}
+//- (UIStatusBarStyle)preferredStatusBarStyle{
+//    if (self.childViewControllers.count == 0){
+//        return self.useDarkTheme ? UIStatusBarStyleLightContent : UIStatusBarStyleDefault;
+//    }
+//    return [[self.childViewControllers firstObject] preferredStatusBarStyle];
+//}
 
 -(NSMutableArray *) userSelectedPhotos{
     if (!_userSelectedPhotos || _userSelectedPhotos.count == 0){
@@ -219,11 +219,11 @@ static CGFloat fadeTime = 0.3;
 -(void)viewDidLoad {
     [super viewDidLoad];
     
-    if (self.useDarkTheme){
-        self.navigationBar.barTintColor = [UIColor blackColor];
-        self.navigationBar.tintColor = [UIColor grayColor];
-        self.navigationBar.barStyle = UIBarStyleBlackTranslucent;
-    }
+//    if (self.useDarkTheme){
+//        self.navigationBar.barTintColor = [UIColor blackColor];
+//        self.navigationBar.tintColor = [UIColor grayColor];
+//        self.navigationBar.barStyle = UIBarStyleBlackTranslucent;
+//    }
     
     [SDImageCache sharedImageCache].maxMemoryCountLimit = 1;
     [[NSURLCache sharedURLCache] removeAllCachedResponses];
