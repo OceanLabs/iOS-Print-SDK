@@ -408,6 +408,7 @@
                 [vc safePerformSelector:@selector(setUserPhone:) withObject:self.userPhone];
                 [vc safePerformSelector:@selector(setKiteDelegate:) withObject:self.delegate];
                 [vc safePerformSelector:@selector(setProduct:) withObject:self.product];
+                [vc safePerformSelector:@selector(setUserSelectedPhotos:) withObject:self.userSelectedPhotos];
                 [self.navigationController pushViewController:vc animated:YES];
             }];
             return;
@@ -416,6 +417,7 @@
         [vc safePerformSelector:@selector(setUserPhone:) withObject:self.userPhone];
         [vc safePerformSelector:@selector(setKiteDelegate:) withObject:self.delegate];
         [vc safePerformSelector:@selector(setProduct:) withObject:self.product];
+        [vc safePerformSelector:@selector(setUserSelectedPhotos:) withObject:self.userSelectedPhotos];
         [self.navigationController pushViewController:vc animated:YES];
         return;
     }

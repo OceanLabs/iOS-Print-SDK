@@ -36,6 +36,7 @@
 #import "OLUpsellViewController.h"
 #import "OLPrintOrder+History.h"
 #import "OLFrameOrderReviewViewController.h"
+#import "OLInfoPageViewController.h"
 
 @import Photos;
 
@@ -179,6 +180,7 @@
 - (void)tearDown {
     UINavigationController *rootVc = (UINavigationController *)[[UIApplication sharedApplication].delegate window].rootViewController;
     [rootVc.presentedViewController dismissViewControllerAnimated:NO completion:NULL];
+    [[OLKiteABTesting sharedInstance] removeObserver:self forKeyPath:self.kvoValueToObserve];
     
     // Put teardown code here. This method is called after the invocation of each test method in the class.
     [super tearDown];
@@ -316,7 +318,7 @@
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context{
-    if ([keyPath isEqualToString:@"launchWithPrintOrderVariant"]){
+    if ([keyPath isEqualToString:self.kvoValueToObserve]){
         [self.kvoObjectToObserve removeObserver:self forKeyPath:self.kvoValueToObserve];
         self.kvoBlockToExecute();
         [self.kvoObjectToObserve addObserver:self forKeyPath:self.kvoValueToObserve options:NSKeyValueObservingOptionNew context:nil];
@@ -722,6 +724,8 @@
         [productHomeVc collectionView:productHomeVc.collectionView didSelectItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
     }];
     
+    XCTAssert([productHomeVc.navigationController.topViewController isKindOfClass:[OLInfoPageViewController class]], @"Not showing info page");
+    
     [self performUIAction:^{
         [productHomeVc.navigationController popViewControllerAnimated:YES];
     }];
@@ -942,6 +946,16 @@
         [reviewVc deletePhotoAtIndex:indexPath.item];
     }];
     
+    button = [cell viewWithTag:11];
+    
+    [self performUIAction:^{
+        [button sendActionsForControlEvents:UIControlEventTouchUpInside];
+    }];
+    
+    [self performUIAction:^{
+        [reviewVc dismissViewControllerAnimated:YES completion:NULL];
+    }];
+    
     OLKiteViewController *kiteVc = [OLKiteUtils kiteVcForViewController:reviewVc];
     OLPrintOrder *printOrder = kiteVc.printOrder;
     printOrder.shippingAddress = [OLAddress kiteTeamAddress];
@@ -981,7 +995,7 @@
     [self waitForExpectationsWithTimeout:120 handler:NULL];
 }
 
-- (void)testStartWithPrintOrder{
+- (void)testStartWithPrintOrderVariantCheckout{
     [self kvoObserveObject:[OLKiteABTesting sharedInstance] forValue:@"launchWithPrintOrderVariant" andExecuteBlock:^{
        [OLKiteABTesting sharedInstance].launchWithPrintOrderVariant = @"Checkout";
     }];
@@ -1020,6 +1034,286 @@
     [self waitForExpectationsWithTimeout:60 handler:NULL];
     
     UINavigationController *nav = (UINavigationController *)vc.childViewControllers.firstObject;
+    XCTAssert([nav.topViewController isKindOfClass:[OLPaymentViewController class]], @"Not showing payment vc");
+}
+
+- (void)testStartWithPrintOrderVariantOverviewReviewCheckout{
+    [self kvoObserveObject:[OLKiteABTesting sharedInstance] forValue:@"launchWithPrintOrderVariant" andExecuteBlock:^{
+        [OLKiteABTesting sharedInstance].launchWithPrintOrderVariant = @"Overview-Review-Checkout";
+    }];
+    
+    NSData *data1 = [NSData dataWithContentsOfFile:[[NSBundle bundleForClass:[OLKiteTestHelper class]] pathForResource:@"1" ofType:@"jpg"]];
+    NSData *data2 = [NSData dataWithContentsOfFile:[[NSBundle bundleForClass:[OLKiteTestHelper class]] pathForResource:@"2" ofType:@"png"]];
+    
+    PHFetchResult *fetchResult = [PHAsset fetchAssetsWithMediaType:PHAssetMediaTypeImage options:nil];
+    XCTAssert(fetchResult.count > 0, @"There are no assets available");
+    PHAsset *phAsset = [fetchResult objectAtIndex:arc4random() % fetchResult.count];
+    
+    NSArray *olAssets = @[
+                          [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/1.jpg"]],
+                          [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/2.jpg"]],
+                          [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/3.jpg"]],
+                          [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/4.jpg"]],
+                          [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/1.jpg"]],
+                          [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/2.jpg"]],
+                          [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/3.jpg"]],
+                          [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/4.jpg"]],
+                          [OLAsset assetWithDataAsJPEG:data1],
+                          [OLAsset assetWithDataAsPNG:data2],
+                          [OLAsset assetWithPHAsset:phAsset]
+                          ];
+    
+    id<OLPrintJob> job = [OLPrintJob printJobWithTemplateId:@"squares" OLAssets:olAssets];
+    
+    OLPrintOrder *printOrder = [[OLPrintOrder alloc] init];
+    [printOrder addPrintJob:job];
+    printOrder.shippingAddress = [OLAddress kiteTeamAddress];
+    printOrder.email = @"ios_unit_test@kite.ly";
+    printOrder.phone = @"1234123412";
+    
+    OLKiteViewController *vc = [[OLKiteViewController alloc] initWithPrintOrder:printOrder];
+    UINavigationController *rootVc = (UINavigationController *)[[UIApplication sharedApplication].delegate window].rootViewController;
+    
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Load KiteViewController"];
+    [rootVc.topViewController presentViewController:vc animated:YES completion:^{
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            while (vc.childViewControllers.count == 0) {
+                sleep(1);
+            }
+            
+            UINavigationController *nav = (UINavigationController *)vc.childViewControllers.firstObject;
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+                if ([nav.parentViewController isKindOfClass:[OLKiteViewController class]]){
+                    [expectation fulfill];
+                }
+                else{
+                    XCTFail(@"Did not show KiteViewController");
+                }
+            });
+            
+        });
+    }];
+    
+    [self waitForExpectationsWithTimeout:60 handler:NULL];
+    
+    UINavigationController *nav = (UINavigationController *)vc.childViewControllers.firstObject;
+    XCTAssert([nav.topViewController isKindOfClass:[OLProductOverviewViewController class]], @"Not showing Overview vc");
+    
+    [self tapNextOnViewController:nav.topViewController];
+    XCTAssert([nav.topViewController isKindOfClass:[OLPhotoSelectionViewController class]], @"Not showing Review vc");
+    
+    [self tapNextOnViewController:nav.topViewController];
+    XCTAssert([nav.topViewController isKindOfClass:[OLOrderReviewViewController class]], @"Not showing Review vc");
+    
+    [self tapNextOnViewController:nav.topViewController];
+    XCTAssert([nav.topViewController isKindOfClass:[OLPaymentViewController class]], @"Not showing payment vc");
+}
+
+- (void)testStartWithPrintOrderVariantReviewCheckout{
+    [self kvoObserveObject:[OLKiteABTesting sharedInstance] forValue:@"launchWithPrintOrderVariant" andExecuteBlock:^{
+        [OLKiteABTesting sharedInstance].launchWithPrintOrderVariant = @"Review-Checkout";
+    }];
+    
+    NSData *data1 = [NSData dataWithContentsOfFile:[[NSBundle bundleForClass:[OLKiteTestHelper class]] pathForResource:@"1" ofType:@"jpg"]];
+    NSData *data2 = [NSData dataWithContentsOfFile:[[NSBundle bundleForClass:[OLKiteTestHelper class]] pathForResource:@"2" ofType:@"png"]];
+    
+    PHFetchResult *fetchResult = [PHAsset fetchAssetsWithMediaType:PHAssetMediaTypeImage options:nil];
+    XCTAssert(fetchResult.count > 0, @"There are no assets available");
+    PHAsset *phAsset = [fetchResult objectAtIndex:arc4random() % fetchResult.count];
+    
+    NSArray *olAssets = @[
+                          [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/1.jpg"]],
+                          [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/2.jpg"]],
+                          [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/3.jpg"]],
+                          [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/4.jpg"]],
+                          [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/1.jpg"]],
+                          [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/2.jpg"]],
+                          [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/3.jpg"]],
+                          [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/4.jpg"]],
+                          [OLAsset assetWithDataAsJPEG:data1],
+                          [OLAsset assetWithDataAsPNG:data2],
+                          [OLAsset assetWithPHAsset:phAsset]
+                          ];
+    
+    id<OLPrintJob> job = [OLPrintJob printJobWithTemplateId:@"squares" OLAssets:olAssets];
+    
+    OLPrintOrder *printOrder = [[OLPrintOrder alloc] init];
+    [printOrder addPrintJob:job];
+    printOrder.shippingAddress = [OLAddress kiteTeamAddress];
+    printOrder.email = @"ios_unit_test@kite.ly";
+    printOrder.phone = @"1234123412";
+    
+    OLKiteViewController *vc = [[OLKiteViewController alloc] initWithPrintOrder:printOrder];
+    UINavigationController *rootVc = (UINavigationController *)[[UIApplication sharedApplication].delegate window].rootViewController;
+    
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Load KiteViewController"];
+    [rootVc.topViewController presentViewController:vc animated:YES completion:^{
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            while (vc.childViewControllers.count == 0) {
+                sleep(1);
+            }
+            
+            UINavigationController *nav = (UINavigationController *)vc.childViewControllers.firstObject;
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+                if ([nav.parentViewController isKindOfClass:[OLKiteViewController class]]){
+                    [expectation fulfill];
+                }
+                else{
+                    XCTFail(@"Did not show KiteViewController");
+                }
+            });
+            
+        });
+    }];
+    
+    [self waitForExpectationsWithTimeout:60 handler:NULL];
+    
+    UINavigationController *nav = (UINavigationController *)vc.childViewControllers.firstObject;
+    XCTAssert([nav.topViewController isKindOfClass:[OLPhotoSelectionViewController class]], @"Not showing Review vc");
+    
+    [self tapNextOnViewController:nav.topViewController];
+    XCTAssert([nav.topViewController isKindOfClass:[OLOrderReviewViewController class]], @"Not showing Review vc");
+    
+    [self tapNextOnViewController:nav.topViewController];
+    XCTAssert([nav.topViewController isKindOfClass:[OLPaymentViewController class]], @"Not showing payment vc");
+}
+
+- (void)testStartWithPrintOrderVariantOverviewCheckout{
+    [self kvoObserveObject:[OLKiteABTesting sharedInstance] forValue:@"launchWithPrintOrderVariant" andExecuteBlock:^{
+        [OLKiteABTesting sharedInstance].launchWithPrintOrderVariant = @"Overview-Checkout";
+    }];
+    
+    NSData *data1 = [NSData dataWithContentsOfFile:[[NSBundle bundleForClass:[OLKiteTestHelper class]] pathForResource:@"1" ofType:@"jpg"]];
+    NSData *data2 = [NSData dataWithContentsOfFile:[[NSBundle bundleForClass:[OLKiteTestHelper class]] pathForResource:@"2" ofType:@"png"]];
+    
+    PHFetchResult *fetchResult = [PHAsset fetchAssetsWithMediaType:PHAssetMediaTypeImage options:nil];
+    XCTAssert(fetchResult.count > 0, @"There are no assets available");
+    PHAsset *phAsset = [fetchResult objectAtIndex:arc4random() % fetchResult.count];
+    
+    NSArray *olAssets = @[
+                          [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/1.jpg"]],
+                          [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/2.jpg"]],
+                          [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/3.jpg"]],
+                          [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/4.jpg"]],
+                          [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/1.jpg"]],
+                          [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/2.jpg"]],
+                          [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/3.jpg"]],
+                          [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/4.jpg"]],
+                          [OLAsset assetWithDataAsJPEG:data1],
+                          [OLAsset assetWithDataAsPNG:data2],
+                          [OLAsset assetWithPHAsset:phAsset]
+                          ];
+    
+    id<OLPrintJob> job = [OLPrintJob printJobWithTemplateId:@"squares" OLAssets:olAssets];
+    
+    OLPrintOrder *printOrder = [[OLPrintOrder alloc] init];
+    [printOrder addPrintJob:job];
+    printOrder.shippingAddress = [OLAddress kiteTeamAddress];
+    printOrder.email = @"ios_unit_test@kite.ly";
+    printOrder.phone = @"1234123412";
+    
+    OLKiteViewController *vc = [[OLKiteViewController alloc] initWithPrintOrder:printOrder];
+    UINavigationController *rootVc = (UINavigationController *)[[UIApplication sharedApplication].delegate window].rootViewController;
+    
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Load KiteViewController"];
+    [rootVc.topViewController presentViewController:vc animated:YES completion:^{
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            while (vc.childViewControllers.count == 0) {
+                sleep(1);
+            }
+            
+            UINavigationController *nav = (UINavigationController *)vc.childViewControllers.firstObject;
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+                if ([nav.parentViewController isKindOfClass:[OLKiteViewController class]]){
+                    [expectation fulfill];
+                }
+                else{
+                    XCTFail(@"Did not show KiteViewController");
+                }
+            });
+            
+        });
+    }];
+    
+    [self waitForExpectationsWithTimeout:60 handler:NULL];
+    
+    UINavigationController *nav = (UINavigationController *)vc.childViewControllers.firstObject;
+    XCTAssert([nav.topViewController isKindOfClass:[OLProductOverviewViewController class]], @"Not showing Overview vc, but: %@", [nav.topViewController class]);
+    
+    [self tapNextOnViewController:nav.topViewController];
+    XCTAssert([nav.topViewController isKindOfClass:[OLPaymentViewController class]], @"Not showing payment vc");
+}
+
+- (void)testStartWithPrintOrderVariantReviewOverviewCheckout{
+    [self kvoObserveObject:[OLKiteABTesting sharedInstance] forValue:@"launchWithPrintOrderVariant" andExecuteBlock:^{
+        [OLKiteABTesting sharedInstance].launchWithPrintOrderVariant = @"Review-Overview-Checkout";
+    }];
+    
+    NSData *data1 = [NSData dataWithContentsOfFile:[[NSBundle bundleForClass:[OLKiteTestHelper class]] pathForResource:@"1" ofType:@"jpg"]];
+    NSData *data2 = [NSData dataWithContentsOfFile:[[NSBundle bundleForClass:[OLKiteTestHelper class]] pathForResource:@"2" ofType:@"png"]];
+    
+    PHFetchResult *fetchResult = [PHAsset fetchAssetsWithMediaType:PHAssetMediaTypeImage options:nil];
+    XCTAssert(fetchResult.count > 0, @"There are no assets available");
+    PHAsset *phAsset = [fetchResult objectAtIndex:arc4random() % fetchResult.count];
+    
+    NSArray *olAssets = @[
+                          [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/1.jpg"]],
+                          [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/2.jpg"]],
+                          [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/3.jpg"]],
+                          [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/4.jpg"]],
+                          [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/1.jpg"]],
+                          [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/2.jpg"]],
+                          [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/3.jpg"]],
+                          [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/4.jpg"]],
+                          [OLAsset assetWithDataAsJPEG:data1],
+                          [OLAsset assetWithDataAsPNG:data2],
+                          [OLAsset assetWithPHAsset:phAsset]
+                          ];
+    
+    id<OLPrintJob> job = [OLPrintJob printJobWithTemplateId:@"squares" OLAssets:olAssets];
+    
+    OLPrintOrder *printOrder = [[OLPrintOrder alloc] init];
+    [printOrder addPrintJob:job];
+    printOrder.shippingAddress = [OLAddress kiteTeamAddress];
+    printOrder.email = @"ios_unit_test@kite.ly";
+    printOrder.phone = @"1234123412";
+    
+    OLKiteViewController *vc = [[OLKiteViewController alloc] initWithPrintOrder:printOrder];
+    UINavigationController *rootVc = (UINavigationController *)[[UIApplication sharedApplication].delegate window].rootViewController;
+    
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Load KiteViewController"];
+    [rootVc.topViewController presentViewController:vc animated:YES completion:^{
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            while (vc.childViewControllers.count == 0) {
+                sleep(1);
+            }
+            
+            UINavigationController *nav = (UINavigationController *)vc.childViewControllers.firstObject;
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+                if ([nav.parentViewController isKindOfClass:[OLKiteViewController class]]){
+                    [expectation fulfill];
+                }
+                else{
+                    XCTFail(@"Did not show KiteViewController");
+                }
+            });
+            
+        });
+    }];
+    
+    [self waitForExpectationsWithTimeout:60 handler:NULL];
+    
+    UINavigationController *nav = (UINavigationController *)vc.childViewControllers.firstObject;
+    XCTAssert([nav.topViewController isKindOfClass:[OLPhotoSelectionViewController class]], @"Not showing Review vc");
+    
+    [self tapNextOnViewController:nav.topViewController];
+    XCTAssert([nav.topViewController isKindOfClass:[OLOrderReviewViewController class]], @"Not showing Review vc");
+    
+    [self tapNextOnViewController:nav.topViewController];
+    
+    XCTAssert([nav.topViewController isKindOfClass:[OLProductOverviewViewController class]], @"Not showing Overview vc, but: %@", [nav.topViewController class]);
+    
+    [self tapNextOnViewController:nav.topViewController];
     XCTAssert([nav.topViewController isKindOfClass:[OLPaymentViewController class]], @"Not showing payment vc");
 }
 
