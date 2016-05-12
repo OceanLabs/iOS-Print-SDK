@@ -180,7 +180,10 @@
 - (void)tearDown {
     UINavigationController *rootVc = (UINavigationController *)[[UIApplication sharedApplication].delegate window].rootViewController;
     [rootVc.presentedViewController dismissViewControllerAnimated:NO completion:NULL];
-    [[OLKiteABTesting sharedInstance] removeObserver:self forKeyPath:self.kvoValueToObserve];
+    if (self.kvoValueToObserve){
+        [[OLKiteABTesting sharedInstance] removeObserver:self forKeyPath:self.kvoValueToObserve];
+        self.kvoValueToObserve = nil;
+    }
     
     // Put teardown code here. This method is called after the invocation of each test method in the class.
     [super tearDown];
