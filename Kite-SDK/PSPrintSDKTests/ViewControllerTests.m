@@ -133,6 +133,7 @@
 - (void)onBackgroundClicked;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 - (IBAction)onButtonEditClicked:(UIButton *)sender;
+- (IBAction)onShippingDetailsGestureRecognized:(id)sender;
 @end
 
 @interface OLScrollCropViewController ()
@@ -144,6 +145,7 @@
 @interface OLKiteABTesting ()
 @property (strong, nonatomic, readwrite) NSString *qualityBannerType;
 @property (strong, nonatomic, readwrite) NSString *launchWithPrintOrderVariant;
+@property (strong, nonatomic, readwrite) NSString *checkoutScreenType;
 @end
 
 @class OLCreditCardCaptureRootController;
@@ -902,6 +904,33 @@
         [vc onBackgroundClicked];
     }];
     
+    [self performUIAction:^{
+    }];
+    
+    [OLKiteABTesting sharedInstance].checkoutScreenType = @"Integrated";
+    
+    [self performUIAction:^{
+        [vc onShippingDetailsGestureRecognized:nil];
+    }];
+    
+    XCTAssert([[(OLNavigationController *)vc.navigationController.presentedViewController topViewController] isKindOfClass:[OLIntegratedCheckoutViewController class]] ,@"");
+    
+    [self performUIAction:^{
+        [(OLCheckoutViewController *)[(OLNavigationController *)vc.navigationController.presentedViewController topViewController] onButtonDoneClicked];
+    }];
+    
+    [OLKiteABTesting sharedInstance].checkoutScreenType = @"Classic";
+    
+    [self performUIAction:^{
+        [vc onShippingDetailsGestureRecognized:nil];
+    }];
+    
+    XCTAssert([[(OLNavigationController *)vc.navigationController.presentedViewController topViewController] isKindOfClass:[OLCheckoutViewController class]] ,@"");
+    
+    [self performUIAction:^{
+        [(OLCheckoutViewController *)[(OLNavigationController *)vc.navigationController.presentedViewController topViewController] onButtonDoneClicked];
+    }];
+    
     UITableViewCell *cell =  [vc tableView:vc.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
     
     [self performUIAction:^{
@@ -909,7 +938,6 @@
         [plusButton sendActionsForControlEvents:UIControlEventTouchUpInside];
         XCTAssert([job extraCopies] == 1);
     }];
-    
     
     [self performUIAction:^{
         UIButton *minusButton = [cell.contentView viewWithTag:10];

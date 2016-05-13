@@ -99,7 +99,9 @@ NSInteger OLPhotoSelectionMargin = 0;
 
 #define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
 
+#if __IPHONE_OS_VERSION_MIN_REQUIRED < 80000
 static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
+#endif
 
 @interface OLKitePrintSDK (Private)
 #ifdef OL_KITE_OFFER_ADOBE
