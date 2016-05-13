@@ -222,6 +222,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 @property (assign, nonatomic) CGFloat keyboardAnimationPercent;
 @property (assign, nonatomic) BOOL authorizedApplePay;
 @property (assign, nonatomic) BOOL usedContinueShoppingButton;
+@property (assign, nonatomic) CGRect originalPromoBoxFrame;
 
 @end
 
@@ -483,25 +484,25 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 }
 
 - (void)keyboardDidShow:(NSNotification *)notification {
+    if (self.promoBoxTopCon.constant == 2){
+        self.originalPromoBoxFrame = self.promoBox.frame;
+    }
     NSDictionary *userInfo = [notification userInfo];
     NSInteger animationOptions = [[userInfo objectForKey:UIKeyboardAnimationCurveUserInfoKey] integerValue];
     CGSize size = [[userInfo objectForKey: UIKeyboardFrameEndUserInfoKey] CGRectValue].size;
     CGFloat time = [[userInfo objectForKey: UIKeyboardAnimationDurationUserInfoKey] doubleValue];
     
-    CGFloat diff = size.height - (self.view.frame.size.height - (self.promoBox.frame.origin.y + self.promoBox.frame.size.height));
+    CGFloat diff = size.height - (self.view.frame.size.height - (self.originalPromoBoxFrame.origin.y + self.promoBox.frame.size.height));
     
-    
-    if (diff > 0){
-        self.keyboardAnimationPercent = diff / size.height;
-        if ([self.promoCodeTextField isFirstResponder]){
-            self.promoBoxBottomCon.constant = 2 + diff;
-            self.promoBoxTopCon.constant = 2 - diff;
-            [UIView animateKeyframesWithDuration:time  delay:0 options:animationOptions << 16 animations:^{
-                [UIView addKeyframeWithRelativeStartTime:time*(1-self.keyboardAnimationPercent*((1-self.keyboardAnimationPercent))) relativeDuration:time *(1-self.keyboardAnimationPercent) animations:^{
-                    [self.view layoutIfNeeded];
-                }];
-            }completion:^(BOOL finished){}];
-        }
+    self.keyboardAnimationPercent = diff / size.height;
+    if ([self.promoCodeTextField isFirstResponder]){
+        self.promoBoxBottomCon.constant = 2 + diff;
+        self.promoBoxTopCon.constant = 2 - diff;
+        [UIView animateKeyframesWithDuration:time  delay:0 options:animationOptions << 16 animations:^{
+            [UIView addKeyframeWithRelativeStartTime:time*(1-self.keyboardAnimationPercent*((1-self.keyboardAnimationPercent))) relativeDuration:time *(1-self.keyboardAnimationPercent) animations:^{
+                [self.view layoutIfNeeded];
+            }];
+        }completion:^(BOOL finished){}];
     }
 }
 
