@@ -721,6 +721,46 @@
     }];
     
     [self performUIAction:^{
+        [cropVc onButtonHorizontalFlipClicked:nil];
+    }];
+    
+    [self performUIAction:^{
+        [cropVc onButtonRotateClicked:nil];
+    }];
+    
+    [self performUIAction:^{
+        [cropVc onButtonHorizontalFlipClicked:nil];
+    }];
+    
+    [self performUIAction:^{
+        [cropVc onButtonHorizontalFlipClicked:nil];
+    }];
+    
+    [self performUIAction:^{
+        [cropVc onButtonRotateClicked:nil];
+    }];
+    
+    [self performUIAction:^{
+        [cropVc onButtonHorizontalFlipClicked:nil];
+    }];
+    
+    [self performUIAction:^{
+        [cropVc onButtonHorizontalFlipClicked:nil];
+    }];
+    
+    [self performUIAction:^{
+        [cropVc onButtonRotateClicked:nil];
+    }];
+    
+    [self performUIAction:^{
+        [cropVc onButtonHorizontalFlipClicked:nil];
+    }];
+    
+    [self performUIAction:^{
+        [cropVc onButtonHorizontalFlipClicked:nil];
+    }];
+    
+    [self performUIAction:^{
         [cropVc onButtonRotateClicked:nil];
     }];
 }
