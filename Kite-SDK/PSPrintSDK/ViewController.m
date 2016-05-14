@@ -134,7 +134,6 @@ UINavigationControllerDelegate, OLKiteDelegate>
         }
     }
 #endif
-    NSAssert(picker, @"Oops, you should be running the KiteSDK-Demo scheme.");
     if (picker){
         [self presentViewController:picker animated:YES completion:nil];
     }

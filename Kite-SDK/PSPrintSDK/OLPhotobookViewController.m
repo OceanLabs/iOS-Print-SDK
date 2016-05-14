@@ -1759,8 +1759,6 @@ UINavigationControllerDelegate, OLUpsellViewControllerDelegate
         }
     }
 #endif
-    
-    NSAssert(picker, @"Oops, you should be running the KiteSDK-Demo scheme.");
     if (picker){
         picker.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
         [self presentViewController:picker animated:YES completion:nil];

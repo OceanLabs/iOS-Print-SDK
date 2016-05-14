@@ -909,7 +909,6 @@ static BOOL hasMoved;
         }
     }
 #endif
-    NSAssert(picker, @"Oops, you should be running the KiteSDK-Demo scheme.");
     if (picker){
         NSArray *allAssets = [[self createAssetArray] mutableCopy];
         NSMutableArray *alAssets = [[NSMutableArray alloc] init];
