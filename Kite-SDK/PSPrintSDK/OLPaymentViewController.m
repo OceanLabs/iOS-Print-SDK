@@ -98,6 +98,14 @@
 
 #endif
 
+#ifdef COCOAPODS
+#import <Braintree/BraintreeCore.h>
+#import <Braintree/BraintreeUI.h>
+#else
+#import "BraintreeCore.h"
+#import "BraintreeUI.h"
+#endif
+
 @import PassKit;
 @import AddressBook;
 
@@ -188,7 +196,7 @@ static BOOL haveLoadedAtLeastOnce = NO;
 #ifdef OL_KITE_OFFER_PAYPAL
 PayPalPaymentDelegate,
 #endif
-UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavigationControllerDelegate, UITableViewDelegate, UIScrollViewDelegate, UIViewControllerPreviewingDelegate>
+UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavigationControllerDelegate, UITableViewDelegate, UIScrollViewDelegate, UIViewControllerPreviewingDelegate, BTDropInViewControllerDelegate>
 
 @property (strong, nonatomic) OLPrintOrder *printOrder;
 @property (strong, nonatomic) OLPayPalCard *card;
@@ -223,6 +231,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 @property (assign, nonatomic) BOOL authorizedApplePay;
 @property (assign, nonatomic) BOOL usedContinueShoppingButton;
 @property (assign, nonatomic) CGRect originalPromoBoxFrame;
+@property (nonatomic, strong) BTAPIClient *braintreeClient;
 
 @end
 
@@ -1122,6 +1131,10 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     }
 }
 
+- (void)userDidCancelPayment {
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
 - (IBAction)onButtonPayWithCreditCardClicked {
     if (self.printOrder.jobs.count == 0){
         return;
@@ -1156,50 +1169,73 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             [self submitOrderForPrintingWithProofOfPayment:nil paymentMethod:@"Free Checkout" completion:^void(PKPaymentAuthorizationStatus status){}];
         } else {
             
-            id card = [OLPayPalCard lastUsedCard];
+            // If you haven't already, create and retain a `BTAPIClient` instance with a tokenization
+            // key or a client token from your server.
+            // Typically, you only need to do this once per session.
+            self.braintreeClient = [[BTAPIClient alloc] initWithAuthorization:@"sandbox_7t7ysydp_m88gx6xpszth8jn4"];
             
-            if ([OLKitePrintSDK useStripeForCreditCards]){
-                card = [OLStripeCard lastUsedCard];
-            }
-#ifdef OL_OFFER_JUDOPAY
-            else if ([OLKitePrintSDK useJudoPayForGBP] && [self.printOrder.currencyCode isEqualToString:@"GBP"]) {
-                card = [OLJudoPayCard lastUsedCard];
-            }
-#endif
+            // Create a BTDropInViewController
+            BTDropInViewController *dropInViewController = [[BTDropInViewController alloc]
+                                                            initWithAPIClient:self.braintreeClient];
+            dropInViewController.delegate = self;
             
+            // This is where you might want to customize your view controller (see below)
             
-            if (card == nil) {
-                [self payWithNewCard];
-            } else {
-                if ([UIAlertController class]){
-                    UIAlertController *ac = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
-                    [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")  style:UIAlertActionStyleCancel handler:NULL]];
-                    [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"Pay with new card", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")  style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
-                        [self payWithNewCard];
-                    }]];
-                    [ac addAction:[UIAlertAction actionWithTitle:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Pay with card ending %@", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), [[card numberMasked] substringFromIndex:[[card numberMasked] length] - 4]]  style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
-                        
-                        if ([OLKitePrintSDK useStripeForCreditCards]){
-                            [self payWithExistingStripeCard:[OLStripeCard lastUsedCard]];
-                        }
-#ifdef OL_OFFER_JUDOPAY
-                        else if ([OLKitePrintSDK useJudoPayForGBP] && [self.printOrder.currencyCode isEqualToString:@"GBP"]) {
-                            [self payWithExistingJudoPayCard:[OLJudoPayCard lastUsedCard]];
-                        }
-#endif
-                        else {
-                            [self payWithExistingPayPalCard:[OLPayPalCard lastUsedCard]];
-                        }
-                    }]];
-                    ac.popoverPresentationController.sourceView = self.paymentButton2;
-                    ac.popoverPresentationController.sourceRect = self.paymentButton2.frame;
-                    [self presentViewController:ac animated:YES completion:NULL];
-                }
-                else{
-                    UIActionSheet *paysheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") destructiveButtonTitle:nil otherButtonTitles:NSLocalizedStringFromTableInBundle(@"Pay with new card", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Pay with card ending %@", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), [[card numberMasked] substringFromIndex:[[card numberMasked] length] - 4]], nil];
-                    [paysheet showInView:self.view];
-                }
-            }
+            // The way you present your BTDropInViewController instance is up to you.
+            // In this example, we wrap it in a new, modally-presented navigation controller:
+            UIBarButtonItem *item = [[UIBarButtonItem alloc]
+                                     initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
+                                     target:self
+                                     action:@selector(userDidCancelPayment)];
+            dropInViewController.navigationItem.leftBarButtonItem = item;
+            UINavigationController *navigationController = [[UINavigationController alloc]
+                                                            initWithRootViewController:dropInViewController];
+            [self presentViewController:navigationController animated:YES completion:nil];
+            
+//            id card = [OLPayPalCard lastUsedCard];
+//            
+//            if ([OLKitePrintSDK useStripeForCreditCards]){
+//                card = [OLStripeCard lastUsedCard];
+//            }
+//#ifdef OL_OFFER_JUDOPAY
+//            else if ([OLKitePrintSDK useJudoPayForGBP] && [self.printOrder.currencyCode isEqualToString:@"GBP"]) {
+//                card = [OLJudoPayCard lastUsedCard];
+//            }
+//#endif
+//            
+//            
+//            if (card == nil) {
+//                [self payWithNewCard];
+//            } else {
+//                if ([UIAlertController class]){
+//                    UIAlertController *ac = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+//                    [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")  style:UIAlertActionStyleCancel handler:NULL]];
+//                    [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"Pay with new card", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")  style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
+//                        [self payWithNewCard];
+//                    }]];
+//                    [ac addAction:[UIAlertAction actionWithTitle:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Pay with card ending %@", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), [[card numberMasked] substringFromIndex:[[card numberMasked] length] - 4]]  style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
+//                        
+//                        if ([OLKitePrintSDK useStripeForCreditCards]){
+//                            [self payWithExistingStripeCard:[OLStripeCard lastUsedCard]];
+//                        }
+//#ifdef OL_OFFER_JUDOPAY
+//                        else if ([OLKitePrintSDK useJudoPayForGBP] && [self.printOrder.currencyCode isEqualToString:@"GBP"]) {
+//                            [self payWithExistingJudoPayCard:[OLJudoPayCard lastUsedCard]];
+//                        }
+//#endif
+//                        else {
+//                            [self payWithExistingPayPalCard:[OLPayPalCard lastUsedCard]];
+//                        }
+//                    }]];
+//                    ac.popoverPresentationController.sourceView = self.paymentButton2;
+//                    ac.popoverPresentationController.sourceRect = self.paymentButton2.frame;
+//                    [self presentViewController:ac animated:YES completion:NULL];
+//                }
+//                else{
+//                    UIActionSheet *paysheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") destructiveButtonTitle:nil otherButtonTitles:NSLocalizedStringFromTableInBundle(@"Pay with new card", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Pay with card ending %@", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), [[card numberMasked] substringFromIndex:[[card numberMasked] length] - 4]], nil];
+//                    [paysheet showInView:self.view];
+//                }
+//            }
         }
     }];
 }

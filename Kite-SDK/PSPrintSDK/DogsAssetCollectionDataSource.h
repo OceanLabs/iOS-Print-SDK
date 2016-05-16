@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "KITAssetCollectionDataSource.h"
+#import <KITAssetsPickerController/KITAssetCollectionDataSource.h>
 
 @interface DogsAssetCollectionDataSource : NSObject <KITAssetCollectionDataSource>
 
