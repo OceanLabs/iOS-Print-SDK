@@ -134,6 +134,7 @@
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 - (IBAction)onButtonEditClicked:(UIButton *)sender;
 - (IBAction)onShippingDetailsGestureRecognized:(id)sender;
+- (IBAction)onButtonPayWithApplePayClicked;
 @end
 
 @interface OLScrollCropViewController ()
@@ -929,6 +930,14 @@
     
     [self performUIAction:^{
         [(OLCheckoutViewController *)[(OLNavigationController *)vc.navigationController.presentedViewController topViewController] onButtonDoneClicked];
+    }];
+    
+    [self performUIAction:^{
+        [vc onButtonPayWithApplePayClicked];
+    }];
+    
+    [self performUIAction:^{
+        [vc.presentedViewController dismissViewControllerAnimated:YES completion:NULL];
     }];
     
     UITableViewCell *cell =  [vc tableView:vc.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
