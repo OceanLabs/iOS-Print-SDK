@@ -337,7 +337,7 @@ static NSOperationQueue *imageOperationQueue;
 
 - (void)getImageWithSize:(CGSize)size progress:(OLImageEditorImageGetImageProgressHandler)progressHandler completion:(OLImageEditorImageGetImageCompletionHandler)completionHandler {
     BOOL fullResolution = CGSizeEqualToSize(size, CGSizeZero);
-    if (self.type == kPrintPhotoAssetTypeALAsset) {
+    if (self.type == kPrintPhotoAssetTypeALAsset && [self.asset respondsToSelector:@selector(defaultRepresentation)]) {
         UIImage* image;
         if (fullResolution){
             image = [UIImage imageWithCGImage:[[self.asset defaultRepresentation] fullResolutionImage] scale:1 orientation:[[self.asset valueForProperty:ALAssetPropertyOrientation] integerValue]];
@@ -392,6 +392,11 @@ static NSOperationQueue *imageOperationQueue;
                 completionHandler([UIImage imageWithData:data]);
             }];
         }
+    }
+    else if ([self.asset respondsToSelector:@selector(dataWithCompletionHandler:)]){
+        [self.asset dataWithCompletionHandler:^(NSData *data, NSError *error){
+            completionHandler([UIImage imageWithData:data]);
+        }];
     }
     else if (self.type == kPrintPhotoAssetTypeCorrupt){
         NSData *data = [NSData dataWithContentsOfFile:[[OLKiteUtils kiteBundle] pathForResource:@"kite_corrupt" ofType:@"jpg"]];
@@ -480,7 +485,7 @@ static NSOperationQueue *imageOperationQueue;
 }
 
 - (void)dataWithCompletionHandler:(GetDataHandler)handler {
-    if (self.type == kPrintPhotoAssetTypeALAsset) {
+    if (self.type == kPrintPhotoAssetTypeALAsset && [self.asset respondsToSelector:@selector(defaultRepresentation)]) {
         ALAssetRepresentation *rep = [self.asset defaultRepresentation];
         if (rep) {
             UIImageOrientation orientation = UIImageOrientationUp;
@@ -568,6 +573,18 @@ static NSOperationQueue *imageOperationQueue;
                 }
             }];
         }
+    }
+    else if([self.asset respondsToSelector:@selector(dataWithCompletionHandler:)]){
+        [self.asset dataWithCompletionHandler:^(NSData *data, NSError *error){
+            if (error){
+                handler(nil,error);
+            }
+            else{
+                [self dataWithImage:[UIImage imageWithData:data] withCompletionHandler:^(NSData *data){
+                    handler(data, nil);
+                }];
+            }
+        }];
     }
     else if (self.type == kPrintPhotoAssetTypeCorrupt){
         handler(0, [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeImagesCorrupt userInfo:@{NSLocalizedDescriptionKey : NSLocalizedString(@"There was an error getting one of your photos. It may have been deleted before we could upload it. Please remove or replace it.", @""), @"asset" : self}]);
