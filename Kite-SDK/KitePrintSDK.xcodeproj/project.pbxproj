@@ -197,7 +197,6 @@
 		2E898CD81CC518180041CCD8 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD73BF6D186215790009DE03 /* CoreGraphics.framework */; };
 		2E898CD91CC518180041CCD8 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD73BF6F186215790009DE03 /* UIKit.framework */; };
 		2E898CDA1CC518180041CCD8 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD73BF6B186215790009DE03 /* Foundation.framework */; };
-		2E898CDB1CC518180041CCD8 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 931ABE3568CB40F8892488E2 /* libPods.a */; };
 		2E898CDD1CC518180041CCD8 /* KitePrintSDK.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2E6E605F1C50384C00829BB7 /* KitePrintSDK.strings */; };
 		2E898CDE1CC518180041CCD8 /* OLKiteStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2E6E60681C5038AD00829BB7 /* OLKiteStoryboard.storyboard */; };
 		2E898CDF1CC518180041CCD8 /* PostcardBackView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2E38C0CC1AD5206F008BC28A /* PostcardBackView.xib */; };
@@ -458,18 +457,22 @@
 		2EADD8511BE79D6D0051CD31 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD73BF6D186215790009DE03 /* CoreGraphics.framework */; };
 		2EADD8521BE79D6D0051CD31 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD73BF6F186215790009DE03 /* UIKit.framework */; };
 		2EADD8531BE79D6D0051CD31 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD73BF6B186215790009DE03 /* Foundation.framework */; };
-		2EADD8541BE79D6D0051CD31 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 931ABE3568CB40F8892488E2 /* libPods.a */; };
 		2EADD8571BE79D6D0051CD31 /* PostcardBackView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2E38C0CC1AD5206F008BC28A /* PostcardBackView.xib */; };
 		2EADD85A1BE79D6D0051CD31 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CD73BF83186215790009DE03 /* Images.xcassets */; };
 		2EADD85C1BE79D6D0051CD31 /* KitePrintSDK.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CD93BB471879EA4F00316492 /* KitePrintSDK.xcassets */; };
 		2EADD85E1BE79D6D0051CD31 /* kite_corrupt.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 3D6CDAAC1B1F41AE00786478 /* kite_corrupt.jpg */; };
 		2EADD85F1BE79D6D0051CD31 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CD73BF7D186215790009DE03 /* Main.storyboard */; };
+		2EBE79471CEA067B00FB5EF2 /* OLPaymentMethodsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EBE79461CEA067B00FB5EF2 /* OLPaymentMethodsViewController.m */; };
+		2EBE79481CEA067B00FB5EF2 /* OLPaymentMethodsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EBE79461CEA067B00FB5EF2 /* OLPaymentMethodsViewController.m */; };
+		2EBE79491CEA067B00FB5EF2 /* OLPaymentMethodsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EBE79461CEA067B00FB5EF2 /* OLPaymentMethodsViewController.m */; };
+		2EBE794A1CEA067B00FB5EF2 /* OLPaymentMethodsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EBE79461CEA067B00FB5EF2 /* OLPaymentMethodsViewController.m */; };
 		2ECC956A1BC6B88F00F44CE1 /* OLDocsObjcExampleCodeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2ECC95691BC6B88F00F44CE1 /* OLDocsObjcExampleCodeTests.m */; };
 		2ED36B3A1C8EE4AD00FB2D4A /* NSDictionary+RequestParameterData.m in Sources */ = {isa = PBXBuildFile; fileRef = 2ED36B391C8EE4AD00FB2D4A /* NSDictionary+RequestParameterData.m */; };
 		2EDBFAB01BC698F2007BDB83 /* 1.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 2EDBFAAF1BC698F2007BDB83 /* 1.jpg */; };
 		2EF4392B1BF4D15E0006C123 /* OLPrintOrderSubmitStatusRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EF4392A1BF4D15E0006C123 /* OLPrintOrderSubmitStatusRequest.m */; };
 		2EF4392C1BF4D15E0006C123 /* OLPrintOrderSubmitStatusRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EF4392A1BF4D15E0006C123 /* OLPrintOrderSubmitStatusRequest.m */; };
-		7D6213DEB708F5F5E6617BF1 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 931ABE3568CB40F8892488E2 /* libPods.a */; };
+		33CBEA74F3FCBAF24663C95F /* libPods-Kite-CI-Deploy.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0750EC28496C23C5C730C181 /* libPods-Kite-CI-Deploy.a */; };
+		6BE6141DB2E6E940766D5C48 /* libPods-KiteSDK-Demo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BC453A900D1393B060B2FA9 /* libPods-KiteSDK-Demo.a */; };
 		CD73BF8B186215790009DE03 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD73BF8A186215790009DE03 /* XCTest.framework */; };
 		CD73BF8C186215790009DE03 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD73BF6B186215790009DE03 /* Foundation.framework */; };
 		CD73BF8D186215790009DE03 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD73BF6F186215790009DE03 /* UIKit.framework */; };
@@ -640,6 +643,7 @@
 		E2AABA161C6DFC160007C1D7 /* OLQRCodeUploadedImagePoller.m in Sources */ = {isa = PBXBuildFile; fileRef = E2AABA141C6DFC160007C1D7 /* OLQRCodeUploadedImagePoller.m */; };
 		E2AABA191C6FC6650007C1D7 /* OLURLShortener.m in Sources */ = {isa = PBXBuildFile; fileRef = E2AABA181C6FC6650007C1D7 /* OLURLShortener.m */; };
 		E2AABA1A1C6FC6650007C1D7 /* OLURLShortener.m in Sources */ = {isa = PBXBuildFile; fileRef = E2AABA181C6FC6650007C1D7 /* OLURLShortener.m */; };
+		E98B32FAB57F31807772349D /* libPods-KitePrintSDKTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CE5B8F47FD88B105ECF7563A /* libPods-KitePrintSDKTests.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -782,7 +786,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		019C40BD2A43BA8D3D0AC726 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
+		0750EC28496C23C5C730C181 /* libPods-Kite-CI-Deploy.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Kite-CI-Deploy.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		12FD9BFBCE9ED8DA9544AC9E /* Pods-Kite-CI-Deploy.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Kite-CI-Deploy.release.xcconfig"; path = "Pods/Target Support Files/Pods-Kite-CI-Deploy/Pods-Kite-CI-Deploy.release.xcconfig"; sourceTree = "<group>"; };
 		2E0804B61C0DECE300F50D42 /* OLCustomPhotoProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLCustomPhotoProvider.h; sourceTree = "<group>"; };
 		2E0804B71C0DECE300F50D42 /* OLCustomPhotoProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLCustomPhotoProvider.m; sourceTree = "<group>"; };
 		2E0804BA1C0DF70200F50D42 /* CatsAssetCollectionDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CatsAssetCollectionDataSource.h; sourceTree = "<group>"; };
@@ -978,6 +983,8 @@
 		2EB4BD671AE128740004CEE0 /* OLPhotobookViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLPhotobookViewController.m; sourceTree = "<group>"; };
 		2EB4BD691AE13F520004CEE0 /* OLPhotobookPageContentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLPhotobookPageContentViewController.h; sourceTree = "<group>"; };
 		2EB4BD6A1AE13F520004CEE0 /* OLPhotobookPageContentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLPhotobookPageContentViewController.m; sourceTree = "<group>"; };
+		2EBE79451CEA067B00FB5EF2 /* OLPaymentMethodsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLPaymentMethodsViewController.h; sourceTree = "<group>"; };
+		2EBE79461CEA067B00FB5EF2 /* OLPaymentMethodsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLPaymentMethodsViewController.m; sourceTree = "<group>"; };
 		2ECC95691BC6B88F00F44CE1 /* OLDocsObjcExampleCodeTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLDocsObjcExampleCodeTests.m; sourceTree = "<group>"; };
 		2ED36B381C8EE4AD00FB2D4A /* NSDictionary+RequestParameterData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSDictionary+RequestParameterData.h"; path = "PSPrintSDK/Categories/NSDictionary+RequestParameterData.h"; sourceTree = "<group>"; };
 		2ED36B391C8EE4AD00FB2D4A /* NSDictionary+RequestParameterData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSDictionary+RequestParameterData.m"; path = "PSPrintSDK/Categories/NSDictionary+RequestParameterData.m"; sourceTree = "<group>"; };
@@ -998,7 +1005,6 @@
 		2EF53E3D1B5549B900BF936A /* OLInfoPageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLInfoPageViewController.m; sourceTree = "<group>"; };
 		2EF8BA9D1B99E9E4009BC73B /* OLImageCachingManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLImageCachingManager.h; sourceTree = "<group>"; };
 		2EF8BA9E1B99E9E4009BC73B /* OLImageCachingManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLImageCachingManager.m; sourceTree = "<group>"; };
-		352445B905BCE0BBF471808D /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		3D0D7ACA1AC0C44C00746FC8 /* NSArray+QueryingExtras.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSArray+QueryingExtras.h"; path = "PSPrintSDK/Categories/NSArray+QueryingExtras.h"; sourceTree = "<group>"; };
 		3D0D7ACB1AC0C44C00746FC8 /* NSArray+QueryingExtras.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSArray+QueryingExtras.m"; path = "PSPrintSDK/Categories/NSArray+QueryingExtras.m"; sourceTree = "<group>"; };
 		3D1779581A1E1D6800BE3E58 /* OLCreditCardCaptureViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLCreditCardCaptureViewController.h; sourceTree = "<group>"; };
@@ -1020,7 +1026,11 @@
 		3DF9D6FC1B0F618000A40C0C /* UIViewController+TraitCollectionCompatibility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIViewController+TraitCollectionCompatibility.m"; path = "PSPrintSDK/Categories/UIViewController+TraitCollectionCompatibility.m"; sourceTree = "<group>"; };
 		3DF9D6FF1B0F65C700A40C0C /* NSObject+Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSObject+Utils.h"; path = "PSPrintSDK/Categories/NSObject+Utils.h"; sourceTree = "<group>"; };
 		3DF9D7001B0F65C700A40C0C /* NSObject+Utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSObject+Utils.m"; path = "PSPrintSDK/Categories/NSObject+Utils.m"; sourceTree = "<group>"; };
-		931ABE3568CB40F8892488E2 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		48B9F1B8F1FE7E95892C5AF0 /* Pods-KitePrintSDKTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KitePrintSDKTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-KitePrintSDKTests/Pods-KitePrintSDKTests.release.xcconfig"; sourceTree = "<group>"; };
+		4BC453A900D1393B060B2FA9 /* libPods-KiteSDK-Demo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-KiteSDK-Demo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		5DDF0E08421D961AB3B8BDE8 /* Pods-KiteSDK-Demo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KiteSDK-Demo.debug.xcconfig"; path = "Pods/Target Support Files/Pods-KiteSDK-Demo/Pods-KiteSDK-Demo.debug.xcconfig"; sourceTree = "<group>"; };
+		7B7AEC95700CBBF97DEE4248 /* Pods-KitePrintSDKTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KitePrintSDKTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-KitePrintSDKTests/Pods-KitePrintSDKTests.debug.xcconfig"; sourceTree = "<group>"; };
+		B990EC48F432C521F8E19986 /* Pods-Kite-CI-Deploy.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Kite-CI-Deploy.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Kite-CI-Deploy/Pods-Kite-CI-Deploy.debug.xcconfig"; sourceTree = "<group>"; };
 		CD382E4818EB7C6300127F95 /* OLJudoPayCard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLJudoPayCard.m; sourceTree = "<group>"; };
 		CD382E4918EB7C6300127F95 /* OLJudoPayCard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLJudoPayCard.h; sourceTree = "<group>"; };
 		CD550A66187B30D200782D75 /* OLAddressLookupViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLAddressLookupViewController.h; sourceTree = "<group>"; };
@@ -1101,6 +1111,7 @@
 		CDE0744A188D7730009ADFA2 /* OLURLDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLURLDataSource.m; sourceTree = "<group>"; };
 		CDE5DDCD18E5BE40000FF3B5 /* OLPrintEnvironment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLPrintEnvironment.h; sourceTree = "<group>"; };
 		CDFFA781189D2DF40083BCE7 /* OLAsset+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "OLAsset+Private.h"; sourceTree = "<group>"; };
+		CE5B8F47FD88B105ECF7563A /* libPods-KitePrintSDKTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-KitePrintSDKTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E220587E1BF3F7AC009CFAF6 /* libUIColor-HexString.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libUIColor-HexString.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E220588D1BF3F868009CFAF6 /* libUICKeyChainStore.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libUICKeyChainStore.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		E220589C1BF3F8C4009CFAF6 /* libSVProgressHUD.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libSVProgressHUD.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1293,6 +1304,7 @@
 		E2AABA141C6DFC160007C1D7 /* OLQRCodeUploadedImagePoller.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLQRCodeUploadedImagePoller.m; sourceTree = "<group>"; };
 		E2AABA171C6FC6650007C1D7 /* OLURLShortener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLURLShortener.h; sourceTree = "<group>"; };
 		E2AABA181C6FC6650007C1D7 /* OLURLShortener.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLURLShortener.m; sourceTree = "<group>"; };
+		F9743B5EB83E2B95AC1322BF /* Pods-KiteSDK-Demo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KiteSDK-Demo.release.xcconfig"; path = "Pods/Target Support Files/Pods-KiteSDK-Demo/Pods-KiteSDK-Demo.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1322,7 +1334,7 @@
 				2E898CD81CC518180041CCD8 /* CoreGraphics.framework in Frameworks */,
 				2E898CD91CC518180041CCD8 /* UIKit.framework in Frameworks */,
 				2E898CDA1CC518180041CCD8 /* Foundation.framework in Frameworks */,
-				2E898CDB1CC518180041CCD8 /* libPods.a in Frameworks */,
+				33CBEA74F3FCBAF24663C95F /* libPods-Kite-CI-Deploy.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1368,7 +1380,7 @@
 				2EADD8511BE79D6D0051CD31 /* CoreGraphics.framework in Frameworks */,
 				2EADD8521BE79D6D0051CD31 /* UIKit.framework in Frameworks */,
 				2EADD8531BE79D6D0051CD31 /* Foundation.framework in Frameworks */,
-				2EADD8541BE79D6D0051CD31 /* libPods.a in Frameworks */,
+				6BE6141DB2E6E940766D5C48 /* libPods-KiteSDK-Demo.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1379,7 +1391,7 @@
 				CD73BF8B186215790009DE03 /* XCTest.framework in Frameworks */,
 				CD73BF8D186215790009DE03 /* UIKit.framework in Frameworks */,
 				CD73BF8C186215790009DE03 /* Foundation.framework in Frameworks */,
-				7D6213DEB708F5F5E6617BF1 /* libPods.a in Frameworks */,
+				E98B32FAB57F31807772349D /* libPods-KitePrintSDKTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1489,6 +1501,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2126BB4199403B73DA359804 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				B990EC48F432C521F8E19986 /* Pods-Kite-CI-Deploy.debug.xcconfig */,
+				12FD9BFBCE9ED8DA9544AC9E /* Pods-Kite-CI-Deploy.release.xcconfig */,
+				7B7AEC95700CBBF97DEE4248 /* Pods-KitePrintSDKTests.debug.xcconfig */,
+				48B9F1B8F1FE7E95892C5AF0 /* Pods-KitePrintSDKTests.release.xcconfig */,
+				5DDF0E08421D961AB3B8BDE8 /* Pods-KiteSDK-Demo.debug.xcconfig */,
+				F9743B5EB83E2B95AC1322BF /* Pods-KiteSDK-Demo.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 		2E0DB88E1A6402D9001032E3 /* View */ = {
 			isa = PBXGroup;
 			children = (
@@ -1597,6 +1622,8 @@
 			children = (
 				CDA8BF5218D70D0F00D835BB /* OLPaymentViewController.h */,
 				CDA8BF5018D70D0F00D835BB /* OLPaymentViewController.m */,
+				2EBE79451CEA067B00FB5EF2 /* OLPaymentMethodsViewController.h */,
+				2EBE79461CEA067B00FB5EF2 /* OLPaymentMethodsViewController.m */,
 				CDA8BF5518D70D0F00D835BB /* OLCheckoutViewController.h */,
 				CDA8BF5118D70D0F00D835BB /* OLCheckoutViewController.m */,
 				2E5F80301B04A22500095203 /* OLIntegratedCheckoutViewController.h */,
@@ -1781,15 +1808,6 @@
 			name = Util;
 			sourceTree = "<group>";
 		};
-		9CB01DF75C9A736C7333F6D8 /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				352445B905BCE0BBF471808D /* Pods.debug.xcconfig */,
-				019C40BD2A43BA8D3D0AC726 /* Pods.release.xcconfig */,
-			);
-			name = Pods;
-			sourceTree = "<group>";
-		};
 		CD550BD61886BF6000782D75 /* Payment */ = {
 			isa = PBXGroup;
 			children = (
@@ -1816,7 +1834,7 @@
 				CD73BF6A186215790009DE03 /* Frameworks */,
 				CD73BF69186215790009DE03 /* Products */,
 				E29C839D1BE275C40041D4CF /* Vendor */,
-				9CB01DF75C9A736C7333F6D8 /* Pods */,
+				2126BB4199403B73DA359804 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -1868,7 +1886,9 @@
 				CD73BF6D186215790009DE03 /* CoreGraphics.framework */,
 				CD73BF6F186215790009DE03 /* UIKit.framework */,
 				CD73BF8A186215790009DE03 /* XCTest.framework */,
-				931ABE3568CB40F8892488E2 /* libPods.a */,
+				0750EC28496C23C5C730C181 /* libPods-Kite-CI-Deploy.a */,
+				CE5B8F47FD88B105ECF7563A /* libPods-KitePrintSDKTests.a */,
+				4BC453A900D1393B060B2FA9 /* libPods-KiteSDK-Demo.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -1879,6 +1899,7 @@
 				2E4CAF141BC294F30089FA26 /* Model */,
 				2E0DB88E1A6402D9001032E3 /* View */,
 				CDA8BF4F18D70CF500D835BB /* Controller */,
+				E29C84161BE2877A0041D4CF /* SVProgressHUD.bundle */,
 				2EA8BEC11A48509E008A9248 /* Categories */,
 				E29C862E1BE3C4640041D4CF /* Resources */,
 			);
@@ -2349,7 +2370,6 @@
 			children = (
 				2E6E605F1C50384C00829BB7 /* KitePrintSDK.strings */,
 				E22963951C43DF29002A90CA /* CTAssetsPickerController.bundle */,
-				E29C84161BE2877A0041D4CF /* SVProgressHUD.bundle */,
 				3D6CDAAC1B1F41AE00786478 /* kite_corrupt.jpg */,
 				2E38C0CC1AD5206F008BC28A /* PostcardBackView.xib */,
 				2E6E60681C5038AD00829BB7 /* OLKiteStoryboard.storyboard */,
@@ -2382,13 +2402,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2E898CE71CC518180041CCD8 /* Build configuration list for PBXNativeTarget "Kite-CI-Deploy" */;
 			buildPhases = (
-				2E898C4D1CC518180041CCD8 /* Check Pods Manifest.lock */,
+				42AD2845491C25C0982C7717 /* 📦 Check Pods Manifest.lock */,
 				2E898C4E1CC518180041CCD8 /* Sources */,
 				2E898CCA1CC518180041CCD8 /* Frameworks */,
 				2E898CDC1CC518180041CCD8 /* Resources */,
 				2E89E4351CC6218100C9EE93 /* ShellScript */,
-				2E898CE51CC518180041CCD8 /* Embed Pods Frameworks */,
-				2E898CE61CC518180041CCD8 /* Copy Pods Resources */,
+				5F0330CA7E1D2E8D374D09BA /* 📦 Embed Pods Frameworks */,
+				E8C88DF2C32A934F0F6CF765 /* 📦 Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -2420,12 +2440,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2EADD8621BE79D6D0051CD31 /* Build configuration list for PBXNativeTarget "KiteSDK-Demo" */;
 			buildPhases = (
-				2EADD7E41BE79D6D0051CD31 /* Check Pods Manifest.lock */,
+				61989835E2194008D8DE456B /* 📦 Check Pods Manifest.lock */,
 				2EADD7E51BE79D6D0051CD31 /* Sources */,
 				2EADD84D1BE79D6D0051CD31 /* Frameworks */,
 				2EADD8551BE79D6D0051CD31 /* Resources */,
-				2EADD8601BE79D6D0051CD31 /* Embed Pods Frameworks */,
-				2EADD8611BE79D6D0051CD31 /* Copy Pods Resources */,
+				9DBB66745205359A4F159E14 /* 📦 Embed Pods Frameworks */,
+				C3FA833CBC4459CE17595940 /* 📦 Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -2440,12 +2460,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = CD73BF9D186215790009DE03 /* Build configuration list for PBXNativeTarget "KitePrintSDKTests" */;
 			buildPhases = (
-				84017C0D42B50691AD67B24F /* Check Pods Manifest.lock */,
+				D720AF67666A1A3C4259DCA6 /* 📦 Check Pods Manifest.lock */,
 				CD73BF85186215790009DE03 /* Sources */,
 				CD73BF86186215790009DE03 /* Frameworks */,
 				CD73BF87186215790009DE03 /* Resources */,
-				A63D5F1FBB7936C3D0A6756D /* Copy Pods Resources */,
-				D65212201C9C95F374758F09 /* Embed Pods Frameworks */,
+				34180D2847A74BF0D595794D /* 📦 Embed Pods Frameworks */,
+				FD151E57EEA0AEF87879CFA7 /* 📦 Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -2826,51 +2846,6 @@
 			shellPath = /bin/sh;
 			shellScript = "\"${PROJECT_DIR}/docs/appledoc/appledoc\" \\\n--templates \"${PROJECT_DIR}/docs/appledoc/Templates\" \\\n--project-name \"${PROJECT_NAME}\" \\\n--project-company \"Kite.ly\" \\\n--company-id \"ly.kite\" \\\n--output \"${PROJECT_DIR}/docs/appledoc/${PROJECT_NAME}-appledocs\" \\\n--install-docset \\\n--logformat xcode \\\n--keep-intermediate-files \\\n--no-repeat-first-par \\\n--no-warn-invalid-crossref \\\n--merge-categories \\\n--exit-threshold 2 \\\n--docset-platform-family iphoneos \\\n--warn-undocumented-member \\\n--warn-missing-arg \\\n--warn-unknown-directive \\\n--warn-empty-description \\\n--warn-undocumented-object \\\n--warn-missing-company-id \\\n--keep-undocumented-objects \\\n--keep-undocumented-members \\\n--ignore \"*.m\" \\\n--index-desc \"${PROJECT_DIR}/docs/appledoc-intro.md\" \\\n\"${PROJECT_DIR}/PSPrintSDK/OLAsset.h\" \"${PROJECT_DIR}/PSPrintSDK/OLKiteViewController.h\" \"${PROJECT_DIR}/PSPrintSDK/OLKitePrintSDK.h\" \"${PROJECT_DIR}/PSPrintSDK/OLPrintJob.h\" \"${PROJECT_DIR}/PSPrintSDK/OLPrintOrder.h\" \"${PROJECT_DIR}/PSPrintSDK/OLAssetUploadRequest.h\"\n";
 		};
-		2E898C4D1CC518180041CCD8 /* Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Check Pods Manifest.lock";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
-			showEnvVarsInLog = 0;
-		};
-		2E898CE51CC518180041CCD8 /* Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Embed Pods Frameworks";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		2E898CE61CC518180041CCD8 /* Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		2E89E4351CC6218100C9EE93 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -2884,14 +2859,29 @@
 			shellPath = /bin/sh;
 			shellScript = "#\n# Set the build number to the current git commit count.\n# If we're using the Dev scheme, then we'll suffix the build\n# number with the current branch name, to make collisions\n# far less likely across feature branches.\n# Based on: http://w3facility.info/question/how-do-i-force-xcode-to-rebuild-the-info-plist-file-in-my-project-every-time-i-build-the-project/\n#\n# Updated with dSYM handling from http://yellowfeather.co.uk/blog/auto-incrementing-build-number-in-xcode-revisited/\n#\n\ngit=`sh /etc/profile; which git`\nappBuild=`\"$git\" rev-list HEAD --count`\nif [ $CONFIGURATION = \"Debug\" ]; then\nbranchName=`\"$git\" rev-parse --abbrev-ref HEAD`\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $appBuild-$branchName\" \"${TARGET_BUILD_DIR}/${INFOPLIST_PATH}\"\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $appBuild-$branchName\" \"${BUILT_PRODUCTS_DIR}/${WRAPPER_NAME}.dSYM/Contents/Info.plist\"\nelse\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $appBuild\" \"${TARGET_BUILD_DIR}/${INFOPLIST_PATH}\"\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $appBuild\" \"${BUILT_PRODUCTS_DIR}/${WRAPPER_NAME}.dSYM/Contents/Info.plist\"\nfi\necho \"Incremented the build number ${TARGET_BUILD_DIR}/${INFOPLIST_PATH}\"";
 		};
-		2EADD7E41BE79D6D0051CD31 /* Check Pods Manifest.lock */ = {
+		34180D2847A74BF0D595794D /* 📦 Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Check Pods Manifest.lock";
+			name = "📦 Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-KitePrintSDKTests/Pods-KitePrintSDKTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		42AD2845491C25C0982C7717 /* 📦 Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "📦 Check Pods Manifest.lock";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2899,44 +2889,29 @@
 			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
-		2EADD8601BE79D6D0051CD31 /* Embed Pods Frameworks */ = {
+		5F0330CA7E1D2E8D374D09BA /* 📦 Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Embed Pods Frameworks";
+			name = "📦 Embed Pods Frameworks";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-frameworks.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Kite-CI-Deploy/Pods-Kite-CI-Deploy-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		2EADD8611BE79D6D0051CD31 /* Copy Pods Resources */ = {
+		61989835E2194008D8DE456B /* 📦 Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		84017C0D42B50691AD67B24F /* Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Check Pods Manifest.lock";
+			name = "📦 Check Pods Manifest.lock";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2944,34 +2919,79 @@
 			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
-		A63D5F1FBB7936C3D0A6756D /* Copy Pods Resources */ = {
+		9DBB66745205359A4F159E14 /* 📦 Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Copy Pods Resources";
+			name = "📦 Embed Pods Frameworks";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-resources.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-KiteSDK-Demo/Pods-KiteSDK-Demo-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		D65212201C9C95F374758F09 /* Embed Pods Frameworks */ = {
+		C3FA833CBC4459CE17595940 /* 📦 Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Embed Pods Frameworks";
+			name = "📦 Copy Pods Resources";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-frameworks.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-KiteSDK-Demo/Pods-KiteSDK-Demo-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		D720AF67666A1A3C4259DCA6 /* 📦 Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "📦 Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		E8C88DF2C32A934F0F6CF765 /* 📦 Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "📦 Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Kite-CI-Deploy/Pods-Kite-CI-Deploy-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		FD151E57EEA0AEF87879CFA7 /* 📦 Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "📦 Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-KitePrintSDKTests/Pods-KitePrintSDKTests-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -3066,6 +3086,7 @@
 				2E898CA11CC518180041CCD8 /* LXReorderableCollectionViewFlowLayout.m in Sources */,
 				2E898CA21CC518180041CCD8 /* OLImageCachingManager.m in Sources */,
 				2E898CA31CC518180041CCD8 /* AssetDataSource.m in Sources */,
+				2EBE79481CEA067B00FB5EF2 /* OLPaymentMethodsViewController.m in Sources */,
 				2E898CA41CC518180041CCD8 /* UIView+RoundRect.m in Sources */,
 				2E898CA51CC518180041CCD8 /* OLCountry.m in Sources */,
 				2E2BF4481CCDFAF100725561 /* OLKiteTheme.m in Sources */,
@@ -3126,6 +3147,7 @@
 				2EA3D36D1C9C04B500B99BCD /* OLOrderReviewViewController.m in Sources */,
 				2EA3D36E1C9C04B500B99BCD /* OLProduct.m in Sources */,
 				2EA3D3701C9C04B500B99BCD /* OLAddressEditViewController.m in Sources */,
+				2EBE794A1CEA067B00FB5EF2 /* OLPaymentMethodsViewController.m in Sources */,
 				2EA3D3711C9C04B500B99BCD /* OLKiteUtils.m in Sources */,
 				2EA3D3721C9C04B500B99BCD /* ALAsset+OLIsEqual.m in Sources */,
 				2EA3D3731C9C04B500B99BCD /* OLAssetsSupplementaryView.m in Sources */,
@@ -3280,6 +3302,7 @@
 				2EADD8121BE79D6D0051CD31 /* OLAsset.m in Sources */,
 				2E0804BE1C0DF70200F50D42 /* CatsAssetCollectionDataSource.m in Sources */,
 				2EADD8131BE79D6D0051CD31 /* AppDelegate.m in Sources */,
+				2EBE79471CEA067B00FB5EF2 /* OLPaymentMethodsViewController.m in Sources */,
 				2EAB0AE81CDB504E00625BD6 /* OLAssetsSupplementaryView.m in Sources */,
 				2EADD8141BE79D6D0051CD31 /* OLProductTemplate.m in Sources */,
 				2EADD8151BE79D6D0051CD31 /* OLPaymentViewController.m in Sources */,
@@ -3513,6 +3536,7 @@
 			files = (
 				E29C858B1BE3B5C50041D4CF /* OLURLDataSource.m in Sources */,
 				E29C858E1BE3B5C50041D4CF /* OLScrollCropViewController.m in Sources */,
+				2EBE79491CEA067B00FB5EF2 /* OLPaymentMethodsViewController.m in Sources */,
 				2E0804B91C0DECE300F50D42 /* OLCustomPhotoProvider.m in Sources */,
 				E29C858F1BE3B5C50041D4CF /* OLPrintOrderCostRequest.m in Sources */,
 				E29C85901BE3B5C50041D4CF /* OLInfoPageViewController.m in Sources */,
@@ -3729,7 +3753,7 @@
 		};
 		2E898CE81CC518180041CCD8 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 352445B905BCE0BBF471808D /* Pods.debug.xcconfig */;
+			baseConfigurationReference = B990EC48F432C521F8E19986 /* Pods-Kite-CI-Deploy.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -3847,7 +3871,7 @@
 		};
 		2E898CE91CC518180041CCD8 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 019C40BD2A43BA8D3D0AC726 /* Pods.release.xcconfig */;
+			baseConfigurationReference = 12FD9BFBCE9ED8DA9544AC9E /* Pods-Kite-CI-Deploy.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -4022,7 +4046,7 @@
 		};
 		2EADD8631BE79D6D0051CD31 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 352445B905BCE0BBF471808D /* Pods.debug.xcconfig */;
+			baseConfigurationReference = 5DDF0E08421D961AB3B8BDE8 /* Pods-KiteSDK-Demo.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -4139,7 +4163,7 @@
 		};
 		2EADD8641BE79D6D0051CD31 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 019C40BD2A43BA8D3D0AC726 /* Pods.release.xcconfig */;
+			baseConfigurationReference = F9743B5EB83E2B95AC1322BF /* Pods-KiteSDK-Demo.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -4329,7 +4353,7 @@
 		};
 		CD73BF9E186215790009DE03 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 352445B905BCE0BBF471808D /* Pods.debug.xcconfig */;
+			baseConfigurationReference = 7B7AEC95700CBBF97DEE4248 /* Pods-KitePrintSDKTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_ENTITLEMENTS = "";
@@ -4351,7 +4375,7 @@
 		};
 		CD73BF9F186215790009DE03 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 019C40BD2A43BA8D3D0AC726 /* Pods.release.xcconfig */;
+			baseConfigurationReference = 48B9F1B8F1FE7E95892C5AF0 /* Pods-KitePrintSDKTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_ENTITLEMENTS = "";

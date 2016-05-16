@@ -214,9 +214,6 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *poweredByKiteLabelBottomCon;
 @property (weak, nonatomic) IBOutlet UIView *shippingDetailsBox;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *shippingDetailsCon;
-@property (weak, nonatomic) IBOutlet UIButton *backToApplePayButton;
-@property (weak, nonatomic) IBOutlet UIButton *payWithApplePayButton;
-@property (weak, nonatomic) IBOutlet UIButton *checkoutButton;
 @property (weak, nonatomic) IBOutlet UIButton *deliveryDetailsButton;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *totalCostActivityIndicator;
 @property (assign, nonatomic) CGFloat keyboardAnimationPercent;
@@ -326,37 +323,22 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     
-    [self.paymentButton1 makeRoundRect];
-    [self.paymentButton2 makeRoundRect];
-    [self.payWithApplePayButton makeRoundRect];
-    [self.checkoutButton makeRoundRect];
+    [self.paymentButton1 makeRoundRectWithRadius:2.0];
+    [self.paymentButton2 makeRoundRectWithRadius:2.0];
     
     if ([UITraitCollection class] && [self.traitCollection respondsToSelector:@selector(forceTouchCapability)] && self.traitCollection.forceTouchCapability == UIForceTouchCapabilityAvailable){
         [self registerForPreviewingWithDelegate:self sourceView:self.tableView];
     }
     
     
-#ifdef OL_KITE_OFFER_PAYPAL
-    if ([OLKiteABTesting sharedInstance].offerPayPal && ![self shouldShowApplePay]){
-        self.payWithApplePayButton.hidden = YES;
-        self.checkoutButton.hidden = YES;
-    }
-    if (![[OLKiteABTesting sharedInstance].paypalSupportedCurrencies containsObjectIdenticalTo:self.printOrder.currencyCode]){
-        [self.paymentButton1 removeFromSuperview];
-    }
-#else
-    [self.paymentButton1 removeFromSuperview];
-#endif
-    
-    if ([self shouldShowApplePay]){
-        self.paymentButton1.hidden = YES;
-        self.paymentButton2.hidden = YES;
-    }
-    else{
-        self.payWithApplePayButton.hidden = YES;
-        self.checkoutButton.hidden = YES;
+    if (![self shouldShowApplePay]){
         self.shippingDetailsCon.constant = 2;
         self.shippingDetailsBox.alpha = 1;
+    }
+    
+    id<OLKiteDelegate> kiteDelegate = [OLKiteUtils kiteDelegate:self];
+    if (([kiteDelegate respondsToSelector:@selector(shouldShowContinueShoppingButton)] && ![kiteDelegate shouldShowContinueShoppingButton]) || [OLKiteABTesting sharedInstance].launchedWithPrintOrder || self.navigationController.viewControllers.firstObject == self){
+        [self.paymentButton1 removeFromSuperview];
     }
     
     [self updateViewsBasedOnCostUpdate];
@@ -421,62 +403,6 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         [OLAnalytics trackBasketScreenHitBackForOrder:self.printOrder applePayIsAvailable:[self isApplePayAvailable] ? @"Yes" : @"No"];
     }
 #endif
-}
-
-- (IBAction)onButtonMoreOptionsClicked:(id)sender{
-#ifndef OL_NO_ANALYTICS
-    [OLAnalytics trackPaymentScreenHitCheckoutForOrder:self.printOrder];
-#endif
-    if (![self.printOrder.shippingAddress isValidAddress]){
-        self.printOrder.shippingAddress = nil;
-    }
-    
-    self.poweredByKiteLabelBottomCon.constant = -110;
-    [UIView animateWithDuration:0.25 animations:^{
-        [self.view layoutIfNeeded];
-    } completion:^(BOOL finished){
-        self.payWithApplePayButton.hidden = YES;
-        self.checkoutButton.hidden = YES;
-        self.paymentButton1.hidden = NO;
-        self.paymentButton2.hidden = NO;
-        
-        self.poweredByKiteLabelBottomCon.constant = 5;
-        self.shippingDetailsCon.constant = 2;
-        if (sender){
-            self.backToApplePayButton.hidden = NO;
-        }
-        [UIView animateWithDuration:0.25 animations:^{
-            [self.view layoutIfNeeded];
-            self.shippingDetailsBox.alpha = 1;
-        }];
-    }];
-}
-
-- (IBAction)onButtonBackToApplePayClicked:(UIButton *)sender {
-#ifndef OL_NO_ANALYTICS
-    [OLAnalytics trackPaymentScreenHitBackToApplePayForOrder:self.printOrder];
-#endif
-    
-    [self.printOrder discardDuplicateJobs];
-    [self updateViewsBasedOnCostUpdate];
-    
-    self.poweredByKiteLabelBottomCon.constant = -110;
-    [UIView animateWithDuration:0.25 animations:^{
-        [self.view layoutIfNeeded];
-    } completion:^(BOOL finished){
-        self.payWithApplePayButton.hidden = NO;
-        self.checkoutButton.hidden = NO;
-        self.paymentButton1.hidden = YES;
-        self.paymentButton2.hidden = YES;
-        
-        self.poweredByKiteLabelBottomCon.constant = 5;
-        self.shippingDetailsCon.constant = -35;
-        self.backToApplePayButton.hidden = YES;
-        [UIView animateWithDuration:0.25 animations:^{
-            [self.view layoutIfNeeded];
-            self.shippingDetailsBox.alpha = 0;
-        }];
-    }];
 }
 
 - (void)onBackgroundClicked {
@@ -669,11 +595,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 #ifdef OL_KITE_OFFER_APPLE_PAY
             self.paymentButton1.hidden = YES;
 #endif
-            if ([self shouldShowApplePay] && self.paymentButton2.tag != 7777){
-                [self onButtonMoreOptionsClicked:nil];
-            }
             [self.paymentButton2 setTitle:NSLocalizedStringFromTableInBundle(@"Checkout for Free!", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") forState:UIControlStateNormal];
-            self.paymentButton2.tag = 7777; //Tag button to know it is showing free checkout;
         }
         else {
 #ifdef OL_KITE_OFFER_PAYPAL
@@ -682,10 +604,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 #ifdef OL_KITE_OFFER_APPLE_PAY
             self.paymentButton1.hidden = NO;
 #endif
-            if ([self shouldShowApplePay] && self.paymentButton2.tag == 7777){
-                [self onButtonBackToApplePayClicked:nil];
-            }
-            [self.paymentButton2 setTitle:NSLocalizedStringFromTableInBundle(@"Credit Card", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") forState:UIControlStateNormal];
+            [self.paymentButton2 setTitle:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Pay %@", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), [[cost totalCostInCurrency:self.printOrder.currencyCode] formatCostForCurrencyCode:self.printOrder.currencyCode]] forState:UIControlStateNormal];
         }
         
         if ([self.tableView numberOfRowsInSection:0] != self.printOrder.jobs.count){
@@ -1497,6 +1416,10 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     }
 }
 
+- (IBAction)onButtonPayClicked:(UIButton *)sender {
+}
+
+
 - (IBAction)onShippingDetailsGestureRecognized:(id)sender {
     [OLKiteUtils shippingControllerForPrintOrder:self.printOrder handler:^(id vc){
         [vc safePerformSelector:@selector(setUserEmail:) withObject:self.userEmail];
@@ -1674,19 +1597,6 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 
 #pragma mark - UITableViewDataSource methods
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    id<OLKiteDelegate> kiteDelegate = [OLKiteUtils kiteDelegate:self];
-    if (([kiteDelegate respondsToSelector:@selector(shouldShowContinueShoppingButton)] && ![kiteDelegate shouldShowContinueShoppingButton]) || [OLKiteABTesting sharedInstance].launchedWithPrintOrder){
-        return 1;
-    }
-    else if (self.navigationController.viewControllers.firstObject == self){
-        return 1;
-    }
-    else{
-        return 2;
-    }
-}
-
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     if (section == 0 && self.printOrder.jobs.count > 0){
         return haveLoadedAtLeastOnce ? self.printOrder.jobs.count : 1;
@@ -1776,12 +1686,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    if (indexPath.section == 0){
-        return 60;
-    }
-    else{
-        return 40;
-    }
+    return 75;
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
