@@ -128,6 +128,10 @@
                         theme.kioskEnablePayAtTheTill = [themeConfig[@"remove_payment_gateway"] boolValue];
                     }
                     
+                    if ([themeConfig[@"promo_code_checkout"] isKindOfClass:[NSNumber class]]){
+                        theme.kioskRequirePromoCode = [themeConfig[@"promo_code_checkout"] boolValue];
+                    }
+                    
                     if ([themeConfig[@"ship_to_store"] isKindOfClass:[NSDictionary class]]){
                         NSDictionary *addressDict = themeConfig[@"ship_to_store"];
                         OLAddress *address = [[OLAddress alloc] init];
