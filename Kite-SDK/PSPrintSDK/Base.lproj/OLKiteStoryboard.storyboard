@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10116" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="cpC-15-nyB">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10116" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="cpC-15-nyB">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
@@ -720,7 +720,7 @@ to rearrange the photos</string>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9gd-BD-JKl" userLabel="Delivery Details">
-                                <rect key="frame" x="0.0" y="485" width="600" height="35"/>
+                                <rect key="frame" x="0.0" y="448" width="600" height="35"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zBV-LU-9Ss">
                                         <rect key="frame" x="39" y="2" width="110" height="30"/>
@@ -754,7 +754,7 @@ to rearrange the photos</string>
                                 </connections>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cV5-4n-Kc8" userLabel="Shipping Method">
-                                <rect key="frame" x="0.0" y="485" width="600" height="35"/>
+                                <rect key="frame" x="0.0" y="448" width="600" height="35"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ehs-mV-jG4">
                                         <rect key="frame" x="42" y="2" width="61" height="30"/>
@@ -793,8 +793,35 @@ to rearrange the photos</string>
                                     <constraint firstItem="1nJ-Y9-R3Z" firstAttribute="leading" secondItem="Ehs-mV-jG4" secondAttribute="trailing" constant="5" id="zwR-3n-8Q8"/>
                                 </constraints>
                             </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="m2c-9c-c2i" userLabel="Shipping Method">
+                                <rect key="frame" x="0.0" y="485" width="600" height="35"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Xbv-As-wN3">
+                                        <rect key="frame" x="41" y="2" width="148" height="30"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                        <state key="normal" title="Add Payment Method">
+                                            <color key="titleColor" red="0.23921568630000001" green="0.23921568630000001" blue="0.23921568630000001" alpha="1" colorSpace="deviceRGB"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="onButtonAddPaymentMethodClicked:" destination="awx-dV-KVo" eventType="touchUpInside" id="uqe-Fb-gBn"/>
+                                        </connections>
+                                    </button>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="card" translatesAutoresizingMaskIntoConstraints="NO" id="1cO-DO-e3U">
+                                        <rect key="frame" x="15" y="11.5" width="16" height="11"/>
+                                        <color key="tintColor" red="0.23921568630000001" green="0.23921568630000001" blue="0.23921568630000001" alpha="1" colorSpace="deviceRGB"/>
+                                    </imageView>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstItem="Xbv-As-wN3" firstAttribute="leading" secondItem="1cO-DO-e3U" secondAttribute="trailing" constant="10" id="Qa9-Xo-dUT"/>
+                                    <constraint firstItem="1cO-DO-e3U" firstAttribute="centerY" secondItem="m2c-9c-c2i" secondAttribute="centerY" id="bsD-6Y-AI9"/>
+                                    <constraint firstItem="1cO-DO-e3U" firstAttribute="leading" secondItem="m2c-9c-c2i" secondAttribute="leading" constant="15" id="eBp-Iy-Kpr"/>
+                                    <constraint firstItem="Xbv-As-wN3" firstAttribute="centerY" secondItem="1cO-DO-e3U" secondAttribute="centerY" id="mTK-na-NE8"/>
+                                    <constraint firstAttribute="height" constant="35" id="xTx-5D-9Ud"/>
+                                </constraints>
+                            </view>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="47" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="4n1-p7-6FT">
-                                <rect key="frame" x="0.0" y="20" width="600" height="426"/>
+                                <rect key="frame" x="0.0" y="20" width="600" height="389"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="jobCell" rowHeight="60" id="ICy-ec-QXu">
@@ -979,7 +1006,7 @@ to rearrange the photos</string>
                                 </prototypes>
                             </tableView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HkN-AG-Mcs">
-                                <rect key="frame" x="0.0" y="448" width="600" height="35"/>
+                                <rect key="frame" x="0.0" y="411" width="600" height="35"/>
                                 <subviews>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Promo Code" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ohh-Wa-CWn">
                                         <rect key="frame" x="41" y="8" width="481" height="18"/>
@@ -1059,10 +1086,12 @@ to rearrange the photos</string>
                                     <constraint firstAttribute="trailing" secondItem="fHD-9P-h6H" secondAttribute="trailing" constant="8" id="SyH-v1-SD5"/>
                                     <constraint firstItem="fHD-9P-h6H" firstAttribute="leading" secondItem="M4Z-g2-rfc" secondAttribute="leading" priority="750" constant="8" id="Tyx-rY-Fr0"/>
                                     <constraint firstAttribute="height" constant="80" id="daQ-GS-Lwo"/>
+                                    <constraint firstItem="fHD-9P-h6H" firstAttribute="top" secondItem="M4Z-g2-rfc" secondAttribute="top" constant="8" id="hB2-gX-Tia"/>
                                 </constraints>
                                 <variation key="default">
                                     <mask key="constraints">
                                         <exclude reference="daQ-GS-Lwo"/>
+                                        <exclude reference="0h4-Ut-3gB"/>
                                     </mask>
                                 </variation>
                             </view>
@@ -1073,6 +1102,8 @@ to rearrange the photos</string>
                             <constraint firstItem="cV5-4n-Kc8" firstAttribute="leading" secondItem="KKf-iN-47n" secondAttribute="leading" id="176-cc-axg"/>
                             <constraint firstItem="cV5-4n-Kc8" firstAttribute="top" secondItem="HkN-AG-Mcs" secondAttribute="bottom" constant="2" id="1Vk-xK-T9q"/>
                             <constraint firstAttribute="bottomMargin" secondItem="M4Z-g2-rfc" secondAttribute="bottom" id="3Nc-0K-Z6H"/>
+                            <constraint firstItem="M4Z-g2-rfc" firstAttribute="top" secondItem="cV5-4n-Kc8" secondAttribute="bottom" constant="39" id="3qP-Yb-hPz"/>
+                            <constraint firstItem="M4Z-g2-rfc" firstAttribute="top" secondItem="m2c-9c-c2i" secondAttribute="bottom" constant="2" id="5Db-5U-IAn"/>
                             <constraint firstAttribute="trailing" secondItem="HkN-AG-Mcs" secondAttribute="trailing" id="8oi-a5-BCH"/>
                             <constraint firstItem="9gd-BD-JKl" firstAttribute="leading" secondItem="KKf-iN-47n" secondAttribute="leading" id="8wp-lv-9ng"/>
                             <constraint firstItem="rQS-7Q-zgx" firstAttribute="top" secondItem="MDv-31-HTi" secondAttribute="bottom" constant="5" id="AiS-MT-eCO"/>
@@ -1080,14 +1111,21 @@ to rearrange the photos</string>
                             <constraint firstItem="9gd-BD-JKl" firstAttribute="top" secondItem="cV5-4n-Kc8" secondAttribute="bottom" constant="-35" id="ILG-hb-0VZ"/>
                             <constraint firstItem="4n1-p7-6FT" firstAttribute="leading" secondItem="KKf-iN-47n" secondAttribute="leading" id="WbP-GQ-FxZ"/>
                             <constraint firstAttribute="trailing" secondItem="9gd-BD-JKl" secondAttribute="trailing" id="Ymk-HI-mAD"/>
+                            <constraint firstAttribute="trailing" secondItem="m2c-9c-c2i" secondAttribute="trailing" id="ZIf-A5-Kg3"/>
                             <constraint firstAttribute="trailing" secondItem="4n1-p7-6FT" secondAttribute="trailing" id="aYm-wN-AMW"/>
+                            <constraint firstItem="m2c-9c-c2i" firstAttribute="leading" secondItem="KKf-iN-47n" secondAttribute="leading" id="cA5-oA-nYV"/>
                             <constraint firstItem="M4Z-g2-rfc" firstAttribute="leading" secondItem="KKf-iN-47n" secondAttribute="leading" id="h0d-CA-3C7"/>
-                            <constraint firstItem="M4Z-g2-rfc" firstAttribute="top" secondItem="9gd-BD-JKl" secondAttribute="bottom" constant="2" id="jhq-i8-7Ck"/>
                             <constraint firstItem="MDv-31-HTi" firstAttribute="centerX" secondItem="KKf-iN-47n" secondAttribute="centerX" id="kuk-95-1uK"/>
                             <constraint firstItem="HkN-AG-Mcs" firstAttribute="leading" secondItem="KKf-iN-47n" secondAttribute="leading" id="lNR-jU-Su1"/>
+                            <constraint firstItem="m2c-9c-c2i" firstAttribute="top" secondItem="cV5-4n-Kc8" secondAttribute="bottom" constant="2" id="vxK-oS-5Ir"/>
                             <constraint firstItem="HkN-AG-Mcs" firstAttribute="top" secondItem="4n1-p7-6FT" secondAttribute="bottom" constant="2" id="wAm-dR-bEi"/>
                             <constraint firstAttribute="trailing" secondItem="M4Z-g2-rfc" secondAttribute="trailing" id="wtC-iZ-6Sk"/>
                         </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="3qP-Yb-hPz"/>
+                            </mask>
+                        </variation>
                     </view>
                     <connections>
                         <outlet property="deliveryDetailsButton" destination="zBV-LU-9Ss" id="w8o-TK-4bG"/>
@@ -1132,6 +1170,45 @@ to rearrange the photos</string>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="dnj-1w-2sd">
                                 <rect key="frame" x="0.0" y="20" width="600" height="580"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="j4g-C0-Jow">
+                                        <rect key="frame" x="0.0" y="28" width="600" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="j4g-C0-Jow" id="9eb-MP-j2t">
+                                            <rect key="frame" x="0.0" y="0.0" width="600" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Eie-dZ-qNi">
+                                                    <rect key="frame" x="5" y="5" width="58" height="33"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="58" id="6Pf-vO-Adw"/>
+                                                        <constraint firstAttribute="height" constant="33" id="ESu-2Q-UrS"/>
+                                                    </constraints>
+                                                </imageView>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="•••• •••• •••• 4444 " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fNU-HY-Owb">
+                                                    <rect key="frame" x="73" y="11" width="158" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="fNU-HY-Owb" firstAttribute="leading" secondItem="Eie-dZ-qNi" secondAttribute="trailing" constant="10" id="FOn-6m-XZM"/>
+                                                <constraint firstItem="Eie-dZ-qNi" firstAttribute="centerY" secondItem="9eb-MP-j2t" secondAttribute="centerY" id="IXT-le-cSz"/>
+                                                <constraint firstItem="fNU-HY-Owb" firstAttribute="centerY" secondItem="Eie-dZ-qNi" secondAttribute="centerY" id="OYQ-Ju-PJk"/>
+                                                <constraint firstItem="Eie-dZ-qNi" firstAttribute="top" secondItem="9eb-MP-j2t" secondAttribute="top" constant="5" id="eHb-Pw-KUG"/>
+                                                <constraint firstAttribute="bottom" secondItem="Eie-dZ-qNi" secondAttribute="bottom" constant="5" id="gsg-fn-Brg"/>
+                                                <constraint firstItem="Eie-dZ-qNi" firstAttribute="leading" secondItem="9eb-MP-j2t" secondAttribute="leading" constant="5" id="l0d-gP-p67"/>
+                                            </constraints>
+                                            <variation key="default">
+                                                <mask key="constraints">
+                                                    <exclude reference="eHb-Pw-KUG"/>
+                                                    <exclude reference="gsg-fn-Brg"/>
+                                                </mask>
+                                            </variation>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </prototypes>
                             </tableView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -3668,6 +3745,7 @@ only £9.99 £8.99</string>
         <image name="book" width="575" height="393"/>
         <image name="button_arrow_down" width="45" height="45"/>
         <image name="button_arrow_up" width="45" height="45"/>
+        <image name="card" width="16" height="11"/>
         <image name="crop-corner-dl" width="23" height="23"/>
         <image name="crop-corner-dr" width="23" height="23"/>
         <image name="crop-corner-ul" width="23" height="23"/>

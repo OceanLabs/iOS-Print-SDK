@@ -79,6 +79,7 @@
 #import "UIViewController+OLMethods.h"
 #import "OLAddress+AddressBook.h"
 #import "NSObject+Utils.h"
+#import "OLPaymentMethodsViewController.h"
 
 #ifdef OL_KITE_OFFER_PAYPAL
 #ifdef COCOAPODS
@@ -1417,6 +1418,13 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 }
 
 - (IBAction)onButtonPayClicked:(UIButton *)sender {
+    
+}
+
+- (IBAction)onButtonAddPaymentMethodClicked:(UIButton *)sender {
+    OLPaymentMethodsViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLPaymentMethodsViewController"];
+    
+    [self presentViewController:[[OLNavigationController alloc] initWithRootViewController:vc] animated:YES completion:NULL];
 }
 
 
