@@ -28,18 +28,8 @@
 //
 
 #ifdef COCOAPODS
-#import <SDWebImage/SDWebImageManager.h>
 #import <TSMarkdownParser/TSMarkdownParser.h>
 #else
-#import "SDWebImageManager.h"
-#import "TSMarkdownParser.h"
-#endif
-
-#ifdef COCOAPODS
-#import <SDWebImage/SDWebImageManager.h>
-#import <TSMarkdownParser/TSMarkdownParser.h>
-#else
-#import "SDWebImageManager.h"
 #import "TSMarkdownParser.h"
 #endif
 
@@ -62,6 +52,7 @@
 #import "UIImageView+FadeIn.h"
 #import "UIViewController+OLMethods.h"
 #import "UIViewController+TraitCollectionCompatibility.h"
+#import "OLImageDownloader.h"
 
 #define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
 
@@ -114,24 +105,7 @@
                                                                             target:nil
                                                                             action:nil];
     NSURL *url = [NSURL URLWithString:[OLKiteABTesting sharedInstance].headerLogoURL];
-    if (url && [[SDWebImageManager sharedManager] cachedImageExistsForURL:url] && [self isMemberOfClass:[OLProductHomeViewController class]]){
-        [[SDWebImageManager sharedManager] downloadImageWithURL:url options:0 progress:NULL completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL){
-            image = [UIImage imageWithCGImage:image.CGImage scale:2 orientation:image.imageOrientation];
-            UIImageView *titleImageView = [[UIImageView alloc] initWithImage:image];
-            titleImageView.alpha = 0;
-            if ([self isPushed]){
-                self.parentViewController.navigationItem.titleView = titleImageView;
-            }
-            else{
-                self.navigationItem.titleView = titleImageView;
-            }
-            titleImageView.alpha = 0;
-            [UIView animateWithDuration:0.5 animations:^{
-                titleImageView.alpha = 1;
-            }];
-        }];
-    }
-    else if (!url && [self isMemberOfClass:[OLProductHomeViewController class]]){
+    if (!url && [self isMemberOfClass:[OLProductHomeViewController class]]){
         if ([self isPushed]){
             self.parentViewController.title = NSLocalizedString(@"Print Shop", @"");
         }
@@ -410,8 +384,10 @@
     }
     
     NSURL *url = [NSURL URLWithString:[OLKiteABTesting sharedInstance].headerLogoURL];
-    if (url && ![[SDWebImageManager sharedManager] cachedImageExistsForURL:url] && [self isMemberOfClass:[OLProductHomeViewController class]]){
-        [[SDWebImageManager sharedManager] downloadImageWithURL:url options:0 progress:NULL completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL){
+    if (url /*&& ![[SDWebImageManager sharedManager] cachedImageExistsForURL:url]*/ && [self isMemberOfClass:[OLProductHomeViewController class]]){
+        [[OLImageDownloader sharedInstance] downloadImageAtURL:url withCompletionHandler:^(UIImage *image, NSError *error){
+//        [[SDWebImageManager sharedManager] downloadImageWithURL:url options:0 progress:NULL completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL){
+            if (error) return;
             image = [UIImage imageWithCGImage:image.CGImage scale:2 orientation:image.imageOrientation];
             UIImageView *titleImageView = [[UIImageView alloc] initWithImage:image];
             titleImageView.alpha = 0;
@@ -630,7 +606,9 @@
         UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"extraCell" forIndexPath:indexPath];
         [self fixCellFrameOnIOS7:cell];
         UIImageView *cellImageView = (UIImageView *)[cell.contentView viewWithTag:40];
-        [[SDWebImageManager sharedManager] downloadImageWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/product_photography/placeholder.png"] options:0 progress:NULL completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL){
+        [[OLImageDownloader sharedInstance] downloadImageAtURL:[NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/product_photography/placeholder.png"] withCompletionHandler:^(UIImage *image, NSError *error){
+//        [[SDWebImageManager sharedManager] downloadImageWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/product_photography/placeholder.png"] options:0 progress:NULL completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL){
+            if (error) return;
             cellImageView.image = image;
             cell.backgroundColor = [image colorAtPixel:CGPointMake(3, 3)];
         }];

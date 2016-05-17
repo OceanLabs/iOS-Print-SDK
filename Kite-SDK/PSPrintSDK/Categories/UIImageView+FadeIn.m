@@ -27,9 +27,7 @@
 //  THE SOFTWARE.
 //
 
-#import "UIImageView+FadeIn.h"
-#import "UIImageView+WebCache.h"
-#include <sys/time.h>
+#import "OLImageDownloader.h"
 
 @implementation UIImageView (FadeIn)
 - (void)setAndFadeInImageWithURL:(NSURL *)url {
@@ -37,28 +35,18 @@
 }
 
 - (void)setAndFadeInImageWithURL:(NSURL *)url placeholder:(UIImage *)placeholder {
-    struct timeval t;
-    gettimeofday(&t, NULL);
-    long msec = t.tv_sec * 1000 + t.tv_usec / 1000;
-    
     self.alpha = 0;
-    __weak UIImageView *weakImageView = self;
     
-    [self sd_setImageWithURL:url placeholderImage:placeholder completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
-        struct timeval t;
-        gettimeofday(&t, NULL);
-        long elapsedTimeMillis = (t.tv_sec * 1000 + t.tv_usec / 1000) - msec;
+    
+    //    [self sd_setImageWithURL:url placeholderImage:placeholder completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+    [[OLImageDownloader sharedInstance] downloadImageAtURL:url withCompletionHandler:^(UIImage *image, NSError *error){
+        self.image = image;
+        [UIView beginAnimations:@"fadeIn" context:nil];
+        [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
+        [UIView setAnimationDuration:0.3];
+        self.alpha = 1;
+        [UIView commitAnimations];
         
-        if (cacheType == SDImageCacheTypeNone || elapsedTimeMillis > 10) {
-            weakImageView.alpha = 0;
-            [UIView beginAnimations:@"fadeIn" context:nil];
-            [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
-            [UIView setAnimationDuration:0.3];
-            weakImageView.alpha = 1;
-            [UIView commitAnimations];
-        } else {
-            weakImageView.alpha = 1;
-        }
     }];
     
 }
