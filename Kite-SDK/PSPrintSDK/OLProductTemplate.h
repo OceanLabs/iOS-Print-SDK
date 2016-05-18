@@ -91,6 +91,7 @@ typedef enum {
 + (void)sync;
 + (void)syncWithCompletionHandler:(void(^_Nullable)(NSArray <OLProductTemplate *>* _Nullable templates, NSError * _Nullable error))handler;
 + (BOOL)isSyncInProgress;
++ (void)cancelSyncInProgress;
 + (OLProductTemplate *_Nullable)templateWithId:(NSString *_Nonnull)identifier;
 + (NSArray *_Nullable)templates;
 + (NSDate *_Nullable)lastSyncDate;

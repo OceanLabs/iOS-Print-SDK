@@ -346,9 +346,9 @@
     }];
 }
 
-//- (void)cancel {
-//    [self.req cancel];
-//    self.req = nil;
-//}
+- (void)cancel {
+    [self.req cancel];
+    self.req = nil;
+}
 
 @end
