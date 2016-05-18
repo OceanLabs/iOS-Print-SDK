@@ -662,7 +662,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         }
         
         NSComparisonResult result = [[cost totalCostInCurrency:self.printOrder.currencyCode] compare:[NSDecimalNumber zero]];
-        if (result == NSOrderedAscending || result == NSOrderedSame) {
+        if (![OLKiteABTesting sharedInstance].theme.kioskRequirePromoCode && (result == NSOrderedAscending || result == NSOrderedSame)) {
 #ifdef OL_KITE_OFFER_PAYPAL
             self.paymentButton1.hidden = YES;
 #endif
