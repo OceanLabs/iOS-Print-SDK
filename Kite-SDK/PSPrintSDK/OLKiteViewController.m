@@ -226,7 +226,7 @@ static CGFloat fadeTime = 0.3;
 //    }
     
     [SDImageCache sharedImageCache].maxMemoryCountLimit = 1;
-    [[NSURLCache sharedURLCache] removeAllCachedResponses];
+//    [[NSURLCache sharedURLCache] removeAllCachedResponses];
     
     if (!self.navigationController){
         self.navigationBar.hidden = NO;

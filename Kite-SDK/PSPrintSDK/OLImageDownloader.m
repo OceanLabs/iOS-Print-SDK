@@ -10,8 +10,6 @@
 
 @interface OLImageDownloader ()
 
-@property (strong, nonatomic) NSURLCache *cache;
-
 @end
 
 @implementation OLImageDownloader
@@ -21,8 +19,8 @@
     static OLImageDownloader *sharedInstance;
     dispatch_once(&once, ^{
         sharedInstance = [[self alloc] init];
-        sharedInstance.cache = [[NSURLCache alloc] initWithMemoryCapacity:0 diskCapacity:100 * 1024 * 1024 diskPath:@"urlImagesCache"];
-        sleep(1);
+//        sharedInstance.cache = [[NSURLCache alloc] initWithMemoryCapacity:0 diskCapacity:100 * 1024 * 1024 diskPath:@"urlImagesCache"];
+//        sleep(1);
     });
     return sharedInstance;
 }
@@ -30,14 +28,14 @@
 - (void)downloadImageAtURL:(NSURL *)url withCompletionHandler:(void(^)(UIImage *image, NSError *error))handler{
     NSURLRequest *request = [[NSURLRequest alloc] initWithURL:url];
     
-    NSCachedURLResponse *cachedResponse = [self.cache cachedResponseForRequest:request];
+    NSCachedURLResponse *cachedResponse = [[NSURLCache sharedURLCache] cachedResponseForRequest:request];
     if (cachedResponse.data){
         handler([UIImage imageWithData:cachedResponse.data], nil);
         return;
     }
     
     NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
-    configuration.URLCache = self.cache;
+//    configuration.URLCache = self.cache;
     configuration.requestCachePolicy = NSURLRequestReturnCacheDataElseLoad;
     NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration delegate:nil delegateQueue:nil];
     
