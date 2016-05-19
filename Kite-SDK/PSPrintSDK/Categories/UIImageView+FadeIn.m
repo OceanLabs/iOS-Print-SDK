@@ -37,8 +37,6 @@
 - (void)setAndFadeInImageWithURL:(NSURL *)url placeholder:(UIImage *)placeholder {
     self.alpha = 0;
     
-    
-    //    [self sd_setImageWithURL:url placeholderImage:placeholder completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
     [[OLImageDownloader sharedInstance] downloadImageAtURL:url withCompletionHandler:^(UIImage *image, NSError *error){
         self.image = image;
         [UIView beginAnimations:@"fadeIn" context:nil];

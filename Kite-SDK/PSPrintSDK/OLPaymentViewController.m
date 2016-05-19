@@ -28,13 +28,12 @@
 //
 
 #ifdef COCOAPODS
-#import <SDWebImage/SDWebImageManager.h>
 #import <SVProgressHUD/SVProgressHUD.h>
 #else
-#import "SDWebImageManager.h"
 #import "SVProgressHUD.h"
 #endif
 
+#import "OLImageDownloader.h"
 #import "OLPaymentViewController.h"
 #import "OLReceiptViewController.h"
 #import "OLPrintOrder.h"
@@ -1738,7 +1737,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             largeEditButton.hidden = NO;
         }
         
-        [SDWebImageManager.sharedManager downloadImageWithURL:product.productTemplate.coverPhotoURL options:0 progress:NULL completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
+        [[OLImageDownloader sharedInstance] downloadImageAtURL:product.productTemplate.coverPhotoURL withCompletionHandler:^(UIImage *image, NSError *error){
             imageView.image = image;
         }];
         

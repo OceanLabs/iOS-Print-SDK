@@ -59,7 +59,6 @@ DEPENDENCIES:
   - KITAssetsPickerController
   - MPFlipViewController
   - PayPal-iOS-SDK/Core (~> 2.12.5)
-  - SDWebImage
   - SkyLab (~> 1.0.0)
   - Stripe (~> 5.1.4)
   - Stripe/ApplePay

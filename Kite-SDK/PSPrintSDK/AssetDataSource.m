@@ -7,12 +7,12 @@
 //
 
 #import "AssetDataSource.h"
-#import <SDWebImage/SDWebImageManager.h>
+#import "OLImageDownloader.h"
 
 @implementation AssetDataSource
 
 - (void)dataLengthWithCompletionHandler:(void (^)(long long, NSError *))handler{
-    [[SDWebImageManager sharedManager] downloadImageWithURL:[NSURL URLWithString:self.url] options:0 progress:NULL completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL){
+    [[OLImageDownloader sharedInstance] downloadImageAtURL:[NSURL URLWithString:self.url] withCompletionHandler:^(UIImage *image, NSError *error){
         dispatch_async(dispatch_get_main_queue(), ^{
             handler(UIImageJPEGRepresentation(image, 0.7).length, error);
         });
@@ -20,7 +20,7 @@
 }
 
 - (void)dataWithCompletionHandler:(void (^)(NSData *, NSError *))handler{
-    [[SDWebImageManager sharedManager] downloadImageWithURL:[NSURL URLWithString:self.url] options:0 progress:NULL completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL){
+    [[OLImageDownloader sharedInstance] downloadImageAtURL:[NSURL URLWithString:self.url] withCompletionHandler:^(UIImage *image, NSError *error){
         dispatch_async(dispatch_get_main_queue(), ^{
             handler(UIImageJPEGRepresentation(image, 0.7), error);
         });
@@ -44,7 +44,7 @@
 }
 
 - (void)thumbnailImageWithCompletionHandler:(void (^)(UIImage *))handler{
-    [[SDWebImageManager sharedManager] downloadImageWithURL:[NSURL URLWithString:self.url] options:0 progress:NULL completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL){
+    [[OLImageDownloader sharedInstance] downloadImageAtURL:[NSURL URLWithString:self.url] withCompletionHandler:^(UIImage *image, NSError *error){
         dispatch_async(dispatch_get_main_queue(), ^{
             handler(image);
         });
