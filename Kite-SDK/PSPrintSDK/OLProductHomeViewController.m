@@ -384,9 +384,8 @@
     }
     
     NSURL *url = [NSURL URLWithString:[OLKiteABTesting sharedInstance].headerLogoURL];
-    if (url /*&& ![[SDWebImageManager sharedManager] cachedImageExistsForURL:url]*/ && [self isMemberOfClass:[OLProductHomeViewController class]]){
+    if (url && ![[OLImageDownloader sharedInstance] cachedDataExistForURL:url] && [self isMemberOfClass:[OLProductHomeViewController class]]){
         [[OLImageDownloader sharedInstance] downloadImageAtURL:url withCompletionHandler:^(UIImage *image, NSError *error){
-//        [[SDWebImageManager sharedManager] downloadImageWithURL:url options:0 progress:NULL completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL){
             if (error) return;
             image = [UIImage imageWithCGImage:image.CGImage scale:2 orientation:image.imageOrientation];
             UIImageView *titleImageView = [[UIImageView alloc] initWithImage:image];
@@ -607,7 +606,6 @@
         [self fixCellFrameOnIOS7:cell];
         UIImageView *cellImageView = (UIImageView *)[cell.contentView viewWithTag:40];
         [[OLImageDownloader sharedInstance] downloadImageAtURL:[NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/product_photography/placeholder.png"] withCompletionHandler:^(UIImage *image, NSError *error){
-//        [[SDWebImageManager sharedManager] downloadImageWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/product_photography/placeholder.png"] options:0 progress:NULL completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL){
             if (error) return;
             cellImageView.image = image;
             cell.backgroundColor = [image colorAtPixel:CGPointMake(3, 3)];

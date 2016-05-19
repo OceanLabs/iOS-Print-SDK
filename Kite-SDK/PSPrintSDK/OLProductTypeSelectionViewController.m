@@ -40,12 +40,7 @@
 #import "UIViewController+OLMethods.h"
 #import "NSObject+Utils.h"
 #import "UIImage+ColorAtPixel.h"
-
-#ifdef COCOAPODS
-#import <SDWebImage/SDWebImageManager.h>
-#else
-#import "SDWebImageManager.h"
-#endif
+#import "OLImageDownloader.h"
 
 #define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
 
@@ -264,7 +259,7 @@
         UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"extraCell" forIndexPath:indexPath];
         [self fixCellFrameOnIOS7:cell];
         UIImageView *cellImageView = (UIImageView *)[cell.contentView viewWithTag:40];
-        [[SDWebImageManager sharedManager] downloadImageWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/product_photography/placeholder.png"] options:0 progress:NULL completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL){
+        [[OLImageDownloader sharedInstance] downloadImageAtURL:[NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/product_photography/placeholder.png"] withCompletionHandler:^(UIImage *image, NSError *error){
             cellImageView.image = image;
             cell.backgroundColor = [image colorAtPixel:CGPointMake(3, 3)];
         }];
