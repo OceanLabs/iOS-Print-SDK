@@ -27,12 +27,6 @@
 //  THE SOFTWARE.
 //
 
-#ifdef COCOAPODS
-#import <SkyLab/SkyLab.h>
-#else
-#import "SkyLab.h"
-#endif
-
 #import "OLCheckoutViewController.h"
 #import "OLPaymentViewController.h"
 #import "OLPrintOrder.h"

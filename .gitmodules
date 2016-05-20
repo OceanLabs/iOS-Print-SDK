@@ -1,6 +1,3 @@
-[submodule "Kite-SDK/vendor/SkyLab"]
-	path = Kite-SDK/vendor/SkyLab
-	url = https://github.com/mattt/SkyLab.git
 [submodule "Kite-SDK/vendor/MPFlipViewController"]
 	path = Kite-SDK/vendor/MPFlipViewController
 	url = https://github.com/mpospese/MPFlipViewController.git
