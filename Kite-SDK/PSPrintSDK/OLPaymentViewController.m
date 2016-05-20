@@ -340,7 +340,14 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         self.payWithApplePayButton.hidden = YES;
         self.checkoutButton.hidden = YES;
     }
-    if (![[OLKiteABTesting sharedInstance].paypalSupportedCurrencies containsObjectIdenticalTo:self.printOrder.currencyCode]){
+    
+    BOOL payPalSupportsOrderCurrency = NO;
+    for (NSString *currency in [OLKiteABTesting sharedInstance].paypalSupportedCurrencies){
+        if ([currency isEqualToString:self.printOrder.currencyCode]){
+            payPalSupportsOrderCurrency = YES;
+        }
+    }
+    if (!payPalSupportsOrderCurrency){
         [self.paymentButton1 removeFromSuperview];
     }
 #else
