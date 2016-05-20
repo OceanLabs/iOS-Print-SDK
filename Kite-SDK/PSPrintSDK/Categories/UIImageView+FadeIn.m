@@ -29,23 +29,56 @@
 
 #import "OLImageDownloader.h"
 
+#import "UIImageView+FadeIn.h"
+#import "OLImageDownloader.h"
+#import "objc/runtime.h"
+
+static char tasksKey;
+
 @implementation UIImageView (FadeIn)
 - (void)setAndFadeInImageWithURL:(NSURL *)url {
-    [self setAndFadeInImageWithURL:url placeholder:nil];
+    [self setAndFadeInImageWithURL:url placeholder:nil completionHandler:NULL];
 }
 
-- (void)setAndFadeInImageWithURL:(NSURL *)url placeholder:(UIImage *)placeholder {
-    self.alpha = 0;
+- (void)setAndFadeInImageWithURL:(NSURL *)url placeholder:(UIImage *)placeholder{
+    [self setAndFadeInImageWithURL:url placeholder:placeholder completionHandler:NULL];
+}
+
+- (void)setAndFadeInImageWithURL:(NSURL *)url placeholder:(UIImage *)placeholder completionHandler:(void(^)())handler{
+    for (id key in self.tasks.allKeys){
+        if (![key isEqual:url]){
+            [self.tasks[key] cancel];
+        }
+    }
     
-    [[OLImageDownloader sharedInstance] downloadImageAtURL:url withCompletionHandler:^(UIImage *image, NSError *error){
+    self.alpha = 0;
+    NSURLSessionTask *task = [[OLImageDownloader sharedInstance] downloadImageAtURL:url withCompletionHandler:^(UIImage *image, NSError *error){
+        if ([self.tasks[url] state] == NSURLSessionTaskStateCanceling){
+            [self.tasks removeObjectForKey:url];
+            return;
+        }
+        [self.tasks removeObjectForKey:url];
         self.image = image;
-        [UIView beginAnimations:@"fadeIn" context:nil];
-        [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
-        [UIView setAnimationDuration:0.3];
-        self.alpha = 1;
-        [UIView commitAnimations];
+        [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+            self.alpha = 1;
+        }completion:^(BOOL finished){
+            if (handler){
+                handler();
+            }
+        }];
         
     }];
-    
+    self.tasks[url] = task;
 }
+
+- (NSMutableDictionary *)tasks{
+    NSMutableDictionary *tasks = objc_getAssociatedObject(self, &tasksKey);
+    if (tasks){
+        return tasks;
+    }
+    tasks = [[NSMutableDictionary alloc] init];
+    objc_setAssociatedObject(self, &tasksKey, tasks, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    return tasks;
+}
+
 @end

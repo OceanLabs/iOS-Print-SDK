@@ -66,14 +66,12 @@ static NSString *const kKeyURL = @"co.oceanlabs.pssdk.kKeyURL";
 - (void)dataLengthWithCompletionHandler:(GetDataLengthHandler)handler {
     self.inProgressDownload = [[OLImageDownloader sharedInstance] downloadImageAtURL:self.url withCompletionHandler:^(UIImage *image, NSError *error) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            if (finished) {
-                self.inProgressDownload = nil;
-                if (image) {
-                    NSData *data = UIImageJPEGRepresentation(image, 0.6);
-                    handler(data.length, error);
-                } else {
-                    handler(0, error);
-                }
+            self.inProgressDownload = nil;
+            if (image) {
+                NSData *data = UIImageJPEGRepresentation(image, 0.6);
+                handler(data.length, error);
+            } else {
+                handler(0, error);
             }
         });
     }];
