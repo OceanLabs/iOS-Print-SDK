@@ -28,13 +28,12 @@
 //
 
 #ifdef COCOAPODS
-#import <SDWebImage/SDWebImageManager.h>
 #import <SVProgressHUD/SVProgressHUD.h>
 #else
-#import "SDWebImageManager.h"
 #import "SVProgressHUD.h"
 #endif
 
+#import "OLImageDownloader.h"
 #import "OLReceiptViewController.h"
 #import "OLPaymentViewController.h"
 #import "Util.h"
@@ -169,11 +168,11 @@ static const NSUInteger kSectionErrorRetry = 2;
 - (void)setupHeader{
     NSString *url = self.printOrder.printed ? [OLKiteABTesting sharedInstance].receiptSuccessURL : [OLKiteABTesting sharedInstance].receiptFailureURL;
     if (url){
-        [[SDWebImageManager sharedManager] downloadImageWithURL:[NSURL URLWithString:url] options:0 progress:NULL completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL){
+        [[OLImageDownloader sharedInstance] downloadImageAtURL:[NSURL URLWithString:url] withCompletionHandler:^(UIImage *image, NSError *error){
             image = [UIImage imageWithCGImage:image.CGImage scale:2 orientation:image.imageOrientation];
             NSString *bgUrl = self.printOrder.printed ? [OLKiteABTesting sharedInstance].receiptSuccessBgURL : [OLKiteABTesting sharedInstance].receiptFailureBgURL;
             if (bgUrl){
-                [[SDWebImageManager sharedManager] downloadImageWithURL:[NSURL URLWithString:bgUrl] options:0 progress:NULL completed:^(UIImage *bgImage, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL){
+                [[OLImageDownloader sharedInstance] downloadImageAtURL:[NSURL URLWithString:bgUrl] withCompletionHandler:^(UIImage *bgImage, NSError *error){
                     bgImage = [UIImage imageWithCGImage:bgImage.CGImage scale:2 orientation:image.imageOrientation];
                     [self setupBannerImage:image withBgImage:bgImage];
                 }];

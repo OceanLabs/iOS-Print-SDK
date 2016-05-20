@@ -1,30 +1,21 @@
 platform :ios, '8.0'
 inhibit_all_warnings!
 
-def shared_pods
-    pod 'SDWebImage'
-    pod 'SVProgressHUD', '1.1.3'
-    pod 'PayPal-iOS-SDK/Core', '~> 2.12.5'
-    pod 'UICKeyChainStore', '~> 2.0.4'
-    pod 'Stripe', '~> 5.1.4'
-    pod 'Stripe/ApplePay'
-    pod 'CTAssetsPickerController'
-    pod 'InstagramImagePicker'
-    pod 'DACircularProgress'
-    pod 'FacebookImagePicker'
-    pod 'CSStickyHeaderFlowLayout'
-    pod 'UIColor-HexString'
-    pod 'MPFlipViewController'
-    pod 'SkyLab', '~> 1.0.0'
-    pod 'TSMarkdownParser'
-    pod 'KITAssetsPickerController'
-    pod 'ios-qr-encoder', '~> 1.0.4'
-end
+link_with 'KiteSDK-Demo', 'KitePrintSDKTests'
 
-target 'KiteSDK-Demo' do
-    shared_pods
-end
-
-target 'Kite-CI-Deploy' do
-    shared_pods
-end
+pod 'SVProgressHUD', '1.1.3'
+pod 'PayPal-iOS-SDK/Core', '~> 2.12.5'
+pod 'UICKeyChainStore', '~> 2.0.4'
+pod 'Stripe', '~> 5.1.4'
+pod 'Stripe/ApplePay'
+pod 'CTAssetsPickerController'
+pod 'InstagramImagePicker'
+pod 'DACircularProgress'
+pod 'FacebookImagePicker'
+pod 'CSStickyHeaderFlowLayout'
+pod 'UIColor-HexString'
+pod 'MPFlipViewController'
+pod 'SkyLab', '~> 1.0.0'
+pod 'TSMarkdownParser'
+pod 'KITAssetsPickerController'
+pod 'ios-qr-encoder', '~> 1.0.4'

@@ -45,12 +45,6 @@
 #import "UIImage+ColorAtPixel.h"
 #import "OLKiteUtils.h"
 
-#ifdef COCOAPODS
-#import <SDWebImage/SDImageCache.h>
-#else
-#import "SDImageCache.h"
-#endif
-
 
 #ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
 #import "OLCustomPhotoProvider.h"
@@ -224,9 +218,6 @@ static CGFloat fadeTime = 0.3;
 //        self.navigationBar.tintColor = [UIColor grayColor];
 //        self.navigationBar.barStyle = UIBarStyleBlackTranslucent;
 //    }
-    
-    [SDImageCache sharedImageCache].maxMemoryCountLimit = 1;
-    [[NSURLCache sharedURLCache] removeAllCachedResponses];
     
     if (!self.navigationController){
         self.navigationBar.hidden = NO;

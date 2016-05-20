@@ -29,12 +29,11 @@
 
 #ifdef COCOAPODS
 #import <SkyLab/SkyLab.h>
-#import <SDWebImage/SDWebImageManager.h>
 #else
 #import "SkyLab.h"
-#import "SDWebImageManager.h"
 #endif
 
+#import "OLImageDownloader.h"
 #import "OLKiteABTesting.h"
 #import "OLKitePrintSDK.h"
 #import "UIColor+HexString.h"
@@ -171,7 +170,7 @@ id safeObject(id obj){
     for (NSString *s in @[kOLKiteThemeHeaderLogoImageURL, kOLKiteThemeCheckoutProgress1, kOLKiteThemeCheckoutProgress2, kOLKiteThemeCheckoutProgress1Bg, kOLKiteThemeCheckoutProgress2Bg, kOLKiteThemeReceiptSuccess, kOLKiteThemeReceiptFailure, kOLKiteThemeReceiptSuccessBg, kOLKiteThemeReceiptFailureBg]){
         NSURL *url = [NSURL URLWithString:[defaults objectForKey:s]];
         if (url){
-            [[SDWebImageManager sharedManager] downloadImageWithURL:url options:0 progress:NULL completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL){
+            [[OLImageDownloader sharedInstance] downloadImageAtURL:url withCompletionHandler:^(UIImage *image, NSError *error){
                 if (!image){
                     [defaults removeObjectForKey:s];
                 }

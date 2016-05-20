@@ -28,10 +28,8 @@
 //
 
 #ifdef COCOAPODS
-#import <SDWebImage/SDWebImageManager.h>
 #import <SkyLab/SkyLab.h>
 #else
-#import "SDWebImageManager.h"
 #import "SkyLab.h"
 #endif
 

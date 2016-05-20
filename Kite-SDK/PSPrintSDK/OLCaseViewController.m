@@ -27,14 +27,7 @@
 //  THE SOFTWARE.
 //
 
-#ifdef COCOAPODS
-#import <SDWebImage/SDWebImageManager.h>
-#import <SDWebImage/SDWebImagePrefetcher.h>
-#else
-#import "SDWebImageManager.h"
-#import "SDWebImagePrefetcher.h"
-#endif
-
+#import "OLImageDownloader.h"
 #import "OLCaseViewController.h"
 #import "OLRemoteImageCropper.h"
 #import "UIImage+ImageNamedInKiteBundle.h"
@@ -68,23 +61,34 @@
     [super viewDidLoad];
     
     self.downloadImagesOperation = [NSBlockOperation blockOperationWithBlock:^{}];
-    NSMutableArray *urls = [[NSMutableArray alloc] init];
+    
     
     if (self.product.productTemplate.maskImageURL){
-        [urls addObject:self.product.productTemplate.maskImageURL];
+        NSOperation *op1 = [NSBlockOperation blockOperationWithBlock:^{}];
+        [self.downloadImagesOperation addDependency:op1];
+        
+        [[OLImageDownloader sharedInstance] downloadImageAtURL:self.product.productTemplate.maskImageURL withCompletionHandler:^(UIImage *image, NSError *error){
+            [[NSOperationQueue mainQueue] addOperation:op1];
+        }];
     }
     if (self.product.productTemplate.productHighlightsImageURL){
-        [urls addObject:self.product.productTemplate.productHighlightsImageURL];
+        NSOperation *op2 = [NSBlockOperation blockOperationWithBlock:^{}];
+        [self.downloadImagesOperation addDependency:op2];
+        
+        [[OLImageDownloader sharedInstance] downloadImageAtURL:self.product.productTemplate.productHighlightsImageURL withCompletionHandler:^(UIImage *image, NSError *error){
+            [[NSOperationQueue mainQueue] addOperation:op2];
+        }];
     }
     if (self.product.productTemplate.productBackgroundImageURL){
-        [urls addObject:self.product.productTemplate.productBackgroundImageURL];
+        NSOperation *op3 = [NSBlockOperation blockOperationWithBlock:^{}];
+        [self.downloadImagesOperation addDependency:op3];
+        
+        [[OLImageDownloader sharedInstance] downloadImageAtURL:self.product.productTemplate.productBackgroundImageURL withCompletionHandler:^(UIImage *image, NSError *error){
+            [[NSOperationQueue mainQueue] addOperation:op3];
+        }];
     }
     
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        [[SDWebImagePrefetcher sharedImagePrefetcher] prefetchURLs:urls progress:NULL completed:^(NSUInteger numberOfCompletedURLs, NSUInteger numberOfSkippedURLs){
-            [[NSOperationQueue mainQueue] addOperation:self.downloadImagesOperation];
-        }];
-    });
+    [[NSOperationQueue mainQueue] addOperation:self.downloadImagesOperation];
     
     self.downloadedMask = NO;
 }
@@ -164,7 +168,7 @@
     if (self.downloadedMask){
         return;
     }
-    [[SDWebImageManager sharedManager] downloadImageWithURL:self.product.productTemplate.maskImageURL options:SDWebImageHighPriority progress:NULL completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL){
+    [[OLImageDownloader sharedInstance] downloadImageAtURL:self.product.productTemplate.maskImageURL withCompletionHandler:^(UIImage *image, NSError *error){
         [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
         if (error) {
             UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Oops", @"")  message:NSLocalizedString(@"Failed to download phone case mask. Please check your internet connectivity and try again", @"")  delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", @"") otherButtonTitles:@"Retry", nil];
@@ -181,14 +185,12 @@
             self.maskImage = image;
             [self maskWithImage:self.maskImage targetView:self.imageCropView];
             
-            [[SDWebImageManager sharedManager] downloadImageWithURL:self.product.productTemplate.productBackgroundImageURL options:SDWebImageHighPriority progress:NULL completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL){
+            [[OLImageDownloader sharedInstance] downloadImageAtURL:self.product.productTemplate.productBackgroundImageURL withCompletionHandler:^(UIImage *image, NSError *error){
                 self.deviceView.image = image;
             }];
-             [[SDWebImageManager sharedManager] downloadImageWithURL:self.product.productTemplate.productHighlightsImageURL options:SDWebImageHighPriority progress:NULL completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL){
+            [[OLImageDownloader sharedInstance] downloadImageAtURL:self.product.productTemplate.productHighlightsImageURL withCompletionHandler:^(UIImage *image, NSError *error){
                 self.highlightsView.image = image;
              }];
-            
-            
             
             self.visualEffectView.hidden = YES;
             self.downloadedMask = YES;
