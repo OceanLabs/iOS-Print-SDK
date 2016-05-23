@@ -430,6 +430,10 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 }
 
 - (IBAction)onButtonMoreOptionsClicked:(id)sender{
+    if (self.printOrder.jobs.count == 0){
+        return;
+    }
+    
 #ifndef OL_NO_ANALYTICS
     [OLAnalytics trackPaymentScreenHitCheckoutForOrder:self.printOrder];
 #endif
