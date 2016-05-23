@@ -32,7 +32,6 @@ PODS:
   - Stripe/Core (5.1.4)
   - SVProgressHUD (1.1.3)
   - TSMarkdownParser (2.1.0)
-  - UICKeyChainStore (2.0.7)
 
 DEPENDENCIES:
   - CSStickyHeaderFlowLayout
@@ -48,7 +47,6 @@ DEPENDENCIES:
   - Stripe/ApplePay
   - SVProgressHUD (= 1.1.3)
   - TSMarkdownParser
-  - UICKeyChainStore (~> 2.0.4)
 
 SPEC CHECKSUMS:
   Bolts: a0058fa3b331c5a1e4402d534f2dae36dbff31e4
@@ -68,6 +66,5 @@ SPEC CHECKSUMS:
   Stripe: 6864be95b09092f05526bc2e0a50804bc556aa0d
   SVProgressHUD: 748080e4f36e603f6c02aec292664239df5279c1
   TSMarkdownParser: 4b3cec2a11d9c70d9dce265e7ec7347166c70fe8
-  UICKeyChainStore: 696cd35083f7c8fb5e201d909b7e6aea6b478575
 
 COCOAPODS: 0.39.0

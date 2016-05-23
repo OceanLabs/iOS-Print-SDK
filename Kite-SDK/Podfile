@@ -1,11 +1,10 @@
 platform :ios, '8.0'
 inhibit_all_warnings!
 
-link_with 'KiteSDK-Demo', 'Kite-CI-Deploy'
+link_with 'KiteSDK-Demo', 'Kite-CI-Deploy', 'KitePrintSDKTests'
 
 pod 'SVProgressHUD', '1.1.3'
 pod 'PayPal-iOS-SDK/Core', '~> 2.12.5'
-pod 'UICKeyChainStore', '~> 2.0.4'
 pod 'Stripe', '~> 5.1.4'
 pod 'Stripe/ApplePay'
 pod 'CTAssetsPickerController'

@@ -36,7 +36,7 @@
 #import "OLKitePrintSDK.h"
 #include <sys/sysctl.h>
 #import "OLKiteABTesting.h"
-#import "UICKeyChainStore.h"
+#import "OLKeyChainStore.h"
 #import "NSDictionary+RequestParameterData.h"
 
 static NSString *const kKeyUserDistinctId = @"ly.kite.sdk.kKeyUserDistinctId";
@@ -84,7 +84,7 @@ static __weak id<OLKiteDelegate> kiteDelegate;
 }
 
 + (NSString *)userDistinctId{
-    UICKeyChainStore *keychain = [UICKeyChainStore keyChainStoreWithService:kKeyServiceName];
+    OLKeyChainStore *keychain = [OLKeyChainStore keyChainStoreWithService:kKeyServiceName];
     NSData *data = [keychain dataForKey:kKeyUserDistinctId];
     NSString *uuid;
     if (data){
