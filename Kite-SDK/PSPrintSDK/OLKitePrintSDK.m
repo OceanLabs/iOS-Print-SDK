@@ -27,10 +27,20 @@
 //  THE SOFTWARE.
 //
 
+#ifdef OL_KITE_OFFER_FACEBOOK
 #ifdef COCOAPODS
 #import <NXOAuth2Client/NXOAuth2AccountStore.h>
 #else
 #import "NXOAuth2AccountStore.h"
+#endif
+#endif
+
+#ifdef OL_KITE_OFFER_INSTAGRAM
+#ifdef COCOAPODS
+#import <NXOAuth2Client/NXOAuth2AccountStore.h>
+#else
+#import "NXOAuth2AccountStore.h"
+#endif
 #endif
 
 #import "OLKitePrintSDK.h"
@@ -301,6 +311,7 @@ static NSString* creativeSDKClientSecret = nil;
     OLPrintOrder *printOrder = [[OLPrintOrder alloc] init];
     [printOrder saveOrder];
     
+#ifdef OL_KITE_OFFER_INSTAGRAM
     NSHTTPCookie *cookie;
     NSHTTPCookieStorage *storage = [NSHTTPCookieStorage sharedHTTPCookieStorage];
     NSArray *cookies = [NSArray arrayWithArray:[storage cookies]];
@@ -309,15 +320,18 @@ static NSString* creativeSDKClientSecret = nil;
             [storage deleteCookie:cookie];
         }
     }
-    
+
     NSArray *instagramAccounts = [[NXOAuth2AccountStore sharedStore] accountsWithAccountType:@"instagram"];
     for (NXOAuth2Account *account in instagramAccounts) {
         [[NXOAuth2AccountStore sharedStore] removeAccount:account];
     }
+#endif
     
+#ifdef OL_KITE_OFFER_FACEBOOK
     FBSDKLoginManager *loginManager = [[FBSDKLoginManager alloc] init];
     [loginManager logOut];
     [FBSDKAccessToken setCurrentAccessToken:nil];
+#endif
     
     [OLKiteABTesting sharedInstance].theme.kioskShipToStoreAddress.recipientLastName = nil;
     [OLKiteABTesting sharedInstance].theme.kioskShipToStoreAddress.recipientFirstName = nil;
