@@ -1,6 +1,6 @@
 machine:
   xcode:
-    version: 7.2
+    version: 7.3
   environment:
     GYM_CODE_SIGNING_IDENTITY: "iPhone Distribution: Kite Tech LTD (L78L4U72YJ)"
 
