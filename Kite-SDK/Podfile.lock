@@ -33,7 +33,6 @@ PODS:
   - SVProgressHUD (1.1.3)
   - TSMarkdownParser (2.1.0)
   - UICKeyChainStore (2.0.7)
-  - UIColor-HexString (1.3.0)
 
 DEPENDENCIES:
   - CSStickyHeaderFlowLayout
@@ -50,7 +49,6 @@ DEPENDENCIES:
   - SVProgressHUD (= 1.1.3)
   - TSMarkdownParser
   - UICKeyChainStore (~> 2.0.4)
-  - UIColor-HexString
 
 SPEC CHECKSUMS:
   Bolts: a0058fa3b331c5a1e4402d534f2dae36dbff31e4
@@ -71,6 +69,5 @@ SPEC CHECKSUMS:
   SVProgressHUD: 748080e4f36e603f6c02aec292664239df5279c1
   TSMarkdownParser: 4b3cec2a11d9c70d9dce265e7ec7347166c70fe8
   UICKeyChainStore: 696cd35083f7c8fb5e201d909b7e6aea6b478575
-  UIColor-HexString: fadc2e1389db19147ac99dee92222d3bd8bfec4a
 
 COCOAPODS: 0.39.0

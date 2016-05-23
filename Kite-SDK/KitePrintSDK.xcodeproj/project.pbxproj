@@ -328,7 +328,6 @@
 		2EA3D3D31C9C04B500B99BCD /* libTSMarkdownParser.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E22058AD1BF3F946009CFAF6 /* libTSMarkdownParser.a */; };
 		2EA3D3D41C9C04B500B99BCD /* libSVProgressHUD.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E220589C1BF3F8C4009CFAF6 /* libSVProgressHUD.a */; };
 		2EA3D3D51C9C04B500B99BCD /* libUICKeyChainStore.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E220588D1BF3F868009CFAF6 /* libUICKeyChainStore.a */; };
-		2EA3D3D61C9C04B500B99BCD /* libUIColor-HexString.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E220587E1BF3F7AC009CFAF6 /* libUIColor-HexString.a */; };
 		2EA3D3D71C9C04B500B99BCD /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		2EA3D3D91C9C04B500B99BCD /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD73BF6B186215790009DE03 /* Foundation.framework */; };
 		2EA3D3DA1C9C04B500B99BCD /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD73BF6F186215790009DE03 /* UIKit.framework */; };
@@ -479,8 +478,6 @@
 		CD73BF8C186215790009DE03 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD73BF6B186215790009DE03 /* Foundation.framework */; };
 		CD73BF8D186215790009DE03 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD73BF6F186215790009DE03 /* UIKit.framework */; };
 		CD73BF97186215790009DE03 /* OLSDKModelTests.m in Sources */ = {isa = PBXBuildFile; fileRef = CD73BF96186215790009DE03 /* OLSDKModelTests.m */; };
-		E22058871BF3F7DB009CFAF6 /* UIColor+HexString.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C84251BE288D30041D4CF /* UIColor+HexString.m */; };
-		E22058881BF3F854009CFAF6 /* libUIColor-HexString.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E220587E1BF3F7AC009CFAF6 /* libUIColor-HexString.a */; };
 		E22058961BF3F87F009CFAF6 /* UICKeyChainStore.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C84211BE2880E0041D4CF /* UICKeyChainStore.m */; };
 		E22058971BF3F8B2009CFAF6 /* libUICKeyChainStore.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E220588D1BF3F868009CFAF6 /* libUICKeyChainStore.a */; };
 		E22058A51BF3F8E6009CFAF6 /* SVIndefiniteAnimatedView.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C84141BE2877A0041D4CF /* SVIndefiniteAnimatedView.m */; };
@@ -651,15 +648,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		2EA3D3DF1C9C04B500B99BCD /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "include/$(PRODUCT_NAME)";
-			dstSubfolderSpec = 16;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		E220587C1BF3F7AC009CFAF6 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "include/$(PRODUCT_NAME)";
@@ -1079,7 +1067,6 @@
 		CDE0744A188D7730009ADFA2 /* OLURLDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLURLDataSource.m; sourceTree = "<group>"; };
 		CDE5DDCD18E5BE40000FF3B5 /* OLPrintEnvironment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLPrintEnvironment.h; sourceTree = "<group>"; };
 		CDFFA781189D2DF40083BCE7 /* OLAsset+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "OLAsset+Private.h"; sourceTree = "<group>"; };
-		E220587E1BF3F7AC009CFAF6 /* libUIColor-HexString.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libUIColor-HexString.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E220588D1BF3F868009CFAF6 /* libUICKeyChainStore.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libUICKeyChainStore.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		E220589C1BF3F8C4009CFAF6 /* libSVProgressHUD.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libSVProgressHUD.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		E22058AD1BF3F946009CFAF6 /* libTSMarkdownParser.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libTSMarkdownParser.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1314,7 +1301,6 @@
 				2EA3D3D31C9C04B500B99BCD /* libTSMarkdownParser.a in Frameworks */,
 				2EA3D3D41C9C04B500B99BCD /* libSVProgressHUD.a in Frameworks */,
 				2EA3D3D51C9C04B500B99BCD /* libUICKeyChainStore.a in Frameworks */,
-				2EA3D3D61C9C04B500B99BCD /* libUIColor-HexString.a in Frameworks */,
 				2EA3D3D71C9C04B500B99BCD /* (null) in Frameworks */,
 				2EA3D3D91C9C04B500B99BCD /* Foundation.framework in Frameworks */,
 				2EA3D3DA1C9C04B500B99BCD /* UIKit.framework in Frameworks */,
@@ -1355,13 +1341,6 @@
 				CD73BF8B186215790009DE03 /* XCTest.framework in Frameworks */,
 				CD73BF8D186215790009DE03 /* UIKit.framework in Frameworks */,
 				CD73BF8C186215790009DE03 /* Foundation.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		E220587B1BF3F7AC009CFAF6 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1435,7 +1414,6 @@
 				E22058B71BF3F96F009CFAF6 /* libTSMarkdownParser.a in Frameworks */,
 				E22058A81BF3F907009CFAF6 /* libSVProgressHUD.a in Frameworks */,
 				E22058971BF3F8B2009CFAF6 /* libUICKeyChainStore.a in Frameworks */,
-				E22058881BF3F854009CFAF6 /* libUIColor-HexString.a in Frameworks */,
 				E29C86201BE3B8E70041D4CF /* Foundation.framework in Frameworks */,
 				E29C861D1BE3B70B0041D4CF /* UIKit.framework in Frameworks */,
 				E29C861C1BE3B7060041D4CF /* CoreGraphics.framework in Frameworks */,
@@ -1793,7 +1771,6 @@
 				CD73BF89186215790009DE03 /* KitePrintSDKTests.xctest */,
 				E29C85701BE3B4290041D4CF /* libKiteSDK.a */,
 				2EADD8651BE79D6D0051CD31 /* KiteSDK-Demo.app */,
-				E220587E1BF3F7AC009CFAF6 /* libUIColor-HexString.a */,
 				E220588D1BF3F868009CFAF6 /* libUICKeyChainStore.a */,
 				E220589C1BF3F8C4009CFAF6 /* libSVProgressHUD.a */,
 				E22058AD1BF3F946009CFAF6 /* libTSMarkdownParser.a */,
@@ -2421,23 +2398,6 @@
 			productReference = CD73BF89186215790009DE03 /* KitePrintSDKTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		E220587D1BF3F7AC009CFAF6 /* UIColor-HexString */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = E22058841BF3F7AC009CFAF6 /* Build configuration list for PBXNativeTarget "UIColor-HexString" */;
-			buildPhases = (
-				E220587A1BF3F7AC009CFAF6 /* Sources */,
-				E220587B1BF3F7AC009CFAF6 /* Frameworks */,
-				E220587C1BF3F7AC009CFAF6 /* CopyFiles */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = "UIColor-HexString";
-			productName = "UIColor-HexString";
-			productReference = E220587E1BF3F7AC009CFAF6 /* libUIColor-HexString.a */;
-			productType = "com.apple.product-type.library.static";
-		};
 		E220588C1BF3F868009CFAF6 /* UICKeyChainStore */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = E22058931BF3F868009CFAF6 /* Build configuration list for PBXNativeTarget "UICKeyChainStore" */;
@@ -2625,9 +2585,6 @@
 					CD73BF88186215790009DE03 = {
 						TestTargetID = 2E898C4C1CC518180041CCD8;
 					};
-					E220587D1BF3F7AC009CFAF6 = {
-						CreatedOnToolsVersion = 7.1;
-					};
 					E220588C1BF3F868009CFAF6 = {
 						CreatedOnToolsVersion = 7.1;
 					};
@@ -2679,7 +2636,6 @@
 				2E4CAF081BC25F0A0089FA26 /* Docs */,
 				E29C856F1BE3B4290041D4CF /* KiteSDK */,
 				2EA3D35A1C9C04B500B99BCD /* KiteSDKMinimal */,
-				E220587D1BF3F7AC009CFAF6 /* UIColor-HexString */,
 				E220588C1BF3F868009CFAF6 /* UICKeyChainStore */,
 				E220589B1BF3F8C4009CFAF6 /* SVProgressHUD */,
 				E22058AC1BF3F946009CFAF6 /* TSMarkdownParser */,
@@ -3247,14 +3203,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		E220587A1BF3F7AC009CFAF6 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				E22058871BF3F7DB009CFAF6 /* UIColor+HexString.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		E22058891BF3F868009CFAF6 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -3635,7 +3583,6 @@
 					"-l\"Stripe\"",
 					"-l\"TSMarkdownParser\"",
 					"-l\"UICKeyChainStore\"",
-					"-l\"UIColor-HexString\"",
 					"-l\"c++\"",
 					"-framework",
 					"\"AVFoundation\"",
@@ -3750,7 +3697,6 @@
 					"-l\"Stripe\"",
 					"-l\"TSMarkdownParser\"",
 					"-l\"UICKeyChainStore\"",
-					"-l\"UIColor-HexString\"",
 					"-l\"c++\"",
 					"-framework",
 					"\"AVFoundation\"",
@@ -3923,7 +3869,6 @@
 					"-l\"Stripe\"",
 					"-l\"TSMarkdownParser\"",
 					"-l\"UICKeyChainStore\"",
-					"-l\"UIColor-HexString\"",
 					"-l\"c++\"",
 					"-framework",
 					"\"AVFoundation\"",
@@ -4037,7 +3982,6 @@
 					"-l\"Stripe\"",
 					"-l\"TSMarkdownParser\"",
 					"-l\"UICKeyChainStore\"",
-					"-l\"UIColor-HexString\"",
 					"-l\"c++\"",
 					"-framework",
 					"\"AVFoundation\"",
@@ -4214,49 +4158,6 @@
 				PRODUCT_NAME = KitePrintSDKTests;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Kite-CI-Deploy.app/Kite-CI-Deploy";
 				WRAPPER_EXTENSION = xctest;
-			};
-			name = Release;
-		};
-		E22058851BF3F7AC009CFAF6 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				DEBUG_INFORMATION_FORMAT = dwarf;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
-				MTL_ENABLE_DEBUG_INFO = YES;
-				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				WARNING_CFLAGS = (
-					"-Wno-shorten-64-to-32",
-					"-Wno-absolute-value",
-				);
-			};
-			name = Debug;
-		};
-		E22058861BF3F7AC009CFAF6 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
-				MTL_ENABLE_DEBUG_INFO = NO;
-				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				WARNING_CFLAGS = (
-					"-Wno-shorten-64-to-32",
-					"-Wno-absolute-value",
-				);
 			};
 			name = Release;
 		};
@@ -4727,15 +4628,6 @@
 			buildConfigurations = (
 				CD73BF9E186215790009DE03 /* Debug */,
 				CD73BF9F186215790009DE03 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		E22058841BF3F7AC009CFAF6 /* Build configuration list for PBXNativeTarget "UIColor-HexString" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				E22058851BF3F7AC009CFAF6 /* Debug */,
-				E22058861BF3F7AC009CFAF6 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

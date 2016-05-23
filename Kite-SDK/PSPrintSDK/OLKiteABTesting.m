@@ -30,7 +30,6 @@
 #import "OLImageDownloader.h"
 #import "OLKiteABTesting.h"
 #import "OLKitePrintSDK.h"
-#import "UIColor+HexString.h"
 #import "OLKiteUtils.h"
 #include <stdlib.h>
 

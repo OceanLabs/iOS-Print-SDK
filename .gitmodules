@@ -13,9 +13,6 @@
 [submodule "Kite-SDK/vendor/UICKeyChainStore"]
 	path = Kite-SDK/vendor/UICKeyChainStore
 	url = https://github.com/kishikawakatsumi/UICKeyChainStore.git
-[submodule "Kite-SDK/vendor/UIColor-HexString"]
-	path = Kite-SDK/vendor/UIColor-HexString
-	url = https://github.com/kevinrenskers/UIColor-HexString.git
 [submodule "Kite-SDK/vendor/CSStickyHeaderFlowLayout"]
 	path = Kite-SDK/vendor/CSStickyHeaderFlowLayout
 	url = https://github.com/OceanLabs/CSStickyHeaderFlowLayout

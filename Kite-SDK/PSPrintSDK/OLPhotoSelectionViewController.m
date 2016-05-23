@@ -27,12 +27,6 @@
 //  THE SOFTWARE.
 //
 
-#ifdef COCOAPODS
-#import <UIColor-HexString/UIColor+HexString.h>
-#else
-#import "UIColor+HexString.h"
-#endif
-
 #import "OLPhotoSelectionViewController.h"
 #import "OLPrintPhoto.h"
 #import "OLOrderReviewViewController.h"
@@ -1130,7 +1124,7 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
 
 - (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath{
     UICollectionReusableView *cell = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"headerView" forIndexPath:indexPath];
-    cell.backgroundColor = [UIColor colorWithHexString:@"#ECEFF2"];
+    cell.backgroundColor = [UIColor colorWithRed:0.925 green:0.937 blue:0.949 alpha:1.000];
     
     UILabel *label = (UILabel *)[cell viewWithTag:77];
     if (!label){
@@ -1288,7 +1282,7 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
     }
     
     NSInteger skipAtNewLine = [self numberOfCellsPerRow] % 2 == 0  && indexPath.item / [self numberOfCellsPerRow] % 2 == 0 ? 1 : 0;
-    imageView.backgroundColor = (indexPath.item + skipAtNewLine) % 2 == 0 ? [UIColor colorWithHexString:@"#e6e9ed"] : [UIColor colorWithHexString:@"#dce0e5"];
+    imageView.backgroundColor = (indexPath.item + skipAtNewLine) % 2 == 0 ? [UIColor colorWithRed:0.902 green:0.914 blue:0.929 alpha:1.000] : [UIColor colorWithRed:0.863 green:0.878 blue:0.898 alpha:1.000];
     
     if (imageIndex < self.userSelectedPhotos.count) {
         OLPrintPhoto *photo = self.userSelectedPhotos[indexPath.row + indexPath.section * self.product.quantityToFulfillOrder];
