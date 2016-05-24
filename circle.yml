@@ -9,13 +9,13 @@ general:
     ignore:
     - dev
   artifacts:
-    - "~/image.png" # relative to the user's home directory
+    - "~/image.png"
 
 test:
   override:
     - export LC_CTYPE="en_US.UTF-8"
     - export XCTOOL_FORCE_TTY="true"
-    - set -o pipefail && xcodebuild -workspace 'Kite-SDK/KitePrintSDK.xcworkspace' -scheme 'Kite-CI-Deploy' clean build test -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 6,OS=latest' CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY= PROVISIONING_PROFILE= GCC_INSTRUMENT_PROGRAM_FLOW_ARCS=YES GCC_GENERATE_TEST_COVERAGE_FILES=YES | tee $CIRCLE_ARTIFACTS/xcode_raw.log | xcpretty --color --report junit --output $CIRCLE_TEST_REPORTS/xcode/results.xml
+    - set -o pipefail && xcodebuild -workspace 'Kite-SDK/KitePrintSDK.xcworkspace' -scheme 'Kite-CI-Deploy' clean build test -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 6,OS=latest' CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY= PROVISIONING_PROFILE= GCC_INSTRUMENT_PROGRAM_FLOW_ARCS=YES GCC_GENERATE_TEST_COVERAGE_FILES=YES
   post:
     - bash <(curl -s https://codecov.io/bash)
 
