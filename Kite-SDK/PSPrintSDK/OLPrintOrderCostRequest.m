@@ -56,6 +56,7 @@
 @interface OLPrintOrder ()
 @property (assign, nonatomic) BOOL shipToStore;
 @property (assign, nonatomic) BOOL payInStore;
+@property (strong, nonatomic) NSString *paymentMethod;
 
 @end
 
@@ -66,6 +67,13 @@ static NSUInteger cacheOrderHash; // cached response is only valid for orders wi
 @interface OLPrintOrderCostRequest ()
 @property (nonatomic, strong) OLBaseRequest *req;
 
+@end
+
+@interface OLPrintOrderCost ()
+@property (strong, nonatomic) NSDictionary *specialTotalCosts;
+@property (strong, nonatomic) NSDictionary *specialPromoDiscount;
+@property (strong, nonatomic) NSString *specialPromoCodeInvalidReason;
+@property (strong, nonatomic) NSString *paymentMethod;
 @end
 
 @implementation OLPrintOrderCostRequest
@@ -108,6 +116,11 @@ static NSUInteger cacheOrderHash; // cached response is only valid for orders wi
     if (extraDict && [extraDict isKindOfClass:[NSDictionary class]]){
         dict = [dict mutableCopy];
         [dict setValue:[extraDict objectForKey:[[extraDict allKeys] firstObject]] forKey:[[extraDict allKeys] firstObject]];
+    }
+    
+    if (order.paymentMethod){
+        dict = [dict mutableCopy];
+        [dict setValue:order.paymentMethod forKey:@"payment_gateway"];
     }
 
     return dict;
@@ -250,7 +263,20 @@ static NSUInteger cacheOrderHash; // cached response is only valid for orders wi
         }
     }
     
+    // Parse Apple Pay special total and discount items
+    NSDictionary *specialTotalCosts = [self createCostsDictionaryFromJSON:json[@"total"]];
+    NSDictionary *specialDiscount = [self createCostsDictionaryFromJSON:json[@"apple_pay_promo_code"][@"discount"]];
+    id specialPromoDiscountInvalidReason = json[@"apple_pay_promo_code"][@"invalid_message"];
+    if (specialPromoDiscountInvalidReason == [NSNull null] || [specialPromoDiscountInvalidReason stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]].length == 0) {
+        specialPromoDiscountInvalidReason = nil;
+    }
+    
     OLPrintOrderCost *orderCost = [[OLPrintOrderCost alloc] initWithTotalCosts:totalCosts shippingCosts:totalShippingCosts jobCosts:jobCosts lineItems:lineItems promoDiscount:discount promoCodeInvalidReason:promoDiscountInvalidReason];
+    
+    orderCost.specialTotalCosts = specialTotalCosts;
+    orderCost.specialPromoDiscount = specialDiscount;
+    orderCost.specialPromoCodeInvalidReason = specialPromoDiscountInvalidReason;
+    
     handler(orderCost, nil);
 }
 
