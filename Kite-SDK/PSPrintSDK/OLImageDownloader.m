@@ -29,6 +29,7 @@
 
 #import "OLImageDownloader.h"
 #import "OLImageDownloadDelegate.h"
+#import "OLConstants.h"
 
 @interface OLImageDownloader ()
 
@@ -58,12 +59,20 @@
 - (NSURLSessionDownloadTask *)downloadImageAtURL:(NSURL *)url progress:(void(^)(NSInteger progress, NSInteger total))progressHandler withCompletionHandler:(void(^)(UIImage *image, NSError *error))handler{
     NSURLRequest *request = [[NSURLRequest alloc] initWithURL:url];
     OLImageDownloadDelegate *delegate = [[OLImageDownloadDelegate alloc] init];
-    delegate.progressHandler = progressHandler;
+    delegate.progressHandler = ^(NSURLSessionTask *task, NSInteger progress, NSInteger total){
+        if (task.state != NSURLSessionTaskStateCanceling){
+            if (progressHandler){
+                progressHandler(progress, total);
+            }
+        }
+    };
     
     
     NSCachedURLResponse *cachedResponse = [[NSURLCache sharedURLCache] cachedResponseForRequest:request];
     if (cachedResponse.data){
-        handler([UIImage imageWithData:cachedResponse.data], nil);
+        if (handler){
+            handler([UIImage imageWithData:cachedResponse.data], nil);
+        }
         return nil;
     }
     
@@ -71,17 +80,31 @@
     configuration.requestCachePolicy = NSURLRequestReturnCacheDataElseLoad;
     NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration delegate:delegate delegateQueue:nil];
     
-    delegate.completionHandler = ^(NSData *data, NSURLResponse *response, NSError *error) {
+    delegate.completionHandler = ^(NSURLSessionTask *task, NSData *data, NSURLResponse *response, NSError *error) {
+        if (task.state == NSURLSessionTaskStateCanceling){
+            return;
+        }
         if (error){
             dispatch_async(dispatch_get_main_queue(), ^{
-                handler(nil, error);
+                if (handler){
+                    handler(nil, error);
+                }
             });
         }
-        else if (data){
+        else if (data && [(NSHTTPURLResponse *)response statusCode] >= 200 && [(NSHTTPURLResponse *)response statusCode] <= 299){
             NSCachedURLResponse *cachedResponse = [[NSCachedURLResponse alloc] initWithResponse:response data:data userInfo:nil storagePolicy:NSURLCacheStorageAllowed];
             [configuration.URLCache storeCachedResponse:cachedResponse forRequest:request];
             dispatch_async(dispatch_get_main_queue(), ^{
-                handler([UIImage imageWithData:data], nil);
+                if (handler){
+                    handler([UIImage imageWithData:data], nil);
+                }
+            });
+        }
+        else{
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (handler){
+                    handler(nil, [NSError errorWithDomain:kOLKiteSDKErrorDomain code:[(NSHTTPURLResponse *)response statusCode] userInfo:nil]);
+                }
             });
         }
     };

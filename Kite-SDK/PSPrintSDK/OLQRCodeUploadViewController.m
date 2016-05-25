@@ -100,9 +100,5 @@
     }];
 }
 
-- (void)dealloc {
-    [self.imagePoller stopPolling];
-}
-
 
 @end

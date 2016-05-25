@@ -31,7 +31,7 @@
 
 @interface OLImageDownloadDelegate : NSObject <NSURLSessionDownloadDelegate>
 
-@property (copy, nonatomic) void (^progressHandler)(NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite);
-@property (copy, nonatomic) void (^completionHandler)(NSData *data, NSURLResponse *response, NSError *error);
+@property (copy, nonatomic) void (^progressHandler)(NSURLSessionTask *task, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite);
+@property (copy, nonatomic) void (^completionHandler)(NSURLSessionTask *task, NSData *data, NSURLResponse *response, NSError *error);
 
 @end
