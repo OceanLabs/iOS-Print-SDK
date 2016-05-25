@@ -447,7 +447,13 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     } completion:^(BOOL finished){
         self.payWithApplePayButton.hidden = YES;
         self.checkoutButton.hidden = YES;
-        self.paymentButton1.hidden = NO;
+        
+        if (self.paymentButton2.tag == 7777){
+            self.paymentButton1.hidden = YES;
+        }
+        else{
+            self.paymentButton1.hidden = NO;
+        }
         self.paymentButton2.hidden = NO;
         
         self.poweredByKiteLabelBottomCon.constant = 5;
@@ -677,7 +683,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             self.paymentButton1.hidden = YES;
 #endif
 #ifdef OL_KITE_OFFER_APPLE_PAY
-            self.paymentButton1.hidden = YES;
+            self.payWithApplePayButton.hidden = YES;
 #endif
             if ([self shouldShowApplePay] && self.paymentButton2.tag != 7777){
                 [self onButtonMoreOptionsClicked:nil];
@@ -690,11 +696,12 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             self.paymentButton1.hidden = NO;
 #endif
 #ifdef OL_KITE_OFFER_APPLE_PAY
-            self.paymentButton1.hidden = NO;
+            self.payWithApplePayButton.hidden = NO;
 #endif
             if ([self shouldShowApplePay] && self.paymentButton2.tag == 7777){
                 [self onButtonBackToApplePayClicked:nil];
             }
+            self.paymentButton2.tag = 0;
             [self.paymentButton2 setTitle:NSLocalizedStringFromTableInBundle(@"Credit Card", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") forState:UIControlStateNormal];
         }
         
