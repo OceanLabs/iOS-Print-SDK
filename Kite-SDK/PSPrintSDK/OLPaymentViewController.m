@@ -683,7 +683,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             self.paymentButton1.hidden = YES;
 #endif
 #ifdef OL_KITE_OFFER_APPLE_PAY
-            self.payWithApplePayButton.hidden = YES;
+            self.paymentButton1.hidden = YES;
 #endif
             if ([self shouldShowApplePay] && self.paymentButton2.tag != 7777){
                 [self onButtonMoreOptionsClicked:nil];
@@ -696,7 +696,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             self.paymentButton1.hidden = NO;
 #endif
 #ifdef OL_KITE_OFFER_APPLE_PAY
-            self.payWithApplePayButton.hidden = NO;
+            self.paymentButton1.hidden = NO;
 #endif
             if ([self shouldShowApplePay] && self.paymentButton2.tag == 7777){
                 [self onButtonBackToApplePayClicked:nil];
