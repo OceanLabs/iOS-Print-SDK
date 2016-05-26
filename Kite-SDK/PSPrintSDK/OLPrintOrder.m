@@ -71,6 +71,10 @@ static id stringOrEmptyString(NSString *str) {
 + (NSDictionary *)cachedResponseForOrder:(OLPrintOrder *)order;
 @end
 
+@interface OLPrintOrderCost ()
+@property (strong, nonatomic) NSString *paymentMethod;
+@end
+
 @interface OLKitePrintSDK (Private)
 +(BOOL)isUnitTesting;
 @end
@@ -382,6 +386,7 @@ static NSBlockOperation *templateSyncOperation;
             NSArray *handlers = [self.costCompletionHandlers copy];
             [self.costCompletionHandlers removeAllObjects];
             for (OLPrintOrderCostCompletionHandler handler in handlers) {
+                cost.paymentMethod = self.paymentMethod;
                 handler(cost, error);
             }
         }];

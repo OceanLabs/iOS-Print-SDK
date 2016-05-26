@@ -271,7 +271,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     }
 }
 
--(BOOL)isApplePayAvailable{
++(BOOL)isApplePayAvailable{
 #ifdef OL_KITE_OFFER_APPLE_PAY
     PKPaymentRequest *request = [Stripe paymentRequestWithMerchantIdentifier:[OLKitePrintSDK appleMerchantID]];
     
@@ -282,7 +282,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 }
 
 -(BOOL)shouldShowApplePay{
-    return [self isApplePayAvailable] && !self.showOtherOptions;
+    return [self.class isApplePayAvailable] && !self.showOtherOptions;
 }
 
 - (void)viewDidLoad {
@@ -304,10 +304,10 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     
     NSString *applePayAvailableStr = @"N/A";
 #ifdef OL_KITE_OFFER_APPLE_PAY
-    if ([self isApplePayAvailable] && [self shouldShowApplePay]){
+    if ([self.class isApplePayAvailable] && [self shouldShowApplePay]){
         applePayAvailableStr = @"Yes";
     }
-    else if ([self isApplePayAvailable] && ![self shouldShowApplePay]){
+    else if ([self.class isApplePayAvailable] && ![self shouldShowApplePay]){
         applePayAvailableStr = @"Other Options";
     }
     else{
@@ -413,7 +413,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         [self.printOrder discardDuplicateJobs];
 #ifndef OL_NO_ANALYTICS
         if (!self.usedContinueShoppingButton){
-            [OLAnalytics trackPaymentScreenHitBackForOrder:self.printOrder applePayIsAvailable:[self isApplePayAvailable] ? @"Yes" : @"No"];
+            [OLAnalytics trackPaymentScreenHitBackForOrder:self.printOrder applePayIsAvailable:[self.class isApplePayAvailable] ? @"Yes" : @"No"];
         }
 #endif
     }
@@ -424,7 +424,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     [self.navigationController.presentingViewController dismissViewControllerAnimated:YES completion:NULL];
 #ifndef OL_NO_ANALYTICS
     if (!self.usedContinueShoppingButton){
-        [OLAnalytics trackBasketScreenHitBackForOrder:self.printOrder applePayIsAvailable:[self isApplePayAvailable] ? @"Yes" : @"No"];
+        [OLAnalytics trackBasketScreenHitBackForOrder:self.printOrder applePayIsAvailable:[self.class isApplePayAvailable] ? @"Yes" : @"No"];
     }
 #endif
 }
@@ -820,7 +820,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     
     NSString *applePayAvailableStr = @"N/A";
 #ifdef OL_KITE_OFFER_APPLE_PAY
-    applePayAvailableStr = [self isApplePayAvailable] ? @"Yes" : @"No";
+    applePayAvailableStr = [self.class isApplePayAvailable] ? @"Yes" : @"No";
 #endif
     
 #ifndef OL_NO_ANALYTICS
@@ -858,7 +858,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         
         self.transitionBlockOperation = [[NSBlockOperation alloc] init];
         [self.transitionBlockOperation addExecutionBlock:[self transistionToReceiptBlock]];
-        if ([self isApplePayAvailable] && self.applePayDismissOperation){
+        if ([self.class isApplePayAvailable] && self.applePayDismissOperation){
             [self.transitionBlockOperation addDependency:self.applePayDismissOperation];
         }
         
@@ -920,7 +920,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
                 NSBlockOperation *presentAlertBlock = [NSBlockOperation blockOperationWithBlock:^{
                     [self presentViewController:ac animated:YES completion:NULL];
                 }];
-                if ([self isApplePayAvailable] && self.applePayDismissOperation){
+                if ([self.class isApplePayAvailable] && self.applePayDismissOperation){
                     [presentAlertBlock addDependency:self.applePayDismissOperation];
                 }
                 [[NSOperationQueue mainQueue] addOperation:presentAlertBlock];
@@ -1020,7 +1020,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             [self.tableView reloadData];
             [self dismissPresentedViewController];
 #ifndef OL_NO_ANALYTICS
-            [OLAnalytics trackPaymentScreenHitEditItemDone:editingVc.editingPrintJob inOrder:self.printOrder applePayIsAvailable:[self isApplePayAvailable] ? @"Yes" : @"No"];
+            [OLAnalytics trackPaymentScreenHitEditItemDone:editingVc.editingPrintJob inOrder:self.printOrder applePayIsAvailable:[self.class isApplePayAvailable] ? @"Yes" : @"No"];
 #endif
         }];
         
@@ -1164,7 +1164,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         }
         
 #ifndef OL_NO_ANALYTICS
-        [OLAnalytics trackPaymentScreenPaymentMethodHit:@"Credit Card" forOrder:self.printOrder applePayIsAvailable:[self isApplePayAvailable] ? @"Yes" : @"No"];
+        [OLAnalytics trackPaymentScreenPaymentMethodHit:@"Credit Card" forOrder:self.printOrder applePayIsAvailable:[self.class isApplePayAvailable] ? @"Yes" : @"No"];
 #endif
         
         NSComparisonResult result = [[cost totalCostInCurrency:self.printOrder.currencyCode] compare:[NSDecimalNumber zero]];
@@ -1336,7 +1336,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             return;
         }
 #ifndef OL_NO_ANALYTICS
-        [OLAnalytics trackPaymentScreenPaymentMethodHit:@"PayPal" forOrder:self.printOrder applePayIsAvailable:[self isApplePayAvailable] ? @"Yes" : @"No"];
+        [OLAnalytics trackPaymentScreenPaymentMethodHit:@"PayPal" forOrder:self.printOrder applePayIsAvailable:[self.class isApplePayAvailable] ? @"Yes" : @"No"];
 #endif
         
         // Create a PayPalPayment
@@ -1373,7 +1373,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             return;
         }
 #ifndef OL_NO_ANALYTICS
-        [OLAnalytics trackPaymentScreenPaymentMethodHit:@"Apple Pay" forOrder:self.printOrder applePayIsAvailable:[self isApplePayAvailable] ? @"Yes" : @"No"];
+        [OLAnalytics trackPaymentScreenPaymentMethodHit:@"Apple Pay" forOrder:self.printOrder applePayIsAvailable:[self.class isApplePayAvailable] ? @"Yes" : @"No"];
 #endif
         
         NSMutableArray *lineItems = [[NSMutableArray alloc] init];
@@ -1424,14 +1424,14 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
                 [self updateViewsBasedOnCostUpdate];
                 
 #ifndef OL_NO_ANALYTICS
-                [OLAnalytics trackPaymentScreenDidDeleteItem:printJob inOrder:self.printOrder applePayIsAvailable:[self isApplePayAvailable] ? @"Yes" : @"No"];
+                [OLAnalytics trackPaymentScreenDidDeleteItem:printJob inOrder:self.printOrder applePayIsAvailable:[self.class isApplePayAvailable] ? @"Yes" : @"No"];
 #endif
             }]];
             [self presentViewController:ac animated:YES completion:NULL];
         }
         else{ //on iOS 7, just delete without prompt
 #ifndef OL_NO_ANALYTICS
-            [OLAnalytics trackPaymentScreenDidDeleteItem:printJob inOrder:self.printOrder applePayIsAvailable:[self isApplePayAvailable] ? @"Yes" : @"No"];
+            [OLAnalytics trackPaymentScreenDidDeleteItem:printJob inOrder:self.printOrder applePayIsAvailable:[self.class isApplePayAvailable] ? @"Yes" : @"No"];
 #endif
             [self.printOrder removePrintJob:printJob];
             
@@ -1460,7 +1460,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         [self updateViewsBasedOnCostUpdate];
         
 #ifndef OL_NO_ANALYTICS
-        [OLAnalytics trackPaymentScreenHitItemQtyDownForItem:printJob inOrder:self.printOrder applePayIsAvailable:[self isApplePayAvailable] ? @"Yes" : @"No"];
+        [OLAnalytics trackPaymentScreenHitItemQtyDownForItem:printJob inOrder:self.printOrder applePayIsAvailable:[self.class isApplePayAvailable] ? @"Yes" : @"No"];
 #endif
     }
 }
@@ -1479,7 +1479,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     [self.printOrder saveOrder];
     [self updateViewsBasedOnCostUpdate];
 #ifndef OL_NO_ANALYTICS
-    [OLAnalytics trackPaymentScreenHitItemQtyUpForItem:printJob inOrder:self.printOrder applePayIsAvailable:[self isApplePayAvailable] ? @"Yes" : @"No"];
+    [OLAnalytics trackPaymentScreenHitItemQtyUpForItem:printJob inOrder:self.printOrder applePayIsAvailable:[self.class isApplePayAvailable] ? @"Yes" : @"No"];
 #endif
 }
 
@@ -1496,7 +1496,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     [self presentViewController:vc animated:YES completion:NULL];
 #ifndef OL_NO_ANALYTICS
     OLProductPrintJob* printJob = ((OLProductPrintJob*)[self.printOrder.jobs objectAtIndex:indexPath.row]);
-    [OLAnalytics trackPaymentScreenHitEditItem:printJob inOrder:self.printOrder applePayIsAvailable:[self isApplePayAvailable] ? @"Yes" : @"No"];
+    [OLAnalytics trackPaymentScreenHitEditItem:printJob inOrder:self.printOrder applePayIsAvailable:[self.class isApplePayAvailable] ? @"Yes" : @"No"];
 #endif
 }
 
@@ -1535,7 +1535,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 #ifdef OL_KITE_OFFER_PAYPAL
 - (void)payPalPaymentDidCancel:(PayPalPaymentViewController *)paymentViewController {
 #ifndef OL_NO_ANALYTICS
-    [OLAnalytics trackPaymentScreenPaymentMethodDidCancel:@"PayPal" forOrder:self.printOrder applePayIsAvailable:[self isApplePayAvailable] ? @"Yes" : @"No"];
+    [OLAnalytics trackPaymentScreenPaymentMethodDidCancel:@"PayPal" forOrder:self.printOrder applePayIsAvailable:[self.class isApplePayAvailable] ? @"Yes" : @"No"];
 #endif
     [self dismissViewControllerAnimated:YES completion:nil];
 }
@@ -1562,7 +1562,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     [self dismissViewControllerAnimated:YES completion:^{
 #ifndef OL_NO_ANALYTICS
         if (!self.authorizedApplePay){
-            [OLAnalytics trackPaymentScreenPaymentMethodDidCancel:@"Apple Pay" forOrder:self.printOrder applePayIsAvailable:[self isApplePayAvailable] ? @"Yes" : @"No"];
+            [OLAnalytics trackPaymentScreenPaymentMethodDidCancel:@"Apple Pay" forOrder:self.printOrder applePayIsAvailable:[self.class isApplePayAvailable] ? @"Yes" : @"No"];
         }
 #endif
         if (![[NSOperationQueue mainQueue].operations containsObject:self.transitionBlockOperation] && !self.transitionBlockOperation.finished){
@@ -1841,7 +1841,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         [self updateViewsBasedOnCostUpdate];
         
 #ifndef OL_NO_ANALYTICS
-        [OLAnalytics trackPaymentScreenDidDeleteItem:job inOrder:self.printOrder applePayIsAvailable:[self isApplePayAvailable] ? @"Yes" : @"No"];
+        [OLAnalytics trackPaymentScreenDidDeleteItem:job inOrder:self.printOrder applePayIsAvailable:[self.class isApplePayAvailable] ? @"Yes" : @"No"];
 #endif
     }
 }
@@ -1992,7 +1992,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 
 - (void)creditCardCaptureControllerDismissed:(OLCreditCardCaptureViewController *)vc{
 #ifndef OL_NO_ANALYTICS
-    [OLAnalytics trackPaymentScreenPaymentMethodDidCancel:@"Credit Card" forOrder:self.printOrder applePayIsAvailable:[self isApplePayAvailable] ? @"Yes" : @"No"];
+    [OLAnalytics trackPaymentScreenPaymentMethodDidCancel:@"Credit Card" forOrder:self.printOrder applePayIsAvailable:[self.class isApplePayAvailable] ? @"Yes" : @"No"];
 #endif
     [self dismissViewControllerAnimated:YES completion:NULL];
 }

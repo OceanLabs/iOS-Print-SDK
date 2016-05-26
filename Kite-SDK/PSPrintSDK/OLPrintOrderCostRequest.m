@@ -38,6 +38,7 @@
 #import "OLPrintOrderCost.h"
 #import "NSObject+Utils.h"
 #import "OLKiteUtils.h"
+#import "OLPaymentViewController.h"
 
 @interface OLKitePrintSDK (Private)
 
@@ -56,7 +57,6 @@
 @interface OLPrintOrder ()
 @property (assign, nonatomic) BOOL shipToStore;
 @property (assign, nonatomic) BOOL payInStore;
-@property (strong, nonatomic) NSString *paymentMethod;
 
 @end
 
@@ -118,9 +118,9 @@ static NSUInteger cacheOrderHash; // cached response is only valid for orders wi
         [dict setValue:[extraDict objectForKey:[[extraDict allKeys] firstObject]] forKey:[[extraDict allKeys] firstObject]];
     }
     
-    if (order.paymentMethod){
+    if ([OLPaymentViewController isApplePayAvailable]){
         dict = [dict mutableCopy];
-        [dict setValue:order.paymentMethod forKey:@"payment_gateway"];
+        [dict setValue:@"APPLE_PAY" forKey:@"payment_gateway"];
     }
 
     return dict;
