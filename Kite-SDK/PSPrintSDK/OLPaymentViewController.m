@@ -150,6 +150,10 @@ static BOOL haveLoadedAtLeastOnce = NO;
 
 @end
 
+@interface OLPrintOrderCost ()
+@property (strong, nonatomic) NSDictionary *specialPromoDiscount;
+@end
+
 @interface OLKitePrintSDK (Private)
 #ifdef OL_OFFER_JUDOPAY
 + (BOOL)useJudoPayForGBP;
@@ -237,13 +241,13 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 
 //- (BOOL)prefersStatusBarHidden {
 //    BOOL hidden = [OLKiteABTesting sharedInstance].darkTheme;
-//    
+//
 //    if ([self respondsToSelector:@selector(traitCollection)]){
 //        if (self.traitCollection.verticalSizeClass == UIUserInterfaceSizeClassCompact && self.view.frame.size.height < self.view.frame.size.width){
 //            hidden |= YES;
 //        }
 //    }
-//    
+//
 //    return hidden;
 //}
 
@@ -982,16 +986,16 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 //#ifndef OL_NO_ANALYTICS
 //    [OLAnalytics trackOrderHistoryScreenViewed];
 //#endif
-//    
+//
 //    OLOrdersViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLOrdersViewController"];
-//    
+//
 //    [(UIViewController *)vc navigationItem].leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:vc action:@selector(dismiss)];
-//    
+//
 //    NSString *supportEmail = [OLKiteABTesting sharedInstance].supportEmail;
 //    if (supportEmail && ![supportEmail isEqualToString:@""]){
 //        vc.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamedInKiteBundle:@"support"] style:UIBarButtonItemStyleDone target:vc action:@selector(emailButtonPushed:)];
 //    }
-//    
+//
 //    OLNavigationController *nvc = [[OLNavigationController alloc] initWithRootViewController:vc];
 //    nvc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
 //    [self presentViewController:nvc animated:YES completion:NULL];
@@ -1380,6 +1384,22 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         for (OLPaymentLineItem *item in cost.lineItems){
             [lineItems addObject:[PKPaymentSummaryItem summaryItemWithLabel:item.description  amount:[item costInCurrency:self.printOrder.currencyCode]]];
         }
+        
+        // if a special discount exists, then add a Discount line item
+        if (cost.specialPromoDiscount){
+            for (NSString *currencyCode in cost.specialPromoDiscount.allKeys) {
+                NSDecimalNumber *currencyDiscount = cost.specialPromoDiscount[self.printOrder.currencyCode];
+                if ([currencyDiscount doubleValue] != 0) {
+                    if ([currencyDiscount doubleValue] > 0) {
+                        currencyDiscount = [currencyDiscount decimalNumberByMultiplyingBy:(NSDecimalNumber *)[NSDecimalNumber numberWithInteger:-1]];
+                    }
+                    
+                    [lineItems addObject:[PKPaymentSummaryItem summaryItemWithLabel:NSLocalizedString(@"Promotional Discount", @"") amount:currencyDiscount]];
+                    break;
+                }
+            }
+        }
+        
         [lineItems addObject:[PKPaymentSummaryItem summaryItemWithLabel:[OLKitePrintSDK applePayPayToString] amount:[cost totalCostInCurrency:self.printOrder.currencyCode]]];
         paymentRequest.paymentSummaryItems = lineItems;
         NSUInteger requiredFields = PKAddressFieldPostalAddress | PKAddressFieldName | PKAddressFieldEmail;
@@ -1676,6 +1696,22 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         for (OLPaymentLineItem *item in cost.lineItems){
             [lineItems addObject:[PKPaymentSummaryItem summaryItemWithLabel:item.description  amount:[item costInCurrency:self.printOrder.currencyCode]]];
         }
+        
+        // if a special discount exists, then add a Discount line item
+        if (cost.specialPromoDiscount){
+            for (NSString *currencyCode in cost.specialPromoDiscount.allKeys) {
+                NSDecimalNumber *currencyDiscount = cost.specialPromoDiscount[self.printOrder.currencyCode];
+                if ([currencyDiscount doubleValue] != 0) {
+                    if ([currencyDiscount doubleValue] > 0) {
+                        currencyDiscount = [currencyDiscount decimalNumberByMultiplyingBy:(NSDecimalNumber *)[NSDecimalNumber numberWithInteger:-1]];
+                    }
+                    
+                    [lineItems addObject:[PKPaymentSummaryItem summaryItemWithLabel:NSLocalizedString(@"Promotional Discount", @"") amount:currencyDiscount]];
+                    break;
+                }
+            }
+        }
+        
         [lineItems addObject:[PKPaymentSummaryItem summaryItemWithLabel:[OLKitePrintSDK applePayPayToString] amount:[cost totalCostInCurrency:self.printOrder.currencyCode]]];
         if (!error){
             completion(PKPaymentAuthorizationStatusSuccess, nil, lineItems);

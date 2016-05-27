@@ -264,7 +264,7 @@ static NSUInteger cacheOrderHash; // cached response is only valid for orders wi
     }
     
     // Parse Apple Pay special total and discount items
-    NSDictionary *specialTotalCosts = [self createCostsDictionaryFromJSON:json[@"total"]];
+    NSDictionary *specialTotalCosts = [self createCostsDictionaryFromJSON:json[@"apple_pay_total"]];
     NSDictionary *specialDiscount = [self createCostsDictionaryFromJSON:json[@"apple_pay_promo_code"][@"discount"]];
     id specialPromoDiscountInvalidReason = json[@"apple_pay_promo_code"][@"invalid_message"];
     if (specialPromoDiscountInvalidReason == [NSNull null] || [specialPromoDiscountInvalidReason stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]].length == 0) {
