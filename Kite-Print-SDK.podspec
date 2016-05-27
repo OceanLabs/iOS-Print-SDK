@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name		= 'Kite-Print-SDK'
-  spec.version         	= '5.0.7'
+  spec.version         	= '5.1.1'
   spec.license 		= { :type => 'MIT', :file => 'Kite-SDK/LICENSE' }
   spec.homepage         = 'https://github.com/OceanLabs/iOS-Print-SDK'
   spec.authors          = {'Deon Botha' => 'deon@oceanlabs.co'}
@@ -8,15 +8,11 @@ Pod::Spec.new do |spec|
   spec.source           = {:git => 'https://github.com/OceanLabs/iOS-Print-SDK.git', :tag => spec.version.to_s }
   spec.source_files     = ['Kite-SDK/PSPrintSDK/OL*.{h,m}', 'Kite-SDK/PSPrintSDK/CardIO*.h', 'Kite-SDK/PSPrintSDK/RMImageCropper/*.{h,m}', 'Kite-SDK/PSPrintSDK/Categories/*.{h,m}', 'Kite-SDK/PSPrintSDK/LXReorderableCollectionViewFlowLayout.{h,m}']
   spec.resources        = ['Kite-SDK/PSPrintSDK/KitePrintSDK.xcassets', 'Kite-SDK/PSPrintSDK/*.lproj', 'Kite-SDK/PSPrintSDK/OLPhotoSelectionButton.xib', 'Kite-SDK/PSPrintSDK/kite_corrupt.jpg', 'Kite-SDK/PSPrintSDK/Base.lproj/OLKiteStoryboard.storyboard']
-  spec.dependency	'SDWebImage', '~> 3.7.2'
   spec.dependency	'SVProgressHUD', '~> 1.1.3'
-  spec.dependency	'UICKeyChainStore', '~> 2.0.4'
   spec.dependency	'CSStickyHeaderFlowLayout', '~> 0.2.4'
-  spec.dependency	'SkyLab', '~> 1.0.0'
   spec.dependency	'MPFlipViewController', '~> 0.0.2'
-  spec.dependency	'UIColor-HexString'
   spec.dependency	'TSMarkdownParser', '~> 1.0.17'
-  spec.dependency 	'DACircularProgress'
+  spec.dependency 'DACircularProgress'
   spec.dependency	'ios-qr-encoder', '~> 1.0.4'
   spec.requires_arc	= true
   spec.platform		= :ios, '7.0'
@@ -36,7 +32,6 @@ Pod::Spec.new do |spec|
     apple.xcconfig	  =  { 'OTHER_CFLAGS' => '$(inherited) -DOL_KITE_OFFER_APPLE_PAY' }
     apple.dependency	  'Stripe', '5.1.4'
     apple.dependency	  'Stripe/ApplePay', '5.1.4'
-    apple.dependency   	  'ApplePayStubs', '0.2'
   end
 
   spec.subspec 'Facebook' do |facebook|

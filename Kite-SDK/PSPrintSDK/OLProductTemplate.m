@@ -207,6 +207,10 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
     return inProgressSyncRequest != nil;
 }
 
++ (void)cancelSyncInProgress{
+    [inProgressSyncRequest cancel];
+}
+
 + (OLProductTemplate *_Nullable)templateWithId:(NSString *_Nonnull)identifier {
     NSArray *templates = [OLProductTemplate templates];
     for (OLProductTemplate *productTemplate in templates) {

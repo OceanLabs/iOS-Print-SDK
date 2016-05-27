@@ -9,25 +9,15 @@ PODS:
   - CTAssetsPickerController (3.3.1):
     - PureLayout (~> 3.0.0)
   - DACircularProgress (2.3.1)
-  - FacebookImagePicker (2.0.9):
-    - FBSDKCoreKit (~> 4.8.0)
-    - FBSDKLoginKit (~> 4.8.0)
-    - SDWebImage (~> 3.7.2)
-  - FBSDKCoreKit (4.8.0):
-    - Bolts (~> 1.1)
-    - FBSDKCoreKit/arc (= 4.8.0)
-    - FBSDKCoreKit/no-arc (= 4.8.0)
-  - FBSDKCoreKit/arc (4.8.0):
-    - Bolts (~> 1.1)
-  - FBSDKCoreKit/no-arc (4.8.0):
-    - Bolts (~> 1.1)
-    - FBSDKCoreKit/arc
-  - FBSDKLoginKit (4.8.0):
+  - FacebookImagePicker (2.0.11):
+    - FBSDKCoreKit (~> 4.11.0)
+    - FBSDKLoginKit (~> 4.11.0)
+  - FBSDKCoreKit (4.11.0):
+    - Bolts (~> 1.7)
+  - FBSDKLoginKit (4.11.0):
     - FBSDKCoreKit
-  - InstagramImagePicker (1.1.4):
+  - InstagramImagePicker (1.1.7):
     - NXOAuth2Client (~> 1.2.8)
-    - SDWebImage (~> 3.7.2)
-    - UIColor-HexString
   - ios-qr-encoder (1.0.4)
   - KITAssetsPickerController (1.0.6):
     - PureLayout (~> 3.0.0)
@@ -35,10 +25,6 @@ PODS:
   - NXOAuth2Client (1.2.8)
   - PayPal-iOS-SDK/Core (2.12.9)
   - PureLayout (3.0.1)
-  - SDWebImage (3.7.6):
-    - SDWebImage/Core (= 3.7.6)
-  - SDWebImage/Core (3.7.6)
-  - SkyLab (1.0.0)
   - Stripe (5.1.4):
     - Stripe/Core (= 5.1.4)
   - Stripe/ApplePay (5.1.4):
@@ -46,8 +32,6 @@ PODS:
   - Stripe/Core (5.1.4)
   - SVProgressHUD (1.1.3)
   - TSMarkdownParser (2.1.0)
-  - UICKeyChainStore (2.0.7)
-  - UIColor-HexString (1.3.0)
 
 DEPENDENCIES:
   - CSStickyHeaderFlowLayout
@@ -59,38 +43,28 @@ DEPENDENCIES:
   - KITAssetsPickerController
   - MPFlipViewController
   - PayPal-iOS-SDK/Core (~> 2.12.5)
-  - SDWebImage
-  - SkyLab (~> 1.0.0)
   - Stripe (~> 5.1.4)
   - Stripe/ApplePay
   - SVProgressHUD (= 1.1.3)
   - TSMarkdownParser
-  - UICKeyChainStore (~> 2.0.4)
-  - UIColor-HexString
 
 SPEC CHECKSUMS:
   Bolts: a0058fa3b331c5a1e4402d534f2dae36dbff31e4
   CSStickyHeaderFlowLayout: 5366582779d8b7c9ba9b9cc729c218cc23888776
   CTAssetsPickerController: b1d1d50ab87cf6b8b13531de5f4530482e7e53ed
   DACircularProgress: 4dd437c0fc3da5161cb289e07ac449493d41db71
-  FacebookImagePicker: b4a3ab14d6af5e39a28c9a5d53330cc160491d1e
-  FBSDKCoreKit: 66a935d17b6e00b6b64e604f2eb9b72c9ab7deb8
-  FBSDKLoginKit: d893fcbb98d854496925e9ff73c67b896982d3c4
-  InstagramImagePicker: 39a6a6f348ddd08c9c2c6714f49b696904253b3d
+  FacebookImagePicker: 60bfada5c06dafa45c37460224f8958382098522
+  FBSDKCoreKit: 686ac982723a14ec9ddb85e2f81235d7706c891b
+  FBSDKLoginKit: bade9fc78277764149ccc5bfaadbf13c83175c6a
+  InstagramImagePicker: 3b1afb10b1b3e5625b8ef64dfabd13464467020d
   ios-qr-encoder: f5f654b3d8921caee92564f8c5698b7a699f9dc3
   KITAssetsPickerController: 449bf9ba1f6be9e2926462ce5df871f0a63e86f2
   MPFlipViewController: 86caa6203ca9d35af23cc6b4e1bcf53e53333770
   NXOAuth2Client: 98c4d4c594edd2b289cfc34a8928653e1dab7adf
   PayPal-iOS-SDK: 98ab60b137b7fd35ab5a785d11f042f6858b4f11
   PureLayout: f35f5384c9c4e4479df041dbe33ad7577b71ddfb
-  SDWebImage: c325cf02c30337336b95beff20a13df489ec0ec9
-  SkyLab: 01d9559bbab2183e54e67dc7a8a12a22b0a4be99
   Stripe: 6864be95b09092f05526bc2e0a50804bc556aa0d
   SVProgressHUD: 748080e4f36e603f6c02aec292664239df5279c1
   TSMarkdownParser: 4b3cec2a11d9c70d9dce265e7ec7347166c70fe8
-  UICKeyChainStore: 696cd35083f7c8fb5e201d909b7e6aea6b478575
-  UIColor-HexString: fadc2e1389db19147ac99dee92222d3bd8bfec4a
 
-PODFILE CHECKSUM: f5f4c5418fa1936c62f6688ca5f7de63744a0fb8
-
-COCOAPODS: 1.0.0
+COCOAPODS: 0.39.0

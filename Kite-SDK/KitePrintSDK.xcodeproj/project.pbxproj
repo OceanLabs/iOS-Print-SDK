@@ -21,6 +21,7 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		0819EEE4AE7604E1C8B8937C /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AB381E46AA873C25781C873 /* libPods.a */; };
 		2E0804B81C0DECE300F50D42 /* OLCustomPhotoProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0804B71C0DECE300F50D42 /* OLCustomPhotoProvider.m */; };
 		2E0804B91C0DECE300F50D42 /* OLCustomPhotoProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0804B71C0DECE300F50D42 /* OLCustomPhotoProvider.m */; };
 		2E0804BE1C0DF70200F50D42 /* CatsAssetCollectionDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0804BB1C0DF70200F50D42 /* CatsAssetCollectionDataSource.m */; };
@@ -35,6 +36,10 @@
 		2E13278B1CC7A8C800387E06 /* UIImage+MDQRCode.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E8702E41C9050CA002BE2DA /* UIImage+MDQRCode.m */; };
 		2E14D2D11C2AE9AD00F35403 /* OLImagePreviewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E14D2D01C2AE9AD00F35403 /* OLImagePreviewViewController.m */; };
 		2E14D2D21C2AE9AD00F35403 /* OLImagePreviewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E14D2D01C2AE9AD00F35403 /* OLImagePreviewViewController.m */; };
+		2E25FEFB1CF2EF5D006E52E5 /* OLKeyChainStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E25FEFA1CF2EF5D006E52E5 /* OLKeyChainStore.m */; };
+		2E25FEFC1CF2EF5D006E52E5 /* OLKeyChainStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E25FEFA1CF2EF5D006E52E5 /* OLKeyChainStore.m */; };
+		2E25FEFD1CF2EF5D006E52E5 /* OLKeyChainStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E25FEFA1CF2EF5D006E52E5 /* OLKeyChainStore.m */; };
+		2E25FEFE1CF2EF5D006E52E5 /* OLKeyChainStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E25FEFA1CF2EF5D006E52E5 /* OLKeyChainStore.m */; };
 		2E2BF4471CCDFAF100725561 /* OLKiteTheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E2BF4461CCDFAF100725561 /* OLKiteTheme.m */; };
 		2E2BF4481CCDFAF100725561 /* OLKiteTheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E2BF4461CCDFAF100725561 /* OLKiteTheme.m */; };
 		2E2BF4491CCDFAF100725561 /* OLKiteTheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E2BF4461CCDFAF100725561 /* OLKiteTheme.m */; };
@@ -53,6 +58,10 @@
 		2E4DF45E1C0F150400EA66FE /* DogsAssetCollectionDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E4DF45D1C0F150400EA66FE /* DogsAssetCollectionDataSource.m */; };
 		2E53E0CD1C1AEAAD00BF7887 /* UIViewController+OLMethods.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E53E0CC1C1AEAAD00BF7887 /* UIViewController+OLMethods.m */; };
 		2E53E0CE1C1AEAAD00BF7887 /* UIViewController+OLMethods.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E53E0CC1C1AEAAD00BF7887 /* UIViewController+OLMethods.m */; };
+		2E5BDC3E1CEDBF8200257B1A /* OLImageDownloadDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E5BDC3D1CEDBF8200257B1A /* OLImageDownloadDelegate.m */; };
+		2E5BDC3F1CEDBF8200257B1A /* OLImageDownloadDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E5BDC3D1CEDBF8200257B1A /* OLImageDownloadDelegate.m */; };
+		2E5BDC401CEDBF8200257B1A /* OLImageDownloadDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E5BDC3D1CEDBF8200257B1A /* OLImageDownloadDelegate.m */; };
+		2E5BDC411CEDBF8200257B1A /* OLImageDownloadDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E5BDC3D1CEDBF8200257B1A /* OLImageDownloadDelegate.m */; };
 		2E5D95AC1CA984E00080EF07 /* OLUpsellViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E5D95AB1CA984E00080EF07 /* OLUpsellViewController.m */; };
 		2E5D95AD1CA984E00080EF07 /* OLUpsellViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E5D95AB1CA984E00080EF07 /* OLUpsellViewController.m */; };
 		2E5D95AE1CA984E00080EF07 /* OLUpsellViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E5D95AB1CA984E00080EF07 /* OLUpsellViewController.m */; };
@@ -318,15 +327,11 @@
 		2EA3D3C81C9C04B500B99BCD /* OLPhotobookPrintJob.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E768F541B394372009BAC18 /* OLPhotobookPrintJob.m */; };
 		2EA3D3C91C9C04B500B99BCD /* OLPaymentLineItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E5F802B1B01E5F700095203 /* OLPaymentLineItem.m */; };
 		2EA3D3CA1C9C04B500B99BCD /* OLPrintJob.m in Sources */ = {isa = PBXBuildFile; fileRef = CD9CF4A4187592A900F067B6 /* OLPrintJob.m */; };
-		2EA3D3CE1C9C04B500B99BCD /* libSDWebImage.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E22058FD1BF3FB71009CFAF6 /* libSDWebImage.a */; };
-		2EA3D3CF1C9C04B500B99BCD /* libSkyLab.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E22058EE1BF3FB20009CFAF6 /* libSkyLab.a */; };
 		2EA3D3D01C9C04B500B99BCD /* libCSSStickyHeaderFlowLayout.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E22058DE1BF3FAA7009CFAF6 /* libCSSStickyHeaderFlowLayout.a */; };
 		2EA3D3D11C9C04B500B99BCD /* libMPFlipViewController.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E22058CC1BF3FA0C009CFAF6 /* libMPFlipViewController.a */; };
 		2EA3D3D21C9C04B500B99BCD /* libDACircularProgress.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E22058BC1BF3F9BF009CFAF6 /* libDACircularProgress.a */; };
 		2EA3D3D31C9C04B500B99BCD /* libTSMarkdownParser.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E22058AD1BF3F946009CFAF6 /* libTSMarkdownParser.a */; };
 		2EA3D3D41C9C04B500B99BCD /* libSVProgressHUD.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E220589C1BF3F8C4009CFAF6 /* libSVProgressHUD.a */; };
-		2EA3D3D51C9C04B500B99BCD /* libUICKeyChainStore.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E220588D1BF3F868009CFAF6 /* libUICKeyChainStore.a */; };
-		2EA3D3D61C9C04B500B99BCD /* libUIColor-HexString.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E220587E1BF3F7AC009CFAF6 /* libUIColor-HexString.a */; };
 		2EA3D3D71C9C04B500B99BCD /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		2EA3D3D91C9C04B500B99BCD /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD73BF6B186215790009DE03 /* Foundation.framework */; };
 		2EA3D3DA1C9C04B500B99BCD /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD73BF6F186215790009DE03 /* UIKit.framework */; };
@@ -462,25 +467,21 @@
 		2EADD85C1BE79D6D0051CD31 /* KitePrintSDK.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CD93BB471879EA4F00316492 /* KitePrintSDK.xcassets */; };
 		2EADD85E1BE79D6D0051CD31 /* kite_corrupt.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 3D6CDAAC1B1F41AE00786478 /* kite_corrupt.jpg */; };
 		2EADD85F1BE79D6D0051CD31 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CD73BF7D186215790009DE03 /* Main.storyboard */; };
-		2EBE79471CEA067B00FB5EF2 /* OLPaymentMethodsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EBE79461CEA067B00FB5EF2 /* OLPaymentMethodsViewController.m */; };
-		2EBE79481CEA067B00FB5EF2 /* OLPaymentMethodsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EBE79461CEA067B00FB5EF2 /* OLPaymentMethodsViewController.m */; };
-		2EBE79491CEA067B00FB5EF2 /* OLPaymentMethodsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EBE79461CEA067B00FB5EF2 /* OLPaymentMethodsViewController.m */; };
-		2EBE794A1CEA067B00FB5EF2 /* OLPaymentMethodsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EBE79461CEA067B00FB5EF2 /* OLPaymentMethodsViewController.m */; };
+		2EBDA6DD1CEB1B0500397082 /* OLImageDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EBDA6DC1CEB1B0500397082 /* OLImageDownloader.m */; };
+		2EBDA6DE1CEB1B0500397082 /* OLImageDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EBDA6DC1CEB1B0500397082 /* OLImageDownloader.m */; };
+		2EBDA6DF1CEB1B0500397082 /* OLImageDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EBDA6DC1CEB1B0500397082 /* OLImageDownloader.m */; };
+		2EBDA6E01CEB1B0500397082 /* OLImageDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EBDA6DC1CEB1B0500397082 /* OLImageDownloader.m */; };
 		2ECC956A1BC6B88F00F44CE1 /* OLDocsObjcExampleCodeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2ECC95691BC6B88F00F44CE1 /* OLDocsObjcExampleCodeTests.m */; };
 		2ED36B3A1C8EE4AD00FB2D4A /* NSDictionary+RequestParameterData.m in Sources */ = {isa = PBXBuildFile; fileRef = 2ED36B391C8EE4AD00FB2D4A /* NSDictionary+RequestParameterData.m */; };
 		2EDBFAB01BC698F2007BDB83 /* 1.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 2EDBFAAF1BC698F2007BDB83 /* 1.jpg */; };
 		2EF4392B1BF4D15E0006C123 /* OLPrintOrderSubmitStatusRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EF4392A1BF4D15E0006C123 /* OLPrintOrderSubmitStatusRequest.m */; };
 		2EF4392C1BF4D15E0006C123 /* OLPrintOrderSubmitStatusRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EF4392A1BF4D15E0006C123 /* OLPrintOrderSubmitStatusRequest.m */; };
-		33CBEA74F3FCBAF24663C95F /* libPods-Kite-CI-Deploy.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0750EC28496C23C5C730C181 /* libPods-Kite-CI-Deploy.a */; };
-		6BE6141DB2E6E940766D5C48 /* libPods-KiteSDK-Demo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BC453A900D1393B060B2FA9 /* libPods-KiteSDK-Demo.a */; };
+		51A8A67516E29D3494E08A77 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AB381E46AA873C25781C873 /* libPods.a */; };
+		6A2496371D6446AD8B663DB1 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AB381E46AA873C25781C873 /* libPods.a */; };
 		CD73BF8B186215790009DE03 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD73BF8A186215790009DE03 /* XCTest.framework */; };
 		CD73BF8C186215790009DE03 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD73BF6B186215790009DE03 /* Foundation.framework */; };
 		CD73BF8D186215790009DE03 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD73BF6F186215790009DE03 /* UIKit.framework */; };
 		CD73BF97186215790009DE03 /* OLSDKModelTests.m in Sources */ = {isa = PBXBuildFile; fileRef = CD73BF96186215790009DE03 /* OLSDKModelTests.m */; };
-		E22058871BF3F7DB009CFAF6 /* UIColor+HexString.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C84251BE288D30041D4CF /* UIColor+HexString.m */; };
-		E22058881BF3F854009CFAF6 /* libUIColor-HexString.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E220587E1BF3F7AC009CFAF6 /* libUIColor-HexString.a */; };
-		E22058961BF3F87F009CFAF6 /* UICKeyChainStore.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C84211BE2880E0041D4CF /* UICKeyChainStore.m */; };
-		E22058971BF3F8B2009CFAF6 /* libUICKeyChainStore.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E220588D1BF3F868009CFAF6 /* libUICKeyChainStore.a */; };
 		E22058A51BF3F8E6009CFAF6 /* SVIndefiniteAnimatedView.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C84141BE2877A0041D4CF /* SVIndefiniteAnimatedView.m */; };
 		E22058A61BF3F8E6009CFAF6 /* SVProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C84181BE2877A0041D4CF /* SVProgressHUD.m */; };
 		E22058A71BF3F8E6009CFAF6 /* SVRadialGradientLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C841A1BE2877A0041D4CF /* SVRadialGradientLayer.m */; };
@@ -498,23 +499,6 @@
 		E22058E71BF3FAEE009CFAF6 /* CSStickyHeaderFlowLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C83D61BE280EA0041D4CF /* CSStickyHeaderFlowLayout.m */; };
 		E22058E81BF3FAEE009CFAF6 /* CSStickyHeaderFlowLayoutAttributes.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C83D81BE280EA0041D4CF /* CSStickyHeaderFlowLayoutAttributes.m */; };
 		E22058E91BF3FAFE009CFAF6 /* libCSSStickyHeaderFlowLayout.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E22058DE1BF3FAA7009CFAF6 /* libCSSStickyHeaderFlowLayout.a */; };
-		E22058F71BF3FB30009CFAF6 /* SkyLab.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C83D21BE277E60041D4CF /* SkyLab.m */; };
-		E22058F81BF3FB48009CFAF6 /* libSkyLab.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E22058EE1BF3FB20009CFAF6 /* libSkyLab.a */; };
-		E22059061BF3FBB6009CFAF6 /* NSData+ImageContentType.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C83A21BE276050041D4CF /* NSData+ImageContentType.m */; };
-		E22059071BF3FBB6009CFAF6 /* SDImageCache.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C83A41BE276050041D4CF /* SDImageCache.m */; };
-		E22059081BF3FBB6009CFAF6 /* SDWebImageCompat.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C83A61BE276050041D4CF /* SDWebImageCompat.m */; };
-		E22059091BF3FBB6009CFAF6 /* SDWebImageDecoder.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C83A81BE276050041D4CF /* SDWebImageDecoder.m */; };
-		E220590A1BF3FBB6009CFAF6 /* SDWebImageDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C83AA1BE276050041D4CF /* SDWebImageDownloader.m */; };
-		E220590B1BF3FBB6009CFAF6 /* SDWebImageDownloaderOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C83AC1BE276050041D4CF /* SDWebImageDownloaderOperation.m */; };
-		E220590C1BF3FBB6009CFAF6 /* SDWebImageManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C83AE1BE276050041D4CF /* SDWebImageManager.m */; };
-		E220590D1BF3FBB6009CFAF6 /* SDWebImagePrefetcher.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C83B11BE276050041D4CF /* SDWebImagePrefetcher.m */; };
-		E220590E1BF3FBB6009CFAF6 /* UIButton+WebCache.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C83B31BE276050041D4CF /* UIButton+WebCache.m */; };
-		E220590F1BF3FBB6009CFAF6 /* UIImage+GIF.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C83B51BE276050041D4CF /* UIImage+GIF.m */; };
-		E22059101BF3FBB6009CFAF6 /* UIImage+MultiFormat.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C83B71BE276050041D4CF /* UIImage+MultiFormat.m */; };
-		E22059111BF3FBB6009CFAF6 /* UIImageView+HighlightedWebCache.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C83BB1BE276050041D4CF /* UIImageView+HighlightedWebCache.m */; };
-		E22059121BF3FBB6009CFAF6 /* UIImageView+WebCache.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C83BD1BE276050041D4CF /* UIImageView+WebCache.m */; };
-		E22059131BF3FBB6009CFAF6 /* UIView+WebCacheOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C83BF1BE276050041D4CF /* UIView+WebCacheOperation.m */; };
-		E22059141BF3FBCF009CFAF6 /* libSDWebImage.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E22058FD1BF3FB71009CFAF6 /* libSDWebImage.a */; };
 		E22963701C43DD54002A90CA /* ALView+PureLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = E22963581C43DCDF002A90CA /* ALView+PureLayout.m */; };
 		E22963711C43DD57002A90CA /* NSArray+PureLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = E229635A1C43DCDF002A90CA /* NSArray+PureLayout.m */; };
 		E22963721C43DD5B002A90CA /* NSLayoutConstraint+PureLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = E229635C1C43DCDF002A90CA /* NSLayoutConstraint+PureLayout.m */; };
@@ -643,7 +627,6 @@
 		E2AABA161C6DFC160007C1D7 /* OLQRCodeUploadedImagePoller.m in Sources */ = {isa = PBXBuildFile; fileRef = E2AABA141C6DFC160007C1D7 /* OLQRCodeUploadedImagePoller.m */; };
 		E2AABA191C6FC6650007C1D7 /* OLURLShortener.m in Sources */ = {isa = PBXBuildFile; fileRef = E2AABA181C6FC6650007C1D7 /* OLURLShortener.m */; };
 		E2AABA1A1C6FC6650007C1D7 /* OLURLShortener.m in Sources */ = {isa = PBXBuildFile; fileRef = E2AABA181C6FC6650007C1D7 /* OLURLShortener.m */; };
-		E98B32FAB57F31807772349D /* libPods-KitePrintSDKTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CE5B8F47FD88B105ECF7563A /* libPods-KitePrintSDKTests.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -667,24 +650,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		2EA3D3DF1C9C04B500B99BCD /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "include/$(PRODUCT_NAME)";
-			dstSubfolderSpec = 16;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		E220587C1BF3F7AC009CFAF6 /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "include/$(PRODUCT_NAME)";
-			dstSubfolderSpec = 16;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		E220588B1BF3F868009CFAF6 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "include/$(PRODUCT_NAME)";
@@ -738,24 +703,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		E22058EC1BF3FB20009CFAF6 /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "include/$(PRODUCT_NAME)";
-			dstSubfolderSpec = 16;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		E22058FB1BF3FB71009CFAF6 /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "include/$(PRODUCT_NAME)";
-			dstSubfolderSpec = 16;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		E22963651C43DD21002A90CA /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -786,8 +733,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		0750EC28496C23C5C730C181 /* libPods-Kite-CI-Deploy.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Kite-CI-Deploy.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		12FD9BFBCE9ED8DA9544AC9E /* Pods-Kite-CI-Deploy.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Kite-CI-Deploy.release.xcconfig"; path = "Pods/Target Support Files/Pods-Kite-CI-Deploy/Pods-Kite-CI-Deploy.release.xcconfig"; sourceTree = "<group>"; };
+		0B046DC7D0342F91243158D5 /* Pods-KiteSDK-Demo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KiteSDK-Demo.release.xcconfig"; path = "Pods/Target Support Files/Pods-KiteSDK-Demo/Pods-KiteSDK-Demo.release.xcconfig"; sourceTree = "<group>"; };
+		298DCAC3C249D556BC358BBE /* Pods-Kite-CI-Deploy.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Kite-CI-Deploy.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Kite-CI-Deploy/Pods-Kite-CI-Deploy.debug.xcconfig"; sourceTree = "<group>"; };
 		2E0804B61C0DECE300F50D42 /* OLCustomPhotoProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLCustomPhotoProvider.h; sourceTree = "<group>"; };
 		2E0804B71C0DECE300F50D42 /* OLCustomPhotoProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLCustomPhotoProvider.m; sourceTree = "<group>"; };
 		2E0804BA1C0DF70200F50D42 /* CatsAssetCollectionDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CatsAssetCollectionDataSource.h; sourceTree = "<group>"; };
@@ -827,6 +774,8 @@
 		2E21DA411B9843CF00D9162F /* OLAssetsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLAssetsViewController.m; sourceTree = "<group>"; };
 		2E21DA421B9843CF00D9162F /* OLAssetsViewControllerTransition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLAssetsViewControllerTransition.h; sourceTree = "<group>"; };
 		2E21DA431B9843CF00D9162F /* OLAssetsViewControllerTransition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLAssetsViewControllerTransition.m; sourceTree = "<group>"; };
+		2E25FEF91CF2EF5D006E52E5 /* OLKeyChainStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLKeyChainStore.h; sourceTree = "<group>"; };
+		2E25FEFA1CF2EF5D006E52E5 /* OLKeyChainStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLKeyChainStore.m; sourceTree = "<group>"; };
 		2E2BF4451CCDFAF100725561 /* OLKiteTheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLKiteTheme.h; sourceTree = "<group>"; };
 		2E2BF4461CCDFAF100725561 /* OLKiteTheme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLKiteTheme.m; sourceTree = "<group>"; };
 		2E2E61E51C21826D005CB729 /* UIViewController+OLMethods.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIViewController+OLMethods.h"; path = "PSPrintSDK/Categories/UIViewController+OLMethods.h"; sourceTree = "<group>"; };
@@ -858,6 +807,8 @@
 		2E5259001A9C91DF00DBC69B /* OLSingleImageProductReviewViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLSingleImageProductReviewViewController.m; sourceTree = "<group>"; };
 		2E53E0CB1C1AEAAD00BF7887 /* UIViewController+OLMethods.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIViewController+OLMethods.h"; path = "PSPrintSDK/Categories/UIViewController+OLMethods.h"; sourceTree = "<group>"; };
 		2E53E0CC1C1AEAAD00BF7887 /* UIViewController+OLMethods.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIViewController+OLMethods.m"; path = "PSPrintSDK/Categories/UIViewController+OLMethods.m"; sourceTree = "<group>"; };
+		2E5BDC3C1CEDBF8200257B1A /* OLImageDownloadDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLImageDownloadDelegate.h; sourceTree = "<group>"; };
+		2E5BDC3D1CEDBF8200257B1A /* OLImageDownloadDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLImageDownloadDelegate.m; sourceTree = "<group>"; };
 		2E5D95AA1CA984E00080EF07 /* OLUpsellViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLUpsellViewController.h; sourceTree = "<group>"; };
 		2E5D95AB1CA984E00080EF07 /* OLUpsellViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLUpsellViewController.m; sourceTree = "<group>"; };
 		2E5E0C141993840600C34D5C /* OLCheckoutDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OLCheckoutDelegate.h; sourceTree = "<group>"; };
@@ -869,11 +820,8 @@
 		2E676C2A1B33FD70005E068B /* OLPopupOptionsImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLPopupOptionsImageView.m; sourceTree = "<group>"; };
 		2E6C20F31BF375EE00109081 /* KiteSDK-Demo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "KiteSDK-Demo.entitlements"; sourceTree = "<group>"; };
 		2E6E605E1C50384C00829BB7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/KitePrintSDK.strings; sourceTree = "<group>"; };
-		2E6E60601C50386000829BB7 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Main.strings; sourceTree = "<group>"; };
 		2E6E60611C50386000829BB7 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/KitePrintSDK.strings; sourceTree = "<group>"; };
-		2E6E60621C50386B00829BB7 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Main.strings; sourceTree = "<group>"; };
 		2E6E60631C50386B00829BB7 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/KitePrintSDK.strings; sourceTree = "<group>"; };
-		2E6E60641C50387000829BB7 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Main.strings; sourceTree = "<group>"; };
 		2E6E60651C50387000829BB7 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/KitePrintSDK.strings; sourceTree = "<group>"; };
 		2E6E60671C5038AD00829BB7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/OLKiteStoryboard.storyboard; sourceTree = "<group>"; };
 		2E6E606A1C5038B100829BB7 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/OLKiteStoryboard.strings; sourceTree = "<group>"; };
@@ -983,8 +931,8 @@
 		2EB4BD671AE128740004CEE0 /* OLPhotobookViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLPhotobookViewController.m; sourceTree = "<group>"; };
 		2EB4BD691AE13F520004CEE0 /* OLPhotobookPageContentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLPhotobookPageContentViewController.h; sourceTree = "<group>"; };
 		2EB4BD6A1AE13F520004CEE0 /* OLPhotobookPageContentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLPhotobookPageContentViewController.m; sourceTree = "<group>"; };
-		2EBE79451CEA067B00FB5EF2 /* OLPaymentMethodsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLPaymentMethodsViewController.h; sourceTree = "<group>"; };
-		2EBE79461CEA067B00FB5EF2 /* OLPaymentMethodsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLPaymentMethodsViewController.m; sourceTree = "<group>"; };
+		2EBDA6DB1CEB1B0500397082 /* OLImageDownloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLImageDownloader.h; sourceTree = "<group>"; };
+		2EBDA6DC1CEB1B0500397082 /* OLImageDownloader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLImageDownloader.m; sourceTree = "<group>"; };
 		2ECC95691BC6B88F00F44CE1 /* OLDocsObjcExampleCodeTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLDocsObjcExampleCodeTests.m; sourceTree = "<group>"; };
 		2ED36B381C8EE4AD00FB2D4A /* NSDictionary+RequestParameterData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSDictionary+RequestParameterData.h"; path = "PSPrintSDK/Categories/NSDictionary+RequestParameterData.h"; sourceTree = "<group>"; };
 		2ED36B391C8EE4AD00FB2D4A /* NSDictionary+RequestParameterData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSDictionary+RequestParameterData.m"; path = "PSPrintSDK/Categories/NSDictionary+RequestParameterData.m"; sourceTree = "<group>"; };
@@ -1005,6 +953,7 @@
 		2EF53E3D1B5549B900BF936A /* OLInfoPageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLInfoPageViewController.m; sourceTree = "<group>"; };
 		2EF8BA9D1B99E9E4009BC73B /* OLImageCachingManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLImageCachingManager.h; sourceTree = "<group>"; };
 		2EF8BA9E1B99E9E4009BC73B /* OLImageCachingManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLImageCachingManager.m; sourceTree = "<group>"; };
+		3AB381E46AA873C25781C873 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		3D0D7ACA1AC0C44C00746FC8 /* NSArray+QueryingExtras.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSArray+QueryingExtras.h"; path = "PSPrintSDK/Categories/NSArray+QueryingExtras.h"; sourceTree = "<group>"; };
 		3D0D7ACB1AC0C44C00746FC8 /* NSArray+QueryingExtras.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSArray+QueryingExtras.m"; path = "PSPrintSDK/Categories/NSArray+QueryingExtras.m"; sourceTree = "<group>"; };
 		3D1779581A1E1D6800BE3E58 /* OLCreditCardCaptureViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLCreditCardCaptureViewController.h; sourceTree = "<group>"; };
@@ -1026,11 +975,10 @@
 		3DF9D6FC1B0F618000A40C0C /* UIViewController+TraitCollectionCompatibility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIViewController+TraitCollectionCompatibility.m"; path = "PSPrintSDK/Categories/UIViewController+TraitCollectionCompatibility.m"; sourceTree = "<group>"; };
 		3DF9D6FF1B0F65C700A40C0C /* NSObject+Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSObject+Utils.h"; path = "PSPrintSDK/Categories/NSObject+Utils.h"; sourceTree = "<group>"; };
 		3DF9D7001B0F65C700A40C0C /* NSObject+Utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSObject+Utils.m"; path = "PSPrintSDK/Categories/NSObject+Utils.m"; sourceTree = "<group>"; };
-		48B9F1B8F1FE7E95892C5AF0 /* Pods-KitePrintSDKTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KitePrintSDKTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-KitePrintSDKTests/Pods-KitePrintSDKTests.release.xcconfig"; sourceTree = "<group>"; };
-		4BC453A900D1393B060B2FA9 /* libPods-KiteSDK-Demo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-KiteSDK-Demo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		5DDF0E08421D961AB3B8BDE8 /* Pods-KiteSDK-Demo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KiteSDK-Demo.debug.xcconfig"; path = "Pods/Target Support Files/Pods-KiteSDK-Demo/Pods-KiteSDK-Demo.debug.xcconfig"; sourceTree = "<group>"; };
-		7B7AEC95700CBBF97DEE4248 /* Pods-KitePrintSDKTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KitePrintSDKTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-KitePrintSDKTests/Pods-KitePrintSDKTests.debug.xcconfig"; sourceTree = "<group>"; };
-		B990EC48F432C521F8E19986 /* Pods-Kite-CI-Deploy.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Kite-CI-Deploy.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Kite-CI-Deploy/Pods-Kite-CI-Deploy.debug.xcconfig"; sourceTree = "<group>"; };
+		6065A81D1D5FA55710F28863 /* Pods-Kite-CI-Deploy.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Kite-CI-Deploy.release.xcconfig"; path = "Pods/Target Support Files/Pods-Kite-CI-Deploy/Pods-Kite-CI-Deploy.release.xcconfig"; sourceTree = "<group>"; };
+		68C5AA28A3D40F0ACF4A8EDB /* libPods-Kite-CI-Deploy.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Kite-CI-Deploy.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		7CD27B24BF5B334ECA9E29FD /* Pods-KiteSDK-Demo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KiteSDK-Demo.debug.xcconfig"; path = "Pods/Target Support Files/Pods-KiteSDK-Demo/Pods-KiteSDK-Demo.debug.xcconfig"; sourceTree = "<group>"; };
+		C0B55F404A620D4736004846 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		CD382E4818EB7C6300127F95 /* OLJudoPayCard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLJudoPayCard.m; sourceTree = "<group>"; };
 		CD382E4918EB7C6300127F95 /* OLJudoPayCard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLJudoPayCard.h; sourceTree = "<group>"; };
 		CD550A66187B30D200782D75 /* OLAddressLookupViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLAddressLookupViewController.h; sourceTree = "<group>"; };
@@ -1111,16 +1059,11 @@
 		CDE0744A188D7730009ADFA2 /* OLURLDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLURLDataSource.m; sourceTree = "<group>"; };
 		CDE5DDCD18E5BE40000FF3B5 /* OLPrintEnvironment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLPrintEnvironment.h; sourceTree = "<group>"; };
 		CDFFA781189D2DF40083BCE7 /* OLAsset+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "OLAsset+Private.h"; sourceTree = "<group>"; };
-		CE5B8F47FD88B105ECF7563A /* libPods-KitePrintSDKTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-KitePrintSDKTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		E220587E1BF3F7AC009CFAF6 /* libUIColor-HexString.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libUIColor-HexString.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		E220588D1BF3F868009CFAF6 /* libUICKeyChainStore.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libUICKeyChainStore.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		E220589C1BF3F8C4009CFAF6 /* libSVProgressHUD.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libSVProgressHUD.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		E22058AD1BF3F946009CFAF6 /* libTSMarkdownParser.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libTSMarkdownParser.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		E22058BC1BF3F9BF009CFAF6 /* libDACircularProgress.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libDACircularProgress.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		E22058CC1BF3FA0C009CFAF6 /* libMPFlipViewController.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libMPFlipViewController.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		E22058DE1BF3FAA7009CFAF6 /* libCSSStickyHeaderFlowLayout.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libCSSStickyHeaderFlowLayout.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		E22058EE1BF3FB20009CFAF6 /* libSkyLab.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libSkyLab.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		E22058FD1BF3FB71009CFAF6 /* libSDWebImage.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libSDWebImage.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		E22962EF1C43DC90002A90CA /* CTAssetCheckmark.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CTAssetCheckmark.h; path = vendor/CTAssetsPickerController/CTAssetsPickerController/CTAssetCheckmark.h; sourceTree = "<group>"; };
 		E22962F01C43DC90002A90CA /* CTAssetCheckmark.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CTAssetCheckmark.m; path = vendor/CTAssetsPickerController/CTAssetsPickerController/CTAssetCheckmark.m; sourceTree = "<group>"; };
 		E22962F11C43DC90002A90CA /* CTAssetCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CTAssetCollectionViewCell.h; path = vendor/CTAssetsPickerController/CTAssetsPickerController/CTAssetCollectionViewCell.h; sourceTree = "<group>"; };
@@ -1304,7 +1247,8 @@
 		E2AABA141C6DFC160007C1D7 /* OLQRCodeUploadedImagePoller.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLQRCodeUploadedImagePoller.m; sourceTree = "<group>"; };
 		E2AABA171C6FC6650007C1D7 /* OLURLShortener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLURLShortener.h; sourceTree = "<group>"; };
 		E2AABA181C6FC6650007C1D7 /* OLURLShortener.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLURLShortener.m; sourceTree = "<group>"; };
-		F9743B5EB83E2B95AC1322BF /* Pods-KiteSDK-Demo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KiteSDK-Demo.release.xcconfig"; path = "Pods/Target Support Files/Pods-KiteSDK-Demo/Pods-KiteSDK-Demo.release.xcconfig"; sourceTree = "<group>"; };
+		F3F42BE23BBDDF4AABF5AADB /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
+		FEA98FBEBCD2840FAF40FA2E /* libPods-KiteSDK-Demo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-KiteSDK-Demo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1334,7 +1278,7 @@
 				2E898CD81CC518180041CCD8 /* CoreGraphics.framework in Frameworks */,
 				2E898CD91CC518180041CCD8 /* UIKit.framework in Frameworks */,
 				2E898CDA1CC518180041CCD8 /* Foundation.framework in Frameworks */,
-				33CBEA74F3FCBAF24663C95F /* libPods-Kite-CI-Deploy.a in Frameworks */,
+				51A8A67516E29D3494E08A77 /* libPods.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1342,15 +1286,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2EA3D3CE1C9C04B500B99BCD /* libSDWebImage.a in Frameworks */,
-				2EA3D3CF1C9C04B500B99BCD /* libSkyLab.a in Frameworks */,
 				2EA3D3D01C9C04B500B99BCD /* libCSSStickyHeaderFlowLayout.a in Frameworks */,
 				2EA3D3D11C9C04B500B99BCD /* libMPFlipViewController.a in Frameworks */,
 				2EA3D3D21C9C04B500B99BCD /* libDACircularProgress.a in Frameworks */,
 				2EA3D3D31C9C04B500B99BCD /* libTSMarkdownParser.a in Frameworks */,
 				2EA3D3D41C9C04B500B99BCD /* libSVProgressHUD.a in Frameworks */,
-				2EA3D3D51C9C04B500B99BCD /* libUICKeyChainStore.a in Frameworks */,
-				2EA3D3D61C9C04B500B99BCD /* libUIColor-HexString.a in Frameworks */,
 				2EA3D3D71C9C04B500B99BCD /* (null) in Frameworks */,
 				2EA3D3D91C9C04B500B99BCD /* Foundation.framework in Frameworks */,
 				2EA3D3DA1C9C04B500B99BCD /* UIKit.framework in Frameworks */,
@@ -1380,7 +1320,7 @@
 				2EADD8511BE79D6D0051CD31 /* CoreGraphics.framework in Frameworks */,
 				2EADD8521BE79D6D0051CD31 /* UIKit.framework in Frameworks */,
 				2EADD8531BE79D6D0051CD31 /* Foundation.framework in Frameworks */,
-				6BE6141DB2E6E940766D5C48 /* libPods-KiteSDK-Demo.a in Frameworks */,
+				6A2496371D6446AD8B663DB1 /* libPods.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1391,21 +1331,7 @@
 				CD73BF8B186215790009DE03 /* XCTest.framework in Frameworks */,
 				CD73BF8D186215790009DE03 /* UIKit.framework in Frameworks */,
 				CD73BF8C186215790009DE03 /* Foundation.framework in Frameworks */,
-				E98B32FAB57F31807772349D /* libPods-KitePrintSDKTests.a in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		E220587B1BF3F7AC009CFAF6 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		E220588A1BF3F868009CFAF6 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
+				0819EEE4AE7604E1C8B8937C /* libPods.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1444,20 +1370,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		E22058EB1BF3FB20009CFAF6 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		E22058FA1BF3FB71009CFAF6 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		E22963641C43DD21002A90CA /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -1480,15 +1392,11 @@
 				2E8703031C905248002BE2DA /* libios-qr-encoder.a in Frameworks */,
 				E22963941C43DE24002A90CA /* libCTAssetsPicker.a in Frameworks */,
 				E244533A1BFD355B0086BF03 /* libPayPal.a in Frameworks */,
-				E22059141BF3FBCF009CFAF6 /* libSDWebImage.a in Frameworks */,
-				E22058F81BF3FB48009CFAF6 /* libSkyLab.a in Frameworks */,
 				E22058E91BF3FAFE009CFAF6 /* libCSSStickyHeaderFlowLayout.a in Frameworks */,
 				E22058D91BF3FA8C009CFAF6 /* libMPFlipViewController.a in Frameworks */,
 				E22058C71BF3F9F7009CFAF6 /* libDACircularProgress.a in Frameworks */,
 				E22058B71BF3F96F009CFAF6 /* libTSMarkdownParser.a in Frameworks */,
 				E22058A81BF3F907009CFAF6 /* libSVProgressHUD.a in Frameworks */,
-				E22058971BF3F8B2009CFAF6 /* libUICKeyChainStore.a in Frameworks */,
-				E22058881BF3F854009CFAF6 /* libUIColor-HexString.a in Frameworks */,
 				E29C86201BE3B8E70041D4CF /* Foundation.framework in Frameworks */,
 				E29C861D1BE3B70B0041D4CF /* UIKit.framework in Frameworks */,
 				E29C861C1BE3B7060041D4CF /* CoreGraphics.framework in Frameworks */,
@@ -1501,19 +1409,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		2126BB4199403B73DA359804 /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				B990EC48F432C521F8E19986 /* Pods-Kite-CI-Deploy.debug.xcconfig */,
-				12FD9BFBCE9ED8DA9544AC9E /* Pods-Kite-CI-Deploy.release.xcconfig */,
-				7B7AEC95700CBBF97DEE4248 /* Pods-KitePrintSDKTests.debug.xcconfig */,
-				48B9F1B8F1FE7E95892C5AF0 /* Pods-KitePrintSDKTests.release.xcconfig */,
-				5DDF0E08421D961AB3B8BDE8 /* Pods-KiteSDK-Demo.debug.xcconfig */,
-				F9743B5EB83E2B95AC1322BF /* Pods-KiteSDK-Demo.release.xcconfig */,
-			);
-			name = Pods;
-			sourceTree = "<group>";
-		};
 		2E0DB88E1A6402D9001032E3 /* View */ = {
 			isa = PBXGroup;
 			children = (
@@ -1622,8 +1517,6 @@
 			children = (
 				CDA8BF5218D70D0F00D835BB /* OLPaymentViewController.h */,
 				CDA8BF5018D70D0F00D835BB /* OLPaymentViewController.m */,
-				2EBE79451CEA067B00FB5EF2 /* OLPaymentMethodsViewController.h */,
-				2EBE79461CEA067B00FB5EF2 /* OLPaymentMethodsViewController.m */,
 				CDA8BF5518D70D0F00D835BB /* OLCheckoutViewController.h */,
 				CDA8BF5118D70D0F00D835BB /* OLCheckoutViewController.m */,
 				2E5F80301B04A22500095203 /* OLIntegratedCheckoutViewController.h */,
@@ -1804,8 +1697,27 @@
 				2E2BF4461CCDFAF100725561 /* OLKiteTheme.m */,
 				2EA13E211BBC242F005F3D71 /* OLKiteUtils.h */,
 				2EA13E221BBC242F005F3D71 /* OLKiteUtils.m */,
+				2EBDA6DB1CEB1B0500397082 /* OLImageDownloader.h */,
+				2EBDA6DC1CEB1B0500397082 /* OLImageDownloader.m */,
+				2E5BDC3C1CEDBF8200257B1A /* OLImageDownloadDelegate.h */,
+				2E5BDC3D1CEDBF8200257B1A /* OLImageDownloadDelegate.m */,
+				2E25FEF91CF2EF5D006E52E5 /* OLKeyChainStore.h */,
+				2E25FEFA1CF2EF5D006E52E5 /* OLKeyChainStore.m */,
 			);
 			name = Util;
+			sourceTree = "<group>";
+		};
+		BD4B69B5FA7649D71E3DCFA6 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				298DCAC3C249D556BC358BBE /* Pods-Kite-CI-Deploy.debug.xcconfig */,
+				6065A81D1D5FA55710F28863 /* Pods-Kite-CI-Deploy.release.xcconfig */,
+				7CD27B24BF5B334ECA9E29FD /* Pods-KiteSDK-Demo.debug.xcconfig */,
+				0B046DC7D0342F91243158D5 /* Pods-KiteSDK-Demo.release.xcconfig */,
+				F3F42BE23BBDDF4AABF5AADB /* Pods.debug.xcconfig */,
+				C0B55F404A620D4736004846 /* Pods.release.xcconfig */,
+			);
+			name = Pods;
 			sourceTree = "<group>";
 		};
 		CD550BD61886BF6000782D75 /* Payment */ = {
@@ -1834,7 +1746,7 @@
 				CD73BF6A186215790009DE03 /* Frameworks */,
 				CD73BF69186215790009DE03 /* Products */,
 				E29C839D1BE275C40041D4CF /* Vendor */,
-				2126BB4199403B73DA359804 /* Pods */,
+				BD4B69B5FA7649D71E3DCFA6 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -1844,15 +1756,11 @@
 				CD73BF89186215790009DE03 /* KitePrintSDKTests.xctest */,
 				E29C85701BE3B4290041D4CF /* libKiteSDK.a */,
 				2EADD8651BE79D6D0051CD31 /* KiteSDK-Demo.app */,
-				E220587E1BF3F7AC009CFAF6 /* libUIColor-HexString.a */,
-				E220588D1BF3F868009CFAF6 /* libUICKeyChainStore.a */,
 				E220589C1BF3F8C4009CFAF6 /* libSVProgressHUD.a */,
 				E22058AD1BF3F946009CFAF6 /* libTSMarkdownParser.a */,
 				E22058BC1BF3F9BF009CFAF6 /* libDACircularProgress.a */,
 				E22058CC1BF3FA0C009CFAF6 /* libMPFlipViewController.a */,
 				E22058DE1BF3FAA7009CFAF6 /* libCSSStickyHeaderFlowLayout.a */,
-				E22058EE1BF3FB20009CFAF6 /* libSkyLab.a */,
-				E22058FD1BF3FB71009CFAF6 /* libSDWebImage.a */,
 				E24453051BFD2C1D0086BF03 /* libPayPal.a */,
 				E22963671C43DD21002A90CA /* libCTAssetsPicker.a */,
 				2EA3D3E31C9C04B500B99BCD /* libKiteSDKMinimal.a */,
@@ -1886,9 +1794,9 @@
 				CD73BF6D186215790009DE03 /* CoreGraphics.framework */,
 				CD73BF6F186215790009DE03 /* UIKit.framework */,
 				CD73BF8A186215790009DE03 /* XCTest.framework */,
-				0750EC28496C23C5C730C181 /* libPods-Kite-CI-Deploy.a */,
-				CE5B8F47FD88B105ECF7563A /* libPods-KitePrintSDKTests.a */,
-				4BC453A900D1393B060B2FA9 /* libPods-KiteSDK-Demo.a */,
+				68C5AA28A3D40F0ACF4A8EDB /* libPods-Kite-CI-Deploy.a */,
+				FEA98FBEBCD2840FAF40FA2E /* libPods-KiteSDK-Demo.a */,
+				3AB381E46AA873C25781C873 /* libPods.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -1899,7 +1807,6 @@
 				2E4CAF141BC294F30089FA26 /* Model */,
 				2E0DB88E1A6402D9001032E3 /* View */,
 				CDA8BF4F18D70CF500D835BB /* Controller */,
-				E29C84161BE2877A0041D4CF /* SVProgressHUD.bundle */,
 				2EA8BEC11A48509E008A9248 /* Categories */,
 				E29C862E1BE3C4640041D4CF /* Resources */,
 			);
@@ -2370,6 +2277,7 @@
 			children = (
 				2E6E605F1C50384C00829BB7 /* KitePrintSDK.strings */,
 				E22963951C43DF29002A90CA /* CTAssetsPickerController.bundle */,
+				E29C84161BE2877A0041D4CF /* SVProgressHUD.bundle */,
 				3D6CDAAC1B1F41AE00786478 /* kite_corrupt.jpg */,
 				2E38C0CC1AD5206F008BC28A /* PostcardBackView.xib */,
 				2E6E60681C5038AD00829BB7 /* OLKiteStoryboard.storyboard */,
@@ -2402,13 +2310,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2E898CE71CC518180041CCD8 /* Build configuration list for PBXNativeTarget "Kite-CI-Deploy" */;
 			buildPhases = (
-				42AD2845491C25C0982C7717 /* 📦 Check Pods Manifest.lock */,
+				83A394BB1BF5F87B1E604FE0 /* Check Pods Manifest.lock */,
 				2E898C4E1CC518180041CCD8 /* Sources */,
 				2E898CCA1CC518180041CCD8 /* Frameworks */,
 				2E898CDC1CC518180041CCD8 /* Resources */,
 				2E89E4351CC6218100C9EE93 /* ShellScript */,
-				5F0330CA7E1D2E8D374D09BA /* 📦 Embed Pods Frameworks */,
-				E8C88DF2C32A934F0F6CF765 /* 📦 Copy Pods Resources */,
+				6864C1668BF6CFC6C9848F43 /* Embed Pods Frameworks */,
+				3135A0F0F92768BA0DE98F11 /* Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -2440,12 +2348,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2EADD8621BE79D6D0051CD31 /* Build configuration list for PBXNativeTarget "KiteSDK-Demo" */;
 			buildPhases = (
-				61989835E2194008D8DE456B /* 📦 Check Pods Manifest.lock */,
+				F415E384F9A491835D63630E /* Check Pods Manifest.lock */,
 				2EADD7E51BE79D6D0051CD31 /* Sources */,
 				2EADD84D1BE79D6D0051CD31 /* Frameworks */,
 				2EADD8551BE79D6D0051CD31 /* Resources */,
-				9DBB66745205359A4F159E14 /* 📦 Embed Pods Frameworks */,
-				C3FA833CBC4459CE17595940 /* 📦 Copy Pods Resources */,
+				68B0889886C959304024446B /* Embed Pods Frameworks */,
+				8F309BFE1F505E6C83263CFD /* Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -2460,12 +2368,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = CD73BF9D186215790009DE03 /* Build configuration list for PBXNativeTarget "KitePrintSDKTests" */;
 			buildPhases = (
-				D720AF67666A1A3C4259DCA6 /* 📦 Check Pods Manifest.lock */,
+				1286B96D9C2B70A697AC6F1D /* Check Pods Manifest.lock */,
 				CD73BF85186215790009DE03 /* Sources */,
 				CD73BF86186215790009DE03 /* Frameworks */,
 				CD73BF87186215790009DE03 /* Resources */,
-				34180D2847A74BF0D595794D /* 📦 Embed Pods Frameworks */,
-				FD151E57EEA0AEF87879CFA7 /* 📦 Copy Pods Resources */,
+				2D0B458F9358CFC9B9F743F1 /* Embed Pods Frameworks */,
+				26CEA2D9C0102147C07CC852 /* Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -2476,40 +2384,6 @@
 			productName = PSPrintSDKTests;
 			productReference = CD73BF89186215790009DE03 /* KitePrintSDKTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
-		};
-		E220587D1BF3F7AC009CFAF6 /* UIColor-HexString */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = E22058841BF3F7AC009CFAF6 /* Build configuration list for PBXNativeTarget "UIColor-HexString" */;
-			buildPhases = (
-				E220587A1BF3F7AC009CFAF6 /* Sources */,
-				E220587B1BF3F7AC009CFAF6 /* Frameworks */,
-				E220587C1BF3F7AC009CFAF6 /* CopyFiles */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = "UIColor-HexString";
-			productName = "UIColor-HexString";
-			productReference = E220587E1BF3F7AC009CFAF6 /* libUIColor-HexString.a */;
-			productType = "com.apple.product-type.library.static";
-		};
-		E220588C1BF3F868009CFAF6 /* UICKeyChainStore */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = E22058931BF3F868009CFAF6 /* Build configuration list for PBXNativeTarget "UICKeyChainStore" */;
-			buildPhases = (
-				E22058891BF3F868009CFAF6 /* Sources */,
-				E220588A1BF3F868009CFAF6 /* Frameworks */,
-				E220588B1BF3F868009CFAF6 /* CopyFiles */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = UICKeyChainStore;
-			productName = UICKeyChainStore;
-			productReference = E220588D1BF3F868009CFAF6 /* libUICKeyChainStore.a */;
-			productType = "com.apple.product-type.library.static";
 		};
 		E220589B1BF3F8C4009CFAF6 /* SVProgressHUD */ = {
 			isa = PBXNativeTarget;
@@ -2594,40 +2468,6 @@
 			name = CSSStickyHeaderFlowLayout;
 			productName = CSSStickyHeaderFlowLayout;
 			productReference = E22058DE1BF3FAA7009CFAF6 /* libCSSStickyHeaderFlowLayout.a */;
-			productType = "com.apple.product-type.library.static";
-		};
-		E22058ED1BF3FB20009CFAF6 /* SkyLab */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = E22058F41BF3FB20009CFAF6 /* Build configuration list for PBXNativeTarget "SkyLab" */;
-			buildPhases = (
-				E22058EA1BF3FB20009CFAF6 /* Sources */,
-				E22058EB1BF3FB20009CFAF6 /* Frameworks */,
-				E22058EC1BF3FB20009CFAF6 /* CopyFiles */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = SkyLab;
-			productName = SkyLab;
-			productReference = E22058EE1BF3FB20009CFAF6 /* libSkyLab.a */;
-			productType = "com.apple.product-type.library.static";
-		};
-		E22058FC1BF3FB71009CFAF6 /* SDWebImage */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = E22059031BF3FB71009CFAF6 /* Build configuration list for PBXNativeTarget "SDWebImage" */;
-			buildPhases = (
-				E22058F91BF3FB71009CFAF6 /* Sources */,
-				E22058FA1BF3FB71009CFAF6 /* Frameworks */,
-				E22058FB1BF3FB71009CFAF6 /* CopyFiles */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = SDWebImage;
-			productName = SDWebImage;
-			productReference = E22058FD1BF3FB71009CFAF6 /* libSDWebImage.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 		E22963661C43DD21002A90CA /* CTAssetsPicker */ = {
@@ -2715,12 +2555,6 @@
 					CD73BF88186215790009DE03 = {
 						TestTargetID = 2E898C4C1CC518180041CCD8;
 					};
-					E220587D1BF3F7AC009CFAF6 = {
-						CreatedOnToolsVersion = 7.1;
-					};
-					E220588C1BF3F868009CFAF6 = {
-						CreatedOnToolsVersion = 7.1;
-					};
 					E220589B1BF3F8C4009CFAF6 = {
 						CreatedOnToolsVersion = 7.1;
 					};
@@ -2734,12 +2568,6 @@
 						CreatedOnToolsVersion = 7.1;
 					};
 					E22058DD1BF3FAA7009CFAF6 = {
-						CreatedOnToolsVersion = 7.1;
-					};
-					E22058ED1BF3FB20009CFAF6 = {
-						CreatedOnToolsVersion = 7.1;
-					};
-					E22058FC1BF3FB71009CFAF6 = {
 						CreatedOnToolsVersion = 7.1;
 					};
 					E22963661C43DD21002A90CA = {
@@ -2775,15 +2603,11 @@
 				2E4CAF081BC25F0A0089FA26 /* Docs */,
 				E29C856F1BE3B4290041D4CF /* KiteSDK */,
 				2EA3D35A1C9C04B500B99BCD /* KiteSDKMinimal */,
-				E220587D1BF3F7AC009CFAF6 /* UIColor-HexString */,
-				E220588C1BF3F868009CFAF6 /* UICKeyChainStore */,
 				E220589B1BF3F8C4009CFAF6 /* SVProgressHUD */,
 				E22058AC1BF3F946009CFAF6 /* TSMarkdownParser */,
 				E22058BB1BF3F9BF009CFAF6 /* DACircularProgress */,
 				E22058CB1BF3FA0C009CFAF6 /* MPFlipViewController */,
 				E22058DD1BF3FAA7009CFAF6 /* CSSStickyHeaderFlowLayout */,
-				E22058ED1BF3FB20009CFAF6 /* SkyLab */,
-				E22058FC1BF3FB71009CFAF6 /* SDWebImage */,
 				E24453041BFD2C1D0086BF03 /* PayPal */,
 				E22963661C43DD21002A90CA /* CTAssetsPicker */,
 				2E13277A1CC7A83300387E06 /* ios-qr-encoder */,
@@ -2833,6 +2657,51 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		1286B96D9C2B70A697AC6F1D /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		26CEA2D9C0102147C07CC852 /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		2D0B458F9358CFC9B9F743F1 /* Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		2E4CAF0C1BC25F120089FA26 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -2859,29 +2728,59 @@
 			shellPath = /bin/sh;
 			shellScript = "#\n# Set the build number to the current git commit count.\n# If we're using the Dev scheme, then we'll suffix the build\n# number with the current branch name, to make collisions\n# far less likely across feature branches.\n# Based on: http://w3facility.info/question/how-do-i-force-xcode-to-rebuild-the-info-plist-file-in-my-project-every-time-i-build-the-project/\n#\n# Updated with dSYM handling from http://yellowfeather.co.uk/blog/auto-incrementing-build-number-in-xcode-revisited/\n#\n\ngit=`sh /etc/profile; which git`\nappBuild=`\"$git\" rev-list HEAD --count`\nif [ $CONFIGURATION = \"Debug\" ]; then\nbranchName=`\"$git\" rev-parse --abbrev-ref HEAD`\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $appBuild-$branchName\" \"${TARGET_BUILD_DIR}/${INFOPLIST_PATH}\"\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $appBuild-$branchName\" \"${BUILT_PRODUCTS_DIR}/${WRAPPER_NAME}.dSYM/Contents/Info.plist\"\nelse\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $appBuild\" \"${TARGET_BUILD_DIR}/${INFOPLIST_PATH}\"\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $appBuild\" \"${BUILT_PRODUCTS_DIR}/${WRAPPER_NAME}.dSYM/Contents/Info.plist\"\nfi\necho \"Incremented the build number ${TARGET_BUILD_DIR}/${INFOPLIST_PATH}\"";
 		};
-		34180D2847A74BF0D595794D /* 📦 Embed Pods Frameworks */ = {
+		3135A0F0F92768BA0DE98F11 /* Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "📦 Embed Pods Frameworks";
+			name = "Copy Pods Resources";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-KitePrintSDKTests/Pods-KitePrintSDKTests-frameworks.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		42AD2845491C25C0982C7717 /* 📦 Check Pods Manifest.lock */ = {
+		6864C1668BF6CFC6C9848F43 /* Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "📦 Check Pods Manifest.lock";
+			name = "Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		68B0889886C959304024446B /* Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		83A394BB1BF5F87B1E604FE0 /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2889,109 +2788,34 @@
 			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
-		5F0330CA7E1D2E8D374D09BA /* 📦 Embed Pods Frameworks */ = {
+		8F309BFE1F505E6C83263CFD /* Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "📦 Embed Pods Frameworks";
+			name = "Copy Pods Resources";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Kite-CI-Deploy/Pods-Kite-CI-Deploy-frameworks.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		61989835E2194008D8DE456B /* 📦 Check Pods Manifest.lock */ = {
+		F415E384F9A491835D63630E /* Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "📦 Check Pods Manifest.lock";
+			name = "Check Pods Manifest.lock";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
-			showEnvVarsInLog = 0;
-		};
-		9DBB66745205359A4F159E14 /* 📦 Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "📦 Embed Pods Frameworks";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-KiteSDK-Demo/Pods-KiteSDK-Demo-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		C3FA833CBC4459CE17595940 /* 📦 Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "📦 Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-KiteSDK-Demo/Pods-KiteSDK-Demo-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		D720AF67666A1A3C4259DCA6 /* 📦 Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "📦 Check Pods Manifest.lock";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
-			showEnvVarsInLog = 0;
-		};
-		E8C88DF2C32A934F0F6CF765 /* 📦 Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "📦 Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Kite-CI-Deploy/Pods-Kite-CI-Deploy-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		FD151E57EEA0AEF87879CFA7 /* 📦 Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "📦 Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-KitePrintSDKTests/Pods-KitePrintSDKTests-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -3086,7 +2910,6 @@
 				2E898CA11CC518180041CCD8 /* LXReorderableCollectionViewFlowLayout.m in Sources */,
 				2E898CA21CC518180041CCD8 /* OLImageCachingManager.m in Sources */,
 				2E898CA31CC518180041CCD8 /* AssetDataSource.m in Sources */,
-				2EBE79481CEA067B00FB5EF2 /* OLPaymentMethodsViewController.m in Sources */,
 				2E898CA41CC518180041CCD8 /* UIView+RoundRect.m in Sources */,
 				2E898CA51CC518180041CCD8 /* OLCountry.m in Sources */,
 				2E2BF4481CCDFAF100725561 /* OLKiteTheme.m in Sources */,
@@ -3094,6 +2917,8 @@
 				2E898CA81CC518180041CCD8 /* OLCustomPhotoProvider.m in Sources */,
 				2E898CA91CC518180041CCD8 /* OLConstants.m in Sources */,
 				2E898CAA1CC518180041CCD8 /* OLProductOverviewPageContentViewController.m in Sources */,
+				2E25FEFC1CF2EF5D006E52E5 /* OLKeyChainStore.m in Sources */,
+				2E5BDC3F1CEDBF8200257B1A /* OLImageDownloadDelegate.m in Sources */,
 				2E898CAB1CC518180041CCD8 /* OLJudoPayCard.m in Sources */,
 				2E898CAC1CC518180041CCD8 /* OLReceiptViewController.m in Sources */,
 				2E898CAE1CC518180041CCD8 /* OLAssetUploadRequest.m in Sources */,
@@ -3116,6 +2941,7 @@
 				2E898CC31CC518180041CCD8 /* OLQRCodeUploadViewController.m in Sources */,
 				2E898CC41CC518180041CCD8 /* OLCountryPickerController.m in Sources */,
 				2E898CC51CC518180041CCD8 /* OLURLShortener.m in Sources */,
+				2EBDA6DE1CEB1B0500397082 /* OLImageDownloader.m in Sources */,
 				2E898CC61CC518180041CCD8 /* OLBaseRequest.m in Sources */,
 				2E898CC71CC518180041CCD8 /* OLPhotobookPrintJob.m in Sources */,
 				2E898CC81CC518180041CCD8 /* OLPaymentLineItem.m in Sources */,
@@ -3131,6 +2957,7 @@
 				2EA3D35D1C9C04B500B99BCD /* OLScrollCropViewController.m in Sources */,
 				2EA3D35E1C9C04B500B99BCD /* OLCustomPhotoProvider.m in Sources */,
 				2EA3D35F1C9C04B500B99BCD /* OLPrintOrderCostRequest.m in Sources */,
+				2EBDA6E01CEB1B0500397082 /* OLImageDownloader.m in Sources */,
 				2EA3D3601C9C04B500B99BCD /* OLInfoPageViewController.m in Sources */,
 				2EA3D3611C9C04B500B99BCD /* OLIntegratedCheckoutViewController.m in Sources */,
 				2EA3D3621C9C04B500B99BCD /* OLProductGroup.m in Sources */,
@@ -3147,7 +2974,7 @@
 				2EA3D36D1C9C04B500B99BCD /* OLOrderReviewViewController.m in Sources */,
 				2EA3D36E1C9C04B500B99BCD /* OLProduct.m in Sources */,
 				2EA3D3701C9C04B500B99BCD /* OLAddressEditViewController.m in Sources */,
-				2EBE794A1CEA067B00FB5EF2 /* OLPaymentMethodsViewController.m in Sources */,
+				2E5BDC411CEDBF8200257B1A /* OLImageDownloadDelegate.m in Sources */,
 				2EA3D3711C9C04B500B99BCD /* OLKiteUtils.m in Sources */,
 				2EA3D3721C9C04B500B99BCD /* ALAsset+OLIsEqual.m in Sources */,
 				2EA3D3731C9C04B500B99BCD /* OLAssetsSupplementaryView.m in Sources */,
@@ -3172,6 +2999,7 @@
 				2EA3D3871C9C04B500B99BCD /* OLPrintOrder+History.m in Sources */,
 				2EA3D3881C9C04B500B99BCD /* OLStripeCard.m in Sources */,
 				2EA3D3891C9C04B500B99BCD /* OLAsset.m in Sources */,
+				2E25FEFE1CF2EF5D006E52E5 /* OLKeyChainStore.m in Sources */,
 				2EA3D38A1C9C04B500B99BCD /* OLProductTemplate.m in Sources */,
 				2EA3D38B1C9C04B500B99BCD /* OLPaymentViewController.m in Sources */,
 				2EA3D38C1C9C04B500B99BCD /* NSDateFormatter+OLTimeIntervalFormatter.m in Sources */,
@@ -3257,10 +3085,12 @@
 				2EADD7EB1BE79D6D0051CD31 /* OLProductGroup.m in Sources */,
 				2EADD7EC1BE79D6D0051CD31 /* UIImage+ColorAtPixel.m in Sources */,
 				2EADD7ED1BE79D6D0051CD31 /* OLCheckoutViewController.m in Sources */,
+				2EBDA6DD1CEB1B0500397082 /* OLImageDownloader.m in Sources */,
 				2EADD7EE1BE79D6D0051CD31 /* OLPhotobookViewController.m in Sources */,
 				2EADD7F01BE79D6D0051CD31 /* OLPopupOptionsImageView.m in Sources */,
 				2EADD7F11BE79D6D0051CD31 /* NSArray+QueryingExtras.m in Sources */,
 				2EADD7F31BE79D6D0051CD31 /* PrintOrderHistoryViewController.m in Sources */,
+				2E5BDC3E1CEDBF8200257B1A /* OLImageDownloadDelegate.m in Sources */,
 				2EADD7F41BE79D6D0051CD31 /* UIImage+ImageNamedInKiteBundle.m in Sources */,
 				2E482B7A1BEB4C7D007460EA /* OLStripeCard.m in Sources */,
 				2E645B371BE7D173009B662B /* OLProductOptionsViewController.m in Sources */,
@@ -3302,7 +3132,6 @@
 				2EADD8121BE79D6D0051CD31 /* OLAsset.m in Sources */,
 				2E0804BE1C0DF70200F50D42 /* CatsAssetCollectionDataSource.m in Sources */,
 				2EADD8131BE79D6D0051CD31 /* AppDelegate.m in Sources */,
-				2EBE79471CEA067B00FB5EF2 /* OLPaymentMethodsViewController.m in Sources */,
 				2EAB0AE81CDB504E00625BD6 /* OLAssetsSupplementaryView.m in Sources */,
 				2EADD8141BE79D6D0051CD31 /* OLProductTemplate.m in Sources */,
 				2EADD8151BE79D6D0051CD31 /* OLPaymentViewController.m in Sources */,
@@ -3363,6 +3192,7 @@
 				E2AABA191C6FC6650007C1D7 /* OLURLShortener.m in Sources */,
 				2EADD8491BE79D6D0051CD31 /* OLBaseRequest.m in Sources */,
 				2EADD84A1BE79D6D0051CD31 /* OLPhotobookPrintJob.m in Sources */,
+				2E25FEFB1CF2EF5D006E52E5 /* OLKeyChainStore.m in Sources */,
 				2EADD84B1BE79D6D0051CD31 /* OLPaymentLineItem.m in Sources */,
 				2EADD84C1BE79D6D0051CD31 /* OLPrintJob.m in Sources */,
 				2EAB0ADB1CDB504E00625BD6 /* ALAsset+OLAccessibilityLabel.m in Sources */,
@@ -3384,22 +3214,6 @@
 				2E6A1FE61CE07E7700237D38 /* CatsAssetCollectionDataSource.m in Sources */,
 				2EAB0AF51CDCD58400625BD6 /* OLTestTapGestureRecognizer.m in Sources */,
 				2E7483551BCD1DF500360550 /* OLPrintPhotoTests.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		E220587A1BF3F7AC009CFAF6 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				E22058871BF3F7DB009CFAF6 /* UIColor+HexString.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		E22058891BF3F868009CFAF6 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				E22058961BF3F87F009CFAF6 /* UICKeyChainStore.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3447,35 +3261,6 @@
 			files = (
 				E22058E71BF3FAEE009CFAF6 /* CSStickyHeaderFlowLayout.m in Sources */,
 				E22058E81BF3FAEE009CFAF6 /* CSStickyHeaderFlowLayoutAttributes.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		E22058EA1BF3FB20009CFAF6 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				E22058F71BF3FB30009CFAF6 /* SkyLab.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		E22058F91BF3FB71009CFAF6 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				E22059061BF3FBB6009CFAF6 /* NSData+ImageContentType.m in Sources */,
-				E22059071BF3FBB6009CFAF6 /* SDImageCache.m in Sources */,
-				E22059081BF3FBB6009CFAF6 /* SDWebImageCompat.m in Sources */,
-				E22059091BF3FBB6009CFAF6 /* SDWebImageDecoder.m in Sources */,
-				E220590A1BF3FBB6009CFAF6 /* SDWebImageDownloader.m in Sources */,
-				E220590B1BF3FBB6009CFAF6 /* SDWebImageDownloaderOperation.m in Sources */,
-				E220590C1BF3FBB6009CFAF6 /* SDWebImageManager.m in Sources */,
-				E220590D1BF3FBB6009CFAF6 /* SDWebImagePrefetcher.m in Sources */,
-				E220590E1BF3FBB6009CFAF6 /* UIButton+WebCache.m in Sources */,
-				E220590F1BF3FBB6009CFAF6 /* UIImage+GIF.m in Sources */,
-				E22059101BF3FBB6009CFAF6 /* UIImage+MultiFormat.m in Sources */,
-				E22059111BF3FBB6009CFAF6 /* UIImageView+HighlightedWebCache.m in Sources */,
-				E22059121BF3FBB6009CFAF6 /* UIImageView+WebCache.m in Sources */,
-				E22059131BF3FBB6009CFAF6 /* UIView+WebCacheOperation.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3536,7 +3321,6 @@
 			files = (
 				E29C858B1BE3B5C50041D4CF /* OLURLDataSource.m in Sources */,
 				E29C858E1BE3B5C50041D4CF /* OLScrollCropViewController.m in Sources */,
-				2EBE79491CEA067B00FB5EF2 /* OLPaymentMethodsViewController.m in Sources */,
 				2E0804B91C0DECE300F50D42 /* OLCustomPhotoProvider.m in Sources */,
 				E29C858F1BE3B5C50041D4CF /* OLPrintOrderCostRequest.m in Sources */,
 				E29C85901BE3B5C50041D4CF /* OLInfoPageViewController.m in Sources */,
@@ -3557,6 +3341,7 @@
 				2EAB0AC41CDB504C00625BD6 /* OLAssetsPageViewController.m in Sources */,
 				E29C85AB1BE3B5C50041D4CF /* OLAddressEditViewController.m in Sources */,
 				E29C85AC1BE3B5C50041D4CF /* OLKiteUtils.m in Sources */,
+				2E5BDC401CEDBF8200257B1A /* OLImageDownloadDelegate.m in Sources */,
 				E29C85AF1BE3B5C50041D4CF /* OLCaseViewController.m in Sources */,
 				E29C85B31BE3B5C50041D4CF /* OLFrameOrderReviewViewController.m in Sources */,
 				E29C85B41BE3B5C50041D4CF /* OLApparelPrintJob.m in Sources */,
@@ -3584,6 +3369,7 @@
 				2E482B7B1BEB4C7D007460EA /* OLStripeCard.m in Sources */,
 				2EAB0AC11CDB504C00625BD6 /* OLAssetScrollView.m in Sources */,
 				E29C85CB1BE3B5C50041D4CF /* OLAsset.m in Sources */,
+				2EBDA6DF1CEB1B0500397082 /* OLImageDownloader.m in Sources */,
 				E29C85CD1BE3B5C50041D4CF /* OLProductTemplate.m in Sources */,
 				E29C85CE1BE3B5C50041D4CF /* OLPaymentViewController.m in Sources */,
 				E29C85D11BE3B5C50041D4CF /* OLPrintPhoto.m in Sources */,
@@ -3648,6 +3434,7 @@
 				E29C86161BE3B5C50041D4CF /* OLPhotobookPrintJob.m in Sources */,
 				E29C86171BE3B5C50041D4CF /* OLPaymentLineItem.m in Sources */,
 				E29C86181BE3B5C50041D4CF /* OLPrintJob.m in Sources */,
+				2E25FEFD1CF2EF5D006E52E5 /* OLKeyChainStore.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3690,9 +3477,6 @@
 			isa = PBXVariantGroup;
 			children = (
 				CD73BF7E186215790009DE03 /* Base */,
-				2E6E60601C50386000829BB7 /* fr */,
-				2E6E60621C50386B00829BB7 /* de */,
-				2E6E60641C50387000829BB7 /* es */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
@@ -3753,7 +3537,7 @@
 		};
 		2E898CE81CC518180041CCD8 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B990EC48F432C521F8E19986 /* Pods-Kite-CI-Deploy.debug.xcconfig */;
+			baseConfigurationReference = F3F42BE23BBDDF4AABF5AADB /* Pods.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -3799,13 +3583,9 @@
 					"-l\"NXOAuth2Client\"",
 					"-l\"PayPalMobile\"",
 					"-l\"PureLayout\"",
-					"-l\"SDWebImage\"",
 					"-l\"SVProgressHUD\"",
-					"-l\"SkyLab\"",
 					"-l\"Stripe\"",
 					"-l\"TSMarkdownParser\"",
-					"-l\"UICKeyChainStore\"",
-					"-l\"UIColor-HexString\"",
 					"-l\"c++\"",
 					"-framework",
 					"\"AVFoundation\"",
@@ -3871,7 +3651,7 @@
 		};
 		2E898CE91CC518180041CCD8 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 12FD9BFBCE9ED8DA9544AC9E /* Pods-Kite-CI-Deploy.release.xcconfig */;
+			baseConfigurationReference = C0B55F404A620D4736004846 /* Pods.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -3916,13 +3696,9 @@
 					"-l\"NXOAuth2Client\"",
 					"-l\"PayPalMobile\"",
 					"-l\"PureLayout\"",
-					"-l\"SDWebImage\"",
 					"-l\"SVProgressHUD\"",
-					"-l\"SkyLab\"",
 					"-l\"Stripe\"",
 					"-l\"TSMarkdownParser\"",
-					"-l\"UICKeyChainStore\"",
-					"-l\"UIColor-HexString\"",
 					"-l\"c++\"",
 					"-framework",
 					"\"AVFoundation\"",
@@ -4046,7 +3822,7 @@
 		};
 		2EADD8631BE79D6D0051CD31 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5DDF0E08421D961AB3B8BDE8 /* Pods-KiteSDK-Demo.debug.xcconfig */;
+			baseConfigurationReference = F3F42BE23BBDDF4AABF5AADB /* Pods.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -4091,13 +3867,9 @@
 					"-l\"NXOAuth2Client\"",
 					"-l\"PayPalMobile\"",
 					"-l\"PureLayout\"",
-					"-l\"SDWebImage\"",
 					"-l\"SVProgressHUD\"",
-					"-l\"SkyLab\"",
 					"-l\"Stripe\"",
 					"-l\"TSMarkdownParser\"",
-					"-l\"UICKeyChainStore\"",
-					"-l\"UIColor-HexString\"",
 					"-l\"c++\"",
 					"-framework",
 					"\"AVFoundation\"",
@@ -4163,7 +3935,7 @@
 		};
 		2EADD8641BE79D6D0051CD31 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = F9743B5EB83E2B95AC1322BF /* Pods-KiteSDK-Demo.release.xcconfig */;
+			baseConfigurationReference = C0B55F404A620D4736004846 /* Pods.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -4207,13 +3979,9 @@
 					"-l\"NXOAuth2Client\"",
 					"-l\"PayPalMobile\"",
 					"-l\"PureLayout\"",
-					"-l\"SDWebImage\"",
 					"-l\"SVProgressHUD\"",
-					"-l\"SkyLab\"",
 					"-l\"Stripe\"",
 					"-l\"TSMarkdownParser\"",
-					"-l\"UICKeyChainStore\"",
-					"-l\"UIColor-HexString\"",
 					"-l\"c++\"",
 					"-framework",
 					"\"AVFoundation\"",
@@ -4353,7 +4121,7 @@
 		};
 		CD73BF9E186215790009DE03 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 7B7AEC95700CBBF97DEE4248 /* Pods-KitePrintSDKTests.debug.xcconfig */;
+			baseConfigurationReference = F3F42BE23BBDDF4AABF5AADB /* Pods.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_ENTITLEMENTS = "";
@@ -4375,7 +4143,7 @@
 		};
 		CD73BF9F186215790009DE03 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 48B9F1B8F1FE7E95892C5AF0 /* Pods-KitePrintSDKTests.release.xcconfig */;
+			baseConfigurationReference = C0B55F404A620D4736004846 /* Pods.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_ENTITLEMENTS = "";
@@ -4392,92 +4160,6 @@
 				PRODUCT_NAME = KitePrintSDKTests;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Kite-CI-Deploy.app/Kite-CI-Deploy";
 				WRAPPER_EXTENSION = xctest;
-			};
-			name = Release;
-		};
-		E22058851BF3F7AC009CFAF6 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				DEBUG_INFORMATION_FORMAT = dwarf;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
-				MTL_ENABLE_DEBUG_INFO = YES;
-				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				WARNING_CFLAGS = (
-					"-Wno-shorten-64-to-32",
-					"-Wno-absolute-value",
-				);
-			};
-			name = Debug;
-		};
-		E22058861BF3F7AC009CFAF6 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
-				MTL_ENABLE_DEBUG_INFO = NO;
-				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				WARNING_CFLAGS = (
-					"-Wno-shorten-64-to-32",
-					"-Wno-absolute-value",
-				);
-			};
-			name = Release;
-		};
-		E22058941BF3F868009CFAF6 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				DEBUG_INFORMATION_FORMAT = dwarf;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
-				MTL_ENABLE_DEBUG_INFO = YES;
-				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				WARNING_CFLAGS = (
-					"-Wno-shorten-64-to-32",
-					"-Wno-absolute-value",
-				);
-			};
-			name = Debug;
-		};
-		E22058951BF3F868009CFAF6 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
-				MTL_ENABLE_DEBUG_INFO = NO;
-				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				WARNING_CFLAGS = (
-					"-Wno-shorten-64-to-32",
-					"-Wno-absolute-value",
-				);
 			};
 			name = Release;
 		};
@@ -4677,92 +4359,6 @@
 			name = Debug;
 		};
 		E22058E61BF3FAA7009CFAF6 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
-				MTL_ENABLE_DEBUG_INFO = NO;
-				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				WARNING_CFLAGS = (
-					"-Wno-shorten-64-to-32",
-					"-Wno-absolute-value",
-				);
-			};
-			name = Release;
-		};
-		E22058F51BF3FB20009CFAF6 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				DEBUG_INFORMATION_FORMAT = dwarf;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
-				MTL_ENABLE_DEBUG_INFO = YES;
-				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				WARNING_CFLAGS = (
-					"-Wno-shorten-64-to-32",
-					"-Wno-absolute-value",
-				);
-			};
-			name = Debug;
-		};
-		E22058F61BF3FB20009CFAF6 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
-				MTL_ENABLE_DEBUG_INFO = NO;
-				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				WARNING_CFLAGS = (
-					"-Wno-shorten-64-to-32",
-					"-Wno-absolute-value",
-				);
-			};
-			name = Release;
-		};
-		E22059041BF3FB71009CFAF6 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				DEBUG_INFORMATION_FORMAT = dwarf;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
-				MTL_ENABLE_DEBUG_INFO = YES;
-				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				WARNING_CFLAGS = (
-					"-Wno-shorten-64-to-32",
-					"-Wno-absolute-value",
-				);
-			};
-			name = Debug;
-		};
-		E22059051BF3FB71009CFAF6 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_WARN_UNREACHABLE_CODE = YES;
@@ -4995,24 +4591,6 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		E22058841BF3F7AC009CFAF6 /* Build configuration list for PBXNativeTarget "UIColor-HexString" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				E22058851BF3F7AC009CFAF6 /* Debug */,
-				E22058861BF3F7AC009CFAF6 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		E22058931BF3F868009CFAF6 /* Build configuration list for PBXNativeTarget "UICKeyChainStore" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				E22058941BF3F868009CFAF6 /* Debug */,
-				E22058951BF3F868009CFAF6 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		E22058A21BF3F8C4009CFAF6 /* Build configuration list for PBXNativeTarget "SVProgressHUD" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -5054,24 +4632,6 @@
 			buildConfigurations = (
 				E22058E51BF3FAA7009CFAF6 /* Debug */,
 				E22058E61BF3FAA7009CFAF6 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		E22058F41BF3FB20009CFAF6 /* Build configuration list for PBXNativeTarget "SkyLab" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				E22058F51BF3FB20009CFAF6 /* Debug */,
-				E22058F61BF3FB20009CFAF6 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		E22059031BF3FB71009CFAF6 /* Build configuration list for PBXNativeTarget "SDWebImage" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				E22059041BF3FB71009CFAF6 /* Debug */,
-				E22059051BF3FB71009CFAF6 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

@@ -9,7 +9,6 @@
 #import <XCTest/XCTest.h>
 #import "OLProductTemplate.h"
 #import "OLKitePrintSDK.h"
-#import "SDWebImageManager.h"
 #import "OLPrintPhoto.h"
 #import "OLKiteTestHelper.h"
 #import <AssetsLibrary/AssetsLibrary.h>

@@ -25,6 +25,7 @@
 @property (strong, nonatomic) NSURL *receiptLogo;
 @property (strong, nonatomic) NSString *ctaColor;
 @property (assign, nonatomic) BOOL kioskEnablePayAtTheTill;
+@property (assign, nonatomic) BOOL kioskRequirePromoCode;
 @property (strong, nonatomic) OLAddress *kioskShipToStoreAddress;
 
 @end

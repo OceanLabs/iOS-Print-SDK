@@ -29,12 +29,6 @@
 
 #import "NSArray+QueryingExtras.h"
 #import "NSObject+Utils.h"
-#ifdef COCOAPODS
-#import <SDWebImage/SDWebImageManager.h>
-#else
-#import "SDWebImageManager.h"
-#endif
-
 #import "OLSingleImageProductReviewViewController.h"
 #import "OLPrintPhoto.h"
 #import "OLAnalytics.h"

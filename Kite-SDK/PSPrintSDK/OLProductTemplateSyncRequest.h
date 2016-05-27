@@ -34,6 +34,6 @@ typedef void (^OLTemplateSyncRequestCompletionHandler)(NSArray *templates, NSErr
 @interface OLProductTemplateSyncRequest : NSObject
 
 - (void)sync:(OLTemplateSyncRequestCompletionHandler)handler;
-//- (void)cancel;
+- (void)cancel;
 
 @end

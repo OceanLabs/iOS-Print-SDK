@@ -58,7 +58,7 @@ typedef enum {
 @property (nonatomic, assign, readonly) BOOL enabled;
 @property (nonatomic, readonly) NSArray *_Nonnull currenciesSupported;
 @property (strong, nonatomic) NSURL *_Nullable coverPhotoURL;
-@property (strong, nonatomic) NSArray *_Nullable productPhotographyURLs;
+@property (strong, nonatomic) NSArray <NSString *>*_Nullable productPhotographyURLs;
 @property (assign, nonatomic) OLTemplateUI templateUI;
 @property (strong, nonatomic) NSString *_Nullable templateClass;
 @property (strong, nonatomic) NSString *_Nullable templateType;
@@ -91,6 +91,7 @@ typedef enum {
 + (void)sync;
 + (void)syncWithCompletionHandler:(void(^_Nullable)(NSArray <OLProductTemplate *>* _Nullable templates, NSError * _Nullable error))handler;
 + (BOOL)isSyncInProgress;
++ (void)cancelSyncInProgress;
 + (OLProductTemplate *_Nullable)templateWithId:(NSString *_Nonnull)identifier;
 + (NSArray *_Nullable)templates;
 + (NSDate *_Nullable)lastSyncDate;

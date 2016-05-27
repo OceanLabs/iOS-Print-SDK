@@ -194,7 +194,7 @@ typedef enum {
         [imageView setAndFadeInImageWithURL:self.productPhotos[i]];
     }
     else{
-        [imageView setAndFadeInImageWithURL:self.productTemplate.productPhotographyURLs[i % [self.productTemplate.productPhotographyURLs count]]];
+        [imageView setAndFadeInImageWithURL:[NSURL URLWithString:self.productTemplate.productPhotographyURLs[i % [self.productTemplate.productPhotographyURLs count]]]];
     }
 }
 

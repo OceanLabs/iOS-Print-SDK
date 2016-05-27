@@ -11,9 +11,6 @@
 #import "NSString+Formatting.h"
 #import "OLKitePrintSDK.h"
 #import "OLProductGroup.h"
-#ifdef OL_KITE_OFFER_PAYPAL
-#import <PayPal-iOS-SDK/PayPalMobile.h>
-#endif
 
 @interface ViewController (Private)
 - (NSString *)liveKey;

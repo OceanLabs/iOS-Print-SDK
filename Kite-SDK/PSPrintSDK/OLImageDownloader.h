@@ -1,7 +1,7 @@
 //
 //  Modified MIT License
 //
-//  Copyright (c) 2010-2015 Kite Tech Ltd. https://www.kite.ly
+//  Copyright (c) 2010-2016 Kite Tech Ltd. https://www.kite.ly
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -27,10 +27,13 @@
 //  THE SOFTWARE.
 //
 
-#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
 
-@interface UIImageView (FadeIn)
-- (void)setAndFadeInImageWithURL:(NSURL *)url;
-- (void)setAndFadeInImageWithURL:(NSURL *)url placeholder:(UIImage *)placeholder;
-- (void)setAndFadeInImageWithURL:(NSURL *)url placeholder:(UIImage *)placeholder completionHandler:(void(^)())handler;
+@interface OLImageDownloader : NSObject
+
++ (instancetype)sharedInstance;
+- (NSURLSessionDownloadTask *)downloadImageAtURL:(NSURL *)url withCompletionHandler:(void(^)(UIImage *image, NSError *error))handler;
+- (NSURLSessionDownloadTask *)downloadImageAtURL:(NSURL *)url progress:(void(^)(NSInteger progress, NSInteger total))progressHandler withCompletionHandler:(void(^)(UIImage *image, NSError *error))handler;
+- (BOOL)cachedDataExistForURL:(NSURL *)url;
+
 @end

@@ -98,6 +98,11 @@
  */
 + (void)setApplePayPayToString:(NSString *_Nonnull)name;
 
+/**
+ *  Clear all customer data.
+ */
++ (void)endCustomerSession;
+
 #ifdef OL_KITE_OFFER_ADOBE
 /**
  *  Optionally enable Adobe's Creative SDK for advanced photo editing functionality (you'll need to take 5 minutes to register your app )

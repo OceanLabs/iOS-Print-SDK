@@ -1,7 +1,7 @@
 //
 //  Modified MIT License
 //
-//  Copyright (c) 2010-2015 Kite Tech Ltd. https://www.kite.ly
+//  Copyright (c) 2010-2016 Kite Tech Ltd. https://www.kite.ly
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -27,10 +27,26 @@
 //  THE SOFTWARE.
 //
 
-#import <UIKit/UIKit.h>
+#import "OLImageDownloadDelegate.h"
 
-@interface UIImageView (FadeIn)
-- (void)setAndFadeInImageWithURL:(NSURL *)url;
-- (void)setAndFadeInImageWithURL:(NSURL *)url placeholder:(UIImage *)placeholder;
-- (void)setAndFadeInImageWithURL:(NSURL *)url placeholder:(UIImage *)placeholder completionHandler:(void(^)())handler;
+@implementation OLImageDownloadDelegate
+
+- (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didWriteData:(int64_t)bytesWritten totalBytesWritten:(int64_t)totalBytesWritten totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite{
+    if (self.progressHandler){
+        self.progressHandler(downloadTask, totalBytesWritten, totalBytesExpectedToWrite);
+    }
+}
+
+- (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didFinishDownloadingToURL:(NSURL *)location{
+    if (self.completionHandler){
+        self.completionHandler(downloadTask, [NSData dataWithContentsOfURL:location], downloadTask.response, nil);
+    }
+}
+
+- (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error{
+    if (self.completionHandler && error){
+        self.completionHandler(task, nil, task.response, error);
+    }
+}
+
 @end
