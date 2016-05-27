@@ -1385,13 +1385,19 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             [lineItems addObject:[PKPaymentSummaryItem summaryItemWithLabel:item.description  amount:[item costInCurrency:self.printOrder.currencyCode]]];
         }
         
-        // if a special discount exists, then add a Discount line item
+        // if a special discount exists, then first remove the normal discount and add a new discount line item
         if (cost.specialPromoDiscount){
             for (NSString *currencyCode in cost.specialPromoDiscount.allKeys) {
                 NSDecimalNumber *currencyDiscount = cost.specialPromoDiscount[self.printOrder.currencyCode];
                 if ([currencyDiscount doubleValue] != 0) {
                     if ([currencyDiscount doubleValue] > 0) {
                         currencyDiscount = [currencyDiscount decimalNumberByMultiplyingBy:(NSDecimalNumber *)[NSDecimalNumber numberWithInteger:-1]];
+                    }
+                    
+                    for (PKPaymentSummaryItem *item in lineItems){
+                        if ([item.amount doubleValue] < 0){
+                            [lineItems removeObject:item];
+                        }
                     }
                     
                     [lineItems addObject:[PKPaymentSummaryItem summaryItemWithLabel:NSLocalizedString(@"Promotional Discount", @"") amount:currencyDiscount]];
@@ -1704,6 +1710,12 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
                 if ([currencyDiscount doubleValue] != 0) {
                     if ([currencyDiscount doubleValue] > 0) {
                         currencyDiscount = [currencyDiscount decimalNumberByMultiplyingBy:(NSDecimalNumber *)[NSDecimalNumber numberWithInteger:-1]];
+                    }
+                    
+                    for (PKPaymentSummaryItem *item in lineItems){
+                        if ([item.amount doubleValue] < 0){
+                            [lineItems removeObject:item];
+                        }
                     }
                     
                     [lineItems addObject:[PKPaymentSummaryItem summaryItemWithLabel:NSLocalizedString(@"Promotional Discount", @"") amount:currencyDiscount]];
