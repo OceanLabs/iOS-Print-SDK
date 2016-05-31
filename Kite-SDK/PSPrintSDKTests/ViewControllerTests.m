@@ -339,7 +339,7 @@
     }
 }
 
-- (void)testCompletePhotobookJourney{
+- (void)DISABLED_testCompletePhotobookJourney{
     OLProductHomeViewController *productHomeVc = [self loadKiteViewController];
     
     [self chooseClass:@"Photo Books" onOLProductHomeViewController:productHomeVc];
@@ -427,7 +427,7 @@
     [self waitForExpectationsWithTimeout:120 handler:NULL];
 }
 
-- (void)testCompleteCaseJourney{
+- (void)DISABLED_testCompleteCaseJourney{
     OLProductHomeViewController *productHomeVc = [self loadKiteViewController];
     [self chooseClass:@"Snap Cases" onOLProductHomeViewController:productHomeVc];
     
@@ -860,7 +860,7 @@
     
 }
 
-- (void)testPaymentViewController{
+- (void)DISABLED_testPaymentViewController{
     XCTestExpectation *expectation = [self expectationWithDescription:@"Template Sync Completed"];
     [self templateSyncWithSuccessHandler:^{
         [expectation fulfill];
@@ -964,7 +964,7 @@
     [self tapNextOnViewController:presentedNav.topViewController];
 }
 
-- (void)testCompletePrintsJourney{
+- (void)DISABLED_testCompletePrintsJourney{
     NSData *data1 = [NSData dataWithContentsOfFile:[[NSBundle bundleForClass:[OLKiteTestHelper class]] pathForResource:@"1" ofType:@"jpg"]];
     NSData *data2 = [NSData dataWithContentsOfFile:[[NSBundle bundleForClass:[OLKiteTestHelper class]] pathForResource:@"2" ofType:@"png"]];
     
@@ -1423,7 +1423,7 @@
     XCTAssert([nav.topViewController isKindOfClass:[OLPaymentViewController class]], @"Not showing payment vc");
 }
 
-- (void)testCompleteFramesJourney{
+- (void)DISABLED_testCompleteFramesJourney{
     NSData *data1 = [NSData dataWithContentsOfFile:[[NSBundle bundleForClass:[OLKiteTestHelper class]] pathForResource:@"1" ofType:@"jpg"]];
     NSData *data2 = [NSData dataWithContentsOfFile:[[NSBundle bundleForClass:[OLKiteTestHelper class]] pathForResource:@"2" ofType:@"png"]];
     
@@ -1512,7 +1512,7 @@
     [self waitForExpectationsWithTimeout:120 handler:NULL];
 }
 
-- (void)testCompleteAccessoryOrder{
+- (void)DISABLED_testCompleteAccessoryOrder{
     OLProductHomeViewController *productHomeVc = [self loadKiteViewController];
     [self chooseClass:@"Accessories and Display" onOLProductHomeViewController:productHomeVc];
 

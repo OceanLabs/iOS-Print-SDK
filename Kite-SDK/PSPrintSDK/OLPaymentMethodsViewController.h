@@ -8,6 +8,22 @@
 
 #import <UIKit/UIKit.h>
 
-@interface OLPaymentMethodsViewController : UIViewController
+typedef enum {
+    kOLPaymentMethodNone,
+    kOLPaymentMethodCreditCard,
+    kOLPaymentMethodApplePay,
+    kOLPaymentMethodPayPal
+}OLPaymentMethod;
 
+@class OLPaymentMethodsViewController;
+
+@protocol OLPaymentMethodsViewControllerDelegate <NSObject>
+
+- (void)paymentMethodsViewController:(OLPaymentMethodsViewController *)vc didFinishPickingPaymentMethod:(OLPaymentMethod)method;
+
+@end
+
+@interface OLPaymentMethodsViewController : UIViewController
+@property (weak, nonatomic) id<OLPaymentMethodsViewControllerDelegate> delegate;
+@property (assign, nonatomic) OLPaymentMethod selectedPaymentMethod;
 @end
