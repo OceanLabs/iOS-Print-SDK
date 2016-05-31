@@ -21,7 +21,7 @@ test:
 
 deployment:
   beta_distribution:
-    branches: beta, new-payment-methods
+    branch: new-payment-methods
     commands:
       - gym -w Kite-SDK/KitePrintSDK.xcworkspace -s Kite-CI-Deploy
       - ipa distribute:crashlytics
