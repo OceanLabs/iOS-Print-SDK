@@ -303,7 +303,6 @@
 		2EA3D3AF1C9C04B500B99BCD /* OLReceiptViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CDA8BF5418D70D0F00D835BB /* OLReceiptViewController.m */; };
 		2EA3D3B01C9C04B500B99BCD /* OLAssetUploadRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = CDAFE000186CC90B003572FE /* OLAssetUploadRequest.m */; };
 		2EA3D3B11C9C04B500B99BCD /* OLAddressPickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = CD93BB2C18783B8E00316492 /* OLAddressPickerController.m */; };
-		2EA3D3B21C9C04B500B99BCD /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = CD73BF77186215790009DE03 /* main.m */; };
 		2EA3D3B31C9C04B500B99BCD /* OLAssetsGroupViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E21DA341B9843CF00D9162F /* OLAssetsGroupViewCell.m */; };
 		2EA3D3B41C9C04B500B99BCD /* OLPostcardPrintJob.m in Sources */ = {isa = PBXBuildFile; fileRef = CD9D6AE4187189BF001CD1F9 /* OLPostcardPrintJob.m */; };
 		2EA3D3B51C9C04B500B99BCD /* NSObject+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DF9D7001B0F65C700A40C0C /* NSObject+Utils.m */; };
@@ -599,7 +598,6 @@
 		E29C85F71BE3B5C50041D4CF /* OLReceiptViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CDA8BF5418D70D0F00D835BB /* OLReceiptViewController.m */; };
 		E29C85F81BE3B5C50041D4CF /* OLAssetUploadRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = CDAFE000186CC90B003572FE /* OLAssetUploadRequest.m */; };
 		E29C85F91BE3B5C50041D4CF /* OLAddressPickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = CD93BB2C18783B8E00316492 /* OLAddressPickerController.m */; };
-		E29C85FB1BE3B5C50041D4CF /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = CD73BF77186215790009DE03 /* main.m */; };
 		E29C85FE1BE3B5C50041D4CF /* OLPostcardPrintJob.m in Sources */ = {isa = PBXBuildFile; fileRef = CD9D6AE4187189BF001CD1F9 /* OLPostcardPrintJob.m */; };
 		E29C86011BE3B5C50041D4CF /* NSObject+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DF9D7001B0F65C700A40C0C /* NSObject+Utils.m */; };
 		E29C86021BE3B5C50041D4CF /* OLAnalytics.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0E250E1A77997E00808ED8 /* OLAnalytics.m */; };
@@ -3041,7 +3039,6 @@
 				2EA3D3AF1C9C04B500B99BCD /* OLReceiptViewController.m in Sources */,
 				2EA3D3B01C9C04B500B99BCD /* OLAssetUploadRequest.m in Sources */,
 				2EA3D3B11C9C04B500B99BCD /* OLAddressPickerController.m in Sources */,
-				2EA3D3B21C9C04B500B99BCD /* main.m in Sources */,
 				2EA3D3B31C9C04B500B99BCD /* OLAssetsGroupViewCell.m in Sources */,
 				2EA3D3B41C9C04B500B99BCD /* OLPostcardPrintJob.m in Sources */,
 				2EA3D3B51C9C04B500B99BCD /* NSObject+Utils.m in Sources */,
@@ -3408,7 +3405,6 @@
 				2EAB0ABA1CDB504C00625BD6 /* ALAsset+OLAssetType.m in Sources */,
 				E29C85F81BE3B5C50041D4CF /* OLAssetUploadRequest.m in Sources */,
 				E29C85F91BE3B5C50041D4CF /* OLAddressPickerController.m in Sources */,
-				E29C85FB1BE3B5C50041D4CF /* main.m in Sources */,
 				E29C85FE1BE3B5C50041D4CF /* OLPostcardPrintJob.m in Sources */,
 				E29C86011BE3B5C50041D4CF /* NSObject+Utils.m in Sources */,
 				2EAB0AC61CDB504C00625BD6 /* OLAssetsSupplementaryView.m in Sources */,
