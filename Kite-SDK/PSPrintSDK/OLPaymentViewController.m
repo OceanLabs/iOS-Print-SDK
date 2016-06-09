@@ -234,6 +234,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 @property (weak, nonatomic) IBOutlet UIButton *addPaymentMethodButton;
 @property (weak, nonatomic) IBOutlet UIImageView *payingWithImageView;
 @property (weak, nonatomic) IBOutlet UIView *addPaymentBox;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *paymentMethodBottomCon;
 
 @end
 
@@ -306,6 +307,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     
     self.shippingCostLabel.text = @"";
     self.promoCodeCostLabel.text = @"";
+    self.promoCodeTextField.text = self.printOrder.promoCode;
     
     NSString *applePayAvailableStr = @"N/A";
 #ifdef OL_KITE_OFFER_APPLE_PAY
@@ -644,6 +646,13 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             self.paymentButton1.hidden = YES;
 #endif
             [self.paymentButton2 setTitle:NSLocalizedStringFromTableInBundle(@"Checkout for Free!", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") forState:UIControlStateNormal];
+            
+            self.paymentMethodBottomCon.constant = 2 - self.addPaymentBox.frame.size.height;
+            self.shippingDetailsCon.constant = 2;
+            self.shippingDetailsBox.alpha = 1;
+            [UIView animateWithDuration:0.25 animations:^{
+                [self.view layoutIfNeeded];
+            } completion:^(BOOL finished){}];
         }
         else {
 #ifdef OL_KITE_OFFER_PAYPAL
@@ -653,6 +662,19 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             self.paymentButton1.hidden = NO;
 #endif
             [self.paymentButton2 setTitle:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Pay %@", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), [[cost totalCostInCurrency:self.printOrder.currencyCode] formatCostForCurrencyCode:self.printOrder.currencyCode]] forState:UIControlStateNormal];
+            
+            self.paymentMethodBottomCon.constant = 2;
+            if (self.selectedPaymentMethod == kOLPaymentMethodApplePay){
+                self.shippingDetailsCon.constant = -50;
+                self.shippingDetailsBox.alpha = 0;
+            }
+            else{
+                self.shippingDetailsCon.constant = 2;
+                self.shippingDetailsBox.alpha = 1;
+            }
+            [UIView animateWithDuration:0.25 animations:^{
+                [self.view layoutIfNeeded];
+            } completion:^(BOOL finished){}];
         }
         
         if ([self.tableView numberOfRowsInSection:0] != self.printOrder.jobs.count){
@@ -676,7 +698,6 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
                 self.totalCostActivityIndicator.alpha = 0;
             }
         } completion:^(BOOL finished){
-            [self.paymentButton2 setTitle:[NSString stringWithFormat:NSLocalizedString(@"Pay %@", @""), [[cost totalCostInCurrency:self.printOrder.currencyCode] formatCostForCurrencyCode:self.printOrder.currencyCode]] forState:UIControlStateNormal];
             [self.totalCostActivityIndicator stopAnimating];
             self.totalCostActivityIndicator.alpha = 1;
             
@@ -1089,17 +1110,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     if (self.printOrder.jobs.count == 0){
         return;
     }
-    
-    if ((!self.printOrder.shippingAddress && self.printOrder.shippingAddressesOfJobs.count == 0) || !self.printOrder.email){
-        [UIView animateWithDuration:0.1 animations:^{
-            self.shippingDetailsBox.backgroundColor = [UIColor colorWithWhite:0.929 alpha:1.000];
-            self.shippingDetailsBox.transform = CGAffineTransformMakeTranslation(-10, 0);
-        } completion:^(BOOL finished){
-            [UIView animateWithDuration:0.25 delay:0 usingSpringWithDamping:0.5 initialSpringVelocity:0 options:0 animations:^{
-                self.shippingDetailsBox.backgroundColor = [UIColor whiteColor];
-                self.shippingDetailsBox.transform = CGAffineTransformIdentity;
-            }completion:NULL];
-        }];
+    if (![self checkForShippingAddress]){
         return;
     }
     
@@ -1263,16 +1274,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     if (self.printOrder.jobs.count == 0){
         return;
     }
-    if ((!self.printOrder.shippingAddress && self.printOrder.shippingAddressesOfJobs.count == 0) || !self.printOrder.email){
-        [UIView animateWithDuration:0.1 animations:^{
-            self.shippingDetailsBox.backgroundColor = [UIColor colorWithWhite:0.929 alpha:1.000];
-            self.shippingDetailsBox.transform = CGAffineTransformMakeTranslation(-10, 0);
-        } completion:^(BOOL finished){
-            [UIView animateWithDuration:0.25 delay:0 usingSpringWithDamping:0.5 initialSpringVelocity:0 options:0 animations:^{
-                self.shippingDetailsBox.backgroundColor = [UIColor whiteColor];
-                self.shippingDetailsBox.transform = CGAffineTransformIdentity;
-            }completion:NULL];
-        }];
+    if (![self checkForShippingAddress]){
         return;
     }
     
@@ -1479,37 +1481,66 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     }
 }
 
+- (BOOL)checkForShippingAddress{
+    if ((!self.printOrder.shippingAddress && self.printOrder.shippingAddressesOfJobs.count == 0) || !self.printOrder.email){
+        [UIView animateWithDuration:0.1 animations:^{
+            self.shippingDetailsBox.backgroundColor = [UIColor colorWithWhite:0.929 alpha:1.000];
+            self.shippingDetailsBox.transform = CGAffineTransformMakeTranslation(-10, 0);
+        } completion:^(BOOL finished){
+            [UIView animateWithDuration:0.25 delay:0 usingSpringWithDamping:0.5 initialSpringVelocity:0 options:0 animations:^{
+                self.shippingDetailsBox.backgroundColor = [UIColor whiteColor];
+                self.shippingDetailsBox.transform = CGAffineTransformIdentity;
+            }completion:NULL];
+        }];
+        return NO;
+    }
+    else{
+        return YES;
+    }
+}
+
 - (IBAction)onButtonPayClicked:(UIButton *)sender {
     if (self.printOrder.jobs.count == 0){
         return;
     }
-    if (self.selectedPaymentMethod == kOLPaymentMethodNone){
-        [UIView animateWithDuration:0.1 animations:^{
-            self.addPaymentBox.backgroundColor = [UIColor colorWithWhite:0.929 alpha:1.000];
-            self.addPaymentBox.transform = CGAffineTransformMakeTranslation(-10, 0);
-        } completion:^(BOOL finished){
-            [UIView animateWithDuration:0.25 delay:0 usingSpringWithDamping:0.5 initialSpringVelocity:0 options:0 animations:^{
-                self.addPaymentBox.backgroundColor = [UIColor whiteColor];
-                self.addPaymentBox.transform = CGAffineTransformIdentity;
-            }completion:NULL];
-        }];
-    }
-    else if (self.selectedPaymentMethod == kOLPaymentMethodCreditCard){
-        if ([OLKitePrintSDK useStripeForCreditCards]){
-            [self payWithExistingStripeCard:[OLStripeCard lastUsedCard]];
+    
+    [self.printOrder costWithCompletionHandler:^(OLPrintOrderCost *cost, NSError *error){
+        NSComparisonResult result = [[cost totalCostInCurrency:self.printOrder.currencyCode] compare:[NSDecimalNumber zero]];
+        if (result == NSOrderedAscending || result == NSOrderedSame) {
+            if (![self checkForShippingAddress]){
+                return;
+            }
+            // The user must have a promo code which reduces this order cost to nothing, lucky user :)
+            [self submitOrderForPrintingWithProofOfPayment:nil paymentMethod:@"Free Checkout" completion:^void(PKPaymentAuthorizationStatus status){}];
         }
-        else{
-            [self payWithExistingPayPalCard:[OLPayPalCard lastUsedCard]];
+        else if (self.selectedPaymentMethod == kOLPaymentMethodNone){
+            [UIView animateWithDuration:0.1 animations:^{
+                self.addPaymentBox.backgroundColor = [UIColor colorWithWhite:0.929 alpha:1.000];
+                self.addPaymentBox.transform = CGAffineTransformMakeTranslation(-10, 0);
+            } completion:^(BOOL finished){
+                [UIView animateWithDuration:0.25 delay:0 usingSpringWithDamping:0.5 initialSpringVelocity:0 options:0 animations:^{
+                    self.addPaymentBox.backgroundColor = [UIColor whiteColor];
+                    self.addPaymentBox.transform = CGAffineTransformIdentity;
+                }completion:NULL];
+            }];
         }
-    }
-    else if (self.selectedPaymentMethod == kOLPaymentMethodApplePay){
-        [self onButtonPayWithApplePayClicked];
-    }
+        else if (self.selectedPaymentMethod == kOLPaymentMethodCreditCard){
+            if ([OLKitePrintSDK useStripeForCreditCards]){
+                [self payWithExistingStripeCard:[OLStripeCard lastUsedCard]];
+            }
+            else{
+                [self payWithExistingPayPalCard:[OLPayPalCard lastUsedCard]];
+            }
+        }
+        else if (self.selectedPaymentMethod == kOLPaymentMethodApplePay){
+            [self onButtonPayWithApplePayClicked];
+        }
 #ifdef OL_KITE_OFFER_PAYPAL
-    else if (self.selectedPaymentMethod == kOLPaymentMethodPayPal){
-        [self onButtonPayWithPayPalClicked];
-    }
+        else if (self.selectedPaymentMethod == kOLPaymentMethodPayPal){
+            [self onButtonPayWithPayPalClicked];
+        }
 #endif
+    }];
 }
 
 - (IBAction)onButtonAddPaymentMethodClicked:(id)sender {

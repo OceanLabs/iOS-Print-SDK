@@ -159,14 +159,14 @@
     if (section == 0){
         return kOLPaymentMethodCreditCard;
     }
-    else if (section == 1 && [self isPayPalAvailable]){
-        return kOLPaymentMethodPayPal;
-    }
     else if (section == 1 && [OLPaymentViewController isApplePayAvailable]){
         return kOLPaymentMethodApplePay;
     }
-    else if (section == 2 && [OLPaymentViewController isApplePayAvailable]){
-        return kOLPaymentMethodApplePay;
+    else if (section == 1 && [self isPayPalAvailable]){
+        return kOLPaymentMethodPayPal;
+    }
+    else if (section == 2 && [self isPayPalAvailable]){
+        return kOLPaymentMethodPayPal;
     }
     NSAssert(NO, @"Should not reach here");
     return kOLPaymentMethodNone;
@@ -178,6 +178,13 @@
 #else
     return NO;
 #endif
+}
+
+- (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout insetForSectionAtIndex:(NSInteger)section{
+    if (section == 0){
+        return UIEdgeInsetsMake(40, 0, 25, 0);
+    }
+    return UIEdgeInsetsMake(15, 0, 0, 0);
 }
 
 - (void)addNewCard {

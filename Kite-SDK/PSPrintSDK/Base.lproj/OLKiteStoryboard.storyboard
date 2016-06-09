@@ -1067,7 +1067,7 @@ to rearrange the photos</string>
                                             <action selector="onButtonPayClicked:" destination="awx-dV-KVo" eventType="touchUpInside" id="D5P-zj-HWe"/>
                                         </connections>
                                     </button>
-                                    <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="white" translatesAutoresizingMaskIntoConstraints="NO" id="Fqc-wl-79H">
+                                    <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="white" translatesAutoresizingMaskIntoConstraints="NO" id="Fqc-wl-79H">
                                         <rect key="frame" x="438" y="20" width="20" height="20"/>
                                     </activityIndicatorView>
                                 </subviews>
@@ -1174,6 +1174,7 @@ to rearrange the photos</string>
                         <outlet property="payingWithImageView" destination="XDh-8y-Y9c" id="duw-0H-R1q"/>
                         <outlet property="paymentButton1" destination="Zg1-ja-X5c" id="6gc-6F-ZjA"/>
                         <outlet property="paymentButton2" destination="fHD-9P-h6H" id="Xt7-SV-J1x"/>
+                        <outlet property="paymentMethodBottomCon" destination="5Db-5U-IAn" id="Zwy-3p-jGM"/>
                         <outlet property="poweredByKiteLabel" destination="MDv-31-HTi" id="2VY-aX-3qh"/>
                         <outlet property="poweredByKiteLabelBottomCon" destination="AiS-MT-eCO" id="dcd-KC-Jnu"/>
                         <outlet property="promoBox" destination="HkN-AG-Mcs" id="bRa-Y3-GG0"/>
