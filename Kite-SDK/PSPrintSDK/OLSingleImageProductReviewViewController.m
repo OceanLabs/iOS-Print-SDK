@@ -251,12 +251,17 @@ static BOOL hasMoved;
     }
     
     [self.hintView viewWithTag:10].transform = CGAffineTransformMakeRotation(M_PI_4);
+    
+    self.hintView.layer.masksToBounds = NO;
+    self.hintView.layer.shadowOffset = CGSizeMake(-5, -5);
+    self.hintView.layer.shadowRadius = 5;
+    self.hintView.layer.shadowOpacity = 0.3;
 }
 
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
     
-    NSTimeInterval delay = 0;
+    NSTimeInterval delay = 1;
     NSTimeInterval duration = 0.3;
     if (self.userSelectedPhotos.count == 0 && self.hintView.alpha <= 0.1f) {
         [UIView animateWithDuration:duration delay:delay options:UIViewAnimationOptionCurveEaseIn animations:^{

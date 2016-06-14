@@ -210,6 +210,11 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
     [self.collectionView registerClass:[UICollectionReusableView class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"headerView"];
     
     [self onUserSelectedPhotoCountChange];
+    
+    self.addPhotosHintView.layer.masksToBounds = NO;
+    self.addPhotosHintView.layer.shadowOffset = CGSizeMake(5, 5);
+    self.addPhotosHintView.layer.shadowRadius = 5;
+    self.addPhotosHintView.layer.shadowOpacity = 0.3;
 }
 
 - (void)viewDidLayoutSubviews{
@@ -285,7 +290,7 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
 }
 
 - (void)updateTitleBasedOnSelectedPhotoQuanitity {
-    NSTimeInterval delay = 0.35;
+    NSTimeInterval delay = 1;
     NSTimeInterval duration = 0.3;
     if (self.userSelectedPhotos.count > 0 && self.addPhotosHintView.alpha >= 0.9f) {
         self.addPhotosHintView.alpha = 1;
