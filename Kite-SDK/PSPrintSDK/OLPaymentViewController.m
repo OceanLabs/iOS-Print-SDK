@@ -1423,7 +1423,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 #endif
 
 - (IBAction)onButtonMinusClicked:(UIButton *)sender {
-    CGPoint buttonPosition = [sender convertPoint:CGPointZero toView:sender.superview];
+    CGPoint buttonPosition = [sender.superview convertPoint:CGPointZero toView:self.tableView];
     NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:buttonPosition];
     OLProductPrintJob* printJob = ((OLProductPrintJob*)[self.printOrder.jobs objectAtIndex:indexPath.row]);
     
@@ -1492,7 +1492,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 }
 
 - (IBAction)onButtonPlusClicked:(UIButton *)sender {
-    CGPoint buttonPosition = [sender convertPoint:CGPointZero toView:sender.superview];
+    CGPoint buttonPosition = [sender.superview convertPoint:CGPointZero toView:self.tableView];
     NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:buttonPosition];
     OLProductPrintJob* printJob = ((OLProductPrintJob*)[self.printOrder.jobs objectAtIndex:indexPath.row]);
     
