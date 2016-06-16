@@ -311,7 +311,7 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
         if (self.product.quantityToFulfillOrder > 1){
             NSUInteger numOrders = 1 + (MAX(0, self.userSelectedPhotos.count - 1 + [self totalNumberOfExtras]) / self.product.quantityToFulfillOrder);
             NSUInteger quanityToFulfilOrder = numOrders * self.product.quantityToFulfillOrder;
-           self.title = [NSString stringWithFormat:@"%lu / %lu", (unsigned long)self.userSelectedPhotos.count - self.userDisabledPhotos.count + [self totalNumberOfExtras], (unsigned long)quanityToFulfilOrder];
+            self.title = [NSString stringWithFormat:@"%lu / %lu", (unsigned long)self.userSelectedPhotos.count - self.userDisabledPhotos.count + [self totalNumberOfExtras], (unsigned long)quanityToFulfilOrder];
         }
         else{
             self.title = [NSString stringWithFormat:@"%lu", (unsigned long)self.userSelectedPhotos.count - self.userDisabledPhotos.count];
@@ -336,9 +336,14 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
     NSMutableArray *photoArray = [[NSMutableArray alloc] initWithCapacity:array.count];
     
     for (id object in array) {
-        OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
-        printPhoto.asset = object;
-        [photoArray addObject:printPhoto];
+        if ([object isKindOfClass:[OLPrintPhoto class]]){
+            [photoArray addObject:object];
+        }
+        else{
+            OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
+            printPhoto.asset = object;
+            [photoArray addObject:printPhoto];
+        }
     }
     
     // First remove any that are not returned.
@@ -838,12 +843,16 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
     else if ([picker isKindOfClass:[KITAssetsPickerController class]]){
         NSMutableArray *olAssets = [[NSMutableArray alloc] init];
         for (id<OLAssetDataSource> asset in assets){
-            if ([asset respondsToSelector:@selector(dataWithCompletionHandler:)]){
+            if ([asset isKindOfClass:[OLPrintPhoto class]]){
+                [olAssets addObject:asset];
+                assetClass = [assets.firstObject class];
+            }
+            else if ([asset respondsToSelector:@selector(dataWithCompletionHandler:)]){
                 [olAssets addObject:[OLAsset assetWithDataSource:asset]];
+                assetClass = [[olAssets.lastObject dataSource] class];
             }
         }
         assets = olAssets;
-        assetClass = [[assets.firstObject dataSource] class];
     }
 #endif
     [self populateArrayWithNewArray:assets dataType:assetClass];
