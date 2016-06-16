@@ -311,7 +311,7 @@
         }
     }
     else{
-        textView.text = product.productTemplate.name;
+        textView.text = product.productTemplate.templateType;
     }
     
     if ([[OLKiteABTesting sharedInstance].productTileStyle isEqualToString:@"Classic"]){
