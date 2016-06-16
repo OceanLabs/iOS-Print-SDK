@@ -1525,11 +1525,13 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             }];
         }
         else if (self.selectedPaymentMethod == kOLPaymentMethodCreditCard){
-            if ([OLKitePrintSDK useStripeForCreditCards]){
-                [self payWithExistingStripeCard:[OLStripeCard lastUsedCard]];
-            }
-            else{
-                [self payWithExistingPayPalCard:[OLPayPalCard lastUsedCard]];
+            if ([self checkForShippingAddress]){
+                if ([OLKitePrintSDK useStripeForCreditCards]){
+                    [self payWithExistingStripeCard:[OLStripeCard lastUsedCard]];
+                }
+                else{
+                    [self payWithExistingPayPalCard:[OLPayPalCard lastUsedCard]];
+                }
             }
         }
         else if (self.selectedPaymentMethod == kOLPaymentMethodApplePay){
