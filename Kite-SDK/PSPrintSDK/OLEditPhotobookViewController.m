@@ -1280,8 +1280,13 @@ UINavigationControllerDelegate>
     }
     
     if (self.addNewPhotosAtIndex == -1){
-        self.coverPhoto = [[OLPrintPhoto alloc] init];
-        self.coverPhoto.asset = [assets firstObject];
+        if ([assets.firstObject isKindOfClass:[OLPrintPhoto class]]){
+            self.coverPhoto = assets.firstObject;
+        }
+        else{
+            self.coverPhoto = [[OLPrintPhoto alloc] init];
+            self.coverPhoto.asset = [assets firstObject];
+        }
         assets = [assets subarrayWithRange:NSMakeRange(1, assets.count - 1)];
         self.addNewPhotosAtIndex = 0;
         
