@@ -88,6 +88,10 @@
 		2E837D491C3C1FBB004DA682 /* OLViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E837D471C3C1FBB004DA682 /* OLViewController.m */; };
 		2E837D4C1C3C221E004DA682 /* OLCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E837D4B1C3C221E004DA682 /* OLCollectionViewController.m */; };
 		2E837D4D1C3C221E004DA682 /* OLCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E837D4B1C3C221E004DA682 /* OLCollectionViewController.m */; };
+		2E84835E1D13E461003F4056 /* OLTShirtReviewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E84835D1D13E461003F4056 /* OLTShirtReviewViewController.m */; };
+		2E84835F1D13E461003F4056 /* OLTShirtReviewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E84835D1D13E461003F4056 /* OLTShirtReviewViewController.m */; };
+		2E8483601D13E461003F4056 /* OLTShirtReviewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E84835D1D13E461003F4056 /* OLTShirtReviewViewController.m */; };
+		2E8483611D13E461003F4056 /* OLTShirtReviewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E84835D1D13E461003F4056 /* OLTShirtReviewViewController.m */; };
 		2E8703031C905248002BE2DA /* libios-qr-encoder.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E8702F21C9051FC002BE2DA /* libios-qr-encoder.a */; };
 		2E898C4F1CC518180041CCD8 /* UIViewController+OLMethods.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E53E0CC1C1AEAAD00BF7887 /* UIViewController+OLMethods.m */; };
 		2E898C501CC518180041CCD8 /* OLURLDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = CDE0744A188D7730009ADFA2 /* OLURLDataSource.m */; };
@@ -842,6 +846,8 @@
 		2E837D471C3C1FBB004DA682 /* OLViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLViewController.m; sourceTree = "<group>"; };
 		2E837D4A1C3C221E004DA682 /* OLCollectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLCollectionViewController.h; sourceTree = "<group>"; };
 		2E837D4B1C3C221E004DA682 /* OLCollectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLCollectionViewController.m; sourceTree = "<group>"; };
+		2E84835C1D13E461003F4056 /* OLTShirtReviewViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLTShirtReviewViewController.h; sourceTree = "<group>"; };
+		2E84835D1D13E461003F4056 /* OLTShirtReviewViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLTShirtReviewViewController.m; sourceTree = "<group>"; };
 		2E87027E1C904918002BE2DA /* AFHTTPSessionManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = AFHTTPSessionManager.m; path = vendor/AFNetworking/AFNetworking/AFHTTPSessionManager.m; sourceTree = "<group>"; };
 		2E87027F1C904918002BE2DA /* AFNetworkReachabilityManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = AFNetworkReachabilityManager.m; path = vendor/AFNetworking/AFNetworking/AFNetworkReachabilityManager.m; sourceTree = "<group>"; };
 		2E8702801C904918002BE2DA /* AFSecurityPolicy.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = AFSecurityPolicy.m; path = vendor/AFNetworking/AFNetworking/AFSecurityPolicy.m; sourceTree = "<group>"; };
@@ -1502,6 +1508,8 @@
 				2E5259001A9C91DF00DBC69B /* OLSingleImageProductReviewViewController.m */,
 				2E20BD841AD4229700FB2446 /* OLCaseViewController.h */,
 				2E20BD851AD4229700FB2446 /* OLCaseViewController.m */,
+				2E84835C1D13E461003F4056 /* OLTShirtReviewViewController.h */,
+				2E84835D1D13E461003F4056 /* OLTShirtReviewViewController.m */,
 				2EB4959A1B303FA8003FB762 /* OLEditPhotobookViewController.h */,
 				2EB4959B1B303FA8003FB762 /* OLEditPhotobookViewController.m */,
 				2EB4BD661AE128740004CEE0 /* OLPhotobookViewController.h */,
@@ -2873,6 +2881,7 @@
 				2E898C761CC518180041CCD8 /* UIImageView+FadeIn.m in Sources */,
 				2E898C771CC518180041CCD8 /* OLAddressSearchRequest.m in Sources */,
 				2E898C781CC518180041CCD8 /* OLPayPalCard.m in Sources */,
+				2E84835F1D13E461003F4056 /* OLTShirtReviewViewController.m in Sources */,
 				2E898C791CC518180041CCD8 /* OLProductPrintJob.m in Sources */,
 				2E898C7A1CC518180041CCD8 /* OLSingleImageProductReviewViewController.m in Sources */,
 				2E898C7B1CC518180041CCD8 /* OLPosterViewController.m in Sources */,
@@ -3048,6 +3057,7 @@
 				2EA3D3B61C9C04B500B99BCD /* OLAnalytics.m in Sources */,
 				2E2BF44A1CCDFAF100725561 /* OLKiteTheme.m in Sources */,
 				2EA3D3B71C9C04B500B99BCD /* OLCircleMaskCollectionViewCell.m in Sources */,
+				2E8483611D13E461003F4056 /* OLTShirtReviewViewController.m in Sources */,
 				2EA3D3B81C9C04B500B99BCD /* OLCreditCardCaptureViewController.m in Sources */,
 				2EA3D3B91C9C04B500B99BCD /* OLPhotoSelectionViewController.m in Sources */,
 				2EA3D3BA1C9C04B500B99BCD /* OLAddressLookupViewController.m in Sources */,
@@ -3076,6 +3086,7 @@
 				2E53E0CD1C1AEAAD00BF7887 /* UIViewController+OLMethods.m in Sources */,
 				2EADD7E61BE79D6D0051CD31 /* OLURLDataSource.m in Sources */,
 				2EAB0AE71CDB504E00625BD6 /* OLAssetsPickerController.m in Sources */,
+				2E84835E1D13E461003F4056 /* OLTShirtReviewViewController.m in Sources */,
 				2EADD7E71BE79D6D0051CD31 /* OLScrollCropViewController.m in Sources */,
 				2EAB0ADE1CDB504E00625BD6 /* ALAssetsGroup+OLIsEqual.m in Sources */,
 				2EADD7E81BE79D6D0051CD31 /* OLPrintOrderCostRequest.m in Sources */,
@@ -3330,6 +3341,7 @@
 				E29C85931BE3B5C50041D4CF /* UIImage+ColorAtPixel.m in Sources */,
 				2EAB0AC01CDB504C00625BD6 /* OLAssetItemViewController.m in Sources */,
 				E29C85951BE3B5C50041D4CF /* OLCheckoutViewController.m in Sources */,
+				2E8483601D13E461003F4056 /* OLTShirtReviewViewController.m in Sources */,
 				E29C85961BE3B5C50041D4CF /* OLPhotobookViewController.m in Sources */,
 				E29C859B1BE3B5C50041D4CF /* OLPopupOptionsImageView.m in Sources */,
 				2EAB0AC81CDB504C00625BD6 /* OLAssetsViewController.m in Sources */,
