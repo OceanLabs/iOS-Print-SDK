@@ -34,6 +34,7 @@
 + (instancetype)sharedInstance;
 - (NSURLSessionDownloadTask *)downloadImageAtURL:(NSURL *)url withCompletionHandler:(void(^)(UIImage *image, NSError *error))handler;
 - (NSURLSessionDownloadTask *)downloadImageAtURL:(NSURL *)url progress:(void(^)(NSInteger progress, NSInteger total))progressHandler withCompletionHandler:(void(^)(UIImage *image, NSError *error))handler;
+- (NSURLSessionDownloadTask *)downloadImageAtURL:(NSURL *)url priority:(float)priority progress:(void(^)(NSInteger progress, NSInteger total))progressHandler withCompletionHandler:(void(^)(UIImage *image, NSError *error))handler;
 - (BOOL)cachedDataExistForURL:(NSURL *)url;
 
 @end
