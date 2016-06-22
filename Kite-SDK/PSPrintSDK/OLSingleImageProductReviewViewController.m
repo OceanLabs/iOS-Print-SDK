@@ -251,12 +251,17 @@ static BOOL hasMoved;
     }
     
     [self.hintView viewWithTag:10].transform = CGAffineTransformMakeRotation(M_PI_4);
+    
+    self.hintView.layer.masksToBounds = NO;
+    self.hintView.layer.shadowOffset = CGSizeMake(-5, -5);
+    self.hintView.layer.shadowRadius = 5;
+    self.hintView.layer.shadowOpacity = 0.3;
 }
 
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
     
-    NSTimeInterval delay = 0;
+    NSTimeInterval delay = 1;
     NSTimeInterval duration = 0.3;
     if (self.userSelectedPhotos.count == 0 && self.hintView.alpha <= 0.1f) {
         [UIView animateWithDuration:duration delay:delay options:UIViewAnimationOptionCurveEaseIn animations:^{
@@ -700,10 +705,15 @@ static BOOL hasMoved;
         
         self.imageDisplayed = self.userSelectedPhotos[indexPath.item];
         
+        id activityView = [self.view viewWithTag:1010];
+        if ([activityView isKindOfClass:[UIActivityIndicatorView class]]){
+            [(UIActivityIndicatorView *)activityView startAnimating];
+        }
         self.imageCropView.imageView.image = nil;
-        [self.imageDisplayed getImageWithProgress:^(float progress){
+        [self.imageDisplayed setImageSize:[UIScreen mainScreen].bounds.size cropped:NO progress:^(float progress){
             [self.imageCropView setProgress:progress];
-        }completion:^(UIImage *image){
+        }completionHandler:^(UIImage *image){
+            [activityView stopAnimating];
             if (self.imageDisplayed.edits.counterClockwiseRotations > 0 || self.imageDisplayed.edits.flipHorizontal || self.imageDisplayed.edits.flipVertical){
                 self.imageCropView.image = [UIImage imageWithCGImage:image.CGImage scale:image.scale orientation:[OLPhotoEdits orientationForNumberOfCounterClockwiseRotations:self.imageDisplayed.edits.counterClockwiseRotations andInitialOrientation:image.imageOrientation horizontalFlip:self.imageDisplayed.edits.flipHorizontal verticalFlip:self.imageDisplayed.edits.flipVertical]];
             }
