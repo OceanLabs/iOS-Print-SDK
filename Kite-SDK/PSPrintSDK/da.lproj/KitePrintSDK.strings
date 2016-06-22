@@ -1,0 +1,413 @@
+/* No comment provided by engineer. */
+
+"401 Unauthorized Request Error whilst trying to upload an asset. Please check you included an Authorization header and that the supplied auth credentials are correct." = "401 Unauthorized Request Error whilst trying to upload an asset. Please check you included an Authorization header and that the supplied auth credentials are correct.";
+
+
+/* No comment provided by engineer. */
+
+"500 Internal Server Error whilst trying to upload an asset. Please try again." = "500 interne serverfejl under uploadingforsøg af et aktiv. Prøv venligst igen.";
+
+
+/* No comment provided by engineer. */
+
+"Add" = "Tilføj";
+
+
+/* No comment provided by engineer. */
+
+"Add Address" = "Tilføj adresse";
+
+
+/* No comment provided by engineer. */
+
+"Add Another Recipient" = "Tilføj en anden modtager";
+
+
+/* No comment provided by engineer. */
+
+"Add New Address" = "Tilføj ny adresse";
+
+
+/* No comment provided by engineer. */
+
+"Add photos from:" = "Tilføj billeder fra:";
+
+
+/* No comment provided by engineer. */
+
+"Address Book" = "Adressebog";
+
+
+/* No comment provided by engineer. */
+
+"Address Search" = "Adressesøgning";
+
+
+/* No comment provided by engineer. */
+
+"Camera Roll" = "Kamerarulle";
+
+
+/* No comment provided by engineer. */
+
+"Cancel" = "Annuler";
+
+
+/* No comment provided by engineer. */
+
+"Checking Code" = "Kontrollerer kode";
+
+
+/* No comment provided by engineer. */
+
+"Checkout for Free!" = "Bestil gratis!";
+
+
+/* No comment provided by engineer. */
+
+"Choose Address" = "Vælg adresse";
+
+
+/* No comment provided by engineer. */
+
+"Choose Country" = "Vælg land";
+
+
+/* No comment provided by engineer. */
+
+"Choose Delivery Address" = "Vælg leveringsadresse";
+
+
+/* No comment provided by engineer. */
+
+"City" = "By";
+
+
+/* No comment provided by engineer. */
+
+"Clearing Code" = "Clearing Code";
+
+
+/* No comment provided by engineer. */
+
+"Country" = "Land";
+
+
+/* No comment provided by engineer. */
+
+"County" = "Land";
+
+
+/* No comment provided by engineer. */
+
+"Delivery Address" = "Leveringsadresse";
+
+
+/* No comment provided by engineer. */
+
+"Delivery Details" = "Leveringsdetaljer";
+
+
+/* No comment provided by engineer. */
+
+"Done" = "Færdig";
+
+
+/* No comment provided by engineer. */
+
+"Edit Address" = "Rediger adresse";
+
+
+/* No comment provided by engineer. */
+
+"Email" = "E-mail";
+
+
+/* No comment provided by engineer. */
+
+"Enter a valid credit card number" = "Indtast et gyldigt kontonummer";
+
+
+/* No comment provided by engineer. */
+
+"Enter a valid CVV number" = "Indtast et gyldigt CVV nummer";
+
+
+/* No comment provided by engineer. */
+
+"Enter a valid expiry date" = "Indtast en gyldig udløbsdato";
+
+
+/* No comment provided by engineer. */
+
+"Enter Address Manually" = "Indtast adresse manuelt";
+
+
+/* No comment provided by engineer. */
+
+"Failed to get the price of the order. Please try again." = "Det lykkedes ikke at finde ordrens pris. Prøv venligst igen.";
+
+
+/* No comment provided by engineer. */
+
+"Failed to store card details with PayPal. Please try again." = "Det lykkedes ikke at gemme kortoplysninger med PayPal. Prøv venligst igen.";
+
+
+/* No comment provided by engineer. */
+
+"Failed to synchronize product templates. Please try again." = "Det lykkedes ikke at synkronisere produktskabeloner. Prøv venligst igen.";
+
+
+/* No comment provided by engineer. */
+
+"Failed to validate the order. Please try again." = "Det lykkedes ikke at validere ordren. Prøv venligst igen.";
+
+
+/* No comment provided by engineer. */
+
+"First Name" = "Fornavn";
+
+
+/* Invalid CVV payment failed error dialog title */
+
+"Invalid CVV" = "Ugyldigt CVV";
+
+
+/* No comment provided by engineer. */
+
+"Invalid Email Address" = "Ugyldig e-mail adresse";
+
+
+/* No comment provided by engineer. */
+
+"Invalid Phone Number" = "Ugyldigt telefonnummer";
+
+
+/* No comment provided by engineer. */
+
+"Last Name" = "Efternavn";
+
+
+/* No comment provided by engineer. */
+
+"Line 1" = "Linje 1";
+
+
+/* No comment provided by engineer. */
+
+"Line 2" = "Linje 2";
+
+
+/* No comment provided by engineer. */
+
+"Missing Delivery Address" = "Leveringsadresse mangler";
+
+
+/* No comment provided by engineer. */
+
+"New Payment" = "Ny betaling";
+
+
+/* No comment provided by engineer. */
+
+"Next" = "Næste";
+
+
+/* No comment provided by engineer. */
+
+"OK" = "OK";
+
+
+/* No comment provided by engineer. */
+
+"Only registered %d/%d image URLs with the asset endpoint" = "Only registered %1$d/%2$d image URLs with the asset endpoint";
+
+
+/* No comment provided by engineer. */
+
+"Oops" = "Ups";
+
+
+/* No comment provided by engineer. */
+
+"Oops!" = "Ups!";
+
+
+/* No comment provided by engineer. */
+
+"Order Id" = "Ordre Id";
+
+
+/* No comment provided by engineer. */
+
+"Order Summary" = "Ordreresumé";
+
+
+/* No comment provided by engineer. */
+
+"Pay %@" = "Betal %@";
+
+
+/* No comment provided by engineer. */
+
+"Pay with card ending %@" = "Pay with card ending %@";
+
+
+/* No comment provided by engineer. */
+
+"Pay with new card" = "Betal med nyt kort";
+
+
+/* No comment provided by engineer. */
+
+"Payment" = "Betaling";
+
+
+/* No comment provided by engineer. */
+
+"Payment (TEST)" = "Betaling (TEST)";
+
+
+/* Payment declined error dialog title */
+
+"Payment Declined" = "Betaling afvist";
+
+
+/* Generic payment failed error dialog title */
+
+"Payment Failed" = "Betaling mislykkedes";
+
+
+/* No comment provided by engineer. */
+
+"Phone" = "Telefon";
+
+
+/* No comment provided by engineer. */
+
+"Please choose an address to have your order shipped to" = "Vælg venligst den adresse du vil have din ordre sendt til";
+
+
+/* No comment provided by engineer. */
+
+"Please enter a card expiry date in the future" = "Indtast venligst en kortudløbsdato i fremtiden";
+
+
+/* No comment provided by engineer. */
+
+"Please enter a valid card number" = "Indtast venligst et gyldigt kontonummer";
+
+
+/* No comment provided by engineer. */
+
+"Please enter a valid email address" = "Indtast veligst en gyldig e-mail adresse";
+
+
+/* No comment provided by engineer. */
+
+"Please enter a valid phone number" = "Indtast venligst et gyldigt telefonnummer";
+
+
+/* No comment provided by engineer. */
+
+"Postcode" = "Postnummer";
+
+
+/* No comment provided by engineer. */
+
+"Print order submission failed with a %lu HTTP response status code. Please try again." = "Print ordre indsendelse mislykkedes med en %lu HTTP svar statuskode. Prøv venligst igen.";
+
+
+/* No comment provided by engineer. */
+
+"Processing" = "Arbejder";
+
+
+/* No comment provided by engineer. */
+
+"Required by the postal service in case there are any issues during delivery." = "Krævet af postvæsenet, i tilfælde af problemer under levering.";
+
+
+/* No comment provided by engineer. */
+
+"Retry" = "Prøv igen";
+
+
+/* No comment provided by engineer. */
+
+"Save" = "Gem";
+
+
+/* No comment provided by engineer. */
+
+"Search by postcode, street or address" = "Søg på postnummer, gade eller adresse";
+
+
+/* No comment provided by engineer. */
+
+"Search by street, address or ZIP code" = "Søg på gade, adresse eller postnummer";
+
+
+/* No comment provided by engineer. */
+
+"Search for Address" = "Søg efter adresse";
+
+
+/* No comment provided by engineer. */
+
+"Shipping" = "Levering";
+
+
+/* No comment provided by engineer. */
+
+"State" = "State";
+
+
+/* No comment provided by engineer. */
+
+"Total" = "Total";
+
+
+/* No comment provided by engineer. */
+
+"Transfer from your phone" = "Overfør fra telefon";
+
+
+/* Generic payment failed error dialog message */
+
+"Unfortunately we failed to take a payment from your card. Please try again." = "Desværre mislykkedes det at modtage betaling fra dit kort. Prøv venligst igen.";
+
+
+/* No comment provided by engineer. */
+
+"Uploading Images \n%lu / %lu" = "Uploader billeder \n%1$lu / %2$lu";
+
+
+/* No comment provided by engineer. */
+
+"We'll send you confirmation and order updates." = "Vi sender dig en bekræftelse og en odreopdatering.";
+
+
+/* No comment provided by engineer. */
+
+"We'll send you confirmation and order updates. Uncheck this box to opt out of email campaigns." = "Vi sender dig en bekræftelse og en odreopdatering. Afklik denne box, hvis du ikke ønsker at modtage kampagne e-mails.";
+
+
+/* Invalid CVV payment failed error dialog message */
+
+"You have entered an invalid CVV number. Please check it and try again." = "Du har indtastet et ugyldigt CVV nummer. Tjek det venligst og prøv igen.";
+
+
+/* Payment declined error dialog message */
+
+"Your payment has been declined. Please check your card details and try again." = "Din betaling er blevet afvist. Tjek venligst dine kontooplysninger og prøv igen.";
+
+
+/* No comment provided by engineer. */
+
+"Your payment was not approved (transaction state: %@). Please try again." = "Din betaling blev ikke godkendt (transaktions tilstand: %@). Prøv venligst igen.";
+
+
+/* No comment provided by engineer. */
+
+"ZIP Code" = "Postnummer";
