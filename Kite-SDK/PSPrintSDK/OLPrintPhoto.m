@@ -459,6 +459,10 @@ static NSOperationQueue *imageOperationQueue;
     
     CGFloat scaleFactor = (MAX(i_size.width, i_size.height) * screenScale) / MIN(sourceImage.size.height, sourceImage.size.width);
     
+    if (scaleFactor >= 1){
+        return sourceImage;
+    }
+    
     CGFloat newHeight = sourceImage.size.height * scaleFactor;
     CGFloat newWidth = sourceImage.size.width * scaleFactor;
     

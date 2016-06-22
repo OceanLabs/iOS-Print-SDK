@@ -182,14 +182,14 @@
             [self.view setNeedsLayout];
             [self.view layoutIfNeeded];
             
-            self.maskImage = image;
+            self.maskImage = [OLPrintPhoto imageWithImage:image scaledToSize:[UIScreen mainScreen].bounds.size];;
             [self maskWithImage:self.maskImage targetView:self.imageCropView];
             
             [[OLImageDownloader sharedInstance] downloadImageAtURL:self.product.productTemplate.productBackgroundImageURL withCompletionHandler:^(UIImage *image, NSError *error){
-                self.deviceView.image = image;
+                self.deviceView.image = [OLPrintPhoto imageWithImage:image scaledToSize:[UIScreen mainScreen].bounds.size];
             }];
             [[OLImageDownloader sharedInstance] downloadImageAtURL:self.product.productTemplate.productHighlightsImageURL withCompletionHandler:^(UIImage *image, NSError *error){
-                self.highlightsView.image = image;
+                self.highlightsView.image = [OLPrintPhoto imageWithImage:image scaledToSize:[UIScreen mainScreen].bounds.size];
              }];
             
             self.visualEffectView.hidden = YES;
