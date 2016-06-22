@@ -58,15 +58,6 @@
 
 - (NSURLSessionDownloadTask *)downloadImageAtURL:(NSURL *)url progress:(void(^)(NSInteger progress, NSInteger total))progressHandler withCompletionHandler:(void(^)(UIImage *image, NSError *error))handler{
     NSURLRequest *request = [[NSURLRequest alloc] initWithURL:url];
-    OLImageDownloadDelegate *delegate = [[OLImageDownloadDelegate alloc] init];
-    delegate.progressHandler = ^(NSURLSessionTask *task, NSInteger progress, NSInteger total){
-        if (task.state != NSURLSessionTaskStateCanceling){
-            if (progressHandler){
-                progressHandler(progress, total);
-            }
-        }
-    };
-    
     
     NSCachedURLResponse *cachedResponse = [[NSURLCache sharedURLCache] cachedResponseForRequest:request];
     if (cachedResponse.data){
@@ -75,6 +66,15 @@
         }
         return nil;
     }
+    
+    OLImageDownloadDelegate *delegate = [[OLImageDownloadDelegate alloc] init];
+    delegate.progressHandler = ^(NSURLSessionTask *task, NSInteger progress, NSInteger total){
+        if (task.state != NSURLSessionTaskStateCanceling){
+            if (progressHandler){
+                progressHandler(progress, total);
+            }
+        }
+    };
     
     NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
     configuration.requestCachePolicy = NSURLRequestReturnCacheDataElseLoad;
@@ -111,6 +111,7 @@
     
     NSURLSessionDownloadTask *downloadTask = [session downloadTaskWithRequest:request];
     [downloadTask resume];
+    [session finishTasksAndInvalidate];
     return downloadTask;
 }
 

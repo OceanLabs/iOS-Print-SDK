@@ -61,6 +61,7 @@
             }
         });
     }] resume];
+    [session finishTasksAndInvalidate];
 }
 
 @end

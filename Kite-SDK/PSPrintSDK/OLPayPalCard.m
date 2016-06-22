@@ -156,6 +156,7 @@ static NSString *typeToString(OLPayPalCardType type) {
             }
         });
     }] resume];
+    [session finishTasksAndInvalidate];
 }
 
 - (void)storeCardWithCompletionHandler:(OLPayPalCardStoreCompletionHandler)handler {
@@ -230,6 +231,7 @@ static NSString *typeToString(OLPayPalCardType type) {
                 }
             });
         }] resume];
+        [session finishTasksAndInvalidate];
     }];
 }
 
@@ -357,6 +359,7 @@ static NSString *typeToString(OLPayPalCardType type) {
                 }
             });
         }] resume];
+        [session finishTasksAndInvalidate];
     }];
 }
 

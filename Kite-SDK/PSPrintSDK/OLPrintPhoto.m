@@ -459,6 +459,10 @@ static NSOperationQueue *imageOperationQueue;
     
     CGFloat scaleFactor = (MAX(i_size.width, i_size.height) * screenScale) / MIN(sourceImage.size.height, sourceImage.size.width);
     
+    if (scaleFactor >= 1){
+        return sourceImage;
+    }
+    
     CGFloat newHeight = sourceImage.size.height * scaleFactor;
     CGFloat newWidth = sourceImage.size.width * scaleFactor;
     
@@ -643,7 +647,7 @@ static NSOperationQueue *imageOperationQueue;
     [aCoder encodeInteger:self.extraCopies forKey:kKeyExtraCopies];
     [aCoder encodeObject:self.edits forKey:kKeyEdits];
     [aCoder encodeObject:self.uuid forKey:kKeyUUID];
-    if (self.type == kPrintPhotoAssetTypeALAsset) {
+    if (self.type == kPrintPhotoAssetTypeALAsset && [self.asset respondsToSelector:@selector(valueForProperty:)]) {
         [aCoder encodeObject:[self.asset valueForProperty:ALAssetPropertyAssetURL] forKey:kKeyAsset];
     }
     else if (self.type == kPrintPhotoAssetTypePHAsset){

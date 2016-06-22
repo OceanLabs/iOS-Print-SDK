@@ -341,6 +341,7 @@
                                               }
                                           }];
     [downloadTask resume];
+    [session finishTasksAndInvalidate];
 }
 
 @end

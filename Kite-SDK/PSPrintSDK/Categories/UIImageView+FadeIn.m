@@ -31,6 +31,7 @@
 
 #import "UIImageView+FadeIn.h"
 #import "OLImageDownloader.h"
+#import "OLPrintPhoto.h"
 #import "objc/runtime.h"
 
 static char tasksKey;
@@ -58,7 +59,7 @@ static char tasksKey;
             return;
         }
         [self.tasks removeObjectForKey:url];
-        self.image = image;
+        self.image = [OLPrintPhoto imageWithImage:image scaledToSize:[UIScreen mainScreen].bounds.size];
         [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
             self.alpha = 1;
         }completion:^(BOOL finished){
