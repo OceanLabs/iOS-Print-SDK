@@ -57,6 +57,10 @@
 }
 
 - (NSURLSessionDownloadTask *)downloadImageAtURL:(NSURL *)url progress:(void(^)(NSInteger progress, NSInteger total))progressHandler withCompletionHandler:(void(^)(UIImage *image, NSError *error))handler{
+    return [self downloadImageAtURL:url priority:0.5 progress:progressHandler withCompletionHandler:handler];
+}
+
+- (NSURLSessionDownloadTask *)downloadImageAtURL:(NSURL *)url priority:(float)priority progress:(void(^)(NSInteger progress, NSInteger total))progressHandler withCompletionHandler:(void(^)(UIImage *image, NSError *error))handler{
     NSURLRequest *request = [[NSURLRequest alloc] initWithURL:url];
     
     NSCachedURLResponse *cachedResponse = [[NSURLCache sharedURLCache] cachedResponseForRequest:request];
@@ -110,6 +114,7 @@
     };
     
     NSURLSessionDownloadTask *downloadTask = [session downloadTaskWithRequest:request];
+    downloadTask.priority = priority;
     [downloadTask resume];
     [session finishTasksAndInvalidate];
     return downloadTask;
