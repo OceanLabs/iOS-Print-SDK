@@ -183,6 +183,7 @@ static __weak id<OLKiteDelegate> kiteDelegate;
             }
         }
     }] resume];
+    [session finishTasksAndInvalidate];
 }
 
 + (void)sendToMixPanelWithDictionary:(NSDictionary *)dict{
@@ -205,6 +206,7 @@ static __weak id<OLKiteDelegate> kiteDelegate;
                                                           delegate:nil
                                                      delegateQueue:nil];
     [[session dataTaskWithRequest:request] resume];
+    [session finishTasksAndInvalidate];
 }
 
 + (NSDictionary *)defaultDictionaryForEventName:(NSString *)eventName{

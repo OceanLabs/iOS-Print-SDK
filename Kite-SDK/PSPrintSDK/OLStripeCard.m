@@ -144,6 +144,7 @@ static OLStripeCard *lastUsedCard;
             }
         });
     }] resume];
+    [session finishTasksAndInvalidate];
 }
 
 #pragma mark - NSCoding protocol methods
