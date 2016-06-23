@@ -614,8 +614,8 @@ static BOOL hasMoved;
     }
 }
 
-- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView imageCellForIndexPath:(NSIndexPath *)indexPath{
-    {
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
+    if (indexPath.section == [self sectionForImageCells]){
         UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"imageCell" forIndexPath:indexPath];
         
         for (UIView *view in cell.subviews){
@@ -652,12 +652,6 @@ static BOOL hasMoved;
         }];
         
         return cell;
-    }
-}
-
-- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
-    if (indexPath.section == [self sectionForImageCells]){
-        return [self collectionView:collectionView imageCellForIndexPath:indexPath];
     }
     
     else {

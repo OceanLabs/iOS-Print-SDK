@@ -16,10 +16,9 @@ const NSInteger kCollectionViewTagSizes = 40;
 @interface OLSingleImageProductReviewViewController () <UICollectionViewDelegate, UICollectionViewDataSource>
 - (NSInteger) sectionForImageCells;
 @property (weak, nonatomic) IBOutlet UICollectionView *imagesCollectionView;
-- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView imageCellForIndexPath:(NSIndexPath *)indexPath;
 @end
 
-@interface OLTShirtReviewViewController ()
+@interface OLTShirtReviewViewController () <UICollectionViewDelegateFlowLayout>
 @property (weak, nonatomic) IBOutlet UIButton *sizeIconButton;
 @property (weak, nonatomic) IBOutlet UIButton *toolIconButton;
 @property (weak, nonatomic) IBOutlet UIButton *bucketIconButton;
@@ -38,14 +37,68 @@ const NSInteger kCollectionViewTagSizes = 40;
 }
 
 - (IBAction)onButtonAddPhotosIconClicked:(UIButton *)sender {
-    self.imagesCollectionView.tag = kCollectionViewTagImages;
-    [self.imagesCollectionView reloadData];
     if (self.userSelectedPhotos.count == 0){
         //TODO check if we can add photos
         [self collectionView:self.imagesCollectionView didSelectItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
     }
     else if (self.drawerBottomCom.constant == 0){
+        self.imagesCollectionView.tag = kCollectionViewTagImages;
+        [self.imagesCollectionView reloadData];
         self.drawerLabel.text = NSLocalizedString(@"PHOTOS", @"");
+        self.drawerBottomCom.constant = -self.ctaButton.frame.size.height - self.drawer.frame.size.height;
+        [UIView animateWithDuration:0.25 animations:^{
+            [self.view layoutIfNeeded];
+        }];
+    }
+    else{
+        self.drawerBottomCom.constant = 0;
+        [UIView animateWithDuration:0.25 animations:^{
+            [self.view layoutIfNeeded];
+        }];
+    }
+}
+
+- (IBAction)onButtonBucketIconClicked:(UIButton *)sender {
+    if (self.drawerBottomCom.constant == 0){
+        self.imagesCollectionView.tag = kCollectionViewTagColors;
+        [self.imagesCollectionView reloadData];
+        self.drawerLabel.text = NSLocalizedString(@"COLOURS", @"");
+        self.drawerBottomCom.constant = -self.ctaButton.frame.size.height - self.drawer.frame.size.height;
+        [UIView animateWithDuration:0.25 animations:^{
+            [self.view layoutIfNeeded];
+        }];
+    }
+    else{
+        self.drawerBottomCom.constant = 0;
+        [UIView animateWithDuration:0.25 animations:^{
+            [self.view layoutIfNeeded];
+        }];
+    }
+}
+
+- (IBAction)onButtonToolsIconClicked:(UIButton *)sender {
+    if (self.drawerBottomCom.constant == 0){
+        self.imagesCollectionView.tag = kCollectionViewTagTools;
+        [self.imagesCollectionView reloadData];
+        self.drawerLabel.text = NSLocalizedString(@"TOOLS", @"");
+        self.drawerBottomCom.constant = -self.ctaButton.frame.size.height - self.drawer.frame.size.height;
+        [UIView animateWithDuration:0.25 animations:^{
+            [self.view layoutIfNeeded];
+        }];
+    }
+    else{
+        self.drawerBottomCom.constant = 0;
+        [UIView animateWithDuration:0.25 animations:^{
+            [self.view layoutIfNeeded];
+        }];
+    }
+}
+
+- (IBAction)onButtonSizeClicked:(UIButton *)sender {
+    if (self.drawerBottomCom.constant == 0){
+        self.imagesCollectionView.tag = kCollectionViewTagSizes;
+        [self.imagesCollectionView reloadData];
+        self.drawerLabel.text = NSLocalizedString(@"SIZE", @"");
         self.drawerBottomCom.constant = -self.ctaButton.frame.size.height - self.drawer.frame.size.height;
         [UIView animateWithDuration:0.25 animations:^{
             [self.view layoutIfNeeded];
@@ -61,20 +114,29 @@ const NSInteger kCollectionViewTagSizes = 40;
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
     if (collectionView.tag == kCollectionViewTagImages){
-        return self.userSelectedPhotos.count + [self sectionForImageCells];
+        return [super collectionView:collectionView numberOfItemsInSection:section];
     }
     return 0;
 }
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
-    return collectionView.tag == 0 ? 0 : 1;
+    if (collectionView.tag == kCollectionViewTagImages){
+        return [super numberOfSectionsInCollectionView:collectionView];
+    }
+    return 0;
+}
+
+- (UIEdgeInsets) collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout insetForSectionAtIndex:(NSInteger)section{
+    if (section == 0){
+        return UIEdgeInsetsMake(0, 30, 0, 30);
+    }
+    else{
+        return UIEdgeInsetsMake(0, 0, 0, 30);
+    }
 }
 
 - (void) collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
     if (collectionView.tag == kCollectionViewTagImages){
-        if (indexPath.section == [self sectionForImageCells]){
-            indexPath = [NSIndexPath indexPathForItem:indexPath.item inSection:0];
-        }
         [super collectionView:collectionView didSelectItemAtIndexPath:indexPath];
     }
 }
@@ -82,12 +144,7 @@ const NSInteger kCollectionViewTagSizes = 40;
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
     UICollectionViewCell *cell;
     if (collectionView.tag == kCollectionViewTagImages){
-        if (indexPath.item == 0){
-            cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"moreCell" forIndexPath:indexPath];
-        }
-        else{
-            cell = [self collectionView:collectionView imageCellForIndexPath:[NSIndexPath indexPathForItem:indexPath.item-[self sectionForImageCells] inSection:0]];
-        }
+        cell = [super collectionView:collectionView cellForItemAtIndexPath:indexPath];
     }
     
     return cell;
@@ -99,21 +156,6 @@ const NSInteger kCollectionViewTagSizes = 40;
 
 - (CGFloat) collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section{
     return 30;
-}
-
-- (IBAction)onButtonBucketIconClicked:(UIButton *)sender {
-    self.imagesCollectionView.tag = kCollectionViewTagColors;
-    [self.imagesCollectionView reloadData];
-}
-
-- (IBAction)onButtonToolsIconClicked:(UIButton *)sender {
-    self.imagesCollectionView.tag = kCollectionViewTagTools;
-    [self.imagesCollectionView reloadData];
-}
-
-- (IBAction)onButtonSizeClicked:(UIButton *)sender {
-    self.imagesCollectionView.tag = kCollectionViewTagSizes;
-    [self.imagesCollectionView reloadData];
 }
 
 @end
