@@ -614,8 +614,8 @@ static BOOL hasMoved;
     }
 }
 
-- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
-    if (indexPath.section == [self sectionForImageCells]){
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView imageCellForIndexPath:(NSIndexPath *)indexPath{
+    {
         UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"imageCell" forIndexPath:indexPath];
         
         for (UIView *view in cell.subviews){
@@ -652,6 +652,12 @@ static BOOL hasMoved;
         }];
         
         return cell;
+    }
+}
+
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
+    if (indexPath.section == [self sectionForImageCells]){
+        return [self collectionView:collectionView imageCellForIndexPath:indexPath];
     }
     
     else {
@@ -1315,12 +1321,13 @@ static BOOL hasMoved;
     [OLAnalytics trackPhotoProvider:@"Facebook" numberOfPhotosAdded:self.userSelectedPhotos.count - originalCount forProductName:self.product.productTemplate.name];
 #endif
     if (self.imagePicked){
+        __weak OLSingleImageProductReviewViewController *welf = self;
         [self.imagePicked setImageSize:[UIScreen mainScreen].bounds.size cropped:NO progress:NULL completionHandler:^(UIImage *image){
             dispatch_async(dispatch_get_main_queue(), ^{
-                self.imageCropView.image = image;
+                welf.imageCropView.image = image;
                 
-                if (self.userSelectedPhotos.count > 0){
-                    id view = [self.view viewWithTag:1010];
+                if (welf.userSelectedPhotos.count > 0){
+                    id view = [welf.view viewWithTag:1010];
                     if ([view isKindOfClass:[UIActivityIndicatorView class]]){
                         [(UIActivityIndicatorView *)view stopAnimating];
                     }
@@ -1350,12 +1357,13 @@ static BOOL hasMoved;
     [self.userSelectedPhotos addObject:printPhoto];
     self.imagePicked = printPhoto;
     
+     __weak OLSingleImageProductReviewViewController *welf = self;
     [self.imagePicked setImageSize:[UIScreen mainScreen].bounds.size cropped:NO progress:NULL completionHandler:^(UIImage *image){
         dispatch_async(dispatch_get_main_queue(), ^{
-            self.imageCropView.image = image;
+            welf.imageCropView.image = image;
             
             if (self.userSelectedPhotos.count > 0){
-                id view = [self.view viewWithTag:1010];
+                id view = [welf.view viewWithTag:1010];
                 if ([view isKindOfClass:[UIActivityIndicatorView class]]){
                     [(UIActivityIndicatorView *)view stopAnimating];
                 }
@@ -1410,16 +1418,17 @@ static BOOL hasMoved;
     
     self.imageDisplayed.edits = cropper.edits;
     
+     __weak OLSingleImageProductReviewViewController *welf = self;
     [self.imageDisplayed setImageSize:[UIScreen mainScreen].bounds.size cropped:NO progress:NULL completionHandler:^(UIImage *image){
         if (self.imageDisplayed.edits.counterClockwiseRotations > 0 || self.imageDisplayed.edits.flipHorizontal || self.imageDisplayed.edits.flipVertical){
-            self.imageCropView.image = [UIImage imageWithCGImage:image.CGImage scale:image.scale orientation:[OLPhotoEdits orientationForNumberOfCounterClockwiseRotations:self.imageDisplayed.edits.counterClockwiseRotations andInitialOrientation:image.imageOrientation horizontalFlip:self.imageDisplayed.edits.flipHorizontal verticalFlip:self.imageDisplayed.edits.flipVertical]];
+            welf.imageCropView.image = [UIImage imageWithCGImage:image.CGImage scale:image.scale orientation:[OLPhotoEdits orientationForNumberOfCounterClockwiseRotations:welf.imageDisplayed.edits.counterClockwiseRotations andInitialOrientation:image.imageOrientation horizontalFlip:welf.imageDisplayed.edits.flipHorizontal verticalFlip:welf.imageDisplayed.edits.flipVertical]];
         }
         else{
-            [self.imageCropView setImage:image];
+            [welf.imageCropView setImage:image];
         }
-        [self.view setNeedsLayout];
-        [self.view layoutIfNeeded];
-        self.imageCropView.imageView.transform = self.imageDisplayed.edits.cropTransform;
+        [welf.view setNeedsLayout];
+        [welf.view layoutIfNeeded];
+        welf.imageCropView.imageView.transform = welf.imageDisplayed.edits.cropTransform;
     }];
     
     [cropper dismissViewControllerAnimated:YES completion:^{
