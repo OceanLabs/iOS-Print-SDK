@@ -33,6 +33,8 @@
 
 @interface OLImageDownloader ()
 
+@property (strong, nonatomic) NSURLCache *cache;
+
 @end
 
 @implementation OLImageDownloader
@@ -42,13 +44,17 @@
     static OLImageDownloader *sharedInstance;
     dispatch_once(&once, ^{
         sharedInstance = [[self alloc] init];
+        NSURLCache *URLCache = [[NSURLCache alloc] initWithMemoryCapacity:4 * 1024 * 1024
+                                                             diskCapacity:200 * 1024 * 1024
+                                                                 diskPath:nil];
+        [NSURLCache setSharedURLCache:URLCache];
     });
     return sharedInstance;
 }
 
 - (BOOL)cachedDataExistForURL:(NSURL *)url{
     NSURLRequest *request = [[NSURLRequest alloc] initWithURL:url];
-    NSCachedURLResponse *cachedResponse = [[NSURLCache sharedURLCache] cachedResponseForRequest:request];
+    NSCachedURLResponse *cachedResponse = [self.cache cachedResponseForRequest:request];
     return cachedResponse.data != nil;
 }
 
