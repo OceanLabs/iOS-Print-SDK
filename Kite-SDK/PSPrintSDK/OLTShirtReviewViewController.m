@@ -7,11 +7,12 @@
 //
 
 #import "OLTShirtReviewViewController.h"
+#import "OLColorSelectionCollectionViewCell.h"
 
-const NSInteger kCollectionViewTagImages = 10;
-const NSInteger kCollectionViewTagColors = 20;
-const NSInteger kCollectionViewTagTools = 30;
-const NSInteger kCollectionViewTagSizes = 40;
+const NSInteger kOLDrawerTagImages = 10;
+const NSInteger kOLDrawerTagColors = 20;
+const NSInteger kOLDrawerTagTools = 30;
+const NSInteger kOLDrawerTagSizes = 40;
 
 @interface OLSingleImageProductReviewViewController () <UICollectionViewDelegate, UICollectionViewDataSource>
 - (NSInteger) sectionForImageCells;
@@ -26,6 +27,8 @@ const NSInteger kCollectionViewTagSizes = 40;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *drawerBottomCom;
 @property (weak, nonatomic) IBOutlet UILabel *drawerLabel;
 @property (weak, nonatomic) IBOutlet UIView *drawer;
+@property (strong, nonatomic) UIColor *selectedColor;
+@property (strong, nonatomic) NSArray<UIColor *> *availableColors;
 
 @end
 
@@ -34,24 +37,26 @@ const NSInteger kCollectionViewTagSizes = 40;
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.addPhotosIconButton.tag = kCollectionViewTagImages;
-    self.bucketIconButton.tag = kCollectionViewTagColors;
-    self.sizeIconButton.tag = kCollectionViewTagSizes;
-    self.toolIconButton.tag = kCollectionViewTagTools;
+    self.addPhotosIconButton.tag = kOLDrawerTagImages;
+    self.bucketIconButton.tag = kOLDrawerTagColors;
+    self.sizeIconButton.tag = kOLDrawerTagSizes;
+    self.toolIconButton.tag = kOLDrawerTagTools;
+    
+    self.availableColors = @[[UIColor blackColor], [UIColor whiteColor], [UIColor grayColor], [UIColor greenColor], [UIColor redColor]];
 }
 
 - (void)selectButton:(UIButton *)sender{
     switch (sender.tag) {
-        case kCollectionViewTagImages:
+        case kOLDrawerTagImages:
             self.drawerLabel.text = NSLocalizedString(@"PHOTOS", @"");
             break;
-        case kCollectionViewTagTools:
+        case kOLDrawerTagTools:
             self.drawerLabel.text = NSLocalizedString(@"TOOL", @"");
             break;
-        case kCollectionViewTagSizes:
+        case kOLDrawerTagSizes:
             self.drawerLabel.text = NSLocalizedString(@"SIZE", @"");
             break;
-        case kCollectionViewTagColors:
+        case kOLDrawerTagColors:
             self.drawerLabel.text = NSLocalizedString(@"COLOURS", @"");
             break;
             
@@ -90,7 +95,7 @@ const NSInteger kCollectionViewTagSizes = 40;
 
 - (IBAction)onIconButtonClicked:(UIButton *)sender {
     void (^buttonAction)() = ^void(){
-        if (self.userSelectedPhotos.count == 0 && sender.tag == kCollectionViewTagImages){
+        if (self.userSelectedPhotos.count == 0 && sender.tag == kOLDrawerTagImages){
             //TODO check if we can add photos
             [self collectionView:self.imagesCollectionView didSelectItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
         }
@@ -114,17 +119,20 @@ const NSInteger kCollectionViewTagSizes = 40;
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
-    if (collectionView.tag == kCollectionViewTagImages){
+    if (collectionView.tag == kOLDrawerTagImages){
         return [super collectionView:collectionView numberOfItemsInSection:section];
+    }
+    else if (collectionView.tag == kOLDrawerTagColors){
+        return self.availableColors.count;
     }
     return 0;
 }
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
-    if (collectionView.tag == kCollectionViewTagImages){
+    if (collectionView.tag == kOLDrawerTagImages){
         return [super numberOfSectionsInCollectionView:collectionView];
     }
-    return 0;
+    return 1;
 }
 
 - (UIEdgeInsets) collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout insetForSectionAtIndex:(NSInteger)section{
@@ -137,15 +145,27 @@ const NSInteger kCollectionViewTagSizes = 40;
 }
 
 - (void) collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
-    if (collectionView.tag == kCollectionViewTagImages){
+    if (collectionView.tag == kOLDrawerTagImages){
         [super collectionView:collectionView didSelectItemAtIndexPath:indexPath];
+    }
+    else if (collectionView.tag == kOLDrawerTagColors){
+        self.selectedColor = [(OLColorSelectionCollectionViewCell *)[collectionView cellForItemAtIndexPath:indexPath] color];
+        [collectionView reloadData];
     }
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
     UICollectionViewCell *cell;
-    if (collectionView.tag == kCollectionViewTagImages){
+    if (collectionView.tag == kOLDrawerTagImages){
         cell = [super collectionView:collectionView cellForItemAtIndexPath:indexPath];
+    }
+    if (collectionView.tag == kOLDrawerTagColors){
+        cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"colorSelectionCell" forIndexPath:indexPath];
+        
+        [cell setSelected:[self.selectedColor isEqual:self.availableColors[indexPath.item]]];
+        
+        [(OLColorSelectionCollectionViewCell *)cell setColor:self.availableColors[indexPath.item]];
+        [cell setNeedsDisplay];
     }
     
     return cell;
