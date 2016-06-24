@@ -42,17 +42,21 @@ const NSInteger kCollectionViewTagSizes = 40;
         [self collectionView:self.imagesCollectionView didSelectItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
     }
     else if (self.drawerBottomCom.constant == 0){
+        sender.selected = YES;
         self.imagesCollectionView.tag = kCollectionViewTagImages;
         [self.imagesCollectionView reloadData];
         self.drawerLabel.text = NSLocalizedString(@"PHOTOS", @"");
         self.drawerBottomCom.constant = -self.ctaButton.frame.size.height - self.drawer.frame.size.height;
         [UIView animateWithDuration:0.25 animations:^{
+            [sender setNeedsDisplay];
             [self.view layoutIfNeeded];
         }];
     }
     else{
+        sender.selected = NO;
         self.drawerBottomCom.constant = 0;
         [UIView animateWithDuration:0.25 animations:^{
+            [sender setNeedsDisplay];
             [self.view layoutIfNeeded];
         }];
     }
@@ -60,6 +64,7 @@ const NSInteger kCollectionViewTagSizes = 40;
 
 - (IBAction)onButtonBucketIconClicked:(UIButton *)sender {
     if (self.drawerBottomCom.constant == 0){
+        sender.selected = YES;
         self.imagesCollectionView.tag = kCollectionViewTagColors;
         [self.imagesCollectionView reloadData];
         self.drawerLabel.text = NSLocalizedString(@"COLOURS", @"");
@@ -69,6 +74,7 @@ const NSInteger kCollectionViewTagSizes = 40;
         }];
     }
     else{
+        sender.selected = NO;
         self.drawerBottomCom.constant = 0;
         [UIView animateWithDuration:0.25 animations:^{
             [self.view layoutIfNeeded];
@@ -78,6 +84,7 @@ const NSInteger kCollectionViewTagSizes = 40;
 
 - (IBAction)onButtonToolsIconClicked:(UIButton *)sender {
     if (self.drawerBottomCom.constant == 0){
+        sender.selected = YES;
         self.imagesCollectionView.tag = kCollectionViewTagTools;
         [self.imagesCollectionView reloadData];
         self.drawerLabel.text = NSLocalizedString(@"TOOLS", @"");
@@ -87,6 +94,7 @@ const NSInteger kCollectionViewTagSizes = 40;
         }];
     }
     else{
+        sender.selected = NO;
         self.drawerBottomCom.constant = 0;
         [UIView animateWithDuration:0.25 animations:^{
             [self.view layoutIfNeeded];
@@ -96,6 +104,7 @@ const NSInteger kCollectionViewTagSizes = 40;
 
 - (IBAction)onButtonSizeClicked:(UIButton *)sender {
     if (self.drawerBottomCom.constant == 0){
+        sender.selected = YES;
         self.imagesCollectionView.tag = kCollectionViewTagSizes;
         [self.imagesCollectionView reloadData];
         self.drawerLabel.text = NSLocalizedString(@"SIZE", @"");
@@ -105,6 +114,7 @@ const NSInteger kCollectionViewTagSizes = 40;
         }];
     }
     else{
+        sender.selected = NO;
         self.drawerBottomCom.constant = 0;
         [UIView animateWithDuration:0.25 animations:^{
             [self.view layoutIfNeeded];

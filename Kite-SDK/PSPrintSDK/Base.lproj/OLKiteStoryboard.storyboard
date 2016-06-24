@@ -2094,7 +2094,7 @@ some images!</string>
                                     <constraint firstAttribute="height" constant="110" id="LLt-xh-FVH"/>
                                 </constraints>
                             </view>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="h7Q-UP-nod">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="h7Q-UP-nod" customClass="OLSelectedEffectButton">
                                 <rect key="frame" x="0.0" y="555" width="122.5" height="45"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <state key="normal" image="add-image-icon"/>
@@ -2102,7 +2102,7 @@ some images!</string>
                                     <action selector="onButtonAddPhotosIconClicked:" destination="HOW-C9-gLV" eventType="touchUpInside" id="vjP-a5-udJ"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xTN-2t-rdf">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xTN-2t-rdf" customClass="OLSelectedEffectButton">
                                 <rect key="frame" x="123" y="555" width="122.5" height="45"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <state key="normal" image="paint-bucket-icon"/>
@@ -2110,7 +2110,7 @@ some images!</string>
                                     <action selector="onButtonBucketIconClicked:" destination="HOW-C9-gLV" eventType="touchUpInside" id="aQy-wH-DVB"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VAG-oi-M3c">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VAG-oi-M3c" customClass="OLSelectedEffectButton">
                                 <rect key="frame" x="247" y="555" width="122.5" height="45"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <state key="normal" image="tools-icon"/>
@@ -2118,7 +2118,7 @@ some images!</string>
                                     <action selector="onButtonToolsIconClicked:" destination="HOW-C9-gLV" eventType="touchUpInside" id="CLj-jB-72j"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XGV-x4-EcH">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XGV-x4-EcH" customClass="OLSelectedEffectButton">
                                 <rect key="frame" x="370" y="555" width="122.5" height="45"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <state key="normal" image="shirt-size-icon"/>
