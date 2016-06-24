@@ -34,90 +34,81 @@ const NSInteger kCollectionViewTagSizes = 40;
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    self.addPhotosIconButton.tag = kCollectionViewTagImages;
+    self.bucketIconButton.tag = kCollectionViewTagColors;
+    self.sizeIconButton.tag = kCollectionViewTagSizes;
+    self.toolIconButton.tag = kCollectionViewTagTools;
 }
 
-- (IBAction)onButtonAddPhotosIconClicked:(UIButton *)sender {
-    if (self.userSelectedPhotos.count == 0){
-        //TODO check if we can add photos
-        [self collectionView:self.imagesCollectionView didSelectItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
+- (void)selectButton:(UIButton *)sender{
+    switch (sender.tag) {
+        case kCollectionViewTagImages:
+            self.drawerLabel.text = NSLocalizedString(@"PHOTOS", @"");
+            break;
+        case kCollectionViewTagTools:
+            self.drawerLabel.text = NSLocalizedString(@"TOOL", @"");
+            break;
+        case kCollectionViewTagSizes:
+            self.drawerLabel.text = NSLocalizedString(@"SIZE", @"");
+            break;
+        case kCollectionViewTagColors:
+            self.drawerLabel.text = NSLocalizedString(@"COLOURS", @"");
+            break;
+            
+        default:
+            break;
     }
-    else if (self.drawerBottomCom.constant == 0){
-        sender.selected = YES;
-        self.imagesCollectionView.tag = kCollectionViewTagImages;
-        [self.imagesCollectionView reloadData];
-        self.drawerLabel.text = NSLocalizedString(@"PHOTOS", @"");
-        self.drawerBottomCom.constant = -self.ctaButton.frame.size.height - self.drawer.frame.size.height;
-        [UIView animateWithDuration:0.25 animations:^{
-            [sender setNeedsDisplay];
-            [self.view layoutIfNeeded];
-        }];
-    }
-    else{
-        sender.selected = NO;
-        self.drawerBottomCom.constant = 0;
-        [UIView animateWithDuration:0.25 animations:^{
-            [sender setNeedsDisplay];
-            [self.view layoutIfNeeded];
-        }];
-    }
+    
+    sender.selected = YES;
+    self.imagesCollectionView.tag = sender.tag;
+    [self.imagesCollectionView reloadData];
+    
+    [UIView animateWithDuration:0.25 animations:^{
+        self.drawer.transform = CGAffineTransformMakeTranslation(0, -self.ctaButton.frame.size.height - self.drawer.frame.size.height);
+    }];
 }
 
-- (IBAction)onButtonBucketIconClicked:(UIButton *)sender {
-    if (self.drawerBottomCom.constant == 0){
-        sender.selected = YES;
-        self.imagesCollectionView.tag = kCollectionViewTagColors;
-        [self.imagesCollectionView reloadData];
-        self.drawerLabel.text = NSLocalizedString(@"COLOURS", @"");
-        self.drawerBottomCom.constant = -self.ctaButton.frame.size.height - self.drawer.frame.size.height;
-        [UIView animateWithDuration:0.25 animations:^{
-            [self.view layoutIfNeeded];
-        }];
-    }
-    else{
-        sender.selected = NO;
-        self.drawerBottomCom.constant = 0;
-        [UIView animateWithDuration:0.25 animations:^{
-            [self.view layoutIfNeeded];
-        }];
-    }
+- (void)deselectButton:(UIButton *)sender withCompletionHandler:(void (^)())handler{
+    sender.selected = NO;
+    [UIView animateWithDuration:0.25 animations:^{
+        self.drawer.transform = CGAffineTransformIdentity;
+    } completion:^(BOOL finished){
+        if (handler){
+            handler();
+        }
+    }];
 }
 
-- (IBAction)onButtonToolsIconClicked:(UIButton *)sender {
-    if (self.drawerBottomCom.constant == 0){
-        sender.selected = YES;
-        self.imagesCollectionView.tag = kCollectionViewTagTools;
-        [self.imagesCollectionView reloadData];
-        self.drawerLabel.text = NSLocalizedString(@"TOOLS", @"");
-        self.drawerBottomCom.constant = -self.ctaButton.frame.size.height - self.drawer.frame.size.height;
-        [UIView animateWithDuration:0.25 animations:^{
-            [self.view layoutIfNeeded];
-        }];
-    }
-    else{
-        sender.selected = NO;
-        self.drawerBottomCom.constant = 0;
-        [UIView animateWithDuration:0.25 animations:^{
-            [self.view layoutIfNeeded];
-        }];
+- (void)deselectSelectedButtonWithCompletionHandler:(void (^)())handler{
+    for (UIButton *button in @[self.addPhotosIconButton, self.toolIconButton, self.sizeIconButton, self.bucketIconButton]){
+        if (button.selected){
+            [self deselectButton:button withCompletionHandler:handler];
+            break; //We should never have more than one selected button
+        }
     }
 }
 
-- (IBAction)onButtonSizeClicked:(UIButton *)sender {
-    if (self.drawerBottomCom.constant == 0){
-        sender.selected = YES;
-        self.imagesCollectionView.tag = kCollectionViewTagSizes;
-        [self.imagesCollectionView reloadData];
-        self.drawerLabel.text = NSLocalizedString(@"SIZE", @"");
-        self.drawerBottomCom.constant = -self.ctaButton.frame.size.height - self.drawer.frame.size.height;
-        [UIView animateWithDuration:0.25 animations:^{
-            [self.view layoutIfNeeded];
-        }];
+- (IBAction)onIconButtonClicked:(UIButton *)sender {
+    void (^buttonAction)() = ^void(){
+        if (self.userSelectedPhotos.count == 0 && sender.tag == kCollectionViewTagImages){
+            //TODO check if we can add photos
+            [self collectionView:self.imagesCollectionView didSelectItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
+        }
+        [self selectButton:sender];
+    };
+    
+    // Nothing is selected: just action
+    if (!self.addPhotosIconButton.selected && !self.toolIconButton.selected && !self.bucketIconButton.selected && !self.sizeIconButton.selected){
+        buttonAction();
     }
+    // Sender is selected: just deselect
+    else if (sender.selected){
+        [self deselectSelectedButtonWithCompletionHandler:NULL];
+    }
+    // Other is selected: Deselect and action
     else{
-        sender.selected = NO;
-        self.drawerBottomCom.constant = 0;
-        [UIView animateWithDuration:0.25 animations:^{
-            [self.view layoutIfNeeded];
+        [self deselectSelectedButtonWithCompletionHandler:^{
+            buttonAction();
         }];
     }
 }

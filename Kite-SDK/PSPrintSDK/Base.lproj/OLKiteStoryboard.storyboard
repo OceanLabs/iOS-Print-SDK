@@ -2099,7 +2099,7 @@ some images!</string>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <state key="normal" image="add-image-icon"/>
                                 <connections>
-                                    <action selector="onButtonAddPhotosIconClicked:" destination="HOW-C9-gLV" eventType="touchUpInside" id="vjP-a5-udJ"/>
+                                    <action selector="onIconButtonClicked:" destination="HOW-C9-gLV" eventType="touchUpInside" id="TwF-Gb-sCM"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xTN-2t-rdf" customClass="OLSelectedEffectButton">
@@ -2107,7 +2107,7 @@ some images!</string>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <state key="normal" image="paint-bucket-icon"/>
                                 <connections>
-                                    <action selector="onButtonBucketIconClicked:" destination="HOW-C9-gLV" eventType="touchUpInside" id="aQy-wH-DVB"/>
+                                    <action selector="onIconButtonClicked:" destination="HOW-C9-gLV" eventType="touchUpInside" id="Uvh-LT-zay"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VAG-oi-M3c" customClass="OLSelectedEffectButton">
@@ -2115,7 +2115,7 @@ some images!</string>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <state key="normal" image="tools-icon"/>
                                 <connections>
-                                    <action selector="onButtonToolsIconClicked:" destination="HOW-C9-gLV" eventType="touchUpInside" id="CLj-jB-72j"/>
+                                    <action selector="onIconButtonClicked:" destination="HOW-C9-gLV" eventType="touchUpInside" id="1qD-nO-udm"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XGV-x4-EcH" customClass="OLSelectedEffectButton">
@@ -2123,7 +2123,7 @@ some images!</string>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <state key="normal" image="shirt-size-icon"/>
                                 <connections>
-                                    <action selector="onButtonSizeClicked:" destination="HOW-C9-gLV" eventType="touchUpInside" id="kE0-9G-6g7"/>
+                                    <action selector="onIconButtonClicked:" destination="HOW-C9-gLV" eventType="touchUpInside" id="YPQ-GC-0F0"/>
                                 </connections>
                             </button>
                         </subviews>
