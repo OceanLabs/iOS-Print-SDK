@@ -1399,9 +1399,15 @@ static BOOL hasMoved;
     [self.imageDisplayed unloadImage];
     
     self.imageDisplayed.edits = cropper.edits;
+    [self.imageCropView setImage:nil];
+    id activityView = [self.view viewWithTag:1010];
+    if ([activityView isKindOfClass:[UIActivityIndicatorView class]]){
+        [(UIActivityIndicatorView *)activityView startAnimating];
+    }
     
     __weak OLSingleImageProductReviewViewController *welf = self;
     [self.imageDisplayed setImageSize:[UIScreen mainScreen].bounds.size cropped:NO progress:NULL completionHandler:^(UIImage *image){
+        [activityView stopAnimating];
         [welf.imageCropView setImage:image];
         [welf.view setNeedsLayout];
         [welf.view layoutIfNeeded];
