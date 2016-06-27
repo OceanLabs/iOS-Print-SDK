@@ -53,23 +53,27 @@ static char tasksKey;
     }
     
     self.alpha = 0;
-    NSURLSessionTask *task = [[OLImageDownloader sharedInstance] downloadImageAtURL:url withCompletionHandler:^(UIImage *image, NSError *error){
-        if ([self.tasks[url] state] == NSURLSessionTaskStateCanceling){
-            [self.tasks removeObjectForKey:url];
-            return;
-        }
-        [self.tasks removeObjectForKey:url];
-        self.image = [OLPrintPhoto imageWithImage:image scaledToSize:[UIScreen mainScreen].bounds.size];
-        [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
-            self.alpha = 1;
-        }completion:^(BOOL finished){
-            if (handler){
-                handler();
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSURLSessionTask *task = [[OLImageDownloader sharedInstance] downloadImageAtURL:url withCompletionHandler:^(UIImage *image, NSError *error){
+            if ([self.tasks[url] state] == NSURLSessionTaskStateCanceling){
+                [self.tasks removeObjectForKey:url];
+                return;
             }
+            [self.tasks removeObjectForKey:url];
+            UIImage *resizedImage = [OLPrintPhoto imageWithImage:image scaledToSize:[UIScreen mainScreen].bounds.size];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                self.image = resizedImage;
+                [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+                    self.alpha = 1;
+                }completion:^(BOOL finished){
+                    if (handler){
+                        handler();
+                    }
+                }];
+            });
         }];
-        
-    }];
-    self.tasks[url] = task;
+        self.tasks[url] = task;
+    });
 }
 
 - (NSMutableDictionary *)tasks{

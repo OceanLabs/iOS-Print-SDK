@@ -219,13 +219,10 @@ static BOOL hasMoved;
         OLPrintPhoto *photo = [self.userSelectedPhotos firstObject];
         self.imageDisplayed = photo;
         [photo setImageSize:[UIScreen mainScreen].bounds.size cropped:NO progress:NULL completionHandler:^(UIImage *image){
-            if (self.imageDisplayed.edits.counterClockwiseRotations > 0 || self.imageDisplayed.edits.flipHorizontal || self.imageDisplayed.edits.flipVertical){
-                self.imageCropView.image = [UIImage imageWithCGImage:image.CGImage scale:image.scale orientation:[OLPhotoEdits orientationForNumberOfCounterClockwiseRotations:self.imageDisplayed.edits.counterClockwiseRotations andInitialOrientation:image.imageOrientation horizontalFlip:self.imageDisplayed.edits.flipHorizontal verticalFlip:self.imageDisplayed.edits.flipVertical]];
-            }
-            else{
+            dispatch_async(dispatch_get_main_queue(), ^{
                 [self.imageCropView setImage:image];
-            }
-            self.imageCropView.imageView.transform = self.imageDisplayed.edits.cropTransform;
+                self.imageCropView.imageView.transform = self.imageDisplayed.edits.cropTransform;
+            });
         }];
     }
     
@@ -552,7 +549,9 @@ static BOOL hasMoved;
         
         OLImagePreviewViewController *previewVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLImagePreviewViewController"];
         [self.userSelectedPhotos[indexPath.item] setImageSize:[UIScreen mainScreen].bounds.size cropped:NO progress:NULL completionHandler:^(UIImage *image){
-            previewVc.image = image;
+            dispatch_async(dispatch_get_main_queue(), ^{
+                previewVc.image = image;
+            });
         }];
         previewVc.providesPresentationContextTransitionStyle = true;
         previewVc.definesPresentationContext = true;
@@ -562,7 +561,9 @@ static BOOL hasMoved;
     else if (previewingContext.sourceView == self.imageCropView){
         OLImagePreviewViewController *previewVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLImagePreviewViewController"];
         [self.imageDisplayed setImageSize:[UIScreen mainScreen].bounds.size cropped:NO progress:NULL completionHandler:^(UIImage *image){
-            previewVc.image = image;
+            dispatch_async(dispatch_get_main_queue(), ^{
+                previewVc.image = image;
+            });
         }];
         previewVc.providesPresentationContextTransitionStyle = true;
         previewVc.definesPresentationContext = true;
@@ -644,7 +645,9 @@ static BOOL hasMoved;
         
         
         [self.userSelectedPhotos[indexPath.item] setImageSize:imageView.frame.size cropped:NO progress:^(float progress){
-            [imageView setProgress:progress];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [imageView setProgress:progress];
+            });
         }completionHandler:^(UIImage *image){
             dispatch_async(dispatch_get_main_queue(), ^{
                 imageView.image = image;
@@ -712,25 +715,17 @@ static BOOL hasMoved;
         self.imageCropView.imageView.image = nil;
         __weak OLSingleImageProductReviewViewController *welf = self;
         [self.imageDisplayed setImageSize:[UIScreen mainScreen].bounds.size cropped:NO progress:^(float progress){
-            [welf.imageCropView setProgress:progress];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [welf.imageCropView setProgress:progress];
+            });
         }completionHandler:^(UIImage *image){
-            [activityView stopAnimating];
-            if (self.imageDisplayed.edits.counterClockwiseRotations > 0 || welf.imageDisplayed.edits.flipHorizontal || self.imageDisplayed.edits.flipVertical){
-                welf.imageCropView.image = [UIImage imageWithCGImage:image.CGImage scale:image.scale orientation:[OLPhotoEdits orientationForNumberOfCounterClockwiseRotations:welf.imageDisplayed.edits.counterClockwiseRotations andInitialOrientation:image.imageOrientation horizontalFlip:welf.imageDisplayed.edits.flipHorizontal verticalFlip:welf.imageDisplayed.edits.flipVertical]];
-            }
-            else{
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [activityView stopAnimating];
                 [welf.imageCropView setImage:image];
-            }
-            [welf.view setNeedsLayout];
-            [welf.view layoutIfNeeded];
-            welf.imageCropView.imageView.transform = welf.imageDisplayed.edits.cropTransform;
-            
-            if (self.userSelectedPhotos.count > 0){
-                id view = [welf.view viewWithTag:1010];
-                if ([view isKindOfClass:[UIActivityIndicatorView class]]){
-                    [(UIActivityIndicatorView *)view stopAnimating];
-                }
-            }
+                [welf.view setNeedsLayout];
+                [welf.view layoutIfNeeded];
+                welf.imageCropView.imageView.transform = welf.imageDisplayed.edits.cropTransform;
+            });
         }];
     }
     else if (numberOfProviders > 1){
@@ -1411,18 +1406,21 @@ static BOOL hasMoved;
     [self.imageDisplayed unloadImage];
     
     self.imageDisplayed.edits = cropper.edits;
+    [self.imageCropView setImage:nil];
+    id activityView = [self.view viewWithTag:1010];
+    if ([activityView isKindOfClass:[UIActivityIndicatorView class]]){
+        [(UIActivityIndicatorView *)activityView startAnimating];
+    }
     
-     __weak OLSingleImageProductReviewViewController *welf = self;
+    __weak OLSingleImageProductReviewViewController *welf = self;
     [self.imageDisplayed setImageSize:[UIScreen mainScreen].bounds.size cropped:NO progress:NULL completionHandler:^(UIImage *image){
-        if (self.imageDisplayed.edits.counterClockwiseRotations > 0 || self.imageDisplayed.edits.flipHorizontal || self.imageDisplayed.edits.flipVertical){
-            welf.imageCropView.image = [UIImage imageWithCGImage:image.CGImage scale:image.scale orientation:[OLPhotoEdits orientationForNumberOfCounterClockwiseRotations:welf.imageDisplayed.edits.counterClockwiseRotations andInitialOrientation:image.imageOrientation horizontalFlip:welf.imageDisplayed.edits.flipHorizontal verticalFlip:welf.imageDisplayed.edits.flipVertical]];
-        }
-        else{
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [activityView stopAnimating];
             [welf.imageCropView setImage:image];
-        }
-        [welf.view setNeedsLayout];
-        [welf.view layoutIfNeeded];
-        welf.imageCropView.imageView.transform = welf.imageDisplayed.edits.cropTransform;
+            [welf.view setNeedsLayout];
+            [welf.view layoutIfNeeded];
+            welf.imageCropView.imageView.transform = welf.imageDisplayed.edits.cropTransform;
+        });
     }];
     
     [cropper dismissViewControllerAnimated:YES completion:^{
