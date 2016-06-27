@@ -34,12 +34,12 @@ static CGFloat circlesDiff = 0.2;
     if (self.selected){
         if ([self.color isEqual:[UIColor whiteColor]]){
             UIBezierPath* ovalPath = [UIBezierPath bezierPathWithOvalInRect: CGRectMake(2, 2, self.frame.size.width-4, self.frame.size.height-4)];
-            [[UIColor blackColor] setStroke];
+            [[UIColor grayColor] setStroke];
             ovalPath.lineWidth = 1;
             [ovalPath stroke];
             
             UIBezierPath* ovalPath2 = [UIBezierPath bezierPathWithOvalInRect: CGRectMake(self.frame.size.width * circlesDiff, self.frame.size.height * circlesDiff, self.frame.size.width  * (1-2*circlesDiff), self.frame.size.height * (1-2*circlesDiff))];
-            [[UIColor blackColor] setStroke];
+            [[UIColor grayColor] setStroke];
             ovalPath2.lineWidth = 2;
             [ovalPath2 stroke];
             [self.color setFill];
@@ -59,7 +59,7 @@ static CGFloat circlesDiff = 0.2;
     else{
         if ([self.color isEqual:[UIColor whiteColor]]){
             UIBezierPath* ovalPath = [UIBezierPath bezierPathWithOvalInRect: CGRectMake(2, 2, self.frame.size.width-4, self.frame.size.height-4)];
-            [[UIColor blackColor] setStroke];
+            [[UIColor grayColor] setStroke];
             ovalPath.lineWidth = 2;
             [ovalPath stroke];
             [self.color setFill];
