@@ -18,6 +18,8 @@ const NSInteger kOLDrawerTagSizes = 40;
 @interface OLSingleImageProductReviewViewController () <UICollectionViewDelegate, UICollectionViewDataSource>
 - (NSInteger) sectionForImageCells;
 @property (weak, nonatomic) IBOutlet UICollectionView *imagesCollectionView;
+@property (weak, nonatomic) IBOutlet OLRemoteImageCropper *imageCropView;
+@property (strong, nonatomic) OLPrintPhoto *imageDisplayed;
 @end
 
 @interface OLTShirtReviewViewController () <UICollectionViewDelegateFlowLayout>
@@ -133,6 +135,9 @@ const NSInteger kOLDrawerTagSizes = 40;
     else if (collectionView.tag == kOLDrawerTagSizes && section == 0){
         return 1;
     }
+    else if (collectionView.tag == kOLDrawerTagTools){
+        return 2;
+    }
     return 0;
 }
 
@@ -174,6 +179,14 @@ const NSInteger kOLDrawerTagSizes = 40;
         self.product.selectedOptions[@"size"] = self.availableSizes[indexPath.item];
         [collectionView reloadData];
     }
+    else if (collectionView.tag == kOLDrawerTagTools){
+        if (indexPath.item == 0){
+            [self onButtonRotateClicked:nil];
+        }
+        else if (indexPath.item == 1){
+            [self onButtonHorizontalFlipClicked:nil];
+        }
+    }
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
@@ -203,6 +216,17 @@ const NSInteger kOLDrawerTagSizes = 40;
             [cell setNeedsDisplay];
         }
     }
+    if  (collectionView.tag == kOLDrawerTagTools){
+        cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"toolCell" forIndexPath:indexPath];
+        if (indexPath.item == 0){
+            [(UIImageView *)[cell viewWithTag:10] setImage:[UIImage imageNamedInKiteBundle:@"rotate"]];
+            [(UILabel *)[cell viewWithTag:20] setText:NSLocalizedString(@"Rotate", @"")];
+        }
+        else if (indexPath.item == 1){
+            [(UIImageView *)[cell viewWithTag:10] setImage:[UIImage imageNamedInKiteBundle:@"flip"]];
+            [(UILabel *)[cell viewWithTag:20] setText:NSLocalizedString(@"Flip", @"")];
+        }
+    }
     
     return cell;
 }
@@ -213,6 +237,65 @@ const NSInteger kOLDrawerTagSizes = 40;
 
 - (CGFloat) collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section{
     return 30;
+}
+
+- (IBAction)onButtonHorizontalFlipClicked:(id)sender {
+    if (self.imageCropView.isCorrecting){
+        return;
+    }
+    
+    [self.imageDisplayed.edits performHorizontalFlipEditFromOrientation:self.imageCropView.imageView.image.imageOrientation];
+    
+    [UIView transitionWithView:self.imageCropView.imageView duration:0.5 options:UIViewAnimationOptionTransitionFlipFromRight animations:^{
+        
+        [self.imageCropView setImage:[UIImage imageWithCGImage:self.imageCropView.image.CGImage scale:self.imageCropView.imageView.image.scale orientation:[OLPhotoEdits orientationForNumberOfCounterClockwiseRotations:self.imageDisplayed.edits.counterClockwiseRotations andInitialOrientation:UIImageOrientationUp horizontalFlip:self.imageDisplayed.edits.flipHorizontal verticalFlip:self.imageDisplayed.edits.flipVertical]]];
+        
+    }completion:NULL];
+}
+
+- (IBAction)onButtonRotateClicked:(id)sender {
+    if (self.imageCropView.isCorrecting){
+        return;
+    }
+    
+    [(UIBarButtonItem *)sender setEnabled:NO];
+    self.imageDisplayed.edits.counterClockwiseRotations = (self.imageDisplayed.edits.counterClockwiseRotations + 1) % 4;
+    CGAffineTransform transform = self.imageCropView.imageView.transform;
+    transform.tx = self.imageCropView.imageView.transform.ty;
+    transform.ty = -self.imageCropView.imageView.transform.tx;
+    
+    CGRect cropboxRect = self.imageCropView.frame;
+    
+    UIImage *newImage = [UIImage imageWithCGImage:self.self.imageCropView.image.CGImage scale:self.imageCropView.imageView.image.scale orientation:[OLPhotoEdits orientationForNumberOfCounterClockwiseRotations:self.imageDisplayed.edits.counterClockwiseRotations andInitialOrientation:UIImageOrientationUp horizontalFlip:self.imageDisplayed.edits.flipHorizontal verticalFlip:self.imageDisplayed.edits.flipVertical]];
+    CGFloat imageAspectRatio = newImage.size.height/newImage.size.width;
+    
+    [UIView animateWithDuration:0.25 delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
+        self.imageCropView.transform = CGAffineTransformMakeRotation(-M_PI_2);
+        
+        CGFloat boxWidth = self.imageCropView.frame.size.width;
+        CGFloat boxHeight = self.imageCropView.frame.size.height;
+        
+        CGFloat imageWidth;
+        CGFloat imageHeight;
+        
+        if (imageAspectRatio > 1.0){
+            imageHeight = boxHeight;
+            imageWidth = boxHeight * imageAspectRatio;
+        }
+        else{
+            imageWidth = boxWidth;
+            imageHeight = boxWidth / imageAspectRatio;
+        }
+        
+        self.imageCropView.imageView.frame = CGRectMake((boxHeight - imageWidth)/ 2.0, (boxWidth - imageHeight) / 2.0, imageWidth, imageHeight);
+        
+    } completion:^(BOOL finished){
+        self.imageCropView.transform = CGAffineTransformIdentity;
+        self.imageCropView.frame = cropboxRect;
+        [self.imageCropView setImage:newImage];
+        
+        [(UIBarButtonItem *)sender setEnabled:YES];
+    }];
 }
 
 @end
