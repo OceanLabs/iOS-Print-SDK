@@ -348,7 +348,7 @@ UINavigationControllerDelegate, OLUpsellViewControllerDelegate
     [self.pageController.view addGestureRecognizer:panGesture];
     [self.pageController.view addGestureRecognizer:longPressGesture];
     
-    self.title = NSLocalizedString(@"Review", @"");
+    self.title = NSLocalizedStringFromTableInBundle(@"Review", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
     
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Back", @"")
                                                                              style:UIBarButtonItemStylePlain
@@ -1375,7 +1375,7 @@ UINavigationControllerDelegate, OLUpsellViewControllerDelegate
             UILabel *helpLabel = [[UILabel alloc] init];
             helpLabel.tag = 1234;
             helpLabel.font = [UIFont systemFontOfSize:11];
-            helpLabel.text = NSLocalizedString(@"Tap to edit", @"");
+            helpLabel.text = NSLocalizedStringFromTableInBundle(@"Tap to edit", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
             helpLabel.translatesAutoresizingMaskIntoConstraints = NO;
             self.coverHelpLabel = helpLabel;
             [halfBookCoverImageContainer insertSubview:helpLabel belowSubview:coverImageView];

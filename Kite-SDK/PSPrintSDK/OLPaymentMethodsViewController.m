@@ -91,7 +91,7 @@
     }
     else if (method == kOLPaymentMethodCreditCard){
         imageView.image = [UIImage imageNamed:@"add-payment"];
-        label.text = NSLocalizedString(@"Add Credit/Debit Card", @"");
+        label.text = NSLocalizedStringFromTableInBundle(@"Add Credit/Debit Card", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
         [cell viewWithTag:30].hidden = YES;
     }
 #ifdef OL_KITE_OFFER_APPLE_PAY

@@ -555,28 +555,28 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 
 - (void)updateSelectedPaymentMethodView{
     if (self.selectedPaymentMethod == kOLPaymentMethodNone){
-        [self.addPaymentMethodButton setTitle:NSLocalizedString(@"Add Payment Method", @"") forState:UIControlStateNormal];
+        [self.addPaymentMethodButton setTitle:NSLocalizedStringFromTableInBundle(@"Add Payment Method", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") forState:UIControlStateNormal];
         self.payingWithImageView.hidden = YES;
         self.shippingDetailsCon.constant = 2;
         self.shippingDetailsBox.alpha = 1;
     }
     else if (self.selectedPaymentMethod == kOLPaymentMethodCreditCard){
         id existingCard = [OLKitePrintSDK useStripeForCreditCards] ? [OLStripeCard lastUsedCard] : [OLPayPalCard lastUsedCard];
-        [self.addPaymentMethodButton setTitle:NSLocalizedString(@"Paying With", @"") forState:UIControlStateNormal];
+        [self.addPaymentMethodButton setTitle:NSLocalizedStringFromTableInBundle(@"Paying With", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") forState:UIControlStateNormal];
         self.payingWithImageView.image = [existingCard cardIcon];
         self.payingWithImageView.hidden = NO;
         self.shippingDetailsCon.constant = 2;
         self.shippingDetailsBox.alpha = 1;
     }
     else if (self.selectedPaymentMethod == kOLPaymentMethodApplePay){
-        [self.addPaymentMethodButton setTitle:NSLocalizedString(@"Paying With", @"") forState:UIControlStateNormal];
+        [self.addPaymentMethodButton setTitle:NSLocalizedStringFromTableInBundle(@"Paying With", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") forState:UIControlStateNormal];
         self.payingWithImageView.image = [UIImage imageNamedInKiteBundle:@"apple-pay-method"];
         self.payingWithImageView.hidden = NO;
         self.shippingDetailsCon.constant = -50;
         self.shippingDetailsBox.alpha = 0;
     }
     else if (self.selectedPaymentMethod == kOLPaymentMethodPayPal){
-        [self.addPaymentMethodButton setTitle:NSLocalizedString(@"Paying With", @"") forState:UIControlStateNormal];
+        [self.addPaymentMethodButton setTitle:NSLocalizedStringFromTableInBundle(@"Paying With", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") forState:UIControlStateNormal];
         self.payingWithImageView.image = [UIImage imageNamedInKiteBundle:@"paypal-method"];
         self.payingWithImageView.hidden = NO;
         self.shippingDetailsCon.constant = 2;

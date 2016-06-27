@@ -190,7 +190,7 @@ static BOOL hasMoved;
     
     if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder){
         if ([[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant isEqualToString:@"Review-Overview-Checkout"]){
-            [self.ctaButton setTitle:NSLocalizedString(@"Next", @"") forState:UIControlStateNormal];
+            [self.ctaButton setTitle:NSLocalizedStringFromTableInBundle(@"Next", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") forState:UIControlStateNormal];
         }
         
         if(!self.editingPrintJob){
@@ -203,7 +203,7 @@ static BOOL hasMoved;
     if ([self.presentingViewController respondsToSelector:@selector(viewControllers)] || !self.presentingViewController) {
         UIViewController *paymentVc = [(UINavigationController *)self.presentingViewController viewControllers].lastObject;
         if ([paymentVc respondsToSelector:@selector(saveAndDismissReviewController)]){
-            [self.ctaButton setTitle:NSLocalizedString(@"Save", @"") forState:UIControlStateNormal];
+            [self.ctaButton setTitle:NSLocalizedStringFromTableInBundle(@"Save", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") forState:UIControlStateNormal];
             [self.ctaButton removeTarget:self action:@selector(onButtonNextClicked) forControlEvents:UIControlEventTouchUpInside];
             [self.ctaButton addTarget:paymentVc action:@selector(saveAndDismissReviewController) forControlEvents:UIControlEventTouchUpInside];
         }
@@ -212,7 +212,7 @@ static BOOL hasMoved;
     self.ctaButton.titleLabel.adjustsFontSizeToFitWidth = YES;
     self.ctaButton.titleLabel.minimumScaleFactor = 0.5;
     
-    self.title = NSLocalizedString(@"Reposition the Photo", @"");
+    self.title = NSLocalizedStringFromTableInBundle(@"Reposition the Photo", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
     
     if (self.imageCropView){
         self.imageCropView.delegate = self;
@@ -235,7 +235,7 @@ static BOOL hasMoved;
     [self.imageCropView addGestureRecognizer:gesture];
     
     
-    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Back", @"")
+    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Back", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")
                                                                              style:UIBarButtonItemStylePlain
                                                                             target:nil
                                                                             action:nil];

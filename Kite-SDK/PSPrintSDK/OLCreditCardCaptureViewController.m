@@ -466,11 +466,11 @@ UITableViewDataSource, UITextFieldDelegate>
 
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section {
     if (section == kOLSectionCardNumber) {
-        return NSLocalizedString(@"Your 16 digit card number", @"");
+        return NSLocalizedStringFromTableInBundle(@"Your 16 digit card number", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
     } else if (section == kOLSectionExpiryDate) {
-        return NSLocalizedString(@"Your card expiry date", @"");
+        return NSLocalizedStringFromTableInBundle(@"Your card expiry date", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
     } else if (section == kOLSectionCVV) {
-        return NSLocalizedString(@"This is the 3-4 digit verification number/security code normally found on the back of your card", @"");
+        return NSLocalizedStringFromTableInBundle(@"This is the 3-4 digit verification number/security code normally found on the back of your card", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
     } else {
         return @"";
     }
@@ -511,7 +511,7 @@ UITableViewDataSource, UITextFieldDelegate>
     
     UITextField *textField = (UITextField *) [cell viewWithTag:99];
     if (indexPath.section == kOLSectionCardNumber) {
-        textField.placeholder = NSLocalizedString(@"Card Number", @"");
+        textField.placeholder = NSLocalizedStringFromTableInBundle(@"Card Number", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
         self.textFieldCardNumber = textField;
         
 //#ifdef OL_KITE_OFFER_PAYPAL
