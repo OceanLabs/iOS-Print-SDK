@@ -1932,7 +1932,7 @@ UINavigationControllerDelegate, OLUpsellViewControllerDelegate
         for (id<OLAssetDataSource> asset in assets){
             if ([asset isKindOfClass:[OLPrintPhoto class]]){
                 [olAssets addObject:asset];
-                assetClass = [assets.firstObject class];
+                assetClass = [assets.lastObject class];
             }
             else if ([asset respondsToSelector:@selector(dataWithCompletionHandler:)]){
                 [olAssets addObject:[OLAsset assetWithDataSource:asset]];
