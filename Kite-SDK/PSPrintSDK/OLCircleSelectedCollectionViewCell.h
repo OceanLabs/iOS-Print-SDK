@@ -29,8 +29,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface OLColorSelectionCollectionViewCell : UICollectionViewCell
-
-@property (strong, nonatomic) UIColor *color;
+@interface OLCircleSelectedCollectionViewCell : UICollectionViewCell
 
 @end

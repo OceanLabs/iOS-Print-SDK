@@ -8,6 +8,7 @@
 
 #import "OLTShirtReviewViewController.h"
 #import "OLColorSelectionCollectionViewCell.h"
+#import "UIImage+ImageNamedInKiteBundle.h"
 
 const NSInteger kOLDrawerTagImages = 10;
 const NSInteger kOLDrawerTagColors = 20;
@@ -27,8 +28,8 @@ const NSInteger kOLDrawerTagSizes = 40;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *drawerBottomCom;
 @property (weak, nonatomic) IBOutlet UILabel *drawerLabel;
 @property (weak, nonatomic) IBOutlet UIView *drawer;
-@property (strong, nonatomic) UIColor *selectedColor;
 @property (strong, nonatomic) NSArray<UIColor *> *availableColors;
+@property (strong, nonatomic) NSArray<NSString *> *availableSizes;
 
 @end
 
@@ -43,6 +44,7 @@ const NSInteger kOLDrawerTagSizes = 40;
     self.toolIconButton.tag = kOLDrawerTagTools;
     
     self.availableColors = @[[UIColor blackColor], [UIColor whiteColor], [UIColor grayColor], [UIColor greenColor], [UIColor redColor]];
+    self.availableSizes = @[@"XS", @"S", @"M", @"L", @"XL", @"XXL"];
 }
 
 - (void)selectButton:(UIButton *)sender{
@@ -51,10 +53,10 @@ const NSInteger kOLDrawerTagSizes = 40;
             self.drawerLabel.text = NSLocalizedString(@"PHOTOS", @"");
             break;
         case kOLDrawerTagTools:
-            self.drawerLabel.text = NSLocalizedString(@"TOOL", @"");
+            self.drawerLabel.text = NSLocalizedString(@"TOOLS", @"");
             break;
         case kOLDrawerTagSizes:
-            self.drawerLabel.text = NSLocalizedString(@"SIZE", @"");
+            self.drawerLabel.text = NSLocalizedString(@"SIZES", @"");
             break;
         case kOLDrawerTagColors:
             self.drawerLabel.text = NSLocalizedString(@"COLOURS", @"");
@@ -125,6 +127,12 @@ const NSInteger kOLDrawerTagSizes = 40;
     else if (collectionView.tag == kOLDrawerTagColors){
         return self.availableColors.count;
     }
+    else if (collectionView.tag == kOLDrawerTagSizes && section == 1){
+        return self.availableSizes.count;
+    }
+    else if (collectionView.tag == kOLDrawerTagSizes && section == 0){
+        return 1;
+    }
     return 0;
 }
 
@@ -132,16 +140,26 @@ const NSInteger kOLDrawerTagSizes = 40;
     if (collectionView.tag == kOLDrawerTagImages){
         return [super numberOfSectionsInCollectionView:collectionView];
     }
+    else if (collectionView.tag == kOLDrawerTagSizes){
+        return 2;
+    }
     return 1;
 }
 
 - (UIEdgeInsets) collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout insetForSectionAtIndex:(NSInteger)section{
     if (section == 0){
-        return UIEdgeInsetsMake(0, 30, 0, 30);
+        return UIEdgeInsetsMake(0, 10, 0, 30);
     }
     else{
         return UIEdgeInsetsMake(0, 0, 0, 30);
     }
+}
+
+- (BOOL)collectionView:(UICollectionView *)collectionView shouldSelectItemAtIndexPath:(NSIndexPath *)indexPath{
+    if (collectionView.tag == kOLDrawerTagSizes && indexPath.section == 0){
+        return NO;
+    }
+    return YES;
 }
 
 - (void) collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
@@ -149,7 +167,11 @@ const NSInteger kOLDrawerTagSizes = 40;
         [super collectionView:collectionView didSelectItemAtIndexPath:indexPath];
     }
     else if (collectionView.tag == kOLDrawerTagColors){
-        self.selectedColor = [(OLColorSelectionCollectionViewCell *)[collectionView cellForItemAtIndexPath:indexPath] color];
+        self.product.selectedOptions[@"colour"] = self.availableColors[indexPath.item];
+        [collectionView reloadData];
+    }
+    else if (collectionView.tag == kOLDrawerTagSizes){
+        self.product.selectedOptions[@"size"] = self.availableSizes[indexPath.item];
         [collectionView reloadData];
     }
 }
@@ -162,10 +184,24 @@ const NSInteger kOLDrawerTagSizes = 40;
     if (collectionView.tag == kOLDrawerTagColors){
         cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"colorSelectionCell" forIndexPath:indexPath];
         
-        [cell setSelected:[self.selectedColor isEqual:self.availableColors[indexPath.item]]];
+        [cell setSelected:[self.product.selectedOptions[@"colour"] isEqual:self.availableColors[indexPath.item]]];
         
         [(OLColorSelectionCollectionViewCell *)cell setColor:self.availableColors[indexPath.item]];
         [cell setNeedsDisplay];
+    }
+    if (collectionView.tag == kOLDrawerTagSizes){
+        if (indexPath.section == 0){
+            cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"iconCell" forIndexPath:indexPath];
+            [(UIImageView *)[cell viewWithTag:10] setImage:[UIImage imageNamedInKiteBundle:@"shirt-size-icon"]];
+        }
+        else{
+            cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"circleSelectedCell" forIndexPath:indexPath];
+            
+            [cell setSelected:[self.product.selectedOptions[@"size"] isEqual:self.availableSizes[indexPath.item]]];
+            
+            [(UILabel *)[cell viewWithTag:10] setText:self.availableSizes[indexPath.item]];
+            [cell setNeedsDisplay];
+        }
     }
     
     return cell;

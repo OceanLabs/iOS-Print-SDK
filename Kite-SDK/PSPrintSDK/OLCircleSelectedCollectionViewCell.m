@@ -27,10 +27,17 @@
 //  THE SOFTWARE.
 //
 
-#import <UIKit/UIKit.h>
+#import "OLCircleSelectedCollectionViewCell.h"
 
-@interface OLColorSelectionCollectionViewCell : UICollectionViewCell
+@implementation OLCircleSelectedCollectionViewCell
 
-@property (strong, nonatomic) UIColor *color;
+- (void)drawRect:(CGRect)rect{
+    if (self.selected){
+        UIBezierPath* ovalPath = [UIBezierPath bezierPathWithOvalInRect: CGRectMake(2, 2, self.frame.size.width-4, self.frame.size.height-4)];
+        [[UIColor blackColor] setStroke];
+        ovalPath.lineWidth = 1;
+        [ovalPath stroke];
+    }
+}
 
 @end
