@@ -20,6 +20,7 @@ const NSInteger kOLDrawerTagSizes = 40;
 @property (weak, nonatomic) IBOutlet UICollectionView *imagesCollectionView;
 @property (weak, nonatomic) IBOutlet OLRemoteImageCropper *imageCropView;
 @property (strong, nonatomic) OLPrintPhoto *imageDisplayed;
+@property(nullable, nonatomic, readonly, strong) UIView *containerView;
 @end
 
 @interface OLTShirtReviewViewController () <UICollectionViewDelegateFlowLayout>
@@ -32,6 +33,7 @@ const NSInteger kOLDrawerTagSizes = 40;
 @property (weak, nonatomic) IBOutlet UIView *drawer;
 @property (strong, nonatomic) NSArray<UIColor *> *availableColors;
 @property (strong, nonatomic) NSArray<NSString *> *availableSizes;
+@property (assign, nonatomic) BOOL showingBack;
 
 @end
 
@@ -296,6 +298,19 @@ const NSInteger kOLDrawerTagSizes = 40;
         
         [(UIBarButtonItem *)sender setEnabled:YES];
     }];
+}
+
+- (IBAction)onButtonProductFlip:(UIButton *)sender {
+    [UIView transitionWithView:self.containerView duration:0.5 options:UIViewAnimationOptionTransitionFlipFromRight animations:^{
+        if (self.showingBack){
+            self.showingBack = NO;
+            //Change view here
+        }
+        else{
+            self.showingBack = YES;
+            //Change view here
+        }
+    }completion:NULL];
 }
 
 @end
