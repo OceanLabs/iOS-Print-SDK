@@ -640,6 +640,12 @@ UINavigationControllerDelegate, OLUpsellViewControllerDelegate
         return nil;
     }
     
+    if (index == 0){
+        UIViewController *vc = [[UIViewController alloc] init];
+        vc.view.backgroundColor = [UIColor colorWithRed:0.918 green:0.910 blue:0.894 alpha:1.000];
+        return vc;
+    }
+    
     OLPhotobookPageContentViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLPhotobookPageViewController"];
     vc.pageIndex = index;
     vc.userSelectedPhotos = self.photobookPhotos;
