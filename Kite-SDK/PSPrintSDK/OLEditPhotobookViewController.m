@@ -208,7 +208,7 @@ UINavigationControllerDelegate>
             maxItem = indexPath.item;
         }
     }
-    if (!self.haveCachedCells && self.product.quantityToFulfillOrder > (maxItem+1) * 2){
+    if (!self.haveCachedCells && self.product.productTemplate.photobookSkeleton.numberOfPages > (maxItem+1) * 2){
         [self collectionView:self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:maxItem+1 inSection:kSectionPages]];
         [self collectionView:self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:maxItem+2 inSection:kSectionPages]];
         self.haveCachedCells = YES;
@@ -858,7 +858,7 @@ UINavigationControllerDelegate>
         return 1;
     }
     else{
-        return self.product.quantityToFulfillOrder / 2.0;
+        return self.product.productTemplate.photobookSkeleton.numberOfPages / 2.0;
     }
     
 }

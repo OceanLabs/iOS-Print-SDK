@@ -31,11 +31,11 @@
 
 @interface OLPhotobookPageLayout : NSObject
 
-@property (assign, nonatomic) NSInteger numberOfPhotos;
-
 /**
- *  Array of NSValues of CGRect. The values in the CGRect are relative. The number of NSValues in the array should match the value in numberOfPhotos.
+ *  Array of NSValues of CGRect. The values in the CGRect are relative. The number of NSValues in the array shows the number of photos.
  */
 @property (strong, nonatomic) NSArray<NSValue *> *positions;
+
+- (NSInteger)numberOfPhotos;
 
 @end

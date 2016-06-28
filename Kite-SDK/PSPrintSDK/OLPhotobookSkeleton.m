@@ -31,4 +31,17 @@
 
 @implementation OLPhotobookSkeleton
 
+- (NSInteger)numberOfPages{
+    return self.pages.count;
+}
+
+- (NSInteger)numberOfPhotos{
+    NSInteger photos = 0;
+    for (OLPhotobookPageLayout *page in self.pages){
+        photos += page.numberOfPhotos;
+    }
+    
+    return photos;
+}
+
 @end

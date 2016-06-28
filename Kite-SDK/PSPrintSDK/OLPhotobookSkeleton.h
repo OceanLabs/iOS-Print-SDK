@@ -34,4 +34,7 @@
 
 @property (strong, nonatomic) NSArray <OLPhotobookPageLayout *> *pages;
 
+- (NSInteger)numberOfPages;
+- (NSInteger)numberOfPhotos;
+
 @end

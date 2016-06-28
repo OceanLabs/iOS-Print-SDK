@@ -36,6 +36,8 @@
 #import "OLKiteTheme.h"
 #import "OLCountry.h"
 #import "OLKiteUtils.h"
+#import "OLPhotobookPageLayout.h"
+#import "OLPhotobookSkeleton.h"
 
 @interface OLProductTemplateSyncRequest ()
 @property (nonatomic, strong) OLBaseRequest *req;
@@ -200,6 +202,7 @@
                                 CGSize sizePx = CGSizeZero;
                                 NSString *classPhoto;
                                 NSArray *supportedOptions;
+                                OLPhotobookSkeleton *photobook;
                                 if (product){
                                     coverPhoto = [product[@"ios_sdk_cover_photo"] isKindOfClass:[NSString class]] ? product[@"ios_sdk_cover_photo"] : nil;
                                     
@@ -240,6 +243,16 @@
                                     if (borderArray){
                                         imageBorder = UIEdgeInsetsMake([borderArray[0] floatValue], [borderArray[3] floatValue], [borderArray[2] floatValue], [borderArray[1] floatValue]);
                                     }
+                                    
+                                    OLPhotobookPageLayout *pageLayout = [[OLPhotobookPageLayout alloc] init];
+                                    pageLayout.positions = @[[NSValue valueWithCGRect:CGRectMake(0, 0, 1, 1)]];
+                                    
+                                    OLPhotobookPageLayout *emptyPage = [[OLPhotobookPageLayout alloc] init];
+                                    emptyPage.positions = @[];
+                                    
+                                    photobook = [[OLPhotobookSkeleton alloc] init];
+                                    photobook.pages = @[emptyPage, pageLayout, pageLayout, pageLayout, pageLayout, emptyPage];
+                                    
                                     
                                     NSDictionary *sizeDict = [product[@"size"] isKindOfClass:[NSDictionary class]] ? product[@"size"] : nil;
                                     if (sizeDict){
@@ -307,6 +320,7 @@
                                     t.gridCountX = [gridCountX integerValue];
                                     t.gridCountY = [gridCountY integerValue];
                                     t.supportedOptions = supportedOptions;
+                                    t.photobookSkeleton = photobook;
                                     
                                     NSMutableArray <OLUpsellOffer *>*upsellOffersClean = [[NSMutableArray alloc] init];
                                     for (NSDictionary *offerDict in upsellOffers){

@@ -31,4 +31,8 @@
 
 @implementation OLPhotobookPageLayout
 
+- (NSInteger)numberOfPhotos{
+    return self.positions.count;
+}
+
 @end

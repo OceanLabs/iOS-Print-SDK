@@ -53,6 +53,8 @@
 #import "UIImage+ImageNamedInKiteBundle.h"
 #import "UIView+RoundRect.h"
 #import "OLUpsellViewController.h"
+#import "OLPhotobookSkeleton.h"
+#import "OLPhotobookPageLayout.h"
 
 #ifdef OL_KITE_AT_LEAST_IOS8
 #import "CTAssetsPickerController.h"
@@ -492,7 +494,16 @@ UINavigationControllerDelegate, OLUpsellViewControllerDelegate
 
 - (void)updatePagesLabel{
     int page = self.editingPageNumber ? [self.editingPageNumber intValue] : 0;
-    self.pagesLabel.text = [NSString stringWithFormat:@"%d-%d of %ld", page + 1, page + 2, (long)self.product.quantityToFulfillOrder];
+    
+    if (self.product.productTemplate.photobookSkeleton.pages[page].numberOfPhotos == 0){
+        self.pagesLabel.text = [NSString stringWithFormat:@"%d of %ld", page + 2, (long)self.product.quantityToFulfillOrder];
+    }
+    else if(self.product.productTemplate.photobookSkeleton.pages[page+1].numberOfPhotos == 0){
+        self.pagesLabel.text = [NSString stringWithFormat:@"%d of %ld", page + 1, (long)self.product.quantityToFulfillOrder];
+    }
+    else{
+        self.pagesLabel.text = [NSString stringWithFormat:@"%d-%d of %ld", page + 1, page + 2, (long)self.product.quantityToFulfillOrder];
+    }
 }
 
 - (void)ios7Back{
@@ -640,11 +651,11 @@ UINavigationControllerDelegate, OLUpsellViewControllerDelegate
         return nil;
     }
     
-    if (index == 0){
-        UIViewController *vc = [[UIViewController alloc] init];
-        vc.view.backgroundColor = [UIColor colorWithRed:0.918 green:0.910 blue:0.894 alpha:1.000];
-        return vc;
-    }
+//    if (self.product.productTemplate.photobookSkeleton.pages[index].numberOfPhotos == 0){
+//        OLPhotobookPageContentViewController *vc = [[OLPhotobookPageContentViewController alloc] init];
+//        vc.view.backgroundColor = [UIColor colorWithRed:0.918 green:0.910 blue:0.894 alpha:1.000];
+//        return vc;
+//    }
     
     OLPhotobookPageContentViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLPhotobookPageViewController"];
     vc.pageIndex = index;
@@ -1265,7 +1276,7 @@ UINavigationControllerDelegate, OLUpsellViewControllerDelegate
     if (completed){
         OLPhotobookPageContentViewController *vc1 = [pageViewController.viewControllers firstObject];
         OLPhotobookPageContentViewController *vc2 = [pageViewController.viewControllers lastObject];
-        self.pagesLabel.text = [NSString stringWithFormat:@"%ld-%ld of %ld", (long)vc1.pageIndex+1, (long)vc2.pageIndex+1, (long)self.product.quantityToFulfillOrder];
+        [self updatePagesLabel];
         
         [UIView animateWithDuration:kBookAnimationTime/2.0 animations:^{
             if ([(OLPhotobookPageContentViewController *)[previousViewControllers firstObject] pageIndex] < vc1.pageIndex){
