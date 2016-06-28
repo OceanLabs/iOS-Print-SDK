@@ -72,7 +72,10 @@
     NSCachedURLResponse *cachedResponse = [[NSURLCache sharedURLCache] cachedResponseForRequest:request];
     if (cachedResponse.data){
         if (handler){
-            handler([UIImage imageWithData:cachedResponse.data], nil);
+            UIImage *image = [UIImage imageWithData:cachedResponse.data];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                handler(image, nil);
+            });
         }
         return nil;
     }
