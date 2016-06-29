@@ -36,8 +36,8 @@
 #import "OLKiteTheme.h"
 #import "OLCountry.h"
 #import "OLKiteUtils.h"
-#import "OLPhotobookPageLayout.h"
-#import "OLPhotobookSkeleton.h"
+#import "OLPageLayout.h"
+#import "OLProductRepresentation.h"
 
 @interface OLProductTemplateSyncRequest ()
 @property (nonatomic, strong) OLBaseRequest *req;
@@ -202,7 +202,7 @@
                                 CGSize sizePx = CGSizeZero;
                                 NSString *classPhoto;
                                 NSArray *supportedOptions;
-                                OLPhotobookSkeleton *photobook;
+                                OLProductRepresentation *productRepresentation;
                                 if (product){
                                     coverPhoto = [product[@"ios_sdk_cover_photo"] isKindOfClass:[NSString class]] ? product[@"ios_sdk_cover_photo"] : nil;
                                     
@@ -244,14 +244,61 @@
                                         imageBorder = UIEdgeInsetsMake([borderArray[0] floatValue], [borderArray[3] floatValue], [borderArray[2] floatValue], [borderArray[1] floatValue]);
                                     }
                                     
-                                    OLPhotobookPageLayout *pageLayout = [[OLPhotobookPageLayout alloc] init];
-                                    pageLayout.positions = @[[NSValue valueWithCGRect:CGRectMake(0, 0, 1, 1)]];
+                                    NSDictionary *representationDict = [product[@"product_representation"] isKindOfClass:[NSDictionary class]] ? product[@"product_representation"] : nil;
                                     
-                                    OLPhotobookPageLayout *emptyPage = [[OLPhotobookPageLayout alloc] init];
-                                    emptyPage.positions = @[];
+                                    if (representationDict && [representationDict[@"layouts"] isKindOfClass:[NSDictionary class]] && [representationDict[@"pages"] isKindOfClass:[NSArray class]]){
+                                        
+                                        //Parse layouts
+                                        NSMutableDictionary *layouts = [[NSMutableDictionary alloc] init];
+                                        for (NSString *layoutKey in [representationDict[@"layouts"] allKeys]){
+                                            if (![representationDict[@"layouts"][layoutKey] isKindOfClass:[NSArray class]]){
+                                                continue;
+                                            }
+                                            
+                                            OLPageLayout *pageLayout = [[OLPageLayout alloc] init];
+                                            NSMutableArray *positions = [[NSMutableArray alloc] init];
+                                            for (NSDictionary *layoutInfoDict in representationDict[@"layouts"][layoutKey]){
+                                                if (![layoutInfoDict isKindOfClass:[NSDictionary class]]){
+                                                    continue;
+                                                }
+                                                [positions addObject:[NSValue valueWithCGRect:CGRectMake([layoutInfoDict[@"x"] doubleValue]/100.0, [layoutInfoDict[@"y"] doubleValue]/100.0, [layoutInfoDict[@"width"] doubleValue]/100.0, [layoutInfoDict[@"height"] doubleValue]/100.0)]];
+                                            }
+                                            pageLayout.positions = positions;
+                                            layouts[layoutKey] = pageLayout;
+                                        }
+                                        
+                                        //Parse pages
+                                        NSMutableArray *pages = [[NSMutableArray alloc] init];
+                                        for (NSDictionary *pageDict in representationDict[@"pages"]){
+                                            if (![pageDict isKindOfClass:[NSDictionary class]] || ![pageDict[@"allowed_layouts"] isKindOfClass:[NSArray class]]){
+                                                continue;
+                                            }
+                                            
+                                            for (int i = 0; i < [pageDict[@"min"] intValue]; i++){
+                                                OLPageLayout *layout = layouts[[pageDict[@"allowed_layouts"] firstObject]];
+                                                if (layout){
+                                                    [pages addObject:layout];
+                                                }
+                                            }
+                                        }
+                                        
+                                        productRepresentation = [[OLProductRepresentation alloc] init];
+                                        productRepresentation.pages = pages;
+                                    }
                                     
-                                    photobook = [[OLPhotobookSkeleton alloc] init];
-                                    photobook.pages = @[emptyPage, pageLayout, pageLayout, pageLayout, pageLayout, emptyPage];
+                                    //Fallback for older photobook products that don't yet have the new product representation
+                                    if (!productRepresentation && [uiClass isEqualToString:@"PHOTOBOOK"]){
+                                        OLPageLayout *pageLayout = [[OLPageLayout alloc] init];
+                                        pageLayout.positions = @[[NSValue valueWithCGRect:CGRectMake(0, 0, 1-imageBorder.top*2, 1-imageBorder.left*2)]];
+                                        
+                                        productRepresentation = [[OLProductRepresentation alloc] init];
+                                        NSMutableArray *pages = [[NSMutableArray alloc] init];
+                                        
+                                        for (int i = 0; i < [imagesPerSheet intValue]; i++){
+                                            [pages addObject:pageLayout];
+                                        }
+                                        productRepresentation.pages = pages;
+                                    }
                                     
                                     
                                     NSDictionary *sizeDict = [product[@"size"] isKindOfClass:[NSDictionary class]] ? product[@"size"] : nil;
@@ -320,7 +367,7 @@
                                     t.gridCountX = [gridCountX integerValue];
                                     t.gridCountY = [gridCountY integerValue];
                                     t.supportedOptions = supportedOptions;
-                                    t.photobookSkeleton = photobook;
+                                    t.productRepresentation = productRepresentation;
                                     
                                     NSMutableArray <OLUpsellOffer *>*upsellOffersClean = [[NSMutableArray alloc] init];
                                     for (NSDictionary *offerDict in upsellOffers){

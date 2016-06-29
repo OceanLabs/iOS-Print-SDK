@@ -28,11 +28,11 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "OLPhotobookPageLayout.h"
+#import "OLPageLayout.h"
 
-@interface OLPhotobookSkeleton : NSObject
+@interface OLProductRepresentation : NSObject
 
-@property (strong, nonatomic) NSArray <OLPhotobookPageLayout *> *pages;
+@property (strong, nonatomic) NSArray <OLPageLayout *> *pages;
 
 - (NSInteger)numberOfPages;
 - (NSInteger)numberOfPhotos;

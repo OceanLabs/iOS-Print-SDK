@@ -53,8 +53,8 @@
 #import "UIImage+ImageNamedInKiteBundle.h"
 #import "UIView+RoundRect.h"
 #import "OLUpsellViewController.h"
-#import "OLPhotobookSkeleton.h"
-#import "OLPhotobookPageLayout.h"
+#import "OLProductRepresentation.h"
+#import "OLPageLayout.h"
 #import "OLPhotobookPageBlankContentViewController.h"
 
 #ifdef OL_KITE_AT_LEAST_IOS8
@@ -503,14 +503,14 @@ UINavigationControllerDelegate, OLUpsellViewControllerDelegate
     }
     int displayPage = page+1;
     
-    if ([(OLPhotobookPageLayout *)self.product.productTemplate.photobookSkeleton.pages.firstObject numberOfPhotos] == 0&& page > 0){
+    if ([(OLPageLayout *)self.product.productTemplate.productRepresentation.pages.firstObject numberOfPhotos] == 0&& page > 0){
         displayPage--;
     }
     
-    if (self.product.productTemplate.photobookSkeleton.pages[page].numberOfPhotos == 0){
+    if (self.product.productTemplate.productRepresentation.pages[page].numberOfPhotos == 0){
         self.pagesLabel.text = [NSString stringWithFormat:@"%d of %ld", displayPage, (long)self.product.quantityToFulfillOrder];
     }
-    else if(self.product.productTemplate.photobookSkeleton.pages[page+1].numberOfPhotos == 0){
+    else if(self.product.productTemplate.productRepresentation.pages[page+1].numberOfPhotos == 0){
         self.pagesLabel.text = [NSString stringWithFormat:@"%d of %ld", displayPage, (long)self.product.quantityToFulfillOrder];
     }
     else{
@@ -665,7 +665,7 @@ UINavigationControllerDelegate, OLUpsellViewControllerDelegate
     
     OLPhotobookPageContentViewController *vc;
     
-    if (self.product.productTemplate.photobookSkeleton.pages[index].numberOfPhotos == 0){
+    if (self.product.productTemplate.productRepresentation.pages[index].numberOfPhotos == 0){
         vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLPhotobookPageBlankContentViewController"];        vc.view.backgroundColor = [UIColor colorWithRed:0.918 green:0.910 blue:0.894 alpha:1.000];
     }
     else{
@@ -824,14 +824,14 @@ UINavigationControllerDelegate, OLUpsellViewControllerDelegate
 - (UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerAfterViewController:(UIViewController *)viewController {
     OLPhotobookPageContentViewController *vc = (OLPhotobookPageContentViewController *) viewController;
     NSUInteger index = (vc.pageIndex + 1);
-    if (index >= self.product.productTemplate.photobookSkeleton.numberOfPages){
+    if (index >= self.product.productTemplate.productRepresentation.numberOfPages){
         return nil;
     }
     return [self viewControllerAtIndex:index];
 }
 
 - (NSInteger)presentationCountForPageViewController:(UIPageViewController *)pageViewController {
-    return self.product.productTemplate.photobookSkeleton.numberOfPages;
+    return self.product.productTemplate.productRepresentation.numberOfPages;
 }
 
 - (NSInteger)presentationIndexForPageViewController:(UIPageViewController *)pageViewController {
@@ -1470,7 +1470,7 @@ UINavigationControllerDelegate, OLUpsellViewControllerDelegate
         return YES;
     }
     OLPhotobookPageContentViewController *vc2 = [self.pageController.viewControllers lastObject];
-    return vc2.pageIndex == self.product.productTemplate.photobookSkeleton.numberOfPages - 1;
+    return vc2.pageIndex == self.product.productTemplate.productRepresentation.numberOfPages - 1;
 }
 
 - (void)openBook:(UIGestureRecognizer *)sender{
@@ -1481,7 +1481,7 @@ UINavigationControllerDelegate, OLUpsellViewControllerDelegate
     self.userHasOpenedBook = YES;
     
     [UIView animateWithDuration:kBookAnimationTime animations:^{
-        if (self.product.productTemplate.photobookSkeleton.pages.firstObject.numberOfPhotos != 0){
+        if (self.product.productTemplate.productRepresentation.pages.firstObject.numberOfPhotos != 0){
             self.containerView.transform = CGAffineTransformIdentity;
         }
     }completion:^(BOOL completed){}];

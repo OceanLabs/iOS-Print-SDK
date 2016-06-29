@@ -117,7 +117,7 @@ typedef enum {
 
 -(NSUInteger)quantityToFulfillOrder{
     if (self.productTemplate.templateUI == kOLTemplateUIPhotobook){
-        return self.productTemplate.photobookSkeleton.numberOfPhotos;
+        return self.productTemplate.productRepresentation.numberOfPhotos;
     }
     return MAX(self.productTemplate.quantityPerSheet, 1);
 }

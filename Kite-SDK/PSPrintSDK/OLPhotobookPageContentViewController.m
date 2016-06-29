@@ -33,6 +33,7 @@
 #import "OLProduct.h"
 #import "OLRemoteImageView.h"
 #import "UIImage+ImageNamedInKiteBundle.h"
+#import "OLPageLayout.h"
 
 @interface OLPhotobookPageContentViewController ()
 
@@ -52,8 +53,11 @@
 }
 
 - (void)setupImageViews{
-    [self.imageView.superview addConstraint:[NSLayoutConstraint constraintWithItem:self.imageView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self.imageView.superview attribute:NSLayoutAttributeHeight multiplier:1-self.product.productTemplate.imageBorder.top*2 constant:0]];
-    [self.imageView.superview addConstraint:[NSLayoutConstraint constraintWithItem:self.imageView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:self.imageView.superview attribute:NSLayoutAttributeWidth multiplier:1-self.product.productTemplate.imageBorder.left*2 constant:0]];
+    OLPageLayout *layout = self.product.productTemplate.productRepresentation.pages[self.pageIndex];
+    CGRect imageViewPosition = [layout.positions.firstObject CGRectValue];
+    
+    [self.imageView.superview addConstraint:[NSLayoutConstraint constraintWithItem:self.imageView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self.imageView.superview attribute:NSLayoutAttributeHeight multiplier:imageViewPosition.size.height constant:0]];
+    [self.imageView.superview addConstraint:[NSLayoutConstraint constraintWithItem:self.imageView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:self.imageView.superview attribute:NSLayoutAttributeWidth multiplier:imageViewPosition.size.width constant:0]];
     
     [self loadImageWithCompletionHandler:NULL];
 }
@@ -87,7 +91,7 @@
 }
 
 - (NSInteger)imageIndexForPoint:(CGPoint)p{
-    NSIndexSet *indexSet = [self.product.productTemplate.photobookSkeleton indexSetForPageNumber:self.pageIndex];
+    NSIndexSet *indexSet = [self.product.productTemplate.productRepresentation indexSetForPageNumber:self.pageIndex];
     if (indexSet.count > 0){
         return indexSet.firstIndex;
     }
@@ -116,7 +120,7 @@
 }
 
 - (void)loadImageWithCompletionHandler:(void(^)(void))handler{
-    NSInteger imageIndex = [self.product.productTemplate.photobookSkeleton indexSetForPageNumber:self.pageIndex].firstIndex;
+    NSInteger imageIndex = [self.product.productTemplate.productRepresentation indexSetForPageNumber:self.pageIndex].firstIndex;
     if (imageIndex >= self.userSelectedPhotos.count){
         return;
     }

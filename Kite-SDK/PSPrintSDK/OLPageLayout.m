@@ -27,13 +27,12 @@
 //  THE SOFTWARE.
 //
 
-#import <Foundation/Foundation.h>
-#import "OLPrintPhoto.h"
-#import "OLPhotobookSkeleton.h"
+#import "OLPageLayout.h"
 
-@interface OLPhotobook : NSObject
+@implementation OLPageLayout
 
-@property (strong, nonatomic) NSArray<OLPrintPhoto *> *photobookPhotos;
-@property (strong, nonatomic) OLPhotobookSkeleton *skeleton;
+- (NSInteger)numberOfPhotos{
+    return self.positions.count;
+}
 
 @end

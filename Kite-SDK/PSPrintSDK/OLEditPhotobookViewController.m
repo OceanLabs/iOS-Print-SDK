@@ -208,7 +208,7 @@ UINavigationControllerDelegate>
             maxItem = indexPath.item;
         }
     }
-    if (!self.haveCachedCells && self.product.productTemplate.photobookSkeleton.numberOfPages > (maxItem+1) * 2){
+    if (!self.haveCachedCells && self.product.productTemplate.productRepresentation.numberOfPages > (maxItem+1) * 2){
         [self collectionView:self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:maxItem+1 inSection:kSectionPages]];
         [self collectionView:self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:maxItem+2 inSection:kSectionPages]];
         self.haveCachedCells = YES;
@@ -457,13 +457,13 @@ UINavigationControllerDelegate>
     }
     
     if ([self.selectedIndexNumber integerValue] == self.longPressImageIndex){
-        [[self pageControllerForPageIndex:[self.product.productTemplate.photobookSkeleton pageIndexForImageIndex:[self.selectedIndexNumber integerValue]]] unhighlightImageAtIndex:[self.selectedIndexNumber integerValue]];
+        [[self pageControllerForPageIndex:[self.product.productTemplate.productRepresentation pageIndexForImageIndex:[self.selectedIndexNumber integerValue]]] unhighlightImageAtIndex:[self.selectedIndexNumber integerValue]];
         self.selectedIndexNumber = nil;
     }
     self.photobookPhotos[self.longPressImageIndex] = [NSNull null];
     [self updateUserSelectedPhotos];
     self.interactionPhotobook.photobookPhotos = self.photobookPhotos;
-    [[self pageControllerForPageIndex:[self.product.productTemplate.photobookSkeleton pageIndexForImageIndex:self.longPressImageIndex]] loadImageWithCompletionHandler:NULL];
+    [[self pageControllerForPageIndex:[self.product.productTemplate.productRepresentation pageIndexForImageIndex:self.longPressImageIndex]] loadImageWithCompletionHandler:NULL];
 }
 
 - (void)cropImage{
@@ -475,7 +475,7 @@ UINavigationControllerDelegate>
     }
     else{
         cropPhoto = self.photobookPhotos[self.longPressImageIndex];
-        imageView = [self pageControllerForPageIndex:[self.product.productTemplate.photobookSkeleton pageIndexForImageIndex:self.longPressImageIndex]].imageView;
+        imageView = [self pageControllerForPageIndex:[self.product.productTemplate.productRepresentation pageIndexForImageIndex:self.longPressImageIndex]].imageView;
     }
 #ifdef OL_KITE_OFFER_ADOBE
     [[AdobeUXAuthManager sharedManager] setAuthenticationParametersWithClientID:[OLKitePrintSDK adobeCreativeSDKClientID] clientSecret:[OLKitePrintSDK adobeCreativeSDKClientSecret] enableSignUp:true];
@@ -519,7 +519,7 @@ UINavigationControllerDelegate>
         imageView = self.interactionPhotobook.coverImageView;
     }
     else{
-        imageView = [self pageControllerForPageIndex:[self.product.productTemplate.photobookSkeleton pageIndexForImageIndex:self.longPressImageIndex]].imageView;
+        imageView = [self pageControllerForPageIndex:[self.product.productTemplate.productRepresentation pageIndexForImageIndex:self.longPressImageIndex]].imageView;
     }
     
     self.replacingImageNumber = [NSNumber numberWithInteger:self.longPressImageIndex];
@@ -590,15 +590,15 @@ UINavigationControllerDelegate>
         }
     }
     
-    OLPhotobookPageContentViewController *page = [self pageControllerForPageIndex:[self.product.productTemplate.photobookSkeleton pageIndexForImageIndex:tappedImageIndex]];
+    OLPhotobookPageContentViewController *page = [self pageControllerForPageIndex:[self.product.productTemplate.productRepresentation pageIndexForImageIndex:tappedImageIndex]];
     if (self.selectedIndexNumber && [self.selectedIndexNumber integerValue] == tappedImageIndex){ //deselect
-        [[self pageControllerForPageIndex:[self.product.productTemplate.photobookSkeleton pageIndexForImageIndex:[self.selectedIndexNumber integerValue]]] unhighlightImageAtIndex:tappedImageIndex];
+        [[self pageControllerForPageIndex:[self.product.productTemplate.productRepresentation pageIndexForImageIndex:[self.selectedIndexNumber integerValue]]] unhighlightImageAtIndex:tappedImageIndex];
         self.selectedIndexNumber = nil;
         self.animating = NO;
         [self photobook:photobook userDidLongPressOnImageWithIndex:tappedImageIndex sender:nil];
     }
     else if (self.selectedIndexNumber){ //swap
-        OLPhotobookPageContentViewController *selectedPage = [self pageControllerForPageIndex:[self.product.productTemplate.photobookSkeleton pageIndexForImageIndex:[self.selectedIndexNumber integerValue]]];
+        OLPhotobookPageContentViewController *selectedPage = [self pageControllerForPageIndex:[self.product.productTemplate.productRepresentation pageIndexForImageIndex:[self.selectedIndexNumber integerValue]]];
         OLPrintPhoto *printPhoto = [self.photobookPhotos objectAtIndex:tappedImageIndex];
         
         [page unhighlightImageAtIndex:tappedImageIndex];
@@ -753,7 +753,7 @@ UINavigationControllerDelegate>
         if (self.photobookPhotos[index] == (id)[NSNull null]){
             return;
         }
-        view = (OLPopupOptionsImageView *)[[self pageControllerForPageIndex:[self.product.productTemplate.photobookSkeleton pageIndexForImageIndex:index]] imageView];
+        view = (OLPopupOptionsImageView *)[[self pageControllerForPageIndex:[self.product.productTemplate.productRepresentation pageIndexForImageIndex:index]] imageView];
     }
     
     self.longPressImageIndex = index;
@@ -869,7 +869,7 @@ UINavigationControllerDelegate>
         return 1;
     }
     else{
-        return self.product.productTemplate.photobookSkeleton.numberOfPages / 2.0;
+        return self.product.productTemplate.productRepresentation.numberOfPages / 2.0;
     }
     
 }
@@ -913,7 +913,7 @@ UINavigationControllerDelegate>
         [self.photobookPhotos[self.longPressImageIndex] unloadImage];
         [self.photobookPhotos[self.longPressImageIndex] setAsset:[OLAsset assetWithImageAsJPEG:croppedImage]];
         
-        [[self pageControllerForPageIndex:[self.product.productTemplate.photobookSkeleton pageIndexForImageIndex:self.longPressImageIndex]] loadImageWithCompletionHandler:NULL];
+        [[self pageControllerForPageIndex:[self.product.productTemplate.productRepresentation pageIndexForImageIndex:self.longPressImageIndex]] loadImageWithCompletionHandler:NULL];
     }
     
     [cropper dismissViewControllerAnimated:YES completion:NULL];

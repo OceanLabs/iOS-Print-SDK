@@ -27,43 +27,15 @@
 //  THE SOFTWARE.
 //
 
-#import "OLPhotobookSkeleton.h"
+#import <Foundation/Foundation.h>
 
-@implementation OLPhotobookSkeleton
+@interface OLPageLayout : NSObject
 
-- (NSInteger)numberOfPages{
-    return self.pages.count;
-}
+/**
+ *  Array of NSValues of CGRect. The values in the CGRect are relative. The number of NSValues in the array shows the number of photos.
+ */
+@property (strong, nonatomic) NSArray<NSValue *> *positions;
 
-- (NSInteger)numberOfPhotos{
-    NSInteger photos = 0;
-    for (OLPhotobookPageLayout *page in self.pages){
-        photos += page.numberOfPhotos;
-    }
-    
-    return photos;
-}
-
-- (NSIndexSet *)indexSetForPageNumber:(NSInteger)pageNumber{
-    NSInteger startIndex = 0;
-    for (NSInteger i = 0; i < pageNumber; i++){
-        startIndex += self.pages[i].numberOfPhotos;
-    }
-    
-    return [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(startIndex, self.pages[pageNumber].numberOfPhotos)];
-}
-
-- (NSInteger)pageIndexForImageIndex:(NSInteger)imageIndex{
-    NSInteger imageCount = 0;
-    for (NSInteger i = 0; i < self.pages.count; i++){
-        imageCount += self.pages[i].numberOfPhotos;
-        if (imageCount > imageIndex){
-            return i;
-        }
-    }
-    
-    NSAssert(NO, @"Should not reach here");
-    return NSNotFound;
-}
+- (NSInteger)numberOfPhotos;
 
 @end
