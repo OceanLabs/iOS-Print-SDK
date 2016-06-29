@@ -36,5 +36,7 @@
 
 - (NSInteger)numberOfPages;
 - (NSInteger)numberOfPhotos;
+- (NSIndexSet *)indexSetForPageNumber:(NSInteger)pageNumber;
+- (NSInteger)pageIndexForImageIndex:(NSInteger)imageIndex;
 
 @end

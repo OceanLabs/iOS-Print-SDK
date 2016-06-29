@@ -55,6 +55,7 @@
 #import "OLUpsellViewController.h"
 #import "OLPhotobookSkeleton.h"
 #import "OLPhotobookPageLayout.h"
+#import "OLPhotobookPageBlankContentViewController.h"
 
 #ifdef OL_KITE_AT_LEAST_IOS8
 #import "CTAssetsPickerController.h"
@@ -494,15 +495,20 @@ UINavigationControllerDelegate, OLUpsellViewControllerDelegate
 
 - (void)updatePagesLabel{
     int page = self.editingPageNumber ? [self.editingPageNumber intValue] : 0;
+    int displayPage = page+1;
+    
+    if ([(OLPhotobookPageLayout *)self.product.productTemplate.photobookSkeleton.pages.firstObject numberOfPhotos] == 0&& page > 0){
+        displayPage--;
+    }
     
     if (self.product.productTemplate.photobookSkeleton.pages[page].numberOfPhotos == 0){
-        self.pagesLabel.text = [NSString stringWithFormat:@"%d of %ld", page + 2, (long)self.product.quantityToFulfillOrder];
+        self.pagesLabel.text = [NSString stringWithFormat:@"%d of %ld", displayPage, (long)self.product.quantityToFulfillOrder];
     }
     else if(self.product.productTemplate.photobookSkeleton.pages[page+1].numberOfPhotos == 0){
-        self.pagesLabel.text = [NSString stringWithFormat:@"%d of %ld", page + 1, (long)self.product.quantityToFulfillOrder];
+        self.pagesLabel.text = [NSString stringWithFormat:@"%d of %ld", displayPage, (long)self.product.quantityToFulfillOrder];
     }
     else{
-        self.pagesLabel.text = [NSString stringWithFormat:@"%d-%d of %ld", page + 1, page + 2, (long)self.product.quantityToFulfillOrder];
+        self.pagesLabel.text = [NSString stringWithFormat:@"%d-%d of %ld", displayPage, displayPage + 1, (long)self.product.quantityToFulfillOrder];
     }
 }
 
@@ -651,13 +657,14 @@ UINavigationControllerDelegate, OLUpsellViewControllerDelegate
         return nil;
     }
     
-//    if (self.product.productTemplate.photobookSkeleton.pages[index].numberOfPhotos == 0){
-//        OLPhotobookPageContentViewController *vc = [[OLPhotobookPageContentViewController alloc] init];
-//        vc.view.backgroundColor = [UIColor colorWithRed:0.918 green:0.910 blue:0.894 alpha:1.000];
-//        return vc;
-//    }
+    OLPhotobookPageContentViewController *vc;
     
-    OLPhotobookPageContentViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLPhotobookPageViewController"];
+    if (self.product.productTemplate.photobookSkeleton.pages[index].numberOfPhotos == 0){
+        vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLPhotobookPageBlankContentViewController"];        vc.view.backgroundColor = [UIColor colorWithRed:0.918 green:0.910 blue:0.894 alpha:1.000];
+    }
+    else{
+        vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLPhotobookPageViewController"];
+    }
     vc.pageIndex = index;
     vc.userSelectedPhotos = self.photobookPhotos;
     vc.product = self.product;
@@ -1076,7 +1083,7 @@ UINavigationControllerDelegate, OLUpsellViewControllerDelegate
     else{
         self.croppingImageIndex = 1;
     }
-    NSInteger index = [[self.pageController.viewControllers objectAtIndex:self.croppingImageIndex] pageIndex];
+    NSInteger index = [[self.pageController.viewControllers objectAtIndex:self.croppingImageIndex] pageIndex]; //TODO this could be problematic. Change to imageIndexForPoint:?
     
     if (self.editMode){
         OLPhotobookPageContentViewController *page = [self.pageController.viewControllers objectAtIndex:self.croppingImageIndex];
@@ -1275,7 +1282,6 @@ UINavigationControllerDelegate, OLUpsellViewControllerDelegate
     self.animating = NO;
     if (completed){
         OLPhotobookPageContentViewController *vc1 = [pageViewController.viewControllers firstObject];
-        OLPhotobookPageContentViewController *vc2 = [pageViewController.viewControllers lastObject];
         [self updatePagesLabel];
         
         [UIView animateWithDuration:kBookAnimationTime/2.0 animations:^{

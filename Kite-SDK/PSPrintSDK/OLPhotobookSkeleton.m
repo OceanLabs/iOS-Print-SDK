@@ -44,4 +44,26 @@
     return photos;
 }
 
+- (NSIndexSet *)indexSetForPageNumber:(NSInteger)pageNumber{
+    NSInteger startIndex = 0;
+    for (NSInteger i = 0; i < pageNumber; i++){
+        startIndex += self.pages[i].numberOfPhotos;
+    }
+    
+    return [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(startIndex, self.pages[pageNumber].numberOfPhotos)];
+}
+
+- (NSInteger)pageIndexForImageIndex:(NSInteger)imageIndex{
+    NSInteger imageCount = 0;
+    for (NSInteger i = 0; i < self.pages.count; i++){
+        imageCount += self.pages[i].numberOfPhotos;
+        if (imageCount > imageIndex){
+            return i;
+        }
+    }
+    
+    NSAssert(NO, @"Should not reach here");
+    return NSNotFound;
+}
+
 @end

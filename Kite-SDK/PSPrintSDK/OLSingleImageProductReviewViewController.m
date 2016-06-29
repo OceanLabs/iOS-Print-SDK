@@ -1310,12 +1310,13 @@ static BOOL hasMoved;
     [OLAnalytics trackPhotoProvider:@"Facebook" numberOfPhotosAdded:self.userSelectedPhotos.count - originalCount forProductName:self.product.productTemplate.name];
 #endif
     if (self.imagePicked){
+        __weak OLSingleImageProductReviewViewController *welf = self;
         [self.imagePicked setImageSize:[UIScreen mainScreen].bounds.size cropped:NO progress:NULL completionHandler:^(UIImage *image){
             dispatch_async(dispatch_get_main_queue(), ^{
-                self.imageCropView.image = image;
+                welf.imageCropView.image = image;
                 
                 if (self.userSelectedPhotos.count > 0){
-                    id view = [self.view viewWithTag:1010];
+                    id view = [welf.view viewWithTag:1010];
                     if ([view isKindOfClass:[UIActivityIndicatorView class]]){
                         [(UIActivityIndicatorView *)view stopAnimating];
                     }
@@ -1345,12 +1346,13 @@ static BOOL hasMoved;
     [self.userSelectedPhotos addObject:printPhoto];
     self.imagePicked = printPhoto;
     
+    __weak OLSingleImageProductReviewViewController *welf = self;
     [self.imagePicked setImageSize:[UIScreen mainScreen].bounds.size cropped:NO progress:NULL completionHandler:^(UIImage *image){
         dispatch_async(dispatch_get_main_queue(), ^{
-            self.imageCropView.image = image;
+            welf.imageCropView.image = image;
             
-            if (self.userSelectedPhotos.count > 0){
-                id view = [self.view viewWithTag:1010];
+            if (welf.userSelectedPhotos.count > 0){
+                id view = [welf.view viewWithTag:1010];
                 if ([view isKindOfClass:[UIActivityIndicatorView class]]){
                     [(UIActivityIndicatorView *)view stopAnimating];
                 }

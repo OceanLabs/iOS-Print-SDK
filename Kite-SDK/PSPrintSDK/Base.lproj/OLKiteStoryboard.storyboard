@@ -1387,6 +1387,92 @@ to rearrange the photos</string>
             </objects>
             <point key="canvasLocation" x="3750" y="-2130"/>
         </scene>
+        <!--Photobook Page Blank Content View Controller-->
+        <scene sceneID="fHu-Fx-0MW">
+            <objects>
+                <viewController storyboardIdentifier="OLPhotobookPageBlankContentViewController" id="5G7-Xp-kZW" customClass="OLPhotobookPageBlankContentViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="kDa-AY-Jhu"/>
+                        <viewControllerLayoutGuide type="bottom" id="UX9-Vj-eih"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="b4h-it-Bp4">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="page-shadow-right" translatesAutoresizingMaskIntoConstraints="NO" id="h94-GF-FnF">
+                                <rect key="frame" x="0.0" y="0.0" width="180" height="600"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="100" id="zEb-RY-hTj"/>
+                                </constraints>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="zEb-RY-hTj"/>
+                                    </mask>
+                                </variation>
+                            </imageView>
+                            <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="page-shadow-right" translatesAutoresizingMaskIntoConstraints="NO" id="9ba-wu-YOf">
+                                <rect key="frame" x="0.0" y="0.0" width="180" height="600"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="199" id="7Xa-cf-6eH"/>
+                                </constraints>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="7Xa-cf-6eH"/>
+                                    </mask>
+                                </variation>
+                            </imageView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="page-shadow-left" translatesAutoresizingMaskIntoConstraints="NO" id="WVD-OR-fAB">
+                                <rect key="frame" x="420" y="0.0" width="180" height="600"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="100" id="bIc-Dq-1vT"/>
+                                </constraints>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="bIc-Dq-1vT"/>
+                                    </mask>
+                                </variation>
+                            </imageView>
+                            <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="page-shadow-left" translatesAutoresizingMaskIntoConstraints="NO" id="ROG-Oe-UMZ">
+                                <rect key="frame" x="420" y="0.0" width="180" height="600"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" id="8nY-OZ-vcJ"/>
+                                </constraints>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="8nY-OZ-vcJ"/>
+                                    </mask>
+                                </variation>
+                            </imageView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="9ba-wu-YOf" firstAttribute="leading" secondItem="h94-GF-FnF" secondAttribute="leading" id="0AF-RH-b9F"/>
+                            <constraint firstItem="WVD-OR-fAB" firstAttribute="leading" secondItem="ROG-Oe-UMZ" secondAttribute="leading" id="2eT-r7-gCg"/>
+                            <constraint firstItem="h94-GF-FnF" firstAttribute="height" secondItem="b4h-it-Bp4" secondAttribute="height" id="3mG-Wc-3mP"/>
+                            <constraint firstItem="h94-GF-FnF" firstAttribute="top" secondItem="kDa-AY-Jhu" secondAttribute="bottom" constant="-20" placeholder="YES" id="4RF-DZ-pHR"/>
+                            <constraint firstItem="ROG-Oe-UMZ" firstAttribute="top" secondItem="kDa-AY-Jhu" secondAttribute="bottom" constant="-20" placeholder="YES" id="5JA-dk-ioc"/>
+                            <constraint firstItem="9ba-wu-YOf" firstAttribute="top" secondItem="h94-GF-FnF" secondAttribute="top" id="9K0-Zy-UBZ"/>
+                            <constraint firstItem="WVD-OR-fAB" firstAttribute="top" secondItem="ROG-Oe-UMZ" secondAttribute="top" id="B0W-0Z-YTG"/>
+                            <constraint firstItem="9ba-wu-YOf" firstAttribute="bottom" secondItem="h94-GF-FnF" secondAttribute="bottom" id="EzL-dz-eBI"/>
+                            <constraint firstItem="h94-GF-FnF" firstAttribute="leading" secondItem="b4h-it-Bp4" secondAttribute="leading" id="F67-r0-GOP"/>
+                            <constraint firstAttribute="trailing" secondItem="WVD-OR-fAB" secondAttribute="trailing" id="X8O-y0-Qlo"/>
+                            <constraint firstItem="WVD-OR-fAB" firstAttribute="trailing" secondItem="ROG-Oe-UMZ" secondAttribute="trailing" id="deC-K8-SeY"/>
+                            <constraint firstItem="h94-GF-FnF" firstAttribute="width" secondItem="b4h-it-Bp4" secondAttribute="width" multiplier="0.3" id="hTH-Zf-iII"/>
+                            <constraint firstItem="WVD-OR-fAB" firstAttribute="width" secondItem="b4h-it-Bp4" secondAttribute="width" multiplier="0.3" id="i1w-2J-FIj"/>
+                            <constraint firstItem="WVD-OR-fAB" firstAttribute="height" secondItem="b4h-it-Bp4" secondAttribute="height" id="ivI-t3-zWw"/>
+                            <constraint firstItem="WVD-OR-fAB" firstAttribute="bottom" secondItem="ROG-Oe-UMZ" secondAttribute="bottom" id="mLd-Qn-enR"/>
+                            <constraint firstItem="9ba-wu-YOf" firstAttribute="trailing" secondItem="h94-GF-FnF" secondAttribute="trailing" id="x4F-Y2-z5k"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="pageShadowLeft" destination="WVD-OR-fAB" id="3e8-I4-IlT"/>
+                        <outlet property="pageShadowRight" destination="h94-GF-FnF" id="9ju-Z9-2Ml"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Zbp-qJ-ahZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="4402" y="-2130"/>
+        </scene>
         <!--Product Home View Controller-->
         <scene sceneID="utb-1P-DTs">
             <objects>
