@@ -435,6 +435,17 @@ UINavigationControllerDelegate>
     self.nextButton.frame = headerFrame;
 }
 
+- (NSInteger)photobookPhotosCount{
+    NSInteger count = 0;
+    for (id object in self.photobookPhotos){
+        if (object != [NSNull null]){
+            count++;
+        }
+    }
+    
+    return count;
+}
+
 #pragma mark - Menu Actions
 
 - (void)deletePage{
@@ -1362,7 +1373,7 @@ UINavigationControllerDelegate>
     }
     
     NSInteger max = self.product.quantityToFulfillOrder;
-    NSInteger current = self.userSelectedPhotos.count + assets.count;
+    NSInteger current = [self photobookPhotosCount] + assets.count;
     if (self.addNewPhotosAtIndex == -1){
         max++;
     }
@@ -1457,7 +1468,7 @@ UINavigationControllerDelegate>
 
 - (BOOL)instagramImagePicker:(OLInstagramImagePickerController *)imagePicker shouldSelectImage:(OLInstagramImage *)image{
     NSInteger max = self.product.quantityToFulfillOrder;
-    NSInteger current = self.userSelectedPhotos.count + imagePicker.selected.count;
+    NSInteger current = [self photobookPhotosCount] + imagePicker.selected.count;
     if (self.addNewPhotosAtIndex == -1){
         max++;
     }
@@ -1550,7 +1561,7 @@ UINavigationControllerDelegate>
 
 - (BOOL)facebookImagePicker:(OLFacebookImagePickerController *)imagePicker shouldSelectImage:(OLFacebookImage *)image{
     NSInteger max = self.product.quantityToFulfillOrder;
-    NSInteger current = self.userSelectedPhotos.count + imagePicker.selected.count;
+    NSInteger current = [self photobookPhotosCount] + imagePicker.selected.count;
     if (self.addNewPhotosAtIndex == -1){
         max++;
     }

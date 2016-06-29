@@ -494,7 +494,13 @@ UINavigationControllerDelegate, OLUpsellViewControllerDelegate
 }
 
 - (void)updatePagesLabel{
-    int page = self.editingPageNumber ? [self.editingPageNumber intValue] : 0;
+    int page = 0;
+    if (self.editingPageNumber){
+        page = [self.editingPageNumber intValue];
+    }
+    else if (!self.editMode){
+        page = (int)[(OLPhotobookPageContentViewController *)self.pageController.viewControllers.firstObject pageIndex];
+    }
     int displayPage = page+1;
     
     if ([(OLPhotobookPageLayout *)self.product.productTemplate.photobookSkeleton.pages.firstObject numberOfPhotos] == 0&& page > 0){
@@ -672,6 +678,17 @@ UINavigationControllerDelegate, OLUpsellViewControllerDelegate
     return vc;
 }
 
+- (NSInteger)photobookPhotosCount{
+    NSInteger count = 0;
+    for (id object in self.photobookPhotos){
+        if (object != [NSNull null]){
+            count++;
+        }
+    }
+    
+    return count;
+}
+
 #pragma mark OLUpsellViewControllerDelegate
 
 - (void)userDidDeclineUpsell:(OLUpsellViewController *)vc{
@@ -807,14 +824,14 @@ UINavigationControllerDelegate, OLUpsellViewControllerDelegate
 - (UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerAfterViewController:(UIViewController *)viewController {
     OLPhotobookPageContentViewController *vc = (OLPhotobookPageContentViewController *) viewController;
     NSUInteger index = (vc.pageIndex + 1);
-    if (index >= self.photobookPhotos.count){
+    if (index >= self.product.productTemplate.photobookSkeleton.numberOfPages){
         return nil;
     }
     return [self viewControllerAtIndex:index];
 }
 
 - (NSInteger)presentationCountForPageViewController:(UIPageViewController *)pageViewController {
-    return self.photobookPhotos.count;
+    return self.product.productTemplate.photobookSkeleton.numberOfPages;
 }
 
 - (NSInteger)presentationIndexForPageViewController:(UIPageViewController *)pageViewController {
@@ -1083,11 +1100,15 @@ UINavigationControllerDelegate, OLUpsellViewControllerDelegate
     else{
         self.croppingImageIndex = 1;
     }
-    NSInteger index = [[self.pageController.viewControllers objectAtIndex:self.croppingImageIndex] pageIndex]; //TODO this could be problematic. Change to imageIndexForPoint:?
+    
+    OLPhotobookPageContentViewController *page = [self.pageController.viewControllers objectAtIndex:self.croppingImageIndex];
+    NSInteger index = [page imageIndexForPoint:[sender locationInView:page.view]];
+    
+    if (index == NSNotFound){
+        return;
+    }
     
     if (self.editMode){
-        OLPhotobookPageContentViewController *page = [self.pageController.viewControllers objectAtIndex:self.croppingImageIndex];
-        NSInteger index = [page imageIndexForPoint:[sender locationInView:page.view]];
         [self.photobookDelegate photobook:self userDidTapOnImageWithIndex:index];
         
         return;
@@ -1097,11 +1118,8 @@ UINavigationControllerDelegate, OLUpsellViewControllerDelegate
         [self addMorePhotosFromView:sender.view];
     }
     else{
-        OLPhotobookPageContentViewController *page = [self.pageController.viewControllers objectAtIndex:self.croppingImageIndex];
         UIImageView *imageView = [page imageView];
-
         self.croppingPrintPhoto = self.photobookPhotos[index];
-        
         [self.croppingPrintPhoto getImageWithProgress:NULL completion:^(UIImage *image){
             
 #ifdef OL_KITE_OFFER_ADOBE
@@ -1452,7 +1470,7 @@ UINavigationControllerDelegate, OLUpsellViewControllerDelegate
         return YES;
     }
     OLPhotobookPageContentViewController *vc2 = [self.pageController.viewControllers lastObject];
-    return vc2.pageIndex == self.photobookPhotos.count - 1;
+    return vc2.pageIndex == self.product.productTemplate.photobookSkeleton.numberOfPages - 1;
 }
 
 - (void)openBook:(UIGestureRecognizer *)sender{
@@ -1463,7 +1481,9 @@ UINavigationControllerDelegate, OLUpsellViewControllerDelegate
     self.userHasOpenedBook = YES;
     
     [UIView animateWithDuration:kBookAnimationTime animations:^{
-        self.containerView.transform = CGAffineTransformIdentity;
+        if (self.product.productTemplate.photobookSkeleton.pages.firstObject.numberOfPhotos != 0){
+            self.containerView.transform = CGAffineTransformIdentity;
+        }
     }completion:^(BOOL completed){}];
     MPFlipStyle style = sender.view.tag == kTagRight ? MPFlipStyleDefault : MPFlipStyleDirectionBackward;
     MPFlipTransition *flipTransition = [[MPFlipTransition alloc] initWithSourceView:self.bookCover destinationView:self.openbookView duration:kBookAnimationTime timingCurve:UIViewAnimationCurveEaseInOut completionAction:MPTransitionActionNone];
@@ -2045,7 +2065,7 @@ UINavigationControllerDelegate, OLUpsellViewControllerDelegate
     }
     
     NSInteger max = self.product.quantityToFulfillOrder;
-    NSInteger current = self.userSelectedPhotos.count + assets.count;
+    NSInteger current = [self photobookPhotosCount] + assets.count;
     if (self.addNewPhotosAtIndex == -1){
         max++;
     }
@@ -2126,7 +2146,7 @@ UINavigationControllerDelegate, OLUpsellViewControllerDelegate
 
 - (BOOL)instagramImagePicker:(OLInstagramImagePickerController *)imagePicker shouldSelectImage:(OLInstagramImage *)image{
     NSInteger max = self.product.quantityToFulfillOrder;
-    NSInteger current = self.userSelectedPhotos.count + imagePicker.selected.count;
+    NSInteger current = [self photobookPhotosCount] + imagePicker.selected.count;
     if (self.addNewPhotosAtIndex == -1){
         max++;
     }
@@ -2205,7 +2225,7 @@ UINavigationControllerDelegate, OLUpsellViewControllerDelegate
 
 - (BOOL)facebookImagePicker:(OLFacebookImagePickerController *)imagePicker shouldSelectImage:(OLFacebookImage *)image{
     NSInteger max = self.product.quantityToFulfillOrder;
-    NSInteger current = self.userSelectedPhotos.count + imagePicker.selected.count;
+    NSInteger current = [self photobookPhotosCount] + imagePicker.selected.count;
     if (self.addNewPhotosAtIndex == -1){
         max++;
     }

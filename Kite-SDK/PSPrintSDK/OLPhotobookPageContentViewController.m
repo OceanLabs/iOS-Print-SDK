@@ -87,7 +87,12 @@
 }
 
 - (NSInteger)imageIndexForPoint:(CGPoint)p{
-    return [self.product.productTemplate.photobookSkeleton indexSetForPageNumber:self.pageIndex].firstIndex;
+    NSIndexSet *indexSet = [self.product.productTemplate.photobookSkeleton indexSetForPageNumber:self.pageIndex];
+    if (indexSet.count > 0){
+        return indexSet.firstIndex;
+    }
+    
+    return NSNotFound;
 }
 
 - (void)unhighlightImageAtIndex:(NSInteger)index{
