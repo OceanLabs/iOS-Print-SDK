@@ -24,3 +24,8 @@ end
 target 'Kite-CI-Deploy' do
     shared_pods
 end
+
+target 'KitePrintSDKTests' do
+    shared_pods
+end
+
