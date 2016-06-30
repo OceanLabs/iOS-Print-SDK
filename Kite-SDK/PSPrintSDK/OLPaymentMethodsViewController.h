@@ -19,7 +19,7 @@ typedef enum {
 
 @protocol OLPaymentMethodsViewControllerDelegate <NSObject>
 
-- (void)paymentMethodsViewController:(OLPaymentMethodsViewController *)vc didFinishPickingPaymentMethod:(OLPaymentMethod)method;
+- (void)paymentMethodsViewController:(OLPaymentMethodsViewController *)vc didPickPaymentMethod:(OLPaymentMethod)method;
 
 @end
 

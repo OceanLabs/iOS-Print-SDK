@@ -1285,13 +1285,7 @@ to rearrange the photos</string>
                             </mask>
                         </variation>
                     </view>
-                    <navigationItem key="navigationItem" title="Payment Method" id="bHr-5B-zaJ">
-                        <barButtonItem key="rightBarButtonItem" systemItem="done" id="YGd-mL-Llp">
-                            <connections>
-                                <action selector="onBarButtonDoneTapped:" destination="UZd-jB-H9g" id="eNi-V9-qPN"/>
-                            </connections>
-                        </barButtonItem>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" title="Payment Method" id="bHr-5B-zaJ"/>
                     <connections>
                         <outlet property="collectionView" destination="65G-jP-BFB" id="Wz7-Dv-zox"/>
                     </connections>

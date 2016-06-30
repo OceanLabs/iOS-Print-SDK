@@ -28,6 +28,14 @@
 
 @implementation OLPaymentMethodsViewController
 
+- (void)setSelectedPaymentMethod:(OLPaymentMethod)selectedPaymentMethod{
+    _selectedPaymentMethod = selectedPaymentMethod;
+    
+    if ([self.delegate respondsToSelector:@selector(paymentMethodsViewController:didPickPaymentMethod:)]){
+        [self.delegate paymentMethodsViewController:self didPickPaymentMethod:selectedPaymentMethod];
+    }
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
 
@@ -192,15 +200,6 @@
     ccCaptureController.delegate = self;
     ccCaptureController.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
     [self presentViewController:ccCaptureController animated:YES completion:nil];
-}
-
-- (IBAction)onBarButtonDoneTapped:(UIBarButtonItem *)sender {
-    if ([self.delegate respondsToSelector:@selector(paymentMethodsViewController:didFinishPickingPaymentMethod:)]){
-        [self.delegate paymentMethodsViewController:self didFinishPickingPaymentMethod:self.selectedPaymentMethod];
-    }
-    else{
-        [self dismissViewControllerAnimated:YES completion:NULL];
-    }
 }
 
 

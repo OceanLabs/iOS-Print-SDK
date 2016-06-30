@@ -1550,9 +1550,8 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     vc.delegate = self;
     vc.selectedPaymentMethod = self.selectedPaymentMethod;
     
-    OLNavigationController *nvc = [[OLNavigationController alloc] initWithRootViewController:vc];
     
-    [self presentViewController:nvc animated:YES completion:NULL];
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
 
@@ -2040,10 +2039,9 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     [self dismissViewControllerAnimated:YES completion:NULL];
 }
 
-- (void)paymentMethodsViewController:(OLPaymentMethodsViewController *)vc didFinishPickingPaymentMethod:(OLPaymentMethod)method{
+- (void)paymentMethodsViewController:(OLPaymentMethodsViewController *)vc didPickPaymentMethod:(OLPaymentMethod)method{
     self.selectedPaymentMethod = method;
     [self updateSelectedPaymentMethodView];
-    [vc dismissViewControllerAnimated:YES completion:NULL];
 }
 
 #if __IPHONE_OS_VERSION_MIN_REQUIRED < 80000
