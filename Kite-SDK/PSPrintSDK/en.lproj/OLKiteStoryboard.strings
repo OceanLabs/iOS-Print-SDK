@@ -143,9 +143,6 @@
 /* Class = "UIButton"; normalTitle = "Turn Around"; ObjectID = "YIY-zM-rSd"; */
 "YIY-zM-rSd.normalTitle" = "Turn Around";
 
-/* Class = "UIButton"; normalTitle = "PayPal"; ObjectID = "Zg1-ja-X5c"; */
-"Zg1-ja-X5c.normalTitle" = "PayPal";
-
 /* Class = "UILabel"; text = "+"; ObjectID = "ZgO-Mf-5NM"; */
 "ZgO-Mf-5NM.text" = "+";
 
@@ -169,9 +166,6 @@
 
 /* Class = "UILabel"; text = "Alternatively type the following URL into your mobile browser's address bar"; ObjectID = "efn-xk-ZpI"; */
 "efn-xk-ZpI.text" = "Alternatively type the following URL into your mobile browser's address bar";
-
-/* Class = "UIButton"; normalTitle = "Credit Card"; ObjectID = "fHD-9P-h6H"; */
-"fHD-9P-h6H.normalTitle" = "Credit Card";
 
 /* Class = "UILabel"; text = "TEST ENVIRONMENT"; ObjectID = "gBc-WD-lqt"; */
 "gBc-WD-lqt.text" = "TEST ENVIRONMENT";

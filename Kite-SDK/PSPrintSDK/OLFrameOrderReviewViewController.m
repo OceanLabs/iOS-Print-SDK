@@ -93,7 +93,7 @@ CGFloat margin = 2;
     NSLog(@"Adding %lu duplicates to frame", (unsigned long)duplicatesToFillOrder);
 #endif
     
-    self.title = NSLocalizedString(@"Review", @"");
+    self.title = NSLocalizedStringFromTableInBundle(@"Review", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
 }
 
 - (void)onTapGestureThumbnailTapped:(UITapGestureRecognizer*)gestureRecognizer {
