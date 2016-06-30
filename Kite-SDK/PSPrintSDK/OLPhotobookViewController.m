@@ -257,10 +257,30 @@ UINavigationControllerDelegate, OLUpsellViewControllerDelegate
         [self.pageController setViewControllers:@[[self viewControllerAtIndex:pageIndex], [self viewControllerAtIndex:pageIndex + 1]] direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
     }
     else{
-        [self.pageController.viewControllers[0] setPageIndex:pageIndex];
-        [self.pageController.viewControllers[0] loadImageWithCompletionHandler:NULL];
-        [self.pageController.viewControllers[1] setPageIndex:pageIndex + 1];
-        [self.pageController.viewControllers[1] loadImageWithCompletionHandler:NULL];
+        for (OLPhotobookPageContentViewController *vc in self.pageController.viewControllers){
+            NSInteger index = [self.pageController.viewControllers indexOfObjectIdenticalTo:vc];
+            NSInteger numberOfImages = self.product.productTemplate.productRepresentation.pages[pageIndex+index].numberOfPhotos;
+            if (([vc isKindOfClass:[OLPhotobookPageContentViewController class]] && numberOfImages == 0) || ([vc isKindOfClass:[OLPhotobookPageBlankContentViewController class]] && numberOfImages == 1)){
+                OLPhotobookPageContentViewController *newVc;
+                if (self.product.productTemplate.productRepresentation.pages[pageIndex+index].numberOfPhotos == 0){
+                    newVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLPhotobookPageBlankContentViewController"];        newVc.view.backgroundColor = [UIColor colorWithRed:0.918 green:0.910 blue:0.894 alpha:1.000];
+                }
+                else{
+                    newVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLPhotobookPageViewController"];
+                }
+                newVc.pageIndex = pageIndex+index;
+                newVc.userSelectedPhotos = self.photobookPhotos;
+                newVc.product = self.product;
+                newVc.view.autoresizingMask = UIViewAutoresizingNone;
+                NSMutableArray *newArray = [NSMutableArray arrayWithArray:self.pageController.viewControllers];
+                newArray[index] = newVc;
+                [self.pageController setViewControllers:newArray direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:NULL];
+            }
+            else{
+                [vc setPageIndex:pageIndex+index];
+                [vc loadImageWithCompletionHandler:NULL];
+            }
+        }
     }
 }
 
