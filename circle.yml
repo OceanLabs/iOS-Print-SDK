@@ -1,0 +1,32 @@
+machine:
+  xcode:
+    version: 7.3
+  environment:
+    GYM_CODE_SIGNING_IDENTITY: "iPhone Distribution: Kite Tech LTD (L78L4U72YJ)"
+
+general:
+  branches:
+    ignore:
+    - dev
+  artifacts:
+    - "~/image.png"
+
+test:
+  override:
+    - export LC_CTYPE="en_US.UTF-8"
+    - export XCTOOL_FORCE_TTY="true"
+    - set -o pipefail && xcodebuild -workspace 'Kite-SDK/KitePrintSDK.xcworkspace' -scheme 'Kite-CI-Deploy' clean build test -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 6,OS=latest' CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY= PROVISIONING_PROFILE= GCC_INSTRUMENT_PROGRAM_FLOW_ARCS=YES GCC_GENERATE_TEST_COVERAGE_FILES=YES
+  post:
+    - bash <(curl -s https://codecov.io/bash)
+
+deployment:
+  beta_distribution:
+    branch: beta
+    commands:
+      - gym -w Kite-SDK/KitePrintSDK.xcworkspace -s Kite-CI-Deploy
+      - ipa distribute:crashlytics
+          --crashlytics_path Kite-SDK/Crashlytics.framework
+          --api_token    "$CRASHLYTICS_API_KEY"
+          --build_secret "$CRASHLYTICS_SECRET"
+          --groups "kite-testers"
+          --notifications YES

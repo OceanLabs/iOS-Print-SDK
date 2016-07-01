@@ -55,7 +55,11 @@
 
 #ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
 #import "OLCustomPhotoProvider.h"
-#import <KITAssetsPickerController.h>
+#ifdef COCOAPODS
+#import <KITAssetsPickerController/KITAssetsPickerController.h>
+#else
+#import "KITAssetsPickerController.h"
+#endif
 #endif
 
 #ifdef OL_KITE_OFFER_ADOBE
@@ -119,8 +123,8 @@ UINavigationControllerDelegate>
 @property (assign, nonatomic) BOOL rotating;
 @property (assign, nonatomic) NSInteger addNewPhotosAtIndex;
 @property (assign, nonatomic) NSInteger longPressImageIndex;
-@property (assign, nonatomic) NSNumber *replacingImageNumber;
-@property (assign, nonatomic) NSNumber *selectedIndexNumber;
+@property (strong, nonatomic) NSNumber *replacingImageNumber;
+@property (strong, nonatomic) NSNumber *selectedIndexNumber;
 @property (strong, nonatomic) NSArray *userSelectedPhotosCopy;
 @property (strong, nonatomic) NSMutableArray *photobookPhotos;
 @property (strong, nonatomic) OLPrintPhoto *coverPhoto;
@@ -131,6 +135,13 @@ UINavigationControllerDelegate>
 @end
 
 @implementation OLEditPhotobookViewController
+
+-(NSMutableArray *) userSelectedPhotos{
+    if (!_userSelectedPhotos){
+        _userSelectedPhotos = [[NSMutableArray alloc] init];
+    }
+    return _userSelectedPhotos;
+}
 
 - (void)setAnimating:(BOOL)animating{
     _animating = animating;
@@ -442,10 +453,6 @@ UINavigationControllerDelegate>
     [self updateUserSelectedPhotos];
     self.interactionPhotobook.photobookPhotos = self.photobookPhotos;
     [[self findPageForImageIndex:self.longPressImageIndex] loadImageWithCompletionHandler:NULL];
-}
-
-- (void)addPage{
-    
 }
 
 - (void)cropImage{
@@ -1057,12 +1064,16 @@ UINavigationControllerDelegate>
 #endif
     __block UIViewController *picker;
     __block Class assetClass;
+#ifdef OL_KITE_CI_DEPLOY
+    if (NO){}
+#else
     if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8 || !definesAtLeastiOS8){
         picker = [[OLAssetsPickerController alloc] init];
         [(OLAssetsPickerController *)picker setAssetsFilter:[ALAssetsFilter allPhotos]];
         assetClass = [ALAsset class];
         ((OLAssetsPickerController *)picker).delegate = self;
     }
+#endif
 #ifdef OL_KITE_AT_LEAST_IOS8
     else{
         if ([PHPhotoLibrary authorizationStatus] == PHAuthorizationStatusNotDetermined){
@@ -1091,7 +1102,6 @@ UINavigationControllerDelegate>
         }
     }
 #endif
-    
     if (picker){
         picker.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
         [self presentViewController:picker animated:YES completion:nil];
@@ -1147,9 +1157,14 @@ UINavigationControllerDelegate>
     NSMutableArray *photoArray = [[NSMutableArray alloc] initWithCapacity:array.count];
     
     for (id object in array) {
-        OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
-        printPhoto.asset = object;
-        [photoArray addObject:printPhoto];
+        if ([object isKindOfClass:[OLPrintPhoto class]]){
+            [photoArray addObject:object];
+        }
+        else{
+            OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
+            printPhoto.asset = object;
+            [photoArray addObject:printPhoto];
+        }
     }
     
 //    // First remove any that are not returned.
@@ -1224,9 +1239,13 @@ UINavigationControllerDelegate>
 - (void)assetsPickerController:(id)picker didFinishPickingAssets:(NSArray *)assets {
     NSInteger originalCount = self.userSelectedPhotos.count;
     Class assetClass;
+#ifdef OL_KITE_CI_DEPLOY
+    if (NO){}
+#else
     if ([picker isKindOfClass:[OLAssetsPickerController class]]){
         assetClass = [ALAsset class];
     }
+#endif
 #ifdef OL_KITE_AT_LEAST_IOS8
     else if ([picker isKindOfClass:[CTAssetsPickerController class]]){
         assetClass = [PHAsset class];
@@ -1236,12 +1255,16 @@ UINavigationControllerDelegate>
     else if ([picker isKindOfClass:[KITAssetsPickerController class]]){
         NSMutableArray *olAssets = [[NSMutableArray alloc] init];
         for (id<OLAssetDataSource> asset in assets){
-            if ([asset respondsToSelector:@selector(dataWithCompletionHandler:)]){
+            if ([asset isKindOfClass:[OLPrintPhoto class]]){
+                [olAssets addObject:asset];
+                assetClass = [assets.lastObject class];
+            }
+            else if ([asset respondsToSelector:@selector(dataWithCompletionHandler:)]){
                 [olAssets addObject:[OLAsset assetWithDataSource:asset]];
+                assetClass = [[olAssets.lastObject dataSource] class];
             }
         }
         assets = olAssets;
-        assetClass = [[assets.firstObject dataSource] class];
     }
 #endif
     
@@ -1257,8 +1280,13 @@ UINavigationControllerDelegate>
     }
     
     if (self.addNewPhotosAtIndex == -1){
-        self.coverPhoto = [[OLPrintPhoto alloc] init];
-        self.coverPhoto.asset = [assets firstObject];
+        if ([assets.firstObject isKindOfClass:[OLPrintPhoto class]]){
+            self.coverPhoto = assets.firstObject;
+        }
+        else{
+            self.coverPhoto = [[OLPrintPhoto alloc] init];
+            self.coverPhoto.asset = [assets firstObject];
+        }
         assets = [assets subarrayWithRange:NSMakeRange(1, assets.count - 1)];
         self.addNewPhotosAtIndex = 0;
         
@@ -1556,6 +1584,7 @@ UINavigationControllerDelegate>
 }
 #endif
 
+#if __IPHONE_OS_VERSION_MIN_REQUIRED < 80000
 #pragma mark UIActionSheet Delegate (only used on iOS 7)
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex{
@@ -1584,7 +1613,9 @@ UINavigationControllerDelegate>
         }
     }
 }
+#endif
 
+#if __IPHONE_OS_VERSION_MIN_REQUIRED < 80000
 #pragma mark - Autorotate and Orientation Methods
 // Currently here to disable landscape orientations and rotation on iOS 7. When support is dropped, these can be deleted.
 
@@ -1605,5 +1636,6 @@ UINavigationControllerDelegate>
         return UIInterfaceOrientationMaskPortrait;
     }
 }
+#endif
 
 @end

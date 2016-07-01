@@ -95,7 +95,7 @@
     return (OLAssetsPickerController *)self.navigationController.parentViewController;
 }
 
-
+#if __IPHONE_OS_VERSION_MIN_REQUIRED < 80000
 #pragma mark - Rotation
 
 - (BOOL)shouldAutorotate
@@ -107,6 +107,7 @@
 {
     return UIInterfaceOrientationMaskAllButUpsideDown;
 }
+#endif
 
 
 #pragma mark - Setup

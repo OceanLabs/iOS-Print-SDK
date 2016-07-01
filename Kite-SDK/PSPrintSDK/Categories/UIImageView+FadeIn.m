@@ -27,39 +27,63 @@
 //  THE SOFTWARE.
 //
 
+#import "OLImageDownloader.h"
+
 #import "UIImageView+FadeIn.h"
-#import "UIImageView+WebCache.h"
-#include <sys/time.h>
+#import "OLImageDownloader.h"
+#import "OLPrintPhoto.h"
+#import "objc/runtime.h"
+
+static char tasksKey;
 
 @implementation UIImageView (FadeIn)
 - (void)setAndFadeInImageWithURL:(NSURL *)url {
-    [self setAndFadeInImageWithURL:url placeholder:nil];
+    [self setAndFadeInImageWithURL:url placeholder:nil completionHandler:NULL];
 }
 
-- (void)setAndFadeInImageWithURL:(NSURL *)url placeholder:(UIImage *)placeholder {
-    struct timeval t;
-    gettimeofday(&t, NULL);
-    long msec = t.tv_sec * 1000 + t.tv_usec / 1000;
+- (void)setAndFadeInImageWithURL:(NSURL *)url placeholder:(UIImage *)placeholder{
+    [self setAndFadeInImageWithURL:url placeholder:placeholder completionHandler:NULL];
+}
+
+- (void)setAndFadeInImageWithURL:(NSURL *)url placeholder:(UIImage *)placeholder completionHandler:(void(^)())handler{
+    for (id key in self.tasks.allKeys){
+        if (![key isEqual:url]){
+            [self.tasks[key] cancel];
+        }
+    }
     
     self.alpha = 0;
-    __weak UIImageView *weakImageView = self;
-    
-    [self sd_setImageWithURL:url placeholderImage:placeholder completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
-        struct timeval t;
-        gettimeofday(&t, NULL);
-        long elapsedTimeMillis = (t.tv_sec * 1000 + t.tv_usec / 1000) - msec;
-        
-        if (cacheType == SDImageCacheTypeNone || elapsedTimeMillis > 10) {
-            weakImageView.alpha = 0;
-            [UIView beginAnimations:@"fadeIn" context:nil];
-            [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
-            [UIView setAnimationDuration:0.3];
-            weakImageView.alpha = 1;
-            [UIView commitAnimations];
-        } else {
-            weakImageView.alpha = 1;
-        }
-    }];
-    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSURLSessionTask *task = [[OLImageDownloader sharedInstance] downloadImageAtURL:url withCompletionHandler:^(UIImage *image, NSError *error){
+            if ([self.tasks[url] state] == NSURLSessionTaskStateCanceling){
+                [self.tasks removeObjectForKey:url];
+                return;
+            }
+            [self.tasks removeObjectForKey:url];
+            UIImage *resizedImage = [OLPrintPhoto imageWithImage:image scaledToSize:[UIScreen mainScreen].bounds.size];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                self.image = resizedImage;
+                [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+                    self.alpha = 1;
+                }completion:^(BOOL finished){
+                    if (handler){
+                        handler();
+                    }
+                }];
+            });
+        }];
+        self.tasks[url] = task;
+    });
 }
+
+- (NSMutableDictionary *)tasks{
+    NSMutableDictionary *tasks = objc_getAssociatedObject(self, &tasksKey);
+    if (tasks){
+        return tasks;
+    }
+    tasks = [[NSMutableDictionary alloc] init];
+    objc_setAssociatedObject(self, &tasksKey, tasks, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    return tasks;
+}
+
 @end

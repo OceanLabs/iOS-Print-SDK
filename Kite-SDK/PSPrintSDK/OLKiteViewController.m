@@ -45,12 +45,6 @@
 #import "UIImage+ColorAtPixel.h"
 #import "OLKiteUtils.h"
 
-#ifdef COCOAPODS
-#import <SDWebImage/SDImageCache.h>
-#else
-#import "SDImageCache.h"
-#endif
-
 
 #ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
 #import "OLCustomPhotoProvider.h"
@@ -75,7 +69,7 @@ static CGFloat fadeTime = 0.3;
 #endif
 
 
-@property (assign, nonatomic) BOOL useDarkTheme; //XXX: Delete this when exposed in header
+//@property (assign, nonatomic) BOOL useDarkTheme; //XXX: Delete this when exposed in header
 
 // Because template sync happens in the constructor it may complete before the OLKiteViewController has appeared. In such a case where sync does
 // complete first we make a note to immediately transition to the appropriate view when the OLKiteViewController does appear:
@@ -101,6 +95,9 @@ static CGFloat fadeTime = 0.3;
 
 @end
 
+@class KITCustomAssetPickerController;
+@class KITAssetCollectionDataSource;
+
 @implementation OLKiteViewController
 
 - (void)awakeFromNib{
@@ -124,32 +121,32 @@ static CGFloat fadeTime = 0.3;
     [self.printOrder saveOrder];
 }
 
-- (void)setUseDarkTheme:(BOOL)useDarkTheme{
-    _useDarkTheme = useDarkTheme;
-    [OLKiteABTesting sharedInstance].darkTheme = useDarkTheme;
-}
+//- (void)setUseDarkTheme:(BOOL)useDarkTheme{
+//    _useDarkTheme = useDarkTheme;
+//    [OLKiteABTesting sharedInstance].darkTheme = useDarkTheme;
+//}
 
-- (BOOL)prefersStatusBarHidden {
-    BOOL hidden = self.useDarkTheme;
-    
-    if ([self respondsToSelector:@selector(traitCollection)]){
-        if (self.traitCollection.verticalSizeClass == UIUserInterfaceSizeClassCompact && self.view.frame.size.height < self.view.frame.size.width){
-            hidden |= YES;
-        }
-    }
-    
-    return hidden;
-}
+//- (BOOL)prefersStatusBarHidden {
+//    BOOL hidden = self.useDarkTheme;
+//    
+//    if ([self respondsToSelector:@selector(traitCollection)]){
+//        if (self.traitCollection.verticalSizeClass == UIUserInterfaceSizeClassCompact && self.view.frame.size.height < self.view.frame.size.width){
+//            hidden |= YES;
+//        }
+//    }
+//    
+//    return hidden;
+//}
 
-- (UIStatusBarStyle)preferredStatusBarStyle{
-    if (self.childViewControllers.count == 0){
-        return self.useDarkTheme ? UIStatusBarStyleLightContent : UIStatusBarStyleDefault;
-    }
-    return [[self.childViewControllers firstObject] preferredStatusBarStyle];
-}
+//- (UIStatusBarStyle)preferredStatusBarStyle{
+//    if (self.childViewControllers.count == 0){
+//        return self.useDarkTheme ? UIStatusBarStyleLightContent : UIStatusBarStyleDefault;
+//    }
+//    return [[self.childViewControllers firstObject] preferredStatusBarStyle];
+//}
 
 -(NSMutableArray *) userSelectedPhotos{
-    if (!_userSelectedPhotos){
+    if (!_userSelectedPhotos || _userSelectedPhotos.count == 0){
         NSMutableArray *mutableUserSelectedPhotos = [[NSMutableArray alloc] init];
         for (id asset in self.assets){
             OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
@@ -176,6 +173,7 @@ static CGFloat fadeTime = 0.3;
     NSBundle *currentBundle = [NSBundle bundleForClass:[OLKiteViewController class]];
     if ((self = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:currentBundle] instantiateViewControllerWithIdentifier:@"KiteViewController"])) {
         self.assets = assets;
+        self.printOrder.userData = info;
     }
     [OLKiteABTesting sharedInstance].launchedWithPrintOrder = NO;
     
@@ -187,39 +185,39 @@ static CGFloat fadeTime = 0.3;
     NSBundle *currentBundle = [NSBundle bundleForClass:[OLKiteViewController class]];
     if ((self = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:currentBundle] instantiateViewControllerWithIdentifier:@"KiteViewController"])) {
         self.printOrder = printOrder;
+        self.printOrder.userData = info;
         self.assets = [[printOrder.jobs firstObject] assetsForUploading];
         [OLKiteABTesting sharedInstance].launchedWithPrintOrder = printOrder != nil;
     }
     return self;
 }
 
-#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
 - (void)addCustomPhotoProviderWithCollections:(NSArray <id<KITAssetCollectionDataSource>>*_Nonnull)collections name:(NSString *_Nonnull)name icon:(UIImage *_Nullable)image{
+#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
     if (!self.customImageProviders){
         self.customImageProviders = [[NSMutableArray<OLCustomPhotoProvider *> alloc] init];
     }
     [self.customImageProviders addObject:[[OLCustomPhotoProvider alloc] initWithCollections:collections name:name icon:image]];
+#endif
 }
 
 - (void)addCustomPhotoProviderWithViewController:(UIViewController<KITCustomAssetPickerController> *_Nonnull)vc name:(NSString *_Nonnull)name icon:(UIImage *_Nullable)icon{
+#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
     if (!self.customImageProviders){
         self.customImageProviders = [[NSMutableArray<OLCustomPhotoProvider *> alloc] init];
     }
     [self.customImageProviders addObject:[[OLCustomPhotoProvider alloc] initWithController:vc name:name icon:icon]];
-}
 #endif
+}
 
 -(void)viewDidLoad {
     [super viewDidLoad];
     
-    if (self.useDarkTheme){
-        self.navigationBar.barTintColor = [UIColor blackColor];
-        self.navigationBar.tintColor = [UIColor grayColor];
-        self.navigationBar.barStyle = UIBarStyleBlackTranslucent;
-    }
-    
-    [SDImageCache sharedImageCache].maxMemoryCountLimit = 1;
-    [[NSURLCache sharedURLCache] removeAllCachedResponses];
+//    if (self.useDarkTheme){
+//        self.navigationBar.barTintColor = [UIColor blackColor];
+//        self.navigationBar.tintColor = [UIColor grayColor];
+//        self.navigationBar.barStyle = UIBarStyleBlackTranslucent;
+//    }
     
     if (!self.navigationController){
         self.navigationBar.hidden = NO;
@@ -352,7 +350,6 @@ static CGFloat fadeTime = 0.3;
             [vc safePerformSelector:@selector(setKiteDelegate:) withObject:welf.delegate];
             [vc safePerformSelector:@selector(setProduct:) withObject:product];
             [vc safePerformSelector:@selector(setUserSelectedPhotos:) withObject:welf.userSelectedPhotos];
-            [vc.navigationItem.rightBarButtonItem setTitle:NSLocalizedString(@"Next", @"")];
             if (self.navigationController.viewControllers.count <= 1){
                 UINavigationController *nvc = [[OLNavigationController alloc] initWithRootViewController:vc];
                 vc.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:welf action:@selector(dismiss)];
@@ -477,6 +474,7 @@ static CGFloat fadeTime = 0.3;
     return [(UINavigationController *)self.childViewControllers.firstObject viewControllers];
 }
 
+#if __IPHONE_OS_VERSION_MIN_REQUIRED < 80000
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
     if (alertView.tag == kTagTemplateSyncFailAlertView) {
         if (buttonIndex == 0){
@@ -489,6 +487,7 @@ static CGFloat fadeTime = 0.3;
         [self dismiss];
     }
 }
+#endif
 
 + (NSString *)storyboardIdentifierForGroupSelected:(OLProductGroup *)group{
     if (group.products.count > 1){
@@ -503,6 +502,7 @@ static CGFloat fadeTime = 0.3;
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
+#if __IPHONE_OS_VERSION_MIN_REQUIRED < 80000
 #pragma mark - Autorotate and Orientation Methods
 // Currently here to disable landscape orientations and rotation on iOS 7. When support is dropped, these can be deleted.
 
@@ -523,5 +523,6 @@ static CGFloat fadeTime = 0.3;
         return UIInterfaceOrientationMaskPortrait;
     }
 }
+#endif
 
 @end

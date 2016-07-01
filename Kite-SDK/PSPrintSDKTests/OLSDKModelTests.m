@@ -10,9 +10,7 @@
 #import "ViewController.h"
 #import "NSString+Formatting.h"
 #import "OLKitePrintSDK.h"
-#ifdef OL_KITE_OFFER_PAYPAL
-#import <PayPal-iOS-SDK/PayPalMobile.h>
-#endif
+#import "OLProductGroup.h"
 
 @interface ViewController (Private)
 - (NSString *)liveKey;
@@ -20,9 +18,10 @@
 @end
 
 @interface OLKitePrintSDK (Private)
-
+#ifdef OL_OFFER_JUDOPAY
 + (void)setUseJudoPayForGBP:(BOOL)use;
 + (BOOL)useJudoPayForGBP;
+#endif
 + (void)setCacheTemplates:(BOOL)cache;
 + (BOOL)cacheTemplates;
 + (NSString *_Nonnull)paypalEnvironment;
@@ -133,9 +132,10 @@
     XCTAssert([[OLKitePrintSDK paypalEnvironment] isEqualToString:PayPalEnvironmentSandbox], @"PayPal environment fail");
     XCTAssert([OLKitePrintSDK paypalClientId] && ![[OLKitePrintSDK paypalClientId] isEqualToString:@""], @"No PayPal client ID");
     XCTAssert([OLKitePrintSDK stripePublishableKey] && ![[OLKitePrintSDK stripePublishableKey] isEqualToString:@""], @"Stripe key fail");
-    
+#ifdef OL_OFFER_JUDOPAY
     [OLKitePrintSDK setUseJudoPayForGBP:NO];
     XCTAssert(![OLKitePrintSDK useJudoPayForGBP], @"Judopay fail");
+#endif
     
     [OLKitePrintSDK setCacheTemplates:NO];
     XCTAssert(![OLKitePrintSDK cacheTemplates], @"Cache templates fail");
@@ -184,6 +184,20 @@
     
     XCTAssert([asset1 isEqual:asset2], @"OLAssets should be equal");
     XCTAssert([asset1 hash] == [asset2 hash], @"OLAsset hashes should be equal");
+}
+
+- (void)testPrintJobProductName{
+    id<OLPrintJob> job = [OLPrintJob printJobWithTemplateId:@"squares" images:@[]];
+    XCTAssert([job.productName isEqualToString:[OLProductTemplate templateWithId:@"squares"].name]);
+    
+    job = [OLPrintJob photobookWithTemplateId:@"photobook_small_portrait" OLAssets:@[] frontCoverOLAsset:nil backCoverOLAsset:nil];
+    XCTAssert([job.productName isEqualToString:[OLProductTemplate templateWithId:@"photobook_small_portrait"].name]);
+}
+
+- (void)testCreditCardExpiryFormat{
+    NSString *s = @"1020";
+    s = [NSString stringByFormattingCreditCardExpiry:s];
+    XCTAssert([s isEqualToString:@"10/20"]);
 }
 
 @end

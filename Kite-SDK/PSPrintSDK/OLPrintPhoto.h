@@ -49,6 +49,7 @@ typedef enum {
 - (void)getImageWithProgress:(OLImageEditorImageGetImageProgressHandler)progressHandler completion:(OLImageEditorImageGetImageCompletionHandler)completionHandler;
 - (void)unloadImage;
 + (void)calcScreenScaleForTraitCollection:(UITraitCollection *)traitCollection;
++ (UIImage*)imageWithImage:(UIImage*) sourceImage scaledToSize:(CGSize) i_size;
 - (BOOL)isEdited;
 
 @property (nonatomic, assign, readonly) PrintPhotoAssetType type;

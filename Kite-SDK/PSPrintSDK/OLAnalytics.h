@@ -89,6 +89,9 @@ static NSString *const kOLAnalyticsError = @"Error";
 + (void)trackContinueShoppingButtonPressed:(OLPrintOrder *)printOrder;
 + (void)trackShippingScreenHitBackForOrder:(OLPrintOrder *)printOrder;
 + (void)trackShippingScreenViewedForOrder:(OLPrintOrder *)printOrder variant:(NSString *)variant showPhoneEntryField:(BOOL)showPhoneEntryField;
++ (void)trackChooseAddressScreenViewed;
++ (void)trackAddAddressScreenViewed;
++ (void)trackSearchAddressScreenViewed;
 + (void)trackPaymentScreenViewedForOrder:(OLPrintOrder *)printOrder applePayIsAvailable:(NSString *)applePayIsAvailable;
 + (void)trackPaymentScreenHitBackForOrder:(OLPrintOrder *)printOrder applePayIsAvailable:(NSString *)applePayIsAvailable;
 + (void)trackPaymentScreenHitItemQtyUpForItem:(id<OLPrintJob>)item inOrder:(OLPrintOrder *)printOrder applePayIsAvailable:(NSString *)applePayIsAvailable;
@@ -108,6 +111,10 @@ static NSString *const kOLAnalyticsError = @"Error";
 + (void)trackBasketIconTappedWithNumberBadged:(NSInteger)number;
 + (void)trackOrderSubmission:(OLPrintOrder *)printOrder;
 + (void)trackQualityInfoScreenViewed;
+
+// upsell events
++ (void)trackUpsellShown:(BOOL)shown;
++ (void)trackUpsellDismissed:(BOOL)optedIn;
 
 + (void)incrementLaunchSDKCount;
 + (void)setExtraInfo:(NSDictionary *)info;

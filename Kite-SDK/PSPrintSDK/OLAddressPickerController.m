@@ -39,17 +39,17 @@
 
 @dynamic delegate;
 
-- (BOOL)prefersStatusBarHidden {
-    BOOL hidden = [OLKiteABTesting sharedInstance].darkTheme;
-    
-    if ([self respondsToSelector:@selector(traitCollection)]){
-        if (self.traitCollection.verticalSizeClass == UIUserInterfaceSizeClassCompact && self.view.frame.size.height < self.view.frame.size.width){
-            hidden |= YES;
-        }
-    }
-    
-    return hidden;
-}
+//- (BOOL)prefersStatusBarHidden {
+//    BOOL hidden = [OLKiteABTesting sharedInstance].darkTheme;
+//    
+//    if ([self respondsToSelector:@selector(traitCollection)]){
+//        if (self.traitCollection.verticalSizeClass == UIUserInterfaceSizeClassCompact && self.view.frame.size.height < self.view.frame.size.width){
+//            hidden |= YES;
+//        }
+//    }
+//    
+//    return hidden;
+//}
 
 - (id)init {
     OLAddressSelectionViewController *vc = [[OLAddressSelectionViewController alloc] init];
@@ -100,6 +100,7 @@
     [self.delegate addressPickerDidCancelPicking:self];
 }
 
+#if __IPHONE_OS_VERSION_MIN_REQUIRED < 80000
 #pragma mark - Autorotate and Orientation Methods
 // Currently here to disable landscape orientations and rotation on iOS 7. When support is dropped, these can be deleted.
 
@@ -120,5 +121,6 @@
         return UIInterfaceOrientationMaskPortrait;
     }
 }
+#endif
 
 @end

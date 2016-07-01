@@ -28,6 +28,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "OLKiteTheme.h"
 
 static NSString *const kOLKiteThemeHeaderLogoImageURL = @"themeLogoImageURL";
 static NSString *const kOLKiteThemeCheckoutProgress1 = @"themeCheckoutProgress1";
@@ -56,10 +57,6 @@ static NSString *const kOLKiteThemeSupportEmail = @"themeSupportEmail";
 @property (assign, nonatomic, readonly) BOOL allowsMultipleRecipients;
 
 @property (strong, nonatomic, readonly) NSString *headerLogoURL;
-@property (strong, nonatomic, readonly) NSString *checkoutProgress1URL;
-@property (strong, nonatomic, readonly) NSString *checkoutProgress2URL;
-@property (strong, nonatomic, readonly) NSString *checkoutProgress1BgURL;
-@property (strong, nonatomic, readonly) NSString *checkoutProgress2BgURL;
 @property (strong, nonatomic, readonly) NSString *receiptSuccessURL;
 @property (strong, nonatomic, readonly) NSString *receiptFailureURL;
 @property (strong, nonatomic, readonly) NSString *receiptSuccessBgURL;
@@ -67,12 +64,14 @@ static NSString *const kOLKiteThemeSupportEmail = @"themeSupportEmail";
 @property (strong, nonatomic, readonly) NSString *supportEmail;
 
 @property (strong, nonatomic) NSDictionary *userConfig;
-@property (assign, nonatomic) BOOL darkTheme;
+@property (strong, nonatomic) OLKiteTheme *theme;
+@property (strong, nonatomic) NSArray *paypalSupportedCurrencies;
+//@property (assign, nonatomic) BOOL darkTheme;
 
 + (instancetype)sharedInstance;
 - (void)fetchRemotePlistsWithCompletionHandler:(void(^)())handler;
 - (void)prefetchRemoteImages;
-- (UIColor *)darkThemeColor1;
+//- (UIColor *)darkThemeColor1;
 - (void)setupABTestVariants;
 
 @end

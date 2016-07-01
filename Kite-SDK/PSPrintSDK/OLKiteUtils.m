@@ -314,7 +314,18 @@
 + (void)registerDefaultsWithURL:(NSURL *)url
                         success:(void (^)(NSDictionary *defaults))success
                         failure:(void (^)(NSError *error))failure{
-    NSURLSessionDataTask *downloadTask = [[NSURLSession sharedSession]
+    NSURLRequest *request = [[NSURLRequest alloc] initWithURL:url];
+    
+    NSCachedURLResponse *cachedResponse = [[NSURLCache sharedURLCache] cachedResponseForRequest:request];
+    if (cachedResponse.data){
+        [[NSURLCache sharedURLCache] removeCachedResponseForRequest:request];
+    }
+    
+    NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
+    configuration.requestCachePolicy = NSURLRequestReloadIgnoringLocalCacheData;
+    NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration delegate:nil delegateQueue:nil];
+    
+    NSURLSessionDataTask *downloadTask = [session
                                           dataTaskWithURL:url completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
                                               if (error){
                                                   failure(error);
@@ -330,6 +341,7 @@
                                               }
                                           }];
     [downloadTask resume];
+    [session finishTasksAndInvalidate];
 }
 
 @end

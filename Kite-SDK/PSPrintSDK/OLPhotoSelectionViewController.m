@@ -27,20 +27,17 @@
 //  THE SOFTWARE.
 //
 
-#ifdef COCOAPODS
-#import <UIColor-HexString/UIColor+HexString.h>
-#else
-#import "UIColor+HexString.h"
-#endif
-
 #import "OLPhotoSelectionViewController.h"
-#import "OLPhotoSelectionButton.h"
 #import "OLPrintPhoto.h"
 #import "OLOrderReviewViewController.h"
 
 #ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
 #import "OLCustomPhotoProvider.h"
-#import <KITAssetsPickerController.h>
+#ifdef COCOAPODS
+#import <KITAssetsPickerController/KITAssetsPickerController.h>
+#else
+#import "KITAssetsPickerController.h"
+#endif
 #endif
 
 #ifdef OL_KITE_AT_LEAST_IOS8
@@ -71,7 +68,6 @@
 #import "OLKitePrintSDK.h"
 #import "OLKiteUtils.h"
 #import "OLOrderReviewViewController.h"
-#import "OLPhotoSelectionButton.h"
 #import "OLPhotoSelectionViewController.h"
 #import "OLPrintJob.h"
 #import "OLPrintPhoto.h"
@@ -86,6 +82,7 @@
 #import "OLQRCodeUploadViewController.h"
 #import "OLURLDataSource.h"
 #import "OLNavigationController.h"
+#import "OLUpsellViewController.h"
 
 #ifdef OL_KITE_OFFER_ADOBE
 #import <AdobeCreativeSDKImage/AdobeCreativeSDKImage.h>
@@ -96,7 +93,9 @@ NSInteger OLPhotoSelectionMargin = 0;
 
 #define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
 
+#if __IPHONE_OS_VERSION_MIN_REQUIRED < 80000
 static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
+#endif
 
 @interface OLKitePrintSDK (Private)
 #ifdef OL_KITE_OFFER_ADOBE
@@ -137,21 +136,23 @@ UIViewControllerPreviewingDelegate, OLScrollCropViewControllerDelegate,
 #ifdef OL_KITE_OFFER_ADOBE
 AdobeUXImageEditorViewControllerDelegate,
 #endif
-UIActionSheetDelegate>
+UIActionSheetDelegate, OLUpsellViewControllerDelegate>
 
 @property (assign, nonatomic) CGSize rotationSize;
-@property (nonatomic, strong) OLAssetsPickerController *picker;
 @property (nonatomic, weak) IBOutlet UIButton *buttonNext;
 @property (nonatomic, weak) IBOutlet UICollectionView *collectionView;
 @property (strong, nonatomic) NSMutableArray *userDisabledPhotos;
 @property (strong, nonatomic) NSMutableDictionary *indexPathsToRemoveDict;
 @property (strong, nonatomic) UIVisualEffectView *visualEffectView;
 @property (weak, nonatomic) IBOutlet UIView *clearButtonContainerView;
-@property (strong, nonatomic) IBOutlet OLPhotoSelectionButton *galleryButton;
 @property (nonatomic, strong) UITapGestureRecognizer *tapBehindQRUploadModalGestureRecognizer;
+@property (weak, nonatomic) IBOutlet UIView *upsellHintView;
 
 @property (weak, nonatomic) OLPrintPhoto *editingPrintPhoto;
 @property (weak, nonatomic) IBOutlet UIView *addPhotosHintView;
+
+@property (assign, nonatomic) NSInteger sectionsForUpsell;
+@property (weak, nonatomic) IBOutlet UIButton *addPhotosButton;
 
 @end
 
@@ -161,7 +162,23 @@ UIActionSheetDelegate>
 #endif
 @property (strong, nonatomic) OLPrintOrder *printOrder;
 - (void)dismiss;
+@end
 
+@interface OLPrintOrder ()
+- (BOOL)hasOfferIdBeenUsed:(NSUInteger)identifier;
+@end
+
+@interface OLProductPrintJob ()
+@property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*declinedOffers;
+@property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*acceptedOffers;
+@property (strong, nonatomic) OLUpsellOffer *redeemedOffer;
+@end
+
+@interface OLProduct ()
+@property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*declinedOffers;
+@property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*acceptedOffers;
+@property (strong, nonatomic) OLUpsellOffer *redeemedOffer;
+- (BOOL)hasOfferIdBeenUsed:(NSUInteger)identifier;
 @end
 
 @implementation OLPhotoSelectionViewController
@@ -193,12 +210,22 @@ UIActionSheetDelegate>
     [self.collectionView registerClass:[UICollectionReusableView class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"headerView"];
     
     [self onUserSelectedPhotoCountChange];
+    
+    self.addPhotosHintView.layer.masksToBounds = NO;
+    self.addPhotosHintView.layer.shadowOffset = CGSizeMake(5, 5);
+    self.addPhotosHintView.layer.shadowRadius = 5;
+    self.addPhotosHintView.layer.shadowOpacity = 0.3;
 }
 
 - (void)viewDidLayoutSubviews{
     [super viewDidLayoutSubviews];
     
-    self.collectionView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
+    CGFloat sectionHeight = [self collectionView:self.collectionView layout:self.collectionView.collectionViewLayout sizeForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]].height * ceil((CGFloat)self.product.quantityToFulfillOrder / [self numberOfCellsPerRow]);
+    sectionHeight += [self collectionView:self.collectionView layout:self.collectionView.collectionViewLayout referenceSizeForHeaderInSection:0].height;
+    CGFloat whitespaceHeight = MAX(0, self.collectionView.frame.size.height - sectionHeight);
+    self.collectionView.contentInset = UIEdgeInsetsMake(self.collectionView.contentInset.top, self.collectionView.contentInset.left, self.collectionView.contentInset.bottom + whitespaceHeight, self.collectionView.contentInset.right);
+    
+    self.collectionView.contentInset = UIEdgeInsetsMake(0, 0, MAX(self.view.frame.size.height - self.buttonNext.frame.origin.y + 5, whitespaceHeight), 0);
 }
 
 - (void)viewWillAppear:(BOOL)animated{
@@ -229,25 +256,13 @@ UIActionSheetDelegate>
 - (void)viewDidDisappear:(BOOL)animated{
     [super viewDidDisappear:animated];
     
+    self.upsellHintView.alpha = 0;
+    
 #ifndef OL_NO_ANALYTICS
     if (!self.navigationController){
         [OLAnalytics trackPhotoSelectionScreenHitBack:self.product.productTemplate.name];
     }
 #endif
-}
-
-- (UIImage *)imageWithColor:(UIColor *)color {
-    CGRect rect = CGRectMake(0.0f, 0.0f, 1.0f, 1.0f);
-    UIGraphicsBeginImageContext(rect.size);
-    CGContextRef context = UIGraphicsGetCurrentContext();
-    
-    CGContextSetFillColorWithColor(context, [color CGColor]);
-    CGContextFillRect(context, rect);
-    
-    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    
-    return image;
 }
 
 - (void)onUserSelectedPhotoCountChange {
@@ -275,7 +290,7 @@ UIActionSheetDelegate>
 }
 
 - (void)updateTitleBasedOnSelectedPhotoQuanitity {
-    NSTimeInterval delay = 0.35;
+    NSTimeInterval delay = 1;
     NSTimeInterval duration = 0.3;
     if (self.userSelectedPhotos.count > 0 && self.addPhotosHintView.alpha >= 0.9f) {
         self.addPhotosHintView.alpha = 1;
@@ -296,7 +311,7 @@ UIActionSheetDelegate>
         if (self.product.quantityToFulfillOrder > 1){
             NSUInteger numOrders = 1 + (MAX(0, self.userSelectedPhotos.count - 1 + [self totalNumberOfExtras]) / self.product.quantityToFulfillOrder);
             NSUInteger quanityToFulfilOrder = numOrders * self.product.quantityToFulfillOrder;
-           self.title = [NSString stringWithFormat:@"%lu / %lu", (unsigned long)self.userSelectedPhotos.count - self.userDisabledPhotos.count + [self totalNumberOfExtras], (unsigned long)quanityToFulfilOrder];
+            self.title = [NSString stringWithFormat:@"%lu / %lu", (unsigned long)self.userSelectedPhotos.count - self.userDisabledPhotos.count + [self totalNumberOfExtras], (unsigned long)quanityToFulfilOrder];
         }
         else{
             self.title = [NSString stringWithFormat:@"%lu", (unsigned long)self.userSelectedPhotos.count - self.userDisabledPhotos.count];
@@ -306,14 +321,12 @@ UIActionSheetDelegate>
     if ([self.userDisabledPhotos count] > 0){
         [UIView animateKeyframesWithDuration:0.15 delay:0 options:UIViewKeyframeAnimationOptionBeginFromCurrentState | UIViewAnimationOptionCurveLinear animations:^{
             self.clearButtonContainerView.transform = CGAffineTransformMakeTranslation(0, -self.clearButtonContainerView.frame.size.height);
-            self.collectionView.contentInset = UIEdgeInsetsMake(self.collectionView.contentInset.top, self.collectionView.contentInset.left, self.collectionView.contentInset.bottom + self.clearButtonContainerView.frame.size.height, self.collectionView.contentInset.left);
         }completion:NULL];
     }
     else{
         if (self.clearButtonContainerView.transform.ty != 0){
             [UIView animateKeyframesWithDuration:0.15 delay:0 options:UIViewKeyframeAnimationOptionBeginFromCurrentState | UIViewAnimationOptionCurveLinear animations:^{
                 self.clearButtonContainerView.transform = CGAffineTransformIdentity;
-                self.collectionView.contentInset = UIEdgeInsetsMake(self.collectionView.contentInset.top, self.collectionView.contentInset.left, 0, self.collectionView.contentInset.left);
             }completion:NULL];
         }
     }
@@ -323,9 +336,14 @@ UIActionSheetDelegate>
     NSMutableArray *photoArray = [[NSMutableArray alloc] initWithCapacity:array.count];
     
     for (id object in array) {
-        OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
-        printPhoto.asset = object;
-        [photoArray addObject:printPhoto];
+        if ([object isKindOfClass:[OLPrintPhoto class]]){
+            [photoArray addObject:object];
+        }
+        else{
+            OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
+            printPhoto.asset = object;
+            [photoArray addObject:printPhoto];
+        }
     }
     
     // First remove any that are not returned.
@@ -390,7 +408,7 @@ UIActionSheetDelegate>
         if ([object.asset isKindOfClass:[OLAsset class]] && [object.asset dataSource]){
             [array addObject:[object.asset dataSource]];
         }
-        else if (![object.asset isKindOfClass:[OLAsset class]]){
+        else if (![object.asset isKindOfClass:[OLAsset class]] && object.asset){
             [array addObject:object.asset];
         }
     }
@@ -489,6 +507,13 @@ UIActionSheetDelegate>
 #pragma mark - Actions
 
 - (IBAction)onButtonAddPhotosClicked:(id)sender {
+    if (self.upsellHintView.alpha != 0){
+        NSTimeInterval duration = 0.3;
+        [UIView animateWithDuration:duration delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
+            self.upsellHintView.alpha = 0;
+        } completion:^(BOOL finished) {}];
+    }
+    
     NSInteger numberOfProviders = 0;
 #ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
     NSInteger numberOfCustomProviders = [OLKiteUtils kiteVcForViewController:self].customImageProviders.count;
@@ -528,7 +553,7 @@ UIActionSheetDelegate>
                 }]];
             }
             if ([OLKiteUtils qrCodeUploadEnabled]) {
-                [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Upload from your phone", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
+                [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Transfer from your phone", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
                     [self showQRCodeImagePicker];
                 }]];
             }
@@ -620,12 +645,16 @@ UIActionSheetDelegate>
 #endif
     __block UIViewController *picker;
     __block Class assetClass;
+#ifdef OL_KITE_CI_DEPLOY
+    if (NO){}
+#else
     if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8 || !definesAtLeastiOS8){
         picker = [[OLAssetsPickerController alloc] init];
         [(OLAssetsPickerController *)picker setAssetsFilter:[ALAssetsFilter allPhotos]];
         assetClass = [ALAsset class];
         ((OLAssetsPickerController *)picker).delegate = self;
     }
+#endif
 #ifdef OL_KITE_AT_LEAST_IOS8
     else{
         if ([PHPhotoLibrary authorizationStatus] == PHAuthorizationStatusNotDetermined){
@@ -663,7 +692,6 @@ UIActionSheetDelegate>
         }
     }
 #endif
-    
     if (picker){
         NSArray *allAssets = [[self createAssetArray] mutableCopy];
         NSMutableArray *alAssets = [[NSMutableArray alloc] init];
@@ -799,9 +827,13 @@ UIActionSheetDelegate>
 - (void)assetsPickerController:(id)picker didFinishPickingAssets:(NSArray *)assets {
     NSInteger originalCount = self.userSelectedPhotos.count;
     Class assetClass;
+#ifdef OL_KITE_CI_DEPLOY
+    if (NO){}
+#else
     if ([picker isKindOfClass:[OLAssetsPickerController class]]){
         assetClass = [ALAsset class];
     }
+#endif
 #ifdef OL_KITE_AT_LEAST_IOS8
     else if ([picker isKindOfClass:[CTAssetsPickerController class]]){
         assetClass = [PHAsset class];
@@ -811,12 +843,16 @@ UIActionSheetDelegate>
     else if ([picker isKindOfClass:[KITAssetsPickerController class]]){
         NSMutableArray *olAssets = [[NSMutableArray alloc] init];
         for (id<OLAssetDataSource> asset in assets){
-            if ([asset respondsToSelector:@selector(dataWithCompletionHandler:)]){
+            if ([asset isKindOfClass:[OLPrintPhoto class]]){
+                [olAssets addObject:asset];
+                assetClass = [assets.lastObject class];
+            }
+            else if ([asset respondsToSelector:@selector(dataWithCompletionHandler:)]){
                 [olAssets addObject:[OLAsset assetWithDataSource:asset]];
+                assetClass = [[olAssets.lastObject dataSource] class];
             }
         }
         assets = olAssets;
-        assetClass = [[assets.firstObject dataSource] class];
     }
 #endif
     [self populateArrayWithNewArray:assets dataType:assetClass];
@@ -826,12 +862,14 @@ UIActionSheetDelegate>
 #endif
 }
 
+#ifndef OL_KITE_CI_DEPLOY
 - (BOOL)assetsPickerController:(OLAssetsPickerController *)picker shouldShowAssetsGroup:(ALAssetsGroup *)group{
     if (group.numberOfAssets == 0){
         return NO;
     }
     return YES;
 }
+#endif
 
 #ifdef OL_KITE_AT_LEAST_IOS8
 - (void)assetsPickerController:(CTAssetsPickerController *)picker didDeSelectAsset:(PHAsset *)asset{
@@ -881,9 +919,13 @@ UIActionSheetDelegate>
     }
     
     Class assetClass;
+#ifdef OL_KITE_CI_DEPLOY
+    if (NO){}
+#else
     if ([picker isKindOfClass:[OLAssetsPickerController class]]){
         assetClass = [ALAsset class];
     }
+#endif
 #ifdef OL_KITE_AT_LEAST_IOS8
     else if ([picker isKindOfClass:[CTAssetsPickerController class]]){
         assetClass = [PHAsset class];
@@ -934,6 +976,7 @@ UIActionSheetDelegate>
     return result;
 }
 
+#ifndef OL_KITE_CI_DEPLOY
 - (BOOL)assetsPickerController:(OLAssetsPickerController *)picker shouldShowAsset:(id)asset{
     NSString *fileName = [[[asset defaultRepresentation] filename] lowercaseString];
     if (!([fileName hasSuffix:@".jpg"] || [fileName hasSuffix:@".jpeg"] || [fileName hasSuffix:@"png"] || [fileName hasSuffix:@"tiff"])) {
@@ -941,6 +984,7 @@ UIActionSheetDelegate>
     }
     return YES;
 }
+#endif
 
 #ifdef OL_KITE_OFFER_INSTAGRAM
 #pragma mark - OLInstagramImagePickerControllerDelegate Methods
@@ -1089,12 +1133,12 @@ UIActionSheetDelegate>
         removedImagesCount += [self.indexPathsToRemoveDict[n] count];
     }
     NSInteger finalNumberOfPhotos = self.userSelectedPhotos.count;
-    return MAX(ceil(finalNumberOfPhotos / (double)self.product.quantityToFulfillOrder), 1);
+    return MAX(MAX(ceil(finalNumberOfPhotos / (double)self.product.quantityToFulfillOrder), 1), self.sectionsForUpsell);
 }
 
 - (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath{
     UICollectionReusableView *cell = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"headerView" forIndexPath:indexPath];
-    cell.backgroundColor = [UIColor colorWithHexString:@"#ECEFF2"];
+    cell.backgroundColor = [UIColor colorWithRed:0.925 green:0.937 blue:0.949 alpha:1.000];
     
     UILabel *label = (UILabel *)[cell viewWithTag:77];
     if (!label){
@@ -1252,7 +1296,7 @@ UIActionSheetDelegate>
     }
     
     NSInteger skipAtNewLine = [self numberOfCellsPerRow] % 2 == 0  && indexPath.item / [self numberOfCellsPerRow] % 2 == 0 ? 1 : 0;
-    imageView.backgroundColor = (indexPath.item + skipAtNewLine) % 2 == 0 ? [UIColor colorWithHexString:@"#e6e9ed"] : [UIColor colorWithHexString:@"#dce0e5"];
+    imageView.backgroundColor = (indexPath.item + skipAtNewLine) % 2 == 0 ? [UIColor colorWithRed:0.902 green:0.914 blue:0.929 alpha:1.000] : [UIColor colorWithRed:0.863 green:0.878 blue:0.898 alpha:1.000];
     
     if (imageIndex < self.userSelectedPhotos.count) {
         OLPrintPhoto *photo = self.userSelectedPhotos[indexPath.row + indexPath.section * self.product.quantityToFulfillOrder];
@@ -1279,6 +1323,13 @@ UIActionSheetDelegate>
 #pragma mark - UICollectionViewDelegate Methods
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
+    if (self.upsellHintView.alpha != 0){
+        NSTimeInterval duration = 0.3;
+        [UIView animateWithDuration:duration delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
+            self.upsellHintView.alpha = 0;
+        } completion:^(BOOL finished) {}];
+    }
+    
     id photo;
     NSInteger photoIndex = indexPath.row + indexPath.section * self.product.quantityToFulfillOrder;
     if (photoIndex < [self.userSelectedPhotos count]){
@@ -1407,10 +1458,152 @@ UIActionSheetDelegate>
     return YES;
 }
 
+- (void)userDidDeclineUpsell:(OLUpsellViewController *)vc{
+    [self.product.declinedOffers addObject:vc.offer];
+    [vc dismissViewControllerAnimated:NO completion:^{
+        [self doSegueToOrderPreview];
+    }];
+}
+
+- (id<OLPrintJob>)addItemToBasketWithTemplateId:(NSString *)templateId{
+    OLProduct *offerProduct = [OLProduct productWithTemplateId:templateId];
+    NSMutableArray *assets = [[NSMutableArray alloc] init];
+    if (offerProduct.productTemplate.templateUI == kOLTemplateUINonCustomizable){
+        //Do nothing, no assets needed
+    }
+    else if (offerProduct.quantityToFulfillOrder == 1){
+        [assets addObject:[OLAsset assetWithDataSource:[self.userSelectedPhotos.firstObject copy]]];
+    }
+    else{
+        for (OLPrintPhoto *photo in self.userSelectedPhotos){
+            [assets addObject:[OLAsset assetWithDataSource:[photo copy]]];
+        }
+    }
+    
+    id<OLPrintJob> job;
+    if ([OLProductTemplate templateWithId:templateId].templateUI == kOLTemplateUIPhotobook){
+        job = [OLPrintJob photobookWithTemplateId:templateId OLAssets:assets frontCoverOLAsset:nil backCoverOLAsset:nil];
+    }
+    else{
+        job = [OLPrintJob printJobWithTemplateId:templateId OLAssets:assets];
+    }
+    
+    [[OLKiteUtils kiteVcForViewController:self].printOrder addPrintJob:job];
+    return job;
+}
+
+- (void)userDidAcceptUpsell:(OLUpsellViewController *)vc{
+    [self.product.acceptedOffers addObject:vc.offer];
+    [vc dismissViewControllerAnimated:NO completion:^{
+        if (vc.offer.prepopulatePhotos){
+            id<OLPrintJob> job = [self addItemToBasketWithTemplateId:vc.offer.offerTemplate];
+            [(OLProductPrintJob *)job setRedeemedOffer:vc.offer];
+            [self doSegueToOrderPreview];
+        }
+        else if ([self.product.templateId isEqualToString:vc.offer.offerTemplate]){
+            self.product.redeemedOffer = vc.offer;
+            self.sectionsForUpsell = [self numberOfSectionsInCollectionView:self.collectionView]+1;
+            [self.collectionView reloadData];
+            [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:self.product.quantityToFulfillOrder-1 inSection:self.sectionsForUpsell-1] atScrollPosition:UICollectionViewScrollPositionBottom animated:YES];
+        }
+        else{
+            id<OLPrintJob> job = [self addItemToBasketWithTemplateId:self.product.templateId];
+            [[(OLProductPrintJob *)job acceptedOffers] addObject:vc.offer];
+            
+            OLProduct *offerProduct = [OLProduct productWithTemplateId:vc.offer.offerTemplate];
+            UIViewController *nextVc = [self.storyboard instantiateViewControllerWithIdentifier:[OLKiteUtils reviewViewControllerIdentifierForProduct:offerProduct photoSelectionScreen:[OLKiteUtils imageProvidersAvailable:self]]];
+            [nextVc safePerformSelector:@selector(setKiteDelegate:) withObject:self.delegate];
+            [nextVc safePerformSelector:@selector(setProduct:) withObject:offerProduct];
+            NSMutableArray *stack = [self.navigationController.viewControllers mutableCopy];
+            [stack removeObject:self];
+            [stack addObject:nextVc];
+            [self.navigationController setViewControllers:stack animated:YES];
+        }
+    }];
+}
+
+- (void)showUpsellHintView{
+    [self.upsellHintView viewWithTag:10].transform = CGAffineTransformMakeRotation(M_PI_4);
+    [(UILabel *)[self.upsellHintView viewWithTag:20] setText:[NSString stringWithFormat:NSLocalizedString(@"Add %ld more images to claim your discount", @""), self.product.quantityToFulfillOrder]];
+    
+    NSTimeInterval delay = 0.35;
+    NSTimeInterval duration = 0.3;
+    [UIView animateWithDuration:duration delay:delay options:UIViewAnimationOptionCurveEaseIn animations:^{
+        self.upsellHintView.alpha = 1;
+    } completion:^(BOOL finished) {}];
+}
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView{
+    if (self.upsellHintView.alpha == 0){
+        return;
+    }
+    NSTimeInterval duration = 0.3;
+    [UIView animateWithDuration:duration delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
+        self.upsellHintView.alpha = 0;
+    } completion:^(BOOL finished) {}];
+}
+
+- (OLUpsellOffer *)upsellOfferToShow{
+    NSArray *upsells = self.product.productTemplate.upsellOffers;
+    if (upsells.count == 0){
+        return nil;
+    }
+    
+    OLUpsellOffer *offerToShow;
+    for (OLUpsellOffer *offer in upsells){
+        //Check if offer is valid for this point
+        if (offer.active && offer.type == OLUpsellOfferTypeItemAdd){
+            
+            if ([self.product hasOfferIdBeenUsed:offer.identifier]){
+                continue;
+            }
+            if ([[OLKiteUtils kiteVcForViewController:self].printOrder hasOfferIdBeenUsed:offer.identifier]){
+                continue;
+            }
+            
+            //Find the max priority offer
+            if (!offerToShow || offerToShow.priority < offer.priority){
+                offerToShow = offer;
+            }
+        }
+    }
+    
+    return offerToShow;
+}
+
+
 - (IBAction)onButtonNextClicked {
     if ([self shouldGoToOrderPreview]) {
-        [self doSegueToOrderPreview];
+        OLUpsellOffer *offer = [self upsellOfferToShow];
+        BOOL shouldShowOffer = offer != nil;
+        if (offer){
+            shouldShowOffer &= offer.minUnits <= self.userSelectedPhotos.count;
+            shouldShowOffer &= offer.maxUnits == 0 || offer.maxUnits >= self.userSelectedPhotos.count;
+            shouldShowOffer &= [OLProduct productWithTemplateId:offer.offerTemplate] != nil;
+        }
+        
+        [OLAnalytics trackUpsellShown:shouldShowOffer];
+        if (shouldShowOffer){
+            OLUpsellViewController *c = [self.storyboard instantiateViewControllerWithIdentifier:@"OLUpsellViewController"];
+            if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8){
+                c.providesPresentationContextTransitionStyle = true;
+                c.definesPresentationContext = true;
+            }
+            c.modalPresentationStyle = UIModalPresentationOverCurrentContext;
+            c.delegate = self;
+            c.offer = offer;
+            c.triggeredProduct = self.product;
+            [self presentViewController:c animated:NO completion:NULL];
+        }
+        else{
+            [self doSegueToOrderPreview];
+        }
     }
+}
+
+- (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView{
+    [self showUpsellHintView];
+    
 }
 
 -(void)doSegueToOrderPreview{
@@ -1435,6 +1628,7 @@ UIActionSheetDelegate>
     self.tapBehindQRUploadModalGestureRecognizer = nil;
 }
 
+#if __IPHONE_OS_VERSION_MIN_REQUIRED < 80000
 #pragma mark - UIAlertViewDelegate methods
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
@@ -1444,6 +1638,7 @@ UIActionSheetDelegate>
         }
     }
 }
+#endif
 
 #pragma mark - OLImageEditorViewControllerDelegate methods
 
@@ -1504,18 +1699,7 @@ UIActionSheetDelegate>
 }
 #endif
 
-#pragma mark - Tear down and restore
-
-- (void)tearDownLargeObjectsFromMemory{
-    [super tearDownLargeObjectsFromMemory];
-    [self.collectionView reloadData];
-}
-
-- (void)recreateTornDownLargeObjectsToMemory{
-    [super recreateTornDownLargeObjectsToMemory];
-    [self.collectionView reloadData];
-}
-
+#if __IPHONE_OS_VERSION_MIN_REQUIRED < 80000
 #pragma mark UIActionSheet Delegate (only used on iOS 7)
 
 - (void) actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex{
@@ -1560,5 +1744,6 @@ UIActionSheetDelegate>
         return UIInterfaceOrientationMaskPortrait;
     }
 }
+#endif
 
 @end

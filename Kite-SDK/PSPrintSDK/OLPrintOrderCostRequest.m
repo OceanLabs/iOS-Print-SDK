@@ -36,6 +36,9 @@
 #import "OLPaymentLineItem.h"
 #import "OLProductPrintJob.h"
 #import "OLPrintOrderCost.h"
+#import "NSObject+Utils.h"
+#import "OLKiteUtils.h"
+#import "OLPaymentViewController.h"
 
 @interface OLKitePrintSDK (Private)
 
@@ -44,25 +47,18 @@
 
 @end
 
-static NSString *urlencode(NSString *str) {
-    NSMutableString *output = [NSMutableString string];
-    const unsigned char *source = (const unsigned char *)[str UTF8String];
-    int sourceLen = (int) strlen((const char *)source);
-    for (int i = 0; i < sourceLen; ++i) {
-        const unsigned char thisChar = source[i];
-        if (thisChar == ' ') {
-            [output appendString:@"+"];
-        } else if (thisChar == '.' || thisChar == '-' || thisChar == '_' || thisChar == '~' ||
-                   (thisChar >= 'a' && thisChar <= 'z') ||
-                   (thisChar >= 'A' && thisChar <= 'Z') ||
-                   (thisChar >= '0' && thisChar <= '9')) {
-            [output appendFormat:@"%c", thisChar];
-        } else {
-            [output appendFormat:@"%%%02X", thisChar];
-        }
-    }
-    return output;
-}
+@interface OLProductPrintJob ()
+@property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*declinedOffers;
+@property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*acceptedOffers;
+@property (strong, nonatomic) OLUpsellOffer *redeemedOffer;
+
+@end
+
+@interface OLPrintOrder ()
+@property (assign, nonatomic) BOOL shipToStore;
+@property (assign, nonatomic) BOOL payInStore;
+
+@end
 
 static NSDictionary *cachedResponse; // we cache the last response
 static NSDate *cacheDate;
@@ -73,23 +69,47 @@ static NSUInteger cacheOrderHash; // cached response is only valid for orders wi
 
 @end
 
+@interface OLPrintOrderCost ()
+@property (strong, nonatomic) NSDictionary *specialTotalCosts;
+@property (strong, nonatomic) NSDictionary *specialPromoDiscount;
+@property (strong, nonatomic) NSString *specialPromoCodeInvalidReason;
+@property (strong, nonatomic) NSString *paymentMethod;
+@end
+
 @implementation OLPrintOrderCostRequest
 
-- (NSString *)stringFromOrder:(OLPrintOrder *)order {
-    NSString *basketString = @"";
+- (NSDictionary *)jsonFromOrder:(OLPrintOrder *)order {
+    NSMutableArray *basket = [[NSMutableArray alloc] initWithCapacity:order.jobs.count];
     for (id<OLPrintJob> job in order.jobs){
-        if (job.address){
-            basketString = [basketString stringByAppendingString:[NSString stringWithFormat:@"%@:%d:%@,", [job templateId], (int)[job quantity] * (int)([job extraCopies]+1), job.address.country.codeAlpha3]];
+        NSMutableDictionary *jobDict = [[NSMutableDictionary alloc] init];
+        NSSet <OLUpsellOffer *>*offers = [(NSObject *)job safePerformSelectorWithReturn:@selector(acceptedOffers) withObject:nil];
+        if (offers.count > 0 && [offers.allObjects.firstObject identifier]){
+            jobDict[@"triggered_upsell"] = [NSNumber numberWithUnsignedInteger:[offers.allObjects.firstObject identifier]];
+        }
+        if ([job respondsToSelector:@selector(redeemedOffer)]){
+            NSUInteger redeemed = [(OLProductPrintJob *)job redeemedOffer].identifier;
+            if (redeemed){
+                jobDict[@"redeemed_upsell"] = [NSNumber numberWithUnsignedInteger:redeemed];
+            }
+        }
+        if (job.address.country){
+            jobDict[@"country_code"] = job.address.country.codeAlpha3;
         }
         else{
-            basketString = [basketString stringByAppendingString:[NSString stringWithFormat:@"%@:%d,", [job templateId], (int)[job quantity] * (int)([job extraCopies]+1)]];
+            jobDict[@"country_code"] = order.shippingAddress.country ? [order.shippingAddress.country codeAlpha3] : [[OLCountry countryForCurrentLocale] codeAlpha3];
         }
+        
+        jobDict[@"template_id"] = job.templateId;
+        jobDict[@"quantity"] = [NSNumber numberWithInteger:[job quantity] * ([job extraCopies]+1)];
+        jobDict[@"job_id"] = [job uuid];
+        [basket addObject:jobDict];
     }
-    basketString = [basketString stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@","]];
 
-    NSDictionary *dict = @{@"basket" : basketString,
+    NSDictionary *dict = @{@"basket" : basket,
                            @"shipping_country_code" : order.shippingAddress.country ? [order.shippingAddress.country codeAlpha3] : [[OLCountry countryForCurrentLocale] codeAlpha3],
-                           @"promo_code" : order.promoCode ? urlencode(order.promoCode) : @""
+                           @"promo_code" : order.promoCode ? order.promoCode : @"",
+                           @"ship_to_store" : [NSNumber numberWithBool:order.shipToStore],
+                           @"pay_in_store" : [NSNumber numberWithBool:order.payInStore]
                            };
     
     NSDictionary *extraDict = [order.userData objectForKey:@"extra_dict_for_cost"];
@@ -97,13 +117,13 @@ static NSUInteger cacheOrderHash; // cached response is only valid for orders wi
         dict = [dict mutableCopy];
         [dict setValue:[extraDict objectForKey:[[extraDict allKeys] firstObject]] forKey:[[extraDict allKeys] firstObject]];
     }
-
-    NSString *orderString = @"";
-    for (NSString *key in [dict allKeys]){
-        orderString = [orderString stringByAppendingString:[NSString stringWithFormat:@"%@=%@&", key, [dict objectForKey:key]]];
+    
+    if ([OLPaymentViewController isApplePayAvailable]){
+        dict = [dict mutableCopy];
+        [dict setValue:@"APPLE_PAY" forKey:@"payment_gateway"];
     }
-    orderString = [orderString stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"&"]];
-    return orderString;
+
+    return dict;
 }
 
 + (NSDictionary *)cachedResponseForOrder:(OLPrintOrder *)order {
@@ -143,9 +163,12 @@ static NSUInteger cacheOrderHash; // cached response is only valid for orders wi
     const NSUInteger hash = order.hash;
     
     NSDictionary *headers = @{@"Authorization": [NSString stringWithFormat:@"ApiKey %@:", [OLKitePrintSDK apiKey]]};
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@/price/?%@", [OLKitePrintSDK apiEndpoint], [OLKitePrintSDK apiVersion], [self stringFromOrder:order]]];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@/price/", [OLKitePrintSDK apiEndpoint], [OLKitePrintSDK apiVersion]]];
     
-    self.req = [[OLBaseRequest alloc] initWithURL:url httpMethod:kOLHTTPMethodGET headers:headers body:nil];
+    NSData *data = [NSJSONSerialization dataWithJSONObject:[self jsonFromOrder:order] options:0 error:nil];
+    NSString *jsonString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    
+    self.req = [[OLBaseRequest alloc] initWithURL:url httpMethod:kOLHTTPMethodPOST headers:headers body:jsonString];
     [self.req startWithCompletionHandler:^(NSInteger httpStatusCode, id json, NSError *error) {
         if (error) {
             self.req = nil;
@@ -176,7 +199,7 @@ static NSUInteger cacheOrderHash; // cached response is only valid for orders wi
             }
             
             self.req = nil;
-            handler(nil, [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeServerFault userInfo:@{NSLocalizedDescriptionKey: NSLocalizedStringFromTableInBundle(@"Failed to get the price of the order. Please try again.", @"KitePrintSDK", [OLConstants bundle], @"")}]);
+            handler(nil, [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeServerFault userInfo:@{NSLocalizedDescriptionKey: NSLocalizedStringFromTableInBundle(@"Failed to get the price of the order. Please try again.", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")}]);
         }
     }];
 }
@@ -240,7 +263,20 @@ static NSUInteger cacheOrderHash; // cached response is only valid for orders wi
         }
     }
     
+    // Parse Apple Pay special total and discount items
+    NSDictionary *specialTotalCosts = [self createCostsDictionaryFromJSON:json[@"apple_pay_total"]];
+    NSDictionary *specialDiscount = [self createCostsDictionaryFromJSON:json[@"apple_pay_promo_code"][@"discount"]];
+    id specialPromoDiscountInvalidReason = json[@"apple_pay_promo_code"][@"invalid_message"];
+    if (specialPromoDiscountInvalidReason == [NSNull null] || [specialPromoDiscountInvalidReason stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]].length == 0) {
+        specialPromoDiscountInvalidReason = nil;
+    }
+    
     OLPrintOrderCost *orderCost = [[OLPrintOrderCost alloc] initWithTotalCosts:totalCosts shippingCosts:totalShippingCosts jobCosts:jobCosts lineItems:lineItems promoDiscount:discount promoCodeInvalidReason:promoDiscountInvalidReason];
+    
+    orderCost.specialTotalCosts = specialTotalCosts;
+    orderCost.specialPromoDiscount = specialDiscount;
+    orderCost.specialPromoCodeInvalidReason = specialPromoDiscountInvalidReason;
+    
     handler(orderCost, nil);
 }
 

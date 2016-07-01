@@ -27,18 +27,13 @@
 //  THE SOFTWARE.
 //
 
-#ifdef COCOAPODS
-#import <AFNetworking/AFNetworking.h>
-#else
-#import "AFNetworking.h"
-#endif
-
 #import "OLAssetUploadRequest.h"
 #import "OLBaseRequest.h"
 #import "OLConstants.h"
 #import "OLKitePrintSDK.h"
 #import "OLAsset.h"
 #import "OLAsset+Private.h"
+#import "OLKiteUtils.h"
 
 @interface OLKitePrintSDK (Private)
 
@@ -64,10 +59,11 @@ typedef void (^UploadToS3CompletionHandler)(NSError *error);
 typedef void (^RegisterImageURLAssetsCompletionHandler)(NSError *error);
 typedef void (^UploadAssetsCompletionHandler)(NSError *error);
 
-@interface OLAssetUploadRequest ()
+@interface OLAssetUploadRequest () <NSURLSessionTaskDelegate>
 @property (nonatomic, strong) OLBaseRequest *signReq, *registerImageURLAssetsReq;
 @property (nonatomic, strong) NSURLSessionDataTask *s3UploadTask;
 @property (nonatomic, assign) BOOL cancelled;
+@property (copy, nonatomic) UploadToS3ProgressHandler progressHandler;
 @end
 
 @implementation OLAssetUploadRequest
@@ -85,11 +81,11 @@ typedef void (^UploadAssetsCompletionHandler)(NSError *error);
     NSInteger errorCode = kOLKiteSDKErrorCodeServerFault;
     switch (httpStatusCode) {
         case 401:
-            errorMessage = NSLocalizedStringFromTableInBundle(@"401 Unauthorized Request Error whilst trying to upload an asset. Please check you included an Authorization header and that the supplied auth credentials are correct.", @"KitePrintSDK", [OLConstants bundle], @"");
+            errorMessage = NSLocalizedStringFromTableInBundle(@"401 Unauthorized Request Error whilst trying to upload an asset. Please check you included an Authorization header and that the supplied auth credentials are correct.", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
             errorCode = kOLKiteSDKErrorCodeUnauthorized;
             break;
         case 500:
-            errorMessage = NSLocalizedStringFromTableInBundle(@"500 Internal Server Error whilst trying to upload an asset. Please try again.", @"KitePrintSDK", [OLConstants bundle], @"");
+            errorMessage = NSLocalizedStringFromTableInBundle(@"500 Internal Server Error whilst trying to upload an asset. Please try again.", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
             break;
         default:
             break;
@@ -152,7 +148,7 @@ typedef void (^UploadAssetsCompletionHandler)(NSError *error);
         }
         
         if (!error && registeredAssetCount != expectedRegisteredAssetCount) {
-            error = [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeRegisteredAssetCountDiscrepency userInfo:@{NSLocalizedDescriptionKey:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Only registered %d/%d image URLs with the asset endpoint", @"KitePrintSDK", [OLConstants bundle], @""), registeredAssetCount, expectedRegisteredAssetCount]}];
+            error = [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeRegisteredAssetCountDiscrepency userInfo:@{NSLocalizedDescriptionKey:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Only registered %d/%d image URLs with the asset endpoint", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), registeredAssetCount, expectedRegisteredAssetCount]}];
         }
         
         handler(error);
@@ -204,6 +200,7 @@ typedef void (^UploadAssetsCompletionHandler)(NSError *error);
 }
 
 - (void)uploadData:(NSData *)data mimeType:(NSString *)mimeType toS3WithSignedRequestURL:(NSURL *)signedS3UploadReqURL progress:(UploadToS3ProgressHandler)progressHandler completion:(UploadToS3CompletionHandler)completionHandler {
+    self.progressHandler = progressHandler;
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:signedS3UploadReqURL];
     [request setHTTPMethod:@"PUT"];
     [request setHTTPBody:data];
@@ -213,22 +210,36 @@ typedef void (^UploadAssetsCompletionHandler)(NSError *error);
     
     __weak OLAssetUploadRequest *zelf = self;
     
-    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
-    self.s3UploadTask = [manager uploadTaskWithRequest:request fromData:data progress:^(NSProgress *progress){
-        if (zelf.cancelled) return;
-        dispatch_async(dispatch_get_main_queue(), ^{
-            progressHandler(progress.completedUnitCount, progress.completedUnitCount, progress.totalUnitCount);
-        });
-    }completionHandler:^(NSURLResponse *response, id responseObject, NSError *error){
+    NSURLSessionConfiguration *sessionConfig = [NSURLSessionConfiguration defaultSessionConfiguration];
+    
+    NSURLSession *session = [NSURLSession sessionWithConfiguration:sessionConfig
+                                                          delegate:self
+                                                     delegateQueue:nil];
+    
+    self.s3UploadTask  = [session uploadTaskWithRequest:request fromData:data completionHandler:^(NSData *data, NSURLResponse *response, NSError *error){
+        //TODO: Check HTTP codes
         if (zelf.cancelled) return;
         if (error){
-            completionHandler(error);
+            dispatch_async(dispatch_get_main_queue(), ^{
+                completionHandler(error);
+            });
         }
         else{
-            completionHandler(nil);
+            dispatch_async(dispatch_get_main_queue(), ^{
+                completionHandler(nil);
+            });
         }
     }];
+    
     [self.s3UploadTask resume];
+    [session finishTasksAndInvalidate];
+}
+
+- (void)URLSession:(NSURLSession *)session task:(nonnull NSURLSessionTask *)task didSendBodyData:(int64_t)bytesSent totalBytesSent:(int64_t)totalBytesSent totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend{
+    if (self.cancelled) return;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self.progressHandler(bytesSent, totalBytesSent, totalBytesExpectedToSend);
+    });
 }
 
 - (void)uploadImageAsJPEG:(UIImage *)image {

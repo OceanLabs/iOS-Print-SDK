@@ -33,7 +33,7 @@ Now that you have cloned the Kite SDK into your project, you need to let your pr
 Step 3. Set Other Linker Flags
 -----------
 
-Now that your project is aware of the Kite SDK, you need to configure a few settings and add some required resources to your project's build configuration. Click on your apps project in the Project Navigator to open the Project and Targets configuration pane. 
+Now that your project is aware of the Kite SDK, you need to configure a few settings and add some required resources to your project's build configuration. Click on your apps project in the Project Navigator to open the Project and Targets configuration pane.
 
 Add `-ObjC` flag to the `Other Linker Flags` in the `Build Settings` tab.
 
@@ -42,7 +42,7 @@ Add `-ObjC` flag to the `Other Linker Flags` in the `Build Settings` tab.
 Step 4. Set Header Search Paths
 -----------
 
-Add `$(PROJECT_DIR)/iOS-Print-SDK/Kite-SDK/PSPrintSDK` the `Header Search Paths` in the `Build Settings` tab ensuring you make the item `Recursive`. 
+Add `$(PROJECT_DIR)/iOS-Print-SDK/Kite-SDK/PSPrintSDK` the `Header Search Paths` in the `Build Settings` tab ensuring you make the item `Recursive`.
 
 If you added the submodule in a directory outside of the root `PROJECT_DIR` make sure the header search path you add reflects this.
 
@@ -50,7 +50,7 @@ If you added the submodule in a directory outside of the root `PROJECT_DIR` make
 
 Step 5. Configure Build Phases
 -----------
-Under the Build Phases tab add `KiteSDK` to `Target Dependencies` phase, then add `libKiteSDK.a`, `Accelerate.framework` and `Photos.framework` to `Link Binary with Libraries` phase.
+Under the Build Phases tab add `KiteSDK` to `Target Dependencies` phase, then add `libKiteSDK.a`, `Accelerate.framework`, `MessageUI.framework` and `Photos.framework` to `Link Binary with Libraries` phase.
 
 ![Add Header Search Paths](build_phases.gif)
 
@@ -60,7 +60,7 @@ Finally add all resources found under `KitePrintSDK.xcproj/Kite Print SDK/Resour
 
 Duplicate Symbol errors
 -----------
-If you're already using and linking against some of the Kite SDK's dependencies (i.e. AFNetworking) you may find that you hit up against duplicate symbol errors. These are very easy to resolve, simple select the `KitePrintSDK.xcodeproj` within your workspace, then select the `KiteSDK` target, and then from within the `Link Binary With Libraries` build phase remove the offending dependencies that you're already compiling and linking into your own project.
+If you're already using and linking against some of the Kite SDK's dependencies you may find that you hit up against duplicate symbol errors. These are very easy to resolve, simple select the `KitePrintSDK.xcodeproj` within your workspace, then select the `KiteSDK` target, and then from within the `Link Binary With Libraries` build phase remove the offending dependencies that you're already compiling and linking into your own project.
 
 ![Add Resources](duplicate_symbols.gif)
 

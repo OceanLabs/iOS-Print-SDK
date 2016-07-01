@@ -110,15 +110,11 @@ static id stringOrEmptyString(NSString *str) {
     return [OLProductTemplate templateWithId:self.templateId].name;
 }
 
-- (NSDecimalNumber *)costInCurrency:(NSString *)currencyCode {
-    return [[OLProductTemplate templateWithId:self.templateId] costPerSheetInCurrencyCode:currencyCode];
-}
-
 - (NSArray *)currenciesSupported {
     return [OLProductTemplate templateWithId:self.templateId].currenciesSupported;
 }
 
-- (NSArray/*<OLImage>*/ *)assetsForUploading {
+- (NSArray<OLAsset *> *)assetsForUploading {
     if (self.backImageAsset) {
         return @[self.frontImageAsset, self.backImageAsset];
     } else {

@@ -35,10 +35,8 @@
 @class ALAssetsGroup;
 @class OLAsset;
 
-#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
 @protocol KITAssetCollectionDataSource;
 @protocol KITCustomAssetPickerController;
-#endif
 
 /**
  *  The delegate object if available will be asked for information
@@ -129,7 +127,7 @@
 /**
  *  The delegate object that will be asked for information in certain scenarios.
  */
-@property (weak, nonatomic, nullable) id<OLKiteDelegate> delegate;
+@property (weak, nonatomic) id<OLKiteDelegate> _Nullable delegate;
 
 /**
  *  Speed up checkout by prepopulating the users email in the Shipping details if you know it
@@ -194,9 +192,10 @@
  */
 - (void)clearBasket;
 
-#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
 /**
  *  Add a custom source for the photo picker
+ *  (Needs the 'ImageProviders' subspec or this method won't do anything. See
+ *  https://github.com/OceanLabs/iOS-Print-SDK/blob/master/Kite-SDK/docs/custom_photo_sources.md for details)
  *
  *  @param collections An array of photo collections(albums)
  *  @param name        The name for the source
@@ -206,12 +205,13 @@
 
 /**
  *  Add your own photo picker.
+ *  (Needs the 'ImageProviders' subspec or this method won't do anything. See
+ *  https://github.com/OceanLabs/iOS-Print-SDK/blob/master/Kite-SDK/docs/custom_photo_sources.md for details)
  *
  *  @param vcs   Your view controller
  *  @param name The name for the source
  *  @param icon An image to be used as an icon (where applicable)
  */
 - (void)addCustomPhotoProviderWithViewController:(UIViewController<KITCustomAssetPickerController> *_Nonnull)vc name:(NSString *_Nonnull)name icon:(UIImage *_Nullable)icon;
-#endif
 
 @end

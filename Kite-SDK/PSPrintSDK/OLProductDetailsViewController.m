@@ -57,21 +57,21 @@
     
     self.view.backgroundColor = [UIColor clearColor];
     
-    if ([OLKiteABTesting sharedInstance].darkTheme){
-        self.detailsLabel.textColor = [UIColor whiteColor];
-        self.optionLabel.textColor = [UIColor whiteColor];
-        self.selectedOptionLabel.textColor = [UIColor whiteColor];
-        self.priceLabel.textColor = [UIColor whiteColor];
-    }
+//    if ([OLKiteABTesting sharedInstance].darkTheme){
+//        self.detailsLabel.textColor = [UIColor whiteColor];
+//        self.optionLabel.textColor = [UIColor whiteColor];
+//        self.selectedOptionLabel.textColor = [UIColor whiteColor];
+//        self.priceLabel.textColor = [UIColor whiteColor];
+//    }
     
     NSMutableAttributedString *attributedString = [[[TSMarkdownParser standardParser] attributedStringFromMarkdown:[self.product detailsString]] mutableCopy];
     
-    if ([OLKiteABTesting sharedInstance].darkTheme){
-        [attributedString addAttribute:NSForegroundColorAttributeName value:[UIColor whiteColor] range:NSMakeRange(0, attributedString.length)];
-    }
-    else{
+//    if ([OLKiteABTesting sharedInstance].darkTheme){
+//        [attributedString addAttribute:NSForegroundColorAttributeName value:[UIColor whiteColor] range:NSMakeRange(0, attributedString.length)];
+//    }
+//    else{
         [attributedString addAttribute:NSForegroundColorAttributeName value:self.detailsTextLabel.tintColor range:NSMakeRange(0, attributedString.length)];
-    }
+//    }
     self.detailsTextLabel.attributedText = attributedString;
     
     if (self.product.productTemplate.options.count == 0){

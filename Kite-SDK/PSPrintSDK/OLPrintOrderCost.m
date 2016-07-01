@@ -30,17 +30,25 @@
 #import "OLPrintOrderCost.h"
 
 static NSString *const kKeyTotalCosts = @"ly.kite.iossdk.kKeyTotalCosts";
+static NSString *const kKeySpecialTotalCosts = @"ly.kite.iossdk.kKeySpecialTotalCosts";
 static NSString *const kKeyShippingCosts = @"ly.kite.iossdk.kKeyShippingCosts";
 static NSString *const kKeyLineItems = @"ly.kite.iossdk.kKeyLineItems";
 static NSString *const kKeyJobCosts = @"ly.kite.iossdk.kKeyJobCosts";
 static NSString *const kKeyPromoCodeInvalidReason = @"ly.kite.iossdk.kKeyPromoCodeInvalidReason";
+static NSString *const kKeySpecialPromoCodeInvalidReason = @"ly.kite.iossdk.kKeySpecialPromoCodeInvalidReason";
 static NSString *const kKeyPromoDiscount = @"ly.kite.iossdk.kKeyPromoDiscount";
+static NSString *const kKeySpecialPromoDiscount = @"ly.kite.iossdk.kKeySpecialPromoDiscount";
 
 @interface OLPrintOrderCost ()
 @property (nonatomic, strong) NSDictionary *jobCosts;
 @property (nonatomic, strong) NSDictionary *shippingCosts;
 @property (nonatomic, strong) NSDictionary *totalCosts;
 @property (nonatomic, strong) NSDictionary *promoDiscount;
+@property (strong, nonatomic, readwrite) NSString *promoCodeInvalidReason;
+@property (strong, nonatomic) NSDictionary *specialTotalCosts;
+@property (strong, nonatomic) NSDictionary *specialPromoDiscount;
+@property (strong, nonatomic) NSString *specialPromoCodeInvalidReason;
+@property (strong, nonatomic) NSString *paymentMethod;
 @end
 
 @interface OLDecimalNumberBehavior : NSObject <NSDecimalNumberBehaviors>
@@ -75,8 +83,8 @@ static NSString *const kKeyPromoDiscount = @"ly.kite.iossdk.kKeyPromoDiscount";
 
 @implementation OLPrintOrderCost
 
-- (id)initWithTotalCosts:(NSDictionary/*<String, NSDecimalNumber>*/ *)totalCosts
-           shippingCosts:(NSDictionary/*<String, NSDecimalNumber>*/ *)shippingCosts
+- (id)initWithTotalCosts:(NSDictionary<NSString *, NSDecimalNumber *> *)totalCosts
+           shippingCosts:(NSDictionary<NSString *, NSDecimalNumber *> *)shippingCosts
                 jobCosts:(NSDictionary *)jobCosts lineItems:(NSArray *)lineItems
            promoDiscount:(NSDictionary *)promoDiscount
   promoCodeInvalidReason:(NSString *)invalidReason {
@@ -92,6 +100,14 @@ static NSString *const kKeyPromoDiscount = @"ly.kite.iossdk.kKeyPromoDiscount";
     return self;
 }
 
+- (NSString *)promoCodeInvalidReason{
+    if ([self.paymentMethod isEqualToString:@"APPLE_PAY"] && self.specialPromoCodeInvalidReason){
+        return _specialPromoCodeInvalidReason;
+    }
+    
+    return _promoCodeInvalidReason;
+}
+
 - (NSDecimalNumber *)costForJob:(id<OLPrintJob>)job inCurrency:(NSString *)currencyCode {
     NSDictionary *costs = [self.jobCosts objectForKey:job];
     return costs[@"product_cost"][currencyCode];
@@ -103,11 +119,20 @@ static NSString *const kKeyPromoDiscount = @"ly.kite.iossdk.kKeyPromoDiscount";
 }
 
 - (NSDecimalNumber *)promoCodeDiscountInCurrency:(NSString *)currencyCode {
+    if ([self.paymentMethod isEqualToString:@"APPLE_PAY"] && self.specialPromoDiscount){
+        NSDecimalNumber *discount = self.specialPromoDiscount[currencyCode];
+        return discount == nil ? [NSDecimalNumber zero] : discount;
+    }
+    
     NSDecimalNumber *discount = self.promoDiscount[currencyCode];
     return discount == nil ? [NSDecimalNumber zero] : discount;
 }
 
 - (NSDecimalNumber *)totalCostInCurrency:(NSString *)currencyCode {
+    if ([self.paymentMethod isEqualToString:@"APPLE_PAY"] && [self.specialTotalCosts.allKeys containsObject:currencyCode]){
+        return [[self.specialTotalCosts objectForKey:currencyCode] decimalNumberByRoundingAccordingToBehavior:[[OLDecimalNumberBehavior alloc] init]];
+    }
+    
     if ([self.totalCosts.allKeys containsObject:currencyCode]){
         return [[self.totalCosts objectForKey:currencyCode] decimalNumberByRoundingAccordingToBehavior:[[OLDecimalNumberBehavior alloc] init]];
     }
@@ -135,6 +160,9 @@ static NSString *const kKeyPromoDiscount = @"ly.kite.iossdk.kKeyPromoDiscount";
     [aCoder encodeObject:self.jobCosts forKey:kKeyJobCosts];
     [aCoder encodeObject:self.promoDiscount forKey:kKeyPromoDiscount];
     [aCoder encodeObject:self.promoCodeInvalidReason forKey:kKeyPromoCodeInvalidReason];
+    [aCoder encodeObject:self.specialTotalCosts forKey:kKeySpecialTotalCosts];
+    [aCoder encodeObject:self.specialPromoDiscount forKey:kKeySpecialPromoDiscount];
+    [aCoder encodeObject:self.specialPromoCodeInvalidReason forKey:kKeySpecialPromoCodeInvalidReason];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
@@ -145,6 +173,9 @@ static NSString *const kKeyPromoDiscount = @"ly.kite.iossdk.kKeyPromoDiscount";
         _jobCosts = [aDecoder decodeObjectForKey:kKeyJobCosts];
         _promoDiscount = [aDecoder decodeObjectForKey:kKeyPromoDiscount];
         _promoCodeInvalidReason = [aDecoder decodeObjectForKey:kKeyPromoCodeInvalidReason];
+        _specialTotalCosts = [aDecoder decodeObjectForKey:kKeySpecialTotalCosts];
+        _specialPromoDiscount = [aDecoder decodeObjectForKey:kKeySpecialPromoDiscount];
+        _specialPromoCodeInvalidReason = [aDecoder decodeObjectForKey:kKeySpecialPromoCodeInvalidReason];
     }
     
     return self;

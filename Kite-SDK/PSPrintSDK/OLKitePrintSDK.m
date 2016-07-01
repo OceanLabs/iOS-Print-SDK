@@ -27,6 +27,22 @@
 //  THE SOFTWARE.
 //
 
+#ifdef OL_KITE_OFFER_FACEBOOK
+#ifdef COCOAPODS
+#import <NXOAuth2Client/NXOAuth2AccountStore.h>
+#else
+#import "NXOAuth2AccountStore.h"
+#endif
+#endif
+
+#ifdef OL_KITE_OFFER_INSTAGRAM
+#ifdef COCOAPODS
+#import <NXOAuth2Client/NXOAuth2AccountStore.h>
+#else
+#import "NXOAuth2AccountStore.h"
+#endif
+#endif
+
 #import "OLKitePrintSDK.h"
 #import "OLPayPalCard.h"
 #import "OLProductTemplate.h"
@@ -39,7 +55,10 @@
 #endif
 
 #endif
+
+#ifdef OL_OFFER_JUDOPAY
 #import "OLJudoPayCard.h"
+#endif
 #import "OLProductHomeViewController.h"
 #import "OLIntegratedCheckoutViewController.h"
 #import "OLKiteABTesting.h"
@@ -49,6 +68,11 @@
 #import <Stripe/Stripe+ApplePay.h>
 #else
 #import "Stripe+ApplePay.h"
+#endif
+
+#ifdef OL_KITE_OFFER_FACEBOOK
+#import <FBSDKCoreKit/FBSDKAccessToken.h>
+#import <FBSDKLoginKit/FBSDKLoginManager.h>
 #endif
 
 #endif
@@ -76,29 +100,34 @@ static NSString *const kOLPayPalClientIdLive = @"ASYVBBCHF_KwVUstugKy4qvpQaPlUeE
 static NSString *const kOLPayPalClientIdSandbox = @"AcEcBRDxqcCKiikjm05FyD4Sfi4pkNP98AYN67sr3_yZdBe23xEk0qhdhZLM";
 static NSString *const kOLPayPalRecipientEmailLive = @"hello@kite.ly";
 static NSString *const kOLPayPalRecipientEmailSandbox = @"sandbox-merchant@kite.ly";
-static NSString *const kOLAPIEndpointVersion = @"v2.0";
+static NSString *const kOLAPIEndpointVersion = @"v2.2";
 
+#ifdef OL_OFFER_JUDOPAY
 static BOOL useJudoPayForGBP = NO;
-static BOOL useStripeForCreditCards = NO;
+#endif
+static BOOL useStripeForCreditCards = YES;
 static BOOL cacheTemplates = NO;
 static BOOL useStaging = NO;
 static BOOL isUnitTesting = NO;
 static BOOL QRCodeUploadEnabled = NO;
 static BOOL isKiosk = NO;
 
-#ifdef OL_KITE_OFFER_INSTAGRAM
 static NSString *instagramClientID = nil;
 static NSString *instagramSecret = nil;
 static NSString *instagramRedirectURI = nil;
-#endif
 
 #ifdef OL_KITE_OFFER_ADOBE
 static NSString* creativeSDKClientId = nil;
 static NSString* creativeSDKClientSecret = nil;
 #endif
 
+@interface OLPrintOrder ()
+- (void)saveOrder;
+@end
+
 @implementation OLKitePrintSDK
 
+#ifdef OL_OFFER_JUDOPAY
 + (BOOL)useJudoPayForGBP {
     return useJudoPayForGBP;
 }
@@ -106,6 +135,7 @@ static NSString* creativeSDKClientSecret = nil;
 + (void)setUseJudoPayForGBP:(BOOL)use {
     useJudoPayForGBP = use;
 }
+#endif
 
 + (BOOL)useStripeForCreditCards {
     return useStripeForCreditCards;
@@ -144,10 +174,14 @@ static NSString* creativeSDKClientSecret = nil;
     [OLStripeCard setClientId:[self stripePublishableKey]];
     if (environment == kOLKitePrintSDKEnvironmentLive) {
         [OLPayPalCard setClientId:[self paypalClientId] withEnvironment:kOLPayPalEnvironmentLive];
+#ifdef OL_OFFER_JUDOPAY
         [OLJudoPayCard setClientId:kJudoClientId token:kJudoLiveToken secret:kJudoLiveSecret withEnvironment:kOLJudoPayEnvironmentLive];
+#endif
     } else {
         [OLPayPalCard setClientId:[self paypalClientId] withEnvironment:kOLPayPalEnvironmentSandbox];
+#ifdef OL_OFFER_JUDOPAY
         [OLJudoPayCard setClientId:kJudoClientId token:kJudoSandboxToken secret:kJudoSandboxSecret withEnvironment:kOLJudoPayEnvironmentSandbox];
+#endif
     }
 }
 
@@ -198,13 +232,16 @@ static NSString* creativeSDKClientSecret = nil;
     }
 }
 
-#ifdef OL_KITE_OFFER_APPLE_PAY
 + (void)setApplePayMerchantID:(NSString *_Nonnull)mID{
+#ifdef OL_KITE_OFFER_APPLE_PAY
     applePayMerchantID = mID;
+#endif
 }
 
 + (void)setApplePayPayToString:(NSString *_Nonnull)name{
+#ifdef OL_KITE_OFFER_APPLE_PAY
     applePayPayToString = name;
+#endif
 }
 
 + (NSString *)applePayPayToString{
@@ -227,7 +264,6 @@ static NSString* creativeSDKClientSecret = nil;
 + (NSString *_Nonnull)appleMerchantID {
     return applePayMerchantID;
 }
-#endif
 
 + (NSString *_Nonnull)stripePublishableKey {
     switch (environment) {
@@ -271,26 +307,85 @@ static NSString* creativeSDKClientSecret = nil;
     return QRCodeUploadEnabled;
 }
 
++ (void)endCustomerSession{
+    OLPrintOrder *printOrder = [[OLPrintOrder alloc] init];
+    [printOrder saveOrder];
+    
+#ifdef OL_KITE_OFFER_INSTAGRAM
+    NSHTTPCookie *cookie;
+    NSHTTPCookieStorage *storage = [NSHTTPCookieStorage sharedHTTPCookieStorage];
+    NSArray *cookies = [NSArray arrayWithArray:[storage cookies]];
+    for (cookie in cookies) {
+        if ([cookie.domain containsString:@"instagram.com"]) {
+            [storage deleteCookie:cookie];
+        }
+    }
+
+    NSArray *instagramAccounts = [[NXOAuth2AccountStore sharedStore] accountsWithAccountType:@"instagram"];
+    for (NXOAuth2Account *account in instagramAccounts) {
+        [[NXOAuth2AccountStore sharedStore] removeAccount:account];
+    }
+#endif
+    
+#ifdef OL_KITE_OFFER_FACEBOOK
+    FBSDKLoginManager *loginManager = [[FBSDKLoginManager alloc] init];
+    [loginManager logOut];
+    [FBSDKAccessToken setCurrentAccessToken:nil];
+#endif
+    
+    [OLKiteABTesting sharedInstance].theme.kioskShipToStoreAddress.recipientLastName = nil;
+    [OLKiteABTesting sharedInstance].theme.kioskShipToStoreAddress.recipientFirstName = nil;
+    
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults removeObjectForKey:@"co.oceanlabs.pssdk.kKeyEmailAddress"];
+    [defaults removeObjectForKey:@"co.oceanlabs.pssdk.kKeyPhone"];
+    [defaults removeObjectForKey:@"co.oceanlabs.pssdk.kKeyRecipientName"];
+    [defaults removeObjectForKey:@"co.oceanlabs.pssdk.kKeyRecipientFirstName"];
+    [defaults removeObjectForKey:@"co.oceanlabs.pssdk.kKeyLine1"];
+    [defaults removeObjectForKey:@"co.oceanlabs.pssdk.kKeyLine2"];
+    [defaults removeObjectForKey:@"co.oceanlabs.pssdk.kKeyCity"];
+    [defaults removeObjectForKey:@"co.oceanlabs.pssdk.kKeyCounty"];
+    [defaults removeObjectForKey:@"co.oceanlabs.pssdk.kKeyPostCode"];
+    [defaults removeObjectForKey:@"co.oceanlabs.pssdk.kKeyCountry"];
+    [defaults synchronize];
+    
+    [OLPayPalCard clearLastUsedCard];
+    [OLStripeCard clearLastUsedCard];
+}
+
 #pragma mark - Internal
 
-#ifdef OL_KITE_OFFER_INSTAGRAM
+
 + (void)setInstagramEnabledWithClientID:(NSString *_Nonnull)clientID secret:(NSString *_Nonnull)secret redirectURI:(NSString *_Nonnull)redirectURI {
+#ifdef OL_KITE_OFFER_INSTAGRAM
     instagramSecret = secret;
     instagramClientID = clientID;
     instagramRedirectURI = redirectURI;
+#endif
 }
 
 + (NSString *)instagramRedirectURI {
+#ifdef OL_KITE_OFFER_INSTAGRAM
     return instagramRedirectURI;
+#else
+    return nil;
+#endif
 }
 
 + (NSString *)instagramSecret{
+#ifdef OL_KITE_OFFER_INSTAGRAM
     return instagramSecret;
+#else
+    return nil;
+#endif
 }
 
 + (NSString *)instagramClientID{
+#ifdef OL_KITE_OFFER_INSTAGRAM
     return instagramClientID;
-}
+#else
+    return nil;
 #endif
+}
 
 @end

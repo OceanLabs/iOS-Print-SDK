@@ -28,18 +28,8 @@
 //
 
 #ifdef COCOAPODS
-#import <SDWebImage/SDWebImageManager.h>
 #import <TSMarkdownParser/TSMarkdownParser.h>
 #else
-#import "SDWebImageManager.h"
-#import "TSMarkdownParser.h"
-#endif
-
-#ifdef COCOAPODS
-#import <SDWebImage/SDWebImageManager.h>
-#import <TSMarkdownParser/TSMarkdownParser.h>
-#else
-#import "SDWebImageManager.h"
 #import "TSMarkdownParser.h"
 #endif
 
@@ -62,6 +52,7 @@
 #import "UIImageView+FadeIn.h"
 #import "UIViewController+OLMethods.h"
 #import "UIViewController+TraitCollectionCompatibility.h"
+#import "OLImageDownloader.h"
 
 #define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
 
@@ -114,24 +105,7 @@
                                                                             target:nil
                                                                             action:nil];
     NSURL *url = [NSURL URLWithString:[OLKiteABTesting sharedInstance].headerLogoURL];
-    if (url && [[SDWebImageManager sharedManager] cachedImageExistsForURL:url] && [self isMemberOfClass:[OLProductHomeViewController class]]){
-        [[SDWebImageManager sharedManager] downloadImageWithURL:url options:0 progress:NULL completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL){
-            image = [UIImage imageWithCGImage:image.CGImage scale:2 orientation:image.imageOrientation];
-            UIImageView *titleImageView = [[UIImageView alloc] initWithImage:image];
-            titleImageView.alpha = 0;
-            if ([self isPushed]){
-                self.parentViewController.navigationItem.titleView = titleImageView;
-            }
-            else{
-                self.navigationItem.titleView = titleImageView;
-            }
-            titleImageView.alpha = 0;
-            [UIView animateWithDuration:0.5 animations:^{
-                titleImageView.alpha = 1;
-            }];
-        }];
-    }
-    else if (!url && [self isMemberOfClass:[OLProductHomeViewController class]]){
+    if (!url && [self isMemberOfClass:[OLProductHomeViewController class]]){
         if ([self isPushed]){
             self.parentViewController.title = NSLocalizedString(@"Print Shop", @"");
         }
@@ -410,8 +384,9 @@
     }
     
     NSURL *url = [NSURL URLWithString:[OLKiteABTesting sharedInstance].headerLogoURL];
-    if (url && ![[SDWebImageManager sharedManager] cachedImageExistsForURL:url] && [self isMemberOfClass:[OLProductHomeViewController class]]){
-        [[SDWebImageManager sharedManager] downloadImageWithURL:url options:0 progress:NULL completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL){
+    if (url && ![[OLImageDownloader sharedInstance] cachedDataExistForURL:url] && [self isMemberOfClass:[OLProductHomeViewController class]]){
+        [[OLImageDownloader sharedInstance] downloadImageAtURL:url withCompletionHandler:^(UIImage *image, NSError *error){
+            if (error) return;
             image = [UIImage imageWithCGImage:image.CGImage scale:2 orientation:image.imageOrientation];
             UIImageView *titleImageView = [[UIImageView alloc] initWithImage:image];
             titleImageView.alpha = 0;
@@ -498,9 +473,9 @@
     CGFloat halfScreenHeight = (size.height - [[UIApplication sharedApplication] statusBarFrame].size.height - self.navigationController.navigationBar.frame.size.height)/2;
     
     CGFloat height = 233;
-    if ([[OLKiteABTesting sharedInstance].productTileStyle isEqualToString:@"Dark"]){
-        height = 200;
-    }
+//    if ([[OLKiteABTesting sharedInstance].productTileStyle isEqualToString:@"Dark"]){
+//        height = 200;
+//    }
     
     if ([self isHorizontalSizeClassCompact] && size.height > size.width) {
         if (numberOfCells == 2){
@@ -529,7 +504,7 @@
             return CGSizeMake(size.width, halfScreenHeight);
         }
         else{
-            return CGSizeMake(size.width/2 - 1, halfScreenHeight * 2);
+            return CGSizeMake(size.width/2 - 1, halfScreenHeight);
         }
     }
     else{
@@ -630,7 +605,11 @@
         UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"extraCell" forIndexPath:indexPath];
         [self fixCellFrameOnIOS7:cell];
         UIImageView *cellImageView = (UIImageView *)[cell.contentView viewWithTag:40];
-        [cellImageView setAndFadeInImageWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/product_photography/placeholder.png"]];
+        [[OLImageDownloader sharedInstance] downloadImageAtURL:[NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/product_photography/placeholder.png"] withCompletionHandler:^(UIImage *image, NSError *error){
+            if (error) return;
+            cellImageView.image = image;
+            cell.backgroundColor = [image colorAtPixel:CGPointMake(3, 3)];
+        }];
         if (self.fromRotation){
             self.fromRotation = NO;
             cell.alpha = 0;
@@ -676,10 +655,10 @@
     if ([[OLKiteABTesting sharedInstance].productTileStyle isEqualToString:@"Classic"]){
         productTypeLabel.backgroundColor = [product labelColor];
     }
-    else if([[OLKiteABTesting sharedInstance].productTileStyle isEqualToString:@"Dark"]){
-        UIButton *button = (UIButton *)[cell.contentView viewWithTag:390];
-        button.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.8];
-    }
+//    else if([[OLKiteABTesting sharedInstance].productTileStyle isEqualToString:@"Dark"]){
+//        UIButton *button = (UIButton *)[cell.contentView viewWithTag:390];
+//        button.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.8];
+//    }
     else{
         UIButton *button = (UIButton *)[cell.contentView viewWithTag:390];
         button.layer.shadowColor = [[UIColor blackColor] CGColor];
@@ -706,16 +685,17 @@
 
 #pragma mark - Tear down and restore
 
-- (void)tearDownLargeObjectsFromMemory{
-    [super tearDownLargeObjectsFromMemory];
-    [self.collectionView reloadData];
-}
+//- (void)tearDownLargeObjectsFromMemory{
+//    [super tearDownLargeObjectsFromMemory];
+//    [self.collectionView reloadData];
+//}
+//
+//- (void)recreateTornDownLargeObjectsToMemory{
+//    [super recreateTornDownLargeObjectsToMemory];
+//    [self.collectionView reloadData];
+//}
 
-- (void)recreateTornDownLargeObjectsToMemory{
-    [super recreateTornDownLargeObjectsToMemory];
-    [self.collectionView reloadData];
-}
-
+#if __IPHONE_OS_VERSION_MIN_REQUIRED < 80000
 #pragma mark - Autorotate and Orientation Methods
 // Currently here to disable landscape orientations and rotation on iOS 7. When support is dropped, these can be deleted.
 
@@ -736,6 +716,7 @@
         return UIInterfaceOrientationMaskPortrait;
     }
 }
+#endif
 
 
 @end

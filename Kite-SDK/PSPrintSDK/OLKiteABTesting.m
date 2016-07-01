@@ -27,18 +27,11 @@
 //  THE SOFTWARE.
 //
 
-#ifdef COCOAPODS
-#import <SkyLab/SkyLab.h>
-#import <SDWebImage/SDWebImageManager.h>
-#else
-#import "SkyLab.h"
-#import "SDWebImageManager.h"
-#endif
-
+#import "OLImageDownloader.h"
 #import "OLKiteABTesting.h"
 #import "OLKitePrintSDK.h"
-#import "UIColor+HexString.h"
 #import "OLKiteUtils.h"
+#include <stdlib.h>
 
 
 static NSString *const kOLKiteABTestLaunchWithPrintOrderVariant = @"ly.kite.abtest.launch_with_print_order_variant";
@@ -56,6 +49,8 @@ static NSString *const kOLKiteABTestAllowMultipleRecipients = @"ly.kite.abtest.a
 id safeObject(id obj){
     return obj ? obj : @"";
 }
+
+static dispatch_once_t srand48OnceToken;
 
 @interface OLKiteABTesting ()
 
@@ -153,25 +148,25 @@ id safeObject(id obj){
     [defaults synchronize];
 }
 
-- (UIColor *)darkThemeColor1{
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    UIColor *color;
-    NSString *hex = [defaults objectForKey:@"ly.kite.theme.dark.color1"];
-    if (hex){
-        color = [UIColor colorWithHexString:hex];
-    }
-    else{
-        color = [UIColor colorWithHexString:@"6867E8"];
-    }
-    return color;
-}
+//- (UIColor *)darkThemeColor1{
+//    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+//    UIColor *color;
+//    NSString *hex = [defaults objectForKey:@"ly.kite.theme.dark.color1"];
+//    if (hex){
+//        color = [UIColor colorWithHexString:hex];
+//    }
+//    else{
+//        color = [UIColor colorWithHexString:@"6867E8"];
+//    }
+//    return color;
+//}
 
 - (void)prefetchRemoteImages{
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     for (NSString *s in @[kOLKiteThemeHeaderLogoImageURL, kOLKiteThemeCheckoutProgress1, kOLKiteThemeCheckoutProgress2, kOLKiteThemeCheckoutProgress1Bg, kOLKiteThemeCheckoutProgress2Bg, kOLKiteThemeReceiptSuccess, kOLKiteThemeReceiptFailure, kOLKiteThemeReceiptSuccessBg, kOLKiteThemeReceiptFailureBg]){
         NSURL *url = [NSURL URLWithString:[defaults objectForKey:s]];
         if (url){
-            [[SDWebImageManager sharedManager] downloadImageWithURL:url options:0 progress:NULL completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL){
+            [[OLImageDownloader sharedInstance] downloadImageAtURL:url withCompletionHandler:^(UIImage *image, NSError *error){
                 if (!image){
                     [defaults removeObjectForKey:s];
                 }
@@ -192,26 +187,6 @@ id safeObject(id obj){
 - (NSString *)headerLogoURL{
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     return [defaults objectForKey:kOLKiteThemeHeaderLogoImageURL];
-}
-
-- (NSString *)checkoutProgress1URL{
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    return [defaults objectForKey:kOLKiteThemeCheckoutProgress1];
-}
-
-- (NSString *)checkoutProgress2URL{
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    return [defaults objectForKey:kOLKiteThemeCheckoutProgress2];
-}
-
-- (NSString *)checkoutProgress1BgURL{
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    return [defaults objectForKey:kOLKiteThemeCheckoutProgress1Bg];
-}
-
-- (NSString *)checkoutProgress2BgURL{
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    return [defaults objectForKey:kOLKiteThemeCheckoutProgress2Bg];
 }
 
 - (NSString *)receiptSuccessURL{
@@ -274,7 +249,7 @@ id safeObject(id obj){
     
     NSURL *URL = [NSURL URLWithString:urlString];
     [OLKiteUtils registerDefaultsWithURL:URL success:^(NSDictionary *defaults){
-        // reset SKLab A/B tests if the experiment version for any test has been bumped. This allows us to default to sticky SkyLab behaviour
+        // reset SKLab A/B tests if the experiment version for any test has been bumped. This allows us to default to sticky OLKiteABTesting behaviour
         // and when we want to reset things just bump the experiment version.
         for (NSString *key in defaults) {
             id possibleDict = defaults[key];
@@ -283,7 +258,7 @@ id safeObject(id obj){
                 id experimentVersion = [possibleDict objectForKey:@"Experiment Version"];
                 id oldExperimentVersion = [oldPossibleDict objectForKey:@"Experiment Version"];
                 if (([experimentVersion isKindOfClass:[NSString class]] && (([oldExperimentVersion isKindOfClass:[NSString class]] && ![experimentVersion isEqualToString:oldExperimentVersion]) || !oldExperimentVersion))) {
-                    [SkyLab resetTestNamed:key];
+                    [OLKiteABTesting resetTestNamed:key];
                 }
             }
         }
@@ -300,7 +275,7 @@ id safeObject(id obj){
     if (!experimentDict) {
         experimentDict = @{@"None" : @1, @"A" : @0, @"B" : @0, @"C" : @0};
     }
-    [SkyLab splitTestWithName:kOLKiteABTestQualityBannerType
+    [OLKiteABTesting splitTestWithName:kOLKiteABTestQualityBannerType
                    conditions:@{
                                 @"None" : safeObject(experimentDict[@"None"]),
                                 @"A" : safeObject(experimentDict[@"A"]),
@@ -318,7 +293,7 @@ id safeObject(id obj){
     if (!experimentDict) {
         experimentDict = @{@"Classic" : @1, @"A" : @0, @"B" : @0, @"Dark" : @0};
     }
-    [SkyLab splitTestWithName:kOLKiteABTestProductTileStyle
+    [OLKiteABTesting splitTestWithName:kOLKiteABTestProductTileStyle
                    conditions:@{
                                 @"Classic" : safeObject(experimentDict[@"Classic"]),
                                 @"A" : safeObject(experimentDict[@"A"]),
@@ -335,7 +310,7 @@ id safeObject(id obj){
     if (!experimentDict) {
         experimentDict = @{@"Checkout" : @0.2, @"Overview-Checkout" : @0.2, @"Review-Overview-Checkout": @0.2, @"Review-Checkout" : @0.2, @"Overview-Review-Checkout" : @0.2};
     }
-    [SkyLab splitTestWithName:kOLKiteABTestLaunchWithPrintOrderVariant
+    [OLKiteABTesting splitTestWithName:kOLKiteABTestLaunchWithPrintOrderVariant
                    conditions:@{
                                 @"Checkout" : safeObject(experimentDict[@"Checkout"]),
                                 @"Overview-Checkout" : safeObject(experimentDict[@"Overview-Checkout"]),
@@ -353,7 +328,7 @@ id safeObject(id obj){
     if (!experimentDict) {
         experimentDict = @{@"Yes" : @0.5, @"No" : @0.5};
     }
-    [SkyLab splitTestWithName:kOLKiteABTestOfferAddressSearch
+    [OLKiteABTesting splitTestWithName:kOLKiteABTestOfferAddressSearch
                    conditions:@{
                                 @"Yes" : safeObject(experimentDict[@"Yes"]),
                                 @"No" : safeObject(experimentDict[@"No"])
@@ -368,7 +343,7 @@ id safeObject(id obj){
     if (!experimentDict) {
         experimentDict = @{@"Yes" : @0.5, @"No" : @0.5};
     }
-    [SkyLab splitTestWithName:kOLKiteABTestRequirePhoneNumber
+    [OLKiteABTesting splitTestWithName:kOLKiteABTestRequirePhoneNumber
                    conditions:@{
                                 @"Yes" : safeObject(experimentDict[@"Yes"]),
                                 @"No" : safeObject(experimentDict[@"No"])
@@ -383,7 +358,7 @@ id safeObject(id obj){
     if (!experimentDict){
         experimentDict = @{@"Classic" : @0.66, @"Integrated" : @0.34}; // There are 3 variants Classic+Address Search, Classic no Address Search & Integrated hence Classic gets 2/3 of the chance here as it will further get split 50:50 between the 2 classic variants internally resulting in 1/3 probability each.
     }
-    [SkyLab splitTestWithName:kOLKiteABTestShippingScreen conditions:@{
+    [OLKiteABTesting splitTestWithName:kOLKiteABTestShippingScreen conditions:@{
                                                                        @"Classic" : safeObject(experimentDict[@"Classic"]),
                                                                        @"Integrated" : safeObject(experimentDict[@"Integrated"])
                                                                        }block:^(id choice){
@@ -401,7 +376,7 @@ id safeObject(id obj){
     for (NSString *s in experimentDict.allKeys){
         [options setObject:safeObject(experimentDict[s]) forKey:s];
     }
-    [SkyLab splitTestWithName:kOLKiteABTestHidePrice
+    [OLKiteABTesting splitTestWithName:kOLKiteABTestHidePrice
                    conditions:@{
                                 @"Yes" : experimentDict[@"Yes"],
                                 @"No" : experimentDict[@"No"]
@@ -436,7 +411,7 @@ id safeObject(id obj){
         return;
     }
     
-    [SkyLab splitTestWithName:kOLKiteABTestPromoBannerText
+    [OLKiteABTesting splitTestWithName:kOLKiteABTestPromoBannerText
                    conditions:conditions block:^(id choice) {
                        self.promoBannerText = choice;
                    }];
@@ -448,7 +423,7 @@ id safeObject(id obj){
     if (!experimentDict) {
         experimentDict = @{@"Yes" : @0.5, @"No" : @0.5};
     }
-    [SkyLab splitTestWithName:kOLKiteABTestOfferPayPal
+    [OLKiteABTesting splitTestWithName:kOLKiteABTestOfferPayPal
                    conditions:@{
                                 @"Yes" : safeObject(experimentDict[@"Yes"]),
                                 @"No" : safeObject(experimentDict[@"No"])
@@ -463,7 +438,7 @@ id safeObject(id obj){
     if (!experimentDict) {
         experimentDict = @{@"Yes" : @0, @"No" : @1};
     }
-    [SkyLab splitTestWithName:kOLKiteABTestAllowMultipleRecipients
+    [OLKiteABTesting splitTestWithName:kOLKiteABTestAllowMultipleRecipients
                    conditions:@{
                                 @"Yes" : safeObject(experimentDict[@"Yes"]),
                                 @"No" : safeObject(experimentDict[@"No"])
@@ -488,6 +463,91 @@ id safeObject(id obj){
     [self setupShowProductDescriptionScreenBeforeShippingTest];
     [self setupHidePriceTest];
     [self groupSetupShippingScreenTests];
+}
+
+#pragma mark OLKiteABTesting
+//The following methods were adapted from OLKiteABTesting: https://github.com/mattt/OLKiteABTesting
+
++ (void)splitTestWithName:(NSString *)name
+               conditions:(id <NSFastEnumeration>)conditions
+                    block:(void (^)(id))block;
+{
+    id condition = [[NSUserDefaults standardUserDefaults] objectForKey:[OLKiteABTesting userDefaultsKeyForTestName:name]];
+    
+    if ([(id <NSObject>)conditions isKindOfClass:[NSDictionary class]]) {
+        if (!condition || ![[(NSDictionary *)conditions allKeys] containsObject:condition]) {
+            condition = [OLKiteABTesting randomKeyFromDictionaryWithWeightedValues:(NSDictionary *)conditions];
+        }
+    } else {
+        BOOL containsCondition = NO;
+        NSMutableArray *mutableCandidates = [NSMutableArray array];
+        for (id candidate in conditions) {
+            [mutableCandidates addObject:candidate];
+            containsCondition = containsCondition || [condition isEqual:candidate];
+        }
+        
+        if (!condition || !containsCondition) {
+            condition = [OLKiteABTesting randomValueFromArray:mutableCandidates];
+        }
+    }
+    
+    BOOL needsSynchronization = ![condition isEqual:[[NSUserDefaults standardUserDefaults] objectForKey:[OLKiteABTesting userDefaultsKeyForTestName:name]]];
+    [[NSUserDefaults standardUserDefaults] setObject:condition forKey:[OLKiteABTesting userDefaultsKeyForTestName:name]];
+    if (needsSynchronization) {
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    }
+    
+    if (block) {
+        block(condition);
+    }
+}
+
++ (void)resetTestNamed:(NSString *)name {
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:[OLKiteABTesting userDefaultsKeyForTestName:name]];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
++ (id)randomKeyFromDictionaryWithWeightedValues:(NSDictionary *)dictionary {
+    if ([dictionary count] == 0) {
+        return nil;
+    }
+    
+    NSArray *keys = [dictionary allKeys];
+    NSMutableArray *mutableWeightedSums = [NSMutableArray arrayWithCapacity:[keys count]];
+    
+    double total = 0.0;
+    for (id key in keys) {
+        total += [dictionary[key] doubleValue];
+        [mutableWeightedSums addObject:@(total)];
+    }
+    
+    dispatch_once(&srand48OnceToken, ^{
+        srand48(time(0));
+    });
+    
+    double r = drand48() * total;
+    
+    __block id randomObject = nil;
+    [mutableWeightedSums enumerateObjectsUsingBlock:^(NSNumber *cumulativeWeightedSum, NSUInteger idx, BOOL *stop) {
+        if (r <= [cumulativeWeightedSum doubleValue]) {
+            randomObject = keys[idx];
+            *stop = YES;
+        }
+    }];
+    
+    return randomObject;
+}
+
++ (id)randomValueFromArray:(NSArray *)array {
+    if ([array count] == 0) {
+        return nil;
+    }
+    
+    return [array objectAtIndex:arc4random_uniform((unsigned int)[array count])];
+}
+
++ (NSString *)userDefaultsKeyForTestName:(NSString *)name {
+    return [NSString stringWithFormat:@"OLKiteABTesting-%@", name];
 }
 
 @end

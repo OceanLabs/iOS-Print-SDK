@@ -35,8 +35,8 @@ static NSString *const kKeyCustomerId = @"co.oceanlabs.Stripe.kKeyCustomerId";
 
 static NSString *const kOLErrorDomainStripe = @"co.oceanlabs.Stripe.kOLErrorDomainStripe";
 
-#define kErrorMessageBadCardNumber NSLocalizedStringFromTableInBundle(@"Please enter a valid card number", @"KitePrintSDK", [OLConstants bundle], @"")
-#define kErrorMessageBadExpiryDate NSLocalizedStringFromTableInBundle(@"Please enter a card expiry date in the future", @"KitePrintSDK", [OLConstants bundle], @"")
+#define kErrorMessageBadCardNumber NSLocalizedStringFromTableInBundle(@"Please enter a valid card number", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")
+#define kErrorMessageBadExpiryDate NSLocalizedStringFromTableInBundle(@"Please enter a card expiry date in the future", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")
 
 
 static NSString *clientId;
@@ -144,26 +144,27 @@ static OLStripeCard *lastUsedCard;
             }
         });
     }] resume];
+    [session finishTasksAndInvalidate];
 }
 
 #pragma mark - NSCoding protocol methods
 
-- (void)encodeWithCoder:(NSCoder *)aCoder {
-    [aCoder encodeObject:self.numberMasked forKey:kKeyNumberMasked];
-    [aCoder encodeObject:self.customerId forKey:kKeyCustomerId];
-}
-
-- (id)initWithCoder:(NSCoder *)aDecoder {
-    if (self = [super init]) {
-        self.numberMasked = [aDecoder decodeObjectOfClass:[NSString class] forKey:kKeyNumberMasked]; // Only store masked version (last 4 digits) of card number for PCI compliance
-        self.customerId = [aDecoder decodeObjectOfClass:[NSString class] forKey:kKeyCustomerId];
-    }
-    
-    return self;
-}
-
-+(BOOL)supportsSecureCoding{
-    return YES;
-}
+//- (void)encodeWithCoder:(NSCoder *)aCoder {
+//    [aCoder encodeObject:self.numberMasked forKey:kKeyNumberMasked];
+//    [aCoder encodeObject:self.customerId forKey:kKeyCustomerId];
+//}
+//
+//- (id)initWithCoder:(NSCoder *)aDecoder {
+//    if (self = [super init]) {
+//        self.numberMasked = [aDecoder decodeObjectOfClass:[NSString class] forKey:kKeyNumberMasked]; // Only store masked version (last 4 digits) of card number for PCI compliance
+//        self.customerId = [aDecoder decodeObjectOfClass:[NSString class] forKey:kKeyCustomerId];
+//    }
+//    
+//    return self;
+//}
+//
+//+(BOOL)supportsSecureCoding{
+//    return YES;
+//}
 
 @end

@@ -28,13 +28,12 @@
 //
 
 #ifdef COCOAPODS
-#import <SDWebImage/SDWebImageManager.h>
 #import <SVProgressHUD/SVProgressHUD.h>
 #else
-#import "SDWebImageManager.h"
 #import "SVProgressHUD.h"
 #endif
 
+#import "OLImageDownloader.h"
 #import "OLPaymentViewController.h"
 #import "OLReceiptViewController.h"
 #import "OLPrintOrder.h"
@@ -44,10 +43,13 @@
 #import "OLCheckoutViewController.h"
 #import "Util.h"
 #import "OLPayPalCard.h"
+#import "NSArray+QueryingExtras.h"
 #import "OLKitePrintSDK.h"
 #import "OLProductTemplate.h"
 #import "OLCountry.h"
+#ifdef OL_OFFER_JUDOPAY
 #import "OLJudoPayCard.h"
+#endif
 #import "NSObject+Utils.h"
 #import "OLConstants.h"
 #import "OLCreditCardCaptureViewController.h"
@@ -75,6 +77,7 @@
 #import "OLAsset+Private.h"
 #import "UIViewController+OLMethods.h"
 #import "OLAddress+AddressBook.h"
+#import "NSObject+Utils.h"
 
 #ifdef OL_KITE_OFFER_PAYPAL
 #ifdef COCOAPODS
@@ -106,6 +109,9 @@ static BOOL haveLoadedAtLeastOnce = NO;
 
 @interface OLProductPrintJob ()
 @property (strong, nonatomic) NSMutableDictionary *options;
+@property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*declinedOffers;
+@property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*acceptedOffers;
+@property (strong, nonatomic) OLUpsellOffer *redeemedOffer;
 @end
 
 @interface OLKiteViewController ()
@@ -116,9 +122,10 @@ static BOOL haveLoadedAtLeastOnce = NO;
 @end
 
 @interface OLProduct (PrivateMethods)
-
 - (NSDecimalNumber*) unitCostDecimalNumber;
-
+@property (strong, nonatomic) NSMutableArray *declinedOffers;
+@property (strong, nonatomic) NSMutableArray *acceptedOffers;
+@property (strong, nonatomic) NSDictionary *redeemedOffer;
 @end
 
 
@@ -143,8 +150,14 @@ static BOOL haveLoadedAtLeastOnce = NO;
 
 @end
 
+@interface OLPrintOrderCost ()
+@property (strong, nonatomic) NSDictionary *specialPromoDiscount;
+@end
+
 @interface OLKitePrintSDK (Private)
+#ifdef OL_OFFER_JUDOPAY
 + (BOOL)useJudoPayForGBP;
+#endif
 + (BOOL)useStripeForCreditCards;
 
 #ifdef OL_KITE_OFFER_PAYPAL
@@ -172,10 +185,6 @@ static BOOL haveLoadedAtLeastOnce = NO;
 @property (nonatomic, readwrite) NSString *receipt;
 @property (strong, nonatomic) OLPrintOrderCost *finalCost;
 @property (nonatomic, strong) OLPrintOrderCostRequest *costReq;
-@end
-
-@interface OLProduct (Private)
-- (NSDecimalNumber*) unitCostDecimalNumber;
 @end
 
 @interface OLPaymentViewController () <
@@ -216,6 +225,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 @property (assign, nonatomic) CGFloat keyboardAnimationPercent;
 @property (assign, nonatomic) BOOL authorizedApplePay;
 @property (assign, nonatomic) BOOL usedContinueShoppingButton;
+@property (assign, nonatomic) CGRect originalPromoBoxFrame;
 
 @end
 
@@ -229,17 +239,17 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 
 @implementation OLPaymentViewController
 
-- (BOOL)prefersStatusBarHidden {
-    BOOL hidden = [OLKiteABTesting sharedInstance].darkTheme;
-    
-    if ([self respondsToSelector:@selector(traitCollection)]){
-        if (self.traitCollection.verticalSizeClass == UIUserInterfaceSizeClassCompact && self.view.frame.size.height < self.view.frame.size.width){
-            hidden |= YES;
-        }
-    }
-    
-    return hidden;
-}
+//- (BOOL)prefersStatusBarHidden {
+//    BOOL hidden = [OLKiteABTesting sharedInstance].darkTheme;
+//
+//    if ([self respondsToSelector:@selector(traitCollection)]){
+//        if (self.traitCollection.verticalSizeClass == UIUserInterfaceSizeClassCompact && self.view.frame.size.height < self.view.frame.size.width){
+//            hidden |= YES;
+//        }
+//    }
+//
+//    return hidden;
+//}
 
 - (id)initWithPrintOrder:(OLPrintOrder *)printOrder {
     NSBundle *currentBundle = [NSBundle bundleForClass:[OLKiteViewController class]];
@@ -248,15 +258,6 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     }
     
     return self;
-}
-
-- (OLCheckoutViewController *)shippingScreenOnTheStack {
-    NSArray *vcStack = self.navigationController.viewControllers;
-    if (vcStack.count >= 2 && [vcStack[vcStack.count - 2] isKindOfClass:[OLCheckoutViewController class]]) {
-        return vcStack[vcStack.count - 2];
-    }
-    
-    return nil;
 }
 
 - (void)sanitizeBasket{
@@ -274,7 +275,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     }
 }
 
--(BOOL)isApplePayAvailable{
++(BOOL)isApplePayAvailable{
 #ifdef OL_KITE_OFFER_APPLE_PAY
     PKPaymentRequest *request = [Stripe paymentRequestWithMerchantIdentifier:[OLKitePrintSDK appleMerchantID]];
     
@@ -285,7 +286,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 }
 
 -(BOOL)shouldShowApplePay{
-    return [self isApplePayAvailable] && !self.showOtherOptions;
+    return [self.class isApplePayAvailable] && !self.showOtherOptions;
 }
 
 - (void)viewDidLoad {
@@ -307,10 +308,10 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     
     NSString *applePayAvailableStr = @"N/A";
 #ifdef OL_KITE_OFFER_APPLE_PAY
-    if ([self isApplePayAvailable] && [self shouldShowApplePay]){
+    if ([self.class isApplePayAvailable] && [self shouldShowApplePay]){
         applePayAvailableStr = @"Yes";
     }
-    else if ([self isApplePayAvailable] && ![self shouldShowApplePay]){
+    else if ([self.class isApplePayAvailable] && ![self shouldShowApplePay]){
         applePayAvailableStr = @"Other Options";
     }
     else{
@@ -319,10 +320,10 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 #endif
     
     if ([OLKitePrintSDK environment] == kOLKitePrintSDKEnvironmentSandbox){
-        self.title = NSLocalizedStringFromTableInBundle(@"Payment (TEST)", @"KitePrintSDK", [OLConstants bundle], @"");
+        self.title = NSLocalizedStringFromTableInBundle(@"Payment (TEST)", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
     }
     else{
-        self.title = NSLocalizedStringFromTableInBundle(@"Payment", @"KitePrintSDK", [OLConstants bundle], @"");
+        self.title = NSLocalizedStringFromTableInBundle(@"Payment", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
     }
     
     self.tableView.delegate = self;
@@ -342,6 +343,16 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     if ([OLKiteABTesting sharedInstance].offerPayPal && ![self shouldShowApplePay]){
         self.payWithApplePayButton.hidden = YES;
         self.checkoutButton.hidden = YES;
+    }
+    
+    BOOL payPalSupportsOrderCurrency = NO;
+    for (NSString *currency in [OLKiteABTesting sharedInstance].paypalSupportedCurrencies){
+        if ([currency isEqualToString:self.printOrder.currencyCode]){
+            payPalSupportsOrderCurrency = YES;
+        }
+    }
+    if (!payPalSupportsOrderCurrency){
+        [self.paymentButton1 removeFromSuperview];
     }
 #else
     [self.paymentButton1 removeFromSuperview];
@@ -386,10 +397,10 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     
     if ([self isPushed]){
         if ([OLKitePrintSDK environment] == kOLKitePrintSDKEnvironmentSandbox){
-            self.parentViewController.title = NSLocalizedStringFromTableInBundle(@"Payment (TEST)", @"KitePrintSDK", [OLConstants bundle], @"");
+            self.parentViewController.title = NSLocalizedStringFromTableInBundle(@"Payment (TEST)", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
         }
         else{
-            self.parentViewController.title = NSLocalizedStringFromTableInBundle(@"Payment", @"KitePrintSDK", [OLConstants bundle], @"");
+            self.parentViewController.title = NSLocalizedStringFromTableInBundle(@"Payment", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
         }
     }
     
@@ -406,7 +417,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         [self.printOrder discardDuplicateJobs];
 #ifndef OL_NO_ANALYTICS
         if (!self.usedContinueShoppingButton){
-            [OLAnalytics trackPaymentScreenHitBackForOrder:self.printOrder applePayIsAvailable:[self isApplePayAvailable] ? @"Yes" : @"No"];
+            [OLAnalytics trackPaymentScreenHitBackForOrder:self.printOrder applePayIsAvailable:[self.class isApplePayAvailable] ? @"Yes" : @"No"];
         }
 #endif
     }
@@ -417,12 +428,16 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     [self.navigationController.presentingViewController dismissViewControllerAnimated:YES completion:NULL];
 #ifndef OL_NO_ANALYTICS
     if (!self.usedContinueShoppingButton){
-        [OLAnalytics trackBasketScreenHitBackForOrder:self.printOrder applePayIsAvailable:[self isApplePayAvailable] ? @"Yes" : @"No"];
+        [OLAnalytics trackBasketScreenHitBackForOrder:self.printOrder applePayIsAvailable:[self.class isApplePayAvailable] ? @"Yes" : @"No"];
     }
 #endif
 }
 
 - (IBAction)onButtonMoreOptionsClicked:(id)sender{
+    if (self.printOrder.jobs.count == 0){
+        return;
+    }
+    
 #ifndef OL_NO_ANALYTICS
     [OLAnalytics trackPaymentScreenHitCheckoutForOrder:self.printOrder];
 #endif
@@ -436,7 +451,13 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     } completion:^(BOOL finished){
         self.payWithApplePayButton.hidden = YES;
         self.checkoutButton.hidden = YES;
-        self.paymentButton1.hidden = NO;
+        
+        if (self.paymentButton2.tag == 7777){
+            self.paymentButton1.hidden = YES;
+        }
+        else{
+            self.paymentButton1.hidden = NO;
+        }
         self.paymentButton2.hidden = NO;
         
         self.poweredByKiteLabelBottomCon.constant = 5;
@@ -483,25 +504,25 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 }
 
 - (void)keyboardDidShow:(NSNotification *)notification {
+    if (self.promoBoxTopCon.constant == 2){
+        self.originalPromoBoxFrame = self.promoBox.frame;
+    }
     NSDictionary *userInfo = [notification userInfo];
     NSInteger animationOptions = [[userInfo objectForKey:UIKeyboardAnimationCurveUserInfoKey] integerValue];
     CGSize size = [[userInfo objectForKey: UIKeyboardFrameEndUserInfoKey] CGRectValue].size;
     CGFloat time = [[userInfo objectForKey: UIKeyboardAnimationDurationUserInfoKey] doubleValue];
     
-    CGFloat diff = size.height - (self.view.frame.size.height - (self.promoBox.frame.origin.y + self.promoBox.frame.size.height));
+    CGFloat diff = size.height - (self.view.frame.size.height - (self.originalPromoBoxFrame.origin.y + self.promoBox.frame.size.height));
     
-    
-    if (diff > 0){
-        self.keyboardAnimationPercent = diff / size.height;
-        if ([self.promoCodeTextField isFirstResponder]){
-            self.promoBoxBottomCon.constant = 2 + diff;
-            self.promoBoxTopCon.constant = 2 - diff;
-            [UIView animateKeyframesWithDuration:time  delay:0 options:animationOptions << 16 animations:^{
-                [UIView addKeyframeWithRelativeStartTime:time*(1-self.keyboardAnimationPercent*((1-self.keyboardAnimationPercent))) relativeDuration:time *(1-self.keyboardAnimationPercent) animations:^{
-                    [self.view layoutIfNeeded];
-                }];
-            }completion:^(BOOL finished){}];
-        }
+    self.keyboardAnimationPercent = diff / size.height;
+    if ([self.promoCodeTextField isFirstResponder]){
+        self.promoBoxBottomCon.constant = 2 + diff;
+        self.promoBoxTopCon.constant = 2 - diff;
+        [UIView animateKeyframesWithDuration:time  delay:0 options:animationOptions << 16 animations:^{
+            [UIView addKeyframeWithRelativeStartTime:time*(1-self.keyboardAnimationPercent*((1-self.keyboardAnimationPercent))) relativeDuration:time *(1-self.keyboardAnimationPercent) animations:^{
+                [self.view layoutIfNeeded];
+            }];
+        }completion:^(BOOL finished){}];
     }
 }
 
@@ -552,9 +573,9 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 
 - (void)handleCostError:(NSError *)error{
     if ([UIAlertController class]){
-        UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLConstants bundle], @"") message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
         if (error.code == kOLKiteSDKErrorCodeProductNotAvailableInRegion){
-            [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLConstants bundle], @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
+            [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
                 if ([[OLCountry countryForCurrentLocale].codeAlpha3 isEqualToString:self.printOrder.shippingAddress.country.codeAlpha3] || !self.printOrder.shippingAddress.country){
                     NSMutableArray *navigationStack = [self.navigationController.viewControllers mutableCopy];
                     if (self.printOrder.jobs.count == 1){
@@ -572,11 +593,11 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             }]];
         }
         else{
-            [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLConstants bundle], @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
+            [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
                 [self.navigationController popViewControllerAnimated:YES];
             }]];
             
-            [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"Retry", @"KitePrintSDK", [OLConstants bundle], @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
+            [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"Retry", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
                 [self.printOrder costWithCompletionHandler:^(OLPrintOrderCost *cost, NSError *error){
                     [self costCalculationCompletedWithError:error];
                 }];
@@ -585,7 +606,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         [self presentViewController:ac animated:YES completion:NULL];
     }
     else{
-        UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLConstants bundle], @"") message:error.localizedDescription delegate:self cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLConstants bundle], @"") otherButtonTitles:NSLocalizedStringFromTableInBundle(@"Retry", @"KitePrintSDK", [OLConstants bundle], @""), nil];
+        UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") message:error.localizedDescription delegate:self cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") otherButtonTitles:NSLocalizedStringFromTableInBundle(@"Retry", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), nil];
         av.delegate = self;
         [av show];
     }
@@ -617,7 +638,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         return;
     }
     
-    NSString *deliveryDetailsTitle = NSLocalizedString(@"Delivery Details", @"");
+    NSString *deliveryDetailsTitle = NSLocalizedStringFromTableInBundle(@"Delivery Details", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
     NSMutableSet *addresses = [[NSMutableSet alloc] init];
     for (id<OLPrintJob> job in self.printOrder.jobs){
         if ([job address]){
@@ -661,7 +682,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         }
         
         NSComparisonResult result = [[cost totalCostInCurrency:self.printOrder.currencyCode] compare:[NSDecimalNumber zero]];
-        if (result == NSOrderedAscending || result == NSOrderedSame) {
+        if (![OLKiteABTesting sharedInstance].theme.kioskRequirePromoCode && (result == NSOrderedAscending || result == NSOrderedSame)) {
 #ifdef OL_KITE_OFFER_PAYPAL
             self.paymentButton1.hidden = YES;
 #endif
@@ -671,7 +692,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             if ([self shouldShowApplePay] && self.paymentButton2.tag != 7777){
                 [self onButtonMoreOptionsClicked:nil];
             }
-            [self.paymentButton2 setTitle:NSLocalizedStringFromTableInBundle(@"Checkout for Free!", @"KitePrintSDK", [OLConstants bundle], @"") forState:UIControlStateNormal];
+            [self.paymentButton2 setTitle:NSLocalizedStringFromTableInBundle(@"Checkout for Free!", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") forState:UIControlStateNormal];
             self.paymentButton2.tag = 7777; //Tag button to know it is showing free checkout;
         }
         else {
@@ -684,7 +705,8 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             if ([self shouldShowApplePay] && self.paymentButton2.tag == 7777){
                 [self onButtonBackToApplePayClicked:nil];
             }
-            [self.paymentButton2 setTitle:NSLocalizedStringFromTableInBundle(@"Credit Card", @"KitePrintSDK", [OLConstants bundle], @"") forState:UIControlStateNormal];
+            self.paymentButton2.tag = 0;
+            [self.paymentButton2 setTitle:NSLocalizedStringFromTableInBundle(@"Credit Card", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") forState:UIControlStateNormal];
         }
         
         if ([self.tableView numberOfRowsInSection:0] != self.printOrder.jobs.count){
@@ -802,7 +824,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     
     NSString *applePayAvailableStr = @"N/A";
 #ifdef OL_KITE_OFFER_APPLE_PAY
-    applePayAvailableStr = [self isApplePayAvailable] ? @"Yes" : @"No";
+    applePayAvailableStr = [self.class isApplePayAvailable] ? @"Yes" : @"No";
 #endif
     
 #ifndef OL_NO_ANALYTICS
@@ -815,7 +837,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     __block BOOL handlerUsed = NO;
     
     [SVProgressHUD setDefaultMaskType:SVProgressHUDMaskTypeBlack];
-    [SVProgressHUD showWithStatus:NSLocalizedStringFromTableInBundle(@"Processing", @"KitePrintSDK", [OLConstants bundle], @"")];
+    [SVProgressHUD showWithStatus:NSLocalizedStringFromTableInBundle(@"Processing", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")];
     [self.printOrder submitForPrintingWithProgressHandler:^(NSUInteger totalAssetsUploaded, NSUInteger totalAssetsToUpload,
                                                             long long totalAssetBytesWritten, long long totalAssetBytesExpectedToWrite,
                                                             long long totalBytesWritten, long long totalBytesExpectedToWrite) {
@@ -830,17 +852,17 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         float progress = totalAssetsUploaded * step + (totalAssetBytesWritten / (float) totalAssetBytesExpectedToWrite) * step;
         [SVProgressHUD setDefaultMaskType:SVProgressHUDMaskTypeBlack];
         if (progress < 1.0){
-            [SVProgressHUD showProgress:progress status:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Uploading Images \n%lu / %lu", @"KitePrintSDK", [OLConstants bundle], @""), (unsigned long) totalAssetsUploaded + 1 + totalURLAssets, (unsigned long) self.printOrder.totalAssetsToUpload]];
+            [SVProgressHUD showProgress:progress status:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Uploading Images \n%lu / %lu", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), (unsigned long) totalAssetsUploaded + 1 + totalURLAssets, (unsigned long) self.printOrder.totalAssetsToUpload]];
         }
         else{
-            [SVProgressHUD showWithStatus:NSLocalizedStringFromTableInBundle(@"Processing", @"KitePrintSDK", [OLConstants bundle], @"")];
+            [SVProgressHUD showWithStatus:NSLocalizedStringFromTableInBundle(@"Processing", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")];
         }
     } completionHandler:^(NSString *orderIdReceipt, NSError *error) {
         [self.printOrder saveToHistory]; // save again as the print order has it's receipt set if it was successful, otherwise last error is set
         
         self.transitionBlockOperation = [[NSBlockOperation alloc] init];
         [self.transitionBlockOperation addExecutionBlock:[self transistionToReceiptBlock]];
-        if ([self isApplePayAvailable] && self.applePayDismissOperation){
+        if ([self.class isApplePayAvailable] && self.applePayDismissOperation){
             [self.transitionBlockOperation addDependency:self.applePayDismissOperation];
         }
         
@@ -850,7 +872,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         if (error) {
             [self.printOrder cancelSubmissionOrPreemptedAssetUpload];
             if ([UIAlertController class]){
-                UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLConstants bundle], @"") message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
+                UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
                 if (error.code == kOLKiteSDKErrorCodeImagesCorrupt){
                     [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"View Item", @"") style:UIAlertActionStyleCancel handler:^(id action){
                         id asset = error.userInfo[@"asset"];
@@ -875,7 +897,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
                     [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Not now", @"") style:UIAlertActionStyleDefault handler:NULL]];
                 }
                 else{
-                    [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLConstants bundle], @"") style:UIAlertActionStyleDefault handler:^(id action){
+                    [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") style:UIAlertActionStyleDefault handler:^(id action){
                         if (error.code != kOLKiteSDKErrorCodeOrderValidationFailed){
                             self.printOrder.receipt = nil;
                             self.printOrder.submitStatus = OLPrintOrderSubmitStatusUnknown;
@@ -902,13 +924,13 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
                 NSBlockOperation *presentAlertBlock = [NSBlockOperation blockOperationWithBlock:^{
                     [self presentViewController:ac animated:YES completion:NULL];
                 }];
-                if ([self isApplePayAvailable] && self.applePayDismissOperation){
+                if ([self.class isApplePayAvailable] && self.applePayDismissOperation){
                     [presentAlertBlock addDependency:self.applePayDismissOperation];
                 }
                 [[NSOperationQueue mainQueue] addOperation:presentAlertBlock];
             }
             else{
-                UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLConstants bundle], @"") message:error.localizedDescription delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLConstants bundle], @"") otherButtonTitles:nil];
+                UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") message:error.localizedDescription delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") otherButtonTitles:nil];
                 if (error.code != kOLKiteSDKErrorCodeOrderValidationFailed){
                     self.printOrder.receipt = nil;
                     self.printOrder.submitStatus = OLPrintOrderSubmitStatusUnknown;
@@ -960,24 +982,24 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     }
 }
 
-- (void)onBarButtonOrdersClicked{
-#ifndef OL_NO_ANALYTICS
-    [OLAnalytics trackOrderHistoryScreenViewed];
-#endif
-    
-    OLOrdersViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLOrdersViewController"];
-    
-    [(UIViewController *)vc navigationItem].leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:vc action:@selector(dismiss)];
-    
-    NSString *supportEmail = [OLKiteABTesting sharedInstance].supportEmail;
-    if (supportEmail && ![supportEmail isEqualToString:@""]){
-        vc.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamedInKiteBundle:@"support"] style:UIBarButtonItemStyleDone target:vc action:@selector(emailButtonPushed:)];
-    }
-    
-    OLNavigationController *nvc = [[OLNavigationController alloc] initWithRootViewController:vc];
-    nvc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
-    [self presentViewController:nvc animated:YES completion:NULL];
-}
+//- (void)onBarButtonOrdersClicked{
+//#ifndef OL_NO_ANALYTICS
+//    [OLAnalytics trackOrderHistoryScreenViewed];
+//#endif
+//
+//    OLOrdersViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLOrdersViewController"];
+//
+//    [(UIViewController *)vc navigationItem].leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:vc action:@selector(dismiss)];
+//
+//    NSString *supportEmail = [OLKiteABTesting sharedInstance].supportEmail;
+//    if (supportEmail && ![supportEmail isEqualToString:@""]){
+//        vc.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamedInKiteBundle:@"support"] style:UIBarButtonItemStyleDone target:vc action:@selector(emailButtonPushed:)];
+//    }
+//
+//    OLNavigationController *nvc = [[OLNavigationController alloc] initWithRootViewController:vc];
+//    nvc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
+//    [self presentViewController:nvc animated:YES completion:NULL];
+//}
 
 - (UINavigationController *)navViewControllerWithControllers:(NSArray *)vcs{
     OLNavigationController *navController = [[OLNavigationController alloc] init];
@@ -1002,7 +1024,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             [self.tableView reloadData];
             [self dismissPresentedViewController];
 #ifndef OL_NO_ANALYTICS
-            [OLAnalytics trackPaymentScreenHitEditItemDone:editingVc.editingPrintJob inOrder:self.printOrder applePayIsAvailable:[self isApplePayAvailable] ? @"Yes" : @"No"];
+            [OLAnalytics trackPaymentScreenHitEditItemDone:editingVc.editingPrintJob inOrder:self.printOrder applePayIsAvailable:[self.class isApplePayAvailable] ? @"Yes" : @"No"];
 #endif
         }];
         
@@ -1033,12 +1055,12 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         if ([promoCode isEqualToString:self.printOrder.promoCode]){
             return;
         }
-        [SVProgressHUD showWithStatus:NSLocalizedStringFromTableInBundle(@"Checking Code", @"KitePrintSDK", [OLConstants bundle], @"")];
+        [SVProgressHUD showWithStatus:NSLocalizedStringFromTableInBundle(@"Checking Code", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")];
     } else {
         if (!self.printOrder.promoCode || [self.printOrder.promoCode isEqualToString:@""]){
             return;
         }
-        [SVProgressHUD showWithStatus:NSLocalizedStringFromTableInBundle(@"Clearing Code", @"KitePrintSDK", [OLConstants bundle], @"")];
+        [SVProgressHUD showWithStatus:NSLocalizedStringFromTableInBundle(@"Clearing Code", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")];
     }
     
     NSString *previousCode = self.printOrder.promoCode;
@@ -1059,12 +1081,12 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
                 self.promoCodeTextField.text = previousCode;
                 [SVProgressHUD dismiss];
                 if ([UIAlertController class]){
-                    UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLConstants bundle], @"") message:cost.promoCodeInvalidReason preferredStyle:UIAlertControllerStyleAlert];
-                    [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLConstants bundle], @"") style:UIAlertActionStyleDefault handler:NULL]];
+                    UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") message:cost.promoCodeInvalidReason preferredStyle:UIAlertControllerStyleAlert];
+                    [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") style:UIAlertActionStyleDefault handler:NULL]];
                     [self presentViewController:ac animated:YES completion:NULL];
                 }
                 else{
-                    UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLConstants bundle], @"") message:cost.promoCodeInvalidReason delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLConstants bundle], @"") otherButtonTitles:nil];
+                    UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") message:cost.promoCodeInvalidReason delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") otherButtonTitles:nil];
                     [av show];
                 }
             } else {
@@ -1105,7 +1127,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         if ([self.delegate respondsToSelector:@selector(shouldAcceptPromoCode:)]) {
             NSString *rejectMessage = [self.delegate performSelector:@selector(shouldAcceptPromoCode:) withObject:self.promoCodeTextField.text];
             if (rejectMessage) {
-                [[[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Oops", @"KitePrintSDK", [OLConstants bundle], @"") message:rejectMessage delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLConstants bundle], @"") otherButtonTitles:nil] show];
+                [[[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Oops", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") message:rejectMessage delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") otherButtonTitles:nil] show];
                 
                 self.printOrder.promoCode = nil;
                 [self.printOrder costWithCompletionHandler:^(OLPrintOrderCost *cost, NSError *error){
@@ -1146,7 +1168,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         }
         
 #ifndef OL_NO_ANALYTICS
-        [OLAnalytics trackPaymentScreenPaymentMethodHit:@"Credit Card" forOrder:self.printOrder applePayIsAvailable:[self isApplePayAvailable] ? @"Yes" : @"No"];
+        [OLAnalytics trackPaymentScreenPaymentMethodHit:@"Credit Card" forOrder:self.printOrder applePayIsAvailable:[self.class isApplePayAvailable] ? @"Yes" : @"No"];
 #endif
         
         NSComparisonResult result = [[cost totalCostInCurrency:self.printOrder.currencyCode] compare:[NSDecimalNumber zero]];
@@ -1160,9 +1182,11 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             if ([OLKitePrintSDK useStripeForCreditCards]){
                 card = [OLStripeCard lastUsedCard];
             }
+#ifdef OL_OFFER_JUDOPAY
             else if ([OLKitePrintSDK useJudoPayForGBP] && [self.printOrder.currencyCode isEqualToString:@"GBP"]) {
                 card = [OLJudoPayCard lastUsedCard];
             }
+#endif
             
             
             if (card == nil) {
@@ -1170,17 +1194,21 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             } else {
                 if ([UIAlertController class]){
                     UIAlertController *ac = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
-                    [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLConstants bundle], @"")  style:UIAlertActionStyleCancel handler:NULL]];
-                    [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"Pay with new card", @"KitePrintSDK", [OLConstants bundle], @"")  style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
+                    [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")  style:UIAlertActionStyleCancel handler:NULL]];
+                    [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"Pay with new card", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")  style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
                         [self payWithNewCard];
                     }]];
-                    [ac addAction:[UIAlertAction actionWithTitle:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Pay with card ending %@", @"KitePrintSDK", [OLConstants bundle], @""), [[card numberMasked] substringFromIndex:[[card numberMasked] length] - 4]]  style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
+                    [ac addAction:[UIAlertAction actionWithTitle:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Pay with card ending %@", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), [[card numberMasked] substringFromIndex:[[card numberMasked] length] - 4]]  style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
                         
                         if ([OLKitePrintSDK useStripeForCreditCards]){
                             [self payWithExistingStripeCard:[OLStripeCard lastUsedCard]];
-                        } else if ([OLKitePrintSDK useJudoPayForGBP] && [self.printOrder.currencyCode isEqualToString:@"GBP"]) {
+                        }
+#ifdef OL_OFFER_JUDOPAY
+                        else if ([OLKitePrintSDK useJudoPayForGBP] && [self.printOrder.currencyCode isEqualToString:@"GBP"]) {
                             [self payWithExistingJudoPayCard:[OLJudoPayCard lastUsedCard]];
-                        } else {
+                        }
+#endif
+                        else {
                             [self payWithExistingPayPalCard:[OLPayPalCard lastUsedCard]];
                         }
                     }]];
@@ -1189,7 +1217,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
                     [self presentViewController:ac animated:YES completion:NULL];
                 }
                 else{
-                    UIActionSheet *paysheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLConstants bundle], @"") destructiveButtonTitle:nil otherButtonTitles:NSLocalizedStringFromTableInBundle(@"Pay with new card", @"KitePrintSDK", [OLConstants bundle], @""), [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Pay with card ending %@", @"KitePrintSDK", [OLConstants bundle], @""), [[card numberMasked] substringFromIndex:[[card numberMasked] length] - 4]], nil];
+                    UIActionSheet *paysheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") destructiveButtonTitle:nil otherButtonTitles:NSLocalizedStringFromTableInBundle(@"Pay with new card", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Pay with card ending %@", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), [[card numberMasked] substringFromIndex:[[card numberMasked] length] - 4]], nil];
                     [paysheet showInView:self.view];
                 }
             }
@@ -1206,22 +1234,24 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 }
 
 - (void)payWithExistingPayPalCard:(OLPayPalCard *)card {
+#ifdef OL_OFFER_JUDOPAY
     if ([OLKitePrintSDK useJudoPayForGBP]) {
         NSAssert(![self.printOrder.currencyCode isEqualToString:@"GBP"], @"JudoPay should be used for GBP orders (and only for Kite internal use)");
     }
+#endif
     [SVProgressHUD setDefaultMaskType:SVProgressHUDMaskTypeBlack];
-    [SVProgressHUD showWithStatus:NSLocalizedStringFromTableInBundle(@"Processing", @"KitePrintSDK", [OLConstants bundle], @"")];
+    [SVProgressHUD showWithStatus:NSLocalizedStringFromTableInBundle(@"Processing", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")];
     [self.printOrder costWithCompletionHandler:^(OLPrintOrderCost *cost, NSError *error) {
         [card chargeCard:[cost totalCostInCurrency:self.printOrder.currencyCode] currencyCode:self.printOrder.currencyCode description:self.printOrder.paymentDescription completionHandler:^(NSString *proofOfPayment, NSError *error) {
             if (error) {
                 [SVProgressHUD dismiss];
                 if ([UIAlertController class]){
-                    UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLConstants bundle], @"") message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
-                    [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLConstants bundle], @"") style:UIAlertActionStyleDefault handler:NULL]];
+                    UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
+                    [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") style:UIAlertActionStyleDefault handler:NULL]];
                     [self presentViewController:ac animated:YES completion:NULL];
                 }
                 else{
-                    UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLConstants bundle], @"") message:error.localizedDescription delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLConstants bundle], @"") otherButtonTitles:nil];
+                    UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") message:error.localizedDescription delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") otherButtonTitles:nil];
                     [av show];
                 }
                 return;
@@ -1235,18 +1265,18 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 
 - (void)payWithExistingStripeCard:(OLStripeCard *)card {
     [SVProgressHUD setDefaultMaskType:SVProgressHUDMaskTypeBlack];
-    [SVProgressHUD showWithStatus:NSLocalizedStringFromTableInBundle(@"Processing", @"KitePrintSDK", [OLConstants bundle], @"")];
+    [SVProgressHUD showWithStatus:NSLocalizedStringFromTableInBundle(@"Processing", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")];
     [self.printOrder costWithCompletionHandler:^(OLPrintOrderCost *cost, NSError *error) {
         [card chargeCard:[cost totalCostInCurrency:self.printOrder.currencyCode] currencyCode:self.printOrder.currencyCode description:self.printOrder.paymentDescription completionHandler:^(NSString *proofOfPayment, NSError *error) {
             if (error) {
                 [SVProgressHUD dismiss];
                 if ([UIAlertController class]){
-                    UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLConstants bundle], @"") message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
-                    [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLConstants bundle], @"") style:UIAlertActionStyleDefault handler:NULL]];
+                    UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
+                    [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") style:UIAlertActionStyleDefault handler:NULL]];
                     [self presentViewController:ac animated:YES completion:NULL];
                 }
                 else{
-                    UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLConstants bundle], @"") message:error.localizedDescription delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLConstants bundle], @"") otherButtonTitles:nil];
+                    UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") message:error.localizedDescription delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") otherButtonTitles:nil];
                     [av show];
                 }
                 return;
@@ -1258,21 +1288,22 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     }];
 }
 
+#ifdef OL_OFFER_JUDOPAY
 - (void)payWithExistingJudoPayCard:(OLJudoPayCard *)card {
     NSAssert([self.printOrder.currencyCode isEqualToString:@"GBP"], @"JudoPay should only be used for GBP orders (and only for Kite internal use)");
     [SVProgressHUD setDefaultMaskType:SVProgressHUDMaskTypeBlack];
-    [SVProgressHUD showWithStatus:NSLocalizedStringFromTableInBundle(@"Processing", @"KitePrintSDK", [OLConstants bundle], @"")];
+    [SVProgressHUD showWithStatus:NSLocalizedStringFromTableInBundle(@"Processing", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")];
     [self.printOrder costWithCompletionHandler:^(OLPrintOrderCost *cost, NSError *error) {
         [card chargeCard:[cost totalCostInCurrency:@"GBP"] currency:kOLJudoPayCurrencyGBP description:self.printOrder.paymentDescription completionHandler:^(NSString *proofOfPayment, NSError *error) {
             if (error) {
                 [SVProgressHUD dismiss];
                 if ([UIAlertController class]){
-                    UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLConstants bundle], @"") message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
-                    [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLConstants bundle], @"") style:UIAlertActionStyleDefault handler:NULL]];
+                    UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
+                    [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") style:UIAlertActionStyleDefault handler:NULL]];
                     [self presentViewController:ac animated:YES completion:NULL];
                 }
                 else{
-                    UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLConstants bundle], @"") message:error.localizedDescription delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLConstants bundle], @"") otherButtonTitles:nil];
+                    UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") message:error.localizedDescription delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") otherButtonTitles:nil];
                     [av show];
                 }
                 return;
@@ -1283,8 +1314,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         }];
     }];
 }
-
-
+#endif
 
 #ifdef OL_KITE_OFFER_PAYPAL
 - (IBAction)onButtonPayWithPayPalClicked {
@@ -1310,7 +1340,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             return;
         }
 #ifndef OL_NO_ANALYTICS
-        [OLAnalytics trackPaymentScreenPaymentMethodHit:@"PayPal" forOrder:self.printOrder applePayIsAvailable:[self isApplePayAvailable] ? @"Yes" : @"No"];
+        [OLAnalytics trackPaymentScreenPaymentMethodHit:@"PayPal" forOrder:self.printOrder applePayIsAvailable:[self.class isApplePayAvailable] ? @"Yes" : @"No"];
 #endif
         
         // Create a PayPalPayment
@@ -1347,13 +1377,35 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             return;
         }
 #ifndef OL_NO_ANALYTICS
-        [OLAnalytics trackPaymentScreenPaymentMethodHit:@"Apple Pay" forOrder:self.printOrder applePayIsAvailable:[self isApplePayAvailable] ? @"Yes" : @"No"];
+        [OLAnalytics trackPaymentScreenPaymentMethodHit:@"Apple Pay" forOrder:self.printOrder applePayIsAvailable:[self.class isApplePayAvailable] ? @"Yes" : @"No"];
 #endif
         
         NSMutableArray *lineItems = [[NSMutableArray alloc] init];
         for (OLPaymentLineItem *item in cost.lineItems){
             [lineItems addObject:[PKPaymentSummaryItem summaryItemWithLabel:item.description  amount:[item costInCurrency:self.printOrder.currencyCode]]];
         }
+        
+        // if a special discount exists, then first remove the normal discount and add a new discount line item
+        if (cost.specialPromoDiscount){
+            for (NSString *currencyCode in cost.specialPromoDiscount.allKeys) {
+                NSDecimalNumber *currencyDiscount = cost.specialPromoDiscount[self.printOrder.currencyCode];
+                if ([currencyDiscount doubleValue] != 0) {
+                    if ([currencyDiscount doubleValue] > 0) {
+                        currencyDiscount = [currencyDiscount decimalNumberByMultiplyingBy:(NSDecimalNumber *)[NSDecimalNumber numberWithInteger:-1]];
+                    }
+                    
+                    for (PKPaymentSummaryItem *item in lineItems){
+                        if ([item.amount doubleValue] < 0){
+                            [lineItems removeObject:item];
+                        }
+                    }
+                    
+                    [lineItems addObject:[PKPaymentSummaryItem summaryItemWithLabel:NSLocalizedString(@"Promotional Discount", @"") amount:currencyDiscount]];
+                    break;
+                }
+            }
+        }
+        
         [lineItems addObject:[PKPaymentSummaryItem summaryItemWithLabel:[OLKitePrintSDK applePayPayToString] amount:[cost totalCostInCurrency:self.printOrder.currencyCode]]];
         paymentRequest.paymentSummaryItems = lineItems;
         NSUInteger requiredFields = PKAddressFieldPostalAddress | PKAddressFieldName | PKAddressFieldEmail;
@@ -1371,7 +1423,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 #endif
 
 - (IBAction)onButtonMinusClicked:(UIButton *)sender {
-    CGPoint buttonPosition = [sender convertPoint:CGPointZero toView:self.tableView];
+    CGPoint buttonPosition = [sender.superview convertPoint:CGPointZero toView:self.tableView];
     NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:buttonPosition];
     OLProductPrintJob* printJob = ((OLProductPrintJob*)[self.printOrder.jobs objectAtIndex:indexPath.row]);
     
@@ -1380,9 +1432,6 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Delete Item", @"") message:NSLocalizedString(@"Are you sure you want to delete this item?", @"") preferredStyle:UIAlertControllerStyleAlert];
             [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"") style:UIAlertActionStyleCancel handler:NULL]];
             [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Yes", @"") style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action){
-#ifndef OL_NO_ANALYTICS
-                [OLAnalytics trackPaymentScreenDidDeleteItem:printJob inOrder:self.printOrder applePayIsAvailable:[self isApplePayAvailable] ? @"Yes" : @"No"];
-#endif
                 [self.printOrder removePrintJob:printJob];
                 
                 NSMutableSet *addresses = [[NSMutableSet alloc] init];
@@ -1399,12 +1448,16 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
                 [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationAutomatic];
                 [self.printOrder saveOrder];
                 [self updateViewsBasedOnCostUpdate];
+                
+#ifndef OL_NO_ANALYTICS
+                [OLAnalytics trackPaymentScreenDidDeleteItem:printJob inOrder:self.printOrder applePayIsAvailable:[self.class isApplePayAvailable] ? @"Yes" : @"No"];
+#endif
             }]];
             [self presentViewController:ac animated:YES completion:NULL];
         }
         else{ //on iOS 7, just delete without prompt
 #ifndef OL_NO_ANALYTICS
-            [OLAnalytics trackPaymentScreenDidDeleteItem:printJob inOrder:self.printOrder applePayIsAvailable:[self isApplePayAvailable] ? @"Yes" : @"No"];
+            [OLAnalytics trackPaymentScreenDidDeleteItem:printJob inOrder:self.printOrder applePayIsAvailable:[self.class isApplePayAvailable] ? @"Yes" : @"No"];
 #endif
             [self.printOrder removePrintJob:printJob];
             
@@ -1433,13 +1486,13 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         [self updateViewsBasedOnCostUpdate];
         
 #ifndef OL_NO_ANALYTICS
-        [OLAnalytics trackPaymentScreenHitItemQtyDownForItem:printJob inOrder:self.printOrder applePayIsAvailable:[self isApplePayAvailable] ? @"Yes" : @"No"];
+        [OLAnalytics trackPaymentScreenHitItemQtyDownForItem:printJob inOrder:self.printOrder applePayIsAvailable:[self.class isApplePayAvailable] ? @"Yes" : @"No"];
 #endif
     }
 }
 
 - (IBAction)onButtonPlusClicked:(UIButton *)sender {
-    CGPoint buttonPosition = [sender convertPoint:CGPointZero toView:self.tableView];
+    CGPoint buttonPosition = [sender.superview convertPoint:CGPointZero toView:self.tableView];
     NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:buttonPosition];
     OLProductPrintJob* printJob = ((OLProductPrintJob*)[self.printOrder.jobs objectAtIndex:indexPath.row]);
     
@@ -1452,7 +1505,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     [self.printOrder saveOrder];
     [self updateViewsBasedOnCostUpdate];
 #ifndef OL_NO_ANALYTICS
-    [OLAnalytics trackPaymentScreenHitItemQtyUpForItem:printJob inOrder:self.printOrder applePayIsAvailable:[self isApplePayAvailable] ? @"Yes" : @"No"];
+    [OLAnalytics trackPaymentScreenHitItemQtyUpForItem:printJob inOrder:self.printOrder applePayIsAvailable:[self.class isApplePayAvailable] ? @"Yes" : @"No"];
 #endif
 }
 
@@ -1469,7 +1522,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     [self presentViewController:vc animated:YES completion:NULL];
 #ifndef OL_NO_ANALYTICS
     OLProductPrintJob* printJob = ((OLProductPrintJob*)[self.printOrder.jobs objectAtIndex:indexPath.row]);
-    [OLAnalytics trackPaymentScreenHitEditItem:printJob inOrder:self.printOrder applePayIsAvailable:[self isApplePayAvailable] ? @"Yes" : @"No"];
+    [OLAnalytics trackPaymentScreenHitEditItem:printJob inOrder:self.printOrder applePayIsAvailable:[self.class isApplePayAvailable] ? @"Yes" : @"No"];
 #endif
 }
 
@@ -1508,7 +1561,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 #ifdef OL_KITE_OFFER_PAYPAL
 - (void)payPalPaymentDidCancel:(PayPalPaymentViewController *)paymentViewController {
 #ifndef OL_NO_ANALYTICS
-    [OLAnalytics trackPaymentScreenPaymentMethodDidCancel:@"PayPal" forOrder:self.printOrder applePayIsAvailable:[self isApplePayAvailable] ? @"Yes" : @"No"];
+    [OLAnalytics trackPaymentScreenPaymentMethodDidCancel:@"PayPal" forOrder:self.printOrder applePayIsAvailable:[self.class isApplePayAvailable] ? @"Yes" : @"No"];
 #endif
     [self dismissViewControllerAnimated:YES completion:nil];
 }
@@ -1535,7 +1588,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     [self dismissViewControllerAnimated:YES completion:^{
 #ifndef OL_NO_ANALYTICS
         if (!self.authorizedApplePay){
-            [OLAnalytics trackPaymentScreenPaymentMethodDidCancel:@"Apple Pay" forOrder:self.printOrder applePayIsAvailable:[self isApplePayAvailable] ? @"Yes" : @"No"];
+            [OLAnalytics trackPaymentScreenPaymentMethodDidCancel:@"Apple Pay" forOrder:self.printOrder applePayIsAvailable:[self.class isApplePayAvailable] ? @"Yes" : @"No"];
         }
 #endif
         if (![[NSOperationQueue mainQueue].operations containsObject:self.transitionBlockOperation] && !self.transitionBlockOperation.finished){
@@ -1591,10 +1644,6 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     self.printOrder.shippingAddress = shippingAddress;
     NSString *email;
     NSString *phone;
-    NSMutableDictionary *d = [[NSMutableDictionary alloc] init];
-    if (self.printOrder.userData) {
-        d = [self.printOrder.userData mutableCopy];
-    }
     CFTypeRef emails = ABRecordCopyValue(address, kABPersonEmailProperty);
     for (NSInteger i = 0; i < ABMultiValueGetCount(emails); i++){
         email = (__bridge_transfer NSString *)(ABMultiValueCopyValueAtIndex(emails, i));
@@ -1603,15 +1652,11 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     for (NSInteger i = 0; i < ABMultiValueGetCount(phones); i++){
         phone = (__bridge_transfer NSString *)(ABMultiValueCopyValueAtIndex(phones, i));
     }
-    d[@"email"] = email ? email : @"";
-    d[@"phone"] = phone ? phone : @"";
     
     self.printOrder.email = email;
     self.printOrder.phone = phone;
     
-    self.printOrder.userData = d;
-    
-    if (![OLCheckoutViewController validateEmail:d[@"email"]] && [OLKitePrintSDK environment] == kOLKitePrintSDKEnvironmentLive){
+    if (![OLCheckoutViewController validateEmail:email] && [OLKitePrintSDK environment] == kOLKitePrintSDKEnvironmentLive){
         completion(PKPaymentAuthorizationStatusInvalidShippingContact);
         return;
     }
@@ -1657,6 +1702,28 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         for (OLPaymentLineItem *item in cost.lineItems){
             [lineItems addObject:[PKPaymentSummaryItem summaryItemWithLabel:item.description  amount:[item costInCurrency:self.printOrder.currencyCode]]];
         }
+        
+        // if a special discount exists, then add a Discount line item
+        if (cost.specialPromoDiscount){
+            for (NSString *currencyCode in cost.specialPromoDiscount.allKeys) {
+                NSDecimalNumber *currencyDiscount = cost.specialPromoDiscount[self.printOrder.currencyCode];
+                if ([currencyDiscount doubleValue] != 0) {
+                    if ([currencyDiscount doubleValue] > 0) {
+                        currencyDiscount = [currencyDiscount decimalNumberByMultiplyingBy:(NSDecimalNumber *)[NSDecimalNumber numberWithInteger:-1]];
+                    }
+                    
+                    for (PKPaymentSummaryItem *item in lineItems){
+                        if ([item.amount doubleValue] < 0){
+                            [lineItems removeObject:item];
+                        }
+                    }
+                    
+                    [lineItems addObject:[PKPaymentSummaryItem summaryItemWithLabel:NSLocalizedString(@"Promotional Discount", @"") amount:currencyDiscount]];
+                    break;
+                }
+            }
+        }
+        
         [lineItems addObject:[PKPaymentSummaryItem summaryItemWithLabel:[OLKitePrintSDK applePayPayToString] amount:[cost totalCostInCurrency:self.printOrder.currencyCode]]];
         if (!error){
             completion(PKPaymentAuthorizationStatusSuccess, nil, lineItems);
@@ -1736,12 +1803,12 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             largeEditButton.hidden = NO;
         }
         
-        [SDWebImageManager.sharedManager downloadImageWithURL:product.productTemplate.coverPhotoURL options:0 progress:NULL completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
+        [[OLImageDownloader sharedInstance] downloadImageAtURL:product.productTemplate.coverPhotoURL withCompletionHandler:^(UIImage *image, NSError *error){
             imageView.image = image;
         }];
         
         quantityLabel.text = [NSString stringWithFormat:@"%ld", (long)[job extraCopies]+1];
-
+        
         NSDecimalNumber *numUnitsInJob = [job numberOfItemsInJob];
         
         priceLabel.text = [[numUnitsInJob decimalNumberByMultiplyingBy:[[product unitCostDecimalNumber] decimalNumberByMultiplyingBy:[NSDecimalNumber decimalNumberWithString:[NSString stringWithFormat:@"%ld", (long)[job extraCopies]+1]]]] formatCostForCurrencyCode:self.printOrder.currencyCode];
@@ -1822,7 +1889,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         [self updateViewsBasedOnCostUpdate];
         
 #ifndef OL_NO_ANALYTICS
-        [OLAnalytics trackPaymentScreenDidDeleteItem:job inOrder:self.printOrder applePayIsAvailable:[self isApplePayAvailable] ? @"Yes" : @"No"];
+        [OLAnalytics trackPaymentScreenDidDeleteItem:job inOrder:self.printOrder applePayIsAvailable:[self.class isApplePayAvailable] ? @"Yes" : @"No"];
 #endif
     }
 }
@@ -1846,6 +1913,9 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 - (UIViewController *)viewControllerForItemAtIndexPath:(NSIndexPath *)indexPath{
     OLProductPrintJob* printJob = ((OLProductPrintJob*)[self.printOrder.jobs objectAtIndex:indexPath.row]);
     OLProduct *product = [OLProduct productWithTemplateId:printJob.templateId];
+    product.acceptedOffers = [[[printJob safePerformSelectorWithReturn:@selector(acceptedOffers)withObject:nil] allObjects] mutableCopy];
+    product.declinedOffers = [[[printJob safePerformSelectorWithReturn:@selector(declinedOffers)withObject:nil] allObjects] mutableCopy];
+    product.redeemedOffer = [printJob safePerformSelectorWithReturn:@selector(redeemedOffer) withObject:nil];
     product.uuid = printJob.uuid;
     
     for (NSString *option in printJob.options.allKeys){
@@ -1888,11 +1958,12 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         if ([asset.dataSource isKindOfClass:[OLPrintPhoto class]]){
             printPhoto = (OLPrintPhoto *)asset.dataSource;
         }
+        [printPhoto unloadImage];
         if (![addedAssetsUUIDs containsObject:printPhoto.uuid]){
             [addedAssetsUUIDs addObject:printPhoto.uuid];
             [userSelectedPhotos addObject:printPhoto];
         }
-    
+        
     }
     
     if ([OLKiteUtils imageProvidersAvailable:self] && product.productTemplate.templateUI != kOLTemplateUICase && product.productTemplate.templateUI != kOLTemplateUIPhotobook && product.productTemplate.templateUI != kOLTemplateUIPostcard && !(product.productTemplate.templateUI == kOLTemplateUIPoster && product.productTemplate.gridCountX == 1 && product.productTemplate.gridCountY == 1)){
@@ -1919,6 +1990,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     }
 }
 
+#if __IPHONE_OS_VERSION_MIN_REQUIRED < 80000
 #pragma mark - UIActionSheetDelegate methods
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
@@ -1929,14 +2001,20 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         // pay with existing card
         if ([OLKitePrintSDK useStripeForCreditCards]){
             [self payWithExistingStripeCard:[OLStripeCard lastUsedCard]];
-        } else if ([OLKitePrintSDK useJudoPayForGBP] && [self.printOrder.currencyCode isEqualToString:@"GBP"]) {
+        }
+#ifdef OL_OFFER_JUDOPAY
+        else if ([OLKitePrintSDK useJudoPayForGBP] && [self.printOrder.currencyCode isEqualToString:@"GBP"]) {
             [self payWithExistingJudoPayCard:[OLJudoPayCard lastUsedCard]];
-        } else {
+        }
+#endif
+        else {
             [self payWithExistingPayPalCard:[OLPayPalCard lastUsedCard]];
         }
     }
 }
+#endif
 
+#if __IPHONE_OS_VERSION_MIN_REQUIRED < 80000
 #pragma mark - UIAlertViewDelegate methods
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
@@ -1950,6 +2028,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         }];
     }
 }
+#endif
 
 #pragma mark - OLCreditCardCaptureDelegate methods
 
@@ -1961,11 +2040,12 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 
 - (void)creditCardCaptureControllerDismissed:(OLCreditCardCaptureViewController *)vc{
 #ifndef OL_NO_ANALYTICS
-    [OLAnalytics trackPaymentScreenPaymentMethodDidCancel:@"Credit Card" forOrder:self.printOrder applePayIsAvailable:[self isApplePayAvailable] ? @"Yes" : @"No"];
+    [OLAnalytics trackPaymentScreenPaymentMethodDidCancel:@"Credit Card" forOrder:self.printOrder applePayIsAvailable:[self.class isApplePayAvailable] ? @"Yes" : @"No"];
 #endif
     [self dismissViewControllerAnimated:YES completion:NULL];
 }
 
+#if __IPHONE_OS_VERSION_MIN_REQUIRED < 80000
 #pragma mark - Autorotate and Orientation Methods
 // Currently here to disable landscape orientations and rotation on iOS 7. When support is dropped, these can be deleted.
 
@@ -1986,5 +2066,6 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         return UIInterfaceOrientationMaskPortrait;
     }
 }
+#endif
 
 @end

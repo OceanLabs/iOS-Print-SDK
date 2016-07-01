@@ -59,6 +59,7 @@ static NSString *const kKeyShippingCosts = @"co.oceanlabs.pssdk.kKeyShippingCost
 static NSString *const kKeyGridCountX = @"co.oceanlabs.pssdk.kKeyGridCountX";
 static NSString *const kKeyGridCountY = @"co.oceanlabs.pssdk.kKeyGridCountY";
 static NSString *const kKeySupportedOptions = @"co.oceanlabs.pssdk.kKeySupportedOptions";
+static NSString *const kKeyUpsellOffers = @"co.oceanlabs.pssdk.kKeyUpsellOffers";
 
 static NSMutableArray *templates;
 static NSDate *lastSyncDate;
@@ -137,15 +138,15 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
     NSString *currencyCode = [self currencyForCurrentLocale];
     
     if ([[self.shippingCosts allKeys] containsObject:country.codeAlpha3]){
-        NSString *cost = self.shippingCosts[country.codeAlpha3][currencyCode];
+        NSString *cost = self.shippingCosts[country.codeAlpha3][currencyCode][@"amount"];
         return cost ? [NSDecimalNumber decimalNumberWithString:cost] : nil;
     }
     else if (country.isInEurope){
-        NSString *cost = self.shippingCosts[@"europe"][currencyCode];
+        NSString *cost = self.shippingCosts[@"europe"][currencyCode][@"amount"];
         return cost ? [NSDecimalNumber decimalNumberWithString:cost] : nil;
     }
     else{
-        NSString *cost = self.shippingCosts[@"rest_of_world"][currencyCode];
+        NSString *cost = self.shippingCosts[@"rest_of_world"][currencyCode][@"amount"];
         return cost? [NSDecimalNumber decimalNumberWithString:cost] : nil;
     }
 }
@@ -204,6 +205,10 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
 
 + (BOOL)isSyncInProgress {
     return inProgressSyncRequest != nil;
+}
+
++ (void)cancelSyncInProgress{
+    [inProgressSyncRequest cancel];
 }
 
 + (OLProductTemplate *_Nullable)templateWithId:(NSString *_Nonnull)identifier {
@@ -323,50 +328,6 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
     return kOLTemplateUINA;
 }
 
-+ (NSString *)templateUIStringWithTemplateClass:(OLTemplateUI)templateClass{
-    switch (templateClass) {
-        case kOLTemplateUICase:
-            return @"Case";
-            break;
-        case kOLTemplateUICircle:
-            return @"Circle";
-            break;
-        case kOLTemplateUIFrame:
-            return @"Frame";
-            break;
-        case kOLTemplateUINA:
-            return @"NA Class";
-            break;
-        case kOLTemplateUIPoster:
-            return @"Poster";
-            break;
-        case kOLTemplateUIRectagle:
-            return @"Rectangle";
-            break;
-        case kOLTemplateUINonCustomizable:
-            return @"Non-Customizable";
-            break;
-        case kOLTemplateUIPostcard:
-            return @"Postcard";
-            break;
-        case kOLTemplateUIPhotobook:
-            return @"Photobook";
-            break;
-            
-        default:
-            return @"";
-            break;
-    }
-}
-
-- (NSString *)description {
-    NSMutableString *supportedCurrencies = [[NSMutableString alloc] init];
-    for (NSString *currency in self.costsByCurrencyCode) {
-        [supportedCurrencies appendFormat:@" %@", currency];
-    }
-    return [NSString stringWithFormat:@"%@%@ (%@)%@ quantity: %lu",self.enabled ? @"enabled " : @"disabled ", self.identifier, self.name, supportedCurrencies, (unsigned long) self.quantityPerSheet];
-}
-
 #pragma mark - NSCoding protocol methods
 - (void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:self.identifier forKey:kKeyIdentifier];
@@ -396,6 +357,7 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
     [aCoder encodeInteger:self.gridCountX forKey:kKeyGridCountX];
     [aCoder encodeInteger:self.gridCountY forKey:kKeyGridCountY];
     [aCoder encodeObject:self.supportedOptions forKey:kKeySupportedOptions];
+    [aCoder encodeObject:self.upsellOffers forKey:kKeyUpsellOffers];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
@@ -427,6 +389,7 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
         _gridCountX = [aDecoder decodeIntegerForKey:kKeyGridCountX];
         _gridCountY = [aDecoder decodeIntegerForKey:kKeyGridCountY];
         self.supportedOptions = [aDecoder decodeObjectForKey:kKeySupportedOptions];
+        self.upsellOffers = [aDecoder decodeObjectForKey:kKeyUpsellOffers];
     }
     
     return self;

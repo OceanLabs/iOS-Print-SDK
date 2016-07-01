@@ -37,6 +37,7 @@
 #import "OLKiteUtils.h"
 #import "OLKiteViewController.h"
 #import "OLKiteABTesting.h"
+#import "OLAnalytics.h"
 
 static const NSUInteger kTagTextField = 99;
 
@@ -54,17 +55,17 @@ static const NSUInteger kTagTextField = 99;
 
 @implementation OLAddressEditViewController
 
-- (BOOL)prefersStatusBarHidden {
-    BOOL hidden = [OLKiteABTesting sharedInstance].darkTheme;
-    
-    if ([self respondsToSelector:@selector(traitCollection)]){
-        if (self.traitCollection.verticalSizeClass == UIUserInterfaceSizeClassCompact && self.view.frame.size.height < self.view.frame.size.width){
-            hidden |= YES;
-        }
-    }
-    
-    return hidden;
-}
+//- (BOOL)prefersStatusBarHidden {
+//    BOOL hidden = [OLKiteABTesting sharedInstance].darkTheme;
+//    
+//    if ([self respondsToSelector:@selector(traitCollection)]){
+//        if (self.traitCollection.verticalSizeClass == UIUserInterfaceSizeClassCompact && self.view.frame.size.height < self.view.frame.size.width){
+//            hidden |= YES;
+//        }
+//    }
+//    
+//    return hidden;
+//}
 
 - (id)init {
     return [self initWithAddress:nil];
@@ -85,6 +86,11 @@ static const NSUInteger kTagTextField = 99;
     }
     
     return self;
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [OLAnalytics trackAddAddressScreenViewed];
 }
 
 - (void)viewDidLoad {
@@ -411,6 +417,7 @@ static const NSUInteger kTagTextField = 99;
     return YES;
 }
 
+#if __IPHONE_OS_VERSION_MIN_REQUIRED < 80000
 #pragma mark - Autorotate and Orientation Methods
 // Currently here to disable landscape orientations and rotation on iOS 7. When support is dropped, these can be deleted.
 
@@ -431,5 +438,6 @@ static const NSUInteger kTagTextField = 99;
         return UIInterfaceOrientationMaskPortrait;
     }
 }
+#endif
 
 @end

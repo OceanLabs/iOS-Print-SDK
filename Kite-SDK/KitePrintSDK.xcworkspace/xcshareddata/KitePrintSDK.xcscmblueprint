@@ -19,6 +19,7 @@
     "117B65B3A14F5CB598DC962723F820AC63399A6A+++8647574" : 0,
     "D6BE2D61E9BC08BACB7354BA664FBBA6CB260E4C+++FCB1EBC" : 0,
     "E41BE06B78DB194196625258C5006B52033E0ECA+++F3B994E" : 0,
+    "F61DC60BC95E56633C6D23109E750F3609E16C8F+++1673D33" : 0,
     "DD20A1A48C66B5213E0FEBB87A95EF51D6C6F3E8+++95DEA63" : 0,
     "52A24398B96ECA98EF0E72469CA9225C49AA7C9D+++876D976" : 0,
     "9E1ECC80773D1F4F22D03CB4DEA298B3CB57FAF5+++BE52FBF" : 0
@@ -40,6 +41,7 @@
     "117B65B3A14F5CB598DC962723F820AC63399A6A+++8647574" : "iOS-Print-SDK\/Kite-SDK\/vendor\/SkyLab\/",
     "D6BE2D61E9BC08BACB7354BA664FBBA6CB260E4C+++FCB1EBC" : "iOS-Print-SDK\/Kite-SDK\/vendor\/UIColor-HexString\/",
     "E41BE06B78DB194196625258C5006B52033E0ECA+++F3B994E" : "iOS-Print-SDK\/Kite-SDK\/vendor\/ios-qr-encoder\/",
+    "F61DC60BC95E56633C6D23109E750F3609E16C8F+++1673D33" : "sticky9\/",
     "DD20A1A48C66B5213E0FEBB87A95EF51D6C6F3E8+++95DEA63" : "iOS-Print-SDK\/Kite-SDK\/vendor\/AFNetworking\/",
     "52A24398B96ECA98EF0E72469CA9225C49AA7C9D+++876D976" : "iOS-Print-SDK\/Kite-SDK\/vendor\/DACircularProgress\/",
     "9E1ECC80773D1F4F22D03CB4DEA298B3CB57FAF5+++BE52FBF" : "iOS-Print-SDK\/Kite-SDK\/vendor\/SVProgressHUD\/"
@@ -137,6 +139,11 @@
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/chiunam\/CTAssetsPickerController.git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "E762C42BC8C71A1AD1A00E2FC726C42A9BF54268+++F391EFB"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/OceanLabs\/Sticky9-iOS.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "F61DC60BC95E56633C6D23109E750F3609E16C8F+++1673D33"
     }
   ]
 }

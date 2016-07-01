@@ -36,6 +36,7 @@
 #import "OLConstants.h"
 #import "UIImage+ImageNamedInKiteBundle.h"
 #import "OLKiteABTesting.h"
+#import "OLKiteUtils.h"
 
 static const NSInteger kSectionAddressList = 0;
 static const NSInteger kSectionAddAddress = 1;
@@ -51,17 +52,17 @@ static const NSInteger kRowAddAddressManually = 0;
 
 @implementation OLAddressSelectionViewController
 
-- (BOOL)prefersStatusBarHidden {
-    BOOL hidden = [OLKiteABTesting sharedInstance].darkTheme;
-    
-    if ([self respondsToSelector:@selector(traitCollection)]){
-        if (self.traitCollection.verticalSizeClass == UIUserInterfaceSizeClassCompact && self.view.frame.size.height < self.view.frame.size.width){
-            hidden |= YES;
-        }
-    }
-    
-    return hidden;
-}
+//- (BOOL)prefersStatusBarHidden {
+//    BOOL hidden = [OLKiteABTesting sharedInstance].darkTheme;
+//    
+//    if ([self respondsToSelector:@selector(traitCollection)]){
+//        if (self.traitCollection.verticalSizeClass == UIUserInterfaceSizeClassCompact && self.view.frame.size.height < self.view.frame.size.width){
+//            hidden |= YES;
+//        }
+//    }
+//    
+//    return hidden;
+//}
 
 - (id)init {
     return [self initWithStyle:UITableViewStyleGrouped];
@@ -70,7 +71,7 @@ static const NSInteger kRowAddAddressManually = 0;
 - (id)initWithStyle:(UITableViewStyle)style {
     self = [super initWithStyle:style];
     if (self) {
-        self.title = NSLocalizedStringFromTableInBundle(@"Choose Address", @"KitePrintSDK", [OLConstants bundle], @"");
+        self.title = NSLocalizedStringFromTableInBundle(@"Choose Address", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
         self.selectedAddresses = [[NSMutableSet alloc] init];
     }
     return self;
@@ -80,7 +81,7 @@ static const NSInteger kRowAddAddressManually = 0;
     [super viewDidLoad];
     self.tableView.allowsMultipleSelection = self.allowMultipleSelection;
     self.allowMultipleSelection = _allowMultipleSelection;
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Done", @"KitePrinSDK", [OLConstants bundle], @"") style:UIBarButtonItemStyleDone target:self action:@selector(onButtonCancelClicked)];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Done", @"KitePrinSDK", [OLKiteUtils kiteBundle], @"") style:UIBarButtonItemStyleDone target:self action:@selector(onButtonCancelClicked)];
     if ([self.tableView respondsToSelector:@selector(setCellLayoutMarginsFollowReadableWidth:)]){
         self.tableView.cellLayoutMarginsFollowReadableWidth = NO;
     }
@@ -94,6 +95,7 @@ static const NSInteger kRowAddAddressManually = 0;
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     [self.tableView reloadData];
+    [OLAnalytics trackChooseAddressScreenViewed];
 }
 
 - (NSArray *)selected {
@@ -143,9 +145,9 @@ static const NSInteger kRowAddAddressManually = 0;
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
     if ([OLAddress addressBook].count == 0) { ++section; }
     if (section == 0) {
-        return [OLAddress addressBook].count > 0 ? NSLocalizedStringFromTableInBundle(@"Address Book", @"KitePrintSDK", [OLConstants bundle], "") : nil;
+        return [OLAddress addressBook].count > 0 ? NSLocalizedStringFromTableInBundle(@"Address Book", @"KitePrintSDK", [OLKiteUtils kiteBundle], "") : nil;
     } else {
-        return NSLocalizedStringFromTableInBundle(@"Add New Address", @"KitePrintSDK", [OLConstants bundle], @"");
+        return NSLocalizedStringFromTableInBundle(@"Add New Address", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
     }
 }
 
@@ -175,9 +177,9 @@ static const NSInteger kRowAddAddressManually = 0;
         }
         
         if (indexPath.row == kRowAddAddressSearch) {
-            cell.textLabel.text = NSLocalizedStringFromTableInBundle(@"Search for Address", @"KitePrintSDK", [OLConstants bundle], @"");
+            cell.textLabel.text = NSLocalizedStringFromTableInBundle(@"Search for Address", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
         } else {
-            cell.textLabel.text = NSLocalizedStringFromTableInBundle(@"Enter Address Manually", @"KitePrintSDK", [OLConstants bundle], @"");
+            cell.textLabel.text = NSLocalizedStringFromTableInBundle(@"Enter Address Manually", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
         }
         
         cell.textLabel.adjustsFontSizeToFitWidth = YES;
@@ -247,6 +249,7 @@ static const NSInteger kRowAddAddressManually = 0;
     }
 }
 
+#if __IPHONE_OS_VERSION_MIN_REQUIRED < 80000
 #pragma mark - Autorotate and Orientation Methods
 // Currently here to disable landscape orientations and rotation on iOS 7. When support is dropped, these can be deleted.
 
@@ -267,6 +270,7 @@ static const NSInteger kRowAddAddressManually = 0;
         return UIInterfaceOrientationMaskPortrait;
     }
 }
+#endif
 
 
 @end

@@ -29,6 +29,7 @@
 
 #import <Foundation/Foundation.h>
 #import "OLProductTemplateOption.h"
+#import "OLUpsellOffer.h"
 
 typedef void (^TemplateSyncHandler)(NSError *_Nullable error);
 
@@ -57,7 +58,7 @@ typedef enum {
 @property (nonatomic, assign, readonly) BOOL enabled;
 @property (nonatomic, readonly) NSArray *_Nonnull currenciesSupported;
 @property (strong, nonatomic) NSURL *_Nullable coverPhotoURL;
-@property (strong, nonatomic) NSArray *_Nullable productPhotographyURLs;
+@property (strong, nonatomic) NSArray <NSString *>*_Nullable productPhotographyURLs;
 @property (assign, nonatomic) OLTemplateUI templateUI;
 @property (strong, nonatomic) NSString *_Nullable templateClass;
 @property (strong, nonatomic) NSString *_Nullable templateType;
@@ -77,6 +78,7 @@ typedef enum {
 @property (strong, nonatomic) NSDictionary *_Nullable shippingCosts;
 @property (assign, nonatomic) NSInteger gridCountX;
 @property (assign, nonatomic) NSInteger gridCountY;
+@property (strong, nonatomic) NSArray <OLUpsellOffer *>*_Nullable upsellOffers;
 @property (strong, nonatomic, readonly) NSArray <OLProductTemplateOption *>*_Nullable options;
 
 - (instancetype _Nonnull)initWithIdentifier:(NSString *_Nonnull)identifier name:(NSString *_Nonnull)name sheetQuantity:(NSUInteger)quantity sheetCostsByCurrencyCode:(NSDictionary<NSString *, NSDecimalNumber *> *_Nullable)costs enabled:(BOOL)enabled;
@@ -85,11 +87,11 @@ typedef enum {
 - (NSString *_Nonnull)currencyForCurrentLocale;
 - (void)setSupportedOptions:(NSArray *_Nullable)options;
 + (OLTemplateUI)templateUIWithIdentifier:(NSString *_Nonnull)identifier;
-+ (NSString *_Nonnull)templateUIStringWithTemplateClass:(OLTemplateUI)templateClass;
 
 + (void)sync;
 + (void)syncWithCompletionHandler:(void(^_Nullable)(NSArray <OLProductTemplate *>* _Nullable templates, NSError * _Nullable error))handler;
 + (BOOL)isSyncInProgress;
++ (void)cancelSyncInProgress;
 + (OLProductTemplate *_Nullable)templateWithId:(NSString *_Nonnull)identifier;
 + (NSArray *_Nullable)templates;
 + (NSDate *_Nullable)lastSyncDate;

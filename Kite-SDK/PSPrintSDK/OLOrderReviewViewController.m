@@ -84,6 +84,18 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
 
 @end
 
+@interface OLProduct ()
+@property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*declinedOffers;
+@property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*acceptedOffers;
+@property (strong, nonatomic) OLUpsellOffer *redeemedOffer;
+@end
+
+@interface OLProductPrintJob ()
+@property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*declinedOffers;
+@property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*acceptedOffers;
+@property (strong, nonatomic) OLUpsellOffer *redeemedOffer;
+@end
+
 @interface OLOrderReviewViewController () <OLCheckoutDelegate, UIAlertViewDelegate, UICollectionViewDelegateFlowLayout,
 #ifdef OL_KITE_OFFER_ADOBE
 AdobeUXImageEditorViewControllerDelegate,
@@ -248,10 +260,20 @@ UIViewControllerPreviewingDelegate>
     NSUInteger quantityToFulfilOrder = numOrders * self.product.quantityToFulfillOrder;
     if (selectedCount < quantityToFulfilOrder) {
         NSUInteger canSelectExtraCount = quantityToFulfilOrder - selectedCount;
-        UIAlertView *av = [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:NSLocalizedString(@"You've selected %d photos.", @""),selectedCount] message:[NSString stringWithFormat:NSLocalizedString(@"You can add %d more for the same price.", @""), canSelectExtraCount] delegate:nil cancelButtonTitle:NSLocalizedString(@"Add more", @"") otherButtonTitles:NSLocalizedString(@"Print these", @""), nil];
-        av.tag = kTagAlertViewSelectMorePhotos;
-        av.delegate = self;
-        [av show];
+        if ([UIAlertController class]){
+            UIAlertController *ac = [UIAlertController alertControllerWithTitle:[NSString stringWithFormat:NSLocalizedString(@"You've selected %d photos.", @""),selectedCount] message:[NSString stringWithFormat:NSLocalizedString(@"You can add %d more for the same price.", @""), canSelectExtraCount] preferredStyle:UIAlertControllerStyleAlert];
+            [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Print these", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
+                [self doCheckout];
+            }]];
+            [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Add more", @"") style:UIAlertActionStyleCancel handler:NULL]];
+            [self presentViewController:ac animated:YES completion:NULL];
+        }
+        else{
+            UIAlertView *av = [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:NSLocalizedString(@"You've selected %d photos.", @""),selectedCount] message:[NSString stringWithFormat:NSLocalizedString(@"You can add %d more for the same price.", @""), canSelectExtraCount] delegate:nil cancelButtonTitle:NSLocalizedString(@"Add more", @"") otherButtonTitles:NSLocalizedString(@"Print these", @""), nil];
+            av.tag = kTagAlertViewSelectMorePhotos;
+            av.delegate = self;
+            [av show];
+        }
         return NO;
     }
     return YES;
@@ -259,11 +281,6 @@ UIViewControllerPreviewingDelegate>
 
 - (void)saveJobWithCompletionHandler:(void(^)())handler{
     [self preparePhotosForCheckout];
-    
-    NSUInteger iphonePhotoCount = 0;
-    for (OLPrintPhoto *photo in self.checkoutPhotos) {
-        if (photo.type == kPrintPhotoAssetTypeALAsset || photo.type == kPrintPhotoAssetTypePHAsset) ++iphonePhotoCount;
-    }
     
     // Avoid uploading assets if possible. We can avoid uploading where the image already exists at a remote
     // URL and the user did not manipulate it in any way.
@@ -284,17 +301,7 @@ UIViewControllerPreviewingDelegate>
     NSLog(@"Adding %lu duplicates", (unsigned long)duplicatesToFillOrder);
 #endif
     
-    NSDictionary *infoDict = [[NSBundle mainBundle] infoDictionary];
-    NSString *appVersion = [infoDict objectForKey:@"CFBundleShortVersionString"];
-    NSNumber *buildNumber = [infoDict objectForKey:@"CFBundleVersion"];
-    
     OLPrintOrder *printOrder = [OLKiteUtils kiteVcForViewController:self].printOrder;
-    printOrder.userData = @{@"photo_count_iphone": [NSNumber numberWithUnsignedInteger:iphonePhotoCount],
-                            @"sdk_version": kOLKiteSDKVersion,
-                            @"platform": @"iOS",
-                            @"uid": [OLAnalytics userDistinctId],
-                            @"app_version": [NSString stringWithFormat:@"Version: %@ (%@)", appVersion, buildNumber]
-                            };
     
     OLProductPrintJob *job = [[OLProductPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:photoAssets];
     NSArray *jobs = [NSArray arrayWithArray:printOrder.jobs];
@@ -310,6 +317,9 @@ UIViewControllerPreviewingDelegate>
             job.uuid = self.product.uuid;
         }
     }
+    [job.acceptedOffers addObjectsFromArray:self.product.acceptedOffers.allObjects];
+    [job.declinedOffers addObjectsFromArray:self.product.declinedOffers.allObjects];
+    job.redeemedOffer = self.product.redeemedOffer;
     self.product.uuid = job.uuid;
     self.editingPrintJob = job;
     if ([printOrder.jobs containsObject:self.editingPrintJob]){
@@ -480,7 +490,7 @@ UIViewControllerPreviewingDelegate>
             self.indexOfPhotoToDelete = indexPath.item;
             av.tag = kTagAlertViewDeletePhoto;
             [av show];
-        };
+        }
         return;
     }
     extraCopies--;
@@ -726,6 +736,7 @@ UIViewControllerPreviewingDelegate>
     return 0.0;
 }
 
+#if __IPHONE_OS_VERSION_MIN_REQUIRED < 80000
 #pragma mark - UIAlertViewDelegate methods
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
@@ -740,6 +751,7 @@ UIViewControllerPreviewingDelegate>
         }
     }
 }
+#endif
 
 #pragma mark - OLImageEditorViewControllerDelegate methods
 
@@ -831,6 +843,7 @@ UIViewControllerPreviewingDelegate>
     [self.collectionView reloadData];
 }
 
+#if __IPHONE_OS_VERSION_MIN_REQUIRED < 80000
 #pragma mark - Autorotate and Orientation Methods
 // Currently here to disable landscape orientations and rotation on iOS 7. When support is dropped, these can be deleted.
 
@@ -851,5 +864,6 @@ UIViewControllerPreviewingDelegate>
         return UIInterfaceOrientationMaskPortrait;
     }
 }
+#endif
 
 @end

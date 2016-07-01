@@ -9,7 +9,6 @@
 #import <XCTest/XCTest.h>
 #import "OLProductTemplate.h"
 #import "OLKitePrintSDK.h"
-#import "SDWebImageManager.h"
 #import "OLPrintPhoto.h"
 #import "OLKiteTestHelper.h"
 #import <AssetsLibrary/AssetsLibrary.h>
@@ -79,6 +78,12 @@
     
     XCTAssert(printOrder.printed, @"Order not printed");
     XCTAssert([printOrder.receipt hasPrefix:@"PS"], @"Order does not have valid receipt");
+    if (jobs.count == 1){
+        XCTAssert(![printOrder.paymentDescription hasSuffix:@"& More"]);
+    }
+    else if (jobs.count > 1){
+        XCTAssert([printOrder.paymentDescription hasSuffix:@"& More"]);
+    }
     
     return printOrder;
 }
@@ -95,9 +100,10 @@
     
     [printOrder costWithCompletionHandler:^(OLPrintOrderCost *cost, NSError *error){
         [card chargeCard:nil currencyCode:nil description:nil completionHandler:^(NSString *proofOfPayment, NSError *error){
+            XCTAssert([[card numberMasked] isEqualToString:@"24242"]);
             printOrder.proofOfPayment = proofOfPayment;
             XCTAssert(!error, @"Stripe error: %@", error);
-            [printOrder submitForPrintingWithProgressHandler:NULL completionHandler:^(NSString *orderIdReceipt, NSError *error) {
+            [printOrder submitForPrintingWithCompletionHandler:^(NSString *orderIdReceipt, NSError *error){
                 XCTAssert(!error, @"Failed to submit order to Kite with: %@", error);
                 
                 [printOrder saveToHistory];
@@ -143,6 +149,12 @@
     [self submitJobs:@[job]];
 }
 
+- (void)testMultipleJobsOrder{
+    OLProductPrintJob *job1 = [OLPrintJob printJobWithTemplateId:@"squares" OLAssets:[OLKiteTestHelper urlAssets]];
+    OLProductPrintJob *job2 = [OLPrintJob printJobWithTemplateId:@"magnets" OLAssets:[OLKiteTestHelper urlAssets]];
+    [self submitJobs:@[job1, job2]];
+}
+
 - (void)testSquaresOrderWithImageOLAssets{
     OLProductPrintJob *job = [OLPrintJob printJobWithTemplateId:@"squares" OLAssets:[OLKiteTestHelper imageAssets]];
     [self submitJobs:@[job]];
@@ -160,7 +172,7 @@
     NSData *data = [NSData dataWithContentsOfFile:[[NSBundle bundleForClass:[OLProductOrderTests class]] pathForResource:@"2" ofType:@"png"]];
     XCTAssert(data, @"No data");
     
-    OLProductPrintJob *job = [OLPrintJob printJobWithTemplateId:@"squares" OLAssets:@[[OLAsset assetWithDataAsJPEG:data]]];
+    OLProductPrintJob *job = [OLPrintJob printJobWithTemplateId:@"squares" OLAssets:@[[OLAsset assetWithDataAsPNG:data]]];
     [self submitJobs:@[job]];
 }
 
@@ -302,6 +314,13 @@
     [self submitJobs:@[job]];
 }
 
+- (void)testPDFOLAssetPhotobook{
+    NSData *data1 = [NSData dataWithContentsOfFile:[[NSBundle bundleForClass:[OLKiteTestHelper class]] pathForResource:@"3" ofType:@"pdf"]];
+    
+    OLPhotobookPrintJob *job = [OLPrintJob photobookWithTemplateId:@"rpi_wrap_300x300_sm" OLAssets:@[[OLAsset assetWithDataAsPDF:data1]] frontCoverOLAsset:nil backCoverOLAsset:nil];
+    [self submitJobs:@[job]];
+}
+
 - (void)testMultipleAddressesManual{
     OLProductPrintJob *job1 = [OLPrintJob printJobWithTemplateId:@"squares" OLAssets:@[[OLKiteTestHelper urlAssets].firstObject]];
     OLProductPrintJob *job2 = [OLPrintJob printJobWithTemplateId:@"squares" OLAssets:@[[OLKiteTestHelper urlAssets].lastObject]];
@@ -332,6 +351,9 @@
     XCTAssert(printOrder.jobs.count == 1, @"Should have only 1 job");
     [printOrder duplicateJobsForAddresses:@[address1, a]];
     XCTAssert(printOrder.jobs.count == 2, @"Should have 2 jobs, one for each address");
+    
+    XCTAssert(printOrder.shippingAddressesOfJobs.count == 2, @"Should have 2 addresses");
+    XCTAssert(([printOrder.shippingAddressesOfJobs.firstObject isEqual:address1] && [printOrder.shippingAddressesOfJobs.lastObject isEqual:a]) || ([printOrder.shippingAddressesOfJobs.firstObject isEqual:a] && [printOrder.shippingAddressesOfJobs.lastObject isEqual:address1]), @"Addresses should be equal to the above");
     
     [self submitOrder:printOrder WithSuccessHandler:NULL];
     

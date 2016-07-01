@@ -27,18 +27,6 @@
 //  THE SOFTWARE.
 //
 
-#ifdef COCOAPODS
-#import <SDWebImage/SDWebImageManager.h>
-#else
-#import "SDWebImageManager.h"
-#endif
-
-#ifdef COCOAPODS
-#import <SDWebImage/SDWebImageManager.h>
-#else
-#import "SDWebImageManager.h"
-#endif
-
 #import "OLFrameOrderReviewViewController.h"
 #import "OLPrintPhoto.h"
 #import "OLProduct.h"
@@ -87,15 +75,6 @@ UIViewControllerPreviewingDelegate>
 @implementation OLFrameOrderReviewViewController
 
 CGFloat margin = 2;
-
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
 
 - (void)viewDidLoad
 {
@@ -191,10 +170,6 @@ CGFloat margin = 2;
     NSMutableArray *reversePhotos = [self.framePhotos mutableCopy];
     [OLFrameOrderReviewViewController reverseRowsOfPhotosInArray:reversePhotos forProduct:self.product];
     self.checkoutPhotos = reversePhotos;
-}
-
-- (BOOL)shouldShowAddMorePhotos{
-    return NO;
 }
 
 -(NSUInteger) totalNumberOfExtras{
@@ -510,6 +485,7 @@ CGFloat margin = 2;
 }
 #endif
 
+#if __IPHONE_OS_VERSION_MIN_REQUIRED < 80000
 #pragma mark - Autorotate and Orientation Methods
 // Currently here to disable landscape orientations and rotation on iOS 7. When support is dropped, these can be deleted.
 
@@ -530,5 +506,6 @@ CGFloat margin = 2;
         return UIInterfaceOrientationMaskPortrait;
     }
 }
+#endif
 
 @end

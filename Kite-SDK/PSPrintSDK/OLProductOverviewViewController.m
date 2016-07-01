@@ -45,6 +45,7 @@
 #import "OLProductDetailsViewController.h"
 #import "UIViewController+OLMethods.h"
 #import "OLPaymentViewController.h"
+#import "OLUpsellViewController.h"
 
 @interface OLKiteViewController ()
 
@@ -53,8 +54,23 @@
 
 @end
 
+@interface OLProduct ()
+@property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*declinedOffers;
+@property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*acceptedOffers;
+@property (strong, nonatomic) OLUpsellOffer *redeemedOffer;
+- (BOOL)hasOfferIdBeenUsed:(NSUInteger)identifier;
+@end
+
+@interface OLProductPrintJob ()
+@property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*declinedOffers;
+@property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*acceptedOffers;
+@property (strong, nonatomic) OLUpsellOffer *redeemedOffer;
+
+@end
+
 @interface OLPrintOrder ()
 - (void)saveOrder;
+- (BOOL)hasOfferIdBeenUsed:(NSUInteger)identifier;
 @end
 
 @interface OLProductOverviewPageContentViewController ()
@@ -62,12 +78,11 @@
 @end
 
 @interface OLProduct (Private)
-
 -(void)setProductPhotography:(NSUInteger)i toImageView:(UIImageView *)imageView;
-
+- (BOOL)hasOfferIdBeenUsed:(NSUInteger)identifier;
 @end
 
-@interface OLProductOverviewViewController () <UIPageViewControllerDataSource, OLProductOverviewPageContentViewControllerDelegate, OLProductDetailsDelegate, UIPageViewControllerDelegate>
+@interface OLProductOverviewViewController () <UIPageViewControllerDataSource, OLProductOverviewPageContentViewControllerDelegate, OLProductDetailsDelegate, UIPageViewControllerDelegate, OLUpsellViewControllerDelegate>
 @property (strong, nonatomic) UIPageViewController *pageController;
 @property (strong, nonatomic) IBOutlet UIPageControl *pageControl;
 @property (weak, nonatomic) IBOutlet UILabel *costLabel;
@@ -145,12 +160,12 @@
         [self.callToActionButton setTitle: NSLocalizedString(@"Add to Basket", @"")forState:UIControlStateNormal];
     }
     
-    if ([OLKiteABTesting sharedInstance].darkTheme && [OLKiteABTesting sharedInstance].darkThemeColor1){
-        self.callToActionButton.backgroundColor = [OLKiteABTesting sharedInstance].darkThemeColor1;
-        [self.callToActionButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        
-        self.detailsSeparator.backgroundColor = [OLKiteABTesting sharedInstance].darkThemeColor1;
-    }
+//    if ([OLKiteABTesting sharedInstance].darkTheme && [OLKiteABTesting sharedInstance].darkThemeColor1){
+//        self.callToActionButton.backgroundColor = [OLKiteABTesting sharedInstance].darkThemeColor1;
+//        [self.callToActionButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+//        
+//        self.detailsSeparator.backgroundColor = [OLKiteABTesting sharedInstance].darkThemeColor1;
+//    }
     
 #ifndef OL_NO_ANALYTICS
     [OLAnalytics trackProductDescriptionScreenViewed:self.product.productTemplate.name hidePrice:[OLKiteABTesting sharedInstance].hidePrice];
@@ -243,12 +258,12 @@
     
     if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0){
         UIVisualEffect *blurEffect;
-        if (![OLKiteABTesting sharedInstance].darkTheme){
+//        if (![OLKiteABTesting sharedInstance].darkTheme){
         blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleExtraLight];
-        }
-        else{
-            blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleDark];
-        }
+//        }
+//        else{
+//            blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleDark];
+//        }
         
         UIVisualEffectView *visualEffectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
         UIView *view = visualEffectView;
@@ -325,6 +340,59 @@
     [self onButtonStartClicked:sender];
 }
 
+- (OLUpsellOffer *)upsellOfferToShow{
+    NSArray *upsells = self.product.productTemplate.upsellOffers;
+    if (upsells.count == 0){
+        return nil;
+    }
+    
+    OLUpsellOffer *offerToShow;
+    for (OLUpsellOffer *offer in upsells){
+        //Check if offer is valid for this point
+        if (offer.active && offer.type == OLUpsellOfferTypeItemAdd){
+            
+            if ([self.product hasOfferIdBeenUsed:offer.identifier]){
+                continue;
+            }
+            if ([[OLKiteUtils kiteVcForViewController:self].printOrder hasOfferIdBeenUsed:offer.identifier]){
+                continue;
+            }
+            
+            //Find the max priority offer
+            if (!offerToShow || offerToShow.priority < offer.priority){
+                offerToShow = offer;
+            }
+        }
+    }
+    
+    return offerToShow;
+}
+
+-(BOOL) shouldGoToCheckout{
+    OLUpsellOffer *offer = [self upsellOfferToShow];
+    BOOL shouldShowOffer = offer != nil;
+    if (offer){
+        shouldShowOffer &= offer.minUnits <= self.userSelectedPhotos.count;
+        shouldShowOffer &= offer.maxUnits == 0 || offer.maxUnits >= self.userSelectedPhotos.count;
+        shouldShowOffer &= [OLProduct productWithTemplateId:offer.offerTemplate] != nil;
+    }
+    if (shouldShowOffer){
+        OLUpsellViewController *c = [self.storyboard instantiateViewControllerWithIdentifier:@"OLUpsellViewController"];
+        if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8){
+            c.providesPresentationContextTransitionStyle = true;
+            c.definesPresentationContext = true;
+        }
+        c.modalPresentationStyle = UIModalPresentationOverCurrentContext;
+        c.delegate = self;
+        c.offer = offer;
+        c.triggeredProduct = self.product;
+        [self presentViewController:c animated:NO completion:NULL];
+        return NO;
+    }
+    
+    return YES;
+}
+
 - (IBAction)onButtonStartClicked:(id)sender {
     if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder && self.product.productTemplate.templateUI != kOLTemplateUINonCustomizable){
         UIViewController *vc;
@@ -340,6 +408,7 @@
                 [vc safePerformSelector:@selector(setUserPhone:) withObject:self.userPhone];
                 [vc safePerformSelector:@selector(setKiteDelegate:) withObject:self.delegate];
                 [vc safePerformSelector:@selector(setProduct:) withObject:self.product];
+                [vc safePerformSelector:@selector(setUserSelectedPhotos:) withObject:self.userSelectedPhotos];
                 [self.navigationController pushViewController:vc animated:YES];
             }];
             return;
@@ -348,11 +417,14 @@
         [vc safePerformSelector:@selector(setUserPhone:) withObject:self.userPhone];
         [vc safePerformSelector:@selector(setKiteDelegate:) withObject:self.delegate];
         [vc safePerformSelector:@selector(setProduct:) withObject:self.product];
+        [vc safePerformSelector:@selector(setUserSelectedPhotos:) withObject:self.userSelectedPhotos];
         [self.navigationController pushViewController:vc animated:YES];
         return;
     }
     else if (self.product.productTemplate.templateUI == kOLTemplateUINonCustomizable){
-        [self doCheckout];
+        if ([self shouldGoToCheckout]){
+            [self doCheckout];
+        }
         return;
     }
     
@@ -366,16 +438,7 @@
 }
 
 - (void)saveJobWithCompletionHandler:(void(^)())handler{
-    NSDictionary *infoDict = [[NSBundle mainBundle] infoDictionary];
-    NSString *appVersion = [infoDict objectForKey:@"CFBundleShortVersionString"];
-    NSNumber *buildNumber = [infoDict objectForKey:@"CFBundleVersion"];
-    
     OLPrintOrder *printOrder = [OLKiteUtils kiteVcForViewController:self].printOrder;
-    printOrder.userData = @{@"sdk_version": kOLKiteSDKVersion,
-                            @"platform": @"iOS",
-                            @"uid": [OLAnalytics userDistinctId],
-                            @"app_version": [NSString stringWithFormat:@"Version: %@ (%@)", appVersion, buildNumber]
-                            };
     
     OLProductPrintJob *job = [[OLProductPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:@[[OLAsset assetWithURL:[NSURL URLWithString:@"https://kite.ly/no-asset.jpg"]]]];
     NSArray *jobs = [NSArray arrayWithArray:printOrder.jobs];
@@ -480,6 +543,58 @@
     }
 }
 
+#pragma mark OLUpsellViewControllerDelegate
+
+- (void)userDidDeclineUpsell:(OLUpsellViewController *)vc{
+    [self.product.declinedOffers addObject:vc.offer];
+    [vc dismissViewControllerAnimated:NO completion:^{
+        [self doCheckout];
+    }];
+}
+
+- (id<OLPrintJob>)addItemToBasketWithTemplateId:(NSString *)templateId{
+    OLProduct *offerProduct = [OLProduct productWithTemplateId:templateId];
+    NSMutableArray *assets = [[NSMutableArray alloc] init];
+    if (offerProduct.productTemplate.templateUI == kOLTemplateUINonCustomizable){
+        //Do nothing, no assets needed
+    }
+    else if (offerProduct.quantityToFulfillOrder == 1){
+        [assets addObject:[OLAsset assetWithDataSource:[self.userSelectedPhotos.firstObject copy]]];
+    }
+    else{
+        for (OLPrintPhoto *photo in self.userSelectedPhotos){
+            [assets addObject:[OLAsset assetWithDataSource:[photo copy]]];
+        }
+    }
+    
+    id<OLPrintJob> job;
+    if ([OLProductTemplate templateWithId:templateId].templateUI == kOLTemplateUIPhotobook){
+        job = [OLPrintJob photobookWithTemplateId:templateId OLAssets:assets frontCoverOLAsset:nil backCoverOLAsset:nil];
+    }
+    else{
+        job = [OLPrintJob printJobWithTemplateId:templateId OLAssets:assets];
+    }
+    
+    [[OLKiteUtils kiteVcForViewController:self].printOrder addPrintJob:job];
+    return job;
+}
+
+- (void)userDidAcceptUpsell:(OLUpsellViewController *)vc{
+    [self.product.acceptedOffers addObject:vc.offer];
+    [vc dismissViewControllerAnimated:NO completion:^{
+        [self saveJobWithCompletionHandler:^{
+            OLProduct *offerProduct = [OLProduct productWithTemplateId:vc.offer.offerTemplate];
+            UIViewController *nextVc = [self.storyboard instantiateViewControllerWithIdentifier:[OLKiteUtils reviewViewControllerIdentifierForProduct:offerProduct photoSelectionScreen:[OLKiteUtils imageProvidersAvailable:self]]];
+            [nextVc safePerformSelector:@selector(setKiteDelegate:) withObject:self.delegate];
+            [nextVc safePerformSelector:@selector(setProduct:) withObject:offerProduct];
+            NSMutableArray *stack = [self.navigationController.viewControllers mutableCopy];
+            [stack removeObject:self];
+            [stack addObject:nextVc];
+            [self.navigationController setViewControllers:stack animated:YES];
+        }];
+    }];
+}
+
 #pragma mark - UIPageViewControllerDataSource
 
 - (UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerBeforeViewController:(UIViewController *)viewController {
@@ -524,6 +639,7 @@
     [self.product setProductPhotography:[(OLProductOverviewPageContentViewController *)self.pageController.viewControllers.firstObject pageIndex] toImageView:[(OLProductOverviewPageContentViewController *)self.pageController.viewControllers.firstObject imageView]];
 }
 
+#if __IPHONE_OS_VERSION_MIN_REQUIRED < 80000
 #pragma mark - Autorotate and Orientation Methods
 // Currently here to disable landscape orientations and rotation on iOS 7. When support is dropped, these can be deleted.
 
@@ -544,6 +660,7 @@
         return UIInterfaceOrientationMaskPortrait;
     }
 }
+#endif
 
 
 @end

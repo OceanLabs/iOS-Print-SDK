@@ -58,6 +58,8 @@ static NSString *const kKeyOrderPhone = @"co.oceanlabs.pssdk.kKeyOrderPhone";
 static NSString *const kKeyOrderSubmitStatus = @"co.oceanlabs.pssdk.kKeyOrderSubmitStatus";
 static NSString *const kKeyOrderSubmitStatusError = @"co.oceanlabs.pssdk.kKeyOrderSubmitStatusError";
 static NSString *const kKeyOrderOptOutOfEmail = @"co.oceanlabs.pssdk.kKeyOrderOptOutOfEmail";
+static NSString *const kKeyOrderShipToStore = @"co.oceanlabs.pssdk.kKeyOrderShipToStore";
+static NSString *const kKeyOrderPayInStore = @"co.oceanlabs.pssdk.kKeyOrderPayInStore";
 
 static NSMutableArray *inProgressPrintOrders; // Tracks all currently in progress print orders. This is useful as it means they won't be dealloc'd if a user doesn't come a strong reference to them but still expects the completion handler callback
 
@@ -67,6 +69,10 @@ static id stringOrEmptyString(NSString *str) {
 
 @interface OLPrintOrderCostRequest (Private)
 + (NSDictionary *)cachedResponseForOrder:(OLPrintOrder *)order;
+@end
+
+@interface OLPrintOrderCost ()
+@property (strong, nonatomic) NSString *paymentMethod;
 @end
 
 @interface OLKitePrintSDK (Private)
@@ -100,14 +106,27 @@ static id stringOrEmptyString(NSString *str) {
 @property (assign, nonatomic) NSInteger numberOfTimesPolledForSubmissionStatus;
 
 @property (weak, nonatomic) NSArray *userSelectedPhotos;
-
+@property (strong, nonatomic) NSString *paymentMethod; //Only used to report Apple Pay, not saved
 @property (nonatomic, readwrite) NSString *receipt;
 
 @property (assign, nonatomic) BOOL optOutOfEmail;
+@property (assign, nonatomic) BOOL shipToStore;
+@property (assign, nonatomic) BOOL payInStore;
 
 @end
 
+@interface OLProductPrintJob ()
+@property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*declinedOffers;
+@property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*acceptedOffers;
+@property (strong, nonatomic) OLUpsellOffer *redeemedOffer;
+@end
+
 static NSBlockOperation *templateSyncOperation;
+
+@interface OLAddress ()
+@property (strong, nonatomic) NSString *companyName;
+
+@end
 
 @implementation OLPrintOrder
 
@@ -200,7 +219,9 @@ static NSBlockOperation *templateSyncOperation;
 }
 
 - (void)setUserData:(NSDictionary *)userData {
-    NSAssert([NSJSONSerialization isValidJSONObject:userData], @"Only valid JSON structures are accepted as user data");
+    if (userData){
+        NSAssert([NSJSONSerialization isValidJSONObject:userData], @"Only valid JSON structures are accepted as user data");
+    }
     _userData = userData;
 }
 
@@ -270,45 +291,45 @@ static NSBlockOperation *templateSyncOperation;
 - (void)removePrintJob:(id<OLPrintJob>)job {
     [(NSMutableArray *) self.jobs removeObject:job];
     
-    [self removeDiskAssetsForJob:job];
+//    [self removeDiskAssetsForJob:job];
 }
 
-- (void)cleanupDisk{
+//- (void)cleanupDisk{
 //    if (self.jobs.count == 0){
 //        NSArray * urls = [[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask];
 //        NSString *documentDirPath = [[(NSURL *)[urls objectAtIndex:0] path] stringByAppendingPathComponent:@"ol-kite-images"];
 //        [[NSFileManager defaultManager] removeItemAtPath:documentDirPath error:nil];
 //    }
-}
+//}
 
-- (void)removeDiskAssetsForJob:(id<OLPrintJob>)job {
-    for (OLAsset *asset in [job assetsForUploading]){
-        NSString *filePath;
-        if (asset.imageFilePath) {
-            filePath = asset.imageFilePath;
-        }
-        else if ([asset.dataSource respondsToSelector:@selector(asset)] && [[(OLPrintPhoto *)asset.dataSource asset] respondsToSelector:@selector(imageFilePath)]){
-            filePath = [[(OLPrintPhoto *)asset.dataSource asset] imageFilePath];
-        }
-        if (!filePath){
-            continue;
-        }
-        
-        BOOL found = NO;
-        //Check if one of the assets is still selected
-        for (OLPrintPhoto *printPhoto in self.userSelectedPhotos){
-            if ([printPhoto.asset respondsToSelector:@selector(imageFilePath)]){
-                if ([printPhoto.asset imageFilePath]) {
-                    found = YES;
-                    break;
-                }
-            }
-        }
-        if (!found){
-            [asset deleteFromDisk];
-        }
-    }
-}
+//- (void)removeDiskAssetsForJob:(id<OLPrintJob>)job {
+//    for (OLAsset *asset in [job assetsForUploading]){
+//        NSString *filePath;
+//        if (asset.imageFilePath) {
+//            filePath = asset.imageFilePath;
+//        }
+//        else if ([asset.dataSource respondsToSelector:@selector(asset)] && [[(OLPrintPhoto *)asset.dataSource asset] respondsToSelector:@selector(imageFilePath)]){
+//            filePath = [[(OLPrintPhoto *)asset.dataSource asset] imageFilePath];
+//        }
+//        if (!filePath){
+//            continue;
+//        }
+//        
+//        BOOL found = NO;
+//        //Check if one of the assets is still selected
+//        for (OLPrintPhoto *printPhoto in self.userSelectedPhotos){
+//            if ([printPhoto.asset respondsToSelector:@selector(imageFilePath)]){
+//                if ([printPhoto.asset imageFilePath]) {
+//                    found = YES;
+//                    break;
+//                }
+//            }
+//        }
+//        if (!found){
+//            [asset deleteFromDisk];
+//        }
+//    }
+//}
 
 - (BOOL)hasCachedCost {
     if (self.finalCost) {
@@ -365,6 +386,7 @@ static NSBlockOperation *templateSyncOperation;
             NSArray *handlers = [self.costCompletionHandlers copy];
             [self.costCompletionHandlers removeAllObjects];
             for (OLPrintOrderCostCompletionHandler handler in handlers) {
+                cost.paymentMethod = self.paymentMethod;
                 handler(cost, error);
             }
         }];
@@ -521,7 +543,13 @@ static NSBlockOperation *templateSyncOperation;
         [json setObject:self.email forKey:@"customer_email"];
     }
     
-    [json setObject:self.optOutOfEmail ? @"true" : @"false" forKey:@"opt_out_of_emails"];
+    if (self.paymentMethod){
+        [json setObject:self.paymentMethod forKey:@"payment_gateway"];
+    }
+    
+    [json setObject:[NSNumber numberWithBool:self.shipToStore] forKey:@"ship_to_store"];
+    [json setObject:[NSNumber numberWithBool:self.payInStore] forKey:@"pay_in_store"];
+    [json setObject:[NSNumber numberWithBool:self.optOutOfEmail] forKey:@"opt_out_of_emails"];
     
     if (self.shippingAddress) {
         NSDictionary *shippingAddress = @{@"recipient_name": stringOrEmptyString(self.shippingAddress.fullNameFromFirstAndLast),
@@ -532,7 +560,8 @@ static NSBlockOperation *templateSyncOperation;
                                           @"city": stringOrEmptyString(self.shippingAddress.city),
                                           @"county_state": stringOrEmptyString(self.shippingAddress.stateOrCounty),
                                           @"postcode": stringOrEmptyString(self.shippingAddress.zipOrPostcode),
-                                          @"country_code": stringOrEmptyString(self.shippingAddress.country.codeAlpha3)
+                                          @"country_code": stringOrEmptyString(self.shippingAddress.country.codeAlpha3),
+                                          @"company_name": stringOrEmptyString(self.shippingAddress.companyName)
                                           };
         [json setObject:shippingAddress forKey:@"shipping_address"];
     }
@@ -550,6 +579,8 @@ static NSBlockOperation *templateSyncOperation;
     OLCountry *country = self.shippingAddress.country ? self.shippingAddress.country : [OLCountry countryForCurrentLocale];
     hash = 31 * hash + [country.codeAlpha3 hash];
     hash = 31 * hash + [self.promoCode hash];
+    hash = 31 * hash + (self.shipToStore ? 39 : 0);
+    hash = 31 * hash + (self.payInStore ? 73 : 0);
     for (id<OLPrintJob> job in self.jobs){
         if (job.address.country){
             hash = 32 * hash + [job.address.country.codeAlpha3 hash];
@@ -625,13 +656,37 @@ static NSBlockOperation *templateSyncOperation;
 
 - (void)saveOrder {
     [NSKeyedArchiver archiveRootObject:self toFile:[OLPrintOrder orderFilePath]];
-    [self cleanupDisk];
+//    [self cleanupDisk];
 }
 
 + (id)loadOrder {
     OLPrintOrder *order = [NSKeyedUnarchiver unarchiveObjectWithFile:[OLPrintOrder orderFilePath]];
-    [order cleanupDisk];
+//    [order cleanupDisk];
     return order;
+}
+
+- (BOOL)hasOfferIdBeenUsed:(NSUInteger)identifier{
+    for (id<OLPrintJob> job in self.jobs){
+        if (![job respondsToSelector:@selector(acceptedOffers)]){
+            continue;
+        }
+        OLProductPrintJob *printJob = job;
+        for (OLUpsellOffer *acceptedOffer in printJob.acceptedOffers){
+            if (acceptedOffer.identifier == identifier){
+                return YES;
+            }
+        }
+        for (OLUpsellOffer *declinedOffer in printJob.declinedOffers){
+            if (declinedOffer.identifier == identifier){
+                return YES;
+            }
+        }
+        if (printJob.redeemedOffer.identifier == identifier){
+            return YES;
+        }
+        
+    }
+    return NO;
 }
 
 #pragma mark - OLAssetUploadRequestDelegate methods
@@ -757,6 +812,8 @@ static NSBlockOperation *templateSyncOperation;
     [aCoder encodeInteger:self.submitStatus forKey:kKeyOrderSubmitStatus];
     [aCoder encodeObject:self.submitStatusErrorMessage forKey:kKeyOrderSubmitStatusError];
     [aCoder encodeBool:self.optOutOfEmail forKey:kKeyOrderOptOutOfEmail];
+    [aCoder encodeBool:self.shipToStore forKey:kKeyOrderShipToStore];
+    [aCoder encodeBool:self.payInStore forKey:kKeyOrderPayInStore];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
@@ -778,6 +835,8 @@ static NSBlockOperation *templateSyncOperation;
             _submitStatus = [aDecoder decodeIntegerForKey:kKeyOrderSubmitStatus];
             _submitStatusErrorMessage = [aDecoder decodeObjectForKey:kKeyOrderSubmitStatusError];
             _optOutOfEmail = [aDecoder decodeBoolForKey:kKeyOrderOptOutOfEmail];
+            _shipToStore = [aDecoder decodeBoolForKey:kKeyOrderShipToStore];
+            _payInStore = [aDecoder decodeBoolForKey:kKeyOrderPayInStore];
         }
         return self;
         

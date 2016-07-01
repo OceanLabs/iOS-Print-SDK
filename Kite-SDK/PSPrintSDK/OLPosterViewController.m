@@ -27,18 +27,6 @@
 //  THE SOFTWARE.
 //
 
-#ifdef COCOAPODS
-#import <SDWebImage/SDWebImageManager.h>
-#else
-#import "SDWebImageManager.h"
-#endif
-
-#ifdef COCOAPODS
-#import <SDWebImage/SDWebImageManager.h>
-#else
-#import "SDWebImageManager.h"
-#endif
-
 #import "OLPosterViewController.h"
 #import "OLProduct.h"
 #import "OLAnalytics.h"
@@ -543,6 +531,7 @@ OLScrollCropViewControllerDelegate>
 }
 #endif
 
+#if __IPHONE_OS_VERSION_MIN_REQUIRED < 80000
 #pragma mark - Autorotate and Orientation Methods
 // Currently here to disable landscape orientations and rotation on iOS 7. When support is dropped, these can be deleted.
 
@@ -563,5 +552,6 @@ OLScrollCropViewControllerDelegate>
         return UIInterfaceOrientationMaskPortrait;
     }
 }
+#endif
 
 @end

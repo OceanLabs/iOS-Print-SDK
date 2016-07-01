@@ -27,12 +27,7 @@
 //  THE SOFTWARE.
 //
 
-#ifdef COCOAPODS
-#import <SDWebImage/SDWebImageManager.h>
-#else
-#import "SDWebImageManager.h"
-#endif
-
+#import "OLImageDownloader.h"
 #import "OLPrintPhoto.h"
 #import <AssetsLibrary/AssetsLibrary.h>
 #import "RMImageCropper.h"
@@ -76,6 +71,17 @@ static NSOperationQueue *imageOperationQueue;
     NSURL *u2 = [obj defaultURL];
     
     return ([u1 isEqual:u2]);
+}
+
+@end
+
+@implementation PHAsset (isEqual)
+
+- (BOOL)isEqual:(id)object{
+    if(![object isKindOfClass:[PHAsset class]])
+        return NO;
+    
+    return [self.localIdentifier isEqualToString:[object localIdentifier]];
 }
 
 @end
@@ -297,22 +303,26 @@ static NSOperationQueue *imageOperationQueue;
 
 #if defined(OL_KITE_OFFER_INSTAGRAM) || defined(OL_KITE_OFFER_FACEBOOK)
 - (void)downloadFullImageWithProgress:(OLImageEditorImageGetImageProgressHandler)progressHandler completion:(OLImageEditorImageGetImageCompletionHandler)completionHandler {
-    if (![[SDWebImageManager sharedManager] cachedImageExistsForURL:[self.asset fullURL]]){
+    
+    NSURLRequest *request = [[NSURLRequest alloc] initWithURL:[self.asset fullURL]];
+    
+    NSCachedURLResponse *cachedResponse = [[NSURLCache sharedURLCache] cachedResponseForRequest:request];
+    if (cachedResponse.data){
         dispatch_async(dispatch_get_main_queue(), ^{
             if (progressHandler){
                 progressHandler(0.05f); // small bit of fake inital progress to get progress bars displaying
             }
         });
     }
-    [[SDWebImageManager sharedManager] downloadImageWithURL:[self.asset fullURL] options:0 progress:^(NSInteger receivedSize, NSInteger expectedSize) {
+    [[OLImageDownloader sharedInstance] downloadImageAtURL:[self.asset fullURL] progress:^(NSInteger receivedSize, NSInteger expectedSize) {
         dispatch_async(dispatch_get_main_queue(), ^{
             if (progressHandler) {
                 progressHandler(MAX(0.05f, receivedSize / (float) expectedSize));
             }
         });
-    } completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
+    } withCompletionHandler:^(UIImage *image, NSError *error) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            if (finished) {
+            if (!error) {
                 if (completionHandler) completionHandler(image);
             }
         });
@@ -326,7 +336,7 @@ static NSOperationQueue *imageOperationQueue;
 
 - (void)getImageWithSize:(CGSize)size progress:(OLImageEditorImageGetImageProgressHandler)progressHandler completion:(OLImageEditorImageGetImageCompletionHandler)completionHandler {
     BOOL fullResolution = CGSizeEqualToSize(size, CGSizeZero);
-    if (self.type == kPrintPhotoAssetTypeALAsset) {
+    if (self.type == kPrintPhotoAssetTypeALAsset && [self.asset respondsToSelector:@selector(defaultRepresentation)]) {
         UIImage* image;
         if (fullResolution){
             image = [UIImage imageWithCGImage:[[self.asset defaultRepresentation] fullResolutionImage] scale:1 orientation:[[self.asset valueForProperty:ALAssetPropertyOrientation] integerValue]];
@@ -365,22 +375,26 @@ static NSOperationQueue *imageOperationQueue;
         OLAsset *asset = (OLAsset *)self.asset;
         
         if (asset.assetType == kOLAssetTypeRemoteImageURL){
-            [[SDWebImageManager sharedManager] downloadImageWithURL:[(OLAsset *)self.asset imageURL]  options:0 progress:^(NSInteger receivedSize, NSInteger expectedSize) {
+            [[OLImageDownloader sharedInstance] downloadImageAtURL:[(OLAsset *)self.asset imageURL] progress:^(NSInteger receivedSize, NSInteger expectedSize) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     if (progressHandler) {
                         progressHandler(MAX(0.05f, receivedSize / (float) expectedSize));
                     }
                 });
-            } completed:
-             ^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL){
-                 completionHandler(image);
-             }];
+            } withCompletionHandler:^(UIImage *image, NSError *error){
+                completionHandler(image);
+            }];
         }
         else{
             [asset dataWithCompletionHandler:^(NSData *data, NSError *error){
                 completionHandler([UIImage imageWithData:data]);
             }];
         }
+    }
+    else if ([self.asset respondsToSelector:@selector(dataWithCompletionHandler:)]){
+        [self.asset dataWithCompletionHandler:^(NSData *data, NSError *error){
+            completionHandler([UIImage imageWithData:data]);
+        }];
     }
     else if (self.type == kPrintPhotoAssetTypeCorrupt){
         NSData *data = [NSData dataWithContentsOfFile:[[OLKiteUtils kiteBundle] pathForResource:@"kite_corrupt" ofType:@"jpg"]];
@@ -473,6 +487,10 @@ static NSOperationQueue *imageOperationQueue;
     
     CGFloat scaleFactor = (MAX(i_size.width, i_size.height) * screenScale) / MIN(sourceImage.size.height, sourceImage.size.width);
     
+    if (scaleFactor >= 1){
+        return sourceImage;
+    }
+    
     CGFloat newHeight = sourceImage.size.height * scaleFactor;
     CGFloat newWidth = sourceImage.size.width * scaleFactor;
     
@@ -497,7 +515,7 @@ static NSOperationQueue *imageOperationQueue;
 }
 
 - (void)dataWithCompletionHandler:(GetDataHandler)handler {
-    if (self.type == kPrintPhotoAssetTypeALAsset) {
+    if (self.type == kPrintPhotoAssetTypeALAsset && [self.asset respondsToSelector:@selector(defaultRepresentation)]) {
         ALAssetRepresentation *rep = [self.asset defaultRepresentation];
         if (rep) {
             UIImageOrientation orientation = UIImageOrientationUp;
@@ -542,15 +560,13 @@ static NSOperationQueue *imageOperationQueue;
     }
 #if defined(OL_KITE_OFFER_INSTAGRAM) || defined(OL_KITE_OFFER_FACEBOOK)
     else if (self.type == kPrintPhotoAssetTypeFacebookPhoto || self.type == kPrintPhotoAssetTypeInstagramPhoto){
-        [[SDWebImageManager sharedManager] downloadImageWithURL:[self.asset fullURL] options:0 progress:NULL completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
-            if (finished) {
-                if (error) {
-                    handler(nil, error);
-                } else {
-                    [self dataWithImage:image withCompletionHandler:^(NSData *data){
-                        handler(data, nil);
-                    }];
-                }
+        [[OLImageDownloader sharedInstance] downloadImageAtURL:[self.asset fullURL] withCompletionHandler:^(UIImage *image, NSError *error) {
+            if (error) {
+                handler(nil, error);
+            } else {
+                [self dataWithImage:image withCompletionHandler:^(NSData *data){
+                    handler(data, nil);
+                }];
             }
         }];
     }
@@ -558,20 +574,15 @@ static NSOperationQueue *imageOperationQueue;
     else if (self.type == kPrintPhotoAssetTypeOLAsset){
         OLAsset *asset = self.asset;
         if (asset.assetType == kOLAssetTypeRemoteImageURL){
-            [[SDWebImageManager sharedManager] downloadImageWithURL:[asset imageURL]
-                                                            options:0
-                                                           progress:NULL
-                                                          completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *url) {
-                                                              if (finished) {
-                                                                  if (error) {
-                                                                      handler(nil, error);
-                                                                  } else {
-                                                                      [self dataWithImage:image withCompletionHandler:^(NSData *data){
-                                                                          handler(data, nil);
-                                                                      }];
-                                                                  }
-                                                              }
-                                                          }];
+            [[OLImageDownloader sharedInstance] downloadImageAtURL:[asset imageURL] withCompletionHandler:^(UIImage *image, NSError *error) {
+                if (error) {
+                    handler(nil, error);
+                } else {
+                    [self dataWithImage:image withCompletionHandler:^(NSData *data){
+                        handler(data, nil);
+                    }];
+                }
+            }];
         }
         else{
             [asset dataWithCompletionHandler:^(NSData *data, NSError *error){
@@ -585,6 +596,18 @@ static NSOperationQueue *imageOperationQueue;
                 }
             }];
         }
+    }
+    else if([self.asset respondsToSelector:@selector(dataWithCompletionHandler:)]){
+        [self.asset dataWithCompletionHandler:^(NSData *data, NSError *error){
+            if (error){
+                handler(nil,error);
+            }
+            else{
+                [self dataWithImage:[UIImage imageWithData:data] withCompletionHandler:^(NSData *data){
+                    handler(data, nil);
+                }];
+            }
+        }];
     }
     else if (self.type == kPrintPhotoAssetTypeCorrupt){
         handler(0, [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeImagesCorrupt userInfo:@{NSLocalizedDescriptionKey : NSLocalizedString(@"There was an error getting one of your photos. It may have been deleted before we could upload it. Please remove or replace it.", @""), @"asset" : self}]);
@@ -652,7 +675,7 @@ static NSOperationQueue *imageOperationQueue;
     [aCoder encodeInteger:self.extraCopies forKey:kKeyExtraCopies];
     [aCoder encodeObject:self.edits forKey:kKeyEdits];
     [aCoder encodeObject:self.uuid forKey:kKeyUUID];
-    if (self.type == kPrintPhotoAssetTypeALAsset) {
+    if (self.type == kPrintPhotoAssetTypeALAsset && [self.asset respondsToSelector:@selector(valueForProperty:)]) {
         [aCoder encodeObject:[self.asset valueForProperty:ALAssetPropertyAssetURL] forKey:kKeyAsset];
     }
     else if (self.type == kPrintPhotoAssetTypePHAsset){

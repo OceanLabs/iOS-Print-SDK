@@ -28,13 +28,12 @@
 //
 
 #ifdef COCOAPODS
-#import <SDWebImage/SDWebImageManager.h>
 #import <SVProgressHUD/SVProgressHUD.h>
 #else
-#import "SDWebImageManager.h"
 #import "SVProgressHUD.h"
 #endif
 
+#import "OLImageDownloader.h"
 #import "OLReceiptViewController.h"
 #import "OLPaymentViewController.h"
 #import "Util.h"
@@ -80,17 +79,17 @@ static const NSUInteger kSectionErrorRetry = 2;
 
 @implementation OLReceiptViewController
 
-- (BOOL)prefersStatusBarHidden {
-    BOOL hidden = [OLKiteABTesting sharedInstance].darkTheme;
-    
-    if ([self respondsToSelector:@selector(traitCollection)]){
-        if (self.traitCollection.verticalSizeClass == UIUserInterfaceSizeClassCompact && self.view.frame.size.height < self.view.frame.size.width){
-            hidden |= YES;
-        }
-    }
-    
-    return hidden;
-}
+//- (BOOL)prefersStatusBarHidden {
+//    BOOL hidden = [OLKiteABTesting sharedInstance].darkTheme;
+//    
+//    if ([self respondsToSelector:@selector(traitCollection)]){
+//        if (self.traitCollection.verticalSizeClass == UIUserInterfaceSizeClassCompact && self.view.frame.size.height < self.view.frame.size.width){
+//            hidden |= YES;
+//        }
+//    }
+//    
+//    return hidden;
+//}
 
 - (id)initWithPrintOrder:(OLPrintOrder *)printOrder {
     if (self = [super initWithStyle:UITableViewStyleGrouped]) {
@@ -169,11 +168,11 @@ static const NSUInteger kSectionErrorRetry = 2;
 - (void)setupHeader{
     NSString *url = self.printOrder.printed ? [OLKiteABTesting sharedInstance].receiptSuccessURL : [OLKiteABTesting sharedInstance].receiptFailureURL;
     if (url){
-        [[SDWebImageManager sharedManager] downloadImageWithURL:[NSURL URLWithString:url] options:0 progress:NULL completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL){
+        [[OLImageDownloader sharedInstance] downloadImageAtURL:[NSURL URLWithString:url] withCompletionHandler:^(UIImage *image, NSError *error){
             image = [UIImage imageWithCGImage:image.CGImage scale:2 orientation:image.imageOrientation];
             NSString *bgUrl = self.printOrder.printed ? [OLKiteABTesting sharedInstance].receiptSuccessBgURL : [OLKiteABTesting sharedInstance].receiptFailureBgURL;
             if (bgUrl){
-                [[SDWebImageManager sharedManager] downloadImageWithURL:[NSURL URLWithString:bgUrl] options:0 progress:NULL completed:^(UIImage *bgImage, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL){
+                [[OLImageDownloader sharedInstance] downloadImageAtURL:[NSURL URLWithString:bgUrl] withCompletionHandler:^(UIImage *bgImage, NSError *error){
                     bgImage = [UIImage imageWithCGImage:bgImage.CGImage scale:2 orientation:image.imageOrientation];
                     [self setupBannerImage:image withBgImage:bgImage];
                 }];
@@ -209,7 +208,7 @@ static const NSUInteger kSectionErrorRetry = 2;
     [super viewWillAppear:animated];
     
     if (self.presentedModally || [OLKiteABTesting sharedInstance].launchedWithPrintOrder) {
-        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Done", @"KitePrintSDK", [OLConstants bundle], @"") style:UIBarButtonItemStylePlain target:self action:@selector(onButtonDoneClicked)];
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Done", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") style:UIBarButtonItemStyleDone target:self action:@selector(onButtonDoneClicked)];
         self.navigationController.viewControllers = @[self];
         self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
         self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
@@ -234,8 +233,8 @@ static const NSUInteger kSectionErrorRetry = 2;
     if (self.printOrder.submitStatus == OLPrintOrderSubmitStatusError){
         [self.printOrder cancelSubmissionOrPreemptedAssetUpload];
         if ([UIAlertController class]){
-            UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLConstants bundle], @"") message:self.printOrder.submitStatusErrorMessage preferredStyle:UIAlertControllerStyleAlert];
-            [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"New Payment", @"KitePrintSDK", [OLConstants bundle], @"") style:UIAlertActionStyleDefault handler:^(id action){
+            UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") message:self.printOrder.submitStatusErrorMessage preferredStyle:UIAlertControllerStyleAlert];
+            [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"New Payment", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") style:UIAlertActionStyleDefault handler:^(id action){
                 OLPaymentViewController *vc = [[OLPaymentViewController alloc] initWithPrintOrder:self.printOrder];
                 vc.delegate = self;
                 OLNavigationController *nvc = [[OLNavigationController alloc] initWithRootViewController:vc];
@@ -246,7 +245,7 @@ static const NSUInteger kSectionErrorRetry = 2;
             [self presentViewController:ac animated:YES completion:NULL];
         }
         else{
-            UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLConstants bundle], @"") message:self.printOrder.submitStatusErrorMessage delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLConstants bundle], @"") otherButtonTitles:nil];
+            UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") message:self.printOrder.submitStatusErrorMessage delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") otherButtonTitles:nil];
             [av show];
             OLPaymentViewController *vc = [[OLPaymentViewController alloc] initWithPrintOrder:self.printOrder];
             vc.delegate = self;
@@ -263,12 +262,12 @@ static const NSUInteger kSectionErrorRetry = 2;
             [SVProgressHUD dismiss];
             if (error){
                 if ([UIAlertController class]){
-                    UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLConstants bundle], @"") message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
-                    [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLConstants bundle], @"") style:UIAlertActionStyleDefault handler:NULL]];
+                    UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
+                    [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") style:UIAlertActionStyleDefault handler:NULL]];
                     [self presentViewController:ac animated:YES completion:NULL];
                 }
                 else{
-                    UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLConstants bundle], @"") message:error.localizedDescription delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLConstants bundle], @"") otherButtonTitles:nil];
+                    UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") message:error.localizedDescription delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") otherButtonTitles:nil];
                     [av show];
                 }
             }
@@ -293,13 +292,13 @@ static const NSUInteger kSectionErrorRetry = 2;
         const float step = (1.0f / totalAssetsToUpload);
         float progress = totalAssetsUploaded * step + (totalAssetBytesWritten / (float) totalAssetBytesExpectedToWrite) * step;
         [SVProgressHUD setDefaultMaskType:SVProgressHUDMaskTypeBlack];
-        [SVProgressHUD showProgress:progress status:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Uploading Images \n%lu / %lu", @"KitePrintSDK", [OLConstants bundle], @""), (unsigned long) totalAssetsUploaded + 1, (unsigned long) totalAssetsToUpload]];
+        [SVProgressHUD showProgress:progress status:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Uploading Images \n%lu / %lu", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), (unsigned long) totalAssetsUploaded + 1, (unsigned long) totalAssetsToUpload]];
     } completionHandler:^(NSString *orderIdReceipt, NSError *error) {
         [self.printOrder saveToHistory]; // save again as the print order has it's receipt set if it was successful, otherwise last error is set
         [SVProgressHUD dismiss];
         
         if (error) {
-            [[[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLConstants bundle], @"") message:error.localizedDescription delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLConstants bundle], @"") otherButtonTitles:nil] show];
+            [[[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") message:error.localizedDescription delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") otherButtonTitles:nil] show];
         } else {
             [self retryWasSuccessful];
         }
@@ -360,9 +359,9 @@ static const NSUInteger kSectionErrorRetry = 2;
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
     if (section == kSectionOrderSummary) {
-        return NSLocalizedStringFromTableInBundle(@"Order Summary", @"KitePrintSDK", [OLConstants bundle], @"");
+        return NSLocalizedStringFromTableInBundle(@"Order Summary", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
     } else if (section == kSectionOrderId) {
-        return NSLocalizedStringFromTableInBundle(@"Order Id", @"KitePrintSDK", [OLConstants bundle], @"");
+        return NSLocalizedStringFromTableInBundle(@"Order Id", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
     }
     
     return nil;
@@ -422,7 +421,7 @@ static const NSUInteger kSectionErrorRetry = 2;
                 NSDecimalNumber *cost;
                 NSString *currencyCode = self.printOrder.currencyCode;
                 if (total) {
-                    cell.textLabel.text = NSLocalizedStringFromTableInBundle(@"Total", @"KitePrintSDK", [OLConstants bundle], @"");
+                    cell.textLabel.text = NSLocalizedStringFromTableInBundle(@"Total", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
                     cell.textLabel.font = [UIFont boldSystemFontOfSize:cell.textLabel.font.pointSize];
                     cell.detailTextLabel.font = [UIFont boldSystemFontOfSize:cell.detailTextLabel.font.pointSize];
                     
@@ -455,7 +454,7 @@ static const NSUInteger kSectionErrorRetry = 2;
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
         }
         
-        cell.textLabel.text = NSLocalizedStringFromTableInBundle(@"Retry", @"KitePrintSDK", [OLConstants bundle], @"");
+        cell.textLabel.text = NSLocalizedStringFromTableInBundle(@"Retry", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
     }
     
     return cell;
@@ -471,6 +470,7 @@ static const NSUInteger kSectionErrorRetry = 2;
     [self onButtonRetryClicked];
 }
 
+#if __IPHONE_OS_VERSION_MIN_REQUIRED < 80000
 #pragma mark - Autorotate and Orientation Methods
 // Currently here to disable landscape orientations and rotation on iOS 7. When support is dropped, these can be deleted.
 
@@ -491,5 +491,6 @@ static const NSUInteger kSectionErrorRetry = 2;
         return UIInterfaceOrientationMaskPortrait;
     }
 }
+#endif
 
 @end

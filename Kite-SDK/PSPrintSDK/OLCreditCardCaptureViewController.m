@@ -33,10 +33,13 @@
 #import "SVProgressHUD.h"
 #endif
 
+#ifdef OL_OFFER_JUDOPAY
+#import "OLJudoPayCard.h"
+#endif
+
 #import "OLCreditCardCaptureViewController.h"
 #import "OLConstants.h"
 #import "OLPayPalCard.h"
-#import "OLJudoPayCard.h"
 #import "OLPrintOrder.h"
 //#import "CardIO.h"
 #import "OLKitePrintSDK.h"
@@ -47,6 +50,7 @@
 #import "OLPrintOrderCost.h"
 #import "UIImage+ImageNamedInKiteBundle.h"
 #import "OLKiteABTesting.h"
+#import "OLKiteUtils.h"
 
 static const NSUInteger kOLSectionCardNumber = 0;
 static const NSUInteger kOLSectionExpiryDate = 1;
@@ -107,7 +111,9 @@ static CardType getCardType(NSString *cardNumber) {
 }
 
 @interface OLKitePrintSDK (Private)
+#ifdef OL_OFFER_JUDOPAY
 + (BOOL)useJudoPayForGBP;
+#endif
 + (BOOL)useStripeForCreditCards;
 @end
 
@@ -129,17 +135,17 @@ UITableViewDataSource, UITextFieldDelegate>
 
 @implementation OLCreditCardCaptureViewController
 
-- (BOOL)prefersStatusBarHidden {
-    BOOL hidden = [OLKiteABTesting sharedInstance].darkTheme;
-    
-    if ([self respondsToSelector:@selector(traitCollection)]){
-        if (self.traitCollection.verticalSizeClass == UIUserInterfaceSizeClassCompact && self.view.frame.size.height < self.view.frame.size.width){
-            hidden |= YES;
-        }
-    }
-    
-    return hidden;
-}
+//- (BOOL)prefersStatusBarHidden {
+//    BOOL hidden = [OLKiteABTesting sharedInstance].darkTheme;
+//    
+//    if ([self respondsToSelector:@selector(traitCollection)]){
+//        if (self.traitCollection.verticalSizeClass == UIUserInterfaceSizeClassCompact && self.view.frame.size.height < self.view.frame.size.width){
+//            hidden |= YES;
+//        }
+//    }
+//    
+//    return hidden;
+//}
 
 - (id)initWithPrintOrder:(OLPrintOrder *)printOrder {
     self.rootVC = [[OLCreditCardCaptureRootController alloc] initWithPrintOrder:printOrder];
@@ -246,28 +252,28 @@ UITableViewDataSource, UITextFieldDelegate>
     [self.textFieldCVV resignFirstResponder];
     
     if (self.textFieldCardNumber.text.length < 4) {
-        NSString *localizedDescription = NSLocalizedStringFromTableInBundle(@"Enter a valid credit card number", @"KitePrintSDK", [OLConstants bundle], @"");
-        [[[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLConstants bundle], @"") message:localizedDescription delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLConstants bundle], @"") otherButtonTitles:nil] show];
+        NSString *localizedDescription = NSLocalizedStringFromTableInBundle(@"Enter a valid credit card number", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
+        [[[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") message:localizedDescription delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") otherButtonTitles:nil] show];
         return;
     }
     
     if (self.textFieldExpiryDate.text.length != 5) {
-        NSString *localizedDescription = NSLocalizedStringFromTableInBundle(@"Enter a valid expiry date", @"KitePrintSDK", [OLConstants bundle], @"");
-        [[[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLConstants bundle], @"") message:localizedDescription delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLConstants bundle], @"") otherButtonTitles:nil] show];
+        NSString *localizedDescription = NSLocalizedStringFromTableInBundle(@"Enter a valid expiry date", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
+        [[[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") message:localizedDescription delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") otherButtonTitles:nil] show];
         return;
     }
     
     if (self.textFieldCVV.text.length == 0) {
-        NSString *localizedDescription = NSLocalizedStringFromTableInBundle(@"Enter a valid CVV number", @"KitePrintSDK", [OLConstants bundle], @"");
-        [[[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLConstants bundle], @"") message:localizedDescription delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLConstants bundle], @"") otherButtonTitles:nil] show];
+        NSString *localizedDescription = NSLocalizedStringFromTableInBundle(@"Enter a valid CVV number", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
+        [[[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") message:localizedDescription delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") otherButtonTitles:nil] show];
         return;
     }
     
     NSUInteger expireMonth = [self cardExpireMonth];
     NSUInteger expireYear = [self cardExpireYear];
     if (expireMonth > 12) {
-        NSString *localizedDescription = NSLocalizedStringFromTableInBundle(@"Enter a valid expiry date", @"KitePrintSDK", [OLConstants bundle], @"");
-        [[[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLConstants bundle], @"") message:localizedDescription delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLConstants bundle], @"") otherButtonTitles:nil] show];
+        NSString *localizedDescription = NSLocalizedStringFromTableInBundle(@"Enter a valid expiry date", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
+        [[[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") message:localizedDescription delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") otherButtonTitles:nil] show];
         return;
     }
     
@@ -275,8 +281,8 @@ UITableViewDataSource, UITextFieldDelegate>
     NSDateComponents *components = [[NSCalendar currentCalendar] components:flags fromDate:[NSDate date]];
     NSInteger componentsYear = components.year - 2000; //This will obviously cause problems near 2100.
     if (componentsYear > expireYear || (componentsYear == expireYear && components.month > expireMonth)){
-        NSString *localizedDescription = NSLocalizedStringFromTableInBundle(@"Please enter a card expiry date in the future", @"KitePrintSDK", [OLConstants bundle], @"");
-        [[[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLConstants bundle], @"") message:localizedDescription delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLConstants bundle], @"") otherButtonTitles:nil] show];
+        NSString *localizedDescription = NSLocalizedStringFromTableInBundle(@"Please enter a card expiry date in the future", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
+        [[[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") message:localizedDescription delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") otherButtonTitles:nil] show];
         return;
     }
     
@@ -296,8 +302,8 @@ UITableViewDataSource, UITextFieldDelegate>
             paypalCard = kOLPayPalCardTypeDiscover;
             break;
         default: {
-            NSString *localizedDescription = NSLocalizedStringFromTableInBundle(@"Enter a valid credit card number", @"KitePrintSDK", [OLConstants bundle], @"");
-            [[[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLConstants bundle], @"") message:localizedDescription delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLConstants bundle], @"") otherButtonTitles:nil] show];
+            NSString *localizedDescription = NSLocalizedStringFromTableInBundle(@"Enter a valid credit card number", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
+            [[[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") message:localizedDescription delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") otherButtonTitles:nil] show];
             return;
         }
     }
@@ -310,17 +316,17 @@ UITableViewDataSource, UITextFieldDelegate>
         card.cvv2 = [self cardCVV];
         
         [SVProgressHUD setDefaultMaskType:SVProgressHUDMaskTypeBlack];
-        [SVProgressHUD showWithStatus:NSLocalizedStringFromTableInBundle(@"Processing", @"KitePrintSDK", [OLConstants bundle], @"")];
+        [SVProgressHUD showWithStatus:NSLocalizedStringFromTableInBundle(@"Processing", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")];
         [card chargeCard:nil currencyCode:nil description:nil completionHandler:^(NSString *proofOfPayment, NSError *error) {
             if (error) {
                 [SVProgressHUD dismiss];
                 if ([UIAlertController class]){
-                    UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLConstants bundle], @"") message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
-                    [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLConstants bundle], @"") style:UIAlertActionStyleDefault handler:NULL]];
+                    UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
+                    [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") style:UIAlertActionStyleDefault handler:NULL]];
                     [self presentViewController:ac animated:YES completion:NULL];
                 }
                 else{
-                    UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLConstants bundle], @"") message:error.localizedDescription delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLConstants bundle], @"") otherButtonTitles:nil];
+                    UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") message:error.localizedDescription delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") otherButtonTitles:nil];
                     [av show];
                 }
                 return;
@@ -345,14 +351,14 @@ UITableViewDataSource, UITextFieldDelegate>
 
 - (void)storeAndChargeCard:(id)card{
     [SVProgressHUD setDefaultMaskType:SVProgressHUDMaskTypeBlack];
-    [SVProgressHUD showWithStatus:NSLocalizedStringFromTableInBundle(@"Processing", @"KitePrintSDK", [OLConstants bundle], @"")];
+    [SVProgressHUD showWithStatus:NSLocalizedStringFromTableInBundle(@"Processing", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")];
     [card storeCardWithCompletionHandler:^(NSError *error) {
         // ignore error as I'd rather the user gets a nice checkout experience than we store the card in PayPal vault.
         [self.printOrder costWithCompletionHandler:^(OLPrintOrderCost *cost, NSError *error) {
             [card chargeCard:[cost totalCostInCurrency:self.printOrder.currencyCode] currencyCode:self.printOrder.currencyCode description:self.printOrder.paymentDescription completionHandler:^(NSString *proofOfPayment, NSError *error) {
                 if (error) {
                     [SVProgressHUD dismiss];
-                    [[[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLConstants bundle], @"") message:error.localizedDescription delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLConstants bundle], @"") otherButtonTitles:nil] show];
+                    [[[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") message:error.localizedDescription delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") otherButtonTitles:nil] show];
                     return;
                 }
                 
@@ -594,6 +600,7 @@ UITableViewDataSource, UITextFieldDelegate>
 //}
 //#endif
 
+#if __IPHONE_OS_VERSION_MIN_REQUIRED < 80000
 #pragma mark - Autorotate and Orientation Methods
 // Currently here to disable landscape orientations and rotation on iOS 7. When support is dropped, these can be deleted.
 
@@ -614,5 +621,6 @@ UITableViewDataSource, UITextFieldDelegate>
         return UIInterfaceOrientationMaskPortrait;
     }
 }
+#endif
 
 @end

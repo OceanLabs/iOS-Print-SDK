@@ -27,12 +27,6 @@
 //  THE SOFTWARE.
 //
 
-#ifdef COCOAPODS
-#import <AFNetworking/AFNetworking.h>
-#else
-#import "AFNetworking.h"
-#endif
-
 #import "OLAnalytics.h"
 #import "OLPrintOrder.h"
 #import "OLAddress.h"
@@ -42,7 +36,7 @@
 #import "OLKitePrintSDK.h"
 #include <sys/sysctl.h>
 #import "OLKiteABTesting.h"
-#import "UICKeyChainStore.h"
+#import "OLKeyChainStore.h"
 #import "NSDictionary+RequestParameterData.h"
 
 static NSString *const kKeyUserDistinctId = @"ly.kite.sdk.kKeyUserDistinctId";
@@ -90,7 +84,7 @@ static __weak id<OLKiteDelegate> kiteDelegate;
 }
 
 + (NSString *)userDistinctId{
-    UICKeyChainStore *keychain = [UICKeyChainStore keyChainStoreWithService:kKeyServiceName];
+    OLKeyChainStore *keychain = [OLKeyChainStore keyChainStoreWithService:kKeyServiceName];
     NSData *data = [keychain dataForKey:kKeyUserDistinctId];
     NSString *uuid;
     if (data){
@@ -189,6 +183,7 @@ static __weak id<OLKiteDelegate> kiteDelegate;
             }
         }
     }] resume];
+    [session finishTasksAndInvalidate];
 }
 
 + (void)sendToMixPanelWithDictionary:(NSDictionary *)dict{
@@ -211,6 +206,7 @@ static __weak id<OLKiteDelegate> kiteDelegate;
                                                           delegate:nil
                                                      delegateQueue:nil];
     [[session dataTaskWithRequest:request] resume];
+    [session finishTasksAndInvalidate];
 }
 
 + (NSDictionary *)defaultDictionaryForEventName:(NSString *)eventName{
@@ -406,6 +402,18 @@ static __weak id<OLKiteDelegate> kiteDelegate;
     [OLAnalytics sendToMixPanelWithDictionary:dict];
     
     [OLAnalytics reportAnalyticsEventToDelegate:eventName job:nil printOrder:printOrder extraInfo:nil];
+}
+
++ (void)trackChooseAddressScreenViewed {
+    [OLAnalytics reportAnalyticsEventToDelegate:@"Choose Address Screen Viewed" job:nil printOrder:nil extraInfo:nil];
+}
+
++ (void)trackAddAddressScreenViewed {
+    [OLAnalytics reportAnalyticsEventToDelegate:@"Add Address Screen Viewed" job:nil printOrder:nil extraInfo:nil];
+}
+
++ (void)trackSearchAddressScreenViewed {
+    [OLAnalytics reportAnalyticsEventToDelegate:@"Search Address Screen Viewed" job:nil printOrder:nil extraInfo:nil];
 }
 
 + (void)trackPaymentScreenViewedForOrder:(OLPrintOrder *)printOrder applePayIsAvailable:(NSString *)applePayIsAvailable{
@@ -713,6 +721,24 @@ static __weak id<OLKiteDelegate> kiteDelegate;
     [OLAnalytics reportAnalyticsEventToDelegate:eventName job:nil printOrder:nil extraInfo:@{kOLAnalyticsProductName : productName}];
 }
 
++ (void)trackUpsellShown:(BOOL)shown {
+    NSString *eventName = @"Upsell Screen Viewed";
+    if (shown) {
+        NSDictionary *dict = [OLAnalytics defaultDictionaryForEventName:eventName];
+        [OLAnalytics sendToMixPanelWithDictionary:dict];
+    }
+    [OLAnalytics reportAnalyticsEventToDelegate:eventName job:nil printOrder:nil extraInfo:@{@"Shown": [NSNumber numberWithBool:shown]}];
+}
+
++ (void)trackUpsellDismissed:(BOOL)optedIn {
+    NSString *eventName = @"Upsell Screen Dismissed";
+    NSDictionary *dict = [OLAnalytics defaultDictionaryForEventName:eventName];
+    NSString *how = optedIn ? @"Yes Please" : @"Not Thanks";
+    [dict[@"properties"] setObject:how forKey:@"How"];
+    [OLAnalytics sendToMixPanelWithDictionary:dict];
+    [OLAnalytics reportAnalyticsEventToDelegate:eventName job:nil printOrder:nil extraInfo:@{@"How": how}];
+}
+
 + (void)trackBasketIconTappedWithNumberBadged:(NSInteger)number{
     [OLAnalytics reportAnalyticsEventToDelegate:@"Basket Icon Tapped" job:nil printOrder:nil extraInfo:@{kOLAnalyticsNumberOnBadge : [NSNumber numberWithInteger:number]}];
 }
@@ -745,14 +771,12 @@ static __weak id<OLKiteDelegate> kiteDelegate;
         p[@"Voucher Code"] = printOrder.promoCode;
     }
     
-    if (printOrder.userData) {
-        if (printOrder.userData[@"email"]) {
-            p[@"Shipping Email"] = printOrder.userData[@"email"];
-        }
-        
-        if (printOrder.userData[@"phone"]) {
-            p[@"Shipping Phone"] = printOrder.userData[@"phone"];
-        }
+    if (printOrder.email) {
+        p[@"Shipping Email"] = printOrder.email;
+    }
+    
+    if (printOrder.phone) {
+        p[@"Shipping Phone"] = printOrder.phone;
     }
     
     if (printOrder.shippingAddress) {

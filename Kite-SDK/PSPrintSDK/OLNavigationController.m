@@ -35,17 +35,18 @@
 - (void)viewDidLoad{
     [super viewDidLoad];
     
-    if ([OLKiteABTesting sharedInstance].darkTheme){
-        self.navigationBar.barTintColor = [UIColor blackColor];
-        self.navigationBar.tintColor = [UIColor grayColor];
-        self.navigationBar.barStyle = UIBarStyleBlackTranslucent;
-        
-        NSMutableDictionary *attributes = [[NSMutableDictionary alloc] init];
-        [attributes setObject:[UIColor grayColor] forKey:NSForegroundColorAttributeName];
-        self.navigationBar.titleTextAttributes = attributes;
-    }
+//    if ([OLKiteABTesting sharedInstance].darkTheme){
+//        self.navigationBar.barTintColor = [UIColor blackColor];
+//        self.navigationBar.tintColor = [UIColor grayColor];
+//        self.navigationBar.barStyle = UIBarStyleBlackTranslucent;
+//        
+//        NSMutableDictionary *attributes = [[NSMutableDictionary alloc] init];
+//        [attributes setObject:[UIColor grayColor] forKey:NSForegroundColorAttributeName];
+//        self.navigationBar.titleTextAttributes = attributes;
+//    }
 }
 
+#if __IPHONE_OS_VERSION_MIN_REQUIRED < 80000
 - (BOOL)shouldAutorotate {
     UIViewController *vc;
     if (self.presentedViewController) vc = self.presentedViewController;
@@ -70,5 +71,6 @@
         return UIInterfaceOrientationMaskPortrait;
     }
 }
+#endif
 
 @end

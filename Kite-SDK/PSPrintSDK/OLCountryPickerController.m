@@ -30,6 +30,7 @@
 #import "OLCountry.h"
 #import "OLConstants.h"
 #import "OLKiteABTesting.h"
+#import "OLKiteUtils.h"
 
 @interface OLCountryListController : UITableViewController
 @property (strong, nonatomic) NSMutableArray *selected;
@@ -42,17 +43,17 @@
 
 @implementation OLCountryListController
 
-- (BOOL)prefersStatusBarHidden {
-    BOOL hidden = [OLKiteABTesting sharedInstance].darkTheme;
-    
-    if ([self respondsToSelector:@selector(traitCollection)]){
-        if (self.traitCollection.verticalSizeClass == UIUserInterfaceSizeClassCompact && self.view.frame.size.height < self.view.frame.size.width){
-            hidden |= YES;
-        }
-    }
-    
-    return hidden;
-}
+//- (BOOL)prefersStatusBarHidden {
+//    BOOL hidden = [OLKiteABTesting sharedInstance].darkTheme;
+//    
+//    if ([self respondsToSelector:@selector(traitCollection)]){
+//        if (self.traitCollection.verticalSizeClass == UIUserInterfaceSizeClassCompact && self.view.frame.size.height < self.view.frame.size.width){
+//            hidden |= YES;
+//        }
+//    }
+//    
+//    return hidden;
+//}
 
 - (id)initWithStyle:(UITableViewStyle)style {
     if (self = [super initWithStyle:style]) {
@@ -64,13 +65,13 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.title = NSLocalizedStringFromTableInBundle(@"Choose Country", @"KitePrintSDK", [OLConstants bundle], @"");
+    self.title = NSLocalizedStringFromTableInBundle(@"Choose Country", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
     
     if (self.tableView.allowsMultipleSelection) {
-        UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Done", @"KitePrintSDK", [OLConstants bundle], @"") style:UIBarButtonItemStyleDone target:self action:@selector(onButtonDoneClicked)];
+        UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Done", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") style:UIBarButtonItemStyleDone target:self action:@selector(onButtonDoneClicked)];
         self.navigationItem.rightBarButtonItem = doneButton;
     } else {
-        UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLConstants bundle], @"") style:UIBarButtonItemStylePlain target:self action:@selector(onButtonCancelClicked)];
+        UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") style:UIBarButtonItemStylePlain target:self action:@selector(onButtonCancelClicked)];
         self.navigationItem.rightBarButtonItem = cancelButton;
     }
     
@@ -197,7 +198,7 @@
         }
     }
 }
-
+#if __IPHONE_OS_VERSION_MIN_REQUIRED < 80000
 #pragma mark - Autorotate and Orientation Methods
 // Currently here to disable landscape orientations and rotation on iOS 7. When support is dropped, these can be deleted.
 
@@ -218,6 +219,7 @@
         return UIInterfaceOrientationMaskPortrait;
     }
 }
+#endif
 
 @end
 
@@ -250,6 +252,7 @@
     return self.countryListVC.selected;
 }
 
+#if __IPHONE_OS_VERSION_MIN_REQUIRED < 80000
 #pragma mark - Autorotate and Orientation Methods
 // Currently here to disable landscape orientations and rotation on iOS 7. When support is dropped, these can be deleted.
 
@@ -270,5 +273,6 @@
         return UIInterfaceOrientationMaskPortrait;
     }
 }
+#endif
 
 @end

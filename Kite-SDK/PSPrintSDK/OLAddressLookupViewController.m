@@ -65,21 +65,21 @@
 
 @implementation OLAddressLookupViewController
 
-- (BOOL)prefersStatusBarHidden {
-    BOOL hidden = [OLKiteABTesting sharedInstance].darkTheme;
-    
-    if ([self respondsToSelector:@selector(traitCollection)]){
-        if (self.traitCollection.verticalSizeClass == UIUserInterfaceSizeClassCompact && self.view.frame.size.height < self.view.frame.size.width){
-            hidden |= YES;
-        }
-    }
-    
-    return hidden;
-}
+//- (BOOL)prefersStatusBarHidden {
+//    BOOL hidden = [OLKiteABTesting sharedInstance].darkTheme;
+//    
+//    if ([self respondsToSelector:@selector(traitCollection)]){
+//        if (self.traitCollection.verticalSizeClass == UIUserInterfaceSizeClassCompact && self.view.frame.size.height < self.view.frame.size.width){
+//            hidden |= YES;
+//        }
+//    }
+//    
+//    return hidden;
+//}
 
 - (id)init {
     if (self = [super initWithStyle:UITableViewStylePlain]) {
-        self.title = NSLocalizedStringFromTableInBundle(@"Address Search", @"KitePrintSDK", [OLConstants bundle], @"");
+        self.title = NSLocalizedStringFromTableInBundle(@"Address Search", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
     }
     
     return self;
@@ -102,7 +102,7 @@
     self.countryPickerView = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"CountryPickerView"];
     
     UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(15, 0, 110, 44)];
-    label.text = NSLocalizedStringFromTableInBundle(@"Country", @"KitePrintSDK", [OLConstants bundle], @"");
+    label.text = NSLocalizedStringFromTableInBundle(@"Country", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
     
     self.labelCountry = [[UILabel alloc] initWithFrame:CGRectMake(110, 0, 320 - 110, 44)];
     self.labelCountry.adjustsFontSizeToFitWidth = YES;
@@ -130,13 +130,18 @@
     }
 }
 
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    [OLAnalytics trackSearchAddressScreenViewed];
+}
+
 - (void)setCountry:(OLCountry *)country {
     _country = country;
     self.labelCountry.text = country.name;
     if ([country.codeAlpha3 isEqualToString:@"USA"]) {
-        self.searchBar.placeholder = NSLocalizedStringFromTableInBundle(@"Search by street, address or ZIP code", @"KitePrintSDK", [OLConstants bundle], @"");
+        self.searchBar.placeholder = NSLocalizedStringFromTableInBundle(@"Search by street, address or ZIP code", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
     } else {
-        self.searchBar.placeholder = NSLocalizedStringFromTableInBundle(@"Search by postcode, street or address", @"KitePrintSDK", [OLConstants bundle], @"");
+        self.searchBar.placeholder = NSLocalizedStringFromTableInBundle(@"Search by postcode, street or address", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
     }
 }
 
@@ -319,6 +324,7 @@
     [self.tableView reloadData]; // ensure section header is reloaded appropriately
 }
 
+#if __IPHONE_OS_VERSION_MIN_REQUIRED < 80000
 #pragma mark - Autorotate and Orientation Methods
 // Currently here to disable landscape orientations and rotation on iOS 7. When support is dropped, these can be deleted.
 
@@ -339,5 +345,6 @@
         return UIInterfaceOrientationMaskPortrait;
     }
 }
+#endif
 
 @end

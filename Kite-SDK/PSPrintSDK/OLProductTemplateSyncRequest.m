@@ -33,6 +33,9 @@
 #import "OLProductTemplate.h"
 #import "OLConstants.h"
 #import "OLKiteABTesting.h"
+#import "OLKiteTheme.h"
+#import "OLCountry.h"
+#import "OLKiteUtils.h"
 
 @interface OLProductTemplateSyncRequest ()
 @property (nonatomic, strong) OLBaseRequest *req;
@@ -42,6 +45,11 @@
 
 + (NSString *)apiEndpoint;
 + (NSString *)apiVersion;
+
+@end
+
+@interface OLAddress ()
+@property (strong, nonatomic) NSString *companyName;
 
 @end
 
@@ -82,15 +90,83 @@
                     [[OLKiteABTesting sharedInstance] setUserConfig:userConfig];
                 }
                 
+                id payPalSupportedCurrencies = json[@"paypal_supported_currencies"];
+                if ([payPalSupportedCurrencies isKindOfClass:[NSArray class]]){
+                    [OLKiteABTesting sharedInstance].paypalSupportedCurrencies = payPalSupportedCurrencies;
+                }
+                
+                id themeConfig = json[@"kiosk_config"];
+                if ([themeConfig isKindOfClass:[NSDictionary class]]){
+                    OLKiteTheme *theme = [[OLKiteTheme alloc] init];
+                    
+                    id valuesDict = themeConfig[[[NSLocale preferredLanguages] objectAtIndex:0]];
+                    if (!valuesDict){
+                        valuesDict = themeConfig[@"en"];
+                    }
+                    if (!valuesDict && [themeConfig allKeys].count > 0){
+                        valuesDict = themeConfig[[themeConfig allKeys].firstObject];
+                    }
+                    
+                    if (valuesDict){
+                        
+                        theme.burgerMenuHeader = [NSURL URLWithString:valuesDict[@"kiosk_burger_menu_header"]];
+                        theme.endSessionButton = [NSURL URLWithString:valuesDict[@"kiosk_end_session_button"]];
+                        theme.navigationIcon = [NSURL URLWithString:valuesDict[@"kiosk_navigation_icon"]];
+                        theme.privacyPolicy = [NSURL URLWithString:valuesDict[@"kiosk_privacy_policy_url"]];
+                        theme.receiptLogo = [NSURL URLWithString:valuesDict[@"kiosk_receipt_logo"]];
+                        theme.secretReveal = [NSURL URLWithString:valuesDict[@"kiosk_secret_reveal"]];
+                        theme.shippingOption1 = [NSURL URLWithString:valuesDict[@"kiosk_shipping_option_to_store"]];
+                        theme.shippingOption2 = [NSURL URLWithString:valuesDict[@"kiosk_shipping_option_to_home"]];
+                        theme.startScreenLandscape = [NSURL URLWithString:valuesDict[@"kiosk_start_screen_landscape"]];
+                        theme.startScreenPortrait = [NSURL URLWithString:valuesDict[@"kiosk_start_screen_portrait"]];
+                        theme.termsAndConditions = [NSURL URLWithString:valuesDict[@"kiosk_terms_and_conditions_url"]];
+                        theme.splashScreen = [NSURL URLWithString:valuesDict[@"kiosk_splash_screen"]];
+                        theme.ctaColor = valuesDict[@"kiosk_cta_color"];
+                    }
+                    
+                    if ([themeConfig[@"remove_payment_gateway"] isKindOfClass:[NSNumber class]]){
+                        theme.kioskEnablePayAtTheTill = [themeConfig[@"remove_payment_gateway"] boolValue];
+                    }
+                    
+                    if ([themeConfig[@"promo_code_checkout"] isKindOfClass:[NSNumber class]]){
+                        theme.kioskRequirePromoCode = [themeConfig[@"promo_code_checkout"] boolValue];
+                    }
+                    
+                    if ([themeConfig[@"ship_to_store"] isKindOfClass:[NSDictionary class]]){
+                        NSDictionary *addressDict = themeConfig[@"ship_to_store"];
+                        OLAddress *address = [[OLAddress alloc] init];
+                        address.companyName = addressDict[@"company_name"];
+                        address.line1 = addressDict[@"shipping_address_1"];
+                        address.line2 = addressDict[@"shipping_address_2"];
+                        address.city = addressDict[@"city"];
+                        address.stateOrCounty = addressDict[@"county_state"];
+                        address.zipOrPostcode = addressDict[@"postal_code"];
+                        address.country = [OLCountry countryForCode:addressDict[@"country_code"]];
+                        
+                        theme.kioskShipToStoreAddress = address;
+                    }
+                    
+                    [[OLKiteABTesting sharedInstance] setTheme:theme];
+                }
+                
                 id objects = json[@"objects"];
                 if ([objects isKindOfClass:[NSArray class]]) {
                     for (id productTemplate in objects) {
                         if ([productTemplate isKindOfClass:[NSDictionary class]]) {
+                            if (![productTemplate[@"active"] boolValue] && [OLKitePrintSDK environment] == kOLKitePrintSDKEnvironmentLive){
+                                continue;
+                            }
+                            else if (![productTemplate[@"sandbox_active"] boolValue] && [OLKitePrintSDK environment] == kOLKitePrintSDKEnvironmentSandbox){
+                                continue;
+                            }
                             id name = productTemplate[@"name"];
                             id identifier = productTemplate[@"template_id"];
                             id costs = productTemplate[@"cost"];
                             id imagesPerSheet = productTemplate[@"images_per_page"];
                             id product = productTemplate[@"product"];
+                            
+                            NSDictionary *upsellOffers = [productTemplate[@"upsell_offers"] isKindOfClass:[NSArray class]] ? productTemplate[@"upsell_offers"] : nil;
+                            
                             NSNumber *enabledNumber = productTemplate[@"enabled"];
                             NSString *description = productTemplate[@"description"];
                             NSString *descriptionMarkdown = productTemplate[@"description_markdown"];
@@ -195,7 +271,7 @@
                                         code = [product[@"product_code"] isKindOfClass:[NSString class]] ? product[@"product_code"] : nil;
                                     }
                                 }
-                            
+                                
                                 NSMutableDictionary *costPerSheetByCurrencyCode = [[NSMutableDictionary alloc] init];
                                 for (id cost in costs) {
                                     if ([cost isKindOfClass:[NSDictionary class]]) {
@@ -231,6 +307,15 @@
                                     t.gridCountX = [gridCountX integerValue];
                                     t.gridCountY = [gridCountY integerValue];
                                     t.supportedOptions = supportedOptions;
+                                    
+                                    NSMutableArray <OLUpsellOffer *>*upsellOffersClean = [[NSMutableArray alloc] init];
+                                    for (NSDictionary *offerDict in upsellOffers){
+                                        if ([offerDict isKindOfClass:[NSDictionary class]]){
+                                            [upsellOffersClean addObject:[OLUpsellOffer upsellOfferWithDictionary:offerDict]];
+                                        }
+                                    }
+                                    t.upsellOffers = upsellOffersClean;
+                                    
                                     [acc addObject:t];
                                 }
                             }
@@ -255,15 +340,15 @@
                     }
                 }
                 
-                handler(nil, [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeServerFault userInfo:@{NSLocalizedDescriptionKey: NSLocalizedStringFromTableInBundle(@"Failed to synchronize product templates. Please try again.", @"KitePrintSDK", [OLConstants bundle], @"")}]);
+                handler(nil, [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeServerFault userInfo:@{NSLocalizedDescriptionKey: NSLocalizedStringFromTableInBundle(@"Failed to synchronize product templates. Please try again.", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")}]);
             }
         }
     }];
 }
 
-//- (void)cancel {
-//    [self.req cancel];
-//    self.req = nil;
-//}
+- (void)cancel {
+    [self.req cancel];
+    self.req = nil;
+}
 
 @end

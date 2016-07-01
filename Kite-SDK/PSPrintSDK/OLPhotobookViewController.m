@@ -52,6 +52,7 @@
 #import "OLScrollCropViewController.h"
 #import "UIImage+ImageNamedInKiteBundle.h"
 #import "UIView+RoundRect.h"
+#import "OLUpsellViewController.h"
 
 #ifdef OL_KITE_AT_LEAST_IOS8
 #import "CTAssetsPickerController.h"
@@ -73,7 +74,11 @@
 #import "UIViewController+OLMethods.h"
 #ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
 #import "OLCustomPhotoProvider.h"
-#import <KITAssetsPickerController.h>
+#ifdef COCOAPODS
+#import <KITAssetsPickerController/KITAssetsPickerController.h>
+#else
+#import "KITAssetsPickerController.h"
+#endif
 #endif
 
 #ifdef OL_KITE_OFFER_ADOBE
@@ -116,9 +121,8 @@ static const CGFloat kBookEdgePadding = 38;
 @end
 
 @interface OLPrintOrder (Private)
-
+- (BOOL)hasOfferIdBeenUsed:(NSUInteger)identifier;
 - (void)saveOrder;
-
 @end
 
 @interface MPFlipTransition (Private)
@@ -128,6 +132,19 @@ static const CGFloat kBookEdgePadding = 38;
 - (void)transitionDidComplete:(BOOL)completed;
 - (void)cleanupLayers;
 
+@end
+
+@interface OLProduct ()
+@property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*declinedOffers;
+@property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*acceptedOffers;
+@property (strong, nonatomic) OLUpsellOffer *redeemedOffer;
+- (BOOL)hasOfferIdBeenUsed:(NSUInteger)identifier;
+@end
+
+@interface OLPhotobookPrintJob ()
+@property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*declinedOffers;
+@property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*acceptedOffers;
+@property (strong, nonatomic) OLUpsellOffer *redeemedOffer;
 @end
 
 @interface OLPhotobookViewController () <UIPageViewControllerDataSource, UIPageViewControllerDelegate, UIGestureRecognizerDelegate,
@@ -148,7 +165,7 @@ KITAssetsPickerControllerDelegate,
 #ifdef OL_KITE_OFFER_ADOBE
 AdobeUXImageEditorViewControllerDelegate,
 #endif
-UINavigationControllerDelegate
+UINavigationControllerDelegate, OLUpsellViewControllerDelegate
 >
 
 @property (assign, nonatomic) BOOL animating;
@@ -482,15 +499,6 @@ UINavigationControllerDelegate
     [self dismissViewControllerAnimated:YES completion:NULL];
 }
 
-- (BOOL)prefersStatusBarHidden{
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8){
-        return YES;
-    }
-    else{
-        return [super prefersStatusBarHidden];
-    }
-}
-
 - (void)viewDidLayoutSubviews{
     [super viewDidLayoutSubviews];
     
@@ -640,6 +648,65 @@ UINavigationControllerDelegate
     return vc;
 }
 
+#pragma mark OLUpsellViewControllerDelegate
+
+- (void)userDidDeclineUpsell:(OLUpsellViewController *)vc{
+    [self.product.declinedOffers addObject:vc.offer];
+    [vc dismissViewControllerAnimated:NO completion:^{
+        [self doCheckout];
+    }];
+}
+
+- (id<OLPrintJob>)addItemToBasketWithTemplateId:(NSString *)templateId{
+    OLProduct *offerProduct = [OLProduct productWithTemplateId:templateId];
+    NSMutableArray *assets = [[NSMutableArray alloc] init];
+    if (offerProduct.productTemplate.templateUI == kOLTemplateUINonCustomizable){
+        //Do nothing, no assets needed
+    }
+    else if (offerProduct.quantityToFulfillOrder == 1){
+        [assets addObject:[OLAsset assetWithDataSource:[self.userSelectedPhotos.firstObject copy]]];
+    }
+    else{
+        for (OLPrintPhoto *photo in self.userSelectedPhotos){
+            [assets addObject:[OLAsset assetWithDataSource:[photo copy]]];
+        }
+    }
+    
+    id<OLPrintJob> job;
+    if ([OLProductTemplate templateWithId:templateId].templateUI == kOLTemplateUIPhotobook){
+        job = [OLPrintJob photobookWithTemplateId:templateId OLAssets:assets frontCoverOLAsset:nil backCoverOLAsset:nil];
+    }
+    else{
+        job = [OLPrintJob printJobWithTemplateId:templateId OLAssets:assets];
+    }
+    
+    [[OLKiteUtils kiteVcForViewController:self].printOrder addPrintJob:job];
+    return job;
+}
+
+- (void)userDidAcceptUpsell:(OLUpsellViewController *)vc{
+    [self.product.acceptedOffers addObject:vc.offer];
+    [vc dismissViewControllerAnimated:NO completion:^{
+        if (vc.offer.prepopulatePhotos){
+            id<OLPrintJob> job = [self addItemToBasketWithTemplateId:vc.offer.offerTemplate];
+            [(OLPhotobookPrintJob *)job setRedeemedOffer:vc.offer];
+            [self doCheckout];
+        }
+        else{
+            [self saveJobWithCompletionHandler:^{
+                OLProduct *offerProduct = [OLProduct productWithTemplateId:vc.offer.offerTemplate];
+                UIViewController *nextVc = [self.storyboard instantiateViewControllerWithIdentifier:[OLKiteUtils reviewViewControllerIdentifierForProduct:offerProduct photoSelectionScreen:[OLKiteUtils imageProvidersAvailable:self]]];
+                [nextVc safePerformSelector:@selector(setKiteDelegate:) withObject:self.delegate];
+                [nextVc safePerformSelector:@selector(setProduct:) withObject:offerProduct];
+                NSMutableArray *stack = [self.navigationController.viewControllers mutableCopy];
+                [stack removeObject:self];
+                [stack addObject:nextVc];
+                [self.navigationController setViewControllers:stack animated:YES];
+            }];
+        }
+    }];
+}
+
 #pragma mark - OLScrollCropView delegate
 
 - (void)scrollCropViewControllerDidCancel:(OLScrollCropViewController *)cropper{
@@ -737,14 +804,61 @@ UINavigationControllerDelegate
 #pragma mark - Checkout
 
 - (IBAction)onButtonNextClicked:(UIButton *)sender {
-    if (![self shouldGoToCheckout]){
-        return;
+    if ([self shouldGoToCheckout]){
+        [self doCheckout];
+    }
+}
+
+- (OLUpsellOffer *)upsellOfferToShow{
+    NSArray *upsells = self.product.productTemplate.upsellOffers;
+    if (upsells.count == 0){
+        return nil;
     }
     
-    [self doCheckout];
+    OLUpsellOffer *offerToShow;
+    for (OLUpsellOffer *offer in upsells){
+        //Check if offer is valid for this point
+        if (offer.active && offer.type == OLUpsellOfferTypeItemAdd){
+            
+            if ([self.product hasOfferIdBeenUsed:offer.identifier]){
+                continue;
+            }
+            if ([[OLKiteUtils kiteVcForViewController:self].printOrder hasOfferIdBeenUsed:offer.identifier]){
+                continue;
+            }
+            
+            //Find the max priority offer
+            if (!offerToShow || offerToShow.priority < offer.priority){
+                offerToShow = offer;
+            }
+        }
+    }
+    
+    return offerToShow;
 }
 
 -(BOOL) shouldGoToCheckout{
+    OLUpsellOffer *offer = [self upsellOfferToShow];
+    BOOL shouldShowOffer = offer != nil;
+    if (offer){
+        shouldShowOffer &= offer.minUnits <= self.userSelectedPhotos.count;
+        shouldShowOffer &= offer.maxUnits == 0 || offer.maxUnits >= self.userSelectedPhotos.count;
+        shouldShowOffer &= [OLProduct productWithTemplateId:offer.offerTemplate] != nil;
+    }
+    if (shouldShowOffer){
+        OLUpsellViewController *c = [self.storyboard instantiateViewControllerWithIdentifier:@"OLUpsellViewController"];
+        if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8){
+            c.providesPresentationContextTransitionStyle = true;
+            c.definesPresentationContext = true;
+        }
+        c.modalPresentationStyle = UIModalPresentationOverCurrentContext;
+        c.delegate = self;
+        c.offer = offer;
+        c.triggeredProduct = self.product;
+        [self presentViewController:c animated:NO completion:NULL];
+        return NO;
+    }
+    
     NSUInteger selectedCount = 0;
     for (id object in self.photobookPhotos){
         if (object != [NSNull null]){
@@ -788,13 +902,6 @@ UINavigationControllerDelegate
         }
     }
     
-    NSUInteger instagramPhotoCount = 0, facebookPhotoCount = 0, iphonePhotoCount = 0;
-    for (OLPrintPhoto *photo in bookPhotos) {
-        if (photo.type == kPrintPhotoAssetTypeALAsset || photo.type == kPrintPhotoAssetTypeOLAsset || photo.type == kPrintPhotoAssetTypePHAsset) ++iphonePhotoCount;
-        if (photo.type == kPrintPhotoAssetTypeFacebookPhoto) ++facebookPhotoCount;
-        if (photo.type == kPrintPhotoAssetTypeInstagramPhoto) ++instagramPhotoCount;
-    }
-    
     // Avoid uploading assets if possible. We can avoid uploading where the image already exists at a remote
     // URL and the user did not manipulate it in any way.
     NSMutableArray *photoAssets = [[NSMutableArray alloc] init];
@@ -809,21 +916,12 @@ UINavigationControllerDelegate
     for (NSUInteger i = 0; i < duplicatesToFillOrder; ++i) {
         [photoAssets addObject:photoAssets[i % userSelectedAssetCount]];
     }
-    NSLog(@"Adding %lu duplicates", (unsigned long)duplicatesToFillOrder);
     
-    NSDictionary *infoDict = [[NSBundle mainBundle] infoDictionary];
-    NSString *appVersion = [infoDict objectForKey:@"CFBundleShortVersionString"];
-    NSNumber *buildNumber = [infoDict objectForKey:@"CFBundleVersion"];
+#ifdef OL_VERBOSE
+    NSLog(@"Adding %lu duplicates", (unsigned long)duplicatesToFillOrder);
+#endif
     
     OLPrintOrder *printOrder = [OLKiteUtils kiteVcForViewController:self].printOrder;
-    printOrder.userData = @{@"photo_count_iphone": [NSNumber numberWithUnsignedInteger:iphonePhotoCount],
-                            @"sdk_version": kOLKiteSDKVersion,
-                            @"platform": @"iOS",
-                            @"uid": [OLAnalytics userDistinctId],
-                            @"app_version": [NSString stringWithFormat:@"Version: %@ (%@)", appVersion, buildNumber]
-                            };
-    
-    
     OLPhotobookPrintJob *job = [[OLPhotobookPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:photoAssets];
     job.frontCover = self.coverPhoto ? [OLAsset assetWithDataSource:self.coverPhoto] : nil;
     for (NSString *option in self.product.selectedOptions.allKeys){
@@ -842,6 +940,9 @@ UINavigationControllerDelegate
             job.uuid = self.product.uuid;
         }
     }
+    [job.acceptedOffers addObjectsFromArray:self.product.acceptedOffers.allObjects];
+    [job.declinedOffers addObjectsFromArray:self.product.declinedOffers.allObjects];
+    job.redeemedOffer = self.product.redeemedOffer;
     self.product.uuid = job.uuid;
     self.editingPrintJob = job;
     if ([printOrder.jobs containsObject:self.editingPrintJob]){
@@ -881,6 +982,7 @@ UINavigationControllerDelegate
     }];
 }
 
+#if __IPHONE_OS_VERSION_MIN_REQUIRED < 80000
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
     if (alertView.tag == kTagAlertViewSelectMorePhotos) {
         if (buttonIndex == 1) {
@@ -888,6 +990,7 @@ UINavigationControllerDelegate
         }
     }
 }
+#endif
 
 #pragma mark - Gesture recognizers
 
@@ -1621,10 +1724,12 @@ UINavigationControllerDelegate
     __block UIViewController *picker;
     __block Class assetClass;
     if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8 || !definesAtLeastiOS8){
+#ifndef OL_KITE_CI_DEPLOY
         picker = [[OLAssetsPickerController alloc] init];
         [(OLAssetsPickerController *)picker setAssetsFilter:[ALAssetsFilter allPhotos]];
         assetClass = [ALAsset class];
         ((OLAssetsPickerController *)picker).delegate = self;
+#endif
     }
 #ifdef OL_KITE_AT_LEAST_IOS8
     else{
@@ -1654,7 +1759,6 @@ UINavigationControllerDelegate
         }
     }
 #endif
-    
     if (picker){
         picker.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
         [self presentViewController:picker animated:YES completion:nil];
@@ -1710,9 +1814,14 @@ UINavigationControllerDelegate
     NSMutableArray *photoArray = [[NSMutableArray alloc] initWithCapacity:array.count];
     
     for (id object in array) {
-        OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
-        printPhoto.asset = object;
-        [photoArray addObject:printPhoto];
+        if ([object isKindOfClass:[OLPrintPhoto class]]){
+            [photoArray addObject:object];
+        }
+        else{
+            OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
+            printPhoto.asset = object;
+            [photoArray addObject:printPhoto];
+        }
     }
     
     //    // First remove any that are not returned.
@@ -1805,9 +1914,13 @@ UINavigationControllerDelegate
 - (void)assetsPickerController:(id)picker didFinishPickingAssets:(NSArray *)assets {
     NSInteger originalCount = self.userSelectedPhotos.count;
     Class assetClass;
+#ifdef OL_KITE_CI_DEPLOY
+    if (NO){}
+#else
     if ([picker isKindOfClass:[OLAssetsPickerController class]]){
         assetClass = [ALAsset class];
     }
+#endif
 #ifdef OL_KITE_AT_LEAST_IOS8
     else if ([picker isKindOfClass:[CTAssetsPickerController class]]){
         assetClass = [PHAsset class];
@@ -1817,12 +1930,16 @@ UINavigationControllerDelegate
     else if ([picker isKindOfClass:[KITAssetsPickerController class]]){
         NSMutableArray *olAssets = [[NSMutableArray alloc] init];
         for (id<OLAssetDataSource> asset in assets){
-            if ([asset respondsToSelector:@selector(dataWithCompletionHandler:)]){
+            if ([asset isKindOfClass:[OLPrintPhoto class]]){
+                [olAssets addObject:asset];
+                assetClass = [assets.lastObject class];
+            }
+            else if ([asset respondsToSelector:@selector(dataWithCompletionHandler:)]){
                 [olAssets addObject:[OLAsset assetWithDataSource:asset]];
+                assetClass = [[olAssets.lastObject dataSource] class];
             }
         }
         assets = olAssets;
-        assetClass = [[assets.firstObject dataSource] class];
     }
 #endif
     
@@ -2096,6 +2213,7 @@ UINavigationControllerDelegate
 }
 #endif
 
+#if __IPHONE_OS_VERSION_MIN_REQUIRED < 80000
 #pragma mark UIActionSheet Delegate (only used on iOS 7)
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex{
@@ -2137,5 +2255,6 @@ UINavigationControllerDelegate
         return UIInterfaceOrientationMaskLandscape;
     }
 }
+#endif
 
 @end

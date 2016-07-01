@@ -27,14 +27,10 @@
 //  THE SOFTWARE.
 //
 
-#ifdef COCOAPODS
-#import <AFNetworking/AFNetworking.h>
-#else
-#import "AFNetworking.h"
-#endif
-
 #import "OLPayPalCard.h"
 #import "OLConstants.h"
+#import "NSString+Formatting.h"
+#import "OLKiteUtils.h"
 
 static NSString *const kKeyNumberMasked = @"co.oceanlabs.paypal.kKeyNumberMasked";
 static NSString *const kKeyCardType = @"co.oceanlabs.paypal.kKeyCardtype";
@@ -47,9 +43,9 @@ static NSString *const kKeyVaultExpireDate = @"co.oceanlabs.paypal.kKeyVaultExpi
 
 static NSString *const kOLErrorDomainPayPal = @"co.oceanlabs.paypal.kOLErrorDomainPayPal";
 
-#define kErrorMessageGenericPayPalVaultFailure NSLocalizedStringFromTableInBundle(@"Failed to store card details with PayPal. Please try again.", @"KitePrintSDK", [OLConstants bundle], @"")
-#define kErrorMessageBadCardNumber NSLocalizedStringFromTableInBundle(@"Please enter a valid card number", @"KitePrintSDK", [OLConstants bundle], @"")
-#define kErrorMessageBadExpiryDate NSLocalizedStringFromTableInBundle(@"Please enter a card expiry date in the future", @"KitePrintSDK", [OLConstants bundle], @"")
+#define kErrorMessageGenericPayPalVaultFailure NSLocalizedStringFromTableInBundle(@"Failed to store card details with PayPal. Please try again.", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")
+#define kErrorMessageBadCardNumber NSLocalizedStringFromTableInBundle(@"Please enter a valid card number", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")
+#define kErrorMessageBadExpiryDate NSLocalizedStringFromTableInBundle(@"Please enter a card expiry date in the future", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")
 
 
 static NSString *clientId;
@@ -122,92 +118,125 @@ static NSString *typeToString(OLPayPalCardType type) {
 }
 
 - (void)getAccessTokenWithCompletionHandler:(OLPayPalCardAccessTokenCompletionHandler)handler {
-    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
-    [manager.requestSerializer setAuthorizationHeaderFieldWithUsername:clientId password:@""];
-    [manager POST:[NSString stringWithFormat:@"https://%@/v1/oauth2/token", environment == kOLPayPalEnvironmentLive ? @"api.paypal.com" : @"api.sandbox.paypal.com"]
-       parameters:@{@"grant_type":@"client_credentials"} progress:NULL
-          success:^(NSURLSessionDataTask *task, id responseObject) {
-        id accessToken = [responseObject objectForKey:@"access_token"];
-        if ([accessToken isKindOfClass:[NSString class]]) {
-            handler(accessToken, nil);
-        } else {
-            // TODO: real response here :)
-            NSError *error = [NSError errorWithDomain:@"" code:0 userInfo:@{NSLocalizedDescriptionKey: @"Failed to validate card details, please try again."}];
-            handler(nil, error);
-        }
-    } failure:^(NSURLSessionDataTask *task, NSError *error) {
-        handler(nil, error);
-    }];
-}
-
-+ (AFHTTPSessionManager *)managerWithAccessToken:(NSString *)accessToken {
-    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
-    manager.requestSerializer = [[AFJSONRequestSerializer alloc] init];
-    [manager.requestSerializer setValue:[NSString stringWithFormat:@"Bearer %@", accessToken] forHTTPHeaderField:@"Authorization"];
-    [manager.requestSerializer setValue:@"application/json" forHTTPHeaderField:@"Accept"];
-    [manager.requestSerializer setValue:@"en" forHTTPHeaderField:@"Accept-Language"];
-    NSMutableIndexSet *acceptableStatusCodes = [[NSMutableIndexSet alloc] init];
-    [acceptableStatusCodes addIndexesInRange:NSMakeRange(200, 100)];
-    [acceptableStatusCodes addIndexesInRange:NSMakeRange(400, 100)];
-    [acceptableStatusCodes addIndexesInRange:NSMakeRange(500, 100)];
-    manager.responseSerializer.acceptableStatusCodes = acceptableStatusCodes;
-    return manager;
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"https://%@/v1/oauth2/token", environment == kOLPayPalEnvironmentLive ? @"api.paypal.com" : @"api.sandbox.paypal.com"]]];
+    [request setHTTPMethod:@"POST"];
+    
+    NSData *basicAuthCredentials = [[NSString stringWithFormat:@"%@:%@", clientId, @""] dataUsingEncoding:NSUTF8StringEncoding];
+    NSString *base64AuthCredentials = [basicAuthCredentials base64EncodedStringWithOptions:(NSDataBase64EncodingOptions)0];
+    [request setValue:[NSString stringWithFormat:@"Basic %@", base64AuthCredentials] forHTTPHeaderField:@"Authorization"];
+    [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+    [request setHTTPBody:[@"grant_type=client_credentials" dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    
+    NSURLSessionConfiguration *sessionConfig = [NSURLSessionConfiguration defaultSessionConfiguration];
+    
+    NSURLSession *session = [NSURLSession sessionWithConfiguration:sessionConfig
+                                                          delegate:nil
+                                                     delegateQueue:nil];
+    
+    [[session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error){
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (error){
+                handler(nil, error);
+            }
+            else if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
+                NSError *JSONError = nil;
+                NSDictionary *dictionary = [NSJSONSerialization JSONObjectWithData:data
+                                                                           options:0
+                                                                             error:&JSONError];
+                
+                id accessToken = [dictionary objectForKey:@"access_token"];
+                if ([accessToken isKindOfClass:[NSString class]] && !JSONError) {
+                    handler(accessToken, nil);
+                } else {
+                    // TODO: real response here :)
+                    NSError *error = [NSError errorWithDomain:@"" code:0 userInfo:@{NSLocalizedDescriptionKey: NSLocalizedString(@"Failed to validate card details, please try again.", @"")}];
+                    handler(nil, error);
+                }
+            }
+        });
+    }] resume];
+    [session finishTasksAndInvalidate];
 }
 
 - (void)storeCardWithCompletionHandler:(OLPayPalCardStoreCompletionHandler)handler {
-   [self getAccessTokenWithCompletionHandler:^(NSString *accessToken, NSError *error) {
-       AFHTTPSessionManager *manager = [OLPayPalCard managerWithAccessToken:accessToken];
-       NSDictionary *params = @{@"number": self.number,
-                                @"type": typeToString(self.type),
-                                @"expire_month": [NSString stringWithFormat:@"%lu", (unsigned long) self.expireMonth],
-                                @"expire_year": [NSString stringWithFormat:@"%lu", (unsigned long) self.expireYear],
-                                @"cvv2": self.cvv2,
-                                //@"payer_id": @""
-                                };
-
-       [manager POST:[NSString stringWithFormat:@"https://%@/v1/vault/credit-card", environment == kOLPayPalEnvironmentLive ? @"api.paypal.com" : @"api.sandbox.paypal.com"]
-          parameters:params progress:NULL success:^(NSURLSessionDataTask *task, id responseObject) {
-              if ([task.response isKindOfClass:[NSHTTPURLResponse class]]){
-                  NSInteger statusCode = [(NSHTTPURLResponse *)task.response statusCode];
-                  if (statusCode >= 200 && statusCode <= 299) {
-                      id number = [responseObject objectForKey:@"number"];
-                      id vaultId = [responseObject objectForKey:@"id"];
-                      id vaultExpireDate = [responseObject objectForKey:@"valid_until"];
-                      if (![number isKindOfClass:[NSString class]] || ![vaultId isKindOfClass:[NSString class]] || ![vaultExpireDate isKindOfClass:[NSString class]]) {
-                          handler([NSError errorWithDomain:kOLErrorDomainPayPal code:statusCode userInfo:@{NSLocalizedDescriptionKey: kErrorMessageGenericPayPalVaultFailure}]);
-                          return;
-                      }
-                      
-                      NSDateFormatter *dateFormatter = [[NSDateFormatter alloc]init];
-                      [dateFormatter setDateFormat:@"YYYY-MM-dd'T'HH:mm:ssZ"];
-                      
-                      self.numberMasked = number;
-                      _vaultId = vaultId;
-                      _vaultExpireDate = [dateFormatter dateFromString:vaultExpireDate];
-                      
-                      handler(nil);
-                  } else {
-                      id errorMessage = [responseObject objectForKey:@"message"];
-                      if (![errorMessage isKindOfClass:[NSString class]]) {
-                          errorMessage = kErrorMessageGenericPayPalVaultFailure;
-                      }
-                      
-                      handler([NSError errorWithDomain:kOLErrorDomainPayPal code:statusCode userInfo:@{NSLocalizedDescriptionKey: errorMessage}]);
-                  }
-              }
-              else{
-                  handler([NSError errorWithDomain:kOLErrorDomainPayPal code:kOLKiteSDKErrorCodeUnexpectedResponse userInfo:@{NSLocalizedDescriptionKey: kErrorMessageGenericPayPalVaultFailure}]);
-              }
-       } failure:^(NSURLSessionDataTask *task, NSError *error) {
-           handler(error);
-       }];
-       
-   }];
+    [self getAccessTokenWithCompletionHandler:^(NSString *accessToken, NSError *error) {
+        NSDictionary *params = @{@"number": self.number,
+                                 @"type": typeToString(self.type),
+                                 @"expire_month": [NSString stringWithFormat:@"%lu", (unsigned long) self.expireMonth],
+                                 @"expire_year": [NSString stringWithFormat:@"%lu", (unsigned long) self.expireYear],
+                                 @"cvv2": self.cvv2
+                                 };
+        
+        NSError *jsonError;
+        NSData * jsonData = [NSJSONSerialization dataWithJSONObject:params options:NSJSONWritingPrettyPrinted error:&jsonError];
+        
+        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"https://%@/v1/vault/credit-card", environment == kOLPayPalEnvironmentLive ? @"api.paypal.com" : @"api.sandbox.paypal.com"]]];
+        [request setHTTPMethod:@"POST"];
+        [request setHTTPBody:jsonData];
+        [request setValue:[NSString stringWithFormat:@"Bearer %@", accessToken] forHTTPHeaderField:@"Authorization"];
+        [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
+        [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+        [request setValue:@"en" forHTTPHeaderField:@"Accept-Language"];
+        
+        NSURLSessionConfiguration *sessionConfig = [NSURLSessionConfiguration defaultSessionConfiguration];
+        
+        NSURLSession *session = [NSURLSession sessionWithConfiguration:sessionConfig
+                                                              delegate:nil
+                                                         delegateQueue:nil];
+        
+        [[session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error){
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (!error){
+                    {
+                        NSError *JSONError = nil;
+                        NSDictionary *dictionary = [NSJSONSerialization JSONObjectWithData:data
+                                                                                   options:0
+                                                                                     error:&JSONError];
+                        if ([response isKindOfClass:[NSHTTPURLResponse class]]){
+                            NSInteger statusCode = [(NSHTTPURLResponse *)response statusCode];
+                            if (statusCode >= 200 && statusCode <= 299) {
+                                id number = [dictionary objectForKey:@"number"];
+                                id vaultId = [dictionary objectForKey:@"id"];
+                                id vaultExpireDate = [dictionary objectForKey:@"valid_until"];
+                                if (![number isKindOfClass:[NSString class]] || ![vaultId isKindOfClass:[NSString class]] || ![vaultExpireDate isKindOfClass:[NSString class]]) {
+                                    handler([NSError errorWithDomain:kOLErrorDomainPayPal code:statusCode userInfo:@{NSLocalizedDescriptionKey: kErrorMessageGenericPayPalVaultFailure}]);
+                                    return;
+                                }
+                                
+                                NSDateFormatter *dateFormatter = [[NSDateFormatter alloc]init];
+                                [dateFormatter setDateFormat:@"YYYY-MM-dd'T'HH:mm:ssZ"];
+                                
+                                self.numberMasked = number;
+                                _vaultId = vaultId;
+                                _vaultExpireDate = [dateFormatter dateFromString:vaultExpireDate];
+                                
+                                handler(nil);
+                            } else {
+                                id errorMessage = [dictionary objectForKey:@"message"];
+                                if (![errorMessage isKindOfClass:[NSString class]]) {
+                                    errorMessage = kErrorMessageGenericPayPalVaultFailure;
+                                }
+                                
+                                handler([NSError errorWithDomain:kOLErrorDomainPayPal code:statusCode userInfo:@{NSLocalizedDescriptionKey: errorMessage}]);
+                            }
+                        }
+                        else{
+                            handler([NSError errorWithDomain:kOLErrorDomainPayPal code:kOLKiteSDKErrorCodeUnexpectedResponse userInfo:@{NSLocalizedDescriptionKey: kErrorMessageGenericPayPalVaultFailure}]);
+                        }
+                    }
+                }
+                else{
+                    handler(error);
+                }
+            });
+        }] resume];
+        [session finishTasksAndInvalidate];
+    }];
 }
 
 - (void)chargeCard:(NSDecimalNumber *)amount currencyCode:(NSString *)currencyCode description:(NSString *)description completionHandler:(OLPayPalCardChargeCompletionHandler)handler {
     [self getAccessTokenWithCompletionHandler:^(NSString *accessToken, NSError *error) {
-        AFHTTPSessionManager *manager = [OLPayPalCard managerWithAccessToken:accessToken];
         NSDictionary *fundingInstrument = nil;
         if (self.number) {
             // take payment directly using full card number
@@ -216,17 +245,14 @@ static NSString *typeToString(OLPayPalCardType type) {
                                           @"type": typeToString(self.type),
                                           @"expire_month": [NSString stringWithFormat:@"%lu", (unsigned long) self.expireMonth],
                                           @"expire_year": [NSString stringWithFormat:@"%lu", (unsigned long) self.expireYear],
-                                          @"cvv2": self.cvv2,
-                                          //@"payer_id": @""
+                                          @"cvv2": self.cvv2
                                           }
                                   };
         } else {
             // take payment with credit card token i.e. vault id
             fundingInstrument = @{
                                   @"credit_card_token":@{
-                                          @"credit_card_id": self.vaultId,
-                                          //@"payer_id": @""
-                                          }
+                                          @"credit_card_id": self.vaultId                                          }
                                   };
         }
         
@@ -251,64 +277,89 @@ static NSString *typeToString(OLPayPalCardType type) {
                                               ]
                                       };
         
+        NSError *jsonError;
+        NSData * jsonData = [NSJSONSerialization dataWithJSONObject:paymentJSON options:NSJSONWritingPrettyPrinted error:&jsonError];
         
-        [manager POST:[NSString stringWithFormat:@"https://%@/v1/payments/payment", environment == kOLPayPalEnvironmentLive ? @"api.paypal.com" : @"api.sandbox.paypal.com"]
-           parameters:paymentJSON progress:NULL success:^(NSURLSessionDataTask *task, id responseObject) {
-               if ([task.response isKindOfClass:[NSHTTPURLResponse class]]){
-                   NSInteger statusCode = [(NSHTTPURLResponse *)task.response statusCode];
-                   
-                   if (statusCode >= 200 && statusCode <= 299) {
-                       id paymentId = responseObject[@"id"];
-                       id paymentState = responseObject[@"state"];
-                       if (![paymentId isKindOfClass:[NSString class]] || ![paymentState isKindOfClass:[NSString class]]) {
-                           handler(nil, [NSError errorWithDomain:kOLErrorDomainPayPal code:statusCode userInfo:@{NSLocalizedDescriptionKey: kErrorMessageGenericPayPalVaultFailure}]);
-                           return;
-                       }
-                       
-                       if (![paymentState isEqualToString:@"approved"]) {
-                           NSError *error = [NSError errorWithDomain:kOLErrorDomainPayPal code:statusCode userInfo:@{NSLocalizedDescriptionKey: [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Your payment was not approved (transaction state: %@). Please try again.", @"KitePrintSDK", [OLConstants bundle], @""), paymentState]}];
-                           handler(nil, error);
-                           return;
-                       }
-                       
-                       NSString *token = paymentId;
-                       token = [token stringByReplacingCharactersInRange:NSMakeRange(0, 3) withString:@"PAUTH"];
-                       handler(token, nil);
-                       
-                   } else {
-                       id errorMessage = [responseObject objectForKey:@"message"];
-                       if (![errorMessage isKindOfClass:[NSString class]]) {
-                           errorMessage = kErrorMessageGenericPayPalVaultFailure;
-                       }
-                       
-                       if ([responseObject[@"details"] isKindOfClass:[NSArray class]]) {
-                           NSArray *details = responseObject[@"details"];
-                           if (details.count > 0) {
-                               if ([details[0] isKindOfClass:[NSDictionary class]]) {
-                                   NSDictionary *detail = details[0];
-                                   NSString *field = detail[@"field"];
-                                   NSString *issue = detail[@"issue"];
-                                   if ([field isKindOfClass:[NSString class]] && [issue isKindOfClass:[NSString class]]) {
-                                       if ([field isEqualToString:@"payer.funding_instruments[0].credit_card.number"]) {
-                                           errorMessage = kErrorMessageBadCardNumber;
-                                       } else if ([field isEqualToString:@"payer.funding_instruments[0].credit_card"]
-                                                  && [issue isEqualToString:@"Invalid expiration (cannot be in the past)"]) {
-                                           errorMessage = kErrorMessageBadExpiryDate;
-                                       }
-                                   }
-                               }
-                           }
-                       }
-                       
-                       handler(nil, [NSError errorWithDomain:kOLErrorDomainPayPal code:statusCode userInfo:@{NSLocalizedDescriptionKey: errorMessage}]);
-                   }
-               }
-               else{
-                   handler(nil, [NSError errorWithDomain:kOLErrorDomainPayPal code:kOLKiteSDKErrorCodeUnexpectedResponse userInfo:@{NSLocalizedDescriptionKey: kErrorMessageGenericPayPalVaultFailure}]);
-               }
-           } failure:^(NSURLSessionDataTask *task, NSError *error) {
-               handler(nil, error);
-           }];
+        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"https://%@/v1/payments/payment", environment == kOLPayPalEnvironmentLive ? @"api.paypal.com" : @"api.sandbox.paypal.com"]]];
+        [request setHTTPMethod:@"POST"];
+        [request setHTTPBody:jsonData];
+        [request setValue:[NSString stringWithFormat:@"Bearer %@", accessToken] forHTTPHeaderField:@"Authorization"];
+        [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
+        [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+        [request setValue:@"en" forHTTPHeaderField:@"Accept-Language"];
+        
+        NSURLSessionConfiguration *sessionConfig = [NSURLSessionConfiguration defaultSessionConfiguration];
+        
+        NSURLSession *session = [NSURLSession sessionWithConfiguration:sessionConfig
+                                                              delegate:nil
+                                                         delegateQueue:nil];
+        [[session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error){
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (!error){
+                    if ([response isKindOfClass:[NSHTTPURLResponse class]]){
+                        NSInteger statusCode = [(NSHTTPURLResponse *)response statusCode];
+                        
+                        NSError *JSONError = nil;
+                        NSDictionary *dictionary = [NSJSONSerialization JSONObjectWithData:data
+                                                                                   options:0
+                                                                                     error:&JSONError];
+                        
+                        if (statusCode >= 200 && statusCode <= 299) {
+                            id paymentId = dictionary[@"id"];
+                            id paymentState = dictionary[@"state"];
+                            if (![paymentId isKindOfClass:[NSString class]] || ![paymentState isKindOfClass:[NSString class]]) {
+                                handler(nil, [NSError errorWithDomain:kOLErrorDomainPayPal code:statusCode userInfo:@{NSLocalizedDescriptionKey: kErrorMessageGenericPayPalVaultFailure}]);
+                                return;
+                            }
+                            
+                            if (![paymentState isEqualToString:@"approved"]) {
+                                NSError *error = [NSError errorWithDomain:kOLErrorDomainPayPal code:statusCode userInfo:@{NSLocalizedDescriptionKey: [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Your payment was not approved (transaction state: %@). Please try again.", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), paymentState]}];
+                                handler(nil, error);
+                                return;
+                            }
+                            
+                            NSString *token = paymentId;
+                            token = [token stringByReplacingCharactersInRange:NSMakeRange(0, 3) withString:@"PAUTH"];
+                            handler(token, nil);
+                            
+                        } else {
+                            id errorMessage = [dictionary objectForKey:@"message"];
+                            if (![errorMessage isKindOfClass:[NSString class]]) {
+                                errorMessage = kErrorMessageGenericPayPalVaultFailure;
+                            }
+                            
+                            if ([dictionary[@"details"] isKindOfClass:[NSArray class]]) {
+                                NSArray *details = dictionary[@"details"];
+                                if (details.count > 0) {
+                                    if ([details[0] isKindOfClass:[NSDictionary class]]) {
+                                        NSDictionary *detail = details[0];
+                                        NSString *field = detail[@"field"];
+                                        NSString *issue = detail[@"issue"];
+                                        if ([field isKindOfClass:[NSString class]] && [issue isKindOfClass:[NSString class]]) {
+                                            if ([field isEqualToString:@"payer.funding_instruments[0].credit_card.number"]) {
+                                                errorMessage = kErrorMessageBadCardNumber;
+                                            } else if ([field isEqualToString:@"payer.funding_instruments[0].credit_card"]
+                                                       && [issue isEqualToString:@"Invalid expiration (cannot be in the past)"]) {
+                                                errorMessage = kErrorMessageBadExpiryDate;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            
+                            handler(nil, [NSError errorWithDomain:kOLErrorDomainPayPal code:statusCode userInfo:@{NSLocalizedDescriptionKey: errorMessage}]);
+                        }
+                    }
+                    else{
+                        handler(nil, [NSError errorWithDomain:kOLErrorDomainPayPal code:kOLKiteSDKErrorCodeUnexpectedResponse userInfo:@{NSLocalizedDescriptionKey: kErrorMessageGenericPayPalVaultFailure}]);
+                    }
+                }
+                else{
+                    handler(nil, error);
+                }
+            });
+        }] resume];
+        [session finishTasksAndInvalidate];
     }];
 }
 

@@ -31,7 +31,6 @@
 #import "OLKitePrintSDK.h"
 #import "OLProduct.h"
 #import "OLSingleImageProductReviewViewController.h"
-#import "UITableViewController+ScreenWidthFactor.h"
 #import "OLProductOverviewViewController.h"
 #import "OLAnalytics.h"
 #import "UIViewController+TraitCollectionCompatibility.h"
@@ -40,6 +39,8 @@
 #import "OLKiteUtils.h"
 #import "UIViewController+OLMethods.h"
 #import "NSObject+Utils.h"
+#import "UIImage+ColorAtPixel.h"
+#import "OLImageDownloader.h"
 
 #define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
 
@@ -258,7 +259,10 @@
         UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"extraCell" forIndexPath:indexPath];
         [self fixCellFrameOnIOS7:cell];
         UIImageView *cellImageView = (UIImageView *)[cell.contentView viewWithTag:40];
-        [cellImageView setAndFadeInImageWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/product_photography/placeholder.png"]];
+        [[OLImageDownloader sharedInstance] downloadImageAtURL:[NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/product_photography/placeholder.png"] withCompletionHandler:^(UIImage *image, NSError *error){
+            cellImageView.image = image;
+            cell.backgroundColor = [image colorAtPixel:CGPointMake(3, 3)];
+        }];
         if (self.fromRotation){
             self.fromRotation = NO;
             cell.alpha = 0;
@@ -348,18 +352,26 @@
     if (!(numberOfProducts % 2 == 0) && (!([self isHorizontalSizeClassCompact]) || size.height < size.width)){
         extras = 1;
     }
+    if (numberOfProducts == 2){
+        extras = 1;
+    }
     
     return numberOfProducts + extras;
 }
 
 - (CGSize) collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
     CGSize size = self.view.bounds.size;
+    
     NSInteger numberOfCells = [self collectionView:collectionView numberOfItemsInSection:indexPath.section];
     CGFloat halfScreenHeight = (size.height - [[UIApplication sharedApplication] statusBarFrame].size.height - self.navigationController.navigationBar.frame.size.height)/2;
     
     CGFloat height = 233;
-    if ([[OLKiteABTesting sharedInstance].productTileStyle isEqualToString:@"Dark"]){
-        height = 200;
+//    if ([[OLKiteABTesting sharedInstance].productTileStyle isEqualToString:@"Dark"]){
+//        height = 200;
+//    }
+    
+    if (indexPath.item >= self.products.count && self.products.count % 2 == 0){
+        return CGSizeMake(size.width, halfScreenHeight);
     }
     
     if ([self isHorizontalSizeClassCompact] && size.height > size.width) {
@@ -389,7 +401,7 @@
             return CGSizeMake(size.width, halfScreenHeight);
         }
         else{
-            return CGSizeMake(size.width/2 - 1, halfScreenHeight * 2);
+            return CGSizeMake(size.width/2 - 1, halfScreenHeight);
         }
     }
     else{
@@ -399,16 +411,17 @@
 
 #pragma mark - Tear down and restore
 
-- (void)tearDownLargeObjectsFromMemory{
-    [super tearDownLargeObjectsFromMemory];
-    [self.collectionView reloadData];
-}
+//- (void)tearDownLargeObjectsFromMemory{
+//    [super tearDownLargeObjectsFromMemory];
+//    [self.collectionView reloadData];
+//}
+//
+//- (void)recreateTornDownLargeObjectsToMemory{
+//    [super recreateTornDownLargeObjectsToMemory];
+//    [self.collectionView reloadData];
+//}
 
-- (void)recreateTornDownLargeObjectsToMemory{
-    [super recreateTornDownLargeObjectsToMemory];
-    [self.collectionView reloadData];
-}
-
+#if __IPHONE_OS_VERSION_MIN_REQUIRED < 80000
 #pragma mark - Autorotate and Orientation Methods
 // Currently here to disable landscape orientations and rotation on iOS 7. When support is dropped, these can be deleted.
 
@@ -429,5 +442,6 @@
         return UIInterfaceOrientationMaskPortrait;
     }
 }
+#endif
 
 @end
