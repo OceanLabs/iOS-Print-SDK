@@ -55,6 +55,7 @@ static NSString *const kOLKiteThemeSupportEmail = @"themeSupportEmail";
 @property (strong, nonatomic, readonly) NSString *promoBannerText;
 @property (strong, nonatomic, readonly) NSString *launchWithPrintOrderVariant;
 @property (assign, nonatomic, readonly) BOOL allowsMultipleRecipients;
+@property (strong, nonatomic, readonly) NSString *paymentScreen;
 
 @property (strong, nonatomic, readonly) NSString *headerLogoURL;
 @property (strong, nonatomic, readonly) NSString *receiptSuccessURL;

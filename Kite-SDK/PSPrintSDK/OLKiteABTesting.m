@@ -45,6 +45,7 @@ static NSString *const kOLKiteABTestPromoBannerStyle = @"ly.kite.abtest.promo_ba
 static NSString *const kOLKiteABTestPromoBannerText = @"ly.kite.abtest.promo_banner_text";
 static NSString *const kOLKiteABTestOfferPayPal = @"ly.kite.abtest.offer_paypal";
 static NSString *const kOLKiteABTestAllowMultipleRecipients = @"ly.kite.abtest.allow_multiple_recipients";
+static NSString *const kOLKiteABTestPaymentScreen = @"ly.kite.abtest.payment_screen";
 
 id safeObject(id obj){
     return obj ? obj : @"";
@@ -63,6 +64,7 @@ static dispatch_once_t srand48OnceToken;
 @property (strong, nonatomic, readwrite) NSString *productTileStyle;
 @property (strong, nonatomic, readwrite) NSString *promoBannerText;
 @property (strong, nonatomic, readwrite) NSString *launchWithPrintOrderVariant;
+@property (strong, nonatomic, readwrite) NSString *paymentScreen;
 @property (assign, nonatomic, readwrite) BOOL allowsMultipleRecipients;
 
 @end
@@ -304,6 +306,23 @@ static dispatch_once_t srand48OnceToken;
                                 }];
 }
 
+- (void)setupPaymentScreenTest{
+    self.paymentScreen = nil;
+    
+    NSDictionary *experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestPaymentScreen];
+    if (!experimentDict) {
+        experimentDict = @{@"V2" : @0, @"V3" : @1};
+    }
+    [OLKiteABTesting splitTestWithName:kOLKiteABTestPaymentScreen
+                            conditions:@{
+                                         @"V2" : safeObject(experimentDict[@"V2"]),
+                                         @"V3" : safeObject(experimentDict[@"V3"]),
+                                         } block:^(id choice) {
+                                             self.paymentScreen = choice;
+                                         }];
+}
+
+
 - (void)setupShowProductDescriptionScreenBeforeShippingTest{
     self.launchWithPrintOrderVariant = nil;
     NSDictionary *experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestLaunchWithPrintOrderVariant];
@@ -451,6 +470,7 @@ static dispatch_once_t srand48OnceToken;
     [self setupOfferAddressSearchTest];
     [self setupRequirePhoneNumberTest];
     [self setupShippingScreenTest];
+    [self setupPaymentScreenTest];
     [self setupOfferPayPalTest];
     [self setupAllowMultipleRecipientsTest];
 }
