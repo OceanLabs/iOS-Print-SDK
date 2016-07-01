@@ -283,11 +283,26 @@ const NSInteger kOLDrawerTagColors = 20;
 }
 
 - (IBAction)onBarButtonCancelTapped:(UIBarButtonItem *)sender {
-    if (self.doneButton.enabled && self.previewView){
-        self.previewView = nil;
+    if (self.doneButton.enabled && self.previewView){ //discard changes
         self.previewSourceView.hidden = NO;
+        
+        self.previewView = [self.cropView snapshotViewAfterScreenUpdates:YES];
+        self.previewView.frame = self.cropView.frame;
+        [self.view addSubview:self.previewView];
+        [UIView animateWithDuration:0.25 animations:^{
+            self.view.backgroundColor = [UIColor clearColor];
+            for (UIView *view in self.allViews){
+                view.alpha = 0;
+            }
+        } completion:^(BOOL finished){
+            [UIView animateWithDuration:0.7 animations:^{
+                self.previewView.transform = CGAffineTransformRotate(CGAffineTransformMakeTranslation(0, self.view.frame.size.height), -M_PI_4);
+            }completion:^(BOOL finished){
+                [super dismissViewControllerAnimated:NO completion:NULL];
+            }];
+        }];
     }
-    if ([self.delegate respondsToSelector:@selector(scrollCropViewControllerDidCancel:)]){
+    else if ([self.delegate respondsToSelector:@selector(scrollCropViewControllerDidCancel:)]){
         [self.delegate scrollCropViewControllerDidCancel:self];
     }
     else{
