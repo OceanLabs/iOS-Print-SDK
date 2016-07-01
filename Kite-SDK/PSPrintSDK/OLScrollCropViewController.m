@@ -30,8 +30,11 @@
 #import "OLScrollCropViewController.h"
 #import "OLPrintPhoto.h"
 #import "OLTextField.h"
+#import "OLColorSelectionCollectionViewCell.h"
 
-@interface OLScrollCropViewController () <RMImageCropperDelegate, UITextFieldDelegate, UIGestureRecognizerDelegate>
+const NSInteger kOLDrawerTagColors = 20;
+
+@interface OLScrollCropViewController () <RMImageCropperDelegate, UITextFieldDelegate, UIGestureRecognizerDelegate, UICollectionViewDelegate, UICollectionViewDataSource>
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *doneButton;
 @property (assign, nonatomic) NSInteger initialOrientation;
 @property (weak, nonatomic) IBOutlet UIToolbar *toolbar;
@@ -42,7 +45,9 @@
 @property (weak, nonatomic) IBOutlet UIToolbar *textToolsToolbar;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *colorsViewBottomCon;
 @property (strong, nonatomic) UIVisualEffectView *visualEffectView;
-
+@property (weak, nonatomic) IBOutlet UICollectionView *colorsCollectionView;
+@property (strong, nonatomic) NSArray<UIColor *> *availableColors;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *colorsTrailingCon;
 
 
 @property (strong, nonatomic) IBOutletCollection(UIView) NSArray *allViews;
@@ -75,6 +80,15 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    self.availableColors = @[[UIColor blackColor], [UIColor whiteColor], [UIColor grayColor], [UIColor greenColor], [UIColor redColor]];
+    
+    self.colorsCollectionView.dataSource = self;
+    self.colorsCollectionView.delegate = self;
+    
+    self.colorsTrailingCon.constant = -self.colorsView.frame.size.width;
+    self.colorsView.transform = CGAffineTransformMakeRotation(M_PI);
+    
     if (self.previewView && !self.skipPresentAnimation){
         self.view.backgroundColor = [UIColor clearColor];
         self.previewView.alpha = 0.15;
@@ -132,6 +146,7 @@
         UITextField *textField = [self addTextField];
         textField.text = textOnPhoto.text;
         textField.transform = textOnPhoto.transform;
+        textField.textColor = textOnPhoto.color;
         [self.edits.textsOnPhoto removeObject:textOnPhoto];
     }
     
@@ -139,10 +154,9 @@
     
     [self registerForKeyboardNotifications];
     
-    self.colorsView.transform = CGAffineTransformMakeTranslation(self.colorsView.frame.size.width, 0);
     if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0){
         UIVisualEffect *blurEffect;
-        blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
+        blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleDark];
         
         self.visualEffectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
         UIView *view = self.visualEffectView;
@@ -420,15 +434,6 @@
     self.doneButton.enabled = YES;
 }
 
-- (IBAction)onColorButtonClicked:(id)sender{
-    for (UITextField *textField in self.textFields){
-        if ([textField isFirstResponder]){
-            [textField setTextColor:[(UIButton *)sender tintColor]];
-            break;
-        }
-    }
-}
-
 - (void)onTextfieldGesturePanRecognized:(UIPanGestureRecognizer *)gesture{
     static CGAffineTransform original;
     
@@ -444,14 +449,59 @@
 }
 
 - (IBAction)onButtonColorTapped:(UIBarButtonItem *)sender {
+    self.colorsTrailingCon.constant = self.colorsTrailingCon.constant == 0 ? -self.colorsView.frame.size.width : 0;
     [UIView animateWithDuration:0.15 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
-    self.colorsView.transform = CGAffineTransformIsIdentity(self.colorsView.transform) ? CGAffineTransformMakeTranslation(self.colorsView.frame.size.width, 0) : CGAffineTransformIdentity;
+        [self.view layoutIfNeeded];
     } completion:NULL];
 }
 
 
 - (void)dealloc{
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+#pragma mark CollectionView
+
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
+    if (collectionView.tag == kOLDrawerTagColors){
+        return self.availableColors.count;
+    }
+    
+    return 0;
+}
+
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
+    UICollectionViewCell *cell;
+    if (collectionView.tag == kOLDrawerTagColors){
+        cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"colorSelectionCell" forIndexPath:indexPath];
+        [(OLColorSelectionCollectionViewCell *)cell setDarkMode:YES];
+        
+        [cell setSelected:NO];
+        for (UITextField *textField in self.textFields){
+            if ([textField isFirstResponder]){
+                [cell setSelected:[textField.textColor isEqual:self.availableColors[indexPath.item]]];
+                break;
+            }
+        }
+        
+        [(OLColorSelectionCollectionViewCell *)cell setColor:self.availableColors[indexPath.item]];
+        [cell setNeedsDisplay];
+    }
+    
+    return cell;
+}
+
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
+    if (collectionView.tag == kOLDrawerTagColors){
+        for (UITextField *textField in self.textFields){
+            if ([textField isFirstResponder]){
+                [textField setTextColor:self.availableColors[indexPath.item]];
+                self.doneButton.enabled = YES;
+                break;
+            }
+        }
+        [collectionView reloadData];
+    }
 }
 
 #pragma mark Keyboard Notifications
@@ -485,8 +535,9 @@
     NSNumber *durationNumber = [info objectForKey:UIKeyboardAnimationDurationUserInfoKey];
     NSNumber *curveNumber = [info objectForKey:UIKeyboardAnimationCurveUserInfoKey];
     
+    self.colorsTrailingCon.constant = -self.colorsView.frame.size.width;
     [UIView animateWithDuration:[durationNumber doubleValue] delay:0 options:[curveNumber unsignedIntegerValue] animations:^{
-        self.colorsView.transform = CGAffineTransformMakeTranslation(self.colorsView.frame.size.width, 0);
+        [self.view layoutIfNeeded];
         
         self.textToolsToolbar.transform = CGAffineTransformMakeTranslation(0, -self.textToolsToolbar.frame.origin.x - self.textToolsToolbar.frame.size.height - [[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height);
     }completion:NULL];

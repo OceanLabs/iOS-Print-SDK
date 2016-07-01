@@ -558,7 +558,8 @@ to rearrange the photos</string>
                                         </connections>
                                     </barButtonItem>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="cFR-mf-z7v"/>
-                                    <barButtonItem title="T" id="Fk5-5M-v8q">
+                                    <barButtonItem image="Tt" id="Fk5-5M-v8q">
+                                        <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <connections>
                                             <action selector="onButtonAddTextClicked:" destination="lkU-BR-804" id="hCb-Q3-UvJ"/>
                                         </connections>
@@ -580,7 +581,7 @@ to rearrange the photos</string>
                                 </items>
                             </toolbar>
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" barStyle="black" translatesAutoresizingMaskIntoConstraints="NO" id="PJS-pJ-upa">
-                                <rect key="frame" x="0.0" y="20" width="600" height="44"/>
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="44" id="GYg-cI-VRT"/>
                                 </constraints>
@@ -595,88 +596,37 @@ to rearrange the photos</string>
                                 </items>
                             </toolbar>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="756-0C-2vh">
-                                <rect key="frame" x="546" y="64" width="54" height="492"/>
+                                <rect key="frame" x="546" y="44" width="54" height="512"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4ZY-mk-lkl">
-                                        <rect key="frame" x="5" y="0.0" width="44" height="70.5"/>
-                                        <color key="tintColor" red="0.098039217289999994" green="0.098039217289999994" blue="0.098039217289999994" alpha="1" colorSpace="calibratedRGB"/>
-                                        <state key="normal" image="circle"/>
-                                        <connections>
-                                            <action selector="onColorButtonClicked:" destination="lkU-BR-804" eventType="touchUpInside" id="eAW-Wc-N9a"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4Ty-uV-Ftv">
-                                        <rect key="frame" x="5" y="140" width="44" height="70.5"/>
-                                        <color key="tintColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                        <state key="normal" image="circle"/>
-                                        <connections>
-                                            <action selector="onColorButtonClicked:" destination="lkU-BR-804" eventType="touchUpInside" id="As6-Jx-clG"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5yk-oL-U7I">
-                                        <rect key="frame" x="5" y="211" width="44" height="70"/>
-                                        <color key="tintColor" red="1" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                        <state key="normal" image="circle"/>
-                                        <connections>
-                                            <action selector="onColorButtonClicked:" destination="lkU-BR-804" eventType="touchUpInside" id="3ba-CU-2N0"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vWq-oD-nLA">
-                                        <rect key="frame" x="5" y="281" width="44" height="70.5"/>
-                                        <color key="tintColor" red="0.0" green="0.50196081400000003" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                        <state key="normal" image="circle"/>
-                                        <connections>
-                                            <action selector="onColorButtonClicked:" destination="lkU-BR-804" eventType="touchUpInside" id="jJU-Z4-h1P"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Pqh-aN-VbQ">
-                                        <rect key="frame" x="5" y="351" width="44" height="70"/>
-                                        <color key="tintColor" red="0.0" green="0.0" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                        <state key="normal" image="circle"/>
-                                        <connections>
-                                            <action selector="onColorButtonClicked:" destination="lkU-BR-804" eventType="touchUpInside" id="jzx-2B-goH"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Xp8-Eb-QGE">
-                                        <rect key="frame" x="5" y="421" width="44" height="70.5"/>
-                                        <color key="tintColor" red="1" green="0.0" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                        <state key="normal" image="circle"/>
-                                        <connections>
-                                            <action selector="onColorButtonClicked:" destination="lkU-BR-804" eventType="touchUpInside" id="jDg-Zt-Sw0"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FgB-YE-KVk">
-                                        <rect key="frame" x="5" y="70" width="44" height="70"/>
-                                        <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                        <state key="normal" image="circle"/>
-                                        <connections>
-                                            <action selector="onColorButtonClicked:" destination="lkU-BR-804" eventType="touchUpInside" id="dFN-ah-vah"/>
-                                        </connections>
-                                    </button>
+                                    <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" tag="20" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Eop-KH-dFz">
+                                        <rect key="frame" x="0.0" y="0.0" width="54" height="512"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="Iqm-bZ-iDt">
+                                            <size key="itemSize" width="50" height="50"/>
+                                            <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                            <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                            <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                        </collectionViewFlowLayout>
+                                        <cells>
+                                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="colorSelectionCell" id="Fc9-BO-GiI" customClass="OLColorSelectionCollectionViewCell">
+                                                <rect key="frame" x="2" y="0.0" width="50" height="50"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                                    <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                </view>
+                                            </collectionViewCell>
+                                        </cells>
+                                    </collectionView>
                                 </subviews>
+                                <gestureRecognizers/>
                                 <constraints>
-                                    <constraint firstItem="FgB-YE-KVk" firstAttribute="centerX" secondItem="756-0C-2vh" secondAttribute="centerX" id="1QO-tL-b7H"/>
                                     <constraint firstAttribute="width" constant="54" id="4dw-QK-oYT"/>
-                                    <constraint firstItem="vWq-oD-nLA" firstAttribute="centerX" secondItem="756-0C-2vh" secondAttribute="centerX" id="8xk-5J-PLi"/>
-                                    <constraint firstItem="vWq-oD-nLA" firstAttribute="height" secondItem="4ZY-mk-lkl" secondAttribute="height" id="9As-1O-vZi"/>
-                                    <constraint firstItem="Xp8-Eb-QGE" firstAttribute="top" secondItem="Pqh-aN-VbQ" secondAttribute="bottom" id="Coo-9d-rdr"/>
-                                    <constraint firstItem="Xp8-Eb-QGE" firstAttribute="height" secondItem="4ZY-mk-lkl" secondAttribute="height" id="Fbs-rv-ukU"/>
-                                    <constraint firstAttribute="bottom" secondItem="Xp8-Eb-QGE" secondAttribute="bottom" id="JJs-AA-oFA"/>
-                                    <constraint firstItem="5yk-oL-U7I" firstAttribute="height" secondItem="4ZY-mk-lkl" secondAttribute="height" id="JSi-0U-wEY"/>
-                                    <constraint firstItem="5yk-oL-U7I" firstAttribute="centerX" secondItem="756-0C-2vh" secondAttribute="centerX" id="JUz-dz-3zh"/>
-                                    <constraint firstItem="4ZY-mk-lkl" firstAttribute="centerX" secondItem="756-0C-2vh" secondAttribute="centerX" id="MNp-2v-2gn"/>
-                                    <constraint firstItem="5yk-oL-U7I" firstAttribute="top" secondItem="4Ty-uV-Ftv" secondAttribute="bottom" id="N5p-4j-fM6"/>
-                                    <constraint firstItem="Pqh-aN-VbQ" firstAttribute="top" secondItem="vWq-oD-nLA" secondAttribute="bottom" id="Nig-QU-ByQ"/>
-                                    <constraint firstItem="Xp8-Eb-QGE" firstAttribute="centerX" secondItem="756-0C-2vh" secondAttribute="centerX" id="OwH-zJ-dd5"/>
-                                    <constraint firstItem="FgB-YE-KVk" firstAttribute="height" secondItem="4ZY-mk-lkl" secondAttribute="height" id="PxV-pp-1YX"/>
-                                    <constraint firstItem="4ZY-mk-lkl" firstAttribute="top" secondItem="756-0C-2vh" secondAttribute="top" id="UzD-9y-l05"/>
-                                    <constraint firstItem="Pqh-aN-VbQ" firstAttribute="height" secondItem="4ZY-mk-lkl" secondAttribute="height" id="bbg-MM-xNa"/>
-                                    <constraint firstItem="vWq-oD-nLA" firstAttribute="top" secondItem="5yk-oL-U7I" secondAttribute="bottom" id="d72-ID-yc6"/>
-                                    <constraint firstItem="Pqh-aN-VbQ" firstAttribute="centerX" secondItem="756-0C-2vh" secondAttribute="centerX" id="oaj-A4-5vM"/>
-                                    <constraint firstItem="4Ty-uV-Ftv" firstAttribute="height" secondItem="4ZY-mk-lkl" secondAttribute="height" id="tPK-aB-1o3"/>
-                                    <constraint firstItem="4Ty-uV-Ftv" firstAttribute="centerX" secondItem="756-0C-2vh" secondAttribute="centerX" id="xJp-wG-KXG"/>
-                                    <constraint firstItem="4Ty-uV-Ftv" firstAttribute="top" secondItem="FgB-YE-KVk" secondAttribute="bottom" id="y7f-m4-MDg"/>
-                                    <constraint firstItem="FgB-YE-KVk" firstAttribute="top" secondItem="4ZY-mk-lkl" secondAttribute="bottom" id="yhD-C1-R8I"/>
+                                    <constraint firstAttribute="trailing" secondItem="Eop-KH-dFz" secondAttribute="trailing" id="7dp-PH-GzN"/>
+                                    <constraint firstItem="Eop-KH-dFz" firstAttribute="top" secondItem="756-0C-2vh" secondAttribute="top" id="Unz-cT-Pcy"/>
+                                    <constraint firstItem="Eop-KH-dFz" firstAttribute="leading" secondItem="756-0C-2vh" secondAttribute="leading" id="d1E-bI-OFh"/>
+                                    <constraint firstAttribute="bottom" secondItem="Eop-KH-dFz" secondAttribute="bottom" id="vcO-gf-Uvv"/>
                                 </constraints>
                             </view>
                         </subviews>
@@ -690,6 +640,7 @@ to rearrange the photos</string>
                             <constraint firstItem="nok-mW-saD" firstAttribute="leading" secondItem="f6w-s4-OgW" secondAttribute="leading" constant="1" id="4Xr-CZ-89m"/>
                             <constraint firstItem="756-0C-2vh" firstAttribute="top" secondItem="PJS-pJ-upa" secondAttribute="bottom" id="4zz-16-oPU"/>
                             <constraint firstItem="5Ml-FB-tKs" firstAttribute="leading" secondItem="zsc-cm-HTN" secondAttribute="trailing" id="5te-V3-56B"/>
+                            <constraint firstItem="PJS-pJ-upa" firstAttribute="top" secondItem="onG-Z7-5X1" secondAttribute="top" id="6r3-Wp-iH9"/>
                             <constraint firstItem="Tki-mw-R7X" firstAttribute="leading" secondItem="onG-Z7-5X1" secondAttribute="leading" id="7qH-r3-BdL"/>
                             <constraint firstAttribute="trailing" secondItem="Tki-mw-R7X" secondAttribute="trailing" id="9eg-Rh-MJK"/>
                             <constraint firstItem="nok-mW-saD" firstAttribute="top" secondItem="124-aY-wOU" secondAttribute="bottom" id="BD5-4c-EER"/>
@@ -746,6 +697,7 @@ to rearrange the photos</string>
                         </constraints>
                         <variation key="default">
                             <mask key="constraints">
+                                <exclude reference="Dds-Ej-PSu"/>
                                 <exclude reference="ojV-vO-jP6"/>
                                 <exclude reference="H4k-lK-38g"/>
                                 <exclude reference="tdR-ba-Bpj"/>
@@ -766,6 +718,8 @@ to rearrange the photos</string>
                     <connections>
                         <outlet property="aspectRatioConstraint" destination="ImC-Qv-Ju3" id="p9Y-jB-by8"/>
                         <outlet property="centerYCon" destination="19d-5d-NoX" id="9FM-YW-Ofo"/>
+                        <outlet property="colorsCollectionView" destination="Eop-KH-dFz" id="zIp-mS-3ZK"/>
+                        <outlet property="colorsTrailingCon" destination="Jo7-qx-sWg" id="1Pq-Kx-eWs"/>
                         <outlet property="colorsView" destination="756-0C-2vh" id="ulu-Fa-SkX"/>
                         <outlet property="colorsViewBottomCon" destination="sKY-6J-2JI" id="bmG-Oe-J3p"/>
                         <outlet property="cropView" destination="nok-mW-saD" id="qFn-PP-Pwf"/>
@@ -3844,13 +3798,13 @@ only £9.99 £8.99</string>
         </scene>
     </scenes>
     <resources>
+        <image name="Tt" width="30" height="30"/>
         <image name="basket-button-pressed" width="22" height="41"/>
         <image name="bluebox" width="163" height="27"/>
         <image name="book" width="575" height="393"/>
         <image name="button_apple_pay" width="140" height="44"/>
         <image name="button_arrow_down" width="45" height="45"/>
         <image name="button_arrow_up" width="45" height="45"/>
-        <image name="circle" width="44" height="44"/>
         <image name="crop-corner-dl" width="23" height="23"/>
         <image name="crop-corner-dr" width="23" height="23"/>
         <image name="crop-corner-ul" width="23" height="23"/>
