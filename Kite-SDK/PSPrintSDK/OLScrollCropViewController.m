@@ -530,7 +530,25 @@
     }
     else if (gesture.state == UIGestureRecognizerStateChanged){
         CGPoint translate = [gesture translationInView:gesture.view.superview];
-        gesture.view.transform = CGAffineTransformTranslate(original, translate.x, translate.y);
+        CGAffineTransform transform = CGAffineTransformTranslate(original, translate.x, translate.y);
+        
+        CGFloat minY = gesture.view.frame.size.height/2.0 - self.cropView.frame.size.height / 2.0;
+        CGFloat maxY = -minY;
+        CGFloat minX = gesture.view.frame.size.width/2.0 - self.cropView.frame.size.width / 2.0;
+        CGFloat maxX = -minX;
+        if (transform.ty < minY){
+            transform.ty = minY;
+        }
+        if (transform.ty > maxY){
+            transform.ty = maxY;
+        }
+        if (transform.tx < minX){
+            transform.tx = minX;
+        }
+        if (transform.tx > maxX){
+            transform.tx = maxX;
+        }
+        gesture.view.transform = transform;
     }
     
     self.doneButton.enabled = YES;
