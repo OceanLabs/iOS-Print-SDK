@@ -48,6 +48,7 @@ const NSInteger kOLDrawerTagColors = 20;
 @property (weak, nonatomic) IBOutlet UICollectionView *colorsCollectionView;
 @property (strong, nonatomic) NSArray<UIColor *> *availableColors;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *colorsTrailingCon;
+@property (weak, nonatomic) IBOutlet UIView *textFieldsView;
 
 
 @property (strong, nonatomic) IBOutletCollection(UIView) NSArray *allViews;
@@ -143,7 +144,7 @@ const NSInteger kOLDrawerTagColors = 20;
     
     NSArray *copy = [[NSArray alloc] initWithArray:self.edits.textsOnPhoto copyItems:NO];
     for (OLTextOnPhoto *textOnPhoto in copy){
-        UITextField *textField = [self addTextField];
+        UITextField *textField = [self addTextFieldToView:self.cropView temp:NO];
         textField.text = textOnPhoto.text;
         textField.transform = textOnPhoto.transform;
         textField.textColor = textOnPhoto.color;
@@ -363,6 +364,14 @@ const NSInteger kOLDrawerTagColors = 20;
         return;
     }
     
+    for (UITextField *textField in self.textFields){
+        UITextField *textFieldCopy = [self addTextFieldToView:self.textFieldsView temp:YES];
+        textFieldCopy.text = textField.text;
+        textFieldCopy.transform = textField.transform;
+        textFieldCopy.textColor = textField.textColor;
+        textField.hidden = YES;
+    }
+    
     [(UIBarButtonItem *)sender setEnabled:NO];
     self.edits.counterClockwiseRotations = (self.edits.counterClockwiseRotations + 1) % 4;
     CGAffineTransform transform = self.cropView.imageView.transform;
@@ -395,6 +404,13 @@ const NSInteger kOLDrawerTagColors = 20;
         self.cropView.imageView.frame = CGRectMake((boxHeight - imageWidth)/ 2.0, (boxWidth - imageHeight) / 2.0, imageWidth, imageHeight);
         
     } completion:^(BOOL finished){
+        for (UITextField *textField in self.textFields){
+            textField.hidden = NO;
+        }
+        for (UITextField *textField in [self.textFieldsView.subviews copy]){
+            [textField removeFromSuperview];
+        }
+        
         self.cropView.transform = CGAffineTransformIdentity;
         self.cropView.frame = cropboxRect;
         [self.cropView setImage:newImage];
@@ -404,7 +420,7 @@ const NSInteger kOLDrawerTagColors = 20;
     }];
 }
 
-- (UITextField *)addTextField{
+- (UITextField *)addTextFieldToView:(UIView *)view temp:(BOOL)temp{
     OLTextField *textField = [[OLTextField alloc] initWithFrame:CGRectMake(0, 0, 100, 40)];
     textField.center = self.cropView.center;
     textField.textAlignment = NSTextAlignmentCenter;
@@ -421,7 +437,7 @@ const NSInteger kOLDrawerTagColors = 20;
     [panGesture addTarget:self action:@selector(onTextfieldGesturePanRecognized:)];
     [textField addGestureRecognizer:panGesture];
     
-    [self.cropView addSubview:textField];
+    [view addSubview:textField];
     [textField.superview addConstraint:[NSLayoutConstraint constraintWithItem:textField attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:textField.superview attribute:NSLayoutAttributeCenterX multiplier:1 constant:0]];
     [textField.superview addConstraint:[NSLayoutConstraint constraintWithItem:textField attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:textField.superview attribute:NSLayoutAttributeCenterY multiplier:1 constant:0]];
     textField.translatesAutoresizingMaskIntoConstraints = NO;
@@ -437,13 +453,15 @@ const NSInteger kOLDrawerTagColors = 20;
     
     [textField.superview addConstraints:con];
     
-    [self.textFields addObject:textField];
+    if (!temp){
+        [self.textFields addObject:textField];
+    }
     
     return textField;
 }
 
 - (IBAction)onButtonAddTextClicked:(UIBarButtonItem *)sender {
-    UITextField *textField = [self addTextField];
+    UITextField *textField = [self addTextFieldToView:self.cropView temp:NO];
     [textField becomeFirstResponder];
 
     self.doneButton.enabled = YES;
@@ -594,8 +612,10 @@ const NSInteger kOLDrawerTagColors = 20;
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField{
-    textField.text = [textField.text stringByAppendingString:@"\n"];
-    return YES;
+//    textField.text = [textField.text stringByAppendingString:@"\n"];
+//    return YES;
+    [textField resignFirstResponder];
+    return NO;
 }
 
 #pragma mark - RMImageCropperDelegate methods
