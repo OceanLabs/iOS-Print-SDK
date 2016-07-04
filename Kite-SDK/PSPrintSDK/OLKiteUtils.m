@@ -232,6 +232,15 @@
     handler(vc);
 }
 
++ (UIFont *)fontWithName:(NSString *)name size:(CGFloat)size{
+    UIFont *font = [UIFont fontWithName:name size:size];
+    if (!font){
+        font = [UIFont systemFontOfSize:size];
+    }
+    
+    return font;
+}
+
 + (NSString *)reviewViewControllerIdentifierForProduct:(OLProduct *)product photoSelectionScreen:(BOOL)photoSelectionScreen{
     OLTemplateUI templateUI = product.productTemplate.templateUI;
     if (templateUI == kOLTemplateUICase){

@@ -31,6 +31,7 @@
 #import "OLPrintPhoto.h"
 #import "OLTextField.h"
 #import "OLColorSelectionCollectionViewCell.h"
+#import "OLKiteUtils.h"
 
 @interface OLScrollCropViewController () <RMImageCropperDelegate, UITextFieldDelegate, UIGestureRecognizerDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *doneButton;
@@ -64,12 +65,14 @@
 
 -(NSArray<NSString *> *) fonts{
     if (!_fonts){
-        _fonts = [[NSMutableArray<NSString *> alloc] init];
+        NSMutableArray<NSString *> *fonts = [[NSMutableArray<NSString *> alloc] init];
         for (NSString *familyName in [UIFont familyNames]){
             for (NSString *fontName in [UIFont fontNamesForFamilyName:familyName]) {
-                [(NSMutableArray *)_fonts addObject:fontName];
+                [fonts addObject:fontName];
             }
         }
+        [fonts addObject:NSLocalizedString(@"Default", @"")];
+        _fonts = [fonts sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
     }
     return _fonts;
 }
@@ -99,7 +102,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.availableColors = @[[UIColor blackColor], [UIColor whiteColor], [UIColor grayColor], [UIColor greenColor], [UIColor redColor], [UIColor blueColor]];
+    self.availableColors = @[[UIColor blackColor], [UIColor whiteColor], [UIColor grayColor], [UIColor greenColor], [UIColor redColor], [UIColor blueColor], [UIColor magentaColor], [UIColor orangeColor]];
     
     self.colorsCollectionView.dataSource = self;
     self.colorsCollectionView.delegate = self;
@@ -108,7 +111,6 @@
     
     self.colorsTrailingCon.constant = -self.colorsView.frame.size.width;
     self.fontsLeadingCon.constant = -self.fontsView.frame.size.width;
-    self.colorsView.transform = CGAffineTransformMakeRotation(M_PI);
     
     if (self.previewView && !self.skipPresentAnimation){
         self.view.backgroundColor = [UIColor clearColor];
@@ -168,7 +170,7 @@
         textField.text = textOnPhoto.text;
         textField.transform = textOnPhoto.transform;
         textField.textColor = textOnPhoto.color;
-        textField.font = [UIFont fontWithName:textOnPhoto.fontName size:textOnPhoto.fontSize];
+        textField.font = [OLKiteUtils fontWithName:textOnPhoto.fontName size:textOnPhoto.fontSize];
         [self.edits.textsOnPhoto removeObject:textOnPhoto];
     }
     
@@ -313,6 +315,9 @@
     self.edits.cropTransform = [self.cropView.imageView transform];
     
     for (OLTextField *textField in self.textFields){
+        if (!textField.text || [textField.text isEqualToString:@""]){
+            continue;
+        }
         OLTextOnPhoto *textOnPhoto = [[OLTextOnPhoto alloc] init];
         textOnPhoto.text = textField.text;
         textOnPhoto.frame = textField.frame;
@@ -585,7 +590,7 @@
         cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"fontCell" forIndexPath:indexPath];
         UILabel *label = [cell viewWithTag:10];
         label.text = self.fonts[indexPath.item];
-        label.font = [UIFont fontWithName:label.text size:17];
+        label.font = [OLKiteUtils fontWithName:label.text size:17];
         label.textColor = [UIColor whiteColor];
         label.numberOfLines = 3;
     }
@@ -598,7 +603,7 @@
         return CGSizeMake(collectionView.frame.size.width * 0.8, collectionView.frame.size.width * 0.8);
     }
     else if (collectionView == self.fontsCollectionView){
-        return CGSizeMake(collectionView.frame.size.width, collectionView.frame.size.width/2.0);
+        return CGSizeMake(collectionView.frame.size.width, collectionView.frame.size.width/4.0);
     }
     
     return CGSizeZero;
@@ -618,7 +623,7 @@
     else if (collectionView == self.fontsCollectionView){
         for (UITextField *textField in self.textFields){
             if ([textField isFirstResponder]){
-                [textField setFont:[UIFont fontWithName:self.fonts[indexPath.item] size:30]];
+                [textField setFont:[OLKiteUtils fontWithName:self.fonts[indexPath.item] size:30]];
                 self.doneButton.enabled = YES;
                 break;
             }
@@ -720,6 +725,8 @@
     [theTextField sizeToFit];
     textField.frame = CGRectMake(theTextField.frame.origin.x, theTextField.frame.origin.y, MAX(theTextField.frame.size.width + theTextField.margins*2, 100), MAX(theTextField.frame.size.height, 40));
     theTextField.center = center;
+    
+    self.doneButton.enabled = YES;
     
     return YES;
 }

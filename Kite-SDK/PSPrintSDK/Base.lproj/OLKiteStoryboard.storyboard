@@ -604,10 +604,10 @@ to rearrange the photos</string>
                                 </items>
                             </toolbar>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="756-0C-2vh">
-                                <rect key="frame" x="546" y="44" width="54" height="512"/>
+                                <rect key="frame" x="546" y="44" width="54" height="556"/>
                                 <subviews>
                                     <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" tag="20" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Eop-KH-dFz">
-                                        <rect key="frame" x="0.0" y="0.0" width="54" height="512"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="54" height="556"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="Iqm-bZ-iDt">
                                             <size key="itemSize" width="50" height="50"/>
@@ -638,10 +638,10 @@ to rearrange the photos</string>
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nQR-x5-hxs">
-                                <rect key="frame" x="0.0" y="44" width="150" height="512"/>
+                                <rect key="frame" x="0.0" y="44" width="150" height="556"/>
                                 <subviews>
                                     <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" tag="30" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="1XS-ul-pdX">
-                                        <rect key="frame" x="0.0" y="0.0" width="150" height="512"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="150" height="556"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="dXo-1O-74T">
                                             <size key="itemSize" width="50" height="50"/>
@@ -689,7 +689,7 @@ to rearrange the photos</string>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="zsc-cm-HTN" firstAttribute="leading" secondItem="BGS-ia-DZN" secondAttribute="trailing" id="0k4-AY-se5"/>
-                            <constraint firstItem="Tki-mw-R7X" firstAttribute="top" secondItem="nQR-x5-hxs" secondAttribute="bottom" id="0w8-xt-cdx"/>
+                            <constraint firstItem="Tki-mw-R7X" firstAttribute="top" secondItem="nQR-x5-hxs" secondAttribute="bottom" constant="-44" id="0w8-xt-cdx"/>
                             <constraint firstAttribute="centerY" secondItem="nok-mW-saD" secondAttribute="centerY" id="19d-5d-NoX"/>
                             <constraint firstAttribute="trailing" secondItem="Qn0-C6-SBY" secondAttribute="trailing" id="1fy-df-4Za"/>
                             <constraint firstItem="uNG-6s-nO8" firstAttribute="top" secondItem="Tki-mw-R7X" secondAttribute="bottom" id="2sH-9i-lfW"/>
@@ -700,6 +700,7 @@ to rearrange the photos</string>
                             <constraint firstItem="nQR-x5-hxs" firstAttribute="top" secondItem="PJS-pJ-upa" secondAttribute="bottom" id="6Ps-MW-tjD"/>
                             <constraint firstItem="PJS-pJ-upa" firstAttribute="top" secondItem="onG-Z7-5X1" secondAttribute="top" id="6r3-Wp-iH9"/>
                             <constraint firstItem="Tki-mw-R7X" firstAttribute="leading" secondItem="onG-Z7-5X1" secondAttribute="leading" id="7qH-r3-BdL"/>
+                            <constraint firstAttribute="bottom" secondItem="nQR-x5-hxs" secondAttribute="bottom" id="84v-Xa-Tq2"/>
                             <constraint firstAttribute="trailing" secondItem="Tki-mw-R7X" secondAttribute="trailing" id="9eg-Rh-MJK"/>
                             <constraint firstItem="nok-mW-saD" firstAttribute="top" secondItem="124-aY-wOU" secondAttribute="bottom" id="BD5-4c-EER"/>
                             <constraint firstAttribute="trailing" secondItem="PJS-pJ-upa" secondAttribute="trailing" id="D7k-Jr-dRA"/>
@@ -752,7 +753,7 @@ to rearrange the photos</string>
                             <constraint firstItem="nok-mW-saD" firstAttribute="leading" secondItem="OUl-7d-l9B" secondAttribute="trailing" id="lds-ai-cG0"/>
                             <constraint firstItem="BGS-ia-DZN" firstAttribute="top" secondItem="zsc-cm-HTN" secondAttribute="top" id="ojV-vO-jP6"/>
                             <constraint firstItem="5Ml-FB-tKs" firstAttribute="trailing" secondItem="nok-mW-saD" secondAttribute="trailing" constant="2" id="q3r-VB-fgJ"/>
-                            <constraint firstItem="uNG-6s-nO8" firstAttribute="top" secondItem="756-0C-2vh" secondAttribute="bottom" constant="44" id="sKY-6J-2JI"/>
+                            <constraint firstItem="uNG-6s-nO8" firstAttribute="top" secondItem="756-0C-2vh" secondAttribute="bottom" id="sKY-6J-2JI"/>
                             <constraint firstItem="uNG-6s-nO8" firstAttribute="top" secondItem="qk7-Gg-AZh" secondAttribute="bottom" id="tHO-OA-P4H"/>
                             <constraint firstItem="Tki-mw-R7X" firstAttribute="top" secondItem="756-0C-2vh" secondAttribute="bottom" id="tdR-ba-Bpj"/>
                             <constraint firstItem="Qn0-C6-SBY" firstAttribute="leading" secondItem="qk7-Gg-AZh" secondAttribute="trailing" id="xW8-1K-hdg"/>
@@ -763,6 +764,7 @@ to rearrange the photos</string>
                                 <exclude reference="Dds-Ej-PSu"/>
                                 <exclude reference="ojV-vO-jP6"/>
                                 <exclude reference="H4k-lK-38g"/>
+                                <exclude reference="0w8-xt-cdx"/>
                                 <exclude reference="tdR-ba-Bpj"/>
                                 <exclude reference="Ev7-5O-KVN"/>
                                 <exclude reference="NuE-55-TZV"/>

@@ -56,6 +56,8 @@
 + (BOOL)instagramEnabled;
 + (BOOL)qrCodeUploadEnabled;
 
++ (UIFont *)fontWithName:(NSString *)name size:(CGFloat)size;
+
 #ifdef OL_KITE_OFFER_APPLE_PAY
 +(BOOL)isApplePayAvailable;
 #endif
