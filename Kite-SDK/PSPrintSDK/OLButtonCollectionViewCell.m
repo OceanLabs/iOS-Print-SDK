@@ -27,43 +27,57 @@
 //  THE SOFTWARE.
 //
 
-#import "OLColorSelectionCollectionViewCell.h"
+#import "OLButtonCollectionViewCell.h"
 
-static CGFloat circlesDiff = 0.2;
+@implementation OLButtonCollectionViewCell
 
-@implementation OLColorSelectionCollectionViewCell
-
-- (void)drawRect:(CGRect)rect{
-    UIBezierPath* ovalPath = [UIBezierPath bezierPathWithOvalInRect: CGRectMake(2, 2, self.frame.size.width-4, self.frame.size.height-4)];
-    UIColor *strokeColor;
+- (void)initialize{
+    self.backgroundColor = [UIColor clearColor];
     
-    if ([self.color isEqual:[UIColor whiteColor]] && !self.darkMode){
-        strokeColor = [UIColor grayColor];
-    }
-    else if ([self.color isEqual:[UIColor blackColor]] && self.darkMode){
-        strokeColor = [UIColor lightGrayColor];
-    }
-    else{
-        strokeColor = self.color;
-    }
-    [strokeColor setStroke];
+    UIButton *button = [[UIButton alloc] init];
+    [button addTarget:self action:@selector(onButtonTouchUpInside) forControlEvents:UIControlEventTouchUpInside];
+    [self addSubview:button];
     
-    if (self.selected){
-        ovalPath.lineWidth = 1;
-        [ovalPath stroke];
-        
-        UIBezierPath* ovalPath2 = [UIBezierPath bezierPathWithOvalInRect: CGRectMake(self.frame.size.width * circlesDiff, self.frame.size.height * circlesDiff, self.frame.size.width  * (1-2*circlesDiff), self.frame.size.height * (1-2*circlesDiff))];
-        ovalPath2.lineWidth = 2;
-        [ovalPath2 stroke];
-        [self.color setFill];
-        [ovalPath2 fill];
+    button.translatesAutoresizingMaskIntoConstraints = NO;
+    NSDictionary *views = NSDictionaryOfVariableBindings(button);
+    NSMutableArray *con = [[NSMutableArray alloc] init];
+    
+    NSArray *visuals = @[@"H:|-0-[button]-0-|",
+                         @"V:|-0-[button]-0-|"];
+    
+    
+    for (NSString *visual in visuals) {
+        [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
     }
-    else{
-        ovalPath.lineWidth = 2;
-        [ovalPath stroke];
-        [self.color setFill];
-        [ovalPath fill];
+    
+    [button.superview addConstraints:con];
+    
+}
+
+- (void)onButtonTouchUpInside{
+    self.selected = !self.selected;
+    [self setNeedsDisplay];
+    
+    UIView *view = self.superview;
+    while (view && ![view isKindOfClass:[UICollectionView class]]){
+        view = view.superview;
     }
+    
+    [[(UICollectionView *)view delegate] collectionView:(UICollectionView *)view didSelectItemAtIndexPath:[(UICollectionView *)view indexPathForCell:self]];
+}
+
+- (id)initWithCoder:(NSCoder *)aCoder{
+    if(self = [super initWithCoder:aCoder]){
+        [self initialize];
+    }
+    return self;
+}
+
+- (id)initWithFrame:(CGRect)rect{
+    if(self = [super initWithFrame:rect]){
+        [self initialize];
+    }
+    return self;
 }
 
 @end

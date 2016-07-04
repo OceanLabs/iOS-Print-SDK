@@ -32,9 +32,7 @@
 #import "OLTextField.h"
 #import "OLColorSelectionCollectionViewCell.h"
 
-const NSInteger kOLDrawerTagColors = 20;
-
-@interface OLScrollCropViewController () <RMImageCropperDelegate, UITextFieldDelegate, UIGestureRecognizerDelegate, UICollectionViewDelegate, UICollectionViewDataSource>
+@interface OLScrollCropViewController () <RMImageCropperDelegate, UITextFieldDelegate, UIGestureRecognizerDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *doneButton;
 @property (assign, nonatomic) NSInteger initialOrientation;
 @property (weak, nonatomic) IBOutlet UIToolbar *toolbar;
@@ -42,13 +40,19 @@ const NSInteger kOLDrawerTagColors = 20;
 
 @property (strong, nonatomic) NSMutableArray<OLTextField *> *textFields;
 @property (weak, nonatomic) IBOutlet UIView *colorsView;
+@property (weak, nonatomic) IBOutlet UIView *fontsView;
 @property (weak, nonatomic) IBOutlet UIToolbar *textToolsToolbar;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *colorsViewBottomCon;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *fontsCollectionViewBottomCon;
 @property (strong, nonatomic) UIVisualEffectView *visualEffectView;
+@property (strong, nonatomic) UIVisualEffectView *visualEffectView2;
 @property (weak, nonatomic) IBOutlet UICollectionView *colorsCollectionView;
+@property (weak, nonatomic) IBOutlet UICollectionView *fontsCollectionView;
 @property (strong, nonatomic) NSArray<UIColor *> *availableColors;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *colorsTrailingCon;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *fontsLeadingCon;
 @property (weak, nonatomic) IBOutlet UIView *textFieldsView;
+@property (strong, nonatomic) NSArray<NSString *> *fonts;
 
 
 @property (strong, nonatomic) IBOutletCollection(UIView) NSArray *allViews;
@@ -56,6 +60,18 @@ const NSInteger kOLDrawerTagColors = 20;
 @end
 
 @implementation OLScrollCropViewController
+
+-(NSArray<NSString *> *) fonts{
+    if (!_fonts){
+        _fonts = [[NSMutableArray<NSString *> alloc] init];
+        for (NSString *familyName in [UIFont familyNames]){
+            for (NSString *fontName in [UIFont fontNamesForFamilyName:familyName]) {
+                [(NSMutableArray *)_fonts addObject:fontName];
+            }
+        }
+    }
+    return _fonts;
+}
 
 -(OLPhotoEdits *) edits{
     if (!_edits){
@@ -82,12 +98,15 @@ const NSInteger kOLDrawerTagColors = 20;
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.availableColors = @[[UIColor blackColor], [UIColor whiteColor], [UIColor grayColor], [UIColor greenColor], [UIColor redColor]];
+    self.availableColors = @[[UIColor blackColor], [UIColor whiteColor], [UIColor grayColor], [UIColor greenColor], [UIColor redColor], [UIColor blueColor]];
     
     self.colorsCollectionView.dataSource = self;
     self.colorsCollectionView.delegate = self;
+    self.fontsCollectionView.dataSource = self;
+    self.fontsCollectionView.delegate = self;
     
     self.colorsTrailingCon.constant = -self.colorsView.frame.size.width;
+    self.fontsLeadingCon.constant = -self.fontsView.frame.size.width;
     self.colorsView.transform = CGAffineTransformMakeRotation(M_PI);
     
     if (self.previewView && !self.skipPresentAnimation){
@@ -148,6 +167,7 @@ const NSInteger kOLDrawerTagColors = 20;
         textField.text = textOnPhoto.text;
         textField.transform = textOnPhoto.transform;
         textField.textColor = textOnPhoto.color;
+        textField.font = [UIFont fontWithName:textOnPhoto.fontName size:textOnPhoto.fontSize];
         [self.edits.textsOnPhoto removeObject:textOnPhoto];
     }
     
@@ -179,8 +199,33 @@ const NSInteger kOLDrawerTagColors = 20;
         [view.superview addConstraints:con];
         
     }
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0){
+        UIVisualEffect *blurEffect;
+        blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleDark];
+        
+        self.visualEffectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
+        UIView *view = self.visualEffectView;
+        [self.fontsView addSubview:view];
+        [self.fontsView sendSubviewToBack:view];
+        
+        view.translatesAutoresizingMaskIntoConstraints = NO;
+        NSDictionary *views = NSDictionaryOfVariableBindings(view);
+        NSMutableArray *con = [[NSMutableArray alloc] init];
+        
+        NSArray *visuals = @[@"H:|-0-[view]-0-|",
+                             @"V:|-0-[view]-0-|"];
+        
+        
+        for (NSString *visual in visuals) {
+            [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+        }
+        
+        [view.superview addConstraints:con];
+        
+    }
     else{
-        self.colorsView.backgroundColor = [UIColor whiteColor];
+        self.colorsView.backgroundColor = [UIColor blackColor];
+        self.fontsView.backgroundColor = [UIColor blackColor];
     }
 }
 
@@ -272,6 +317,8 @@ const NSInteger kOLDrawerTagColors = 20;
         textOnPhoto.frame = textField.frame;
         textOnPhoto.transform = textField.transform;
         textOnPhoto.color = textField.textColor;
+        textOnPhoto.fontName = textField.font.fontName;
+        textOnPhoto.fontSize = textField.font.pointSize;
         [self.edits.textsOnPhoto addObject:textOnPhoto];
     }
     
@@ -369,6 +416,7 @@ const NSInteger kOLDrawerTagColors = 20;
         textFieldCopy.text = textField.text;
         textFieldCopy.transform = textField.transform;
         textFieldCopy.textColor = textField.textColor;
+        textFieldCopy.font = textField.font;
         textField.hidden = YES;
     }
     
@@ -481,6 +529,14 @@ const NSInteger kOLDrawerTagColors = 20;
     self.doneButton.enabled = YES;
 }
 
+- (IBAction)onButtonFontTapped:(UIBarButtonItem *)sender {
+    self.fontsLeadingCon.constant = self.fontsLeadingCon.constant == 0 ? -self.fontsView.frame.size.width : 0;
+    [UIView animateWithDuration:0.15 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
+        [self.view layoutIfNeeded];
+    } completion:NULL];
+}
+
+
 - (IBAction)onButtonColorTapped:(UIBarButtonItem *)sender {
     self.colorsTrailingCon.constant = self.colorsTrailingCon.constant == 0 ? -self.colorsView.frame.size.width : 0;
     [UIView animateWithDuration:0.15 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
@@ -496,8 +552,11 @@ const NSInteger kOLDrawerTagColors = 20;
 #pragma mark CollectionView
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
-    if (collectionView.tag == kOLDrawerTagColors){
+    if (collectionView == self.colorsCollectionView){
         return self.availableColors.count;
+    }
+    else if (collectionView == self.fontsCollectionView){
+        return self.fonts.count;
     }
     
     return 0;
@@ -505,7 +564,7 @@ const NSInteger kOLDrawerTagColors = 20;
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
     UICollectionViewCell *cell;
-    if (collectionView.tag == kOLDrawerTagColors){
+    if (collectionView == self.colorsCollectionView){
         cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"colorSelectionCell" forIndexPath:indexPath];
         [(OLColorSelectionCollectionViewCell *)cell setDarkMode:YES];
         
@@ -520,12 +579,31 @@ const NSInteger kOLDrawerTagColors = 20;
         [(OLColorSelectionCollectionViewCell *)cell setColor:self.availableColors[indexPath.item]];
         [cell setNeedsDisplay];
     }
+    else if (collectionView == self.fontsCollectionView){
+        cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"fontCell" forIndexPath:indexPath];
+        UILabel *label = [cell viewWithTag:10];
+        label.text = self.fonts[indexPath.item];
+        label.font = [UIFont fontWithName:label.text size:17];
+        label.textColor = [UIColor whiteColor];
+        label.numberOfLines = 3;
+    }
     
     return cell;
 }
 
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
+    if (collectionView == self.colorsCollectionView){
+        return CGSizeMake(collectionView.frame.size.width * 0.8, collectionView.frame.size.width * 0.8);
+    }
+    else if (collectionView == self.fontsCollectionView){
+        return CGSizeMake(collectionView.frame.size.width, collectionView.frame.size.width/2.0);
+    }
+    
+    return CGSizeZero;
+}
+
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
-    if (collectionView.tag == kOLDrawerTagColors){
+    if (collectionView == self.colorsCollectionView){
         for (UITextField *textField in self.textFields){
             if ([textField isFirstResponder]){
                 [textField setTextColor:self.availableColors[indexPath.item]];
@@ -534,6 +612,15 @@ const NSInteger kOLDrawerTagColors = 20;
             }
         }
         [collectionView reloadData];
+    }
+    else if (collectionView == self.fontsCollectionView){
+        for (UITextField *textField in self.textFields){
+            if ([textField isFirstResponder]){
+                [textField setFont:[UIFont fontWithName:self.fonts[indexPath.item] size:30]];
+                self.doneButton.enabled = YES;
+                break;
+            }
+        }
     }
 }
 
@@ -569,6 +656,7 @@ const NSInteger kOLDrawerTagColors = 20;
     NSNumber *curveNumber = [info objectForKey:UIKeyboardAnimationCurveUserInfoKey];
     
     self.colorsTrailingCon.constant = -self.colorsView.frame.size.width;
+    self.fontsLeadingCon.constant = -self.fontsView.frame.size.width;
     [UIView animateWithDuration:[durationNumber doubleValue] delay:0 options:[curveNumber unsignedIntegerValue] animations:^{
         [self.view layoutIfNeeded];
         
@@ -583,6 +671,7 @@ const NSInteger kOLDrawerTagColors = 20;
     NSNumber *curveNumber = [info objectForKey:UIKeyboardAnimationCurveUserInfoKey];
     
     self.colorsViewBottomCon.constant = [rectValue CGRectValue].size.height;
+    self.fontsCollectionViewBottomCon.constant = [rectValue CGRectValue].size.height;
     [UIView animateWithDuration:[durationNumber doubleValue] delay:0 options:[curveNumber unsignedIntegerValue] animations:^{
         [self.view layoutIfNeeded];
     }completion:NULL];

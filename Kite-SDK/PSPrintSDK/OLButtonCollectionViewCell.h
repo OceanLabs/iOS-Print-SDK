@@ -27,43 +27,8 @@
 //  THE SOFTWARE.
 //
 
-#import "OLColorSelectionCollectionViewCell.h"
+#import <UIKit/UIKit.h>
 
-static CGFloat circlesDiff = 0.2;
-
-@implementation OLColorSelectionCollectionViewCell
-
-- (void)drawRect:(CGRect)rect{
-    UIBezierPath* ovalPath = [UIBezierPath bezierPathWithOvalInRect: CGRectMake(2, 2, self.frame.size.width-4, self.frame.size.height-4)];
-    UIColor *strokeColor;
-    
-    if ([self.color isEqual:[UIColor whiteColor]] && !self.darkMode){
-        strokeColor = [UIColor grayColor];
-    }
-    else if ([self.color isEqual:[UIColor blackColor]] && self.darkMode){
-        strokeColor = [UIColor lightGrayColor];
-    }
-    else{
-        strokeColor = self.color;
-    }
-    [strokeColor setStroke];
-    
-    if (self.selected){
-        ovalPath.lineWidth = 1;
-        [ovalPath stroke];
-        
-        UIBezierPath* ovalPath2 = [UIBezierPath bezierPathWithOvalInRect: CGRectMake(self.frame.size.width * circlesDiff, self.frame.size.height * circlesDiff, self.frame.size.width  * (1-2*circlesDiff), self.frame.size.height * (1-2*circlesDiff))];
-        ovalPath2.lineWidth = 2;
-        [ovalPath2 stroke];
-        [self.color setFill];
-        [ovalPath2 fill];
-    }
-    else{
-        ovalPath.lineWidth = 2;
-        [ovalPath stroke];
-        [self.color setFill];
-        [ovalPath fill];
-    }
-}
+@interface OLButtonCollectionViewCell : UICollectionViewCell
 
 @end

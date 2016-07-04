@@ -28,8 +28,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "OLButtonCollectionViewCell.h"
 
-@interface OLColorSelectionCollectionViewCell : UICollectionViewCell
+@interface OLColorSelectionCollectionViewCell : OLButtonCollectionViewCell
 
 @property (strong, nonatomic) UIColor *color;
 @property (assign, nonatomic) BOOL darkMode;
