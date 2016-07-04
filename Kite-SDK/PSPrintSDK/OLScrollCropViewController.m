@@ -53,6 +53,7 @@
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *fontsLeadingCon;
 @property (weak, nonatomic) IBOutlet UIView *textFieldsView;
 @property (strong, nonatomic) NSArray<NSString *> *fonts;
+@property (assign, nonatomic) CGFloat textFieldKeyboardDiff;
 
 
 @property (strong, nonatomic) IBOutletCollection(UIView) NSArray *allViews;
@@ -510,6 +511,7 @@
 
 - (IBAction)onButtonAddTextClicked:(UIBarButtonItem *)sender {
     UITextField *textField = [self addTextFieldToView:self.cropView temp:NO];
+    [self.view layoutIfNeeded];
     [textField becomeFirstResponder];
 
     self.doneButton.enabled = YES;
@@ -661,17 +663,39 @@
         [self.view layoutIfNeeded];
         
         self.textToolsToolbar.transform = CGAffineTransformMakeTranslation(0, -self.textToolsToolbar.frame.origin.x - self.textToolsToolbar.frame.size.height - [[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height);
+        
+        for (UITextField *textField in self.textFields){
+            if ([textField isFirstResponder]){
+                textField.transform = CGAffineTransformTranslate(textField.transform, 0, self.textFieldKeyboardDiff);
+                self.textFieldKeyboardDiff = 0;
+                break;
+            }
+        }
     }completion:NULL];
 }
 
 - (void)keyboardWillChangeFrame:(NSNotification*)aNotification{
     NSDictionary *info = [aNotification userInfo];
-    NSValue *rectValue = [info objectForKey:UIKeyboardFrameEndUserInfoKey];
+    CGFloat keyboardHeight = [[info objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue].size.height;
     NSNumber *durationNumber = [info objectForKey:UIKeyboardAnimationDurationUserInfoKey];
     NSNumber *curveNumber = [info objectForKey:UIKeyboardAnimationCurveUserInfoKey];
     
-    self.colorsViewBottomCon.constant = [rectValue CGRectValue].size.height;
-    self.fontsCollectionViewBottomCon.constant = [rectValue CGRectValue].size.height;
+    for (UITextField *textField in self.textFields){
+        if ([textField isFirstResponder]){
+            CGPoint p = [self.cropView convertRect:textField.frame toView:nil].origin;
+            
+            CGFloat diff = p.y + textField.frame.size.height - (self.view.frame.size.height - keyboardHeight);
+            if (diff > 0) {
+                textField.transform = CGAffineTransformTranslate(textField.transform, 0, -diff);
+                self.textFieldKeyboardDiff = diff;
+            }
+            
+            break;
+        }
+    }
+    
+    self.colorsViewBottomCon.constant = keyboardHeight;
+    self.fontsCollectionViewBottomCon.constant = keyboardHeight;
     [UIView animateWithDuration:[durationNumber doubleValue] delay:0 options:[curveNumber unsignedIntegerValue] animations:^{
         [self.view layoutIfNeeded];
     }completion:NULL];
