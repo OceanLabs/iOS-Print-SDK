@@ -27,22 +27,12 @@
 //  THE SOFTWARE.
 //
 
-#import <Foundation/Foundation.h>
-#import "OLTextOnPhoto.h"
+#import <UIKit/UIKit.h>
+#import "OLButtonCollectionViewCell.h"
 
-@interface OLPhotoEdits : NSObject <NSCoding, NSCopying>
+@interface OLColorSelectionCollectionViewCell : OLButtonCollectionViewCell
 
-@property (assign, nonatomic) CGRect cropImageRect;
-@property (assign, nonatomic) CGRect cropImageFrame;
-@property (assign, nonatomic) CGSize cropImageSize;
-@property (assign, nonatomic) CGAffineTransform cropTransform;
-@property (assign, nonatomic) NSInteger counterClockwiseRotations;
-@property (assign, nonatomic) BOOL flipHorizontal;
-@property (assign, nonatomic) BOOL flipVertical;
-@property (strong, nonatomic) NSMutableArray<OLTextOnPhoto *> *textsOnPhoto;
-
-- (void)performHorizontalFlipEditFromOrientation:(UIImageOrientation)orientation;
-
-+ (UIImageOrientation)orientationForNumberOfCounterClockwiseRotations:(NSInteger)number andInitialOrientation:(UIImageOrientation)orientation horizontalFlip:(BOOL)horizontalFlip verticalFlip:(BOOL)verticalFlip;
+@property (strong, nonatomic) UIColor *color;
+@property (assign, nonatomic) BOOL darkMode;
 
 @end

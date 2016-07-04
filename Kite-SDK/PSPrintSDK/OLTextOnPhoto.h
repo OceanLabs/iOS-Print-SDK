@@ -26,23 +26,15 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
 //
-
 #import <Foundation/Foundation.h>
-#import "OLTextOnPhoto.h"
 
-@interface OLPhotoEdits : NSObject <NSCoding, NSCopying>
+@interface OLTextOnPhoto : NSObject <NSCoding, NSCopying>
 
-@property (assign, nonatomic) CGRect cropImageRect;
-@property (assign, nonatomic) CGRect cropImageFrame;
-@property (assign, nonatomic) CGSize cropImageSize;
-@property (assign, nonatomic) CGAffineTransform cropTransform;
-@property (assign, nonatomic) NSInteger counterClockwiseRotations;
-@property (assign, nonatomic) BOOL flipHorizontal;
-@property (assign, nonatomic) BOOL flipVertical;
-@property (strong, nonatomic) NSMutableArray<OLTextOnPhoto *> *textsOnPhoto;
-
-- (void)performHorizontalFlipEditFromOrientation:(UIImageOrientation)orientation;
-
-+ (UIImageOrientation)orientationForNumberOfCounterClockwiseRotations:(NSInteger)number andInitialOrientation:(UIImageOrientation)orientation horizontalFlip:(BOOL)horizontalFlip verticalFlip:(BOOL)verticalFlip;
+@property (strong, nonatomic) NSString *text;
+@property (assign, nonatomic) CGRect frame;
+@property (assign, nonatomic) CGAffineTransform transform;
+@property (strong, nonatomic) UIColor *color;
+@property (strong, nonatomic) NSString *fontName;
+@property (assign, nonatomic) CGFloat fontSize;
 
 @end

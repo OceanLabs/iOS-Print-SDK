@@ -27,22 +27,43 @@
 //  THE SOFTWARE.
 //
 
-#import <Foundation/Foundation.h>
-#import "OLTextOnPhoto.h"
+#import "OLColorSelectionCollectionViewCell.h"
 
-@interface OLPhotoEdits : NSObject <NSCoding, NSCopying>
+static CGFloat circlesDiff = 0.2;
 
-@property (assign, nonatomic) CGRect cropImageRect;
-@property (assign, nonatomic) CGRect cropImageFrame;
-@property (assign, nonatomic) CGSize cropImageSize;
-@property (assign, nonatomic) CGAffineTransform cropTransform;
-@property (assign, nonatomic) NSInteger counterClockwiseRotations;
-@property (assign, nonatomic) BOOL flipHorizontal;
-@property (assign, nonatomic) BOOL flipVertical;
-@property (strong, nonatomic) NSMutableArray<OLTextOnPhoto *> *textsOnPhoto;
+@implementation OLColorSelectionCollectionViewCell
 
-- (void)performHorizontalFlipEditFromOrientation:(UIImageOrientation)orientation;
-
-+ (UIImageOrientation)orientationForNumberOfCounterClockwiseRotations:(NSInteger)number andInitialOrientation:(UIImageOrientation)orientation horizontalFlip:(BOOL)horizontalFlip verticalFlip:(BOOL)verticalFlip;
+- (void)drawRect:(CGRect)rect{
+    UIBezierPath* ovalPath = [UIBezierPath bezierPathWithOvalInRect: CGRectMake(2, 2, self.frame.size.width-4, self.frame.size.height-4)];
+    UIColor *strokeColor;
+    
+    if ([self.color isEqual:[UIColor whiteColor]] && !self.darkMode){
+        strokeColor = [UIColor grayColor];
+    }
+    else if ([self.color isEqual:[UIColor blackColor]] && self.darkMode){
+        strokeColor = [UIColor lightGrayColor];
+    }
+    else{
+        strokeColor = self.color;
+    }
+    [strokeColor setStroke];
+    
+    if (self.selected){
+        ovalPath.lineWidth = 1;
+        [ovalPath stroke];
+        
+        UIBezierPath* ovalPath2 = [UIBezierPath bezierPathWithOvalInRect: CGRectMake(self.frame.size.width * circlesDiff, self.frame.size.height * circlesDiff, self.frame.size.width  * (1-2*circlesDiff), self.frame.size.height * (1-2*circlesDiff))];
+        ovalPath2.lineWidth = 2;
+        [ovalPath2 stroke];
+        [self.color setFill];
+        [ovalPath2 fill];
+    }
+    else{
+        ovalPath.lineWidth = 2;
+        [ovalPath stroke];
+        [self.color setFill];
+        [ovalPath fill];
+    }
+}
 
 @end

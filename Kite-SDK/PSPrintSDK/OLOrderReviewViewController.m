@@ -775,6 +775,10 @@ UIViewControllerPreviewingDelegate>
             NSIndexPath *indexPath = [NSIndexPath indexPathForItem:i inSection:0];
             if (indexPath){
                 [self.collectionView reloadItemsAtIndexPaths:@[indexPath]];
+                UICollectionViewCell *cell = [self.collectionView cellForItemAtIndexPath:indexPath];
+                UIView *imageView = [cell viewWithTag:10];
+                imageView.hidden = YES;
+                cropper.previewSourceView = imageView;
             }
         }
     }
