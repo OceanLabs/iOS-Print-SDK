@@ -475,7 +475,7 @@
 }
 
 - (UITextField *)addTextFieldToView:(UIView *)view temp:(BOOL)temp{
-    OLPhotoTextField *textField = [[OLPhotoTextField alloc] initWithFrame:CGRectMake(0, 0, 100, 40)];
+    OLPhotoTextField *textField = [[OLPhotoTextField alloc] initWithFrame:CGRectMake(0, 0, 130, 70)];
     textField.center = self.cropView.center;
     textField.margins = 10;
     textField.delegate = self;

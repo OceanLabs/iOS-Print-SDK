@@ -33,13 +33,13 @@
 
 @implementation OLPhotoTextField
 
-//- (CGRect)textRectForBounds:(CGRect)bounds {
-//    return CGRectMake(bounds.origin.x + self.margins, bounds.origin.y,
-//                      bounds.size.width - self.margins * 2, bounds.size.height);
-//}
-//- (CGRect)editingRectForBounds:(CGRect)bounds {
-//    return [self textRectForBounds:bounds];
-//}
+- (CGRect)textRectForBounds:(CGRect)bounds {
+    return CGRectMake(bounds.origin.x + 15, bounds.origin.y + 15,
+                      bounds.size.width - 30, bounds.size.height - 30);
+}
+- (CGRect)editingRectForBounds:(CGRect)bounds {
+    return [self textRectForBounds:bounds];
+}
 
 - (void)initialize{
     self.textAlignment = NSTextAlignmentCenter;
@@ -66,7 +66,7 @@
 }
 
 - (void)layoutCornerButtons{
-    [self viewWithTag:10].frame = CGRectMake(self.frame.size.width - 15, -15, 30, 30);
+    [self viewWithTag:10].frame = CGRectMake(self.frame.size.width - 30, 0, 30, 30);
 }
 
 - (void)updateSize{
@@ -98,7 +98,7 @@
 -(void)drawRect:(CGRect)rect
 {
     //// Rectangle Drawing
-    UIBezierPath* rectanglePath = [UIBezierPath bezierPathWithRect: CGRectMake(0, 0, self.frame.size.width, self.frame.size.height)];
+    UIBezierPath* rectanglePath = [UIBezierPath bezierPathWithRect: CGRectMake(15, 15, self.frame.size.width-30, self.frame.size.height-30)];
     [[UIColor blackColor] setStroke];
     rectanglePath.lineWidth = 2;
     [rectanglePath stroke];
