@@ -60,23 +60,20 @@
     [resizeButton setImage:[UIImage imageNamedInKiteBundle:@"circle-resize"] forState:UIControlStateNormal];
     [self addSubview:resizeButton];
     [resizeButton addTarget:self action:@selector(onButtonResizeTouched:) forControlEvents:UIControlEventTouchDown];
+    [resizeButton addTarget:self action:@selector(onButtonResizeLetGo:) forControlEvents:UIControlEventTouchUpInside];
+    [resizeButton addTarget:self action:@selector(onButtonResizeLetGo:) forControlEvents:UIControlEventTouchUpOutside];
 }
 
 - (void)onButtonResizeTouched:(UIButton *)sender{
-    
+    if ([self.photoTextFieldDelegate respondsToSelector:@selector(photoTextFieldDidSendActionTouchDownForResize:)]){
+        [self.photoTextFieldDelegate photoTextFieldDidSendActionTouchDownForResize:self];
+    }
 }
 
-- (void)layoutCornerButtons{
-    [self viewWithTag:10].frame = CGRectMake(self.frame.size.width - 30, 0, 30, 30);
-    [self viewWithTag:20].frame = CGRectMake(self.frame.size.width - 30, self.frame.size.height - 30, 30, 30);
-}
-
-- (void)updateSize{
-    CGPoint center = self.center;
-    [self sizeToFit];
-    self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y, MAX(self.frame.size.width + self.margins*2, 100), MAX(self.frame.size.height, 40));
-    self.center = center;
-    [self setNeedsDisplay];
+- (void)onButtonResizeLetGo:(UIButton *)sender{
+    if ([self.photoTextFieldDelegate respondsToSelector:@selector(photoTextFieldDidSendActionTouchDownForResize:)]){
+        [self.photoTextFieldDelegate photoTextFieldDidSendActionTouchUpForResize:self];
+    }
 }
 
 - (void)onButtonXTapped:(UIButton *)sender{
@@ -97,6 +94,19 @@
         [self initialize];
     }
     return self;
+}
+
+- (void)layoutCornerButtons{
+    [self viewWithTag:10].frame = CGRectMake(self.frame.size.width - 30, 0, 30, 30);
+    [self viewWithTag:20].frame = CGRectMake(self.frame.size.width - 30, self.frame.size.height - 30, 30, 30);
+}
+
+- (void)updateSize{
+    CGPoint center = self.center;
+    [self sizeToFit];
+    self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y, MAX(self.frame.size.width + self.margins*2, 100), MAX(self.frame.size.height, 40));
+    self.center = center;
+    [self setNeedsDisplay];
 }
 
 -(void)drawRect:(CGRect)rect

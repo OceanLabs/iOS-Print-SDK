@@ -55,6 +55,7 @@
 @property (weak, nonatomic) IBOutlet UIView *textFieldsView;
 @property (strong, nonatomic) NSArray<NSString *> *fonts;
 @property (assign, nonatomic) CGFloat textFieldKeyboardDiff;
+@property (assign, nonatomic) BOOL resizingTextField;
 
 
 @property (strong, nonatomic) IBOutletCollection(UIView) NSArray *allViews;
@@ -524,31 +525,60 @@
 
 - (void)onTextfieldGesturePanRecognized:(UIPanGestureRecognizer *)gesture{
     static CGAffineTransform original;
+    static CGFloat originalFontSize;
     
     if (gesture.state == UIGestureRecognizerStateBegan){
         original = gesture.view.transform;
+        
+        OLPhotoTextField *textField = (OLPhotoTextField *)gesture.view;
+        originalFontSize = textField.font.pointSize;
     }
     else if (gesture.state == UIGestureRecognizerStateChanged){
         CGPoint translate = [gesture translationInView:gesture.view.superview];
         CGAffineTransform transform = CGAffineTransformTranslate(original, translate.x, translate.y);
         
-        CGFloat minY = gesture.view.frame.size.height/2.0 - self.cropView.frame.size.height / 2.0;
-        CGFloat maxY = -minY;
-        CGFloat minX = gesture.view.frame.size.width/2.0 - self.cropView.frame.size.width / 2.0;
-        CGFloat maxX = -minX;
-        if (transform.ty < minY){
-            transform.ty = minY;
+        if (self.resizingTextField){
+            CGFloat sizeChange = sqrt(translate.x * translate.x + translate.y * translate.y);
+            if (translate.x < 0 && translate.y < 0){
+                sizeChange = -sizeChange;
+            }
+            else if (translate.x < 0){
+                sizeChange = translate.y;
+            }
+            else if (translate.y < 0){
+                sizeChange = translate.x;
+            }
+//            else if (transform.tx < 0 && transform.tx > transform.ty){
+//                sizeChange = -transform.;
+//            }
+//            else if (transform.ty < 0 && transform.ty > transform.tx){
+//                sizeChange = -sizeChange;
+//            }
+            OLPhotoTextField *textField = (OLPhotoTextField *)gesture.view;
+            textField.font = [UIFont fontWithName:textField.font.fontName size:MAX(originalFontSize + sizeChange, 30)];
         }
-        if (transform.ty > maxY){
-            transform.ty = maxY;
+        else{
+            CGFloat minY = gesture.view.frame.size.height/2.0 - self.cropView.frame.size.height / 2.0;
+            CGFloat maxY = -minY;
+            CGFloat minX = gesture.view.frame.size.width/2.0 - self.cropView.frame.size.width / 2.0;
+            CGFloat maxX = -minX;
+            if (transform.ty < minY){
+                transform.ty = minY;
+            }
+            if (transform.ty > maxY){
+                transform.ty = maxY;
+            }
+            if (transform.tx < minX){
+                transform.tx = minX;
+            }
+            if (transform.tx > maxX){
+                transform.tx = maxX;
+            }
+            gesture.view.transform = transform;
         }
-        if (transform.tx < minX){
-            transform.tx = minX;
-        }
-        if (transform.tx > maxX){
-            transform.tx = maxX;
-        }
-        gesture.view.transform = transform;
+    }
+    else if (gesture.state == UIGestureRecognizerStateEnded){
+        self.resizingTextField = NO;
     }
     
     self.doneButton.enabled = YES;
@@ -761,6 +791,14 @@
 - (void)photoTextFieldDidSendActionTouchUpInsideForX:(OLPhotoTextField *)textField{
     [textField removeFromSuperview];
     [self.textFields removeObjectIdenticalTo:textField];
+}
+
+- (void)photoTextFieldDidSendActionTouchDownForResize:(OLPhotoTextField *)textField{
+    self.resizingTextField = YES;
+}
+
+- (void)photoTextFieldDidSendActionTouchUpForResize:(OLPhotoTextField *)textField{
+    self.resizingTextField = NO;
 }
 
 #pragma mark - RMImageCropperDelegate methods

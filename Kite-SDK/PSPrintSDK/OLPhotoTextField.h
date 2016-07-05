@@ -37,12 +37,14 @@
 
 - (void)photoTextFieldDidSendActionTouchUpInsideForX:(OLPhotoTextField *)textField;
 - (void)photoTextFieldDidSendActionTouchDownForResize:(OLPhotoTextField *)textField;
+- (void)photoTextFieldDidSendActionTouchUpForResize:(OLPhotoTextField *)textField;
 
 @end
 
 @interface OLPhotoTextField : UITextField
 
 @property (assign, nonatomic) CGFloat margins;
+//@property (assign, nonatomic) CGFloat fontResize;
 @property (weak, nonatomic) id<OLPhotoTextFieldDelegate> photoTextFieldDelegate;
 - (void)updateSize;
 
