@@ -29,7 +29,7 @@
 
 #import "OLScrollCropViewController.h"
 #import "OLPrintPhoto.h"
-#import "OLTextField.h"
+#import "OLPhotoTextField.h"
 #import "OLColorSelectionCollectionViewCell.h"
 #import "OLKiteUtils.h"
 
@@ -39,7 +39,7 @@
 @property (weak, nonatomic) IBOutlet UIToolbar *toolbar;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *centerYCon;
 
-@property (strong, nonatomic) NSMutableArray<OLTextField *> *textFields;
+@property (strong, nonatomic) NSMutableArray<OLPhotoTextField *> *textFields;
 @property (weak, nonatomic) IBOutlet UIView *colorsView;
 @property (weak, nonatomic) IBOutlet UIView *fontsView;
 @property (weak, nonatomic) IBOutlet UIToolbar *textToolsToolbar;
@@ -92,7 +92,7 @@
 }
 
 - (void)dismissKeyboard{
-    for (OLTextField *textField in self.textFields){
+    for (OLPhotoTextField *textField in self.textFields){
         if ([textField isFirstResponder]){
             [textField resignFirstResponder];
         }
@@ -314,7 +314,7 @@
     self.edits.cropImageSize = [self.cropView croppedImageSize];
     self.edits.cropTransform = [self.cropView.imageView transform];
     
-    for (OLTextField *textField in self.textFields){
+    for (OLPhotoTextField *textField in self.textFields){
         if (!textField.text || [textField.text isEqualToString:@""]){
             continue;
         }
@@ -475,16 +475,10 @@
 }
 
 - (UITextField *)addTextFieldToView:(UIView *)view temp:(BOOL)temp{
-    OLTextField *textField = [[OLTextField alloc] initWithFrame:CGRectMake(0, 0, 100, 40)];
+    OLPhotoTextField *textField = [[OLPhotoTextField alloc] initWithFrame:CGRectMake(0, 0, 100, 40)];
     textField.center = self.cropView.center;
-    textField.textAlignment = NSTextAlignmentCenter;
     textField.margins = 10;
     textField.delegate = self;
-    textField.layer.borderWidth = 2;
-    textField.layer.borderColor = self.view.tintColor.CGColor;
-    textField.textColor = [UIColor whiteColor];
-    textField.tintColor = [UIColor whiteColor];
-    [textField setFont:[UIFont systemFontOfSize:30]];
     
     UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] init];
     panGesture.delegate = self;
@@ -621,7 +615,7 @@
         return CGSizeMake(collectionView.frame.size.width * 0.8, collectionView.frame.size.width * 0.8);
     }
     else if (collectionView == self.fontsCollectionView){
-        return CGSizeMake(collectionView.frame.size.width, collectionView.frame.size.width/4.0);
+        return CGSizeMake(collectionView.frame.size.width, collectionView.frame.size.width/2);
     }
     
     return CGSizeZero;
@@ -738,11 +732,7 @@
 #pragma mark - UITextFieldDelegate
 
 - (BOOL) textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
-    OLTextField *theTextField = (OLTextField *)textField;
-    CGPoint center = textField.center;
-    [theTextField sizeToFit];
-    textField.frame = CGRectMake(theTextField.frame.origin.x, theTextField.frame.origin.y, MAX(theTextField.frame.size.width + theTextField.margins*2, 100), MAX(theTextField.frame.size.height, 40));
-    theTextField.center = center;
+    [(OLPhotoTextField *)textField updateSize];
     
     self.doneButton.enabled = YES;
     
@@ -754,6 +744,12 @@
 //    return YES;
     [textField resignFirstResponder];
     return NO;
+}
+
+- (void)textFieldDidEndEditing:(UITextField *)textField{
+    if (!textField.text || [textField.text isEqualToString:@""]){
+        [textField removeFromSuperview];
+    }
 }
 
 #pragma mark - RMImageCropperDelegate methods
