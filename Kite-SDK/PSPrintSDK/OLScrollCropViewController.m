@@ -548,14 +548,15 @@
             else if (translate.y < 0){
                 sizeChange = translate.x;
             }
-//            else if (transform.tx < 0 && transform.tx > transform.ty){
-//                sizeChange = -transform.;
-//            }
-//            else if (transform.ty < 0 && transform.ty > transform.tx){
-//                sizeChange = -sizeChange;
-//            }
             OLPhotoTextField *textField = (OLPhotoTextField *)gesture.view;
+            CGFloat fontSize = textField.font.pointSize;
             textField.font = [UIFont fontWithName:textField.font.fontName size:MAX(originalFontSize + sizeChange, 30)];
+            [textField sizeToFit];
+            if (textField.frame.origin.x < 0 || textField.frame.origin.y < 0 || textField.frame.origin.x + textField.frame.size.width > textField.superview.frame.size.width || textField.frame.origin.y + textField.frame.size.height > textField.superview.frame.size.height){
+                textField.font = [UIFont fontWithName:textField.font.fontName size:fontSize];
+                [textField sizeToFit];
+            }
+            [textField setNeedsDisplay];
         }
         else{
             CGFloat minY = gesture.view.frame.size.height/2.0 - self.cropView.frame.size.height / 2.0;
