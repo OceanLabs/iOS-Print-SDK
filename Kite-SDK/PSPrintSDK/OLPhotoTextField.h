@@ -30,9 +30,20 @@
 
 #import <UIKit/UIKit.h>
 
+
+@class OLPhotoTextField;
+
+@protocol OLPhotoTextFieldDelegate <NSObject>
+
+- (void)photoTextFieldDidSendActionTouchUpInsideForX:(OLPhotoTextField *)textField;
+- (void)photoTextFieldDidSendActionTouchDownForResize:(OLPhotoTextField *)textField;
+
+@end
+
 @interface OLPhotoTextField : UITextField
 
 @property (assign, nonatomic) CGFloat margins;
+@property (weak, nonatomic) id<OLPhotoTextFieldDelegate> photoTextFieldDelegate;
 - (void)updateSize;
 
 @end

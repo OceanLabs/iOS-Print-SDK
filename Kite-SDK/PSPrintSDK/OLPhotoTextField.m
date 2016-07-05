@@ -55,14 +55,14 @@
     [self addSubview:xButton];
     [xButton addTarget:self action:@selector(onButtonXTapped:) forControlEvents:UIControlEventTouchUpInside];
     
-    UIButton *moveButton = [[UIButton alloc] init];
-    moveButton.tag = 20;
-    [moveButton setImage:[UIImage imageNamedInKiteBundle:@"circle-move"] forState:UIControlStateNormal];
-    [self addSubview:moveButton];
-    [moveButton addTarget:self action:@selector(onButtonMoveTouched:) forControlEvents:UIControlEventTouchDown];
+    UIButton *resizeButton = [[UIButton alloc] init];
+    resizeButton.tag = 20;
+    [resizeButton setImage:[UIImage imageNamedInKiteBundle:@"circle-resize"] forState:UIControlStateNormal];
+    [self addSubview:resizeButton];
+    [resizeButton addTarget:self action:@selector(onButtonResizeTouched:) forControlEvents:UIControlEventTouchDown];
 }
 
-- (void)onButtonMoveTouched:(UIButton *)sender{
+- (void)onButtonResizeTouched:(UIButton *)sender{
     
 }
 
@@ -80,7 +80,9 @@
 }
 
 - (void)onButtonXTapped:(UIButton *)sender{
-    [sender.superview removeFromSuperview];
+    if ([self.photoTextFieldDelegate respondsToSelector:@selector(photoTextFieldDidSendActionTouchUpInsideForX:)]){
+        [self.photoTextFieldDelegate photoTextFieldDidSendActionTouchUpInsideForX:self];
+    }
 }
 
 - (id)initWithCoder:(NSCoder *)aCoder{

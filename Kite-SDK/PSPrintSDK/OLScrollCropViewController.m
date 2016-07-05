@@ -33,7 +33,7 @@
 #import "OLColorSelectionCollectionViewCell.h"
 #import "OLKiteUtils.h"
 
-@interface OLScrollCropViewController () <RMImageCropperDelegate, UITextFieldDelegate, UIGestureRecognizerDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
+@interface OLScrollCropViewController () <RMImageCropperDelegate, UITextFieldDelegate, UIGestureRecognizerDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, OLPhotoTextFieldDelegate>
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *doneButton;
 @property (assign, nonatomic) NSInteger initialOrientation;
 @property (weak, nonatomic) IBOutlet UIToolbar *toolbar;
@@ -484,6 +484,7 @@
     textField.center = self.cropView.center;
     textField.margins = 10;
     textField.delegate = self;
+    textField.photoTextFieldDelegate = self;
     
     UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] init];
     panGesture.delegate = self;
@@ -745,8 +746,6 @@
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField{
-//    textField.text = [textField.text stringByAppendingString:@"\n"];
-//    return YES;
     [textField resignFirstResponder];
     return NO;
 }
@@ -755,7 +754,13 @@
     [(OLPhotoTextField *)textField updateSize];
     if (!textField.text || [textField.text isEqualToString:@""]){
         [textField removeFromSuperview];
+        [self.textFields removeObjectIdenticalTo:(OLPhotoTextField *)textField];
     }
+}
+
+- (void)photoTextFieldDidSendActionTouchUpInsideForX:(OLPhotoTextField *)textField{
+    [textField removeFromSuperview];
+    [self.textFields removeObjectIdenticalTo:textField];
 }
 
 #pragma mark - RMImageCropperDelegate methods
