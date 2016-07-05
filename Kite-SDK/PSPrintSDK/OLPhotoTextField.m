@@ -55,10 +55,11 @@
     [self addSubview:xButton];
     [xButton addTarget:self action:@selector(onButtonXTapped:) forControlEvents:UIControlEventTouchUpInside];
     
-    //    UIButton *moveButton = [[UIButton alloc] init];
-    //    [moveButton setImage:[UIImage imageNamedInKiteBundle:@"circle-move"] forState:UIControlStateNormal];
-    //    [textField addSubview:xButton];
-    //    [moveButton addTarget:self action:@selector(onButtonMoveTouched:) forControlEvents:UIControlEventTouchDown];
+    UIButton *moveButton = [[UIButton alloc] init];
+    moveButton.tag = 20;
+    [moveButton setImage:[UIImage imageNamedInKiteBundle:@"circle-move"] forState:UIControlStateNormal];
+    [self addSubview:moveButton];
+    [moveButton addTarget:self action:@selector(onButtonMoveTouched:) forControlEvents:UIControlEventTouchDown];
 }
 
 - (void)onButtonMoveTouched:(UIButton *)sender{
@@ -67,6 +68,7 @@
 
 - (void)layoutCornerButtons{
     [self viewWithTag:10].frame = CGRectMake(self.frame.size.width - 30, 0, 30, 30);
+    [self viewWithTag:20].frame = CGRectMake(self.frame.size.width - 30, self.frame.size.height - 30, 30, 30);
 }
 
 - (void)updateSize{

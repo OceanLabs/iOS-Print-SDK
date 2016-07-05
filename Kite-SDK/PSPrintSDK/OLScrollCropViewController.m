@@ -337,7 +337,7 @@
 }
 
 - (IBAction)onBarButtonCancelTapped:(UIBarButtonItem *)sender {
-    if (self.doneButton.enabled && self.previewView){ //discard changes
+    if (self.doneButton.enabled && self.previewView && [self.delegate respondsToSelector:@selector(scrollCropViewControllerDidDropChanges:)]){ //discard changes
         self.previewSourceView.hidden = NO;
         
         self.previewView = [self.cropView snapshotViewAfterScreenUpdates:YES];
@@ -352,7 +352,12 @@
             [UIView animateWithDuration:0.7 animations:^{
                 self.previewView.transform = CGAffineTransformRotate(CGAffineTransformMakeTranslation(0, self.view.frame.size.height), -M_PI_4);
             }completion:^(BOOL finished){
-                [super dismissViewControllerAnimated:NO completion:NULL];
+                if ([self.delegate respondsToSelector:@selector(scrollCropViewControllerDidDropChanges:)]){
+                    [self.delegate scrollCropViewControllerDidCancel:self];
+                }
+                else{
+                    [self dismissViewControllerAnimated:NO completion:NULL];
+                }
             }];
         }];
     }
@@ -747,6 +752,7 @@
 }
 
 - (void)textFieldDidEndEditing:(UITextField *)textField{
+    [(OLPhotoTextField *)textField updateSize];
     if (!textField.text || [textField.text isEqualToString:@""]){
         [textField removeFromSuperview];
     }

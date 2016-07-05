@@ -764,6 +764,14 @@ UIViewControllerPreviewingDelegate>
     }];
 }
 
+- (void)scrollCropViewControllerDidDropChanges:(OLScrollCropViewController *)cropper{
+    [UIView animateWithDuration:0.25 animations:^{
+        self.nextButton.alpha = 1;
+        self.navigationController.navigationBar.alpha = 1;
+    }];
+    [cropper dismissViewControllerAnimated:NO completion:NULL];
+}
+
 -(void)scrollCropViewController:(OLScrollCropViewController *)cropper didFinishCroppingImage:(UIImage *)croppedImage{
     [self.editingPrintPhoto unloadImage];
     
