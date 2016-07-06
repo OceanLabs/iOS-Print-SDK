@@ -62,6 +62,7 @@ const NSInteger kOLEditDrawerTagFonts = 30;
 @property (weak, nonatomic) IBOutlet UILabel *drawerLabel;
 
 @property (strong, nonatomic) OLPhotoTextField *activeTextField;
+@property (assign, nonatomic) CGFloat originalDrawerHeight;
 
 
 @property (strong, nonatomic) IBOutletCollection(UIView) NSArray *allViews;
@@ -103,12 +104,21 @@ const NSInteger kOLEditDrawerTagFonts = 30;
         if (self.collectionView.tag != kOLEditDrawerTagTools && activeTextField != _activeTextField){ //Showing colors/fonts for another textField. Dismiss first
             [self dismissDrawerWithCompletionHandler:^(BOOL finished){
                 self.collectionView.tag = kOLEditDrawerTagTools;
+                
+                self.drawerHeightCon.constant = self.originalDrawerHeight;
+                [self.view layoutIfNeeded];
+                
                 [self.collectionView reloadData];
                 [self showDrawerWithCompletionHandler:NULL];
             }];
         }
         else{
             self.collectionView.tag = kOLEditDrawerTagTools;
+            
+            self.drawerHeightCon.constant = self.originalDrawerHeight;
+            [self.view layoutIfNeeded];
+            
+            [self.collectionView reloadData];
             [self showDrawerWithCompletionHandler:NULL];
         }
     }
@@ -168,6 +178,8 @@ const NSInteger kOLEditDrawerTagFonts = 30;
     
     self.collectionView.dataSource = self;
     self.collectionView.delegate = self;
+    
+    self.originalDrawerHeight = self.drawerHeightCon.constant;
     
     if (self.previewView && !self.skipPresentAnimation){
         self.view.backgroundColor = [UIColor clearColor];
@@ -568,6 +580,10 @@ const NSInteger kOLEditDrawerTagFonts = 30;
 - (IBAction)onDrawerButtonDoneClicked:(UIButton *)sender {
     [self dismissDrawerWithCompletionHandler:^(BOOL finished){
         self.collectionView.tag = kOLEditDrawerTagTools;
+        
+        self.drawerHeightCon.constant = self.originalDrawerHeight;
+        [self.view layoutIfNeeded];
+        
         [self.collectionView reloadData];
         [self showDrawerWithCompletionHandler:NULL];
     }];
@@ -702,7 +718,6 @@ const NSInteger kOLEditDrawerTagFonts = 30;
         label.text = self.fonts[indexPath.item];
         label.font = [OLKiteUtils fontWithName:label.text size:17];
         label.textColor = [UIColor whiteColor];
-        label.numberOfLines = 3;
     }
     
     return cell;
@@ -713,6 +728,10 @@ const NSInteger kOLEditDrawerTagFonts = 30;
 }
 
 - (CGFloat) collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section{
+    if (self.collectionView.tag == kOLEditDrawerTagFonts){
+        return 0;
+    }
+    
     return 25;
 }
 
@@ -724,7 +743,7 @@ const NSInteger kOLEditDrawerTagFonts = 30;
         return CGSizeMake(self.collectionView.frame.size.height, self.collectionView.frame.size.height);
     }
     else if (collectionView.tag == kOLEditDrawerTagFonts){
-        return CGSizeMake(collectionView.frame.size.width, 44);
+        return CGSizeMake(collectionView.frame.size.width, 40);
     }
     
     return CGSizeZero;
@@ -735,8 +754,11 @@ const NSInteger kOLEditDrawerTagFonts = 30;
         CGFloat margin = (collectionView.frame.size.width - ([self collectionView:collectionView layout:self.collectionView.collectionViewLayout sizeForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:section]].width * 2 + [self collectionView:collectionView layout:collectionViewLayout minimumLineSpacingForSectionAtIndex:section]))/2.0;
         return UIEdgeInsetsMake(0, margin, 0, margin);
     }
+    else if (collectionView.tag == kOLEditDrawerTagColors){
+        return UIEdgeInsetsMake(0, 5, 0, 5);
+    }
     
-    return UIEdgeInsetsMake(0, 5, 0, 5);
+    return UIEdgeInsetsZero;
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
@@ -745,6 +767,11 @@ const NSInteger kOLEditDrawerTagFonts = 30;
             [self dismissDrawerWithCompletionHandler:^(BOOL finished){
                 [self.view bringSubviewToFront:self.drawerView];
                 collectionView.tag = kOLEditDrawerTagFonts;
+                
+                self.drawerHeightCon.constant = self.originalDrawerHeight + 150;
+                [self.view layoutIfNeeded];
+                [(UICollectionViewFlowLayout *)self.collectionView.collectionViewLayout setScrollDirection:UICollectionViewScrollDirectionVertical];
+                
                 [collectionView reloadData];
                 [self showDrawerWithCompletionHandler:NULL];
             }];
@@ -753,6 +780,7 @@ const NSInteger kOLEditDrawerTagFonts = 30;
             [self dismissDrawerWithCompletionHandler:^(BOOL finished){
                 [self.view bringSubviewToFront:self.drawerView];
                 collectionView.tag = kOLEditDrawerTagColors;
+                [(UICollectionViewFlowLayout *)self.collectionView.collectionViewLayout setScrollDirection:UICollectionViewScrollDirectionHorizontal];
                 [collectionView reloadData];
                 [self showDrawerWithCompletionHandler:NULL];
             }];

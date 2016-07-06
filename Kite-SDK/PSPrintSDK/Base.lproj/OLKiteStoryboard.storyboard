@@ -579,8 +579,8 @@ to rearrange the photos</string>
                                                     <rect key="frame" x="0.0" y="0.0" width="46" height="40"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <subviews>
-                                                        <label opaque="NO" userInteractionEnabled="NO" tag="10" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Jx5-9O-5y4">
-                                                            <rect key="frame" x="5" y="0.0" width="40" height="50"/>
+                                                        <label opaque="NO" userInteractionEnabled="NO" tag="10" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Jx5-9O-5y4">
+                                                            <rect key="frame" x="5" y="0.0" width="36" height="40"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                             <nil key="highlightedColor"/>
@@ -660,6 +660,11 @@ to rearrange the photos</string>
                                                 </variation>
                                             </collectionViewCell>
                                         </cells>
+                                        <variation key="default">
+                                            <mask key="constraints">
+                                                <exclude reference="c0H-Xk-d2n"/>
+                                            </mask>
+                                        </variation>
                                     </collectionView>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Lorem Ipsum" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7OO-cs-zah">
                                         <rect key="frame" x="10" y="6" width="76" height="15"/>
@@ -676,6 +681,7 @@ to rearrange the photos</string>
                                     <constraint firstAttribute="bottom" secondItem="U8I-Ql-DTD" secondAttribute="bottom" id="ZVE-7M-JMc"/>
                                     <constraint firstItem="jnM-8K-Kev" firstAttribute="leading" secondItem="ebu-Rv-mbK" secondAttribute="leading" id="Zhz-Xr-gqS"/>
                                     <constraint firstItem="7OO-cs-zah" firstAttribute="top" secondItem="ebu-Rv-mbK" secondAttribute="top" constant="6" id="a1n-tb-P6e"/>
+                                    <constraint firstAttribute="bottom" secondItem="jnM-8K-Kev" secondAttribute="bottom" constant="53" id="pOB-gA-Hnk"/>
                                     <constraint firstItem="7OO-cs-zah" firstAttribute="leading" secondItem="ebu-Rv-mbK" secondAttribute="leading" constant="10" id="qaz-wn-BDX"/>
                                     <constraint firstItem="jnM-8K-Kev" firstAttribute="top" secondItem="7OO-cs-zah" secondAttribute="bottom" constant="8" id="usU-40-ROx"/>
                                     <constraint firstAttribute="trailing" secondItem="U8I-Ql-DTD" secondAttribute="trailing" id="yYA-PM-WUp"/>
@@ -837,6 +843,7 @@ to rearrange the photos</string>
                         <outletCollection property="allViews" destination="TAm-mR-qRl" id="BTV-jo-KNH"/>
                         <outletCollection property="allViews" destination="y5O-eZ-nT4" id="t1G-2x-LAk"/>
                         <outletCollection property="allViews" destination="Tki-mw-R7X" id="tTC-lT-6dH"/>
+                        <outletCollection property="allViews" destination="ebu-Rv-mbK" id="t4P-gO-BNz"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qG7-3J-9cO" userLabel="First Responder" sceneMemberID="firstResponder"/>
