@@ -44,8 +44,9 @@
 @interface OLPhotoTextField : UITextField
 
 @property (assign, nonatomic) CGFloat margins;
-//@property (assign, nonatomic) CGFloat fontResize;
 @property (weak, nonatomic) id<OLPhotoTextFieldDelegate> photoTextFieldDelegate;
 - (void)updateSize;
+- (void)showButtons;
+- (void)hideButtons;
 
 @end

@@ -54,6 +54,7 @@
     [xButton setImage:[UIImage imageNamedInKiteBundle:@"circle-x"] forState:UIControlStateNormal];
     [self addSubview:xButton];
     [xButton addTarget:self action:@selector(onButtonXTapped:) forControlEvents:UIControlEventTouchUpInside];
+    xButton.alpha = 0;
     
     UIButton *resizeButton = [[UIButton alloc] init];
     resizeButton.tag = 20;
@@ -62,6 +63,7 @@
     [resizeButton addTarget:self action:@selector(onButtonResizeTouched:) forControlEvents:UIControlEventTouchDown];
     [resizeButton addTarget:self action:@selector(onButtonResizeLetGo:) forControlEvents:UIControlEventTouchUpInside];
     [resizeButton addTarget:self action:@selector(onButtonResizeLetGo:) forControlEvents:UIControlEventTouchUpOutside];
+    resizeButton.alpha = 0;
 }
 
 - (void)onButtonResizeTouched:(UIButton *)sender{
@@ -97,8 +99,22 @@
 }
 
 - (void)layoutCornerButtons{
-    [self viewWithTag:10].frame = CGRectMake(self.frame.size.width - 30, 0, 30, 30);
+    [self viewWithTag:10].frame = CGRectMake(0, 0, 30, 30);
     [self viewWithTag:20].frame = CGRectMake(self.frame.size.width - 30, self.frame.size.height - 30, 30, 30);
+}
+
+- (void)hideButtons{
+    [UIView animateWithDuration:0.15 animations:^{
+        [self viewWithTag:10].alpha = 0;
+        [self viewWithTag:20].alpha = 0;
+    }];
+}
+
+- (void)showButtons{
+    [UIView animateWithDuration:0.15 animations:^{
+        [self viewWithTag:10].alpha = 1;
+        [self viewWithTag:20].alpha = 1;
+    }];
 }
 
 - (void)updateSize{

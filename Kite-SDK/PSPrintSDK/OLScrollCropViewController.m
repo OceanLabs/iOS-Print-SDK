@@ -57,6 +57,8 @@
 @property (assign, nonatomic) CGFloat textFieldKeyboardDiff;
 @property (assign, nonatomic) BOOL resizingTextField;
 
+@property (strong, nonatomic) OLPhotoTextField *activeTextField;
+
 
 @property (strong, nonatomic) IBOutletCollection(UIView) NSArray *allViews;
 
@@ -407,6 +409,10 @@
         return;
     }
     
+    [self.activeTextField resignFirstResponder];
+    [self.activeTextField hideButtons];
+    self.activeTextField = nil;
+    
     [self.edits performHorizontalFlipEditFromOrientation:self.cropView.imageView.image.imageOrientation];
     
     [UIView transitionWithView:self.cropView.imageView duration:0.5 options:UIViewAnimationOptionTransitionFlipFromRight animations:^{
@@ -422,6 +428,10 @@
     if (self.cropView.isCorrecting){
         return;
     }
+    
+    [self.activeTextField resignFirstResponder];
+    [self.activeTextField hideButtons];
+    self.activeTextField = nil;
     
     for (UITextField *textField in self.textFields){
         UITextField *textFieldCopy = [self addTextFieldToView:self.textFieldsView temp:YES];
@@ -485,7 +495,11 @@
     textField.center = self.cropView.center;
     textField.margins = 10;
     textField.delegate = self;
+    textField.autocorrectionType = UITextAutocorrectionTypeNo;
     textField.photoTextFieldDelegate = self;
+    [textField addTarget:self
+                  action:@selector(textFieldDidChange:)
+        forControlEvents:UIControlEventEditingChanged];
     
     UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] init];
     panGesture.delegate = self;
@@ -518,7 +532,8 @@
 - (IBAction)onButtonAddTextClicked:(UIBarButtonItem *)sender {
     UITextField *textField = [self addTextFieldToView:self.cropView temp:NO];
     [self.view layoutIfNeeded];
-    [textField becomeFirstResponder];
+    [textField becomeFirstResponder]; //Take focus away from any existing active TF
+    [textField becomeFirstResponder]; //Become first responder
 
     self.doneButton.enabled = YES;
 }
@@ -532,6 +547,13 @@
         
         OLPhotoTextField *textField = (OLPhotoTextField *)gesture.view;
         originalFontSize = textField.font.pointSize;
+        
+        if (self.activeTextField != textField){
+            [self.activeTextField resignFirstResponder];
+            [self.activeTextField hideButtons];
+            self.activeTextField = (OLPhotoTextField *)textField;
+            [self.activeTextField showButtons];
+        }
     }
     else if (gesture.state == UIGestureRecognizerStateChanged){
         CGPoint translate = [gesture translationInView:gesture.view.superview];
@@ -768,12 +790,10 @@
 
 #pragma mark - UITextFieldDelegate
 
-- (BOOL) textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
+- (void)textFieldDidChange:(UITextField *)textField{
     [(OLPhotoTextField *)textField updateSize];
     
     self.doneButton.enabled = YES;
-    
-    return YES;
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField{
@@ -787,6 +807,17 @@
         [textField removeFromSuperview];
         [self.textFields removeObjectIdenticalTo:(OLPhotoTextField *)textField];
     }
+}
+
+- (BOOL)textFieldShouldBeginEditing:(UITextField *)textField{
+    if (self.activeTextField == textField){
+        return YES;
+    }
+    [self.activeTextField resignFirstResponder];
+    [self.activeTextField hideButtons];
+    self.activeTextField = (OLPhotoTextField *)textField;
+    [self.activeTextField showButtons];
+    return self.activeTextField != nil;
 }
 
 - (void)photoTextFieldDidSendActionTouchUpInsideForX:(OLPhotoTextField *)textField{
