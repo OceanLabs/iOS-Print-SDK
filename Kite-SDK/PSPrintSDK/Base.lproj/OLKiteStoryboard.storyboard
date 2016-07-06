@@ -546,8 +546,21 @@ to rearrange the photos</string>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ebu-Rv-mbK">
                                 <rect key="frame" x="0.0" y="600" width="600" height="122"/>
                                 <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="U8I-Ql-DTD">
+                                        <rect key="frame" x="0.0" y="78" width="600" height="44"/>
+                                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="44" id="mTC-xf-91I"/>
+                                        </constraints>
+                                        <state key="normal" title="Done">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="onDrawerButtonDoneClicked:" destination="lkU-BR-804" eventType="touchUpInside" id="1az-eE-cRL"/>
+                                        </connections>
+                                    </button>
                                     <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="jnM-8K-Kev">
-                                        <rect key="frame" x="0.0" y="31" width="600" height="40"/>
+                                        <rect key="frame" x="0.0" y="29" width="600" height="40"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="40" id="c0H-Xk-d2n"/>
@@ -618,8 +631,8 @@ to rearrange the photos</string>
                                                     <rect key="frame" x="0.0" y="0.0" width="46" height="40"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <subviews>
-                                                        <imageView userInteractionEnabled="NO" tag="10" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="snL-IO-jSO">
-                                                            <rect key="frame" x="0.0" y="0.0" width="46" height="23"/>
+                                                        <imageView userInteractionEnabled="NO" tag="10" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="snL-IO-jSO">
+                                                            <rect key="frame" x="0.0" y="0.0" width="46" height="22"/>
                                                         </imageView>
                                                         <label opaque="NO" userInteractionEnabled="NO" tag="20" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9AF-uV-oKy">
                                                             <rect key="frame" x="2" y="25" width="42" height="15"/>
@@ -659,10 +672,13 @@ to rearrange the photos</string>
                                     <constraint firstAttribute="height" constant="122" id="7R8-fO-Txq"/>
                                     <constraint firstAttribute="trailing" secondItem="jnM-8K-Kev" secondAttribute="trailing" id="JrX-n1-soI"/>
                                     <constraint firstItem="jnM-8K-Kev" firstAttribute="centerY" secondItem="ebu-Rv-mbK" secondAttribute="centerY" constant="10" id="XiU-aA-r0C"/>
+                                    <constraint firstItem="U8I-Ql-DTD" firstAttribute="leading" secondItem="ebu-Rv-mbK" secondAttribute="leading" id="YkV-er-REL"/>
+                                    <constraint firstAttribute="bottom" secondItem="U8I-Ql-DTD" secondAttribute="bottom" id="ZVE-7M-JMc"/>
                                     <constraint firstItem="jnM-8K-Kev" firstAttribute="leading" secondItem="ebu-Rv-mbK" secondAttribute="leading" id="Zhz-Xr-gqS"/>
                                     <constraint firstItem="7OO-cs-zah" firstAttribute="top" secondItem="ebu-Rv-mbK" secondAttribute="top" constant="6" id="a1n-tb-P6e"/>
-                                    <constraint firstItem="jnM-8K-Kev" firstAttribute="top" secondItem="ebu-Rv-mbK" secondAttribute="top" constant="31" id="diW-y6-uJ3"/>
                                     <constraint firstItem="7OO-cs-zah" firstAttribute="leading" secondItem="ebu-Rv-mbK" secondAttribute="leading" constant="10" id="qaz-wn-BDX"/>
+                                    <constraint firstItem="jnM-8K-Kev" firstAttribute="top" secondItem="7OO-cs-zah" secondAttribute="bottom" constant="8" id="usU-40-ROx"/>
+                                    <constraint firstAttribute="trailing" secondItem="U8I-Ql-DTD" secondAttribute="trailing" id="yYA-PM-WUp"/>
                                 </constraints>
                                 <variation key="default">
                                     <mask key="constraints">

@@ -49,7 +49,7 @@ static CGFloat circlesDiff = 0.2;
     [strokeColor setStroke];
     
     if (self.selected){
-        ovalPath.lineWidth = 1;
+        ovalPath.lineWidth = 1.5;
         [ovalPath stroke];
         
         UIBezierPath* ovalPath2 = [UIBezierPath bezierPathWithOvalInRect: CGRectMake(self.frame.size.width * circlesDiff, self.frame.size.height * circlesDiff, self.frame.size.width  * (1-2*circlesDiff), self.frame.size.height * (1-2*circlesDiff))];

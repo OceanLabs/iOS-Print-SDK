@@ -103,6 +103,7 @@ const NSInteger kOLEditDrawerTagFonts = 30;
         if (self.collectionView.tag != kOLEditDrawerTagTools && activeTextField != _activeTextField){ //Showing colors/fonts for another textField. Dismiss first
             [self dismissDrawerWithCompletionHandler:^(BOOL finished){
                 self.collectionView.tag = kOLEditDrawerTagTools;
+                [self.collectionView reloadData];
                 [self showDrawerWithCompletionHandler:NULL];
             }];
         }
@@ -121,6 +122,7 @@ const NSInteger kOLEditDrawerTagFonts = 30;
     [UIView animateWithDuration:0.25 animations:^{
         self.drawerView.transform = CGAffineTransformIdentity;
     } completion:^(BOOL finished){
+        [self.view bringSubviewToFront:self.toolbar];
         if (handler){
             handler(finished);
         }
@@ -128,7 +130,6 @@ const NSInteger kOLEditDrawerTagFonts = 30;
 }
 
 - (void)showDrawerWithCompletionHandler:(void(^)(BOOL finished))handler{
-    [self.collectionView reloadData];
     if (self.collectionView.tag == kOLEditDrawerTagTools){
         self.drawerLabel.text = NSLocalizedString(@"Tools", @"");
     }
@@ -523,6 +524,7 @@ const NSInteger kOLEditDrawerTagFonts = 30;
     textField.delegate = self;
     textField.autocorrectionType = UITextAutocorrectionTypeNo;
     textField.photoTextFieldDelegate = self;
+    textField.keyboardAppearance = UIKeyboardAppearanceDark;
     [textField addTarget:self
                   action:@selector(textFieldDidChange:)
         forControlEvents:UIControlEventEditingChanged];
@@ -562,6 +564,13 @@ const NSInteger kOLEditDrawerTagFonts = 30;
     [textField becomeFirstResponder]; //Become first responder
 
     self.doneButton.enabled = YES;
+}
+- (IBAction)onDrawerButtonDoneClicked:(UIButton *)sender {
+    [self dismissDrawerWithCompletionHandler:^(BOOL finished){
+        self.collectionView.tag = kOLEditDrawerTagTools;
+        [self.collectionView reloadData];
+        [self showDrawerWithCompletionHandler:NULL];
+    }];
 }
 
 - (void)onTextfieldGesturePanRecognized:(UIPanGestureRecognizer *)gesture{
@@ -682,6 +691,9 @@ const NSInteger kOLEditDrawerTagFonts = 30;
         }
         
         [(OLColorSelectionCollectionViewCell *)cell setColor:self.availableColors[indexPath.item]];
+        
+        [cell setSelected:[self.activeTextField.textColor isEqual:self.availableColors[indexPath.item]]];
+        
         [cell setNeedsDisplay];
     }
     else if (collectionView.tag == kOLEditDrawerTagFonts){
@@ -731,6 +743,7 @@ const NSInteger kOLEditDrawerTagFonts = 30;
     if (collectionView.tag == kOLEditDrawerTagTools){
         if (indexPath.item == 0){
             [self dismissDrawerWithCompletionHandler:^(BOOL finished){
+                [self.view bringSubviewToFront:self.drawerView];
                 collectionView.tag = kOLEditDrawerTagFonts;
                 [collectionView reloadData];
                 [self showDrawerWithCompletionHandler:NULL];
@@ -738,6 +751,7 @@ const NSInteger kOLEditDrawerTagFonts = 30;
         }
         else if (indexPath.item == 1){
             [self dismissDrawerWithCompletionHandler:^(BOOL finished){
+                [self.view bringSubviewToFront:self.drawerView];
                 collectionView.tag = kOLEditDrawerTagColors;
                 [collectionView reloadData];
                 [self showDrawerWithCompletionHandler:NULL];
