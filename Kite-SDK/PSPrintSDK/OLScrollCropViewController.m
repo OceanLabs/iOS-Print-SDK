@@ -98,8 +98,12 @@
     for (OLPhotoTextField *textField in self.textFields){
         if ([textField isFirstResponder]){
             [textField resignFirstResponder];
+            return;
         }
     }
+    
+    [self.activeTextField hideButtons];
+    self.activeTextField = nil;
 }
 
 - (void)viewDidLoad {
@@ -817,7 +821,7 @@
     [self.activeTextField hideButtons];
     self.activeTextField = (OLPhotoTextField *)textField;
     [self.activeTextField showButtons];
-    return self.activeTextField != nil;
+    return NO;
 }
 
 - (void)photoTextFieldDidSendActionTouchUpInsideForX:(OLPhotoTextField *)textField{
