@@ -901,6 +901,10 @@ UINavigationControllerDelegate>
     [cropper dismissViewControllerAnimated:YES completion:NULL];
 }
 
+- (void)scrollCropViewControllerDidDropChanges:(OLScrollCropViewController *)cropper{
+    [cropper dismissViewControllerAnimated:NO completion:NULL];
+}
+
 -(void)scrollCropViewController:(OLScrollCropViewController *)cropper didFinishCroppingImage:(UIImage *)croppedImage{
     if (self.longPressImageIndex == -1){
         [self.coverPhoto unloadImage];

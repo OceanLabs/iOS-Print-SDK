@@ -32,29 +32,38 @@
 #import "OLPhotoTextField.h"
 #import "OLColorSelectionCollectionViewCell.h"
 #import "OLKiteUtils.h"
+#import "UIImage+ImageNamedInKiteBundle.h"
+#import "UIView+RoundRect.h"
 
-@interface OLScrollCropViewController () <RMImageCropperDelegate, UITextFieldDelegate, UIGestureRecognizerDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
+const NSInteger kOLEditDrawerTagTools = 10;
+const NSInteger kOLEditDrawerTagColors = 20;
+const NSInteger kOLEditDrawerTagFonts = 30;
+
+@interface OLScrollCropViewController () <RMImageCropperDelegate, UITextFieldDelegate, UIGestureRecognizerDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, OLPhotoTextFieldDelegate>
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *doneButton;
 @property (assign, nonatomic) NSInteger initialOrientation;
 @property (weak, nonatomic) IBOutlet UIToolbar *toolbar;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *centerYCon;
 
 @property (strong, nonatomic) NSMutableArray<OLPhotoTextField *> *textFields;
-@property (weak, nonatomic) IBOutlet UIView *colorsView;
-@property (weak, nonatomic) IBOutlet UIView *fontsView;
-@property (weak, nonatomic) IBOutlet UIToolbar *textToolsToolbar;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *colorsViewBottomCon;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *fontsCollectionViewBottomCon;
 @property (strong, nonatomic) UIVisualEffectView *visualEffectView;
 @property (strong, nonatomic) UIVisualEffectView *visualEffectView2;
-@property (weak, nonatomic) IBOutlet UICollectionView *colorsCollectionView;
-@property (weak, nonatomic) IBOutlet UICollectionView *fontsCollectionView;
 @property (strong, nonatomic) NSArray<UIColor *> *availableColors;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *colorsTrailingCon;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *fontsLeadingCon;
 @property (weak, nonatomic) IBOutlet UIView *textFieldsView;
 @property (strong, nonatomic) NSArray<NSString *> *fonts;
 @property (assign, nonatomic) CGFloat textFieldKeyboardDiff;
+@property (assign, nonatomic) BOOL resizingTextField;
+@property (weak, nonatomic) IBOutlet UIView *drawerView;
+@property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *drawerHeightCon;
+@property (weak, nonatomic) IBOutlet UILabel *drawerLabel;
+
+@property (strong, nonatomic) OLPhotoTextField *activeTextField;
+@property (assign, nonatomic) CGFloat originalDrawerHeight;
 
 
 @property (strong, nonatomic) IBOutletCollection(UIView) NSArray *allViews;
@@ -91,12 +100,76 @@
     return _textFields;
 }
 
+- (void)setActiveTextField:(OLPhotoTextField *)activeTextField{
+    if (activeTextField){
+        if (self.collectionView.tag != kOLEditDrawerTagTools && activeTextField != _activeTextField){ //Showing colors/fonts for another textField. Dismiss first
+            [self dismissDrawerWithCompletionHandler:^(BOOL finished){
+                self.collectionView.tag = kOLEditDrawerTagTools;
+                
+                self.drawerHeightCon.constant = self.originalDrawerHeight;
+                [self.view layoutIfNeeded];
+                
+                [self.collectionView reloadData];
+                [self showDrawerWithCompletionHandler:NULL];
+            }];
+        }
+        else{
+            self.collectionView.tag = kOLEditDrawerTagTools;
+            
+            self.drawerHeightCon.constant = self.originalDrawerHeight;
+            [self.view layoutIfNeeded];
+            
+            [self.collectionView reloadData];
+            [self showDrawerWithCompletionHandler:NULL];
+        }
+    }
+    else{
+        [self dismissDrawerWithCompletionHandler:NULL];
+    }
+     _activeTextField = activeTextField;
+}
+
+- (void)dismissDrawerWithCompletionHandler:(void(^)(BOOL finished))handler{
+    [UIView animateWithDuration:0.25 animations:^{
+        self.drawerView.transform = CGAffineTransformIdentity;
+    } completion:^(BOOL finished){
+        [self.view bringSubviewToFront:self.toolbar];
+        if (handler){
+            handler(finished);
+        }
+    }];
+}
+
+- (void)showDrawerWithCompletionHandler:(void(^)(BOOL finished))handler{
+    if (self.collectionView.tag == kOLEditDrawerTagTools){
+        self.drawerLabel.text = NSLocalizedString(@"Tools", @"");
+    }
+    else if (self.collectionView.tag == kOLEditDrawerTagColors){
+        self.drawerLabel.text = NSLocalizedString(@"Text Colour", @"");
+    }
+    else if (self.collectionView.tag == kOLEditDrawerTagFonts){
+        self.drawerLabel.text = NSLocalizedString(@"Fonts", @"");
+    }
+    //set height
+    [UIView animateWithDuration:0.25 animations:^{
+        self.drawerView.transform = CGAffineTransformMakeTranslation(0, -self.drawerView.frame.size.height);
+    } completion:^(BOOL finished){
+        if (handler){
+            handler(finished);
+        }
+    }];
+}
+
 - (void)dismissKeyboard{
     for (OLPhotoTextField *textField in self.textFields){
         if ([textField isFirstResponder]){
             [textField resignFirstResponder];
+            return;
         }
     }
+    
+    [self.activeTextField hideButtons];
+    self.activeTextField = nil;
 }
 
 - (void)viewDidLoad {
@@ -104,13 +177,10 @@
     
     self.availableColors = @[[UIColor blackColor], [UIColor whiteColor], [UIColor grayColor], [UIColor greenColor], [UIColor redColor], [UIColor blueColor], [UIColor magentaColor], [UIColor orangeColor]];
     
-    self.colorsCollectionView.dataSource = self;
-    self.colorsCollectionView.delegate = self;
-    self.fontsCollectionView.dataSource = self;
-    self.fontsCollectionView.delegate = self;
+    self.collectionView.dataSource = self;
+    self.collectionView.delegate = self;
     
-    self.colorsTrailingCon.constant = -self.colorsView.frame.size.width;
-    self.fontsLeadingCon.constant = -self.fontsView.frame.size.width;
+    self.originalDrawerHeight = self.drawerHeightCon.constant;
     
     if (self.previewView && !self.skipPresentAnimation){
         self.view.backgroundColor = [UIColor clearColor];
@@ -174,8 +244,6 @@
         [self.edits.textsOnPhoto removeObject:textOnPhoto];
     }
     
-    self.textToolsToolbar.transform = CGAffineTransformMakeTranslation(0, -self.textToolsToolbar.frame.origin.x - self.textToolsToolbar.frame.size.height - [[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height);
-    
     [self registerForKeyboardNotifications];
     
     if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0){
@@ -184,32 +252,8 @@
         
         self.visualEffectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
         UIView *view = self.visualEffectView;
-        [self.colorsView addSubview:view];
-        [self.colorsView sendSubviewToBack:view];
-        
-        view.translatesAutoresizingMaskIntoConstraints = NO;
-        NSDictionary *views = NSDictionaryOfVariableBindings(view);
-        NSMutableArray *con = [[NSMutableArray alloc] init];
-        
-        NSArray *visuals = @[@"H:|-0-[view]-0-|",
-                             @"V:|-0-[view]-0-|"];
-        
-        
-        for (NSString *visual in visuals) {
-            [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
-        }
-        
-        [view.superview addConstraints:con];
-        
-    }
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0){
-        UIVisualEffect *blurEffect;
-        blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleDark];
-        
-        self.visualEffectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
-        UIView *view = self.visualEffectView;
-        [self.fontsView addSubview:view];
-        [self.fontsView sendSubviewToBack:view];
+        [self.drawerView addSubview:view];
+        [self.drawerView sendSubviewToBack:view];
         
         view.translatesAutoresizingMaskIntoConstraints = NO;
         NSDictionary *views = NSDictionaryOfVariableBindings(view);
@@ -227,8 +271,7 @@
         
     }
     else{
-        self.colorsView.backgroundColor = [UIColor blackColor];
-        self.fontsView.backgroundColor = [UIColor blackColor];
+        self.drawerView.backgroundColor = [UIColor blackColor];
     }
 }
 
@@ -337,7 +380,7 @@
 }
 
 - (IBAction)onBarButtonCancelTapped:(UIBarButtonItem *)sender {
-    if (self.doneButton.enabled && self.previewView){ //discard changes
+    if (self.doneButton.enabled && self.previewView && [self.delegate respondsToSelector:@selector(scrollCropViewControllerDidDropChanges:)]){ //discard changes
         self.previewSourceView.hidden = NO;
         
         self.previewView = [self.cropView snapshotViewAfterScreenUpdates:YES];
@@ -352,7 +395,12 @@
             [UIView animateWithDuration:0.7 animations:^{
                 self.previewView.transform = CGAffineTransformRotate(CGAffineTransformMakeTranslation(0, self.view.frame.size.height), -M_PI_4);
             }completion:^(BOOL finished){
-                [super dismissViewControllerAnimated:NO completion:NULL];
+                if ([self.delegate respondsToSelector:@selector(scrollCropViewControllerDidDropChanges:)]){
+                    [self.delegate scrollCropViewControllerDidCancel:self];
+                }
+                else{
+                    [self dismissViewControllerAnimated:NO completion:NULL];
+                }
             }];
         }];
     }
@@ -401,6 +449,10 @@
         return;
     }
     
+    [self.activeTextField resignFirstResponder];
+    [self.activeTextField hideButtons];
+    self.activeTextField = nil;
+    
     [self.edits performHorizontalFlipEditFromOrientation:self.cropView.imageView.image.imageOrientation];
     
     [UIView transitionWithView:self.cropView.imageView duration:0.5 options:UIViewAnimationOptionTransitionFlipFromRight animations:^{
@@ -416,6 +468,10 @@
     if (self.cropView.isCorrecting){
         return;
     }
+    
+    [self.activeTextField resignFirstResponder];
+    [self.activeTextField hideButtons];
+    self.activeTextField = nil;
     
     for (UITextField *textField in self.textFields){
         UITextField *textFieldCopy = [self addTextFieldToView:self.textFieldsView temp:YES];
@@ -475,10 +531,16 @@
 }
 
 - (UITextField *)addTextFieldToView:(UIView *)view temp:(BOOL)temp{
-    OLPhotoTextField *textField = [[OLPhotoTextField alloc] initWithFrame:CGRectMake(0, 0, 100, 40)];
+    OLPhotoTextField *textField = [[OLPhotoTextField alloc] initWithFrame:CGRectMake(0, 0, 130, 70)];
     textField.center = self.cropView.center;
     textField.margins = 10;
     textField.delegate = self;
+    textField.autocorrectionType = UITextAutocorrectionTypeNo;
+    textField.photoTextFieldDelegate = self;
+    textField.keyboardAppearance = UIKeyboardAppearanceDark;
+    [textField addTarget:self
+                  action:@selector(textFieldDidChange:)
+        forControlEvents:UIControlEventEditingChanged];
     
     UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] init];
     panGesture.delegate = self;
@@ -511,56 +573,90 @@
 - (IBAction)onButtonAddTextClicked:(UIBarButtonItem *)sender {
     UITextField *textField = [self addTextFieldToView:self.cropView temp:NO];
     [self.view layoutIfNeeded];
-    [textField becomeFirstResponder];
+    [textField becomeFirstResponder]; //Take focus away from any existing active TF
+    [textField becomeFirstResponder]; //Become first responder
 
     self.doneButton.enabled = YES;
+}
+- (IBAction)onDrawerButtonDoneClicked:(UIButton *)sender {
+    [self dismissDrawerWithCompletionHandler:^(BOOL finished){
+        self.collectionView.tag = kOLEditDrawerTagTools;
+        
+        self.drawerHeightCon.constant = self.originalDrawerHeight;
+        [self.view layoutIfNeeded];
+        
+        [self.collectionView reloadData];
+        [self showDrawerWithCompletionHandler:NULL];
+    }];
 }
 
 - (void)onTextfieldGesturePanRecognized:(UIPanGestureRecognizer *)gesture{
     static CGAffineTransform original;
+    static CGFloat originalFontSize;
     
     if (gesture.state == UIGestureRecognizerStateBegan){
         original = gesture.view.transform;
+        
+        OLPhotoTextField *textField = (OLPhotoTextField *)gesture.view;
+        originalFontSize = textField.font.pointSize;
+        
+        if (self.activeTextField != textField){
+            [self.activeTextField resignFirstResponder];
+            [self.activeTextField hideButtons];
+            self.activeTextField = (OLPhotoTextField *)textField;
+            [self.activeTextField showButtons];
+        }
     }
     else if (gesture.state == UIGestureRecognizerStateChanged){
         CGPoint translate = [gesture translationInView:gesture.view.superview];
         CGAffineTransform transform = CGAffineTransformTranslate(original, translate.x, translate.y);
         
-        CGFloat minY = gesture.view.frame.size.height/2.0 - self.cropView.frame.size.height / 2.0;
-        CGFloat maxY = -minY;
-        CGFloat minX = gesture.view.frame.size.width/2.0 - self.cropView.frame.size.width / 2.0;
-        CGFloat maxX = -minX;
-        if (transform.ty < minY){
-            transform.ty = minY;
+        if (self.resizingTextField){
+            CGFloat sizeChange = sqrt(translate.x * translate.x + translate.y * translate.y);
+            if (translate.x < 0 && translate.y < 0){
+                sizeChange = -sizeChange;
+            }
+            else if (translate.x < 0){
+                sizeChange = translate.y;
+            }
+            else if (translate.y < 0){
+                sizeChange = translate.x;
+            }
+            OLPhotoTextField *textField = (OLPhotoTextField *)gesture.view;
+            CGFloat fontSize = textField.font.pointSize;
+            textField.font = [UIFont fontWithName:textField.font.fontName size:MAX(originalFontSize + sizeChange, 30)];
+            [textField sizeToFit];
+            if (textField.frame.origin.x < 0 || textField.frame.origin.y < 0 || textField.frame.origin.x + textField.frame.size.width > textField.superview.frame.size.width || textField.frame.origin.y + textField.frame.size.height > textField.superview.frame.size.height){
+                textField.font = [UIFont fontWithName:textField.font.fontName size:fontSize];
+                [textField sizeToFit];
+            }
+            [textField setNeedsDisplay];
         }
-        if (transform.ty > maxY){
-            transform.ty = maxY;
+        else{
+            CGFloat minY = gesture.view.frame.size.height/2.0 - self.cropView.frame.size.height / 2.0;
+            CGFloat maxY = -minY;
+            CGFloat minX = gesture.view.frame.size.width/2.0 - self.cropView.frame.size.width / 2.0;
+            CGFloat maxX = -minX;
+            if (transform.ty < minY){
+                transform.ty = minY;
+            }
+            if (transform.ty > maxY){
+                transform.ty = maxY;
+            }
+            if (transform.tx < minX){
+                transform.tx = minX;
+            }
+            if (transform.tx > maxX){
+                transform.tx = maxX;
+            }
+            gesture.view.transform = transform;
         }
-        if (transform.tx < minX){
-            transform.tx = minX;
-        }
-        if (transform.tx > maxX){
-            transform.tx = maxX;
-        }
-        gesture.view.transform = transform;
+    }
+    else if (gesture.state == UIGestureRecognizerStateEnded){
+        self.resizingTextField = NO;
     }
     
     self.doneButton.enabled = YES;
-}
-
-- (IBAction)onButtonFontTapped:(UIBarButtonItem *)sender {
-    self.fontsLeadingCon.constant = self.fontsLeadingCon.constant == 0 ? -self.fontsView.frame.size.width : 0;
-    [UIView animateWithDuration:0.15 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
-        [self.view layoutIfNeeded];
-    } completion:NULL];
-}
-
-
-- (IBAction)onButtonColorTapped:(UIBarButtonItem *)sender {
-    self.colorsTrailingCon.constant = self.colorsTrailingCon.constant == 0 ? -self.colorsView.frame.size.width : 0;
-    [UIView animateWithDuration:0.15 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
-        [self.view layoutIfNeeded];
-    } completion:NULL];
 }
 
 
@@ -571,10 +667,13 @@
 #pragma mark CollectionView
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
-    if (collectionView == self.colorsCollectionView){
+    if (collectionView.tag == kOLEditDrawerTagTools){
+        return 2;
+    }
+    else if (collectionView.tag == kOLEditDrawerTagColors){
         return self.availableColors.count;
     }
-    else if (collectionView == self.fontsCollectionView){
+    else if (collectionView.tag == kOLEditDrawerTagFonts){
         return self.fonts.count;
     }
     
@@ -583,7 +682,20 @@
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
     UICollectionViewCell *cell;
-    if (collectionView == self.colorsCollectionView){
+    if (collectionView.tag == kOLEditDrawerTagTools){
+        cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"toolCell" forIndexPath:indexPath];
+        [cell viewWithTag:10].tintColor = [UIColor whiteColor];
+        [(UILabel *)[cell viewWithTag:20] setTextColor:[UIColor whiteColor]];
+        if (indexPath.item == 0){
+            [(UIImageView *)[cell viewWithTag:10] setImage:[UIImage imageNamedInKiteBundle:@"Aa"]];
+            [(UILabel *)[cell viewWithTag:20] setText:NSLocalizedString(@"Fonts", @"")];
+        }
+        else if (indexPath.item == 1){
+            [(UIImageView *)[cell viewWithTag:10] setImage:[UIImage imageNamedInKiteBundle:@"paint-bucket-icon"]];
+            [(UILabel *)[cell viewWithTag:20] setText:NSLocalizedString(@"Text Colour", @"")];
+        }
+    }
+    else if (collectionView.tag == kOLEditDrawerTagColors){
         cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"colorSelectionCell" forIndexPath:indexPath];
         [(OLColorSelectionCollectionViewCell *)cell setDarkMode:YES];
         
@@ -596,50 +708,103 @@
         }
         
         [(OLColorSelectionCollectionViewCell *)cell setColor:self.availableColors[indexPath.item]];
+        
+        [cell setSelected:[self.activeTextField.textColor isEqual:self.availableColors[indexPath.item]]];
+        
         [cell setNeedsDisplay];
     }
-    else if (collectionView == self.fontsCollectionView){
+    else if (collectionView.tag == kOLEditDrawerTagFonts){
         cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"fontCell" forIndexPath:indexPath];
         UILabel *label = [cell viewWithTag:10];
+        [label makeRoundRectWithRadius:4];
         label.text = self.fonts[indexPath.item];
         label.font = [OLKiteUtils fontWithName:label.text size:17];
+        if ([self.activeTextField.font.fontName isEqualToString:label.text]){
+            label.backgroundColor = [UIColor colorWithRed:0.349 green:0.757 blue:0.890 alpha:1.000];
+        }
+        else{
+            label.backgroundColor = [UIColor clearColor];
+        }
         label.textColor = [UIColor whiteColor];
-        label.numberOfLines = 3;
     }
     
     return cell;
 }
 
-- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
-    if (collectionView == self.colorsCollectionView){
-        return CGSizeMake(collectionView.frame.size.width * 0.8, collectionView.frame.size.width * 0.8);
+- (CGFloat) collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section{
+    return 25;
+}
+
+- (CGFloat) collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section{
+    if (self.collectionView.tag == kOLEditDrawerTagFonts){
+        return 0;
     }
-    else if (collectionView == self.fontsCollectionView){
-        return CGSizeMake(collectionView.frame.size.width, collectionView.frame.size.width/2);
+    
+    return 25;
+}
+
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
+    if (collectionView.tag == kOLEditDrawerTagTools){
+        return CGSizeMake(self.collectionView.frame.size.height * 2.0, self.collectionView.frame.size.height);
+    }
+    if (collectionView.tag == kOLEditDrawerTagColors){
+        return CGSizeMake(self.collectionView.frame.size.height, self.collectionView.frame.size.height);
+    }
+    else if (collectionView.tag == kOLEditDrawerTagFonts){
+        return CGSizeMake(collectionView.frame.size.width - 40, 30);
     }
     
     return CGSizeZero;
 }
 
+- (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout insetForSectionAtIndex:(NSInteger)section{
+    if (collectionView.tag == kOLEditDrawerTagTools){
+        CGFloat margin = (collectionView.frame.size.width - ([self collectionView:collectionView layout:self.collectionView.collectionViewLayout sizeForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:section]].width * 2 + [self collectionView:collectionView layout:collectionViewLayout minimumLineSpacingForSectionAtIndex:section]))/2.0;
+        return UIEdgeInsetsMake(0, margin, 0, margin);
+    }
+    else if (collectionView.tag == kOLEditDrawerTagColors){
+        return UIEdgeInsetsMake(0, 5, 0, 5);
+    }
+    
+    return UIEdgeInsetsZero;
+}
+
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
-    if (collectionView == self.colorsCollectionView){
-        for (UITextField *textField in self.textFields){
-            if ([textField isFirstResponder]){
-                [textField setTextColor:self.availableColors[indexPath.item]];
-                self.doneButton.enabled = YES;
-                break;
-            }
+    if (collectionView.tag == kOLEditDrawerTagTools){
+        if (indexPath.item == 0){
+            [self dismissDrawerWithCompletionHandler:^(BOOL finished){
+                [self.view bringSubviewToFront:self.drawerView];
+                collectionView.tag = kOLEditDrawerTagFonts;
+                
+                self.drawerHeightCon.constant = self.originalDrawerHeight + 150;
+                [self.view layoutIfNeeded];
+                [(UICollectionViewFlowLayout *)self.collectionView.collectionViewLayout setScrollDirection:UICollectionViewScrollDirectionVertical];
+                
+                [collectionView reloadData];
+                [self showDrawerWithCompletionHandler:NULL];
+            }];
         }
+        else if (indexPath.item == 1){
+            [self dismissDrawerWithCompletionHandler:^(BOOL finished){
+                [self.view bringSubviewToFront:self.drawerView];
+                collectionView.tag = kOLEditDrawerTagColors;
+                [(UICollectionViewFlowLayout *)self.collectionView.collectionViewLayout setScrollDirection:UICollectionViewScrollDirectionHorizontal];
+                [collectionView reloadData];
+                [self showDrawerWithCompletionHandler:NULL];
+            }];
+        }
+        
+    }
+    else if (collectionView.tag == kOLEditDrawerTagColors){
+        [self.activeTextField setTextColor:self.availableColors[indexPath.item]];
+        self.doneButton.enabled = YES;
         [collectionView reloadData];
     }
-    else if (collectionView == self.fontsCollectionView){
-        for (UITextField *textField in self.textFields){
-            if ([textField isFirstResponder]){
-                [textField setFont:[OLKiteUtils fontWithName:self.fonts[indexPath.item] size:30]];
-                self.doneButton.enabled = YES;
-                break;
-            }
-        }
+    else if (collectionView.tag == kOLEditDrawerTagFonts){
+        [self.activeTextField setFont:[OLKiteUtils fontWithName:self.fonts[indexPath.item] size:30]];
+        [self.activeTextField updateSize];
+        self.doneButton.enabled = YES;
+        [collectionView reloadData];
     }
 }
 
@@ -648,9 +813,6 @@
 - (void)registerForKeyboardNotifications
 {
     [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(keyboardWasShown:)
-                                                 name:UIKeyboardWillShowNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(keyboardWillBeHidden:)
                                                  name:UIKeyboardWillHideNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -658,28 +820,13 @@
                                                  name:UIKeyboardWillChangeFrameNotification object:nil];
 }
 
-- (void)keyboardWasShown:(NSNotification*)aNotification{
-    NSDictionary *info = [aNotification userInfo];
-    NSNumber *durationNumber = [info objectForKey:UIKeyboardAnimationDurationUserInfoKey];
-    NSNumber *curveNumber = [info objectForKey:UIKeyboardAnimationCurveUserInfoKey];
-    
-    [UIView animateWithDuration:[durationNumber doubleValue] delay:0 options:[curveNumber unsignedIntegerValue] animations:^{
-        self.textToolsToolbar.transform = CGAffineTransformIdentity;
-    }completion:NULL];
-    
-}
-
 - (void)keyboardWillBeHidden:(NSNotification*)aNotification{
     NSDictionary *info = [aNotification userInfo];
     NSNumber *durationNumber = [info objectForKey:UIKeyboardAnimationDurationUserInfoKey];
     NSNumber *curveNumber = [info objectForKey:UIKeyboardAnimationCurveUserInfoKey];
     
-    self.colorsTrailingCon.constant = -self.colorsView.frame.size.width;
-    self.fontsLeadingCon.constant = -self.fontsView.frame.size.width;
     [UIView animateWithDuration:[durationNumber doubleValue] delay:0 options:[curveNumber unsignedIntegerValue] animations:^{
         [self.view layoutIfNeeded];
-        
-        self.textToolsToolbar.transform = CGAffineTransformMakeTranslation(0, -self.textToolsToolbar.frame.origin.x - self.textToolsToolbar.frame.size.height - [[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height);
         
         for (UITextField *textField in self.textFields){
             if ([textField isFirstResponder]){
@@ -731,25 +878,49 @@
 
 #pragma mark - UITextFieldDelegate
 
-- (BOOL) textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
+- (void)textFieldDidChange:(UITextField *)textField{
     [(OLPhotoTextField *)textField updateSize];
     
     self.doneButton.enabled = YES;
-    
-    return YES;
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField{
-//    textField.text = [textField.text stringByAppendingString:@"\n"];
-//    return YES;
     [textField resignFirstResponder];
     return NO;
 }
 
 - (void)textFieldDidEndEditing:(UITextField *)textField{
+    [(OLPhotoTextField *)textField updateSize];
     if (!textField.text || [textField.text isEqualToString:@""]){
         [textField removeFromSuperview];
+        [self.textFields removeObjectIdenticalTo:(OLPhotoTextField *)textField];
+        self.activeTextField = nil;
     }
+}
+
+- (BOOL)textFieldShouldBeginEditing:(UITextField *)textField{
+    if (self.activeTextField == textField){
+        return YES;
+    }
+    [self.activeTextField resignFirstResponder];
+    [self.activeTextField hideButtons];
+    self.activeTextField = (OLPhotoTextField *)textField;
+    [self.activeTextField showButtons];
+    return NO;
+}
+
+- (void)photoTextFieldDidSendActionTouchUpInsideForX:(OLPhotoTextField *)textField{
+    [textField removeFromSuperview];
+    [self.textFields removeObjectIdenticalTo:textField];
+    self.activeTextField = nil;
+}
+
+- (void)photoTextFieldDidSendActionTouchDownForResize:(OLPhotoTextField *)textField{
+    self.resizingTextField = YES;
+}
+
+- (void)photoTextFieldDidSendActionTouchUpForResize:(OLPhotoTextField *)textField{
+    self.resizingTextField = NO;
 }
 
 #pragma mark - RMImageCropperDelegate methods

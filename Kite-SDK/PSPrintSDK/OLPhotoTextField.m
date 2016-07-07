@@ -33,13 +33,13 @@
 
 @implementation OLPhotoTextField
 
-//- (CGRect)textRectForBounds:(CGRect)bounds {
-//    return CGRectMake(bounds.origin.x + self.margins, bounds.origin.y,
-//                      bounds.size.width - self.margins * 2, bounds.size.height);
-//}
-//- (CGRect)editingRectForBounds:(CGRect)bounds {
-//    return [self textRectForBounds:bounds];
-//}
+- (CGRect)textRectForBounds:(CGRect)bounds {
+    return CGRectMake(bounds.origin.x + 15, bounds.origin.y + 15,
+                      bounds.size.width - 30, bounds.size.height - 30);
+}
+- (CGRect)editingRectForBounds:(CGRect)bounds {
+    return [self textRectForBounds:bounds];
+}
 
 - (void)initialize{
     self.textAlignment = NSTextAlignmentCenter;
@@ -54,31 +54,34 @@
     [xButton setImage:[UIImage imageNamedInKiteBundle:@"circle-x"] forState:UIControlStateNormal];
     [self addSubview:xButton];
     [xButton addTarget:self action:@selector(onButtonXTapped:) forControlEvents:UIControlEventTouchUpInside];
+    xButton.alpha = 0;
     
-    //    UIButton *moveButton = [[UIButton alloc] init];
-    //    [moveButton setImage:[UIImage imageNamedInKiteBundle:@"circle-move"] forState:UIControlStateNormal];
-    //    [textField addSubview:xButton];
-    //    [moveButton addTarget:self action:@selector(onButtonMoveTouched:) forControlEvents:UIControlEventTouchDown];
+    UIButton *resizeButton = [[UIButton alloc] init];
+    resizeButton.tag = 20;
+    [resizeButton setImage:[UIImage imageNamedInKiteBundle:@"circle-resize"] forState:UIControlStateNormal];
+    [self addSubview:resizeButton];
+    [resizeButton addTarget:self action:@selector(onButtonResizeTouched:) forControlEvents:UIControlEventTouchDown];
+    [resizeButton addTarget:self action:@selector(onButtonResizeLetGo:) forControlEvents:UIControlEventTouchUpInside];
+    [resizeButton addTarget:self action:@selector(onButtonResizeLetGo:) forControlEvents:UIControlEventTouchUpOutside];
+    resizeButton.alpha = 0;
 }
 
-- (void)onButtonMoveTouched:(UIButton *)sender{
-    
+- (void)onButtonResizeTouched:(UIButton *)sender{
+    if ([self.photoTextFieldDelegate respondsToSelector:@selector(photoTextFieldDidSendActionTouchDownForResize:)]){
+        [self.photoTextFieldDelegate photoTextFieldDidSendActionTouchDownForResize:self];
+    }
 }
 
-- (void)layoutCornerButtons{
-    [self viewWithTag:10].frame = CGRectMake(self.frame.size.width - 15, -15, 30, 30);
-}
-
-- (void)updateSize{
-    CGPoint center = self.center;
-    [self sizeToFit];
-    self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y, MAX(self.frame.size.width + self.margins*2, 100), MAX(self.frame.size.height, 40));
-    self.center = center;
-    [self setNeedsDisplay];
+- (void)onButtonResizeLetGo:(UIButton *)sender{
+    if ([self.photoTextFieldDelegate respondsToSelector:@selector(photoTextFieldDidSendActionTouchDownForResize:)]){
+        [self.photoTextFieldDelegate photoTextFieldDidSendActionTouchUpForResize:self];
+    }
 }
 
 - (void)onButtonXTapped:(UIButton *)sender{
-    [sender.superview removeFromSuperview];
+    if ([self.photoTextFieldDelegate respondsToSelector:@selector(photoTextFieldDidSendActionTouchUpInsideForX:)]){
+        [self.photoTextFieldDelegate photoTextFieldDidSendActionTouchUpInsideForX:self];
+    }
 }
 
 - (id)initWithCoder:(NSCoder *)aCoder{
@@ -95,10 +98,37 @@
     return self;
 }
 
+- (void)layoutCornerButtons{
+    [self viewWithTag:10].frame = CGRectMake(0, 0, 30, 30);
+    [self viewWithTag:20].frame = CGRectMake(self.frame.size.width - 30, self.frame.size.height - 30, 30, 30);
+}
+
+- (void)hideButtons{
+    [UIView animateWithDuration:0.15 animations:^{
+        [self viewWithTag:10].alpha = 0;
+        [self viewWithTag:20].alpha = 0;
+    }];
+}
+
+- (void)showButtons{
+    [UIView animateWithDuration:0.15 animations:^{
+        [self viewWithTag:10].alpha = 1;
+        [self viewWithTag:20].alpha = 1;
+    }];
+}
+
+- (void)updateSize{
+    CGPoint center = self.center;
+    [self sizeToFit];
+    self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y, MAX(self.frame.size.width + self.margins*2, 100), MAX(self.frame.size.height, 40));
+    self.center = center;
+    [self setNeedsDisplay];
+}
+
 -(void)drawRect:(CGRect)rect
 {
     //// Rectangle Drawing
-    UIBezierPath* rectanglePath = [UIBezierPath bezierPathWithRect: CGRectMake(0, 0, self.frame.size.width, self.frame.size.height)];
+    UIBezierPath* rectanglePath = [UIBezierPath bezierPathWithRect: CGRectMake(15, 15, self.frame.size.width-30, self.frame.size.height-30)];
     [[UIColor blackColor] setStroke];
     rectanglePath.lineWidth = 2;
     [rectanglePath stroke];

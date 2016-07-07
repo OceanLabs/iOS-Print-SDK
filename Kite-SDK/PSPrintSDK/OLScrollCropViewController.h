@@ -38,6 +38,9 @@
 - (void)scrollCropViewController:(OLScrollCropViewController *)cropper didFinishCroppingImage:(UIImage *)croppedImage;
 - (void)scrollCropViewControllerDidCancel:(OLScrollCropViewController *)cropper;
 
+@optional
+- (void)scrollCropViewControllerDidDropChanges:(OLScrollCropViewController *)cropper;
+
 @end
 
 @interface OLScrollCropViewController : UIViewController
