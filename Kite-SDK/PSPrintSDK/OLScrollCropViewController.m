@@ -33,6 +33,7 @@
 #import "OLColorSelectionCollectionViewCell.h"
 #import "OLKiteUtils.h"
 #import "UIImage+ImageNamedInKiteBundle.h"
+#import "UIView+RoundRect.h"
 
 const NSInteger kOLEditDrawerTagTools = 10;
 const NSInteger kOLEditDrawerTagColors = 20;
@@ -715,8 +716,15 @@ const NSInteger kOLEditDrawerTagFonts = 30;
     else if (collectionView.tag == kOLEditDrawerTagFonts){
         cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"fontCell" forIndexPath:indexPath];
         UILabel *label = [cell viewWithTag:10];
+        [label makeRoundRectWithRadius:4];
         label.text = self.fonts[indexPath.item];
         label.font = [OLKiteUtils fontWithName:label.text size:17];
+        if ([self.activeTextField.font.fontName isEqualToString:label.text]){
+            label.backgroundColor = [UIColor colorWithRed:0.349 green:0.757 blue:0.890 alpha:1.000];
+        }
+        else{
+            label.backgroundColor = [UIColor clearColor];
+        }
         label.textColor = [UIColor whiteColor];
     }
     
@@ -743,7 +751,7 @@ const NSInteger kOLEditDrawerTagFonts = 30;
         return CGSizeMake(self.collectionView.frame.size.height, self.collectionView.frame.size.height);
     }
     else if (collectionView.tag == kOLEditDrawerTagFonts){
-        return CGSizeMake(collectionView.frame.size.width, 40);
+        return CGSizeMake(collectionView.frame.size.width - 40, 30);
     }
     
     return CGSizeZero;
@@ -794,7 +802,9 @@ const NSInteger kOLEditDrawerTagFonts = 30;
     }
     else if (collectionView.tag == kOLEditDrawerTagFonts){
         [self.activeTextField setFont:[OLKiteUtils fontWithName:self.fonts[indexPath.item] size:30]];
+        [self.activeTextField updateSize];
         self.doneButton.enabled = YES;
+        [collectionView reloadData];
     }
 }
 

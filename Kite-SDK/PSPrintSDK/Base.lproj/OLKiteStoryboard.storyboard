@@ -579,8 +579,8 @@ to rearrange the photos</string>
                                                     <rect key="frame" x="0.0" y="0.0" width="46" height="40"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <subviews>
-                                                        <label opaque="NO" userInteractionEnabled="NO" tag="10" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Jx5-9O-5y4">
-                                                            <rect key="frame" x="5" y="0.0" width="36" height="40"/>
+                                                        <label opaque="NO" userInteractionEnabled="NO" tag="10" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.29999999999999999" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Jx5-9O-5y4">
+                                                            <rect key="frame" x="0.0" y="0.0" width="46" height="40"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                             <nil key="highlightedColor"/>
@@ -589,10 +589,10 @@ to rearrange the photos</string>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                 </view>
                                                 <constraints>
-                                                    <constraint firstAttribute="trailing" secondItem="Jx5-9O-5y4" secondAttribute="trailing" constant="5" id="1mw-Fr-hqV"/>
+                                                    <constraint firstAttribute="trailing" secondItem="Jx5-9O-5y4" secondAttribute="trailing" id="1mw-Fr-hqV"/>
                                                     <constraint firstAttribute="bottom" secondItem="Jx5-9O-5y4" secondAttribute="bottom" id="Nwx-Je-XPv"/>
                                                     <constraint firstItem="Jx5-9O-5y4" firstAttribute="top" secondItem="TuT-J1-Dti" secondAttribute="top" id="Wq2-HP-Pgg"/>
-                                                    <constraint firstItem="Jx5-9O-5y4" firstAttribute="leading" secondItem="TuT-J1-Dti" secondAttribute="leading" constant="5" id="bWj-xE-Xrc"/>
+                                                    <constraint firstItem="Jx5-9O-5y4" firstAttribute="leading" secondItem="TuT-J1-Dti" secondAttribute="leading" id="bWj-xE-Xrc"/>
                                                 </constraints>
                                             </collectionViewCell>
                                             <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="colorSelectionCell" id="Fc9-BO-GiI" customClass="OLColorSelectionCollectionViewCell">
