@@ -801,7 +801,7 @@ const NSInteger kOLEditDrawerTagFonts = 30;
         [collectionView reloadData];
     }
     else if (collectionView.tag == kOLEditDrawerTagFonts){
-        [self.activeTextField setFont:[OLKiteUtils fontWithName:self.fonts[indexPath.item] size:30]];
+        [self.activeTextField setFont:[OLKiteUtils fontWithName:self.fonts[indexPath.item] size:self.activeTextField.font.pointSize]];
         [self.activeTextField updateSize];
         self.doneButton.enabled = YES;
         [collectionView reloadData];
@@ -900,6 +900,17 @@ const NSInteger kOLEditDrawerTagFonts = 30;
 
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField{
     if (self.activeTextField == textField){
+        if (self.collectionView.tag == kOLEditDrawerTagFonts){
+            [self dismissDrawerWithCompletionHandler:^(BOOL finished){
+                self.collectionView.tag = kOLEditDrawerTagTools;
+                
+                self.drawerHeightCon.constant = self.originalDrawerHeight;
+                [self.view layoutIfNeeded];
+                
+                [self.collectionView reloadData];
+                [self showDrawerWithCompletionHandler:NULL];
+            }];
+        }
         return YES;
     }
     [self.activeTextField resignFirstResponder];
