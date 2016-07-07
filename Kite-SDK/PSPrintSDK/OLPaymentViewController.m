@@ -185,6 +185,7 @@ static BOOL haveLoadedAtLeastOnce = NO;
 @property (nonatomic, readwrite) NSString *receipt;
 @property (strong, nonatomic) OLPrintOrderCost *finalCost;
 @property (nonatomic, strong) OLPrintOrderCostRequest *costReq;
+@property (strong, nonatomic) NSString *paymentMethod;
 @end
 
 @interface OLPaymentViewController () <
@@ -1161,6 +1162,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         return;
     }
     
+    self.printOrder.paymentMethod = @"CREDIT_CARD";
     [self.printOrder costWithCompletionHandler:^(OLPrintOrderCost *cost, NSError *error) {
         if (!cost){
             [self updateViewsBasedOnCostUpdate];
@@ -1334,6 +1336,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         return;
     }
     
+    self.printOrder.paymentMethod = @"PAYPAL";
     [self.printOrder costWithCompletionHandler:^(OLPrintOrderCost *cost, NSError *error) {
         if (!cost){
             [self updateViewsBasedOnCostUpdate];
@@ -1369,6 +1372,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     
     self.applePayDismissOperation = [[NSBlockOperation alloc] init];
     
+    self.printOrder.paymentMethod = @"APPLE_PAY";
     PKPaymentRequest *paymentRequest = [Stripe paymentRequestWithMerchantIdentifier:[OLKitePrintSDK appleMerchantID]];
     paymentRequest.currencyCode = self.printOrder.currencyCode;
     [self.printOrder costWithCompletionHandler:^(OLPrintOrderCost *cost, NSError *error){
