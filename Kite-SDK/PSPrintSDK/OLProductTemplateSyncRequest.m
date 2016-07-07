@@ -172,6 +172,9 @@
                             NSString *descriptionMarkdown = productTemplate[@"description_markdown"];
                             BOOL enabled = enabledNumber == nil ? YES : [enabledNumber boolValue];
                             
+                            NSNumber *printInStoreNumber = productTemplate[@"print_in_store"];
+                            BOOL printInStore = printInStoreNumber == nil ? NO : [printInStoreNumber boolValue];
+                            
                             NSDictionary *shippingCosts = [productTemplate[@"shipping_costs"] isKindOfClass:[NSDictionary class]] ? productTemplate[@"shipping_costs"] : nil;
                             
                             NSNumber *gridCountX = [productTemplate[@"grid_count_x"] isKindOfClass:[NSNumber class]] ? productTemplate[@"grid_count_x"] : nil;
@@ -307,6 +310,7 @@
                                     t.gridCountX = [gridCountX integerValue];
                                     t.gridCountY = [gridCountY integerValue];
                                     t.supportedOptions = supportedOptions;
+                                    t.printInStore = printInStore;
                                     
                                     NSMutableArray <OLUpsellOffer *>*upsellOffersClean = [[NSMutableArray alloc] init];
                                     for (NSDictionary *offerDict in upsellOffers){
