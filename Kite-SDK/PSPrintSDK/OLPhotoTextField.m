@@ -64,6 +64,15 @@
     [resizeButton addTarget:self action:@selector(onButtonResizeLetGo:) forControlEvents:UIControlEventTouchUpInside];
     [resizeButton addTarget:self action:@selector(onButtonResizeLetGo:) forControlEvents:UIControlEventTouchUpOutside];
     resizeButton.alpha = 0;
+    
+    UIButton *rotateButton = [[UIButton alloc] init];
+    rotateButton.tag = 30;
+    [rotateButton setImage:[UIImage imageNamedInKiteBundle:@"circle-rotate"] forState:UIControlStateNormal];
+    [self addSubview:rotateButton];
+    [rotateButton addTarget:self action:@selector(onButtonRotateTouched:) forControlEvents:UIControlEventTouchDown];
+    [rotateButton addTarget:self action:@selector(onButtonRotateLetGo:) forControlEvents:UIControlEventTouchUpInside];
+    [rotateButton addTarget:self action:@selector(onButtonRotateLetGo:) forControlEvents:UIControlEventTouchUpOutside];
+    rotateButton.alpha = 0;
 }
 
 - (void)onButtonResizeTouched:(UIButton *)sender{
@@ -84,6 +93,18 @@
     }
 }
 
+- (void)onButtonRotateTouched:(UIButton *)sender{
+    if ([self.photoTextFieldDelegate respondsToSelector:@selector(photoTextFieldDidSendActionTouchDownForRotate:)]){
+        [self.photoTextFieldDelegate photoTextFieldDidSendActionTouchDownForRotate:self];
+    }
+}
+
+- (void)onButtonRotateLetGo:(UIButton *)sender{
+    if ([self.photoTextFieldDelegate respondsToSelector:@selector(photoTextFieldDidSendActionTouchDownForRotate:)]){
+        [self.photoTextFieldDelegate photoTextFieldDidSendActionTouchUpForRotate:self];
+    }
+}
+
 - (id)initWithCoder:(NSCoder *)aCoder{
     if(self = [super initWithCoder:aCoder]){
         [self initialize];
@@ -101,12 +122,14 @@
 - (void)layoutCornerButtons{
     [self viewWithTag:10].frame = CGRectMake(0, 0, 30, 30);
     [self viewWithTag:20].frame = CGRectMake(self.frame.size.width - 30, self.frame.size.height - 30, 30, 30);
+    [self viewWithTag:30].frame = CGRectMake(0, self.frame.size.height - 30, 30, 30);
 }
 
 - (void)hideButtons{
     [UIView animateWithDuration:0.15 animations:^{
         [self viewWithTag:10].alpha = 0;
         [self viewWithTag:20].alpha = 0;
+        [self viewWithTag:30].alpha = 0;
     }];
 }
 
@@ -114,6 +137,7 @@
     [UIView animateWithDuration:0.15 animations:^{
         [self viewWithTag:10].alpha = 1;
         [self viewWithTag:20].alpha = 1;
+        [self viewWithTag:30].alpha = 1;
     }];
 }
 
@@ -127,7 +151,6 @@
 
 -(void)drawRect:(CGRect)rect
 {
-    //// Rectangle Drawing
     UIBezierPath* rectanglePath = [UIBezierPath bezierPathWithRect: CGRectMake(15, 15, self.frame.size.width-30, self.frame.size.height-30)];
     [[UIColor blackColor] setStroke];
     rectanglePath.lineWidth = 2;

@@ -57,6 +57,7 @@ const NSInteger kOLEditDrawerTagFonts = 30;
 @property (strong, nonatomic) NSArray<NSString *> *fonts;
 @property (assign, nonatomic) CGFloat textFieldKeyboardDiff;
 @property (assign, nonatomic) BOOL resizingTextField;
+@property (assign, nonatomic) BOOL rotatingTextField;
 @property (weak, nonatomic) IBOutlet UIView *drawerView;
 @property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *drawerHeightCon;
@@ -632,6 +633,9 @@ const NSInteger kOLEditDrawerTagFonts = 30;
             }
             [textField setNeedsDisplay];
         }
+        else if (self.rotatingTextField){
+            
+        }
         else{
             CGFloat minY = gesture.view.frame.size.height/2.0 - self.cropView.frame.size.height / 2.0;
             CGFloat maxY = -minY;
@@ -932,6 +936,14 @@ const NSInteger kOLEditDrawerTagFonts = 30;
 
 - (void)photoTextFieldDidSendActionTouchUpForResize:(OLPhotoTextField *)textField{
     self.resizingTextField = NO;
+}
+
+- (void)photoTextFieldDidSendActionTouchDownForRotate:(OLPhotoTextField *)textField{
+    self.rotatingTextField = YES;
+}
+
+- (void)photoTextFieldDidSendActionTouchUpForRotate:(OLPhotoTextField *)textField{
+    self.rotatingTextField = NO;
 }
 
 #pragma mark - RMImageCropperDelegate methods
