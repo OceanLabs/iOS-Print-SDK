@@ -197,9 +197,9 @@ static BOOL haveLoadedAtLeastOnce = NO;
 #ifdef OL_KITE_OFFER_PAYPAL
 PayPalPaymentDelegate,
 #endif
-UITableViewDataSource, UITableViewDelegate
+UITableViewDataSource, UITableViewDelegate,
 #ifdef OL_KITE_OFFER_APPLE_PAY
-, PKPaymentAuthorizationViewControllerDelegate,
+PKPaymentAuthorizationViewControllerDelegate,
 #endif
 UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavigationControllerDelegate, UITableViewDelegate, UIScrollViewDelegate, UIViewControllerPreviewingDelegate, OLPaymentMethodsViewControllerDelegate>
 
