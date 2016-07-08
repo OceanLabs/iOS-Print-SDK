@@ -1539,9 +1539,11 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
                 }
             }
         }
+#ifdef OL_KITE_OFFER_APPLE_PAY
         else if (selectedPaymentMethod == kOLPaymentMethodApplePay){
             [self onButtonPayWithApplePayClicked];
         }
+#endif
 #ifdef OL_KITE_OFFER_PAYPAL
         else if (selectedPaymentMethod == kOLPaymentMethodPayPal){
             [self onButtonPayWithPayPalClicked];
