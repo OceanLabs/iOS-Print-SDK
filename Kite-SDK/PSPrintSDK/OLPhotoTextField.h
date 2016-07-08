@@ -38,6 +38,8 @@
 - (void)photoTextFieldDidSendActionTouchUpInsideForX:(OLPhotoTextField *)textField;
 - (void)photoTextFieldDidSendActionTouchDownForResize:(OLPhotoTextField *)textField;
 - (void)photoTextFieldDidSendActionTouchUpForResize:(OLPhotoTextField *)textField;
+- (void)photoTextFieldDidSendActionTouchDownForRotate:(OLPhotoTextField *)textField;
+- (void)photoTextFieldDidSendActionTouchUpForRotate:(OLPhotoTextField *)textField;
 
 @end
 
