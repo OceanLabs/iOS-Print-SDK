@@ -18,7 +18,6 @@ PODS:
     - FBSDKCoreKit
   - InstagramImagePicker (1.1.7):
     - NXOAuth2Client (~> 1.2.8)
-  - ios-qr-encoder (1.0.4)
   - KITAssetsPickerController (1.0.6):
     - PureLayout (~> 3.0.0)
   - MPFlipViewController (0.0.2)
@@ -39,7 +38,6 @@ DEPENDENCIES:
   - DACircularProgress
   - FacebookImagePicker
   - InstagramImagePicker
-  - ios-qr-encoder (~> 1.0.4)
   - KITAssetsPickerController
   - MPFlipViewController
   - PayPal-iOS-SDK/Core (~> 2.12.5)
@@ -57,7 +55,6 @@ SPEC CHECKSUMS:
   FBSDKCoreKit: 686ac982723a14ec9ddb85e2f81235d7706c891b
   FBSDKLoginKit: bade9fc78277764149ccc5bfaadbf13c83175c6a
   InstagramImagePicker: 3b1afb10b1b3e5625b8ef64dfabd13464467020d
-  ios-qr-encoder: f5f654b3d8921caee92564f8c5698b7a699f9dc3
   KITAssetsPickerController: 449bf9ba1f6be9e2926462ce5df871f0a63e86f2
   MPFlipViewController: 86caa6203ca9d35af23cc6b4e1bcf53e53333770
   NXOAuth2Client: 98c4d4c594edd2b289cfc34a8928653e1dab7adf
@@ -67,6 +64,6 @@ SPEC CHECKSUMS:
   SVProgressHUD: 748080e4f36e603f6c02aec292664239df5279c1
   TSMarkdownParser: 64cb52fe5a518b4875a6167a650cb0ed4b18cea5
 
-PODFILE CHECKSUM: 8ed335c1cd243610ea07b9838a2043eb8cea484b
+PODFILE CHECKSUM: 962741add0037caca13fc986b7bf5fe781acc8e1
 
 COCOAPODS: 1.0.1

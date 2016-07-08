@@ -30,11 +30,7 @@
 #import "OLQRCodeUploadViewController.h"
 #import "OLQRCodeUploadedImagePoller.h"
 #import "OLURLShortener.h"
-#ifdef COCOAPODS
-#import <ios-qr-encoder/UIImage+MDQRCode.h>
-#else
 #import "UIImage+MDQRCode.h"
-#endif
 
 
 @interface OLQRCodeUploadViewController ()

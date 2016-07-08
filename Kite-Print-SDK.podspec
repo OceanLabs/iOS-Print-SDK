@@ -13,7 +13,6 @@ Pod::Spec.new do |spec|
   spec.dependency	'MPFlipViewController', '~> 0.0.2'
   spec.dependency	'TSMarkdownParser', '~> 1.0.17'
   spec.dependency 'DACircularProgress'
-  spec.dependency	'ios-qr-encoder', '~> 1.0.4'
   spec.requires_arc	= true
   spec.platform		= :ios, '7.0'
   spec.social_media_url	= 'https://twitter.com/dbotha'

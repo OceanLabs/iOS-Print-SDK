@@ -7,6 +7,3 @@
 [submodule "Kite-SDK/vendor/CSStickyHeaderFlowLayout"]
 	path = Kite-SDK/vendor/CSStickyHeaderFlowLayout
 	url = https://github.com/OceanLabs/CSStickyHeaderFlowLayout
-[submodule "Kite-SDK/vendor/ios-qr-encoder"]
-	path = Kite-SDK/vendor/ios-qr-encoder
-	url = https://github.com/moqod/ios-qr-code-encoder.git
