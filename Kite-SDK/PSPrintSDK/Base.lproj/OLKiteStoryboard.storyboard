@@ -711,13 +711,6 @@ to rearrange the photos</string>
                                         </connections>
                                     </barButtonItem>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="cFR-mf-z7v"/>
-                                    <barButtonItem image="Tt" id="Fk5-5M-v8q">
-                                        <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        <connections>
-                                            <action selector="onButtonAddTextClicked:" destination="lkU-BR-804" id="hCb-Q3-UvJ"/>
-                                        </connections>
-                                    </barButtonItem>
-                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="VLQ-xK-Fbe"/>
                                     <barButtonItem image="tool_rotate" id="mhy-JJ-w1G">
                                         <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <connections>
@@ -4516,8 +4509,8 @@ only £9.99 £8.99</string>
                                 </constraints>
                                 <variation key="default">
                                     <mask key="constraints">
-                                        <exclude reference="pwI-W1-iUv"/>
                                         <exclude reference="4pS-Ie-XgT"/>
+                                        <exclude reference="pwI-W1-iUv"/>
                                     </mask>
                                 </variation>
                             </view>
@@ -4581,7 +4574,6 @@ only £9.99 £8.99</string>
     <resources>
         <image name="airplane" width="17" height="12"/>
         <image name="apple-pay-method" width="45" height="29"/>
-        <image name="Tt" width="30" height="30"/>
         <image name="basket-button-pressed" width="22" height="41"/>
         <image name="bluebox" width="163" height="27"/>
         <image name="book" width="575" height="393"/>
