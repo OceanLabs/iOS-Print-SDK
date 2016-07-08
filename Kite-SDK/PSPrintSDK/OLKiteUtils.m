@@ -38,6 +38,7 @@
 #import "OLCheckoutViewController.h"
 #import "OLIntegratedCheckoutViewController.h"
 #import "OLKiteViewController.h"
+#import "OLPaymentViewControllerV2.h"
 
 @class OLCustomPhotoProvider;
 
@@ -217,8 +218,14 @@
 #endif
 
 + (void)checkoutViewControllerForPrintOrder:(OLPrintOrder *)printOrder handler:(void(^)(id vc))handler{
-    OLPaymentViewController *vc = [[OLPaymentViewController alloc] initWithPrintOrder:printOrder];
-    handler(vc);
+    if ([[OLKiteABTesting sharedInstance].paymentScreen isEqualToString:@"V2"]){
+        OLPaymentViewController *vc = [[OLPaymentViewControllerV2 alloc] initWithPrintOrder:printOrder];
+        handler(vc);
+    }
+    else{
+        OLPaymentViewController *vc = [[OLPaymentViewController alloc] initWithPrintOrder:printOrder];
+        handler(vc);
+    }
 }
 
 + (void)shippingControllerForPrintOrder:(OLPrintOrder *)printOrder handler:(void(^)(OLCheckoutViewController *vc))handler{
@@ -230,6 +237,15 @@
         vc = [[OLIntegratedCheckoutViewController alloc] initWithPrintOrder:printOrder];
     }
     handler(vc);
+}
+
++ (UIFont *)fontWithName:(NSString *)name size:(CGFloat)size{
+    UIFont *font = [UIFont fontWithName:name size:size];
+    if (!font){
+        font = [UIFont systemFontOfSize:size];
+    }
+    
+    return font;
 }
 
 + (NSString *)reviewViewControllerIdentifierForProduct:(OLProduct *)product photoSelectionScreen:(BOOL)photoSelectionScreen{
@@ -341,6 +357,7 @@
                                               }
                                           }];
     [downloadTask resume];
+    [session finishTasksAndInvalidate];
 }
 
 @end

@@ -29,8 +29,11 @@
 
 #import "OLImageDownloader.h"
 #import "OLImageDownloadDelegate.h"
+#import "OLConstants.h"
 
 @interface OLImageDownloader ()
+
+@property (strong, nonatomic) NSURLCache *cache;
 
 @end
 
@@ -41,13 +44,17 @@
     static OLImageDownloader *sharedInstance;
     dispatch_once(&once, ^{
         sharedInstance = [[self alloc] init];
+        NSURLCache *URLCache = [[NSURLCache alloc] initWithMemoryCapacity:4 * 1024 * 1024
+                                                             diskCapacity:200 * 1024 * 1024
+                                                                 diskPath:nil];
+        [NSURLCache setSharedURLCache:URLCache];
     });
     return sharedInstance;
 }
 
 - (BOOL)cachedDataExistForURL:(NSURL *)url{
     NSURLRequest *request = [[NSURLRequest alloc] initWithURL:url];
-    NSCachedURLResponse *cachedResponse = [[NSURLCache sharedURLCache] cachedResponseForRequest:request];
+    NSCachedURLResponse *cachedResponse = [self.cache cachedResponseForRequest:request];
     return cachedResponse.data != nil;
 }
 
@@ -56,38 +63,69 @@
 }
 
 - (NSURLSessionDownloadTask *)downloadImageAtURL:(NSURL *)url progress:(void(^)(NSInteger progress, NSInteger total))progressHandler withCompletionHandler:(void(^)(UIImage *image, NSError *error))handler{
+    return [self downloadImageAtURL:url priority:0.5 progress:progressHandler withCompletionHandler:handler];
+}
+
+- (NSURLSessionDownloadTask *)downloadImageAtURL:(NSURL *)url priority:(float)priority progress:(void(^)(NSInteger progress, NSInteger total))progressHandler withCompletionHandler:(void(^)(UIImage *image, NSError *error))handler{
     NSURLRequest *request = [[NSURLRequest alloc] initWithURL:url];
-    OLImageDownloadDelegate *delegate = [[OLImageDownloadDelegate alloc] init];
-    delegate.progressHandler = progressHandler;
-    
     
     NSCachedURLResponse *cachedResponse = [[NSURLCache sharedURLCache] cachedResponseForRequest:request];
     if (cachedResponse.data){
-        handler([UIImage imageWithData:cachedResponse.data], nil);
+        if (handler){
+            UIImage *image = [UIImage imageWithData:cachedResponse.data];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                handler(image, nil);
+            });
+        }
         return nil;
     }
+    
+    OLImageDownloadDelegate *delegate = [[OLImageDownloadDelegate alloc] init];
+    delegate.progressHandler = ^(NSURLSessionTask *task, NSInteger progress, NSInteger total){
+        if (task.state != NSURLSessionTaskStateCanceling){
+            if (progressHandler){
+                progressHandler(progress, total);
+            }
+        }
+    };
     
     NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
     configuration.requestCachePolicy = NSURLRequestReturnCacheDataElseLoad;
     NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration delegate:delegate delegateQueue:nil];
     
-    delegate.completionHandler = ^(NSData *data, NSURLResponse *response, NSError *error) {
+    delegate.completionHandler = ^(NSURLSessionTask *task, NSData *data, NSURLResponse *response, NSError *error) {
+        if (task.state == NSURLSessionTaskStateCanceling){
+            return;
+        }
         if (error){
             dispatch_async(dispatch_get_main_queue(), ^{
-                handler(nil, error);
+                if (handler){
+                    handler(nil, error);
+                }
             });
         }
-        else if (data){
+        else if (data && [(NSHTTPURLResponse *)response statusCode] >= 200 && [(NSHTTPURLResponse *)response statusCode] <= 299){
             NSCachedURLResponse *cachedResponse = [[NSCachedURLResponse alloc] initWithResponse:response data:data userInfo:nil storagePolicy:NSURLCacheStorageAllowed];
             [configuration.URLCache storeCachedResponse:cachedResponse forRequest:request];
             dispatch_async(dispatch_get_main_queue(), ^{
-                handler([UIImage imageWithData:data], nil);
+                if (handler){
+                    handler([UIImage imageWithData:data], nil);
+                }
+            });
+        }
+        else{
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (handler){
+                    handler(nil, [NSError errorWithDomain:kOLKiteSDKErrorDomain code:[(NSHTTPURLResponse *)response statusCode] userInfo:nil]);
+                }
             });
         }
     };
     
     NSURLSessionDownloadTask *downloadTask = [session downloadTaskWithRequest:request];
+    downloadTask.priority = priority;
     [downloadTask resume];
+    [session finishTasksAndInvalidate];
     return downloadTask;
 }
 

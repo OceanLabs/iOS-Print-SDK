@@ -30,6 +30,7 @@
 #import <Foundation/Foundation.h>
 #import "OLProductTemplateOption.h"
 #import "OLUpsellOffer.h"
+#import "OLProductRepresentation.h"
 
 typedef void (^TemplateSyncHandler)(NSError *_Nullable error);
 
@@ -80,6 +81,7 @@ typedef enum {
 @property (assign, nonatomic) NSInteger gridCountY;
 @property (strong, nonatomic) NSArray <OLUpsellOffer *>*_Nullable upsellOffers;
 @property (strong, nonatomic, readonly) NSArray <OLProductTemplateOption *>*_Nullable options;
+@property (strong, nonatomic) OLProductRepresentation *_Nullable productRepresentation;
 
 - (instancetype _Nonnull)initWithIdentifier:(NSString *_Nonnull)identifier name:(NSString *_Nonnull)name sheetQuantity:(NSUInteger)quantity sheetCostsByCurrencyCode:(NSDictionary<NSString *, NSDecimalNumber *> *_Nullable)costs enabled:(BOOL)enabled;
 - (NSDecimalNumber *_Nullable)costPerSheetInCurrencyCode:(NSString *_Nonnull)currencyCode;

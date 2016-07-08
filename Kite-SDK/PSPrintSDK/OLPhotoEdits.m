@@ -36,8 +36,16 @@ static NSString *const kKeyCropTransform = @"co.oceanlabs.psprintstudio.kKeyCrop
 static NSString *const kKeyCCRotations = @"co.oceanlabs.psprintstudio.kKeyCCRotations";
 static NSString *const kKeyFlipHorizontal = @"co.oceanlabs.psprintstudio.kKeyFlipHorizontal";
 static NSString *const kKeyFlipVertical = @"co.oceanlabs.psprintstudio.kKeyFlipVertical";
+static NSString *const kKeyTextsOnPhoto = @"co.oceanlabs.psprintstudio.kKeyTextsOnPhoto";
 
 @implementation OLPhotoEdits
+
+-(NSMutableArray *) textsOnPhoto{
+    if (!_textsOnPhoto){
+        _textsOnPhoto = [[NSMutableArray alloc] init];
+    }
+    return _textsOnPhoto;
+}
 
 -(CGAffineTransform) cropTransform{
     if (CGAffineTransformEqualToTransform(_cropTransform, CGAffineTransformMake(0, 0, 0, 0, 0, 0))){
@@ -55,6 +63,7 @@ static NSString *const kKeyFlipVertical = @"co.oceanlabs.psprintstudio.kKeyFlipV
         _counterClockwiseRotations = [aDecoder decodeIntegerForKey:kKeyCCRotations];
         _flipHorizontal = [aDecoder decodeBoolForKey:kKeyFlipHorizontal];
         _flipVertical = [aDecoder decodeBoolForKey:kKeyFlipVertical];
+        _textsOnPhoto = [aDecoder decodeObjectForKey:kKeyTextsOnPhoto];
     }
     return self;
 }
@@ -67,6 +76,7 @@ static NSString *const kKeyFlipVertical = @"co.oceanlabs.psprintstudio.kKeyFlipV
     [aCoder encodeInteger:self.counterClockwiseRotations forKey:kKeyCCRotations];
     [aCoder encodeBool:self.flipHorizontal forKey:kKeyFlipHorizontal];
     [aCoder encodeBool:self.flipVertical forKey:kKeyFlipVertical];
+    [aCoder encodeObject:self.textsOnPhoto forKey:kKeyTextsOnPhoto];
 }
 
 - (void)performHorizontalFlipEditFromOrientation:(UIImageOrientation)orientation{
@@ -213,6 +223,7 @@ static NSString *const kKeyFlipVertical = @"co.oceanlabs.psprintstudio.kKeyFlipV
     copy.counterClockwiseRotations = self.counterClockwiseRotations;
     copy.flipHorizontal = self.flipHorizontal;
     copy.flipVertical = self.flipVertical;
+    copy.textsOnPhoto = [[NSMutableArray alloc] initWithArray:self.textsOnPhoto copyItems:YES];
 
     return copy;
 }
@@ -228,6 +239,7 @@ static NSString *const kKeyFlipVertical = @"co.oceanlabs.psprintstudio.kKeyFlipV
         retVal &= self.counterClockwiseRotations == other.counterClockwiseRotations;
         retVal &= self.flipHorizontal == self.flipHorizontal;
         retVal &= self.flipVertical == self.flipVertical;
+        retVal &= [self.textsOnPhoto isEqualToArray:other.textsOnPhoto];
     }
     
     return retVal;

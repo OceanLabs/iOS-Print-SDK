@@ -33,10 +33,10 @@
 #import "OLProduct.h"
 #import "OLRemoteImageView.h"
 #import "UIImage+ImageNamedInKiteBundle.h"
+#import "OLPageLayout.h"
 
 @interface OLPhotobookPageContentViewController ()
 
-@property (weak, nonatomic) IBOutlet UIImageView *pageBackground;
 @property (weak, nonatomic) IBOutlet UIImageView *pageShadowRight;
 @property (weak, nonatomic) IBOutlet UIImageView *pageShadowLeft;
 
@@ -49,8 +49,15 @@
 - (void)viewDidLoad{
     [super viewDidLoad];
         
-    [self.imageView.superview addConstraint:[NSLayoutConstraint constraintWithItem:self.imageView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self.imageView.superview attribute:NSLayoutAttributeHeight multiplier:1-self.product.productTemplate.imageBorder.top*2 constant:0]];
-    [self.imageView.superview addConstraint:[NSLayoutConstraint constraintWithItem:self.imageView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:self.imageView.superview attribute:NSLayoutAttributeWidth multiplier:1-self.product.productTemplate.imageBorder.left*2 constant:0]];
+    [self setupImageViews];
+}
+
+- (void)setupImageViews{
+    OLPageLayout *layout = self.product.productTemplate.productRepresentation.pages[self.pageIndex];
+    CGRect imageViewPosition = [layout.positions.firstObject CGRectValue];
+    
+    [self.imageView.superview addConstraint:[NSLayoutConstraint constraintWithItem:self.imageView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self.imageView.superview attribute:NSLayoutAttributeHeight multiplier:imageViewPosition.size.height constant:0]];
+    [self.imageView.superview addConstraint:[NSLayoutConstraint constraintWithItem:self.imageView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:self.imageView.superview attribute:NSLayoutAttributeWidth multiplier:imageViewPosition.size.width constant:0]];
     
     [self loadImageWithCompletionHandler:NULL];
 }
@@ -69,7 +76,6 @@
 - (void)setPage:(BOOL)left{
     self.left = left;
     if (left){
-        self.pageBackground.image = [UIImage imageNamedInKiteBundle:@"page-left"];
         self.pageShadowLeft.hidden = NO;
         self.pageShadowRight.hidden = YES;
         self.pageShadowLeft2.hidden = YES;
@@ -77,7 +83,6 @@
 
     }
     else{
-        self.pageBackground.image = [UIImage imageNamedInKiteBundle:@"page-right"];
         self.pageShadowLeft.hidden = YES;
         self.pageShadowRight.hidden = NO;
         self.pageShadowLeft2.hidden = YES;
@@ -86,7 +91,12 @@
 }
 
 - (NSInteger)imageIndexForPoint:(CGPoint)p{
-    return self.pageIndex; //only one for now
+    NSIndexSet *indexSet = [self.product.productTemplate.productRepresentation indexSetForPageNumber:self.pageIndex];
+    if (indexSet.count > 0){
+        return indexSet.firstIndex;
+    }
+    
+    return NSNotFound;
 }
 
 - (void)unhighlightImageAtIndex:(NSInteger)index{
@@ -110,20 +120,21 @@
 }
 
 - (void)loadImageWithCompletionHandler:(void(^)(void))handler{
-    if (self.pageIndex >= self.userSelectedPhotos.count){
+    NSInteger imageIndex = [self.product.productTemplate.productRepresentation indexSetForPageNumber:self.pageIndex].firstIndex;
+    if (imageIndex >= self.userSelectedPhotos.count){
         return;
     }
-    OLPrintPhoto *printPhoto = [self.userSelectedPhotos objectAtIndex:self.pageIndex];
+    OLPrintPhoto *printPhoto = [self.userSelectedPhotos objectAtIndex:imageIndex];
     if (printPhoto != (id)[NSNull null]){
         self.imageView.image = nil;
         dispatch_async(dispatch_get_main_queue(), ^{
-            NSInteger blockIndex = self.pageIndex;
+            NSInteger blockIndex = imageIndex;
             
             [printPhoto setImageSize:self.imageView.frame.size cropped:YES progress:^(float progress){
                 [self.imageView setProgress:progress];
             }completionHandler:^(UIImage *image){
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    if (blockIndex == self.pageIndex){
+                    if (blockIndex == imageIndex){
                         self.imageView.image = image;
                         
                         if (self.left){

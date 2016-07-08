@@ -261,11 +261,11 @@ UIViewControllerPreviewingDelegate>
     if (selectedCount < quantityToFulfilOrder) {
         NSUInteger canSelectExtraCount = quantityToFulfilOrder - selectedCount;
         if ([UIAlertController class]){
-            UIAlertController *ac = [UIAlertController alertControllerWithTitle:[NSString stringWithFormat:NSLocalizedString(@"You've selected %d photos.", @""),selectedCount] message:[NSString stringWithFormat:NSLocalizedString(@"You can add %d more for the same price.", @""), canSelectExtraCount] preferredStyle:UIAlertControllerStyleAlert];
-            [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Print these", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
+            UIAlertController *ac = [UIAlertController alertControllerWithTitle:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"You've selected %d photos.", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") ,selectedCount] message:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"You can add %d more for the same price.", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), canSelectExtraCount] preferredStyle:UIAlertControllerStyleAlert];
+            [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"Print these", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
                 [self doCheckout];
             }]];
-            [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Add more", @"") style:UIAlertActionStyleCancel handler:NULL]];
+            [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"Add more", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") style:UIAlertActionStyleCancel handler:NULL]];
             [self presentViewController:ac animated:YES completion:NULL];
         }
         else{
@@ -764,6 +764,14 @@ UIViewControllerPreviewingDelegate>
     }];
 }
 
+- (void)scrollCropViewControllerDidDropChanges:(OLScrollCropViewController *)cropper{
+    [UIView animateWithDuration:0.25 animations:^{
+        self.nextButton.alpha = 1;
+        self.navigationController.navigationBar.alpha = 1;
+    }];
+    [cropper dismissViewControllerAnimated:NO completion:NULL];
+}
+
 -(void)scrollCropViewController:(OLScrollCropViewController *)cropper didFinishCroppingImage:(UIImage *)croppedImage{
     [self.editingPrintPhoto unloadImage];
     
@@ -775,6 +783,10 @@ UIViewControllerPreviewingDelegate>
             NSIndexPath *indexPath = [NSIndexPath indexPathForItem:i inSection:0];
             if (indexPath){
                 [self.collectionView reloadItemsAtIndexPaths:@[indexPath]];
+                UICollectionViewCell *cell = [self.collectionView cellForItemAtIndexPath:indexPath];
+                UIView *imageView = [cell viewWithTag:10];
+                imageView.hidden = YES;
+                cropper.previewSourceView = imageView;
             }
         }
     }

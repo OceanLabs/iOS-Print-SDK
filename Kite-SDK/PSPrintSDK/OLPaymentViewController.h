@@ -42,4 +42,5 @@
 @property (strong, nonatomic) NSString *userPhone;
 
 - (id)initWithPrintOrder:(OLPrintOrder *)printOrder;
++(BOOL)isApplePayAvailable;
 @end

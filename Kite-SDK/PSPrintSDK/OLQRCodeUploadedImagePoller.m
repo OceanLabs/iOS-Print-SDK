@@ -58,6 +58,7 @@
         if (image != nil) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 if (!self.cancelled) {
+                    [self stopPolling];
                     OLAsset *asset = [OLAsset assetWithDataSource:[[OLURLDataSource alloc] initWithURLString:imageURL.absoluteString]];
                     downloadedHandler(asset);
                 }
@@ -65,7 +66,10 @@
         } else if (error) {
             // image probably doesn't exist at the endpoint yet, try polling again
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                [self startPollingImageURL:imageURL onImageDownloadProgress:progressHandler onImageDownloadedHandler:downloadedHandler];
+                [self.op cancel];
+                if (!self.cancelled){
+                    [self startPollingImageURL:imageURL onImageDownloadProgress:progressHandler onImageDownloadedHandler:downloadedHandler];
+                }
             });
         }
     }];

@@ -440,6 +440,34 @@ static NSOperationQueue *imageOperationQueue;
             
             printPhoto.thumbnailIsMaxSize = CGSizeEqualToSize(blockImage.size, image.size);
             
+            
+            for (OLTextOnPhoto *textOnPhoto in printPhoto.edits.textsOnPhoto){
+                CGFloat scaling = MIN(blockImage.size.width, blockImage.size.height) / MIN(printPhoto.edits.cropImageSize.width, printPhoto.edits.cropImageSize.height);
+                UIFont *font = [OLKiteUtils fontWithName:textOnPhoto.fontName size:textOnPhoto.fontSize * scaling];
+                
+                CGRect textRect;
+                textRect.origin.x = textOnPhoto.frame.origin.x * scaling;
+                textRect.origin.y = textOnPhoto.frame.origin.y * scaling + 4;
+                textRect.size.width = textOnPhoto.frame.size.width * scaling;
+                textRect.size.height = textOnPhoto.frame.size.height * scaling;
+                
+                UIGraphicsBeginImageContext(blockImage.size);
+                [blockImage drawInRect:CGRectMake(0,0,blockImage.size.width,blockImage.size.height)];
+                
+                NSMutableParagraphStyle *style = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
+                style.alignment = NSTextAlignmentCenter;
+                
+                NSMutableDictionary *attributes = [@{NSFontAttributeName : font, NSForegroundColorAttributeName: [UIColor whiteColor], NSParagraphStyleAttributeName : style} mutableCopy];
+                if (textOnPhoto.color){
+                    attributes[NSForegroundColorAttributeName] = textOnPhoto.color;
+                }
+                
+                [textOnPhoto.text drawInRect:textRect withAttributes:attributes];
+                blockImage = UIGraphicsGetImageFromCurrentImageContext();
+                UIGraphicsEndImageContext();
+            }
+            
+            
             completionHandler(blockImage);
         };
         if ([NSThread isMainThread]){
@@ -458,6 +486,10 @@ static NSOperationQueue *imageOperationQueue;
 {
     
     CGFloat scaleFactor = (MAX(i_size.width, i_size.height) * screenScale) / MIN(sourceImage.size.height, sourceImage.size.width);
+    
+    if (scaleFactor >= 1){
+        return sourceImage;
+    }
     
     CGFloat newHeight = sourceImage.size.height * scaleFactor;
     CGFloat newWidth = sourceImage.size.width * scaleFactor;
@@ -643,7 +675,7 @@ static NSOperationQueue *imageOperationQueue;
     [aCoder encodeInteger:self.extraCopies forKey:kKeyExtraCopies];
     [aCoder encodeObject:self.edits forKey:kKeyEdits];
     [aCoder encodeObject:self.uuid forKey:kKeyUUID];
-    if (self.type == kPrintPhotoAssetTypeALAsset) {
+    if (self.type == kPrintPhotoAssetTypeALAsset && [self.asset respondsToSelector:@selector(valueForProperty:)]) {
         [aCoder encodeObject:[self.asset valueForProperty:ALAssetPropertyAssetURL] forKey:kKeyAsset];
     }
     else if (self.type == kPrintPhotoAssetTypePHAsset){

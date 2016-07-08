@@ -33,19 +33,19 @@
 
 - (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didWriteData:(int64_t)bytesWritten totalBytesWritten:(int64_t)totalBytesWritten totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite{
     if (self.progressHandler){
-        self.progressHandler(totalBytesWritten, totalBytesExpectedToWrite);
+        self.progressHandler(downloadTask, (int)totalBytesWritten, (int)totalBytesExpectedToWrite);
     }
 }
 
 - (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didFinishDownloadingToURL:(NSURL *)location{
     if (self.completionHandler){
-        self.completionHandler([NSData dataWithContentsOfURL:location], downloadTask.response, nil);
+        self.completionHandler(downloadTask, [NSData dataWithContentsOfURL:location], downloadTask.response, nil);
     }
 }
 
 - (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error{
-    if (self.completionHandler){
-        self.completionHandler(nil, task.response, error);
+    if (self.completionHandler && error){
+        self.completionHandler(task, nil, task.response, error);
     }
 }
 

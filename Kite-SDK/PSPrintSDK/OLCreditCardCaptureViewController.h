@@ -40,7 +40,7 @@
 @end
 
 @interface OLCreditCardCaptureViewController : OLNavigationController
-- (id)initWithPrintOrder:(OLPrintOrder *)printOrder;
+- (instancetype)initWithPrintOrder:(OLPrintOrder *)printOrder;
 
 @property (nonatomic, weak) id <UINavigationControllerDelegate, OLCreditCardCaptureDelegate> delegate;
 

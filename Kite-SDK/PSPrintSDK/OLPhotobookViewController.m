@@ -53,6 +53,9 @@
 #import "UIImage+ImageNamedInKiteBundle.h"
 #import "UIView+RoundRect.h"
 #import "OLUpsellViewController.h"
+#import "OLProductRepresentation.h"
+#import "OLPageLayout.h"
+#import "OLPhotobookPageBlankContentViewController.h"
 
 #ifdef OL_KITE_AT_LEAST_IOS8
 #import "CTAssetsPickerController.h"
@@ -254,10 +257,30 @@ UINavigationControllerDelegate, OLUpsellViewControllerDelegate
         [self.pageController setViewControllers:@[[self viewControllerAtIndex:pageIndex], [self viewControllerAtIndex:pageIndex + 1]] direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
     }
     else{
-        [self.pageController.viewControllers[0] setPageIndex:pageIndex];
-        [self.pageController.viewControllers[0] loadImageWithCompletionHandler:NULL];
-        [self.pageController.viewControllers[1] setPageIndex:pageIndex + 1];
-        [self.pageController.viewControllers[1] loadImageWithCompletionHandler:NULL];
+        for (OLPhotobookPageContentViewController *vc in self.pageController.viewControllers){
+            NSInteger index = [self.pageController.viewControllers indexOfObjectIdenticalTo:vc];
+            NSInteger numberOfImages = self.product.productTemplate.productRepresentation.pages[pageIndex+index].numberOfPhotos;
+            if (([vc isKindOfClass:[OLPhotobookPageContentViewController class]] && numberOfImages == 0) || ([vc isKindOfClass:[OLPhotobookPageBlankContentViewController class]] && numberOfImages == 1)){
+                OLPhotobookPageContentViewController *newVc;
+                if (self.product.productTemplate.productRepresentation.pages[pageIndex+index].numberOfPhotos == 0){
+                    newVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLPhotobookPageBlankContentViewController"];        newVc.view.backgroundColor = [UIColor colorWithRed:0.918 green:0.910 blue:0.894 alpha:1.000];
+                }
+                else{
+                    newVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLPhotobookPageViewController"];
+                }
+                newVc.pageIndex = pageIndex+index;
+                newVc.userSelectedPhotos = self.photobookPhotos;
+                newVc.product = self.product;
+                newVc.view.autoresizingMask = UIViewAutoresizingNone;
+                NSMutableArray *newArray = [NSMutableArray arrayWithArray:self.pageController.viewControllers];
+                newArray[index] = newVc;
+                [self.pageController setViewControllers:newArray direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:NULL];
+            }
+            else{
+                [vc setPageIndex:pageIndex+index];
+                [vc loadImageWithCompletionHandler:NULL];
+            }
+        }
     }
 }
 
@@ -348,7 +371,7 @@ UINavigationControllerDelegate, OLUpsellViewControllerDelegate
     [self.pageController.view addGestureRecognizer:panGesture];
     [self.pageController.view addGestureRecognizer:longPressGesture];
     
-    self.title = NSLocalizedString(@"Review", @"");
+    self.title = NSLocalizedStringFromTableInBundle(@"Review", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
     
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Back", @"")
                                                                              style:UIBarButtonItemStylePlain
@@ -491,8 +514,28 @@ UINavigationControllerDelegate, OLUpsellViewControllerDelegate
 }
 
 - (void)updatePagesLabel{
-    int page = self.editingPageNumber ? [self.editingPageNumber intValue] : 0;
-    self.pagesLabel.text = [NSString stringWithFormat:@"%d-%d of %ld", page + 1, page + 2, (long)self.product.quantityToFulfillOrder];
+    int page = 0;
+    if (self.editingPageNumber){
+        page = [self.editingPageNumber intValue];
+    }
+    else if (!self.editMode){
+        page = (int)[(OLPhotobookPageContentViewController *)self.pageController.viewControllers.firstObject pageIndex];
+    }
+    int displayPage = page+1;
+    
+    if ([(OLPageLayout *)self.product.productTemplate.productRepresentation.pages.firstObject numberOfPhotos] == 0&& page > 0){
+        displayPage--;
+    }
+    
+    if (self.product.productTemplate.productRepresentation.pages[page].numberOfPhotos == 0){
+        self.pagesLabel.text = [NSString stringWithFormat:@"%d of %ld", displayPage, (long)self.product.quantityToFulfillOrder];
+    }
+    else if(self.product.productTemplate.productRepresentation.pages[page+1].numberOfPhotos == 0){
+        self.pagesLabel.text = [NSString stringWithFormat:@"%d of %ld", displayPage, (long)self.product.quantityToFulfillOrder];
+    }
+    else{
+        self.pagesLabel.text = [NSString stringWithFormat:@"%d-%d of %ld", displayPage, displayPage + 1, (long)self.product.quantityToFulfillOrder];
+    }
 }
 
 - (void)ios7Back{
@@ -640,12 +683,30 @@ UINavigationControllerDelegate, OLUpsellViewControllerDelegate
         return nil;
     }
     
-    OLPhotobookPageContentViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLPhotobookPageViewController"];
+    OLPhotobookPageContentViewController *vc;
+    
+    if (self.product.productTemplate.productRepresentation.pages[index].numberOfPhotos == 0){
+        vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLPhotobookPageBlankContentViewController"];        vc.view.backgroundColor = [UIColor colorWithRed:0.918 green:0.910 blue:0.894 alpha:1.000];
+    }
+    else{
+        vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLPhotobookPageViewController"];
+    }
     vc.pageIndex = index;
     vc.userSelectedPhotos = self.photobookPhotos;
     vc.product = self.product;
     vc.view.autoresizingMask = UIViewAutoresizingNone;
     return vc;
+}
+
+- (NSInteger)photobookPhotosCount{
+    NSInteger count = 0;
+    for (id object in self.photobookPhotos){
+        if (object != [NSNull null]){
+            count++;
+        }
+    }
+    
+    return count;
 }
 
 #pragma mark OLUpsellViewControllerDelegate
@@ -711,6 +772,10 @@ UINavigationControllerDelegate, OLUpsellViewControllerDelegate
 
 - (void)scrollCropViewControllerDidCancel:(OLScrollCropViewController *)cropper{
     [cropper dismissViewControllerAnimated:YES completion:NULL];
+}
+
+- (void)scrollCropViewControllerDidDropChanges:(OLScrollCropViewController *)cropper{
+    [cropper dismissViewControllerAnimated:NO completion:NULL];
 }
 
 -(void)scrollCropViewController:(OLScrollCropViewController *)cropper didFinishCroppingImage:(UIImage *)croppedImage{
@@ -783,14 +848,14 @@ UINavigationControllerDelegate, OLUpsellViewControllerDelegate
 - (UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerAfterViewController:(UIViewController *)viewController {
     OLPhotobookPageContentViewController *vc = (OLPhotobookPageContentViewController *) viewController;
     NSUInteger index = (vc.pageIndex + 1);
-    if (index >= self.photobookPhotos.count){
+    if (index >= self.product.productTemplate.productRepresentation.numberOfPages){
         return nil;
     }
     return [self viewControllerAtIndex:index];
 }
 
 - (NSInteger)presentationCountForPageViewController:(UIPageViewController *)pageViewController {
-    return self.photobookPhotos.count;
+    return self.product.productTemplate.productRepresentation.numberOfPages;
 }
 
 - (NSInteger)presentationIndexForPageViewController:(UIPageViewController *)pageViewController {
@@ -876,10 +941,20 @@ UINavigationControllerDelegate, OLUpsellViewControllerDelegate
     NSUInteger quantityToFulfilOrder = numOrders * self.product.quantityToFulfillOrder;
     if (selectedCount < quantityToFulfilOrder) {
         NSUInteger canSelectExtraCount = quantityToFulfilOrder - selectedCount;
-        UIAlertView *av = [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:NSLocalizedString(@"You've selected %d photos.", @""),selectedCount] message:[NSString stringWithFormat:NSLocalizedString(@"You can add %d more for the same price.", @""), canSelectExtraCount] delegate:nil cancelButtonTitle:NSLocalizedString(@"Add more", @"") otherButtonTitles:NSLocalizedString(@"Print these", @""), nil];
-        av.tag = kTagAlertViewSelectMorePhotos;
-        av.delegate = self;
-        [av show];
+        if ([UIAlertController class]){
+            UIAlertController *ac = [UIAlertController alertControllerWithTitle:[NSString stringWithFormat:NSLocalizedString(@"You've selected %d photos.", @""),selectedCount] message:[NSString stringWithFormat:NSLocalizedString(@"You can add %d more for the same price.", @""), canSelectExtraCount] preferredStyle:UIAlertControllerStyleAlert];
+            [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Add more", @"") style:UIAlertActionStyleCancel handler:NULL]];
+            [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Print these", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
+                [self doCheckout];
+            }]];
+            [self presentViewController:ac animated:YES completion:NULL];
+        }
+        else{
+            UIAlertView *av = [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:NSLocalizedString(@"You've selected %d photos.", @""),selectedCount] message:[NSString stringWithFormat:NSLocalizedString(@"You can add %d more for the same price.", @""), canSelectExtraCount] delegate:nil cancelButtonTitle:NSLocalizedString(@"Add more", @"") otherButtonTitles:NSLocalizedString(@"Print these", @""), nil];
+            av.tag = kTagAlertViewSelectMorePhotos;
+            av.delegate = self;
+            [av show];
+        }
         return NO;
     }
     return YES;
@@ -1059,11 +1134,15 @@ UINavigationControllerDelegate, OLUpsellViewControllerDelegate
     else{
         self.croppingImageIndex = 1;
     }
-    NSInteger index = [[self.pageController.viewControllers objectAtIndex:self.croppingImageIndex] pageIndex];
+    
+    OLPhotobookPageContentViewController *page = [self.pageController.viewControllers objectAtIndex:self.croppingImageIndex];
+    NSInteger index = [page imageIndexForPoint:[sender locationInView:page.view]];
+    
+    if (index == NSNotFound){
+        return;
+    }
     
     if (self.editMode){
-        OLPhotobookPageContentViewController *page = [self.pageController.viewControllers objectAtIndex:self.croppingImageIndex];
-        NSInteger index = [page imageIndexForPoint:[sender locationInView:page.view]];
         [self.photobookDelegate photobook:self userDidTapOnImageWithIndex:index];
         
         return;
@@ -1073,11 +1152,8 @@ UINavigationControllerDelegate, OLUpsellViewControllerDelegate
         [self addMorePhotosFromView:sender.view];
     }
     else{
-        OLPhotobookPageContentViewController *page = [self.pageController.viewControllers objectAtIndex:self.croppingImageIndex];
         UIImageView *imageView = [page imageView];
-
         self.croppingPrintPhoto = self.photobookPhotos[index];
-        
         [self.croppingPrintPhoto getImageWithProgress:NULL completion:^(UIImage *image){
             
 #ifdef OL_KITE_OFFER_ADOBE
@@ -1258,8 +1334,7 @@ UINavigationControllerDelegate, OLUpsellViewControllerDelegate
     self.animating = NO;
     if (completed){
         OLPhotobookPageContentViewController *vc1 = [pageViewController.viewControllers firstObject];
-        OLPhotobookPageContentViewController *vc2 = [pageViewController.viewControllers lastObject];
-        self.pagesLabel.text = [NSString stringWithFormat:@"%ld-%ld of %ld", (long)vc1.pageIndex+1, (long)vc2.pageIndex+1, (long)self.product.quantityToFulfillOrder];
+        [self updatePagesLabel];
         
         [UIView animateWithDuration:kBookAnimationTime/2.0 animations:^{
             if ([(OLPhotobookPageContentViewController *)[previousViewControllers firstObject] pageIndex] < vc1.pageIndex){
@@ -1375,7 +1450,7 @@ UINavigationControllerDelegate, OLUpsellViewControllerDelegate
             UILabel *helpLabel = [[UILabel alloc] init];
             helpLabel.tag = 1234;
             helpLabel.font = [UIFont systemFontOfSize:11];
-            helpLabel.text = NSLocalizedString(@"Tap to edit", @"");
+            helpLabel.text = NSLocalizedStringFromTableInBundle(@"Tap to edit", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
             helpLabel.translatesAutoresizingMaskIntoConstraints = NO;
             self.coverHelpLabel = helpLabel;
             [halfBookCoverImageContainer insertSubview:helpLabel belowSubview:coverImageView];
@@ -1429,7 +1504,7 @@ UINavigationControllerDelegate, OLUpsellViewControllerDelegate
         return YES;
     }
     OLPhotobookPageContentViewController *vc2 = [self.pageController.viewControllers lastObject];
-    return vc2.pageIndex == self.photobookPhotos.count - 1;
+    return vc2.pageIndex == self.product.productTemplate.productRepresentation.numberOfPages - 1;
 }
 
 - (void)openBook:(UIGestureRecognizer *)sender{
@@ -1440,7 +1515,9 @@ UINavigationControllerDelegate, OLUpsellViewControllerDelegate
     self.userHasOpenedBook = YES;
     
     [UIView animateWithDuration:kBookAnimationTime animations:^{
-        self.containerView.transform = CGAffineTransformIdentity;
+        if (self.product.productTemplate.productRepresentation.pages.firstObject.numberOfPhotos != 0){
+            self.containerView.transform = CGAffineTransformIdentity;
+        }
     }completion:^(BOOL completed){}];
     MPFlipStyle style = sender.view.tag == kTagRight ? MPFlipStyleDefault : MPFlipStyleDirectionBackward;
     MPFlipTransition *flipTransition = [[MPFlipTransition alloc] initWithSourceView:self.bookCover destinationView:self.openbookView duration:kBookAnimationTime timingCurve:UIViewAnimationCurveEaseInOut completionAction:MPTransitionActionNone];
@@ -1814,9 +1891,14 @@ UINavigationControllerDelegate, OLUpsellViewControllerDelegate
     NSMutableArray *photoArray = [[NSMutableArray alloc] initWithCapacity:array.count];
     
     for (id object in array) {
-        OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
-        printPhoto.asset = object;
-        [photoArray addObject:printPhoto];
+        if ([object isKindOfClass:[OLPrintPhoto class]]){
+            [photoArray addObject:object];
+        }
+        else{
+            OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
+            printPhoto.asset = object;
+            [photoArray addObject:printPhoto];
+        }
     }
     
     //    // First remove any that are not returned.
@@ -1925,12 +2007,16 @@ UINavigationControllerDelegate, OLUpsellViewControllerDelegate
     else if ([picker isKindOfClass:[KITAssetsPickerController class]]){
         NSMutableArray *olAssets = [[NSMutableArray alloc] init];
         for (id<OLAssetDataSource> asset in assets){
-            if ([asset respondsToSelector:@selector(dataWithCompletionHandler:)]){
+            if ([asset isKindOfClass:[OLPrintPhoto class]]){
+                [olAssets addObject:asset];
+                assetClass = [assets.lastObject class];
+            }
+            else if ([asset respondsToSelector:@selector(dataWithCompletionHandler:)]){
                 [olAssets addObject:[OLAsset assetWithDataSource:asset]];
+                assetClass = [[olAssets.lastObject dataSource] class];
             }
         }
         assets = olAssets;
-        assetClass = [[assets.firstObject dataSource] class];
     }
 #endif
     
@@ -2013,7 +2099,7 @@ UINavigationControllerDelegate, OLUpsellViewControllerDelegate
     }
     
     NSInteger max = self.product.quantityToFulfillOrder;
-    NSInteger current = self.userSelectedPhotos.count + assets.count;
+    NSInteger current = [self photobookPhotosCount] + assets.count;
     if (self.addNewPhotosAtIndex == -1){
         max++;
     }
@@ -2094,7 +2180,7 @@ UINavigationControllerDelegate, OLUpsellViewControllerDelegate
 
 - (BOOL)instagramImagePicker:(OLInstagramImagePickerController *)imagePicker shouldSelectImage:(OLInstagramImage *)image{
     NSInteger max = self.product.quantityToFulfillOrder;
-    NSInteger current = self.userSelectedPhotos.count + imagePicker.selected.count;
+    NSInteger current = [self photobookPhotosCount] + imagePicker.selected.count;
     if (self.addNewPhotosAtIndex == -1){
         max++;
     }
@@ -2173,7 +2259,7 @@ UINavigationControllerDelegate, OLUpsellViewControllerDelegate
 
 - (BOOL)facebookImagePicker:(OLFacebookImagePickerController *)imagePicker shouldSelectImage:(OLFacebookImage *)image{
     NSInteger max = self.product.quantityToFulfillOrder;
-    NSInteger current = self.userSelectedPhotos.count + imagePicker.selected.count;
+    NSInteger current = [self photobookPhotosCount] + imagePicker.selected.count;
     if (self.addNewPhotosAtIndex == -1){
         max++;
     }

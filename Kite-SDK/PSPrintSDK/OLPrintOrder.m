@@ -71,6 +71,10 @@ static id stringOrEmptyString(NSString *str) {
 + (NSDictionary *)cachedResponseForOrder:(OLPrintOrder *)order;
 @end
 
+@interface OLPrintOrderCost ()
+@property (strong, nonatomic) NSString *paymentMethod;
+@end
+
 @interface OLKitePrintSDK (Private)
 +(BOOL)isUnitTesting;
 @end
@@ -102,7 +106,7 @@ static id stringOrEmptyString(NSString *str) {
 @property (assign, nonatomic) NSInteger numberOfTimesPolledForSubmissionStatus;
 
 @property (weak, nonatomic) NSArray *userSelectedPhotos;
-
+@property (strong, nonatomic) NSString *paymentMethod; //Only used to report Apple Pay, not saved
 @property (nonatomic, readwrite) NSString *receipt;
 
 @property (assign, nonatomic) BOOL optOutOfEmail;
@@ -382,6 +386,7 @@ static NSBlockOperation *templateSyncOperation;
             NSArray *handlers = [self.costCompletionHandlers copy];
             [self.costCompletionHandlers removeAllObjects];
             for (OLPrintOrderCostCompletionHandler handler in handlers) {
+                cost.paymentMethod = self.paymentMethod;
                 handler(cost, error);
             }
         }];
@@ -536,6 +541,10 @@ static NSBlockOperation *templateSyncOperation;
     }
     if (self.email){
         [json setObject:self.email forKey:@"customer_email"];
+    }
+    
+    if (self.paymentMethod){
+        [json setObject:self.paymentMethod forKey:@"payment_gateway"];
     }
     
     [json setObject:[NSNumber numberWithBool:self.shipToStore] forKey:@"ship_to_store"];

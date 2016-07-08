@@ -217,6 +217,7 @@ typedef void (^UploadAssetsCompletionHandler)(NSError *error);
                                                      delegateQueue:nil];
     
     self.s3UploadTask  = [session uploadTaskWithRequest:request fromData:data completionHandler:^(NSData *data, NSURLResponse *response, NSError *error){
+        //TODO: Check HTTP codes
         if (zelf.cancelled) return;
         if (error){
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -231,6 +232,7 @@ typedef void (^UploadAssetsCompletionHandler)(NSError *error);
     }];
     
     [self.s3UploadTask resume];
+    [session finishTasksAndInvalidate];
 }
 
 - (void)URLSession:(NSURLSession *)session task:(nonnull NSURLSessionTask *)task didSendBodyData:(int64_t)bytesSent totalBytesSent:(int64_t)totalBytesSent totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend{
