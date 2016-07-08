@@ -160,7 +160,9 @@
 - (void)creditCardCaptureController:(OLCreditCardCaptureViewController *)vc didFinishWithProofOfPayment:(NSString *)proofOfPayment{
     self.selectedPaymentMethod = kOLPaymentMethodCreditCard;
     [self.collectionView reloadData];
-    [vc dismissViewControllerAnimated:YES completion:NULL];
+    [vc dismissViewControllerAnimated:YES completion:^(){
+        [self.navigationController popViewControllerAnimated:YES];
+    }];
 }
 
 - (OLPaymentMethod)paymentMethodForSection:(NSInteger)section{

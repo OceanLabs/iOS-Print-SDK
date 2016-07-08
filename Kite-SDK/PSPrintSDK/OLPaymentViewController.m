@@ -108,6 +108,8 @@ static NSString *const kSectionPromoCodes = @"kSectionPromoCodes";
 static NSString *const kSectionPayment = @"kSectionPayment";
 static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
 
+static OLPaymentMethod selectedPaymentMethod;
+
 static BOOL haveLoadedAtLeastOnce = NO;
 
 @interface OLProductPrintJob ()
@@ -230,7 +232,6 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 @property (assign, nonatomic) BOOL usedContinueShoppingButton;
 @property (assign, nonatomic) CGRect originalPromoBoxFrame;
 @property (nonatomic, assign) BOOL presentedModally;
-@property (assign, nonatomic) OLPaymentMethod selectedPaymentMethod;
 @property (weak, nonatomic) IBOutlet UIButton *addPaymentMethodButton;
 @property (weak, nonatomic) IBOutlet UIImageView *payingWithImageView;
 @property (weak, nonatomic) IBOutlet UIView *addPaymentBox;
@@ -368,8 +369,8 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     [OLAnalytics trackPaymentScreenViewedForOrder:self.printOrder applePayIsAvailable:applePayAvailableStr];
 #endif
     
-    if (self.selectedPaymentMethod == kOLPaymentMethodNone && [self.class isApplePayAvailable]){
-        self.selectedPaymentMethod = kOLPaymentMethodApplePay;
+    if (selectedPaymentMethod == kOLPaymentMethodNone && [self.class isApplePayAvailable]){
+        selectedPaymentMethod = kOLPaymentMethodApplePay;
     }
     [self updateSelectedPaymentMethodView];
 }
@@ -554,13 +555,13 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 }
 
 - (void)updateSelectedPaymentMethodView{
-    if (self.selectedPaymentMethod == kOLPaymentMethodNone){
+    if (selectedPaymentMethod == kOLPaymentMethodNone){
         [self.addPaymentMethodButton setTitle:NSLocalizedStringFromTableInBundle(@"Add Payment Method", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") forState:UIControlStateNormal];
         self.payingWithImageView.hidden = YES;
         self.shippingDetailsCon.constant = 2;
         self.shippingDetailsBox.alpha = 1;
     }
-    else if (self.selectedPaymentMethod == kOLPaymentMethodCreditCard){
+    else if (selectedPaymentMethod == kOLPaymentMethodCreditCard){
         id existingCard = [OLKitePrintSDK useStripeForCreditCards] ? [OLStripeCard lastUsedCard] : [OLPayPalCard lastUsedCard];
         [self.addPaymentMethodButton setTitle:NSLocalizedStringFromTableInBundle(@"Paying With", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") forState:UIControlStateNormal];
         self.payingWithImageView.image = [existingCard cardIcon];
@@ -568,14 +569,14 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         self.shippingDetailsCon.constant = 2;
         self.shippingDetailsBox.alpha = 1;
     }
-    else if (self.selectedPaymentMethod == kOLPaymentMethodApplePay){
+    else if (selectedPaymentMethod == kOLPaymentMethodApplePay){
         [self.addPaymentMethodButton setTitle:NSLocalizedStringFromTableInBundle(@"Paying With", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") forState:UIControlStateNormal];
         self.payingWithImageView.image = [UIImage imageNamedInKiteBundle:@"apple-pay-method"];
         self.payingWithImageView.hidden = NO;
         self.shippingDetailsCon.constant = -50;
         self.shippingDetailsBox.alpha = 0;
     }
-    else if (self.selectedPaymentMethod == kOLPaymentMethodPayPal){
+    else if (selectedPaymentMethod == kOLPaymentMethodPayPal){
         [self.addPaymentMethodButton setTitle:NSLocalizedStringFromTableInBundle(@"Paying With", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") forState:UIControlStateNormal];
         self.payingWithImageView.image = [UIImage imageNamedInKiteBundle:@"paypal-method"];
         self.payingWithImageView.hidden = NO;
@@ -664,7 +665,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             [self.paymentButton2 setTitle:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Pay %@", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), [[cost totalCostInCurrency:self.printOrder.currencyCode] formatCostForCurrencyCode:self.printOrder.currencyCode]] forState:UIControlStateNormal];
             
             self.paymentMethodBottomCon.constant = 2;
-            if (self.selectedPaymentMethod == kOLPaymentMethodApplePay){
+            if (selectedPaymentMethod == kOLPaymentMethodApplePay){
                 self.shippingDetailsCon.constant = -50;
                 self.shippingDetailsBox.alpha = 0;
             }
@@ -1513,7 +1514,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             // The user must have a promo code which reduces this order cost to nothing, lucky user :)
             [self submitOrderForPrintingWithProofOfPayment:nil paymentMethod:@"Free Checkout" completion:^void(PKPaymentAuthorizationStatus status){}];
         }
-        else if (self.selectedPaymentMethod == kOLPaymentMethodNone){
+        else if (selectedPaymentMethod == kOLPaymentMethodNone){
             [UIView animateWithDuration:0.1 animations:^{
                 self.addPaymentBox.backgroundColor = [UIColor colorWithWhite:0.929 alpha:1.000];
                 self.addPaymentBox.transform = CGAffineTransformMakeTranslation(-10, 0);
@@ -1524,7 +1525,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
                 }completion:NULL];
             }];
         }
-        else if (self.selectedPaymentMethod == kOLPaymentMethodCreditCard){
+        else if (selectedPaymentMethod == kOLPaymentMethodCreditCard){
             if ([self checkForShippingAddress]){
                 if ([OLKitePrintSDK useStripeForCreditCards]){
                     [self payWithExistingStripeCard:[OLStripeCard lastUsedCard]];
@@ -1534,11 +1535,11 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
                 }
             }
         }
-        else if (self.selectedPaymentMethod == kOLPaymentMethodApplePay){
+        else if (selectedPaymentMethod == kOLPaymentMethodApplePay){
             [self onButtonPayWithApplePayClicked];
         }
 #ifdef OL_KITE_OFFER_PAYPAL
-        else if (self.selectedPaymentMethod == kOLPaymentMethodPayPal){
+        else if (selectedPaymentMethod == kOLPaymentMethodPayPal){
             [self onButtonPayWithPayPalClicked];
         }
 #endif
@@ -1548,7 +1549,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 - (IBAction)onButtonAddPaymentMethodClicked:(id)sender {
     OLPaymentMethodsViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLPaymentMethodsViewController"];
     vc.delegate = self;
-    vc.selectedPaymentMethod = self.selectedPaymentMethod;
+    vc.selectedPaymentMethod = selectedPaymentMethod;
     
     
     [self.navigationController pushViewController:vc animated:YES];
@@ -2040,7 +2041,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 }
 
 - (void)paymentMethodsViewController:(OLPaymentMethodsViewController *)vc didPickPaymentMethod:(OLPaymentMethod)method{
-    self.selectedPaymentMethod = method;
+    selectedPaymentMethod = method;
     [self updateSelectedPaymentMethodView];
 }
 
