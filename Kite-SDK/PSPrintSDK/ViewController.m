@@ -321,7 +321,9 @@ UINavigationControllerDelegate, OLKiteDelegate>
 }
 
 - (void)logKiteAnalyticsEventWithInfo:(NSDictionary *)info{
+#ifdef OL_KITE_VERBOSE
     NSLog(@"%@", info);
+#endif
 }
 
 #pragma mark Internal

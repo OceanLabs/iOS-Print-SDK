@@ -591,15 +591,25 @@ const NSInteger kOLEditDrawerTagFonts = 30;
     }];
 }
 
+- (CGFloat)angleOfTouchPoint:(CGPoint)p fromPoint:(CGPoint)c{
+    CGFloat x = c.x - p.x;
+    CGFloat y = c.y - p.y;
+    CGFloat hypotenuse = sqrt(x * x + y * y);
+    return acos(x / hypotenuse);
+}
+
 - (void)onTextfieldGesturePanRecognized:(UIPanGestureRecognizer *)gesture{
     static CGAffineTransform original;
     static CGFloat originalFontSize;
+    static CGFloat originalAngle;
     
     if (gesture.state == UIGestureRecognizerStateBegan){
         original = gesture.view.transform;
         
         OLPhotoTextField *textField = (OLPhotoTextField *)gesture.view;
         originalFontSize = textField.font.pointSize;
+        
+        originalAngle = [self angleOfTouchPoint:[gesture locationInView:gesture.view] fromPoint:CGPointMake(gesture.view.frame.size.width, gesture.view.frame.size.height)];
         
         if (self.activeTextField != textField){
             [self.activeTextField resignFirstResponder];
@@ -610,7 +620,10 @@ const NSInteger kOLEditDrawerTagFonts = 30;
     }
     else if (gesture.state == UIGestureRecognizerStateChanged){
         CGPoint translate = [gesture translationInView:gesture.view.superview];
-        CGAffineTransform transform = CGAffineTransformTranslate(original, translate.x, translate.y);
+        CGAffineTransform translation = CGAffineTransformTranslate(CGAffineTransformMakeTranslation(original.tx, original.ty), translate.x, translate.y);
+        CGAffineTransform transform = original;
+        transform.tx = translation.tx;
+        transform.ty = translation.ty;
         
         if (self.resizingTextField){
             CGFloat sizeChange = sqrt(translate.x * translate.x + translate.y * translate.y);
@@ -634,7 +647,10 @@ const NSInteger kOLEditDrawerTagFonts = 30;
             [textField setNeedsDisplay];
         }
         else if (self.rotatingTextField){
+            CGFloat angle = originalAngle + [self angleOfTouchPoint:[gesture locationInView:gesture.view] fromPoint:CGPointMake(gesture.view.frame.size.width, gesture.view.frame.size.height)];
+            CGAffineTransform transform = CGAffineTransformRotate(CGAffineTransformMakeTranslation(original.tx, original.ty), angle);
             
+            gesture.view.transform = transform;
         }
         else{
             CGFloat minY = gesture.view.frame.size.height/2.0 - self.cropView.frame.size.height / 2.0;
@@ -658,6 +674,7 @@ const NSInteger kOLEditDrawerTagFonts = 30;
     }
     else if (gesture.state == UIGestureRecognizerStateEnded){
         self.resizingTextField = NO;
+        self.rotatingTextField = NO;
     }
     
     self.doneButton.enabled = YES;
