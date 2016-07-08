@@ -60,6 +60,7 @@ static NSString *const kKeyOrderSubmitStatusError = @"co.oceanlabs.pssdk.kKeyOrd
 static NSString *const kKeyOrderOptOutOfEmail = @"co.oceanlabs.pssdk.kKeyOrderOptOutOfEmail";
 static NSString *const kKeyOrderShipToStore = @"co.oceanlabs.pssdk.kKeyOrderShipToStore";
 static NSString *const kKeyOrderPayInStore = @"co.oceanlabs.pssdk.kKeyOrderPayInStore";
+static NSString *const kKeyOrderPaymentMethod = @"co.oceanlabs.pssdk.kKeyOrderPaymentMethod";
 
 static NSMutableArray *inProgressPrintOrders; // Tracks all currently in progress print orders. This is useful as it means they won't be dealloc'd if a user doesn't come a strong reference to them but still expects the completion handler callback
 
@@ -106,7 +107,7 @@ static id stringOrEmptyString(NSString *str) {
 @property (assign, nonatomic) NSInteger numberOfTimesPolledForSubmissionStatus;
 
 @property (weak, nonatomic) NSArray *userSelectedPhotos;
-@property (strong, nonatomic) NSString *paymentMethod; //Only used to report Apple Pay, not saved
+@property (strong, nonatomic) NSString *paymentMethod;
 @property (nonatomic, readwrite) NSString *receipt;
 
 @property (assign, nonatomic) BOOL optOutOfEmail;
@@ -814,6 +815,7 @@ static NSBlockOperation *templateSyncOperation;
     [aCoder encodeBool:self.optOutOfEmail forKey:kKeyOrderOptOutOfEmail];
     [aCoder encodeBool:self.shipToStore forKey:kKeyOrderShipToStore];
     [aCoder encodeBool:self.payInStore forKey:kKeyOrderPayInStore];
+    [aCoder encodeObject:self.paymentMethod forKey:kKeyOrderPaymentMethod];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
@@ -837,6 +839,7 @@ static NSBlockOperation *templateSyncOperation;
             _optOutOfEmail = [aDecoder decodeBoolForKey:kKeyOrderOptOutOfEmail];
             _shipToStore = [aDecoder decodeBoolForKey:kKeyOrderShipToStore];
             _payInStore = [aDecoder decodeBoolForKey:kKeyOrderPayInStore];
+            _paymentMethod = [aDecoder decodeObjectForKey:kKeyOrderPaymentMethod];
         }
         return self;
         
