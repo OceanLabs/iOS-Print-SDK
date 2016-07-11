@@ -592,29 +592,37 @@ const NSInteger kOLEditDrawerTagFonts = 30;
 }
 
 - (CGFloat)angleOfTouchPoint:(CGPoint)p fromPoint:(CGPoint)c{
-    
-    
     CGFloat x = p.x - c.x;
     CGFloat y = p.y - c.y;
-    CGFloat hypotenuse = sqrt(x * x + y * y);
-    
-    CGFloat angle = acos(x / hypotenuse);
-    if (y < 0){
-        angle *= -1;
+
+    if (y == 0){
+        y = 0.000001; //Avoid division by zero, even though it produces the right result
     }
-    angle = angle - M_PI_4 - M_PI_2;
     
-    return angle;
+    CGFloat angle = atan(x / y);
+    if (y >= 0){
+        angle = angle + M_PI;
+    }
+    
+    NSLog(@"Point :(%f,%f), Angle:%f", x, y, angle * (180.0 / M_PI));
+    
+    return -angle;
 }
 
 - (void)onTextfieldGesturePanRecognized:(UIPanGestureRecognizer *)gesture{
     static CGAffineTransform original;
     static CGFloat originalFontSize;
     static CGRect originalFrame;
+    static CGFloat originalAngle;
     
     if (gesture.state == UIGestureRecognizerStateBegan){
         original = gesture.view.transform;
         originalFrame = gesture.view.frame;
+        
+        CGPoint gesturePoint = [gesture locationInView:self.cropView];
+        CGPoint translatedPoint = CGPointMake(gesturePoint.x - original.tx, gesturePoint.y - original.ty);
+        originalAngle = [self angleOfTouchPoint:translatedPoint fromPoint:gesture.view.center];
+        
         
         OLPhotoTextField *textField = (OLPhotoTextField *)gesture.view;
         originalFontSize = textField.font.pointSize;
@@ -658,7 +666,7 @@ const NSInteger kOLEditDrawerTagFonts = 30;
             CGPoint gesturePoint = [gesture locationInView:self.cropView];
             CGPoint translatedPoint = CGPointMake(gesturePoint.x - original.tx, gesturePoint.y - original.ty);
             CGFloat angle = [self angleOfTouchPoint:translatedPoint fromPoint:gesture.view.center];
-            CGAffineTransform transform = CGAffineTransformRotate(CGAffineTransformMakeTranslation(original.tx, original.ty), angle);
+            CGAffineTransform transform = CGAffineTransformRotate(CGAffineTransformMakeTranslation(original.tx, original.ty), angle - originalAngle);
             
             gesture.view.transform = transform;
         }
