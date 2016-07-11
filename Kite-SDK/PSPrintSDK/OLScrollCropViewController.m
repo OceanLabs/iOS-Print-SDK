@@ -599,20 +599,17 @@ const NSInteger kOLEditDrawerTagFonts = 30;
     CGFloat hypotenuse = sqrt(x * x + y * y);
     
     CGFloat angle = acos(x / hypotenuse);
-//    angle = fmod(angle, 2.0 * M_PI);
     if (y < 0){
         angle *= -1;
     }
     angle = angle - M_PI_4 - M_PI_2;
     
-    NSLog(@"Point :(%f,%f), Angle:%f", p.x, p.y, angle * (180.0 / M_PI));
     return angle;
 }
 
 - (void)onTextfieldGesturePanRecognized:(UIPanGestureRecognizer *)gesture{
     static CGAffineTransform original;
     static CGFloat originalFontSize;
-    static CGFloat originalAngle;
     static CGRect originalFrame;
     
     if (gesture.state == UIGestureRecognizerStateBegan){
@@ -621,10 +618,6 @@ const NSInteger kOLEditDrawerTagFonts = 30;
         
         OLPhotoTextField *textField = (OLPhotoTextField *)gesture.view;
         originalFontSize = textField.font.pointSize;
-        
-        CGPoint gesturePoint = [gesture locationInView:self.cropView];
-        CGPoint translatedPoint = CGPointMake(gesturePoint.x - original.tx, gesturePoint.y - original.ty);
-        originalAngle = [self angleOfTouchPoint:translatedPoint fromPoint:gesture.view.center];
         
         if (self.activeTextField != textField){
             [self.activeTextField resignFirstResponder];
@@ -664,7 +657,7 @@ const NSInteger kOLEditDrawerTagFonts = 30;
         else if (self.rotatingTextField){
             CGPoint gesturePoint = [gesture locationInView:self.cropView];
             CGPoint translatedPoint = CGPointMake(gesturePoint.x - original.tx, gesturePoint.y - original.ty);
-            CGFloat angle = originalAngle + [self angleOfTouchPoint:translatedPoint fromPoint:gesture.view.center];
+            CGFloat angle = [self angleOfTouchPoint:translatedPoint fromPoint:gesture.view.center];
             CGAffineTransform transform = CGAffineTransformRotate(CGAffineTransformMakeTranslation(original.tx, original.ty), angle);
             
             gesture.view.transform = transform;
