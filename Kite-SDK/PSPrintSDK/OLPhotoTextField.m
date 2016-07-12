@@ -142,21 +142,38 @@
 }
 
 - (void)updateSize{
+    CGFloat angle = atan2(self.transform.b, self.transform.a);
+    CGAffineTransform translationOnly = CGAffineTransformIdentity;
+    translationOnly.tx = self.transform.tx;
+    translationOnly.ty = self.transform.ty;
+    self.transform = translationOnly;
+    
     CGPoint center = self.center;
     [self sizeToFit];
     self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y, MAX(self.frame.size.width + self.margins*2, 100), MAX(self.frame.size.height, 40));
     self.center = center;
+    
+    self.transform = CGAffineTransformRotate(self.transform, angle);
+    
     [self setNeedsDisplay];
 }
 
 -(void)drawRect:(CGRect)rect
 {
+    CGFloat angle = atan2(self.transform.b, self.transform.a);
+    CGAffineTransform translationOnly = CGAffineTransformIdentity;
+    translationOnly.tx = self.transform.tx;
+    translationOnly.ty = self.transform.ty;
+    self.transform = translationOnly;
+    
     UIBezierPath* rectanglePath = [UIBezierPath bezierPathWithRect: CGRectMake(15, 15, self.frame.size.width-30, self.frame.size.height-30)];
     [[UIColor blackColor] setStroke];
     rectanglePath.lineWidth = 2;
     [rectanglePath stroke];
     
     [self layoutCornerButtons];
+    
+    self.transform = CGAffineTransformRotate(self.transform, angle);
 }
 
 @end

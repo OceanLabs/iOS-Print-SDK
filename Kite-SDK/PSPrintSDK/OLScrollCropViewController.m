@@ -65,6 +65,7 @@ const NSInteger kOLEditDrawerTagFonts = 30;
 
 @property (strong, nonatomic) OLPhotoTextField *activeTextField;
 @property (assign, nonatomic) CGFloat originalDrawerHeight;
+//@property (assign, nonatomic) CGAffineTransform tempRotationTransform;
 
 
 @property (strong, nonatomic) IBOutletCollection(UIView) NSArray *allViews;
@@ -936,6 +937,10 @@ const NSInteger kOLEditDrawerTagFonts = 30;
 
 - (void)textFieldDidEndEditing:(UITextField *)textField{
     [(OLPhotoTextField *)textField updateSize];
+    [textField setNeedsLayout];
+    [textField layoutIfNeeded];
+    
+    //Remove empty textfield
     if (!textField.text || [textField.text isEqualToString:@""]){
         [textField removeFromSuperview];
         [self.textFields removeObjectIdenticalTo:(OLPhotoTextField *)textField];
@@ -956,6 +961,8 @@ const NSInteger kOLEditDrawerTagFonts = 30;
                 [self showDrawerWithCompletionHandler:NULL];
             }];
         }
+
+        [(OLPhotoTextField *)textField updateSize];
         return YES;
     }
     [self.activeTextField resignFirstResponder];
