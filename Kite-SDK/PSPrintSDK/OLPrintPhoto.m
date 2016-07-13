@@ -451,8 +451,7 @@ static NSOperationQueue *imageOperationQueue;
                 textRect.size.width = textOnPhoto.frame.size.width * scaling;
                 textRect.size.height = textOnPhoto.frame.size.height * scaling;
                 
-                UIGraphicsBeginImageContext(blockImage.size);
-                [blockImage drawInRect:CGRectMake(0,0,blockImage.size.width,blockImage.size.height)];
+                UIGraphicsBeginImageContext(CGSizeMake(textRect.size.width, textRect.size.height));
                 
                 NSMutableParagraphStyle *style = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
                 style.alignment = NSTextAlignmentCenter;
@@ -462,7 +461,29 @@ static NSOperationQueue *imageOperationQueue;
                     attributes[NSForegroundColorAttributeName] = textOnPhoto.color;
                 }
                 
-                [textOnPhoto.text drawInRect:textRect withAttributes:attributes];
+                CGSize  textSize = [textOnPhoto.text sizeWithAttributes:attributes];
+                
+                CGContextRef    context =   UIGraphicsGetCurrentContext();
+                CGAffineTransform   t   =   CGAffineTransformMakeTranslation(textRect.size.width / 2, textRect.size.height / 2);
+                CGAffineTransform   r   =   CGAffineTransformMakeRotation(atan2(textOnPhoto.transform.b, textOnPhoto.transform.a));
+                
+                
+                CGContextConcatCTM(context, t);
+                CGContextConcatCTM(context, r);
+                
+                [textOnPhoto.text   drawAtPoint:CGPointMake(-1 * textSize.width / 2, -1 * textSize.height / 2)
+                           withAttributes:attributes];
+                
+                CGContextConcatCTM(context, CGAffineTransformInvert(r));
+                CGContextConcatCTM(context, CGAffineTransformInvert(t));
+                
+                
+                UIImage *textImage = UIGraphicsGetImageFromCurrentImageContext();
+                UIGraphicsEndImageContext();
+                
+                UIGraphicsBeginImageContext(CGSizeMake(blockImage.size.width, blockImage.size.height));
+                [blockImage drawInRect:CGRectMake(0,0,blockImage.size.width,blockImage.size.height)];
+                [textImage drawInRect:textRect];
                 blockImage = UIGraphicsGetImageFromCurrentImageContext();
                 UIGraphicsEndImageContext();
             }
