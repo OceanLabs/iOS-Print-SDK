@@ -34,25 +34,21 @@
 #import "OLKiteUtils.h"
 #import "UIImage+ImageNamedInKiteBundle.h"
 #import "UIView+RoundRect.h"
+#import "OLEditingToolsView.h"
 
 const NSInteger kOLEditDrawerTagTools = 10;
 const NSInteger kOLEditDrawerTagColors = 20;
 const NSInteger kOLEditDrawerTagFonts = 30;
 
 @interface OLScrollCropViewController () <RMImageCropperDelegate, UITextFieldDelegate, UIGestureRecognizerDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, OLPhotoTextFieldDelegate>
-@property (weak, nonatomic) IBOutlet UIBarButtonItem *doneButton;
+@property (weak, nonatomic) UIButton *doneButton;
 @property (assign, nonatomic) NSInteger initialOrientation;
-@property (weak, nonatomic) IBOutlet UIToolbar *toolbar;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *centerYCon;
 
 @property (strong, nonatomic) NSMutableArray<OLPhotoTextField *> *textFields;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *colorsViewBottomCon;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *fontsCollectionViewBottomCon;
 @property (strong, nonatomic) UIVisualEffectView *visualEffectView;
 @property (strong, nonatomic) UIVisualEffectView *visualEffectView2;
 @property (strong, nonatomic) NSArray<UIColor *> *availableColors;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *colorsTrailingCon;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *fontsLeadingCon;
 @property (weak, nonatomic) IBOutlet UIView *textFieldsView;
 @property (strong, nonatomic) NSArray<NSString *> *fonts;
 @property (assign, nonatomic) CGFloat textFieldKeyboardDiff;
@@ -65,8 +61,7 @@ const NSInteger kOLEditDrawerTagFonts = 30;
 
 @property (strong, nonatomic) OLPhotoTextField *activeTextField;
 @property (assign, nonatomic) CGFloat originalDrawerHeight;
-//@property (assign, nonatomic) CGAffineTransform tempRotationTransform;
-
+@property (weak, nonatomic) IBOutlet OLEditingToolsView *editingTools;
 
 @property (strong, nonatomic) IBOutletCollection(UIView) NSArray *allViews;
 
@@ -132,10 +127,14 @@ const NSInteger kOLEditDrawerTagFonts = 30;
 }
 
 - (void)dismissDrawerWithCompletionHandler:(void(^)(BOOL finished))handler{
+    self.editingTools.button1.selected = NO;
+    self.editingTools.button2.selected = NO;
+    self.editingTools.button3.selected = NO;
+    self.editingTools.button4.selected = NO;
     [UIView animateWithDuration:0.25 animations:^{
         self.drawerView.transform = CGAffineTransformIdentity;
     } completion:^(BOOL finished){
-        [self.view bringSubviewToFront:self.toolbar];
+        [self.view bringSubviewToFront:self.editingTools];
         if (handler){
             handler(finished);
         }
@@ -145,6 +144,7 @@ const NSInteger kOLEditDrawerTagFonts = 30;
 - (void)showDrawerWithCompletionHandler:(void(^)(BOOL finished))handler{
     if (self.collectionView.tag == kOLEditDrawerTagTools){
         self.drawerLabel.text = NSLocalizedString(@"Tools", @"");
+        self.editingTools.button3.selected = YES;
     }
     else if (self.collectionView.tag == kOLEditDrawerTagColors){
         self.drawerLabel.text = NSLocalizedString(@"Text Colour", @"");
@@ -197,17 +197,6 @@ const NSInteger kOLEditDrawerTagFonts = 30;
     [self.cropView setClipsToBounds:NO];
     self.cropView.backgroundColor = [UIColor clearColor];
     
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8){
-        UIButton *doneButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 40, 20)];
-        [doneButton addTarget:self action:@selector(onBarButtonDoneTapped:) forControlEvents:UIControlEventTouchUpInside];
-        [doneButton setTitle: NSLocalizedString(@"Done", @"") forState:UIControlStateNormal];
-        [doneButton setTitleColor:self.view.tintColor forState:UIControlStateNormal];
-        [doneButton.titleLabel setFont:[UIFont boldSystemFontOfSize:18]];
-        [doneButton sizeToFit];
-        
-        UIBarButtonItem *item =[[UIBarButtonItem alloc] initWithCustomView:doneButton];
-        self.navigationItem.rightBarButtonItem = item;
-    }
     self.initialOrientation = self.fullImage.imageOrientation;
     self.cropView.delegate = self;
     
@@ -250,7 +239,7 @@ const NSInteger kOLEditDrawerTagFonts = 30;
     
     if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0){
         UIVisualEffect *blurEffect;
-        blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleDark];
+        blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleExtraLight];
         
         self.visualEffectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
         UIView *view = self.visualEffectView;
@@ -271,10 +260,25 @@ const NSInteger kOLEditDrawerTagFonts = 30;
         
         [view.superview addConstraints:con];
         
+        self.drawerView.backgroundColor = [UIColor colorWithWhite:1 alpha:0.5];
+        
     }
     else{
-        self.drawerView.backgroundColor = [UIColor blackColor];
+        self.drawerView.backgroundColor = [UIColor whiteColor];
     }
+    
+    [self.editingTools.ctaButton addTarget:self action:@selector(onBarButtonDoneTapped:) forControlEvents:UIControlEventTouchUpInside];
+    [self.editingTools.button4 removeFromSuperview];
+    [self.editingTools.button1 setImage:[UIImage imageNamedInKiteBundle:@"flip"] forState:UIControlStateNormal];
+    [self.editingTools.button3 setImage:[UIImage imageNamedInKiteBundle:@"Tt"] forState:UIControlStateNormal];
+    [self.editingTools.button2 setImage:[UIImage imageNamedInKiteBundle:@"rotate"] forState:UIControlStateNormal];
+    
+    [self.editingTools.button1 addTarget:self action:@selector(onButtonHorizontalFlipClicked:) forControlEvents:UIControlEventTouchUpInside];
+    [self.editingTools.button3 addTarget:self action:@selector(onButtonAddTextClicked:) forControlEvents:UIControlEventTouchUpInside];
+    [self.editingTools.button2 addTarget:self action:@selector(onButtonRotateClicked:) forControlEvents:UIControlEventTouchUpInside];
+    
+    self.doneButton = self.editingTools.ctaButton;
+    self.doneButton.enabled = NO;
 }
 
 - (void)viewDidAppear:(BOOL)animated{
@@ -353,7 +357,7 @@ const NSInteger kOLEditDrawerTagFonts = 30;
     }
 }
 
-- (IBAction)onBarButtonDoneTapped:(UIBarButtonItem *)sender {
+- (void)onBarButtonDoneTapped:(id)sender {
     self.edits.cropImageRect = [self.cropView getImageRect];
     self.edits.cropImageFrame = [self.cropView getFrameRect];
     self.edits.cropImageSize = [self.cropView croppedImageSize];
@@ -730,8 +734,8 @@ const NSInteger kOLEditDrawerTagFonts = 30;
     UICollectionViewCell *cell;
     if (collectionView.tag == kOLEditDrawerTagTools){
         cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"toolCell" forIndexPath:indexPath];
-        [cell viewWithTag:10].tintColor = [UIColor whiteColor];
-        [(UILabel *)[cell viewWithTag:20] setTextColor:[UIColor whiteColor]];
+        [cell viewWithTag:10].tintColor = [UIColor blackColor];
+        [(UILabel *)[cell viewWithTag:20] setTextColor:[UIColor blackColor]];
         if (indexPath.item == 0){
             [(UIImageView *)[cell viewWithTag:10] setImage:[UIImage imageNamedInKiteBundle:@"Aa"]];
             [(UILabel *)[cell viewWithTag:20] setText:NSLocalizedString(@"Fonts", @"")];
@@ -743,7 +747,6 @@ const NSInteger kOLEditDrawerTagFonts = 30;
     }
     else if (collectionView.tag == kOLEditDrawerTagColors){
         cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"colorSelectionCell" forIndexPath:indexPath];
-        [(OLColorSelectionCollectionViewCell *)cell setDarkMode:YES];
         
         [cell setSelected:NO];
         for (UITextField *textField in self.textFields){
@@ -771,7 +774,7 @@ const NSInteger kOLEditDrawerTagFonts = 30;
         else{
             label.backgroundColor = [UIColor clearColor];
         }
-        label.textColor = [UIColor whiteColor];
+        label.textColor = [UIColor blackColor];
     }
     
     return cell;
@@ -904,8 +907,6 @@ const NSInteger kOLEditDrawerTagFonts = 30;
         }
     }
     
-    self.colorsViewBottomCon.constant = keyboardHeight;
-    self.fontsCollectionViewBottomCon.constant = keyboardHeight;
     [UIView animateWithDuration:[durationNumber doubleValue] delay:0 options:[curveNumber unsignedIntegerValue] animations:^{
         [self.view layoutIfNeeded];
     }completion:NULL];

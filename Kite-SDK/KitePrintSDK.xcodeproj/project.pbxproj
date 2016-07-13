@@ -58,6 +58,12 @@
 		2E37B1821D229162003DAA84 /* OLProductRepresentation.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E37B1801D229162003DAA84 /* OLProductRepresentation.m */; };
 		2E37B1831D229162003DAA84 /* OLProductRepresentation.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E37B1801D229162003DAA84 /* OLProductRepresentation.m */; };
 		2E37B1841D229162003DAA84 /* OLProductRepresentation.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E37B1801D229162003DAA84 /* OLProductRepresentation.m */; };
+		2E434AE01D36583700D1BD06 /* OLEditingToolsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E434ADF1D36583700D1BD06 /* OLEditingToolsView.m */; };
+		2E434AE11D36583700D1BD06 /* OLEditingToolsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E434ADF1D36583700D1BD06 /* OLEditingToolsView.m */; };
+		2E434AE21D36583700D1BD06 /* OLEditingToolsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E434ADF1D36583700D1BD06 /* OLEditingToolsView.m */; };
+		2E434AE31D36583700D1BD06 /* OLEditingToolsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E434ADF1D36583700D1BD06 /* OLEditingToolsView.m */; };
+		2E434AE51D36675700D1BD06 /* OLEditingToolsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2E434AE81D36675700D1BD06 /* OLEditingToolsView.xib */; };
+		2E434AE61D36675700D1BD06 /* OLEditingToolsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2E434AE81D36675700D1BD06 /* OLEditingToolsView.xib */; };
 		2E482B7A1BEB4C7D007460EA /* OLStripeCard.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E482B781BEB4C7D007460EA /* OLStripeCard.m */; };
 		2E482B7B1BEB4C7D007460EA /* OLStripeCard.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E482B781BEB4C7D007460EA /* OLStripeCard.m */; };
 		2E4DF45E1C0F150400EA66FE /* DogsAssetCollectionDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E4DF45D1C0F150400EA66FE /* DogsAssetCollectionDataSource.m */; };
@@ -869,6 +875,14 @@
 		2E3F96AE1A4967FF005C0EA3 /* OLProduct.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLProduct.m; sourceTree = "<group>"; };
 		2E3F96B01A49ACF4005C0EA3 /* OLPrintPhoto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLPrintPhoto.h; sourceTree = "<group>"; };
 		2E3F96B11A49ACF4005C0EA3 /* OLPrintPhoto.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLPrintPhoto.m; sourceTree = "<group>"; };
+		2E434ADE1D36583700D1BD06 /* OLEditingToolsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLEditingToolsView.h; sourceTree = "<group>"; };
+		2E434ADF1D36583700D1BD06 /* OLEditingToolsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLEditingToolsView.m; sourceTree = "<group>"; };
+		2E434AE71D36675700D1BD06 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/OLEditingToolsView.xib; sourceTree = "<group>"; };
+		2E434AEA1D36676100D1BD06 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/OLEditingToolsView.strings; sourceTree = "<group>"; };
+		2E434AEC1D36676300D1BD06 /* da */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = da; path = da.lproj/OLEditingToolsView.strings; sourceTree = "<group>"; };
+		2E434AEE1D36676400D1BD06 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/OLEditingToolsView.strings; sourceTree = "<group>"; };
+		2E434AF01D36676500D1BD06 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/OLEditingToolsView.strings; sourceTree = "<group>"; };
+		2E434AF21D36676700D1BD06 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/OLEditingToolsView.strings; sourceTree = "<group>"; };
 		2E455DFE1B1F1BA1001B1718 /* NSDecimalNumber+CostFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSDecimalNumber+CostFormatter.h"; path = "PSPrintSDK/Categories/NSDecimalNumber+CostFormatter.h"; sourceTree = "<group>"; };
 		2E455DFF1B1F1BA1001B1718 /* NSDecimalNumber+CostFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSDecimalNumber+CostFormatter.m"; path = "PSPrintSDK/Categories/NSDecimalNumber+CostFormatter.m"; sourceTree = "<group>"; };
 		2E482B771BEB4C7D007460EA /* OLStripeCard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLStripeCard.h; sourceTree = "<group>"; };
@@ -1550,10 +1564,10 @@
 				2ED389901C917D2000DC2314 /* OLPhotoTextField.m */,
 				2E6561101D1C341A0092001C /* OLSelectedEffectButton.h */,
 				2E6561111D1C341A0092001C /* OLSelectedEffectButton.m */,
-				2EB7B0AC1D1D57A2009E6E17 /* OLColorSelectionCollectionViewCell.h */,
-				2EB7B0AD1D1D57A2009E6E17 /* OLColorSelectionCollectionViewCell.m */,
 				2E9AC8221D2127C900BF0A1A /* OLCircleSelectedCollectionViewCell.h */,
 				2E9AC8231D2127C900BF0A1A /* OLCircleSelectedCollectionViewCell.m */,
+				2E434ADE1D36583700D1BD06 /* OLEditingToolsView.h */,
+				2E434ADF1D36583700D1BD06 /* OLEditingToolsView.m */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -2451,6 +2465,7 @@
 				E22963951C43DF29002A90CA /* CTAssetsPickerController.bundle */,
 				E29C84161BE2877A0041D4CF /* SVProgressHUD.bundle */,
 				3D6CDAAC1B1F41AE00786478 /* kite_corrupt.jpg */,
+				2E434AE81D36675700D1BD06 /* OLEditingToolsView.xib */,
 				2E38C0CC1AD5206F008BC28A /* PostcardBackView.xib */,
 				2E6E60681C5038AD00829BB7 /* OLKiteStoryboard.storyboard */,
 				CD93BB471879EA4F00316492 /* KitePrintSDK.xcassets */,
@@ -2775,6 +2790,7 @@
 				2E898CDD1CC518180041CCD8 /* KitePrintSDK.strings in Resources */,
 				2E898CDE1CC518180041CCD8 /* OLKiteStoryboard.storyboard in Resources */,
 				2E898CDF1CC518180041CCD8 /* PostcardBackView.xib in Resources */,
+				2E434AE61D36675700D1BD06 /* OLEditingToolsView.xib in Resources */,
 				2E898CE11CC518180041CCD8 /* Images.xcassets in Resources */,
 				2E898CE21CC518180041CCD8 /* KitePrintSDK.xcassets in Resources */,
 				2E898CE31CC518180041CCD8 /* kite_corrupt.jpg in Resources */,
@@ -2789,6 +2805,7 @@
 				2E6E605D1C50384C00829BB7 /* KitePrintSDK.strings in Resources */,
 				2E6E60661C5038AD00829BB7 /* OLKiteStoryboard.storyboard in Resources */,
 				2EADD8571BE79D6D0051CD31 /* PostcardBackView.xib in Resources */,
+				2E434AE51D36675700D1BD06 /* OLEditingToolsView.xib in Resources */,
 				2EADD85A1BE79D6D0051CD31 /* Images.xcassets in Resources */,
 				2EADD85C1BE79D6D0051CD31 /* KitePrintSDK.xcassets in Resources */,
 				2EADD85E1BE79D6D0051CD31 /* kite_corrupt.jpg in Resources */,
@@ -2992,6 +3009,7 @@
 				2E67B9211D264FD600914D56 /* OLPaymentViewControllerV2.m in Sources */,
 				2E96BAEA1D2FC109002F5F74 /* split.c in Sources */,
 				2E898C5A1CC518180041CCD8 /* OLPopupOptionsImageView.m in Sources */,
+				2E434AE11D36583700D1BD06 /* OLEditingToolsView.m in Sources */,
 				2E898C5B1CC518180041CCD8 /* NSArray+QueryingExtras.m in Sources */,
 				2E898C5D1CC518180041CCD8 /* PrintOrderHistoryViewController.m in Sources */,
 				2E898C5E1CC518180041CCD8 /* UIImage+ImageNamedInKiteBundle.m in Sources */,
@@ -3050,7 +3068,6 @@
 				2E67B92B1D267A3E00914D56 /* OLColorSelectionCollectionViewCell.m in Sources */,
 				2E96BAD61D2FC109002F5F74 /* mask.c in Sources */,
 				2E898C901CC518180041CCD8 /* OLProductOverviewViewController.m in Sources */,
-				2EB7B0AF1D1D57A2009E6E17 /* OLColorSelectionCollectionViewCell.m in Sources */,
 				2E898C911CC518180041CCD8 /* OLAddress+AddressBook.m in Sources */,
 				2E898C921CC518180041CCD8 /* OLPrintOrder.m in Sources */,
 				2E898C931CC518180041CCD8 /* OLProductTemplateSyncRequest.m in Sources */,
@@ -3104,7 +3121,6 @@
 				2E898CC51CC518180041CCD8 /* OLURLShortener.m in Sources */,
 				2EBDA6DE1CEB1B0500397082 /* OLImageDownloader.m in Sources */,
 				2E898CC61CC518180041CCD8 /* OLBaseRequest.m in Sources */,
-				2E9AC8251D2127C900BF0A1A /* OLCircleSelectedCollectionViewCell.m in Sources */,
 				2E898CC71CC518180041CCD8 /* OLPhotobookPrintJob.m in Sources */,
 				2E898CC81CC518180041CCD8 /* OLPaymentLineItem.m in Sources */,
 				2E898CC91CC518180041CCD8 /* OLPrintJob.m in Sources */,
@@ -3244,12 +3260,12 @@
 				2EA3D3C21C9C04B500B99BCD /* ALAsset+OLAssetType.m in Sources */,
 				2EA3D3C31C9C04B500B99BCD /* RMImageCropper.m in Sources */,
 				2EA3D3C41C9C04B500B99BCD /* OLAssetsViewController.m in Sources */,
-				2E9AC8271D2127C900BF0A1A /* OLCircleSelectedCollectionViewCell.m in Sources */,
 				2EA3D3C51C9C04B500B99BCD /* OLCountryPickerController.m in Sources */,
 				2EA3D3C71C9C04B500B99BCD /* OLBaseRequest.m in Sources */,
 				2EA3D3C81C9C04B500B99BCD /* OLPhotobookPrintJob.m in Sources */,
 				2EA3D3C91C9C04B500B99BCD /* OLPaymentLineItem.m in Sources */,
 				2EA3D3CA1C9C04B500B99BCD /* OLPrintJob.m in Sources */,
+				2E434AE31D36583700D1BD06 /* OLEditingToolsView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3257,6 +3273,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2E434AE01D36583700D1BD06 /* OLEditingToolsView.m in Sources */,
 				2ED389911C917D2000DC2314 /* OLPhotoTextField.m in Sources */,
 				2E53E0CD1C1AEAAD00BF7887 /* UIViewController+OLMethods.m in Sources */,
 				2EADD7E61BE79D6D0051CD31 /* OLURLDataSource.m in Sources */,
@@ -3363,7 +3380,6 @@
 				2EADD82F1BE79D6D0051CD31 /* OLCountry.m in Sources */,
 				2E2BF4471CCDFAF100725561 /* OLKiteTheme.m in Sources */,
 				2EADD8311BE79D6D0051CD31 /* ALAssetsLibrary+Singleton.m in Sources */,
-				2E9AC8241D2127C900BF0A1A /* OLCircleSelectedCollectionViewCell.m in Sources */,
 				2E0804B81C0DECE300F50D42 /* OLCustomPhotoProvider.m in Sources */,
 				2EADD8321BE79D6D0051CD31 /* OLConstants.m in Sources */,
 				2EB715E11CFDD38100618C7B /* OLPayPalCard+OLCardIcon.m in Sources */,
@@ -3565,7 +3581,6 @@
 				E29C85BC1BE3B5C50041D4CF /* OLAddressSearchRequest.m in Sources */,
 				E29C85BD1BE3B5C50041D4CF /* OLPayPalCard.m in Sources */,
 				2EA0087C1CB293A900C23DFA /* OLUpsellOffer.m in Sources */,
-				2E9AC8261D2127C900BF0A1A /* OLCircleSelectedCollectionViewCell.m in Sources */,
 				2EAB0ABE1CDB504C00625BD6 /* NSDateFormatter+OLTimeIntervalFormatter.m in Sources */,
 				E29C85BF1BE3B5C50041D4CF /* OLProductPrintJob.m in Sources */,
 				E29C85C01BE3B5C50041D4CF /* OLSingleImageProductReviewViewController.m in Sources */,
@@ -3608,7 +3623,6 @@
 				E29C85DA1BE3B5C50041D4CF /* OLProductOverviewViewController.m in Sources */,
 				E29C85DB1BE3B5C50041D4CF /* OLAddress+AddressBook.m in Sources */,
 				E29C85DD1BE3B5C50041D4CF /* OLPrintOrder.m in Sources */,
-				2EB7B0B01D1D57A2009E6E17 /* OLColorSelectionCollectionViewCell.m in Sources */,
 				2E645B381BE7D176009B662B /* OLProductOptionsViewController.m in Sources */,
 				2E67B92C1D267A3E00914D56 /* OLColorSelectionCollectionViewCell.m in Sources */,
 				E29C85DE1BE3B5C50041D4CF /* OLProductTemplateSyncRequest.m in Sources */,
@@ -3650,6 +3664,7 @@
 				2EF4392C1BF4D15E0006C123 /* OLPrintOrderSubmitStatusRequest.m in Sources */,
 				E29C86091BE3B5C50041D4CF /* OLKiteABTesting.m in Sources */,
 				E29C860A1BE3B5C50041D4CF /* OLProductHomeViewController.m in Sources */,
+				2E434AE21D36583700D1BD06 /* OLEditingToolsView.m in Sources */,
 				2E837D491C3C1FBB004DA682 /* OLViewController.m in Sources */,
 				2E2BF4491CCDFAF100725561 /* OLKiteTheme.m in Sources */,
 				E29C860E1BE3B5C50041D4CF /* OLAddressSelectionViewController.m in Sources */,
@@ -3679,6 +3694,19 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
+		2E434AE81D36675700D1BD06 /* OLEditingToolsView.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				2E434AE71D36675700D1BD06 /* Base */,
+				2E434AEA1D36676100D1BD06 /* fr */,
+				2E434AEC1D36676300D1BD06 /* da */,
+				2E434AEE1D36676400D1BD06 /* en */,
+				2E434AF01D36676500D1BD06 /* de */,
+				2E434AF21D36676700D1BD06 /* es */,
+			);
+			name = OLEditingToolsView.xib;
+			sourceTree = "<group>";
+		};
 		2E6E605F1C50384C00829BB7 /* KitePrintSDK.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
