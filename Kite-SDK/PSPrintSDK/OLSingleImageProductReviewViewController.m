@@ -55,7 +55,6 @@
 #import "OLPrintPhoto.h"
 #import "OLProductPrintJob.h"
 #import "OLProductTemplateOption.h"
-#import "OLRemoteImageCropper.h"
 #import "OLRemoteImageView.h"
 #import "OLRemoteImageCropper.h"
 #import "OLAsset+Private.h"
@@ -1315,7 +1314,7 @@ static BOOL hasMoved;
             dispatch_async(dispatch_get_main_queue(), ^{
                 welf.imageCropView.image = image;
                 
-                if (self.userSelectedPhotos.count > 0){
+                if (welf.userSelectedPhotos.count > 0){
                     id view = [welf.view viewWithTag:1010];
                     if ([view isKindOfClass:[UIActivityIndicatorView class]]){
                         [(UIActivityIndicatorView *)view stopAnimating];

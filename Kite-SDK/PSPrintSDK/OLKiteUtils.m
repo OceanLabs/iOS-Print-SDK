@@ -253,6 +253,9 @@
     if (templateUI == kOLTemplateUICase){
         return @"OLCaseViewController";
     }
+    else if (templateUI == kOLTemplateUIApparel){
+        return @"OLTShirtReviewViewController";
+    }
     else if (templateUI == kOLTemplateUIPostcard){
         return @"OLPostcardViewController";
     }
