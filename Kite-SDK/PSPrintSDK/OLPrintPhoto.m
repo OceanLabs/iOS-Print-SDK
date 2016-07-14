@@ -442,7 +442,7 @@ static NSOperationQueue *imageOperationQueue;
             
             
             for (OLTextOnPhoto *textOnPhoto in printPhoto.edits.textsOnPhoto){
-                CGFloat scaling = MIN(blockImage.size.width, blockImage.size.height) / MIN(printPhoto.edits.cropImageSize.width, printPhoto.edits.cropImageSize.height);
+                CGFloat scaling = MIN(blockImage.size.width, blockImage.size.height) / MIN(printPhoto.edits.cropImageFrame.size.width, printPhoto.edits.cropImageFrame.size.height);
                 UIFont *font = [OLKiteUtils fontWithName:textOnPhoto.fontName size:textOnPhoto.fontSize * scaling];
                 
                 CGRect textRect;
