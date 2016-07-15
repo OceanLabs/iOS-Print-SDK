@@ -60,16 +60,18 @@ static char tasksKey;
                 return;
             }
             [self.tasks removeObjectForKey:url];
-            UIImage *resizedImage = [OLPrintPhoto imageWithImage:image scaledToSize:[UIScreen mainScreen].bounds.size];
-            dispatch_async(dispatch_get_main_queue(), ^{
-                self.image = resizedImage;
-                [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
-                    self.alpha = 1;
-                }completion:^(BOOL finished){
-                    if (handler){
-                        handler();
-                    }
-                }];
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                UIImage *resizedImage = [OLPrintPhoto imageWithImage:image scaledToSize:[UIScreen mainScreen].bounds.size];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    self.image = resizedImage;
+                    [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+                        self.alpha = 1;
+                    }completion:^(BOOL finished){
+                        if (handler){
+                            handler();
+                        }
+                    }];
+                });
             });
         }];
         self.tasks[url] = task;
