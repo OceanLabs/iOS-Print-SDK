@@ -107,12 +107,16 @@ static char tasksKey;
     self.alpha = 0;
     
     PHImageRequestID requestID = [[PHImageManager defaultManager] requestImageForAsset:asset targetSize:size contentMode:PHImageContentModeAspectFill options:options resultHandler:^(UIImage *result, NSDictionary *info){
-        [self.tasks removeObjectForKey:asset.localIdentifier];
         if (!result){
             return;
         }
         if (![info[PHImageResultIsDegradedKey] boolValue]){
-            [self.tasks removeObjectForKey:asset.localIdentifier];
+            if ([self.tasks.allKeys containsObject:asset.localIdentifier]){
+                [self.tasks removeObjectForKey:asset.localIdentifier];
+            }
+            else{
+                return;
+            }
         }
         self.image = result;
         [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
