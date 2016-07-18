@@ -1,7 +1,7 @@
 //
 //  Modified MIT License
 //
-//  Copyright (c) 2010-2015 Kite Tech Ltd. https://www.kite.ly
+//  Copyright (c) 2010-2016 Kite Tech Ltd. https://www.kite.ly
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -28,14 +28,10 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <Photos/Photos.h>
+#import "OLProduct.h"
 
-@interface UIImageView (FadeIn)
-- (void)setAndFadeInImageWithURL:(NSURL *)url;
-- (void)setAndFadeInImageWithURL:(NSURL *)url size:(CGSize)size;
-- (void)setAndFadeInImageWithURL:(NSURL *)url size:(CGSize)size placeholder:(UIImage *)placeholder;
-- (void)setAndFadeInImageWithURL:(NSURL *)url size:(CGSize)size placeholder:(UIImage *)placeholder completionHandler:(void(^)())handler;
-- (void)setAndFadeInImageWithPHAsset:(PHAsset *)asset size:(CGSize)size options:(PHImageRequestOptions *)options;
-- (void)setAndFadeInImageWithPHAsset:(PHAsset *)asset size:(CGSize)size options:(PHImageRequestOptions *)options placeholder:(UIImage *)placeholder;
-- (void)setAndFadeInImageWithPHAsset:(PHAsset *)asset size:(CGSize)size options:(PHImageRequestOptions *)options placeholder:(UIImage *)placeholder completionHandler:(void(^)())handler;
+@interface OLImagePickerViewController : UIViewController
+
+@property (strong, nonatomic) OLProduct *product;
+
 @end

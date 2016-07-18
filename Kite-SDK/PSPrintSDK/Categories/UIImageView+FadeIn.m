@@ -38,18 +38,26 @@ static char tasksKey;
 
 @implementation UIImageView (FadeIn)
 - (void)setAndFadeInImageWithURL:(NSURL *)url {
-    [self setAndFadeInImageWithURL:url placeholder:nil completionHandler:NULL];
+    [self setAndFadeInImageWithURL:url size:CGSizeZero placeholder:nil completionHandler:NULL];
 }
 
-- (void)setAndFadeInImageWithURL:(NSURL *)url placeholder:(UIImage *)placeholder{
-    [self setAndFadeInImageWithURL:url placeholder:placeholder completionHandler:NULL];
+- (void)setAndFadeInImageWithURL:(NSURL *)url size:(CGSize)size{
+    [self setAndFadeInImageWithURL:url size:size placeholder:nil completionHandler:NULL];
 }
 
-- (void)setAndFadeInImageWithURL:(NSURL *)url placeholder:(UIImage *)placeholder completionHandler:(void(^)())handler{
+- (void)setAndFadeInImageWithURL:(NSURL *)url size:(CGSize)size placeholder:(UIImage *)placeholder{
+    [self setAndFadeInImageWithURL:url size:size placeholder:placeholder completionHandler:NULL];
+}
+
+- (void)setAndFadeInImageWithURL:(NSURL *)url size:(CGSize)size placeholder:(UIImage *)placeholder completionHandler:(void(^)())handler{
     for (id key in self.tasks.allKeys){
         if (![key isEqual:url]){
             [self.tasks[key] cancel];
         }
+    }
+    
+    if (size.height == 0 || size.width == 0){
+        size = CGSizeMake(self.frame.size.width * [UIScreen mainScreen].scale, self.frame.size.height * [UIScreen mainScreen].scale);
     }
     
     self.alpha = 0;
@@ -60,6 +68,7 @@ static char tasksKey;
                 return;
             }
             [self.tasks removeObjectForKey:url];
+            
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
                 UIImage *resizedImage = [OLPrintPhoto imageWithImage:image scaledToSize:[UIScreen mainScreen].bounds.size];
                 dispatch_async(dispatch_get_main_queue(), ^{
@@ -77,6 +86,47 @@ static char tasksKey;
         self.tasks[url] = task;
     });
 }
+
+- (void)setAndFadeInImageWithPHAsset:(PHAsset *)asset size:(CGSize)size options:(PHImageRequestOptions *)options{
+    [self setAndFadeInImageWithPHAsset:asset size:size options:options placeholder:nil completionHandler:NULL];
+}
+
+- (void)setAndFadeInImageWithPHAsset:(PHAsset *)asset size:(CGSize)size options:(PHImageRequestOptions *)options placeholder:(UIImage *)placeholder{
+    [self setAndFadeInImageWithPHAsset:asset size:size options:options  placeholder:placeholder completionHandler:NULL];
+}
+
+- (void)setAndFadeInImageWithPHAsset:(PHAsset *)asset size:(CGSize)size options:(PHImageRequestOptions *)options placeholder:(UIImage *)placeholder completionHandler:(void(^)())handler{
+    for (id key in self.tasks.allKeys){
+        if (![key isEqual:asset.localIdentifier]){
+            PHImageRequestID requestID = (PHImageRequestID)[self.tasks[key] longValue];
+            [[PHImageManager defaultManager] cancelImageRequest:requestID];
+            [self.tasks removeObjectForKey:key];
+        }
+    }
+    
+    self.alpha = 0;
+    
+    PHImageRequestID requestID = [[PHImageManager defaultManager] requestImageForAsset:asset targetSize:size contentMode:PHImageContentModeAspectFill options:options resultHandler:^(UIImage *result, NSDictionary *info){
+        [self.tasks removeObjectForKey:asset.localIdentifier];
+        if (!result){
+            return;
+        }
+        if (![info[PHImageResultIsDegradedKey] boolValue]){
+            [self.tasks removeObjectForKey:asset.localIdentifier];
+        }
+        self.image = result;
+        [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+            self.alpha = 1;
+        }completion:^(BOOL finished){
+            if (handler){
+                handler();
+            }
+        }];
+    }];
+    self.tasks[asset.localIdentifier] = [NSNumber numberWithLong:requestID];
+}
+
+
 
 - (NSMutableDictionary *)tasks{
     NSMutableDictionary *tasks = objc_getAssociatedObject(self, &tasksKey);

@@ -269,7 +269,7 @@
         return @"OLPaymentViewController";
     }
     else if (photoSelectionScreen){
-        return @"PhotoSelectionViewController";
+        return @"OLImagePickerViewController";
     }
     else if (templateUI == kOLTemplateUIPoster){
         return @"OLPosterViewController";
