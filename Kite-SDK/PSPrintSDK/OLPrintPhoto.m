@@ -656,20 +656,25 @@ static NSOperationQueue *imageOperationQueue;
         _uuid = [aDecoder decodeObjectForKey:kKeyUUID];
         if (self.type == kPrintPhotoAssetTypeALAsset) {
             NSURL *assetURL = [aDecoder decodeObjectForKey:kKeyAsset];
-            [[ALAssetsLibrary defaultAssetsLibrary] assetForURL:assetURL
-                                                    resultBlock:^(ALAsset *asset) {
-                                                        NSAssert([NSThread isMainThread], @"oops wrong assumption about main thread callback");
-                                                        if (asset == nil) {
-                                                            // corrupt asset, user has probably deleted the photo from their device
-                                                            _type = kPrintPhotoAssetTypeCorrupt;
-                                                        } else {
-                                                            self.asset = asset;
+            if ([assetURL isKindOfClass:[NSURL class]]){
+                [[ALAssetsLibrary defaultAssetsLibrary] assetForURL:assetURL
+                                                        resultBlock:^(ALAsset *asset) {
+                                                            NSAssert([NSThread isMainThread], @"oops wrong assumption about main thread callback");
+                                                            if (asset == nil) {
+                                                                // corrupt asset, user has probably deleted the photo from their device
+                                                                _type = kPrintPhotoAssetTypeCorrupt;
+                                                            } else {
+                                                                self.asset = asset;
+                                                            }
                                                         }
-                                                    }
-                                                   failureBlock:^(NSError *err) {
-                                                       NSAssert([NSThread isMainThread], @"oops wrong assumption about main thread callback");
-                                                       _type = kPrintPhotoAssetTypeCorrupt;
-                                                   }];
+                                                       failureBlock:^(NSError *err) {
+                                                           NSAssert([NSThread isMainThread], @"oops wrong assumption about main thread callback");
+                                                           _type = kPrintPhotoAssetTypeCorrupt;
+                                                       }];
+            }
+            else{
+                _type = kPrintPhotoAssetTypeCorrupt;
+            }
         }
         else if (self.type == kPrintPhotoAssetTypePHAsset){
             NSString *localId = [aDecoder decodeObjectForKey:kKeyAsset];
