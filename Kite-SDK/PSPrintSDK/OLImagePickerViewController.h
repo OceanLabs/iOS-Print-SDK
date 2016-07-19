@@ -37,7 +37,6 @@
 @property (strong, nonatomic) OLProduct *product;
 @property (weak, nonatomic) id<OLKiteDelegate> delegate;
 - (void)updateTitleBasedOnSelectedPhotoQuanitity;
-@property (strong, nonatomic) NSMutableArray<OLPrintPhoto *> *userSelectedPhotos;
 
 
 @end

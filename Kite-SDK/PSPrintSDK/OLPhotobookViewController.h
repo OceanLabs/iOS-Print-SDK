@@ -29,7 +29,6 @@
 
 #import <UIKit/UIKit.h>
 #import "OLKitePrintSDK.h"
-#import "OLMutableAssetArray.h"
 
 @class OLPhotobookPageContentViewController;
 @class OLPhotobookViewController;
@@ -59,7 +58,7 @@
 @property (strong, nonatomic) id<OLPrintJob> editingPrintJob;
 
 - (void)loadCoverPhoto;
-- (void)setUserSelectedPhotos:(OLMutableAssetArray *)userSelectedPhotos;
+- (void)setUserSelectedPhotos:(NSMutableArray<OLPrintPhoto *> *)userSelectedPhotos;
 - (void)saveJobWithCompletionHandler:(void(^)())handler;
 
 @end

@@ -167,7 +167,7 @@ UINavigationControllerDelegate, OLUpsellViewControllerDelegate
 @property (assign, nonatomic) NSInteger addNewPhotosAtIndex;
 @property (assign, nonatomic) NSInteger croppingImageIndex;
 @property (strong, nonatomic) IBOutlet UIView *bookCover;
-@property (strong, nonatomic) NSArray *userSelectedPhotosCopy;
+@property (strong, nonatomic) NSArray<OLPrintPhoto *> *userSelectedPhotosCopy;
 @property (strong, nonatomic) NSLayoutConstraint *centerXCon;
 @property (strong, nonatomic) NSLayoutConstraint *centerYCon;
 @property (strong, nonatomic) NSLayoutConstraint *widthCon2;
@@ -217,10 +217,10 @@ UINavigationControllerDelegate, OLUpsellViewControllerDelegate
     return _inertiaBehavior;
 }
 
-- (void)setUserSelectedPhotos:(OLMutableAssetArray *)userSelectedPhotos{
+- (void)setUserSelectedPhotos:(NSMutableArray<OLPrintPhoto *> *)userSelectedPhotos{
     [OLUserSession currentSession].userSelectedPhotos = userSelectedPhotos;
     
-    self.photobookPhotos = [[NSMutableArray alloc] initWithCapacity:self.product.quantityToFulfillOrder];
+    self.photobookPhotos = [[NSMutableArray<OLPrintPhoto *> alloc] initWithCapacity:self.product.quantityToFulfillOrder];
     [self.photobookPhotos addObjectsFromArray:userSelectedPhotos];
     for (NSInteger i = userSelectedPhotos.count; i < self.product.quantityToFulfillOrder; i++){
         [self.photobookPhotos addObject:[userSelectedPhotos objectAtIndex:i % userSelectedPhotos.count]];

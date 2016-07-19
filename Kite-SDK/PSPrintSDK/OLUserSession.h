@@ -27,7 +27,6 @@
 //  THE SOFTWARE.
 //
 #import <Foundation/Foundation.h>
-#import "OLMutableAssetArray.h"
 #import "OLPrintPhoto.h"
 #import "OLPrintOrder.h"
 #import "OLAsset.h"
@@ -44,7 +43,7 @@ typedef NSUInteger OLUserSessionCleanupOption;
 
 @interface OLUserSession : NSObject
 
-@property (strong, nonatomic) OLMutableAssetArray<OLPrintPhoto *> *userSelectedPhotos;
+@property (strong, nonatomic) NSMutableArray<OLPrintPhoto *> *userSelectedPhotos;
 @property (strong, nonatomic) OLPrintOrder *printOrder;
 @property (strong, nonatomic) NSArray<OLAsset *> *appAssets;
 + (instancetype)currentSession;

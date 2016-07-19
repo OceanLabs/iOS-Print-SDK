@@ -30,7 +30,7 @@
 #import "OLAsset.h"
 
 typedef enum {
-    kOLAssetTypeALAsset,
+    kOLAssetTypeCorrupt,
     kOLAssetTypePHAsset,
     kOLAssetTypeRemoteImageURL,
     kOLAssetTypeImageFilePath,

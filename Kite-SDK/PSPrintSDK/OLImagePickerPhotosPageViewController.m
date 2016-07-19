@@ -32,6 +32,7 @@
 #import "UIImageView+FadeIn.h"
 #import "OLRemoteImageView.h"
 #import "UIViewController+TraitCollectionCompatibility.h"
+#import "OLUserSession.h"
 
 @interface OLImagePickerPhotosPageViewController () <UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, UICollectionViewDelegate>
 @property (weak, nonatomic) IBOutlet UILabel *albumLabel;
@@ -100,12 +101,14 @@ NSInteger OLImagePickerMargin = 0;
     
     UIImageView *checkmark = [cell viewWithTag:20];
     id asset = self.assets[indexPath.item];
-//    if ([self.imagePicker.selectedImages containsObject:asset]){
-//        checkmark.hidden = NO;
-//    }
-//    else{
-//        checkmark.hidden = YES;
-//    }
+    OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
+    printPhoto.asset = asset;
+    if ([[OLUserSession currentSession].userSelectedPhotos containsObject:printPhoto]){
+        checkmark.hidden = NO;
+    }
+    else{
+        checkmark.hidden = YES;
+    }
     
     return cell;
     
@@ -205,14 +208,16 @@ NSInteger OLImagePickerMargin = 0;
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
     id asset = self.assets[indexPath.item];
-//    if ([self.imagePicker.selectedImages containsObject:asset]){
-//        [self.imagePicker.selectedImages removeObject:asset];
-//        [[collectionView cellForItemAtIndexPath:indexPath] viewWithTag:20].hidden = YES;
-//    }
-//    else{
-//        [self.imagePicker.selectedImages addObject:asset];
-//        [[collectionView cellForItemAtIndexPath:indexPath] viewWithTag:20].hidden = NO;
-//    }
+    OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
+    printPhoto.asset = asset;
+    if ([[OLUserSession currentSession].userSelectedPhotos containsObject:printPhoto]){
+        [[OLUserSession currentSession].userSelectedPhotos removeObject:asset];
+        [[collectionView cellForItemAtIndexPath:indexPath] viewWithTag:20].hidden = YES;
+    }
+    else{
+        [[OLUserSession currentSession].userSelectedPhotos addObject:printPhoto];
+        [[collectionView cellForItemAtIndexPath:indexPath] viewWithTag:20].hidden = NO;
+    }
     
     [self.imagePicker updateTitleBasedOnSelectedPhotoQuanitity];
 }

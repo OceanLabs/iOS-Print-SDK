@@ -39,6 +39,7 @@
 #import "OLAnalytics.h"
 #import "OLProductPrintJob.h"
 #import "OLPrintOrder.h"
+#import "OLUserSession.h"
 
 @interface OLKiteViewController ()
 @property (strong, nonatomic) NSMutableArray <OLCustomPhotoProvider *> *customImageProviders;
@@ -142,16 +143,16 @@
 #pragma mark Asset Management
 
 - (void)updateTitleBasedOnSelectedPhotoQuanitity {
-    if (self.userSelectedPhotos.count == 0) {
+    if ([OLUserSession currentSession].userSelectedPhotos.count == 0) {
         self.title = NSLocalizedString(@"Choose Photos", @"");
     } else {
         if (self.product.quantityToFulfillOrder > 1){
-            NSUInteger numOrders = 1 + (MAX(0, self.userSelectedPhotos.count - 1 + [self totalNumberOfExtras]) / self.product.quantityToFulfillOrder);
+            NSUInteger numOrders = 1 + (MAX(0, [OLUserSession currentSession].userSelectedPhotos.count - 1 + [self totalNumberOfExtras]) / self.product.quantityToFulfillOrder);
             NSUInteger quanityToFulfilOrder = numOrders * self.product.quantityToFulfillOrder;
-            self.title = [NSString stringWithFormat:@"%lu / %lu", (unsigned long)self.userSelectedPhotos.count + [self totalNumberOfExtras], (unsigned long)quanityToFulfilOrder];
+            self.title = [NSString stringWithFormat:@"%lu / %lu", (unsigned long)[OLUserSession currentSession].userSelectedPhotos.count + [self totalNumberOfExtras], (unsigned long)quanityToFulfilOrder];
         }
         else{
-            self.title = [NSString stringWithFormat:@"%lu", (unsigned long)self.userSelectedPhotos.count];
+            self.title = [NSString stringWithFormat:@"%lu", (unsigned long)[OLUserSession currentSession].userSelectedPhotos.count];
         }
     }
 }
@@ -162,7 +163,7 @@
     }
     
     NSUInteger res = 0;
-    for (OLPrintPhoto *photo in self.userSelectedPhotos){
+    for (OLPrintPhoto *photo in [OLUserSession currentSession].userSelectedPhotos){
         res += photo.extraCopies;
     }
     return res;
@@ -255,7 +256,7 @@
 #pragma mark Navigation
 
 - (BOOL)shouldGoToOrderPreview {
-    if (self.userSelectedPhotos.count == 0) {
+    if ([OLUserSession currentSession].userSelectedPhotos.count == 0) {
         UIAlertController *av = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Oops!", @"") message:NSLocalizedString(@"Please select some images to print first.", @"") preferredStyle:UIAlertControllerStyleAlert];
         [av addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", @"") style:UIAlertActionStyleDefault handler:NULL]];
         [self presentViewController:av animated:YES completion:NULL];
@@ -271,8 +272,8 @@
         OLUpsellOffer *offer = [self upsellOfferToShow];
         BOOL shouldShowOffer = offer != nil;
         if (offer){
-            shouldShowOffer &= offer.minUnits <= self.userSelectedPhotos.count;
-            shouldShowOffer &= offer.maxUnits == 0 || offer.maxUnits >= self.userSelectedPhotos.count;
+            shouldShowOffer &= offer.minUnits <= [OLUserSession currentSession].userSelectedPhotos.count;
+            shouldShowOffer &= offer.maxUnits == 0 || offer.maxUnits >= [OLUserSession currentSession].userSelectedPhotos.count;
             shouldShowOffer &= [OLProduct productWithTemplateId:offer.offerTemplate] != nil;
         }
         
@@ -372,10 +373,10 @@
         //Do nothing, no assets needed
     }
     else if (offerProduct.quantityToFulfillOrder == 1){
-        [assets addObject:[OLAsset assetWithDataSource:[self.userSelectedPhotos.firstObject copy]]];
+        [assets addObject:[OLAsset assetWithDataSource:[[OLUserSession currentSession].userSelectedPhotos.firstObject copy]]];
     }
     else{
-        for (OLPrintPhoto *photo in self.userSelectedPhotos){
+        for (OLPrintPhoto *photo in [OLUserSession currentSession].userSelectedPhotos){
             [assets addObject:[OLAsset assetWithDataSource:[photo copy]]];
         }
     }

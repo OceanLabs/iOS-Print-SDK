@@ -30,11 +30,9 @@
 @import Photos;
 
 #import "OLAsset.h"
-#import <AssetsLibrary/AssetsLibrary.h>
 #import "OLURLDataSource.h"
 #import "OLAsset+Private.h"
 #import "OLPrintPhoto.h"
-#import "ALAssetsLibrary+Singleton.h"
 #import "OLKiteUtils.h"
 #import "OLConstants.h"
 
@@ -103,26 +101,6 @@ NSString *const kOLMimeTypePDF = @"application/pdf";
     return self;
 }
 
-- (instancetype)initWithALAsset:(ALAsset *)asset {
-    if (self = [super init]) {
-        NSString *fileName = [[[asset defaultRepresentation] filename] lowercaseString];
-        if ([fileName hasSuffix:@".jpg"] || [fileName hasSuffix:@".jpeg"]) {
-            _mimeType = kOLMimeTypeJPEG;
-        } else if ([fileName hasSuffix:@".png"]) {
-            _mimeType = kOLMimeTypePNG;
-        } else if ([fileName hasSuffix:@".tif"] || [fileName hasSuffix:@".tiff"]) {
-            _mimeType = kOLMimeTypeTIFF;
-        } else {
-            NSAssert(NO, @"Only JPEG, PNG & TIFF images are supported");
-        }
-        
-        self.alAssetURL = [asset valueForProperty:ALAssetPropertyAssetURL];
-        
-    }
-    
-    return self;
-}
-
 - (instancetype)initWithPHAsset:(PHAsset *)asset {
     if (self = [super init]) {
         _mimeType = kOLMimeTypeJPEG;
@@ -158,8 +136,6 @@ NSString *const kOLMimeTypePDF = @"application/pdf";
         return kOLAssetTypeRemoteImageURL;
     } else if (self.imageFilePath) {
         return kOLAssetTypeImageFilePath;
-    } else if (self.alAssetURL) {
-        return kOLAssetTypeALAsset;
     } else if (self.dataSource) {
         return kOLAssetTypeDataSource;
     } else if (self.phAssetLocalId){
@@ -194,10 +170,6 @@ NSString *const kOLMimeTypePDF = @"application/pdf";
     return [[OLAsset alloc] initWithImageFilePath:path];
 }
 
-+ (OLAsset *)assetWithALAsset:(ALAsset *)asset {
-    return [[OLAsset alloc] initWithALAsset:asset];
-}
-
 + (OLAsset *)assetWithPHAsset:(PHAsset *)asset {
     return [[OLAsset alloc] initWithPHAsset:asset];
 }
@@ -227,10 +199,7 @@ NSString *const kOLMimeTypePDF = @"application/pdf";
 }
 
 + (OLAsset *)assetWithPrintPhoto:(OLPrintPhoto *)printPhoto{
-    if ([[printPhoto asset] isKindOfClass: [ALAsset class]]){
-        return [OLAsset assetWithALAsset:[printPhoto asset]];
-    }
-    else if ([[printPhoto asset] isKindOfClass: [PHAsset class]]){
+    if ([[printPhoto asset] isKindOfClass: [PHAsset class]]){
         return [OLAsset assetWithPHAsset:[printPhoto asset]];
     }
 #ifdef OL_KITE_OFFER_INSTAGRAM
@@ -247,10 +216,6 @@ NSString *const kOLMimeTypePDF = @"application/pdf";
         return [NSKeyedUnarchiver unarchiveObjectWithData:[NSKeyedArchiver archivedDataWithRootObject:[printPhoto asset]]];
     }
     
-    else if ([[printPhoto asset] isKindOfClass:[ALAsset class]]){
-        return [OLAsset assetWithALAsset:[printPhoto asset]];
-    }
-    
     return nil;
 }
 
@@ -264,50 +229,8 @@ NSString *const kOLMimeTypePDF = @"application/pdf";
     return [[PHAsset fetchAssetsWithLocalIdentifiers:@[self.phAssetLocalId] options:nil] firstObject];
 }
 
-- (void)loadALAssetWithCompletionHandler:(LoadAssetCompletionHandler)handler {
-    if (self.alAsset) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            handler(self.alAsset, nil);
-        });
-    } else {
-        [[ALAssetsLibrary defaultAssetsLibrary] assetForURL:self.alAssetURL
-                      resultBlock:^(ALAsset *asset) {
-                          dispatch_async(dispatch_get_main_queue(), ^{
-                              NSAssert([NSThread isMainThread], @"oops wrong assumption about main thread callback");
-                              self.alAsset = asset;
-                              handler(self.alAsset, nil);
-                          });
-                      }
-                     failureBlock:^(NSError *err) {
-                         dispatch_async(dispatch_get_main_queue(), ^{
-                             NSAssert([NSThread isMainThread], @"oops wrong assumption about main thread callback");
-                             handler(nil, err);
-                         });
-                     }];
-    }
-}
-
 - (void)dataLengthWithCompletionHandler:(GetDataLengthHandler)handler {
     switch (self.assetType) {
-        case kOLAssetTypeALAsset: {
-            [self loadALAssetWithCompletionHandler:^(ALAsset *asset, NSError *error) {
-                if (asset && !error) {
-                    ALAssetRepresentation *rep = asset.defaultRepresentation;
-                    uint8_t *buffer = (uint8_t *) malloc((unsigned long) rep.size);
-                    NSError *error = nil;
-                    NSUInteger buffered = [rep getBytes:buffer fromOffset:0.0 length:(NSInteger) rep.size error:&error];
-                    if (error) {
-                        handler(0, error);
-                    } else {
-                        NSData *data = [NSData dataWithBytesNoCopy:buffer length:buffered freeWhenDone:YES];
-                        handler(data.length, nil);
-                    }
-                } else {
-                    handler(0, error);
-                }
-            }];
-            break;
-        }
         case kOLAssetTypePHAsset:{
             PHAsset *asset = [[PHAsset fetchAssetsWithLocalIdentifiers:@[self.phAssetLocalId] options:nil] firstObject];
             if (!asset){
@@ -376,36 +299,18 @@ NSString *const kOLMimeTypePDF = @"application/pdf";
             break;
         }
         case kOLAssetTypeRemoteImageURL: {
-            dispatch_async(dispatch_get_main_queue(), ^{
                 handler(0, nil);
-            });
             break;
         }
+        case kOLAssetTypeCorrupt:
+            handler(0, [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeImagesCorrupt userInfo:@{NSLocalizedDescriptionKey : NSLocalizedString(@"There was an error getting one of your photos. Please remove or replace it.", @""), @"asset" : self}]);
+            break;
     }
     
 }
 
 - (void)dataWithCompletionHandler:(GetDataHandler)handler {
     switch (self.assetType) {
-        case kOLAssetTypeALAsset: {
-            [self loadALAssetWithCompletionHandler:^(ALAsset *asset, NSError *error) {
-                if (asset && !error) {
-                    ALAssetRepresentation *rep = asset.defaultRepresentation;
-                    uint8_t *buffer = (uint8_t *) malloc((unsigned long) rep.size);
-                    NSError *error = nil;
-                    NSUInteger buffered = [rep getBytes:buffer fromOffset:0.0 length:(NSInteger) rep.size error:&error];
-                    if (error) {
-                        handler(nil, error);
-                    } else {
-                        NSData *data = [NSData dataWithBytesNoCopy:buffer length:buffered freeWhenDone:YES];
-                        handler(data, nil);
-                    }
-                } else {
-                    handler(nil, error);
-                }
-            }];
-            break;
-        }
         case kOLAssetTypePHAsset:{
             PHAsset *asset = [[PHAsset fetchAssetsWithLocalIdentifiers:@[self.phAssetLocalId] options:nil] firstObject];
             if (!asset){
@@ -448,17 +353,18 @@ NSString *const kOLMimeTypePDF = @"application/pdf";
             break;
         }
         case kOLAssetTypeImageFilePath: {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                NSError *error = nil;
-                NSData *data = [NSData dataWithContentsOfFile:self.imageFilePath options:0 error:&error];
-                handler(data, error);
-            });
+            NSError *error = nil;
+            NSData *data = [NSData dataWithContentsOfFile:self.imageFilePath options:0 error:&error];
+            handler(data, error);
             break;
         }
         case kOLAssetTypeRemoteImageURL: {
             NSAssert(NO, @"don't be calling dataWithCompletionHandler on an image URL OLAsset as it has no meaning");
             break;
         }
+        case kOLAssetTypeCorrupt:
+            handler(nil, [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeImagesCorrupt userInfo:@{NSLocalizedDescriptionKey : NSLocalizedString(@"There was an error getting one of your photos. Please remove or replace it.", @""), @"asset" : self}]);
+            break;
     }
 }
 
@@ -480,9 +386,6 @@ NSString *const kOLMimeTypePDF = @"application/pdf";
     }
     
     switch (self.assetType) {
-        case kOLAssetTypeALAsset: {
-            return [self.alAssetURL isEqual:[object alAssetURL]];
-        }
         case kOLAssetTypePHAsset: {
             return [self.phAssetLocalId isEqualToString:[object phAssetLocalId]];
         }
@@ -499,6 +402,8 @@ NSString *const kOLMimeTypePDF = @"application/pdf";
         case kOLAssetTypeRemoteImageURL: {
             return [self.imageURL isEqual:[object imageURL]];
         }
+        default:
+            return NO;
     }
 }
 

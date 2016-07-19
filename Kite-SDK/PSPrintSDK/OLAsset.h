@@ -159,15 +159,6 @@ extern NSString *const kOLMimeTypePDF;
 + (OLAsset *)assetWithFilePath:(NSString *)path;
 
 /**
- *  Create an asset with an ALAsset
- *
- *  @param asset The ALAsset
- *
- *  @return The OLAsset
- */
-+ (OLAsset *)assetWithALAsset:(ALAsset *)asset;
-
-/**
  *  Create an asset with a PHAsset
  *
  *  @param asset The PHAsset
@@ -222,13 +213,6 @@ extern NSString *const kOLMimeTypePDF;
  *  The Kite previewURL. Will only be valid upon sucessfully uploading this asset to the server i.e. OLAsset.isUploaded == YES
  */
 @property (nonatomic, readonly) NSURL *previewURL;
-
-/**
- *  Special method for OLAssets created from ALAssets. Loads the ALAsset.
- *
- *  @param handler Completion handler
- */
-- (void)loadALAssetWithCompletionHandler:(LoadAssetCompletionHandler)handler;
 
 /**
  *  Special method for OLAssets created from PHAssets. Finds and returns the PHAsset in the PHAssetLibrary with the known localIdentifier.

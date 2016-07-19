@@ -29,9 +29,7 @@
 
 #import "OLImageDownloader.h"
 #import "OLPrintPhoto.h"
-#import <AssetsLibrary/AssetsLibrary.h>
 #import "RMImageCropper.h"
-#import "ALAssetsLibrary+Singleton.h"
 #import "OLKiteUtils.h"
 #import "OLConstants.h"
 #ifdef OL_KITE_OFFER_INSTAGRAM
@@ -56,24 +54,6 @@ static CGFloat screenScale = 2.0;
 static NSOperationQueue *imageOperationQueue;
 
 @import Photos;
-
-@implementation ALAsset (isEqual)
-
-- (NSURL*)defaultURL {
-    return [self valueForProperty:ALAssetPropertyAssetURL];
-}
-
-- (BOOL)isEqual:(id)obj {
-    if(![obj isKindOfClass:[ALAsset class]])
-        return NO;
-    
-    NSURL *u1 = [self defaultURL];
-    NSURL *u2 = [obj defaultURL];
-    
-    return ([u1 isEqual:u2]);
-}
-
-@end
 
 @implementation PHAsset (isEqual)
 
@@ -119,10 +99,7 @@ static NSOperationQueue *imageOperationQueue;
 
 - (void)setAsset:(id)asset {
     _asset = asset;
-    if ([asset isKindOfClass:[ALAsset class]]) {
-        _type = kPrintPhotoAssetTypeALAsset;
-    }
-    else if ([asset isKindOfClass:[PHAsset class]]) {
+    if ([asset isKindOfClass:[PHAsset class]]) {
         _type = kPrintPhotoAssetTypePHAsset;
     }
     else if ([asset isKindOfClass:[OLAsset class]]){
@@ -181,7 +158,7 @@ static NSOperationQueue *imageOperationQueue;
     NSBlockOperation *blockOperation = [[NSBlockOperation alloc] init];
     
     [blockOperation addExecutionBlock:^{
-        if (self.type == kPrintPhotoAssetTypeALAsset || self.type == kPrintPhotoAssetTypePHAsset) {
+        if (self.type == kPrintPhotoAssetTypePHAsset) {
             [OLPrintPhoto resizedImageWithPrintPhoto:self size:destSize cropped:cropped progress:progressHandler completion:^(UIImage *image) {
                 self.cachedCroppedThumbnailImage = image;
                 handler(image);
@@ -206,19 +183,6 @@ static NSOperationQueue *imageOperationQueue;
                     [OLPrintPhoto resizedImageWithPrintPhoto:self size:destSize cropped:cropped progress:progressHandler completion:^(UIImage *image) {
                         self.cachedCroppedThumbnailImage = image;
                         handler(image);
-                    }];
-                }
-                else if (asset.assetType == kOLAssetTypeALAsset){
-                    [asset loadALAssetWithCompletionHandler:^(ALAsset *asset, NSError *error){
-                        NSBlockOperation *block = [NSBlockOperation blockOperationWithBlock:^{
-                            self.asset = asset;
-                            [OLPrintPhoto resizedImageWithPrintPhoto:self size:destSize cropped:cropped progress:progressHandler completion:^(UIImage *image) {
-                                self.cachedCroppedThumbnailImage = image;
-                                handler(image);
-                            }];
-                        }];
-                        block.queuePriority = NSOperationQueuePriorityHigh;
-                        [[OLPrintPhoto imageOperationQueue] addOperation:block];
                     }];
                 }
                 else{
@@ -336,17 +300,7 @@ static NSOperationQueue *imageOperationQueue;
 
 - (void)getImageWithSize:(CGSize)size progress:(OLImageEditorImageGetImageProgressHandler)progressHandler completion:(OLImageEditorImageGetImageCompletionHandler)completionHandler {
     BOOL fullResolution = CGSizeEqualToSize(size, CGSizeZero);
-    if (self.type == kPrintPhotoAssetTypeALAsset && [self.asset respondsToSelector:@selector(defaultRepresentation)]) {
-        UIImage* image;
-        if (fullResolution){
-            image = [UIImage imageWithCGImage:[[self.asset defaultRepresentation] fullResolutionImage] scale:1 orientation:[[self.asset valueForProperty:ALAssetPropertyOrientation] integerValue]];
-        }
-        else{
-            image = [UIImage imageWithCGImage:[[self.asset defaultRepresentation] fullScreenImage]];
-        }
-        completionHandler(image);
-    }
-    else if (self.type == kPrintPhotoAssetTypePHAsset){
+    if (self.type == kPrintPhotoAssetTypePHAsset){
         PHImageManager *imageManager = [PHImageManager defaultManager];
         PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
         options.synchronous = YES;
@@ -536,25 +490,7 @@ static NSOperationQueue *imageOperationQueue;
 }
 
 - (void)dataWithCompletionHandler:(GetDataHandler)handler {
-    if (self.type == kPrintPhotoAssetTypeALAsset && [self.asset respondsToSelector:@selector(defaultRepresentation)]) {
-        ALAssetRepresentation *rep = [self.asset defaultRepresentation];
-        if (rep) {
-            UIImageOrientation orientation = UIImageOrientationUp;
-            NSNumber* orientationValue = [self.asset valueForProperty:@"ALAssetPropertyOrientation"];
-            if (orientationValue != nil) {
-                orientation = [orientationValue intValue];
-            }
-            
-            UIImage *image = [UIImage imageWithCGImage:[rep fullResolutionImage] scale:rep.scale orientation:orientation];
-            [self dataWithImage:image withCompletionHandler:^(NSData *data){
-                handler(data, nil);
-            }];
-        } else {
-            _type = kPrintPhotoAssetTypeCorrupt;
-            handler(nil, [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeImagesCorrupt userInfo:@{NSLocalizedDescriptionKey : NSLocalizedString(@"One of the images in an item was deleted from your device before we could upload it. Please remove or replace it.", @""), @"asset" : self}]);
-        }
-    }
-    else if (self.type == kPrintPhotoAssetTypePHAsset){
+    if (self.type == kPrintPhotoAssetTypePHAsset){
         NSBlockOperation *block = [[NSBlockOperation alloc] init];
         [block addExecutionBlock:^{
             PHImageManager *imageManager = [PHImageManager defaultManager];
@@ -654,24 +590,7 @@ static NSOperationQueue *imageOperationQueue;
         _extraCopies = [aDecoder decodeIntForKey:kKeyExtraCopies];
         _edits = [aDecoder decodeObjectForKey:kKeyEdits];
         _uuid = [aDecoder decodeObjectForKey:kKeyUUID];
-        if (self.type == kPrintPhotoAssetTypeALAsset) {
-            NSURL *assetURL = [aDecoder decodeObjectForKey:kKeyAsset];
-            [[ALAssetsLibrary defaultAssetsLibrary] assetForURL:assetURL
-                                                    resultBlock:^(ALAsset *asset) {
-                                                        NSAssert([NSThread isMainThread], @"oops wrong assumption about main thread callback");
-                                                        if (asset == nil) {
-                                                            // corrupt asset, user has probably deleted the photo from their device
-                                                            _type = kPrintPhotoAssetTypeCorrupt;
-                                                        } else {
-                                                            self.asset = asset;
-                                                        }
-                                                    }
-                                                   failureBlock:^(NSError *err) {
-                                                       NSAssert([NSThread isMainThread], @"oops wrong assumption about main thread callback");
-                                                       _type = kPrintPhotoAssetTypeCorrupt;
-                                                   }];
-        }
-        else if (self.type == kPrintPhotoAssetTypePHAsset){
+        if (self.type == kPrintPhotoAssetTypePHAsset){
             NSString *localId = [aDecoder decodeObjectForKey:kKeyAsset];
             PHAsset *asset = localId ? [[PHAsset fetchAssetsWithLocalIdentifiers:@[localId] options:nil] firstObject] : nil;
             if (!asset){
@@ -696,10 +615,7 @@ static NSOperationQueue *imageOperationQueue;
     [aCoder encodeInteger:self.extraCopies forKey:kKeyExtraCopies];
     [aCoder encodeObject:self.edits forKey:kKeyEdits];
     [aCoder encodeObject:self.uuid forKey:kKeyUUID];
-    if (self.type == kPrintPhotoAssetTypeALAsset && [self.asset respondsToSelector:@selector(valueForProperty:)]) {
-        [aCoder encodeObject:[self.asset valueForProperty:ALAssetPropertyAssetURL] forKey:kKeyAsset];
-    }
-    else if (self.type == kPrintPhotoAssetTypePHAsset){
+    if (self.type == kPrintPhotoAssetTypePHAsset){
         [aCoder encodeObject:[self.asset localIdentifier] forKey:kKeyAsset];
     }
     else if (self.type != kPrintPhotoAssetTypeCorrupt){

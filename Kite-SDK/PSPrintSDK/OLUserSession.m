@@ -46,9 +46,9 @@
     return sharedInstance;
 }
 
--(OLMutableAssetArray *) userSelectedPhotos{
+-(NSMutableArray *) userSelectedPhotos{
     if (!_userSelectedPhotos || _userSelectedPhotos.count == 0){
-        OLMutableAssetArray *mutableUserSelectedPhotos = [[OLMutableAssetArray alloc] init];
+        NSMutableArray *mutableUserSelectedPhotos = [[NSMutableArray alloc] init];
         for (id asset in self.appAssets){
             OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
             printPhoto.asset = asset;
