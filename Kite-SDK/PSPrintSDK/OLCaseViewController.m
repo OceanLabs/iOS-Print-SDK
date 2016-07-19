@@ -102,34 +102,30 @@
         return;
     }
     
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0){
-        if (!self.visualEffectView){
-            UIVisualEffect *blurEffect;
-            blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
-            
-            self.visualEffectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
-            UIView *view = self.visualEffectView;
-            [view.layer setMasksToBounds:YES];
-            [self.containerView insertSubview:view belowSubview:self.maskActivityIndicator];
-            
-            view.translatesAutoresizingMaskIntoConstraints = NO;
-            NSDictionary *views = NSDictionaryOfVariableBindings(view);
-            NSMutableArray *con = [[NSMutableArray alloc] init];
-            
-            NSArray *visuals = @[@"H:|-0-[view]-0-|",
-                                 @"V:|-0-[view]-0-|"];
-            
-            
-            for (NSString *visual in visuals) {
-                [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
-            }
-            
-            [view.superview addConstraints:con];
-        }
-    }
-    else{
+    if (!self.visualEffectView){
+        UIVisualEffect *blurEffect;
+        blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
         
+        self.visualEffectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
+        UIView *view = self.visualEffectView;
+        [view.layer setMasksToBounds:YES];
+        [self.containerView insertSubview:view belowSubview:self.maskActivityIndicator];
+        
+        view.translatesAutoresizingMaskIntoConstraints = NO;
+        NSDictionary *views = NSDictionaryOfVariableBindings(view);
+        NSMutableArray *con = [[NSMutableArray alloc] init];
+        
+        NSArray *visuals = @[@"H:|-0-[view]-0-|",
+                             @"V:|-0-[view]-0-|"];
+        
+        
+        for (NSString *visual in visuals) {
+            [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+        }
+        
+        [view.superview addConstraints:con];
     }
+    
     
     UIImage *tempMask = [UIImage imageNamedInKiteBundle:@"dummy mask"];
     [self.containerView removeConstraint:self.maskAspectRatio];
@@ -227,40 +223,5 @@
     }
     [super doCheckout];
 }
-
-#if __IPHONE_OS_VERSION_MIN_REQUIRED < 80000
-#pragma mark - UIAlertViewDelegate methods
-
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-    if (alertView.tag == 99) {
-        if (buttonIndex == 0) {
-            [self.navigationController popViewControllerAnimated:YES];
-        } else {
-            [self applyDownloadedMask];
-        }
-    }
-}
-
-#pragma mark - Autorotate and Orientation Methods
-// Currently here to disable landscape orientations and rotation on iOS 7. When support is dropped, these can be deleted.
-
-- (BOOL)shouldAutorotate {
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
-        return YES;
-    }
-    else{
-        return NO;
-    }
-}
-
-- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
-        return UIInterfaceOrientationMaskAll;
-    }
-    else{
-        return UIInterfaceOrientationMaskPortrait;
-    }
-}
-#endif
 
 @end

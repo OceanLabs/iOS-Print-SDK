@@ -38,6 +38,7 @@
 #import "OLImagePreviewViewController.h"
 #import "OLAnalytics.h"
 #import "OLKitePrintSDK.h"
+#import "OLUserSession.h"
 
 #ifdef OL_KITE_OFFER_ADOBE
 #import <AdobeCreativeSDKImage/AdobeCreativeSDKImage.h>
@@ -82,12 +83,12 @@ CGFloat margin = 2;
     
     // ensure order is maxed out by adding duplicates as necessary
     self.framePhotos = [[NSMutableArray alloc] init];
-    [self.framePhotos addObjectsFromArray:self.userSelectedPhotos];
+    [self.framePhotos addObjectsFromArray:[OLUserSession currentSession].userSelectedPhotos];
     NSUInteger userSelectedAssetCount = [self.framePhotos count];
     NSUInteger numOrders = (NSUInteger) floor(userSelectedAssetCount + self.product.quantityToFulfillOrder - 1) / self.product.quantityToFulfillOrder;
     NSUInteger duplicatesToFillOrder = numOrders * self.product.quantityToFulfillOrder - userSelectedAssetCount;
     for (NSUInteger i = 0; i < duplicatesToFillOrder; ++i) {
-        [self.framePhotos addObject:self.userSelectedPhotos[i % userSelectedAssetCount]];
+        [self.framePhotos addObject:[OLUserSession currentSession].userSelectedPhotos[i % userSelectedAssetCount]];
     }
 #ifdef OL_VERBOSE
     NSLog(@"Adding %lu duplicates to frame", (unsigned long)duplicatesToFillOrder);
@@ -316,12 +317,6 @@ CGFloat margin = 2;
     else{
         UICollectionViewCell* cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"imageCell" forIndexPath:indexPath];
         
-        //Workaround for iOS 7
-        if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8){
-            cell.contentView.frame = cell.bounds;
-            cell.contentView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin |UIViewAutoresizingFlexibleTopMargin |UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleBottomMargin;
-        }
-        
         UIView* view = collectionView.superview;
         while (![view isKindOfClass:[UICollectionViewCell class]]){
             view = view.superview;
@@ -482,29 +477,6 @@ CGFloat margin = 2;
 
 - (void)photoEditorCanceled:(AdobeUXImageEditorViewController *)editor{
     [editor dismissViewControllerAnimated:YES completion:NULL];
-}
-#endif
-
-#if __IPHONE_OS_VERSION_MIN_REQUIRED < 80000
-#pragma mark - Autorotate and Orientation Methods
-// Currently here to disable landscape orientations and rotation on iOS 7. When support is dropped, these can be deleted.
-
-- (BOOL)shouldAutorotate {
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
-        return YES;
-    }
-    else{
-        return NO;
-    }
-}
-
-- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
-        return UIInterfaceOrientationMaskAll;
-    }
-    else{
-        return UIInterfaceOrientationMaskPortrait;
-    }
 }
 #endif
 

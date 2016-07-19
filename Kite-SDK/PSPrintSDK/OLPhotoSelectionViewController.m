@@ -31,18 +31,14 @@
 #import "OLPrintPhoto.h"
 #import "OLOrderReviewViewController.h"
 
-#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
 #import "OLCustomPhotoProvider.h"
 #ifdef COCOAPODS
 #import <KITAssetsPickerController/KITAssetsPickerController.h>
 #else
 #import "KITAssetsPickerController.h"
 #endif
-#endif
 
-#ifdef OL_KITE_AT_LEAST_IOS8
 #import "CTAssetsPickerController.h"
-#endif
 
 #ifdef OL_KITE_OFFER_INSTAGRAM
 #import <InstagramImagePicker/OLInstagramImagePickerController.h>
@@ -61,7 +57,6 @@
 #import "OLAnalytics.h"
 #import "OLAsset.h"
 #import "OLProductPrintJob.h"
-#import "OLAssetsPickerController.h"
 #import "OLConstants.h"
 #import "OLImageCachingManager.h"
 #import "OLKiteABTesting.h"
@@ -91,12 +86,6 @@
 
 NSInteger OLPhotoSelectionMargin = 0;
 
-#define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
-
-#if __IPHONE_OS_VERSION_MIN_REQUIRED < 80000
-static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
-#endif
-
 @interface OLKitePrintSDK (Private)
 #ifdef OL_KITE_OFFER_ADOBE
 + (NSString *)adobeCreativeSDKClientSecret;
@@ -112,10 +101,7 @@ static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 @end
 
 @interface OLPhotoSelectionViewController () <UINavigationControllerDelegate,
-#ifdef OL_KITE_AT_LEAST_IOS8
 CTAssetsPickerControllerDelegate,
-#endif
-OLAssetsPickerControllerDelegate,
 UICollectionViewDataSource,
 UICollectionViewDelegate,
 UICollectionViewDelegateFlowLayout,
@@ -125,9 +111,7 @@ OLInstagramImagePickerControllerDelegate,
 #ifdef OL_KITE_OFFER_FACEBOOK
 OLFacebookImagePickerControllerDelegate,
 #endif
-#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
 KITAssetsPickerControllerDelegate,
-#endif
 LXReorderableCollectionViewDataSource,
 UIGestureRecognizerDelegate,
 UICollectionViewDelegateFlowLayout,
@@ -157,9 +141,7 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
 @end
 
 @interface OLKiteViewController ()
-#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
 @property (strong, nonatomic) NSMutableArray <OLCustomPhotoProvider *> *customImageProviders;
-#endif
 @property (strong, nonatomic) OLPrintOrder *printOrder;
 - (void)dismiss;
 @end
@@ -385,11 +367,9 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
 - (void)onTapBehindQRCodeScannerModal:(UITapGestureRecognizer *)sender {
     if (sender.state == UIGestureRecognizerStateEnded) {
         CGPoint location = [sender locationInView:nil]; // Passing nil gives us coordinates in the window
-        // swap (x,y) on iOS 8 in landscape
-        if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0) {
-            if (UIInterfaceOrientationIsLandscape([UIApplication sharedApplication].statusBarOrientation)) {
-                location = CGPointMake(location.y, location.x);
-            }
+        // swap (x,y) in landscape
+        if (UIInterfaceOrientationIsLandscape([UIApplication sharedApplication].statusBarOrientation)) {
+            location = CGPointMake(location.y, location.x);
         }
         
         // Convert tap location into the local view's coordinate system. If outside, dismiss the view.
@@ -515,10 +495,8 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
     }
     
     NSInteger numberOfProviders = 0;
-#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
     NSInteger numberOfCustomProviders = [OLKiteUtils kiteVcForViewController:self].customImageProviders.count;
     numberOfProviders += numberOfCustomProviders;
-#endif
     
     if ([OLKiteUtils cameraRollEnabled:self]){
         numberOfProviders++;
@@ -535,70 +513,41 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
     }
     
     if (numberOfProviders > 1){
-        if ([UIAlertController class]){
-            UIAlertController *ac = [UIAlertController alertControllerWithTitle:nil message:NSLocalizedString(@"Add photos from:", @"") preferredStyle:UIAlertControllerStyleActionSheet];
-            if ([OLKiteUtils cameraRollEnabled:self]){
-                [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Camera Roll", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
-                    [self cameraRollSelected:nil];
-                }]];
-            }
-            if ([OLKiteUtils instagramEnabled]){
-                [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Instagram", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
-                    [self instagramSelected:nil];
-                }]];
-            }
-            if ([OLKiteUtils facebookEnabled]){
-                [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Facebook", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
-                    [self facebookSelected:nil];
-                }]];
-            }
-            if ([OLKiteUtils qrCodeUploadEnabled]) {
-                [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Transfer from your phone", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
-                    [self showQRCodeImagePicker];
-                }]];
-            }
-#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
-            for (OLCustomPhotoProvider *provider in [OLKiteUtils kiteVcForViewController:self].customImageProviders){
-                [ac addAction:[UIAlertAction actionWithTitle:provider.name style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
-                    [self showPickerForProvider:provider];
-                }]];
-            }
-#endif
-            
-            [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"") style:UIAlertActionStyleCancel handler:^(UIAlertAction *action){
-                [ac dismissViewControllerAnimated:YES completion:NULL];
+        UIAlertController *ac = [UIAlertController alertControllerWithTitle:nil message:NSLocalizedString(@"Add photos from:", @"") preferredStyle:UIAlertControllerStyleActionSheet];
+        if ([OLKiteUtils cameraRollEnabled:self]){
+            [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Camera Roll", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
+                [self cameraRollSelected:nil];
             }]];
-            if ([ac respondsToSelector:@selector(popoverPresentationController)]){
-                ac.popoverPresentationController.sourceView = sender;
-                ac.popoverPresentationController.sourceRect = [(UIView *)sender frame];
-            }
-            [self presentViewController:ac animated:YES completion:NULL];
         }
-        else{
-            UIActionSheet *as = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"Add photos from:", @"")
-                                                            delegate:self
-                                                   cancelButtonTitle:nil
-                                              destructiveButtonTitle:nil
-                                                   otherButtonTitles:nil];
-            
-            if ([OLKiteUtils cameraRollEnabled:self]){
-                [as addButtonWithTitle:NSLocalizedString(@"Camera Roll", @"")];
-            }
-            if ([OLKiteUtils facebookEnabled]){
-                [as addButtonWithTitle:@"Facebook"];
-            }
-            if ([OLKiteUtils instagramEnabled]){
-                [as addButtonWithTitle:@"Instagram"];
-            }
-#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
-            for (OLCustomPhotoProvider *provider in [OLKiteUtils kiteVcForViewController:self].customImageProviders){
-                [as addButtonWithTitle:provider.name];
-            }
-#endif
-            as.cancelButtonIndex = [as addButtonWithTitle:@"Cancel"];
-            
-            [as showInView:self.view];
+        if ([OLKiteUtils instagramEnabled]){
+            [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Instagram", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
+                [self instagramSelected:nil];
+            }]];
         }
+        if ([OLKiteUtils facebookEnabled]){
+            [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Facebook", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
+                [self facebookSelected:nil];
+            }]];
+        }
+        if ([OLKiteUtils qrCodeUploadEnabled]) {
+            [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Transfer from your phone", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
+                [self showQRCodeImagePicker];
+            }]];
+        }
+        for (OLCustomPhotoProvider *provider in [OLKiteUtils kiteVcForViewController:self].customImageProviders){
+            [ac addAction:[UIAlertAction actionWithTitle:provider.name style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
+                [self showPickerForProvider:provider];
+            }]];
+        }
+        
+        [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"") style:UIAlertActionStyleCancel handler:^(UIAlertAction *action){
+            [ac dismissViewControllerAnimated:YES completion:NULL];
+        }]];
+        if ([ac respondsToSelector:@selector(popoverPresentationController)]){
+            ac.popoverPresentationController.sourceView = sender;
+            ac.popoverPresentationController.sourceRect = [(UIView *)sender frame];
+        }
+        [self presentViewController:ac animated:YES completion:NULL];
     }
     else{
         if ([OLKiteUtils cameraRollEnabled:self]){
@@ -610,15 +559,12 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
         else if ([OLKiteUtils instagramEnabled]){
             [self instagramSelected:nil];
         }
-#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
         else{
             [self showPickerForProvider:[OLKiteUtils kiteVcForViewController:self].customImageProviders.firstObject];
         }
-#endif
     }
 }
 
-#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
 - (void)showPickerForProvider:(OLCustomPhotoProvider *)provider{
     UIViewController<KITCustomAssetPickerController> *vc;
     if (provider.vc){
@@ -637,61 +583,46 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
     vc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
     [self presentViewController:vc animated:YES completion:NULL];
 }
-#endif
 
-- (IBAction)cameraRollSelected:(id)sender {
+- (void)cameraRollSelected:(id)sender {
 #ifndef OL_NO_ANALYTICS
     [OLAnalytics trackPhotoProviderPicked:@"Camera Roll" forProductName:self.product.productTemplate.name];
 #endif
     __block UIViewController *picker;
     __block Class assetClass;
-#ifdef OL_KITE_CI_DEPLOY
-    if (NO){}
-#else
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8 || !definesAtLeastiOS8){
-        picker = [[OLAssetsPickerController alloc] init];
-        [(OLAssetsPickerController *)picker setAssetsFilter:[ALAssetsFilter allPhotos]];
-        assetClass = [ALAsset class];
-        ((OLAssetsPickerController *)picker).delegate = self;
-    }
-#endif
-#ifdef OL_KITE_AT_LEAST_IOS8
-    else{
-        if ([PHPhotoLibrary authorizationStatus] == PHAuthorizationStatusNotDetermined){
-            [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status){
-                if (status == PHAuthorizationStatusAuthorized){
-                    picker = [[CTAssetsPickerController alloc] init];
-                    ((CTAssetsPickerController *)picker).showsEmptyAlbums = NO;
-                    PHFetchOptions *options = [[PHFetchOptions alloc] init];
-                    options.predicate = [NSPredicate predicateWithFormat:@"mediaType == %d", PHAssetMediaTypeImage];
-                    ((CTAssetsPickerController *)picker).assetsFetchOptions = options;
-                    assetClass = [PHAsset class];
-                    ((CTAssetsPickerController *)picker).delegate = self;
-                    NSArray *allAssets = [[self createAssetArray] mutableCopy];
-                    NSMutableArray *alAssets = [[NSMutableArray alloc] init];
-                    for (id asset in allAssets){
-                        if ([asset isKindOfClass:assetClass]){
-                            [alAssets addObject:asset];
-                        }
+    if ([PHPhotoLibrary authorizationStatus] == PHAuthorizationStatusNotDetermined){
+        [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status){
+            if (status == PHAuthorizationStatusAuthorized){
+                picker = [[CTAssetsPickerController alloc] init];
+                ((CTAssetsPickerController *)picker).showsEmptyAlbums = NO;
+                PHFetchOptions *options = [[PHFetchOptions alloc] init];
+                options.predicate = [NSPredicate predicateWithFormat:@"mediaType == %d", PHAssetMediaTypeImage];
+                ((CTAssetsPickerController *)picker).assetsFetchOptions = options;
+                assetClass = [PHAsset class];
+                ((CTAssetsPickerController *)picker).delegate = self;
+                NSArray *allAssets = [[self createAssetArray] mutableCopy];
+                NSMutableArray *alAssets = [[NSMutableArray alloc] init];
+                for (id asset in allAssets){
+                    if ([asset isKindOfClass:assetClass]){
+                        [alAssets addObject:asset];
                     }
-                    
-                    [(id)picker setSelectedAssets:alAssets];
-                    picker.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
-                    [self presentViewController:picker animated:YES completion:nil];
                 }
-            }];
-        }
-        else{
-            picker = [[CTAssetsPickerController alloc] init];
-            ((CTAssetsPickerController *)picker).showsEmptyAlbums = NO;
-            PHFetchOptions *options = [[PHFetchOptions alloc] init];
-            options.predicate = [NSPredicate predicateWithFormat:@"mediaType == %d", PHAssetMediaTypeImage];
-            ((CTAssetsPickerController *)picker).assetsFetchOptions = options;
-            assetClass = [PHAsset class];
-            ((CTAssetsPickerController *)picker).delegate = self;
-        }
+                
+                [(id)picker setSelectedAssets:alAssets];
+                picker.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
+                [self presentViewController:picker animated:YES completion:nil];
+            }
+        }];
     }
-#endif
+    else{
+        picker = [[CTAssetsPickerController alloc] init];
+        ((CTAssetsPickerController *)picker).showsEmptyAlbums = NO;
+        PHFetchOptions *options = [[PHFetchOptions alloc] init];
+        options.predicate = [NSPredicate predicateWithFormat:@"mediaType == %d", PHAssetMediaTypeImage];
+        ((CTAssetsPickerController *)picker).assetsFetchOptions = options;
+        assetClass = [PHAsset class];
+        ((CTAssetsPickerController *)picker).delegate = self;
+    }
     if (picker){
         NSArray *allAssets = [[self createAssetArray] mutableCopy];
         NSMutableArray *alAssets = [[NSMutableArray alloc] init];
@@ -814,16 +745,6 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
     return nil;
 }
 
-#if __IPHONE_OS_VERSION_MIN_REQUIRED < 80000
-- (BOOL)assetsPickerController:(OLAssetsPickerController *)picker isDefaultAssetsGroup:(ALAssetsGroup *)group {
-    if ([self.delegate respondsToSelector:@selector(kiteController:isDefaultAssetsGroup:)]) {
-        return [self.delegate kiteController:[self kiteViewController] isDefaultAssetsGroup:group];
-    }
-    
-    return NO;
-}
-#endif
-
 - (void)assetsPickerController:(id)picker didFinishPickingAssets:(NSArray *)assets {
     NSInteger originalCount = self.userSelectedPhotos.count;
     Class assetClass;
@@ -834,12 +755,9 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
         assetClass = [ALAsset class];
     }
 #endif
-#ifdef OL_KITE_AT_LEAST_IOS8
     else if ([picker isKindOfClass:[CTAssetsPickerController class]]){
         assetClass = [PHAsset class];
     }
-#endif
-#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
     else if ([picker isKindOfClass:[KITAssetsPickerController class]]){
         NSMutableArray *olAssets = [[NSMutableArray alloc] init];
         for (id<OLAssetDataSource> asset in assets){
@@ -854,7 +772,6 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
         }
         assets = olAssets;
     }
-#endif
     [self populateArrayWithNewArray:assets dataType:assetClass];
     [picker dismissViewControllerAnimated:YES completion:^(void){}];
 #ifndef OL_NO_ANALYTICS
@@ -871,11 +788,7 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
 }
 #endif
 
-#ifdef OL_KITE_AT_LEAST_IOS8
 - (void)assetsPickerController:(CTAssetsPickerController *)picker didDeSelectAsset:(PHAsset *)asset{
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8){
-        return;
-    }
     if (![asset isKindOfClass:[PHAsset class]]){
         return;
     }
@@ -885,9 +798,6 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
 }
 
 - (void)assetsPickerController:(CTAssetsPickerController *)picker didSelectAsset:(PHAsset *)asset{
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8){
-        return;
-    }
     if (![asset isKindOfClass:[PHAsset class]]){
         return;
     }
@@ -895,7 +805,6 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
     options.networkAccessAllowed = YES;
     [[OLImageCachingManager sharedInstance].photosCachingManager startCachingImagesForAssets:@[asset] targetSize:PHImageManagerMaximumSize contentMode:PHImageContentModeAspectFill options:options];
 }
-#endif
 
 - (BOOL)assetsPickerController:(id)picker shouldSelectAsset:(id)asset
 {
@@ -926,12 +835,9 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
         assetClass = [ALAsset class];
     }
 #endif
-#ifdef OL_KITE_AT_LEAST_IOS8
     else if ([picker isKindOfClass:[CTAssetsPickerController class]]){
         assetClass = [PHAsset class];
     }
-#endif
-#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
     else if ([picker isKindOfClass:[KITAssetsPickerController class]]){
         assetClass = [OLAsset class];
         NSMutableArray *olAssets = [[NSMutableArray alloc] init];
@@ -942,31 +848,24 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
         }
         assets = olAssets;
     }
-#endif
     [self populateArrayWithNewArray:assets dataType:assetClass];
     
     // show alert
     if (self.userSelectedPhotos.count >= max)
     {
-        if ([UIAlertController class]){
-            UIAlertController *alert =
-            [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Maximum Photos Reached", @"")
-                                                message:[NSString stringWithFormat:max == 1 ? NSLocalizedString(@"Please select only %ld photo", @"") : NSLocalizedString(@"Please select not more than %ld photos", @""), (long)max]
-                                         preferredStyle:UIAlertControllerStyleAlert];
-            
-            UIAlertAction *action =
-            [UIAlertAction actionWithTitle:NSLocalizedString(@"OK", @"")
-                                     style:UIAlertActionStyleDefault
-                                   handler:nil];
-            
-            [alert addAction:action];
-            
-            [picker presentViewController:alert animated:YES completion:nil];
-        }
-        else{
-            UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Maximum Photos Reached", @"") message:[NSString stringWithFormat:max == 1 ? NSLocalizedString(@"Please select only %ld photo", @"") : NSLocalizedString(@"Please select not more than %ld photos", @""), (long)max] delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"") otherButtonTitles:nil];
-            [av show];
-        }
+        UIAlertController *alert =
+        [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Maximum Photos Reached", @"")
+                                            message:[NSString stringWithFormat:max == 1 ? NSLocalizedString(@"Please select only %ld photo", @"") : NSLocalizedString(@"Please select not more than %ld photos", @""), (long)max]
+                                     preferredStyle:UIAlertControllerStyleAlert];
+        
+        UIAlertAction *action =
+        [UIAlertAction actionWithTitle:NSLocalizedString(@"OK", @"")
+                                 style:UIAlertActionStyleDefault
+                               handler:nil];
+        
+        [alert addAction:action];
+        
+        [picker presentViewController:alert animated:YES completion:nil];
     }
     
     // limit selection to max
@@ -995,7 +894,6 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
 
 - (void)instagramImagePicker:(OLInstagramImagePickerController *)imagePicker didFinishPickingImages:(NSArray *)images {
     NSInteger originalCount = self.userSelectedPhotos.count;
-#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
     NSMutableArray *assets = [[NSMutableArray alloc] init];
     for (id<OLAssetDataSource> asset in images){
         if ([asset isKindOfClass:[OLInstagramImage class]]){
@@ -1003,7 +901,6 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
         }
     }
     images = assets;
-#endif
     
     [self populateArrayWithNewArray:images dataType:[OLInstagramImage class]];
     [self dismissViewControllerAnimated:YES completion:^(void){}];
@@ -1029,7 +926,6 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
 
 - (void)facebookImagePicker:(OLFacebookImagePickerController *)imagePicker didFinishPickingImages:(NSArray *)images {
     NSInteger originalCount = self.userSelectedPhotos.count;
-#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
     NSMutableArray *assets = [[NSMutableArray alloc] init];
     for (id<OLAssetDataSource> asset in images){
         if ([asset isKindOfClass:[OLFacebookImage class]]){
@@ -1037,7 +933,6 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
         }
     }
     images = assets;
-#endif
     
     [self populateArrayWithNewArray:images dataType:[OLFacebookImage class]];
     [self dismissViewControllerAnimated:YES completion:^(void){}];
@@ -1183,19 +1078,9 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
     return cell;
 }
 
-- (void)fixCellFrameOnIOS7:(UICollectionViewCell *)cell {
-    // Ugly hack to fix cell frame on iOS 7 iPad. For whatever reason the frame size is not as per collectionView:layout:sizeForItemAtIndexPath:, others also experiencing this issue http://stackoverflow.com/questions/25804588/auto-layout-in-uicollectionviewcell-not-working
-    if (SYSTEM_VERSION_LESS_THAN(@"8")) {
-        [[cell contentView] setFrame:[cell bounds]];
-        [[cell contentView] setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight];
-    }
-}
-
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     static NSString *identifier = @"PhotoCell";
     UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
-    
-    [self fixCellFrameOnIOS7:cell];
     
     NSUInteger imageIndex = indexPath.row + indexPath.section * self.product.quantityToFulfillOrder;
     
@@ -1443,15 +1328,9 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
     }
     
     if (self.userSelectedPhotos.count - self.userDisabledPhotos.count == 0) {
-        if ([UIAlertController class]){
-            UIAlertController *av = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Oops!", @"") message:NSLocalizedString(@"Please select some images to print first.", @"") preferredStyle:UIAlertControllerStyleAlert];
-            [av addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", @"") style:UIAlertActionStyleDefault handler:NULL]];
-            [self presentViewController:av animated:YES completion:NULL];
-        }
-        else{
-            UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Oops!", @"") message:NSLocalizedString(@"Please select some images to print first.", @"") delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"") otherButtonTitles:nil];
-            [av show];
-        }
+        UIAlertController *av = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Oops!", @"") message:NSLocalizedString(@"Please select some images to print first.", @"") preferredStyle:UIAlertControllerStyleAlert];
+        [av addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", @"") style:UIAlertActionStyleDefault handler:NULL]];
+        [self presentViewController:av animated:YES completion:NULL];
         return NO;
     }
     
@@ -1585,10 +1464,8 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
         [OLAnalytics trackUpsellShown:shouldShowOffer];
         if (shouldShowOffer){
             OLUpsellViewController *c = [self.storyboard instantiateViewControllerWithIdentifier:@"OLUpsellViewController"];
-            if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8){
-                c.providesPresentationContextTransitionStyle = true;
-                c.definesPresentationContext = true;
-            }
+            c.providesPresentationContextTransitionStyle = true;
+            c.definesPresentationContext = true;
             c.modalPresentationStyle = UIModalPresentationOverCurrentContext;
             c.delegate = self;
             c.offer = offer;
@@ -1610,7 +1487,6 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
     UIViewController* orvc = [self.storyboard instantiateViewControllerWithIdentifier:[OLKiteUtils reviewViewControllerIdentifierForProduct:self.product photoSelectionScreen:NO]];
     
     [orvc safePerformSelector:@selector(setProduct:) withObject:self.product];
-    [orvc safePerformSelector:@selector(setUserSelectedPhotos:) withObject:self.userSelectedPhotos];
     [self.navigationController pushViewController:orvc animated:YES];
 }
 
@@ -1627,18 +1503,6 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
     [self.view.window removeGestureRecognizer:self.tapBehindQRUploadModalGestureRecognizer];
     self.tapBehindQRUploadModalGestureRecognizer = nil;
 }
-
-#if __IPHONE_OS_VERSION_MIN_REQUIRED < 80000
-#pragma mark - UIAlertViewDelegate methods
-
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-    if (alertView.tag == kTagAlertViewSelectMorePhotos) {
-        if (buttonIndex == 1) {
-            [self doSegueToOrderPreview];
-        }
-    }
-}
-#endif
 
 #pragma mark - OLImageEditorViewControllerDelegate methods
 
@@ -1700,53 +1564,6 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
 
 - (void)photoEditorCanceled:(AdobeUXImageEditorViewController *)editor{
     [editor dismissViewControllerAnimated:YES completion:NULL];
-}
-#endif
-
-#if __IPHONE_OS_VERSION_MIN_REQUIRED < 80000
-#pragma mark UIActionSheet Delegate (only used on iOS 7)
-
-- (void) actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex{
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-        if (buttonIndex == [OLKiteUtils cameraRollProviderIndex:self]){
-            [self cameraRollSelected:nil];
-        }
-        else if (buttonIndex == [OLKiteUtils instagramProviderIndex:self]){
-            [self instagramSelected:nil];
-        }
-        else if (buttonIndex == [OLKiteUtils facebookProviderIndex:self]){
-            [self facebookSelected:nil];
-        }
-        else if (buttonIndex == [OLKiteUtils qrCodeProviderStartIndex:self]){
-            [self showQRCodeImagePicker];
-        }
-#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
-        else{
-            [self showPickerForProvider:[OLKiteUtils kiteVcForViewController:self].customImageProviders[buttonIndex - [OLKiteUtils customProvidersStartIndex:self]]];
-        }
-#endif
-    });
-}
-
-#pragma mark - Autorotate and Orientation Methods
-// Currently here to disable landscape orientations and rotation on iOS 7. When support is dropped, these can be deleted.
-
-- (BOOL)shouldAutorotate {
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
-        return YES;
-    }
-    else{
-        return NO;
-    }
-}
-
-- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
-        return UIInterfaceOrientationMaskAll;
-    }
-    else{
-        return UIInterfaceOrientationMaskPortrait;
-    }
 }
 #endif
 

@@ -56,32 +56,26 @@ NSInteger OLImagePickerMargin = 0;
     self.albumLabel.text = NSLocalizedString(@"All Photos", @"");
     self.albumLabelChevron.hidden = YES;
     
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0){
-        UIVisualEffect *blurEffect;
-        blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleExtraLight];
-        
-        self.visualEffectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
-        UIView *view = self.visualEffectView;
-        [self.albumLabelContainer insertSubview:view belowSubview:self.albumLabel];
-        
-        view.translatesAutoresizingMaskIntoConstraints = NO;
-        NSDictionary *views = NSDictionaryOfVariableBindings(view);
-        NSMutableArray *con = [[NSMutableArray alloc] init];
-        
-        NSArray *visuals = @[@"H:|-0-[view]-0-|",
-                             @"V:|-0-[view]-0-|"];
-        
-        
-        for (NSString *visual in visuals) {
-            [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
-        }
-        
-        [view.superview addConstraints:con];
-        
+    UIVisualEffect *blurEffect;
+    blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleExtraLight];
+    
+    self.visualEffectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
+    UIView *view = self.visualEffectView;
+    [self.albumLabelContainer insertSubview:view belowSubview:self.albumLabel];
+    
+    view.translatesAutoresizingMaskIntoConstraints = NO;
+    NSDictionary *views = NSDictionaryOfVariableBindings(view);
+    NSMutableArray *con = [[NSMutableArray alloc] init];
+    
+    NSArray *visuals = @[@"H:|-0-[view]-0-|",
+                         @"V:|-0-[view]-0-|"];
+    
+    
+    for (NSString *visual in visuals) {
+        [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
     }
-    else{
-        self.albumLabelContainer.backgroundColor = [UIColor whiteColor];
-    }
+    
+    [view.superview addConstraints:con];
 }
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
@@ -106,12 +100,12 @@ NSInteger OLImagePickerMargin = 0;
     
     UIImageView *checkmark = [cell viewWithTag:20];
     id asset = self.assets[indexPath.item];
-    if ([self.selectedImages containsObject:asset]){
-        checkmark.hidden = NO;
-    }
-    else{
-        checkmark.hidden = YES;
-    }
+//    if ([self.imagePicker.selectedImages containsObject:asset]){
+//        checkmark.hidden = NO;
+//    }
+//    else{
+//        checkmark.hidden = YES;
+//    }
     
     return cell;
     
@@ -211,14 +205,16 @@ NSInteger OLImagePickerMargin = 0;
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
     id asset = self.assets[indexPath.item];
-    if ([self.selectedImages containsObject:asset]){
-        [self.selectedImages removeObject:asset];
-        [[collectionView cellForItemAtIndexPath:indexPath] viewWithTag:20].hidden = YES;
-    }
-    else{
-        [self.selectedImages addObject:asset];
-        [[collectionView cellForItemAtIndexPath:indexPath] viewWithTag:20].hidden = NO;
-    }
+//    if ([self.imagePicker.selectedImages containsObject:asset]){
+//        [self.imagePicker.selectedImages removeObject:asset];
+//        [[collectionView cellForItemAtIndexPath:indexPath] viewWithTag:20].hidden = YES;
+//    }
+//    else{
+//        [self.imagePicker.selectedImages addObject:asset];
+//        [[collectionView cellForItemAtIndexPath:indexPath] viewWithTag:20].hidden = NO;
+//    }
+    
+    [self.imagePicker updateTitleBasedOnSelectedPhotoQuanitity];
 }
 
 

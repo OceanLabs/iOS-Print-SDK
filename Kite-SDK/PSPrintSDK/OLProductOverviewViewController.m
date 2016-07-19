@@ -46,6 +46,7 @@
 #import "UIViewController+OLMethods.h"
 #import "OLPaymentViewController.h"
 #import "OLUpsellViewController.h"
+#import "OLUserSession.h"
 
 @interface OLKiteViewController ()
 
@@ -256,49 +257,43 @@
     UINavigationController *nvc = [[UINavigationController alloc] initWithRootViewController:self.productDetails];
     nvc.navigationBarHidden = YES;
     
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0){
-        UIVisualEffect *blurEffect;
-//        if (![OLKiteABTesting sharedInstance].darkTheme){
-        blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleExtraLight];
-//        }
-//        else{
-//            blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleDark];
-//        }
-        
-        UIVisualEffectView *visualEffectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
-        UIView *view = visualEffectView;
-        [nvc.view addSubview:view];
-        [nvc.view sendSubviewToBack:view];
-        nvc.view.backgroundColor = [UIColor clearColor];
-        
-        view.translatesAutoresizingMaskIntoConstraints = NO;
-        NSDictionary *views = NSDictionaryOfVariableBindings(view);
-        NSMutableArray *con = [[NSMutableArray alloc] init];
-        
-        NSArray *visuals = @[@"H:|-0-[view]-0-|",
-                             @"V:|-0-[view]-0-|"];
-        
-        
-        for (NSString *visual in visuals) {
-            [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
-        }
-        
-        [view.superview addConstraints:con];
-        
+    UIVisualEffect *blurEffect;
+    //        if (![OLKiteABTesting sharedInstance].darkTheme){
+    blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleExtraLight];
+    //        }
+    //        else{
+    //            blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleDark];
+    //        }
+    
+    UIVisualEffectView *visualEffectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
+    UIView *view = visualEffectView;
+    [nvc.view addSubview:view];
+    [nvc.view sendSubviewToBack:view];
+    nvc.view.backgroundColor = [UIColor clearColor];
+    
+    view.translatesAutoresizingMaskIntoConstraints = NO;
+    NSDictionary *views = NSDictionaryOfVariableBindings(view);
+    NSMutableArray *con = [[NSMutableArray alloc] init];
+    
+    NSArray *visuals = @[@"H:|-0-[view]-0-|",
+                         @"V:|-0-[view]-0-|"];
+    
+    
+    for (NSString *visual in visuals) {
+        [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
     }
-    else{
-        nvc.view.backgroundColor = [UIColor whiteColor];
-    }
+    
+    [view.superview addConstraints:con];
     
     [self addChildViewController:nvc];
     [self.detailsView addSubview:nvc.view];
     UIView *detailsVcView = nvc.view;
     
     detailsVcView.translatesAutoresizingMaskIntoConstraints = NO;
-    NSDictionary *views = NSDictionaryOfVariableBindings(detailsVcView);
-    NSMutableArray *con = [[NSMutableArray alloc] init];
+    views = NSDictionaryOfVariableBindings(detailsVcView);
+    con = [[NSMutableArray alloc] init];
     
-    NSArray *visuals = @[@"H:|-0-[detailsVcView]-0-|",
+    visuals = @[@"H:|-0-[detailsVcView]-0-|",
                          @"V:|-0-[detailsVcView]-0-|"];
     
     
@@ -372,16 +367,14 @@
     OLUpsellOffer *offer = [self upsellOfferToShow];
     BOOL shouldShowOffer = offer != nil;
     if (offer){
-        shouldShowOffer &= offer.minUnits <= self.userSelectedPhotos.count;
-        shouldShowOffer &= offer.maxUnits == 0 || offer.maxUnits >= self.userSelectedPhotos.count;
+        shouldShowOffer &= offer.minUnits <= [OLUserSession currentSession].userSelectedPhotos.count;
+        shouldShowOffer &= offer.maxUnits == 0 || offer.maxUnits >= [OLUserSession currentSession].userSelectedPhotos.count;
         shouldShowOffer &= [OLProduct productWithTemplateId:offer.offerTemplate] != nil;
     }
     if (shouldShowOffer){
         OLUpsellViewController *c = [self.storyboard instantiateViewControllerWithIdentifier:@"OLUpsellViewController"];
-        if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8){
-            c.providesPresentationContextTransitionStyle = true;
-            c.definesPresentationContext = true;
-        }
+        c.providesPresentationContextTransitionStyle = true;
+        c.definesPresentationContext = true;
         c.modalPresentationStyle = UIModalPresentationOverCurrentContext;
         c.delegate = self;
         c.offer = offer;
@@ -408,7 +401,6 @@
                 [vc safePerformSelector:@selector(setUserPhone:) withObject:self.userPhone];
                 [vc safePerformSelector:@selector(setKiteDelegate:) withObject:self.delegate];
                 [vc safePerformSelector:@selector(setProduct:) withObject:self.product];
-                [vc safePerformSelector:@selector(setUserSelectedPhotos:) withObject:self.userSelectedPhotos];
                 [self.navigationController pushViewController:vc animated:YES];
             }];
             return;
@@ -417,7 +409,6 @@
         [vc safePerformSelector:@selector(setUserPhone:) withObject:self.userPhone];
         [vc safePerformSelector:@selector(setKiteDelegate:) withObject:self.delegate];
         [vc safePerformSelector:@selector(setProduct:) withObject:self.product];
-        [vc safePerformSelector:@selector(setUserSelectedPhotos:) withObject:self.userSelectedPhotos];
         [self.navigationController pushViewController:vc animated:YES];
         return;
     }
@@ -430,7 +421,6 @@
     
     UIViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:[OLKiteUtils reviewViewControllerIdentifierForProduct:self.product photoSelectionScreen:[OLKiteUtils imageProvidersAvailable:self]]];
     
-    [vc safePerformSelector:@selector(setUserSelectedPhotos:) withObject:self.userSelectedPhotos];
     [vc safePerformSelector:@selector(setDelegate:) withObject:self.delegate];
     [vc safePerformSelector:@selector(setProduct:) withObject:self.product];
     
@@ -559,10 +549,10 @@
         //Do nothing, no assets needed
     }
     else if (offerProduct.quantityToFulfillOrder == 1){
-        [assets addObject:[OLAsset assetWithDataSource:[self.userSelectedPhotos.firstObject copy]]];
+        [assets addObject:[OLAsset assetWithDataSource:[[OLUserSession currentSession].userSelectedPhotos.firstObject copy]]];
     }
     else{
-        for (OLPrintPhoto *photo in self.userSelectedPhotos){
+        for (OLPrintPhoto *photo in [OLUserSession currentSession].userSelectedPhotos){
             [assets addObject:[OLAsset assetWithDataSource:[photo copy]]];
         }
     }
@@ -638,29 +628,6 @@
     [super recreateTornDownLargeObjectsToMemory];
     [self.product setProductPhotography:[(OLProductOverviewPageContentViewController *)self.pageController.viewControllers.firstObject pageIndex] toImageView:[(OLProductOverviewPageContentViewController *)self.pageController.viewControllers.firstObject imageView]];
 }
-
-#if __IPHONE_OS_VERSION_MIN_REQUIRED < 80000
-#pragma mark - Autorotate and Orientation Methods
-// Currently here to disable landscape orientations and rotation on iOS 7. When support is dropped, these can be deleted.
-
-- (BOOL)shouldAutorotate {
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
-        return YES;
-    }
-    else{
-        return NO;
-    }
-}
-
-- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
-        return UIInterfaceOrientationMaskAll;
-    }
-    else{
-        return UIInterfaceOrientationMaskPortrait;
-    }
-}
-#endif
 
 
 @end

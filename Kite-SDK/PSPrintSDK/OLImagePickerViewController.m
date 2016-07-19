@@ -41,7 +41,6 @@
 #import "OLPrintOrder.h"
 
 @interface OLKiteViewController ()
-@property (strong, nonatomic) NSMutableArray *userSelectedPhotos;
 @property (strong, nonatomic) NSMutableArray <OLCustomPhotoProvider *> *customImageProviders;
 @property (strong, nonatomic) OLPrintOrder *printOrder;
 @end
@@ -50,7 +49,6 @@
 @property (weak, nonatomic) IBOutlet UICollectionView *sourcesCollectionView;
 @property (weak, nonatomic) IBOutlet UIView *containerView;
 @property (strong, nonatomic) UIPageViewController *pageController;
-@property (strong, nonatomic) NSMutableArray *selectedImages;
 @property (strong, nonatomic) UIVisualEffectView *visualEffectView;
 
 @end
@@ -74,15 +72,14 @@
 
 @implementation OLImagePickerViewController
 
-- (NSMutableArray *)userSelectedPhotos{
-    OLKiteViewController *kiteVc = [OLKiteUtils kiteVcForViewController:self];
-    return kiteVc.userSelectedPhotos;
-}
+//- (NSMutableArray *)userSelectedPhotos{
+//    OLKiteViewController *kiteVc = [OLKiteUtils kiteVcForViewController:self];
+//    return kiteVc.userSelectedPhotos;
+//}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.selectedImages = [[NSMutableArray alloc] init];
     self.automaticallyAdjustsScrollViewInsets = NO;
         
     self.sourcesCollectionView.delegate = self;
@@ -110,33 +107,26 @@
     
     [view.superview addConstraints:con];
     
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0){
-        UIVisualEffect *blurEffect;
-        blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleExtraLight];
-        
-        self.visualEffectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
-        UIView *view = self.visualEffectView;
-        [self.sourcesCollectionView.superview insertSubview:view belowSubview:self.sourcesCollectionView];
-        
-        view.translatesAutoresizingMaskIntoConstraints = NO;
-        NSDictionary *views = NSDictionaryOfVariableBindings(view);
-        NSMutableArray *con = [[NSMutableArray alloc] init];
-        
-        NSArray *visuals = @[@"H:|-0-[view]-0-|",
-                             @"V:|-0-[view]-0-|"];
-        
-        
-        for (NSString *visual in visuals) {
-            [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
-        }
-        
-        [view.superview addConstraints:con];
-        
+    UIVisualEffect *blurEffect;
+    blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleExtraLight];
+    
+    self.visualEffectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
+    view = self.visualEffectView;
+    [self.sourcesCollectionView.superview insertSubview:view belowSubview:self.sourcesCollectionView];
+    
+    view.translatesAutoresizingMaskIntoConstraints = NO;
+    views = NSDictionaryOfVariableBindings(view);
+    con = [[NSMutableArray alloc] init];
+    
+    visuals = @[@"H:|-0-[view]-0-|",
+                         @"V:|-0-[view]-0-|"];
+    
+    
+    for (NSString *visual in visuals) {
+        [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
     }
-    else{
-        self.sourcesCollectionView.superview.backgroundColor = [UIColor whiteColor];
-    }
-
+    
+    [view.superview addConstraints:con];
 }
 
 - (void)viewDidLayoutSubviews{
@@ -147,6 +137,35 @@
         vc.albumLabelContainerTopCon.constant = [[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height + self.sourcesCollectionView.frame.size.height;
         vc.collectionView.contentInset = UIEdgeInsetsMake([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height + self.sourcesCollectionView.frame.size.height + vc.albumLabelContainer.frame.size.height, 0, 0, 0);
     }
+}
+
+#pragma mark Asset Management
+
+- (void)updateTitleBasedOnSelectedPhotoQuanitity {
+    if (self.userSelectedPhotos.count == 0) {
+        self.title = NSLocalizedString(@"Choose Photos", @"");
+    } else {
+        if (self.product.quantityToFulfillOrder > 1){
+            NSUInteger numOrders = 1 + (MAX(0, self.userSelectedPhotos.count - 1 + [self totalNumberOfExtras]) / self.product.quantityToFulfillOrder);
+            NSUInteger quanityToFulfilOrder = numOrders * self.product.quantityToFulfillOrder;
+            self.title = [NSString stringWithFormat:@"%lu / %lu", (unsigned long)self.userSelectedPhotos.count + [self totalNumberOfExtras], (unsigned long)quanityToFulfilOrder];
+        }
+        else{
+            self.title = [NSString stringWithFormat:@"%lu", (unsigned long)self.userSelectedPhotos.count];
+        }
+    }
+}
+
+-(NSUInteger) totalNumberOfExtras{
+    if (self.product.productTemplate.templateUI == kOLTemplateUIFrame || self.product.productTemplate.templateUI == kOLTemplateUIPoster || self.product.productTemplate.templateUI == kOLTemplateUIPhotobook){
+        return 0;
+    }
+    
+    NSUInteger res = 0;
+    for (OLPrintPhoto *photo in self.userSelectedPhotos){
+        res += photo.extraCopies;
+    }
+    return res;
 }
 
 #pragma mark PageViewController
@@ -161,7 +180,7 @@
 
 - (UIViewController *)viewControllerAtIndex:(NSInteger)index{
     OLImagePickerPhotosPageViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLImagePickerPhotosPageViewController"];
-    vc.selectedImages = self.selectedImages;
+    vc.imagePicker = self;
     
     PHFetchOptions *options = [[PHFetchOptions alloc] init];
     options.wantsIncrementalChangeDetails = NO;
@@ -192,7 +211,7 @@
     UILabel *label = [cell viewWithTag:20];
     if (indexPath.item == [OLKiteUtils cameraRollProviderIndex:self]){
         imageView.image = [UIImage imageNamedInKiteBundle:@"import_gallery"];
-        label.text = NSLocalizedString(@"Camera Roll", @"");
+        label.text = NSLocalizedString(@"Photo Library", @"");
     }
     else if (indexPath.item == [OLKiteUtils facebookProviderIndex:self]){
         imageView.image = [UIImage imageNamedInKiteBundle:@"import_facebook"];
@@ -206,11 +225,10 @@
         imageView.image = [UIImage imageNamedInKiteBundle:@"import_qr"];
         label.text = NSLocalizedString(@"Transfer from your phone", @"");
     }
-#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_SOURCES
     else{
-        imageView.image = [[OLKiteUtils kiteVcForViewController:self].customImageProviders[indexPath.item - self.customProvidersStartAtIndex] icon];
+        imageView.image = [[OLKiteUtils kiteVcForViewController:self].customImageProviders[indexPath.item - [OLKiteUtils customProvidersStartIndex:self]] icon];
+        label.text = [[OLKiteUtils kiteVcForViewController:self].customImageProviders[indexPath.item - [OLKiteUtils customProvidersStartIndex:self]] name];
     }
-#endif
     
     return cell;
 }
@@ -238,15 +256,9 @@
 
 - (BOOL)shouldGoToOrderPreview {
     if (self.userSelectedPhotos.count == 0) {
-        if ([UIAlertController class]){
-            UIAlertController *av = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Oops!", @"") message:NSLocalizedString(@"Please select some images to print first.", @"") preferredStyle:UIAlertControllerStyleAlert];
-            [av addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", @"") style:UIAlertActionStyleDefault handler:NULL]];
-            [self presentViewController:av animated:YES completion:NULL];
-        }
-        else{
-            UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Oops!", @"") message:NSLocalizedString(@"Please select some images to print first.", @"") delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"") otherButtonTitles:nil];
-            [av show];
-        }
+        UIAlertController *av = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Oops!", @"") message:NSLocalizedString(@"Please select some images to print first.", @"") preferredStyle:UIAlertControllerStyleAlert];
+        [av addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", @"") style:UIAlertActionStyleDefault handler:NULL]];
+        [self presentViewController:av animated:YES completion:NULL];
         return NO;
     }
     
@@ -255,18 +267,6 @@
 
 - (IBAction)onButtonNextClicked:(UIButton *)sender {
     if ([self shouldGoToOrderPreview]) {
-        
-        for (id asset in self.selectedImages){ //Replace this with populateArray...
-            OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
-            if ([asset isKindOfClass:[PHAsset class]]){
-                printPhoto.asset = asset;
-            }
-            
-            if (printPhoto){
-                [self.userSelectedPhotos addObject:printPhoto];
-            }
-        }
-        
         
         OLUpsellOffer *offer = [self upsellOfferToShow];
         BOOL shouldShowOffer = offer != nil;
@@ -279,10 +279,8 @@
         [OLAnalytics trackUpsellShown:shouldShowOffer];
         if (shouldShowOffer){
             OLUpsellViewController *c = [self.storyboard instantiateViewControllerWithIdentifier:@"OLUpsellViewController"];
-            if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8){
-                c.providesPresentationContextTransitionStyle = true;
-                c.definesPresentationContext = true;
-            }
+            c.providesPresentationContextTransitionStyle = true;
+            c.definesPresentationContext = true;
             c.modalPresentationStyle = UIModalPresentationOverCurrentContext;
             c.delegate = self;
             c.offer = offer;
@@ -299,7 +297,6 @@
     UIViewController* orvc = [self.storyboard instantiateViewControllerWithIdentifier:[OLKiteUtils reviewViewControllerIdentifierForProduct:self.product photoSelectionScreen:NO]];
     
     [orvc safePerformSelector:@selector(setProduct:) withObject:self.product];
-    [orvc safePerformSelector:@selector(setUserSelectedPhotos:) withObject:self.userSelectedPhotos];
     [self.navigationController pushViewController:orvc animated:YES];
 }
 

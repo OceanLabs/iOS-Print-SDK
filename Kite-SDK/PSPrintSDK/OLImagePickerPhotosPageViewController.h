@@ -29,6 +29,7 @@
 
 
 #import <UIKit/UIKit.h>
+#import "OLImagePickerViewController.h"
 
 @interface OLImagePickerPhotosPageViewController : UIViewController
 
@@ -40,7 +41,7 @@
 @property (assign, nonatomic) NSInteger maximumPhotos;
 
 @property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
-@property (weak, nonatomic) NSMutableArray *selectedImages;
+@property (weak, nonatomic) OLImagePickerViewController *imagePicker;
 
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *albumLabelContainerTopCon;
 @property (weak, nonatomic) IBOutlet UIView *albumLabelContainer;

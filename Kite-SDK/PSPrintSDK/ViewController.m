@@ -39,22 +39,16 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
 
 #import "ViewController.h"
 #import "OLKitePrintSDK.h"
-#import "OLAssetsPickerController.h"
 #import "OLImageCachingManager.h"
 #import "CatsAssetCollectionDataSource.h"
 #import "DogsAssetCollectionDataSource.h"
 
-#ifdef OL_KITE_AT_LEAST_IOS8
 #import <CTAssetsPickerController/CTAssetsPickerController.h>
-#endif
 
-#import <AssetsLibrary/AssetsLibrary.h>
 @import Photos;
 
-@interface ViewController () <OLAssetsPickerControllerDelegate,
-#ifdef OL_KITE_AT_LEAST_IOS8
+@interface ViewController () <
 CTAssetsPickerControllerDelegate,
-#endif
 UINavigationControllerDelegate, OLKiteDelegate>
 @property (weak, nonatomic) IBOutlet UIButton *localPhotosButton;
 @property (weak, nonatomic) IBOutlet UIButton *remotePhotosButton;
@@ -97,43 +91,30 @@ UINavigationControllerDelegate, OLKiteDelegate>
     if (![self isAPIKeySet]) return;
     __block UIViewController *picker;
     __block Class assetClass;
-#ifdef OL_KITE_CI_DEPLOY
-    if (NO){}
-#else
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8 || !definesAtLeastiOS8){
-        picker = [[OLAssetsPickerController alloc] init];
-        [(OLAssetsPickerController *)picker setAssetsFilter:[ALAssetsFilter allPhotos]];
-        assetClass = [ALAsset class];
-        ((OLAssetsPickerController *)picker).delegate = self;
+    
+    if ([PHPhotoLibrary authorizationStatus] == PHAuthorizationStatusNotDetermined){
+        [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status){
+            if (status == PHAuthorizationStatusAuthorized){
+                picker = [[CTAssetsPickerController alloc] init];
+                ((CTAssetsPickerController *)picker).showsEmptyAlbums = NO;
+                PHFetchOptions *options = [[PHFetchOptions alloc] init];
+                options.predicate = [NSPredicate predicateWithFormat:@"mediaType == %d", PHAssetMediaTypeImage];
+                ((CTAssetsPickerController *)picker).assetsFetchOptions = options;
+                assetClass = [PHAsset class];
+                ((CTAssetsPickerController *)picker).delegate = self;
+                [self presentViewController:picker animated:YES completion:nil];
+            }
+        }];
     }
-#endif
-#ifdef OL_KITE_AT_LEAST_IOS8
     else{
-        if ([PHPhotoLibrary authorizationStatus] == PHAuthorizationStatusNotDetermined){
-            [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status){
-                if (status == PHAuthorizationStatusAuthorized){
-                    picker = [[CTAssetsPickerController alloc] init];
-                    ((CTAssetsPickerController *)picker).showsEmptyAlbums = NO;
-                    PHFetchOptions *options = [[PHFetchOptions alloc] init];
-                    options.predicate = [NSPredicate predicateWithFormat:@"mediaType == %d", PHAssetMediaTypeImage];
-                    ((CTAssetsPickerController *)picker).assetsFetchOptions = options;
-                    assetClass = [PHAsset class];
-                    ((CTAssetsPickerController *)picker).delegate = self;
-                    [self presentViewController:picker animated:YES completion:nil];
-                }
-            }];
-        }
-        else{
-            picker = [[CTAssetsPickerController alloc] init];
-            ((CTAssetsPickerController *)picker).showsEmptyAlbums = NO;
-            PHFetchOptions *options = [[PHFetchOptions alloc] init];
-            options.predicate = [NSPredicate predicateWithFormat:@"mediaType == %d", PHAssetMediaTypeImage];
-            ((CTAssetsPickerController *)picker).assetsFetchOptions = options;
-            assetClass = [PHAsset class];
-            ((CTAssetsPickerController *)picker).delegate = self;
-        }
+        picker = [[CTAssetsPickerController alloc] init];
+        ((CTAssetsPickerController *)picker).showsEmptyAlbums = NO;
+        PHFetchOptions *options = [[PHFetchOptions alloc] init];
+        options.predicate = [NSPredicate predicateWithFormat:@"mediaType == %d", PHAssetMediaTypeImage];
+        ((CTAssetsPickerController *)picker).assetsFetchOptions = options;
+        assetClass = [PHAsset class];
+        ((CTAssetsPickerController *)picker).delegate = self;
     }
-#endif
     if (picker){
         [self presentViewController:picker animated:YES completion:nil];
     }
@@ -202,30 +183,13 @@ UINavigationControllerDelegate, OLKiteDelegate>
     
     //Register for push notifications
     NSUInteger types = (UIUserNotificationTypeSound | UIUserNotificationTypeAlert | UIUserNotificationTypeBadge);
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
-        [[UIApplication sharedApplication] registerUserNotificationSettings:
-         [UIUserNotificationSettings settingsForTypes:types categories:nil]];
-        [[UIApplication sharedApplication] registerForRemoteNotifications];
-    }
-    //    else {
-    //        [[UIApplication sharedApplication] registerForRemoteNotificationTypes:types];
-    //    }
-    
+    [[UIApplication sharedApplication] registerUserNotificationSettings:
+     [UIUserNotificationSettings settingsForTypes:types categories:nil]];
+    [[UIApplication sharedApplication] registerForRemoteNotifications];
 }
-
 - (IBAction)onButtonPrintRemotePhotos:(id)sender {
     if (![self isAPIKeySet]) return;
     [[[UIAlertView alloc] initWithTitle:@"Remote URLS" message:@"Feel free to Change hardcoded remote image URLs in ViewController.m onButtonPrintRemotePhotos:" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
-}
-
-#pragma mark - UIAlertViewDelegate methods
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-    NSArray *assets = @[[OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/1.jpg"]],
-                        [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/2.jpg"]],
-                        [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/3.jpg"]],
-                        [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/4.jpg"]]];
-    
-    [self printWithAssets:assets];
 }
 
 #pragma mark - UIImagePickerControllerDelegate methods
@@ -249,9 +213,6 @@ UINavigationControllerDelegate, OLKiteDelegate>
             if ([asset isKindOfClass:[PHAsset class]]){
                 [assetObjects addObject:[OLAsset assetWithPHAsset:asset]];
             }
-            else if([asset isKindOfClass:[ALAsset class]]){
-                [assetObjects addObject:[OLAsset assetWithALAsset:asset]];
-            }
             else{
                 NSLog(@"Oops, don’t recognize class %@, starting with no assets", [asset class]);
             }
@@ -261,7 +222,6 @@ UINavigationControllerDelegate, OLKiteDelegate>
     
 }
 
-#ifdef OL_KITE_AT_LEAST_IOS8
 - (void)assetsPickerController:(CTAssetsPickerController *)picker didDeSelectAsset:(PHAsset *)asset{
     PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
     options.networkAccessAllowed = YES;
@@ -274,31 +234,7 @@ UINavigationControllerDelegate, OLKiteDelegate>
     [[OLImageCachingManager sharedInstance].photosCachingManager startCachingImagesForAssets:@[asset] targetSize:PHImageManagerMaximumSize contentMode:PHImageContentModeAspectFill options:options];
 }
 
-#endif
-
-- (BOOL)assetsPickerController:(OLAssetsPickerController *)picker shouldShowAssetsGroup:(ALAssetsGroup *)group{
-    if (group.numberOfAssets == 0){
-        return NO;
-    }
-    return YES;
-}
-
-- (BOOL)assetsPickerController:(OLAssetsPickerController *)picker shouldShowAsset:(id)asset{
-    NSString *fileName = [[[asset defaultRepresentation] filename] lowercaseString];
-    if (!([fileName hasSuffix:@".jpg"] || [fileName hasSuffix:@".jpeg"] || [fileName hasSuffix:@"png"] || [fileName hasSuffix:@"tiff"])) {
-        return NO;
-    }
-    return YES;
-}
-
 #pragma mark - OLKiteDelete
-
-- (BOOL)kiteController:(OLKiteViewController *)controller isDefaultAssetsGroup:(ALAssetsGroup *)group {
-    //    if ([[group valueForProperty:ALAssetsGroupPropertyName] isEqualToString:@"Instagram"]) {
-    //        return YES;
-    //    }
-    return NO;
-}
 
 - (BOOL)kiteControllerShouldAllowUserToAddMorePhotos:(OLKiteViewController *)controller {
     return YES;
@@ -329,7 +265,7 @@ UINavigationControllerDelegate, OLKiteDelegate>
 #pragma mark Internal
 
 - (void)setupCIDeploymentWithAssets:(NSArray *)assets{
-    BOOL shouldOfferAPIChange = [[[UIDevice currentDevice] systemVersion] floatValue] >= 8;
+    BOOL shouldOfferAPIChange = YES;
     UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
     
     if (!([pasteboard containsPasteboardTypes: [NSArray arrayWithObject:@"public.utf8-plain-text"]] && pasteboard.string.length == 40)) {
@@ -369,17 +305,6 @@ UINavigationControllerDelegate, OLKiteDelegate>
             vc.userPhone = @"";
             vc.delegate = self;
             [self presentViewController:vc animated:YES completion:NULL];
-            
-            //Register for push notifications
-            NSUInteger types = (UIUserNotificationTypeSound | UIUserNotificationTypeAlert | UIUserNotificationTypeBadge);
-            if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
-                [[UIApplication sharedApplication] registerUserNotificationSettings:
-                 [UIUserNotificationSettings settingsForTypes:types categories:nil]];
-                [[UIApplication sharedApplication] registerForRemoteNotifications];
-            }
-            //    else {
-            //        [[UIApplication sharedApplication] registerForRemoteNotificationTypes:types];
-            //    }
         }]];
         [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Yes and use staging", @"") style:UIAlertActionStyleDefault handler:^(id action){
             [OLKitePrintSDK setUseStaging:YES];

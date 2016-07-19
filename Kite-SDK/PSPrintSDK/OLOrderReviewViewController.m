@@ -49,13 +49,13 @@
 #import "OLPaymentViewController.h"
 #import "UIViewController+OLMethods.h"
 #import "OLImagePreviewViewController.h"
+#import "OLUserSession.h"
 
 #ifdef OL_KITE_OFFER_ADOBE
 #import <AdobeCreativeSDKImage/AdobeCreativeSDKImage.h>
 #import <AdobeCreativeSDKCore/AdobeCreativeSDKCore.h>
 #endif
 
-static const NSUInteger kTagAlertViewSelectMorePhotos = 99;
 static const NSUInteger kTagAlertViewDeletePhoto = 98;
 
 @interface OLKitePrintSDK (Private)
@@ -96,7 +96,7 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
 @property (strong, nonatomic) OLUpsellOffer *redeemedOffer;
 @end
 
-@interface OLOrderReviewViewController () <OLCheckoutDelegate, UIAlertViewDelegate, UICollectionViewDelegateFlowLayout,
+@interface OLOrderReviewViewController () <OLCheckoutDelegate, UICollectionViewDelegateFlowLayout,
 #ifdef OL_KITE_OFFER_ADOBE
 AdobeUXImageEditorViewControllerDelegate,
 #endif
@@ -182,7 +182,7 @@ UIViewControllerPreviewingDelegate>
     
 #ifndef OL_NO_ANALYTICS
     if (!self.navigationController){
-        [OLAnalytics trackReviewScreenHitBack:self.product.productTemplate.name numberOfPhotos:self.userSelectedPhotos.count];
+        [OLAnalytics trackReviewScreenHitBack:self.product.productTemplate.name numberOfPhotos:[OLUserSession currentSession].userSelectedPhotos.count];
     }
 #endif
 }
@@ -237,7 +237,7 @@ UIViewControllerPreviewingDelegate>
 
 -(NSUInteger) totalNumberOfExtras{
     NSUInteger res = 0;
-    for (OLPrintPhoto *photo in self.userSelectedPhotos){
+    for (OLPrintPhoto *photo in [OLUserSession currentSession].userSelectedPhotos){
         res += photo.extraCopies;
     }
     return res;
@@ -245,9 +245,9 @@ UIViewControllerPreviewingDelegate>
 
 - (void)updateTitleBasedOnSelectedPhotoQuanitity {
     if (self.product.quantityToFulfillOrder > 1){
-        NSUInteger numOrders = 1 + (MAX(0, self.userSelectedPhotos.count - 1 + [self totalNumberOfExtras]) / self.product.quantityToFulfillOrder);
+        NSUInteger numOrders = 1 + (MAX(0, [OLUserSession currentSession].userSelectedPhotos.count - 1 + [self totalNumberOfExtras]) / self.product.quantityToFulfillOrder);
         NSUInteger quanityToFulfilOrder = numOrders * self.product.quantityToFulfillOrder;
-        self.title = [NSString stringWithFormat:@"%lu / %lu", (unsigned long) (self.userSelectedPhotos.count + [self totalNumberOfExtras]), (unsigned long)quanityToFulfilOrder];
+        self.title = [NSString stringWithFormat:@"%lu / %lu", (unsigned long) ([OLUserSession currentSession].userSelectedPhotos.count + [self totalNumberOfExtras]), (unsigned long)quanityToFulfilOrder];
     }
     else{
         self.title = NSLocalizedString(@"Review", @"");
@@ -255,25 +255,17 @@ UIViewControllerPreviewingDelegate>
 }
 
 -(BOOL) shouldGoToCheckout{
-    NSUInteger selectedCount = self.userSelectedPhotos.count + [self totalNumberOfExtras];
+    NSUInteger selectedCount = [OLUserSession currentSession].userSelectedPhotos.count + [self totalNumberOfExtras];
     NSUInteger numOrders = 1 + (MAX(0, selectedCount - 1) / self.product.quantityToFulfillOrder);
     NSUInteger quantityToFulfilOrder = numOrders * self.product.quantityToFulfillOrder;
     if (selectedCount < quantityToFulfilOrder) {
         NSUInteger canSelectExtraCount = quantityToFulfilOrder - selectedCount;
-        if ([UIAlertController class]){
-            UIAlertController *ac = [UIAlertController alertControllerWithTitle:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"You've selected %d photos.", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") ,selectedCount] message:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"You can add %d more for the same price.", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), canSelectExtraCount] preferredStyle:UIAlertControllerStyleAlert];
-            [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"Print these", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
-                [self doCheckout];
-            }]];
-            [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"Add more", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") style:UIAlertActionStyleCancel handler:NULL]];
-            [self presentViewController:ac animated:YES completion:NULL];
-        }
-        else{
-            UIAlertView *av = [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:NSLocalizedString(@"You've selected %d photos.", @""),selectedCount] message:[NSString stringWithFormat:NSLocalizedString(@"You can add %d more for the same price.", @""), canSelectExtraCount] delegate:nil cancelButtonTitle:NSLocalizedString(@"Add more", @"") otherButtonTitles:NSLocalizedString(@"Print these", @""), nil];
-            av.tag = kTagAlertViewSelectMorePhotos;
-            av.delegate = self;
-            [av show];
-        }
+        UIAlertController *ac = [UIAlertController alertControllerWithTitle:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"You've selected %d photos.", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") ,selectedCount] message:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"You can add %d more for the same price.", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), canSelectExtraCount] preferredStyle:UIAlertControllerStyleAlert];
+        [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"Print these", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
+            [self doCheckout];
+        }]];
+        [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"Add more", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") style:UIAlertActionStyleCancel handler:NULL]];
+        [self presentViewController:ac animated:YES completion:NULL];
         return NO;
     }
     return YES;
@@ -368,9 +360,9 @@ UIViewControllerPreviewingDelegate>
 #ifndef OL_NO_ANALYTICS
     [OLAnalytics trackReviewScreenDeletedPhotoForProductName:self.product.productTemplate.name];
 #endif
-    [self.userSelectedPhotos removeObjectAtIndex:index];
+    [[OLUserSession currentSession].userSelectedPhotos removeObjectAtIndex:index];
     
-    if (self.userSelectedPhotos.count == 0){
+    if ([OLUserSession currentSession].userSelectedPhotos.count == 0){
         [self.navigationController popViewControllerAnimated:YES];
     }
     
@@ -400,7 +392,7 @@ UIViewControllerPreviewingDelegate>
     
     [previewingContext setSourceRect:[cell convertRect:imageView.frame toView:self.collectionView]];
     
-    self.editingPrintPhoto = self.userSelectedPhotos[indexPath.item];
+    self.editingPrintPhoto = [OLUserSession currentSession].userSelectedPhotos[indexPath.item];
     
     OLImagePreviewViewController *previewVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLImagePreviewViewController"];
     [self.editingPrintPhoto getImageWithProgress:NULL completion:^(UIImage *image){
@@ -455,8 +447,8 @@ UIViewControllerPreviewingDelegate>
     }
     NSIndexPath* indexPath = [self.collectionView indexPathForCell:(UICollectionViewCell *)cell];
     
-    NSInteger extraCopies = [self.userSelectedPhotos[indexPath.item] extraCopies] + 1;
-    [self.userSelectedPhotos[indexPath.item] setExtraCopies:extraCopies];
+    NSInteger extraCopies = [[OLUserSession currentSession].userSelectedPhotos[indexPath.item] extraCopies] + 1;
+    [[OLUserSession currentSession].userSelectedPhotos[indexPath.item] setExtraCopies:extraCopies];
     UILabel* countLabel = (UILabel *)[cellContentView viewWithTag:30];
     [countLabel setText: [NSString stringWithFormat:@"%lu", (unsigned long)extraCopies + 1]];
     
@@ -475,7 +467,7 @@ UIViewControllerPreviewingDelegate>
     }
     NSIndexPath* indexPath = [self.collectionView indexPathForCell:(UICollectionViewCell *)cell];
     
-    NSInteger extraCopies = [self.userSelectedPhotos[indexPath.item] extraCopies];
+    NSInteger extraCopies = [[OLUserSession currentSession].userSelectedPhotos[indexPath.item] extraCopies];
     if (extraCopies == 0){
         if ([UIAlertController class]){
             UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Remove?", @"") message:NSLocalizedString(@"Do you want to remove this photo?", @"") preferredStyle:UIAlertControllerStyleAlert];
@@ -495,7 +487,7 @@ UIViewControllerPreviewingDelegate>
     }
     extraCopies--;
     
-    [self.userSelectedPhotos[indexPath.item] setExtraCopies:extraCopies];
+    [[OLUserSession currentSession].userSelectedPhotos[indexPath.item] setExtraCopies:extraCopies];
     UILabel* countLabel = (UILabel *)[cellContentView viewWithTag:30];
     [countLabel setText: [NSString stringWithFormat:@"%lu", (unsigned long)extraCopies + 1]];
     
@@ -525,7 +517,7 @@ UIViewControllerPreviewingDelegate>
     }
     NSIndexPath *indexPath = [self.collectionView indexPathForCell:(UICollectionViewCell *)cell];
     
-    self.editingPrintPhoto = self.userSelectedPhotos[indexPath.item];
+    self.editingPrintPhoto = [OLUserSession currentSession].userSelectedPhotos[indexPath.item];
     
     [self.editingPrintPhoto getImageWithProgress:NULL completion:^(UIImage *image){
         
@@ -581,11 +573,11 @@ UIViewControllerPreviewingDelegate>
 
 - (void)preparePhotosForCheckout{
     self.checkoutPhotos = [[NSMutableArray alloc] init];
-    [self.checkoutPhotos addObjectsFromArray:self.userSelectedPhotos];
-    for (int i = 0; i < self.userSelectedPhotos.count; i++) {
-        NSInteger numberOfCopies = [self.userSelectedPhotos[i] extraCopies];
+    [self.checkoutPhotos addObjectsFromArray:[OLUserSession currentSession].userSelectedPhotos];
+    for (int i = 0; i < [OLUserSession currentSession].userSelectedPhotos.count; i++) {
+        NSInteger numberOfCopies = [[OLUserSession currentSession].userSelectedPhotos[i] extraCopies];
         for (NSInteger j = 0; j < numberOfCopies; j++){
-            [self.checkoutPhotos addObject:self.userSelectedPhotos[i]];
+            [self.checkoutPhotos addObject:[OLUserSession currentSession].userSelectedPhotos[i]];
         }
     }
 }
@@ -593,7 +585,7 @@ UIViewControllerPreviewingDelegate>
 #pragma mark UICollectionView data source and delegate methods
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
-    return [self.userSelectedPhotos count];
+    return [[OLUserSession currentSession].userSelectedPhotos count];
 }
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
@@ -653,9 +645,9 @@ UIViewControllerPreviewingDelegate>
     [downButton addTarget:self action:@selector(onButtonDownArrowClicked:) forControlEvents:UIControlEventTouchUpInside];
     
     UILabel *countLabel = (UILabel *)[cell.contentView viewWithTag:30];
-    [countLabel setText: [NSString stringWithFormat:@"%ld", (long)[self.userSelectedPhotos[indexPath.item] extraCopies]+1]];
+    [countLabel setText: [NSString stringWithFormat:@"%ld", (long)[[OLUserSession currentSession].userSelectedPhotos[indexPath.item] extraCopies]+1]];
     
-    OLPrintPhoto *printPhoto = (OLPrintPhoto*)[self.userSelectedPhotos objectAtIndex:indexPath.item];
+    OLPrintPhoto *printPhoto = (OLPrintPhoto*)[[OLUserSession currentSession].userSelectedPhotos objectAtIndex:indexPath.item];
     [printPhoto setImageSize:cellImage.frame.size cropped:YES progress:^(float progress){
         [cellImage setProgress:progress];
     } completionHandler:^(UIImage *image){
@@ -736,23 +728,6 @@ UIViewControllerPreviewingDelegate>
     return 0.0;
 }
 
-#if __IPHONE_OS_VERSION_MIN_REQUIRED < 80000
-#pragma mark - UIAlertViewDelegate methods
-
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-    if (alertView.tag == kTagAlertViewSelectMorePhotos) {
-        if (buttonIndex == 1) {
-            [self doCheckout];
-        }
-    }
-    else if (alertView.tag == kTagAlertViewDeletePhoto) {
-        if (buttonIndex == 0){
-            [self deletePhotoAtIndex:self.indexOfPhotoToDelete];
-        }
-    }
-}
-#endif
-
 #pragma mark - OLImageEditorViewControllerDelegate methods
 
 - (void)scrollCropViewControllerDidCancel:(OLScrollCropViewController *)cropper{
@@ -778,8 +753,8 @@ UIViewControllerPreviewingDelegate>
     self.editingPrintPhoto.edits = cropper.edits;
     
     //Need to do some work to only reload the proper cells, otherwise the cropped image might zoom to the wrong cell.
-    for (NSInteger i = 0; i < self.userSelectedPhotos.count; i++){
-        if (self.userSelectedPhotos[i] == self.editingPrintPhoto){
+    for (NSInteger i = 0; i < [OLUserSession currentSession].userSelectedPhotos.count; i++){
+        if ([OLUserSession currentSession].userSelectedPhotos[i] == self.editingPrintPhoto){
             NSIndexPath *indexPath = [NSIndexPath indexPathForItem:i inSection:0];
             if (indexPath){
                 [self.collectionView reloadItemsAtIndexPaths:@[indexPath]];
@@ -854,28 +829,5 @@ UIViewControllerPreviewingDelegate>
     [super recreateTornDownLargeObjectsToMemory];
     [self.collectionView reloadData];
 }
-
-#if __IPHONE_OS_VERSION_MIN_REQUIRED < 80000
-#pragma mark - Autorotate and Orientation Methods
-// Currently here to disable landscape orientations and rotation on iOS 7. When support is dropped, these can be deleted.
-
-- (BOOL)shouldAutorotate {
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
-        return YES;
-    }
-    else{
-        return NO;
-    }
-}
-
-- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
-        return UIInterfaceOrientationMaskAll;
-    }
-    else{
-        return UIInterfaceOrientationMaskPortrait;
-    }
-}
-#endif
 
 @end

@@ -104,12 +104,7 @@
         return NO;
     }
     
-    BOOL customProvidersAvailable = NO;
-#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
-    customProvidersAvailable = kiteVc.customImageProviders.count > 0;
-#endif
-    
-    return [OLKiteUtils cameraRollEnabled:topVc] || [OLKiteUtils instagramEnabled] || [OLKiteUtils facebookEnabled] || customProvidersAvailable;
+    return [OLKiteUtils cameraRollEnabled:topVc] || [OLKiteUtils instagramEnabled] || [OLKiteUtils facebookEnabled] || kiteVc.customImageProviders.count > 0;
 }
 
 + (BOOL)cameraRollEnabled:(UIViewController *)topVc{
@@ -168,8 +163,11 @@
 }
 
 + (NSInteger)qrCodeProviderStartIndex:(UIViewController *)topVc{
-    NSInteger index = 0;
+    if (![self qrCodeUploadEnabled]){
+        return -1;
+    }
     
+    NSInteger index = 0;
     if ([OLKiteUtils cameraRollEnabled:topVc]){
         index++;
     }
@@ -183,10 +181,12 @@
     return index;
 }
 
-#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
 + (NSInteger)customProvidersStartIndex:(UIViewController *)topVc{
+    if ([OLKiteUtils kiteVcForViewController:topVc].customImageProviders.count == 0){
+        return -1;
+    }
+    
     NSInteger index = 0;
-
     if ([OLKiteUtils cameraRollEnabled:topVc]){
         index++;
     }
@@ -202,7 +202,6 @@
     
     return index;
 }
-#endif
 
 + (id<OLKiteDelegate>)kiteDelegate:(UIViewController *)topVC {
     OLKiteViewController *kiteVC = [self kiteVcForViewController:topVC];

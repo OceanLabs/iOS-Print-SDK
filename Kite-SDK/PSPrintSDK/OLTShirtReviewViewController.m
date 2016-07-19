@@ -9,6 +9,7 @@
 #import "OLTShirtReviewViewController.h"
 #import "OLColorSelectionCollectionViewCell.h"
 #import "UIImage+ImageNamedInKiteBundle.h"
+#import "OLUserSession.h"
 
 const NSInteger kOLDrawerTagImages = 10;
 const NSInteger kOLDrawerTagColors = 20;
@@ -101,7 +102,7 @@ const NSInteger kOLDrawerTagSizes = 40;
 
 - (IBAction)onIconButtonClicked:(UIButton *)sender {
     void (^buttonAction)() = ^void(){
-        if (self.userSelectedPhotos.count == 0 && sender.tag == kOLDrawerTagImages){
+        if ([OLUserSession currentSession].userSelectedPhotos.count == 0 && sender.tag == kOLDrawerTagImages){
             //TODO check if we can add photos
             [self collectionView:self.imagesCollectionView didSelectItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
         }

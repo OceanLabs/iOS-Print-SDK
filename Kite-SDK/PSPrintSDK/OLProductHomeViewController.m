@@ -53,6 +53,7 @@
 #import "UIViewController+OLMethods.h"
 #import "UIViewController+TraitCollectionCompatibility.h"
 #import "OLImageDownloader.h"
+#import "OLUserSession.h"
 
 #define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
 
@@ -67,8 +68,6 @@
 @interface OLKiteViewController (Private)
 
 + (NSString *)storyboardIdentifierForGroupSelected:(OLProductGroup *)group;
-@property (strong, nonatomic) OLPrintOrder *printOrder;
-@property (strong, nonatomic) NSMutableArray *userSelectedPhotos;
 - (void)dismiss;
 
 @end
@@ -544,14 +543,12 @@
     OLProductGroup *group = self.productGroups[indexPath.row];
     OLProduct *product = [group.products firstObject];
     product.uuid = nil;
-    [OLKiteUtils kiteVcForViewController:self].userSelectedPhotos = nil;
-    self.userSelectedPhotos = [OLKiteUtils kiteVcForViewController:self].userSelectedPhotos;
+    [OLUserSession currentSession].userSelectedPhotos = nil;
     
     NSString *identifier = [OLKiteViewController storyboardIdentifierForGroupSelected:group];
     
     id vc = [self.storyboard instantiateViewControllerWithIdentifier:identifier];
     [vc safePerformSelector:@selector(setAssets:) withObject:self.assets];
-    [vc safePerformSelector:@selector(setUserSelectedPhotos:) withObject:self.userSelectedPhotos];
     [vc safePerformSelector:@selector(setDelegate:) withObject:self.delegate];
     [vc safePerformSelector:@selector(setFilterProducts:) withObject:self.filterProducts];
     [vc safePerformSelector:@selector(setTemplateClass:) withObject:product.productTemplate.templateClass];
@@ -584,14 +581,6 @@
     return numberOfProducts + extras;
 }
 
-- (void)fixCellFrameOnIOS7:(UICollectionViewCell *)cell {
-    // Ugly hack to fix cell frame on iOS 7 iPad. For whatever reason the frame size is not as per collectionView:layout:sizeForItemAtIndexPath:, others also experiencing this issue http://stackoverflow.com/questions/25804588/auto-layout-in-uicollectionviewcell-not-working
-    if (SYSTEM_VERSION_LESS_THAN(@"8")) {
-        [[cell contentView] setFrame:[cell bounds]];
-        [[cell contentView] setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight];
-    }
-}
-
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
     if (indexPath.section == 0 && ![[OLKiteABTesting sharedInstance].qualityBannerType isEqualToString:@"None"] ){
         UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"qualityBanner" forIndexPath:indexPath];
@@ -603,7 +592,6 @@
     
     if (indexPath.item >= self.productGroups.count){
         UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"extraCell" forIndexPath:indexPath];
-        [self fixCellFrameOnIOS7:cell];
         UIImageView *cellImageView = (UIImageView *)[cell.contentView viewWithTag:40];
         [[OLImageDownloader sharedInstance] downloadImageAtURL:[NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/product_photography/placeholder.png"] withCompletionHandler:^(UIImage *image, NSError *error){
             if (error) return;
@@ -622,7 +610,6 @@
     
     NSString *identifier = [NSString stringWithFormat:@"ProductCell%@", [OLKiteABTesting sharedInstance].productTileStyle];
     UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
-    [self fixCellFrameOnIOS7:cell];
     
     UIView *view = cell.contentView;
     view.translatesAutoresizingMaskIntoConstraints = NO;
@@ -682,41 +669,6 @@
     NSIndexPath *indexPath = [self.collectionView indexPathForCell:(UICollectionViewCell *)view];
     [self collectionView:self.collectionView didSelectItemAtIndexPath:indexPath];
 }
-
-#pragma mark - Tear down and restore
-
-//- (void)tearDownLargeObjectsFromMemory{
-//    [super tearDownLargeObjectsFromMemory];
-//    [self.collectionView reloadData];
-//}
-//
-//- (void)recreateTornDownLargeObjectsToMemory{
-//    [super recreateTornDownLargeObjectsToMemory];
-//    [self.collectionView reloadData];
-//}
-
-#if __IPHONE_OS_VERSION_MIN_REQUIRED < 80000
-#pragma mark - Autorotate and Orientation Methods
-// Currently here to disable landscape orientations and rotation on iOS 7. When support is dropped, these can be deleted.
-
-- (BOOL)shouldAutorotate {
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
-        return YES;
-    }
-    else{
-        return NO;
-    }
-}
-
-- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
-        return UIInterfaceOrientationMaskAll;
-    }
-    else{
-        return UIInterfaceOrientationMaskPortrait;
-    }
-}
-#endif
 
 
 @end

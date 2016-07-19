@@ -41,6 +41,7 @@
 #import "OLRemoteImageView.h"
 #import "OLKiteUtils.h"
 #import "OLImagePreviewViewController.h"
+#import "OLUserSession.h"
 
 #ifdef OL_KITE_OFFER_ADOBE
 #import <AdobeCreativeSDKImage/AdobeCreativeSDKImage.h>
@@ -97,12 +98,12 @@ OLScrollCropViewControllerDelegate>
     
     // ensure order is maxed out by adding duplicates as necessary
     self.posterPhotos = [[NSMutableArray alloc] init];
-    [self.posterPhotos addObjectsFromArray:self.userSelectedPhotos];
+    [self.posterPhotos addObjectsFromArray:[OLUserSession currentSession].userSelectedPhotos];
     NSUInteger userSelectedAssetCount = [self.posterPhotos count];
     NSUInteger numOrders = (NSUInteger) floor(userSelectedAssetCount + self.product.quantityToFulfillOrder - 1) / self.product.quantityToFulfillOrder;
     NSUInteger duplicatesToFillOrder = numOrders * self.product.quantityToFulfillOrder - userSelectedAssetCount;
     for (NSUInteger i = 0; i < duplicatesToFillOrder; ++i) {
-        [self.posterPhotos addObject:self.userSelectedPhotos[i % userSelectedAssetCount]];
+        [self.posterPhotos addObject:[OLUserSession currentSession].userSelectedPhotos[i % userSelectedAssetCount]];
     }
 #ifdef OL_VERBOSE
     NSLog(@"Adding %lu duplicates to frame", (unsigned long)duplicatesToFillOrder);
@@ -165,12 +166,6 @@ OLScrollCropViewControllerDelegate>
     if (collectionView.tag == 10){
         UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"posterCell" forIndexPath:indexPath];
         
-        //Workaround for iOS 7
-        if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8){
-            cell.contentView.frame = cell.bounds;
-            cell.contentView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin |UIViewAutoresizingFlexibleTopMargin |UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleBottomMargin;
-        }
-        
         UIView *view = cell.contentView;
         view.translatesAutoresizingMaskIntoConstraints = NO;
         NSDictionary *views = NSDictionaryOfVariableBindings(view);
@@ -195,13 +190,6 @@ OLScrollCropViewControllerDelegate>
     }
     
     UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"photoCell" forIndexPath:indexPath];
-    
-    
-    //Workaround for iOS 7
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8){
-        cell.contentView.frame = cell.bounds;
-        cell.contentView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin |UIViewAutoresizingFlexibleTopMargin |UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleBottomMargin;
-    }
     
     UIView* view = collectionView.superview;
     while (![view isKindOfClass:[UICollectionViewCell class]]){
@@ -528,29 +516,6 @@ OLScrollCropViewControllerDelegate>
 
 - (void)photoEditorCanceled:(AdobeUXImageEditorViewController *)editor{
     [editor dismissViewControllerAnimated:YES completion:NULL];
-}
-#endif
-
-#if __IPHONE_OS_VERSION_MIN_REQUIRED < 80000
-#pragma mark - Autorotate and Orientation Methods
-// Currently here to disable landscape orientations and rotation on iOS 7. When support is dropped, these can be deleted.
-
-- (BOOL)shouldAutorotate {
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
-        return YES;
-    }
-    else{
-        return NO;
-    }
-}
-
-- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
-        return UIInterfaceOrientationMaskAll;
-    }
-    else{
-        return UIInterfaceOrientationMaskPortrait;
-    }
 }
 #endif
 

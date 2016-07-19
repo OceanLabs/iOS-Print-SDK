@@ -30,10 +30,14 @@
 #import <UIKit/UIKit.h>
 #import "OLProduct.h"
 #import "OLKiteViewController.h"
+#import "OLPrintPhoto.h"
 
 @interface OLImagePickerViewController : UIViewController
 
 @property (strong, nonatomic) OLProduct *product;
 @property (weak, nonatomic) id<OLKiteDelegate> delegate;
+- (void)updateTitleBasedOnSelectedPhotoQuanitity;
+@property (strong, nonatomic) NSMutableArray<OLPrintPhoto *> *userSelectedPhotos;
+
 
 @end

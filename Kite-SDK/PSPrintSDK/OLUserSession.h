@@ -26,29 +26,28 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
 //
+#import <Foundation/Foundation.h>
+#import "OLMutableAssetArray.h"
+#import "OLPrintPhoto.h"
+#import "OLPrintOrder.h"
+#import "OLAsset.h"
 
+enum {
+    OLUserSessionCleanupOptionNone             = 0,
+    OLUserSessionCleanupOptionPhotos           = 1 << 0,
+    OLUserSessionCleanupOptionBasket           = 1 << 1,
+    OLUserSessionCleanupOptionPayment          = 1 << 2,
+    OLUserSessionCleanupOptionSocial           = 1 << 3,
+    OLUserSessionCleanupOptionAll              = 1 << 4,
+};
+typedef NSUInteger OLUserSessionCleanupOption;
 
-#import "OLCustomPhotoProvider.h"
+@interface OLUserSession : NSObject
 
-@implementation OLCustomPhotoProvider
-
-- (instancetype)initWithCollections:(NSArray<id<KITAssetCollectionDataSource>> *)collections name:(NSString *)name icon:(UIImage *)icon{
-    if (self = [super init]){
-        _collections = collections;
-        _icon = icon;
-        _name = name;
-    }
-    return self;
-}
-
-- (instancetype)initWithController:(UIViewController<KITCustomAssetPickerController> *)controller name:(NSString *)name icon:(UIImage *)icon{
-    if (self = [super init]){
-        _vc = controller;
-        _icon = icon;
-        _name = name;
-    }
-    return self;
-}
+@property (strong, nonatomic) OLMutableAssetArray<OLPrintPhoto *> *userSelectedPhotos;
+@property (strong, nonatomic) OLPrintOrder *printOrder;
+@property (strong, nonatomic) NSArray<OLAsset *> *appAssets;
++ (instancetype)currentSession;
+- (void)cleanupUserSession:(OLUserSessionCleanupOption)cleanupOptions;
 
 @end
-

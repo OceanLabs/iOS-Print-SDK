@@ -27,28 +27,8 @@
 //  THE SOFTWARE.
 //
 
+#import "OLMutableAssetArray.h"
 
-#import "OLCustomPhotoProvider.h"
-
-@implementation OLCustomPhotoProvider
-
-- (instancetype)initWithCollections:(NSArray<id<KITAssetCollectionDataSource>> *)collections name:(NSString *)name icon:(UIImage *)icon{
-    if (self = [super init]){
-        _collections = collections;
-        _icon = icon;
-        _name = name;
-    }
-    return self;
-}
-
-- (instancetype)initWithController:(UIViewController<KITCustomAssetPickerController> *)controller name:(NSString *)name icon:(UIImage *)icon{
-    if (self = [super init]){
-        _vc = controller;
-        _icon = icon;
-        _name = name;
-    }
-    return self;
-}
+@implementation OLMutableAssetArray
 
 @end
-

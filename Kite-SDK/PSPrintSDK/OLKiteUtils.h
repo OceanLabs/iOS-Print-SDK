@@ -70,9 +70,7 @@
 + (NSInteger)facebookProviderIndex:(UIViewController *)topVc;
 + (NSInteger)instagramProviderIndex:(UIViewController *)topVc;
 + (NSInteger)qrCodeProviderStartIndex:(UIViewController *)topVc;
-#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
 + (NSInteger)customProvidersStartIndex:(UIViewController *)topVc;
-#endif
 
 + (void)registerDefaultsWithURL:(NSURL *)url
                         success:(void (^)(NSDictionary *defaults))success
