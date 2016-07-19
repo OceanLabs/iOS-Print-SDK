@@ -65,6 +65,7 @@ static dispatch_once_t srand48OnceToken;
 @property (strong, nonatomic, readwrite) NSString *promoBannerText;
 @property (strong, nonatomic, readwrite) NSString *launchWithPrintOrderVariant;
 @property (strong, nonatomic, readwrite) NSString *paymentScreen;
+@property (strong, nonatomic, readwrite) NSString *coverPhotoId;
 @property (assign, nonatomic, readwrite) BOOL allowsMultipleRecipients;
 
 @end
@@ -270,6 +271,19 @@ static dispatch_once_t srand48OnceToken;
     }];
 }
 
+//Note: Run in TemplateSyncRequest, not with the other tests
+- (void)setupCoverPhotoTestWithExperimentDict:(NSDictionary *)experimentDict{
+    self.coverPhotoId = nil;
+    
+    if (!experimentDict) {
+        return;
+    }
+    [OLKiteABTesting splitTestWithName:kOLKiteABTestPromoBannerText
+                            conditions:experimentDict block:^(id choice) {
+                                             self.coverPhotoId = choice;
+                                         }];
+}
+
 - (void)setupQualityBannerTypeTest{
     self.qualityBannerType = nil;
     
@@ -278,14 +292,10 @@ static dispatch_once_t srand48OnceToken;
         experimentDict = @{@"None" : @1, @"A" : @0, @"B" : @0, @"C" : @0};
     }
     [OLKiteABTesting splitTestWithName:kOLKiteABTestQualityBannerType
-                   conditions:@{
-                                @"None" : safeObject(experimentDict[@"None"]),
-                                @"A" : safeObject(experimentDict[@"A"]),
-                                @"B" : safeObject(experimentDict[@"B"]),
-                                @"C" : safeObject(experimentDict[@"C"])
-                                } block:^(id choice) {
-                                    self.qualityBannerType= choice;
-                                }];
+                            conditions:experimentDict
+                                 block:^(id choice) {
+                                     self.qualityBannerType= choice;
+                                 }];
 }
 
 - (void)setupProductTileStyleTest{

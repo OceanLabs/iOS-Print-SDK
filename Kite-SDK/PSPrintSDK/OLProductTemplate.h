@@ -59,7 +59,8 @@ typedef enum {
 @property (nonatomic, assign, readonly) NSUInteger quantityPerSheet;
 @property (nonatomic, assign, readonly) BOOL enabled;
 @property (nonatomic, readonly) NSArray *_Nonnull currenciesSupported;
-@property (strong, nonatomic) NSURL *_Nullable coverPhotoURL;
+@property (strong, nonatomic, readonly) NSURL *_Nullable coverPhotoURL;
+@property (strong, nonatomic) NSDictionary<NSString *, NSString *> *_Nullable coverPhotosDict;
 @property (strong, nonatomic) NSArray <NSString *>*_Nullable productPhotographyURLs;
 @property (assign, nonatomic) OLTemplateUI templateUI;
 @property (strong, nonatomic) NSString *_Nullable templateClass;
