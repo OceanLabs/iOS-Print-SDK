@@ -211,7 +211,7 @@ NSInteger OLImagePickerMargin = 0;
     OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
     printPhoto.asset = asset;
     if ([[OLUserSession currentSession].userSelectedPhotos containsObject:printPhoto]){
-        [[OLUserSession currentSession].userSelectedPhotos removeObject:asset];
+        [[OLUserSession currentSession].userSelectedPhotos removeObject:printPhoto];
         [[collectionView cellForItemAtIndexPath:indexPath] viewWithTag:20].hidden = YES;
     }
     else{

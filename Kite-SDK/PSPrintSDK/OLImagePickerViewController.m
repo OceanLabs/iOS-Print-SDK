@@ -51,6 +51,7 @@
 @property (weak, nonatomic) IBOutlet UIView *containerView;
 @property (strong, nonatomic) UIPageViewController *pageController;
 @property (strong, nonatomic) UIVisualEffectView *visualEffectView;
+@property (assign, nonatomic) CGSize rotationSize;
 
 @end
 
@@ -138,6 +139,16 @@
         vc.albumLabelContainerTopCon.constant = [[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height + self.sourcesCollectionView.frame.size.height;
         vc.collectionView.contentInset = UIEdgeInsetsMake([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height + self.sourcesCollectionView.frame.size.height + vc.albumLabelContainer.frame.size.height, 0, 0, 0);
     }
+}
+
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+    self.rotationSize = size;
+    [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinator> context){
+        [self.sourcesCollectionView.collectionViewLayout invalidateLayout];
+    }completion:^(id<UIViewControllerTransitionCoordinator> context){
+        
+    }];
 }
 
 #pragma mark Asset Management
@@ -251,6 +262,17 @@
     result += [OLKiteUtils kiteVcForViewController:self].customImageProviders.count;
     
     return result;
+}
+
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
+    return CGSizeMake(80, collectionView.frame.size.height);
+}
+
+- (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout insetForSectionAtIndex:(NSInteger)section{
+    CGSize size = self.rotationSize.width != 0 ? self.rotationSize : self.view.frame.size;
+    
+    CGFloat margin = MAX((size.width - [self collectionView:collectionView numberOfItemsInSection:0] * [self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]].width)/2.0, 5);
+    return UIEdgeInsetsMake(0, margin, 0, margin);
 }
 
 #pragma mark Navigation
