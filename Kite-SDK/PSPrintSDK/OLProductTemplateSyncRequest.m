@@ -188,7 +188,7 @@
                                 && (imagesPerSheet == nil || [imagesPerSheet isKindOfClass:[NSNumber class]])
                                 && (product == nil || [product isKindOfClass:[NSDictionary class]])) {
                                 
-                                NSString *coverPhoto;
+                                NSMutableDictionary<NSString *, NSString *> *coverPhotos = [[NSMutableDictionary<NSString *, NSString *> alloc] init];
                                 NSArray *productShots;
                                 NSString *productClass;
                                 NSString *productType;
@@ -207,7 +207,18 @@
                                 NSArray *supportedOptions;
                                 OLProductRepresentation *productRepresentation;
                                 if (product){
-                                    coverPhoto = [product[@"ios_sdk_cover_photo"] isKindOfClass:[NSString class]] ? product[@"ios_sdk_cover_photo"] : nil;
+                                    NSMutableDictionary *experimentDict = [[NSMutableDictionary alloc] init];
+                                    NSArray *coverPhotoDicts = product[@"cover_photo_variants"];
+                                    if ([coverPhotoDicts isKindOfClass:[NSArray class]]){
+                                        for (NSDictionary *dict in coverPhotoDicts){
+                                            if ([dict isKindOfClass:[NSDictionary class]]){
+                                                if ([dict[@"variant_id"] isKindOfClass:[NSString class]] && [dict[@"url"] isKindOfClass:[NSString class]]){
+                                                    coverPhotos[dict[@"variant_id"]] = dict[@"url"];
+                                                }
+                                            }
+                                        }
+                                        [[OLKiteABTesting sharedInstance] setupCoverPhotoTestWithExperimentDict:experimentDict];
+                                    }
                                     
                                     maskImageURL = [product[@"mask_url"] isKindOfClass:[NSString class]] ? product[@"mask_url"] : nil;
                                     productBackgroundImageURL = [product[@"product_background_image_url"] isKindOfClass:[NSString class]] ? product[@"product_background_image_url"] : nil;
@@ -348,7 +359,7 @@
                                 
                                 if (costPerSheetByCurrencyCode.count > 0) {
                                     OLProductTemplate *t = [[OLProductTemplate alloc] initWithIdentifier:identifier name:name sheetQuantity:[imagesPerSheet unsignedIntegerValue] sheetCostsByCurrencyCode:costPerSheetByCurrencyCode enabled:enabled];
-                                    t.coverPhotoURL = [NSURL URLWithString:coverPhoto];
+                                    t.coverPhotosDict = coverPhotos;
                                     t.productPhotographyURLs = productShots;
                                     t.templateUI = [OLProductTemplate templateUIWithIdentifier:uiClass];
                                     t.templateType = productType;
@@ -392,6 +403,17 @@
                     [self fetchTemplatesWithURL:nextPage templateAccumulator:acc handler:handler];
                 } else {
                     self.req = nil;
+                    NSMutableSet *coverPhotoVariants = [[NSMutableSet alloc] init];
+                    
+                    for (OLProductTemplate *t in acc){
+                        [coverPhotoVariants addObjectsFromArray:t.coverPhotosDict.allKeys];
+                    }
+                    
+                    NSMutableDictionary *experimentDict = [[NSMutableDictionary alloc] init];
+                    for (NSString *s in coverPhotoVariants){
+                        experimentDict[s] = [NSNumber numberWithDouble:1.0/(double)coverPhotoVariants.count];
+                    }
+                    [[OLKiteABTesting sharedInstance] setupCoverPhotoTestWithExperimentDict:experimentDict];
                     handler(acc, nil);
                 }
             } else {

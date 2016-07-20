@@ -31,13 +31,14 @@
 #import "OLProductTemplateSyncRequest.h"
 #import "OLCountry.h"
 #import "OLKitePrintSDK.h"
+#import "OLKiteABTesting.h"
 
 static NSString *const kKeyIdentifier = @"co.oceanlabs.pssdk.kKeyIdentifier";
 static NSString *const kKeyName = @"co.oceanlabs.pssdk.kKeyName";
 static NSString *const kKeyQuantity = @"co.oceanlabs.pssdk.kKeyQuantity";
 static NSString *const kKeyEnabled = @"co.oceanlabs.pssdk.kKeyEnabled";
 static NSString *const kKeyCostsByCurrency = @"co.oceanlabs.pssdk.kKeyCostsByCurrency";
-static NSString *const kKeyCoverPhotoURL = @"co.oceanlabs.pssdk.kKeyCoverPhotoURL";
+static NSString *const kKeyCoverPhotosDict = @"co.oceanlabs.pssdk.kKeyCoverPhotosDict";
 static NSString *const kKeyProductPhotographyURLs = @"co.oceanlabs.pssdk.kKeyProductPhotographyURLs";
 static NSString *const kKeyTemplateClass = @"co.oceanlabs.pssdk.kKeyTemplateClass";
 static NSString *const kKeyTemplateType = @"co.oceanlabs.pssdk.kKeyTemplateType";
@@ -84,6 +85,19 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
 @end
 
 @implementation OLProductTemplate
+
+- (NSURL *)coverPhotoURL{
+    NSString *testResult = [OLKiteABTesting sharedInstance].coverPhotoId;
+    NSURL *coverPhotoURL;
+    if (testResult){
+        coverPhotoURL = [NSURL URLWithString:self.coverPhotosDict[testResult]];
+    }
+    if (!coverPhotoURL && self.coverPhotosDict.allKeys.count > 0){
+        coverPhotoURL = [NSURL URLWithString:self.coverPhotosDict[self.coverPhotosDict.allKeys.firstObject]];
+    }
+    
+    return coverPhotoURL;
+}
 
 - (instancetype _Nonnull)initWithIdentifier:(NSString *_Nonnull)identifier name:(NSString *_Nonnull)name sheetQuantity:(NSUInteger)quantity sheetCostsByCurrencyCode:(NSDictionary<NSString *, NSDecimalNumber *> *_Nullable)costs enabled:(BOOL)enabled {
     if (self = [super init]) {
@@ -338,7 +352,7 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
     [aCoder encodeInteger:self.quantityPerSheet forKey:kKeyQuantity];
     [aCoder encodeBool:self.enabled forKey:kKeyEnabled];
     [aCoder encodeObject:self.costsByCurrencyCode forKey:kKeyCostsByCurrency];
-    [aCoder encodeObject:self.coverPhotoURL forKey:kKeyCoverPhotoURL];
+    [aCoder encodeObject:self.coverPhotoURL forKey:kKeyCoverPhotosDict];
     [aCoder encodeObject:self.productPhotographyURLs forKey:kKeyProductPhotographyURLs];
     [aCoder encodeObject:self.labelColor forKey:kKeyLabelColor];
     [aCoder encodeObject:[NSNumber numberWithInt:self.templateUI] forKey:kKeyTemplateUI];
@@ -370,7 +384,7 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
         _quantityPerSheet = [aDecoder decodeIntegerForKey:kKeyQuantity];
         _enabled = [aDecoder decodeBoolForKey:kKeyEnabled];
         _costsByCurrencyCode = [aDecoder decodeObjectForKey:kKeyCostsByCurrency];
-        _coverPhotoURL = [aDecoder decodeObjectForKey:kKeyCoverPhotoURL];
+        _coverPhotosDict = [aDecoder decodeObjectForKey:kKeyCoverPhotosDict];
         _productPhotographyURLs = [aDecoder decodeObjectForKey:kKeyProductPhotographyURLs];
         _templateUI = [[aDecoder decodeObjectForKey:kKeyTemplateUI] intValue];
         _templateClass = [aDecoder decodeObjectForKey:kKeyTemplateClass];

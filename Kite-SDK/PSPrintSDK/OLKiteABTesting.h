@@ -56,6 +56,7 @@ static NSString *const kOLKiteThemeSupportEmail = @"themeSupportEmail";
 @property (strong, nonatomic, readonly) NSString *launchWithPrintOrderVariant;
 @property (assign, nonatomic, readonly) BOOL allowsMultipleRecipients;
 @property (strong, nonatomic, readonly) NSString *paymentScreen;
+@property (strong, nonatomic, readonly) NSString *coverPhotoId;
 
 @property (strong, nonatomic, readonly) NSString *headerLogoURL;
 @property (strong, nonatomic, readonly) NSString *receiptSuccessURL;
@@ -74,5 +75,5 @@ static NSString *const kOLKiteThemeSupportEmail = @"themeSupportEmail";
 - (void)prefetchRemoteImages;
 //- (UIColor *)darkThemeColor1;
 - (void)setupABTestVariants;
-
+- (void)setupCoverPhotoTestWithExperimentDict:(NSDictionary *)experimentDict;
 @end
