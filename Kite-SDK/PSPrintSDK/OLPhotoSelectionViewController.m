@@ -748,14 +748,7 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
 - (void)assetsPickerController:(id)picker didFinishPickingAssets:(NSArray *)assets {
     NSInteger originalCount = self.userSelectedPhotos.count;
     Class assetClass;
-#ifdef OL_KITE_CI_DEPLOY
-    if (NO){}
-#else
-    if ([picker isKindOfClass:[OLAssetsPickerController class]]){
-        assetClass = [ALAsset class];
-    }
-#endif
-    else if ([picker isKindOfClass:[CTAssetsPickerController class]]){
+    if ([picker isKindOfClass:[CTAssetsPickerController class]]){
         assetClass = [PHAsset class];
     }
     else if ([picker isKindOfClass:[KITAssetsPickerController class]]){
@@ -778,15 +771,6 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
     [OLAnalytics trackPhotoProvider:@"Camera Roll" numberOfPhotosAdded:self.userSelectedPhotos.count - originalCount forProductName:self.product.productTemplate.name];
 #endif
 }
-
-#ifndef OL_KITE_CI_DEPLOY
-- (BOOL)assetsPickerController:(OLAssetsPickerController *)picker shouldShowAssetsGroup:(ALAssetsGroup *)group{
-    if (group.numberOfAssets == 0){
-        return NO;
-    }
-    return YES;
-}
-#endif
 
 - (void)assetsPickerController:(CTAssetsPickerController *)picker didDeSelectAsset:(PHAsset *)asset{
     if (![asset isKindOfClass:[PHAsset class]]){
@@ -828,14 +812,7 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
     }
     
     Class assetClass;
-#ifdef OL_KITE_CI_DEPLOY
-    if (NO){}
-#else
-    if ([picker isKindOfClass:[OLAssetsPickerController class]]){
-        assetClass = [ALAsset class];
-    }
-#endif
-    else if ([picker isKindOfClass:[CTAssetsPickerController class]]){
+    if ([picker isKindOfClass:[CTAssetsPickerController class]]){
         assetClass = [PHAsset class];
     }
     else if ([picker isKindOfClass:[KITAssetsPickerController class]]){
@@ -874,16 +851,6 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
     [self.userSelectedPhotos addObjectsFromArray:tempUserSelected];
     return result;
 }
-
-#ifndef OL_KITE_CI_DEPLOY
-- (BOOL)assetsPickerController:(OLAssetsPickerController *)picker shouldShowAsset:(id)asset{
-    NSString *fileName = [[[asset defaultRepresentation] filename] lowercaseString];
-    if (!([fileName hasSuffix:@".jpg"] || [fileName hasSuffix:@".jpeg"] || [fileName hasSuffix:@"png"] || [fileName hasSuffix:@"tiff"])) {
-        return NO;
-    }
-    return YES;
-}
-#endif
 
 #ifdef OL_KITE_OFFER_INSTAGRAM
 #pragma mark - OLInstagramImagePickerControllerDelegate Methods

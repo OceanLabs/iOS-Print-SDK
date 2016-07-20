@@ -1833,14 +1833,7 @@ UINavigationControllerDelegate, OLUpsellViewControllerDelegate
 - (void)assetsPickerController:(id)picker didFinishPickingAssets:(NSArray *)assets {
     NSInteger originalCount = [OLUserSession currentSession].userSelectedPhotos.count;
     Class assetClass;
-#ifdef OL_KITE_CI_DEPLOY
-    if (NO){}
-#else
-    if ([picker isKindOfClass:[OLAssetsPickerController class]]){
-        assetClass = [ALAsset class];
-    }
-#endif
-    else if ([picker isKindOfClass:[CTAssetsPickerController class]]){
+    if ([picker isKindOfClass:[CTAssetsPickerController class]]){
         assetClass = [PHAsset class];
     }
     else if ([picker isKindOfClass:[KITAssetsPickerController class]]){
