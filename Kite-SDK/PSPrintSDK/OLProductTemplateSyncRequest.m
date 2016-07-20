@@ -212,9 +212,9 @@
                                     if ([coverPhotoDicts isKindOfClass:[NSArray class]]){
                                         for (NSDictionary *dict in coverPhotoDicts){
                                             if ([dict isKindOfClass:[NSDictionary class]]){
-                                                if ([dict[@"variant_id"] isKindOfClass:[NSString class]] && [dict[@"url"] isKindOfClass:[NSString class]])
+                                                if ([dict[@"variant_id"] isKindOfClass:[NSString class]] && [dict[@"url"] isKindOfClass:[NSString class]]){
                                                     coverPhotos[dict[@"variant_id"]] = dict[@"url"];
-                                                experimentDict[dict[@"variant_id"]] = @0.5;
+                                                }
                                             }
                                         }
                                         [[OLKiteABTesting sharedInstance] setupCoverPhotoTestWithExperimentDict:experimentDict];
@@ -403,6 +403,17 @@
                     [self fetchTemplatesWithURL:nextPage templateAccumulator:acc handler:handler];
                 } else {
                     self.req = nil;
+                    NSMutableSet *coverPhotoVariants = [[NSMutableSet alloc] init];
+                    
+                    for (OLProductTemplate *t in acc){
+                        [coverPhotoVariants addObjectsFromArray:t.coverPhotosDict.allKeys];
+                    }
+                    
+                    NSMutableDictionary *experimentDict = [[NSMutableDictionary alloc] init];
+                    for (NSString *s in coverPhotoVariants){
+                        experimentDict[s] = [NSNumber numberWithDouble:1.0/(double)coverPhotoVariants.count];
+                    }
+                    [[OLKiteABTesting sharedInstance] setupCoverPhotoTestWithExperimentDict:experimentDict];
                     handler(acc, nil);
                 }
             } else {
