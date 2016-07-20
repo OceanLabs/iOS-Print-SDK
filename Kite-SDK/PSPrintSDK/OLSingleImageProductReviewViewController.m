@@ -65,11 +65,6 @@
 #import "UIViewController+TraitCollectionCompatibility.h"
 #import "OLUpsellViewController.h"
 
-#ifdef OL_KITE_OFFER_ADOBE
-#import <AdobeCreativeSDKImage/AdobeCreativeSDKImage.h>
-#import <AdobeCreativeSDKCore/AdobeCreativeSDKCore.h>
-#endif
-
 #import "OLCustomPhotoProvider.h"
 #ifdef COCOAPODS
 #import <KITAssetsPickerController/KITAssetsPickerController.h>
@@ -109,11 +104,6 @@
 @end
 
 @interface OLKitePrintSDK (InternalUtils)
-#ifdef OL_KITE_OFFER_ADOBE
-+ (NSString *)adobeCreativeSDKClientSecret;
-+ (NSString *)adobeCreativeSDKClientID;
-#endif
-
 #ifdef OL_KITE_OFFER_INSTAGRAM
 + (NSString *) instagramRedirectURI;
 + (NSString *) instagramSecret;
@@ -130,9 +120,6 @@ OLFacebookImagePickerControllerDelegate,
 #endif
 CTAssetsPickerControllerDelegate,
 KITAssetsPickerControllerDelegate,
-#ifdef OL_KITE_OFFER_ADOBE
-AdobeUXImageEditorViewControllerDelegate,
-#endif
 RMImageCropperDelegate, UIViewControllerPreviewingDelegate>
 
 @property (weak, nonatomic) IBOutlet UICollectionView *imagesCollectionView;
@@ -264,57 +251,6 @@ static BOOL hasMoved;
     if (!self.imageCropView.imageView.image){
         return;
     }
-    
-#ifdef OL_KITE_OFFER_ADOBE
-    [[AdobeUXAuthManager sharedManager] setAuthenticationParametersWithClientID:[OLKitePrintSDK adobeCreativeSDKClientID] clientSecret:[OLKitePrintSDK adobeCreativeSDKClientSecret] enableSignUp:true];
-    [AdobeImageEditorCustomization setCropToolPresets:@[@{kAdobeImageEditorCropPresetName:@"", kAdobeImageEditorCropPresetWidth:@1, kAdobeImageEditorCropPresetHeight:[NSNumber numberWithDouble:self.imageCropView.frame.size.height / self.imageCropView.frame.size.width]}]];
-    [AdobeImageEditorCustomization setCropToolCustomEnabled:NO];
-    [AdobeImageEditorCustomization setCropToolInvertEnabled:NO];
-    [AdobeImageEditorCustomization setCropToolOriginalEnabled:NO];
-    
-    [self.imageDisplayed getImageWithProgress:NULL completion:^(UIImage *image){
-        AdobeUXImageEditorViewController *editorController = [[AdobeUXImageEditorViewController alloc] initWithImage:image];
-        [editorController setDelegate:self];
-        [self presentViewController:editorController animated:YES completion:nil];
-    }];
-#else
-    OLScrollCropViewController *cropVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLScrollCropViewController"];
-    cropVc.enableCircleMask = self.product.productTemplate.templateUI == kOLTemplateUICircle;
-    cropVc.delegate = self;
-    cropVc.aspectRatio = self.imageCropView.frame.size.height / self.imageCropView.frame.size.width;
-    
-    if (!animated){
-        cropVc.skipPresentAnimation = YES;
-    }
-    cropVc.previewView = [self.imageCropView snapshotViewAfterScreenUpdates:YES];
-    cropVc.previewView.frame = [self.imageCropView.superview convertRect:self.imageCropView.frame toView:nil];
-    cropVc.previewSourceView = self.imageCropView;
-    
-    for (NSLayoutConstraint *con in self.view.constraints){
-        if ((con.firstItem == self.containerView || con.secondItem == self.containerView) && (con.firstAttribute == NSLayoutAttributeCenterY && con.secondAttribute == NSLayoutAttributeCenterY)){
-            cropVc.centerYConConstant = [NSNumber numberWithDouble:con.constant];
-        }
-    }
-    
-    cropVc.forceSourceViewDimensions = YES;
-    cropVc.providesPresentationContextTransitionStyle = true;
-    cropVc.definesPresentationContext = true;
-    cropVc.modalPresentationStyle = UIModalPresentationOverCurrentContext;
-    
-    [self.imageDisplayed getImageWithProgress:^(float progress){
-        [cropVc.cropView setProgress:progress];
-    }completion:^(UIImage *image){
-        [cropVc setFullImage:image];
-        OLPhotoEdits *edits = [self.imageDisplayed.edits copy];
-        edits.cropImageFrame = [self.imageCropView getFrameRect];
-        edits.cropImageRect = [self.imageCropView getImageRect];
-        edits.cropImageSize = [self.imageCropView croppedImageSize];
-        edits.cropTransform = self.imageCropView.imageView.transform;
-        cropVc.edits = edits;
-        //        cropVc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
-        [self presentViewController:cropVc animated:NO completion:NULL];
-    }];
-#endif
     
 #ifndef OL_NO_ANALYTICS
     [OLAnalytics trackReviewScreenEnteredCropScreenForProductName:self.product.productTemplate.name];
@@ -1288,53 +1224,6 @@ static BOOL hasMoved;
     [OLAnalytics trackReviewScreenDidCropPhotoForProductName:self.product.productTemplate.name];
 #endif
 }
-
-#ifdef OL_KITE_OFFER_ADOBE
-- (void)photoEditor:(AdobeUXImageEditorViewController *)editor finishedWithImage:(UIImage *)image{
-    [self.imageDisplayed unloadImage];
-    
-    OLPrintPhoto *printPhoto = self.imageDisplayed;
-    OLPrintPhoto *copy = [printPhoto copy];
-    printPhoto.asset = [OLAsset assetWithImageAsJPEG:image];
-    
-    self.imageCropView.imageView.image = nil;
-    [self.imagesCollectionView reloadData];
-    
-    [editor dismissViewControllerAnimated:YES completion:NULL];
-    
-#ifndef OL_NO_ANALYTICS
-    [OLAnalytics trackReviewScreenDidCropPhotoForProductName:self.product.productTemplate.name];
-#endif
-    
-    [copy screenImageWithSize:[UIScreen mainScreen].bounds.size applyEdits:NO progress:NULL completionHandler:^(UIImage *image){
-        [editor enqueueHighResolutionRenderWithImage:image completion:^(UIImage *result, NSError *error) {
-            [self.imageCropView setImage:result];
-            
-            NSArray * urls = [[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask];
-            NSString *documentDirPath = [[(NSURL *)[urls objectAtIndex:0] path] stringByAppendingPathComponent:@"ol-kite-images"];
-            
-            
-            NSFileManager *fileManager= [NSFileManager defaultManager];
-            BOOL isDir;
-            if(![fileManager fileExistsAtPath:documentDirPath isDirectory:&isDir]){
-                [fileManager createDirectoryAtPath:documentDirPath withIntermediateDirectories:YES attributes:nil error:NULL];
-            }
-            
-            NSData * binaryImageData = UIImageJPEGRepresentation(result, 0.7);
-            
-            NSString *filePath = [documentDirPath stringByAppendingPathComponent:[[[NSUUID UUID] UUIDString] stringByAppendingString:@".jpg"]];
-            [binaryImageData writeToFile:filePath atomically:YES];
-            
-            printPhoto.asset = [OLAsset assetWithFilePath:filePath];
-        }];
-    }];
-    
-}
-
-- (void)photoEditorCanceled:(AdobeUXImageEditorViewController *)editor{
-    [editor dismissViewControllerAnimated:YES completion:NULL];
-}
-#endif
 
 #pragma mark - UIGestureRecognizer Delegate
 

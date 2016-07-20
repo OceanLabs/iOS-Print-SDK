@@ -358,12 +358,6 @@ static NSOperationQueue *imageOperationQueue;
     }
 }
 
-- (void)deleteFromDisk{
-    if ([self.asset isKindOfClass:[OLAsset class]]){
-        [self.asset deleteFromDisk];
-    }
-}
-
 - (void)unloadImage {
     self.cachedCroppedThumbnailImage = nil; // we can always recreate this
 }

@@ -80,11 +80,6 @@
 #import "KITAssetsPickerController.h"
 #endif
 
-#ifdef OL_KITE_OFFER_ADOBE
-#import <AdobeCreativeSDKImage/AdobeCreativeSDKImage.h>
-#import <AdobeCreativeSDKCore/AdobeCreativeSDKCore.h>
-#endif
-
 static const NSUInteger kTagLeft = 10;
 static const NSUInteger kTagRight = 20;
 static const CGFloat kBookAnimationTime = 0.8;
@@ -97,10 +92,6 @@ static const CGFloat kBookEdgePadding = 38;
 @end
 
 @interface OLKitePrintSDK (InternalUtils)
-#ifdef OL_KITE_OFFER_ADOBE
-+ (NSString *)adobeCreativeSDKClientSecret;
-+ (NSString *)adobeCreativeSDKClientID;
-#endif
 #ifdef OL_KITE_OFFER_INSTAGRAM
 + (NSString *) instagramRedirectURI;
 + (NSString *) instagramSecret;
@@ -153,9 +144,6 @@ OLInstagramImagePickerControllerDelegate,
 OLFacebookImagePickerControllerDelegate,
 #endif
 KITAssetsPickerControllerDelegate,
-#ifdef OL_KITE_OFFER_ADOBE
-AdobeUXImageEditorViewControllerDelegate,
-#endif
 UINavigationControllerDelegate, OLUpsellViewControllerDelegate
 >
 
@@ -733,50 +721,6 @@ UINavigationControllerDelegate, OLUpsellViewControllerDelegate
     [cropper dismissViewControllerAnimated:YES completion:NULL];
 }
 
-#ifdef OL_KITE_OFFER_ADOBE
-- (void)photoEditor:(AdobeUXImageEditorViewController *)editor finishedWithImage:(UIImage *)image{
-    [self.croppingPrintPhoto unloadImage];
-    
-    OLPrintPhoto *printPhoto = self.croppingPrintPhoto;
-    OLPrintPhoto *copy = [printPhoto copy];
-    printPhoto.asset = [OLAsset assetWithImageAsJPEG:image];
-    
-    if (self.croppingPrintPhoto == self.coverPhoto){
-        [self loadCoverPhoto];
-    }
-    
-    [(OLPhotobookPageContentViewController *)[self.pageController.viewControllers objectAtIndex:self.croppingImageIndex] loadImageWithCompletionHandler:NULL];
-    
-    [editor dismissViewControllerAnimated:YES completion:NULL];
-    
-    [copy getImageWithProgress:NULL completion:^(UIImage *image){
-        [editor enqueueHighResolutionRenderWithImage:image completion:^(UIImage *result, NSError *error) {
-            NSArray * urls = [[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask];
-            NSString *documentDirPath = [[(NSURL *)[urls objectAtIndex:0] path] stringByAppendingPathComponent:@"ol-kite-images"];
-            
-            
-            NSFileManager *fileManager= [NSFileManager defaultManager];
-            BOOL isDir;
-            if(![fileManager fileExistsAtPath:documentDirPath isDirectory:&isDir]){
-                [fileManager createDirectoryAtPath:documentDirPath withIntermediateDirectories:YES attributes:nil error:NULL];
-            }
-            
-            NSData * binaryImageData = UIImageJPEGRepresentation(result, 0.7);
-            
-            NSString *filePath = [documentDirPath stringByAppendingPathComponent:[[[NSUUID UUID] UUIDString] stringByAppendingString:@".jpg"]];
-            [binaryImageData writeToFile:filePath atomically:YES];
-            
-            printPhoto.asset = [OLAsset assetWithFilePath:filePath];
-        }];
-    }];
-    
-}
-
-- (void)photoEditorCanceled:(AdobeUXImageEditorViewController *)editor{
-    [editor dismissViewControllerAnimated:YES completion:NULL];
-}
-#endif
-
 #pragma mark - UIPageViewControllerDataSource and delegate
 
 - (UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerBeforeViewController:(UIViewController *)viewController {
@@ -989,19 +933,6 @@ UINavigationControllerDelegate, OLUpsellViewControllerDelegate
     else if (self.coverPhoto){
         self.croppingPrintPhoto = self.coverPhoto;
         UIImageView *imageView = self.coverImageView;
-#ifdef OL_KITE_OFFER_ADOBE
-        [[AdobeUXAuthManager sharedManager] setAuthenticationParametersWithClientID:[OLKitePrintSDK adobeCreativeSDKClientID] clientSecret:[OLKitePrintSDK adobeCreativeSDKClientSecret] enableSignUp:true];
-        [AdobeImageEditorCustomization setCropToolPresets:@[@{kAdobeImageEditorCropPresetName:@"", kAdobeImageEditorCropPresetWidth:@1, kAdobeImageEditorCropPresetHeight:[NSNumber numberWithDouble:imageView.frame.size.height / imageView.frame.size.width]}]];
-        [AdobeImageEditorCustomization setCropToolCustomEnabled:NO];
-        [AdobeImageEditorCustomization setCropToolInvertEnabled:NO];
-        [AdobeImageEditorCustomization setCropToolOriginalEnabled:NO];
-        
-        [self.croppingPrintPhoto getImageWithProgress:NULL completion:^(UIImage *image){
-            AdobeUXImageEditorViewController *editorController = [[AdobeUXImageEditorViewController alloc] initWithImage:image];
-            [editorController setDelegate:self];
-            [self presentViewController:editorController animated:YES completion:nil];
-        }];
-#else
         OLScrollCropViewController *cropVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLScrollCropViewController"];
         cropVc.delegate = self;
         cropVc.aspectRatio = imageView.frame.size.height / imageView.frame.size.width;
@@ -1018,7 +949,6 @@ UINavigationControllerDelegate, OLUpsellViewControllerDelegate
 //            cropVc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
             [self presentViewController:cropVc animated:NO completion:NULL];
         }];
-#endif
     }
     else{
         [self openBook:sender];
@@ -1068,19 +998,6 @@ UINavigationControllerDelegate, OLUpsellViewControllerDelegate
         UIImageView *imageView = [page imageView];
         self.croppingPrintPhoto = self.photobookPhotos[index];
         [self.croppingPrintPhoto getImageWithProgress:NULL completion:^(UIImage *image){
-            
-#ifdef OL_KITE_OFFER_ADOBE
-            [[AdobeUXAuthManager sharedManager] setAuthenticationParametersWithClientID:[OLKitePrintSDK adobeCreativeSDKClientID] clientSecret:[OLKitePrintSDK adobeCreativeSDKClientSecret] enableSignUp:true];
-            [AdobeImageEditorCustomization setCropToolPresets:@[@{kAdobeImageEditorCropPresetName:@"", kAdobeImageEditorCropPresetWidth:@1, kAdobeImageEditorCropPresetHeight:[NSNumber numberWithDouble:imageView.frame.size.height / imageView.frame.size.width]}]];
-            [AdobeImageEditorCustomization setCropToolCustomEnabled:NO];
-            [AdobeImageEditorCustomization setCropToolInvertEnabled:NO];
-            [AdobeImageEditorCustomization setCropToolOriginalEnabled:NO];
-            
-            
-            AdobeUXImageEditorViewController *editorController = [[AdobeUXImageEditorViewController alloc] initWithImage:image];
-            [editorController setDelegate:self];
-            [self presentViewController:editorController animated:YES completion:nil];
-#else
             OLScrollCropViewController *cropVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLScrollCropViewController"];
             cropVc.delegate = self;
             cropVc.aspectRatio = imageView.frame.size.height / imageView.frame.size.width;
@@ -1094,7 +1011,6 @@ UINavigationControllerDelegate, OLUpsellViewControllerDelegate
             [cropVc setFullImage:image];
             cropVc.edits = self.croppingPrintPhoto.edits;
             [self presentViewController:cropVc animated:NO completion:NULL];
-#endif
             
 #ifndef OL_NO_ANALYTICS
             [OLAnalytics trackReviewScreenEnteredCropScreenForProductName:self.product.productTemplate.name];

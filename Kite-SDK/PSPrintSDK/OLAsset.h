@@ -92,11 +92,6 @@ extern NSString *const kOLMimeTypePDF;
  *  Optional method to cancel loading of the image (for example downloading from the network)
  */
 - (void)cancelAnyLoadingOfData;
-
-/**
- *  Optional method to delete any cache files from disk
- */
-- (void)deleteFromDisk;
 @end
 
 /**

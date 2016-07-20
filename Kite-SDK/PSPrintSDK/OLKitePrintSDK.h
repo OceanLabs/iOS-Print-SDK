@@ -101,18 +101,7 @@
 /**
  *  Clear all customer data.
  */
-+ (void)endCustomerSession;
-
-#ifdef OL_KITE_OFFER_ADOBE
-/**
- *  Optionally enable Adobe's Creative SDK for advanced photo editing functionality (you'll need to take 5 minutes to register your app )
- *  After you have registered, call this method to set everything up.
- *
- *  @param clientID    Your client ID
- *  @param secret      Your client secret
- */
-//+ (void)setAdobeCreativeSDKEnabledWithClientID:(NSString *_Nonnull)clientID secret:(NSString *_Nonnull)secret;
-#endif
++ (void)endCustomerSession; //TODO: Deprecate
 
 /**
  *  Enable ability to upload a photo from another device through the use of a QR code. Useful for kiosk apps. Default value is NO.
