@@ -88,14 +88,15 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
 
 - (NSURL *)coverPhotoURL{
     NSString *testResult = [OLKiteABTesting sharedInstance].coverPhotoId;
+    NSURL *coverPhotoURL;
     if (testResult){
-        return [NSURL URLWithString:self.coverPhotosDict[testResult]];
+        coverPhotoURL = [NSURL URLWithString:self.coverPhotosDict[testResult]];
     }
-    else if (self.coverPhotosDict.allKeys.count > 0){
-        return [NSURL URLWithString:self.coverPhotosDict[self.coverPhotosDict.allKeys.firstObject]];
+    if (!coverPhotoURL && self.coverPhotosDict.allKeys.count > 0){
+        coverPhotoURL = [NSURL URLWithString:self.coverPhotosDict[self.coverPhotosDict.allKeys.firstObject]];
     }
     
-    return nil;
+    return coverPhotoURL;
 }
 
 - (instancetype _Nonnull)initWithIdentifier:(NSString *_Nonnull)identifier name:(NSString *_Nonnull)name sheetQuantity:(NSUInteger)quantity sheetCostsByCurrencyCode:(NSDictionary<NSString *, NSDecimalNumber *> *_Nullable)costs enabled:(BOOL)enabled {
