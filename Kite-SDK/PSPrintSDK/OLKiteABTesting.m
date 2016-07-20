@@ -46,6 +46,7 @@ static NSString *const kOLKiteABTestPromoBannerText = @"ly.kite.abtest.promo_ban
 static NSString *const kOLKiteABTestOfferPayPal = @"ly.kite.abtest.offer_paypal";
 static NSString *const kOLKiteABTestAllowMultipleRecipients = @"ly.kite.abtest.allow_multiple_recipients";
 static NSString *const kOLKiteABTestPaymentScreen = @"ly.kite.abtest.payment_screen";
+static NSString *const kOLKiteABTestCoverPhotoVariants = @"ly.kite.abtest.cover_photo_variants";
 
 id safeObject(id obj){
     return obj ? obj : @"";
@@ -252,9 +253,15 @@ static dispatch_once_t srand48OnceToken;
     
     NSURL *URL = [NSURL URLWithString:urlString];
     [OLKiteUtils registerDefaultsWithURL:URL success:^(NSDictionary *defaults){
-        // reset SKLab A/B tests if the experiment version for any test has been bumped. This allows us to default to sticky OLKiteABTesting behaviour
+        // reset A/B tests if the experiment version for any test has been bumped. This allows us to default to sticky OLKiteABTesting behaviour
         // and when we want to reset things just bump the experiment version.
+        // Always resets in sanbox mode
         for (NSString *key in defaults) {
+            if ([OLKitePrintSDK environment] == kOLKitePrintSDKEnvironmentSandbox){
+                [OLKiteABTesting resetTestNamed:key];
+                continue;
+            }
+            
             id possibleDict = defaults[key];
             id oldPossibleDict = oldDefaults[key];
             if ([possibleDict isKindOfClass:[NSDictionary class]] && ([oldPossibleDict isKindOfClass:[NSDictionary class]]|| !oldPossibleDict) ) {
@@ -275,10 +282,14 @@ static dispatch_once_t srand48OnceToken;
 - (void)setupCoverPhotoTestWithExperimentDict:(NSDictionary *)experimentDict{
     self.coverPhotoId = nil;
     
+    if ([OLKitePrintSDK environment] == kOLKitePrintSDKEnvironmentSandbox){
+        [OLKiteABTesting resetTestNamed:kOLKiteABTestCoverPhotoVariants];
+    }
+    
     if (!experimentDict) {
         return;
     }
-    [OLKiteABTesting splitTestWithName:kOLKiteABTestPromoBannerText
+    [OLKiteABTesting splitTestWithName:kOLKiteABTestCoverPhotoVariants
                             conditions:experimentDict block:^(id choice) {
                                              self.coverPhotoId = choice;
                                          }];
