@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name		= 'Kite-Print-SDK'
-  spec.version         	= '5.2.1'
+  spec.version         	= '6.0.0'
   spec.license 		= { :type => 'MIT', :file => 'Kite-SDK/LICENSE' }
   spec.homepage         = 'https://github.com/OceanLabs/iOS-Print-SDK'
   spec.authors          = {'Deon Botha' => 'deon@oceanlabs.co'}
@@ -14,12 +14,12 @@ Pod::Spec.new do |spec|
   spec.dependency	'TSMarkdownParser', '~> 1.0.17'
   spec.dependency 'DACircularProgress'
   spec.requires_arc	= true
-  spec.platform		= :ios, '7.0'
+  spec.platform		= :ios, '8.0'
   spec.social_media_url	= 'https://twitter.com/dbotha'
   spec.default_subspec = 'Lite'
 
   spec.subspec 'Lite' do |lite|
-  #subspec for developers who don't want the third party PayPal, Stripe, Instagram, Facebook bloat
+  #subspec for developers who don't want the third party PayPal, Stripe, Facebook bloat
   end
 
   spec.subspec 'PayPal' do |paypal|
