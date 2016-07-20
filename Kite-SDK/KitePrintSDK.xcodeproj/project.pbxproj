@@ -1247,8 +1247,6 @@
 		E29C83BD1BE276050041D4CF /* UIImageView+WebCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIImageView+WebCache.m"; path = "vendor/SDWebImage/SDWebImage/UIImageView+WebCache.m"; sourceTree = "<group>"; };
 		E29C83BE1BE276050041D4CF /* UIView+WebCacheOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIView+WebCacheOperation.h"; path = "vendor/SDWebImage/SDWebImage/UIView+WebCacheOperation.h"; sourceTree = "<group>"; };
 		E29C83BF1BE276050041D4CF /* UIView+WebCacheOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIView+WebCacheOperation.m"; path = "vendor/SDWebImage/SDWebImage/UIView+WebCacheOperation.m"; sourceTree = "<group>"; };
-		E29C83D11BE277E60041D4CF /* SkyLab.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SkyLab.h; path = vendor/SkyLab/SkyLab/SkyLab.h; sourceTree = "<group>"; };
-		E29C83D21BE277E60041D4CF /* SkyLab.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SkyLab.m; path = vendor/SkyLab/SkyLab/SkyLab.m; sourceTree = "<group>"; };
 		E29C83D51BE280EA0041D4CF /* CSStickyHeaderFlowLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CSStickyHeaderFlowLayout.h; path = vendor/CSStickyHeaderFlowLayout/Classes/CSStickyHeaderFlowLayout.h; sourceTree = "<group>"; };
 		E29C83D61BE280EA0041D4CF /* CSStickyHeaderFlowLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CSStickyHeaderFlowLayout.m; path = vendor/CSStickyHeaderFlowLayout/Classes/CSStickyHeaderFlowLayout.m; sourceTree = "<group>"; };
 		E29C83D71BE280EA0041D4CF /* CSStickyHeaderFlowLayoutAttributes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CSStickyHeaderFlowLayoutAttributes.h; path = vendor/CSStickyHeaderFlowLayout/Classes/CSStickyHeaderFlowLayoutAttributes.h; sourceTree = "<group>"; };
@@ -2161,20 +2159,14 @@
 		E29C839D1BE275C40041D4CF /* Vendor */ = {
 			isa = PBXGroup;
 			children = (
-				2E87028F1C9049DE002BE2DA /* ios-qr-encoder */,
 				E22962ED1C43DC46002A90CA /* PureLayout */,
 				E22962EC1C43DC0E002A90CA /* CTAssetsPicker */,
 				E24452E51BFD1FCA0086BF03 /* PayPal */,
-				E29C84231BE288B70041D4CF /* UIColor-HexString */,
-				E29C841F1BE287E50041D4CF /* UICKeyChainStore */,
 				E29C84121BE287130041D4CF /* SVProgressHUD */,
 				E29C840E1BE286A20041D4CF /* TSMarkdownParser */,
 				E29C84071BE286110041D4CF /* DACircularProgress */,
 				E29C83F81BE2853F0041D4CF /* MPFlipViewController */,
-				E29C83DB1BE282700041D4CF /* AFNetworking */,
 				E29C83D41BE280B00041D4CF /* CSStickyHeaderFlowLayout */,
-				E29C83D01BE277CF0041D4CF /* SkyLab */,
-				E29C839E1BE275CE0041D4CF /* SDWebImage */,
 			);
 			name = Vendor;
 			sourceTree = "<group>";
@@ -2215,15 +2207,6 @@
 			name = SDWebImage;
 			sourceTree = "<group>";
 		};
-		E29C83D01BE277CF0041D4CF /* SkyLab */ = {
-			isa = PBXGroup;
-			children = (
-				E29C83D11BE277E60041D4CF /* SkyLab.h */,
-				E29C83D21BE277E60041D4CF /* SkyLab.m */,
-			);
-			name = SkyLab;
-			sourceTree = "<group>";
-		};
 		E29C83D41BE280B00041D4CF /* CSStickyHeaderFlowLayout */ = {
 			isa = PBXGroup;
 			children = (
@@ -2233,32 +2216,6 @@
 				E29C83D81BE280EA0041D4CF /* CSStickyHeaderFlowLayoutAttributes.m */,
 			);
 			name = CSStickyHeaderFlowLayout;
-			sourceTree = "<group>";
-		};
-		E29C83DB1BE282700041D4CF /* AFNetworking */ = {
-			isa = PBXGroup;
-			children = (
-				2E87027E1C904918002BE2DA /* AFHTTPSessionManager.m */,
-				2E87027F1C904918002BE2DA /* AFNetworkReachabilityManager.m */,
-				2E8702801C904918002BE2DA /* AFSecurityPolicy.m */,
-				2E8702811C904918002BE2DA /* AFURLRequestSerialization.m */,
-				2E8702821C904918002BE2DA /* AFURLResponseSerialization.m */,
-				2E8702831C904918002BE2DA /* AFURLSessionManager.m */,
-				E29C83E01BE2829C0041D4CF /* AFHTTPSessionManager.h */,
-				E29C83E11BE2829C0041D4CF /* AFHTTPSessionManager.m */,
-				E29C83E21BE2829C0041D4CF /* AFNetworking.h */,
-				E29C83E31BE2829C0041D4CF /* AFNetworkReachabilityManager.h */,
-				E29C83E41BE2829C0041D4CF /* AFNetworkReachabilityManager.m */,
-				E29C83E51BE2829C0041D4CF /* AFSecurityPolicy.h */,
-				E29C83E61BE2829C0041D4CF /* AFSecurityPolicy.m */,
-				E29C83E91BE2829C0041D4CF /* AFURLRequestSerialization.h */,
-				E29C83EA1BE2829C0041D4CF /* AFURLRequestSerialization.m */,
-				E29C83EB1BE2829C0041D4CF /* AFURLResponseSerialization.h */,
-				E29C83EC1BE2829C0041D4CF /* AFURLResponseSerialization.m */,
-				E29C83ED1BE2829C0041D4CF /* AFURLSessionManager.h */,
-				E29C83EE1BE2829C0041D4CF /* AFURLSessionManager.m */,
-			);
-			name = AFNetworking;
 			sourceTree = "<group>";
 		};
 		E29C83F81BE2853F0041D4CF /* MPFlipViewController */ = {
@@ -2310,24 +2267,6 @@
 				E29C841A1BE2877A0041D4CF /* SVRadialGradientLayer.m */,
 			);
 			name = SVProgressHUD;
-			sourceTree = "<group>";
-		};
-		E29C841F1BE287E50041D4CF /* UICKeyChainStore */ = {
-			isa = PBXGroup;
-			children = (
-				E29C84201BE2880E0041D4CF /* UICKeyChainStore.h */,
-				E29C84211BE2880E0041D4CF /* UICKeyChainStore.m */,
-			);
-			name = UICKeyChainStore;
-			sourceTree = "<group>";
-		};
-		E29C84231BE288B70041D4CF /* UIColor-HexString */ = {
-			isa = PBXGroup;
-			children = (
-				E29C84241BE288D30041D4CF /* UIColor+HexString.h */,
-				E29C84251BE288D30041D4CF /* UIColor+HexString.m */,
-			);
-			name = "UIColor-HexString";
 			sourceTree = "<group>";
 		};
 		E29C862E1BE3C4640041D4CF /* Resources */ = {
