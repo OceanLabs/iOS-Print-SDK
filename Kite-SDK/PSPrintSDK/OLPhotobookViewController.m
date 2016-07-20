@@ -611,7 +611,7 @@ UINavigationControllerDelegate, OLUpsellViewControllerDelegate
     }
     __weak OLPhotobookViewController *welf = self;
     if (self.coverImageView){
-        [self.coverPhoto setImageSize:self.coverImageView.frame.size cropped:YES progress:^(float progress){
+        [self.coverPhoto screenImageWithSize:self.coverImageView.frame.size applyEdits:YES progress:^(float progress){
             [welf.coverImageView setProgress:progress];
         }completionHandler:^(UIImage *image){
             dispatch_async(dispatch_get_main_queue(), ^{

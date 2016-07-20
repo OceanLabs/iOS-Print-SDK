@@ -207,7 +207,7 @@ static BOOL hasMoved;
         self.imageCropView.delegate = self;
         OLPrintPhoto *photo = [[OLUserSession currentSession].userSelectedPhotos firstObject];
         self.imageDisplayed = photo;
-        [photo setImageSize:[UIScreen mainScreen].bounds.size cropped:NO progress:NULL completionHandler:^(UIImage *image){
+        [photo screenImageWithSize:[UIScreen mainScreen].bounds.size applyEdits:NO progress:NULL completionHandler:^(UIImage *image){
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self.imageCropView setImage:image];
                 self.imageCropView.imageView.transform = self.imageDisplayed.edits.cropTransform;
@@ -526,7 +526,7 @@ static BOOL hasMoved;
         [previewingContext setSourceRect:[cell convertRect:cellImageView.frame toView:self.imagesCollectionView]];
         
         OLImagePreviewViewController *previewVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLImagePreviewViewController"];
-        [[OLUserSession currentSession].userSelectedPhotos[indexPath.item] setImageSize:[UIScreen mainScreen].bounds.size cropped:NO progress:NULL completionHandler:^(UIImage *image){
+        [[OLUserSession currentSession].userSelectedPhotos[indexPath.item] screenImageWithSize:[UIScreen mainScreen].bounds.size applyEdits:NO progress:NULL completionHandler:^(UIImage *image){
             dispatch_async(dispatch_get_main_queue(), ^{
                 previewVc.image = image;
             });
@@ -538,7 +538,7 @@ static BOOL hasMoved;
     }
     else if (previewingContext.sourceView == self.imageCropView){
         OLImagePreviewViewController *previewVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLImagePreviewViewController"];
-        [self.imageDisplayed setImageSize:[UIScreen mainScreen].bounds.size cropped:NO progress:NULL completionHandler:^(UIImage *image){
+        [self.imageDisplayed screenImageWithSize:[UIScreen mainScreen].bounds.size applyEdits:NO progress:NULL completionHandler:^(UIImage *image){
             dispatch_async(dispatch_get_main_queue(), ^{
                 previewVc.image = image;
             });
@@ -622,7 +622,7 @@ static BOOL hasMoved;
         [imageView.superview addConstraints:con];
         
         
-        [[OLUserSession currentSession].userSelectedPhotos[indexPath.item] setImageSize:imageView.frame.size cropped:NO progress:^(float progress){
+        [[OLUserSession currentSession].userSelectedPhotos[indexPath.item] screenImageWithSize:imageView.frame.size applyEdits:NO progress:^(float progress){
             dispatch_async(dispatch_get_main_queue(), ^{
                 [imageView setProgress:progress];
             });
@@ -690,7 +690,7 @@ static BOOL hasMoved;
         }
         self.imageCropView.imageView.image = nil;
         __weak OLSingleImageProductReviewViewController *welf = self;
-        [self.imageDisplayed setImageSize:[UIScreen mainScreen].bounds.size cropped:NO progress:^(float progress){
+        [self.imageDisplayed screenImageWithSize:[UIScreen mainScreen].bounds.size applyEdits:NO progress:^(float progress){
             dispatch_async(dispatch_get_main_queue(), ^{
                 [welf.imageCropView setProgress:progress];
             });
@@ -1071,7 +1071,7 @@ static BOOL hasMoved;
         self.imageDisplayed = self.imagePicked;
         __weak OLSingleImageProductReviewViewController *welf = self;
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            [self.imagePicked setImageSize:[UIScreen mainScreen].bounds.size cropped:NO progress:NULL completionHandler:^(UIImage *image){
+            [self.imagePicked screenImageWithSize:[UIScreen mainScreen].bounds.size applyEdits:NO progress:NULL completionHandler:^(UIImage *image){
                 dispatch_async(dispatch_get_main_queue(), ^{
                     welf.imageCropView.image = image;
                     welf.imagePicked = nil;
@@ -1138,7 +1138,7 @@ static BOOL hasMoved;
 #endif
     if (self.imagePicked){
         __weak OLSingleImageProductReviewViewController *welf = self;
-        [self.imagePicked setImageSize:[UIScreen mainScreen].bounds.size cropped:NO progress:NULL completionHandler:^(UIImage *image){
+        [self.imagePicked screenImageWithSize:[UIScreen mainScreen].bounds.size applyEdits:NO progress:NULL completionHandler:^(UIImage *image){
             dispatch_async(dispatch_get_main_queue(), ^{
                 welf.imageCropView.image = image;
                 
@@ -1189,7 +1189,7 @@ static BOOL hasMoved;
 #endif
     if (self.imagePicked){
         __weak OLSingleImageProductReviewViewController *welf = self;
-        [self.imagePicked setImageSize:[UIScreen mainScreen].bounds.size cropped:NO progress:NULL completionHandler:^(UIImage *image){
+        [self.imagePicked screenImageWithSize:[UIScreen mainScreen].bounds.size applyEdits:NO progress:NULL completionHandler:^(UIImage *image){
             dispatch_async(dispatch_get_main_queue(), ^{
                 welf.imageCropView.image = image;
                 
@@ -1225,7 +1225,7 @@ static BOOL hasMoved;
     self.imagePicked = printPhoto;
     
     __weak OLSingleImageProductReviewViewController *welf = self;
-    [self.imagePicked setImageSize:[UIScreen mainScreen].bounds.size cropped:NO progress:NULL completionHandler:^(UIImage *image){
+    [self.imagePicked screenImageWithSize:[UIScreen mainScreen].bounds.size applyEdits:NO progress:NULL completionHandler:^(UIImage *image){
         dispatch_async(dispatch_get_main_queue(), ^{
             welf.imageCropView.image = image;
             
@@ -1269,7 +1269,7 @@ static BOOL hasMoved;
     }
     
     __weak OLSingleImageProductReviewViewController *welf = self;
-    [self.imageDisplayed setImageSize:[UIScreen mainScreen].bounds.size cropped:NO progress:NULL completionHandler:^(UIImage *image){
+    [self.imageDisplayed screenImageWithSize:[UIScreen mainScreen].bounds.size applyEdits:NO progress:NULL completionHandler:^(UIImage *image){
         dispatch_async(dispatch_get_main_queue(), ^{
             [activityView stopAnimating];
             [welf.imageCropView setImage:image];
@@ -1306,7 +1306,7 @@ static BOOL hasMoved;
     [OLAnalytics trackReviewScreenDidCropPhotoForProductName:self.product.productTemplate.name];
 #endif
     
-    [copy setImageSize:[UIScreen mainScreen].bounds.size cropped:NO progress:NULL completionHandler:^(UIImage *image){
+    [copy screenImageWithSize:[UIScreen mainScreen].bounds.size applyEdits:NO progress:NULL completionHandler:^(UIImage *image){
         [editor enqueueHighResolutionRenderWithImage:image completion:^(UIImage *result, NSError *error) {
             [self.imageCropView setImage:result];
             

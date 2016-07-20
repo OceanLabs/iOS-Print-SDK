@@ -31,6 +31,8 @@
 #import "OLAsset.h"
 #import "OLPhotoEdits.h"
 
+extern CGSize const OLAssetMaximumSize;
+
 typedef void (^OLImageEditorImageGetImageCompletionHandler)(UIImage *image);
 typedef void (^OLImageEditorImageGetImageProgressHandler)(float progress);
 
@@ -44,7 +46,7 @@ typedef enum {
 
 @interface OLPrintPhoto : NSObject <OLAssetDataSource, NSCopying, NSCoding>
 
-- (void)setImageSize:(CGSize)destSize cropped:(BOOL)cropped progress:(OLImageEditorImageGetImageProgressHandler)progressHandler completionHandler:(void(^)(UIImage *image))handler;
+- (void)screenImageWithSize:(CGSize)destSize applyEdits:(BOOL)applyEdits progress:(OLImageEditorImageGetImageProgressHandler)progressHandler completionHandler:(void(^)(UIImage *image))handler;
 - (void)getImageWithProgress:(OLImageEditorImageGetImageProgressHandler)progressHandler completion:(OLImageEditorImageGetImageCompletionHandler)completionHandler;
 - (void)unloadImage;
 + (void)calcScreenScaleForTraitCollection:(UITraitCollection *)traitCollection;

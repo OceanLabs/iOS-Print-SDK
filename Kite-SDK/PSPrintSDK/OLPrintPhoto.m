@@ -51,6 +51,8 @@ static NSString *const kKeyExtraCopies = @"co.oceanlabs.psprintstudio.kKeyExtraC
 
 static CGFloat screenScale = 2.0;
 
+CGSize const OLAssetMaximumSize = {-1, -1};
+
 static NSOperationQueue *imageOperationQueue;
 
 @import Photos;
@@ -146,7 +148,7 @@ static NSOperationQueue *imageOperationQueue;
     }
 }
 
-- (void)setImageSize:(CGSize)destSize cropped:(BOOL)cropped progress:(OLImageEditorImageGetImageProgressHandler)progressHandler completionHandler:(void(^)(UIImage *image))handler{
+- (void)screenImageWithSize:(CGSize)destSize applyEdits:(BOOL)cropped progress:(OLImageEditorImageGetImageProgressHandler)progressHandler completionHandler:(void(^)(UIImage *image))handler{
     if (self.cachedCroppedThumbnailImage) {
         if ((MAX(destSize.height, destSize.width) * screenScale <= MIN(self.cachedCroppedThumbnailImage.size.width, self.cachedCroppedThumbnailImage.size.height)) || self.thumbnailIsMaxSize){
             handler(self.cachedCroppedThumbnailImage);
@@ -201,7 +203,7 @@ static NSOperationQueue *imageOperationQueue;
 #ifdef OL_KITE_OFFER_INSTAGRAM
             else if (self.type == kPrintPhotoAssetTypeInstagramPhoto) {
                 if (![self isEdited]){
-                    [self getImageWithSize:CGSizeZero progress:progressHandler completion:^(UIImage *image){
+                    [self getImageWithSize:OLAssetMaximumSize progress:progressHandler completion:^(UIImage *image){
                         self.cachedCroppedThumbnailImage = image;
                         self.thumbnailIsMaxSize = YES;
                         if (progressHandler){
@@ -224,7 +226,7 @@ static NSOperationQueue *imageOperationQueue;
 #ifdef OL_KITE_OFFER_FACEBOOK
             else if (self.type == kPrintPhotoAssetTypeFacebookPhoto){
                 if (![self isEdited]){
-                    [self getImageWithSize:CGSizeZero progress:progressHandler completion:^(UIImage *image){
+                    [self getImageWithSize:OLAssetMaximumSize progress:progressHandler completion:^(UIImage *image){
                         self.cachedCroppedThumbnailImage = image;
                         self.thumbnailIsMaxSize = YES;
                         if (progressHandler){
@@ -295,11 +297,11 @@ static NSOperationQueue *imageOperationQueue;
 #endif
 
 - (void)getImageWithProgress:(OLImageEditorImageGetImageProgressHandler)progressHandler completion:(OLImageEditorImageGetImageCompletionHandler)completionHandler {
-    [self getImageWithSize:CGSizeZero progress:progressHandler completion:completionHandler];
+    [self getImageWithSize:OLAssetMaximumSize progress:progressHandler completion:completionHandler];
 }
 
 - (void)getImageWithSize:(CGSize)size progress:(OLImageEditorImageGetImageProgressHandler)progressHandler completion:(OLImageEditorImageGetImageCompletionHandler)completionHandler {
-    BOOL fullResolution = CGSizeEqualToSize(size, CGSizeZero);
+    BOOL fullResolution = CGSizeEqualToSize(size, OLAssetMaximumSize);
     if (self.type == kPrintPhotoAssetTypePHAsset){
         PHImageManager *imageManager = [PHImageManager defaultManager];
         PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
@@ -576,7 +578,7 @@ static NSOperationQueue *imageOperationQueue;
     photo.asset = [OLAsset assetWithImageAsJPEG:image];
     photo.edits = self.edits;
     
-    [OLPrintPhoto resizedImageWithPrintPhoto:photo size:CGSizeZero cropped:YES progress:NULL completion:^(UIImage *image){
+    [OLPrintPhoto resizedImageWithPrintPhoto:photo size:OLAssetMaximumSize cropped:YES progress:NULL completion:^(UIImage *image){
         handler(UIImageJPEGRepresentation(image, 0.7));
     }];
     

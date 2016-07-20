@@ -208,7 +208,7 @@ OLScrollCropViewControllerDelegate>
     
     OLPrintPhoto *printPhoto =(OLPrintPhoto*)[self.posterPhotos objectAtIndex:indexPath.row + (outerCollectionViewIndexPath.item) * self.product.quantityToFulfillOrder];
     
-    [printPhoto setImageSize:[self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath] cropped:YES progress:^(float progress){
+    [printPhoto screenImageWithSize:[self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath] applyEdits:YES progress:^(float progress){
         [imageView setProgress:progress];
     } completionHandler:^(UIImage *image){
         dispatch_async(dispatch_get_main_queue(), ^{

@@ -648,7 +648,7 @@ UIViewControllerPreviewingDelegate>
     [countLabel setText: [NSString stringWithFormat:@"%ld", (long)[[OLUserSession currentSession].userSelectedPhotos[indexPath.item] extraCopies]+1]];
     
     OLPrintPhoto *printPhoto = (OLPrintPhoto*)[[OLUserSession currentSession].userSelectedPhotos objectAtIndex:indexPath.item];
-    [printPhoto setImageSize:cellImage.frame.size cropped:YES progress:^(float progress){
+    [printPhoto screenImageWithSize:cellImage.frame.size applyEdits:YES progress:^(float progress){
         [cellImage setProgress:progress];
     } completionHandler:^(UIImage *image){
         dispatch_async(dispatch_get_main_queue(), ^{

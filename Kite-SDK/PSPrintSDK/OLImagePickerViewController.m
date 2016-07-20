@@ -74,11 +74,6 @@
 
 @implementation OLImagePickerViewController
 
-//- (NSMutableArray *)userSelectedPhotos{
-//    OLKiteViewController *kiteVc = [OLKiteUtils kiteVcForViewController:self];
-//    return kiteVc.userSelectedPhotos;
-//}
-
 - (void)viewDidLoad {
     [super viewDidLoad];
     

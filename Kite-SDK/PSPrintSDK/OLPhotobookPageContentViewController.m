@@ -130,7 +130,7 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             NSInteger blockIndex = imageIndex;
             
-            [printPhoto setImageSize:self.imageView.frame.size cropped:YES progress:^(float progress){
+            [printPhoto screenImageWithSize:self.imageView.frame.size applyEdits:YES progress:^(float progress){
                 [self.imageView setProgress:progress];
             }completionHandler:^(UIImage *image){
                 dispatch_async(dispatch_get_main_queue(), ^{
