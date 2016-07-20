@@ -217,7 +217,6 @@
                                                 }
                                             }
                                         }
-                                        [[OLKiteABTesting sharedInstance] setupCoverPhotoTestWithExperimentDict:experimentDict];
                                     }
                                     
                                     maskImageURL = [product[@"mask_url"] isKindOfClass:[NSString class]] ? product[@"mask_url"] : nil;
