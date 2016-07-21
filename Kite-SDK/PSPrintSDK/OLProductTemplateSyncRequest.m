@@ -207,7 +207,6 @@
                                 NSArray *supportedOptions;
                                 OLProductRepresentation *productRepresentation;
                                 if (product){
-                                    NSMutableDictionary *experimentDict = [[NSMutableDictionary alloc] init];
                                     NSArray *coverPhotoDicts = product[@"cover_photo_variants"];
                                     if ([coverPhotoDicts isKindOfClass:[NSArray class]]){
                                         for (NSDictionary *dict in coverPhotoDicts){
