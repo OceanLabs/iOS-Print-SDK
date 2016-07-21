@@ -26,7 +26,6 @@
 #import "OLEditPhotobookViewController.h"
 #import "OLKiteABTesting.h"
 #import "OLIntegratedCheckoutViewController.h"
-#import "OLAssetsPickerController.h"
 #import "PrintOrderHistoryViewController.h"
 #import "OLAddressEditViewController.h"
 #import "OLTestTapGestureRecognizer.h"
@@ -238,7 +237,7 @@
     
     __block OLProductHomeViewController *resultVc;
     
-    OLKiteViewController *vc = [[OLKiteViewController alloc] initWithAssets:@[[OLKiteTestHelper aPrintPhoto].asset]];
+    OLKiteViewController *vc = [[OLKiteViewController alloc] initWithAssets:@[[OLKiteTestHelper aPrintPhoto]]];
     [vc addCustomPhotoProviderWithCollections:@[[[CatsAssetCollectionDataSource alloc] init]] name:@"Cats" icon:[UIImage imageNamed:@"cat"]];
     [vc addCustomPhotoProviderWithCollections:@[[[DogsAssetCollectionDataSource alloc] init]] name:@"Dogs" icon:[UIImage imageNamed:@"dog"]];
     [[OLUserSession currentSession] cleanupUserSession:OLUserSessionCleanupOptionBasket];

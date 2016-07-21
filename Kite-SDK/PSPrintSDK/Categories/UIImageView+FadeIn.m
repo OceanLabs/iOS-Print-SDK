@@ -34,6 +34,7 @@
 #import "objc/runtime.h"
 #import "UIImage+OLUtils.h"
 #import "OLUserSession.h"
+#import "OLAsset+Private.h"
 
 static char tasksKey;
 
@@ -96,6 +97,41 @@ static char tasksKey;
     [self setAndFadeInImageWithPHAsset:asset size:size options:options  placeholder:placeholder completionHandler:NULL];
 }
 
+- (void)setAndFadeInImageWithOLAsset:(OLAsset *)asset size:(CGSize)size applyEdits:(BOOL)applyEdits placeholder:(UIImage *)placeholder completionHandler:(void(^)())handler{
+    for (id key in self.tasks.allKeys){
+        if (![key isEqual:asset.uuid]){
+            [self.tasks removeObjectForKey:key];
+        }
+    }
+    
+    if (size.height == 0 || size.width == 0){
+        size = CGSizeMake(self.frame.size.width * [UIScreen mainScreen].scale, self.frame.size.height * [UIScreen mainScreen].scale);
+    }
+    
+    self.alpha = 0;
+    self.tasks[asset.uuid] = [NSNull null];
+    [asset imageWithSize:self.frame.size applyEdits:applyEdits progress:NULL completion:^(UIImage *image){
+        if (!self.tasks[asset.uuid]){
+            return;
+        }
+        [self.tasks removeObjectForKey:asset.uuid];
+        
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            UIImage *resizedImage = [image shrinkToSize:[UIScreen mainScreen].bounds.size forScreenScale:[OLUserSession currentSession].screenScale];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                self.image = resizedImage;
+                [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+                    self.alpha = 1;
+                }completion:^(BOOL finished){
+                    if (handler){
+                        handler();
+                    }
+                }];
+            });
+        });
+    }];
+}
+
 - (void)setAndFadeInImageWithPHAsset:(PHAsset *)asset size:(CGSize)size options:(PHImageRequestOptions *)options placeholder:(UIImage *)placeholder completionHandler:(void(^)())handler{
     for (id key in self.tasks.allKeys){
         if (![key isEqual:asset.localIdentifier]){
@@ -130,8 +166,6 @@ static char tasksKey;
     }];
     self.tasks[asset.localIdentifier] = [NSNumber numberWithLong:requestID];
 }
-
-
 
 - (NSMutableDictionary *)tasks{
     NSMutableDictionary *tasks = objc_getAssociatedObject(self, &tasksKey);

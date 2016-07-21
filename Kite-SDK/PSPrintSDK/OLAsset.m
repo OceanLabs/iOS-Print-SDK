@@ -81,6 +81,13 @@ static NSOperationQueue *imageOperationQueue;
 
 @implementation OLAsset
 
+-(NSString *) uuid{
+    if (!_uuid){
+        _uuid = [[NSUUID UUID] UUIDString];
+    }
+    return _uuid;
+}
+
 +(NSOperationQueue *) imageOperationQueue{
     if (!imageOperationQueue){
         imageOperationQueue = [[NSOperationQueue alloc] init];
@@ -426,8 +433,10 @@ static NSOperationQueue *imageOperationQueue;
         else if (self.assetType == kOLAssetTypeImageFilePath){
             NSData *imageData = [NSData dataWithContentsOfFile:self.imageFilePath options:0 error:nil];
             [self resizeImage:[UIImage imageWithData:imageData] size:size applyEdits:YES completion:^(UIImage *image){
-                self.cachedEditedImage = image;
-                handler(image);
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    self.cachedEditedImage = image;
+                    handler(image);
+                });
             }];
         }
         else if (self.assetType == kOLAssetTypeFacebookPhoto || self.assetType == kOLAssetTypeInstagramPhoto || self.assetType == kOLAssetTypeRemoteImageURL) {
@@ -447,6 +456,16 @@ static NSOperationQueue *imageOperationQueue;
                             }
                             handler(image);
                         }
+                    });
+                }];
+            }];
+        }
+        else if (self.assetType == kOLAssetTypeDataSource){
+            [self.dataSource dataWithCompletionHandler:^(NSData *data, NSError *error){
+                [self resizeImage:[UIImage imageWithData:data] size:size applyEdits:YES completion:^(UIImage *image){
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        self.cachedEditedImage = image;
+                        handler(image);
                     });
                 }];
             }];

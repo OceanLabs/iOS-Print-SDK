@@ -30,10 +30,13 @@
 #import <UIKit/UIKit.h>
 #import <Photos/Photos.h>
 
+@class OLAsset;
+
 @interface UIImageView (FadeIn)
 - (void)setAndFadeInImageWithURL:(NSURL *)url;
 - (void)setAndFadeInImageWithURL:(NSURL *)url size:(CGSize)size;
 - (void)setAndFadeInImageWithURL:(NSURL *)url size:(CGSize)size placeholder:(UIImage *)placeholder;
+- (void)setAndFadeInImageWithOLAsset:(OLAsset *)asset size:(CGSize)size applyEdits:(BOOL)applyEdits placeholder:(UIImage *)placeholder completionHandler:(void(^)())handler;
 - (void)setAndFadeInImageWithURL:(NSURL *)url size:(CGSize)size placeholder:(UIImage *)placeholder completionHandler:(void(^)())handler;
 - (void)setAndFadeInImageWithPHAsset:(PHAsset *)asset size:(CGSize)size options:(PHImageRequestOptions *)options;
 - (void)setAndFadeInImageWithPHAsset:(PHAsset *)asset size:(CGSize)size options:(PHImageRequestOptions *)options placeholder:(UIImage *)placeholder;

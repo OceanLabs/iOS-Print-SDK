@@ -71,6 +71,7 @@
 + (NSInteger)instagramProviderIndex:(UIViewController *)topVc;
 + (NSInteger)qrCodeProviderStartIndex:(UIViewController *)topVc;
 + (NSInteger)customProvidersStartIndex:(UIViewController *)topVc;
++ (NSInteger)appProviderIndex:(UIViewController *)topVc;
 
 + (void)registerDefaultsWithURL:(NSURL *)url
                         success:(void (^)(NSDictionary *defaults))success

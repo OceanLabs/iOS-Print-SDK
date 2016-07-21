@@ -34,7 +34,7 @@
 @interface OLImagePickerPhotosPageViewController : UIViewController
 
 
-@property (strong, nonatomic) id/* NSArray or PHFetchResult */ assets;
+@property (strong, nonatomic) NSDictionary<NSString *, id /*PHFetchResult or NSArray of OLAssets or OLAssetDataSources*/> * collections;
 
 @property (assign, nonatomic) NSInteger quantityPerItem;
 @property (assign, nonatomic) NSInteger minimumPhotos;
@@ -45,6 +45,7 @@
 
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *albumLabelContainerTopCon;
 @property (weak, nonatomic) IBOutlet UIView *albumLabelContainer;
+@property (assign, nonatomic) NSInteger pageIndex;
 
 
 @end

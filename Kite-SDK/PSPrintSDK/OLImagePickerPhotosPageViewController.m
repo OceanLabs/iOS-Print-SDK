@@ -90,7 +90,7 @@ NSInteger OLImagePickerMargin = 0;
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
-    return [self.assets count];
+    return [self.collections[self.collections.allKeys.firstObject] count];
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
@@ -99,7 +99,7 @@ NSInteger OLImagePickerMargin = 0;
     [self setAssetWithIndexPath:indexPath toImageView:imageView];
     
     UIImageView *checkmark = [cell viewWithTag:20];
-    id asset = self.assets[indexPath.item];
+    id asset = self.collections[self.collections.allKeys.firstObject][indexPath.item];
     OLAsset *printPhoto = asset;
     if ([[OLUserSession currentSession].userSelectedPhotos containsObject:printPhoto]){
         checkmark.hidden = NO;
@@ -113,7 +113,7 @@ NSInteger OLImagePickerMargin = 0;
 }
 
 - (void)setAssetWithIndexPath:(NSIndexPath *)indexPath toImageView:(OLRemoteImageView *)imageView{
-    id asset = self.assets[indexPath.item];
+    id asset = self.collections[self.collections.allKeys.firstObject][indexPath.item];
     
     if ([asset isKindOfClass:[PHAsset class]]){
         PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
@@ -126,6 +126,9 @@ NSInteger OLImagePickerMargin = 0;
         
         CGSize cellSize = [self collectionView:self.collectionView layout:self.collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath];
         [imageView setAndFadeInImageWithPHAsset:asset size:CGSizeMake(cellSize.width * [UIScreen mainScreen].scale, cellSize.height * [UIScreen mainScreen].scale) options:options];
+    }
+    else if ([asset isKindOfClass:[OLAsset class]]){
+        [imageView setAndFadeInImageWithOLAsset:asset size:imageView.frame.size applyEdits:NO placeholder:nil completionHandler:NULL];
     }
 }
 
@@ -205,7 +208,7 @@ NSInteger OLImagePickerMargin = 0;
 
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
-    id asset = self.assets[indexPath.item];
+    id asset = self.collections[self.collections.allKeys.firstObject][indexPath.item];
     OLAsset *printPhoto;
     if ([asset isKindOfClass:[PHAsset class]]){
         printPhoto = [OLAsset assetWithPHAsset:asset];

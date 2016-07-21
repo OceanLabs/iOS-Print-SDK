@@ -40,6 +40,8 @@
 #import "OLPrintOrder.h"
 #import "OLUserSession.h"
 #import "OLAsset+Private.h"
+#import <KITAssetCollectionDataSource.h>
+#import <KITAssetDataSource.h>
 
 @interface OLKiteViewController ()
 @property (strong, nonatomic) NSMutableArray <OLCustomPhotoProvider *> *customImageProviders;
@@ -52,6 +54,8 @@
 @property (strong, nonatomic) UIPageViewController *pageController;
 @property (strong, nonatomic) UIVisualEffectView *visualEffectView;
 @property (assign, nonatomic) CGSize rotationSize;
+
+@property (strong, nonatomic) NSArray<NSDictionary<NSString *, id /*PHFetchResult or NSArray of OLAssets or OLAssetDataSources*/> *> *providers;
 
 @end
 
@@ -76,6 +80,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    [self setupProviderCollections];
     
     self.automaticallyAdjustsScrollViewInsets = NO;
         
@@ -124,6 +130,44 @@
     }
     
     [view.superview addConstraints:con];
+    
+    [self updateTitleBasedOnSelectedPhotoQuanitity];
+}
+
+- (void)setupProviderCollections{
+    NSMutableArray *collections = [[NSMutableArray alloc] init];
+    if ([OLUserSession currentSession].appAssets.count > 0){
+        [collections addObject:@{@"All Photos" : [OLUserSession currentSession].appAssets}];
+    }
+    if ([OLKiteUtils cameraRollProviderIndex:self] != -1){
+        PHFetchOptions *options = [[PHFetchOptions alloc] init];
+        options.wantsIncrementalChangeDetails = NO;
+        options.includeHiddenAssets = NO;
+        options.includeAllBurstAssets = NO;
+        options.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"creationDate" ascending:NO]];
+        if ([options respondsToSelector:@selector(setIncludeAssetSourceTypes:)]){
+            options.includeAssetSourceTypes = PHAssetSourceTypeCloudShared | PHAssetSourceTypeUserLibrary | PHAssetSourceTypeiTunesSynced;
+        }
+        
+        [collections addObject:@{NSLocalizedString(@"All Photos", @"") : [PHAsset fetchAssetsWithMediaType:PHAssetMediaTypeImage options:options]}];
+    }
+    if ([OLKiteUtils facebookProviderIndex:self] != -1){
+         [collections addObject:@{@"Facebook" : @[]}];
+    }
+    if ([OLKiteUtils instagramProviderIndex:self] != -1){
+        [collections addObject:@{@"Instagram" : @[]}];
+    }
+    for (OLCustomPhotoProvider *provider in [OLKiteUtils kiteVcForViewController:self].customImageProviders){
+        for (id<KITAssetCollectionDataSource> collection in provider.collections){
+            NSMutableArray *assets = [[NSMutableArray alloc] init];
+            for (id <KITAssetDataSource> asset in collection){
+                [assets addObject:[OLAsset assetWithDataSource:(id<OLAssetDataSource>)asset]];
+            }
+            [collections addObject:@{collection.title : assets}];
+        }
+    }
+    
+    self.providers = collections;
 }
 
 - (void)viewDidLayoutSubviews{
@@ -178,27 +222,22 @@
 #pragma mark PageViewController
 
 - (UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerAfterViewController:(UIViewController *)viewController{
-    return [self viewControllerAtIndex:0];
+    return [self viewControllerAtIndex:[(OLImagePickerPhotosPageViewController *)viewController pageIndex] + 1];
 }
 
 - (UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerBeforeViewController:(UIViewController *)viewController{
-    return [self viewControllerAtIndex:0];
+    return [self viewControllerAtIndex:[(OLImagePickerPhotosPageViewController *)viewController pageIndex] - 1];
 }
 
 - (UIViewController *)viewControllerAtIndex:(NSInteger)index{
+    if(index < 0 || index >= self.providers.count){
+        return nil;
+    }
     OLImagePickerPhotosPageViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLImagePickerPhotosPageViewController"];
     vc.imagePicker = self;
+    vc.pageIndex = index;
     
-    PHFetchOptions *options = [[PHFetchOptions alloc] init];
-    options.wantsIncrementalChangeDetails = NO;
-    options.includeHiddenAssets = NO;
-    options.includeAllBurstAssets = NO;
-    options.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"creationDate" ascending:NO]];
-    if ([options respondsToSelector:@selector(setIncludeAssetSourceTypes:)]){
-        options.includeAssetSourceTypes = PHAssetSourceTypeCloudShared | PHAssetSourceTypeUserLibrary | PHAssetSourceTypeiTunesSynced;
-    }
-    
-    vc.assets = [PHAsset fetchAssetsWithMediaType:PHAssetMediaTypeImage options:options];
+    vc.collections = self.providers[index];
     
     vc.collectionView.contentInset = UIEdgeInsetsMake([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height + self.sourcesCollectionView.frame.size.height, 0, 0, 0);
     vc.quantityPerItem = self.product.quantityToFulfillOrder;
@@ -216,7 +255,11 @@
     
     UIImageView *imageView = [cell viewWithTag:10];
     UILabel *label = [cell viewWithTag:20];
-    if (indexPath.item == [OLKiteUtils cameraRollProviderIndex:self]){
+    if (indexPath.item == [OLKiteUtils appProviderIndex:self]){
+//        imageView.image = [UIImage imageNamedInKiteBundle:@""];
+        label.text = NSLocalizedString(@"App", @""); //TODO
+    }
+    else if (indexPath.item == [OLKiteUtils cameraRollProviderIndex:self]){
         imageView.image = [UIImage imageNamedInKiteBundle:@"import_gallery"];
         label.text = NSLocalizedString(@"Photo Library", @"");
     }

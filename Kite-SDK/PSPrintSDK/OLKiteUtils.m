@@ -39,6 +39,7 @@
 #import "OLIntegratedCheckoutViewController.h"
 #import "OLKiteViewController.h"
 #import "OLPaymentViewControllerV2.h"
+#import "OLUserSession.h"
 
 @class OLCustomPhotoProvider;
 
@@ -118,24 +119,39 @@
     return YES;
 }
 
++ (NSInteger)appProviderIndex:(UIViewController *)topVc{
+    if ([OLUserSession currentSession].appAssets.count > 0){
+        return 0;
+    }
+    else{
+        return -1;
+    }
+}
+
 + (NSInteger)cameraRollProviderIndex:(UIViewController *)topVc{
-    NSInteger index = -1;
-    if ([OLKiteUtils cameraRollEnabled:topVc]){
+    if (![OLKiteUtils cameraRollEnabled:topVc]){
+        return -1;
+    }
+    
+    NSInteger index = 0;
+    if ([OLUserSession currentSession].appAssets.count > 0){
         index++;
     }
     
     return index;
 }
 
+
+
 + (NSInteger)facebookProviderIndex:(UIViewController *)topVc{
-    NSInteger index = -1;
     if (![OLKiteUtils facebookEnabled]){
-        return index;
-    }
-    else{
-        index++;
+        return -1;
     }
     
+    NSInteger index = 0;
+    if ([OLUserSession currentSession].appAssets.count > 0){
+        index++;
+    }
     if ([OLKiteUtils cameraRollEnabled:topVc]){
         index++;
     }
@@ -144,14 +160,14 @@
 }
 
 + (NSInteger)instagramProviderIndex:(UIViewController *)topVc{
-    NSInteger index = -1;
     if (![OLKiteUtils instagramEnabled]){
-        return index;
-    }
-    else{
-        index++;
+        return -1;
     }
     
+    NSInteger index = 0;
+    if ([OLUserSession currentSession].appAssets.count > 0){
+        index++;
+    }
     if ([OLKiteUtils cameraRollEnabled:topVc]){
         index++;
     }
@@ -168,6 +184,9 @@
     }
     
     NSInteger index = 0;
+    if ([OLUserSession currentSession].appAssets.count > 0){
+        index++;
+    }
     if ([OLKiteUtils cameraRollEnabled:topVc]){
         index++;
     }
@@ -187,6 +206,9 @@
     }
     
     NSInteger index = 0;
+    if ([OLUserSession currentSession].appAssets.count > 0){
+        index++;
+    }
     if ([OLKiteUtils cameraRollEnabled:topVc]){
         index++;
     }
