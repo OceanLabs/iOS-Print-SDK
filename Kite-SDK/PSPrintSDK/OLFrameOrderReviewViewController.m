@@ -109,7 +109,7 @@ CGFloat margin = 2;
     cropVc.definesPresentationContext = true;
     cropVc.modalPresentationStyle = UIModalPresentationOverCurrentContext;
     
-    [self.editingPrintPhoto getImageWithProgress:NULL completion:^(UIImage *image){
+    [self.editingPrintPhoto imageWithSize:OLAssetMaximumSize applyEdits:NO cacheResult:NO progress:NULL completion:^(UIImage *image){
         [cropVc setFullImage:image];
         cropVc.edits = self.editingPrintPhoto.edits;
 //        cropVc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
@@ -167,7 +167,7 @@ CGFloat margin = 2;
     self.editingPrintPhoto = printPhoto;
     
     OLImagePreviewViewController *previewVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLImagePreviewViewController"];
-    [self.editingPrintPhoto getImageWithProgress:NULL completion:^(UIImage *image){
+    [self.editingPrintPhoto imageWithSize:OLAssetMaximumSize applyEdits:NO cacheResult:NO progress:NULL completion:^(UIImage *image){
         previewVc.image = image;
     }];
     previewVc.providesPresentationContextTransitionStyle = true;
@@ -181,7 +181,7 @@ CGFloat margin = 2;
     cropVc.enableCircleMask = self.product.productTemplate.templateUI == kOLTemplateUICircle;
     cropVc.delegate = self;
     cropVc.aspectRatio = 1;
-    [self.editingPrintPhoto getImageWithProgress:^(float progress){
+    [self.editingPrintPhoto imageWithSize:OLAssetMaximumSize applyEdits:NO cacheResult:NO progress:^(float progress){
         [cropVc.cropView setProgress:progress];
     }completion:^(UIImage *image){
         [cropVc setFullImage:image];
@@ -284,9 +284,9 @@ CGFloat margin = 2;
         cellImage.image = nil;
         
         OLPrintPhoto *printPhoto =(OLPrintPhoto*)[self.framePhotos objectAtIndex:indexPath.row + (outerCollectionViewIndexPath.item) * self.product.quantityToFulfillOrder];
-        [printPhoto screenImageWithSize:[self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath] applyEdits:YES progress:^(float progress){
+        [printPhoto imageWithSize:[self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath] applyEdits:YES cacheResult:YES progress:^(float progress){
             [cellImage setProgress:progress];
-        }completionHandler:^(UIImage *image){
+        }completion:^(UIImage *image){
             dispatch_async(dispatch_get_main_queue(), ^{
                 cellImage.image = image;
             });

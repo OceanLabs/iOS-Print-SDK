@@ -380,7 +380,7 @@ UIViewControllerPreviewingDelegate>
     self.editingPrintPhoto = [OLUserSession currentSession].userSelectedPhotos[indexPath.item];
     
     OLImagePreviewViewController *previewVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLImagePreviewViewController"];
-    [self.editingPrintPhoto getImageWithProgress:NULL completion:^(UIImage *image){
+    [self.editingPrintPhoto imageWithSize:OLAssetMaximumSize applyEdits:NO cacheResult:NO progress:NULL completion:^(UIImage *image){
         previewVc.image = image;
     }];
     previewVc.providesPresentationContextTransitionStyle = true;
@@ -394,7 +394,7 @@ UIViewControllerPreviewingDelegate>
     cropVc.enableCircleMask = self.product.productTemplate.templateUI == kOLTemplateUICircle;
     cropVc.delegate = self;
     cropVc.aspectRatio = [self productAspectRatio];
-    [self.editingPrintPhoto getImageWithProgress:^(float progress){
+    [self.editingPrintPhoto imageWithSize:OLAssetMaximumSize applyEdits:NO cacheResult:NO progress:^(float progress){
         [cropVc.cropView setProgress:progress];
     }completion:^(UIImage *image){
         [cropVc setFullImage:image];
@@ -490,7 +490,7 @@ UIViewControllerPreviewingDelegate>
     
     self.editingPrintPhoto = [OLUserSession currentSession].userSelectedPhotos[indexPath.item];
     
-    [self.editingPrintPhoto getImageWithProgress:NULL completion:^(UIImage *image){
+    [self.editingPrintPhoto imageWithSize:OLAssetMaximumSize applyEdits:NO cacheResult:NO progress:NULL completion:^(UIImage *image){
         
         [UIView animateWithDuration:0.25 animations:^{
             self.nextButton.alpha = 0;
@@ -606,9 +606,9 @@ UIViewControllerPreviewingDelegate>
     [countLabel setText: [NSString stringWithFormat:@"%ld", (long)[[OLUserSession currentSession].userSelectedPhotos[indexPath.item] extraCopies]+1]];
     
     OLPrintPhoto *printPhoto = (OLPrintPhoto*)[[OLUserSession currentSession].userSelectedPhotos objectAtIndex:indexPath.item];
-    [printPhoto screenImageWithSize:cellImage.frame.size applyEdits:YES progress:^(float progress){
+    [printPhoto imageWithSize:cellImage.frame.size applyEdits:YES cacheResult:YES progress:^(float progress){
         [cellImage setProgress:progress];
-    } completionHandler:^(UIImage *image){
+    } completion:^(UIImage *image){
         dispatch_async(dispatch_get_main_queue(), ^{
             [activityIndicator stopAnimating];
             cellImage.image = image;

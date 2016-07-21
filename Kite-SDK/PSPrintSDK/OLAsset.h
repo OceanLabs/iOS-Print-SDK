@@ -216,9 +216,4 @@ extern NSString *const kOLMimeTypePDF;
  */
 - (PHAsset *)loadPHAsset;
 
-/**
- *  Method to delete any cache files from disk
- */
-- (void)deleteFromDisk;
-
 @end

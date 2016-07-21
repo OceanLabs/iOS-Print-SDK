@@ -33,9 +33,6 @@
 
 extern CGSize const OLAssetMaximumSize;
 
-typedef void (^OLImageEditorImageGetImageCompletionHandler)(UIImage *image);
-typedef void (^OLImageEditorImageGetImageProgressHandler)(float progress);
-
 typedef enum {
     kPrintPhotoAssetTypeCorrupt,
     kPrintPhotoAssetTypePHAsset,
@@ -46,8 +43,7 @@ typedef enum {
 
 @interface OLPrintPhoto : NSObject <OLAssetDataSource, NSCopying, NSCoding>
 
-- (void)screenImageWithSize:(CGSize)destSize applyEdits:(BOOL)applyEdits progress:(OLImageEditorImageGetImageProgressHandler)progressHandler completionHandler:(void(^)(UIImage *image))handler;
-- (void)getImageWithProgress:(OLImageEditorImageGetImageProgressHandler)progressHandler completion:(OLImageEditorImageGetImageCompletionHandler)completionHandler;
+- (void)imageWithSize:(CGSize)size applyEdits:(BOOL)applyEdits cacheResult:(BOOL)cacheResult progress:(void(^)(float progress))progress completion:(void(^)(UIImage *image))handler;
 - (void)unloadImage;
 + (void)calcScreenScaleForTraitCollection:(UITraitCollection *)traitCollection;
 + (UIImage*)imageWithImage:(UIImage*) sourceImage scaledToSize:(CGSize) i_size;

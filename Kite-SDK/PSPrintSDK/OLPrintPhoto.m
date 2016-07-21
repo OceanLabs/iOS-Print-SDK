@@ -69,7 +69,7 @@ static NSOperationQueue *imageOperationQueue;
 @end
 
 @interface OLPrintPhoto ()
-@property (nonatomic, strong) UIImage *cachedCroppedThumbnailImage;
+@property (nonatomic, strong) UIImage *cachedEditedImage;
 @property (assign, nonatomic) BOOL thumbnailIsMaxSize;
 @property (nonatomic, assign, readwrite) PrintPhotoAssetType type;
 @end
@@ -148,109 +148,75 @@ static NSOperationQueue *imageOperationQueue;
     }
 }
 
-- (void)screenImageWithSize:(CGSize)destSize applyEdits:(BOOL)cropped progress:(OLImageEditorImageGetImageProgressHandler)progressHandler completionHandler:(void(^)(UIImage *image))handler{
-    if (self.cachedCroppedThumbnailImage) {
-        if ((MAX(destSize.height, destSize.width) * screenScale <= MIN(self.cachedCroppedThumbnailImage.size.width, self.cachedCroppedThumbnailImage.size.height)) || self.thumbnailIsMaxSize){
-            handler(self.cachedCroppedThumbnailImage);
+- (void)imageWithSize:(CGSize)size applyEdits:(BOOL)applyEdits cacheResult:(BOOL)cacheResult progress:(void(^)(float progress))progress completion:(void(^)(UIImage *image))handler{
+    if (!handler){
+        //Nothing to do really
+        return;
+    }
+    if (!cacheResult){
+        self.cachedEditedImage = nil;
+    }
+    if (self.cachedEditedImage) {
+        if ((MAX(size.height, size.width) * screenScale <= MIN(self.cachedEditedImage.size.width, self.cachedEditedImage.size.height)) || self.thumbnailIsMaxSize){
+            handler(self.cachedEditedImage);
             return;
         }
     }
     self.thumbnailIsMaxSize = NO;
+    BOOL fullResolution = CGSizeEqualToSize(size, OLAssetMaximumSize);
     
     NSBlockOperation *blockOperation = [[NSBlockOperation alloc] init];
     
     [blockOperation addExecutionBlock:^{
         if (self.type == kPrintPhotoAssetTypePHAsset) {
-            [OLPrintPhoto resizedImageWithPrintPhoto:self size:destSize cropped:cropped progress:progressHandler completion:^(UIImage *image) {
-                self.cachedCroppedThumbnailImage = image;
-                handler(image);
-                
+            PHImageManager *imageManager = [PHImageManager defaultManager];
+            PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
+            options.synchronous = NO;
+            options.deliveryMode = fullResolution ? PHImageRequestOptionsDeliveryModeHighQualityFormat : PHImageRequestOptionsDeliveryModeFastFormat;
+            options.resizeMode = PHImageRequestOptionsResizeModeFast;
+            options.networkAccessAllowed = YES;
+            options.progressHandler = ^(double progressAmount, NSError *__nullable error, BOOL *stop, NSDictionary *__nullable info){
+                if (progress){
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        progress(progressAmount);
+                    });
+                }
+            };
+            
+            //Don't request less than a 400x400 image, otherwise the Photos Framework tries to be useful and returns a low-res, prerendered image which loses the rotation metadata (but is rotated correctly). This messes up the rotation from our editor.
+            CGSize requestSize = fullResolution ? PHImageManagerMaximumSize : CGSizeMake(MAX(size.width * screenScale, 400), MAX(size.height * screenScale, 400));
+            [imageManager requestImageForAsset:(PHAsset *)self.asset targetSize:requestSize contentMode:PHImageContentModeAspectFill options:options resultHandler:^(UIImage *image, NSDictionary *info){
+                if (applyEdits){
+                    [self resizeImage:image size:size applyEdits:YES completion:^(UIImage *image){
+                        self.cachedEditedImage = cacheResult ? image : nil;
+                        handler(image);
+                    }];
+                }
+                else{ //Image is already resized, no need to do it again
+                    self.cachedEditedImage = cacheResult ? image : nil;
+                    handler(image);
+                }
             }];
         }
-        else {
-            if (self.type == kPrintPhotoAssetTypeOLAsset){
-                OLAsset *asset = (OLAsset *)self.asset;
-                
-                if (asset.assetType == kOLAssetTypeRemoteImageURL){
-                    [OLPrintPhoto resizedImageWithPrintPhoto:self size:destSize cropped:cropped progress:progressHandler completion:^(UIImage *image) {
-                        self.cachedCroppedThumbnailImage = image;
-                        dispatch_async(dispatch_get_main_queue(), ^{
-                            handler(image);
-                        });
-                    }];
-                }
-                else if (asset.assetType == kOLAssetTypePHAsset){
-                    PHAsset *asset = [self.asset loadPHAsset];
-                    self.asset = asset;
-                    [OLPrintPhoto resizedImageWithPrintPhoto:self size:destSize cropped:cropped progress:progressHandler completion:^(UIImage *image) {
-                        self.cachedCroppedThumbnailImage = image;
-                        handler(image);
-                    }];
-                }
-                else{
-                    [asset dataWithCompletionHandler:^(NSData *data, NSError *error){
-                        NSBlockOperation *block = [NSBlockOperation blockOperationWithBlock:^{
-                            [OLPrintPhoto resizedImageWithPrintPhoto:self size:destSize cropped:cropped progress:progressHandler completion:^(UIImage *image) {
-                                self.cachedCroppedThumbnailImage = image;
-                                handler(image);
-                            }];
-                        }];
-                        block.queuePriority = NSOperationQueuePriorityHigh;
-                        [[OLPrintPhoto imageOperationQueue] addOperation:block];
-                    }];
-                }
-            }
-#ifdef OL_KITE_OFFER_INSTAGRAM
-            else if (self.type == kPrintPhotoAssetTypeInstagramPhoto) {
-                if (![self isEdited]){
-                    [self getImageWithSize:OLAssetMaximumSize progress:progressHandler completion:^(UIImage *image){
-                        self.cachedCroppedThumbnailImage = image;
-                        self.thumbnailIsMaxSize = YES;
-                        if (progressHandler){
-                            progressHandler(1);
-                        }
-                        handler(image);
-                    }];
-                }
-                else{
-                    [OLPrintPhoto resizedImageWithPrintPhoto:self size:destSize cropped:cropped progress:progressHandler completion:^(UIImage *image) {
-                        self.cachedCroppedThumbnailImage = image;
-                        if (progressHandler){
-                            progressHandler(1);
-                        }
-                        handler(image);
-                    }];
-                }
-            }
-#endif
-#ifdef OL_KITE_OFFER_FACEBOOK
-            else if (self.type == kPrintPhotoAssetTypeFacebookPhoto){
-                if (![self isEdited]){
-                    [self getImageWithSize:OLAssetMaximumSize progress:progressHandler completion:^(UIImage *image){
-                        self.cachedCroppedThumbnailImage = image;
-                        self.thumbnailIsMaxSize = YES;
-                        if (progressHandler){
-                            progressHandler(1);
-                        }
-                        handler(image);
-                    }];
-                }
-                else{
-                    [OLPrintPhoto resizedImageWithPrintPhoto:self size:destSize cropped:cropped progress:progressHandler completion:^(UIImage *image) {
-                        self.cachedCroppedThumbnailImage = image;
-                        if (progressHandler){
-                            progressHandler(1);
-                        }
-                        handler(image);
-                    }];
-                }
-            }
-            else if (self.type == kPrintPhotoAssetTypeCorrupt){
-                NSData *data = [NSData dataWithContentsOfFile:[[OLKiteUtils kiteBundle] pathForResource:@"kite_corrupt" ofType:@"jpg"]];
-                handler([UIImage imageWithData:data]);
-            }
-#endif
+#if defined(OL_KITE_OFFER_INSTAGRAM) || defined(OL_KITE_OFFER_FACEBOOK)
+        if (self.type == kPrintPhotoAssetTypeFacebookPhoto || self.type == kPrintPhotoAssetTypeInstagramPhoto) {
+            [self downloadFullImageWithProgress:progress completion:^(UIImage *image){
+                [self resizeImage:image size:size applyEdits:YES completion:^(UIImage *image){
+                    self.thumbnailIsMaxSize = YES;
+                    self.cachedEditedImage = cacheResult ? image : nil;
+                    if (progress){
+                        progress(1);
+                    }
+                    handler(image);
+                }];
+            }];
         }
+#endif
+        else if (self.type == kPrintPhotoAssetTypeCorrupt){
+            NSData *data = [NSData dataWithContentsOfFile:[[OLKiteUtils kiteBundle] pathForResource:@"kite_corrupt" ofType:@"jpg"]];
+            handler([UIImage imageWithData:data]);
+        }
+        
     }];
     [[OLPrintPhoto imageOperationQueue] addOperation:blockOperation];
 }
@@ -268,7 +234,7 @@ static NSOperationQueue *imageOperationQueue;
 }
 
 #if defined(OL_KITE_OFFER_INSTAGRAM) || defined(OL_KITE_OFFER_FACEBOOK)
-- (void)downloadFullImageWithProgress:(OLImageEditorImageGetImageProgressHandler)progressHandler completion:(OLImageEditorImageGetImageCompletionHandler)completionHandler {
+- (void)downloadFullImageWithProgress:(void(^)(float progress))progressHandler completion:(void (^)(UIImage *image))completionHandler {
     
     NSURLRequest *request = [[NSURLRequest alloc] initWithURL:[self.asset fullURL]];
     
@@ -296,34 +262,9 @@ static NSOperationQueue *imageOperationQueue;
 }
 #endif
 
-- (void)getImageWithProgress:(OLImageEditorImageGetImageProgressHandler)progressHandler completion:(OLImageEditorImageGetImageCompletionHandler)completionHandler {
-    [self getImageWithSize:OLAssetMaximumSize progress:progressHandler completion:completionHandler];
-}
-
-- (void)getImageWithSize:(CGSize)size progress:(OLImageEditorImageGetImageProgressHandler)progressHandler completion:(OLImageEditorImageGetImageCompletionHandler)completionHandler {
-    BOOL fullResolution = CGSizeEqualToSize(size, OLAssetMaximumSize);
-    if (self.type == kPrintPhotoAssetTypePHAsset){
-        PHImageManager *imageManager = [PHImageManager defaultManager];
-        PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
-        options.synchronous = YES;
-        options.deliveryMode = PHImageRequestOptionsDeliveryModeHighQualityFormat;
-        options.networkAccessAllowed = YES;
-        options.progressHandler = ^(double progress, NSError *__nullable error, BOOL *stop, NSDictionary *__nullable info){
-            if (progressHandler){
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    progressHandler(progress);
-                });
-            }
-        };
-        
-        //Don't request less than a 400x400 image, otherwise the Photos Framework tries to be useful and returns a low-res, prerendered image which loses the rotation metadata (but is rotated correctly). This messes up the rotation from our editor.
-        CGSize requestSize = fullResolution ? PHImageManagerMaximumSize : CGSizeMake(MAX(size.width * screenScale, 400), MAX(size.height * screenScale, 400));
-        [imageManager requestImageForAsset:(PHAsset *)self.asset targetSize:requestSize contentMode:PHImageContentModeAspectFill options:options resultHandler:^(UIImage *image, NSDictionary *info){
-            completionHandler(image);
-        }];
-    }
+- (void)getImageWithSize:(CGSize)size progress:(void(^)(float progress))progressHandler completion:(void (^)(UIImage *image))completionHandler {
 #if defined(OL_KITE_OFFER_INSTAGRAM) || defined(OL_KITE_OFFER_FACEBOOK)
-    else if (self.type == kPrintPhotoAssetTypeFacebookPhoto || self.type == kPrintPhotoAssetTypeInstagramPhoto) {
+    if (self.type == kPrintPhotoAssetTypeFacebookPhoto || self.type == kPrintPhotoAssetTypeInstagramPhoto) {
         [self downloadFullImageWithProgress:progressHandler completion:completionHandler];
     }
 #endif
@@ -359,98 +300,93 @@ static NSOperationQueue *imageOperationQueue;
 }
 
 - (void)unloadImage {
-    self.cachedCroppedThumbnailImage = nil; // we can always recreate this
+    self.cachedEditedImage = nil; // we can always recreate this
 }
 
 - (BOOL)isEdited{
     return !CGRectIsEmpty(self.edits.cropImageFrame) || !CGRectIsEmpty(self.edits.cropImageRect) || !CGSizeEqualToSize(self.edits.cropImageSize, CGSizeZero) || self.edits.counterClockwiseRotations > 0 || self.edits.flipHorizontal || self.edits.flipVertical;
 }
 
-+ (void)resizedImageWithPrintPhoto:(OLPrintPhoto *)printPhoto size:(CGSize)destSize cropped:(BOOL)cropped progress:(OLImageEditorImageGetImageProgressHandler)progressHandler completion:(OLImageEditorImageGetImageCompletionHandler)completionHandler {
-    
-    
-    [printPhoto getImageWithSize:destSize progress:progressHandler completion:^(UIImage *image) {
-        __block UIImage *blockImage = image;
-        void (^localBlock)() = ^{
-            if (printPhoto.edits.counterClockwiseRotations > 0 || printPhoto.edits.flipHorizontal || printPhoto.edits.flipVertical){
-                blockImage = [UIImage imageWithCGImage:blockImage.CGImage scale:blockImage.scale orientation:[OLPhotoEdits orientationForNumberOfCounterClockwiseRotations:printPhoto.edits.counterClockwiseRotations andInitialOrientation:blockImage.imageOrientation horizontalFlip:printPhoto.edits.flipHorizontal verticalFlip:printPhoto.edits.flipVertical]];
-            }
-            
-            if (destSize.height != 0 && destSize.width != 0){
-                blockImage = [OLPrintPhoto imageWithImage:blockImage scaledToSize:destSize];
-            }
-            
-            if (![printPhoto isEdited] || !cropped){
-                printPhoto.thumbnailIsMaxSize = CGSizeEqualToSize(blockImage.size, image.size);
-                completionHandler(blockImage);
-                return;
-            }
-            
-            blockImage = [RMImageCropper editedImageFromImage:blockImage andFrame:printPhoto.edits.cropImageFrame andImageRect:printPhoto.edits.cropImageRect andImageViewWidth:printPhoto.edits.cropImageSize.width andImageViewHeight:printPhoto.edits.cropImageSize.height];
-            
-            printPhoto.thumbnailIsMaxSize = CGSizeEqualToSize(blockImage.size, image.size);
-            
-            
-            for (OLTextOnPhoto *textOnPhoto in printPhoto.edits.textsOnPhoto){
-                CGFloat scaling = MIN(blockImage.size.width, blockImage.size.height) / MIN(printPhoto.edits.cropImageFrame.size.width, printPhoto.edits.cropImageFrame.size.height);
-                UIFont *font = [OLKiteUtils fontWithName:textOnPhoto.fontName size:textOnPhoto.fontSize * scaling];
-                
-                CGRect textRect;
-                textRect.origin.x = textOnPhoto.frame.origin.x * scaling;
-                textRect.origin.y = textOnPhoto.frame.origin.y * scaling + 4;
-                textRect.size.width = textOnPhoto.frame.size.width * scaling;
-                textRect.size.height = textOnPhoto.frame.size.height * scaling;
-                
-                UIGraphicsBeginImageContext(CGSizeMake(textRect.size.width, textRect.size.height));
-                
-                NSMutableParagraphStyle *style = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
-                style.alignment = NSTextAlignmentCenter;
-                
-                NSMutableDictionary *attributes = [@{NSFontAttributeName : font, NSForegroundColorAttributeName: [UIColor whiteColor], NSParagraphStyleAttributeName : style} mutableCopy];
-                if (textOnPhoto.color){
-                    attributes[NSForegroundColorAttributeName] = textOnPhoto.color;
-                }
-                
-                CGSize  textSize = [textOnPhoto.text sizeWithAttributes:attributes];
-                
-                CGContextRef    context =   UIGraphicsGetCurrentContext();
-                CGAffineTransform   t   =   CGAffineTransformMakeTranslation(textRect.size.width / 2, textRect.size.height / 2);
-                CGAffineTransform   r   =   CGAffineTransformMakeRotation(atan2(textOnPhoto.transform.b, textOnPhoto.transform.a));
-                
-                
-                CGContextConcatCTM(context, t);
-                CGContextConcatCTM(context, r);
-                
-                [textOnPhoto.text   drawAtPoint:CGPointMake(-1 * textSize.width / 2, -1 * textSize.height / 2)
-                           withAttributes:attributes];
-                
-                CGContextConcatCTM(context, CGAffineTransformInvert(r));
-                CGContextConcatCTM(context, CGAffineTransformInvert(t));
-                
-                
-                UIImage *textImage = UIGraphicsGetImageFromCurrentImageContext();
-                UIGraphicsEndImageContext();
-                
-                UIGraphicsBeginImageContext(CGSizeMake(blockImage.size.width, blockImage.size.height));
-                [blockImage drawInRect:CGRectMake(0,0,blockImage.size.width,blockImage.size.height)];
-                [textImage drawInRect:textRect];
-                blockImage = UIGraphicsGetImageFromCurrentImageContext();
-                UIGraphicsEndImageContext();
-            }
-            
-            
-            completionHandler(blockImage);
-        };
-        if ([NSThread isMainThread]){
-            NSBlockOperation *block = [NSBlockOperation blockOperationWithBlock:localBlock];
-            block.queuePriority = NSOperationQueuePriorityHigh;
-            [[OLPrintPhoto imageOperationQueue] addOperation:block];
+- (void)resizeImage:(UIImage *)image size:(CGSize)size applyEdits:(BOOL)applyEdits completion:(void(^)(UIImage *image))handler{
+    __block UIImage *blockImage = image;
+    void (^localBlock)() = ^{
+        if (self.edits.counterClockwiseRotations > 0 || self.edits.flipHorizontal || self.edits.flipVertical){
+            blockImage = [UIImage imageWithCGImage:blockImage.CGImage scale:blockImage.scale orientation:[OLPhotoEdits orientationForNumberOfCounterClockwiseRotations:self.edits.counterClockwiseRotations andInitialOrientation:blockImage.imageOrientation horizontalFlip:self.edits.flipHorizontal verticalFlip:self.edits.flipVertical]];
         }
-        else{
-            localBlock();
+        
+        if (!CGSizeEqualToSize(size, CGSizeZero) && !CGSizeEqualToSize(size, OLAssetMaximumSize)){
+            blockImage = [OLPrintPhoto imageWithImage:blockImage scaledToSize:size];
         }
-    }];
-    
+        
+        if (![self isEdited] || !applyEdits){
+            self.thumbnailIsMaxSize = CGSizeEqualToSize(blockImage.size, image.size);
+            handler(blockImage);
+            return;
+        }
+        
+        blockImage = [RMImageCropper editedImageFromImage:blockImage andFrame:self.edits.cropImageFrame andImageRect:self.edits.cropImageRect andImageViewWidth:self.edits.cropImageSize.width andImageViewHeight:self.edits.cropImageSize.height];
+        
+        self.thumbnailIsMaxSize = CGSizeEqualToSize(blockImage.size, image.size);
+        
+        
+        for (OLTextOnPhoto *textOnPhoto in self.edits.textsOnPhoto){
+            CGFloat scaling = MIN(blockImage.size.width, blockImage.size.height) / MIN(self.edits.cropImageFrame.size.width, self.edits.cropImageFrame.size.height);
+            UIFont *font = [OLKiteUtils fontWithName:textOnPhoto.fontName size:textOnPhoto.fontSize * scaling];
+            
+            CGRect textRect;
+            textRect.origin.x = textOnPhoto.frame.origin.x * scaling;
+            textRect.origin.y = textOnPhoto.frame.origin.y * scaling + 4;
+            textRect.size.width = textOnPhoto.frame.size.width * scaling;
+            textRect.size.height = textOnPhoto.frame.size.height * scaling;
+            
+            UIGraphicsBeginImageContext(CGSizeMake(textRect.size.width, textRect.size.height));
+            
+            NSMutableParagraphStyle *style = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
+            style.alignment = NSTextAlignmentCenter;
+            
+            NSMutableDictionary *attributes = [@{NSFontAttributeName : font, NSForegroundColorAttributeName: [UIColor whiteColor], NSParagraphStyleAttributeName : style} mutableCopy];
+            if (textOnPhoto.color){
+                attributes[NSForegroundColorAttributeName] = textOnPhoto.color;
+            }
+            
+            CGSize  textSize = [textOnPhoto.text sizeWithAttributes:attributes];
+            
+            CGContextRef    context =   UIGraphicsGetCurrentContext();
+            CGAffineTransform   t   =   CGAffineTransformMakeTranslation(textRect.size.width / 2, textRect.size.height / 2);
+            CGAffineTransform   r   =   CGAffineTransformMakeRotation(atan2(textOnPhoto.transform.b, textOnPhoto.transform.a));
+            
+            
+            CGContextConcatCTM(context, t);
+            CGContextConcatCTM(context, r);
+            
+            [textOnPhoto.text   drawAtPoint:CGPointMake(-1 * textSize.width / 2, -1 * textSize.height / 2)
+                             withAttributes:attributes];
+            
+            CGContextConcatCTM(context, CGAffineTransformInvert(r));
+            CGContextConcatCTM(context, CGAffineTransformInvert(t));
+            
+            
+            UIImage *textImage = UIGraphicsGetImageFromCurrentImageContext();
+            UIGraphicsEndImageContext();
+            
+            UIGraphicsBeginImageContext(CGSizeMake(blockImage.size.width, blockImage.size.height));
+            [blockImage drawInRect:CGRectMake(0,0,blockImage.size.width,blockImage.size.height)];
+            [textImage drawInRect:textRect];
+            blockImage = UIGraphicsGetImageFromCurrentImageContext();
+            UIGraphicsEndImageContext();
+        }
+        
+        
+        handler(blockImage);
+    };
+    if ([NSThread isMainThread]){
+        NSBlockOperation *block = [NSBlockOperation blockOperationWithBlock:localBlock];
+        block.queuePriority = NSOperationQueuePriorityHigh;
+        [[OLPrintPhoto imageOperationQueue] addOperation:block];
+    }
+    else{
+        localBlock();
+    }
 }
 
 +(UIImage*)imageWithImage:(UIImage*) sourceImage scaledToSize:(CGSize) i_size
@@ -572,7 +508,7 @@ static NSOperationQueue *imageOperationQueue;
     photo.asset = [OLAsset assetWithImageAsJPEG:image];
     photo.edits = self.edits;
     
-    [OLPrintPhoto resizedImageWithPrintPhoto:photo size:OLAssetMaximumSize cropped:YES progress:NULL completion:^(UIImage *image){
+    [self resizeImage:image size:OLAssetMaximumSize applyEdits:YES completion:^(UIImage *image){
         handler(UIImageJPEGRepresentation(image, 0.7));
     }];
     

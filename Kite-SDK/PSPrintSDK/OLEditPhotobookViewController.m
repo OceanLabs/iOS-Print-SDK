@@ -451,7 +451,7 @@ UINavigationControllerDelegate>
     cropVc.providesPresentationContextTransitionStyle = true;
     cropVc.definesPresentationContext = true;
     cropVc.modalPresentationStyle = UIModalPresentationOverCurrentContext;
-    [cropPhoto getImageWithProgress:NULL completion:^(UIImage *image){
+    [cropPhoto imageWithSize:OLAssetMaximumSize applyEdits:NO cacheResult:NO progress:NULL completion:^(UIImage *image){
         [cropVc setFullImage:image];
         cropVc.edits = cropPhoto.edits;
         //        cropVc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;

@@ -419,7 +419,7 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
     self.editingPrintPhoto = self.userSelectedPhotos[indexPath.item];
     
     OLImagePreviewViewController *previewVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLImagePreviewViewController"];
-    [self.editingPrintPhoto getImageWithProgress:NULL completion:^(UIImage *image){
+    [self.editingPrintPhoto imageWithSize:OLAssetMaximumSize applyEdits:NO cacheResult:NO progress:NULL completion:^(UIImage *image){
         previewVc.image = image;
     }];
     previewVc.providesPresentationContextTransitionStyle = true;
@@ -433,7 +433,7 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
     cropVc.enableCircleMask = self.product.productTemplate.templateUI == kOLTemplateUICircle;
     cropVc.delegate = self;
     cropVc.aspectRatio = [self productAspectRatio];
-    [self.editingPrintPhoto getImageWithProgress:^(float progress){
+    [self.editingPrintPhoto imageWithSize:OLAssetMaximumSize applyEdits:NO cacheResult:NO progress:^(float progress){
         [cropVc.cropView setProgress:progress];
     }completion:^(UIImage *image){
         [cropVc setFullImage:image];
@@ -1125,9 +1125,9 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
     
     if (imageIndex < self.userSelectedPhotos.count) {
         OLPrintPhoto *photo = self.userSelectedPhotos[indexPath.row + indexPath.section * self.product.quantityToFulfillOrder];
-        [photo screenImageWithSize:[self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath] applyEdits:YES progress:^(float progress){
+        [photo imageWithSize:[self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath] applyEdits:YES cacheResult:YES progress:^(float progress){
             [imageView setProgress:progress];
-        } completionHandler:^(UIImage *image){
+        } completion:^(UIImage *image){
             dispatch_async(dispatch_get_main_queue(), ^{
                 if (image){
                     imageView.image = image;

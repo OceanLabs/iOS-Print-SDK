@@ -599,9 +599,9 @@ UINavigationControllerDelegate, OLUpsellViewControllerDelegate
     }
     __weak OLPhotobookViewController *welf = self;
     if (self.coverImageView){
-        [self.coverPhoto screenImageWithSize:self.coverImageView.frame.size applyEdits:YES progress:^(float progress){
+        [self.coverPhoto imageWithSize:self.coverImageView.frame.size applyEdits:YES cacheResult:YES progress:^(float progress){
             [welf.coverImageView setProgress:progress];
-        }completionHandler:^(UIImage *image){
+        }completion:^(UIImage *image){
             dispatch_async(dispatch_get_main_queue(), ^{
                 welf.coverImageView.image = image;
             });
@@ -943,7 +943,7 @@ UINavigationControllerDelegate, OLUpsellViewControllerDelegate
         cropVc.definesPresentationContext = true;
         cropVc.modalPresentationStyle = UIModalPresentationOverCurrentContext;
         
-        [self.croppingPrintPhoto getImageWithProgress:NULL completion:^(UIImage *image){
+        [self.croppingPrintPhoto imageWithSize:OLAssetMaximumSize applyEdits:NO cacheResult:NO progress:NULL completion:^(UIImage *image){
             [cropVc setFullImage:image];
             cropVc.edits = self.croppingPrintPhoto.edits;
 //            cropVc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
@@ -997,7 +997,7 @@ UINavigationControllerDelegate, OLUpsellViewControllerDelegate
     else{
         UIImageView *imageView = [page imageView];
         self.croppingPrintPhoto = self.photobookPhotos[index];
-        [self.croppingPrintPhoto getImageWithProgress:NULL completion:^(UIImage *image){
+        [self.croppingPrintPhoto imageWithSize:OLAssetMaximumSize applyEdits:NO cacheResult:NO progress:NULL completion:^(UIImage *image){
             OLScrollCropViewController *cropVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLScrollCropViewController"];
             cropVc.delegate = self;
             cropVc.aspectRatio = imageView.frame.size.height / imageView.frame.size.width;

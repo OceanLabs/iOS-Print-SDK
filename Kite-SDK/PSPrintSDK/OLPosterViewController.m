@@ -192,9 +192,9 @@ CGFloat posterMargin = 2;
     
     OLPrintPhoto *printPhoto =(OLPrintPhoto*)[self.posterPhotos objectAtIndex:indexPath.row + (outerCollectionViewIndexPath.item) * self.product.quantityToFulfillOrder];
     
-    [printPhoto screenImageWithSize:[self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath] applyEdits:YES progress:^(float progress){
+    [printPhoto imageWithSize:[self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath] applyEdits:YES cacheResult:YES progress:^(float progress){
         [imageView setProgress:progress];
-    } completionHandler:^(UIImage *image){
+    } completion:^(UIImage *image){
         dispatch_async(dispatch_get_main_queue(), ^{
             imageView.image = image;
             [activity stopAnimating];
@@ -331,7 +331,7 @@ CGFloat posterMargin = 2;
     cropVc.definesPresentationContext = true;
     cropVc.modalPresentationStyle = UIModalPresentationOverCurrentContext;
     
-    [self.editingPrintPhoto getImageWithProgress:NULL completion:^(UIImage *image){
+    [self.editingPrintPhoto imageWithSize:OLAssetMaximumSize applyEdits:NO cacheResult:NO progress:NULL completion:^(UIImage *image){
         [cropVc setFullImage:image];
         cropVc.edits = self.editingPrintPhoto.edits;
         //        cropVc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
@@ -360,7 +360,7 @@ CGFloat posterMargin = 2;
     self.editingPrintPhoto = printPhoto;
     
     OLImagePreviewViewController *previewVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLImagePreviewViewController"];
-    [self.editingPrintPhoto getImageWithProgress:NULL completion:^(UIImage *image){
+    [self.editingPrintPhoto imageWithSize:OLAssetMaximumSize applyEdits:NO cacheResult:NO progress:NULL completion:^(UIImage *image){
         previewVc.image = image;
     }];
     previewVc.providesPresentationContextTransitionStyle = true;
@@ -374,7 +374,7 @@ CGFloat posterMargin = 2;
     cropVc.enableCircleMask = self.product.productTemplate.templateUI == kOLTemplateUICircle;
     cropVc.delegate = self;
     cropVc.aspectRatio = 1;
-    [self.editingPrintPhoto getImageWithProgress:^(float progress){
+    [self.editingPrintPhoto imageWithSize:OLAssetMaximumSize applyEdits:NO cacheResult:NO progress:^(float progress){
         [cropVc.cropView setProgress:progress];
     }completion:^(UIImage *image){
         [cropVc setFullImage:image];
