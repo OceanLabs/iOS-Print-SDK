@@ -31,7 +31,6 @@
 #import "OLPrintPhoto.h"
 #import "OLProduct.h"
 #import "OLAsset+Private.h"
-#import "UIViewController+TraitCollectionCompatibility.h"
 #import "OLRemoteImageView.h"
 #import "OLKiteUtils.h"
 #import "OLKiteViewController.h"

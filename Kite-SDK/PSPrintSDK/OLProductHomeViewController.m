@@ -51,7 +51,6 @@
 #import "UIImage+ImageNamedInKiteBundle.h"
 #import "UIImageView+FadeIn.h"
 #import "UIViewController+OLMethods.h"
-#import "UIViewController+TraitCollectionCompatibility.h"
 #import "OLImageDownloader.h"
 #import "OLUserSession.h"
 
@@ -462,7 +461,7 @@
     CGSize size = self.view.frame.size;
     if (indexPath.section == 0 && ![[OLKiteABTesting sharedInstance].qualityBannerType isEqualToString:@"None"]){
         CGFloat height = 110;
-        if ([self isHorizontalSizeClassCompact] && size.height > size.width){
+        if (self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassCompact && size.height > size.width){
             height = (self.view.frame.size.width * height) / 375.0;
         }
         return CGSizeMake(self.view.frame.size.width, height);
@@ -476,7 +475,7 @@
 //        height = 200;
 //    }
     
-    if ([self isHorizontalSizeClassCompact] && size.height > size.width) {
+    if (self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassCompact && size.height > size.width) {
         if (numberOfCells == 2){
             return CGSizeMake(size.width, halfScreenHeight);
         }
@@ -574,7 +573,7 @@
     NSInteger numberOfProducts = [self.productGroups count];
     
     CGSize size = self.view.frame.size;
-    if (!(numberOfProducts % 2 == 0) && (!([self isHorizontalSizeClassCompact]) || size.height < size.width)){
+    if (!(numberOfProducts % 2 == 0) && (self.traitCollection.horizontalSizeClass != UIUserInterfaceSizeClassCompact || size.height < size.width)){
         extras = 1;
     }
     

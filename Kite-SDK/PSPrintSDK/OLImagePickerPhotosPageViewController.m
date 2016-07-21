@@ -31,7 +31,6 @@
 #import "OLImagePickerPhotosPageViewController.h"
 #import "UIImageView+FadeIn.h"
 #import "OLRemoteImageView.h"
-#import "UIViewController+TraitCollectionCompatibility.h"
 #import "OLUserSession.h"
 
 @interface OLImagePickerPhotosPageViewController () <UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, UICollectionViewDelegate>
@@ -137,7 +136,7 @@ NSInteger OLImagePickerMargin = 0;
         return 3;
     }
     
-    if (![self isHorizontalSizeClassCompact]){
+    if (self.traitCollection.horizontalSizeClass != UIUserInterfaceSizeClassCompact){
         if (size.height > size.width){
             return [self findFactorOf:self.quantityPerItem maximum:6 minimum:6];
         }

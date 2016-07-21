@@ -39,7 +39,6 @@
 #import "OLAsset+Private.h"
 #import "OLAnalytics.h"
 #import "OLKitePrintSDK.h"
-#import "UIViewController+TraitCollectionCompatibility.h"
 #import "OLIntegratedCheckoutViewController.h"
 #import "OLKiteViewController.h"
 #import "OLKiteABTesting.h"
@@ -647,7 +646,7 @@ UIViewControllerPreviewingDelegate>
     //Everything is designed and calculated based on a 320 view width. Scale up as necessary for larger phones.
     CGFloat screenWidthFactor = 1;
     //Only change the scale for portrait phones.
-    if ([self isHorizontalSizeClassCompact] && self.view.frame.size.width < self.view.frame.size.height){
+    if (self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassCompact && self.view.frame.size.width < self.view.frame.size.height){
         screenWidthFactor = self.view.frame.size.width / 320;
     }
     

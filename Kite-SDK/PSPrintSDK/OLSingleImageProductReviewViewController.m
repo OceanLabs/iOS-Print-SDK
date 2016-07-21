@@ -62,7 +62,6 @@
 #import "OLSingleImageProductReviewViewController.h"
 #import "OLQRCodeUploadViewController.h"
 #import "OLURLDataSource.h"
-#import "UIViewController+TraitCollectionCompatibility.h"
 #import "OLUpsellViewController.h"
 
 #import "OLCustomPhotoProvider.h"
@@ -819,7 +818,7 @@ static BOOL hasMoved;
     OLQRCodeUploadViewController *vc = (OLQRCodeUploadViewController *) [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:nil] instantiateViewControllerWithIdentifier:@"OLQRCodeUploadViewController"];
     vc.modalPresentationStyle = UIModalPresentationFormSheet;
     vc.delegate = self;
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone || [self isHorizontalSizeClassCompact]){
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone || self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassCompact){
         vc.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(onQRCodeScannerDidCancel)];
         OLNavigationController *nvc = [[OLNavigationController alloc] initWithRootViewController:vc];
         [self presentViewController:nvc animated:YES completion:nil];

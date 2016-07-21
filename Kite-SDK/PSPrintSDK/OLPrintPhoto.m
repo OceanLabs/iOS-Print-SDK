@@ -262,43 +262,6 @@ static NSOperationQueue *imageOperationQueue;
 }
 #endif
 
-- (void)getImageWithSize:(CGSize)size progress:(void(^)(float progress))progressHandler completion:(void (^)(UIImage *image))completionHandler {
-#if defined(OL_KITE_OFFER_INSTAGRAM) || defined(OL_KITE_OFFER_FACEBOOK)
-    if (self.type == kPrintPhotoAssetTypeFacebookPhoto || self.type == kPrintPhotoAssetTypeInstagramPhoto) {
-        [self downloadFullImageWithProgress:progressHandler completion:completionHandler];
-    }
-#endif
-    else if (self.type == kPrintPhotoAssetTypeOLAsset){
-        OLAsset *asset = (OLAsset *)self.asset;
-        
-        if (asset.assetType == kOLAssetTypeRemoteImageURL){
-            [[OLImageDownloader sharedInstance] downloadImageAtURL:[(OLAsset *)self.asset imageURL] progress:^(NSInteger receivedSize, NSInteger expectedSize) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    if (progressHandler) {
-                        progressHandler(MAX(0.05f, receivedSize / (float) expectedSize));
-                    }
-                });
-            } withCompletionHandler:^(UIImage *image, NSError *error){
-                completionHandler(image);
-            }];
-        }
-        else{
-            [asset dataWithCompletionHandler:^(NSData *data, NSError *error){
-                completionHandler([UIImage imageWithData:data]);
-            }];
-        }
-    }
-    else if ([self.asset respondsToSelector:@selector(dataWithCompletionHandler:)]){
-        [self.asset dataWithCompletionHandler:^(NSData *data, NSError *error){
-            completionHandler([UIImage imageWithData:data]);
-        }];
-    }
-    else if (self.type == kPrintPhotoAssetTypeCorrupt){
-        NSData *data = [NSData dataWithContentsOfFile:[[OLKiteUtils kiteBundle] pathForResource:@"kite_corrupt" ofType:@"jpg"]];
-        completionHandler([UIImage imageWithData:data]);
-    }
-}
-
 - (void)unloadImage {
     self.cachedEditedImage = nil; // we can always recreate this
 }

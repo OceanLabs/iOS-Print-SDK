@@ -33,7 +33,6 @@
 #import "OLSingleImageProductReviewViewController.h"
 #import "OLProductOverviewViewController.h"
 #import "OLAnalytics.h"
-#import "UIViewController+TraitCollectionCompatibility.h"
 #import "UIImageView+FadeIn.h"
 #import "OLKiteABTesting.h"
 #import "OLKiteUtils.h"
@@ -332,7 +331,7 @@
     NSInteger numberOfProducts = [self.products count];
     
     CGSize size = self.view.frame.size;
-    if (!(numberOfProducts % 2 == 0) && (!([self isHorizontalSizeClassCompact]) || size.height < size.width)){
+    if (!(numberOfProducts % 2 == 0) && (self.traitCollection.horizontalSizeClass != UIUserInterfaceSizeClassCompact || size.height < size.width)){
         extras = 1;
     }
     if (numberOfProducts == 2){
@@ -357,7 +356,7 @@
         return CGSizeMake(size.width, halfScreenHeight);
     }
     
-    if ([self isHorizontalSizeClassCompact] && size.height > size.width) {
+    if (self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassCompact && size.height > size.width) {
         if (numberOfCells == 2){
             return CGSizeMake(size.width, halfScreenHeight);
         }

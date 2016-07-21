@@ -73,7 +73,6 @@
 #import "OLPaymentViewController.h"
 #import "OLImagePreviewViewController.h"
 #import "UIView+RoundRect.h"
-#import "UIViewController+TraitCollectionCompatibility.h"
 #import "OLQRCodeUploadViewController.h"
 #import "OLURLDataSource.h"
 #import "OLNavigationController.h"
@@ -649,7 +648,7 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
     OLQRCodeUploadViewController *vc = (OLQRCodeUploadViewController *) [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:nil] instantiateViewControllerWithIdentifier:@"OLQRCodeUploadViewController"];
     vc.modalPresentationStyle = UIModalPresentationFormSheet;
     vc.delegate = self;
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone || [self isHorizontalSizeClassCompact]){
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone || self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassCompact){
         vc.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(onQRCodeScannerDidCancel)];
         OLNavigationController *nvc = [[OLNavigationController alloc] initWithRootViewController:vc];
         [self presentViewController:nvc animated:YES completion:nil];
@@ -914,7 +913,7 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
         return 3;
     }
     
-    if (![self isHorizontalSizeClassCompact]){
+    if (self.traitCollection.horizontalSizeClass != UIUserInterfaceSizeClassCompact){
         if (size.height > size.width){
             return [self findFactorOf:self.product.quantityToFulfillOrder maximum:6 minimum:6];
         }
