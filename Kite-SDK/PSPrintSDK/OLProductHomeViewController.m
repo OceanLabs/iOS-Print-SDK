@@ -47,7 +47,7 @@
 #import "OLProductOverviewViewController.h"
 #import "OLProductTemplate.h"
 #import "OLProductTypeSelectionViewController.h"
-#import "UIImage+ColorAtPixel.h"
+#import "UIImage+OLUtils.h"
 #import "UIImage+ImageNamedInKiteBundle.h"
 #import "UIImageView+FadeIn.h"
 #import "UIViewController+OLMethods.h"

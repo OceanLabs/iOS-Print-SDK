@@ -38,7 +38,7 @@
 #import "OLKiteUtils.h"
 #import "UIViewController+OLMethods.h"
 #import "NSObject+Utils.h"
-#import "UIImage+ColorAtPixel.h"
+#import "UIImage+OLUtils.h"
 #import "OLImageDownloader.h"
 #import "OLUserSession.h"
 

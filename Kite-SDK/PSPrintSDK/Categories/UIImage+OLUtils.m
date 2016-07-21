@@ -29,9 +29,9 @@
 
 #import <CoreGraphics/CoreGraphics.h>
 
-#import "UIImage+ColorAtPixel.h"
+#import "UIImage+OLUtils.h"
 
-@implementation UIImage (ColorAtPixel)
+@implementation UIImage (OLUtils)
 
 - (UIColor *)colorAtPixel:(CGPoint)point {
     // Cancel if point is outside image coordinates
@@ -73,6 +73,23 @@
     CGFloat blue  = (CGFloat)pixelData[2] / 255.0f;
     CGFloat alpha = (CGFloat)pixelData[3] / 255.0f;
     return [UIColor colorWithRed:red green:green blue:blue alpha:alpha];
+}
+
+- (UIImage *)shrinkToSize:(CGSize)size forScreenScale:(CGFloat)screenScale{
+    CGFloat scaleFactor = (MAX(size.width, size.height) * screenScale) / MIN(self.size.height, self.size.width);
+    
+    if (scaleFactor >= 1){
+        return self;
+    }
+    
+    CGFloat newHeight = self.size.height * scaleFactor;
+    CGFloat newWidth = self.size.width * scaleFactor;
+    
+    UIGraphicsBeginImageContext(CGSizeMake(newWidth, newHeight));
+    [self drawInRect:CGRectMake(0, 0, newWidth, newHeight)];
+    UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return newImage;
 }
 
 @end

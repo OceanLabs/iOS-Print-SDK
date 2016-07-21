@@ -31,6 +31,8 @@
 #import "OLCaseViewController.h"
 #import "OLRemoteImageCropper.h"
 #import "UIImage+ImageNamedInKiteBundle.h"
+#import "UIImage+OLUtils.h"
+#import "OLUserSession.h"
 
 @interface OLSingleImageProductReviewViewController (Private)
 
@@ -178,14 +180,14 @@
             [self.view setNeedsLayout];
             [self.view layoutIfNeeded];
             
-            self.maskImage = [OLPrintPhoto imageWithImage:image scaledToSize:[UIScreen mainScreen].bounds.size];
+            self.maskImage = [image shrinkToSize:[UIScreen mainScreen].bounds.size forScreenScale:[OLUserSession currentSession].screenScale];
             [self maskWithImage:self.maskImage targetView:self.imageCropView];
             
             [[OLImageDownloader sharedInstance] downloadImageAtURL:self.product.productTemplate.productBackgroundImageURL priority:1.0 progress:NULL withCompletionHandler:^(UIImage *image, NSError *error){
-                self.deviceView.image = [OLPrintPhoto imageWithImage:image scaledToSize:[UIScreen mainScreen].bounds.size];
+                self.deviceView.image = [image shrinkToSize:[UIScreen mainScreen].bounds.size forScreenScale:[OLUserSession currentSession].screenScale];
             }];
             [[OLImageDownloader sharedInstance] downloadImageAtURL:self.product.productTemplate.productHighlightsImageURL priority:0.9 progress:NULL withCompletionHandler:^(UIImage *image, NSError *error){
-                self.highlightsView.image = [OLPrintPhoto imageWithImage:image scaledToSize:[UIScreen mainScreen].bounds.size];
+                self.highlightsView.image = [image shrinkToSize:[UIScreen mainScreen].bounds.size forScreenScale:[OLUserSession currentSession].screenScale];
              }];
             
             self.visualEffectView.hidden = YES;

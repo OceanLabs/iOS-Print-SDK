@@ -47,7 +47,7 @@
 #import "OLOrderReviewViewController.h"
 #import "OLKiteViewController.h"
 #import "OLKiteABTesting.h"
-#import "UIImage+ColorAtPixel.h"
+#import "UIImage+OLUtils.h"
 #import "UIImage+ImageNamedInKiteBundle.h"
 #import "OLNavigationController.h"
 #import "OLKiteUtils.h"

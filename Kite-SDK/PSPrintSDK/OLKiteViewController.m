@@ -42,7 +42,7 @@
 #import "OLNavigationController.h"
 #import "NSObject+Utils.h"
 #import "OLKiteABTesting.h"
-#import "UIImage+ColorAtPixel.h"
+#import "UIImage+OLUtils.h"
 #import "OLKiteUtils.h"
 #import "OLUserSession.h"
 #import "OLCustomPhotoProvider.h"
@@ -181,7 +181,7 @@ static CGFloat fadeTime = 0.3;
         self.customNavigationItem.title = @"";
     }
     
-    [OLPrintPhoto calcScreenScaleForTraitCollection:self.traitCollection];
+    [[OLUserSession currentSession] calcScreenScaleForTraitCollection:self.traitCollection];
     
     [OLAnalytics setKiteDelegate:self.delegate];
     

@@ -29,8 +29,9 @@
 
 #import <UIKit/UIKit.h>
 
-@interface UIImage (ColorAtPixel)
+@interface UIImage (OLUtils)
 
 - (UIColor *)colorAtPixel:(CGPoint)point;
+- (UIImage *)shrinkToSize:(CGSize)size forScreenScale:(CGFloat)screenScale;
 
 @end

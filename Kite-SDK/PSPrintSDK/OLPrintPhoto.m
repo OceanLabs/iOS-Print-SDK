@@ -32,6 +32,8 @@
 #import "RMImageCropper.h"
 #import "OLKiteUtils.h"
 #import "OLConstants.h"
+#import "UIImage+OLUtils.h"
+#import "OLUserSession.h"
 #ifdef OL_KITE_OFFER_INSTAGRAM
 #import <InstagramImagePicker/OLInstagramImage.h>
 #endif
@@ -48,8 +50,6 @@ static NSString *const kKeyEdits = @"co.oceanlabs.psprintstudio.kKeyEdits";
 static NSString *const kKeyUUID = @"co.oceanlabs.psprintstudio.kKeyUUID";
 
 static NSString *const kKeyExtraCopies = @"co.oceanlabs.psprintstudio.kKeyExtraCopies";
-
-static CGFloat screenScale = 2.0;
 
 CGSize const OLAssetMaximumSize = {-1, -1};
 
@@ -125,29 +125,6 @@ static NSOperationQueue *imageOperationQueue;
     }
 }
 
-+ (void)calcScreenScaleForTraitCollection:(UITraitCollection *)traitCollection{
-    //Should be [UIScreen mainScreen].scale but the 6 Plus with its 1GB RAM chokes on 3x images.
-    CGFloat scale = [UIScreen mainScreen].scale;
-    if (scale == 2.0 || scale == 1.0){
-        screenScale = scale;
-    }
-    else if (!traitCollection){
-        scale = 2.0;
-    }
-    else{
-        UIImage *ram1GbImage = [UIImage imageNamed:@"ram-1" inBundle:[OLKiteUtils kiteBundle] compatibleWithTraitCollection:traitCollection];
-        UIImage *ramThisDeviceImage = [UIImage imageNamed:@"ram" inBundle:[OLKiteUtils kiteBundle] compatibleWithTraitCollection:traitCollection];
-        NSData *ram1Gb = UIImagePNGRepresentation(ram1GbImage);
-        NSData *ramThisDevice = UIImagePNGRepresentation(ramThisDeviceImage);
-        if ([ram1Gb isEqualToData:ramThisDevice]){
-            screenScale = 2.0;
-        }
-        else{
-            screenScale = scale;
-        }
-    }
-}
-
 - (void)imageWithSize:(CGSize)size applyEdits:(BOOL)applyEdits cacheResult:(BOOL)cacheResult progress:(void(^)(float progress))progress completion:(void(^)(UIImage *image))handler{
     if (!handler){
         //Nothing to do really
@@ -157,7 +134,7 @@ static NSOperationQueue *imageOperationQueue;
         self.cachedEditedImage = nil;
     }
     if (self.cachedEditedImage) {
-        if ((MAX(size.height, size.width) * screenScale <= MIN(self.cachedEditedImage.size.width, self.cachedEditedImage.size.height)) || self.thumbnailIsMaxSize){
+        if ((MAX(size.height, size.width) * [OLUserSession currentSession].screenScale <= MIN(self.cachedEditedImage.size.width, self.cachedEditedImage.size.height)) || self.thumbnailIsMaxSize){
             handler(self.cachedEditedImage);
             return;
         }
@@ -184,7 +161,7 @@ static NSOperationQueue *imageOperationQueue;
             };
             
             //Don't request less than a 400x400 image, otherwise the Photos Framework tries to be useful and returns a low-res, prerendered image which loses the rotation metadata (but is rotated correctly). This messes up the rotation from our editor.
-            CGSize requestSize = fullResolution ? PHImageManagerMaximumSize : CGSizeMake(MAX(size.width * screenScale, 400), MAX(size.height * screenScale, 400));
+            CGSize requestSize = fullResolution ? PHImageManagerMaximumSize : CGSizeMake(MAX(size.width * [OLUserSession currentSession].screenScale, 400), MAX(size.height * [OLUserSession currentSession].screenScale, 400));
             [imageManager requestImageForAsset:(PHAsset *)self.asset targetSize:requestSize contentMode:PHImageContentModeAspectFill options:options resultHandler:^(UIImage *image, NSDictionary *info){
                 if (applyEdits){
                     [self resizeImage:image size:size applyEdits:YES completion:^(UIImage *image){
@@ -278,7 +255,7 @@ static NSOperationQueue *imageOperationQueue;
         }
         
         if (!CGSizeEqualToSize(size, CGSizeZero) && !CGSizeEqualToSize(size, OLAssetMaximumSize)){
-            blockImage = [OLPrintPhoto imageWithImage:blockImage scaledToSize:size];
+            blockImage = [blockImage shrinkToSize:size forScreenScale:[OLUserSession currentSession].screenScale];
         }
         
         if (![self isEdited] || !applyEdits){
@@ -351,26 +328,6 @@ static NSOperationQueue *imageOperationQueue;
         localBlock();
     }
 }
-
-+(UIImage*)imageWithImage:(UIImage*) sourceImage scaledToSize:(CGSize) i_size
-{
-    
-    CGFloat scaleFactor = (MAX(i_size.width, i_size.height) * screenScale) / MIN(sourceImage.size.height, sourceImage.size.width);
-    
-    if (scaleFactor >= 1){
-        return sourceImage;
-    }
-    
-    CGFloat newHeight = sourceImage.size.height * scaleFactor;
-    CGFloat newWidth = sourceImage.size.width * scaleFactor;
-    
-    UIGraphicsBeginImageContext(CGSizeMake(newWidth, newHeight));
-    [sourceImage drawInRect:CGRectMake(0, 0, newWidth, newHeight)];
-    UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    return newImage;
-}
-
 
 #pragma mark - OLAssetDataSource protocol methods
 

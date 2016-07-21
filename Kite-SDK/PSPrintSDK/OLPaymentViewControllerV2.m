@@ -59,7 +59,7 @@
 #import "OLBaseRequest.h"
 #import "OLPrintOrderCost.h"
 #import "OLKiteABTesting.h"
-#import "UIImage+ColorAtPixel.h"
+#import "UIImage+OLUtils.h"
 #import "UIImage+ImageNamedInKiteBundle.h"
 #import "UIImageView+FadeIn.h"
 #import "NSDecimalNumber+CostFormatter.h"

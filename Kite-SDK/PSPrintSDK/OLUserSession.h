@@ -46,7 +46,8 @@ typedef NSUInteger OLUserSessionCleanupOption;
 @property (strong, nonatomic) NSMutableArray<OLPrintPhoto *> *userSelectedPhotos;
 @property (strong, nonatomic) OLPrintOrder *printOrder;
 @property (strong, nonatomic) NSArray<OLAsset *> *appAssets;
+@property (assign, nonatomic) CGFloat screenScale;
 + (instancetype)currentSession;
 - (void)cleanupUserSession:(OLUserSessionCleanupOption)cleanupOptions;
-
+- (void)calcScreenScaleForTraitCollection:(UITraitCollection *)traitCollection;
 @end

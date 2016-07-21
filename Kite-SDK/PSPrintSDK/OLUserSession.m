@@ -28,6 +28,7 @@
 //
 
 #import "OLUserSession.h"
+#import "OLKiteUtils.h"
 
 @interface OLPrintOrder (Private)
 
@@ -42,7 +43,10 @@
 + (instancetype)currentSession {
     static dispatch_once_t once;
     static OLUserSession * sharedInstance;
-    dispatch_once(&once, ^ { sharedInstance = [[self alloc] init]; });
+    dispatch_once(&once, ^ {
+        sharedInstance = [[self alloc] init];
+        sharedInstance.screenScale = 2.0;
+    });
     return sharedInstance;
 }
 
@@ -89,6 +93,26 @@
         //TODO
     }
     
+}
+
+- (void)calcScreenScaleForTraitCollection:(UITraitCollection *)traitCollection{
+    //Should be [UIScreen mainScreen].scale but the 6 Plus with its 1GB RAM chokes on 3x images.
+    CGFloat scale = [UIScreen mainScreen].scale;
+    if (scale == 2.0 || scale == 1.0){
+        self.screenScale = scale;
+    }
+    else{
+        UIImage *ram1GbImage = [UIImage imageNamed:@"ram-1" inBundle:[OLKiteUtils kiteBundle] compatibleWithTraitCollection:traitCollection];
+        UIImage *ramThisDeviceImage = [UIImage imageNamed:@"ram" inBundle:[OLKiteUtils kiteBundle] compatibleWithTraitCollection:traitCollection];
+        NSData *ram1Gb = UIImagePNGRepresentation(ram1GbImage);
+        NSData *ramThisDevice = UIImagePNGRepresentation(ramThisDeviceImage);
+        if ([ram1Gb isEqualToData:ramThisDevice]){
+            self.screenScale = 2.0;
+        }
+        else{
+            self.screenScale = scale;
+        }
+    }
 }
 
 @end

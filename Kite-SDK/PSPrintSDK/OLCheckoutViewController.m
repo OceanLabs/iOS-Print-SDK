@@ -38,7 +38,7 @@
 #import "OLAddressEditViewController.h"
 #import "OLProductPrintJob.h"
 #import "OLKiteABTesting.h"
-#import "UIImage+ColorAtPixel.h"
+#import "UIImage+OLUtils.h"
 #import "UIImage+ImageNamedInKiteBundle.h"
 #import "OLKiteUtils.h"
 

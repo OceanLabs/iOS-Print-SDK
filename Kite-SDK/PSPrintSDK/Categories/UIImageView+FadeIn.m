@@ -33,6 +33,8 @@
 #import "OLImageDownloader.h"
 #import "OLPrintPhoto.h"
 #import "objc/runtime.h"
+#import "UIImage+OLUtils.h"
+#import "OLUserSession.h"
 
 static char tasksKey;
 
@@ -70,7 +72,7 @@ static char tasksKey;
             [self.tasks removeObjectForKey:url];
             
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-                UIImage *resizedImage = [OLPrintPhoto imageWithImage:image scaledToSize:[UIScreen mainScreen].bounds.size];
+                UIImage *resizedImage = [image shrinkToSize:[UIScreen mainScreen].bounds.size forScreenScale:[OLUserSession currentSession].screenScale];
                 dispatch_async(dispatch_get_main_queue(), ^{
                     self.image = resizedImage;
                     [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
