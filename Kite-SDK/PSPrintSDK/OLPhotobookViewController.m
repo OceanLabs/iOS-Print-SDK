@@ -45,7 +45,6 @@
 #import "OLPhotobookPrintJob.h"
 #import "OLPhotobookViewController.h"
 #import "OLPopupOptionsImageView.h"
-#import "OLPrintPhoto.h"
 #import "OLProduct.h"
 #import "OLProductTemplate.h"
 #import "OLScrollCropViewController.h"
@@ -56,6 +55,7 @@
 #import "OLPageLayout.h"
 #import "OLPhotobookPageBlankContentViewController.h"
 #import "OLUserSession.h"
+#import "OLAsset+Private.h"
 
 #import "CTAssetsPickerController.h"
 
@@ -155,12 +155,12 @@ UINavigationControllerDelegate, OLUpsellViewControllerDelegate
 @property (assign, nonatomic) NSInteger addNewPhotosAtIndex;
 @property (assign, nonatomic) NSInteger croppingImageIndex;
 @property (strong, nonatomic) IBOutlet UIView *bookCover;
-@property (strong, nonatomic) NSArray<OLPrintPhoto *> *userSelectedPhotosCopy;
+@property (strong, nonatomic) NSArray<OLAsset *> *userSelectedPhotosCopy;
 @property (strong, nonatomic) NSLayoutConstraint *centerXCon;
 @property (strong, nonatomic) NSLayoutConstraint *centerYCon;
 @property (strong, nonatomic) NSLayoutConstraint *widthCon2;
 @property (strong, nonatomic) NSLayoutConstraint *widthCon;
-@property (strong, nonatomic) OLPrintPhoto *croppingPrintPhoto;
+@property (strong, nonatomic) OLAsset *croppingPrintPhoto;
 @property (strong, nonatomic) UIDynamicAnimator* dynamicAnimator;
 @property (strong, nonatomic) UIDynamicItemBehavior* inertiaBehavior;
 @property (strong, nonatomic) UIVisualEffectView *visualEffectView;
@@ -205,10 +205,10 @@ UINavigationControllerDelegate, OLUpsellViewControllerDelegate
     return _inertiaBehavior;
 }
 
-- (void)setUserSelectedPhotos:(NSMutableArray<OLPrintPhoto *> *)userSelectedPhotos{
+- (void)setUserSelectedPhotos:(NSMutableArray<OLAsset *> *)userSelectedPhotos{
     [OLUserSession currentSession].userSelectedPhotos = userSelectedPhotos;
     
-    self.photobookPhotos = [[NSMutableArray<OLPrintPhoto *> alloc] initWithCapacity:self.product.quantityToFulfillOrder];
+    self.photobookPhotos = [[NSMutableArray<OLAsset *> alloc] initWithCapacity:self.product.quantityToFulfillOrder];
     [self.photobookPhotos addObjectsFromArray:userSelectedPhotos];
     for (NSInteger i = userSelectedPhotos.count; i < self.product.quantityToFulfillOrder; i++){
         [self.photobookPhotos addObject:[userSelectedPhotos objectAtIndex:i % userSelectedPhotos.count]];
@@ -599,7 +599,7 @@ UINavigationControllerDelegate, OLUpsellViewControllerDelegate
     }
     __weak OLPhotobookViewController *welf = self;
     if (self.coverImageView){
-        [self.coverPhoto imageWithSize:self.coverImageView.frame.size applyEdits:YES cacheResult:YES progress:^(float progress){
+        [self.coverPhoto imageWithSize:self.coverImageView.frame.size applyEdits:YES progress:^(float progress){
             [welf.coverImageView setProgress:progress];
         }completion:^(UIImage *image){
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -659,7 +659,7 @@ UINavigationControllerDelegate, OLUpsellViewControllerDelegate
         [assets addObject:[OLAsset assetWithDataSource:[[OLUserSession currentSession].userSelectedPhotos.firstObject copy]]];
     }
     else{
-        for (OLPrintPhoto *photo in [OLUserSession currentSession].userSelectedPhotos){
+        for (OLAsset *photo in [OLUserSession currentSession].userSelectedPhotos){
             [assets addObject:[OLAsset assetWithDataSource:[photo copy]]];
         }
     }
@@ -711,7 +711,7 @@ UINavigationControllerDelegate, OLUpsellViewControllerDelegate
 
 -(void)scrollCropViewController:(OLScrollCropViewController *)cropper didFinishCroppingImage:(UIImage *)croppedImage{
     [self.croppingPrintPhoto unloadImage];
-    self.croppingPrintPhoto.asset = [OLAsset assetWithImageAsJPEG:croppedImage];
+    self.croppingPrintPhoto = [OLAsset assetWithImageAsJPEG:croppedImage];
     if (self.croppingPrintPhoto == self.coverPhoto){
         [self loadCoverPhoto];
     }
@@ -857,7 +857,7 @@ UINavigationControllerDelegate, OLUpsellViewControllerDelegate
     // Avoid uploading assets if possible. We can avoid uploading where the image already exists at a remote
     // URL and the user did not manipulate it in any way.
     NSMutableArray *photoAssets = [[NSMutableArray alloc] init];
-    for (OLPrintPhoto *photo in bookPhotos) {
+    for (OLAsset *photo in bookPhotos) {
         [photoAssets addObject:[OLAsset assetWithDataSource:[photo copy]]];
     }
     
@@ -875,7 +875,7 @@ UINavigationControllerDelegate, OLUpsellViewControllerDelegate
     
     OLPrintOrder *printOrder = [OLKiteUtils kiteVcForViewController:self].printOrder;
     OLPhotobookPrintJob *job = [[OLPhotobookPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:photoAssets];
-    job.frontCover = self.coverPhoto ? [OLAsset assetWithDataSource:self.coverPhoto] : nil;
+    job.frontCover = self.coverPhoto;
     for (NSString *option in self.product.selectedOptions.allKeys){
         [job setValue:self.product.selectedOptions[option] forOption:option];
     }
@@ -943,7 +943,7 @@ UINavigationControllerDelegate, OLUpsellViewControllerDelegate
         cropVc.definesPresentationContext = true;
         cropVc.modalPresentationStyle = UIModalPresentationOverCurrentContext;
         
-        [self.croppingPrintPhoto imageWithSize:OLAssetMaximumSize applyEdits:NO cacheResult:NO progress:NULL completion:^(UIImage *image){
+        [self.croppingPrintPhoto imageWithSize:OLAssetMaximumSize applyEdits:NO progress:NULL completion:^(UIImage *image){
             [cropVc setFullImage:image];
             cropVc.edits = self.croppingPrintPhoto.edits;
 //            cropVc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
@@ -963,7 +963,7 @@ UINavigationControllerDelegate, OLUpsellViewControllerDelegate
 
 - (void)updateUserSelectedPhotos{
     [[OLUserSession currentSession].userSelectedPhotos removeAllObjects];
-    for (OLPrintPhoto *item in self.photobookPhotos){
+    for (OLAsset *item in self.photobookPhotos){
         if (![item isKindOfClass:[NSNull class]]){
             [[OLUserSession currentSession].userSelectedPhotos addObject:item];
         }
@@ -997,7 +997,7 @@ UINavigationControllerDelegate, OLUpsellViewControllerDelegate
     else{
         UIImageView *imageView = [page imageView];
         self.croppingPrintPhoto = self.photobookPhotos[index];
-        [self.croppingPrintPhoto imageWithSize:OLAssetMaximumSize applyEdits:NO cacheResult:NO progress:NULL completion:^(UIImage *image){
+        [self.croppingPrintPhoto imageWithSize:OLAssetMaximumSize applyEdits:NO progress:NULL completion:^(UIImage *image){
             OLScrollCropViewController *cropVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLScrollCropViewController"];
             cropVc.delegate = self;
             cropVc.aspectRatio = imageView.frame.size.height / imageView.frame.size.width;
@@ -1660,19 +1660,12 @@ UINavigationControllerDelegate, OLUpsellViewControllerDelegate
     NSMutableArray *photoArray = [[NSMutableArray alloc] initWithCapacity:array.count];
     
     for (id object in array) {
-        if ([object isKindOfClass:[OLPrintPhoto class]]){
-            [photoArray addObject:object];
-        }
-        else{
-            OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
-            printPhoto.asset = object;
-            [photoArray addObject:printPhoto];
-        }
+        [photoArray addObject:object];
     }
     
     //    // First remove any that are not returned.
     //    NSMutableArray *removeArray = [NSMutableArray arrayWithArray:self.userSelectedPhotos];
-    //    for (OLPrintPhoto *object in self.userSelectedPhotos) {
+    //    for (OLAsset *object in self.userSelectedPhotos) {
     //        if ([object.asset isKindOfClass:[OLAsset class]] && [[object.asset dataSource] isKindOfClass:class]){
     //            if ([photoArray containsObject:object]){
     //                [removeArray removeObjectIdenticalTo:object];
@@ -1755,7 +1748,7 @@ UINavigationControllerDelegate, OLUpsellViewControllerDelegate
     else if ([picker isKindOfClass:[KITAssetsPickerController class]]){
         NSMutableArray *olAssets = [[NSMutableArray alloc] init];
         for (id<OLAssetDataSource> asset in assets){
-            if ([asset isKindOfClass:[OLPrintPhoto class]]){
+            if ([asset isKindOfClass:[OLAsset class]]){
                 [olAssets addObject:asset];
                 assetClass = [assets.lastObject class];
             }
@@ -1768,8 +1761,7 @@ UINavigationControllerDelegate, OLUpsellViewControllerDelegate
     }
     
     if (self.addNewPhotosAtIndex == -1){
-        self.coverPhoto = [[OLPrintPhoto alloc] init];
-        self.coverPhoto.asset = [assets firstObject];
+        self.coverPhoto = [assets firstObject];
         assets = [assets subarrayWithRange:NSMakeRange(1, assets.count - 1)];
         self.addNewPhotosAtIndex = 0;
         
@@ -1869,8 +1861,7 @@ UINavigationControllerDelegate, OLUpsellViewControllerDelegate
     
     if (self.addNewPhotosAtIndex == -1){
         if (images.count > 0){
-            self.coverPhoto = [[OLPrintPhoto alloc] init];
-            self.coverPhoto.asset = [images firstObject];
+            self.coverPhoto =[images firstObject];
             images = [images subarrayWithRange:NSMakeRange(1, images.count - 1)];
             self.addNewPhotosAtIndex = 0;
         }
@@ -1941,8 +1932,7 @@ UINavigationControllerDelegate, OLUpsellViewControllerDelegate
     
     if (self.addNewPhotosAtIndex == -1){
         if (images.count > 0){
-            self.coverPhoto = [[OLPrintPhoto alloc] init];
-            self.coverPhoto.asset = [images firstObject];
+            self.coverPhoto = [images firstObject];
             images = [images subarrayWithRange:NSMakeRange(1, images.count - 1)];
             self.addNewPhotosAtIndex = 0;
         }

@@ -54,8 +54,7 @@
     if (!_userSelectedPhotos || _userSelectedPhotos.count == 0){
         NSMutableArray *mutableUserSelectedPhotos = [[NSMutableArray alloc] init];
         for (id asset in self.appAssets){
-            OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
-            printPhoto.asset = asset;
+            OLAsset *printPhoto = asset;
             [mutableUserSelectedPhotos addObject:printPhoto];
         }
         _userSelectedPhotos = mutableUserSelectedPhotos;

@@ -552,7 +552,7 @@
         [assets addObject:[OLAsset assetWithDataSource:[[OLUserSession currentSession].userSelectedPhotos.firstObject copy]]];
     }
     else{
-        for (OLPrintPhoto *photo in [OLUserSession currentSession].userSelectedPhotos){
+        for (OLAsset *photo in [OLUserSession currentSession].userSelectedPhotos){
             [assets addObject:[OLAsset assetWithDataSource:[photo copy]]];
         }
     }

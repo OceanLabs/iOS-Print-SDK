@@ -29,9 +29,12 @@
 
 #import <Foundation/Foundation.h>
 
-@class ALAsset;
 @class PHAsset;
-@class OLPrintPhoto;
+
+/**
+ *  Use this size to request the maximum available size of an image
+ */
+extern CGSize const OLAssetMaximumSize;
 
 /**
  *  Handler to get the data length
@@ -48,14 +51,6 @@ typedef void (^GetDataLengthHandler)(long long dataLength, NSError *error);
  *  @param error The error
  */
 typedef void (^GetDataHandler)(NSData *data, NSError *error);
-
-/**
- *  Completion handler when loading the ALAsset
- *
- *  @param asset The ALAsset
- *  @param error The error
- */
-typedef void (^LoadAssetCompletionHandler)(ALAsset *asset, NSError *error);
 
 extern NSString *const kOLMimeTypeJPEG;
 extern NSString *const kOLMimeTypePNG;
@@ -181,15 +176,6 @@ extern NSString *const kOLMimeTypePDF;
 + (OLAsset *)assetWithURL:(NSURL *)url;
 
 /**
- *  Create an asset with a OLPrintPhoto
- *
- *  @param printPhoto The OLPrintPhoto
- *
- *  @return The OLAsset
- */
-+ (OLAsset *)assetWithPrintPhoto:(OLPrintPhoto *)printPhoto;
-
-/**
  *  The mime type of the asset
  */
 @property (nonatomic, readonly) NSString *mimeType;
@@ -208,12 +194,5 @@ extern NSString *const kOLMimeTypePDF;
  *  The Kite previewURL. Will only be valid upon sucessfully uploading this asset to the server i.e. OLAsset.isUploaded == YES
  */
 @property (nonatomic, readonly) NSURL *previewURL;
-
-/**
- *  Special method for OLAssets created from PHAssets. Finds and returns the PHAsset in the PHAssetLibrary with the known localIdentifier.
- *
- *  @return The PHAsset
- */
-- (PHAsset *)loadPHAsset;
 
 @end

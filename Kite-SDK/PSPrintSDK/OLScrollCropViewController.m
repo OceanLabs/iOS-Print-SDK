@@ -28,13 +28,13 @@
 //
 
 #import "OLScrollCropViewController.h"
-#import "OLPrintPhoto.h"
 #import "OLPhotoTextField.h"
 #import "OLColorSelectionCollectionViewCell.h"
 #import "OLKiteUtils.h"
 #import "UIImage+ImageNamedInKiteBundle.h"
 #import "UIView+RoundRect.h"
 #import "OLEditingToolsView.h"
+#import "OLAsset+Private.h"
 
 const NSInteger kOLEditDrawerTagTools = 10;
 const NSInteger kOLEditDrawerTagColors = 20;

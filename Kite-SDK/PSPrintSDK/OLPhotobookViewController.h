@@ -52,13 +52,13 @@
 @property (assign, nonatomic) BOOL editMode;
 @property (assign, nonatomic) BOOL startOpen;
 @property (assign, nonatomic, readonly) BOOL bookClosed;
-@property (strong, nonatomic) OLPrintPhoto *coverPhoto;
+@property (strong, nonatomic) OLAsset *coverPhoto;
 @property (weak, nonatomic) IBOutlet UILabel *pagesLabel;
 
 @property (strong, nonatomic) id<OLPrintJob> editingPrintJob;
 
 - (void)loadCoverPhoto;
-- (void)setUserSelectedPhotos:(NSMutableArray<OLPrintPhoto *> *)userSelectedPhotos;
+- (void)setUserSelectedPhotos:(NSMutableArray<OLAsset *> *)userSelectedPhotos;
 - (void)saveJobWithCompletionHandler:(void(^)())handler;
 
 @end

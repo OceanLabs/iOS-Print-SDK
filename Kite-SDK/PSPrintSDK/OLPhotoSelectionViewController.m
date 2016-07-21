@@ -28,7 +28,6 @@
 //
 
 #import "OLPhotoSelectionViewController.h"
-#import "OLPrintPhoto.h"
 #import "OLOrderReviewViewController.h"
 
 #import "OLCustomPhotoProvider.h"
@@ -55,7 +54,6 @@
 #import "NSObject+Utils.h"
 #import "OLAddress.h"
 #import "OLAnalytics.h"
-#import "OLAsset.h"
 #import "OLProductPrintJob.h"
 #import "OLConstants.h"
 #import "OLImageCachingManager.h"
@@ -65,7 +63,6 @@
 #import "OLOrderReviewViewController.h"
 #import "OLPhotoSelectionViewController.h"
 #import "OLPrintJob.h"
-#import "OLPrintPhoto.h"
 #import "OLProductPrintJob.h"
 #import "OLRemoteImageView.h"
 #import "UIImage+ImageNamedInKiteBundle.h"
@@ -77,6 +74,7 @@
 #import "OLURLDataSource.h"
 #import "OLNavigationController.h"
 #import "OLUpsellViewController.h"
+#import "OLAsset+Private.h"
 
 NSInteger OLPhotoSelectionMargin = 0;
 
@@ -118,7 +116,7 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
 @property (nonatomic, strong) UITapGestureRecognizer *tapBehindQRUploadModalGestureRecognizer;
 @property (weak, nonatomic) IBOutlet UIView *upsellHintView;
 
-@property (weak, nonatomic) OLPrintPhoto *editingPrintPhoto;
+@property (weak, nonatomic) OLAsset *editingPrintPhoto;
 @property (weak, nonatomic) IBOutlet UIView *addPhotosHintView;
 
 @property (assign, nonatomic) NSInteger sectionsForUpsell;
@@ -235,7 +233,7 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
 
 - (void)onUserSelectedPhotoCountChange {
     NSMutableArray *toRemove = [[NSMutableArray alloc] init];
-    for (OLPrintPhoto *printPhoto in self.userDisabledPhotos){
+    for (OLAsset *printPhoto in self.userDisabledPhotos){
         if (![self.userSelectedPhotos containsObjectIdenticalTo:printPhoto]){
             [toRemove addObject:printPhoto];
         }
@@ -251,7 +249,7 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
     }
     
     NSUInteger res = 0;
-    for (OLPrintPhoto *photo in self.userSelectedPhotos){
+    for (OLAsset *photo in self.userSelectedPhotos){
         res += photo.extraCopies;
     }
     return res;
@@ -301,53 +299,7 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
 }
 
 - (void)populateArrayWithNewArray:(NSArray *)array dataType:(Class)class {
-    NSMutableArray *photoArray = [[NSMutableArray alloc] initWithCapacity:array.count];
     
-    for (id object in array) {
-        if ([object isKindOfClass:[OLPrintPhoto class]]){
-            [photoArray addObject:object];
-        }
-        else{
-            OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
-            printPhoto.asset = object;
-            [photoArray addObject:printPhoto];
-        }
-    }
-    
-    // First remove any that are not returned.
-    NSMutableArray *removeArray = [NSMutableArray arrayWithArray:self.userSelectedPhotos];
-    for (OLPrintPhoto *object in self.userSelectedPhotos) {
-        if ([object.asset isKindOfClass:[OLAsset class]] && [[object.asset dataSource] isKindOfClass:class]){
-            if ([photoArray containsObject:object]){
-                [removeArray removeObjectIdenticalTo:object];
-                [photoArray removeObject:object];
-            }
-        }
-        else if (![object.asset isKindOfClass:class]) {
-            [removeArray removeObjectIdenticalTo:object];
-        }
-        
-        else if([photoArray containsObject:object]){
-            [removeArray removeObjectIdenticalTo:object];
-        }
-    }
-    
-    [self.userSelectedPhotos removeObjectsInArray:removeArray];
-    
-    // Second, add the remaining objects to the end of the array without replacing any.
-    NSMutableArray *addArray = [NSMutableArray arrayWithArray:photoArray];
-    for (id object in self.userSelectedPhotos) {
-        if ([addArray containsObject:object]){
-            [addArray removeObject:object];
-        }
-    }
-    
-    [self.userSelectedPhotos addObjectsFromArray:addArray];
-    
-    // Reload the collection view.
-    [self.collectionView reloadData];
-    
-    [self onUserSelectedPhotoCountChange];
 }
 
 - (void)onTapBehindQRCodeScannerModal:(UITapGestureRecognizer *)sender {
@@ -370,13 +322,8 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
 
 - (NSArray *)createAssetArray {
     NSMutableArray *array = [[NSMutableArray alloc] initWithCapacity:self.userSelectedPhotos.count];
-    for (OLPrintPhoto *object in self.userSelectedPhotos) {
-        if ([object.asset isKindOfClass:[OLAsset class]] && [object.asset dataSource]){
-            [array addObject:[object.asset dataSource]];
-        }
-        else if (![object.asset isKindOfClass:[OLAsset class]] && object.asset){
-            [array addObject:object.asset];
-        }
+    for (OLAsset *object in self.userSelectedPhotos) {
+            [array addObject:object];
     }
     return array;
 }
@@ -394,7 +341,7 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
-    for (OLPrintPhoto *photo in self.userSelectedPhotos) {
+    for (OLAsset *photo in self.userSelectedPhotos) {
         [photo unloadImage];
     }
 }
@@ -418,7 +365,7 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
     self.editingPrintPhoto = self.userSelectedPhotos[indexPath.item];
     
     OLImagePreviewViewController *previewVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLImagePreviewViewController"];
-    [self.editingPrintPhoto imageWithSize:OLAssetMaximumSize applyEdits:NO cacheResult:NO progress:NULL completion:^(UIImage *image){
+    [self.editingPrintPhoto imageWithSize:OLAssetMaximumSize applyEdits:NO progress:NULL completion:^(UIImage *image){
         previewVc.image = image;
     }];
     previewVc.providesPresentationContextTransitionStyle = true;
@@ -432,7 +379,7 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
     cropVc.enableCircleMask = self.product.productTemplate.templateUI == kOLTemplateUICircle;
     cropVc.delegate = self;
     cropVc.aspectRatio = [self productAspectRatio];
-    [self.editingPrintPhoto imageWithSize:OLAssetMaximumSize applyEdits:NO cacheResult:NO progress:^(float progress){
+    [self.editingPrintPhoto imageWithSize:OLAssetMaximumSize applyEdits:NO progress:^(float progress){
         [cropVc.cropView setProgress:progress];
     }completion:^(UIImage *image){
         [cropVc setFullImage:image];
@@ -726,7 +673,7 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
     else if ([picker isKindOfClass:[KITAssetsPickerController class]]){
         NSMutableArray *olAssets = [[NSMutableArray alloc] init];
         for (id<OLAssetDataSource> asset in assets){
-            if ([asset isKindOfClass:[OLPrintPhoto class]]){
+            if ([asset isKindOfClass:[OLAsset class]]){
                 [olAssets addObject:asset];
                 assetClass = [assets.lastObject class];
             }
@@ -1123,8 +1070,8 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
     imageView.backgroundColor = (indexPath.item + skipAtNewLine) % 2 == 0 ? [UIColor colorWithRed:0.902 green:0.914 blue:0.929 alpha:1.000] : [UIColor colorWithRed:0.863 green:0.878 blue:0.898 alpha:1.000];
     
     if (imageIndex < self.userSelectedPhotos.count) {
-        OLPrintPhoto *photo = self.userSelectedPhotos[indexPath.row + indexPath.section * self.product.quantityToFulfillOrder];
-        [photo imageWithSize:[self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath] applyEdits:YES cacheResult:YES progress:^(float progress){
+        OLAsset *photo = self.userSelectedPhotos[indexPath.row + indexPath.section * self.product.quantityToFulfillOrder];
+        [photo imageWithSize:[self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath] applyEdits:YES progress:^(float progress){
             [imageView setProgress:progress];
         } completion:^(UIImage *image){
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -1293,7 +1240,7 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
         [assets addObject:[OLAsset assetWithDataSource:[self.userSelectedPhotos.firstObject copy]]];
     }
     else{
-        for (OLPrintPhoto *photo in self.userSelectedPhotos){
+        for (OLAsset *photo in self.userSelectedPhotos){
             [assets addObject:[OLAsset assetWithDataSource:[photo copy]]];
         }
     }
@@ -1432,8 +1379,7 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
 #pragma mark OLQRCodeUploadViewControllerDelegate methods
 - (void)qrCodeUpload:(OLQRCodeUploadViewController *)vc didFinishPickingAsset:(OLAsset *)asset {
     
-    OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
-    printPhoto.asset = asset;
+    OLAsset *printPhoto = asset;
     [self.userSelectedPhotos addObject:printPhoto];
     
     [self.collectionView reloadData];

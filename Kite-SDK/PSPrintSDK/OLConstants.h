@@ -55,7 +55,6 @@
 #import "OLPostcardPrintJob.h"
 #import "OLPrintOrderCost.h"
 #import "OLAssetUploadRequest.h"
-#import "OLPrintPhoto.h"
 #import "OLAnalytics.h"
 
 extern NSString *_Nonnull const kOLKiteSDKErrorDomain;

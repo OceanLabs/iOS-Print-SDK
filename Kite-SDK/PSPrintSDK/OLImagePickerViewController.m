@@ -33,13 +33,13 @@
 #import "OLCustomPhotoProvider.h"
 #import "OLImagePickerPhotosPageViewController.h"
 #import <Photos/Photos.h>
-#import "OLPrintPhoto.h"
 #import "OLUpsellViewController.h"
 #import "NSObject+Utils.h"
 #import "OLAnalytics.h"
 #import "OLProductPrintJob.h"
 #import "OLPrintOrder.h"
 #import "OLUserSession.h"
+#import "OLAsset+Private.h"
 
 @interface OLKiteViewController ()
 @property (strong, nonatomic) NSMutableArray <OLCustomPhotoProvider *> *customImageProviders;
@@ -169,7 +169,7 @@
     }
     
     NSUInteger res = 0;
-    for (OLPrintPhoto *photo in [OLUserSession currentSession].userSelectedPhotos){
+    for (OLAsset *photo in [OLUserSession currentSession].userSelectedPhotos){
         res += photo.extraCopies;
     }
     return res;
@@ -393,7 +393,7 @@
         [assets addObject:[OLAsset assetWithDataSource:[[OLUserSession currentSession].userSelectedPhotos.firstObject copy]]];
     }
     else{
-        for (OLPrintPhoto *photo in [OLUserSession currentSession].userSelectedPhotos){
+        for (OLAsset *photo in [OLUserSession currentSession].userSelectedPhotos){
             [assets addObject:[OLAsset assetWithDataSource:[photo copy]]];
         }
     }

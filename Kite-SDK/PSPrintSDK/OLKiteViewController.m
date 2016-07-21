@@ -37,7 +37,6 @@
 #import "OLProductTypeSelectionViewController.h"
 #import "OLKitePrintSDK.h"
 #import "OLAnalytics.h"
-#import "OLPrintPhoto.h"
 #import "OLProductGroup.h"
 #import "OLNavigationController.h"
 #import "NSObject+Utils.h"

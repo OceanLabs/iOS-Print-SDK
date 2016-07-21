@@ -30,7 +30,6 @@
 #import <UIKit/UIKit.h>
 #import "OLProduct.h"
 #import "OLKiteViewController.h"
-#import "OLPrintPhoto.h"
 
 @interface OLImagePickerViewController : UIViewController
 

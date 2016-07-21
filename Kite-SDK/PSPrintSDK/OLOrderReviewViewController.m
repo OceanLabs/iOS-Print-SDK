@@ -28,8 +28,7 @@
 //
 
 #import "OLOrderReviewViewController.h"
-#import "OLPrintPhoto.h"
-#import "OLAsset.h"
+#import "OLAsset+Private.h"
 #import "OLProductPrintJob.h"
 #import "OLConstants.h"
 #import "OLCheckoutDelegate.h"
@@ -49,6 +48,7 @@
 #import "UIViewController+OLMethods.h"
 #import "OLImagePreviewViewController.h"
 #import "OLUserSession.h"
+#import "OLAsset+Private.h"
 
 static const NSUInteger kTagAlertViewDeletePhoto = 98;
 
@@ -86,7 +86,7 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
 @interface OLOrderReviewViewController () <OLCheckoutDelegate, UICollectionViewDelegateFlowLayout,
 UIViewControllerPreviewingDelegate>
 
-@property (weak, nonatomic) OLPrintPhoto *editingPrintPhoto;
+@property (weak, nonatomic) OLAsset *editingPrintPhoto;
 @property (strong, nonatomic) UIView *addMorePhotosView;
 @property (strong, nonatomic) UIButton *addMorePhotosButton;
 @property (assign, nonatomic) NSUInteger indexOfPhotoToDelete;
@@ -221,7 +221,7 @@ UIViewControllerPreviewingDelegate>
 
 -(NSUInteger) totalNumberOfExtras{
     NSUInteger res = 0;
-    for (OLPrintPhoto *photo in [OLUserSession currentSession].userSelectedPhotos){
+    for (OLAsset *photo in [OLUserSession currentSession].userSelectedPhotos){
         res += photo.extraCopies;
     }
     return res;
@@ -261,7 +261,7 @@ UIViewControllerPreviewingDelegate>
     // Avoid uploading assets if possible. We can avoid uploading where the image already exists at a remote
     // URL and the user did not manipulate it in any way.
     NSMutableArray *photoAssets = [[NSMutableArray alloc] init];
-    for (OLPrintPhoto *photo in self.checkoutPhotos) {
+    for (OLAsset *photo in self.checkoutPhotos) {
         [photoAssets addObject:[OLAsset assetWithDataSource:[photo copy]]];
     }
     
@@ -379,7 +379,7 @@ UIViewControllerPreviewingDelegate>
     self.editingPrintPhoto = [OLUserSession currentSession].userSelectedPhotos[indexPath.item];
     
     OLImagePreviewViewController *previewVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLImagePreviewViewController"];
-    [self.editingPrintPhoto imageWithSize:OLAssetMaximumSize applyEdits:NO cacheResult:NO progress:NULL completion:^(UIImage *image){
+    [self.editingPrintPhoto imageWithSize:OLAssetMaximumSize applyEdits:NO progress:NULL completion:^(UIImage *image){
         previewVc.image = image;
     }];
     previewVc.providesPresentationContextTransitionStyle = true;
@@ -393,7 +393,7 @@ UIViewControllerPreviewingDelegate>
     cropVc.enableCircleMask = self.product.productTemplate.templateUI == kOLTemplateUICircle;
     cropVc.delegate = self;
     cropVc.aspectRatio = [self productAspectRatio];
-    [self.editingPrintPhoto imageWithSize:OLAssetMaximumSize applyEdits:NO cacheResult:NO progress:^(float progress){
+    [self.editingPrintPhoto imageWithSize:OLAssetMaximumSize applyEdits:NO progress:^(float progress){
         [cropVc.cropView setProgress:progress];
     }completion:^(UIImage *image){
         [cropVc setFullImage:image];
@@ -489,7 +489,7 @@ UIViewControllerPreviewingDelegate>
     
     self.editingPrintPhoto = [OLUserSession currentSession].userSelectedPhotos[indexPath.item];
     
-    [self.editingPrintPhoto imageWithSize:OLAssetMaximumSize applyEdits:NO cacheResult:NO progress:NULL completion:^(UIImage *image){
+    [self.editingPrintPhoto imageWithSize:OLAssetMaximumSize applyEdits:NO progress:NULL completion:^(UIImage *image){
         
         [UIView animateWithDuration:0.25 animations:^{
             self.nextButton.alpha = 0;
@@ -604,8 +604,8 @@ UIViewControllerPreviewingDelegate>
     UILabel *countLabel = (UILabel *)[cell.contentView viewWithTag:30];
     [countLabel setText: [NSString stringWithFormat:@"%ld", (long)[[OLUserSession currentSession].userSelectedPhotos[indexPath.item] extraCopies]+1]];
     
-    OLPrintPhoto *printPhoto = (OLPrintPhoto*)[[OLUserSession currentSession].userSelectedPhotos objectAtIndex:indexPath.item];
-    [printPhoto imageWithSize:cellImage.frame.size applyEdits:YES cacheResult:YES progress:^(float progress){
+    OLAsset *printPhoto = (OLAsset*)[[OLUserSession currentSession].userSelectedPhotos objectAtIndex:indexPath.item];
+    [printPhoto imageWithSize:cellImage.frame.size applyEdits:YES progress:^(float progress){
         [cellImage setProgress:progress];
     } completion:^(UIImage *image){
         dispatch_async(dispatch_get_main_queue(), ^{

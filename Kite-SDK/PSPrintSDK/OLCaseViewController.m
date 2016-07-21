@@ -33,6 +33,7 @@
 #import "UIImage+ImageNamedInKiteBundle.h"
 #import "UIImage+OLUtils.h"
 #import "OLUserSession.h"
+#import "OLAsset+Private.h"
 
 @interface OLSingleImageProductReviewViewController (Private)
 
@@ -49,7 +50,7 @@
 @property (strong, nonatomic) UIVisualEffectView *visualEffectView;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *maskActivityIndicator;
 @property (strong, nonatomic) UIImage *maskImage;
-@property (strong, nonatomic) OLPrintPhoto *imageDisplayed;
+@property (strong, nonatomic) OLAsset *imageDisplayed;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *centerYCon;
 @property (weak, nonatomic) IBOutlet UIImageView *deviceView;
 @property (weak, nonatomic) IBOutlet UIImageView *highlightsView;

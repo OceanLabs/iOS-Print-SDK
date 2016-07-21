@@ -100,8 +100,7 @@ NSInteger OLImagePickerMargin = 0;
     
     UIImageView *checkmark = [cell viewWithTag:20];
     id asset = self.assets[indexPath.item];
-    OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
-    printPhoto.asset = asset;
+    OLAsset *printPhoto = asset;
     if ([[OLUserSession currentSession].userSelectedPhotos containsObject:printPhoto]){
         checkmark.hidden = NO;
     }
@@ -207,8 +206,10 @@ NSInteger OLImagePickerMargin = 0;
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
     id asset = self.assets[indexPath.item];
-    OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
-    printPhoto.asset = asset;
+    OLAsset *printPhoto;
+    if ([asset isKindOfClass:[PHAsset class]]){
+        printPhoto = [OLAsset assetWithPHAsset:asset];
+    }
     if ([[OLUserSession currentSession].userSelectedPhotos containsObject:printPhoto]){
         [[OLUserSession currentSession].userSelectedPhotos removeObject:printPhoto];
         [[collectionView cellForItemAtIndexPath:indexPath] viewWithTag:20].hidden = YES;

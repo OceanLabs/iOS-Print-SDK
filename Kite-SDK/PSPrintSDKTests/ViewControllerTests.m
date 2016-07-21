@@ -596,7 +596,7 @@
     
     NSMutableArray *printPhotos = [[NSMutableArray alloc] initWithCapacity:700];
     for (OLAsset *asset in olAssets){
-        OLPrintPhoto *photo = [[OLPrintPhoto alloc] init];
+        OLAsset *photo = [[OLAsset alloc] init];
         photo.asset = asset;
         [printPhotos addObject:photo];
     }
@@ -985,7 +985,7 @@
     
     NSMutableArray *printPhotos = [[NSMutableArray alloc] initWithCapacity:700];
     for (OLAsset *asset in olAssets){
-        OLPrintPhoto *photo = [[OLPrintPhoto alloc] init];
+        OLAsset *photo = [[OLAsset alloc] init];
         photo.asset = asset;
         [printPhotos addObject:photo];
     }
@@ -1443,7 +1443,7 @@
     
     NSMutableArray *printPhotos = [[NSMutableArray alloc] initWithCapacity:700];
     for (OLAsset *asset in olAssets){
-        OLPrintPhoto *photo = [[OLPrintPhoto alloc] init];
+        OLAsset *photo = [[OLAsset alloc] init];
         photo.asset = asset;
         [printPhotos addObject:photo];
     }

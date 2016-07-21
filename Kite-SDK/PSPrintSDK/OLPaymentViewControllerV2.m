@@ -1840,12 +1840,8 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     if (product.productTemplate.templateUI == kOLTemplateUIPhotobook && [(OLPhotobookPrintJob *)printJob frontCover]){
         //Make sure we don't add the cover photo asset in the book photos
         OLAsset *asset = [(OLPhotobookPrintJob *)printJob frontCover];
-        OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
-        printPhoto.asset = asset;
+        OLAsset *printPhoto = asset;
         
-        if ([asset.dataSource isKindOfClass:[OLPrintPhoto class]]){
-            printPhoto = (OLPrintPhoto *)asset.dataSource;
-        }
         if (printPhoto.uuid){
             [addedAssetsUUIDs addObject:printPhoto.uuid];
         }
@@ -1861,11 +1857,10 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         if ([asset corrupt]){
             continue;
         }
-        OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
-        printPhoto.asset = asset;
+        OLAsset *printPhoto = asset;
         
-        if ([asset.dataSource isKindOfClass:[OLPrintPhoto class]]){
-            printPhoto = (OLPrintPhoto *)asset.dataSource;
+        if ([asset.dataSource isKindOfClass:[OLAsset class]]){
+            printPhoto = (OLAsset *)asset.dataSource;
         }
         [printPhoto unloadImage];
         if (![addedAssetsUUIDs containsObject:printPhoto.uuid]){
@@ -1884,8 +1879,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     else{
         UIViewController* orvc = [self.storyboard instantiateViewControllerWithIdentifier:[OLKiteUtils reviewViewControllerIdentifierForProduct:product photoSelectionScreen:NO]];
         if ([printJob isKindOfClass:[OLPhotobookPrintJob class]] && [(OLPhotobookPrintJob *)printJob frontCover]){
-            OLPrintPhoto *coverPhoto = [[OLPrintPhoto alloc] init];
-            coverPhoto.asset = [(OLPhotobookPrintJob *)printJob frontCover];
+            OLAsset *coverPhoto = [(OLPhotobookPrintJob *)printJob frontCover];
             [orvc safePerformSelector:@selector(setCoverPhoto:) withObject:coverPhoto];
         }
         else{

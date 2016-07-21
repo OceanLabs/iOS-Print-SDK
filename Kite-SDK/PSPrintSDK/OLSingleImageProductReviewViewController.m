@@ -30,7 +30,6 @@
 #import "NSArray+QueryingExtras.h"
 #import "NSObject+Utils.h"
 #import "OLSingleImageProductReviewViewController.h"
-#import "OLPrintPhoto.h"
 #import "OLAnalytics.h"
 #import "OLAsset+Private.h"
 #import "OLProductPrintJob.h"
@@ -50,7 +49,6 @@
 #import "NSArray+QueryingExtras.h"
 #import "OLKiteViewController.h"
 #import "OLPaymentViewController.h"
-#import "OLPrintPhoto.h"
 #import "OLProductPrintJob.h"
 #import "OLProductTemplateOption.h"
 #import "OLRemoteImageView.h"
@@ -126,8 +124,8 @@ RMImageCropperDelegate, UIViewControllerPreviewingDelegate>
 @property (weak, nonatomic) IBOutlet UIView *containerView;
 @property (weak, nonatomic) IBOutlet OLRemoteImageCropper *imageCropView;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *maskAspectRatio;
-@property (strong, nonatomic) OLPrintPhoto *imagePicked;
-@property (strong, nonatomic) OLPrintPhoto *imageDisplayed;
+@property (strong, nonatomic) OLAsset *imagePicked;
+@property (strong, nonatomic) OLAsset *imageDisplayed;
 @property (strong, nonatomic) NSIndexPath *previewingIndexPath;
 @property (nonatomic, copy) void (^saveJobCompletionHandler)();
 @property (nonatomic, strong) UITapGestureRecognizer *tapBehindQRUploadModalGestureRecognizer;
@@ -191,9 +189,9 @@ static BOOL hasMoved;
     
     if (self.imageCropView){
         self.imageCropView.delegate = self;
-        OLPrintPhoto *photo = [[OLUserSession currentSession].userSelectedPhotos firstObject];
+        OLAsset *photo = [[OLUserSession currentSession].userSelectedPhotos firstObject];
         self.imageDisplayed = photo;
-        [photo imageWithSize:[UIScreen mainScreen].bounds.size applyEdits:NO cacheResult:YES progress:NULL completion:^(UIImage *image){
+        [photo imageWithSize:[UIScreen mainScreen].bounds.size applyEdits:NO progress:NULL completion:^(UIImage *image){
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self.imageCropView setImage:image];
                 self.imageCropView.imageView.transform = self.imageDisplayed.edits.cropTransform;
@@ -201,7 +199,7 @@ static BOOL hasMoved;
         }];
     }
     
-    for (OLPrintPhoto *printPhoto in [OLUserSession currentSession].userSelectedPhotos){
+    for (OLAsset *printPhoto in [OLUserSession currentSession].userSelectedPhotos){
         [printPhoto unloadImage];
     }
     
@@ -461,7 +459,7 @@ static BOOL hasMoved;
         [previewingContext setSourceRect:[cell convertRect:cellImageView.frame toView:self.imagesCollectionView]];
         
         OLImagePreviewViewController *previewVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLImagePreviewViewController"];
-        [[OLUserSession currentSession].userSelectedPhotos[indexPath.item] imageWithSize:[UIScreen mainScreen].bounds.size applyEdits:NO cacheResult:YES progress:NULL completion:^(UIImage *image){
+        [[OLUserSession currentSession].userSelectedPhotos[indexPath.item] imageWithSize:[UIScreen mainScreen].bounds.size applyEdits:NO progress:NULL completion:^(UIImage *image){
             dispatch_async(dispatch_get_main_queue(), ^{
                 previewVc.image = image;
             });
@@ -473,7 +471,7 @@ static BOOL hasMoved;
     }
     else if (previewingContext.sourceView == self.imageCropView){
         OLImagePreviewViewController *previewVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLImagePreviewViewController"];
-        [self.imageDisplayed imageWithSize:[UIScreen mainScreen].bounds.size applyEdits:NO cacheResult:YES progress:NULL completion:^(UIImage *image){
+        [self.imageDisplayed imageWithSize:[UIScreen mainScreen].bounds.size applyEdits:NO progress:NULL completion:^(UIImage *image){
             dispatch_async(dispatch_get_main_queue(), ^{
                 previewVc.image = image;
             });
@@ -557,7 +555,7 @@ static BOOL hasMoved;
         [imageView.superview addConstraints:con];
         
         
-        [[OLUserSession currentSession].userSelectedPhotos[indexPath.item] imageWithSize:imageView.frame.size applyEdits:NO cacheResult:YES progress:^(float progress){
+        [[OLUserSession currentSession].userSelectedPhotos[indexPath.item] imageWithSize:imageView.frame.size applyEdits:NO progress:^(float progress){
             dispatch_async(dispatch_get_main_queue(), ^{
                 [imageView setProgress:progress];
             });
@@ -625,7 +623,7 @@ static BOOL hasMoved;
         }
         self.imageCropView.imageView.image = nil;
         __weak OLSingleImageProductReviewViewController *welf = self;
-        [self.imageDisplayed imageWithSize:[UIScreen mainScreen].bounds.size applyEdits:NO cacheResult:YES progress:^(float progress){
+        [self.imageDisplayed imageWithSize:[UIScreen mainScreen].bounds.size applyEdits:NO progress:^(float progress){
             dispatch_async(dispatch_get_main_queue(), ^{
                 [welf.imageCropView setProgress:progress];
             });
@@ -720,13 +718,8 @@ static BOOL hasMoved;
 
 - (NSArray *)createAssetArray {
     NSMutableArray *array = [[NSMutableArray alloc] initWithCapacity:[OLUserSession currentSession].userSelectedPhotos.count];
-    for (OLPrintPhoto *object in [OLUserSession currentSession].userSelectedPhotos) {
-        if ([object.asset isKindOfClass:[OLAsset class]] && [object.asset dataSource]){
-            [array addObject:[object.asset dataSource]];
-        }
-        else if (![object.asset isKindOfClass:[OLAsset class]] && object.asset){
-            [array addObject:object.asset];
-        }
+    for (OLAsset *object in [OLUserSession currentSession].userSelectedPhotos) {
+            [array addObject:object];
     }
     return array;
 }
@@ -872,7 +865,7 @@ static BOOL hasMoved;
         [assets addObject:[OLAsset assetWithDataSource:[[OLUserSession currentSession].userSelectedPhotos.firstObject copy]]];
     }
     else{
-        for (OLPrintPhoto *photo in [OLUserSession currentSession].userSelectedPhotos){
+        for (OLAsset *photo in [OLUserSession currentSession].userSelectedPhotos){
             [assets addObject:[OLAsset assetWithDataSource:[photo copy]]];
         }
     }
@@ -915,61 +908,7 @@ static BOOL hasMoved;
 #pragma mark - CTAssetsPickerControllerDelegate Methods
 
 - (void)populateArrayWithNewArray:(NSArray *)array dataType:(Class)class {
-    NSMutableArray *photoArray = [[NSMutableArray alloc] initWithCapacity:array.count];
     
-    for (id object in array) {
-        if ([object isKindOfClass:[OLPrintPhoto class]]){
-            [photoArray addObject:object];
-        }
-        else{
-            OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
-            printPhoto.asset = object;
-            [photoArray addObject:printPhoto];
-        }
-    }
-    
-    // First remove any that are not returned.
-    NSMutableArray *removeArray = [NSMutableArray arrayWithArray:[OLUserSession currentSession].userSelectedPhotos];
-    for (OLPrintPhoto *object in [OLUserSession currentSession].userSelectedPhotos) {
-        if ([object.asset isKindOfClass:[OLAsset class]] && [[object.asset dataSource] isKindOfClass:class]){
-            if ([photoArray containsObject:object]){
-                [removeArray removeObjectIdenticalTo:object];
-                [photoArray removeObject:object];
-            }
-        }
-        else if (![object.asset isKindOfClass:class]) {
-            [removeArray removeObjectIdenticalTo:object];
-        }
-        
-        else if([photoArray containsObject:object]){
-            [removeArray removeObjectIdenticalTo:object];
-        }
-    }
-    
-    [[OLUserSession currentSession].userSelectedPhotos removeObjectsInArray:removeArray];
-    
-    // Second, add the remaining objects to the end of the array without replacing any.
-    NSMutableArray *addArray = [NSMutableArray arrayWithArray:photoArray];
-    for (id object in [OLUserSession currentSession].userSelectedPhotos) {
-        if ([addArray containsObject:object]){
-            [addArray removeObject:object];
-        }
-    }
-    
-    for (OLPrintPhoto *photo in addArray){
-        if (![removeArray containsObject:photo]){
-            self.imagePicked = photo;
-            break;
-        }
-    }
-    
-    [[OLUserSession currentSession].userSelectedPhotos addObjectsFromArray:addArray];
-    
-    [self.imagesCollectionView reloadData];
-    
-    if ([OLUserSession currentSession].userSelectedPhotos.count > 0){
-        self.hintView.alpha = 0;
-    }
 }
 
 - (void)assetsPickerController:(id)picker didFinishPickingAssets:(NSArray *)assets {
@@ -989,7 +928,7 @@ static BOOL hasMoved;
     else if ([picker isKindOfClass:[KITAssetsPickerController class]]){
         NSMutableArray *olAssets = [[NSMutableArray alloc] init];
         for (id<OLAssetDataSource> asset in assets){
-            if ([asset isKindOfClass:[OLPrintPhoto class]]){
+            if ([asset isKindOfClass:[OLAsset class]]){
                 [olAssets addObject:asset];
                 assetClass = [assets.lastObject class];
             }
@@ -1006,7 +945,7 @@ static BOOL hasMoved;
         self.imageDisplayed = self.imagePicked;
         __weak OLSingleImageProductReviewViewController *welf = self;
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            [self.imagePicked imageWithSize:[UIScreen mainScreen].bounds.size applyEdits:NO cacheResult:YES progress:NULL completion:^(UIImage *image){
+            [self.imagePicked imageWithSize:[UIScreen mainScreen].bounds.size applyEdits:NO progress:NULL completion:^(UIImage *image){
                 dispatch_async(dispatch_get_main_queue(), ^{
                     welf.imageCropView.image = image;
                     welf.imagePicked = nil;
@@ -1073,7 +1012,7 @@ static BOOL hasMoved;
 #endif
     if (self.imagePicked){
         __weak OLSingleImageProductReviewViewController *welf = self;
-        [self.imagePicked imageWithSize:[UIScreen mainScreen].bounds.size applyEdits:NO cacheResult:YES progress:NULL completion:^(UIImage *image){
+        [self.imagePicked imageWithSize:[UIScreen mainScreen].bounds.size applyEdits:NO progress:NULL completion:^(UIImage *image){
             dispatch_async(dispatch_get_main_queue(), ^{
                 welf.imageCropView.image = image;
                 
@@ -1124,7 +1063,7 @@ static BOOL hasMoved;
 #endif
     if (self.imagePicked){
         __weak OLSingleImageProductReviewViewController *welf = self;
-        [self.imagePicked imageWithSize:[UIScreen mainScreen].bounds.size applyEdits:NO cacheResult:YES progress:NULL completion:^(UIImage *image){
+        [self.imagePicked imageWithSize:[UIScreen mainScreen].bounds.size applyEdits:NO progress:NULL completion:^(UIImage *image){
             dispatch_async(dispatch_get_main_queue(), ^{
                 welf.imageCropView.image = image;
                 
@@ -1154,13 +1093,12 @@ static BOOL hasMoved;
         [(UIActivityIndicatorView *)view startAnimating];
     }
     
-    OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
-    printPhoto.asset = asset;
+    OLAsset *printPhoto = asset;
     [[OLUserSession currentSession].userSelectedPhotos addObject:printPhoto];
     self.imagePicked = printPhoto;
     
     __weak OLSingleImageProductReviewViewController *welf = self;
-    [self.imagePicked imageWithSize:[UIScreen mainScreen].bounds.size applyEdits:NO cacheResult:YES progress:NULL completion:^(UIImage *image){
+    [self.imagePicked imageWithSize:[UIScreen mainScreen].bounds.size applyEdits:NO progress:NULL completion:^(UIImage *image){
         dispatch_async(dispatch_get_main_queue(), ^{
             welf.imageCropView.image = image;
             
@@ -1204,7 +1142,7 @@ static BOOL hasMoved;
     }
     
     __weak OLSingleImageProductReviewViewController *welf = self;
-    [self.imageDisplayed imageWithSize:[UIScreen mainScreen].bounds.size applyEdits:NO cacheResult:YES progress:NULL completion:^(UIImage *image){
+    [self.imageDisplayed imageWithSize:[UIScreen mainScreen].bounds.size applyEdits:NO progress:NULL completion:^(UIImage *image){
         dispatch_async(dispatch_get_main_queue(), ^{
             [activityView stopAnimating];
             [welf.imageCropView setImage:image];
