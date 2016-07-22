@@ -29,12 +29,12 @@
 
 #import <UIKit/UIKit.h>
 #import "OLViewController.h"
+#import "OLImagePickerProviderCollection.h"
 
 @class OLPrintOrder;
 @class OLKiteViewController;
 @class OLAsset;
 
-@protocol KITAssetCollectionDataSource;
 @protocol KITCustomAssetPickerController;
 
 /**
@@ -190,7 +190,7 @@
  *  @param name        The name for the source
  *  @param image       An image to be used as an icon (where applicable)
  */
-- (void)addCustomPhotoProviderWithCollections:(NSArray <id<KITAssetCollectionDataSource>>*_Nonnull)collections name:(NSString *_Nonnull)name icon:(UIImage *_Nullable)image;
+- (void)addCustomPhotoProviderWithCollections:(NSArray <OLImagePickerProviderCollection *>*_Nonnull)collections name:(NSString *_Nonnull)name icon:(UIImage *_Nullable)image;
 
 /**
  *  Add your own photo picker.

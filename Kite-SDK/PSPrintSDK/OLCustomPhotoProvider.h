@@ -29,18 +29,15 @@
 
 
 #import <Foundation/Foundation.h>
+#import "OLImagePickerProvider.h"
 
 @protocol KITAssetCollectionDataSource;
 @protocol KITCustomAssetPickerController;
 
-@interface OLCustomPhotoProvider : NSObject
+@interface OLCustomPhotoProvider : OLImagePickerProvider
 
-@property (strong, nonatomic) NSArray<id<KITAssetCollectionDataSource>> *collections;
 @property (strong, nonatomic) UIViewController<KITCustomAssetPickerController> *vc;
-@property (strong, nonatomic) NSString *name;
-@property (strong, nonatomic) UIImage *icon;
 
-- (instancetype)initWithCollections:(NSArray<id<KITAssetCollectionDataSource>> *)collections name:(NSString *)name icon:(UIImage *)icon;
 - (instancetype)initWithController:(UIViewController<KITCustomAssetPickerController> *)controller name:(NSString *)name icon:(UIImage *)icon;
 
 

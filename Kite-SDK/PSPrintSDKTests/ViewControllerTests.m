@@ -80,7 +80,7 @@
 
 @interface OLKiteViewController ()
 - (void)dismiss;
-@property (strong, nonatomic) NSMutableArray <OLCustomPhotoProvider *> *customImageProviders;
+@property (strong, nonatomic) NSMutableArray <OLImagePickerProvider *> *customImageProviders;
 @end
 
 @interface OLProductHomeViewController (Private)

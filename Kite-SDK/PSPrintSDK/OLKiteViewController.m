@@ -55,7 +55,7 @@ static CGFloat fadeTime = 0.3;
 @property (weak, nonatomic) IBOutlet UINavigationBar *navigationBar;
 @property (weak, nonatomic) IBOutlet UINavigationItem *customNavigationItem;
 @property (weak, nonatomic) IBOutlet UIImageView *loadingImageView;
-@property (strong, nonatomic) NSMutableArray <OLCustomPhotoProvider *> *customImageProviders;
+@property (strong, nonatomic) NSMutableArray <OLImagePickerProvider *> *customImageProviders;
 
 
 //@property (assign, nonatomic) BOOL useDarkTheme; //XXX: Delete this when exposed in header
@@ -148,16 +148,16 @@ static CGFloat fadeTime = 0.3;
     return self;
 }
 
-- (void)addCustomPhotoProviderWithCollections:(NSArray <id<KITAssetCollectionDataSource>>*_Nonnull)collections name:(NSString *_Nonnull)name icon:(UIImage *_Nullable)image{
+- (void)addCustomPhotoProviderWithCollections:(NSArray <OLImagePickerProviderCollection *>*_Nonnull)collections name:(NSString *_Nonnull)name icon:(UIImage *_Nullable)image{
     if (!self.customImageProviders){
-        self.customImageProviders = [[NSMutableArray<OLCustomPhotoProvider *> alloc] init];
+        self.customImageProviders = [[NSMutableArray<OLImagePickerProvider *> alloc] init];
     }
-    [self.customImageProviders addObject:[[OLCustomPhotoProvider alloc] initWithCollections:collections name:name icon:image]];
+    [self.customImageProviders addObject:[[OLImagePickerProvider alloc] initWithCollections:(NSArray <id<NSFastEnumeration>> *)collections name:name icon:image]];
 }
 
 - (void)addCustomPhotoProviderWithViewController:(UIViewController<KITCustomAssetPickerController> *_Nonnull)vc name:(NSString *_Nonnull)name icon:(UIImage *_Nullable)icon{
     if (!self.customImageProviders){
-        self.customImageProviders = [[NSMutableArray<OLCustomPhotoProvider *> alloc] init];
+        self.customImageProviders = [[NSMutableArray<OLImagePickerProvider *> alloc] init];
     }
     [self.customImageProviders addObject:[[OLCustomPhotoProvider alloc] initWithController:vc name:name icon:icon]];
 }

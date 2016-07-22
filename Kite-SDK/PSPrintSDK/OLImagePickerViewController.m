@@ -42,6 +42,8 @@
 #import "OLAsset+Private.h"
 #import <KITAssetCollectionDataSource.h>
 #import <KITAssetDataSource.h>
+#import "OLImagePickerProviderCollection.h"
+#import "OLImagePickerProvider.h"
 
 @interface OLKiteViewController ()
 @property (strong, nonatomic) NSMutableArray <OLCustomPhotoProvider *> *customImageProviders;
@@ -55,7 +57,7 @@
 @property (strong, nonatomic) UIVisualEffectView *visualEffectView;
 @property (assign, nonatomic) CGSize rotationSize;
 
-@property (strong, nonatomic) NSArray<NSDictionary<NSString *, id /*PHFetchResult or NSArray of OLAssets or OLAssetDataSources*/> *> *providers;
+@property (strong, nonatomic) NSArray<OLImagePickerProvider *> *providers;
 
 @end
 
@@ -81,7 +83,12 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    [self setupProviderCollections];
+    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Back", @"")
+                                                                             style:UIBarButtonItemStylePlain
+                                                                            target:nil
+                                                                            action:nil];
+    
+    [self setupProviders];
     
     self.automaticallyAdjustsScrollViewInsets = NO;
         
@@ -134,10 +141,24 @@
     [self updateTitleBasedOnSelectedPhotoQuanitity];
 }
 
-- (void)setupProviderCollections{
-    NSMutableArray *collections = [[NSMutableArray alloc] init];
+- (void)setupProviders{
+    NSMutableArray<OLImagePickerProvider *> *providers = [[NSMutableArray<OLImagePickerProvider *> alloc] init];
     if ([OLUserSession currentSession].appAssets.count > 0){
-        [collections addObject:@{@"All Photos" : [OLUserSession currentSession].appAssets}];
+        OLImagePickerProviderCollection *collection = [[OLImagePickerProviderCollection alloc] initWithArray:[OLUserSession currentSession].appAssets name:NSLocalizedString(@"All Photos", @"")];
+        
+        NSDictionary *info = [[NSBundle mainBundle] infoDictionary];
+        NSString *bundleName = nil;
+        if ([info objectForKey:@"CFBundleDisplayName"] == nil) {
+            bundleName = [[[NSBundle mainBundle] infoDictionary] objectForKey:(NSString *) kCFBundleNameKey];
+        } else {
+            bundleName = [NSString stringWithFormat:@"%@", [info objectForKey:@"CFBundleDisplayName"]];
+        }
+        
+        UIImage *appIcon = [UIImage imageNamed: [[[[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleIcons"] objectForKey:@"CFBundlePrimaryIcon"] objectForKey:@"CFBundleIconFiles"]  objectAtIndex:0]];
+        
+        OLImagePickerProvider *provider = [[OLImagePickerProvider alloc] initWithCollections:@[collection] name:bundleName icon:appIcon];
+        provider.providerType = OLImagePickerProviderTypeApp;
+        [providers addObject:provider];
     }
     if ([OLKiteUtils cameraRollProviderIndex:self] != -1){
         PHFetchOptions *options = [[PHFetchOptions alloc] init];
@@ -149,25 +170,39 @@
             options.includeAssetSourceTypes = PHAssetSourceTypeCloudShared | PHAssetSourceTypeUserLibrary | PHAssetSourceTypeiTunesSynced;
         }
         
-        [collections addObject:@{NSLocalizedString(@"All Photos", @"") : [PHAsset fetchAssetsWithMediaType:PHAssetMediaTypeImage options:options]}];
+        OLImagePickerProviderCollection *collection = [[OLImagePickerProviderCollection alloc] initWithPHFetchResult:[PHAsset fetchAssetsWithMediaType:PHAssetMediaTypeImage options:options] name:NSLocalizedString(@"All Photos", @"")];
+        OLImagePickerProvider *provider = [[OLImagePickerProvider alloc] initWithCollections:@[collection] name:NSLocalizedString(@"Photo Library", @"") icon:[UIImage imageNamedInKiteBundle:@"import_gallery"]];
+        provider.providerType = OLImagePickerProviderTypePhotoLibrary;
+        [providers addObject:provider];
     }
     if ([OLKiteUtils facebookProviderIndex:self] != -1){
-         [collections addObject:@{@"Facebook" : @[]}];
+        OLImagePickerProviderCollection *collection = [[OLImagePickerProviderCollection alloc] initWithArray:@[] name:NSLocalizedString(@"All Photos", @"")];
+        OLImagePickerProvider *provider = [[OLImagePickerProvider alloc] initWithCollections:@[collection] name:@"Facebook" icon:[UIImage imageNamedInKiteBundle:@"import_facebook"]];
+        provider.providerType = OLImagePickerProviderTypeFacebook;
+        [providers addObject:provider];
     }
     if ([OLKiteUtils instagramProviderIndex:self] != -1){
-        [collections addObject:@{@"Instagram" : @[]}];
+        OLImagePickerProviderCollection *collection = [[OLImagePickerProviderCollection alloc] initWithArray:@[] name:NSLocalizedString(@"All Photos", @"")];
+        OLImagePickerProvider *provider = [[OLImagePickerProvider alloc] initWithCollections:@[collection] name:@"Instagram" icon:[UIImage imageNamedInKiteBundle:@"import_instagram"]];
+        provider.providerType = OLImagePickerProviderTypeInstagram;
+        [providers addObject:provider];
     }
-    for (OLCustomPhotoProvider *provider in [OLKiteUtils kiteVcForViewController:self].customImageProviders){
-        for (id<KITAssetCollectionDataSource> collection in provider.collections){
+    for (OLImagePickerProvider *customProvider in [OLKiteUtils kiteVcForViewController:self].customImageProviders){
+        NSMutableArray *collections = [[NSMutableArray alloc] init];
+        for (id<KITAssetCollectionDataSource> collection in customProvider.collections){
             NSMutableArray *assets = [[NSMutableArray alloc] init];
             for (id <KITAssetDataSource> asset in collection){
                 [assets addObject:[OLAsset assetWithDataSource:(id<OLAssetDataSource>)asset]];
             }
-            [collections addObject:@{collection.title : assets}];
+            
+            [collections addObject:[[OLImagePickerProviderCollection alloc] initWithArray:assets name:NSLocalizedString(@"All Photos", @"")]];
         }
+        OLImagePickerProvider *provider = [[OLImagePickerProvider alloc] initWithCollections:collections name:customProvider.name icon:customProvider.icon];
+        provider.providerType = OLImagePickerProviderTypeCustom;
+        [providers addObject:provider];
     }
     
-    self.providers = collections;
+    self.providers = providers;
 }
 
 - (void)viewDidLayoutSubviews{
@@ -237,7 +272,7 @@
     vc.imagePicker = self;
     vc.pageIndex = index;
     
-    vc.collections = self.providers[index];
+    vc.provider = self.providers[index];
     
     vc.collectionView.contentInset = UIEdgeInsetsMake([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height + self.sourcesCollectionView.frame.size.height, 0, 0, 0);
     vc.quantityPerItem = self.product.quantityToFulfillOrder;
@@ -245,7 +280,16 @@
     [vc.view class]; //force view did load
     vc.collectionView.contentInset = UIEdgeInsetsMake([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height + self.sourcesCollectionView.frame.size.height, 0, 0, 0);
     
+    if ([vc isKindOfClass:[OLImagePickerPhotosPageViewController class]]){
+        vc.albumLabelContainerTopCon.constant = [[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height + self.sourcesCollectionView.frame.size.height;
+        vc.collectionView.contentInset = UIEdgeInsetsMake([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height + self.sourcesCollectionView.frame.size.height + vc.albumLabelContainer.frame.size.height, 0, 0, 0);
+    }
+    
     return vc;
+}
+
+- (void)pageViewController:(UIPageViewController *)pageViewController didFinishAnimating:(BOOL)finished previousViewControllers:(NSArray<UIViewController *> *)previousViewControllers transitionCompleted:(BOOL)completed{
+    [self.sourcesCollectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:[pageViewController.viewControllers.firstObject pageIndex] inSection:0] atScrollPosition:UICollectionViewScrollPositionNone animated:YES];
 }
 
 #pragma mark CollectionView
@@ -255,36 +299,17 @@
     
     UIImageView *imageView = [cell viewWithTag:10];
     UILabel *label = [cell viewWithTag:20];
-    if (indexPath.item == [OLKiteUtils appProviderIndex:self]){
-//        imageView.image = [UIImage imageNamedInKiteBundle:@""];
-        label.text = NSLocalizedString(@"App", @""); //TODO
-    }
-    else if (indexPath.item == [OLKiteUtils cameraRollProviderIndex:self]){
-        imageView.image = [UIImage imageNamedInKiteBundle:@"import_gallery"];
-        label.text = NSLocalizedString(@"Photo Library", @"");
-    }
-    else if (indexPath.item == [OLKiteUtils facebookProviderIndex:self]){
-        imageView.image = [UIImage imageNamedInKiteBundle:@"import_facebook"];
-        label.text = NSLocalizedString(@"Facebook", @"");
-    }
-    else if (indexPath.item == [OLKiteUtils instagramProviderIndex:self]){
-        imageView.image = [UIImage imageNamedInKiteBundle:@"import_instagram"];
-        label.text = NSLocalizedString(@"Instagram", @"");
-    }
-    else if (indexPath.item == [OLKiteUtils qrCodeProviderStartIndex:self]){
-        imageView.image = [UIImage imageNamedInKiteBundle:@"import_qr"];
-        label.text = NSLocalizedString(@"Transfer from your phone", @"");
-    }
-    else{
-        imageView.image = [[OLKiteUtils kiteVcForViewController:self].customImageProviders[indexPath.item - [OLKiteUtils customProvidersStartIndex:self]] icon];
-        label.text = [[OLKiteUtils kiteVcForViewController:self].customImageProviders[indexPath.item - [OLKiteUtils customProvidersStartIndex:self]] name];
-    }
+    imageView.image = self.providers[indexPath.item].icon;
+    label.text = self.providers[indexPath.item].name;
     
     return cell;
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
     NSInteger result = 0;
+    if ([OLKiteUtils appProviderIndex:self] != -1){
+        result++;
+    }
     if ([OLKiteUtils cameraRollEnabled:self]){
         result++;
     }
@@ -311,6 +336,16 @@
     
     CGFloat margin = MAX((size.width - [self collectionView:collectionView numberOfItemsInSection:0] * [self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]].width)/2.0, 5);
     return UIEdgeInsetsMake(0, margin, 0, margin);
+}
+
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
+    NSInteger currentPageIndex = [self.pageController.viewControllers.firstObject pageIndex];
+    if (currentPageIndex == indexPath.item){
+        return;
+    }
+    
+    UIViewController *vc = [self viewControllerAtIndex:indexPath.item];
+    [self.pageController setViewControllers:@[vc] direction:currentPageIndex < indexPath.item ? UIPageViewControllerNavigationDirectionForward : UIPageViewControllerNavigationDirectionReverse animated:YES completion:NULL];
 }
 
 #pragma mark Navigation

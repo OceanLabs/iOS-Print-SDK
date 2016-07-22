@@ -90,7 +90,7 @@ NSInteger OLImagePickerMargin = 0;
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
-    return [self.collections[self.collections.allKeys.firstObject] count];
+    return [self.provider.collections.firstObject count];
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
@@ -99,8 +99,15 @@ NSInteger OLImagePickerMargin = 0;
     [self setAssetWithIndexPath:indexPath toImageView:imageView];
     
     UIImageView *checkmark = [cell viewWithTag:20];
-    id asset = self.collections[self.collections.allKeys.firstObject][indexPath.item];
-    OLAsset *printPhoto = asset;
+    id asset = [self.provider.collections.firstObject objectAtIndex:indexPath.item];
+    OLAsset *printPhoto;
+    if ([asset isKindOfClass:[PHAsset class]]){
+        printPhoto = [OLAsset assetWithPHAsset:asset];
+    }
+    else if ([asset isKindOfClass:[OLAsset class]]){
+        printPhoto = asset;
+    }
+    
     if ([[OLUserSession currentSession].userSelectedPhotos containsObject:printPhoto]){
         checkmark.hidden = NO;
     }
@@ -113,7 +120,7 @@ NSInteger OLImagePickerMargin = 0;
 }
 
 - (void)setAssetWithIndexPath:(NSIndexPath *)indexPath toImageView:(OLRemoteImageView *)imageView{
-    id asset = self.collections[self.collections.allKeys.firstObject][indexPath.item];
+    id asset = [self.provider.collections.firstObject objectAtIndex:indexPath.item];
     
     if ([asset isKindOfClass:[PHAsset class]]){
         PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
@@ -208,10 +215,13 @@ NSInteger OLImagePickerMargin = 0;
 
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
-    id asset = self.collections[self.collections.allKeys.firstObject][indexPath.item];
+    id asset = [self.provider.collections.firstObject objectAtIndex:indexPath.item];
     OLAsset *printPhoto;
     if ([asset isKindOfClass:[PHAsset class]]){
         printPhoto = [OLAsset assetWithPHAsset:asset];
+    }
+    else if ([asset isKindOfClass:[OLAsset class]]){
+        printPhoto = asset;
     }
     if ([[OLUserSession currentSession].userSelectedPhotos containsObject:printPhoto]){
         [[OLUserSession currentSession].userSelectedPhotos removeObject:printPhoto];

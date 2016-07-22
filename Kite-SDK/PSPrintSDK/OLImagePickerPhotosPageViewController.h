@@ -30,11 +30,12 @@
 
 #import <UIKit/UIKit.h>
 #import "OLImagePickerViewController.h"
+#import "OLImagePickerProvider.h"
 
 @interface OLImagePickerPhotosPageViewController : UIViewController
 
 
-@property (strong, nonatomic) NSDictionary<NSString *, id /*PHFetchResult or NSArray of OLAssets or OLAssetDataSources*/> * collections;
+@property (strong, nonatomic) OLImagePickerProvider* provider;
 
 @property (assign, nonatomic) NSInteger quantityPerItem;
 @property (assign, nonatomic) NSInteger minimumPhotos;

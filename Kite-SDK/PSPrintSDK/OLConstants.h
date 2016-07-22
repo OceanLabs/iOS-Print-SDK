@@ -56,6 +56,7 @@
 #import "OLPrintOrderCost.h"
 #import "OLAssetUploadRequest.h"
 #import "OLAnalytics.h"
+#import "OLImagePickerProviderCollection.h"
 
 extern NSString *_Nonnull const kOLKiteSDKErrorDomain;
 extern NSString *_Nonnull const kOLKiteSDKVersion;
