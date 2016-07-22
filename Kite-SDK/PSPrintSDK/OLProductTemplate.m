@@ -165,6 +165,23 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
     }
 }
 
+- (NSDecimalNumber *)originalShippingCostForCountry:(OLCountry *)country{
+    NSString *currencyCode = [self currencyForCurrentLocale];
+    
+    if ([[self.shippingCosts allKeys] containsObject:country.codeAlpha3]){
+        NSString *cost = self.shippingCosts[country.codeAlpha3][currencyCode][@"original_amount"];
+        return cost ? [NSDecimalNumber decimalNumberWithString:cost] : nil;
+    }
+    else if (country.isInEurope){
+        NSString *cost = self.shippingCosts[@"europe"][currencyCode][@"original_amount"];
+        return cost ? [NSDecimalNumber decimalNumberWithString:cost] : nil;
+    }
+    else{
+        NSString *cost = self.shippingCosts[@"rest_of_world"][currencyCode][@"original_amount"];
+        return cost? [NSDecimalNumber decimalNumberWithString:cost] : nil;
+    }
+}
+
 - (NSString *)currencyForCurrentLocale {
     NSString *code = [OLCountry countryForCurrentLocale].currencyCode;
     if ([self.currenciesSupported containsObject:code]) {

@@ -45,6 +45,7 @@
 - (NSUInteger)quantityToFulfillOrder;
 - (NSString *)templateId;
 - (NSString *)unitCost;
+- (NSString *)originalUnitCost;
 - (NSString *)packInfo;
 - (NSString *)dimensions;
 - (NSString *)detailsString;

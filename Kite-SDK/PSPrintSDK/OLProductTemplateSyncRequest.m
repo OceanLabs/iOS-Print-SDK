@@ -345,12 +345,17 @@
                                 }
                                 
                                 NSMutableDictionary *costPerSheetByCurrencyCode = [[NSMutableDictionary alloc] init];
+                                NSMutableDictionary *originalCostPerSheetByCurrencyCode = [[NSMutableDictionary alloc] init];
                                 for (id cost in costs) {
                                     if ([cost isKindOfClass:[NSDictionary class]]) {
                                         id currencyCode = cost[@"currency"];
                                         id amount = cost[@"amount"];
+                                        id originalAmount = cost[@"original_amount"];
                                         if ([currencyCode isKindOfClass:[NSString class]] && [amount isKindOfClass:[NSString class]]) {
                                             costPerSheetByCurrencyCode[currencyCode] = [NSDecimalNumber decimalNumberWithString:amount];
+                                        }
+                                        if ([currencyCode isKindOfClass:[NSString class]] && [originalAmount isKindOfClass:[NSString class]]){
+                                            originalCostPerSheetByCurrencyCode[currencyCode] = [NSDecimalNumber decimalNumberWithString:originalAmount];
                                         }
                                     }
                                 }
@@ -358,6 +363,7 @@
                                 if (costPerSheetByCurrencyCode.count > 0) {
                                     OLProductTemplate *t = [[OLProductTemplate alloc] initWithIdentifier:identifier name:name sheetQuantity:[imagesPerSheet unsignedIntegerValue] sheetCostsByCurrencyCode:costPerSheetByCurrencyCode enabled:enabled];
                                     t.coverPhotosDict = coverPhotos;
+                                    t.originalCostsByCurrencyCode = originalCostPerSheetByCurrencyCode;
                                     t.productPhotographyURLs = productShots;
                                     t.templateUI = [OLProductTemplate templateUIWithIdentifier:uiClass];
                                     t.templateType = productType;

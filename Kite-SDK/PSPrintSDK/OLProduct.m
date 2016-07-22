@@ -239,6 +239,30 @@ typedef enum {
     return code;
 }
 
+- (NSString *)originalUnitCost {
+    NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
+    [formatter setNumberStyle:NSNumberFormatterCurrencyStyle];
+    [formatter setCurrencyCode:[self currencyCode]];
+    NSDecimalNumber *cost = [self originalUnitCostDecimalNumber];
+    if (!cost){
+        return nil;
+    }
+    return [formatter stringFromNumber:cost];
+}
+
+- (NSDecimalNumber*) originalUnitCostDecimalNumber {
+    OLProductTemplate *productTemplate = [OLProductTemplate templateWithId:self.templateId];
+    
+    NSDecimalNumber *sheetCost = productTemplate.originalCostsByCurrencyCode[[self currencyCode]];
+    if (!sheetCost){
+        return nil;
+    }
+    NSUInteger sheetQuanity = productTemplate.quantityPerSheet == 0 ? 1 : productTemplate.quantityPerSheet;
+    NSUInteger numSheets = (NSUInteger) ceil(self.quantityToFulfillOrder / sheetQuanity);
+    NSDecimalNumber *unitCost = [sheetCost decimalNumberByMultiplyingBy:[NSDecimalNumber decimalNumberWithString:[NSString stringWithFormat:@"%lu", (unsigned long)numSheets]]];
+    return unitCost;
+}
+
 - (NSString *)unitCost {
     NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
     [formatter setNumberStyle:NSNumberFormatterCurrencyStyle];
@@ -357,7 +381,13 @@ typedef enum {
     NSDecimalNumber *shippingCost = [self.productTemplate shippingCostForCountry:[OLCountry countryForCurrentLocale]];
     if (shippingCost && [shippingCost doubleValue] != 0){
         if (![OLKiteABTesting sharedInstance].hidePrice){
+            NSDecimalNumber *original = [self.productTemplate originalShippingCostForCountry:[OLCountry countryForCurrentLocale]];
+            if (original){
+                s = [s stringByAppendingString: [NSString stringWithFormat:NSLocalizedString(@"**Shipping**\n~%@~ %@\n\n", @""), [original formatCostForCurrencyCode:[self.productTemplate currencyForCurrentLocale]], [shippingCost formatCostForCurrencyCode:[self.productTemplate currencyForCurrentLocale]]]];
+            }
+            else{
             s = [s stringByAppendingString: [NSString stringWithFormat:NSLocalizedString(@"**Shipping**\n%@\n\n", @""), [shippingCost formatCostForCurrencyCode:[self.productTemplate currencyForCurrentLocale]]]];
+            }
         }
     }
     else if (!shippingCost){ // ¯\_(ツ)_/¯ don't assume 0, don't add any shipping info

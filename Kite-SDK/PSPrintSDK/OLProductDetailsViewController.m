@@ -33,6 +33,12 @@
 #import "OLAnalytics.h"
 #import "OLKiteABTesting.h"
 
+@interface TSMarkdownParser ()
+
+- (void)addParsingRuleWithRegularExpression:(NSRegularExpression *)regularExpression block:(TSMarkdownParserMatchBlock)block;
+
+@end
+
 @interface OLProductDetailsViewController ()
 
 @property (weak, nonatomic) IBOutlet UIView *moreOptionsView;
@@ -66,12 +72,20 @@
     
     NSMutableAttributedString *attributedString = [[[TSMarkdownParser standardParser] attributedStringFromMarkdown:[self.product detailsString]] mutableCopy];
     
+    NSRange strikeThroughRange = [[attributedString string] rangeOfString:@"\\~.*\\~" options:NSRegularExpressionSearch];
+    if (strikeThroughRange.location != NSNotFound){
+        [attributedString addAttributes:@{NSStrikethroughStyleAttributeName : [NSNumber numberWithInteger:NSUnderlineStyleSingle]} range:strikeThroughRange];
+        [attributedString deleteCharactersInRange:NSMakeRange(strikeThroughRange.location, 1)];
+        [attributedString deleteCharactersInRange:NSMakeRange(strikeThroughRange.location + strikeThroughRange.length-2, 1)];
+    }
+    
 //    if ([OLKiteABTesting sharedInstance].darkTheme){
 //        [attributedString addAttribute:NSForegroundColorAttributeName value:[UIColor whiteColor] range:NSMakeRange(0, attributedString.length)];
 //    }
 //    else{
         [attributedString addAttribute:NSForegroundColorAttributeName value:self.detailsTextLabel.tintColor range:NSMakeRange(0, attributedString.length)];
 //    }
+    
     self.detailsTextLabel.attributedText = attributedString;
     
     if (self.product.productTemplate.options.count == 0){
