@@ -69,10 +69,15 @@
 #else
 #import "Stripe+ApplePay.h"
 #endif
+#endif
 
 #ifdef OL_KITE_OFFER_FACEBOOK
-#import <FBSDKCoreKit/FBSDKAccessToken.h>
+#ifdef COCOAPODS
 #import <FBSDKLoginKit/FBSDKLoginManager.h>
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
+#else
+#import "FBSDKLoginManager.h"
+#import "FBSDKCoreKit.h"
 #endif
 
 #endif

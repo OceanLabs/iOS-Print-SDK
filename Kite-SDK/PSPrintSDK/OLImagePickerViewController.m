@@ -40,8 +40,6 @@
 #import "OLPrintOrder.h"
 #import "OLUserSession.h"
 #import "OLAsset+Private.h"
-#import <KITAssetCollectionDataSource.h>
-#import <KITAssetDataSource.h>
 #import "OLImagePickerProviderCollection.h"
 #import "OLImagePickerProvider.h"
 
@@ -189,10 +187,10 @@
     }
     for (OLImagePickerProvider *customProvider in [OLKiteUtils kiteVcForViewController:self].customImageProviders){
         NSMutableArray *collections = [[NSMutableArray alloc] init];
-        for (id<KITAssetCollectionDataSource> collection in customProvider.collections){
+        for (OLImagePickerProviderCollection *collection in customProvider.collections){
             NSMutableArray *assets = [[NSMutableArray alloc] init];
-            for (id <KITAssetDataSource> asset in collection){
-                [assets addObject:[OLAsset assetWithDataSource:(id<OLAssetDataSource>)asset]];
+            for (OLAsset *asset in collection){
+                [assets addObject:asset];
             }
             
             [collections addObject:[[OLImagePickerProviderCollection alloc] initWithArray:assets name:NSLocalizedString(@"All Photos", @"")]];
@@ -223,6 +221,15 @@
     }completion:^(id<UIViewControllerTransitionCoordinator> context){
         
     }];
+}
+
+- (BOOL)scrollViewShouldScrollToTop:(UIScrollView *)scrollView{
+    OLImagePickerPhotosPageViewController *vc = self.pageController.viewControllers.firstObject;
+    if ([vc isKindOfClass:[OLImagePickerPhotosPageViewController class]]){
+        [[vc collectionView] scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0] atScrollPosition:UICollectionViewScrollPositionTop animated:YES];
+    }
+    
+    return YES;
 }
 
 #pragma mark Asset Management

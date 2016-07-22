@@ -35,7 +35,6 @@
 #import "OLAnalytics.h"
 #import "OLProductTypeSelectionViewController.h"
 #import "OLSingleImageProductReviewViewController.h"
-#import "OLPhotoSelectionViewController.h"
 #import "OLFrameOrderReviewViewController.h"
 #import "OLPostcardViewController.h"
 #import "NSObject+Utils.h"

@@ -67,7 +67,6 @@
 #import "OLKiteUtils.h"
 #import "OLKiteViewController.h"
 #import "OLOrderReviewViewController.h"
-#import "OLPhotoSelectionViewController.h"
 #import "OLPhotobookViewController.h"
 #import "NSObject+Utils.h"
 #import "OLProductOverviewViewController.h"
@@ -82,6 +81,7 @@
 #import "OLPaymentMethodsViewController.h"
 #import "OLPayPalCard+OLCardIcon.h"
 #import "OLStripeCard+OLCardIcon.h"
+#import "OLImagePickerViewController.h"
 
 #ifdef OL_KITE_OFFER_PAYPAL
 #ifdef COCOAPODS
@@ -1881,9 +1881,8 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     }
     
     if ([OLKiteUtils imageProvidersAvailable:self] && product.productTemplate.templateUI != kOLTemplateUICase && product.productTemplate.templateUI != kOLTemplateUIPhotobook && product.productTemplate.templateUI != kOLTemplateUIPostcard && !(product.productTemplate.templateUI == kOLTemplateUIPoster && product.productTemplate.gridCountX == 1 && product.productTemplate.gridCountY == 1)){
-        OLPhotoSelectionViewController *photoVc = [self.storyboard instantiateViewControllerWithIdentifier:@"PhotoSelectionViewController"];
+        OLImagePickerViewController *photoVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLImagePickerViewController"];
         photoVc.product = product;
-        photoVc.userSelectedPhotos = userSelectedPhotos;
         return [self navViewControllerWithControllers:@[photoVc]];
     }
     else{

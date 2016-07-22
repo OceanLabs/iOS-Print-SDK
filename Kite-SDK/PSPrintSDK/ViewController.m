@@ -40,16 +40,10 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
 #import "ViewController.h"
 #import "OLKitePrintSDK.h"
 #import "OLImageCachingManager.h"
-#import "CatsAssetCollectionDataSource.h"
-#import "DogsAssetCollectionDataSource.h"
-
-#import <CTAssetsPickerController/CTAssetsPickerController.h>
 
 @import Photos;
 
-@interface ViewController () <
-CTAssetsPickerControllerDelegate,
-UINavigationControllerDelegate, OLKiteDelegate>
+@interface ViewController () <UINavigationControllerDelegate, OLKiteDelegate>
 @property (weak, nonatomic) IBOutlet UIButton *localPhotosButton;
 @property (weak, nonatomic) IBOutlet UIButton *remotePhotosButton;
 @property (nonatomic, weak) IBOutlet UISegmentedControl *environmentPicker;
@@ -89,34 +83,16 @@ UINavigationControllerDelegate, OLKiteDelegate>
 
 - (IBAction)onButtonPrintLocalPhotos:(id)sender {
     if (![self isAPIKeySet]) return;
-    __block UIViewController *picker;
-    __block Class assetClass;
     
     if ([PHPhotoLibrary authorizationStatus] == PHAuthorizationStatusNotDetermined){
         [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status){
             if (status == PHAuthorizationStatusAuthorized){
-                picker = [[CTAssetsPickerController alloc] init];
-                ((CTAssetsPickerController *)picker).showsEmptyAlbums = NO;
-                PHFetchOptions *options = [[PHFetchOptions alloc] init];
-                options.predicate = [NSPredicate predicateWithFormat:@"mediaType == %d", PHAssetMediaTypeImage];
-                ((CTAssetsPickerController *)picker).assetsFetchOptions = options;
-                assetClass = [PHAsset class];
-                ((CTAssetsPickerController *)picker).delegate = self;
-                [self presentViewController:picker animated:YES completion:nil];
+                //TODO system image picker
             }
         }];
     }
     else{
-        picker = [[CTAssetsPickerController alloc] init];
-        ((CTAssetsPickerController *)picker).showsEmptyAlbums = NO;
-        PHFetchOptions *options = [[PHFetchOptions alloc] init];
-        options.predicate = [NSPredicate predicateWithFormat:@"mediaType == %d", PHAssetMediaTypeImage];
-        ((CTAssetsPickerController *)picker).assetsFetchOptions = options;
-        assetClass = [PHAsset class];
-        ((CTAssetsPickerController *)picker).delegate = self;
-    }
-    if (picker){
-        [self presentViewController:picker animated:YES completion:nil];
+        //TODO system image picker
     }
 }
 
@@ -179,8 +155,9 @@ UINavigationControllerDelegate, OLKiteDelegate>
     vc.userEmail = @"";
     vc.userPhone = @"";
     vc.delegate = self;
-    [vc addCustomPhotoProviderWithCollections:@[[[CatsAssetCollectionDataSource alloc] init]] name:@"Cats" icon:[UIImage imageNamed:@"cat"]];
-    [vc addCustomPhotoProviderWithCollections:@[[[DogsAssetCollectionDataSource alloc] init]] name:@"Dogs" icon:[UIImage imageNamed:@"dog"]];
+    
+    [self addCatsAndDogsImagePickersToKite:vc];
+    
     [self presentViewController:vc animated:YES completion:NULL];
     
     //Register for push notifications
@@ -201,48 +178,6 @@ UINavigationControllerDelegate, OLKiteDelegate>
         [self printWithAssets:assets];
     }]];
     [self presentViewController:ac animated:YES completion:NULL];
-}
-
-#pragma mark - UIImagePickerControllerDelegate methods
-
-- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
-    [self dismissViewControllerAnimated:YES completion:^(void) {
-        UIImage *chosenImage = info[UIImagePickerControllerOriginalImage];
-        [self printWithAssets:@[[OLAsset assetWithImageAsJPEG:chosenImage]]];
-    }];
-}
-
-- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker {
-    [self dismissViewControllerAnimated:YES completion:nil];
-}
-
-#pragma mark - CTAssetsPickerControllerDelegate Methods
-- (void)assetsPickerController:(id)picker didFinishPickingAssets:(NSArray *)assets {
-    [picker dismissViewControllerAnimated:YES completion:^(void){
-        NSMutableArray *assetObjects = [[NSMutableArray alloc] initWithCapacity:assets.count];
-        for (id asset in assets){
-            if ([asset isKindOfClass:[PHAsset class]]){
-                [assetObjects addObject:[OLAsset assetWithPHAsset:asset]];
-            }
-            else{
-                NSLog(@"Oops, don’t recognize class %@, starting with no assets", [asset class]);
-            }
-        }
-        [self printWithAssets:assetObjects];
-    }];
-    
-}
-
-- (void)assetsPickerController:(CTAssetsPickerController *)picker didDeSelectAsset:(PHAsset *)asset{
-    PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
-    options.networkAccessAllowed = YES;
-    [[OLImageCachingManager sharedInstance].photosCachingManager stopCachingImagesForAssets:@[asset] targetSize:PHImageManagerMaximumSize contentMode:PHImageContentModeAspectFill options:options];
-}
-
-- (void)assetsPickerController:(CTAssetsPickerController *)picker didSelectAsset:(PHAsset *)asset{
-    PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
-    options.networkAccessAllowed = YES;
-    [[OLImageCachingManager sharedInstance].photosCachingManager startCachingImagesForAssets:@[asset] targetSize:PHImageManagerMaximumSize contentMode:PHImageContentModeAspectFill options:options];
 }
 
 #pragma mark - OLKiteDelete
@@ -299,8 +234,9 @@ UINavigationControllerDelegate, OLKiteDelegate>
             vc.userEmail = @"";
             vc.userPhone = @"";
             vc.delegate = self;
-            [vc addCustomPhotoProviderWithCollections:@[[[CatsAssetCollectionDataSource alloc] init]] name:@"Cats" icon:[UIImage imageNamed:@"cat"]];
-            [vc addCustomPhotoProviderWithCollections:@[[[DogsAssetCollectionDataSource alloc] init]] name:@"Dogs" icon:[UIImage imageNamed:@"dog"]];
+            
+            [self addCatsAndDogsImagePickersToKite:vc];
+            
             [self presentViewController:vc animated:YES completion:NULL];
         }]];
         [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Yes", @"") style:UIAlertActionStyleDefault handler:^(id action){
@@ -330,8 +266,9 @@ UINavigationControllerDelegate, OLKiteDelegate>
             vc.userEmail = @"";
             vc.userPhone = @"";
             vc.delegate = self;
-            [vc addCustomPhotoProviderWithCollections:@[[[CatsAssetCollectionDataSource alloc] init]] name:@"Cats" icon:[UIImage imageNamed:@"cat"]];
-            [vc addCustomPhotoProviderWithCollections:@[[[DogsAssetCollectionDataSource alloc] init]] name:@"Dogs" icon:[UIImage imageNamed:@"dog"]];
+            
+            [self addCatsAndDogsImagePickersToKite:vc];
+            
             [self presentViewController:vc animated:YES completion:NULL];
         }]];
         [self presentViewController:ac animated:YES completion:NULL];
@@ -350,10 +287,18 @@ UINavigationControllerDelegate, OLKiteDelegate>
         vc.userEmail = @"";
         vc.userPhone = @"";
         vc.delegate = self;
-        [vc addCustomPhotoProviderWithCollections:@[[[CatsAssetCollectionDataSource alloc] init]] name:@"Cats" icon:[UIImage imageNamed:@"cat"]];
-        [vc addCustomPhotoProviderWithCollections:@[[[DogsAssetCollectionDataSource alloc] init]] name:@"Dogs" icon:[UIImage imageNamed:@"dog"]];
+       
+        [self addCatsAndDogsImagePickersToKite:vc];
+        
         [self presentViewController:vc animated:YES completion:NULL];
     }
+}
+
+- (void)addCatsAndDogsImagePickersToKite:(OLKiteViewController *)kvc{
+    OLImagePickerProviderCollection *dogsCollection = [[OLImagePickerProviderCollection alloc] initWithArray:@[[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/5.jpg"], [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/6.jpg"]]] name:@"All Dogs"];
+    OLImagePickerProviderCollection *catsCollection = [[OLImagePickerProviderCollection alloc] initWithArray:@[[OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/1.jpg"]], [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/2.jpg"]], [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/3.jpg"]], [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/4.jpg"]]] name:@"All Cats"];
+    [kvc addCustomPhotoProviderWithCollections:@[catsCollection] name:@"Cats" icon:[UIImage imageNamed:@"cat"]];
+    [kvc addCustomPhotoProviderWithCollections:@[dogsCollection] name:@"Dogs" icon:[UIImage imageNamed:@"dog"]];
 }
 
 @end

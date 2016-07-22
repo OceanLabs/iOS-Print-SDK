@@ -38,14 +38,8 @@
 #import "UIImage+OLUtils.h"
 #import "RMImageCropper.h"
 #import "OLImageDownloader.h"
-
-#ifdef OL_KITE_OFFER_INSTAGRAM
-#import <InstagramImagePicker/OLInstagramImage.h>
-#endif
-
-#ifdef OL_KITE_OFFER_FACEBOOK
-#import <FacebookImagePicker/OLFacebookImage.h>
-#endif
+//#import "OLInstagramImage.h"
+//#import "OLFacebookImage.h"
 
 static NSString *const kKeyMimeType = @"co.oceanlabs.pssdk.kKeyMimeType";
 static NSString *const kKeyImageData = @"co.oceanlabs.pssdk.kKeyImageData";
@@ -68,8 +62,8 @@ static NSOperationQueue *imageOperationQueue;
 @property (nonatomic, strong) NSString *imageFilePath;
 @property (nonatomic, strong) NSData *imageData;
 @property (strong, nonatomic) PHAsset *phAsset;
-@property (strong, nonatomic) OLFacebookImage *facebookImage;
-@property (strong, nonatomic) OLInstagramImage *instagramImage;
+//@property (strong, nonatomic) OLFacebookImage *facebookImage;
+//@property (strong, nonatomic) OLInstagramImage *instagramImage;
 @property (nonatomic, strong) id<OLAssetDataSource> dataSource;
 @property (nonatomic, strong) NSURL *imageURL;
 @property (assign, nonatomic) BOOL corrupt;
@@ -97,15 +91,15 @@ static NSOperationQueue *imageOperationQueue;
 }
 
 - (NSURL *)imageURL{
-    if (self.instagramImage){
-        return [self.instagramImage fullURL];
-    }
-    else if (self.facebookImage){
-        return [self.facebookImage fullURL];
-    }
-    else{
+//    if (self.instagramImage){
+//        return [self.instagramImage fullURL];
+//    }
+//    else if (self.facebookImage){
+//        return [self.facebookImage fullURL];
+//    }
+//    else{
         return _imageURL;
-    }
+//    }
 }
 
 - (instancetype)initWithImageData:(NSData *)data mimeType:(NSString *)mimeType {
@@ -171,12 +165,12 @@ static NSOperationQueue *imageOperationQueue;
     if (self.imageData) {
         return kOLAssetTypeImageData;
     }
-    else if (self.instagramImage){
-        return kOLAssetTypeInstagramPhoto;
-    }
-    else if (self.facebookImage){
-        return kOLAssetTypeFacebookPhoto;
-    }
+//    else if (self.instagramImage){
+//        return kOLAssetTypeInstagramPhoto;
+//    }
+//    else if (self.facebookImage){
+//        return kOLAssetTypeFacebookPhoto;
+//    }
     else if (self.imageURL) {
         return kOLAssetTypeRemoteImageURL;
     }
