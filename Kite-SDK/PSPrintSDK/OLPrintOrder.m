@@ -78,6 +78,8 @@ static id stringOrEmptyString(NSString *str) {
 
 @interface OLKitePrintSDK (Private)
 +(BOOL)isUnitTesting;
++ (NSString *)paypalAccountId;
++ (NSString *)stripeAccountId;
 @end
 
 @interface OLPrintOrder () <OLAssetUploadRequestDelegate, OLPrintOrderRequestDelegate>
@@ -514,6 +516,13 @@ static NSBlockOperation *templateSyncOperation;
     
     if (self.proofOfPayment) {
         [json setObject:self.proofOfPayment forKey:@"proof_of_payment"];
+        
+        if ([self.proofOfPayment hasPrefix:@"AP-"] || [self.proofOfPayment hasPrefix:@"PAY-"] || [self.proofOfPayment hasPrefix:@"PAUTH-"]){
+            json[@"account_id"] = stringOrEmptyString([OLKitePrintSDK paypalAccountId]);
+        }
+        else if ([self.proofOfPayment hasPrefix:@"tok_"]){
+            json[@"account_id"] = stringOrEmptyString([OLKitePrintSDK stripeAccountId]);
+        }
     }
     
     if (self.currencyCode && (self.cachedCost || self.finalCost)) {

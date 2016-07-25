@@ -86,8 +86,6 @@ static NSString *const kJudoLiveToken     = @"JjOZ49Z9XCYy2FAc";
 static NSString *const kJudoLiveSecret  = @"b8d5950ec68e27e7dfdb314dbd7160e7421c3bddd4d883d9aef5e94788def934";
 
 static NSString *apiKey = nil;
-static NSString *const kOLStripePublishableKeyTest = @"pk_test_FxzXniUJWigFysP0bowWbuy3";
-static NSString *const kOLStripePublishableKeyLive = @"pk_live_o1egYds0rWu43ln7FjEyOU5E";
 static NSString *applePayMerchantID = nil;
 static NSString *applePayPayToString = nil;
 static OLKitePrintSDKEnvironment environment;
@@ -96,10 +94,6 @@ static NSString *const kOLAPIEndpointLive = @"https://api.kite.ly";
 static NSString *const kOLAPIEndpointSandbox = @"https://api.kite.ly";
 static NSString *const kOLStagingEndpointLive = @"https://staging.kite.ly";
 static NSString *const kOLStagingEndpointSandbox = @"https://staging.kite.ly";
-static NSString *const kOLPayPalClientIdLive = @"ASYVBBCHF_KwVUstugKy4qvpQaPlUeE_5beKRJHpIP2d3SA_jZrsaUDTmLQY";
-static NSString *const kOLPayPalClientIdSandbox = @"AcEcBRDxqcCKiikjm05FyD4Sfi4pkNP98AYN67sr3_yZdBe23xEk0qhdhZLM";
-static NSString *const kOLPayPalRecipientEmailLive = @"hello@kite.ly";
-static NSString *const kOLPayPalRecipientEmailSandbox = @"sandbox-merchant@kite.ly";
 static NSString *const kOLAPIEndpointVersion = @"v3.0";
 
 #ifdef OL_OFFER_JUDOPAY
@@ -111,6 +105,11 @@ static BOOL useStaging = NO;
 static BOOL isUnitTesting = NO;
 static BOOL QRCodeUploadEnabled = NO;
 static BOOL isKiosk = NO;
+
+static NSString *paypalAccountId = nil;
+static NSString *paypalPublicKey = nil;
+static NSString *stripeAccountId = nil;
+static NSString *stripePublicKey = nil;
 
 static NSString *instagramClientID = nil;
 static NSString *instagramSecret = nil;
@@ -226,10 +225,7 @@ static NSString* creativeSDKClientSecret = nil;
 #endif
 
 + (NSString *_Nonnull)paypalClientId {
-    switch (environment) {
-        case kOLKitePrintSDKEnvironmentLive: return kOLPayPalClientIdLive;
-        case kOLKitePrintSDKEnvironmentSandbox: return kOLPayPalClientIdSandbox;
-    }
+    return paypalPublicKey;
 }
 
 + (void)setApplePayMerchantID:(NSString *_Nonnull)mID{
@@ -266,10 +262,7 @@ static NSString* creativeSDKClientSecret = nil;
 }
 
 + (NSString *_Nonnull)stripePublishableKey {
-    switch (environment) {
-        case kOLKitePrintSDKEnvironmentLive: return kOLStripePublishableKeyLive;
-        case kOLKitePrintSDKEnvironmentSandbox: return kOLStripePublishableKeyTest;
-    }
+    return stripePublicKey;
 }
 
 + (NSString *)qualityGuaranteeString{
@@ -386,6 +379,30 @@ static NSString* creativeSDKClientSecret = nil;
 #else
     return nil;
 #endif
+}
+
++ (void)setPayPalAccountId:(NSString *)accountId{
+    paypalAccountId = accountId;
+}
+
++ (void)setPayPalPublicKey:(NSString *)publicKey{
+    paypalPublicKey = publicKey;
+}
+
++ (void)setStripeAccountId:(NSString *)accountId{
+    stripeAccountId = accountId;
+}
+
++ (void)setStripePublicKey:(NSString *)publicKey{
+    stripePublicKey = publicKey;
+}
+
++ (NSString *)paypalAccountId{
+    return paypalAccountId;
+}
+
++ (NSString *)stripeAccountId{
+    return stripeAccountId;
 }
 
 @end
