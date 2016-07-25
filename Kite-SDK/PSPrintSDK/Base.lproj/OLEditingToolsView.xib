@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10117" systemVersion="15G31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
@@ -35,11 +35,6 @@
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <state key="normal" image="tools-icon"/>
                 </button>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oSN-9f-hdK" customClass="OLSelectedEffectButton">
-                    <rect key="frame" x="375" y="0.0" width="124" height="100"/>
-                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                    <state key="normal" image="shirt-size-icon"/>
-                </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eId-4o-ISN">
                     <rect key="frame" x="499.5" y="0.0" width="100" height="100"/>
                     <constraints>
@@ -50,6 +45,11 @@
                         <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
                     <state key="disabled" backgroundImage="grey-bg"/>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oSN-9f-hdK" customClass="OLSelectedEffectButton">
+                    <rect key="frame" x="375" y="0.0" width="124" height="100"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <state key="normal" image="shirt-size-icon"/>
                 </button>
             </subviews>
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -67,7 +67,7 @@
                 <constraint firstAttribute="bottom" secondItem="Bcn-yP-Ryo" secondAttribute="bottom" id="IvR-iQ-Brg"/>
                 <constraint firstItem="bK4-Bw-NGr" firstAttribute="width" secondItem="Bcn-yP-Ryo" secondAttribute="width" id="Kb6-8W-G2T"/>
                 <constraint firstItem="Bcn-yP-Ryo" firstAttribute="leading" secondItem="bK4-Bw-NGr" secondAttribute="trailing" constant="1" id="Mn8-f0-v3b"/>
-                <constraint firstItem="oSN-9f-hdK" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" priority="997" id="PXj-mf-SXb"/>
+                <constraint firstItem="oSN-9f-hdK" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" priority="997" constant="988" id="PXj-mf-SXb"/>
                 <constraint firstItem="oSN-9f-hdK" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="QvG-0f-BiL"/>
                 <constraint firstItem="Bcn-yP-Ryo" firstAttribute="width" secondItem="eId-4o-ISN" secondAttribute="width" multiplier="0.5" priority="995" id="Ru1-G6-shE"/>
                 <constraint firstItem="Bcn-yP-Ryo" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="SU6-fF-ikC"/>
@@ -82,10 +82,11 @@
                 <constraint firstItem="w7a-UU-KXS" firstAttribute="width" secondItem="eId-4o-ISN" secondAttribute="width" multiplier="0.5" priority="995" id="knQ-97-2fT"/>
                 <constraint firstItem="bK4-Bw-NGr" firstAttribute="width" secondItem="oSN-9f-hdK" secondAttribute="width" id="lAG-cq-Wka"/>
                 <constraint firstItem="oSN-9f-hdK" firstAttribute="leading" secondItem="w7a-UU-KXS" secondAttribute="trailing" priority="998" constant="1" id="llv-h0-zhf"/>
-                <constraint firstItem="bK4-Bw-NGr" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" priority="999" id="m15-YT-6NU"/>
-                <constraint firstItem="Bcn-yP-Ryo" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" priority="998" id="mOU-w1-bSC"/>
+                <constraint firstItem="bK4-Bw-NGr" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" priority="990" id="m15-YT-6NU"/>
+                <constraint firstItem="Bcn-yP-Ryo" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" priority="998" constant="989" id="mOU-w1-bSC"/>
                 <constraint firstAttribute="bottom" secondItem="eId-4o-ISN" secondAttribute="bottom" id="nFs-EG-F5d"/>
                 <constraint firstItem="Bcn-yP-Ryo" firstAttribute="width" secondItem="oSN-9f-hdK" secondAttribute="width" id="oIt-L8-dJl"/>
+                <constraint firstItem="oSN-9f-hdK" firstAttribute="width" secondItem="w7a-UU-KXS" secondAttribute="width" id="oYx-hK-mwK"/>
                 <constraint firstAttribute="bottom" secondItem="oSN-9f-hdK" secondAttribute="bottom" id="pe6-2x-DLe"/>
                 <constraint firstItem="w7a-UU-KXS" firstAttribute="width" secondItem="bK4-Bw-NGr" secondAttribute="width" id="xm1-Br-fzK"/>
             </constraints>

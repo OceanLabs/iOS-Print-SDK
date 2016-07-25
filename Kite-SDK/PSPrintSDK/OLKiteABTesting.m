@@ -303,7 +303,12 @@ static dispatch_once_t srand48OnceToken;
         experimentDict = @{@"None" : @1, @"A" : @0, @"B" : @0, @"C" : @0};
     }
     [OLKiteABTesting splitTestWithName:kOLKiteABTestQualityBannerType
-                            conditions:experimentDict
+                            conditions:@{
+                                         @"None" : safeObject(experimentDict[@"None"]),
+                                         @"A" : safeObject(experimentDict[@"A"]),
+                                         @"B" : safeObject(experimentDict[@"B"]),
+                                         @"C" : safeObject(experimentDict[@"C"])
+                                         }
                                  block:^(id choice) {
                                      self.qualityBannerType= choice;
                                  }];
