@@ -269,6 +269,7 @@ const NSInteger kOLEditDrawerTagFonts = 30;
     
     [self.editingTools.ctaButton addTarget:self action:@selector(onBarButtonDoneTapped:) forControlEvents:UIControlEventTouchUpInside];
     [self.editingTools.button4 removeFromSuperview];
+    [self.editingTools.button3 removeFromSuperview]; //TODO: Remove, temp for master
     [self.editingTools.button1 setImage:[UIImage imageNamedInKiteBundle:@"flip"] forState:UIControlStateNormal];
     [self.editingTools.button3 setImage:[UIImage imageNamedInKiteBundle:@"Tt"] forState:UIControlStateNormal];
     [self.editingTools.button2 setImage:[UIImage imageNamedInKiteBundle:@"rotate"] forState:UIControlStateNormal];
