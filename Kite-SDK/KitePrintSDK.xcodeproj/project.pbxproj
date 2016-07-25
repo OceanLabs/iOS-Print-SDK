@@ -33,6 +33,7 @@
 		2E0FF2E61D2A9003007093C0 /* OLButtonCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0FF2E21D2A9003007093C0 /* OLButtonCollectionViewCell.m */; };
 		2E14D2D11C2AE9AD00F35403 /* OLImagePreviewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E14D2D01C2AE9AD00F35403 /* OLImagePreviewViewController.m */; };
 		2E14D2D21C2AE9AD00F35403 /* OLImagePreviewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E14D2D01C2AE9AD00F35403 /* OLImagePreviewViewController.m */; };
+		2E25C7071D460A8C00B5BD8C /* libPayPalMobile.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E24452ED1BFD20D80086BF03 /* libPayPalMobile.a */; };
 		2E25FEFB1CF2EF5D006E52E5 /* OLKeyChainStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E25FEFA1CF2EF5D006E52E5 /* OLKeyChainStore.m */; };
 		2E25FEFC1CF2EF5D006E52E5 /* OLKeyChainStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E25FEFA1CF2EF5D006E52E5 /* OLKeyChainStore.m */; };
 		2E25FEFD1CF2EF5D006E52E5 /* OLKeyChainStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E25FEFA1CF2EF5D006E52E5 /* OLKeyChainStore.m */; };
@@ -119,7 +120,6 @@
 		2E84835F1D13E461003F4056 /* OLTShirtReviewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E84835D1D13E461003F4056 /* OLTShirtReviewViewController.m */; };
 		2E8483601D13E461003F4056 /* OLTShirtReviewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E84835D1D13E461003F4056 /* OLTShirtReviewViewController.m */; };
 		2E8483611D13E461003F4056 /* OLTShirtReviewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E84835D1D13E461003F4056 /* OLTShirtReviewViewController.m */; };
-		2E8703031C905248002BE2DA /* libios-qr-encoder.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E8702F21C9051FC002BE2DA /* libios-qr-encoder.a */; };
 		2E898C4F1CC518180041CCD8 /* UIViewController+OLMethods.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E53E0CC1C1AEAAD00BF7887 /* UIViewController+OLMethods.m */; };
 		2E898C501CC518180041CCD8 /* OLURLDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = CDE0744A188D7730009ADFA2 /* OLURLDataSource.m */; };
 		2E898C511CC518180041CCD8 /* OLScrollCropViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0A72651A6FB07000BC5AE7 /* OLScrollCropViewController.m */; };
@@ -394,7 +394,6 @@
 		2EA3D3D21C9C04B500B99BCD /* libDACircularProgress.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E22058BC1BF3F9BF009CFAF6 /* libDACircularProgress.a */; };
 		2EA3D3D31C9C04B500B99BCD /* libTSMarkdownParser.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E22058AD1BF3F946009CFAF6 /* libTSMarkdownParser.a */; };
 		2EA3D3D41C9C04B500B99BCD /* libSVProgressHUD.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E220589C1BF3F8C4009CFAF6 /* libSVProgressHUD.a */; };
-		2EA3D3D71C9C04B500B99BCD /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		2EA3D3D91C9C04B500B99BCD /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD73BF6B186215790009DE03 /* Foundation.framework */; };
 		2EA3D3DA1C9C04B500B99BCD /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD73BF6F186215790009DE03 /* UIKit.framework */; };
 		2EA3D3DB1C9C04B500B99BCD /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD73BF6D186215790009DE03 /* CoreGraphics.framework */; };
@@ -621,8 +620,6 @@
 		E22963931C43DDFC002A90CA /* CTAssetThumbnailView.m in Sources */ = {isa = PBXBuildFile; fileRef = E229631F1C43DC90002A90CA /* CTAssetThumbnailView.m */; };
 		E22963941C43DE24002A90CA /* libCTAssetsPicker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E22963671C43DD21002A90CA /* libCTAssetsPicker.a */; };
 		E244530E1BFD2C230086BF03 /* libPayPalMobile.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E24452ED1BFD20D80086BF03 /* libPayPalMobile.a */; };
-		E24453231BFD2DC40086BF03 /* OLPayPalDummy.m in Sources */ = {isa = PBXBuildFile; fileRef = E24453211BFD2D810086BF03 /* OLPayPalDummy.m */; };
-		E244533A1BFD355B0086BF03 /* libPayPal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E24453051BFD2C1D0086BF03 /* libPayPal.a */; };
 		E29C858B1BE3B5C50041D4CF /* OLURLDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = CDE0744A188D7730009ADFA2 /* OLURLDataSource.m */; };
 		E29C858E1BE3B5C50041D4CF /* OLScrollCropViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0A72651A6FB07000BC5AE7 /* OLScrollCropViewController.m */; };
 		E29C858F1BE3B5C50041D4CF /* OLPrintOrderCostRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E8C29EC1B18D1AC0045DC21 /* OLPrintOrderCostRequest.m */; };
@@ -952,7 +949,6 @@
 		2E8702E21C9050CA002BE2DA /* rscode.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = rscode.c; path = "vendor/ios-qr-encoder/QRCode/QR/libqrencode/rscode.c"; sourceTree = SOURCE_ROOT; };
 		2E8702E31C9050CA002BE2DA /* split.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = split.c; path = "vendor/ios-qr-encoder/QRCode/QR/libqrencode/split.c"; sourceTree = SOURCE_ROOT; };
 		2E8702E41C9050CA002BE2DA /* UIImage+MDQRCode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIImage+MDQRCode.m"; path = "vendor/ios-qr-encoder/QRCode/QR/UIImage+MDQRCode.m"; sourceTree = SOURCE_ROOT; };
-		2E8702F21C9051FC002BE2DA /* libios-qr-encoder.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libios-qr-encoder.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2E8703041C9052A0002BE2DA /* UIImage+MDQRCode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIImage+MDQRCode.h"; path = "vendor/ios-qr-encoder/QRCode/QR/UIImage+MDQRCode.h"; sourceTree = SOURCE_ROOT; };
 		2E8703061C905368002BE2DA /* bitstream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = bitstream.h; path = "vendor/ios-qr-encoder/QRCode/QR/libqrencode/bitstream.h"; sourceTree = SOURCE_ROOT; };
 		2E8703071C905368002BE2DA /* mask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mask.h; path = "vendor/ios-qr-encoder/QRCode/QR/libqrencode/mask.h"; sourceTree = SOURCE_ROOT; };
@@ -1414,7 +1410,6 @@
 				2EA3D3D21C9C04B500B99BCD /* libDACircularProgress.a in Frameworks */,
 				2EA3D3D31C9C04B500B99BCD /* libTSMarkdownParser.a in Frameworks */,
 				2EA3D3D41C9C04B500B99BCD /* libSVProgressHUD.a in Frameworks */,
-				2EA3D3D71C9C04B500B99BCD /* (null) in Frameworks */,
 				2EA3D3D91C9C04B500B99BCD /* Foundation.framework in Frameworks */,
 				2EA3D3DA1C9C04B500B99BCD /* UIKit.framework in Frameworks */,
 				2EA3D3DB1C9C04B500B99BCD /* CoreGraphics.framework in Frameworks */,
@@ -1512,9 +1507,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2E8703031C905248002BE2DA /* libios-qr-encoder.a in Frameworks */,
+				2E25C7071D460A8C00B5BD8C /* libPayPalMobile.a in Frameworks */,
 				E22963941C43DE24002A90CA /* libCTAssetsPicker.a in Frameworks */,
-				E244533A1BFD355B0086BF03 /* libPayPal.a in Frameworks */,
 				E22058E91BF3FAFE009CFAF6 /* libCSSStickyHeaderFlowLayout.a in Frameworks */,
 				E22058D91BF3FA8C009CFAF6 /* libMPFlipViewController.a in Frameworks */,
 				E22058C71BF3F9F7009CFAF6 /* libDACircularProgress.a in Frameworks */,
@@ -3534,7 +3528,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E24453231BFD2DC40086BF03 /* OLPayPalDummy.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3993,7 +3986,7 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_PREFIX_HEADER = "KiteSDK/KiteSDK-Prefix.pch";
+				GCC_PREFIX_HEADER = "PSPrintSDK/KitePrintSDK-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -4024,7 +4017,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_PREFIX_HEADER = "KiteSDK/KiteSDK-Prefix.pch";
+				GCC_PREFIX_HEADER = "PSPrintSDK/KitePrintSDK-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = "";
 				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
@@ -4523,7 +4516,7 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_PREFIX_HEADER = "KiteSDK/KiteSDK-Prefix.pch";
+				GCC_PREFIX_HEADER = "PSPrintSDK/KitePrintSDK-Prefix.pch";
 				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
@@ -4546,7 +4539,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_PREFIX_HEADER = "KiteSDK/KiteSDK-Prefix.pch";
+				GCC_PREFIX_HEADER = "PSPrintSDK/KitePrintSDK-Prefix.pch";
 				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
@@ -4693,7 +4686,7 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_PREFIX_HEADER = "KiteSDK/KiteSDK-Prefix.pch";
+				GCC_PREFIX_HEADER = "PSPrintSDK/KitePrintSDK-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -4726,7 +4719,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_PREFIX_HEADER = "KiteSDK/KiteSDK-Prefix.pch";
+				GCC_PREFIX_HEADER = "PSPrintSDK/KitePrintSDK-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"OL_KITE_OFFER_PAYPAL=1",
 					"OL_KITE_AT_LEAST_IOS8=1",
