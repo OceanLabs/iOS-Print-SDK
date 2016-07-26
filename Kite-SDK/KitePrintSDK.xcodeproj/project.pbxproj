@@ -31,6 +31,14 @@
 		2E0FF2E61D2A9003007093C0 /* OLButtonCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0FF2E21D2A9003007093C0 /* OLButtonCollectionViewCell.m */; };
 		2E14D2D11C2AE9AD00F35403 /* OLImagePreviewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E14D2D01C2AE9AD00F35403 /* OLImagePreviewViewController.m */; };
 		2E14D2D21C2AE9AD00F35403 /* OLImagePreviewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E14D2D01C2AE9AD00F35403 /* OLImagePreviewViewController.m */; };
+		2E1E66CF1D477B78002524A4 /* OLImagePickerPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1E66CE1D477B78002524A4 /* OLImagePickerPageViewController.m */; };
+		2E1E66D01D477B78002524A4 /* OLImagePickerPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1E66CE1D477B78002524A4 /* OLImagePickerPageViewController.m */; };
+		2E1E66D11D477B78002524A4 /* OLImagePickerPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1E66CE1D477B78002524A4 /* OLImagePickerPageViewController.m */; };
+		2E1E66D21D477B78002524A4 /* OLImagePickerPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1E66CE1D477B78002524A4 /* OLImagePickerPageViewController.m */; };
+		2E1E66D51D478052002524A4 /* OLImagePickerLoginPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1E66D41D478052002524A4 /* OLImagePickerLoginPageViewController.m */; };
+		2E1E66D61D478052002524A4 /* OLImagePickerLoginPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1E66D41D478052002524A4 /* OLImagePickerLoginPageViewController.m */; };
+		2E1E66D71D478052002524A4 /* OLImagePickerLoginPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1E66D41D478052002524A4 /* OLImagePickerLoginPageViewController.m */; };
+		2E1E66D81D478052002524A4 /* OLImagePickerLoginPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1E66D41D478052002524A4 /* OLImagePickerLoginPageViewController.m */; };
 		2E25C7071D460A8C00B5BD8C /* libPayPalMobile.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E24452ED1BFD20D80086BF03 /* libPayPalMobile.a */; };
 		2E25FEFB1CF2EF5D006E52E5 /* OLKeyChainStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E25FEFA1CF2EF5D006E52E5 /* OLKeyChainStore.m */; };
 		2E25FEFC1CF2EF5D006E52E5 /* OLKeyChainStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E25FEFA1CF2EF5D006E52E5 /* OLKeyChainStore.m */; };
@@ -750,6 +758,10 @@
 		2E1067FF1B83335C00EB4C14 /* UIView+RoundRect.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIView+RoundRect.m"; path = "PSPrintSDK/Categories/UIView+RoundRect.m"; sourceTree = "<group>"; };
 		2E14D2CF1C2AE9AD00F35403 /* OLImagePreviewViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLImagePreviewViewController.h; sourceTree = "<group>"; };
 		2E14D2D01C2AE9AD00F35403 /* OLImagePreviewViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLImagePreviewViewController.m; sourceTree = "<group>"; };
+		2E1E66CD1D477B78002524A4 /* OLImagePickerPageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLImagePickerPageViewController.h; sourceTree = "<group>"; };
+		2E1E66CE1D477B78002524A4 /* OLImagePickerPageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLImagePickerPageViewController.m; sourceTree = "<group>"; };
+		2E1E66D31D478052002524A4 /* OLImagePickerLoginPageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLImagePickerLoginPageViewController.h; sourceTree = "<group>"; };
+		2E1E66D41D478052002524A4 /* OLImagePickerLoginPageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLImagePickerLoginPageViewController.m; sourceTree = "<group>"; };
 		2E20BD841AD4229700FB2446 /* OLCaseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLCaseViewController.h; sourceTree = "<group>"; };
 		2E20BD851AD4229700FB2446 /* OLCaseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLCaseViewController.m; sourceTree = "<group>"; };
 		2E2123B11CD3809300B9288B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/OLKiteStoryboard.strings; sourceTree = "<group>"; };
@@ -1403,6 +1415,10 @@
 			children = (
 				2E884F441D37B566007CA45A /* OLImagePickerViewController.h */,
 				2E884F451D37B566007CA45A /* OLImagePickerViewController.m */,
+				2E1E66CD1D477B78002524A4 /* OLImagePickerPageViewController.h */,
+				2E1E66CE1D477B78002524A4 /* OLImagePickerPageViewController.m */,
+				2E1E66D31D478052002524A4 /* OLImagePickerLoginPageViewController.h */,
+				2E1E66D41D478052002524A4 /* OLImagePickerLoginPageViewController.m */,
 				2E28CDFB1D38EEAF00E9AFEA /* OLImagePickerPhotosPageViewController.h */,
 				2E28CDFC1D38EEAF00E9AFEA /* OLImagePickerPhotosPageViewController.m */,
 				2EA8BEB41A484FCB008A9248 /* OLOrderReviewViewController.h */,
@@ -2615,6 +2631,7 @@
 				2E898C611CC518180041CCD8 /* OLProductOptionsViewController.m in Sources */,
 				2E898C621CC518180041CCD8 /* OLOrderReviewViewController.m in Sources */,
 				2E96BAE21D2FC109002F5F74 /* qrspec.c in Sources */,
+				2E1E66D61D478052002524A4 /* OLImagePickerLoginPageViewController.m in Sources */,
 				2E898C631CC518180041CCD8 /* OLProduct.m in Sources */,
 				2E96BADE1D2FC109002F5F74 /* qrinput.c in Sources */,
 				2E96BAC01D2FC101002F5F74 /* UIImage+MDQRCode.m in Sources */,
@@ -2717,6 +2734,7 @@
 				2E898CC51CC518180041CCD8 /* OLURLShortener.m in Sources */,
 				2EBDA6DE1CEB1B0500397082 /* OLImageDownloader.m in Sources */,
 				2E898CC61CC518180041CCD8 /* OLBaseRequest.m in Sources */,
+				2E1E66D01D477B78002524A4 /* OLImagePickerPageViewController.m in Sources */,
 				2E898CC71CC518180041CCD8 /* OLPhotobookPrintJob.m in Sources */,
 				2E898CC81CC518180041CCD8 /* OLPaymentLineItem.m in Sources */,
 				2E898CC91CC518180041CCD8 /* OLPrintJob.m in Sources */,
@@ -2739,6 +2757,7 @@
 				2EA3D3631C9C04B500B99BCD /* UIImage+OLUtils.m in Sources */,
 				2EA3D3641C9C04B500B99BCD /* OLCheckoutViewController.m in Sources */,
 				2EA3D3651C9C04B500B99BCD /* OLPhotobookViewController.m in Sources */,
+				2E1E66D21D477B78002524A4 /* OLImagePickerPageViewController.m in Sources */,
 				2EA3D3671C9C04B500B99BCD /* OLPopupOptionsImageView.m in Sources */,
 				2EA3D3681C9C04B500B99BCD /* NSArray+QueryingExtras.m in Sources */,
 				2EA3D3691C9C04B500B99BCD /* OLGreetingCardPrintJob.m in Sources */,
@@ -2844,6 +2863,7 @@
 				2EA3D3C71C9C04B500B99BCD /* OLBaseRequest.m in Sources */,
 				2EA3D3C81C9C04B500B99BCD /* OLPhotobookPrintJob.m in Sources */,
 				2EA3D3C91C9C04B500B99BCD /* OLPaymentLineItem.m in Sources */,
+				2E1E66D81D478052002524A4 /* OLImagePickerLoginPageViewController.m in Sources */,
 				2EA3D3CA1C9C04B500B99BCD /* OLPrintJob.m in Sources */,
 				2E434AE31D36583700D1BD06 /* OLEditingToolsView.m in Sources */,
 			);
@@ -2875,6 +2895,7 @@
 				2EADD7F31BE79D6D0051CD31 /* PrintOrderHistoryViewController.m in Sources */,
 				2E5BDC3E1CEDBF8200257B1A /* OLImageDownloadDelegate.m in Sources */,
 				2EADD7F41BE79D6D0051CD31 /* UIImage+ImageNamedInKiteBundle.m in Sources */,
+				2E1E66D51D478052002524A4 /* OLImagePickerLoginPageViewController.m in Sources */,
 				2E482B7A1BEB4C7D007460EA /* OLStripeCard.m in Sources */,
 				2E645B371BE7D173009B662B /* OLProductOptionsViewController.m in Sources */,
 				2EB919951D23AE20009D0B8F /* OLPhotobookPageBlankContentViewController.m in Sources */,
@@ -2977,6 +2998,7 @@
 				E2AABA191C6FC6650007C1D7 /* OLURLShortener.m in Sources */,
 				2EADD8491BE79D6D0051CD31 /* OLBaseRequest.m in Sources */,
 				2EADD84A1BE79D6D0051CD31 /* OLPhotobookPrintJob.m in Sources */,
+				2E1E66CF1D477B78002524A4 /* OLImagePickerPageViewController.m in Sources */,
 				2E25FEFB1CF2EF5D006E52E5 /* OLKeyChainStore.m in Sources */,
 				2EADD84B1BE79D6D0051CD31 /* OLPaymentLineItem.m in Sources */,
 				2EADD84C1BE79D6D0051CD31 /* OLPrintJob.m in Sources */,
@@ -3087,13 +3109,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		E24453011BFD2C1D0086BF03 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		E29C856C1BE3B4290041D4CF /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -3146,6 +3161,7 @@
 				E29C85CA1BE3B5C50041D4CF /* OLPrintOrder+History.m in Sources */,
 				2E37B17D1D227EDA003DAA84 /* OLPageLayout.m in Sources */,
 				2E5D95AD1CA984E00080EF07 /* OLUpsellViewController.m in Sources */,
+				2E1E66D11D477B78002524A4 /* OLImagePickerPageViewController.m in Sources */,
 				2E96BADF1D2FC109002F5F74 /* qrinput.c in Sources */,
 				2E482B7B1BEB4C7D007460EA /* OLStripeCard.m in Sources */,
 				E29C85CB1BE3B5C50041D4CF /* OLAsset.m in Sources */,
@@ -3203,6 +3219,7 @@
 				E2AABA1A1C6FC6650007C1D7 /* OLURLShortener.m in Sources */,
 				2EF4392C1BF4D15E0006C123 /* OLPrintOrderSubmitStatusRequest.m in Sources */,
 				E29C86091BE3B5C50041D4CF /* OLKiteABTesting.m in Sources */,
+				2E1E66D71D478052002524A4 /* OLImagePickerLoginPageViewController.m in Sources */,
 				E29C860A1BE3B5C50041D4CF /* OLProductHomeViewController.m in Sources */,
 				2E434AE21D36583700D1BD06 /* OLEditingToolsView.m in Sources */,
 				2E837D491C3C1FBB004DA682 /* OLViewController.m in Sources */,

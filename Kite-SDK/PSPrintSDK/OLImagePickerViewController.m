@@ -42,6 +42,8 @@
 #import "OLAsset+Private.h"
 #import "OLImagePickerProviderCollection.h"
 #import "OLImagePickerProvider.h"
+#import "OLImagePickerLoginPageViewController.h"
+#import <FBSDKCoreKit/FBSDKAccessToken.h>
 
 @interface OLKiteViewController ()
 @property (strong, nonatomic) NSMutableArray <OLCustomPhotoProvider *> *customImageProviders;
@@ -203,14 +205,20 @@
     self.providers = providers;
 }
 
+- (void)updateTopConForVc:(UIViewController *)vc{
+    if ([vc isKindOfClass:[OLImagePickerPhotosPageViewController class]]){
+        ((OLImagePickerPhotosPageViewController *)vc).albumLabelContainerTopCon.constant = [[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height + self.sourcesCollectionView.frame.size.height;
+        ((OLImagePickerPhotosPageViewController *)vc).collectionView.contentInset = UIEdgeInsetsMake([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height + self.sourcesCollectionView.frame.size.height + ((OLImagePickerPhotosPageViewController *)vc).albumLabelContainer.frame.size.height, 0, 0, 0);
+    }
+    else{
+        ((OLImagePickerPhotosPageViewController *)vc).albumLabelContainerTopCon.constant = [[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height + 10;
+    }
+}
+
 - (void)viewDidLayoutSubviews{
     [super viewDidLayoutSubviews];
     
-    OLImagePickerPhotosPageViewController *vc = self.pageController.viewControllers.firstObject;
-    if ([vc isKindOfClass:[OLImagePickerPhotosPageViewController class]]){
-        vc.albumLabelContainerTopCon.constant = [[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height + self.sourcesCollectionView.frame.size.height;
-        vc.collectionView.contentInset = UIEdgeInsetsMake([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height + self.sourcesCollectionView.frame.size.height + vc.albumLabelContainer.frame.size.height, 0, 0, 0);
-    }
+    [self updateTopConForVc:self.pageController.viewControllers.firstObject];
 }
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
@@ -271,26 +279,33 @@
     return [self viewControllerAtIndex:[(OLImagePickerPhotosPageViewController *)viewController pageIndex] - 1];
 }
 
+- (void)reloadPageController{
+    [self.pageController setViewControllers:@[[self viewControllerAtIndex:[self.pageController.viewControllers.firstObject pageIndex]]] direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:NULL];
+}
+
 - (UIViewController *)viewControllerAtIndex:(NSInteger)index{
     if(index < 0 || index >= self.providers.count){
         return nil;
     }
-    OLImagePickerPhotosPageViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLImagePickerPhotosPageViewController"];
-    vc.imagePicker = self;
-    vc.pageIndex = index;
     
-    vc.provider = self.providers[index];
+    OLImagePickerPageViewController *vc;
     
-    vc.collectionView.contentInset = UIEdgeInsetsMake([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height + self.sourcesCollectionView.frame.size.height, 0, 0, 0);
-    vc.quantityPerItem = self.product.quantityToFulfillOrder;
+    if (self.providers[index].providerType == OLImagePickerProviderTypeFacebook && ![FBSDKAccessToken currentAccessToken]){
+        vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLImagePickerLoginPageViewController"];
+        vc.pageIndex = index;
+        vc.providerType = OLImagePickerProviderTypeFacebook;
+        
+    }
+    else{
+        vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLImagePickerPhotosPageViewController"];
+        ((OLImagePickerPhotosPageViewController *)vc).imagePicker = self;
+        vc.pageIndex = index;
+        ((OLImagePickerPhotosPageViewController *)vc).provider = self.providers[index];
+        ((OLImagePickerPhotosPageViewController *)vc).quantityPerItem = self.product.quantityToFulfillOrder;
+    }
     
     [vc.view class]; //force view did load
-    vc.collectionView.contentInset = UIEdgeInsetsMake([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height + self.sourcesCollectionView.frame.size.height, 0, 0, 0);
-    
-    if ([vc isKindOfClass:[OLImagePickerPhotosPageViewController class]]){
-        vc.albumLabelContainerTopCon.constant = [[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height + self.sourcesCollectionView.frame.size.height;
-        vc.collectionView.contentInset = UIEdgeInsetsMake([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height + self.sourcesCollectionView.frame.size.height + vc.albumLabelContainer.frame.size.height, 0, 0, 0);
-    }
+    [self updateTopConForVc:vc];
     
     return vc;
 }

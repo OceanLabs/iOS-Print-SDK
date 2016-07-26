@@ -27,24 +27,13 @@
 //  THE SOFTWARE.
 //
 
-
 #import <UIKit/UIKit.h>
-#import "OLImagePickerViewController.h"
-#import "OLImagePickerPageViewController.h"
+#import "OLImagePickerProvider.h"
 
-@interface OLImagePickerPhotosPageViewController : OLImagePickerPageViewController
+@interface OLImagePickerPageViewController : UIViewController
 
-
-@property (strong, nonatomic) OLImagePickerProvider* provider;
-
-@property (assign, nonatomic) NSInteger quantityPerItem;
-@property (assign, nonatomic) NSInteger minimumPhotos;
-@property (assign, nonatomic) NSInteger maximumPhotos;
-
-@property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
-@property (weak, nonatomic) OLImagePickerViewController *imagePicker;
-
-@property (weak, nonatomic) IBOutlet UIView *albumLabelContainer;
-
+@property (assign, nonatomic) NSInteger pageIndex;
+@property (assign, nonatomic) OLImagePickerProviderType providerType;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *albumLabelContainerTopCon;
 
 @end
