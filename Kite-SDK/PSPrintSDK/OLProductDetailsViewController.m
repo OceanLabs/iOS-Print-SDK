@@ -72,19 +72,19 @@
     
     NSMutableAttributedString *attributedString = [[[TSMarkdownParser standardParser] attributedStringFromMarkdown:[self.product detailsString]] mutableCopy];
     
+    //    if ([OLKiteABTesting sharedInstance].darkTheme){
+    //        [attributedString addAttribute:NSForegroundColorAttributeName value:[UIColor whiteColor] range:NSMakeRange(0, attributedString.length)];
+    //    }
+    //    else{
+    [attributedString addAttribute:NSForegroundColorAttributeName value:self.detailsTextLabel.tintColor range:NSMakeRange(0, attributedString.length)];
+    //    }
+    
     NSRange strikeThroughRange = [[attributedString string] rangeOfString:@"\\~.*\\~" options:NSRegularExpressionSearch];
     if (strikeThroughRange.location != NSNotFound){
-        [attributedString addAttributes:@{NSStrikethroughStyleAttributeName : [NSNumber numberWithInteger:NSUnderlineStyleSingle]} range:strikeThroughRange];
+        [attributedString addAttributes:@{NSStrikethroughStyleAttributeName : [NSNumber numberWithInteger:NSUnderlineStyleSingle], NSForegroundColorAttributeName : [UIColor colorWithWhite:0.627 alpha:1.000]} range:strikeThroughRange];
         [attributedString deleteCharactersInRange:NSMakeRange(strikeThroughRange.location, 1)];
         [attributedString deleteCharactersInRange:NSMakeRange(strikeThroughRange.location + strikeThroughRange.length-2, 1)];
     }
-    
-//    if ([OLKiteABTesting sharedInstance].darkTheme){
-//        [attributedString addAttribute:NSForegroundColorAttributeName value:[UIColor whiteColor] range:NSMakeRange(0, attributedString.length)];
-//    }
-//    else{
-        [attributedString addAttribute:NSForegroundColorAttributeName value:self.detailsTextLabel.tintColor range:NSMakeRange(0, attributedString.length)];
-//    }
     
     self.detailsTextLabel.attributedText = attributedString;
     
