@@ -171,19 +171,18 @@
         }
         
         OLImagePickerProviderCollection *collection = [[OLImagePickerProviderCollection alloc] initWithPHFetchResult:[PHAsset fetchAssetsWithMediaType:PHAssetMediaTypeImage options:options] name:NSLocalizedString(@"All Photos", @"")];
-        OLImagePickerProvider *provider = [[OLImagePickerProvider alloc] initWithCollections:@[collection] name:NSLocalizedString(@"Photo Library", @"") icon:[UIImage imageNamedInKiteBundle:@"import_gallery"]];
+        OLImagePickerProvider *provider = [[OLImagePickerProvider alloc] initWithCollections:[@[collection] mutableCopy] name:NSLocalizedString(@"Photo Library", @"") icon:[UIImage imageNamedInKiteBundle:@"import_gallery"]];
         provider.providerType = OLImagePickerProviderTypePhotoLibrary;
         [providers addObject:provider];
     }
     if ([OLKiteUtils facebookEnabled]){
         OLImagePickerProviderCollection *collection = [[OLImagePickerProviderCollection alloc] initWithArray:@[] name:NSLocalizedString(@"All Photos", @"")];
-        OLImagePickerProvider *provider = [[OLImagePickerProvider alloc] initWithCollections:@[collection] name:@"Facebook" icon:[UIImage imageNamedInKiteBundle:@"import_facebook"]];
+        OLImagePickerProvider *provider = [[OLImagePickerProvider alloc] initWithCollections:[@[collection] mutableCopy] name:@"Facebook" icon:[UIImage imageNamedInKiteBundle:@"import_facebook"]];
         provider.providerType = OLImagePickerProviderTypeFacebook;
         [providers addObject:provider];
     }
     if ([OLKiteUtils instagramEnabled]){
-        OLImagePickerProviderCollection *collection = [[OLImagePickerProviderCollection alloc] initWithArray:@[] name:NSLocalizedString(@"All Photos", @"")];
-        OLImagePickerProvider *provider = [[OLImagePickerProvider alloc] initWithCollections:@[collection] name:@"Instagram" icon:[UIImage imageNamedInKiteBundle:@"import_instagram"]];
+        OLImagePickerProvider *provider = [[OLImagePickerProvider alloc] initWithCollections:[@[] mutableCopy] name:@"Instagram" icon:[UIImage imageNamedInKiteBundle:@"import_instagram"]];
         provider.providerType = OLImagePickerProviderTypeInstagram;
         [providers addObject:provider];
     }

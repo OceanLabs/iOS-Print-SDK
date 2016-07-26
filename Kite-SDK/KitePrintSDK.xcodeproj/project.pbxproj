@@ -39,6 +39,30 @@
 		2E1E66D61D478052002524A4 /* OLImagePickerLoginPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1E66D41D478052002524A4 /* OLImagePickerLoginPageViewController.m */; };
 		2E1E66D71D478052002524A4 /* OLImagePickerLoginPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1E66D41D478052002524A4 /* OLImagePickerLoginPageViewController.m */; };
 		2E1E66D81D478052002524A4 /* OLImagePickerLoginPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1E66D41D478052002524A4 /* OLImagePickerLoginPageViewController.m */; };
+		2E1E66E01D4795EE002524A4 /* OLFacebookAlbum.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1E66DB1D4795EE002524A4 /* OLFacebookAlbum.m */; };
+		2E1E66E11D4795EE002524A4 /* OLFacebookAlbum.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1E66DB1D4795EE002524A4 /* OLFacebookAlbum.m */; };
+		2E1E66E21D4795EE002524A4 /* OLFacebookAlbum.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1E66DB1D4795EE002524A4 /* OLFacebookAlbum.m */; };
+		2E1E66E31D4795EE002524A4 /* OLFacebookAlbum.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1E66DB1D4795EE002524A4 /* OLFacebookAlbum.m */; };
+		2E1E66E41D4795EE002524A4 /* OLFacebookAlbumRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1E66DD1D4795EE002524A4 /* OLFacebookAlbumRequest.m */; };
+		2E1E66E51D4795EE002524A4 /* OLFacebookAlbumRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1E66DD1D4795EE002524A4 /* OLFacebookAlbumRequest.m */; };
+		2E1E66E61D4795EE002524A4 /* OLFacebookAlbumRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1E66DD1D4795EE002524A4 /* OLFacebookAlbumRequest.m */; };
+		2E1E66E71D4795EE002524A4 /* OLFacebookAlbumRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1E66DD1D4795EE002524A4 /* OLFacebookAlbumRequest.m */; };
+		2E1E66E81D4795EE002524A4 /* OLFacebookPhotosForAlbumRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1E66DF1D4795EE002524A4 /* OLFacebookPhotosForAlbumRequest.m */; };
+		2E1E66E91D4795EE002524A4 /* OLFacebookPhotosForAlbumRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1E66DF1D4795EE002524A4 /* OLFacebookPhotosForAlbumRequest.m */; };
+		2E1E66EA1D4795EE002524A4 /* OLFacebookPhotosForAlbumRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1E66DF1D4795EE002524A4 /* OLFacebookPhotosForAlbumRequest.m */; };
+		2E1E66EB1D4795EE002524A4 /* OLFacebookPhotosForAlbumRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1E66DF1D4795EE002524A4 /* OLFacebookPhotosForAlbumRequest.m */; };
+		2E1E66EE1D479617002524A4 /* OLFacebookImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1E66ED1D479617002524A4 /* OLFacebookImage.m */; };
+		2E1E66EF1D479617002524A4 /* OLFacebookImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1E66ED1D479617002524A4 /* OLFacebookImage.m */; };
+		2E1E66F01D479617002524A4 /* OLFacebookImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1E66ED1D479617002524A4 /* OLFacebookImage.m */; };
+		2E1E66F11D479617002524A4 /* OLFacebookImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1E66ED1D479617002524A4 /* OLFacebookImage.m */; };
+		2E1E66F51D479695002524A4 /* OLImagePickerFacebookPhotosPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1E66F41D479695002524A4 /* OLImagePickerFacebookPhotosPageViewController.m */; };
+		2E1E66F61D479695002524A4 /* OLImagePickerFacebookPhotosPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1E66F41D479695002524A4 /* OLImagePickerFacebookPhotosPageViewController.m */; };
+		2E1E66F71D479695002524A4 /* OLImagePickerFacebookPhotosPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1E66F41D479695002524A4 /* OLImagePickerFacebookPhotosPageViewController.m */; };
+		2E1E66F81D479695002524A4 /* OLImagePickerFacebookPhotosPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1E66F41D479695002524A4 /* OLImagePickerFacebookPhotosPageViewController.m */; };
+		2E1E66FB1D47A653002524A4 /* OLFacebookImagePickerConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1E66FA1D47A653002524A4 /* OLFacebookImagePickerConstants.m */; };
+		2E1E66FC1D47A653002524A4 /* OLFacebookImagePickerConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1E66FA1D47A653002524A4 /* OLFacebookImagePickerConstants.m */; };
+		2E1E66FD1D47A653002524A4 /* OLFacebookImagePickerConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1E66FA1D47A653002524A4 /* OLFacebookImagePickerConstants.m */; };
+		2E1E66FE1D47A653002524A4 /* OLFacebookImagePickerConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1E66FA1D47A653002524A4 /* OLFacebookImagePickerConstants.m */; };
 		2E25C7071D460A8C00B5BD8C /* libPayPalMobile.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E24452ED1BFD20D80086BF03 /* libPayPalMobile.a */; };
 		2E25FEFB1CF2EF5D006E52E5 /* OLKeyChainStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E25FEFA1CF2EF5D006E52E5 /* OLKeyChainStore.m */; };
 		2E25FEFC1CF2EF5D006E52E5 /* OLKeyChainStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E25FEFA1CF2EF5D006E52E5 /* OLKeyChainStore.m */; };
@@ -762,6 +786,18 @@
 		2E1E66CE1D477B78002524A4 /* OLImagePickerPageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLImagePickerPageViewController.m; sourceTree = "<group>"; };
 		2E1E66D31D478052002524A4 /* OLImagePickerLoginPageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLImagePickerLoginPageViewController.h; sourceTree = "<group>"; };
 		2E1E66D41D478052002524A4 /* OLImagePickerLoginPageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLImagePickerLoginPageViewController.m; sourceTree = "<group>"; };
+		2E1E66DA1D4795EE002524A4 /* OLFacebookAlbum.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLFacebookAlbum.h; sourceTree = "<group>"; };
+		2E1E66DB1D4795EE002524A4 /* OLFacebookAlbum.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLFacebookAlbum.m; sourceTree = "<group>"; };
+		2E1E66DC1D4795EE002524A4 /* OLFacebookAlbumRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLFacebookAlbumRequest.h; sourceTree = "<group>"; };
+		2E1E66DD1D4795EE002524A4 /* OLFacebookAlbumRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLFacebookAlbumRequest.m; sourceTree = "<group>"; };
+		2E1E66DE1D4795EE002524A4 /* OLFacebookPhotosForAlbumRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLFacebookPhotosForAlbumRequest.h; sourceTree = "<group>"; };
+		2E1E66DF1D4795EE002524A4 /* OLFacebookPhotosForAlbumRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLFacebookPhotosForAlbumRequest.m; sourceTree = "<group>"; };
+		2E1E66EC1D479617002524A4 /* OLFacebookImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLFacebookImage.h; sourceTree = "<group>"; };
+		2E1E66ED1D479617002524A4 /* OLFacebookImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLFacebookImage.m; sourceTree = "<group>"; };
+		2E1E66F31D479695002524A4 /* OLImagePickerFacebookPhotosPageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLImagePickerFacebookPhotosPageViewController.h; sourceTree = "<group>"; };
+		2E1E66F41D479695002524A4 /* OLImagePickerFacebookPhotosPageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLImagePickerFacebookPhotosPageViewController.m; sourceTree = "<group>"; };
+		2E1E66F91D47A653002524A4 /* OLFacebookImagePickerConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLFacebookImagePickerConstants.h; sourceTree = "<group>"; };
+		2E1E66FA1D47A653002524A4 /* OLFacebookImagePickerConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLFacebookImagePickerConstants.m; sourceTree = "<group>"; };
 		2E20BD841AD4229700FB2446 /* OLCaseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLCaseViewController.h; sourceTree = "<group>"; };
 		2E20BD851AD4229700FB2446 /* OLCaseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLCaseViewController.m; sourceTree = "<group>"; };
 		2E2123B11CD3809300B9288B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/OLKiteStoryboard.strings; sourceTree = "<group>"; };
@@ -1389,6 +1425,40 @@
 			name = View;
 			sourceTree = "<group>";
 		};
+		2E1E66D91D4795C8002524A4 /* Facebook */ = {
+			isa = PBXGroup;
+			children = (
+				2E1E66EC1D479617002524A4 /* OLFacebookImage.h */,
+				2E1E66ED1D479617002524A4 /* OLFacebookImage.m */,
+				2E1E66DA1D4795EE002524A4 /* OLFacebookAlbum.h */,
+				2E1E66DB1D4795EE002524A4 /* OLFacebookAlbum.m */,
+				2E1E66DC1D4795EE002524A4 /* OLFacebookAlbumRequest.h */,
+				2E1E66DD1D4795EE002524A4 /* OLFacebookAlbumRequest.m */,
+				2E1E66DE1D4795EE002524A4 /* OLFacebookPhotosForAlbumRequest.h */,
+				2E1E66DF1D4795EE002524A4 /* OLFacebookPhotosForAlbumRequest.m */,
+				2E1E66F91D47A653002524A4 /* OLFacebookImagePickerConstants.h */,
+				2E1E66FA1D47A653002524A4 /* OLFacebookImagePickerConstants.m */,
+			);
+			name = Facebook;
+			sourceTree = "<group>";
+		};
+		2E1E66F21D479674002524A4 /* Image Picker */ = {
+			isa = PBXGroup;
+			children = (
+				2E884F441D37B566007CA45A /* OLImagePickerViewController.h */,
+				2E884F451D37B566007CA45A /* OLImagePickerViewController.m */,
+				2E1E66CD1D477B78002524A4 /* OLImagePickerPageViewController.h */,
+				2E1E66CE1D477B78002524A4 /* OLImagePickerPageViewController.m */,
+				2E1E66D31D478052002524A4 /* OLImagePickerLoginPageViewController.h */,
+				2E1E66D41D478052002524A4 /* OLImagePickerLoginPageViewController.m */,
+				2E28CDFB1D38EEAF00E9AFEA /* OLImagePickerPhotosPageViewController.h */,
+				2E28CDFC1D38EEAF00E9AFEA /* OLImagePickerPhotosPageViewController.m */,
+				2E1E66F31D479695002524A4 /* OLImagePickerFacebookPhotosPageViewController.h */,
+				2E1E66F41D479695002524A4 /* OLImagePickerFacebookPhotosPageViewController.m */,
+			);
+			name = "Image Picker";
+			sourceTree = "<group>";
+		};
 		2E4CAF101BC293EA0089FA26 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -1413,14 +1483,6 @@
 		2E4CAF111BC293FC0089FA26 /* Edit-Review */ = {
 			isa = PBXGroup;
 			children = (
-				2E884F441D37B566007CA45A /* OLImagePickerViewController.h */,
-				2E884F451D37B566007CA45A /* OLImagePickerViewController.m */,
-				2E1E66CD1D477B78002524A4 /* OLImagePickerPageViewController.h */,
-				2E1E66CE1D477B78002524A4 /* OLImagePickerPageViewController.m */,
-				2E1E66D31D478052002524A4 /* OLImagePickerLoginPageViewController.h */,
-				2E1E66D41D478052002524A4 /* OLImagePickerLoginPageViewController.m */,
-				2E28CDFB1D38EEAF00E9AFEA /* OLImagePickerPhotosPageViewController.h */,
-				2E28CDFC1D38EEAF00E9AFEA /* OLImagePickerPhotosPageViewController.m */,
 				2EA8BEB41A484FCB008A9248 /* OLOrderReviewViewController.h */,
 				2EA8BEB51A484FCB008A9248 /* OLOrderReviewViewController.m */,
 				2EA8BEB61A484FCB008A9248 /* OLFrameOrderReviewViewController.h */,
@@ -1512,6 +1574,7 @@
 				CD550BD61886BF6000782D75 /* Payment */,
 				CD7696A11868DE7A006D4A26 /* Print */,
 				3DE2B0C01A77D2290092D97F /* Util */,
+				2E1E66D91D4795C8002524A4 /* Facebook */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -1870,6 +1933,7 @@
 			isa = PBXGroup;
 			children = (
 				2E4CAF101BC293EA0089FA26 /* Products */,
+				2E1E66F21D479674002524A4 /* Image Picker */,
 				2E4CAF111BC293FC0089FA26 /* Edit-Review */,
 				2E4CAF121BC2940A0089FA26 /* Shipping-Payment */,
 				2E4CAF131BC2941E0089FA26 /* Other */,
@@ -2677,11 +2741,13 @@
 				2E898C8C1CC518180041CCD8 /* OLAddress.m in Sources */,
 				2E36A1DD1D42094C00EA2F0F /* OLImagePickerProvider.m in Sources */,
 				2E898C8D1CC518180041CCD8 /* OLNavigationController.m in Sources */,
+				2E1E66E51D4795EE002524A4 /* OLFacebookAlbumRequest.m in Sources */,
 				2E898C8E1CC518180041CCD8 /* NSDecimalNumber+CostFormatter.m in Sources */,
 				2E67B92B1D267A3E00914D56 /* OLColorSelectionCollectionViewCell.m in Sources */,
 				2E96BAD61D2FC109002F5F74 /* mask.c in Sources */,
 				2E898C901CC518180041CCD8 /* OLProductOverviewViewController.m in Sources */,
 				2E898C911CC518180041CCD8 /* OLAddress+AddressBook.m in Sources */,
+				2E1E66FC1D47A653002524A4 /* OLFacebookImagePickerConstants.m in Sources */,
 				2E898C921CC518180041CCD8 /* OLPrintOrder.m in Sources */,
 				2E898C931CC518180041CCD8 /* OLProductTemplateSyncRequest.m in Sources */,
 				2E898C971CC518180041CCD8 /* OLProductTemplateOption.m in Sources */,
@@ -2691,6 +2757,7 @@
 				2E898C9A1CC518180041CCD8 /* OLViewController.m in Sources */,
 				2E898C9B1CC518180041CCD8 /* NSDictionary+RequestParameterData.m in Sources */,
 				2E898C9C1CC518180041CCD8 /* OLRemoteImageCropper.m in Sources */,
+				2E1E66E11D4795EE002524A4 /* OLFacebookAlbum.m in Sources */,
 				2E37B1821D229162003DAA84 /* OLProductRepresentation.m in Sources */,
 				2EB919961D23AE20009D0B8F /* OLPhotobookPageBlankContentViewController.m in Sources */,
 				2E898C9E1CC518180041CCD8 /* OLUpsellOffer.m in Sources */,
@@ -2708,6 +2775,7 @@
 				2E36A1E31D420CDA00EA2F0F /* OLImagePickerProviderCollection.m in Sources */,
 				2E5BDC3F1CEDBF8200257B1A /* OLImageDownloadDelegate.m in Sources */,
 				2E898CAB1CC518180041CCD8 /* OLJudoPayCard.m in Sources */,
+				2E1E66F61D479695002524A4 /* OLImagePickerFacebookPhotosPageViewController.m in Sources */,
 				2E898CAC1CC518180041CCD8 /* OLReceiptViewController.m in Sources */,
 				2E898CAE1CC518180041CCD8 /* OLAssetUploadRequest.m in Sources */,
 				2E898CAF1CC518180041CCD8 /* OLAddressPickerController.m in Sources */,
@@ -2728,6 +2796,7 @@
 				2E898CC01CC518180041CCD8 /* OLCollectionViewController.m in Sources */,
 				2E898CC11CC518180041CCD8 /* RMImageCropper.m in Sources */,
 				2E898CC31CC518180041CCD8 /* OLQRCodeUploadViewController.m in Sources */,
+				2E1E66E91D4795EE002524A4 /* OLFacebookPhotosForAlbumRequest.m in Sources */,
 				2E6561131D1C341A0092001C /* OLSelectedEffectButton.m in Sources */,
 				2E898CC41CC518180041CCD8 /* OLCountryPickerController.m in Sources */,
 				2E96BAE61D2FC109002F5F74 /* rscode.c in Sources */,
@@ -2736,6 +2805,7 @@
 				2E898CC61CC518180041CCD8 /* OLBaseRequest.m in Sources */,
 				2E1E66D01D477B78002524A4 /* OLImagePickerPageViewController.m in Sources */,
 				2E898CC71CC518180041CCD8 /* OLPhotobookPrintJob.m in Sources */,
+				2E1E66EF1D479617002524A4 /* OLFacebookImage.m in Sources */,
 				2E898CC81CC518180041CCD8 /* OLPaymentLineItem.m in Sources */,
 				2E898CC91CC518180041CCD8 /* OLPrintJob.m in Sources */,
 			);
@@ -2747,8 +2817,11 @@
 			files = (
 				2EA3D35C1C9C04B500B99BCD /* OLURLDataSource.m in Sources */,
 				2EA3D35D1C9C04B500B99BCD /* OLScrollCropViewController.m in Sources */,
+				2E1E66FE1D47A653002524A4 /* OLFacebookImagePickerConstants.m in Sources */,
+				2E1E66F11D479617002524A4 /* OLFacebookImage.m in Sources */,
 				2EB197941CF872F200648696 /* OLPaymentMethodsViewController.m in Sources */,
 				2EA3D35E1C9C04B500B99BCD /* OLCustomPhotoProvider.m in Sources */,
+				2E1E66E31D4795EE002524A4 /* OLFacebookAlbum.m in Sources */,
 				2EA3D35F1C9C04B500B99BCD /* OLPrintOrderCostRequest.m in Sources */,
 				2EBDA6E01CEB1B0500397082 /* OLImageDownloader.m in Sources */,
 				2EA3D3601C9C04B500B99BCD /* OLInfoPageViewController.m in Sources */,
@@ -2763,6 +2836,7 @@
 				2EA3D3691C9C04B500B99BCD /* OLGreetingCardPrintJob.m in Sources */,
 				2E96BAE01D2FC109002F5F74 /* qrinput.c in Sources */,
 				2E37B17E1D227EDA003DAA84 /* OLPageLayout.m in Sources */,
+				2E1E66E71D4795EE002524A4 /* OLFacebookAlbumRequest.m in Sources */,
 				2EA3D36B1C9C04B500B99BCD /* UIImage+ImageNamedInKiteBundle.m in Sources */,
 				2EA3D36D1C9C04B500B99BCD /* OLOrderReviewViewController.m in Sources */,
 				2E96BAC21D2FC101002F5F74 /* UIImage+MDQRCode.m in Sources */,
@@ -2801,6 +2875,7 @@
 				2EA3D38F1C9C04B500B99BCD /* NSString+Formatting.m in Sources */,
 				2EA3D3901C9C04B500B99BCD /* OLAddress.m in Sources */,
 				2EA3D3911C9C04B500B99BCD /* OLNavigationController.m in Sources */,
+				2E1E66F81D479695002524A4 /* OLImagePickerFacebookPhotosPageViewController.m in Sources */,
 				2EA3D3921C9C04B500B99BCD /* OLPhotoEdits.m in Sources */,
 				2EA3D3931C9C04B500B99BCD /* UIViewController+OLMethods.m in Sources */,
 				2E96BAE81D2FC109002F5F74 /* rscode.c in Sources */,
@@ -2840,6 +2915,7 @@
 				2EA3D3AF1C9C04B500B99BCD /* OLReceiptViewController.m in Sources */,
 				2EA3D3B01C9C04B500B99BCD /* OLAssetUploadRequest.m in Sources */,
 				2EA3D3B11C9C04B500B99BCD /* OLAddressPickerController.m in Sources */,
+				2E1E66EB1D4795EE002524A4 /* OLFacebookPhotosForAlbumRequest.m in Sources */,
 				2EA3D3B41C9C04B500B99BCD /* OLPostcardPrintJob.m in Sources */,
 				2EA3D3B51C9C04B500B99BCD /* NSObject+Utils.m in Sources */,
 				2EA3D3B61C9C04B500B99BCD /* OLAnalytics.m in Sources */,
@@ -2941,11 +3017,13 @@
 				2E37B1811D229162003DAA84 /* OLProductRepresentation.m in Sources */,
 				2E36A1DC1D42094C00EA2F0F /* OLImagePickerProvider.m in Sources */,
 				E2AABA151C6DFC160007C1D7 /* OLQRCodeUploadedImagePoller.m in Sources */,
+				2E1E66E41D4795EE002524A4 /* OLFacebookAlbumRequest.m in Sources */,
 				2EADD8191BE79D6D0051CD31 /* NSString+Formatting.m in Sources */,
 				2EADD81A1BE79D6D0051CD31 /* OLAddress.m in Sources */,
 				2EB715DB1CFDD36600618C7B /* OLStripeCard+OLCardIcon.m in Sources */,
 				2EADD81B1BE79D6D0051CD31 /* OLNavigationController.m in Sources */,
 				2EADD81C1BE79D6D0051CD31 /* NSDecimalNumber+CostFormatter.m in Sources */,
+				2E1E66FB1D47A653002524A4 /* OLFacebookImagePickerConstants.m in Sources */,
 				2EADD81E1BE79D6D0051CD31 /* OLProductOverviewViewController.m in Sources */,
 				2EADD81F1BE79D6D0051CD31 /* OLAddress+AddressBook.m in Sources */,
 				2EADD8201BE79D6D0051CD31 /* OLPrintOrder.m in Sources */,
@@ -2955,6 +3033,7 @@
 				2EADD8261BE79D6D0051CD31 /* OLPrintOrderRequest.m in Sources */,
 				2E837D481C3C1FBB004DA682 /* OLViewController.m in Sources */,
 				2E96BABF1D2FC101002F5F74 /* UIImage+MDQRCode.m in Sources */,
+				2E1E66E01D4795EE002524A4 /* OLFacebookAlbum.m in Sources */,
 				2ED36B3A1C8EE4AD00FB2D4A /* NSDictionary+RequestParameterData.m in Sources */,
 				2EADD8271BE79D6D0051CD31 /* OLRemoteImageCropper.m in Sources */,
 				2EA0087B1CB293A900C23DFA /* OLUpsellOffer.m in Sources */,
@@ -2972,6 +3051,7 @@
 				2E36A1E21D420CDA00EA2F0F /* OLImagePickerProviderCollection.m in Sources */,
 				2EADD8341BE79D6D0051CD31 /* OLJudoPayCard.m in Sources */,
 				2EADD8351BE79D6D0051CD31 /* OLReceiptViewController.m in Sources */,
+				2E1E66F51D479695002524A4 /* OLImagePickerFacebookPhotosPageViewController.m in Sources */,
 				2EADD8361BE79D6D0051CD31 /* OLAssetUploadRequest.m in Sources */,
 				2EADD8371BE79D6D0051CD31 /* OLAddressPickerController.m in Sources */,
 				2EADD8381BE79D6D0051CD31 /* main.m in Sources */,
@@ -2992,6 +3072,7 @@
 				2EADD8441BE79D6D0051CD31 /* OLAddressSelectionViewController.m in Sources */,
 				2E837D4C1C3C221E004DA682 /* OLCollectionViewController.m in Sources */,
 				2EADD8461BE79D6D0051CD31 /* RMImageCropper.m in Sources */,
+				2E1E66E81D4795EE002524A4 /* OLFacebookPhotosForAlbumRequest.m in Sources */,
 				E2AABA111C6CFA2B0007C1D7 /* OLQRCodeUploadViewController.m in Sources */,
 				2EADD8481BE79D6D0051CD31 /* OLCountryPickerController.m in Sources */,
 				2E884F461D37B566007CA45A /* OLImagePickerViewController.m in Sources */,
@@ -3000,6 +3081,7 @@
 				2EADD84A1BE79D6D0051CD31 /* OLPhotobookPrintJob.m in Sources */,
 				2E1E66CF1D477B78002524A4 /* OLImagePickerPageViewController.m in Sources */,
 				2E25FEFB1CF2EF5D006E52E5 /* OLKeyChainStore.m in Sources */,
+				2E1E66EE1D479617002524A4 /* OLFacebookImage.m in Sources */,
 				2EADD84B1BE79D6D0051CD31 /* OLPaymentLineItem.m in Sources */,
 				2EADD84C1BE79D6D0051CD31 /* OLPrintJob.m in Sources */,
 			);
@@ -3164,8 +3246,10 @@
 				2E1E66D11D477B78002524A4 /* OLImagePickerPageViewController.m in Sources */,
 				2E96BADF1D2FC109002F5F74 /* qrinput.c in Sources */,
 				2E482B7B1BEB4C7D007460EA /* OLStripeCard.m in Sources */,
+				2E1E66EA1D4795EE002524A4 /* OLFacebookPhotosForAlbumRequest.m in Sources */,
 				E29C85CB1BE3B5C50041D4CF /* OLAsset.m in Sources */,
 				2EBDA6DF1CEB1B0500397082 /* OLImageDownloader.m in Sources */,
+				2E1E66FD1D47A653002524A4 /* OLFacebookImagePickerConstants.m in Sources */,
 				E29C85CD1BE3B5C50041D4CF /* OLProductTemplate.m in Sources */,
 				2EB715D71CFDD12900618C7B /* OLLuhn.m in Sources */,
 				E29C85CE1BE3B5C50041D4CF /* OLPaymentViewController.m in Sources */,
@@ -3177,8 +3261,10 @@
 				2E96BAE71D2FC109002F5F74 /* rscode.c in Sources */,
 				E29C85D41BE3B5C50041D4CF /* OLAddress.m in Sources */,
 				E29C85D61BE3B5C50041D4CF /* OLNavigationController.m in Sources */,
+				2E1E66E61D4795EE002524A4 /* OLFacebookAlbumRequest.m in Sources */,
 				2E8FD2711BF9E73B00F4FC5A /* OLPhotoEdits.m in Sources */,
 				2E53E0CE1C1AEAAD00BF7887 /* UIViewController+OLMethods.m in Sources */,
+				2E1E66F01D479617002524A4 /* OLFacebookImage.m in Sources */,
 				E29C85D71BE3B5C50041D4CF /* NSDecimalNumber+CostFormatter.m in Sources */,
 				2E645B361BE7D170009B662B /* OLProductDetailsViewController.m in Sources */,
 				E29C85DA1BE3B5C50041D4CF /* OLProductOverviewViewController.m in Sources */,
@@ -3214,7 +3300,9 @@
 				E29C86021BE3B5C50041D4CF /* OLAnalytics.m in Sources */,
 				E29C86031BE3B5C50041D4CF /* OLCircleMaskCollectionViewCell.m in Sources */,
 				E29C86041BE3B5C50041D4CF /* OLCreditCardCaptureViewController.m in Sources */,
+				2E1E66F71D479695002524A4 /* OLImagePickerFacebookPhotosPageViewController.m in Sources */,
 				E29C86081BE3B5C50041D4CF /* OLAddressLookupViewController.m in Sources */,
+				2E1E66E21D4795EE002524A4 /* OLFacebookAlbum.m in Sources */,
 				2E7BDADC1D3E1713005F142C /* OLUserSession.m in Sources */,
 				E2AABA1A1C6FC6650007C1D7 /* OLURLShortener.m in Sources */,
 				2EF4392C1BF4D15E0006C123 /* OLPrintOrderSubmitStatusRequest.m in Sources */,

@@ -27,25 +27,8 @@
 //  THE SOFTWARE.
 //
 
-#import <Foundation/Foundation.h>
-#import "OLImagePickerProviderCollection.h"
+#import "OLImagePickerPhotosPageViewController.h"
 
-typedef enum {
-    OLImagePickerProviderTypeCustom,
-    OLImagePickerProviderTypeApp,
-    OLImagePickerProviderTypePhotoLibrary,
-    OLImagePickerProviderTypeFacebook,
-    OLImagePickerProviderTypeInstagram,
-    OLImagePickerProviderTypeQRCode
-} OLImagePickerProviderType;
-
-@interface OLImagePickerProvider : NSObject
-
-@property (strong, nonatomic) NSMutableArray<OLImagePickerProviderCollection *> *collections;
-@property (strong, nonatomic) NSString *name;
-@property (strong, nonatomic) UIImage *icon;
-@property (assign, nonatomic) OLImagePickerProviderType providerType;
-
-- (instancetype)initWithCollections:(NSMutableArray<id<NSFastEnumeration>> *)collections name:(NSString *)name icon:(UIImage *)icon;
+@interface OLImagePickerFacebookPhotosPageViewController : OLImagePickerPhotosPageViewController
 
 @end

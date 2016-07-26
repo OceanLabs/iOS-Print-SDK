@@ -46,5 +46,7 @@
 
 @property (weak, nonatomic) IBOutlet UIView *albumLabelContainer;
 
+- (NSUInteger)numberOfCellsPerRow;
+
 
 @end
