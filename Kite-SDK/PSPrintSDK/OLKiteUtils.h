@@ -66,13 +66,6 @@
 + (NSString *)reviewViewControllerIdentifierForProduct:(OLProduct *)product photoSelectionScreen:(BOOL)photoSelectionScreen;
 + (void)shippingControllerForPrintOrder:(OLPrintOrder *)printOrder handler:(void(^)(OLCheckoutViewController *vc))handler;
 
-+ (NSInteger)cameraRollProviderIndex:(UIViewController *)topVc;
-+ (NSInteger)facebookProviderIndex:(UIViewController *)topVc;
-+ (NSInteger)instagramProviderIndex:(UIViewController *)topVc;
-+ (NSInteger)qrCodeProviderStartIndex:(UIViewController *)topVc;
-+ (NSInteger)customProvidersStartIndex:(UIViewController *)topVc;
-+ (NSInteger)appProviderIndex:(UIViewController *)topVc;
-
 + (void)registerDefaultsWithURL:(NSURL *)url
                         success:(void (^)(NSDictionary *defaults))success
                         failure:(void (^)(NSError *error))failure;

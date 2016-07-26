@@ -158,7 +158,7 @@
         provider.providerType = OLImagePickerProviderTypeApp;
         [providers addObject:provider];
     }
-    if ([OLKiteUtils cameraRollProviderIndex:self] != -1){
+    if ([OLKiteUtils cameraRollEnabled:self]){
         PHFetchOptions *options = [[PHFetchOptions alloc] init];
         options.wantsIncrementalChangeDetails = NO;
         options.includeHiddenAssets = NO;
@@ -173,13 +173,13 @@
         provider.providerType = OLImagePickerProviderTypePhotoLibrary;
         [providers addObject:provider];
     }
-    if ([OLKiteUtils facebookProviderIndex:self] != -1){
+    if ([OLKiteUtils facebookEnabled]){
         OLImagePickerProviderCollection *collection = [[OLImagePickerProviderCollection alloc] initWithArray:@[] name:NSLocalizedString(@"All Photos", @"")];
         OLImagePickerProvider *provider = [[OLImagePickerProvider alloc] initWithCollections:@[collection] name:@"Facebook" icon:[UIImage imageNamedInKiteBundle:@"import_facebook"]];
         provider.providerType = OLImagePickerProviderTypeFacebook;
         [providers addObject:provider];
     }
-    if ([OLKiteUtils instagramProviderIndex:self] != -1){
+    if ([OLKiteUtils instagramEnabled]){
         OLImagePickerProviderCollection *collection = [[OLImagePickerProviderCollection alloc] initWithArray:@[] name:NSLocalizedString(@"All Photos", @"")];
         OLImagePickerProvider *provider = [[OLImagePickerProvider alloc] initWithCollections:@[collection] name:@"Instagram" icon:[UIImage imageNamedInKiteBundle:@"import_instagram"]];
         provider.providerType = OLImagePickerProviderTypeInstagram;
@@ -313,25 +313,7 @@
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
-    NSInteger result = 0;
-    if ([OLKiteUtils appProviderIndex:self] != -1){
-        result++;
-    }
-    if ([OLKiteUtils cameraRollEnabled:self]){
-        result++;
-    }
-    if ([OLKiteUtils instagramEnabled]){
-        result++;
-    }
-    if ([OLKiteUtils facebookEnabled]){
-        result++;
-    }
-    if ([OLKiteUtils qrCodeUploadEnabled]){
-        result++;
-    }
-    result += [OLKiteUtils kiteVcForViewController:self].customImageProviders.count;
-    
-    return result;
+    return self.providers.count;
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
