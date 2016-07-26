@@ -811,6 +811,7 @@
 		2E1067FF1B83335C00EB4C14 /* UIView+RoundRect.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIView+RoundRect.m"; path = "PSPrintSDK/Categories/UIView+RoundRect.m"; sourceTree = "<group>"; };
 		2E14D2CF1C2AE9AD00F35403 /* OLImagePreviewViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLImagePreviewViewController.h; sourceTree = "<group>"; };
 		2E14D2D01C2AE9AD00F35403 /* OLImagePreviewViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLImagePreviewViewController.m; sourceTree = "<group>"; };
+		2E1E66CA1D476417002524A4 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/OLKiteStoryboard.strings; sourceTree = "<group>"; };
 		2E20BD841AD4229700FB2446 /* OLCaseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLCaseViewController.h; sourceTree = "<group>"; };
 		2E20BD851AD4229700FB2446 /* OLCaseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLCaseViewController.m; sourceTree = "<group>"; };
 		2E2123B11CD3809300B9288B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/OLKiteStoryboard.strings; sourceTree = "<group>"; };
@@ -906,7 +907,6 @@
 		2E6E60651C50387000829BB7 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/KitePrintSDK.strings; sourceTree = "<group>"; };
 		2E6E60671C5038AD00829BB7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/OLKiteStoryboard.storyboard; sourceTree = "<group>"; };
 		2E6E606A1C5038B100829BB7 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/OLKiteStoryboard.strings; sourceTree = "<group>"; };
-		2E6E606C1C5038B900829BB7 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/OLKiteStoryboard.strings; sourceTree = "<group>"; };
 		2E6E606E1C5038BD00829BB7 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/OLKiteStoryboard.strings; sourceTree = "<group>"; };
 		2E6E606F1C50393800829BB7 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/KitePrintSDK.strings; sourceTree = "<group>"; };
 		2E7483501BCCFB5900360550 /* 2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 2.png; sourceTree = "<group>"; };
@@ -3670,10 +3670,10 @@
 			children = (
 				2E6E60671C5038AD00829BB7 /* Base */,
 				2E6E606A1C5038B100829BB7 /* fr */,
-				2E6E606C1C5038B900829BB7 /* de */,
 				2E6E606E1C5038BD00829BB7 /* es */,
 				2E2123B11CD3809300B9288B /* en */,
 				2E276C6A1D1AD2DF00331125 /* da */,
+				2E1E66CA1D476417002524A4 /* de */,
 			);
 			name = OLKiteStoryboard.storyboard;
 			sourceTree = "<group>";
