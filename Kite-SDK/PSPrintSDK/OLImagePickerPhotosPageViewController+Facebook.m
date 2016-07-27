@@ -87,14 +87,14 @@
             self.photos = [[NSMutableArray alloc] init];
             self.albumLabel.text = self.albums.firstObject.name;
             self.nextPageRequest = [[OLFacebookPhotosForAlbumRequest alloc] initWithAlbum:self.albums.firstObject];
-            [self loadNextPage];
+            [self loadNextFacebookPage];
             //            self.tableView.tableFooterView = nil;
         }
         
     }];
 }
 
-- (void)loadNextPage {
+- (void)loadNextFacebookPage {
     self.inProgressPhotosRequest = self.nextPageRequest;
     self.nextPageRequest = nil;
     [self.inProgressPhotosRequest getPhotos:^(NSArray *photos, NSError *error, OLFacebookPhotosForAlbumRequest *nextPageRequest) {

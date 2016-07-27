@@ -41,9 +41,6 @@
 
 @interface OLImagePickerPhotosPageViewController : OLImagePickerPageViewController
 
-
-@property (strong, nonatomic) OLImagePickerProvider* provider;
-
 @property (assign, nonatomic) NSInteger quantityPerItem;
 @property (assign, nonatomic) NSInteger minimumPhotos;
 @property (assign, nonatomic) NSInteger maximumPhotos;

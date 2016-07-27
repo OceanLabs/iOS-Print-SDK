@@ -46,10 +46,10 @@
     self.overflowMedia = @[];
     [self.collectionView reloadData];
     [self.provider.collections addObject:[[OLImagePickerProviderCollection alloc] initWithArray:@[] name:NSLocalizedString(@"All Photos", @"")]];
-    [self loadNextPage];
+    [self loadNextInstagramPage];
 }
 
-- (void)loadNextPage {
+- (void)loadNextInstagramPage {
     self.inProgressMediaRequest = self.nextMediaRequest;
     self.nextMediaRequest = nil;
     [self.inProgressMediaRequest fetchMediaWithCompletionHandler:^(NSError *error, NSArray *media, OLInstagramMediaRequest *nextRequest) {

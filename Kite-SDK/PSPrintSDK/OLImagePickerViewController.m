@@ -309,21 +309,18 @@
     if (self.providers[index].providerType == OLImagePickerProviderTypeFacebook && ![FBSDKAccessToken currentAccessToken]){
         vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLImagePickerLoginPageViewController"];
         vc.pageIndex = index;
-        vc.providerType = OLImagePickerProviderTypeFacebook;
     }
     else if (self.providers[index].providerType == OLImagePickerProviderTypeInstagram && [[NXOAuth2AccountStore sharedStore] accountsWithAccountType:@"instagram"].count == 0){
         vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLImagePickerLoginPageViewController"];
         vc.pageIndex = index;
-        vc.providerType = OLImagePickerProviderTypeInstagram;
     }
     else{
         vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLImagePickerPhotosPageViewController"];
         vc.pageIndex = index;
-        vc.providerType = self.providers[index].providerType;
-        ((OLImagePickerPhotosPageViewController *)vc).provider = self.providers[index];
         ((OLImagePickerPhotosPageViewController *)vc).quantityPerItem = self.product.quantityToFulfillOrder;
     }
     vc.imagePicker = self;
+    vc.provider = self.providers[index];
     [vc.view class]; //force view did load
     [self updateTopConForVc:vc];
     

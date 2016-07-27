@@ -32,5 +32,6 @@
 @interface OLImagePickerPhotosPageViewController (Facebook)
 
 - (void)loadFacebookAlbums;
+- (void)loadNextFacebookPage;
 
 @end

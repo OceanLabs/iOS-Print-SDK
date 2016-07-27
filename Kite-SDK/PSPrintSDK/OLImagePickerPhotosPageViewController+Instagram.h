@@ -32,5 +32,6 @@
 @interface OLImagePickerPhotosPageViewController (Instagram)
 
 - (void)startImageLoading;
+- (void)loadNextInstagramPage;
 
 @end

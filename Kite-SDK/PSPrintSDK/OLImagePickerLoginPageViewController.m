@@ -49,13 +49,13 @@
     [super viewDidLoad];
     
     NSString *providerName;
-    if (self.providerType == OLImagePickerProviderTypeInstagram){
+    if (self.provider.providerType == OLImagePickerProviderTypeInstagram){
         providerName = @"Instagram";
     }
-    else if (self.providerType == OLImagePickerProviderTypeFacebook){
+    else if (self.provider.providerType == OLImagePickerProviderTypeFacebook){
         providerName = @"Facebook";
     }
-    else if (self.providerType == OLImagePickerProviderTypePhotoLibrary){
+    else if (self.provider.providerType == OLImagePickerProviderTypePhotoLibrary){
         providerName = [UIDevice currentDevice].localizedModel;
     }
     self.label.text = [NSString stringWithFormat:@"We need access to your %@ photos", providerName];
@@ -65,14 +65,14 @@
 }
 
 - (IBAction)onButtonLoginTapped:(UIButton *)sender {
-    if (self.providerType == OLImagePickerProviderTypeInstagram){
+    if (self.provider.providerType == OLImagePickerProviderTypeInstagram){
         OLInstagramLoginWebViewController *loginVC = [[OLInstagramLoginWebViewController alloc] init];
         loginVC.imagePicker = self.imagePicker;
         
         OLNavigationController *nvc = [[OLNavigationController alloc] initWithRootViewController:loginVC];
         [self presentViewController:nvc animated:YES completion:NULL];
     }
-    else if (self.providerType == OLImagePickerProviderTypeFacebook){
+    else if (self.provider.providerType == OLImagePickerProviderTypeFacebook){
         FBSDKLoginManager *login = [[FBSDKLoginManager alloc] init];
         [login logInWithReadPermissions:@[@"public_profile", @"user_photos"] fromViewController:self handler:^(id result, NSError *error) {
             if (error) {
@@ -84,7 +84,7 @@
             }
         }];
     }
-    else if (self.providerType == OLImagePickerProviderTypePhotoLibrary){
+    else if (self.provider.providerType == OLImagePickerProviderTypePhotoLibrary){
     }
 }
 

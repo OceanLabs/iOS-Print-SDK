@@ -78,10 +78,10 @@ NSInteger OLImagePickerMargin = 0;
     
     [view.superview addConstraints:con];
     
-    if (self.providerType == OLImagePickerProviderTypeFacebook){
+    if (self.provider.providerType == OLImagePickerProviderTypeFacebook){
         [self loadFacebookAlbums];
     }
-    else if (self.providerType == OLImagePickerProviderTypeInstagram){
+    else if (self.provider.providerType == OLImagePickerProviderTypeInstagram){
         [self startImageLoading];
     }
 }
@@ -241,6 +241,21 @@ NSInteger OLImagePickerMargin = 0;
     }
     
     [self.imagePicker updateTitleBasedOnSelectedPhotoQuanitity];
+}
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    if (self.provider.providerType == OLImagePickerProviderTypeInstagram){
+        if (self.inProgressMediaRequest == nil && scrollView.contentOffset.y >= self.collectionView.contentSize.height - self.collectionView.frame.size.height) {
+            // we've reached the bottom, lets load the next page of instagram images.
+            [self loadNextInstagramPage];
+        }
+    }
+    else if (self.provider.providerType == OLImagePickerProviderTypeFacebook){
+        if (self.inProgressRequest == nil && scrollView.contentOffset.y >= self.collectionView.contentSize.height - self.collectionView.frame.size.height) {
+            // we've reached the bottom, lets load the next page of facebook images.
+            [self loadNextFacebookPage];
+        }
+    }
 }
 
 
