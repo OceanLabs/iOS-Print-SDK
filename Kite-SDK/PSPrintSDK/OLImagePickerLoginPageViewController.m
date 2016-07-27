@@ -31,17 +31,17 @@
 #import "UIView+RoundRect.h"
 #import <FBSDKLoginKit/FBSDKLoginManager.h>
 #import "OLImagePickerViewController.h"
-
-@interface OLImagePickerViewController ()
-- (void)reloadPageController;
-@end
+#import <NXOAuth2Client/NXOAuth2AccountStore.h>
+#import "OLKitePrintSDK.h"
+#import "OLInstagramLoginWebViewController.h"
+#import "OLNavigationController.h"
 
 @interface OLImagePickerLoginPageViewController ()
 @property (weak, nonatomic) IBOutlet UIButton *loginButton;
 @property (weak, nonatomic) IBOutlet UILabel *label;
-
-
 @end
+
+
 
 @implementation OLImagePickerLoginPageViewController
 
@@ -66,6 +66,11 @@
 
 - (IBAction)onButtonLoginTapped:(UIButton *)sender {
     if (self.providerType == OLImagePickerProviderTypeInstagram){
+        OLInstagramLoginWebViewController *loginVC = [[OLInstagramLoginWebViewController alloc] init];
+        loginVC.imagePicker = self.imagePicker;
+        
+        OLNavigationController *nvc = [[OLNavigationController alloc] initWithRootViewController:loginVC];
+        [self presentViewController:nvc animated:YES completion:NULL];
     }
     else if (self.providerType == OLImagePickerProviderTypeFacebook){
         FBSDKLoginManager *login = [[FBSDKLoginManager alloc] init];

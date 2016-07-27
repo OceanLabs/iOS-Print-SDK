@@ -37,6 +37,8 @@
 #import "OLFacebookPhotosForAlbumRequest.h"
 #import "OLFacebookImage.h"
 
+#import "OLInstagramMediaRequest.h"
+
 @interface OLImagePickerPhotosPageViewController : OLImagePickerPageViewController
 
 
@@ -65,6 +67,12 @@
 
 @property (nonatomic, strong) NSMutableArray<OLFacebookImage *> *photos;
 @property (nonatomic, strong) NSArray<OLFacebookImage *> *overflowPhotos;
+
+//Instagram
+@property (nonatomic, strong) NSMutableArray *media;
+@property (nonatomic, strong) OLInstagramMediaRequest *inProgressMediaRequest;
+@property (nonatomic, strong) OLInstagramMediaRequest *nextMediaRequest;
+@property (nonatomic, strong) NSArray *overflowMedia;
 
 
 @end

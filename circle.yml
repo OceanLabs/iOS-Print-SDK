@@ -7,7 +7,7 @@ machine:
 general:
   branches:
     ignore:
-    - dev
+    - dev, new-photo-selection
   artifacts:
     - "~/image.png"
 

@@ -511,6 +511,26 @@
 		2EB612E71D489E4700B48E29 /* OLImagePickerPhotosPageViewController+Facebook.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB612E51D489E4700B48E29 /* OLImagePickerPhotosPageViewController+Facebook.m */; };
 		2EB612E81D489E4700B48E29 /* OLImagePickerPhotosPageViewController+Facebook.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB612E51D489E4700B48E29 /* OLImagePickerPhotosPageViewController+Facebook.m */; };
 		2EB612E91D489E4700B48E29 /* OLImagePickerPhotosPageViewController+Facebook.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB612E51D489E4700B48E29 /* OLImagePickerPhotosPageViewController+Facebook.m */; };
+		2EB612EC1D48AF3200B48E29 /* OLImagePickerPhotosPageViewController+Instagram.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB612EB1D48AF3200B48E29 /* OLImagePickerPhotosPageViewController+Instagram.m */; };
+		2EB612ED1D48AF3200B48E29 /* OLImagePickerPhotosPageViewController+Instagram.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB612EB1D48AF3200B48E29 /* OLImagePickerPhotosPageViewController+Instagram.m */; };
+		2EB612EE1D48AF3200B48E29 /* OLImagePickerPhotosPageViewController+Instagram.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB612EB1D48AF3200B48E29 /* OLImagePickerPhotosPageViewController+Instagram.m */; };
+		2EB612EF1D48AF3200B48E29 /* OLImagePickerPhotosPageViewController+Instagram.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB612EB1D48AF3200B48E29 /* OLImagePickerPhotosPageViewController+Instagram.m */; };
+		2EB612F21D48AF9400B48E29 /* OLInstagramLoginWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB612F11D48AF9400B48E29 /* OLInstagramLoginWebViewController.m */; };
+		2EB612F31D48AF9400B48E29 /* OLInstagramLoginWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB612F11D48AF9400B48E29 /* OLInstagramLoginWebViewController.m */; };
+		2EB612F41D48AF9400B48E29 /* OLInstagramLoginWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB612F11D48AF9400B48E29 /* OLInstagramLoginWebViewController.m */; };
+		2EB612F51D48AF9400B48E29 /* OLInstagramLoginWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB612F11D48AF9400B48E29 /* OLInstagramLoginWebViewController.m */; };
+		2EB612FD1D48AFE800B48E29 /* OLInstagramMediaRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB612F81D48AFE800B48E29 /* OLInstagramMediaRequest.m */; };
+		2EB612FE1D48AFE800B48E29 /* OLInstagramMediaRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB612F81D48AFE800B48E29 /* OLInstagramMediaRequest.m */; };
+		2EB612FF1D48AFE800B48E29 /* OLInstagramMediaRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB612F81D48AFE800B48E29 /* OLInstagramMediaRequest.m */; };
+		2EB613001D48AFE800B48E29 /* OLInstagramMediaRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB612F81D48AFE800B48E29 /* OLInstagramMediaRequest.m */; };
+		2EB613011D48AFE800B48E29 /* OLInstagramImagePickerConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB612FA1D48AFE800B48E29 /* OLInstagramImagePickerConstants.m */; };
+		2EB613021D48AFE800B48E29 /* OLInstagramImagePickerConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB612FA1D48AFE800B48E29 /* OLInstagramImagePickerConstants.m */; };
+		2EB613031D48AFE800B48E29 /* OLInstagramImagePickerConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB612FA1D48AFE800B48E29 /* OLInstagramImagePickerConstants.m */; };
+		2EB613041D48AFE800B48E29 /* OLInstagramImagePickerConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB612FA1D48AFE800B48E29 /* OLInstagramImagePickerConstants.m */; };
+		2EB613051D48AFE800B48E29 /* OLInstagramImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB612FC1D48AFE800B48E29 /* OLInstagramImage.m */; };
+		2EB613061D48AFE800B48E29 /* OLInstagramImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB612FC1D48AFE800B48E29 /* OLInstagramImage.m */; };
+		2EB613071D48AFE800B48E29 /* OLInstagramImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB612FC1D48AFE800B48E29 /* OLInstagramImage.m */; };
+		2EB613081D48AFE800B48E29 /* OLInstagramImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB612FC1D48AFE800B48E29 /* OLInstagramImage.m */; };
 		2EB715D51CFDD12900618C7B /* OLLuhn.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB715D41CFDD12900618C7B /* OLLuhn.m */; };
 		2EB715D61CFDD12900618C7B /* OLLuhn.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB715D41CFDD12900618C7B /* OLLuhn.m */; };
 		2EB715D71CFDD12900618C7B /* OLLuhn.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB715D41CFDD12900618C7B /* OLLuhn.m */; };
@@ -966,6 +986,16 @@
 		2EB4BD6A1AE13F520004CEE0 /* OLPhotobookPageContentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLPhotobookPageContentViewController.m; sourceTree = "<group>"; };
 		2EB612E41D489E4700B48E29 /* OLImagePickerPhotosPageViewController+Facebook.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "OLImagePickerPhotosPageViewController+Facebook.h"; sourceTree = "<group>"; };
 		2EB612E51D489E4700B48E29 /* OLImagePickerPhotosPageViewController+Facebook.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "OLImagePickerPhotosPageViewController+Facebook.m"; sourceTree = "<group>"; };
+		2EB612EA1D48AF3200B48E29 /* OLImagePickerPhotosPageViewController+Instagram.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "OLImagePickerPhotosPageViewController+Instagram.h"; sourceTree = "<group>"; };
+		2EB612EB1D48AF3200B48E29 /* OLImagePickerPhotosPageViewController+Instagram.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "OLImagePickerPhotosPageViewController+Instagram.m"; sourceTree = "<group>"; };
+		2EB612F01D48AF9400B48E29 /* OLInstagramLoginWebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLInstagramLoginWebViewController.h; sourceTree = "<group>"; };
+		2EB612F11D48AF9400B48E29 /* OLInstagramLoginWebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLInstagramLoginWebViewController.m; sourceTree = "<group>"; };
+		2EB612F71D48AFE800B48E29 /* OLInstagramMediaRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLInstagramMediaRequest.h; sourceTree = "<group>"; };
+		2EB612F81D48AFE800B48E29 /* OLInstagramMediaRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLInstagramMediaRequest.m; sourceTree = "<group>"; };
+		2EB612F91D48AFE800B48E29 /* OLInstagramImagePickerConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLInstagramImagePickerConstants.h; sourceTree = "<group>"; };
+		2EB612FA1D48AFE800B48E29 /* OLInstagramImagePickerConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLInstagramImagePickerConstants.m; sourceTree = "<group>"; };
+		2EB612FB1D48AFE800B48E29 /* OLInstagramImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLInstagramImage.h; sourceTree = "<group>"; };
+		2EB612FC1D48AFE800B48E29 /* OLInstagramImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLInstagramImage.m; sourceTree = "<group>"; };
 		2EB715D31CFDD12900618C7B /* OLLuhn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLLuhn.h; sourceTree = "<group>"; };
 		2EB715D41CFDD12900618C7B /* OLLuhn.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLLuhn.m; sourceTree = "<group>"; };
 		2EB715D91CFDD36600618C7B /* OLStripeCard+OLCardIcon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "OLStripeCard+OLCardIcon.h"; sourceTree = "<group>"; };
@@ -1455,6 +1485,10 @@
 				2E28CDFC1D38EEAF00E9AFEA /* OLImagePickerPhotosPageViewController.m */,
 				2EB612E41D489E4700B48E29 /* OLImagePickerPhotosPageViewController+Facebook.h */,
 				2EB612E51D489E4700B48E29 /* OLImagePickerPhotosPageViewController+Facebook.m */,
+				2EB612EA1D48AF3200B48E29 /* OLImagePickerPhotosPageViewController+Instagram.h */,
+				2EB612EB1D48AF3200B48E29 /* OLImagePickerPhotosPageViewController+Instagram.m */,
+				2EB612F01D48AF9400B48E29 /* OLInstagramLoginWebViewController.h */,
+				2EB612F11D48AF9400B48E29 /* OLInstagramLoginWebViewController.m */,
 			);
 			name = "Image Picker";
 			sourceTree = "<group>";
@@ -1574,6 +1608,7 @@
 				CD550BD61886BF6000782D75 /* Payment */,
 				CD7696A11868DE7A006D4A26 /* Print */,
 				3DE2B0C01A77D2290092D97F /* Util */,
+				2EB612F61D48AFDA00B48E29 /* Instagram */,
 				2E1E66D91D4795C8002524A4 /* Facebook */,
 			);
 			name = Model;
@@ -1651,6 +1686,19 @@
 				2EAB0AF21CDCD57A00625BD6 /* OLTestTapGestureRecognizer.m */,
 			);
 			name = Helpers;
+			sourceTree = "<group>";
+		};
+		2EB612F61D48AFDA00B48E29 /* Instagram */ = {
+			isa = PBXGroup;
+			children = (
+				2EB612F71D48AFE800B48E29 /* OLInstagramMediaRequest.h */,
+				2EB612F81D48AFE800B48E29 /* OLInstagramMediaRequest.m */,
+				2EB612F91D48AFE800B48E29 /* OLInstagramImagePickerConstants.h */,
+				2EB612FA1D48AFE800B48E29 /* OLInstagramImagePickerConstants.m */,
+				2EB612FB1D48AFE800B48E29 /* OLInstagramImage.h */,
+				2EB612FC1D48AFE800B48E29 /* OLInstagramImage.m */,
+			);
+			name = Instagram;
 			sourceTree = "<group>";
 		};
 		2ED5DEB01AC94337003301A8 /* LXReorderableCollectionViewFlowLayout */ = {
@@ -2685,10 +2733,12 @@
 				2E898C571CC518180041CCD8 /* OLCheckoutViewController.m in Sources */,
 				2E898C581CC518180041CCD8 /* OLPhotobookViewController.m in Sources */,
 				2E67B9211D264FD600914D56 /* OLPaymentViewControllerV2.m in Sources */,
+				2EB612FE1D48AFE800B48E29 /* OLInstagramMediaRequest.m in Sources */,
 				2E96BAEA1D2FC109002F5F74 /* split.c in Sources */,
 				2E898C5A1CC518180041CCD8 /* OLPopupOptionsImageView.m in Sources */,
 				2E434AE11D36583700D1BD06 /* OLEditingToolsView.m in Sources */,
 				2E898C5B1CC518180041CCD8 /* NSArray+QueryingExtras.m in Sources */,
+				2EB613061D48AFE800B48E29 /* OLInstagramImage.m in Sources */,
 				2E898C5D1CC518180041CCD8 /* PrintOrderHistoryViewController.m in Sources */,
 				2E898C5E1CC518180041CCD8 /* UIImage+ImageNamedInKiteBundle.m in Sources */,
 				2E898C601CC518180041CCD8 /* OLStripeCard.m in Sources */,
@@ -2705,6 +2755,7 @@
 				2E898C681CC518180041CCD8 /* OLKiteUtils.m in Sources */,
 				2E0FF2E41D2A9003007093C0 /* OLButtonCollectionViewCell.m in Sources */,
 				2E898C6B1CC518180041CCD8 /* OLImagePreviewViewController.m in Sources */,
+				2EB612F31D48AF9400B48E29 /* OLInstagramLoginWebViewController.m in Sources */,
 				2E898C6C1CC518180041CCD8 /* OLCaseViewController.m in Sources */,
 				2E898C6D1CC518180041CCD8 /* ViewController.m in Sources */,
 				2E28CDFE1D38EEAF00E9AFEA /* OLImagePickerPhotosPageViewController.m in Sources */,
@@ -2739,6 +2790,7 @@
 				2E898C891CC518180041CCD8 /* OLKitePrintSDK.m in Sources */,
 				2E898C8A1CC518180041CCD8 /* OLQRCodeUploadedImagePoller.m in Sources */,
 				2E898C8B1CC518180041CCD8 /* NSString+Formatting.m in Sources */,
+				2EB612ED1D48AF3200B48E29 /* OLImagePickerPhotosPageViewController+Instagram.m in Sources */,
 				2E898C8C1CC518180041CCD8 /* OLAddress.m in Sources */,
 				2E36A1DD1D42094C00EA2F0F /* OLImagePickerProvider.m in Sources */,
 				2E898C8D1CC518180041CCD8 /* OLNavigationController.m in Sources */,
@@ -2762,6 +2814,7 @@
 				2E37B1821D229162003DAA84 /* OLProductRepresentation.m in Sources */,
 				2EB919961D23AE20009D0B8F /* OLPhotobookPageBlankContentViewController.m in Sources */,
 				2E898C9E1CC518180041CCD8 /* OLUpsellOffer.m in Sources */,
+				2EB613021D48AFE800B48E29 /* OLInstagramImagePickerConstants.m in Sources */,
 				2E898C9F1CC518180041CCD8 /* UITextField+Selection.m in Sources */,
 				2E898CA11CC518180041CCD8 /* LXReorderableCollectionViewFlowLayout.m in Sources */,
 				2E898CA21CC518180041CCD8 /* OLImageCachingManager.m in Sources */,
@@ -2840,6 +2893,7 @@
 				2EA3D36B1C9C04B500B99BCD /* UIImage+ImageNamedInKiteBundle.m in Sources */,
 				2EA3D36D1C9C04B500B99BCD /* OLOrderReviewViewController.m in Sources */,
 				2E96BAC21D2FC101002F5F74 /* UIImage+MDQRCode.m in Sources */,
+				2EB613081D48AFE800B48E29 /* OLInstagramImage.m in Sources */,
 				2EA3D36E1C9C04B500B99BCD /* OLProduct.m in Sources */,
 				2EA3D3701C9C04B500B99BCD /* OLAddressEditViewController.m in Sources */,
 				2E5BDC411CEDBF8200257B1A /* OLImageDownloadDelegate.m in Sources */,
@@ -2865,12 +2919,15 @@
 				2EA3D3841C9C04B500B99BCD /* OLPrintOrderCost.m in Sources */,
 				2EA3D3851C9C04B500B99BCD /* OLEditPhotobookViewController.m in Sources */,
 				2EA3D3861C9C04B500B99BCD /* UIView+RMUtils.m in Sources */,
+				2EB613001D48AFE800B48E29 /* OLInstagramMediaRequest.m in Sources */,
+				2EB612EF1D48AF3200B48E29 /* OLImagePickerPhotosPageViewController+Instagram.m in Sources */,
 				2EA3D3871C9C04B500B99BCD /* OLPrintOrder+History.m in Sources */,
 				2EA3D3881C9C04B500B99BCD /* OLStripeCard.m in Sources */,
 				2EA3D3891C9C04B500B99BCD /* OLAsset.m in Sources */,
 				2E25FEFE1CF2EF5D006E52E5 /* OLKeyChainStore.m in Sources */,
 				2EA3D38A1C9C04B500B99BCD /* OLProductTemplate.m in Sources */,
 				2EA3D38B1C9C04B500B99BCD /* OLPaymentViewController.m in Sources */,
+				2EB613041D48AFE800B48E29 /* OLInstagramImagePickerConstants.m in Sources */,
 				2E96BAD81D2FC109002F5F74 /* mask.c in Sources */,
 				2EA3D38E1C9C04B500B99BCD /* OLKitePrintSDK.m in Sources */,
 				2EA3D38F1C9C04B500B99BCD /* NSString+Formatting.m in Sources */,
@@ -2918,6 +2975,7 @@
 				2E1E66EB1D4795EE002524A4 /* OLFacebookPhotosForAlbumRequest.m in Sources */,
 				2EA3D3B41C9C04B500B99BCD /* OLPostcardPrintJob.m in Sources */,
 				2EA3D3B51C9C04B500B99BCD /* NSObject+Utils.m in Sources */,
+				2EB612F51D48AF9400B48E29 /* OLInstagramLoginWebViewController.m in Sources */,
 				2EA3D3B61C9C04B500B99BCD /* OLAnalytics.m in Sources */,
 				2E2BF44A1CCDFAF100725561 /* OLKiteTheme.m in Sources */,
 				2EA3D3B71C9C04B500B99BCD /* OLCircleMaskCollectionViewCell.m in Sources */,
@@ -2961,10 +3019,12 @@
 				2EADD7E91BE79D6D0051CD31 /* OLInfoPageViewController.m in Sources */,
 				2EADD7EA1BE79D6D0051CD31 /* OLIntegratedCheckoutViewController.m in Sources */,
 				2EADD7EB1BE79D6D0051CD31 /* OLProductGroup.m in Sources */,
+				2EB612FD1D48AFE800B48E29 /* OLInstagramMediaRequest.m in Sources */,
 				2EADD7EC1BE79D6D0051CD31 /* UIImage+OLUtils.m in Sources */,
 				2EADD7ED1BE79D6D0051CD31 /* OLCheckoutViewController.m in Sources */,
 				2EBDA6DD1CEB1B0500397082 /* OLImageDownloader.m in Sources */,
 				2EADD7EE1BE79D6D0051CD31 /* OLPhotobookViewController.m in Sources */,
+				2EB613051D48AFE800B48E29 /* OLInstagramImage.m in Sources */,
 				2ED389951C918DC100DC2314 /* OLTextOnPhoto.m in Sources */,
 				2EADD7F01BE79D6D0051CD31 /* OLPopupOptionsImageView.m in Sources */,
 				2EADD7F11BE79D6D0051CD31 /* NSArray+QueryingExtras.m in Sources */,
@@ -2981,6 +3041,7 @@
 				2E7F516D1BF5FBB100A78718 /* OLGreetingCardPrintJob.m in Sources */,
 				2EADD7FA1BE79D6D0051CD31 /* OLAddressEditViewController.m in Sources */,
 				2EADD7FB1BE79D6D0051CD31 /* OLKiteUtils.m in Sources */,
+				2EB612F21D48AF9400B48E29 /* OLInstagramLoginWebViewController.m in Sources */,
 				2E14D2D11C2AE9AD00F35403 /* OLImagePreviewViewController.m in Sources */,
 				2E7BDADA1D3E1713005F142C /* OLUserSession.m in Sources */,
 				2EADD7FE1BE79D6D0051CD31 /* OLCaseViewController.m in Sources */,
@@ -3015,6 +3076,7 @@
 				2EADD8141BE79D6D0051CD31 /* OLProductTemplate.m in Sources */,
 				2EADD8151BE79D6D0051CD31 /* OLPaymentViewController.m in Sources */,
 				2EADD8181BE79D6D0051CD31 /* OLKitePrintSDK.m in Sources */,
+				2EB612EC1D48AF3200B48E29 /* OLImagePickerPhotosPageViewController+Instagram.m in Sources */,
 				2E37B1811D229162003DAA84 /* OLProductRepresentation.m in Sources */,
 				2E36A1DC1D42094C00EA2F0F /* OLImagePickerProvider.m in Sources */,
 				E2AABA151C6DFC160007C1D7 /* OLQRCodeUploadedImagePoller.m in Sources */,
@@ -3038,6 +3100,7 @@
 				2ED36B3A1C8EE4AD00FB2D4A /* NSDictionary+RequestParameterData.m in Sources */,
 				2EADD8271BE79D6D0051CD31 /* OLRemoteImageCropper.m in Sources */,
 				2EA0087B1CB293A900C23DFA /* OLUpsellOffer.m in Sources */,
+				2EB613011D48AFE800B48E29 /* OLInstagramImagePickerConstants.m in Sources */,
 				2EADD8291BE79D6D0051CD31 /* UITextField+Selection.m in Sources */,
 				2EADD82B1BE79D6D0051CD31 /* LXReorderableCollectionViewFlowLayout.m in Sources */,
 				2EADD82D1BE79D6D0051CD31 /* OLImageCachingManager.m in Sources */,
@@ -3220,6 +3283,7 @@
 				2E5BDC401CEDBF8200257B1A /* OLImageDownloadDelegate.m in Sources */,
 				E29C85AF1BE3B5C50041D4CF /* OLCaseViewController.m in Sources */,
 				E29C85B31BE3B5C50041D4CF /* OLFrameOrderReviewViewController.m in Sources */,
+				2EB612FF1D48AFE800B48E29 /* OLInstagramMediaRequest.m in Sources */,
 				E29C85B41BE3B5C50041D4CF /* OLApparelPrintJob.m in Sources */,
 				2E96BAD31D2FC109002F5F74 /* bitstream.c in Sources */,
 				E29C85B51BE3B5C50041D4CF /* OLKiteViewController.m in Sources */,
@@ -3263,6 +3327,7 @@
 				E29C85D61BE3B5C50041D4CF /* OLNavigationController.m in Sources */,
 				2E1E66E61D4795EE002524A4 /* OLFacebookAlbumRequest.m in Sources */,
 				2E8FD2711BF9E73B00F4FC5A /* OLPhotoEdits.m in Sources */,
+				2EB613031D48AFE800B48E29 /* OLInstagramImagePickerConstants.m in Sources */,
 				2E53E0CE1C1AEAAD00BF7887 /* UIViewController+OLMethods.m in Sources */,
 				2E1E66F01D479617002524A4 /* OLFacebookImage.m in Sources */,
 				E29C85D71BE3B5C50041D4CF /* NSDecimalNumber+CostFormatter.m in Sources */,
@@ -3272,6 +3337,7 @@
 				E29C85DD1BE3B5C50041D4CF /* OLPrintOrder.m in Sources */,
 				2E645B381BE7D176009B662B /* OLProductOptionsViewController.m in Sources */,
 				2E36A1DE1D42094C00EA2F0F /* OLImagePickerProvider.m in Sources */,
+				2EB612F41D48AF9400B48E29 /* OLInstagramLoginWebViewController.m in Sources */,
 				2E67B92C1D267A3E00914D56 /* OLColorSelectionCollectionViewCell.m in Sources */,
 				E29C85DE1BE3B5C50041D4CF /* OLProductTemplateSyncRequest.m in Sources */,
 				E29C85E41BE3B5C50041D4CF /* OLProductTypeSelectionViewController.m in Sources */,
@@ -3287,7 +3353,9 @@
 				E29C85F01BE3B5C50041D4CF /* OLCountry.m in Sources */,
 				2ED389921C917D2000DC2314 /* OLPhotoTextField.m in Sources */,
 				E29C85F31BE3B5C50041D4CF /* OLConstants.m in Sources */,
+				2EB612EE1D48AF3200B48E29 /* OLImagePickerPhotosPageViewController+Instagram.m in Sources */,
 				E29C85F41BE3B5C50041D4CF /* OLProductOverviewPageContentViewController.m in Sources */,
+				2EB613071D48AFE800B48E29 /* OLInstagramImage.m in Sources */,
 				2E96BADB1D2FC109002F5F74 /* qrencode.c in Sources */,
 				E29C85F61BE3B5C50041D4CF /* OLJudoPayCard.m in Sources */,
 				E29C85F71BE3B5C50041D4CF /* OLReceiptViewController.m in Sources */,

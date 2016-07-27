@@ -33,6 +33,7 @@
 #import "OLRemoteImageView.h"
 #import "OLUserSession.h"
 #import "OLImagePickerPhotosPageViewController+Facebook.h"
+#import "OLImagePickerPhotosPageViewController+Instagram.h"
 
 @interface OLImagePickerPhotosPageViewController () <UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, UICollectionViewDelegate>
 @property (weak, nonatomic) IBOutlet UIImageView *albumLabelChevron;
@@ -79,6 +80,9 @@ NSInteger OLImagePickerMargin = 0;
     
     if (self.providerType == OLImagePickerProviderTypeFacebook){
         [self loadFacebookAlbums];
+    }
+    else if (self.providerType == OLImagePickerProviderTypeInstagram){
+        [self startImageLoading];
     }
 }
 

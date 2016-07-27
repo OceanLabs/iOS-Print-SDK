@@ -64,7 +64,7 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
     [super viewDidLoad];
     
 #ifdef OL_KITE_OFFER_INSTAGRAM
-    [OLKitePrintSDK setInstagramEnabledWithClientID:@"a6a09c92a14d488baa471e5209906d3d" secret:@"bfb814274cd041a5b7e06f32608e0e87" redirectURI:@"kite://instagram-callback"];
+    [OLKitePrintSDK setInstagramEnabledWithClientID:@"1af4c208cbdc4d09bbe251704990638f" secret:@"c8a5b1b1806f4586afad2f277cee1d5c" redirectURI:@"kitely://instagram-callback"];
 #endif
     
 #ifdef OL_KITE_OFFER_APPLE_PAY

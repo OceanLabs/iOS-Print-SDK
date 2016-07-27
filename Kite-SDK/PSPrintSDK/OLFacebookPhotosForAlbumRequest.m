@@ -53,7 +53,7 @@
     if ([FBSDKAccessToken currentAccessToken]) {
         // connection is open, perform the request
         [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
-        NSString *graphPath = [NSString stringWithFormat:@"%@/photos?fields=picture,source,id,images&limit=50", self.album.albumId];
+        NSString *graphPath = [NSString stringWithFormat:@"%@/photos?fields=picture,source,id,images&limit=100", self.album.albumId];
         if (self.after) {
             graphPath = [graphPath stringByAppendingFormat:@"&after=%@", self.after];
         }

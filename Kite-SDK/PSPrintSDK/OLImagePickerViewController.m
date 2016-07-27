@@ -44,10 +44,18 @@
 #import "OLImagePickerProvider.h"
 #import "OLImagePickerLoginPageViewController.h"
 #import <FBSDKCoreKit/FBSDKAccessToken.h>
+#import <NXOAuth2Client/NXOAuth2AccountStore.h>
+#import "OLKitePrintSDK.h"
 
 @interface OLKiteViewController ()
 @property (strong, nonatomic) NSMutableArray <OLCustomPhotoProvider *> *customImageProviders;
 @property (strong, nonatomic) OLPrintOrder *printOrder;
+@end
+
+@interface OLKitePrintSDK ()
++ (NSString *)instagramRedirectURI;
++ (NSString *)instagramSecret;
++ (NSString *)instagramClientID;
 @end
 
 @interface OLImagePickerViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UIPageViewControllerDelegate, UIPageViewControllerDataSource, OLUpsellViewControllerDelegate>
@@ -287,23 +295,35 @@
         return nil;
     }
     
+    if (self.providers[index].providerType == OLImagePickerProviderTypeInstagram){
+        [[NXOAuth2AccountStore sharedStore] setClientID:[OLKitePrintSDK instagramClientID]
+                                                 secret:[OLKitePrintSDK instagramSecret]
+                                       authorizationURL:[NSURL URLWithString:@"https://api.instagram.com/oauth/authorize"]
+                                               tokenURL:[NSURL URLWithString:@"https://api.instagram.com/oauth/access_token/"]
+                                            redirectURL:[NSURL URLWithString:[OLKitePrintSDK instagramRedirectURI]]
+                                         forAccountType:@"instagram"];
+    }
+    
     OLImagePickerPageViewController *vc;
     
     if (self.providers[index].providerType == OLImagePickerProviderTypeFacebook && ![FBSDKAccessToken currentAccessToken]){
         vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLImagePickerLoginPageViewController"];
         vc.pageIndex = index;
         vc.providerType = OLImagePickerProviderTypeFacebook;
-        
+    }
+    else if (self.providers[index].providerType == OLImagePickerProviderTypeInstagram && [[NXOAuth2AccountStore sharedStore] accountsWithAccountType:@"instagram"].count == 0){
+        vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLImagePickerLoginPageViewController"];
+        vc.pageIndex = index;
+        vc.providerType = OLImagePickerProviderTypeInstagram;
     }
     else{
         vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLImagePickerPhotosPageViewController"];
-        ((OLImagePickerPhotosPageViewController *)vc).imagePicker = self;
         vc.pageIndex = index;
         vc.providerType = self.providers[index].providerType;
         ((OLImagePickerPhotosPageViewController *)vc).provider = self.providers[index];
         ((OLImagePickerPhotosPageViewController *)vc).quantityPerItem = self.product.quantityToFulfillOrder;
     }
-    
+    vc.imagePicker = self;
     [vc.view class]; //force view did load
     [self updateTopConForVc:vc];
     

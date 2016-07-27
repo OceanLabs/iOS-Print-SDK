@@ -29,6 +29,9 @@
 
 #import "OLUserSession.h"
 #import "OLKiteUtils.h"
+#import <NXOAuth2Client/NXOAuth2AccountStore.h>
+#import <FBSDKCoreKit/FBSDKAccessToken.h>
+#import <FBSDKLoginKit/FBSDKLoginManager.h>
 
 @interface OLPrintOrder (Private)
 
@@ -85,7 +88,23 @@
         //TODO
     }
     if ((cleanupOptions & OLUserSessionCleanupOptionSocial) == OLUserSessionCleanupOptionSocial){
-        //TODO
+        NSHTTPCookie *cookie;
+        NSHTTPCookieStorage *storage = [NSHTTPCookieStorage sharedHTTPCookieStorage];
+        NSArray *cookies = [NSArray arrayWithArray:[storage cookies]];
+        for (cookie in cookies) {
+            if ([cookie.domain containsString:@"instagram.com"]) {
+                [storage deleteCookie:cookie];
+            }
+        }
+        
+        NSArray *instagramAccounts = [[NXOAuth2AccountStore sharedStore] accountsWithAccountType:@"instagram"];
+        for (NXOAuth2Account *account in instagramAccounts) {
+            [[NXOAuth2AccountStore sharedStore] removeAccount:account];
+        }
+        
+        FBSDKLoginManager *loginManager = [[FBSDKLoginManager alloc] init];
+        [loginManager logOut];
+        [FBSDKAccessToken setCurrentAccessToken:nil];
     }
     if ((cleanupOptions & OLUserSessionCleanupOptionAll) == OLUserSessionCleanupOptionAll){
         self.userSelectedPhotos = nil;

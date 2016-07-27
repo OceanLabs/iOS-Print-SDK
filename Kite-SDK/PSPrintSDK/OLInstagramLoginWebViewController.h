@@ -28,15 +28,8 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "OLProduct.h"
-#import "OLKiteViewController.h"
+#import "OLImagePickerViewController.h"
 
-@interface OLImagePickerViewController : UIViewController
-
-@property (strong, nonatomic) OLProduct *product;
-@property (weak, nonatomic) id<OLKiteDelegate> delegate;
-- (void)updateTitleBasedOnSelectedPhotoQuanitity;
-- (void)reloadPageController;
-
-
+@interface OLInstagramLoginWebViewController : UIViewController
+@property (weak, nonatomic) OLImagePickerViewController *imagePicker;
 @end

@@ -4489,8 +4489,10 @@ only £9.99 £8.99</string>
                             <constraint firstItem="KRc-V0-JNW" firstAttribute="top" relation="greaterThanOrEqual" secondItem="Boa-KA-dMa" secondAttribute="bottom" constant="20" id="8Of-ZF-jvw"/>
                             <constraint firstItem="Boa-KA-dMa" firstAttribute="top" secondItem="kXv-te-0ud" secondAttribute="bottom" constant="20" id="Has-BD-Rrq"/>
                             <constraint firstItem="KRc-V0-JNW" firstAttribute="centerX" secondItem="LLf-db-dfy" secondAttribute="centerX" id="N0J-TA-jjp"/>
+                            <constraint firstItem="Boa-KA-dMa" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="LLf-db-dfy" secondAttribute="leading" constant="20" id="PWO-GT-pl9"/>
                             <constraint firstItem="KRc-V0-JNW" firstAttribute="centerY" secondItem="LLf-db-dfy" secondAttribute="centerY" priority="750" id="QK6-Rl-AWf"/>
                             <constraint firstItem="Boa-KA-dMa" firstAttribute="centerX" secondItem="LLf-db-dfy" secondAttribute="centerX" id="tez-4g-mdm"/>
+                            <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="Boa-KA-dMa" secondAttribute="trailing" constant="20" id="uYc-70-I7N"/>
                         </constraints>
                     </view>
                     <connections>
