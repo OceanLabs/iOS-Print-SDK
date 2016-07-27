@@ -10,7 +10,7 @@
 
 @interface OLImagePickerProviderCollection ()
 
-@property (strong, nonatomic) NSArray<OLAsset *> *array;
+@property (strong, nonatomic) NSMutableArray<OLAsset *> *array;
 @property (strong, nonatomic) PHFetchResult *fetchResult;
 @property (strong, nonatomic, readwrite) NSString *name;
 
@@ -21,7 +21,7 @@
 - (instancetype)initWithArray:(NSArray<OLAsset *> *)array name:(NSString *)name{
     self = [super init];
     if (self){
-        self.array = array;
+        self.array = [array mutableCopy];
         self.name = name;
     }
     
@@ -40,7 +40,7 @@
 
 - (id)copyWithZone:(NSZone *)zone{
     OLImagePickerProviderCollection *copy = [[OLImagePickerProviderCollection alloc] init];
-    copy.array = [[NSArray alloc] initWithArray:self.array copyItems:NO];
+    copy.array = [[NSMutableArray alloc] initWithArray:self.array copyItems:NO];
     copy.fetchResult = [self.fetchResult copyWithZone:zone];
     return copy;
 }

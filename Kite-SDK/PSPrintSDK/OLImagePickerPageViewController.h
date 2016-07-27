@@ -29,11 +29,13 @@
 
 #import <UIKit/UIKit.h>
 #import "OLImagePickerProvider.h"
+#import "OLImagePickerViewController.h"
 
 @interface OLImagePickerPageViewController : UIViewController
 
 @property (assign, nonatomic) NSInteger pageIndex;
 @property (assign, nonatomic) OLImagePickerProviderType providerType;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *albumLabelContainerTopCon;
+@property (weak, nonatomic) OLImagePickerViewController *imagePicker;
 
 @end

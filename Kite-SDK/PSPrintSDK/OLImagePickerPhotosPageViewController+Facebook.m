@@ -27,34 +27,16 @@
 //  THE SOFTWARE.
 //
 
-#import "OLImagePickerFacebookPhotosPageViewController.h"
-#import "OLFacebookAlbumRequest.h"
-#import "OLFacebookAlbum.h"
-#import "OLFacebookPhotosForAlbumRequest.h"
-#import "OLFacebookImage.h"
+#import "OLImagePickerPhotosPageViewController+Facebook.h"
 
-@interface OLImagePickerFacebookPhotosPageViewController ()
-
-@property (nonatomic, strong) OLFacebookAlbumRequest *albumRequestForNextPage;
-@property (nonatomic, strong) OLFacebookAlbumRequest *inProgressRequest;
-@property (nonatomic, strong) OLFacebookPhotosForAlbumRequest *nextPageRequest;
-@property (nonatomic, strong) OLFacebookPhotosForAlbumRequest *inProgressPhotosRequest;
-@property (nonatomic, strong) UIView *loadingFooter;
-@property (nonatomic, weak) IBOutlet UIActivityIndicatorView *loadingIndicator;
-@property (nonatomic, strong) NSError *getAlbumError;
-@property (nonatomic, strong) NSMutableArray<OLFacebookAlbum *> *albums;
-
-@property (nonatomic, strong) NSMutableArray<OLFacebookImage *> *photos;
-@property (nonatomic, strong) NSArray<OLFacebookImage *> *overflowPhotos;
-
-
+@interface OLImagePickerProviderCollection ()
+@property (strong, nonatomic) NSMutableArray<OLAsset *> *array;
 @end
 
-@implementation OLImagePickerFacebookPhotosPageViewController
+@implementation OLImagePickerPhotosPageViewController (Facebook)
 
-- (void)viewDidLoad{
-    [super viewDidLoad];
-    
+- (void)loadFacebookAlbums{
+    self.albums = [[NSMutableArray alloc] init];
     self.albumRequestForNextPage = [[OLFacebookAlbumRequest alloc] init];
     [self loadNextAlbumPage];
     
@@ -90,19 +72,23 @@
         }
         
         [self.albums addObjectsFromArray:albums];
-        if (self.albums.count == albums.count) {
-            // first insert request
-            [self.collectionView reloadData];
-        } else {
-            [self.collectionView insertItemsAtIndexPaths:paths];
-        }
+//        if (self.albums.count == albums.count) {
+//            // first insert request
+//            [self.collectionView reloadData];
+//        } else {
+//            [self.collectionView insertItemsAtIndexPaths:paths];
+//        }
         
         if (nextPageRequest) {
-//            self.tableView.tableFooterView = self.loadingFooter;
+            //            self.tableView.tableFooterView = self.loadingFooter;
         } else {
+            [self.provider.collections addObject:[[OLImagePickerProviderCollection alloc] initWithArray:[[NSMutableArray alloc] init] name:[self.albums.firstObject name]]];
+            
+            self.photos = [[NSMutableArray alloc] init];
+            self.albumLabel.text = self.albums.firstObject.name;
             self.nextPageRequest = [[OLFacebookPhotosForAlbumRequest alloc] initWithAlbum:self.albums.firstObject];
             [self loadNextPage];
-//            self.tableView.tableFooterView = nil;
+            //            self.tableView.tableFooterView = nil;
         }
         
     }];
@@ -122,14 +108,23 @@
         }
         
         NSUInteger photosStartCount = self.photos.count;
+        for (OLFacebookImage *image in self.overflowPhotos){
+            [self.provider.collections.firstObject.array addObject:[OLAsset assetWithURL:image.fullURL]];
+        }
         [self.photos addObjectsFromArray:self.overflowPhotos];
         if (nextPageRequest != nil) {
-            // only insert multiple of 4 images so we fill complete rows
+            // only insert multiple of numberOfCellsPerRow images so we fill complete rows
             NSInteger overflowCount = (self.photos.count + photos.count) % [self numberOfCellsPerRow];
+            for (OLFacebookImage *image in [photos subarrayWithRange:NSMakeRange(0, photos.count - overflowCount)]){
+                [self.provider.collections.firstObject.array addObject:[OLAsset assetWithURL:image.fullURL]];
+            }
             [self.photos addObjectsFromArray:[photos subarrayWithRange:NSMakeRange(0, photos.count - overflowCount)]];
             self.overflowPhotos = [photos subarrayWithRange:NSMakeRange(photos.count - overflowCount, overflowCount)];
         } else {
             // we've exhausted all the users images so show the remainder
+            for (OLFacebookImage *image in photos){
+                [self.provider.collections.firstObject.array addObject:[OLAsset assetWithURL:image.fullURL]];
+            }
             [self.photos addObjectsFromArray:photos];
             self.overflowPhotos = @[];
         }

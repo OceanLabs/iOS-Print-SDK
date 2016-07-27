@@ -75,8 +75,7 @@
             } else if ([result isCancelled]) {
                 
             } else {
-                OLImagePickerViewController *picker = (OLImagePickerViewController *)self.parentViewController;
-                [picker reloadPageController];
+                [self.imagePicker reloadPageController];
             }
         }];
     }

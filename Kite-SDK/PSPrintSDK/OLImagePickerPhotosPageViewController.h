@@ -32,6 +32,11 @@
 #import "OLImagePickerViewController.h"
 #import "OLImagePickerPageViewController.h"
 
+#import "OLFacebookAlbumRequest.h"
+#import "OLFacebookAlbum.h"
+#import "OLFacebookPhotosForAlbumRequest.h"
+#import "OLFacebookImage.h"
+
 @interface OLImagePickerPhotosPageViewController : OLImagePickerPageViewController
 
 
@@ -42,11 +47,24 @@
 @property (assign, nonatomic) NSInteger maximumPhotos;
 
 @property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
-@property (weak, nonatomic) OLImagePickerViewController *imagePicker;
-
 @property (weak, nonatomic) IBOutlet UIView *albumLabelContainer;
+@property (weak, nonatomic) IBOutlet UILabel *albumLabel;
 
 - (NSUInteger)numberOfCellsPerRow;
+
+
+//Facebook
+@property (nonatomic, strong) OLFacebookAlbumRequest *albumRequestForNextPage;
+@property (nonatomic, strong) OLFacebookAlbumRequest *inProgressRequest;
+@property (nonatomic, strong) OLFacebookPhotosForAlbumRequest *nextPageRequest;
+@property (nonatomic, strong) OLFacebookPhotosForAlbumRequest *inProgressPhotosRequest;
+@property (nonatomic, strong) UIView *loadingFooter;
+@property (nonatomic, weak) IBOutlet UIActivityIndicatorView *loadingIndicator;
+@property (nonatomic, strong) NSError *getAlbumError;
+@property (nonatomic, strong) NSMutableArray<OLFacebookAlbum *> *albums;
+
+@property (nonatomic, strong) NSMutableArray<OLFacebookImage *> *photos;
+@property (nonatomic, strong) NSArray<OLFacebookImage *> *overflowPhotos;
 
 
 @end

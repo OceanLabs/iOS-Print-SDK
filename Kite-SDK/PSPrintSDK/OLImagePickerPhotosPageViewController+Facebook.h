@@ -29,6 +29,8 @@
 
 #import "OLImagePickerPhotosPageViewController.h"
 
-@interface OLImagePickerFacebookPhotosPageViewController : OLImagePickerPhotosPageViewController
+@interface OLImagePickerPhotosPageViewController (Facebook)
+
+- (void)loadFacebookAlbums;
 
 @end

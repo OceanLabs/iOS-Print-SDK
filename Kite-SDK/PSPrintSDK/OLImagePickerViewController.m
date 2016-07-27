@@ -299,6 +299,7 @@
         vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLImagePickerPhotosPageViewController"];
         ((OLImagePickerPhotosPageViewController *)vc).imagePicker = self;
         vc.pageIndex = index;
+        vc.providerType = self.providers[index].providerType;
         ((OLImagePickerPhotosPageViewController *)vc).provider = self.providers[index];
         ((OLImagePickerPhotosPageViewController *)vc).quantityPerItem = self.product.quantityToFulfillOrder;
     }

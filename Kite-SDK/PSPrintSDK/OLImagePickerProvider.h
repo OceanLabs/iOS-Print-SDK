@@ -46,6 +46,6 @@ typedef enum {
 @property (strong, nonatomic) UIImage *icon;
 @property (assign, nonatomic) OLImagePickerProviderType providerType;
 
-- (instancetype)initWithCollections:(NSMutableArray<id<NSFastEnumeration>> *)collections name:(NSString *)name icon:(UIImage *)icon;
+- (instancetype)initWithCollections:(NSArray<id<NSFastEnumeration>> *)collections name:(NSString *)name icon:(UIImage *)icon;
 
 @end

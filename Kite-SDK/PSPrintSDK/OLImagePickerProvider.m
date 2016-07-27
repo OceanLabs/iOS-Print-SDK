@@ -31,9 +31,9 @@
 
 @implementation OLImagePickerProvider
 
-- (instancetype)initWithCollections:(NSMutableArray<OLImagePickerProviderCollection *> *)collections name:(NSString *)name icon:(UIImage *)icon{
+- (instancetype)initWithCollections:(NSArray<OLImagePickerProviderCollection *> *)collections name:(NSString *)name icon:(UIImage *)icon{
     if (self = [super init]){
-        self.collections = collections;
+        self.collections = [collections mutableCopy];
         self.icon = icon;
         self.name = name;
     }

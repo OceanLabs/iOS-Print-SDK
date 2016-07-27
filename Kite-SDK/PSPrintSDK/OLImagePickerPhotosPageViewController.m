@@ -32,9 +32,9 @@
 #import "UIImageView+FadeIn.h"
 #import "OLRemoteImageView.h"
 #import "OLUserSession.h"
+#import "OLImagePickerPhotosPageViewController+Facebook.h"
 
 @interface OLImagePickerPhotosPageViewController () <UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, UICollectionViewDelegate>
-@property (weak, nonatomic) IBOutlet UILabel *albumLabel;
 @property (weak, nonatomic) IBOutlet UIImageView *albumLabelChevron;
 @property (assign, nonatomic) CGSize rotationSize;
 @property (strong, nonatomic) UIVisualEffectView *visualEffectView;
@@ -76,6 +76,10 @@ NSInteger OLImagePickerMargin = 0;
     }
     
     [view.superview addConstraints:con];
+    
+    if (self.providerType == OLImagePickerProviderTypeFacebook){
+        [self loadFacebookAlbums];
+    }
 }
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
