@@ -78,10 +78,10 @@ NSInteger OLImagePickerMargin = 0;
     
     [view.superview addConstraints:con];
     
-    if (self.provider.providerType == OLImagePickerProviderTypeFacebook){
+    if (self.provider.providerType == OLImagePickerProviderTypeFacebook && self.provider.collections.count == 0){
         [self loadFacebookAlbums];
     }
-    else if (self.provider.providerType == OLImagePickerProviderTypeInstagram){
+    else if (self.provider.providerType == OLImagePickerProviderTypeInstagram && self.provider.collections.count == 0){
         [self startImageLoading];
     }
 }
