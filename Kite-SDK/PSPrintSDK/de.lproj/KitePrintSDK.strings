@@ -2,7 +2,7 @@
 "401 Unauthorized Request Error whilst trying to upload an asset. Please check you included an Authorization header and that the supplied auth credentials are correct." = "401 Unauthorized Request Error whilst trying to upload an asset. Please check you included an Authorization header and that the supplied auth credentials are correct.";
 
 /* No comment provided by engineer. */
-"500 Internal Server Error whilst trying to upload an asset. Please try again." = "500 Internal Server Error. Bitte erneut versuchen. ";
+"500 Internal Server Error whilst trying to upload an asset. Please try again." = "500 Interner Server Fehler beim Hochladen. Bitte nocheinmal probieren";
 
 /* No comment provided by engineer. */
 "Add" = "hinzufügen";
@@ -20,16 +20,16 @@
 "Add more" = "Add more";
 
 /* No comment provided by engineer. */
-"Add New Address" = "Add New Address";
+"Add New Address" = "neue Adresse hinzufügen";
 
 /* No comment provided by engineer. */
-"Add Payment Method" = "Add Payment Method";
+"Add Payment Method" = "Zahlungsmethode hinzufügen";
 
 /* No comment provided by engineer. */
 "Add photos from:" = "Add photos from:";
 
 /* No comment provided by engineer. */
-"Add to Basket" = "Add to Basket";
+"Add to Basket" = "in den Korb legen";
 
 /* No comment provided by engineer. */
 "Address Book" = "Adressbuch";
@@ -38,7 +38,7 @@
 "Address Search" = "Adressensuche";
 
 /* No comment provided by engineer. */
-"Back" = "Back";
+"Back" = "Zurück";
 
 /* No comment provided by engineer. */
 "Camera Roll" = "Camera Roll";
@@ -53,7 +53,7 @@
 "Checking Code" = "Überprüfung Gutscheincode";
 
 /* No comment provided by engineer. */
-"Checkout" = "Checkout";
+"Checkout" = "Check out";
 
 /* No comment provided by engineer. */
 "Checkout for Free!" = "Kostenlos Checkout";
@@ -137,10 +137,10 @@
 "Last Name" = "Familienname";
 
 /* No comment provided by engineer. */
-"Line 1" = "Line 1";
+"Line 1" = "Leitung 1";
 
 /* No comment provided by engineer. */
-"Line 2" = "Line 2";
+"Line 2" = "Leitung 1";
 
 /* No comment provided by engineer. */
 "Missing Delivery Address" = "Fehlende Lieferadresse";
@@ -168,10 +168,10 @@
 "Order Id" = "Bestell ID";
 
 /* No comment provided by engineer. */
-"Order Summary" = "Order Summary";
+"Order Summary" = "Bestellübersicht";
 
 /* No comment provided by engineer. */
-"Pay %@" = "Pay %@";
+"Pay %@" = "Bezahlen %@";
 
 /* No comment provided by engineer. */
 "Pay with card ending %@" = "Bezahlen mit Karten-Endnummer %@";
@@ -198,40 +198,40 @@
 "Phone" = "Telefon";
 
 /* No comment provided by engineer. */
-"Please choose an address to have your order shipped to" = "Please choose an address to have your order shipped to";
+"Please choose an address to have your order shipped to" = "Bitte Lieferadresse wählen";
 
 /* No comment provided by engineer. */
-"Please enter a card expiry date in the future" = "Please enter a card expiry date in the future";
+"Please enter a card expiry date in the future" = "Bitte ein Kartenablaufdatum in der Zukunft eingeben";
 
 /* No comment provided by engineer. */
-"Please enter a valid card number" = "Please enter a valid card number";
+"Please enter a valid card number" = "Bitte gültige Kartennummer eingeben";
 
 /* No comment provided by engineer. */
 "Please enter a valid email address" = "Bitte eine gültige E-Mail Sdresse eingeben";
 
 /* No comment provided by engineer. */
-"Please enter a valid phone number" = "Please enter a valid phone number";
+"Please enter a valid phone number" = "Bitte gültige Telefonnummer eingeben";
 
 /* No comment provided by engineer. */
-"Postcode" = "Postcode";
+"Postcode" = "Postleitzahl";
 
 /* No comment provided by engineer. */
-"Print order submission failed with a %lu HTTP response status code. Please try again." = "Print order submission failed with a %lu HTTP response status code. Please try again.";
+"Print order submission failed with a %lu HTTP response status code. Please try again." = "Druckordereingabe fehlgeschlagen mit %lu  HTTP Staus Code";
 
 /* No comment provided by engineer. */
 "Print these" = "Print these";
 
 /* No comment provided by engineer. */
-"Processing" = "Processing";
+"Processing" = "Aufbereitung";
 
 /* No comment provided by engineer. */
 "Reposition the Photo" = "Reposition the Photo";
 
 /* No comment provided by engineer. */
-"Required by the postal service in case there are any issues during delivery." = "Required by the postal service in case there are any issues during delivery.";
+"Required by the postal service in case there are any issues during delivery." = "Für die Postzustellung erforderlich, um Probleme bei der Zustellung zu vermeiden.";
 
 /* No comment provided by engineer. */
-"Retry" = "Retry";
+"Retry" = "Bitte erneut versuchen";
 
 /* No comment provided by engineer. */
 "Review" = "Review";
@@ -240,19 +240,19 @@
 "Save" = "sichern";
 
 /* No comment provided by engineer. */
-"Search by postcode, street or address" = "Search by postcode, street or address";
+"Search by postcode, street or address" = "Suche nach Postleitzahl, Straße oder Adresse";
 
 /* No comment provided by engineer. */
-"Search by street, address or ZIP code" = "Search by street, address or ZIP code";
+"Search by street, address or ZIP code" = "Suche nach Straße Adresse oder Postleitzahl";
 
 /* No comment provided by engineer. */
-"Search for Address" = "Search for Address";
+"Search for Address" = "Nach Adresse suchen";
 
 /* No comment provided by engineer. */
-"Shipping" = "Shipping";
+"Shipping" = "Versand";
 
 /* No comment provided by engineer. */
-"State" = "State";
+"State" = "Status";
 
 /* No comment provided by engineer. */
 "Tap to edit" = "Tap to edit";
@@ -261,19 +261,19 @@
 "This is the 3-4 digit verification number/security code normally found on the back of your card" = "This is the 3-4 digit verification number/security code normally found on the back of your card";
 
 /* No comment provided by engineer. */
-"Total" = "Total";
+"Total" = "Gesamt";
 
 /* No comment provided by engineer. */
 "Transfer from your phone" = "von Deinem Telephon gesendet";
 
 /* Generic payment failed error dialog message */
-"Unfortunately we failed to take a payment from your card. Please try again." = "Unfortunately we failed to take a payment from your card. Please try again.";
+"Unfortunately we failed to take a payment from your card. Please try again." = "Leider war die Zahlung mit Ihrer Karte nicht erfolgreich, Bitte versuchen Sie es noch einmal.";
 
 /* No comment provided by engineer. */
-"Uploading Images \n%lu / %lu" = "Uploading Images \n%lu / %lu";
+"Uploading Images \n%lu / %lu" = "Bilder hochladen \n%lu / %lu";
 
 /* No comment provided by engineer. */
-"We'll send you confirmation and order updates." = "We'll send you confirmation and order updates.";
+"We'll send you confirmation and order updates." = "Wir werden Dir eine Orderbestätigung und Bestell-Aktualisierungen zusenden";
 
 /* No comment provided by engineer. */
 "We'll send you confirmation and order updates. Uncheck this box to opt out of email campaigns." = "We'll send you confirmation and order updates. Uncheck this box to opt out of email campaigns.";
@@ -282,7 +282,7 @@
 "You can add %d more for the same price." = "You can add %d more for the same price.";
 
 /* Invalid CVV payment failed error dialog message */
-"You have entered an invalid CVV number. Please check it and try again." = "You have entered an invalid CVV number. Please check it and try again.";
+"You have entered an invalid CVV number. Please check it and try again." = "Deine CVV Nummer ist ungültig, Bitte überprüfe sie und versuche es noch einmal.";
 
 /* No comment provided by engineer. */
 "You've selected %d photos." = "You've selected %d photos.";
@@ -294,11 +294,11 @@
 "Your card expiry date" = "Your card expiry date";
 
 /* Payment declined error dialog message */
-"Your payment has been declined. Please check your card details and try again." = "Your payment has been declined. Please check your card details and try again.";
+"Your payment has been declined. Please check your card details and try again." = "Deine Zahlung ist abgelehnt worden. Bitte überprüfe sie und versuche es noch einmal.";
 
 /* No comment provided by engineer. */
-"Your payment was not approved (transaction state: %@). Please try again." = "Your payment was not approved (transaction state: %@). Please try again.";
+"Your payment was not approved (transaction state: %@). Please try again." = "Deine Zahlung ist nicht anerkannt worden (Vorgang: %@) Bitte versuche es noch einmal.";
 
 /* No comment provided by engineer. */
-"ZIP Code" = "ZIP Code";
+"ZIP Code" = "Postleitzahl";
 
