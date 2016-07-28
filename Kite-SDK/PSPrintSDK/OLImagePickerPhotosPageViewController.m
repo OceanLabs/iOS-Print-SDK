@@ -81,10 +81,10 @@ NSInteger OLImagePickerMargin = 0;
     
     [self.view bringSubviewToFront:self.albumsContainerView];
     
-    if (self.provider.providerType == OLImagePickerProviderTypeFacebook && self.provider.collections.count == 0){
+    if (self.provider.providerType == OLImagePickerProviderTypeFacebook && self.provider.collections.firstObject.count == 0){
         [self loadFacebookAlbums];
     }
-    else if (self.provider.providerType == OLImagePickerProviderTypeInstagram && self.provider.collections.count == 0){
+    else if (self.provider.providerType == OLImagePickerProviderTypeInstagram && self.provider.collections.firstObject.count == 0){
         [self startImageLoading];
     }
 }
@@ -267,19 +267,22 @@ NSInteger OLImagePickerMargin = 0;
 - (IBAction)userDidTapOnAlbumLabel:(UITapGestureRecognizer *)sender {
     BOOL isOpening = CGAffineTransformIsIdentity(self.albumsContainerView.transform);
     
+    if (isOpening){
     self.nextButton.hidden = NO;
     self.imagePicker.nextButton.hidden = YES;
+    }
+    else{
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.25 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+            self.imagePicker.nextButton.hidden = NO;
+            self.nextButton.hidden = YES;
+        });
+    }
     
     [UIView animateWithDuration:0.8 delay:0 usingSpringWithDamping:0.6 initialSpringVelocity:0 options:0 animations:^{
         self.albumsContainerView.transform = isOpening ? CGAffineTransformMakeTranslation(0, self.view.frame.size.height - (self.albumsContainerView.frame.origin.y + self.albumsContainerView.frame.size.height)) : CGAffineTransformIdentity;
         
-        self.albumLabelChevron.transform = isOpening ?  CGAffineTransformMakeRotation(M_PI) : CGAffineTransformIdentity;
-    }completion:^(BOOL finished){
-        if (!isOpening){
-            self.imagePicker.nextButton.hidden = NO;
-            self.nextButton.hidden = YES;
-        }
-    }];
+        self.albumLabelChevron.transform = isOpening ? CGAffineTransformIdentity : CGAffineTransformMakeRotation(M_PI);
+    }completion:^(BOOL finished){}];
 }
 
 

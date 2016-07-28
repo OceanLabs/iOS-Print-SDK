@@ -50,12 +50,16 @@
 }
 
 - (void)loadNextInstagramPage {
+    if (self.inProgressRequest){
+        [self.inProgressRequest cancel];
+    }
     self.inProgressMediaRequest = self.nextMediaRequest;
     self.nextMediaRequest = nil;
+    __weak OLImagePickerPhotosPageViewController *welf = self;
     [self.inProgressMediaRequest fetchMediaWithCompletionHandler:^(NSError *error, NSArray *media, OLInstagramMediaRequest *nextRequest) {
-        self.inProgressMediaRequest = nil;
-        self.nextMediaRequest = nextRequest;
-        self.loadingIndicator.hidden = YES;
+        welf.inProgressMediaRequest = nil;
+        welf.nextMediaRequest = nextRequest;
+        welf.loadingIndicator.hidden = YES;
         
         if (error) {
             // clear all accounts and redo login...
@@ -66,7 +70,7 @@
                     [[NXOAuth2AccountStore sharedStore] removeAccount:account];
                 }
                 
-                [self.imagePicker reloadPageController];
+                [welf.imagePicker reloadPageController];
             } else {
                 //TODO handle error
             }
@@ -74,36 +78,36 @@
             return;
         }
         
-        NSUInteger mediaStartCount = self.media.count;
-        [self.media addObjectsFromArray:self.overflowMedia];
-        for (OLInstagramImage *image in self.overflowMedia){
-            [self.provider.collections.firstObject.array addObject:[OLAsset assetWithURL:image.fullURL]];
+        NSUInteger mediaStartCount = welf.media.count;
+        [welf.media addObjectsFromArray:welf.overflowMedia];
+        for (OLInstagramImage *image in welf.overflowMedia){
+            [welf.provider.collections.firstObject.array addObject:[OLAsset assetWithURL:image.fullURL]];
         }
         if (nextRequest != nil) {
             // only insert multiple of [self numberOfCellsPerRow] images so we fill complete rows
-            NSInteger overflowCount = (self.media.count + media.count) % [self numberOfCellsPerRow];
-            [self.media addObjectsFromArray:[media subarrayWithRange:NSMakeRange(0, media.count - overflowCount)]];
+            NSInteger overflowCount = (welf.media.count + media.count) % [welf numberOfCellsPerRow];
+            [welf.media addObjectsFromArray:[media subarrayWithRange:NSMakeRange(0, media.count - overflowCount)]];
             for (OLInstagramImage *image in [media subarrayWithRange:NSMakeRange(0, media.count - overflowCount)]){
-                [self.provider.collections.firstObject.array addObject:[OLAsset assetWithURL:image.fullURL]];
+                [welf.provider.collections.firstObject.array addObject:[OLAsset assetWithURL:image.fullURL]];
             }
-            self.overflowMedia = [media subarrayWithRange:NSMakeRange(media.count - overflowCount, overflowCount)];
+            welf.overflowMedia = [media subarrayWithRange:NSMakeRange(media.count - overflowCount, overflowCount)];
         } else {
             // we've exhausted all the users images so show the remainder
-            [self.media addObjectsFromArray:media];
+            [welf.media addObjectsFromArray:media];
             for (OLInstagramImage *image in media){
-                [self.provider.collections.firstObject.array addObject:[OLAsset assetWithURL:image.fullURL]];
+                [welf.provider.collections.firstObject.array addObject:[OLAsset assetWithURL:image.fullURL]];
             }
-            self.overflowMedia = @[];
+            welf.overflowMedia = @[];
         }
         
         // Insert new items
         NSMutableArray *addedItemPaths = [[NSMutableArray alloc] init];
-        for (NSUInteger itemIndex = mediaStartCount; itemIndex < self.media.count; ++itemIndex) {
+        for (NSUInteger itemIndex = mediaStartCount; itemIndex < welf.media.count; ++itemIndex) {
             [addedItemPaths addObject:[NSIndexPath indexPathForItem:itemIndex inSection:0]];
         }
         
-        [self.collectionView insertItemsAtIndexPaths:addedItemPaths];
-        ((UICollectionViewFlowLayout *) self.collectionView.collectionViewLayout).footerReferenceSize = CGSizeMake(0, nextRequest == nil ? 0 : 44);        
+        [welf.collectionView insertItemsAtIndexPaths:addedItemPaths];
+        ((UICollectionViewFlowLayout *) welf.collectionView.collectionViewLayout).footerReferenceSize = CGSizeMake(0, nextRequest == nil ? 0 : 44);
     }];
 }
 

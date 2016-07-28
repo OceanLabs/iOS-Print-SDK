@@ -49,17 +49,21 @@
 }
 
 - (void)loadNextAlbumPage {
+    if (self.inProgressRequest){
+        [self.inProgressRequest cancel];
+    }
     self.inProgressRequest = self.albumRequestForNextPage;
     self.albumRequestForNextPage = nil;
+    __weak OLImagePickerPhotosPageViewController *welf = self;
     [self.inProgressRequest getAlbums:^(NSArray<OLFacebookAlbum *> *albums, NSError *error, OLFacebookAlbumRequest *nextPageRequest) {
-        self.inProgressRequest = nil;
-        self.loadingIndicator.hidden = YES;
-        self.albumRequestForNextPage = nextPageRequest;
+        welf.inProgressRequest = nil;
+        welf.loadingIndicator.hidden = YES;
+        welf.albumRequestForNextPage = nextPageRequest;
         
         if (error) {
-            if (self.parentViewController.isBeingPresented) {
-                self.loadingIndicator.hidden = NO;
-                self.getAlbumError = error; // delay notification so that delegate can dismiss view controller safely if desired.
+            if (welf.parentViewController.isBeingPresented) {
+                welf.loadingIndicator.hidden = NO;
+                welf.getAlbumError = error; // delay notification so that delegate can dismiss view controller safely if desired.
             } else {
                 //TODO error
             }
@@ -68,75 +72,79 @@
         
         NSMutableArray *paths = [[NSMutableArray alloc] init];
         for (NSUInteger i = 0; i < albums.count; ++i) {
-            [paths addObject:[NSIndexPath indexPathForRow:self.albums.count + i inSection:0]];
+            [paths addObject:[NSIndexPath indexPathForRow:welf.albums.count + i inSection:0]];
         }
         
-        [self.albums addObjectsFromArray:albums];
-//        if (self.albums.count == albums.count) {
+        [welf.albums addObjectsFromArray:albums];
+//        if (welf.albums.count == albums.count) {
 //            // first insert request
-//            [self.collectionView reloadData];
+//            [welf.collectionView reloadData];
 //        } else {
-//            [self.collectionView insertItemsAtIndexPaths:paths];
+//            [welf.collectionView insertItemsAtIndexPaths:paths];
 //        }
         
         if (nextPageRequest) {
-            //            self.tableView.tableFooterView = self.loadingFooter;
+            //            welf.tableView.tableFooterView = welf.loadingFooter;
         } else {
-            [self.provider.collections addObject:[[OLImagePickerProviderCollection alloc] initWithArray:[[NSMutableArray alloc] init] name:[self.albums.firstObject name]]];
+            [welf.provider.collections addObject:[[OLImagePickerProviderCollection alloc] initWithArray:[[NSMutableArray alloc] init] name:[welf.albums.firstObject name]]];
             
-            self.photos = [[NSMutableArray alloc] init];
-            self.albumLabel.text = self.albums.firstObject.name;
-            self.nextPageRequest = [[OLFacebookPhotosForAlbumRequest alloc] initWithAlbum:self.albums.firstObject];
-            [self loadNextFacebookPage];
-            //            self.tableView.tableFooterView = nil;
+            welf.photos = [[NSMutableArray alloc] init];
+            welf.albumLabel.text = welf.albums.firstObject.name;
+            welf.nextPageRequest = [[OLFacebookPhotosForAlbumRequest alloc] initWithAlbum:welf.albums.firstObject];
+            [welf loadNextFacebookPage];
+            //            welf.tableView.tableFooterView = nil;
         }
         
     }];
 }
 
 - (void)loadNextFacebookPage {
+    if (self.inProgressRequest){
+        [self.inProgressRequest cancel];
+    }
     self.inProgressPhotosRequest = self.nextPageRequest;
     self.nextPageRequest = nil;
+    __weak OLImagePickerPhotosPageViewController *welf = self;
     [self.inProgressPhotosRequest getPhotos:^(NSArray *photos, NSError *error, OLFacebookPhotosForAlbumRequest *nextPageRequest) {
-        self.inProgressRequest = nil;
-        self.nextPageRequest = nextPageRequest;
-        self.loadingIndicator.hidden = YES;
+        welf.inProgressRequest = nil;
+        welf.nextPageRequest = nextPageRequest;
+        welf.loadingIndicator.hidden = YES;
         
         if (error) {
             //TODO error
             return;
         }
         
-        NSUInteger photosStartCount = self.photos.count;
-        for (OLFacebookImage *image in self.overflowPhotos){
-            [self.provider.collections.firstObject.array addObject:[OLAsset assetWithURL:image.fullURL]];
+        NSUInteger photosStartCount = welf.photos.count;
+        for (OLFacebookImage *image in welf.overflowPhotos){
+            [welf.provider.collections.firstObject.array addObject:[OLAsset assetWithURL:image.fullURL]];
         }
-        [self.photos addObjectsFromArray:self.overflowPhotos];
+        [welf.photos addObjectsFromArray:welf.overflowPhotos];
         if (nextPageRequest != nil) {
             // only insert multiple of numberOfCellsPerRow images so we fill complete rows
-            NSInteger overflowCount = (self.photos.count + photos.count) % [self numberOfCellsPerRow];
+            NSInteger overflowCount = (welf.photos.count + photos.count) % [welf numberOfCellsPerRow];
             for (OLFacebookImage *image in [photos subarrayWithRange:NSMakeRange(0, photos.count - overflowCount)]){
-                [self.provider.collections.firstObject.array addObject:[OLAsset assetWithURL:image.fullURL]];
+                [welf.provider.collections.firstObject.array addObject:[OLAsset assetWithURL:image.fullURL]];
             }
-            [self.photos addObjectsFromArray:[photos subarrayWithRange:NSMakeRange(0, photos.count - overflowCount)]];
-            self.overflowPhotos = [photos subarrayWithRange:NSMakeRange(photos.count - overflowCount, overflowCount)];
+            [welf.photos addObjectsFromArray:[photos subarrayWithRange:NSMakeRange(0, photos.count - overflowCount)]];
+            welf.overflowPhotos = [photos subarrayWithRange:NSMakeRange(photos.count - overflowCount, overflowCount)];
         } else {
             // we've exhausted all the users images so show the remainder
             for (OLFacebookImage *image in photos){
-                [self.provider.collections.firstObject.array addObject:[OLAsset assetWithURL:image.fullURL]];
+                [welf.provider.collections.firstObject.array addObject:[OLAsset assetWithURL:image.fullURL]];
             }
-            [self.photos addObjectsFromArray:photos];
-            self.overflowPhotos = @[];
+            [welf.photos addObjectsFromArray:photos];
+            welf.overflowPhotos = @[];
         }
         
         // Insert new items
         NSMutableArray *addedItemPaths = [[NSMutableArray alloc] init];
-        for (NSUInteger itemIndex = photosStartCount; itemIndex < self.photos.count; ++itemIndex) {
+        for (NSUInteger itemIndex = photosStartCount; itemIndex < welf.photos.count; ++itemIndex) {
             [addedItemPaths addObject:[NSIndexPath indexPathForItem:itemIndex inSection:0]];
         }
         
-        [self.collectionView insertItemsAtIndexPaths:addedItemPaths];
-        ((UICollectionViewFlowLayout *) self.collectionView.collectionViewLayout).footerReferenceSize = CGSizeMake(0, nextPageRequest == nil ? 0 : 44);
+        [welf.collectionView insertItemsAtIndexPaths:addedItemPaths];
+        ((UICollectionViewFlowLayout *) welf.collectionView.collectionViewLayout).footerReferenceSize = CGSizeMake(0, nextPageRequest == nil ? 0 : 44);
     }];
     
 }
