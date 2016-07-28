@@ -39,6 +39,7 @@
 @property (weak, nonatomic) IBOutlet UIImageView *albumLabelChevron;
 @property (assign, nonatomic) CGSize rotationSize;
 @property (strong, nonatomic) UIVisualEffectView *visualEffectView;
+@property (weak, nonatomic) IBOutlet UIView *albumsContainerView;
 
 @end
 
@@ -55,7 +56,7 @@ NSInteger OLImagePickerMargin = 0;
     self.automaticallyAdjustsScrollViewInsets = NO;
     
     self.albumLabel.text = NSLocalizedString(@"All Photos", @"");
-    self.albumLabelChevron.hidden = YES;
+    self.albumLabelChevron.transform = CGAffineTransformMakeRotation(M_PI);
     
     UIVisualEffect *blurEffect;
     blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleExtraLight];
@@ -77,6 +78,8 @@ NSInteger OLImagePickerMargin = 0;
     }
     
     [view.superview addConstraints:con];
+    
+    [self.view bringSubviewToFront:self.albumsContainerView];
     
     if (self.provider.providerType == OLImagePickerProviderTypeFacebook && self.provider.collections.count == 0){
         [self loadFacebookAlbums];
@@ -256,6 +259,27 @@ NSInteger OLImagePickerMargin = 0;
             [self loadNextFacebookPage];
         }
     }
+}
+
+- (IBAction)userDidDragAlbumLabel:(UIPanGestureRecognizer *)sender {
+}
+
+- (IBAction)userDidTapOnAlbumLabel:(UITapGestureRecognizer *)sender {
+    BOOL isOpening = CGAffineTransformIsIdentity(self.albumsContainerView.transform);
+    
+    self.nextButton.hidden = NO;
+    self.imagePicker.nextButton.hidden = YES;
+    
+    [UIView animateWithDuration:0.8 delay:0 usingSpringWithDamping:0.6 initialSpringVelocity:0 options:0 animations:^{
+        self.albumsContainerView.transform = isOpening ? CGAffineTransformMakeTranslation(0, self.view.frame.size.height - (self.albumsContainerView.frame.origin.y + self.albumsContainerView.frame.size.height)) : CGAffineTransformIdentity;
+        
+        self.albumLabelChevron.transform = isOpening ?  CGAffineTransformMakeRotation(M_PI) : CGAffineTransformIdentity;
+    }completion:^(BOOL finished){
+        if (!isOpening){
+            self.imagePicker.nextButton.hidden = NO;
+            self.nextButton.hidden = YES;
+        }
+    }];
 }
 
 

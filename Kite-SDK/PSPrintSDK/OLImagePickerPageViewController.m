@@ -31,4 +31,34 @@
 
 @implementation OLImagePickerPageViewController
 
+- (void)viewDidLoad{
+    [super viewDidLoad];
+    
+    UIButton *nextButton = [[UIButton alloc] init];
+    self.nextButton = nextButton;
+    [nextButton setTitle:NSLocalizedString(@"Next", @"") forState:UIControlStateNormal];
+    [nextButton.titleLabel setFont:[UIFont systemFontOfSize:17]];
+    [nextButton addTarget:self.imagePicker action:@selector(onButtonNextClicked:) forControlEvents:UIControlEventTouchUpInside];
+    [nextButton setBackgroundColor:[UIColor colorWithRed:0.125 green:0.498 blue:0.655 alpha:1.000]];
+    nextButton.hidden = YES;
+    
+    
+    [self.view addSubview:nextButton];
+    
+    nextButton.translatesAutoresizingMaskIntoConstraints = NO;
+    NSDictionary *views = NSDictionaryOfVariableBindings(nextButton);
+    NSMutableArray *con = [[NSMutableArray alloc] init];
+    
+    NSArray *visuals = @[@"H:|-20-[nextButton]-20-|",
+                         @"V:[nextButton(50)]-10-|"];
+    
+    
+    for (NSString *visual in visuals) {
+        [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+    }
+    
+    [nextButton.superview addConstraints:con];
+
+}
+
 @end

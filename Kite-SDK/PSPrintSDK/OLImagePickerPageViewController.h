@@ -37,5 +37,7 @@
 @property (strong, nonatomic) OLImagePickerProvider* provider;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *albumLabelContainerTopCon;
 @property (weak, nonatomic) OLImagePickerViewController *imagePicker;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *albumsContainerHeight;
+@property (strong, nonatomic) UIButton *nextButton;
 
 @end

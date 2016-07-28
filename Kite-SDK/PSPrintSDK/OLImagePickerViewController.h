@@ -34,9 +34,11 @@
 @interface OLImagePickerViewController : UIViewController
 
 @property (strong, nonatomic) OLProduct *product;
+@property (weak, nonatomic) IBOutlet UIButton *nextButton;
 @property (weak, nonatomic) id<OLKiteDelegate> delegate;
 - (void)updateTitleBasedOnSelectedPhotoQuanitity;
 - (void)reloadPageController;
+- (void)onButtonNextClicked:(UIButton *)sender;
 
 
 @end

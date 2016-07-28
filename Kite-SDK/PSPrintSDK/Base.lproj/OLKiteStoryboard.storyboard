@@ -4503,7 +4503,7 @@ only £9.99 £8.99</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="u6S-70-uku" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1340" y="-2629"/>
+            <point key="canvasLocation" x="1364" y="-2916"/>
         </scene>
         <!--Image Picker Photos Page View Controller-->
         <scene sceneID="dJj-UV-A6G">
@@ -4554,44 +4554,61 @@ only £9.99 £8.99</string>
                                     </collectionViewCell>
                                 </cells>
                             </collectionView>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="p8Q-jB-WXB">
-                                <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2Qw-uy-h3a">
+                                <rect key="frame" x="0.0" y="-84" width="600" height="128"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Lorem Ipsum" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0k1-YH-dlk">
-                                        <rect key="frame" x="250" y="5" width="99.5" height="34"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="details-arrow" translatesAutoresizingMaskIntoConstraints="NO" id="aFB-aF-yn4">
-                                        <rect key="frame" x="355" y="19.5" width="8" height="5"/>
-                                    </imageView>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="p8Q-jB-WXB">
+                                        <rect key="frame" x="0.0" y="84" width="600" height="44"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Lorem Ipsum" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0k1-YH-dlk">
+                                                <rect key="frame" x="250" y="5" width="99.5" height="34"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="details-arrow" translatesAutoresizingMaskIntoConstraints="NO" id="aFB-aF-yn4">
+                                                <rect key="frame" x="355" y="19.5" width="8" height="5"/>
+                                            </imageView>
+                                        </subviews>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <gestureRecognizers/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="128" id="1LQ-wV-aRm"/>
+                                            <constraint firstItem="aFB-aF-yn4" firstAttribute="centerY" secondItem="0k1-YH-dlk" secondAttribute="centerY" id="TWQ-Qi-a4u"/>
+                                            <constraint firstAttribute="height" constant="44" id="kHJ-FU-QPI"/>
+                                            <constraint firstItem="0k1-YH-dlk" firstAttribute="centerX" secondItem="p8Q-jB-WXB" secondAttribute="centerX" id="p7U-Ze-XaR"/>
+                                            <constraint firstItem="0k1-YH-dlk" firstAttribute="top" secondItem="p8Q-jB-WXB" secondAttribute="top" constant="5" id="pcr-Vg-a09"/>
+                                            <constraint firstItem="aFB-aF-yn4" firstAttribute="leading" secondItem="0k1-YH-dlk" secondAttribute="trailing" constant="5" id="rH2-uL-MYe"/>
+                                            <constraint firstAttribute="bottom" secondItem="0k1-YH-dlk" secondAttribute="bottom" constant="5" id="tja-l9-DDb"/>
+                                            <constraint firstItem="aFB-aF-yn4" firstAttribute="top" secondItem="0k1-YH-dlk" secondAttribute="bottom" id="wuF-JM-f0x"/>
+                                        </constraints>
+                                        <variation key="default">
+                                            <mask key="constraints">
+                                                <exclude reference="1LQ-wV-aRm"/>
+                                                <exclude reference="wuF-JM-f0x"/>
+                                            </mask>
+                                        </variation>
+                                        <connections>
+                                            <outletCollection property="gestureRecognizers" destination="kEk-5k-1A7" appends="YES" id="guP-LH-2LH"/>
+                                            <outletCollection property="gestureRecognizers" destination="M3i-ZN-CnY" appends="YES" id="ec4-XT-ifb"/>
+                                        </connections>
+                                    </view>
                                 </subviews>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="128" id="1LQ-wV-aRm"/>
-                                    <constraint firstItem="aFB-aF-yn4" firstAttribute="centerY" secondItem="0k1-YH-dlk" secondAttribute="centerY" id="TWQ-Qi-a4u"/>
-                                    <constraint firstAttribute="height" constant="44" id="kHJ-FU-QPI"/>
-                                    <constraint firstItem="0k1-YH-dlk" firstAttribute="centerX" secondItem="p8Q-jB-WXB" secondAttribute="centerX" id="p7U-Ze-XaR"/>
-                                    <constraint firstItem="0k1-YH-dlk" firstAttribute="top" secondItem="p8Q-jB-WXB" secondAttribute="top" constant="5" id="pcr-Vg-a09"/>
-                                    <constraint firstItem="aFB-aF-yn4" firstAttribute="leading" secondItem="0k1-YH-dlk" secondAttribute="trailing" constant="5" id="rH2-uL-MYe"/>
-                                    <constraint firstAttribute="bottom" secondItem="0k1-YH-dlk" secondAttribute="bottom" constant="5" id="tja-l9-DDb"/>
-                                    <constraint firstItem="aFB-aF-yn4" firstAttribute="top" secondItem="0k1-YH-dlk" secondAttribute="bottom" id="wuF-JM-f0x"/>
+                                    <constraint firstAttribute="bottom" secondItem="p8Q-jB-WXB" secondAttribute="bottom" id="4Xr-Xi-b0U"/>
+                                    <constraint firstAttribute="trailing" secondItem="p8Q-jB-WXB" secondAttribute="trailing" id="6q9-mI-uaY"/>
+                                    <constraint firstAttribute="height" constant="128" id="dc9-2D-2O0"/>
+                                    <constraint firstItem="p8Q-jB-WXB" firstAttribute="leading" secondItem="2Qw-uy-h3a" secondAttribute="leading" id="fpa-73-Vrc"/>
                                 </constraints>
-                                <variation key="default">
-                                    <mask key="constraints">
-                                        <exclude reference="1LQ-wV-aRm"/>
-                                        <exclude reference="wuF-JM-f0x"/>
-                                    </mask>
-                                </variation>
                             </view>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstAttribute="trailing" secondItem="p8Q-jB-WXB" secondAttribute="trailing" id="9RZ-Kn-yPI"/>
-                            <constraint firstItem="p8Q-jB-WXB" firstAttribute="leading" secondItem="IxY-gk-dWn" secondAttribute="leading" id="Bv9-6o-8HL"/>
-                            <constraint firstItem="p8Q-jB-WXB" firstAttribute="top" secondItem="IxY-gk-dWn" secondAttribute="top" id="HpM-gH-sVh"/>
+                            <constraint firstItem="p8Q-jB-WXB" firstAttribute="top" secondItem="IxY-gk-dWn" secondAttribute="top" id="597-Ci-6Ya"/>
+                            <constraint firstAttribute="trailing" secondItem="2Qw-uy-h3a" secondAttribute="trailing" id="ARw-fm-86k"/>
                             <constraint firstAttribute="trailing" secondItem="Lmf-XS-dV3" secondAttribute="trailing" id="Pc0-ob-M7K"/>
+                            <constraint firstItem="2Qw-uy-h3a" firstAttribute="leading" secondItem="IxY-gk-dWn" secondAttribute="leading" id="Vtf-NF-cNr"/>
                             <constraint firstItem="w2r-Bx-QSS" firstAttribute="top" secondItem="Lmf-XS-dV3" secondAttribute="bottom" id="c8E-JC-y4M"/>
                             <constraint firstItem="Lmf-XS-dV3" firstAttribute="leading" secondItem="IxY-gk-dWn" secondAttribute="leading" id="dba-U4-y6h"/>
                             <constraint firstItem="Lmf-XS-dV3" firstAttribute="top" secondItem="IxY-gk-dWn" secondAttribute="topMargin" id="nSB-WM-RDZ"/>
@@ -4602,11 +4619,23 @@ only £9.99 £8.99</string>
                         <outlet property="albumLabel" destination="0k1-YH-dlk" id="xxa-z3-q15"/>
                         <outlet property="albumLabelChevron" destination="aFB-aF-yn4" id="cKG-Iu-myB"/>
                         <outlet property="albumLabelContainer" destination="p8Q-jB-WXB" id="fXb-JU-tVd"/>
-                        <outlet property="albumLabelContainerTopCon" destination="HpM-gH-sVh" id="kbN-Bs-QmA"/>
+                        <outlet property="albumLabelContainerTopCon" destination="597-Ci-6Ya" id="Ghu-O2-yfb"/>
+                        <outlet property="albumsContainerHeight" destination="dc9-2D-2O0" id="mYq-GF-sRg"/>
+                        <outlet property="albumsContainerView" destination="2Qw-uy-h3a" id="wfS-UI-DZQ"/>
                         <outlet property="collectionView" destination="Lmf-XS-dV3" id="lBd-nI-At0"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="WCk-tf-hP8" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <panGestureRecognizer minimumNumberOfTouches="1" id="M3i-ZN-CnY">
+                    <connections>
+                        <action selector="userDidDragAlbumLabel:" destination="arO-Mg-S2q" id="c7g-rV-cwU"/>
+                    </connections>
+                </panGestureRecognizer>
+                <tapGestureRecognizer id="kEk-5k-1A7">
+                    <connections>
+                        <action selector="userDidTapOnAlbumLabel:" destination="arO-Mg-S2q" id="kQ4-wr-ksD"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="1345" y="-1998"/>
         </scene>
@@ -4704,6 +4733,7 @@ only £9.99 £8.99</string>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="50" id="akT-l2-oHK"/>
                                 </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <state key="normal" title="Next">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
@@ -4730,6 +4760,7 @@ only £9.99 £8.99</string>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <connections>
                         <outlet property="containerView" destination="rFW-UE-yVX" id="mmz-me-ivQ"/>
+                        <outlet property="nextButton" destination="nAS-1v-6Ot" id="eDq-ng-Slj"/>
                         <outlet property="sourcesCollectionView" destination="Caf-8g-q37" id="8e0-xn-zTi"/>
                     </connections>
                 </viewController>
