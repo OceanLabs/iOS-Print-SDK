@@ -261,15 +261,12 @@ NSInteger OLImagePickerMargin = 0;
     }
 }
 
-- (IBAction)userDidDragAlbumLabel:(UIPanGestureRecognizer *)sender {
-}
-
 - (IBAction)userDidTapOnAlbumLabel:(UITapGestureRecognizer *)sender {
     BOOL isOpening = CGAffineTransformIsIdentity(self.albumsContainerView.transform);
     
     if (isOpening){
-    self.nextButton.hidden = NO;
-    self.imagePicker.nextButton.hidden = YES;
+        self.nextButton.hidden = NO;
+        self.imagePicker.nextButton.hidden = YES;
     }
     else{
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.25 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
@@ -283,6 +280,65 @@ NSInteger OLImagePickerMargin = 0;
         
         self.albumLabelChevron.transform = isOpening ? CGAffineTransformIdentity : CGAffineTransformMakeRotation(M_PI);
     }completion:^(BOOL finished){}];
+}
+
+- (IBAction)userDidDragAlbumLabel:(UIPanGestureRecognizer *)sender {
+    {
+        static CGFloat originalY;
+        
+        if (sender.state == UIGestureRecognizerStateBegan){
+            originalY = self.albumsContainerView.transform.ty;
+        }
+        else if (sender.state == UIGestureRecognizerStateChanged){
+            CGFloat closedY = self.albumsContainerView.frame.origin.y - self.albumsContainerView.transform.ty;
+            CGFloat openTY = (self.view.frame.size.height - (closedY + self.albumsContainerView.frame.size.height));
+            CGPoint translate = [sender translationInView:sender.view.superview];
+            self.albumsContainerView.transform = CGAffineTransformMakeTranslation(0, MAX(translate.y + originalY, 0));
+            
+            CGFloat percentComplete = MAX(self.albumsContainerView.transform.ty, 0) / (openTY);
+            self.albumLabelChevron.transform = CGAffineTransformMakeRotation(M_PI * (1- MIN(percentComplete, 1)));
+            
+            self.nextButton.hidden = percentComplete <= 0.5;
+            self.imagePicker.nextButton.hidden = percentComplete > 0.5;
+            
+            
+        }
+        else if (sender.state == UIGestureRecognizerStateEnded ||
+                 sender.state == UIGestureRecognizerStateFailed ||
+                 sender.state == UIGestureRecognizerStateCancelled){
+            CGFloat closedY = self.albumsContainerView.frame.origin.y - self.albumsContainerView.transform.ty;
+            CGFloat openTY = (self.view.frame.size.height - (closedY + self.albumsContainerView.frame.size.height));
+            
+            BOOL opening = [sender velocityInView:sender.view].y > 0;
+            
+            CGFloat start = self.albumsContainerView.transform.ty;
+            CGFloat ty = opening ? openTY : 0;
+            
+            CGFloat distance = ABS(start - ty);
+            CGFloat total = openTY;
+            CGFloat percentComplete = 1 - distance / total;
+            
+            CGFloat damping = ABS(0.6 + (0.6 * percentComplete)*(0.6 * percentComplete));
+            CGFloat time = ABS(0.8 - (0.8 * percentComplete));
+            
+            if (opening){
+                self.nextButton.hidden = NO;
+                self.imagePicker.nextButton.hidden = YES;
+            }
+            else{
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.25 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+                    self.nextButton.hidden = YES;
+                    self.imagePicker.nextButton.hidden = NO;
+                });
+            }
+            
+            
+            [UIView animateWithDuration:time delay:0 usingSpringWithDamping:damping initialSpringVelocity:0 options:0 animations:^{
+                self.albumsContainerView.transform = CGAffineTransformMakeTranslation(0, ty);
+                self.albumLabelChevron.transform = opening ? CGAffineTransformIdentity : CGAffineTransformMakeRotation(M_PI);
+            }completion:^(BOOL finished){}];
+        }
+    }
 }
 
 
