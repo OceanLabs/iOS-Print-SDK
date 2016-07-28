@@ -45,6 +45,7 @@
 #import "OLKiteUtils.h"
 #import "OLUserSession.h"
 #import "OLCustomPhotoProvider.h"
+#import "OLAsset+Private.h"
 
 static CGFloat fadeTime = 0.3;
 
@@ -411,6 +412,12 @@ static CGFloat fadeTime = 0.3;
     }
     else {
         return @"OLProductOverviewViewController";
+    }
+}
+
+- (void)didReceiveMemoryWarning{
+    for (OLAsset *asset in [OLUserSession currentSession].userSelectedPhotos){
+        [asset unloadImage];
     }
 }
 

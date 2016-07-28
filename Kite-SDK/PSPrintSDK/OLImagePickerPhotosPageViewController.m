@@ -34,6 +34,7 @@
 #import "OLUserSession.h"
 #import "OLImagePickerPhotosPageViewController+Facebook.h"
 #import "OLImagePickerPhotosPageViewController+Instagram.h"
+#import "UIView+RoundRect.h"
 
 @interface OLImagePickerPhotosPageViewController () <UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, UICollectionViewDelegate>
 @property (weak, nonatomic) IBOutlet UIImageView *albumLabelChevron;
@@ -152,6 +153,13 @@ NSInteger OLImagePickerMargin = 0;
         cell.contentView.transform = CGAffineTransformMakeRotation(M_PI);
         OLRemoteImageView *imageView = [cell viewWithTag:10];
         [self setAssetOfCollection:self.provider.collections[indexPath.item] withIndex:0 toImageView:imageView forCollectionView:collectionView];
+        [imageView makeRoundRectWithRadius:4];
+        imageView.clipsToBounds = YES;
+        
+        cell.clipsToBounds = NO;
+        cell.layer.shadowColor = [[UIColor blackColor] CGColor];
+        cell.layer.shadowOpacity = .4;
+        cell.layer.shadowRadius = 5;
         
         UILabel *label = [[cell viewWithTag:20] viewWithTag:30];
         label.text = self.provider.collections[indexPath.item].name;

@@ -4579,17 +4579,17 @@ only £9.99 £8.99</string>
                                                 </collectionViewFlowLayout>
                                                 <cells>
                                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="albumCell" id="qYc-ZR-Qcj">
-                                                        <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                                        <rect key="frame" x="112.5" y="0.0" width="375" height="375"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                                            <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="375" height="375"/>
                                                             <autoresizingMask key="autoresizingMask"/>
                                                             <subviews>
                                                                 <imageView userInteractionEnabled="NO" tag="10" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="UvS-en-PHi" customClass="OLRemoteImageView">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                                                    <rect key="frame" x="0.0" y="0.0" width="375" height="375"/>
                                                                 </imageView>
                                                                 <view tag="20" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="s0C-GP-xfR">
-                                                                    <rect key="frame" x="-41" y="-2" width="83" height="41"/>
+                                                                    <rect key="frame" x="284" y="323" width="83" height="41"/>
                                                                     <subviews>
                                                                         <label opaque="NO" userInteractionEnabled="NO" tag="30" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="k8W-GL-Toy">
                                                                             <rect key="frame" x="20" y="10" width="43" height="21"/>
@@ -4618,6 +4618,7 @@ only £9.99 £8.99</string>
                                                             <constraint firstAttribute="trailing" secondItem="UvS-en-PHi" secondAttribute="trailing" id="Yzv-sx-jZH"/>
                                                             <constraint firstAttribute="bottom" secondItem="UvS-en-PHi" secondAttribute="bottom" id="xXe-dj-W0w"/>
                                                         </constraints>
+                                                        <size key="customSize" width="375" height="375"/>
                                                     </collectionViewCell>
                                                 </cells>
                                             </collectionView>
