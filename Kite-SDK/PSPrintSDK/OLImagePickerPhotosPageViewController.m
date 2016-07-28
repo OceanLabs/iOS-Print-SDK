@@ -40,6 +40,8 @@
 @property (assign, nonatomic) CGSize rotationSize;
 @property (strong, nonatomic) UIVisualEffectView *visualEffectView;
 @property (weak, nonatomic) IBOutlet UIView *albumsContainerView;
+@property (weak, nonatomic) IBOutlet UIView *albumsCollectionViewContainerView;
+@property (assign, nonatomic) NSInteger showingCollectionIndex;
 
 @end
 
@@ -47,11 +49,23 @@ NSInteger OLImagePickerMargin = 0;
 
 @implementation OLImagePickerPhotosPageViewController
 
+- (void)viewDidDisappear:(BOOL)animated{
+    [super viewDidDisappear:animated];
+    
+    if (self.albumsContainerView.transform.ty != 0){
+        [self userDidTapOnAlbumLabel:nil];
+    }
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     
     self.collectionView.delegate = self;
     self.collectionView.dataSource = self;
+    self.albumsCollectionView.dataSource = self;
+    self.albumsCollectionView.delegate = self;
+    
+    self.albumsCollectionView.transform = CGAffineTransformMakeRotation(M_PI);
     
     self.automaticallyAdjustsScrollViewInsets = NO;
     
@@ -81,10 +95,10 @@ NSInteger OLImagePickerMargin = 0;
     
     [self.view bringSubviewToFront:self.albumsContainerView];
     
-    if (self.provider.providerType == OLImagePickerProviderTypeFacebook && self.provider.collections.firstObject.count == 0){
+    if (self.provider.providerType == OLImagePickerProviderTypeFacebook && (self.provider.collections.count == 0 || self.provider.collections[self.showingCollectionIndex].count == 0)){
         [self loadFacebookAlbums];
     }
-    else if (self.provider.providerType == OLImagePickerProviderTypeInstagram && self.provider.collections.firstObject.count == 0){
+    else if (self.provider.providerType == OLImagePickerProviderTypeInstagram && (self.provider.collections.count == 0 || self.provider.collections[self.showingCollectionIndex].count == 0)){
         [self startImageLoading];
     }
 }
@@ -101,37 +115,53 @@ NSInteger OLImagePickerMargin = 0;
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
-    return [self.provider.collections.firstObject count];
+    if (collectionView.tag == 10){
+        return [self.provider.collections.firstObject count];
+    }
+    else{
+        return [self.provider.collections count];
+    }
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
-    UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"photoCell" forIndexPath:indexPath];
-    OLRemoteImageView *imageView = [cell viewWithTag:10];
-    [self setAssetWithIndexPath:indexPath toImageView:imageView];
-    
-    UIImageView *checkmark = [cell viewWithTag:20];
-    id asset = [self.provider.collections.firstObject objectAtIndex:indexPath.item];
-    OLAsset *printPhoto;
-    if ([asset isKindOfClass:[PHAsset class]]){
-        printPhoto = [OLAsset assetWithPHAsset:asset];
-    }
-    else if ([asset isKindOfClass:[OLAsset class]]){
-        printPhoto = asset;
-    }
-    
-    if ([[OLUserSession currentSession].userSelectedPhotos containsObject:printPhoto]){
-        checkmark.hidden = NO;
+    UICollectionViewCell *cell;
+    if (collectionView.tag == 10){
+        cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"photoCell" forIndexPath:indexPath];
+        OLRemoteImageView *imageView = [cell viewWithTag:10];
+        [self setAssetOfCollection:self.provider.collections[self.showingCollectionIndex] withIndex:indexPath.item toImageView:imageView forCollectionView:collectionView];
+        
+        UIImageView *checkmark = [cell viewWithTag:20];
+        id asset = [self.provider.collections.firstObject objectAtIndex:indexPath.item];
+        OLAsset *printPhoto;
+        if ([asset isKindOfClass:[PHAsset class]]){
+            printPhoto = [OLAsset assetWithPHAsset:asset];
+        }
+        else if ([asset isKindOfClass:[OLAsset class]]){
+            printPhoto = asset;
+        }
+        
+        if ([[OLUserSession currentSession].userSelectedPhotos containsObject:printPhoto]){
+            checkmark.hidden = NO;
+        }
+        else{
+            checkmark.hidden = YES;
+        }
     }
     else{
-        checkmark.hidden = YES;
+        cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"albumCell" forIndexPath:indexPath];
+        cell.contentView.transform = CGAffineTransformMakeRotation(M_PI);
+        OLRemoteImageView *imageView = [cell viewWithTag:10];
+        [self setAssetOfCollection:self.provider.collections[indexPath.item] withIndex:0 toImageView:imageView forCollectionView:collectionView];
+        
+        UILabel *label = [[cell viewWithTag:20] viewWithTag:30];
+        label.text = self.provider.collections[indexPath.item].name;
     }
     
     return cell;
-    
 }
 
-- (void)setAssetWithIndexPath:(NSIndexPath *)indexPath toImageView:(OLRemoteImageView *)imageView{
-    id asset = [self.provider.collections.firstObject objectAtIndex:indexPath.item];
+- (void)setAssetOfCollection:(OLImagePickerProviderCollection *)collection withIndex:(NSInteger)index toImageView:(OLRemoteImageView *)imageView forCollectionView:(UICollectionView *)collectionView{
+    id asset = [collection objectAtIndex:index];
     
     if ([asset isKindOfClass:[PHAsset class]]){
         PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
@@ -142,8 +172,8 @@ NSInteger OLImagePickerMargin = 0;
         
         //TODO progress
         
-        CGSize cellSize = [self collectionView:self.collectionView layout:self.collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath];
-        [imageView setAndFadeInImageWithPHAsset:asset size:CGSizeMake(cellSize.width * [UIScreen mainScreen].scale, cellSize.height * [UIScreen mainScreen].scale) options:options];
+        CGSize cellSize = [self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:[NSIndexPath indexPathForItem:index inSection:0]];
+        [imageView setAndFadeInImageWithPHAsset:asset size:CGSizeMake(cellSize.width * [OLUserSession currentSession].screenScale, cellSize.height * [OLUserSession currentSession].screenScale) options:options];
     }
     else if ([asset isKindOfClass:[OLAsset class]]){
         [imageView setAndFadeInImageWithOLAsset:asset size:imageView.frame.size applyEdits:NO placeholder:nil completionHandler:NULL];
@@ -193,60 +223,93 @@ NSInteger OLImagePickerMargin = 0;
 }
 
 - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section{
-    return OLImagePickerMargin;
+    if (collectionView.tag == 10){
+        return OLImagePickerMargin;
+    }
+    else{
+        return 0;
+    }
 }
 
 - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section{
-    return OLImagePickerMargin;
+    if (collectionView.tag == 10){
+        return OLImagePickerMargin;
+    }
+    else{
+        return 0;
+    }
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
+    
     CGSize size = self.view.bounds.size;
     
     if (self.rotationSize.width != 0){
         size = self.rotationSize;
     }
     
-    float numberOfCellsPerRow = [self numberOfCellsPerRow];
-    CGFloat width = ceilf(size.width/numberOfCellsPerRow);
-    CGFloat height = width;
-    
-    
-    return CGSizeMake(width, height);
+    if (collectionView.tag == 10){
+        
+        
+        float numberOfCellsPerRow = [self numberOfCellsPerRow];
+        CGFloat width = ceilf(size.width/numberOfCellsPerRow);
+        CGFloat height = width;
+        
+        
+        return CGSizeMake(width, height);
+    }
+    else{
+        return CGSizeMake(size.width - 16, 225);
+    }
 }
 
 - (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout insetForSectionAtIndex:(NSInteger)section{
-    CGSize size = self.rotationSize.width != 0 ? self.rotationSize : self.view.frame.size;
-    
-    CGSize cellSize = [self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
-    CGFloat diff = size.width - (cellSize.width * [self numberOfCellsPerRow]);
-    return UIEdgeInsetsMake(0, diff/2.0, 0, diff/2.0);
+    if (collectionView.tag == 10){
+        CGSize size = self.rotationSize.width != 0 ? self.rotationSize : self.view.frame.size;
+        
+        CGSize cellSize = [self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
+        CGFloat diff = size.width - (cellSize.width * [self numberOfCellsPerRow]);
+        return UIEdgeInsetsMake(0, diff/2.0, 0, diff/2.0);
+    }
+    else{
+        return UIEdgeInsetsMake(10, 0, 0, 0);
+    }
 }
 
 
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
-    id asset = [self.provider.collections.firstObject objectAtIndex:indexPath.item];
-    OLAsset *printPhoto;
-    if ([asset isKindOfClass:[PHAsset class]]){
-        printPhoto = [OLAsset assetWithPHAsset:asset];
-    }
-    else if ([asset isKindOfClass:[OLAsset class]]){
-        printPhoto = asset;
-    }
-    if ([[OLUserSession currentSession].userSelectedPhotos containsObject:printPhoto]){
-        [[OLUserSession currentSession].userSelectedPhotos removeObject:printPhoto];
-        [[collectionView cellForItemAtIndexPath:indexPath] viewWithTag:20].hidden = YES;
+    if (collectionView.tag == 10){
+        id asset = [self.provider.collections.firstObject objectAtIndex:indexPath.item];
+        OLAsset *printPhoto;
+        if ([asset isKindOfClass:[PHAsset class]]){
+            printPhoto = [OLAsset assetWithPHAsset:asset];
+        }
+        else if ([asset isKindOfClass:[OLAsset class]]){
+            printPhoto = asset;
+        }
+        if ([[OLUserSession currentSession].userSelectedPhotos containsObject:printPhoto]){
+            [[OLUserSession currentSession].userSelectedPhotos removeObject:printPhoto];
+            [[collectionView cellForItemAtIndexPath:indexPath] viewWithTag:20].hidden = YES;
+        }
+        else{
+            [[OLUserSession currentSession].userSelectedPhotos addObject:printPhoto];
+            [[collectionView cellForItemAtIndexPath:indexPath] viewWithTag:20].hidden = NO;
+        }
+        
+        [self.imagePicker updateTitleBasedOnSelectedPhotoQuanitity];
     }
     else{
-        [[OLUserSession currentSession].userSelectedPhotos addObject:printPhoto];
-        [[collectionView cellForItemAtIndexPath:indexPath] viewWithTag:20].hidden = NO;
+        self.showingCollectionIndex = indexPath.item;
+        [self.collectionView reloadData];
+        [self userDidTapOnAlbumLabel:nil];
+        self.albumLabel.text = self.provider.collections[self.showingCollectionIndex].name;
     }
-    
-    [self.imagePicker updateTitleBasedOnSelectedPhotoQuanitity];
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    //TODO: ignore albums collectionview scrolling
+    
     if (self.provider.providerType == OLImagePickerProviderTypeInstagram){
         if (self.inProgressMediaRequest == nil && scrollView.contentOffset.y >= self.collectionView.contentSize.height - self.collectionView.frame.size.height) {
             // we've reached the bottom, lets load the next page of instagram images.
@@ -275,6 +338,17 @@ NSInteger OLImagePickerMargin = 0;
         });
     }
     
+    if (isOpening){
+        [UIView animateWithDuration:0.1 animations:^{
+            self.albumsCollectionViewContainerView.alpha = 1;
+        }];
+    }
+    else{
+        [UIView animateWithDuration:0.1 delay:0.1 options:0 animations:^{
+            self.albumsCollectionViewContainerView.alpha = 0;
+        } completion:NULL];
+    }
+    
     [UIView animateWithDuration:0.8 delay:0 usingSpringWithDamping:0.6 initialSpringVelocity:0 options:0 animations:^{
         self.albumsContainerView.transform = isOpening ? CGAffineTransformMakeTranslation(0, self.view.frame.size.height - (self.albumsContainerView.frame.origin.y + self.albumsContainerView.frame.size.height)) : CGAffineTransformIdentity;
         
@@ -301,6 +375,7 @@ NSInteger OLImagePickerMargin = 0;
             self.nextButton.hidden = percentComplete <= 0.5;
             self.imagePicker.nextButton.hidden = percentComplete > 0.5;
             
+            self.albumsCollectionViewContainerView.alpha = MIN(percentComplete * 10, 1);
             
         }
         else if (sender.state == UIGestureRecognizerStateEnded ||
@@ -324,8 +399,15 @@ NSInteger OLImagePickerMargin = 0;
             if (opening){
                 self.nextButton.hidden = NO;
                 self.imagePicker.nextButton.hidden = YES;
+                
+                [UIView animateWithDuration:0.1 animations:^{
+                    self.albumsCollectionViewContainerView.alpha = 1;
+                }];
             }
             else{
+                [UIView animateWithDuration:time/8.0 delay:0.1 options:0 animations:^{
+                    self.albumsCollectionViewContainerView.alpha = 0;
+                } completion:NULL];
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.25 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
                     self.nextButton.hidden = YES;
                     self.imagePicker.nextButton.hidden = NO;

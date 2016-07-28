@@ -330,6 +330,8 @@
 
 - (void)pageViewController:(UIPageViewController *)pageViewController didFinishAnimating:(BOOL)finished previousViewControllers:(NSArray<UIViewController *> *)previousViewControllers transitionCompleted:(BOOL)completed{
     [self.sourcesCollectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:[pageViewController.viewControllers.firstObject pageIndex] inSection:0] atScrollPosition:UICollectionViewScrollPositionNone animated:YES];
+    self.nextButton.hidden = NO;
+    ((OLImagePickerPageViewController *)(self.pageController.viewControllers.firstObject)).nextButton.hidden = YES;
 }
 
 #pragma mark CollectionView

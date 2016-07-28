@@ -61,4 +61,15 @@
 
 }
 
+- (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    
+    if (self.imagePicker.nextButton.hidden){
+        self.nextButton.hidden = NO;
+    }
+    else{
+        self.nextButton.hidden = YES;
+    }
+}
+
 @end

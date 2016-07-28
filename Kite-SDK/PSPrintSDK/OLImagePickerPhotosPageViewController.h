@@ -46,6 +46,7 @@
 @property (assign, nonatomic) NSInteger maximumPhotos;
 
 @property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
+@property (weak, nonatomic) IBOutlet UICollectionView *albumsCollectionView;
 @property (weak, nonatomic) IBOutlet UIView *albumLabelContainer;
 @property (weak, nonatomic) IBOutlet UILabel *albumLabel;
 

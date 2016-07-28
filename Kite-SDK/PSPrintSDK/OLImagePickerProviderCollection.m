@@ -63,7 +63,11 @@
     if (self.fetchResult){
         return [self.fetchResult objectAtIndex:index];
     }
-    return [self.array objectAtIndex:index];
+    if (self.array.count > index){
+        return [self.array objectAtIndex:index];
+    }
+    
+    return nil;
 }
 
 - (NSUInteger)indexOfObject:(id)obj{

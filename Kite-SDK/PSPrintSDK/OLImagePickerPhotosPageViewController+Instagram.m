@@ -106,8 +106,14 @@
             [addedItemPaths addObject:[NSIndexPath indexPathForItem:itemIndex inSection:0]];
         }
         
-        [welf.collectionView insertItemsAtIndexPaths:addedItemPaths];
-        ((UICollectionViewFlowLayout *) welf.collectionView.collectionViewLayout).footerReferenceSize = CGSizeMake(0, nextRequest == nil ? 0 : 44);
+        if (welf.view.superview){
+            [welf.collectionView insertItemsAtIndexPaths:addedItemPaths];
+            ((UICollectionViewFlowLayout *) welf.collectionView.collectionViewLayout).footerReferenceSize = CGSizeMake(0, nextRequest == nil ? 0 : 44);
+            [welf.albumsCollectionView reloadData];
+        }
+        else{
+            [welf.collectionView reloadData];
+        }
     }];
 }
 

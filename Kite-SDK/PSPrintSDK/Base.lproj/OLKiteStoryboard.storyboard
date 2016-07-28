@@ -4517,7 +4517,7 @@ only £9.99 £8.99</string>
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Lmf-XS-dV3">
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" tag="10" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Lmf-XS-dV3">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="QVo-mq-1ej">
@@ -4557,6 +4557,83 @@ only £9.99 £8.99</string>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2Qw-uy-h3a">
                                 <rect key="frame" x="0.0" y="-84" width="600" height="128"/>
                                 <subviews>
+                                    <view alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lKC-yh-RgW">
+                                        <rect key="frame" x="0.0" y="0.0" width="600" height="84"/>
+                                        <subviews>
+                                            <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Yjo-f0-Lgp">
+                                                <rect key="frame" x="0.0" y="0.0" width="600" height="84"/>
+                                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="ODd-pQ-XwT">
+                                                    <rect key="frame" x="0.0" y="0.0" width="600" height="84"/>
+                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                </view>
+                                                <blurEffect style="light"/>
+                                            </visualEffectView>
+                                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" tag="20" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Gku-Rv-HjR">
+                                                <rect key="frame" x="0.0" y="0.0" width="600" height="84"/>
+                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="ETw-fT-DMv">
+                                                    <size key="itemSize" width="50" height="50"/>
+                                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                                </collectionViewFlowLayout>
+                                                <cells>
+                                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="albumCell" id="qYc-ZR-Qcj">
+                                                        <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                                            <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                                            <autoresizingMask key="autoresizingMask"/>
+                                                            <subviews>
+                                                                <imageView userInteractionEnabled="NO" tag="10" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="UvS-en-PHi" customClass="OLRemoteImageView">
+                                                                    <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                                                </imageView>
+                                                                <view tag="20" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="s0C-GP-xfR">
+                                                                    <rect key="frame" x="-41" y="-2" width="83" height="41"/>
+                                                                    <subviews>
+                                                                        <label opaque="NO" userInteractionEnabled="NO" tag="30" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="k8W-GL-Toy">
+                                                                            <rect key="frame" x="20" y="10" width="43" height="21"/>
+                                                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                                            <fontDescription key="fontDescription" type="system" weight="medium" pointSize="17"/>
+                                                                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                                            <nil key="highlightedColor"/>
+                                                                        </label>
+                                                                    </subviews>
+                                                                    <color key="backgroundColor" red="0.086274509799999996" green="0.75294117650000003" blue="0.72549019609999998" alpha="0.80234966860000001" colorSpace="calibratedRGB"/>
+                                                                    <constraints>
+                                                                        <constraint firstItem="k8W-GL-Toy" firstAttribute="top" secondItem="s0C-GP-xfR" secondAttribute="top" constant="10" id="Hpx-0N-vFU"/>
+                                                                        <constraint firstItem="k8W-GL-Toy" firstAttribute="leading" secondItem="s0C-GP-xfR" secondAttribute="leading" constant="20" id="adP-83-gml"/>
+                                                                        <constraint firstAttribute="bottom" secondItem="k8W-GL-Toy" secondAttribute="bottom" constant="10" id="mvw-pZ-ZWf"/>
+                                                                        <constraint firstAttribute="trailing" secondItem="k8W-GL-Toy" secondAttribute="trailing" constant="20" id="o1P-8P-uIz"/>
+                                                                    </constraints>
+                                                                </view>
+                                                            </subviews>
+                                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                        </view>
+                                                        <constraints>
+                                                            <constraint firstAttribute="bottom" secondItem="s0C-GP-xfR" secondAttribute="bottom" constant="11" id="1T2-FR-XM7"/>
+                                                            <constraint firstItem="UvS-en-PHi" firstAttribute="top" secondItem="qYc-ZR-Qcj" secondAttribute="top" id="C8i-u4-j2P"/>
+                                                            <constraint firstAttribute="trailing" secondItem="s0C-GP-xfR" secondAttribute="trailing" constant="8" id="GYH-lW-20e"/>
+                                                            <constraint firstItem="UvS-en-PHi" firstAttribute="leading" secondItem="qYc-ZR-Qcj" secondAttribute="leading" id="Wvd-Sv-5PZ"/>
+                                                            <constraint firstAttribute="trailing" secondItem="UvS-en-PHi" secondAttribute="trailing" id="Yzv-sx-jZH"/>
+                                                            <constraint firstAttribute="bottom" secondItem="UvS-en-PHi" secondAttribute="bottom" id="xXe-dj-W0w"/>
+                                                        </constraints>
+                                                    </collectionViewCell>
+                                                </cells>
+                                            </collectionView>
+                                        </subviews>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstItem="Gku-Rv-HjR" firstAttribute="top" secondItem="lKC-yh-RgW" secondAttribute="top" id="2aw-tW-GFH"/>
+                                            <constraint firstItem="Yjo-f0-Lgp" firstAttribute="top" secondItem="lKC-yh-RgW" secondAttribute="top" id="5gL-eL-DGN"/>
+                                            <constraint firstItem="Gku-Rv-HjR" firstAttribute="leading" secondItem="lKC-yh-RgW" secondAttribute="leading" id="8gC-B9-aJD"/>
+                                            <constraint firstAttribute="bottom" secondItem="Gku-Rv-HjR" secondAttribute="bottom" id="DVp-nF-aTa"/>
+                                            <constraint firstAttribute="trailing" secondItem="Yjo-f0-Lgp" secondAttribute="trailing" id="MXP-O2-AOK"/>
+                                            <constraint firstAttribute="bottom" secondItem="Yjo-f0-Lgp" secondAttribute="bottom" id="Ufp-zK-J2B"/>
+                                            <constraint firstAttribute="trailing" secondItem="Gku-Rv-HjR" secondAttribute="trailing" id="grA-Wi-bW9"/>
+                                            <constraint firstItem="Yjo-f0-Lgp" firstAttribute="leading" secondItem="lKC-yh-RgW" secondAttribute="leading" id="y8l-ub-VD7"/>
+                                        </constraints>
+                                    </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="p8Q-jB-WXB">
                                         <rect key="frame" x="0.0" y="84" width="600" height="44"/>
                                         <subviews>
@@ -4594,12 +4671,16 @@ only £9.99 £8.99</string>
                                         </connections>
                                     </view>
                                 </subviews>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
+                                    <constraint firstItem="p8Q-jB-WXB" firstAttribute="top" secondItem="lKC-yh-RgW" secondAttribute="bottom" id="2YT-ah-NML"/>
                                     <constraint firstAttribute="bottom" secondItem="p8Q-jB-WXB" secondAttribute="bottom" id="4Xr-Xi-b0U"/>
                                     <constraint firstAttribute="trailing" secondItem="p8Q-jB-WXB" secondAttribute="trailing" id="6q9-mI-uaY"/>
+                                    <constraint firstAttribute="trailing" secondItem="lKC-yh-RgW" secondAttribute="trailing" id="ENj-dM-rt8"/>
+                                    <constraint firstItem="lKC-yh-RgW" firstAttribute="top" secondItem="2Qw-uy-h3a" secondAttribute="top" id="T8c-dt-ifc"/>
                                     <constraint firstAttribute="height" constant="128" id="dc9-2D-2O0"/>
                                     <constraint firstItem="p8Q-jB-WXB" firstAttribute="leading" secondItem="2Qw-uy-h3a" secondAttribute="leading" id="fpa-73-Vrc"/>
+                                    <constraint firstItem="lKC-yh-RgW" firstAttribute="leading" secondItem="2Qw-uy-h3a" secondAttribute="leading" id="nLU-nK-KQ3"/>
                                 </constraints>
                             </view>
                         </subviews>
@@ -4620,6 +4701,8 @@ only £9.99 £8.99</string>
                         <outlet property="albumLabelChevron" destination="aFB-aF-yn4" id="cKG-Iu-myB"/>
                         <outlet property="albumLabelContainer" destination="p8Q-jB-WXB" id="fXb-JU-tVd"/>
                         <outlet property="albumLabelContainerTopCon" destination="597-Ci-6Ya" id="Ghu-O2-yfb"/>
+                        <outlet property="albumsCollectionView" destination="Gku-Rv-HjR" id="gfv-D8-s1O"/>
+                        <outlet property="albumsCollectionViewContainerView" destination="lKC-yh-RgW" id="wV2-d9-ehv"/>
                         <outlet property="albumsContainerHeight" destination="dc9-2D-2O0" id="mYq-GF-sRg"/>
                         <outlet property="albumsContainerView" destination="2Qw-uy-h3a" id="wfS-UI-DZQ"/>
                         <outlet property="collectionView" destination="Lmf-XS-dV3" id="lBd-nI-At0"/>
