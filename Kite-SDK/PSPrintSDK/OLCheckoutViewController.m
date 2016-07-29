@@ -38,7 +38,7 @@
 #import "OLAddressEditViewController.h"
 #import "OLProductPrintJob.h"
 #import "OLKiteABTesting.h"
-#import "UIImage+ColorAtPixel.h"
+#import "UIImage+OLUtils.h"
 #import "UIImage+ImageNamedInKiteBundle.h"
 #import "OLKiteUtils.h"
 
@@ -513,7 +513,7 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
     if (section == kSectionDeliveryDetails){
         return 0;
     }
-    if (section == kSectionEmailAddress && ([[[UIDevice currentDevice] systemVersion] floatValue] < 8 || ![self.kiteDelegate respondsToSelector:@selector(shouldShowOptOutOfEmailsCheckbox)] || ![self.kiteDelegate shouldShowOptOutOfEmailsCheckbox])){
+    if (![self.kiteDelegate respondsToSelector:@selector(shouldShowOptOutOfEmailsCheckbox)] || ![self.kiteDelegate shouldShowOptOutOfEmailsCheckbox]){
         return 28;
     }
     return 44;
@@ -523,7 +523,7 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
     if (section != kSectionEmailAddress){
         return nil;
     }
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8 || ![self.kiteDelegate respondsToSelector:@selector(shouldShowOptOutOfEmailsCheckbox)] || ![self.kiteDelegate shouldShowOptOutOfEmailsCheckbox]){
+    if (![self.kiteDelegate respondsToSelector:@selector(shouldShowOptOutOfEmailsCheckbox)] || ![self.kiteDelegate shouldShowOptOutOfEmailsCheckbox]){
         return nil;
     }
     
@@ -541,32 +541,30 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
     
     [cell addSubview:titleLabel];
     
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8){
-        UIButton *checkbox = [[UIButton alloc] init];
-        [checkbox setImage:self.printOrder.optOutOfEmail ? [UIImage imageNamedInKiteBundle:@"checkbox_off"] : [UIImage imageNamedInKiteBundle:@"checkbox_on"] forState:UIControlStateNormal];
-        [checkbox addTarget:self action:@selector(onButtonCheckboxClicked:) forControlEvents:UIControlEventTouchUpInside];
-        checkbox.translatesAutoresizingMaskIntoConstraints = NO;
-        [titleLabel.superview addSubview:checkbox];
-        
-        titleLabel.translatesAutoresizingMaskIntoConstraints = NO;
-        NSDictionary *views = NSDictionaryOfVariableBindings(titleLabel, checkbox);
-        NSMutableArray *con = [[NSMutableArray alloc] init];
-        
-        NSArray *visuals = @[[NSString stringWithFormat:@"H:|-20-[titleLabel]-5-[checkbox(%f)]-20-|", checkbox.imageView.image.size.width],
-                             @"V:[titleLabel(43)]",
-                             @"V:[checkbox(43)]"];
-        
-        
-        for (NSString *visual in visuals) {
-            [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
-        }
-        
-        NSLayoutConstraint *textFieldCenterY = [NSLayoutConstraint constraintWithItem:titleLabel attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:titleLabel.superview attribute:NSLayoutAttributeCenterY multiplier:1 constant:0];
-        NSLayoutConstraint *checkboxCenterY = [NSLayoutConstraint constraintWithItem:checkbox attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:checkbox.superview attribute:NSLayoutAttributeCenterY multiplier:1 constant:0];
-        [con addObjectsFromArray:@[textFieldCenterY, checkboxCenterY]];
-        
-        [titleLabel.superview addConstraints:con];
+    UIButton *checkbox = [[UIButton alloc] init];
+    [checkbox setImage:self.printOrder.optOutOfEmail ? [UIImage imageNamedInKiteBundle:@"checkbox_off"] : [UIImage imageNamedInKiteBundle:@"checkbox_on"] forState:UIControlStateNormal];
+    [checkbox addTarget:self action:@selector(onButtonCheckboxClicked:) forControlEvents:UIControlEventTouchUpInside];
+    checkbox.translatesAutoresizingMaskIntoConstraints = NO;
+    [titleLabel.superview addSubview:checkbox];
+    
+    titleLabel.translatesAutoresizingMaskIntoConstraints = NO;
+    NSDictionary *views = NSDictionaryOfVariableBindings(titleLabel, checkbox);
+    NSMutableArray *con = [[NSMutableArray alloc] init];
+    
+    NSArray *visuals = @[[NSString stringWithFormat:@"H:|-20-[titleLabel]-5-[checkbox(%f)]-20-|", checkbox.imageView.image.size.width],
+                         @"V:[titleLabel(43)]",
+                         @"V:[checkbox(43)]"];
+    
+    
+    for (NSString *visual in visuals) {
+        [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
     }
+    
+    NSLayoutConstraint *textFieldCenterY = [NSLayoutConstraint constraintWithItem:titleLabel attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:titleLabel.superview attribute:NSLayoutAttributeCenterY multiplier:1 constant:0];
+    NSLayoutConstraint *checkboxCenterY = [NSLayoutConstraint constraintWithItem:checkbox attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:checkbox.superview attribute:NSLayoutAttributeCenterY multiplier:1 constant:0];
+    [con addObjectsFromArray:@[textFieldCenterY, checkboxCenterY]];
+    
+    [titleLabel.superview addConstraints:con];
     return cell;
 }
 
@@ -642,24 +640,22 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
     [cell addSubview:titleLabel];
     [cell addSubview:inputField];
     
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8){
-        UIView *view = inputField;
-        view.translatesAutoresizingMaskIntoConstraints = NO;
-        NSDictionary *views = NSDictionaryOfVariableBindings(view);
-        NSMutableArray *con = [[NSMutableArray alloc] init];
-        
-        NSArray *visuals = @[@"H:|-86-[view]-0-|", @"V:[view(43)]"];
-        
-        
-        for (NSString *visual in visuals) {
-            [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
-        }
-        
-        NSLayoutConstraint *centerY = [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:view.superview attribute:NSLayoutAttributeCenterY multiplier:1 constant:0];
-        [con addObject:centerY];
-        
-        [view.superview addConstraints:con];
+    UIView *view = inputField;
+    view.translatesAutoresizingMaskIntoConstraints = NO;
+    NSDictionary *views = NSDictionaryOfVariableBindings(view);
+    NSMutableArray *con = [[NSMutableArray alloc] init];
+    
+    NSArray *visuals = @[@"H:|-86-[view]-0-|", @"V:[view(43)]"];
+    
+    
+    for (NSString *visual in visuals) {
+        [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
     }
+    
+    NSLayoutConstraint *centerY = [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:view.superview attribute:NSLayoutAttributeCenterY multiplier:1 constant:0];
+    [con addObject:centerY];
+    
+    [view.superview addConstraints:con];
     
     
     return cell;
@@ -775,29 +771,6 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
 - (void)addressPickerDidCancelPicking:(OLAddressPickerController *)picker {
     [self dismissViewControllerAnimated:YES completion:nil];
 }
-
-#if __IPHONE_OS_VERSION_MIN_REQUIRED < 80000
-#pragma mark - Autorotate and Orientation Methods
-// Currently here to disable landscape orientations and rotation on iOS 7. When support is dropped, these can be deleted.
-
-- (BOOL)shouldAutorotate {
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
-        return YES;
-    }
-    else{
-        return NO;
-    }
-}
-
-- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
-        return UIInterfaceOrientationMaskAll;
-    }
-    else{
-        return UIInterfaceOrientationMaskPortrait;
-    }
-}
-#endif
 
 // Called when the UIKeyboardDidShowNotification is sent.
 - (void)keyboardWasShown:(NSNotification*)aNotification

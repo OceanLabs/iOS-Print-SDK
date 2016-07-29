@@ -31,6 +31,9 @@
 #import "OLCaseViewController.h"
 #import "OLRemoteImageCropper.h"
 #import "UIImage+ImageNamedInKiteBundle.h"
+#import "UIImage+OLUtils.h"
+#import "OLUserSession.h"
+#import "OLAsset+Private.h"
 
 @interface OLSingleImageProductReviewViewController (Private)
 
@@ -47,7 +50,7 @@
 @property (strong, nonatomic) UIVisualEffectView *visualEffectView;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *maskActivityIndicator;
 @property (strong, nonatomic) UIImage *maskImage;
-@property (strong, nonatomic) OLPrintPhoto *imageDisplayed;
+@property (strong, nonatomic) OLAsset *imageDisplayed;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *centerYCon;
 @property (weak, nonatomic) IBOutlet UIImageView *deviceView;
 @property (weak, nonatomic) IBOutlet UIImageView *highlightsView;
@@ -102,34 +105,30 @@
         return;
     }
     
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0){
-        if (!self.visualEffectView){
-            UIVisualEffect *blurEffect;
-            blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
-            
-            self.visualEffectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
-            UIView *view = self.visualEffectView;
-            [view.layer setMasksToBounds:YES];
-            [self.containerView insertSubview:view belowSubview:self.maskActivityIndicator];
-            
-            view.translatesAutoresizingMaskIntoConstraints = NO;
-            NSDictionary *views = NSDictionaryOfVariableBindings(view);
-            NSMutableArray *con = [[NSMutableArray alloc] init];
-            
-            NSArray *visuals = @[@"H:|-0-[view]-0-|",
-                                 @"V:|-0-[view]-0-|"];
-            
-            
-            for (NSString *visual in visuals) {
-                [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
-            }
-            
-            [view.superview addConstraints:con];
-        }
-    }
-    else{
+    if (!self.visualEffectView){
+        UIVisualEffect *blurEffect;
+        blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
         
+        self.visualEffectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
+        UIView *view = self.visualEffectView;
+        [view.layer setMasksToBounds:YES];
+        [self.containerView insertSubview:view belowSubview:self.maskActivityIndicator];
+        
+        view.translatesAutoresizingMaskIntoConstraints = NO;
+        NSDictionary *views = NSDictionaryOfVariableBindings(view);
+        NSMutableArray *con = [[NSMutableArray alloc] init];
+        
+        NSArray *visuals = @[@"H:|-0-[view]-0-|",
+                             @"V:|-0-[view]-0-|"];
+        
+        
+        for (NSString *visual in visuals) {
+            [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+        }
+        
+        [view.superview addConstraints:con];
     }
+    
     
     UIImage *tempMask = [UIImage imageNamedInKiteBundle:@"dummy mask"];
     [self.containerView removeConstraint:self.maskAspectRatio];
@@ -182,14 +181,14 @@
             [self.view setNeedsLayout];
             [self.view layoutIfNeeded];
             
-            self.maskImage = [OLPrintPhoto imageWithImage:image scaledToSize:[UIScreen mainScreen].bounds.size];
+            self.maskImage = [image shrinkToSize:[UIScreen mainScreen].bounds.size forScreenScale:[OLUserSession currentSession].screenScale];
             [self maskWithImage:self.maskImage targetView:self.imageCropView];
             
             [[OLImageDownloader sharedInstance] downloadImageAtURL:self.product.productTemplate.productBackgroundImageURL priority:1.0 progress:NULL withCompletionHandler:^(UIImage *image, NSError *error){
-                self.deviceView.image = [OLPrintPhoto imageWithImage:image scaledToSize:[UIScreen mainScreen].bounds.size];
+                self.deviceView.image = [image shrinkToSize:[UIScreen mainScreen].bounds.size forScreenScale:[OLUserSession currentSession].screenScale];
             }];
             [[OLImageDownloader sharedInstance] downloadImageAtURL:self.product.productTemplate.productHighlightsImageURL priority:0.9 progress:NULL withCompletionHandler:^(UIImage *image, NSError *error){
-                self.highlightsView.image = [OLPrintPhoto imageWithImage:image scaledToSize:[UIScreen mainScreen].bounds.size];
+                self.highlightsView.image = [image shrinkToSize:[UIScreen mainScreen].bounds.size forScreenScale:[OLUserSession currentSession].screenScale];
              }];
             
             self.visualEffectView.hidden = YES;
@@ -227,40 +226,5 @@
     }
     [super doCheckout];
 }
-
-#if __IPHONE_OS_VERSION_MIN_REQUIRED < 80000
-#pragma mark - UIAlertViewDelegate methods
-
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-    if (alertView.tag == 99) {
-        if (buttonIndex == 0) {
-            [self.navigationController popViewControllerAnimated:YES];
-        } else {
-            [self applyDownloadedMask];
-        }
-    }
-}
-
-#pragma mark - Autorotate and Orientation Methods
-// Currently here to disable landscape orientations and rotation on iOS 7. When support is dropped, these can be deleted.
-
-- (BOOL)shouldAutorotate {
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
-        return YES;
-    }
-    else{
-        return NO;
-    }
-}
-
-- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
-        return UIInterfaceOrientationMaskAll;
-    }
-    else{
-        return UIInterfaceOrientationMaskPortrait;
-    }
-}
-#endif
 
 @end

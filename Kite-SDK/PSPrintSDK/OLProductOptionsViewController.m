@@ -46,34 +46,28 @@
     
     self.backChevron.transform = CGAffineTransformMakeRotation(M_PI);
     
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0){
-        UIVisualEffect *blurEffect;
-        blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleExtraLight];
-        
-        self.visualEffectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
-        UIView *view = self.visualEffectView;
-        [self.view addSubview:view];
-        [self.view sendSubviewToBack:view];
-        self.view.backgroundColor = [UIColor clearColor];
-        
-        view.translatesAutoresizingMaskIntoConstraints = NO;
-        NSDictionary *views = NSDictionaryOfVariableBindings(view);
-        NSMutableArray *con = [[NSMutableArray alloc] init];
-        
-        NSArray *visuals = @[@"H:|-0-[view]-0-|",
-                             @"V:|-0-[view]-0-|"];
-        
-        
-        for (NSString *visual in visuals) {
-            [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
-        }
-        
-        [view.superview addConstraints:con];
-        
+    UIVisualEffect *blurEffect;
+    blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleExtraLight];
+    
+    self.visualEffectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
+    UIView *view = self.visualEffectView;
+    [self.view addSubview:view];
+    [self.view sendSubviewToBack:view];
+    self.view.backgroundColor = [UIColor clearColor];
+    
+    view.translatesAutoresizingMaskIntoConstraints = NO;
+    NSDictionary *views = NSDictionaryOfVariableBindings(view);
+    NSMutableArray *con = [[NSMutableArray alloc] init];
+    
+    NSArray *visuals = @[@"H:|-0-[view]-0-|",
+                         @"V:|-0-[view]-0-|"];
+    
+    
+    for (NSString *visual in visuals) {
+        [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
     }
-    else{
-        self.view.backgroundColor = [UIColor whiteColor];
-    }
+    
+    [view.superview addConstraints:con];
     
     self.tableView.dataSource = self;
     self.tableView.delegate = self;

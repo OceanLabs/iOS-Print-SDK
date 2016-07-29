@@ -25,19 +25,49 @@
 		0965B1E0A734EFED98957ABF /* libPods-KitePrintSDKTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D5311AEC977293456E67B5B /* libPods-KitePrintSDKTests.a */; };
 		2E0804B81C0DECE300F50D42 /* OLCustomPhotoProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0804B71C0DECE300F50D42 /* OLCustomPhotoProvider.m */; };
 		2E0804B91C0DECE300F50D42 /* OLCustomPhotoProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0804B71C0DECE300F50D42 /* OLCustomPhotoProvider.m */; };
-		2E0804BE1C0DF70200F50D42 /* CatsAssetCollectionDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0804BB1C0DF70200F50D42 /* CatsAssetCollectionDataSource.m */; };
-		2E0804BF1C0DF70200F50D42 /* AssetDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0804BD1C0DF70200F50D42 /* AssetDataSource.m */; };
 		2E0FF2E31D2A9003007093C0 /* OLButtonCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0FF2E21D2A9003007093C0 /* OLButtonCollectionViewCell.m */; };
 		2E0FF2E41D2A9003007093C0 /* OLButtonCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0FF2E21D2A9003007093C0 /* OLButtonCollectionViewCell.m */; };
 		2E0FF2E51D2A9003007093C0 /* OLButtonCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0FF2E21D2A9003007093C0 /* OLButtonCollectionViewCell.m */; };
 		2E0FF2E61D2A9003007093C0 /* OLButtonCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0FF2E21D2A9003007093C0 /* OLButtonCollectionViewCell.m */; };
 		2E14D2D11C2AE9AD00F35403 /* OLImagePreviewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E14D2D01C2AE9AD00F35403 /* OLImagePreviewViewController.m */; };
 		2E14D2D21C2AE9AD00F35403 /* OLImagePreviewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E14D2D01C2AE9AD00F35403 /* OLImagePreviewViewController.m */; };
+		2E1E66CF1D477B78002524A4 /* OLImagePickerPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1E66CE1D477B78002524A4 /* OLImagePickerPageViewController.m */; };
+		2E1E66D01D477B78002524A4 /* OLImagePickerPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1E66CE1D477B78002524A4 /* OLImagePickerPageViewController.m */; };
+		2E1E66D11D477B78002524A4 /* OLImagePickerPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1E66CE1D477B78002524A4 /* OLImagePickerPageViewController.m */; };
+		2E1E66D21D477B78002524A4 /* OLImagePickerPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1E66CE1D477B78002524A4 /* OLImagePickerPageViewController.m */; };
+		2E1E66D51D478052002524A4 /* OLImagePickerLoginPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1E66D41D478052002524A4 /* OLImagePickerLoginPageViewController.m */; };
+		2E1E66D61D478052002524A4 /* OLImagePickerLoginPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1E66D41D478052002524A4 /* OLImagePickerLoginPageViewController.m */; };
+		2E1E66D71D478052002524A4 /* OLImagePickerLoginPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1E66D41D478052002524A4 /* OLImagePickerLoginPageViewController.m */; };
+		2E1E66D81D478052002524A4 /* OLImagePickerLoginPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1E66D41D478052002524A4 /* OLImagePickerLoginPageViewController.m */; };
+		2E1E66E01D4795EE002524A4 /* OLFacebookAlbum.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1E66DB1D4795EE002524A4 /* OLFacebookAlbum.m */; };
+		2E1E66E11D4795EE002524A4 /* OLFacebookAlbum.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1E66DB1D4795EE002524A4 /* OLFacebookAlbum.m */; };
+		2E1E66E21D4795EE002524A4 /* OLFacebookAlbum.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1E66DB1D4795EE002524A4 /* OLFacebookAlbum.m */; };
+		2E1E66E31D4795EE002524A4 /* OLFacebookAlbum.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1E66DB1D4795EE002524A4 /* OLFacebookAlbum.m */; };
+		2E1E66E41D4795EE002524A4 /* OLFacebookAlbumRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1E66DD1D4795EE002524A4 /* OLFacebookAlbumRequest.m */; };
+		2E1E66E51D4795EE002524A4 /* OLFacebookAlbumRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1E66DD1D4795EE002524A4 /* OLFacebookAlbumRequest.m */; };
+		2E1E66E61D4795EE002524A4 /* OLFacebookAlbumRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1E66DD1D4795EE002524A4 /* OLFacebookAlbumRequest.m */; };
+		2E1E66E71D4795EE002524A4 /* OLFacebookAlbumRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1E66DD1D4795EE002524A4 /* OLFacebookAlbumRequest.m */; };
+		2E1E66E81D4795EE002524A4 /* OLFacebookPhotosForAlbumRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1E66DF1D4795EE002524A4 /* OLFacebookPhotosForAlbumRequest.m */; };
+		2E1E66E91D4795EE002524A4 /* OLFacebookPhotosForAlbumRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1E66DF1D4795EE002524A4 /* OLFacebookPhotosForAlbumRequest.m */; };
+		2E1E66EA1D4795EE002524A4 /* OLFacebookPhotosForAlbumRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1E66DF1D4795EE002524A4 /* OLFacebookPhotosForAlbumRequest.m */; };
+		2E1E66EB1D4795EE002524A4 /* OLFacebookPhotosForAlbumRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1E66DF1D4795EE002524A4 /* OLFacebookPhotosForAlbumRequest.m */; };
+		2E1E66EE1D479617002524A4 /* OLFacebookImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1E66ED1D479617002524A4 /* OLFacebookImage.m */; };
+		2E1E66EF1D479617002524A4 /* OLFacebookImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1E66ED1D479617002524A4 /* OLFacebookImage.m */; };
+		2E1E66F01D479617002524A4 /* OLFacebookImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1E66ED1D479617002524A4 /* OLFacebookImage.m */; };
+		2E1E66F11D479617002524A4 /* OLFacebookImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1E66ED1D479617002524A4 /* OLFacebookImage.m */; };
+		2E1E66FB1D47A653002524A4 /* OLFacebookImagePickerConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1E66FA1D47A653002524A4 /* OLFacebookImagePickerConstants.m */; };
+		2E1E66FC1D47A653002524A4 /* OLFacebookImagePickerConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1E66FA1D47A653002524A4 /* OLFacebookImagePickerConstants.m */; };
+		2E1E66FD1D47A653002524A4 /* OLFacebookImagePickerConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1E66FA1D47A653002524A4 /* OLFacebookImagePickerConstants.m */; };
+		2E1E66FE1D47A653002524A4 /* OLFacebookImagePickerConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1E66FA1D47A653002524A4 /* OLFacebookImagePickerConstants.m */; };
 		2E25C7071D460A8C00B5BD8C /* libPayPalMobile.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E24452ED1BFD20D80086BF03 /* libPayPalMobile.a */; };
 		2E25FEFB1CF2EF5D006E52E5 /* OLKeyChainStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E25FEFA1CF2EF5D006E52E5 /* OLKeyChainStore.m */; };
 		2E25FEFC1CF2EF5D006E52E5 /* OLKeyChainStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E25FEFA1CF2EF5D006E52E5 /* OLKeyChainStore.m */; };
 		2E25FEFD1CF2EF5D006E52E5 /* OLKeyChainStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E25FEFA1CF2EF5D006E52E5 /* OLKeyChainStore.m */; };
 		2E25FEFE1CF2EF5D006E52E5 /* OLKeyChainStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E25FEFA1CF2EF5D006E52E5 /* OLKeyChainStore.m */; };
+		2E28CDFD1D38EEAF00E9AFEA /* OLImagePickerPhotosPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E28CDFC1D38EEAF00E9AFEA /* OLImagePickerPhotosPageViewController.m */; };
+		2E28CDFE1D38EEAF00E9AFEA /* OLImagePickerPhotosPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E28CDFC1D38EEAF00E9AFEA /* OLImagePickerPhotosPageViewController.m */; };
+		2E28CDFF1D38EEAF00E9AFEA /* OLImagePickerPhotosPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E28CDFC1D38EEAF00E9AFEA /* OLImagePickerPhotosPageViewController.m */; };
+		2E28CE001D38EEAF00E9AFEA /* OLImagePickerPhotosPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E28CDFC1D38EEAF00E9AFEA /* OLImagePickerPhotosPageViewController.m */; };
 		2E2BF4471CCDFAF100725561 /* OLKiteTheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E2BF4461CCDFAF100725561 /* OLKiteTheme.m */; };
 		2E2BF4481CCDFAF100725561 /* OLKiteTheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E2BF4461CCDFAF100725561 /* OLKiteTheme.m */; };
 		2E2BF4491CCDFAF100725561 /* OLKiteTheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E2BF4461CCDFAF100725561 /* OLKiteTheme.m */; };
@@ -51,6 +81,14 @@
 		2E31C0161C7B2237009C1E42 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E31C0151C7B2237009C1E42 /* QuartzCore.framework */; };
 		2E31C0191C7B2253009C1E42 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E244531C1BFD2C8C0086BF03 /* MobileCoreServices.framework */; };
 		2E31C01B1C7B2267009C1E42 /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E31C01A1C7B2267009C1E42 /* libc++.tbd */; };
+		2E36A1DC1D42094C00EA2F0F /* OLImagePickerProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E36A1DB1D42094C00EA2F0F /* OLImagePickerProvider.m */; };
+		2E36A1DD1D42094C00EA2F0F /* OLImagePickerProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E36A1DB1D42094C00EA2F0F /* OLImagePickerProvider.m */; };
+		2E36A1DE1D42094C00EA2F0F /* OLImagePickerProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E36A1DB1D42094C00EA2F0F /* OLImagePickerProvider.m */; };
+		2E36A1DF1D42094C00EA2F0F /* OLImagePickerProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E36A1DB1D42094C00EA2F0F /* OLImagePickerProvider.m */; };
+		2E36A1E21D420CDA00EA2F0F /* OLImagePickerProviderCollection.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E36A1E11D420CDA00EA2F0F /* OLImagePickerProviderCollection.m */; };
+		2E36A1E31D420CDA00EA2F0F /* OLImagePickerProviderCollection.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E36A1E11D420CDA00EA2F0F /* OLImagePickerProviderCollection.m */; };
+		2E36A1E41D420CDA00EA2F0F /* OLImagePickerProviderCollection.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E36A1E11D420CDA00EA2F0F /* OLImagePickerProviderCollection.m */; };
+		2E36A1E51D420CDA00EA2F0F /* OLImagePickerProviderCollection.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E36A1E11D420CDA00EA2F0F /* OLImagePickerProviderCollection.m */; };
 		2E37B17B1D227EDA003DAA84 /* OLPageLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E37B17A1D227EDA003DAA84 /* OLPageLayout.m */; };
 		2E37B17C1D227EDA003DAA84 /* OLPageLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E37B17A1D227EDA003DAA84 /* OLPageLayout.m */; };
 		2E37B17D1D227EDA003DAA84 /* OLPageLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E37B17A1D227EDA003DAA84 /* OLPageLayout.m */; };
@@ -67,7 +105,6 @@
 		2E434AE61D36675700D1BD06 /* OLEditingToolsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2E434AE81D36675700D1BD06 /* OLEditingToolsView.xib */; };
 		2E482B7A1BEB4C7D007460EA /* OLStripeCard.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E482B781BEB4C7D007460EA /* OLStripeCard.m */; };
 		2E482B7B1BEB4C7D007460EA /* OLStripeCard.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E482B781BEB4C7D007460EA /* OLStripeCard.m */; };
-		2E4DF45E1C0F150400EA66FE /* DogsAssetCollectionDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E4DF45D1C0F150400EA66FE /* DogsAssetCollectionDataSource.m */; };
 		2E53E0CD1C1AEAAD00BF7887 /* UIViewController+OLMethods.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E53E0CC1C1AEAAD00BF7887 /* UIViewController+OLMethods.m */; };
 		2E53E0CE1C1AEAAD00BF7887 /* UIViewController+OLMethods.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E53E0CC1C1AEAAD00BF7887 /* UIViewController+OLMethods.m */; };
 		2E5BDC3E1CEDBF8200257B1A /* OLImageDownloadDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E5BDC3D1CEDBF8200257B1A /* OLImageDownloadDelegate.m */; };
@@ -100,15 +137,15 @@
 		2E67B92B1D267A3E00914D56 /* OLColorSelectionCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E67B9291D267A3E00914D56 /* OLColorSelectionCollectionViewCell.m */; };
 		2E67B92C1D267A3E00914D56 /* OLColorSelectionCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E67B9291D267A3E00914D56 /* OLColorSelectionCollectionViewCell.m */; };
 		2E67B92D1D267A3E00914D56 /* OLColorSelectionCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E67B9291D267A3E00914D56 /* OLColorSelectionCollectionViewCell.m */; };
-		2E6A1FE41CE07E7100237D38 /* DogsAssetCollectionDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E4DF45D1C0F150400EA66FE /* DogsAssetCollectionDataSource.m */; };
-		2E6A1FE51CE07E7400237D38 /* AssetDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0804BD1C0DF70200F50D42 /* AssetDataSource.m */; };
-		2E6A1FE61CE07E7700237D38 /* CatsAssetCollectionDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0804BB1C0DF70200F50D42 /* CatsAssetCollectionDataSource.m */; };
 		2E6E605D1C50384C00829BB7 /* KitePrintSDK.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2E6E605F1C50384C00829BB7 /* KitePrintSDK.strings */; };
 		2E6E60661C5038AD00829BB7 /* OLKiteStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2E6E60681C5038AD00829BB7 /* OLKiteStoryboard.storyboard */; };
 		2E7483511BCCFB5900360550 /* 2.png in Resources */ = {isa = PBXBuildFile; fileRef = 2E7483501BCCFB5900360550 /* 2.png */; };
 		2E7483531BCD11F800360550 /* ViewControllerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E7483521BCD11F800360550 /* ViewControllerTests.m */; };
-		2E7483551BCD1DF500360550 /* OLPrintPhotoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E7483541BCD1DF500360550 /* OLPrintPhotoTests.m */; };
 		2E7835B41C902E24007BDF7C /* NSDictionary+RequestParameterData.m in Sources */ = {isa = PBXBuildFile; fileRef = 2ED36B391C8EE4AD00FB2D4A /* NSDictionary+RequestParameterData.m */; };
+		2E7BDADA1D3E1713005F142C /* OLUserSession.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E7BDAD91D3E1713005F142C /* OLUserSession.m */; };
+		2E7BDADB1D3E1713005F142C /* OLUserSession.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E7BDAD91D3E1713005F142C /* OLUserSession.m */; };
+		2E7BDADC1D3E1713005F142C /* OLUserSession.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E7BDAD91D3E1713005F142C /* OLUserSession.m */; };
+		2E7BDADD1D3E1713005F142C /* OLUserSession.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E7BDAD91D3E1713005F142C /* OLUserSession.m */; };
 		2E7D1C8F1BC41C7D009227EE /* OLProductOrderTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E7D1C8E1BC41C7D009227EE /* OLProductOrderTests.m */; };
 		2E7F516D1BF5FBB100A78718 /* OLGreetingCardPrintJob.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E7F516C1BF5FBB100A78718 /* OLGreetingCardPrintJob.m */; };
 		2E7F516E1BF5FBB100A78718 /* OLGreetingCardPrintJob.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E7F516C1BF5FBB100A78718 /* OLGreetingCardPrintJob.m */; };
@@ -120,6 +157,10 @@
 		2E84835F1D13E461003F4056 /* OLTShirtReviewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E84835D1D13E461003F4056 /* OLTShirtReviewViewController.m */; };
 		2E8483601D13E461003F4056 /* OLTShirtReviewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E84835D1D13E461003F4056 /* OLTShirtReviewViewController.m */; };
 		2E8483611D13E461003F4056 /* OLTShirtReviewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E84835D1D13E461003F4056 /* OLTShirtReviewViewController.m */; };
+		2E884F461D37B566007CA45A /* OLImagePickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E884F451D37B566007CA45A /* OLImagePickerViewController.m */; };
+		2E884F471D37B566007CA45A /* OLImagePickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E884F451D37B566007CA45A /* OLImagePickerViewController.m */; };
+		2E884F481D37B566007CA45A /* OLImagePickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E884F451D37B566007CA45A /* OLImagePickerViewController.m */; };
+		2E884F491D37B566007CA45A /* OLImagePickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E884F451D37B566007CA45A /* OLImagePickerViewController.m */; };
 		2E898C4F1CC518180041CCD8 /* UIViewController+OLMethods.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E53E0CC1C1AEAAD00BF7887 /* UIViewController+OLMethods.m */; };
 		2E898C501CC518180041CCD8 /* OLURLDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = CDE0744A188D7730009ADFA2 /* OLURLDataSource.m */; };
 		2E898C511CC518180041CCD8 /* OLScrollCropViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0A72651A6FB07000BC5AE7 /* OLScrollCropViewController.m */; };
@@ -127,7 +168,7 @@
 		2E898C531CC518180041CCD8 /* OLInfoPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EF53E3D1B5549B900BF936A /* OLInfoPageViewController.m */; };
 		2E898C541CC518180041CCD8 /* OLIntegratedCheckoutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E5F80311B04A22500095203 /* OLIntegratedCheckoutViewController.m */; };
 		2E898C551CC518180041CCD8 /* OLProductGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D8ECA501AD692FA00CFB2C0 /* OLProductGroup.m */; };
-		2E898C561CC518180041CCD8 /* UIImage+ColorAtPixel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EF53E3A1B55421A00BF936A /* UIImage+ColorAtPixel.m */; };
+		2E898C561CC518180041CCD8 /* UIImage+OLUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EF53E3A1B55421A00BF936A /* UIImage+OLUtils.m */; };
 		2E898C571CC518180041CCD8 /* OLCheckoutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CDA8BF5118D70D0F00D835BB /* OLCheckoutViewController.m */; };
 		2E898C581CC518180041CCD8 /* OLPhotobookViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB4BD671AE128740004CEE0 /* OLPhotobookViewController.m */; };
 		2E898C5A1CC518180041CCD8 /* OLPopupOptionsImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E676C2A1B33FD70005E068B /* OLPopupOptionsImageView.m */; };
@@ -138,7 +179,6 @@
 		2E898C611CC518180041CCD8 /* OLProductOptionsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EAD11541BD7C716000BC80E /* OLProductOptionsViewController.m */; };
 		2E898C621CC518180041CCD8 /* OLOrderReviewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA8BEB51A484FCB008A9248 /* OLOrderReviewViewController.m */; };
 		2E898C631CC518180041CCD8 /* OLProduct.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E3F96AE1A4967FF005C0EA3 /* OLProduct.m */; };
-		2E898C641CC518180041CCD8 /* DogsAssetCollectionDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E4DF45D1C0F150400EA66FE /* DogsAssetCollectionDataSource.m */; };
 		2E898C651CC518180041CCD8 /* OLGreetingCardPrintJob.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E7F516C1BF5FBB100A78718 /* OLGreetingCardPrintJob.m */; };
 		2E898C671CC518180041CCD8 /* OLAddressEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CD93BB3D187882A300316492 /* OLAddressEditViewController.m */; };
 		2E898C681CC518180041CCD8 /* OLKiteUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA13E221BBC242F005F3D71 /* OLKiteUtils.m */; };
@@ -163,18 +203,15 @@
 		2E898C801CC518180041CCD8 /* UIView+RMUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D8122EC1A759F42004E7297 /* UIView+RMUtils.m */; };
 		2E898C811CC518180041CCD8 /* OLPrintOrder+History.m in Sources */ = {isa = PBXBuildFile; fileRef = CD550B181881E1E600782D75 /* OLPrintOrder+History.m */; };
 		2E898C821CC518180041CCD8 /* OLAsset.m in Sources */ = {isa = PBXBuildFile; fileRef = CDAFE007186D9C6C003572FE /* OLAsset.m */; };
-		2E898C831CC518180041CCD8 /* CatsAssetCollectionDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0804BB1C0DF70200F50D42 /* CatsAssetCollectionDataSource.m */; };
 		2E898C841CC518180041CCD8 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = CD73BF7B186215790009DE03 /* AppDelegate.m */; };
 		2E898C851CC518180041CCD8 /* OLProductTemplate.m in Sources */ = {isa = PBXBuildFile; fileRef = CD97568D18D8D147007CA090 /* OLProductTemplate.m */; };
 		2E898C861CC518180041CCD8 /* OLPaymentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CDA8BF5018D70D0F00D835BB /* OLPaymentViewController.m */; };
-		2E898C881CC518180041CCD8 /* OLPrintPhoto.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E3F96B11A49ACF4005C0EA3 /* OLPrintPhoto.m */; };
 		2E898C891CC518180041CCD8 /* OLKitePrintSDK.m in Sources */ = {isa = PBXBuildFile; fileRef = CD73BFB318635F170009DE03 /* OLKitePrintSDK.m */; };
 		2E898C8A1CC518180041CCD8 /* OLQRCodeUploadedImagePoller.m in Sources */ = {isa = PBXBuildFile; fileRef = E2AABA141C6DFC160007C1D7 /* OLQRCodeUploadedImagePoller.m */; };
 		2E898C8B1CC518180041CCD8 /* NSString+Formatting.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DEF0D171A964881000F1E66 /* NSString+Formatting.m */; };
 		2E898C8C1CC518180041CCD8 /* OLAddress.m in Sources */ = {isa = PBXBuildFile; fileRef = CD73BFA31862FC510009DE03 /* OLAddress.m */; };
 		2E898C8D1CC518180041CCD8 /* OLNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E9965A91ABC7035007F010F /* OLNavigationController.m */; };
 		2E898C8E1CC518180041CCD8 /* NSDecimalNumber+CostFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E455DFF1B1F1BA1001B1718 /* NSDecimalNumber+CostFormatter.m */; };
-		2E898C8F1CC518180041CCD8 /* UIViewController+TraitCollectionCompatibility.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DF9D6FC1B0F618000A40C0C /* UIViewController+TraitCollectionCompatibility.m */; };
 		2E898C901CC518180041CCD8 /* OLProductOverviewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA8BEAF1A484FCB008A9248 /* OLProductOverviewViewController.m */; };
 		2E898C911CC518180041CCD8 /* OLAddress+AddressBook.m in Sources */ = {isa = PBXBuildFile; fileRef = CD93BB3318785D3B00316492 /* OLAddress+AddressBook.m */; };
 		2E898C921CC518180041CCD8 /* OLPrintOrder.m in Sources */ = {isa = PBXBuildFile; fileRef = CD9D6AE81871B5C7001CD1F9 /* OLPrintOrder.m */; };
@@ -189,10 +226,8 @@
 		2E898C9F1CC518180041CCD8 /* UITextField+Selection.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DEF0D1A1A964B4E000F1E66 /* UITextField+Selection.m */; };
 		2E898CA11CC518180041CCD8 /* LXReorderableCollectionViewFlowLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 2ED5DEBE1AC948C1003301A8 /* LXReorderableCollectionViewFlowLayout.m */; };
 		2E898CA21CC518180041CCD8 /* OLImageCachingManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EF8BA9E1B99E9E4009BC73B /* OLImageCachingManager.m */; };
-		2E898CA31CC518180041CCD8 /* AssetDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0804BD1C0DF70200F50D42 /* AssetDataSource.m */; };
 		2E898CA41CC518180041CCD8 /* UIView+RoundRect.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1067FF1B83335C00EB4C14 /* UIView+RoundRect.m */; };
 		2E898CA51CC518180041CCD8 /* OLCountry.m in Sources */ = {isa = PBXBuildFile; fileRef = CD73BFA6186306550009DE03 /* OLCountry.m */; };
-		2E898CA71CC518180041CCD8 /* ALAssetsLibrary+Singleton.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EE94D3E1B501D900086590C /* ALAssetsLibrary+Singleton.m */; };
 		2E898CA81CC518180041CCD8 /* OLCustomPhotoProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0804B71C0DECE300F50D42 /* OLCustomPhotoProvider.m */; };
 		2E898CA91CC518180041CCD8 /* OLConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = CD73BFB018634ED50009DE03 /* OLConstants.m */; };
 		2E898CAA1CC518180041CCD8 /* OLProductOverviewPageContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA8BEB11A484FCB008A9248 /* OLProductOverviewPageContentViewController.m */; };
@@ -207,7 +242,6 @@
 		2E898CB51CC518180041CCD8 /* OLPrintOrderSubmitStatusRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EF4392A1BF4D15E0006C123 /* OLPrintOrderSubmitStatusRequest.m */; };
 		2E898CB61CC518180041CCD8 /* OLCircleMaskCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E973EED1A7A5D0E00488212 /* OLCircleMaskCollectionViewCell.m */; };
 		2E898CB71CC518180041CCD8 /* OLCreditCardCaptureViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D1779591A1E1D6800BE3E58 /* OLCreditCardCaptureViewController.m */; };
-		2E898CB81CC518180041CCD8 /* OLPhotoSelectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E39CAA21AB894A8008B1EFF /* OLPhotoSelectionViewController.m */; };
 		2E898CB91CC518180041CCD8 /* OLAddressLookupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CD550A67187B30D200782D75 /* OLAddressLookupViewController.m */; };
 		2E898CBA1CC518180041CCD8 /* OLKiteABTesting.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB1C4101B551D6000EFE0D0 /* OLKiteABTesting.m */; };
 		2E898CBB1CC518180041CCD8 /* OLProductHomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA8BEAD1A484FCB008A9248 /* OLProductHomeViewController.m */; };
@@ -290,29 +324,22 @@
 		2EA3D3601C9C04B500B99BCD /* OLInfoPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EF53E3D1B5549B900BF936A /* OLInfoPageViewController.m */; };
 		2EA3D3611C9C04B500B99BCD /* OLIntegratedCheckoutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E5F80311B04A22500095203 /* OLIntegratedCheckoutViewController.m */; };
 		2EA3D3621C9C04B500B99BCD /* OLProductGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D8ECA501AD692FA00CFB2C0 /* OLProductGroup.m */; };
-		2EA3D3631C9C04B500B99BCD /* UIImage+ColorAtPixel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EF53E3A1B55421A00BF936A /* UIImage+ColorAtPixel.m */; };
+		2EA3D3631C9C04B500B99BCD /* UIImage+OLUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EF53E3A1B55421A00BF936A /* UIImage+OLUtils.m */; };
 		2EA3D3641C9C04B500B99BCD /* OLCheckoutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CDA8BF5118D70D0F00D835BB /* OLCheckoutViewController.m */; };
 		2EA3D3651C9C04B500B99BCD /* OLPhotobookViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB4BD671AE128740004CEE0 /* OLPhotobookViewController.m */; };
-		2EA3D3661C9C04B500B99BCD /* OLAssetItemViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E21DA301B9843CF00D9162F /* OLAssetItemViewController.m */; };
 		2EA3D3671C9C04B500B99BCD /* OLPopupOptionsImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E676C2A1B33FD70005E068B /* OLPopupOptionsImageView.m */; };
 		2EA3D3681C9C04B500B99BCD /* NSArray+QueryingExtras.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D0D7ACB1AC0C44C00746FC8 /* NSArray+QueryingExtras.m */; };
 		2EA3D3691C9C04B500B99BCD /* OLGreetingCardPrintJob.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E7F516C1BF5FBB100A78718 /* OLGreetingCardPrintJob.m */; };
-		2EA3D36A1C9C04B500B99BCD /* ALAsset+OLAccessibilityLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA829211B9DE54100A9208E /* ALAsset+OLAccessibilityLabel.m */; };
 		2EA3D36B1C9C04B500B99BCD /* UIImage+ImageNamedInKiteBundle.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA13E1F1BBC2202005F3D71 /* UIImage+ImageNamedInKiteBundle.m */; };
-		2EA3D36C1C9C04B500B99BCD /* OLAssetsPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E21DA381B9843CF00D9162F /* OLAssetsPageViewController.m */; };
 		2EA3D36D1C9C04B500B99BCD /* OLOrderReviewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA8BEB51A484FCB008A9248 /* OLOrderReviewViewController.m */; };
 		2EA3D36E1C9C04B500B99BCD /* OLProduct.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E3F96AE1A4967FF005C0EA3 /* OLProduct.m */; };
 		2EA3D3701C9C04B500B99BCD /* OLAddressEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CD93BB3D187882A300316492 /* OLAddressEditViewController.m */; };
 		2EA3D3711C9C04B500B99BCD /* OLKiteUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA13E221BBC242F005F3D71 /* OLKiteUtils.m */; };
-		2EA3D3721C9C04B500B99BCD /* ALAsset+OLIsEqual.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA829251B9DE54100A9208E /* ALAsset+OLIsEqual.m */; };
-		2EA3D3731C9C04B500B99BCD /* OLAssetsSupplementaryView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E21DA3D1B9843CF00D9162F /* OLAssetsSupplementaryView.m */; };
 		2EA3D3741C9C04B500B99BCD /* OLCaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E20BD851AD4229700FB2446 /* OLCaseViewController.m */; };
 		2EA3D3751C9C04B500B99BCD /* OLFrameOrderReviewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA8BEB71A484FCB008A9248 /* OLFrameOrderReviewViewController.m */; };
 		2EA3D3761C9C04B500B99BCD /* OLApparelPrintJob.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E333CC91BC7D1850092E42A /* OLApparelPrintJob.m */; };
 		2EA3D3771C9C04B500B99BCD /* OLKiteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EE3C86F1A4AFB0C006446E2 /* OLKiteViewController.m */; };
 		2EA3D3791C9C04B500B99BCD /* OLPhotobookPageContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB4BD6A1AE13F520004CEE0 /* OLPhotobookPageContentViewController.m */; };
-		2EA3D37A1C9C04B500B99BCD /* OLAssetsViewControllerTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E21DA431B9843CF00D9162F /* OLAssetsViewControllerTransition.m */; };
-		2EA3D37B1C9C04B500B99BCD /* NSBundle+OLAssetsPickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA829291B9DE54100A9208E /* NSBundle+OLAssetsPickerController.m */; };
 		2EA3D37C1C9C04B500B99BCD /* UIImageView+FadeIn.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D8122F01A75A46D004E7297 /* UIImageView+FadeIn.m */; };
 		2EA3D37D1C9C04B500B99BCD /* OLAddressSearchRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = CD73BFA91863180A0009DE03 /* OLAddressSearchRequest.m */; };
 		2EA3D37E1C9C04B500B99BCD /* OLPayPalCard.m in Sources */ = {isa = PBXBuildFile; fileRef = CD550BDB1886BF8B00782D75 /* OLPayPalCard.m */; };
@@ -329,8 +356,6 @@
 		2EA3D3891C9C04B500B99BCD /* OLAsset.m in Sources */ = {isa = PBXBuildFile; fileRef = CDAFE007186D9C6C003572FE /* OLAsset.m */; };
 		2EA3D38A1C9C04B500B99BCD /* OLProductTemplate.m in Sources */ = {isa = PBXBuildFile; fileRef = CD97568D18D8D147007CA090 /* OLProductTemplate.m */; };
 		2EA3D38B1C9C04B500B99BCD /* OLPaymentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CDA8BF5018D70D0F00D835BB /* OLPaymentViewController.m */; };
-		2EA3D38C1C9C04B500B99BCD /* NSDateFormatter+OLTimeIntervalFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA8292B1B9DE54100A9208E /* NSDateFormatter+OLTimeIntervalFormatter.m */; };
-		2EA3D38D1C9C04B500B99BCD /* OLPrintPhoto.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E3F96B11A49ACF4005C0EA3 /* OLPrintPhoto.m */; };
 		2EA3D38E1C9C04B500B99BCD /* OLKitePrintSDK.m in Sources */ = {isa = PBXBuildFile; fileRef = CD73BFB318635F170009DE03 /* OLKitePrintSDK.m */; };
 		2EA3D38F1C9C04B500B99BCD /* NSString+Formatting.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DEF0D171A964881000F1E66 /* NSString+Formatting.m */; };
 		2EA3D3901C9C04B500B99BCD /* OLAddress.m in Sources */ = {isa = PBXBuildFile; fileRef = CD73BFA31862FC510009DE03 /* OLAddress.m */; };
@@ -338,52 +363,40 @@
 		2EA3D3921C9C04B500B99BCD /* OLPhotoEdits.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E8FD26F1BF9E73B00F4FC5A /* OLPhotoEdits.m */; };
 		2EA3D3931C9C04B500B99BCD /* UIViewController+OLMethods.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E53E0CC1C1AEAAD00BF7887 /* UIViewController+OLMethods.m */; };
 		2EA3D3941C9C04B500B99BCD /* NSDecimalNumber+CostFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E455DFF1B1F1BA1001B1718 /* NSDecimalNumber+CostFormatter.m */; };
-		2EA3D3951C9C04B500B99BCD /* UIViewController+TraitCollectionCompatibility.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DF9D6FC1B0F618000A40C0C /* UIViewController+TraitCollectionCompatibility.m */; };
 		2EA3D3961C9C04B500B99BCD /* OLProductDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EAD11511BD79ED0000BC80E /* OLProductDetailsViewController.m */; };
 		2EA3D3971C9C04B500B99BCD /* OLProductOverviewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA8BEAF1A484FCB008A9248 /* OLProductOverviewViewController.m */; };
 		2EA3D3981C9C04B500B99BCD /* OLAddress+AddressBook.m in Sources */ = {isa = PBXBuildFile; fileRef = CD93BB3318785D3B00316492 /* OLAddress+AddressBook.m */; };
 		2EA3D3991C9C04B500B99BCD /* OLPrintOrder.m in Sources */ = {isa = PBXBuildFile; fileRef = CD9D6AE81871B5C7001CD1F9 /* OLPrintOrder.m */; };
 		2EA3D39A1C9C04B500B99BCD /* OLProductOptionsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EAD11541BD7C716000BC80E /* OLProductOptionsViewController.m */; };
 		2EA3D39B1C9C04B500B99BCD /* OLProductTemplateSyncRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = CD97569018D8FDF4007CA090 /* OLProductTemplateSyncRequest.m */; };
-		2EA3D39C1C9C04B500B99BCD /* OLAssetsPickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E21DA3B1B9843CF00D9162F /* OLAssetsPickerController.m */; };
-		2EA3D39D1C9C04B500B99BCD /* ALAssetsGroup+OLIsEqual.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA829271B9DE54100A9208E /* ALAssetsGroup+OLIsEqual.m */; };
-		2EA3D39E1C9C04B500B99BCD /* OLAssetsViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E21DA3F1B9843CF00D9162F /* OLAssetsViewCell.m */; };
 		2EA3D39F1C9C04B500B99BCD /* OLProductTypeSelectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E5258FD1A9C884700DBC69B /* OLProductTypeSelectionViewController.m */; };
 		2EA3D3A01C9C04B500B99BCD /* OLPrintOrderRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = CD95AA77186F31BB0097C328 /* OLPrintOrderRequest.m */; };
 		2EA3D3A11C9C04B500B99BCD /* OLRemoteImageCropper.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EAC21531B9EDDC000C41BD4 /* OLRemoteImageCropper.m */; };
-		2EA3D3A21C9C04B500B99BCD /* OLAssetsGroupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E21DA361B9843CF00D9162F /* OLAssetsGroupViewController.m */; };
 		2EA3D3A31C9C04B500B99BCD /* UITextField+Selection.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DEF0D1A1A964B4E000F1E66 /* UITextField+Selection.m */; };
 		2EA3D3A41C9C04B500B99BCD /* OLCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E837D4B1C3C221E004DA682 /* OLCollectionViewController.m */; };
 		2EA3D3A61C9C04B500B99BCD /* LXReorderableCollectionViewFlowLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 2ED5DEBE1AC948C1003301A8 /* LXReorderableCollectionViewFlowLayout.m */; };
 		2EA3D3A71C9C04B500B99BCD /* OLImageCachingManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EF8BA9E1B99E9E4009BC73B /* OLImageCachingManager.m */; };
 		2EA3D3A81C9C04B500B99BCD /* UIView+RoundRect.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1067FF1B83335C00EB4C14 /* UIView+RoundRect.m */; };
 		2EA3D3A91C9C04B500B99BCD /* OLCountry.m in Sources */ = {isa = PBXBuildFile; fileRef = CD73BFA6186306550009DE03 /* OLCountry.m */; };
-		2EA3D3AA1C9C04B500B99BCD /* OLAssetScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E21DA321B9843CF00D9162F /* OLAssetScrollView.m */; };
-		2EA3D3AB1C9C04B500B99BCD /* ALAssetsLibrary+Singleton.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EE94D3E1B501D900086590C /* ALAssetsLibrary+Singleton.m */; };
 		2EA3D3AC1C9C04B500B99BCD /* OLConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = CD73BFB018634ED50009DE03 /* OLConstants.m */; };
 		2EA3D3AD1C9C04B500B99BCD /* OLProductOverviewPageContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA8BEB11A484FCB008A9248 /* OLProductOverviewPageContentViewController.m */; };
 		2EA3D3AE1C9C04B500B99BCD /* OLJudoPayCard.m in Sources */ = {isa = PBXBuildFile; fileRef = CD382E4818EB7C6300127F95 /* OLJudoPayCard.m */; };
 		2EA3D3AF1C9C04B500B99BCD /* OLReceiptViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CDA8BF5418D70D0F00D835BB /* OLReceiptViewController.m */; };
 		2EA3D3B01C9C04B500B99BCD /* OLAssetUploadRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = CDAFE000186CC90B003572FE /* OLAssetUploadRequest.m */; };
 		2EA3D3B11C9C04B500B99BCD /* OLAddressPickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = CD93BB2C18783B8E00316492 /* OLAddressPickerController.m */; };
-		2EA3D3B31C9C04B500B99BCD /* OLAssetsGroupViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E21DA341B9843CF00D9162F /* OLAssetsGroupViewCell.m */; };
 		2EA3D3B41C9C04B500B99BCD /* OLPostcardPrintJob.m in Sources */ = {isa = PBXBuildFile; fileRef = CD9D6AE4187189BF001CD1F9 /* OLPostcardPrintJob.m */; };
 		2EA3D3B51C9C04B500B99BCD /* NSObject+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DF9D7001B0F65C700A40C0C /* NSObject+Utils.m */; };
 		2EA3D3B61C9C04B500B99BCD /* OLAnalytics.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0E250E1A77997E00808ED8 /* OLAnalytics.m */; };
 		2EA3D3B71C9C04B500B99BCD /* OLCircleMaskCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E973EED1A7A5D0E00488212 /* OLCircleMaskCollectionViewCell.m */; };
 		2EA3D3B81C9C04B500B99BCD /* OLCreditCardCaptureViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D1779591A1E1D6800BE3E58 /* OLCreditCardCaptureViewController.m */; };
-		2EA3D3B91C9C04B500B99BCD /* OLPhotoSelectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E39CAA21AB894A8008B1EFF /* OLPhotoSelectionViewController.m */; };
 		2EA3D3BA1C9C04B500B99BCD /* OLAddressLookupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CD550A67187B30D200782D75 /* OLAddressLookupViewController.m */; };
 		2EA3D3BB1C9C04B500B99BCD /* OLPrintOrderSubmitStatusRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EF4392A1BF4D15E0006C123 /* OLPrintOrderSubmitStatusRequest.m */; };
 		2EA3D3BC1C9C04B500B99BCD /* OLKiteABTesting.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB1C4101B551D6000EFE0D0 /* OLKiteABTesting.m */; };
 		2EA3D3BD1C9C04B500B99BCD /* OLProductHomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA8BEAD1A484FCB008A9248 /* OLProductHomeViewController.m */; };
-		2EA3D3BE1C9C04B500B99BCD /* UIImage+OLAssetsPickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA8292D1B9DE54100A9208E /* UIImage+OLAssetsPickerController.m */; };
 		2EA3D3BF1C9C04B500B99BCD /* OLViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E837D471C3C1FBB004DA682 /* OLViewController.m */; };
 		2EA3D3C01C9C04B500B99BCD /* OLAddressSelectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CD93BB2F187842AB00316492 /* OLAddressSelectionViewController.m */; };
 		2EA3D3C11C9C04B500B99BCD /* OLProductTemplateOption.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E898F861BE37F9B00739F5A /* OLProductTemplateOption.m */; };
-		2EA3D3C21C9C04B500B99BCD /* ALAsset+OLAssetType.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA829231B9DE54100A9208E /* ALAsset+OLAssetType.m */; };
 		2EA3D3C31C9C04B500B99BCD /* RMImageCropper.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D8122EA1A759F42004E7297 /* RMImageCropper.m */; };
-		2EA3D3C41C9C04B500B99BCD /* OLAssetsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E21DA411B9843CF00D9162F /* OLAssetsViewController.m */; };
 		2EA3D3C51C9C04B500B99BCD /* OLCountryPickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = CD93BB441878DFA300316492 /* OLCountryPickerController.m */; };
 		2EA3D3C71C9C04B500B99BCD /* OLBaseRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = CD73BFAC18631A570009DE03 /* OLBaseRequest.m */; };
 		2EA3D3C81C9C04B500B99BCD /* OLPhotobookPrintJob.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E768F541B394372009BAC18 /* OLPhotobookPrintJob.m */; };
@@ -400,40 +413,6 @@
 		2EA3D3DC1C9C04B500B99BCD /* AddressBookUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD93BB36187869A100316492 /* AddressBookUI.framework */; };
 		2EA3D3DD1C9C04B500B99BCD /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD93BB35187869A100316492 /* AddressBook.framework */; };
 		2EA3D3DE1C9C04B500B99BCD /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD550D94188AA20100782D75 /* AssetsLibrary.framework */; };
-		2EAB0AB91CDB504C00625BD6 /* ALAsset+OLAccessibilityLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA829211B9DE54100A9208E /* ALAsset+OLAccessibilityLabel.m */; };
-		2EAB0ABA1CDB504C00625BD6 /* ALAsset+OLAssetType.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA829231B9DE54100A9208E /* ALAsset+OLAssetType.m */; };
-		2EAB0ABB1CDB504C00625BD6 /* ALAsset+OLIsEqual.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA829251B9DE54100A9208E /* ALAsset+OLIsEqual.m */; };
-		2EAB0ABC1CDB504C00625BD6 /* ALAssetsGroup+OLIsEqual.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA829271B9DE54100A9208E /* ALAssetsGroup+OLIsEqual.m */; };
-		2EAB0ABD1CDB504C00625BD6 /* NSBundle+OLAssetsPickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA829291B9DE54100A9208E /* NSBundle+OLAssetsPickerController.m */; };
-		2EAB0ABE1CDB504C00625BD6 /* NSDateFormatter+OLTimeIntervalFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA8292B1B9DE54100A9208E /* NSDateFormatter+OLTimeIntervalFormatter.m */; };
-		2EAB0ABF1CDB504C00625BD6 /* UIImage+OLAssetsPickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA8292D1B9DE54100A9208E /* UIImage+OLAssetsPickerController.m */; };
-		2EAB0AC01CDB504C00625BD6 /* OLAssetItemViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E21DA301B9843CF00D9162F /* OLAssetItemViewController.m */; };
-		2EAB0AC11CDB504C00625BD6 /* OLAssetScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E21DA321B9843CF00D9162F /* OLAssetScrollView.m */; };
-		2EAB0AC21CDB504C00625BD6 /* OLAssetsGroupViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E21DA341B9843CF00D9162F /* OLAssetsGroupViewCell.m */; };
-		2EAB0AC31CDB504C00625BD6 /* OLAssetsGroupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E21DA361B9843CF00D9162F /* OLAssetsGroupViewController.m */; };
-		2EAB0AC41CDB504C00625BD6 /* OLAssetsPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E21DA381B9843CF00D9162F /* OLAssetsPageViewController.m */; };
-		2EAB0AC51CDB504C00625BD6 /* OLAssetsPickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E21DA3B1B9843CF00D9162F /* OLAssetsPickerController.m */; };
-		2EAB0AC61CDB504C00625BD6 /* OLAssetsSupplementaryView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E21DA3D1B9843CF00D9162F /* OLAssetsSupplementaryView.m */; };
-		2EAB0AC71CDB504C00625BD6 /* OLAssetsViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E21DA3F1B9843CF00D9162F /* OLAssetsViewCell.m */; };
-		2EAB0AC81CDB504C00625BD6 /* OLAssetsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E21DA411B9843CF00D9162F /* OLAssetsViewController.m */; };
-		2EAB0AC91CDB504C00625BD6 /* OLAssetsViewControllerTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E21DA431B9843CF00D9162F /* OLAssetsViewControllerTransition.m */; };
-		2EAB0ADB1CDB504E00625BD6 /* ALAsset+OLAccessibilityLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA829211B9DE54100A9208E /* ALAsset+OLAccessibilityLabel.m */; };
-		2EAB0ADC1CDB504E00625BD6 /* ALAsset+OLAssetType.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA829231B9DE54100A9208E /* ALAsset+OLAssetType.m */; };
-		2EAB0ADD1CDB504E00625BD6 /* ALAsset+OLIsEqual.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA829251B9DE54100A9208E /* ALAsset+OLIsEqual.m */; };
-		2EAB0ADE1CDB504E00625BD6 /* ALAssetsGroup+OLIsEqual.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA829271B9DE54100A9208E /* ALAssetsGroup+OLIsEqual.m */; };
-		2EAB0ADF1CDB504E00625BD6 /* NSBundle+OLAssetsPickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA829291B9DE54100A9208E /* NSBundle+OLAssetsPickerController.m */; };
-		2EAB0AE01CDB504E00625BD6 /* NSDateFormatter+OLTimeIntervalFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA8292B1B9DE54100A9208E /* NSDateFormatter+OLTimeIntervalFormatter.m */; };
-		2EAB0AE11CDB504E00625BD6 /* UIImage+OLAssetsPickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA8292D1B9DE54100A9208E /* UIImage+OLAssetsPickerController.m */; };
-		2EAB0AE21CDB504E00625BD6 /* OLAssetItemViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E21DA301B9843CF00D9162F /* OLAssetItemViewController.m */; };
-		2EAB0AE31CDB504E00625BD6 /* OLAssetScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E21DA321B9843CF00D9162F /* OLAssetScrollView.m */; };
-		2EAB0AE41CDB504E00625BD6 /* OLAssetsGroupViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E21DA341B9843CF00D9162F /* OLAssetsGroupViewCell.m */; };
-		2EAB0AE51CDB504E00625BD6 /* OLAssetsGroupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E21DA361B9843CF00D9162F /* OLAssetsGroupViewController.m */; };
-		2EAB0AE61CDB504E00625BD6 /* OLAssetsPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E21DA381B9843CF00D9162F /* OLAssetsPageViewController.m */; };
-		2EAB0AE71CDB504E00625BD6 /* OLAssetsPickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E21DA3B1B9843CF00D9162F /* OLAssetsPickerController.m */; };
-		2EAB0AE81CDB504E00625BD6 /* OLAssetsSupplementaryView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E21DA3D1B9843CF00D9162F /* OLAssetsSupplementaryView.m */; };
-		2EAB0AE91CDB504E00625BD6 /* OLAssetsViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E21DA3F1B9843CF00D9162F /* OLAssetsViewCell.m */; };
-		2EAB0AEA1CDB504E00625BD6 /* OLAssetsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E21DA411B9843CF00D9162F /* OLAssetsViewController.m */; };
-		2EAB0AEB1CDB504E00625BD6 /* OLAssetsViewControllerTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E21DA431B9843CF00D9162F /* OLAssetsViewControllerTransition.m */; };
 		2EAB0AEE1CDB835700625BD6 /* 3.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 2EAB0AEC1CDB834E00625BD6 /* 3.pdf */; };
 		2EAB0AF51CDCD58400625BD6 /* OLTestTapGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EAB0AF21CDCD57A00625BD6 /* OLTestTapGestureRecognizer.m */; };
 		2EADD7E61BE79D6D0051CD31 /* OLURLDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = CDE0744A188D7730009ADFA2 /* OLURLDataSource.m */; };
@@ -442,7 +421,7 @@
 		2EADD7E91BE79D6D0051CD31 /* OLInfoPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EF53E3D1B5549B900BF936A /* OLInfoPageViewController.m */; };
 		2EADD7EA1BE79D6D0051CD31 /* OLIntegratedCheckoutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E5F80311B04A22500095203 /* OLIntegratedCheckoutViewController.m */; };
 		2EADD7EB1BE79D6D0051CD31 /* OLProductGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D8ECA501AD692FA00CFB2C0 /* OLProductGroup.m */; };
-		2EADD7EC1BE79D6D0051CD31 /* UIImage+ColorAtPixel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EF53E3A1B55421A00BF936A /* UIImage+ColorAtPixel.m */; };
+		2EADD7EC1BE79D6D0051CD31 /* UIImage+OLUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EF53E3A1B55421A00BF936A /* UIImage+OLUtils.m */; };
 		2EADD7ED1BE79D6D0051CD31 /* OLCheckoutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CDA8BF5118D70D0F00D835BB /* OLCheckoutViewController.m */; };
 		2EADD7EE1BE79D6D0051CD31 /* OLPhotobookViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB4BD671AE128740004CEE0 /* OLPhotobookViewController.m */; };
 		2EADD7F01BE79D6D0051CD31 /* OLPopupOptionsImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E676C2A1B33FD70005E068B /* OLPopupOptionsImageView.m */; };
@@ -474,13 +453,11 @@
 		2EADD8131BE79D6D0051CD31 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = CD73BF7B186215790009DE03 /* AppDelegate.m */; };
 		2EADD8141BE79D6D0051CD31 /* OLProductTemplate.m in Sources */ = {isa = PBXBuildFile; fileRef = CD97568D18D8D147007CA090 /* OLProductTemplate.m */; };
 		2EADD8151BE79D6D0051CD31 /* OLPaymentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CDA8BF5018D70D0F00D835BB /* OLPaymentViewController.m */; };
-		2EADD8171BE79D6D0051CD31 /* OLPrintPhoto.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E3F96B11A49ACF4005C0EA3 /* OLPrintPhoto.m */; };
 		2EADD8181BE79D6D0051CD31 /* OLKitePrintSDK.m in Sources */ = {isa = PBXBuildFile; fileRef = CD73BFB318635F170009DE03 /* OLKitePrintSDK.m */; };
 		2EADD8191BE79D6D0051CD31 /* NSString+Formatting.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DEF0D171A964881000F1E66 /* NSString+Formatting.m */; };
 		2EADD81A1BE79D6D0051CD31 /* OLAddress.m in Sources */ = {isa = PBXBuildFile; fileRef = CD73BFA31862FC510009DE03 /* OLAddress.m */; };
 		2EADD81B1BE79D6D0051CD31 /* OLNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E9965A91ABC7035007F010F /* OLNavigationController.m */; };
 		2EADD81C1BE79D6D0051CD31 /* NSDecimalNumber+CostFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E455DFF1B1F1BA1001B1718 /* NSDecimalNumber+CostFormatter.m */; };
-		2EADD81D1BE79D6D0051CD31 /* UIViewController+TraitCollectionCompatibility.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DF9D6FC1B0F618000A40C0C /* UIViewController+TraitCollectionCompatibility.m */; };
 		2EADD81E1BE79D6D0051CD31 /* OLProductOverviewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA8BEAF1A484FCB008A9248 /* OLProductOverviewViewController.m */; };
 		2EADD81F1BE79D6D0051CD31 /* OLAddress+AddressBook.m in Sources */ = {isa = PBXBuildFile; fileRef = CD93BB3318785D3B00316492 /* OLAddress+AddressBook.m */; };
 		2EADD8201BE79D6D0051CD31 /* OLPrintOrder.m in Sources */ = {isa = PBXBuildFile; fileRef = CD9D6AE81871B5C7001CD1F9 /* OLPrintOrder.m */; };
@@ -493,7 +470,6 @@
 		2EADD82D1BE79D6D0051CD31 /* OLImageCachingManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EF8BA9E1B99E9E4009BC73B /* OLImageCachingManager.m */; };
 		2EADD82E1BE79D6D0051CD31 /* UIView+RoundRect.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1067FF1B83335C00EB4C14 /* UIView+RoundRect.m */; };
 		2EADD82F1BE79D6D0051CD31 /* OLCountry.m in Sources */ = {isa = PBXBuildFile; fileRef = CD73BFA6186306550009DE03 /* OLCountry.m */; };
-		2EADD8311BE79D6D0051CD31 /* ALAssetsLibrary+Singleton.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EE94D3E1B501D900086590C /* ALAssetsLibrary+Singleton.m */; };
 		2EADD8321BE79D6D0051CD31 /* OLConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = CD73BFB018634ED50009DE03 /* OLConstants.m */; };
 		2EADD8331BE79D6D0051CD31 /* OLProductOverviewPageContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA8BEB11A484FCB008A9248 /* OLProductOverviewPageContentViewController.m */; };
 		2EADD8341BE79D6D0051CD31 /* OLJudoPayCard.m in Sources */ = {isa = PBXBuildFile; fileRef = CD382E4818EB7C6300127F95 /* OLJudoPayCard.m */; };
@@ -506,7 +482,6 @@
 		2EADD83C1BE79D6D0051CD31 /* OLAnalytics.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0E250E1A77997E00808ED8 /* OLAnalytics.m */; };
 		2EADD83D1BE79D6D0051CD31 /* OLCircleMaskCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E973EED1A7A5D0E00488212 /* OLCircleMaskCollectionViewCell.m */; };
 		2EADD83E1BE79D6D0051CD31 /* OLCreditCardCaptureViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D1779591A1E1D6800BE3E58 /* OLCreditCardCaptureViewController.m */; };
-		2EADD83F1BE79D6D0051CD31 /* OLPhotoSelectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E39CAA21AB894A8008B1EFF /* OLPhotoSelectionViewController.m */; };
 		2EADD8401BE79D6D0051CD31 /* OLAddressLookupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CD550A67187B30D200782D75 /* OLAddressLookupViewController.m */; };
 		2EADD8411BE79D6D0051CD31 /* OLKiteABTesting.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB1C4101B551D6000EFE0D0 /* OLKiteABTesting.m */; };
 		2EADD8421BE79D6D0051CD31 /* OLProductHomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA8BEAD1A484FCB008A9248 /* OLProductHomeViewController.m */; };
@@ -532,6 +507,30 @@
 		2EB197921CF872F200648696 /* OLPaymentMethodsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB197901CF872F200648696 /* OLPaymentMethodsViewController.m */; };
 		2EB197931CF872F200648696 /* OLPaymentMethodsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB197901CF872F200648696 /* OLPaymentMethodsViewController.m */; };
 		2EB197941CF872F200648696 /* OLPaymentMethodsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB197901CF872F200648696 /* OLPaymentMethodsViewController.m */; };
+		2EB612E61D489E4700B48E29 /* OLImagePickerPhotosPageViewController+Facebook.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB612E51D489E4700B48E29 /* OLImagePickerPhotosPageViewController+Facebook.m */; };
+		2EB612E71D489E4700B48E29 /* OLImagePickerPhotosPageViewController+Facebook.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB612E51D489E4700B48E29 /* OLImagePickerPhotosPageViewController+Facebook.m */; };
+		2EB612E81D489E4700B48E29 /* OLImagePickerPhotosPageViewController+Facebook.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB612E51D489E4700B48E29 /* OLImagePickerPhotosPageViewController+Facebook.m */; };
+		2EB612E91D489E4700B48E29 /* OLImagePickerPhotosPageViewController+Facebook.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB612E51D489E4700B48E29 /* OLImagePickerPhotosPageViewController+Facebook.m */; };
+		2EB612EC1D48AF3200B48E29 /* OLImagePickerPhotosPageViewController+Instagram.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB612EB1D48AF3200B48E29 /* OLImagePickerPhotosPageViewController+Instagram.m */; };
+		2EB612ED1D48AF3200B48E29 /* OLImagePickerPhotosPageViewController+Instagram.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB612EB1D48AF3200B48E29 /* OLImagePickerPhotosPageViewController+Instagram.m */; };
+		2EB612EE1D48AF3200B48E29 /* OLImagePickerPhotosPageViewController+Instagram.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB612EB1D48AF3200B48E29 /* OLImagePickerPhotosPageViewController+Instagram.m */; };
+		2EB612EF1D48AF3200B48E29 /* OLImagePickerPhotosPageViewController+Instagram.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB612EB1D48AF3200B48E29 /* OLImagePickerPhotosPageViewController+Instagram.m */; };
+		2EB612F21D48AF9400B48E29 /* OLInstagramLoginWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB612F11D48AF9400B48E29 /* OLInstagramLoginWebViewController.m */; };
+		2EB612F31D48AF9400B48E29 /* OLInstagramLoginWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB612F11D48AF9400B48E29 /* OLInstagramLoginWebViewController.m */; };
+		2EB612F41D48AF9400B48E29 /* OLInstagramLoginWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB612F11D48AF9400B48E29 /* OLInstagramLoginWebViewController.m */; };
+		2EB612F51D48AF9400B48E29 /* OLInstagramLoginWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB612F11D48AF9400B48E29 /* OLInstagramLoginWebViewController.m */; };
+		2EB612FD1D48AFE800B48E29 /* OLInstagramMediaRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB612F81D48AFE800B48E29 /* OLInstagramMediaRequest.m */; };
+		2EB612FE1D48AFE800B48E29 /* OLInstagramMediaRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB612F81D48AFE800B48E29 /* OLInstagramMediaRequest.m */; };
+		2EB612FF1D48AFE800B48E29 /* OLInstagramMediaRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB612F81D48AFE800B48E29 /* OLInstagramMediaRequest.m */; };
+		2EB613001D48AFE800B48E29 /* OLInstagramMediaRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB612F81D48AFE800B48E29 /* OLInstagramMediaRequest.m */; };
+		2EB613011D48AFE800B48E29 /* OLInstagramImagePickerConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB612FA1D48AFE800B48E29 /* OLInstagramImagePickerConstants.m */; };
+		2EB613021D48AFE800B48E29 /* OLInstagramImagePickerConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB612FA1D48AFE800B48E29 /* OLInstagramImagePickerConstants.m */; };
+		2EB613031D48AFE800B48E29 /* OLInstagramImagePickerConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB612FA1D48AFE800B48E29 /* OLInstagramImagePickerConstants.m */; };
+		2EB613041D48AFE800B48E29 /* OLInstagramImagePickerConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB612FA1D48AFE800B48E29 /* OLInstagramImagePickerConstants.m */; };
+		2EB613051D48AFE800B48E29 /* OLInstagramImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB612FC1D48AFE800B48E29 /* OLInstagramImage.m */; };
+		2EB613061D48AFE800B48E29 /* OLInstagramImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB612FC1D48AFE800B48E29 /* OLInstagramImage.m */; };
+		2EB613071D48AFE800B48E29 /* OLInstagramImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB612FC1D48AFE800B48E29 /* OLInstagramImage.m */; };
+		2EB613081D48AFE800B48E29 /* OLInstagramImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB612FC1D48AFE800B48E29 /* OLInstagramImage.m */; };
 		2EB715D51CFDD12900618C7B /* OLLuhn.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB715D41CFDD12900618C7B /* OLLuhn.m */; };
 		2EB715D61CFDD12900618C7B /* OLLuhn.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB715D41CFDD12900618C7B /* OLLuhn.m */; };
 		2EB715D71CFDD12900618C7B /* OLLuhn.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB715D41CFDD12900618C7B /* OLLuhn.m */; };
@@ -625,7 +624,7 @@
 		E29C85901BE3B5C50041D4CF /* OLInfoPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EF53E3D1B5549B900BF936A /* OLInfoPageViewController.m */; };
 		E29C85911BE3B5C50041D4CF /* OLIntegratedCheckoutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E5F80311B04A22500095203 /* OLIntegratedCheckoutViewController.m */; };
 		E29C85921BE3B5C50041D4CF /* OLProductGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D8ECA501AD692FA00CFB2C0 /* OLProductGroup.m */; };
-		E29C85931BE3B5C50041D4CF /* UIImage+ColorAtPixel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EF53E3A1B55421A00BF936A /* UIImage+ColorAtPixel.m */; };
+		E29C85931BE3B5C50041D4CF /* UIImage+OLUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EF53E3A1B55421A00BF936A /* UIImage+OLUtils.m */; };
 		E29C85951BE3B5C50041D4CF /* OLCheckoutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CDA8BF5118D70D0F00D835BB /* OLCheckoutViewController.m */; };
 		E29C85961BE3B5C50041D4CF /* OLPhotobookViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB4BD671AE128740004CEE0 /* OLPhotobookViewController.m */; };
 		E29C859B1BE3B5C50041D4CF /* OLPopupOptionsImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E676C2A1B33FD70005E068B /* OLPopupOptionsImageView.m */; };
@@ -654,13 +653,11 @@
 		E29C85CB1BE3B5C50041D4CF /* OLAsset.m in Sources */ = {isa = PBXBuildFile; fileRef = CDAFE007186D9C6C003572FE /* OLAsset.m */; };
 		E29C85CD1BE3B5C50041D4CF /* OLProductTemplate.m in Sources */ = {isa = PBXBuildFile; fileRef = CD97568D18D8D147007CA090 /* OLProductTemplate.m */; };
 		E29C85CE1BE3B5C50041D4CF /* OLPaymentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CDA8BF5018D70D0F00D835BB /* OLPaymentViewController.m */; };
-		E29C85D11BE3B5C50041D4CF /* OLPrintPhoto.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E3F96B11A49ACF4005C0EA3 /* OLPrintPhoto.m */; };
 		E29C85D21BE3B5C50041D4CF /* OLKitePrintSDK.m in Sources */ = {isa = PBXBuildFile; fileRef = CD73BFB318635F170009DE03 /* OLKitePrintSDK.m */; };
 		E29C85D31BE3B5C50041D4CF /* NSString+Formatting.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DEF0D171A964881000F1E66 /* NSString+Formatting.m */; };
 		E29C85D41BE3B5C50041D4CF /* OLAddress.m in Sources */ = {isa = PBXBuildFile; fileRef = CD73BFA31862FC510009DE03 /* OLAddress.m */; };
 		E29C85D61BE3B5C50041D4CF /* OLNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E9965A91ABC7035007F010F /* OLNavigationController.m */; };
 		E29C85D71BE3B5C50041D4CF /* NSDecimalNumber+CostFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E455DFF1B1F1BA1001B1718 /* NSDecimalNumber+CostFormatter.m */; };
-		E29C85D81BE3B5C50041D4CF /* UIViewController+TraitCollectionCompatibility.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DF9D6FC1B0F618000A40C0C /* UIViewController+TraitCollectionCompatibility.m */; };
 		E29C85DA1BE3B5C50041D4CF /* OLProductOverviewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA8BEAF1A484FCB008A9248 /* OLProductOverviewViewController.m */; };
 		E29C85DB1BE3B5C50041D4CF /* OLAddress+AddressBook.m in Sources */ = {isa = PBXBuildFile; fileRef = CD93BB3318785D3B00316492 /* OLAddress+AddressBook.m */; };
 		E29C85DD1BE3B5C50041D4CF /* OLPrintOrder.m in Sources */ = {isa = PBXBuildFile; fileRef = CD9D6AE81871B5C7001CD1F9 /* OLPrintOrder.m */; };
@@ -673,7 +670,6 @@
 		E29C85ED1BE3B5C50041D4CF /* OLImageCachingManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EF8BA9E1B99E9E4009BC73B /* OLImageCachingManager.m */; };
 		E29C85EF1BE3B5C50041D4CF /* UIView+RoundRect.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1067FF1B83335C00EB4C14 /* UIView+RoundRect.m */; };
 		E29C85F01BE3B5C50041D4CF /* OLCountry.m in Sources */ = {isa = PBXBuildFile; fileRef = CD73BFA6186306550009DE03 /* OLCountry.m */; };
-		E29C85F21BE3B5C50041D4CF /* ALAssetsLibrary+Singleton.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EE94D3E1B501D900086590C /* ALAssetsLibrary+Singleton.m */; };
 		E29C85F31BE3B5C50041D4CF /* OLConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = CD73BFB018634ED50009DE03 /* OLConstants.m */; };
 		E29C85F41BE3B5C50041D4CF /* OLProductOverviewPageContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA8BEB11A484FCB008A9248 /* OLProductOverviewPageContentViewController.m */; };
 		E29C85F61BE3B5C50041D4CF /* OLJudoPayCard.m in Sources */ = {isa = PBXBuildFile; fileRef = CD382E4818EB7C6300127F95 /* OLJudoPayCard.m */; };
@@ -685,7 +681,6 @@
 		E29C86021BE3B5C50041D4CF /* OLAnalytics.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0E250E1A77997E00808ED8 /* OLAnalytics.m */; };
 		E29C86031BE3B5C50041D4CF /* OLCircleMaskCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E973EED1A7A5D0E00488212 /* OLCircleMaskCollectionViewCell.m */; };
 		E29C86041BE3B5C50041D4CF /* OLCreditCardCaptureViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D1779591A1E1D6800BE3E58 /* OLCreditCardCaptureViewController.m */; };
-		E29C86061BE3B5C50041D4CF /* OLPhotoSelectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E39CAA21AB894A8008B1EFF /* OLPhotoSelectionViewController.m */; };
 		E29C86081BE3B5C50041D4CF /* OLAddressLookupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CD550A67187B30D200782D75 /* OLAddressLookupViewController.m */; };
 		E29C86091BE3B5C50041D4CF /* OLKiteABTesting.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB1C4101B551D6000EFE0D0 /* OLKiteABTesting.m */; };
 		E29C860A1BE3B5C50041D4CF /* OLProductHomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA8BEAD1A484FCB008A9248 /* OLProductHomeViewController.m */; };
@@ -797,10 +792,6 @@
 /* Begin PBXFileReference section */
 		2E0804B61C0DECE300F50D42 /* OLCustomPhotoProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLCustomPhotoProvider.h; sourceTree = "<group>"; };
 		2E0804B71C0DECE300F50D42 /* OLCustomPhotoProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLCustomPhotoProvider.m; sourceTree = "<group>"; };
-		2E0804BA1C0DF70200F50D42 /* CatsAssetCollectionDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CatsAssetCollectionDataSource.h; sourceTree = "<group>"; };
-		2E0804BB1C0DF70200F50D42 /* CatsAssetCollectionDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CatsAssetCollectionDataSource.m; sourceTree = "<group>"; };
-		2E0804BC1C0DF70200F50D42 /* AssetDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AssetDataSource.h; sourceTree = "<group>"; };
-		2E0804BD1C0DF70200F50D42 /* AssetDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AssetDataSource.m; sourceTree = "<group>"; };
 		2E0A72641A6FB07000BC5AE7 /* OLScrollCropViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLScrollCropViewController.h; sourceTree = "<group>"; };
 		2E0A72651A6FB07000BC5AE7 /* OLScrollCropViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLScrollCropViewController.m; sourceTree = "<group>"; };
 		2E0E250D1A77997E00808ED8 /* OLAnalytics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLAnalytics.h; sourceTree = "<group>"; };
@@ -811,34 +802,29 @@
 		2E1067FF1B83335C00EB4C14 /* UIView+RoundRect.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIView+RoundRect.m"; path = "PSPrintSDK/Categories/UIView+RoundRect.m"; sourceTree = "<group>"; };
 		2E14D2CF1C2AE9AD00F35403 /* OLImagePreviewViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLImagePreviewViewController.h; sourceTree = "<group>"; };
 		2E14D2D01C2AE9AD00F35403 /* OLImagePreviewViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLImagePreviewViewController.m; sourceTree = "<group>"; };
+		2E1E66CD1D477B78002524A4 /* OLImagePickerPageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLImagePickerPageViewController.h; sourceTree = "<group>"; };
+		2E1E66CE1D477B78002524A4 /* OLImagePickerPageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLImagePickerPageViewController.m; sourceTree = "<group>"; };
+		2E1E66D31D478052002524A4 /* OLImagePickerLoginPageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLImagePickerLoginPageViewController.h; sourceTree = "<group>"; };
+		2E1E66D41D478052002524A4 /* OLImagePickerLoginPageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLImagePickerLoginPageViewController.m; sourceTree = "<group>"; };
+		2E1E66DA1D4795EE002524A4 /* OLFacebookAlbum.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLFacebookAlbum.h; sourceTree = "<group>"; };
+		2E1E66DB1D4795EE002524A4 /* OLFacebookAlbum.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLFacebookAlbum.m; sourceTree = "<group>"; };
+		2E1E66DC1D4795EE002524A4 /* OLFacebookAlbumRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLFacebookAlbumRequest.h; sourceTree = "<group>"; };
+		2E1E66DD1D4795EE002524A4 /* OLFacebookAlbumRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLFacebookAlbumRequest.m; sourceTree = "<group>"; };
+		2E1E66DE1D4795EE002524A4 /* OLFacebookPhotosForAlbumRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLFacebookPhotosForAlbumRequest.h; sourceTree = "<group>"; };
+		2E1E66DF1D4795EE002524A4 /* OLFacebookPhotosForAlbumRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLFacebookPhotosForAlbumRequest.m; sourceTree = "<group>"; };
+		2E1E66EC1D479617002524A4 /* OLFacebookImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLFacebookImage.h; sourceTree = "<group>"; };
+		2E1E66ED1D479617002524A4 /* OLFacebookImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLFacebookImage.m; sourceTree = "<group>"; };
+		2E1E66F91D47A653002524A4 /* OLFacebookImagePickerConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLFacebookImagePickerConstants.h; sourceTree = "<group>"; };
+		2E1E66FA1D47A653002524A4 /* OLFacebookImagePickerConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLFacebookImagePickerConstants.m; sourceTree = "<group>"; };
 		2E20BD841AD4229700FB2446 /* OLCaseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLCaseViewController.h; sourceTree = "<group>"; };
 		2E20BD851AD4229700FB2446 /* OLCaseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLCaseViewController.m; sourceTree = "<group>"; };
 		2E2123B11CD3809300B9288B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/OLKiteStoryboard.strings; sourceTree = "<group>"; };
-		2E21DA2F1B9843CF00D9162F /* OLAssetItemViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLAssetItemViewController.h; sourceTree = "<group>"; };
-		2E21DA301B9843CF00D9162F /* OLAssetItemViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLAssetItemViewController.m; sourceTree = "<group>"; };
-		2E21DA311B9843CF00D9162F /* OLAssetScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLAssetScrollView.h; sourceTree = "<group>"; };
-		2E21DA321B9843CF00D9162F /* OLAssetScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLAssetScrollView.m; sourceTree = "<group>"; };
-		2E21DA331B9843CF00D9162F /* OLAssetsGroupViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLAssetsGroupViewCell.h; sourceTree = "<group>"; };
-		2E21DA341B9843CF00D9162F /* OLAssetsGroupViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLAssetsGroupViewCell.m; sourceTree = "<group>"; };
-		2E21DA351B9843CF00D9162F /* OLAssetsGroupViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLAssetsGroupViewController.h; sourceTree = "<group>"; };
-		2E21DA361B9843CF00D9162F /* OLAssetsGroupViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLAssetsGroupViewController.m; sourceTree = "<group>"; };
-		2E21DA371B9843CF00D9162F /* OLAssetsPageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLAssetsPageViewController.h; sourceTree = "<group>"; };
-		2E21DA381B9843CF00D9162F /* OLAssetsPageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLAssetsPageViewController.m; sourceTree = "<group>"; };
-		2E21DA391B9843CF00D9162F /* OLAssetsPickerCommon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLAssetsPickerCommon.h; sourceTree = "<group>"; };
-		2E21DA3A1B9843CF00D9162F /* OLAssetsPickerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLAssetsPickerController.h; sourceTree = "<group>"; };
-		2E21DA3B1B9843CF00D9162F /* OLAssetsPickerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLAssetsPickerController.m; sourceTree = "<group>"; };
-		2E21DA3C1B9843CF00D9162F /* OLAssetsSupplementaryView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLAssetsSupplementaryView.h; sourceTree = "<group>"; };
-		2E21DA3D1B9843CF00D9162F /* OLAssetsSupplementaryView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLAssetsSupplementaryView.m; sourceTree = "<group>"; };
-		2E21DA3E1B9843CF00D9162F /* OLAssetsViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLAssetsViewCell.h; sourceTree = "<group>"; };
-		2E21DA3F1B9843CF00D9162F /* OLAssetsViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLAssetsViewCell.m; sourceTree = "<group>"; };
-		2E21DA401B9843CF00D9162F /* OLAssetsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLAssetsViewController.h; sourceTree = "<group>"; };
-		2E21DA411B9843CF00D9162F /* OLAssetsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLAssetsViewController.m; sourceTree = "<group>"; };
-		2E21DA421B9843CF00D9162F /* OLAssetsViewControllerTransition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLAssetsViewControllerTransition.h; sourceTree = "<group>"; };
-		2E21DA431B9843CF00D9162F /* OLAssetsViewControllerTransition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLAssetsViewControllerTransition.m; sourceTree = "<group>"; };
 		2E25FEF91CF2EF5D006E52E5 /* OLKeyChainStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLKeyChainStore.h; sourceTree = "<group>"; };
 		2E25FEFA1CF2EF5D006E52E5 /* OLKeyChainStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLKeyChainStore.m; sourceTree = "<group>"; };
 		2E276C6A1D1AD2DF00331125 /* da */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = da; path = da.lproj/OLKiteStoryboard.strings; sourceTree = "<group>"; };
 		2E276C6B1D1AD2DF00331125 /* da */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = da; path = da.lproj/KitePrintSDK.strings; sourceTree = "<group>"; };
+		2E28CDFB1D38EEAF00E9AFEA /* OLImagePickerPhotosPageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLImagePickerPhotosPageViewController.h; sourceTree = "<group>"; };
+		2E28CDFC1D38EEAF00E9AFEA /* OLImagePickerPhotosPageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLImagePickerPhotosPageViewController.m; sourceTree = "<group>"; };
 		2E2BF4451CCDFAF100725561 /* OLKiteTheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLKiteTheme.h; sourceTree = "<group>"; };
 		2E2BF4461CCDFAF100725561 /* OLKiteTheme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLKiteTheme.m; sourceTree = "<group>"; };
 		2E2E61E51C21826D005CB729 /* UIViewController+OLMethods.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIViewController+OLMethods.h"; path = "PSPrintSDK/Categories/UIViewController+OLMethods.h"; sourceTree = "<group>"; };
@@ -851,17 +837,17 @@
 		2E31C01A1C7B2267009C1E42 /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
 		2E333CC91BC7D1850092E42A /* OLApparelPrintJob.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLApparelPrintJob.m; sourceTree = "<group>"; };
 		2E333CCB1BC7D19E0092E42A /* OLApparelPrintJob.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLApparelPrintJob.h; sourceTree = "<group>"; };
+		2E36A1DA1D42094C00EA2F0F /* OLImagePickerProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLImagePickerProvider.h; sourceTree = "<group>"; };
+		2E36A1DB1D42094C00EA2F0F /* OLImagePickerProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLImagePickerProvider.m; sourceTree = "<group>"; };
+		2E36A1E01D420CDA00EA2F0F /* OLImagePickerProviderCollection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLImagePickerProviderCollection.h; sourceTree = "<group>"; };
+		2E36A1E11D420CDA00EA2F0F /* OLImagePickerProviderCollection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLImagePickerProviderCollection.m; sourceTree = "<group>"; };
 		2E37B1791D227EDA003DAA84 /* OLPageLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLPageLayout.h; sourceTree = "<group>"; };
 		2E37B17A1D227EDA003DAA84 /* OLPageLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLPageLayout.m; sourceTree = "<group>"; };
 		2E37B17F1D229162003DAA84 /* OLProductRepresentation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLProductRepresentation.h; sourceTree = "<group>"; };
 		2E37B1801D229162003DAA84 /* OLProductRepresentation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLProductRepresentation.m; sourceTree = "<group>"; };
 		2E38C0CC1AD5206F008BC28A /* PostcardBackView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PostcardBackView.xib; sourceTree = "<group>"; };
-		2E39CAA11AB894A8008B1EFF /* OLPhotoSelectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLPhotoSelectionViewController.h; sourceTree = "<group>"; };
-		2E39CAA21AB894A8008B1EFF /* OLPhotoSelectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLPhotoSelectionViewController.m; sourceTree = "<group>"; };
 		2E3F96AD1A4967FF005C0EA3 /* OLProduct.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLProduct.h; sourceTree = "<group>"; };
 		2E3F96AE1A4967FF005C0EA3 /* OLProduct.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLProduct.m; sourceTree = "<group>"; };
-		2E3F96B01A49ACF4005C0EA3 /* OLPrintPhoto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLPrintPhoto.h; sourceTree = "<group>"; };
-		2E3F96B11A49ACF4005C0EA3 /* OLPrintPhoto.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLPrintPhoto.m; sourceTree = "<group>"; };
 		2E434ADE1D36583700D1BD06 /* OLEditingToolsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLEditingToolsView.h; sourceTree = "<group>"; };
 		2E434ADF1D36583700D1BD06 /* OLEditingToolsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLEditingToolsView.m; sourceTree = "<group>"; };
 		2E434AE71D36675700D1BD06 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/OLEditingToolsView.xib; sourceTree = "<group>"; };
@@ -874,8 +860,6 @@
 		2E455DFF1B1F1BA1001B1718 /* NSDecimalNumber+CostFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSDecimalNumber+CostFormatter.m"; path = "PSPrintSDK/Categories/NSDecimalNumber+CostFormatter.m"; sourceTree = "<group>"; };
 		2E482B771BEB4C7D007460EA /* OLStripeCard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLStripeCard.h; sourceTree = "<group>"; };
 		2E482B781BEB4C7D007460EA /* OLStripeCard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLStripeCard.m; sourceTree = "<group>"; };
-		2E4DF45D1C0F150400EA66FE /* DogsAssetCollectionDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DogsAssetCollectionDataSource.m; sourceTree = "<group>"; };
-		2E4DF4601C0F152900EA66FE /* DogsAssetCollectionDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DogsAssetCollectionDataSource.h; sourceTree = "<group>"; };
 		2E5258FC1A9C884700DBC69B /* OLProductTypeSelectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLProductTypeSelectionViewController.h; sourceTree = "<group>"; };
 		2E5258FD1A9C884700DBC69B /* OLProductTypeSelectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLProductTypeSelectionViewController.m; sourceTree = "<group>"; };
 		2E5258FF1A9C91DF00DBC69B /* OLSingleImageProductReviewViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLSingleImageProductReviewViewController.h; sourceTree = "<group>"; };
@@ -911,11 +895,12 @@
 		2E6E606F1C50393800829BB7 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/KitePrintSDK.strings; sourceTree = "<group>"; };
 		2E7483501BCCFB5900360550 /* 2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 2.png; sourceTree = "<group>"; };
 		2E7483521BCD11F800360550 /* ViewControllerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewControllerTests.m; sourceTree = "<group>"; };
-		2E7483541BCD1DF500360550 /* OLPrintPhotoTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLPrintPhotoTests.m; sourceTree = "<group>"; };
 		2E74A9CF1B6B7827001AE97B /* OLPosterViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLPosterViewController.h; sourceTree = "<group>"; };
 		2E74A9D01B6B7827001AE97B /* OLPosterViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLPosterViewController.m; sourceTree = "<group>"; };
 		2E768F531B394372009BAC18 /* OLPhotobookPrintJob.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLPhotobookPrintJob.h; sourceTree = "<group>"; };
 		2E768F541B394372009BAC18 /* OLPhotobookPrintJob.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLPhotobookPrintJob.m; sourceTree = "<group>"; };
+		2E7BDAD81D3E1713005F142C /* OLUserSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLUserSession.h; sourceTree = "<group>"; };
+		2E7BDAD91D3E1713005F142C /* OLUserSession.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLUserSession.m; sourceTree = "<group>"; };
 		2E7D1C8E1BC41C7D009227EE /* OLProductOrderTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLProductOrderTests.m; sourceTree = "<group>"; };
 		2E7F516C1BF5FBB100A78718 /* OLGreetingCardPrintJob.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLGreetingCardPrintJob.m; sourceTree = "<group>"; };
 		2E7F516F1BF5FBCD00A78718 /* OLGreetingCardPrintJob.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLGreetingCardPrintJob.h; sourceTree = "<group>"; };
@@ -925,28 +910,8 @@
 		2E837D4B1C3C221E004DA682 /* OLCollectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLCollectionViewController.m; sourceTree = "<group>"; };
 		2E84835C1D13E461003F4056 /* OLTShirtReviewViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLTShirtReviewViewController.h; sourceTree = "<group>"; };
 		2E84835D1D13E461003F4056 /* OLTShirtReviewViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLTShirtReviewViewController.m; sourceTree = "<group>"; };
-		2E87027E1C904918002BE2DA /* AFHTTPSessionManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = AFHTTPSessionManager.m; path = vendor/AFNetworking/AFNetworking/AFHTTPSessionManager.m; sourceTree = "<group>"; };
-		2E87027F1C904918002BE2DA /* AFNetworkReachabilityManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = AFNetworkReachabilityManager.m; path = vendor/AFNetworking/AFNetworking/AFNetworkReachabilityManager.m; sourceTree = "<group>"; };
-		2E8702801C904918002BE2DA /* AFSecurityPolicy.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = AFSecurityPolicy.m; path = vendor/AFNetworking/AFNetworking/AFSecurityPolicy.m; sourceTree = "<group>"; };
-		2E8702811C904918002BE2DA /* AFURLRequestSerialization.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = AFURLRequestSerialization.m; path = vendor/AFNetworking/AFNetworking/AFURLRequestSerialization.m; sourceTree = "<group>"; };
-		2E8702821C904918002BE2DA /* AFURLResponseSerialization.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = AFURLResponseSerialization.m; path = vendor/AFNetworking/AFNetworking/AFURLResponseSerialization.m; sourceTree = "<group>"; };
-		2E8702831C904918002BE2DA /* AFURLSessionManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = AFURLSessionManager.m; path = vendor/AFNetworking/AFNetworking/AFURLSessionManager.m; sourceTree = "<group>"; };
-		2E8702DD1C9050CA002BE2DA /* bitstream.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = bitstream.c; path = "vendor/ios-qr-encoder/QRCode/QR/libqrencode/bitstream.c"; sourceTree = SOURCE_ROOT; };
-		2E8702DE1C9050CA002BE2DA /* mask.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = mask.c; path = "vendor/ios-qr-encoder/QRCode/QR/libqrencode/mask.c"; sourceTree = SOURCE_ROOT; };
-		2E8702DF1C9050CA002BE2DA /* qrencode.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = qrencode.c; path = "vendor/ios-qr-encoder/QRCode/QR/libqrencode/qrencode.c"; sourceTree = SOURCE_ROOT; };
-		2E8702E01C9050CA002BE2DA /* qrinput.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = qrinput.c; path = "vendor/ios-qr-encoder/QRCode/QR/libqrencode/qrinput.c"; sourceTree = SOURCE_ROOT; };
-		2E8702E11C9050CA002BE2DA /* qrspec.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = qrspec.c; path = "vendor/ios-qr-encoder/QRCode/QR/libqrencode/qrspec.c"; sourceTree = SOURCE_ROOT; };
-		2E8702E21C9050CA002BE2DA /* rscode.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = rscode.c; path = "vendor/ios-qr-encoder/QRCode/QR/libqrencode/rscode.c"; sourceTree = SOURCE_ROOT; };
-		2E8702E31C9050CA002BE2DA /* split.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = split.c; path = "vendor/ios-qr-encoder/QRCode/QR/libqrencode/split.c"; sourceTree = SOURCE_ROOT; };
-		2E8702E41C9050CA002BE2DA /* UIImage+MDQRCode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIImage+MDQRCode.m"; path = "vendor/ios-qr-encoder/QRCode/QR/UIImage+MDQRCode.m"; sourceTree = SOURCE_ROOT; };
-		2E8703041C9052A0002BE2DA /* UIImage+MDQRCode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIImage+MDQRCode.h"; path = "vendor/ios-qr-encoder/QRCode/QR/UIImage+MDQRCode.h"; sourceTree = SOURCE_ROOT; };
-		2E8703061C905368002BE2DA /* bitstream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = bitstream.h; path = "vendor/ios-qr-encoder/QRCode/QR/libqrencode/bitstream.h"; sourceTree = SOURCE_ROOT; };
-		2E8703071C905368002BE2DA /* mask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mask.h; path = "vendor/ios-qr-encoder/QRCode/QR/libqrencode/mask.h"; sourceTree = SOURCE_ROOT; };
-		2E8703081C905368002BE2DA /* qrencode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = qrencode.h; path = "vendor/ios-qr-encoder/QRCode/QR/libqrencode/qrencode.h"; sourceTree = SOURCE_ROOT; };
-		2E8703091C905368002BE2DA /* qrinput.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = qrinput.h; path = "vendor/ios-qr-encoder/QRCode/QR/libqrencode/qrinput.h"; sourceTree = SOURCE_ROOT; };
-		2E87030A1C905368002BE2DA /* qrspec.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = qrspec.h; path = "vendor/ios-qr-encoder/QRCode/QR/libqrencode/qrspec.h"; sourceTree = SOURCE_ROOT; };
-		2E87030B1C905368002BE2DA /* rscode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = rscode.h; path = "vendor/ios-qr-encoder/QRCode/QR/libqrencode/rscode.h"; sourceTree = SOURCE_ROOT; };
-		2E87030C1C905368002BE2DA /* split.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = split.h; path = "vendor/ios-qr-encoder/QRCode/QR/libqrencode/split.h"; sourceTree = SOURCE_ROOT; };
+		2E884F441D37B566007CA45A /* OLImagePickerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLImagePickerViewController.h; sourceTree = "<group>"; };
+		2E884F451D37B566007CA45A /* OLImagePickerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLImagePickerViewController.m; sourceTree = "<group>"; };
 		2E898CEA1CC518180041CCD8 /* Kite-CI-Deploy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Kite-CI-Deploy.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2E898F851BE37F9B00739F5A /* OLProductTemplateOption.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLProductTemplateOption.h; sourceTree = "<group>"; };
 		2E898F861BE37F9B00739F5A /* OLProductTemplateOption.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLProductTemplateOption.m; sourceTree = "<group>"; };
@@ -988,20 +953,6 @@
 		2EA13E211BBC242F005F3D71 /* OLKiteUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLKiteUtils.h; sourceTree = "<group>"; };
 		2EA13E221BBC242F005F3D71 /* OLKiteUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLKiteUtils.m; sourceTree = "<group>"; };
 		2EA3D3E31C9C04B500B99BCD /* libKiteSDKMinimal.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libKiteSDKMinimal.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		2EA829201B9DE54100A9208E /* ALAsset+OLAccessibilityLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "ALAsset+OLAccessibilityLabel.h"; path = "Categories/ALAsset+OLAccessibilityLabel.h"; sourceTree = "<group>"; };
-		2EA829211B9DE54100A9208E /* ALAsset+OLAccessibilityLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "ALAsset+OLAccessibilityLabel.m"; path = "Categories/ALAsset+OLAccessibilityLabel.m"; sourceTree = "<group>"; };
-		2EA829221B9DE54100A9208E /* ALAsset+OLAssetType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "ALAsset+OLAssetType.h"; path = "Categories/ALAsset+OLAssetType.h"; sourceTree = "<group>"; };
-		2EA829231B9DE54100A9208E /* ALAsset+OLAssetType.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "ALAsset+OLAssetType.m"; path = "Categories/ALAsset+OLAssetType.m"; sourceTree = "<group>"; };
-		2EA829241B9DE54100A9208E /* ALAsset+OLIsEqual.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "ALAsset+OLIsEqual.h"; path = "Categories/ALAsset+OLIsEqual.h"; sourceTree = "<group>"; };
-		2EA829251B9DE54100A9208E /* ALAsset+OLIsEqual.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "ALAsset+OLIsEqual.m"; path = "Categories/ALAsset+OLIsEqual.m"; sourceTree = "<group>"; };
-		2EA829261B9DE54100A9208E /* ALAssetsGroup+OLIsEqual.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "ALAssetsGroup+OLIsEqual.h"; path = "Categories/ALAssetsGroup+OLIsEqual.h"; sourceTree = "<group>"; };
-		2EA829271B9DE54100A9208E /* ALAssetsGroup+OLIsEqual.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "ALAssetsGroup+OLIsEqual.m"; path = "Categories/ALAssetsGroup+OLIsEqual.m"; sourceTree = "<group>"; };
-		2EA829281B9DE54100A9208E /* NSBundle+OLAssetsPickerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSBundle+OLAssetsPickerController.h"; path = "Categories/NSBundle+OLAssetsPickerController.h"; sourceTree = "<group>"; };
-		2EA829291B9DE54100A9208E /* NSBundle+OLAssetsPickerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSBundle+OLAssetsPickerController.m"; path = "Categories/NSBundle+OLAssetsPickerController.m"; sourceTree = "<group>"; };
-		2EA8292A1B9DE54100A9208E /* NSDateFormatter+OLTimeIntervalFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSDateFormatter+OLTimeIntervalFormatter.h"; path = "Categories/NSDateFormatter+OLTimeIntervalFormatter.h"; sourceTree = "<group>"; };
-		2EA8292B1B9DE54100A9208E /* NSDateFormatter+OLTimeIntervalFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSDateFormatter+OLTimeIntervalFormatter.m"; path = "Categories/NSDateFormatter+OLTimeIntervalFormatter.m"; sourceTree = "<group>"; };
-		2EA8292C1B9DE54100A9208E /* UIImage+OLAssetsPickerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIImage+OLAssetsPickerController.h"; path = "Categories/UIImage+OLAssetsPickerController.h"; sourceTree = "<group>"; };
-		2EA8292D1B9DE54100A9208E /* UIImage+OLAssetsPickerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIImage+OLAssetsPickerController.m"; path = "Categories/UIImage+OLAssetsPickerController.m"; sourceTree = "<group>"; };
 		2EA8BEAC1A484FCB008A9248 /* OLProductHomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLProductHomeViewController.h; sourceTree = "<group>"; };
 		2EA8BEAD1A484FCB008A9248 /* OLProductHomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLProductHomeViewController.m; sourceTree = "<group>"; };
 		2EA8BEAE1A484FCB008A9248 /* OLProductOverviewViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLProductOverviewViewController.h; sourceTree = "<group>"; };
@@ -1033,6 +984,18 @@
 		2EB4BD671AE128740004CEE0 /* OLPhotobookViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLPhotobookViewController.m; sourceTree = "<group>"; };
 		2EB4BD691AE13F520004CEE0 /* OLPhotobookPageContentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLPhotobookPageContentViewController.h; sourceTree = "<group>"; };
 		2EB4BD6A1AE13F520004CEE0 /* OLPhotobookPageContentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLPhotobookPageContentViewController.m; sourceTree = "<group>"; };
+		2EB612E41D489E4700B48E29 /* OLImagePickerPhotosPageViewController+Facebook.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "OLImagePickerPhotosPageViewController+Facebook.h"; sourceTree = "<group>"; };
+		2EB612E51D489E4700B48E29 /* OLImagePickerPhotosPageViewController+Facebook.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "OLImagePickerPhotosPageViewController+Facebook.m"; sourceTree = "<group>"; };
+		2EB612EA1D48AF3200B48E29 /* OLImagePickerPhotosPageViewController+Instagram.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "OLImagePickerPhotosPageViewController+Instagram.h"; sourceTree = "<group>"; };
+		2EB612EB1D48AF3200B48E29 /* OLImagePickerPhotosPageViewController+Instagram.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "OLImagePickerPhotosPageViewController+Instagram.m"; sourceTree = "<group>"; };
+		2EB612F01D48AF9400B48E29 /* OLInstagramLoginWebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLInstagramLoginWebViewController.h; sourceTree = "<group>"; };
+		2EB612F11D48AF9400B48E29 /* OLInstagramLoginWebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLInstagramLoginWebViewController.m; sourceTree = "<group>"; };
+		2EB612F71D48AFE800B48E29 /* OLInstagramMediaRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLInstagramMediaRequest.h; sourceTree = "<group>"; };
+		2EB612F81D48AFE800B48E29 /* OLInstagramMediaRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLInstagramMediaRequest.m; sourceTree = "<group>"; };
+		2EB612F91D48AFE800B48E29 /* OLInstagramImagePickerConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLInstagramImagePickerConstants.h; sourceTree = "<group>"; };
+		2EB612FA1D48AFE800B48E29 /* OLInstagramImagePickerConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLInstagramImagePickerConstants.m; sourceTree = "<group>"; };
+		2EB612FB1D48AFE800B48E29 /* OLInstagramImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLInstagramImage.h; sourceTree = "<group>"; };
+		2EB612FC1D48AFE800B48E29 /* OLInstagramImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLInstagramImage.m; sourceTree = "<group>"; };
 		2EB715D31CFDD12900618C7B /* OLLuhn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLLuhn.h; sourceTree = "<group>"; };
 		2EB715D41CFDD12900618C7B /* OLLuhn.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLLuhn.m; sourceTree = "<group>"; };
 		2EB715D91CFDD36600618C7B /* OLStripeCard+OLCardIcon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "OLStripeCard+OLCardIcon.h"; sourceTree = "<group>"; };
@@ -1057,12 +1020,10 @@
 		2EDBFAAF1BC698F2007BDB83 /* 1.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 1.jpg; sourceTree = "<group>"; };
 		2EE3C86E1A4AFB0C006446E2 /* OLKiteViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLKiteViewController.h; sourceTree = "<group>"; };
 		2EE3C86F1A4AFB0C006446E2 /* OLKiteViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLKiteViewController.m; sourceTree = "<group>"; };
-		2EE94D3D1B501D900086590C /* ALAssetsLibrary+Singleton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "ALAssetsLibrary+Singleton.h"; path = "PSPrintSDK/Categories/ALAssetsLibrary+Singleton.h"; sourceTree = "<group>"; };
-		2EE94D3E1B501D900086590C /* ALAssetsLibrary+Singleton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "ALAssetsLibrary+Singleton.m"; path = "PSPrintSDK/Categories/ALAssetsLibrary+Singleton.m"; sourceTree = "<group>"; };
 		2EF439291BF4D15E0006C123 /* OLPrintOrderSubmitStatusRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLPrintOrderSubmitStatusRequest.h; sourceTree = "<group>"; };
 		2EF4392A1BF4D15E0006C123 /* OLPrintOrderSubmitStatusRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLPrintOrderSubmitStatusRequest.m; sourceTree = "<group>"; };
-		2EF53E391B55421A00BF936A /* UIImage+ColorAtPixel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIImage+ColorAtPixel.h"; path = "PSPrintSDK/Categories/UIImage+ColorAtPixel.h"; sourceTree = "<group>"; };
-		2EF53E3A1B55421A00BF936A /* UIImage+ColorAtPixel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIImage+ColorAtPixel.m"; path = "PSPrintSDK/Categories/UIImage+ColorAtPixel.m"; sourceTree = "<group>"; };
+		2EF53E391B55421A00BF936A /* UIImage+OLUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIImage+OLUtils.h"; path = "PSPrintSDK/Categories/UIImage+OLUtils.h"; sourceTree = "<group>"; };
+		2EF53E3A1B55421A00BF936A /* UIImage+OLUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIImage+OLUtils.m"; path = "PSPrintSDK/Categories/UIImage+OLUtils.m"; sourceTree = "<group>"; };
 		2EF53E3C1B5549B900BF936A /* OLInfoPageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLInfoPageViewController.h; sourceTree = "<group>"; };
 		2EF53E3D1B5549B900BF936A /* OLInfoPageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLInfoPageViewController.m; sourceTree = "<group>"; };
 		2EF8BA9D1B99E9E4009BC73B /* OLImageCachingManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLImageCachingManager.h; sourceTree = "<group>"; };
@@ -1085,8 +1046,6 @@
 		3DEF0D171A964881000F1E66 /* NSString+Formatting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSString+Formatting.m"; path = "PSPrintSDK/Categories/NSString+Formatting.m"; sourceTree = "<group>"; };
 		3DEF0D191A964B4E000F1E66 /* UITextField+Selection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UITextField+Selection.h"; path = "PSPrintSDK/Categories/UITextField+Selection.h"; sourceTree = "<group>"; };
 		3DEF0D1A1A964B4E000F1E66 /* UITextField+Selection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UITextField+Selection.m"; path = "PSPrintSDK/Categories/UITextField+Selection.m"; sourceTree = "<group>"; };
-		3DF9D6FB1B0F618000A40C0C /* UIViewController+TraitCollectionCompatibility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIViewController+TraitCollectionCompatibility.h"; path = "PSPrintSDK/Categories/UIViewController+TraitCollectionCompatibility.h"; sourceTree = "<group>"; };
-		3DF9D6FC1B0F618000A40C0C /* UIViewController+TraitCollectionCompatibility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIViewController+TraitCollectionCompatibility.m"; path = "PSPrintSDK/Categories/UIViewController+TraitCollectionCompatibility.m"; sourceTree = "<group>"; };
 		3DF9D6FF1B0F65C700A40C0C /* NSObject+Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSObject+Utils.h"; path = "PSPrintSDK/Categories/NSObject+Utils.h"; sourceTree = "<group>"; };
 		3DF9D7001B0F65C700A40C0C /* NSObject+Utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSObject+Utils.m"; path = "PSPrintSDK/Categories/NSObject+Utils.m"; sourceTree = "<group>"; };
 		48EA1821F95A31ABAF57DA36 /* Pods-Kite-CI-Deploy.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Kite-CI-Deploy.release.xcconfig"; path = "Pods/Target Support Files/Pods-Kite-CI-Deploy/Pods-Kite-CI-Deploy.release.xcconfig"; sourceTree = "<group>"; };
@@ -1278,56 +1237,10 @@
 		E244531A1BFD2C810086BF03 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		E244531C1BFD2C8C0086BF03 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		E244531E1BFD2C910086BF03 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
-		E24453201BFD2D810086BF03 /* OLPayPalDummy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLPayPalDummy.h; sourceTree = "<group>"; };
-		E24453211BFD2D810086BF03 /* OLPayPalDummy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLPayPalDummy.m; sourceTree = "<group>"; };
-		E29C83A11BE276050041D4CF /* NSData+ImageContentType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSData+ImageContentType.h"; path = "vendor/SDWebImage/SDWebImage/NSData+ImageContentType.h"; sourceTree = "<group>"; };
-		E29C83A21BE276050041D4CF /* NSData+ImageContentType.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSData+ImageContentType.m"; path = "vendor/SDWebImage/SDWebImage/NSData+ImageContentType.m"; sourceTree = "<group>"; };
-		E29C83A31BE276050041D4CF /* SDImageCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SDImageCache.h; path = vendor/SDWebImage/SDWebImage/SDImageCache.h; sourceTree = "<group>"; };
-		E29C83A41BE276050041D4CF /* SDImageCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SDImageCache.m; path = vendor/SDWebImage/SDWebImage/SDImageCache.m; sourceTree = "<group>"; };
-		E29C83A51BE276050041D4CF /* SDWebImageCompat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SDWebImageCompat.h; path = vendor/SDWebImage/SDWebImage/SDWebImageCompat.h; sourceTree = "<group>"; };
-		E29C83A61BE276050041D4CF /* SDWebImageCompat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SDWebImageCompat.m; path = vendor/SDWebImage/SDWebImage/SDWebImageCompat.m; sourceTree = "<group>"; };
-		E29C83A71BE276050041D4CF /* SDWebImageDecoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SDWebImageDecoder.h; path = vendor/SDWebImage/SDWebImage/SDWebImageDecoder.h; sourceTree = "<group>"; };
-		E29C83A81BE276050041D4CF /* SDWebImageDecoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SDWebImageDecoder.m; path = vendor/SDWebImage/SDWebImage/SDWebImageDecoder.m; sourceTree = "<group>"; };
-		E29C83A91BE276050041D4CF /* SDWebImageDownloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SDWebImageDownloader.h; path = vendor/SDWebImage/SDWebImage/SDWebImageDownloader.h; sourceTree = "<group>"; };
-		E29C83AA1BE276050041D4CF /* SDWebImageDownloader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SDWebImageDownloader.m; path = vendor/SDWebImage/SDWebImage/SDWebImageDownloader.m; sourceTree = "<group>"; };
-		E29C83AB1BE276050041D4CF /* SDWebImageDownloaderOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SDWebImageDownloaderOperation.h; path = vendor/SDWebImage/SDWebImage/SDWebImageDownloaderOperation.h; sourceTree = "<group>"; };
-		E29C83AC1BE276050041D4CF /* SDWebImageDownloaderOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SDWebImageDownloaderOperation.m; path = vendor/SDWebImage/SDWebImage/SDWebImageDownloaderOperation.m; sourceTree = "<group>"; };
-		E29C83AD1BE276050041D4CF /* SDWebImageManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SDWebImageManager.h; path = vendor/SDWebImage/SDWebImage/SDWebImageManager.h; sourceTree = "<group>"; };
-		E29C83AE1BE276050041D4CF /* SDWebImageManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SDWebImageManager.m; path = vendor/SDWebImage/SDWebImage/SDWebImageManager.m; sourceTree = "<group>"; };
-		E29C83AF1BE276050041D4CF /* SDWebImageOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SDWebImageOperation.h; path = vendor/SDWebImage/SDWebImage/SDWebImageOperation.h; sourceTree = "<group>"; };
-		E29C83B01BE276050041D4CF /* SDWebImagePrefetcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SDWebImagePrefetcher.h; path = vendor/SDWebImage/SDWebImage/SDWebImagePrefetcher.h; sourceTree = "<group>"; };
-		E29C83B11BE276050041D4CF /* SDWebImagePrefetcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SDWebImagePrefetcher.m; path = vendor/SDWebImage/SDWebImage/SDWebImagePrefetcher.m; sourceTree = "<group>"; };
-		E29C83B21BE276050041D4CF /* UIButton+WebCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIButton+WebCache.h"; path = "vendor/SDWebImage/SDWebImage/UIButton+WebCache.h"; sourceTree = "<group>"; };
-		E29C83B31BE276050041D4CF /* UIButton+WebCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIButton+WebCache.m"; path = "vendor/SDWebImage/SDWebImage/UIButton+WebCache.m"; sourceTree = "<group>"; };
-		E29C83B41BE276050041D4CF /* UIImage+GIF.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIImage+GIF.h"; path = "vendor/SDWebImage/SDWebImage/UIImage+GIF.h"; sourceTree = "<group>"; };
-		E29C83B51BE276050041D4CF /* UIImage+GIF.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIImage+GIF.m"; path = "vendor/SDWebImage/SDWebImage/UIImage+GIF.m"; sourceTree = "<group>"; };
-		E29C83B61BE276050041D4CF /* UIImage+MultiFormat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIImage+MultiFormat.h"; path = "vendor/SDWebImage/SDWebImage/UIImage+MultiFormat.h"; sourceTree = "<group>"; };
-		E29C83B71BE276050041D4CF /* UIImage+MultiFormat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIImage+MultiFormat.m"; path = "vendor/SDWebImage/SDWebImage/UIImage+MultiFormat.m"; sourceTree = "<group>"; };
-		E29C83BA1BE276050041D4CF /* UIImageView+HighlightedWebCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIImageView+HighlightedWebCache.h"; path = "vendor/SDWebImage/SDWebImage/UIImageView+HighlightedWebCache.h"; sourceTree = "<group>"; };
-		E29C83BB1BE276050041D4CF /* UIImageView+HighlightedWebCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIImageView+HighlightedWebCache.m"; path = "vendor/SDWebImage/SDWebImage/UIImageView+HighlightedWebCache.m"; sourceTree = "<group>"; };
-		E29C83BC1BE276050041D4CF /* UIImageView+WebCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIImageView+WebCache.h"; path = "vendor/SDWebImage/SDWebImage/UIImageView+WebCache.h"; sourceTree = "<group>"; };
-		E29C83BD1BE276050041D4CF /* UIImageView+WebCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIImageView+WebCache.m"; path = "vendor/SDWebImage/SDWebImage/UIImageView+WebCache.m"; sourceTree = "<group>"; };
-		E29C83BE1BE276050041D4CF /* UIView+WebCacheOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIView+WebCacheOperation.h"; path = "vendor/SDWebImage/SDWebImage/UIView+WebCacheOperation.h"; sourceTree = "<group>"; };
-		E29C83BF1BE276050041D4CF /* UIView+WebCacheOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIView+WebCacheOperation.m"; path = "vendor/SDWebImage/SDWebImage/UIView+WebCacheOperation.m"; sourceTree = "<group>"; };
-		E29C83D11BE277E60041D4CF /* SkyLab.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SkyLab.h; path = vendor/SkyLab/SkyLab/SkyLab.h; sourceTree = "<group>"; };
-		E29C83D21BE277E60041D4CF /* SkyLab.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SkyLab.m; path = vendor/SkyLab/SkyLab/SkyLab.m; sourceTree = "<group>"; };
 		E29C83D51BE280EA0041D4CF /* CSStickyHeaderFlowLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CSStickyHeaderFlowLayout.h; path = vendor/CSStickyHeaderFlowLayout/Classes/CSStickyHeaderFlowLayout.h; sourceTree = "<group>"; };
 		E29C83D61BE280EA0041D4CF /* CSStickyHeaderFlowLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CSStickyHeaderFlowLayout.m; path = vendor/CSStickyHeaderFlowLayout/Classes/CSStickyHeaderFlowLayout.m; sourceTree = "<group>"; };
 		E29C83D71BE280EA0041D4CF /* CSStickyHeaderFlowLayoutAttributes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CSStickyHeaderFlowLayoutAttributes.h; path = vendor/CSStickyHeaderFlowLayout/Classes/CSStickyHeaderFlowLayoutAttributes.h; sourceTree = "<group>"; };
 		E29C83D81BE280EA0041D4CF /* CSStickyHeaderFlowLayoutAttributes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CSStickyHeaderFlowLayoutAttributes.m; path = vendor/CSStickyHeaderFlowLayout/Classes/CSStickyHeaderFlowLayoutAttributes.m; sourceTree = "<group>"; };
-		E29C83E01BE2829C0041D4CF /* AFHTTPSessionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFHTTPSessionManager.h; path = vendor/AFNetworking/AFNetworking/AFHTTPSessionManager.h; sourceTree = "<group>"; };
-		E29C83E11BE2829C0041D4CF /* AFHTTPSessionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFHTTPSessionManager.m; path = vendor/AFNetworking/AFNetworking/AFHTTPSessionManager.m; sourceTree = "<group>"; };
-		E29C83E21BE2829C0041D4CF /* AFNetworking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFNetworking.h; path = vendor/AFNetworking/AFNetworking/AFNetworking.h; sourceTree = "<group>"; };
-		E29C83E31BE2829C0041D4CF /* AFNetworkReachabilityManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFNetworkReachabilityManager.h; path = vendor/AFNetworking/AFNetworking/AFNetworkReachabilityManager.h; sourceTree = "<group>"; };
-		E29C83E41BE2829C0041D4CF /* AFNetworkReachabilityManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFNetworkReachabilityManager.m; path = vendor/AFNetworking/AFNetworking/AFNetworkReachabilityManager.m; sourceTree = "<group>"; };
-		E29C83E51BE2829C0041D4CF /* AFSecurityPolicy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFSecurityPolicy.h; path = vendor/AFNetworking/AFNetworking/AFSecurityPolicy.h; sourceTree = "<group>"; };
-		E29C83E61BE2829C0041D4CF /* AFSecurityPolicy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFSecurityPolicy.m; path = vendor/AFNetworking/AFNetworking/AFSecurityPolicy.m; sourceTree = "<group>"; };
-		E29C83E91BE2829C0041D4CF /* AFURLRequestSerialization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFURLRequestSerialization.h; path = vendor/AFNetworking/AFNetworking/AFURLRequestSerialization.h; sourceTree = "<group>"; };
-		E29C83EA1BE2829C0041D4CF /* AFURLRequestSerialization.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFURLRequestSerialization.m; path = vendor/AFNetworking/AFNetworking/AFURLRequestSerialization.m; sourceTree = "<group>"; };
-		E29C83EB1BE2829C0041D4CF /* AFURLResponseSerialization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFURLResponseSerialization.h; path = vendor/AFNetworking/AFNetworking/AFURLResponseSerialization.h; sourceTree = "<group>"; };
-		E29C83EC1BE2829C0041D4CF /* AFURLResponseSerialization.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFURLResponseSerialization.m; path = vendor/AFNetworking/AFNetworking/AFURLResponseSerialization.m; sourceTree = "<group>"; };
-		E29C83ED1BE2829C0041D4CF /* AFURLSessionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFURLSessionManager.h; path = vendor/AFNetworking/AFNetworking/AFURLSessionManager.h; sourceTree = "<group>"; };
-		E29C83EE1BE2829C0041D4CF /* AFURLSessionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFURLSessionManager.m; path = vendor/AFNetworking/AFNetworking/AFURLSessionManager.m; sourceTree = "<group>"; };
 		E29C83F91BE2855F0041D4CF /* MPAnimation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPAnimation.h; path = vendor/MPFlipViewController/Container/MPAnimation.h; sourceTree = "<group>"; };
 		E29C83FA1BE2855F0041D4CF /* MPAnimation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MPAnimation.m; path = vendor/MPFlipViewController/Container/MPAnimation.m; sourceTree = "<group>"; };
 		E29C83FB1BE2855F0041D4CF /* MPFlipEnumerations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPFlipEnumerations.h; path = vendor/MPFlipViewController/Container/MPFlipEnumerations.h; sourceTree = "<group>"; };
@@ -1352,12 +1265,7 @@
 		E29C84181BE2877A0041D4CF /* SVProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SVProgressHUD.m; path = vendor/SVProgressHUD/SVProgressHUD/SVProgressHUD.m; sourceTree = "<group>"; };
 		E29C84191BE2877A0041D4CF /* SVRadialGradientLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SVRadialGradientLayer.h; path = vendor/SVProgressHUD/SVProgressHUD/SVRadialGradientLayer.h; sourceTree = "<group>"; };
 		E29C841A1BE2877A0041D4CF /* SVRadialGradientLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SVRadialGradientLayer.m; path = vendor/SVProgressHUD/SVProgressHUD/SVRadialGradientLayer.m; sourceTree = "<group>"; };
-		E29C84201BE2880E0041D4CF /* UICKeyChainStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UICKeyChainStore.h; path = vendor/UICKeyChainStore/Lib/UICKeyChainStore/UICKeyChainStore.h; sourceTree = "<group>"; };
-		E29C84211BE2880E0041D4CF /* UICKeyChainStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UICKeyChainStore.m; path = vendor/UICKeyChainStore/Lib/UICKeyChainStore/UICKeyChainStore.m; sourceTree = "<group>"; };
-		E29C84241BE288D30041D4CF /* UIColor+HexString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIColor+HexString.h"; path = "vendor/UIColor-HexString/UIColor+HexString.h"; sourceTree = "<group>"; };
-		E29C84251BE288D30041D4CF /* UIColor+HexString.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIColor+HexString.m"; path = "vendor/UIColor-HexString/UIColor+HexString.m"; sourceTree = "<group>"; };
 		E29C85701BE3B4290041D4CF /* libKiteSDK.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libKiteSDK.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		E29C86211BE3BCA80041D4CF /* KiteSDK-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "KiteSDK-Prefix.pch"; sourceTree = "<group>"; };
 		E2AABA0F1C6CFA2B0007C1D7 /* OLQRCodeUploadViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLQRCodeUploadViewController.h; sourceTree = "<group>"; };
 		E2AABA101C6CFA2B0007C1D7 /* OLQRCodeUploadViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLQRCodeUploadViewController.m; sourceTree = "<group>"; };
 		E2AABA131C6DFC160007C1D7 /* OLQRCodeUploadedImagePoller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLQRCodeUploadedImagePoller.h; sourceTree = "<group>"; };
@@ -1547,46 +1455,42 @@
 			name = View;
 			sourceTree = "<group>";
 		};
-		2E21DA261B98436E00D9162F /* OLAssetsPickerController */ = {
+		2E1E66D91D4795C8002524A4 /* Facebook */ = {
 			isa = PBXGroup;
 			children = (
-				2EA829201B9DE54100A9208E /* ALAsset+OLAccessibilityLabel.h */,
-				2EA829211B9DE54100A9208E /* ALAsset+OLAccessibilityLabel.m */,
-				2EA829221B9DE54100A9208E /* ALAsset+OLAssetType.h */,
-				2EA829231B9DE54100A9208E /* ALAsset+OLAssetType.m */,
-				2EA829241B9DE54100A9208E /* ALAsset+OLIsEqual.h */,
-				2EA829251B9DE54100A9208E /* ALAsset+OLIsEqual.m */,
-				2EA829261B9DE54100A9208E /* ALAssetsGroup+OLIsEqual.h */,
-				2EA829271B9DE54100A9208E /* ALAssetsGroup+OLIsEqual.m */,
-				2EA829281B9DE54100A9208E /* NSBundle+OLAssetsPickerController.h */,
-				2EA829291B9DE54100A9208E /* NSBundle+OLAssetsPickerController.m */,
-				2EA8292A1B9DE54100A9208E /* NSDateFormatter+OLTimeIntervalFormatter.h */,
-				2EA8292B1B9DE54100A9208E /* NSDateFormatter+OLTimeIntervalFormatter.m */,
-				2EA8292C1B9DE54100A9208E /* UIImage+OLAssetsPickerController.h */,
-				2EA8292D1B9DE54100A9208E /* UIImage+OLAssetsPickerController.m */,
-				2E21DA2F1B9843CF00D9162F /* OLAssetItemViewController.h */,
-				2E21DA301B9843CF00D9162F /* OLAssetItemViewController.m */,
-				2E21DA311B9843CF00D9162F /* OLAssetScrollView.h */,
-				2E21DA321B9843CF00D9162F /* OLAssetScrollView.m */,
-				2E21DA331B9843CF00D9162F /* OLAssetsGroupViewCell.h */,
-				2E21DA341B9843CF00D9162F /* OLAssetsGroupViewCell.m */,
-				2E21DA351B9843CF00D9162F /* OLAssetsGroupViewController.h */,
-				2E21DA361B9843CF00D9162F /* OLAssetsGroupViewController.m */,
-				2E21DA371B9843CF00D9162F /* OLAssetsPageViewController.h */,
-				2E21DA381B9843CF00D9162F /* OLAssetsPageViewController.m */,
-				2E21DA391B9843CF00D9162F /* OLAssetsPickerCommon.h */,
-				2E21DA3A1B9843CF00D9162F /* OLAssetsPickerController.h */,
-				2E21DA3B1B9843CF00D9162F /* OLAssetsPickerController.m */,
-				2E21DA3C1B9843CF00D9162F /* OLAssetsSupplementaryView.h */,
-				2E21DA3D1B9843CF00D9162F /* OLAssetsSupplementaryView.m */,
-				2E21DA3E1B9843CF00D9162F /* OLAssetsViewCell.h */,
-				2E21DA3F1B9843CF00D9162F /* OLAssetsViewCell.m */,
-				2E21DA401B9843CF00D9162F /* OLAssetsViewController.h */,
-				2E21DA411B9843CF00D9162F /* OLAssetsViewController.m */,
-				2E21DA421B9843CF00D9162F /* OLAssetsViewControllerTransition.h */,
-				2E21DA431B9843CF00D9162F /* OLAssetsViewControllerTransition.m */,
+				2E1E66EC1D479617002524A4 /* OLFacebookImage.h */,
+				2E1E66ED1D479617002524A4 /* OLFacebookImage.m */,
+				2E1E66DA1D4795EE002524A4 /* OLFacebookAlbum.h */,
+				2E1E66DB1D4795EE002524A4 /* OLFacebookAlbum.m */,
+				2E1E66DC1D4795EE002524A4 /* OLFacebookAlbumRequest.h */,
+				2E1E66DD1D4795EE002524A4 /* OLFacebookAlbumRequest.m */,
+				2E1E66DE1D4795EE002524A4 /* OLFacebookPhotosForAlbumRequest.h */,
+				2E1E66DF1D4795EE002524A4 /* OLFacebookPhotosForAlbumRequest.m */,
+				2E1E66F91D47A653002524A4 /* OLFacebookImagePickerConstants.h */,
+				2E1E66FA1D47A653002524A4 /* OLFacebookImagePickerConstants.m */,
 			);
-			name = OLAssetsPickerController;
+			name = Facebook;
+			sourceTree = "<group>";
+		};
+		2E1E66F21D479674002524A4 /* Image Picker */ = {
+			isa = PBXGroup;
+			children = (
+				2E884F441D37B566007CA45A /* OLImagePickerViewController.h */,
+				2E884F451D37B566007CA45A /* OLImagePickerViewController.m */,
+				2E1E66CD1D477B78002524A4 /* OLImagePickerPageViewController.h */,
+				2E1E66CE1D477B78002524A4 /* OLImagePickerPageViewController.m */,
+				2E28CDFB1D38EEAF00E9AFEA /* OLImagePickerPhotosPageViewController.h */,
+				2E28CDFC1D38EEAF00E9AFEA /* OLImagePickerPhotosPageViewController.m */,
+				2E1E66D31D478052002524A4 /* OLImagePickerLoginPageViewController.h */,
+				2E1E66D41D478052002524A4 /* OLImagePickerLoginPageViewController.m */,
+				2EB612E41D489E4700B48E29 /* OLImagePickerPhotosPageViewController+Facebook.h */,
+				2EB612E51D489E4700B48E29 /* OLImagePickerPhotosPageViewController+Facebook.m */,
+				2EB612EA1D48AF3200B48E29 /* OLImagePickerPhotosPageViewController+Instagram.h */,
+				2EB612EB1D48AF3200B48E29 /* OLImagePickerPhotosPageViewController+Instagram.m */,
+				2EB612F01D48AF9400B48E29 /* OLInstagramLoginWebViewController.h */,
+				2EB612F11D48AF9400B48E29 /* OLInstagramLoginWebViewController.m */,
+			);
+			name = "Image Picker";
 			sourceTree = "<group>";
 		};
 		2E4CAF101BC293EA0089FA26 /* Products */ = {
@@ -1613,8 +1517,6 @@
 		2E4CAF111BC293FC0089FA26 /* Edit-Review */ = {
 			isa = PBXGroup;
 			children = (
-				2E39CAA11AB894A8008B1EFF /* OLPhotoSelectionViewController.h */,
-				2E39CAA21AB894A8008B1EFF /* OLPhotoSelectionViewController.m */,
 				2EA8BEB41A484FCB008A9248 /* OLOrderReviewViewController.h */,
 				2EA8BEB51A484FCB008A9248 /* OLOrderReviewViewController.m */,
 				2EA8BEB61A484FCB008A9248 /* OLFrameOrderReviewViewController.h */,
@@ -1675,7 +1577,6 @@
 			isa = PBXGroup;
 			children = (
 				2E96BA3B1D2FA9CF002F5F74 /* QREncoder */,
-				2E21DA261B98436E00D9162F /* OLAssetsPickerController */,
 				2ED5DEB01AC94337003301A8 /* LXReorderableCollectionViewFlowLayout */,
 				3D8122E21A759E41004E7297 /* RMImageCropper */,
 				2EE3C86E1A4AFB0C006446E2 /* OLKiteViewController.h */,
@@ -1707,46 +1608,10 @@
 				CD550BD61886BF6000782D75 /* Payment */,
 				CD7696A11868DE7A006D4A26 /* Print */,
 				3DE2B0C01A77D2290092D97F /* Util */,
-				2EA008791CB293A900C23DFA /* OLUpsellOffer.h */,
-				2EA0087A1CB293A900C23DFA /* OLUpsellOffer.m */,
+				2EB612F61D48AFDA00B48E29 /* Instagram */,
+				2E1E66D91D4795C8002524A4 /* Facebook */,
 			);
 			name = Model;
-			sourceTree = "<group>";
-		};
-		2E4DF4611C0F153A00EA66FE /* Custom Asset Providers */ = {
-			isa = PBXGroup;
-			children = (
-				2E0804BA1C0DF70200F50D42 /* CatsAssetCollectionDataSource.h */,
-				2E0804BB1C0DF70200F50D42 /* CatsAssetCollectionDataSource.m */,
-				2E4DF4601C0F152900EA66FE /* DogsAssetCollectionDataSource.h */,
-				2E4DF45D1C0F150400EA66FE /* DogsAssetCollectionDataSource.m */,
-				2E0804BC1C0DF70200F50D42 /* AssetDataSource.h */,
-				2E0804BD1C0DF70200F50D42 /* AssetDataSource.m */,
-			);
-			name = "Custom Asset Providers";
-			sourceTree = "<group>";
-		};
-		2E87028F1C9049DE002BE2DA /* ios-qr-encoder */ = {
-			isa = PBXGroup;
-			children = (
-				2E8703061C905368002BE2DA /* bitstream.h */,
-				2E8703071C905368002BE2DA /* mask.h */,
-				2E8703081C905368002BE2DA /* qrencode.h */,
-				2E8703091C905368002BE2DA /* qrinput.h */,
-				2E87030A1C905368002BE2DA /* qrspec.h */,
-				2E87030B1C905368002BE2DA /* rscode.h */,
-				2E87030C1C905368002BE2DA /* split.h */,
-				2E8702DD1C9050CA002BE2DA /* bitstream.c */,
-				2E8702DE1C9050CA002BE2DA /* mask.c */,
-				2E8702DF1C9050CA002BE2DA /* qrencode.c */,
-				2E8702E01C9050CA002BE2DA /* qrinput.c */,
-				2E8702E11C9050CA002BE2DA /* qrspec.c */,
-				2E8702E21C9050CA002BE2DA /* rscode.c */,
-				2E8702E31C9050CA002BE2DA /* split.c */,
-				2E8703041C9052A0002BE2DA /* UIImage+MDQRCode.h */,
-				2E8702E41C9050CA002BE2DA /* UIImage+MDQRCode.m */,
-			);
-			path = "ios-qr-encoder";
 			sourceTree = "<group>";
 		};
 		2E96BA3B1D2FA9CF002F5F74 /* QREncoder */ = {
@@ -1787,8 +1652,6 @@
 				2E53E0CC1C1AEAAD00BF7887 /* UIViewController+OLMethods.m */,
 				3DF9D6FF1B0F65C700A40C0C /* NSObject+Utils.h */,
 				3DF9D7001B0F65C700A40C0C /* NSObject+Utils.m */,
-				3DF9D6FB1B0F618000A40C0C /* UIViewController+TraitCollectionCompatibility.h */,
-				3DF9D6FC1B0F618000A40C0C /* UIViewController+TraitCollectionCompatibility.m */,
 				3D0D7ACA1AC0C44C00746FC8 /* NSArray+QueryingExtras.h */,
 				3D0D7ACB1AC0C44C00746FC8 /* NSArray+QueryingExtras.m */,
 				3DEF0D191A964B4E000F1E66 /* UITextField+Selection.h */,
@@ -1799,10 +1662,8 @@
 				3D8122F01A75A46D004E7297 /* UIImageView+FadeIn.m */,
 				2E455DFE1B1F1BA1001B1718 /* NSDecimalNumber+CostFormatter.h */,
 				2E455DFF1B1F1BA1001B1718 /* NSDecimalNumber+CostFormatter.m */,
-				2EE94D3D1B501D900086590C /* ALAssetsLibrary+Singleton.h */,
-				2EE94D3E1B501D900086590C /* ALAssetsLibrary+Singleton.m */,
-				2EF53E391B55421A00BF936A /* UIImage+ColorAtPixel.h */,
-				2EF53E3A1B55421A00BF936A /* UIImage+ColorAtPixel.m */,
+				2EF53E391B55421A00BF936A /* UIImage+OLUtils.h */,
+				2EF53E3A1B55421A00BF936A /* UIImage+OLUtils.m */,
 				2E1067FE1B83335C00EB4C14 /* UIView+RoundRect.h */,
 				2E1067FF1B83335C00EB4C14 /* UIView+RoundRect.m */,
 				2EA13E1E1BBC2202005F3D71 /* UIImage+ImageNamedInKiteBundle.h */,
@@ -1825,6 +1686,19 @@
 				2EAB0AF21CDCD57A00625BD6 /* OLTestTapGestureRecognizer.m */,
 			);
 			name = Helpers;
+			sourceTree = "<group>";
+		};
+		2EB612F61D48AFDA00B48E29 /* Instagram */ = {
+			isa = PBXGroup;
+			children = (
+				2EB612F71D48AFE800B48E29 /* OLInstagramMediaRequest.h */,
+				2EB612F81D48AFE800B48E29 /* OLInstagramMediaRequest.m */,
+				2EB612F91D48AFE800B48E29 /* OLInstagramImagePickerConstants.h */,
+				2EB612FA1D48AFE800B48E29 /* OLInstagramImagePickerConstants.m */,
+				2EB612FB1D48AFE800B48E29 /* OLInstagramImage.h */,
+				2EB612FC1D48AFE800B48E29 /* OLInstagramImage.m */,
+			);
+			name = Instagram;
 			sourceTree = "<group>";
 		};
 		2ED5DEB01AC94337003301A8 /* LXReorderableCollectionViewFlowLayout */ = {
@@ -1898,7 +1772,6 @@
 				CD73BFA01862FA210009DE03 /* Sample App */,
 				CD73BF71186215790009DE03 /* Kite Print SDK */,
 				CD73BF90186215790009DE03 /* Kite Print SDK Tests */,
-				E29C85711BE3B4290041D4CF /* KiteSDK */,
 				CD73BF6A186215790009DE03 /* Frameworks */,
 				CD73BF69186215790009DE03 /* Products */,
 				E29C839D1BE275C40041D4CF /* Vendor */,
@@ -1983,7 +1856,6 @@
 			isa = PBXGroup;
 			children = (
 				CD73BF96186215790009DE03 /* OLSDKModelTests.m */,
-				2E7483541BCD1DF500360550 /* OLPrintPhotoTests.m */,
 				2E924BE11BC6A0C80038938A /* OLKiteRequestTests.m */,
 				2E7D1C8E1BC41C7D009227EE /* OLProductOrderTests.m */,
 				2ECC95691BC6B88F00F44CE1 /* OLDocsObjcExampleCodeTests.m */,
@@ -2016,7 +1888,6 @@
 				CD73BF81186215790009DE03 /* ViewController.m */,
 				CD97569318E083E3007CA090 /* PrintOrderHistoryViewController.h */,
 				CD97569418E083E3007CA090 /* PrintOrderHistoryViewController.m */,
-				2E4DF4611C0F153A00EA66FE /* Custom Asset Providers */,
 				CD73BF83186215790009DE03 /* Images.xcassets */,
 				CD73BF72186215790009DE03 /* Supporting Files */,
 			);
@@ -2067,6 +1938,8 @@
 			children = (
 				CD73BFB218635F170009DE03 /* OLKitePrintSDK.h */,
 				CD73BFB318635F170009DE03 /* OLKitePrintSDK.m */,
+				2E7BDAD81D3E1713005F142C /* OLUserSession.h */,
+				2E7BDAD91D3E1713005F142C /* OLUserSession.m */,
 				CDE5DDCD18E5BE40000FF3B5 /* OLPrintEnvironment.h */,
 				CD9D6AE2187188BE001CD1F9 /* OLPrintJob.h */,
 				CD9CF4A4187592A900F067B6 /* OLPrintJob.m */,
@@ -2090,6 +1963,8 @@
 				CD97568D18D8D147007CA090 /* OLProductTemplate.m */,
 				2E898F851BE37F9B00739F5A /* OLProductTemplateOption.h */,
 				2E898F861BE37F9B00739F5A /* OLProductTemplateOption.m */,
+				2EA008791CB293A900C23DFA /* OLUpsellOffer.h */,
+				2EA0087A1CB293A900C23DFA /* OLUpsellOffer.m */,
 				3D8ECA4F1AD692FA00CFB2C0 /* OLProductGroup.h */,
 				3D8ECA501AD692FA00CFB2C0 /* OLProductGroup.m */,
 				2E3F96AD1A4967FF005C0EA3 /* OLProduct.h */,
@@ -2106,6 +1981,7 @@
 			isa = PBXGroup;
 			children = (
 				2E4CAF101BC293EA0089FA26 /* Products */,
+				2E1E66F21D479674002524A4 /* Image Picker */,
 				2E4CAF111BC293FC0089FA26 /* Edit-Review */,
 				2E4CAF121BC2940A0089FA26 /* Shipping-Payment */,
 				2E4CAF131BC2941E0089FA26 /* Other */,
@@ -2127,8 +2003,10 @@
 				2E8FD26F1BF9E73B00F4FC5A /* OLPhotoEdits.m */,
 				2ED389931C918DC100DC2314 /* OLTextOnPhoto.h */,
 				2ED389941C918DC100DC2314 /* OLTextOnPhoto.m */,
-				2E3F96B01A49ACF4005C0EA3 /* OLPrintPhoto.h */,
-				2E3F96B11A49ACF4005C0EA3 /* OLPrintPhoto.m */,
+				2E36A1DA1D42094C00EA2F0F /* OLImagePickerProvider.h */,
+				2E36A1DB1D42094C00EA2F0F /* OLImagePickerProvider.m */,
+				2E36A1E01D420CDA00EA2F0F /* OLImagePickerProviderCollection.h */,
+				2E36A1E11D420CDA00EA2F0F /* OLImagePickerProviderCollection.m */,
 				2E0804B61C0DECE300F50D42 /* OLCustomPhotoProvider.h */,
 				2E0804B71C0DECE300F50D42 /* OLCustomPhotoProvider.m */,
 			);
@@ -2253,67 +2131,16 @@
 		E29C839D1BE275C40041D4CF /* Vendor */ = {
 			isa = PBXGroup;
 			children = (
-				2E87028F1C9049DE002BE2DA /* ios-qr-encoder */,
 				E22962ED1C43DC46002A90CA /* PureLayout */,
 				E22962EC1C43DC0E002A90CA /* CTAssetsPicker */,
 				E24452E51BFD1FCA0086BF03 /* PayPal */,
-				E29C84231BE288B70041D4CF /* UIColor-HexString */,
-				E29C841F1BE287E50041D4CF /* UICKeyChainStore */,
 				E29C84121BE287130041D4CF /* SVProgressHUD */,
 				E29C840E1BE286A20041D4CF /* TSMarkdownParser */,
 				E29C84071BE286110041D4CF /* DACircularProgress */,
 				E29C83F81BE2853F0041D4CF /* MPFlipViewController */,
-				E29C83DB1BE282700041D4CF /* AFNetworking */,
 				E29C83D41BE280B00041D4CF /* CSStickyHeaderFlowLayout */,
-				E29C83D01BE277CF0041D4CF /* SkyLab */,
-				E29C839E1BE275CE0041D4CF /* SDWebImage */,
 			);
 			name = Vendor;
-			sourceTree = "<group>";
-		};
-		E29C839E1BE275CE0041D4CF /* SDWebImage */ = {
-			isa = PBXGroup;
-			children = (
-				E29C83A11BE276050041D4CF /* NSData+ImageContentType.h */,
-				E29C83A21BE276050041D4CF /* NSData+ImageContentType.m */,
-				E29C83A31BE276050041D4CF /* SDImageCache.h */,
-				E29C83A41BE276050041D4CF /* SDImageCache.m */,
-				E29C83A51BE276050041D4CF /* SDWebImageCompat.h */,
-				E29C83A61BE276050041D4CF /* SDWebImageCompat.m */,
-				E29C83A71BE276050041D4CF /* SDWebImageDecoder.h */,
-				E29C83A81BE276050041D4CF /* SDWebImageDecoder.m */,
-				E29C83A91BE276050041D4CF /* SDWebImageDownloader.h */,
-				E29C83AA1BE276050041D4CF /* SDWebImageDownloader.m */,
-				E29C83AB1BE276050041D4CF /* SDWebImageDownloaderOperation.h */,
-				E29C83AC1BE276050041D4CF /* SDWebImageDownloaderOperation.m */,
-				E29C83AD1BE276050041D4CF /* SDWebImageManager.h */,
-				E29C83AE1BE276050041D4CF /* SDWebImageManager.m */,
-				E29C83AF1BE276050041D4CF /* SDWebImageOperation.h */,
-				E29C83B01BE276050041D4CF /* SDWebImagePrefetcher.h */,
-				E29C83B11BE276050041D4CF /* SDWebImagePrefetcher.m */,
-				E29C83B21BE276050041D4CF /* UIButton+WebCache.h */,
-				E29C83B31BE276050041D4CF /* UIButton+WebCache.m */,
-				E29C83B41BE276050041D4CF /* UIImage+GIF.h */,
-				E29C83B51BE276050041D4CF /* UIImage+GIF.m */,
-				E29C83B61BE276050041D4CF /* UIImage+MultiFormat.h */,
-				E29C83B71BE276050041D4CF /* UIImage+MultiFormat.m */,
-				E29C83BA1BE276050041D4CF /* UIImageView+HighlightedWebCache.h */,
-				E29C83BB1BE276050041D4CF /* UIImageView+HighlightedWebCache.m */,
-				E29C83BC1BE276050041D4CF /* UIImageView+WebCache.h */,
-				E29C83BD1BE276050041D4CF /* UIImageView+WebCache.m */,
-				E29C83BE1BE276050041D4CF /* UIView+WebCacheOperation.h */,
-				E29C83BF1BE276050041D4CF /* UIView+WebCacheOperation.m */,
-			);
-			name = SDWebImage;
-			sourceTree = "<group>";
-		};
-		E29C83D01BE277CF0041D4CF /* SkyLab */ = {
-			isa = PBXGroup;
-			children = (
-				E29C83D11BE277E60041D4CF /* SkyLab.h */,
-				E29C83D21BE277E60041D4CF /* SkyLab.m */,
-			);
-			name = SkyLab;
 			sourceTree = "<group>";
 		};
 		E29C83D41BE280B00041D4CF /* CSStickyHeaderFlowLayout */ = {
@@ -2325,32 +2152,6 @@
 				E29C83D81BE280EA0041D4CF /* CSStickyHeaderFlowLayoutAttributes.m */,
 			);
 			name = CSStickyHeaderFlowLayout;
-			sourceTree = "<group>";
-		};
-		E29C83DB1BE282700041D4CF /* AFNetworking */ = {
-			isa = PBXGroup;
-			children = (
-				2E87027E1C904918002BE2DA /* AFHTTPSessionManager.m */,
-				2E87027F1C904918002BE2DA /* AFNetworkReachabilityManager.m */,
-				2E8702801C904918002BE2DA /* AFSecurityPolicy.m */,
-				2E8702811C904918002BE2DA /* AFURLRequestSerialization.m */,
-				2E8702821C904918002BE2DA /* AFURLResponseSerialization.m */,
-				2E8702831C904918002BE2DA /* AFURLSessionManager.m */,
-				E29C83E01BE2829C0041D4CF /* AFHTTPSessionManager.h */,
-				E29C83E11BE2829C0041D4CF /* AFHTTPSessionManager.m */,
-				E29C83E21BE2829C0041D4CF /* AFNetworking.h */,
-				E29C83E31BE2829C0041D4CF /* AFNetworkReachabilityManager.h */,
-				E29C83E41BE2829C0041D4CF /* AFNetworkReachabilityManager.m */,
-				E29C83E51BE2829C0041D4CF /* AFSecurityPolicy.h */,
-				E29C83E61BE2829C0041D4CF /* AFSecurityPolicy.m */,
-				E29C83E91BE2829C0041D4CF /* AFURLRequestSerialization.h */,
-				E29C83EA1BE2829C0041D4CF /* AFURLRequestSerialization.m */,
-				E29C83EB1BE2829C0041D4CF /* AFURLResponseSerialization.h */,
-				E29C83EC1BE2829C0041D4CF /* AFURLResponseSerialization.m */,
-				E29C83ED1BE2829C0041D4CF /* AFURLSessionManager.h */,
-				E29C83EE1BE2829C0041D4CF /* AFURLSessionManager.m */,
-			);
-			name = AFNetworking;
 			sourceTree = "<group>";
 		};
 		E29C83F81BE2853F0041D4CF /* MPFlipViewController */ = {
@@ -2402,34 +2203,6 @@
 				E29C841A1BE2877A0041D4CF /* SVRadialGradientLayer.m */,
 			);
 			name = SVProgressHUD;
-			sourceTree = "<group>";
-		};
-		E29C841F1BE287E50041D4CF /* UICKeyChainStore */ = {
-			isa = PBXGroup;
-			children = (
-				E29C84201BE2880E0041D4CF /* UICKeyChainStore.h */,
-				E29C84211BE2880E0041D4CF /* UICKeyChainStore.m */,
-			);
-			name = UICKeyChainStore;
-			sourceTree = "<group>";
-		};
-		E29C84231BE288B70041D4CF /* UIColor-HexString */ = {
-			isa = PBXGroup;
-			children = (
-				E29C84241BE288D30041D4CF /* UIColor+HexString.h */,
-				E29C84251BE288D30041D4CF /* UIColor+HexString.m */,
-			);
-			name = "UIColor-HexString";
-			sourceTree = "<group>";
-		};
-		E29C85711BE3B4290041D4CF /* KiteSDK */ = {
-			isa = PBXGroup;
-			children = (
-				E29C86211BE3BCA80041D4CF /* KiteSDK-Prefix.pch */,
-				E24453201BFD2D810086BF03 /* OLPayPalDummy.h */,
-				E24453211BFD2D810086BF03 /* OLPayPalDummy.m */,
-			);
-			path = KiteSDK;
 			sourceTree = "<group>";
 		};
 		E29C862E1BE3C4640041D4CF /* Resources */ = {
@@ -2955,24 +2728,26 @@
 				2E898C531CC518180041CCD8 /* OLInfoPageViewController.m in Sources */,
 				2E898C541CC518180041CCD8 /* OLIntegratedCheckoutViewController.m in Sources */,
 				2E898C551CC518180041CCD8 /* OLProductGroup.m in Sources */,
-				2E898C561CC518180041CCD8 /* UIImage+ColorAtPixel.m in Sources */,
+				2E898C561CC518180041CCD8 /* UIImage+OLUtils.m in Sources */,
 				2E96BADA1D2FC109002F5F74 /* qrencode.c in Sources */,
 				2E898C571CC518180041CCD8 /* OLCheckoutViewController.m in Sources */,
 				2E898C581CC518180041CCD8 /* OLPhotobookViewController.m in Sources */,
 				2E67B9211D264FD600914D56 /* OLPaymentViewControllerV2.m in Sources */,
+				2EB612FE1D48AFE800B48E29 /* OLInstagramMediaRequest.m in Sources */,
 				2E96BAEA1D2FC109002F5F74 /* split.c in Sources */,
 				2E898C5A1CC518180041CCD8 /* OLPopupOptionsImageView.m in Sources */,
 				2E434AE11D36583700D1BD06 /* OLEditingToolsView.m in Sources */,
 				2E898C5B1CC518180041CCD8 /* NSArray+QueryingExtras.m in Sources */,
+				2EB613061D48AFE800B48E29 /* OLInstagramImage.m in Sources */,
 				2E898C5D1CC518180041CCD8 /* PrintOrderHistoryViewController.m in Sources */,
 				2E898C5E1CC518180041CCD8 /* UIImage+ImageNamedInKiteBundle.m in Sources */,
 				2E898C601CC518180041CCD8 /* OLStripeCard.m in Sources */,
 				2E898C611CC518180041CCD8 /* OLProductOptionsViewController.m in Sources */,
 				2E898C621CC518180041CCD8 /* OLOrderReviewViewController.m in Sources */,
 				2E96BAE21D2FC109002F5F74 /* qrspec.c in Sources */,
+				2E1E66D61D478052002524A4 /* OLImagePickerLoginPageViewController.m in Sources */,
 				2E898C631CC518180041CCD8 /* OLProduct.m in Sources */,
 				2E96BADE1D2FC109002F5F74 /* qrinput.c in Sources */,
-				2E898C641CC518180041CCD8 /* DogsAssetCollectionDataSource.m in Sources */,
 				2E96BAC01D2FC101002F5F74 /* UIImage+MDQRCode.m in Sources */,
 				2E898C651CC518180041CCD8 /* OLGreetingCardPrintJob.m in Sources */,
 				2E67B9261D2671DE00914D56 /* OLPhotoTextField.m in Sources */,
@@ -2980,8 +2755,10 @@
 				2E898C681CC518180041CCD8 /* OLKiteUtils.m in Sources */,
 				2E0FF2E41D2A9003007093C0 /* OLButtonCollectionViewCell.m in Sources */,
 				2E898C6B1CC518180041CCD8 /* OLImagePreviewViewController.m in Sources */,
+				2EB612F31D48AF9400B48E29 /* OLInstagramLoginWebViewController.m in Sources */,
 				2E898C6C1CC518180041CCD8 /* OLCaseViewController.m in Sources */,
 				2E898C6D1CC518180041CCD8 /* ViewController.m in Sources */,
+				2E28CDFE1D38EEAF00E9AFEA /* OLImagePickerPhotosPageViewController.m in Sources */,
 				2E898C6E1CC518180041CCD8 /* OLFrameOrderReviewViewController.m in Sources */,
 				2E898C6F1CC518180041CCD8 /* OLApparelPrintJob.m in Sources */,
 				2E96BAD21D2FC109002F5F74 /* bitstream.c in Sources */,
@@ -3000,52 +2777,56 @@
 				2E898C7D1CC518180041CCD8 /* OLProductDetailsViewController.m in Sources */,
 				2E898C7E1CC518180041CCD8 /* OLPrintOrderCost.m in Sources */,
 				2E898C7F1CC518180041CCD8 /* OLEditPhotobookViewController.m in Sources */,
+				2EB612E71D489E4700B48E29 /* OLImagePickerPhotosPageViewController+Facebook.m in Sources */,
 				2E898C801CC518180041CCD8 /* UIView+RMUtils.m in Sources */,
 				2EB715E21CFDD38100618C7B /* OLPayPalCard+OLCardIcon.m in Sources */,
 				2EB715D61CFDD12900618C7B /* OLLuhn.m in Sources */,
 				2E898C811CC518180041CCD8 /* OLPrintOrder+History.m in Sources */,
 				2E898C821CC518180041CCD8 /* OLAsset.m in Sources */,
 				2EB715DC1CFDD36600618C7B /* OLStripeCard+OLCardIcon.m in Sources */,
-				2E898C831CC518180041CCD8 /* CatsAssetCollectionDataSource.m in Sources */,
 				2E898C841CC518180041CCD8 /* AppDelegate.m in Sources */,
 				2E898C851CC518180041CCD8 /* OLProductTemplate.m in Sources */,
 				2E898C861CC518180041CCD8 /* OLPaymentViewController.m in Sources */,
-				2E898C881CC518180041CCD8 /* OLPrintPhoto.m in Sources */,
 				2E898C891CC518180041CCD8 /* OLKitePrintSDK.m in Sources */,
 				2E898C8A1CC518180041CCD8 /* OLQRCodeUploadedImagePoller.m in Sources */,
 				2E898C8B1CC518180041CCD8 /* NSString+Formatting.m in Sources */,
+				2EB612ED1D48AF3200B48E29 /* OLImagePickerPhotosPageViewController+Instagram.m in Sources */,
 				2E898C8C1CC518180041CCD8 /* OLAddress.m in Sources */,
+				2E36A1DD1D42094C00EA2F0F /* OLImagePickerProvider.m in Sources */,
 				2E898C8D1CC518180041CCD8 /* OLNavigationController.m in Sources */,
+				2E1E66E51D4795EE002524A4 /* OLFacebookAlbumRequest.m in Sources */,
 				2E898C8E1CC518180041CCD8 /* NSDecimalNumber+CostFormatter.m in Sources */,
-				2E898C8F1CC518180041CCD8 /* UIViewController+TraitCollectionCompatibility.m in Sources */,
 				2E67B92B1D267A3E00914D56 /* OLColorSelectionCollectionViewCell.m in Sources */,
 				2E96BAD61D2FC109002F5F74 /* mask.c in Sources */,
 				2E898C901CC518180041CCD8 /* OLProductOverviewViewController.m in Sources */,
 				2E898C911CC518180041CCD8 /* OLAddress+AddressBook.m in Sources */,
+				2E1E66FC1D47A653002524A4 /* OLFacebookImagePickerConstants.m in Sources */,
 				2E898C921CC518180041CCD8 /* OLPrintOrder.m in Sources */,
 				2E898C931CC518180041CCD8 /* OLProductTemplateSyncRequest.m in Sources */,
 				2E898C971CC518180041CCD8 /* OLProductTemplateOption.m in Sources */,
 				2E898C981CC518180041CCD8 /* OLProductTypeSelectionViewController.m in Sources */,
 				2E898C991CC518180041CCD8 /* OLPrintOrderRequest.m in Sources */,
+				2E884F471D37B566007CA45A /* OLImagePickerViewController.m in Sources */,
 				2E898C9A1CC518180041CCD8 /* OLViewController.m in Sources */,
 				2E898C9B1CC518180041CCD8 /* NSDictionary+RequestParameterData.m in Sources */,
 				2E898C9C1CC518180041CCD8 /* OLRemoteImageCropper.m in Sources */,
+				2E1E66E11D4795EE002524A4 /* OLFacebookAlbum.m in Sources */,
 				2E37B1821D229162003DAA84 /* OLProductRepresentation.m in Sources */,
 				2EB919961D23AE20009D0B8F /* OLPhotobookPageBlankContentViewController.m in Sources */,
 				2E898C9E1CC518180041CCD8 /* OLUpsellOffer.m in Sources */,
+				2EB613021D48AFE800B48E29 /* OLInstagramImagePickerConstants.m in Sources */,
 				2E898C9F1CC518180041CCD8 /* UITextField+Selection.m in Sources */,
 				2E898CA11CC518180041CCD8 /* LXReorderableCollectionViewFlowLayout.m in Sources */,
 				2E898CA21CC518180041CCD8 /* OLImageCachingManager.m in Sources */,
-				2E898CA31CC518180041CCD8 /* AssetDataSource.m in Sources */,
 				2E898CA41CC518180041CCD8 /* UIView+RoundRect.m in Sources */,
 				2E898CA51CC518180041CCD8 /* OLCountry.m in Sources */,
 				2E2BF4481CCDFAF100725561 /* OLKiteTheme.m in Sources */,
-				2E898CA71CC518180041CCD8 /* ALAssetsLibrary+Singleton.m in Sources */,
 				2E898CA81CC518180041CCD8 /* OLCustomPhotoProvider.m in Sources */,
 				2E898CA91CC518180041CCD8 /* OLConstants.m in Sources */,
 				2E898CAA1CC518180041CCD8 /* OLProductOverviewPageContentViewController.m in Sources */,
 				2E25FEFC1CF2EF5D006E52E5 /* OLKeyChainStore.m in Sources */,
 				2EB197921CF872F200648696 /* OLPaymentMethodsViewController.m in Sources */,
+				2E36A1E31D420CDA00EA2F0F /* OLImagePickerProviderCollection.m in Sources */,
 				2E5BDC3F1CEDBF8200257B1A /* OLImageDownloadDelegate.m in Sources */,
 				2E898CAB1CC518180041CCD8 /* OLJudoPayCard.m in Sources */,
 				2E898CAC1CC518180041CCD8 /* OLReceiptViewController.m in Sources */,
@@ -3057,8 +2838,8 @@
 				2E898CB41CC518180041CCD8 /* OLAnalytics.m in Sources */,
 				2E898CB51CC518180041CCD8 /* OLPrintOrderSubmitStatusRequest.m in Sources */,
 				2E898CB61CC518180041CCD8 /* OLCircleMaskCollectionViewCell.m in Sources */,
+				2E7BDADB1D3E1713005F142C /* OLUserSession.m in Sources */,
 				2E898CB71CC518180041CCD8 /* OLCreditCardCaptureViewController.m in Sources */,
-				2E898CB81CC518180041CCD8 /* OLPhotoSelectionViewController.m in Sources */,
 				2E898CB91CC518180041CCD8 /* OLAddressLookupViewController.m in Sources */,
 				2E37B17C1D227EDA003DAA84 /* OLPageLayout.m in Sources */,
 				2E898CBA1CC518180041CCD8 /* OLKiteABTesting.m in Sources */,
@@ -3068,13 +2849,16 @@
 				2E898CC01CC518180041CCD8 /* OLCollectionViewController.m in Sources */,
 				2E898CC11CC518180041CCD8 /* RMImageCropper.m in Sources */,
 				2E898CC31CC518180041CCD8 /* OLQRCodeUploadViewController.m in Sources */,
+				2E1E66E91D4795EE002524A4 /* OLFacebookPhotosForAlbumRequest.m in Sources */,
 				2E6561131D1C341A0092001C /* OLSelectedEffectButton.m in Sources */,
 				2E898CC41CC518180041CCD8 /* OLCountryPickerController.m in Sources */,
 				2E96BAE61D2FC109002F5F74 /* rscode.c in Sources */,
 				2E898CC51CC518180041CCD8 /* OLURLShortener.m in Sources */,
 				2EBDA6DE1CEB1B0500397082 /* OLImageDownloader.m in Sources */,
 				2E898CC61CC518180041CCD8 /* OLBaseRequest.m in Sources */,
+				2E1E66D01D477B78002524A4 /* OLImagePickerPageViewController.m in Sources */,
 				2E898CC71CC518180041CCD8 /* OLPhotobookPrintJob.m in Sources */,
+				2E1E66EF1D479617002524A4 /* OLFacebookImage.m in Sources */,
 				2E898CC81CC518180041CCD8 /* OLPaymentLineItem.m in Sources */,
 				2E898CC91CC518180041CCD8 /* OLPrintJob.m in Sources */,
 			);
@@ -3086,42 +2870,43 @@
 			files = (
 				2EA3D35C1C9C04B500B99BCD /* OLURLDataSource.m in Sources */,
 				2EA3D35D1C9C04B500B99BCD /* OLScrollCropViewController.m in Sources */,
+				2E1E66FE1D47A653002524A4 /* OLFacebookImagePickerConstants.m in Sources */,
+				2E1E66F11D479617002524A4 /* OLFacebookImage.m in Sources */,
 				2EB197941CF872F200648696 /* OLPaymentMethodsViewController.m in Sources */,
 				2EA3D35E1C9C04B500B99BCD /* OLCustomPhotoProvider.m in Sources */,
+				2E1E66E31D4795EE002524A4 /* OLFacebookAlbum.m in Sources */,
 				2EA3D35F1C9C04B500B99BCD /* OLPrintOrderCostRequest.m in Sources */,
 				2EBDA6E01CEB1B0500397082 /* OLImageDownloader.m in Sources */,
 				2EA3D3601C9C04B500B99BCD /* OLInfoPageViewController.m in Sources */,
 				2EA3D3611C9C04B500B99BCD /* OLIntegratedCheckoutViewController.m in Sources */,
 				2EA3D3621C9C04B500B99BCD /* OLProductGroup.m in Sources */,
-				2EA3D3631C9C04B500B99BCD /* UIImage+ColorAtPixel.m in Sources */,
+				2EA3D3631C9C04B500B99BCD /* UIImage+OLUtils.m in Sources */,
 				2EA3D3641C9C04B500B99BCD /* OLCheckoutViewController.m in Sources */,
 				2EA3D3651C9C04B500B99BCD /* OLPhotobookViewController.m in Sources */,
-				2EA3D3661C9C04B500B99BCD /* OLAssetItemViewController.m in Sources */,
+				2E1E66D21D477B78002524A4 /* OLImagePickerPageViewController.m in Sources */,
 				2EA3D3671C9C04B500B99BCD /* OLPopupOptionsImageView.m in Sources */,
 				2EA3D3681C9C04B500B99BCD /* NSArray+QueryingExtras.m in Sources */,
 				2EA3D3691C9C04B500B99BCD /* OLGreetingCardPrintJob.m in Sources */,
-				2EA3D36A1C9C04B500B99BCD /* ALAsset+OLAccessibilityLabel.m in Sources */,
 				2E96BAE01D2FC109002F5F74 /* qrinput.c in Sources */,
 				2E37B17E1D227EDA003DAA84 /* OLPageLayout.m in Sources */,
+				2E1E66E71D4795EE002524A4 /* OLFacebookAlbumRequest.m in Sources */,
 				2EA3D36B1C9C04B500B99BCD /* UIImage+ImageNamedInKiteBundle.m in Sources */,
-				2EA3D36C1C9C04B500B99BCD /* OLAssetsPageViewController.m in Sources */,
 				2EA3D36D1C9C04B500B99BCD /* OLOrderReviewViewController.m in Sources */,
 				2E96BAC21D2FC101002F5F74 /* UIImage+MDQRCode.m in Sources */,
+				2EB613081D48AFE800B48E29 /* OLInstagramImage.m in Sources */,
 				2EA3D36E1C9C04B500B99BCD /* OLProduct.m in Sources */,
 				2EA3D3701C9C04B500B99BCD /* OLAddressEditViewController.m in Sources */,
 				2E5BDC411CEDBF8200257B1A /* OLImageDownloadDelegate.m in Sources */,
 				2EA3D3711C9C04B500B99BCD /* OLKiteUtils.m in Sources */,
-				2EA3D3721C9C04B500B99BCD /* ALAsset+OLIsEqual.m in Sources */,
-				2EA3D3731C9C04B500B99BCD /* OLAssetsSupplementaryView.m in Sources */,
+				2E884F491D37B566007CA45A /* OLImagePickerViewController.m in Sources */,
 				2EA3D3741C9C04B500B99BCD /* OLCaseViewController.m in Sources */,
 				2EA3D3751C9C04B500B99BCD /* OLFrameOrderReviewViewController.m in Sources */,
 				2EA3D3761C9C04B500B99BCD /* OLApparelPrintJob.m in Sources */,
 				2EA3D3771C9C04B500B99BCD /* OLKiteViewController.m in Sources */,
 				2EA3D3791C9C04B500B99BCD /* OLPhotobookPageContentViewController.m in Sources */,
-				2EA3D37A1C9C04B500B99BCD /* OLAssetsViewControllerTransition.m in Sources */,
-				2EA3D37B1C9C04B500B99BCD /* NSBundle+OLAssetsPickerController.m in Sources */,
 				2EA3D37C1C9C04B500B99BCD /* UIImageView+FadeIn.m in Sources */,
 				2EA3D37D1C9C04B500B99BCD /* OLAddressSearchRequest.m in Sources */,
+				2EB612E91D489E4700B48E29 /* OLImagePickerPhotosPageViewController+Facebook.m in Sources */,
 				2E67B9231D264FD600914D56 /* OLPaymentViewControllerV2.m in Sources */,
 				2EA3D37E1C9C04B500B99BCD /* OLPayPalCard.m in Sources */,
 				2EA3D37F1C9C04B500B99BCD /* OLProductPrintJob.m in Sources */,
@@ -3134,14 +2919,15 @@
 				2EA3D3841C9C04B500B99BCD /* OLPrintOrderCost.m in Sources */,
 				2EA3D3851C9C04B500B99BCD /* OLEditPhotobookViewController.m in Sources */,
 				2EA3D3861C9C04B500B99BCD /* UIView+RMUtils.m in Sources */,
+				2EB613001D48AFE800B48E29 /* OLInstagramMediaRequest.m in Sources */,
+				2EB612EF1D48AF3200B48E29 /* OLImagePickerPhotosPageViewController+Instagram.m in Sources */,
 				2EA3D3871C9C04B500B99BCD /* OLPrintOrder+History.m in Sources */,
 				2EA3D3881C9C04B500B99BCD /* OLStripeCard.m in Sources */,
 				2EA3D3891C9C04B500B99BCD /* OLAsset.m in Sources */,
 				2E25FEFE1CF2EF5D006E52E5 /* OLKeyChainStore.m in Sources */,
 				2EA3D38A1C9C04B500B99BCD /* OLProductTemplate.m in Sources */,
 				2EA3D38B1C9C04B500B99BCD /* OLPaymentViewController.m in Sources */,
-				2EA3D38C1C9C04B500B99BCD /* NSDateFormatter+OLTimeIntervalFormatter.m in Sources */,
-				2EA3D38D1C9C04B500B99BCD /* OLPrintPhoto.m in Sources */,
+				2EB613041D48AFE800B48E29 /* OLInstagramImagePickerConstants.m in Sources */,
 				2E96BAD81D2FC109002F5F74 /* mask.c in Sources */,
 				2EA3D38E1C9C04B500B99BCD /* OLKitePrintSDK.m in Sources */,
 				2EA3D38F1C9C04B500B99BCD /* NSString+Formatting.m in Sources */,
@@ -3151,24 +2937,22 @@
 				2EA3D3931C9C04B500B99BCD /* UIViewController+OLMethods.m in Sources */,
 				2E96BAE81D2FC109002F5F74 /* rscode.c in Sources */,
 				2EA3D3941C9C04B500B99BCD /* NSDecimalNumber+CostFormatter.m in Sources */,
-				2EA3D3951C9C04B500B99BCD /* UIViewController+TraitCollectionCompatibility.m in Sources */,
 				2EA3D3961C9C04B500B99BCD /* OLProductDetailsViewController.m in Sources */,
 				2EA3D3971C9C04B500B99BCD /* OLProductOverviewViewController.m in Sources */,
 				2EA3D3981C9C04B500B99BCD /* OLAddress+AddressBook.m in Sources */,
 				2EA3D3991C9C04B500B99BCD /* OLPrintOrder.m in Sources */,
 				2E6561151D1C341A0092001C /* OLSelectedEffectButton.m in Sources */,
 				2EA3D39A1C9C04B500B99BCD /* OLProductOptionsViewController.m in Sources */,
+				2E28CE001D38EEAF00E9AFEA /* OLImagePickerPhotosPageViewController.m in Sources */,
 				2EA3D39B1C9C04B500B99BCD /* OLProductTemplateSyncRequest.m in Sources */,
 				2EB919981D23AE20009D0B8F /* OLPhotobookPageBlankContentViewController.m in Sources */,
 				2E0FF2E61D2A9003007093C0 /* OLButtonCollectionViewCell.m in Sources */,
-				2EA3D39C1C9C04B500B99BCD /* OLAssetsPickerController.m in Sources */,
-				2EA3D39D1C9C04B500B99BCD /* ALAssetsGroup+OLIsEqual.m in Sources */,
-				2EA3D39E1C9C04B500B99BCD /* OLAssetsViewCell.m in Sources */,
+				2E36A1E51D420CDA00EA2F0F /* OLImagePickerProviderCollection.m in Sources */,
+				2E36A1DF1D42094C00EA2F0F /* OLImagePickerProvider.m in Sources */,
 				2EA3D39F1C9C04B500B99BCD /* OLProductTypeSelectionViewController.m in Sources */,
 				2EB715D81CFDD12900618C7B /* OLLuhn.m in Sources */,
 				2EA3D3A01C9C04B500B99BCD /* OLPrintOrderRequest.m in Sources */,
 				2EA3D3A11C9C04B500B99BCD /* OLRemoteImageCropper.m in Sources */,
-				2EA3D3A21C9C04B500B99BCD /* OLAssetsGroupViewController.m in Sources */,
 				2EA3D3A31C9C04B500B99BCD /* UITextField+Selection.m in Sources */,
 				2EA3D3A41C9C04B500B99BCD /* OLCollectionViewController.m in Sources */,
 				2EA3D3A61C9C04B500B99BCD /* LXReorderableCollectionViewFlowLayout.m in Sources */,
@@ -3176,22 +2960,22 @@
 				2EA3D3A81C9C04B500B99BCD /* UIView+RoundRect.m in Sources */,
 				2EB715E41CFDD38100618C7B /* OLPayPalCard+OLCardIcon.m in Sources */,
 				2EA3D3A91C9C04B500B99BCD /* OLCountry.m in Sources */,
-				2EA3D3AA1C9C04B500B99BCD /* OLAssetScrollView.m in Sources */,
-				2EA3D3AB1C9C04B500B99BCD /* ALAssetsLibrary+Singleton.m in Sources */,
 				2EA0087D1CB293A900C23DFA /* OLUpsellOffer.m in Sources */,
 				2E67B9271D2671DF00914D56 /* OLPhotoTextField.m in Sources */,
 				2EA3D3AC1C9C04B500B99BCD /* OLConstants.m in Sources */,
 				2E96BAEC1D2FC109002F5F74 /* split.c in Sources */,
 				2EA3D3AD1C9C04B500B99BCD /* OLProductOverviewPageContentViewController.m in Sources */,
+				2E7BDADD1D3E1713005F142C /* OLUserSession.m in Sources */,
 				2E67B9251D2671DB00914D56 /* OLTextOnPhoto.m in Sources */,
 				2E5D95AE1CA984E00080EF07 /* OLUpsellViewController.m in Sources */,
 				2EA3D3AE1C9C04B500B99BCD /* OLJudoPayCard.m in Sources */,
 				2EA3D3AF1C9C04B500B99BCD /* OLReceiptViewController.m in Sources */,
 				2EA3D3B01C9C04B500B99BCD /* OLAssetUploadRequest.m in Sources */,
 				2EA3D3B11C9C04B500B99BCD /* OLAddressPickerController.m in Sources */,
-				2EA3D3B31C9C04B500B99BCD /* OLAssetsGroupViewCell.m in Sources */,
+				2E1E66EB1D4795EE002524A4 /* OLFacebookPhotosForAlbumRequest.m in Sources */,
 				2EA3D3B41C9C04B500B99BCD /* OLPostcardPrintJob.m in Sources */,
 				2EA3D3B51C9C04B500B99BCD /* NSObject+Utils.m in Sources */,
+				2EB612F51D48AF9400B48E29 /* OLInstagramLoginWebViewController.m in Sources */,
 				2EA3D3B61C9C04B500B99BCD /* OLAnalytics.m in Sources */,
 				2E2BF44A1CCDFAF100725561 /* OLKiteTheme.m in Sources */,
 				2EA3D3B71C9C04B500B99BCD /* OLCircleMaskCollectionViewCell.m in Sources */,
@@ -3199,24 +2983,21 @@
 				2EA3D3B81C9C04B500B99BCD /* OLCreditCardCaptureViewController.m in Sources */,
 				2E67B92D1D267A3E00914D56 /* OLColorSelectionCollectionViewCell.m in Sources */,
 				2E96BADC1D2FC109002F5F74 /* qrencode.c in Sources */,
-				2EA3D3B91C9C04B500B99BCD /* OLPhotoSelectionViewController.m in Sources */,
 				2EA3D3BA1C9C04B500B99BCD /* OLAddressLookupViewController.m in Sources */,
 				2EA3D3BB1C9C04B500B99BCD /* OLPrintOrderSubmitStatusRequest.m in Sources */,
 				2EA3D3BC1C9C04B500B99BCD /* OLKiteABTesting.m in Sources */,
 				2EA3D3BD1C9C04B500B99BCD /* OLProductHomeViewController.m in Sources */,
-				2EA3D3BE1C9C04B500B99BCD /* UIImage+OLAssetsPickerController.m in Sources */,
 				2EA3D3BF1C9C04B500B99BCD /* OLViewController.m in Sources */,
 				2E37B1841D229162003DAA84 /* OLProductRepresentation.m in Sources */,
 				2E96BAD41D2FC109002F5F74 /* bitstream.c in Sources */,
 				2EA3D3C01C9C04B500B99BCD /* OLAddressSelectionViewController.m in Sources */,
 				2EA3D3C11C9C04B500B99BCD /* OLProductTemplateOption.m in Sources */,
-				2EA3D3C21C9C04B500B99BCD /* ALAsset+OLAssetType.m in Sources */,
 				2EA3D3C31C9C04B500B99BCD /* RMImageCropper.m in Sources */,
-				2EA3D3C41C9C04B500B99BCD /* OLAssetsViewController.m in Sources */,
 				2EA3D3C51C9C04B500B99BCD /* OLCountryPickerController.m in Sources */,
 				2EA3D3C71C9C04B500B99BCD /* OLBaseRequest.m in Sources */,
 				2EA3D3C81C9C04B500B99BCD /* OLPhotobookPrintJob.m in Sources */,
 				2EA3D3C91C9C04B500B99BCD /* OLPaymentLineItem.m in Sources */,
+				2E1E66D81D478052002524A4 /* OLImagePickerLoginPageViewController.m in Sources */,
 				2EA3D3CA1C9C04B500B99BCD /* OLPrintJob.m in Sources */,
 				2E434AE31D36583700D1BD06 /* OLEditingToolsView.m in Sources */,
 			);
@@ -3230,57 +3011,51 @@
 				2ED389911C917D2000DC2314 /* OLPhotoTextField.m in Sources */,
 				2E53E0CD1C1AEAAD00BF7887 /* UIViewController+OLMethods.m in Sources */,
 				2EADD7E61BE79D6D0051CD31 /* OLURLDataSource.m in Sources */,
-				2EAB0AE71CDB504E00625BD6 /* OLAssetsPickerController.m in Sources */,
 				2E84835E1D13E461003F4056 /* OLTShirtReviewViewController.m in Sources */,
 				2EADD7E71BE79D6D0051CD31 /* OLScrollCropViewController.m in Sources */,
-				2EAB0ADE1CDB504E00625BD6 /* ALAssetsGroup+OLIsEqual.m in Sources */,
 				2E67B92A1D267A3E00914D56 /* OLColorSelectionCollectionViewCell.m in Sources */,
 				2EADD7E81BE79D6D0051CD31 /* OLPrintOrderCostRequest.m in Sources */,
 				2EB197911CF872F200648696 /* OLPaymentMethodsViewController.m in Sources */,
 				2EADD7E91BE79D6D0051CD31 /* OLInfoPageViewController.m in Sources */,
 				2EADD7EA1BE79D6D0051CD31 /* OLIntegratedCheckoutViewController.m in Sources */,
-				2EAB0AEA1CDB504E00625BD6 /* OLAssetsViewController.m in Sources */,
 				2EADD7EB1BE79D6D0051CD31 /* OLProductGroup.m in Sources */,
-				2EADD7EC1BE79D6D0051CD31 /* UIImage+ColorAtPixel.m in Sources */,
+				2EB612FD1D48AFE800B48E29 /* OLInstagramMediaRequest.m in Sources */,
+				2EADD7EC1BE79D6D0051CD31 /* UIImage+OLUtils.m in Sources */,
 				2EADD7ED1BE79D6D0051CD31 /* OLCheckoutViewController.m in Sources */,
 				2EBDA6DD1CEB1B0500397082 /* OLImageDownloader.m in Sources */,
 				2EADD7EE1BE79D6D0051CD31 /* OLPhotobookViewController.m in Sources */,
+				2EB613051D48AFE800B48E29 /* OLInstagramImage.m in Sources */,
 				2ED389951C918DC100DC2314 /* OLTextOnPhoto.m in Sources */,
 				2EADD7F01BE79D6D0051CD31 /* OLPopupOptionsImageView.m in Sources */,
 				2EADD7F11BE79D6D0051CD31 /* NSArray+QueryingExtras.m in Sources */,
 				2EADD7F31BE79D6D0051CD31 /* PrintOrderHistoryViewController.m in Sources */,
 				2E5BDC3E1CEDBF8200257B1A /* OLImageDownloadDelegate.m in Sources */,
 				2EADD7F41BE79D6D0051CD31 /* UIImage+ImageNamedInKiteBundle.m in Sources */,
+				2E1E66D51D478052002524A4 /* OLImagePickerLoginPageViewController.m in Sources */,
 				2E482B7A1BEB4C7D007460EA /* OLStripeCard.m in Sources */,
 				2E645B371BE7D173009B662B /* OLProductOptionsViewController.m in Sources */,
 				2EB919951D23AE20009D0B8F /* OLPhotobookPageBlankContentViewController.m in Sources */,
 				2EADD7F61BE79D6D0051CD31 /* OLOrderReviewViewController.m in Sources */,
 				2EADD7F71BE79D6D0051CD31 /* OLProduct.m in Sources */,
-				2E4DF45E1C0F150400EA66FE /* DogsAssetCollectionDataSource.m in Sources */,
-				2EAB0AE41CDB504E00625BD6 /* OLAssetsGroupViewCell.m in Sources */,
 				2E96BAE91D2FC109002F5F74 /* split.c in Sources */,
 				2E7F516D1BF5FBB100A78718 /* OLGreetingCardPrintJob.m in Sources */,
 				2EADD7FA1BE79D6D0051CD31 /* OLAddressEditViewController.m in Sources */,
 				2EADD7FB1BE79D6D0051CD31 /* OLKiteUtils.m in Sources */,
-				2EAB0AE61CDB504E00625BD6 /* OLAssetsPageViewController.m in Sources */,
+				2EB612F21D48AF9400B48E29 /* OLInstagramLoginWebViewController.m in Sources */,
 				2E14D2D11C2AE9AD00F35403 /* OLImagePreviewViewController.m in Sources */,
+				2E7BDADA1D3E1713005F142C /* OLUserSession.m in Sources */,
 				2EADD7FE1BE79D6D0051CD31 /* OLCaseViewController.m in Sources */,
-				2EAB0ADC1CDB504E00625BD6 /* ALAsset+OLAssetType.m in Sources */,
 				2EADD7FF1BE79D6D0051CD31 /* ViewController.m in Sources */,
 				2EADD8001BE79D6D0051CD31 /* OLFrameOrderReviewViewController.m in Sources */,
 				2EADD8011BE79D6D0051CD31 /* OLApparelPrintJob.m in Sources */,
 				2EADD8021BE79D6D0051CD31 /* OLKiteViewController.m in Sources */,
 				2EADD8041BE79D6D0051CD31 /* OLPhotobookPageContentViewController.m in Sources */,
-				2EAB0AE21CDB504E00625BD6 /* OLAssetItemViewController.m in Sources */,
-				2EAB0AE91CDB504E00625BD6 /* OLAssetsViewCell.m in Sources */,
 				2E5D95AC1CA984E00080EF07 /* OLUpsellViewController.m in Sources */,
-				2EAB0ADD1CDB504E00625BD6 /* ALAsset+OLIsEqual.m in Sources */,
 				2EADD8071BE79D6D0051CD31 /* UIImageView+FadeIn.m in Sources */,
 				2EADD8081BE79D6D0051CD31 /* OLAddressSearchRequest.m in Sources */,
-				2EAB0AEB1CDB504E00625BD6 /* OLAssetsViewControllerTransition.m in Sources */,
 				2E96BAE51D2FC109002F5F74 /* rscode.c in Sources */,
-				2EAB0AE01CDB504E00625BD6 /* NSDateFormatter+OLTimeIntervalFormatter.m in Sources */,
 				2EADD8091BE79D6D0051CD31 /* OLPayPalCard.m in Sources */,
+				2E28CDFD1D38EEAF00E9AFEA /* OLImagePickerPhotosPageViewController.m in Sources */,
 				2E96BAD51D2FC109002F5F74 /* mask.c in Sources */,
 				2EADD80A1BE79D6D0051CD31 /* OLProductPrintJob.m in Sources */,
 				2EADD80B1BE79D6D0051CD31 /* OLSingleImageProductReviewViewController.m in Sources */,
@@ -3288,7 +3063,7 @@
 				2EADD80C1BE79D6D0051CD31 /* OLPosterViewController.m in Sources */,
 				2EADD80D1BE79D6D0051CD31 /* OLRemoteImageView.m in Sources */,
 				2E96BADD1D2FC109002F5F74 /* qrinput.c in Sources */,
-				2EAB0ADF1CDB504E00625BD6 /* NSBundle+OLAssetsPickerController.m in Sources */,
+				2EB612E61D489E4700B48E29 /* OLImagePickerPhotosPageViewController+Facebook.m in Sources */,
 				2E645B351BE7D16E009B662B /* OLProductDetailsViewController.m in Sources */,
 				2E6561121D1C341A0092001C /* OLSelectedEffectButton.m in Sources */,
 				2EADD80E1BE79D6D0051CD31 /* OLPrintOrderCost.m in Sources */,
@@ -3296,53 +3071,52 @@
 				2EADD8101BE79D6D0051CD31 /* UIView+RMUtils.m in Sources */,
 				2EADD8111BE79D6D0051CD31 /* OLPrintOrder+History.m in Sources */,
 				2EADD8121BE79D6D0051CD31 /* OLAsset.m in Sources */,
-				2E0804BE1C0DF70200F50D42 /* CatsAssetCollectionDataSource.m in Sources */,
 				2EADD8131BE79D6D0051CD31 /* AppDelegate.m in Sources */,
 				2EB715D51CFDD12900618C7B /* OLLuhn.m in Sources */,
-				2EAB0AE81CDB504E00625BD6 /* OLAssetsSupplementaryView.m in Sources */,
 				2EADD8141BE79D6D0051CD31 /* OLProductTemplate.m in Sources */,
 				2EADD8151BE79D6D0051CD31 /* OLPaymentViewController.m in Sources */,
-				2EADD8171BE79D6D0051CD31 /* OLPrintPhoto.m in Sources */,
 				2EADD8181BE79D6D0051CD31 /* OLKitePrintSDK.m in Sources */,
+				2EB612EC1D48AF3200B48E29 /* OLImagePickerPhotosPageViewController+Instagram.m in Sources */,
 				2E37B1811D229162003DAA84 /* OLProductRepresentation.m in Sources */,
+				2E36A1DC1D42094C00EA2F0F /* OLImagePickerProvider.m in Sources */,
 				E2AABA151C6DFC160007C1D7 /* OLQRCodeUploadedImagePoller.m in Sources */,
+				2E1E66E41D4795EE002524A4 /* OLFacebookAlbumRequest.m in Sources */,
 				2EADD8191BE79D6D0051CD31 /* NSString+Formatting.m in Sources */,
 				2EADD81A1BE79D6D0051CD31 /* OLAddress.m in Sources */,
 				2EB715DB1CFDD36600618C7B /* OLStripeCard+OLCardIcon.m in Sources */,
 				2EADD81B1BE79D6D0051CD31 /* OLNavigationController.m in Sources */,
 				2EADD81C1BE79D6D0051CD31 /* NSDecimalNumber+CostFormatter.m in Sources */,
-				2EADD81D1BE79D6D0051CD31 /* UIViewController+TraitCollectionCompatibility.m in Sources */,
+				2E1E66FB1D47A653002524A4 /* OLFacebookImagePickerConstants.m in Sources */,
 				2EADD81E1BE79D6D0051CD31 /* OLProductOverviewViewController.m in Sources */,
 				2EADD81F1BE79D6D0051CD31 /* OLAddress+AddressBook.m in Sources */,
 				2EADD8201BE79D6D0051CD31 /* OLPrintOrder.m in Sources */,
 				2EADD8211BE79D6D0051CD31 /* OLProductTemplateSyncRequest.m in Sources */,
 				2E645B391BE7D1EE009B662B /* OLProductTemplateOption.m in Sources */,
 				2EADD8251BE79D6D0051CD31 /* OLProductTypeSelectionViewController.m in Sources */,
-				2EAB0AE51CDB504E00625BD6 /* OLAssetsGroupViewController.m in Sources */,
 				2EADD8261BE79D6D0051CD31 /* OLPrintOrderRequest.m in Sources */,
 				2E837D481C3C1FBB004DA682 /* OLViewController.m in Sources */,
 				2E96BABF1D2FC101002F5F74 /* UIImage+MDQRCode.m in Sources */,
+				2E1E66E01D4795EE002524A4 /* OLFacebookAlbum.m in Sources */,
 				2ED36B3A1C8EE4AD00FB2D4A /* NSDictionary+RequestParameterData.m in Sources */,
 				2EADD8271BE79D6D0051CD31 /* OLRemoteImageCropper.m in Sources */,
 				2EA0087B1CB293A900C23DFA /* OLUpsellOffer.m in Sources */,
+				2EB613011D48AFE800B48E29 /* OLInstagramImagePickerConstants.m in Sources */,
 				2EADD8291BE79D6D0051CD31 /* UITextField+Selection.m in Sources */,
 				2EADD82B1BE79D6D0051CD31 /* LXReorderableCollectionViewFlowLayout.m in Sources */,
 				2EADD82D1BE79D6D0051CD31 /* OLImageCachingManager.m in Sources */,
-				2E0804BF1C0DF70200F50D42 /* AssetDataSource.m in Sources */,
 				2EADD82E1BE79D6D0051CD31 /* UIView+RoundRect.m in Sources */,
 				2EADD82F1BE79D6D0051CD31 /* OLCountry.m in Sources */,
 				2E2BF4471CCDFAF100725561 /* OLKiteTheme.m in Sources */,
-				2EADD8311BE79D6D0051CD31 /* ALAssetsLibrary+Singleton.m in Sources */,
 				2E0804B81C0DECE300F50D42 /* OLCustomPhotoProvider.m in Sources */,
 				2EADD8321BE79D6D0051CD31 /* OLConstants.m in Sources */,
 				2EB715E11CFDD38100618C7B /* OLPayPalCard+OLCardIcon.m in Sources */,
 				2E96BAD91D2FC109002F5F74 /* qrencode.c in Sources */,
 				2EADD8331BE79D6D0051CD31 /* OLProductOverviewPageContentViewController.m in Sources */,
+				2E36A1E21D420CDA00EA2F0F /* OLImagePickerProviderCollection.m in Sources */,
 				2EADD8341BE79D6D0051CD31 /* OLJudoPayCard.m in Sources */,
 				2EADD8351BE79D6D0051CD31 /* OLReceiptViewController.m in Sources */,
 				2EADD8361BE79D6D0051CD31 /* OLAssetUploadRequest.m in Sources */,
 				2EADD8371BE79D6D0051CD31 /* OLAddressPickerController.m in Sources */,
-				2EAB0AE31CDB504E00625BD6 /* OLAssetScrollView.m in Sources */,
 				2EADD8381BE79D6D0051CD31 /* main.m in Sources */,
 				2EADD83A1BE79D6D0051CD31 /* OLPostcardPrintJob.m in Sources */,
 				2E37B17B1D227EDA003DAA84 /* OLPageLayout.m in Sources */,
@@ -3354,7 +3128,6 @@
 				2EF4392B1BF4D15E0006C123 /* OLPrintOrderSubmitStatusRequest.m in Sources */,
 				2EADD83D1BE79D6D0051CD31 /* OLCircleMaskCollectionViewCell.m in Sources */,
 				2EADD83E1BE79D6D0051CD31 /* OLCreditCardCaptureViewController.m in Sources */,
-				2EADD83F1BE79D6D0051CD31 /* OLPhotoSelectionViewController.m in Sources */,
 				2EADD8401BE79D6D0051CD31 /* OLAddressLookupViewController.m in Sources */,
 				2EADD8411BE79D6D0051CD31 /* OLKiteABTesting.m in Sources */,
 				2EADD8421BE79D6D0051CD31 /* OLProductHomeViewController.m in Sources */,
@@ -3362,16 +3135,18 @@
 				2EADD8441BE79D6D0051CD31 /* OLAddressSelectionViewController.m in Sources */,
 				2E837D4C1C3C221E004DA682 /* OLCollectionViewController.m in Sources */,
 				2EADD8461BE79D6D0051CD31 /* RMImageCropper.m in Sources */,
-				2EAB0AE11CDB504E00625BD6 /* UIImage+OLAssetsPickerController.m in Sources */,
+				2E1E66E81D4795EE002524A4 /* OLFacebookPhotosForAlbumRequest.m in Sources */,
 				E2AABA111C6CFA2B0007C1D7 /* OLQRCodeUploadViewController.m in Sources */,
 				2EADD8481BE79D6D0051CD31 /* OLCountryPickerController.m in Sources */,
+				2E884F461D37B566007CA45A /* OLImagePickerViewController.m in Sources */,
 				E2AABA191C6FC6650007C1D7 /* OLURLShortener.m in Sources */,
 				2EADD8491BE79D6D0051CD31 /* OLBaseRequest.m in Sources */,
 				2EADD84A1BE79D6D0051CD31 /* OLPhotobookPrintJob.m in Sources */,
+				2E1E66CF1D477B78002524A4 /* OLImagePickerPageViewController.m in Sources */,
 				2E25FEFB1CF2EF5D006E52E5 /* OLKeyChainStore.m in Sources */,
+				2E1E66EE1D479617002524A4 /* OLFacebookImage.m in Sources */,
 				2EADD84B1BE79D6D0051CD31 /* OLPaymentLineItem.m in Sources */,
 				2EADD84C1BE79D6D0051CD31 /* OLPrintJob.m in Sources */,
-				2EAB0ADB1CDB504E00625BD6 /* ALAsset+OLAccessibilityLabel.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3385,11 +3160,7 @@
 				2ECC956A1BC6B88F00F44CE1 /* OLDocsObjcExampleCodeTests.m in Sources */,
 				CD73BF97186215790009DE03 /* OLSDKModelTests.m in Sources */,
 				2E7D1C8F1BC41C7D009227EE /* OLProductOrderTests.m in Sources */,
-				2E6A1FE41CE07E7100237D38 /* DogsAssetCollectionDataSource.m in Sources */,
-				2E6A1FE51CE07E7400237D38 /* AssetDataSource.m in Sources */,
-				2E6A1FE61CE07E7700237D38 /* CatsAssetCollectionDataSource.m in Sources */,
 				2EAB0AF51CDCD58400625BD6 /* OLTestTapGestureRecognizer.m in Sources */,
-				2E7483551BCD1DF500360550 /* OLPrintPhotoTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3492,46 +3263,40 @@
 				2E0804B91C0DECE300F50D42 /* OLCustomPhotoProvider.m in Sources */,
 				E29C858F1BE3B5C50041D4CF /* OLPrintOrderCostRequest.m in Sources */,
 				E29C85901BE3B5C50041D4CF /* OLInfoPageViewController.m in Sources */,
-				2EAB0AC91CDB504C00625BD6 /* OLAssetsViewControllerTransition.m in Sources */,
 				E29C85911BE3B5C50041D4CF /* OLIntegratedCheckoutViewController.m in Sources */,
 				E29C85921BE3B5C50041D4CF /* OLProductGroup.m in Sources */,
 				2E96BAC11D2FC101002F5F74 /* UIImage+MDQRCode.m in Sources */,
-				E29C85931BE3B5C50041D4CF /* UIImage+ColorAtPixel.m in Sources */,
-				2EAB0AC01CDB504C00625BD6 /* OLAssetItemViewController.m in Sources */,
+				E29C85931BE3B5C50041D4CF /* UIImage+OLUtils.m in Sources */,
 				2E67B9221D264FD600914D56 /* OLPaymentViewControllerV2.m in Sources */,
+				2E884F481D37B566007CA45A /* OLImagePickerViewController.m in Sources */,
 				E29C85951BE3B5C50041D4CF /* OLCheckoutViewController.m in Sources */,
 				2E8483601D13E461003F4056 /* OLTShirtReviewViewController.m in Sources */,
 				E29C85961BE3B5C50041D4CF /* OLPhotobookViewController.m in Sources */,
 				E29C859B1BE3B5C50041D4CF /* OLPopupOptionsImageView.m in Sources */,
-				2EAB0AC81CDB504C00625BD6 /* OLAssetsViewController.m in Sources */,
 				E29C859E1BE3B5C50041D4CF /* NSArray+QueryingExtras.m in Sources */,
 				2E7F516E1BF5FBB100A78718 /* OLGreetingCardPrintJob.m in Sources */,
 				E29C85A11BE3B5C50041D4CF /* UIImage+ImageNamedInKiteBundle.m in Sources */,
 				E29C85A41BE3B5C50041D4CF /* OLOrderReviewViewController.m in Sources */,
 				E29C85A51BE3B5C50041D4CF /* OLProduct.m in Sources */,
-				2EAB0AC41CDB504C00625BD6 /* OLAssetsPageViewController.m in Sources */,
 				E29C85AB1BE3B5C50041D4CF /* OLAddressEditViewController.m in Sources */,
 				E29C85AC1BE3B5C50041D4CF /* OLKiteUtils.m in Sources */,
 				2E5BDC401CEDBF8200257B1A /* OLImageDownloadDelegate.m in Sources */,
 				E29C85AF1BE3B5C50041D4CF /* OLCaseViewController.m in Sources */,
 				E29C85B31BE3B5C50041D4CF /* OLFrameOrderReviewViewController.m in Sources */,
+				2EB612FF1D48AFE800B48E29 /* OLInstagramMediaRequest.m in Sources */,
 				E29C85B41BE3B5C50041D4CF /* OLApparelPrintJob.m in Sources */,
 				2E96BAD31D2FC109002F5F74 /* bitstream.c in Sources */,
 				E29C85B51BE3B5C50041D4CF /* OLKiteViewController.m in Sources */,
 				E29C85B81BE3B5C50041D4CF /* OLPhotobookPageContentViewController.m in Sources */,
 				E2AABA161C6DFC160007C1D7 /* OLQRCodeUploadedImagePoller.m in Sources */,
 				2E6561141D1C341A0092001C /* OLSelectedEffectButton.m in Sources */,
-				2EAB0AC71CDB504C00625BD6 /* OLAssetsViewCell.m in Sources */,
 				E29C85BB1BE3B5C50041D4CF /* UIImageView+FadeIn.m in Sources */,
 				E29C85BC1BE3B5C50041D4CF /* OLAddressSearchRequest.m in Sources */,
 				E29C85BD1BE3B5C50041D4CF /* OLPayPalCard.m in Sources */,
 				2EA0087C1CB293A900C23DFA /* OLUpsellOffer.m in Sources */,
-				2EAB0ABE1CDB504C00625BD6 /* NSDateFormatter+OLTimeIntervalFormatter.m in Sources */,
 				E29C85BF1BE3B5C50041D4CF /* OLProductPrintJob.m in Sources */,
 				E29C85C01BE3B5C50041D4CF /* OLSingleImageProductReviewViewController.m in Sources */,
-				2EAB0AC31CDB504C00625BD6 /* OLAssetsGroupViewController.m in Sources */,
 				2E14D2D21C2AE9AD00F35403 /* OLImagePreviewViewController.m in Sources */,
-				2EAB0AC51CDB504C00625BD6 /* OLAssetsPickerController.m in Sources */,
 				E29C85C41BE3B5C50041D4CF /* OLPosterViewController.m in Sources */,
 				2EB715E31CFDD38100618C7B /* OLPayPalCard+OLCardIcon.m in Sources */,
 				E29C85C51BE3B5C50041D4CF /* OLRemoteImageView.m in Sources */,
@@ -3542,33 +3307,37 @@
 				E29C85CA1BE3B5C50041D4CF /* OLPrintOrder+History.m in Sources */,
 				2E37B17D1D227EDA003DAA84 /* OLPageLayout.m in Sources */,
 				2E5D95AD1CA984E00080EF07 /* OLUpsellViewController.m in Sources */,
+				2E1E66D11D477B78002524A4 /* OLImagePickerPageViewController.m in Sources */,
 				2E96BADF1D2FC109002F5F74 /* qrinput.c in Sources */,
 				2E482B7B1BEB4C7D007460EA /* OLStripeCard.m in Sources */,
-				2EAB0AC11CDB504C00625BD6 /* OLAssetScrollView.m in Sources */,
+				2E1E66EA1D4795EE002524A4 /* OLFacebookPhotosForAlbumRequest.m in Sources */,
 				E29C85CB1BE3B5C50041D4CF /* OLAsset.m in Sources */,
 				2EBDA6DF1CEB1B0500397082 /* OLImageDownloader.m in Sources */,
+				2E1E66FD1D47A653002524A4 /* OLFacebookImagePickerConstants.m in Sources */,
 				E29C85CD1BE3B5C50041D4CF /* OLProductTemplate.m in Sources */,
 				2EB715D71CFDD12900618C7B /* OLLuhn.m in Sources */,
 				E29C85CE1BE3B5C50041D4CF /* OLPaymentViewController.m in Sources */,
 				2E0FF2E51D2A9003007093C0 /* OLButtonCollectionViewCell.m in Sources */,
 				2ED389961C918DC100DC2314 /* OLTextOnPhoto.m in Sources */,
-				E29C85D11BE3B5C50041D4CF /* OLPrintPhoto.m in Sources */,
 				E29C85D21BE3B5C50041D4CF /* OLKitePrintSDK.m in Sources */,
 				E29C85D31BE3B5C50041D4CF /* NSString+Formatting.m in Sources */,
 				2E96BAD71D2FC109002F5F74 /* mask.c in Sources */,
 				2E96BAE71D2FC109002F5F74 /* rscode.c in Sources */,
 				E29C85D41BE3B5C50041D4CF /* OLAddress.m in Sources */,
 				E29C85D61BE3B5C50041D4CF /* OLNavigationController.m in Sources */,
+				2E1E66E61D4795EE002524A4 /* OLFacebookAlbumRequest.m in Sources */,
 				2E8FD2711BF9E73B00F4FC5A /* OLPhotoEdits.m in Sources */,
+				2EB613031D48AFE800B48E29 /* OLInstagramImagePickerConstants.m in Sources */,
 				2E53E0CE1C1AEAAD00BF7887 /* UIViewController+OLMethods.m in Sources */,
+				2E1E66F01D479617002524A4 /* OLFacebookImage.m in Sources */,
 				E29C85D71BE3B5C50041D4CF /* NSDecimalNumber+CostFormatter.m in Sources */,
-				2EAB0AB91CDB504C00625BD6 /* ALAsset+OLAccessibilityLabel.m in Sources */,
-				E29C85D81BE3B5C50041D4CF /* UIViewController+TraitCollectionCompatibility.m in Sources */,
 				2E645B361BE7D170009B662B /* OLProductDetailsViewController.m in Sources */,
 				E29C85DA1BE3B5C50041D4CF /* OLProductOverviewViewController.m in Sources */,
 				E29C85DB1BE3B5C50041D4CF /* OLAddress+AddressBook.m in Sources */,
 				E29C85DD1BE3B5C50041D4CF /* OLPrintOrder.m in Sources */,
 				2E645B381BE7D176009B662B /* OLProductOptionsViewController.m in Sources */,
+				2E36A1DE1D42094C00EA2F0F /* OLImagePickerProvider.m in Sources */,
+				2EB612F41D48AF9400B48E29 /* OLInstagramLoginWebViewController.m in Sources */,
 				2E67B92C1D267A3E00914D56 /* OLColorSelectionCollectionViewCell.m in Sources */,
 				E29C85DE1BE3B5C50041D4CF /* OLProductTemplateSyncRequest.m in Sources */,
 				E29C85E41BE3B5C50041D4CF /* OLProductTypeSelectionViewController.m in Sources */,
@@ -3579,35 +3348,34 @@
 				2E837D4D1C3C221E004DA682 /* OLCollectionViewController.m in Sources */,
 				E29C85EB1BE3B5C50041D4CF /* LXReorderableCollectionViewFlowLayout.m in Sources */,
 				E29C85ED1BE3B5C50041D4CF /* OLImageCachingManager.m in Sources */,
-				2EAB0AC21CDB504C00625BD6 /* OLAssetsGroupViewCell.m in Sources */,
-				2EAB0ABC1CDB504C00625BD6 /* ALAssetsGroup+OLIsEqual.m in Sources */,
 				E29C85EF1BE3B5C50041D4CF /* UIView+RoundRect.m in Sources */,
 				2E96BAEB1D2FC109002F5F74 /* split.c in Sources */,
 				E29C85F01BE3B5C50041D4CF /* OLCountry.m in Sources */,
 				2ED389921C917D2000DC2314 /* OLPhotoTextField.m in Sources */,
-				E29C85F21BE3B5C50041D4CF /* ALAssetsLibrary+Singleton.m in Sources */,
 				E29C85F31BE3B5C50041D4CF /* OLConstants.m in Sources */,
+				2EB612EE1D48AF3200B48E29 /* OLImagePickerPhotosPageViewController+Instagram.m in Sources */,
 				E29C85F41BE3B5C50041D4CF /* OLProductOverviewPageContentViewController.m in Sources */,
+				2EB613071D48AFE800B48E29 /* OLInstagramImage.m in Sources */,
 				2E96BADB1D2FC109002F5F74 /* qrencode.c in Sources */,
 				E29C85F61BE3B5C50041D4CF /* OLJudoPayCard.m in Sources */,
 				E29C85F71BE3B5C50041D4CF /* OLReceiptViewController.m in Sources */,
-				2EAB0ABA1CDB504C00625BD6 /* ALAsset+OLAssetType.m in Sources */,
 				E29C85F81BE3B5C50041D4CF /* OLAssetUploadRequest.m in Sources */,
 				2EB715DD1CFDD36600618C7B /* OLStripeCard+OLCardIcon.m in Sources */,
 				E29C85F91BE3B5C50041D4CF /* OLAddressPickerController.m in Sources */,
 				E29C85FE1BE3B5C50041D4CF /* OLPostcardPrintJob.m in Sources */,
 				E29C86011BE3B5C50041D4CF /* NSObject+Utils.m in Sources */,
-				2EAB0AC61CDB504C00625BD6 /* OLAssetsSupplementaryView.m in Sources */,
-				2EAB0ABB1CDB504C00625BD6 /* ALAsset+OLIsEqual.m in Sources */,
+				2E28CDFF1D38EEAF00E9AFEA /* OLImagePickerPhotosPageViewController.m in Sources */,
 				E29C86021BE3B5C50041D4CF /* OLAnalytics.m in Sources */,
 				E29C86031BE3B5C50041D4CF /* OLCircleMaskCollectionViewCell.m in Sources */,
 				E29C86041BE3B5C50041D4CF /* OLCreditCardCaptureViewController.m in Sources */,
-				E29C86061BE3B5C50041D4CF /* OLPhotoSelectionViewController.m in Sources */,
 				E29C86081BE3B5C50041D4CF /* OLAddressLookupViewController.m in Sources */,
-				2EAB0ABF1CDB504C00625BD6 /* UIImage+OLAssetsPickerController.m in Sources */,
+				2E1E66E21D4795EE002524A4 /* OLFacebookAlbum.m in Sources */,
+				2E7BDADC1D3E1713005F142C /* OLUserSession.m in Sources */,
 				E2AABA1A1C6FC6650007C1D7 /* OLURLShortener.m in Sources */,
 				2EF4392C1BF4D15E0006C123 /* OLPrintOrderSubmitStatusRequest.m in Sources */,
 				E29C86091BE3B5C50041D4CF /* OLKiteABTesting.m in Sources */,
+				2EB612E81D489E4700B48E29 /* OLImagePickerPhotosPageViewController+Facebook.m in Sources */,
+				2E1E66D71D478052002524A4 /* OLImagePickerLoginPageViewController.m in Sources */,
 				E29C860A1BE3B5C50041D4CF /* OLProductHomeViewController.m in Sources */,
 				2E434AE21D36583700D1BD06 /* OLEditingToolsView.m in Sources */,
 				2E837D491C3C1FBB004DA682 /* OLViewController.m in Sources */,
@@ -3618,11 +3386,11 @@
 				2EB919971D23AE20009D0B8F /* OLPhotobookPageBlankContentViewController.m in Sources */,
 				E29C86121BE3B5C50041D4CF /* OLCountryPickerController.m in Sources */,
 				E29C86141BE3B5C50041D4CF /* OLBaseRequest.m in Sources */,
-				2EAB0ABD1CDB504C00625BD6 /* NSBundle+OLAssetsPickerController.m in Sources */,
 				2E37B1831D229162003DAA84 /* OLProductRepresentation.m in Sources */,
 				E29C86161BE3B5C50041D4CF /* OLPhotobookPrintJob.m in Sources */,
 				E29C86171BE3B5C50041D4CF /* OLPaymentLineItem.m in Sources */,
 				2E96BAE31D2FC109002F5F74 /* qrspec.c in Sources */,
+				2E36A1E41D420CDA00EA2F0F /* OLImagePickerProviderCollection.m in Sources */,
 				E29C86181BE3B5C50041D4CF /* OLPrintJob.m in Sources */,
 				2E25FEFD1CF2EF5D006E52E5 /* OLKeyChainStore.m in Sources */,
 			);
@@ -3723,13 +3491,11 @@
 				GCC_PREFIX_HEADER = "PSPrintSDK/KitePrintSDK-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
-					OL_KITE_AT_LEAST_IOS8,
 					STRIPE_ENABLE_APPLEPAY,
 					OL_KITE_OFFER_APPLE_PAY,
 					OL_KITE_OFFER_INSTAGRAM,
 					OL_KITE_OFFER_FACEBOOK,
 					OL_KITE_OFFER_PAYPAL,
-					OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS,
 					"OL_KITE_CI_DEPLOY=ba171b0d91b1418fbd04f7b12af1e37e42d2cb1e",
 				);
 				INFOPLIST_FILE = "KitePrintSDK-Dev-Info.plist";
@@ -3741,17 +3507,12 @@
 					"-ObjC",
 					"-l\"Bolts\"",
 					"-l\"CSStickyHeaderFlowLayout\"",
-					"-l\"CTAssetsPickerController\"",
 					"-l\"DACircularProgress\"",
 					"-l\"FBSDKCoreKit\"",
 					"-l\"FBSDKLoginKit\"",
-					"-l\"FacebookImagePicker\"",
-					"-l\"InstagramImagePicker\"",
-					"-l\"KITAssetsPickerController\"",
 					"-l\"MPFlipViewController\"",
 					"-l\"NXOAuth2Client\"",
 					"-l\"PayPalMobile\"",
-					"-l\"PureLayout\"",
 					"-l\"SVProgressHUD\"",
 					"-l\"Stripe\"",
 					"-l\"TSMarkdownParser\"",
@@ -3854,17 +3615,12 @@
 					"-ObjC",
 					"-l\"Bolts\"",
 					"-l\"CSStickyHeaderFlowLayout\"",
-					"-l\"CTAssetsPickerController\"",
 					"-l\"DACircularProgress\"",
 					"-l\"FBSDKCoreKit\"",
 					"-l\"FBSDKLoginKit\"",
-					"-l\"FacebookImagePicker\"",
-					"-l\"InstagramImagePicker\"",
-					"-l\"KITAssetsPickerController\"",
 					"-l\"MPFlipViewController\"",
 					"-l\"NXOAuth2Client\"",
 					"-l\"PayPalMobile\"",
-					"-l\"PureLayout\"",
 					"-l\"SVProgressHUD\"",
 					"-l\"Stripe\"",
 					"-l\"TSMarkdownParser\"",
@@ -3943,9 +3699,9 @@
 					"DEBUG=1",
 					"$(inherited)",
 				);
-				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
+				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/vendor/PayPal-iOS-SDK/PayPalMobile",
@@ -3971,9 +3727,9 @@
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_PREFIX_HEADER = "PSPrintSDK/KitePrintSDK-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = "";
-				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
+				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/vendor/PayPal-iOS-SDK/PayPalMobile",
@@ -4007,14 +3763,12 @@
 				GCC_PREFIX_HEADER = "PSPrintSDK/KitePrintSDK-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
-					OL_KITE_AT_LEAST_IOS8,
 					STRIPE_ENABLE_APPLEPAY,
 					OL_KITE_OFFER_APPLE_PAY,
 					OL_KITE_OFFER_INSTAGRAM,
 					OL_KITE_OFFER_FACEBOOK,
 					OL_KITE_OFFER_PAYPAL,
 					OL_KITE_VERBOSE,
-					OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS,
 				);
 				INFOPLIST_FILE = "KitePrintSDK-Dev-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
@@ -4120,13 +3874,11 @@
 				GCC_PREFIX_HEADER = "PSPrintSDK/KitePrintSDK-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
-					OL_KITE_AT_LEAST_IOS8,
 					STRIPE_ENABLE_APPLEPAY,
 					OL_KITE_OFFER_APPLE_PAY,
 					OL_KITE_OFFER_INSTAGRAM,
 					OL_KITE_OFFER_FACEBOOK,
 					OL_KITE_OFFER_PAYPAL,
-					OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS,
 				);
 				INFOPLIST_FILE = "KitePrintSDK-Dev-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
@@ -4341,7 +4093,7 @@
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -4363,7 +4115,7 @@
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -4384,7 +4136,7 @@
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -4406,7 +4158,7 @@
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -4427,7 +4179,7 @@
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -4449,7 +4201,7 @@
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -4471,7 +4223,7 @@
 				GCC_PREFIX_HEADER = "PSPrintSDK/KitePrintSDK-Prefix.pch";
 				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -4494,7 +4246,7 @@
 				GCC_PREFIX_HEADER = "PSPrintSDK/KitePrintSDK-Prefix.pch";
 				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -4515,7 +4267,7 @@
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -4537,7 +4289,7 @@
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -4596,11 +4348,10 @@
 					"DEBUG=1",
 					"$(inherited)",
 					"OL_KITE_OFFER_PAYPAL=1",
-					"OL_KITE_AT_LEAST_IOS8=1",
 				);
-				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
+				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/vendor/PayPal-iOS-SDK/PayPalMobile",
@@ -4631,7 +4382,7 @@
 				);
 				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/vendor/PayPal-iOS-SDK/PayPalMobile",

@@ -19,36 +19,21 @@
   },
   "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "6F77CFD9-0E83-4062-AC28-1F4AB1A98ECF",
   "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
-    "E28E36D423EC87798E52E2BF482E9F7A1E6479D6" : "iOS-Print-SDK\/Kite-SDK\/vendor\/SDWebImage\/",
     "9E1ECC80773D1F4F22D03CB4DEA298B3CB57FAF5" : "iOS-Print-SDK\/Kite-SDK\/vendor\/SVProgressHUD\/",
-    "DD20A1A48C66B5213E0FEBB87A95EF51D6C6F3E8" : "iOS-Print-SDK\/Kite-SDK\/vendor\/AFNetworking\/",
     "52A24398B96ECA98EF0E72469CA9225C49AA7C9D" : "iOS-Print-SDK\/Kite-SDK\/vendor\/DACircularProgress\/",
     "701B5006D938B65FD42237DDAF25824304CA7A66" : "iOS-Print-SDK\/Kite-SDK\/vendor\/CSStickyHeaderFlowLayout\/",
-    "117B65B3A14F5CB598DC962723F820AC63399A6A" : "iOS-Print-SDK\/Kite-SDK\/vendor\/SkyLab\/",
     "98E520DDA0AE776CF47A7A4A2C7C2ABBE041AE69" : "iOS-Print-SDK\/",
     "DE1BCDB9BD2BF95E86A6E4610C039E0FEADFD758" : "iOS-Print-SDK\/Kite-SDK\/vendor\/MPFlipViewController\/",
-    "D6BE2D61E9BC08BACB7354BA664FBBA6CB260E4C" : "iOS-Print-SDK\/Kite-SDK\/vendor\/UIColor-HexString\/",
     "9015EB48116202885FDED716D35167A5D0CCD9C6" : "iOS-Print-SDK\/Kite-SDK\/vendor\/TSMarkdownParser\/",
-    "5928309140879E871CA2C91C35635A4223DBC07C" : "iOS-Print-SDK\/Kite-SDK\/vendor\/UICKeyChainStore\/"
   },
   "DVTSourceControlWorkspaceBlueprintNameKey" : "KitePrintSDK",
   "DVTSourceControlWorkspaceBlueprintVersion" : 204,
   "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "Kite-SDK\/KitePrintSDK.xcodeproj",
   "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
     {
-      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/mattt\/SkyLab.git",
-      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
-      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "117B65B3A14F5CB598DC962723F820AC63399A6A"
-    },
-    {
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/danielamitay\/DACircularProgress.git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "52A24398B96ECA98EF0E72469CA9225C49AA7C9D"
-    },
-    {
-      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/kishikawakatsumi\/UICKeyChainStore.git",
-      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
-      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "5928309140879E871CA2C91C35635A4223DBC07C"
     },
     {
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/jamztang\/CSStickyHeaderFlowLayout.git",
@@ -71,11 +56,6 @@
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "9E1ECC80773D1F4F22D03CB4DEA298B3CB57FAF5"
     },
     {
-      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/kevinrenskers\/UIColor-HexString.git",
-      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
-      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "D6BE2D61E9BC08BACB7354BA664FBBA6CB260E4C"
-    },
-    {
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/AFNetworking\/AFNetworking.git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "DD20A1A48C66B5213E0FEBB87A95EF51D6C6F3E8"
@@ -85,10 +65,5 @@
       "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "DE1BCDB9BD2BF95E86A6E4610C039E0FEADFD758"
     },
-    {
-      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/rs\/SDWebImage.git",
-      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
-      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "E28E36D423EC87798E52E2BF482E9F7A1E6479D6"
-    }
   ]
 }

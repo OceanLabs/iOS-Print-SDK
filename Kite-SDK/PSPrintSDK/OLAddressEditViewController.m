@@ -147,27 +147,17 @@ static const NSUInteger kTagTextField = 99;
         flag = NO;
         errorMessage = NSLocalizedString(@"Please fill in your postal code", @"");
     }
-
+    
     if (!flag){
-        if ([UIAlertController class]) // iOS 8 or greater
-        {
-            UIAlertController *alert= [UIAlertController
-                                       alertControllerWithTitle:NSLocalizedString(@"", @"")
-                                       message:errorMessage
-                                       preferredStyle:UIAlertControllerStyleAlert];
-            UIAlertAction* ok = [UIAlertAction actionWithTitle:NSLocalizedString(@"OK", @"") style:UIAlertActionStyleDefault
-                                                       handler:^(UIAlertAction * action){}];
-            
-            [alert addAction:ok];
-            [self presentViewController:alert animated:YES completion:nil];
-        }
-        else{
-            UIAlertView* dialog = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"", @"")
-                                                             message:errorMessage
-                                                            delegate:self
-                                                   cancelButtonTitle:NSLocalizedString(@"OK", @"") otherButtonTitles:nil, nil];
-            [dialog show];
-        }
+        UIAlertController *alert= [UIAlertController
+                                   alertControllerWithTitle:NSLocalizedString(@"", @"")
+                                   message:errorMessage
+                                   preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction* ok = [UIAlertAction actionWithTitle:NSLocalizedString(@"OK", @"") style:UIAlertActionStyleDefault
+                                                   handler:^(UIAlertAction * action){}];
+        
+        [alert addAction:ok];
+        [self presentViewController:alert animated:YES completion:nil];
     }
     
     
@@ -275,7 +265,7 @@ static const NSUInteger kTagTextField = 99;
             self.textFieldLastName.delegate = self;
             self.textFieldLastName.attributedPlaceholder = [[NSAttributedString alloc] initWithString:NSLocalizedStringFromTableInBundle(@"Last Name", @"KitePrintSDK", [NSBundle mainBundle], @"") attributes:@{NSForegroundColorAttributeName : [UIColor colorWithRed:108.0/255.0 green:108.0/255.0 blue:108.0/255.0 alpha:1]}];
             
-            if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8){
+            if (YES){
                 UIView *view = self.textFieldLastName;
                 view.translatesAutoresizingMaskIntoConstraints = NO;
                 tf.translatesAutoresizingMaskIntoConstraints = NO;
@@ -416,28 +406,5 @@ static const NSUInteger kTagTextField = 99;
     
     return YES;
 }
-
-#if __IPHONE_OS_VERSION_MIN_REQUIRED < 80000
-#pragma mark - Autorotate and Orientation Methods
-// Currently here to disable landscape orientations and rotation on iOS 7. When support is dropped, these can be deleted.
-
-- (BOOL)shouldAutorotate {
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
-        return YES;
-    }
-    else{
-        return NO;
-    }
-}
-
-- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
-        return UIInterfaceOrientationMaskAll;
-    }
-    else{
-        return UIInterfaceOrientationMaskPortrait;
-    }
-}
-#endif
 
 @end

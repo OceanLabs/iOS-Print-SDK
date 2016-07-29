@@ -26,7 +26,6 @@
 #import "OLEditPhotobookViewController.h"
 #import "OLKiteABTesting.h"
 #import "OLIntegratedCheckoutViewController.h"
-#import "OLAssetsPickerController.h"
 #import "PrintOrderHistoryViewController.h"
 #import "OLAddressEditViewController.h"
 #import "OLTestTapGestureRecognizer.h"
@@ -38,6 +37,7 @@
 #import "OLFrameOrderReviewViewController.h"
 #import "OLInfoPageViewController.h"
 #import "OLImagePreviewViewController.h"
+#import "OLUserSession.h"
 
 @import Photos;
 
@@ -80,9 +80,7 @@
 
 @interface OLKiteViewController ()
 - (void)dismiss;
-@property (strong, nonatomic) NSMutableArray *userSelectedPhotos;
-@property (strong, nonatomic) OLPrintOrder *printOrder;
-@property (strong, nonatomic) NSMutableArray <OLCustomPhotoProvider *> *customImageProviders;
+@property (strong, nonatomic) NSMutableArray <OLImagePickerProvider *> *customImageProviders;
 @end
 
 @interface OLProductHomeViewController (Private)
@@ -239,10 +237,10 @@
     
     __block OLProductHomeViewController *resultVc;
     
-    OLKiteViewController *vc = [[OLKiteViewController alloc] initWithAssets:@[[OLKiteTestHelper aPrintPhoto].asset]];
+    OLKiteViewController *vc = [[OLKiteViewController alloc] initWithAssets:@[[OLKiteTestHelper aPrintPhoto]]];
     [vc addCustomPhotoProviderWithCollections:@[[[CatsAssetCollectionDataSource alloc] init]] name:@"Cats" icon:[UIImage imageNamed:@"cat"]];
     [vc addCustomPhotoProviderWithCollections:@[[[DogsAssetCollectionDataSource alloc] init]] name:@"Dogs" icon:[UIImage imageNamed:@"dog"]];
-    [vc clearBasket];
+    [[OLUserSession currentSession] cleanupUserSession:OLUserSessionCleanupOptionBasket];
     UINavigationController *rootVc = (UINavigationController *)[[UIApplication sharedApplication].delegate window].rootViewController;
     
     [rootVc.topViewController presentViewController:vc animated:YES completion:^{
@@ -349,8 +347,7 @@
     
     [self chooseProduct:@"A5 Landscape Photobook" onOLProductTypeSelectionViewController:productTypeVc];
     
-    OLProductOverviewViewController *overviewVc = (OLProductOverviewViewController *)productHomeVc.navigationController.topViewController;
-    overviewVc.userSelectedPhotos = [@[overviewVc.userSelectedPhotos.firstObject, overviewVc.userSelectedPhotos.firstObject, overviewVc.userSelectedPhotos.firstObject, overviewVc.userSelectedPhotos.firstObject, overviewVc.userSelectedPhotos.firstObject, overviewVc.userSelectedPhotos.firstObject, overviewVc.userSelectedPhotos.firstObject, overviewVc.userSelectedPhotos.firstObject, overviewVc.userSelectedPhotos.firstObject, overviewVc.userSelectedPhotos.firstObject, overviewVc.userSelectedPhotos.firstObject, overviewVc.userSelectedPhotos.firstObject, overviewVc.userSelectedPhotos.firstObject, overviewVc.userSelectedPhotos.firstObject, overviewVc.userSelectedPhotos.firstObject, overviewVc.userSelectedPhotos.firstObject, overviewVc.userSelectedPhotos.firstObject, overviewVc.userSelectedPhotos.firstObject, overviewVc.userSelectedPhotos.firstObject, overviewVc.userSelectedPhotos.firstObject, overviewVc.userSelectedPhotos.firstObject, ] mutableCopy];
+    [OLUserSession currentSession].userSelectedPhotos = [@[[OLUserSession currentSession].userSelectedPhotos.firstObject, [OLUserSession currentSession].userSelectedPhotos.firstObject, [OLUserSession currentSession].userSelectedPhotos.firstObject, [OLUserSession currentSession].userSelectedPhotos.firstObject, [OLUserSession currentSession].userSelectedPhotos.firstObject, [OLUserSession currentSession].userSelectedPhotos.firstObject, [OLUserSession currentSession].userSelectedPhotos.firstObject, [OLUserSession currentSession].userSelectedPhotos.firstObject, [OLUserSession currentSession].userSelectedPhotos.firstObject, [OLUserSession currentSession].userSelectedPhotos.firstObject, [OLUserSession currentSession].userSelectedPhotos.firstObject, [OLUserSession currentSession].userSelectedPhotos.firstObject, [OLUserSession currentSession].userSelectedPhotos.firstObject, [OLUserSession currentSession].userSelectedPhotos.firstObject, [OLUserSession currentSession].userSelectedPhotos.firstObject, [OLUserSession currentSession].userSelectedPhotos.firstObject, [OLUserSession currentSession].userSelectedPhotos.firstObject, [OLUserSession currentSession].userSelectedPhotos.firstObject, [OLUserSession currentSession].userSelectedPhotos.firstObject, [OLUserSession currentSession].userSelectedPhotos.firstObject, [OLUserSession currentSession].userSelectedPhotos.firstObject, ] mutableCopy];
     
     [self tapNextOnViewController:productHomeVc.navigationController.topViewController];
     
@@ -384,8 +381,7 @@
 //        [photobook touches]
 //    }
     
-    OLKiteViewController *kiteVc = [OLKiteUtils kiteVcForViewController:productHomeVc.navigationController.topViewController];
-    OLPrintOrder *printOrder = kiteVc.printOrder;
+    OLPrintOrder *printOrder = [OLUserSession currentSession].printOrder;
     printOrder.shippingAddress = [OLAddress kiteTeamAddress];
     printOrder.email = @"ios_unit_test@kite.ly";
     
@@ -507,8 +503,7 @@
         [caseVc dismissViewControllerAnimated:YES completion:NULL];
     }];
     
-    OLKiteViewController *kiteVc = [OLKiteUtils kiteVcForViewController:caseVc];
-    OLPrintOrder *printOrder = kiteVc.printOrder;
+    OLPrintOrder *printOrder = [OLUserSession currentSession].printOrder;
     printOrder.shippingAddress = [OLAddress kiteTeamAddress];
     printOrder.email = @"ios_unit_test@kite.ly";
     [self tapNextOnViewController:caseVc];
@@ -600,7 +595,7 @@
     
     NSMutableArray *printPhotos = [[NSMutableArray alloc] initWithCapacity:700];
     for (OLAsset *asset in olAssets){
-        OLPrintPhoto *photo = [[OLPrintPhoto alloc] init];
+        OLAsset *photo = [[OLAsset alloc] init];
         photo.asset = asset;
         [printPhotos addObject:photo];
     }
@@ -989,7 +984,7 @@
     
     NSMutableArray *printPhotos = [[NSMutableArray alloc] initWithCapacity:700];
     for (OLAsset *asset in olAssets){
-        OLPrintPhoto *photo = [[OLPrintPhoto alloc] init];
+        OLAsset *photo = [[OLAsset alloc] init];
         photo.asset = asset;
         [printPhotos addObject:photo];
     }
@@ -1062,8 +1057,7 @@
         [(OLScrollCropViewController *)reviewVc.presentedViewController onBarButtonCancelTapped:nil];
     }];
     
-    OLKiteViewController *kiteVc = [OLKiteUtils kiteVcForViewController:reviewVc];
-    OLPrintOrder *printOrder = kiteVc.printOrder;
+    OLPrintOrder *printOrder = [OLUserSession currentSession].printOrder;
     printOrder.shippingAddress = [OLAddress kiteTeamAddress];
     printOrder.email = @"ios_unit_test@kite.ly";
     [self tapNextOnViewController:reviewVc];
@@ -1448,7 +1442,7 @@
     
     NSMutableArray *printPhotos = [[NSMutableArray alloc] initWithCapacity:700];
     for (OLAsset *asset in olAssets){
-        OLPrintPhoto *photo = [[OLPrintPhoto alloc] init];
+        OLAsset *photo = [[OLAsset alloc] init];
         photo.asset = asset;
         [printPhotos addObject:photo];
     }
@@ -1473,8 +1467,7 @@
     OLFrameOrderReviewViewController *reviewVc = (OLFrameOrderReviewViewController *)productHomeVc.navigationController.topViewController;
     XCTAssert([reviewVc isKindOfClass:[OLFrameOrderReviewViewController class]]);
     
-    OLKiteViewController *kiteVc = [OLKiteUtils kiteVcForViewController:reviewVc];
-    OLPrintOrder *printOrder = kiteVc.printOrder;
+    OLPrintOrder *printOrder = [OLUserSession currentSession].printOrder;
     printOrder.shippingAddress = [OLAddress kiteTeamAddress];
     printOrder.email = @"ios_unit_test@kite.ly";
     [self tapNextOnViewController:reviewVc];
@@ -1523,8 +1516,7 @@
     
     [self tapNextOnViewController:productHomeVc.navigationController.topViewController];
     
-    OLKiteViewController *kiteVc = [OLKiteUtils kiteVcForViewController:productHomeVc.navigationController.topViewController];
-    OLPrintOrder *printOrder = kiteVc.printOrder;
+    OLPrintOrder *printOrder = [OLUserSession currentSession].printOrder;
     printOrder.shippingAddress = [OLAddress kiteTeamAddress];
     printOrder.email = @"ios_unit_test@kite.ly";
     

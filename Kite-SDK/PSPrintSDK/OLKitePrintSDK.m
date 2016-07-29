@@ -69,10 +69,15 @@
 #else
 #import "Stripe+ApplePay.h"
 #endif
+#endif
 
 #ifdef OL_KITE_OFFER_FACEBOOK
-#import <FBSDKCoreKit/FBSDKAccessToken.h>
+#ifdef COCOAPODS
 #import <FBSDKLoginKit/FBSDKLoginManager.h>
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
+#else
+#import "FBSDKLoginManager.h"
+#import "FBSDKCoreKit.h"
 #endif
 
 #endif
@@ -114,11 +119,6 @@ static NSString *stripePublicKey = nil;
 static NSString *instagramClientID = nil;
 static NSString *instagramSecret = nil;
 static NSString *instagramRedirectURI = nil;
-
-#ifdef OL_KITE_OFFER_ADOBE
-static NSString* creativeSDKClientId = nil;
-static NSString* creativeSDKClientSecret = nil;
-#endif
 
 @interface OLPrintOrder ()
 - (void)saveOrder;
@@ -268,21 +268,6 @@ static NSString* creativeSDKClientSecret = nil;
 + (NSString *)qualityGuaranteeString{
     return NSLocalizedString(@"**Quality Guarantee**\nOur products are of the highest quality and we’re confident you will love yours. If not, we offer a no quibble money back guarantee. Enjoy!", @"");
 }
-
-#ifdef OL_KITE_OFFER_ADOBE
-+ (void)setAdobeCreativeSDKEnabledWithClientID:(NSString *_Nonnull)clientID secret:(NSString *_Nonnull)secret{
-    creativeSDKClientSecret = secret;
-    creativeSDKClientId = clientID;
-}
-
-+ (NSString *)adobeCreativeSDKClientSecret{
-    return creativeSDKClientSecret;
-}
-
-+ (NSString *)adobeCreativeSDKClientID{
-    return creativeSDKClientId;
-}
-#endif
 
 + (void)setIsKiosk:(BOOL)enabled{
     isKiosk = enabled;

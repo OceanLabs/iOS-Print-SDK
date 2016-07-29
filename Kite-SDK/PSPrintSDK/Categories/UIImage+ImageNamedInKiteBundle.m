@@ -33,12 +33,7 @@
 @implementation UIImage (ImageNamedInKiteBundle)
 
 + (UIImage*)imageNamedInKiteBundle:(NSString*)name{
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8){
-        return [UIImage imageNamed:name];
-    }
-    else{
-        return [UIImage imageNamed:name inBundle:[OLKiteUtils kiteBundle] compatibleWithTraitCollection:nil];
-    }
+    return [UIImage imageNamed:name inBundle:[OLKiteUtils kiteBundle] compatibleWithTraitCollection:nil];
 }
 
 @end

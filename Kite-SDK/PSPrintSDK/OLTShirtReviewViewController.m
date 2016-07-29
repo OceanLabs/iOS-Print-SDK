@@ -9,6 +9,8 @@
 #import "OLTShirtReviewViewController.h"
 #import "OLColorSelectionCollectionViewCell.h"
 #import "UIImage+ImageNamedInKiteBundle.h"
+#import "OLUserSession.h"
+#import "OLAsset+Private.h"
 
 const NSInteger kOLDrawerTagImages = 10;
 const NSInteger kOLDrawerTagColors = 20;
@@ -19,7 +21,7 @@ const NSInteger kOLDrawerTagSizes = 40;
 - (NSInteger) sectionForImageCells;
 @property (weak, nonatomic) IBOutlet UICollectionView *imagesCollectionView;
 @property (weak, nonatomic) IBOutlet OLRemoteImageCropper *imageCropView;
-@property (strong, nonatomic) OLPrintPhoto *imageDisplayed;
+@property (strong, nonatomic) OLAsset *imageDisplayed;
 @property(nullable, nonatomic, readonly, strong) UIView *containerView;
 @end
 
@@ -101,7 +103,7 @@ const NSInteger kOLDrawerTagSizes = 40;
 
 - (IBAction)onIconButtonClicked:(UIButton *)sender {
     void (^buttonAction)() = ^void(){
-        if (self.userSelectedPhotos.count == 0 && sender.tag == kOLDrawerTagImages){
+        if ([OLUserSession currentSession].userSelectedPhotos.count == 0 && sender.tag == kOLDrawerTagImages){
             //TODO check if we can add photos
             [self collectionView:self.imagesCollectionView didSelectItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
         }

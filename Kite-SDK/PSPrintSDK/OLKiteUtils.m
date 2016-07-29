@@ -39,6 +39,7 @@
 #import "OLIntegratedCheckoutViewController.h"
 #import "OLKiteViewController.h"
 #import "OLPaymentViewControllerV2.h"
+#import "OLUserSession.h"
 
 @class OLCustomPhotoProvider;
 
@@ -104,12 +105,7 @@
         return NO;
     }
     
-    BOOL customProvidersAvailable = NO;
-#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
-    customProvidersAvailable = kiteVc.customImageProviders.count > 0;
-#endif
-    
-    return [OLKiteUtils cameraRollEnabled:topVc] || [OLKiteUtils instagramEnabled] || [OLKiteUtils facebookEnabled] || customProvidersAvailable;
+    return [OLKiteUtils cameraRollEnabled:topVc] || [OLKiteUtils instagramEnabled] || [OLKiteUtils facebookEnabled] || kiteVc.customImageProviders.count > 0;
 }
 
 + (BOOL)cameraRollEnabled:(UIViewController *)topVc{
@@ -122,87 +118,6 @@
     
     return YES;
 }
-
-+ (NSInteger)cameraRollProviderIndex:(UIViewController *)topVc{
-    NSInteger index = -1;
-    if ([OLKiteUtils cameraRollEnabled:topVc]){
-        index++;
-    }
-    
-    return index;
-}
-
-+ (NSInteger)facebookProviderIndex:(UIViewController *)topVc{
-    NSInteger index = -1;
-    if (![OLKiteUtils facebookEnabled]){
-        return index;
-    }
-    else{
-        index++;
-    }
-    
-    if ([OLKiteUtils cameraRollEnabled:topVc]){
-        index++;
-    }
-    
-    return index;
-}
-
-+ (NSInteger)instagramProviderIndex:(UIViewController *)topVc{
-    NSInteger index = -1;
-    if (![OLKiteUtils instagramEnabled]){
-        return index;
-    }
-    else{
-        index++;
-    }
-    
-    if ([OLKiteUtils cameraRollEnabled:topVc]){
-        index++;
-    }
-    if ([OLKiteUtils facebookEnabled]){
-        index++;
-    }
-    
-    return index;
-}
-
-+ (NSInteger)qrCodeProviderStartIndex:(UIViewController *)topVc{
-    NSInteger index = 0;
-    
-    if ([OLKiteUtils cameraRollEnabled:topVc]){
-        index++;
-    }
-    if ([OLKiteUtils facebookEnabled]){
-        index++;
-    }
-    if ([OLKiteUtils instagramEnabled]){
-        index++;
-    }
-    
-    return index;
-}
-
-#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
-+ (NSInteger)customProvidersStartIndex:(UIViewController *)topVc{
-    NSInteger index = 0;
-
-    if ([OLKiteUtils cameraRollEnabled:topVc]){
-        index++;
-    }
-    if ([OLKiteUtils facebookEnabled]){
-        index++;
-    }
-    if ([OLKiteUtils instagramEnabled]){
-        index++;
-    }
-    if ([OLKiteUtils qrCodeUploadEnabled]){
-        index++;
-    }
-    
-    return index;
-}
-#endif
 
 + (id<OLKiteDelegate>)kiteDelegate:(UIViewController *)topVC {
     OLKiteViewController *kiteVC = [self kiteVcForViewController:topVC];
@@ -269,7 +184,7 @@
         return @"OLPaymentViewController";
     }
     else if (photoSelectionScreen){
-        return @"PhotoSelectionViewController";
+        return @"OLImagePickerViewController";
     }
     else if (templateUI == kOLTemplateUIPoster){
         return @"OLPosterViewController";

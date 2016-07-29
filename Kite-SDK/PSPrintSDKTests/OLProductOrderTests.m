@@ -9,7 +9,6 @@
 #import <XCTest/XCTest.h>
 #import "OLProductTemplate.h"
 #import "OLKitePrintSDK.h"
-#import "OLPrintPhoto.h"
 #import "OLKiteTestHelper.h"
 #import <AssetsLibrary/AssetsLibrary.h>
 
@@ -223,34 +222,22 @@
     
     [self waitForExpectationsWithTimeout:15 handler:NULL];
     
-    OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
-    printPhoto.asset = asset;
-    
-    OLProductPrintJob *job = [OLPrintJob printJobWithTemplateId:@"squares" OLAssets:@[[OLAsset assetWithPrintPhoto:printPhoto]]];
+    OLProductPrintJob *job = [OLPrintJob printJobWithTemplateId:@"squares" OLAssets:@[asset]];
     [self submitJobs:@[job]];
 }
 
 - (void)testSquaresOrderWithURLOLAssetPrintPhotos{
-    OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
-    printPhoto.asset = [OLKiteTestHelper urlAssets].firstObject;
-    
-    OLProductPrintJob *job = [OLPrintJob printJobWithTemplateId:@"squares" OLAssets:@[[OLAsset assetWithDataSource:printPhoto]]];
+    OLProductPrintJob *job = [OLPrintJob printJobWithTemplateId:@"squares" OLAssets:@[[OLKiteTestHelper urlAssets].firstObject]];
     [self submitJobs:@[job]];
 }
 
 - (void)testSquaresOrderWithImageOLAssetPrintPhotos{
-    OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
-    printPhoto.asset = [OLKiteTestHelper imageAssets].firstObject;
-    
-    OLProductPrintJob *job = [OLPrintJob printJobWithTemplateId:@"squares" OLAssets:@[[OLAsset assetWithDataSource:printPhoto]]];
+    OLProductPrintJob *job = [OLPrintJob printJobWithTemplateId:@"squares" OLAssets:@[[OLKiteTestHelper imageAssets].firstObject]];
     [self submitJobs:@[job]];
 }
 
 - (void)testSquaresOrderWithImageOLAssetPrintPhotoOLAsset{
-    OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
-    printPhoto.asset = [OLKiteTestHelper imageAssets].firstObject;
-    
-    OLProductPrintJob *job = [OLPrintJob printJobWithTemplateId:@"squares" OLAssets:@[[OLAsset assetWithPrintPhoto:printPhoto]]];
+    OLProductPrintJob *job = [OLPrintJob printJobWithTemplateId:@"squares" OLAssets:@[[OLKiteTestHelper imageAssets].firstObject]];
     [self submitJobs:@[job]];
 }
 
@@ -260,10 +247,7 @@
     
     PHAsset *asset = [fetchResult objectAtIndex:arc4random() % fetchResult.count];
     
-    OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
-    printPhoto.asset = asset;
-    
-    OLProductPrintJob *job = [OLPrintJob printJobWithTemplateId:@"squares" OLAssets:@[[OLAsset assetWithDataSource:printPhoto]]];
+    OLProductPrintJob *job = [OLPrintJob printJobWithTemplateId:@"squares" OLAssets:@[[OLAsset assetWithPHAsset:asset]]];
     [self submitJobs:@[job]];
 }
 
@@ -273,16 +257,9 @@
     
     PHAsset *asset = [fetchResult objectAtIndex:arc4random() % fetchResult.count];
     
-    OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
-    printPhoto.asset = asset;
+    OLAsset *printPhoto = [OLAsset assetWithPHAsset:asset];
     
-    OLAsset *olAsset = [OLAsset assetWithPrintPhoto:printPhoto];
-    
-    PHAsset *loadedAsset = [olAsset loadPHAsset];
-    
-    XCTAssert([[loadedAsset localIdentifier] isEqualToString:[asset localIdentifier]], @"Local IDs should match");
-    
-    OLProductPrintJob *job = [OLPrintJob printJobWithTemplateId:@"squares" OLAssets:@[olAsset]];
+    OLProductPrintJob *job = [OLPrintJob printJobWithTemplateId:@"squares" OLAssets:@[printPhoto]];
     [self submitJobs:@[job]];
 }
 
@@ -292,9 +269,7 @@
     
     PHAsset *asset = [fetchResult objectAtIndex:arc4random() % fetchResult.count];
     
-    OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
-    printPhoto.asset = asset;
-    
+    OLAsset *printPhoto = [OLAsset assetWithPHAsset:asset];    
     OLProductPrintJob *job = [OLPrintJob printJobWithTemplateId:@"squares" dataSources:@[printPhoto]];
     [self submitJobs:@[job]];
 }
