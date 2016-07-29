@@ -81,7 +81,7 @@
                 album.albumId = albumId;
                 album.photoCount = [photoCount unsignedIntegerValue];
                 album.name = name;
-                album.coverPhotoURL = [NSURL URLWithString:[NSString stringWithFormat:@"https://graph.facebook.com/%@/picture?type=small&access_token=%@", album.albumId, [FBSDKAccessToken currentAccessToken].tokenString]];
+                album.coverPhotoURL = [NSURL URLWithString:[NSString stringWithFormat:@"https://graph.facebook.com/%@/picture?type=album&access_token=%@", album.albumId, [FBSDKAccessToken currentAccessToken].tokenString]];
                 [albums addObject:album];
             }
             

@@ -86,10 +86,15 @@
         if (nextPageRequest) {
             //            welf.tableView.tableFooterView = welf.loadingFooter;
         } else {
-            [welf.provider.collections addObject:[[OLImagePickerProviderCollection alloc] initWithArray:[[NSMutableArray alloc] init] name:[welf.albums.firstObject name]]];
+            welf.albumLabel.text = welf.albums.firstObject.name;
+            for (OLFacebookAlbum *album in welf.albums){
+                [welf.provider.collections addObject:[[OLImagePickerProviderCollection alloc] initWithArray:[[NSMutableArray alloc] init] name:album.name]];
+            }
+            [self.albumsCollectionView reloadData];
             
             welf.photos = [[NSMutableArray alloc] init];
-            welf.albumLabel.text = welf.albums.firstObject.name;
+            
+            
             welf.nextPageRequest = [[OLFacebookPhotosForAlbumRequest alloc] initWithAlbum:welf.albums.firstObject];
             [welf loadNextFacebookPage];
             //            welf.tableView.tableFooterView = nil;
@@ -117,21 +122,21 @@
         
         NSUInteger photosStartCount = welf.photos.count;
         for (OLFacebookImage *image in welf.overflowPhotos){
-            [welf.provider.collections.firstObject.array addObject:[OLAsset assetWithURL:image.fullURL]];
+            [welf.provider.collections[self.showingCollectionIndex].array addObject:[OLAsset assetWithURL:image.fullURL]];
         }
         [welf.photos addObjectsFromArray:welf.overflowPhotos];
         if (nextPageRequest != nil) {
             // only insert multiple of numberOfCellsPerRow images so we fill complete rows
             NSInteger overflowCount = (welf.photos.count + photos.count) % [welf numberOfCellsPerRow];
             for (OLFacebookImage *image in [photos subarrayWithRange:NSMakeRange(0, photos.count - overflowCount)]){
-                [welf.provider.collections.firstObject.array addObject:[OLAsset assetWithURL:image.fullURL]];
+                [welf.provider.collections[self.showingCollectionIndex].array addObject:[OLAsset assetWithURL:image.fullURL]];
             }
             [welf.photos addObjectsFromArray:[photos subarrayWithRange:NSMakeRange(0, photos.count - overflowCount)]];
             welf.overflowPhotos = [photos subarrayWithRange:NSMakeRange(photos.count - overflowCount, overflowCount)];
         } else {
             // we've exhausted all the users images so show the remainder
             for (OLFacebookImage *image in photos){
-                [welf.provider.collections.firstObject.array addObject:[OLAsset assetWithURL:image.fullURL]];
+                [welf.provider.collections[self.showingCollectionIndex].array addObject:[OLAsset assetWithURL:image.fullURL]];
             }
             [welf.photos addObjectsFromArray:photos];
             welf.overflowPhotos = @[];

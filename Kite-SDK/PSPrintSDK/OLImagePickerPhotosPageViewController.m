@@ -42,7 +42,6 @@
 @property (strong, nonatomic) UIVisualEffectView *visualEffectView;
 @property (weak, nonatomic) IBOutlet UIView *albumsContainerView;
 @property (weak, nonatomic) IBOutlet UIView *albumsCollectionViewContainerView;
-@property (assign, nonatomic) NSInteger showingCollectionIndex;
 
 @end
 
@@ -161,7 +160,13 @@ NSInteger OLImagePickerMargin = 0;
         cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"albumCell" forIndexPath:indexPath];
         cell.contentView.transform = CGAffineTransformMakeRotation(M_PI);
         OLRemoteImageView *imageView = [cell viewWithTag:10];
-        [self setAssetOfCollection:self.provider.collections[indexPath.item] withIndex:0 toImageView:imageView forCollectionView:collectionView];
+        
+        if (self.provider.providerType == OLImagePickerProviderTypeFacebook){
+            [imageView setAndFadeInImageWithURL:self.albums[indexPath.item].coverPhotoURL size:imageView.frame.size placeholder:nil];
+        }
+        else{
+            [self setAssetOfCollection:self.provider.collections[indexPath.item] withIndex:0 toImageView:imageView forCollectionView:collectionView];
+        }
         [imageView makeRoundRectWithRadius:4];
         imageView.clipsToBounds = YES;
         
@@ -316,9 +321,17 @@ NSInteger OLImagePickerMargin = 0;
     else{
         self.showingCollectionIndex = indexPath.item;
         [self.collectionView reloadData];
-        [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0] atScrollPosition:UICollectionViewScrollPositionTop animated:NO];
+        if ([self.collectionView numberOfItemsInSection:0] > 0){
+            [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0] atScrollPosition:UICollectionViewScrollPositionTop animated:NO];
+        }
         [self userDidTapOnAlbumLabel:nil];
         self.albumLabel.text = self.provider.collections[self.showingCollectionIndex].name;
+        
+        if (self.provider.providerType == OLImagePickerProviderTypeFacebook && self.provider.collections[self.showingCollectionIndex].count == 0){
+            self.photos = [[NSMutableArray alloc] init];
+            self.nextPageRequest = [[OLFacebookPhotosForAlbumRequest alloc] initWithAlbum:self.albums[self.showingCollectionIndex]];
+            [self loadNextFacebookPage];
+        }
     }
 }
 
