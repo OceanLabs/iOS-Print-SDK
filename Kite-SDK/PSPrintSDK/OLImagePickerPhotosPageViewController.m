@@ -167,8 +167,8 @@ NSInteger OLImagePickerMargin = 0;
         cell.contentView.transform = CGAffineTransformMakeRotation(M_PI);
         OLRemoteImageView *imageView = [cell viewWithTag:10];
         
-        if (self.provider.providerType == OLImagePickerProviderTypeFacebook){
-            [imageView setAndFadeInImageWithURL:self.albums[indexPath.item].coverPhotoURL size:imageView.frame.size placeholder:nil];
+        if (self.provider.collections[indexPath.item].coverAsset){
+            [imageView setAndFadeInImageWithOLAsset:self.provider.collections[indexPath.item].coverAsset size:imageView.frame.size applyEdits:NO placeholder:nil completionHandler:NULL];
         }
         else{
             [self setAssetOfCollection:self.provider.collections[indexPath.item] withIndex:0 toImageView:imageView forCollectionView:collectionView];
@@ -335,7 +335,7 @@ NSInteger OLImagePickerMargin = 0;
         
         if (self.provider.providerType == OLImagePickerProviderTypeFacebook && self.provider.collections[self.showingCollectionIndex].count == 0){
             self.photos = [[NSMutableArray alloc] init];
-            self.nextPageRequest = [[OLFacebookPhotosForAlbumRequest alloc] initWithAlbum:self.albums[self.showingCollectionIndex]];
+            self.nextPageRequest = [[OLFacebookPhotosForAlbumRequest alloc] initWithAlbum:(OLFacebookAlbum *)self.provider.collections[self.showingCollectionIndex].metaData];
             [self loadNextFacebookPage];
         }
     }

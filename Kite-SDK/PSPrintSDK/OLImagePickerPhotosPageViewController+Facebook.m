@@ -88,7 +88,10 @@
         } else {
             welf.albumLabel.text = welf.albums.firstObject.name;
             for (OLFacebookAlbum *album in welf.albums){
-                [welf.provider.collections addObject:[[OLImagePickerProviderCollection alloc] initWithArray:[[NSMutableArray alloc] init] name:album.name]];
+                OLImagePickerProviderCollection *collection = [[OLImagePickerProviderCollection alloc] initWithArray:[[NSMutableArray alloc] init] name:album.name];
+                collection.coverAsset = [OLAsset assetWithURL:album.coverPhotoURL];
+                collection.metaData = album;
+                [welf.provider.collections addObject:collection];
             }
             [self.albumsCollectionView reloadData];
             
