@@ -53,9 +53,7 @@ NSInteger OLImagePickerMargin = 0;
 - (void)viewDidDisappear:(BOOL)animated{
     [super viewDidDisappear:animated];
     
-    if (self.albumsContainerView.transform.ty != 0){
-        [self userDidTapOnAlbumLabel:nil];
-    }
+    [self closeAlbumsDrawer];
 }
 
 - (void)viewDidAppear:(BOOL)animated{
@@ -71,12 +69,12 @@ NSInteger OLImagePickerMargin = 0;
     self.collectionView.dataSource = self;
     self.albumsCollectionView.dataSource = self;
     self.albumsCollectionView.delegate = self;
-    
+        
     self.albumsCollectionView.transform = CGAffineTransformMakeRotation(M_PI);
     
     self.automaticallyAdjustsScrollViewInsets = NO;
     
-    self.albumLabel.text = NSLocalizedString(@"All Photos", @"");
+    self.albumLabel.text = self.provider.collections.firstObject.name;
     self.albumLabelChevron.transform = CGAffineTransformMakeRotation(M_PI);
     
     UIVisualEffect *blurEffect;
@@ -123,7 +121,12 @@ NSInteger OLImagePickerMargin = 0;
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
     if (collectionView.tag == 10){
-        return [self.provider.collections.firstObject count];
+        if (self.provider.collections.count > self.showingCollectionIndex){
+            return [self.provider.collections[self.showingCollectionIndex] count];
+        }
+        else{
+            return 0;
+        }
     }
     else{
         return [self.provider.collections count];
@@ -138,7 +141,7 @@ NSInteger OLImagePickerMargin = 0;
         [self setAssetOfCollection:self.provider.collections[self.showingCollectionIndex] withIndex:indexPath.item toImageView:imageView forCollectionView:collectionView];
         
         UIImageView *checkmark = [cell viewWithTag:20];
-        id asset = [self.provider.collections.firstObject objectAtIndex:indexPath.item];
+        id asset = [self.provider.collections[self.showingCollectionIndex] objectAtIndex:indexPath.item];
         OLAsset *printPhoto;
         if ([asset isKindOfClass:[PHAsset class]]){
             printPhoto = [OLAsset assetWithPHAsset:asset];
@@ -291,7 +294,7 @@ NSInteger OLImagePickerMargin = 0;
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
     if (collectionView.tag == 10){
-        id asset = [self.provider.collections.firstObject objectAtIndex:indexPath.item];
+        id asset = [self.provider.collections[self.showingCollectionIndex] objectAtIndex:indexPath.item];
         OLAsset *printPhoto;
         if ([asset isKindOfClass:[PHAsset class]]){
             printPhoto = [OLAsset assetWithPHAsset:asset];
@@ -313,6 +316,7 @@ NSInteger OLImagePickerMargin = 0;
     else{
         self.showingCollectionIndex = indexPath.item;
         [self.collectionView reloadData];
+        [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0] atScrollPosition:UICollectionViewScrollPositionTop animated:NO];
         [self userDidTapOnAlbumLabel:nil];
         self.albumLabel.text = self.provider.collections[self.showingCollectionIndex].name;
     }
@@ -332,6 +336,12 @@ NSInteger OLImagePickerMargin = 0;
             // we've reached the bottom, lets load the next page of facebook images.
             [self loadNextFacebookPage];
         }
+    }
+}
+
+- (void)closeAlbumsDrawer{
+    if (!CGAffineTransformIsIdentity(self.albumsContainerView.transform)){
+        [self userDidTapOnAlbumLabel:nil];
     }
 }
 

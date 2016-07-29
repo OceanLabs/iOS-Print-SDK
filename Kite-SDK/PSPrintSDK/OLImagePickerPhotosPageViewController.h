@@ -51,6 +51,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *albumLabel;
 
 - (NSUInteger)numberOfCellsPerRow;
+- (void)closeAlbumsDrawer;
 
 
 //Facebook

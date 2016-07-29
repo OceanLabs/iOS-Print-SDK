@@ -224,7 +224,10 @@
                 [collections addObject:collection];
             }
             
-            [provider.collections addObjectsFromArray:collections];            
+            [provider.collections addObjectsFromArray:collections];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [[self.pageController.viewControllers.firstObject albumsCollectionView] reloadData];
+            });
         });
     }
     if ([OLKiteUtils facebookEnabled]){
@@ -245,7 +248,7 @@
                 [assets addObject:asset];
             }
             
-            [collections addObject:[[OLImagePickerProviderCollection alloc] initWithArray:assets name:NSLocalizedString(@"All Photos", @"")]];
+            [collections addObject:[[OLImagePickerProviderCollection alloc] initWithArray:assets name:collection.name]];
         }
         OLImagePickerProvider *provider = [[OLImagePickerProvider alloc] initWithCollections:collections name:customProvider.name icon:customProvider.icon];
         provider.providerType = OLImagePickerProviderTypeCustom;
@@ -407,11 +410,16 @@
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
     NSInteger currentPageIndex = [self.pageController.viewControllers.firstObject pageIndex];
+    UIViewController *showingVc = self.pageController.viewControllers.firstObject;
     if (currentPageIndex == indexPath.item){
+        if ([showingVc isKindOfClass:[OLImagePickerPhotosPageViewController class]]){
+            [(OLImagePickerPhotosPageViewController *)showingVc closeAlbumsDrawer];
+        }
         return;
     }
     
     UIViewController *vc = [self viewControllerAtIndex:indexPath.item];
+    
     [self.pageController setViewControllers:@[vc] direction:currentPageIndex < indexPath.item ? UIPageViewControllerNavigationDirectionForward : UIPageViewControllerNavigationDirectionReverse animated:YES completion:NULL];
 }
 
