@@ -387,6 +387,12 @@ static NSString* creativeSDKClientSecret = nil;
 
 + (void)setPayPalPublicKey:(NSString *)publicKey{
     paypalPublicKey = publicKey;
+    
+    if (environment == kOLKitePrintSDKEnvironmentLive) {
+        [OLPayPalCard setClientId:[self paypalClientId] withEnvironment:kOLPayPalEnvironmentLive];
+    } else {
+        [OLPayPalCard setClientId:[self paypalClientId] withEnvironment:kOLPayPalEnvironmentSandbox];
+    }
 }
 
 + (void)setStripeAccountId:(NSString *)accountId{
@@ -395,6 +401,7 @@ static NSString* creativeSDKClientSecret = nil;
 
 + (void)setStripePublicKey:(NSString *)publicKey{
     stripePublicKey = publicKey;
+    [OLStripeCard setClientId:[self stripePublishableKey]];
 }
 
 + (NSString *)paypalAccountId{
