@@ -178,26 +178,57 @@
             options.includeAssetSourceTypes = PHAssetSourceTypeCloudShared | PHAssetSourceTypeUserLibrary | PHAssetSourceTypeiTunesSynced;
         }
         options.predicate = [NSPredicate predicateWithFormat:@"mediaType = %d",PHAssetMediaTypeImage];
-        
-        PHFetchResult *fetchResult = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeSmartAlbum subtype:PHAssetCollectionSubtypeAny options:nil];
-        
-        NSMutableArray<OLImagePickerProviderCollection *> *collections = [[NSMutableArray alloc] init];
-        for (PHAssetCollection *fetchedCollection in fetchResult){
-            PHFetchResult *fetchedPhotos = [PHAsset fetchAssetsInAssetCollection:fetchedCollection options:options];
-            if (fetchedPhotos.count == 0){
-                continue;
-            }
-            OLImagePickerProviderCollection *collection = [[OLImagePickerProviderCollection alloc] initWithPHFetchResult:fetchedPhotos name:fetchedCollection.localizedTitle];
-            [collections addObject:collection];
-        }
 
-        OLImagePickerProvider *provider = [[OLImagePickerProvider alloc] initWithCollections:collections name:NSLocalizedString(@"Photo Library", @"") icon:[UIImage imageNamedInKiteBundle:@"import_gallery"]];
+        PHAssetCollection *userLibraryCollection = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeSmartAlbum subtype:PHAssetCollectionSubtypeSmartAlbumUserLibrary options:nil].firstObject;
+        PHFetchResult *fetchedPhotos = [PHAsset fetchAssetsInAssetCollection:userLibraryCollection options:options];
+        OLImagePickerProviderCollection *userLibraryProviderCollection = [[OLImagePickerProviderCollection alloc] initWithPHFetchResult:fetchedPhotos name:userLibraryCollection.localizedTitle];
+        
+        OLImagePickerProvider *provider = [[OLImagePickerProvider alloc] initWithCollections:@[userLibraryProviderCollection] name:NSLocalizedString(@"Photo Library", @"") icon:[UIImage imageNamedInKiteBundle:@"import_gallery"]];
         provider.providerType = OLImagePickerProviderTypePhotoLibrary;
         [providers addObject:provider];
+        
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            NSMutableArray *assetCollections = [[NSMutableArray alloc] init];
+            PHFetchResult *result = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeSmartAlbum subtype:PHAssetCollectionSubtypeSmartAlbumFavorites options:nil];
+            for (PHAssetCollection *collection in result){
+                [assetCollections addObject:collection];
+            }
+            result = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeSmartAlbum subtype:PHAssetCollectionSubtypeSmartAlbumSelfPortraits options:nil];
+            for (PHAssetCollection *collection in result){
+                [assetCollections addObject:collection];
+            }
+            result = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeSmartAlbum subtype:PHAssetCollectionSubtypeSmartAlbumRecentlyAdded options:nil];
+            for (PHAssetCollection *collection in result){
+                [assetCollections addObject:collection];
+            }
+            result = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeSmartAlbum subtype:PHAssetCollectionSubtypeSmartAlbumPanoramas options:nil];
+            for (PHAssetCollection *collection in result){
+                [assetCollections addObject:collection];
+            }
+            result = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeSmartAlbum subtype:PHAssetCollectionSubtypeSmartAlbumScreenshots options:nil];
+            for (PHAssetCollection *collection in result){
+                [assetCollections addObject:collection];
+            }
+            result = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeAlbum subtype:PHAssetCollectionSubtypeAny options:nil];
+            for (PHAssetCollection *collection in result){
+                [assetCollections addObject:collection];
+            }
+            
+            NSMutableArray<OLImagePickerProviderCollection *> *collections = [[NSMutableArray alloc] init];
+            for (PHAssetCollection *fetchedCollection in assetCollections){
+                PHFetchResult *fetchedPhotos = [PHAsset fetchAssetsInAssetCollection:fetchedCollection options:options];
+                if (fetchedPhotos.count == 0){
+                    continue;
+                }
+                OLImagePickerProviderCollection *collection = [[OLImagePickerProviderCollection alloc] initWithPHFetchResult:fetchedPhotos name:fetchedCollection.localizedTitle];
+                [collections addObject:collection];
+            }
+            
+            [provider.collections addObjectsFromArray:collections];            
+        });
     }
     if ([OLKiteUtils facebookEnabled]){
-        OLImagePickerProviderCollection *collection = [[OLImagePickerProviderCollection alloc] initWithArray:@[] name:NSLocalizedString(@"All Photos", @"")];
-        OLImagePickerProvider *provider = [[OLImagePickerProvider alloc] initWithCollections:[@[collection] mutableCopy] name:@"Facebook" icon:[UIImage imageNamedInKiteBundle:@"import_facebook"]];
+        OLImagePickerProvider *provider = [[OLImagePickerProvider alloc] initWithCollections:[@[] mutableCopy] name:@"Facebook" icon:[UIImage imageNamedInKiteBundle:@"import_facebook"]];
         provider.providerType = OLImagePickerProviderTypeFacebook;
         [providers addObject:provider];
     }

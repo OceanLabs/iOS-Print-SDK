@@ -58,6 +58,12 @@ NSInteger OLImagePickerMargin = 0;
     }
 }
 
+- (void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
+    
+    [self.albumsCollectionView reloadData];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     
@@ -235,7 +241,7 @@ NSInteger OLImagePickerMargin = 0;
         return OLImagePickerMargin;
     }
     else{
-        return 0;
+        return 10;
     }
 }
 
@@ -244,7 +250,7 @@ NSInteger OLImagePickerMargin = 0;
         return OLImagePickerMargin;
     }
     else{
-        return 0;
+        return 10;
     }
 }
 
@@ -257,12 +263,9 @@ NSInteger OLImagePickerMargin = 0;
     }
     
     if (collectionView.tag == 10){
-        
-        
         float numberOfCellsPerRow = [self numberOfCellsPerRow];
         CGFloat width = ceilf(size.width/numberOfCellsPerRow);
         CGFloat height = width;
-        
         
         return CGSizeMake(width, height);
     }
@@ -280,7 +283,7 @@ NSInteger OLImagePickerMargin = 0;
         return UIEdgeInsetsMake(0, diff/2.0, 0, diff/2.0);
     }
     else{
-        return UIEdgeInsetsMake(10, 0, 0, 0);
+        return UIEdgeInsetsMake(10, 0, self.albumLabelContainerTopCon.constant + 10, 0);
     }
 }
 
