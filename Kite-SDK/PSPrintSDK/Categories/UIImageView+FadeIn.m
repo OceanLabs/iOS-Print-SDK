@@ -69,6 +69,9 @@ static char tasksKey;
                 [self.tasks removeObjectForKey:url];
                 return;
             }
+            if (error){
+                return;
+            }
             [self.tasks removeObjectForKey:url];
             
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
@@ -85,7 +88,9 @@ static char tasksKey;
                 });
             });
         }];
-        self.tasks[url] = task;
+        if (url){
+            self.tasks[url] = task;
+        }
     });
 }
 

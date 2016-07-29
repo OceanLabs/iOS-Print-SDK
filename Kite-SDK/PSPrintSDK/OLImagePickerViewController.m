@@ -46,6 +46,8 @@
 #import <FBSDKCoreKit/FBSDKAccessToken.h>
 #import <NXOAuth2Client/NXOAuth2AccountStore.h>
 #import "OLKitePrintSDK.h"
+#import "UIViewController+OLMethods.h"
+#import "OLPaymentViewController.h"
 
 @interface OLKiteViewController ()
 @property (strong, nonatomic) NSMutableArray <OLCustomPhotoProvider *> *customImageProviders;
@@ -147,6 +149,20 @@
     [view.superview addConstraints:con];
     
     [self updateTitleBasedOnSelectedPhotoQuanitity];
+}
+
+- (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    
+    if ([self.presentingViewController respondsToSelector:@selector(viewControllers)]) {
+        UIViewController *presentingVc = [(UINavigationController *)self.presentingViewController viewControllers].lastObject;
+        if (![presentingVc isKindOfClass:[OLPaymentViewController class]]){
+            [self addBasketIconToTopRight];
+        }
+    }
+    else{
+        [self addBasketIconToTopRight];
+    }
 }
 
 - (void)setupProviders{

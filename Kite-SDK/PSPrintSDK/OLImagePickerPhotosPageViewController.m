@@ -105,6 +105,12 @@ NSInteger OLImagePickerMargin = 0;
     else if (self.provider.providerType == OLImagePickerProviderTypeInstagram && (self.provider.collections.count == 0 || self.provider.collections[self.showingCollectionIndex].count == 0)){
         [self startImageLoading];
     }
+    
+    if (self.provider.providerType == OLImagePickerProviderTypeApp || self.provider.providerType == OLImagePickerProviderTypeInstagram || self.provider.providerType == OLImagePickerProviderTypeQRCode || (self.provider.providerType == OLImagePickerProviderTypeCustom && self.provider.collections.count <= 1)){
+        [self.albumLabelContainer removeFromSuperview];
+        self.albumLabelContainer = nil;
+        [self.albumsContainerView removeFromSuperview];
+    }
 }
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
