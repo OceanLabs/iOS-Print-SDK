@@ -518,10 +518,10 @@ static NSBlockOperation *templateSyncOperation;
         [json setObject:self.proofOfPayment forKey:@"proof_of_payment"];
         
         if ([self.proofOfPayment hasPrefix:@"AP-"] || [self.proofOfPayment hasPrefix:@"PAY-"] || [self.proofOfPayment hasPrefix:@"PAUTH-"]){
-            json[@"account_id"] = stringOrEmptyString([OLKitePrintSDK paypalAccountId]);
+            json[@"payment_account_id"] = stringOrEmptyString([OLKitePrintSDK paypalAccountId]);
         }
         else if ([self.proofOfPayment hasPrefix:@"tok_"]){
-            json[@"account_id"] = stringOrEmptyString([OLKitePrintSDK stripeAccountId]);
+            json[@"payment_account_id"] = stringOrEmptyString([OLKitePrintSDK stripeAccountId]);
         }
     }
     
