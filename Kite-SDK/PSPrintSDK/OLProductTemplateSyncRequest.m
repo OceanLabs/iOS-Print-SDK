@@ -105,8 +105,8 @@
                     
                     id stripeKeys = paymentKeys[@"stripe"];
                     if([stripeKeys isKindOfClass:[NSDictionary class]]){
-                        id accountId = paypalKeys[@"account_id"];
-                        id publicKey = paypalKeys[@"public_key"];
+                        id accountId = stripeKeys[@"account_id"];
+                        id publicKey = stripeKeys[@"public_key"];
                         if ([publicKey isKindOfClass:[NSString class]]){
                             [OLKitePrintSDK setStripeAccountId:accountId];
                             [OLKitePrintSDK setStripePublicKey:publicKey];
