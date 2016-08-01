@@ -149,8 +149,7 @@
 "New Payment" = "Neue Zahlung";
 
 /* No comment provided by engineer. */
-"Next" = "Nächster
-;
+"Next" = "Nächster";
 
 /* No comment provided by engineer. */
 "OK" = "Ok";
@@ -302,3 +301,4 @@
 /* No comment provided by engineer. */
 "ZIP Code" = "Postleitzahl";
 
+"Please enter your first name and last name" = "Geben Sie bitte Ihren Vor-und Nachnamen ein";

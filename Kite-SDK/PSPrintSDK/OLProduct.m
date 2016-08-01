@@ -358,23 +358,23 @@ typedef enum {
     
     //Add description
     if (self.productTemplate.productDescription && ![self.productTemplate.productDescription isEqualToString:@""]){
-        s = [s stringByAppendingString:[NSString stringWithFormat:@"**Description**\n%@\n\n", [self.productTemplate.productDescription stringByReplacingOccurrencesOfString:@"\\n" withString:@"\n"]]];
+        s = [s stringByAppendingString:[NSString stringWithFormat:NSLocalizedString(@"**Description**\n%@\n\n", @""), [self.productTemplate.productDescription stringByReplacingOccurrencesOfString:@"\\n" withString:@"\n"]]];
     }
     
     //Add size info
     OLTemplateUI templateClass = self.productTemplate.templateUI;
     if (templateClass != kOLTemplateUICase){
-        s = [s stringByAppendingString:[NSString stringWithFormat:@"**Size**\n%@\n\n", self.dimensions]];
+        s = [s stringByAppendingString:[NSString stringWithFormat:NSLocalizedString(@"**Size**\n%@\n\n", @""), self.dimensions]];
     }
     
     //Add qty info
     if (self.packInfo && ![self.packInfo isEqualToString:@""]){
-        s = [s stringByAppendingString:[NSString stringWithFormat:@"**Quantity**\n%lu\n\n", (unsigned long)self.quantityToFulfillOrder]];
+        s = [s stringByAppendingString:[NSString stringWithFormat:NSLocalizedString(@"**Quantity**\n%lu\n\n", @""), (unsigned long)self.quantityToFulfillOrder]];
     }
     
     //Add price info
     if ([OLKiteABTesting sharedInstance].hidePrice){
-        s = [s stringByAppendingString:[NSString stringWithFormat:@"**Price**\n%@\n\n", self.unitCost]];
+        s = [s stringByAppendingString:[NSString stringWithFormat:NSLocalizedString(@"**Price**\n%@\n\n", @""), self.unitCost]];
     }
     
     //Add shipping info
