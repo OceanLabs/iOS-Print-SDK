@@ -155,7 +155,7 @@ NSInteger OLImagePickerMargin = 0;
             printPhoto = asset;
         }
         
-        if ([[OLUserSession currentSession].userSelectedPhotos containsObject:printPhoto]){
+        if ([self.imagePicker.selectedAssets containsObject:printPhoto]){
             checkmark.hidden = NO;
         }
         else{
@@ -313,12 +313,12 @@ NSInteger OLImagePickerMargin = 0;
         else if ([asset isKindOfClass:[OLAsset class]]){
             printPhoto = asset;
         }
-        if ([[OLUserSession currentSession].userSelectedPhotos containsObject:printPhoto]){
-            [[OLUserSession currentSession].userSelectedPhotos removeObject:printPhoto];
+        if ([self.imagePicker.selectedAssets containsObject:printPhoto]){
+            [self.imagePicker.selectedAssets removeObject:printPhoto];
             [[collectionView cellForItemAtIndexPath:indexPath] viewWithTag:20].hidden = YES;
         }
         else{
-            [[OLUserSession currentSession].userSelectedPhotos addObject:printPhoto];
+            [self.imagePicker.selectedAssets addObject:printPhoto];
             [[collectionView cellForItemAtIndexPath:indexPath] viewWithTag:20].hidden = NO;
         }
         

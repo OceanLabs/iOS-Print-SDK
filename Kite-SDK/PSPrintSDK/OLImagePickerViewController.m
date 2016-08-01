@@ -69,6 +69,8 @@
 
 @property (strong, nonatomic) NSArray<OLImagePickerProvider *> *providers;
 
+@property (strong, nonatomic) NSArray<OLAsset *> *originalSelectedAssets;
+
 @end
 
 @interface OLProduct ()
@@ -90,13 +92,37 @@
 
 @implementation OLImagePickerViewController
 
+@synthesize selectedAssets=_selectedAssets;
+
+- (void)setSelectedAssets:(NSMutableArray<OLAsset *> *)selectedAssets{
+    self.originalSelectedAssets = [[NSArray alloc] initWithArray:selectedAssets];
+    
+    _selectedAssets = selectedAssets;
+}
+
+- (NSMutableArray<OLAsset *> *)selectedAssets{
+    if (!_selectedAssets){
+        return [OLUserSession currentSession].userSelectedPhotos;
+    }
+    
+    return _selectedAssets;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Back", @"")
-                                                                             style:UIBarButtonItemStylePlain
-                                                                            target:nil
-                                                                            action:nil];
+    if (self.navigationController.viewControllers.firstObject == self){
+        self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(onBarButtonItemCancelTapped:)];
+        [self.nextButton removeTarget:self action:@selector(onButtonNextClicked:) forControlEvents:UIControlEventTouchUpInside];
+        [self.nextButton addTarget:self action:@selector(onButtonDoneTapped:) forControlEvents:UIControlEventTouchUpInside];
+        [self.nextButton setTitle:NSLocalizedStringFromTableInBundle(@"Done", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") forState:UIControlStateNormal];
+    }
+    else{
+        self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Back", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")
+                                                                                 style:UIBarButtonItemStylePlain
+                                                                                target:nil
+                                                                                action:nil];
+    }
     
     [self setupProviders];
     
@@ -313,16 +339,16 @@
 #pragma mark Asset Management
 
 - (void)updateTitleBasedOnSelectedPhotoQuanitity {
-    if ([OLUserSession currentSession].userSelectedPhotos.count == 0) {
+    if (self.selectedAssets.count == 0) {
         self.title = NSLocalizedString(@"Choose Photos", @"");
     } else {
         if (self.product.quantityToFulfillOrder > 1){
-            NSUInteger numOrders = 1 + (MAX(0, [OLUserSession currentSession].userSelectedPhotos.count - 1 + [self totalNumberOfExtras]) / self.product.quantityToFulfillOrder);
+            NSUInteger numOrders = 1 + (MAX(0, self.selectedAssets.count - 1 + [self totalNumberOfExtras]) / self.product.quantityToFulfillOrder);
             NSUInteger quanityToFulfilOrder = numOrders * self.product.quantityToFulfillOrder;
-            self.title = [NSString stringWithFormat:@"%lu / %lu", (unsigned long)[OLUserSession currentSession].userSelectedPhotos.count + [self totalNumberOfExtras], (unsigned long)quanityToFulfilOrder];
+            self.title = [NSString stringWithFormat:@"%lu / %lu", (unsigned long)self.selectedAssets.count + [self totalNumberOfExtras], (unsigned long)quanityToFulfilOrder];
         }
         else{
-            self.title = [NSString stringWithFormat:@"%lu", (unsigned long)[OLUserSession currentSession].userSelectedPhotos.count];
+            self.title = [NSString stringWithFormat:@"%lu", (unsigned long)self.selectedAssets.count];
         }
     }
 }
@@ -333,7 +359,7 @@
     }
     
     NSUInteger res = 0;
-    for (OLAsset *photo in [OLUserSession currentSession].userSelectedPhotos){
+    for (OLAsset *photo in self.selectedAssets){
         res += photo.extraCopies;
     }
     return res;
@@ -442,7 +468,7 @@
 #pragma mark Navigation
 
 - (BOOL)shouldGoToOrderPreview {
-    if ([OLUserSession currentSession].userSelectedPhotos.count == 0) {
+    if (self.selectedAssets.count == 0) {
         UIAlertController *av = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Oops!", @"") message:NSLocalizedString(@"Please select some images to print first.", @"") preferredStyle:UIAlertControllerStyleAlert];
         [av addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", @"") style:UIAlertActionStyleDefault handler:NULL]];
         [self presentViewController:av animated:YES completion:NULL];
@@ -458,8 +484,8 @@
         OLUpsellOffer *offer = [self upsellOfferToShow];
         BOOL shouldShowOffer = offer != nil;
         if (offer){
-            shouldShowOffer &= offer.minUnits <= [OLUserSession currentSession].userSelectedPhotos.count;
-            shouldShowOffer &= offer.maxUnits == 0 || offer.maxUnits >= [OLUserSession currentSession].userSelectedPhotos.count;
+            shouldShowOffer &= offer.minUnits <= self.selectedAssets.count;
+            shouldShowOffer &= offer.maxUnits == 0 || offer.maxUnits >= self.selectedAssets.count;
             shouldShowOffer &= [OLProduct productWithTemplateId:offer.offerTemplate] != nil;
         }
         
@@ -485,6 +511,33 @@
     
     [orvc safePerformSelector:@selector(setProduct:) withObject:self.product];
     [self.navigationController pushViewController:orvc animated:YES];
+}
+
+- (void)onBarButtonItemCancelTapped:(UIBarButtonItem *)sender{
+    [self.selectedAssets removeAllObjects];
+    [self.selectedAssets addObjectsFromArray:self.originalSelectedAssets];
+    
+    if ([self.delegate respondsToSelector:@selector(imagePickerDidCancel:)]){
+        [self.delegate imagePickerDidCancel:self];
+    }
+    else{
+        [self dismissViewControllerAnimated:YES completion:NULL];
+    }
+}
+
+- (void)onButtonDoneTapped:(UIButton *)sender{
+    NSMutableArray *removedAssets = [[NSMutableArray alloc] initWithArray:self.originalSelectedAssets];
+    [removedAssets removeObjectsInArray:self.selectedAssets];
+    
+    NSMutableArray *addedAssets = [[NSMutableArray alloc] initWithArray:self.selectedAssets];
+    [addedAssets removeObjectsInArray:self.originalSelectedAssets];
+    
+    if ([self.delegate respondsToSelector:@selector(imagePickerDidCancel:)]){
+        [self.delegate imagePicker:self didFinishPickingAssets:self.selectedAssets added:addedAssets removed:removedAssets];
+    }
+    else{
+        [self dismissViewControllerAnimated:YES completion:NULL];
+    }
 }
 
 #pragma mark Upsells
@@ -542,7 +595,6 @@
             
             OLProduct *offerProduct = [OLProduct productWithTemplateId:vc.offer.offerTemplate];
             UIViewController *nextVc = [self.storyboard instantiateViewControllerWithIdentifier:[OLKiteUtils reviewViewControllerIdentifierForProduct:offerProduct photoSelectionScreen:[OLKiteUtils imageProvidersAvailable:self]]];
-            [nextVc safePerformSelector:@selector(setKiteDelegate:) withObject:self.delegate];
             [nextVc safePerformSelector:@selector(setProduct:) withObject:offerProduct];
             NSMutableArray *stack = [self.navigationController.viewControllers mutableCopy];
             [stack removeObject:self];
@@ -559,10 +611,10 @@
         //Do nothing, no assets needed
     }
     else if (offerProduct.quantityToFulfillOrder == 1){
-        [assets addObject:[OLAsset assetWithDataSource:[[OLUserSession currentSession].userSelectedPhotos.firstObject copy]]];
+        [assets addObject:[OLAsset assetWithDataSource:[self.selectedAssets.firstObject copy]]];
     }
     else{
-        for (OLAsset *photo in [OLUserSession currentSession].userSelectedPhotos){
+        for (OLAsset *photo in self.selectedAssets){
             [assets addObject:[OLAsset assetWithDataSource:[photo copy]]];
         }
     }

@@ -30,12 +30,23 @@
 #import <UIKit/UIKit.h>
 #import "OLProduct.h"
 #import "OLKiteViewController.h"
+#import "OLAsset.h"
+
+@class OLImagePickerViewController;
+
+@protocol OLImagePickerViewControllerDelegate <NSObject>
+
+- (void)imagePickerDidCancel:(OLImagePickerViewController *)vc;
+- (void)imagePicker:(OLImagePickerViewController *)vc didFinishPickingAssets:(NSMutableArray *)assets added:(NSArray<OLAsset *> *)addedAssets removed:(NSArray *)removedAssets;
+
+@end
 
 @interface OLImagePickerViewController : UIViewController
 
 @property (strong, nonatomic) OLProduct *product;
 @property (weak, nonatomic) IBOutlet UIButton *nextButton;
-@property (weak, nonatomic) id<OLKiteDelegate> delegate;
+@property (weak, nonatomic) id<OLImagePickerViewControllerDelegate> delegate;
+@property (strong, nonatomic) NSMutableArray<OLAsset *> *selectedAssets;
 - (void)updateTitleBasedOnSelectedPhotoQuanitity;
 - (void)reloadPageController;
 - (void)onButtonNextClicked:(UIButton *)sender;

@@ -57,6 +57,7 @@
 #import "OLURLDataSource.h"
 #import "OLUpsellViewController.h"
 #import "OLImagePreviewViewController.h"
+#import "OLImagePickerViewController.h"
 
 #define SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(v)  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedAscending)
 
@@ -81,7 +82,7 @@
 #endif
 @end
 
-@interface OLSingleImageProductReviewViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UINavigationControllerDelegate, UIGestureRecognizerDelegate, OLUpsellViewControllerDelegate,RMImageCropperDelegate, UIViewControllerPreviewingDelegate>
+@interface OLSingleImageProductReviewViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UINavigationControllerDelegate, UIGestureRecognizerDelegate, OLUpsellViewControllerDelegate,RMImageCropperDelegate, UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate>
 
 @property (weak, nonatomic) IBOutlet UICollectionView *imagesCollectionView;
 
@@ -582,6 +583,9 @@ static BOOL hasMoved;
             });
         }];
     }
+    else{
+        [self showImagePicker];
+    }
 }
 
 #pragma mark OLUpsellViewControllerDelegate
@@ -643,11 +647,65 @@ static BOOL hasMoved;
     }];
 }
 
+#pragma mark - Image Picker
+
+- (void)showImagePicker{
+    OLImagePickerViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLImagePickerViewController"];
+    vc.selectedAssets = [OLUserSession currentSession].userSelectedPhotos;
+    vc.delegate = self;
+    [self presentViewController:[[OLNavigationController alloc] initWithRootViewController:vc] animated:YES completion:NULL];
+}
+
+- (void)imagePickerDidCancel:(OLImagePickerViewController *)vc{
+    [vc dismissViewControllerAnimated:YES completion:NULL];
+}
+
+- (void)imagePicker:(OLImagePickerViewController *)vc didFinishPickingAssets:(NSMutableArray *)assets added:(NSArray<OLAsset *> *)addedAssets removed:(NSArray *)removedAssets{
+    [OLUserSession currentSession].userSelectedPhotos = assets;
+    
+    if (addedAssets.count == 0 && [removedAssets containsObject:self.imageDisplayed]){
+        self.imagePicked = assets.lastObject;
+    }
+    else{
+        self.imagePicked = addedAssets.lastObject;
+    }
+    if (self.imagePicked){
+        id view = [self.view viewWithTag:1010];
+        if ([view isKindOfClass:[UIActivityIndicatorView class]]){
+            [(UIActivityIndicatorView *)view startAnimating];
+        }
+        self.imageDisplayed = self.imagePicked;
+        __weak OLSingleImageProductReviewViewController *welf = self;
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            [self.imagePicked imageWithSize:[UIScreen mainScreen].bounds.size applyEdits:NO progress:^(float progress){
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [welf.imageCropView setProgress:progress];
+                });
+            } completion:^(UIImage *image){
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    welf.imageCropView.image = image;
+                    welf.imagePicked = nil;
+                    
+                    if (assets.count > 0){
+                        id view = [welf.view viewWithTag:1010];
+                        if ([view isKindOfClass:[UIActivityIndicatorView class]]){
+                            [(UIActivityIndicatorView *)view stopAnimating];
+                        }
+                    }
+                });
+            }];
+        });
+        
+    }
+    
+    [self.imagesCollectionView reloadData];
+    [vc dismissViewControllerAnimated:YES completion:NULL];
+}
+
 #pragma mark - OLImageEditorViewControllerDelegate methods
 
 - (void)scrollCropViewControllerDidCancel:(OLScrollCropViewController *)cropper{
-    [cropper dismissViewControllerAnimated:YES completion:^{
-    }];
+    [cropper dismissViewControllerAnimated:YES completion:^{}];
 }
 
 - (void)scrollCropViewControllerDidDropChanges:(OLScrollCropViewController *)cropper{

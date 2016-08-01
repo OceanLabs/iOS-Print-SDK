@@ -75,6 +75,13 @@ static NSOperationQueue *imageOperationQueue;
 
 @implementation OLAsset
 
+-(OLPhotoEdits *) edits{
+    if (!_edits){
+        _edits = [[OLPhotoEdits alloc] init];
+    }
+    return _edits;
+}
+
 -(NSString *) uuid{
     if (!_uuid){
         _uuid = [[NSUUID UUID] UUIDString];

@@ -130,6 +130,7 @@ static CGFloat fadeTime = 0.3;
     NSBundle *currentBundle = [NSBundle bundleForClass:[OLKiteViewController class]];
     if ((self = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:currentBundle] instantiateViewControllerWithIdentifier:@"KiteViewController"])) {
         [OLUserSession currentSession].appAssets = assets;
+        [[OLUserSession currentSession] resetUserSelectedPhotos];
         self.printOrder.userData = info;
     }
     [OLKiteABTesting sharedInstance].launchedWithPrintOrder = NO;
