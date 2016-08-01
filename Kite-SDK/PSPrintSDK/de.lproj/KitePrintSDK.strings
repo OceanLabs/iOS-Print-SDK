@@ -26,7 +26,7 @@
 "Add Payment Method" = "Zahlungsmethode hinzufügen";
 
 /* No comment provided by engineer. */
-"Add photos from:" = "Add photos from:";
+"Add photos from:" = "Fotos hinzufügen aus:";
 
 /* No comment provided by engineer. */
 "Add to Basket" = "in den Korb legen";
@@ -41,7 +41,7 @@
 "Back" = "Zurück";
 
 /* No comment provided by engineer. */
-"Camera Roll" = "Camera Roll";
+"Camera Roll" = "Filmrolle";
 
 /* No comment provided by engineer. */
 "Cancel" = "löschen";
@@ -263,7 +263,7 @@
 "Total" = "Gesamt";
 
 /* No comment provided by engineer. */
-"Transfer from your phone" = "von Deinem Telephon gesendet";
+"Transfer from your phone" = "Transfer von Ihrem Mobiltelepnon";
 
 /* Generic payment failed error dialog message */
 "Unfortunately we failed to take a payment from your card. Please try again." = "Leider war die Zahlung mit Ihrer Karte nicht erfolgreich, Bitte versuchen Sie es noch einmal.";
@@ -302,3 +302,11 @@
 "ZIP Code" = "Postleitzahl";
 
 "Please enter your first name and last name" = "Geben Sie bitte Ihren Vor-und Nachnamen ein";
+"**Shipping**\nFREE\n\n" = "**Versand**\nFREI\n\n";
+"**Shipping**\n%@\n\n" = "**Versand**\n%@\n\n";
+"**Shipping**\n~%@~ %@\n\n" = "**Versand**\n~%@~ %@\n\n";
+"**Price**\n%@\n\n" = "**Price**\n%@\n\n";
+"**Quantity**\n%lu\n\n" = "**Quantity**\n%lu\n\n";
+"**Size**\n%@\n\n" = "**Size**\n%@\n\n";
+"**Description**\n%@\n\n" = "**Beschreibung**\n%@\n\n";
+
