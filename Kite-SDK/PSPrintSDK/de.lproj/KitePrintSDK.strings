@@ -47,7 +47,7 @@
 "Cancel" = "löschen";
 
 /* No comment provided by engineer. */
-"Card Number" = "Card Number";
+"Card Number" = "Kartennummer";
 
 /* No comment provided by engineer. */
 "Checking Code" = "Überprüfung Gutscheincode";
@@ -86,7 +86,7 @@
 "Delivery Address" = "Lieferadresse";
 
 /* No comment provided by engineer. */
-"Delivery Details" = "Liefer-Details";
+"Delivery Details" = "Lieferbedingungen";
 
 /* No comment provided by engineer. */
 "Done" = "erledigt";
@@ -257,7 +257,7 @@
 "Tap to edit" = "Tap to edit";
 
 /* No comment provided by engineer. */
-"This is the 3-4 digit verification number/security code normally found on the back of your card" = "This is the 3-4 digit verification number/security code normally found on the back of your card";
+"This is the 3-4 digit verification number/security code normally found on the back of your card" = "Dies ist die 3-4- stellige Prüfnummer / Sicherheitscode normalerweise auf der Rückseite Ihrer Karte gefunden";
 
 /* No comment provided by engineer. */
 "Total" = "Gesamt";
@@ -287,10 +287,10 @@
 "You've selected %d photos." = "You've selected %d photos.";
 
 /* No comment provided by engineer. */
-"Your 16 digit card number" = "Your 16 digit card number";
+"Your 16 digit card number" = "Ihre 16-stellige Kartennummer";
 
 /* No comment provided by engineer. */
-"Your card expiry date" = "Your card expiry date";
+"Your card expiry date" = "Ihre Karte Ablaufdatum";
 
 /* Payment declined error dialog message */
 "Your payment has been declined. Please check your card details and try again." = "Deine Zahlung ist abgelehnt worden. Bitte überprüfe sie und versuche es noch einmal.";
@@ -310,3 +310,5 @@
 "**Size**\n%@\n\n" = "**Size**\n%@\n\n";
 "**Description**\n%@\n\n" = "**Beschreibung**\n%@\n\n";
 
+"Pay with Credit Card (TEST)" = "Mit Karte bezahlen (TEST)"
+"Pay with Credit Card" = "Mit Karte bezahlen"
