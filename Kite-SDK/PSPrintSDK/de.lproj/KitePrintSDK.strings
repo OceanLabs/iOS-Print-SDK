@@ -101,7 +101,7 @@
 "Enter a valid credit card number" = "gültige Kreditkartennummer eintragen";
 
 /* No comment provided by engineer. */
-"Enter a valid CVV number" = "gültige CW Nummer eintragen";
+"Enter a valid CVV number" = "gültige CVV Nummer eintragen";
 
 /* No comment provided by engineer. */
 "Enter a valid expiry date" = "gültiges Ablaufdatum eintragen";
@@ -310,5 +310,5 @@
 "**Size**\n%@\n\n" = "**Size**\n%@\n\n";
 "**Description**\n%@\n\n" = "**Beschreibung**\n%@\n\n";
 
-"Pay with Credit Card (TEST)" = "Mit Karte bezahlen (TEST)"
-"Pay with Credit Card" = "Mit Karte bezahlen"
+"Pay with Credit Card (TEST)" = "Mit Karte bezahlen (TEST)";
+"Pay with Credit Card" = "Mit Karte bezahlen";
