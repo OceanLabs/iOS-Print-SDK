@@ -18,10 +18,6 @@
 @end
 
 @interface OLKitePrintSDK (Private)
-#ifdef OL_OFFER_JUDOPAY
-+ (void)setUseJudoPayForGBP:(BOOL)use;
-+ (BOOL)useJudoPayForGBP;
-#endif
 + (void)setCacheTemplates:(BOOL)cache;
 + (BOOL)cacheTemplates;
 + (NSString *_Nonnull)paypalEnvironment;
@@ -132,10 +128,6 @@
     XCTAssert([[OLKitePrintSDK paypalEnvironment] isEqualToString:PayPalEnvironmentSandbox], @"PayPal environment fail");
     XCTAssert([OLKitePrintSDK paypalClientId] && ![[OLKitePrintSDK paypalClientId] isEqualToString:@""], @"No PayPal client ID");
     XCTAssert([OLKitePrintSDK stripePublishableKey] && ![[OLKitePrintSDK stripePublishableKey] isEqualToString:@""], @"Stripe key fail");
-#ifdef OL_OFFER_JUDOPAY
-    [OLKitePrintSDK setUseJudoPayForGBP:NO];
-    XCTAssert(![OLKitePrintSDK useJudoPayForGBP], @"Judopay fail");
-#endif
     
     [OLKitePrintSDK setCacheTemplates:NO];
     XCTAssert(![OLKitePrintSDK cacheTemplates], @"Cache templates fail");

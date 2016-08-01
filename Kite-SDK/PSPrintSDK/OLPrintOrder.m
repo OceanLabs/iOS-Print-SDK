@@ -466,7 +466,7 @@ static NSBlockOperation *templateSyncOperation;
 - (void)setProofOfPayment:(NSString *)proofOfPayment {
     _proofOfPayment = proofOfPayment;
     if (proofOfPayment && ![proofOfPayment isEqualToString:@""]) {
-        NSAssert([proofOfPayment hasPrefix:@"AP-"] || [proofOfPayment hasPrefix:@"PAY-"] || [proofOfPayment hasPrefix:@"tok_"] || [proofOfPayment hasPrefix:@"PAUTH-"] || [proofOfPayment hasPrefix:@"J-"], @"Proof of payment must be a PayPal REST payment confirmation id or a PayPal Adaptive Payment pay key or JudoPay receiptId i.e. PAY-..., AP-... or J-");
+        NSAssert([proofOfPayment hasPrefix:@"AP-"] || [proofOfPayment hasPrefix:@"PAY-"] || [proofOfPayment hasPrefix:@"tok_"] || [proofOfPayment hasPrefix:@"PAUTH-"]], @"Proof of payment must be a PayPal REST payment confirmation id or a PayPal Adaptive Payment pay key i.e. PAY-..., AP-... or J-");
     }
 }
 

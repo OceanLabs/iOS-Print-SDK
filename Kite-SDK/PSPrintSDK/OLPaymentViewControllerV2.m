@@ -47,9 +47,6 @@
 #import "OLKitePrintSDK.h"
 #import "OLProductTemplate.h"
 #import "OLCountry.h"
-#ifdef OL_OFFER_JUDOPAY
-#import "OLJudoPayCard.h"
-#endif
 #import "NSObject+Utils.h"
 #import "OLConstants.h"
 #import "OLCreditCardCaptureViewController.h"
@@ -149,9 +146,6 @@ static BOOL haveLoadedAtLeastOnce = NO;
 @end
 
 @interface OLKitePrintSDK (Private)
-#ifdef OL_OFFER_JUDOPAY
-+ (BOOL)useJudoPayForGBP;
-#endif
 + (BOOL)useStripeForCreditCards;
 
 #ifdef OL_KITE_OFFER_PAYPAL
@@ -1148,12 +1142,6 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             if ([OLKitePrintSDK useStripeForCreditCards]){
                 card = [OLStripeCard lastUsedCard];
             }
-#ifdef OL_OFFER_JUDOPAY
-            else if ([OLKitePrintSDK useJudoPayForGBP] && [self.printOrder.currencyCode isEqualToString:@"GBP"]) {
-                card = [OLJudoPayCard lastUsedCard];
-            }
-#endif
-            
             
             if (card == nil) {
                 [self payWithNewCard];
@@ -1168,11 +1156,6 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
                     if ([OLKitePrintSDK useStripeForCreditCards]){
                         [self payWithExistingStripeCard:[OLStripeCard lastUsedCard]];
                     }
-#ifdef OL_OFFER_JUDOPAY
-                    else if ([OLKitePrintSDK useJudoPayForGBP] && [self.printOrder.currencyCode isEqualToString:@"GBP"]) {
-                        [self payWithExistingJudoPayCard:[OLJudoPayCard lastUsedCard]];
-                    }
-#endif
                     else {
                         [self payWithExistingPayPalCard:[OLPayPalCard lastUsedCard]];
                     }
@@ -1194,11 +1177,6 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 }
 
 - (void)payWithExistingPayPalCard:(OLPayPalCard *)card {
-#ifdef OL_OFFER_JUDOPAY
-    if ([OLKitePrintSDK useJudoPayForGBP]) {
-        NSAssert(![self.printOrder.currencyCode isEqualToString:@"GBP"], @"JudoPay should be used for GBP orders (and only for Kite internal use)");
-    }
-#endif
     [SVProgressHUD setDefaultMaskType:SVProgressHUDMaskTypeBlack];
     [SVProgressHUD showWithStatus:NSLocalizedStringFromTableInBundle(@"Processing", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")];
     [self.printOrder costWithCompletionHandler:^(OLPrintOrderCost *cost, NSError *error) {
@@ -1236,28 +1214,6 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         }];
     }];
 }
-
-#ifdef OL_OFFER_JUDOPAY
-- (void)payWithExistingJudoPayCard:(OLJudoPayCard *)card {
-    NSAssert([self.printOrder.currencyCode isEqualToString:@"GBP"], @"JudoPay should only be used for GBP orders (and only for Kite internal use)");
-    [SVProgressHUD setDefaultMaskType:SVProgressHUDMaskTypeBlack];
-    [SVProgressHUD showWithStatus:NSLocalizedStringFromTableInBundle(@"Processing", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")];
-    [self.printOrder costWithCompletionHandler:^(OLPrintOrderCost *cost, NSError *error) {
-        [card chargeCard:[cost totalCostInCurrency:@"GBP"] currency:kOLJudoPayCurrencyGBP description:self.printOrder.paymentDescription completionHandler:^(NSString *proofOfPayment, NSError *error) {
-            if (error) {
-                [SVProgressHUD dismiss];
-                UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
-                [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") style:UIAlertActionStyleDefault handler:NULL]];
-                [self presentViewController:ac animated:YES completion:NULL];
-                return;
-            }
-            
-            [self submitOrderForPrintingWithProofOfPayment:proofOfPayment paymentMethod:@"Credit Card" completion:^void(PKPaymentAuthorizationStatus status){}];
-            [card saveAsLastUsedCard];
-        }];
-    }];
-}
-#endif
 
 #ifdef OL_KITE_OFFER_PAYPAL
 - (IBAction)onButtonPayWithPayPalClicked {

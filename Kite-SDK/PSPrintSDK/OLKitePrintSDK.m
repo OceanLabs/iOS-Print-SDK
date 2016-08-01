@@ -53,12 +53,8 @@
 #else
 #import "PayPalMobile.h"
 #endif
-
 #endif
 
-#ifdef OL_OFFER_JUDOPAY
-#import "OLJudoPayCard.h"
-#endif
 #import "OLProductHomeViewController.h"
 #import "OLIntegratedCheckoutViewController.h"
 #import "OLKiteABTesting.h"
@@ -84,12 +80,6 @@
 #import "OLPaymentViewController.h"
 #import "OLKiteUtils.h"
 
-static NSString *const kJudoClientId      = @"100170-877";
-static NSString *const kJudoSandboxToken     = @"oLMiwCPBeLs0iVX4";
-static NSString *const kJudoSandboxSecret  = @"3bf983df93ceb422bc81fd0289c3eb95ea1d39d990ba27306679ed069826805c";
-static NSString *const kJudoLiveToken     = @"JjOZ49Z9XCYy2FAc";
-static NSString *const kJudoLiveSecret  = @"b8d5950ec68e27e7dfdb314dbd7160e7421c3bddd4d883d9aef5e94788def934";
-
 static NSString *apiKey = nil;
 static NSString *const kOLStripePublishableKeyTest = @"pk_test_FxzXniUJWigFysP0bowWbuy3";
 static NSString *const kOLStripePublishableKeyLive = @"pk_live_o1egYds0rWu43ln7FjEyOU5E";
@@ -107,9 +97,6 @@ static NSString *const kOLPayPalRecipientEmailLive = @"hello@kite.ly";
 static NSString *const kOLPayPalRecipientEmailSandbox = @"sandbox-merchant@kite.ly";
 static NSString *const kOLAPIEndpointVersion = @"v3.0";
 
-#ifdef OL_OFFER_JUDOPAY
-static BOOL useJudoPayForGBP = NO;
-#endif
 static BOOL useStripeForCreditCards = YES;
 static BOOL cacheTemplates = NO;
 static BOOL useStaging = NO;
@@ -126,16 +113,6 @@ static NSString *instagramRedirectURI = nil;
 @end
 
 @implementation OLKitePrintSDK
-
-#ifdef OL_OFFER_JUDOPAY
-+ (BOOL)useJudoPayForGBP {
-    return useJudoPayForGBP;
-}
-
-+ (void)setUseJudoPayForGBP:(BOOL)use {
-    useJudoPayForGBP = use;
-}
-#endif
 
 + (BOOL)useStripeForCreditCards {
     return useStripeForCreditCards;
@@ -174,14 +151,8 @@ static NSString *instagramRedirectURI = nil;
     [OLStripeCard setClientId:[self stripePublishableKey]];
     if (environment == kOLKitePrintSDKEnvironmentLive) {
         [OLPayPalCard setClientId:[self paypalClientId] withEnvironment:kOLPayPalEnvironmentLive];
-#ifdef OL_OFFER_JUDOPAY
-        [OLJudoPayCard setClientId:kJudoClientId token:kJudoLiveToken secret:kJudoLiveSecret withEnvironment:kOLJudoPayEnvironmentLive];
-#endif
     } else {
         [OLPayPalCard setClientId:[self paypalClientId] withEnvironment:kOLPayPalEnvironmentSandbox];
-#ifdef OL_OFFER_JUDOPAY
-        [OLJudoPayCard setClientId:kJudoClientId token:kJudoSandboxToken secret:kJudoSandboxSecret withEnvironment:kOLJudoPayEnvironmentSandbox];
-#endif
     }
 }
 

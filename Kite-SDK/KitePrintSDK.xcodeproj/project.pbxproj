@@ -231,7 +231,6 @@
 		2E898CA81CC518180041CCD8 /* OLCustomPhotoProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0804B71C0DECE300F50D42 /* OLCustomPhotoProvider.m */; };
 		2E898CA91CC518180041CCD8 /* OLConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = CD73BFB018634ED50009DE03 /* OLConstants.m */; };
 		2E898CAA1CC518180041CCD8 /* OLProductOverviewPageContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA8BEB11A484FCB008A9248 /* OLProductOverviewPageContentViewController.m */; };
-		2E898CAB1CC518180041CCD8 /* OLJudoPayCard.m in Sources */ = {isa = PBXBuildFile; fileRef = CD382E4818EB7C6300127F95 /* OLJudoPayCard.m */; };
 		2E898CAC1CC518180041CCD8 /* OLReceiptViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CDA8BF5418D70D0F00D835BB /* OLReceiptViewController.m */; };
 		2E898CAE1CC518180041CCD8 /* OLAssetUploadRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = CDAFE000186CC90B003572FE /* OLAssetUploadRequest.m */; };
 		2E898CAF1CC518180041CCD8 /* OLAddressPickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = CD93BB2C18783B8E00316492 /* OLAddressPickerController.m */; };
@@ -380,7 +379,6 @@
 		2EA3D3A91C9C04B500B99BCD /* OLCountry.m in Sources */ = {isa = PBXBuildFile; fileRef = CD73BFA6186306550009DE03 /* OLCountry.m */; };
 		2EA3D3AC1C9C04B500B99BCD /* OLConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = CD73BFB018634ED50009DE03 /* OLConstants.m */; };
 		2EA3D3AD1C9C04B500B99BCD /* OLProductOverviewPageContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA8BEB11A484FCB008A9248 /* OLProductOverviewPageContentViewController.m */; };
-		2EA3D3AE1C9C04B500B99BCD /* OLJudoPayCard.m in Sources */ = {isa = PBXBuildFile; fileRef = CD382E4818EB7C6300127F95 /* OLJudoPayCard.m */; };
 		2EA3D3AF1C9C04B500B99BCD /* OLReceiptViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CDA8BF5418D70D0F00D835BB /* OLReceiptViewController.m */; };
 		2EA3D3B01C9C04B500B99BCD /* OLAssetUploadRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = CDAFE000186CC90B003572FE /* OLAssetUploadRequest.m */; };
 		2EA3D3B11C9C04B500B99BCD /* OLAddressPickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = CD93BB2C18783B8E00316492 /* OLAddressPickerController.m */; };
@@ -472,7 +470,6 @@
 		2EADD82F1BE79D6D0051CD31 /* OLCountry.m in Sources */ = {isa = PBXBuildFile; fileRef = CD73BFA6186306550009DE03 /* OLCountry.m */; };
 		2EADD8321BE79D6D0051CD31 /* OLConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = CD73BFB018634ED50009DE03 /* OLConstants.m */; };
 		2EADD8331BE79D6D0051CD31 /* OLProductOverviewPageContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA8BEB11A484FCB008A9248 /* OLProductOverviewPageContentViewController.m */; };
-		2EADD8341BE79D6D0051CD31 /* OLJudoPayCard.m in Sources */ = {isa = PBXBuildFile; fileRef = CD382E4818EB7C6300127F95 /* OLJudoPayCard.m */; };
 		2EADD8351BE79D6D0051CD31 /* OLReceiptViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CDA8BF5418D70D0F00D835BB /* OLReceiptViewController.m */; };
 		2EADD8361BE79D6D0051CD31 /* OLAssetUploadRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = CDAFE000186CC90B003572FE /* OLAssetUploadRequest.m */; };
 		2EADD8371BE79D6D0051CD31 /* OLAddressPickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = CD93BB2C18783B8E00316492 /* OLAddressPickerController.m */; };
@@ -672,7 +669,6 @@
 		E29C85F01BE3B5C50041D4CF /* OLCountry.m in Sources */ = {isa = PBXBuildFile; fileRef = CD73BFA6186306550009DE03 /* OLCountry.m */; };
 		E29C85F31BE3B5C50041D4CF /* OLConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = CD73BFB018634ED50009DE03 /* OLConstants.m */; };
 		E29C85F41BE3B5C50041D4CF /* OLProductOverviewPageContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA8BEB11A484FCB008A9248 /* OLProductOverviewPageContentViewController.m */; };
-		E29C85F61BE3B5C50041D4CF /* OLJudoPayCard.m in Sources */ = {isa = PBXBuildFile; fileRef = CD382E4818EB7C6300127F95 /* OLJudoPayCard.m */; };
 		E29C85F71BE3B5C50041D4CF /* OLReceiptViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CDA8BF5418D70D0F00D835BB /* OLReceiptViewController.m */; };
 		E29C85F81BE3B5C50041D4CF /* OLAssetUploadRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = CDAFE000186CC90B003572FE /* OLAssetUploadRequest.m */; };
 		E29C85F91BE3B5C50041D4CF /* OLAddressPickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = CD93BB2C18783B8E00316492 /* OLAddressPickerController.m */; };
@@ -1054,8 +1050,6 @@
 		97C123D005C55400FE8CA6E3 /* Pods-KitePrintSDKTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KitePrintSDKTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-KitePrintSDKTests/Pods-KitePrintSDKTests.release.xcconfig"; sourceTree = "<group>"; };
 		BF4FFD591B0B737D3A6DDA1E /* libPods-Kite-CI-Deploy.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Kite-CI-Deploy.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C69363223A86C6A26FD18921 /* Pods-KiteSDK-Demo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KiteSDK-Demo.release.xcconfig"; path = "Pods/Target Support Files/Pods-KiteSDK-Demo/Pods-KiteSDK-Demo.release.xcconfig"; sourceTree = "<group>"; };
-		CD382E4818EB7C6300127F95 /* OLJudoPayCard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLJudoPayCard.m; sourceTree = "<group>"; };
-		CD382E4918EB7C6300127F95 /* OLJudoPayCard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLJudoPayCard.h; sourceTree = "<group>"; };
 		CD550A66187B30D200782D75 /* OLAddressLookupViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLAddressLookupViewController.h; sourceTree = "<group>"; };
 		CD550A67187B30D200782D75 /* OLAddressLookupViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLAddressLookupViewController.m; sourceTree = "<group>"; };
 		CD550B171881E1E600782D75 /* OLPrintOrder+History.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "OLPrintOrder+History.h"; sourceTree = "<group>"; };
@@ -1757,8 +1751,6 @@
 				2EB715DA1CFDD36600618C7B /* OLStripeCard+OLCardIcon.m */,
 				2EB715DF1CFDD38100618C7B /* OLPayPalCard+OLCardIcon.h */,
 				2EB715E01CFDD38100618C7B /* OLPayPalCard+OLCardIcon.m */,
-				CD382E4918EB7C6300127F95 /* OLJudoPayCard.h */,
-				CD382E4818EB7C6300127F95 /* OLJudoPayCard.m */,
 				2E5F802A1B01E5F700095203 /* OLPaymentLineItem.h */,
 				2E5F802B1B01E5F700095203 /* OLPaymentLineItem.m */,
 			);
@@ -2828,7 +2820,6 @@
 				2EB197921CF872F200648696 /* OLPaymentMethodsViewController.m in Sources */,
 				2E36A1E31D420CDA00EA2F0F /* OLImagePickerProviderCollection.m in Sources */,
 				2E5BDC3F1CEDBF8200257B1A /* OLImageDownloadDelegate.m in Sources */,
-				2E898CAB1CC518180041CCD8 /* OLJudoPayCard.m in Sources */,
 				2E898CAC1CC518180041CCD8 /* OLReceiptViewController.m in Sources */,
 				2E898CAE1CC518180041CCD8 /* OLAssetUploadRequest.m in Sources */,
 				2E898CAF1CC518180041CCD8 /* OLAddressPickerController.m in Sources */,
@@ -2968,7 +2959,6 @@
 				2E7BDADD1D3E1713005F142C /* OLUserSession.m in Sources */,
 				2E67B9251D2671DB00914D56 /* OLTextOnPhoto.m in Sources */,
 				2E5D95AE1CA984E00080EF07 /* OLUpsellViewController.m in Sources */,
-				2EA3D3AE1C9C04B500B99BCD /* OLJudoPayCard.m in Sources */,
 				2EA3D3AF1C9C04B500B99BCD /* OLReceiptViewController.m in Sources */,
 				2EA3D3B01C9C04B500B99BCD /* OLAssetUploadRequest.m in Sources */,
 				2EA3D3B11C9C04B500B99BCD /* OLAddressPickerController.m in Sources */,
@@ -3113,7 +3103,6 @@
 				2E96BAD91D2FC109002F5F74 /* qrencode.c in Sources */,
 				2EADD8331BE79D6D0051CD31 /* OLProductOverviewPageContentViewController.m in Sources */,
 				2E36A1E21D420CDA00EA2F0F /* OLImagePickerProviderCollection.m in Sources */,
-				2EADD8341BE79D6D0051CD31 /* OLJudoPayCard.m in Sources */,
 				2EADD8351BE79D6D0051CD31 /* OLReceiptViewController.m in Sources */,
 				2EADD8361BE79D6D0051CD31 /* OLAssetUploadRequest.m in Sources */,
 				2EADD8371BE79D6D0051CD31 /* OLAddressPickerController.m in Sources */,
@@ -3357,7 +3346,6 @@
 				E29C85F41BE3B5C50041D4CF /* OLProductOverviewPageContentViewController.m in Sources */,
 				2EB613071D48AFE800B48E29 /* OLInstagramImage.m in Sources */,
 				2E96BADB1D2FC109002F5F74 /* qrencode.c in Sources */,
-				E29C85F61BE3B5C50041D4CF /* OLJudoPayCard.m in Sources */,
 				E29C85F71BE3B5C50041D4CF /* OLReceiptViewController.m in Sources */,
 				E29C85F81BE3B5C50041D4CF /* OLAssetUploadRequest.m in Sources */,
 				2EB715DD1CFDD36600618C7B /* OLStripeCard+OLCardIcon.m in Sources */,
