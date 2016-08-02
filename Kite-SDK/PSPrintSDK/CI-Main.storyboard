@@ -8,7 +8,7 @@
         <!--Kite Print SDK-->
         <scene sceneID="ufC-wZ-h7g">
             <objects>
-                <viewController id="vXZ-lx-hvc" customClass="ViewController" sceneMemberID="viewController">
+                <viewController id="vXZ-lx-hvc" customClass="CIViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="qcE-Ga-fsi"/>
                         <viewControllerLayoutGuide type="bottom" id="41f-SW-s49"/>

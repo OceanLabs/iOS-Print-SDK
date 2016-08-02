@@ -28,8 +28,7 @@
 //
 
 /**********************************************************************
- * Insert your API keys here. These are found under your profile
- * by logging in to the developer portal at https://www.kite.ly
+ * For Internal Kite.ly use ONLY
  **********************************************************************/
 static NSString *const kAPIKeySandbox = @"REPLACE_WITH_YOUR_API_KEY"; // replace with your Sandbox API key found under the Profile section in the developer portal
 static NSString *const kAPIKeyLive = @"REPLACE_WITH_YOUR_API_KEY"; // replace with your Live API key found under the Profile section in the developer portal
@@ -37,13 +36,13 @@ static NSString *const kAPIKeyLive = @"REPLACE_WITH_YOUR_API_KEY"; // replace wi
 static NSString *const kApplePayMerchantIDKey = @"merchant.ly.kite.sdk"; // Replace with your merchant ID
 static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your business name
 
-#import "ViewController.h"
+#import "CI-ViewController.h"
 #import "OLKitePrintSDK.h"
 #import "OLImageCachingManager.h"
 
 @import Photos;
 
-@interface ViewController () <UINavigationControllerDelegate, OLKiteDelegate>
+@interface CIViewController () <UINavigationControllerDelegate, OLKiteDelegate>
 @property (nonatomic, weak) IBOutlet UISegmentedControl *environmentPicker;
 @property (nonatomic, strong) OLPrintOrder* printOrder;
 @end
@@ -52,7 +51,7 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
 + (void)setUseStaging:(BOOL)staging;
 @end
 
-@implementation ViewController
+@implementation CIViewController
 
 -(void)viewDidAppear:(BOOL)animated{
     self.printOrder = [[OLPrintOrder alloc] init];
@@ -111,18 +110,6 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
 }
 
 - (BOOL)isAPIKeySet {
-    if (![[[NSProcessInfo processInfo]environment][@"OL_KITE_UI_TEST"] isEqualToString:@"1"]){
-        if ([[self apiKey] isEqualToString:@"REPLACE_WITH_YOUR_API_KEY"] && ![OLKitePrintSDK apiKey]) {
-            UIAlertController *ac = [UIAlertController alertControllerWithTitle:@"API Key Required" message:@"Set your API keys at the top of ViewController.m before you can print. This can be found under your profile at http://kite.ly" preferredStyle:UIAlertControllerStyleAlert];
-            [ac addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:NULL]];
-            [self presentViewController:ac animated:YES completion:NULL];
-            return NO;
-        }
-    }
-    else{
-        [OLKitePrintSDK setAPIKey:[[NSProcessInfo processInfo]environment][@"TEST_API_KEY"] withEnvironment:kOLKitePrintSDKEnvironmentSandbox];
-    }
-    
     return YES;
 }
 
@@ -135,38 +122,17 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
 }
 
 - (void)printWithAssets:(NSArray *)assets {
-    if (![[[NSProcessInfo processInfo]environment][@"OL_KITE_UI_TEST"] isEqualToString:@"1"]){
-        if (![self isAPIKeySet]) return;
-        [OLKitePrintSDK setAPIKey:[self apiKey] withEnvironment:[self environment]];
-    }
-    
-    OLKiteViewController *vc = [[OLKiteViewController alloc] initWithAssets:assets];
-    vc.userEmail = @"";
-    vc.userPhone = @"";
-    vc.delegate = self;
-    
-    [self addCatsAndDogsImagePickersToKite:vc];
-    
-    [self presentViewController:vc animated:YES completion:NULL];
-    
-    //Register for push notifications
-    NSUInteger types = (UIUserNotificationTypeSound | UIUserNotificationTypeAlert | UIUserNotificationTypeBadge);
-    [[UIApplication sharedApplication] registerUserNotificationSettings:
-     [UIUserNotificationSettings settingsForTypes:types categories:nil]];
-    [[UIApplication sharedApplication] registerForRemoteNotifications];
+    [self setupCIDeploymentWithAssets:assets];
+    return;
 }
 - (IBAction)onButtonPrintRemotePhotos:(id)sender {
     if (![self isAPIKeySet]) return;
-    UIAlertController *ac = [UIAlertController alertControllerWithTitle:@"Remote URLS" message:@"Feel free to Change hardcoded remote image URLs in ViewController.m onButtonPrintRemotePhotos:" preferredStyle:UIAlertControllerStyleAlert];
-    [ac addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:^(id action){
-        NSArray *assets = @[[OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/1.jpg"]],
-                            [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/2.jpg"]],
-                            [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/3.jpg"]],
-                            [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/4.jpg"]]];
-        
-        [self printWithAssets:assets];
-    }]];
-    [self presentViewController:ac animated:YES completion:NULL];
+    NSArray *assets = @[[OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/1.jpg"]],
+                        [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/2.jpg"]],
+                        [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/3.jpg"]],
+                        [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/4.jpg"]]];
+    
+    [self printWithAssets:assets];
 }
 
 - (void)addCatsAndDogsImagePickersToKite:(OLKiteViewController *)kvc{
@@ -177,26 +143,96 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
 
 #pragma mark - OLKiteDelete
 
-- (BOOL)kiteControllerShouldAllowUserToAddMorePhotos:(OLKiteViewController *)controller {
-    return YES;
-}
-
-//- (BOOL)shouldShowOptOutOfEmailsCheckbox{
-//    return YES;
-//}
-
-//- (BOOL)shouldShowPhoneEntryOnCheckoutScreen{
-//    return YES;
-//}
-
-- (BOOL)shouldShowContinueShoppingButton{
-    return YES;
-}
-
 - (void)logKiteAnalyticsEventWithInfo:(NSDictionary *)info{
 #ifdef OL_KITE_VERBOSE
     NSLog(@"%@", info);
 #endif
+}
+
+#pragma mark Internal
+
+- (void)setupCIDeploymentWithAssets:(NSArray *)assets{
+    BOOL shouldOfferAPIChange = YES;
+    UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
+    
+    if (!([pasteboard containsPasteboardTypes: [NSArray arrayWithObject:@"public.utf8-plain-text"]] && pasteboard.string.length == 40)) {
+        shouldOfferAPIChange = NO;
+    }
+    
+    if (shouldOfferAPIChange){
+        UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Possible API key detected in clipboard", @"") message:NSLocalizedString(@"Do you want to use this instead of the built-in ones?", @"") preferredStyle:UIAlertControllerStyleAlert];
+        [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"No", @"") style:UIAlertActionStyleDefault handler:^(id action){
+#define STRINGIZE(x) #x
+#define STRINGIZE2(x) STRINGIZE(x)
+#define OL_KITE_CI_DEPLOY_KEY @ STRINGIZE2(OL_KITE_CI_DEPLOY)
+            [OLKitePrintSDK setAPIKey:OL_KITE_CI_DEPLOY_KEY withEnvironment:kOLKitePrintSDKEnvironmentSandbox];
+            
+#ifdef OL_KITE_OFFER_APPLE_PAY
+            [OLKitePrintSDK setApplePayMerchantID:kApplePayMerchantIDKey];
+#endif
+            
+            OLKiteViewController *vc = [[OLKiteViewController alloc] initWithAssets:assets info:@{}];
+            vc.userEmail = @"";
+            vc.userPhone = @"";
+            vc.delegate = self;
+            
+            [self addCatsAndDogsImagePickersToKite:vc];
+            
+            [self presentViewController:vc animated:YES completion:NULL];
+        }]];
+        [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Yes", @"") style:UIAlertActionStyleDefault handler:^(id action){
+            [OLKitePrintSDK setAPIKey:pasteboard.string withEnvironment:[self environment]];
+            
+#ifdef OL_KITE_OFFER_APPLE_PAY
+            [OLKitePrintSDK setApplePayMerchantID:kApplePayMerchantIDKey];
+            [OLKitePrintSDK setApplePayPayToString:kApplePayBusinessName];
+#endif
+            
+            OLKiteViewController *vc = [[OLKiteViewController alloc] initWithAssets:assets];
+            vc.userEmail = @"";
+            vc.userPhone = @"";
+            vc.delegate = self;
+            [self presentViewController:vc animated:YES completion:NULL];
+        }]];
+        [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Yes and use staging", @"") style:UIAlertActionStyleDefault handler:^(id action){
+            [OLKitePrintSDK setUseStaging:YES];
+            [OLKitePrintSDK setAPIKey:pasteboard.string withEnvironment:[self environment]];
+            
+#ifdef OL_KITE_OFFER_APPLE_PAY
+            [OLKitePrintSDK setApplePayMerchantID:kApplePayMerchantIDKey];
+            [OLKitePrintSDK setApplePayPayToString:kApplePayBusinessName];
+#endif
+            
+            OLKiteViewController *vc = [[OLKiteViewController alloc] initWithAssets:assets];
+            vc.userEmail = @"";
+            vc.userPhone = @"";
+            vc.delegate = self;
+            
+            [self addCatsAndDogsImagePickersToKite:vc];
+            
+            [self presentViewController:vc animated:YES completion:NULL];
+        }]];
+        [self presentViewController:ac animated:YES completion:NULL];
+    }
+    else{
+#define STRINGIZE(x) #x
+#define STRINGIZE2(x) STRINGIZE(x)
+#define OL_KITE_CI_DEPLOY_KEY @ STRINGIZE2(OL_KITE_CI_DEPLOY)
+        [OLKitePrintSDK setAPIKey:OL_KITE_CI_DEPLOY_KEY withEnvironment:kOLKitePrintSDKEnvironmentSandbox];
+        
+#ifdef OL_KITE_OFFER_APPLE_PAY
+        [OLKitePrintSDK setApplePayMerchantID:kApplePayMerchantIDKey];
+#endif
+        
+        OLKiteViewController *vc = [[OLKiteViewController alloc] initWithAssets:assets];
+        vc.userEmail = @"";
+        vc.userPhone = @"";
+        vc.delegate = self;
+       
+        [self addCatsAndDogsImagePickersToKite:vc];
+        
+        [self presentViewController:vc animated:YES completion:NULL];
+    }
 }
 
 @end
