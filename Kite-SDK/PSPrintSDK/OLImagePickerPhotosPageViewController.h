@@ -50,6 +50,7 @@
 @property (weak, nonatomic) IBOutlet UIView *albumLabelContainer;
 @property (weak, nonatomic) IBOutlet UILabel *albumLabel;
 @property (assign, nonatomic) NSInteger showingCollectionIndex;
+@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
 
 - (NSUInteger)numberOfCellsPerRow;
 - (void)closeAlbumsDrawer;

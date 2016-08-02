@@ -4517,6 +4517,10 @@ only £9.99 £8.99</string>
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="d7v-61-97c">
+                                <rect key="frame" x="282" y="281" width="37" height="37"/>
+                                <color key="color" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                            </activityIndicatorView>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" tag="10" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Lmf-XS-dV3">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -4692,12 +4696,15 @@ only £9.99 £8.99</string>
                             <constraint firstAttribute="trailing" secondItem="Lmf-XS-dV3" secondAttribute="trailing" id="Pc0-ob-M7K"/>
                             <constraint firstItem="2Qw-uy-h3a" firstAttribute="leading" secondItem="IxY-gk-dWn" secondAttribute="leading" id="Vtf-NF-cNr"/>
                             <constraint firstItem="w2r-Bx-QSS" firstAttribute="top" secondItem="Lmf-XS-dV3" secondAttribute="bottom" id="c8E-JC-y4M"/>
+                            <constraint firstItem="d7v-61-97c" firstAttribute="centerX" secondItem="IxY-gk-dWn" secondAttribute="centerX" id="dCD-bp-4Ko"/>
                             <constraint firstItem="Lmf-XS-dV3" firstAttribute="leading" secondItem="IxY-gk-dWn" secondAttribute="leading" id="dba-U4-y6h"/>
                             <constraint firstItem="Lmf-XS-dV3" firstAttribute="top" secondItem="IxY-gk-dWn" secondAttribute="topMargin" id="nSB-WM-RDZ"/>
+                            <constraint firstItem="d7v-61-97c" firstAttribute="centerY" secondItem="IxY-gk-dWn" secondAttribute="centerY" id="vjA-xX-0eP"/>
                         </constraints>
                     </view>
                     <nil key="simulatedStatusBarMetrics"/>
                     <connections>
+                        <outlet property="activityIndicator" destination="d7v-61-97c" id="ZNg-Xg-Ms5"/>
                         <outlet property="albumLabel" destination="0k1-YH-dlk" id="xxa-z3-q15"/>
                         <outlet property="albumLabelChevron" destination="aFB-aF-yn4" id="cKG-Iu-myB"/>
                         <outlet property="albumLabelContainer" destination="p8Q-jB-WXB" id="fXb-JU-tVd"/>

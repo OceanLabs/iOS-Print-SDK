@@ -100,9 +100,11 @@ NSInteger OLImagePickerMargin = 0;
     [self.view bringSubviewToFront:self.albumsContainerView];
     
     if (self.provider.providerType == OLImagePickerProviderTypeFacebook && (self.provider.collections.count == 0 || self.provider.collections[self.showingCollectionIndex].count == 0)){
+        [self.activityIndicator startAnimating];
         [self loadFacebookAlbums];
     }
     else if (self.provider.providerType == OLImagePickerProviderTypeInstagram && (self.provider.collections.count == 0 || self.provider.collections[self.showingCollectionIndex].count == 0)){
+        [self.activityIndicator startAnimating];
         [self startImageLoading];
     }
     
@@ -346,6 +348,7 @@ NSInteger OLImagePickerMargin = 0;
         if (self.provider.providerType == OLImagePickerProviderTypeFacebook && self.provider.collections[self.showingCollectionIndex].count == 0){
             self.photos = [[NSMutableArray alloc] init];
             self.nextPageRequest = [[OLFacebookPhotosForAlbumRequest alloc] initWithAlbum:(OLFacebookAlbum *)self.provider.collections[self.showingCollectionIndex].metaData];
+            [self.activityIndicator startAnimating];
             [self loadNextFacebookPage];
         }
     }

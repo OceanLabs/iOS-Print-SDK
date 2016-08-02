@@ -143,6 +143,7 @@
             }
             [welf.photos addObjectsFromArray:photos];
             welf.overflowPhotos = @[];
+            [self.activityIndicator stopAnimating];
         }
         
         // Insert new items
