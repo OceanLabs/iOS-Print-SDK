@@ -47,6 +47,7 @@
 - (id)init {
     if (self = [super init]) {
         self.title = NSLocalizedString(@"Log In", @"");
+        self.view.backgroundColor = [UIColor whiteColor];
     }
     
     return self;
@@ -58,6 +59,7 @@
     [self addInstagramLoginObservers];
     
     self.webView = [[UIWebView alloc] init];
+    self.webView.backgroundColor = [UIColor whiteColor];
     [self.view addSubview:self.webView];
     UIView *webView = self.webView;
     self.webView.delegate = self;
@@ -66,7 +68,7 @@
     NSMutableArray *con = [[NSMutableArray alloc] init];
     
     NSArray *visuals = @[@"H:|-0-[webView]-0-|",
-                         @"V:|-64-[webView]-0-|"];
+                         @"V:|-0-[webView]-0-|"];
     
     
     for (NSString *visual in visuals) {
@@ -74,7 +76,18 @@
     }
     
     [webView.superview addConstraints:con];
-
+    
+    self.activityIndicator = [[UIActivityIndicatorView alloc] init];
+    self.activityIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyleWhiteLarge;
+    self.activityIndicator.color = [UIColor lightGrayColor];
+    self.activityIndicator.hidesWhenStopped = YES;
+    [self.activityIndicator startAnimating];
+    [self.view addSubview:self.activityIndicator];
+    
+    self.activityIndicator.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.view attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.activityIndicator attribute:NSLayoutAttributeCenterX multiplier:1 constant:0]];
+    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.view attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.activityIndicator attribute:NSLayoutAttributeCenterY multiplier:1 constant:0]];
+    
     
     UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Cancel", @"") style:UIBarButtonItemStylePlain target:self action:@selector(onButtonCancelClicked)];
     self.navigationItem.leftBarButtonItem = cancelButton;
@@ -160,7 +173,7 @@
         
         return NO;
     }
-    
+    self.activityIndicator.hidden = NO;
     return YES;
 }
 
