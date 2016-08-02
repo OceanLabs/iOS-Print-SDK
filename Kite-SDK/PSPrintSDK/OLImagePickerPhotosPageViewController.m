@@ -168,7 +168,10 @@ NSInteger OLImagePickerMargin = 0;
         OLRemoteImageView *imageView = [cell viewWithTag:10];
         
         if (self.provider.collections[indexPath.item].coverAsset){
-            [imageView setAndFadeInImageWithOLAsset:self.provider.collections[indexPath.item].coverAsset size:imageView.frame.size applyEdits:NO placeholder:nil completionHandler:NULL];
+            __weak OLRemoteImageView *weakImageView = imageView;
+            [imageView setAndFadeInImageWithOLAsset:self.provider.collections[indexPath.item].coverAsset size:imageView.frame.size applyEdits:NO placeholder:nil progress:^(float progress){
+                [weakImageView setProgress:progress];
+            } completionHandler:NULL];
         }
         else{
             [self setAssetOfCollection:self.provider.collections[indexPath.item] withIndex:0 toImageView:imageView forCollectionView:collectionView];
@@ -198,13 +201,20 @@ NSInteger OLImagePickerMargin = 0;
         options.deliveryMode = PHImageRequestOptionsDeliveryModeOpportunistic;
         options.resizeMode = PHImageRequestOptionsResizeModeFast;
         
-        //TODO progress
+        options.progressHandler = ^(double progress, NSError *__nullable error, BOOL *stop, NSDictionary *__nullable info){
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [imageView setProgress:progress];
+            });
+        };
         
         CGSize cellSize = [self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:[NSIndexPath indexPathForItem:index inSection:0]];
         [imageView setAndFadeInImageWithPHAsset:asset size:CGSizeMake(cellSize.width * [OLUserSession currentSession].screenScale, cellSize.height * [OLUserSession currentSession].screenScale) options:options];
     }
     else if ([asset isKindOfClass:[OLAsset class]]){
-        [imageView setAndFadeInImageWithOLAsset:asset size:imageView.frame.size applyEdits:NO placeholder:nil completionHandler:NULL];
+        __weak OLRemoteImageView *weakImageView = imageView;
+        [imageView setAndFadeInImageWithOLAsset:asset size:imageView.frame.size applyEdits:NO placeholder:nil progress:^(float progress){
+            [weakImageView setProgress:progress];
+        } completionHandler:NULL];
     }
 }
 

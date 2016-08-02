@@ -40,18 +40,18 @@ static char tasksKey;
 
 @implementation UIImageView (FadeIn)
 - (void)setAndFadeInImageWithURL:(NSURL *)url {
-    [self setAndFadeInImageWithURL:url size:CGSizeZero placeholder:nil completionHandler:NULL];
+    [self setAndFadeInImageWithURL:url size:CGSizeZero placeholder:nil progress:NULL completionHandler:NULL];
 }
 
 - (void)setAndFadeInImageWithURL:(NSURL *)url size:(CGSize)size{
-    [self setAndFadeInImageWithURL:url size:size placeholder:nil completionHandler:NULL];
+    [self setAndFadeInImageWithURL:url size:size placeholder:nil progress:NULL completionHandler:NULL];
 }
 
 - (void)setAndFadeInImageWithURL:(NSURL *)url size:(CGSize)size placeholder:(UIImage *)placeholder{
-    [self setAndFadeInImageWithURL:url size:size placeholder:placeholder completionHandler:NULL];
+    [self setAndFadeInImageWithURL:url size:size placeholder:placeholder progress:NULL completionHandler:NULL];
 }
 
-- (void)setAndFadeInImageWithURL:(NSURL *)url size:(CGSize)size placeholder:(UIImage *)placeholder completionHandler:(void(^)())handler{
+- (void)setAndFadeInImageWithURL:(NSURL *)url size:(CGSize)size placeholder:(UIImage *)placeholder progress:(void(^)(float progress))progressHandler completionHandler:(void(^)())handler{
     for (id key in self.tasks.allKeys){
         if (![key isEqual:url]){
             [self.tasks[key] cancel];
@@ -64,7 +64,12 @@ static char tasksKey;
     
     self.alpha = 0;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        NSURLSessionTask *task = [[OLImageDownloader sharedInstance] downloadImageAtURL:url withCompletionHandler:^(UIImage *image, NSError *error){
+        NSURLSessionTask *task = [[OLImageDownloader sharedInstance] downloadImageAtURL:url progress:^(NSInteger downloaded, NSInteger total){
+            if (progressHandler){
+                float progress = (float)downloaded / (float)total;
+                progressHandler(progress);
+            }
+        }withCompletionHandler:^(UIImage *image, NSError *error){
             if ([self.tasks[url] state] == NSURLSessionTaskStateCanceling){
                 [self.tasks removeObjectForKey:url];
                 return;
@@ -102,7 +107,7 @@ static char tasksKey;
     [self setAndFadeInImageWithPHAsset:asset size:size options:options  placeholder:placeholder completionHandler:NULL];
 }
 
-- (void)setAndFadeInImageWithOLAsset:(OLAsset *)asset size:(CGSize)size applyEdits:(BOOL)applyEdits placeholder:(UIImage *)placeholder completionHandler:(void(^)())handler{
+- (void)setAndFadeInImageWithOLAsset:(OLAsset *)asset size:(CGSize)size applyEdits:(BOOL)applyEdits placeholder:(UIImage *)placeholder progress:(void(^)(float progress))progressHandler completionHandler:(void(^)())handler{
     for (id key in self.tasks.allKeys){
         if (![key isEqual:asset.uuid]){
             [self.tasks removeObjectForKey:key];
@@ -115,7 +120,7 @@ static char tasksKey;
     
     self.alpha = 0;
     self.tasks[asset.uuid] = [NSNull null];
-    [asset imageWithSize:self.frame.size applyEdits:applyEdits progress:NULL completion:^(UIImage *image){
+    [asset imageWithSize:self.frame.size applyEdits:applyEdits progress:progressHandler completion:^(UIImage *image){
         if (!self.tasks[asset.uuid]){
             return;
         }
