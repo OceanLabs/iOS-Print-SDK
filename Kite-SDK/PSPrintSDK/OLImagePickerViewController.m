@@ -177,6 +177,12 @@
     
     [view.superview addConstraints:con];
     
+    view.clipsToBounds = NO;
+    view.layer.shadowColor = [[UIColor blackColor] CGColor];
+    view.layer.shadowOpacity = .3;
+    view.layer.shadowOffset = CGSizeMake(0, 1);
+    view.layer.shadowRadius = 2;
+    
     [self updateTitleBasedOnSelectedPhotoQuanitity];
 }
 
