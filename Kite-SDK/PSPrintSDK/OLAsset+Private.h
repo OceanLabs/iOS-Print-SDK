@@ -37,8 +37,8 @@ typedef enum {
     kOLAssetTypeImageFilePath,
     kOLAssetTypeImageData,
     kOLAssetTypeDataSource,
-    kOLAssetTypeFacebookPhoto,
-    kOLAssetTypeInstagramPhoto
+//    kOLAssetTypeFacebookPhoto,
+//    kOLAssetTypeInstagramPhoto
 } OLAssetType;
 
 @interface OLAsset (FriendMethods)

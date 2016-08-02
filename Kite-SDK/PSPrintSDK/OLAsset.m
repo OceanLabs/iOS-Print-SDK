@@ -71,6 +71,10 @@ static NSOperationQueue *imageOperationQueue;
 @property (assign, nonatomic) NSInteger extraCopies;
 @property (strong, nonatomic) OLPhotoEdits *edits;
 @property (strong, nonatomic) NSString *uuid;
+
+@property (nonatomic, readwrite) NSString *mimeType;
+@property (nonatomic, readwrite) long long assetId;
+@property (nonatomic, readwrite) NSURL *previewURL;
 @end
 
 @implementation OLAsset
@@ -440,7 +444,7 @@ static NSOperationQueue *imageOperationQueue;
                 });
             }];
         }
-        else if (self.assetType == kOLAssetTypeFacebookPhoto || self.assetType == kOLAssetTypeInstagramPhoto || self.assetType == kOLAssetTypeRemoteImageURL) {
+        else if (/*self.assetType == kOLAssetTypeFacebookPhoto || self.assetType == kOLAssetTypeInstagramPhoto || */self.assetType == kOLAssetTypeRemoteImageURL) {
             [[OLImageDownloader sharedInstance] downloadImageAtURL:self.imageURL progress:^(NSInteger currentProgress, NSInteger total){
                 dispatch_async(dispatch_get_main_queue(), ^{
                     if (progress) {
@@ -603,6 +607,24 @@ static NSOperationQueue *imageOperationQueue;
         default:
             return NO;
     }
+}
+
+- (id)copyWithZone:(NSZone *)zone{
+    OLAsset *copy = [[OLAsset alloc] init];
+    copy.imageFilePath = self.imageFilePath;
+    copy.imageData = self.imageData;
+    copy.phAsset = self.phAsset;
+    copy.dataSource = self.dataSource;
+    copy.imageURL = self.imageURL;
+    copy.corrupt = self.corrupt;
+    copy.extraCopies = self.extraCopies;
+    copy.edits = [self.edits copyWithZone:zone];
+    copy.uuid = self.uuid;
+    copy.mimeType = self.mimeType;
+    copy.assetId = self.assetId;
+    copy.previewURL = self.previewURL;
+    
+    return copy;
 }
 
 #pragma mark - NSCoding methods
