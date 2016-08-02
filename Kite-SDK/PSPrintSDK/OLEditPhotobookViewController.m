@@ -40,6 +40,8 @@
 #import "OLAsset+Private.h"
 #import "UIViewController+OLMethods.h"
 #import "OLPaymentViewController.h"
+#import "OLImagePickerViewController.h"
+#import "OLNavigationController.h"
 
 static const NSInteger kSectionCover = 0;
 static const NSInteger kSectionHelp = 1;
@@ -58,7 +60,7 @@ static const NSInteger kSectionPages = 2;
 #endif
 @end
 
-@interface OLEditPhotobookViewController () <UICollectionViewDelegateFlowLayout, OLPhotobookViewControllerDelegate, OLImageViewDelegate, OLScrollCropViewControllerDelegate,UINavigationControllerDelegate>
+@interface OLEditPhotobookViewController () <UICollectionViewDelegateFlowLayout, OLPhotobookViewControllerDelegate, OLImageViewDelegate, OLScrollCropViewControllerDelegate,UINavigationControllerDelegate, OLImagePickerViewControllerDelegate, UIPopoverPresentationControllerDelegate>
 
 @property (assign, nonatomic) BOOL animating;
 @property (assign, nonatomic) BOOL haveCachedCells;
@@ -373,6 +375,14 @@ static const NSInteger kSectionPages = 2;
     }
     
     return count;
+}
+
+- (UIModalPresentationStyle) adaptivePresentationStyleForPresentationController:(UIPresentationController *)controller{
+    return UIModalPresentationNone;
+}
+
+- (UIModalPresentationStyle)adaptivePresentationStyleForPresentationController:(UIPresentationController *)controller traitCollection:(UITraitCollection *)traitCollection {
+    return UIModalPresentationNone;
 }
 
 #pragma mark - Menu Actions
@@ -827,7 +837,82 @@ static const NSInteger kSectionPages = 2;
 #pragma mark - Adding new images
 
 - (void)addMorePhotosFromView:(UIView *)view{
-   
+//    [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:kSectionPages] atScrollPosition:UICollectionViewScrollPositionTop animated:YES];
+    
+    OLImagePickerViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLImagePickerViewController"];
+    vc.selectedAssets = [OLUserSession currentSession].userSelectedPhotos;
+    vc.delegate = self;
+//    vc.modalPresentationStyle = UIModalPresentationPopover;
+//    vc.preferredContentSize = CGSizeMake(self.view.frame.size.width, self.view.frame.size.height);
+//    
+//    UIPopoverPresentationController *povc = vc.popoverPresentationController;
+//    povc.sourceView = view;
+//    povc.sourceRect = view.frame;
+//    povc.delegate = self;
+    
+    [self presentViewController:[[OLNavigationController alloc] initWithRootViewController:vc] animated:YES completion:NULL];
+}
+
+- (void)imagePickerDidCancel:(OLImagePickerViewController *)vc{
+    [vc dismissViewControllerAnimated:YES completion:NULL];
+}
+
+- (void)imagePicker:(OLImagePickerViewController *)vc didFinishPickingAssets:(NSMutableArray *)assets added:(NSArray<OLAsset *> *)addedAssets removed:(NSArray *)removedAssets{
+    
+    if (self.replacingImageNumber){
+        if ([self.replacingImageNumber integerValue] == -1){
+            self.coverPhoto = nil;
+            self.addNewPhotosAtIndex = -1;
+        }
+        else{
+            self.photobookPhotos[[self.replacingImageNumber integerValue]] = [NSNull null];
+        }
+        self.replacingImageNumber = nil;
+    }
+    
+    if (self.addNewPhotosAtIndex == -1){
+            self.coverPhoto = [addedAssets firstObject];
+        addedAssets = [[addedAssets subarrayWithRange:NSMakeRange(1, assets.count - 1)] mutableCopy];
+        self.addNewPhotosAtIndex = 0;
+        
+        for (OLPhotobookViewController *photobook in self.childViewControllers){
+            if ([photobook bookClosed]){
+                photobook.coverPhoto = self.coverPhoto;
+                [photobook loadCoverPhoto];
+                break;
+            }
+        }
+    }
+    
+    [self updatePhotobookPhotos];
+    for (OLPhotobookViewController *photobook in self.childViewControllers){
+        if (!photobook.bookClosed){
+            photobook.photobookPhotos = self.photobookPhotos;
+            for (OLPhotobookPageContentViewController *page in photobook.pageController.viewControllers){
+                [page loadImageWithCompletionHandler:NULL];
+            }
+        }
+    }
+    [self updateUserSelectedPhotos];
+    
+    if (!self.autoAddedCover && assets.count > 0){
+        self.autoAddedCover = YES;
+        if (!self.coverPhoto){
+            self.coverPhoto = addedAssets.firstObject;
+            [assets removeObject:self.coverPhoto];
+            [assets insertObject:self.coverPhoto atIndex:0];
+            for (OLPhotobookViewController *photobook in self.childViewControllers){
+                if ([photobook bookClosed]){
+                    photobook.coverPhoto = self.coverPhoto;
+                    [photobook loadCoverPhoto];
+                    break;
+                }
+            }
+        }
+    }
+    
+    [vc dismissViewControllerAnimated:YES completion:^(void){}];
+    
 }
 
 @end

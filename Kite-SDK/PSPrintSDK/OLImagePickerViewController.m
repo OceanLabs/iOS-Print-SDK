@@ -111,7 +111,10 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    if (self.navigationController.viewControllers.firstObject == self){
+    if (!self.navigationController){
+        [self.nextButton removeFromSuperview];
+    }
+    else if (self.navigationController.viewControllers.firstObject == self){
         self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(onBarButtonItemCancelTapped:)];
         [self.nextButton removeTarget:self action:@selector(onButtonNextClicked:) forControlEvents:UIControlEventTouchUpInside];
         [self.nextButton addTarget:self action:@selector(onButtonDoneTapped:) forControlEvents:UIControlEventTouchUpInside];

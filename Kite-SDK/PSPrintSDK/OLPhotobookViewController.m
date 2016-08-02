@@ -61,6 +61,8 @@
 #import "OLPaymentViewController.h"
 #import "UIViewController+OLMethods.h"
 #import "OLCustomPhotoProvider.h"
+#import "OLImagePickerViewController.h"
+#import "OLNavigationController.h"
 
 static const NSUInteger kTagLeft = 10;
 static const NSUInteger kTagRight = 20;
@@ -108,7 +110,7 @@ static const CGFloat kBookEdgePadding = 38;
 @property (strong, nonatomic) OLUpsellOffer *redeemedOffer;
 @end
 
-@interface OLPhotobookViewController () <UIPageViewControllerDataSource, UIPageViewControllerDelegate,UIGestureRecognizerDelegate, OLImageViewDelegate, OLScrollCropViewControllerDelegate, UINavigationControllerDelegate, OLUpsellViewControllerDelegate>
+@interface OLPhotobookViewController () <UIPageViewControllerDataSource, UIPageViewControllerDelegate,UIGestureRecognizerDelegate, OLImageViewDelegate, OLScrollCropViewControllerDelegate, UINavigationControllerDelegate, OLUpsellViewControllerDelegate, OLImagePickerViewControllerDelegate>
 
 @property (assign, nonatomic) BOOL animating;
 @property (assign, nonatomic) BOOL bookClosed;
@@ -1480,7 +1482,41 @@ static const CGFloat kBookEdgePadding = 38;
 #pragma mark - Adding new images
 
 - (void)addMorePhotosFromView:(UIView *)view{
-    //TODO
+    OLImagePickerViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLImagePickerViewController"];
+    vc.selectedAssets = [OLUserSession currentSession].userSelectedPhotos;
+    vc.delegate = self;
+    
+    [self presentViewController:[[OLNavigationController alloc] initWithRootViewController:vc] animated:YES completion:NULL];
+}
+
+- (void)imagePickerDidCancel:(OLImagePickerViewController *)vc{
+    [vc dismissViewControllerAnimated:YES completion:NULL];
+}
+
+- (void)imagePicker:(OLImagePickerViewController *)vc didFinishPickingAssets:(NSMutableArray *)assets added:(NSArray<OLAsset *> *)addedAssets removed:(NSArray *)removedAssets{
+    
+    if (self.addNewPhotosAtIndex == -1){
+        self.coverPhoto = [addedAssets firstObject];
+        addedAssets = [[addedAssets subarrayWithRange:NSMakeRange(1, assets.count - 1)] mutableCopy];
+        self.addNewPhotosAtIndex = 0;
+        
+        for (OLPhotobookViewController *photobook in self.childViewControllers){
+            if ([photobook bookClosed]){
+                photobook.coverPhoto = self.coverPhoto;
+                [photobook loadCoverPhoto];
+                break;
+            }
+        }
+    }
+    
+    [self updatePhotobookPhotos];
+    for (OLPhotobookPageContentViewController *page in self.pageController.viewControllers){
+        [page loadImageWithCompletionHandler:NULL];
+    }
+    [self updateUserSelectedPhotos];
+    
+    [vc dismissViewControllerAnimated:YES completion:^(void){}];
+    
 }
 
 - (void)updatePhotobookPhotos{
