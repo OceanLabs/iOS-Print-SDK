@@ -30,7 +30,6 @@
 @import Photos;
 
 #import "OLAsset.h"
-#import "OLURLDataSource.h"
 #import "OLAsset+Private.h"
 #import "OLKiteUtils.h"
 #import "OLConstants.h"
@@ -245,8 +244,8 @@ static NSOperationQueue *imageOperationQueue;
     } else if ([urlStr hasSuffix:@"pdf"]){
         return [[OLAsset alloc] initWithImageURL:url mimeType:kOLMimeTypePDF];
     } else {
-        // Worst case scenario where we will need to download the entire image first and just assume it's a JPEG.
-        return [OLAsset assetWithDataSource:[[OLURLDataSource alloc] initWithURLString:urlStr]];
+        // Worst case scenario just assume it's a JPEG.
+        return [[OLAsset alloc] initWithImageURL:url mimeType:kOLMimeTypeJPEG];
     }
 
     return nil;

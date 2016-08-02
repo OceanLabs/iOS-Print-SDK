@@ -29,7 +29,6 @@
 
 #import "OLQRCodeUploadedImagePoller.h"
 #import "OLAsset.h"
-#import "OLURLDataSource.h"
 #import "OLImageDownloader.h"
 
 @interface OLQRCodeUploadedImagePoller ()
@@ -59,7 +58,7 @@
             dispatch_async(dispatch_get_main_queue(), ^{
                 if (!self.cancelled) {
                     [self stopPolling];
-                    OLAsset *asset = [OLAsset assetWithDataSource:[[OLURLDataSource alloc] initWithURLString:imageURL.absoluteString]];
+                    OLAsset *asset = [OLAsset assetWithURL:imageURL];
                     downloadedHandler(asset);
                 }
             });

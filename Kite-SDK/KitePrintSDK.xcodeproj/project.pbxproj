@@ -164,7 +164,6 @@
 		2E884F481D37B566007CA45A /* OLImagePickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E884F451D37B566007CA45A /* OLImagePickerViewController.m */; };
 		2E884F491D37B566007CA45A /* OLImagePickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E884F451D37B566007CA45A /* OLImagePickerViewController.m */; };
 		2E898C4F1CC518180041CCD8 /* UIViewController+OLMethods.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E53E0CC1C1AEAAD00BF7887 /* UIViewController+OLMethods.m */; };
-		2E898C501CC518180041CCD8 /* OLURLDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = CDE0744A188D7730009ADFA2 /* OLURLDataSource.m */; };
 		2E898C511CC518180041CCD8 /* OLScrollCropViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0A72651A6FB07000BC5AE7 /* OLScrollCropViewController.m */; };
 		2E898C521CC518180041CCD8 /* OLPrintOrderCostRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E8C29EC1B18D1AC0045DC21 /* OLPrintOrderCostRequest.m */; };
 		2E898C531CC518180041CCD8 /* OLInfoPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EF53E3D1B5549B900BF936A /* OLInfoPageViewController.m */; };
@@ -316,7 +315,6 @@
 		2EA0087B1CB293A900C23DFA /* OLUpsellOffer.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA0087A1CB293A900C23DFA /* OLUpsellOffer.m */; };
 		2EA0087C1CB293A900C23DFA /* OLUpsellOffer.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA0087A1CB293A900C23DFA /* OLUpsellOffer.m */; };
 		2EA0087D1CB293A900C23DFA /* OLUpsellOffer.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA0087A1CB293A900C23DFA /* OLUpsellOffer.m */; };
-		2EA3D35C1C9C04B500B99BCD /* OLURLDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = CDE0744A188D7730009ADFA2 /* OLURLDataSource.m */; };
 		2EA3D35D1C9C04B500B99BCD /* OLScrollCropViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0A72651A6FB07000BC5AE7 /* OLScrollCropViewController.m */; };
 		2EA3D35E1C9C04B500B99BCD /* OLCustomPhotoProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0804B71C0DECE300F50D42 /* OLCustomPhotoProvider.m */; };
 		2EA3D35F1C9C04B500B99BCD /* OLPrintOrderCostRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E8C29EC1B18D1AC0045DC21 /* OLPrintOrderCostRequest.m */; };
@@ -413,7 +411,6 @@
 		2EA3D3DE1C9C04B500B99BCD /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD550D94188AA20100782D75 /* AssetsLibrary.framework */; };
 		2EAB0AEE1CDB835700625BD6 /* 3.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 2EAB0AEC1CDB834E00625BD6 /* 3.pdf */; };
 		2EAB0AF51CDCD58400625BD6 /* OLTestTapGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EAB0AF21CDCD57A00625BD6 /* OLTestTapGestureRecognizer.m */; };
-		2EADD7E61BE79D6D0051CD31 /* OLURLDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = CDE0744A188D7730009ADFA2 /* OLURLDataSource.m */; };
 		2EADD7E71BE79D6D0051CD31 /* OLScrollCropViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0A72651A6FB07000BC5AE7 /* OLScrollCropViewController.m */; };
 		2EADD7E81BE79D6D0051CD31 /* OLPrintOrderCostRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E8C29EC1B18D1AC0045DC21 /* OLPrintOrderCostRequest.m */; };
 		2EADD7E91BE79D6D0051CD31 /* OLInfoPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EF53E3D1B5549B900BF936A /* OLInfoPageViewController.m */; };
@@ -615,7 +612,6 @@
 		E22963921C43DDF9002A90CA /* CTAssetThumbnailStacks.m in Sources */ = {isa = PBXBuildFile; fileRef = E229631D1C43DC90002A90CA /* CTAssetThumbnailStacks.m */; };
 		E22963931C43DDFC002A90CA /* CTAssetThumbnailView.m in Sources */ = {isa = PBXBuildFile; fileRef = E229631F1C43DC90002A90CA /* CTAssetThumbnailView.m */; };
 		E22963941C43DE24002A90CA /* libCTAssetsPicker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E22963671C43DD21002A90CA /* libCTAssetsPicker.a */; };
-		E29C858B1BE3B5C50041D4CF /* OLURLDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = CDE0744A188D7730009ADFA2 /* OLURLDataSource.m */; };
 		E29C858E1BE3B5C50041D4CF /* OLScrollCropViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0A72651A6FB07000BC5AE7 /* OLScrollCropViewController.m */; };
 		E29C858F1BE3B5C50041D4CF /* OLPrintOrderCostRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E8C29EC1B18D1AC0045DC21 /* OLPrintOrderCostRequest.m */; };
 		E29C85901BE3B5C50041D4CF /* OLInfoPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EF53E3D1B5549B900BF936A /* OLInfoPageViewController.m */; };
@@ -1127,8 +1123,6 @@
 		CDAFE000186CC90B003572FE /* OLAssetUploadRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLAssetUploadRequest.m; sourceTree = "<group>"; };
 		CDAFE006186D9C6C003572FE /* OLAsset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLAsset.h; sourceTree = "<group>"; };
 		CDAFE007186D9C6C003572FE /* OLAsset.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLAsset.m; sourceTree = "<group>"; };
-		CDE07449188D7730009ADFA2 /* OLURLDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLURLDataSource.h; sourceTree = "<group>"; };
-		CDE0744A188D7730009ADFA2 /* OLURLDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLURLDataSource.m; sourceTree = "<group>"; };
 		CDE5DDCD18E5BE40000FF3B5 /* OLPrintEnvironment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLPrintEnvironment.h; sourceTree = "<group>"; };
 		CDFFA781189D2DF40083BCE7 /* OLAsset+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "OLAsset+Private.h"; sourceTree = "<group>"; };
 		CFE5B84A94297F8524AE7764 /* libPods-KiteSDK-Demo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-KiteSDK-Demo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1998,8 +1992,6 @@
 		CDAFE005186D9C5E003572FE /* Asset */ = {
 			isa = PBXGroup;
 			children = (
-				CDE07449188D7730009ADFA2 /* OLURLDataSource.h */,
-				CDE0744A188D7730009ADFA2 /* OLURLDataSource.m */,
 				CDAFE006186D9C6C003572FE /* OLAsset.h */,
 				CDAFE007186D9C6C003572FE /* OLAsset.m */,
 				CDFFA781189D2DF40083BCE7 /* OLAsset+Private.h */,
@@ -2728,7 +2720,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				2E898C4F1CC518180041CCD8 /* UIViewController+OLMethods.m in Sources */,
-				2E898C501CC518180041CCD8 /* OLURLDataSource.m in Sources */,
 				2E898C511CC518180041CCD8 /* OLScrollCropViewController.m in Sources */,
 				2E898C521CC518180041CCD8 /* OLPrintOrderCostRequest.m in Sources */,
 				2E898C531CC518180041CCD8 /* OLInfoPageViewController.m in Sources */,
@@ -2873,7 +2864,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2EA3D35C1C9C04B500B99BCD /* OLURLDataSource.m in Sources */,
 				2EA3D35D1C9C04B500B99BCD /* OLScrollCropViewController.m in Sources */,
 				2E1E66FE1D47A653002524A4 /* OLFacebookImagePickerConstants.m in Sources */,
 				2E1E66F11D479617002524A4 /* OLFacebookImage.m in Sources */,
@@ -3014,7 +3004,6 @@
 				2E434AE01D36583700D1BD06 /* OLEditingToolsView.m in Sources */,
 				2ED389911C917D2000DC2314 /* OLPhotoTextField.m in Sources */,
 				2E53E0CD1C1AEAAD00BF7887 /* UIViewController+OLMethods.m in Sources */,
-				2EADD7E61BE79D6D0051CD31 /* OLURLDataSource.m in Sources */,
 				2E84835E1D13E461003F4056 /* OLTShirtReviewViewController.m in Sources */,
 				2EADD7E71BE79D6D0051CD31 /* OLScrollCropViewController.m in Sources */,
 				2E67B92A1D267A3E00914D56 /* OLColorSelectionCollectionViewCell.m in Sources */,
@@ -3261,7 +3250,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E29C858B1BE3B5C50041D4CF /* OLURLDataSource.m in Sources */,
 				E29C858E1BE3B5C50041D4CF /* OLScrollCropViewController.m in Sources */,
 				2E0804B91C0DECE300F50D42 /* OLCustomPhotoProvider.m in Sources */,
 				E29C858F1BE3B5C50041D4CF /* OLPrintOrderCostRequest.m in Sources */,

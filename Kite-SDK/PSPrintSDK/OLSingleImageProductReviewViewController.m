@@ -53,8 +53,6 @@
 #import "OLPaymentViewController.h"
 #import "UIViewController+OLMethods.h"
 #import "OLSingleImageProductReviewViewController.h"
-#import "OLQRCodeUploadViewController.h"
-#import "OLURLDataSource.h"
 #import "OLUpsellViewController.h"
 #import "OLImagePreviewViewController.h"
 #import "OLImagePickerViewController.h"
