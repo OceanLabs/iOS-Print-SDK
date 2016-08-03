@@ -52,7 +52,6 @@ static CGFloat fadeTime = 0.3;
 
 @interface OLKiteViewController ()
 
-@property (strong, nonatomic) OLPrintOrder *printOrder;
 @property (weak, nonatomic) IBOutlet UINavigationBar *navigationBar;
 @property (weak, nonatomic) IBOutlet UINavigationItem *customNavigationItem;
 @property (weak, nonatomic) IBOutlet UIImageView *loadingImageView;
@@ -131,7 +130,7 @@ static CGFloat fadeTime = 0.3;
     if ((self = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:currentBundle] instantiateViewControllerWithIdentifier:@"KiteViewController"])) {
         [OLUserSession currentSession].appAssets = assets;
         [[OLUserSession currentSession] resetUserSelectedPhotos];
-        self.printOrder.userData = info;
+        [OLUserSession currentSession].printOrder.userData = info;
     }
     [OLKiteABTesting sharedInstance].launchedWithPrintOrder = NO;
     
@@ -142,8 +141,8 @@ static CGFloat fadeTime = 0.3;
     [OLAnalytics setExtraInfo:info];
     NSBundle *currentBundle = [NSBundle bundleForClass:[OLKiteViewController class]];
     if ((self = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:currentBundle] instantiateViewControllerWithIdentifier:@"KiteViewController"])) {
-        self.printOrder = printOrder;
-        self.printOrder.userData = info;
+        [OLUserSession currentSession].printOrder = printOrder;
+        [OLUserSession currentSession].printOrder.userData = info;
         [OLUserSession currentSession].appAssets = [[printOrder.jobs firstObject] assetsForUploading];
         [OLKiteABTesting sharedInstance].launchedWithPrintOrder = printOrder != nil;
     }
@@ -261,8 +260,8 @@ static CGFloat fadeTime = 0.3;
             return;
         }
         else if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder){
-            BOOL containsPDF = [OLKiteUtils assetArrayContainsPDF:[[welf.printOrder.jobs firstObject] assetsForUploading]];
-            OLProduct *product = [OLProduct productWithTemplateId:[[welf.printOrder.jobs firstObject] templateId]];
+            BOOL containsPDF = [OLKiteUtils assetArrayContainsPDF:[[[OLUserSession currentSession].printOrder.jobs firstObject] assetsForUploading]];
+            OLProduct *product = [OLProduct productWithTemplateId:[[[OLUserSession currentSession].printOrder.jobs firstObject] templateId]];
             NSString *identifier;
             if (!containsPDF && [[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant hasPrefix:@"Overview-"] && [product isValidProductForUI]){
                 identifier = @"OLProductOverviewViewController";
@@ -271,7 +270,7 @@ static CGFloat fadeTime = 0.3;
                 identifier = [OLKiteUtils reviewViewControllerIdentifierForProduct:product photoSelectionScreen:[OLKiteUtils imageProvidersAvailable:welf]];
             }
             else{
-                [OLKiteUtils checkoutViewControllerForPrintOrder:welf.printOrder handler:^(id vc){
+                [OLKiteUtils checkoutViewControllerForPrintOrder:[OLUserSession currentSession].printOrder handler:^(id vc){
                     [vc safePerformSelector:@selector(setUserEmail:) withObject:welf.userEmail];
                     [vc safePerformSelector:@selector(setUserPhone:) withObject:welf.userPhone];
                     [vc safePerformSelector:@selector(setKiteDelegate:) withObject:welf.delegate];

@@ -51,7 +51,6 @@
 
 @interface OLKiteViewController ()
 @property (strong, nonatomic) NSMutableArray <OLCustomPhotoProvider *> *customImageProviders;
-@property (strong, nonatomic) OLPrintOrder *printOrder;
 @end
 
 @interface OLKitePrintSDK ()
@@ -614,7 +613,7 @@
             if ([self.product hasOfferIdBeenUsed:offer.identifier]){
                 continue;
             }
-            if ([[OLKiteUtils kiteVcForViewController:self].printOrder hasOfferIdBeenUsed:offer.identifier]){
+            if ([[OLUserSession currentSession].printOrder hasOfferIdBeenUsed:offer.identifier]){
                 continue;
             }
             
@@ -669,11 +668,11 @@
         //Do nothing, no assets needed
     }
     else if (offerProduct.quantityToFulfillOrder == 1){
-        [assets addObject:[OLAsset assetWithDataSource:[self.selectedAssets.firstObject copy]]];
+        [assets addObject:[self.selectedAssets.firstObject copy]];
     }
     else{
         for (OLAsset *photo in self.selectedAssets){
-            [assets addObject:[OLAsset assetWithDataSource:[photo copy]]];
+            [assets addObject:[photo copy]];
         }
     }
     
@@ -685,7 +684,7 @@
         job = [OLPrintJob printJobWithTemplateId:templateId OLAssets:assets];
     }
     
-    [[OLKiteUtils kiteVcForViewController:self].printOrder addPrintJob:job];
+    [[OLUserSession currentSession].printOrder addPrintJob:job];
     return job;
 }
 

@@ -71,12 +71,6 @@ static const NSUInteger kSectionErrorRetry = 2;
 
 @end
 
-@interface OLKiteViewController ()
-
-@property (strong, nonatomic) OLPrintOrder *printOrder;
-
-@end
-
 @implementation OLReceiptViewController
 
 //- (BOOL)prefersStatusBarHidden {

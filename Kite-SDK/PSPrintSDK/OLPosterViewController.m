@@ -63,10 +63,7 @@ CGFloat posterMargin = 2;
 @end
 
 @interface OLKiteViewController ()
-
-@property (strong, nonatomic) OLPrintOrder *printOrder;
 - (void)dismiss;
-
 @end
 
 @interface OLOrderReviewViewController (Private) <UICollectionViewDelegateFlowLayout>

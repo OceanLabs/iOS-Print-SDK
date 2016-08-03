@@ -48,10 +48,7 @@
 #import "OLUserSession.h"
 
 @interface OLKiteViewController ()
-
-@property (strong, nonatomic) OLPrintOrder *printOrder;
 - (void)dismiss;
-
 @end
 
 @interface OLProduct ()
@@ -361,7 +358,7 @@
             if ([self.product hasOfferIdBeenUsed:offer.identifier]){
                 continue;
             }
-            if ([[OLKiteUtils kiteVcForViewController:self].printOrder hasOfferIdBeenUsed:offer.identifier]){
+            if ([[OLUserSession currentSession].printOrder hasOfferIdBeenUsed:offer.identifier]){
                 continue;
             }
             
@@ -405,7 +402,7 @@
             vc = [self.storyboard instantiateViewControllerWithIdentifier:[OLKiteUtils reviewViewControllerIdentifierForProduct:self.product photoSelectionScreen:[OLKiteUtils imageProvidersAvailable:self]]];
         }
         else{
-            [OLKiteUtils checkoutViewControllerForPrintOrder:[OLKiteUtils kiteVcForViewController:self].printOrder handler:^(id vc){
+            [OLKiteUtils checkoutViewControllerForPrintOrder:[OLUserSession currentSession].printOrder handler:^(id vc){
                 if ([[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant isEqualToString:@"Checkout"]){
                     [[vc navigationItem] setLeftBarButtonItem:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:(OLKiteViewController *)vc action:@selector(dismiss)]];
                 }
@@ -440,7 +437,7 @@
 }
 
 - (void)saveJobWithCompletionHandler:(void(^)())handler{
-    OLPrintOrder *printOrder = [OLKiteUtils kiteVcForViewController:self].printOrder;
+    OLPrintOrder *printOrder = [OLUserSession currentSession].printOrder;
     
     OLProductPrintJob *job = [[OLProductPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:@[[OLAsset assetWithURL:[NSURL URLWithString:@"https://kite.ly/no-asset.jpg"]]]];
     NSArray *jobs = [NSArray arrayWithArray:printOrder.jobs];
@@ -481,7 +478,7 @@
 - (void)doCheckout {
     [self saveJobWithCompletionHandler:NULL];
     
-    OLPrintOrder *printOrder = [OLKiteUtils kiteVcForViewController:self].printOrder;
+    OLPrintOrder *printOrder = [OLUserSession currentSession].printOrder;
         [OLKiteUtils checkoutViewControllerForPrintOrder:printOrder handler:^(id vc){
             [vc safePerformSelector:@selector(setUserEmail:) withObject:[OLKiteUtils userEmail:self]];
             [vc safePerformSelector:@selector(setUserPhone:) withObject:[OLKiteUtils userPhone:self]];
@@ -561,11 +558,11 @@
         //Do nothing, no assets needed
     }
     else if (offerProduct.quantityToFulfillOrder == 1){
-        [assets addObject:[OLAsset assetWithDataSource:[[OLUserSession currentSession].userSelectedPhotos.firstObject copy]]];
+        [assets addObject:[[OLUserSession currentSession].userSelectedPhotos.firstObject copy]];
     }
     else{
         for (OLAsset *photo in [OLUserSession currentSession].userSelectedPhotos){
-            [assets addObject:[OLAsset assetWithDataSource:[photo copy]]];
+            [assets addObject:[photo copy]];
         }
     }
     
@@ -577,7 +574,7 @@
         job = [OLPrintJob printJobWithTemplateId:templateId OLAssets:assets];
     }
     
-    [[OLKiteUtils kiteVcForViewController:self].printOrder addPrintJob:job];
+    [[OLUserSession currentSession].printOrder addPrintJob:job];
     return job;
 }
 

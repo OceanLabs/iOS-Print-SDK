@@ -256,7 +256,7 @@ static BOOL hasMoved;
     self.imageDisplayed.edits.cropImageSize = [self.imageCropView croppedImageSize];
     self.imageDisplayed.edits.cropTransform = self.imageCropView.imageView.transform;
     
-    OLAsset *asset = [OLAsset assetWithDataSource:[self.imageDisplayed copy]];
+    OLAsset *asset = [self.imageDisplayed copy];
     [asset dataLengthWithCompletionHandler:^(long long dataLength, NSError *error){
         if (dataLength < 40000){
             UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Image Is Too Small", @"") message:NSLocalizedString(@"Please zoom out or pick a higher quality image", @"") preferredStyle:UIAlertControllerStyleAlert];
@@ -274,7 +274,7 @@ static BOOL hasMoved;
 }
 
 - (void)saveJobNowWithCompletionHandler:(void(^)())handler {
-    OLAsset *asset = [OLAsset assetWithDataSource:[self.imageDisplayed copy]];
+    OLAsset *asset = [self.imageDisplayed copy];
     NSArray *assetArray = @[asset];
     
     OLPrintOrder *printOrder = [OLUserSession currentSession].printOrder;
@@ -602,11 +602,11 @@ static BOOL hasMoved;
         //Do nothing, no assets needed
     }
     else if (offerProduct.quantityToFulfillOrder == 1){
-        [assets addObject:[OLAsset assetWithDataSource:[[OLUserSession currentSession].userSelectedPhotos.firstObject copy]]];
+        [assets addObject:[[OLUserSession currentSession].userSelectedPhotos.firstObject copy]];
     }
     else{
         for (OLAsset *photo in [OLUserSession currentSession].userSelectedPhotos){
-            [assets addObject:[OLAsset assetWithDataSource:[photo copy]]];
+            [assets addObject:[photo copy]];
         }
     }
     

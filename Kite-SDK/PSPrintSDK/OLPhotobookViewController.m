@@ -76,11 +76,7 @@ static const CGFloat kBookEdgePadding = 38;
 @end
 
 @interface OLKiteViewController ()
-
-@property (strong, nonatomic) OLPrintOrder *printOrder;
-@property (strong, nonatomic) NSMutableArray <OLCustomPhotoProvider *> *customImageProviders;
 - (void)dismiss;
-
 @end
 
 @interface OLPrintOrder (Private)
@@ -150,9 +146,8 @@ static const CGFloat kBookEdgePadding = 38;
         return _editingPrintJob;
     }
     else if([OLKiteABTesting sharedInstance].launchedWithPrintOrder){
-        OLKiteViewController *kiteVc = [OLKiteUtils kiteVcForViewController:self];
-        self.product.uuid = [kiteVc.printOrder.jobs.firstObject uuid];
-        return [kiteVc.printOrder.jobs firstObject];
+        self.product.uuid = [[OLUserSession currentSession].printOrder.jobs.firstObject uuid];
+        return [[OLUserSession currentSession].printOrder.jobs firstObject];
     }
     
     return nil;
@@ -234,8 +229,7 @@ static const CGFloat kBookEdgePadding = 38;
         }
         
         if(!self.editingPrintJob){
-            OLKiteViewController *kiteVc = [OLKiteUtils kiteVcForViewController:self];
-            self.editingPrintJob = [kiteVc.printOrder.jobs firstObject];
+            self.editingPrintJob = [[OLUserSession currentSession].printOrder.jobs firstObject];
             self.product.uuid = self.editingPrintJob.uuid;
         }
     }
@@ -621,11 +615,11 @@ static const CGFloat kBookEdgePadding = 38;
         //Do nothing, no assets needed
     }
     else if (offerProduct.quantityToFulfillOrder == 1){
-        [assets addObject:[OLAsset assetWithDataSource:[[OLUserSession currentSession].userSelectedPhotos.firstObject copy]]];
+        [assets addObject:[[OLUserSession currentSession].userSelectedPhotos.firstObject copy]];
     }
     else{
         for (OLAsset *photo in [OLUserSession currentSession].userSelectedPhotos){
-            [assets addObject:[OLAsset assetWithDataSource:[photo copy]]];
+            [assets addObject:[photo copy]];
         }
     }
     
@@ -637,7 +631,7 @@ static const CGFloat kBookEdgePadding = 38;
         job = [OLPrintJob printJobWithTemplateId:templateId OLAssets:assets];
     }
     
-    [[OLKiteUtils kiteVcForViewController:self].printOrder addPrintJob:job];
+    [[OLUserSession currentSession].printOrder addPrintJob:job];
     return job;
 }
 
@@ -740,7 +734,7 @@ static const CGFloat kBookEdgePadding = 38;
             if ([self.product hasOfferIdBeenUsed:offer.identifier]){
                 continue;
             }
-            if ([[OLKiteUtils kiteVcForViewController:self].printOrder hasOfferIdBeenUsed:offer.identifier]){
+            if ([[OLUserSession currentSession].printOrder hasOfferIdBeenUsed:offer.identifier]){
                 continue;
             }
             
@@ -823,7 +817,7 @@ static const CGFloat kBookEdgePadding = 38;
     // URL and the user did not manipulate it in any way.
     NSMutableArray *photoAssets = [[NSMutableArray alloc] init];
     for (OLAsset *photo in bookPhotos) {
-        [photoAssets addObject:[OLAsset assetWithDataSource:[photo copy]]];
+        [photoAssets addObject:[photo copy]];
     }
     
     // ensure order is maxed out by adding duplicates as necessary
@@ -838,7 +832,7 @@ static const CGFloat kBookEdgePadding = 38;
     NSLog(@"Adding %lu duplicates", (unsigned long)duplicatesToFillOrder);
 #endif
     
-    OLPrintOrder *printOrder = [OLKiteUtils kiteVcForViewController:self].printOrder;
+    OLPrintOrder *printOrder = [OLUserSession currentSession].printOrder;
     OLPhotobookPrintJob *job = [[OLPhotobookPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:photoAssets];
     job.frontCover = self.coverPhoto;
     for (NSString *option in self.product.selectedOptions.allKeys){
@@ -880,7 +874,7 @@ static const CGFloat kBookEdgePadding = 38;
 - (void)doCheckout {
     [self saveJobWithCompletionHandler:NULL];
     
-    OLPrintOrder *printOrder = [OLKiteUtils kiteVcForViewController:self].printOrder;
+    OLPrintOrder *printOrder = [OLUserSession currentSession].printOrder;
     [OLKiteUtils checkoutViewControllerForPrintOrder:printOrder handler:^(id vc){
         [vc safePerformSelector:@selector(setUserEmail:) withObject:[OLKiteUtils userEmail:self]];
         [vc safePerformSelector:@selector(setUserPhone:) withObject:[OLKiteUtils userPhone:self]];

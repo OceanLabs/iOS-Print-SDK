@@ -39,10 +39,7 @@
 #import "OLNavigationController.h"
 #import "OLKiteABTesting.h"
 #import "UIView+RoundRect.h"
-
-@interface OLKiteViewController (Private)
-@property (strong, nonatomic) OLPrintOrder *printOrder;
-@end
+#import "OLUserSession.h"
 
 @interface OLPaymentViewController ()
 - (void)onBarButtonOrdersClicked;
@@ -57,7 +54,7 @@
         return;
     }
     
-    OLPrintOrder *printOrder = [OLKiteUtils kiteVcForViewController:self].printOrder;
+    OLPrintOrder *printOrder = [OLUserSession currentSession].printOrder;
     UIButton *basketButton = [UIButton buttonWithType:UIButtonTypeCustom];
     UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(6, 3, 44, 44)];
     imageView.contentMode = UIViewContentModeRight;
@@ -109,7 +106,7 @@
 }
 
 - (IBAction)onButtonBasketClicked:(UIBarButtonItem *)sender {
-    OLPrintOrder *printOrder = [OLKiteUtils kiteVcForViewController:self].printOrder;
+    OLPrintOrder *printOrder = [OLUserSession currentSession].printOrder;
     
 #ifndef OL_NO_ANALYTICS
     NSUInteger count = printOrder.jobs.count;

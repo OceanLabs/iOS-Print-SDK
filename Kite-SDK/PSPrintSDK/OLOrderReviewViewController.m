@@ -59,10 +59,7 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
 @end
 
 @interface OLKiteViewController ()
-
-@property (strong, nonatomic) OLPrintOrder *printOrder;
 - (void)dismiss;
-
 @end
 
 @interface OLPrintOrder (Private)
@@ -145,8 +142,7 @@ UIViewControllerPreviewingDelegate>
         }
         
         if(!self.editingPrintJob){
-            OLKiteViewController *kiteVc = [OLKiteUtils kiteVcForViewController:self];
-            self.editingPrintJob = [kiteVc.printOrder.jobs firstObject];
+            self.editingPrintJob = [[OLUserSession currentSession].printOrder.jobs firstObject];
             self.product.uuid = self.editingPrintJob.uuid;
         }
     }
@@ -262,7 +258,7 @@ UIViewControllerPreviewingDelegate>
     // URL and the user did not manipulate it in any way.
     NSMutableArray *photoAssets = [[NSMutableArray alloc] init];
     for (OLAsset *photo in self.checkoutPhotos) {
-        [photoAssets addObject:[OLAsset assetWithDataSource:[photo copy]]];
+        [photoAssets addObject:[photo copy]];
     }
     
     // ensure order is maxed out by adding duplicates as necessary
@@ -277,7 +273,7 @@ UIViewControllerPreviewingDelegate>
     NSLog(@"Adding %lu duplicates", (unsigned long)duplicatesToFillOrder);
 #endif
     
-    OLPrintOrder *printOrder = [OLKiteUtils kiteVcForViewController:self].printOrder;
+    OLPrintOrder *printOrder = [OLUserSession currentSession].printOrder;
     
     OLProductPrintJob *job = [[OLProductPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:photoAssets];
     NSArray *jobs = [NSArray arrayWithArray:printOrder.jobs];
@@ -319,7 +315,7 @@ UIViewControllerPreviewingDelegate>
 - (void)doCheckout {
     [self saveJobWithCompletionHandler:NULL];
     
-    OLPrintOrder *printOrder = [OLKiteUtils kiteVcForViewController:self].printOrder;
+    OLPrintOrder *printOrder = [OLUserSession currentSession].printOrder;
     
     if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder && [[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant isEqualToString:@"Review-Overview-Checkout"]){
         UIViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLProductOverviewViewController"];
