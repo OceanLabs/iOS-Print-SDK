@@ -53,6 +53,18 @@ NSInteger OLImagePickerMargin = 0;
     [super viewDidDisappear:animated];
     
     [self closeAlbumsDrawer];
+    [self.albumRequestForNextPage cancel];
+    [self.inProgressRequest cancel];
+    [self.inProgressMediaRequest cancel];
+    [self.nextMediaRequest cancel];
+    [self.nextPageRequest cancel];
+    [self.inProgressPhotosRequest cancel];
+    self.albumRequestForNextPage = nil;
+    self.inProgressRequest = nil;
+    self.inProgressMediaRequest = nil;
+    self.nextMediaRequest = nil;
+    self.nextPageRequest = nil;
+    self.inProgressPhotosRequest = nil;
 }
 
 - (void)viewDidAppear:(BOOL)animated{

@@ -70,6 +70,7 @@
 @property (strong, nonatomic) NSArray<OLImagePickerProvider *> *providers;
 
 @property (strong, nonatomic) NSArray<OLAsset *> *originalSelectedAssets;
+@property (strong, nonatomic) UIView *triangle;
 
 @end
 
@@ -182,6 +183,26 @@
     view.layer.shadowOpacity = .3;
     view.layer.shadowOffset = CGSizeMake(0, 1);
     view.layer.shadowRadius = 2;
+    
+    self.triangle = [[UIView alloc] init];
+    self.triangle.backgroundColor = [UIColor whiteColor];
+    [self.visualEffectView addSubview:self.triangle];
+    view = self.triangle;
+    
+    view.translatesAutoresizingMaskIntoConstraints = NO;
+    views = NSDictionaryOfVariableBindings(view);
+    con = [[NSMutableArray alloc] init];
+    
+    visuals = @[@"H:|-(-8)-[view(16)]",
+                         @"V:[view(16)]-(-8)-|"];
+    
+    
+    for (NSString *visual in visuals) {
+        [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+    }
+    
+    [view.superview addConstraints:con];
+
     
     [self updateTitleBasedOnSelectedPhotoQuanitity];
 }
@@ -472,6 +493,9 @@
     UIViewController *vc = [self viewControllerAtIndex:indexPath.item];
     
     [self.pageController setViewControllers:@[vc] direction:currentPageIndex < indexPath.item ? UIPageViewControllerNavigationDirectionForward : UIPageViewControllerNavigationDirectionReverse animated:YES completion:NULL];
+    
+    UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
+    self.triangle.transform = CGAffineTransformConcat(CGAffineTransformMakeRotation(M_PI_4), CGAffineTransformMakeTranslation([collectionView convertRect:cell.frame toView:self.view].origin.x + cell.frame.size.width, 0));
 }
 
 #pragma mark Navigation

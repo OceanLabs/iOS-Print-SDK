@@ -70,10 +70,10 @@
             return;
         }
         
-        NSMutableArray *paths = [[NSMutableArray alloc] init];
-        for (NSUInteger i = 0; i < albums.count; ++i) {
-            [paths addObject:[NSIndexPath indexPathForRow:welf.albums.count + i inSection:0]];
-        }
+//        NSMutableArray *paths = [[NSMutableArray alloc] init];
+//        for (NSUInteger i = 0; i < albums.count; ++i) {
+//            [paths addObject:[NSIndexPath indexPathForRow:welf.albums.count + i inSection:0]];
+//        }
         
         [welf.albums addObjectsFromArray:albums];
 //        if (welf.albums.count == albums.count) {
@@ -107,8 +107,8 @@
 }
 
 - (void)loadNextFacebookPage {
-    if (self.inProgressRequest){
-        [self.inProgressRequest cancel];
+    if (self.inProgressPhotosRequest){
+        [self.inProgressPhotosRequest cancel];
     }
     self.inProgressPhotosRequest = self.nextPageRequest;
     self.nextPageRequest = nil;
