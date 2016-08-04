@@ -41,6 +41,7 @@
 #import "OLPrintOrderCost.h"
 #import "OLProductPrintJob.h"
 #import "OLPrintOrderSubmitStatusRequest.h"
+#import "OLPaymentViewController.h"
 
 static NSString *const kKeyProofOfPayment = @"co.oceanlabs.pssdk.kKeyProofOfPayment";
 static NSString *const kKeyVoucherCode = @"co.oceanlabs.pssdk.kKeyVoucherCode";
@@ -591,6 +592,7 @@ static NSBlockOperation *templateSyncOperation;
     hash = 31 * hash + [self.promoCode hash];
     hash = 31 * hash + (self.shipToStore ? 39 : 0);
     hash = 31 * hash + (self.payInStore ? 73 : 0);
+    hash = 31 * hash + ([OLPaymentViewController isApplePayAvailable] ? 47 : 0);
     for (id<OLPrintJob> job in self.jobs){
         if (job.address.country){
             hash = 32 * hash + [job.address.country.codeAlpha3 hash];
