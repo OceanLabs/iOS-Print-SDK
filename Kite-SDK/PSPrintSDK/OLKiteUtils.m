@@ -124,14 +124,6 @@
     return kiteVC.delegate;
 }
 
-#ifdef OL_KITE_OFFER_APPLE_PAY
-+(BOOL)isApplePayAvailable{
-    PKPaymentRequest *request = [Stripe paymentRequestWithMerchantIdentifier:[OLKitePrintSDK appleMerchantID]];
-    
-    return [Stripe canSubmitPaymentRequest:request];
-}
-#endif
-
 + (void)checkoutViewControllerForPrintOrder:(OLPrintOrder *)printOrder handler:(void(^)(id vc))handler{
     if ([[OLKiteABTesting sharedInstance].paymentScreen isEqualToString:@"V2"]){
         OLPaymentViewController *vc = [[OLPaymentViewControllerV2 alloc] initWithPrintOrder:printOrder];
