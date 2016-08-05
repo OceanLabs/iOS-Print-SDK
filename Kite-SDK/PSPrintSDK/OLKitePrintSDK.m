@@ -267,7 +267,6 @@ static NSString *instagramRedirectURI = nil;
     OLPrintOrder *printOrder = [[OLPrintOrder alloc] init];
     [printOrder saveOrder];
     
-#ifdef OL_KITE_OFFER_INSTAGRAM
     NSHTTPCookie *cookie;
     NSHTTPCookieStorage *storage = [NSHTTPCookieStorage sharedHTTPCookieStorage];
     NSArray *cookies = [NSArray arrayWithArray:[storage cookies]];
@@ -281,7 +280,6 @@ static NSString *instagramRedirectURI = nil;
     for (NXOAuth2Account *account in instagramAccounts) {
         [[NXOAuth2AccountStore sharedStore] removeAccount:account];
     }
-#endif
     
 #ifdef OL_KITE_OFFER_FACEBOOK
     FBSDKLoginManager *loginManager = [[FBSDKLoginManager alloc] init];
@@ -313,35 +311,21 @@ static NSString *instagramRedirectURI = nil;
 
 
 + (void)setInstagramEnabledWithClientID:(NSString *_Nonnull)clientID secret:(NSString *_Nonnull)secret redirectURI:(NSString *_Nonnull)redirectURI {
-#ifdef OL_KITE_OFFER_INSTAGRAM
     instagramSecret = secret;
     instagramClientID = clientID;
     instagramRedirectURI = redirectURI;
-#endif
 }
 
 + (NSString *)instagramRedirectURI {
-#ifdef OL_KITE_OFFER_INSTAGRAM
     return instagramRedirectURI;
-#else
-    return nil;
-#endif
 }
 
 + (NSString *)instagramSecret{
-#ifdef OL_KITE_OFFER_INSTAGRAM
     return instagramSecret;
-#else
-    return nil;
-#endif
 }
 
 + (NSString *)instagramClientID{
-#ifdef OL_KITE_OFFER_INSTAGRAM
     return instagramClientID;
-#else
-    return nil;
-#endif
 }
 
 @end
