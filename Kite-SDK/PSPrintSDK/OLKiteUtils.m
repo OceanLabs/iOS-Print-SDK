@@ -40,6 +40,7 @@
 #import "OLKiteViewController.h"
 #import "OLPaymentViewControllerV2.h"
 #import "OLUserSession.h"
+#import "FBSDKLoginManager.h"
 
 @class OLCustomPhotoProvider;
 
@@ -78,11 +79,11 @@
 }
 
 + (BOOL)instagramEnabled{
-#ifdef OL_KITE_OFFER_INSTAGRAM
-    return [OLKitePrintSDK instagramSecret] && ![[OLKitePrintSDK instagramSecret] isEqualToString:@""] && [OLKitePrintSDK instagramClientID] && ![[OLKitePrintSDK instagramClientID] isEqualToString:@""] && [OLKitePrintSDK instagramRedirectURI] && ![[OLKitePrintSDK instagramRedirectURI] isEqualToString:@""];
-#else
+    if (YES){ //Check what needs to be checked in terms of installation
+        return [OLKitePrintSDK instagramSecret] && ![[OLKitePrintSDK instagramSecret] isEqualToString:@""] && [OLKitePrintSDK instagramClientID] && ![[OLKitePrintSDK instagramClientID] isEqualToString:@""] && [OLKitePrintSDK instagramRedirectURI] && ![[OLKitePrintSDK instagramRedirectURI] isEqualToString:@""];
+    }
+    
     return NO;
-#endif
 }
 
 + (BOOL)qrCodeUploadEnabled {
@@ -90,11 +91,12 @@
 }
 
 + (BOOL)facebookEnabled{
-#ifdef OL_KITE_OFFER_FACEBOOK
-    return YES;
-#else
+    //TODO check that it is actually set up
+    if ([FBSDKLoginManager class]){
+        return YES;
+    }
+    
     return NO;
-#endif
 }
 
 + (BOOL)imageProvidersAvailable:(UIViewController *)topVc{

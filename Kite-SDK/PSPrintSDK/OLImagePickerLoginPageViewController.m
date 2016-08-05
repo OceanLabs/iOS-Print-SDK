@@ -29,7 +29,7 @@
 
 #import "OLImagePickerLoginPageViewController.h"
 #import "UIView+RoundRect.h"
-#import <FBSDKLoginKit/FBSDKLoginManager.h>
+#import "FBSDKLoginManager.h"
 #import "OLImagePickerViewController.h"
 #import <NXOAuth2Client/NXOAuth2AccountStore.h>
 #import "OLKitePrintSDK.h"
