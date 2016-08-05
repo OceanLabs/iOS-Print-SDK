@@ -48,11 +48,9 @@
 
 +(NSString *)appleMerchantID;
 
-#ifdef OL_KITE_OFFER_INSTAGRAM
 + (NSString *) instagramRedirectURI;
 + (NSString *) instagramSecret;
 + (NSString *) instagramClientID;
-#endif
 
 + (BOOL)QRCodeUploadEnabled;
 
