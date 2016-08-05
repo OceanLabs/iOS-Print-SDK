@@ -616,11 +616,12 @@ UIViewControllerPreviewingDelegate>
     }
     
     UIEdgeInsets b = self.product.productTemplate.imageBorder;
+    CGSize cellSize = [self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath];
     
-    NSLayoutConstraint *topCon = [NSLayoutConstraint constraintWithItem:cellImage attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:borderView attribute:NSLayoutAttributeTop multiplier:1 constant:b.top];
-    NSLayoutConstraint *leftCon = [NSLayoutConstraint constraintWithItem:cellImage attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:borderView attribute:NSLayoutAttributeLeft multiplier:1 constant:b.left];
-    NSLayoutConstraint *rightCon = [NSLayoutConstraint constraintWithItem:cellImage attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:borderView attribute:NSLayoutAttributeRight multiplier:1 constant:-b.right];
-    NSLayoutConstraint *bottomCon = [NSLayoutConstraint constraintWithItem:cellImage attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationLessThanOrEqual toItem:borderView attribute:NSLayoutAttributeBottom multiplier:1 constant:-b.bottom];
+    NSLayoutConstraint *topCon = [NSLayoutConstraint constraintWithItem:borderView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:cellImage attribute:NSLayoutAttributeTop multiplier:1 constant:-b.top * (cellSize.height - [self heightForButtons])];
+    NSLayoutConstraint *leftCon = [NSLayoutConstraint constraintWithItem:borderView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:cellImage attribute:NSLayoutAttributeLeft multiplier:1 constant:-b.left * cellSize.width];
+    NSLayoutConstraint *rightCon = [NSLayoutConstraint constraintWithItem:cellImage attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:borderView attribute:NSLayoutAttributeRight multiplier:1 constant:-b.right * cellSize.width];
+    NSLayoutConstraint *bottomCon = [NSLayoutConstraint constraintWithItem:cellImage attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationLessThanOrEqual toItem:borderView attribute:NSLayoutAttributeBottom multiplier:1 constant:-b.bottom * (cellSize.height - [self heightForButtons])];
     
     NSLayoutConstraint *aspectRatioCon = [NSLayoutConstraint constraintWithItem:cellImage attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:cellImage attribute:NSLayoutAttributeWidth multiplier:[self productAspectRatio] constant:0];
     aspectRatioCon.priority = 750;
@@ -635,23 +636,25 @@ UIViewControllerPreviewingDelegate>
     return cell;
 }
 
+- (CGFloat)heightForButtons{
+    return 51;
+}
+
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     UIEdgeInsets b = self.product.productTemplate.imageBorder;
     
-    //Everything is designed and calculated based on a 320 view width. Scale up as necessary for larger phones.
-    CGFloat screenWidthFactor = 1;
-    //Only change the scale for portrait phones.
-    if (self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassCompact && self.view.frame.size.width < self.view.frame.size.height){
-        screenWidthFactor = self.view.frame.size.width / 320;
-    }
+    CGFloat margin = [self collectionView:collectionView layout:collectionView.collectionViewLayout minimumInteritemSpacingForSectionAtIndex:indexPath.section];
     
-    CGFloat margin = 20;
-    CGFloat heightForButtons = 51;
-    CGFloat imageWidth = 320 - margin * 2  - b.right - b.left;
-    CGFloat imageHeight = imageWidth * [self productAspectRatio];
-    CGFloat height = (imageHeight + b.top + b.bottom) * screenWidthFactor + margin + heightForButtons;
-    CGFloat width = (imageWidth + b.right + b.left) * screenWidthFactor + margin * 2;
+    UIEdgeInsets sectionInsets = [self collectionView:collectionView layout:collectionView.collectionViewLayout insetForSectionAtIndex:indexPath.section];
+    CGFloat width = self.view.frame.size.width;
+    width -= sectionInsets.left + sectionInsets.right;
+    width = MIN(width / 2.0, 320.0);
+    width -= (NSInteger)((self.view.frame.size.width / width)-1) * margin;
+    
+    CGFloat height = (width * (1.0 - b.left - b.right)) * [self productAspectRatio];
+    height = height / (1 - b.top - b.bottom);
+    height += [self heightForButtons];
     
     return CGSizeMake(width, height);
 }
