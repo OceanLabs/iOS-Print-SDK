@@ -2773,6 +2773,7 @@ some images!</string>
                                     <outlet property="imageViewLeftCon" destination="6rz-jJ-eAE" id="pVb-1P-7oh"/>
                                     <outlet property="imageViewRightCon" destination="QEz-pC-1P9" id="L3B-Ye-Kpj"/>
                                     <outlet property="imageViewTopCon" destination="KuK-lB-XqE" id="AN9-9E-mUq"/>
+                                    <outlet property="printContainerView" destination="6rZ-As-Bvm" id="P51-ra-nlN"/>
                                 </connections>
                             </collectionViewCell>
                         </cells>

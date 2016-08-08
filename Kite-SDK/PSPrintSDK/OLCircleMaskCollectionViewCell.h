@@ -39,5 +39,6 @@
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *imageViewBottomCon;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *imageViewRightCon;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityView;
+@property (weak, nonatomic) IBOutlet UIView *printContainerView;
 
 @end
