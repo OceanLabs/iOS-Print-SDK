@@ -554,6 +554,10 @@
 		2EDBFAB01BC698F2007BDB83 /* 1.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 2EDBFAAF1BC698F2007BDB83 /* 1.jpg */; };
 		2EF4392B1BF4D15E0006C123 /* OLPrintOrderSubmitStatusRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EF4392A1BF4D15E0006C123 /* OLPrintOrderSubmitStatusRequest.m */; };
 		2EF4392C1BF4D15E0006C123 /* OLPrintOrderSubmitStatusRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EF4392A1BF4D15E0006C123 /* OLPrintOrderSubmitStatusRequest.m */; };
+		2EF718341D589DB60036502D /* OLInfoBanner.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EF718331D589DB60036502D /* OLInfoBanner.m */; };
+		2EF718351D589DB60036502D /* OLInfoBanner.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EF718331D589DB60036502D /* OLInfoBanner.m */; };
+		2EF718361D589DB60036502D /* OLInfoBanner.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EF718331D589DB60036502D /* OLInfoBanner.m */; };
+		2EF718371D589DB60036502D /* OLInfoBanner.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EF718331D589DB60036502D /* OLInfoBanner.m */; };
 		B7106FC2FDFC534AFB2516F3 /* libPods-KiteSDK-Demo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CFE5B84A94297F8524AE7764 /* libPods-KiteSDK-Demo.a */; };
 		CD73BF8B186215790009DE03 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD73BF8A186215790009DE03 /* XCTest.framework */; };
 		CD73BF8C186215790009DE03 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD73BF6B186215790009DE03 /* Foundation.framework */; };
@@ -1021,6 +1025,8 @@
 		2EF53E3A1B55421A00BF936A /* UIImage+OLUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIImage+OLUtils.m"; path = "PSPrintSDK/Categories/UIImage+OLUtils.m"; sourceTree = "<group>"; };
 		2EF53E3C1B5549B900BF936A /* OLInfoPageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLInfoPageViewController.h; sourceTree = "<group>"; };
 		2EF53E3D1B5549B900BF936A /* OLInfoPageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLInfoPageViewController.m; sourceTree = "<group>"; };
+		2EF718321D589DB60036502D /* OLInfoBanner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLInfoBanner.h; sourceTree = "<group>"; };
+		2EF718331D589DB60036502D /* OLInfoBanner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLInfoBanner.m; sourceTree = "<group>"; };
 		2EF8BA9D1B99E9E4009BC73B /* OLImageCachingManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLImageCachingManager.h; sourceTree = "<group>"; };
 		2EF8BA9E1B99E9E4009BC73B /* OLImageCachingManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLImageCachingManager.m; sourceTree = "<group>"; };
 		321E56D8BE2D006816AACDED /* Pods-KiteSDK-Demo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KiteSDK-Demo.debug.xcconfig"; path = "Pods/Target Support Files/Pods-KiteSDK-Demo/Pods-KiteSDK-Demo.debug.xcconfig"; sourceTree = "<group>"; };
@@ -1442,6 +1448,8 @@
 				2E9AC8231D2127C900BF0A1A /* OLCircleSelectedCollectionViewCell.m */,
 				2E434ADE1D36583700D1BD06 /* OLEditingToolsView.h */,
 				2E434ADF1D36583700D1BD06 /* OLEditingToolsView.m */,
+				2EF718321D589DB60036502D /* OLInfoBanner.h */,
+				2EF718331D589DB60036502D /* OLInfoBanner.m */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -2853,6 +2861,7 @@
 				2EBDA6DE1CEB1B0500397082 /* OLImageDownloader.m in Sources */,
 				2E898CC61CC518180041CCD8 /* OLBaseRequest.m in Sources */,
 				2E1E66D01D477B78002524A4 /* OLImagePickerPageViewController.m in Sources */,
+				2EF718351D589DB60036502D /* OLInfoBanner.m in Sources */,
 				2E898CC71CC518180041CCD8 /* OLPhotobookPrintJob.m in Sources */,
 				2E1E66EF1D479617002524A4 /* OLFacebookImage.m in Sources */,
 				2E898CC81CC518180041CCD8 /* OLPaymentLineItem.m in Sources */,
@@ -2910,6 +2919,7 @@
 				2E96BAE41D2FC109002F5F74 /* qrspec.c in Sources */,
 				2EA3D3811C9C04B500B99BCD /* OLImagePreviewViewController.m in Sources */,
 				2EA3D3821C9C04B500B99BCD /* OLPosterViewController.m in Sources */,
+				2EF718371D589DB60036502D /* OLInfoBanner.m in Sources */,
 				2EA3D3831C9C04B500B99BCD /* OLRemoteImageView.m in Sources */,
 				2EA3D3841C9C04B500B99BCD /* OLPrintOrderCost.m in Sources */,
 				2EA3D3851C9C04B500B99BCD /* OLEditPhotobookViewController.m in Sources */,
@@ -3135,6 +3145,7 @@
 				2EADD8491BE79D6D0051CD31 /* OLBaseRequest.m in Sources */,
 				2EADD84A1BE79D6D0051CD31 /* OLPhotobookPrintJob.m in Sources */,
 				2E1E66CF1D477B78002524A4 /* OLImagePickerPageViewController.m in Sources */,
+				2EF718341D589DB60036502D /* OLInfoBanner.m in Sources */,
 				2E25FEFB1CF2EF5D006E52E5 /* OLKeyChainStore.m in Sources */,
 				2E1E66EE1D479617002524A4 /* OLFacebookImage.m in Sources */,
 				2EADD84B1BE79D6D0051CD31 /* OLPaymentLineItem.m in Sources */,
@@ -3284,6 +3295,7 @@
 				E29C85BB1BE3B5C50041D4CF /* UIImageView+FadeIn.m in Sources */,
 				E29C85BC1BE3B5C50041D4CF /* OLAddressSearchRequest.m in Sources */,
 				E29C85BD1BE3B5C50041D4CF /* OLPayPalCard.m in Sources */,
+				2EF718361D589DB60036502D /* OLInfoBanner.m in Sources */,
 				2EA0087C1CB293A900C23DFA /* OLUpsellOffer.m in Sources */,
 				E29C85BF1BE3B5C50041D4CF /* OLProductPrintJob.m in Sources */,
 				E29C85C01BE3B5C50041D4CF /* OLSingleImageProductReviewViewController.m in Sources */,

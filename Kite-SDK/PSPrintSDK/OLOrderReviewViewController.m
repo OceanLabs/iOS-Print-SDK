@@ -50,6 +50,7 @@
 #import "OLUserSession.h"
 #import "OLAsset+Private.h"
 #import "UIImageView+FadeIn.h"
+#import "OLInfoBanner.h"
 
 static const NSUInteger kTagAlertViewDeletePhoto = 98;
 
@@ -89,6 +90,7 @@ UIViewControllerPreviewingDelegate>
 @property (strong, nonatomic) UIButton *addMorePhotosButton;
 @property (assign, nonatomic) NSUInteger indexOfPhotoToDelete;
 @property (strong, nonatomic) UIButton *nextButton;
+@property (strong, nonatomic) OLInfoBanner *infoBanner;
 
 @end
 
@@ -125,6 +127,11 @@ UIViewControllerPreviewingDelegate>
     if ([UITraitCollection class] && [self.traitCollection respondsToSelector:@selector(forceTouchCapability)] && self.traitCollection.forceTouchCapability == UIForceTouchCapabilityAvailable){
         [self registerForPreviewingWithDelegate:self sourceView:self.collectionView];
     }
+    
+    static dispatch_once_t predicate;
+    dispatch_once(&predicate, ^{
+        self.infoBanner = [OLInfoBanner showInfoBannerOnViewController:self withTitle:NSLocalizedStringFromTableInBundle(@"Tap Image to Edit", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")];
+    });
 }
 
 - (void)setupCtaButton{
