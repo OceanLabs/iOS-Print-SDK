@@ -126,18 +126,15 @@ static char tasksKey;
         }
         [self.tasks removeObjectForKey:asset.uuid];
         
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            UIImage *resizedImage = [image shrinkToSize:[UIScreen mainScreen].bounds.size forScreenScale:[OLUserSession currentSession].screenScale];
-            dispatch_async(dispatch_get_main_queue(), ^{
-                self.image = resizedImage;
-                [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
-                    self.alpha = 1;
-                }completion:^(BOOL finished){
-                    if (handler){
-                        handler();
-                    }
-                }];
-            });
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.image = image;
+            [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+                self.alpha = 1;
+            }completion:^(BOOL finished){
+                if (handler){
+                    handler();
+                }
+            }];
         });
     }];
 }

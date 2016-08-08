@@ -28,9 +28,16 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "OLRemoteImageView.h"
 
 @interface OLCircleMaskCollectionViewCell : UICollectionViewCell
 
 @property (assign, nonatomic) BOOL enableMask;
+@property (weak, nonatomic) IBOutlet OLRemoteImageView *imageView;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *imageViewTopCon;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *imageViewLeftCon;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *imageViewBottomCon;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *imageViewRightCon;
+@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityView;
 
 @end

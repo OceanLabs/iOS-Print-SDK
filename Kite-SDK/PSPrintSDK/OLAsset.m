@@ -388,13 +388,18 @@ static NSOperationQueue *imageOperationQueue;
         //Nothing to do really
         return;
     }
+    BOOL fullResolution = CGSizeEqualToSize(size, OLAssetMaximumSize);
+    
+    if (fullResolution || !applyEdits){
+        self.cachedEditedImage = nil;
+    }
+    
     if (self.cachedEditedImage) {
         if (size.height * [OLUserSession currentSession].screenScale <= self.cachedEditedImage.size.height || size.width * [OLUserSession currentSession].screenScale <= self.cachedEditedImage.size.width){
             handler(self.cachedEditedImage);
             return;
         }
     }
-    BOOL fullResolution = CGSizeEqualToSize(size, OLAssetMaximumSize);
     
     NSBlockOperation *blockOperation = [[NSBlockOperation alloc] init];
     [blockOperation addExecutionBlock:^{

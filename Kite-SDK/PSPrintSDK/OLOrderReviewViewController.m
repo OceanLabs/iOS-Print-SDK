@@ -49,6 +49,7 @@
 #import "OLImagePreviewViewController.h"
 #import "OLUserSession.h"
 #import "OLAsset+Private.h"
+#import "UIImageView+FadeIn.h"
 
 static const NSUInteger kTagAlertViewDeletePhoto = 98;
 
@@ -477,10 +478,7 @@ UIViewControllerPreviewingDelegate>
         cell = cell.superview;
     }
     
-    OLRemoteImageView *imageView = (OLRemoteImageView *)[cell viewWithTag:10];
-    if (!imageView.image){
-        return;
-    }
+    OLRemoteImageView *imageView = [(OLCircleMaskCollectionViewCell *)cell imageView];
     NSIndexPath *indexPath = [self.collectionView indexPathForCell:(UICollectionViewCell *)cell];
     
     self.editingPrintPhoto = [OLUserSession currentSession].userSelectedPhotos[indexPath.item];
@@ -496,7 +494,7 @@ UIViewControllerPreviewingDelegate>
         cropVc.aspectRatio = [self productAspectRatio];
         
         cropVc.previewView = [imageView snapshotViewAfterScreenUpdates:YES];
-        cropVc.previewView.frame = [cell convertRect:imageView.frame toView:nil];
+        cropVc.previewView.frame = [imageView.superview convertRect:imageView.frame toView:nil];
         cropVc.previewSourceView = imageView;
         cropVc.providesPresentationContextTransitionStyle = true;
         cropVc.definesPresentationContext = true;
@@ -561,32 +559,13 @@ UIViewControllerPreviewingDelegate>
     }
     
     [view.superview addConstraints:con];
+        
+    [cell.activityView startAnimating];
     
-    UIView *borderView = [cell.contentView viewWithTag:399];
-    
-    UIActivityIndicatorView *activityIndicator = (UIActivityIndicatorView *)[cell.contentView viewWithTag:278];
-    [activityIndicator startAnimating];
-    
-    UIView *oldView = [cell.contentView viewWithTag:10];
-    [oldView removeFromSuperview];
-    
-    OLRemoteImageView *cellImage = [[OLRemoteImageView alloc] initWithFrame:borderView.frame];
-    cellImage.tag = 10;
-    cellImage.translatesAutoresizingMaskIntoConstraints = NO;
-    cellImage.contentMode = UIViewContentModeScaleAspectFill;
-    cellImage.clipsToBounds = YES;
-    [cell.contentView insertSubview:cellImage aboveSubview:activityIndicator];
-    
-    if ([self.presentedViewController isKindOfClass:[OLScrollCropViewController class]]){
-        OLScrollCropViewController *cropVc = (OLScrollCropViewController *)self.presentedViewController;
-        if (oldView == cropVc.previewSourceView){
-            cropVc.previewSourceView = cellImage;
-            cellImage.hidden = YES;
-        }
+    cell.imageView.userInteractionEnabled = YES;
+    if (cell.imageView.gestureRecognizers.count == 0){
+        [cell.imageView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onButtonEnhanceClicked:)]];
     }
-    
-    cellImage.userInteractionEnabled = YES;
-    [cellImage addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onButtonEnhanceClicked:)]];
     
     UIButton *enhanceButton = (UIButton *)[cell.contentView viewWithTag:11];
     [enhanceButton addTarget:self action:@selector(onButtonEnhanceClicked:) forControlEvents:UIControlEventTouchUpInside];
@@ -601,12 +580,23 @@ UIViewControllerPreviewingDelegate>
     [countLabel setText: [NSString stringWithFormat:@"%ld", (long)[[OLUserSession currentSession].userSelectedPhotos[indexPath.item] extraCopies]+1]];
     
     OLAsset *printPhoto = (OLAsset*)[[OLUserSession currentSession].userSelectedPhotos objectAtIndex:indexPath.item];
-    [printPhoto imageWithSize:cellImage.frame.size applyEdits:YES progress:^(float progress){
-        [cellImage setProgress:progress];
-    } completion:^(UIImage *image){
+    CGSize cellSize = [self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath];
+    
+    UIEdgeInsets b = self.product.productTemplate.imageBorder;
+    
+    cell.imageViewTopCon.constant = b.top * (cellSize.height - [self heightForButtons]);
+    cell.imageViewRightCon.constant = b.right * cellSize.width;
+    cell.imageViewBottomCon.constant = b.bottom * (cellSize.height - [self heightForButtons]);
+    cell.imageViewLeftCon.constant = b.left * cellSize.width;
+    
+    [cell setNeedsLayout];
+    [cell layoutIfNeeded];
+    
+    [cell.imageView setAndFadeInImageWithOLAsset:printPhoto size:cell.imageView.frame.size applyEdits:YES placeholder:nil progress:^(float progress){
+        [cell.imageView setProgress:progress];
+    } completionHandler:^(){
         dispatch_async(dispatch_get_main_queue(), ^{
-            [activityIndicator stopAnimating];
-            cellImage.image = image;
+            [cell.activityView stopAnimating];
         });
     }];
     
@@ -614,24 +604,6 @@ UIViewControllerPreviewingDelegate>
         cell.enableMask = YES;
         [cell setNeedsDisplay];
     }
-    
-    UIEdgeInsets b = self.product.productTemplate.imageBorder;
-    CGSize cellSize = [self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath];
-    
-    NSLayoutConstraint *topCon = [NSLayoutConstraint constraintWithItem:borderView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:cellImage attribute:NSLayoutAttributeTop multiplier:1 constant:-b.top * (cellSize.height - [self heightForButtons])];
-    NSLayoutConstraint *leftCon = [NSLayoutConstraint constraintWithItem:borderView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:cellImage attribute:NSLayoutAttributeLeft multiplier:1 constant:-b.left * cellSize.width];
-    NSLayoutConstraint *rightCon = [NSLayoutConstraint constraintWithItem:cellImage attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:borderView attribute:NSLayoutAttributeRight multiplier:1 constant:-b.right * cellSize.width];
-    NSLayoutConstraint *bottomCon = [NSLayoutConstraint constraintWithItem:cellImage attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationLessThanOrEqual toItem:borderView attribute:NSLayoutAttributeBottom multiplier:1 constant:-b.bottom * (cellSize.height - [self heightForButtons])];
-    
-    NSLayoutConstraint *aspectRatioCon = [NSLayoutConstraint constraintWithItem:cellImage attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:cellImage attribute:NSLayoutAttributeWidth multiplier:[self productAspectRatio] constant:0];
-    aspectRatioCon.priority = 750;
-    NSLayoutConstraint *activityCenterXCon = [NSLayoutConstraint constraintWithItem:cellImage attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:activityIndicator attribute:NSLayoutAttributeCenterX multiplier:1 constant:0];
-    NSLayoutConstraint *activityCenterYCon = [NSLayoutConstraint constraintWithItem:cellImage attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:activityIndicator attribute:NSLayoutAttributeCenterY multiplier:1 constant:0];
-    
-    [borderView.superview addConstraints:@[topCon, leftCon, rightCon, bottomCon, activityCenterYCon, activityCenterXCon]];
-    [cellImage addConstraints:@[aspectRatioCon]];
-    
-    
     
     return cell;
 }
@@ -648,8 +620,13 @@ UIViewControllerPreviewingDelegate>
     
     UIEdgeInsets sectionInsets = [self collectionView:collectionView layout:collectionView.collectionViewLayout insetForSectionAtIndex:indexPath.section];
     CGFloat width = self.view.frame.size.width;
+    if (self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassCompact && self.view.frame.size.height > self.view.frame.size.width){
+        width = self.view.frame.size.width;
+    }
+    else{
+        width = MIN(width, 320.0);
+    }
     width -= sectionInsets.left + sectionInsets.right;
-    width = MIN(width / 2.0, 320.0);
     width -= (NSInteger)((self.view.frame.size.width / width)-1) * margin;
     
     CGFloat height = (width * (1.0 - b.left - b.right)) * [self productAspectRatio];
@@ -659,29 +636,19 @@ UIViewControllerPreviewingDelegate>
     return CGSizeMake(width, height);
 }
 
--(CGFloat)marginBetweenCellsForCollectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout{
-    CGFloat width = self.view.bounds.size.width;
-    CGFloat cellWidth = [self collectionView:collectionView layout:collectionViewLayout sizeForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]].width;
-    int cellsPerRow = width / cellWidth;
-    CGFloat spaceLeft = width - (cellsPerRow * cellWidth);
-    CGFloat margin = spaceLeft / (cellsPerRow + 1);
-    return margin;
-}
-
-// 3
 - (UIEdgeInsets)collectionView:
 (UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout insetForSectionAtIndex:(NSInteger)section {
-    CGFloat margin = [self marginBetweenCellsForCollectionView:collectionView layout:collectionViewLayout];
-    return UIEdgeInsetsMake(0, margin, 0, margin);
+    CGFloat margin = 15;
+    return UIEdgeInsetsMake(margin, margin, margin, margin);
 }
 - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section
 {
-    return 0;//[self marginBetweenCellsForCollectionView:collectionView layout:collectionViewLayout];
+    return 20;
 }
 
 - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section
 {
-    return 0.0;
+    return 35;
 }
 
 #pragma mark - OLImageEditorViewControllerDelegate methods
