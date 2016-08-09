@@ -44,19 +44,13 @@
 
 @implementation OLInstagramLoginWebViewController
 
-- (id)init {
-    if (self = [super init]) {
-        self.title = NSLocalizedString(@"Log In", @"");
-        self.view.backgroundColor = [UIColor whiteColor];
-    }
-    
-    return self;
-}
-
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    self.view.backgroundColor = [UIColor whiteColor];
+    
     [self addInstagramLoginObservers];
+    self.title = NSLocalizedString(@"Log In", @"");
     
     self.webView = [[UIWebView alloc] init];
     self.webView.backgroundColor = [UIColor whiteColor];
@@ -67,8 +61,10 @@
     NSDictionary *views = NSDictionaryOfVariableBindings(webView);
     NSMutableArray *con = [[NSMutableArray alloc] init];
     
+    CGFloat topMargin = [[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height;
+    
     NSArray *visuals = @[@"H:|-0-[webView]-0-|",
-                         @"V:|-0-[webView]-0-|"];
+                         [NSString stringWithFormat:@"V:|-%f-[webView]-0-|", topMargin]];
     
     
     for (NSString *visual in visuals) {

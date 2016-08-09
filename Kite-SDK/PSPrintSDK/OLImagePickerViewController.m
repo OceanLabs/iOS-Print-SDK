@@ -234,26 +234,8 @@
     [self positionTriangle];
 }
 
-- (void)setupProviders{
-    NSMutableArray<OLImagePickerProvider *> *providers = [[NSMutableArray<OLImagePickerProvider *> alloc] init];
-    if ([OLUserSession currentSession].appAssets.count > 0){
-        OLImagePickerProviderCollection *collection = [[OLImagePickerProviderCollection alloc] initWithArray:[OLUserSession currentSession].appAssets name:NSLocalizedString(@"All Photos", @"")];
-        
-        NSDictionary *info = [[NSBundle mainBundle] infoDictionary];
-        NSString *bundleName = nil;
-        if ([info objectForKey:@"CFBundleDisplayName"] == nil) {
-            bundleName = [[[NSBundle mainBundle] infoDictionary] objectForKey:(NSString *) kCFBundleNameKey];
-        } else {
-            bundleName = [NSString stringWithFormat:@"%@", [info objectForKey:@"CFBundleDisplayName"]];
-        }
-        
-        UIImage *appIcon = [UIImage imageNamed: [[[[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleIcons"] objectForKey:@"CFBundlePrimaryIcon"] objectForKey:@"CFBundleIconFiles"]  objectAtIndex:0]];
-        
-        OLImagePickerProvider *provider = [[OLImagePickerProvider alloc] initWithCollections:@[collection] name:bundleName icon:appIcon];
-        provider.providerType = OLImagePickerProviderTypeApp;
-        [providers addObject:provider];
-    }
-    if ([OLKiteUtils cameraRollEnabled:self]){
+- (void)setupLibraryProviderAtIndex:(NSInteger)index{
+    {
         PHFetchOptions *options = [[PHFetchOptions alloc] init];
         options.wantsIncrementalChangeDetails = NO;
         options.includeHiddenAssets = NO;
@@ -263,14 +245,14 @@
             options.includeAssetSourceTypes = PHAssetSourceTypeCloudShared | PHAssetSourceTypeUserLibrary | PHAssetSourceTypeiTunesSynced;
         }
         options.predicate = [NSPredicate predicateWithFormat:@"mediaType = %d",PHAssetMediaTypeImage];
-
+        
         PHAssetCollection *userLibraryCollection = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeSmartAlbum subtype:PHAssetCollectionSubtypeSmartAlbumUserLibrary options:nil].firstObject;
         PHFetchResult *fetchedPhotos = [PHAsset fetchAssetsInAssetCollection:userLibraryCollection options:options];
         OLImagePickerProviderCollection *userLibraryProviderCollection = [[OLImagePickerProviderCollection alloc] initWithPHFetchResult:fetchedPhotos name:userLibraryCollection.localizedTitle];
         
         OLImagePickerProvider *provider = [[OLImagePickerProvider alloc] initWithCollections:@[userLibraryProviderCollection] name:NSLocalizedString(@"Photo Library", @"") icon:[UIImage imageNamedInKiteBundle:@"import_gallery"]];
         provider.providerType = OLImagePickerProviderTypePhotoLibrary;
-        [providers addObject:provider];
+        [(NSMutableArray *)self.providers insertObject:provider atIndex:index];
         
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             NSMutableArray *assetCollections = [[NSMutableArray alloc] init];
@@ -311,9 +293,53 @@
             
             [provider.collections addObjectsFromArray:collections];
             dispatch_async(dispatch_get_main_queue(), ^{
-                [[self.pageController.viewControllers.firstObject albumsCollectionView] reloadData];
+                if ([self.pageController.viewControllers.firstObject isKindOfClass:[OLImagePickerPhotosPageViewController class]]){
+                    [[self.pageController.viewControllers.firstObject albumsCollectionView] reloadData];
+                }
             });
         });
+    }
+}
+
+- (void)setupProviders{
+    NSMutableArray<OLImagePickerProvider *> *providers = [[NSMutableArray<OLImagePickerProvider *> alloc] init];
+    self.providers = providers;
+    if ([OLUserSession currentSession].appAssets.count > 0){
+        OLImagePickerProviderCollection *collection = [[OLImagePickerProviderCollection alloc] initWithArray:[OLUserSession currentSession].appAssets name:NSLocalizedString(@"All Photos", @"")];
+        
+        NSDictionary *info = [[NSBundle mainBundle] infoDictionary];
+        NSString *bundleName = nil;
+        if ([info objectForKey:@"CFBundleDisplayName"] == nil) {
+            bundleName = [[[NSBundle mainBundle] infoDictionary] objectForKey:(NSString *) kCFBundleNameKey];
+        } else {
+            bundleName = [NSString stringWithFormat:@"%@", [info objectForKey:@"CFBundleDisplayName"]];
+        }
+        
+        UIImage *appIcon = [UIImage imageNamed: [[[[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleIcons"] objectForKey:@"CFBundlePrimaryIcon"] objectForKey:@"CFBundleIconFiles"]  objectAtIndex:0]];
+        
+        OLImagePickerProvider *provider = [[OLImagePickerProvider alloc] initWithCollections:@[collection] name:bundleName icon:appIcon];
+        provider.providerType = OLImagePickerProviderTypeApp;
+        [providers addObject:provider];
+    }
+    if ([OLKiteUtils cameraRollEnabled:self]){
+        [self setupLibraryProviderAtIndex:providers.count];
+        if ([PHPhotoLibrary authorizationStatus] == PHAuthorizationStatusNotDetermined){
+            [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status){
+                if (status == PHAuthorizationStatusAuthorized){
+                    for (OLImagePickerProvider *provider in providers){
+                        if (provider.providerType == OLImagePickerProviderTypePhotoLibrary){
+                            NSInteger providerIndex = [providers indexOfObjectIdenticalTo:provider];
+                            [providers removeObjectAtIndex:providerIndex];
+                            [self setupLibraryProviderAtIndex:providerIndex];
+                            dispatch_async(dispatch_get_main_queue(), ^{
+                                [self reloadPageController];
+                            });
+                            break;
+                        }
+                    }
+                }
+            }];
+        }
     }
     if ([OLKiteUtils facebookEnabled]){
         OLImagePickerProvider *provider = [[OLImagePickerProvider alloc] initWithCollections:[@[] mutableCopy] name:@"Facebook" icon:[UIImage imageNamedInKiteBundle:@"import_facebook"]];
@@ -339,8 +365,6 @@
         provider.providerType = OLImagePickerProviderTypeCustom;
         [providers addObject:provider];
     }
-    
-    self.providers = providers;
 }
 
 - (void)updateTopConForVc:(UIViewController *)vc{
@@ -444,6 +468,10 @@
         vc.pageIndex = index;
     }
     else if (self.providers[index].providerType == OLImagePickerProviderTypeInstagram && [[NXOAuth2AccountStore sharedStore] accountsWithAccountType:@"instagram"].count == 0){
+        vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLImagePickerLoginPageViewController"];
+        vc.pageIndex = index;
+    }
+    else if (self.providers[index].providerType == OLImagePickerProviderTypePhotoLibrary && [PHPhotoLibrary authorizationStatus] != PHAuthorizationStatusAuthorized){
         vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLImagePickerLoginPageViewController"];
         vc.pageIndex = index;
     }
