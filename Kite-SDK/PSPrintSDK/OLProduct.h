@@ -46,6 +46,7 @@
 - (NSString *)templateId;
 - (NSString *)unitCost;
 - (NSString *)originalUnitCost;
+- (NSDecimalNumber*) originalUnitCostDecimalNumber;
 - (NSString *)packInfo;
 - (NSString *)dimensions;
 - (NSString *)detailsString;
