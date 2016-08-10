@@ -494,6 +494,9 @@ UIViewControllerPreviewingDelegate>
         
         [UIView animateWithDuration:0.25 animations:^{
             self.nextButton.alpha = 0;
+            self.infoBanner.transform = CGAffineTransformMakeTranslation(0, -self.infoBanner.frame.origin.y);
+        } completion:^(BOOL finished){
+            [self.infoBanner removeFromSuperview];
         }];
         OLScrollCropViewController *cropVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLScrollCropViewController"];
         cropVc.borderInsets = self.product.productTemplate.imageBorder;

@@ -296,21 +296,26 @@ const NSInteger kOLEditDrawerTagFonts = 30;
         [self.view bringSubviewToFront:self.cropView];
         [self.view bringSubviewToFront:self.previewView];
         
-        UIEdgeInsets b = self.borderInsets;
-        CGFloat margin = 10;
-        
-        CGFloat width = self.view.frame.size.width;
-        width -= margin * 2;
-        width -= (NSInteger)((self.view.frame.size.width / width)-1) * margin;
-        
-        CGFloat height = (width * (1.0 - b.left - b.right)) * self.aspectRatio;
-        height = height / (1 - b.top - b.bottom);
-        
-        self.cropViewTopCon.constant = -b.top * height;
-        self.cropViewRightCon.constant = b.right * width;
-        self.cropViewBottomCon.constant = b.bottom * height;
-        self.cropViewLeftCon.constant = -b.left * width;
+        UIEdgeInsets b = [self imageInsetsOnContainer];
+        self.cropViewTopCon.constant = -b.top;
+        self.cropViewRightCon.constant = b.right;
+        self.cropViewBottomCon.constant = b.bottom ;
+        self.cropViewLeftCon.constant = -b.left;
     }
+}
+
+- (UIEdgeInsets)imageInsetsOnContainer{
+    UIEdgeInsets b = self.borderInsets;
+    CGFloat margin = 10;
+    
+    CGFloat width = self.view.frame.size.width;
+    width -= margin * 2;
+    width -= (NSInteger)((self.view.frame.size.width / width)-1) * margin;
+    
+    CGFloat height = (width * (1.0 - b.left - b.right)) * self.aspectRatio;
+    height = height / (1 - b.top - b.bottom);
+    
+    return UIEdgeInsetsMake(b.top * height, b.left * width, b.bottom * height, b.right * width);
 }
 
 - (CGFloat)heightForButtons{
@@ -462,7 +467,11 @@ const NSInteger kOLEditDrawerTagFonts = 30;
         [super dismissViewControllerAnimated:NO completion:completion];
     }
     else{
-        self.previewView = [self.printContainerView snapshotViewAfterScreenUpdates:YES];
+        UIEdgeInsets b = [self imageInsetsOnContainer];
+        [self.printContainerView addSubview:self.cropView];
+        self.cropView.frame = CGRectMake(b.left, b.top, self.printContainerView.frame.size.width - b.left - b.right, self.previewView.frame.size.height - b.top - b.bottom);
+        self.previewView  = [self.printContainerView snapshotViewAfterScreenUpdates:YES];
+        
         self.previewView.frame = self.printContainerView.frame;
         [self.view addSubview:self.previewView];
         [UIView animateWithDuration:0.25 animations:^{

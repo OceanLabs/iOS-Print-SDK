@@ -33,5 +33,6 @@
 @interface OLInfoBanner : UIView
 
 + (OLInfoBanner *)showInfoBannerOnViewController:(UIViewController *)vc withTitle:(NSString *)title;
+- (void)dismiss;
 
 @end
