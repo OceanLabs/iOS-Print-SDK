@@ -64,6 +64,13 @@ const NSInteger kOLEditDrawerTagFonts = 30;
 @property (weak, nonatomic) IBOutlet OLEditingToolsView *editingTools;
 
 @property (strong, nonatomic) IBOutletCollection(UIView) NSArray *allViews;
+@property (strong, nonatomic) IBOutletCollection(UIImageView) NSArray *cropFrameEdges;
+
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *cropViewTopCon;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *cropViewLeftCon;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *cropViewBottomCon;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *cropViewRightCon;
+@property (weak, nonatomic) IBOutlet UIView *printContainerView;
 
 @end
 
@@ -263,18 +270,51 @@ const NSInteger kOLEditDrawerTagFonts = 30;
     
     
     [self.editingTools.ctaButton addTarget:self action:@selector(onBarButtonDoneTapped:) forControlEvents:UIControlEventTouchUpInside];
-    [self.editingTools.button4 removeFromSuperview];
-    [self.editingTools.button3 removeFromSuperview]; //TODO: Remove, temp for master
+//    [self.editingTools.button4 removeFromSuperview];
+//    [self.editingTools.button3 removeFromSuperview]; //TODO: Remove, temp for master
     [self.editingTools.button1 setImage:[UIImage imageNamedInKiteBundle:@"flip"] forState:UIControlStateNormal];
     [self.editingTools.button3 setImage:[UIImage imageNamedInKiteBundle:@"Tt"] forState:UIControlStateNormal];
     [self.editingTools.button2 setImage:[UIImage imageNamedInKiteBundle:@"rotate"] forState:UIControlStateNormal];
+    [self.editingTools.button4 setImage:[UIImage imageNamedInKiteBundle:@"crop"] forState:UIControlStateNormal];
     
     [self.editingTools.button1 addTarget:self action:@selector(onButtonHorizontalFlipClicked:) forControlEvents:UIControlEventTouchUpInside];
     [self.editingTools.button3 addTarget:self action:@selector(onButtonAddTextClicked:) forControlEvents:UIControlEventTouchUpInside];
     [self.editingTools.button2 addTarget:self action:@selector(onButtonRotateClicked:) forControlEvents:UIControlEventTouchUpInside];
+    [self.editingTools.button4 addTarget:self action:@selector(onButtonCropClicked:) forControlEvents:UIControlEventTouchUpInside];
     
     self.doneButton = self.editingTools.ctaButton;
     self.doneButton.enabled = NO;
+    
+    if (!UIEdgeInsetsEqualToEdgeInsets(self.borderInsets, UIEdgeInsetsZero)){
+        for (UIView *view in self.cropFrameEdges){
+            view.hidden = YES;
+        }
+        
+        self.cropView.clipsToBounds = YES;
+        self.cropView.userInteractionEnabled = NO;
+        [self.view bringSubviewToFront:self.printContainerView];
+        [self.view bringSubviewToFront:self.cropView];
+        [self.view bringSubviewToFront:self.previewView];
+        
+        UIEdgeInsets b = self.borderInsets;
+        CGFloat margin = 10;
+        
+        CGFloat width = self.view.frame.size.width;
+        width -= margin * 2;
+        width -= (NSInteger)((self.view.frame.size.width / width)-1) * margin;
+        
+        CGFloat height = (width * (1.0 - b.left - b.right)) * self.aspectRatio;
+        height = height / (1 - b.top - b.bottom);
+        
+        self.cropViewTopCon.constant = -b.top * height;
+        self.cropViewRightCon.constant = b.right * width;
+        self.cropViewBottomCon.constant = b.bottom * height;
+        self.cropViewLeftCon.constant = -b.left * width;
+    }
+}
+
+- (CGFloat)heightForButtons{
+    return 64 + self.drawerView.frame.size.height;
 }
 
 - (void)viewDidAppear:(BOOL)animated{
@@ -286,7 +326,7 @@ const NSInteger kOLEditDrawerTagFonts = 30;
         } completion:^(BOOL finished){
             self.previewSourceView.hidden = YES;
             [UIView animateWithDuration:0.25 animations:^{
-                self.previewView.frame = self.cropView.frame;
+                self.previewView.frame = self.printContainerView.frame;
             }completion:^(BOOL finished){
                 [UIView animateWithDuration:0.25 animations:^{
                     self.view.backgroundColor = [UIColor blackColor];
@@ -422,8 +462,8 @@ const NSInteger kOLEditDrawerTagFonts = 30;
         [super dismissViewControllerAnimated:NO completion:completion];
     }
     else{
-        self.previewView = [self.cropView snapshotViewAfterScreenUpdates:YES];
-        self.previewView.frame = self.cropView.frame;
+        self.previewView = [self.printContainerView snapshotViewAfterScreenUpdates:YES];
+        self.previewView.frame = self.printContainerView.frame;
         [self.view addSubview:self.previewView];
         [UIView animateWithDuration:0.25 animations:^{
             self.view.backgroundColor = [UIColor clearColor];
@@ -572,7 +612,7 @@ const NSInteger kOLEditDrawerTagFonts = 30;
     return textField;
 }
 
-- (IBAction)onButtonAddTextClicked:(UIBarButtonItem *)sender {
+- (void)onButtonAddTextClicked:(UIButton *)sender {
     UITextField *textField = [self addTextFieldToView:self.cropView temp:NO];
     [self.view layoutIfNeeded];
     [textField becomeFirstResponder]; //Take focus away from any existing active TF
@@ -580,6 +620,18 @@ const NSInteger kOLEditDrawerTagFonts = 30;
 
     self.doneButton.enabled = YES;
 }
+
+- (void)onButtonCropClicked:(UIButton *)sender{
+    sender.selected = YES;
+    self.cropView.clipsToBounds = NO;
+    self.cropView.userInteractionEnabled = YES;
+    self.printContainerView.hidden = YES;
+    [self.view sendSubviewToBack:self.cropView];
+    for (UIView *view in self.cropFrameEdges){
+        view.hidden = NO;
+    }
+}
+
 - (IBAction)onDrawerButtonDoneClicked:(UIButton *)sender {
     [self dismissDrawerWithCompletionHandler:^(BOOL finished){
         self.collectionView.tag = kOLEditDrawerTagTools;

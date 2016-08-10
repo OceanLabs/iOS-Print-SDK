@@ -57,5 +57,6 @@
 @property (strong, nonatomic) UIView *previewSourceView;
 @property (assign, nonatomic) BOOL forceSourceViewDimensions;
 @property (assign, nonatomic) BOOL skipPresentAnimation;
+@property (assign, nonatomic) UIEdgeInsets borderInsets;
 
 @end

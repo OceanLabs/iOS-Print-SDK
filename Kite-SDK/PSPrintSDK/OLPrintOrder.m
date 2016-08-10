@@ -62,6 +62,8 @@ static NSString *const kKeyOrderShipToStore = @"co.oceanlabs.pssdk.kKeyOrderShip
 static NSString *const kKeyOrderPayInStore = @"co.oceanlabs.pssdk.kKeyOrderPayInStore";
 static NSString *const kKeyOrderPaymentMethod = @"co.oceanlabs.pssdk.kKeyOrderPaymentMethod";
 
+static NSString *const kKeySavedOrderSDKVersion = @"co.oceanlabs.pssdk.kKeySavedOrderSDKVersion";
+
 static NSMutableArray *inProgressPrintOrders; // Tracks all currently in progress print orders. This is useful as it means they won't be dealloc'd if a user doesn't come a strong reference to them but still expects the completion handler callback
 
 static id stringOrEmptyString(NSString *str) {
@@ -618,12 +620,16 @@ static NSBlockOperation *templateSyncOperation;
 
 - (void)saveOrder {
     [NSKeyedArchiver archiveRootObject:self toFile:[OLPrintOrder orderFilePath]];
-//    [self cleanupDisk];
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults setObject:kOLKiteSDKVersion forKey:kKeySavedOrderSDKVersion];
 }
 
 + (id)loadOrder {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    if (![[defaults objectForKey:kKeySavedOrderSDKVersion] isEqualToString:kOLKiteSDKVersion]){
+        return nil;
+    }
     OLPrintOrder *order = [NSKeyedUnarchiver unarchiveObjectWithFile:[OLPrintOrder orderFilePath]];
-//    [order cleanupDisk];
     return order;
 }
 

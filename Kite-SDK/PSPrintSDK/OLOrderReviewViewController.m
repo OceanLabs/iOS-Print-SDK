@@ -485,7 +485,7 @@ UIViewControllerPreviewingDelegate>
         cell = cell.superview;
     }
     
-    OLRemoteImageView *imageView = [(OLCircleMaskCollectionViewCell *)cell imageView];
+    UIView *printView = [(OLCircleMaskCollectionViewCell *)cell printContainerView];
     NSIndexPath *indexPath = [self.collectionView indexPathForCell:(UICollectionViewCell *)cell];
     
     self.editingPrintPhoto = [OLUserSession currentSession].userSelectedPhotos[indexPath.item];
@@ -496,13 +496,14 @@ UIViewControllerPreviewingDelegate>
             self.nextButton.alpha = 0;
         }];
         OLScrollCropViewController *cropVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLScrollCropViewController"];
+        cropVc.borderInsets = self.product.productTemplate.imageBorder;
         cropVc.enableCircleMask = self.product.productTemplate.templateUI == kOLTemplateUICircle;
         cropVc.delegate = self;
         cropVc.aspectRatio = [self productAspectRatio];
         
-        cropVc.previewView = [imageView snapshotViewAfterScreenUpdates:YES];
-        cropVc.previewView.frame = [imageView.superview convertRect:imageView.frame toView:nil];
-        cropVc.previewSourceView = imageView;
+        cropVc.previewView = [printView snapshotViewAfterScreenUpdates:YES];
+        cropVc.previewView.frame = [printView.superview convertRect:printView.frame toView:nil];
+        cropVc.previewSourceView = printView;
         cropVc.providesPresentationContextTransitionStyle = true;
         cropVc.definesPresentationContext = true;
         cropVc.modalPresentationStyle = UIModalPresentationOverCurrentContext;
