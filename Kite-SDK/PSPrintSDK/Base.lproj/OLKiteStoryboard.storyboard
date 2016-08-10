@@ -659,8 +659,8 @@ to rearrange the photos</string>
                                                         <imageView userInteractionEnabled="NO" tag="10" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="snL-IO-jSO">
                                                             <rect key="frame" x="0.0" y="0.0" width="46" height="22"/>
                                                         </imageView>
-                                                        <label opaque="NO" userInteractionEnabled="NO" tag="20" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9AF-uV-oKy">
-                                                            <rect key="frame" x="2" y="25" width="42" height="15"/>
+                                                        <label opaque="NO" userInteractionEnabled="NO" tag="20" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="1000" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9AF-uV-oKy">
+                                                            <rect key="frame" x="0.0" y="25" width="46" height="15"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                             <nil key="highlightedColor"/>
@@ -669,13 +669,13 @@ to rearrange the photos</string>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                 </view>
                                                 <constraints>
-                                                    <constraint firstAttribute="trailing" secondItem="9AF-uV-oKy" secondAttribute="trailing" constant="2" id="7a5-65-fvb"/>
+                                                    <constraint firstAttribute="trailing" secondItem="9AF-uV-oKy" secondAttribute="trailing" id="7a5-65-fvb"/>
                                                     <constraint firstItem="9AF-uV-oKy" firstAttribute="top" secondItem="snL-IO-jSO" secondAttribute="bottom" constant="3" id="88Q-1Q-YQa"/>
                                                     <constraint firstItem="snL-IO-jSO" firstAttribute="top" secondItem="M4l-iW-JYh" secondAttribute="top" id="B7O-5s-iJo"/>
                                                     <constraint firstAttribute="bottom" secondItem="9AF-uV-oKy" secondAttribute="bottom" id="H2C-mS-0Ms"/>
                                                     <constraint firstAttribute="trailing" secondItem="snL-IO-jSO" secondAttribute="trailing" id="Ico-Ri-s1d"/>
                                                     <constraint firstAttribute="bottom" secondItem="snL-IO-jSO" secondAttribute="bottom" id="c5j-zn-720"/>
-                                                    <constraint firstItem="9AF-uV-oKy" firstAttribute="leading" secondItem="M4l-iW-JYh" secondAttribute="leading" constant="2" id="hD4-su-iJE"/>
+                                                    <constraint firstItem="9AF-uV-oKy" firstAttribute="leading" secondItem="M4l-iW-JYh" secondAttribute="leading" id="hD4-su-iJE"/>
                                                     <constraint firstItem="snL-IO-jSO" firstAttribute="leading" secondItem="M4l-iW-JYh" secondAttribute="leading" id="uXg-I4-xNn"/>
                                                 </constraints>
                                                 <variation key="default">

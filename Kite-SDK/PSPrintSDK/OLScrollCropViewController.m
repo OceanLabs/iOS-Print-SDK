@@ -35,10 +35,13 @@
 #import "UIView+RoundRect.h"
 #import "OLEditingToolsView.h"
 #import "OLAsset+Private.h"
+#import "OLUserSession.h"
 
-const NSInteger kOLEditDrawerTagTools = 10;
-const NSInteger kOLEditDrawerTagColors = 20;
-const NSInteger kOLEditDrawerTagFonts = 30;
+const NSInteger kOLEditDrawerTagTextTools = 11;
+const NSInteger kOLEditDrawerTagColors = 21;
+const NSInteger kOLEditDrawerTagFonts = 31;
+const NSInteger kOLEditDrawerTagImageTools = 10;
+const NSInteger kOLEditDrawerTagImages = 30;
 
 @interface OLScrollCropViewController () <RMImageCropperDelegate, UITextFieldDelegate, UIGestureRecognizerDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, OLPhotoTextFieldDelegate>
 @property (weak, nonatomic) UIButton *doneButton;
@@ -106,9 +109,9 @@ const NSInteger kOLEditDrawerTagFonts = 30;
 
 - (void)setActiveTextField:(OLPhotoTextField *)activeTextField{
     if (activeTextField){
-        if (self.collectionView.tag != kOLEditDrawerTagTools && activeTextField != _activeTextField){ //Showing colors/fonts for another textField. Dismiss first
+        if (self.collectionView.tag != kOLEditDrawerTagTextTools && activeTextField != _activeTextField){ //Showing colors/fonts for another textField. Dismiss first
             [self dismissDrawerWithCompletionHandler:^(BOOL finished){
-                self.collectionView.tag = kOLEditDrawerTagTools;
+                self.collectionView.tag = kOLEditDrawerTagTextTools;
                 
                 self.drawerHeightCon.constant = self.originalDrawerHeight;
                 [self.view layoutIfNeeded];
@@ -118,7 +121,7 @@ const NSInteger kOLEditDrawerTagFonts = 30;
             }];
         }
         else{
-            self.collectionView.tag = kOLEditDrawerTagTools;
+            self.collectionView.tag = kOLEditDrawerTagTextTools;
             
             self.drawerHeightCon.constant = self.originalDrawerHeight;
             [self.view layoutIfNeeded];
@@ -127,46 +130,10 @@ const NSInteger kOLEditDrawerTagFonts = 30;
             [self showDrawerWithCompletionHandler:NULL];
         }
     }
-    else{
-        [self dismissDrawerWithCompletionHandler:NULL];
-    }
+//    else{
+//        [self dismissDrawerWithCompletionHandler:NULL];
+//    }
      _activeTextField = activeTextField;
-}
-
-- (void)dismissDrawerWithCompletionHandler:(void(^)(BOOL finished))handler{
-    self.editingTools.button1.selected = NO;
-    self.editingTools.button2.selected = NO;
-    self.editingTools.button3.selected = NO;
-    self.editingTools.button4.selected = NO;
-    [UIView animateWithDuration:0.25 animations:^{
-        self.drawerView.transform = CGAffineTransformIdentity;
-    } completion:^(BOOL finished){
-        [self.view bringSubviewToFront:self.editingTools];
-        if (handler){
-            handler(finished);
-        }
-    }];
-}
-
-- (void)showDrawerWithCompletionHandler:(void(^)(BOOL finished))handler{
-    if (self.collectionView.tag == kOLEditDrawerTagTools){
-        self.drawerLabel.text = NSLocalizedString(@"Tools", @"");
-        self.editingTools.button3.selected = YES;
-    }
-    else if (self.collectionView.tag == kOLEditDrawerTagColors){
-        self.drawerLabel.text = NSLocalizedString(@"Text Colour", @"");
-    }
-    else if (self.collectionView.tag == kOLEditDrawerTagFonts){
-        self.drawerLabel.text = NSLocalizedString(@"Fonts", @"");
-    }
-    //set height
-    [UIView animateWithDuration:0.25 animations:^{
-        self.drawerView.transform = CGAffineTransformMakeTranslation(0, -self.drawerView.frame.size.height);
-    } completion:^(BOOL finished){
-        if (handler){
-            handler(finished);
-        }
-    }];
 }
 
 - (void)dismissKeyboard{
@@ -270,17 +237,15 @@ const NSInteger kOLEditDrawerTagFonts = 30;
     
     
     [self.editingTools.ctaButton addTarget:self action:@selector(onBarButtonDoneTapped:) forControlEvents:UIControlEventTouchUpInside];
-//    [self.editingTools.button4 removeFromSuperview];
-//    [self.editingTools.button3 removeFromSuperview]; //TODO: Remove, temp for master
-    [self.editingTools.button1 setImage:[UIImage imageNamedInKiteBundle:@"flip"] forState:UIControlStateNormal];
+    [self.editingTools.button1 setImage:[UIImage imageNamedInKiteBundle:@"tools-icon"] forState:UIControlStateNormal];
     [self.editingTools.button3 setImage:[UIImage imageNamedInKiteBundle:@"Tt"] forState:UIControlStateNormal];
     [self.editingTools.button2 setImage:[UIImage imageNamedInKiteBundle:@"rotate"] forState:UIControlStateNormal];
     [self.editingTools.button4 setImage:[UIImage imageNamedInKiteBundle:@"crop"] forState:UIControlStateNormal];
     
-    [self.editingTools.button1 addTarget:self action:@selector(onButtonHorizontalFlipClicked:) forControlEvents:UIControlEventTouchUpInside];
-    [self.editingTools.button3 addTarget:self action:@selector(onButtonAddTextClicked:) forControlEvents:UIControlEventTouchUpInside];
-    [self.editingTools.button2 addTarget:self action:@selector(onButtonRotateClicked:) forControlEvents:UIControlEventTouchUpInside];
-    [self.editingTools.button4 addTarget:self action:@selector(onButtonCropClicked:) forControlEvents:UIControlEventTouchUpInside];
+    [self.editingTools.button1 addTarget:self action:@selector(onButton1Clicked:) forControlEvents:UIControlEventTouchUpInside];
+        [self.editingTools.button2 addTarget:self action:@selector(onButton2Clicked:) forControlEvents:UIControlEventTouchUpInside];
+    [self.editingTools.button3 addTarget:self action:@selector(onButton3Clicked:) forControlEvents:UIControlEventTouchUpInside];
+    [self.editingTools.button4 addTarget:self action:@selector(onButton4Clicked:) forControlEvents:UIControlEventTouchUpInside];
     
     self.doneButton = self.editingTools.ctaButton;
     self.doneButton.enabled = NO;
@@ -398,67 +363,6 @@ const NSInteger kOLEditDrawerTagFonts = 30;
     }
 }
 
-- (void)onBarButtonDoneTapped:(id)sender {
-    self.edits.cropImageRect = [self.cropView getImageRect];
-    self.edits.cropImageFrame = [self.cropView getFrameRect];
-    self.edits.cropImageSize = [self.cropView croppedImageSize];
-    self.edits.cropTransform = [self.cropView.imageView transform];
-    
-    for (OLPhotoTextField *textField in self.textFields){
-        if (!textField.text || [textField.text isEqualToString:@""]){
-            continue;
-        }
-        OLTextOnPhoto *textOnPhoto = [[OLTextOnPhoto alloc] init];
-        textOnPhoto.text = textField.text;
-        textOnPhoto.frame = textField.frame;
-        textOnPhoto.transform = textField.transform;
-        textOnPhoto.color = textField.textColor;
-        textOnPhoto.fontName = textField.font.fontName;
-        textOnPhoto.fontSize = textField.font.pointSize;
-        [self.edits.textsOnPhoto addObject:textOnPhoto];
-    }
-    
-    if ([self.delegate respondsToSelector:@selector(scrollCropViewController:didFinishCroppingImage:)]){
-        [self.delegate scrollCropViewController:self didFinishCroppingImage:[self.cropView editedImage]];
-    }
-    else{
-        [self dismissViewControllerAnimated:YES completion:NULL];
-    }
-}
-
-- (IBAction)onBarButtonCancelTapped:(UIBarButtonItem *)sender {
-    if (self.doneButton.enabled && self.previewView && [self.delegate respondsToSelector:@selector(scrollCropViewControllerDidDropChanges:)]){ //discard changes
-        self.previewSourceView.hidden = NO;
-        
-        self.previewView = [self.cropView snapshotViewAfterScreenUpdates:YES];
-        self.previewView.frame = self.cropView.frame;
-        [self.view addSubview:self.previewView];
-        [UIView animateWithDuration:0.25 animations:^{
-            self.view.backgroundColor = [UIColor clearColor];
-            for (UIView *view in self.allViews){
-                view.alpha = 0;
-            }
-        } completion:^(BOOL finished){
-            [UIView animateWithDuration:0.7 animations:^{
-                self.previewView.transform = CGAffineTransformRotate(CGAffineTransformMakeTranslation(0, self.view.frame.size.height), -M_PI_4);
-            }completion:^(BOOL finished){
-                if ([self.delegate respondsToSelector:@selector(scrollCropViewControllerDidDropChanges:)]){
-                    [self.delegate scrollCropViewControllerDidCancel:self];
-                }
-                else{
-                    [self dismissViewControllerAnimated:NO completion:NULL];
-                }
-            }];
-        }];
-    }
-    else if ([self.delegate respondsToSelector:@selector(scrollCropViewControllerDidCancel:)]){
-        [self.delegate scrollCropViewControllerDidCancel:self];
-    }
-    else{
-        [self dismissViewControllerAnimated:YES completion:NULL];
-    }
-}
-
 - (void)dismissViewControllerAnimated:(BOOL)flag completion:(void (^)(void))completion{
     if (!self.previewView){
         [super dismissViewControllerAnimated:flag completion:completion];
@@ -493,92 +397,6 @@ const NSInteger kOLEditDrawerTagFonts = 30;
             }];
         }];
     }
-}
-
-- (IBAction)onButtonHorizontalFlipClicked:(id)sender {
-    if (self.cropView.isCorrecting){
-        return;
-    }
-    
-    [self.activeTextField resignFirstResponder];
-    [self.activeTextField hideButtons];
-    self.activeTextField = nil;
-    
-    [self.edits performHorizontalFlipEditFromOrientation:self.cropView.imageView.image.imageOrientation];
-    
-    [UIView transitionWithView:self.cropView.imageView duration:0.5 options:UIViewAnimationOptionTransitionFlipFromRight animations:^{
-        
-        [self.cropView setImage:[UIImage imageWithCGImage:self.fullImage.CGImage scale:self.cropView.imageView.image.scale orientation:[OLPhotoEdits orientationForNumberOfCounterClockwiseRotations:self.edits.counterClockwiseRotations andInitialOrientation:self.initialOrientation horizontalFlip:self.edits.flipHorizontal verticalFlip:self.edits.flipVertical]]];
-        
-    }completion:NULL];
-    
-    self.doneButton.enabled = YES;
-}
-
-- (IBAction)onButtonRotateClicked:(id)sender {
-    if (self.cropView.isCorrecting){
-        return;
-    }
-    
-    [self.activeTextField resignFirstResponder];
-    [self.activeTextField hideButtons];
-    self.activeTextField = nil;
-    
-    for (UITextField *textField in self.textFields){
-        UITextField *textFieldCopy = [self addTextFieldToView:self.textFieldsView temp:YES];
-        textFieldCopy.text = textField.text;
-        textFieldCopy.transform = textField.transform;
-        textFieldCopy.textColor = textField.textColor;
-        textFieldCopy.font = textField.font;
-        textField.hidden = YES;
-    }
-    
-    [(UIBarButtonItem *)sender setEnabled:NO];
-    self.edits.counterClockwiseRotations = (self.edits.counterClockwiseRotations + 1) % 4;
-    CGAffineTransform transform = self.cropView.imageView.transform;
-    transform.tx = self.cropView.imageView.transform.ty;
-    transform.ty = -self.cropView.imageView.transform.tx;
-    
-    CGRect cropboxRect = self.cropView.frame;
-    
-    UIImage *newImage = [UIImage imageWithCGImage:self.fullImage.CGImage scale:self.cropView.imageView.image.scale orientation:[OLPhotoEdits orientationForNumberOfCounterClockwiseRotations:self.edits.counterClockwiseRotations andInitialOrientation:self.initialOrientation horizontalFlip:self.edits.flipHorizontal verticalFlip:self.edits.flipVertical]];
-    CGFloat imageAspectRatio = newImage.size.height/newImage.size.width;
-    
-    [UIView animateWithDuration:0.25 delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
-        self.cropView.transform = CGAffineTransformMakeRotation(-M_PI_2);
-        
-        CGFloat boxWidth = self.cropView.frame.size.width;
-        CGFloat boxHeight = self.cropView.frame.size.height;
-        
-        CGFloat imageWidth;
-        CGFloat imageHeight;
-        
-        if (imageAspectRatio > 1.0){
-            imageHeight = boxHeight;
-            imageWidth = boxHeight * imageAspectRatio;
-        }
-        else{
-            imageWidth = boxWidth;
-            imageHeight = boxWidth / imageAspectRatio;
-        }
-        
-        self.cropView.imageView.frame = CGRectMake((boxHeight - imageWidth)/ 2.0, (boxWidth - imageHeight) / 2.0, imageWidth, imageHeight);
-        
-    } completion:^(BOOL finished){
-        for (UITextField *textField in self.textFields){
-            textField.hidden = NO;
-        }
-        for (UITextField *textField in [self.textFieldsView.subviews copy]){
-            [textField removeFromSuperview];
-        }
-        
-        self.cropView.transform = CGAffineTransformIdentity;
-        self.cropView.frame = cropboxRect;
-        [self.cropView setImage:newImage];
-        
-        [(UIBarButtonItem *)sender setEnabled:YES];
-        self.doneButton.enabled = YES;
-    }];
 }
 
 - (UITextField *)addTextFieldToView:(UIView *)view temp:(BOOL)temp{
@@ -619,38 +437,6 @@ const NSInteger kOLEditDrawerTagFonts = 30;
     }
     
     return textField;
-}
-
-- (void)onButtonAddTextClicked:(UIButton *)sender {
-    UITextField *textField = [self addTextFieldToView:self.cropView temp:NO];
-    [self.view layoutIfNeeded];
-    [textField becomeFirstResponder]; //Take focus away from any existing active TF
-    [textField becomeFirstResponder]; //Become first responder
-
-    self.doneButton.enabled = YES;
-}
-
-- (void)onButtonCropClicked:(UIButton *)sender{
-    sender.selected = YES;
-    self.cropView.clipsToBounds = NO;
-    self.cropView.userInteractionEnabled = YES;
-    self.printContainerView.hidden = YES;
-    [self.view sendSubviewToBack:self.cropView];
-    for (UIView *view in self.cropFrameEdges){
-        view.hidden = NO;
-    }
-}
-
-- (IBAction)onDrawerButtonDoneClicked:(UIButton *)sender {
-    [self dismissDrawerWithCompletionHandler:^(BOOL finished){
-        self.collectionView.tag = kOLEditDrawerTagTools;
-        
-        self.drawerHeightCon.constant = self.originalDrawerHeight;
-        [self.view layoutIfNeeded];
-        
-        [self.collectionView reloadData];
-        [self showDrawerWithCompletionHandler:NULL];
-    }];
 }
 
 - (CGFloat)angleOfTouchPoint:(CGPoint)p fromPoint:(CGPoint)c{
@@ -771,10 +557,308 @@ const NSInteger kOLEditDrawerTagFonts = 30;
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
+#pragma mark Drawer
+
+- (void)dismissDrawerWithCompletionHandler:(void(^)(BOOL finished))handler{
+    self.editingTools.button1.selected = NO;
+    self.editingTools.button2.selected = NO;
+    self.editingTools.button3.selected = NO;
+    self.editingTools.button4.selected = NO;
+    [UIView animateWithDuration:0.25 animations:^{
+        self.drawerView.transform = CGAffineTransformIdentity;
+    } completion:^(BOOL finished){
+        [self.view bringSubviewToFront:self.editingTools];
+        if (handler){
+            handler(finished);
+        }
+    }];
+}
+
+- (void)showDrawerWithCompletionHandler:(void(^)(BOOL finished))handler{
+    if (self.collectionView.tag == kOLEditDrawerTagTextTools){
+        self.drawerLabel.text = NSLocalizedString(@"Tools", @"");
+        self.editingTools.button3.selected = YES;
+    }
+    else if (self.collectionView.tag == kOLEditDrawerTagColors){
+        self.drawerLabel.text = NSLocalizedString(@"Text Colour", @"");
+    }
+    else if (self.collectionView.tag == kOLEditDrawerTagFonts){
+        self.drawerLabel.text = NSLocalizedString(@"Fonts", @"");
+    }
+    //set height
+    [UIView animateWithDuration:0.25 animations:^{
+        self.drawerView.transform = CGAffineTransformMakeTranslation(0, -self.drawerView.frame.size.height);
+    } completion:^(BOOL finished){
+        if (handler){
+            handler(finished);
+        }
+    }];
+}
+
+#pragma mark Buttons
+
+- (void)onBarButtonDoneTapped:(id)sender {
+    self.edits.cropImageRect = [self.cropView getImageRect];
+    self.edits.cropImageFrame = [self.cropView getFrameRect];
+    self.edits.cropImageSize = [self.cropView croppedImageSize];
+    self.edits.cropTransform = [self.cropView.imageView transform];
+    
+    for (OLPhotoTextField *textField in self.textFields){
+        if (!textField.text || [textField.text isEqualToString:@""]){
+            continue;
+        }
+        OLTextOnPhoto *textOnPhoto = [[OLTextOnPhoto alloc] init];
+        textOnPhoto.text = textField.text;
+        textOnPhoto.frame = textField.frame;
+        textOnPhoto.transform = textField.transform;
+        textOnPhoto.color = textField.textColor;
+        textOnPhoto.fontName = textField.font.fontName;
+        textOnPhoto.fontSize = textField.font.pointSize;
+        [self.edits.textsOnPhoto addObject:textOnPhoto];
+    }
+    
+    if ([self.delegate respondsToSelector:@selector(scrollCropViewController:didFinishCroppingImage:)]){
+        [self.delegate scrollCropViewController:self didFinishCroppingImage:[self.cropView editedImage]];
+    }
+    else{
+        [self dismissViewControllerAnimated:YES completion:NULL];
+    }
+}
+
+- (IBAction)onBarButtonCancelTapped:(UIBarButtonItem *)sender {
+    if (self.doneButton.enabled && self.previewView && [self.delegate respondsToSelector:@selector(scrollCropViewControllerDidDropChanges:)]){ //discard changes
+        self.previewSourceView.hidden = NO;
+        
+        UIEdgeInsets b = [self imageInsetsOnContainer];
+        [self.printContainerView addSubview:self.cropView];
+        self.cropView.frame = CGRectMake(b.left, b.top, self.printContainerView.frame.size.width - b.left - b.right, self.previewView.frame.size.height - b.top - b.bottom);
+        self.previewView  = [self.printContainerView snapshotViewAfterScreenUpdates:YES];
+        
+        self.previewView.frame = self.printContainerView.frame;
+        [self.view addSubview:self.previewView];
+        [UIView animateWithDuration:0.25 animations:^{
+            self.view.backgroundColor = [UIColor clearColor];
+            for (UIView *view in self.allViews){
+                view.alpha = 0;
+            }
+        } completion:^(BOOL finished){
+            [UIView animateWithDuration:0.7 animations:^{
+                self.previewView.transform = CGAffineTransformRotate(CGAffineTransformMakeTranslation(0, self.view.frame.size.height), -M_PI_4);
+            }completion:^(BOOL finished){
+                if ([self.delegate respondsToSelector:@selector(scrollCropViewControllerDidDropChanges:)]){
+                    [self.delegate scrollCropViewControllerDidCancel:self];
+                }
+                else{
+                    [self dismissViewControllerAnimated:NO completion:NULL];
+                }
+            }];
+        }];
+    }
+    else if ([self.delegate respondsToSelector:@selector(scrollCropViewControllerDidCancel:)]){
+        [self.delegate scrollCropViewControllerDidCancel:self];
+    }
+    else{
+        [self dismissViewControllerAnimated:YES completion:NULL];
+    }
+}
+
+- (void)onButton1Clicked:(UIButton *)sender{
+    sender.tag = kOLEditDrawerTagImageTools;
+    [self onButtonClicked:sender];
+}
+
+- (void)onButton2Clicked:(UIButton *)sender{
+}
+
+- (void)onButton3Clicked:(UIButton *)sender{
+}
+
+- (void)onButton4Clicked:(UIButton *)sender{
+}
+
+- (void)selectButton:(UIButton *)sender{
+    switch (sender.tag) {
+        case kOLEditDrawerTagTextTools:
+            self.drawerLabel.text = NSLocalizedString(@"TEXT", @"");
+            break;
+        case kOLEditDrawerTagImageTools:
+            self.drawerLabel.text = NSLocalizedString(@"TOOLS", @"");
+            break;
+            
+        default:
+            break;
+    }
+    
+    sender.selected = YES;
+    self.collectionView.tag = sender.tag;
+    [self.collectionView reloadData];
+    
+    [self showDrawerWithCompletionHandler:NULL];
+}
+
+- (void)deselectButton:(UIButton *)sender withCompletionHandler:(void (^)())handler{
+    sender.selected = NO;
+    [self dismissDrawerWithCompletionHandler:^(BOOL finished){
+        if (handler){
+            handler();
+        }
+    }];
+}
+
+- (void)deselectSelectedButtonWithCompletionHandler:(void (^)())handler{
+    for (UIButton *button in @[self.editingTools.button1, self.editingTools.button2, self.editingTools.button3, self.editingTools.button4]){
+        if (button.selected){
+            [self deselectButton:button withCompletionHandler:handler];
+            break; //We should never have more than one selected button
+        }
+    }
+}
+
+- (IBAction)onButtonClicked:(UIButton *)sender {
+    void (^buttonAction)() = ^void(){
+        [self selectButton:sender];
+    };
+    
+    // Nothing is selected: just action
+    if (!self.editingTools.button1.selected && !self.editingTools.button2.selected && !self.editingTools.button3.selected && !self.editingTools.button4.selected){
+        buttonAction();
+    }
+    // Sender is selected: just deselect
+    else if (sender.selected){
+        [self deselectSelectedButtonWithCompletionHandler:NULL];
+    }
+    // Other is selected: Deselect and action
+    else{
+        [self deselectSelectedButtonWithCompletionHandler:^{
+            buttonAction();
+        }];
+    }
+}
+
+#pragma mark Actions
+
+- (IBAction)onButtonHorizontalFlipClicked:(id)sender {
+    if (self.cropView.isCorrecting){
+        return;
+    }
+    
+    [self.activeTextField resignFirstResponder];
+    [self.activeTextField hideButtons];
+    self.activeTextField = nil;
+    
+    [self.edits performHorizontalFlipEditFromOrientation:self.cropView.imageView.image.imageOrientation];
+    
+    [UIView transitionWithView:self.cropView.imageView duration:0.5 options:UIViewAnimationOptionTransitionFlipFromRight animations:^{
+        
+        [self.cropView setImage:[UIImage imageWithCGImage:self.fullImage.CGImage scale:self.cropView.imageView.image.scale orientation:[OLPhotoEdits orientationForNumberOfCounterClockwiseRotations:self.edits.counterClockwiseRotations andInitialOrientation:self.initialOrientation horizontalFlip:self.edits.flipHorizontal verticalFlip:self.edits.flipVertical]]];
+        
+    }completion:NULL];
+    
+    self.doneButton.enabled = YES;
+}
+
+- (IBAction)onButtonRotateClicked:(id)sender {
+    if (self.cropView.isCorrecting){
+        return;
+    }
+    
+    [self.activeTextField resignFirstResponder];
+    [self.activeTextField hideButtons];
+    self.activeTextField = nil;
+    
+    for (UITextField *textField in self.textFields){
+        UITextField *textFieldCopy = [self addTextFieldToView:self.textFieldsView temp:YES];
+        textFieldCopy.text = textField.text;
+        textFieldCopy.transform = textField.transform;
+        textFieldCopy.textColor = textField.textColor;
+        textFieldCopy.font = textField.font;
+        textField.hidden = YES;
+    }
+    
+    [(UIBarButtonItem *)sender setEnabled:NO];
+    self.edits.counterClockwiseRotations = (self.edits.counterClockwiseRotations + 1) % 4;
+    CGAffineTransform transform = self.cropView.imageView.transform;
+    transform.tx = self.cropView.imageView.transform.ty;
+    transform.ty = -self.cropView.imageView.transform.tx;
+    
+    CGRect cropboxRect = self.cropView.frame;
+    
+    UIImage *newImage = [UIImage imageWithCGImage:self.fullImage.CGImage scale:self.cropView.imageView.image.scale orientation:[OLPhotoEdits orientationForNumberOfCounterClockwiseRotations:self.edits.counterClockwiseRotations andInitialOrientation:self.initialOrientation horizontalFlip:self.edits.flipHorizontal verticalFlip:self.edits.flipVertical]];
+    CGFloat imageAspectRatio = newImage.size.height/newImage.size.width;
+    
+    [UIView animateWithDuration:0.25 delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
+        self.cropView.transform = CGAffineTransformMakeRotation(-M_PI_2);
+        
+        CGFloat boxWidth = self.cropView.frame.size.width;
+        CGFloat boxHeight = self.cropView.frame.size.height;
+        
+        CGFloat imageWidth;
+        CGFloat imageHeight;
+        
+        if (imageAspectRatio > 1.0){
+            imageHeight = boxHeight;
+            imageWidth = boxHeight * imageAspectRatio;
+        }
+        else{
+            imageWidth = boxWidth;
+            imageHeight = boxWidth / imageAspectRatio;
+        }
+        
+        self.cropView.imageView.frame = CGRectMake((boxHeight - imageWidth)/ 2.0, (boxWidth - imageHeight) / 2.0, imageWidth, imageHeight);
+        
+    } completion:^(BOOL finished){
+        for (UITextField *textField in self.textFields){
+            textField.hidden = NO;
+        }
+        for (UITextField *textField in [self.textFieldsView.subviews copy]){
+            [textField removeFromSuperview];
+        }
+        
+        self.cropView.transform = CGAffineTransformIdentity;
+        self.cropView.frame = cropboxRect;
+        [self.cropView setImage:newImage];
+        
+        [(UIBarButtonItem *)sender setEnabled:YES];
+        self.doneButton.enabled = YES;
+    }];
+}
+
+- (void)onButtonAddTextClicked:(UIButton *)sender {
+    UITextField *textField = [self addTextFieldToView:self.cropView temp:NO];
+    [self.view layoutIfNeeded];
+    [textField becomeFirstResponder]; //Take focus away from any existing active TF
+    [textField becomeFirstResponder]; //Become first responder
+    
+    self.doneButton.enabled = YES;
+}
+
+- (void)onButtonCropClicked:(UIButton *)sender{
+    sender.selected = YES;
+    self.cropView.clipsToBounds = NO;
+    self.cropView.userInteractionEnabled = YES;
+    self.printContainerView.hidden = YES;
+    [self.view sendSubviewToBack:self.cropView];
+    for (UIView *view in self.cropFrameEdges){
+        view.hidden = NO;
+    }
+}
+
+- (IBAction)onDrawerButtonDoneClicked:(UIButton *)sender {
+    [self dismissDrawerWithCompletionHandler:^(BOOL finished){
+        self.collectionView.tag = kOLEditDrawerTagTextTools;
+        
+        self.drawerHeightCon.constant = self.originalDrawerHeight;
+        [self.view layoutIfNeeded];
+        
+        [self.collectionView reloadData];
+        [self showDrawerWithCompletionHandler:NULL];
+    }];
+}
+
 #pragma mark CollectionView
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
-    if (collectionView.tag == kOLEditDrawerTagTools){
+    if (collectionView.tag == kOLEditDrawerTagTextTools){
         return 2;
     }
     else if (collectionView.tag == kOLEditDrawerTagColors){
@@ -783,13 +867,16 @@ const NSInteger kOLEditDrawerTagFonts = 30;
     else if (collectionView.tag == kOLEditDrawerTagFonts){
         return self.fonts.count;
     }
+    else if (collectionView.tag == kOLEditDrawerTagImageTools){
+        return 4;
+    }
     
     return 0;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
     UICollectionViewCell *cell;
-    if (collectionView.tag == kOLEditDrawerTagTools){
+    if (collectionView.tag == kOLEditDrawerTagTextTools){
         cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"toolCell" forIndexPath:indexPath];
         [cell viewWithTag:10].tintColor = [UIColor blackColor];
         [(UILabel *)[cell viewWithTag:20] setTextColor:[UIColor blackColor]];
@@ -800,6 +887,27 @@ const NSInteger kOLEditDrawerTagFonts = 30;
         else if (indexPath.item == 1){
             [(UIImageView *)[cell viewWithTag:10] setImage:[UIImage imageNamedInKiteBundle:@"paint-bucket-icon"]];
             [(UILabel *)[cell viewWithTag:20] setText:NSLocalizedString(@"Text Colour", @"")];
+        }
+    }
+    else if (collectionView.tag == kOLEditDrawerTagImageTools){
+        cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"toolCell" forIndexPath:indexPath];
+        [cell viewWithTag:10].tintColor = [UIColor blackColor];
+        [(UILabel *)[cell viewWithTag:20] setTextColor:[UIColor blackColor]];
+        if (indexPath.item == 0){
+            [(UIImageView *)[cell viewWithTag:10] setImage:[UIImage imageNamedInKiteBundle:@"flip"]];
+            [(UILabel *)[cell viewWithTag:20] setText:NSLocalizedStringFromTableInBundle(@"Flip", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")];
+        }
+        else if (indexPath.item == 1){
+            [(UIImageView *)[cell viewWithTag:10] setImage:[UIImage imageNamedInKiteBundle:@"rotate"]];
+            [(UILabel *)[cell viewWithTag:20] setText:NSLocalizedStringFromTableInBundle(@"Rotate", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")];
+        }
+        else if (indexPath.item == 2){
+            [(UIImageView *)[cell viewWithTag:10] setImage:[UIImage imageNamedInKiteBundle:@"crop"]];
+            [(UILabel *)[cell viewWithTag:20] setText:NSLocalizedStringFromTableInBundle(@"Crop", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")];
+        }
+        else if (indexPath.item == 3){
+            [(UIImageView *)[cell viewWithTag:10] setImage:[UIImage imageNamedInKiteBundle:@"Tt"]];
+            [(UILabel *)[cell viewWithTag:20] setText:NSLocalizedStringFromTableInBundle(@"Add Text", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")];
         }
     }
     else if (collectionView.tag == kOLEditDrawerTagColors){
@@ -850,8 +958,8 @@ const NSInteger kOLEditDrawerTagFonts = 30;
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
-    if (collectionView.tag == kOLEditDrawerTagTools){
-        return CGSizeMake(self.collectionView.frame.size.height * 2.0, self.collectionView.frame.size.height);
+    if (collectionView.tag == kOLEditDrawerTagTextTools || collectionView.tag == kOLEditDrawerTagImageTools){
+        return CGSizeMake(self.collectionView.frame.size.height * 1.2, self.collectionView.frame.size.height);
     }
     if (collectionView.tag == kOLEditDrawerTagColors){
         return CGSizeMake(self.collectionView.frame.size.height, self.collectionView.frame.size.height);
@@ -864,8 +972,8 @@ const NSInteger kOLEditDrawerTagFonts = 30;
 }
 
 - (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout insetForSectionAtIndex:(NSInteger)section{
-    if (collectionView.tag == kOLEditDrawerTagTools){
-        CGFloat margin = (collectionView.frame.size.width - ([self collectionView:collectionView layout:self.collectionView.collectionViewLayout sizeForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:section]].width * 2 + [self collectionView:collectionView layout:collectionViewLayout minimumLineSpacingForSectionAtIndex:section]))/2.0;
+    if (collectionView.tag == kOLEditDrawerTagTextTools || collectionView.tag == kOLEditDrawerTagImageTools){
+        CGFloat margin = MAX((collectionView.frame.size.width - ([self collectionView:collectionView layout:self.collectionView.collectionViewLayout sizeForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:section]].width * [self collectionView:collectionView numberOfItemsInSection:section] + [self collectionView:collectionView layout:collectionViewLayout minimumLineSpacingForSectionAtIndex:section] * ([self collectionView:collectionView numberOfItemsInSection:section]-1)))/2.0, 5);
         return UIEdgeInsetsMake(0, margin, 0, margin);
     }
     else if (collectionView.tag == kOLEditDrawerTagColors){
@@ -876,7 +984,7 @@ const NSInteger kOLEditDrawerTagFonts = 30;
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
-    if (collectionView.tag == kOLEditDrawerTagTools){
+    if (collectionView.tag == kOLEditDrawerTagTextTools){
         if (indexPath.item == 0){
             [self dismissDrawerWithCompletionHandler:^(BOOL finished){
                 [self.view bringSubviewToFront:self.drawerView];
@@ -900,6 +1008,20 @@ const NSInteger kOLEditDrawerTagFonts = 30;
             }];
         }
         
+    }
+    if (collectionView.tag == kOLEditDrawerTagImageTools){
+        if (indexPath.item == 0){
+            [self onButtonHorizontalFlipClicked:nil];
+        }
+        else if (indexPath.item == 1){
+            [self onButtonRotateClicked:nil];
+        }
+        else if (indexPath.item == 2){
+            [self onButtonCropClicked:nil];
+        }
+        else if (indexPath.item == 3){
+            [self onButtonAddTextClicked:nil];
+        }
     }
     else if (collectionView.tag == kOLEditDrawerTagColors){
         [self.activeTextField setTextColor:self.availableColors[indexPath.item]];
@@ -1010,7 +1132,7 @@ const NSInteger kOLEditDrawerTagFonts = 30;
     if (self.activeTextField == textField){
         if (self.collectionView.tag == kOLEditDrawerTagFonts){
             [self dismissDrawerWithCompletionHandler:^(BOOL finished){
-                self.collectionView.tag = kOLEditDrawerTagTools;
+                self.collectionView.tag = kOLEditDrawerTagTextTools;
                 
                 self.drawerHeightCon.constant = self.originalDrawerHeight;
                 [self.view layoutIfNeeded];
