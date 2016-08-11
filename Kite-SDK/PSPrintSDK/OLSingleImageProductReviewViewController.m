@@ -702,15 +702,15 @@ static BOOL hasMoved;
 
 #pragma mark - OLImageEditorViewControllerDelegate methods
 
-- (void)scrollCropViewControllerDidCancel:(OLScrollCropViewController *)cropper{
+- (void)scrollCropViewControllerDidCancel:(OLImageEditViewController *)cropper{
     [cropper dismissViewControllerAnimated:YES completion:^{}];
 }
 
-- (void)scrollCropViewControllerDidDropChanges:(OLScrollCropViewController *)cropper{
+- (void)scrollCropViewControllerDidDropChanges:(OLImageEditViewController *)cropper{
     [cropper dismissViewControllerAnimated:NO completion:NULL];
 }
 
--(void)scrollCropViewController:(OLScrollCropViewController *)cropper didFinishCroppingImage:(UIImage *)croppedImage{
+-(void)scrollCropViewController:(OLImageEditViewController *)cropper didFinishCroppingImage:(UIImage *)croppedImage{
     [self.imageDisplayed unloadImage];
     
     self.imageDisplayed.edits = cropper.edits;

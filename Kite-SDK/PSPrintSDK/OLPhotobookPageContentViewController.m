@@ -28,7 +28,7 @@
 //
 
 #import "OLPhotobookPageContentViewController.h"
-#import "OLScrollCropViewController.h"
+#import "OLImageEditViewController.h"
 #import "OLProduct.h"
 #import "OLRemoteImageView.h"
 #import "UIImage+ImageNamedInKiteBundle.h"

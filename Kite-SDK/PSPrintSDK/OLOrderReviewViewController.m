@@ -393,7 +393,7 @@ UIViewControllerPreviewingDelegate>
 }
 
 - (void)previewingContext:(id<UIViewControllerPreviewing>)previewingContext commitViewController:(UIViewController *)viewControllerToCommit{
-    OLScrollCropViewController *cropVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLScrollCropViewController"];
+    OLImageEditViewController *cropVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLScrollCropViewController"];
     cropVc.enableCircleMask = self.product.productTemplate.templateUI == kOLTemplateUICircle;
     cropVc.delegate = self;
     cropVc.aspectRatio = [self productAspectRatio];
@@ -498,7 +498,7 @@ UIViewControllerPreviewingDelegate>
         } completion:^(BOOL finished){
             [self.infoBanner removeFromSuperview];
         }];
-        OLScrollCropViewController *cropVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLScrollCropViewController"];
+        OLImageEditViewController *cropVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLScrollCropViewController"];
         cropVc.borderInsets = self.product.productTemplate.imageBorder;
         cropVc.enableCircleMask = self.product.productTemplate.templateUI == kOLTemplateUICircle;
         cropVc.delegate = self;
@@ -664,7 +664,7 @@ UIViewControllerPreviewingDelegate>
 
 #pragma mark - OLImageEditorViewControllerDelegate methods
 
-- (void)scrollCropViewControllerDidCancel:(OLScrollCropViewController *)cropper{
+- (void)scrollCropViewControllerDidCancel:(OLImageEditViewController *)cropper{
     [cropper dismissViewControllerAnimated:YES completion:^{
         [UIView animateWithDuration:0.25 animations:^{
             self.nextButton.alpha = 1;
@@ -673,7 +673,7 @@ UIViewControllerPreviewingDelegate>
     }];
 }
 
-- (void)scrollCropViewControllerDidDropChanges:(OLScrollCropViewController *)cropper{
+- (void)scrollCropViewControllerDidDropChanges:(OLImageEditViewController *)cropper{
     [UIView animateWithDuration:0.25 animations:^{
         self.nextButton.alpha = 1;
         self.navigationController.navigationBar.alpha = 1;
@@ -681,7 +681,7 @@ UIViewControllerPreviewingDelegate>
     [cropper dismissViewControllerAnimated:NO completion:NULL];
 }
 
--(void)scrollCropViewController:(OLScrollCropViewController *)cropper didFinishCroppingImage:(UIImage *)croppedImage{
+-(void)scrollCropViewController:(OLImageEditViewController *)cropper didFinishCroppingImage:(UIImage *)croppedImage{
     [self.editingPrintPhoto unloadImage];
     self.editingPrintPhoto.edits = cropper.edits;
     
@@ -715,7 +715,7 @@ UIViewControllerPreviewingDelegate>
 #endif
 }
 
-- (void)scrollCropViewController:(OLScrollCropViewController *)cropper didReplaceAssetWithAsset:(OLAsset *)asset{
+- (void)scrollCropViewController:(OLImageEditViewController *)cropper didReplaceAssetWithAsset:(OLAsset *)asset{
     NSUInteger index = [[OLUserSession currentSession].userSelectedPhotos indexOfObjectIdenticalTo:self.editingPrintPhoto];
     [[OLUserSession currentSession].userSelectedPhotos replaceObjectAtIndex:index withObject:asset];
     self.editingPrintPhoto = asset;

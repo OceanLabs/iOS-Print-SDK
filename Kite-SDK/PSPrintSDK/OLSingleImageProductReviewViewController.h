@@ -30,7 +30,7 @@
 #import <UIKit/UIKit.h>
 
 #import "OLKitePrintSDK.h"
-#import "OLScrollCropViewController.h"
+#import "OLImageEditViewController.h"
 
 @class OLProduct;
 

@@ -30,22 +30,22 @@
 #import <UIKit/UIKit.h>
 #import "OLRemoteImageCropper.h"
 
-@class OLScrollCropViewController;
+@class OLImageEditViewController;
 @class OLPhotoEdits;
 @class OLAsset;
 
 @protocol OLScrollCropViewControllerDelegate <NSObject>
 
-- (void)scrollCropViewController:(OLScrollCropViewController *)cropper didFinishCroppingImage:(UIImage *)croppedImage;
-- (void)scrollCropViewControllerDidCancel:(OLScrollCropViewController *)cropper;
-- (void)scrollCropViewController:(OLScrollCropViewController *)cropper didReplaceAssetWithAsset:(OLAsset *)asset;
+- (void)scrollCropViewController:(OLImageEditViewController *)cropper didFinishCroppingImage:(UIImage *)croppedImage;
+- (void)scrollCropViewControllerDidCancel:(OLImageEditViewController *)cropper;
+- (void)scrollCropViewController:(OLImageEditViewController *)cropper didReplaceAssetWithAsset:(OLAsset *)asset;
 
 @optional
-- (void)scrollCropViewControllerDidDropChanges:(OLScrollCropViewController *)cropper;
+- (void)scrollCropViewControllerDidDropChanges:(OLImageEditViewController *)cropper;
 
 @end
 
-@interface OLScrollCropViewController : UIViewController
+@interface OLImageEditViewController : UIViewController
 
 @property (strong, nonatomic) UIImage *fullImage;
 @property (copy, nonatomic) OLPhotoEdits *edits;

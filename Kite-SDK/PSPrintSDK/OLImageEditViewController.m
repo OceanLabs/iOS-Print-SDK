@@ -27,7 +27,7 @@
 //  THE SOFTWARE.
 //
 
-#import "OLScrollCropViewController.h"
+#import "OLImageEditViewController.h"
 #import "OLPhotoTextField.h"
 #import "OLColorSelectionCollectionViewCell.h"
 #import "OLKiteUtils.h"
@@ -45,7 +45,7 @@ const NSInteger kOLEditDrawerTagFonts = 31;
 const NSInteger kOLEditDrawerTagImageTools = 10;
 const NSInteger kOLEditDrawerTagImages = 30;
 
-@interface OLScrollCropViewController () <RMImageCropperDelegate, UITextFieldDelegate, UIGestureRecognizerDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, OLPhotoTextFieldDelegate, OLImagePickerViewControllerDelegate>
+@interface OLImageEditViewController () <RMImageCropperDelegate, UITextFieldDelegate, UIGestureRecognizerDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, OLPhotoTextFieldDelegate, OLImagePickerViewControllerDelegate>
 @property (weak, nonatomic) UIButton *doneButton;
 @property (assign, nonatomic) NSInteger initialOrientation;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *centerYCon;
@@ -81,7 +81,7 @@ const NSInteger kOLEditDrawerTagImages = 30;
 
 @end
 
-@implementation OLScrollCropViewController
+@implementation OLImageEditViewController
 
 -(NSArray<NSString *> *) fonts{
     if (!_fonts){
@@ -609,7 +609,7 @@ const NSInteger kOLEditDrawerTagImages = 30;
      [self.editingTools.button4 addTarget:self action:@selector(onButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
 }
 
-- (void)onBarButtonDoneTapped:(id)sender {
+- (void)onButtonDoneTapped:(id)sender {
     self.edits.cropImageRect = [self.cropView getImageRect];
     self.edits.cropImageFrame = [self.cropView getFrameRect];
     self.edits.cropImageSize = [self.cropView croppedImageSize];
@@ -1198,6 +1198,7 @@ const NSInteger kOLEditDrawerTagImages = 30;
 
 - (void)imagePicker:(OLImagePickerViewController *)vc didFinishPickingAssets:(NSMutableArray *)assets added:(NSArray<OLAsset *> *)addedAssets removed:(NSArray *)removedAssets{
     self.replacedAsset = addedAssets.lastObject;
+    self.edits = [self.replacedAsset.edits copy];
     if (self.replacedAsset){
         self.doneButton.enabled = YES;
         id view = [self.view viewWithTag:1010];
@@ -1208,7 +1209,9 @@ const NSInteger kOLEditDrawerTagImages = 30;
         for (UITextField *tf in self.textFields){
             [tf removeFromSuperview];
         }
-        __weak OLScrollCropViewController *welf = self;
+        [self.textFields removeAllObjects];
+        
+        __weak OLImageEditViewController *welf = self;
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             [self.replacedAsset imageWithSize:[UIScreen mainScreen].bounds.size applyEdits:NO progress:^(float progress){
                 dispatch_async(dispatch_get_main_queue(), ^{
@@ -1218,7 +1221,6 @@ const NSInteger kOLEditDrawerTagImages = 30;
                 dispatch_async(dispatch_get_main_queue(), ^{
                     self.fullImage = image;
                     
-                    self.edits = [self.replacedAsset.edits copy];
                     NSArray *copy = [[NSArray alloc] initWithArray:self.edits.textsOnPhoto copyItems:NO];
                     for (OLTextOnPhoto *textOnPhoto in copy){
                         UITextField *textField = [self addTextFieldToView:self.cropView temp:NO];
