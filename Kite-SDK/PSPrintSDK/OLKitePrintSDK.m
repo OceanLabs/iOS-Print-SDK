@@ -81,8 +81,6 @@
 #import "OLKiteUtils.h"
 
 static NSString *apiKey = nil;
-static NSString *const kOLStripePublishableKeyTest = @"pk_test_FxzXniUJWigFysP0bowWbuy3";
-static NSString *const kOLStripePublishableKeyLive = @"pk_live_o1egYds0rWu43ln7FjEyOU5E";
 static NSString *applePayMerchantID = nil;
 static NSString *applePayPayToString = nil;
 static OLKitePrintSDKEnvironment environment;
@@ -91,10 +89,6 @@ static NSString *const kOLAPIEndpointLive = @"https://api.kite.ly";
 static NSString *const kOLAPIEndpointSandbox = @"https://api.kite.ly";
 static NSString *const kOLStagingEndpointLive = @"https://staging.kite.ly";
 static NSString *const kOLStagingEndpointSandbox = @"https://staging.kite.ly";
-static NSString *const kOLPayPalClientIdLive = @"ASYVBBCHF_KwVUstugKy4qvpQaPlUeE_5beKRJHpIP2d3SA_jZrsaUDTmLQY";
-static NSString *const kOLPayPalClientIdSandbox = @"AcEcBRDxqcCKiikjm05FyD4Sfi4pkNP98AYN67sr3_yZdBe23xEk0qhdhZLM";
-static NSString *const kOLPayPalRecipientEmailLive = @"hello@kite.ly";
-static NSString *const kOLPayPalRecipientEmailSandbox = @"sandbox-merchant@kite.ly";
 static NSString *const kOLAPIEndpointVersion = @"v3.0";
 
 static BOOL useStripeForCreditCards = YES;
@@ -103,6 +97,11 @@ static BOOL useStaging = NO;
 static BOOL isUnitTesting = NO;
 static BOOL QRCodeUploadEnabled = NO;
 static BOOL isKiosk = NO;
+
+static NSString *paypalAccountId = nil;
+static NSString *paypalPublicKey = nil;
+static NSString *stripeAccountId = nil;
+static NSString *stripePublicKey = nil;
 
 static NSString *instagramClientID = nil;
 static NSString *instagramSecret = nil;
@@ -197,10 +196,7 @@ static NSString *instagramRedirectURI = nil;
 #endif
 
 + (NSString *_Nonnull)paypalClientId {
-    switch (environment) {
-        case kOLKitePrintSDKEnvironmentLive: return kOLPayPalClientIdLive;
-        case kOLKitePrintSDKEnvironmentSandbox: return kOLPayPalClientIdSandbox;
-    }
+    return paypalPublicKey;
 }
 
 + (void)setApplePayMerchantID:(NSString *_Nonnull)mID{
@@ -237,10 +233,7 @@ static NSString *instagramRedirectURI = nil;
 }
 
 + (NSString *_Nonnull)stripePublishableKey {
-    switch (environment) {
-        case kOLKitePrintSDKEnvironmentLive: return kOLStripePublishableKeyLive;
-        case kOLKitePrintSDKEnvironmentSandbox: return kOLStripePublishableKeyTest;
-    }
+    return stripePublicKey;
 }
 
 + (NSString *)qualityGuaranteeString{
@@ -328,6 +321,37 @@ static NSString *instagramRedirectURI = nil;
 
 + (NSString *)instagramClientID{
     return instagramClientID;
+}
+
++ (void)setPayPalAccountId:(NSString *)accountId{
+    paypalAccountId = accountId;
+}
+
++ (void)setPayPalPublicKey:(NSString *)publicKey{
+    paypalPublicKey = publicKey;
+    
+    if (environment == kOLKitePrintSDKEnvironmentLive) {
+        [OLPayPalCard setClientId:[self paypalClientId] withEnvironment:kOLPayPalEnvironmentLive];
+    } else {
+        [OLPayPalCard setClientId:[self paypalClientId] withEnvironment:kOLPayPalEnvironmentSandbox];
+    }
+}
+
++ (void)setStripeAccountId:(NSString *)accountId{
+    stripeAccountId = accountId;
+}
+
++ (void)setStripePublicKey:(NSString *)publicKey{
+    stripePublicKey = publicKey;
+    [OLStripeCard setClientId:[self stripePublishableKey]];
+}
+
++ (NSString *)paypalAccountId{
+    return paypalAccountId;
+}
+
++ (NSString *)stripeAccountId{
+    return stripeAccountId;
 }
 
 @end

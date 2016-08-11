@@ -41,6 +41,7 @@
 #import "OLPrintOrderCost.h"
 #import "OLProductPrintJob.h"
 #import "OLPrintOrderSubmitStatusRequest.h"
+#import "OLPaymentViewController.h"
 
 static NSString *const kKeyProofOfPayment = @"co.oceanlabs.pssdk.kKeyProofOfPayment";
 static NSString *const kKeyVoucherCode = @"co.oceanlabs.pssdk.kKeyVoucherCode";
@@ -80,6 +81,8 @@ static id stringOrEmptyString(NSString *str) {
 
 @interface OLKitePrintSDK (Private)
 +(BOOL)isUnitTesting;
++ (NSString *)paypalAccountId;
++ (NSString *)stripeAccountId;
 @end
 
 @interface OLPrintOrder () <OLAssetUploadRequestDelegate, OLPrintOrderRequestDelegate>
@@ -477,6 +480,13 @@ static NSBlockOperation *templateSyncOperation;
     
     if (self.proofOfPayment) {
         [json setObject:self.proofOfPayment forKey:@"proof_of_payment"];
+        
+        if ([self.proofOfPayment hasPrefix:@"AP-"] || [self.proofOfPayment hasPrefix:@"PAY-"] || [self.proofOfPayment hasPrefix:@"PAUTH-"]){
+            json[@"payment_account_id"] = stringOrEmptyString([OLKitePrintSDK paypalAccountId]);
+        }
+        else if ([self.proofOfPayment hasPrefix:@"tok_"]){
+            json[@"payment_account_id"] = stringOrEmptyString([OLKitePrintSDK stripeAccountId]);
+        }
     }
     
     if (self.currencyCode && (self.cachedCost || self.finalCost)) {
@@ -545,6 +555,7 @@ static NSBlockOperation *templateSyncOperation;
     hash = 31 * hash + [self.promoCode hash];
     hash = 31 * hash + (self.shipToStore ? 39 : 0);
     hash = 31 * hash + (self.payInStore ? 73 : 0);
+    hash = 31 * hash + ([OLPaymentViewController isApplePayAvailable] ? 47 : 0);
     for (id<OLPrintJob> job in self.jobs){
         if (job.address.country){
             hash = 32 * hash + [job.address.country.codeAlpha3 hash];

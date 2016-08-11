@@ -141,10 +141,10 @@
             [self.costLabel.superview addSubview:originalCostLabel];
             originalCostLabel.translatesAutoresizingMaskIntoConstraints = NO;
             
-            [originalCostLabel.superview addConstraint:[NSLayoutConstraint constraintWithItem:originalCostLabel attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:self.costLabel attribute:NSLayoutAttributeLeft multiplier:1 constant:-5]];
+            [originalCostLabel.superview addConstraint:[NSLayoutConstraint constraintWithItem:originalCostLabel attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:self.costLabel attribute:NSLayoutAttributeLeft multiplier:1 constant:-10]];
             [originalCostLabel.superview addConstraint:[NSLayoutConstraint constraintWithItem:originalCostLabel attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.costLabel attribute:NSLayoutAttributeCenterY multiplier:1 constant:0]];
             
-            NSAttributedString *attCost = [[NSAttributedString alloc] initWithString:original attributes:@{NSFontAttributeName : self.costLabel.font, NSStrikethroughStyleAttributeName : [NSNumber numberWithInteger:NSUnderlineStyleSingle]}];
+            NSAttributedString *attCost = [[NSAttributedString alloc] initWithString:original attributes:@{NSFontAttributeName : self.costLabel.font, NSStrikethroughStyleAttributeName : [NSNumber numberWithInteger:NSUnderlineStyleSingle], NSForegroundColorAttributeName : [UIColor colorWithWhite:0.40 alpha:1.000]}];
             originalCostLabel.attributedText = attCost;
         }
     }

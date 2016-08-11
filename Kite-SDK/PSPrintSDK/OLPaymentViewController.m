@@ -110,6 +110,10 @@ static OLPaymentMethod selectedPaymentMethod;
 
 static BOOL haveLoadedAtLeastOnce = NO;
 
+@interface OLProductTemplate ()
+@property (nonatomic, strong) NSDictionary<NSString *, NSDecimalNumber *> *costsByCurrencyCode;
+@end
+
 @interface OLProductPrintJob ()
 @property (strong, nonatomic) NSMutableDictionary *options;
 @property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*declinedOffers;
@@ -709,7 +713,8 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     for (id<OLPrintJob> job in self.printOrder.jobs){
         OLProductTemplate *template = [OLProductTemplate templateWithId:[job templateId]];
         
-        NSDecimalNumber *sheetCost = [template costPerSheetInCurrencyCode:[self.printOrder currencyCode]];
+        NSDictionary *costDict = template.originalCostsByCurrencyCode ? template.originalCostsByCurrencyCode : template.costsByCurrencyCode;
+        NSDecimalNumber *sheetCost = costDict[[self.printOrder currencyCode]];
         NSUInteger sheetQuanity = template.quantityPerSheet == 0 ? 1 : template.quantityPerSheet;
         NSUInteger numSheets = (NSUInteger) ceil([OLProduct productWithTemplateId:[job templateId]].quantityToFulfillOrder / sheetQuanity);
         NSDecimalNumber *unitCost = [sheetCost decimalNumberByMultiplyingBy:[NSDecimalNumber decimalNumberWithString:[NSString stringWithFormat:@"%lu", (unsigned long)numSheets]]];
@@ -1692,7 +1697,27 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         
         NSDecimalNumber *numUnitsInJob = [job numberOfItemsInJob];
         
-        priceLabel.text = [[numUnitsInJob decimalNumberByMultiplyingBy:[[product unitCostDecimalNumber] decimalNumberByMultiplyingBy:[NSDecimalNumber decimalNumberWithString:[NSString stringWithFormat:@"%ld", (long)[job extraCopies]+1]]]] formatCostForCurrencyCode:self.printOrder.currencyCode];
+        NSDecimalNumber *originalUnitCost = product.originalUnitCostDecimalNumber;
+        NSDecimalNumber *finalUnitCost = [product unitCostDecimalNumber];
+        
+        [[cell viewWithTag:1000] removeFromSuperview];
+        
+        if (originalUnitCost){
+            UILabel *finalCostLabel = [[UILabel alloc] init];
+            finalCostLabel.font = priceLabel.font;
+            finalCostLabel.tag = 1000;
+            finalCostLabel.text = [[numUnitsInJob decimalNumberByMultiplyingBy:[finalUnitCost decimalNumberByMultiplyingBy:[NSDecimalNumber decimalNumberWithString:[NSString stringWithFormat:@"%ld", (long)[job extraCopies]+1]]]] formatCostForCurrencyCode:self.printOrder.currencyCode];
+            [cell addSubview:finalCostLabel];
+            finalCostLabel.translatesAutoresizingMaskIntoConstraints = NO;
+            [cell addConstraint:[NSLayoutConstraint constraintWithItem:priceLabel attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:finalCostLabel attribute:NSLayoutAttributeTop multiplier:1 constant:-5]];
+            [cell addConstraint:[NSLayoutConstraint constraintWithItem:priceLabel attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:finalCostLabel attribute:NSLayoutAttributeCenterX multiplier:1 constant:0]];
+            
+            NSString *s = [[numUnitsInJob decimalNumberByMultiplyingBy:[originalUnitCost decimalNumberByMultiplyingBy:[NSDecimalNumber decimalNumberWithString:[NSString stringWithFormat:@"%ld", (long)[job extraCopies]+1]]]] formatCostForCurrencyCode:self.printOrder.currencyCode];
+            priceLabel.attributedText = [[NSAttributedString alloc] initWithString:s attributes:@{NSFontAttributeName : priceLabel.font, NSStrikethroughStyleAttributeName : [NSNumber numberWithInteger:NSUnderlineStyleSingle], NSForegroundColorAttributeName : [UIColor colorWithWhite:0.40 alpha:1.000]}];
+        }
+        else{
+            priceLabel.text = [[numUnitsInJob decimalNumberByMultiplyingBy:[finalUnitCost decimalNumberByMultiplyingBy:[NSDecimalNumber decimalNumberWithString:[NSString stringWithFormat:@"%ld", (long)[job extraCopies]+1]]]] formatCostForCurrencyCode:self.printOrder.currencyCode];
+        }
         
         if ([numUnitsInJob integerValue] == 1){
             productNameLabel.text = product.productTemplate.name;

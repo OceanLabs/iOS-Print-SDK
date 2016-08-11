@@ -168,21 +168,21 @@ UITableViewDataSource, UITextFieldDelegate>
         
         if (printOrder){
             if ([OLKitePrintSDK environment] == kOLKitePrintSDKEnvironmentSandbox) {
-                self.title = NSLocalizedString(@"Pay with Credit Card (TEST)", @"");
+                self.title = NSLocalizedStringFromTableInBundle(@"Pay with Credit Card (TEST)", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
             } else {
-                self.title = NSLocalizedString(@"Pay with Credit Card", @"");
+                self.title = NSLocalizedStringFromTableInBundle(NSLocalizedStringFromTableInBundle(@"Pay with Credit Card", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
             }
         }
         else{
             if ([OLKitePrintSDK environment] == kOLKitePrintSDKEnvironmentSandbox) {
-                self.title = NSLocalizedString(@"Add Credit Card (TEST)", @"");
+                self.title = NSLocalizedStringFromTableInBundle(@"Add Credit Card (TEST)", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
             } else {
-                self.title = NSLocalizedString(@"Add Credit Card", @"");
+                self.title = NSLocalizedStringFromTableInBundle(@"Add Credit Card", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
             }
         }
 
         
-        self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Cancel", @"") style:UIBarButtonItemStylePlain target:self action:@selector(onButtonCancelClicked)];
+        self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle: NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") style:UIBarButtonItemStylePlain target:self action:@selector(onButtonCancelClicked)];
     }
     
     return self;
@@ -195,10 +195,10 @@ UITableViewDataSource, UITextFieldDelegate>
     buttonPay.backgroundColor = [UIColor colorWithRed:74 / 255.0f green:137 / 255.0f blue:220 / 255.0f alpha:1.0];
     [buttonPay addTarget:self action:@selector(onButtonPayClicked) forControlEvents:UIControlEventTouchUpInside];
     if (self.printOrder){
-        [buttonPay setTitle:NSLocalizedString(@"Pay", @"") forState:UIControlStateNormal];
+        [buttonPay setTitle: NSLocalizedStringFromTableInBundle(@"Pay", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") forState:UIControlStateNormal];
     }
     else{
-        [buttonPay setTitle:NSLocalizedString(@"Add", @"") forState:UIControlStateNormal];
+        [buttonPay setTitle: NSLocalizedStringFromTableInBundle(@"Add", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") forState:UIControlStateNormal];
     }
     [buttonPay makeRoundRect];
     
@@ -223,13 +223,13 @@ UITableViewDataSource, UITextFieldDelegate>
     self.tableView.tableFooterView = footerView;
     
     if (self.printOrder){
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Pay", @"")
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Pay", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")
                                                                              style:UIBarButtonItemStyleDone
                                                                             target:self
                                                                             action:@selector(onButtonPayClicked)];
     }
     else{
-        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Add", @"")
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Add", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")
                                                                                   style:UIBarButtonItemStyleDone
                                                                                  target:self
                                                                                  action:@selector(onButtonPayClicked)];
@@ -459,10 +459,10 @@ UITableViewDataSource, UITextFieldDelegate>
         self.textFieldCardNumber = textField;
         
     } else if (indexPath.section == kOLSectionExpiryDate) {
-        textField.placeholder = NSLocalizedString(@"MM/YY", @"");
+        textField.placeholder = NSLocalizedStringFromTableInBundle(@"MM/YY", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
         self.textFieldExpiryDate = textField;
     } else if (indexPath.section == kOLSectionCVV) {
-        textField.placeholder = NSLocalizedString(@"CVV", @"");
+        textField.placeholder = NSLocalizedStringFromTableInBundle(@"CVV", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
         self.textFieldCVV = textField;
     }
     

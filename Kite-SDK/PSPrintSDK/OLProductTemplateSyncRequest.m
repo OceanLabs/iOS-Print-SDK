@@ -47,6 +47,10 @@
 
 + (NSString *)apiEndpoint;
 + (NSString *)apiVersion;
++ (void)setPayPalAccountId:(NSString *)accountId;
++ (void)setPayPalPublicKey:(NSString *)publicKey;
++ (void)setStripeAccountId:(NSString *)accountId;
++ (void)setStripePublicKey:(NSString *)publicKey;
 
 @end
 
@@ -84,6 +88,29 @@
                     id next = meta[@"next"];
                     if ([next isKindOfClass:[NSString class]]) {
                         nextPage = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", [OLKitePrintSDK apiEndpoint], next]];
+                    }
+                }
+                
+                id paymentKeys = json[@"payment_keys"];
+                if ([paymentKeys isKindOfClass:[NSDictionary class]]){
+                    id paypalKeys = paymentKeys[@"paypal"];
+                    if([paypalKeys isKindOfClass:[NSDictionary class]]){
+                        id accountId = paypalKeys[@"account_id"];
+                        id publicKey = paypalKeys[@"public_key"];
+                        if ([publicKey isKindOfClass:[NSString class]]){
+                            [OLKitePrintSDK setPayPalAccountId:accountId];
+                            [OLKitePrintSDK setPayPalPublicKey:publicKey];
+                        }
+                    }
+                    
+                    id stripeKeys = paymentKeys[@"stripe"];
+                    if([stripeKeys isKindOfClass:[NSDictionary class]]){
+                        id accountId = stripeKeys[@"account_id"];
+                        id publicKey = stripeKeys[@"public_key"];
+                        if ([publicKey isKindOfClass:[NSString class]]){
+                            [OLKitePrintSDK setStripeAccountId:accountId];
+                            [OLKitePrintSDK setStripePublicKey:publicKey];
+                        }
                     }
                 }
                 
