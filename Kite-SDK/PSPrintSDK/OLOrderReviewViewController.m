@@ -616,6 +616,8 @@ UIViewControllerPreviewingDelegate>
         [cell setNeedsDisplay];
     }
     
+    cell.printContainerView.backgroundColor = printPhoto.edits.borderColor ? printPhoto.edits.borderColor : [UIColor whiteColor];
+    
     return cell;
 }
 

@@ -35,6 +35,7 @@
 #import "OLImagePickerPhotosPageViewController+Facebook.h"
 #import "OLImagePickerPhotosPageViewController+Instagram.h"
 #import "UIView+RoundRect.h"
+#import "OLAsset+Private.h"
 
 @interface OLImagePickerPhotosPageViewController () <UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, UICollectionViewDelegate>
 @property (weak, nonatomic) IBOutlet UIImageView *albumLabelChevron;
@@ -343,6 +344,8 @@ NSInteger OLImagePickerMargin = 0;
         }
         else{
             [self.imagePicker.selectedAssets addObject:printPhoto];
+            printPhoto.edits = nil;
+            [printPhoto unloadImage];
             [[collectionView cellForItemAtIndexPath:indexPath] viewWithTag:20].hidden = NO;
         }
         

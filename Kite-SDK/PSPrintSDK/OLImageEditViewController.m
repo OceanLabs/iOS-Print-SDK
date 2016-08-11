@@ -40,9 +40,10 @@
 #import "OLNavigationController.h"
 
 const NSInteger kOLEditTagTextTools = 11;
-const NSInteger kOLEditTagColors = 21;
+const NSInteger kOLEditTagTextColors = 21;
 const NSInteger kOLEditTagFonts = 31;
 const NSInteger kOLEditTagImages = 10;
+const NSInteger kOLEditTagBorderColors = 20;
 const NSInteger kOLEditTagImageTools = 30;
 const NSInteger kOLEditTagCrop = 40;
 
@@ -261,7 +262,14 @@ const NSInteger kOLEditTagCrop = 40;
         self.cropViewRightCon.constant = b.right;
         self.cropViewBottomCon.constant = b.bottom ;
         self.cropViewLeftCon.constant = -b.left;
+        
+        self.printContainerView.backgroundColor = self.edits.borderColor ? self.edits.borderColor : [UIColor whiteColor];
+
     }
+}
+
+- (BOOL)hasEditableBorder{
+    return !UIEdgeInsetsEqualToEdgeInsets(self.borderInsets, UIEdgeInsetsZero);
 }
 
 - (UIEdgeInsets)imageInsetsOnContainer{
@@ -570,15 +578,11 @@ const NSInteger kOLEditTagCrop = 40;
 }
 
 - (void)showDrawerWithCompletionHandler:(void(^)(BOOL finished))handler{
-    if (self.collectionView.tag == kOLEditTagTextTools){
-        self.drawerLabel.text = NSLocalizedString(@"Tools", @"");
-        self.editingTools.button3.selected = YES;
-    }
-    else if (self.collectionView.tag == kOLEditTagColors){
-        self.drawerLabel.text = NSLocalizedString(@"Text Colour", @"");
+    if (self.collectionView.tag == kOLEditTagTextColors){
+        self.drawerLabel.text = NSLocalizedStringFromTableInBundle(@"TEXT COLOUR", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
     }
     else if (self.collectionView.tag == kOLEditTagFonts){
-        self.drawerLabel.text = NSLocalizedString(@"Fonts", @"");
+        self.drawerLabel.text = NSLocalizedStringFromTableInBundle(@"FONTS", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
     }
     //set height
     [UIView animateWithDuration:0.25 animations:^{
@@ -599,8 +603,14 @@ const NSInteger kOLEditTagCrop = 40;
     self.editingTools.button1.tag = kOLEditTagImages;
     [self.editingTools.button1 addTarget:self action:@selector(onButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
     
-    [self.editingTools.button3 setImage:[UIImage imageNamedInKiteBundle:@"paint-bucket-icon"] forState:UIControlStateNormal];
-    [self.editingTools.button3 addTarget:self action:@selector(onButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+    if ([self hasEditableBorder]){
+    [self.editingTools.button2 setImage:[UIImage imageNamedInKiteBundle:@"paint-bucket-icon"] forState:UIControlStateNormal];
+    self.editingTools.button2.tag = kOLEditTagBorderColors;
+    [self.editingTools.button2 addTarget:self action:@selector(onButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+    }
+    else{
+        [self.editingTools.button2 removeFromSuperview];
+    }
     
     [self.editingTools.button3 setImage:[UIImage imageNamedInKiteBundle:@"tools-icon"] forState:UIControlStateNormal];
     self.editingTools.button3.tag = kOLEditTagImageTools;
@@ -681,14 +691,18 @@ const NSInteger kOLEditTagCrop = 40;
 - (void)selectButton:(UIButton *)sender{
     switch (sender.tag) {
         case kOLEditTagTextTools:
-            self.drawerLabel.text = NSLocalizedString(@"TEXT", @"");
+            self.drawerLabel.text = NSLocalizedStringFromTableInBundle(@"TEXT TOOLS", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
             break;
         case kOLEditTagImageTools:
-            self.drawerLabel.text = NSLocalizedString(@"TOOLS", @"");
+            self.drawerLabel.text = NSLocalizedStringFromTableInBundle(@"IMAGE TOOLS", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
             break;
         case kOLEditTagImages:
             [self showImagePicker];
             return;
+        case kOLEditTagBorderColors:
+            self.drawerLabel.text = NSLocalizedStringFromTableInBundle(@"COLOURS", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
+
+            break;
         case kOLEditTagCrop:
             [self onButtonCropClicked:sender];
             return;
@@ -882,7 +896,7 @@ const NSInteger kOLEditTagCrop = 40;
     if (collectionView.tag == kOLEditTagTextTools){
         return 2;
     }
-    else if (collectionView.tag == kOLEditTagColors){
+    else if (collectionView.tag == kOLEditTagTextColors || collectionView.tag == kOLEditTagBorderColors){
         return self.availableColors.count;
     }
     else if (collectionView.tag == kOLEditTagFonts){
@@ -927,7 +941,7 @@ const NSInteger kOLEditTagCrop = 40;
             [(UILabel *)[cell viewWithTag:20] setText:NSLocalizedStringFromTableInBundle(@"Add Text", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")];
         }
     }
-    else if (collectionView.tag == kOLEditTagColors){
+    else if (collectionView.tag == kOLEditTagTextColors || collectionView.tag == kOLEditTagBorderColors){
         cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"colorSelectionCell" forIndexPath:indexPath];
         
         [cell setSelected:NO];
@@ -940,7 +954,12 @@ const NSInteger kOLEditTagCrop = 40;
         
         [(OLColorSelectionCollectionViewCell *)cell setColor:self.availableColors[indexPath.item]];
         
-        [cell setSelected:[self.activeTextField.textColor isEqual:self.availableColors[indexPath.item]]];
+        if (collectionView.tag == kOLEditTagTextColors){
+            [cell setSelected:[self.activeTextField.textColor isEqual:self.availableColors[indexPath.item]]];
+        }
+        else if(collectionView.tag == kOLEditTagBorderColors){
+            [cell setSelected:[self.edits.borderColor isEqual:self.availableColors[indexPath.item]]];
+        }
         
         [cell setNeedsDisplay];
     }
@@ -978,7 +997,7 @@ const NSInteger kOLEditTagCrop = 40;
     if (collectionView.tag == kOLEditTagTextTools || collectionView.tag == kOLEditTagImageTools){
         return CGSizeMake(self.collectionView.frame.size.height * 1.2, self.collectionView.frame.size.height);
     }
-    if (collectionView.tag == kOLEditTagColors){
+    if (collectionView.tag == kOLEditTagTextColors || collectionView.tag == kOLEditTagBorderColors){
         return CGSizeMake(self.collectionView.frame.size.height, self.collectionView.frame.size.height);
     }
     else if (collectionView.tag == kOLEditTagFonts){
@@ -993,7 +1012,7 @@ const NSInteger kOLEditTagCrop = 40;
         CGFloat margin = MAX((collectionView.frame.size.width - ([self collectionView:collectionView layout:self.collectionView.collectionViewLayout sizeForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:section]].width * [self collectionView:collectionView numberOfItemsInSection:section] + [self collectionView:collectionView layout:collectionViewLayout minimumLineSpacingForSectionAtIndex:section] * ([self collectionView:collectionView numberOfItemsInSection:section]-1)))/2.0, 5);
         return UIEdgeInsetsMake(0, margin, 0, margin);
     }
-    else if (collectionView.tag == kOLEditTagColors){
+    else if (collectionView.tag == kOLEditTagTextColors || collectionView.tag == kOLEditTagBorderColors){
         return UIEdgeInsetsMake(0, 5, 0, 5);
     }
     
@@ -1018,7 +1037,7 @@ const NSInteger kOLEditTagCrop = 40;
         else if (indexPath.item == 1){
             [self dismissDrawerWithCompletionHandler:^(BOOL finished){
                 [self.view bringSubviewToFront:self.drawerView];
-                collectionView.tag = kOLEditTagColors;
+                collectionView.tag = kOLEditTagTextColors;
                 [(UICollectionViewFlowLayout *)self.collectionView.collectionViewLayout setScrollDirection:UICollectionViewScrollDirectionHorizontal];
                 [collectionView reloadData];
                 [self showDrawerWithCompletionHandler:NULL];
@@ -1037,7 +1056,13 @@ const NSInteger kOLEditTagCrop = 40;
             [self onButtonAddTextClicked:nil];
         }
     }
-    else if (collectionView.tag == kOLEditTagColors){
+    else if (collectionView.tag == kOLEditTagBorderColors){
+        self.printContainerView.backgroundColor = self.availableColors[indexPath.item];
+        self.edits.borderColor = self.availableColors[indexPath.item];
+        self.doneButton.enabled = YES;
+        [collectionView reloadData];
+    }
+    else if (collectionView.tag == kOLEditTagTextColors){
         [self.activeTextField setTextColor:self.availableColors[indexPath.item]];
         self.doneButton.enabled = YES;
         [collectionView reloadData];
