@@ -592,7 +592,7 @@ const NSInteger kOLEditDrawerTagImages = 30;
 #pragma mark Buttons
 
 - (void)setupButtons{
-    [self.editingTools.ctaButton addTarget:self action:@selector(onBarButtonDoneTapped:) forControlEvents:UIControlEventTouchUpInside];
+    [self.editingTools.ctaButton addTarget:self action:@selector(onButtonDoneTapped:) forControlEvents:UIControlEventTouchUpInside];
     
     [self.editingTools.button1 setImage:[UIImage imageNamedInKiteBundle:@"add-image-icon"] forState:UIControlStateNormal];
     self.editingTools.button1.tag = kOLEditDrawerTagImages;
