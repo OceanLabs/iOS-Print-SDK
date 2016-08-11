@@ -39,12 +39,12 @@
 #import "OLImagePickerViewController.h"
 #import "OLNavigationController.h"
 
-const NSInteger kOLEditTagTextTools = 11;
-const NSInteger kOLEditTagTextColors = 21;
-const NSInteger kOLEditTagFonts = 31;
 const NSInteger kOLEditTagImages = 10;
 const NSInteger kOLEditTagBorderColors = 20;
 const NSInteger kOLEditTagImageTools = 30;
+/**/const NSInteger kOLEditTagTextTools = 31;
+/**/const NSInteger kOLEditTagTextColors = 32;
+/**/const NSInteger kOLEditTagFonts = 33;
 const NSInteger kOLEditTagCrop = 40;
 
 @interface OLImageEditViewController () <RMImageCropperDelegate, UITextFieldDelegate, UIGestureRecognizerDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, OLPhotoTextFieldDelegate, OLImagePickerViewControllerDelegate>
@@ -123,6 +123,7 @@ const NSInteger kOLEditTagCrop = 40;
                 [self.view layoutIfNeeded];
                 
                 [self.collectionView reloadData];
+                self.collectionView.tag = kOLEditTagTextTools;
                 [self showDrawerWithCompletionHandler:NULL];
             }];
         }
@@ -578,7 +579,10 @@ const NSInteger kOLEditTagCrop = 40;
 }
 
 - (void)showDrawerWithCompletionHandler:(void(^)(BOOL finished))handler{
-    if (self.collectionView.tag == kOLEditTagTextColors){
+    if (self.collectionView.tag == kOLEditTagTextTools){
+        self.drawerLabel.text = NSLocalizedStringFromTableInBundle(@"TEXT TOOLS", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
+    }
+    else if (self.collectionView.tag == kOLEditTagTextColors){
         self.drawerLabel.text = NSLocalizedStringFromTableInBundle(@"TEXT COLOUR", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
     }
     else if (self.collectionView.tag == kOLEditTagFonts){
@@ -592,6 +596,12 @@ const NSInteger kOLEditTagCrop = 40;
             handler(finished);
         }
     }];
+    
+    for (UIButton *b in @[self.editingTools.button1, self.editingTools.button2, self.editingTools.button3, self.editingTools.button4]){
+        if (b.tag / 10 == self.collectionView.tag / 10){
+            b.selected = YES;
+        }
+    }
 }
 
 #pragma mark Buttons
@@ -690,9 +700,6 @@ const NSInteger kOLEditTagCrop = 40;
 
 - (void)selectButton:(UIButton *)sender{
     switch (sender.tag) {
-        case kOLEditTagTextTools:
-            self.drawerLabel.text = NSLocalizedStringFromTableInBundle(@"TEXT TOOLS", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
-            break;
         case kOLEditTagImageTools:
             self.drawerLabel.text = NSLocalizedStringFromTableInBundle(@"IMAGE TOOLS", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
             break;
